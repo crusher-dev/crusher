@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="10d760f8-4731-488a-a78f-2b794b0fac48" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1iSm8eCGHqQhr9f3kb0hZAn7Krp" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.TypeScript" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/packages" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="10d760f8-4731-488a-a78f-2b794b0fac48" name="Default Changelist" comment="" />
+      <created>1601909208607</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1601909208607</updated>
+      <workItem from="1601909209670" duration="3665000" />
+      <workItem from="1601962868707" duration="2498000" />
+      <workItem from="1601979574754" duration="716000" />
+      <workItem from="1601980298182" duration="266000" />
+      <workItem from="1601997107212" duration="599000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="637" y="328" width="636" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1601968487744">
+      <screen x="0" y="27" width="1920" height="999" />
+    </state>
+    <state x="637" y="328" width="636" height="403" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.999@0.27.1920.999" timestamp="1601968487744" />
+    <state x="449" y="161" width="1022" height="737" key="SettingsEditor" timestamp="1601980044341">
+      <screen x="0" y="27" width="1920" height="999" />
+    </state>
+    <state x="449" y="161" width="1022" height="737" key="SettingsEditor/0.27.1920.999@0.27.1920.999" timestamp="1601980044341" />
+  </component>
+</project>

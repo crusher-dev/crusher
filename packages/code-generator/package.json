@@ -4,6 +4,9 @@
   "description": "A package responsible for generating the playwright code for the events recorded from chrome-extension",
   "author": "Utkarsh Dixit",
   "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --watch src --ext js,ts,tsx  --exec 'tsc'"
+  },
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
     "typescript": "^4.0.3",

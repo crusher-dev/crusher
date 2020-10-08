@@ -1,0 +1,51 @@
+#overlay_add_action(data-recorder='true')
+    #popper_arrow(data-popper-arrow='true')
+    #overlay_add_icon.arrow_box(data-recorder='true')
+        span#overlay_add(data-recorder='true') +
+        #overlay_add_events_container(data-recorder='true')
+            .overlay_heading_container(data-recorder='true')
+                span.overlay_heading(data-recorder='true') Select action
+                .overlay_close_icon(data-recorder='true')
+                    svg(width='22', height='22', viewBox='0 0 12 12', fill='none', xmlns='http://www.w3.org/2000/svg', data-recorder='true')
+                        path(data-recorder='true', d='M1.82603 1.9512C-0.283608 4.12983 -0.227482 7.61874 1.95114 9.72837C4.12976 11.838 7.61867 11.7819 9.72831 9.60326C11.8379 7.42464 11.7818 3.93573 9.6032 1.82609C7.42458 -0.283543 3.93566 -0.227417 1.82603 1.9512ZM8.17365 3.63183C8.26465 3.71995 8.26698 3.86489 8.17886 3.95589L6.42527 5.76682L8.2362 7.52041C8.3272 7.60853 8.32954 7.75347 8.24142 7.84447L7.92259 8.17373C7.83447 8.26473 7.68953 8.26706 7.59853 8.17894L5.78758 6.42534L4.03399 8.23627C3.94587 8.32727 3.80093 8.3296 3.70993 8.24148L3.38067 7.92265C3.28967 7.83453 3.28734 7.68959 3.37546 7.59859L5.12905 5.78766L3.31812 4.03407C3.22712 3.94595 3.22479 3.80101 3.3129 3.71001L3.63173 3.38075C3.71985 3.28975 3.86479 3.28742 3.95579 3.37554L5.76673 5.12913L7.52032 3.3182C7.60844 3.2272 7.75338 3.22487 7.84438 3.31298L8.17365 3.63183Z', fill='white')
+            .overlay_modal_content(data-recorder='true')
+                #events_grid.overlay_grid(data-recorder='true')
+                    .overlay_add_event_item(data-action='HOVER', data-recorder='true') Hover
+                    .overlay_add_event_item(data-action='CLICK', data-recorder='true') Click
+                    .overlay_add_event_item(data-action='SCROLL_TO_VIEW', data-recorder='true') Scroll to view
+                    .overlay_add_event_item(data-action='EXTRACT_INFO', data-recorder='true') Extract Info
+                    .overlay_add_event_item(data-action='ASSERT_TEXT', data-recorder='true') Assert Text
+                    .overlay_add_event_item(data-action='SCREENSHOT', data-recorder='true') Screenshot
+                #extract_event_form.form_container(data-recorder='true', data-gone='true')
+                    input#extract_variable_name.modal_input(placeholder='Name of variable', data-recorder='true')
+                    textarea#validation_script.form_textarea(data-recorder='true')
+                    .form_label.label(data-recorder='true') Extracted Info
+                    textarea#extracted_info_preview.form_textarea(placeholder='', disabled='true', data-recorder='true')
+                    #submit_extract_form.form_submit_btn(data-recorder='true') Save
+                #assert_event_form.form_container(data-recorder='true', data-gone='true')
+                    .form_label.label(data-recorder='true') Should Equal to
+                    .form_label
+                        select#options(name='options')
+                            option(value='equal') Equal
+                            option(value='notEqual') Not Equal
+                            option(value='isAtMost') isAtMost
+                            option(value='isNull') isNull
+                            option(value='isNotNull') isNotNull
+                            option(value='isNan') isNan
+                            option(value='isNotNaN') isNotNaN
+                            option(value='isArray') isArray
+                            option(value='isFinite') isFinite
+                            option(value='include') include
+                            option(value='include') include
+                            option(value='match') match
+                            option(value='notMatch') notMatch
+                            option(value='lengthOf') lengthOf
+                            option(value='oneOf') oneOf
+                            option(value='isEmpty') isEmpty
+                            option(value='isNotEmpty') isNotEmpty
+                            option(value='isOk') isOk
+                            option(value='array') array
+                    input#assert_comparision_text.modal_input(placeholder='', data-recorder='true')
+                    .form_label.label(data-recorder='true') Validation
+                    input#assert_validation.modal_input(placeholder='Validation', disabled='true', data-recorder='true')
+                    #submit_assert_form.form_submit_btn(data-recorder='true') Save

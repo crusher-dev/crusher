@@ -1,11 +1,400 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="10d760f8-4731-488a-a78f-2b794b0fac48" name="Default Changelist" comment="" />
+    <list default="true" id="10d760f8-4731-488a-a78f-2b794b0fac48" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans400ItalicLatin.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans400ItalicLatinExt.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans400RegularLatin.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans400RegularLatinExt.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans500ItalicLatin.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans500ItalicLatinExt.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans500RegularLatin.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans500RegularLatinExt.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans700ItalicLatin.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans700ItalicLatinExt.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans700RegularLatin.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/fonts/DMSans700RegularLatinExt.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/action.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/arrow.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/bus.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/chrome.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/crusher.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/edge.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/extension_icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/firefox.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/mouse.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/navigation-back.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/navigation-forward.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/navigation-refresh.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/ongoing_recording.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/play.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/record.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/safari.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/settings.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/ssl.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/start_recording.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/styles/devices.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/styles/fonts.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/styles/overlay.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/styles/popup.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/scripts/build.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/scripts/dev.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/scripts/tasks.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/scripts/watch/bundleTemplates.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/scripts/watch/copyAssets.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/assets/styles/devices.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/background.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/constants/actionTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/constants/domEventsToRecord.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/constants/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/change_navigator.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/eventsController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/events_listener.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/ui/eventRecording.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/services/backgroundFrameStorage.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/services/backgroundTabStorage.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/types/chrome.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/popup/app.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/popup/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/templates/background_script.pug" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/templates/iframe_inject.pug" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/templates/popup.pug" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/templates/test_recorder.pug" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/app.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/components/modal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/containers/modal/seoModelContent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/dom.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/domPath.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/frameStorage.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/helpers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/messages.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/selector.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/tabStorage.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/url.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/webpack/customPublicPath.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/webpack/webpack.content_script.dev.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/webpack/webpack.content_script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/webpack/webpack.dev.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/webpack/webpack.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-shared/constants/devices.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-shared/constants/recordedActions.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-shared/constants/userAgents.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-shared/types/userAgent.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/crusher-shared/utils/url.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/json5" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.bin/json5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/mkdirp" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.bin/mkdirp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/rimraf" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.bin/rimraf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/tsc" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.bin/tsc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/tsserver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.bin/tsserver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/uuid" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.bin/uuid" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.bin/which" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.yarn-integrity" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.yarn-integrity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/acorn/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/acorn/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/acorn/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/bin/acorn" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/acorn/bin/acorn" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/dist/acorn.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/dist/acorn.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/acorn/dist/acorn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/dist/acorn.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/dist/acorn.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/dist/acorn.mjs.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/dist/bin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/acorn/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/acorn/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ansi-regex/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ansi-regex/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ansi-regex/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ansi-regex/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ansi-regex/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ansi-regex/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/ansi-regex/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/ansi-regex/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/.lintstagedrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/.prettierignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/.prettierrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/CONTRIBUTING.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/LICENSE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/cache.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/cache.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/cache.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/checker.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/checker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/checker.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/fs.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/fs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/fs.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/protocol.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/protocol.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/protocol.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/runtime.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/runtime.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/runtime.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/send.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/send.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/checker/send.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/entry.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/entry.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/entry.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/helpers.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/helpers.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/helpers.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/instance.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/instance.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/instance.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/interfaces.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/interfaces.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/interfaces.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/paths-plugin.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/paths-plugin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/paths-plugin.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/watch-mode.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/watch-mode.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/dist/watch-mode.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/node_modules/.bin/mkdirp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/node_modules/webpack-log/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/node_modules/webpack-log/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/node_modules/webpack-log/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/node_modules/webpack-log/node_modules/.bin/uuid" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/node_modules/webpack-log/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/angular-webpack-starter.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/babel.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/compile-output.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/config-file-name.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/create-cache-dir.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/custom-transformers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/declaration.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/error.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/exclude.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/import-empty-declaration.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/paths-plugin.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/react.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/remove.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/rename-case.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/report-files.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/simple.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/skipLibCheck.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/source-map.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/utils.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/watch-output.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/__test__/watch.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/cache.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/checker/checker.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/checker/fs.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/checker/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/checker/protocol.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/checker/runtime.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/checker/send.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/entry.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/helpers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/instance.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/interfaces.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/paths-plugin.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/src/watch-mode.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/tslint.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/awesome-typescript-loader/yarn.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/configstore/node_modules/make-dir/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/configstore/node_modules/make-dir/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/semver/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/semver/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/semver/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/semver/bin/semver" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/semver/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/semver/range.bnf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/cross-spawn/node_modules/semver/semver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/eslint-scope/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/eslint-scope/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/eslint-scope/lib/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/eslint-scope/lib/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/eslint-scope/lib/referencer.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/eslint-scope/lib/referencer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/eslint-scope/lib/scope.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/eslint-scope/lib/scope.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/eslint-scope/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/eslint-scope/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/find-up/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/find-up/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/glob-parent/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/glob-parent/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/glob-parent/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/node_modules/is-glob/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/node_modules/is-glob/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/node_modules/is-glob/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/node_modules/is-glob/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/glob-parent/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/glob-parent/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/globby/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/globby/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/node_modules/pify/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/node_modules/pify/license" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/node_modules/pify/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/node_modules/pify/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/globby/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/globby/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/globby/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/locate-path/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/locate-path/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/lru-cache/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/lru-cache/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/lru-cache/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/lru-cache/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/lru-cache/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/lru-cache/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/make-dir/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/semver/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/semver/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/semver/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/semver/bin/semver" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/semver/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/semver/range.bnf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/make-dir/node_modules/semver/semver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/nodemon/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/glob-parent/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/glob-parent/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/glob-parent/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/glob-parent/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/semver/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/semver/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/semver/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/semver/bin/semver" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/semver/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/semver/range.bnf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/nodemon/node_modules/semver/semver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/p-locate/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/p-locate/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/package-json/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/package-json/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/pify/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/pify/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/pify/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/pify/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/pify/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/pify/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/pify/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/pify/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/resolve-from/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/resolve-from/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/resolve-from/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/resolve-from/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/resolve-from/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/resolve-from/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/resolve-from/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/resolve-from/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/semver-diff/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/semver-diff/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/semver/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/semver/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/semver/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/semver/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/semver/bin/semver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/semver/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/semver/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/semver/semver.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/semver/semver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/strip-json-comments/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/strip-json-comments/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/strip-json-comments/license" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/strip-json-comments/license" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/strip-json-comments/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/strip-json-comments/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/strip-json-comments/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/strip-json-comments/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/cs/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/cs/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/de/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/de/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/es/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/es/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/fr/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/fr/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/it/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/it/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/ja/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/ja/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/ko/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/ko/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.dom.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/lib.dom.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2015.core.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2015.core.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2020.bigint.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2020.bigint.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2020.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2020.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es2020.intl.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es5.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/lib.es5.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/lib.webworker.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/lib.webworker.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/pl/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/pl/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/protocol.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/protocol.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/pt-br/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/pt-br/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/ru/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/ru/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/tr/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/tr/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/tsc.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/tsc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/tsserver.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/tsserver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/tsserverlibrary.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/tsserverlibrary.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/tsserverlibrary.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/tsserverlibrary.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/typesMap.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/typesMap.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/typescript.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/typescript.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/typescript.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/typescript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/typescriptServices.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/typescriptServices.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/typescriptServices.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/typescriptServices.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/typingsInstaller.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/typingsInstaller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/zh-cn/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/zh-cn/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/lib/zh-tw/diagnosticMessages.generated.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/lib/zh-tw/diagnosticMessages.generated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/typescript/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/typescript/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/watchpack/node_modules/glob-parent/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/watchpack/node_modules/glob-parent/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/watchpack/node_modules/glob-parent/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/watchpack/node_modules/glob-parent/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/DevMiddlewareError.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/context.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/context.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/fs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/middleware.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/reporter.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/reporter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/lib/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/node_modules/.bin/mkdirp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-middleware/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-server/node_modules/.bin/semver" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-dev-server/node_modules/.bin/semver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-server/node_modules/ansi-regex/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-server/node_modules/ansi-regex/license" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-server/node_modules/ansi-regex/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-dev-server/node_modules/ansi-regex/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-log/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-log/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack-log/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-log/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-log/src/loglevel/LogLevel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-log/src/loglevel/MethodFactory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-log/src/loglevel/PrefixFactory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack-log/src/loglevel/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/webpack/node_modules/.bin/acorn" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/webpack/node_modules/.bin/acorn" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/yallist/iterator.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/yallist/iterator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/yallist/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/yallist/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/yallist/yallist.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/yallist/yallist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/dist/code-generator/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/dist/crusher-shared/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/node_modules/.bin/tsc" beforeDir="false" afterPath="$PROJECT_DIR$/packages/code-generator/node_modules/.bin/tsc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/node_modules/.bin/tsserver" beforeDir="false" afterPath="$PROJECT_DIR$/packages/code-generator/node_modules/.bin/tsserver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/code-generator/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/code-generator/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/code-generator/tsconfig.tsbuildinfo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/crusher-shared/node_modules/.bin/tsc" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-shared/node_modules/.bin/tsc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/crusher-shared/node_modules/.bin/tsserver" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-shared/node_modules/.bin/tsserver" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/crusher-shared/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-shared/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/crusher-shared/src/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/crusher-shared/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-shared/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1iSm8eCGHqQhr9f3kb0hZAn7Krp" />
   <component name="ProjectViewState">
@@ -15,8 +404,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/packages/crusher-extension" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.TypeScript" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
@@ -26,8 +417,14 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/packages" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/packages/crusher-extension" />
+    </key>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="10d760f8-4731-488a-a78f-2b794b0fac48" name="Default Changelist" comment="" />
@@ -40,17 +437,35 @@
       <workItem from="1601979574754" duration="716000" />
       <workItem from="1601980298182" duration="266000" />
       <workItem from="1601997107212" duration="599000" />
+      <workItem from="1602018203392" duration="4656000" />
+      <workItem from="1602061838843" duration="5247000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="637" y="328" width="636" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1601968487744">
       <screen x="0" y="27" width="1920" height="999" />
     </state>
     <state x="637" y="328" width="636" height="403" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.999@0.27.1920.999" timestamp="1601968487744" />
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602074161596">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1602074161596" />
     <state x="449" y="161" width="1022" height="737" key="SettingsEditor" timestamp="1601980044341">
       <screen x="0" y="27" width="1920" height="999" />
     </state>

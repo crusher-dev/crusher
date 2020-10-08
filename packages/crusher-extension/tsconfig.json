@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "strict": false,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "target": "es5",
+    "allowJs": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
+  },
+  "typeRoots": [ "node_modules/@types" ],
+  "files": [
+    "src/background.ts",
+    "src/ui/popup/index.tsx",
+    "./node_modules/preact/dist/preact.js"
+  ],
+  "include": ["./src/**/*"]
+}

@@ -825,8 +825,8 @@ interface MediaTrackSupportedConstraints {
     width?: boolean;
 }
 
-interface MessageEventInit<T = any> extends EventInit {
-    data?: T;
+interface MessageEventInit extends EventInit {
+    data?: any;
     lastEventId?: string;
     origin?: string;
     ports?: MessagePort[];
@@ -2978,11 +2978,6 @@ interface CSSStyleDeclaration {
     overflowWrap: string;
     overflowX: string;
     overflowY: string;
-    overscrollBehavior: string;
-    overscrollBehaviorBlock: string;
-    overscrollBehaviorInline: string;
-    overscrollBehaviorX: string;
-    overscrollBehaviorY: string;
     padding: string;
     paddingBlockEnd: string;
     paddingBlockStart: string;
@@ -3943,16 +3938,7 @@ declare var DOMMatrixReadOnly: {
 
 /** Provides the ability to parse XML or HTML source code from a string into a DOM Document. */
 interface DOMParser {
-    /**
-     * Parses string using either the HTML or XML parser, according to type, and returns the resulting Document. type can be "text/html" (which will invoke the HTML parser), or any of "text/xml", "application/xml", "application/xhtml+xml", or "image/svg+xml" (which will invoke the XML parser).
-     * 
-     * For the XML parser, if string cannot be parsed, then the returned Document will contain elements describing the resulting error.
-     * 
-     * Note that script elements are not evaluated during parsing, and the resulting document's encoding will always be UTF-8.
-     * 
-     * Values other than the above for type will cause a TypeError exception to be thrown.
-     */
-    parseFromString(string: string, type: DOMParserSupportedType): Document;
+    parseFromString(str: string, type: SupportedType): Document;
 }
 
 declare var DOMParser: {
@@ -4563,6 +4549,10 @@ interface Document extends Node, DocumentAndElementEventHandlers, DocumentOrShad
      */
     onreadystatechange: ((this: Document, ev: Event) => any) | null;
     onvisibilitychange: ((this: Document, ev: Event) => any) | null;
+    /**
+     * Returns document's origin.
+     */
+    readonly origin: string;
     readonly ownerDocument: null;
     /**
      * Return an HTMLCollection of the embed elements in the Document.
@@ -5095,7 +5085,7 @@ interface ElementEventMap {
 }
 
 /** Element is the most general base class from which all objects in a Document inherit. It only has methods and properties common to all kinds of elements. More specific classes inherit from Element. */
-interface Element extends Node, Animatable, ChildNode, InnerHTML, NonDocumentTypeChildNode, ParentNode, Slottable {
+interface Element extends Node, Animatable, ChildNode, InnerHTML, NonDocumentTypeChildNode, ParentNode, Slotable {
     readonly assignedSlot: HTMLSlotElement | null;
     readonly attributes: NamedNodeMap;
     /**
@@ -5262,7 +5252,6 @@ interface ElementCSSInlineStyle {
 
 interface ElementContentEditable {
     contentEditable: string;
-    enterKeyHint: string;
     inputMode: string;
     readonly isContentEditable: boolean;
 }
@@ -7095,7 +7084,6 @@ interface HTMLImageElement extends HTMLElement {
      * Sets or retrieves whether the image is a server-side image map.
      */
     isMap: boolean;
-    loading: string;
     /**
      * Sets or retrieves a Uniform Resource Identifier (URI) to a long description of the object.
      */
@@ -10416,11 +10404,11 @@ declare var MessageChannel: {
 };
 
 /** A message received by a target object. */
-interface MessageEvent<T = any> extends Event {
+interface MessageEvent extends Event {
     /**
      * Returns the data of the message.
      */
-    readonly data: T;
+    readonly data: any;
     /**
      * Returns the last event ID string, for server-sent events.
      */
@@ -10441,7 +10429,7 @@ interface MessageEvent<T = any> extends Event {
 
 declare var MessageEvent: {
     prototype: MessageEvent;
-    new<T>(type: string, eventInitDict?: MessageEventInit<T>): MessageEvent<T>;
+    new(type: string, eventInitDict?: MessageEventInit): MessageEvent;
 };
 
 interface MessagePortEventMap {
@@ -14369,8 +14357,8 @@ interface SVGSVGElement extends SVGGraphicsElement, DocumentEvent, SVGFitToViewB
     getComputedStyle(elt: Element, pseudoElt?: string | null): CSSStyleDeclaration;
     getCurrentTime(): number;
     getElementById(elementId: string): Element;
-    getEnclosureList(rect: SVGRect, referenceElement: SVGElement | null): NodeListOf<SVGCircleElement | SVGEllipseElement | SVGImageElement | SVGLineElement | SVGPathElement | SVGPolygonElement | SVGPolylineElement | SVGRectElement | SVGTextElement | SVGUseElement>;
-    getIntersectionList(rect: SVGRect, referenceElement: SVGElement | null): NodeListOf<SVGCircleElement | SVGEllipseElement | SVGImageElement | SVGLineElement | SVGPathElement | SVGPolygonElement | SVGPolylineElement | SVGRectElement | SVGTextElement | SVGUseElement>;
+    getEnclosureList(rect: SVGRect, referenceElement: SVGElement): NodeListOf<SVGCircleElement | SVGEllipseElement | SVGImageElement | SVGLineElement | SVGPathElement | SVGPolygonElement | SVGPolylineElement | SVGRectElement | SVGTextElement | SVGUseElement>;
+    getIntersectionList(rect: SVGRect, referenceElement: SVGElement): NodeListOf<SVGCircleElement | SVGEllipseElement | SVGImageElement | SVGLineElement | SVGPathElement | SVGPolygonElement | SVGPolylineElement | SVGRectElement | SVGTextElement | SVGUseElement>;
     pauseAnimations(): void;
     setCurrentTime(seconds: number): void;
     /** @deprecated */
@@ -14993,7 +14981,7 @@ declare var SharedWorker: {
     new(scriptURL: string, options?: string | WorkerOptions): SharedWorker;
 };
 
-interface Slottable {
+interface Slotable {
     readonly assignedSlot: HTMLSlotElement | null;
 }
 
@@ -15081,7 +15069,7 @@ interface SpeechRecognitionEventMap {
     "audioend": Event;
     "audiostart": Event;
     "end": Event;
-    "error": ErrorEvent;
+    "error": Event;
     "nomatch": SpeechRecognitionEvent;
     "result": SpeechRecognitionEvent;
     "soundend": Event;
@@ -15100,7 +15088,7 @@ interface SpeechRecognition extends EventTarget {
     onaudioend: ((this: SpeechRecognition, ev: Event) => any) | null;
     onaudiostart: ((this: SpeechRecognition, ev: Event) => any) | null;
     onend: ((this: SpeechRecognition, ev: Event) => any) | null;
-    onerror: ((this: SpeechRecognition, ev: ErrorEvent) => any) | null;
+    onerror: ((this: SpeechRecognition, ev: Event) => any) | null;
     onnomatch: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
     onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null;
     onsoundend: ((this: SpeechRecognition, ev: Event) => any) | null;
@@ -15398,24 +15386,24 @@ declare var StyleSheetList: {
 
 /** This Web Crypto API interface provides a number of low-level cryptographic functions. It is accessed via the Crypto.subtle properties available in a window context (via Window.crypto). */
 interface SubtleCrypto {
-    decrypt(algorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): Promise<ArrayBuffer>;
-    deriveBits(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
-    deriveKey(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: string | AesDerivedKeyParams | HmacImportParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-    digest(algorithm: AlgorithmIdentifier, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): Promise<ArrayBuffer>;
-    encrypt(algorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): Promise<ArrayBuffer>;
-    exportKey(format: "jwk", key: CryptoKey): Promise<JsonWebKey>;
-    exportKey(format: "raw" | "pkcs8" | "spki", key: CryptoKey): Promise<ArrayBuffer>;
-    exportKey(format: string, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
-    generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | CryptoKey>;
-    generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams | DhKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair>;
-    generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-    importKey(format: "jwk", keyData: JsonWebKey, algorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-    importKey(format: "raw" | "pkcs8" | "spki", keyData: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, algorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-    importKey(format: string, keyData: JsonWebKey | Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, algorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-    sign(algorithm: AlgorithmIdentifier | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): Promise<ArrayBuffer>;
-    unwrapKey(format: "raw" | "pkcs8" | "spki" | "jwk" | string, wrappedKey: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, unwrappedKeyAlgorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-    verify(algorithm: AlgorithmIdentifier | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, signature: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): Promise<boolean>;
-    wrapKey(format: "raw" | "pkcs8" | "spki" | "jwk" | string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams): Promise<ArrayBuffer>;
+    decrypt(algorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): PromiseLike<ArrayBuffer>;
+    deriveBits(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer>;
+    deriveKey(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: string | AesDerivedKeyParams | HmacImportParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKey>;
+    digest(algorithm: AlgorithmIdentifier, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): PromiseLike<ArrayBuffer>;
+    encrypt(algorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): PromiseLike<ArrayBuffer>;
+    exportKey(format: "jwk", key: CryptoKey): PromiseLike<JsonWebKey>;
+    exportKey(format: "raw" | "pkcs8" | "spki", key: CryptoKey): PromiseLike<ArrayBuffer>;
+    exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
+    generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKeyPair | CryptoKey>;
+    generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams | DhKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKeyPair>;
+    generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKey>;
+    importKey(format: "jwk", keyData: JsonWebKey, algorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKey>;
+    importKey(format: "raw" | "pkcs8" | "spki", keyData: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, algorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKey>;
+    importKey(format: string, keyData: JsonWebKey | Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, algorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKey>;
+    sign(algorithm: AlgorithmIdentifier | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): PromiseLike<ArrayBuffer>;
+    unwrapKey(format: "raw" | "pkcs8" | "spki" | "jwk" | string, wrappedKey: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, unwrappedKeyAlgorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams | AesKeyAlgorithm, extractable: boolean, keyUsages: KeyUsage[]): PromiseLike<CryptoKey>;
+    verify(algorithm: AlgorithmIdentifier | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, signature: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, data: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer): PromiseLike<boolean>;
+    wrapKey(format: "raw" | "pkcs8" | "spki" | "jwk" | string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams): PromiseLike<ArrayBuffer>;
 }
 
 declare var SubtleCrypto: {
@@ -15435,7 +15423,7 @@ declare var SyncManager: {
 };
 
 /** The textual content of Element or Attr. If an element has no markup within its content, it has a single child implementing Text that contains the element's text. However, if the element contains markup, it is parsed into information items and Text nodes that form its children. */
-interface Text extends CharacterData, Slottable {
+interface Text extends CharacterData, Slotable {
     readonly assignedSlot: HTMLSlotElement | null;
     /**
      * Returns the combined data of all direct Text node siblings.
@@ -16176,32 +16164,6 @@ interface VideoPlaybackQuality {
 declare var VideoPlaybackQuality: {
     prototype: VideoPlaybackQuality;
     new(): VideoPlaybackQuality;
-};
-
-interface VisualViewportEventMap {
-    "resize": UIEvent;
-    "scroll": Event;
-}
-
-interface VisualViewport extends EventTarget {
-    readonly height: number;
-    readonly offsetLeft: number;
-    readonly offsetTop: number;
-    onresize: ((this: VisualViewport, ev: UIEvent) => any) | null;
-    onscroll: ((this: VisualViewport, ev: Event) => any) | null;
-    readonly pageLeft: number;
-    readonly pageTop: number;
-    readonly scale: number;
-    readonly width: number;
-    addEventListener<K extends keyof VisualViewportEventMap>(type: K, listener: (this: VisualViewport, ev: VisualViewportEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof VisualViewportEventMap>(type: K, listener: (this: VisualViewport, ev: VisualViewportEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-}
-
-declare var VisualViewport: {
-    prototype: VisualViewport;
-    new(): VisualViewport;
 };
 
 interface WEBGL_color_buffer_float {
@@ -18512,7 +18474,6 @@ interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandler
     readonly styleMedia: StyleMedia;
     readonly toolbar: BarProp;
     readonly top: Window;
-    readonly visualViewport: VisualViewport;
     readonly window: Window & typeof globalThis;
     alert(message?: any): void;
     blur(): void;
@@ -18536,7 +18497,7 @@ interface Window extends EventTarget, AnimationFrameProvider, GlobalEventHandler
     /** @deprecated */
     releaseEvents(): void;
     resizeBy(x: number, y: number): void;
-    resizeTo(width: number, height: number): void;
+    resizeTo(x: number, y: number): void;
     scroll(options?: ScrollToOptions): void;
     scroll(x: number, y: number): void;
     scrollBy(options?: ScrollToOptions): void;
@@ -19541,7 +19502,6 @@ declare var statusbar: BarProp;
 declare var styleMedia: StyleMedia;
 declare var toolbar: BarProp;
 declare var top: Window;
-declare var visualViewport: VisualViewport;
 declare var window: Window & typeof globalThis;
 declare function alert(message?: any): void;
 declare function blur(): void;
@@ -19565,7 +19525,7 @@ declare function prompt(message?: string, _default?: string): string | null;
 /** @deprecated */
 declare function releaseEvents(): void;
 declare function resizeBy(x: number, y: number): void;
-declare function resizeTo(width: number, height: number): void;
+declare function resizeTo(x: number, y: number): void;
 declare function scroll(options?: ScrollToOptions): void;
 declare function scroll(x: number, y: number): void;
 declare function scrollBy(options?: ScrollToOptions): void;
@@ -19976,7 +19936,6 @@ type ColorSpaceConversion = "default" | "none";
 type CompositeOperation = "accumulate" | "add" | "replace";
 type CompositeOperationOrAuto = "accumulate" | "add" | "auto" | "replace";
 type CredentialMediationRequirement = "optional" | "required" | "silent";
-type DOMParserSupportedType = "application/xhtml+xml" | "application/xml" | "image/svg+xml" | "text/html" | "text/xml";
 type DirectionSetting = "" | "lr" | "rl";
 type DisplayCaptureSurfaceType = "application" | "browser" | "monitor" | "window";
 type DistanceModelType = "exponential" | "inverse" | "linear";
@@ -20077,6 +20036,7 @@ type ServiceWorkerState = "activated" | "activating" | "installed" | "installing
 type ServiceWorkerUpdateViaCache = "all" | "imports" | "none";
 type ShadowRootMode = "closed" | "open";
 type SpeechSynthesisErrorCode = "audio-busy" | "audio-hardware" | "canceled" | "interrupted" | "invalid-argument" | "language-unavailable" | "network" | "not-allowed" | "synthesis-failed" | "synthesis-unavailable" | "text-too-long" | "voice-unavailable";
+type SupportedType = "application/xhtml+xml" | "application/xml" | "image/svg+xml" | "text/html" | "text/xml";
 type TextTrackKind = "captions" | "chapters" | "descriptions" | "metadata" | "subtitles";
 type TextTrackMode = "disabled" | "hidden" | "showing";
 type TouchType = "direct" | "stylus";

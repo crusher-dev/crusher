@@ -1,5 +1,7 @@
 import parse from "url-parse";
 
+const url = require("url");
+
 const clean = (url: string) => String(url).replace(/^\/|\/$/g, "");
 
 export const isLocal = (url: string) =>
@@ -34,3 +36,7 @@ export const getQueryStringParams = function getParameterByName(
     if (!results[2]) return "";
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 };
+
+export const resolveToBackendPath = (relativePath: string) => {
+    return url.resolve("https://backend.crusher-test.com/", relativePath);
+}

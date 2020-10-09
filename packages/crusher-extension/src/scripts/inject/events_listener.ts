@@ -1,5 +1,6 @@
+import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
+import {ACTIONS_IN_TEST} from "../../constants/domEventsToRecord";
 import EventRecording from "./ui/eventRecording";
-import {ACTION_TYPES} from "../../constants/actionTypes";
 import LocalFrameStorage from "../../utils/frameStorage";
 import {
     START_INSPECTING_RECORDING_MODE,
@@ -7,7 +8,6 @@ import {
     NOT_RECORDING,
 } from "../../constants";
 import {ACTION_FORM_TYPE} from "../../ui/testRecorder/app";
-import {ASSERT_TEXT} from "../../constants/domEventsToRecord";
 
 if (top !== self) {
     fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
@@ -33,10 +33,9 @@ if (top !== self) {
 
     window.top.postMessage(
         {
-            type: ACTION_TYPES.GET_RECORDING_STATUS,
+            type: META_ACTIONS.FETCH_RECORDING_STATUS,
             // @ts-ignore
             frameId: LocalFrameStorage.get(),
-            value: true,
         },
         "*"
     );
@@ -51,22 +50,24 @@ if (top !== self) {
 
             if (formType === ACTION_FORM_TYPE.PAGE_ACTIONS) {
                 switch (type) {
-                    case ACTION_TYPES.INSPECT:
-                        if (value) recordingOverlay.showEventsFormWizard();
-                        else recordingOverlay.removeEventsFormWizard();
+                    case SETTINGS_ACTIONS.INSPECT_MODE_ON:
+                        recordingOverlay.showEventsFormWizard();
                         break;
-                    case ACTION_TYPES.SCREENSHOT:
+                    case SETTINGS_ACTIONS.INSPECT_MODE_OFF:
+                        recordingOverlay.removeEventsFormWizard();
+                        break;
+                    case SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT:
                         recordingOverlay.takePageScreenShot();
                         break;
-                    case ACTION_TYPES.CAPTURE_CONSOLE:
+                    case SETTINGS_ACTIONS.START_CAPTURING_CONSOLE:
                         recordingOverlay.saveConsoleLogsAtThisMoment();
                         break;
-                    case ACTION_TYPES.GET_SEO_META:
+                    case META_ACTIONS.FETCH_SEO_META:
                         const metaDesc: any = document.querySelector('meta[name="description"]');
 
                         window.top.postMessage(
                             {
-                                type: ACTION_TYPES.SET_SEO_META,
+                                type: META_ACTIONS.FETCH_SEO_META_RESPONSE,
                                 // @ts-ignore
                                 frameId: LocalFrameStorage.get(),
                                 value: {
@@ -80,24 +81,21 @@ if (top !== self) {
                 }
             } else if (formType === ACTION_FORM_TYPE.ELEMENT_ACTIONS) {
                 recordingOverlay.hideEventsBoxIfShown();
-                if (type === ASSERT_TEXT) {
-                } else {
+                if (type !== ACTIONS_IN_TEST.ASSERT_ELEMENT) {
                     recordingOverlay.handleSelectedActionFromEventsList({action: type});
                 }
             } else {
                 switch (type) {
-                    case ACTION_TYPES.GO_BACK:
+                    case SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL:
                         window.history.back();
                         break;
-                    case ACTION_TYPES.GO_FORWARD:
+                    case SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL:
                         window.history.forward();
                         break;
-                    case ACTION_TYPES.REFRESH_PAGE:
+                    case SETTINGS_ACTIONS.REFRESH_PAGE:
                         window.location.reload();
                         break;
-                    case ACTION_TYPES.TOOGLE_INSPECTOR:
-                        break;
-                    case ACTION_TYPES.RECORDING_STATUS_RESPONSE:
+                    case META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE:
                         const {isFromParent} = message.data;
                         if (!isFromParent) {
                             break;

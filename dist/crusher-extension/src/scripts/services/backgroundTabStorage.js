@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const url_1 = require("../../utils/url");
+const url_1 = require("~/crusher-shared/utils/url");
 exports.default = {
     tabs: {},
     set(tabId, details) {

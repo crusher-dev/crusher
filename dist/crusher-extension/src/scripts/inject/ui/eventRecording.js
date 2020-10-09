@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const domEventsToRecord_1 = require("../../../constants/domEventsToRecord");
+const actionTypes_1 = require("~/crusher-extension/src/constants/actionTypes");
+const domEventsToRecord_1 = require("~/crusher-extension/src/constants/domEventsToRecord");
 const dom_1 = require("../../../utils/dom");
 const eventsController_1 = __importDefault(require("../eventsController"));
 const frameStorage_1 = __importDefault(require("../../../utils/frameStorage"));
-const actionTypes_1 = require("../../../constants/actionTypes");
 const selector_1 = require("../../../utils/selector");
 const { createPopper } = require("@popperjs/core");
 class EventRecording {
@@ -18,7 +18,6 @@ class EventRecording {
             showingEventsBox: false,
             pinned: false,
         };
-        this.awake = false;
         this.isInspectorMoving = false;
         this.state = Object.assign({}, this.defaultState);
         this.handleMouseOver = this.handleMouseOver.bind(this);
@@ -116,7 +115,6 @@ class EventRecording {
         }
     }
     initNodes() {
-        this._modalHeading = document.querySelector(".overlay_heading_container .overlay_heading");
         this._addActionElement = document.querySelector("#overlay_add_action");
         this._addActionIcon = document.querySelector("#overlay_add");
         this._addActionModal = document.querySelector("#overlay_add_icon");
@@ -124,7 +122,6 @@ class EventRecording {
         this._overlayAddEventsContainer = document.querySelector("#overlay_add_events_container");
         this._overlayEventsGrid = document.querySelector("#events_grid");
         this._arrowOnAddIcon = document.querySelector("#popper_arrow");
-        this._modalContentContainer = document.querySelector(".overlay_modal_content");
     }
     updateEventTarget(target) {
         this.state = Object.assign(Object.assign({}, this.state), { targetElement: target });
@@ -152,24 +149,24 @@ class EventRecording {
             ? event.action
             : event.target.getAttribute("data-action");
         switch (action) {
-            case domEventsToRecord_1.CLICK:
+            case domEventsToRecord_1.ACTIONS_IN_TEST.CLICK:
                 dom_1.removeAllTargetBlankFromLinks();
-                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.CLICK, this.state.targetElement);
+                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.CLICK, this.state.targetElement);
                 this.eventsController.simulateClickOnElement(this.state.targetElement);
                 break;
-            case domEventsToRecord_1.HOVER:
+            case domEventsToRecord_1.ACTIONS_IN_TEST.HOVER:
                 this.eventsController.simulateHoverOnElement(this.state.targetElement);
-                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.HOVER, this.state.targetElement);
+                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.HOVER, this.state.targetElement);
                 break;
-            case domEventsToRecord_1.BLACKOUT:
+            case domEventsToRecord_1.ACTIONS_IN_TEST.BLACKOUT:
                 this.state.targetElement.style.visibility = "hidden";
-                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.BLACKOUT, this.state.targetElement);
+                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.BLACKOUT, this.state.targetElement);
                 break;
-            case domEventsToRecord_1.SCREENSHOT:
-                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.SCREENSHOT, this.state.targetElement);
+            case domEventsToRecord_1.ACTIONS_IN_TEST.ELEMENT_SCREENSHOT:
+                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.ELEMENT_SCREENSHOT, this.state.targetElement);
                 break;
-            case domEventsToRecord_1.SCROLL_TO_VIEW:
-                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.SCROLL_TO_VIEW, this.state.targetElement);
+            case domEventsToRecord_1.ACTIONS_IN_TEST.SCROLL_TO_VIEW:
+                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.SCROLL_TO_VIEW, this.state.targetElement);
                 break;
             default:
                 break;
@@ -197,7 +194,7 @@ class EventRecording {
         this.stopInspectorIfMoving();
         this._addActionElement.style.display = "none";
         window.top.postMessage({
-            type: actionTypes_1.ACTION_TYPES.SHOW_ELEMENT_FORM,
+            type: actionTypes_1.SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR,
             // @ts-ignore
             frameId: frameStorage_1.default.get(),
             value: selector_1.getSelectors(this.state.targetElement),
@@ -214,20 +211,20 @@ class EventRecording {
             const { target } = event;
             if (target.tagName.toLowerCase() === "a") {
                 const href = target.getAttribute("href");
-                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.CLICK, event.target);
+                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.CLICK, event.target);
                 if (href) {
                     window.location = href;
                 }
                 return event.preventDefault();
             }
             if (!event.simulatedEvent) {
-                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.CLICK, event.target);
+                this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.CLICK, event.target);
             }
         }
     }
     handleInputChange(event) {
         const targetElement = event.target;
-        this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.INPUT, event.target, targetElement.value);
+        this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.INPUT, event.target, targetElement.value);
     }
     registerNodeListeners() {
         alert("GODD");
@@ -241,10 +238,10 @@ class EventRecording {
         this._closeActionIcon.addEventListener("click", this.toggleEventsBox, true);
     }
     takePageScreenShot() {
-        this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.PAGE_SCREENSHOT, document.body, document.title);
+        this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.PAGE_SCREENSHOT, document.body, document.title);
     }
     saveConsoleLogsAtThisMoment() {
-        this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.CAPTURE_CONSOLE, document.body, document.title);
+        this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.CAPTURE_CONSOLE, document.body, document.title);
     }
     removeNodeListeners() {
         document.body.removeEventListener("mousemove", this.handleMouseOver, true);
@@ -252,17 +249,15 @@ class EventRecording {
         this._overlayEventsGrid.removeEventListener("click", this.handleEventsGridClick, true);
     }
     boot(isFirstTime = false) {
-        this.awake = true;
         if (isFirstTime) {
             const currentURL = new URL(window.location.href);
             currentURL.searchParams.delete("__crusherAgent__");
-            this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.NAVIGATE_URL, document.body, currentURL.toString());
+            this.eventsController.saveCapturedEventInBackground(domEventsToRecord_1.ACTIONS_IN_TEST.NAVIGATE_URL, document.body, currentURL.toString());
         }
         window.top.postMessage({
-            type: actionTypes_1.ACTION_TYPES.STARTED_RECORDING_EVENTS,
+            type: actionTypes_1.META_ACTIONS.STARTED_RECORDING_TESTS,
             // @ts-ignore
-            frameId: frameStorage_1.default.get(),
-            value: true,
+            frameId: frameStorage_1.default.get()
         }, "*");
         this.registerNodeListeners();
     }
@@ -276,7 +271,7 @@ class EventRecording {
         else {
             this.isInspectorMoving = true;
             window.top.postMessage({
-                type: actionTypes_1.ACTION_TYPES.TOOGLE_INSPECTOR,
+                type: actionTypes_1.SETTINGS_ACTIONS.INSPECT_MODE_ON,
                 // @ts-ignore
                 frameId: frameStorage_1.default.get(),
             }, "*");

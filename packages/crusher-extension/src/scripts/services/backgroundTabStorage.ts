@@ -1,4 +1,4 @@
-import { isOfCrusherExtension } from "../../utils/url";
+import { isOfCrusherExtension } from "../../../../crusher-shared/utils/url";
 
 export default {
   tabs: {},

@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from "../../constants/actionTypes";
+import {NAVIGATOR_ACTIONS} from "../../constants/actionTypes";
 import LocalFrameStorage from "../../utils/frameStorage";
 
 const actualCode = `(${(
@@ -40,7 +40,7 @@ const actualCode = `(${(
 
 window.top.postMessage(
   {
-    type: ACTION_TYPES.GET_USER_AGENT,
+    type: NAVIGATOR_ACTIONS.FETCH_USER_AGENT,
     // @ts-ignore
     frameId: LocalFrameStorage.get(),
     value: true,
@@ -54,7 +54,7 @@ window.addEventListener("message", (message) => {
   if (!!type === false) {
     return;
   }
-  if (type === ACTION_TYPES.SET_USER_AGENT) {
+  if (type === NAVIGATOR_ACTIONS.FETCH_USER_AGENT_RESPONSE) {
     const s = document.createElement("script");
     s.textContent = `${actualCode}('${userAgent.value}', '${userAgent.appVersion}', '${userAgent.platform}');`;
     document.documentElement.appendChild(s);

@@ -1,4 +1,4 @@
-import { isOfCrusherExtension } from "~/crusher-shared/utils/url";
+import { isOfCrusherExtension } from "../../../crusher-shared/utils/url";
 import Tab = chrome.tabs.Tab;
 
 export default {

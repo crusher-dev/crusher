@@ -1,18 +1,16 @@
+import {Ref} from "preact";
 import React from "preact/compat";
 import {useRef, useState} from "preact/hooks";
-import {addHttpToURLIfNotThere, getQueryStringParams} from "../../utils/url";
+import {MODALS} from "../../constants/modal";
+import {AssertModal} from "./components/assertModal";
+import {SeoModal} from "./components/seoModal";
+import devices from "../../../../crusher-shared/constants/devices";
+import userAgents from "../../../../crusher-shared/constants/userAgents";
+import {addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath} from "../../../../crusher-shared/utils/url";
+import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE,} from "../../constants";
+import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
+import {ACTIONS_IN_TEST} from "../../constants/domEventsToRecord";
 import {sendPostDataWithForm} from "../../utils/helpers";
-import {ACTION_TYPES, STATE} from "../../constants/actionTypes";
-import {
-    START_INSPECTING_RECORDING_MODE,
-    START_NON_INSPECTING_RECORDING_MODE,
-    NOT_RECORDING,
-} from "../../constants";
-import userAgents from "~/crusher-shared/constants/userAgents";
-import devices from "~/crusher-shared/constants/devices";
-import {SERVER_ENDPOINT} from "../../constants/endpoints";
-import {Modal} from "./components/modal";
-import {Ref} from "preact";
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -92,17 +90,17 @@ function Actions(props: any) {
     const {iframeRef, type, isShowingElementFormCallback, updateState} = props;
     const pageActions = [
         {
-            id: ACTION_TYPES.INSPECT,
+            id: SETTINGS_ACTIONS.INSPECT_MODE_ON,
             value: "Inspect",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: ACTION_TYPES.SCREENSHOT,
+            id: SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: ACTION_TYPES.SEO,
+            id: SETTINGS_ACTIONS.SHOW_SEO_MODAL,
             value: "SEO",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
@@ -121,110 +119,119 @@ function Actions(props: any) {
 
     const elementActions = [
         {
-            id: CLICK,
+            id: SETTINGS_ACTIONS.CLICK_ON_ELEMENT,
             value: "Click",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: HOVER,
+            id: SETTINGS_ACTIONS.HOVER_ON_ELEMENT,
             value: "Hover",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: SCREENSHOT,
+            id: SETTINGS_ACTIONS.TAKE_ELEMENT_SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: BLACKOUT,
+            id: SETTINGS_ACTIONS.BLACKOUT_ON_ELEMENT,
             value: "Blackout",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
+        {
+            id: SETTINGS_ACTIONS.SHOW_ASSERT_ELEMENT_MODAL,
+            value: "Assert",
+            icon: chrome.runtime.getURL("icons/action.svg")
+        }
     ];
 
     function handleElementActionClick(actionType: string, updateState: Function) {
         const cn = iframeRef.current.contentWindow;
+        console.log(actionType);
 
         switch (actionType) {
-            case ACTION_TYPES.INSPECT:
+            case SETTINGS_ACTIONS.INSPECT_MODE_ON:
                 cn.postMessage(
                     {
-                        type: ACTION_TYPES.INSPECT,
+                        type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
                         formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
                         value: true,
                     },
                     "*"
                 );
                 break;
-            case ACTION_TYPES.SCREENSHOT:
+            case SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT:
                 cn.postMessage(
                     {
-                        type: ACTION_TYPES.SCREENSHOT,
+                        type: SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT,
                         formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
                         value: true,
                     },
                     "*"
                 );
                 break;
-            case ACTION_TYPES.SEO:
+            case SETTINGS_ACTIONS.SHOW_SEO_MODAL:
                 cn.postMessage(
                     {
-                        type: ACTION_TYPES.GET_SEO_META,
+                        type: ACTIONS_IN_TEST.VALIDATE_SEO,
                         formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
                         value: true
                     },
                     "*"
-                )
-                updateState(STATE.SEO);
+                );
+                updateState(MODALS.SEO);
                 break;
-            case ACTION_TYPES.CAPTURE_CONSOLE:
+            case SETTINGS_ACTIONS.START_CAPTURING_CONSOLE:
                 cn.postMessage(
                     {
-                        type: ACTION_TYPES.CAPTURE_CONSOLE,
+                        type: ACTIONS_IN_TEST.CAPTURE_CONSOLE,
                         formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
                         value: true,
                     },
                     "*"
                 );
                 break;
-            case CLICK:
+            case SETTINGS_ACTIONS.CLICK_ON_ELEMENT:
                 isShowingElementFormCallback(false);
                 cn.postMessage(
                     {
-                        type: CLICK,
+                        type: ACTIONS_IN_TEST.CLICK,
                         formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                         value: true,
                     },
                     "*"
                 );
                 break;
-            case HOVER:
+            case SETTINGS_ACTIONS.HOVER_ON_ELEMENT:
                 isShowingElementFormCallback(false);
                 cn.postMessage(
                     {
-                        type: HOVER,
+                        type: ACTIONS_IN_TEST.HOVER,
                         formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                         value: true,
                     },
                     "*"
                 );
                 break;
-            case SCREENSHOT:
+            case SETTINGS_ACTIONS.SHOW_ASSERT_ELEMENT_MODAL:
+                updateState(MODALS.ASSERT_ELEMENT);
+                break;
+            case SETTINGS_ACTIONS.TAKE_ELEMENT_SCREENSHOT:
                 isShowingElementFormCallback(false);
                 cn.postMessage(
                     {
-                        type: SCREENSHOT,
+                        type: ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
                         formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                         value: true,
                     },
                     "*"
                 );
                 break;
-            case BLACKOUT:
+            case SETTINGS_ACTIONS.BLACKOUT_ON_ELEMENT:
                 isShowingElementFormCallback(false);
                 cn.postMessage(
                     {
-                        type: BLACKOUT,
+                        type: ACTIONS_IN_TEST.BLACKOUT,
                         formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                         value: true,
                     },
@@ -265,7 +272,7 @@ function Actions(props: any) {
                         }
                         id={actions[i + 1].id}
                         onClick={() => {
-                            handleElementActionClick(actions[i].id, updateState);
+                            handleElementActionClick(actions[i+1].id, updateState);
                         }}
                     >
                         <img style={styles.actionImage} src={actions[i + 1].icon}/>
@@ -316,17 +323,17 @@ function DesktopBrowser(props: any) {
 
     function goBack() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({type: ACTION_TYPES.GO_BACK, value: true}, "*");
+        cn.postMessage({type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true}, "*");
     }
 
     function goForward() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({type: ACTION_TYPES.GO_FORWARD, value: true}, "*");
+        cn.postMessage({type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true}, "*");
     }
 
     function refreshPage() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({type: ACTION_TYPES.REFRESH_PAGE, value: true}, "*");
+        cn.postMessage({type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true}, "*");
     }
 
     function Addressbar() {
@@ -479,7 +486,7 @@ function App() {
 
     const [steps, setSteps] = useState([
         {
-            event_type: SET_DEVICE,
+            event_type: ACTIONS_IN_TEST.SET_DEVICE,
             selectors: [{value: "body", uniquenessScore: 1, type: "body"}],
             value: selectedDeviceId,
         },
@@ -487,7 +494,9 @@ function App() {
     const [seoMeta, setSeoMeta] = useState({});
     const [isRecording, setIsRecording] = useState(false);
     const [isShowingElementForm, setIsShowingElementForm] = useState(false);
-    const [isUsingElementInspector, setIsUsingElementInspector] = useState(false);
+    const [isUsingElementInspector] = useState(false);
+    const [currentElementSelectors, setCurrentElementSelectors] = useState(null);
+    const [currentElementAttributes, setCurrentElementAttributes] = useState(null);
 
     const iframeRef : Ref<any> = useRef(null);
 
@@ -496,7 +505,11 @@ function App() {
     }
 
     function saveSeoValidation(options: any) {
-        setSteps([...getSteps(), {event_type: VALIDATE_SEO, value: options, selectors: ["body"]}] as any);
+        setSteps([...getSteps(), {event_type: ACTIONS_IN_TEST.VALIDATE_SEO, value: options, selectors: ["body"]}] as any);
+    }
+
+    function saveAssertionCallback(options: any){
+        setSteps([...getSteps(), {event_type: ACTIONS_IN_TEST.ASSERT_ELEMENT, value: options, selectors: currentElementSelectors}] as any);
     }
 
     messageListenerCallback = function (event: any) {
@@ -508,14 +521,14 @@ function App() {
                 setSteps([...getSteps(), {event_type: eventType, value, selectors}]);
             } else {
                 const navigateEventExist = steps.find(
-                    (step) => step.event_type === NAVIGATE_URL
+                    (step) => step.event_type === ACTIONS_IN_TEST.NAVIGATE_URL
                 );
 
-                if (navigateEventExist && eventType === NAVIGATE_URL) {
+                if (navigateEventExist && eventType === ACTIONS_IN_TEST.NAVIGATE_URL) {
                 } else {
                     if (
-                        lastStep.event_type === INPUT &&
-                        eventType === INPUT &&
+                        lastStep.event_type === ACTIONS_IN_TEST.INPUT &&
+                        eventType === ACTIONS_IN_TEST.INPUT &&
                         lastStep.selectors[0].value === selectors[0].value
                     ) {
                         steps[steps.length - 1].value = value;
@@ -531,19 +544,21 @@ function App() {
         } else if (type) {
             const cn = iframeRef.current.contentWindow;
             switch (type) {
-                case ACTION_TYPES.SHOW_ELEMENT_FORM:
+                case SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR:
                     setIsShowingElementForm(true);
+                    setCurrentElementSelectors(selectors);
+                    setCurrentElementAttributes(event.data.attributes);
                     break;
-                case ACTION_TYPES.STARTED_RECORDING_EVENTS:
+                case SETTINGS_ACTIONS.START_RECORDING:
                     setIsRecording(true);
                     break;
-                case ACTION_TYPES.TOOGLE_INSPECTOR:
-                    setIsUsingElementInspector(!isUsingElementInspector);
-                    break;
-                case ACTION_TYPES.GET_RECORDING_STATUS:
+                // case ACTION_TYPES.TOOGLE_INSPECTOR:
+                //     setIsUsingElementInspector(!isUsingElementInspector);
+                //     break;
+                case META_ACTIONS.FETCH_RECORDING_STATUS:
                     cn.postMessage(
                         {
-                            type: ACTION_TYPES.RECORDING_STATUS_RESPONSE,
+                            type: META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE,
                             value: isUsingElementInspector
                                 ? START_INSPECTING_RECORDING_MODE
                                 : isRecording
@@ -554,8 +569,8 @@ function App() {
                         "*"
                     );
                     break;
-                case ACTION_TYPES.GET_USER_AGENT:
-                    const iframeURL = getQueryStringParams("url", window.location.href);
+                case META_ACTIONS.FETCH_USER_AGENT:
+                    const iframeURL = getQueryStringParams("url", window.location.href) as string;
                     const crusherAgent = getQueryStringParams(
                         "__crusherAgent__",
                         iframeURL
@@ -564,10 +579,11 @@ function App() {
                         (agent) => agent.name === (crusherAgent || userAgents[6].value)
                     );
                     cn.postMessage(
-                        {type: ACTION_TYPES.SET_USER_AGENT, value: userAgent},
+                        {type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent},
                         "*"
                     );
-                case ACTION_TYPES.SET_SEO_META:
+                    break;
+                case META_ACTIONS.FETCH_SEO_META_RESPONSE:
                     setSeoMeta({title: value.title, description: value.description});
                     break;
             }
@@ -575,7 +591,7 @@ function App() {
     };
 
     function saveTest() {
-        sendPostDataWithForm(`${SERVER_ENDPOINT}test/goToEditor`, {
+        sendPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
             events: escape(JSON.stringify(steps)),
         });
     }
@@ -583,6 +599,8 @@ function App() {
     function cancelTest() {
         if (isShowingElementForm) {
             setIsShowingElementForm(false);
+            setCurrentElementSelectors(null);
+            setCurrentElementAttributes(null);
         } else {
             window.close();
         }
@@ -628,8 +646,7 @@ function App() {
                     type={ACTION_FORM_TYPE.ELEMENT_ACTIONS}
                     isShowingElementFormCallback={setIsShowingElementForm}
                     iframeRef={iframeRef}
-                    updateState={() => {
-                    }}
+                    updateState={updateState}
                 />
             </>
         ) : (
@@ -730,7 +747,8 @@ function App() {
                 rel="stylesheet"
                 href={chrome.runtime.getURL("/styles/fonts.css")}
             />
-            <Modal seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation}/>
+            <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback}/>
+            <SeoModal seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation}/>
         </div>
     );
 }

@@ -58,3 +58,10 @@ export function sendPostDataWithForm(url: string, options: any = {}) {
   form.submit();
   form.remove();
 }
+
+export function getAllAttributes(element: any) {
+  const attributeNamesArr : Array<string> = element.getAttributeNames();
+  return attributeNamesArr.map(attributeName => {
+    return {name: attributeName, value: element.getAttribute(attributeName)}
+  })
+}

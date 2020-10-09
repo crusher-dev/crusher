@@ -23,7 +23,8 @@ function Row({ name, state, setState }) {
         compat_1.default.createElement("div", { style: { flex: 1 } }, name),
         compat_1.default.createElement("select", { style: Object.assign(Object.assign({}, styles.select), { flex: 0.5, marginRight: 108 }), value: state.selectedValidationMethod[name.toLowerCase()], onChange: onValidationMethodChange },
             compat_1.default.createElement("option", { value: "matches" }, "matches"),
-            compat_1.default.createElement("option", { value: "contains" }, "contains")),
+            compat_1.default.createElement("option", { value: "contains" }, "contains"),
+            compat_1.default.createElement("option", { value: "regex" }, "regex")),
         compat_1.default.createElement("input", { onChange: onInputChange, value: state.assertValues[name.toLowerCase()], style: Object.assign({}, styles.input), placeholder: `Your assertion ${name}` })));
 }
 function MiddleSection({ handleCloseCallback, seoMeta }) {

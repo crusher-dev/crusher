@@ -1,18 +1,9 @@
-import {
-  BLACKOUT,
-  CAPTURE_CONSOLE,
-  CLICK,
-  HOVER,
-  INPUT,
-  NAVIGATE_URL,
-  PAGE_SCREENSHOT,
-  SCREENSHOT,
-  SCROLL_TO_VIEW,
-} from "../../../constants/domEventsToRecord";
+import {getAllAttributes} from "../../../utils/helpers";
+import {META_ACTIONS, SETTINGS_ACTIONS} from "../../../constants/actionTypes";
+import {ACTIONS_IN_TEST} from "../../../constants/domEventsToRecord";
 import { removeAllTargetBlankFromLinks } from "../../../utils/dom";
 import EventsController from "../eventsController";
 import LocalFrameStorage from "../../../utils/frameStorage";
-import { ACTION_TYPES } from "../../../constants/actionTypes";
 import { getSelectors } from "../../../utils/selector";
 
 const { createPopper } = require("@popperjs/core");
@@ -29,15 +20,9 @@ export default class EventRecording {
 
   private eventsController: EventsController;
 
-  private controller: any;
-
   private _overlayAddEventsContainer: any;
 
-  private _modalContentContainer: any;
-
   private _addActionElement: any;
-
-  private _addAction: any;
 
   private _closeActionIcon: any;
 
@@ -52,10 +37,6 @@ export default class EventRecording {
   private _addActionModal: any;
 
   private _arrowOnAddIcon: any;
-
-  private _modalHeading: any;
-
-  private awake = false;
 
   private isInspectorMoving = false;
 
@@ -89,7 +70,7 @@ export default class EventRecording {
   highlightInspectedElement() {
     this.isInspectorMoving = true;
     // this._addActionElement.style.display = 'block';
-    const { targetElement } = this.state;
+    const {targetElement} = this.state;
     if (targetElement) {
       this.highlightNode(targetElement);
     }
@@ -143,22 +124,22 @@ export default class EventRecording {
 
     // Increase the height of actions containers to give more space for not falling out of selection.
     this._addActionElement.style.height = `${
-      this._overlayAddEventsContainer.getBoundingClientRect().height
+        this._overlayAddEventsContainer.getBoundingClientRect().height
     }px`;
 
     this.destoryEventsListTether();
     this._eventsListTether = createPopper(
-      this._addActionModal,
-      this._overlayAddEventsContainer,
-      {
-        placement: "right-start",
-        modifiers: [
-          {
-            name: "flip",
-            enabled: true,
-          },
-        ],
-      }
+        this._addActionModal,
+        this._overlayAddEventsContainer,
+        {
+          placement: "right-start",
+          modifiers: [
+            {
+              name: "flip",
+              enabled: true,
+            },
+          ],
+        }
     );
   }
 
@@ -177,23 +158,17 @@ export default class EventRecording {
   }
 
   initNodes() {
-    this._modalHeading = document.querySelector(
-      ".overlay_heading_container .overlay_heading"
-    );
     this._addActionElement = document.querySelector("#overlay_add_action");
     this._addActionIcon = document.querySelector("#overlay_add");
     this._addActionModal = document.querySelector("#overlay_add_icon");
     this._closeActionIcon = document.querySelector(
-      "#overlay_add_events_container .overlay_close_icon"
+        "#overlay_add_events_container .overlay_close_icon"
     );
     this._overlayAddEventsContainer = document.querySelector(
-      "#overlay_add_events_container"
+        "#overlay_add_events_container"
     );
     this._overlayEventsGrid = document.querySelector("#events_grid");
     this._arrowOnAddIcon = document.querySelector("#popper_arrow");
-    this._modalContentContainer = document.querySelector(
-      ".overlay_modal_content"
-    );
   }
 
   updateEventTarget(target: HTMLElement) {
@@ -226,42 +201,42 @@ export default class EventRecording {
   handleSelectedActionFromEventsList(event: any) {
     // If its coming from testRecorder popup use event.action
     const action = event.action
-      ? event.action
-      : event.target.getAttribute("data-action");
+        ? event.action
+        : event.target.getAttribute("data-action");
     switch (action) {
-      case CLICK:
+      case ACTIONS_IN_TEST.CLICK:
         removeAllTargetBlankFromLinks();
         this.eventsController.saveCapturedEventInBackground(
-          CLICK,
-          this.state.targetElement
+            ACTIONS_IN_TEST.CLICK,
+            this.state.targetElement
         );
         this.eventsController.simulateClickOnElement(this.state.targetElement);
         break;
-      case HOVER:
+      case ACTIONS_IN_TEST.HOVER:
         this.eventsController.simulateHoverOnElement(this.state.targetElement);
         this.eventsController.saveCapturedEventInBackground(
-          HOVER,
-          this.state.targetElement
+            ACTIONS_IN_TEST.HOVER,
+            this.state.targetElement
         );
         break;
-      case BLACKOUT:
+      case ACTIONS_IN_TEST.BLACKOUT:
         this.state.targetElement.style.visibility = "hidden";
         this.eventsController.saveCapturedEventInBackground(
-          BLACKOUT,
-          this.state.targetElement
+            ACTIONS_IN_TEST.BLACKOUT,
+            this.state.targetElement
         );
 
         break;
-      case SCREENSHOT:
+      case ACTIONS_IN_TEST.ELEMENT_SCREENSHOT:
         this.eventsController.saveCapturedEventInBackground(
-          SCREENSHOT,
-          this.state.targetElement
+            ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
+            this.state.targetElement
         );
         break;
-      case SCROLL_TO_VIEW:
+      case ACTIONS_IN_TEST.SCROLL_TO_VIEW:
         this.eventsController.saveCapturedEventInBackground(
-          SCROLL_TO_VIEW,
-          this.state.targetElement
+            ACTIONS_IN_TEST.SCROLL_TO_VIEW,
+            this.state.targetElement
         );
         break;
       default:
@@ -273,16 +248,16 @@ export default class EventRecording {
   handleMouseOver(event: MouseEvent) {
     if (this._addActionElement) {
       if (
-        this._addActionElement.contains(event.target) ||
-        // @ts-ignore
-        event.target.hasAttribute("data-recorder") ||
-        this.state.pinned
+          this._addActionElement.contains(event.target) ||
+          // @ts-ignore
+          event.target.hasAttribute("data-recorder") ||
+          this.state.pinned
       ) {
         return event.preventDefault();
       }
     }
 
-    const { targetElement } = this.state;
+    const {targetElement} = this.state;
 
     if (targetElement !== event.target && this.isInspectorMoving) {
       // Remove Highlight from last element hovered
@@ -297,13 +272,14 @@ export default class EventRecording {
     this._addActionElement.style.display = "none";
 
     window.top.postMessage(
-      {
-        type: ACTION_TYPES.SHOW_ELEMENT_FORM,
-        // @ts-ignore
-        frameId: LocalFrameStorage.get(),
-        value: getSelectors(this.state.targetElement),
-      },
-      "*"
+        {
+          type: SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR,
+          // @ts-ignore
+          frameId: LocalFrameStorage.get(),
+          selectors: getSelectors(this.state.targetElement),
+          attributes: getAllAttributes(this.state.targetElement)
+        },
+        "*"
     );
   }
 
@@ -316,12 +292,12 @@ export default class EventRecording {
     const isRecorder = event.target.getAttribute("data-recorder");
     if (!isRecorder) {
       this.state.pinned = false;
-      const { target } = event;
+      const {target} = event;
       if (target.tagName.toLowerCase() === "a") {
         const href = target.getAttribute("href");
         this.eventsController.saveCapturedEventInBackground(
-          CLICK,
-          event.target
+            ACTIONS_IN_TEST.CLICK,
+            event.target
         );
         if (href) {
           window.location = href;
@@ -330,8 +306,8 @@ export default class EventRecording {
       }
       if (!event.simulatedEvent) {
         this.eventsController.saveCapturedEventInBackground(
-          CLICK,
-          event.target
+            ACTIONS_IN_TEST.CLICK,
+            event.target
         );
       }
     }
@@ -340,9 +316,9 @@ export default class EventRecording {
   handleInputChange(event: any) {
     const targetElement = event.target;
     this.eventsController.saveCapturedEventInBackground(
-      INPUT,
-      event.target,
-      targetElement.value
+        ACTIONS_IN_TEST.INPUT,
+        event.target,
+        targetElement.value
     );
   }
 
@@ -357,26 +333,26 @@ export default class EventRecording {
     this._addActionElement.addEventListener("click", this.handleAddIconClick);
 
     this._overlayEventsGrid.addEventListener(
-      "click",
-      this.handleEventsGridClick,
-      true
+        "click",
+        this.handleEventsGridClick,
+        true
     );
     this._closeActionIcon.addEventListener("click", this.toggleEventsBox, true);
   }
 
   takePageScreenShot() {
     this.eventsController.saveCapturedEventInBackground(
-      PAGE_SCREENSHOT,
-      document.body,
-      document.title
+        ACTIONS_IN_TEST.PAGE_SCREENSHOT,
+        document.body,
+        document.title
     );
   }
 
   saveConsoleLogsAtThisMoment() {
     this.eventsController.saveCapturedEventInBackground(
-      CAPTURE_CONSOLE,
-      document.body,
-      document.title
+        ACTIONS_IN_TEST.CAPTURE_CONSOLE,
+        document.body,
+        document.title
     );
   }
 
@@ -384,29 +360,27 @@ export default class EventRecording {
     document.body.removeEventListener("mousemove", this.handleMouseOver, true);
     this._addActionIcon.removeEventListener("click", this.handleAddIconClick);
     this._overlayEventsGrid.removeEventListener(
-      "click",
-      this.handleEventsGridClick,
-      true
+        "click",
+        this.handleEventsGridClick,
+        true
     );
   }
 
   boot(isFirstTime = false) {
-    this.awake = true;
     if (isFirstTime) {
       const currentURL = new URL(window.location.href);
       currentURL.searchParams.delete("__crusherAgent__");
       this.eventsController.saveCapturedEventInBackground(
-        NAVIGATE_URL,
+        ACTIONS_IN_TEST.NAVIGATE_URL,
         document.body,
         currentURL.toString()
       );
     }
     window.top.postMessage(
       {
-        type: ACTION_TYPES.STARTED_RECORDING_EVENTS,
+        type: META_ACTIONS.STARTED_RECORDING_TESTS,
         // @ts-ignore
-        frameId: LocalFrameStorage.get(),
-        value: true,
+        frameId: LocalFrameStorage.get()
       },
       "*"
     );
@@ -423,7 +397,7 @@ export default class EventRecording {
       this.isInspectorMoving = true;
       window.top.postMessage(
         {
-          type: ACTION_TYPES.TOOGLE_INSPECTOR,
+          type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
           // @ts-ignore
           frameId: LocalFrameStorage.get(),
         },

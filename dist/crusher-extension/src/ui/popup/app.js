@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const preact_1 = require("preact");
 const compat_1 = __importDefault(require("preact/compat"));
 const helpers_1 = require("../../utils/helpers");
-const devices_1 = __importDefault(require("../../constants/devices"));
+const devices_1 = __importDefault(require("~/crusher-shared/constants/devices"));
 class App extends preact_1.Component {
     constructor(props) {
         super(props);

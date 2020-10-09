@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
+    "rootDir": "../../",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -18,7 +19,7 @@
   "files": [
     "src/background.ts",
     "src/ui/popup/index.tsx",
-    "./node_modules/preact/dist/preact.js"
+    "../../node_modules/preact/dist/preact.js"
   ],
   "include": ["./src/**/*"]
 }

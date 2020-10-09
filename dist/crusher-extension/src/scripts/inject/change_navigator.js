@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const actionTypes_1 = require("../../constants/actionTypes");
+const actionTypes_1 = require("~/crusher-extension/src/constants/actionTypes");
 const frameStorage_1 = __importDefault(require("../../utils/frameStorage"));
 const actualCode = `(${(userAgent, appVersion, platformVersion) => {
     const { navigator } = window;
@@ -39,7 +39,7 @@ const actualCode = `(${(userAgent, appVersion, platformVersion) => {
     });
 }})`;
 window.top.postMessage({
-    type: actionTypes_1.ACTION_TYPES.GET_USER_AGENT,
+    type: actionTypes_1.NAVIGATOR_ACTIONS.FETCH_USER_AGENT,
     // @ts-ignore
     frameId: frameStorage_1.default.get(),
     value: true,
@@ -49,7 +49,7 @@ window.addEventListener("message", (message) => {
     if (!!type === false) {
         return;
     }
-    if (type === actionTypes_1.ACTION_TYPES.SET_USER_AGENT) {
+    if (type === actionTypes_1.NAVIGATOR_ACTIONS.FETCH_USER_AGENT_RESPONSE) {
         const s = document.createElement("script");
         s.textContent = `${actualCode}('${userAgent.value}', '${userAgent.appVersion}', '${userAgent.platform}');`;
         document.documentElement.appendChild(s);

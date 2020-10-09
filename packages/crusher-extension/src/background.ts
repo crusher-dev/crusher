@@ -1,16 +1,15 @@
-import * as url from "./utils/url";
 import tabStorage from "./utils/tabStorage";
 import FrameStorage from "./utils/frameStorage";
-import { getQueryStringParams } from "./utils/url";
+import { getQueryStringParams, isOfCrusherExtension } from "../../crusher-shared/utils/url";
 
-import userAgents from "~/crusher-shared/constants/userAgents";
+import userAgents from "../../crusher-shared/constants/userAgents";
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
 import Tab = chrome.tabs.Tab;
 import WebRequestDetails = chrome.webRequest.WebRequestDetails;
 import WebRequestFullDetails = chrome.webRequest.WebRequestFullDetails;
 import WebResponseHeadersDetails = chrome.webRequest.WebResponseHeadersDetails;
 import HttpHeader = chrome.webRequest.HttpHeader;
-import {UserAgent} from "~/crusher-shared/types/userAgent";
+import {UserAgent} from "../../crusher-shared/types/userAgent";
 
 class ChromeEventsListener {
   state: any;
@@ -34,7 +33,7 @@ class ChromeEventsListener {
   }
 
   onTabUpdated(tabId: number, changeInfo: TabChangeInfo, tab: Tab) {
-    if (tab.url && url.isOfCrusherExtension(tab.url)) {
+    if (tab.url && isOfCrusherExtension(tab.url)) {
       const iframeURL = getQueryStringParams("url", tab.url) as string;
       const crusherAgent = getQueryStringParams("__crusherAgent__", iframeURL);
       const userAgent : UserAgent | undefined = userAgents.find(

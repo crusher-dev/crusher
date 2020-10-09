@@ -3,8 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getQueryStringParams = exports.addHttpToURLIfNotThere = exports.origins = exports.isOfCrusherExtension = exports.isLocal = void 0;
+exports.resolveToBackendPath = exports.getQueryStringParams = exports.addHttpToURLIfNotThere = exports.origins = exports.isOfCrusherExtension = exports.isLocal = void 0;
 const url_parse_1 = __importDefault(require("url-parse"));
+const url = require("url");
 const clean = (url) => String(url).replace(/^\/|\/$/g, "");
 exports.isLocal = (url) => String(url).startsWith("chrome://") ||
     String(url).startsWith("chrome-extension://");
@@ -31,5 +32,8 @@ exports.getQueryStringParams = function getParameterByName(name, url) {
     if (!results[2])
         return "";
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+exports.resolveToBackendPath = (relativePath) => {
+    return url.resolve("https://backend.crusher-test.com/", relativePath);
 };
 //# sourceMappingURL=url.js.map

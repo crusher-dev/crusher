@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ACTION_FORM_TYPE = void 0;
 const compat_1 = __importDefault(require("preact/compat"));
 const hooks_1 = require("preact/hooks");
-const url_1 = require("../../utils/url");
-const helpers_1 = require("../../utils/helpers");
-const actionTypes_1 = require("../../constants/actionTypes");
-const constants_1 = require("../../constants");
-const userAgents_1 = __importDefault(require("~/crusher-shared/constants/userAgents"));
+const actionTypes_1 = require("~/crusher-extension/src/constants/actionTypes");
+const domEventsToRecord_1 = require("~/crusher-extension/src/constants/domEventsToRecord");
 const devices_1 = __importDefault(require("~/crusher-shared/constants/devices"));
-const endpoints_1 = require("../../constants/endpoints");
+const userAgents_1 = __importDefault(require("~/crusher-shared/constants/userAgents"));
+const url_1 = require("~/crusher-shared/utils/url");
+const constants_1 = require("../../constants");
+const helpers_1 = require("../../utils/helpers");
 const modal_1 = require("./components/modal");
 exports.ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -54,39 +54,39 @@ function Actions(props) {
     const { iframeRef, type, isShowingElementFormCallback, updateState } = props;
     const pageActions = [
         {
-            id: actionTypes_1.ACTION_TYPES.INSPECT,
+            id: actionTypes_1.SETTINGS_ACTIONS.INSPECT_MODE_ON,
             value: "Inspect",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: actionTypes_1.ACTION_TYPES.SCREENSHOT,
+            id: actionTypes_1.SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: actionTypes_1.ACTION_TYPES.SEO,
+            id: actionTypes_1.SETTINGS_ACTIONS.SHOW_SEO_MODAL,
             value: "SEO",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
     ];
     const elementActions = [
         {
-            id: CLICK,
+            id: domEventsToRecord_1.ACTIONS_IN_TEST.CLICK,
             value: "Click",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: HOVER,
+            id: domEventsToRecord_1.ACTIONS_IN_TEST.HOVER,
             value: "Hover",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: SCREENSHOT,
+            id: domEventsToRecord_1.ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
         {
-            id: BLACKOUT,
+            id: domEventsToRecord_1.ACTIONS_IN_TEST.BLACKOUT,
             value: "Blackout",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
@@ -94,63 +94,62 @@ function Actions(props) {
     function handleElementActionClick(actionType, updateState) {
         const cn = iframeRef.current.contentWindow;
         switch (actionType) {
-            case actionTypes_1.ACTION_TYPES.INSPECT:
+            case actionTypes_1.SETTINGS_ACTIONS.INSPECT_MODE_ON:
                 cn.postMessage({
-                    type: actionTypes_1.ACTION_TYPES.INSPECT,
+                    type: actionTypes_1.SETTINGS_ACTIONS.INSPECT_MODE_ON,
                     formType: exports.ACTION_FORM_TYPE.PAGE_ACTIONS,
                     value: true,
                 }, "*");
                 break;
-            case actionTypes_1.ACTION_TYPES.SCREENSHOT:
+            case actionTypes_1.SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT:
                 cn.postMessage({
-                    type: actionTypes_1.ACTION_TYPES.SCREENSHOT,
+                    type: domEventsToRecord_1.ACTIONS_IN_TEST.PAGE_SCREENSHOT,
                     formType: exports.ACTION_FORM_TYPE.PAGE_ACTIONS,
                     value: true,
                 }, "*");
                 break;
-            case actionTypes_1.ACTION_TYPES.SEO:
+            case actionTypes_1.SETTINGS_ACTIONS.SHOW_SEO_MODAL:
                 cn.postMessage({
-                    type: actionTypes_1.ACTION_TYPES.GET_SEO_META,
+                    type: domEventsToRecord_1.ACTIONS_IN_TEST.VALIDATE_SEO,
                     formType: exports.ACTION_FORM_TYPE.PAGE_ACTIONS,
                     value: true
                 }, "*");
-                updateState(actionTypes_1.STATE.SEO);
                 break;
-            case actionTypes_1.ACTION_TYPES.CAPTURE_CONSOLE:
+            case actionTypes_1.SETTINGS_ACTIONS.START_CAPTURING_CONSOLE:
                 cn.postMessage({
-                    type: actionTypes_1.ACTION_TYPES.CAPTURE_CONSOLE,
+                    type: domEventsToRecord_1.ACTIONS_IN_TEST.CAPTURE_CONSOLE,
                     formType: exports.ACTION_FORM_TYPE.PAGE_ACTIONS,
                     value: true,
                 }, "*");
                 break;
-            case CLICK:
+            case actionTypes_1.SETTINGS_ACTIONS.CLICK_ON_ELEMENT:
                 isShowingElementFormCallback(false);
                 cn.postMessage({
-                    type: CLICK,
+                    type: domEventsToRecord_1.ACTIONS_IN_TEST.CLICK,
                     formType: exports.ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                     value: true,
                 }, "*");
                 break;
-            case HOVER:
+            case actionTypes_1.SETTINGS_ACTIONS.HOVER_ON_ELEMENT:
                 isShowingElementFormCallback(false);
                 cn.postMessage({
-                    type: HOVER,
+                    type: domEventsToRecord_1.ACTIONS_IN_TEST.HOVER,
                     formType: exports.ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                     value: true,
                 }, "*");
                 break;
-            case SCREENSHOT:
+            case actionTypes_1.SETTINGS_ACTIONS.TAKE_ELEMENT_SCREENSHOT:
                 isShowingElementFormCallback(false);
                 cn.postMessage({
-                    type: SCREENSHOT,
+                    type: domEventsToRecord_1.ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
                     formType: exports.ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                     value: true,
                 }, "*");
                 break;
-            case BLACKOUT:
+            case actionTypes_1.SETTINGS_ACTIONS.BLACKOUT_ON_ELEMENT:
                 isShowingElementFormCallback(false);
                 cn.postMessage({
-                    type: BLACKOUT,
+                    type: domEventsToRecord_1.ACTIONS_IN_TEST.BLACKOUT,
                     formType: exports.ACTION_FORM_TYPE.ELEMENT_ACTIONS,
                     value: true,
                 }, "*");
@@ -199,15 +198,15 @@ function DesktopBrowser(props) {
     }
     function goBack() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({ type: actionTypes_1.ACTION_TYPES.GO_BACK, value: true }, "*");
+        cn.postMessage({ type: actionTypes_1.SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true }, "*");
     }
     function goForward() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({ type: actionTypes_1.ACTION_TYPES.GO_FORWARD, value: true }, "*");
+        cn.postMessage({ type: actionTypes_1.SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true }, "*");
     }
     function refreshPage() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({ type: actionTypes_1.ACTION_TYPES.REFRESH_PAGE, value: true }, "*");
+        cn.postMessage({ type: actionTypes_1.SETTINGS_ACTIONS.REFRESH_PAGE, value: true }, "*");
     }
     function Addressbar() {
         const urlEncoded = new URL(addressValue);
@@ -270,7 +269,7 @@ function App() {
     const selectedDeviceId = url_1.getQueryStringParams("device", window.location.href);
     const [steps, setSteps] = hooks_1.useState([
         {
-            event_type: SET_DEVICE,
+            event_type: domEventsToRecord_1.ACTIONS_IN_TEST.SET_DEVICE,
             selectors: [{ value: "body", uniquenessScore: 1, type: "body" }],
             value: selectedDeviceId,
         },
@@ -278,13 +277,13 @@ function App() {
     const [seoMeta, setSeoMeta] = hooks_1.useState({});
     const [isRecording, setIsRecording] = hooks_1.useState(false);
     const [isShowingElementForm, setIsShowingElementForm] = hooks_1.useState(false);
-    const [isUsingElementInspector, setIsUsingElementInspector] = hooks_1.useState(false);
+    const [isUsingElementInspector] = hooks_1.useState(false);
     const iframeRef = hooks_1.useRef(null);
     function getSteps() {
         return steps;
     }
     function saveSeoValidation(options) {
-        setSteps([...getSteps(), { event_type: VALIDATE_SEO, value: options, selectors: ["body"] }]);
+        setSteps([...getSteps(), { event_type: domEventsToRecord_1.ACTIONS_IN_TEST.VALIDATE_SEO, value: options, selectors: ["body"] }]);
     }
     messageListenerCallback = function (event) {
         const { type, eventType, value, selectors } = event.data;
@@ -295,12 +294,12 @@ function App() {
                 setSteps([...getSteps(), { event_type: eventType, value, selectors }]);
             }
             else {
-                const navigateEventExist = steps.find((step) => step.event_type === NAVIGATE_URL);
-                if (navigateEventExist && eventType === NAVIGATE_URL) {
+                const navigateEventExist = steps.find((step) => step.event_type === domEventsToRecord_1.ACTIONS_IN_TEST.NAVIGATE_URL);
+                if (navigateEventExist && eventType === domEventsToRecord_1.ACTIONS_IN_TEST.NAVIGATE_URL) {
                 }
                 else {
-                    if (lastStep.event_type === INPUT &&
-                        eventType === INPUT &&
+                    if (lastStep.event_type === domEventsToRecord_1.ACTIONS_IN_TEST.INPUT &&
+                        eventType === domEventsToRecord_1.ACTIONS_IN_TEST.INPUT &&
                         lastStep.selectors[0].value === selectors[0].value) {
                         steps[steps.length - 1].value = value;
                         setSteps(steps);
@@ -317,39 +316,40 @@ function App() {
         else if (type) {
             const cn = iframeRef.current.contentWindow;
             switch (type) {
-                case actionTypes_1.ACTION_TYPES.SHOW_ELEMENT_FORM:
+                case actionTypes_1.SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR:
                     setIsShowingElementForm(true);
                     break;
-                case actionTypes_1.ACTION_TYPES.STARTED_RECORDING_EVENTS:
+                case actionTypes_1.SETTINGS_ACTIONS.START_RECORDING:
                     setIsRecording(true);
                     break;
-                case actionTypes_1.ACTION_TYPES.TOOGLE_INSPECTOR:
-                    setIsUsingElementInspector(!isUsingElementInspector);
-                    break;
-                case actionTypes_1.ACTION_TYPES.GET_RECORDING_STATUS:
+                // case ACTION_TYPES.TOOGLE_INSPECTOR:
+                //     setIsUsingElementInspector(!isUsingElementInspector);
+                //     break;
+                case actionTypes_1.META_ACTIONS.FETCH_RECORDING_STATUS:
                     cn.postMessage({
-                        type: actionTypes_1.ACTION_TYPES.RECORDING_STATUS_RESPONSE,
+                        type: actionTypes_1.META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE,
                         value: isUsingElementInspector
-                            ? constants_1.IS_RECORDING_USING_INSPECTOR
+                            ? constants_1.START_INSPECTING_RECORDING_MODE
                             : isRecording
-                                ? constants_1.IS_RECORDING_WITHOUT_INSPECTOR
+                                ? constants_1.START_NON_INSPECTING_RECORDING_MODE
                                 : constants_1.NOT_RECORDING,
                         isFromParent: true,
                     }, "*");
                     break;
-                case actionTypes_1.ACTION_TYPES.GET_USER_AGENT:
+                case actionTypes_1.META_ACTIONS.FETCH_USER_AGENT:
                     const iframeURL = url_1.getQueryStringParams("url", window.location.href);
                     const crusherAgent = url_1.getQueryStringParams("__crusherAgent__", iframeURL);
                     const userAgent = userAgents_1.default.find((agent) => agent.name === (crusherAgent || userAgents_1.default[6].value));
-                    cn.postMessage({ type: actionTypes_1.ACTION_TYPES.SET_USER_AGENT, value: userAgent }, "*");
-                case actionTypes_1.ACTION_TYPES.SET_SEO_META:
+                    cn.postMessage({ type: actionTypes_1.META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent }, "*");
+                    break;
+                case actionTypes_1.META_ACTIONS.FETCH_SEO_META_RESPONSE:
                     setSeoMeta({ title: value.title, description: value.description });
                     break;
             }
         }
     };
     function saveTest() {
-        helpers_1.sendPostDataWithForm(`${endpoints_1.SERVER_ENDPOINT}test/goToEditor`, {
+        helpers_1.sendPostDataWithForm(url_1.resolveToBackendPath("/test/goToEditor"), {
             events: escape(JSON.stringify(steps)),
         });
     }

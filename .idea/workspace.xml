@@ -20,57 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10d760f8-4731-488a-a78f-2b794b0fac48" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/cross.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/constants/modal.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/components/seoModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/containers/modal/assertModalContent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/background.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/background.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/background.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/background.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/constants/actionTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/constants/actionTypes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/constants/actionTypes.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/constants/actionTypes.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/constants/domEventsToRecord.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/constants/domEventsToRecord.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/constants/domEventsToRecord.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/constants/domEventsToRecord.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/constants/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/constants/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/constants/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/change_navigator.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/change_navigator.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/change_navigator.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/change_navigator.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/events_listener.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/events_listener.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/events_listener.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/events_listener.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/ui/eventRecording.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/ui/eventRecording.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/ui/eventRecording.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/inject/ui/eventRecording.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/services/backgroundTabStorage.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/services/backgroundTabStorage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/services/backgroundTabStorage.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/scripts/services/backgroundTabStorage.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/popup/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/popup/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/popup/app.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/popup/app.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/app.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/app.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/containers/modal/seoModelContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/containers/modal/seoModelContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/containers/modal/seoModelContent.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/containers/modal/seoModelContent.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/ui/testRecorder/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/utils/domPath.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/utils/domPath.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-extension/src/utils/domPath.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-extension/src/utils/domPath.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-shared/utils/url.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-shared/utils/url.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/crusher-shared/utils/url.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/crusher-shared/utils/url.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.yarn-integrity" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.yarn-integrity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/background.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/background.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/constants/actionTypes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/constants/actionTypes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/constants/domEventsToRecord.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/constants/domEventsToRecord.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/change_navigator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/change_navigator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/events_listener.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/events_listener.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/ui/eventRecording.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/inject/ui/eventRecording.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/services/backgroundTabStorage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/scripts/services/backgroundTabStorage.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/ui/popup/app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/popup/app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/components/modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/components/assertModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/ui/testRecorder/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/utils/domPath.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/domPath.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/utils/helpers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/helpers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/utils/tabStorage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/src/utils/tabStorage.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/src/utils/url.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/public/icons/correct.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-extension/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-extension/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/crusher-shared/utils/url.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/crusher-shared/utils/url.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +74,7 @@
       <workItem from="1601997107212" duration="599000" />
       <workItem from="1602018203392" duration="4656000" />
       <workItem from="1602061838843" duration="5247000" />
-      <workItem from="1602259501650" duration="1866000" />
+      <workItem from="1602259501650" duration="3089000" />
     </task>
     <servers />
   </component>
@@ -144,10 +94,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="637" y="328" width="696" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1602260023488">
+    <state x="637" y="328" width="696" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1602264477021">
       <screen x="0" y="27" width="1920" height="999" />
     </state>
-    <state x="637" y="328" width="696" height="403" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.999@0.27.1920.999" timestamp="1602260023488" />
+    <state x="637" y="328" width="696" height="403" key="#com.intellij.fileTypes.FileTypeChooser/0.27.1920.999@0.27.1920.999" timestamp="1602264477020" />
     <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602074161596">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

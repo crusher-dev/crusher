@@ -9,7 +9,7 @@ import userAgents from "../../../../crusher-shared/constants/userAgents";
 import {addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath} from "../../../../crusher-shared/utils/url";
 import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE,} from "../../constants";
 import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
-import {ACTIONS_IN_TEST} from "../../constants/domEventsToRecord";
+import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import {sendPostDataWithForm} from "../../utils/helpers";
 
 export const ACTION_FORM_TYPE = {

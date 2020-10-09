@@ -1,5 +1,5 @@
 import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
-import {ACTIONS_IN_TEST} from "../../constants/domEventsToRecord";
+import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import EventRecording from "./ui/eventRecording";
 import LocalFrameStorage from "../../utils/frameStorage";
 import {

@@ -86,5 +86,5 @@ USER docker
 
 EXPOSE 3000
 
-ENTRYPOINT ["npm"]
-CMD ["run", "-s", "start"]
+ENTRYPOINT ["yarn"]
+CMD ["workspace", "test-runner", "start"]

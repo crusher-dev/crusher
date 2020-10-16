@@ -38,5 +38,5 @@ export const getQueryStringParams = function getParameterByName(
 };
 
 export const resolveToBackendPath = (relativePath: string) => {
-    return url.resolve("https://backend.crusher-test.com/", relativePath);
+    return url.resolve("https://backend.crusher.dev/", relativePath);
 }

@@ -173,6 +173,14 @@ function Actions(props: any) {
             case SETTINGS_ACTIONS.SHOW_SEO_MODAL:
                 cn.postMessage(
                     {
+                        type: META_ACTIONS.FETCH_SEO_META,
+                        formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
+                        value: true
+                    },
+                    "*"
+                );
+                cn.postMessage(
+                    {
                         type: ACTIONS_IN_TEST.VALIDATE_SEO,
                         formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
                         value: true

@@ -22,6 +22,8 @@ export default class EventRecording {
 
   private _overlayAddEventsContainer: any;
 
+  private _overlayCover: any;
+
   private _addActionElement: any;
 
   private _closeActionIcon: any;
@@ -159,6 +161,7 @@ export default class EventRecording {
 
   initNodes() {
     this._addActionElement = document.querySelector("#overlay_add_action");
+    this._overlayCover = document.querySelector("#overlay_cover");
     this._addActionIcon = document.querySelector("#overlay_add");
     this._addActionModal = document.querySelector("#overlay_add_icon");
     this._closeActionIcon = document.querySelector(
@@ -171,22 +174,55 @@ export default class EventRecording {
     this._arrowOnAddIcon = document.querySelector("#popper_arrow");
   }
 
-  updateEventTarget(target: HTMLElement) {
+  updateEventTarget(target: HTMLElement, event: any) {
     this.state = {
       ...this.state,
       targetElement: target,
     };
 
     if (this.isInspectorMoving) {
-      this.highlightNode(target);
+      this.highlightNode(target, event);
     }
-    this.showAddIcon(target);
+    // this.showAddIcon(target);
   }
 
-  highlightNode(target: HTMLElement) {
-    target.style.outlineStyle = "solid";
-    target.style.outlineColor = "#EC2E6A";
-    target.style.outlineWidth = "1px";
+  elementsAtLocation (x: number,y: number){
+    let stack= [], el;
+    do {
+      el = document.elementFromPoint(x, y);
+      if(!el){
+        break;
+      }
+      stack.push(el);
+      el?.classList.add('pointerEventsNone');
+    }while(el?.tagName !== 'HTML');
+
+    // clean up
+    for(var i  = 0; i < stack.length; i += 1)
+      stack[i]?.classList.remove('pointerEventsNone');
+
+    return stack;
+  }
+
+  highlightNode(_target: any, event : any = null) {
+    this._overlayCover.style.position = "absolute";
+    let target = _target;
+    if(event) {
+      console.log("Printing elements at this location");
+      const elements = this.elementsAtLocation(event.pageX, event.pageY);
+      if(elements && elements.length > 1 && elements[0].id==="overlay_cover"){
+        target = elements[1];
+      }
+    }
+    this._overlayCover.style.top = target.getBoundingClientRect().top + "px";
+    this._overlayCover.style.left = target.getBoundingClientRect().left + "px";
+    this._overlayCover.style.width = target.getBoundingClientRect().width + "px";
+    this._overlayCover.style.height = target.getBoundingClientRect().height + "px";
+    this._overlayCover.style['z-index'] = 299999999;
+    // //
+    this._overlayCover.style.outlineStyle = "solid";
+    this._overlayCover.style.outlineColor = "#EC2E6A";
+    this._overlayCover.style.outlineWidth = "1px";
   }
 
   removeHighLightFromNode(target: HTMLElement) {
@@ -240,8 +276,10 @@ export default class EventRecording {
         );
         break;
       default:
+        return;
         break;
     }
+    this.unpin();
     this.toggleEventsBox();
   }
 
@@ -259,11 +297,12 @@ export default class EventRecording {
 
     const {targetElement} = this.state;
 
-    if (targetElement !== event.target && this.isInspectorMoving) {
+    if (this.isInspectorMoving) {
       // Remove Highlight from last element hovered
       this.removeHighLightFromNode(targetElement);
-      this.updateEventTarget(event.target as HTMLElement);
+      this.updateEventTarget(event.target as HTMLElement, event);
     }
+
   }
 
   handleAddIconClick() {
@@ -287,12 +326,36 @@ export default class EventRecording {
     this.handleSelectedActionFromEventsList(event);
   }
 
+  unpin(){
+    console.log("Unpinning");
+    this.state.pinned = false;
+    this._overlayCover.classList.remove("pointerEventsNone");
+    this._overlayCover.style.left = "0px";
+    this._overlayCover.style.top = "0px";
+    this._overlayCover.style.width = "0px";
+    this._overlayCover.style.height = "0px";
+  }
+
   // eslint-disable-next-line consistent-return
   handleDocumentClick(event: any) {
-    const isRecorder = event.target.getAttribute("data-recorder");
+    let target = event.target;
+    const isRecorderCover = target.getAttribute("data-recorder-cover");
+    if(isRecorderCover) {
+      target = event.target;
+      console.log("Printing elements at this location");
+      const elements = this.elementsAtLocation(event.pageX, event.pageY);
+      if(elements && elements.length > 1 && elements[0].id==="overlay_cover"){
+        target = elements[1];
+      }
+      this.state.pinned = true;
+      this.state.targetElement = target;
+      this._overlayCover.classList.add("pointerEventsNone");
+      this.handleAddIconClick();
+      return;
+    }
+    const isRecorder = target.getAttribute("data-recorder");
     if (!isRecorder) {
-      this.state.pinned = false;
-      const {target} = event;
+      this.unpin();
       if (target.tagName.toLowerCase() === "a") {
         const href = target.getAttribute("href");
         this.eventsController.saveCapturedEventInBackground(
@@ -323,7 +386,6 @@ export default class EventRecording {
   }
 
   registerNodeListeners() {
-    alert("GODD");
     document.body.addEventListener("mousemove", this.handleMouseOver, true);
     document.body.addEventListener("input", this.handleInputChange, true);
     document.addEventListener("click", this.handleDocumentClick, true);

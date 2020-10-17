@@ -34,12 +34,19 @@ function Row({name, state, setState, attributes, isValid}: any) {
     }
 
     const onNameChange = (event: any) => {
-        console.log(event);
+        const currentNameIndex = attributes.find((attribute: any) => {
+            return attribute.name === event.target.options[event.target.selectedIndex].value
+        });
+
         setState({
             ...state,
             attributes: {
                 ...state.attributes,
                 [name.toString().toLowerCase()]: event.target.options[event.target.selectedIndex].value
+            },
+            assertValues: {
+                ...state.assertValues,
+                [name.toString().toLowerCase()]: currentNameIndex.value
             }
         });
     }
@@ -49,7 +56,7 @@ function Row({name, state, setState, attributes, isValid}: any) {
     }) : [];
 
     const value = state.assertValues[name.toString().toLowerCase()];
-    const currentNameIndex = attributes.findIndex((attribute: any) => {
+    const currentNameIndex = attributes.find((attribute: any) => {
         return attribute.name === state.attributes[name.toString().toLowerCase()];
     })
 
@@ -74,11 +81,11 @@ function Row({name, state, setState, attributes, isValid}: any) {
                 <option value="regex">regex</option>
             </select>
             {method === "regex" ? (
-                <textarea onChange={onInputChange} value={value} style={{...styles.input}}
+                <textarea onChange={onInputChange} value={value ?  value : currentNameIndex.value} style={{...styles.input}}
                           placeholder={`Assertion value`}/>
             ) : (
                 <input onChange={onInputChange}
-                       value={value ? value : (value === "" ? "" : attributes[currentNameIndex === -1 ? 0 : currentNameIndex].value)}
+                       value={value ? value : currentNameIndex.value}
                        style={{...styles.input}} placeholder={`Assertion value`}/>
             )}
         </div>

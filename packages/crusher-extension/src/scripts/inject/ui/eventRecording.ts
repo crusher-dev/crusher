@@ -194,6 +194,9 @@ export default class EventRecording {
         break;
       }
       stack.push(el);
+      if(stack.length > 5){
+        break;
+      }
       el?.classList.add('pointerEventsNone');
     }while(el?.tagName !== 'HTML');
 
@@ -204,18 +207,30 @@ export default class EventRecording {
     return stack;
   }
 
+  getOffset( el: any ) {
+    let _x = 0;
+    let _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+      _x += el.offsetLeft - el.scrollLeft;
+      _y += el.offsetTop - el.scrollTop;
+      el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+  }
+
   highlightNode(_target: any, event : any = null) {
     this._overlayCover.style.position = "absolute";
     let target = _target;
     if(event) {
+      const elements = this.elementsAtLocation(this.getOffset(target).left, this.getOffset(target).top);
       console.log("Printing elements at this location");
-      const elements = this.elementsAtLocation(event.pageX, event.pageY);
+      console.log(elements);
       if(elements && elements.length > 1 && elements[0].id==="overlay_cover"){
         target = elements[1];
       }
     }
-    this._overlayCover.style.top = target.getBoundingClientRect().top + "px";
-    this._overlayCover.style.left = target.getBoundingClientRect().left + "px";
+    this._overlayCover.style.top = this.getOffset(target).top + "px";
+    this._overlayCover.style.left = this.getOffset(target).left + "px";
     this._overlayCover.style.width = target.getBoundingClientRect().width + "px";
     this._overlayCover.style.height = target.getBoundingClientRect().height + "px";
     this._overlayCover.style['z-index'] = 299999999;

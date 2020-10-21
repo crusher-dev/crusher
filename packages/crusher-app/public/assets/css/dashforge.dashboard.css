@@ -1,0 +1,383 @@
+/*
+ * Dashforge Dashboard Pages
+ *
+ * This style is use in dashboard pages.
+ *
+ */
+.bg-df-1 {
+  background-color: #0168fa; }
+
+.bg-df-2 {
+  background-color: #69b2f8; }
+
+.bg-df-3 {
+  background-color: #d1e6fa; }
+
+.bg-litecoin {
+  background-color: #325a98; }
+
+.stroke-wd-3 {
+  stroke-width: 3px; }
+
+.wd-12 {
+  width: 12px; }
+
+.ht-12 {
+  height: 12px; }
+
+.chart-one {
+  position: relative;
+  overflow: hidden;
+  margin: 0 15px 15px;
+  padding-top: 80px;
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem; }
+  @media (min-width: 576px) {
+    .chart-one {
+      margin: 0 20px 15px;
+      padding-top: 0;
+      overflow: visible; } }
+  .chart-one .flot-x-axis {
+    display: none; }
+    @media (min-width: 576px) {
+      .chart-one .flot-x-axis {
+        display: block; } }
+    .chart-one .flot-x-axis .flot-tick-label {
+      transform: translateY(2px);
+      text-transform: uppercase;
+      font-size: 9px;
+      font-weight: 500;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+      letter-spacing: .5px;
+      color: #8392a5; }
+  .chart-one .flot-chart {
+    margin-left: -12px;
+    margin-right: -10px;
+    height: 350px; }
+
+.chart-two .flot-x-axis > div {
+  transform: translateY(3px);
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+  letter-spacing: .5px;
+  color: #8392a5; }
+  .chart-two .flot-x-axis > div:first-child {
+    margin-left: 15px; }
+
+.chart-two .flot-chart {
+  height: 150px;
+  margin-left: -15px;
+  margin-right: -13px; }
+  @media (min-width: 576px) {
+    .chart-two .flot-chart {
+      height: 210px; } }
+  @media (min-width: 992px) and (max-width: 1199.98px) {
+    .chart-two .flot-chart {
+      height: 155px; } }
+
+.chart-three .flot-chart {
+  margin-left: -7px;
+  margin-right: -8px;
+  margin-bottom: -5px; }
+
+.chart-four .flot-chart {
+  margin-right: -8px;
+  margin-bottom: -5px; }
+
+.chart-five > div {
+  position: relative;
+  margin-left: -10px;
+  height: 225px; }
+
+.table-dashboard {
+  font-size: 13px; }
+  .table-dashboard thead th,
+  .table-dashboard tbody td {
+    border-color: #e5e9f2;
+    white-space: nowrap; }
+    .table-dashboard thead th:first-child,
+    .table-dashboard tbody td:first-child {
+      padding-left: 20px; }
+    .table-dashboard thead th:last-child,
+    .table-dashboard tbody td:last-child {
+      padding-right: 20px; }
+  .table-dashboard thead th {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: #8392a5; }
+
+.table-dashboard-one tbody td {
+  padding-top: 5px;
+  padding-bottom: 5px; }
+
+/* -------------- dashboard-two.html ----------------- */
+.chart-six {
+  margin-left: -5px;
+  height: 150px; }
+  @media (min-width: 576px) {
+    .chart-six {
+      height: 200px; } }
+  @media (min-width: 768px) {
+    .chart-six {
+      height: 250px; } }
+  @media (min-width: 992px) {
+    .chart-six {
+      height: 300px; } }
+
+.chart-seven {
+  height: 150px; }
+  @media (min-width: 992px) {
+    .chart-seven {
+      height: 205px; } }
+  @media (min-width: 1200px) {
+    .chart-seven {
+      height: 188px; } }
+
+.chart-eight .flot-chart {
+  margin-left: -26px;
+  margin-right: -26px;
+  margin-bottom: -26px;
+  height: 126px; }
+  @media (min-width: 768px) {
+    .chart-eight .flot-chart {
+      height: 167px; } }
+  @media (min-width: 992px) {
+    .chart-eight .flot-chart {
+      margin-left: -30px;
+      margin-right: -30px;
+      margin-bottom: -30px;
+      height: 126px; } }
+
+.chart-nine .flot-chart {
+  height: 142px;
+  margin-left: -5px;
+  margin-right: -5px; }
+
+.chart-nine .flot-y-axis .flot-tick-label,
+.chart-nine .flot-x-axis .flot-tick-label {
+  font-size: 9px;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+  font-weight: 500;
+  color: #8392a5; }
+
+.chart-nine .flot-y-axis .flot-tick-label {
+  margin-left: -10px; }
+  .chart-nine .flot-y-axis .flot-tick-label:first-child {
+    display: none; }
+
+.chart-nine .flot-x-axis .flot-tick-label {
+  transform: translateY(3px); }
+  .chart-nine .flot-x-axis .flot-tick-label:last-child {
+    margin-left: -5px; }
+
+.chart-ten .flot-chart {
+  height: 95px;
+  margin-left: -8px;
+  margin-right: -12px; }
+
+.card-dashboard-table .table th, .card-dashboard-table .table td {
+  border-color: rgba(72, 94, 144, 0.16);
+  padding: 10px 15px;
+  font-size: 13px;
+  text-align: right;
+  white-space: nowrap; }
+
+.card-dashboard-table .table thead tr th:first-child {
+  border-left-width: 0; }
+
+.card-dashboard-table .table thead tr th:last-child {
+  border-right-width: 0; }
+
+.card-dashboard-table .table thead tr:first-child th {
+  border-top-width: 0;
+  font-size: 13px;
+  background-color: #f5f6fa;
+  text-align: left; }
+
+.card-dashboard-table .table thead tr:last-child th {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: 8px 15px;
+  color: #8392a5; }
+
+.card-dashboard-table .table thead tr th:first-child,
+.card-dashboard-table .table tbody tr td:first-child {
+  text-align: left; }
+
+.card-dashboard-table .table strong {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+  font-weight: 500; }
+
+/* ---------- dashboard-three.html ------------ */
+.card-crypto .nav-line {
+  border-bottom-width: 0;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: .5px; }
+  .card-crypto .nav-line .nav-link + .nav-link {
+    margin-left: 10px; }
+  .card-crypto .nav-line .nav-link.active::after {
+    height: 3px;
+    bottom: -10px;
+    border-radius: 0.25rem;
+    display: none; }
+    @media (min-width: 576px) {
+      .card-crypto .nav-line .nav-link.active::after {
+        display: block; } }
+
+.chart-eleven .flot-chart {
+  height: 160px; }
+  @media (min-width: 576px) {
+    .chart-eleven .flot-chart {
+      height: 220px; } }
+  @media (min-width: 768px) {
+    .chart-eleven .flot-chart {
+      height: 250px; } }
+  @media (min-width: 992px) {
+    .chart-eleven .flot-chart {
+      height: 284px; } }
+
+.chart-eleven .flot-x-axis > div:first-child,
+.chart-eleven .flot-y-axis > div:first-child {
+  display: none; }
+
+.crypto {
+  position: relative;
+  padding: 20px; }
+
+.crypto-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px; }
+
+.crypto-icon-sm {
+  height: 35px;
+  width: 35px;
+  font-size: 16px; }
+
+.crypto-bitcoin-cash {
+  line-height: 0;
+  transform: rotate(-40deg); }
+
+.chart-twelve .flot-chart {
+  height: 80px;
+  margin-left: -20px;
+  margin-right: -20px; }
+
+.list-label {
+  padding: 6px 20px;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+  background-color: #f5f6fa;
+  color: #8392a5;
+  letter-spacing: 1px;
+  border-top: 1px solid #e5e9f2; }
+  .list-label:first-of-type {
+    border-top-width: 0; }
+
+.list-item {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e5e9f2; }
+
+.chart-thirteen {
+  height: 220px; }
+  @media (min-width: 768px) and (max-width: 991.98px) {
+    .chart-thirteen {
+      height: 143px; } }
+  @media (min-width: 992px) and (max-width: 1199.98px) {
+    .chart-thirteen {
+      height: 160px; } }
+
+.chart-fourteen {
+  position: relative;
+  overflow: hidden; }
+  .chart-fourteen .flot-chart {
+    height: 200px;
+    margin-top: -10px;
+    margin-left: -30px;
+    margin-right: -28px; }
+  .chart-fourteen .flot-x-axis .flot-tick-label {
+    font-size: 9px;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+    color: #8392a5;
+    text-transform: uppercase;
+    letter-spacing: -.2px; }
+
+.chart-fifteen {
+  overflow: hidden; }
+  .chart-fifteen .flot-chart {
+    height: 200px;
+    margin-right: -18px; }
+  .chart-fifteen .flot-y-axis .flot-tick-label,
+  .chart-fifteen .flot-x-axis .flot-tick-label {
+    font-size: 9px;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+    font-weight: 500;
+    color: #67788e; }
+  .chart-fifteen .flot-y-axis .flot-tick-label:first-child {
+    display: none; }
+  .chart-fifteen .flot-x-axis .flot-tick-label {
+    text-transform: uppercase;
+    font-size: 8px;
+    font-weight: 600; }
+
+.chart-sixteen {
+  overflow: hidden; }
+  .chart-sixteen .flot-chart {
+    height: 180px;
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-bottom: -8px; }
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      .chart-sixteen .flot-chart {
+        height: 274px; } }
+    @media (min-width: 1200px) {
+      .chart-sixteen .flot-chart {
+        height: 186px; } }
+  .chart-sixteen .flot-x-axis .flot-tick-label {
+    font-size: 9px;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;
+    margin-top: -25px;
+    margin-left: -25px; }
+    .chart-sixteen .flot-x-axis .flot-tick-label:first-child {
+      display: none; }
+
+.chart-seventeen {
+  height: 260px; }
+
+.table-dashboard-two {
+  width: 100%;
+  font-size: 13px; }
+  .table-dashboard-two tr + tr td {
+    border-top: 1px solid #e5e9f2; }
+  .table-dashboard-two td {
+    vertical-align: top;
+    line-height: 1;
+    padding: 8px 0; }
+    .table-dashboard-two td:first-child {
+      padding-left: 0; }
+      .table-dashboard-two td:first-child div {
+        opacity: .7; }
+    .table-dashboard-two td:nth-child(3), .table-dashboard-two td:last-child {
+      font-family: "Rubik", sans-serif; }
+    .table-dashboard-two td:last-child {
+      color: #8392a5; }

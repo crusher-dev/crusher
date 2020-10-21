@@ -1,0 +1,111 @@
+Version history for query-simple-datetimepicker
+https://github.com/mugifly/jquery-simple-datetimepicker/
+
+1.12.0  2014-04-25 (JST)
+  - [Add] Automatically relocate a position of a picker when picker is float-mode.
+  - [Add] Automatically destroy a picker, when an input-field has lose.
+  - [Add] The getDate and setDate method is available on PickerHandler Object.
+  - [Change] Changed a parent element to root, when picker is float-mode (Reported by: Kupid).
+
+1.11.0  2014-04-25 (JST)
+  - [Add] Support for allowWdays option (Idea by: elvinlee).
+  - [Add] Greek locale (Thanks to: sincetomorrow).
+  - [Fix] Issue at option.current - Setting the custom date and time as default (Thanks to: michelts).
+  - [Fix] Process for drawing the time cell (Reported by: jhiver).
+  - [Fix] Past date is selected when clicking on previous (futureOnly) (Reported by: ignatiusreza).
+  - [Fix] Bug when switching to next month.
+  - [Fix] If not available a console on this environment.
+  - [Fix] Position / outerHeight() gives wrong value (Thanks to: ricardocanelas).
+
+1.10.1  2014-02-16 (JST)
+  - [Fix] Issue with month jumping (Report by: jcutrell, LinTicket, cnorthwood).
+
+1.10.0  2014-02-16 (JST)
+  - [Add] Polish locale (Thanks to: viszman).
+  - [Add] Romanian locale (Thanks to: IngerAlHaosului).
+  - [Add] Support for minDate and maxDate options (Thanks to: droidmunkey).
+  - [Add] Support for minTime and maxTime options (Thanks to: CedricLevasseur).
+  - [Add] Support for user event-handlers: onInit, onShow, onHide (Idea by: Kupid Wang).
+  - [Add] Manual handling of the appended picker (handleDtpicker method).
+  - [Add] Allow focus of input to display datepicker (Thanks to: jpetto).
+  - [Fix] Use isNaN instead of Number.isNaN (Thanks to: vbatoufflet).
+  - [Fix] Don't allow scroll to past-month when limiting to future dates (Report by: fredrik-w).
+
+1.9.0  2013-11-06 (JST)
+  - [Add] Support for Bower (Thanks to: kmulvey).
+  - [Change] Improved localization mechanism (Thanks to: LucasTheCure).
+  - [Change] Refactor - Simplified some codes (Thanks to: LucasTheCure).
+  - [Fix] Close a picker when date is selected on dateOnly mode (Thanks to: Kwozzie).
+
+1.8.0  2013-10-17 (JST)
+  - [Add] Portuguese locale (Thanks to: adc-tcarvalho).
+  - [Add] Dutch locale (Thanks to: Mondane).
+  - [Add] Czech locale (Thanks to: Jan Zatloukal).
+  - [Add] French locale (Thanks to: Jan matll42).
+  - [Add] Italian locale (Thanks to: Mauro Zuccato).
+  - [Fix] Fixing positioning when element is inside of nested relative parent (Thanks to: AddoSolutions).
+
+1.7.0  2013-09-16
+  - [Add] Korean locale (Thanks to: perhapsspy).
+  - [Add] "futureOnly" option and bugfix (Thanks to: camiel).
+  - [Add] "dateOnly" option (Thanks to: logitick).
+  - [Fix] Improved date parse (when using dateFormat option).
+
+1.6.0  2013-09-04
+  - [Add] "closeOnSelected" option for close the picker when selected date & time (Idea by: MacDknife).
+  - [Add] "timelistScroll" option for disable automatic scroll of timelist (Idea by: deviso).
+  - [Add] Change the months by scroll of mouse-wheel on the calendar (Idea by: deviso).
+  - [Add] "calendarMouseScroll" option for scroll calendar with mouse wheel (default: true).
+  - [Add] Today button for calendar (Idea by: Tanver186).
+  - [Add] "todayButton" option (default: true).
+  - [Change] Improve design (header, container).
+  - [Fix] Malfunction of "animation" option (Can't disable animation).
+
+1.5.0  2013-08-28
+  - [Add] Turkish locale (Thanks to: myfell).
+  - [Add] Spanish locale (Thanks to: maw).
+  - [Add] Swedish locale (Thanks to: MacDknife).
+  - [Fix] Be more robust when receiving clearly bogus date strings (Thanks to: maw).
+
+1.4.0  2013-08-02
+  - [Add] Indonesia locale (Thanks to: robzlabz).
+  - [Fix] "firstDayOfWeek" option and others (Thanks to: thisispiers).
+  - [Fix] should now gets format mysql-datetime (Thanks to: Orlac).
+
+1.3.0  2013-06-29
+  - [Add] Chinese locale (Thanks to: jasonslyvia).
+  - [Add] Initial first day of the week (Thanks to: concept1hundred).
+  - [Add] German locale (Thanks to: rtakeda).
+  - [Change] Option name: "minute_interval" -> "minuteInterval"
+  - [Fix] misplaced when located in nested elements (Thanks to: insonifi).
+
+1.2.0  2013-06-17
+  - [Add] Change the interval of minute (Thanks to: AndAniCalik).
+
+1.1.4  2013-06-02
+  - [Add] Brasil locale (Thanks to: Mauricio).
+
+1.1.3  2013-05-22
+  - [Add] Russian locale (Thanks to: rdolgushin).
+
+1.1.2  2013-05-09
+  - [Fixed] IE8 compatibility (Thanks to: mackeian).
+
+1.1.1  2013-03-12
+  - [Fixed] Fixed width of timelist for bug in ie9 (Thanks to: jjsgro).
+
+1.1.0  2013-03-02
+   - [Implement] Option to disable the animation.
+   - [Improve] Animation and parts.
+   - [Fixed] Support dateFormat and fix bug (Thanks to: LeandroSe).
+   - [Fixed] Support Firefox in current date (Thanks: LeandroSe).
+   - [Improve] Show the month name instead of number in header (Thanks to: dsims).
+   - [Fixed] appendDtpicker is not overriding the default date with the input's value (Thanks: dsims).
+   - [Fixed] default month (Thanks: dsims).
+
+1.0.0  2012-11-02
+   - Initial release.
+
+----
+
+Thanks to contributors!

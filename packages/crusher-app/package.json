@@ -1,0 +1,95 @@
+{
+  "private": true,
+  "name": "crusher-app",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prettifyAll": "yarn prettier --write */*",
+    "runInDev": "next dev --port 7000",
+    "lint:ts": "eslint --ext=jsx,ts,tsx src",
+    "lint-fix:ts": "eslint --fix src"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write"
+    ],
+    "*.jsx": [
+      "prettier --write"
+    ],
+    "*.tsx": [
+      "prettier --write"
+    ],
+    "*.ts": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
+  },
+  "dependencies": {
+    "@emotion/babel-preset-css-prop": "^10.0.27",
+    "@emotion/core": "^10.0.28",
+    "@lottiefiles/react-lottie-player": "^2.1.7",
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.7.0",
+    "@types/react-redux": "^7.1.9",
+    "clipboard-copy": "^3.1.0",
+    "code-generator": "https://github.com/crusherdev/code-generator.git#c7210689393f064c6c3e7d37fe5530e2de95597b",
+    "commitizen": "^4.0.4",
+    "cookie": "^0.4.1",
+    "cors": "^2.8.5",
+    "cz-conventional-changelog": "3.2.0",
+    "emotion": "^10.0.27",
+    "enquirer": "^2.3.5",
+    "http": "^0.0.1-security",
+    "husky": "^4.2.5",
+    "inquirer": "^7.2.0",
+    "js-cookie": "^2.2.1",
+    "lint-staged": "^10.1.5",
+    "lodash": "^4.17.15",
+    "mitt": "^2.1.0",
+    "next": "9.5.1",
+    "next-cookies": "^2.0.3",
+    "next-redux-wrapper": "^6.0.2",
+    "node-fetch": "^2.6.0",
+    "nprogress": "^0.2.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-redux": "^7.2.0",
+    "react-select": "^3.1.0",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-persist-transform-filter": "^0.0.20",
+    "redux-thunk": "^2.3.0",
+    "tailwind": "^4.0.0",
+    "urlencoded-body-parser": "^3.0.0",
+    "validator": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/next": "^9.0.0",
+    "@types/node": "^14.0.27",
+    "@types/react": "^16.9.53",
+    "@typescript-eslint/eslint-plugin": "^4.1.1",
+    "@typescript-eslint/parser": "^4.1.1",
+    "@zeit/next-css": "^1.0.1",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "next-purgecss": "^4.0.0",
+    "prettier": "^2.1.1",
+    "typescript": "^4.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

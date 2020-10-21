@@ -1,47 +1,32 @@
-import {Ref} from "preact";
+import { Ref } from "preact";
 import React from "preact/compat";
-import {useRef, useState} from "preact/hooks";
-import {MODALS} from "../../constants/modal";
-import {AssertModal} from "./components/assertModal";
-import {SeoModal} from "./components/seoModal";
+import { useRef, useState } from "preact/hooks";
+import { MODALS } from "../../constants/modal";
+import { AssertModal } from "./components/assertModal";
+import { SeoModal } from "./components/seoModal";
 import devices from "../../../../crusher-shared/constants/devices";
 import userAgents from "../../../../crusher-shared/constants/userAgents";
-import {addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath} from "../../../../crusher-shared/utils/url";
-import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE,} from "../../constants";
-import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
-import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
-import {sendPostDataWithForm} from "../../utils/helpers";
+import { addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath } from "../../../../crusher-shared/utils/url";
+import { NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE, } from "../../constants";
+import { META_ACTIONS, SETTINGS_ACTIONS } from "../../constants/actionTypes";
+import { ACTIONS_IN_TEST } from "../../../../crusher-shared/constants/recordedActions";
+import { sendPostDataWithForm } from "../../utils/helpers";
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
     ELEMENT_ACTIONS: "ELEMENT_ACTIONS",
 };
 
-function RecordingIcon(props: any) {
-    return (
-        <svg height="512pt" viewBox="0 0 512 512" width="512pt" {...props}>
-            <path
-                d="M512 256c0 141.387-114.613 256-256 256S0 397.387 0 256 114.613 0 256 0s256 114.613 256 256zm0 0"
-                fill="#e76e54"
-            />
-            <path
-                d="M384 256c0 70.691-57.309 128-128 128s-128-57.309-128-128 57.309-128 128-128 128 57.309 128 128zm0 0"
-                fill="#dd523c"
-            />
-        </svg>
-    );
-}
-
 function Step(props: any) {
-    const {type, path, value} = props;
+    const { type, path, value } = props;
     return (
         <li style={styles.step}>
             <div style={styles.stepImage}>
-                <img src={chrome.runtime.getURL("icons/mouse.svg")}/>
+                <img src={chrome.runtime.getURL("icons/mouse.svg")} />
             </div>
-            <div style={{...styles.stepTextContainer}}>
+            <div style={{ ...styles.stepTextContainer }}>
                 <div style={styles.stepAction}>{type}</div>
-                <div style={{width: "70%", overflow: "hidden"}}>
+                <div style={{ width: "70%", overflow: "hidden" }}>
                     <div style={styles.stepSelector}>{value || path}</div>
                 </div>
             </div>
@@ -56,11 +41,11 @@ function Step(props: any) {
 }
 
 function Steps(props: any) {
-    const {steps} = props;
+    const { steps } = props;
 
     const stepList = steps.map((step: any) => {
         console.log(step);
-        const {event_type, selectors, value} = step;
+        const { event_type, selectors, value } = step;
         return (
             <Step
                 type={event_type}
@@ -87,7 +72,7 @@ function Steps(props: any) {
 }
 
 function Actions(props: any) {
-    const {iframeRef, type, isShowingElementFormCallback, updateState} = props;
+    const { iframeRef, type, isShowingElementFormCallback, updateState } = props;
     const pageActions = [
         {
             id: SETTINGS_ACTIONS.INSPECT_MODE_ON,
@@ -260,30 +245,30 @@ function Actions(props: any) {
                 <div
                     style={
                         shouldAddMarginRight
-                            ? {...styles.actionItem, ...styles.oddItem}
-                            : {...styles.actionItem, ...styles.oddItem}
+                            ? { ...styles.actionItem, ...styles.oddItem }
+                            : { ...styles.actionItem, ...styles.oddItem }
                     }
                     id={actions[i].id}
                     onClick={() => {
                         handleElementActionClick(actions[i].id, updateState);
                     }}
                 >
-                    <img style={styles.actionImage} src={actions[i].icon}/>
+                    <img style={styles.actionImage} src={actions[i].icon} />
                     <span style={styles.actionText}>{actions[i].value}</span>
                 </div>
                 {i + 1 < actions.length && (
                     <div
                         style={
                             shouldAddMarginRight
-                                ? {...styles.actionItem, ...styles.oddItem}
-                                : {...styles.actionItem, ...styles.oddItem}
+                                ? { ...styles.actionItem, ...styles.oddItem }
+                                : { ...styles.actionItem, ...styles.oddItem }
                         }
                         id={actions[i + 1].id}
                         onClick={() => {
-                            handleElementActionClick(actions[i+1].id, updateState);
+                            handleElementActionClick(actions[i + 1].id, updateState);
                         }}
                     >
-                        <img style={styles.actionImage} src={actions[i + 1].icon}/>
+                        <img style={styles.actionImage} src={actions[i + 1].icon} />
                         <span style={styles.actionText}>{actions[i + 1].value}</span>
                     </div>
                 )}
@@ -292,7 +277,7 @@ function Actions(props: any) {
     }
 
     return (
-        <div style={{...styles.actionListContainer, marginTop: "2rem"}}>
+        <div style={{ ...styles.actionListContainer, marginTop: "2rem" }}>
             {out}
         </div>
     );
@@ -305,7 +290,7 @@ function DesktopBrowser(props: any) {
     const url = urlEncoded
         ? decodeURI(urlEncoded.toString().replace(/^["']/, "").replace(/["']$/, ""))
         : "https://google.com";
-    const {forwardRef} = props;
+    const { forwardRef } = props;
     const addressInput: any = useRef(null);
     const [addressValue, setAddressValue] = useState(url);
 
@@ -331,17 +316,17 @@ function DesktopBrowser(props: any) {
 
     function goBack() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true}, "*");
+        cn.postMessage({ type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true }, "*");
     }
 
     function goForward() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true}, "*");
+        cn.postMessage({ type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true }, "*");
     }
 
     function refreshPage() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true}, "*");
+        cn.postMessage({ type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true }, "*");
     }
 
     function Addressbar() {
@@ -355,10 +340,11 @@ function DesktopBrowser(props: any) {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
+                        paddingLeft: "0.5rem"
                     }}
                 >
                     <img
-                        style={{width: "0.8rem"}}
+                        style={{ width: "0.8rem" }}
                         src={chrome.runtime.getURL("/icons/ssl.svg")}
                     />
                 </div>
@@ -370,14 +356,6 @@ function DesktopBrowser(props: any) {
                 >
                     {urlEncoded.toString().substr(0, 50)}
                 </div>
-                <div style={styles.recordingStatus}>
-                    <RecordingIcon
-                        height={12}
-                        width={12}
-                        style={{marginRight: ".5rem"}}
-                    />
-                    Recording Test
-                </div>
             </div>
         );
     }
@@ -385,11 +363,11 @@ function DesktopBrowser(props: any) {
     function Toolbar() {
         return (
             <div style={styles.browserToolbar}>
-                <div style={styles.browserSmallShadow}/>
                 <div style={styles.browserMainToolbar}>
-                    <div style={{display: "flex", alignItems: "center"}}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                         <img
                             src={chrome.runtime.getURL("/icons/navigation-back.svg")}
+                            style={{ width: "1.2rem" }}
                             onClick={goBack}
                         />
                     </div>
@@ -403,6 +381,7 @@ function DesktopBrowser(props: any) {
                         <img
                             src={chrome.runtime.getURL("/icons/navigation-forward.svg")}
                             onClick={goForward}
+                            style={{ width: "1.2rem" }}
                         />
                     </div>
                     <div
@@ -413,12 +392,12 @@ function DesktopBrowser(props: any) {
                         }}
                     >
                         <img
-                            style={{width: "1.1rem"}}
+                            style={{ width: "1.2rem" }}
                             src={chrome.runtime.getURL("/icons/navigation-refresh.svg")}
                             onClick={refreshPage}
                         />
                     </div>
-                    <Addressbar/>
+                    <Addressbar />
                 </div>
             </div>
         );
@@ -435,7 +414,7 @@ function DesktopBrowser(props: any) {
                             height: selectedDevice.height,
                         }}
                     >
-                        <div className="content" style={{width: "100%", height: "100%"}}>
+                        <div className="content" style={{ width: "100%", height: "100%" }}>
                             <iframe
                                 ref={forwardRef}
                                 style={{
@@ -474,7 +453,7 @@ function DesktopBrowser(props: any) {
     return (
         <div style={styles.mainContainer}>
             <div style={styles.browser}>
-                <Toolbar/>
+                <Toolbar />
                 {IframeSection()}
             </div>
         </div>
@@ -495,7 +474,7 @@ function App() {
     const [steps, setSteps] = useState([
         {
             event_type: ACTIONS_IN_TEST.SET_DEVICE,
-            selectors: [{value: "body", uniquenessScore: 1, type: "body"}],
+            selectors: [{ value: "body", uniquenessScore: 1, type: "body" }],
             value: selectedDeviceId,
         },
     ]);
@@ -506,27 +485,27 @@ function App() {
     const [currentElementSelectors, setCurrentElementSelectors] = useState(null);
     const [currentElementAttributes, setCurrentElementAttributes] = useState(null);
 
-    const iframeRef : Ref<any> = useRef(null);
+    const iframeRef: Ref<any> = useRef(null);
 
     function getSteps() {
         return steps;
     }
 
     function saveSeoValidation(options: any) {
-        setSteps([...getSteps(), {event_type: ACTIONS_IN_TEST.VALIDATE_SEO, value: options, selectors: ["body"]}] as any);
+        setSteps([...getSteps(), { event_type: ACTIONS_IN_TEST.VALIDATE_SEO, value: options, selectors: ["body"] }] as any);
     }
 
-    function saveAssertionCallback(options: any){
-        setSteps([...getSteps(), {event_type: ACTIONS_IN_TEST.ASSERT_ELEMENT, value: options, selectors: currentElementSelectors}] as any);
+    function saveAssertionCallback(options: any) {
+        setSteps([...getSteps(), { event_type: ACTIONS_IN_TEST.ASSERT_ELEMENT, value: options, selectors: currentElementSelectors }] as any);
     }
 
     messageListenerCallback = function (event: any) {
-        const {type, eventType, value, selectors} = event.data;
+        const { type, eventType, value, selectors } = event.data;
         const steps = getSteps();
         if (eventType) {
             const lastStep = steps[steps.length - 1];
             if (!lastStep) {
-                setSteps([...getSteps(), {event_type: eventType, value, selectors}]);
+                setSteps([...getSteps(), { event_type: eventType, value, selectors }]);
             } else {
                 const navigateEventExist = steps.find(
                     (step) => step.event_type === ACTIONS_IN_TEST.NAVIGATE_URL
@@ -544,7 +523,7 @@ function App() {
                     } else {
                         setSteps([
                             ...getSteps(),
-                            {event_type: eventType, value, selectors},
+                            { event_type: eventType, value, selectors },
                         ]);
                     }
                 }
@@ -587,12 +566,12 @@ function App() {
                         (agent) => agent.name === (crusherAgent || userAgents[6].value)
                     );
                     cn.postMessage(
-                        {type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent},
+                        { type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent },
                         "*"
                     );
                     break;
                 case META_ACTIONS.FETCH_SEO_META_RESPONSE:
-                    setSeoMeta({title: value.title, description: value.description});
+                    setSeoMeta({ title: value.title, description: value.description });
                     break;
             }
         }
@@ -616,7 +595,7 @@ function App() {
 
     function RightBottomSection() {
         return (
-            <div style={{display: "flex", marginTop: "auto"}}>
+            <div style={{ display: "flex", marginTop: "auto" }}>
                 <div
                     onClick={cancelTest}
                     style={{
@@ -634,7 +613,7 @@ function App() {
                 >
                     Stop
                 </div>
-                <div style={{...styles.button, width: "auto"}} onClick={saveTest}>
+                <div style={{ ...styles.button, width: "auto" }} onClick={saveTest}>
                     <img
                         style={styles.buttonImage}
                         src={chrome.runtime.getURL("icons/record.svg")}
@@ -658,27 +637,36 @@ function App() {
                 />
             </>
         ) : (
-            <>
-                <div style={styles.sectionHeading}>Actions</div>
-                <Actions
-                    type={ACTION_FORM_TYPE.PAGE_ACTIONS}
-                    isShowingElementFormCallback={setIsShowingElementForm}
-                    iframeRef={iframeRef}
-                    updateState={updateState}
-                />
-            </>
-        );
+                <>
+                    <div style={styles.sectionHeading}>Actions</div>
+                    <Actions
+                        type={ACTION_FORM_TYPE.PAGE_ACTIONS}
+                        isShowingElementFormCallback={setIsShowingElementForm}
+                        iframeRef={iframeRef}
+                        updateState={updateState}
+                    />
+                </>
+            );
     }
 
     const [state, updateState] = useState(null);
 
     function RightSection() {
         return (
-            <div style={{...styles.sidebar, ...styles.paddingContainer}}>
-                <div style={styles.sectionHeading}>Steps</div>
-                <Steps steps={steps}/>
-                <RightMiddleSection state={state} updateState={updateState}/>
-                <RightBottomSection/>
+            <div style={{ ...styles.sidebar }}>
+                <div style={styles.tipContainer}>
+                    <div style={styles.bulbIcon}><img src="/icons/bulb.svg" width={31}/></div>
+                    <div style={styles.tipContent}>
+                        <div style={styles.tipTitle}>Tip of the session</div>
+                        <div style={styles.tipDesc}>Click on play to replay selected test</div>
+                    </div>
+                </div>
+                <div style={styles.paddingContainer}>
+                    <div style={styles.sectionHeading}>12 Actions</div>
+                    <Steps steps={steps} />
+                    <RightMiddleSection state={state} updateState={updateState} />
+                    <RightBottomSection />
+                </div>
             </div>
         );
     }
@@ -686,8 +674,8 @@ function App() {
     // @ts-ignore
     return (
         <div style={styles.container}>
-            <DesktopBrowser forwardRef={iframeRef}/>
-            <RightSection/>
+            <DesktopBrowser forwardRef={iframeRef} />
+            <RightSection />
             <style>
                 {`
                     html, body{
@@ -755,8 +743,8 @@ function App() {
                 rel="stylesheet"
                 href={chrome.runtime.getURL("/styles/fonts.css")}
             />
-            <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback}/>
-            <SeoModal seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation}/>
+            <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback} />
+            <SeoModal seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation} />
         </div>
     );
 }
@@ -774,10 +762,14 @@ const styles = {
         overflow: "auto",
     },
     sidebar: {
-        background: "#141528",
+        background: "#14181F",
         display: "flex",
         flexDirection: "column",
-        maxWidth: "19rem",
+        maxWidth: "22rem",
+        borderRadius: "0.70rem 0 0 0",
+        position: "fixed",
+        bottom: "0",
+        right: "0%",
         marginLeft: "auto",
         maxHeight: "100vh",
     },
@@ -785,15 +777,40 @@ const styles = {
         display: "flex",
         alignItems: "center",
     },
+    tipContainer: {
+        display: "flex",
+        flexDirection: "row",
+        background: "#1C1F26",
+        borderRadius: "0.62rem 0 0 0",
+        padding: "0.88rem 1.63rem"
+    },
+    bulbIcon: {
+
+    },
+    tipContent: {
+        color: "#FFFFFF",
+        fontFamily: "DM Sans",
+        marginLeft: "0.898rem"
+    },
+    tipTitle: {
+        fontSize: "0.66rem",
+        fontWeight: "bold"
+    },
+    tipDesc: {
+        fontSize: "0.64rem",
+        marginTop: "0.1rem",
+        fontWeight: 500
+    },
     sectionHeading: {
         fontFamily: "DM Sans",
-        fontSize: "0.9rem",
+        fontSize: "1rem",
         fontWeight: 700,
         marginBottom: "0rem",
+        textAlign: "center",
         color: "#fff",
     },
     paddingContainer: {
-        padding: "1.9rem 1.25rem",
+        padding: "1.1rem 1.25rem",
     },
     stepsContainer: {
         listStyle: "none",
@@ -804,7 +821,7 @@ const styles = {
         cursor: "pointer",
         fontFamily: "DM Sans",
         fontStyle: "normal",
-        background: "#0C0C1F",
+        background: "#1C1F26",
         borderRadius: "0.25rem",
         padding: "0.6rem 0",
         overflow: "hidden",
@@ -817,7 +834,7 @@ const styles = {
     },
     stepAction: {
         fontWeight: "bold",
-        color: "#9393BC",
+        color: "#83A3E3",
         fontSize: "0.8rem",
     },
     stepSelector: {
@@ -838,33 +855,28 @@ const styles = {
         display: "flex",
         flexDirection: "column",
     },
-    browserSmallShadow: {
-        background: "rgb(53, 57, 74)",
-        height: "0.4rem",
-    },
     browserMainToolbar: {
-        background: "rgb(53, 57, 74)",
+        background: "#141920",
         display: "flex",
-        padding: "0.25rem 0.75rem",
+        padding: "0.73rem 2rem",
     },
     addressBar: {
         width: "65%",
         padding: "0 0.1rem",
-        background: "#2b2e37",
+        background: "#1C1F26",
         overflow: "hidden",
         display: "flex",
         alignItems: "center",
         color: "#fff",
-        borderRadius: "1rem",
-        marginLeft: "0.9rem",
-        height: "1.3rem",
+        borderRadius: "0.1rem",
+        marginLeft: "0.9rem"
     },
     addressBarInput: {
         flex: 1,
-        fontSize: "0.7rem",
+        fontSize: "0.77rem",
         outline: "none",
         display: "flex",
-        marginLeft: "0.1rem",
+        padding: "0.6rem 0.5rem",
         alignItems: "center",
     },
     recordingStatus: {
@@ -895,14 +907,13 @@ const styles = {
         backgroundColor: "#fff",
     },
     button: {
-        background: "#0C0C1F",
-        boxShadow: "inset 0px 1px 13px 4px #070718",
+        background: "#5B76F7",
         borderRadius: 4,
         fontWeight: 600,
         fontSize: "0.825rem",
         color: "#fff",
         fontFamily: "DM Sans",
-        padding: "0.65rem 1rem",
+        padding: "0.5rem 1.15rem",
         display: "flex",
         alignItems: "center",
         cursor: "pointer",
@@ -925,7 +936,7 @@ const styles = {
         fontWeight: "bold",
         fontSize: "0.8rem",
         color: "#fff",
-        background: "#0D0D20",
+        background: "#15181E",
         boxShadow: "inset 0px 0px 15px 1px rgba(7, 7, 26, 0.7)",
         borderRadius: "0.2rem",
         width: "6.5rem",

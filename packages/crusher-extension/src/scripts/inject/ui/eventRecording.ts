@@ -222,7 +222,7 @@ export default class EventRecording {
     this._overlayCover.style.position = "absolute";
     let target = _target;
     if(event) {
-      const elements = this.elementsAtLocation(this.getOffset(target).left, this.getOffset(target).top);
+      const elements = this.elementsAtLocation(event.clientX, event.clientY);
       console.log("Printing elements at this location");
       console.log(elements);
       if(elements && elements.length > 1 && elements[0].id==="overlay_cover"){
@@ -359,6 +359,7 @@ export default class EventRecording {
       target = event.target;
       console.log("Printing elements at this location");
       const elements = this.elementsAtLocation(event.pageX, event.pageY);
+      console.log(elements);
       if(elements && elements.length > 1 && elements[0].id==="overlay_cover"){
         target = elements[1];
       }

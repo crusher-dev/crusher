@@ -58,7 +58,7 @@ function Steps(props: any) {
     return (
         <div
             style={{
-                height: 300,
+                height: 100,
                 minHeight: "50%",
                 overflowY: "auto",
                 marginBottom: "2rem",
@@ -76,18 +76,21 @@ function Actions(props: any) {
     const pageActions = [
         {
             id: SETTINGS_ACTIONS.INSPECT_MODE_ON,
-            value: "Inspect",
+            value: "Element",
             icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Take screenshot, add assertion"
         },
         {
             id: SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Take page screenshot"
         },
         {
             id: SETTINGS_ACTIONS.SHOW_SEO_MODAL,
             value: "SEO",
             icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Select Element"
         },
         // {
         //     id: ACTION_TYPES.CAPTURE_CONSOLE,
@@ -238,40 +241,22 @@ function Actions(props: any) {
     const actions =
         type === ACTION_FORM_TYPE.ELEMENT_ACTIONS ? elementActions : pageActions;
 
-    for (let i = 0; i < actions.length; i += 2) {
-        const shouldAddMarginRight = i % 2 && i !== actions.length - 1;
+    for (let i = 0; i < actions.length; i++) {
         out.push(
             <div style={styles.actionRow}>
                 <div
-                    style={
-                        shouldAddMarginRight
-                            ? { ...styles.actionItem, ...styles.oddItem }
-                            : { ...styles.actionItem, ...styles.oddItem }
-                    }
+                    style={{ ...styles.actionItem }}
                     id={actions[i].id}
                     onClick={() => {
                         handleElementActionClick(actions[i].id, updateState);
                     }}
                 >
                     <img style={styles.actionImage} src={actions[i].icon} />
-                    <span style={styles.actionText}>{actions[i].value}</span>
-                </div>
-                {i + 1 < actions.length && (
-                    <div
-                        style={
-                            shouldAddMarginRight
-                                ? { ...styles.actionItem, ...styles.oddItem }
-                                : { ...styles.actionItem, ...styles.oddItem }
-                        }
-                        id={actions[i + 1].id}
-                        onClick={() => {
-                            handleElementActionClick(actions[i + 1].id, updateState);
-                        }}
-                    >
-                        <img style={styles.actionImage} src={actions[i + 1].icon} />
-                        <span style={styles.actionText}>{actions[i + 1].value}</span>
+                    <div style={styles.actionContent}>
+                        <span style={styles.actionText}>{actions[i].value}</span>
+                        <span style={styles.actionDesc}>{actions[i].desc}</span>
                     </div>
-                )}
+                </div>
             </div>
         );
     }
@@ -398,6 +383,13 @@ function DesktopBrowser(props: any) {
                         />
                     </div>
                     <Addressbar />
+                    <div style={{ ...styles.button, width: "auto", marginLeft: "auto" }} >
+                        <img
+                            style={styles.buttonImage}
+                            src={chrome.runtime.getURL("icons/record.svg")}
+                        />
+                        <span>Save Test</span>
+                    </div>
                 </div>
             </div>
         );
@@ -593,42 +585,13 @@ function App() {
         }
     }
 
-    function RightBottomSection() {
-        return (
-            <div style={{ display: "flex", marginTop: "auto" }}>
-                <div
-                    onClick={cancelTest}
-                    style={{
-                        marginLeft: "auto",
-                        width: "auto",
-                        marginRight: "3rem",
-                        color: "#fff",
-                        cursor: "pointer",
-                        fontFamily: "DM Sans",
-                        fontWeight: 500,
-                        fontSize: "0.9rem",
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    Stop
-                </div>
-                <div style={{ ...styles.button, width: "auto" }} onClick={saveTest}>
-                    <img
-                        style={styles.buttonImage}
-                        src={chrome.runtime.getURL("icons/record.svg")}
-                    />
-                    <span>Save Test</span>
-                </div>
-            </div>
-        );
-    }
-
     function RightMiddleSection(props: any) {
         const isElementSelected = isShowingElementForm;
         return isElementSelected ? (
             <>
-                <div style={styles.sectionHeading}>Element Actions</div>
+                <div style={styles.flexRow}>
+                    <div style={styles.flexRowHeading}>Select Element Action</div>
+                </div>
                 <Actions
                     type={ACTION_FORM_TYPE.ELEMENT_ACTIONS}
                     isShowingElementFormCallback={setIsShowingElementForm}
@@ -638,7 +601,10 @@ function App() {
             </>
         ) : (
                 <>
-                    <div style={styles.sectionHeading}>Actions</div>
+                    <div style={styles.flexRow}>
+                        <div style={styles.flexRowHeading}>Select Action</div>
+                        {/* <div style={styles.flexRowRightItem}>Use template</div> */}
+                    </div>
                     <Actions
                         type={ACTION_FORM_TYPE.PAGE_ACTIONS}
                         isShowingElementFormCallback={setIsShowingElementForm}
@@ -655,7 +621,7 @@ function App() {
         return (
             <div style={{ ...styles.sidebar }}>
                 <div style={styles.tipContainer}>
-                    <div style={styles.bulbIcon}><img src="/icons/bulb.svg" width={31}/></div>
+                    <div style={styles.bulbIcon}><img src="/icons/bulb.svg" width={31} /></div>
                     <div style={styles.tipContent}>
                         <div style={styles.tipTitle}>Tip of the session</div>
                         <div style={styles.tipDesc}>Click on play to replay selected test</div>
@@ -665,7 +631,6 @@ function App() {
                     <div style={styles.sectionHeading}>12 Actions</div>
                     <Steps steps={steps} />
                     <RightMiddleSection state={state} updateState={updateState} />
-                    <RightBottomSection />
                 </div>
             </div>
         );
@@ -766,6 +731,7 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         maxWidth: "22rem",
+        width: "22rem",
         borderRadius: "0.70rem 0 0 0",
         position: "fixed",
         bottom: "0",
@@ -808,6 +774,23 @@ const styles = {
         marginBottom: "0rem",
         textAlign: "center",
         color: "#fff",
+    },
+    flexRow: {
+        display: "flex",
+        flexDirection: "row",
+        fontFamily: "DM Sans",
+        fontSize: "0.875rem",
+        color: "#fff"
+    },
+    flexRowHeading: {
+        color: "#fff",
+        fontWeight: 700
+    },
+    flexRowRightItem: {
+        marginLeft: "auto",
+        color: "#fff",
+        fontWeight: 700,
+        cursor: "pointer"
     },
     paddingContainer: {
         padding: "1.1rem 1.25rem",
@@ -939,13 +922,25 @@ const styles = {
         background: "#15181E",
         boxShadow: "inset 0px 0px 15px 1px rgba(7, 7, 26, 0.7)",
         borderRadius: "0.2rem",
-        width: "6.5rem",
+        width: "100%",
         display: "flex",
         cursor: "pointer",
     },
     actionImage: {},
+    actionContent: {
+        marginLeft: "1rem",
+        display: "flex",
+        flexDirection: "column"
+    },
     actionText: {
-        marginLeft: "auto",
+        fontSize: "0.9rem",
+        fontFamily: "DM Sans"
+    },
+    actionDesc: {
+        fontSize: "0.82rem",
+        fontFamily: "DM Sans",
+        fontWeight: "500",
+        marginTop: "0.15rem"
     },
     oddItem: {
         marginRight: "1rem",

@@ -1,16 +1,14 @@
-import { Ref } from "preact";
+import {Ref} from "preact";
 import React from "preact/compat";
-import { useRef, useState } from "preact/hooks";
-import { MODALS } from "../../constants/modal";
-import { AssertModal } from "./components/assertModal";
-import { SeoModal } from "./components/seoModal";
+import {useCallback, useRef, useState} from "preact/hooks";
+import {MODALS} from "../../constants/modal";
 import devices from "../../../../crusher-shared/constants/devices";
 import userAgents from "../../../../crusher-shared/constants/userAgents";
-import { addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath } from "../../../../crusher-shared/utils/url";
-import { NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE, } from "../../constants";
-import { META_ACTIONS, SETTINGS_ACTIONS } from "../../constants/actionTypes";
-import { ACTIONS_IN_TEST } from "../../../../crusher-shared/constants/recordedActions";
-import { sendPostDataWithForm } from "../../utils/helpers";
+import {addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath} from "../../../../crusher-shared/utils/url";
+import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE,} from "../../constants";
+import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
+import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
+import {sendPostDataWithForm} from "../../utils/helpers";
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -18,15 +16,15 @@ export const ACTION_FORM_TYPE = {
 };
 
 function Step(props: any) {
-    const { type, path, value } = props;
+    const {type, path, value} = props;
     return (
         <li style={styles.step}>
             <div style={styles.stepImage}>
-                <img src={chrome.runtime.getURL("icons/mouse.svg")} />
+                <img src={chrome.runtime.getURL("icons/mouse.svg")}/>
             </div>
-            <div style={{ ...styles.stepTextContainer }}>
+            <div style={{...styles.stepTextContainer}}>
                 <div style={styles.stepAction}>{type}</div>
-                <div style={{ width: "70%", overflow: "hidden" }}>
+                <div style={{width: "70%", overflow: "hidden"}}>
                     <div style={styles.stepSelector}>{value || path}</div>
                 </div>
             </div>
@@ -41,11 +39,11 @@ function Step(props: any) {
 }
 
 function Steps(props: any) {
-    const { steps } = props;
+    const {steps} = props;
 
     const stepList = steps.map((step: any) => {
         console.log(step);
-        const { event_type, selectors, value } = step;
+        const {event_type, selectors, value} = step;
         return (
             <Step
                 type={event_type}
@@ -72,7 +70,7 @@ function Steps(props: any) {
 }
 
 function Actions(props: any) {
-    const { iframeRef, type, isShowingElementFormCallback, updateState } = props;
+    const {iframeRef, type, isShowingElementFormCallback, updateState} = props;
     const pageActions = [
         {
             id: SETTINGS_ACTIONS.INSPECT_MODE_ON,
@@ -110,26 +108,31 @@ function Actions(props: any) {
             id: SETTINGS_ACTIONS.CLICK_ON_ELEMENT,
             value: "Click",
             icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Click on the element"
         },
         {
             id: SETTINGS_ACTIONS.HOVER_ON_ELEMENT,
             value: "Hover",
             icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Add a hover action to element"
         },
         {
             id: SETTINGS_ACTIONS.TAKE_ELEMENT_SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Take screenshot of element"
         },
         {
             id: SETTINGS_ACTIONS.BLACKOUT_ON_ELEMENT,
             value: "Blackout",
             icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Blackout element in test results"
         },
         {
             id: SETTINGS_ACTIONS.SHOW_ASSERT_ELEMENT_MODAL,
             value: "Assert",
-            icon: chrome.runtime.getURL("icons/action.svg")
+            icon: chrome.runtime.getURL("icons/action.svg"),
+            desc: "Setup Assertion for Element"
         }
     ];
 
@@ -245,13 +248,13 @@ function Actions(props: any) {
         out.push(
             <div style={styles.actionRow}>
                 <div
-                    style={{ ...styles.actionItem }}
+                    style={{...styles.actionItem}}
                     id={actions[i].id}
                     onClick={() => {
                         handleElementActionClick(actions[i].id, updateState);
                     }}
                 >
-                    <img style={styles.actionImage} src={actions[i].icon} />
+                    <img style={styles.actionImage} src={actions[i].icon}/>
                     <div style={styles.actionContent}>
                         <span style={styles.actionText}>{actions[i].value}</span>
                         <span style={styles.actionDesc}>{actions[i].desc}</span>
@@ -262,7 +265,7 @@ function Actions(props: any) {
     }
 
     return (
-        <div style={{ ...styles.actionListContainer, marginTop: "2rem" }}>
+        <div style={{...styles.actionListContainer, marginTop: "2rem"}}>
             {out}
         </div>
     );
@@ -275,7 +278,7 @@ function DesktopBrowser(props: any) {
     const url = urlEncoded
         ? decodeURI(urlEncoded.toString().replace(/^["']/, "").replace(/["']$/, ""))
         : "https://google.com";
-    const { forwardRef } = props;
+    const {forwardRef} = props;
     const addressInput: any = useRef(null);
     const [addressValue, setAddressValue] = useState(url);
 
@@ -301,17 +304,17 @@ function DesktopBrowser(props: any) {
 
     function goBack() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({ type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true }, "*");
+        cn.postMessage({type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true}, "*");
     }
 
     function goForward() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({ type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true }, "*");
+        cn.postMessage({type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true}, "*");
     }
 
     function refreshPage() {
         const cn = forwardRef.current.contentWindow;
-        cn.postMessage({ type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true }, "*");
+        cn.postMessage({type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true}, "*");
     }
 
     function Addressbar() {
@@ -329,7 +332,7 @@ function DesktopBrowser(props: any) {
                     }}
                 >
                     <img
-                        style={{ width: "0.8rem" }}
+                        style={{width: "0.8rem"}}
                         src={chrome.runtime.getURL("/icons/ssl.svg")}
                     />
                 </div>
@@ -349,10 +352,10 @@ function DesktopBrowser(props: any) {
         return (
             <div style={styles.browserToolbar}>
                 <div style={styles.browserMainToolbar}>
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{display: "flex", alignItems: "center"}}>
                         <img
                             src={chrome.runtime.getURL("/icons/navigation-back.svg")}
-                            style={{ width: "1.2rem" }}
+                            style={{width: "1.2rem"}}
                             onClick={goBack}
                         />
                     </div>
@@ -366,7 +369,7 @@ function DesktopBrowser(props: any) {
                         <img
                             src={chrome.runtime.getURL("/icons/navigation-forward.svg")}
                             onClick={goForward}
-                            style={{ width: "1.2rem" }}
+                            style={{width: "1.2rem"}}
                         />
                     </div>
                     <div
@@ -377,13 +380,13 @@ function DesktopBrowser(props: any) {
                         }}
                     >
                         <img
-                            style={{ width: "1.2rem" }}
+                            style={{width: "1.2rem"}}
                             src={chrome.runtime.getURL("/icons/navigation-refresh.svg")}
                             onClick={refreshPage}
                         />
                     </div>
-                    <Addressbar />
-                    <div style={{ ...styles.button, width: "auto", marginLeft: "auto" }} >
+                    <Addressbar/>
+                    <div style={{...styles.button, width: "auto", marginLeft: "auto"}} onClick={props.saveTest}>
                         <img
                             style={styles.buttonImage}
                             src={chrome.runtime.getURL("icons/record.svg")}
@@ -406,7 +409,7 @@ function DesktopBrowser(props: any) {
                             height: selectedDevice.height,
                         }}
                     >
-                        <div className="content" style={{ width: "100%", height: "100%" }}>
+                        <div className="content" style={{width: "100%", height: "100%"}}>
                             <iframe
                                 ref={forwardRef}
                                 style={{
@@ -445,7 +448,7 @@ function DesktopBrowser(props: any) {
     return (
         <div style={styles.mainContainer}>
             <div style={styles.browser}>
-                <Toolbar />
+                <Toolbar/>
                 {IframeSection()}
             </div>
         </div>
@@ -460,13 +463,281 @@ window.addEventListener("message", (event) => {
     }
 });
 
+
+function ShowRowInput(props: any){
+    const {name, nameOptions, rowKey, method, updateMethodCallback, updateSelectedSeoField, value, valuesMap, updateFieldValueCallback} = props;
+    const nameOptionsOut = nameOptions.map((option: string)=> {
+        return (
+            <option value={option}>{option}</option>
+        );
+    });
+
+    function onChangeSeoField(event: any){
+        updateSelectedSeoField(rowKey, event.target.value);
+    }
+
+    function handleMethodChange(event: any){
+        updateMethodCallback(rowKey, name, event.target.value);
+    }
+
+    function updateFieldValue(event: any){
+        updateFieldValueCallback(rowKey, name, event.target.value);
+    }
+
+    function checkIfCorrectValue(){
+        console.log("check called", method, value, valuesMap, name);
+        if(method === "matches"){
+            return value === valuesMap[name].value
+        } else if(method === "contains"){
+            return valuesMap[name].value && valuesMap[name].value.includes(value);
+        } else if(method === "regex"){
+            try{
+                const rgx = new RegExp(value);
+                if(rgx.test(valuesMap[name].value)){
+                    return true;
+                } else{
+                    throw new Error("Regex didn't match");
+                }
+            } catch(err){
+                return false;
+            }
+        }
+        return false;
+    }
+
+    return (
+        <tr style={styles.inputTableGridItem}>
+            <th style={styles.inputTableGridItemLabel}>
+                <select style={{...styles.select}} onChange={onChangeSeoField} value={name}>
+                    {nameOptionsOut}
+                </select>
+                <img src={chrome.runtime.getURL(checkIfCorrectValue() ? "/icons/correct.svg": "/icons/cross.svg")} style={{marginLeft: "0.85rem"}}/>
+            </th>
+            <th style={styles.inputTableGridOption}>
+                <select style={{...styles.select}} value={method} onChange={handleMethodChange}>
+                    <option value="matches">matches</option>
+                    <option value="contains">contains</option>
+                    <option value="regex">regex</option>
+                </select>
+            </th>
+            <th style={styles.inputTableGridOptionValue}>
+                <input onChange={updateFieldValue} placeholder={"Enter value"} value={value} style={styles.inputTableGridOptionValueInput} />
+            </th>
+        </tr>
+    )
+}
+
+function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
+    const {title, metaTags} = seoMeta;
+    const [seoMetaRowNames, setSeoMetaRowNames] = useState({});
+    const [seoMetaRows, setSeoMetaRows] = useState({});
+    const [seoMetaRowsMethods, setSeoMetaRowsMethods] = useState({} as any);
+    const [seoMetaValues, setSeoMetaValues] = useState({} as any);
+    const _latestSeoMetaRowNames = useRef({});
+    const _latestSeoMetaRows = useRef({});
+    const _latestSeoMethodRows = useRef({});
+    const _latestSeoMetaValues = useRef({});
+
+    const seoOptionsMap = {
+        "title": {
+            name: "title",
+            value: title
+        },
+        ...metaTags
+    }
+
+    const nameOptions = Object.keys(seoOptionsMap).map((seoFieldName) => {
+        return  seoOptionsMap[seoFieldName].name
+    });
+
+    const saveSEOAssertion = ()=> {
+        const savedFields = Object.keys(_latestSeoMetaRowNames.current as any).map((rowKey)=>{
+            //@ts-ignore
+            return {fieldName: _latestSeoMetaRowNames.current[rowKey], method: _latestSeoMethodRows.current[rowKey], fieldValue: _latestSeoMetaValues.current[rowKey]}
+        });
+        return saveSEOAssertionCallback(savedFields);
+    }
+
+    const updateSEOFieldValue = useCallback((rowKey: string,fieldName: string, fieldValue: string) => {
+        let _seoMetaRows : any = _latestSeoMetaRows.current;
+        let _seoMetaValues: any = _latestSeoMetaValues.current;
+
+        _seoMetaRows[rowKey] = (
+            //@ts-ignore
+            <ShowRowInput rowKey={rowKey} value={fieldValue} updateFieldValueCallback={updateSEOFieldValue} method={_latestSeoMethodRows.current[rowKey]} updateMethodCallback={updateMethodForSeoField} updateSelectedSeoField={updateSelectedSeoField} nameOptions={nameOptions} name={fieldName} valuesMap={seoOptionsMap}/>
+        );
+        _seoMetaValues[rowKey] = fieldValue;
+
+        setSeoMetaRows({..._seoMetaRows});
+        setSeoMetaValues({
+            ..._seoMetaValues,
+            [rowKey]: name
+        });
+
+        _latestSeoMetaRows.current = _seoMetaRows;
+        _latestSeoMetaValues.current = _seoMetaValues;
+
+    }, [seoMetaRows, seoMetaValues]);
+
+    const updateSelectedSeoField = useCallback((rowKey: string, name: string) => {
+        let _seoMetaRows : any = _latestSeoMetaRows.current;
+        let _seoMetaRowNames : any = _latestSeoMetaRowNames.current;
+        let _seoMetaRowValues : any = _latestSeoMetaValues.current;
+
+        _seoMetaRowNames[rowKey] = name;
+        _seoMetaRowValues[rowKey] = seoOptionsMap[name].value;
+        setSeoMetaRowNames(_seoMetaRowNames);
+        setSeoMetaRows({..._seoMetaRows});
+        setSeoMetaValues({..._seoMetaRowValues});
+        _latestSeoMetaRowNames.current = _seoMetaRowNames;
+        _latestSeoMetaRows.current = _seoMetaRows;
+        _latestSeoMetaValues.current = _seoMetaRowValues;
+    }, [seoMetaRows, seoMetaRowsMethods]);
+
+    const updateMethodForSeoField = useCallback((rowKey: string, fieldName : string, name: string) => {
+        let _seoMetaRows : any = _latestSeoMetaRows.current;
+        let _seoMetaMethods : any = _latestSeoMethodRows.current;
+
+        _seoMetaMethods[rowKey] = name;
+
+        setSeoMetaRows({..._seoMetaRows});
+        setSeoMetaRowsMethods({
+            ..._seoMetaMethods
+        });
+
+        _latestSeoMetaRows.current = _seoMetaRows;
+        _latestSeoMethodRows.current = _seoMetaMethods;
+    }, [seoMetaRows, seoMetaRowsMethods]);
+
+    const autoGenerateSeoMetaRows = useCallback(()=> {
+        let _seoMetaRowNames : any = _latestSeoMetaRowNames.current;
+
+        let _seoMetaRows: any = {};
+        let _seoMetaMethods: any = {};
+        let _seoMetaValues: any = {};
+
+        Object.values(seoOptionsMap ? seoOptionsMap : {}).map((meta: any)=>{
+            const key = window.performance.now()+"_"+Math.random().toString(36).substr(2, 9);
+            setSeoMetaRowsMethods({
+                ...seoMetaRowsMethods,
+                [key]: "matches"
+            });
+            setSeoMetaRowNames({
+                ...seoMetaRowNames,
+                [key]: meta.name
+            });
+            _seoMetaMethods[key] = "matches";
+            _seoMetaValues[key] = meta.value;
+            _seoMetaRowNames[key] = meta.name;
+        });
+
+        setSeoMetaRows(_seoMetaRows);
+        _latestSeoMetaRowNames.current = _seoMetaRowNames;
+        _latestSeoMetaRows.current = _seoMetaRows;
+        _latestSeoMethodRows.current  = _seoMetaMethods;
+        _latestSeoMetaValues.current = _seoMetaValues;
+
+    }, [seoMetaRows, seoMetaRowsMethods]);
+
+    const createRow = useCallback(()=>{
+        const key = window.performance.now()+"_"+Math.random().toString(36).substr(2, 9);
+        const seoMetaRowNames = _latestSeoMetaRowNames.current as any;
+        let seoMetaMethods: any = _latestSeoMethodRows.current as any;
+        let seoMetaValues: any = _latestSeoMetaValues.current as any;
+
+        setSeoMetaRowsMethods({
+            ...seoMetaMethods,
+            [key]: "matches"
+        });
+        _latestSeoMethodRows.current = {
+            ...seoMetaMethods,
+            [key]: "matches"
+        };
+
+        setSeoMetaRowNames({
+            ...seoMetaRowNames,
+            [key]: nameOptions[0]
+        });
+        _latestSeoMetaRowNames.current={
+            ...seoMetaRowNames,
+            [key]: nameOptions[0]
+        };
+
+        setSeoMetaValues({
+            ...seoMetaValues,
+            [key]: seoOptionsMap[nameOptions[0]].value
+        })
+        _latestSeoMetaValues.current = {
+            ...seoMetaValues,
+            [key]: seoOptionsMap[nameOptions[0]].value
+        };
+
+    }, [seoMetaRows, seoMetaRowsMethods]);
+
+    const seoMetaRowsOut = Object.keys(_latestSeoMetaRowNames.current).map((rowKey: string)=>{
+        return (
+            //@ts-ignore
+            <ShowRowInput value={_latestSeoMetaValues.current[rowKey]} rowKey={rowKey} updateFieldValueCallback={updateSEOFieldValue} updateMethodCallback={updateMethodForSeoField} updateSelectedSeoField={updateSelectedSeoField} nameOptions={nameOptions} name={_latestSeoMetaRowNames.current[rowKey]} valuesMap={seoOptionsMap} method={_latestSeoMethodRows.current[rowKey]}/>
+        )
+    })
+
+    return (
+        <div style={styles.innerForm}>
+            <div style={styles.innerFormHeader}>
+                <div style={styles.innerFormHeaderIconContainer}>
+                    <img style={styles.innerFormHeaderIcon} src={chrome.runtime.getURL("/icons/browser.svg")}/>
+                </div>
+                <div style={styles.innerFormHeaderContent}>
+                    <div style={styles.innerFormHeaderTitle}>SEO Checks</div>
+                    <div style={styles.innerFormHeaderDesc}>These are run when page is loaded</div>
+                </div>
+                <div style={styles.innerFormHelp}>
+                    <img style={styles.innerFormHelpIcon} src={chrome.runtime.getURL("/icons/bulbV2.svg")}/>
+                    <div style={{display: "flex", alignItems: "center"}} onClick={autoGenerateSeoMetaRows}>
+                        <span style={styles.innerFormHelpLink}>Generate-SEO Checks!</span>
+                    </div>
+                </div>
+            </div>
+            <table style={styles.inputTableGrid}>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                {seoMetaRowsOut}
+            </table>
+            <div style={styles.formBottomRow}>
+                <div style={styles.formButtonAdvance} onClick={createRow}>
+                    Advance
+                </div>
+                <div style={{...styles.button, padding: "0.4rem 3rem", marginLeft: "auto"}} onClick={saveSEOAssertion}>Save</div>
+            </div>
+        </div>
+    )
+}
+
+function ShowForm({state, updateState, seoMeta, submitCallback}: any) {
+    function closeForm(){
+        updateState(null);
+    }
+
+    return (
+        <div style={{width: "32rem"}}>
+            <div style={styles.goBack} onClick={closeForm}>
+                {"< Go Back"}
+            </div>
+            <ShowSEOForm saveSEOAssertionCallback={submitCallback} seoMeta={seoMeta}/>
+        </div>
+    );
+}
+
 function App() {
     const selectedDeviceId = getQueryStringParams("device", window.location.href);
 
     const [steps, setSteps] = useState([
         {
             event_type: ACTIONS_IN_TEST.SET_DEVICE,
-            selectors: [{ value: "body", uniquenessScore: 1, type: "body" }],
+            selectors: [{value: "body", uniquenessScore: 1, type: "body"}],
             value: selectedDeviceId,
         },
     ]);
@@ -476,6 +747,7 @@ function App() {
     const [isUsingElementInspector] = useState(false);
     const [currentElementSelectors, setCurrentElementSelectors] = useState(null);
     const [currentElementAttributes, setCurrentElementAttributes] = useState(null);
+    const [state, updateState] = useState(null);
 
     const iframeRef: Ref<any> = useRef(null);
 
@@ -484,20 +756,31 @@ function App() {
     }
 
     function saveSeoValidation(options: any) {
-        setSteps([...getSteps(), { event_type: ACTIONS_IN_TEST.VALIDATE_SEO, value: options, selectors: ["body"] }] as any);
+        console.log("Here are options");
+        console.log(options);
+        setSteps([...getSteps(), {
+            event_type: ACTIONS_IN_TEST.VALIDATE_SEO,
+            value: options,
+            selectors: ["body"]
+        }] as any);
+        updateState(null);
     }
 
     function saveAssertionCallback(options: any) {
-        setSteps([...getSteps(), { event_type: ACTIONS_IN_TEST.ASSERT_ELEMENT, value: options, selectors: currentElementSelectors }] as any);
+        setSteps([...getSteps(), {
+            event_type: ACTIONS_IN_TEST.ASSERT_ELEMENT,
+            value: options,
+            selectors: currentElementSelectors
+        }] as any);
     }
 
     messageListenerCallback = function (event: any) {
-        const { type, eventType, value, selectors } = event.data;
+        const {type, eventType, value, selectors} = event.data;
         const steps = getSteps();
         if (eventType) {
             const lastStep = steps[steps.length - 1];
             if (!lastStep) {
-                setSteps([...getSteps(), { event_type: eventType, value, selectors }]);
+                setSteps([...getSteps(), {event_type: eventType, value, selectors}]);
             } else {
                 const navigateEventExist = steps.find(
                     (step) => step.event_type === ACTIONS_IN_TEST.NAVIGATE_URL
@@ -515,7 +798,7 @@ function App() {
                     } else {
                         setSteps([
                             ...getSteps(),
-                            { event_type: eventType, value, selectors },
+                            {event_type: eventType, value, selectors},
                         ]);
                     }
                 }
@@ -558,32 +841,26 @@ function App() {
                         (agent) => agent.name === (crusherAgent || userAgents[6].value)
                     );
                     cn.postMessage(
-                        { type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent },
+                        {type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent},
                         "*"
                     );
                     break;
                 case META_ACTIONS.FETCH_SEO_META_RESPONSE:
-                    setSeoMeta({ title: value.title, description: value.description });
+                    setSeoMeta({title: value.title, metaTags: value.metaTags});
                     break;
             }
         }
     };
 
-    function saveTest() {
-        sendPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
-            events: escape(JSON.stringify(steps)),
-        });
-    }
-
-    function cancelTest() {
-        if (isShowingElementForm) {
-            setIsShowingElementForm(false);
-            setCurrentElementSelectors(null);
-            setCurrentElementAttributes(null);
-        } else {
-            window.close();
-        }
-    }
+    // function cancelTest() {
+    //     if (isShowingElementForm) {
+    //         setIsShowingElementForm(false);
+    //         setCurrentElementSelectors(null);
+    //         setCurrentElementAttributes(null);
+    //     } else {
+    //         window.close();
+    //     }
+    // }
 
     function RightMiddleSection(props: any) {
         const isElementSelected = isShowingElementForm;
@@ -600,47 +877,61 @@ function App() {
                 />
             </>
         ) : (
-                <>
-                    <div style={styles.flexRow}>
-                        <div style={styles.flexRowHeading}>Select Action</div>
-                        {/* <div style={styles.flexRowRightItem}>Use template</div> */}
-                    </div>
-                    <Actions
-                        type={ACTION_FORM_TYPE.PAGE_ACTIONS}
-                        isShowingElementFormCallback={setIsShowingElementForm}
-                        iframeRef={iframeRef}
-                        updateState={updateState}
-                    />
-                </>
-            );
+            <>
+                <div style={styles.flexRow}>
+                    <div style={styles.flexRowHeading}>Select Action</div>
+                    {/* <div style={styles.flexRowRightItem}>Use template</div> */}
+                </div>
+                <Actions
+                    type={ACTION_FORM_TYPE.PAGE_ACTIONS}
+                    isShowingElementFormCallback={setIsShowingElementForm}
+                    iframeRef={iframeRef}
+                    updateState={updateState}
+                />
+            </>
+        );
     }
 
-    const [state, updateState] = useState(null);
 
     function RightSection() {
         return (
-            <div style={{ ...styles.sidebar }}>
+            <div style={{...styles.sidebar}}>
                 <div style={styles.tipContainer}>
-                    <div style={styles.bulbIcon}><img src="/icons/bulb.svg" width={31} /></div>
+                    <div style={styles.bulbIcon}><img src="/icons/bulb.svg" width={31}/></div>
                     <div style={styles.tipContent}>
                         <div style={styles.tipTitle}>Tip of the session</div>
                         <div style={styles.tipDesc}>Click on play to replay selected test</div>
                     </div>
                 </div>
                 <div style={styles.paddingContainer}>
-                    <div style={styles.sectionHeading}>12 Actions</div>
-                    <Steps steps={steps} />
-                    <RightMiddleSection state={state} updateState={updateState} />
+                    <div style={{width: "22rem", marginLeft: "auto"}}>
+                        <div style={styles.sectionHeading}>{steps.length} Actions</div>
+                        <Steps steps={steps}/>
+                    </div>
+                    {!state && (
+                        <RightMiddleSection state={state} updateState={updateState}/>
+                    )}
+                    {state && (
+                        <ShowForm submitCallback={saveSeoValidation} state={state} seoMeta={seoMeta} currentElementAttributes={currentElementAttributes}
+                                  updateState={updateState} saveAssertionCallback={saveAssertionCallback}
+                                  saveSeoValidationCallback={saveSeoValidation}/>
+                    )}
                 </div>
             </div>
         );
     }
 
+    function saveTest() {
+        sendPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
+            events: escape(JSON.stringify(steps)),
+        });
+    }
+
     // @ts-ignore
     return (
         <div style={styles.container}>
-            <DesktopBrowser forwardRef={iframeRef} />
-            <RightSection />
+            <DesktopBrowser saveTest={saveTest} forwardRef={iframeRef}/>
+            <RightSection/>
             <style>
                 {`
                     html, body{
@@ -708,8 +999,10 @@ function App() {
                 rel="stylesheet"
                 href={chrome.runtime.getURL("/styles/fonts.css")}
             />
-            <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback} />
-            <SeoModal seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation} />
+            {/*<AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState}*/}
+            {/*             saveAssertionCallback={saveAssertionCallback}/>*/}
+            {/*<SeoModal seoMeta={seoMeta} state={state} updateState={updateState}*/}
+            {/*          saveSeoValidationCallback={saveSeoValidation}/>*/}
         </div>
     );
 }
@@ -727,11 +1020,9 @@ const styles = {
         overflow: "auto",
     },
     sidebar: {
-        background: "#14181F",
+        background: "#1C1F26",
         display: "flex",
         flexDirection: "column",
-        maxWidth: "22rem",
-        width: "22rem",
         borderRadius: "0.70rem 0 0 0",
         position: "fixed",
         bottom: "0",
@@ -750,9 +1041,7 @@ const styles = {
         borderRadius: "0.62rem 0 0 0",
         padding: "0.88rem 1.63rem"
     },
-    bulbIcon: {
-
-    },
+    bulbIcon: {},
     tipContent: {
         color: "#FFFFFF",
         fontFamily: "DM Sans",
@@ -794,6 +1083,7 @@ const styles = {
     },
     paddingContainer: {
         padding: "1.1rem 1.25rem",
+        position: "relative"
     },
     stepsContainer: {
         listStyle: "none",
@@ -875,9 +1165,10 @@ const styles = {
     },
     previewBrowser: {
         flex: 1,
+        maxWidth: "75%",
         display: "flex",
         justifyContent: "center",
-        paddingTop: "3rem",
+        paddingTop: "1rem",
         overflowY: "auto",
         background: "rgb(40, 40, 40)",
     },
@@ -920,7 +1211,6 @@ const styles = {
         fontSize: "0.8rem",
         color: "#fff",
         background: "#15181E",
-        boxShadow: "inset 0px 0px 15px 1px rgba(7, 7, 26, 0.7)",
         borderRadius: "0.2rem",
         width: "100%",
         display: "flex",
@@ -945,6 +1235,124 @@ const styles = {
     oddItem: {
         marginRight: "1rem",
     },
+    goBack: {
+        fontFamily: "DM Sans",
+        fontStyle: "normal",
+        fontSize: "0.81rem",
+        color: "#fff",
+        position: "absolute",
+        top: "5%",
+        left: "2rem",
+        cursor: "pointer"
+    },
+    innerForm: {
+    },
+    innerFormHeader: {
+        display: "flex",
+        flexDirection: "row",
+        position: "relative"
+    },
+    innerFormHeaderIconContainer: {},
+    innerFormHeaderIcon: {},
+    innerFormHeaderContent: {
+        flex: 1,
+        marginLeft: "1.41rem",
+        color: "#fff",
+        fontFamily: "DM Sans",
+        fontStyle: "normal"
+    },
+    innerFormHeaderTitle: {
+        fontFamily: "DM Sans",
+        fontStyle: "normal",
+        fontWeight: "bold",
+        color: "#fff",
+        fontSize: "0.9rem"
+    },
+    innerFormHeaderDesc: {
+        marginTop: "0.45rem",
+        fontSize: "0.81rem"
+    },
+    innerFormHelp: {
+        display: "flex",
+        alignItems: "top",
+        position: "absolute",
+        top: "-1.2rem",
+        right: "0rem",
+        cursor: "pointer"
+    },
+    innerFormHelpIcon: {},
+    innerFormHelpLink: {
+        paddingTop: "0.4rem",
+        marginLeft: "0.2rem",
+        fontFamily: "DM Sans",
+        fontStyle: "normal",
+        fontWeight: "bold",
+        color: "#fff",
+        textDecorationLine: "underline",
+        fontSize: "0.82rem"
+    },
+    inputTableGrid: {
+        marginTop: "2rem",
+        width: "100%",
+        textAlign: "left",
+        borderSpacing: "0.95rem",
+        maxHeight: "47vh",
+        display: "inline-block",
+        overflowY: "auto"
+    },
+    inputTableGridItem: {
+        display: "table-row",
+        gridTemplateColumns: "auto auto auto",
+    },
+    inputTableGridItemLabel: {
+        fontFamily: "DM Sans",
+        minWidth: "7rem",
+        fontStyle: "normal",
+        fontSize: "0.82rem",
+        color: "#fff",
+        display: "flex"
+    },
+    inputTableGridOption: {
+        width: "50%",
+        textAlign: "right"
+    },
+    inputTableGridOptionValue: {
+        width: "50%",
+
+        textAlign: "right"
+    },
+    inputTableGridOptionValueInput: {
+        padding: "0.4rem 0.7rem",
+        borderRadius: "0.25rem",
+        width: "100%",
+        maxWidth: "10rem",
+        fontSize: 18,
+    },
+    formBottomRow: {
+      display: "flex",
+      marginTop: "1.4rem"
+    },
+    formButtonAdvance: {
+        fontWeight: "800",
+        cursor: "pointer",
+        fontSize: "0.82rem",
+        color: "#5B76F7",
+        textDecorationLine: "underline"
+    },
+    select: {
+        padding: "0.4rem 0.7rem",
+        borderRadius: "0.25rem",
+        width: "100%",
+        maxWidth: "10rem",
+        fontSize: 18,
+    },
+    input: {
+        padding: "0.4rem 0.7rem",
+        borderRadius: "0.25rem",
+        width: "100%",
+        maxWidth: "10rem",
+        fontSize: 18,
+    }
 };
 
 export default App;

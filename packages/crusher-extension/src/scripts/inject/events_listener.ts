@@ -63,8 +63,16 @@ if (top !== self) {
                         recordingOverlay.saveConsoleLogsAtThisMoment();
                         break;
                     case META_ACTIONS.FETCH_SEO_META:
-                        const metaDesc: any = document.querySelector('meta[name="description"]');
-
+                        //@ts-ignore
+                        const metaTagsArray: any = [...document.querySelectorAll('meta')];
+                        const metaTagsValuesMap: any = metaTagsArray.reduce((prev: any, current: HTMLMetaElement)=>{
+                            const name = current.getAttribute("name");
+                            if(!name){
+                                return prev;
+                            }
+                            return {...prev, [name]: {name, value: current.content}}
+                        }, {});
+                        alert(JSON.stringify(metaTagsValuesMap));
                         window.top.postMessage(
                             {
                                 type: META_ACTIONS.FETCH_SEO_META_RESPONSE,
@@ -72,7 +80,7 @@ if (top !== self) {
                                 frameId: LocalFrameStorage.get(),
                                 value: {
                                     title: document.title,
-                                    description: metaDesc ? metaDesc.content : null
+                                    metaTags: metaTagsValuesMap
                                 },
                             },
                             "*"

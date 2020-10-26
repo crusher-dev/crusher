@@ -55,6 +55,7 @@ export default class EventRecording {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseOver = this.handleMouseOver.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
 
     this.handleAddIconClick = this.handleAddIconClick.bind(this);
     this.handleEventsGridClick = this.handleEventsGridClick.bind(this);
@@ -232,8 +233,6 @@ export default class EventRecording {
     let target = _target;
     if(event) {
       const elements = this.elementsAtLocation(event.clientX, event.clientY);
-      console.log("Printing elements at this location");
-      console.log(elements);
       if(elements && elements.length > 1 && elements[0].id==="overlay_cover"){
         target = elements[1];
       }
@@ -330,7 +329,6 @@ export default class EventRecording {
   }
 
   handleMouseOver(event: MouseEvent){
-    console.log("Mouse over", event.target);
     if(this.hoveringState !== event.target) {
       this.hoveringState = {
         element: event.target,
@@ -346,6 +344,10 @@ export default class EventRecording {
         time: Date.now()
       }
     }
+  }
+
+  handleKeyDown(event: KeyboardEvent){
+   
   }
 
   pollInterval(){
@@ -451,6 +453,8 @@ export default class EventRecording {
     document.body.addEventListener("mousemove", this.handleMouseMove, true);
     document.body.addEventListener("mouseover", this.handleMouseOver, true);
     document.body.addEventListener("mouseout", this.handleMouseOut, true);
+    document.body.addEventListener("keypress", this.handleKeyDown, true);
+
     document.body.addEventListener("input", this.handleInputChange, true);
     document.addEventListener("click", this.handleDocumentClick, true);
     setInterval(this.pollInterval, 300);
@@ -514,7 +518,7 @@ export default class EventRecording {
     this.registerNodeListeners();
   }
 
-  showEventsFormWizard() {
+  toggleInspector() {
     this.initNodes();
     this.registerNodeListenerForForm();
     if (this.isInspectorMoving) {

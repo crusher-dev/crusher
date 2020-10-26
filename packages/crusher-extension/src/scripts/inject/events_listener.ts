@@ -51,7 +51,7 @@ if (top !== self) {
             if (formType === ACTION_FORM_TYPE.PAGE_ACTIONS) {
                 switch (type) {
                     case SETTINGS_ACTIONS.INSPECT_MODE_ON:
-                        recordingOverlay.showEventsFormWizard();
+                        recordingOverlay.toggleInspector();
                         break;
                     case SETTINGS_ACTIONS.INSPECT_MODE_OFF:
                         recordingOverlay.removeEventsFormWizard();
@@ -115,7 +115,7 @@ if (top !== self) {
                             recordingOverlay.boot(true);
                         } else if (value === START_INSPECTING_RECORDING_MODE) {
                             recordingOverlay.boot();
-                            recordingOverlay.showEventsFormWizard();
+                            recordingOverlay.toggleInspector();
                         }
                         break;
                 }

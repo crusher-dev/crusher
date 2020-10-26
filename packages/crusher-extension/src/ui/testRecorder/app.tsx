@@ -302,6 +302,23 @@ function DesktopBrowser(props: any) {
         }
     }
 
+
+    function handleKeyPress(event: KeyboardEvent){
+        const cn = forwardRef.current.contentWindow;
+        if(event.key === "q" ) {
+            cn.postMessage(
+                {
+                    type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
+                    formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
+                    value: true,
+                },
+                "*"
+            );
+        }
+    }
+
+    document.body.addEventListener("keypress", handleKeyPress, true);
+
     function goBack() {
         const cn = forwardRef.current.contentWindow;
         cn.postMessage({type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true}, "*");

@@ -42,12 +42,20 @@ export default class EventRecording {
 
   private isInspectorMoving = false;
 
+  private hoveringState : any = {
+    element: null,
+    time: Date.now()
+  }
+
   constructor(options = {} as any) {
     this.state = {
       ...this.defaultState,
     };
 
+    this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseOver = this.handleMouseOver.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
+
     this.handleAddIconClick = this.handleAddIconClick.bind(this);
     this.handleEventsGridClick = this.handleEventsGridClick.bind(this);
     this.takePageScreenShot = this.takePageScreenShot.bind(this);
@@ -55,6 +63,7 @@ export default class EventRecording {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.eventsController = new EventsController(this);
     this.toggleEventsBox = this.toggleEventsBox.bind(this);
+    this.pollInterval = this.pollInterval.bind(this);
   }
 
   getState() {
@@ -298,7 +307,7 @@ export default class EventRecording {
     this.toggleEventsBox();
   }
 
-  handleMouseOver(event: MouseEvent) {
+  handleMouseMove(event: MouseEvent) {
     if (this._addActionElement) {
       if (
           this._addActionElement.contains(event.target) ||
@@ -318,6 +327,41 @@ export default class EventRecording {
       this.updateEventTarget(event.target as HTMLElement, event);
     }
 
+  }
+
+  handleMouseOver(event: MouseEvent){
+    console.log("Mouse over", event.target);
+    if(this.hoveringState !== event.target) {
+      this.hoveringState = {
+        element: event.target,
+        time: Date.now()
+      }
+    }
+  }
+
+  handleMouseOut(event: MouseEvent){
+    if(this.hoveringState.element === event.target) {
+      this.hoveringState = {
+        element: null,
+        time: Date.now()
+      }
+    }
+  }
+
+  pollInterval(){
+    if(this.hoveringState.element && this.hoveringState.time){
+      const diffInMilliSeconds = Date.now() - this.hoveringState.time;
+      if(diffInMilliSeconds > 2000){
+        this.eventsController.saveCapturedEventInBackground(
+            ACTIONS_IN_TEST.HOVER,
+            this.hoveringState.element
+        );
+        this.hoveringState = {
+          element: null,
+          time: Date.now()
+        }
+      }
+    }
   }
 
   handleAddIconClick() {
@@ -344,11 +388,13 @@ export default class EventRecording {
   unpin(){
     console.log("Unpinning");
     this.state.pinned = false;
-    this._overlayCover.classList.remove("pointerEventsNone");
-    this._overlayCover.style.left = "0px";
-    this._overlayCover.style.top = "0px";
-    this._overlayCover.style.width = "0px";
-    this._overlayCover.style.height = "0px";
+    if(this._overlayCover){
+      this._overlayCover.classList.remove("pointerEventsNone");
+      this._overlayCover.style.left = "0px";
+      this._overlayCover.style.top = "0px";
+      this._overlayCover.style.width = "0px";
+      this._overlayCover.style.height = "0px";
+    }
   }
 
   // eslint-disable-next-line consistent-return
@@ -402,9 +448,12 @@ export default class EventRecording {
   }
 
   registerNodeListeners() {
-    document.body.addEventListener("mousemove", this.handleMouseOver, true);
+    document.body.addEventListener("mousemove", this.handleMouseMove, true);
+    document.body.addEventListener("mouseover", this.handleMouseOver, true);
+    document.body.addEventListener("mouseout", this.handleMouseOut, true);
     document.body.addEventListener("input", this.handleInputChange, true);
     document.addEventListener("click", this.handleDocumentClick, true);
+    setInterval(this.pollInterval, 300);
   }
 
   registerNodeListenerForForm() {
@@ -435,7 +484,7 @@ export default class EventRecording {
   }
 
   removeNodeListeners() {
-    document.body.removeEventListener("mousemove", this.handleMouseOver, true);
+    document.body.removeEventListener("mousemove", this.handleMouseMove, true);
     this._addActionIcon.removeEventListener("click", this.handleAddIconClick);
     this._overlayEventsGrid.removeEventListener(
         "click",

@@ -30,7 +30,7 @@ async function initDevServer() {
   );
 
   createWebpackServer(devConfig, {
-    host: "localhost",
+    host: "0.0.0.0",
     port: 2400,
   });
 

@@ -347,13 +347,13 @@ export default class EventRecording {
   }
 
   handleKeyDown(event: KeyboardEvent){
-   
+
   }
 
   pollInterval(){
     if(this.hoveringState.element && this.hoveringState.time){
       const diffInMilliSeconds = Date.now() - this.hoveringState.time;
-      if(diffInMilliSeconds > 2000){
+      if(diffInMilliSeconds > 1000){
         this.eventsController.saveCapturedEventInBackground(
             ACTIONS_IN_TEST.HOVER,
             this.hoveringState.element
@@ -396,6 +396,7 @@ export default class EventRecording {
       this._overlayCover.style.top = "0px";
       this._overlayCover.style.width = "0px";
       this._overlayCover.style.height = "0px";
+      this.toggleInspector();
     }
   }
 

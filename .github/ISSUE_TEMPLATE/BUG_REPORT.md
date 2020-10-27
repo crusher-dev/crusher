@@ -6,7 +6,7 @@ labels: bug, triage
 assignees: ''
 ---
 
-**Descrive the issue**
+**Describe the issue**
 
 
 **Any loom video for this**

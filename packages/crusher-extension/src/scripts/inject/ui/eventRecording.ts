@@ -303,7 +303,7 @@ export default class EventRecording {
         break;
     }
     this.unpin();
-    this.toggleEventsBox();
+    this.hideEventsBoxIfShown();
   }
 
   handleMouseMove(event: MouseEvent) {
@@ -329,7 +329,7 @@ export default class EventRecording {
   }
 
   handleMouseOver(event: MouseEvent){
-    if(this.hoveringState !== event.target) {
+    if(this.hoveringState !== event.target && (event.target as any).id!=="overlay_cover") {
       this.hoveringState = {
         element: event.target,
         time: Date.now()
@@ -396,7 +396,6 @@ export default class EventRecording {
       this._overlayCover.style.top = "0px";
       this._overlayCover.style.width = "0px";
       this._overlayCover.style.height = "0px";
-      this.toggleInspector();
     }
   }
 

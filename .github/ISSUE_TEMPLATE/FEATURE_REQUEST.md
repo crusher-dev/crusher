@@ -1,6 +1,6 @@
 ---
 name: "\U0001F941  Feature request"
-about: Report a feature
+about: Raise a feature request
 title: ''
 labels: feature, improvement
 assignees: ''

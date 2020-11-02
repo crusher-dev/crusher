@@ -10,9 +10,9 @@
 FROM mcr.microsoft.com/playwright:bionic
 
 # 1. Add codebase
-ADD ../../packages/test-runner /code/
+ADD ./ /code/
 
-WORKDIR /code
+RUN npm install -g npm
 
 # 2. Give permission to user to edit it
 RUN chown -R pwuser:pwuser ./
@@ -22,7 +22,9 @@ USER pwuser
 
 RUN npm install
 
+WORKDIR /code/packages/test-runner/
+
 EXPOSE 80
 
-ENTRYPOINT ["npm"]
-CMD ["run", "-s", "start"]
+#ENTRYPOINT ["npm"]
+#CMD ["run", "-s", "start"]

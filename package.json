@@ -6,5 +6,8 @@
   "version": "1.0.0",
   "description": "Mono repository for crusher",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ts-node-dev": "^1.0.0"
+  }
 }

@@ -8,15 +8,11 @@
     "dev": "nodemon --watch src --ext js,ts,tsx  --exec 'tsc'"
   },
   "devDependencies": {
-    "awesome-typescript-loader": "^5.2.1",
-    "typescript": "^4.0.3",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "typescript": "^4.0.3"
   },
   "dependencies": {
     "crusher-shared": "1.0.0",
-    "nodemon": "^2.0.4",
-    "webpack-dev-server": "^3.11.0"
+    "nodemon": "^2.0.4"
   },
   "private": true
 }

@@ -1,0 +1,22 @@
+FROM node:lts-alpine3.12
+
+MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
+
+RUN apk add --no-cache bash
+RUN apk add git
+RUN npm install -g npm@7.0.3
+
+VOLUME ["/app"]
+
+WORKDIR /app/packages/crusher-app/
+
+ENTRYPOINT ["/bin/sh"]
+
+RUN chown -R node /usr/local/lib/node_modules
+
+USER node
+
+EXPOSE 7000
+
+ENTRYPOINT ["npm"]
+CMD ["run", "-s", "runInDev"]

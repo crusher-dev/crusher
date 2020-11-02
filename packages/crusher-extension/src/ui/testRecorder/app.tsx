@@ -9,6 +9,7 @@ import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_REC
 import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
 import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import {sendPostDataWithForm} from "../../utils/helpers";
+import {AssertModal} from "./components/assertModal";
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -789,6 +790,7 @@ function App() {
             value: options,
             selectors: currentElementSelectors
         }] as any);
+        setIsShowingElementForm(false);
     }
 
     messageListenerCallback = function (event: any) {
@@ -925,10 +927,10 @@ function App() {
                         <div style={styles.sectionHeading}>{steps.length} Actions</div>
                         <Steps steps={steps}/>
                     </div>
-                    {!state && (
+                    {state !== MODALS.SEO && (
                         <RightMiddleSection state={state} updateState={updateState}/>
                     )}
-                    {state && (
+                    {state && state === MODALS.SEO && (
                         <ShowForm submitCallback={saveSeoValidation} state={state} seoMeta={seoMeta} currentElementAttributes={currentElementAttributes}
                                   updateState={updateState} saveAssertionCallback={saveAssertionCallback}
                                   saveSeoValidationCallback={saveSeoValidation}/>
@@ -1016,6 +1018,8 @@ function App() {
                 rel="stylesheet"
                 href={chrome.runtime.getURL("/styles/fonts.css")}
             />
+            <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback} />
+
             {/*<AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState}*/}
             {/*             saveAssertionCallback={saveAssertionCallback}/>*/}
             {/*<SeoModal seoMeta={seoMeta} state={state} updateState={updateState}*/}

@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+node_modules/
+build/
+other/
+tmp/
+temp/
+.DS_store
+.env
+.env.development
+.now
+_next/i

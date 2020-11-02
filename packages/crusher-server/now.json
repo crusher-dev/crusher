@@ -1,0 +1,17 @@
+{
+	"version": 2,
+	"builds": [{ "src": "src/app.ts", "use": "@now/node-server" }],
+	"routes": [
+		{
+			"src": "/.*",
+			"dest": "src/app.ts",
+			"methods": ["GET", "POST", "OPTIONS"],
+			"headers": {
+				"Access-Control-Allow-Origin": "https://app.crusher.dev",
+				"Access-Control-Allow-Credentials": "true",
+				"Access-Control-Allow-Headers": "X-Requested-With, Access-Control-Allow-Origin, X-HTTP-Method-Override, Content-Type, Cache-Control, Authorization, Accept",
+				"Access-Control-Max-Age": "86400"
+			}
+		}
+	]
+}

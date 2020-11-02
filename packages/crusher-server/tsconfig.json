@@ -1,0 +1,30 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"lib": ["es5", "es6", "DOM"],
+		"target": "es5",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"outDir": "./build",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"sourceMap": true,
+		"noEmitHelpers": false,
+		"noImplicitAny": false,
+		"noUnusedLocals": false,
+		"strictNullChecks": false,
+		"esModuleInterop": false
+	},
+	"include": [
+		"**/*.ts"
+	],
+	"typeRoots": [ "node_modules/@types" ],
+	"files": [
+		"src/app.js"
+	],
+	"include": ["./src/**/*"],
+	"exclude": [
+		"node_modules",
+		"**/*.spec.ts"
+	]
+}

@@ -1,0 +1,111 @@
+{
+	"private": true,
+	"name": "crusher-server",
+	"version": "1.0.0",
+	"description": "Backend of crusher.",
+	"devDependencies": {
+		"@types/body-parser": "1.16.3",
+		"@types/express": "4.0.35",
+		"@types/jsonwebtoken": "^8.3.2",
+		"@types/mongoose": "^5.7.36",
+		"@types/multer": "0.0.33",
+		"@types/node": "^8.0.29",
+		"husky": "^3.0.4",
+		"nodemon": "1.11.0",
+		"prettier": "2.0.5",
+		"pretty-quick": "^2.0.1",
+		"shipit-cli": "^5.1.0",
+		"shipit-deploy": "^5.1.0",
+		"ts-node": "3.3.0",
+		"ts-node-dev": "^1.0.0-pre.44",
+		"typescript": "3.3.3333"
+	},
+	"dependencies": {
+		"@google-cloud/storage": "^5.1.2",
+		"@octokit/auth": "^2.0.0",
+		"@octokit/oauth-app": "^1.1.2",
+		"@octokit/rest": "^18.0.0",
+		"@sendgrid/mail": "^7.1.1",
+		"@types/cron": "^1.7.2",
+		"@types/lodash": "^4.14.136",
+		"@types/node-cron": "^2.0.3",
+		"axios": "^0.19.0",
+		"bcrypt": "^4.0.1",
+		"bluebird": "^3.5.5",
+		"body-parser": "1.17.2",
+		"bullmq": "^1.8.14",
+		"chalk": "^4.0.0",
+		"code-generator": "https://github.com/crusherdev/code-generator.git#82a2023872bd0f6f2cdc6a2a7175378037a45d77",
+		"commitizen": "^4.0.4",
+		"cookie": "^0.4.1",
+		"cors": "^2.8.5",
+		"cron": "^1.8.2",
+		"crypto-js": "^4.0.0",
+		"cz-conventional-changelog": "^3.1.0",
+		"dotenv": "^8.2.0",
+		"envfile": "^3.0.0",
+		"express": "4.15.3",
+		"google-auth-library": "^5.7.0",
+		"googleapis": "^51.0.0",
+		"husky": "^4.2.5",
+		"ioredis-lock": "^4.0.0",
+		"jsonfile": "^5.0.0",
+		"jsonwebtoken": "^8.5.1",
+		"lint-staged": "^10.1.5",
+		"lodash": "^4.17.15",
+		"logdna": "^3.5.0",
+		"mitt": "^2.1.0",
+		"mongoose": "^5.10.0",
+		"multer": "1.3.0",
+		"mysql": "^2.17.1",
+		"mysql-import": "^2.0.2",
+		"mysql-promise": "^5.0.0",
+		"mysqldump": "^3.1.0",
+		"node-fetch": "^2.6.0",
+		"node-persist": "^3.0.5",
+		"node-storage": "0.0.9",
+		"now": "^18.0.0",
+		"pixelmatch": "^5.2.1",
+		"pngjs": "^5.0.0",
+		"prettier": "2.0.5",
+		"prompts": "^2.2.1",
+		"redislock": "^1.3.0",
+		"redlock": "^4.1.0",
+		"reflect-metadata": "^0.1.13",
+		"routing-controllers": "0.7.0",
+		"sib-api-v3-sdk": "^7.2.3",
+		"simple-git": "^2.11.0",
+		"sleep-promise": "^8.0.1",
+		"substring": "^1.0.0",
+		"tsconfig-paths": "^3.9.0",
+		"typedi": "0.5.2",
+		"underscore": "^1.9.1",
+		"uuid": "^8.3.0"
+	},
+	"scripts": {
+		"dev:serverless": "now dev",
+		"dev": "ts-node-dev --poll --interval 200 --respawn --transpile-only src/app.ts",
+		"run:prod": "NODE_ENV=production ts-node src/app.ts",
+		"deploy": "now --prod"
+	},
+	"lint-staged": {
+		"*.js": [
+			"eslint",
+			"prettier --write"
+		],
+		"*.ts": [
+			"prettier --write"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged",
+			"prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+		}
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	}
+}

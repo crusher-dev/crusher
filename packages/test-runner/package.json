@@ -1,0 +1,53 @@
+{
+  "private": "true",
+  "name": "test-runner",
+  "version": "1.0.0",
+  "description": "[Dockerfile.bionic](Dockerfile.bionic) is a playwright-ready image of playwright. This image includes all the dependencies needed to run browsers in a Docker container.",
+  "main": "example.js",
+  "dependencies": {
+    "@google-cloud/storage": "^5.0.1",
+    "@octokit/auth": "^2.0.0",
+    "@octokit/rest": "^18.0.0",
+    "aws-sdk": "^2.762.0",
+    "bullmq": "^1.10.0",
+    "crypt": "^0.0.2",
+    "fs-extra": "^9.0.1",
+    "logdna": "^3.5.0",
+    "md5": "^2.2.1",
+    "methods": "^1.1.2",
+    "mongoose": "^5.10.0",
+    "playwright": "^1.5.2",
+    "playwright-core": "^1.5.2",
+    "playwright-video": "https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704",
+    "reflect-metadata": "^0.1.13",
+    "shelljs": "^0.8.4",
+    "ts-node": "^9.0.0",
+    "uniqid": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/bull": "^3.14.4",
+    "@types/debug": "^4.1.5",
+    "@types/express": "^4.17.7",
+    "@types/jest": "^24.0.18",
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "~10",
+    "@types/shelljs": "^0.8.8",
+    "husky": "^3.0.5",
+    "jest": "^24.9.0",
+    "lint-staged": "8.2.1",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
+    "ts-node-dev": "^1.0.0-pre.50",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.0.3"
+  },
+  "scripts": {
+    "start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.js",
+    "start:dev": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node-dev src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

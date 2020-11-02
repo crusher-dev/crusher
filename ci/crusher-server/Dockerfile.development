@@ -5,10 +5,12 @@ MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 RUN apk add --no-cache bash
 RUN apk add mysql-client
 RUN apk add git
+RUN apk add libcap && setcap cap_net_bind_service=+ep `readlink -f \`which node\``
+RUN npm install -g npm@7.0.3
 
 VOLUME ["/server"]
 
-WORKDIR /server
+WORKDIR /server/packages/crusher-server/
 
 EXPOSE 443
 

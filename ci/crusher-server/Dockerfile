@@ -6,11 +6,13 @@ RUN apk add --no-cache bash
 
 RUN apk add git
 
-ADD ../../packages/crusher-server ./server
+RUN npm install -g npm
 
-WORKDIR /server
+ADD ./ ./server
 
-RUN yarn install
+RUN npm install
+
+WORKDIR /server/packages/crusher-server/
 
 EXPOSE 80
 

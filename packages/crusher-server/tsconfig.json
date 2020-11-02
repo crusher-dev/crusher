@@ -13,7 +13,8 @@
 		"noImplicitAny": false,
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
-		"esModuleInterop": false
+		"esModuleInterop": false,
+		"noImplicitReturns":  false
 	},
 	"include": [
 		"**/*.ts"

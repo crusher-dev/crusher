@@ -17,7 +17,6 @@
 		"shipit-cli": "^5.1.0",
 		"shipit-deploy": "^5.1.0",
 		"ts-node": "3.3.0",
-		"ts-node-dev": "^1.0.0-pre.44",
 		"typescript": "3.3.3333"
 	},
 	"dependencies": {

@@ -14,13 +14,16 @@ VOLUME ["/code"]
 
 WORKDIR /code
 
+RUN npm install -g npm@7.0.3
+
 # 2. Give permission to user to edit it
 RUN chown -R pwuser:pwuser ./
 
 # 3. Run everything after as non-privileged user.
 USER pwuser
 
-RUN npm install
+
+WORKDIR /code/packages/test-runner/
 
 EXPOSE 80
 

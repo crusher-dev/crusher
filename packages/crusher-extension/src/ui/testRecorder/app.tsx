@@ -2,7 +2,7 @@ import {Ref} from "preact";
 import React from "preact/compat";
 import {useCallback, useEffect, useRef, useState} from "preact/hooks";
 import {MODALS} from "../../constants/modal";
-import devices from "../../../../crusher-shared/constants/devices";
+import _devices from "../../../../crusher-shared/constants/devices";
 import userAgents from "../../../../crusher-shared/constants/userAgents";
 import {addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath} from "../../../../crusher-shared/utils/url";
 import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE,} from "../../constants";
@@ -10,6 +10,8 @@ import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
 import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import {sendPostDataWithForm} from "../../utils/helpers";
 import {AssertModal} from "./components/assertModal";
+
+const devices : any = _devices;
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -286,14 +288,14 @@ function DesktopBrowser(props: any) {
     const [addressValue, setAddressValue] = useState(url);
 
     const deviceInfoIndex = devices.findIndex(
-        (device) => device.id === selectedDeviceId
+        (device: any) => device.id === selectedDeviceId
     );
 
     const selectedDevice = deviceInfoIndex
         ? devices[deviceInfoIndex]
         : devices[8];
 
-    const isMobile = ["Pixel 3, 3 XL", "iPhone 8 Plus, 7 Plus, 6S Plus"].includes(
+    const isMobile = devices.filter((device: any) => device.mobile === true).map((device: any)=>device.name).includes(
         selectedDevice.name
     );
 

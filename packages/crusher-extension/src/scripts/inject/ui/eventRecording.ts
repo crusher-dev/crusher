@@ -47,6 +47,10 @@ export default class EventRecording {
     time: Date.now()
   }
 
+  private scrollTimer : any = null;
+  private lastScrollFireTime = 0;
+
+
   constructor(options = {} as any) {
     this.state = {
       ...this.defaultState,
@@ -56,6 +60,7 @@ export default class EventRecording {
     this.handleMouseOver = this.handleMouseOver.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
 
     this.handleAddIconClick = this.handleAddIconClick.bind(this);
     this.handleEventsGridClick = this.handleEventsGridClick.bind(this);
@@ -350,6 +355,51 @@ export default class EventRecording {
 
   }
 
+  handleScroll(event: any){
+
+    var minScrollTime = 100;
+    var now = new Date().getTime();
+
+    const _this = this;
+    function processScroll() {
+
+      let target = event.target;
+
+      const isDocumentScrolled = event.target === document;
+      if(isDocumentScrolled){
+        return _this.eventsController.saveCapturedEventInBackground(
+            ACTIONS_IN_TEST.SCROLL,
+            document.body,
+            window.scrollY
+        );
+      }
+
+      const isRecorderCover = target.getAttribute("data-recorder-cover");
+      if(!isRecorderCover && !event.simulatedEvent) {
+        _this.eventsController.saveCapturedEventInBackground(
+            ACTIONS_IN_TEST.SCROLL,
+            event.target,
+            event.target.scrollTop
+        );
+      } else {
+        return event.preventDefault();
+      }
+    }
+
+    if (!_this.scrollTimer) {
+      if (now - _this.lastScrollFireTime > (3 * minScrollTime)) {
+        processScroll();   // fire immediately on first scroll
+        _this.lastScrollFireTime = now;
+      }
+      _this.scrollTimer = setTimeout(function() {
+        _this.scrollTimer = null;
+        _this.lastScrollFireTime = new Date().getTime();
+        processScroll();
+      }, minScrollTime);
+    }
+
+  }
+
   pollInterval(){
     if(this.hoveringState.element && this.hoveringState.time){
       const diffInMilliSeconds = Date.now() - this.hoveringState.time;
@@ -453,7 +503,7 @@ export default class EventRecording {
     document.body.addEventListener("mousemove", this.handleMouseMove, true);
     document.body.addEventListener("mouseover", this.handleMouseOver, true);
     document.body.addEventListener("mouseout", this.handleMouseOut, true);
-    document.body.addEventListener("keypress", this.handleKeyDown, true);
+    window.addEventListener("scroll", this.handleScroll, true);
 
     document.body.addEventListener("input", this.handleInputChange, true);
     document.addEventListener("click", this.handleDocumentClick, true);

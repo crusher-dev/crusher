@@ -45,11 +45,12 @@ function Steps(props: any) {
     const stepList = steps.map((step: any) => {
         console.log(step);
         const {event_type, selectors, value} = step;
+
         return (
             <Step
                 type={event_type}
                 path={selectors && selectors[0].value}
-                value={value}
+                value={event_type === ACTIONS_IN_TEST.SCROLL ? `${value.length} Scrolls Recorded` : value}
             />
         );
     });
@@ -757,7 +758,7 @@ function App() {
         {
             event_type: ACTIONS_IN_TEST.SET_DEVICE,
             selectors: [{value: "body", uniquenessScore: 1, type: "body"}],
-            value: selectedDeviceId,
+            value: selectedDeviceId as any,
         },
     ]);
     const [seoMeta, setSeoMeta] = useState({});
@@ -772,7 +773,6 @@ function App() {
     const actionsScrollRef: Ref<any> = useRef(null);
 
     useEffect(()=>{
-        console.log(actionsScrollRef.current);
         const scrollDiv = actionsScrollRef.current;
         scrollDiv.scrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
     }, [steps, isShowingElementForm]);
@@ -821,11 +821,24 @@ function App() {
                     ) {
                         steps[steps.length - 1].value = value;
                         setSteps(steps);
-                    } else {
+                    } else if(lastStep.event_type === ACTIONS_IN_TEST.SCROLL && eventType === ACTIONS_IN_TEST.SCROLL && lastStep.selectors[0].value === selectors[0].value) {
+                        steps[steps.length - 1] = {event_type: eventType, value: [...lastStep.value, value], selectors};
                         setSteps([
-                            ...getSteps(),
-                            {event_type: eventType, value, selectors},
+                            ...steps
                         ]);
+
+                    } else {
+                        if(eventType === ACTIONS_IN_TEST.SCROLL){
+                            setSteps([
+                                ...getSteps(),
+                                {event_type: eventType, value: [value], selectors},
+                            ]);
+                        } else {
+                            setSteps([
+                                ...getSteps(),
+                                {event_type: eventType, value, selectors},
+                            ]);
+                        }
                     }
                 }
             }

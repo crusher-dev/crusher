@@ -470,14 +470,16 @@ export default class EventRecording {
     const isRecorder = target.getAttribute("data-recorder");
     if (!isRecorder) {
       this.unpin();
-      if (target.tagName.toLowerCase() === "a") {
-        const href = target.getAttribute("href");
+      const closestLink: HTMLAnchorElement = target.closest("a");
+      if (closestLink.tagName.toLowerCase() === "a") {
+        const href = closestLink.getAttribute("href");
         this.eventsController.saveCapturedEventInBackground(
             ACTIONS_IN_TEST.CLICK,
-            event.target
+            closestLink
         );
+        console.log("Going to this link", href);
         if (href) {
-          window.location = href;
+          window.location.href = href;
         }
         return event.preventDefault();
       }
@@ -504,6 +506,12 @@ export default class EventRecording {
     document.body.addEventListener("mouseover", this.handleMouseOver, true);
     document.body.addEventListener("mouseout", this.handleMouseOut, true);
     window.addEventListener("scroll", this.handleScroll, true);
+    (window as any).open = function (open) {
+      return function (url: string) {
+        console.log("Opening a new tab", url);
+        window.location.href = url;
+      };
+    }(window.open);
 
     document.body.addEventListener("input", this.handleInputChange, true);
     document.addEventListener("click", this.handleDocumentClick, true);

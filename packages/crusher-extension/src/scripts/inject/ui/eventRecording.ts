@@ -242,8 +242,8 @@ export default class EventRecording {
         target = elements[1];
       }
     }
-    this._overlayCover.style.top = this.getOffset(target).top + "px";
-    this._overlayCover.style.left = this.getOffset(target).left + "px";
+    this._overlayCover.style.top = (window.scrollY + target.getBoundingClientRect().y) + "px";
+    this._overlayCover.style.left = (window.scrollX + target.getBoundingClientRect().x) + "px";
     this._overlayCover.style.width = target.getBoundingClientRect().width + "px";
     this._overlayCover.style.height = target.getBoundingClientRect().height + "px";
     this._overlayCover.style['z-index'] = 299999999;

@@ -801,7 +801,11 @@ function App() {
     }
 
     window.onbeforeunload = function() {
-        return "Leaving this page will discard your recorded test, do you still want to leave?";
+        if(steps && steps.length > 2) {
+            return "Leaving this page will discard your recorded test, do you still want to leave?";
+        } else {
+            return false;
+        }
     }
 
     messageListenerCallback = function (event: any) {

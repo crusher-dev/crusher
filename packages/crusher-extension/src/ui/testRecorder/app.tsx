@@ -1,6 +1,6 @@
 import {Ref} from "preact";
 import React from "preact/compat";
-import {useCallback, useRef, useState} from "preact/hooks";
+import {useCallback, useEffect, useRef, useState} from "preact/hooks";
 import {MODALS} from "../../constants/modal";
 import devices from "../../../../crusher-shared/constants/devices";
 import userAgents from "../../../../crusher-shared/constants/userAgents";
@@ -40,7 +40,7 @@ function Step(props: any) {
 }
 
 function Steps(props: any) {
-    const {steps} = props;
+    const {steps, forwardRef} = props;
 
     const stepList = steps.map((step: any) => {
         console.log(step);
@@ -62,6 +62,7 @@ function Steps(props: any) {
                 overflowY: "auto",
                 marginBottom: "2rem",
             }}
+            ref={forwardRef}
         >
             <ul style={styles.stepsContainer} className="margin-list-item">
                 {stepList}
@@ -768,7 +769,13 @@ function App() {
     const [state, updateState] = useState(null);
 
     const iframeRef: Ref<any> = useRef(null);
+    const actionsScrollRef: Ref<any> = useRef(null);
 
+    useEffect(()=>{
+        console.log(actionsScrollRef.current);
+        const scrollDiv = actionsScrollRef.current;
+        scrollDiv.scrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
+    }, [steps, isShowingElementForm]);
     function getSteps() {
         return steps;
     }
@@ -925,7 +932,7 @@ function App() {
                 <div style={styles.paddingContainer}>
                     <div style={{width: "22rem", marginLeft: "auto"}}>
                         <div style={styles.sectionHeading}>{steps.length} Actions</div>
-                        <Steps steps={steps}/>
+                        <Steps forwardRef={actionsScrollRef} steps={steps}/>
                     </div>
                     {state !== MODALS.SEO && (
                         <RightMiddleSection state={state} updateState={updateState}/>

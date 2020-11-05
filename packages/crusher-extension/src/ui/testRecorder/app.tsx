@@ -52,7 +52,7 @@ function Steps(props: any) {
             <Step
                 type={event_type}
                 path={selectors && selectors[0].value}
-                value={event_type === ACTIONS_IN_TEST.SCROLL ? `${value.length} Scrolls Recorded` : value}
+                value={event_type === ACTIONS_IN_TEST.SCROLL ? `Performing scroll` : value}
             />
         );
     });
@@ -774,10 +774,11 @@ function App() {
     const iframeRef: Ref<any> = useRef(null);
     const actionsScrollRef: Ref<any> = useRef(null);
 
-    useEffect(()=>{
-        const scrollDiv = actionsScrollRef.current;
-        scrollDiv.scrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
-    }, [steps, isShowingElementForm]);
+    // useEffect(()=>{
+    //     const scrollDiv = actionsScrollRef.current;
+    //     scrollDiv.scrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
+    // }, [steps, isShowingElementForm]);
+
     function getSteps() {
         return steps;
     }

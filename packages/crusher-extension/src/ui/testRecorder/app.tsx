@@ -800,6 +800,10 @@ function App() {
         setIsShowingElementForm(false);
     }
 
+    window.onbeforeunload = function() {
+        return "Leaving this page will discard your recorded test, do you still want to leave?";
+    }
+
     messageListenerCallback = function (event: any) {
         const {type, eventType, value, selectors} = event.data;
         const steps = getSteps();

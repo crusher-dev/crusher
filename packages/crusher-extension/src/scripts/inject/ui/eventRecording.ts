@@ -471,7 +471,7 @@ export default class EventRecording {
     if (!isRecorder) {
       this.unpin();
       const closestLink: HTMLAnchorElement = target.closest("a");
-      if (closestLink.tagName.toLowerCase() === "a") {
+      if (closestLink && closestLink.tagName.toLowerCase() === "a") {
         const href = closestLink.getAttribute("href");
         this.eventsController.saveCapturedEventInBackground(
             ACTIONS_IN_TEST.CLICK,
@@ -506,6 +506,7 @@ export default class EventRecording {
     document.body.addEventListener("mouseover", this.handleMouseOver, true);
     document.body.addEventListener("mouseout", this.handleMouseOut, true);
     window.addEventListener("scroll", this.handleScroll, true);
+
     (window as any).open = function (open) {
       return function (url: string) {
         console.log("Opening a new tab", url);

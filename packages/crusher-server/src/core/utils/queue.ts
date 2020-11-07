@@ -13,7 +13,7 @@ import { TestType } from '../interfaces/TestType';
 import { JobLogs } from '../../server/models/jobLogs';
 import * as mongoose from 'mongoose';
 import { TestLogsService } from '../services/mongo/testLogs';
-import CodeGenerator from 'code-generator';
+import CodeGenerator from '../../../../code-generator/dist/code-generator/src/index';
 import { Logger } from '../../utils/logger';
 import * as chalk from 'chalk';
 

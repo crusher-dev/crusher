@@ -10,6 +10,10 @@ module.exports = {
         "IS_DEVELOPMENT": true,
         "FRONTEND_URL": "http://localhost:3000/"
       },
+      "merge_logs": true,
+      "out_file": "./logs/crusher-app.out",
+      "log_file": "./logs/crusher-app.log.out",
+      "error_file": "./logs/crusher-app.error.out",
     },
     {
       "name": "crusher-server",
@@ -30,6 +34,7 @@ module.exports = {
         "DB_USERNAME": "root",
         "DB_PASSWORD": "password",
         "DB_DATABASE": "crusher",
+        "MONGODB_CONNECTION_STRING": "mongodb://root:password@localhost:27017/",
         "GOOGLE_CLIENT_ID": "330490657063-1l8mgjv6pnopfmdcgecnslvnkuipbivj.apps.googleusercontent.com",
         "GOOGLE_CLIENT_SECRET": "Iac-4EQFeqQl_t1Hnq8aCrpP",
         "GITHUB_CLIENT_ID": "Iv1.b94bab70cd7aad37",
@@ -43,7 +48,11 @@ module.exports = {
         "MONGODB_PORT": "27017",
         "MONGODB_USERNAME": "root",
         "MONGODB_PASSWORD": "password"
-      }
+      },
+      "merge_logs": true,
+      "out_file": "./logs/crusher-server.out",
+      "log_file": "./logs/crusher-server.log.out",
+      "error_file": "./logs/crusher-server.error.out"
     },
     {
       "name": "test-runner",
@@ -54,17 +63,39 @@ module.exports = {
         "LOGDNA_API_KEY": "c7bdd500e3cfbfe457a2ec4168b8cfaa",
         "MONGODB_HOST": "localhost",
         "MONGODB_PORT": "27017",
+        "MONGODB_CONNECTION_STRING": "mongodb://root:password@localhost:27017/",
         "MONGODB_USERNAME": "root",
+        "MONGODB_PASSWORD": "password",
         "REDIS_HOST": "localhost",
         "REDIS_PORT": 6379,
         "REDIS_PASSWORD": ""
-      }
+      },
     },
     {
       "name": "crusher-extension",
       "cwd": "./packages/crusher-extension",
       "script": "npm",
-      "args": "run dev"
+      "args": "run dev",
+      "env": {
+        "BACKEND_URL": "http://localhost:8000/"
+      }
+    },
+    {
+      "name": "video-processor",
+      "cwd": "./packages/video-processor",
+      "script": "npm",
+      "args": "run start",
+      "env": {
+        "LOGDNA_API_KEY": "c7bdd500e3cfbfe457a2ec4168b8cfaa",
+        "MONGODB_HOST": "localhost",
+        "MONGODB_PORT": "27017",
+        "MONGODB_CONNECTION_STRING": "mongodb://root:password@localhost:27017/",
+        "MONGODB_USERNAME": "root",
+        "MONGODB_PASSWORD": "password",
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": 6379,
+        "REDIS_PASSWORD": ""
+      },
     }
   ]
 }

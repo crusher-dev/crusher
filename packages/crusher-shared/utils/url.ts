@@ -2,6 +2,8 @@ import parse from "url-parse";
 
 const url = require("url");
 
+const LOCAL_BACKEND_URL = "http://localhost:8000/";
+
 const clean = (url: string) => String(url).replace(/^\/|\/$/g, "");
 
 export const isLocal = (url: string) =>
@@ -38,5 +40,5 @@ export const getQueryStringParams = function getParameterByName(
 };
 
 export const resolveToBackendPath = (relativePath: string) => {
-    return url.resolve(process.env.NODE_ENV === "production" ? "https://backend.crusher.dev/" : "https://backend.crusher-test.com/", relativePath);
+    return url.resolve(LOCAL_BACKEND_URL, relativePath);
 }

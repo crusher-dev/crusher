@@ -10,3 +10,4 @@ temp/
 .env.development
 .now
 _next/i
+logs/

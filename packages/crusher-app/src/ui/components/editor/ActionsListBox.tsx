@@ -2,7 +2,7 @@ import { TestActionCard } from "@ui/components/testActionCard";
 import { css } from "@emotion/core";
 import { toPrettyEventName } from "@utils/helpers";
 // @ts-ignore
-import CodeGenerator from "../../../../node_modules/code-generator";
+import CodeGenerator from "~/code-generator/src/index";
 import ClipboardCopy from "clipboard-copy";
 import { NAVIGATE_URL } from "@utils/constants";
 import React from "react";

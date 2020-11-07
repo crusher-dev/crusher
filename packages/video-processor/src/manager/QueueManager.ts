@@ -1,0 +1,18 @@
+import {Worker, Queue, QueueScheduler} from "bullmq";
+import {REDDIS} from "../../config/database";
+const path  = require( "path");
+const r = require('../services/videoProcessorWorker');
+
+const queue = new Queue('video-processing-queue', {connection: REDDIS});
+
+queue.client.then(async (reddisClient)=>{
+
+ const queueScheduler = new QueueScheduler('video-processing-queue', {
+  stalledInterval: 120000,
+  maxStalledCount: 1,
+  connection: reddisClient
+ });
+ await queueScheduler.waitUntilReady();
+
+ new Worker('video-processing-queue', path.resolve('src/services/videoProcessorWorker.ts'), { connection: reddisClient, concurrency: 3});
+});

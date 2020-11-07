@@ -5,7 +5,7 @@
   "author": "Utkarsh Dixit",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --watch src --ext js,ts,tsx  --exec 'tsc'"
+    "build": "tsc src/index.ts --outDir dist"
   },
   "devDependencies": {
     "typescript": "^4.0.3"

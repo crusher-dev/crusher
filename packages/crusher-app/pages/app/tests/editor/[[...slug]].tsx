@@ -11,8 +11,7 @@ import {
 } from "@services/test";
 import parse from "urlencoded-body-parser";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-//@ts-ignore
-import CodeGenerator from "code-generator";
+import CodeGenerator from "../../../../../code-generator/dist/code-generator/src/index";
 import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { getTestsCountInProject } from "@services/projects";

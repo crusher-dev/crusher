@@ -3,16 +3,12 @@ FROM node:lts-alpine3.12
 MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 
 RUN apk add --no-cache bash
-
+RUN apk add mysql-client
 RUN apk add git
 
-ADD ./ ./server
+VOLUME ["/video-processor"]
 
-WORKDIR /server
-
-RUN yarn install
-
-EXPOSE 80
+WORKDIR /video-processor
 
 ENTRYPOINT ["npm"]
-CMD ["run", "-s", "run:prod"]
+CMD ["run", "-s", "start"]

@@ -117,3 +117,5 @@ dist
 
 .idea*
 DS_STORE
+
+logs/

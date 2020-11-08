@@ -13,5 +13,5 @@ queue.client.then(async (reddisClient)=>{
  });
  await queueScheduler.waitUntilReady();
 
- new Worker('request-queue', path.resolve(process.env.NODE_ENV==="local" ? "/Users/utkarsh/Desktop/crusher/crusher/packages/test-runner/src/services/codeRunnerWorker.ts" : '/code/src/services/codeRunnerWorker.ts'), { connection: reddisClient, concurrency: 3, lockDuration: 120000});
+ new Worker('request-queue', path.resolve(path.resolve("src/services/codeRunnerWorker.ts")), { connection: reddisClient, concurrency: 3, lockDuration: 120000});
 });

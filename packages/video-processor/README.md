@@ -56,7 +56,12 @@ $ sudo docker container run --name code_runner -it --rm -v {$PWD}:/code --ipc=ho
 
 ```
 
+  
+
   **NPM install**: Go inside container /code. Run npm install. Binaries are different for host and container.
+
+  
+  
 
 >  **NOTE**: The seccomp profile is coming from Jessie Frazelle. It's needed
 

@@ -20,7 +20,12 @@ AWS.config.update({
 });
 
 // Create S3 service object
-const s3BucketService = new AWS.S3({apiVersion: '2006-03-01'});
+const s3BucketService = new AWS.S3({
+	apiVersion: '2006-03-01',
+	endpoint: 'http://192.168.99.104:4566',
+	s3ForcePathStyle: true,
+	signatureVersion: 'v4'
+});
 
 // Call S3 to list the buckets
 s3BucketService.listBuckets(function(err, data) {
@@ -60,7 +65,7 @@ export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName
 			const url = s3BucketService.getSignedUrl('getObject', {
 				Bucket: VIDEO_BUCKET_NAME,
 				Key: data.Key,
-				Expires: 60*60*24*30
+				Expires: 60*60*24*5
 			})
 
 			console.log(`${filePath} uploaded to ${VIDEO_BUCKET_NAME} aws bucket.`);

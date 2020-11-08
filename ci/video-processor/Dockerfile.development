@@ -6,11 +6,9 @@ RUN apk add --no-cache bash
 RUN apk add mysql-client
 RUN apk add git
 
-VOLUME ["/server"]
+VOLUME ["/video-processor"]
 
-WORKDIR /server
-
-EXPOSE 443
+WORKDIR /video-processor
 
 ENTRYPOINT ["npm"]
-CMD ["run", "-s", "dev"]
+CMD ["run", "-s", "start"]

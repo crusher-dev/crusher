@@ -19,7 +19,7 @@ checkResultQueue.client.then(async (reddisClient) => {
 
 	new Worker(
 		'check-result-queue',
-		path.resolve('/server/src/core/workers/checkResult.ts'),
+		path.resolve('src/core/workers/checkResult.ts'),
 		// @ts-ignore
 		{ connection: reddisClient, concurrency: 3 },
 	);

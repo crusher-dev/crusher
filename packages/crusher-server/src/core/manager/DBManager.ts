@@ -32,6 +32,7 @@ export default class DBManager {
 							`Failed running query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`,
 							{ queryToExecute },
 						);
+						console.error(error);
 						return reject(error);
 					}
 					Logger.debug('DbManager::queryRunner', `Executing Query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {

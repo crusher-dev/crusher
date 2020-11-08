@@ -34,7 +34,7 @@ module.exports = {
         "DB_USERNAME": "root",
         "DB_PASSWORD": "password",
         "DB_DATABASE": "crusher",
-        "MONGODB_CONNECTION_STRING": "mongodb://root:password@localhost:27017/",
+        "MONGODB_CONNECTION_STRING": "mongodb://admin@localhost:27017/",
         "GOOGLE_CLIENT_ID": "330490657063-1l8mgjv6pnopfmdcgecnslvnkuipbivj.apps.googleusercontent.com",
         "GOOGLE_CLIENT_SECRET": "Iac-4EQFeqQl_t1Hnq8aCrpP",
         "GITHUB_CLIENT_ID": "Iv1.b94bab70cd7aad37",

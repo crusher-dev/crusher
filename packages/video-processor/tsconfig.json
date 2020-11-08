@@ -6,7 +6,11 @@
     "sourceMap": true,
     "target": "es5",
     "outDir": "build",
-    "allowJs": true
+    "allowJs": true,
+    "noEmitHelpers": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "strictNullChecks": false
   },
   "include": [
     "**/*.ts"

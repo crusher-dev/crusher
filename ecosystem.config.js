@@ -46,8 +46,8 @@ module.exports = {
         "LOGDNA_API_KEY": "c7bdd500e3cfbfe457a2ec4168b8cfaa",
         "MONGODB_HOST": "localhost",
         "MONGODB_PORT": "27017",
-        "MONGODB_USERNAME": "root",
-        "MONGODB_PASSWORD": "password"
+        "MONGODB_USERNAME": "admin",
+        "MONGODB_PASSWORD": ""
       },
       "merge_logs": true,
       "out_file": "./logs/crusher-server.out",
@@ -63,9 +63,9 @@ module.exports = {
         "LOGDNA_API_KEY": "c7bdd500e3cfbfe457a2ec4168b8cfaa",
         "MONGODB_HOST": "localhost",
         "MONGODB_PORT": "27017",
-        "MONGODB_CONNECTION_STRING": "mongodb://root:password@localhost:27017/",
-        "MONGODB_USERNAME": "root",
-        "MONGODB_PASSWORD": "password",
+        "MONGODB_CONNECTION_STRING": "mongodb://admin@localhost:27017/",
+        "MONGODB_USERNAME": "admin",
+        "MONGODB_PASSWORD": "",
         "REDIS_HOST": "localhost",
         "REDIS_PORT": 6379,
         "REDIS_PASSWORD": ""
@@ -89,9 +89,9 @@ module.exports = {
         "LOGDNA_API_KEY": "c7bdd500e3cfbfe457a2ec4168b8cfaa",
         "MONGODB_HOST": "localhost",
         "MONGODB_PORT": "27017",
-        "MONGODB_CONNECTION_STRING": "mongodb://root:password@localhost:27017/",
-        "MONGODB_USERNAME": "root",
-        "MONGODB_PASSWORD": "password",
+        "MONGODB_CONNECTION_STRING": "mongodb://admin@localhost:27017/",
+        "MONGODB_USERNAME": "admin",
+        "MONGODB_PASSWORD": "",
         "REDIS_HOST": "localhost",
         "REDIS_PORT": 6379,
         "REDIS_PASSWORD": ""

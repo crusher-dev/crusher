@@ -7,7 +7,7 @@ import userAgents from "../../crusher-shared/constants/userAgents";
 
 const importPlayWright = `const playwright = require('playwright');\n\n`
 
-const header = `const browser = await playwright["chromium"].launch({headless: false});\n`
+const header = `const browser = await playwright["chromium"].launch();\n`
 
 const footer = `await browser.close();\n`;
 

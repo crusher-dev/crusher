@@ -1,8 +1,8 @@
 import {Ref} from "preact";
 import React from "preact/compat";
-import {useCallback, useEffect, useRef, useState} from "preact/hooks";
+import {useCallback, useRef, useState} from "preact/hooks";
 import {MODALS} from "../../constants/modal";
-import devices from "../../../../crusher-shared/constants/devices";
+import _devices from "../../../../crusher-shared/constants/devices";
 import userAgents from "../../../../crusher-shared/constants/userAgents";
 import {addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath} from "../../../../crusher-shared/utils/url";
 import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE,} from "../../constants";
@@ -10,6 +10,8 @@ import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
 import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import {sendPostDataWithForm} from "../../utils/helpers";
 import {AssertModal} from "./components/assertModal";
+
+const devices: any = _devices;
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -45,11 +47,12 @@ function Steps(props: any) {
     const stepList = steps.map((step: any) => {
         console.log(step);
         const {event_type, selectors, value} = step;
+
         return (
             <Step
                 type={event_type}
                 path={selectors && selectors[0].value}
-                value={value}
+                value={event_type === ACTIONS_IN_TEST.SCROLL ? `Performing scroll` : value}
             />
         );
     });
@@ -285,14 +288,14 @@ function DesktopBrowser(props: any) {
     const [addressValue, setAddressValue] = useState(url);
 
     const deviceInfoIndex = devices.findIndex(
-        (device) => device.id === selectedDeviceId
+        (device: any) => device.id === selectedDeviceId
     );
 
     const selectedDevice = deviceInfoIndex
         ? devices[deviceInfoIndex]
         : devices[8];
 
-    const isMobile = ["Pixel 3, 3 XL", "iPhone 8 Plus, 7 Plus, 6S Plus"].includes(
+    const isMobile = devices.filter((device: any) => device.mobile === true).map((device: any) => device.name).includes(
         selectedDevice.name
     );
 
@@ -305,9 +308,9 @@ function DesktopBrowser(props: any) {
     }
 
 
-    function handleKeyPress(event: KeyboardEvent){
+    function handleKeyPress(event: KeyboardEvent) {
         const cn = forwardRef.current.contentWindow;
-        if(event.key === "q" ) {
+        if (event.key === "q") {
             cn.postMessage(
                 {
                     type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
@@ -372,11 +375,10 @@ function DesktopBrowser(props: any) {
             <div style={styles.browserToolbar}>
                 <div style={styles.browserMainToolbar}>
                     <div style={{display: "flex", alignItems: "center"}}>
-                        <img
-                            src={chrome.runtime.getURL("/icons/navigation-back.svg")}
-                            style={{width: "1.2rem"}}
-                            onClick={goBack}
-                        />
+                        <svg width={24} height={24} viewBox="0 0 48 1" onClick={goBack}>
+                            <title>{"Rectangle 5"}</title>
+                            <path d="M0 0h48v1H0z" fill="#063855" fillRule="evenodd" />
+                        </svg>
                     </div>
                     <div
                         style={{
@@ -385,11 +387,9 @@ function DesktopBrowser(props: any) {
                             alignItems: "center",
                         }}
                     >
-                        <img
-                            src={chrome.runtime.getURL("/icons/navigation-forward.svg")}
-                            onClick={goForward}
-                            style={{width: "1.2rem"}}
-                        />
+                        <svg fill="#5F6368" viewBox="0 0 24 24" width={24} height={24} onClick={refreshPage}>
+                            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                        </svg>
                     </div>
                     <div
                         style={{
@@ -398,14 +398,19 @@ function DesktopBrowser(props: any) {
                             alignItems: "center",
                         }}
                     >
-                        <img
-                            style={{width: "1.2rem"}}
-                            src={chrome.runtime.getURL("/icons/navigation-refresh.svg")}
-                            onClick={refreshPage}
-                        />
+                        <svg fill="#5F6368" viewBox="0 0 24 24" width={24} height={24} onClick={goForward}>
+                            <path
+                                d="M-20-11h12.17l-5.59 5.59L-12-4l8-8-8-8-1.41 1.41L-7.83-13H-20v2z"
+                                style={{
+                                    transformBox: "fill-box",
+                                    transformOrigin: "center",
+                                }}
+                            />
+                        </svg>
                     </div>
                     <Addressbar/>
                     <div style={{...styles.button, width: "auto", marginLeft: "auto"}} onClick={props.saveTest}>
+
                         <img
                             style={styles.buttonImage}
                             src={chrome.runtime.getURL("icons/record.svg")}
@@ -483,41 +488,41 @@ window.addEventListener("message", (event) => {
 });
 
 
-function ShowRowInput(props: any){
+function ShowRowInput(props: any) {
     const {name, nameOptions, rowKey, method, updateMethodCallback, updateSelectedSeoField, value, valuesMap, updateFieldValueCallback} = props;
-    const nameOptionsOut = nameOptions.map((option: string)=> {
+    const nameOptionsOut = nameOptions.map((option: string) => {
         return (
             <option value={option}>{option}</option>
         );
     });
 
-    function onChangeSeoField(event: any){
+    function onChangeSeoField(event: any) {
         updateSelectedSeoField(rowKey, event.target.value);
     }
 
-    function handleMethodChange(event: any){
+    function handleMethodChange(event: any) {
         updateMethodCallback(rowKey, name, event.target.value);
     }
 
-    function updateFieldValue(event: any){
+    function updateFieldValue(event: any) {
         updateFieldValueCallback(rowKey, name, event.target.value);
     }
 
-    function checkIfCorrectValue(){
+    function checkIfCorrectValue() {
         console.log("check called", method, value, valuesMap, name);
-        if(method === "matches"){
+        if (method === "matches") {
             return value === valuesMap[name].value
-        } else if(method === "contains"){
+        } else if (method === "contains") {
             return valuesMap[name].value && valuesMap[name].value.includes(value);
-        } else if(method === "regex"){
-            try{
+        } else if (method === "regex") {
+            try {
                 const rgx = new RegExp(value);
-                if(rgx.test(valuesMap[name].value)){
+                if (rgx.test(valuesMap[name].value)) {
                     return true;
-                } else{
+                } else {
                     throw new Error("Regex didn't match");
                 }
-            } catch(err){
+            } catch (err) {
                 return false;
             }
         }
@@ -530,7 +535,8 @@ function ShowRowInput(props: any){
                 <select style={{...styles.select}} onChange={onChangeSeoField} value={name}>
                     {nameOptionsOut}
                 </select>
-                <img src={chrome.runtime.getURL(checkIfCorrectValue() ? "/icons/correct.svg": "/icons/cross.svg")} style={{marginLeft: "0.85rem"}}/>
+                <img src={chrome.runtime.getURL(checkIfCorrectValue() ? "/icons/correct.svg" : "/icons/cross.svg")}
+                     style={{marginLeft: "0.85rem"}}/>
             </th>
             <th style={styles.inputTableGridOption}>
                 <select style={{...styles.select}} value={method} onChange={handleMethodChange}>
@@ -540,13 +546,14 @@ function ShowRowInput(props: any){
                 </select>
             </th>
             <th style={styles.inputTableGridOptionValue}>
-                <input onChange={updateFieldValue} placeholder={"Enter value"} value={value} style={styles.inputTableGridOptionValueInput} />
+                <input onChange={updateFieldValue} placeholder={"Enter value"} value={value}
+                       style={styles.inputTableGridOptionValueInput}/>
             </th>
         </tr>
     )
 }
 
-function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
+function ShowSEOForm({seoMeta, saveSEOAssertionCallback}: any) {
     const {title, metaTags} = seoMeta;
     const [seoMetaRowNames, setSeoMetaRowNames] = useState({});
     const [seoMetaRows, setSeoMetaRows] = useState({});
@@ -566,24 +573,24 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
     }
 
     const nameOptions = Object.keys(seoOptionsMap).map((seoFieldName) => {
-        return  seoOptionsMap[seoFieldName].name
+        return seoOptionsMap[seoFieldName].name
     });
 
-    const saveSEOAssertion = ()=> {
-        const savedFields = Object.keys(_latestSeoMetaRowNames.current as any).map((rowKey)=>{
+    const saveSEOAssertion = () => {
+        const savedFields = Object.keys(_latestSeoMetaRowNames.current as any).map((rowKey) => {
             //@ts-ignore
-            return {fieldName: _latestSeoMetaRowNames.current[rowKey], method: _latestSeoMethodRows.current[rowKey], fieldValue: _latestSeoMetaValues.current[rowKey]}
+            return {fieldName: _latestSeoMetaRowNames.current[rowKey],  method: _latestSeoMethodRows.current[rowKey], fieldValue: _latestSeoMetaValues.current[rowKey]}
         });
         return saveSEOAssertionCallback(savedFields);
     }
 
-    const updateSEOFieldValue = useCallback((rowKey: string,fieldName: string, fieldValue: string) => {
-        let _seoMetaRows : any = _latestSeoMetaRows.current;
+    const updateSEOFieldValue = useCallback((rowKey: string, fieldName: string, fieldValue: string) => {
+        let _seoMetaRows: any = _latestSeoMetaRows.current;
         let _seoMetaValues: any = _latestSeoMetaValues.current;
 
         _seoMetaRows[rowKey] = (
             //@ts-ignore
-            <ShowRowInput rowKey={rowKey} value={fieldValue} updateFieldValueCallback={updateSEOFieldValue} method={_latestSeoMethodRows.current[rowKey]} updateMethodCallback={updateMethodForSeoField} updateSelectedSeoField={updateSelectedSeoField} nameOptions={nameOptions} name={fieldName} valuesMap={seoOptionsMap}/>
+            <ShowRowInput rowKey={rowKey} value={fieldValue} updateFieldValueCallback={updateSEOFieldValue} method={_latestSeoMethodRows.current[rowKey]} updateMethodCallback={updateMethodForSeoField}  updateSelectedSeoField={updateSelectedSeoField} nameOptions={nameOptions} name={fieldName}  valuesMap={seoOptionsMap}/>
         );
         _seoMetaValues[rowKey] = fieldValue;
 
@@ -599,9 +606,9 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
     }, [seoMetaRows, seoMetaValues]);
 
     const updateSelectedSeoField = useCallback((rowKey: string, name: string) => {
-        let _seoMetaRows : any = _latestSeoMetaRows.current;
-        let _seoMetaRowNames : any = _latestSeoMetaRowNames.current;
-        let _seoMetaRowValues : any = _latestSeoMetaValues.current;
+        let _seoMetaRows: any = _latestSeoMetaRows.current;
+        let _seoMetaRowNames: any = _latestSeoMetaRowNames.current;
+        let _seoMetaRowValues: any = _latestSeoMetaValues.current;
 
         _seoMetaRowNames[rowKey] = name;
         _seoMetaRowValues[rowKey] = seoOptionsMap[name].value;
@@ -613,9 +620,9 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
         _latestSeoMetaValues.current = _seoMetaRowValues;
     }, [seoMetaRows, seoMetaRowsMethods]);
 
-    const updateMethodForSeoField = useCallback((rowKey: string, fieldName : string, name: string) => {
-        let _seoMetaRows : any = _latestSeoMetaRows.current;
-        let _seoMetaMethods : any = _latestSeoMethodRows.current;
+    const updateMethodForSeoField = useCallback((rowKey: string, fieldName: string, name: string) => {
+        let _seoMetaRows: any = _latestSeoMetaRows.current;
+        let _seoMetaMethods: any = _latestSeoMethodRows.current;
 
         _seoMetaMethods[rowKey] = name;
 
@@ -628,15 +635,15 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
         _latestSeoMethodRows.current = _seoMetaMethods;
     }, [seoMetaRows, seoMetaRowsMethods]);
 
-    const autoGenerateSeoMetaRows = useCallback(()=> {
-        let _seoMetaRowNames : any = _latestSeoMetaRowNames.current;
+    const autoGenerateSeoMetaRows = useCallback(() => {
+        let _seoMetaRowNames: any = _latestSeoMetaRowNames.current;
 
         let _seoMetaRows: any = {};
         let _seoMetaMethods: any = {};
         let _seoMetaValues: any = {};
 
-        Object.values(seoOptionsMap ? seoOptionsMap : {}).map((meta: any)=>{
-            const key = window.performance.now()+"_"+Math.random().toString(36).substr(2, 9);
+        Object.values(seoOptionsMap ? seoOptionsMap : {}).map((meta: any) => {
+            const key = window.performance.now() + "_" + Math.random().toString(36).substr(2, 9);
             setSeoMetaRowsMethods({
                 ...seoMetaRowsMethods,
                 [key]: "matches"
@@ -653,13 +660,13 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
         setSeoMetaRows(_seoMetaRows);
         _latestSeoMetaRowNames.current = _seoMetaRowNames;
         _latestSeoMetaRows.current = _seoMetaRows;
-        _latestSeoMethodRows.current  = _seoMetaMethods;
+        _latestSeoMethodRows.current = _seoMetaMethods;
         _latestSeoMetaValues.current = _seoMetaValues;
 
     }, [seoMetaRows, seoMetaRowsMethods]);
 
-    const createRow = useCallback(()=>{
-        const key = window.performance.now()+"_"+Math.random().toString(36).substr(2, 9);
+    const createRow = useCallback(() => {
+        const key = window.performance.now() + "_" + Math.random().toString(36).substr(2, 9);
         const seoMetaRowNames = _latestSeoMetaRowNames.current as any;
         let seoMetaMethods: any = _latestSeoMethodRows.current as any;
         let seoMetaValues: any = _latestSeoMetaValues.current as any;
@@ -677,7 +684,7 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
             ...seoMetaRowNames,
             [key]: nameOptions[0]
         });
-        _latestSeoMetaRowNames.current={
+        _latestSeoMetaRowNames.current = {
             ...seoMetaRowNames,
             [key]: nameOptions[0]
         };
@@ -693,7 +700,7 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
 
     }, [seoMetaRows, seoMetaRowsMethods]);
 
-    const seoMetaRowsOut = Object.keys(_latestSeoMetaRowNames.current).map((rowKey: string)=>{
+    const seoMetaRowsOut = Object.keys(_latestSeoMetaRowNames.current).map((rowKey: string) => {
         return (
             //@ts-ignore
             <ShowRowInput value={_latestSeoMetaValues.current[rowKey]} rowKey={rowKey} updateFieldValueCallback={updateSEOFieldValue} updateMethodCallback={updateMethodForSeoField} updateSelectedSeoField={updateSelectedSeoField} nameOptions={nameOptions} name={_latestSeoMetaRowNames.current[rowKey]} valuesMap={seoOptionsMap} method={_latestSeoMethodRows.current[rowKey]}/>
@@ -729,14 +736,16 @@ function ShowSEOForm({seoMeta, saveSEOAssertionCallback} : any) {
                 <div style={styles.formButtonAdvance} onClick={createRow}>
                     Advance
                 </div>
-                <div style={{...styles.button, padding: "0.4rem 3rem", marginLeft: "auto"}} onClick={saveSEOAssertion}>Save</div>
+                <div style={{...styles.button, padding: "0.4rem 3rem", marginLeft: "auto"}}
+                     onClick={saveSEOAssertion}>Save
+                </div>
             </div>
         </div>
     )
 }
 
 function ShowForm({state, updateState, seoMeta, submitCallback}: any) {
-    function closeForm(){
+    function closeForm() {
         updateState(null);
     }
 
@@ -757,7 +766,7 @@ function App() {
         {
             event_type: ACTIONS_IN_TEST.SET_DEVICE,
             selectors: [{value: "body", uniquenessScore: 1, type: "body"}],
-            value: selectedDeviceId,
+            value: selectedDeviceId as any,
         },
     ]);
     const [seoMeta, setSeoMeta] = useState({});
@@ -771,11 +780,11 @@ function App() {
     const iframeRef: Ref<any> = useRef(null);
     const actionsScrollRef: Ref<any> = useRef(null);
 
-    useEffect(()=>{
-        console.log(actionsScrollRef.current);
-        const scrollDiv = actionsScrollRef.current;
-        scrollDiv.scrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
-    }, [steps, isShowingElementForm]);
+    // useEffect(()=>{
+    //     const scrollDiv = actionsScrollRef.current;
+    //     scrollDiv.scrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
+    // }, [steps, isShowingElementForm]);
+
     function getSteps() {
         return steps;
     }
@@ -800,6 +809,14 @@ function App() {
         setIsShowingElementForm(false);
     }
 
+    window.onbeforeunload = function () {
+        if (steps && steps.length > 2) {
+            return "Leaving this page will discard your recorded test, do you still want to leave?";
+        } else {
+            return false;
+        }
+    }
+
     messageListenerCallback = function (event: any) {
         const {type, eventType, value, selectors} = event.data;
         const steps = getSteps();
@@ -821,11 +838,24 @@ function App() {
                     ) {
                         steps[steps.length - 1].value = value;
                         setSteps(steps);
-                    } else {
+                    } else if (lastStep.event_type === ACTIONS_IN_TEST.SCROLL && eventType === ACTIONS_IN_TEST.SCROLL && lastStep.selectors[0].value === selectors[0].value) {
+                        steps[steps.length - 1] = {event_type: eventType, value: [...lastStep.value, value], selectors};
                         setSteps([
-                            ...getSteps(),
-                            {event_type: eventType, value, selectors},
+                            ...steps
                         ]);
+
+                    } else {
+                        if (eventType === ACTIONS_IN_TEST.SCROLL) {
+                            setSteps([
+                                ...getSteps(),
+                                {event_type: eventType, value: [value], selectors},
+                            ]);
+                        } else {
+                            setSteps([
+                                ...getSteps(),
+                                {event_type: eventType, value, selectors},
+                            ]);
+                        }
                     }
                 }
             }
@@ -938,7 +968,8 @@ function App() {
                         <RightMiddleSection state={state} updateState={updateState}/>
                     )}
                     {state && state === MODALS.SEO && (
-                        <ShowForm submitCallback={saveSeoValidation} state={state} seoMeta={seoMeta} currentElementAttributes={currentElementAttributes}
+                        <ShowForm submitCallback={saveSeoValidation} state={state} seoMeta={seoMeta}
+                                  currentElementAttributes={currentElementAttributes}
                                   updateState={updateState} saveAssertionCallback={saveAssertionCallback}
                                   saveSeoValidationCallback={saveSeoValidation}/>
                     )}
@@ -1025,7 +1056,8 @@ function App() {
                 rel="stylesheet"
                 href={chrome.runtime.getURL("/styles/fonts.css")}
             />
-            <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback} />
+            <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState}
+                         saveAssertionCallback={saveAssertionCallback}/>
 
             {/*<AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState}*/}
             {/*             saveAssertionCallback={saveAssertionCallback}/>*/}
@@ -1273,8 +1305,7 @@ const styles = {
         left: "2rem",
         cursor: "pointer"
     },
-    innerForm: {
-    },
+    innerForm: {},
     innerFormHeader: {
         display: "flex",
         flexDirection: "row",
@@ -1357,8 +1388,8 @@ const styles = {
         fontSize: 18,
     },
     formBottomRow: {
-      display: "flex",
-      marginTop: "1.4rem"
+        display: "flex",
+        marginTop: "1.4rem"
     },
     formButtonAdvance: {
         fontWeight: "800",

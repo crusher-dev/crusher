@@ -1,25 +1,28 @@
 export default [
     {
         id: "iphoneXRXSMax",
-        name: "iPhone XR, XS Max",
+        name: "iPhone XR, XSMax",
         width: 414,
         height: 896,
         visible: true,
+        mobile: true,
         userAgent: "iPhone",
     },
     {
-        id: "iPhone8Plus7Plus6SPlus",
-        name: "iPhone 8+, 7+, 6S+",
+        id: "iPhone8Plus87Plus",
+        name: "iPhone 8+, 8, 7+",
         width: 414,
         height: 736,
+        mobile: true,
         visible: false,
         userAgent: "iPhone",
     },
     {
-        id: "iPhone876S6",
-        name: "iPhone 8, 7, 6S, 6",
+        id: "iPhone76S6",
+        name: "iPhone 7, 6S, 6",
         width: 375,
         height: 667,
+        mobile: true,
         visible: false,
         userAgent: "iPhone",
     },
@@ -29,6 +32,7 @@ export default [
         width: 412,
         height: 846,
         visible: true,
+        mobile: true,
         userAgent: "Samsung Phone",
     },
     // {
@@ -45,6 +49,7 @@ export default [
         width: 393,
         height: 786,
         visible: true,
+        mobile: true,
         userAgent: "Google Pixel",
     },
     {
@@ -66,7 +71,7 @@ export default [
     {
         id: "GoogleChromeLargeScreen",
         name: "Desktop L (1440 * 800)",
-        width: 1280,
+        width: 1440,
         height: 800,
         visible: true,
         userAgent: "Google Chrome",
@@ -74,7 +79,7 @@ export default [
     {
         id: "GoogleChromeLargeScreen",
         name: "Desktop XL (1600 * 800)",
-        width: 1280,
+        width: 1600,
         height: 800,
         visible: true,
         userAgent: "Google Chrome",

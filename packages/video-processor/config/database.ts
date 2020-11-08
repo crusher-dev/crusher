@@ -1,8 +1,8 @@
 export const REDDIS = {
-	host: process.env.REDDIS_HOST ? process.env.REDDIS_HOST : "192.168.99.104",
+	host: process.env.REDIS_HOST ? process.env.REDIS_HOST : "192.168.99.104",
 	//@ts-ignore
-	port: process.env.REDDIS_PORT ? parseInt(process.env.REDDIS_PORT) : 6379,
-	password: process.env.REDDIS_PASSWORD ?  process.env.REDDIS_PASSWORD : null
+	port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
+	password: process.env.REDIS_PASSWORD ?  process.env.REDIS_PASSWORD : null
 };
 
 export const MONGODB = {

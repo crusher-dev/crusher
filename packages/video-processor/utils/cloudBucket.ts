@@ -11,7 +11,11 @@ AWS.config.update({
 });
 
 // Create S3 service object
-export const s3BucketService = new AWS.S3({apiVersion: '2006-03-01'});
+export const s3BucketService = new AWS.S3({
+    apiVersion: '2006-03-01',
+    endpoint: 'http://192.168.99.104:4566',
+    s3ForcePathStyle: true
+});
 
 export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName: string, destination: string = "/") {
     return new Promise((resolve, reject)=>{

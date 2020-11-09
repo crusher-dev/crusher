@@ -776,7 +776,8 @@ function App() {
     const [currentElementSelectors, setCurrentElementSelectors] = useState(null);
     const [currentElementAttributes, setCurrentElementAttributes] = useState(null);
     const [state, updateState] = useState(null);
-
+    const [startingTime] = useState(Date.now());
+    const [lastStepTime, setLastStepTime] = useState(Date.now());
     const iframeRef: Ref<any> = useRef(null);
     const actionsScrollRef: Ref<any> = useRef(null);
 
@@ -797,6 +798,7 @@ function App() {
             value: options,
             selectors: ["body"]
         }] as any);
+        setLastStepTime(Date.now());
         updateState(null);
     }
 
@@ -806,6 +808,7 @@ function App() {
             value: options,
             selectors: currentElementSelectors
         }] as any);
+        setLastStepTime(Date.now());
         setIsShowingElementForm(false);
     }
 
@@ -824,6 +827,7 @@ function App() {
             const lastStep = steps[steps.length - 1];
             if (!lastStep) {
                 setSteps([...getSteps(), {event_type: eventType, value, selectors}]);
+                setLastStepTime(Date.now());
             } else {
                 const navigateEventExist = steps.find(
                     (step) => step.event_type === ACTIONS_IN_TEST.NAVIGATE_URL
@@ -838,23 +842,26 @@ function App() {
                     ) {
                         steps[steps.length - 1].value = value;
                         setSteps(steps);
+                        setLastStepTime(Date.now());
                     } else if (lastStep.event_type === ACTIONS_IN_TEST.SCROLL && eventType === ACTIONS_IN_TEST.SCROLL && lastStep.selectors[0].value === selectors[0].value) {
                         steps[steps.length - 1] = {event_type: eventType, value: [...lastStep.value, value], selectors};
                         setSteps([
                             ...steps
                         ]);
-
+                        setLastStepTime(Date.now());
                     } else {
                         if (eventType === ACTIONS_IN_TEST.SCROLL) {
                             setSteps([
                                 ...getSteps(),
                                 {event_type: eventType, value: [value], selectors},
                             ]);
+                            setLastStepTime(Date.now());
                         } else {
                             setSteps([
                                 ...getSteps(),
                                 {event_type: eventType, value, selectors},
                             ]);
+                            setLastStepTime(Date.now());
                         }
                     }
                 }
@@ -981,6 +988,7 @@ function App() {
     function saveTest() {
         sendPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
             events: escape(JSON.stringify(steps)),
+            totalTime: lastStepTime - startingTime
         });
     }
 

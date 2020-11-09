@@ -41,5 +41,5 @@ export const COMPONENTS = {
 
 //Don't use this directly
 export const SUPPORTED_THEME = ["dark", "light"];
-export const DEFAULT_THEME = "dark";
+export const DEFAULT_THEME = "light";
 export const ThemeContext = React.createContext(DEFAULT_THEME);

@@ -97,7 +97,7 @@ const TestState = {
 };
 
 function Test(props) {
-	let { testId, events, testInfo, isFirstTest } = props;
+	let { testId, events, testInfo, isFirstTest, totalTime } = props;
 	testInfo = testInfo ? testInfo : {};
 	const [actions, setActions] = useState(
 		testInfo.events ? JSON.parse(testInfo.events) : JSON.parse(events),
@@ -257,7 +257,7 @@ function Test(props) {
 			<div css={styles.centeredContainer}>
 				<div css={styles.placeholderHeaderContainer}>
 					<div css={styles.placeholderHeaderTitle}>
-						Kudos!! You created whole test in 50 secs 👏
+						Kudos!! You created whole test in {Math.floor(totalTime/1000)} seconds👏
 					</div>
 					<div css={styles.placeholderHeaderDesc}>
 						We will now run this test in subsquent run. Catch all UI/Flow Bugs for
@@ -529,6 +529,8 @@ Test.getInitialProps = async (ctx) => {
 		let events, framework, testInfo;
 		events = postData ? postData.events : null;
 		framework = postData ? postData.framework : null;
+		const totalTime = postData ? postData.totalTime : null;
+
 		if (testId) {
 			testInfo = await getTest(testId, headers);
 			events = testInfo.events;
@@ -540,6 +542,7 @@ Test.getInitialProps = async (ctx) => {
 			testInfo: testInfo,
 			testId: testId ? testId : null,
 			isFirstTest: testsCount && testsCount.totalTests === 0,
+			totalTime: totalTime
 		};
 	} catch (er) {
 		throw er;

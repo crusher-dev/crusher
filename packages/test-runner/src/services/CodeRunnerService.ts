@@ -13,7 +13,7 @@ import {TestTypes} from "../interfaces/TestTypes";
 require("../wrapper/playwright.ts");
 export default class CodeRunnerService {
 
-    async logStep(testType, testId, type, body, meta) {
+    async logStep(testType, testId, type, body, meta, timeTakeForThisStep) {
         console.log("Saving logs", {testType, testId, type, body, meta});
 
         return (new TestLiveStepsLogs({
@@ -21,7 +21,10 @@ export default class CodeRunnerService {
             body: body,
             testId: testId,
             testType: testType,
-            meta: meta,
+            meta: {
+                ...(meta ? meta : {}),
+                timeTaken: timeTakeForThisStep
+            },
         })).save();
     }
 

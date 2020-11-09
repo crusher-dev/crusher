@@ -248,7 +248,7 @@ function Test(props) {
 		? testResults.logs.map((log) => {
 				console.log(log);
 				const action = { event_type: log.actionType, desc: log.body.message };
-				return <LogActionCard action={action} isFinished={true} />;
+				return <LogActionCard action={action} timeTaken={log.meta ? log.meta.timeTaken : null} isFinished={true} />;
 		  })
 		: [];
 

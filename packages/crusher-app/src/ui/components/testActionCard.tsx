@@ -36,7 +36,7 @@ export const TestActionCard = (props) => {
 };
 
 export const LogActionCard = (props) => {
-	const { isFinished, style, action } = props;
+	const { isFinished, style, action, timeTaken } = props;
 	const desc = action.desc;
 
 	return (
@@ -54,7 +54,7 @@ export const LogActionCard = (props) => {
 					<img src={"/svg/tests/correct.svg"} style={{ width: "1.05rem" }} />
 				</div>
 			) : null}
-			<div css={styles.timeTookForStep}>Took 1 sec</div>
+			<div css={styles.timeTookForStep}>Took {timeTaken ? (timeTaken/1000).toFixed(1) : "Few"} seconds</div>
 		</div>
 	);
 };

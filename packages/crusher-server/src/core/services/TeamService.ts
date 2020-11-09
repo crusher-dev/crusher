@@ -13,7 +13,7 @@ export default class TeamService {
 		this.dbManager = Container.get(DBManager);
 	}
 
-	async createTeam(details: CreateTeamRequest) {
+	async createTeam(details: CreateTeamRequest) : Promise<any> {
 		const { userId, teamName, stripeCustomerId } = details;
 		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=? AND team_id IS NULL`, [userId]);
 

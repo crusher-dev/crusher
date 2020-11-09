@@ -58,7 +58,7 @@ export default class ProjectService {
 		return this.dbManager.fetchSingleRow(`DELETE FROM projects WHERE id = ?`, [projectId]);
 	}
 
-	async createDefaultProject(teamId: number, name: string) {
+	async createDefaultProject(teamId: number, name?: string) {
 		return this.dbManager.insertData(`INSERT INTO projects SET ?`, {
 			name: 'Default',
 			team_id: teamId,

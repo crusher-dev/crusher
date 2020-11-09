@@ -12,6 +12,7 @@ import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
 import React, { useEffect } from "react";
 import { toPascalCase } from "@utils/helpers";
+import { Logo } from "@ui/components/Atoms";
 
 // Todo- Breakdown in diff component.
 function LeftSection(props) {
@@ -157,14 +158,11 @@ function LeftSection(props) {
 	);
 }
 
-function Logo() {
+function LogoItem() {
 	return (
 		<Link href={"/app/project/dashboard"}>
 			<a href={"/app/project/dashboard"}>
-				<img
-					src={"/svg/logo-dark.svg"}
-					style={{ cursor: "pointer", width: "11.62rem" }}
-				/>
+				<Logo style={{ cursor: "pointer", height: "1.5625rem" }} />
 			</a>
 		</Link>
 	);
@@ -256,7 +254,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 					/>
 					<div css={styles.contentContainer}>
 						<div css={styles.header}>
-							<Logo />
+							<LogoItem />
 							<ProjectSelector
 								projectsList={projectsList}
 								options={options}

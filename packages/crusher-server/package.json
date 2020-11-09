@@ -84,7 +84,7 @@
 	},
 	"scripts": {
 		"dev:serverless": "now dev",
-		"dev": "ts-node-dev --poll --interval 200 --respawn --transpile-only src/app.ts",
+		"dev": "ts-node src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"deploy": "now --prod"
 	},

@@ -20,6 +20,7 @@ module.exports = {
       "cwd": "./packages/crusher-server",
       "script": "npm",
       "args": "run dev",
+       "watch": ["src", "config"],
       "env": {
         "PORT": 8000,
         "BACKEND_URL": "http://localhost:8000",
@@ -59,6 +60,7 @@ module.exports = {
       "cwd": "./packages/test-runner",
       "script": "npm",
       "args": "run start:dev",
+      "watch": ["src", "config", "util"],
       "env": {
         "LOGDNA_API_KEY": "c7bdd500e3cfbfe457a2ec4168b8cfaa",
         "MONGODB_HOST": "localhost",

@@ -25,8 +25,6 @@ import { Platform } from '../../core/interfaces/Platform';
 import { JobTrigger } from '../../core/interfaces/JobTrigger';
 import { TestType } from '../../core/interfaces/TestType';
 
-const { Octokit } = require('@octokit/rest');
-
 const RESPONSE_STATUS = {
 	PROJECT_CREATED: 'PROJECT_CREATED',
 	PROJECT_CREATION_FAILED: 'PROJECT_CREATION_FAILED',

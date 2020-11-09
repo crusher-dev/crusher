@@ -3,6 +3,7 @@ import DBManager from '../manager/DBManager';
 import { TEAM_CREATED, TEAM_CREATION_FAILED } from '../../constants';
 import { CreateTeamRequest } from '../interfaces/services/team/CreateTeamRequest';
 import { TierPlan } from '../interfaces/TierPlan';
+import { User } from '../interfaces/db/User';
 
 @Service()
 export default class TeamService {
@@ -13,7 +14,7 @@ export default class TeamService {
 	}
 
 	async createTeam(details: CreateTeamRequest) {
-		const { userId, teamName } = details;
+		const { userId, teamName, stripeCustomerId } = details;
 		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=? AND team_id IS NULL`, [userId]);
 
 		// Only 1 team should be allowed
@@ -22,6 +23,7 @@ export default class TeamService {
 				name: teamName,
 				team_email: user.email,
 				tier: TierPlan.FREE,
+				stripe_customer_id: stripeCustomerId
 			});
 			if (team.insertId) {
 				await this.dbManager.fetchSingleRow(`UPDATE users SET team_id=? WHERE id=?`, [team.insertId, userId]);
@@ -32,5 +34,9 @@ export default class TeamService {
 			}
 		}
 		throw new Error('User has already joined some team');
+	}
+
+	async getTeamInfo(teamId: string): Promise<User> {
+		return await this.dbManager.fetchSingleRow('SELECT * from teams WHERE id = ?', [teamId]);
 	}
 }

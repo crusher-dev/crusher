@@ -6,8 +6,6 @@ import {
 	Body,
 	Post,
 	Param,
-	UnauthorizedError,
-	Req,
 	Res,
 	BadRequestError,
 } from 'routing-controllers';
@@ -16,30 +14,17 @@ import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';
 import ProjectService from '../../core/services/ProjectService';
 import TestService from '../../core/services/TestService';
-import { request } from '../../utils/request';
 import DraftService from '../../core/services/DraftService';
-import { TEST_INSTANCE_PLATFORM, TEST_TYPES } from '../../constants';
 import { Draft } from '../../core/interfaces/db/Draft';
-import { Platform } from '../../core/interfaces/Platform';
 import { addTestRequestToQueue } from '../../core/utils/queue';
 import { TestType } from '../../core/interfaces/TestType';
 import { TestFramework } from '../../core/interfaces/TestFramework';
 import { User } from '../../core/interfaces/db/User';
-import * as events from 'events';
 import DraftInstanceService from '../../core/services/DraftInstanceService';
 import { InstanceStatus } from '../../core/interfaces/InstanceStatus';
-import { DraftInstance } from '../../core/interfaces/db/DraftInstance';
 import DraftInstanceResultsService from '../../core/services/DraftInstanceResultsService';
-import { TestsLogs } from '../models/testLogs';
-import * as mongoose from 'mongoose';
-import { TestLogsService } from '../../core/services/mongo/testLogs';
 import TestInstanceRecordingService from '../../core/services/TestInstanceRecordingService';
 import { TestLiveStepsLogs } from '../models/testLiveStepsLogs';
-
-const RESPONSE_STATUS = {
-	INSUFFICIENT_INFORMATION: 'INSUFFICIENT_INFORMATION',
-	TEST_CREATED: 'TEST_CREATED',
-};
 
 @Service()
 @JsonController('/draft')

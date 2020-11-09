@@ -6,7 +6,6 @@ import ProjectHostsService from '../../core/services/ProjectHostsService';
 import ProjectService from '../../core/services/ProjectService';
 import CommentsService from '../../core/services/CommentsService';
 import TestInstanceResultsService from '../../core/services/TestInstanceResultsService';
-import { Platform } from '../../core/interfaces/Platform';
 import TestInstanceService from '../../core/services/TestInstanceService';
 import JobsService from '../../core/services/JobsService';
 import TestInstanceResultSetsService from '../../core/services/TestInstanceResultSetsService';

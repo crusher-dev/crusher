@@ -1,26 +1,10 @@
-import {
-	JsonController,
-	Get,
-	Authorized,
-	CurrentUser,
-	Body,
-	Post,
-	UnauthorizedError,
-	Param,
-} from 'routing-controllers';
+import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param } from 'routing-controllers';
 import { Service, Container, Inject } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';
 import ProjectService from '../../core/services/ProjectService';
 
 import DraftInstanceService from '../../core/services/DraftInstanceService';
-
-const TEST_INSTANCE_STATUS = {
-	CREATED: 'CREATED',
-	SKIPPED: 'SKIPPED',
-	ABORTED: 'ABORTED',
-	FINISHED: 'FINISHED',
-};
 
 @Service()
 @JsonController('/draft_instance/')

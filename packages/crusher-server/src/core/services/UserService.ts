@@ -1,11 +1,10 @@
-import { Service, Container } from 'typedi';
+import { Service, Container, Inject } from 'typedi';
 import DBManager from '../manager/DBManager';
 import {
 	EMAIL_NOT_VERIFIED,
 	ERROR_OCCURED_IN_AUTHENTICATION,
 	NO_TEAM_JOINED,
 	SIGNED_IN,
-	SIGNED_UP_WITHOUT_JOINING_TEAM,
 	USER_ALREADY_REGISTERED,
 	USER_FAILED_TO_REGISTERED,
 	USER_NOT_REGISTERED,
@@ -22,12 +21,15 @@ import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';
 import { Logger } from '../../utils/logger';
 import ProjectService from './ProjectService';
 import TeamService from './TeamService';
+import StripeManager from '../manager/StripeManager';
 
 @Service()
 export default class UserService {
 	private dbManager: DBManager;
 	private projectService: ProjectService;
 	private teamService: TeamService;
+	@Inject()
+	private stripeManager: StripeManager;
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
@@ -74,31 +76,38 @@ export default class UserService {
 		}
 
 		if (!_user) {
-			let encryptedPassword = encryptPassword(password);
-
-			const insertedUser = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
-				first_name: firstName,
-				last_name: lastName,
-				email: email,
-				password: encryptedPassword,
-				verified: false,
-			});
-			if (insertedUser.insertId) {
-				const team = await this.teamService.createTeam({
-					teamName: 'Default',
-					userId: insertedUser.insertId,
-				});
-				const project = team && team.teamId && (await this.projectService.createDefaultProject(team.teamId));
-				return {
-					status: USER_REGISTERED,
-					userId: insertedUser.insertId,
-					token: generateToken(insertedUser.insertId, team && team.teamId ? team.teamId : null),
-				};
-			} else {
-				return { status: USER_FAILED_TO_REGISTERED };
-			}
+			return await this.createdUserProfile(password, firstName, lastName, email);
 		}
 		return { status: USER_ALREADY_REGISTERED };
+	}
+
+	private async createdUserProfile(password: string, firstName: string, lastName: string, email: string) {
+		let encryptedPassword = encryptPassword(password);
+
+		const insertedUser = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
+			first_name: firstName,
+			last_name: lastName,
+			email: email,
+			password: encryptedPassword,
+			verified: false,
+		});
+		if (insertedUser.insertId) {
+			const stripeName = `${firstName} ${lastName}`;
+			const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
+			const teamName = `${firstName}'s team`;
+			const team = await this.teamService.createTeam({
+				teamName,
+				userId: insertedUser.insertId,
+				stripeCustomerId,
+			});
+			const projectName = `${firstName}'s project`;
+			await this.projectService.createDefaultProject(team.teamId, projectName);
+			return {
+				status: USER_REGISTERED,
+				userId: insertedUser.insertId,
+				token: generateToken(insertedUser.insertId, team && team.teamId ? team.teamId : null)
+			}
+		}
 	}
 
 	async authenticateWithGoogleProfile(profileInfo: RegisterUserRequest) {

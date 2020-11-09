@@ -8,4 +8,7 @@ export interface User extends BaseRowInterface {
 	email: string;
 	password?: string;
 	verified: boolean;
+	stripe_customer_id?: string;
+	on_hold?: boolean;
+	stripe_subscription_id?: string;
 }

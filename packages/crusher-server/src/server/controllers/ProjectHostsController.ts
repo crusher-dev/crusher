@@ -7,7 +7,6 @@ import {
 	Post,
 	Param,
 	UnauthorizedError,
-	Req,
 } from 'routing-controllers';
 import { Service, Container, Inject } from 'typedi';
 import DBManager from '../../core/manager/DBManager';

@@ -54,8 +54,7 @@ export default class DBManager {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
 			return queryResults;
 		} catch (e) {
-			return new InternalServerError('Some internal error occurred');
-
+			throw new InternalServerError('Some internal error occurred');
 		}
 	};
 
@@ -64,8 +63,7 @@ export default class DBManager {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
 			return queryResults;
 		} catch (e) {
-			return new InternalServerError('Some internal error occurred' + e);
-		}
+			throw new InternalServerError('Some internal error occurred');		}
 	};
 
 	fetchSingleRow = async (command, valuesToEscape = null) => {
@@ -78,7 +76,7 @@ export default class DBManager {
 			// Otherwise send nothing
 			return null;
 		} catch (e) {
-			return new InternalServerError(`Something went wrong with executing this query: ${command} ${e} `);
+			throw new InternalServerError(`Something went wrong with executing this query: ${command} ${e} `);
 		}
 	};
 

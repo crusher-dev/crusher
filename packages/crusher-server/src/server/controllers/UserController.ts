@@ -5,7 +5,6 @@ import {
 	Get,
 	InternalServerError,
 	JsonController,
-	Param,
 	Post,
 	QueryParam,
 	QueryParams,
@@ -20,7 +19,6 @@ import GoogleAPIService from '../../core/services/GoogleAPIService';
 import {
 	EMAIL_NOT_VERIFIED,
 	EMAIL_VERIFIED_WITH_VERIFICATION_CODE,
-	INVALID_VERIFICATION_CODE,
 	NO_TEAM_JOINED,
 	SIGNED_UP_WITHOUT_JOINING_TEAM,
 	USER_NOT_REGISTERED,
@@ -32,8 +30,7 @@ import { decodeToken, generateToken, generateVerificationCode } from '../../core
 import ProjectService from '../../core/services/ProjectService';
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from '../../utils/cookies';
 import { Logger } from '../../utils/logger';
-import { STATUS_CODES } from 'http';
-
+import { generateId } from '../../core/utils/helper';
 
 const { google } = require('googleapis');
 
@@ -54,20 +51,13 @@ export class UserController {
 	@Inject()
 	private projectService: ProjectService;
 
-	private dbManager;
-
-	constructor() {
-		// This passes on only one DB containers
-		this.dbManager = Container.get(DBManager);
-	}
-
 	/**
 	 * Creates new user entry. And sends a link to DB.
 	 */
 	@Post('/signup')
 	async createUser(@Body() userInfo: any, @Res() res) {
 		const { firstName, lastName, email, password } = userInfo;
-		const { status, token, userId } = await this.userService.registerUser({
+		const { status, userId, token } = await this.userService.registerUser({
 			firstName,
 			lastName,
 			email,
@@ -84,7 +74,7 @@ export class UserController {
 	}
 	/**
 	 * Tries to login user
-	 *  | If succesfful, generate jwt and store it in session
+	 *  | If successful, generate jwt and store it in session
 	 * 	| Else
 	 * 	  | If Not verified, throw error for validation and send link to user.
 	 * 	  | Throw 401
@@ -122,7 +112,7 @@ export class UserController {
 			email,
 			firstName: given_name,
 			lastName: family_name,
-			password: Date.now() + 'crushdsgkjdfkj1',
+			password: Date.now() + generateId(10)
 		});
 
 		if (userInfo.token) {
@@ -173,10 +163,7 @@ export class UserController {
 		return this.userService
 			.getUserInfo(user_id)
 			.then(async (info) => {
-				const { id: user_id, team_id, verified } = info;
-				if (!verified) {
-					return { status: EMAIL_NOT_VERIFIED };
-				}
+				const { id: user_id, team_id } = info;
 				if (user_id && !team_id) {
 					return { status: NO_TEAM_JOINED };
 				}
@@ -187,6 +174,47 @@ export class UserController {
 			})
 			.catch((err) => {
 				return { status: USER_NOT_REGISTERED };
+			});
+	}
+
+	@Post('/user/get_plans')
+	async getPricingPlans(@CurrentUser({ required: false }) user, @Body() body) {
+		const { user_id } = user;
+		const metaArray = body;
+		if (!user_id) {
+			return { status: USER_NOT_REGISTERED };
+		}
+
+		return this.userService
+			.addUserMeta(metaArray, user_id)
+			.then(async () => {
+				return { status: 'success' };
+			})
+			.catch((err) => {
+				return new InternalServerError('Some internal error occurred');
+			});
+	}
+
+	@Post('/user/start_trial')
+	async startUserTrial(@CurrentUser({ required: false }) user, @Body() body) {
+		const { user_id } = user;
+
+		// Update stripe
+
+		// Start team_pricing_log
+
+		const metaArray = body;
+		if (!user_id) {
+			return { status: USER_NOT_REGISTERED };
+		}
+
+		return this.userService
+			.addUserMeta(metaArray, user_id)
+			.then(async () => {
+				return { status: 'success' };
+			})
+			.catch((err) => {
+				return new InternalServerError('Some internal error occurred');
 			});
 	}
 
@@ -213,22 +241,6 @@ export class UserController {
 	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res) {
 		const { user_id } = user;
 		return this.userService.getUserInfo(user_id);
-	}
-
-	@Authorized()
-	@Post('/createTeam')
-	async createTeam(@CurrentUser({ required: true }) user, @Body() body) {
-		const { teamName } = body;
-		if (!teamName) {
-			throw new Error('No team name provided');
-		}
-		const team = await this.teamService.createTeam({
-			teamName,
-			userId: user.user_id,
-		});
-		team && team.teamId && (await this.projectService.createDefaultProject(team.teamId));
-
-		return team;
 	}
 
 	/**

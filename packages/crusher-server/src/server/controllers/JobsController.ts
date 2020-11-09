@@ -6,12 +6,10 @@ import TestInstanceService from '../../core/services/TestInstanceService';
 import TestInstanceScreenShotsService from '../../core/services/TestInstanceScreenShotsService';
 import ScreenshotComparisionsService from '../../core/services/ScreenshotComparisionsService';
 import { Platform } from '../../core/interfaces/Platform';
-import { jobs } from 'googleapis/build/src/apis/jobs';
 import TestInstanceResultsService from '../../core/services/TestInstanceResultsService';
 import TestInstanceResultSetsService from '../../core/services/TestInstanceResultSetsService';
 import CommentsService from '../../core/services/CommentsService';
 import { TestLogsService } from '../../core/services/mongo/testLogs';
-import { User } from '../../core/interfaces/db/User';
 import TestInstanceRecordingService from '../../core/services/TestInstanceRecordingService';
 
 @Service()

@@ -7,15 +7,11 @@ import {
 	Post,
 	Param,
 	UnauthorizedError,
-	Req,
 } from 'routing-controllers';
 import { Service, Container, Inject } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';
-import ProjectHostsService from '../../core/services/ProjectHostsService';
-import ProjectService from '../../core/services/ProjectService';
 import MonitoringService from '../../core/services/MonitoringService';
-import { Platform } from '../../core/interfaces/Platform';
 import { convertLabelToSeconds, convertSecondsToLabel } from '../../core/utils/helper';
 
 @Service()

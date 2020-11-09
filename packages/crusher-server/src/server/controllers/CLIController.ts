@@ -6,11 +6,6 @@ import ClIService from '../../core/services/ClIService';
 import { generateToken } from '../../core/utils/auth';
 import { v1 as uuidv1 } from 'uuid';
 
-const RESPONSE_STATUS = {
-	INSUFFICIENT_INFORMATION: 'INSUFFICIENT_INFORMATION',
-	TEST_CREATED: 'TEST_CREATED',
-};
-
 @Service()
 @JsonController('/cli')
 export class CLIController {

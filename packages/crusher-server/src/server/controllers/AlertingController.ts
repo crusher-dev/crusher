@@ -19,14 +19,7 @@ import AlertingService from '../../core/services/AlertingService';
 import JobsService, { TRIGGER } from '../../core/services/JobsService';
 import UserService from '../../core/services/UserService';
 import { Logger } from '../../utils/logger';
-import { SlackOAuthResponse } from '../../core/interfaces/SlackOAuthResponse';
-import { fetch } from '../../core/utils/fetch';
 import { resolvePathToFrontendURI } from '../../core/utils/uri';
-
-const RESPONSE_STATUS = {
-	INSUFFICIENT_INFORMATION: 'INSUFFICIENT_INFORMATION',
-	TEST_CREATED: 'TEST_CREATED',
-};
 
 @Service()
 @JsonController('/alerting')

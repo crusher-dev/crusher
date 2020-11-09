@@ -5,7 +5,6 @@ import {
 	Controller,
 	CurrentUser,
 	Get,
-	JsonController,
 	Param,
 	Post,
 	Req,

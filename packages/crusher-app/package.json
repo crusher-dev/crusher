@@ -2,7 +2,6 @@
   "private": true,
   "name": "crusher-app",
   "version": "1.0.0",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -65,6 +64,7 @@
     "redux-persist": "^6.0.0",
     "redux-persist-transform-filter": "^0.0.20",
     "redux-thunk": "^2.3.0",
+    "stripe": "^8.120.0",
     "tailwind": "^4.0.0",
     "urlencoded-body-parser": "^3.0.0",
     "validator": "^13.0.0"

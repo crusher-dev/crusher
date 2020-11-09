@@ -7,24 +7,13 @@ import {
 	Post,
 	UnauthorizedError,
 	Param,
-	BadRequestError,
-	Req,
 } from 'routing-controllers';
 import { Service, Container, Inject } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';
 import ProjectService from '../../core/services/ProjectService';
-import TestService from '../../core/services/TestService';
 import TestInstanceService from '../../core/services/TestInstanceService';
 import JobsService from '../../core/services/JobsService';
-import { getDefaultHostFromCode } from '../../core/utils/helper';
-
-const TEST_INSTANCE_STATUS = {
-	CREATED: 'CREATED',
-	SKIPPED: 'SKIPPED',
-	ABORTED: 'ABORTED',
-	FINISHED: 'FINISHED',
-};
 
 const TEST_RESULT_STATUS = {
 	PASSED: 'PASSED',

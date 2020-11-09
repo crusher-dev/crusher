@@ -289,7 +289,7 @@ function Test(props) {
 					</div>
 				</div>
 				<div css={styles.verifyingTestContainer}>
-					<img style={{ width: "2rem" }} src={"/svg/tests/verifyingLoading.svg"} />
+					<img style={{ width: isRunningTest ? "2rem" : "1.1rem" }} src={isRunningTest ? "/svg/tests/verifyingLoading.svg" : "/svg/tests/correct.svg"} />
 					<div
 						style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
 					>

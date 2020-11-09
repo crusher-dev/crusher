@@ -11,9 +11,16 @@ const header = `const browser = await playwright["chromium"].launch();\n`
 
 const footer = `await browser.close();\n`;
 
-const logStepsFunction = `function logStep(type, data, meta){
+const logStepsFunction = `
+const {
+  performance
+} = require('perf_hooks');
+
+let lastStepExecutedOn = performance.now();
+function logStep(type, data, meta){
+    const timeTakeForThisStep = performance.now() - lastStepExecutedOn;
 	if(typeof _logStepToMongo !== "undefined"){
-		_logStepToMongo(type, data, meta);
+		_logStepToMongo(type, data, meta, timeTakeForThisStep);
 	}
 }\n`;
 

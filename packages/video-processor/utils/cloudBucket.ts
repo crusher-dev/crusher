@@ -14,7 +14,8 @@ AWS.config.update({
 export const s3BucketService = new AWS.S3({
     apiVersion: '2006-03-01',
     endpoint: 'http://localhost:4566',
-    s3ForcePathStyle: true
+    s3ForcePathStyle: true,
+    signatureVersion: 'v4'
 });
 
 export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName: string, destination: string = "/") {
@@ -30,7 +31,7 @@ export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName
             const url = s3BucketService.getSignedUrl('getObject', {
                 Bucket: VIDEO_BUCKET_NAME,
                 Key: data.key,
-                Expires: 60*60*24*30
+                Expires: 60*60*24*6
             })
 
             console.log(`${filePath} uploaded to ${AWS_S3_VIDEO_BUCKET} aws bucket.`);

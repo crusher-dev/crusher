@@ -18,7 +18,9 @@ const {
 
 let lastStepExecutedOn = performance.now();
 function logStep(type, data, meta){
-    const timeTakeForThisStep = performance.now() - lastStepExecutedOn;
+    const currentTime = performance.now();
+    const timeTakeForThisStep = currentTime - lastStepExecutedOn;
+    lastStepExecutedOn = currentTime;
 	if(typeof _logStepToMongo !== "undefined"){
 		_logStepToMongo(type, data, meta, timeTakeForThisStep);
 	}

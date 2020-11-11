@@ -1,7 +1,7 @@
 import {Component} from "preact";
 import React from "preact/compat";
-import {MODALS} from "../../../constants/modal";
-import {SEOModelContent} from "../containers/modal/seoModelContent";
+import {MODALS} from "../../../../constants/modal";
+import {SEOModelContent} from "./seoModelContent";
 
 export class SeoModal extends Component<any, any> {
     render() {

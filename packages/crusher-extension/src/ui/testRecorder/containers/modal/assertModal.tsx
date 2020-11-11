@@ -1,7 +1,7 @@
 import {Component} from "preact";
 import React from "preact/compat";
-import {MODALS} from "../../../constants/modal";
-import {AssertModalContent} from "../containers/modal/assertModalContent";
+import {MODALS} from "../../../../constants/modal";
+import {AssertModalContent} from "./assertModalContent";
 
 export class AssertModal extends Component<any, any> {
     render() {

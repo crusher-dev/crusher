@@ -375,7 +375,7 @@ function DesktopBrowser(props: any) {
         return (
             <div style={styles.browserToolbar}>
                 <div style={styles.browserMainToolbar}>
-                    <div style={{display: "flex", alignItems: "center"}}>
+                    <div style={{display: "flex", alignItems: "center",   cursor: 'pointer'}}>
                         <NavigateBackIcon onClick={goBack} disabled={false}/>
                     </div>
                     <div
@@ -383,6 +383,7 @@ function DesktopBrowser(props: any) {
                             marginLeft: "0.7rem",
                             display: "flex",
                             alignItems: "center",
+                            cursor: 'pointer'
                         }}
                     >
                         <NavigateForwardIcon onClick={goForward} disabled={false} />
@@ -391,7 +392,7 @@ function DesktopBrowser(props: any) {
                         style={{
                             marginLeft: "0.9rem",
                             display: "flex",
-                            alignItems: "center",
+                            alignItems: "center", cursor: 'pointer'
                         }}
                     >
                        <NavigateRefreshIcon onClick={refreshPage} disabled={false}/>
@@ -1161,7 +1162,7 @@ const styles = {
         padding: "0.73rem 2rem",
     },
     addressBar: {
-        width: "65%",
+        width: "35%",
         padding: "0 0.1rem",
         background: "#1C1F26",
         overflow: "hidden",
@@ -1379,6 +1380,7 @@ const styles = {
         maxWidth: "10rem",
         fontSize: 18,
     }
+
 };
 
 export default App;

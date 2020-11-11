@@ -10,6 +10,7 @@ import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
 import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import {sendPostDataWithForm} from "../../utils/helpers";
 import {AssertModal} from "./components/assertModal";
+import {NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon} from "../../assets/icons";
 
 const devices: any = _devices;
 
@@ -375,10 +376,7 @@ function DesktopBrowser(props: any) {
             <div style={styles.browserToolbar}>
                 <div style={styles.browserMainToolbar}>
                     <div style={{display: "flex", alignItems: "center"}}>
-                        <svg width={24} height={24} viewBox="0 0 48 1" onClick={goBack}>
-                            <title>{"Rectangle 5"}</title>
-                            <path d="M0 0h48v1H0z" fill="#063855" fillRule="evenodd" />
-                        </svg>
+                        <NavigateBackIcon onClick={goBack} disabled={false}/>
                     </div>
                     <div
                         style={{
@@ -387,9 +385,7 @@ function DesktopBrowser(props: any) {
                             alignItems: "center",
                         }}
                     >
-                        <svg fill="#5F6368" viewBox="0 0 24 24" width={24} height={24} onClick={refreshPage}>
-                            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                        </svg>
+                        <NavigateForwardIcon onClick={goForward} disabled={false} />
                     </div>
                     <div
                         style={{
@@ -398,19 +394,10 @@ function DesktopBrowser(props: any) {
                             alignItems: "center",
                         }}
                     >
-                        <svg fill="#5F6368" viewBox="0 0 24 24" width={24} height={24} onClick={goForward}>
-                            <path
-                                d="M-20-11h12.17l-5.59 5.59L-12-4l8-8-8-8-1.41 1.41L-7.83-13H-20v2z"
-                                style={{
-                                    transformBox: "fill-box",
-                                    transformOrigin: "center",
-                                }}
-                            />
-                        </svg>
+                       <NavigateRefreshIcon onClick={refreshPage} disabled={false}/>
                     </div>
                     <Addressbar/>
                     <div style={{...styles.button, width: "auto", marginLeft: "auto"}} onClick={props.saveTest}>
-
                         <img
                             style={styles.buttonImage}
                             src={chrome.runtime.getURL("icons/record.svg")}

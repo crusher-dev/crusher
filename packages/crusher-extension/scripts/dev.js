@@ -35,7 +35,7 @@ async function initDevServer() {
   });
 
   exec(
-    'nodemon --watch src --exec "webpack --config webpack/webpack.content_script.dev.js --watch --progress --profile --colors"',
+    'nodemon --watch /Users/himanshu/Desktop/crusher/crusher/src --exec "webpack --config webpack/webpack.content_script.dev.js  --progress --profile --colors"',
     (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);

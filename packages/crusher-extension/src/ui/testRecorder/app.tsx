@@ -9,7 +9,7 @@ import {NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_REC
 import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
 import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import {sendPostDataWithForm} from "../../utils/helpers";
-import {AssertModal} from "./components/assertModal";
+import {AssertModal} from "./containers/modal/assertModal";
 import {NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon} from "../../assets/icons";
 import {ToggleSwitchIndicator} from "./components/toggleSwitchIndicator";
 
@@ -412,6 +412,7 @@ function DesktopBrowser(props: any) {
                             marginLeft: "1.3rem",
                             display: "flex",
                             alignItems: "center",
+                            cursor: 'pointer'
                         }}
                     >
                         <NavigateForwardIcon onClick={goForward} disabled={false} />
@@ -420,7 +421,7 @@ function DesktopBrowser(props: any) {
                         style={{
                             marginLeft: "1.5rem",
                             display: "flex",
-                            alignItems: "center",
+                            alignItems: "center", cursor: 'pointer'
                         }}
                     >
                        <NavigateRefreshIcon onClick={refreshPage} disabled={false}/>
@@ -831,14 +832,6 @@ function App() {
         setIsShowingElementForm(false);
     }
 
-    window.onbeforeunload = function () {
-        if (steps && steps.length > 2) {
-            return "Leaving this page will discard your recorded test, do you still want to leave?";
-        } else {
-            return false;
-        }
-    }
-
     messageListenerCallback = function (event: any) {
         const {type, eventType, value, selectors} = event.data;
         const steps = getSteps();
@@ -933,16 +926,6 @@ function App() {
             }
         }
     };
-
-    // function cancelTest() {
-    //     if (isShowingElementForm) {
-    //         setIsShowingElementForm(false);
-    //         setCurrentElementSelectors(null);
-    //         setCurrentElementAttributes(null);
-    //     } else {
-    //         window.close();
-    //     }
-    // }
 
     function RightMiddleSection(props: any) {
         const isElementSelected = isShowingElementForm;
@@ -1120,11 +1103,6 @@ function App() {
             />
             <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState}
                          saveAssertionCallback={saveAssertionCallback}/>
-
-            {/*<AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState}*/}
-            {/*             saveAssertionCallback={saveAssertionCallback}/>*/}
-            {/*<SeoModal seoMeta={seoMeta} state={state} updateState={updateState}*/}
-            {/*          saveSeoValidationCallback={saveSeoValidation}/>*/}
         </div>
     );
 }
@@ -1479,6 +1457,7 @@ const styles = {
         maxWidth: "10rem",
         fontSize: 18,
     }
+
 };
 
 export default App;

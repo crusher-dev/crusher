@@ -1,6 +1,6 @@
 import {Ref} from "preact";
 import React from "preact/compat";
-import {useCallback, useRef, useState} from "preact/hooks";
+import {useCallback, useEffect, useRef, useState} from "preact/hooks";
 import {MODALS} from "../../constants/modal";
 import _devices from "../../../../crusher-shared/constants/devices";
 import userAgents from "../../../../crusher-shared/constants/userAgents";
@@ -10,7 +10,8 @@ import {META_ACTIONS, SETTINGS_ACTIONS} from "../../constants/actionTypes";
 import {ACTIONS_IN_TEST} from "../../../../crusher-shared/constants/recordedActions";
 import {sendPostDataWithForm} from "../../utils/helpers";
 import {AssertModal} from "./components/assertModal";
-import {NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon} from "../../assets/icons";
+import {NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon} from "../../assets/icons";
+import {ToggleSwitchIndicator} from "./components/toggleSwitchIndicator";
 
 const devices: any = _devices;
 
@@ -42,11 +43,36 @@ function Step(props: any) {
     );
 }
 
+function useScroll(ref: any, steps: any){
+    const [scrollPos, setScrollPos] = useState(0);
+    const handleScroll = () => {
+        // when component re-renders, it causes window.scrollY to be 0. We don't want
+        // to update state if scrollY is 0. because scroll restoration breaks.
+        if (ref.current.scrollTop !== 0) {
+            setScrollPos(ref.current.scrollTop);
+        }
+    };
+
+    // add event listener to window when component mounts
+    useEffect(() => {
+        ref.current.addEventListener("scroll", handleScroll);
+        return () => ref.current.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // restore scroll whenever loading changes
+    useEffect(
+        () => {
+            ref.current.scrollTo(0, scrollPos);
+        },
+        [steps]
+    );
+};
+
 function Steps(props: any) {
     const {steps, forwardRef} = props;
+    useScroll(forwardRef, steps);
 
     const stepList = steps.map((step: any) => {
-        console.log(step);
         const {event_type, selectors, value} = step;
 
         return (
@@ -58,13 +84,15 @@ function Steps(props: any) {
         );
     });
 
+
     return (
         <div
             style={{
-                height: 100,
-                minHeight: "50%",
+                height: "auto",
+                maxHeight: 240,
+                minHeight: 100,
                 overflowY: "auto",
-                marginBottom: "2rem",
+                marginBottom: "2rem"
             }}
             ref={forwardRef}
         >
@@ -278,6 +306,7 @@ function Actions(props: any) {
 }
 
 function DesktopBrowser(props: any) {
+    const {isShowingElementForm} = props;
     const selectedDeviceId = getQueryStringParams("device", window.location.href);
     const urlParams = getQueryStringParams("url", window.location.href);
     const urlEncoded = urlParams ? new URL(urlParams) : null;
@@ -375,12 +404,12 @@ function DesktopBrowser(props: any) {
         return (
             <div style={styles.browserToolbar}>
                 <div style={styles.browserMainToolbar}>
-                    <div style={{display: "flex", alignItems: "center"}}>
+                    <div style={{display: "flex", alignItems: "center", marginLeft: "1.1rem"}}>
                         <NavigateBackIcon onClick={goBack} disabled={false}/>
                     </div>
                     <div
                         style={{
-                            marginLeft: "0.7rem",
+                            marginLeft: "1.3rem",
                             display: "flex",
                             alignItems: "center",
                         }}
@@ -389,7 +418,7 @@ function DesktopBrowser(props: any) {
                     </div>
                     <div
                         style={{
-                            marginLeft: "0.9rem",
+                            marginLeft: "1.5rem",
                             display: "flex",
                             alignItems: "center",
                         }}
@@ -397,12 +426,12 @@ function DesktopBrowser(props: any) {
                        <NavigateRefreshIcon onClick={refreshPage} disabled={false}/>
                     </div>
                     <Addressbar/>
-                    <div style={{...styles.button, width: "auto", marginLeft: "auto"}} onClick={props.saveTest}>
-                        <img
-                            style={styles.buttonImage}
-                            src={chrome.runtime.getURL("icons/record.svg")}
-                        />
-                        <span>Save Test</span>
+                    <div style={styles.elementToggleIndicatorContainer}>
+                        <ToggleSwitchIndicator label="Element mode" enabled={isShowingElementForm}/>
+                    </div>
+                    <div style={{...styles.button, width: "auto", marginLeft: "1.6rem"}} onClick={props.saveTest}>
+                        <RecordLabelIcon />
+                        <span style={{marginLeft: "1.2rem"}}>Save Test</span>
                     </div>
                 </div>
             </div>
@@ -770,7 +799,10 @@ function App() {
 
     // useEffect(()=>{
     //     const scrollDiv = actionsScrollRef.current;
-    //     scrollDiv.scrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
+    //     const newScrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
+    //     if(newScrollTop !== 0) {
+    //         scrollDiv.scrollTop = newScrollTop;
+    //     }
     // }, [steps, isShowingElementForm]);
 
     function getSteps() {
@@ -982,7 +1014,7 @@ function App() {
     // @ts-ignore
     return (
         <div style={styles.container}>
-            <DesktopBrowser saveTest={saveTest} forwardRef={iframeRef}/>
+            <DesktopBrowser isShowingElementForm={isShowingElementForm} saveTest={saveTest} forwardRef={iframeRef}/>
             <RightSection/>
             <style>
                 {`
@@ -1041,6 +1073,41 @@ function App() {
                       height: 640px;
                       background: white;
                     }
+                    
+                    .toggle-switch {
+                        display: inline-block;
+                    }
+                    
+                    .toggle-switch input[type=checkbox] {display:none}
+                    .toggle-switch label {cursor:pointer;}
+                    .toggle-switch label .toggle-track {
+                        display:block;
+                        height:0.625rem;
+                        width: 2.7rem;
+                        background:#212633;
+                        border-radius:1rem;
+                        position:relative;
+                        padding: 0.1rem 0rem;
+                    }
+
+                    .toggle-switch .toggle-track:before{
+                        content:'';
+                        display:inline-block;
+                        height:0.525rem;
+                        width:0.525rem;
+                        background:#5B76F7;
+                        border-radius:1rem;
+                        position:absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        right: calc(100% - 0.725rem);
+                        transition:all .2s ease-in;
+                    }
+
+                    .toggle-switch input[type="checkbox"]:checked + label .toggle-track:before{
+                        background: #5B76F7;
+                        right: 0.2rem;
+                    }
                 `}
             </style>
             <link
@@ -1092,7 +1159,7 @@ const styles = {
     tipContainer: {
         display: "flex",
         flexDirection: "row",
-        background: "#1C1F26",
+        background: "#0F1114",
         borderRadius: "0.62rem 0 0 0",
         padding: "0.88rem 1.63rem"
     },
@@ -1175,7 +1242,7 @@ const styles = {
         paddingRight: "0.75rem",
     },
     browser: {
-        background: "rgb(40, 40, 40)",
+        background: "#010101",
         minHeight: "100vh",
         overflow: "hidden",
     },
@@ -1184,12 +1251,13 @@ const styles = {
         flexDirection: "column",
     },
     browserMainToolbar: {
-        background: "#141920",
+        background: "#14181F",
         display: "flex",
         padding: "0.73rem 2rem",
     },
     addressBar: {
-        width: "65%",
+        width: "33.9%",
+        maxWidth: "25rem",
         padding: "0 0.1rem",
         background: "#1C1F26",
         overflow: "hidden",
@@ -1197,7 +1265,7 @@ const styles = {
         alignItems: "center",
         color: "#fff",
         borderRadius: "0.1rem",
-        marginLeft: "0.9rem"
+        marginLeft: "1.6rem"
     },
     addressBarInput: {
         flex: 1,
@@ -1225,7 +1293,7 @@ const styles = {
         justifyContent: "center",
         paddingTop: "1rem",
         overflowY: "auto",
-        background: "rgb(40, 40, 40)",
+        background: "#010101",
     },
     browserFrame: {
         border: "none",
@@ -1235,20 +1303,24 @@ const styles = {
         height: 800,
         backgroundColor: "#fff",
     },
+    elementToggleIndicatorContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: "auto"
+    },
     button: {
         background: "#5B76F7",
         borderRadius: 4,
-        fontWeight: 600,
+        fontWeight: 500,
         fontSize: "0.825rem",
         color: "#fff",
         fontFamily: "DM Sans",
-        padding: "0.5rem 1.15rem",
+        padding: "0.5rem 0.95rem",
         display: "flex",
         alignItems: "center",
         cursor: "pointer",
-    },
-    buttonImage: {
-        marginRight: "1.2rem",
     },
     actionListContainer: {
         display: "flex",

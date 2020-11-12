@@ -1,12 +1,11 @@
 import {Component} from "preact";
 import React from "preact/compat";
-import {MODALS} from "../../../constants/modal";
-import {AssertModalContent} from "../containers/modal/assertModalContent";
+import {MODALS} from "../../../../constants/modal";
+import {AssertModalContent} from "./assertModalContent";
 
 export class AssertModal extends Component<any, any> {
     render() {
         const {state, seoMeta, attributes, updateState, saveAssertionCallback} = this.props;
-        console.log("ASSERTING MODAL", state, seoMeta, attributes);
         return (
             state && state === MODALS.ASSERT_ELEMENT && (
                 <div id="modal-overlay" style={styles.modalOverlay}>

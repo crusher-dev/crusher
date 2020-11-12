@@ -26,6 +26,7 @@ export default class EventRecording {
 
   private _addActionElement: any;
 
+
   private _closeActionIcon: any;
 
   private _addActionIcon: any;

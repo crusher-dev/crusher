@@ -1,5 +1,5 @@
-import React from "preact/compat";
-import { useState} from "preact/hooks";
+import React from "react";
+import { useState} from "react";
 
 export function AssertModalContent({handleCloseCallback, seoMeta, attributes}: any) {
     return (
@@ -52,6 +52,7 @@ function Row({name, state, setState, attributes, isValid}: any) {
     }
 
     const attributesOut = attributes ? attributes.map((attr: any) => {
+        //@ts-ignore
         return (<option name={attr.name} value={attr.name}>{attr.name}</option>)
     }) : [];
 
@@ -332,7 +333,7 @@ function BulbIcon({props}: any) {
     );
 }
 
-const styles = {
+const styles : { [key: string]: React.CSSProperties } = {
     modalOverlay: {
         borderRadius: 8,
         width: 760,
@@ -378,10 +379,10 @@ const styles = {
         padding: "12px 24px",
         background: " #000000",
         minWidth: "120px",
-        textAlign: " center",
+        textAlign: "center",
         color: " #fff",
         borderRadius: "4px",
-        fontWeight: "600",
+        fontWeight: 600,
         marginLeft: 24,
         cursor: "pointer",
     },
@@ -403,5 +404,5 @@ const styles = {
     },
     middleSection: {
         marginBottom: 64,
-    },
+    }
 };

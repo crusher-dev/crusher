@@ -1,5 +1,5 @@
-import { Component } from "preact";
-import React from "preact/compat";
+import { Component } from "react";
+import React from "react";
 import { loadScript } from "../../utils/helpers";
 import devices from "../../../../crusher-shared/constants/devices"
 
@@ -28,15 +28,15 @@ class App extends Component<any, any> {
       <>
         <div
           id="icon"
-          class="center-aligned"
+          className="center-aligned"
           style={{
             background: `url(${chrome.runtime.getURL("icons/crusher.svg")})`,
             width: 98,
             height: 79,
           }}
         ></div>
-        <span class="small_heading">How to create test?</span>
-        <ol id="steps" class="numbered-list">
+        <span className="small_heading">How to create test?</span>
+        <ol id="steps" className="numbered-list">
           <li>Press start Recording.</li>
           <li>
             Basic actions are supported by default. For extensive actions, click
@@ -153,7 +153,7 @@ class App extends Component<any, any> {
   }
 }
 
-const styles = {
+const styles : { [key: string]: React.CSSProperties } = {
   container: {
     background: "#141427",
     color: "#FFFFFF",

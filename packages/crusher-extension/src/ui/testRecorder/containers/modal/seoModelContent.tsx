@@ -1,5 +1,5 @@
-import React from "preact/compat";
-import {useEffect, useState} from "preact/hooks";
+import React from "react";
+import {useEffect, useState} from "react";
 
 export function SEOModelContent({handleCloseCallback, seoMeta}: any) {
     return (
@@ -208,7 +208,7 @@ function BulbIcon({props}: any) {
     );
 }
 
-const styles = {
+const styles : { [key: string]: React.CSSProperties } = {
     modalOverlay: {
         borderRadius: 8,
         width: 760,
@@ -254,10 +254,10 @@ const styles = {
         padding: "12px 24px",
         background: " #000000",
         minWidth: "120px",
-        textAlign: " center",
+        textAlign: "center",
         color: " #fff",
         borderRadius: "4px",
-        fontWeight: "600",
+        fontWeight: 600,
         marginLeft: 24,
         cursor: "pointer",
     },

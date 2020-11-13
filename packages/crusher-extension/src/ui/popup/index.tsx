@@ -1,6 +1,6 @@
-import { render } from "preact";
+import { render } from "react-dom";
 import App from "./app";
-import React from "preact/compat";
+import React from "react";
 import { getActiveTabId } from "../../utils/helpers";
 
 // Get Active Tab id (i.e, tabId) and check if the recorder is one or not (i.e, isSessionGoingOn).

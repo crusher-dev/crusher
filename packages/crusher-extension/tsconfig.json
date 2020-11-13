@@ -19,7 +19,7 @@
   "files": [
     "src/background.ts",
     "src/ui/popup/index.tsx",
-    "../../node_modules/preact/dist/preact.js"
+    "../../node_modules/react/index.js"
   ],
   "include": ["./src/**/*"]
 }

@@ -1,6 +1,6 @@
-import {useEffect, useRef} from "preact/hooks";
-import {Ref} from "preact";
-import React from "preact/compat";
+import {useEffect, useRef} from "react";
+import {Ref} from "react";
+import React from "react";
 
 interface ToggleSwitchIndicatorProps {
     label: string;
@@ -40,7 +40,7 @@ const ToggleSwitchIndicator = (props: ToggleSwitchIndicatorProps) => {
     )
 }
 
-const styles = {
+const styles : { [key: string]: React.CSSProperties } = {
     toggleWithLabelContainer: {
         display: "flex",
         flexDirection: "row"
@@ -49,7 +49,7 @@ const styles = {
         marginLeft: "1rem",
         fontFamily: "DM Sans",
         fontStyle: "normal",
-        fontWeight: "500",
+        fontWeight: 500,
         fontSize: "0.7rem",
         position: "relative",
         color: "#fff",

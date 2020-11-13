@@ -1,5 +1,5 @@
-import {Component} from "preact";
-import React from "preact/compat";
+import {Component} from "react";
+import React from "react";
 import {MODALS} from "../../../../constants/modal";
 import {AssertModalContent} from "./assertModalContent";
 
@@ -21,7 +21,7 @@ export class AssertModal extends Component<any, any> {
     }
 };
 
-const styles = {
+const styles : { [key: string]: React.CSSProperties } = {
     modalOverlay: {
         position: "absolute",
         width: "100vw",

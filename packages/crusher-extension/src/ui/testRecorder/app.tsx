@@ -1,6 +1,5 @@
-import {Ref} from "preact";
-import React from "preact/compat";
-import {useCallback, useEffect, useRef, useState} from "preact/hooks";
+import React, {Ref} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {MODALS} from "../../constants/modal";
 import _devices from "../../../../crusher-shared/constants/devices";
 import userAgents from "../../../../crusher-shared/constants/userAgents";
@@ -12,6 +11,7 @@ import {sendPostDataWithForm} from "../../utils/helpers";
 import {AssertModal} from "./containers/modal/assertModal";
 import {NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon} from "../../assets/icons";
 import {ToggleSwitchIndicator} from "./components/toggleSwitchIndicator";
+import styled from 'styled-components';
 
 const devices: any = _devices;
 
@@ -391,6 +391,7 @@ function DesktopBrowser(props: any) {
                 <div
                     ref={addressInput}
                     style={styles.addressBarInput}
+                    //@ts-ignore
                     onKeyDown={handleKeyDown}
                     contentEditable={true}
                 >
@@ -996,7 +997,7 @@ function App() {
 
     // @ts-ignore
     return (
-        <div style={styles.container}>
+        <Test style={styles.container}>
             <DesktopBrowser isShowingElementForm={isShowingElementForm} saveTest={saveTest} forwardRef={iframeRef}/>
             <RightSection/>
             <style>
@@ -1103,11 +1104,15 @@ function App() {
             />
             <AssertModal attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState}
                          saveAssertionCallback={saveAssertionCallback}/>
-        </div>
+        </Test>
     );
 }
 
-const styles = {
+const Test = styled.div`
+background: red;
+color: yellow;
+`;
+const styles : { [key: string]: React.CSSProperties } = {
     container: {
         display: "flex",
         height: "auto",
@@ -1260,7 +1265,7 @@ const styles = {
         fontSize: "0.6rem",
         display: "flex",
         alignItems: "center",
-        fontWeight: "500",
+        fontWeight: 500,
         fontFamily: "DM Sans",
         padding: "0 0.8rem",
     },
@@ -1334,7 +1339,7 @@ const styles = {
     actionDesc: {
         fontSize: "0.82rem",
         fontFamily: "DM Sans",
-        fontWeight: "500",
+        fontWeight: 500,
         marginTop: "0.15rem"
     },
     oddItem: {
@@ -1437,7 +1442,7 @@ const styles = {
         marginTop: "1.4rem"
     },
     formButtonAdvance: {
-        fontWeight: "800",
+        fontWeight: 500,
         cursor: "pointer",
         fontSize: "0.82rem",
         color: "#5B76F7",

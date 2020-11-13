@@ -55,7 +55,7 @@ module.exports = {
             "@babel/preset-react",
             "@emotion/babel-preset-css-prop",
           ],
-          plugins: [["@babel/plugin-transform-react-jsx", { pragma: "h" }]],
+          plugins: [["@babel/plugin-transform-react-jsx"]],
         },
       },
       { test: /\.ts(x)?$/, loader: "ts-loader" },

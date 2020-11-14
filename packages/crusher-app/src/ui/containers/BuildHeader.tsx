@@ -14,7 +14,7 @@ const ROUTES = {
 	PROJECT_TESTS: "PROJECT_TESTS",
 };
 
-function getCurrentRoute(router) {
+function getCurrentRoute(router: any) {
 	const pathName = router.pathname;
 	switch (pathName) {
 		case "/app/project/dashboard":

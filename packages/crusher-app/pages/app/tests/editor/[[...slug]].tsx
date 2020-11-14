@@ -257,7 +257,7 @@ function Test(props) {
 			<div css={styles.centeredContainer}>
 				<div css={styles.placeholderHeaderContainer}>
 					<div css={styles.placeholderHeaderTitle}>
-						Kudos!! You created whole test in {Math.floor(totalTime/1000)} seconds👏
+						You just created a test in {Math.floor(totalTime/1000)} seconds👏
 					</div>
 					<div css={styles.placeholderHeaderDesc}>
 						We will now run this test in subsquent run. Catch all UI/Flow Bugs for
@@ -293,7 +293,7 @@ function Test(props) {
 					<div
 						style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
 					>
-						<span>Verifying your test in background</span>
+						<span>We’re verifying your test in background</span>
 					</div>
 				</div>
 				<div css={styles.liveStepsContainer}>{liveStepsOut}</div>

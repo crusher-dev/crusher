@@ -17,6 +17,7 @@ import { getSelectedProject } from "@redux/stateUtils/projects";
 import { getTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { LogActionCard } from "@ui/components/testActionCard";
+import {TestStatus} from "@ui/containers/editor/TestStatus";
 
 function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
 	return checkDraftStatus(id, logsAfter).then((res) => {
@@ -227,30 +228,22 @@ function Test(props) {
 		}
 	}, [draftInfo, testName]);
 
-	const deleteAction = useCallback(
-		function (index) {
-			setActions(
-				actions.filter((val, _index) => {
-					return _index !== index;
-				}),
-			);
-		},
-		[actions],
-	);
+	// const deleteAction = useCallback(
+	// 	function (index) {
+	// 		setActions(
+	// 			actions.filter((val, _index) => {
+	// 				return _index !== index;
+	// 			}),
+	// 		);
+	// 	},
+	// 	[actions],
+	// );
 
 	if (testResults && testResults.testInstanceRecording) {
 		alert(`Recorded tests, ${testResults.testInstanceRecording}`);
 	}
 
 	// console.log(testResults);
-
-	const liveStepsOut = testResults
-		? testResults.logs.map((log) => {
-				console.log(log);
-				const action = { event_type: log.actionType, desc: log.body.message };
-				return <LogActionCard action={action} timeTaken={log.meta ? log.meta.timeTaken : null} isFinished={true} />;
-		  })
-		: [];
 
 	return (
 		<div css={styles.container}>
@@ -260,12 +253,11 @@ function Test(props) {
 						You just created a test in {Math.floor(totalTime/1000)} seconds👏
 					</div>
 					<div css={styles.placeholderHeaderDesc}>
-						We will now run this test in subsquent run. Catch all UI/Flow Bugs for
-						this test. Also, you ship faster by testing all flows in few mins.
+						<div>Crusher will check UI/Flow for bugs.</div>
+						<div>Ship faster by running all tests in few mins.</div>
 					</div>
 				</div>
 				<div css={styles.addTestContainer}>
-					<div css={styles.addTestInputLabel}>Test name</div>
 					<div css={styles.addTestInputWithActionContainer}>
 						<div css={styles.addTestInputContainer}>
 							<input
@@ -288,15 +280,7 @@ function Test(props) {
 						</div>
 					</div>
 				</div>
-				<div css={styles.verifyingTestContainer}>
-					<img style={{ width: isRunningTest ? "2rem" : "1.1rem" }} src={isRunningTest ? "/svg/tests/verifyingLoading.svg" : "/svg/tests/correct.svg"} />
-					<div
-						style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-					>
-						<span>We’re verifying your test in background</span>
-					</div>
-				</div>
-				<div css={styles.liveStepsContainer}>{liveStepsOut}</div>
+				<TestStatus actions={actions} logs={testResults ? testResults.logs : []}/>
 			</div>
 		</div>
 	);
@@ -313,19 +297,19 @@ const styles = {
 	`,
 	centeredContainer: css`
 		padding-top: 2.75rem;
-		max-width: 36rem;
+		width: 36rem;
 	`,
 	placeholderHeaderContainer: css``,
 	placeholderHeaderTitle: css`
 		font-family: DM Sans;
 		font-style: normal;
 		font-weight: bold;
-		font-size: 1rem;
+		font-size: 1.4rem;
 	`,
 	placeholderHeaderDesc: css`
 		font-family: DM Sans;
 		margin-top: 0.6rem;
-		font-size: 0.8rem;
+		font-size: 0.9rem;
 		line-height: 1.4rem;
 	`,
 	leftSide: css`
@@ -373,7 +357,7 @@ const styles = {
 	addTestInputWithActionContainer: css`
 		display: flex;
 		flex-direction: row;
-		margin-top: 0.7rem;
+		margin-top: 2.4rem;
 	`,
 	addTestInputContainer: css`
 		flex: 1;
@@ -394,7 +378,7 @@ const styles = {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 0.8rem;
+		font-size: 0.9rem;
 		padding: 0.5rem 2.75rem;
 		margin-left: 0.8rem;
 		color: #eaeaee;

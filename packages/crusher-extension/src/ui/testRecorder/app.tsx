@@ -29,11 +29,11 @@ function Step(props: any) {
             </div>
             <div style={{...styles.stepTextContainer}}>
                 <div style={styles.stepAction}>{type}</div>
-                <div style={{width: "70%", overflow: "hidden"}}>
+                <div style={{ overflow: "hidden"}}>
                     <div style={styles.stepSelector}>{value || path}</div>
                 </div>
             </div>
-            <div style={styles.centerItemsVerticalFlex}>
+            <div style={{...styles.centerItemsVerticalFlex, marginLeft: "auto", paddingRight: "1.5rem"}}>
                 <img
                     style={styles.stepGoImage}
                     src={chrome.runtime.getURL("icons/arrow.svg")}
@@ -1133,7 +1133,9 @@ const styles : { [key: string]: React.CSSProperties } = {
         bottom: "0",
         right: "0%",
         marginLeft: "auto",
-        maxHeight: "100vh",
+        maxHeight: "85vh",
+        overflowY: "scroll",
+        maxWidth: "30vw"
     },
     centerItemsVerticalFlex: {
         display: "flex",
@@ -1142,7 +1144,7 @@ const styles : { [key: string]: React.CSSProperties } = {
     tipContainer: {
         display: "flex",
         flexDirection: "row",
-        background: "#0F1114",
+        background: "rgb(1, 1, 1)",
         borderRadius: "0.62rem 0 0 0",
         padding: "0.88rem 1.63rem"
     },
@@ -1208,7 +1210,7 @@ const styles : { [key: string]: React.CSSProperties } = {
         padding: "0rem 0.9rem",
     },
     stepTextContainer: {
-        flex: 1,
+
     },
     stepAction: {
         fontWeight: "bold",
@@ -1271,7 +1273,7 @@ const styles : { [key: string]: React.CSSProperties } = {
     },
     previewBrowser: {
         flex: 1,
-        maxWidth: "75%",
+        maxWidth: "70vw",
         display: "flex",
         justifyContent: "center",
         paddingTop: "1rem",

@@ -10,49 +10,38 @@ import {
 import {saveSelectedProjectInRedux} from "@redux/actions/action";
 import {store} from "@redux/store";
 import {resolvePathToBackendURI} from "@utils/url";
-import React, {useEffect} from "react";
+import React, {CSSProperties, useEffect} from "react";
 import {toPascalCase} from "@utils/helpers";
 import {Logo} from "@ui/components/Atoms";
 
-function NavList(props: any) {
-    const {items} = props;
-    const out = items.map((item: any) => {
+interface NavItem{
+    name: string;
+    link: string;
+    icon: string;
+};
+
+interface NavListProps{
+    items: Array<NavItem>;
+    style?: CSSProperties;
+}
+
+function NavList(props: NavListProps) {
+    const {items, style} = props;
+    const out = items.map((item: NavItem) => {
         return (
-            <li>
-                <a href={resolvePathToBackendURI("/user/logout")}>
-                    <div
-                        style={{
-                            marginTop: "2.25rem",
-
-                            cursor: "pointer",
-                            marginBottom: "0.4rem",
-                            display: "flex",
-                        }}
-                    >
-                        <img
-                            src={"/svg/sidebarSettings/logout.svg"}
-                            style={{height: "1.15rem"}}
-                        />
-
-                        <span
-                            style={{
-                                marginLeft: "1.5rem",
-                                color: "#23232F",
-                                fontFamily: "Gilroy",
-                                fontWeight: 500,
-                                fontSize: "0.9rem",
-                            }}
-                        >
-							New features
-						</span>
-                    </div>
-                </a>
-            </li>
+                <li>
+                    <Link href={item.link}>
+                        <a href={item.link}>
+                            <img src={item.icon}/>
+                            <span>{item.name}</span>
+                        </a>
+                    </Link>
+                </li>
         )
     });
 
     return (
-        <ul>
+        <ul style={style} css={styles.sectionItemList}>
             {out}
         </ul>
     );
@@ -61,6 +50,19 @@ function NavList(props: any) {
 // Todo- Breakdown in diff component.
 function LeftSection(props) {
     const {userInfo, selectedProject} = props;
+    const mainNavLinks = [
+        {name: "Dashboard", link: "/app/project/dashboard", icon: "/svg/sidebarSettings/dashboard.svg"},
+        {name: "Builds", link: "/app/project/builds", icon: "/svg/sidebarSettings/builds.svg"},
+        {name: "Tests", link: "/app/project/tests", icon: "/svg/sidebarSettings/testsList.svg"},
+        {name: "Project Settings", link: "/app/project/settings/hosts", icon: "/svg/sidebarSettings/projectSettings.svg"}
+    ];
+
+    const bottomNavLinks = [
+        {name: "New features", link: "/app/new-features", icon: "/svg/sidebarSettings/newFeatures.svg"},
+        {name: "Help & Support", link: "/app/help-support", icon: "/svg/sidebarSettings/help.svg"},
+        {name: "Logout", link: resolvePathToBackendURI("/user/logout"), icon: "/svg/sidebarSettings/logout.svg"}
+    ];
+
     return (
         <div css={styles.leftSection}>
             <div css={styles.sectionContainer}>
@@ -96,132 +98,10 @@ function LeftSection(props) {
                         {/*<img src={"/svg/settings.svg"} />*/}
                     </div>
                 </div>
-                <ul css={styles.sectionItemList}>
-                    <li>
-                        <Link href={"/app/project/dashboard"}>
-                            <a href={"/app/project/dashboard"}>
-                                <img src="/svg/sidebarSettings/dashboard.svg"/>
-                                <span>Dashboard</span>
-                            </a>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href={"/app/project/builds"}>
-                            <a href={"/app/project/builds"}>
-                                <img src="/svg/sidebarSettings/builds.svg"/>
-                                <span>Builds</span>
-                            </a>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href={"/app/project/tests"}>
-                            <a href={"/app/project/tests"}>
-                                <img src="/svg/sidebarSettings/testsList.svg"/>
-                                <span>Tests</span>
-                            </a>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href={"/app/project/settings/hosts"}>
-                            <a href={"/app/project/settings/hosts"}>
-                                <img src="/svg/sidebarSettings/projectSettings.svg"/>
-                                <span>Project Settings</span>
-                            </a>
-                        </Link>
-                    </li>
-                </ul>
+               <NavList items ={mainNavLinks}/>
             </div>
             <div css={styles.settingsBottomFixedContainer}>
-                <ul>
-                    <li><a href={resolvePathToBackendURI("/user/logout")}>
-                        <div
-                            style={{
-                                marginTop: "2.25rem",
-
-                                cursor: "pointer",
-                                marginBottom: "0.4rem",
-                                display: "flex",
-                            }}
-                        >
-                            <img
-                                src={"/svg/sidebarSettings/logout.svg"}
-                                style={{height: "1.15rem"}}
-                            />
-
-                            <span
-                                style={{
-                                    marginLeft: "1.5rem",
-                                    color: "#23232F",
-                                    fontFamily: "Gilroy",
-                                    fontWeight: 500,
-                                    fontSize: "0.9rem",
-                                }}
-                            >
-							New features
-						</span>
-                        </div>
-                    </a></li>
-                    <li>
-                        <a href={resolvePathToBackendURI("/user/logout")}>
-                            <div
-                                style={{
-                                    marginTop: "2.25rem",
-
-                                    cursor: "pointer",
-                                    marginBottom: "0.4rem",
-                                    display: "flex",
-                                }}
-                            >
-                                <img
-                                    src={"/svg/sidebarSettings/logout.svg"}
-                                    style={{height: "1.15rem"}}
-                                />
-
-                                <span
-                                    style={{
-                                        marginLeft: "1.5rem",
-                                        color: "#23232F",
-                                        fontFamily: "Gilroy",
-                                        fontWeight: 500,
-                                        fontSize: "0.9rem",
-                                    }}
-                                >
-							Help & Support
-						</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href={resolvePathToBackendURI("/user/logout")}>
-                            <div
-                                style={{
-                                    marginTop: "2.25rem",
-
-                                    cursor: "pointer",
-                                    marginBottom: "0.4rem",
-                                    display: "flex",
-                                }}
-                            >
-                                <img
-                                    src={"/svg/sidebarSettings/logout.svg"}
-                                    style={{height: "1.15rem"}}
-                                />
-
-                                <span
-                                    style={{
-                                        marginLeft: "1.5rem",
-                                        color: "#23232F",
-                                        fontFamily: "Gilroy",
-                                        fontWeight: 500,
-                                        fontSize: "0.9rem",
-                                    }}
-                                >
-							Logout
-						</span>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <NavList items={bottomNavLinks}/>
 
             </div>
         </div>
@@ -448,8 +328,7 @@ const styles = {
 	`,
     settingsBottomFixedContainer: css`
 		margin-top: auto;
-		padding-bottom: 1.5rem;
-		padding: 0 1.625rem;
+		padding-bottom: 3rem;
 	`,
     infoSection: css`
 		display: flex;

@@ -5,14 +5,14 @@ const r = require('../services/videoProcessorWorker');
 
 const queue = new Queue('video-processing-queue', {connection: REDDIS});
 
-queue.client.then(async (reddisClient)=>{
+queue.client.then(async (redisClient)=>{
 
  const queueScheduler = new QueueScheduler('video-processing-queue', {
   stalledInterval: 120000,
   maxStalledCount: 1,
-  connection: reddisClient
+  connection: redisClient
  });
  await queueScheduler.waitUntilReady();
 
- new Worker('video-processing-queue', path.resolve('src/services/videoProcessorWorker.ts'), { connection: reddisClient, concurrency: 3});
+ new Worker('video-processing-queue', path.resolve('src/services/videoProcessorWorker.ts'), { connection: redisClient, concurrency: 3});
 });

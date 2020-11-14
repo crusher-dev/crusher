@@ -3,30 +3,29 @@ import {css} from "@emotion/core";
 import {ProgressBar} from "@ui/components/ProgressBar";
 import {LogActionCard} from "@ui/components/testActionCard";
 import {LiveLogs} from "@interfaces/LiveLogs";
+import {LiveLogsActions} from "@ui/components/editor/LiveLogsActions";
 
 interface TestStatusProps{
     logs: Array<LiveLogs>;
+    actions: Array<any>;
 };
 
 
-function TestStatus(props: any) {
-    const {logs} = props;
+function TestStatus(props: TestStatusProps) {
+    const {logs, actions} = props;
 
-    const liveLogs = logs.map((log: LiveLogs) => {
-            const action = { event_type: log.actionType, desc: log.body.message };
-            return <LogActionCard action={action} timeTaken={log.meta ? log.meta.timeTaken : null} isFinished={true} />;
-    });
+    const actionsCount = actions.length;
 
     return (
         <div css={styles.container}>
             <div css={styles.infoHeading}>We're verifying your test in background</div>
-            <ProgressBar progress={2} style={{width: "100%", height: "0.38rem", marginTop: "0.9rem"}}/>
+            <ProgressBar progress={(logs.length/actionsCount)*100} style={{width: "100%", height: "0.38rem", marginTop: "0.9rem"}}/>
             <div css={styles.statusDescContainer}>
                 <span css={styles.statusDesc}>You can go ahead and save test.</span>
-                <span css={styles.stepsStatus}>20/30 Steps</span>
+                <span css={styles.stepsStatus}>{logs.length}/{actionsCount} Steps</span>
             </div>
             <div css={styles.liveLogsContainer}>
-
+                <LiveLogsActions actions={actions} logs={logs}/>
             </div>
         </div>
     );
@@ -34,13 +33,20 @@ function TestStatus(props: any) {
 
 const styles = {
     container: css`
-        
+        margin-top: 3.9rem;
+        width: 90%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%)
     `,
     infoHeading: css`
-        
+        font-family: Cera Pro;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 1rem;
     `,
     statusDescContainer: css`
-        margin-top: 0.75rem;
+        margin-top: 0.9rem;
         font-family: Gilroy;
         font-weight: 500;
         font-style: normal;
@@ -51,10 +57,12 @@ const styles = {
       
     `,
     stepsStatus: css`
-        margin-left: auto;
+        float: right;
         font-weight: bold;
     `,
     liveLogsContainer: css`
         margin-top: 2.25rem;
     `
 }
+
+export {TestStatus};

@@ -52,6 +52,7 @@
     "next": "9.5.4",
     "next-cookies": "^2.0.3",
     "next-redux-wrapper": "^6.0.2",
+    "next-transpile-modules": "^4.1.0",
     "node-fetch": "^2.6.1",
     "nookies": "^2.4.1",
     "nprogress": "^0.2.0",

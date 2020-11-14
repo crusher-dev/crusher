@@ -25,6 +25,7 @@ const styles = {
        background: linear-gradient(180deg, #3BF54E 0%, #53C81C 100%);
        border-radius: 4px 0px 0px 4px;
        height: 100%;
+       transition: width 1s ease-in-out;
     `
 }
 

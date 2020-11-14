@@ -3,5 +3,6 @@
   "compilerOptions": {
     "esModuleInterop": true
   },
+  "include": ["constants/*.ts", "constants/*.tsx"],
   "typeRoots": [ "node_modules/@types"]
 }

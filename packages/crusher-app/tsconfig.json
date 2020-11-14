@@ -27,9 +27,10 @@
       "@interfaces/*": ["src/interfaces/*"],
       "@hoc/*": ["src/hoc/*"],
       "@containers/*": ["src/containers/*"],
-      "@constants/*": ["src/constants/*"]
+      "@constants/*": ["src/constants/*"],
+      "@crusher-shared/*": ["../crusher-shared/*"]
     }
   },
   "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../crusher-shared/constants/*.ts",  "../crusher-shared/constants/*.tsx"]
 }

@@ -241,7 +241,7 @@ const styles = {
     background: #111313;
     color: #fff;
     text-align: center;
-    padding: 1.125rem;
+    padding: 1.1rem;
     display: flex;
     align-items: center;
     justify-content: center;

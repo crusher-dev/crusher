@@ -165,7 +165,7 @@ function ProjectHostsSettings(props) {
 		<div
 			style={{
 				display: "flex",
-				paddingTop: "4.25rem",
+				marginTop: "2.8rem",
 				paddingLeft: "4.25rem",
 				paddingRight: "4.25rem",
 				flexDirection: "column",

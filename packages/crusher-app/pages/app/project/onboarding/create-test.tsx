@@ -32,6 +32,7 @@ function ProjectOnboardingCreateTest(props) {
 	useEffect(changeFeatureMessage, [featuresMessage]);
 
 
+	const firstName = userInfo.name.split(" ")[0];
 	return (
 		<>
 			<OnboardingPopup userStatus={userStatus} />
@@ -50,7 +51,7 @@ function ProjectOnboardingCreateTest(props) {
 						<span style={{color: features[featuresMessage].color}}>{features[featuresMessage].message}</span> with Crusher
 					</div>
 					<div css={styles.heyText}>
-						Hey {userInfo.name}, Experience power of no code testing
+						Hey {firstName}, Experience power of no code testing
 					</div>
 					<div>
 

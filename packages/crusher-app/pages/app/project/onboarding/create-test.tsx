@@ -4,7 +4,7 @@ import WithSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
 import {useState, useEffect} from "react";
 
-const features = [{message: "Ship Faster", color: "#FF5A8C"}, {message: 'Increase your productivity', color: '#885FFF'}, {message: "Catch UI/Flow Issues", color: '#FB7237'}, {message: "Monitor Product", color: "#4E75FF"}, {message: "Test on different devices", color: "#53D6FF"}, {message: "Test from different browsers", color: "#4E75FF"}, {message: "Test without writing code", color: "#69A5FF"}, {message: "Increase Revenue", color: "#4E75FF"}, {message: "Deverease Unhappy Customers", color: "#4E75FF"}, {message: "Test in Development", color: "#4E75FF"} ]
+const features = [{message: "Ship Faster", color: "#FF5A8C"}, {message: 'Increase your productivity', color: '#885FFF'}, {message: "Catch UI/Flow Issues", color: '#FB7237'}, {message: "Monitor Product changes", color: "#4E75FF"}, {message: "Test on different devices", color: "#53D6FF"}, {message: "Test from different browsers", color: "#4E75FF"}, {message: "Test without writing code", color: "#69A5FF"}, {message: "Increase Revenue", color: "#4E75FF"}, {message: "Deverease Unhappy Customers", color: "#4E75FF"}, {message: "Test in Development", color: "#4E75FF"} ]
 
 function ProjectOnboardingCreateTest(props) {
 	const { userInfo, userStatus } = props;

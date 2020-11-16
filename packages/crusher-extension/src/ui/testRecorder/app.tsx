@@ -12,7 +12,7 @@ import {AssertModal} from "./containers/modal/assertModal";
 import {NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon} from "../../assets/icons";
 import {ToggleSwitchIndicator} from "./components/toggleSwitchIndicator";
 import styled from 'styled-components';
-
+import PerfectScrollbar from "perfect-scrollbar";
 const devices: any = _devices;
 
 export const ACTION_FORM_TYPE = {
@@ -32,12 +32,6 @@ function Step(props: any) {
                 <div style={{ overflow: "hidden"}}>
                     <div style={styles.stepSelector}>{value || path}</div>
                 </div>
-            </div>
-            <div style={{...styles.centerItemsVerticalFlex, marginLeft: "auto", paddingRight: "1.5rem"}}>
-                <img
-                    style={styles.stepGoImage}
-                    src={chrome.runtime.getURL("icons/arrow.svg")}
-                />
             </div>
         </li>
     );
@@ -72,6 +66,11 @@ function Steps(props: any) {
     const {steps, forwardRef} = props;
     useScroll(forwardRef, steps);
 
+    useEffect(()=>{
+        //@ts-ignore
+        new PerfectScrollbar(document.querySelector("#stepsListContainer"));
+    }, []);
+
     const stepList = steps.map((step: any) => {
         const {event_type, selectors, value} = step;
 
@@ -91,9 +90,10 @@ function Steps(props: any) {
                 height: "auto",
                 maxHeight: 240,
                 minHeight: 100,
-                overflowY: "auto",
-                marginBottom: "2rem"
+                overflowY: "hidden",
+                marginBottom: "0.5rem"
             }}
+            id="stepsListContainer"
             ref={forwardRef}
         >
             <ul style={styles.stepsContainer} className="margin-list-item">
@@ -969,11 +969,12 @@ function App() {
                         <div style={styles.tipDesc}>Click on play to replay selected test</div>
                     </div>
                 </div>
+                <div style={{overflowY: "auto"}}>
+                <div style={{background: "#14181F", padding: "1.1rem 1.25rem", paddingBottom: "0rem"}}>
+                    <div style={styles.sectionHeading}>{steps.length} Actions</div>
+                    <Steps forwardRef={actionsScrollRef} steps={steps}/>
+                </div>
                 <div style={styles.paddingContainer}>
-                    <div style={{width: "22rem", marginLeft: "auto"}}>
-                        <div style={styles.sectionHeading}>{steps.length} Actions</div>
-                        <Steps forwardRef={actionsScrollRef} steps={steps}/>
-                    </div>
                     {state !== MODALS.SEO && (
                         <RightMiddleSection state={state} updateState={updateState}/>
                     )}
@@ -983,6 +984,7 @@ function App() {
                                   updateState={updateState} saveAssertionCallback={saveAssertionCallback}
                                   saveSeoValidationCallback={saveSeoValidation}/>
                     )}
+                </div>
                 </div>
             </div>
         );
@@ -1110,7 +1112,7 @@ function App() {
 
 const Test = styled.div`
 background: red;
-color: yellow;
+color: black;
 `;
 const styles : { [key: string]: React.CSSProperties } = {
     container: {
@@ -1134,8 +1136,8 @@ const styles : { [key: string]: React.CSSProperties } = {
         right: "0%",
         marginLeft: "auto",
         maxHeight: "85vh",
-        overflowY: "scroll",
-        maxWidth: "30vw"
+        maxWidth: "30vw",
+        width: "100%"
     },
     centerItemsVerticalFlex: {
         display: "flex",
@@ -1214,17 +1216,14 @@ const styles : { [key: string]: React.CSSProperties } = {
     },
     stepAction: {
         fontWeight: "bold",
-        color: "#83A3E3",
+        color: "#8C8C8C",
         fontSize: "0.8rem",
     },
     stepSelector: {
         marginTop: "0.25rem",
-        color: "#fff",
+        color: "#8C8C8C",
         fontSize: "0.6rem",
         whiteSpace: "nowrap",
-    },
-    stepGoImage: {
-        paddingRight: "0.75rem",
     },
     browser: {
         background: "#010101",
@@ -1464,7 +1463,6 @@ const styles : { [key: string]: React.CSSProperties } = {
         maxWidth: "10rem",
         fontSize: 18,
     }
-
 };
 
 export default App;

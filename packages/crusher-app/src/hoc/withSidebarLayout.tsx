@@ -58,6 +58,7 @@ function LeftSection(props) {
     ];
 
     const bottomNavLinks = [
+        {name: "Add a team member", link: "/app/new-features", icon: "/svg/sidebarSettings/team_member.svg"},
         {name: "New features", link: "/app/new-features", icon: "/svg/sidebarSettings/newFeatures.svg"},
         {name: "Help & Support", link: "/app/help-support", icon: "/svg/sidebarSettings/help.svg"},
         {name: "Logout", link: resolvePathToBackendURI("/user/logout"), icon: "/svg/sidebarSettings/logout.svg"}
@@ -102,7 +103,6 @@ function LeftSection(props) {
             </div>
             <div css={styles.settingsBottomFixedContainer}>
                 <NavList items={bottomNavLinks}/>
-
             </div>
         </div>
     );
@@ -218,23 +218,6 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
                         </div>
                     </div>
                 </div>
-                <style jsx global>{`
-					body {
-						background: #fbfbfb;
-						font-family: DM Sans;
-					}
-					::-webkit-scrollbar {
-						width: 2px; /* Remove scrollbar space */
-					}
-					a {
-						text-decoration: none;
-						color: inherit;
-					}
-					a:hover {
-						text-decoration: none;
-						color: inherit;
-					}
-				`}</style>
             </div>
         );
     };
@@ -304,11 +287,11 @@ const styles = {
 		padding: 0;
 		padding: 0 1.625rem;
 		@media (max-width: 1120px) {
-			margin-top: 3.55rem;
+			margin-top: 5rem;
 		}
 		li {
 			&:not(:last-child) {
-				margin-bottom: 2.56rem;
+				margin-bottom: 1.9rem;
 			}
 
 			img {
@@ -322,7 +305,7 @@ const styles = {
 			cursor: pointer;
 			span {
 				font-size: 1rem;
-				margin-left: 1.45rem;
+				margin-left: 1.5rem;
 			}
 		}
 	`,

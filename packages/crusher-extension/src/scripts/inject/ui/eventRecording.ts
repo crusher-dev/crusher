@@ -584,6 +584,14 @@ export default class EventRecording {
     if (this.isInspectorMoving) {
       this.toggleEventsBox();
       this.isInspectorMoving = false;
+      window.top.postMessage(
+          {
+            type: SETTINGS_ACTIONS.INSPECT_MODE_OFF,
+            // @ts-ignore
+            frameId: LocalFrameStorage.get(),
+          },
+          "*"
+      );
     } else {
       this.isInspectorMoving = true;
       window.top.postMessage(

@@ -27,9 +27,9 @@ function ProjectOnboardingCreateTest(props) {
 					height: "100%",
 				}}
 			>
-				<div css={styles.heading}>Onboarding 1/2</div>
 				<div css={styles.innerCenterContainer}>
-					<img src={"/svg/onboarding/featuredOnboardingImage.svg"} />
+					<iframe  css={styles.videoPlayer} src="https://www.loom.com/embed/5f1392d00274403083d151c0183620cb"
+							frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
 					<div css={styles.heyText}>Hey {userInfo.name},</div>
 					<div css={styles.heyTextDescContainer}>
 						<div css={styles.heyTextDesc}>
@@ -53,68 +53,23 @@ function ProjectOnboardingCreateTest(props) {
 									<img src={"/svg/onboarding/cloudDownload.svg"} />
 									<span>Download Extension</span>
 								</div>
-								{/*<div css={styles.importButton}>Or Import SampleTest</div>*/}
-							</div>
-							<a
-								css={styles.watchVideoContainer}
-								target="_blank"
-								href={"https://www.loom.com/embed/97e020479fd24eb0958889f517b502de"}
-							>
-								<img src={"/svg/onboarding/playV2.svg"} />
-								<span>Watch Video</span>
-							</a>
-						</div>
-						<div css={styles.feedbackContainer}>
-							<div css={styles.feedback}>
-								If you have feedback, want any feature or have watercooler topics.
-							</div>
-							<div css={styles.feedback} style={{ marginTop: "1rem" }}>
-								I’m available at bottom right corner.
 							</div>
 						</div>
+
 					</div>
 				</div>
-				{/*<div css={styles.leftSide}>*/}
-				{/*	<iframe*/}
-				{/*		style={{ width: "31rem", height: "20.6rem" }}*/}
-				{/*		src="https://www.loom.com/embed/97e020479fd24eb0958889f517b502de"*/}
-				{/*		frameBorder="0"*/}
-				{/*		//@ts-ignore*/}
-				{/*		webkitallowfullscreen*/}
-				{/*		mozallowfullscreen*/}
-				{/*		allowFullScreen*/}
-				{/*	></iframe>*/}
-				{/*	<div css={styles.videoTextContainer}>*/}
-				{/*		<img src={"/svg/onboarding/play.svg"} />*/}
-				{/*		<span>Creating your first test - Video</span>*/}
-				{/*	</div>*/}
-				{/*</div>*/}
-				{/*<div css={styles.rightSide}>*/}
-				{/*	<div css={styles.chromeExtensionContainer}>*/}
-				{/*		<div css={styles.chromeExtensionHeading}>*/}
-				{/*			Create test with chrome extension*/}
-				{/*		</div>*/}
-				{/*		<div css={styles.chromeExtensionDesc}>*/}
-				{/*			Download Chrome Extension and create a test*/}
-				{/*		</div>*/}
-				{/*		<div css={styles.button} onClick={handleDownloadExtensionClick}>*/}
-				{/*			Download*/}
-				{/*		</div>*/}
-				{/*	</div>*/}
-				{/*	<a*/}
-				{/*		css={styles.needHelpText}*/}
-				{/*		href={"https://crusherdev.page.link/help_onboarding"}*/}
-				{/*		target={"_blank"}*/}
-				{/*	>*/}
-				{/*		Stuck ? Need help*/}
-				{/*	</a>*/}
-				{/*</div>*/}
 			</div>
 		</>
 	);
 }
 
 const styles = {
+	videoPlayer: css`
+	width:43.5rem; height:26.25rem; 
+	border-radius: .6rem;
+	margin: 0 auto;
+	margin-top: .9rem;
+	`,
 	heading: css`
 		font-family: Cera Pro;
 		font-style: normal;

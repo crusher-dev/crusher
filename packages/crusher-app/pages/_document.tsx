@@ -35,6 +35,23 @@ export default class MyDocument extends Document {
 					<NextScript />
 					<GTMNoScriptTag />
 				</body>
+				<style jsx global>{`
+					body {
+						background: #fbfbfb;
+						font-family: DM Sans;
+					}
+					::-webkit-scrollbar {
+						width: 2px; /* Remove scrollbar space */
+					}
+					a {
+						text-decoration: none;
+						color: inherit;
+					}
+					a:hover {
+						text-decoration: none;
+						color: inherit;
+					}
+				`}</style>
 			</Html>
 		);
 	}

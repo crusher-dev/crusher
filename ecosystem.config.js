@@ -47,6 +47,9 @@ module.exports = {
         "LOGDNA_API_KEY": "c7bdd500e3cfbfe457a2ec4168b8cfaa",
         "MONGODB_HOST": "localhost",
         "MONGODB_PORT": "27017",
+        // https://docs.mongodb.com/manual/reference/connection-string/#components
+        // https://github.com/crusherdev/crusher/issues/7
+        // Due to wrong format, username is none and db name is admin. Please use it while this issue is fixed.
         "MONGODB_USERNAME": "admin",
         "MONGODB_PASSWORD": ""
       },

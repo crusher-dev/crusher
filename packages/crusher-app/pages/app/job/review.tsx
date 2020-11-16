@@ -814,7 +814,7 @@ function VideoModal({ video_uri }) {
 		<div css={styles.videoOverlayContent}>
 			<video
 				controls={true}
-				style={{ width: "40rem" }}
+				style={{ width: "40" }}
 				autoPlay={true}
 				src={video_uri}
 			/>

@@ -1071,7 +1071,7 @@ function App() {
                         background:#212633;
                         border-radius:1rem;
                         position:relative;
-                        padding: 0.1rem 0rem;
+                        padding: 0.1rem 0;
                     }
 
                     .toggle-switch .toggle-track:before{
@@ -1128,7 +1128,7 @@ const styles : { [key: string]: React.CSSProperties } = {
         background: "#1C1F26",
         display: "flex",
         flexDirection: "column",
-        borderRadius: "0.70rem 0 0 0",
+        borderRadius: "0.70 0 0 0",
         position: "fixed",
         bottom: "0",
         right: "0%",
@@ -1167,7 +1167,7 @@ const styles : { [key: string]: React.CSSProperties } = {
         fontFamily: "DM Sans",
         fontSize: "1rem",
         fontWeight: 700,
-        marginBottom: "0rem",
+        marginBottom: "0",
         textAlign: "center",
         color: "#fff",
     },
@@ -1207,7 +1207,7 @@ const styles : { [key: string]: React.CSSProperties } = {
         overflow: "hidden",
     },
     stepImage: {
-        padding: "0rem 0.9rem",
+        padding: "0 0.9rem",
     },
     stepTextContainer: {
 
@@ -1388,7 +1388,7 @@ const styles : { [key: string]: React.CSSProperties } = {
         alignItems: "top",
         position: "absolute",
         top: "-1.2rem",
-        right: "0rem",
+        right: "0",
         cursor: "pointer"
     },
     innerFormHelpIcon: {},
@@ -1436,7 +1436,7 @@ const styles : { [key: string]: React.CSSProperties } = {
         padding: "0.4rem 0.7rem",
         borderRadius: "0.25rem",
         width: "100%",
-        maxWidth: "10rem",
+        maxWidth: "10",
         fontSize: 18,
     },
     formBottomRow: {
@@ -1454,14 +1454,14 @@ const styles : { [key: string]: React.CSSProperties } = {
         padding: "0.4rem 0.7rem",
         borderRadius: "0.25rem",
         width: "100%",
-        maxWidth: "10rem",
+        maxWidth: "10",
         fontSize: 18,
     },
     input: {
         padding: "0.4rem 0.7rem",
         borderRadius: "0.25rem",
         width: "100%",
-        maxWidth: "10rem",
+        maxWidth: "10",
         fontSize: 18,
     }
 

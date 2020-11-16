@@ -20,14 +20,14 @@ export function DropDown(props) {
 	const dropdownStyle = {
 		menu: (provided, state) => ({
 			...provided,
-			backgroundColor: "#f2f2f2",
+			backgroundColor: "#fff",
 			width: width,
 			zIndex: 200000000,
 		}),
 		control: (provided, state) => ({
 			...provided,
-			backgroundColor: "#f2f2f2",
-			border: "none",
+			backgroundColor: "#fff",
+			border: "1px solid #E9E9E9",
 			outline: "none",
 			zIndex: 1000,
 			padding: `${paddingTop} 12px`,

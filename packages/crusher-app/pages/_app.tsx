@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { wrapper } from "@redux/store";
 import { fetchProjectsFromServer } from "@redux/thunks/projects";
 import dynamic from "next/dynamic";
 import { getCookies } from "@utils/cookies";
-import { emitter } from "@utils/mitt";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { ReactReduxContext } from "react-redux";

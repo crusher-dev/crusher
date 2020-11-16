@@ -12,7 +12,7 @@ import {AssertModal} from "./containers/modal/assertModal";
 import {NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon} from "../../assets/icons";
 import {ToggleSwitchIndicator} from "./components/toggleSwitchIndicator";
 import styled from 'styled-components';
-
+// import PerfectScrollbar from "perfect-scrollbar";
 const devices: any = _devices;
 
 export const ACTION_FORM_TYPE = {
@@ -32,12 +32,6 @@ function Step(props: any) {
                 <div style={{ overflow: "hidden"}}>
                     <div style={styles.stepSelector}>{value || path}</div>
                 </div>
-            </div>
-            <div style={{...styles.centerItemsVerticalFlex, marginLeft: "auto", paddingRight: "1.5rem"}}>
-                <img
-                    style={styles.stepGoImage}
-                    src={chrome.runtime.getURL("icons/arrow.svg")}
-                />
             </div>
         </li>
     );
@@ -72,6 +66,11 @@ function Steps(props: any) {
     const {steps, forwardRef} = props;
     useScroll(forwardRef, steps);
 
+    // useEffect(()=>{
+    //     //@ts-ignore
+    //     new PerfectScrollbar(document.querySelector("#stepsListContainer"));
+    // }, []);
+
     const stepList = steps.map((step: any) => {
         const {event_type, selectors, value} = step;
 
@@ -92,8 +91,9 @@ function Steps(props: any) {
                 maxHeight: 240,
                 minHeight: 100,
                 overflowY: "auto",
-                marginBottom: "2rem"
+                marginBottom: "0.5rem"
             }}
+            id="stepsListContainer"
             ref={forwardRef}
         >
             <ul style={styles.stepsContainer} className="margin-list-item">
@@ -306,7 +306,7 @@ function Actions(props: any) {
 }
 
 function DesktopBrowser(props: any) {
-    const {isShowingElementForm} = props;
+    const {isInspectModeOn} = props;
     const selectedDeviceId = getQueryStringParams("device", window.location.href);
     const urlParams = getQueryStringParams("url", window.location.href);
     const urlEncoded = urlParams ? new URL(urlParams) : null;
@@ -429,7 +429,7 @@ function DesktopBrowser(props: any) {
                     </div>
                     <Addressbar/>
                     <div style={styles.elementToggleIndicatorContainer}>
-                        <ToggleSwitchIndicator label="Element mode" enabled={isShowingElementForm}/>
+                        <ToggleSwitchIndicator label="Element mode" enabled={isInspectModeOn}/>
                     </div>
                     <div style={{...styles.button, width: "auto", marginLeft: "1.6rem"}} onClick={props.saveTest}>
                         <RecordLabelIcon />
@@ -789,16 +789,23 @@ function App() {
     ]);
     const [seoMeta, setSeoMeta] = useState({});
     const [isRecording, setIsRecording] = useState(false);
-    const [isShowingElementForm, setIsShowingElementForm] = useState(false);
+    const [isShowingElementForm, _setIsShowingElementForm] = useState(false);
     const [isUsingElementInspector] = useState(false);
     const [currentElementSelectors, setCurrentElementSelectors] = useState(null);
     const [currentElementAttributes, setCurrentElementAttributes] = useState(null);
     const [state, updateState] = useState(null);
     const [startingTime] = useState(Date.now());
     const [lastStepTime, setLastStepTime] = useState(Date.now());
+    const [isInspectModeOn, setIsInspectModeOn] = useState(false);
     const iframeRef: Ref<any> = useRef(null);
     const actionsScrollRef: Ref<any> = useRef(null);
 
+    const setIsShowingElementForm = (value: boolean) => {
+        if(!value){
+            setIsInspectModeOn(false);
+        }
+        _setIsShowingElementForm(value);
+    }
     // useEffect(()=>{
     //     const scrollDiv = actionsScrollRef.current;
     //     const newScrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
@@ -882,6 +889,12 @@ function App() {
         } else if (type) {
             const cn = iframeRef.current.contentWindow;
             switch (type) {
+                case SETTINGS_ACTIONS.INSPECT_MODE_ON:
+                    setIsInspectModeOn(true);
+                    break;
+                case SETTINGS_ACTIONS.INSPECT_MODE_OFF:
+                    setIsInspectModeOn(false);
+                    break;
                 case SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR:
                     setIsShowingElementForm(true);
                     setCurrentElementSelectors(selectors);
@@ -969,11 +982,11 @@ function App() {
                         <div style={styles.tipDesc}>Click on play to replay selected test</div>
                     </div>
                 </div>
+                <div style={{overflowY: "auto"}}>
+                <div style={{background: "#14181F", padding: "0rem 1.25rem", paddingBottom: "0rem"}}>
+                    <Steps forwardRef={actionsScrollRef} steps={steps}/>
+                </div>
                 <div style={styles.paddingContainer}>
-                    <div style={{width: "22rem", marginLeft: "auto"}}>
-                        <div style={styles.sectionHeading}>{steps.length} Actions</div>
-                        <Steps forwardRef={actionsScrollRef} steps={steps}/>
-                    </div>
                     {state !== MODALS.SEO && (
                         <RightMiddleSection state={state} updateState={updateState}/>
                     )}
@@ -983,6 +996,7 @@ function App() {
                                   updateState={updateState} saveAssertionCallback={saveAssertionCallback}
                                   saveSeoValidationCallback={saveSeoValidation}/>
                     )}
+                </div>
                 </div>
             </div>
         );
@@ -998,7 +1012,7 @@ function App() {
     // @ts-ignore
     return (
         <Test style={styles.container}>
-            <DesktopBrowser isShowingElementForm={isShowingElementForm} saveTest={saveTest} forwardRef={iframeRef}/>
+            <DesktopBrowser isInspectModeOn={isInspectModeOn} saveTest={saveTest} forwardRef={iframeRef}/>
             <RightSection/>
             <style>
                 {`
@@ -1110,7 +1124,7 @@ function App() {
 
 const Test = styled.div`
 background: red;
-color: yellow;
+color: black;
 `;
 const styles : { [key: string]: React.CSSProperties } = {
     container: {
@@ -1134,8 +1148,8 @@ const styles : { [key: string]: React.CSSProperties } = {
         right: "0%",
         marginLeft: "auto",
         maxHeight: "85vh",
-        overflowY: "scroll",
-        maxWidth: "30vw"
+        maxWidth: "27rem",
+        width: "30vw"
     },
     centerItemsVerticalFlex: {
         display: "flex",
@@ -1214,17 +1228,14 @@ const styles : { [key: string]: React.CSSProperties } = {
     },
     stepAction: {
         fontWeight: "bold",
-        color: "#83A3E3",
+        color: "#8C8C8C",
         fontSize: "0.8rem",
     },
     stepSelector: {
         marginTop: "0.25rem",
-        color: "#fff",
+        color: "#8C8C8C",
         fontSize: "0.6rem",
         whiteSpace: "nowrap",
-    },
-    stepGoImage: {
-        paddingRight: "0.75rem",
     },
     browser: {
         background: "#010101",
@@ -1464,7 +1475,6 @@ const styles : { [key: string]: React.CSSProperties } = {
         maxWidth: "10",
         fontSize: 18,
     }
-
 };
 
 export default App;

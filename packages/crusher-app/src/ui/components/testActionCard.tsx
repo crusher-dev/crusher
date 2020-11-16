@@ -65,7 +65,7 @@ export const LogActionCard = (props: any) => {
 
 const styles = {
 	container: css`
-		padding: 0.8rem 0rem;
+		padding: 0.8rem 0;
 		margin-bottom: 2.35rem;
 		display: flex;
 		flex-direction: row;

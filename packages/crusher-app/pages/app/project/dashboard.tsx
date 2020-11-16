@@ -48,7 +48,7 @@ function Activity(props) {
 			</div>
 			<div css={styles.buildsIdNDate} style={{ marginLeft: "auto" }}>
 				<div css={styles.buildsId}>#7982</div>
-				<div css={styles.buildsDate} style={{ marginTop: "0rem" }}>
+				<div css={styles.buildsDate} style={{ marginTop: "0" }}>
 					21 Aug | 9:15 pm
 				</div>
 			</div>
@@ -222,7 +222,7 @@ const styles = {
 		border-radius: 0.25rem;
 		display: flex;
 		flex: 1rem;
-		max-width: 20rem;
+		max-width: 20;
 		padding: 0.75rem 1.2rem;
 	`,
 	productionHealthItemText: css``,

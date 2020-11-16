@@ -58,7 +58,6 @@ function LeftSection(props) {
     ];
 
     const bottomNavLinks = [
-        {name: "Add a team member", link: "/app/new-features", icon: "/svg/sidebarSettings/team_member.svg"},
         {name: "New features", link: "/app/new-features", icon: "/svg/sidebarSettings/newFeatures.svg"},
         {name: "Help & Support", link: "/app/help-support", icon: "/svg/sidebarSettings/help.svg"},
         {name: "Logout", link: resolvePathToBackendURI("/user/logout"), icon: "/svg/sidebarSettings/logout.svg"}
@@ -96,13 +95,17 @@ function LeftSection(props) {
                         )}
                     </div>
                     <div css={styles.sectionHeaderSetting}>
-                        {/*<img src={"/svg/settings.svg"} />*/}
+                        <img src={"/svg/settings.svg"} />
                     </div>
                 </div>
                <NavList items ={mainNavLinks}/>
             </div>
             <div css={styles.settingsBottomFixedContainer}>
                 <NavList items={bottomNavLinks}/>
+            </div>
+            <div css={styles.inviteMembers}>
+                <img src="/svg/sidebarSettings/team_member.svg"/>
+                <span>Invite members</span>
             </div>
         </div>
     );
@@ -233,6 +236,24 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 }
 
 const styles = {
+    inviteMembers: css`
+    cursor: pointer;
+    background: #111313;
+    color: #fff;
+    text-align: center;
+    padding: 1.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span{
+    font-size: 1.125rem;
+    margin-left: .75rem;
+    font-weight: 600;
+    }
+    &:hover{
+        background: #5b76f7;
+    }
+    `,
     mainContainer: css`
 		display: flex;
 		height: 100vh;
@@ -311,7 +332,7 @@ const styles = {
 	`,
     settingsBottomFixedContainer: css`
 		margin-top: auto;
-		padding-bottom: 3rem;
+		margin-bottom: 2rem;
 	`,
     infoSection: css`
 		display: flex;
@@ -360,17 +381,11 @@ const styles = {
 		flex: 1;
 		flex-direction: column;
 		height: 100vh;
+		margin-left: -2px;
 		overflow-y: scroll;
 	`,
     header: css`
 		display: flex;
-		border-bottom-color: #f2f2f2;
-
-		border-bottom-style: solid;
-		// 		border-bottom-width: 0.125rem;
-		// padding: 1rem 4.25rem;
-		border-bottom-width: 1px;
-		border-bottom-style: solid;
 		align-items: center;
 		padding: 1rem 4.25rem;
 	`,

@@ -201,7 +201,7 @@ const styles = {
 		margin-left: 3.75rem;
 		margin-bottom: 2rem;
 		&:first-child {
-			margin-left: 0rem;
+			margin-left: 0;
 		}
 	`,
 	testFeaturedImage: css`

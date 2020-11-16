@@ -30,31 +30,25 @@ function ProjectOnboardingCreateTest(props) {
 				<div css={styles.innerCenterContainer}>
 					<iframe  css={styles.videoPlayer} src="https://www.loom.com/embed/5f1392d00274403083d151c0183620cb"
 							frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
-					<div css={styles.heyText}>Hey {userInfo.name},</div>
-					<div css={styles.heyTextDescContainer}>
-						<div css={styles.heyTextDesc}>
-							You’re about to experience power of no code testing
-						</div>
-						<div style={{ marginTop: "0.7rem" }} css={styles.heyTextDesc}>
-							Let’s start by creating or importing test.
-						</div>
+					<div css={styles.crusherFeatures}>
+						Deploy fast with Crusher
+					</div>
+					<div css={styles.heyText}>
+						Hey {userInfo.name}, Experience power of no code testing
 					</div>
 					<div>
-						<div
-							style={{
-								display: "inline-block",
-								position: "relative",
-								left: "50%",
-								transform: "translateX(-50%)",
-							}}
-						>
+
 							<div css={styles.buttonContainer}>
-								<div css={styles.downloadButton} onClick={handleDownloadExtensionClick}>
+								<div css={styles.createTestButton} onClick={handleDownloadExtensionClick}>
 									<img src={"/svg/onboarding/cloudDownload.svg"} />
-									<span>Download Extension</span>
+									<span>Create a test</span>
 								</div>
 							</div>
+
+						<div css={styles.migrateTest}>
+							Already Have testing? Migrate test
 						</div>
+
 
 					</div>
 				</div>
@@ -64,11 +58,18 @@ function ProjectOnboardingCreateTest(props) {
 }
 
 const styles = {
+	migrateTest: css`
+		font-size: .9rem;
+		color: #2E2929;
+		text-decoration: underline;
+		text-align: center;
+	`,
 	videoPlayer: css`
 	width:43.5rem; height:26.25rem; 
 	border-radius: .6rem;
 	margin: 0 auto;
 	margin-top: .9rem;
+	margin-bottom: 2.5rem;
 	`,
 	heading: css`
 		font-family: Cera Pro;
@@ -86,28 +87,29 @@ const styles = {
 	heyText: css`
 		font-family: Cera Pro;
 		font-style: normal;
-		font-weight: bold;
-		font-size: 1.3rem;
+		font-weight: 800;
+		font-size: 2rem;
 		text-align: center;
-		margin-top: 2.1rem;
 		color: #2b2b39;
+		margin-bottom: 2rem;
+		line-height: 2rem;
 	`,
-	heyTextDescContainer: css`
-		margin-top: 0.9rem;
-	`,
-	heyTextDesc: css`
+	crusherFeatures: css`
 		font-family: Gilroy;
-		font-size: 0.95rem;
+		font-size: 1.25rem;
 		text-align: center;
-		font-weight: 500;
+		font-weight: 800;
 		color: #2b2b39;
+		margin-bottom: 1.5rem;
+		line-height: 1.25rem;
 	`,
 	buttonContainer: css`
 		display: flex;
 		justify-content: center;
-		margin-top: 2.5rem;
+		margin-bottom: 2.35rem;
+	
 	`,
-	downloadButton: css`
+	createTestButton: css`
 		background: #5b76f7;
 		border: 1px solid #3f60f5;
 		box-sizing: border-box;
@@ -118,12 +120,17 @@ const styles = {
 		font-weight: bold;
 		font-size: 0.9rem;
 		color: #ffffff;
+		&:hover{
+			background: #4361ED;
+		}
 		span {
 			margin-left: 2.1rem;
 			display: flex;
 			flex-direction: row;
 			align-items: center;
+			font-size: 1rem;
 		}
+			min-width: 12rem;
 		cursor: pointer;
 	`,
 	importButton: css`
@@ -168,7 +175,7 @@ const styles = {
 		color: #2b2b39;
 	`,
 	leftSide: css`
-		width: 40rem;
+		width: 40;
 		height: 100%;
 		padding-left: 4.1rem;
 		display: flex;
@@ -221,7 +228,7 @@ const styles = {
 	`,
 	separatorContainer: css`
 		display: flex;
-		margin: 4rem 0rem;
+		margin: 4rem 0;
 		align-items: center;
 	`,
 	separatorLine: css`
@@ -232,7 +239,7 @@ const styles = {
 	separatorText: css`
 		font-size: 0.95rem;
 		text-transform: uppercase;
-		padding: 0rem 2rem;
+		padding: 0 2rem;
 		color: #2d3958;
 	`,
 	infoBoxContainer: css`

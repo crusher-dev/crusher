@@ -55,7 +55,7 @@ function RenderCreateHostForm(props) {
 						labelDescription={"This is the name by which you address this host"}
 					>
 						<Input
-							width={"20rem"}
+							width={"20"}
 							value={name}
 							onChange={onNameChange}
 							placeholder={"Enter host name"}
@@ -66,7 +66,7 @@ function RenderCreateHostForm(props) {
 						labelDescription={"This is the url of this host"}
 					>
 						<Input
-							width={"20rem"}
+							width={"20"}
 							value={url}
 							onChange={onURLChange}
 							placeholder={"Enter host url"}

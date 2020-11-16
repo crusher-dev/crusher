@@ -161,11 +161,11 @@ const styles : { [key: string]: React.CSSProperties } = {
     padding: 0,
   },
   paddingContainer: {
-    padding: "0rem 1.25rem",
+    padding: "0 1.25rem",
   },
   headingBlock: {
     display: "flex",
-    padding: "1.75rem 1.25rem 0rem 1.25rem",
+    padding: "1.75rem 1.25rem 0 1.25rem",
   },
   heading: {
     fontFamily: "DM Sans",
@@ -179,7 +179,7 @@ const styles : { [key: string]: React.CSSProperties } = {
     fontSize: ".9rem",
     fontWeight: 400,
     marginRight: "auto",
-    padding: "0rem .5rem 1.25rem 1.25rem",
+    padding: "0 .5rem 1.25rem 1.25rem",
     marginTop: ".5rem",
   },
   selectInputContainer: {

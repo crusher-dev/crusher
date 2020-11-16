@@ -41,7 +41,7 @@ function NavList(props: NavListProps) {
     });
 
     return (
-        <ul style={style} css={styles.sectionItemList}>
+        <ul style={style} css={styles.primaryMenu}>
             {out}
         </ul>
     );
@@ -67,7 +67,7 @@ function LeftSection(props) {
         <div css={styles.leftSection}>
             <div css={styles.sectionContainer}>
                 <div css={styles.sectionHeaderItem}>
-                    <div css={styles.projectFavicon}>H</div>
+                    <div css={styles.teamIcon}>H</div>
                     <div css={styles.sectionHeaderContentArea}>
 							<span
                                 style={{
@@ -270,14 +270,14 @@ const styles = {
 		overflow-y: scroll;
 	`,
     sectionContainer: css`
-		padding: 2rem 0rem;
+		padding: 1.2rem 0;
 	`,
     sectionHeaderItem: css`
 		padding: 0 1.5rem;
 		font-weight: 500;
 		display: flex;
 	`,
-    projectFavicon: css`
+    teamIcon: css`
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -285,7 +285,7 @@ const styles = {
 		padding: 0.8rem 1.12rem;
 		font-weight: 900;
 		font-size: 0.85rem;
-		background: rgba(0, 0, 0, 0.25);
+		background: rgba(97, 98, 102, 0.2);
 		color: #888888;
 		border-radius: 0.3rem;
 	`,
@@ -302,8 +302,8 @@ const styles = {
 		justify-content: center;
 		cursor: pointer;
 	`,
-    sectionItemList: css`
-		margin-top: 5.55rem;
+    primaryMenu: css`
+		    margin-top: 3.3rem;
 		list-style: none;
 		padding: 0;
 		padding: 0 1.625rem;
@@ -348,8 +348,8 @@ const styles = {
 		margin-top: 1.5rem;
 		list-style: none;
 		padding: 0;
-		padding-left: 0rem;
-		padding-right: 0rem;
+		padding-left: 0;
+		padding-right: 0;
 		li {
 			&:not(:last-child) {
 				margin-bottom: 2.1rem;
@@ -359,7 +359,7 @@ const styles = {
 			color: #fbfbfb;
 			font-weight: 500;
 			font-size: 0.9rem;
-			padding: 0rem;
+			padding: 0;
 			cursor: pointer;
 			border-radius: 0.25rem;
 		}

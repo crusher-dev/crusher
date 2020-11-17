@@ -37,24 +37,17 @@ function WithSession(Component, componentScope?: string) {
 	WrappedComponent.getInitialProps = async (ctx) => {
 		const { req, res } = ctx;
 
-		const cookies = getCookies(req);
-		const isLoggedIn =
-			(cookies.isLoggedIn && cookies.isLoggedIn === "true") ||
-			(cookies.token && cookies.token.trim() !== "");
-
 		const headers = req ? req.headers : null;
 
 		cleanHeaders(headers);
-
 		// @TODO: Rethink if there is a better way to do this.
-		// If req is set, it's server side, otherwise called from client side
-		let statusInfo = ctx.userStatus ? ctx.userStatus : null;
-
+		let statusInfo =  ctx.userStatus || null;
 		await handleUserStatus(statusInfo, res, componentScope);
 
 		let userInfo = await getUserInfo(headers);
 
-		if (componentScope && componentScope !== statusInfo) {
+		const redirectToDashboard = componentScope && componentScope !== statusInfo;
+		if (redirectToDashboard) {
 			await redirectToFrontendPath("/", res);
 		}
 

@@ -33,8 +33,6 @@ function RenderSlackIntegrations(props) {
 
 function SettingContent(props) {
 	const { isIntegratedWithEmail, slackIntegrations } = props;
-
-	console.log("INtegrations", slackIntegrations);
 	const [isIntegratedWithSlack, setIsIntegratedWithSlack] = useState(
 		props.isIntegratedWithSlack,
 	);

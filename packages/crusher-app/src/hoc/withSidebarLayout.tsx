@@ -13,6 +13,7 @@ import {resolvePathToBackendURI} from "@utils/url";
 import React, {CSSProperties, useEffect} from "react";
 import {toPascalCase} from "@utils/helpers";
 import {Logo} from "@ui/components/Atoms";
+import {FeedbackComponent} from "@ui/components/app/feedbackComponent";
 
 interface NavItem{
     name: string;
@@ -218,6 +219,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
                         </div>
                         <div css={styles.innerContentContainer}>
                             <Component {...props} />
+                           <FeedbackComponent/>
                         </div>
                     </div>
                 </div>

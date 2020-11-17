@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Header } from "@ui/containers/BuildHeader";
+import { Header } from "@ui/containers/reviewPage/BuildHeader";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import withSession from "@hoc/withSession";
 

@@ -15,7 +15,7 @@ import {
 } from "@utils/constants";
 import { redirectToFrontendPath } from "@utils/router";
 import { AuthenticationTemplate } from "@ui/template/authenticationDark";
-import { GoogleIcon } from "@ui/components/SVGs";
+import { GoogleIcon } from "@ui/components/common/SVGs";
 import { getStyleFromObject } from "@utils/styleUtils";
 import { COLORS, COMPONENTS, ThemeContext } from "@constants/style";
 import { emitter } from "@utils/mitt";

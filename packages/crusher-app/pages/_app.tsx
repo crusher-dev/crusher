@@ -18,7 +18,7 @@ import {type} from "os";
 
 const TopProgressBar = dynamic(
 	function () {
-		return import("../src/ui/components/TopProgressBar");
+		return import("@ui/components/app/TopProgressBar");
 	},
 	{ ssr: false },
 );

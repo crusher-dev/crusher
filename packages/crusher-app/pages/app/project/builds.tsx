@@ -1,6 +1,6 @@
 import { css } from "@emotion/core";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
-import { Pagination } from "@ui/components/Pagination";
+import { Pagination } from "@ui/components/common/Pagination";
 import WithSession from "../../../src/hoc/withSession";
 import { redirectToFrontendPath } from "@utils/router";
 import { getCookies } from "@utils/cookies";

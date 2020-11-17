@@ -1,7 +1,7 @@
 import React from "react";
 import {css} from "@emotion/core";
-import {ProgressBar} from "@ui/components/ProgressBar";
-import {LogActionCard} from "@ui/components/testActionCard";
+import {ProgressBar} from "@ui/components/app/ProgressBar";
+import {LogActionCard} from "@ui/components/list/testActionCard";
 import {LiveLogs} from "@interfaces/LiveLogs";
 import {LiveLogsActions} from "@ui/components/editor/LiveLogsActions";
 

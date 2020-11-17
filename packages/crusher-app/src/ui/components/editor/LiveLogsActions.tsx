@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {LiveLogs} from "@interfaces/LiveLogs";
-import {LogActionCard} from "@ui/components/testActionCard";
+import {LogActionCard} from "@ui/components/list/testActionCard";
 import {css} from "@emotion/core";
 
 import {ACTION_DESCRIPTIONS} from "../../../../../crusher-shared/constants/actionDescriptions";

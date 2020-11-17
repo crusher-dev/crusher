@@ -1,5 +1,5 @@
 import { css } from "@emotion/core";
-import { Logo } from "@ui/components/Atoms";
+import { Logo } from "@ui/components/common/Atoms";
 import React, { useContext } from "react";
 import { COMPONENTS, ThemeContext } from "@constants/style";
 import { getStyleFromObject } from "@utils/styleUtils";

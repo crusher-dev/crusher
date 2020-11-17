@@ -8,7 +8,7 @@ import { redirectToFrontendPath } from "@utils/router";
 import isEmail from "validator/lib/isEmail";
 import { AuthenticationTemplate } from "@ui/template/authenticationDark";
 import { css } from "@emotion/core";
-import { BackSVG, GoogleIcon } from "@ui/components/SVGs";
+import { BackSVG, GoogleIcon } from "@ui/components/common/SVGs";
 import Link from "next/link";
 import { COLORS, ThemeContext } from "@constants/style";
 

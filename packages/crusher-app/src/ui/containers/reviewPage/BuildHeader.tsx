@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { withRouter } from "next/router";
 
 import { css } from "@emotion/core";
-import { WhiteLogo } from "@ui/components/Atoms";
+import { WhiteLogo } from "@ui/components/common/Atoms";
 import { toPascalCase } from "@utils/helpers";
 import { Platform } from "@interfaces/Platform";
 

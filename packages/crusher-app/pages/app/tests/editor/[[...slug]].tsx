@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { getTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
-import { LogActionCard } from "@ui/components/testActionCard";
+import { LogActionCard } from "@ui/components/list/testActionCard";
 import {TestStatus} from "@ui/containers/editor/TestStatus";
 
 function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {

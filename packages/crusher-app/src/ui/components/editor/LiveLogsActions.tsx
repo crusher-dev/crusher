@@ -23,8 +23,6 @@ function getLogsWithStatus(actions: Array<{event_type: string, [key: string]: st
 
     const out = [];
 
-    console.log("Just something");
-    console.log(actions, logs);
     for(let i = 0; i < logs.length; i++){
         const action = actions[actionsIndex];
         if(actions[actionsIndex++].event_type === logs[i].actionType){

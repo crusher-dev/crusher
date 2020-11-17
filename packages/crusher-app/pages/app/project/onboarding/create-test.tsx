@@ -86,7 +86,7 @@ const styles = {
 	border-radius: .6rem;
 	margin: 0 auto;
 	margin-top: .9rem;
-	margin-bottom: 2.5rem;
+	margin-bottom: 3rem;
 	`,
 	heading: css`
 		font-family: Cera Pro;
@@ -117,7 +117,7 @@ const styles = {
 		text-align: center;
 		font-weight: 600;
 		color: #2b2b39;
-		margin-bottom: 1.5rem;
+		margin-bottom: .75rem;
 		line-height: 1.25rem;
 		span{
 			font-weight: 800;

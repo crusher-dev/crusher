@@ -68,6 +68,7 @@ function LeftSection(props) {
         <div css={styles.leftSection}>
             <div css={styles.sectionContainer}>
                 <div css={styles.sectionHeaderItem}>
+                    {/*@Note :- Change hardcoded text*/}
                     <div css={styles.teamIcon}>H</div>
                     <div css={styles.sectionHeaderContentArea}>
 							<span
@@ -78,10 +79,9 @@ function LeftSection(props) {
                                     fontWeight: "bold",
                                 }}
                             >
-								{toPascalCase(selectedProject ? selectedProject : "")}
+								{toPascalCase(selectedProject && selectedProject)} project
 							</span>
 
-                        {userInfo && (
                             <span
                                 style={{
                                     color: "#8C8C8C",
@@ -93,7 +93,7 @@ function LeftSection(props) {
                             >
 									{userInfo.name}
 								</span>
-                        )}
+
                     </div>
                     <div css={styles.sectionHeaderSetting}>
                         <img src={"/svg/settings.svg"} />
@@ -112,7 +112,7 @@ function LeftSection(props) {
     );
 }
 
-function LogoItem() {
+function CrusherLogo() {
     return (
         <Link href={"/app/project/dashboard"}>
             <a href={"/app/project/dashboard"}>
@@ -208,7 +208,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
                     />
                     <div css={styles.contentContainer}>
                         <div css={styles.header}>
-                            <LogoItem/>
+                            <CrusherLogo/>
                             <ProjectSelector
                                 projectsList={projectsList}
                                 options={options}

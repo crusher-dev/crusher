@@ -1,5 +1,5 @@
 @tailwind base;
 @tailwind utilities;
-img{
-    display: unset;
+img {
+	display: unset;
 }

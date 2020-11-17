@@ -1,5 +1,5 @@
-export enum JobTrigger{
-    MANUAL = "MANUAL",
-    CRON = "CRON",
-    CLI = "CLI"
-};
+export enum JobTrigger {
+  MANUAL = "MANUAL",
+  CRON = "CRON",
+  CLI = "CLI",
+}

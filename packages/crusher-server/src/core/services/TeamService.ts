@@ -13,7 +13,7 @@ export default class TeamService {
 		this.dbManager = Container.get(DBManager);
 	}
 
-	async createTeam(details: CreateTeamRequest) : Promise<any> {
+	async createTeam(details: CreateTeamRequest): Promise<any> {
 		const { userId, teamName, stripeCustomerId } = details;
 		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=? AND team_id IS NULL`, [userId]);
 
@@ -23,7 +23,7 @@ export default class TeamService {
 				name: teamName,
 				team_email: user.email,
 				tier: TierPlan.FREE,
-				stripe_customer_id: stripeCustomerId
+				stripe_customer_id: stripeCustomerId,
 			});
 			if (team.insertId) {
 				await this.dbManager.fetchSingleRow(`UPDATE users SET team_id=? WHERE id=?`, [team.insertId, userId]);

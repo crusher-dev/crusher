@@ -11,16 +11,9 @@
     "noUnusedLocals": false,
     "strictNullChecks": false
   },
-  "include": [
-    "**/*.ts"
-  ],
-  "typeRoots": [ "node_modules/@types" ],
-  "files": [
-    "src/app.js"
-  ],
+  "include": ["**/*.ts"],
+  "typeRoots": ["node_modules/@types"],
+  "files": ["src/app.js"],
   "include": ["./src/**/*"],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

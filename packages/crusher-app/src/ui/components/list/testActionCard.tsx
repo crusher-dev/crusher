@@ -36,7 +36,15 @@ export const TestActionCard = (props: any) => {
 };
 
 export const LogActionCard = (props: any) => {
-	const { isFinished, style,  action, index, timeTaken, isLast, forwardRef } = props;
+	const {
+		isFinished,
+		style,
+		action,
+		index,
+		timeTaken,
+		isLast,
+		forwardRef,
+	} = props;
 	const desc = action.desc;
 
 	return (
@@ -48,17 +56,38 @@ export const LogActionCard = (props: any) => {
 						<div css={styles.actionInfoHeading}>
 							{desc.substr(0, 34)} {desc.length > 34 ? "..." : null}
 						</div>
-						<div css={styles.actionInfoDesc}>
-							{action.selector}
-						</div>
+						<div css={styles.actionInfoDesc}>{action.selector}</div>
 					</div>
 				</div>
 			</div>
-				<div css={styles.correctContainer} style={{bottom: isLast ? "-0.7rem" : "-2.8rem"}}>
-					<img src={isFinished ? "/svg/editor/correctStep.svg" : "/svg/editor/notProcessedStep.svg"} style={{ width: "1.5rem" }} />
-					{!isLast && (<div style={{height: "2rem", width: "0.15rem", background: "#F3F3F3", position: "relative", left: "50%", transform: "translateX(-50%)"}}></div>)}
-				</div>
-			<div css={styles.timeTookForStep}>{timeTaken ? (timeTaken/1000).toFixed(1) : "Few"} sec</div>
+			<div
+				css={styles.correctContainer}
+				style={{ bottom: isLast ? "-0.7rem" : "-2.8rem" }}
+			>
+				<img
+					src={
+						isFinished
+							? "/svg/editor/correctStep.svg"
+							: "/svg/editor/notProcessedStep.svg"
+					}
+					style={{ width: "1.5rem" }}
+				/>
+				{!isLast && (
+					<div
+						style={{
+							height: "2rem",
+							width: "0.15rem",
+							background: "#F3F3F3",
+							position: "relative",
+							left: "50%",
+							transform: "translateX(-50%)",
+						}}
+					></div>
+				)}
+			</div>
+			<div css={styles.timeTookForStep}>
+				{timeTaken ? (timeTaken / 1000).toFixed(1) : "Few"} sec
+			</div>
 		</div>
 	);
 };
@@ -110,5 +139,5 @@ const styles = {
 	`,
 	actionBoxInfo: css`
 		flex: 1;
-	`
+	`,
 };

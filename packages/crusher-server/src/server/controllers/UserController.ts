@@ -112,7 +112,7 @@ export class UserController {
 			email,
 			firstName: given_name,
 			lastName: family_name,
-			password: Date.now() + generateId(10)
+			password: Date.now() + generateId(10),
 		});
 
 		if (userInfo.token) {

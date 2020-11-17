@@ -26,4 +26,3 @@ export const fetchProjectsFromServer: any = (headers: any = null) => (
 			});
 		});
 };
-

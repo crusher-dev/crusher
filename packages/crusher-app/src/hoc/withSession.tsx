@@ -41,7 +41,7 @@ function WithSession(Component, componentScope?: string) {
 
 		cleanHeaders(headers);
 		// @TODO: Rethink if there is a better way to do this.
-		let statusInfo =  ctx.userStatus || null;
+		let statusInfo = ctx.userStatus || null;
 		await handleUserStatus(statusInfo, res, componentScope);
 
 		let userInfo = await getUserInfo(headers);

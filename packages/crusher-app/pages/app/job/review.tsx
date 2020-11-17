@@ -388,7 +388,6 @@ function RenderScreenshotComparison({
 	}
 
 	function toggleCommentsBox() {
-
 		setShouldShowCommentsBox(!shouldShowCommentsBox);
 		if (!shouldShowCommentsBox) {
 			setTimeout(() => {

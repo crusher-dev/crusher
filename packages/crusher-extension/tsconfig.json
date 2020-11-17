@@ -15,7 +15,7 @@
     "jsx": "react",
     "allowSyntheticDefaultImports": true
   },
-  "typeRoots": [ "node_modules/@types" ],
+  "typeRoots": ["node_modules/@types"],
   "files": [
     "src/background.ts",
     "src/ui/popup/index.tsx",

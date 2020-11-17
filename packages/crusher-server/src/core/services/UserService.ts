@@ -4,7 +4,8 @@ import {
 	EMAIL_NOT_VERIFIED,
 	ERROR_OCCURED_IN_AUTHENTICATION,
 	NO_TEAM_JOINED,
-	SIGNED_IN, SIGNED_UP_WITHOUT_JOINING_TEAM,
+	SIGNED_IN,
+	SIGNED_UP_WITHOUT_JOINING_TEAM,
 	USER_ALREADY_REGISTERED,
 	USER_FAILED_TO_REGISTERED,
 	USER_NOT_REGISTERED,
@@ -66,7 +67,7 @@ export default class UserService {
 		return { status: ERROR_OCCURED_IN_AUTHENTICATION };
 	}
 
-	async registerUser(userData: RegisterUserRequest) : Promise<any> {
+	async registerUser(userData: RegisterUserRequest): Promise<any> {
 		const { email, firstName, lastName, password } = userData;
 
 		const _user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
@@ -105,8 +106,8 @@ export default class UserService {
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,
-				token: generateToken(insertedUser.insertId, team && team.teamId ? team.teamId : null)
-			}
+				token: generateToken(insertedUser.insertId, team && team.teamId ? team.teamId : null),
+			};
 		}
 	}
 

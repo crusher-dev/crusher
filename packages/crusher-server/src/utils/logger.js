@@ -1,4 +1,4 @@
-const { currentEnvironmentName, ENVIRONMENT } = require( './env');
+const { currentEnvironmentName, ENVIRONMENT } = require('./env');
 const LoggerDNA = require('logdna');
 const IS_PRODUCTION = process.env.NODE_ENV === ENVIRONMENT.production;
 const chalk = require('chalk');
@@ -53,7 +53,7 @@ module.exports = {
 			_debug(msgToShow);
 			showMeta(meta);
 			if (IS_PRODUCTION) {
-				 // logger.debug(msgToShow, { meta });
+				// logger.debug(msgToShow, { meta });
 			}
 		},
 		error: function (tag, message, meta = null) {

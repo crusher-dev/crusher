@@ -17,7 +17,7 @@ import { getSelectedProject } from "@redux/stateUtils/projects";
 import { getTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { LogActionCard } from "@ui/components/list/testActionCard";
-import {TestStatus} from "@ui/containers/editor/TestStatus";
+import { TestStatus } from "@ui/containers/editor/TestStatus";
 
 function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
 	return checkDraftStatus(id, logsAfter).then((res) => {
@@ -239,13 +239,12 @@ function Test(props) {
 		alert(`Recorded tests, ${testResults.testInstanceRecording}`);
 	}
 
-
 	return (
 		<div css={styles.container}>
 			<div css={styles.centeredContainer}>
 				<div css={styles.placeholderHeaderContainer}>
 					<div css={styles.placeholderHeaderTitle}>
-						You just created a test in {Math.floor(totalTime/1000)} seconds👏
+						You just created a test in {Math.floor(totalTime / 1000)} seconds👏
 					</div>
 					<div css={styles.placeholderHeaderDesc}>
 						<div>Crusher will check UI/Flow for bugs.</div>
@@ -275,7 +274,7 @@ function Test(props) {
 						</div>
 					</div>
 				</div>
-				<TestStatus actions={actions} logs={testResults ? testResults.logs : []}/>
+				<TestStatus actions={actions} logs={testResults ? testResults.logs : []} />
 			</div>
 		</div>
 	);
@@ -521,7 +520,7 @@ Test.getInitialProps = async (ctx) => {
 			testInfo: testInfo,
 			testId: testId ? testId : null,
 			isFirstTest: testsCount && testsCount.totalTests === 0,
-			totalTime: totalTime
+			totalTime: totalTime,
 		};
 	} catch (er) {
 		throw er;

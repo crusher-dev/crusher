@@ -1,5 +1,5 @@
-export enum TestFramework{
-    PLAYWRIGHT= "PLAYWRIGHT",
-    PUPPETEER = "PUPPETEER",
-    SELENIUM = "SELENIUM"
+export enum TestFramework {
+  PLAYWRIGHT = "PLAYWRIGHT",
+  PUPPETEER = "PUPPETEER",
+  SELENIUM = "SELENIUM",
 }

@@ -10,7 +10,7 @@ export const FeedbackComponent = ()=>{
     )
 }
 const feedbackCss = css`
-    aposition: fixed;
+    position: fixed;
     bottom: 0;
     right: 0;
     height: 6rem;

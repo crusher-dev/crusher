@@ -1,6 +1,4 @@
 import { backendRequest, cleanHeaders } from "@utils/backendRequest";
-// import { setHostsInState, saveProjectsInRedux } from '../actions/action';
-import { getAllHosts } from "@services/projects";
 import { saveProjectsInRedux } from "@redux/actions/action";
 import { emitter } from "@utils/mitt";
 
@@ -29,14 +27,3 @@ export const fetchProjectsFromServer: any = (headers: any = null) => (
 		});
 };
 
-export const fetchAllHostsOfProjectFromServer = (projectId, headers = null) => (
-	dispatch,
-) => {
-	return getAllHosts(projectId, headers)
-		.then((hosts) => {
-			// dispatch(setHostsInState(hosts, projectId));
-		})
-		.catch((err) => {
-			// dispatch(setHostsInState([], projectId));
-		});
-};

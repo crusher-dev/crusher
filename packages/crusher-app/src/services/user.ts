@@ -53,13 +53,6 @@ export const resendVerification = (headers = null) => {
 	});
 };
 
-export const refreshToken = (headers = null) => {
-	return backendRequest("/user/refreshToken", {
-		method: RequestMethod.GET,
-		headers: headers,
-	});
-};
-
 export const getUserStatus = (headers = null) => {
 	return backendRequest("/user/getStatus", {
 		headers: headers,

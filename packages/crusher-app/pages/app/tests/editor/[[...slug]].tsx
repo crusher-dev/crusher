@@ -74,7 +74,6 @@ function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
 							return createdDate > prev ? createdDate : prev;
 					  }, new Date(0))
 					: logsAfter;
-			// console.log(test, res);
 			const { currentDraftId } = updateLogsCallback(
 				status,
 				null,
@@ -146,7 +145,6 @@ function Test(props) {
 					setTestState(TestState.COMPLETED);
 				}
 			}
-			// console.log(draftRef.current);
 			return { currentDraftId: draftRef.current.id };
 		},
 		[draftInfo],
@@ -160,8 +158,6 @@ function Test(props) {
 			checkDraftStatusAgainAndAgain(id, receiveLogsCallback).then((res) => {
 				if (res) {
 					setIsTestBaseCreated(true);
-				} else {
-					// console.log("Got nothing");
 				}
 			});
 		}
@@ -243,7 +239,6 @@ function Test(props) {
 		alert(`Recorded tests, ${testResults.testInstanceRecording}`);
 	}
 
-	// console.log(testResults);
 
 	return (
 		<div css={styles.container}>

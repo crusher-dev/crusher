@@ -12,7 +12,7 @@ import { USER_NOT_REGISTERED } from "@utils/constants";
 import { NextPageContext } from "next";
 import { getThemeFromCookie } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
-import "../src/style/tailwind.css";
+import "../src/tailwind.css";
 import { DialogBox } from "@ui/atom/Dialog";
 import {type} from "os";
 
@@ -72,12 +72,12 @@ App.getInitialProps = async ({ Component, ctx }: any) => {
 	const theme = getThemeFromCookie(ctx);
 
 	if (isLoggedIn) {
-		const status = await getUserStatus(headers);
-
 		const criticalData = await Promise.all([
 			getUserStatus(headers),
 			...serverSideStoreResolvers(ctx, headers),
 		]);
+
+		const status = criticalData[0]
 
 		if (status === USER_NOT_REGISTERED) {
 			return { theme };

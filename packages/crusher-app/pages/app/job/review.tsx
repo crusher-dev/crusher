@@ -106,8 +106,6 @@ function RenderCommentsBox(props) {
 			setTimeout(() => {
 				focusRefCallback();
 			});
-		} else {
-			console.log(l);
 		}
 	}
 
@@ -390,7 +388,7 @@ function RenderScreenshotComparison({
 	}
 
 	function toggleCommentsBox() {
-		console.log(comments);
+
 		setShouldShowCommentsBox(!shouldShowCommentsBox);
 		if (!shouldShowCommentsBox) {
 			setTimeout(() => {
@@ -568,7 +566,7 @@ function TestInstanceReview({
 			jobComments[instance_id] && jobComments[instance_id][screenshot.id]
 				? jobComments[instance_id][screenshot.id]
 				: [];
-		console.log(result);
+
 		return (
 			<RenderScreenshotComparison
 				instance={instance}

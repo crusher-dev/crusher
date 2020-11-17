@@ -48,7 +48,7 @@ export default class MyDocument extends Document {
 						color: inherit;
 					}
 					a:hover {
-						    text-decoration: underline !important;
+						text-decoration: underline !important;
 						color: #5b76f7;
 					}
 				`}</style>

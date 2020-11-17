@@ -1,4 +1,4 @@
-import {NAVIGATOR_ACTIONS} from "../../constants/actionTypes";
+import { NAVIGATOR_ACTIONS } from "../../constants/actionTypes";
 import LocalFrameStorage from "../../utils/frameStorage";
 
 const actualCode = `(${(

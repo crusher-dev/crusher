@@ -60,8 +60,15 @@ export function sendPostDataWithForm(url: string, options: any = {}) {
 }
 
 export function getAllAttributes(element: any) {
-  const attributeNamesArr : Array<string> = element.getAttributeNames();
-  return [...attributeNamesArr.map(attributeName => {
-    return {name: attributeName, value: element.getAttribute(attributeName)}
-  }), {name: "innerHTML", value: element.innerHTML}, {name: "innerText", value: element.innerText}];
+  const attributeNamesArr: Array<string> = element.getAttributeNames();
+  return [
+    ...attributeNamesArr.map((attributeName) => {
+      return {
+        name: attributeName,
+        value: element.getAttribute(attributeName),
+      };
+    }),
+    { name: "innerHTML", value: element.innerHTML },
+    { name: "innerText", value: element.innerText },
+  ];
 }

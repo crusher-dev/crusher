@@ -1,1 +1,1 @@
-require('./manager/QueueManager');
+require("./manager/QueueManager");

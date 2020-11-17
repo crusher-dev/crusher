@@ -63,7 +63,8 @@ export default class DBManager {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
 			return queryResults;
 		} catch (e) {
-			throw new InternalServerError('Some internal error occurred');		}
+			throw new InternalServerError('Some internal error occurred');
+		}
 	};
 
 	fetchSingleRow = async (command, valuesToEscape = null) => {

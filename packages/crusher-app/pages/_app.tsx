@@ -14,7 +14,7 @@ import { getThemeFromCookie } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
 import "../src/tailwind.css";
 import { DialogBox } from "@ui/atom/Dialog";
-import {type} from "os";
+import { type } from "os";
 
 const TopProgressBar = dynamic(
 	function () {
@@ -56,19 +56,16 @@ App.getInitialProps = async ({ Component, ctx }: any) => {
 	let headers;
 	const cookies = getCookies(req);
 
-	if (typeof(req) !== "undefined") {
+	if (typeof req !== "undefined") {
 		headers = req.headers;
 		cleanHeaders(headers);
 
-		if(!(
-		cookies.token &&
-		cookies.token.trim().length > 1)){
-			console.log("User is not logged in")
+		if (!(cookies.token && cookies.token.trim().length > 1)) {
+			console.log("User is not logged in");
 		}
 	}
 
-	const isLoggedIn =
-		cookies.isLoggedIn === "true" ;
+	const isLoggedIn = cookies.isLoggedIn === "true";
 	const theme = getThemeFromCookie(ctx);
 
 	if (isLoggedIn) {
@@ -77,7 +74,7 @@ App.getInitialProps = async ({ Component, ctx }: any) => {
 			...serverSideStoreResolvers(ctx, headers),
 		]);
 
-		const status = criticalData[0]
+		const status = criticalData[0];
 
 		if (status === USER_NOT_REGISTERED) {
 			return { theme };

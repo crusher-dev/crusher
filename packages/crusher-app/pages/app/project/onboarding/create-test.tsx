@@ -2,9 +2,20 @@ import { css } from "@emotion/core";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
 import WithSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
-const features = [{message: "Ship Faster", color: "#FF5A8C"}, {message: 'Increase your productivity', color: '#885FFF'}, {message: "Catch UI/Flow Issues", color: '#FB7237'}, {message: "Monitor Product changes", color: "#4E75FF"}, {message: "Test on different devices", color: "#53D6FF"}, {message: "Test from different browsers", color: "#4E75FF"}, {message: "Test without writing code", color: "#69A5FF"}, {message: "Increase Revenue", color: "#4E75FF"}, {message: "Deverease Unhappy Customers", color: "#4E75FF"}, {message: "Test in Development", color: "#4E75FF"} ]
+const features = [
+	{ message: "Ship Faster", color: "#FF5A8C" },
+	{ message: "Increase your productivity", color: "#885FFF" },
+	{ message: "Catch UI/Flow Issues", color: "#FB7237" },
+	{ message: "Monitor Product changes", color: "#4E75FF" },
+	{ message: "Test on different devices", color: "#53D6FF" },
+	{ message: "Test from different browsers", color: "#4E75FF" },
+	{ message: "Test without writing code", color: "#69A5FF" },
+	{ message: "Increase Revenue", color: "#4E75FF" },
+	{ message: "Deverease Unhappy Customers", color: "#4E75FF" },
+	{ message: "Test in Development", color: "#4E75FF" },
+];
 
 function ProjectOnboardingCreateTest(props) {
 	const { userInfo, userStatus } = props;
@@ -20,17 +31,18 @@ function ProjectOnboardingCreateTest(props) {
 		}
 	}
 
-	const changeFeatureMessage = ()=>{
+	const changeFeatureMessage = () => {
 		const interval = setInterval(() => {
-			setFeaturesMessage(featuresMessage + 1 < features.length ? featuresMessage + 1 : 0);
-		},4500);
+			setFeaturesMessage(
+				featuresMessage + 1 < features.length ? featuresMessage + 1 : 0,
+			);
+		}, 4500);
 		return () => {
 			clearInterval(interval);
-		  };
+		};
 	};
 
 	useEffect(changeFeatureMessage, [featuresMessage]);
-
 
 	const firstName = userInfo.name.split(" ")[0];
 	return (
@@ -45,28 +57,35 @@ function ProjectOnboardingCreateTest(props) {
 				}}
 			>
 				<div css={styles.innerCenterContainer}>
-					<iframe  css={styles.videoPlayer} src="https://www.loom.com/embed/5f1392d00274403083d151c0183620cb"
-							frameBorder="0" mozallowfullscreen={true} mozallowfullscreen={true} allowFullScreen={true}></iframe>
+					<iframe
+						css={styles.videoPlayer}
+						src="https://www.loom.com/embed/5f1392d00274403083d151c0183620cb"
+						frameBorder="0"
+						mozallowfullscreen={true}
+						mozallowfullscreen={true}
+						allowFullScreen={true}
+					></iframe>
 					<div css={styles.crusherFeatures}>
-						<span style={{color: features[featuresMessage].color}}>{features[featuresMessage].message}</span> with Crusher
+						<span style={{ color: features[featuresMessage].color }}>
+							{features[featuresMessage].message}
+						</span>{" "}
+						with Crusher
 					</div>
 					<div css={styles.heyText}>
 						Hey {firstName}, Experience power of no code testing
 					</div>
 					<div>
-
-							<div css={styles.buttonContainer}>
-								<div css={styles.createTestButton} onClick={handleDownloadExtensionClick}>
-									<img src={"/svg/onboarding/cloudDownload.svg"} />
-									<span>Create a test</span>
-								</div>
+						<div css={styles.buttonContainer}>
+							<div
+								css={styles.createTestButton}
+								onClick={handleDownloadExtensionClick}
+							>
+								<img src={"/svg/onboarding/cloudDownload.svg"} />
+								<span>Create a test</span>
 							</div>
-
-						<div css={styles.migrateTest}>
-							Already Have testing? Migrate test
 						</div>
 
-
+						<div css={styles.migrateTest}>Already Have testing? Migrate test</div>
 					</div>
 				</div>
 			</div>
@@ -76,17 +95,18 @@ function ProjectOnboardingCreateTest(props) {
 
 const styles = {
 	migrateTest: css`
-		font-size: .9rem;
-		color: #2E2929;
+		font-size: 0.9rem;
+		color: #2e2929;
 		text-decoration: underline;
 		text-align: center;
 	`,
 	videoPlayer: css`
-	width:43.5rem; height:26.25rem; 
-	border-radius: .6rem;
-	margin: 0 auto;
-	margin-top: .9rem;
-	margin-bottom: 3rem;
+		width: 43.5rem;
+		height: 26.25rem;
+		border-radius: 0.6rem;
+		margin: 0 auto;
+		margin-top: 0.9rem;
+		margin-bottom: 3rem;
 	`,
 	heading: css`
 		font-family: Cera Pro;
@@ -117,9 +137,9 @@ const styles = {
 		text-align: center;
 		font-weight: 600;
 		color: #2b2b39;
-		margin-bottom: .75rem;
+		margin-bottom: 0.75rem;
 		line-height: 1.25rem;
-		span{
+		span {
 			font-weight: 800;
 			transition: color 2s ease-out;
 		}
@@ -128,7 +148,6 @@ const styles = {
 		display: flex;
 		justify-content: center;
 		margin-bottom: 2.35rem;
-	
 	`,
 	createTestButton: css`
 		background: #5b76f7;
@@ -141,8 +160,8 @@ const styles = {
 		font-weight: bold;
 		font-size: 0.9rem;
 		color: #ffffff;
-		&:hover{
-			background: #4361ED;
+		&:hover {
+			background: #4361ed;
 		}
 		span {
 			margin-left: 2.1rem;
@@ -151,7 +170,7 @@ const styles = {
 			align-items: center;
 			font-size: 1rem;
 		}
-			min-width: 12rem;
+		min-width: 12rem;
 		cursor: pointer;
 	`,
 	importButton: css`

@@ -568,11 +568,11 @@ textarea {
 .paper-snackbar {
   background-color: #ec2e6a !important;
 }
-#overlay_cover{
+#overlay_cover {
   width: 100%;
   cursor: default;
   height: 100%;
 }
-.pointerEventsNone{
+.pointerEventsNone {
   pointer-events: none;
 }

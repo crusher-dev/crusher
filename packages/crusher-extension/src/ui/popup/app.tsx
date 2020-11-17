@@ -1,7 +1,7 @@
 import { Component } from "react";
 import React from "react";
 import { loadScript } from "../../utils/helpers";
-import devices from "../../../../crusher-shared/constants/devices"
+import devices from "../../../../crusher-shared/constants/devices";
 
 class App extends Component<any, any> {
   constructor(props: any) {
@@ -54,7 +54,7 @@ class App extends Component<any, any> {
       const { selectedDevice } = this.state;
       const iframeURL = new URL(tab.url);
       const crusherAgent = devices.find(
-        (device  ) => device.id === selectedDevice
+        (device) => device.id === selectedDevice
       );
       iframeURL.searchParams.set(
         "__crusherAgent__",
@@ -153,7 +153,7 @@ class App extends Component<any, any> {
   }
 }
 
-const styles : { [key: string]: React.CSSProperties } = {
+const styles: { [key: string]: React.CSSProperties } = {
   container: {
     background: "#141427",
     color: "#FFFFFF",

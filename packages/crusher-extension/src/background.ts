@@ -1,6 +1,9 @@
 import tabStorage from "./utils/tabStorage";
 import FrameStorage from "./utils/frameStorage";
-import { getQueryStringParams, isOfCrusherExtension } from "../../crusher-shared/utils/url";
+import {
+  getQueryStringParams,
+  isOfCrusherExtension,
+} from "../../crusher-shared/utils/url";
 
 import userAgents from "../../crusher-shared/constants/userAgents";
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
@@ -9,7 +12,7 @@ import WebRequestDetails = chrome.webRequest.WebRequestDetails;
 import WebRequestFullDetails = chrome.webRequest.WebRequestFullDetails;
 import WebResponseHeadersDetails = chrome.webRequest.WebResponseHeadersDetails;
 import HttpHeader = chrome.webRequest.HttpHeader;
-import {UserAgent} from "../../crusher-shared/types/userAgent";
+import { UserAgent } from "../../crusher-shared/types/userAgent";
 
 class ChromeEventsListener {
   state: any;
@@ -36,11 +39,15 @@ class ChromeEventsListener {
     if (tab.url && isOfCrusherExtension(tab.url)) {
       const iframeURL = getQueryStringParams("url", tab.url) as string;
       const crusherAgent = getQueryStringParams("__crusherAgent__", iframeURL);
-      const userAgent : UserAgent | undefined = userAgents.find(
+      const userAgent: UserAgent | undefined = userAgents.find(
         (agent) => agent.name === (crusherAgent || userAgents[6].value)
       );
 
-      tabStorage.set(tabId, tab, userAgent ? userAgent.value : userAgents[0].value);
+      tabStorage.set(
+        tabId,
+        tab,
+        userAgent ? userAgent.value : userAgents[0].value
+      );
     } else {
       tabStorage.remove(tabId);
     }
@@ -74,7 +81,7 @@ class ChromeEventsListener {
     const areActionsAllowed = this.isAllowedToPerformAction(
       tabStorage.get(details.tabId)
     );
-    const headers : Array<HttpHeader> | undefined = details.responseHeaders;
+    const headers: Array<HttpHeader> | undefined = details.responseHeaders;
 
     if (!headers || !areActionsAllowed || details.parentFrameId !== 0) {
       return { responseHeaders: headers };

@@ -16,10 +16,7 @@ module.exports = {
   externals: ["fs", "request", "yamlparser"],
   entry: {
     background: [customPath, path.resolve(__dirname, "../src/background.ts")],
-    popup: [
-      customPath,
-      path.resolve(__dirname, "../src/ui/popup/index.tsx"),
-    ],
+    popup: [customPath, path.resolve(__dirname, "../src/ui/popup/index.tsx")],
     record_test: [
       customPath,
       path.resolve(__dirname, "../src/ui/testRecorder/index.tsx"),

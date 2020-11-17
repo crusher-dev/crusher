@@ -96,7 +96,6 @@ function SettingContent(props) {
 					  })
 					: [],
 			);
-			console.log("Got hosts", allHostsInProject);
 		});
 	}, []);
 

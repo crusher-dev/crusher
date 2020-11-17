@@ -93,7 +93,6 @@ function SettingContent(props) {
 					  })
 					: [],
 			);
-			console.log("Got hosts", allHostsInProject);
 		});
 	}, []);
 
@@ -122,7 +121,6 @@ function SettingContent(props) {
 	}
 
 	function onChangeBrowser(newBrowser) {
-		console.log(newBrowser);
 		setSelectedBrowser(newBrowser);
 	}
 

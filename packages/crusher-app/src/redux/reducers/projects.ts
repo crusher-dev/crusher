@@ -14,7 +14,6 @@ const projects = (state = initialState, action) => {
 		case HYDRATE:
 			return { ...state, ...action.payload.projects };
 		case SAVE_PROJECTS:
-			console.log(action.allProjects);
 			return {
 				...state,
 				allProjects: action.allProjects,

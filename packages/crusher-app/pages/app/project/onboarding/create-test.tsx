@@ -3,9 +3,10 @@ import { WithSidebarLayout } from "@hoc/withSidebarLayout";
 import WithSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
 import { useState, useEffect } from "react";
+import {CreateTest} from "@ui/components/app/CreateTestButton";
 
 const features = [
-	{ message: "Ship Faster", color: "#FF5A8C" },
+	{ message: "😃 Ship Faster", color: "#FF5A8C" },
 	{ message: "Increase your productivity", color: "#885FFF" },
 	{ message: "Catch UI/Flow Issues", color: "#FB7237" },
 	{ message: "Monitor Product changes", color: "#4E75FF" },
@@ -13,23 +14,13 @@ const features = [
 	{ message: "Test from different browsers", color: "#4E75FF" },
 	{ message: "Test without writing code", color: "#69A5FF" },
 	{ message: "Increase Revenue", color: "#4E75FF" },
-	{ message: "Deverease Unhappy Customers", color: "#4E75FF" },
+	{ message: "Decrease Unhappy Customers", color: "#4E75FF" },
 	{ message: "Test in Development", color: "#4E75FF" },
 ];
 
 function ProjectOnboardingCreateTest(props) {
 	const { userInfo, userStatus } = props;
 	const [featuresMessage, setFeaturesMessage] = useState(0);
-
-	function handleDownloadExtensionClick() {
-		const _newWindow = window.open(
-			"https://chrome.google.com/webstore/detail/gfiagiidgjjnmklhbalcjbmdjbpphdln?authuser=0&hl=en-GB",
-			"Crusher Chrome Extension",
-		);
-		if (window.focus) {
-			_newWindow.focus();
-		}
-	}
 
 	const changeFeatureMessage = () => {
 		const interval = setInterval(() => {
@@ -76,13 +67,7 @@ function ProjectOnboardingCreateTest(props) {
 					</div>
 					<div>
 						<div css={styles.buttonContainer}>
-							<div
-								css={styles.createTestButton}
-								onClick={handleDownloadExtensionClick}
-							>
-								<img src={"/svg/onboarding/cloudDownload.svg"} />
-								<span>Create a test</span>
-							</div>
+							<CreateTest label="Create first test"/>
 						</div>
 
 						<div css={styles.migrateTest}>Already Have testing? Migrate test</div>
@@ -160,6 +145,9 @@ const styles = {
 		font-weight: bold;
 		font-size: 0.9rem;
 		color: #ffffff;
+		a:hover{
+			text-decoration: none !important;
+		}
 		&:hover {
 			background: #4361ed;
 		}

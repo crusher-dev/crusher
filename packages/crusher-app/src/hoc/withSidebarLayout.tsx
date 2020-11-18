@@ -22,6 +22,7 @@ import NewFeatures from "../../public/svg/sidebarSettings/newFeatures.svg";
 import Help from "../../public/svg/sidebarSettings/help.svg";
 import Logout from "../../public/svg/sidebarSettings/logout.svg";
 import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
+import {CreateTest} from "@ui/components/app/CreateTestButton";
 
 interface NavItem {
 	name: string;
@@ -177,19 +178,6 @@ function ProjectSelector(props: {
 	);
 }
 
-function AddTestButton() {
-	return (
-		<Link href={"/app/project/onboarding/create-test"}>
-			<a
-				href={"/app/project/onboarding/create-test"}
-				css={styles.createTestContainer}
-			>
-				<img src={"/svg/add.svg"} />
-				<span css={styles.createTestLabel}>Create a test</span>
-			</a>
-		</Link>
-	);
-}
 
 export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 	const WrappedComponent = function (props) {
@@ -250,7 +238,14 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 								selectedProject={selectedProject}
 								onChange={onProjectChange}
 							/>
-							<AddTestButton />
+							<Link href={"/app/project/onboarding/create-test"}>
+								<a
+									href={"/app/project/onboarding/create-test"}
+									css={styles.createTest}
+								>
+									<CreateTest/>
+								</a>
+							</Link>
 						</div>
 						<div css={styles.innerContentContainer}>
 							<Component {...props} />
@@ -273,6 +268,12 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 }
 
 const styles = {
+	createTest:css`
+	    margin-left: auto;
+	    :hover{
+	    	text-decoration: none !important;
+	    }
+	`,
 	inviteMembers: css`
 		cursor: pointer;
 		background: #111313;
@@ -446,24 +447,12 @@ const styles = {
 	header: css`
 		display: flex;
 		align-items: center;
-		padding: 1rem 4.25rem;
+		padding: 1rem 3rem;
 	`,
 	projectDropdownContainer: css`
 		margin-left: 4.62rem;
 		align-self: center;
 		font-size: 1rem;
-	`,
-	createTestContainer: css`
-		margin-left: auto;
-		align-self: center;
-		display: flex;
-		cursor: pointer;
-	`,
-	createTestLabel: css`
-		margin-left: 1.5rem;
-		font-weight: 500;
-		font-size: 1.06rem;
-		align-self: center;
 	`,
 	innerContentContainer: css`
 		flex: 1;

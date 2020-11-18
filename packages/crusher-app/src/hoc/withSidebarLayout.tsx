@@ -14,6 +14,14 @@ import React, { CSSProperties, useEffect } from "react";
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
+import DasgboardSvg from "../../public/svg/sidebarSettings/dashboard.svg";
+import BuildsSVG from "../../public/svg/sidebarSettings/builds.svg";
+import TestsSVG from "../../public/svg/sidebarSettings/testsList.svg";
+import ProjectSettings from "../../public/svg/sidebarSettings/projectSettings.svg";
+import NewFeatures from "../../public/svg/sidebarSettings/newFeatures.svg";
+import Help from "../../public/svg/sidebarSettings/help.svg";
+import Logout from "../../public/svg/sidebarSettings/logout.svg";
+import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 
 interface NavItem {
 	name: string;
@@ -22,28 +30,28 @@ interface NavItem {
 }
 
 interface NavListProps {
-	items: Array<NavItem>;
+	navItems: Array<NavItem>;
 	style?: CSSProperties;
 }
 
 function NavList(props: NavListProps) {
-	const { items, style } = props;
-	const out = items.map((item: NavItem) => {
-		return (
-			<li>
-				<Link href={item.link}>
-					<a href={item.link}>
-						<img src={item.icon} />
-						<span>{item.name}</span>
-					</a>
-				</Link>
-			</li>
-		);
-	});
+	const { navItems, style } = props;
 
 	return (
 		<ul style={style} css={styles.primaryMenu}>
-			{out}
+			{navItems.map((item: NavItem, i) => {
+				const SVGImage = item.icon;
+				return (
+					<li className={i === 0 && "active"}>
+						<Link href={item.link}>
+							<a href={item.link}>
+								<SVGImage />
+								<span>{item.name}</span>
+							</a>
+						</Link>
+					</li>
+				);
+			})}
 		</ul>
 	);
 }
@@ -55,22 +63,22 @@ function LeftSection(props) {
 		{
 			name: "Dashboard",
 			link: "/app/project/dashboard",
-			icon: "/svg/sidebarSettings/dashboard.svg",
+			icon: DasgboardSvg,
 		},
 		{
 			name: "Builds",
 			link: "/app/project/builds",
-			icon: "/svg/sidebarSettings/builds.svg",
+			icon: BuildsSVG,
 		},
 		{
 			name: "Tests",
 			link: "/app/project/tests",
-			icon: "/svg/sidebarSettings/testsList.svg",
+			icon: TestsSVG,
 		},
 		{
 			name: "Project Settings",
 			link: "/app/project/settings/hosts",
-			icon: "/svg/sidebarSettings/projectSettings.svg",
+			icon: ProjectSettings,
 		},
 	];
 
@@ -78,17 +86,17 @@ function LeftSection(props) {
 		{
 			name: "New features",
 			link: "/app/new-features",
-			icon: "/svg/sidebarSettings/newFeatures.svg",
+			icon: NewFeatures,
 		},
 		{
 			name: "Help & Support",
 			link: "/app/help-support",
-			icon: "/svg/sidebarSettings/help.svg",
+			icon: Help,
 		},
 		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),
-			icon: "/svg/sidebarSettings/logout.svg",
+			icon: Logout,
 		},
 	];
 
@@ -123,13 +131,13 @@ function LeftSection(props) {
 						</span>
 					</div>
 					<div css={styles.sectionHeaderSetting}>
-						<img src={"/svg/settings.svg"} />
+						<DropdownSVG/>
 					</div>
 				</div>
-				<NavList items={mainNavLinks} />
+				<NavList navItems={mainNavLinks} />
 			</div>
 			<div css={styles.settingsBottomFixedContainer}>
-				<NavList items={bottomNavLinks} />
+				<NavList navItems={bottomNavLinks} />
 			</div>
 			<div css={styles.inviteMembers}>
 				<img src="/svg/sidebarSettings/team_member.svg" />
@@ -332,17 +340,37 @@ const styles = {
 		cursor: pointer;
 	`,
 	primaryMenu: css`
-		margin-top: 3.3rem;
-		list-style: none;
-		padding: 0;
-		padding: 0 1.625rem;
 		@media (max-width: 1120px) {
 			margin-top: 5rem;
 		}
+		margin-top: 3.3rem;
+		list-style: none;
+		padding: 0;
+
+		.active {
+			::before {
+				position: absolute;
+				top: 0;
+				left: 0;
+				content: url(/svg/sidebarSettings/tab_selected.svg);
+			}
+			color: #506cf5;
+			svg,
+			path {
+				fill: #506cf5;
+			}
+		}
+
 		li {
 			&:not(:last-child) {
 				margin-bottom: 1.9rem;
 			}
+			a {
+				align-items: center;
+				display: flex;
+			}
+			padding: 0 1.625rem;
+			position: relative;
 
 			img {
 				height: 1.25rem;
@@ -350,6 +378,8 @@ const styles = {
 			color: #636363;
 			font-weight: 500;
 			font-size: 1.33rem;
+			padding-top: 0.36rem;
+			padding-bottom: 0.36rem;
 			display: flex;
 			align-items: center;
 			cursor: pointer;

@@ -3,7 +3,7 @@ import { WithSidebarLayout } from "@hoc/withSidebarLayout";
 import WithSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
 import { useState, useEffect } from "react";
-import {CreateTest} from "@ui/components/app/CreateTestButton";
+import { CreateTest } from "@ui/components/app/CreateTestButton";
 
 const features = [
 	{ message: "😃 Ship Faster", color: "#FF5A8C" },
@@ -67,7 +67,7 @@ function ProjectOnboardingCreateTest(props) {
 					</div>
 					<div>
 						<div css={styles.buttonContainer}>
-							<CreateTest label="Create first test"/>
+							<CreateTest label="Create first test" />
 						</div>
 
 						<div css={styles.migrateTest}>Already Have testing? Migrate test</div>
@@ -145,7 +145,7 @@ const styles = {
 		font-weight: bold;
 		font-size: 0.9rem;
 		color: #ffffff;
-		a:hover{
+		a:hover {
 			text-decoration: none !important;
 		}
 		&:hover {

@@ -126,7 +126,6 @@ const styles = {
 		line-height: 1.25rem;
 		span {
 			font-weight: 800;
-
 		}
 	`,
 	buttonContainer: css`

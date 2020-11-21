@@ -1,37 +1,37 @@
-import { isOfCrusherExtension } from "../../../crusher-shared/utils/url";
+import { isOfCrusherExtension } from '../../../crusher-shared/utils/url';
 import Tab = chrome.tabs.Tab;
 
 export default {
-  tabs: {},
+	tabs: {},
 
-  set(tabId: number, details: Tab, crusherAgent: string) {
-    this.tabs[tabId] = {
-      ...details,
-      crusherAgent,
-    };
-  },
+	set(tabId: number, details: Tab, crusherAgent: string) {
+		this.tabs[tabId] = {
+			...details,
+			crusherAgent,
+		};
+	},
 
-  all() {
-    return this.tabs;
-  },
+	all() {
+		return this.tabs;
+	},
 
-  get(tabId: number) {
-    return this.tabs[tabId];
-  },
+	get(tabId: number) {
+		return this.tabs[tabId];
+	},
 
-  has(tabId: number) {
-    return this.tabs.hasOwnProperty(tabId) && this.tabs[tabId] !== null;
-  },
+	has(tabId: number) {
+		return this.tabs.hasOwnProperty(tabId) && this.tabs[tabId] !== null;
+	},
 
-  isExtension(tabId: number) {
-    const tab = this.get(tabId);
-    if (!tab) {
-      return false;
-    }
-    return isOfCrusherExtension(this.get(tabId).url);
-  },
+	isExtension(tabId: number) {
+		const tab = this.get(tabId);
+		if (!tab) {
+			return false;
+		}
+		return isOfCrusherExtension(this.get(tabId).url);
+	},
 
-  remove(tabId: number) {
-    this.tabs[tabId] = null;
-  },
+	remove(tabId: number) {
+		this.tabs[tabId] = null;
+	},
 };

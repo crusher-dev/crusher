@@ -109,7 +109,7 @@ function LeftSection(props: any) {
 		setShowDropDwon(!showDropDown);
 	};
 
-	const userFistCharacter = userInfo.name.slice(0,1)
+	const userFistCharacter = userInfo.name.slice(0, 1);
 
 	return (
 		<div css={styles.leftSection}>

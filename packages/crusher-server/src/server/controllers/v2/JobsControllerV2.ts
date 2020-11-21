@@ -28,10 +28,7 @@ export class JobsControllerV2 {
 
 		const commentsMap = await this.commentsServiceV2.getCommentsBetweenJobs(jobRecord.id, referenceJob.id);
 		const testInstancesWithMediaMap = await this.testInstanceV2Service.getTestInstancesMapWithMedia(jobRecord.id);
-		const testInstanceResultsMap = await this.testInstanceResultsServiceV2.getResultsForJob(
-			jobRecord.id,
-			referenceJob.id,
-		);
+		const testInstanceResultsMap = await this.testInstanceResultsServiceV2.getResultsForJob(jobRecord.id, referenceJob.id);
 
 		return {
 			job: jobRecord,

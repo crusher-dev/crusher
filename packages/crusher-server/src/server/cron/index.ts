@@ -39,9 +39,7 @@ export function init() {
 					const testsInProjectArr = await testService.getAllTestsInProject(projectMonitoringSettings.project_id);
 
 					const testIds = testsInProjectArr.map((test) => test.id);
-					const host = projectMonitoringSettings.target_host
-						? await hostsService.getHost(projectMonitoringSettings.target_host)
-						: null;
+					const host = projectMonitoringSettings.target_host ? await hostsService.getHost(projectMonitoringSettings.target_host) : null;
 					let job = await jobService.createOrUpdateJob(null, null, {
 						projectId: projectMonitoringSettings.project_id,
 						host: host ? host.url : null,

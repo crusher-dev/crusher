@@ -40,11 +40,7 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 	let instanceId = 0;
 	const { host } = job ? job : ({} as any);
 
-	const generatedCode = getGeneratedCode(
-		test,
-		testRequest.job ? testRequest.job.platform : Platform.CHROME,
-		testRequest.test.testType,
-	);
+	const generatedCode = getGeneratedCode(test, testRequest.job ? testRequest.job.platform : Platform.CHROME, testRequest.test.testType);
 
 	const finalCode = generatedCode;
 

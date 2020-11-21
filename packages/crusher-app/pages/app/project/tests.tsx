@@ -121,7 +121,7 @@ function RenderTestCard(props) {
 
 function ProjectTestsList(props) {
 	const { tests } = props;
-	const [projectTests, setProjectTests] = useState( tests || []);
+	const [projectTests, setProjectTests] = useState(tests || []);
 	const [isLoading, setIsLoading] = useState(false);
 	const projectsList = useSelector(getProjectsList);
 	const selectedProjectId = useSelector(getSelectedProject);
@@ -149,32 +149,34 @@ function ProjectTestsList(props) {
 			<div css={styles.heading}>
 				{selectedProject ? selectedProject.name : "Tests List"}
 			</div>
-			{!isLoading && projectTests.length ? (
+			{!isLoading && projectTests.length > 0 ? (
 				<RenderTestCard tests={projectTests} />
-			) : <ShowEmptyPlaceHolder/>}
+			) : (
+				<ShowEmptyPlaceHolder />
+			)}
 		</div>
 	);
 }
 
-
 function ShowEmptyPlaceHolder() {
-	return <div css={styles.activitiesPlaceholderContainer}>
-		<Player
-			autoplay={true}
-			src={"https://assets2.lottiefiles.com/packages/lf20_S6vWEd.json"}
-			speed={1}
-			background={"transparent"}
-			style={{width: 220, height: 220, margin: "0 auto"}}
-			loop={true}
-		/>
-		<div css={styles.activitiesPlaceholderHeading}>Alas!</div>
-		<div css={styles.activitiesPlaceholderMessageContainer}>
-			<div>You don’t have any tests to show.</div>
-			<div css={styles.blueItalicText}>Need any help</div>
+	return (
+		<div css={styles.activitiesPlaceholderContainer}>
+			<Player
+				autoplay={true}
+				src={"https://assets2.lottiefiles.com/packages/lf20_S6vWEd.json"}
+				speed={1}
+				background={"transparent"}
+				style={{ width: 220, height: 220, margin: "0 auto" }}
+				loop={true}
+			/>
+			<div css={styles.activitiesPlaceholderHeading}>Alas!</div>
+			<div css={styles.activitiesPlaceholderMessageContainer}>
+				<div>You don’t have any tests to show.</div>
+				<div css={styles.blueItalicText}>Need any help</div>
+			</div>
 		</div>
-	</div>;
+	);
 }
-
 
 const styles = {
 	container: css`

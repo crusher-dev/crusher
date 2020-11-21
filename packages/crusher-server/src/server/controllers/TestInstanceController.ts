@@ -1,13 +1,4 @@
-import {
-	JsonController,
-	Get,
-	Authorized,
-	CurrentUser,
-	Body,
-	Post,
-	UnauthorizedError,
-	Param,
-} from 'routing-controllers';
+import { JsonController, Get, Authorized, CurrentUser, Body, Post, UnauthorizedError, Param } from 'routing-controllers';
 import { Service, Container, Inject } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';

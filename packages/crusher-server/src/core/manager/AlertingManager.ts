@@ -11,14 +11,7 @@ const JOB_STATUS_ICONS = {
 export default class AlertingManager {
 	constructor() {}
 
-	public static sendSlackMessage(
-		webhook_url: string,
-		jobRecord: JobBuild,
-		user: User,
-		countRecords: any,
-		failedTestsList: any,
-		status,
-	) {
+	public static sendSlackMessage(webhook_url: string, jobRecord: JobBuild, user: User, countRecords: any, failedTestsList: any, status) {
 		function renderFailedTestIfThere() {
 			const out = failedTestsList.map((test) => {
 				return {
@@ -93,11 +86,9 @@ export default class AlertingManager {
 						type: 'section',
 						text: {
 							type: 'mrkdwn',
-							text: `*<${resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`)}| Build ID : ${
-								jobRecord.id
-							}>*\n Branch - ${jobRecord.branch_name}\n Code run on Travis by ${user.first_name}\n ${new Date(
-								jobRecord.created_at,
-							).toTimeString()}`,
+							text: `*<${resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`)}| Build ID : ${jobRecord.id}>*\n Branch - ${
+								jobRecord.branch_name
+							}\n Code run on Travis by ${user.first_name}\n ${new Date(jobRecord.created_at).toTimeString()}`,
 						},
 						accessory: {
 							type: 'image',

@@ -13,12 +13,7 @@ const storage: Storage = new Storage({
 
 const testImagesBucket = storage.bucket(TESTS_BUCKET_NAME);
 
-export async function uploadFileToBucket(
-	bucket: Bucket,
-	filePath: string,
-	fileName: string,
-	destination: string = '/',
-) {
+export async function uploadFileToBucket(bucket: Bucket, filePath: string, fileName: string, destination: string = '/') {
 	await bucket.upload(filePath, {
 		destination: destination + '/' + fileName,
 		gzip: true,

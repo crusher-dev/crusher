@@ -55,12 +55,7 @@ export default class AlertingService {
 		});
 	}
 
-	async addAlertIntegrationToProject(
-		integration_id: number,
-		project_id: number,
-		user_id: number,
-		config: SlackOAuthResponse,
-	) {
+	async addAlertIntegrationToProject(integration_id: number, project_id: number, user_id: number, config: SlackOAuthResponse) {
 		return this.dbManager.insertData('INSERT INTO integration_alerting SET ?', {
 			project_id,
 			integration_id,

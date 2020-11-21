@@ -1,18 +1,18 @@
 {
-  "name": "code-generator",
-  "version": "1.0.0",
-  "description": "A package responsible for generating the playwright code for the events recorded from chrome-extension",
-  "author": "Utkarsh Dixit",
-  "license": "MIT",
-  "scripts": {
-    "build": "tsc src/index.ts --outDir dist"
-  },
-  "devDependencies": {
-    "typescript": "^4.0.3"
-  },
-  "dependencies": {
-    "crusher-shared": "1.0.0",
-    "nodemon": "^2.0.4"
-  },
-  "private": true
+	"name": "code-generator",
+	"version": "1.0.0",
+	"description": "A package responsible for generating the playwright code for the events recorded from chrome-extension",
+	"author": "Utkarsh Dixit",
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc src/index.ts --outDir dist"
+	},
+	"devDependencies": {
+		"typescript": "^4.0.3"
+	},
+	"dependencies": {
+		"crusher-shared": "1.0.0",
+		"nodemon": "^2.0.4"
+	},
+	"private": true
 }

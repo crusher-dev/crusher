@@ -157,15 +157,7 @@ export default class TestsEventsWorker {
 	}
 
 	static async onTestProgress(reddisClient, bullJob) {
-		const {
-			repoName: fullRepoName,
-			githubCheckRunId,
-			githubInstallationId,
-			status,
-			testInstanceId,
-			jobId,
-			testType,
-		} = bullJob.data;
+		const { repoName: fullRepoName, githubCheckRunId, githubInstallationId, status, testInstanceId, jobId, testType } = bullJob.data;
 
 		const reddisLock = new ReddisLock([reddisClient], {
 			driftFactor: 0.01,

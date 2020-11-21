@@ -1,16 +1,4 @@
-import {
-	Authorized,
-	Body,
-	ContentType,
-	Controller,
-	CurrentUser,
-	Get,
-	Param,
-	Post,
-	Req,
-	Res,
-	UnauthorizedError,
-} from 'routing-controllers';
+import { Authorized, Body, ContentType, Controller, CurrentUser, Get, Param, Post, Req, Res, UnauthorizedError } from 'routing-controllers';
 import { Container, Inject, Service } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';

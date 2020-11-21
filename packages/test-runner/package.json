@@ -1,5 +1,4 @@
 {
-  "private": "true",
   "name": "test-runner",
   "version": "1.0.0",
   "description": "[Dockerfile.bionic](Dockerfile.bionic) is a playwright-ready image of playwright. This image includes all the dependencies needed to run browsers in a Docker container.",

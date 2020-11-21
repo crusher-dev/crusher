@@ -10,7 +10,7 @@ import {
 import { saveSelectedProjectInRedux } from "@redux/actions/action";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
-import React, { CSSProperties, useEffect } from "react";
+import React, {CSSProperties, useEffect, useState} from "react";
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
@@ -23,6 +23,7 @@ import Help from "../../public/svg/sidebarSettings/help.svg";
 import Logout from "../../public/svg/sidebarSettings/logout.svg";
 import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 import {CreateTest} from "@ui/components/app/CreateTestButton";
+import {useRouter} from "next/router";
 
 interface NavItem {
 	name: string;
@@ -37,13 +38,13 @@ interface NavListProps {
 
 function NavList(props: NavListProps) {
 	const { navItems, style } = props;
-
+	const router = useRouter();
 	return (
 		<ul style={style} css={styles.primaryMenu}>
 			{navItems.map((item: NavItem, i) => {
 				const SVGImage = item.icon;
 				return (
-					<li className={i === 0 && "active"}>
+					<li className={(router as any).pathname === item.link ?  "active" : null}>
 						<Link href={item.link}>
 							<a href={item.link}>
 								<SVGImage />
@@ -58,8 +59,10 @@ function NavList(props: NavListProps) {
 }
 
 // Todo- Breakdown in diff component.
-function LeftSection(props) {
+function LeftSection(props: any) {
 	const { userInfo, selectedProject } = props;
+	const [showDropDown, setShowDropDwon] = useState(false);
+
 	const mainNavLinks = [
 		{
 			name: "Dashboard",
@@ -101,6 +104,11 @@ function LeftSection(props) {
 		},
 	];
 
+	const toggleSettingsDropDown = () => {
+		setShowDropDwon(!showDropDown);
+
+	}
+
 	return (
 		<div css={styles.leftSection}>
 			<div css={styles.sectionContainer}>
@@ -132,8 +140,23 @@ function LeftSection(props) {
 						</span>
 					</div>
 					<div css={styles.sectionHeaderSetting}>
-						<DropdownSVG/>
+						<DropdownSVG onClick={toggleSettingsDropDown}/>
 					</div>
+					{showDropDown && (
+						<ul css={styles.settingsDropDown}>
+							<li style={{display: "flex", alignItems: "center"}}>
+								<img src={"/svg/sidebarSettings/addDropdown.svg"} style={{marginRight: "1rem"}}/><span>Add team member</span>
+							</li>
+							<li style={{display: "flex", alignItems: "center"}}>
+								<img src={"/svg/sidebarSettings/addDropdown.svg"} style={{marginRight: "1rem"}}/><span>Add Project</span>
+							</li>
+							<li>Manage Billing/Plan</li>
+							<li>Manage Payment</li>
+							<li>Get Support</li>
+							<li>Logout</li>
+						</ul>
+					)}
+
 				</div>
 				<NavList navItems={mainNavLinks} />
 			</div>
@@ -314,6 +337,7 @@ const styles = {
 		padding: 0 1.5rem;
 		font-weight: 500;
 		display: flex;
+		position: relative;
 	`,
 	teamIcon: css`
 		display: flex;
@@ -462,4 +486,30 @@ const styles = {
 		background: #fff;
 		border-color: #e2e2e2;
 	`,
+	settingsDropDown: css`
+		position: absolute;
+		background: #fff;
+		border: 1px solid #CDD0DB;
+		color: black;
+		right: 1.25rem;
+		top: 3.5rem;
+		padding: 0.6rem 0.70rem;
+		box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+		border-radisu: 0.25rem;
+		li {
+			color: #636363;
+			margin: 0.85rem 0rem;
+			min-width: 12.5rem;
+			font-family: Gilroy;
+			font-weight: 600;
+			font-size: 0.86rem;
+			&:first-child{
+				margin: 0.25rem 0rem;
+			}
+			&:last-child{
+				margin: 0.25rem 0rem;
+			}
+		}
+		z-index: 99;
+	`
 };

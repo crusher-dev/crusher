@@ -142,7 +142,7 @@ function LeftSection(props: any) {
 					<div css={styles.sectionHeaderSetting}>
 						<DropdownSVG onClick={toggleSettingsDropDown} />
 					</div>
-					{showDropDown && <SidebarTeamDropdown />}
+					{showDropDown && <SidebarTeamDropdown onOutsideClick={toggleSettingsDropDown} />}
 				</div>
 				<NavList navItems={mainNavLinks} />
 			</div>

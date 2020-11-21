@@ -1,9 +1,13 @@
 import React from "react";
 import { css } from "@emotion/core";
-
+// @ts-ignore
+import OutsideClickHandler from 'react-outside-click-handler';
 import AddDropdownSVG from "../../../../public/svg/sidebarSettings/addDropdown.svg";
 
-export const SidebarTeamDropdown = ({}) => (
+export const SidebarTeamDropdown = ({onOutsideClick}) => (
+	<OutsideClickHandler
+		onOutsideClick={onOutsideClick}
+	>
 	<ul css={settingsDropdownStyle}>
 		<li style={{ display: "flex", alignItems: "center" }}>
 			<AddDropdownSVG style={{ marginRight: "1rem" }} />
@@ -18,6 +22,7 @@ export const SidebarTeamDropdown = ({}) => (
 		<li>Get Support</li>
 		<li>Logout</li>
 	</ul>
+	</OutsideClickHandler>
 );
 
 const settingsDropdownStyle = css`

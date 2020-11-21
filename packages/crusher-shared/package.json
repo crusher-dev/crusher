@@ -9,7 +9,8 @@
 		"typescript": "^4.0.5"
 	},
 	"scripts": {
-		"build": "tsc . --outDir ../../dist"
+		"build": "tsc . --outDir ../../dist",
+		"lint": "prettier --write ."
 	},
 	"dependencies": {
 		"url-parse": "^1.4.7"

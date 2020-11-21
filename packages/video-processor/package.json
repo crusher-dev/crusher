@@ -51,7 +51,8 @@
 	},
 	"scripts": {
 		"start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos tsnd  --poll --interval 200 --respawn src/app.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*"
 	},
 	"author": ""
 }

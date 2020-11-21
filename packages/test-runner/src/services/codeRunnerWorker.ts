@@ -23,7 +23,7 @@ const videoProcessingQueue = new Queue('video-processing-queue', {
 	connection: REDDIS as any,
 });
 
-module.exports = async (bullJob) => {
+module.exports = async bullJob => {
 	const { job, test, instanceId } = bullJob.data as RunRequest;
 	const { id, prId, branchName, repoName, commitId, projectId, trigger, status, host, githubInstallationId, platform, githubCheckRunId } = job
 		? job

@@ -1,17 +1,12 @@
 // @ts-ignore
 import('playwright');
-import md5 from "md5";
-import {saveVideo as saveVideoPlaywright} from "playwright-video";
-import {ElementHandle} from "playwright/lib/client/elementHandle";
-
+import md5 from 'md5';
+import { saveVideo as saveVideoPlaywright } from 'playwright-video';
+import { ElementHandle } from 'playwright/lib/client/elementHandle';
 
 import { Page } from 'playwright/lib/client/page';
 import { JobPlatform } from '../interfaces/JobPlatform';
 import { TestLogsService } from '../services/mongo/testLogs';
-
-
-
-
 
 let state: any = { platform: JobPlatform.CHROME, isRecordingVideo: false };
 
@@ -30,7 +25,7 @@ Page.prototype._goto = Page.prototype.goto;
 Page.prototype._hover = Page.prototype.hover;
 ElementHandle.prototype.___screenshot = ElementHandle.prototype.screenshot;
 
-export const saveVideo = function (page: Page, savePath: string, options?: any) {
+export const saveVideo = function(page: Page, savePath: string, options?: any) {
 	console.log('Starting recording video for draft');
 	return new Promise(async (resolve, reject) => {
 		const pageVideoCapture = await saveVideoPlaywright(page, `/tmp/video/${state.instanceId}/${state.platform}/${state.testInfo.id}.mp4`, options);
@@ -39,7 +34,7 @@ export const saveVideo = function (page: Page, savePath: string, options?: any) 
 	});
 };
 
-Page.prototype.goto = async function (url: string, options?: any) {
+Page.prototype.goto = async function(url: string, options?: any) {
 	const testLogsService = new TestLogsService();
 	testLogsService.init(state.testInfo.id, state.instanceId, state.testInfo.testType, state.jobInfo ? state.jobInfo.id : -1);
 	// await testLogsService.notify(TEST_LOGS_SERVICE_TAGS.NAVIGATE_PAGE, `Starting navigation to ${url}`);
@@ -48,7 +43,7 @@ Page.prototype.goto = async function (url: string, options?: any) {
 	return gotoOut;
 };
 
-Page.prototype.screenshot = async function (options?: any) {
+Page.prototype.screenshot = async function(options?: any) {
 	const { path } = options;
 	let imageName = path ? path.trim() : '';
 	imageName = md5(imageName) + '.png';
@@ -66,7 +61,7 @@ Page.prototype.screenshot = async function (options?: any) {
 	return screenshotOut;
 };
 
-ElementHandle.prototype.screenshot = async function (options?: any) {
+ElementHandle.prototype.screenshot = async function(options?: any) {
 	const { path } = options;
 	let imageName = path ? path.trim() : '';
 	imageName = md5(imageName) + '.png';
@@ -78,7 +73,7 @@ ElementHandle.prototype.screenshot = async function (options?: any) {
 	return screenshotOut;
 };
 
-Page.prototype.click = async function (selector: string, options?: any) {
+Page.prototype.click = async function(selector: string, options?: any) {
 	const testLogsService = new TestLogsService();
 	testLogsService.init(state.testInfo.id, state.instanceId, state.testInfo.testType, state.jobInfo ? state.jobInfo.id : -1);
 
@@ -89,7 +84,7 @@ Page.prototype.click = async function (selector: string, options?: any) {
 
 	return clickOut;
 };
-Page.prototype.hover = async function (selector: string, options?: any) {
+Page.prototype.hover = async function(selector: string, options?: any) {
 	const testLogsService = new TestLogsService();
 	testLogsService.init(state.testInfo.id, state.instanceId, state.testInfo.testType, state.jobInfo ? state.jobInfo.id : -1);
 
@@ -101,7 +96,7 @@ Page.prototype.hover = async function (selector: string, options?: any) {
 };
 
 export const chromium = {
-	launch: function (options: any = {}) {
+	launch: function(options: any = {}) {
 		const playwright = require('playwright');
 		return playwright['chromium'].launch({
 			...options,
@@ -113,14 +108,14 @@ export const chromium = {
 export const chrome = chromium;
 
 export const firefox = {
-	launch: function (options: any = {}) {
+	launch: function(options: any = {}) {
 		const playwright = require('playwright');
 		return playwright['firefox'].launch({ ...options });
 	},
 };
 
 export const webkit = {
-	launch: function (options: any = {}) {
+	launch: function(options: any = {}) {
 		const playwright = require('playwright');
 		return playwright['webkit'].launch({ ...options });
 	},
@@ -131,13 +126,13 @@ export const safari = webkit;
 function getPlatformHandler(platformName: string): any {
 	if (!platformName) return null;
 	const platform = {
-		'chrome':chromium,
-		'chromium':chromium,
-		'safari': safari,
-		'webkit': safari,
-		'firefox': firefox
-	}
-	return platform[platformName.toLowerCase()]
+		chrome: chromium,
+		chromium: chromium,
+		safari: safari,
+		webkit: safari,
+		firefox: firefox,
+	};
+	return platform[platformName.toLowerCase()];
 }
 
 /*

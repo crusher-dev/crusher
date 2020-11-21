@@ -28,7 +28,7 @@ const s3BucketService = new AWS.S3({
 });
 
 // Call S3 to list the buckets
-s3BucketService.listBuckets(function (err, data) {
+s3BucketService.listBuckets(function(err, data) {
 	if (err) {
 		console.log('Error', err);
 	} else {
@@ -53,7 +53,7 @@ export async function uploadFileToBucket(bucket: Bucket, filePath: string, fileN
 export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName: string, destination: string = '/') {
 	return new Promise((resolve, reject) => {
 		const fileStream = fs.createReadStream(filePath);
-		fileStream.on('error', function (err) {
+		fileStream.on('error', function(err) {
 			reject({ message: 'File Error', err: err });
 		});
 
@@ -68,7 +68,7 @@ export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName
 				Key: destination + '/' + fileName,
 				Body: fileStream,
 			},
-			function (err, data) {
+			function(err, data) {
 				if (err) reject({ message: 'File upload failed', err: err });
 
 				const url = s3BucketService.getSignedUrl('getObject', {

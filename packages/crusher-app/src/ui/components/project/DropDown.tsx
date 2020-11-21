@@ -2,6 +2,9 @@ import Select from "react-select";
 
 import React from "react";
 
+/*
+	@Note - Don't use this component this is not standardised.
+*/
 export function DropDown(props) {
 	let {
 		options,
@@ -30,23 +33,36 @@ export function DropDown(props) {
 			border: "1px solid #E9E9E9",
 			outline: "none",
 			zIndex: 1000,
-			padding: `${paddingTop} 12px`,
-			borderRadius: "0.375rem",
+			padding: `${paddingTop} .75rem`,
+			borderRadius: "0.275rem",
 			paddingRight: "0.25rem",
 			width: width,
 		}),
-		container: (provided, state) => ({
+		container: () => ({
 			position: "relative",
 			width: "100%",
 		}),
-		singleValue: (provided, state) => {
+		singleValue: (provided) => {
 			return { ...provided, color: "#2D3958", fontSize: "1rem" };
 		},
 		option: (provided, state) => {
+			const value = state.data.value;
+			let additionalStyle = {};
+
+			if (value === "add_project") {
+				additionalStyle = {
+					color: "#6583FE",
+					textDecoration: "underline",
+					fontWeight: 600,
+				};
+			}
+
 			return {
 				...provided,
-				color: state.isSelected ? "#2D3958" : "#2D3958",
-				backgroundColor: "#f2f2f2",
+				color: state.isSelected ? "#18181A" : "#18181A",
+				backgroundColor: state.isSelected ? "#F8F8F8" : "#fff",
+				cursor: "pointer",
+				...additionalStyle,
 			};
 		},
 	};

@@ -10,7 +10,7 @@ import {
 import { saveSelectedProjectInRedux } from "@redux/actions/action";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
-import React, {CSSProperties, useEffect, useState} from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
@@ -22,8 +22,9 @@ import NewFeatures from "../../public/svg/sidebarSettings/newFeatures.svg";
 import Help from "../../public/svg/sidebarSettings/help.svg";
 import Logout from "../../public/svg/sidebarSettings/logout.svg";
 import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
-import {CreateTest} from "@ui/components/app/CreateTestButton";
-import {useRouter} from "next/router";
+import { CreateTest } from "@ui/components/app/CreateTestButton";
+import { useRouter } from "next/router";
+import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
 
 interface NavItem {
 	name: string;
@@ -44,7 +45,7 @@ function NavList(props: NavListProps) {
 			{navItems.map((item: NavItem, i) => {
 				const SVGImage = item.icon;
 				return (
-					<li className={(router as any).pathname === item.link ?  "active" : null}>
+					<li className={(router as any).pathname === item.link ? "active" : null}>
 						<Link href={item.link}>
 							<a href={item.link}>
 								<SVGImage />
@@ -106,8 +107,7 @@ function LeftSection(props: any) {
 
 	const toggleSettingsDropDown = () => {
 		setShowDropDwon(!showDropDown);
-
-	}
+	};
 
 	return (
 		<div css={styles.leftSection}>
@@ -140,23 +140,9 @@ function LeftSection(props: any) {
 						</span>
 					</div>
 					<div css={styles.sectionHeaderSetting}>
-						<DropdownSVG onClick={toggleSettingsDropDown}/>
+						<DropdownSVG onClick={toggleSettingsDropDown} />
 					</div>
-					{showDropDown && (
-						<ul css={styles.settingsDropDown}>
-							<li style={{display: "flex", alignItems: "center"}}>
-								<img src={"/svg/sidebarSettings/addDropdown.svg"} style={{marginRight: "1rem"}}/><span>Add team member</span>
-							</li>
-							<li style={{display: "flex", alignItems: "center"}}>
-								<img src={"/svg/sidebarSettings/addDropdown.svg"} style={{marginRight: "1rem"}}/><span>Add Project</span>
-							</li>
-							<li>Manage Billing/Plan</li>
-							<li>Manage Payment</li>
-							<li>Get Support</li>
-							<li>Logout</li>
-						</ul>
-					)}
-
+					{showDropDown && <SidebarTeamDropdown />}
 				</div>
 				<NavList navItems={mainNavLinks} />
 			</div>
@@ -200,7 +186,6 @@ function ProjectSelector(props: {
 		</div>
 	);
 }
-
 
 export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 	const WrappedComponent = function (props) {
@@ -262,11 +247,8 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 								onChange={onProjectChange}
 							/>
 							<Link href={"/app/project/onboarding/create-test"}>
-								<a
-									href={"/app/project/onboarding/create-test"}
-									css={styles.createTest}
-								>
-									<CreateTest/>
+								<a href={"/app/project/onboarding/create-test"} css={styles.createTest}>
+									<CreateTest />
 								</a>
 							</Link>
 						</div>
@@ -291,11 +273,11 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 }
 
 const styles = {
-	createTest:css`
-	    margin-left: auto;
-	    :hover{
-	    	text-decoration: none !important;
-	    }
+	createTest: css`
+		margin-left: auto;
+		:hover {
+			text-decoration: none !important;
+		}
 	`,
 	inviteMembers: css`
 		cursor: pointer;
@@ -486,30 +468,4 @@ const styles = {
 		background: #fff;
 		border-color: #e2e2e2;
 	`,
-	settingsDropDown: css`
-		position: absolute;
-		background: #fff;
-		border: 1px solid #CDD0DB;
-		color: black;
-		right: 1.25rem;
-		top: 3.5rem;
-		padding: 0.6rem 0.70rem;
-		box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
-		border-radisu: 0.25rem;
-		li {
-			color: #636363;
-			margin: 0.85rem 0rem;
-			min-width: 12.5rem;
-			font-family: Gilroy;
-			font-weight: 600;
-			font-size: 0.86rem;
-			&:first-child{
-				margin: 0.25rem 0rem;
-			}
-			&:last-child{
-				margin: 0.25rem 0rem;
-			}
-		}
-		z-index: 99;
-	`
 };

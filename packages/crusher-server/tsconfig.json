@@ -15,8 +15,7 @@
 		"strictNullChecks": false,
 		"esModuleInterop": false,
 		"suppressImplicitAnyIndexErrors": true,
-		"noImplicitReturns": false,
-
+		"noImplicitReturns": false
 	},
 	"include": ["**/*.ts"],
 	"typeRoots": ["node_modules/@types"],

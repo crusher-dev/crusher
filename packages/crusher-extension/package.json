@@ -7,8 +7,7 @@
 	"scripts": {
 		"dev": "ts-node scripts/dev",
 		"build": "node scripts/build.js",
-		"commit": "cz",
-		"prettify": "npx prettier --write ."
+		"lint": "prettier --write ."
 	},
 	"dependencies": {
 		"@medv/finder": "^2.0.0",

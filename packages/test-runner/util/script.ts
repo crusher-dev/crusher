@@ -6,7 +6,7 @@ export function replaceImportWithRequire(script: string) {
 	if (!script) {
 		return script;
 	}
-	return script.replace(matchImportRegex, function (match, variableName, packageName) {
+	return script.replace(matchImportRegex, function(match, variableName, packageName) {
 		if (!variableName || !packageName) {
 			return match;
 		}
@@ -15,7 +15,7 @@ export function replaceImportWithRequire(script: string) {
 }
 
 export function replaceWithPlaywrightWrapper(script: string, platform = null) {
-	return script.replace(packageNameRequireMatchRegex, function (match: string, quote: string, packageName: string) {
+	return script.replace(packageNameRequireMatchRegex, function(match: string, quote: string, packageName: string) {
 		if (packageName === 'playwright') {
 			return `require(${quote}../wrapper/playwright${quote}).boot(platform)`;
 		} else if (packageName === 'playwright-video') {

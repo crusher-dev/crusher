@@ -5,7 +5,7 @@ require('../services/codeRunnerWorker');
 
 const queue = new Queue('request-queue', { connection: REDDIS as any });
 
-queue.client.then(async (reddisClient) => {
+queue.client.then(async reddisClient => {
 	const queueScheduler = new QueueScheduler('request-queue', {
 		stalledInterval: 120000,
 		maxStalledCount: 1,

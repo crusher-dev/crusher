@@ -21,7 +21,7 @@ export const s3BucketService = new AWS.S3({
 export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName: string, destination: string = '/') {
 	return new Promise((resolve, reject) => {
 		const fileStream = fs.createReadStream(filePath);
-		fileStream.on('error', function (err) {
+		fileStream.on('error', function(err) {
 			reject({ message: 'File Error', err: err });
 		});
 		console.log(destination, fileName);
@@ -31,7 +31,7 @@ export async function uploadFileToAwsBucket(s3Bucket, filePath: string, fileName
 				Key: destination + '/' + fileName,
 				Body: fileStream,
 			},
-			function (err, data) {
+			function(err, data) {
 				if (err) reject({ message: 'File upload failed', err: err });
 
 				const url = s3BucketService.getSignedUrl('getObject', {

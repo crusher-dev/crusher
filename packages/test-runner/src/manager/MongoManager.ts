@@ -10,23 +10,23 @@ export default class MongoManager {
 			? MONGODB.connectionString
 			: `mongodb://${MONGODB.username}:${MONGODB.password}@${MONGODB.host}:${MONGODB.port}/${MONGODB.database}`;
 
-		console.log(connectionString)
+		console.log(connectionString);
 		mongoose.connect(connectionString);
 
-		mongoose.connection.on('connected', function () {
+		mongoose.connection.on('connected', function() {
 			console.log('Connected to ' + connectionString);
 		});
 
-		mongoose.connection.on('error', function (error) {
+		mongoose.connection.on('error', function(error) {
 			console.log('Connection to ' + connectionString + ' failed:' + error);
 		});
 
-		mongoose.connection.on('disconnected', function () {
+		mongoose.connection.on('disconnected', function() {
 			console.log('Disconnected from ' + connectionString);
 		});
 
-		process.on('SIGINT', function () {
-			mongoose.connection.close(function () {
+		process.on('SIGINT', function() {
+			mongoose.connection.close(function() {
 				console.log('Disconnected from ' + connectionString + ' through app termination');
 				process.exit(0);
 			});

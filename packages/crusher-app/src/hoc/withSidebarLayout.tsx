@@ -112,7 +112,7 @@ function LeftSection(props: any) {
 	return (
 		<div css={styles.leftSection}>
 			<div css={styles.sectionContainer}>
-				<div css={styles.sectionHeaderItem}>
+				<div css={styles.sectionHeaderItem} onClick={toggleSettingsDropDown}>
 					{/*@Note :- Change hardcoded text*/}
 					<div css={styles.teamIcon}>H</div>
 					<div css={styles.sectionHeaderContentArea}>
@@ -140,9 +140,11 @@ function LeftSection(props: any) {
 						</span>
 					</div>
 					<div css={styles.sectionHeaderSetting}>
-						<DropdownSVG onClick={toggleSettingsDropDown} />
+						<DropdownSVG />
 					</div>
-					{showDropDown && <SidebarTeamDropdown onOutsideClick={toggleSettingsDropDown} />}
+					{showDropDown && (
+						<SidebarTeamDropdown onOutsideClick={toggleSettingsDropDown} />
+					)}
 				</div>
 				<NavList navItems={mainNavLinks} />
 			</div>
@@ -320,6 +322,7 @@ const styles = {
 		font-weight: 500;
 		display: flex;
 		position: relative;
+		cursor: pointer;
 	`,
 	teamIcon: css`
 		display: flex;

@@ -1,27 +1,25 @@
 import React from "react";
 import { css } from "@emotion/core";
 // @ts-ignore
-import OutsideClickHandler from 'react-outside-click-handler';
+import OutsideClickHandler from "react-outside-click-handler";
 import AddDropdownSVG from "../../../../public/svg/sidebarSettings/addDropdown.svg";
 
-export const SidebarTeamDropdown = ({onOutsideClick}) => (
-	<OutsideClickHandler
-		onOutsideClick={onOutsideClick}
-	>
-	<ul css={settingsDropdownStyle}>
-		<li style={{ display: "flex", alignItems: "center" }}>
-			<AddDropdownSVG style={{ marginRight: "1rem" }} />
-			<span>Add team member</span>
-		</li>
-		<li style={{ display: "flex", alignItems: "center" }}>
-			<AddDropdownSVG style={{ marginRight: "1rem" }} />
-			<span>Add Project</span>
-		</li>
-		<li>Manage Billing/Plan</li>
-		<li>Manage Payment</li>
-		<li>Get Support</li>
-		<li>Logout</li>
-	</ul>
+export const SidebarTeamDropdown = ({ onOutsideClick }) => (
+	<OutsideClickHandler onOutsideClick={onOutsideClick}>
+		<ul css={settingsDropdownStyle}>
+			<li style={{ display: "flex", alignItems: "center" }}>
+				<AddDropdownSVG style={{ marginRight: "1rem" }} />
+				<span>Add team member</span>
+			</li>
+			<li style={{ display: "flex", alignItems: "center" }}>
+				<AddDropdownSVG style={{ marginRight: "1rem" }} />
+				<span>Add Project</span>
+			</li>
+			<li>Manage Billing/Plan</li>
+			<li>Manage Payment</li>
+			<li>Get Support</li>
+			<li>Logout</li>
+		</ul>
 	</OutsideClickHandler>
 );
 

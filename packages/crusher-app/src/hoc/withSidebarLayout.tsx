@@ -109,12 +109,14 @@ function LeftSection(props: any) {
 		setShowDropDwon(!showDropDown);
 	};
 
+	const userFistCharacter = userInfo.name.slice(0,1)
+
 	return (
 		<div css={styles.leftSection}>
 			<div css={styles.sectionContainer}>
 				<div css={styles.sectionHeaderItem} onClick={toggleSettingsDropDown}>
 					{/*@Note :- Change hardcoded text*/}
-					<div css={styles.teamIcon}>H</div>
+					<div css={styles.teamIcon}>{userFistCharacter}</div>
 					<div css={styles.sectionHeaderContentArea}>
 						<span
 							style={{

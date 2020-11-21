@@ -126,7 +126,7 @@ const styles = {
 		line-height: 1.25rem;
 		span {
 			font-weight: 800;
-			transition: color 2s ease-out;
+
 		}
 	`,
 	buttonContainer: css`

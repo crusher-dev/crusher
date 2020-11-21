@@ -163,7 +163,7 @@ function CrusherLogo() {
 	return (
 		<Link href={"/app/project/dashboard"}>
 			<a href={"/app/project/dashboard"}>
-				<Logo style={{ cursor: "pointer", height: "1.5625rem" }} />
+				<Logo style={{ cursor: "pointer", height: "1.6625rem" }} />
 			</a>
 		</Link>
 	);
@@ -175,13 +175,29 @@ function ProjectSelector(props: {
 	selectedProject: any;
 	onChange: (project) => void;
 }) {
+	const router = useRouter();
+	const { options, onChange, selectedProject } = props;
+	const modifiedOption = [
+		{ label: "Add new project", value: "add_project" },
+		...options,
+		{ label: "View all project", value: "view_all" },
+	];
+	const handleChange = (option) => {
+		if (option.value === "add_project") {
+			router.push("https://google.com");
+		} else if (option.value === "view_all") {
+			router.push("https://facebook.com");
+		} else {
+			onChange(option);
+		}
+	};
 	return (
 		<div css={styles.projectDropdownContainer}>
 			{props.projectsList && (
 				<DropDown
-					options={props.options}
-					selected={props.selectedProject ? { value: props.selectedProject } : {}}
-					onChange={props.onChange}
+					options={modifiedOption}
+					selected={selectedProject ? { value: selectedProject } : {}}
+					onChange={handleChange}
 					placeholder={"Select project"}
 				/>
 			)}

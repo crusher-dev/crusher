@@ -23,10 +23,7 @@ export default class TestInstanceResultSetsService {
 	}
 
 	async getResultSetsBetweenTwoJobs(baseJobId: number, referenceJobId: number) {
-		return this.dbManager.fetchData(`SELECT * FROM test_instance_result_sets WHERE job_id = ? AND target_job_id = ?`, [
-			baseJobId,
-			referenceJobId,
-		]);
+		return this.dbManager.fetchData(`SELECT * FROM test_instance_result_sets WHERE job_id = ? AND target_job_id = ?`, [baseJobId, referenceJobId]);
 	}
 
 	async getResultSetStatusBetweenTwoJobs(
@@ -59,15 +56,9 @@ export default class TestInstanceResultSetsService {
 
 		console.log(results, results.length, hasTestFailed, hasAllTestsPassed);
 		if (hasTestFailed) {
-			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
-				TestInstanceResultSetConclusion.FAILED,
-				setId,
-			]);
+			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [TestInstanceResultSetConclusion.FAILED, setId]);
 		} else if (hasAllTestsPassed) {
-			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
-				TestInstanceResultSetConclusion.PASSED,
-				setId,
-			]);
+			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [TestInstanceResultSetConclusion.PASSED, setId]);
 		} else if (isStillInReview) {
 			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
 				TestInstanceResultSetConclusion.MANUAL_REVIEW_REQUIRED,

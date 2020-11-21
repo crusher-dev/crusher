@@ -14,7 +14,9 @@
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
 		"esModuleInterop": false,
-		"noImplicitReturns": false
+		"suppressImplicitAnyIndexErrors": true,
+		"noImplicitReturns": false,
+
 	},
 	"include": ["**/*.ts"],
 	"typeRoots": ["node_modules/@types"],

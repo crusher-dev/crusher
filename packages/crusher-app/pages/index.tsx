@@ -124,7 +124,10 @@ function Home() {
 					>
 						Next
 					</div>
-					<a href={resolvePathToBackendURI("/user/authenticate/google")}  css={styles.loginGoogleLink}>
+					<a
+						href={resolvePathToBackendURI("/user/authenticate/google")}
+						css={styles.loginGoogleLink}
+					>
 						<div css={styles.googleLoginButton(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
 							<span className={"font-medium button"}>Login with Google</span>
@@ -157,9 +160,9 @@ Home.getInitialProps = (ctx) => {
 };
 
 const styles = {
-	loginGoogleLink : css`
-		:hover{
-			text-decoration: none !important;	
+	loginGoogleLink: css`
+		:hover {
+			text-decoration: none !important;
 		}
 	`,
 	form: (theme) => css`

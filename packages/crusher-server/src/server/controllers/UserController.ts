@@ -1,16 +1,4 @@
-import {
-	Authorized,
-	Body,
-	CurrentUser,
-	Get,
-	InternalServerError,
-	JsonController,
-	Post,
-	QueryParam,
-	QueryParams,
-	Req,
-	Res,
-} from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, Post, QueryParam, QueryParams, Req, Res } from 'routing-controllers';
 import { Container, Inject, Service } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';
@@ -145,10 +133,7 @@ export class UserController {
 	 */
 	@Get('/authenticate/google')
 	authenticateWithGoogle(@Res() res: any) {
-		const scopes = [
-			'https://www.googleapis.com/auth/userinfo.email',
-			'https://www.googleapis.com/auth/userinfo.profile',
-		];
+		const scopes = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'];
 		const url = oauth2Client.generateAuthUrl({ scope: scopes });
 		res.redirect(url);
 	}

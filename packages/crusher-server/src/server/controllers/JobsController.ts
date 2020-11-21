@@ -50,16 +50,10 @@ export class JobsController {
 
 			const referenceJob = await this.jobsService.getReferenceJob(jobRecords[i]);
 			if (referenceJob) {
-				const comparisonScreenshotsCount = await this.jobsService.getScreenshotsCountInJob(
-					jobRecords[i].id,
-					referenceJob.id,
-				);
+				const comparisonScreenshotsCount = await this.jobsService.getScreenshotsCountInJob(jobRecords[i].id, referenceJob.id);
 				jobRecords[i] = {
 					...jobRecords[i],
-					passedScreenshotCount:
-						comparisonScreenshotsCount.totalComparisonCount === 0
-							? jobRecords[i].screenshotCount
-							: comparisonScreenshotsCount.passedCount,
+					passedScreenshotCount: comparisonScreenshotsCount.totalComparisonCount === 0 ? jobRecords[i].screenshotCount : comparisonScreenshotsCount.passedCount,
 					failedScreenshotCount: comparisonScreenshotsCount.failedCount,
 					reviewRequiredScreenshotCount: comparisonScreenshotsCount.reviewRequiredCount,
 				};
@@ -90,10 +84,7 @@ export class JobsController {
 	async getJob(@CurrentUser({ required: true }) user, @Param('jobId') jobId, @QueryParams() query) {
 		const { platform } = query;
 		const job = await this.jobsService.getJob(jobId);
-		const testInstances = await this.testInstanceService.getAllTestInstancesByJobIdOfPlatform(
-			jobId,
-			platform ? platform : Platform.CHROME,
-		);
+		const testInstances = await this.testInstanceService.getAllTestInstancesByJobIdOfPlatform(jobId, platform ? platform : Platform.CHROME);
 
 		for (let i = 0; i < testInstances.length; i++) {
 			const instanceLogs = (await this.testLogsService.getLogsOfInstanceInJob(testInstances[i].id)).map((log) => {
@@ -145,14 +136,9 @@ export class JobsController {
 		const currentJob = await this.jobsService.getJob(jobId);
 		const referenceJob = await this.jobsService.getFirstJobOfHost(currentJob.host);
 
-		const currentInstances = await this.testInstanceService.getAllInstancesWithResultByJobId(
-			jobId,
-			Platform.CHROME,
-			currentJob.host,
-		);
+		const currentInstances = await this.testInstanceService.getAllInstancesWithResultByJobId(jobId, Platform.CHROME, currentJob.host);
 
-		const referenceInstances =
-			referenceJob && (await this.testInstanceService.getAllInstancesWithResultByJobId(referenceJob.id));
+		const referenceInstances = referenceJob && (await this.testInstanceService.getAllInstancesWithResultByJobId(referenceJob.id));
 		let referenceInstancesMap = {};
 		if (referenceInstances) {
 			for (let referenceInstance of referenceInstances) {

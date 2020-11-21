@@ -1,3 +1,5 @@
+// This is used by pm2
+// Centralize this config file
 module.exports = {
   apps: [
     {

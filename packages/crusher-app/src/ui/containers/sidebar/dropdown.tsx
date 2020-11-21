@@ -3,6 +3,8 @@ import { css } from "@emotion/core";
 // @ts-ignore
 import OutsideClickHandler from "react-outside-click-handler";
 import AddDropdownSVG from "../../../../public/svg/sidebarSettings/addDropdown.svg";
+import { resolvePathToBackendURI } from "@utils/url";
+import Link from "next/link";
 
 export const SidebarTeamDropdown = ({ onOutsideClick }) => (
 	<OutsideClickHandler onOutsideClick={onOutsideClick}>
@@ -18,7 +20,9 @@ export const SidebarTeamDropdown = ({ onOutsideClick }) => (
 			<li>Manage Billing/Plan</li>
 			<li>Manage Payment</li>
 			<li>Get Support</li>
-			<li>Logout</li>
+			<Link href={resolvePathToBackendURI("/user/logout")}>
+				<li>Logout</li>
+			</Link>
 		</ul>
 	</OutsideClickHandler>
 );
@@ -38,12 +42,12 @@ const settingsDropdownStyle = css`
 	border-radius: 4px;
 	padding: 0.75rem 0;
 	li {
-		color: #636363;
+		color: #303030;
 		cursor: pointer;
 		min-width: 12.5rem;
 		font-family: Gilroy;
-		font-weight: 600;
-		font-size: 0.86rem;
+		font-weight: 500;
+		font-size: 0.9rem;
 		line-height: 0.86rem;
 		padding: 0.7275rem 0.975rem;
 		:hover {

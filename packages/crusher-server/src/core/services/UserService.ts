@@ -42,10 +42,7 @@ export default class UserService {
 		const { email, password } = details;
 
 		let encryptedPassword = encryptPassword(password);
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [
-			email,
-			encryptedPassword,
-		]);
+		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptedPassword]);
 
 		if (!user) {
 			return { status: USER_NOT_REGISTERED };
@@ -245,10 +242,11 @@ export default class UserService {
 			[provider, user_id],
 		);
 		if (providerRecord) {
-			await this.dbManager.fetchSingleRow(
-				`UPDATE user_provider_connections SET access_token = ? WHERE user_id = ? AND provider = ?`,
-				[access_token, user_id, provider],
-			);
+			await this.dbManager.fetchSingleRow(`UPDATE user_provider_connections SET access_token = ? WHERE user_id = ? AND provider = ?`, [
+				access_token,
+				user_id,
+				provider,
+			]);
 			return { id: providerRecord.id };
 		}
 		const insertedRecord = await this.dbManager.insertData('INSERT INTO user_provider_connections SET ? ', {
@@ -273,10 +271,11 @@ export default class UserService {
 		if (repoNameArr && repoNameArr.length === 2) {
 			const record = await this.getInstallationIdOfRepo(fullRepoName);
 			if (record) {
-				return this.dbManager.fetchSingleRow(
-					`UPDATE github_app_installations SET ? WHERE owner_name = ? AND repo_name = ?`,
-					[installation_id, repoNameArr[0], repoNameArr[1]],
-				);
+				return this.dbManager.fetchSingleRow(`UPDATE github_app_installations SET ? WHERE owner_name = ? AND repo_name = ?`, [
+					installation_id,
+					repoNameArr[0],
+					repoNameArr[1],
+				]);
 			} else {
 				return this.dbManager.insertData(`INSERT INTO github_app_installations SET ? `, {
 					owner_name: repoNameArr[0],
@@ -295,10 +294,7 @@ export default class UserService {
 	async getInstallationIdOfRepo(fullRepoName: string): Promise<GithubAppInstallation> {
 		const repoNameArr = fullRepoName.split('/');
 		if (repoNameArr && repoNameArr.length === 2) {
-			return this.dbManager.fetchSingleRow(
-				`SELECT * FROM github_app_installations WHERE owner_name = ? AND repo_name = ?`,
-				[repoNameArr[0], repoNameArr[1]],
-			);
+			return this.dbManager.fetchSingleRow(`SELECT * FROM github_app_installations WHERE owner_name = ? AND repo_name = ?`, [repoNameArr[0], repoNameArr[1]]);
 		} else {
 			Logger.error(`UserService::getInstallationIdOfRepo`, 'Bad repo name', {
 				fullRepoName,

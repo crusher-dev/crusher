@@ -42,11 +42,7 @@ export default class JobsService {
 	}
 
 	async getAllJobsOfProject(projectId: number, limit = 5, offset = 0) {
-		return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [
-			projectId,
-			offset,
-			limit,
-		]);
+		return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
 	}
 
 	async getTotalScreenshotsInJob(jobId: number): Promise<number> {
@@ -83,10 +79,7 @@ export default class JobsService {
 	}
 
 	async getTotalJobs(projectId) {
-		const countRecord = await this.dbManager.fetchSingleRow(
-			`SELECT count(*) as totalCount FROM jobs WHERE project_id = ?`,
-			[projectId],
-		);
+		const countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ?`, [projectId]);
 		return countRecord.totalCount;
 	}
 
@@ -95,15 +88,18 @@ export default class JobsService {
 		const testIds = JSON.parse(meta).sort();
 
 		if (host) {
-			return this.dbManager.fetchSingleRow(
-				`SELECT * FROM jobs WHERE host = ? AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`,
-				[host, JSON.stringify(testIds), JobConclusion.PASSED, id],
-			);
+			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host = ? AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
+				host,
+				JSON.stringify(testIds),
+				JobConclusion.PASSED,
+				id,
+			]);
 		} else {
-			return this.dbManager.fetchSingleRow(
-				`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`,
-				[JSON.stringify(testIds), JobConclusion.PASSED, id],
-			);
+			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
+				JSON.stringify(testIds),
+				JobConclusion.PASSED,
+				id,
+			]);
 		}
 	}
 
@@ -157,11 +153,7 @@ export default class JobsService {
 			return null;
 		}
 
-		return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE repo_name = ? AND commit_id = ? AND status = ?`, [
-			repoName,
-			sha,
-			JobStatus.QUEUED,
-		]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE repo_name = ? AND commit_id = ? AND status = ?`, [repoName, sha, JobStatus.QUEUED]);
 	}
 
 	async createOrUpdateJob(repoName: string, commitId: string, details: any) {

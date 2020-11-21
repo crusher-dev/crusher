@@ -255,12 +255,7 @@ async function notifyResultWithEmail(jobRecord: any, result: JobConclusion, user
 	}
 }
 
-async function notifyResultWithSlackIntegrations(
-	jobRecord: any,
-	result: JobConclusion,
-	userWhoStartedTheJob: User,
-	state,
-) {
+async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobConclusion, userWhoStartedTheJob: User, state) {
 	const slackIntegrationsArr = await alertingService.getSlackIntegrationsInProject(jobRecord.project_id);
 
 	for (let i = 0; i < slackIntegrationsArr.length; i++) {
@@ -313,17 +308,7 @@ async function handlePostChecksOperations(state, totalTestCount, jobRecord: any)
 }
 
 async function runChecksAfterAllTestsAreCompleted(details, clearJobTempValues) {
-	const {
-		githubInstallationId,
-		githubCheckRunId,
-		totalTestCount,
-		testLogs,
-		screenshots,
-		testId,
-		jobId,
-		instanceId,
-		fullRepoName,
-	} = details;
+	const { githubInstallationId, githubCheckRunId, totalTestCount, testLogs, screenshots, testId, jobId, instanceId, fullRepoName } = details;
 
 	const state = {
 		failedTestsArray: [],
@@ -350,11 +335,7 @@ async function runChecksAfterAllTestsAreCompleted(details, clearJobTempValues) {
 
 	const outPromises = testInstancesArrWithImages.map((testInstanceWithImages) => {
 		return async () => {
-			const referenceInstance = getReferenceInstance(
-				referenceTestInstancesMap,
-				testInstanceWithImages.test_id,
-				testInstanceWithImages.platform,
-			);
+			const referenceInstance = getReferenceInstance(referenceTestInstancesMap, testInstanceWithImages.test_id, testInstanceWithImages.platform);
 			const referenceInstanceWithImages = referenceInstance ? referenceInstance : testInstanceWithImages;
 			const shouldPerformDiffChecks = testInstanceWithImages !== referenceInstanceWithImages;
 
@@ -367,12 +348,7 @@ async function runChecksAfterAllTestsAreCompleted(details, clearJobTempValues) {
 				status: TestInstanceResultSetStatus.RUNNING_CHECKS,
 			});
 
-			const {
-				didAllImagesPass,
-				passedImagesCount,
-				manualReviewImagesCount,
-				failedImagesCount,
-			} = await getResultForTestInstance(
+			const { didAllImagesPass, passedImagesCount, manualReviewImagesCount, failedImagesCount } = await getResultForTestInstance(
 				testInstanceWithImages,
 				referenceInstanceWithImages,
 				resultSetId,
@@ -383,11 +359,7 @@ async function runChecksAfterAllTestsAreCompleted(details, clearJobTempValues) {
 				state.failedTestsArray.push(testInstancesArrWithImages);
 			} else if (hasTestInstanceFinishedExecuting(testInstanceWithImages) && didAllImagesPass) {
 				state.passedTestsArray.push(testInstancesArrWithImages);
-			} else if (
-				hasTestInstanceFinishedExecuting(testInstanceWithImages) &&
-				!failedImagesCount &&
-				manualReviewImagesCount
-			) {
+			} else if (hasTestInstanceFinishedExecuting(testInstanceWithImages) && !failedImagesCount && manualReviewImagesCount) {
 				state.markedForReviewTestsArray.push(testInstancesArrWithImages);
 			}
 

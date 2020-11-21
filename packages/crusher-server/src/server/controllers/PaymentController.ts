@@ -30,11 +30,11 @@ export class PaymentController {
 		const onHoldPromise = this.paymentService.getOnHoldStatus(team_id);
 		const plansPromise = this.paymentService.getPlans(team_id);
 
-		const [
-			[cards, current_subscription, past_invoices, current_invoices],
-			on_hold,
-			[featurePlan, currentPlan],
-		] = await Promise.all([stripePromise, onHoldPromise, plansPromise]);
+		const [[cards, current_subscription, past_invoices, current_invoices], on_hold, [featurePlan, currentPlan]] = await Promise.all([
+			stripePromise,
+			onHoldPromise,
+			plansPromise,
+		]);
 
 		return {
 			on_hold: Boolean(on_hold),

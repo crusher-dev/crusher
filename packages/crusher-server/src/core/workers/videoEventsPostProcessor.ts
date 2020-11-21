@@ -7,13 +7,7 @@ const draftInstanceResultsService = new DraftInstanceResultsService();
 
 export class VideoEventsPostProcessor {
 	static async onVideoProcessed(callback) {
-		const {
-			processed,
-			recordedVideoUrl,
-			instanceId: instanceId,
-			testId: testId,
-			testType: testType,
-		} = callback.returnvalue;
+		const { processed, recordedVideoUrl, instanceId: instanceId, testId: testId, testType: testType } = callback.returnvalue;
 		console.log('Video processed completely', callback.returnValue);
 		if (processed && recordedVideoUrl) {
 			if (testType === TestType.SAVED) {

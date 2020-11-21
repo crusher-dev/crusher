@@ -17,20 +17,20 @@ export function DropDown(props) {
 		isMulti,
 	} = props;
 
-	width = width ? width : "18rem";
-	let paddingTop = heightFactor ? `${heightFactor * 0.3}rem` : "0.3rem";
+	width = width ? width : "17rem";
+	let paddingTop = heightFactor ? `${heightFactor * 0.3}rem` : "0.1rem";
 
 	const dropdownStyle = {
-		menu: (provided, state) => ({
+		menu: (provided) => ({
 			...provided,
 			backgroundColor: "#fff",
 			width: width,
 			zIndex: 200000000,
 		}),
-		control: (provided, state) => ({
+		control: (provided) => ({
 			...provided,
 			backgroundColor: "#fff",
-			border: "1px solid #E9E9E9",
+			border: "1px solid #d1d1d1",
 			outline: "none",
 			zIndex: 1000,
 			padding: `${paddingTop} .75rem`,

@@ -37,11 +37,10 @@ const containerCss = css`
 		line-height: 1rem;
 	}
 	input {
-		margin-top: 0.8rem;
-		padding: 0.7rem 1rem;
+		margin-top: 0.75rem;
+		padding: 0.65rem 1rem;
 		font-family: Gilroy;
 		font-size: 1rem;
-
 		color: #2e2e2e;
 		border: 0.125rem solid #dfdfdf;
 		width: 100%;

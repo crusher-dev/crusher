@@ -71,13 +71,13 @@ const modalContainerCss = css`
 
 const illustrationContainerCss = css`
 	position: absolute;
-	top: -0.75rem;
+    top: -.8rem;
 	right: -0.5rem;
 `;
 
 const topContainerCss = css`
 	color: #fff;
-	padding: 2rem 1.75rem 1rem 1.75rem;
+	padding: 1.6rem 1.75rem 3.075rem 1.75rem;
 	padding-bottom: 2.25rem;
 	position: relative;
 	font-family: Cera Pro;
@@ -86,7 +86,7 @@ const topContainerCss = css`
 		font-size: 1.75rem;
 	}
 	.modalDesc {
-		font-size: 1.1rem;
+		font-size: 1.25rem;
 		margin-top: 0.25rem;
 	}
 `;
@@ -94,7 +94,7 @@ const topContainerCss = css`
 const bodyContainerCss = css`
 	width: 100%;
 	background: #fff;
-	padding: 1.82rem 1.75rem 2.25rem 1.75rem;
+	padding: 1.5rem 1.75rem 2rem 1.75rem;
 	margin-bottom: 1.5rem;
 	font-family: Gilroy;
 	color: #2e2e2e;

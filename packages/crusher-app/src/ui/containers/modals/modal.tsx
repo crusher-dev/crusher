@@ -107,8 +107,8 @@ const bodyContainerCss = css`
 
 const crossModalCss = css`
 	position: absolute;
-	top: 2.5rem;
-	right: 1.75rem;
+	top: 1.5rem;
+	right: 2rem;
 	cursor: pointer;
 	z-index: 2;
 `;

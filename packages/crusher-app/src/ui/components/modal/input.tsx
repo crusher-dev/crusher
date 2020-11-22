@@ -33,7 +33,7 @@ const containerCss = css`
 		font-family: Gilroy;
 		font-weight: bold;
 		color: #2b2b39;
-		font-size: 1.1rem;
+		font-size: 1rem;
 		line-height: 1rem;
 	}
 	input {

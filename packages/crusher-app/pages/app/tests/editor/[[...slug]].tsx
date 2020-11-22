@@ -14,7 +14,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import CodeGenerator from "../../../../../code-generator/dist/code-generator/src/index";
 import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
-import { getTestsCountInProject } from "@services/projects";
+import { fetchTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { LogActionCard } from "@ui/components/list/testActionCard";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
@@ -495,7 +495,7 @@ Test.getInitialProps = async (ctx) => {
 			cookies.selectedProject ? cookies.selectedProject : null,
 		);
 
-		const testsCount = await getTestsCountInProject(
+		const testsCount = await fetchTestsCountInProject(
 			selectedProject ? selectedProject : defaultProject,
 			headers,
 		);

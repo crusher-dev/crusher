@@ -3,10 +3,7 @@ import Head from "next/head";
 import { DropDown } from "@ui/components/project/DropDown";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import {
-	getProjectsList,
-	getSelectedProject,
-} from "@redux/stateUtils/projects";
+import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { saveSelectedProjectInRedux } from "@redux/actions/action";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
@@ -45,7 +42,10 @@ function NavList(props: NavListProps) {
 			{navItems.map((item: NavItem, i) => {
 				const SVGImage = item.icon;
 				return (
-					<li className={(router as any).pathname === item.link ? "active" : null}>
+					<li
+						className={(router as any).pathname === item.link ? "active" : null}
+						key={i}
+					>
 						<Link href={item.link}>
 							<a href={item.link}>
 								<SVGImage />
@@ -188,7 +188,7 @@ function ProjectSelector(props: {
 		if (option.value === "add_project") {
 			router.push("https://google.com");
 		} else if (option.value === "view_all") {
-			router.push("https://facebook.com");
+			router.push("/app/project/list");
 		} else {
 			onChange(option);
 		}
@@ -211,7 +211,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 	const WrappedComponent = function (props) {
 		const { userInfo } = props;
 		const selectedProject = useSelector(getSelectedProject);
-		const projectsList = useSelector(getProjectsList);
+		const projectsList = useSelector(getProjects);
 		const selectedProjectName = projectsList.find((project) => {
 			return project.id === selectedProject;
 		});

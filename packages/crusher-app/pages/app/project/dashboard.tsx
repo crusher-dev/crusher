@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getTestsCountInProject } from "@services/projects";
+import { fetchTestsCountInProject } from "@services/projects";
 import { serialize } from "cookie";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { getTime } from "@utils/helpers";
@@ -441,7 +441,7 @@ ProjectDashboard.getInitialProps = async (ctx) => {
 			cookies.selectedProject ? cookies.selectedProject : null,
 		);
 
-		const testsCount = await getTestsCountInProject(
+		const testsCount = await fetchTestsCountInProject(
 			selectedProject ? selectedProject : defaultProject,
 			headers,
 		);

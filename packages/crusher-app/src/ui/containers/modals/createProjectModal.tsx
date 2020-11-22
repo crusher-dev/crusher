@@ -62,7 +62,7 @@ const CreateProjectModal = (props: iProps) => {
 						<label>Members of this project</label>
 					</div>
 					<div css={membersDescCss}>
-						All members get notification. You can modify this from project settings.
+						Everyone gets project update. Change this in project settings.
 					</div>
 				</div>
 
@@ -83,11 +83,12 @@ const topAreaCSS = css`
 		#242d37 35.74%,
 		#112128 79.28%
 	);
+	border-bottom: 2px solid #0a1215;
 `;
 
 const modalMoto = css`
 	font-size: 1rem;
-	margin-bottom: 2rem;
+	margin-bottom: 1.25rem;
 `;
 
 const bodyContainerCss = css`
@@ -120,7 +121,7 @@ const membersDescCss = css`
 
 const buttonCss = css`
 	margin-top: auto;
-	margin-top: 8.3rem;
+	margin-top: 9rem;
 `;
 
 export { CreateProjectModal };

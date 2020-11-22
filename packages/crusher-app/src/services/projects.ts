@@ -76,6 +76,16 @@ export const deleteHostFromProject = async (hostId, headers = null) => {
 	});
 };
 
+export const deleteProjectFromBackend = async(projectId: number) => {
+	return backendRequest(`/projects/delete/${projectId}`, {
+		method: RequestMethod.GET,
+		headers: headers,
+	}).then((res) => {
+		const { status } = res;
+		return status === "DELETED";
+	});
+};
+
 export const saveMonitoringSettingsInDB = async (
 	settings,
 	projectId,

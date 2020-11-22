@@ -1,4 +1,8 @@
-import { ADD_PROJECT, SAVE_PROJECTS, SAVE_SELECTED_PROJECT } from '@redux/actions/action';
+import {
+	ADD_PROJECT,
+	SAVE_PROJECTS,
+	SAVE_SELECTED_PROJECT,
+} from "@redux/actions/action";
 import jsCookie from "js-cookie";
 import { HYDRATE } from "next-redux-wrapper";
 import { extractHostnameFromUrl } from "@utils/helpers";
@@ -27,7 +31,10 @@ const projects = (state = initialState, action) => {
 			});
 			return { ...state, selectedProject: action.projectId };
 		case ADD_PROJECT:
-			return { ...state, allProjects: [...state.allProjects, {name: action.name, id: action.id}]};
+			return {
+				...state,
+				allProjects: [...state.allProjects, { name: action.name, id: action.id }],
+			};
 		case "persist/REHYDRATE":
 			return {
 				...state,

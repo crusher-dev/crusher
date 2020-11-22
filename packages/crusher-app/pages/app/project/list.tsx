@@ -112,8 +112,8 @@ const projectName = css`
 	font-family: Cera Pro;
 	font-style: normal;
 	font-weight: bold;
-	font-size: 1.4rem;
-	line-height: 1.4rem;
+	font-size: 1.2rem;
+	line-height: 1.2rem;
 	margin-bottom: 0.75rem;
 `;
 const projectMeta = css`
@@ -123,11 +123,12 @@ const projectMeta = css`
 `;
 
 const projectTest = css`
-	margin-right: 2rem;
+	margin-right: 1rem;
 `;
 
 const addProjectTest = css`
 	text-decoration: underline;
+	cursor: pointer;
 `;
 const projectRightSection = css`
 	margin-left: auto;
@@ -163,12 +164,12 @@ ProjectTestsList.getInitialProps = async (ctx) => {
 			headers,
 		);
 		return {
-			tests: tests && Array.isArray(tests) ? tests : [],
+			tests: [],
 		};
 	} catch (er) {
 		throw er;
 		await redirectToFrontendPath("/404", res);
-		return null;
+		return {};
 	}
 };
 

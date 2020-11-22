@@ -1,21 +1,21 @@
 import { Modal } from "@ui/containers/modals/modal";
-import {useState} from "react";
+import { useState } from "react";
 import React from "react";
-import {ModalInput} from "@ui/components/modal/input";
-import {css} from "@emotion/core";
-import { ModalButton } from '@ui/components/modal/button';
+import { ModalInput } from "@ui/components/modal/input";
+import { css } from "@emotion/core";
+import { ModalButton } from "@ui/components/modal/button";
 
 interface iProps {
 	onSubmit: any;
 	onClose: any;
-};
+}
 const CreateProjectModal = (props: iProps) => {
-	const {onSubmit, onClose} = props;
+	const { onSubmit, onClose } = props;
 	const [projectName, setProjectName] = useState("");
 
 	const handleSubmit = () => {
-		if(projectName && projectName.replace(/\s/g, "").length){
-			if(onSubmit) {
+		if (projectName && projectName.replace(/\s/g, "").length) {
+			if (onSubmit) {
 				onSubmit(projectName);
 			}
 		} else {
@@ -25,28 +25,47 @@ const CreateProjectModal = (props: iProps) => {
 
 	const handleChange = (event: any) => {
 		setProjectName(event.target.value);
-	}
+	};
 
 	return (
-    <Modal
-      heading={"Create a project"}
-      desc={"in your team"}
-      illustration={"/assets/img/illustration/create_project_illustration.png"}
-      moto={"Structure your team in a nice-manner."}
+		<Modal
+			heading={"Create a project"}
+			desc={"in your team"}
+			illustration={"/assets/img/illustration/create_project_illustration.png"}
+			moto={"Structure your team in a nice-manner."}
 			onClose={onClose}
-    >
+		>
+			<div className={modalMoto}>Structure your team in a nice-manner.</div>
 			<div css={bodyContainerCss}>
-				<ModalInput id={"project_name"} title={"Project Name"} placeholder={"Enter project name"} value={projectName} onChange={handleChange}/>
+				<ModalInput
+					id={"project_name"}
+					title={"Project Name"}
+					placeholder={"Enter project name"}
+					value={projectName}
+					onChange={handleChange}
+				/>
 				<div css={membersInputCss}>
-					<div><label>Members of this project</label></div>
-					<div css={membersDescCss}>All members get notification. You can modify this from project settings.</div>
+					<div>
+						<label>Members of this project</label>
+					</div>
+					<div css={membersDescCss}>
+						All members get notification. You can modify this from project settings.
+					</div>
 				</div>
 
-				<ModalButton containerCss={buttonCss} title={"Create a new Project"} onClick={handleSubmit}/>
+				<ModalButton
+					containerCss={buttonCss}
+					title={"Create a new Project"}
+					onClick={handleSubmit}
+				/>
 			</div>
 		</Modal>
-  );
+	);
 };
+
+const modalMoto = css`
+	font-size: 0.825rem;
+`;
 
 const bodyContainerCss = css`
 	margin-top: 1.55rem;
@@ -55,7 +74,7 @@ const bodyContainerCss = css`
 	label {
 		font-family: Gilroy;
 		font-weight: bold;
-		color: #2B2B39;
+		color: #2b2b39;
 		font-size: 0.825rem;
 	}
 	min-height: 22rem;
@@ -63,7 +82,7 @@ const bodyContainerCss = css`
 
 const membersInputCss = css`
 	margin-top: 2.15rem;
-`
+`;
 
 const membersDescCss = css`
 	font-size: 0.8rem;
@@ -73,6 +92,5 @@ const membersDescCss = css`
 const buttonCss = css`
 	margin-top: auto;
 `;
-
 
 export { CreateProjectModal };

@@ -37,7 +37,7 @@ const CreateProjectModal = (props: iProps) => {
 			topAreaCSS={topAreaCSS}
 		>
 			<div css={bodyContainerCss}>
-				<div css={modalMoto}>Structure your team in a nice-manner.</div>
+				<div css={modalMoto}>Organize your test in different projects</div>
 				<ModalInput
 					id={"project_name"}
 					title={"Project Name"}
@@ -66,7 +66,7 @@ const CreateProjectModal = (props: iProps) => {
 
 const topAreaCSS = css`
 	background: linear-gradient(
-		150deg,
+		-184deg,
 		#262f39 16.9%,
 		#242d37 35.74%,
 		#112128 79.28%

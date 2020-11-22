@@ -38,12 +38,13 @@ const containerCss = css`
 	}
 	input {
 		margin-top: 0.75rem;
-		padding: 0.65rem 1rem;
+		padding: 0.5rem 1rem;
 		font-family: Gilroy;
 		font-size: 1rem;
 		color: #2e2e2e;
 		border: 0.125rem solid #dfdfdf;
 		width: 100%;
+
 		border-radius: 0.25rem;
 	}
 `;

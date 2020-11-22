@@ -28,6 +28,7 @@ import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
 import { addProject } from "@services/projects";
+import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
 
 interface NavItem {
 	name: string;
@@ -157,13 +158,12 @@ function LeftSection(props: any) {
 						<DropdownSVG />
 					</div>
 					{showDropDown && (
-						<SidebarTeamDropdown onAddProjectCallback={setShowAddProject.bind(this, true)} onOutsideClick={toggleSettingsDropDown} />
-					)}
-					{showAddProject && (
-						<CreateProjectModal
-							onClose={closeProjectModal}
+						<SidebarTeamDropdown
+							onAddProjectCallback={setShowAddProject.bind(this, true)}
+							onOutsideClick={toggleSettingsDropDown}
 						/>
 					)}
+					{showAddProject && <CreateProjectModal onClose={closeProjectModal} />}
 				</div>
 				<NavList navItems={mainNavLinks} />
 			</div>
@@ -220,13 +220,10 @@ function ProjectSelector(props: {
 		setIsShowingCreateProjectModal(false);
 	}, [isShowingCreateProjectModal]);
 
-
 	return (
 		<div css={styles.projectDropdownContainer}>
 			{isShowingCreateProjectModal && (
-				<CreateProjectModal
-					onClose={closeProjectModal}
-				/>
+				<CreateProjectModal onClose={closeProjectModal} />
 			)}
 			{props.projectsList && (
 				<DropDown
@@ -307,6 +304,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 						</div>
 						<div css={styles.innerContentContainer}>
 							<Component {...props} />
+							<AddPaymentModel onClose={() => {}} />
 							<FeedbackComponent />
 						</div>
 					</div>

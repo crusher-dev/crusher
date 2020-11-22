@@ -30,7 +30,7 @@ const buttonCss = css`
 	line-height: 1.126rem;
 	cursor: pointer;
 	font-weight: 700;
-    border-radius: 0.31rem;
+	border-radius: 0.31rem;
 `;
 
 export { ModalButton };

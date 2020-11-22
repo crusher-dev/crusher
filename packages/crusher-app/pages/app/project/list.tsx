@@ -12,8 +12,8 @@ import Chrome from "../../../public/svg/project/chrome.svg";
 import Router from "next/router";
 import { getTime } from "@utils/helpers";
 import { deleteProjectFromBackend } from "@services/projects";
-import React, {useState} from "react";
-import {CreateProjectModal} from "@ui/containers/modals/createProjectModal";
+import React, { useState } from "react";
+import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 
 function ProjectItem({ name, id, team_id, noTests, created_at }) {
 	const addTest = (projectId: number) => {
@@ -56,11 +56,15 @@ function HeaderComponent() {
 				<div css={headingText}>List of projects in your workspace</div>
 			</div>
 			<div>
-				<AddProject label={"Add Project"} onClick={setshowAddProjectStatus.bind(this,true)}/>
+				<AddProject
+					label={"Add Project"}
+					onClick={setshowAddProjectStatus.bind(this, true)}
+				/>
 				{showAddProject && (
 					<CreateProjectModal
-						onClose={()=>{
-							setshowAddProjectStatus(false)}}
+						onClose={() => {
+							setshowAddProjectStatus(false);
+						}}
 					/>
 				)}
 			</div>

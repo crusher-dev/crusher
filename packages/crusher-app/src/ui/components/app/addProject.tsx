@@ -2,9 +2,9 @@ import PlusSVG from "../../../../public/svg/sidebarSettings/plus.svg";
 import React from "react";
 import { css } from "@emotion/core";
 
-export function AddProject({ label = "Create a test" }) {
+export function AddProject({ label = "Create a test", onClick }) {
 	return (
-		<div css={styles.createTestButton}>
+		<div css={styles.createTestButton} onClick={onClick}>
 			<PlusSVG />
 			<span css={styles.createTestLabel}>{label}</span>
 		</div>

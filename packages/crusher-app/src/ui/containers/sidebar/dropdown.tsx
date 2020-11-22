@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { css } from "@emotion/core";
 // @ts-ignore
 import OutsideClickHandler from "react-outside-click-handler";
@@ -6,26 +6,37 @@ import AddDropdownSVG from "../../../../public/svg/sidebarSettings/addDropdown.s
 import { resolvePathToBackendURI } from "@utils/url";
 import Link from "next/link";
 
-export const SidebarTeamDropdown = ({ onOutsideClick }) => (
-	<OutsideClickHandler onOutsideClick={onOutsideClick}>
-		<ul css={settingsDropdownStyle}>
-			<li style={{ display: "flex", alignItems: "center" }}>
-				<AddDropdownSVG style={{ marginRight: "1rem" }} />
-				<span>Add team member</span>
-			</li>
-			<li style={{ display: "flex", alignItems: "center" }}>
-				<AddDropdownSVG style={{ marginRight: "1rem" }} />
-				<span>Add Project</span>
-			</li>
-			<li>Manage Billing/Plan</li>
-			<li>Manage Payment</li>
-			<li>Get Support</li>
-			<Link href={resolvePathToBackendURI("/user/logout")}>
-				<li>Logout</li>
-			</Link>
-		</ul>
-	</OutsideClickHandler>
-);
+import {CreateProjectModal} from "@ui/containers/modals/createProjectModal";
+
+export const SidebarTeamDropdown = ({ onOutsideClick }) => {
+	const [showAddProject, setshowAddProject] = useState(false);
+
+	return (
+		<OutsideClickHandler onOutsideClick={onOutsideClick}>
+			{showAddProject && (
+				<CreateProjectModal
+					onClose={setshowAddProject.bind(this,false)}
+				/>
+			)}
+			<ul css={settingsDropdownStyle}>
+				<li style={{ display: "flex", alignItems: "center" }} >
+					<AddDropdownSVG style={{ marginRight: "1rem" }} />
+					<span>Add team member</span>
+				</li>
+				<li style={{ display: "flex", alignItems: "center" }}  onClick={setshowAddProject.bind(this,true)}>
+					<AddDropdownSVG style={{ marginRight: "1rem" }} />
+					<span>Add Project</span>
+				</li>
+				<li>Manage Billing/Plan</li>
+				<li>Manage Payment</li>
+				<li>Get Support</li>
+				<Link href={resolvePathToBackendURI("/user/logout")}>
+					<li>Logout</li>
+				</Link>
+			</ul>
+		</OutsideClickHandler>
+	);
+}
 
 const settingsDropdownStyle = css`
 	position: absolute;

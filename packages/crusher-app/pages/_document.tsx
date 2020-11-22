@@ -52,6 +52,45 @@ export default class MyDocument extends Document {
 						text-decoration: underline !important;
 						color: #5b76f7;
 					}
+					.StripeElement {
+						margin-top: 0.5rem;
+						box-sizing: border-box;
+
+						height: 45px;
+
+						padding: 10px 12px;
+
+						border-radius: 4px;
+						background-color: white;
+
+						box-shadow: 0 1px 3px 0 #e6ebf1;
+						-webkit-transition: box-shadow 150ms ease;
+						transition: box-shadow 150ms ease;
+
+						margin-top: 0.5rem;
+						border: 1px solid #d0d0d0;
+						width: 100%;
+
+						border-radius: 4px;
+					}
+
+					.StripeElement--focus {
+						box-shadow: 0 1px 3px 0 #cfd7df;
+					}
+
+					.StripeElement--invalid {
+						border-color: #ff3838;
+					}
+
+					.StripeElement--webkit-autofill {
+						background-color: #fefde5 !important;
+					}
+					.card-errors {
+						margin-top: 0.5rem;
+						font-size: 1rem;
+						color: #ff3838;
+						font-weight: 500;
+					}
 				`}</style>
 			</Html>
 		);

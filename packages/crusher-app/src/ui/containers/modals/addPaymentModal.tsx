@@ -5,16 +5,16 @@ import { ModalInput } from "@ui/components/modal/input";
 import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
 import { addProject } from "@services/projects";
-
 import { addProjectInRedux } from "@redux/actions/action";
 
 import { store } from "@redux/store";
+import { StripePaymentBox } from "@ui/components/common/payment.tsx";
 
 interface iProps {
 	onClose: any;
 }
 
-const CreateProjectModal = (props: iProps) => {
+const AddPaymentModel = (props: iProps) => {
 	const { onClose } = props;
 	const [projectName, setProjectName] = useState("");
 
@@ -40,49 +40,32 @@ const CreateProjectModal = (props: iProps) => {
 
 	return (
 		<Modal
-			heading={"Create a project"}
-			subHeading={"in your team"}
-			illustrationSVG={"/assets/img/illustration/create_project_illustration.png"}
-			subHeading={"in your team"}
+			heading={"Add payment method"}
+			subHeading={"Add a credit card"}
+			illustrationSVG={"/assets/img/illustration/women_running.png"}
 			onClose={onClose}
 			topAreaCSS={topAreaCSS}
+			illustrationContainerCSS={illustrationContainerCss}
 		>
 			<div css={bodyContainerCss}>
-				<div css={modalMoto}>Organize your test in different projects</div>
-				<ModalInput
-					id={"project_name"}
-					title={"Project Name"}
-					placeholder={"Enter project name"}
-					value={projectName}
-					onChange={handleChange}
-				/>
-				<div css={membersInputCss}>
-					<div>
-						<label>Members of this project</label>
-					</div>
-					<div css={membersDescCss}>
-						Everyone gets project update. Change this in project settings.
-					</div>
-				</div>
-
-				<ModalButton
-					containerCss={buttonCss}
-					title={"Create a new Project"}
-					onClick={handleSubmit}
-				/>
+				<div css={modalMoto}>You will be charged on 20Nov.</div>
+				<StripePaymentBox />
 			</div>
 		</Modal>
 	);
 };
 
+const illustrationContainerCss = css`
+	top: 1.2rem;
+	right: -0.5rem;
+`;
+
 const topAreaCSS = css`
-	background: linear-gradient(
-		-184deg,
-		#262f39 16.9%,
-		#242d37 35.74%,
-		#112128 79.28%
-	);
-	border-bottom: 2px solid #0a1215;
+	background: #e8ecff;
+	// border-bottom: 2px solid #E8ECFF;
+	color: #2b2b39;
+	div > img {
+	}
 `;
 
 const modalMoto = css`
@@ -121,6 +104,7 @@ const membersDescCss = css`
 const buttonCss = css`
 	margin-top: auto;
 	margin-top: 10rem;
+	background: #23232f;
 `;
 
-export { CreateProjectModal };
+export { AddPaymentModel };

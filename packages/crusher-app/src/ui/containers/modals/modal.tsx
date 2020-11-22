@@ -10,6 +10,7 @@ interface iProps {
 	contentCSS: any; //Css for content. Overrides existing css
 	children: any;
 	illustrationSVG: any;
+	illustrationContainerCSS: any;
 	onClose: any;
 }
 
@@ -22,6 +23,7 @@ class Modal extends React.Component<iProps, any> {
 			contentCSS,
 			children,
 			illustrationSVG,
+			illustrationContainerCSS,
 			css,
 			onClose,
 		} = this.props;
@@ -35,7 +37,7 @@ class Modal extends React.Component<iProps, any> {
 						<div css={crossModalCss} onClick={onClose}>
 							<CrossModal />
 						</div>
-						<div css={illustrationContainerCss}>
+						<div css={[illustrationContainerCss, illustrationContainerCSS]}>
 							<img src={illustrationSVG} />
 						</div>
 					</div>
@@ -55,7 +57,6 @@ const containerCss = css`
 	height: 100%;
 	background: rgba(22, 21, 21, 0.95);
 	z-index: 1001;
-
 `;
 
 const modalContainerCss = css`
@@ -66,12 +67,11 @@ const modalContainerCss = css`
 	transform: translate(-50%, -20%);
 	overflow: hidden;
 	border-radius: 0.5rem;
-
 `;
 
 const illustrationContainerCss = css`
 	position: absolute;
-    top: -.8rem;
+	top: -0.8rem;
 	right: -0.5rem;
 `;
 

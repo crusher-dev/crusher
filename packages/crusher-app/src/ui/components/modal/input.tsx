@@ -33,15 +33,17 @@ const containerCss = css`
 		font-family: Gilroy;
 		font-weight: bold;
 		color: #2b2b39;
-		font-size: 0.825rem;
+		font-size: 1.1rem;
+		line-height: 1rem;
 	}
 	input {
-		margin-top: 0.65rem;
-		padding: 0.65rem 0.9rem;
+		margin-top: 0.8rem;
+		padding: 0.7rem 1rem;
 		font-family: Gilroy;
-		font-size: 0.8rem;
+		font-size: 1rem;
+
 		color: #2e2e2e;
-		border: 0.1rem solid #dfdfdf;
+		border: 0.125rem solid #dfdfdf;
 		width: 100%;
 		border-radius: 0.25rem;
 	}

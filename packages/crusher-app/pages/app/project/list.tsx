@@ -18,12 +18,7 @@ function ProjectItem({ name, id, team_id }) {
 			<div css={projectContent}>
 				<div css={projectName}>{name}</div>
 				<div css={projectMeta}>
-					<div css={projectWatcher}>14 watcher</div>
 					<div css={projectTest}>12 test</div>
-				</div>
-
-				<div css={projectAction}>
-					<div css={addProjectMember}>Add member</div>
 					<div css={addProjectTest}>Add test</div>
 				</div>
 			</div>
@@ -119,46 +114,39 @@ const projectName = css`
 	font-weight: bold;
 	font-size: 1.4rem;
 	line-height: 1.4rem;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.75rem;
 `;
 const projectMeta = css`
 	display: flex;
-	margin-bottom: 0.75rem;
 	font-size: 1rem;
 	color: #2b2b39;
 `;
-const projectWatcher = css`
+
+const projectTest = css`
 	margin-right: 2rem;
 `;
-const projectTest = css``;
-const projectAction = css`
-	display: flex;
-	font-size: 1rem;
-	color: #2b2b39;
+
+const addProjectTest = css`
 	text-decoration: underline;
 `;
-const addProjectMember = css`
-	margin-right: 2rem;
-`;
-const addProjectTest = css``;
 const projectRightSection = css`
 	margin-left: auto;
 	flex-direction: column;
 	display: flex;
-	justify-content: space-between;
 	align-items: flex-end;
 `;
 const projectDeleteButton = css`
 	color: #e43756;
 	font-size: 0.86rem;
 	font-weight: 600;
+	margin-top: 1rem;
 `;
 const projectCreatedOn = css``;
 
 ProjectTestsList.getInitialProps = async (ctx) => {
 	const { res, req, store } = ctx;
 	try {
-		const headers;
+		let headers;
 		if (req) {
 			headers = req.headers;
 			cleanHeaders(headers);

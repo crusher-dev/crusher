@@ -34,6 +34,7 @@ export default class MyDocument extends Document {
 					<Main />
 					<NextScript />
 					<GTMNoScriptTag />
+					<div id={"overlay"}></div>
 				</body>
 				<style jsx global>{`
 					body {

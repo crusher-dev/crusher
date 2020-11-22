@@ -4,10 +4,10 @@ import { DropDown } from "@ui/components/project/DropDown";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import { saveSelectedProjectInRedux } from "@redux/actions/action";
+import { addProjectInRedux, saveSelectedProjectInRedux } from '@redux/actions/action';
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
-import React, { CSSProperties, useEffect, useState } from "react";
+import React, { CSSProperties, useCallback, useEffect, useState } from 'react';
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
@@ -22,6 +22,9 @@ import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
 import { useRouter } from "next/router";
 import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
+import { CreateProjectModal } from '@ui/containers/modals/createProjectModal';
+import ReactDOM from "react-dom";
+import { addProject } from '@services/projects';
 
 interface NavItem {
 	name: string;
@@ -178,6 +181,8 @@ function ProjectSelector(props: {
 	onChange: (project) => void;
 }) {
 	const router = useRouter();
+	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(false);
+
 	const { options, onChange, selectedProject } = props;
 	const modifiedOption = [
 		{ label: "Add new project", value: "add_project" },
@@ -186,15 +191,29 @@ function ProjectSelector(props: {
 	];
 	const handleChange = (option) => {
 		if (option.value === "add_project") {
-			router.push("https://google.com");
+			setIsShowingCreateProjectModal(true);
 		} else if (option.value === "view_all") {
 			router.push("/app/project/list");
 		} else {
 			onChange(option);
 		}
 	};
+
+	const closeProjectModal = useCallback(() => {
+		ReactDOM.render(null, document.getElementById("overlay"));
+		setIsShowingCreateProjectModal(false);
+	}, [isShowingCreateProjectModal]);
+
+	const createNewProject = (projectName: string) => {
+		addProject(projectName).then(projectId => {
+			closeProjectModal();
+			store.dispatch(addProjectInRedux(projectName, projectId));
+		});
+	};
+
 	return (
 		<div css={styles.projectDropdownContainer}>
+			{isShowingCreateProjectModal && (<CreateProjectModal onClose={closeProjectModal} onSubmit={createNewProject} />)}
 			{props.projectsList && (
 				<DropDown
 					options={modifiedOption}

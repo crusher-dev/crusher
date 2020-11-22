@@ -62,10 +62,7 @@ export default class PaymentService {
 
 	async addPlan(team_id, subscriptionId, planId) {
 		const [{ stripe_pricing_id }] = await this.getPlanData([planId]);
-		const { id: subscriptionItemId } = await this.stripeManager.addItemInSubscription(
-			subscriptionId,
-			stripe_pricing_id,
-		);
+		const { id: subscriptionItemId } = await this.stripeManager.addItemInSubscription(subscriptionId, stripe_pricing_id);
 		await this.addNewTeamPricingLog(team_id, planId, 'Stripe', subscriptionItemId);
 	}
 
@@ -75,9 +72,7 @@ export default class PaymentService {
 			pricingLogId,
 		);
 		await this.stripeManager.deleteSubscriptionItems(stripeSubscriptionItemId);
-		const makePlanInactive = this.dbManager.fetchSingleRow(`UPDATE teams SET ongoing=0',  WHERE id = ?`, [
-			pricingLogId,
-		]);
+		const makePlanInactive = this.dbManager.fetchSingleRow(`UPDATE teams SET ongoing=0',  WHERE id = ?`, [pricingLogId]);
 		await makePlanInactive;
 	}
 
@@ -87,18 +82,10 @@ export default class PaymentService {
 			const currentPlanPromise = await this.getPlans(team_id);
 			const [[newPlanInfo], currentPlans] = await Promise.all([newPlanPromise, currentPlanPromise]);
 
-			const {
-				is_addon: newPlanIsAddon,
-				listing_type: newPlanListingTpye,
-				product_type: newPlanProductType,
-			} = newPlanInfo;
+			const { is_addon: newPlanIsAddon, listing_type: newPlanListingTpye, product_type: newPlanProductType } = newPlanInfo;
 
 			const filteredPlan = currentPlans.filter((it) => {
-				return (
-					it.is_addon === newPlanIsAddon &&
-					it.listing_type === newPlanListingTpye &&
-					it.product_type === newPlanProductType
-				);
+				return it.is_addon === newPlanIsAddon && it.listing_type === newPlanListingTpye && it.product_type === newPlanProductType;
 			})[0];
 
 			await this.removePlan(filteredPlan.stripe_subscription_item_id);
@@ -126,10 +113,10 @@ export default class PaymentService {
 		const pricingLogPromise = subscriptionData.items.data.map((item, i) => {
 			this.addNewTeamPricingLog(team_id, crusherPlanIds[i], 'Stripe', item.id);
 		});
-		const updateTeamPromise = this.dbManager.fetchSingleRow(
-			`UPDATE teams SET type='PAID', stripe_subscription_id=? WHERE id = ?`,
-			[subscriptionData.id, team_id],
-		);
+		const updateTeamPromise = this.dbManager.fetchSingleRow(`UPDATE teams SET type='PAID', stripe_subscription_id=? WHERE id = ?`, [
+			subscriptionData.id,
+			team_id,
+		]);
 
 		await Promise.all([updateTeamPromise, ...pricingLogPromise]);
 		return { status: 'success' };
@@ -139,13 +126,8 @@ export default class PaymentService {
 	async switchToFreePlan(teamId) {
 		const { stripe_subscription_id } = await this.teamService.getTeamInfo(teamId);
 		try {
-			const updateUserTypePromise = this.dbManager.fetchSingleRow(`UPDATE teams SET type='FREE' WHERE id = ?`, [
-				teamId,
-			]);
-			const updateLogsPromise = this.dbManager.fetchSingleRow(
-				`UPDATE team_pricing_log SET ongoing=false and end_at = now() WHERE team_id = ?`,
-				[teamId],
-			);
+			const updateUserTypePromise = this.dbManager.fetchSingleRow(`UPDATE teams SET type='FREE' WHERE id = ?`, [teamId]);
+			const updateLogsPromise = this.dbManager.fetchSingleRow(`UPDATE team_pricing_log SET ongoing=false and end_at = now() WHERE team_id = ?`, [teamId]);
 			const addFreePricingLog = this.addNewTeamPricingLog(teamId, 1, 'no_payment');
 			const changeStripePayment = this.stripeManager.expireFreeTrial(stripe_subscription_id, 0);
 			await Promise.all([updateUserTypePromise, updateLogsPromise, addFreePricingLog, changeStripePayment]);

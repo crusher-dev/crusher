@@ -1,18 +1,22 @@
 {
+  "name": "crusher",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "version": "1.0.0",
   "description": "Mono repository for crusher",
-  "main": "index.js",
+  "main": "",
   "license": "MIT",
   "scripts": {
     "start": "pm2 start",
-    "log:app": "pm2 logs crusher-app"
+    "log:app": "pm2 logs crusher-app",
+    "lint": "lerna run lint"
   },
-  "dependencies": {
+  "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
+    "husky": "^4.3.0",
+    "lerna": "^3.22.1",
     "pm2": "^4.5.0",
     "ts-node-dev": "^1.0.0"
   }

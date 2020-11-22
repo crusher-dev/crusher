@@ -1,17 +1,17 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "removeComments": true,
-    "sourceMap": true,
-    "target": "es5",
-    "outDir": "build",
-    "allowJs": true,
-    "noEmitHelpers": false,
-    "noImplicitAny": false,
-    "noUnusedLocals": false,
-    "strictNullChecks": false
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"module": "commonjs",
+		"removeComments": true,
+		"sourceMap": true,
+		"target": "es5",
+		"outDir": "build",
+		"allowJs": true,
+		"noEmitHelpers": false,
+		"noImplicitAny": false,
+		"noUnusedLocals": false,
+		"strictNullChecks": false
+	},
+	"include": ["**/*.ts"],
+	"exclude": ["node_modules", "**/*.spec.ts"]
 }

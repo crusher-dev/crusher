@@ -31,10 +31,7 @@ export default class TestInstanceService {
 		);
 		const updatePromisesArr = results.map((result) => {
 			return (async () => {
-				await this.dbManager.fetchSingleRow(`UPDATE test_instance_results SET status = ? WHERE id = ?`, [
-					TestInstanceResultStatus.PASSED,
-					result.id,
-				]);
+				await this.dbManager.fetchSingleRow(`UPDATE test_instance_results SET status = ? WHERE id = ?`, [TestInstanceResultStatus.PASSED, result.id]);
 				return result.instance_result_set_id;
 			})();
 		});
@@ -56,11 +53,7 @@ export default class TestInstanceService {
 		);
 		const updatePromisesArr = results.map((result) => {
 			return (async () => {
-				await this.dbManager.fetchSingleRow(`UPDATE test_instance_results SET status = ? WHERE id = ?`, [
-					TestInstanceResultStatus.PASSED,
-					result.id,
-					platform,
-				]);
+				await this.dbManager.fetchSingleRow(`UPDATE test_instance_results SET status = ? WHERE id = ?`, [TestInstanceResultStatus.PASSED, result.id, platform]);
 				return result.instance_result_set_id;
 			})();
 		});

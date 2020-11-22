@@ -21,9 +21,7 @@ export default class CommentsServiceV2 {
 				[current.instance_id]: {
 					...(prev && prev[current.instance_id] ? prev[current.instance_id] : {}),
 					[current.screenshot_id]: [
-						...(prev && prev[current.instance_id] && prev[current.instance_id][current.screenshot_id]
-							? prev[current.instance_id][current.screenshot_id]
-							: []),
+						...(prev && prev[current.instance_id] && prev[current.instance_id][current.screenshot_id] ? prev[current.instance_id][current.screenshot_id] : []),
 						current,
 					],
 				},

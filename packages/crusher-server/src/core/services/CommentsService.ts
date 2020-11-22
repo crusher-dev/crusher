@@ -30,10 +30,7 @@ export default class CommentsService {
 	}
 
 	async getCommentsOfScreenshotInResultSet(screenshotId: number, resultSetId: number) {
-		return this.dbManager.fetchData(`SELECT * FROM comments WHERE screenshot_id = ? AND result_set_id = ? `, [
-			screenshotId,
-			resultSetId,
-		]);
+		return this.dbManager.fetchData(`SELECT * FROM comments WHERE screenshot_id = ? AND result_set_id = ? `, [screenshotId, resultSetId]);
 	}
 
 	async deleteComment(commentId: number) {

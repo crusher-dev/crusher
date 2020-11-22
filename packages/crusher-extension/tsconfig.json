@@ -1,25 +1,21 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "rootDir": "../../",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "strict": false,
-    "noImplicitReturns": true,
-    "moduleResolution": "node",
-    "target": "es5",
-    "allowJs": true,
-    "jsx": "react",
-    "allowSyntheticDefaultImports": true
-  },
-  "typeRoots": ["node_modules/@types"],
-  "files": [
-    "src/background.ts",
-    "src/ui/popup/index.tsx",
-    "../../node_modules/react/index.js"
-  ],
-  "include": ["./src/**/*"]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"module": "commonjs",
+		"rootDir": "../../",
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"sourceMap": true,
+		"strict": false,
+		"noImplicitReturns": true,
+		"moduleResolution": "node",
+		"target": "es5",
+		"allowJs": true,
+		"jsx": "react",
+		"allowSyntheticDefaultImports": true
+	},
+	"typeRoots": ["node_modules/@types"],
+	"files": ["src/background.ts", "src/ui/popup/index.tsx", "../../node_modules/react/index.js"],
+	"include": ["./src/**/*"]
 }

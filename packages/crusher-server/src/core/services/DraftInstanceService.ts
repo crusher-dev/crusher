@@ -12,27 +12,16 @@ export default class DraftInstanceService {
 		this.dbManager = Container.get(DBManager);
 	}
 
-	async createNewDraftInstance(details: {
-		code: string;
-		draft_id: number;
-		platform: 'CHROME' | 'FIREFOX' | 'SAFARI' | 'ALL';
-		status: InstanceStatus;
-	}) {
+	async createNewDraftInstance(details: { code: string; draft_id: number; platform: 'CHROME' | 'FIREFOX' | 'SAFARI' | 'ALL'; status: InstanceStatus }) {
 		return this.dbManager.insertData(`INSERT INTO draft_instances SET ?, created_at = NOW()`, details);
 	}
 
 	async getRecentDraftInstance(draftId: number) {
-		return this.dbManager.fetchSingleRow(
-			`SELECT * FROM draft_instances WHERE draft_id = ? ORDER BY created_at DESC LIMIT 1`,
-			[draftId],
-		);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM draft_instances WHERE draft_id = ? ORDER BY created_at DESC LIMIT 1`, [draftId]);
 	}
 
 	async updateDraftInstanceStatus(status: string, draftInstanceId: number) {
-		return this.dbManager.fetchSingleRow(`UPDATE draft_instances SET status = ? WHERE id = ?`, [
-			status,
-			draftInstanceId,
-		]);
+		return this.dbManager.fetchSingleRow(`UPDATE draft_instances SET status = ? WHERE id = ?`, [status, draftInstanceId]);
 	}
 
 	async getAllDraftInstances(draftId: number) {

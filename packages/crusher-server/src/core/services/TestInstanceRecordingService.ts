@@ -23,8 +23,6 @@ export default class TestInstanceRecordingService {
 	}
 
 	async getTestRecording(instanceId: number): Promise<TestInstanceRecording> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM test_instance_recordings WHERE test_instance_id = ?`, [
-			instanceId,
-		]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM test_instance_recordings WHERE test_instance_id = ?`, [instanceId]);
 	}
 }

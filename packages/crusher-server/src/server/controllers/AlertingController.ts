@@ -1,15 +1,4 @@
-import {
-	Authorized,
-	Body,
-	CurrentUser,
-	Get,
-	JsonController,
-	MethodNotAllowedError,
-	Param,
-	Post,
-	QueryParams,
-	Res,
-} from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Get, JsonController, MethodNotAllowedError, Param, Post, QueryParams, Res } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
 import ProjectService from '../../core/services/ProjectService';
 import TestService from '../../core/services/TestService';

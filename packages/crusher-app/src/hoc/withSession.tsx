@@ -41,13 +41,17 @@ function WithSession(Component, componentScope?: string) {
 
 		cleanHeaders(headers);
 		// @TODO: Rethink if there is a better way to do this.
+		// This is coming from app.tsx.
 		let statusInfo = ctx.userStatus || null;
 		await handleUserStatus(statusInfo, res, componentScope);
-
 		let userInfo = await getUserInfo(headers);
 
+		/*
+		If there's invalid project id, set default project id
+		 */
+
 		const redirectToDashboard = componentScope && componentScope !== statusInfo;
-		if (redirectToDashboard) {
+		if (redirectToDashboard && !userInfo) {
 			await redirectToFrontendPath("/", res);
 		}
 

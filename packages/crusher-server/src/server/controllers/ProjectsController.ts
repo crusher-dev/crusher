@@ -1,14 +1,4 @@
-import {
-	Authorized,
-	Body,
-	CurrentUser,
-	Get,
-	JsonController,
-	Param,
-	Post,
-	Req,
-	UnauthorizedError,
-} from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, Req, UnauthorizedError } from 'routing-controllers';
 import { Container, Inject, Service } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';
@@ -134,10 +124,7 @@ export class ProjectsController {
 
 				let { checkRunId: _check } = (await githubService.createCheckRunFromJob(job)) as any;
 				checkRunId = _check;
-				Logger.debug(
-					'ProjectsController::runTestsInProject',
-					chalk.hex('#0b2ce2').bold(`Got check run id: ${checkRunId}`),
-				);
+				Logger.debug('ProjectsController::runTestsInProject', chalk.hex('#0b2ce2').bold(`Got check run id: ${checkRunId}`));
 
 				await this.jobService.updateJobInfo(job.id, {
 					check_run_id: checkRunId,

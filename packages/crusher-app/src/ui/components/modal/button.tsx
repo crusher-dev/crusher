@@ -16,15 +16,21 @@ const ModalButton = (props: iProps) => {
 };
 
 const buttonCss = css`
+	&:hover {
+		background: #3c59cf;
+	}
 	background: #6583fe;
-	padding: 0.65rem;
+	padding: 1rem;
 	width: 100%;
 	text-align: center;
 	font-family: Gilroy;
 	font-weight: bold;
 	color: #fff;
-	font-size: 0.9rem;
+	font-size: 1.126rem;
+	line-height: 1.126rem;
 	cursor: pointer;
+	font-weight: 700;
+	border-radius: 0.225rem;
 `;
 
 export { ModalButton };

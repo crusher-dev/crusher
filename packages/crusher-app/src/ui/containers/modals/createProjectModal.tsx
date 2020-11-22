@@ -30,13 +30,14 @@ const CreateProjectModal = (props: iProps) => {
 	return (
 		<Modal
 			heading={"Create a project"}
-			desc={"in your team"}
-			illustration={"/assets/img/illustration/create_project_illustration.png"}
-			moto={"Structure your team in a nice-manner."}
+			subHeading={"in your team"}
+			illustrationSVG={"/assets/img/illustration/create_project_illustration.png"}
+			subHeading={"in your team"}
 			onClose={onClose}
+			topAreaCSS={topAreaCSS}
 		>
-			<div className={modalMoto}>Structure your team in a nice-manner.</div>
 			<div css={bodyContainerCss}>
+				<div css={modalMoto}>Structure your team in a nice-manner.</div>
 				<ModalInput
 					id={"project_name"}
 					title={"Project Name"}
@@ -63,34 +64,51 @@ const CreateProjectModal = (props: iProps) => {
 	);
 };
 
+const topAreaCSS = css`
+	background: linear-gradient(
+		150deg,
+		#262f39 16.9%,
+		#242d37 35.74%,
+		#112128 79.28%
+	);
+`;
+
 const modalMoto = css`
-	font-size: 0.825rem;
+	font-size: 1rem;
+	margin-bottom: 2rem;
 `;
 
 const bodyContainerCss = css`
-	margin-top: 1.55rem;
 	display: flex;
 	flex-direction: column;
 	label {
 		font-family: Gilroy;
 		font-weight: bold;
 		color: #2b2b39;
-		font-size: 0.825rem;
+		font-size: 1rem;
 	}
-	min-height: 22rem;
+	min-height: 21rem;
 `;
 
 const membersInputCss = css`
-	margin-top: 2.15rem;
+	margin-top: 2.75rem;
+	label {
+		font-family: Gilroy;
+		font-weight: bold;
+		color: #2b2b39;
+		font-size: 1rem;
+		line-height: 1.1rem;
+	}
 `;
 
 const membersDescCss = css`
-	font-size: 0.8rem;
-	margin-top: 0.5rem;
+	font-size: 0.95rem;
+	margin-top: 0.675rem;
 `;
 
 const buttonCss = css`
 	margin-top: auto;
+	margin-top: 8.6rem;
 `;
 
 export { CreateProjectModal };

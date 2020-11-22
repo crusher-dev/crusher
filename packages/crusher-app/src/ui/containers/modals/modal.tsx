@@ -5,12 +5,11 @@ import CrossModal from "../../../../public/svg/modals/cross.svg";
 
 interface iProps {
 	heading: string;
-	desc: string;
-	moto: string;
-	topAreaCss: any;
-	bodyCss: any;
+	subHeading: string;
+	topAreaCSS: any; //gradeint for topbar
+	contentCSS: any; //Css for content. Overrides existing css
 	children: any;
-	illustration: any;
+	illustrationSVG: any;
 	onClose: any;
 }
 
@@ -18,29 +17,31 @@ class Modal extends React.Component<iProps, any> {
 	render() {
 		const {
 			heading,
-			desc,
-			topAreaCss,
-			bodyCss,
+			subHeading,
+			topAreaCSS,
+			contentCSS,
 			children,
-			illustration,
+			illustrationSVG,
 			css,
 			onClose,
 		} = this.props;
 
+		console.log(this.props);
+
 		return ReactDOM.render(
 			<div css={[containerCss, css]}>
 				<div css={modalContainerCss}>
-					<div css={[topContainerCss, topAreaCss]}>
+					<div css={[topContainerCss, topAreaCSS]}>
 						<div className={"modalHeading"}>{heading}</div>
-						<div className={"modalDesc"}>{desc}</div>
+						<div className={"modalDesc"}>{subHeading}</div>
 						<div css={crossModalCss} onClick={onClose}>
 							<CrossModal />
 						</div>
 						<div css={illustrationContainerCss}>
-							<img src={illustration} />
+							<img src={illustrationSVG} />
 						</div>
 					</div>
-					<div css={[bodyContainerCss, bodyCss]}>{children}</div>
+					<div css={[bodyContainerCss, contentCSS]}>{children}</div>
 				</div>
 			</div>,
 			document.getElementById("overlay"),
@@ -54,56 +55,60 @@ const containerCss = css`
 	top: 0;
 	width: 100vw;
 	height: 100vh;
-	background: rgb(0, 0, 0, 0.5);
+	background: rgba(22, 21, 21, 0.95);
 	z-index: 1001;
 `;
 
 const modalContainerCss = css`
-	max-width: 37rem;
+	width: 33.35rem;
 	position: relative;
-	top: 50%;
+	top: 8rem;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, -2rem);
 	overflow: hidden;
-	border-radius: 0.25rem;
+	border-radius: 0.5rem;
 `;
 
 const illustrationContainerCss = css`
 	position: absolute;
-	top: -1rem;
+	top: -0.75rem;
 	right: -0.5rem;
 `;
 
 const topContainerCss = css`
-	background: #0a1e24;
 	color: #fff;
-	padding: 1.4rem 1.55rem;
+	padding: 2rem 1.75rem 1rem 1.75rem;
 	padding-bottom: 2.25rem;
 	position: relative;
 	font-family: Cera Pro;
 	.modalHeading {
 		font-weight: 900;
-		font-size: 1.4rem;
+		font-size: 1.75rem;
 	}
 	.modalDesc {
+		font-size: 1.1rem;
 		margin-top: 0.25rem;
-		font-size: 1rem;
 	}
 `;
 
 const bodyContainerCss = css`
 	width: 100%;
 	background: #fff;
-	padding: 1.25rem 1.55rem;
-	padding-bottom: 2rem;
+	padding: 1.82rem 1.75rem 2.25rem 1.75rem;
+	margin-bottom: 1.5rem;
 	font-family: Gilroy;
 	color: #2e2e2e;
+
+	border: 2px solid #d7d7d7;
+	border-top: 0;
+	border-bottom-left-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
 `;
 
 const crossModalCss = css`
 	position: absolute;
-	top: 1.5rem;
-	right: 2.25rem;
+	top: 2.5rem;
+	right: 1.75rem;
 	cursor: pointer;
 	z-index: 2;
 `;

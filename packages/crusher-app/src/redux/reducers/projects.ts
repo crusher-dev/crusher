@@ -1,5 +1,6 @@
 import {
 	ADD_PROJECT,
+	DELETE_PROJECT,
 	SAVE_PROJECTS,
 	SAVE_SELECTED_PROJECT,
 } from "@redux/actions/action";
@@ -35,6 +36,17 @@ const projects = (state = initialState, action) => {
 				...state,
 				allProjects: [...state.allProjects, { name: action.name, id: action.id }],
 			};
+
+			return {
+				...state,
+				allProjects: [...state.allProjects, { name: action.name, id: action.id }],
+			};
+		case DELETE_PROJECT:
+			const filteredAllProjects = state.allProjects.filter((project: any) => {
+				return project.id !== action.id;
+			});
+			return { ...state, allProjects: filteredAllProjects };
+
 		case "persist/REHYDRATE":
 			return {
 				...state,

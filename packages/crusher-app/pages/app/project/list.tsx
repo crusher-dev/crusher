@@ -9,8 +9,19 @@ import { cleanHeaders } from "@utils/backendRequest";
 import { useSelector } from "react-redux";
 import { AddProject } from "@ui/components/app/addProject";
 import Chrome from "../../../public/svg/project/chrome.svg";
+import Router from "next/router";
+import { getTime } from "@utils/helpers";
+import { deleteProjectFromBackend } from "@services/projects";
 
-function ProjectItem({ name, id, team_id }) {
+function ProjectItem({ name, id, team_id, noTests, created_at }) {
+	const addTest = (projectId: number) => {
+		Router.replace("/app/project/onboarding/create-test");
+	};
+
+	const deleteProject = (projectId: number) => {
+		deleteProjectFromBackend(projectId);
+	};
+
 	return (
 		<div css={projectCard}>
 			<Chrome css={icon} />
@@ -18,13 +29,17 @@ function ProjectItem({ name, id, team_id }) {
 			<div css={projectContent}>
 				<div css={projectName}>{name}</div>
 				<div css={projectMeta}>
-					<div css={projectTest}>12 test</div>
-					<div css={addProjectTest}>Add test</div>
+					<div css={projectTest}>{noTests} tests</div>
+					<div css={addProjectTest} onClick={addTest}>
+						Add test
+					</div>
 				</div>
 			</div>
 			<div css={projectRightSection}>
-				<div css={projectCreatedOn}>Create on 26/12/2020</div>
-				<div css={projectDeleteButton}>Delete</div>
+				<div css={projectCreatedOn}>Created on {getTime(new Date(created_at))}</div>
+				<div css={projectDeleteButton} onClick={deleteProject}>
+					Delete
+				</div>
 			</div>
 		</div>
 	);
@@ -141,6 +156,7 @@ const projectDeleteButton = css`
 	font-size: 0.86rem;
 	font-weight: 600;
 	margin-top: 1rem;
+	cursor: pointer;
 `;
 const projectCreatedOn = css``;
 

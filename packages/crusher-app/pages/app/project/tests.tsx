@@ -4,12 +4,13 @@ import WithSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
 import { getAllTestsInfosInProject } from "@services/test";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import Link from "next/link";
 import { cleanHeaders } from "@utils/backendRequest";
 import { Player } from "@lottiefiles/react-lottie-player";
+import { CreateProjectModal } from '@ui/containers/modals/createProjectModal';
 
 function TestCard(props) {
 	const { name, userName, userId, id, featured_video_uri, createdAt } = props;

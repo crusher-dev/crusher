@@ -69,6 +69,12 @@ function NavList(props: NavListProps) {
 function LeftSection(props: any) {
 	const { userInfo, selectedProject } = props;
 	const [showDropDown, setShowDropDwon] = useState(false);
+	const [showAddProject, setShowAddProject] = useState(false);
+
+	const closeProjectModal = () => {
+		ReactDOM.render(null, document.getElementById("overlay"));
+		setShowAddProject(false);
+	};
 
 	const mainNavLinks = [
 		{
@@ -151,7 +157,12 @@ function LeftSection(props: any) {
 						<DropdownSVG />
 					</div>
 					{showDropDown && (
-						<SidebarTeamDropdown onOutsideClick={toggleSettingsDropDown} />
+						<SidebarTeamDropdown onAddProjectCallback={setShowAddProject.bind(this, true)} onOutsideClick={toggleSettingsDropDown} />
+					)}
+					{showAddProject && (
+						<CreateProjectModal
+							onClose={closeProjectModal}
+						/>
 					)}
 				</div>
 				<NavList navItems={mainNavLinks} />

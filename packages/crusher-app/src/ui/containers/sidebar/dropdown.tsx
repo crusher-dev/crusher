@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useCallback, useState } from 'react';
 import { css } from "@emotion/core";
 // @ts-ignore
 import OutsideClickHandler from "react-outside-click-handler";
@@ -8,22 +8,16 @@ import Link from "next/link";
 
 import {CreateProjectModal} from "@ui/containers/modals/createProjectModal";
 
-export const SidebarTeamDropdown = ({ onOutsideClick }) => {
-	const [showAddProject, setshowAddProject] = useState(false);
+export const SidebarTeamDropdown = ({ onOutsideClick, onAddProjectCallback }) => {
 
 	return (
 		<OutsideClickHandler onOutsideClick={onOutsideClick}>
-			{showAddProject && (
-				<CreateProjectModal
-					onClose={setshowAddProject.bind(this,false)}
-				/>
-			)}
 			<ul css={settingsDropdownStyle}>
 				<li style={{ display: "flex", alignItems: "center" }} >
 					<AddDropdownSVG style={{ marginRight: "1rem" }} />
 					<span>Add team member</span>
 				</li>
-				<li style={{ display: "flex", alignItems: "center" }}  onClick={setshowAddProject.bind(this,true)}>
+				<li style={{ display: "flex", alignItems: "center" }}  onClick={onAddProjectCallback}>
 					<AddDropdownSVG style={{ marginRight: "1rem" }} />
 					<span>Add Project</span>
 				</li>

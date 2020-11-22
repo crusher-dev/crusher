@@ -6,10 +6,7 @@ import { redirectToFrontendPath } from "@utils/router";
 import { getAllTestsInfosInProject } from "@services/test";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-	getProjectsList,
-	getSelectedProject,
-} from "@redux/stateUtils/projects";
+import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import Link from "next/link";
 import { cleanHeaders } from "@utils/backendRequest";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -123,7 +120,7 @@ function ProjectTestsList(props) {
 	const { tests } = props;
 	const [projectTests, setProjectTests] = useState(tests || []);
 	const [isLoading, setIsLoading] = useState(false);
-	const projectsList = useSelector(getProjectsList);
+	const projectsList = useSelector(getProjects);
 	const selectedProjectId = useSelector(getSelectedProject);
 
 	const isInitialMount = useRef(true);

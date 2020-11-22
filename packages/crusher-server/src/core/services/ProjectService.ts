@@ -49,9 +49,15 @@ export default class ProjectService {
 			[userId],
 		);
 
-		return projects.map((project) => {
-			return { id: project.id, name: project.name, team_id: project.team_id };
-		});
+		const out = [];
+		for(let i = 0; i < projects.length; i++){
+			const project = projects[i];
+			const noTests = await this.dbManager.fetchSingleRow(`SELECT COUNT(*) as totalTestCount FROM tests WHERE tests.project_id = ?`, [project.id]);
+
+			// @TODO: DO this in a single query.
+			out.push({ id: project.id, name: project.name, team_id: project.team_id, noTests: noTests.totalTestCount, created_at:  project.created_at });
+		}
+		return out;
 	}
 
 	async deleteProject(projectId: number) {

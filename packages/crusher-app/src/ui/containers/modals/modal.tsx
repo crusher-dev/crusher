@@ -6,7 +6,7 @@ import CrossModal from "../../../../public/svg/modals/cross.svg";
 interface iProps {
 	heading: string;
 	subHeading: string;
-	topAreaCSS: any; //gradeint for topbar
+	topAreaCSS: any; //gradient for topbar
 	contentCSS: any; //Css for content. Overrides existing css
 	children: any;
 	illustrationSVG: any;
@@ -25,8 +25,6 @@ class Modal extends React.Component<iProps, any> {
 			css,
 			onClose,
 		} = this.props;
-
-		console.log(this.props);
 
 		return ReactDOM.render(
 			<div css={[containerCss, css]}>

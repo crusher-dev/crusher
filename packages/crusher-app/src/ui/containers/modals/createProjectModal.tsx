@@ -4,20 +4,24 @@ import React from "react";
 import { ModalInput } from "@ui/components/modal/input";
 import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
+import {addProject} from "@services/projects";
+
+import {addProjectInRedux} from "@redux/actions/action";
+
+import { store } from "@redux/store";
 
 interface iProps {
-	onSubmit: any;
 	onClose: any;
 }
+
+
 const CreateProjectModal = (props: iProps) => {
-	const { onSubmit, onClose } = props;
+	const { onClose } = props;
 	const [projectName, setProjectName] = useState("");
 
 	const handleSubmit = () => {
 		if (projectName && projectName.replace(/\s/g, "").length) {
-			if (onSubmit) {
-				onSubmit(projectName);
-			}
+				createNewProject(projectName);
 		} else {
 			alert("Invalid project name");
 		}
@@ -25,6 +29,14 @@ const CreateProjectModal = (props: iProps) => {
 
 	const handleChange = (event: any) => {
 		setProjectName(event.target.value);
+	};
+
+	const createNewProject = (projectName: string) => {
+		addProject(projectName).then( async (projectId) => {
+			 await store.dispatch(addProjectInRedux(projectName, projectId));
+			 onClose();
+			window && window.location.reload();
+		});
 	};
 
 	return (

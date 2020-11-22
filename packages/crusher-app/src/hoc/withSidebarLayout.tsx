@@ -209,19 +209,12 @@ function ProjectSelector(props: {
 		setIsShowingCreateProjectModal(false);
 	}, [isShowingCreateProjectModal]);
 
-	const createNewProject = (projectName: string) => {
-		addProject(projectName).then((projectId) => {
-			closeProjectModal();
-			store.dispatch(addProjectInRedux(projectName, projectId));
-		});
-	};
 
 	return (
 		<div css={styles.projectDropdownContainer}>
 			{isShowingCreateProjectModal && (
 				<CreateProjectModal
 					onClose={closeProjectModal}
-					onSubmit={createNewProject}
 				/>
 			)}
 			{props.projectsList && (

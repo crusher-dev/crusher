@@ -91,7 +91,7 @@ const bodyContainerCss = css`
 `;
 
 const membersInputCss = css`
-	margin-top: 2.75rem;
+	margin-top: 2rem;
 	label {
 		font-family: Gilroy;
 		font-weight: bold;
@@ -108,7 +108,7 @@ const membersDescCss = css`
 
 const buttonCss = css`
 	margin-top: auto;
-	margin-top: 8.6rem;
+	margin-top: 8.3rem;
 `;
 
 export { CreateProjectModal };

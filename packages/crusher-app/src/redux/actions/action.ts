@@ -11,7 +11,7 @@ export const setUserDataInState = (data) => ({
 export const addProjectInRedux = (name, id) => ({
 	type: ADD_PROJECT,
 	name,
-	id
+	id,
 });
 
 export const saveSelectedProjectInRedux = (projectId) => ({

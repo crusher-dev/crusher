@@ -10,7 +10,7 @@ import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import Link from "next/link";
 import { cleanHeaders } from "@utils/backendRequest";
 import { Player } from "@lottiefiles/react-lottie-player";
-import { CreateProjectModal } from '@ui/containers/modals/createProjectModal';
+import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 
 function TestCard(props) {
 	const { name, userName, userId, id, featured_video_uri, createdAt } = props;

@@ -4,10 +4,13 @@ import { DropDown } from "@ui/components/project/DropDown";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import { addProjectInRedux, saveSelectedProjectInRedux } from '@redux/actions/action';
+import {
+	addProjectInRedux,
+	saveSelectedProjectInRedux,
+} from "@redux/actions/action";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
-import React, { CSSProperties, useCallback, useEffect, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useState } from "react";
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
@@ -22,9 +25,9 @@ import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
 import { useRouter } from "next/router";
 import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
-import { CreateProjectModal } from '@ui/containers/modals/createProjectModal';
+import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
-import { addProject } from '@services/projects';
+import { addProject } from "@services/projects";
 
 interface NavItem {
 	name: string;
@@ -181,7 +184,9 @@ function ProjectSelector(props: {
 	onChange: (project) => void;
 }) {
 	const router = useRouter();
-	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(false);
+	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(
+		false,
+	);
 
 	const { options, onChange, selectedProject } = props;
 	const modifiedOption = [
@@ -205,7 +210,7 @@ function ProjectSelector(props: {
 	}, [isShowingCreateProjectModal]);
 
 	const createNewProject = (projectName: string) => {
-		addProject(projectName).then(projectId => {
+		addProject(projectName).then((projectId) => {
 			closeProjectModal();
 			store.dispatch(addProjectInRedux(projectName, projectId));
 		});
@@ -213,7 +218,12 @@ function ProjectSelector(props: {
 
 	return (
 		<div css={styles.projectDropdownContainer}>
-			{isShowingCreateProjectModal && (<CreateProjectModal onClose={closeProjectModal} onSubmit={createNewProject} />)}
+			{isShowingCreateProjectModal && (
+				<CreateProjectModal
+					onClose={closeProjectModal}
+					onSubmit={createNewProject}
+				/>
+			)}
 			{props.projectsList && (
 				<DropDown
 					options={modifiedOption}

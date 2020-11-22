@@ -7,7 +7,7 @@ import { css } from "@emotion/core";
  */
 
 interface IProps {
-	title: String; // Should be changed text/label
+	title: string; // Should be changed text/label
 	onClick: () => void;
 	disabled: boolean;
 }

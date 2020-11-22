@@ -85,26 +85,6 @@
 		"dev:serverless": "now dev",
 		"dev": "ts-node src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
-		"deploy": "now --prod"
-	},
-	"lint-staged": {
-		"*.js": [
-			"eslint",
-			"prettier --write"
-		],
-		"*.ts": [
-			"prettier --write"
-		]
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged",
-			"prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
-		}
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-conventional-changelog"
-		}
+		"lint": "prettier --write ."
 	}
 }

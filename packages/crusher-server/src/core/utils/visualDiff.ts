@@ -56,11 +56,7 @@ export async function visualDiffWithURI(baseFileURI: string, testFileURI: string
 			});
 		});
 
-		return await visualDiff(
-			`/tmp/${fName}_${time}_base.png`,
-			`/tmp/${fName}_${time}_test.png`,
-			`/tmp/${fName}_${time}_diff.png`,
-		);
+		return await visualDiff(`/tmp/${fName}_${time}_base.png`, `/tmp/${fName}_${time}_test.png`, `/tmp/${fName}_${time}_diff.png`);
 	} catch (ex) {
 		console.log('Error visual diff', 2);
 		console.error(ex);

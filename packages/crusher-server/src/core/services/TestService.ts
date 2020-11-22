@@ -42,10 +42,7 @@ export default class TestService {
 	}
 
 	async getTestsCountInProject(projectId: number): Promise<number> {
-		const countRecord = await this.dbManager.fetchSingleRow(
-			'SELECT COUNT(*) as totalTests FROM tests WHERE project_id = ?',
-			[projectId],
-		);
+		const countRecord = await this.dbManager.fetchSingleRow('SELECT COUNT(*) as totalTests FROM tests WHERE project_id = ?', [projectId]);
 		return countRecord.totalTests;
 	}
 

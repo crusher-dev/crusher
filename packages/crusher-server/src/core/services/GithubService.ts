@@ -72,13 +72,7 @@ export default class GithubService {
 			return false;
 		}
 
-		const createCheckRunResponse = await this.createCheckRun(
-			owner_name,
-			repo_original_name,
-			commit_id,
-			installation_id,
-			id,
-		);
+		const createCheckRunResponse = await this.createCheckRun(owner_name, repo_original_name, commit_id, installation_id, id);
 
 		const {
 			data: { id: checkRunId },

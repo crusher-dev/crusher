@@ -18,22 +18,14 @@ export default class DraftInstanceService {
 	}
 
 	async getDraftResult(draftInstanceId: number) {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM draft_instance_results WHERE instance_id = ? LIMIT 1`, [
-			draftInstanceId,
-		]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM draft_instance_results WHERE instance_id = ? LIMIT 1`, [draftInstanceId]);
 	}
 
 	async updateInstanceRecording(draftInstanceId, video_url) {
-		return this.dbManager.fetchSingleRow(`UPDATE draft_instance_results SET video_uri = ? WHERE instance_id = ?`, [
-			video_url,
-			draftInstanceId,
-		]);
+		return this.dbManager.fetchSingleRow(`UPDATE draft_instance_results SET video_uri = ? WHERE instance_id = ?`, [video_url, draftInstanceId]);
 	}
 
 	async updateSavedTestRecordingFromDraft(testId, video_url) {
-		return this.dbManager.fetchSingleRow(`UPDATE tests SET featured_video_uri = ? WHERE draft_id = ?`, [
-			video_url,
-			testId,
-		]);
+		return this.dbManager.fetchSingleRow(`UPDATE tests SET featured_video_uri = ? WHERE draft_id = ?`, [video_url, testId]);
 	}
 }

@@ -6,10 +6,7 @@ import { redirectToFrontendPath } from "@utils/router";
 import { getAllTestsInfosInProject } from "@services/test";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-	getProjectsList,
-	getSelectedProject,
-} from "@redux/stateUtils/projects";
+import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import Link from "next/link";
 import { cleanHeaders } from "@utils/backendRequest";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -89,11 +86,10 @@ function TestCard(props) {
 
 function RenderTestCard(props) {
 	const { tests } = props;
-	const out = tests ? tests : [];
 
-	const finalOut = out.reduce(function (prev, current, index) {
+	const finalOut = tests.reduce(function (prev, current, index) {
 		if (index % 3 == 0) {
-			const rowItems = [out[index], out[index + 1], out[index + 2]]
+			const rowItems = [tests[index], tests[index + 1], tests[index + 2]]
 				.filter((val) => {
 					return typeof val !== "undefined";
 				})
@@ -122,9 +118,9 @@ function RenderTestCard(props) {
 
 function ProjectTestsList(props) {
 	const { tests } = props;
-	const [projectTests, setProjectTests] = useState(tests ? tests : []);
+	const [projectTests, setProjectTests] = useState(tests || []);
 	const [isLoading, setIsLoading] = useState(false);
-	const projectsList = useSelector(getProjectsList);
+	const projectsList = useSelector(getProjects);
 	const selectedProjectId = useSelector(getSelectedProject);
 
 	const isInitialMount = useRef(true);
@@ -150,25 +146,31 @@ function ProjectTestsList(props) {
 			<div css={styles.heading}>
 				{selectedProject ? selectedProject.name : "Tests List"}
 			</div>
-			{!isLoading && projectTests.length ? (
+			{!isLoading && projectTests.length > 0 ? (
 				<RenderTestCard tests={projectTests} />
 			) : (
-				<div css={styles.activitiesPlaceholderContainer}>
-					<Player
-						autoplay={true}
-						src={"https://assets2.lottiefiles.com/packages/lf20_S6vWEd.json"}
-						speed={1}
-						background={"transparent"}
-						style={{ width: 220, height: 220, margin: "0 auto" }}
-						loop={true}
-					/>
-					<div css={styles.activitiesPlaceholderHeading}>Alas!</div>
-					<div css={styles.activitiesPlaceholderMessageContainer}>
-						<div>You don’t have any tests to show.</div>
-						<div css={styles.blueItalicText}>Need any help</div>
-					</div>
-				</div>
+				<ShowEmptyPlaceHolder />
 			)}
+		</div>
+	);
+}
+
+function ShowEmptyPlaceHolder() {
+	return (
+		<div css={styles.activitiesPlaceholderContainer}>
+			<Player
+				autoplay={true}
+				src={"https://assets2.lottiefiles.com/packages/lf20_S6vWEd.json"}
+				speed={1}
+				background={"transparent"}
+				style={{ width: 220, height: 220, margin: "0 auto" }}
+				loop={true}
+			/>
+			<div css={styles.activitiesPlaceholderHeading}>Alas!</div>
+			<div css={styles.activitiesPlaceholderMessageContainer}>
+				<div>You don’t have any tests to show.</div>
+				<div css={styles.blueItalicText}>Need any help</div>
+			</div>
 		</div>
 	);
 }

@@ -10,7 +10,7 @@ const RESPONSE_STATUS = {
 /*
 		Expected res: [{id: project.id, name: project.name, team_id: project.team_id}, ...]
  */
-export const getAllProjects = async (headers = null) => {
+export const fetchAllProjects = async (headers = null) => {
 	return backendRequest("/projects/getAll", {
 		headers: headers,
 	}).catch((err) => {
@@ -18,7 +18,7 @@ export const getAllProjects = async (headers = null) => {
 	});
 };
 
-export const getTestsCountInProject = async (projectId, headers = null) => {
+export const fetchTestsCountInProject = async (projectId, headers = null) => {
 	return backendRequest(`/projects/testsCount/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,

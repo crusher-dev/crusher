@@ -49,11 +49,7 @@ export class TestInstanceResultsController {
 
 	@Authorized()
 	@Get('/disapprove/:resultSetId/:resultId')
-	async disApprove(
-		@CurrentUser({ required: true }) user,
-		@Param('resultSetId') resultSetId,
-		@Param('resultId') resultId,
-	) {
+	async disApprove(@CurrentUser({ required: true }) user, @Param('resultSetId') resultSetId, @Param('resultId') resultId) {
 		const { user_id } = user;
 		return this.testInstanceResultsService.markResultAsRejected(resultId, user_id).then(async (res) => {
 			await res;

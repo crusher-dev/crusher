@@ -40,9 +40,7 @@ export default class TestInstanceService {
 
 	// Sort by created_at DESC
 	async getAllTestInstances(testId: number) {
-		return this.dbManager.fetchData('SELECT * FROM test_instances WHERE test_id = ? ORDER BY created_at DESC', [
-			testId,
-		]);
+		return this.dbManager.fetchData('SELECT * FROM test_instances WHERE test_id = ? ORDER BY created_at DESC', [testId]);
 	}
 
 	async getTestInstance(testInstanceId: number) {

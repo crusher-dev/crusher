@@ -19,10 +19,7 @@ export default class ClIService {
 	}
 
 	async updateTokenStatus(cliToken: string, userId: number, teamId: number) {
-		return this.dbManager.fetchSingleRow('UPDATE cli_status SET ?, status = "completed" WHERE token=?', [
-			{ user_id: userId, team_id: teamId },
-			cliToken,
-		]);
+		return this.dbManager.fetchSingleRow('UPDATE cli_status SET ?, status = "completed" WHERE token=?', [{ user_id: userId, team_id: teamId }, cliToken]);
 	}
 
 	async getTokenInfo(cliToken: string): Promise<CliStatus> {

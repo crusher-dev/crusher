@@ -1,6 +1,6 @@
 import React from "react";
 
-export const FIGMA_REM_COEFFICIENT: number = 16;
+export const FIGMA_REM_COEFFICIENT = 16;
 
 export const COLORS = {
 	white: "#FFFFFF",

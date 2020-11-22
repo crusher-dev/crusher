@@ -27,11 +27,7 @@ export default class DBManager {
 					const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
 
 					if (error) {
-						Logger.error(
-							'DbManager::queryRunner',
-							`Failed running query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`,
-							{ queryToExecute },
-						);
+						Logger.error('DbManager::queryRunner', `Failed running query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, { queryToExecute });
 						console.error(error);
 						return reject(error);
 					}

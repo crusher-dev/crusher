@@ -1,14 +1,4 @@
-import {
-	JsonController,
-	Get,
-	Authorized,
-	CurrentUser,
-	Body,
-	Post,
-	Param,
-	Res,
-	BadRequestError,
-} from 'routing-controllers';
+import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, Res, BadRequestError } from 'routing-controllers';
 import { Service, Container, Inject } from 'typedi';
 import DBManager from '../../core/manager/DBManager';
 import UserService from '../../core/services/UserService';
@@ -87,12 +77,7 @@ export class DraftController {
 
 	@Authorized()
 	@Post('/getLastInstanceStatus/:draftId')
-	async getStatus(
-		@CurrentUser({ required: true }) user: User,
-		@Param('draftId') draftId: number,
-		@Body() body,
-		@Res() res,
-	) {
+	async getStatus(@CurrentUser({ required: true }) user: User, @Param('draftId') draftId: number, @Body() body, @Res() res) {
 		const { logsAfter } = body;
 		let count = 0;
 		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);
@@ -103,18 +88,16 @@ export class DraftController {
 		return new Promise((resolve, reject) => {
 			try {
 				const interval = setInterval(async () => {
-					const testStatus = await this.draftInstanceService
-						.getDraftInstance(lastInstance.id)
-						.then(async (instance) => {
-							const result = await this.draftInstanceResultsService.getDraftResult(lastInstance.id);
+					const testStatus = await this.draftInstanceService.getDraftInstance(lastInstance.id).then(async (instance) => {
+						const result = await this.draftInstanceResultsService.getDraftResult(lastInstance.id);
 
-							const testInstanceRecording = await this.testInstanceRecordingService.getTestRecording(lastInstance.id);
-							return {
-								status: result ? instance.status : InstanceStatus.RUNNING,
-								result,
-								testInstanceRecording,
-							};
-						});
+						const testInstanceRecording = await this.testInstanceRecordingService.getTestRecording(lastInstance.id);
+						return {
+							status: result ? instance.status : InstanceStatus.RUNNING,
+							result,
+							testInstanceRecording,
+						};
+					});
 
 					if (logsAfter) {
 						TestLiveStepsLogs.find(

@@ -82,7 +82,7 @@ const CheckoutForm = () => {
 	}, [stripe]);
 
 	return (
-		<form onSubmit={handleSubmit} css={stripeForm}>
+		<form onSubmit={handleSubmit} css={[!paymentRequest&&noPayButton,stripeForm]}>
 			{paymentRequest && (
 				<>
 					<div css={addCardOneClick}>Add card with one click</div>
@@ -164,6 +164,10 @@ async function stripeTokenHandler(token) {
 	return response.json();
 }
 
+const noPayButton = css`
+	height: 22rem;
+		margin-top: 3.5rem !important;
+`
 const stripeForm = css`
 	margin-top: 1.5rem;
 `;

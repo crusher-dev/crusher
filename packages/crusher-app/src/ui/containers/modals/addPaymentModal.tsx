@@ -61,16 +61,15 @@ const illustrationContainerCss = css`
 `;
 
 const topAreaCSS = css`
+	background: linear-gradient(356.01deg, #57e5f9 -20.93%, #8bceff 51.33%);
 	background: #e8ecff;
-	// border-bottom: 2px solid #E8ECFF;
 	color: #2b2b39;
-	div > img {
-	}
+	// border-bottom: 2px solid #E8ECFF;
 `;
 
 const modalMoto = css`
 	font-size: 1rem;
-	margin-bottom: 1.25rem;
+	margin-bottom: 0.75rem;
 `;
 
 const bodyContainerCss = css`
@@ -82,29 +81,7 @@ const bodyContainerCss = css`
 		color: #2b2b39;
 		font-size: 1rem;
 	}
-	min-height: 21rem;
-`;
-
-const membersInputCss = css`
-	margin-top: 2rem;
-	label {
-		font-family: Gilroy;
-		font-weight: bold;
-		color: #2b2b39;
-		font-size: 1rem;
-		line-height: 1.1rem;
-	}
-`;
-
-const membersDescCss = css`
-	font-size: 0.95rem;
-	margin-top: 0.675rem;
-`;
-
-const buttonCss = css`
-	margin-top: auto;
-	margin-top: 10rem;
-	background: #23232f;
+	min-height: 25rem;
 `;
 
 export { AddPaymentModel };

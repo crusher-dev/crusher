@@ -35,6 +35,7 @@ function App({ Component, pageProps }) {
 						<PersistGate loading={null} persistor={(store as any).__persistor}>
 							<ThemeContext.Provider value={pageProps.theme}>
 								<Component {...pageProps} />
+
 							</ThemeContext.Provider>
 						</PersistGate>
 					</Provider>

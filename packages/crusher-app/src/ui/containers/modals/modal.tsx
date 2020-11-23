@@ -74,6 +74,9 @@ const illustrationContainerCss = css`
 	position: absolute;
 	top: -0.8rem;
 	right: -0.5rem;
+	img{
+	width: 15.15rem;
+	}
 `;
 
 const topContainerCss = css`

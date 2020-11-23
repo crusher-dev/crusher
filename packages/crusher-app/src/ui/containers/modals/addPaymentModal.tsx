@@ -1,13 +1,8 @@
 import { Modal } from "@ui/containers/modals/modal";
-import { useState } from "react";
 import React from "react";
-import { ModalInput } from "@ui/components/modal/input";
-import { css } from "@emotion/core";
-import { ModalButton } from "@ui/components/modal/button";
-import { addProject } from "@services/projects";
-import { addProjectInRedux } from "@redux/actions/action";
 
-import { store } from "@redux/store";
+import { css } from "@emotion/core";
+
 import { StripePaymentBox } from "@ui/components/common/payment.tsx";
 
 interface iProps {
@@ -16,27 +11,6 @@ interface iProps {
 
 const AddPaymentModel = (props: iProps) => {
 	const { onClose } = props;
-	const [projectName, setProjectName] = useState("");
-
-	const handleSubmit = () => {
-		if (projectName && projectName.replace(/\s/g, "").length) {
-			createNewProject(projectName);
-		} else {
-			alert("Invalid project name");
-		}
-	};
-
-	const handleChange = (event: any) => {
-		setProjectName(event.target.value);
-	};
-
-	const createNewProject = (projectName: string) => {
-		addProject(projectName).then(async (projectId) => {
-			await store.dispatch(addProjectInRedux(projectName, projectId));
-			onClose();
-			window && window.location.reload();
-		});
-	};
 
 	return (
 		<Modal

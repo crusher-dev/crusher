@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
 	CardElement,
@@ -81,17 +81,32 @@ const CheckoutForm = () => {
 		}
 	}, [stripe]);
 
-	if (paymentRequest) {
-		console.log("loaded");
-	} else {
-		console.log("not loaded");
-	}
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit} css={stripeForm}>
 			{paymentRequest && (
-				<PaymentRequestButtonElement options={{ paymentRequest }} />
+				<>
+					<div css={addCardOneClick}>Add card with one click</div>
+
+					<div css={payNowButton}>
+						<PaymentRequestButtonElement
+							options={{
+								paymentRequest,
+								style: {
+									paymentRequestButton: {
+										height: "49px",
+									},
+								},
+							}}
+						/>
+					</div>
+
+					<div css={orText}>or</div>
+				</>
 			)}
-			<label htmlFor="name">Name</label>
+
+			<label htmlFor="name" css={label}>
+				Name
+			</label>
 			<div className="form-row">
 				<input
 					id="name"
@@ -105,6 +120,7 @@ const CheckoutForm = () => {
 					}}
 				/>
 			</div>
+
 			<div className="form-row">
 				<label for="card-element">Credit or debit card</label>
 				<CardElement
@@ -112,10 +128,11 @@ const CheckoutForm = () => {
 					options={CARD_ELEMENT_OPTIONS}
 					onChange={handleChange}
 				/>
-				<div className="card-errors" role="alert">
+				<div className="card-errors" role="alert" css={cardError}>
 					{error}
 				</div>
 			</div>
+
 			<button type="submit" css={submitButtonCss}>
 				Add Credit card
 			</button>
@@ -147,6 +164,26 @@ async function stripeTokenHandler(token) {
 	return response.json();
 }
 
+const stripeForm = css`
+	margin-top: 1.5rem;
+`;
+
+const payNowButton = css`
+	margin-bottom: 1.5rem;
+`;
+
+const orText = css`
+	text-align: center;
+	color: grey;
+`;
+
+const addCardOneClick = css`
+	margin-bottom: 1rem;
+	text-align: center;
+	font-size: 1rem;
+	font-weight: 600;
+`;
+
 const submitButtonCss = css`
 	background: #6583fe;
 	padding: 1rem;
@@ -161,7 +198,7 @@ const submitButtonCss = css`
 	font-weight: 700;
 	border-radius: 0.31rem;
 	margin-top: auto;
-	margin-top: 10rem;
+	margin-top: 1rem;
 	background: #23232f;
 `;
 
@@ -175,4 +212,13 @@ const nameElement = css`
 	border-radius: 4px;
 	font-size: 1rem;
 	margin-bottom: 1.5rem;
+`;
+
+const cardError = css`
+	height: 1.75rem;
+	width: 100%;
+`;
+
+const label = css`
+	display: block;
 `;

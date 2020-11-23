@@ -124,12 +124,15 @@ function LeftSection(props: any) {
 
 	const userFistCharacter = userInfo.name.slice(0, 1);
 
+	const [showPayment, setPaymentShow] = useState(false);
 	return (
 		<div css={styles.leftSection}>
 			<div css={styles.sectionContainer}>
-				<div css={styles.sectionHeaderItem} onClick={toggleSettingsDropDown}>
+				<div css={styles.sectionHeaderItem}>
 					{/*@Note :- Change hardcoded text*/}
-					<div css={styles.teamIcon}>{userFistCharacter}</div>
+					<div css={styles.teamIcon} onClick={toggleSettingsDropDown}>
+						{userFistCharacter}
+					</div>
 					<div css={styles.sectionHeaderContentArea}>
 						<span
 							style={{
@@ -138,6 +141,7 @@ function LeftSection(props: any) {
 								fontFamily: "Cera Pro",
 								fontWeight: "bold",
 							}}
+							onClick={toggleSettingsDropDown}
 						>
 							{toPascalCase(selectedProject && selectedProject)} project
 						</span>
@@ -150,12 +154,18 @@ function LeftSection(props: any) {
 								fontSize: "0.8rem",
 								marginTop: "0.05rem",
 							}}
+							onClick={toggleSettingsDropDown}
 						>
 							{userInfo.name}
 						</span>
+
+						<div onClick={setPaymentShow.bind(this, true)} css={addPaymentOnTrial}>
+							14 days left. Add payment.
+						</div>
+						{showPayment && <AddPaymentModel onClose={() => {}} />}
 					</div>
-					<div css={styles.sectionHeaderSetting}>
-						<DropdownSVG />
+					<div css={styles.sectionHeaderSetting} onClick={toggleSettingsDropDown}>
+						<DropdownSVG style={{ marginTop: ".5rem" }} />
 					</div>
 					{showDropDown && (
 						<SidebarTeamDropdown
@@ -165,6 +175,7 @@ function LeftSection(props: any) {
 					)}
 					{showAddProject && <CreateProjectModal onClose={closeProjectModal} />}
 				</div>
+
 				<NavList navItems={mainNavLinks} />
 			</div>
 			<div css={styles.settingsBottomFixedContainer}>
@@ -304,7 +315,6 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 						</div>
 						<div css={styles.innerContentContainer}>
 							<Component {...props} />
-							<AddPaymentModel onClose={() => {}} />
 							<FeedbackComponent />
 						</div>
 					</div>
@@ -323,6 +333,17 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 	return WrappedComponent;
 }
 
+const addPaymentOnTrial = css`
+	margin-top: 1rem;
+	font-family: Gilroy;
+
+	font-weight: 500;
+    font-size: .95rem;
+
+	text-decoration-line: underline;
+
+	color: #2b2b39;
+`;
 const styles = {
 	createTest: css`
 		margin-left: auto;
@@ -384,6 +405,8 @@ const styles = {
 		background: rgba(97, 98, 102, 0.2);
 		color: #888888;
 		border-radius: 0.3rem;
+		width: 3.2rem;
+		height: 3.2rem;
 	`,
 	sectionHeaderContentArea: css`
 		margin-left: 1.11rem;
@@ -394,7 +417,6 @@ const styles = {
 	sectionHeaderSetting: css`
 		margin-left: auto;
 		display: flex;
-		align-items: center;
 		justify-content: center;
 		cursor: pointer;
 	`,

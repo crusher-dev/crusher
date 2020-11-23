@@ -34,6 +34,7 @@ export default class MyDocument extends Document {
 					<Main />
 					<NextScript />
 					<GTMNoScriptTag />
+
 					<div id={"overlay"}></div>
 				</body>
 				<style jsx global>{`
@@ -52,7 +53,7 @@ export default class MyDocument extends Document {
 						text-decoration: underline !important;
 						color: #5b76f7;
 					}
-					.StripeElement {
+					.form-row .StripeElement {
 						margin-top: 0.5rem;
 						box-sizing: border-box;
 
@@ -74,11 +75,11 @@ export default class MyDocument extends Document {
 						border-radius: 4px;
 					}
 
-					.StripeElement--focus {
+					.form-row .StripeElement--focus {
 						box-shadow: 0 1px 3px 0 #cfd7df;
 					}
 
-					.StripeElement--invalid {
+					.form-row .StripeElement--invalid {
 						border-color: #ff3838;
 					}
 

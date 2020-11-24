@@ -42,7 +42,7 @@ const CreateProjectModal = (props: iProps) => {
 		<Modal
 			heading={"Create a project"}
 			subHeading={"in your team"}
-			illustrationSVG={"/assets/img/illustration/create_project_illustration.png"}
+			illustration={"/assets/img/illustration/create_project_illustration.png"}
 			subHeading={"in your team"}
 			onClose={onClose}
 			topAreaCSS={topAreaCSS}

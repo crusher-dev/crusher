@@ -16,7 +16,7 @@ const AddPaymentModel = (props: iProps) => {
 		<Modal
 			heading={"Add payment method"}
 			subHeading={"Add a credit card"}
-			illustrationSVG={"/assets/img/illustration/women_running.png"}
+			illustration={"/assets/img/illustration/women_running.png"}
 			onClose={onClose}
 			topAreaCSS={topAreaCSS}
 			illustrationContainerCSS={illustrationContainerCss}

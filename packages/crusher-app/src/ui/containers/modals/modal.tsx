@@ -9,8 +9,10 @@ interface iProps {
 	topAreaCSS: any; //gradient for topbar
 	contentCSS: any; //Css for content. Overrides existing css
 	children: any;
-	illustrationSVG: any;
+	illustration: any;
 	illustrationContainerCSS: any;
+	headingCss: any;
+	descCss: any;
 	onClose: any;
 }
 
@@ -22,9 +24,11 @@ class Modal extends React.Component<iProps, any> {
 			topAreaCSS,
 			contentCSS,
 			children,
-			illustrationSVG,
+			illustration,
 			illustrationContainerCSS,
 			css,
+			headingCss,
+			descCss,
 			onClose,
 		} = this.props;
 
@@ -32,13 +36,13 @@ class Modal extends React.Component<iProps, any> {
 			<div css={[containerCss, css]}>
 				<div css={modalContainerCss}>
 					<div css={[topContainerCss, topAreaCSS]}>
-						<div className={"modalHeading"}>{heading}</div>
-						<div className={"modalDesc"}>{subHeading}</div>
+						<div className={"modalHeading"} css={headingCss}>{heading}</div>
+						<div className={"modalDesc"} css={descCss}>{subHeading}</div>
 						<div css={crossModalCss} onClick={onClose}>
 							<CrossModal />
 						</div>
 						<div css={[illustrationContainerCss, illustrationContainerCSS]}>
-							<img src={illustrationSVG} />
+							<img src={illustration} />
 						</div>
 					</div>
 					<div css={[bodyContainerCss, contentCSS]}>{children}</div>

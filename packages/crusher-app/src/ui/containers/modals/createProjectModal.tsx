@@ -120,7 +120,7 @@ const membersDescCss = css`
 
 const buttonCss = css`
 	margin-top: auto;
-	margin-top: 10rem;
+	margin-top: 11rem;
 `;
 
 export { CreateProjectModal };

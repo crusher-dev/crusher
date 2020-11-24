@@ -60,6 +60,7 @@ const containerCss = css`
 `;
 
 const modalContainerCss = css`
+	// width: 31.35rem;
 	width: 33.35rem;
 	position: relative;
 	top: 25%;
@@ -73,6 +74,9 @@ const illustrationContainerCss = css`
 	position: absolute;
 	top: -0.8rem;
 	right: -0.5rem;
+	img{
+	width: 15.15rem;
+	}
 `;
 
 const topContainerCss = css`
@@ -87,7 +91,8 @@ const topContainerCss = css`
 	}
 	.modalDesc {
 		font-size: 1.25rem;
-		margin-top: 0.25rem;
+		margin-top: -0.25rem;
+		margin-bottom: 0.5rem;
 	}
 `;
 

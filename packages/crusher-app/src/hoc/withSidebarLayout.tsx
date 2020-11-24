@@ -162,7 +162,9 @@ function LeftSection(props: any) {
 						<div onClick={setPaymentShow.bind(this, true)} css={addPaymentOnTrial}>
 							14 days left. Add payment.
 						</div>
-						{showPayment && <AddPaymentModel onClose={() => {}} />}
+						{showPayment && (
+							<AddPaymentModel onClose={setPaymentShow.bind(this, false)} />
+						)}
 					</div>
 					<div css={styles.sectionHeaderSetting} onClick={toggleSettingsDropDown}>
 						<DropdownSVG style={{ marginTop: ".5rem" }} />
@@ -338,7 +340,7 @@ const addPaymentOnTrial = css`
 	font-family: Gilroy;
 
 	font-weight: 500;
-    font-size: .95rem;
+	font-size: 0.95rem;
 
 	text-decoration-line: underline;
 

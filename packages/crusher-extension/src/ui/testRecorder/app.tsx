@@ -8,6 +8,7 @@ import { META_ACTIONS, SETTINGS_ACTIONS } from '../../constants/actionTypes';
 import { ACTIONS_IN_TEST } from '../../../../crusher-shared/constants/recordedActions';
 import { sendPostDataWithForm } from '../../utils/helpers';
 import { AssertModal } from './containers/modal/assertModal';
+import { SeoModal } from './containers/modal/seoModal';
 import { NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon } from '../../assets/icons';
 import { ToggleSwitchIndicator } from './components/toggleSwitchIndicator';
 import styled from 'styled-components';
@@ -1123,6 +1124,14 @@ function App() {
 				state={state}
 				updateState={updateState}
 				saveAssertionCallback={saveAssertionCallback}
+			/>
+
+			<SeoModal
+				attributes={currentElementAttributes}
+				seoMeta={seoMeta}
+				state={state}
+				updateState={updateState}
+				saveSeoValidationCallback={()=>{}}
 			/>
 		</Test>
 	);

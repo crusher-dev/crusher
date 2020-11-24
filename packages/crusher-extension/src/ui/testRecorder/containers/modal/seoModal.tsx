@@ -13,6 +13,7 @@ export class SeoModal extends Component<any, any> {
 				<div id='modal-overlay' style={styles.modalOverlay}>
 					<SEOModelContent
 						seoMeta={seoMeta}
+						saveSEOAssertionCallback={saveSeoValidationCallback}
 						handleCloseCallback={(options: any) => {
 							if (!!options) {
 								saveSeoValidationCallback(options);

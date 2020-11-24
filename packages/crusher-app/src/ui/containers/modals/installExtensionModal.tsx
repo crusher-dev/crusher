@@ -17,7 +17,7 @@ const InstallExtension = (props: iProps) => {
 		<Modal
 			heading={"Install extension"}
 			subHeading={"to create test"}
-			illustrationSVG={"/assets/img/illustration/orange_bouncy.png"}
+			illustration={"/assets/img/illustration/orange_bouncy.png"}
 			onClose={onClose}
 			topAreaCSS={topAreaCSS}
 			illustrationContainerCSS={illustrationContainerCss}

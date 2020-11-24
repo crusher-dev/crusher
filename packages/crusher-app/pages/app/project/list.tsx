@@ -14,10 +14,14 @@ import { getTime } from "@utils/helpers";
 import { deleteProjectFromBackend } from "@services/projects";
 import React, { useState } from "react";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
+import { CreateTestModal } from "@ui/containers/modals/createTestModal";
+import ReactDOM from 'react-dom';
 
-function ProjectItem({ name, id, team_id, noTests, created_at }) {
+function ProjectItem({ name, id, team_id, noTests, created_at, showAddTestModal }) {
 	const addTest = (projectId: number) => {
-		Router.replace("/app/project/onboarding/create-test");
+		if(showAddTestModal){
+			showAddTestModal(projectId);
+		}
 	};
 
 	const deleteProject = (projectId: number) => {
@@ -73,15 +77,28 @@ function HeaderComponent() {
 }
 
 function ProjectTestsList(props) {
+	const [showAddTestModal, setShowAddTestModal] = useState({ value: false, projectId: null });
 	const projects = useSelector(getProjects);
+
+	const showAddTestModalCallback = (projectId: string) => {
+		setShowAddTestModal({value: true, projectId: projectId});
+	};
+
+	const closeAddTestModal = () => {
+		ReactDOM.render(null, document.getElementById("overlay"));
+		setShowAddTestModal({value: false, projectId: null});
+	};
 
 	return (
 		<div css={container}>
+			{showAddTestModal && showAddTestModal.value && (
+				<CreateTestModal onClose={closeAddTestModal}/>
+			)}
 			<div css={innerContainer}>
 				<HeaderComponent />
 				<div css={projectCardsContainer}>
 					{projects.map((project) => (
-						<ProjectItem {...project} />
+						<ProjectItem {...project} showAddTestModal={showAddTestModalCallback} />
 					))}
 				</div>
 			</div>

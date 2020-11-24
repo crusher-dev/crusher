@@ -1,12 +1,74 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useEffect, useState } from 'react';
 
-export function SEOModelContent({ handleCloseCallback, seoMeta }: any) {
+export function SEOModelContent({saveSEOAssertionCallback, handleCloseCallback, seoMeta }: any) {
 	return (
 		<div id='seo-modal' style={styles.modalOverlay}>
 			{TopBar(handleCloseCallback)}
-			<MiddleSection seoMeta={seoMeta} handleCloseCallback={handleCloseCallback} />
+			<MiddleSection saveSEOAssertionCallback={saveSEOAssertionCallback} seoMeta={seoMeta} handleCloseCallback={handleCloseCallback} />
 		</div>
+	);
+}
+
+
+function ShowRowInput(props: any) {
+	const { name, nameOptions, rowKey, method, updateMethodCallback, updateSelectedSeoField, value, valuesMap, updateFieldValueCallback } = props;
+	const nameOptionsOut = nameOptions.map((option: string) => {
+		return <option value={option}>{option}</option>;
+	});
+
+	function onChangeSeoField(event: any) {
+		updateSelectedSeoField(rowKey, event.target.value);
+	}
+
+	function handleMethodChange(event: any) {
+		updateMethodCallback(rowKey, name, event.target.value);
+	}
+
+	function updateFieldValue(event: any) {
+		updateFieldValueCallback(rowKey, name, event.target.value);
+	}
+
+	function checkIfCorrectValue() {
+		console.log('check called', method, value, valuesMap, name);
+		if (method === 'matches') {
+			return value === valuesMap[name].value;
+		} else if (method === 'contains') {
+			return valuesMap[name].value && valuesMap[name].value.includes(value);
+		} else if (method === 'regex') {
+			try {
+				const rgx = new RegExp(value);
+				if (rgx.test(valuesMap[name].value)) {
+					return true;
+				} else {
+					throw new Error("Regex didn't match");
+				}
+			} catch (err) {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	return (
+		<tr style={styles.inputTableGridItem}>
+			<th style={styles.inputTableGridItemLabel}>
+				<select style={{ ...styles.select }} onChange={onChangeSeoField} value={name}>
+					{nameOptionsOut}
+				</select>
+				<img src={chrome.runtime.getURL(checkIfCorrectValue() ? '/icons/correct.svg' : '/icons/cross.svg')} style={{ marginLeft: '0.85rem' }} />
+			</th>
+			<th style={styles.inputTableGridOption}>
+				<select style={{ ...styles.select }} value={method} onChange={handleMethodChange}>
+					<option value='matches'>matches</option>
+					<option value='contains'>contains</option>
+					<option value='regex'>regex</option>
+				</select>
+			</th>
+			<th style={styles.inputTableGridOptionValue}>
+				<input onChange={updateFieldValue} placeholder={'Enter value'} value={value} style={styles.inputTableGridOptionValueInput} />
+			</th>
+		</tr>
 	);
 }
 
@@ -48,71 +110,222 @@ function Row({ name, state, setState }: any) {
 	);
 }
 
-function MiddleSection({ handleCloseCallback, seoMeta }: any) {
-	const [state, setState] = useState({
-		selectedValidationMethod: {
-			title: 'matches',
-			description: 'matches',
+function MiddleSection({ handleCloseCallback, saveSEOAssertionCallback, seoMeta }: any) {
+
+	const { title, metaTags } = seoMeta;
+	const [seoMetaRowNames, setSeoMetaRowNames] = useState({});
+	const [seoMetaRows, setSeoMetaRows] = useState({});
+	const [seoMetaRowsMethods, setSeoMetaRowsMethods] = useState({} as any);
+	const [seoMetaValues, setSeoMetaValues] = useState({} as any);
+	const _latestSeoMetaRowNames:any = useRef({});
+	const _latestSeoMetaRows:any = useRef({});
+	const _latestSeoMethodRows:any = useRef({});
+	const _latestSeoMetaValues:any = useRef({});
+
+	const seoOptionsMap = {
+		title: {
+			name: 'title',
+			value: title,
 		},
-		assertValues: {
-			title: null,
-			description: null,
-		},
-	});
-
-	useEffect(() => {
-		setState({
-			...state,
-			assertValues: {
-				...state.assertValues,
-				title: state.assertValues.title ? state.assertValues.title : seoMeta.title,
-				description: state.assertValues.description ? state.assertValues.description : seoMeta.description,
-			},
-		});
-	}, [seoMeta]);
-
-	const saveSeoAssertion = () => {
-		const out = [];
-
-		if (!!state.assertValues.title) {
-			out.push({
-				name: 'title',
-				method: state.assertValues.title,
-				assertValue: state.assertValues.title,
-			});
-		}
-		if (!!state.assertValues.description) {
-			out.push({
-				name: 'description',
-				method: state.assertValues.description,
-				assertValue: state.assertValues.description,
-			});
-		}
-
-		if (!state.assertValues.title && !state.assertValues.description) {
-			alert('No values provided');
-		} else {
-			handleCloseCallback(out);
-		}
+		...metaTags,
 	};
 
-	return (
-		<>
-			<div className={'middle-section'} style={styles.middleSection}>
-				<Row name={'Title'} key={'title'} state={state} setState={setState} />
-				<Row name={'Description'} key={'description'} state={state} setState={setState} />
-			</div>
-			<div style={styles.bottomBar}>
-				<BulbIcon style={{ marginRight: 4 }} />
-				<div id={'modal-generate-test'} style={styles.generateText}>
-					Auto-Generate test!
-				</div>
+	const nameOptions = Object.keys(seoOptionsMap).map((seoFieldName) => {
+		return seoOptionsMap[seoFieldName].name;
+	});
 
-				<div id={'modal-button'} style={styles.button} onClick={saveSeoAssertion}>
-					Save
+	const saveSEOAssertion = () => {
+		const savedFields = Object.keys(_latestSeoMetaRowNames.current as any).map((rowKey) => {
+			//@ts-ignore
+			return {
+				fieldName: _latestSeoMetaRowNames.current[rowKey],
+				method: _latestSeoMethodRows.current[rowKey],
+				fieldValue: _latestSeoMetaValues.current[rowKey],
+			};
+		});
+		return saveSEOAssertionCallback(savedFields);
+	};
+
+	const updateSEOFieldValue = useCallback(
+		(rowKey: string, fieldName: string, fieldValue: string) => {
+			let _seoMetaRows: any = _latestSeoMetaRows.current;
+			let _seoMetaValues: any = _latestSeoMetaValues.current;
+
+			_seoMetaRows[rowKey] = (
+				//@ts-ignore
+				<ShowRowInput
+					rowKey={rowKey}
+					value={fieldValue}
+					updateFieldValueCallback={updateSEOFieldValue}
+					method={_latestSeoMethodRows.current[rowKey]}
+					updateMethodCallback={updateMethodForSeoField}
+					updateSelectedSeoField={updateSelectedSeoField}
+					nameOptions={nameOptions}
+					name={fieldName}
+					valuesMap={seoOptionsMap}
+				/>
+			);
+			_seoMetaValues[rowKey] = fieldValue;
+
+			setSeoMetaRows({ ..._seoMetaRows });
+			setSeoMetaValues({
+				..._seoMetaValues,
+				[rowKey]: name,
+			});
+
+			_latestSeoMetaRows.current = _seoMetaRows;
+			_latestSeoMetaValues.current = _seoMetaValues;
+		},
+		[seoMetaRows, seoMetaValues],
+	);
+
+	const updateSelectedSeoField = useCallback(
+		(rowKey: string, name: string) => {
+			let _seoMetaRows: any = _latestSeoMetaRows.current;
+			let _seoMetaRowNames: any = _latestSeoMetaRowNames.current;
+			let _seoMetaRowValues: any = _latestSeoMetaValues.current;
+
+			_seoMetaRowNames[rowKey] = name;
+			_seoMetaRowValues[rowKey] = seoOptionsMap[name].value;
+			setSeoMetaRowNames(_seoMetaRowNames);
+			setSeoMetaRows({ ..._seoMetaRows });
+			setSeoMetaValues({ ..._seoMetaRowValues });
+			_latestSeoMetaRowNames.current = _seoMetaRowNames;
+			_latestSeoMetaRows.current = _seoMetaRows;
+			_latestSeoMetaValues.current = _seoMetaRowValues;
+		},
+		[seoMetaRows, seoMetaRowsMethods],
+	);
+
+	const updateMethodForSeoField = useCallback(
+		(rowKey: string, fieldName: string, name: string) => {
+			let _seoMetaRows: any = _latestSeoMetaRows.current;
+			let _seoMetaMethods: any = _latestSeoMethodRows.current;
+
+			_seoMetaMethods[rowKey] = name;
+
+			setSeoMetaRows({ ..._seoMetaRows });
+			setSeoMetaRowsMethods({
+				..._seoMetaMethods,
+			});
+
+			_latestSeoMetaRows.current = _seoMetaRows;
+			_latestSeoMethodRows.current = _seoMetaMethods;
+		},
+		[seoMetaRows, seoMetaRowsMethods],
+	);
+
+	const autoGenerateSeoMetaRows = useCallback(() => {
+		let _seoMetaRowNames: any = _latestSeoMetaRowNames.current;
+
+		let _seoMetaRows: any = {};
+		let _seoMetaMethods: any = {};
+		let _seoMetaValues: any = {};
+
+		console.log("Options", seoOptionsMap, seoMeta);
+		Object.values(seoOptionsMap ? seoOptionsMap : {}).map((meta: any) => {
+			const key = window.performance.now() + '_' + Math.random().toString(36).substr(2, 9);
+			setSeoMetaRowsMethods({
+				...seoMetaRowsMethods,
+				[key]: 'matches',
+			});
+			setSeoMetaRowNames({
+				...seoMetaRowNames,
+				[key]: meta.name,
+			});
+			_seoMetaMethods[key] = 'matches';
+			_seoMetaValues[key] = meta.value;
+			_seoMetaRowNames[key] = meta.name;
+		});
+
+		setSeoMetaRows(_seoMetaRows);
+		_latestSeoMetaRowNames.current = _seoMetaRowNames;
+		_latestSeoMetaRows.current = _seoMetaRows;
+		_latestSeoMethodRows.current = _seoMetaMethods;
+		_latestSeoMetaValues.current = _seoMetaValues;
+	}, [seoMetaRows, seoMetaRowsMethods, seoMeta]);
+
+	const createRow = useCallback(() => {
+		const key = window.performance.now() + '_' + Math.random().toString(36).substr(2, 9);
+		const seoMetaRowNames = _latestSeoMetaRowNames.current as any;
+		let seoMetaMethods: any = _latestSeoMethodRows.current as any;
+		let seoMetaValues: any = _latestSeoMetaValues.current as any;
+
+		setSeoMetaRowsMethods({
+			...seoMetaMethods,
+			[key]: 'matches',
+		});
+		_latestSeoMethodRows.current = {
+			...seoMetaMethods,
+			[key]: 'matches',
+		};
+
+		setSeoMetaRowNames({
+			...seoMetaRowNames,
+			[key]: nameOptions[0],
+		});
+		_latestSeoMetaRowNames.current = {
+			...seoMetaRowNames,
+			[key]: nameOptions[0],
+		};
+
+		setSeoMetaValues({
+			...seoMetaValues,
+			[key]: seoOptionsMap[nameOptions[0]].value,
+		});
+		_latestSeoMetaValues.current = {
+			...seoMetaValues,
+			[key]: seoOptionsMap[nameOptions[0]].value,
+		};
+	}, [seoMetaRows, seoMetaRowsMethods, seoMeta]);
+
+	const seoMetaRowsOut = Object.keys(_latestSeoMetaRowNames.current).map((rowKey: string) => {
+		// @ts-ignore
+		const { current } = _latestSeoMetaRowNames;
+		return (
+			//@ts-ignore
+			<ShowRowInput
+				value={_latestSeoMetaValues.current[rowKey]}
+				rowKey={rowKey}
+				updateFieldValueCallback={updateSEOFieldValue}
+				updateMethodCallback={updateMethodForSeoField}
+				updateSelectedSeoField={updateSelectedSeoField}
+				nameOptions={nameOptions}
+				name={current[rowKey]}
+				valuesMap={seoOptionsMap}
+				method={_latestSeoMethodRows.current[rowKey]}
+			/>
+		);
+	});
+	// <div style={styles.formButtonAdvance} onClick={createRow}>
+	// 	Advance
+	// </div>
+	return (
+		<div style={{position: "relative"}}>
+			<div style={{display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%", position: "absolute", top: "-5rem"}}>
+			<BulbIcon style={{ marginRight: "0.65rem" }} />
+			<div id={'modal-generate-test'} style={styles.generateText} onClick={autoGenerateSeoMetaRows}>
+				Generate Checks!
+			</div>
+			</div>
+			<table style={styles.inputTableGrid}>
+				<tr>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+				{seoMetaRowsOut}
+			</table>
+			<div style={styles.bottomBar}>
+				<div style={formButtonAdvanceCss} onClick={createRow}>
+					<span>Advance</span>
+					<span style={{marginLeft: "0.5rem"}}><img width={12} src={chrome.extension.getURL("/icons/arrow_down.svg")}/></span>
+				</div>
+				<div id={'modal-button'} style={saveButtonCss} onClick={saveSEOAssertion}>
+					Save Action
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 
@@ -130,9 +343,7 @@ function TopBar(handleClick: any) {
 					</div>
 				</div>
 			</div>
-			<div id='close-button' onClick={() => handleClick()} style={{ cursor: 'pointer' }}>
-				<CloseIcon />
-			</div>
+
 		</div>
 	);
 }
@@ -189,7 +400,7 @@ function BrowserIcons({ props }: any) {
 	);
 }
 
-function BulbIcon({ props }: any) {
+function BulbIcon(props : any) {
 	return (
 		<svg width={38} height={38} viewBox='0 0 38 38' fill='none' {...props}>
 			<path
@@ -205,18 +416,78 @@ function BulbIcon({ props }: any) {
 	);
 }
 
+const formButtonAdvanceCss = {
+	color: "#5B76F7",
+	marginRight: "auto",
+	fontFamily: "DM Sans",
+	fontSize: "0.9rem",
+	textDecorationLine: "underline",
+	fontWeight: "900",
+	cursor: "pointer"
+};
+
+const saveButtonCss = {
+	padding: '12px 24px',
+	minWidth: '120px',
+	textAlign: 'center',
+	color: ' #fff',
+	borderRadius: '4px',
+	fontWeight: 600,
+	marginLeft: 24,
+	fontSize: "0.9rem",
+	cursor: 'pointer',
+	background: "#5B76F7"
+}
+
 const styles: { [key: string]: React.CSSProperties } = {
+	inputTableGrid: {
+		width: '100%',
+		textAlign: 'left',
+		borderSpacing: '0 0.75rem',
+		maxHeight: '47vh',
+		display: 'inline-block',
+		overflowY: 'auto',
+	},
+	inputTableGridItem: {
+		display: 'table-row',
+		gridTemplateColumns: 'auto auto auto',
+	},
+	inputTableGridItemLabel: {
+		fontFamily: 'DM Sans',
+		minWidth: '7rem',
+		fontStyle: 'normal',
+		fontSize: '0.82rem',
+		color: '#fff',
+		display: 'flex',
+	},
+	inputTableGridOption: {
+		width: '50%',
+		textAlign: 'center',
+	},
+	inputTableGridOptionValue: {
+		width: '50%',
+
+		textAlign: 'right',
+	},
+	inputTableGridOptionValueInput: {
+		padding: '0.4rem 0.7rem',
+		borderRadius: '0.25rem',
+		width: '100%',
+		fontSize: 18,
+	},
 	modalOverlay: {
 		borderRadius: 8,
 		width: 760,
+		maxHeight: "33.75rem",
+		overflow: "auto",
 		boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
 		padding: '36px 40px',
-		background: '#fff',
+		background: '#1C1F26',
 	},
 	topBar: {
 		display: 'flex',
 		justifyContent: 'space-between',
-		marginBottom: 56,
+		marginBottom: "1rem",
 	},
 	topLeftSection: {
 		display: 'flex',
@@ -229,12 +500,12 @@ const styles: { [key: string]: React.CSSProperties } = {
 		fontWeight: 800,
 		fontSize: '22',
 		marginBottom: 8,
-		color: '#313131',
+		color: '#FFFFFF',
 	},
 	subHeading: {
 		fontStyle: 'normal',
-		fontSize: '18',
-		color: '#313131',
+		fontSize: "1.06rem",
+		color: '#FFFFFF',
 	},
 	bottomBar: {
 		display: 'flex',
@@ -242,8 +513,9 @@ const styles: { [key: string]: React.CSSProperties } = {
 		alignItems: 'center',
 	},
 	generateText: {
-		color: '#2B2A2A',
+		color: '#fff',
 		textDecoration: 'underline',
+		fontSize: "0.9rem",
 		marginRight: 20,
 		cursor: 'pointer',
 	},

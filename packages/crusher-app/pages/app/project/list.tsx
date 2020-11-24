@@ -89,10 +89,15 @@ function ProjectTestsList(props) {
 		setShowAddTestModal({value: false, projectId: null});
 	};
 
+	const createTestCallback = (url, browsers) => {
+		closeAddTestModal();
+		Router.replace("/app/project/onboarding/create-test");
+	}
+
 	return (
 		<div css={container}>
 			{showAddTestModal && showAddTestModal.value && (
-				<CreateTestModal onClose={closeAddTestModal}/>
+				<CreateTestModal onSubmit={createTestCallback} onClose={closeAddTestModal}/>
 			)}
 			<div css={innerContainer}>
 				<HeaderComponent />

@@ -4,23 +4,48 @@ import React from "react";
 import { ModalInput } from "@ui/components/modal/input";
 import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
+import { MultiSelect } from "@ui/components/modal/multiSelect";
+import Flag from "../../../../public/svg/modals/flag.svg";
+import Play from "../../../../public/svg/modals/play.svg";
 
 interface iProps {
 	onClose: any;
+	onSubmit: any;
 }
 
 const CreateTestModal = (props: iProps) => {
-	const { onClose } = props;
+	const { onClose, onSubmit } = props;
 	const [url, setURL] = useState("");
+	const [selectedBrowsers, setSelectedBrowsers] = useState([
+    { label: "Chrome", value: "CHROME" },
+  ]);
 
 	const handleSubmit = () => {
-		return true;
+		if(url && url.length > 0 && selectedBrowsers.length > 0) {
+			if (onSubmit) {
+				const browsers = selectedBrowsers.map((browserOption) => {
+					return browserOption.value;
+				});
+				onSubmit(url, browsers);
+			}
+		} else {
+			alert("Invalid inputs");
+		}
 	};
 
 	const handleURLChange = (event: any) => {
 		setURL(event.target.value);
 	};
 
+	const handleBrowserChange = (values: any) => {
+		setSelectedBrowsers(values);
+	};
+
+	const browserOptions = [
+		{ label: "Chrome", value: "CHROME" },
+		{ label: "Firefox", value: "FIREFOX" },
+		{ label: "Safari", value: "SAFARI" },
+	];
 
 	return (
 		<Modal
@@ -47,28 +72,79 @@ const CreateTestModal = (props: iProps) => {
 				{/*	value={url}*/}
 				{/*	onChange={handleURLChange}*/}
 				{/*/>*/}
-
+				<MultiSelect
+					title={"Browser"}
+					values={selectedBrowsers}
+					options={browserOptions}
+					name={"Browser"}
+					onChange={handleBrowserChange}
+					style={{ marginTop: "1rem" }}
+				/>
+				<div css={modalNoteCss}>
+					<div css={flagContainerCss}>
+						<Flag />
+					</div>
+					<div style={{ flex: "1" }}>
+						<div>
+							If your app shows different version for different device, country, etc.
+            </div>
+						<div>Create different version or fork a test</div>
+					</div>
+				</div>
 				<ModalButton
 					containerCss={buttonCss}
 					title={"Start Recording"}
 					onClick={handleSubmit}
 				/>
+				<a css={playContainerCss} href={"https://www.loom.com/share/5f1392d00274403083d151c0183620cb"}>
+					<Play />{" "}
+          <span style={{ marginLeft: "0.75rem" }}>Watch how to record test</span>
+				</a>
 			</div>
 		</Modal>
 	);
 };
 
+const playContainerCss = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 1.06rem;
+	color: #1e1d1d;
+	font-size: 1rem;
+	font-family: Gilroy;
+	text-decoration-line: underline;
+	cursor: pointer;
+`;
+
+const flagContainerCss = css`
+	margin-right: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+const modalNoteCss = css`
+	color: #7e7e7e;
+	font-family: Gilroy;
+	font-size: 0.8rem;
+	margin-top: 2.562rem;
+	display: flex;
+	flex-direction: row;
+`;
+
 const topAreaCSS = css`
-	background: #EDF8FF;
+	background: #edf8ff;
 	border-bottom: 2px solid #0a1215;
 `;
 
 const modalHeadingCss = css`
-		color: #261F18;
+	color: #261f18;
 `;
 
 const modalDescCss = css`
-		color: #2E2E2E;
+	color: #2e2e2e;
+	font-size: 1rem !important;
 `;
 
 const modalMoto = css`
@@ -79,6 +155,7 @@ const modalMoto = css`
 const bodyContainerCss = css`
 	display: flex;
 	flex-direction: column;
+	padding-top: 0.75rem;
 	label {
 		font-family: Gilroy;
 		font-weight: bold;
@@ -106,7 +183,9 @@ const membersDescCss = css`
 
 const buttonCss = css`
 	margin-top: auto;
-	margin-top: 11rem;
+	background: #3c59cf;
+	margin-top: 2.5rem;
+	font-size: 1rem;
 `;
 
 export { CreateTestModal };

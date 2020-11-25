@@ -1,12 +1,10 @@
 import { Modal } from "@ui/containers/modals/modal";
 import { useState } from "react";
 import React from "react";
-import { ModalInput } from "@ui/components/modal/input";
 import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
 import { MultiSelect } from "@ui/components/modal/multiSelect";
-import Flag from "../../../../public/svg/modals/flag.svg";
-import Play from "../../../../public/svg/modals/play.svg";
+import { ModalCheckbox } from "@ui/components/modal/checkbox";
 
 interface iProps {
 	onClose: any;
@@ -15,30 +13,22 @@ interface iProps {
 
 const ModifyTestSettingsModal = (props: iProps) => {
 	const { onClose, onSubmit } = props;
-	const [url, setURL] = useState("");
 	const [selectedBrowsers, setSelectedBrowsers] = useState([
 		{ label: "Chrome", value: "CHROME" },
 	]);
+	const [selectedResolutions, setSelectedResolutions] = useState([]);
+	const [shouldSaveTestSettingsForFuture, setShouldSaveTestSettingsForFuture] = useState(false);
 
 	const handleSubmit = () => {
-		if(url && url.length > 0 && selectedBrowsers.length > 0) {
-			if (onSubmit) {
-				const browsers = selectedBrowsers.map((browserOption) => {
-					return browserOption.value;
-				});
-				onSubmit(url, browsers);
-			}
-		} else {
-			alert("Invalid inputs");
-		}
-	};
 
-	const handleURLChange = (event: any) => {
-		setURL(event.target.value);
 	};
 
 	const handleBrowserChange = (values: any) => {
 		setSelectedBrowsers(values);
+	};
+
+	const handleResolutionChange = (values: any) => {
+		setSelectedResolutions(values);
 	};
 
 	const browserOptions = [
@@ -47,9 +37,26 @@ const ModifyTestSettingsModal = (props: iProps) => {
 		{ label: "Safari", value: "SAFARI" },
 	];
 
+	const resolutionOptions = [
+		{ label: "1920x1080", value: "1920x1080"},
+		{ label: "720x480", value: "720x480"}
+	];
+
+	const selectedBrowsersInText = selectedBrowsers.map((browserOption) => {
+		return browserOption.label;
+	}).join(",");
+
+	const selectedResolutionsInText = selectedResolutions.map((resolutionOption) => {
+		return resolutionOption.label;
+	}).join(",");
+
+	const onCheckboxToggle = () => {
+		setShouldSaveTestSettingsForFuture(!shouldSaveTestSettingsForFuture);
+	};
+
 	return (
 		<Modal
-			heading={"Create a test"}
+			heading={"Save test settings"}
 			subHeading={"Experience power of no-code testing"}
 			illustration={"/assets/img/illustration/women_running.png"}
 			onClose={onClose}
@@ -58,20 +65,6 @@ const ModifyTestSettingsModal = (props: iProps) => {
 			topAreaCSS={topAreaCSS}
 		>
 			<div css={bodyContainerCss}>
-				<ModalInput
-					id={"url"}
-					title={"Enter url"}
-					placeholder={"Enter host url"}
-					value={url}
-					onChange={handleURLChange}
-				/>
-				{/*<ModalInput*/}
-				{/*	id={"url"}*/}
-				{/*	title={"Enter url"}*/}
-				{/*	placeholder={"Enter host url"}*/}
-				{/*	value={url}*/}
-				{/*	onChange={handleURLChange}*/}
-				{/*/>*/}
 				<MultiSelect
 					title={"Browser"}
 					values={selectedBrowsers}
@@ -80,30 +73,54 @@ const ModifyTestSettingsModal = (props: iProps) => {
 					onChange={handleBrowserChange}
 					style={{ marginTop: "1rem" }}
 				/>
-				<div css={modalNoteCss}>
-					<div css={flagContainerCss}>
-						<Flag />
+				{selectedBrowsers.length ? (
+					<div css={inputInfoContainerCss}>
+						<div>Current</div>
+						<div css={inputInfoValueCss}>{selectedBrowsersInText}</div>
 					</div>
-					<div style={{ flex: "1" }}>
-						<div>
-							If your app shows different version for different device, country, etc.
-						</div>
-						<div>Create different version or fork a test</div>
+				) : null}
+				<MultiSelect
+					title={"Resolutions"}
+					values={selectedResolutions}
+					options={resolutionOptions}
+					name={"Resolution"}
+					onChange={handleResolutionChange}
+					style={{ marginTop: "1rem" }}
+				/>
+				{selectedResolutions.length ? (
+					<div css={inputInfoContainerCss}>
+						<div>Current</div>
+						<div css={inputInfoValueCss}>{selectedResolutionsInText}</div>
 					</div>
-				</div>
+				) : null}
+				<ModalCheckbox containerCss={checkboxContainerCss} title={"Save this for every test going forwards"} enabled={shouldSaveTestSettingsForFuture} onToggle={onCheckboxToggle}/>
 				<ModalButton
 					containerCss={buttonCss}
-					title={"Start Recording"}
+					title={"Save for test"}
 					onClick={handleSubmit}
 				/>
-				<a css={playContainerCss} href={"https://www.loom.com/share/5f1392d00274403083d151c0183620cb"}>
-					<Play />{" "}
-					<span style={{ marginLeft: "0.75rem" }}>Watch how to record test</span>
-				</a>
 			</div>
 		</Modal>
 	);
 };
+
+const checkboxContainerCss = css`
+	margin-top: 2.43rem;
+`;
+const inputInfoContainerCss = css`
+	margin-top: 0.8125rem;
+	font-family: Cera Pro;
+	font-size: 0.875rem;
+	color: #000000;
+	font-weight: 500;
+	margin-bottom: 0.2rem;
+`;
+
+const inputInfoValueCss = css`
+	font-size: 0.75rem;
+	font-weight: normal;
+	margin-top: 0.5rem;
+`;
 
 const playContainerCss = css`
 	display: flex;
@@ -183,8 +200,8 @@ const membersDescCss = css`
 
 const buttonCss = css`
 	margin-top: auto;
-	background: #3c59cf;
-	margin-top: 2.5rem;
+	background: #5B76F7;
+	margin-top: 1.125rem;
 	font-size: 1rem;
 `;
 

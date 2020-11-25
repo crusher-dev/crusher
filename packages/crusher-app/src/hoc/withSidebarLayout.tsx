@@ -123,6 +123,10 @@ function LeftSection(props: any) {
 	};
 
 	const userFistCharacter = userInfo.name.slice(0, 1);
+	const closePaymentModal = () => {
+		setPaymentShow(false);
+		ReactDOM.render(null, document.getElementById("overlay"));
+	};
 
 	const [showPayment, setPaymentShow] = useState(false);
 	return (
@@ -163,7 +167,7 @@ function LeftSection(props: any) {
 							14 days left. Add payment.
 						</div>
 						{showPayment && (
-							<AddPaymentModel onClose={setPaymentShow.bind(this, false)} />
+							<AddPaymentModel onClose={closePaymentModal} />
 						)}
 					</div>
 					<div css={styles.sectionHeaderSetting} onClick={toggleSettingsDropDown}>

@@ -15,7 +15,7 @@ export const TestActionCard = (props: any) => {
 	const { isFinished, style, action } = props;
 	const defaultSelector = action.selectors[0].value;
 	return (
-		<div style={style} css={styles.container}>
+		<div style={{...style, fontWeight: isFinished ? "bold" : "regular"}} css={styles.container}>
 			<div css={styles.actionInfo}>
 				<div css={styles.actionInfoHeading}>
 					{normalizeActionType(action.event_type)}
@@ -48,10 +48,10 @@ export const LogActionCard = (props: any) => {
 	const desc = action.desc;
 
 	return (
-		<div style={style} css={styles.container} ref={forwardRef}>
+		<div style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }} css={styles.container} ref={forwardRef}>
 			<div css={styles.actionInfo}>
 				<div css={styles.actionBoxRow}>
-					<div css={styles.actionBoxRowIndex}>{index})</div>
+					<div css={styles.actionBoxRowIndex}>{index}.)</div>
 					<div css={styles.actionBoxInfo}>
 						<div css={styles.actionInfoHeading}>
 							{desc.substr(0, 34)} {desc.length > 34 ? "..." : null}
@@ -94,13 +94,15 @@ export const LogActionCard = (props: any) => {
 
 const styles = {
 	container: css`
-		padding: 0.8rem 0;
+		padding: 0.8rem;
 		margin-bottom: 2.35rem;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		background: #ffffff;
 		border: 1px solid #f3f3f3;
+		border-radius: 0.25rem;
+		font-family: Gilroy;
 		position: relative;
 		overflow: visible;
 		z-index: 24;
@@ -116,13 +118,12 @@ const styles = {
 		z-index: 23;
 	`,
 	actionInfoHeading: css`
-		font-family: DM Sans;
+		font-family: Gilroy;
 		font-style: normal;
-		font-weight: bold;
 		color: #2d3958;
 	`,
 	actionInfoDesc: css`
-		font-family: DM Sans;
+		font-family: Gilroy;
 		font-style: normal;
 		font-weight: normal;
 		color: #2d3958;

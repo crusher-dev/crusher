@@ -19,6 +19,8 @@ import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { LogActionCard } from "@ui/components/list/testActionCard";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
 import WithSession from '@hoc/withSession';
+import WithoutSession from '@hoc/withoutSession';
+import WithSessionInfo from '@hoc/withSessionInfo';
 
 function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
 	return checkDraftStatus(id, logsAfter).then((res) => {
@@ -530,4 +532,4 @@ Test.getInitialProps = async (ctx) => {
 	}
 };
 
-export default WithSession(WithSidebarLayout(Test));
+export default WithSessionInfo(WithSidebarLayout(Test));

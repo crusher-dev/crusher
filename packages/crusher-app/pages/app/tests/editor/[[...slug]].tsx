@@ -21,6 +21,7 @@ import { TestStatus } from "@ui/containers/editor/TestStatus";
 import WithSession from '@hoc/withSession';
 import WithoutSession from '@hoc/withoutSession';
 import WithSessionInfo from '@hoc/withSessionInfo';
+import { ModifyTestSettingsModal } from '@ui/containers/modals/modifyTestSettingsModal';
 
 function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
 	return checkDraftStatus(id, logsAfter).then((res) => {
@@ -278,6 +279,7 @@ function Test(props) {
 					</div>
 				</div>
 				<TestStatus actions={actions} logs={testResults ? testResults.logs : []} />
+				{/*<ModifyTestSettingsModal/>*/}
 			</div>
 		</div>
 	);

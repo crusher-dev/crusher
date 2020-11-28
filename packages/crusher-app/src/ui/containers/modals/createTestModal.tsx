@@ -17,11 +17,11 @@ const CreateTestModal = (props: iProps) => {
 	const { onClose, onSubmit } = props;
 	const [url, setURL] = useState("");
 	const [selectedBrowsers, setSelectedBrowsers] = useState([
-    { label: "Chrome", value: "CHROME" },
-  ]);
+		{ label: "Chrome", value: "CHROME" },
+	]);
 
 	const handleSubmit = () => {
-		if(url && url.length > 0 && selectedBrowsers.length > 0) {
+		if (url && url.length > 0 && selectedBrowsers.length > 0) {
 			if (onSubmit) {
 				const browsers = selectedBrowsers.map((browserOption) => {
 					return browserOption.value;
@@ -87,7 +87,7 @@ const CreateTestModal = (props: iProps) => {
 					<div style={{ flex: "1" }}>
 						<div>
 							If your app shows different version for different device, country, etc.
-            </div>
+						</div>
 						<div>Create different version or fork a test</div>
 					</div>
 				</div>
@@ -96,9 +96,12 @@ const CreateTestModal = (props: iProps) => {
 					title={"Start Recording"}
 					onClick={handleSubmit}
 				/>
-				<a css={playContainerCss} href={"https://www.loom.com/share/5f1392d00274403083d151c0183620cb"}>
+				<a
+					css={playContainerCss}
+					href={"https://www.loom.com/share/5f1392d00274403083d151c0183620cb"}
+				>
 					<Play />{" "}
-          <span style={{ marginLeft: "0.75rem" }}>Watch how to record test</span>
+					<span style={{ marginLeft: "0.75rem" }}>Watch how to record test</span>
 				</a>
 			</div>
 		</Modal>

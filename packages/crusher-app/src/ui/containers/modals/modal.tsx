@@ -36,8 +36,12 @@ class Modal extends React.Component<iProps, any> {
 			<div css={[containerCss, css]}>
 				<div css={modalContainerCss}>
 					<div css={[topContainerCss, topAreaCSS]}>
-						<div className={"modalHeading"} css={headingCss}>{heading}</div>
-						<div className={"modalDesc"} css={descCss}>{subHeading}</div>
+						<div className={"modalHeading"} css={headingCss}>
+							{heading}
+						</div>
+						<div className={"modalDesc"} css={descCss}>
+							{subHeading}
+						</div>
 						<div css={crossModalCss} onClick={onClose}>
 							<CrossModal />
 						</div>
@@ -78,8 +82,8 @@ const illustrationContainerCss = css`
 	position: absolute;
 	top: -0.8rem;
 	right: -0.5rem;
-	img{
-	width: 15.15rem;
+	img {
+		width: 15.15rem;
 	}
 `;
 

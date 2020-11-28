@@ -16,15 +16,15 @@ import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { fetchTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
-import { LogActionCard } from "@ui/components/list/testActionCard";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
-import WithSession from '@hoc/withSession';
-import WithoutSession from '@hoc/withoutSession';
-import WithSessionInfo from '@hoc/withSessionInfo';
-import { ModifyTestSettingsModal } from '@ui/containers/modals/modifyTestSettingsModal';
+import WithSessionInfo from "@hoc/withSessionInfo";
 
-function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
-	return checkDraftStatus(id, logsAfter).then((res) => {
+function checkDraftStatusAgainAndAgain(
+	id: string,
+	updateLogsCallback: any,
+	logsAfter = 0,
+) {
+	return checkDraftStatus(id, logsAfter).then((res: any) => {
 		const { status, logs, test } = res;
 
 		if (test && test.result && status === "FETCHED_LOGS") {
@@ -48,7 +48,7 @@ function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
 			} else {
 				const lastCreatedAt =
 					logs && logs.length
-						? logs.reduce((prev, current) => {
+						? logs.reduce((prev: any, current: any) => {
 								const createdDate = new Date(current.createdAt);
 								return createdDate > prev ? createdDate : prev;
 						  }, new Date(0))
@@ -73,7 +73,7 @@ function checkDraftStatusAgainAndAgain(id, updateLogsCallback, logsAfter = 0) {
 		} else {
 			const lastCreatedAt =
 				logs && logs.length
-					? logs.reduce((prev, current) => {
+					? logs.reduce((prev: any, current: any) => {
 							const createdDate = new Date(current.createdAt);
 							return createdDate > prev ? createdDate : prev;
 					  }, new Date(0))
@@ -100,7 +100,7 @@ const TestState = {
 	COMPLETED: "COMPLETED",
 };
 
-function Test(props) {
+function Test(props: any) {
 	let { testId, events, testInfo, isFirstTest, totalTime } = props;
 	testInfo = testInfo ? testInfo : {};
 	const [actions, setActions] = useState(

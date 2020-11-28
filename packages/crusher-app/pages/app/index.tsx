@@ -1,11 +1,10 @@
-import React from "react";
 import { redirectToFrontendPath } from "@utils/router";
 
-function AppIndex(props) {
+function AppIndex() {
 	return null;
 }
 
-AppIndex.getInitialProps = async ({ req, res }) => {
+AppIndex.getInitialProps = async ({ res }: any) => {
 	await redirectToFrontendPath("/app/dashboard", res);
 	return {};
 };

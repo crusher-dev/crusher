@@ -17,11 +17,12 @@ const ModifyTestSettingsModal = (props: iProps) => {
 		{ label: "Chrome", value: "CHROME" },
 	]);
 	const [selectedResolutions, setSelectedResolutions] = useState([]);
-	const [shouldSaveTestSettingsForFuture, setShouldSaveTestSettingsForFuture] = useState(false);
+	const [
+		shouldSaveTestSettingsForFuture,
+		setShouldSaveTestSettingsForFuture,
+	] = useState(false);
 
-	const handleSubmit = () => {
-
-	};
+	const handleSubmit = () => {};
 
 	const handleBrowserChange = (values: any) => {
 		setSelectedBrowsers(values);
@@ -38,17 +39,21 @@ const ModifyTestSettingsModal = (props: iProps) => {
 	];
 
 	const resolutionOptions = [
-		{ label: "1920x1080", value: "1920x1080"},
-		{ label: "720x480", value: "720x480"}
+		{ label: "1920x1080", value: "1920x1080" },
+		{ label: "720x480", value: "720x480" },
 	];
 
-	const selectedBrowsersInText = selectedBrowsers.map((browserOption) => {
-		return browserOption.label;
-	}).join(",");
+	const selectedBrowsersInText = selectedBrowsers
+		.map((browserOption) => {
+			return browserOption.label;
+		})
+		.join(",");
 
-	const selectedResolutionsInText = selectedResolutions.map((resolutionOption) => {
-		return resolutionOption.label;
-	}).join(",");
+	const selectedResolutionsInText = selectedResolutions
+		.map((resolutionOption) => {
+			return resolutionOption.label;
+		})
+		.join(",");
 
 	const onCheckboxToggle = () => {
 		setShouldSaveTestSettingsForFuture(!shouldSaveTestSettingsForFuture);
@@ -93,7 +98,12 @@ const ModifyTestSettingsModal = (props: iProps) => {
 						<div css={inputInfoValueCss}>{selectedResolutionsInText}</div>
 					</div>
 				) : null}
-				<ModalCheckbox containerCss={checkboxContainerCss} title={"Save this for every test going forwards"} enabled={shouldSaveTestSettingsForFuture} onToggle={onCheckboxToggle}/>
+				<ModalCheckbox
+					containerCss={checkboxContainerCss}
+					title={"Save this for every test going forwards"}
+					enabled={shouldSaveTestSettingsForFuture}
+					onToggle={onCheckboxToggle}
+				/>
 				<ModalButton
 					containerCss={buttonCss}
 					title={"Save for test"}
@@ -200,7 +210,7 @@ const membersDescCss = css`
 
 const buttonCss = css`
 	margin-top: auto;
-	background: #5B76F7;
+	background: #5b76f7;
 	margin-top: 1.125rem;
 	font-size: 1rem;
 `;

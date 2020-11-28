@@ -1,11 +1,10 @@
-import React from "react";
 import { redirectToFrontendPath } from "@utils/router";
 
-function Dashboard(props) {
+function Dashboard() {
 	return null;
 }
 
-Dashboard.getInitialProps = async ({ req, res }) => {
+Dashboard.getInitialProps = async ({ res }: any) => {
 	await redirectToFrontendPath("/app/project/dashboard", res);
 	return {};
 };

@@ -15,7 +15,10 @@ export const TestActionCard = (props: any) => {
 	const { isFinished, style, action } = props;
 	const defaultSelector = action.selectors[0].value;
 	return (
-		<div style={{...style, fontWeight: isFinished ? "bold" : "regular"}} css={styles.container}>
+		<div
+			style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }}
+			css={styles.container}
+		>
 			<div css={styles.actionInfo}>
 				<div css={styles.actionInfoHeading}>
 					{normalizeActionType(action.event_type)}
@@ -48,7 +51,11 @@ export const LogActionCard = (props: any) => {
 	const desc = action.desc;
 
 	return (
-		<div style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }} css={styles.container} ref={forwardRef}>
+		<div
+			style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }}
+			css={styles.container}
+			ref={forwardRef}
+		>
 			<div css={styles.actionInfo}>
 				<div css={styles.actionBoxRow}>
 					<div css={styles.actionBoxRowIndex}>{index}.)</div>

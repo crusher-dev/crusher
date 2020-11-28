@@ -123,7 +123,7 @@ interface TeamPaymentSettingsProps {
 	isIntegratedWithRepo: boolean;
 	isIntegratedWithEmail: boolean;
 	slackIntegrations: Array<any>;
-};
+}
 
 function TeamPaymentSettings(props: TeamPaymentSettingsProps) {
 	const {

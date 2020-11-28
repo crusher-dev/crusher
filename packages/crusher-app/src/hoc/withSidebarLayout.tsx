@@ -166,9 +166,7 @@ function LeftSection(props: any) {
 						<div onClick={setPaymentShow.bind(this, true)} css={addPaymentOnTrial}>
 							14 days left. Add payment.
 						</div>
-						{showPayment && (
-							<AddPaymentModel onClose={closePaymentModal} />
-						)}
+						{showPayment && <AddPaymentModel onClose={closePaymentModal} />}
 					</div>
 					<div css={styles.sectionHeaderSetting} onClick={toggleSettingsDropDown}>
 						<DropdownSVG style={{ marginTop: ".5rem" }} />

@@ -15,11 +15,18 @@ import { deleteProjectFromBackend } from "@services/projects";
 import React, { useState } from "react";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import { CreateTestModal } from "@ui/containers/modals/createTestModal";
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
 
-function ProjectItem({ name, id, team_id, noTests, created_at, showAddTestModal }) {
+function ProjectItem({
+	name,
+	id,
+	team_id,
+	noTests,
+	created_at,
+	showAddTestModal,
+}) {
 	const addTest = (projectId: number) => {
-		if(showAddTestModal){
+		if (showAddTestModal) {
 			showAddTestModal(projectId);
 		}
 	};
@@ -77,27 +84,33 @@ function HeaderComponent() {
 }
 
 function ProjectTestsList(props) {
-	const [showAddTestModal, setShowAddTestModal] = useState({ value: false, projectId: null });
+	const [showAddTestModal, setShowAddTestModal] = useState({
+		value: false,
+		projectId: null,
+	});
 	const projects = useSelector(getProjects);
 
 	const showAddTestModalCallback = (projectId: string) => {
-		setShowAddTestModal({value: true, projectId: projectId});
+		setShowAddTestModal({ value: true, projectId: projectId });
 	};
 
 	const closeAddTestModal = () => {
 		ReactDOM.render(null, document.getElementById("overlay"));
-		setShowAddTestModal({value: false, projectId: null});
+		setShowAddTestModal({ value: false, projectId: null });
 	};
 
 	const createTestCallback = (url, browsers) => {
 		closeAddTestModal();
 		Router.replace("/app/project/onboarding/create-test");
-	}
+	};
 
 	return (
 		<div css={container}>
 			{showAddTestModal && showAddTestModal.value && (
-				<CreateTestModal onSubmit={createTestCallback} onClose={closeAddTestModal}/>
+				<CreateTestModal
+					onSubmit={createTestCallback}
+					onClose={closeAddTestModal}
+				/>
 			)}
 			<div css={innerContainer}>
 				<HeaderComponent />

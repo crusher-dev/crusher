@@ -7,7 +7,7 @@ import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import {
 	addProjectInRedux,
 	saveSelectedProjectInRedux,
-} from "@redux/actions/action";
+} from "@redux/actions/project";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
 import React, { CSSProperties, useCallback, useEffect, useState } from "react";

@@ -9,7 +9,6 @@ import {
 	createTestFromDraft,
 	getTest,
 } from "@services/test";
-import parse from "urlencoded-body-parser";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import CodeGenerator from "../../../../../code-generator/dist/code-generator/src/index";
 import { useSelector } from "react-redux";
@@ -17,6 +16,8 @@ import { getSelectedProject } from "@redux/stateUtils/projects";
 import { fetchTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
+const parse = require("urlencoded-body-parser");
+
 import WithSessionInfo from "@hoc/withSessionInfo";
 
 function checkDraftStatusAgainAndAgain(

@@ -6,7 +6,7 @@ import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
 import { addProject } from "@services/projects";
 
-import { addProjectInRedux } from "@redux/actions/action";
+import { addProjectInRedux } from "@redux/actions/project";
 
 import { store } from "@redux/store";
 

@@ -3,7 +3,7 @@ import {
 	DELETE_PROJECT,
 	SAVE_PROJECTS,
 	SAVE_SELECTED_PROJECT,
-} from "@redux/actions/action";
+} from "@redux/actions/project";
 import jsCookie from "js-cookie";
 import { HYDRATE } from "next-redux-wrapper";
 import { extractHostnameFromUrl } from "@utils/helpers";

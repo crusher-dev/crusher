@@ -1,5 +1,5 @@
 import { backendRequest, cleanHeaders } from "@utils/backendRequest";
-import { saveProjectsInRedux } from "@redux/actions/action";
+import { saveProjectsInRedux } from "@redux/actions/project";
 import { emitter } from "@utils/mitt";
 
 export const fetchProjectsFromServer: any = (headers: any = null) => (

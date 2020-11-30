@@ -203,13 +203,11 @@ export class UserController {
 			});
 	}
 
+	@Authorized()
 	@Post('/meta/add')
-	async addUserMeta(@CurrentUser({ required: false }) user, @Body() body) {
+	async addUserMeta(@CurrentUser({ required: true }) user, @Body() body) {
 		const { user_id } = user;
 		const metaArray = body;
-		if (!user_id) {
-			return { status: USER_NOT_REGISTERED };
-		}
 
 		return this.userService
 			.addUserMeta(metaArray, user_id)
@@ -217,7 +215,7 @@ export class UserController {
 				return { status: 'success' };
 			})
 			.catch((err) => {
-				return new InternalServerError('Some internal error occured');
+				return new InternalServerError('Some internal error occurred');
 			});
 	}
 

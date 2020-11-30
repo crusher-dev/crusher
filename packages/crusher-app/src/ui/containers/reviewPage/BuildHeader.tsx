@@ -74,7 +74,7 @@ function renderBrowserList(
 					className="ml-2 mr-2"
 					src={icon}
 					title={toPascalCase(name)}
-					height="20px"
+					style={{ height: 20 }}
 				/>
 			</div>
 		);
@@ -111,7 +111,7 @@ function renderCountriesList(selectedCountry = "global") {
 					className="ml-2 mr-2"
 					src={icon}
 					title={toPascalCase(name)}
-					height="20px"
+					style={{ height: 20 }}
 				/>
 			</div>
 		);

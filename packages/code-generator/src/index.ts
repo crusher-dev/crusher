@@ -137,6 +137,7 @@ export default class CodeGenerator {
 						firstTimeNavigate = false;
 						code +=
 							`const page = await browserContext.newPage({});\n` +
+							`page.setDefaultTimeout(60000);` +
 							(isRecordingVideo ? `const {saveVideo} = require('playwright-video');\ncaptureVideo = await saveVideo(page, 'video.mp4');\ntry{\n` : '') +
 							`await page.goto('${value}');\n`;
 					} else {

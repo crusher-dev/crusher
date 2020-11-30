@@ -1,40 +1,49 @@
+import React from "react";
 import { cleanHeaders } from "@utils/backendRequest";
-import { getCookies } from "@utils/cookies";
-import { redirectToBackendURI, redirectToFrontendPath } from "@utils/router";
+import { redirectToFrontendPath } from "@utils/router";
 import {
 	EMAIL_NOT_VERIFIED,
 	NO_TEAM_JOINED,
 	USER_NOT_REGISTERED,
 } from "@utils/constants";
-import { getUserInfo, getUserStatus } from "@services/user";
+import { getUserInfo } from "@services/user";
 
-async function handleUserStatus(statusInfo, res, componentScope = null) {
+async function handleUserStatus(
+	statusInfo: any,
+	res: any,
+	componentScope: string | null = null,
+) {
 	switch (statusInfo) {
 		case EMAIL_NOT_VERIFIED:
 			if (componentScope !== EMAIL_NOT_VERIFIED) {
 				await redirectToFrontendPath("/verification", res);
+				return true;
 			}
 			return false;
 			break;
 		case NO_TEAM_JOINED:
 			if (componentScope !== NO_TEAM_JOINED) {
 				await redirectToFrontendPath("/onboarding", res);
+				return true;
 			}
 			return false;
 		case USER_NOT_REGISTERED:
 			if (componentScope !== USER_NOT_REGISTERED) {
 				return false;
 			}
+			return true;
 			break;
+		default:
+			return false;
 	}
 }
 
-function WithSession(Component, componentScope?: string) {
-	const WrappedComponent = function (props) {
+function WithSession(Component: any, componentScope?: string) {
+	const WrappedComponent = function (props: any) {
 		return <Component {...props} />;
 	};
 
-	WrappedComponent.getInitialProps = async (ctx) => {
+	WrappedComponent.getInitialProps = async (ctx: any) => {
 		const { req, res } = ctx;
 
 		const headers = req ? req.headers : null;
@@ -42,9 +51,13 @@ function WithSession(Component, componentScope?: string) {
 		cleanHeaders(headers);
 		// @TODO: Rethink if there is a better way to do this.
 		// This is coming from app.tsx.
-		let statusInfo = ctx.userStatus || null;
-		await handleUserStatus(statusInfo, res, componentScope);
-		let userInfo = await getUserInfo(headers);
+		const statusInfo = ctx.userStatus || null;
+		await handleUserStatus(
+			statusInfo,
+			res,
+			componentScope ? componentScope : null,
+		);
+		const userInfo = await getUserInfo(headers);
 
 		/*
 		If there's invalid project id, set default project id

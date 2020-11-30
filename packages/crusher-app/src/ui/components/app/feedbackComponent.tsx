@@ -44,5 +44,6 @@ const feedbackCss = css`
     height: 6rem;
     width: 10rem;
     cursor: pointer;
+    z-index: 99999;
 }
 `;

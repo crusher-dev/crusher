@@ -1,6 +1,7 @@
 import { TestType } from '../interfaces/TestType';
 import TestInstanceRecordingService from '../services/TestInstanceRecordingService';
 import DraftInstanceResultsService from '../services/DraftInstanceResultsService';
+import 'reflect-metadata';
 
 const testInstanceRecordingService = new TestInstanceRecordingService();
 const draftInstanceResultsService = new DraftInstanceResultsService();

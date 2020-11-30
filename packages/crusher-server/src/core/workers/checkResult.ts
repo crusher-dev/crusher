@@ -26,6 +26,8 @@ import { EmailManager } from '../manager/EmailManager';
 import { resolvePathToFrontendURI } from '../utils/uri';
 import { Job } from 'bullmq';
 import { REDDIS } from '../../../config/database';
+import 'reflect-metadata';
+
 //@ts-ignore
 import IORedis from 'ioredis';
 

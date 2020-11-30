@@ -20,32 +20,23 @@ export function extractOwnerAndRepoName(fullRepoName: string) {
 	const splitArr = fullRepoName.split('/');
 	return { ownerName: splitArr[0], repoName: splitArr[1] };
 }
+const labelOptions = [
+	{ value: 1800, label: '0.5h' },
+	{ value: 3600, label: '1h' },
+	{ value: 7200, label: '2h' },
+	{ value: 14400, label: '4h' },
+	{ value: 28800, label: '8h' },
+	{ value: 43200, label: '12h' },
+	{ value: 86400, label: '1d' },
+];
 
 export function convertSecondsToLabel(seconds) {
-	const labelOptions = [
-		{ value: 1800, label: '30m' },
-		{ value: 3600, label: '1h' },
-		{ value: 7200, label: '2h' },
-		{ value: 14400, label: '4h' },
-		{ value: 28800, label: '8h' },
-		{ value: 43200, label: '12h' },
-		{ value: 86400, label: '1d' },
-	];
 	return labelOptions.sort(function (a, b) {
 		return Math.abs(seconds - a.value) - Math.abs(seconds - b.value);
 	})[0].label;
 }
 
 export function convertLabelToSeconds(labelToFind) {
-	const labelOptions = [
-		{ value: 1800, label: '30m' },
-		{ value: 3600, label: '1h' },
-		{ value: 7200, label: '2h' },
-		{ value: 14400, label: '4h' },
-		{ value: 28800, label: '8h' },
-		{ value: 43200, label: '12h' },
-		{ value: 86400, label: '1d' },
-	];
 	const label = labelOptions.find((l) => {
 		return l.label === labelToFind;
 	});

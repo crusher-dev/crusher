@@ -12,6 +12,7 @@ import DraftInstanceResultsService from '../services/DraftInstanceResultsService
 import TestInstanceScreenShotsService from '../services/TestInstanceScreenShotsService';
 import TestInstanceRecordingService from '../services/TestInstanceRecordingService';
 import { Logger } from '../../utils/logger';
+import 'reflect-metadata';
 
 const ReddisLock = require('redlock');
 

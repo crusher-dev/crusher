@@ -41,8 +41,15 @@ export default class JobsService {
 		]);
 	}
 
-	async getAllJobsOfProject(projectId: number, limit = 5, offset = 0) {
-		return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
+	async getAllJobsOfProject(projectId: number, trigger: JobTrigger, limit = 5, offset = 0) {
+		if(!trigger) {
+			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
+		}
+		if(trigger === JobTrigger.MONITORING){
+			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND (\`trigger\`=? OR \`trigger\`=?) ORDER BY created_at DESC LIMIT ?,?`, [projectId, JobTrigger.CRON, JobTrigger.CLI, offset, limit]);
+		} else {
+			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND \`trigger\`=? ORDER BY created_at DESC LIMIT ?,?`, [projectId, trigger, offset, limit]);
+		}
 	}
 
 	async getTotalScreenshotsInJob(jobId: number): Promise<number> {
@@ -78,9 +85,18 @@ export default class JobsService {
 		};
 	}
 
-	async getTotalJobs(projectId) {
-		const countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ?`, [projectId]);
-		return countRecord.totalCount;
+	async getTotalJobs(projectId, trigger) {
+		let countRecord;
+		if(!trigger){
+			countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ?`, [projectId]);
+		} else {
+			if(trigger === JobTrigger.MONITORING) {
+				countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ? AND (\`trigger\` = ? OR \`trigger\` = ?)`, [projectId, JobTrigger.CLI, JobTrigger.CRON]);
+			} else if(trigger === JobTrigger.MANUAL) {
+				countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ? AND \`trigger\` = ?`, [projectId, trigger]);
+			}
+		}
+		return countRecord ? countRecord.totalCount : 0;
 	}
 
 	async getReferenceJob(job1) {

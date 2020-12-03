@@ -7,7 +7,9 @@ function renderPageItem(number, currentPage, resolvePaginationUrl) {
 		<Link href={url}>
 			<a href={url} style={{ marginRight: 8 }}>
 				<div
-					style={{ color: number === currentPage ? "#232425" : "#7f8ca5" }}
+					style={{
+						color: parseInt(number) === parseInt(currentPage) ? "#232425" : "#7f8ca5",
+					}}
 					css={styles.paginationItem}
 				>
 					{number}

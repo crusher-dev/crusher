@@ -1,21 +1,26 @@
+import React, { useState } from "react";
 import { css } from "@emotion/core";
+import WithSession from "@hoc/withSession";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
-import { Pagination } from "@ui/components/common/Pagination";
-import WithSession from "../../../src/hoc/withSession";
-import { redirectToFrontendPath } from "@utils/router";
-import { getCookies } from "@utils/cookies";
-import { getAllJobsOfProject } from "@services/job";
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { getSelectedProject } from "@redux/stateUtils/projects";
+import { FilterListPagination } from "@ui/containers/FilterListPagination";
 import { cleanHeaders } from "@utils/backendRequest";
-import { getTime } from "@utils/helpers";
-import { useRouter } from "next/router";
-import { Player } from "@lottiefiles/react-lottie-player";
-import Head from "next/head";
-import Link from "next/link";
-import { JobConclusion } from "@interfaces/JobConclusion";
+import { getCookies } from "@utils/cookies";
+import { getSelectedProject } from "@redux/stateUtils/projects";
+import { getAllJobsOfProject } from "@services/job";
+import { redirectToFrontendPath } from "@utils/router";
 import { JobStatus } from "@interfaces/JobStatus";
+import { JobConclusion } from "@interfaces/JobConclusion";
+import Link from "next/link";
+import { getTime } from "@utils/helpers";
+
+const AVAILABLE_FILTERS = [
+	{ title: "Monitoring", value: 1 },
+	{ title: "Manual", value: 2 },
+];
+
+const BuildLog = () => {
+	return null;
+};
 
 function RenderStatusImage(props) {
 	const { status, conclusion, postCheckConclusion } = props;
@@ -179,8 +184,8 @@ function Build(props) {
 	);
 }
 
-function RenderBuilds(props) {
-	const { builds } = props;
+function RenderBuilds(props: any) {
+	const { items: builds } = props;
 	const { jobs } = builds;
 	console.log(jobs);
 	const out = jobs
@@ -205,73 +210,91 @@ function RenderBuilds(props) {
 	return <ul css={styles.buildsListContainer}>{out}</ul>;
 }
 
-function ProjectBuilds(props) {
-	const { builds } = props;
-	const router = useRouter();
-	const [projectBuilds, setProjectBuilds] = useState(builds ? builds : []);
-	const [isLoading, setIsLoading] = useState(false);
-	const selectedProjectId = useSelector(getSelectedProject);
-	const isInitialMount = useRef(true);
-	const currentPage = router.query.page ? parseInt(router.query.page as any) : 1;
+function resolvePaginationUrl(pageNumber: number) {
+	return `?page=${pageNumber}`;
+}
 
-	const { totalPages } = (projectBuilds ? projectBuilds : {}) as any;
+function resolveCategoryUrl(category: number) {
+	return `?category=${category}`;
+}
 
-	function resolvePaginationUrl(pageNumber) {
-		return `?page=${pageNumber}`;
-	}
-
+const JobBuilds = (props: any) => {
+	const { builds, category, page } = props;
 	return (
-		<div
-			style={{
-				display: "flex",
-				paddingTop: "2.41rem",
-				paddingLeft: "4.25rem",
-				paddingRight: "4.25rem",
-				flexDirection: "column",
-				color: "#2B2B39",
-			}}
-		>
-			<Head>
-				<script
-					src={
-						"https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
-					}
-					defer
+		<div css={containerCSS}>
+			<div css={headingCSS}>Previous Builds</div>
+
+			<div css={filterContainerCss}>
+				<FilterListPagination
+					categories={AVAILABLE_FILTERS}
+					resolvePaginationUrl={resolvePaginationUrl}
+					resolveCategoryUrl={resolveCategoryUrl}
+					currentPage={parseInt(page)}
+					totalPages={builds.totalPages}
+					items={builds}
+					itemsPerPage={10}
+					selectedCategory={category}
+					itemsListComponent={RenderBuilds}
 				/>
-			</Head>
-			<div css={styles.heading}>Recent Builds</div>
-			{!isLoading &&
-			projectBuilds &&
-			projectBuilds.jobs &&
-			projectBuilds.jobs.length ? (
-				<>
-					<RenderBuilds builds={projectBuilds} />
-					<Pagination
-						totalPages={totalPages ? totalPages : 1}
-						currentPage={currentPage}
-						resolvePaginationUrl={resolvePaginationUrl}
-					/>
-				</>
-			) : (
-				<div css={styles.activitiesPlaceholderContainer}>
-					<Player
-						autoplay={true}
-						src={"https://assets2.lottiefiles.com/packages/lf20_S6vWEd.json"}
-						speed={1}
-						background={"transparent"}
-						style={{ width: 220, height: 220, margin: "0 auto" }}
-						loop={true}
-					/>
-					<div css={styles.activitiesPlaceholderHeading}>Alas!</div>
-					<div css={styles.activitiesPlaceholderMessageContainer}>
-						<div>You don’t have any builds to show.</div>
-						<div css={styles.blueItalicText}>Need any help</div>
-					</div>
-				</div>
-			)}
+			</div>
 		</div>
 	);
-}
+};
+
+JobBuilds.getInitialProps = async (ctx: any) => {
+	const { res, req, store, query } = ctx;
+	try {
+		let headers;
+		if (req) {
+			headers = req.headers;
+			cleanHeaders(headers);
+		}
+
+		const cookies = getCookies(req);
+		const defaultProject = getSelectedProject(store.getState());
+
+		const selectedProject = JSON.parse(
+			cookies.selectedProject ? cookies.selectedProject : null,
+		);
+		const page = query.page ? query.page : 1;
+		const category = query.category ? query.category : 0;
+
+		const selectedProjectId = selectedProject ? selectedProject : defaultProject;
+		const builds = await getAllJobsOfProject(
+			selectedProjectId,
+			category,
+			page,
+			headers,
+		);
+
+		return {
+			builds: builds,
+			projectId: selectedProjectId,
+			category: category,
+			page: page,
+		};
+	} catch (er) {
+		throw er;
+		redirectToFrontendPath("/404", res);
+		return null;
+	}
+};
+
+const containerCSS = css`
+	padding: 2.5rem 4.25rem;
+	padding-bottom: 0;
+`;
+
+const headingCSS = css`
+	color: #454551;
+	font-family: Cera Pro;
+	font-weight: bold;
+	font-size: 1.5rem;
+`;
+
+const filterContainerCss = css`
+	margin-top: 2.75rem;
+`;
 
 const styles = {
 	heading: css`
@@ -418,40 +441,4 @@ const styles = {
 		font-style: italic;
 	`,
 };
-
-ProjectBuilds.getInitialProps = async (ctx) => {
-	const { res, req, store, query } = ctx;
-	try {
-		let headers;
-		if (req) {
-			headers = req.headers;
-			cleanHeaders(headers);
-		}
-
-		const cookies = getCookies(req);
-		const defaultProject = getSelectedProject(store.getState());
-
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
-		const page = query.page ? query.page : 1;
-
-		const builds = await getAllJobsOfProject(
-			selectedProject ? selectedProject : defaultProject,
-			page,
-			headers,
-		);
-
-		return {
-			builds: builds,
-			firstProjectId: selectedProject ? selectedProject : defaultProject,
-			page: page,
-		};
-	} catch (er) {
-		throw er;
-		redirectToFrontendPath("/404", res);
-		return null;
-	}
-};
-
-export default WithSession(WithSidebarLayout(ProjectBuilds));
+export default WithSession(WithSidebarLayout(JobBuilds));

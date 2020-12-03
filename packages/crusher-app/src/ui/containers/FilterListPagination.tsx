@@ -133,6 +133,7 @@ const FilterListPagination = (props: iFilterListPaginationProps) => {
 			<ItemsListComponent items={items} />
 
 			<Pagination
+				style={{ marginTop: "2.75rem" }}
 				totalPages={totalPages ? totalPages : 1}
 				currentPage={filters.currentPage}
 				resolvePaginationUrl={resolvePaginationUrl}

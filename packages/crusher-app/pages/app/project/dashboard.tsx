@@ -36,7 +36,7 @@ function getBuildStatus(status: JobStatus, conclusion: JobConclusion) {
 	} else if (status === JobStatus.TIMEOUT) {
 		return "TIMEOUT";
 	} else {
-		return "RUNNING_CHECKS";
+		return "RUNNING CHECKS";
 	}
 }
 

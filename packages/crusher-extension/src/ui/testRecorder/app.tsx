@@ -291,7 +291,7 @@ function Actions(props: any) {
 }
 
 function DesktopBrowser(props: any) {
-	const { isInspectModeOn } = props;
+	const { isInspectModeOn, isElementModeOn } = props;
 	const selectedDeviceId = getQueryStringParams('device', window.location.href);
 	const urlParams = getQueryStringParams('url', window.location.href);
 	const urlEncoded = urlParams ? new URL(urlParams) : null;
@@ -424,6 +424,11 @@ function DesktopBrowser(props: any) {
 	const IframeSection = () => {
 		return (
 			<div style={styles.previewBrowser}>
+				{isElementModeOn && (
+					<div style={{position: 'absolute', left: 0, top: 0, width: "100%", height: "100%", background: 'transparent', zIndex: 99999}}>
+
+					</div>
+				)}
 				{isMobile && (
 					<div
 						className='smartphone'
@@ -812,12 +817,17 @@ function App() {
 	const [startingTime] = useState(Date.now());
 	const [lastStepTime, setLastStepTime] = useState(Date.now());
 	const [isInspectModeOn, setIsInspectModeOn] = useState(false);
+	const [isElementModeOn, setIsElementModeOn] = useState(false);
+
 	const iframeRef: Ref<any> = useRef(null);
 	const actionsScrollRef: Ref<any> = useRef(null);
 
 	const setIsShowingElementForm = (value: boolean) => {
 		if (!value) {
 			setIsInspectModeOn(false);
+			setIsElementModeOn(false);
+		} else {
+			setIsElementModeOn(true);
 		}
 		_setIsShowingElementForm(value);
 	};
@@ -1020,7 +1030,7 @@ function App() {
 	// @ts-ignore
 	return (
 		<Test style={styles.container}>
-			<DesktopBrowser isInspectModeOn={isInspectModeOn} saveTest={saveTest} forwardRef={iframeRef} />
+			<DesktopBrowser isInspectModeOn={isInspectModeOn} isElementModeOn={isElementModeOn} saveTest={saveTest} forwardRef={iframeRef} />
 			<RightSection />
 			<style>
 				{`
@@ -1303,6 +1313,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 		paddingTop: '1rem',
 		overflowY: 'auto',
 		background: '#010101',
+		position: 'relative'
 	},
 	browserFrame: {
 		border: 'none',

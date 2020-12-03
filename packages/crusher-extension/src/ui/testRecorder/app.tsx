@@ -850,11 +850,12 @@ function App() {
 			...getSteps(),
 			{
 				event_type: ACTIONS_IN_TEST.VALIDATE_SEO,
-				value: options,
+				value: JSON.stringify(options),
 				selectors: ['body'],
 			},
 		] as any);
 		setLastStepTime(Date.now());
+		setIsShowingElementForm(false);
 		updateState(null);
 	}
 
@@ -863,7 +864,7 @@ function App() {
 			...getSteps(),
 			{
 				event_type: ACTIONS_IN_TEST.ASSERT_ELEMENT,
-				value: options,
+				value: JSON.stringify(options),
 				selectors: currentElementSelectors,
 			},
 		] as any);
@@ -1003,17 +1004,6 @@ function App() {
 					</div>
 					<div style={styles.paddingContainer}>
 						{state !== MODALS.SEO && <RightMiddleSection state={state} updateState={updateState} />}
-						{state && state === MODALS.SEO && (
-							<ShowForm
-								submitCallback={saveSeoValidation}
-								state={state}
-								seoMeta={seoMeta}
-								currentElementAttributes={currentElementAttributes}
-								updateState={updateState}
-								saveAssertionCallback={saveAssertionCallback}
-								saveSeoValidationCallback={saveSeoValidation}
-							/>
-						)}
 					</div>
 				</div>
 			</div>
@@ -1039,6 +1029,7 @@ function App() {
                         margin: 0;
                         padding: 0;
                         font-size: 20px;
+                        overflow: hidden;
                     }
                     .margin-list-item li:not(:first-child){
                         margin-top: 0.75rem;
@@ -1141,7 +1132,7 @@ function App() {
 				seoMeta={seoMeta}
 				state={state}
 				updateState={updateState}
-				saveSeoValidationCallback={()=>{}}
+				saveSeoValidationCallback={saveSeoValidation}
 			/>
 		</Test>
 	);
@@ -1155,7 +1146,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 	container: {
 		display: 'flex',
 		height: 'auto',
-		background: 'rgb(40, 40, 40)',
+		background: 'rgb(40, 40, 40)'
 	},
 	mainContainer: {
 		flex: 1,

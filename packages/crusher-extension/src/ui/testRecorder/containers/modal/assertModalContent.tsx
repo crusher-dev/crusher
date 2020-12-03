@@ -220,6 +220,42 @@ function MiddleSection({ handleCloseCallback, seoMeta, attributes }: any) {
 		return <Row isValid={state.validMap[id]} name={id} attributes={attributes} key={id} state={state} setState={setStateMiddleware} />;
 	});
 
+	const generateTest = () => {
+		let newState: any = {
+			rows: [],
+			selectedValidationMethod: {},
+			assertValues: {},
+			attributes: {},
+			validMap: {},
+		};
+		for(let i = 0; i < attributes.length; i++){
+			const key = Date.now() + "_" + Math.floor(Math.random() * 9999999);
+
+			newState = {
+				...newState,
+				//@ts-ignore
+				rows: [...newState.rows, { id: key }],
+				selectedValidationMethod: {
+					...newState.selectedValidationMethod,
+					[key]: 'matches',
+				},
+				assertValues: {
+					...newState.assertValues,
+					[key]: attributes[i].value,
+				},
+				attributes: {
+					...newState.attributes,
+					[key]: attributes[i].name,
+				},
+				validMap: {
+					...newState.validMap,
+					[key]: true,
+				},
+			};
+		}
+		setState(newState);
+	}
+
 	return (
 		<>
 			<div className={'middle-section'} style={styles.middleSection}>
@@ -230,7 +266,7 @@ function MiddleSection({ handleCloseCallback, seoMeta, attributes }: any) {
 			</div>
 			<div style={styles.bottomBar}>
 				<BulbIcon style={{ marginRight: 4 }} />
-				<div id={'modal-generate-test'} style={styles.generateText}>
+				<div id={'modal-generate-test'} style={styles.generateText} onClick={generateTest}>
 					Auto-Generate test!
 				</div>
 

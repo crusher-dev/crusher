@@ -35,7 +35,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
-
+		zIndex: 999999,
 		background: 'rgba(14, 14, 14, 0.9)',
 	},
 };

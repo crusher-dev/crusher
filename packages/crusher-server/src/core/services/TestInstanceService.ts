@@ -43,6 +43,10 @@ export default class TestInstanceService {
 		return this.dbManager.fetchData('SELECT * FROM test_instances WHERE test_id = ? ORDER BY created_at DESC', [testId]);
 	}
 
+	async getReferenceTestInstance(referenceJobId: number, testId: number, platform: any){
+		return this.dbManager.fetchSingleRow(`SELECT * FROM test_instances WHERE job_id = ? AND test_id = ? AND platform = ?`, [referenceJobId, testId, platform])
+	}
+
 	async getTestInstance(testInstanceId: number) {
 		return this.dbManager.fetchSingleRow('SELECT * FROM test_instances WHERE id = ?', [testInstanceId]);
 	}

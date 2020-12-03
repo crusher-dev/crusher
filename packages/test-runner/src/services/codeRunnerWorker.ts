@@ -25,7 +25,7 @@ const videoProcessingQueue = new Queue('video-processing-queue', {
 
 module.exports = async bullJob => {
 	const { job, test, instanceId } = bullJob.data as RunRequest;
-	const { id, prId, branchName, repoName, commitId, projectId, trigger, status, host, githubInstallationId, platform, githubCheckRunId } = job
+	const { id, prId, branchName, repoName, commitId, projectId, trigger, status, host, reportId, githubInstallationId, platform, githubCheckRunId } = job
 		? job
 		: ({} as any);
 
@@ -74,7 +74,9 @@ module.exports = async bullJob => {
 			testType: test.testType,
 			isError: false,
 			testCount: job && job.testCount ? job.testCount : 1,
+			reportId: reportId,
 			video: null,
+			platform,
 			fullRepoName: repoName,
 		};
 
@@ -111,7 +113,9 @@ module.exports = async bullJob => {
 			testCount: job && job.testCount,
 			fullRepoName: repoName,
 			testType: test.testType,
+			reportId: reportId,
 			video: null,
+			platform,
 			images,
 		};
 		try {

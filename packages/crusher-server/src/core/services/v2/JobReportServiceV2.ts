@@ -1,5 +1,6 @@
 import { Service, Container } from 'typedi';
 import DBManager from '../../manager/DBManager';
+import { JobReportStatus } from '../../interfaces/JobReportStatus';
 
 @Service()
 export default class JobReportServiceV2 {
@@ -19,5 +20,9 @@ export default class JobReportServiceV2 {
 
 	async getJobReport(reportId: number){
 			return this.dbManager.fetchSingleRow(`SELECT * FROM id = ?`, [reportId]);
+	}
+
+	async updateJobReportStatus(status: JobReportStatus, reportId: number, explanation: string | null = null){
+			return this.dbManager.fetchSingleRow(`UPDATE job_reports SET ? WHERE id = ?`, [{status: status, explanation: explanation}, reportId])
 	}
 }

@@ -5,8 +5,7 @@ import { TestInstanceResultSetStatus } from '../TestInstanceResultSetStatus';
 
 export interface TestInstanceResultSet extends BaseRowInterface {
 	id?: number;
-	job_id: number;
-	target_job_id: number;
+	report_id: number;
 	instance_id: number;
 	target_instance_id: number;
 	status: TestInstanceResultSetStatus;

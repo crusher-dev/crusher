@@ -13,6 +13,8 @@ import TestInstanceScreenShotsService from '../services/TestInstanceScreenShotsS
 import TestInstanceRecordingService from '../services/TestInstanceRecordingService';
 import { Logger } from '../../utils/logger';
 import 'reflect-metadata';
+import JobReportServiceV2 from '../services/v2/JobReportServiceV2';
+import { JobReportStatus } from '../interfaces/JobReportStatus';
 
 const ReddisLock = require('redlock');
 
@@ -77,7 +79,10 @@ export default class TestsEventsWorker {
 			testCount,
 			fullRepoName,
 			testType,
+			reportId,
+			platform
 		} = callback.returnvalue;
+
 		try {
 			if (!isError) {
 				Logger.info('QueueManager::testCompleted', `\x1b[36m Test #${testId}\x1b[0m completed!!`);
@@ -97,12 +102,16 @@ export default class TestsEventsWorker {
 						jobId,
 						instanceId,
 						fullRepoName,
+						reportId,
+						platform
 					});
 				}
 				Logger.info('QueueManager::testCompleted', 'Added to checkResult queue');
 			} else {
 				const testInstanceService = new TestInstanceService();
 				const jobsService = new JobsService();
+				const jobReportsService = new JobReportServiceV2();
+
 				if (testType === TestType.DRAFT) {
 					const draftInstanceService = new DraftInstanceService();
 					await draftInstanceService.updateDraftInstanceStatus(InstanceStatus.ABORTED, instanceId);
@@ -136,12 +145,16 @@ export default class TestsEventsWorker {
 								jobId,
 								instanceId,
 								fullRepoName,
+								reportId,
+								platform
 							});
 						} catch (ex) {}
 
 						await jobsService.updateJobInfo(jobId, {
 							conclusion: JobConclusion.FAILED,
 						});
+
+						await jobReportsService.updateJobReportStatus(JobReportStatus.FAILED, reportId, `#${instanceId} failed to execute successfully.`);
 
 						await testInstanceService.updateTestInstanceStatus(InstanceStatus.ABORTED, instanceId);
 					}

@@ -30,7 +30,7 @@ function RenderStatusImage(props) {
 			<img
 				src={"/svg/tests/buttons/failed.svg"}
 				css={styles.button}
-				style={{ width: "8.8rem" }}
+				style={{ width: "10.37500rem" }}
 			/>
 		);
 	}
@@ -43,7 +43,7 @@ function RenderStatusImage(props) {
 			<img
 				src={"/svg/tests/buttons/approved.svg"}
 				css={styles.button}
-				style={{ width: "8.8rem" }}
+				style={{ width: "10.37500rem" }}
 			/>
 		);
 	}
@@ -55,7 +55,7 @@ function RenderStatusImage(props) {
 					<img
 						src={"/svg/tests/buttons/approved.svg"}
 						css={styles.button}
-						style={{ width: "8.8rem" }}
+						style={{ width: "10.37500rem" }}
 					/>
 				);
 			}
@@ -64,7 +64,7 @@ function RenderStatusImage(props) {
 				<img
 					src={"/svg/tests/buttons/failed.svg"}
 					css={styles.button}
-					style={{ width: "8.8rem" }}
+					style={{ width: "10.37500rem" }}
 				/>
 			);
 		case "MANUAL_REVIEW_REQUIRED":
@@ -72,7 +72,7 @@ function RenderStatusImage(props) {
 				<img
 					src={"/svg/tests/buttons/needsReview.svg"}
 					css={styles.button}
-					style={{ width: "8.8rem" }}
+					style={{ width: "10.37500rem" }}
 				/>
 			);
 	}
@@ -81,7 +81,7 @@ function RenderStatusImage(props) {
 		<img
 			src={"/svg/tests/buttons/running.svg"}
 			css={styles.button}
-			style={{ width: "8.8rem" }}
+			style={{ width: "10.37500rem" }}
 		/>
 	);
 }
@@ -140,14 +140,17 @@ function Build(props) {
 						<div style={{ margin: "0 auto" }}>
 							<div css={styles.buildShortTwoItemsContainer}>
 								<div css={styles.buildShortInfo}>
-									<img src={"/svg/tests/screenshot.svg"} style={{ width: "1.15rem" }} />
+									<img
+										src={"/svg/tests/screenshot.svg"}
+										style={{ width: "1.3125rem" }}
+									/>
 									<span>
 										{`${totalScreenshotCount ? totalScreenshotCount : 0} `}{" "}
 										<span style={{ fontWeight: 600 }}> Screenshots</span>
 									</span>
 								</div>
 								<div css={styles.buildShortInfo} style={{ margin: "0 auto" }}>
-									<img src={"/svg/tests/passed.svg"} style={{ width: "1.15rem" }} />
+									<img src={"/svg/tests/passed.svg"} style={{ width: "1.3125rem" }} />
 									<span>
 										{`${passedScreenshotCount ? passedScreenshotCount : 0} `}{" "}
 										<span style={{ fontWeight: 600 }}> passed</span>
@@ -156,7 +159,7 @@ function Build(props) {
 							</div>
 							<div css={styles.buildShortItemsContainer}>
 								<div css={styles.buildShortInfo}>
-									<img src={"/svg/tests/review.svg"} style={{ width: "1.15rem" }} />
+									<img src={"/svg/tests/review.svg"} style={{ width: "1.3125rem" }} />
 									<span>
 										{`${
 											reviewRequiredScreenshotCount ? reviewRequiredScreenshotCount : 0
@@ -335,14 +338,19 @@ const styles = {
 	`,
 	buildsIdNDate: css``,
 	buildsId: css`
-		font-size: 1.1rem;
-		font-weight: 700;
+		font-size: 1.375rem;
+		font-weight: bold;
+		font-style: normal;
 		color: #202029;
 		font-family: Cera Pro;
 	`,
 	buildsDate: css`
-		margin-top: 0.5rem;
-		font-size: 0.75rem;
+		margin-top: 0.75rem;
+		font-size: 0.875rem;
+		color: #2d3958;
+		font-family: Gilroy;
+		font-style: normal;
+		font-weight: normal;
 	`,
 	buildInfo: css`
 		margin-left: 2.25rem;
@@ -357,9 +365,10 @@ const styles = {
 	buildCommitBranch: css`
 		background: #f2f2f2;
 		border-radius: 0.25rem;
-		padding: 0.3rem 1rem;
+		font-family: Gilroy;
+		padding: 0.375rem 1.25rem;
 		color: #000000;
-		font-size: 0.75rem;
+		font-size: 0.875rem;
 		font-weight: 500;
 	`,
 	buildCommit: css`
@@ -389,16 +398,16 @@ const styles = {
 		color: #5d5d5d;
 		font-family: Gilroy;
 		& > span {
-			margin-left: 0.95rem;
+			margin-left: 1rem;
 			position: relative;
 			top: 50%;
 			transform: translateY(-50%);
-			font-size: 0.775rem;
+			font-size: 0.9375rem;
 			font-weight: 700;
 		}
 	`,
 	buildShortItemsContainer: css`
-		margin-top: 1rem;
+		margin-top: 1.5rem;
 		color: #5d5d5d;
 	`,
 	buttonContainer: css`

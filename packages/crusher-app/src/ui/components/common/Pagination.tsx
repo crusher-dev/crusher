@@ -24,7 +24,7 @@ function renderDots() {
 }
 
 export const Pagination = (props) => {
-	let { totalPages, currentPage, resolvePaginationUrl } = props;
+	let { totalPages, currentPage, resolvePaginationUrl, style } = props;
 	let itemsToShow = 6;
 	currentPage = !currentPage || currentPage < 1 ? 1 : currentPage;
 
@@ -60,7 +60,11 @@ export const Pagination = (props) => {
 		out.push(renderPageItem(totalPages, currentPage, resolvePaginationUrl));
 	}
 
-	return <div css={styles.paginationContainer}>{out}</div>;
+	return (
+		<div style={style} css={styles.paginationContainer}>
+			{out}
+		</div>
+	);
 };
 
 const styles = {

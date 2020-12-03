@@ -437,6 +437,7 @@ module.exports = async (bullJob: Job) => {
 				return lock.unlock();
 			} catch (ex) {
 				console.error(ex);
+				return true;
 			}
 		});
 	} catch (Ex) {

@@ -336,7 +336,9 @@ const styles = {
 		padding: 1.7rem 2rem;
 		background-color: #fff;
 	`,
-	buildsIdNDate: css``,
+	buildsIdNDate: css`
+		flex: 0.1;
+	`,
 	buildsId: css`
 		font-size: 1.375rem;
 		font-weight: bold;

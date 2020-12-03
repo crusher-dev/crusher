@@ -16,11 +16,15 @@ import { TestLogsService } from '../services/mongo/testLogs';
 import CodeGenerator from '../../../../code-generator/dist/code-generator/src/index';
 import { Logger } from '../../utils/logger';
 import * as chalk from 'chalk';
+import JobReportServiceV2 from '../services/v2/JobReportServiceV2';
+import JobsService from '../services/JobsService';
 
 const path = require('path');
 
 const testInstanceService = new TestInstanceService();
 const draftInstanceService = new DraftInstanceService();
+const jobReportsService = new JobReportServiceV2();
+const jobsService = new JobsService();
 
 const requestQueue = new Queue('request-queue', {
 	// @ts-ignore
@@ -78,7 +82,7 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 	await requestQueue.add(test.id.toString(), { ...testRequest, instanceId: instanceId }, { lifo: false });
 }
 
-export async function addJobToRequestQueue(job) {
+export async function addJobToRequestQueue(jobRequest) {
 	const {
 		jobId,
 		prId,
@@ -94,7 +98,12 @@ export async function addJobToRequestQueue(job) {
 		tests,
 		testType,
 		githubCheckRunId,
-	} = job;
+	} = jobRequest;
+
+	const job = await jobsService.getJob(jobId);
+	const referenceJobId = await jobsService.getReferenceJob(job);
+	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJobId, projectId);
+
 	const jobDetails: RunJobRequestBody = {
 		id: jobId,
 		prId,
@@ -103,6 +112,7 @@ export async function addJobToRequestQueue(job) {
 		commitId,
 		projectId,
 		trigger,
+		reportId: jobReportsId,
 		status: jobStatus,
 		host,
 		githubInstallationId,

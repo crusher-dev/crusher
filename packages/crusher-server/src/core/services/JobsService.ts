@@ -33,9 +33,9 @@ export default class JobsService {
 	}
 
 	async stopAllJobsRunningForMoreThanAnHour() {
-		return this.dbManager.fetchSingleRow(`UPDATE jobs SET status = ?, conclusion = ? WHERE status = ? OR status = ?`, [
+		// @TODO: Link this to job_reports
+		return this.dbManager.fetchSingleRow(`UPDATE jobs SET status = ? WHERE status = ? OR status = ?`, [
 			JobStatus.TIMEOUT,
-			JobConclusion.FAILED,
 			JobStatus.RUNNING,
 			JobStatus.QUEUED,
 		]);
@@ -88,16 +88,16 @@ export default class JobsService {
 		const testIds = JSON.parse(meta).sort();
 
 		if (host) {
-			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host = ? AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
+			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host = ? AND meta = ? AND status = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
 				host,
 				JSON.stringify(testIds),
-				JobConclusion.PASSED,
+				JobStatus.FINISHED,
 				id,
 			]);
 		} else {
-			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
+			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND status = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
 				JSON.stringify(testIds),
-				JobConclusion.PASSED,
+				JobStatus.FINISHED,
 				id,
 			]);
 		}

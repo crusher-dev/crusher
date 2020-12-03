@@ -26,6 +26,10 @@ export default class TestInstanceResultSetsService {
 		return this.dbManager.fetchData(`SELECT * FROM test_instance_result_sets WHERE job_id = ? AND target_job_id = ?`, [baseJobId, referenceJobId]);
 	}
 
+	async getResultSets(reportId: number) {
+		return this.dbManager.fetchData(`SELECT * FROM test_instance_result_sets WHERE report_id = ? `, [reportId]);
+	}
+
 	async getResultSetStatusBetweenTwoJobs(
 		baseJobId: number,
 		referenceJobId: number,

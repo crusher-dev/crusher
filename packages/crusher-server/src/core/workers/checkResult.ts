@@ -30,9 +30,14 @@ import 'reflect-metadata';
 
 //@ts-ignore
 import IORedis from 'ioredis';
+import JobReportServiceV2 from '../services/v2/JobReportServiceV2';
+import { TestInstanceResultSetConclusion } from '../interfaces/TestInstanceResultSetConclusion';
+import { JobReportStatus } from '../interfaces/JobReportStatus';
 
 const ReddisLock = require('redlock');
 const jobsService = Container.get(JobsService);
+const jobsReportService = Container.get(JobReportServiceV2);
+
 const testService = Container.get(TestService);
 const testInstanceService = Container.get(TestInstanceService);
 const testInstanceResultSetsService = Container.get(TestInstanceResultSetsService);
@@ -42,7 +47,9 @@ const alertingService = Container.get(AlertingService);
 const userService = Container.get(UserService);
 
 interface TestInstanceWithImages extends TestInstance {
-	images: Map<String, TestInstanceScreenshot>;
+	images: {
+		[imageKey : string]: TestInstanceScreenshot
+	};
 }
 
 async function getOrganisedTestInstancesWithImages(testInstances: Array<TestInstance>) {
@@ -70,6 +77,23 @@ async function getOrganisedTestInstancesWithImages(testInstances: Array<TestInst
 	}, Promise.resolve({}));
 }
 
+
+async function getOrganisedTestInstanceWithImages(testInstance: TestInstance) : Promise<TestInstanceWithImages> {
+		const images = await testInstanceScreenshotsService.getAllScreenShotsOfInstance(testInstance.id);
+
+		const imagesMap = images.reduce((prevImages, image) => {
+			return {
+				...prevImages,
+				[image.name + '_' + testInstance.platform]: image,
+			};
+		}, {});
+
+		return {
+					...testInstance,
+					images: imagesMap
+		};
+}
+
 function reduceInstancesMapToArr(testInstancesMap): Array<TestInstanceWithImages> {
 	return Object.values(testInstancesMap).reduce((prev: Array<any>, current: any) => {
 		return [...prev, ...Object.values(current)];
@@ -80,7 +104,11 @@ function hasTestInstanceFinishedExecuting(testInstance: TestInstance) {
 	return testInstance.status === InstanceStatus.FINISHED;
 }
 
-function getReferenceInstance(testInstancesMap, testId, platform) {
+function getReferenceInstance(referenceJobId, testId, platform) {
+	return 	testInstanceService.getReferenceTestInstance(referenceJobId, testId,platform);
+}
+
+function _getReferenceInstance(testInstancesMap, testId, platform) {
 	if (testInstancesMap && testInstancesMap[testId] && testInstancesMap[testId][platform]) {
 		return testInstancesMap[testId][platform];
 	}
@@ -205,10 +233,10 @@ async function getResultForTestInstance(
 	};
 }
 
-async function notifyResultWithEmail(jobRecord: any, result: JobConclusion, userWhoStartedTheJob: User) {
+async function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: User) {
 	const usersInTeam = await testService.findMembersOfProject(jobRecord.project_id);
 
-	if (result === JobConclusion.FAILED) {
+	if (result === JobReportStatus.FAILED) {
 		EmailManager.sendEmailToUsers(
 			usersInTeam,
 			`Job ${jobRecord.id} Failed`,
@@ -222,7 +250,7 @@ async function notifyResultWithEmail(jobRecord: any, result: JobConclusion, user
 				)}%22%20target%3D%22_blank%22%20style%3D%22text-decoration%3A%20none%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctable%20border%3D%220%22%20cellpadding%3D%220%22%20cellspacing%3D%220%22%20align%3D%22center%22%20style%3D%22max-width%3A%20240px%3B%20min-width%3A%20120px%3B%20border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20padding%3A%200%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctbody%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22middle%22%20style%3D%22padding%3A%2012px%2024px%3B%20margin%3A%200%3B%20text-decoration%3A%20none%3B%20font-weight%3A%20500%3B%20border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20border-radius%3A%204px%3B%20-webkit-border-radius%3A%204px%3B%20-moz-border-radius%3A%204px%3B%20-khtml-border-radius%3A%204px%3B%22%20bgcolor%3D%22%235f7aff%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20target%3D%22_blank%22%20style%3D%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20font-weight%3A%20600%20%21important%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20text-decoration%3A%20none%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23FFFFFF%3B%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20font-size%3A%2017px%3B%20font-weight%3A%20400%3B%20line-height%3A%20120%25%3B%22%20href%3D%22https%3A//github.com/konsav/email-templates/%22%3EGo%20to%20Builds%20page%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%3C/tr%3E%3C/tbody%3E%3C/table%3E%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20End%20of%20WRAPPER%20--%3E%0A%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%3C/table%3E%0A%20%20%20%20%3C%21--%20End%20of%20SECTION%20/%20BACKGROUND%20--%3E%0A%20%20%20%20%3Ctable%20border%3D%220%22%20cellpadding%3D%220%22%20cellspacing%3D%220%22%20align%3D%22center%22%20width%3D%22500%22%20style%3D%22%0A%20%20%20%20%20%20border-collapse%3A%20collapse%3B%0A%20%20%20%20%20%20border-spacing%3A%200%3B%0A%20%20%20%20%20%20padding%3A%200%3B%0A%20%20%20%20%20%20width%3A%20inherit%3B%0A%20%20%20%20%20%20max-width%3A%20560px%3B%0A%20%20%20%20%20%20background%3A%20%23fff%3B%0A%20%20%20%20%20%20border-radius%3A%208px%3B%0A%20%20%20%20%20%20padding%3A%2020px%200px%3B%0A%20%20%20%20%20%20margin-top%3A%2040px%3B%0A%20%20%20%20%20%20%22%20class%3D%22wrapper%22%3E%0A%20%20%20%20%20%20%3Ctbody%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20SUPHEADER%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20HERO%20IMAGE%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Image%20text%20color%20should%20be%20opposite%20to%20background%20color.%20Set%20your%20url%2C%20image%20src%2C%20alt%20and%20title.%20Alt%20text%20should%20fit%20the%20image%20size.%20Real%20image%20size%20should%20be%20x2%20%28wrapper%20x2%29.%20Do%20not%20set%20height%20for%20flexible%20images%20%28including%20%22auto%22%29.%20URL%20format%3A%20http%3A//domain.com/%3Futm_source%3D%7B%7BCampaign-Source%7D%7D%26utm_medium%3Demail%26utm_content%3D%7B%7B%CCmage-Name%7D%7D%26utm_campaign%3D%7B%7BCampaign-Name%7D%7D%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20HEADER%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2020px%3B%20font-weight%3A%20bold%3B%20line-height%3A%20130%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2040px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22header%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20For%20support%2C%20feedback%20or%20help%20%u260E%uFE0F%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20PARAGRAPH%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2015px%3B%20font-weight%3A%20400%3B%20line-height%3A%20160%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2015px%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22paragraph%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20I%27ll%20be%20happy%20to%20schedule%20one%20on%20one%20call%20with%20you.%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20PARAGRAPH%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%20style%3D%22%20padding-bottom%3A%200px%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20font-size%3A%2017px%3B%20font-weight%3A%20400%3B%20line-height%3A%20160%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2015px%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22paragraph%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20Himanshu%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20PARAGRAPH%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%20style%3D%22%20padding-bottom%3A%2040px%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20font-size%3A%2014px%3B%20font-weight%3A%20400%3B%20line-height%3A%20160%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-bottom%3A%2040px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22paragraph%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20+91-7296823551%20%3Cbr%3E%20himanshu@crusher.dev%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20End%20of%20WRAPPER%20--%3E%0A%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%3C/table%3E%0A%20%20%20%20%3Ctable%20width%3D%22550%22%20align%3D%22center%22%3E%0A%20%20%20%20%20%20%3C%21--%20LINE%20--%3E%0A%20%20%20%20%20%20%3C%21--%20Set%20line%20color%20--%3E%0A%20%20%20%20%20%20%3Ctbody%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2030px%3B%22%20class%3D%22line%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Chr%20color%3D%22%23b6bbc6%22%20align%3D%22center%22%20width%3D%22100%25%22%20size%3D%221%22%20noshade%3D%22%22%20style%3D%22margin%3A%200%3B%20padding%3A%200%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20FOOTER%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20font-size%3A%2013px%3B%20font-weight%3A%20400%3B%20line-height%3A%20150%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-bottom%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23828999%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22footer%22%3EYou%27re%20receiving%20this%20becuase%20you%27ve%20registered%20at%20crusher.%3Cbr%3E%20Check%20%3Ca%20href%3D%22https%3A//github.com/konsav/email-templates/%22%20target%3D%22_blank%22%20style%3D%22text-decoration%3A%20underline%3B%20color%3A%20%23828999%3B%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20font-size%3A%2013px%3B%20font-weight%3A%20400%3B%20line-height%3A%20150%25%3B%22%3Esubscription%20settings%3C/a%3E.%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%3C/table%3E%0A%20%20%0A%3C/body%3E%3C/html%3E`,
 			),
 		);
-	} else if (result === JobConclusion.PASSED) {
+	} else if (result === JobReportStatus.PASSED) {
 		EmailManager.sendEmailToUsers(
 			usersInTeam,
 			`Job ${jobRecord.id} Failed`,
@@ -236,7 +264,7 @@ async function notifyResultWithEmail(jobRecord: any, result: JobConclusion, user
 				)}%22%20target%3D%22_blank%22%20style%3D%22text-decoration%3A%20none%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctable%20border%3D%220%22%20cellpadding%3D%220%22%20cellspacing%3D%220%22%20align%3D%22center%22%20style%3D%22max-width%3A%20240px%3B%20min-width%3A%20120px%3B%20border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20padding%3A%200%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctbody%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22middle%22%20style%3D%22padding%3A%2012px%2024px%3B%20margin%3A%200%3B%20text-decoration%3A%20none%3B%20font-weight%3A%20500%3B%20border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20border-radius%3A%204px%3B%20-webkit-border-radius%3A%204px%3B%20-moz-border-radius%3A%204px%3B%20-khtml-border-radius%3A%204px%3B%22%20bgcolor%3D%22%235f7aff%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20target%3D%22_blank%22%20style%3D%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20font-weight%3A%20600%20%21important%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20text-decoration%3A%20none%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23FFFFFF%3B%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20font-size%3A%2017px%3B%20font-weight%3A%20400%3B%20line-height%3A%20120%25%3B%22%20href%3D%22https%3A//github.com/konsav/email-templates/%22%3EGo%20to%20Builds%20page%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%3C/tr%3E%3C/tbody%3E%3C/table%3E%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20End%20of%20WRAPPER%20--%3E%0A%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%3C/table%3E%0A%20%20%20%20%3C%21--%20End%20of%20SECTION%20/%20BACKGROUND%20--%3E%0A%20%20%20%20%3Ctable%20border%3D%220%22%20cellpadding%3D%220%22%20cellspacing%3D%220%22%20align%3D%22center%22%20width%3D%22500%22%20style%3D%22%0A%20%20%20%20%20%20border-collapse%3A%20collapse%3B%0A%20%20%20%20%20%20border-spacing%3A%200%3B%0A%20%20%20%20%20%20padding%3A%200%3B%0A%20%20%20%20%20%20width%3A%20inherit%3B%0A%20%20%20%20%20%20max-width%3A%20560px%3B%0A%20%20%20%20%20%20background%3A%20%23fff%3B%0A%20%20%20%20%20%20border-radius%3A%208px%3B%0A%20%20%20%20%20%20padding%3A%2020px%200px%3B%0A%20%20%20%20%20%20margin-top%3A%2040px%3B%0A%20%20%20%20%20%20%22%20class%3D%22wrapper%22%3E%0A%20%20%20%20%20%20%3Ctbody%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20SUPHEADER%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20HERO%20IMAGE%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Image%20text%20color%20should%20be%20opposite%20to%20background%20color.%20Set%20your%20url%2C%20image%20src%2C%20alt%20and%20title.%20Alt%20text%20should%20fit%20the%20image%20size.%20Real%20image%20size%20should%20be%20x2%20%28wrapper%20x2%29.%20Do%20not%20set%20height%20for%20flexible%20images%20%28including%20%22auto%22%29.%20URL%20format%3A%20http%3A//domain.com/%3Futm_source%3D%7B%7BCampaign-Source%7D%7D%26utm_medium%3Demail%26utm_content%3D%7B%7B%CCmage-Name%7D%7D%26utm_campaign%3D%7B%7BCampaign-Name%7D%7D%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20HEADER%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2020px%3B%20font-weight%3A%20bold%3B%20line-height%3A%20130%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2040px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22header%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20For%20support%2C%20feedback%20or%20help%20%u260E%uFE0F%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20PARAGRAPH%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2015px%3B%20font-weight%3A%20400%3B%20line-height%3A%20160%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2015px%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22paragraph%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20I%27ll%20be%20happy%20to%20schedule%20one%20on%20one%20call%20with%20you.%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20PARAGRAPH%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%20style%3D%22%20padding-bottom%3A%200px%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20font-size%3A%2017px%3B%20font-weight%3A%20400%3B%20line-height%3A%20160%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2015px%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22paragraph%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20Himanshu%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20PARAGRAPH%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%20style%3D%22%20padding-bottom%3A%2040px%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20font-size%3A%2014px%3B%20font-weight%3A%20400%3B%20line-height%3A%20160%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-bottom%3A%2040px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22paragraph%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20+91-7296823551%20%3Cbr%3E%20himanshu@crusher.dev%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20End%20of%20WRAPPER%20--%3E%0A%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%3C/table%3E%0A%20%20%20%20%3Ctable%20width%3D%22550%22%20align%3D%22center%22%3E%0A%20%20%20%20%20%20%3C%21--%20LINE%20--%3E%0A%20%20%20%20%20%20%3C%21--%20Set%20line%20color%20--%3E%0A%20%20%20%20%20%20%3Ctbody%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2030px%3B%22%20class%3D%22line%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Chr%20color%3D%22%23b6bbc6%22%20align%3D%22center%22%20width%3D%22100%25%22%20size%3D%221%22%20noshade%3D%22%22%20style%3D%22margin%3A%200%3B%20padding%3A%200%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20FOOTER%20--%3E%0A%20%20%20%20%20%20%20%20%3C%21--%20Set%20text%20color%20and%20font%20family%20%28%22%27DM%20Sans%27%2Csans-serif%22%20or%20%22Georgia%2C%20serif%22%29.%20Duplicate%20all%20text%20styles%20in%20links%2C%20including%20line-height%20--%3E%0A%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20font-size%3A%2013px%3B%20font-weight%3A%20400%3B%20line-height%3A%20150%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding-bottom%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23828999%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%22%20class%3D%22footer%22%3EYou%27re%20receiving%20this%20becuase%20you%27ve%20registered%20at%20crusher.%3Cbr%3E%20Check%20%3Ca%20href%3D%22https%3A//github.com/konsav/email-templates/%22%20target%3D%22_blank%22%20style%3D%22text-decoration%3A%20underline%3B%20color%3A%20%23828999%3B%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20font-size%3A%2013px%3B%20font-weight%3A%20400%3B%20line-height%3A%20150%25%3B%22%3Esubscription%20settings%3C/a%3E.%0A%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%3C/table%3E%0A%20%20%0A%3C/body%3E%3C/html%3E`,
 			),
 		);
-	} else if (result === JobConclusion.MANUAL_REVIEW_REQUIRED) {
+	} else if (result === JobReportStatus.MANUAL_REVIEW_REQUIRED) {
 		EmailManager.sendEmailToUsers(
 			usersInTeam,
 			`Job ${jobRecord.id}, Manual Review Required!!`,
@@ -257,7 +285,7 @@ async function notifyResultWithEmail(jobRecord: any, result: JobConclusion, user
 	}
 }
 
-async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobConclusion, userWhoStartedTheJob: User, state) {
+async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: User, state) {
 	const slackIntegrationsArr = await alertingService.getSlackIntegrationsInProject(jobRecord.project_id);
 
 	for (let i = 0; i < slackIntegrationsArr.length; i++) {
@@ -276,7 +304,7 @@ async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobConc
 	}
 }
 
-async function notifyResultToGithubChecks(jobRecord: any, result: JobConclusion, userWhoStartedTheJob: User) {
+async function notifyResultToGithubChecks(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: User) {
 	await updateGithubCheckStatus(
 		GithubCheckStatus.COMPLETED,
 		{
@@ -284,98 +312,79 @@ async function notifyResultToGithubChecks(jobRecord: any, result: JobConclusion,
 			githubCheckRunId: jobRecord.check_run_id,
 			githubInstallationId: jobRecord.installation_id,
 		},
-		result === JobConclusion.PASSED ? GithubConclusion.SUCCESS : GithubConclusion.FAILURE,
+		result === JobReportStatus.PASSED ? GithubConclusion.SUCCESS : GithubConclusion.FAILURE,
 	);
 }
 
-async function handlePostChecksOperations(state, totalTestCount, jobRecord: any) {
+async function handlePostChecksOperations(reportId: number, totalTestCount, jobId: number) {
+	const jobRecord = await jobsService.getJob(jobId);
 	const userWhoStartedThisJob = await userService.getUserInfo(jobRecord.user_id);
-	let jobConclusion = JobConclusion.FAILED;
+	let jobConclusion = JobReportStatus.FAILED;
 
+	const allResultSets = await testInstanceResultSetsService.getResultSets(reportId);
+	const state = {
+		passedTestsArray: [],
+		failedTestsArray: [],
+		markedForReviewTestsArray: []
+	};
+	allResultSets.map((resultSet)=>{
+		const {conclusion} = resultSet;
+		if(conclusion === TestInstanceResultSetConclusion.PASSED){
+			state.passedTestsArray.push(resultSet);
+		} else if(conclusion === TestInstanceResultSetConclusion.FAILED){
+			state.failedTestsArray.push(resultSet);
+		} else {
+			state.markedForReviewTestsArray.push(resultSet);
+		}
+	});
+
+	let explanation = "";
 	if (state.passedTestsArray.length === totalTestCount) {
-		jobConclusion = JobConclusion.PASSED;
+		jobConclusion = JobReportStatus.PASSED;
+		explanation = "All tests passed with visual checks";
 	} else if (state.failedTestsArray.length) {
-		jobConclusion = JobConclusion.FAILED;
+		jobConclusion = JobReportStatus.FAILED;
+		explanation = "There are some failed tests in this build";
 	} else if (!state.failedTestsArray.length && state.markedForReviewTestsArray.length) {
-		jobConclusion = JobConclusion.MANUAL_REVIEW_REQUIRED;
+		jobConclusion = JobReportStatus.MANUAL_REVIEW_REQUIRED;
+		explanation = "No tests failed, but some of them requires manual review";
 	}
 
-	await jobsService.updateJobInfo(jobRecord.id, {
-		conclusion: jobConclusion,
-	});
+	await jobsReportService.updateJobReportStatus(jobConclusion, reportId, explanation)
 
 	await notifyResultToGithubChecks(jobRecord, jobConclusion, userWhoStartedThisJob);
 	await notifyResultWithEmail(jobRecord, jobConclusion, userWhoStartedThisJob);
 	await notifyResultWithSlackIntegrations(jobRecord, jobConclusion, userWhoStartedThisJob, state);
 }
 
-async function runChecksAfterAllTestsAreCompleted(details, clearJobTempValues) {
-	const { githubInstallationId, githubCheckRunId, totalTestCount, testLogs, screenshots, testId, jobId, instanceId, fullRepoName } = details;
+async function runChecks(details, clearJobTempValues){
+	const { githubInstallationId, githubCheckRunId, platform, reportId, totalTestCount, testLogs, screenshots, testId, jobId, instanceId, fullRepoName } = details;
 
-	const state = {
-		failedTestsArray: [],
-		passedTestsArray: [],
-		markedForReviewTestsArray: [],
-	};
+	const currentJobReport = await jobsReportService.getJobReport(reportId);
 
-	console.debug('\x1b[33m%s\x1b[0m', `Job completed ${jobId}, testId: ${testId}, testInstanceId: ${instanceId}`);
+	const testInstance = await testInstanceService.getTestInstance(instanceId);
+	const referenceInstance = await getReferenceInstance(currentJobReport.reference_job_id, testId, platform);
+	const shouldPerformDiffChecks = jobId !== currentJobReport.reference_job_id;
 
-	await jobsService.updateJobStatus(JobStatus.FINISHED, jobId);
-
-	const jobRecord = await jobsService.getJob(jobId);
-	const referenceJob = await jobsService.getReferenceJob(jobRecord);
-
-	const testInstances = await testInstanceService.getAllTestInstancesFromJobId(jobId);
-	const referenceTestInstances = referenceJob
-		? await testInstanceService.getAllTestInstancesFromJobId(referenceJob.id)
-		: await testInstanceService.getAllTestInstancesFromJobId(jobId);
-
-	const testInstancesMap = await getOrganisedTestInstancesWithImages(testInstances);
-	const referenceTestInstancesMap = await getOrganisedTestInstancesWithImages(referenceTestInstances);
-
-	const testInstancesArrWithImages = reduceInstancesMapToArr(testInstancesMap);
-
-	const outPromises = testInstancesArrWithImages.map((testInstanceWithImages) => {
-		return async () => {
-			const referenceInstance = getReferenceInstance(referenceTestInstancesMap, testInstanceWithImages.test_id, testInstanceWithImages.platform);
-			const referenceInstanceWithImages = referenceInstance ? referenceInstance : testInstanceWithImages;
-			const shouldPerformDiffChecks = testInstanceWithImages !== referenceInstanceWithImages;
-
-			// Create result set for this config
-			const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
-				job_id: jobId,
-				target_job_id: referenceJob ? referenceJob.id : jobId,
-				instance_id: testInstanceWithImages.id,
-				target_instance_id: referenceInstanceWithImages.id,
-				status: TestInstanceResultSetStatus.RUNNING_CHECKS,
-			});
-
-			const { didAllImagesPass, passedImagesCount, manualReviewImagesCount, failedImagesCount } = await getResultForTestInstance(
-				testInstanceWithImages,
-				referenceInstanceWithImages,
-				resultSetId,
-				shouldPerformDiffChecks,
-			);
-
-			if (!hasTestInstanceFinishedExecuting(testInstanceWithImages) || failedImagesCount) {
-				state.failedTestsArray.push(testInstancesArrWithImages);
-			} else if (hasTestInstanceFinishedExecuting(testInstanceWithImages) && didAllImagesPass) {
-				state.passedTestsArray.push(testInstancesArrWithImages);
-			} else if (hasTestInstanceFinishedExecuting(testInstanceWithImages) && !failedImagesCount && manualReviewImagesCount) {
-				state.markedForReviewTestsArray.push(testInstancesArrWithImages);
-			}
-
-			await testInstanceResultSetsService.updateResultSetStatus(resultSetId);
-			return true;
-		};
+	// Create result set for this config
+	const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
+		instance_id: instanceId,
+		target_instance_id: currentJobReport.reference_job_id,
+		report_id: reportId,
+		status: TestInstanceResultSetStatus.RUNNING_CHECKS,
 	});
 
-	await Promise.all(
-		outPromises.map((promiseFun) => {
-			return promiseFun();
-		}),
+	const testInstanceWithImages = await getOrganisedTestInstanceWithImages(testInstance);
+	const referenceInstanceWithImages = await getOrganisedTestInstanceWithImages(referenceInstance);
+
+	const { didAllImagesPass, passedImagesCount, manualReviewImagesCount, failedImagesCount } = await getResultForTestInstance(
+		testInstanceWithImages,
+		referenceInstanceWithImages,
+		resultSetId,
+		shouldPerformDiffChecks,
 	);
-	await handlePostChecksOperations(state, totalTestCount, jobRecord);
+
+	await testInstanceResultSetsService.updateResultSetStatus(resultSetId);
 }
 
 module.exports = async (bullJob: Job) => {
@@ -401,7 +410,9 @@ module.exports = async (bullJob: Job) => {
 		testId,
 		jobId,
 		instanceId,
+		reportId,
 		fullRepoName,
+		platform
 	} = bullJob.data;
 
 	async function clearJobTempValues(jobId) {
@@ -415,22 +426,26 @@ module.exports = async (bullJob: Job) => {
 			await reddisClient.incr(`${jobId}:completed`);
 			const completedTestsCount = parseInt(await reddisClient.get(`${jobId}:completed`));
 
+			await runChecks(
+				{
+					githubInstallationId,
+					githubCheckRunId,
+					totalTestCount,
+					testLogs,
+					screenshots,
+					testId,
+					jobId,
+					instanceId,
+					reportId,
+					fullRepoName,
+					platform
+				},
+				clearJobTempValues,
+			);
+
 			if (completedTestsCount === totalTestCount) {
 				await clearJobTempValues(jobId);
-				await runChecksAfterAllTestsAreCompleted(
-					{
-						githubInstallationId,
-						githubCheckRunId,
-						totalTestCount,
-						testLogs,
-						screenshots,
-						testId,
-						jobId,
-						instanceId,
-						fullRepoName,
-					},
-					clearJobTempValues,
-				);
+				await handlePostChecksOperations(reportId, totalTestCount, jobId);
 			}
 
 			try {

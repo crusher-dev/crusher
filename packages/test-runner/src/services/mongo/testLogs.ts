@@ -67,7 +67,10 @@ export class TestLogsService {
 			testId: this.testId,
 			instanceId: this.instanceId,
 			type: this.type,
-			meta,
+			meta: {
+				...meta,
+				isError: true
+			},
 		}).save();
 
 		await new TestsLogs({

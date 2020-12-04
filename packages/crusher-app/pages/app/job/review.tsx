@@ -9,10 +9,14 @@ import { cleanHeaders } from "@utils/backendRequest";
 import { Platform } from "@interfaces/Platform";
 import { addCommentForScreenshot } from "@services/comments";
 import { approveResult, rejectResult } from "@services/results";
-import { getTime } from "@utils/helpers";
+import { getTime, toPascalCase } from "@utils/helpers";
 import { LogsBox } from "@ui/components/editor/LogsBox";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { JobReportService } from "@services/v2/jobReport";
+import Clock from "../../../public/svg/jobReview/clock.svg";
+import Play from "../../../public/svg/jobReview/play.svg";
+import Passed from "../../../public/svg/jobReview/passed.svg";
+import Failed from "../../../public/svg/jobReview/failed.svg";
 
 import {
 	addCommentInRedux,
@@ -25,7 +29,7 @@ import {
 	getCurrentJobComments,
 	getCurrentJobInstances,
 	getCurrentJobResults,
-	getCurrentJobReviewPlatform,
+	getCurrentJobReviewPlatform, getReferenceJob,
 } from "@redux/stateUtils/job";
 import { store } from "@redux/store";
 import { JobInfo } from "@interfaces/JobInfo";
@@ -218,12 +222,16 @@ function JobInfoBox() {
 		status,
 	} = jobInfo;
 
-	return (
+	const approveAll = () => {
+		alert("Approved");
+	};
+
+ 	return (
 		<div className=" mg-t-70">
 			<div
-				className="container card ht-md-100p d-flex justify-content-center "
+				className="card ht-md-100p d-flex justify-content-center "
 				style={{ padding: 0 }}
-				css={styles.blackTopCard}
+				css={[containerCss, styles.blackTopCard]}
 			>
 				<div className="d-flex" style={{ display: "flex", padding: "20px 0px" }}>
 					<div
@@ -244,7 +252,12 @@ function JobInfoBox() {
 						>
 							<h4
 								className="tx-28 tx-normal mg-b-5 mg-r-5 lh-1 tx-color-01"
-								style={{ color: "#fff", fontSize: "1.4rem", fontWeight: 600 }}
+								style={{
+									color: "#fff",
+									fontSize: "1.125rem",
+									fontWeight: 600,
+									fontFamily: "Cera Pro",
+								}}
 							>
 								#{jobId}
 							</h4>
@@ -254,14 +267,15 @@ function JobInfoBox() {
 									display: "flex",
 									flexDirection: "row",
 									alignItems: "center",
-									marginTop: "1rem",
+									marginTop: "1.5rem",
 								}}
 							>
-								<img src={"/svg/calendar.svg"} />
+								<img src={"/svg/calendar.svg"} style={{ height: "0.875rem" }} />
 								<span
 									style={{
 										marginLeft: "1.3rem",
-										fontSize: "0.85rem",
+										fontSize: "0.875rem",
+										fontFamily: "Gilroy",
 									}}
 								>
 									{getTime(new Date(jobInfo.updated_at))}
@@ -272,25 +286,53 @@ function JobInfoBox() {
 
 					<div style={{ display: "flex" }} className="card-body col col-lg-3">
 						<div className="d-lg-block align-items-end">
-							<div className="mb-3 d-flex align-items-center">
+							<div className="d-flex align-items-center">
 								<code
 									className="tx-normal mg-b-0 mg-r-5 lh-1 tx-color-01"
 									css={styles.branchContainer}
 								>
 									{branchName ? (
-										branchName
+										<span
+											style={{
+												fontSize: "0.8375rem",
+												fontFamily: "Gilroy",
+												color: "#ffffff",
+											}}
+										>
+											{branchName}
+										</span>
 									) : (
-										<span style={{ fontSize: "0.8rem", color: "#ffffffa8" }}>
+										<span
+											style={{
+												fontSize: "0.8375rem",
+												fontFamily: "Gilroy",
+												color: "#ffffffa8",
+											}}
+										>
 											N/A branch
 										</span>
 									)}
 								</code>
 							</div>
-							<div className="tx-14 tx-color-03 mt-2" css={styles.commitName}>
+							<div className="tx-14 tx-color-03" css={styles.commitName}>
 								{commitName ? (
-									commitName
+									<span
+										style={{
+											fontSize: "0.875rem",
+											fontFamily: "Gilroy",
+											color: "#ffffff",
+										}}
+									>
+										{commitName}
+									</span>
 								) : (
-									<span style={{ fontSize: "0.8rem", color: "#ffffffa8" }}>
+									<span
+										style={{
+											fontSize: "0.875rem",
+											fontFamily: "Gilroy",
+											color: "#ffffffa8",
+										}}
+									>
 										**No Commit Message**
 									</span>
 								)}
@@ -298,23 +340,7 @@ function JobInfoBox() {
 						</div>
 					</div>
 
-					<div className="card-body col col-lg-4 ml-5">
-						<div className="d-flex">
-							<div className="mr-3">
-								<img src="/svg/screenshotVisual.svg" className="mg-l-8 mg-r-5" />
-								<span className="ml-2 tx-12 tx-color-02 tx-semibold">
-									{manualReviewRequiredTestCount ? manualReviewRequiredTestCount : "No"}{" "}
-									review required / {totalTestCount} tests
-								</span>
-							</div>
-						</div>
-						<div className="mt-3">
-							<img src="/svg/passedVisual.svg" className="mr-1 ml-1" />
-							<span className="ml-2 tx-12 tx-color-02 tx-semibold">
-								{passedTestCount ? passedTestCount : "No"} tests passed
-							</span>
-						</div>
-					</div>
+					<div className="card-body col col-lg-4 ml-5"></div>
 
 					<div
 						className="card-body col col-lg1 d-flex justify-content-center align-items-center"
@@ -338,6 +364,7 @@ function JobInfoBox() {
 									marginRight: "1.4rem",
 									fontSize: "0.8rem",
 								}}
+								onClick={approveAll}
 							>
 								Approve All
 							</div>
@@ -454,7 +481,7 @@ function RenderScreenshotComparison({
 					/>
 				</div>
 			</div>
-			<div className="container tx-white d-flex justify-content-between mg-l-25 pd-l-35 pd-r-55 pt-3">
+			<div className="tx-white d-flex justify-content-between mg-l-25 pd-l-35 pd-r-55 pt-3">
 				<div style={{ width: "100%" }}>
 					<span className="tx-medium tx-13">{screenshotName} screenshot</span>
 					<div className="row pd-0 mg-0 mt-4" style={{ width: "100%" }}>
@@ -540,6 +567,48 @@ function OverlayModal(props) {
 	);
 }
 
+function getInstanceConclusion(
+	instanceStatus: TestInstanceStatus,
+	results: Array<any>,
+) {
+	if (
+		instanceStatus === TestInstanceStatus.ABORTED ||
+		instanceStatus === TestInstanceStatus.TIMEOUT
+	) {
+		return "FAILED";
+	} else if (
+		instanceStatus === TestInstanceStatus.QUEUED &&
+		instanceStatus === TestInstanceStatus.RUNNING
+	) {
+		return "RUNNING";
+	} else if (instanceStatus === TestInstanceStatus.FINISHED) {
+		const passedCount = results.filter(
+			(result) => result.result_set_conclusion === "PASSED",
+		).length;
+		if (results.length === passedCount) {
+			return "PASSED";
+		} else {
+			return "FAILED";
+		}
+	} else {
+		return "UNKNOWN";
+	}
+}
+
+function GetStatusImage(props: any) {
+	const { conclusion } = props;
+
+	if (conclusion === "PASSED") {
+		return <Passed style={{height: "1.5rem"}} />;
+	} else if (conclusion === "FAILED") {
+		return <Failed style={{height: "1.5rem"}}  />;
+	} else if (conclusion === "RUNNING") {
+		return <img style={{height: "1.5rem"}}  src={"/svg/jobReview/loading.svg"}/>
+	} else {
+		return null;
+	}
+}
+
 function TestInstanceReview({
 	instance,
 	reportId,
@@ -583,6 +652,8 @@ function TestInstanceReview({
 		);
 	});
 
+	const results = jobResults[instance_id] && jobResults[instance_id].results;
+
 	function playVideo() {
 		showVideoModalCallback(recorded_video_uri, instance_id);
 	}
@@ -591,27 +662,37 @@ function TestInstanceReview({
 		showLogsModalCallback(instance_id);
 	}
 
+	const instanceConclusion = getInstanceConclusion(instance.status, results);
+
+	const approve = () => {
+		alert("Approved instance");
+	};
+	
 	return (
 		<div className="" css={styles.bodyBackground}>
 			<div
 				className="card-header"
 				style={{
-					paddingLeft: 70,
+					paddingLeft: "2.5rem",
 					paddingTop: "0.7rem",
 					paddingBottom: "0.7rem",
-					paddingRight: 70,
+					paddingRight: "2.5rem",
 					background: "#15181E",
 					position: "relative",
 					zIndex: 3,
 				}}
 			>
-				<div className="container-big d-flex pos-relative">
-					<img src="/svg/thumbsUp.svg" className="mt-n1" />
-					<div className="container tx-white d-flex justify-content-between mg-l-25 pl-3 pd-r-55">
-						<h6
-							className="lh-5 mb-0 tx-white tx-semibold tx-14"
-							css={styles.pinBoxHeading}
-						>
+				<div css={containerCss} className="d-flex pos-relative">
+					<img
+						src="/svg/thumbsUp.svg"
+						className="mt-n1"
+						style={{ cursor: "pointer" }}
+					/>
+					<div
+						css={testInstanceStripContainerCss}
+						className="tx-white d-flex justify-content-between pl-3"
+					>
+						<h6 className="lh-5 mb-0 tx-white" css={styles.pinBoxHeading}>
 							{test_name}
 						</h6>
 						<div
@@ -622,17 +703,50 @@ function TestInstanceReview({
 								paddingLeft: "5rem",
 								flexDirection: "row",
 								alignItems: "center",
+								fontFamily: "Gilroy",
+								fontSize: "0.825rem",
 							}}
 						>
-							{/*<a className='tx-12 link-03 mr-4'>10 screenshots</a>*/}
+							<div
+								style={{
+									display: "flex",
+									alignItems: "center",
+									marginRight: "2.875rem",
+								}}
+							>
+								<div>
+									<Clock style={{ height: "1.125rem" }} />
+								</div>
+								<div style={{ marginLeft: "1rem" }}>
+									{Math.floor(
+										new Date(instance.updated_at) - new Date(instance.created_at),
+									)}{" "}
+									Sec
+								</div>
+							</div>
+							{instance && instance.platform === Platform.CHROME ? (
+								<div
+									onClick={playVideo}
+									style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+								>
+									<div>
+										<Play style={{ height: "1.125rem" }} />
+									</div>
+									<div style={{ marginLeft: "1rem" }}>Play test recording</div>
+								</div>
+							) : null}
 							{/*<a className='tx-12 link-03 mr-4'>View Video</a>*/}
 							{/*<a className='tx-12 link-03'>View Logs</a>*/}
 						</div>
-						<div className="tx-bold d-flex" css={styles.darkApproveButton}>
+						<div className="d-flex" css={styles.darkApproveButton}>
 							<img
 								src="/svg/unselectedThumbsIcon.svg"
-								width={14}
-								height={18}
+								style={{
+									height: "0.9375rem",
+									position: "relative",
+									top: "50%",
+									transform: "translateY(-50%)",
+								}}
 								className="ml-2"
 							/>
 							<div
@@ -640,8 +754,10 @@ function TestInstanceReview({
 								style={{
 									marginLeft: "1.6rem",
 									marginRight: "1.4rem",
-									fontSize: "0.8rem",
+									fontSize: "1rem",
+									fontFamily: "Gilroy",
 								}}
+								onClick={approve}
 							>
 								Approve
 							</div>
@@ -649,53 +765,22 @@ function TestInstanceReview({
 					</div>
 				</div>
 			</div>
-			<div className="container-big tx-white pos-relative pd-b-30">
+			<div css={containerCss} className="tx-white pos-relative pd-b-30">
 				<div
-					className="container tx-white mg-l-25 pd-l-35 pd-r-55 pt-3 mg-b-10"
+					className="tx-white pt-3 mg-b-10"
 					style={{
 						display: "flex",
 						flexDirection: "row",
 						alignItems: "center",
 						paddingTop: "1rem",
+						padding: "1rem 3rem",
 					}}
 				>
-					<div>
-						<img src={"/svg/thumbsUp.svg"} />
-					</div>
-					<div
-						style={{
-							display: "flex",
-							fontFamily: "Poppins",
-							justifyContent: "center",
-							fontSize: "0.9rem",
-							fontWeight: 600,
-							marginLeft: "1.5rem",
-							marginTop: "0.1rem",
-						}}
-					>
-						Total {events.length} Steps
+					<div style={{display: "flex", alignItems: "center"}}>
+						<div><GetStatusImage conclusion={instanceConclusion} /></div>
+						<div style={{ marginLeft: "1rem" }}>Test {toPascalCase(instanceConclusion)}</div>
 					</div>
 					<div style={{ marginLeft: "auto", display: "flex", flexDirection: "row" }}>
-						{instance && instance.platform === Platform.CHROME ? (
-							<div
-								onClick={playVideo}
-								style={{
-									fontFamily: "Poppins",
-									fontSize: "0.8rem",
-									fontWeight: 700,
-									display: "flex",
-									flexDirection: "row",
-									alignItems: "center",
-									cursor: "pointer",
-								}}
-							>
-								<img src={"/svg/playVideo.svg"} width={22} />
-								<span style={{ marginLeft: "0.8rem", marginTop: "0.1rem" }}>
-									Preview test video
-								</span>
-							</div>
-						) : null}
-
 						<div
 							onClick={showLogsInModal}
 							style={{
@@ -843,6 +928,7 @@ function JobReviews(props) {
 	const { reportId } = props;
 	const [isLoading, setIsLoading] = useState(false);
 	const platform = useSelector(getCurrentJobReviewPlatform);
+	const referenceJob = useSelector(getReferenceJob);
 
 	const handlePlatformChange = async (platform) => {
 		setIsLoading(true);
@@ -917,6 +1003,8 @@ function JobReviews(props) {
 			<Header
 				onPlatformChanged={handlePlatformChange}
 				platform={platform}
+				referenceJob={referenceJob}
+				reportId={reportId}
 			></Header>
 
 			{isLoading && <WaitForPlatform platform={platform} />}
@@ -980,9 +1068,20 @@ JobReviews.getInitialProps = async ({ req, res, query, store }) => {
 
 export default withSession(JobReviews);
 
+const containerCss = css`
+	max-width: 70vw;
+	margin: 0 auto;
+`;
+
+const testInstanceStripContainerCss = css`
+	width: 100%;
+	border: none !important;
+	margin-left: 0.9375rem;
+`;
+
 const styles = {
 	branchContainer: css`
-		background: #18191f;
+		background: #272829;
 		border-radius: 4px;
 		font-weight: 500;
 		font-size: 12px;
@@ -996,6 +1095,7 @@ const styles = {
 	`,
 	commitName: css`
 		font-size: 0.85rem;
+		margin-top: 1.25rem;
 	`,
 	statusBox: css`
 		background: #83f3bd;
@@ -1016,14 +1116,15 @@ const styles = {
 	`,
 	darkApproveButton: css`
 		color: #ffffff;
-		background: #171C2;
-		font-weight: 600;
-		border: 1px solid #2e3945;
+		background: rgb(12, 15, 22);
+		border: 0px solid #2e3945;
 		border-radius: 0.1rem;
 		padding-left: 12px !important;
 		padding-top: 6px !important;
 		padding-bottom: 6px !important;
 		cursor: pointer;
+		font-weight: 600;
+		font-family: Cera Pro;
 	`,
 	bodyBackground: css`
 		background-color: #131415;
@@ -1053,10 +1154,9 @@ const styles = {
 	`,
 	blackTopCard: css`
 		background-color: #131415;
-		border-radius: 0;
 		color: white !important;
 		font-family: Poppins;
-		border: none;
+		border: none !important;
 
 		.tx-color-01 {
 			color: white !important;
@@ -1071,6 +1171,7 @@ const styles = {
 	pinBoxHeading: css`
 		display: flex;
 		align-items: center;
+		font-family: Cera Pro;
 		font-size: 1.1rem;
 	`,
 	instanceBorder: css`

@@ -62,6 +62,16 @@ export class TestLogsService {
 	async notifyTestExecutionFailed(meta?: any) {
 		await new TestsLogs({
 			tag: TEST_LOGS_SERVICE_TAGS.TEST_EXECUTION_FAILED,
+			message: meta.err.toMessage(),
+			jobId: this.jobId,
+			testId: this.testId,
+			instanceId: this.instanceId,
+			type: this.type,
+			meta,
+		}).save();
+
+		await new TestsLogs({
+			tag: TEST_LOGS_SERVICE_TAGS.TEST_EXECUTION_FAILED,
 			message: `Test #${this.testId} couldn't be executed.`,
 			jobId: this.jobId,
 			testId: this.testId,

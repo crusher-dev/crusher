@@ -369,7 +369,7 @@ async function runChecks(details, clearJobTempValues){
 	// Create result set for this config
 	const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
 		instance_id: instanceId,
-		target_instance_id: referenceInstance.id,
+		target_instance_id: referenceInstance ? referenceInstance.id : instanceId,
 		report_id: reportId,
 		status: TestInstanceResultSetStatus.RUNNING_CHECKS,
 	});
@@ -444,6 +444,10 @@ module.exports = async (bullJob: Job) => {
 			);
 
 			if (completedTestsCount === totalTestCount) {
+				const job = await jobsService.getJob(jobId);
+				if(job.status !== JobStatus.ABORTED) {
+					await jobsService.updateJobStatus(JobStatus.FINISHED, jobId);
+				}
 				await clearJobTempValues(jobId);
 				await handlePostChecksOperations(reportId, totalTestCount, jobId);
 			}

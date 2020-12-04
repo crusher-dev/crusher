@@ -12,7 +12,8 @@ import { approveResult, rejectResult } from "@services/results";
 import { getTime } from "@utils/helpers";
 import { LogsBox } from "@ui/components/editor/LogsBox";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
-import { JobService } from "@services/v2/job";
+import { JobReportService } from "@services/v2/jobReport";
+
 import {
 	addCommentInRedux,
 	setCurrentJobPlatform,
@@ -943,7 +944,7 @@ function JobReviews(props) {
 }
 
 JobReviews.getInitialProps = async ({ req, res, query, store }) => {
-	const { jobId } = query;
+	const { jobId, reportId } = query;
 	let headers = null;
 	if (req) {
 		headers = req.headers;
@@ -954,7 +955,7 @@ JobReviews.getInitialProps = async ({ req, res, query, store }) => {
 		await redirectToFrontendPath("/", res);
 	}
 
-	await JobService.getJob(jobId, headers)
+	await JobReportService.getJobReportFull(reportId, headers)
 		.then((res) => {
 			store.dispatch(setJobInfo("CHROME", res));
 			return res;

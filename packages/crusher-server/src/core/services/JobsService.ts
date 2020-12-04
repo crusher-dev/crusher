@@ -71,11 +71,11 @@ export default class JobsService {
 	}> {
 		const totalScreenshots = await this.dbManager.fetchSingleRow(
 			'SELECT COUNT(*) as count FROM test_instance_screenshots, test_instances WHERE test_instances.job_id = ? AND test_instance_screenshots.instance_id = test_instances.id',
-			[reportId],
+			[jobId],
 		);
 		const countRecord = await this.dbManager.fetchSingleRow(
-			`SELECT COUNT(case conclusion when 'PASSED' then 1 else null end) passedCount, COUNT(case conclusion when 'FAILED' then 1 else null end) failedCount, COUNT(case conclusion when 'MANUAL_REVIEW_REQUIRED' then 1 else null end) reviewCount from test_instance_result_sets WHERE report_id = ?`,
-			[jobId],
+			`SELECT COUNT(case test_instance_results.status when 'PASSED' then 1 else null end) passedCount, COUNT(case test_instance_results.status when 'FAILED' then 1 else null end) failedCount, COUNT(case test_instance_results.status when 'MANUAL_REVIEW_REQUIRED' then 1 when 'ERROR_CREATING_DIFF' then 1 else null end) reviewCount from test_instance_result_sets, test_instance_results WHERE test_instance_result_sets.report_id = ? AND test_instance_results.instance_result_set_id=test_instance_result_sets.id`,
+			[reportId],
 		);
 		return {
 			passedCount: totalScreenshots.count - (countRecord.failedCount + countRecord.reviewCount),

@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { css } from "@emotion/core";
 import WithSession from "@hoc/withSession";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
@@ -12,6 +12,7 @@ import { JobStatus } from "@interfaces/JobStatus";
 import { JobConclusion } from "@interfaces/JobConclusion";
 import Link from "next/link";
 import { getTime } from "@utils/helpers";
+import { JobReportStatus } from "@interfaces/JobReportStatus";
 
 const AVAILABLE_FILTERS = [
 	{ title: "Monitoring", value: 1 },
@@ -19,9 +20,9 @@ const AVAILABLE_FILTERS = [
 ];
 
 function RenderStatusImage(props: any) {
-	const { status, conclusion, postCheckConclusion } = props;
+	const { status } = props;
 
-	if (status === JobStatus.ABORTED) {
+	if (status === JobReportStatus.FAILED) {
 		return (
 			<img
 				src={"/svg/tests/buttons/failed.svg"}
@@ -31,10 +32,7 @@ function RenderStatusImage(props: any) {
 		);
 	}
 
-	if (
-		status === JobStatus.FINISHED &&
-		postCheckConclusion === JobConclusion.PASSED
-	) {
+	if (status === JobReportStatus.PASSED) {
 		return (
 			<img
 				src={"/svg/tests/buttons/approved.svg"}
@@ -44,33 +42,14 @@ function RenderStatusImage(props: any) {
 		);
 	}
 
-	switch (conclusion) {
-		case "PASSED":
-			if (postCheckConclusion === JobConclusion.PASSED) {
-				return (
-					<img
-						src={"/svg/tests/buttons/approved.svg"}
-						css={styles.button}
-						style={{ width: "10.37500rem" }}
-					/>
-				);
-			}
-		case "FAILED":
-			return (
-				<img
-					src={"/svg/tests/buttons/failed.svg"}
-					css={styles.button}
-					style={{ width: "10.37500rem" }}
-				/>
-			);
-		case "MANUAL_REVIEW_REQUIRED":
-			return (
-				<img
-					src={"/svg/tests/buttons/needsReview.svg"}
-					css={styles.button}
-					style={{ width: "10.37500rem" }}
-				/>
-			);
+	if (status === JobReportStatus.MANUAL_REVIEW_REQUIRED) {
+		return (
+			<img
+				src={"/svg/tests/buttons/needsReview.svg"}
+				css={styles.button}
+				style={{ width: "10.37500rem" }}
+			/>
+		);
 	}
 
 	return (
@@ -86,6 +65,7 @@ function Build(props: any) {
 	const {
 		jobId,
 		reportId,
+		reportStatus,
 		createdAt,
 		branchName,
 		conclusion,
@@ -168,15 +148,7 @@ function Build(props: any) {
 						</div>
 					</div>
 					<div css={styles.buttonContainer} style={{ marginLeft: "auto" }}>
-						<RenderStatusImage
-							postCheckConclusion={
-								totalScreenshotCount === passedScreenshotCount
-									? JobConclusion.PASSED
-									: JobConclusion.FAILED
-							}
-							conclusion={conclusion}
-							status={status}
-						/>
+						<RenderStatusImage status={reportStatus} />
 					</div>
 				</div>
 			</li>
@@ -202,6 +174,7 @@ function RenderBuilds(props: any) {
 						reviewRequiredScreenshotCount={job.reviewRequiredScreenshotCount}
 						commitName={job.commit_name}
 						status={job.status}
+						reportStatus={job.reportStatus}
 						conclusion={job.conclusion}
 					/>
 				);

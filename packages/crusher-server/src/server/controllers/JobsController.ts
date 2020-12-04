@@ -87,57 +87,7 @@ export class JobsController {
 	async getLogsOfProject(@CurrentUser({ required: true }) user, @Param('projectId') projectId) {
 		return this.jobsService.getLastNLogsOfProject(projectId);
 	}
-
-	@Authorized()
-	@Get('/get/:jobId')
-	async getJob(@CurrentUser({ required: true }) user, @Param('jobId') jobId, @QueryParams() query) {
-		const { platform } = query;
-		const job = await this.jobsService.getJob(jobId);
-		const testInstances = await this.testInstanceService.getAllTestInstancesByJobIdOfPlatform(jobId, platform ? platform : Platform.CHROME);
-
-		for (let i = 0; i < testInstances.length; i++) {
-			const instanceLogs = (await this.testLogsService.getLogsOfInstanceInJob(testInstances[i].id)).map((log) => {
-				return log['_doc'];
-			});
-			const instanceRecording = await this.testInstanceRecordingService.getTestRecording(testInstances[i].id);
-			testInstances[i].video_url = instanceRecording ? instanceRecording.video_uri : null;
-			testInstances[i].logs = instanceLogs;
-		}
-		const referenceJob = await this.jobsService.getReferenceJob(job);
-
-		const testInstancesWithResult = await this.testInstanceService.getAllInstancesWithResultByJobId(
-			jobId,
-			platform ? platform : Platform.CHROME,
-			referenceJob ? referenceJob.id : jobId,
-		);
-
-		const resultIds = Object.keys(
-			testInstancesWithResult.reduce((prev, current) => {
-				return { ...prev, [current.resultSetId]: true };
-			}, {}),
-		);
-
-		const comments = {};
-		for (let i = 0; i < resultIds.length; i++) {
-			const commentsInResultSet = await this.commentsService.getCommentsOfResultSetWithUserName(parseInt(resultIds[i]));
-
-			comments[resultIds[i]] = commentsInResultSet.reduce((prev: any, current) => {
-				return {
-					...prev,
-					[current.screenshot_id]: [...(prev[current.screenshot_id] ? prev[current.screenshot_id] : []), current],
-				};
-			}, {});
-		}
-
-		return {
-			testInstances: testInstances,
-			testInstancesWithResult: testInstancesWithResult,
-			referenceJob: referenceJob,
-			comments: comments,
-			jobInfo: job,
-		};
-	}
-
+	
 	@Authorized()
 	@Get('/getVisualDiffsWithFirstJob/:jobId')
 	async getVisualDiffs(@CurrentUser({ required: true }) user, @Param('jobId') jobId) {

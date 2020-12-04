@@ -3,7 +3,7 @@ import { withRouter } from "next/router";
 
 import { css } from "@emotion/core";
 import { WhiteLogo } from "@ui/components/common/Atoms";
-import { toPascalCase } from "@utils/helpers";
+import {getTime, toPascalCase} from "@utils/helpers";
 import { Platform } from "@interfaces/Platform";
 
 const ROUTES = {
@@ -123,6 +123,8 @@ function renderCountriesList(selectedCountry = "global") {
 const BaseHeader = ({
 	isMobile,
 	isDesktop,
+	reportId,
+	referenceJob,
 	router,
 	onPlatformChanged,
 	platform,
@@ -135,21 +137,25 @@ const BaseHeader = ({
 		<div className={mobileMenu ? "navbar-nav-show" : ""}>
 			<header
 				className="navbar navbar-header navbar-header-fixed "
-				style={{ background: "#131415", border: "1px solid #191E23" }}
+				style={{ background: "#131415", border: "1px solid #191E23", padding: "1rem 1rem" }}
 			>
-				<div className="container">
-					<div className="navbar-brand">
+				<div css={containerCss}>
+					<div className="navbar-brand" style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<a href="/app/dashboard" className="df-logo">
 							{" "}
-							<WhiteLogo height={22} />
+							<WhiteLogo style={{ height: "1.75rem" }} />
 						</a>
 					</div>
 
 					<MiddleMenu />
-					<div className="navbar-right">
+					<div className="navbar-brand" style={{ color: "#fff", fontSize: "0.9375rem", fontFamily: "Cera Pro", fontWeight: 500 }}>
+						<div>Baseline</div>
+						<div style={{marginLeft: "1.5rem"}}>#{referenceJob.id} - ({getTime(new Date(referenceJob.created_at))})</div>
+						{/*<div className="pt-2 pb-2 pl-1 pr-1 text-center tx-medium" css={[styles.greenButton]}>Approve all</div>*/}
+					</div>
+					<div className={"navbar-right"}>
 						{renderCountriesList()}
 						{renderBrowserList(onPlatformChanged, platform)}
-						{/*<div className="pt-2 pb-2 pl-1 pr-1 text-center tx-medium" css={[styles.greenButton]}>Approve all</div>*/}
 					</div>
 				</div>
 			</header>
@@ -186,6 +192,12 @@ export const MiddleMenu = () => (
 		</div>
 	</div>
 );
+
+const containerCss = css`
+	width: 70%;
+	margin: 0 auto;
+	display: flex;
+`;
 
 const styles = {
 	greenButton: css`

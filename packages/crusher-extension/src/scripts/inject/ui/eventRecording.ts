@@ -361,7 +361,10 @@ export default class EventRecording {
 	pollInterval() {
 		if (this.hoveringState.element && this.hoveringState.time) {
 			const diffInMilliSeconds = Date.now() - this.hoveringState.time;
-			if (diffInMilliSeconds > 1000) {
+			const activeFocusElement: any = document.activeElement;
+			console.log("Here it is");
+			if (diffInMilliSeconds > 1000 && activeFocusElement.tagName !== "INPUT") {
+				// Only record hover if not in input mode focus.
 				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.HOVER, this.hoveringState.element);
 				this.hoveringState = {
 					element: null,
@@ -450,6 +453,8 @@ export default class EventRecording {
 		document.body.addEventListener('mousemove', this.handleMouseMove, true);
 		document.body.addEventListener('mouseover', this.handleMouseOver, true);
 		document.body.addEventListener('mouseout', this.handleMouseOut, true);
+
+
 		window.addEventListener('scroll', this.handleScroll, true);
 
 		(window as any).open = (function (open) {

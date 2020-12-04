@@ -7,15 +7,49 @@ import { redirectToFrontendPath } from "@utils/router";
 import { backendRequest, cleanHeaders } from "@utils/backendRequest";
 import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchTestsCountInProject } from "@services/projects";
 import { serialize } from "cookie";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { getTime } from "@utils/helpers";
+import { JobStatus } from "@interfaces/JobStatus";
+import { JobConclusion } from "@interfaces/JobConclusion";
 
-function Build(props) {
-	const { jobId, createdAt, branchName, commitId, commitName, status } = props;
+function getBuildStatus(status: JobStatus, conclusion: JobConclusion) {
+	if (status === JobStatus.ABORTED) {
+		return "FAILED";
+	}
+
+	if (status === JobStatus.FINISHED && conclusion === JobConclusion.PASSED) {
+		return "PASSED";
+	} else if (
+		status === JobStatus.FINISHED &&
+		conclusion === JobConclusion.FAILED
+	) {
+		return "FAILED";
+	} else if (
+		status === JobStatus.FINISHED &&
+		conclusion === JobConclusion.MANUAL_REVIEW_REQUIRED
+	) {
+		return "MANUAL REVIEW REQUIRED";
+	} else if (status === JobStatus.TIMEOUT) {
+		return "TIMEOUT";
+	} else {
+		return "RUNNING CHECKS";
+	}
+}
+
+function Build(props: any) {
+	const {
+		jobId,
+		createdAt,
+		branchName,
+		conclusion,
+		commitId,
+		commitName,
+		status,
+	} = props;
 
 	return (
 		<Link href={"/app/job/review"}>
@@ -30,7 +64,7 @@ function Build(props) {
 					</div>
 					<div css={[styles.reviewButton]}>
 						<img src={"/svg/dashboard/whiteFlag.svg"} style={{ width: "0.6rem" }} />
-						<span>{status}</span>
+						<span>{getBuildStatus(status, conclusion)}</span>
 					</div>
 				</li>
 			</a>
@@ -69,6 +103,7 @@ function RenderBuilds(props) {
 							commitId={job.commit_id}
 							commitName={job.commit_name}
 							status={job.status}
+							conclusion={job.conclusion}
 						/>
 					);
 			  })
@@ -198,6 +233,9 @@ function ProjectDashboard(props) {
 }
 
 const styles = {
+	button: css`
+		cursor: pointer;
+	`,
 	container: css`
 		display: flex;
 		padding-top: 2.46rem;

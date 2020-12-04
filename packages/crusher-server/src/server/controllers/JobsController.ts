@@ -11,6 +11,7 @@ import TestInstanceResultSetsService from '../../core/services/TestInstanceResul
 import CommentsService from '../../core/services/CommentsService';
 import { TestLogsService } from '../../core/services/mongo/testLogs';
 import TestInstanceRecordingService from '../../core/services/TestInstanceRecordingService';
+import { JobTrigger } from '../../core/interfaces/JobTrigger';
 
 @Service()
 @JsonController('/job')
@@ -39,11 +40,17 @@ export class JobsController {
 	@Authorized()
 	@Get('/getProjectsJob/:projectId')
 	async getAllJobs(@Param('projectId') projectId: number, @QueryParams() queries) {
-		let { page } = queries;
+		let { page, category, itemsPerPage } = queries;
 		page = !page || page < 1 ? 1 : page;
-		const totalCount = await this.jobsService.getTotalJobs(projectId);
+		let trigger = null;
+		if(parseInt(category) === 1) {
+			trigger = JobTrigger.MONITORING;
+		} else if (parseInt(category) === 2){
+			trigger = JobTrigger.MANUAL;
+		}
+		const totalCount = await this.jobsService.getTotalJobs(projectId, trigger);
 
-		let jobRecords = await this.jobsService.getAllJobsOfProject(projectId, 5, (page - 1) * 5);
+		let jobRecords = await this.jobsService.getAllJobsOfProject(projectId, trigger, itemsPerPage ? itemsPerPage : 5, (page - 1) * (itemsPerPage ? itemsPerPage : 5));
 
 		for (let i = 0; i < jobRecords.length; i++) {
 			jobRecords[i].screenshotCount = await this.jobsService.getTotalScreenshotsInJob(jobRecords[i].id);
@@ -69,6 +76,8 @@ export class JobsController {
 
 		return {
 			jobs: jobRecords,
+			category: category,
+			trigger: trigger,
 			totalPages: Math.ceil(totalCount / 5),
 		};
 	}

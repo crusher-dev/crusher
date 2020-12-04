@@ -49,11 +49,3 @@ export const getMetaDashboardProjectInfo = (
 		headers: headers,
 	});
 };
-
-export const getJob = (jobId, platform, headers = null) => {
-	return backendRequest(`/job/get/${jobId}`, {
-		method: RequestMethod.GET,
-		headers: headers,
-		payload: { platform: platform },
-	});
-};

@@ -85,6 +85,7 @@ function RenderStatusImage(props: any) {
 function Build(props: any) {
 	const {
 		jobId,
+		reportId,
 		createdAt,
 		branchName,
 		conclusion,
@@ -96,7 +97,7 @@ function Build(props: any) {
 		reviewRequiredScreenshotCount,
 	} = props;
 
-	const testInstanceReviewLink = `/app/job/review?jobId=${jobId}`;
+	const testInstanceReviewLink = `/app/job/review?jobId=${jobId}&reportId=${reportId}`;
 
 	return (
 		<Link href={testInstanceReviewLink as any}>
@@ -191,6 +192,7 @@ function RenderBuilds(props: any) {
 		? jobs.map((job: any) => {
 				return (
 					<Build
+						reportId={job.reportId}
 						jobId={job.id}
 						createdAt={job.created_at}
 						branchName={job.branch_name}

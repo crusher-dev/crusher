@@ -12,7 +12,8 @@ import { approveResult, rejectResult } from "@services/results";
 import { getTime } from "@utils/helpers";
 import { LogsBox } from "@ui/components/editor/LogsBox";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
-import { JobService } from "@services/v2/job";
+import { JobReportService } from "@services/v2/jobReport";
+
 import {
 	addCommentInRedux,
 	setCurrentJobPlatform,
@@ -81,6 +82,7 @@ function RenderCommentsBox(props) {
 		updateTestsCountCallback,
 		jobId,
 		instanceId,
+		reportId,
 		comments,
 		result,
 	} = props;
@@ -90,15 +92,14 @@ function RenderCommentsBox(props) {
 
 	async function addComment() {
 		setIsAddingComment(true);
+		const commentMessage = inputEl.current.innerHTML;
 		const l = await addCommentForScreenshot(
-			inputEl.current.innerHTML,
-			jobId,
-			result.instance_id,
-			screenshotInfo.id,
-			result.instance_result_set_id,
+			commentMessage,
+			reportId,
+			result.id
 		);
 
-		if (l && l.screenshot_id) {
+		if (l && l.result_id) {
 			updateTestsCountCallback(comments.length + 1);
 			store.dispatch(addCommentInRedux(l));
 			inputEl.current.innerHTML = "";
@@ -348,6 +349,7 @@ function RenderScreenshotComparison({
 	screenshot,
 	result,
 	comments,
+	reportId,
 	instance,
 }) {
 	// null value means that the status of screenshot is getting loaded
@@ -499,6 +501,7 @@ function RenderScreenshotComparison({
 									comments={comments}
 									screenshotInfo={screenshot}
 									result={result}
+									reportId={reportId}
 									jobId={instance.job_id}
 									instanceId={instance.id}
 									updateTestsCountCallback={updatedCommentsCount}
@@ -535,6 +538,7 @@ function OverlayModal(props) {
 
 function TestInstanceReview({
 	instance,
+	reportId,
 	showVideoModalCallback,
 	showLogsModalCallback,
 }) {
@@ -562,14 +566,15 @@ function TestInstanceReview({
 				: null;
 
 		const comments =
-			jobComments[instance_id] && jobComments[instance_id][screenshot.id]
-				? jobComments[instance_id][screenshot.id]
+			jobComments && jobComments[result.id]
+				? jobComments[result.id]
 				: [];
 
 		return (
 			<RenderScreenshotComparison
 				instance={instance}
 				result={result}
+				reportId={reportId}
 				comments={comments}
 				screenshot={screenshot}
 			/>
@@ -717,7 +722,7 @@ function TestInstanceReview({
 }
 
 function RenderTestInstances(props) {
-	const { showVideoModalCallback, showLogsModalCallback } = props;
+	const { showVideoModalCallback, showLogsModalCallback, reportId } = props;
 	const testInstancesMap = useSelector(getCurrentJobInstances);
 	const currentPlatform = useSelector(getCurrentJobReviewPlatform);
 
@@ -729,6 +734,7 @@ function RenderTestInstances(props) {
 			return (
 				<TestInstanceReview
 					instance={instance}
+					reportId={reportId}
 					showLogsModalCallback={showLogsModalCallback}
 					showVideoModalCallback={showVideoModalCallback}
 				/>
@@ -832,6 +838,7 @@ function LogsModal({ logs }) {
 }
 
 function JobReviews(props) {
+	const {reportId} = props;
 	const [isLoading, setIsLoading] = useState(false);
 	const platform = useSelector(getCurrentJobReviewPlatform);
 
@@ -917,6 +924,7 @@ function JobReviews(props) {
 				<RenderTestInstances
 					showLogsModalCallback={showLogsModalCallback}
 					showVideoModalCallback={showVideoModalCallback}
+					reportId={reportId}
 				/>
 			</div>
 
@@ -943,7 +951,7 @@ function JobReviews(props) {
 }
 
 JobReviews.getInitialProps = async ({ req, res, query, store }) => {
-	const { jobId } = query;
+	const { jobId, reportId } = query;
 	let headers = null;
 	if (req) {
 		headers = req.headers;
@@ -954,7 +962,7 @@ JobReviews.getInitialProps = async ({ req, res, query, store }) => {
 		await redirectToFrontendPath("/", res);
 	}
 
-	await JobService.getJob(jobId, headers)
+	await JobReportService.getJobReportFull(reportId, headers)
 		.then((res) => {
 			store.dispatch(setJobInfo("CHROME", res));
 			return res;
@@ -963,7 +971,9 @@ JobReviews.getInitialProps = async ({ req, res, query, store }) => {
 			await redirectToFrontendPath("/error", res);
 		});
 
-	return {};
+	return {
+		reportId: reportId
+	};
 };
 
 export default withSession(JobReviews);

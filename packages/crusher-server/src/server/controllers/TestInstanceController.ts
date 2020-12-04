@@ -57,20 +57,4 @@ export class TestInstanceController {
 			throw new UnauthorizedError('User not authorized to access test instance with this id.');
 		}
 	}
-
-	@Authorized()
-	@Get('/getVisualDiffWithLastInstance/:testId')
-	async getVisualDiffWithLastInstance(@CurrentUser({ required: true }) user, @Param('testId') testId) {
-		const { user_id } = user;
-		const canAccessTestInstance = await this.userService.canAccessTestWithID(testId, user_id);
-		const instances = await this.testInstanceService.getAllTestInstances(testId);
-		if (!instances || instances.length === 0) {
-			return { status: TEST_RESULT_STATUS.NO_TEST_INSTANCE };
-		}
-		if (instances && instances.length === 1) {
-			return { status: TEST_RESULT_STATUS.NO_REFERENCE_TEST };
-		}
-		const currentTest = instances[0];
-		const referenceTest = instances[1];
-	}
 }

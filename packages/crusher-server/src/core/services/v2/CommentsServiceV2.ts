@@ -9,22 +9,19 @@ export default class CommentsServiceV2 {
 		this.dbManager = Container.get(DBManager);
 	}
 
-	async getCommentsBetweenJobs(jobId: number, referenceJobId: number) {
+	async getCommentsInReportId(reportId: number) {
 		const testInstanceComments = await this.dbManager.fetchData(
-			`SELECT comments.*, users.first_name user_first_name, users.last_name user_last_name FROM users, comments INNER JOIN test_instance_result_sets tirs on comments.result_set_id = tirs.id WHERE tirs.job_id = ? AND tirs.target_job_id = ? AND users.id = comments.user_id;`,
-			[jobId, referenceJobId],
+			`SELECT comments.*, users.first_name user_first_name, users.last_name user_last_name FROM users, comments WHERE comments.report_id = ? AND comments.user_id=users.id`,
+			[reportId]
 		);
 
 		const commentsMap = testInstanceComments.reduce((prev, current) => {
 			return {
 				...prev,
-				[current.instance_id]: {
-					...(prev && prev[current.instance_id] ? prev[current.instance_id] : {}),
-					[current.screenshot_id]: [
-						...(prev && prev[current.instance_id] && prev[current.instance_id][current.screenshot_id] ? prev[current.instance_id][current.screenshot_id] : []),
-						current,
-					],
-				},
+				[current.result_id]: [
+					...(prev && prev[current.result_id] ? prev[current.result_id] : []),
+					current
+				]
 			};
 		}, {});
 

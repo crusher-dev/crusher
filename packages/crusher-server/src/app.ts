@@ -36,6 +36,7 @@ import { Slack } from './server/controllers/integrations/Slack';
 import { JobsControllerV2 } from './server/controllers/v2/JobsControllerV2';
 import { TestInstanceControllerV2 } from './server/controllers/v2/TestInstanceControllerV2';
 import { PaymentController } from './server/controllers/PaymentController';
+import { JobReportsController } from './server/controllers/v2/JobReportsController';
 
 new MongoManager().init();
 useContainer(Container);
@@ -62,6 +63,7 @@ useExpressServer(expressApp, {
 		TestInstanceControllerV2,
 		Slack,
 		PaymentController,
+		JobReportsController
 	],
 	middlewares: [CorsMiddleware],
 	authorizationChecker: async (action: Action) => {

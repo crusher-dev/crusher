@@ -45,8 +45,8 @@ function Build(props: any) {
 	} = props;
 
 	return (
-		<Link href={"/app/job/review"}>
-			<a href={"/app/job/review"}>
+		<Link href={`/app/job/review?jobId=${jobId}&reportId=${reportId}`}>
+			<a href={`/app/job/review?jobId=${jobId}&reportId=${reportId}`}>
 				<li>
 					<div css={styles.buildsIdNDate}>
 						<div css={styles.buildsId}>#{jobId}</div>

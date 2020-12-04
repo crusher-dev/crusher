@@ -18,7 +18,10 @@ export default class CommentsServiceV2 {
 		const commentsMap = testInstanceComments.reduce((prev, current) => {
 			return {
 				...prev,
-				[current.result_id]: current
+				[current.result_id]: [
+					...(prev && prev[current.result_id] ? prev[current.result_id] : []),
+					current
+				]
 			};
 		}, {});
 

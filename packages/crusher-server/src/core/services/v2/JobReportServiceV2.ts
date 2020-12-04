@@ -41,7 +41,7 @@ export default class JobReportServiceV2 {
 	}
 
 	async getJobReport(reportId: number){
-			return this.dbManager.fetchSingleRow(`SELECT * FROM WHERE id = ?`, [reportId]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM job_reports WHERE id = ?`, [reportId]);
 	}
 
 	async updateJobReportStatus(status: JobReportStatus, reportId: number, explanation: string | null = null){

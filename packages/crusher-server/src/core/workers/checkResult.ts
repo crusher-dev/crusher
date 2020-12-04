@@ -369,7 +369,7 @@ async function runChecks(details, clearJobTempValues){
 	// Create result set for this config
 	const { insertId: resultSetId } = await testInstanceResultSetsService.createResultSet({
 		instance_id: instanceId,
-		target_instance_id: currentJobReport.reference_job_id,
+		target_instance_id: referenceInstance.id,
 		report_id: reportId,
 		status: TestInstanceResultSetStatus.RUNNING_CHECKS,
 	});

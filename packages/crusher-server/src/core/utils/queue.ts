@@ -102,7 +102,7 @@ export async function addJobToRequestQueue(jobRequest) {
 
 	const job = await jobsService.getJob(jobId);
 	const referenceJobId = await jobsService.getReferenceJob(job);
-	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJobId, projectId);
+	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJobId ? referenceJobId : jobId, projectId);
 
 	const jobDetails: RunJobRequestBody = {
 		id: jobId,
@@ -112,7 +112,7 @@ export async function addJobToRequestQueue(jobRequest) {
 		commitId,
 		projectId,
 		trigger,
-		reportId: jobReportsId,
+		reportId: jobReportsId.insertId,
 		status: jobStatus,
 		host,
 		githubInstallationId,

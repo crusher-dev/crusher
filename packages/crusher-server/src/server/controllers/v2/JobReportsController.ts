@@ -62,7 +62,7 @@ export class JobReportsController {
 			reports[i].screenshotCount = await this.jobsService.getTotalScreenshotsInJob(reports[i].jobId);
 			const referenceJobId = reports[i].referenceJobId ? reports[i].referenceJobId: reports[i].jobId;
 			if (reports[i].referenceJobId) {
-				const comparisonScreenshotsCount = await this.jobsService.getScreenshotsCountInJob(reports[i].jobId, referenceJobId);
+				const comparisonScreenshotsCount = await this.jobsService.getScreenshotsCountInJobReport(reports[i].reportId, reports[i].jobId);
 				reports[i] = {
 					...reports[i],
 					passedScreenshotCount: comparisonScreenshotsCount.totalComparisonCount === 0 ? reports[i].screenshotCount : comparisonScreenshotsCount.passedCount,

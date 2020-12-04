@@ -47,7 +47,7 @@ export class JobReportsController {
 	@Get("/list/:projectId")
 	async getJobReportsInProject(@Param("projectId") projectId: number, @QueryParams() queries){
 		let { page, category, itemsPerPage } = queries;
-		page = !page || page < 1 ? 1 : page;
+		page = page && !isNaN(page) && page >= 1 ? page : 1;
 		let trigger = null;
 		if(parseInt(category) === 1) {
 			trigger = JobTrigger.MONITORING;

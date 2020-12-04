@@ -20,6 +20,11 @@ export default class ProjectService {
 		return !!record;
 	}
 
+
+	async getNoBuildsTodayOfProject(projectId: number){
+		return this.dbManager.fetchSingleRow(`SELECT COUNT(*) as count FROM job_reports WHERE job_reports.project_id = ? AND cast(job_reports.created_at as Date) = cast(NOW() as date);`, [projectId]);
+	}
+
 	async createProject(projectName: string, teamId: number): Promise<InsertRecordResponse> {
 		return this.dbManager.insertData(`INSERT INTO projects SET ?`, {
 			name: projectName,

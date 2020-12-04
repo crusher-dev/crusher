@@ -33,9 +33,9 @@ export default class JobsService {
 	}
 
 	async stopAllJobsRunningForMoreThanAnHour() {
-		return this.dbManager.fetchSingleRow(`UPDATE jobs SET status = ?, conclusion = ? WHERE status = ? OR status = ?`, [
+		// @TODO: Link this to job_reports
+		return this.dbManager.fetchSingleRow(`UPDATE jobs SET status = ? WHERE status = ? OR status = ?`, [
 			JobStatus.TIMEOUT,
-			JobConclusion.FAILED,
 			JobStatus.RUNNING,
 			JobStatus.QUEUED,
 		]);
@@ -58,6 +58,31 @@ export default class JobsService {
 			[jobId],
 		);
 		return record.totalCount;
+	}
+
+	async getScreenshotsCountInJobReport(
+		reportId: number,
+		jobId: number
+	): Promise<{
+		passedCount: number;
+		failedCount: number;
+		reviewRequiredCount: number;
+		totalComparisonCount: number;
+	}> {
+		const totalScreenshots = await this.dbManager.fetchSingleRow(
+			'SELECT COUNT(*) as count FROM test_instance_screenshots, test_instances WHERE test_instances.job_id = ? AND test_instance_screenshots.instance_id = test_instances.id',
+			[jobId],
+		);
+		const countRecord = await this.dbManager.fetchSingleRow(
+			`SELECT COUNT(case test_instance_results.status when 'PASSED' then 1 else null end) passedCount, COUNT(case test_instance_results.status when 'FAILED' then 1 else null end) failedCount, COUNT(case test_instance_results.status when 'MANUAL_REVIEW_REQUIRED' then 1 when 'ERROR_CREATING_DIFF' then 1 else null end) reviewCount from test_instance_result_sets, test_instance_results WHERE test_instance_result_sets.report_id = ? AND test_instance_results.instance_result_set_id=test_instance_result_sets.id`,
+			[reportId],
+		);
+		return {
+			passedCount: totalScreenshots.count - (countRecord.failedCount + countRecord.reviewCount),
+			failedCount: countRecord.failedCount,
+			reviewRequiredCount: countRecord.reviewCount,
+			totalComparisonCount: totalScreenshots.count,
+		};
 	}
 
 	async getScreenshotsCountInJob(
@@ -104,16 +129,16 @@ export default class JobsService {
 		const testIds = JSON.parse(meta).sort();
 
 		if (host) {
-			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host = ? AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
+			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host = ? AND meta = ? AND status = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
 				host,
 				JSON.stringify(testIds),
-				JobConclusion.PASSED,
+				JobStatus.FINISHED,
 				id,
 			]);
 		} else {
-			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND conclusion = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
+			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND status = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
 				JSON.stringify(testIds),
-				JobConclusion.PASSED,
+				JobStatus.FINISHED,
 				id,
 			]);
 		}

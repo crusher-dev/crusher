@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { css } from "@emotion/core";
-import { getPaginationEndpoint } from "@services/job";
 import { Pagination } from "@ui/components/common/Pagination";
 
 interface iFilter {
@@ -42,7 +41,7 @@ const FilterCaps = (props: iFilterCapsProps) => {
 
 	const out = caps.map((cap, index) => {
 		return (
-			<a href={resolveCategoryUrl(cap.value)}>
+			<a key={cap.value} href={resolveCategoryUrl(cap.value)}>
 				<li
 					className={
 						parseInt(selectedCap as any) === cap.value
@@ -107,7 +106,7 @@ const FilterListPagination = (props: iFilterListPaginationProps) => {
 
 	const ItemsListComponent: any = itemsListComponent;
 	const [filters, setFilters] = useState({
-		currentPage: parseInt(currentPage),
+		currentPage: parseInt(currentPage as any),
 		category: selectedCategory,
 	} as iFilters);
 

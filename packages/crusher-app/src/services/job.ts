@@ -14,7 +14,7 @@ export const getAllJobsOfProject = (
 	page = 1,
 	headers = null,
 ) => {
-	return backendRequest(`/job/getProjectsJob/${projectId}`, {
+	return backendRequest(`/v2/job/report/list/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 		payload: { page: page ? page : 1, category },

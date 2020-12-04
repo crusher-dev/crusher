@@ -22,21 +22,7 @@ export class JobsControllerV2 {
 
 	@Get('/get/:jobId')
 	async getJob(@Param('jobId') jobId: number) {
-		const jobRecord = await this.jobsService.getJob(jobId);
-		const defaultReferenceJob = await this.jobsService.getReferenceJob(jobRecord);
-		const referenceJob = defaultReferenceJob ? defaultReferenceJob : jobRecord;
 
-		const commentsMap = await this.commentsServiceV2.getCommentsBetweenJobs(jobRecord.id, referenceJob.id);
-		const testInstancesWithMediaMap = await this.testInstanceV2Service.getTestInstancesMapWithMedia(jobRecord.id);
-		const testInstanceResultsMap = await this.testInstanceResultsServiceV2.getResultsForJob(jobRecord.id, referenceJob.id);
-
-		return {
-			job: jobRecord,
-			referenceJob: referenceJob,
-			instances: testInstancesWithMediaMap,
-			results: testInstanceResultsMap,
-			comments: commentsMap,
-		};
 	}
 
 	@Authorized()

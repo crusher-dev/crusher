@@ -5,6 +5,7 @@ export interface RunJobRequestBody {
 	repoName?: string;
 	commitId?: string;
 	projectId: number;
+	reportId: number;
 	trigger: 'MANUAL' | 'CRON' | 'PR';
 	status: 'QUEUED' | 'RUNNING' | 'FINISHED' | 'TIMEOUT' | 'ABORTED';
 	platform?: 'CHROME' | 'FIREFOX' | 'SAFARI' | 'ALL';

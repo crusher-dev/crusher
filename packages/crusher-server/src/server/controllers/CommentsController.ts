@@ -30,15 +30,13 @@ export class CommentsController {
 	async addComment(@CurrentUser({ required: true }) user, @Body() body) {
 		const { user_id } = user;
 		const userRecord = await this.userService.getUserInfo(user_id);
-		const { job_id, instance_id, screenshot_id, result_set_id, message } = body;
+		const { report_id, result_id, message } = body;
 
 		const timeNow = new Date().toISOString().slice(0, 19).replace('T', ' ');
 		const { insertId } = await this.commentsService.createComment({
 			user_id,
-			job_id,
-			instance_id,
-			screenshot_id,
-			result_set_id,
+			report_id,
+			result_id,
 			message,
 			created_at: timeNow,
 		});
@@ -46,10 +44,8 @@ export class CommentsController {
 		return {
 			id: insertId,
 			user_id,
-			job_id,
-			instance_id,
-			screenshot_id,
-			result_set_id,
+			report_id,
+			result_id,
 			message,
 			created_at: timeNow,
 			user_first_name: userRecord.first_name,

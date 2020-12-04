@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { css } from "@emotion/core";
+import { Pagination } from "@ui/components/common/Pagination";
 
 interface iFilter {
 	title: string;
@@ -8,20 +9,26 @@ interface iFilter {
 
 interface iFilterListPaginationProps {
 	categories: Array<iFilter>;
-	endpoint: string;
+	items: any;
+	currentPage: number;
+	resolveCategoryUrl: any;
+	totalPages: number;
 	itemsPerPage: number;
-	itemComponent: ReactElement;
+	selectedCategory: number;
+	itemsListComponent: ReactElement;
+	resolvePaginationUrl: any;
 }
 
 interface iFilterCapsProps {
 	caps: Array<iFilter>;
 	disableAllCap?: boolean;
 	selectedCap?: number | null;
+	resolveCategoryUrl: any;
 	onChangeCap: (cap: iFilter) => void;
 }
 
 const FilterCaps = (props: iFilterCapsProps) => {
-	const { disableAllCap, selectedCap, onChangeCap } = props;
+	const { disableAllCap, selectedCap, resolveCategoryUrl, onChangeCap } = props;
 	let { caps } = props;
 
 	if (!disableAllCap) {
@@ -34,21 +41,23 @@ const FilterCaps = (props: iFilterCapsProps) => {
 
 	const out = caps.map((cap, index) => {
 		return (
-			<li
-				className={
-					selectedCap === cap.value
-						? "active"
-						: !selectedCap && index === 0
-						? "active"
-						: ""
-				}
-				key={cap.value}
-				onClick={() => {
-					onFilterCapClickCallback(cap);
-				}}
-			>
-				{cap.title}
-			</li>
+			<a key={cap.value} href={resolveCategoryUrl(cap.value)}>
+				<li
+					className={
+						parseInt(selectedCap as any) === cap.value
+							? "active"
+							: !selectedCap && index === 0
+							? "active"
+							: ""
+					}
+					key={cap.value}
+					onClick={() => {
+						onFilterCapClickCallback(cap);
+					}}
+				>
+					{cap.title}
+				</li>
+			</a>
 		);
 	});
 
@@ -84,8 +93,22 @@ interface iFilters {
 }
 
 const FilterListPagination = (props: iFilterListPaginationProps) => {
-	const { categories } = props;
-	const [filters, setFilters] = useState({ currentPage: 1 } as iFilters);
+	const {
+		categories,
+		currentPage,
+		items,
+		resolvePaginationUrl,
+		totalPages,
+		selectedCategory,
+		resolveCategoryUrl,
+		itemsListComponent,
+	} = props;
+
+	const ItemsListComponent: any = itemsListComponent;
+	const [filters, setFilters] = useState({
+		currentPage: parseInt(currentPage as any),
+		category: selectedCategory,
+	} as iFilters);
 
 	const onChangeFilter = (newCap: iFilter) => {
 		setFilters({
@@ -95,7 +118,7 @@ const FilterListPagination = (props: iFilterListPaginationProps) => {
 	};
 
 	useEffect(() => {
-		console.log("Something changed!");
+		// getPaginationEndpoint("/ge");
 	}, [filters]);
 
 	return (
@@ -103,9 +126,17 @@ const FilterListPagination = (props: iFilterListPaginationProps) => {
 			<FilterCaps
 				onChangeCap={onChangeFilter}
 				selectedCap={filters.category}
+				resolveCategoryUrl={resolveCategoryUrl}
 				caps={categories}
 			/>
-			<div>{filters.currentPage}</div>
+			<ItemsListComponent items={items} />
+
+			<Pagination
+				style={{ marginTop: "2.75rem" }}
+				totalPages={totalPages ? totalPages : 1}
+				currentPage={filters.currentPage}
+				resolvePaginationUrl={resolvePaginationUrl}
+			/>
 		</div>
 	);
 };

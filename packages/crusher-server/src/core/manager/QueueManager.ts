@@ -3,6 +3,7 @@ import { REDDIS } from '../../../config/database';
 import * as path from 'path';
 import TestsEventsWorker from '../workers/testEventsWoker';
 import { VideoEventsPostProcessor } from '../workers/videoEventsPostProcessor';
+const resultWorker = require('../workers/checkResult');
 
 const checkResultQueue = new Queue('check-result-queue', {
 	// @ts-ignore
@@ -19,9 +20,9 @@ checkResultQueue.client.then(async (reddisClient) => {
 
 	new Worker(
 		'check-result-queue',
-		path.resolve('src/core/workers/checkResult.ts'),
+		resultWorker,
 		// @ts-ignore
-		{ connection: reddisClient, concurrency: 3 },
+		{ connection: reddisClient, concurrency: 1},
 	);
 
 	// We can assume that only test-instance will be added to it

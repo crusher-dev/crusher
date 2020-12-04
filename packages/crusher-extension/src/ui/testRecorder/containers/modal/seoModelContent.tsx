@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export function SEOModelContent({saveSEOAssertionCallback, handleCloseCallback, seoMeta }: any) {
 	return (
@@ -69,44 +69,6 @@ function ShowRowInput(props: any) {
 				<input onChange={updateFieldValue} placeholder={'Enter value'} value={value} style={styles.inputTableGridOptionValueInput} />
 			</th>
 		</tr>
-	);
-}
-
-function Row({ name, state, setState }: any) {
-	const onValidationMethodChange = (event: any) => {
-		setState({
-			...state,
-			selectedValidationMethod: {
-				...state.selectedValidationMethod,
-				[name.toLowerCase()]: event.target.value,
-			},
-		});
-	};
-
-	const onInputChange = (event: any) => {
-		setState({
-			...state,
-			assertValues: {
-				...state.assertValues,
-				[name.toLowerCase()]: event.target.value,
-			},
-		});
-	};
-
-	return (
-		<div className={'middleRow'} style={styles.middleRow}>
-			<div style={{ flex: 1 }}>{name}</div>
-			<select
-				style={{ ...styles.select, flex: 0.5, marginRight: 108 }}
-				value={state.selectedValidationMethod[name.toLowerCase()]}
-				onChange={onValidationMethodChange}
-			>
-				<option value='matches'>matches</option>
-				<option value='contains'>contains</option>
-				<option value='regex'>regex</option>
-			</select>
-			<input onChange={onInputChange} value={state.assertValues[name.toLowerCase()]} style={{ ...styles.input }} placeholder={`Your assertion ${name}`} />
-		</div>
 	);
 }
 
@@ -348,21 +310,6 @@ function TopBar(handleClick: any) {
 	);
 }
 
-function CloseIcon(props: any) {
-	return (
-		<svg width={17} height={17} viewBox='0 0 17 17' fill='none' {...props}>
-			<path
-				d='M16.564 13.792L3.241.47a1.487 1.487 0 00-2.103 0l-.702.701a1.487 1.487 0 000 2.104l13.323 13.323a1.487 1.487 0 002.103 0l.701-.701a1.486 1.486 0 00.001-2.104z'
-				fill='#9F9F9F'
-			/>
-			<path
-				d='M13.759.47L.436 13.793a1.487 1.487 0 000 2.103l.7.701a1.487 1.487 0 002.104 0L16.564 3.276a1.486 1.486 0 000-2.103l-.701-.7A1.487 1.487 0 0013.759.47z'
-				fill='#9F9F9F'
-			/>
-		</svg>
-	);
-}
-
 function BrowserIcons({ props }: any) {
 	return (
 		<svg width={37} height={37} viewBox='0 0 37 37' fill='none' {...props}>
@@ -416,17 +363,17 @@ function BulbIcon(props : any) {
 	);
 }
 
-const formButtonAdvanceCss = {
+const formButtonAdvanceCss: React.CSSProperties = {
 	color: "#5B76F7",
 	marginRight: "auto",
 	fontFamily: "DM Sans",
 	fontSize: "0.9rem",
 	textDecorationLine: "underline",
-	fontWeight: "900",
+	fontWeight: 900,
 	cursor: "pointer"
 };
 
-const saveButtonCss = {
+const saveButtonCss : React.CSSProperties = {
 	padding: '12px 24px',
 	minWidth: '120px',
 	textAlign: 'center',

@@ -8,11 +8,28 @@ export const getVisualDiffsJob = (jobId, headers = null) => {
 	});
 };
 
-export const getAllJobsOfProject = (projectId, page, headers = null) => {
+export const getAllJobsOfProject = (
+	projectId,
+	category = 0,
+	page = 1,
+	headers = null,
+) => {
 	return backendRequest(`/job/getProjectsJob/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
-		payload: { page: page ? page : 1 },
+		payload: { page: page ? page : 1, category },
+	});
+};
+
+export const getPaginationEndpoint = (
+	endpoint: string,
+	payload: any,
+	headers = null,
+) => {
+	return backendRequest(endpoint, {
+		method: RequestMethod.GET,
+		headers: headers,
+		payload: payload,
 	});
 };
 

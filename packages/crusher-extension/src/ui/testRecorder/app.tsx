@@ -291,7 +291,7 @@ function Actions(props: any) {
 }
 
 function DesktopBrowser(props: any) {
-	const { isInspectModeOn } = props;
+	const { isInspectModeOn, isElementModeOn } = props;
 	const selectedDeviceId = getQueryStringParams('device', window.location.href);
 	const urlParams = getQueryStringParams('url', window.location.href);
 	const urlEncoded = urlParams ? new URL(urlParams) : null;
@@ -424,6 +424,11 @@ function DesktopBrowser(props: any) {
 	const IframeSection = () => {
 		return (
 			<div style={styles.previewBrowser}>
+				{isElementModeOn && (
+					<div style={{position: 'absolute', left: 0, top: 0, width: "100%", height: "100%", background: 'transparent', zIndex: 99999}}>
+
+					</div>
+				)}
 				{isMobile && (
 					<div
 						className='smartphone'
@@ -812,12 +817,17 @@ function App() {
 	const [startingTime] = useState(Date.now());
 	const [lastStepTime, setLastStepTime] = useState(Date.now());
 	const [isInspectModeOn, setIsInspectModeOn] = useState(false);
+	const [isElementModeOn, setIsElementModeOn] = useState(false);
+
 	const iframeRef: Ref<any> = useRef(null);
 	const actionsScrollRef: Ref<any> = useRef(null);
 
 	const setIsShowingElementForm = (value: boolean) => {
 		if (!value) {
 			setIsInspectModeOn(false);
+			setIsElementModeOn(false);
+		} else {
+			setIsElementModeOn(true);
 		}
 		_setIsShowingElementForm(value);
 	};
@@ -840,11 +850,12 @@ function App() {
 			...getSteps(),
 			{
 				event_type: ACTIONS_IN_TEST.VALIDATE_SEO,
-				value: options,
+				value: JSON.stringify(options),
 				selectors: ['body'],
 			},
 		] as any);
 		setLastStepTime(Date.now());
+		setIsShowingElementForm(false);
 		updateState(null);
 	}
 
@@ -853,7 +864,7 @@ function App() {
 			...getSteps(),
 			{
 				event_type: ACTIONS_IN_TEST.ASSERT_ELEMENT,
-				value: options,
+				value: JSON.stringify(options),
 				selectors: currentElementSelectors,
 			},
 		] as any);
@@ -993,17 +1004,6 @@ function App() {
 					</div>
 					<div style={styles.paddingContainer}>
 						{state !== MODALS.SEO && <RightMiddleSection state={state} updateState={updateState} />}
-						{state && state === MODALS.SEO && (
-							<ShowForm
-								submitCallback={saveSeoValidation}
-								state={state}
-								seoMeta={seoMeta}
-								currentElementAttributes={currentElementAttributes}
-								updateState={updateState}
-								saveAssertionCallback={saveAssertionCallback}
-								saveSeoValidationCallback={saveSeoValidation}
-							/>
-						)}
 					</div>
 				</div>
 			</div>
@@ -1020,7 +1020,7 @@ function App() {
 	// @ts-ignore
 	return (
 		<Test style={styles.container}>
-			<DesktopBrowser isInspectModeOn={isInspectModeOn} saveTest={saveTest} forwardRef={iframeRef} />
+			<DesktopBrowser isInspectModeOn={isInspectModeOn} isElementModeOn={isElementModeOn} saveTest={saveTest} forwardRef={iframeRef} />
 			<RightSection />
 			<style>
 				{`
@@ -1029,6 +1029,7 @@ function App() {
                         margin: 0;
                         padding: 0;
                         font-size: 20px;
+                        overflow: hidden;
                     }
                     .margin-list-item li:not(:first-child){
                         margin-top: 0.75rem;
@@ -1131,7 +1132,7 @@ function App() {
 				seoMeta={seoMeta}
 				state={state}
 				updateState={updateState}
-				saveSeoValidationCallback={()=>{}}
+				saveSeoValidationCallback={saveSeoValidation}
 			/>
 		</Test>
 	);
@@ -1145,7 +1146,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 	container: {
 		display: 'flex',
 		height: 'auto',
-		background: 'rgb(40, 40, 40)',
+		background: 'rgb(40, 40, 40)'
 	},
 	mainContainer: {
 		flex: 1,
@@ -1303,6 +1304,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 		paddingTop: '1rem',
 		overflowY: 'auto',
 		background: '#010101',
+		position: 'relative'
 	},
 	browserFrame: {
 		border: 'none',

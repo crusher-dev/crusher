@@ -101,8 +101,8 @@ export async function addJobToRequestQueue(jobRequest) {
 	} = jobRequest;
 
 	const job = await jobsService.getJob(jobId);
-	const referenceJobId = await jobsService.getReferenceJob(job);
-	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJobId ? referenceJobId : jobId, projectId);
+	const referenceJob = await jobsService.getReferenceJob(job);
+	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJob ? referenceJob.id : jobId, projectId);
 
 	const jobDetails: RunJobRequestBody = {
 		id: jobId,

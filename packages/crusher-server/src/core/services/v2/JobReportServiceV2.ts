@@ -34,7 +34,7 @@ export default class JobReportServiceV2 {
 		if(trigger === JobTrigger.MONITORING){
 			return this.dbManager.fetchData(`SELECT job_reports.id as reportId, job_reports.status as reportStatus, job_reports.job_id jobId, job_reports.reference_job_id referenceJobId, job_reports.status_explanation reportExplanation, jobs.* FROM job_reports, jobs WHERE job_reports.project_id = ? AND jobs.id = job_reports.job_id AND (jobs.trigger=? OR jobs.trigger=?) ORDER BY job_reports.created_at DESC LIMIT ?,?`, [projectId, JobTrigger.CRON, JobTrigger.CLI, offset, limit]);
 		} else if(trigger === JobTrigger.MANUAL) {
-			return this.dbManager.fetchData(`SELECT job_reports.id as reportId, job_reports.status as reportStatus, job_reports.job_id jobId, job_reports.reference_job_id referenceJobId, job_reports.status_explanation reportExplanation, jobs.* FROM job_reports, jobs WHERE job_reports.project_id = ? AND jobs.id = job_reports.job_id AND job_reports.trigger=? ORDER BY job_reports.created_at DESC LIMIT ?,?`, [projectId, trigger, offset, limit]);
+			return this.dbManager.fetchData(`SELECT job_reports.id as reportId, job_reports.status as reportStatus, job_reports.job_id jobId, job_reports.reference_job_id referenceJobId, job_reports.status_explanation reportExplanation, jobs.* FROM job_reports, jobs WHERE job_reports.project_id = ? AND jobs.id = job_reports.job_id AND jobs.trigger=? ORDER BY job_reports.created_at DESC LIMIT ?,?`, [projectId, trigger, offset, limit]);
 		} else {
 			return this.dbManager.fetchData(`SELECT job_reports.id as reportId, job_reports.status as reportStatus, job_reports.job_id jobId, job_reports.reference_job_id referenceJobId, job_reports.status_explanation reportExplanation, jobs.* FROM job_reports, jobs WHERE job_reports.project_id = ? AND jobs.id = job_reports.job_id ORDER BY job_reports.created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
 		}
@@ -45,6 +45,6 @@ export default class JobReportServiceV2 {
 	}
 
 	async updateJobReportStatus(status: JobReportStatus, reportId: number, explanation: string | null = null){
-			return this.dbManager.fetchSingleRow(`UPDATE job_reports SET ? WHERE id = ?`, [{status: status, explanation: explanation}, reportId])
+			return this.dbManager.fetchSingleRow(`UPDATE job_reports SET ? WHERE id = ?`, [{status: status, status_explanation: explanation}, reportId])
 	}
 }

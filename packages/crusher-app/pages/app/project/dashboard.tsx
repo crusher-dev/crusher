@@ -13,31 +13,22 @@ import { fetchTestsCountInProject } from "@services/projects";
 import { serialize } from "cookie";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { getTime } from "@utils/helpers";
-import { JobStatus } from "@interfaces/JobStatus";
-import { JobConclusion } from "@interfaces/JobConclusion";
+import { JobReportStatus } from "@interfaces/JobReportStatus";
 
-function getBuildStatus(status: JobStatus, conclusion: JobConclusion) {
-	if (status === JobStatus.ABORTED) {
+function getBuildStatus(status: JobReportStatus) {
+	if (status === JobReportStatus.FAILED) {
 		return "FAILED";
 	}
 
-	if (status === JobStatus.FINISHED && conclusion === JobConclusion.PASSED) {
+	if (status === JobReportStatus.PASSED) {
 		return "PASSED";
-	} else if (
-		status === JobStatus.FINISHED &&
-		conclusion === JobConclusion.FAILED
-	) {
-		return "FAILED";
-	} else if (
-		status === JobStatus.FINISHED &&
-		conclusion === JobConclusion.MANUAL_REVIEW_REQUIRED
-	) {
-		return "MANUAL REVIEW REQUIRED";
-	} else if (status === JobStatus.TIMEOUT) {
-		return "TIMEOUT";
-	} else {
-		return "RUNNING CHECKS";
 	}
+
+	if (status === JobReportStatus.MANUAL_REVIEW_REQUIRED) {
+		return "NEEDS REVIEW";
+	}
+
+	return "RUNNING";
 }
 
 function Build(props: any) {
@@ -45,6 +36,8 @@ function Build(props: any) {
 		jobId,
 		createdAt,
 		branchName,
+		reportStatus,
+		reportId,
 		conclusion,
 		commitId,
 		commitName,
@@ -64,7 +57,7 @@ function Build(props: any) {
 					</div>
 					<div css={[styles.reviewButton]}>
 						<img src={"/svg/dashboard/whiteFlag.svg"} style={{ width: "0.6rem" }} />
-						<span>{getBuildStatus(status, conclusion)}</span>
+						<span>{getBuildStatus(reportStatus)}</span>
 					</div>
 				</li>
 			</a>
@@ -98,6 +91,8 @@ function RenderBuilds(props) {
 					return (
 						<Build
 							jobId={job.id}
+							reportId={job.reportId}
+							reportStatus={job.reportStatus}
 							createdAt={job.created_at}
 							branchName={job.branch_name}
 							commitId={job.commit_id}

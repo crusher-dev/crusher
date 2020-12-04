@@ -150,10 +150,6 @@ export default class TestsEventsWorker {
 							});
 						} catch (ex) {}
 
-						await jobsService.updateJobInfo(jobId, {
-							conclusion: JobConclusion.FAILED,
-						});
-
 						await jobReportsService.updateJobReportStatus(JobReportStatus.FAILED, reportId, `#${instanceId} failed to execute successfully.`);
 
 						await testInstanceService.updateTestInstanceStatus(InstanceStatus.ABORTED, instanceId);

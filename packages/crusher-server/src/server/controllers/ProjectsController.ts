@@ -82,6 +82,16 @@ export class ProjectsController {
 			totalTests: await this.testService.getTestsCountInProject(projectId),
 		};
 	}
+
+	@Get('/meta/dashboard/info/:projectId')
+	async getMetaDashboardInfoOfProject(@Param("projectId") projectId: number){
+		const totalJobsToday = await this.projectService.getNoBuildsTodayOfProject(projectId);
+
+		return {
+			totalJobsToday: totalJobsToday.count
+		}
+	}
+
 	@Post('/runTests/:projectId')
 	async runTestsInProject(@Param('projectId') projectId, @Req() req, @Body() body) {
 		try {

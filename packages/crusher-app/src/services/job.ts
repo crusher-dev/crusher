@@ -33,8 +33,18 @@ export const getPaginationEndpoint = (
 	});
 };
 
-export const getAllProjectLogs = (projectId, headers = null) => {
+export const getAllProjectLogs = (projectId: number, headers = null) => {
 	return backendRequest(`/job/getLogsOfProject/${projectId}`, {
+		method: RequestMethod.GET,
+		headers: headers,
+	});
+};
+
+export const getMetaDashboardProjectInfo = (
+	projectId: number,
+	headers = null,
+) => {
+	return backendRequest(`/projects/meta/dashboard/info/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 	});

@@ -2,7 +2,7 @@ import { css } from "@emotion/core";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
 import WithSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
-import { getAllJobsOfProject, getAllProjectLogs } from "@services/job";
+import {getAllJobsOfProject, getAllProjectLogs, getMetaDashboardProjectInfo} from "@services/job";
 import { redirectToFrontendPath } from "@utils/router";
 import { backendRequest, cleanHeaders } from "@utils/backendRequest";
 import { useSelector } from "react-redux";
@@ -128,7 +128,7 @@ function RenderActivities(props) {
 }
 
 function ProjectDashboard(props) {
-	const { builds, activities, userInfo } = props;
+	const { builds, activities, userInfo, metaDashboardInfo } = props;
 	const [dashboardInfo, setDashboardInfo] = useState({
 		projectBuilds: builds ? builds : [],
 		projectActivities: activities ? activities : [],
@@ -155,6 +155,7 @@ function ProjectDashboard(props) {
 			});
 	}, [selectedProjectId]);
 
+	const {totalJobsToday} = metaDashboardInfo;
 	const { projectBuilds, projectActivities } = dashboardInfo;
 	return (
 		<div css={styles.container}>
@@ -190,8 +191,8 @@ function ProjectDashboard(props) {
 					</div>
 					<div css={styles.productionHealthItem}>
 						<div css={styles.productionHealthItemText}>
-							<div css={styles.productionHealthItemHeading}>Test ran today</div>
-							<div css={styles.productionHealthItemDesc}>N/A</div>
+							<div css={styles.productionHealthItemHeading}>Jobs ran today</div>
+							<div css={styles.productionHealthItemDesc}>{totalJobsToday}</div>
 						</div>
 						<img
 							src={"/svg/dashboard/calendar.svg"}
@@ -495,6 +496,11 @@ ProjectDashboard.getInitialProps = async (ctx) => {
 			headers,
 		);
 
+		const metaDashboardInfo = await getMetaDashboardProjectInfo(
+			selectedProject ? selectedProject : defaultProject,
+			headers,
+		);
+
 		const [builds, activities] = await Promise.all([
 			buildsPromise,
 			activitiesPromise,
@@ -503,6 +509,7 @@ ProjectDashboard.getInitialProps = async (ctx) => {
 		return {
 			builds: builds,
 			activities: activities,
+			metaDashboardInfo: metaDashboardInfo,
 		};
 	} catch (er) {
 		console.error(er);

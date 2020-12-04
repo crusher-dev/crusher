@@ -54,7 +54,7 @@ export class JobReportsController {
 		} else if (parseInt(category) === 2){
 			trigger = JobTrigger.MANUAL;
 		}
-		const totalCount = await this.jobReportsService.getTotalJobsReportsCountInProject(projectId, trigger);
+		const totalCountRecord = await this.jobReportsService.getTotalJobsReportsCountInProject(projectId, trigger);
 
 		const reports = await this.jobReportsService.getAllJobReportsInProjectPage(projectId, trigger, itemsPerPage ? itemsPerPage : 5, (page - 1) * (itemsPerPage ? itemsPerPage : 5));
 
@@ -83,7 +83,7 @@ export class JobReportsController {
 			jobs: reports,
 			category: category,
 			trigger: trigger,
-			totalPages: Math.ceil(totalCount / 5),
+			totalPages: Math.ceil(totalCountRecord.totalCount / 5),
 		};
 	}
 

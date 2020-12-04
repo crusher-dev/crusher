@@ -89,15 +89,12 @@ function RenderCommentsBox(props) {
 
 	const [isAddingComment, setIsAddingComment] = useState(false);
 	const inputEl = useRef(null);
+	const commentsListRef = useRef(null);
 
 	async function addComment() {
 		setIsAddingComment(true);
 		const commentMessage = inputEl.current.innerHTML;
-		const l = await addCommentForScreenshot(
-			commentMessage,
-			reportId,
-			result.id
-		);
+		const l = await addCommentForScreenshot(commentMessage, reportId, result.id);
 
 		if (l && l.result_id) {
 			updateTestsCountCallback(comments.length + 1);
@@ -121,9 +118,16 @@ function RenderCommentsBox(props) {
 		return <RenderComment comment={comment} />;
 	});
 
+	useEffect(() => {
+		if (commentsListRef.current) {
+			(commentsListRef.current as any).scrollTop = (commentsListRef.current as any).scrollHeight;
+		}
+	}, [comments]);
 	return (
 		<div css={styles.commentBoxContainer} ref={forwardedRef}>
-			<ul css={styles.commentsList}>{commentsOut}</ul>
+			<ul css={styles.commentsList} ref={commentsListRef}>
+				{commentsOut}
+			</ul>
 			<div style={{ position: "relative" }} css={styles.commentBoxInputContainer}>
 				<div
 					css={styles.commentBox}
@@ -363,7 +367,7 @@ function RenderScreenshotComparison({
 		result ? result.status === "PASSED" : false,
 	);
 
-	let { diff_image_url, diff_delta } = result ? result : ({} as any);
+	const { diff_image_url, diff_delta } = result ? result : ({} as any);
 	const [shouldShowCommentsBox, setShouldShowCommentsBox] = useState(false);
 	const [hasComments, setHasComments] = useState(
 		comments && comments.length > 0,
@@ -566,9 +570,7 @@ function TestInstanceReview({
 				: null;
 
 		const comments =
-			jobComments && jobComments[result.id]
-				? jobComments[result.id]
-				: [];
+			jobComments && jobComments[result.id] ? jobComments[result.id] : [];
 
 		return (
 			<RenderScreenshotComparison
@@ -838,7 +840,7 @@ function LogsModal({ logs }) {
 }
 
 function JobReviews(props) {
-	const {reportId} = props;
+	const { reportId } = props;
 	const [isLoading, setIsLoading] = useState(false);
 	const platform = useSelector(getCurrentJobReviewPlatform);
 
@@ -972,7 +974,7 @@ JobReviews.getInitialProps = async ({ req, res, query, store }) => {
 		});
 
 	return {
-		reportId: reportId
+		reportId: reportId,
 	};
 };
 

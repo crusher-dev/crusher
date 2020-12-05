@@ -373,6 +373,8 @@ const styles: { [key: string]: React.CSSProperties } = {
 		width: 760,
 		boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
 		padding: '36px 40px',
+		maxHeight: "33.75rem",
+		overflow: "scroll",
 		background: '#fff',
 	},
 	topBar: {

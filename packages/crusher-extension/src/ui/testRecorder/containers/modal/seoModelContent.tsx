@@ -426,7 +426,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 		borderRadius: 8,
 		width: 760,
 		maxHeight: "33.75rem",
-		overflow: "auto",
+		overflow: "scroll",
 		boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
 		padding: '36px 40px',
 		background: '#1C1F26',

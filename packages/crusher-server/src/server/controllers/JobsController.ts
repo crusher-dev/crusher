@@ -87,7 +87,7 @@ export class JobsController {
 	async getLogsOfProject(@CurrentUser({ required: true }) user, @Param('projectId') projectId) {
 		return this.jobsService.getLastNLogsOfProject(projectId);
 	}
-	
+
 	@Authorized()
 	@Get('/getVisualDiffsWithFirstJob/:jobId')
 	async getVisualDiffs(@CurrentUser({ required: true }) user, @Param('jobId') jobId) {

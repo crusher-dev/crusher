@@ -44,6 +44,46 @@ const extractInfoUsingScriptFunction =
     return output;
 }\n\n`;
 
+const assertElementAttributesFunction = `async function assertElementAttributes(page, selector, assertionsJSON){
+	const assertions = JSON.parse(assertionsJSON);
+	const elHandle = await page.$(selector);
+	const hasPassed = true;
+	const logs = [];
+	
+	for(let i = 0; i < assertions.length; i++) {
+		const {value, method, attribute} = assertions[i];
+		const elementAttributeValue = await elHandle.getAttribute(attribute);
+		if(method === "matches") {
+			if(elementAttributeValue !== value){
+				hasPassed = false;
+				logs.push({status: "FAILED", message: "Failed to assert attribute="+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
+			}
+			else {
+				logs.push({status: "DONE", message: "Asserted attribute="+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
+			}
+		} else if(method === "contains") {
+			const doesContain =  elementAttributeValue.includes(value);
+			if(!doesContain ){
+				hasPassed = false;
+				logs.push({status: "FAILED", message: "Failed to assert attribute contains "+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
+			}
+			else {
+				logs.push({status: "DONE", message: "Asserted attribute contains "+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
+			}
+		} else if(method === "regex" ){
+			const rgx = new RegExp(value);
+			if (!rgx.test(elementAttributeValue)) {
+				hasPassed = false;
+				logs.push({status: "FAILED", message: "Failed to assert attribute matches regex: "+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
+			} else {
+				logs.push({status: "DONE", message: "Asserted attribute matches regex: "+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
+			}
+		}
+	}
+	
+	return [hasPassed, logs];
+}\n\n`;
+
 const sleepScriptFunction = `
 const DEFAULT_SLEEP_TIME = 500;
 const TYPE_DELAY = 100;
@@ -80,6 +120,8 @@ export default class CodeGenerator {
 		for (let fun of helperFunctions) {
 			if (fun === ACTIONS_IN_TEST.EXTRACT_INFO) {
 				codeToAdd += extractInfoUsingScriptFunction;
+			} else if(fun === ACTIONS_IN_TEST.ASSERT_ELEMENT) {
+				codeToAdd += assertElementAttributesFunction;
 			}
 		}
 		if (isRecordingVideo) {
@@ -248,7 +290,12 @@ export default class CodeGenerator {
 					break;
 				case ACTIONS_IN_TEST.ASSERT_ELEMENT:
 					this.helperFunctionsToInclude[ACTIONS_IN_TEST.ASSERT_ELEMENT] = true;
-					code += ` `;
+					code += `[hasAllAssertionPassed, assertionLogs] = assertElementAttributes(page, '` + selectors[0].value + `', \`` + value +  `\`);\n
+					if(!hasAllAssertionPassed){
+						throw new Error("Not all assertions passed");
+					}
+					`;
+
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.ASSERT_ELEMENT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.ASSERT_ELEMENT]({
 							selector: selectors[0].value,

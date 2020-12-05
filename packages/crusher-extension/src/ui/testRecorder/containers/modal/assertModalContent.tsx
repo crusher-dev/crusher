@@ -113,7 +113,7 @@ function MiddleSection({ handleCloseCallback, seoMeta, attributes }: any) {
 			const key = state.rows[i].id.toString();
 			console.log(state, key);
 			// @ts-ignore
-			if (state.assertValues[key] && state.selectedValidationMethod[key] && state.attributes[key]) {
+			if (state.selectedValidationMethod[key] && state.attributes[key]) {
 				// @ts-ignore
 				out.push({
 					value: state.assertValues[key],

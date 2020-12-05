@@ -10,7 +10,7 @@ import {
 	getTest,
 } from "@services/test";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import CodeGenerator from "../../../../../code-generator/dist/code-generator/src/index";
+// import CodeGenerator from "../../../../../code-generator/src/index";
 import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { fetchTestsCountInProject } from "@services/projects";
@@ -181,9 +181,9 @@ function Test(props: any) {
 
 	const handleRunTest = useCallback(
 		function () {
-			const codeGenerator = new CodeGenerator({}, "PLAYWRIGHT");
+			// const codeGenerator = new CodeGenerator({}, "PLAYWRIGHT");
 
-			const code = codeGenerator.generate(actions, true);
+			const code = "";
 
 			createAndRunDraftTest(
 				testInfo.name ? testInfo.name : "",

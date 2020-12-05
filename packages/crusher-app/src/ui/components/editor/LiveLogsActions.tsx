@@ -29,14 +29,16 @@ function getLogsWithStatus(
 	for (let i = 0; i < logs.length; i++) {
 		const action = actions[actionsIndex];
 		if (actions[actionsIndex++].event_type === logs[i].actionType) {
+			const descFunction = ACTION_DESCRIPTIONS[action.event_type];
+			console.log(action.event_type);
 			//@ts-ignore
 			out.push({
 				event_type: logs[i].actionType,
 				selector: action.selectors[0].value,
-				desc: ACTION_DESCRIPTIONS[action.event_type]({
+				desc: typeof descFunction === "function" ? ACTION_DESCRIPTIONS[action.event_type]({
 					selector: (action.selectors[0] as any).value,
 					value: action.value,
-				}),
+				}) : "",
 				timeTaken: logs[i].meta.timeTaken,
 				isCompleted: true,
 			});
@@ -47,14 +49,17 @@ function getLogsWithStatus(
 
 	for (let i = actionsIndex; i < actions.length; i++) {
 		const action = actions[i];
+		const descFunction = ACTION_DESCRIPTIONS[action.event_type];
+		console.log(action.event_type);
+
 		//@ts-ignore
 		out.push({
 			event_type: action.event_type,
 			selector: action.selectors[0].value,
-			desc: ACTION_DESCRIPTIONS[action.event_type]({
+			desc: typeof descFunction === "function" ? ACTION_DESCRIPTIONS[action.event_type]({
 				selector: (action.selectors[0] as any).value,
 				value: action.value,
-			}),
+			}) : "",
 			timeTaken: null,
 			isCompleted: false,
 		});

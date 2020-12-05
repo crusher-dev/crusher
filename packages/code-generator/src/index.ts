@@ -47,7 +47,7 @@ const extractInfoUsingScriptFunction =
 const assertElementAttributesFunction = `async function assertElementAttributes(page, selector, assertionsJSON){
 	const assertions = JSON.parse(assertionsJSON);
 	const elHandle = await page.$(selector);
-	const hasPassed = true;
+	let hasPassed = true;
 	const logs = [];
 	
 	for(let i = 0; i < assertions.length; i++) {

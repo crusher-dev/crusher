@@ -288,19 +288,21 @@ export default class CodeGenerator {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
+				case ACTIONS_IN_TEST.VALIDATE_SEO:
+
+					break;
 				case ACTIONS_IN_TEST.ASSERT_ELEMENT:
 					this.helperFunctionsToInclude[ACTIONS_IN_TEST.ASSERT_ELEMENT] = true;
-					code += `[hasAllAssertionPassed, assertionLogs] = assertElementAttributes(page, '` + selectors[0].value + `', \`` + value +  `\`);\n
-					if(!hasAllAssertionPassed){
-						throw new Error("Not all assertions passed");
-					}
-					`;
+					code += `[hasAllAssertionPassed, assertionLogs] = await assertElementAttributes(page, '` + selectors[0].value + `', \`` + value +  `\`);\n`;
 
 					if (isLiveProgress) {
-						code += `await logStep('${ACTIONS_IN_TEST.ASSERT_ELEMENT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.ASSERT_ELEMENT]({
+						code += `await logStep('${ACTIONS_IN_TEST.ASSERT_ELEMENT}', {status: hasAllAssertionPassed ? 'DONE' : 'FAILED', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.ASSERT_ELEMENT]({
 							selector: selectors[0].value,
 						})}'}, {selector: '${selectors[0].value}'});\n`;
 					}
+					code+=`if(!hasAllAssertionPassed){
+						throw new Error("Not all assertions passed");
+					}\n`;
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}

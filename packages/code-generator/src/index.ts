@@ -98,7 +98,7 @@ function sleep(time){
 export default class CodeGenerator {
 	helperFunctionsToInclude: any;
 
-	constructor(options: any) {
+	constructor(options?: any) {
 		this.helperFunctionsToInclude = {};
 	}
 

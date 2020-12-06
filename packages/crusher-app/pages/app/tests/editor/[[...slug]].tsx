@@ -10,12 +10,12 @@ import {
 	getTest,
 } from "@services/test";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-// import CodeGenerator from "../../../../../code-generator/src/index";
 import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { fetchTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
 
 import WithSessionInfo from "@hoc/withSessionInfo";
@@ -102,27 +102,28 @@ const TestState = {
 };
 
 function Test(props: any) {
-	let { testId, events, testInfo, isFirstTest, totalTime } = props;
+	const { testId, events, isFirstTest, totalTime } = props;
+	let { testInfo } = props;
 	testInfo = testInfo ? testInfo : {};
-	const [actions, setActions] = useState(
+	const [actions] = useState(
 		testInfo.events ? JSON.parse(testInfo.events) : JSON.parse(events),
 	);
-	const [draftInfo, setDraftInfo] = useState(null);
-	const [testState, setTestState] = useState(TestState.CREATED);
-	const [testResults, setTestResults] = useState(null);
+	const [draftInfo, setDraftInfo]: [any, any] = useState(null);
+	const [, setTestState] = useState(TestState.CREATED);
+	const [testResults, setTestResults]: [any, any] = useState(null);
 	const [testName, setTestName] = useState(testInfo ? testInfo.name : "");
-	const [isRunningTest, setIsRunningTest] = useState(false);
-	const [isTestBaseCreated, setIsTestBaseCreated] = useState(false);
+	const [, setIsRunningTest] = useState(false);
+	const [, setIsTestBaseCreated] = useState(false);
 
 	const selectedProjectId = useSelector(getSelectedProject);
-	const draftRef = useRef(null);
+	const draftRef: any = useRef(null);
 
-	let tR = null;
+	let tR: any = null;
 	draftRef.current = draftInfo;
 
 	const receiveLogsCallback = useCallback(
 		function (
-			status,
+			_status,
 			testStatus,
 			logs,
 			images,
@@ -132,6 +133,8 @@ function Test(props: any) {
 		) {
 			if (draftId === draftInfo.id) {
 				setTestResults({
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					//@ts-ignore
 					logs: [...(tR ? tR.logs : []), ...(logs ? logs : [])],
 					images: [...(tR ? tR.images : []), ...(images ? JSON.parse(images) : [])],
 					testInstanceRecording,
@@ -160,7 +163,7 @@ function Test(props: any) {
 			const { id } = draftInfo;
 			setTestState(TestState.RUNNING);
 
-			checkDraftStatusAgainAndAgain(id, receiveLogsCallback).then((res) => {
+			checkDraftStatusAgainAndAgain(id, receiveLogsCallback).then((res: any) => {
 				if (res) {
 					setIsTestBaseCreated(true);
 				}
@@ -181,8 +184,6 @@ function Test(props: any) {
 
 	const handleRunTest = useCallback(
 		function () {
-			// const codeGenerator = new CodeGenerator({}, "PLAYWRIGHT");
-
 			const code = "";
 
 			createAndRunDraftTest(
@@ -191,13 +192,12 @@ function Test(props: any) {
 				actions,
 				selectedProjectId,
 			)
-				.then((res) => {
-					const { id } = res;
+				.then((res: any) => {
 					setDraftInfo(res);
 					setIsRunningTest(true);
 					setTestResults(null);
 				})
-				.catch((err) => {
+				.catch((err: any) => {
 					alert("FAILED");
 					console.error(err);
 				});
@@ -211,21 +211,22 @@ function Test(props: any) {
 			return false;
 		}
 		if (draftInfo) {
-			createTestFromDraft(draftInfo.id, { testName: testName })
-				.then((res) => {
+			return createTestFromDraft(draftInfo.id, { testName: testName })
+				.then((res: any) => {
 					if (!res) {
 						throw new Error("Empty response");
 					}
-					const { insertId } = res;
 					if (isFirstTest) {
 						redirectToFrontendPath("/app/project/onboarding/integrationIntroduction");
 					} else {
 						redirectToFrontendPath("/app/project/tests");
 					}
 				})
-				.catch((err) => {
+				.catch((err: any) => {
 					console.error(err);
 				});
+		} else {
+			return false;
 		}
 	}, [draftInfo, testName]);
 
@@ -245,22 +246,22 @@ function Test(props: any) {
 	}
 
 	return (
-		<div css={styles.container}>
-			<div css={styles.centeredContainer}>
-				<div css={styles.placeholderHeaderContainer}>
-					<div css={styles.placeholderHeaderTitle}>
+		<div css={containerCSS}>
+			<div css={centeredContainerCSS}>
+				<div>
+					<div css={placeholderHeaderTitleCSS}>
 						You just created a test in {Math.floor(totalTime / 1000)} seconds👏
 					</div>
-					<div css={styles.placeholderHeaderDesc}>
+					<div css={placeholderHeaderDescCss}>
 						<div>Crusher will check UI/Flow for bugs.</div>
 						<div>Ship faster by running all tests in few mins.</div>
 					</div>
 				</div>
-				<div css={styles.addTestContainer}>
-					<div css={styles.addTestInputWithActionContainer}>
-						<div css={styles.addTestInputContainer}>
+				<div css={addTestContainerCSS}>
+					<div css={addTestInputWithActionContainerCSS}>
+						<div css={addTestInputContainerCSS}>
 							<input
-								css={styles.addTestInput}
+								css={addTestInputCSS}
 								name="testName"
 								placeholder="Name of your test"
 								value={testName}
@@ -268,7 +269,7 @@ function Test(props: any) {
 							/>
 						</div>
 						<div
-							css={styles.addTestButton}
+							css={addTestButtonCSS}
 							style={{
 								color: "#eaeaee",
 								backgroundColor: "#5b76f7",
@@ -286,206 +287,75 @@ function Test(props: any) {
 	);
 }
 
-const styles = {
-	container: css`
-		display: flex;
-		padding-top: 4.25rem;
-		height: 100%;
-		padding-left: 4.25rem;
-		padding-right: 4rem;
-		justify-content: center;
-	`,
-	centeredContainer: css`
-		padding-top: 2.75rem;
-		width: 36rem;
-	`,
-	placeholderHeaderContainer: css``,
-	placeholderHeaderTitle: css`
-		font-family: DM Sans;
-		font-style: normal;
-		font-weight: bold;
-		font-size: 1.4rem;
-	`,
-	placeholderHeaderDesc: css`
-		font-family: DM Sans;
-		margin-top: 0.6rem;
-		font-size: 0.9rem;
-		line-height: 1.4rem;
-	`,
-	leftSide: css`
-		width: 54rem;
-	`,
-	rightSide: css`
-		margin-left: auto;
-		display: flex;
-		padding-left: 4rem;
-		flex-direction: column;
-	`,
-	screenshotsContainer: css`
-		margin-top: 2.25rem;
-		width: 26rem;
-	`,
-	screenshotsHeading: css`
-		font-weight: 700;
-		font-size: 1.1rem;
-		color: #2d3958;
-	`,
-	screenshotsGrid: css`
-		margin-top: 1.25rem;
-		display: flex;
-		flex-wrap: wrap;
-	`,
-	screenshotItem: css`
-		background: rgba(0, 0, 0, 0.05);
-		border-radius: 0.2rem;
-		width: 7.1rem;
-		height: 4.25rem;
-		margin-bottom: 1.5rem;
-		margin-right: 1.5rem;
-		background-repeat: no-repeat;
-		background-size: contain;
-	`,
-	addTestContainer: css`
-		margin-top: 1.625rem;
-		color: #2d3958;
-	`,
-	addTestInputLabel: css`
-		font-family: DM Sans;
-		font-size: 0.8rem;
-		font-weight: 500;
-	`,
-	addTestInputWithActionContainer: css`
-		display: flex;
-		flex-direction: row;
-		margin-top: 2.4rem;
-	`,
-	addTestInputContainer: css`
-		flex: 1;
-	`,
-	addTestInput: css`
-		background: #fff;
-		border-radius: 0.25rem;
-		border: 1.5px solid #e2e2e2;
-		font-size: 0.85rem;
-		color: #2d3958;
-		padding: 0.5rem 1.1rem;
-		width: 100%;
-	`,
-	addTestButton: css`
-		background: #5b76f7;
-		border-radius: 5px;
-		width: auto;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-size: 0.9rem;
-		padding: 0.5rem 2.75rem;
-		margin-left: 0.8rem;
-		color: #eaeaee;
-		font-weight: 500;
-		cursor: pointer;
-	`,
-	verifyingTestContainer: css`
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		margin-top: 7rem;
-		span {
-			margin-left: 1rem;
-			font-family: DM Sans;
-			font-size: 0.9rem;
-			color: #2d3958;
-			font-style: normal;
-			font-weight: 500;
-		}
-	`,
-	liveStepsContainer: css`
-		margin-top: 2.1rem;
-	`,
-	runTestContainer: css`
-		margin-top: 1.75rem;
-		color: #2d3958;
-		width: 26rem;
-	`,
-	runTestHeading: css`
-		font-weight: 700;
-		font-size: 1.125rem;
-	`,
-	saveTestButton: css`
-		background: #5b76f7;
-		border-radius: 5px;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 0.7rem 0.5rem;
-		color: #eaeaee;
-		font-size: 0.925rem;
-		font-weight: 700;
-		margin-top: 1.5rem;
-		cursor: pointer;
-		span {
-			margin-left: 1rem;
-		}
-	`,
-	previewTestButton: css`
-		background: #5b76f7;
-		border-radius: 5px;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 0.7rem 0.5rem;
-		color: #eaeaee;
-		font-size: 0.925rem;
-		font-weight: 700;
-		margin-top: 1.5rem;
-		cursor: pointer;
-		margin-right: 1.4rem;
-		span {
-			margin-left: 1rem;
-		}
-	`,
-	testButtonContainer: css`
-		display: flex;
-	`,
-	overlay: css`
-		position: fixed;
-		z-index: 99999;
-		background: rgba(0, 0, 0, 0.5);
-		left: 0;
-		top: 0;
-		width: 100vw;
-		height: 100vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	`,
-	logsOverlayContent: css`
-		background: #fff;
-		padding: 3.575rem 10.125rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		border-radius: 0.8rem;
-	`,
-	waitingTitle: css`
-		font-family: DM Sans;
-		font-style: normal;
-		font-weight: bold;
-		font-size: 1.35rem;
-	`,
-	waitingDesc: css`
-		margin-top: 0.6rem;
-		font-family: DM Sans;
-		font-style: normal;
-		font-weight: normal;
-		font-size: 0.9rem;
-	`,
-};
+const containerCSS = css`
+	display: flex;
+	padding-top: 4.25rem;
+	height: 100%;
+	padding-left: 4.25rem;
+	padding-right: 4rem;
+	justify-content: center;
+`;
 
-Test.getInitialProps = async (ctx) => {
+const centeredContainerCSS = css`
+	padding-top: 2.75rem;
+	width: 36rem;
+`;
+
+const placeholderHeaderTitleCSS = css`
+	font-family: DM Sans;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 1.4rem;
+`;
+
+const placeholderHeaderDescCss = css`
+	font-family: DM Sans;
+	margin-top: 0.6rem;
+	font-size: 0.9rem;
+	line-height: 1.4rem;
+`;
+
+const addTestContainerCSS = css`
+	margin-top: 1.625rem;
+	color: #2d3958;
+`;
+
+const addTestInputWithActionContainerCSS = css`
+	display: flex;
+	flex-direction: row;
+	margin-top: 2.4rem;
+`;
+
+const addTestInputContainerCSS = css`
+	flex: 1;
+`;
+
+const addTestInputCSS = css`
+	background: #fff;
+	border-radius: 0.25rem;
+	border: 1.5px solid #e2e2e2;
+	font-size: 0.85rem;
+	color: #2d3958;
+	padding: 0.5rem 1.1rem;
+	width: 100%;
+`;
+
+const addTestButtonCSS = css`
+	background: #5b76f7;
+	border-radius: 5px;
+	width: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 0.9rem;
+	padding: 0.5rem 2.75rem;
+	margin-left: 0.8rem;
+	color: #eaeaee;
+	font-weight: 500;
+	cursor: pointer;
+`;
+
+Test.getInitialProps = async (ctx: any) => {
 	const { res, req, store, query } = ctx;
 	try {
 		let headers, postData;
@@ -520,6 +390,7 @@ Test.getInitialProps = async (ctx) => {
 			events = testInfo.events;
 			framework = testInfo.framework;
 		}
+
 		return {
 			isLoggedIn: isLoggedIn,
 			events: events ? unescape(events) : "[]",
@@ -529,7 +400,6 @@ Test.getInitialProps = async (ctx) => {
 			totalTime: totalTime,
 		};
 	} catch (er) {
-		throw er;
 		await redirectToFrontendPath("/", res);
 		return null;
 	}

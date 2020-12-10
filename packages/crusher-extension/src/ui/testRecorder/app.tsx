@@ -37,36 +37,15 @@ function Step(props: any) {
 	);
 }
 
-function useScroll(ref: any, steps: any) {
-	const [scrollPos, setScrollPos] = useState(0);
-	const handleScroll = () => {
-		// when component re-renders, it causes window.scrollY to be 0. We don't want
-		// to update state if scrollY is 0. because scroll restoration breaks.
-		if (ref.current.scrollTop !== 0) {
-			setScrollPos(ref.current.scrollTop);
-		}
-	};
-
-	// add event listener to window when component mounts
-	useEffect(() => {
-		ref.current.addEventListener('scroll', handleScroll);
-		return () => ref.current.removeEventListener('scroll', handleScroll);
-	}, []);
-
-	// restore scroll whenever loading changes
-	useEffect(() => {
-		ref.current.scrollTo(0, scrollPos);
-	}, [steps]);
-}
-
-function Steps(props: any) {
+function ActionStepsList(props: any) {
 	const { steps, forwardRef } = props;
-	useScroll(forwardRef, steps);
 
-	// useEffect(()=>{
-	//     //@ts-ignore
-	//     new PerfectScrollbar(document.querySelector("#stepsListContainer"));
-	// }, []);
+
+	useEffect(()=>{
+		const testListContainer = document.querySelector("#stepsListContainer");
+		const elementHeight = testListContainer.scrollHeight;
+		testListContainer.scrollBy(0,elementHeight)
+	})
 
 	const stepList = steps.map((step: any) => {
 		const { event_type, selectors, value } = step;
@@ -82,6 +61,7 @@ function Steps(props: any) {
 				minHeight: 100,
 				overflowY: 'auto',
 				marginBottom: '0.5rem',
+				scrollBehavior: 'smooth'
 			}}
 			id='stepsListContainer'
 			ref={forwardRef}
@@ -378,7 +358,7 @@ function DesktopBrowser(props: any) {
 	function Toolbar() {
 		return (
 			<div style={styles.browserToolbar}>
-				<div style={styles.browserMainToolbar}>
+				<div style={styles.browserMainToolbar} id="top-bar">
 					<div
 						style={{
 							display: 'flex',
@@ -525,21 +505,12 @@ function App() {
 		}
 		_setIsShowingElementForm(value);
 	};
-	// useEffect(()=>{
-	//     const scrollDiv = actionsScrollRef.current;
-	//     const newScrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
-	//     if(newScrollTop !== 0) {
-	//         scrollDiv.scrollTop = newScrollTop;
-	//     }
-	// }, [steps, isShowingElementForm]);
 
 	function getSteps() {
 		return steps;
 	}
 
 	function saveSeoValidation(options: any) {
-		console.log('Here are options');
-		console.log(options);
 		setSteps([
 			...getSteps(),
 			{
@@ -566,6 +537,7 @@ function App() {
 		setIsShowingElementForm(false);
 	}
 
+	// @Note - Poorly written code. This is if else hell, break it down into clear pieces
 	messageListenerCallback = function (event: any) {
 		const { type, eventType, value, selectors } = event.data;
 		const steps = getSteps();
@@ -649,60 +621,6 @@ function App() {
 		}
 	};
 
-	function RightMiddleSection(props: any) {
-		const isElementSelected = isShowingElementForm;
-		return isElementSelected ? (
-			<>
-				<div style={styles.flexRow}>
-					<div style={styles.flexRowHeading}>Select Element Action</div>
-				</div>
-				<Actions
-					type={ACTION_FORM_TYPE.ELEMENT_ACTIONS}
-					isShowingElementFormCallback={setIsShowingElementForm}
-					iframeRef={iframeRef}
-					updateState={updateState}
-				/>
-			</>
-		) : (
-			<>
-				<div style={styles.flexRow}>
-					<div style={styles.flexRowHeading}>Select Action</div>
-					{/* <div style={styles.flexRowRightItem}>Use template</div> */}
-				</div>
-				<Actions type={ACTION_FORM_TYPE.PAGE_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm} iframeRef={iframeRef} updateState={updateState} />
-			</>
-		);
-	}
-
-	function RightSection() {
-		return (
-			<div style={{ ...styles.sidebar }}>
-				<div style={styles.tipContainer}>
-					<div style={styles.bulbIcon}>
-						<img src='/icons/bulb.svg' width={31} />
-					</div>
-					<div style={styles.tipContent}>
-						<div style={styles.tipTitle}>Tip of the session</div>
-						<div style={styles.tipDesc}>Click on play to replay selected test</div>
-					</div>
-				</div>
-				<div style={{ overflowY: 'auto' }}>
-					<div
-						style={{
-							background: '#14181F',
-							padding: '0rem 1.25rem',
-							paddingBottom: '0rem',
-						}}
-					>
-						<Steps forwardRef={actionsScrollRef} steps={steps} />
-					</div>
-					<div style={styles.paddingContainer}>
-						{state !== MODALS.SEO && <RightMiddleSection state={state} updateState={updateState} />}
-					</div>
-				</div>
-			</div>
-		);
-	}
 
 	function saveTest() {
 		sendPostDataWithForm(resolveToBackendPath('/test/goToEditor'), {
@@ -712,10 +630,11 @@ function App() {
 	}
 
 	// @ts-ignore
+	const propsToAttachToRightSection = { iframeRef,setIsShowingElementForm, isShowingElementForm}
 	return (
-		<Test style={styles.container}>
+		<Window style={styles.container}>
 			<DesktopBrowser isInspectModeOn={isInspectModeOn} isElementModeOn={isElementModeOn} saveTest={saveTest} forwardRef={iframeRef} />
-			<RightSection />
+			<RightSection state={state} steps={steps} actionsScrollRef={actionsScrollRef} updateState={updateState} {...propsToAttachToRightSection}/>
 			<style>
 				{`
                     html, body{
@@ -828,14 +747,76 @@ function App() {
 				updateState={updateState}
 				saveSeoValidationCallback={saveSeoValidation}
 			/>
-		</Test>
+		</Window>
 	);
 }
 
-const Test = styled.div`
+function ActionContainer(props: any) {
+	const {updateState, iframeRef,setIsShowingElementForm, isShowingElementForm} = props;
+
+	const isElementSelected = isShowingElementForm;
+	return isElementSelected ? (
+		<>
+			<div style={styles.flexRow}>
+				<div style={styles.flexRowHeading}>Select Element Action</div>
+			</div>
+			<Actions
+				type={ACTION_FORM_TYPE.ELEMENT_ACTIONS}
+				isShowingElementFormCallback={setIsShowingElementForm}
+				iframeRef={iframeRef}
+				updateState={updateState}
+			/>
+		</>
+	) : (
+		<>
+			<div style={styles.flexRow}>
+				<div style={styles.flexRowHeading}>Select Action</div>
+				{/* <div style={styles.flexRowRightItem}>Use template</div> */}
+			</div>
+			<Actions type={ACTION_FORM_TYPE.PAGE_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm} iframeRef={iframeRef} updateState={updateState} />
+		</>
+	);
+}
+
+
+
+function RightSection({state, steps,updateState,actionsScrollRef,  iframeRef,setIsShowingElementForm, isShowingElementForm}) {
+	return (
+		<div style={{ ...styles.sidebar }}>
+			<div style={styles.tipContainer}>
+				<div style={styles.bulbIcon}>
+					<img src='/icons/bulb.svg' width={31} />
+				</div>
+				<div style={styles.tipContent}>
+					<div style={styles.tipTitle}>Tip of the session</div>
+					<div style={styles.tipDesc}>Click on play to replay selected test</div>
+				</div>
+			</div>
+			<div style={{borderTopLeftRadius: 12, background: '#14181F',}}>
+				<div
+					style={{
+
+						padding: '0rem 1.25rem',
+						paddingBottom: '0rem',
+						borderTopLeftRadius: 12
+					}}
+				>
+					<ActionStepsList forwardRef={actionsScrollRef} steps={steps} />
+				</div>
+				<div style={styles.actionContainer}>
+					{state !== MODALS.SEO && <ActionContainer state={state} updateState={updateState} iframeRef={iframeRef} isShowingElementForm={isShowingElementForm} setIsShowingElementForm={setIsShowingElementForm}/>}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+
+const Window = styled.div`
 	background: red;
 	color: black;
 `;
+
 const styles: { [key: string]: React.CSSProperties } = {
 	container: {
 		display: 'flex',
@@ -849,17 +830,16 @@ const styles: { [key: string]: React.CSSProperties } = {
 		overflow: 'auto',
 	},
 	sidebar: {
-		background: '#1C1F26',
 		display: 'flex',
-		flexDirection: 'column',
-		borderRadius: '0.70 0 0 0',
+		flexDirection: 'column',,
 		position: 'fixed',
 		bottom: '0',
 		right: '0%',
 		marginLeft: 'auto',
 		maxHeight: '85vh',
-		maxWidth: '27rem',
-		width: '30vw',
+		maxWidth: '22rem',
+		borderTopLeftRadius: 20,
+		width: '25vw',
 	},
 	centerItemsVerticalFlex: {
 		display: 'flex',
@@ -912,9 +892,13 @@ const styles: { [key: string]: React.CSSProperties } = {
 		fontWeight: 700,
 		cursor: 'pointer',
 	},
-	paddingContainer: {
+	actionContainer: {
 		padding: '1.1rem 1.25rem',
 		position: 'relative',
+		background: "#1C1F26",
+		marginTop: "-0.55rem",
+		borderTopLeftRadius: "12px",
+		overflow: 'auto'
 	},
 	stepsContainer: {
 		listStyle: 'none',
@@ -989,22 +973,26 @@ const styles: { [key: string]: React.CSSProperties } = {
 		fontWeight: 500,
 		fontFamily: 'DM Sans',
 		padding: '0 0.8rem',
+
 	},
 	previewBrowser: {
 		flex: 1,
-		maxWidth: '70vw',
+		maxWidth: '75vw',
 		display: 'flex',
 		justifyContent: 'center',
-		paddingTop: '1rem',
+
 		overflowY: 'auto',
 		background: '#010101',
-		position: 'relative'
+		position: 'relative',
+		alignItems: 'center',
+		height:  `calc(100vh - 2.58rem)`
 	},
 	browserFrame: {
 		border: 'none',
 		display: 'block',
 		borderRadius: 2,
-		width: 1280,
+		width: 1480,
+		maxWidth: '100%',
 		height: 800,
 		backgroundColor: '#fff',
 	},

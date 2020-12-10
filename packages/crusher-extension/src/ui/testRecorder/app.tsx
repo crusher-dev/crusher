@@ -37,7 +37,7 @@ function Step(props: any) {
 	);
 }
 
-function Steps(props: any) {
+function ActionStepsList(props: any) {
 	const { steps, forwardRef } = props;
 
 
@@ -632,7 +632,7 @@ function App() {
 	// @ts-ignore
 	const propsToAttachToRightSection = { iframeRef,setIsShowingElementForm, isShowingElementForm}
 	return (
-		<Test style={styles.container}>
+		<Window style={styles.container}>
 			<DesktopBrowser isInspectModeOn={isInspectModeOn} isElementModeOn={isElementModeOn} saveTest={saveTest} forwardRef={iframeRef} />
 			<RightSection state={state} steps={steps} actionsScrollRef={actionsScrollRef} updateState={updateState} {...propsToAttachToRightSection}/>
 			<style>
@@ -747,11 +747,11 @@ function App() {
 				updateState={updateState}
 				saveSeoValidationCallback={saveSeoValidation}
 			/>
-		</Test>
+		</Window>
 	);
 }
 
-function RightMiddleSection(props: any) {
+function ActionContainer(props: any) {
 	const {updateState, iframeRef,setIsShowingElementForm, isShowingElementForm} = props;
 
 	const isElementSelected = isShowingElementForm;
@@ -792,18 +792,19 @@ function RightSection({state, steps,updateState,actionsScrollRef,  iframeRef,set
 					<div style={styles.tipDesc}>Click on play to replay selected test</div>
 				</div>
 			</div>
-			<div style={{ overflowY: 'auto' }}>
+			<div style={{borderTopLeftRadius: 12, background: '#14181F',}}>
 				<div
 					style={{
-						background: '#14181F',
+
 						padding: '0rem 1.25rem',
 						paddingBottom: '0rem',
+						borderTopLeftRadius: 12
 					}}
 				>
-					<Steps forwardRef={actionsScrollRef} steps={steps} />
+					<ActionStepsList forwardRef={actionsScrollRef} steps={steps} />
 				</div>
-				<div style={styles.paddingContainer}>
-					{state !== MODALS.SEO && <RightMiddleSection state={state} updateState={updateState} iframeRef={iframeRef} isShowingElementForm={isShowingElementForm} setIsShowingElementForm={setIsShowingElementForm}/>}
+				<div style={styles.actionContainer}>
+					{state !== MODALS.SEO && <ActionContainer state={state} updateState={updateState} iframeRef={iframeRef} isShowingElementForm={isShowingElementForm} setIsShowingElementForm={setIsShowingElementForm}/>}
 				</div>
 			</div>
 		</div>
@@ -811,13 +812,11 @@ function RightSection({state, steps,updateState,actionsScrollRef,  iframeRef,set
 }
 
 
-const Test = styled.div`
+const Window = styled.div`
 	background: red;
 	color: black;
 `;
 
-
-const topBar:any = window.document.querySelector("#top-bar");
 const styles: { [key: string]: React.CSSProperties } = {
 	container: {
 		display: 'flex',
@@ -831,16 +830,15 @@ const styles: { [key: string]: React.CSSProperties } = {
 		overflow: 'auto',
 	},
 	sidebar: {
-		background: '#1C1F26',
 		display: 'flex',
-		flexDirection: 'column',
-		borderRadius: '0.70 0 0 0',
+		flexDirection: 'column',,
 		position: 'fixed',
 		bottom: '0',
 		right: '0%',
 		marginLeft: 'auto',
 		maxHeight: '85vh',
-		maxWidth: '22.5rem',
+		maxWidth: '22rem',
+		borderTopLeftRadius: 20,
 		width: '25vw',
 	},
 	centerItemsVerticalFlex: {
@@ -894,9 +892,13 @@ const styles: { [key: string]: React.CSSProperties } = {
 		fontWeight: 700,
 		cursor: 'pointer',
 	},
-	paddingContainer: {
+	actionContainer: {
 		padding: '1.1rem 1.25rem',
 		position: 'relative',
+		background: "#1C1F26",
+		marginTop: "-0.55rem",
+		borderTopLeftRadius: "12px",
+		overflow: 'auto'
 	},
 	stepsContainer: {
 		listStyle: 'none',

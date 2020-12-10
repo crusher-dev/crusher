@@ -142,7 +142,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 
 		const video_uri = res ? res.video_uri : null;
 
-		if (project_id && code) {
+		if (project_id) {
 			return this.testService.createTest({
 				testName: isNotEmpty(_testName) ? _testName : name,
 				events: isNotEmpty(_events) ? _events : events,

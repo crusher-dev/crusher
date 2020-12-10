@@ -5875,12 +5875,6 @@ coa@~1.0.1:
   dependencies:
     q "^1.1.2"
 
-code-generator@./packages/code-generator:
-  version "1.0.0"
-  dependencies:
-    crusher-shared "1.0.0"
-    nodemon "^2.0.4"
-
 "code-generator@https://github.com/crusherdev/code-generator.git#82a2023872bd0f6f2cdc6a2a7175378037a45d77":
   version "1.0.0"
   resolved "https://github.com/crusherdev/code-generator.git#82a2023872bd0f6f2cdc6a2a7175378037a45d77"

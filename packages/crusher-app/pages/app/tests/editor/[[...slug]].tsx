@@ -15,6 +15,8 @@ import { getSelectedProject } from "@redux/stateUtils/projects";
 import { fetchTestsCountInProject } from "@services/projects";
 import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
+import CodeGenerator from "@code-generator/src/index";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
 
@@ -184,7 +186,7 @@ function Test(props: any) {
 
 	const handleRunTest = useCallback(
 		function () {
-			const code = "";
+			const code = new CodeGenerator({}).generate(actions);
 
 			createAndRunDraftTest(
 				testInfo.name ? testInfo.name : "",

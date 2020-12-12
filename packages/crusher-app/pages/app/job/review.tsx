@@ -29,7 +29,8 @@ import {
 	getCurrentJobComments,
 	getCurrentJobInstances,
 	getCurrentJobResults,
-	getCurrentJobReviewPlatform, getReferenceJob,
+	getCurrentJobReviewPlatform,
+	getReferenceJob,
 } from "@redux/stateUtils/job";
 import { store } from "@redux/store";
 import { JobInfo } from "@interfaces/JobInfo";
@@ -226,7 +227,7 @@ function JobInfoBox() {
 		alert("Approved");
 	};
 
- 	return (
+	return (
 		<div className=" mg-t-70">
 			<div
 				className="card ht-md-100p d-flex justify-content-center "
@@ -599,11 +600,13 @@ function GetStatusImage(props: any) {
 	const { conclusion } = props;
 
 	if (conclusion === "PASSED") {
-		return <Passed style={{height: "1.5rem"}} />;
+		return <Passed style={{ height: "1.5rem" }} />;
 	} else if (conclusion === "FAILED") {
-		return <Failed style={{height: "1.5rem"}}  />;
+		return <Failed style={{ height: "1.5rem" }} />;
 	} else if (conclusion === "RUNNING") {
-		return <img style={{height: "1.5rem"}}  src={"/svg/jobReview/loading.svg"}/>
+		return (
+			<img style={{ height: "1.5rem" }} src={"/svg/jobReview/loading.svg"} />
+		);
 	} else {
 		return null;
 	}
@@ -639,7 +642,9 @@ function TestInstanceReview({
 				: null;
 
 		const comments =
-			jobComments && jobComments[result.id] ? jobComments[result.id] : [];
+			jobComments && result && jobComments[result.id]
+				? jobComments[result.id]
+				: [];
 
 		return (
 			<RenderScreenshotComparison
@@ -667,7 +672,7 @@ function TestInstanceReview({
 	const approve = () => {
 		alert("Approved instance");
 	};
-	
+
 	return (
 		<div className="" css={styles.bodyBackground}>
 			<div
@@ -776,9 +781,13 @@ function TestInstanceReview({
 						padding: "1rem 3rem",
 					}}
 				>
-					<div style={{display: "flex", alignItems: "center"}}>
-						<div><GetStatusImage conclusion={instanceConclusion} /></div>
-						<div style={{ marginLeft: "1rem" }}>Test {toPascalCase(instanceConclusion)}</div>
+					<div style={{ display: "flex", alignItems: "center" }}>
+						<div>
+							<GetStatusImage conclusion={instanceConclusion} />
+						</div>
+						<div style={{ marginLeft: "1rem" }}>
+							Test {toPascalCase(instanceConclusion)}
+						</div>
 					</div>
 					<div style={{ marginLeft: "auto", display: "flex", flexDirection: "row" }}>
 						<div

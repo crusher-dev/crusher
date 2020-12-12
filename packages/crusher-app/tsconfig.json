@@ -18,7 +18,7 @@
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"baseUrl": "..",
+		"baseUrl": "../",
 		"types": ["@emotion/react/types/css-prop"],
 		"typeRoots": [",./@types", ",./node_modules/@types"],
 		"paths": {
@@ -34,6 +34,7 @@
 			"@hoc/*": ["crusher-app/src/hoc/*"],
 			"@containers/*": ["crusher-app/src/containers/*"],
 			"@constants/*": ["crusher-app/src/constants/*"],
+			"@code-generator/*": ["code-generator/*"],
 			"@crusher-shared/*": ["crusher-shared/*"]
 		}
 	},

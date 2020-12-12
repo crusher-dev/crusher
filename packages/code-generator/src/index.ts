@@ -11,8 +11,7 @@ const header = `const browser = await playwright["chromium"].launch();\n`;
 
 const footer = `await browser.close();\n`;
 
-const logStepsFunction = `
-const {
+const logStepsFunction = `const {
   performance
 } = require('perf_hooks');
 

@@ -21,8 +21,6 @@
     "module": "commonjs",
     "jsx": "react",
     "lib": ["DOM", "ESnext"],
-    "baseUrl": ".",
-    "outDir": "dist",
     "rootDir": "packages/",
     "paths": {
       "~/*": ["packages/*"]

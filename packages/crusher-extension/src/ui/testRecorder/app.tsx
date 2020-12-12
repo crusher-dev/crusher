@@ -42,7 +42,7 @@ function ActionStepsList(props: any) {
 
 
 	useEffect(()=>{
-		const testListContainer = document.querySelector("#stepsListContainer");
+		const testListContainer: any = document.querySelector("#stepsListContainer");
 		const elementHeight = testListContainer.scrollHeight;
 		testListContainer.scrollBy(0,elementHeight)
 	})
@@ -780,7 +780,7 @@ function ActionContainer(props: any) {
 
 
 
-function RightSection({state, steps,updateState,actionsScrollRef,  iframeRef,setIsShowingElementForm, isShowingElementForm}) {
+function RightSection({state, steps,updateState,actionsScrollRef,  iframeRef,setIsShowingElementForm, isShowingElementForm}: any) {
 	return (
 		<div style={{ ...styles.sidebar }}>
 			<div style={styles.tipContainer}>
@@ -831,7 +831,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 	},
 	sidebar: {
 		display: 'flex',
-		flexDirection: 'column',,
+		flexDirection: 'column',
 		position: 'fixed',
 		bottom: '0',
 		right: '0%',

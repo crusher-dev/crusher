@@ -193,7 +193,7 @@ class ChromeEventsListener {
 		chrome.webRequest.onHeadersReceived.addListener(
 			this.onHeadersReceived,
 			{ urls: ["<all_urls>"], types: ["sub_frame", "main_frame"] },
-			["blocking"],
+			["blocking", "responseHeaders"],
 		);
 
 		chrome.webNavigation.onBeforeNavigate.addListener(this.onBeforeNavigation);

@@ -1,12 +1,12 @@
-import { getAllAttributes } from '../../../utils/helpers';
-import { META_ACTIONS, SETTINGS_ACTIONS } from '../../../constants/actionTypes';
-import { ACTIONS_IN_TEST } from '../../../../../crusher-shared/constants/recordedActions';
-import { DOM } from '../../../utils/dom';
-import EventsController from '../eventsController';
-import LocalFrameStorage from '../../../utils/frameStorage';
-import { getSelectors } from '../../../utils/selector';
+import { getAllAttributes } from "../../../utils/helpers";
+import { META_ACTIONS, SETTINGS_ACTIONS } from "../../../constants/actionTypes";
+import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
+import { DOM } from "../../../utils/dom";
+import EventsController from "../eventsController";
+import { getSelectors } from "../../../utils/selector";
 
-const { createPopper } = require('@popperjs/core');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { createPopper } = require("@popperjs/core");
 
 export default class EventRecording {
 	defaultState: any = {
@@ -58,7 +58,6 @@ export default class EventRecording {
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseOver = this.handleMouseOver.bind(this);
 		this.handleMouseOut = this.handleMouseOut.bind(this);
-		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 
 		this.handleAddIconClick = this.handleAddIconClick.bind(this);
@@ -95,7 +94,7 @@ export default class EventRecording {
 	hideEventsBoxIfShown() {
 		this.removeInspector();
 		this.isInspectorMoving = false;
-		this._addActionElement.style.display = 'none';
+		this._addActionElement.style.display = "none";
 	}
 
 	stopInspectorIfMoving() {
@@ -109,48 +108,54 @@ export default class EventRecording {
 			this.destroyAddTether();
 
 			this._addActionTether = createPopper(target, this._addActionElement, {
-				placement: 'right-start',
+				placement: "right-start",
 				modifiers: [
 					{
-						name: 'flip',
+						name: "flip",
 						enabled: true,
 					},
 					{
-						name: 'offset',
+						name: "offset",
 						options: {
 							offset: [-1, 0],
 						},
 					},
 					{
-						name: 'arrow',
+						name: "arrow",
 						options: {
 							element: this._arrowOnAddIcon,
 						},
 					},
 				],
 			});
-			this._addActionElement.style.display = 'block';
+			this._addActionElement.style.display = "block";
 		}
 	}
 
 	showEventsList() {
-		console.debug('Showing events list', this._overlayAddEventsContainer);
-		this._overlayAddEventsContainer.style.display = 'block';
+		console.debug("Showing events list", this._overlayAddEventsContainer);
+		this._overlayAddEventsContainer.style.display = "block";
 		this.state.pinned = true;
 
 		// Increase the height of actions containers to give more space for not falling out of selection.
-		this._addActionElement.style.height = `${this._overlayAddEventsContainer.getBoundingClientRect().height}px`;
+		this._addActionElement.style.height = `${
+			this._overlayAddEventsContainer.getBoundingClientRect().height
+		}px`;
 
 		this.destoryEventsListTether();
-		this._eventsListTether = createPopper(this._addActionModal, this._overlayAddEventsContainer, {
-			placement: 'right-start',
-			modifiers: [
-				{
-					name: 'flip',
-					enabled: true,
-				},
-			],
-		});
+		this._eventsListTether = createPopper(
+			this._addActionModal,
+			this._overlayAddEventsContainer,
+			{
+				placement: "right-start",
+				modifiers: [
+					{
+						name: "flip",
+						enabled: true,
+					},
+				],
+			},
+		);
 	}
 
 	destroyAddTether() {
@@ -168,14 +173,18 @@ export default class EventRecording {
 	}
 
 	initNodes() {
-		this._addActionElement = document.querySelector('#overlay_add_action');
-		this._overlayCover = document.querySelector('#overlay_cover');
-		this._addActionIcon = document.querySelector('#overlay_add');
-		this._addActionModal = document.querySelector('#overlay_add_icon');
-		this._closeActionIcon = document.querySelector('#overlay_add_events_container .overlay_close_icon');
-		this._overlayAddEventsContainer = document.querySelector('#overlay_add_events_container');
-		this._overlayEventsGrid = document.querySelector('#events_grid');
-		this._arrowOnAddIcon = document.querySelector('#popper_arrow');
+		this._addActionElement = document.querySelector("#overlay_add_action");
+		this._overlayCover = document.querySelector("#overlay_cover");
+		this._addActionIcon = document.querySelector("#overlay_add");
+		this._addActionModal = document.querySelector("#overlay_add_icon");
+		this._closeActionIcon = document.querySelector(
+			"#overlay_add_events_container .overlay_close_icon",
+		);
+		this._overlayAddEventsContainer = document.querySelector(
+			"#overlay_add_events_container",
+		);
+		this._overlayEventsGrid = document.querySelector("#events_grid");
+		this._arrowOnAddIcon = document.querySelector("#popper_arrow");
 	}
 
 	updateEventTarget(target: HTMLElement, event: any) {
@@ -191,8 +200,8 @@ export default class EventRecording {
 	}
 
 	elementsAtLocation(x: number, y: number) {
-		let stack = [],
-			el;
+		const stack = [];
+		let el;
 		do {
 			el = document.elementFromPoint(x, y);
 			if (!el) {
@@ -202,11 +211,12 @@ export default class EventRecording {
 			if (stack.length > 5) {
 				break;
 			}
-			el?.classList.add('pointerEventsNone');
-		} while (el?.tagName !== 'HTML');
+			el?.classList.add("pointerEventsNone");
+		} while (el?.tagName !== "HTML");
 
 		// clean up
-		for (var i = 0; i < stack.length; i += 1) stack[i]?.classList.remove('pointerEventsNone');
+		for (let i = 0; i < stack.length; i += 1)
+			stack[i]?.classList.remove("pointerEventsNone");
 
 		return stack;
 	}
@@ -223,57 +233,77 @@ export default class EventRecording {
 	}
 
 	highlightNode(_target: any, event: any = null) {
-		this._overlayCover.style.position = 'absolute';
+		this._overlayCover.style.position = "absolute";
 		let target = _target;
 		if (event) {
 			const elements = this.elementsAtLocation(event.clientX, event.clientY);
-			if (elements && elements.length > 1 && elements[0].id === 'overlay_cover') {
+			if (elements && elements.length > 1 && elements[0].id === "overlay_cover") {
 				target = elements[1];
 			}
 		}
-		this._overlayCover.style.top = window.scrollY + target.getBoundingClientRect().y + 'px';
-		this._overlayCover.style.left = window.scrollX + target.getBoundingClientRect().x + 'px';
-		this._overlayCover.style.width = target.getBoundingClientRect().width + 'px';
-		this._overlayCover.style.height = target.getBoundingClientRect().height + 'px';
-		this._overlayCover.style['z-index'] = 299999999;
+		this._overlayCover.style.top =
+			window.scrollY + target.getBoundingClientRect().y + "px";
+		this._overlayCover.style.left =
+			window.scrollX + target.getBoundingClientRect().x + "px";
+		this._overlayCover.style.width = target.getBoundingClientRect().width + "px";
+		this._overlayCover.style.height =
+			target.getBoundingClientRect().height + "px";
+		this._overlayCover.style["z-index"] = 299999999;
 		// //
-		this._overlayCover.style.outlineStyle = 'solid';
-		this._overlayCover.style.outlineColor = '#EC2E6A';
-		this._overlayCover.style.outlineWidth = '1px';
+		this._overlayCover.style.outlineStyle = "solid";
+		this._overlayCover.style.outlineColor = "#EC2E6A";
+		this._overlayCover.style.outlineWidth = "1px";
 	}
 
 	removeHighLightFromNode(target: HTMLElement) {
 		// @FIXME: What if the target had set outlineColor and outlineStyleBefore.
 		if (target) {
-			target.style.outlineStyle = 'none';
-			target.style.outlineColor = 'none';
-			target.style.outlineWidth = '0px';
+			target.style.outlineStyle = "none";
+			target.style.outlineColor = "none";
+			target.style.outlineWidth = "0px";
 		}
 	}
 
 	handleSelectedActionFromEventsList(event: any) {
 		// If its coming from testRecorder popup use event.action
-		const action = event.action ? event.action : event.target.getAttribute('data-action');
+		const action = event.action
+			? event.action
+			: event.target.getAttribute("data-action");
 		switch (action) {
 			case ACTIONS_IN_TEST.CLICK:
 				DOM.removeAllTargetBlankFromLinks();
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.CLICK, this.state.targetElement);
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.CLICK,
+					this.state.targetElement,
+				);
 				this.eventsController.simulateClickOnElement(this.state.targetElement);
 				break;
 			case ACTIONS_IN_TEST.HOVER:
 				this.eventsController.simulateHoverOnElement(this.state.targetElement);
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.HOVER, this.state.targetElement);
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.HOVER,
+					this.state.targetElement,
+				);
 				break;
 			case ACTIONS_IN_TEST.BLACKOUT:
-				this.state.targetElement.style.visibility = 'hidden';
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.BLACKOUT, this.state.targetElement);
+				this.state.targetElement.style.visibility = "hidden";
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.BLACKOUT,
+					this.state.targetElement,
+				);
 
 				break;
 			case ACTIONS_IN_TEST.ELEMENT_SCREENSHOT:
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.ELEMENT_SCREENSHOT, this.state.targetElement);
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
+					this.state.targetElement,
+				);
 				break;
 			case ACTIONS_IN_TEST.SCROLL_TO_VIEW:
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL_TO_VIEW, this.state.targetElement);
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.SCROLL_TO_VIEW,
+					this.state.targetElement,
+				);
 				break;
 			default:
 				return;
@@ -287,8 +317,7 @@ export default class EventRecording {
 		if (this._addActionElement) {
 			if (
 				this._addActionElement.contains(event.target) ||
-				// @ts-ignore
-				event.target.hasAttribute('data-recorder') ||
+				(event.target as HTMLElement).hasAttribute("data-recorder") ||
 				this.state.pinned
 			) {
 				return event.preventDefault();
@@ -305,7 +334,10 @@ export default class EventRecording {
 	}
 
 	handleMouseOver(event: MouseEvent) {
-		if (this.hoveringState !== event.target && (event.target as any).id !== 'overlay_cover') {
+		if (
+			this.hoveringState !== event.target &&
+			(event.target as any).id !== "overlay_cover"
+		) {
 			this.hoveringState = {
 				element: event.target,
 				time: Date.now(),
@@ -322,37 +354,42 @@ export default class EventRecording {
 		}
 	}
 
-	handleKeyDown(event: KeyboardEvent) {}
-
 	handleScroll(event: any) {
-		var minScrollTime = 100;
-		var now = new Date().getTime();
+		const minScrollTime = 100;
+		const now = new Date().getTime();
 
-		const _this = this;
 		function processScroll() {
-			let target = event.target;
+			const target = event.target;
 
 			const isDocumentScrolled = event.target === document;
 			if (isDocumentScrolled) {
-				return _this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, document.body, window.scrollY);
+				return this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.SCROLL,
+					document.body,
+					window.scrollY,
+				);
 			}
 
-			const isRecorderCover = target.getAttribute('data-recorder-cover');
+			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				_this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, event.target, event.target.scrollTop);
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.SCROLL,
+					event.target,
+					event.target.scrollTop,
+				);
 			} else {
 				return event.preventDefault();
 			}
 		}
 
-		if (!_this.scrollTimer) {
-			if (now - _this.lastScrollFireTime > 3 * minScrollTime) {
+		if (!this.scrollTimer) {
+			if (now - this.lastScrollFireTime > 3 * minScrollTime) {
 				processScroll(); // fire immediately on first scroll
-				_this.lastScrollFireTime = now;
+				this.lastScrollFireTime = now;
 			}
-			_this.scrollTimer = setTimeout(function () {
-				_this.scrollTimer = null;
-				_this.lastScrollFireTime = new Date().getTime();
+			this.scrollTimer = setTimeout(function () {
+				this.scrollTimer = null;
+				this.lastScrollFireTime = new Date().getTime();
 				processScroll();
 			}, minScrollTime);
 		}
@@ -365,7 +402,10 @@ export default class EventRecording {
 			console.log("Here it is");
 			if (diffInMilliSeconds > 1000 && activeFocusElement.tagName !== "INPUT") {
 				// Only record hover if not in input mode focus.
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.HOVER, this.hoveringState.element);
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.HOVER,
+					this.hoveringState.element,
+				);
 				this.hoveringState = {
 					element: null,
 					time: Date.now(),
@@ -377,17 +417,16 @@ export default class EventRecording {
 	handleAddIconClick() {
 		// @TODO: Post message to parent frame to show the form.
 		this.stopInspectorIfMoving();
-		this._addActionElement.style.display = 'none';
+		this._addActionElement.style.display = "none";
 
 		window.top.postMessage(
 			{
 				type: SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR,
-				// @ts-ignore
-				frameId: LocalFrameStorage.get(),
+				frameId: null,
 				selectors: getSelectors(this.state.targetElement),
 				attributes: getAllAttributes(this.state.targetElement),
 			},
-			'*',
+			"*",
 		);
 	}
 
@@ -396,113 +435,141 @@ export default class EventRecording {
 	}
 
 	unpin() {
-		console.log('Unpinning');
+		console.log("Unpinning");
 		this.state.pinned = false;
 		if (this._overlayCover) {
-			this._overlayCover.classList.remove('pointerEventsNone');
-			this._overlayCover.style.left = '0px';
-			this._overlayCover.style.top = '0px';
-			this._overlayCover.style.width = '0px';
-			this._overlayCover.style.height = '0px';
+			this._overlayCover.classList.remove("pointerEventsNone");
+			this._overlayCover.style.left = "0px";
+			this._overlayCover.style.top = "0px";
+			this._overlayCover.style.width = "0px";
+			this._overlayCover.style.height = "0px";
 		}
 	}
 
 	// eslint-disable-next-line consistent-return
 	handleDocumentClick(event: any) {
 		let target = event.target;
-		const isRecorderCover = target.getAttribute('data-recorder-cover');
+		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		if (isRecorderCover) {
 			target = event.target;
-			console.log('Printing elements at this location');
+			console.log("Printing elements at this location");
 			const elements = this.elementsAtLocation(event.pageX, event.pageY);
 			console.log(elements);
-			if (elements && elements.length > 1 && elements[0].id === 'overlay_cover') {
+			if (elements && elements.length > 1 && elements[0].id === "overlay_cover") {
 				target = elements[1];
 			}
 			this.state.pinned = true;
 			this.state.targetElement = target;
-			this._overlayCover.classList.add('pointerEventsNone');
+			this._overlayCover.classList.add("pointerEventsNone");
 			this.handleAddIconClick();
 			return;
 		}
-		const isRecorder = target.getAttribute('data-recorder');
+		const isRecorder = target.getAttribute("data-recorder");
 		if (!isRecorder) {
 			this.unpin();
-			const closestLink: HTMLAnchorElement = target.closest('a');
-			if (closestLink && closestLink.tagName.toLowerCase() === 'a') {
-				const href = closestLink.getAttribute('href');
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.CLICK, closestLink);
-				console.log('Going to this link', href);
+			const closestLink: HTMLAnchorElement = target.closest("a");
+			if (closestLink && closestLink.tagName.toLowerCase() === "a") {
+				const href = closestLink.getAttribute("href");
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.CLICK,
+					closestLink,
+				);
+				console.log("Going to this link", href);
 				if (href) {
 					window.location.href = href;
 				}
 				return event.preventDefault();
 			}
 			if (!event.simulatedEvent) {
-				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.CLICK, event.target);
+				this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.CLICK,
+					event.target,
+				);
 			}
 		}
 	}
 
 	handleInputChange(event: any) {
 		const targetElement = event.target;
-		this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.INPUT, event.target, targetElement.value);
+		this.eventsController.saveCapturedEventInBackground(
+			ACTIONS_IN_TEST.INPUT,
+			event.target,
+			targetElement.value,
+		);
 	}
 
 	registerNodeListeners() {
-		document.body.addEventListener('mousemove', this.handleMouseMove, true);
-		document.body.addEventListener('mouseover', this.handleMouseOver, true);
-		document.body.addEventListener('mouseout', this.handleMouseOut, true);
+		document.body.addEventListener("mousemove", this.handleMouseMove, true);
+		document.body.addEventListener("mouseover", this.handleMouseOver, true);
+		document.body.addEventListener("mouseout", this.handleMouseOut, true);
 
-
-		window.addEventListener('scroll', this.handleScroll, true);
+		window.addEventListener("scroll", this.handleScroll, true);
 
 		(window as any).open = (function (open) {
 			return function (url: string) {
-				console.log('Opening a new tab', url);
+				console.log("Opening a new tab", url);
 				window.location.href = url;
 			};
 		})(window.open);
 
-		document.body.addEventListener('input', this.handleInputChange, true);
-		document.addEventListener('click', this.handleDocumentClick, true);
+		document.body.addEventListener("input", this.handleInputChange, true);
+		document.addEventListener("click", this.handleDocumentClick, true);
 		setInterval(this.pollInterval, 300);
 	}
 
 	registerNodeListenerForForm() {
-		this._addActionElement.addEventListener('click', this.handleAddIconClick);
+		this._addActionElement.addEventListener("click", this.handleAddIconClick);
 
-		this._overlayEventsGrid.addEventListener('click', this.handleEventsGridClick, true);
-		this._closeActionIcon.addEventListener('click', this.toggleEventsBox, true);
+		this._overlayEventsGrid.addEventListener(
+			"click",
+			this.handleEventsGridClick,
+			true,
+		);
+		this._closeActionIcon.addEventListener("click", this.toggleEventsBox, true);
 	}
 
 	takePageScreenShot() {
-		this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.PAGE_SCREENSHOT, document.body, document.title);
+		this.eventsController.saveCapturedEventInBackground(
+			ACTIONS_IN_TEST.PAGE_SCREENSHOT,
+			document.body,
+			document.title,
+		);
 	}
 
 	saveConsoleLogsAtThisMoment() {
-		this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.CAPTURE_CONSOLE, document.body, document.title);
+		this.eventsController.saveCapturedEventInBackground(
+			ACTIONS_IN_TEST.CAPTURE_CONSOLE,
+			document.body,
+			document.title,
+		);
 	}
 
 	removeNodeListeners() {
-		document.body.removeEventListener('mousemove', this.handleMouseMove, true);
-		this._addActionIcon.removeEventListener('click', this.handleAddIconClick);
-		this._overlayEventsGrid.removeEventListener('click', this.handleEventsGridClick, true);
+		document.body.removeEventListener("mousemove", this.handleMouseMove, true);
+		this._addActionIcon.removeEventListener("click", this.handleAddIconClick);
+		this._overlayEventsGrid.removeEventListener(
+			"click",
+			this.handleEventsGridClick,
+			true,
+		);
 	}
 
 	boot(isFirstTime = false) {
 		if (isFirstTime) {
 			const currentURL = new URL(window.location.href);
-			currentURL.searchParams.delete('__crusherAgent__');
-			this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.NAVIGATE_URL, document.body, currentURL.toString());
+			currentURL.searchParams.delete("__crusherAgent__");
+			this.eventsController.saveCapturedEventInBackground(
+				ACTIONS_IN_TEST.NAVIGATE_URL,
+				document.body,
+				currentURL.toString(),
+			);
 		}
 		window.top.postMessage(
 			{
 				type: META_ACTIONS.STARTED_RECORDING_TESTS,
-				// @ts-ignore
-				frameId: LocalFrameStorage.get(),
+				frameId: null,
 			},
-			'*',
+			"*",
 		);
 		this.registerNodeListeners();
 	}
@@ -516,23 +583,21 @@ export default class EventRecording {
 			window.top.postMessage(
 				{
 					type: SETTINGS_ACTIONS.INSPECT_MODE_OFF,
-					// @ts-ignore
-					frameId: LocalFrameStorage.get(),
+					frameId: null,
 				},
-				'*',
+				"*",
 			);
 		} else {
 			this.isInspectorMoving = true;
 			window.top.postMessage(
 				{
 					type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
-					// @ts-ignore
-					frameId: LocalFrameStorage.get(),
+					frameId: null,
 				},
-				'*',
+				"*",
 			);
 		}
-		console.info('Info Overlay booted up');
+		console.info("Info Overlay booted up");
 	}
 
 	removeNodes() {
@@ -552,7 +617,7 @@ export default class EventRecording {
 	removeEventsFormWizard() {
 		const { targetElement } = this.state;
 
-		console.debug('Shutting down Recording Overlay');
+		console.debug("Shutting down Recording Overlay");
 		this.removeNodeListeners();
 		if (targetElement) {
 			this.removeHighLightFromNode(targetElement);

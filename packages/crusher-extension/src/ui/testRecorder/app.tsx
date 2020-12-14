@@ -1,23 +1,36 @@
-import React, { Ref, useEffect, useRef, useState } from 'react';
-import { MODALS } from '../../constants/modal';
-import _devices from '../../../../crusher-shared/constants/devices';
-import userAgents from '../../../../crusher-shared/constants/userAgents';
-import { addHttpToURLIfNotThere, getQueryStringParams, resolveToBackendPath } from '../../../../crusher-shared/utils/url';
-import { NOT_RECORDING, START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE } from '../../constants';
-import { META_ACTIONS, SETTINGS_ACTIONS } from '../../constants/actionTypes';
-import { ACTIONS_IN_TEST } from '../../../../crusher-shared/constants/recordedActions';
-import { sendPostDataWithForm } from '../../utils/helpers';
-import { AssertModal } from './containers/modal/assertModal';
-import { SeoModal } from './containers/modal/seoModal';
-import { NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon } from '../../assets/icons';
-import { ToggleSwitchIndicator } from './components/toggleSwitchIndicator';
-import styled from 'styled-components';
+import React, { Ref, useEffect, useRef, useState } from "react";
+import { MODALS } from "../../constants/modal";
+import _devices from "../../../../crusher-shared/constants/devices";
+import userAgents from "../../../../crusher-shared/constants/userAgents";
+import {
+	addHttpToURLIfNotThere,
+	getQueryStringParams,
+	resolveToBackendPath,
+} from "../../../../crusher-shared/utils/url";
+import {
+	NOT_RECORDING,
+	START_INSPECTING_RECORDING_MODE,
+	START_NON_INSPECTING_RECORDING_MODE,
+} from "../../constants";
+import { META_ACTIONS, SETTINGS_ACTIONS } from "../../constants/actionTypes";
+import { ACTIONS_IN_TEST } from "../../../../crusher-shared/constants/recordedActions";
+import { sendPostDataWithForm } from "../../utils/helpers";
+import { AssertModal } from "./containers/modal/assertModal";
+import { SeoModal } from "./containers/modal/seoModal";
+import {
+	NavigateBackIcon,
+	NavigateForwardIcon,
+	NavigateRefreshIcon,
+	RecordLabelIcon,
+} from "../../assets/icons";
+import { ToggleSwitchIndicator } from "./components/toggleSwitchIndicator";
+import styled from "styled-components";
 
 const devices: any = _devices;
 
 export const ACTION_FORM_TYPE = {
-	PAGE_ACTIONS: 'PAGE_ACTIONS',
-	ELEMENT_ACTIONS: 'ELEMENT_ACTIONS',
+	PAGE_ACTIONS: "PAGE_ACTIONS",
+	ELEMENT_ACTIONS: "ELEMENT_ACTIONS",
 };
 
 function Step(props: any) {
@@ -25,11 +38,11 @@ function Step(props: any) {
 	return (
 		<li style={styles.step}>
 			<div style={styles.stepImage}>
-				<img src={chrome.runtime.getURL('icons/mouse.svg')} />
+				<img src={chrome.runtime.getURL("icons/mouse.svg")} />
 			</div>
 			<div style={{ ...styles.stepTextContainer }}>
 				<div style={styles.stepAction}>{type}</div>
-				<div style={{ overflow: 'hidden' }}>
+				<div style={{ overflow: "hidden" }}>
 					<div style={styles.stepSelector}>{value || path}</div>
 				</div>
 			</div>
@@ -40,33 +53,39 @@ function Step(props: any) {
 function ActionStepsList(props: any) {
 	const { steps, forwardRef } = props;
 
-
-	useEffect(()=>{
+	useEffect(() => {
 		const testListContainer: any = document.querySelector("#stepsListContainer");
 		const elementHeight = testListContainer.scrollHeight;
-		testListContainer.scrollBy(0,elementHeight)
-	})
+		testListContainer.scrollBy(0, elementHeight);
+	});
 
-	const stepList = steps.map((step: any) => {
+	const stepList = steps.map((step: any, index: number) => {
 		const { event_type, selectors, value } = step;
 
-		return <Step type={event_type} path={selectors && selectors[0].value} value={event_type === ACTIONS_IN_TEST.SCROLL ? `Performing scroll` : value} />;
+		return (
+			<Step
+				key={index}
+				type={event_type}
+				path={selectors && selectors[0].value}
+				value={event_type === ACTIONS_IN_TEST.SCROLL ? "Performing scroll" : value}
+			/>
+		);
 	});
 
 	return (
 		<div
 			style={{
-				height: 'auto',
+				height: "auto",
 				maxHeight: 240,
 				minHeight: 100,
-				overflowY: 'auto',
-				marginBottom: '0.5rem',
-				scrollBehavior: 'smooth'
+				overflowY: "auto",
+				marginBottom: "0.5rem",
+				scrollBehavior: "smooth",
 			}}
-			id='stepsListContainer'
+			id="stepsListContainer"
 			ref={forwardRef}
 		>
-			<ul style={styles.stepsContainer} className='margin-list-item'>
+			<ul style={styles.stepsContainer} className="margin-list-item">
 				{stepList}
 			</ul>
 		</div>
@@ -78,21 +97,21 @@ function Actions(props: any) {
 	const pageActions = [
 		{
 			id: SETTINGS_ACTIONS.INSPECT_MODE_ON,
-			value: 'Element',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Take screenshot, add assertion',
+			value: "Element",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Take screenshot, add assertion",
 		},
 		{
 			id: SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT,
-			value: 'Screenshot',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Take page screenshot',
+			value: "Screenshot",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Take page screenshot",
 		},
 		{
 			id: SETTINGS_ACTIONS.SHOW_SEO_MODAL,
-			value: 'SEO',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Select Element',
+			value: "SEO",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Select Element",
 		},
 		// {
 		//     id: ACTION_TYPES.CAPTURE_CONSOLE,
@@ -110,37 +129,37 @@ function Actions(props: any) {
 	const elementActions = [
 		{
 			id: SETTINGS_ACTIONS.CLICK_ON_ELEMENT,
-			value: 'Click',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Click on the element',
+			value: "Click",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Click on the element",
 		},
 		{
 			id: SETTINGS_ACTIONS.HOVER_ON_ELEMENT,
-			value: 'Hover',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Add a hover action to element',
+			value: "Hover",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Add a hover action to element",
 		},
 		{
 			id: SETTINGS_ACTIONS.TAKE_ELEMENT_SCREENSHOT,
-			value: 'Screenshot',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Take screenshot of element',
+			value: "Screenshot",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Take screenshot of element",
 		},
 		{
 			id: SETTINGS_ACTIONS.BLACKOUT_ON_ELEMENT,
-			value: 'Blackout',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Blackout element in test results',
+			value: "Blackout",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Blackout element in test results",
 		},
 		{
 			id: SETTINGS_ACTIONS.SHOW_ASSERT_ELEMENT_MODAL,
-			value: 'Assert',
-			icon: chrome.runtime.getURL('icons/action.svg'),
-			desc: 'Setup Assertion for Element',
+			value: "Assert",
+			icon: chrome.runtime.getURL("icons/action.svg"),
+			desc: "Setup Assertion for Element",
 		},
 	];
 
-	function handleElementActionClick(actionType: string, updateState: Function) {
+	function handleElementActionClick(actionType: string, updateState: any) {
 		const cn = iframeRef.current.contentWindow;
 		console.log(actionType);
 
@@ -152,7 +171,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				break;
 			case SETTINGS_ACTIONS.TAKE_PAGE_SCREENSHOT:
@@ -162,7 +181,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				break;
 			case SETTINGS_ACTIONS.SHOW_SEO_MODAL:
@@ -172,7 +191,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				cn.postMessage(
 					{
@@ -180,7 +199,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				updateState(MODALS.SEO);
 				break;
@@ -191,7 +210,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				break;
 			case SETTINGS_ACTIONS.CLICK_ON_ELEMENT:
@@ -202,7 +221,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				break;
 			case SETTINGS_ACTIONS.HOVER_ON_ELEMENT:
@@ -213,7 +232,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				break;
 			case SETTINGS_ACTIONS.SHOW_ASSERT_ELEMENT_MODAL:
@@ -227,7 +246,7 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				break;
 			case SETTINGS_ACTIONS.BLACKOUT_ON_ELEMENT:
@@ -238,14 +257,15 @@ function Actions(props: any) {
 						formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
 						value: true,
 					},
-					'*',
+					"*",
 				);
 				break;
 		}
 	}
 
 	const out = [];
-	const actions = type === ACTION_FORM_TYPE.ELEMENT_ACTIONS ? elementActions : pageActions;
+	const actions =
+		type === ACTION_FORM_TYPE.ELEMENT_ACTIONS ? elementActions : pageActions;
 
 	for (let i = 0; i < actions.length; i++) {
 		out.push(
@@ -267,20 +287,26 @@ function Actions(props: any) {
 		);
 	}
 
-	return <div style={{ ...styles.actionListContainer, marginTop: '2rem' }}>{out}</div>;
+	return (
+		<div style={{ ...styles.actionListContainer, marginTop: "2rem" }}>{out}</div>
+	);
 }
 
 function DesktopBrowser(props: any) {
 	const { isInspectModeOn, isElementModeOn } = props;
-	const selectedDeviceId = getQueryStringParams('device', window.location.href);
-	const urlParams = getQueryStringParams('url', window.location.href);
+	const selectedDeviceId = getQueryStringParams("device", window.location.href);
+	const urlParams = getQueryStringParams("url", window.location.href);
 	const urlEncoded = urlParams ? new URL(urlParams) : null;
-	const url = urlEncoded ? decodeURI(urlEncoded.toString().replace(/^["']/, '').replace(/["']$/, '')) : 'https://google.com';
+	const url = urlEncoded
+		? decodeURI(urlEncoded.toString().replace(/^["']/, "").replace(/["']$/, ""))
+		: "https://google.com";
 	const { forwardRef } = props;
 	const addressInput: any = useRef(null);
 	const [addressValue, setAddressValue] = useState(url);
 
-	const deviceInfoIndex = devices.findIndex((device: any) => device.id === selectedDeviceId);
+	const deviceInfoIndex = devices.findIndex(
+		(device: any) => device.id === selectedDeviceId,
+	);
 
 	const selectedDevice = deviceInfoIndex ? devices[deviceInfoIndex] : devices[8];
 
@@ -291,62 +317,72 @@ function DesktopBrowser(props: any) {
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.keyCode === 13) {
-			setAddressValue(addHttpToURLIfNotThere(addressInput.current.innerText.trim()));
+			setAddressValue(
+				addHttpToURLIfNotThere(addressInput.current.innerText.trim()),
+			);
 		}
 	}
 
 	function handleKeyPress(event: KeyboardEvent) {
 		const cn = forwardRef.current.contentWindow;
-		if (event.key === 'q') {
+		if (event.key === "q") {
 			cn.postMessage(
 				{
 					type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
 					formType: ACTION_FORM_TYPE.PAGE_ACTIONS,
 					value: true,
 				},
-				'*',
+				"*",
 			);
 		}
 	}
 
-	document.body.addEventListener('keypress', handleKeyPress, true);
+	document.body.addEventListener("keypress", handleKeyPress, true);
 
 	function goBack() {
 		const cn = forwardRef.current.contentWindow;
-		cn.postMessage({ type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true }, '*');
+		cn.postMessage(
+			{ type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true },
+			"*",
+		);
 	}
 
 	function goForward() {
 		const cn = forwardRef.current.contentWindow;
-		cn.postMessage({ type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true }, '*');
+		cn.postMessage(
+			{ type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true },
+			"*",
+		);
 	}
 
 	function refreshPage() {
 		const cn = forwardRef.current.contentWindow;
-		cn.postMessage({ type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true }, '*');
+		cn.postMessage({ type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true }, "*");
 	}
 
 	function Addressbar() {
 		const urlEncoded = new URL(addressValue);
-		urlEncoded.searchParams.delete('__crusherAgent__');
+		urlEncoded.searchParams.delete("__crusherAgent__");
 		return (
 			<div style={styles.addressBar}>
 				<div
 					style={{
-						width: '1.75rem',
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-						paddingLeft: '0.5rem',
+						width: "1.75rem",
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						paddingLeft: "0.5rem",
 					}}
 				>
-					<img style={{ width: '0.8rem' }} src={chrome.runtime.getURL('/icons/ssl.svg')} />
+					<img
+						style={{ width: "0.8rem" }}
+						src={chrome.runtime.getURL("/icons/ssl.svg")}
+					/>
 				</div>
 				<div
 					ref={addressInput}
 					style={styles.addressBarInput}
-					//@ts-ignore
-					onKeyDown={handleKeyDown}
+					onKeyDown={handleKeyDown as any}
 					contentEditable={true}
 				>
 					{urlEncoded.toString().substr(0, 50)}
@@ -361,40 +397,43 @@ function DesktopBrowser(props: any) {
 				<div style={styles.browserMainToolbar} id="top-bar">
 					<div
 						style={{
-							display: 'flex',
-							alignItems: 'center',
-							marginLeft: '1.1rem',
+							display: "flex",
+							alignItems: "center",
+							marginLeft: "1.1rem",
 						}}
 					>
 						<NavigateBackIcon onClick={goBack} disabled={false} />
 					</div>
 					<div
 						style={{
-							marginLeft: '1.3rem',
-							display: 'flex',
-							alignItems: 'center',
-							cursor: 'pointer',
+							marginLeft: "1.3rem",
+							display: "flex",
+							alignItems: "center",
+							cursor: "pointer",
 						}}
 					>
 						<NavigateForwardIcon onClick={goForward} disabled={false} />
 					</div>
 					<div
 						style={{
-							marginLeft: '1.5rem',
-							display: 'flex',
-							alignItems: 'center',
-							cursor: 'pointer',
+							marginLeft: "1.5rem",
+							display: "flex",
+							alignItems: "center",
+							cursor: "pointer",
 						}}
 					>
 						<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
 					</div>
 					<Addressbar />
 					<div style={styles.elementToggleIndicatorContainer}>
-						<ToggleSwitchIndicator label='Element mode' enabled={isInspectModeOn} />
+						<ToggleSwitchIndicator label="Element mode" enabled={isInspectModeOn} />
 					</div>
-					<div style={{ ...styles.button, width: 'auto', marginLeft: '1.6rem' }} onClick={props.saveTest}>
+					<div
+						style={{ ...styles.button, width: "auto", marginLeft: "1.6rem" }}
+						onClick={props.saveTest}
+					>
 						<RecordLabelIcon />
-						<span style={{ marginLeft: '1.2rem' }}>Save Test</span>
+						<span style={{ marginLeft: "1.2rem" }}>Save Test</span>
 					</div>
 				</div>
 			</div>
@@ -405,29 +444,37 @@ function DesktopBrowser(props: any) {
 		return (
 			<div style={styles.previewBrowser}>
 				{isElementModeOn && (
-					<div style={{position: 'absolute', left: 0, top: 0, width: "100%", height: "100%", background: 'transparent', zIndex: 99999}}>
-
-					</div>
+					<div
+						style={{
+							position: "absolute",
+							left: 0,
+							top: 0,
+							width: "100%",
+							height: "100%",
+							background: "transparent",
+							zIndex: 99999,
+						}}
+					></div>
 				)}
 				{isMobile && (
 					<div
-						className='smartphone'
+						className="smartphone"
 						style={{
 							width: selectedDevice.width,
 							height: selectedDevice.height,
 						}}
 					>
-						<div className='content' style={{ width: '100%', height: '100%' }}>
+						<div className="content" style={{ width: "100%", height: "100%" }}>
 							<iframe
 								ref={forwardRef}
 								style={{
 									...styles.browserFrame,
-									width: '100%',
-									height: '100%',
+									width: "100%",
+									height: "100%",
 								}}
-								scrolling='auto'
-								sandbox='allow-scripts allow-forms allow-same-origin'
-								id='screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634'
+								scrolling="auto"
+								sandbox="allow-scripts allow-forms allow-same-origin"
+								id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
 								title={selectedDevice.name}
 								src={addressValue}
 							/>
@@ -442,9 +489,9 @@ function DesktopBrowser(props: any) {
 							width: selectedDevice.width,
 							height: selectedDevice.height,
 						}}
-						scrolling='auto'
-						id='screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634'
-						sandbox='allow-scripts allow-forms allow-same-origin'
+						scrolling="auto"
+						id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+						sandbox="allow-scripts allow-forms allow-same-origin"
 						title={selectedDevice.name}
 						src={addressValue}
 					/>
@@ -465,19 +512,19 @@ function DesktopBrowser(props: any) {
 
 let messageListenerCallback: any = null;
 
-window.addEventListener('message', (event) => {
+window.addEventListener("message", (event) => {
 	if (messageListenerCallback) {
 		messageListenerCallback(event);
 	}
 });
 
 function App() {
-	const selectedDeviceId = getQueryStringParams('device', window.location.href);
+	const selectedDeviceId = getQueryStringParams("device", window.location.href);
 
 	const [steps, setSteps] = useState([
 		{
 			event_type: ACTIONS_IN_TEST.SET_DEVICE,
-			selectors: [{ value: 'body', uniquenessScore: 1, type: 'body' }],
+			selectors: [{ value: "body", uniquenessScore: 1, type: "body" }],
 			value: selectedDeviceId as any,
 		},
 	]);
@@ -516,7 +563,7 @@ function App() {
 			{
 				event_type: ACTIONS_IN_TEST.VALIDATE_SEO,
 				value: JSON.stringify(options),
-				selectors: ['body'],
+				selectors: ["body"],
 			},
 		] as any);
 		setLastStepTime(Date.now());
@@ -547,11 +594,16 @@ function App() {
 				setSteps([...getSteps(), { event_type: eventType, value, selectors }]);
 				setLastStepTime(Date.now());
 			} else {
-				const navigateEventExist = steps.find((step) => step.event_type === ACTIONS_IN_TEST.NAVIGATE_URL);
+				const navigateEventExist = steps.find(
+					(step) => step.event_type === ACTIONS_IN_TEST.NAVIGATE_URL,
+				);
 
-				if (navigateEventExist && eventType === ACTIONS_IN_TEST.NAVIGATE_URL) {
-				} else {
-					if (lastStep.event_type === ACTIONS_IN_TEST.INPUT && eventType === ACTIONS_IN_TEST.INPUT && lastStep.selectors[0].value === selectors[0].value) {
+				if (!(navigateEventExist && eventType === ACTIONS_IN_TEST.NAVIGATE_URL)) {
+					if (
+						lastStep.event_type === ACTIONS_IN_TEST.INPUT &&
+						eventType === ACTIONS_IN_TEST.INPUT &&
+						lastStep.selectors[0].value === selectors[0].value
+					) {
 						steps[steps.length - 1].value = value;
 						setSteps(steps);
 						setLastStepTime(Date.now());
@@ -569,7 +621,10 @@ function App() {
 						setLastStepTime(Date.now());
 					} else {
 						if (eventType === ACTIONS_IN_TEST.SCROLL) {
-							setSteps([...getSteps(), { event_type: eventType, value: [value], selectors }]);
+							setSteps([
+								...getSteps(),
+								{ event_type: eventType, value: [value], selectors },
+							]);
 							setLastStepTime(Date.now());
 						} else {
 							setSteps([...getSteps(), { event_type: eventType, value, selectors }]);
@@ -580,6 +635,16 @@ function App() {
 			}
 		} else if (type) {
 			const cn = iframeRef.current.contentWindow;
+
+			const iframeURL = getQueryStringParams(
+				"url",
+				window.location.href,
+			) as string;
+			const crusherAgent = getQueryStringParams("__crusherAgent__", iframeURL);
+			const userAgent = userAgents.find(
+				(agent) => agent.name === (crusherAgent || userAgents[6].value),
+			);
+
 			switch (type) {
 				case SETTINGS_ACTIONS.INSPECT_MODE_ON:
 					setIsInspectModeOn(true);
@@ -602,17 +667,21 @@ function App() {
 					cn.postMessage(
 						{
 							type: META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE,
-							value: isUsingElementInspector ? START_INSPECTING_RECORDING_MODE : isRecording ? START_NON_INSPECTING_RECORDING_MODE : NOT_RECORDING,
+							value: isUsingElementInspector
+								? START_INSPECTING_RECORDING_MODE
+								: isRecording
+								? START_NON_INSPECTING_RECORDING_MODE
+								: NOT_RECORDING,
 							isFromParent: true,
 						},
-						'*',
+						"*",
 					);
 					break;
 				case META_ACTIONS.FETCH_USER_AGENT:
-					const iframeURL = getQueryStringParams('url', window.location.href) as string;
-					const crusherAgent = getQueryStringParams('__crusherAgent__', iframeURL);
-					const userAgent = userAgents.find((agent) => agent.name === (crusherAgent || userAgents[6].value));
-					cn.postMessage({ type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent }, '*');
+					cn.postMessage(
+						{ type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent },
+						"*",
+					);
 					break;
 				case META_ACTIONS.FETCH_SEO_META_RESPONSE:
 					setSeoMeta({ title: value.title, metaTags: value.metaTags });
@@ -621,20 +690,33 @@ function App() {
 		}
 	};
 
-
 	function saveTest() {
-		sendPostDataWithForm(resolveToBackendPath('/test/goToEditor'), {
+		sendPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
 			events: escape(JSON.stringify(steps)),
 			totalTime: lastStepTime - startingTime,
 		});
 	}
 
-	// @ts-ignore
-	const propsToAttachToRightSection = { iframeRef,setIsShowingElementForm, isShowingElementForm}
+	const propsToAttachToRightSection = {
+		iframeRef,
+		setIsShowingElementForm,
+		isShowingElementForm,
+	};
 	return (
 		<Window style={styles.container}>
-			<DesktopBrowser isInspectModeOn={isInspectModeOn} isElementModeOn={isElementModeOn} saveTest={saveTest} forwardRef={iframeRef} />
-			<RightSection state={state} steps={steps} actionsScrollRef={actionsScrollRef} updateState={updateState} {...propsToAttachToRightSection}/>
+			<DesktopBrowser
+				isInspectModeOn={isInspectModeOn}
+				isElementModeOn={isElementModeOn}
+				saveTest={saveTest}
+				forwardRef={iframeRef}
+			/>
+			<RightSection
+				state={state}
+				steps={steps}
+				actionsScrollRef={actionsScrollRef}
+				updateState={updateState}
+				{...propsToAttachToRightSection}
+			/>
 			<style>
 				{`
                     html, body{
@@ -730,8 +812,11 @@ function App() {
                     }
                 `}
 			</style>
-			<link rel='stylesheet' href={chrome.runtime.getURL('/styles/devices.min.css')} />
-			<link rel='stylesheet' href={chrome.runtime.getURL('/styles/fonts.css')} />
+			<link
+				rel="stylesheet"
+				href={chrome.runtime.getURL("/styles/devices.min.css")}
+			/>
+			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")} />
 			<AssertModal
 				attributes={currentElementAttributes}
 				seoMeta={seoMeta}
@@ -752,7 +837,12 @@ function App() {
 }
 
 function ActionContainer(props: any) {
-	const {updateState, iframeRef,setIsShowingElementForm, isShowingElementForm} = props;
+	const {
+		updateState,
+		iframeRef,
+		setIsShowingElementForm,
+		isShowingElementForm,
+	} = props;
 
 	const isElementSelected = isShowingElementForm;
 	return isElementSelected ? (
@@ -773,44 +863,61 @@ function ActionContainer(props: any) {
 				<div style={styles.flexRowHeading}>Select Action</div>
 				{/* <div style={styles.flexRowRightItem}>Use template</div> */}
 			</div>
-			<Actions type={ACTION_FORM_TYPE.PAGE_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm} iframeRef={iframeRef} updateState={updateState} />
+			<Actions
+				type={ACTION_FORM_TYPE.PAGE_ACTIONS}
+				isShowingElementFormCallback={setIsShowingElementForm}
+				iframeRef={iframeRef}
+				updateState={updateState}
+			/>
 		</>
 	);
 }
 
-
-
-function RightSection({state, steps,updateState,actionsScrollRef,  iframeRef,setIsShowingElementForm, isShowingElementForm}: any) {
+function RightSection({
+	state,
+	steps,
+	updateState,
+	actionsScrollRef,
+	iframeRef,
+	setIsShowingElementForm,
+	isShowingElementForm,
+}: any) {
 	return (
 		<div style={{ ...styles.sidebar }}>
 			<div style={styles.tipContainer}>
 				<div style={styles.bulbIcon}>
-					<img src='/icons/bulb.svg' width={31} />
+					<img src="/icons/bulb.svg" width={31} />
 				</div>
 				<div style={styles.tipContent}>
 					<div style={styles.tipTitle}>Tip of the session</div>
 					<div style={styles.tipDesc}>Click on play to replay selected test</div>
 				</div>
 			</div>
-			<div style={{borderTopLeftRadius: 12, background: '#14181F',}}>
+			<div style={{ borderTopLeftRadius: 12, background: "#14181F" }}>
 				<div
 					style={{
-
-						padding: '0rem 1.25rem',
-						paddingBottom: '0rem',
-						borderTopLeftRadius: 12
+						padding: "0rem 1.25rem",
+						paddingBottom: "0rem",
+						borderTopLeftRadius: 12,
 					}}
 				>
 					<ActionStepsList forwardRef={actionsScrollRef} steps={steps} />
 				</div>
 				<div style={styles.actionContainer}>
-					{state !== MODALS.SEO && <ActionContainer state={state} updateState={updateState} iframeRef={iframeRef} isShowingElementForm={isShowingElementForm} setIsShowingElementForm={setIsShowingElementForm}/>}
+					{state !== MODALS.SEO && (
+						<ActionContainer
+							state={state}
+							updateState={updateState}
+							iframeRef={iframeRef}
+							isShowingElementForm={isShowingElementForm}
+							setIsShowingElementForm={setIsShowingElementForm}
+						/>
+					)}
 				</div>
 			</div>
 		</div>
 	);
 }
-
 
 const Window = styled.div`
 	background: red;
@@ -819,357 +926,356 @@ const Window = styled.div`
 
 const styles: { [key: string]: React.CSSProperties } = {
 	container: {
-		display: 'flex',
-		height: 'auto',
-		background: 'rgb(40, 40, 40)'
+		display: "flex",
+		height: "auto",
+		background: "rgb(40, 40, 40)",
 	},
 	mainContainer: {
 		flex: 1,
-		width: '70%',
-		maxHeight: '100vh',
-		overflow: 'auto',
+		width: "70%",
+		maxHeight: "100vh",
+		overflow: "auto",
 	},
 	sidebar: {
-		display: 'flex',
-		flexDirection: 'column',
-		position: 'fixed',
-		bottom: '0',
-		right: '0%',
-		marginLeft: 'auto',
-		maxHeight: '85vh',
-		maxWidth: '22rem',
+		display: "flex",
+		flexDirection: "column",
+		position: "fixed",
+		bottom: "0",
+		right: "0%",
+		marginLeft: "auto",
+		maxHeight: "85vh",
+		maxWidth: "22rem",
 		borderTopLeftRadius: 20,
-		width: '25vw',
+		width: "25vw",
 	},
 	centerItemsVerticalFlex: {
-		display: 'flex',
-		alignItems: 'center',
+		display: "flex",
+		alignItems: "center",
 	},
 	tipContainer: {
-		display: 'flex',
-		flexDirection: 'row',
-		background: 'rgb(1, 1, 1)',
-		borderRadius: '0.62rem 0 0 0',
-		padding: '0.88rem 1.63rem',
+		display: "flex",
+		flexDirection: "row",
+		background: "rgb(1, 1, 1)",
+		borderRadius: "0.62rem 0 0 0",
+		padding: "0.88rem 1.63rem",
 	},
 	bulbIcon: {},
 	tipContent: {
-		color: '#FFFFFF',
-		fontFamily: 'DM Sans',
-		marginLeft: '0.898rem',
+		color: "#FFFFFF",
+		fontFamily: "DM Sans",
+		marginLeft: "0.898rem",
 	},
 	tipTitle: {
-		fontSize: '0.66rem',
-		fontWeight: 'bold',
+		fontSize: "0.66rem",
+		fontWeight: "bold",
 	},
 	tipDesc: {
-		fontSize: '0.64rem',
-		marginTop: '0.1rem',
+		fontSize: "0.64rem",
+		marginTop: "0.1rem",
 		fontWeight: 500,
 	},
 	sectionHeading: {
-		fontFamily: 'DM Sans',
-		fontSize: '1rem',
+		fontFamily: "DM Sans",
+		fontSize: "1rem",
 		fontWeight: 700,
-		marginBottom: '0',
-		textAlign: 'center',
-		color: '#fff',
+		marginBottom: "0",
+		textAlign: "center",
+		color: "#fff",
 	},
 	flexRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		fontFamily: 'DM Sans',
-		fontSize: '0.875rem',
-		color: '#fff',
+		display: "flex",
+		flexDirection: "row",
+		fontFamily: "DM Sans",
+		fontSize: "0.875rem",
+		color: "#fff",
 	},
 	flexRowHeading: {
-		color: '#fff',
+		color: "#fff",
 		fontWeight: 700,
 	},
 	flexRowRightItem: {
-		marginLeft: 'auto',
-		color: '#fff',
+		marginLeft: "auto",
+		color: "#fff",
 		fontWeight: 700,
-		cursor: 'pointer',
+		cursor: "pointer",
 	},
 	actionContainer: {
-		padding: '1.1rem 1.25rem',
-		position: 'relative',
+		padding: "1.1rem 1.25rem",
+		position: "relative",
 		background: "#1C1F26",
 		marginTop: "-0.55rem",
 		borderTopLeftRadius: "12px",
-		overflow: 'auto'
+		overflow: "auto",
 	},
 	stepsContainer: {
-		listStyle: 'none',
+		listStyle: "none",
 		padding: 0,
 	},
 	step: {
-		display: 'flex',
-		cursor: 'pointer',
-		fontFamily: 'DM Sans',
-		fontStyle: 'normal',
-		background: '#1C1F26',
-		borderRadius: '0.25rem',
-		padding: '0.6rem 0',
-		overflow: 'hidden',
+		display: "flex",
+		cursor: "pointer",
+		fontFamily: "DM Sans",
+		fontStyle: "normal",
+		background: "#1C1F26",
+		borderRadius: "0.25rem",
+		padding: "0.6rem 0",
+		overflow: "hidden",
 	},
 	stepImage: {
-		padding: '0 0.9rem',
+		padding: "0 0.9rem",
 	},
 	stepTextContainer: {},
 	stepAction: {
-		fontWeight: 'bold',
-		color: '#8C8C8C',
-		fontSize: '0.8rem',
+		fontWeight: "bold",
+		color: "#8C8C8C",
+		fontSize: "0.8rem",
 	},
 	stepSelector: {
-		marginTop: '0.25rem',
-		color: '#8C8C8C',
-		fontSize: '0.6rem',
-		whiteSpace: 'nowrap',
+		marginTop: "0.25rem",
+		color: "#8C8C8C",
+		fontSize: "0.6rem",
+		whiteSpace: "nowrap",
 	},
 	browser: {
-		background: '#010101',
-		minHeight: '100vh',
-		overflow: 'hidden',
+		background: "#010101",
+		minHeight: "100vh",
+		overflow: "hidden",
 	},
 	browserToolbar: {
-		display: 'flex',
-		flexDirection: 'column',
+		display: "flex",
+		flexDirection: "column",
 	},
 	browserMainToolbar: {
-		background: '#14181F',
-		display: 'flex',
-		padding: '0.73rem 2rem',
+		background: "#14181F",
+		display: "flex",
+		padding: "0.73rem 2rem",
 	},
 	addressBar: {
-		width: '33.9%',
-		maxWidth: '25rem',
-		padding: '0 0.1rem',
-		background: '#1C1F26',
-		overflow: 'hidden',
-		display: 'flex',
-		alignItems: 'center',
-		color: '#fff',
-		borderRadius: '0.1rem',
-		marginLeft: '1.6rem',
+		width: "33.9%",
+		maxWidth: "25rem",
+		padding: "0 0.1rem",
+		background: "#1C1F26",
+		overflow: "hidden",
+		display: "flex",
+		alignItems: "center",
+		color: "#fff",
+		borderRadius: "0.1rem",
+		marginLeft: "1.6rem",
 	},
 	addressBarInput: {
 		flex: 1,
-		fontSize: '0.77rem',
-		outline: 'none',
-		display: 'flex',
-		padding: '0.6rem 0.5rem',
-		alignItems: 'center',
+		fontSize: "0.77rem",
+		outline: "none",
+		display: "flex",
+		padding: "0.6rem 0.5rem",
+		alignItems: "center",
 	},
 	recordingStatus: {
-		background: '#1E2027',
-		color: '#64707C',
-		lineHeight: '1.15rem',
-		fontSize: '0.6rem',
-		display: 'flex',
-		alignItems: 'center',
+		background: "#1E2027",
+		color: "#64707C",
+		lineHeight: "1.15rem",
+		fontSize: "0.6rem",
+		display: "flex",
+		alignItems: "center",
 		fontWeight: 500,
-		fontFamily: 'DM Sans',
-		padding: '0 0.8rem',
-
+		fontFamily: "DM Sans",
+		padding: "0 0.8rem",
 	},
 	previewBrowser: {
 		flex: 1,
-		maxWidth: '75vw',
-		display: 'flex',
-		justifyContent: 'center',
+		maxWidth: "75vw",
+		display: "flex",
+		justifyContent: "center",
 
-		overflowY: 'auto',
-		background: '#010101',
-		position: 'relative',
-		alignItems: 'center',
-		height:  `calc(100vh - 2.58rem)`
+		overflowY: "auto",
+		background: "#010101",
+		position: "relative",
+		alignItems: "center",
+		height: "calc(100vh - 2.58rem)",
 	},
 	browserFrame: {
-		border: 'none',
-		display: 'block',
+		border: "none",
+		display: "block",
 		borderRadius: 2,
 		width: 1480,
-		maxWidth: '100%',
+		maxWidth: "100%",
 		height: 800,
-		backgroundColor: '#fff',
+		backgroundColor: "#fff",
 	},
 	elementToggleIndicatorContainer: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginLeft: 'auto',
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		marginLeft: "auto",
 	},
 	button: {
-		background: '#5B76F7',
+		background: "#5B76F7",
 		borderRadius: 4,
 		fontWeight: 500,
-		fontSize: '0.825rem',
-		color: '#fff',
-		fontFamily: 'DM Sans',
-		padding: '0.5rem 0.95rem',
-		display: 'flex',
-		alignItems: 'center',
-		cursor: 'pointer',
+		fontSize: "0.825rem",
+		color: "#fff",
+		fontFamily: "DM Sans",
+		padding: "0.5rem 0.95rem",
+		display: "flex",
+		alignItems: "center",
+		cursor: "pointer",
 	},
 	actionListContainer: {
-		display: 'flex',
-		flexDirection: 'column',
+		display: "flex",
+		flexDirection: "column",
 	},
 	actionRow: {
-		display: 'flex',
-		justifyContent: 'space-between',
-		marginBottom: '1rem',
+		display: "flex",
+		justifyContent: "space-between",
+		marginBottom: "1rem",
 	},
 	actionItem: {
-		padding: '0.8rem 0.8rem',
-		fontFamily: 'DM Sans',
-		fontWeight: 'bold',
-		fontSize: '0.8rem',
-		color: '#fff',
-		background: '#15181E',
-		borderRadius: '0.2rem',
-		width: '100%',
-		display: 'flex',
-		cursor: 'pointer',
+		padding: "0.8rem 0.8rem",
+		fontFamily: "DM Sans",
+		fontWeight: "bold",
+		fontSize: "0.8rem",
+		color: "#fff",
+		background: "#15181E",
+		borderRadius: "0.2rem",
+		width: "100%",
+		display: "flex",
+		cursor: "pointer",
 	},
 	actionImage: {},
 	actionContent: {
-		marginLeft: '1rem',
-		display: 'flex',
-		flexDirection: 'column',
+		marginLeft: "1rem",
+		display: "flex",
+		flexDirection: "column",
 	},
 	actionText: {
-		fontSize: '0.9rem',
-		fontFamily: 'DM Sans',
+		fontSize: "0.9rem",
+		fontFamily: "DM Sans",
 	},
 	actionDesc: {
-		fontSize: '0.82rem',
-		fontFamily: 'DM Sans',
+		fontSize: "0.82rem",
+		fontFamily: "DM Sans",
 		fontWeight: 500,
-		marginTop: '0.15rem',
+		marginTop: "0.15rem",
 	},
 	oddItem: {
-		marginRight: '1rem',
+		marginRight: "1rem",
 	},
 	goBack: {
-		fontFamily: 'DM Sans',
-		fontStyle: 'normal',
-		fontSize: '0.81rem',
-		color: '#fff',
-		position: 'absolute',
-		top: '5%',
-		left: '2rem',
-		cursor: 'pointer',
+		fontFamily: "DM Sans",
+		fontStyle: "normal",
+		fontSize: "0.81rem",
+		color: "#fff",
+		position: "absolute",
+		top: "5%",
+		left: "2rem",
+		cursor: "pointer",
 	},
 	innerForm: {},
 	innerFormHeader: {
-		display: 'flex',
-		flexDirection: 'row',
-		position: 'relative',
+		display: "flex",
+		flexDirection: "row",
+		position: "relative",
 	},
 	innerFormHeaderIconContainer: {},
 	innerFormHeaderIcon: {},
 	innerFormHeaderContent: {
 		flex: 1,
-		marginLeft: '1.41rem',
-		color: '#fff',
-		fontFamily: 'DM Sans',
-		fontStyle: 'normal',
+		marginLeft: "1.41rem",
+		color: "#fff",
+		fontFamily: "DM Sans",
+		fontStyle: "normal",
 	},
 	innerFormHeaderTitle: {
-		fontFamily: 'DM Sans',
-		fontStyle: 'normal',
-		fontWeight: 'bold',
-		color: '#fff',
-		fontSize: '0.9rem',
+		fontFamily: "DM Sans",
+		fontStyle: "normal",
+		fontWeight: "bold",
+		color: "#fff",
+		fontSize: "0.9rem",
 	},
 	innerFormHeaderDesc: {
-		marginTop: '0.45rem',
-		fontSize: '0.81rem',
+		marginTop: "0.45rem",
+		fontSize: "0.81rem",
 	},
 	innerFormHelp: {
-		display: 'flex',
-		alignItems: 'top',
-		position: 'absolute',
-		top: '-1.2rem',
-		right: '0',
-		cursor: 'pointer',
+		display: "flex",
+		alignItems: "top",
+		position: "absolute",
+		top: "-1.2rem",
+		right: "0",
+		cursor: "pointer",
 	},
 	innerFormHelpIcon: {},
 	innerFormHelpLink: {
-		paddingTop: '0.4rem',
-		marginLeft: '0.2rem',
-		fontFamily: 'DM Sans',
-		fontStyle: 'normal',
-		fontWeight: 'bold',
-		color: '#fff',
-		textDecorationLine: 'underline',
-		fontSize: '0.82rem',
+		paddingTop: "0.4rem",
+		marginLeft: "0.2rem",
+		fontFamily: "DM Sans",
+		fontStyle: "normal",
+		fontWeight: "bold",
+		color: "#fff",
+		textDecorationLine: "underline",
+		fontSize: "0.82rem",
 	},
 	inputTableGrid: {
-		marginTop: '2rem',
-		width: '100%',
-		textAlign: 'left',
-		borderSpacing: '0.95rem',
-		maxHeight: '47vh',
-		display: 'inline-block',
-		overflowY: 'auto',
+		marginTop: "2rem",
+		width: "100%",
+		textAlign: "left",
+		borderSpacing: "0.95rem",
+		maxHeight: "47vh",
+		display: "inline-block",
+		overflowY: "auto",
 	},
 	inputTableGridItem: {
-		display: 'table-row',
-		gridTemplateColumns: 'auto auto auto',
+		display: "table-row",
+		gridTemplateColumns: "auto auto auto",
 	},
 	inputTableGridItemLabel: {
-		fontFamily: 'DM Sans',
-		minWidth: '7rem',
-		fontStyle: 'normal',
-		fontSize: '0.82rem',
-		color: '#fff',
-		display: 'flex',
+		fontFamily: "DM Sans",
+		minWidth: "7rem",
+		fontStyle: "normal",
+		fontSize: "0.82rem",
+		color: "#fff",
+		display: "flex",
 	},
 	inputTableGridOption: {
-		width: '50%',
-		textAlign: 'right',
+		width: "50%",
+		textAlign: "right",
 	},
 	inputTableGridOptionValue: {
-		width: '50%',
+		width: "50%",
 
-		textAlign: 'right',
+		textAlign: "right",
 	},
 	inputTableGridOptionValueInput: {
-		padding: '0.4rem 0.7rem',
-		borderRadius: '0.25rem',
-		width: '100%',
-		maxWidth: '10',
+		padding: "0.4rem 0.7rem",
+		borderRadius: "0.25rem",
+		width: "100%",
+		maxWidth: "10",
 		fontSize: 18,
 	},
 	formBottomRow: {
-		display: 'flex',
-		marginTop: '1.4rem',
+		display: "flex",
+		marginTop: "1.4rem",
 	},
 	formButtonAdvance: {
 		fontWeight: 500,
-		cursor: 'pointer',
-		fontSize: '0.82rem',
-		color: '#5B76F7',
-		textDecorationLine: 'underline',
+		cursor: "pointer",
+		fontSize: "0.82rem",
+		color: "#5B76F7",
+		textDecorationLine: "underline",
 	},
 	select: {
-		padding: '0.4rem 0.7rem',
-		borderRadius: '0.25rem',
-		width: '100%',
-		maxWidth: '10',
+		padding: "0.4rem 0.7rem",
+		borderRadius: "0.25rem",
+		width: "100%",
+		maxWidth: "10",
 		fontSize: 18,
 	},
 	input: {
-		padding: '0.4rem 0.7rem',
-		borderRadius: '0.25rem',
-		width: '100%',
-		maxWidth: '10',
+		padding: "0.4rem 0.7rem",
+		borderRadius: "0.25rem",
+		width: "100%",
+		maxWidth: "10",
 		fontSize: 18,
 	},
 };

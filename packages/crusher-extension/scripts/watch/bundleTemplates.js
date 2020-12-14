@@ -1,3 +1,3 @@
-const tasks = require('../tasks');
+const tasks = require("../tasks");
 
-tasks.bundleTemplates('dev');
+tasks.bundleTemplates("dev");

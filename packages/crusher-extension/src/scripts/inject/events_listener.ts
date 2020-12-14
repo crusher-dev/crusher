@@ -1,25 +1,28 @@
-import { META_ACTIONS, SETTINGS_ACTIONS } from '../../constants/actionTypes';
-import { ACTIONS_IN_TEST } from '../../../../crusher-shared/constants/recordedActions';
-import EventRecording from './ui/eventRecording';
-import LocalFrameStorage from '../../utils/frameStorage';
-import { START_INSPECTING_RECORDING_MODE, START_NON_INSPECTING_RECORDING_MODE, NOT_RECORDING } from '../../constants';
-import { ACTION_FORM_TYPE } from '../../ui/testRecorder/app';
+import { META_ACTIONS, SETTINGS_ACTIONS } from "../../constants/actionTypes";
+import { ACTIONS_IN_TEST } from "../../../../crusher-shared/constants/recordedActions";
+import EventRecording from "./ui/eventRecording";
+import {
+	START_INSPECTING_RECORDING_MODE,
+	START_NON_INSPECTING_RECORDING_MODE,
+	NOT_RECORDING,
+} from "../../constants";
+import { ACTION_FORM_TYPE } from "../../ui/testRecorder/app";
 
 if (top !== self) {
-	fetch(chrome.runtime.getURL('iframe_inject.html') /* , options */)
+	fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
 		.then((response) => response.text())
 		.then((html) => {
-			const htmlWrapper = document.createElement('div');
+			const htmlWrapper = document.createElement("div");
 			htmlWrapper.innerHTML = html;
 			document.body.appendChild(htmlWrapper);
 
-			const linkRel = document.createElement('link');
-			linkRel.setAttribute('rel', 'stylesheet');
-			linkRel.setAttribute('href', chrome.runtime.getURL('styles/overlay.css'));
+			const linkRel = document.createElement("link");
+			linkRel.setAttribute("rel", "stylesheet");
+			linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
 			document.head.appendChild(linkRel);
 		})
 		.catch((err) => {
-			console.debug('Something went wrong while appending crusher content script');
+			console.debug("Something went wrong while appending crusher content script");
 			console.error(err);
 		});
 
@@ -28,14 +31,13 @@ if (top !== self) {
 	window.top.postMessage(
 		{
 			type: META_ACTIONS.FETCH_RECORDING_STATUS,
-			// @ts-ignore
-			frameId: LocalFrameStorage.get(),
+			frameId: null,
 		},
-		'*',
+		"*",
 	);
 
 	window.addEventListener(
-		'message',
+		"message",
 		(message) => {
 			const { type, value, formType } = message.data;
 			if (!!type === false) {
@@ -57,27 +59,32 @@ if (top !== self) {
 						recordingOverlay.saveConsoleLogsAtThisMoment();
 						break;
 					case META_ACTIONS.FETCH_SEO_META:
-						//@ts-ignore
-						const metaTagsArray: any = [...document.querySelectorAll('meta')];
-						const metaTagsValuesMap: any = metaTagsArray.reduce((prev: any, current: HTMLMetaElement) => {
-							const name = current.getAttribute('name');
-							if (!name) {
-								return prev;
-							}
-							return { ...prev, [name]: { name, value: current.content } };
-						}, {});
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						// eslint-disable-next-line no-case-declarations
+						const metaTagsArray: any = [...document.querySelectorAll("meta")];
+						// eslint-disable-next-line no-case-declarations
+						const metaTagsValuesMap: any = metaTagsArray.reduce(
+							(prev: any, current: HTMLMetaElement) => {
+								const name = current.getAttribute("name");
+								if (!name) {
+									return prev;
+								}
+								return { ...prev, [name]: { name, value: current.content } };
+							},
+							{},
+						);
 						alert(JSON.stringify(metaTagsValuesMap));
 						window.top.postMessage(
 							{
 								type: META_ACTIONS.FETCH_SEO_META_RESPONSE,
-								// @ts-ignore
-								frameId: LocalFrameStorage.get(),
+								frameId: null,
 								value: {
 									title: document.title,
 									metaTags: metaTagsValuesMap,
 								},
 							},
-							'*',
+							"*",
 						);
 						break;
 				}
@@ -87,6 +94,8 @@ if (top !== self) {
 					recordingOverlay.handleSelectedActionFromEventsList({ action: type });
 				}
 			} else {
+				const { isFromParent } = message.data;
+
 				switch (type) {
 					case SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL:
 						window.history.back();
@@ -98,11 +107,13 @@ if (top !== self) {
 						window.location.reload();
 						break;
 					case META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE:
-						const { isFromParent } = message.data;
 						if (!isFromParent) {
 							break;
 						}
-						if (value === START_NON_INSPECTING_RECORDING_MODE || value === NOT_RECORDING) {
+						if (
+							value === START_NON_INSPECTING_RECORDING_MODE ||
+							value === NOT_RECORDING
+						) {
 							recordingOverlay.boot(true);
 						} else if (value === START_INSPECTING_RECORDING_MODE) {
 							recordingOverlay.boot();
@@ -116,7 +127,7 @@ if (top !== self) {
 	);
 
 	document.addEventListener(
-		'keydown',
+		"keydown",
 		(event: KeyboardEvent) => {
 			if (event.repeat) {
 				return;
@@ -130,7 +141,7 @@ if (top !== self) {
 	);
 
 	document.addEventListener(
-		'keyup',
+		"keyup",
 		() => {
 			recordingOverlay.stopInspectorIfMoving();
 		},

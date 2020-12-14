@@ -1,6 +1,5 @@
-import EventRecording from './ui/eventRecording';
-import FrameStorage from '../../utils/frameStorage';
-import { getSelectors } from '../../utils/selector';
+import EventRecording from "./ui/eventRecording";
+import { getSelectors } from "../../utils/selector";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -11,7 +10,7 @@ export default class EventsController {
 
 	simulateClickOnElement(element: any) {
 		try {
-			const event = new MouseEvent('click', {
+			const event = new MouseEvent("click", {
 				view: window,
 				bubbles: true,
 				cancelable: false,
@@ -28,26 +27,30 @@ export default class EventsController {
 
 	simulateHoverOnElement(el: any) {
 		try {
-			const event = new Event('MS');
-			event.initEvent('mouseover', true, true);
+			const event = new Event("MS");
+			event.initEvent("mouseover", true, true);
 			el.dispatchEvent(event);
 		} catch (err) {
 			console.error(el, err);
 		}
 	}
 
-	saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = '', callback?: any) {
+	saveCapturedEventInBackground(
+		event_type: string,
+		capturedTarget: any,
+		value: any = "",
+		callback?: any,
+	) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
 
 		window.top.postMessage(
 			{
 				eventType: event_type,
-				// @ts-ignore
-				frameId: FrameStorage.get(),
+				frameId: null,
 				value,
 				selectors,
 			},
-			'*',
+			"*",
 		);
 	}
 }

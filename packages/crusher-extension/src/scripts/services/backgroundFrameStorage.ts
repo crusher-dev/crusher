@@ -19,6 +19,7 @@ export default {
 
 	has(tabId: number, frameId: number) {
 		const id = this.makeFrameId(tabId, frameId);
+		// eslint-disable-next-line no-prototype-builtins
 		return this.frames.hasOwnProperty(id) && this.frames[id] !== null;
 	},
 };

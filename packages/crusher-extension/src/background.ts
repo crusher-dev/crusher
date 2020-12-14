@@ -1,15 +1,14 @@
-import tabStorage from './utils/tabStorage';
-import FrameStorage from './utils/frameStorage';
-import { getQueryStringParams, isOfCrusherExtension } from '../../crusher-shared/utils/url';
-
-import userAgents from '../../crusher-shared/constants/userAgents';
+import TabStorage from "./utils/tabStorage";
+import FrameStorage from "./utils/frameStorage";
+import UserAgents from "../../crusher-shared/constants/userAgents";
 import TabChangeInfo = chrome.tabs.TabChangeInfo;
 import Tab = chrome.tabs.Tab;
 import WebRequestDetails = chrome.webRequest.WebRequestDetails;
 import WebRequestFullDetails = chrome.webRequest.WebRequestFullDetails;
 import WebResponseHeadersDetails = chrome.webRequest.WebResponseHeadersDetails;
 import HttpHeader = chrome.webRequest.HttpHeader;
-import { UserAgent } from '../../crusher-shared/types/userAgent';
+import { UserAgent } from "../../crusher-shared/types/userAgent";
+import { AdvancedURL } from "./utils/url";
 
 class ChromeEventsListener {
 	state: any;
@@ -20,37 +19,52 @@ class ChromeEventsListener {
 		this.onBeforeRequest = this.onBeforeRequest.bind(this);
 		this.onHeadersReceived = this.onHeadersReceived.bind(this);
 		this.onBeforeSendHeaders = this.onBeforeSendHeaders.bind(this);
-		this.onRuntimeMessage = this.onRuntimeMessage.bind(this);
 		this.onBeforeNavigation = this.onBeforeNavigation.bind(this);
 	}
 
-	isAllowedToPerformAction(tab: Tab) {
+	isRegisteredAsCrusherWindow(tabId: number) {
+		const tab = TabStorage.get(tabId);
+
 		if (!tab || !tab.id) {
 			return false;
 		}
 
-		return tabStorage.isExtension(tab.id);
-	}
-
-	onTabUpdated(tabId: number, changeInfo: TabChangeInfo, tab: Tab) {
-		if (tab.url && isOfCrusherExtension(tab.url)) {
-			const iframeURL = getQueryStringParams('url', tab.url) as string;
-			const crusherAgent = getQueryStringParams('__crusherAgent__', iframeURL);
-			const userAgent: UserAgent | undefined = userAgents.find((agent) => agent.name === (crusherAgent || userAgents[6].value));
-
-			tabStorage.set(tabId, tab, userAgent ? userAgent.value : userAgents[0].value);
-		} else {
-			tabStorage.remove(tabId);
-		}
+		return TabStorage.isExtension(tab.id);
 	}
 
 	onTabRemoved(tabId: number) {
-		if (!tabStorage.has(tabId)) {
+		if (TabStorage.get(tabId)) {
+			TabStorage.remove(tabId);
+		}
+	}
+
+	onTabUpdated(tabId: number, changeInfo: TabChangeInfo, tab: Tab) {
+		if (tab.url && AdvancedURL.checkIfCrusherExtension(tab.url)) {
+			// @TODO: In case `iframeURL` is empty, show a modal asking for target website url.
+			const iframeURL: string = AdvancedURL.getParameterByName(
+				"url",
+				tab.url,
+			) as string;
+
+			const crusherAgent = AdvancedURL.getParameterByName(
+				"__crusherAgent__",
+				iframeURL,
+			);
+
+			const selectedUserAgent: UserAgent | undefined = UserAgents.find(
+				(agent) => agent.name === (crusherAgent || UserAgents[6].value),
+			);
+
+			TabStorage.set(
+				tabId,
+				tab,
+				selectedUserAgent ? selectedUserAgent.value : UserAgents[0].value,
+			);
 		}
 	}
 
 	onBeforeRequest(details: WebRequestDetails) {
-		const areActionsAllowed = this.isAllowedToPerformAction(tabStorage.get(details.tabId));
+		const areActionsAllowed = this.isRegisteredAsCrusherWindow(details.tabId);
 
 		if (!areActionsAllowed || details.parentFrameId !== 0) {
 			return { cancel: false };
@@ -67,19 +81,27 @@ class ChromeEventsListener {
 	}
 
 	onHeadersReceived(details: WebResponseHeadersDetails) {
-		const areActionsAllowed = this.isAllowedToPerformAction(tabStorage.get(details.tabId));
+		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(
+			details.tabId,
+		);
 		const headers: Array<HttpHeader> | undefined = details.responseHeaders;
 
-		if (!headers || !areActionsAllowed || details.parentFrameId !== 0) {
+		if (!headers || !isRegisteredAsCrusherWindow || details.parentFrameId !== 0) {
 			return { responseHeaders: headers };
 		}
 
 		const responseHeaders = headers.filter((header) => {
 			const name = header.name.toLowerCase();
-			return ['x-frame-options', 'content-security-policy', 'frame-options'].indexOf(name) === -1;
+			return (
+				["x-frame-options", "content-security-policy", "frame-options"].indexOf(
+					name,
+				) === -1
+			);
 		});
 
-		const redirectUrl = headers.find((header) => header.name.toLowerCase() === 'location');
+		const redirectUrl = headers.find(
+			(header) => header.name.toLowerCase() === "location",
+		);
 
 		if (redirectUrl) {
 			chrome.browsingData.remove(
@@ -96,10 +118,12 @@ class ChromeEventsListener {
 	}
 
 	onBeforeSendHeaders(details: WebRequestFullDetails) {
-		const areActionsAllowed = this.isAllowedToPerformAction(tabStorage.get(details.tabId));
-		const headers = details.requestHeaders;
+		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(
+			details.tabId,
+		);
+		const headers: Array<HttpHeader> | undefined = details.requestHeaders;
 
-		if (!areActionsAllowed || details.parentFrameId !== 0) {
+		if (!isRegisteredAsCrusherWindow || details.parentFrameId !== 0) {
 			return { requestHeaders: headers };
 		}
 
@@ -110,29 +134,36 @@ class ChromeEventsListener {
 			};
 		}
 
-		const userAgent = tabStorage.get(details.tabId).crusherAgent;
+		const userAgent = TabStorage.get(details.tabId).crusherAgent;
 
 		details.requestHeaders?.push({
-			name: 'User-Agent',
+			name: "User-Agent",
 			value: userAgent,
 		});
 
 		return { requestHeaders: details.requestHeaders };
 	}
 
-	onRuntimeMessage() {}
-
 	onBeforeNavigation(details: any) {
-		const isAllowed = this.isAllowedToPerformAction(tabStorage.get(details.tabId));
+		const isAllowed = this.isRegisteredAsCrusherWindow(
+			TabStorage.get(details.tabId),
+		);
 
 		if (!isAllowed || details.frameId === 0) {
 			return;
 		}
 
-		if (details.parentFrameId === 0) {
-			const userAgentId = getQueryStringParams('__crusherAgent__', details.url);
-			const userAgentFromUrl = userAgents.find((agent) => agent.name === userAgentId);
-			const userAgent = userAgentFromUrl ? userAgentFromUrl.value : tabStorage.get(details.tabId).crusherAgent;
+		if (details.parentFrameId === 0 && details.url) {
+			const userAgentId = AdvancedURL.getParameterByName(
+				"__crusherAgent__",
+				details.url,
+			);
+			const userAgentFromUrl = UserAgents.find(
+				(agent) => agent.name === userAgentId,
+			);
+			const userAgent = userAgentFromUrl
+				? userAgentFromUrl.value
+				: TabStorage.get(details.tabId).crusherAgent;
 
 			if (userAgent) {
 				FrameStorage.set({
@@ -146,21 +177,31 @@ class ChromeEventsListener {
 	registerEventListeners() {
 		chrome.tabs.onUpdated.addListener(this.onTabUpdated);
 		chrome.tabs.onRemoved.addListener(this.onTabRemoved);
-		chrome.webRequest.onBeforeRequest.addListener(this.onBeforeRequest, { urls: ['<all_urls>'] }, ['blocking']);
-		chrome.webRequest.onHeadersReceived.addListener(this.onHeadersReceived, { urls: ['<all_urls>'], types: ['sub_frame', 'main_frame'] }, [
-			'blocking',
-			'responseHeaders',
-		]);
-		chrome.webRequest.onBeforeSendHeaders.addListener(this.onBeforeSendHeaders, { urls: ['<all_urls>'], types: ['sub_frame'] }, ['blocking', 'requestHeaders']);
-		chrome.runtime.onMessage.addListener(this.onRuntimeMessage);
+
+		chrome.webRequest.onBeforeRequest.addListener(
+			this.onBeforeRequest,
+			{ urls: ["<all_urls>"] },
+			["blocking"],
+		);
+
+		chrome.webRequest.onBeforeSendHeaders.addListener(
+			this.onBeforeSendHeaders,
+			{ urls: ["<all_urls>"], types: ["sub_frame"] },
+			["blocking", "requestHeaders"],
+		);
+
+		chrome.webRequest.onHeadersReceived.addListener(
+			this.onHeadersReceived,
+			{ urls: ["<all_urls>"], types: ["sub_frame", "main_frame"] },
+			["blocking", "responseHeaders"],
+		);
+
 		chrome.webNavigation.onBeforeNavigate.addListener(this.onBeforeNavigation);
 	}
 
 	boot() {
 		this.registerEventListeners();
 	}
-
-	shutdown() {}
 }
 
 const chromeEventsManager = new ChromeEventsListener();

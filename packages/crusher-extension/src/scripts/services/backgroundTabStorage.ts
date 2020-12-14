@@ -1,4 +1,4 @@
-import { isOfCrusherExtension } from '../../../../crusher-shared/utils/url';
+import { isOfCrusherExtension } from "../../../../crusher-shared/utils/url";
 
 export default {
 	tabs: {},
@@ -16,6 +16,7 @@ export default {
 	},
 
 	has(tabId: number) {
+		// eslint-disable-next-line no-prototype-builtins
 		return this.tabs.hasOwnProperty(tabId) && this.tabs[tabId] !== null;
 	},
 

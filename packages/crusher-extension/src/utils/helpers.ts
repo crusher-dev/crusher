@@ -1,11 +1,8 @@
-export function loadScript(name: string, tabId: any, cb: any) {
+export function loadScript(name: string, tabId: any, cb: ()=>any) {
 	return new Promise((resolve, reject) => {
 		if (process.env.NODE_ENV === 'production') {
 			chrome.tabs.executeScript(tabId, { file: `/js/${name}.js`, runAt: 'document_end' }, () => {
 				resolve(true);
-				if (cb) {
-					cb();
-				}
 			});
 		} else {
 			// dev: async fetch bundle
@@ -14,20 +11,11 @@ export function loadScript(name: string, tabId: any, cb: any) {
 				.then((fetchRes) => {
 					chrome.tabs.executeScript(tabId, { code: fetchRes, runAt: 'document_end' }, () => {
 						resolve(true);
-						if (cb) {
-							cb();
-						}
 					});
-				});
+				}).catch((err)=>{
+					reject(err);
+			});
 		}
-	});
-}
-
-export function getActiveTabId() {
-	return new Promise((resolve, reject) => {
-		chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any) => {
-			resolve(tabs[0].id);
-		});
 	});
 }
 

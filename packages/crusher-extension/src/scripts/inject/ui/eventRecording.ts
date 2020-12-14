@@ -1,7 +1,7 @@
 import { getAllAttributes } from '../../../utils/helpers';
 import { META_ACTIONS, SETTINGS_ACTIONS } from '../../../constants/actionTypes';
 import { ACTIONS_IN_TEST } from '../../../../../crusher-shared/constants/recordedActions';
-import { removeAllTargetBlankFromLinks } from '../../../utils/dom';
+import { DOM } from '../../../utils/dom';
 import EventsController from '../eventsController';
 import LocalFrameStorage from '../../../utils/frameStorage';
 import { getSelectors } from '../../../utils/selector';
@@ -256,7 +256,7 @@ export default class EventRecording {
 		const action = event.action ? event.action : event.target.getAttribute('data-action');
 		switch (action) {
 			case ACTIONS_IN_TEST.CLICK:
-				removeAllTargetBlankFromLinks();
+				DOM.removeAllTargetBlankFromLinks();
 				this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.CLICK, this.state.targetElement);
 				this.eventsController.simulateClickOnElement(this.state.targetElement);
 				break;

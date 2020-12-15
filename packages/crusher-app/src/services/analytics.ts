@@ -8,7 +8,7 @@ export default class Analytics{
 
     }
 
-    static trackSegmentEvent (...args){
+	static trackSegmentEvent(...args) {}
 
     }
 

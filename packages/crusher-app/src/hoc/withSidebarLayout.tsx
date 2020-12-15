@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import {
-	addProjectInRedux,
 	saveSelectedProjectInRedux,
 } from "@redux/actions/project";
 import { store } from "@redux/store";
@@ -27,7 +26,6 @@ import { useRouter } from "next/router";
 import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
-import { addProject } from "@services/projects";
 import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
 
 interface NavItem {

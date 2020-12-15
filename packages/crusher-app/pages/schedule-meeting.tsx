@@ -37,7 +37,7 @@ const bookDescription = css`
 	font-size: 0.82rem;
 `;
 
-function CrusherSelectBox({ checked, setChecked }) {
+function CrusherSelectBox({ checked, setChecked, text, description }) {
 	const handleChange = (event) => {
 		setChecked(event.target.checked);
 	};
@@ -54,9 +54,9 @@ function CrusherSelectBox({ checked, setChecked }) {
 				/>
 			</div>
 			<div>
-				<div css={headingStyle}>Connect me to Crusher team member</div>
+				<div css={headingStyle}>{text}</div>
 				<div css={bookDescription}>
-					Tell us about your use case and we’ll show you what is possible
+					{description}
 				</div>
 			</div>
 		</div>
@@ -79,7 +79,7 @@ function GetStartedScreem() {
 	const [phone, setPhoneNumber] = useState("");
 	const [checked, setChecked] = React.useState(true);
 	const handleNext = () => {
-		alert("Handle next event here");
+		alert("Handle next event here. Probably airtable");
 	};
 
 	function BookMeetingScreen() {
@@ -92,10 +92,10 @@ function GetStartedScreem() {
 				<AuthenticationTemplate>
 					<div css={styles.form(theme)}>
 						<div css={styles.headingContainer}>
-							<div css={styles.formHeading(theme)}>Your accounts has been created</div>
+							<div css={styles.formHeading(theme)}>Your account has been created</div>
 						</div>
 
-						<CrusherSelectBox checked={checked} setChecked={setChecked} />
+						<CrusherSelectBox checked={checked} setChecked={setChecked} text={"Connect with a Crusher team member"} description={"Tell us about your use case and we’ll show you what's possible."}/>
 
 						<form>
 							<div css={styles.inputContainer}>
@@ -154,12 +154,12 @@ const styles = {
 		}
 	`,
 	inputContainer: css`
-		margin-bottom: 1.75rem;
+		margin-bottom: 2.5rem;
 		margin-top: 1.75rem;
 	`,
 	phoneInput: css`
 		margin-top: 1.25rem;
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
 		width: 100%;
 	`,
 	inputElement: (theme) => css`

@@ -4,9 +4,7 @@ import { DropDown } from "@ui/components/project/DropDown";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import {
-	saveSelectedProjectInRedux,
-} from "@redux/actions/project";
+import { saveSelectedProjectInRedux } from "@redux/actions/project";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
 import React, { CSSProperties, useCallback, useEffect, useState } from "react";

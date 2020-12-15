@@ -1,4 +1,1 @@
-export default class Airtable{
-
-
-}
+export default class Airtable {}

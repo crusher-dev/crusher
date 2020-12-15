@@ -12,7 +12,7 @@ import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
 import { resolvePathToBackendURI } from "@utils/url";
 import WithSession from "@hoc/withSession";
-import {WithSettingsLayout} from "@hoc/v2/withSettingLayout";
+import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
 
 function RenderSlackIntegrations(props) {
 	const { slackIntegrations } = props;

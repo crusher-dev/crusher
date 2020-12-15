@@ -35,10 +35,13 @@ function getLogsWithStatus(
 			out.push({
 				event_type: logs[i].actionType,
 				selector: action.selectors[0].value,
-				desc: typeof descFunction === "function" ? ACTION_DESCRIPTIONS[action.event_type]({
-					selector: (action.selectors[0] as any).value,
-					value: action.value,
-				}) : "",
+				desc:
+					typeof descFunction === "function"
+						? ACTION_DESCRIPTIONS[action.event_type]({
+								selector: (action.selectors[0] as any).value,
+								value: action.value,
+						  })
+						: "",
 				timeTaken: logs[i].meta.timeTaken,
 				isCompleted: true,
 			});
@@ -56,10 +59,13 @@ function getLogsWithStatus(
 		out.push({
 			event_type: action.event_type,
 			selector: action.selectors[0].value,
-			desc: typeof descFunction === "function" ? ACTION_DESCRIPTIONS[action.event_type]({
-				selector: (action.selectors[0] as any).value,
-				value: action.value,
-			}) : "",
+			desc:
+				typeof descFunction === "function"
+					? ACTION_DESCRIPTIONS[action.event_type]({
+							selector: (action.selectors[0] as any).value,
+							value: action.value,
+					  })
+					: "",
 			timeTaken: null,
 			isCompleted: false,
 		});

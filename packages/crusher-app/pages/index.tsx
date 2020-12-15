@@ -89,10 +89,10 @@ function Home() {
 						</div>
 					</div>
 
-					<div css={styles.emailPassContainer}>
+					<div css={styles.inputContainer}>
 						<form>
 							<input
-								css={[styles.emailInput, styles.inputElement(theme)]}
+								css={[styles.phoneInput, styles.inputElement(theme)]}
 								placeholder={"Email"}
 								onKeyDown={handleReturnKey}
 								onChange={(event) => {
@@ -197,10 +197,10 @@ const styles = {
 			cursor: pointer;
 		}
 	`,
-	emailPassContainer: css`
+	inputContainer: css`
 		margin-bottom: 1.65rem;
 	`,
-	emailInput: css`
+	phoneInput: css`
 		width: 100%;
 		margin-bottom: 1.55rem;
 	`,

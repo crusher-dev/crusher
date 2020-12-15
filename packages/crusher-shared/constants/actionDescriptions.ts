@@ -37,7 +37,7 @@ const ACTION_DESCRIPTIONS = {
 	},
 	[ACTIONS_IN_TEST.VALIDATE_SEO]: (meta: ActionMeta) => {
 		return `Validating SEO info`;
-	}
+	},
 };
 
 export { ACTION_DESCRIPTIONS };

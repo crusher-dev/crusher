@@ -11,6 +11,7 @@ export class AssertModal extends Component<any, any> {
 			attributes,
 			updateState,
 			saveAssertionCallback,
+			closeModalCallback,
 		} = this.props;
 		return (
 			state &&
@@ -20,6 +21,7 @@ export class AssertModal extends Component<any, any> {
 						attributes={attributes}
 						seoMeta={seoMeta}
 						handleCloseCallback={(options: any) => {
+							closeModalCallback();
 							if (options) {
 								saveAssertionCallback(options);
 							}

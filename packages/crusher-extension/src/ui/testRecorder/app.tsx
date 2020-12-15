@@ -163,6 +163,7 @@ function Actions(props: any) {
 		const cn = iframeRef.current.contentWindow;
 		console.log(actionType);
 
+		// @TODO: Why are we still posting this messages to content script?
 		switch (actionType) {
 			case SETTINGS_ACTIONS.INSPECT_MODE_ON:
 				cn.postMessage(
@@ -581,7 +582,20 @@ function App() {
 			},
 		] as any);
 		setLastStepTime(Date.now());
+	}
+
+	function closeAssertModalCallback() {
+		const cn = (iframeRef as any).current.contentWindow;
 		setIsShowingElementForm(false);
+
+		cn.postMessage(
+			{
+				type: "any",
+				formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS,
+				value: true,
+			},
+			"*",
+		);
 	}
 
 	// @Note - Poorly written code. This is if else hell, break it down into clear pieces
@@ -823,6 +837,7 @@ function App() {
 				state={state}
 				updateState={updateState}
 				saveAssertionCallback={saveAssertionCallback}
+				closeModalCallback={closeAssertModalCallback}
 			/>
 
 			<SeoModal

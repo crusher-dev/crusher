@@ -50,11 +50,14 @@ export default class EventRecording {
 	private scrollTimer: any = null;
 	private lastScrollFireTime = 0;
 
+	private resetUserEventsToDefaultCallback: any = undefined;
+
 	constructor(options = {} as any) {
 		this.state = {
 			...this.defaultState,
 		};
 
+		this.onLeftClick = this.onLeftClick.bind(this);
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseOver = this.handleMouseOver.bind(this);
 		this.handleMouseOut = this.handleMouseOut.bind(this);
@@ -173,6 +176,7 @@ export default class EventRecording {
 	}
 
 	initNodes() {
+		console.debug("Registering all nodes");
 		this._addActionElement = document.querySelector("#overlay_add_action");
 		this._overlayCover = document.querySelector("#overlay_cover");
 		this._addActionIcon = document.querySelector("#overlay_add");
@@ -306,11 +310,34 @@ export default class EventRecording {
 				);
 				break;
 			default:
-				return;
 				break;
+		}
+		if (this.resetUserEventsToDefaultCallback) {
+			this.resetUserEventsToDefaultCallback();
+			this.resetUserEventsToDefaultCallback = null;
 		}
 		this.unpin();
 		this.hideEventsBoxIfShown();
+	}
+
+	onLeftClick(event: Event) {
+		event.preventDefault();
+		this.turnInspectModeOn();
+
+		const eventExceptions = {
+			mousemove: this.handleMouseMove.bind(this),
+			mouseover: this.handleMouseMove.bind(this),
+			mouseout: this.handleMouseOut.bind(this),
+			input: this.handleInputChange.bind(this),
+			click: this.handleDocumentClick.bind(this),
+			contextmenu: this.onLeftClick.bind(this),
+		};
+
+		if (!this.resetUserEventsToDefaultCallback) {
+			this.resetUserEventsToDefaultCallback = DOM.disableAllUserEvents(
+				eventExceptions,
+			);
+		}
 	}
 
 	handleMouseMove(event: MouseEvent) {
@@ -502,6 +529,7 @@ export default class EventRecording {
 		document.body.addEventListener("mousemove", this.handleMouseMove, true);
 		document.body.addEventListener("mouseover", this.handleMouseOver, true);
 		document.body.addEventListener("mouseout", this.handleMouseOut, true);
+		document.addEventListener("contextmenu", this.onLeftClick, true);
 
 		window.addEventListener("scroll", this.handleScroll, true);
 
@@ -555,6 +583,8 @@ export default class EventRecording {
 	}
 
 	boot(isFirstTime = false) {
+		this.initNodes();
+
 		if (isFirstTime) {
 			const currentURL = new URL(window.location.href);
 			currentURL.searchParams.delete("__crusherAgent__");
@@ -574,28 +604,36 @@ export default class EventRecording {
 		this.registerNodeListeners();
 	}
 
+	turnInspectModeOn() {
+		console.debug("Turning inspect element mode on");
+		this.isInspectorMoving = true;
+		window.top.postMessage(
+			{
+				type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
+				frameId: null,
+			},
+			"*",
+		);
+	}
+
+	turnInspectModeOff() {
+		this.toggleEventsBox();
+		this.isInspectorMoving = false;
+		window.top.postMessage(
+			{
+				type: SETTINGS_ACTIONS.INSPECT_MODE_OFF,
+				frameId: null,
+			},
+			"*",
+		);
+	}
+
 	toggleInspector() {
-		this.initNodes();
 		this.registerNodeListenerForForm();
 		if (this.isInspectorMoving) {
-			this.toggleEventsBox();
-			this.isInspectorMoving = false;
-			window.top.postMessage(
-				{
-					type: SETTINGS_ACTIONS.INSPECT_MODE_OFF,
-					frameId: null,
-				},
-				"*",
-			);
+			this.turnInspectModeOff();
 		} else {
-			this.isInspectorMoving = true;
-			window.top.postMessage(
-				{
-					type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
-					frameId: null,
-				},
-				"*",
-			);
+			this.turnInspectModeOn();
 		}
 		console.info("Info Overlay booted up");
 	}

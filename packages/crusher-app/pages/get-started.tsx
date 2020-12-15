@@ -12,7 +12,7 @@ import { BackSVG, GoogleIcon } from "@ui/components/common/SVGs";
 import Link from "next/link";
 import { COLORS, ThemeContext } from "@constants/style";
 
-function Home() {
+function SignupScreen() {
 	const theme = useContext(ThemeContext);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -71,9 +71,9 @@ function Home() {
 					</div>
 
 					<form>
-						<div css={styles.emailPassContainer}>
+						<div css={styles.inputContainer}>
 							<input
-								css={[styles.emailInput, styles.inputElement(theme)]}
+								css={[styles.phoneInput, styles.inputElement(theme)]}
 								placeholder={"Your name"}
 								onKeyDown={handleKeyDown}
 								onChange={(event) => {
@@ -140,7 +140,7 @@ function Home() {
 	);
 }
 
-Home.getInitialProps = (ctx) => {
+SignupScreen.getInitialProps = (ctx) => {
 	return {};
 };
 
@@ -177,10 +177,10 @@ const styles = {
 			cursor: pointer;
 		}
 	`,
-	emailPassContainer: css`
+	inputContainer: css`
 		margin-bottom: 1.65rem;
 	`,
-	emailInput: css`
+	phoneInput: css`
 		width: 100%;
 	`,
 	inputElement: (theme) => css`
@@ -201,7 +201,7 @@ const styles = {
 		}
 	`,
 	requestButton: css`
-		padding: 1.05rem;
+		padding: 0.95rem;
 		background: #5b76f7;
 		border: 1px solid #5b76f7;
 		box-sizing: border-box;
@@ -290,4 +290,4 @@ const styles = {
 	`,
 };
 
-export default WithoutSession(Home);
+export default WithoutSession(SignupScreen);

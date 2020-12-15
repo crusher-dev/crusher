@@ -3,7 +3,7 @@ import { withRouter } from "next/router";
 
 import { css } from "@emotion/core";
 import { WhiteLogo } from "@ui/components/common/Atoms";
-import {getTime, toPascalCase} from "@utils/helpers";
+import { getTime, toPascalCase } from "@utils/helpers";
 import { Platform } from "@interfaces/Platform";
 
 const ROUTES = {
@@ -137,7 +137,11 @@ const BaseHeader = ({
 		<div className={mobileMenu ? "navbar-nav-show" : ""}>
 			<header
 				className="navbar navbar-header navbar-header-fixed "
-				style={{ background: "#131415", border: "1px solid #191E23", padding: "1rem 1rem" }}
+				style={{
+					background: "#131415",
+					border: "1px solid #191E23",
+					padding: "1rem 1rem",
+				}}
 			>
 				<div css={containerCss}>
 					<div className="navbar-brand" style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -148,9 +152,19 @@ const BaseHeader = ({
 					</div>
 
 					<MiddleMenu />
-					<div className="navbar-brand" style={{ color: "#fff", fontSize: "0.9375rem", fontFamily: "Cera Pro", fontWeight: 500 }}>
+					<div
+						className="navbar-brand"
+						style={{
+							color: "#fff",
+							fontSize: "0.9375rem",
+							fontFamily: "Cera Pro",
+							fontWeight: 500,
+						}}
+					>
 						<div>Baseline</div>
-						<div style={{marginLeft: "1.5rem"}}>#{referenceJob.id} - ({getTime(new Date(referenceJob.created_at))})</div>
+						<div style={{ marginLeft: "1.5rem" }}>
+							#{referenceJob.id} - ({getTime(new Date(referenceJob.created_at))})
+						</div>
 						{/*<div className="pt-2 pb-2 pl-1 pr-1 text-center tx-medium" css={[styles.greenButton]}>Approve all</div>*/}
 					</div>
 					<div className={"navbar-right"}>

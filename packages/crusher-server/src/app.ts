@@ -63,7 +63,7 @@ useExpressServer(expressApp, {
 		TestInstanceControllerV2,
 		Slack,
 		PaymentController,
-		JobReportsController
+		JobReportsController,
 	],
 	middlewares: [CorsMiddleware],
 	authorizationChecker: async (action: Action) => {

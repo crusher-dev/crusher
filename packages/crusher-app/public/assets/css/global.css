@@ -452,3 +452,8 @@ a:hover {
 		opacity: 0;
 	}
 }
+
+.react-tel-input .form-control{
+	width: 100% !important;
+	padding: 12.5px 14px 12.5px 58px !important;
+}

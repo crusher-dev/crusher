@@ -2,7 +2,11 @@ import { css } from "@emotion/core";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
 import WithSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
-import {getAllJobsOfProject, getAllProjectLogs, getMetaDashboardProjectInfo} from "@services/job";
+import {
+	getAllJobsOfProject,
+	getAllProjectLogs,
+	getMetaDashboardProjectInfo,
+} from "@services/job";
 import { redirectToFrontendPath } from "@utils/router";
 import { backendRequest, cleanHeaders } from "@utils/backendRequest";
 import { useSelector } from "react-redux";
@@ -155,7 +159,7 @@ function ProjectDashboard(props) {
 			});
 	}, [selectedProjectId]);
 
-	const {totalJobsToday} = metaDashboardInfo;
+	const { totalJobsToday } = metaDashboardInfo;
 	const { projectBuilds, projectActivities } = dashboardInfo;
 	return (
 		<div css={styles.container}>

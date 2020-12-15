@@ -8,24 +8,7 @@ import {
 } from "../../constants";
 import { ACTION_FORM_TYPE } from "../../ui/testRecorder/app";
 
-if (top !== self) {
-	fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
-		.then((response) => response.text())
-		.then((html) => {
-			const htmlWrapper = document.createElement("div");
-			htmlWrapper.innerHTML = html;
-			document.body.appendChild(htmlWrapper);
-
-			const linkRel = document.createElement("link");
-			linkRel.setAttribute("rel", "stylesheet");
-			linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
-			document.head.appendChild(linkRel);
-		})
-		.catch((err) => {
-			console.debug("Something went wrong while appending crusher content script");
-			console.error(err);
-		});
-
+function boot() {
 	const recordingOverlay = new EventRecording({});
 
 	window.top.postMessage(
@@ -147,4 +130,25 @@ if (top !== self) {
 		},
 		true,
 	);
+}
+
+if (top !== self) {
+	fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
+		.then((response) => response.text())
+		.then((html) => {
+			const htmlWrapper = document.createElement("div");
+			htmlWrapper.innerHTML = html;
+			document.body.appendChild(htmlWrapper);
+
+			const linkRel = document.createElement("link");
+			linkRel.setAttribute("rel", "stylesheet");
+			linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
+			document.head.appendChild(linkRel);
+
+			boot();
+		})
+		.catch((err) => {
+			console.debug("Something went wrong while appending crusher content script");
+			console.error(err);
+		});
 }

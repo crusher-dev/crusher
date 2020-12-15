@@ -90,7 +90,7 @@ function ShowRowInput(props: any) {
 			</th>
 			<th style={styles.inputTableGridOption}>
 				<select
-					style={{ ...styles.select }}
+					style={{ ...styles.select, minWidth: "60%" }}
 					value={method}
 					onChange={handleMethodChange}
 				>
@@ -485,7 +485,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 		textAlign: "right",
 	},
 	inputTableGridOptionValueInput: {
-		padding: "0.4rem 0.7rem",
+		padding: "12px 1rem",
 		borderRadius: "0.25rem",
 		width: "100%",
 		fontSize: 18,
@@ -552,9 +552,18 @@ const styles: { [key: string]: React.CSSProperties } = {
 		marginBottom: "32px",
 	},
 	select: {
-		padding: 12,
 		minWidth: 120,
 		fontSize: 18,
+		appearance: "none",
+		background: "#FAFAFA",
+		border: "1px solid #DADADA",
+		borderRadius: "0.20rem",
+		padding: "12px 1rem",
+		backgroundImage:
+			"url(\"data:image/svg+xml;utf8,<svg fill='black' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>\")",
+		backgroundRepeat: "no-repeat",
+		backgroundPositionX: "96.5%",
+		backgroundPositionY: "50%",
 	},
 	input: {
 		padding: 12,

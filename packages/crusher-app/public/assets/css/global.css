@@ -453,7 +453,40 @@ a:hover {
 	}
 }
 
+/*React telephone input starts*/
+
 .react-tel-input .form-control{
 	width: 100% !important;
 	padding: 12.5px 14px 12.5px 58px !important;
 }
+
+.react-tel-input .country-list .search-box {
+	border: 1px solid #CACACA;
+	border-radius: 6px;
+	font-size: 15px;
+	line-height: 15px;
+	margin-left: 6px;
+	padding: 11px 10px 11px 12px !important;
+	outline: none;
+	width: 94% !important;
+}
+
+.react-tel-input .country-list{
+	width: 100% !important;
+}
+
+.react-tel-input .flag-dropdown.open {
+	z-index: 2;
+	width: 100%;
+}
+
+.react-tel-input .country-list{
+	max-height: 320px !important;
+}
+
+.react-tel-input .country-list .country {
+	position: relative !important;
+	padding: 10px 9px 10px 46px !important;
+	font-size: 14px !important;
+}
+/*React telephone input ends*/

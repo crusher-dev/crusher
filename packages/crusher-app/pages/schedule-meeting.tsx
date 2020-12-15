@@ -55,9 +55,7 @@ function CrusherSelectBox({ checked, setChecked, text, description }) {
 			</div>
 			<div>
 				<div css={headingStyle}>{text}</div>
-				<div css={bookDescription}>
-					{description}
-				</div>
+				<div css={bookDescription}>{description}</div>
 			</div>
 		</div>
 	);
@@ -95,7 +93,14 @@ function GetStartedScreem() {
 							<div css={styles.formHeading(theme)}>Your account has been created</div>
 						</div>
 
-						<CrusherSelectBox checked={checked} setChecked={setChecked} text={"Connect with a Crusher team member"} description={"Tell us about your use case and we’ll show you what's possible."}/>
+						<CrusherSelectBox
+							checked={checked}
+							setChecked={setChecked}
+							text={"Connect with a Crusher team member"}
+							description={
+								"Tell us about your use case and we’ll show you what's possible."
+							}
+						/>
 
 						<form>
 							<div css={styles.inputContainer}>

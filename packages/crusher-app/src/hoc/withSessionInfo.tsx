@@ -1,12 +1,11 @@
 import { cleanHeaders } from "@utils/backendRequest";
-import { getCookies } from "@utils/cookies";
-import { redirectToBackendURI, redirectToFrontendPath } from "@utils/router";
+import {  redirectToFrontendPath } from "@utils/router";
 import {
 	EMAIL_NOT_VERIFIED,
 	NO_TEAM_JOINED,
 	USER_NOT_REGISTERED,
 } from "@utils/constants";
-import { getUserInfo, getUserStatus } from "@services/user";
+import { getUserInfo,  } from "@services/user";
 
 async function handleUserStatus(statusInfo, res, componentScope = null) {
 	switch (statusInfo) {

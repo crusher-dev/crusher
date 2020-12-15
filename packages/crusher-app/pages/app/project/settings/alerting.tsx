@@ -12,6 +12,7 @@ import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
 import { resolvePathToBackendURI } from "@utils/url";
 import WithSession from "@hoc/withSession";
+import {WithSettingsLayout} from "@hoc/v2/withSettingLayout";
 
 function RenderSlackIntegrations(props) {
 	const { slackIntegrations } = props;
@@ -239,4 +240,4 @@ ProjectAlertingSettings.getInitialProps = async (ctx) => {
 	}
 };
 
-export default WithSession(WithSidebarLayout(ProjectAlertingSettings));
+export default WithSession(WithSettingsLayout(ProjectAlertingSettings));

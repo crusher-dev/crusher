@@ -478,15 +478,14 @@ export default class EventRecording {
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		if (isRecorderCover) {
-			target = event.target;
 			console.log("Printing elements at this location");
-			const elements = this.elementsAtLocation(event.pageX, event.pageY);
-			console.log(elements);
+			const elements = this.elementsAtLocation(event.clientX, event.clientY);
+			target = elements[0];
 			if (elements && elements.length > 1 && elements[0].id === "overlay_cover") {
 				target = elements[1];
 			}
 			this.state.pinned = true;
-			this.state.targetElement = target;
+			this.state.targetElement = target ? target : event.target;
 			this._overlayCover.classList.add("pointerEventsNone");
 			this.handleAddIconClick();
 			return;

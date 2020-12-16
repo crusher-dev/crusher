@@ -146,6 +146,20 @@ export default class CodeGenerator {
 			width = device.width;
 			height = device.height;
 			code += `const browserContext = await browser.newContext({width: '${device.width}px', height: '${device.height}px', userAgent: "${userAgent.value}"});\n`;
+			code += `await browserContext.addInitScript(()=>{
+		document.addEventListener("click", function(event){
+				const {target} = event;
+				const closestLink = target.closest("a");
+				if (closestLink && closestLink.tagName.toLowerCase() === "a") {
+						const href = closestLink.getAttribute("href");
+						console.log("Going to this link", href);
+						if (href) {
+								window.location.href = href;
+						}
+						return event.preventDefault();
+				}
+		}, true);
+});\n`;
 			if (isLiveProgress) {
 				code += `await logStep('${ACTIONS_IN_TEST.SET_DEVICE}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.SET_DEVICE]({
 					value: device.name,
@@ -177,8 +191,16 @@ export default class CodeGenerator {
 					if (firstTimeNavigate) {
 						firstTimeNavigate = false;
 						code +=
-							`const page = await browserContext.newPage({});\n` +
-							`page.setDefaultTimeout(60000);` +
+							`const page = await browserContext.newPage({});\n`;
+						code += `page.on("popup", async (popup)=>{
+		const popupUrl = await popup.url();
+		page.evaluate("window.location.href = \\"" + popupUrl + "\\"");
+		const pages = await browserContext.pages();
+		for(let i = 1; i < pages.length; i++){
+				await pages[i].close();
+		}
+});\n`
+						code += `page.setDefaultTimeout(60000);` +
 							(isRecordingVideo ? `const {saveVideo} = require('playwright-video');\ncaptureVideo = await saveVideo(page, 'video.mp4');\ntry{\n` : '') +
 							`await page.goto('${value}');\n`;
 					} else {

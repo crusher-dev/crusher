@@ -384,22 +384,23 @@ export default class EventRecording {
 	handleScroll(event: any) {
 		const minScrollTime = 100;
 		const now = new Date().getTime();
-
+		console.log("Scrolled, ", event.target);
+		const _this = this;
 		function processScroll() {
 			const target = event.target;
 
 			const isDocumentScrolled = event.target === document;
 			if (isDocumentScrolled) {
-				return this.eventsController.saveCapturedEventInBackground(
+				return _this.eventsController.saveCapturedEventInBackground(
 					ACTIONS_IN_TEST.SCROLL,
-					document.body,
+					window,
 					window.scrollY,
 				);
 			}
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				this.eventsController.saveCapturedEventInBackground(
+				_this.eventsController.saveCapturedEventInBackground(
 					ACTIONS_IN_TEST.SCROLL,
 					event.target,
 					event.target.scrollTop,

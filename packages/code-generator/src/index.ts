@@ -7,7 +7,7 @@ import { ACTION_DESCRIPTIONS } from '../../crusher-shared/constants/actionDescri
 
 const importPlayWright = `const playwright = require('playwright');\n\n`;
 
-const header = `const browser = await playwright["chromium"].launch({headless: true});\n`;
+const header = `const browser = await playwright["chromium"].launch({headless: false});\n`;
 
 const footer = `await browser.close();\n`;
 
@@ -24,6 +24,9 @@ function logStep(type, data, meta){
 		_logStepToMongo(type, data, meta, timeTakeForThisStep);
 	}
 }\n`;
+
+
+const scrollToFunction = `\n`;
 
 const extractInfoUsingScriptFunction =
 	`async function extractInfoUsingScript(page, selector, validationScript){
@@ -181,6 +184,8 @@ export default class CodeGenerator {
 				codeToAdd += extractInfoUsingScriptFunction;
 			} else if(fun === ACTIONS_IN_TEST.ASSERT_ELEMENT) {
 				codeToAdd += assertElementAttributesFunction;
+			} else if(fun === ACTIONS_IN_TEST.SCROLL) {
+				codeToAdd += scrollToFunction;
 			}
 		}
 		if (isRecordingVideo) {
@@ -360,6 +365,41 @@ export default class CodeGenerator {
 					}
 					break;
 				case ACTIONS_IN_TEST.SCROLL:
+					this.helperFunctionsToInclude[ACTIONS_IN_TEST.SCROLL] = true;
+
+					if(selectors[0] !== "window") {
+						code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
+					}
+					if(value && value.length) {
+						code += `await page.evaluate(async ([scrollPosArr, selectorKey])=>{
+		const scrollTo = async function(element, offset) {
+			const fixedOffset = offset.toFixed();
+			const onScroll = function () {
+					if (element.pageYOffset.toFixed() === fixedOffset) {
+							element.removeEventListener('scroll', onScroll);
+							return true;
+					}
+			};
+
+		element.addEventListener('scroll', onScroll);
+		onScroll();
+		element.scrollTo({
+			top: offset,
+			behavior: 'smooth'
+		});
+};
+							const element = selectorKey === "window" ? window : document.querySelector(selectorKey);
+							
+							for(let i = 0; i < scrollPosArr.length; i++){
+								await scrollTo(element, scrollPosArr[i]);
+							}
+						}, [[${value}], ${JSON.stringify("window")}]);\n`;
+					}
+					if (isLiveProgress) {
+						code += `await logStep('${ACTIONS_IN_TEST.SCROLL}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.EXTRACT_INFO]({
+							selector: selectors[0] === "window" ? selectors[0] : selectors[0].value,
+						})}'}, {selector: ${selectors[0] === "window" ? JSON.stringify("window") : `selector_${i}`}});\n`;
+					}
 					break;
 				case ACTIONS_IN_TEST.EXTRACT_INFO:
 					const variable_name = Object.keys(value)[0];

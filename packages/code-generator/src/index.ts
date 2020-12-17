@@ -7,7 +7,7 @@ import { ACTION_DESCRIPTIONS } from '../../crusher-shared/constants/actionDescri
 
 const importPlayWright = `const playwright = require('playwright');\n\n`;
 
-const header = `const browser = await playwright["chromium"].launch();\n`;
+const header = `const browser = await playwright["chromium"].launch({headless: true});\n`;
 
 const footer = `await browser.close();\n`;
 
@@ -83,6 +83,65 @@ const assertElementAttributesFunction = `async function assertElementAttributes(
 	return [hasPassed, logs];
 }\n\n`;
 
+const waitForSelectorFunction = `async function waitForSelector(_selectorsJSON, page, defaultSelector = null){
+	const _selectors = JSON.parse(_selectorsJSON);
+	const selectors = _selectors.map(selector => {return selector;});
+	
+	const getElementsByXPath = (xpath, parent) => {
+    let results = [];
+    let query = document.evaluate(xpath, parent || document,
+        null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    for (let i = 0, length = query.snapshotLength; i < length; ++i) {
+        results.push(query.snapshotItem(i));
+    }
+    return results;
+	};
+	
+	const generateQuerySelector = function(el) {
+      if (el.tagName.toLowerCase() == "html")
+          return "HTML";
+      var str = el.tagName;
+      str += (el.id != "") ? "#" + el.id : "";
+      if (el.className) {
+          var classes = el.className.split(/\\s/);
+          for (var i = 0; i < classes.length; i++) {
+              str += "." + classes[i]
+          }
+      }
+      return generateQuerySelector(el.parentNode) + " > " + str;
+	};
+	
+	try{
+	 await page.waitForSelector(defaultSelector, {state: "attached"});
+	 return defaultSelector;
+	} catch(err){
+		const _newSelectors = selectors.filter(selector => {return selector.value !== defaultSelector});
+		const validSelector = await page.evaluate((selectors) => {
+			for(let i = 0; i < selectors.length; i++){
+				try{
+					if(selectors[i].type === "xpath"){
+						const elements = getElementsByXPath(selectors[i].value);
+						if(elements.length){
+							return generateQuerySelector(elements[0]);
+						}
+					} else if(document.querySelector(selectors[i].value)){
+						console.log("Valid selector is: " + selectors[i].value);
+						return selectors[i].value;
+					}
+				} catch(ex){
+					console.log("Invalid selector: ", selectors[i].value);
+				}
+				console.log("Selector didn't match: " + selectors[i].value);
+			}
+			return null;
+		}, _newSelectors);
+		if(typeof validSelector === "undefined"){
+			throw new Error("This is not working");
+		}
+		return validSelector;
+	}
+}\n`;
+
 const sleepScriptFunction = `
 const DEFAULT_SLEEP_TIME = 500;
 const TYPE_DELAY = 100;
@@ -106,6 +165,7 @@ export default class CodeGenerator {
 		return (
 			importPlayWright +
 			this.addHelperFunctionsIfAny(isRecordingVideo, isLiveProgress) +
+			waitForSelectorFunction +
 			(isRecordingVideo ? `let captureVideo;\n` : ``) +
 			header +
 			generatedEventsCode +
@@ -186,6 +246,7 @@ export default class CodeGenerator {
 
 		for (let i = 0; i < events.length; i++) {
 			const { event_type, selectors, value } = events[i];
+
 			switch (event_type) {
 				case ACTIONS_IN_TEST.NAVIGATE_URL:
 					if (firstTimeNavigate) {
@@ -200,7 +261,7 @@ export default class CodeGenerator {
 				await pages[i].close();
 		}
 });\n`
-						code += `page.setDefaultTimeout(60000);` +
+						code += `page.setDefaultTimeout(10000);` +
 							(isRecordingVideo ? `const {saveVideo} = require('playwright-video');\ncaptureVideo = await saveVideo(page, 'video.mp4');\ntry{\n` : '') +
 							`await page.goto('${value}');\n`;
 					} else {
@@ -216,22 +277,26 @@ export default class CodeGenerator {
 					}
 					break;
 				case ACTIONS_IN_TEST.CLICK:
-					code += `await page.waitForSelector('${selectors[0].value}', {state: "attached"});\nconst stv_${i} = await page.$('${selectors[0].value}');\nawait stv_${i}.scrollIntoViewIfNeeded();\nawait stv_${i}.dispatchEvent('click');\n`;
+					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
+
+					code += `const stv_${i} = await page.$(selector_${i});\nawait stv_${i}.scrollIntoViewIfNeeded();\nawait stv_${i}.dispatchEvent('click');\n`;
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.CLICK}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.CLICK]({
 							selector: selectors[0].value,
-						})}'}, {selector: '${selectors[0].value}'});\n`;
+						})}'}, {selector: selector_${i}});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
 				case ACTIONS_IN_TEST.HOVER:
-					code += `await page.waitForSelector('${selectors[0].value}', {state: "attached"});\nawait page.hover('${selectors[0].value}');\n`;
+					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
+
+					code += `await page.hover(selector_${i});\n`;
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.HOVER}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.HOVER]({
 							selector: selectors[0].value,
-						})}'}, {selector: '${selectors[0].value}'});\n`;
+						})}'}, {selector: selector_${i}});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
@@ -239,13 +304,15 @@ export default class CodeGenerator {
 					break;
 				case ACTIONS_IN_TEST.ELEMENT_SCREENSHOT:
 					screenShotFileName = selectors[0].value.replace(/[^\w\s]/gi, '').replace(/ /g, '_') + `_${i}`;
-					code += `await page.waitForSelector('${selectors[0].value}', {state: "attached"});\nconst h_${i} = await page.$('${selectors[0].value}');\nawait h_${i}.screenshot({path: '${screenShotFileName}.png'});\n`;
+					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
+
+					code += `const h_${i} = await page.$(selector_${i});\nawait h_${i}.screenshot({path: '${screenShotFileName}.png'});\n`;
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.ELEMENT_SCREENSHOT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[
 							ACTIONS_IN_TEST.ELEMENT_SCREENSHOT
 						]({
 							selector: selectors[0].value,
-						})}'}, {selector: '${selectors[0].value}'});\n`;
+						})}'}, {selector: selector_${i}});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
@@ -264,25 +331,29 @@ export default class CodeGenerator {
 					}
 					break;
 				case ACTIONS_IN_TEST.SCROLL_TO_VIEW:
-					code += `await page.waitForSelector('${selectors[0].value}', {state: "attached"});\nconst stv_${i} = await page.$('${selectors[0].value}');\nawait stv_${i}.scrollIntoViewIfNeeded();\n`;
+					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
+
+					code += `const stv_${i} = await page.$(selector_${i});\nawait stv_${i}.scrollIntoViewIfNeeded();\n`;
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.SCROLL_TO_VIEW}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.SCROLL_TO_VIEW]({
 							selector: selectors[0].value,
-						})}'}, {selector: '${selectors[0].value}'});\n`;
+						})}'}, {selector: selector_${i}});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
 				case ACTIONS_IN_TEST.INPUT:
-					code += `await page.waitForSelector('${selectors[0].value}', {state: "attached"});\nawait page.type('${selectors[0].value}', '${value}', {delay: ${
+					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
+
+					code += `await page.type(selector_${i}, '${value}', {delay: ${
 						isRecordingVideo ? 'TYPE_DELAY' : 25
 					}});\n`;
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.INPUT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.INPUT]({
 							selector: selectors[0].value,
 							value,
-						})}'}, {selector: '${selectors[0].value}', value: '${value}'});\n`;
+						})}'}, {selector: selector_${i}, value: '${value}'});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
@@ -294,8 +365,10 @@ export default class CodeGenerator {
 					const variable_name = Object.keys(value)[0];
 					const validation_script = value[variable_name];
 					this.helperFunctionsToInclude[ACTIONS_IN_TEST.EXTRACT_INFO] = true;
+					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
+
 					code +=
-						`await page.waitForSelector('${selectors[0].value}', {state: "attached"});\nlet ${variable_name} = await extractInfoUsingScript(page, '${selectors[0].value}', ` +
+						`let ${variable_name} = await extractInfoUsingScript(page, selector_${i}, ` +
 						'`' +
 						validation_script +
 						'`' +
@@ -303,7 +376,7 @@ export default class CodeGenerator {
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.EXTRACT_INFO}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.EXTRACT_INFO]({
 							selector: selectors[0].value,
-						})}'}, {selector: '${selectors[0].value}'});\n`;
+						})}'}, {selector: selector_${i}});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;

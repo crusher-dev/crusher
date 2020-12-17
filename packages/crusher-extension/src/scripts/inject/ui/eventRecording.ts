@@ -384,7 +384,7 @@ export default class EventRecording {
 	handleScroll(event: any) {
 		const minScrollTime = 100;
 		const now = new Date().getTime();
-		console.log("Scrolled, ", event.target);
+		// console.log("Scrolled, ", event.target);
 		const _this = this;
 		function processScroll() {
 			const target = event.target;
@@ -416,8 +416,8 @@ export default class EventRecording {
 				this.lastScrollFireTime = now;
 			}
 			this.scrollTimer = setTimeout(function () {
-				this.scrollTimer = null;
-				this.lastScrollFireTime = new Date().getTime();
+				_this.scrollTimer = null;
+				_this.lastScrollFireTime = new Date().getTime();
 				processScroll();
 			}, minScrollTime);
 		}

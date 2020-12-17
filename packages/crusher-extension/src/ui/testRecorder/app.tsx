@@ -601,6 +601,7 @@ function App() {
 	// @Note - Poorly written code. This is if else hell, break it down into clear pieces
 	messageListenerCallback = function (event: any) {
 		const { type, eventType, value, selectors } = event.data;
+		console.log(type, eventType, value);
 		const steps = getSteps();
 		if (eventType) {
 			const lastStep = steps[steps.length - 1];
@@ -624,7 +625,7 @@ function App() {
 					} else if (
 						lastStep.event_type === ACTIONS_IN_TEST.SCROLL &&
 						eventType === ACTIONS_IN_TEST.SCROLL &&
-						lastStep.selectors[0].value === selectors[0].value
+						lastStep.selectors[0] === selectors[0]
 					) {
 						steps[steps.length - 1] = {
 							event_type: eventType,

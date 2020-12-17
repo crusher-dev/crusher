@@ -41,7 +41,11 @@ export default class EventsController {
 		value: any = "",
 		callback?: any,
 	) {
-		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
+		const selectors = capturedTarget
+			? capturedTarget === window
+				? ["window"]
+				: getSelectors(capturedTarget)
+			: null;
 
 		window.top.postMessage(
 			{

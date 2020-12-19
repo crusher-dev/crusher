@@ -1,4 +1,13 @@
 html
+    head
     body
+        #upgrade-me(src='app.js')
         #root
-        script(src=env == 'prod' ? './js/record_test.js': 'http://localhost:2400/record_test.js')
+        script(src='http://localhost:2400/record_test.js')
+        script(type='module').
+                    import {upgradeElement} from '/dist/main.mjs';
+                    upgradeElement(document.getElementById('upgrade-me'), '/dist/worker/worker.mjs');
+        script(nomodule='' async='false' defer='').
+                    document.addEventListener('DOMContentLoaded', function() {
+                      MainThread.upgradeElement(document.getElementById('upgrade-me'), '/dist/worker/worker.js');
+                    }, false);

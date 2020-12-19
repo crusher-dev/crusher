@@ -93,7 +93,7 @@ function SettingContent(props) {
 						<a
 							target={"_blank"}
 							href={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook&client_id=650512229650.1202465322982?redirect_uri=${escape(
-								resolvePathToBackendURI(`alerting/add/slack`),
+								resolvePathToBackendURI("alerting/add/slack"),
 							)}&state=${selectedProject}`}
 						>
 							<Button title="Add to slack" />

@@ -50,9 +50,3 @@
                     input#assert_validation.modal_input(placeholder='Validation', disabled='true', data-recorder='true')
                     #submit_assert_form.form_submit_btn(data-recorder='true') Save
 a#overlay_cover(data-recorder-cover='true')
-#upgrade-me(src='http://localhost:5001/worker.js')
-script(type='module').
-        import {upgradeElement} from 'http://localhost:5001/dist/main.mjs';
-        upgradeElement(document.getElementById('upgrade-me'), 'http://localhost:5001/dist/worker/worker.mjs').then(async (worker)=>{
-            worker.callFunction("getSelectorsForNode").then((result) => console.log(`Complex math result: ${result}`));
-        });

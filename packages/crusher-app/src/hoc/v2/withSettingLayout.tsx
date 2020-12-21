@@ -59,7 +59,7 @@ export function WithSettingsLayout(
 				<div css={settingsPage}>
 					{ProjectContainer()}
 					{MenuContainer()}
-					<div>
+					<div style={{ flex: 1 }}>
 						<Component {...props} />
 					</div>
 				</div>
@@ -151,7 +151,7 @@ function MainMenuItem({ data }) {
 	const SVG = data.primarySVG;
 	return (
 		<div css={mainMenu}>
-			<div class="menu-heading">
+			<div className="menu-heading">
 				<SVG /> <span>{data.title}</span>
 			</div>
 			{data.subMenu &&

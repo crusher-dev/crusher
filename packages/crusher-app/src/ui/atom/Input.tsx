@@ -98,7 +98,7 @@ const inputContainerCSS = css`
 	align-items: center;
 	border: 1px solid #c4c4c4;
 	border-radius: ${4 / PIXEL_REM_RATIO}rem;
-	width: ${300 / PIXEL_REM_RATIO}rem;
+	width: ${364 / PIXEL_REM_RATIO}rem;
 `;
 const actionIconContainerCSS = css`
 	margin-right: ${17 / PIXEL_REM_RATIO}rem;

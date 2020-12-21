@@ -11,6 +11,8 @@ interface iProps {
 	children: any;
 	illustration: any;
 	illustrationContainerCSS: any;
+	mainContainerCSS: any;
+	containerCSS: any;
 	headingCss: any;
 	descCss: any;
 	onClose: any;
@@ -26,15 +28,16 @@ class Modal extends React.Component<iProps, any> {
 			children,
 			illustration,
 			illustrationContainerCSS,
-			css,
+			containerCSS,
 			headingCss,
 			descCss,
 			onClose,
+			mainContainerCSS: _manualMainContainerCSS,
 		} = this.props;
 
 		return ReactDOM.render(
-			<div css={[containerCss, css]}>
-				<div css={modalContainerCss}>
+			<div css={[containerCss, containerCSS]}>
+				<div css={[modalContainerCss, _manualMainContainerCSS]}>
 					<div css={[topContainerCss, topAreaCSS]}>
 						<div className={"modalHeading"} css={headingCss}>
 							{heading}

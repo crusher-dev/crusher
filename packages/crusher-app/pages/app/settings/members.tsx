@@ -11,8 +11,6 @@ import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHe
 import { PIXEL_REM_RATIO } from "@constants/other";
 import { MemberFilterTableList } from "@ui/components/settings/MemberFilterTableList";
 import { iMember } from "@interfaces/redux/settings";
-import { Conditional } from "@ui/components/common/Conditional";
-import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 
 const DUMMY_MEMBERS: Array<iMember> = [
 	{

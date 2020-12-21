@@ -11,6 +11,9 @@ import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHe
 import { PIXEL_REM_RATIO } from "@constants/other";
 import { MemberFilterTableList } from "@ui/components/settings/MemberFilterTableList";
 import { iMember } from "@interfaces/redux/settings";
+import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
+import { Conditional } from "@ui/components/common/Conditional";
+import ReactDOM from "react-dom";
 
 const DUMMY_MEMBERS: Array<iMember> = [
 	{
@@ -78,6 +81,7 @@ const buttonCSS = css`
 
 const ProjectIntegrationSettings = () => {
 	const [roleSort, setRoleSort] = useState(null as string | null);
+	const [showMemberModal, setShowMemberModal] = useState(false);
 
 	const onToggleRoleSort = () => {
 		if (roleSort === "DESC") {
@@ -87,13 +91,18 @@ const ProjectIntegrationSettings = () => {
 		}
 	};
 
+	const closeTeamMemberModal = useCallback(() => {
+		ReactDOM.render(null, document.getElementById("overlay"));
+		setShowMemberModal(false);
+	}, []);
+
 	const onInviteMember = useCallback(() => {
-		console.log("Opening invite member modal");
+		setShowMemberModal(true);
 	}, []);
 
 	return (
 		<>
-			<SettingsContent>
+			<SettingsContent contentCSS={settingContentCSS}>
 				<SettingsContentHeader
 					title={"Team members"}
 					desc={"List of all team members in current project"}
@@ -107,9 +116,18 @@ const ProjectIntegrationSettings = () => {
 					/>
 				</div>
 			</SettingsContent>
+			<Conditional If={showMemberModal}>
+				<InviteTeamMemberModal
+					onClose={closeTeamMemberModal}
+				></InviteTeamMemberModal>
+			</Conditional>
 		</>
 	);
 };
+
+const settingContentCSS = css`
+	width: ${720 / PIXEL_REM_RATIO}rem;
+`;
 
 const mainContainerCSS = css`
 	margin-top: ${47 / PIXEL_REM_RATIO}rem;

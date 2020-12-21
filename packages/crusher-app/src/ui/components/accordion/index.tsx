@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { css } from "@emotion/core";
 import DownIcon from "../../../../public/svg/settings/down.svg";
 import { PIXEL_REM_RATIO } from "@constants/other";
@@ -16,6 +16,10 @@ const AccordionTab = (props: iAccordionTabProps) => {
 	const [isActive, setIsActive] = useState(false);
 	const { title, children } = props;
 	const _panelRef = useRef(null);
+
+	useEffect(() => {
+		setIsActive(true);
+	}, []);
 
 	const toggleTab = () => {
 		setIsActive(!isActive);
@@ -70,7 +74,7 @@ const tabHeaderPanelCSS = css`
 `;
 const tabHeaderTitleCSS = css`
 	font-family: Gilroy;
-	font-size: ${16 / PIXEL_REM_RATIO}rem;
+	font-size: ${14 / PIXEL_REM_RATIO}rem;
 	color: #323232;
 	font-weight: 700;
 `;

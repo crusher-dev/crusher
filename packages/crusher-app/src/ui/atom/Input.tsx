@@ -74,12 +74,13 @@ const containerCSS = css``;
 const labelCSS = css`
 	color: #323232;
 	font-family: Gilroy;
-	font-size: ${18 / PIXEL_REM_RATIO}rem;
+	font-size: ${16 / PIXEL_REM_RATIO}rem;
 	font-weight: 700;
 `;
 const inputCSS = css`
 	padding: ${10 / PIXEL_REM_RATIO}rem ${17 / PIXEL_REM_RATIO}rem;
 	width: 100%;
+	font-size: ${13 / PIXEL_REM_RATIO}rem;
 	background: #fff;
 	font-family: Gilroy;
 	border: none;
@@ -96,9 +97,9 @@ const inputRowContainerCSS = css`
 const inputContainerCSS = css`
 	display: flex;
 	align-items: center;
-	border: 1px solid #c4c4c4;
-	border-radius: ${4 / PIXEL_REM_RATIO}rem;
-	width: ${364 / PIXEL_REM_RATIO}rem;
+	border: 1.5px solid #c4c4c4;
+	border-radius: ${6 / PIXEL_REM_RATIO}rem;
+	width: ${320 / PIXEL_REM_RATIO}rem;
 `;
 const actionIconContainerCSS = css`
 	margin-right: ${17 / PIXEL_REM_RATIO}rem;

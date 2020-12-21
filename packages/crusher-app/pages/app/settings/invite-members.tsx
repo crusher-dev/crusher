@@ -70,6 +70,7 @@ const InviteUserFromEmailButton = (props: iInviteUserFromEmailButtonProps) => {
 };
 const inviteButtonCSS = css`
 	background: #6583fe;
+	border: 1.2px solid #6583fe;
 `;
 
 interface iCopyInviteLinkButtonProps {
@@ -96,6 +97,7 @@ const copyButtonCSS = css`
 	background: #323232;
 	display: flex;
 	justify-content: center;
+	border: 1.2px solid #141414;
 	span {
 		margin-left: ${9 / PIXEL_REM_RATIO}rem;
 	}
@@ -104,7 +106,6 @@ const copyButtonCSS = css`
 const buttonCSS = css`
 	border-radius: 4px;
 	padding: ${10 / PIXEL_REM_RATIO}rem ${10 / PIXEL_REM_RATIO}rem;
-	border: 1.2px solid #6583fe;
 	color: #fff;
 	min-width: ${150 / PIXEL_REM_RATIO}rem;
 	text-align: center;
@@ -137,7 +138,7 @@ const InviteMembers = () => {
 	};
 
 	return (
-		<SettingsContent>
+		<SettingsContent contentCSS={settingContentCSS}>
 			<SettingsContentHeader
 				title={"Invite team members"}
 				desc={"Invite your friends, employees or co-workers in current project"}
@@ -188,6 +189,10 @@ const InviteMembers = () => {
 		</SettingsContent>
 	);
 };
+
+const settingContentCSS = css`
+	width: ${640 / PIXEL_REM_RATIO}rem;
+`;
 
 const mainContainerCSS = css`
 	margin-top: ${47 / PIXEL_REM_RATIO}rem;

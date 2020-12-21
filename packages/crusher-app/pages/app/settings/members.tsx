@@ -11,6 +11,8 @@ import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHe
 import { PIXEL_REM_RATIO } from "@constants/other";
 import { MemberFilterTableList } from "@ui/components/settings/MemberFilterTableList";
 import { iMember } from "@interfaces/redux/settings";
+import { Conditional } from "@ui/components/common/Conditional";
+import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 
 const DUMMY_MEMBERS: Array<iMember> = [
 	{
@@ -78,6 +80,11 @@ const buttonCSS = css`
 
 const ProjectIntegrationSettings = () => {
 	const [roleSort, setRoleSort] = useState(null as string | null);
+	const [showInviteModal, setShowInviteModal] = useState(true);
+
+	const closeInviteTeamMemberModal = () => {
+		setShowInviteModal(false);
+	};
 
 	const onToggleRoleSort = () => {
 		if (roleSort === "DESC") {
@@ -92,20 +99,25 @@ const ProjectIntegrationSettings = () => {
 	}, []);
 
 	return (
-		<SettingsContent>
-			<SettingsContentHeader
-				title={"Team members"}
-				desc={"List of all team members in current project"}
-				button={<InviteMemberButton onClick={onInviteMember} />}
-			/>
-			<div css={mainContainerCSS}>
-				<MemberFilterTableList
-					onToggleRoleSort={onToggleRoleSort}
-					filterSort={roleSort}
-					members={DUMMY_MEMBERS}
+		<>
+			<SettingsContent>
+				<SettingsContentHeader
+					title={"Team members"}
+					desc={"List of all team members in current project"}
+					button={<InviteMemberButton onClick={onInviteMember} />}
 				/>
-			</div>
-		</SettingsContent>
+				<div css={mainContainerCSS}>
+					<MemberFilterTableList
+						onToggleRoleSort={onToggleRoleSort}
+						filterSort={roleSort}
+						members={DUMMY_MEMBERS}
+					/>
+				</div>
+			</SettingsContent>
+			<Conditional If={showInviteModal}>
+				<InviteTeamMemberModal onClose={closeInviteTeamMemberModal} />
+			</Conditional>
+		</>
 	);
 };
 

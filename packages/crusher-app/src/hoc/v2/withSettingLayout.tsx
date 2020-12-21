@@ -3,41 +3,32 @@ import Head from "next/head";
 import PlusSVG from "../../../public/svg/sidebarSettings/plus.svg";
 import BackSVG from "../../../public/svg/settings/back.svg";
 import StarSVG from "../../../public/svg/settings/star.svg";
-import UserSVG from "../../../public/svg/settings/user.svg";
-import BuildingSVG from "../../../public/svg/settings/building.svg";
 import TeamSVG from "../../../public/svg/settings/team.svg";
 
 import React from "react";
+import Router from "next/router";
+import { useRouter } from "next/router";
 
-const accountMenuData = {
-	title: "Account",
-	primarySVG: UserSVG,
-	subMenu: [
-		{ title: "Profile" },
-		{ title: "Preferences" },
-		{ title: "Notification" },
-	],
-};
-const workspaceMenuData = {
-	title: "Workspace",
-	primarySVG: BuildingSVG,
-	subMenu: [
-		{ title: "General" },
-		{ title: "Plan" },
-		{ title: "Billing" },
-		{ title: "Members" },
-		{ title: "Import/Export" },
-	],
-};
 const projectMenuData = {
 	title: "Project",
 	primarySVG: TeamSVG,
 	subMenu: [
-		{ title: "Manage host" },
-		{ title: "Team members" },
-		{ title: "Integration" },
-		{ title: "Notifications" },
-		{ title: "Other" },
+		{
+			id: "project-basic-settings",
+			title: "Basic",
+			link: "/app/settings/project/basic",
+		},
+		{
+			id: "project-members-settings",
+			title: "Team members",
+			link: "/app/settings/project/members",
+			children: ["/app/settings/project/invite-members"],
+		},
+		{
+			id: "project-integration-settings",
+			title: "Integration/Notifications",
+			link: "/app/settings/project/integration",
+		},
 	],
 };
 
@@ -57,9 +48,9 @@ export function WithSettingsLayout(
 					/>
 				</Head>
 				<div css={settingsPage}>
-					{ProjectContainer()}
-					{MenuContainer()}
-					<div style={{ flex: 1 }}>
+					<ProjectContainer />
+					<MenuContainer />
+					<div style={{ flex: 1, overflowY: "auto" }}>
 						<Component {...props} />
 					</div>
 				</div>
@@ -104,10 +95,9 @@ function MenuContainer() {
 				</div>
 			</div>
 
-			<MainMenuItem data={accountMenuData} />
-			<MainMenuItem data={workspaceMenuData} />
 			<MainMenuItem data={projectMenuData} />
-			<div style={{ marginTop: "1.8rem" }}>
+
+			<div style={{ marginTop: "auto" }}>
 				<div css={menuBottomLink}>
 					<PlusSVG /> <span>Add team member</span>
 				</div>
@@ -149,18 +139,36 @@ const menuBottomLink = css`
 
 function MainMenuItem({ data }) {
 	const SVG = data.primarySVG;
+	const router = useRouter();
+	const currentRoute = router.pathname;
+
+	const handleItemClick = (item: any) => {
+		Router.replace(item.link);
+	};
+
 	return (
 		<div css={mainMenu}>
 			<div className="menu-heading">
 				<SVG /> <span>{data.title}</span>
 			</div>
 			{data.subMenu &&
-				data.subMenu.map((item, i) => (
-					<div css={menuItem} className={i === 0 ? "selected" : ""}>
-						<div className="selected-bar"></div>
-						<div className="menu-text">{item.title}</div>
-					</div>
-				))}
+				data.subMenu.map((item, i) => {
+					return (
+						<div
+							css={menuItem}
+							onClick={handleItemClick.bind(this, item)}
+							className={
+								currentRoute === item.link ||
+								(item.children && item.children.includes(currentRoute))
+									? "selected"
+									: ""
+							}
+						>
+							<div className="selected-bar"></div>
+							<div className="menu-text">{item.title}</div>
+						</div>
+					);
+				})}
 		</div>
 	);
 }
@@ -326,5 +334,5 @@ const menuBar = css`
 
 const settingsPage = css`
 	display: flex;
-	height: 100%;
+	height: 100vh;
 `;

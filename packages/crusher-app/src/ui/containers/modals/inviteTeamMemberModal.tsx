@@ -32,19 +32,16 @@ const InviteTeamMemberModal = (props: iProps) => {
 	);
 };
 
-const containerCSS = css``;
+const containerCSS = css`
+	width: ${648 / PIXEL_REM_RATIO}rem;
+`;
 
 const externalInputCSS = css`
 	width: ${300 / PIXEL_REM_RATIO}rem;
 `;
 
 const topAreaCSS = css`
-	background: linear-gradient(
-		-184deg,
-		#262f39 16.9%,
-		#242d37 35.74%,
-		#112128 79.28%
-	);
+	background: linear-gradient(360deg, #8793ff 0%, #a36bff 100%);
 	border-bottom: 2px solid #0a1215;
 `;
 

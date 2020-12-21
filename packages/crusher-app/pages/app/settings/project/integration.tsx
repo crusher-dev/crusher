@@ -91,7 +91,7 @@ const ProjectIntegrationSettings = () => {
 };
 
 const settingContentCSS = css`
-	width: ${720 / PIXEL_REM_RATIO}rem;
+	width: ${490 / PIXEL_REM_RATIO}rem;
 `;
 
 const mainContainerCSS = css`
@@ -117,13 +117,13 @@ const accordionContentCSS = css`
 const repositoryNameCSS = css`
 	font-family: Gilroy;
 	font-weight: 500;
-	font-size: ${16 / PIXEL_REM_RATIO}rem;
+	font-size: ${14 / PIXEL_REM_RATIO}rem;
 	color: #404040;
 `;
 const repositoryDateCSS = css`
 	margin-left: auto;
 	font-family: Gilroy;
-	font-size: ${15 / PIXEL_REM_RATIO}rem;
+	font-size: ${13 / PIXEL_REM_RATIO}rem;
 	font-weight: 500;
 	color: #636363;
 `;
@@ -133,13 +133,13 @@ const addRepoContainerCSS = css`
 	margin-top: ${30 / PIXEL_REM_RATIO}rem;
 	a {
 		font-weight: 700;
-		font-size: ${18 / PIXEL_REM_RATIO}rem;
+		font-size: ${17 / PIXEL_REM_RATIO}rem;
 		text-decoration-line: underline;
 		color: #0f0f0f;
 	}
 	span {
 		margin-left: ${16 / PIXEL_REM_RATIO}rem;
-		font-size: ${16 / PIXEL_REM_RATIO}rem;
+		font-size: ${14 / PIXEL_REM_RATIO}rem;
 		color: #636363;
 		font-weight: 500;
 	}

@@ -69,6 +69,7 @@ const settingPageHeadingCSS = css`
 const settingPageDescCSS = css`
 	font-family: Gilroy;
 	font-weight: 500;
+	font-size: ${16 / PIXEL_REM_RATIO}rem;
 	margin-top: ${13 / PIXEL_REM_RATIO}rem;
 `;
 

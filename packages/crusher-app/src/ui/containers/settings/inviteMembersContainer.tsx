@@ -101,7 +101,7 @@ const buttonCSS = css`
 	text-align: center;
 	margin-left: ${20 / PIXEL_REM_RATIO}rem;
 	cursor: pointer;
-	font-size: ${15 / PIXEL_REM_RATIO}rem;
+	font-size: ${14 / PIXEL_REM_RATIO}rem;
 	font-weight: 600;
 	font-family: Gilroy;
 `;
@@ -213,12 +213,12 @@ const externalCardHeadingCSS = css`
 	font-family: Gilroy;
 	font-weight: 800;
 	color: #323232;
-	font-size: ${20 / PIXEL_REM_RATIO}rem;
+	font-size: ${18 / PIXEL_REM_RATIO}rem;
 `;
 
 const externalCardDescCSS = css`
 	margin-top: ${6 / PIXEL_REM_RATIO}rem;
-	font-size: ${16 / PIXEL_REM_RATIO}rem;
+	font-size: ${14 / PIXEL_REM_RATIO}rem;
 	font-weight: 500;
 	font-family: Gilroy;
 	color: #323232;

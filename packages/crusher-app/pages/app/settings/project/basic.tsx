@@ -160,10 +160,10 @@ const featureOptionCSS = css`
 	}
 `;
 const settingContentCSS = css`
-	width: ${640 / PIXEL_REM_RATIO}rem;
+	width: ${600 / PIXEL_REM_RATIO}rem;
 `;
 const inputContainerCSS = css`
-	width: 100%;
+	width: 95%;
 `;
 const mainContainerCSS = css`
 	margin-top: ${47 / PIXEL_REM_RATIO}rem;
@@ -175,8 +175,8 @@ const mainContainerCSS = css`
 		color: #323232;
 	}
 	input {
-		padding: ${12 / PIXEL_REM_RATIO}rem ${20 / PIXEL_REM_RATIO}rem;
-		font-size: ${16 / PIXEL_REM_RATIO}rem;
+		padding: ${10 / PIXEL_REM_RATIO}rem ${18 / PIXEL_REM_RATIO}rem;
+		font-size: ${15 / PIXEL_REM_RATIO}rem;
 	}
 `;
 

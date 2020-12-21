@@ -4,12 +4,13 @@ import { PIXEL_REM_RATIO } from "@constants/other";
 
 interface iSettingsContentProps {
 	children: React.ReactNode;
+	contentCSS?: any;
 }
 const SettingsContent = (props: iSettingsContentProps) => {
-	const { children } = props;
+	const { children, contentCSS: _manualContentCSS } = props;
 	return (
 		<div css={containerCSS}>
-			<div css={contentCSS}>{children}</div>
+			<div css={[contentCSS, _manualContentCSS]}>{children}</div>
 		</div>
 	);
 };

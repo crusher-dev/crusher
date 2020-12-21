@@ -80,11 +80,6 @@ const buttonCSS = css`
 
 const ProjectIntegrationSettings = () => {
 	const [roleSort, setRoleSort] = useState(null as string | null);
-	const [showInviteModal, setShowInviteModal] = useState(true);
-
-	const closeInviteTeamMemberModal = () => {
-		setShowInviteModal(false);
-	};
 
 	const onToggleRoleSort = () => {
 		if (roleSort === "DESC") {
@@ -114,9 +109,6 @@ const ProjectIntegrationSettings = () => {
 					/>
 				</div>
 			</SettingsContent>
-			<Conditional If={showInviteModal}>
-				<InviteTeamMemberModal onClose={closeInviteTeamMemberModal} />
-			</Conditional>
 		</>
 	);
 };

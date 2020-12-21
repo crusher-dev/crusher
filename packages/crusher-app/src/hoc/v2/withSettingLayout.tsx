@@ -81,11 +81,15 @@ function ProjectContainer() {
 }
 
 function MenuContainer() {
+	const goBackToApp = () => {
+		Router.replace("/app");
+	};
+
 	return (
 		<div css={menuBar}>
 			<div css={topMenuSection}>
 				<div id="back-container">
-					<div id="arrow-icon">
+					<div id="arrow-icon" onClick={goBackToApp}>
 						<BackSVG />
 					</div>
 					<div id="back-text">Settings</div>

@@ -29,15 +29,17 @@ const SettingsContentHeader = (props: iSettingsContentHeader) => {
 				</div>
 			</Conditional>
 			<Conditional If={!button}>
-				<div className={"settingPageHeading"} css={settingPageHeadingCSS}>
-					{title}
-				</div>
-
-				<Conditional If={desc}>
-					<div className={"settingPageDesc"} css={settingPageDescCSS}>
-						{desc}
+				<>
+					<div className={"settingPageHeading"} css={settingPageHeadingCSS}>
+						{title}
 					</div>
-				</Conditional>
+
+					<Conditional If={desc}>
+						<div className={"settingPageDesc"} css={settingPageDescCSS}>
+							{desc}
+						</div>
+					</Conditional>
+				</>
 			</Conditional>
 		</div>
 	);

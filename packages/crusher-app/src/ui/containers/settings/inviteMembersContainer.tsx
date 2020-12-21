@@ -119,7 +119,7 @@ const separatorCSS = css`
 
 interface iInviteMemberContainerProps {
 	link: string;
-	externalInputCSS: any;
+	externalInputCSS?: any;
 }
 
 const InviteMembersContainer = (props: iInviteMemberContainerProps) => {

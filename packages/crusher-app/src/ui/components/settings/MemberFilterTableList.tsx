@@ -5,6 +5,7 @@ import GearIcon from "../../../../public/svg/settings/gear.svg";
 import DownIcon from "../../../../public/svg/settings/down.svg";
 import { iMember } from "@interfaces/redux/settings";
 import { Conditional } from "@ui/components/common/Conditional";
+import Avatar from "react-avatar";
 
 interface iMemberFilterTableListProps {
 	members: Array<iMember>;
@@ -24,7 +25,7 @@ const MemberMiniProfile = (props: iMemberMiniProfileProps) => {
 	const { name, email } = props;
 	return (
 		<div css={miniProfileContainerCSS}>
-			<div css={avatarCSS}></div>
+			<Avatar name={name} css={avatarCSS} size={"44"} maxInitials={1} />
 			<div css={miniProfileContentCSS}>
 				<div css={miniProfileNameCSS}>{name}</div>
 				<div css={miniProfileEmailCSS}>{email}</div>
@@ -57,6 +58,7 @@ const MemberItem = (props: iMemberItemProps) => {
 };
 
 const MemberFilterTableList = (props: iMemberFilterTableListProps) => {
+	// Null filterSort means unordered list.
 	const { members: unorderedMembers, onToggleRoleSort, filterSort } = props;
 
 	let sortedMembers = unorderedMembers;
@@ -155,6 +157,9 @@ const avatarCSS = css`
 	width: ${60 / PIXEL_REM_RATIO}rem;
 	height: ${60 / PIXEL_REM_RATIO}rem;
 	border-radius: ${30 / PIXEL_REM_RATIO}rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background: #c4c4c4;
 `;
 

@@ -7,6 +7,8 @@ import { combineReducers } from "redux";
 import { HYDRATE } from "next-redux-wrapper";
 import job from "@redux/reducers/job";
 import testInstance from "@redux/reducers/testInstance";
+import IAction from "@interfaces/redux/action";
+import settings from "@redux/reducers/settings";
 
 const combinedReducer = combineReducers({
 	app,
@@ -16,9 +18,10 @@ const combinedReducer = combineReducers({
 	lastBuilds,
 	job,
 	testInstance,
+	settings,
 });
 
-const rootReducer = (state, action) => {
+const rootReducer = (state: any, action: IAction<any>) => {
 	if (action.type === HYDRATE) {
 		const nextState = {
 			...state, // use previous state

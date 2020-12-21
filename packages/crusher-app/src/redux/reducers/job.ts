@@ -1,4 +1,3 @@
-import { JobInfo } from "@interfaces/JobInfo";
 import {
 	ADD_COMMENT_TO_SCREENSHOT,
 	SET_CURRENT_JOB_INFO,
@@ -14,7 +13,7 @@ const initialState = {
 	results: {},
 };
 
-const job = (state = initialState, action) => {
+const job = (state = initialState, action: any) => {
 	switch (action.type) {
 		case SET_CURRENT_JOB_INFO:
 			return {

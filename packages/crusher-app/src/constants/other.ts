@@ -36,3 +36,5 @@ export const TEAM_SETTING_MENU_ITEMS = {
 	BILLING: "Billing",
 	TEAM: "Team",
 };
+
+export const PIXEL_REM_RATIO = 20;

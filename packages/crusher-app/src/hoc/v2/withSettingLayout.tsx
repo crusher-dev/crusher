@@ -321,6 +321,7 @@ const menuBar = css`
 	flex-direction: column;
 	background: #fbfbfb;
 	border: 1px solid #eae8e8;
+	overflow-y: auto;
 `;
 
 const settingsPage = css`

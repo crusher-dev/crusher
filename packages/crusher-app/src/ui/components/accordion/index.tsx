@@ -67,6 +67,12 @@ const tabHeaderCSS = css`
 	border-radius: ${4 / PIXEL_REM_RATIO}rem;
 	background: #fff;
 	align-items: center;
+	cursor: pointer;
+	opacity: 0.7;
+
+	&:hover {
+		opacity: 1;
+	}
 `;
 const tabHeaderPanelCSS = css`
 	height: 0px !important;

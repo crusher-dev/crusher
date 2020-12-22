@@ -1,9 +1,9 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from '../../constants';
-import { CreateTestInstanceRequest } from '../interfaces/services/test/CreateTestInstanceRequest';
-import { Platform } from '../interfaces/Platform';
-import JobsService from './JobsService';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
+import { CreateTestInstanceRequest } from "../interfaces/services/test/CreateTestInstanceRequest";
+import { Platform } from "../interfaces/Platform";
+import JobsService from "./JobsService";
 
 @Service()
 export default class TestInstanceService {
@@ -40,27 +40,31 @@ export default class TestInstanceService {
 
 	// Sort by created_at DESC
 	async getAllTestInstances(testId: number) {
-		return this.dbManager.fetchData('SELECT * FROM test_instances WHERE test_id = ? ORDER BY created_at DESC', [testId]);
+		return this.dbManager.fetchData("SELECT * FROM test_instances WHERE test_id = ? ORDER BY created_at DESC", [testId]);
 	}
 
-	async getReferenceTestInstance(referenceJobId: number, testId: number, platform: any){
-		return this.dbManager.fetchSingleRow(`SELECT * FROM test_instances WHERE job_id = ? AND test_id = ? AND platform = ?`, [referenceJobId, testId, platform])
+	async getReferenceTestInstance(referenceJobId: number, testId: number, platform: any) {
+		return this.dbManager.fetchSingleRow(`SELECT * FROM test_instances WHERE job_id = ? AND test_id = ? AND platform = ?`, [
+			referenceJobId,
+			testId,
+			platform,
+		]);
 	}
 
 	async getTestInstance(testInstanceId: number) {
-		return this.dbManager.fetchSingleRow('SELECT * FROM test_instances WHERE id = ?', [testInstanceId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM test_instances WHERE id = ?", [testInstanceId]);
 	}
 
 	async getAllTestInstancesFromJobId(jobId: number) {
 		return this.dbManager.fetchData(
-			'SELECT test_instances.*, tests.name test_name FROM test_instances  LEFT JOIN tests ON tests.id = test_instances.test_id WHERE job_id = ? ORDER BY created_at DESC',
+			"SELECT test_instances.*, tests.name test_name FROM test_instances  LEFT JOIN tests ON tests.id = test_instances.test_id WHERE job_id = ? ORDER BY created_at DESC",
 			[jobId],
 		);
 	}
 
 	async getAllTestInstancesByJobIdOfPlatform(jobId: number, platform: Platform) {
 		return this.dbManager.fetchData(
-			'SELECT tests.events as events, test_instances.* FROM test_instances, tests WHERE job_id = ? AND platform = ? AND tests.id = test_instances.test_id ORDER BY created_at DESC',
+			"SELECT tests.events as events, test_instances.* FROM test_instances, tests WHERE job_id = ? AND platform = ? AND tests.id = test_instances.test_id ORDER BY created_at DESC",
 			[jobId, platform],
 		);
 	}

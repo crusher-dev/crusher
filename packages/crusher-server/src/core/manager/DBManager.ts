@@ -1,8 +1,8 @@
-import { InternalServerError } from 'routing-controllers';
-import { Logger } from '../../utils/logger';
-import * as chalk from 'chalk';
+import { InternalServerError } from "routing-controllers";
+import { Logger } from "../../utils/logger";
+import * as chalk from "chalk";
 
-const mysql = require('mysql');
+const mysql = require("mysql");
 
 export default class DBManager {
 	private connPool;
@@ -11,7 +11,7 @@ export default class DBManager {
 	constructor() {
 		this.connPool = mysql.createPool({
 			connectionLimit: process.env.DB_CONNECTION_POOL || 10,
-			host: process.env.DB_HOST || 'localhost',
+			host: process.env.DB_HOST || "localhost",
 			user: process.env.DB_USERNAME,
 			password: process.env.DB_PASSWORD,
 			database: process.env.DB_DATABASE,
@@ -27,11 +27,11 @@ export default class DBManager {
 					const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
 
 					if (error) {
-						Logger.error('DbManager::queryRunner', `Failed running query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, { queryToExecute });
+						Logger.error("DbManager::queryRunner", `Failed running query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, { queryToExecute });
 						console.error(error);
 						return reject(error);
 					}
-					Logger.debug('DbManager::queryRunner', `Executing Query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {
+					Logger.debug("DbManager::queryRunner", `Executing Query (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {
 						queryToExecute,
 					});
 					resolve(result);
@@ -50,7 +50,7 @@ export default class DBManager {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
 			return queryResults;
 		} catch (e) {
-			throw new InternalServerError('Some internal error occurred');
+			throw new InternalServerError("Some internal error occurred");
 		}
 	};
 
@@ -59,7 +59,7 @@ export default class DBManager {
 			const queryResults = await this.queryRunner(command, valuesToEscape);
 			return queryResults;
 		} catch (e) {
-			throw new InternalServerError('Some internal error occurred');
+			throw new InternalServerError("Some internal error occurred");
 		}
 	};
 

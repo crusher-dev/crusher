@@ -6,9 +6,8 @@
 		"build": "next build",
 		"start": "next start",
 		"runInDev": "next dev --port 7000",
-		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
-		"lint-fix:ts": "eslint --fix src",
+		"lint": "eslint --fix src",
 		"analyze": "cross-env ANALYZE=true next build",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
 		"analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"

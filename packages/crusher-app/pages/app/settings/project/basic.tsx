@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 
 import { cleanHeaders } from "@utils/backendRequest";
-import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
 import WithSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
@@ -13,6 +12,12 @@ import { Input } from "@ui/atom/Input";
 import EnabledOptionIcon from "../../../../public/svg/settings/enabledOption.svg";
 import DisabledOptionIcon from "../../../../public/svg/settings/disabledOption.svg";
 import { Conditional } from "@ui/components/common/Conditional";
+import { getProjectInfo, getSelectedProject } from "@redux/stateUtils/projects";
+import { _getProjectInfo, _updateProjectInfo } from "@services/v2/project";
+import { setCurrentProjectInfo } from "@redux/actions/project";
+import { useSelector } from "react-redux";
+import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
+import { store } from "@redux/store";
 
 interface iFeatureItemProps {
 	title: string;
@@ -48,13 +53,15 @@ FeatureItem.defaultProps = {
 	enabled: false,
 };
 
-const ProjectBasicSettings = () => {
-	const [projectName, setProjectName] = useState("Crusher");
+const ProjectBasicSettings = (props: any) => {
+	const { isVideoRecordingOn, isScreenshotOn, isMultiBrowserSupportOn } = props;
+	const projectInfo: iProjectInfoResponse = useSelector(getProjectInfo);
+
+	const [projectName, setProjectName] = useState(projectInfo.name);
 	const [featuresInfo, setFeaturesInfo] = useState({
-		video_recording: true,
-		screenshot: true,
-		log_duration_time: false,
-		multi_browser_support: false,
+		video_recording: isVideoRecordingOn,
+		screenshot: isScreenshotOn,
+		multi_browser_support: isMultiBrowserSupportOn,
 	});
 
 	const handleProjectNameChange = (event: any) => {
@@ -75,19 +82,19 @@ const ProjectBasicSettings = () => {
 		});
 	}, [featuresInfo]);
 
-	const handleLogDurationTimeToggle = useCallback(() => {
-		setFeaturesInfo({
-			...featuresInfo,
-			log_duration_time: !featuresInfo.log_duration_time,
-		});
-	}, [featuresInfo]);
-
 	const handleMultiBrowserSupportToggle = useCallback(() => {
 		setFeaturesInfo({
 			...featuresInfo,
 			multi_browser_support: !featuresInfo.multi_browser_support,
 		});
 	}, [featuresInfo]);
+
+	const saveBasicSettings = () => {
+		_updateProjectInfo({ name: projectName }, projectInfo.id).then(() => {
+			store.dispatch(setCurrentProjectInfo({ ...projectInfo, name: projectName }));
+		});
+	};
+
 	return (
 		<SettingsContent contentCSS={settingContentCSS}>
 			<SettingsContentHeader
@@ -116,18 +123,15 @@ const ProjectBasicSettings = () => {
 							onToggleEnable={handleScreenshotToggle}
 						/>
 						<FeatureItem
-							title={"Log duration time"}
-							enabled={featuresInfo.log_duration_time}
-							onToggleEnable={handleLogDurationTimeToggle}
-						/>
-						<FeatureItem
 							title={"Multi browser support"}
 							enabled={featuresInfo.multi_browser_support}
 							onToggleEnable={handleMultiBrowserSupportToggle}
 						/>
 					</ul>
 					<div css={saveButtonRowCSS}>
-						<button css={saveButtonCSS}>Save</button>
+						<button css={saveButtonCSS} onClick={saveBasicSettings}>
+							Save
+						</button>
 					</div>
 				</div>
 			</div>
@@ -210,26 +214,28 @@ const mainContainerCSS = css`
 `;
 
 ProjectBasicSettings.getInitialProps = async (ctx: any) => {
-	const { req, res } = ctx;
+	const { req, res, store } = ctx;
 	try {
 		let headers;
 		if (req) {
 			headers = req.headers;
 			cleanHeaders(headers);
 		}
-		const cookies = getCookies(req);
 
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
+		const selectedProject = getSelectedProject(store.getState());
+
+		await _getProjectInfo(parseInt(selectedProject), headers).then(
+			(projectInfo) => {
+				store.dispatch(setCurrentProjectInfo(projectInfo));
+			},
 		);
 
 		return {
-			isIntegratedWithSlack: false,
-			isIntegratedWithRepo: false,
-			isIntegratedWithEmail: true,
+			isVideoRecordingOn: true,
+			isScreenshotOn: true,
+			isMultiBrowserSupportOn: false,
 		};
 	} catch (ex) {
-		throw ex;
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

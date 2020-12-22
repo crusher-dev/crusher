@@ -1,6 +1,6 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { MonitoringSettings } from '../interfaces/db/MonitoringSettings';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { MonitoringSettings } from "../interfaces/db/MonitoringSettings";
 
 @Service()
 export default class MonitoringService {
@@ -19,7 +19,7 @@ export default class MonitoringService {
 	}
 
 	async getSettingsForProject(projectId: number): Promise<MonitoringSettings> {
-		return this.dbManager.fetchSingleRow('SELECT * FROM monitoring_settings WHERE project_id = ?', [projectId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM monitoring_settings WHERE project_id = ?", [projectId]);
 	}
 
 	async getProjectsForCronNow(): Promise<Array<MonitoringSettings>> {

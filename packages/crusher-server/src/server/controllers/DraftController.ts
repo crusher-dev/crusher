@@ -1,23 +1,23 @@
-import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, Res, BadRequestError } from 'routing-controllers';
-import { Service, Container, Inject } from 'typedi';
-import DBManager from '../../core/manager/DBManager';
-import UserService from '../../core/services/UserService';
-import ProjectService from '../../core/services/ProjectService';
-import TestService from '../../core/services/TestService';
-import DraftService from '../../core/services/DraftService';
-import { Draft } from '../../core/interfaces/db/Draft';
-import { addTestRequestToQueue } from '../../core/utils/queue';
-import { TestType } from '../../core/interfaces/TestType';
-import { TestFramework } from '../../core/interfaces/TestFramework';
-import { User } from '../../core/interfaces/db/User';
-import DraftInstanceService from '../../core/services/DraftInstanceService';
-import { InstanceStatus } from '../../core/interfaces/InstanceStatus';
-import DraftInstanceResultsService from '../../core/services/DraftInstanceResultsService';
-import TestInstanceRecordingService from '../../core/services/TestInstanceRecordingService';
-import { TestLiveStepsLogs } from '../models/testLiveStepsLogs';
+import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, Res, BadRequestError } from "routing-controllers";
+import { Service, Container, Inject } from "typedi";
+import DBManager from "../../core/manager/DBManager";
+import UserService from "../../core/services/UserService";
+import ProjectService from "../../core/services/ProjectService";
+import TestService from "../../core/services/TestService";
+import DraftService from "../../core/services/DraftService";
+import { Draft } from "../../core/interfaces/db/Draft";
+import { addTestRequestToQueue } from "../../core/utils/queue";
+import { TestType } from "../../core/interfaces/TestType";
+import { TestFramework } from "../../core/interfaces/TestFramework";
+import { User } from "../../core/interfaces/db/User";
+import DraftInstanceService from "../../core/services/DraftInstanceService";
+import { InstanceStatus } from "../../core/interfaces/InstanceStatus";
+import DraftInstanceResultsService from "../../core/services/DraftInstanceResultsService";
+import TestInstanceRecordingService from "../../core/services/TestInstanceRecordingService";
+import { TestLiveStepsLogs } from "../models/testLiveStepsLogs";
 
 @Service()
-@JsonController('/draft')
+@JsonController("/draft")
 export class DraftController {
 	@Inject()
 	private userService: UserService;
@@ -42,19 +42,19 @@ export class DraftController {
 	}
 
 	@Authorized()
-	@Get('/get/:draftId')
-	async getTest(@CurrentUser({ required: true }) user, @Param('draftId') draftId) {
+	@Get("/get/:draftId")
+	async getTest(@CurrentUser({ required: true }) user, @Param("draftId") draftId) {
 		const { user_id } = user;
 		return this.draftService.getDraftTest(draftId);
 	}
 
 	@Authorized()
-	@Post('/createAndRun')
+	@Post("/createAndRun")
 	async createDraft(@CurrentUser({ required: true }) user, @Body() body) {
 		const { user_id } = user;
 		const { testName, projectId, events, code } = body;
 		const draft = await this.draftService.createDraftTest({
-			name: testName ? testName : '',
+			name: testName ? testName : "",
 			events: JSON.stringify(events),
 			code: code,
 			user_id,
@@ -76,8 +76,8 @@ export class DraftController {
 	}
 
 	@Authorized()
-	@Post('/getLastInstanceStatus/:draftId')
-	async getStatus(@CurrentUser({ required: true }) user: User, @Param('draftId') draftId: number, @Body() body, @Res() res) {
+	@Post("/getLastInstanceStatus/:draftId")
+	async getStatus(@CurrentUser({ required: true }) user: User, @Param("draftId") draftId: number, @Body() body, @Res() res) {
 		const { logsAfter } = body;
 		let count = 0;
 		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);
@@ -117,10 +117,10 @@ export class DraftController {
 									console.log(logs);
 								}
 								if (logs) {
-									resolve({ status: 'FETCHED_LOGS', logs: logs, test: testStatus });
+									resolve({ status: "FETCHED_LOGS", logs: logs, test: testStatus });
 									return clearInterval(interval);
 								} else if (count === 5) {
-									resolve({ status: 'NO_UPDATE', test: testStatus });
+									resolve({ status: "NO_UPDATE", test: testStatus });
 									return clearInterval(interval);
 								}
 								count++;
@@ -142,10 +142,10 @@ export class DraftController {
 									console.log(logs);
 								}
 								if (logs) {
-									resolve({ status: 'FETCHED_LOGS', logs: logs, test: testStatus });
+									resolve({ status: "FETCHED_LOGS", logs: logs, test: testStatus });
 									return clearInterval(interval);
 								} else if (count === 5) {
-									resolve({ status: 'NO_UPDATE', test: testStatus });
+									resolve({ status: "NO_UPDATE", test: testStatus });
 									return clearInterval(interval);
 								}
 								count++;

@@ -1,30 +1,30 @@
-import { Authorized, Body, ContentType, Controller, CurrentUser, Get, Param, Post, Req, Res, UnauthorizedError } from 'routing-controllers';
-import { Container, Inject, Service } from 'typedi';
-import DBManager from '../../core/manager/DBManager';
-import UserService from '../../core/services/UserService';
-import ProjectService from '../../core/services/ProjectService';
-import TestService from '../../core/services/TestService';
-import DraftService from '../../core/services/DraftService';
-import DraftInstanceService from '../../core/services/DraftInstanceService';
-import JobsService, { TRIGGER } from '../../core/services/JobsService';
-import { getDefaultHostFromCode } from '../../core/utils/helper';
-import TestInstanceService from '../../core/services/TestInstanceService';
-import { JobTrigger } from '../../core/interfaces/JobTrigger';
-import { JobStatus } from '../../core/interfaces/JobStatus';
-import { addJobToRequestQueue } from '../../core/utils/queue';
-import { InsertRecordResponse } from '../../core/interfaces/services/InsertRecordResponse';
-import { Platform } from '../../core/interfaces/Platform';
-import { resolvePathToFrontendURI } from '../../core/utils/uri';
-import { TestType } from '../../core/interfaces/TestType';
-import { TestFramework } from '../../core/interfaces/TestFramework';
+import { Authorized, Body, ContentType, Controller, CurrentUser, Get, Param, Post, Req, Res, UnauthorizedError } from "routing-controllers";
+import { Container, Inject, Service } from "typedi";
+import DBManager from "../../core/manager/DBManager";
+import UserService from "../../core/services/UserService";
+import ProjectService from "../../core/services/ProjectService";
+import TestService from "../../core/services/TestService";
+import DraftService from "../../core/services/DraftService";
+import DraftInstanceService from "../../core/services/DraftInstanceService";
+import JobsService, { TRIGGER } from "../../core/services/JobsService";
+import { getDefaultHostFromCode } from "../../core/utils/helper";
+import TestInstanceService from "../../core/services/TestInstanceService";
+import { JobTrigger } from "../../core/interfaces/JobTrigger";
+import { JobStatus } from "../../core/interfaces/JobStatus";
+import { addJobToRequestQueue } from "../../core/utils/queue";
+import { InsertRecordResponse } from "../../core/interfaces/services/InsertRecordResponse";
+import { Platform } from "../../core/interfaces/Platform";
+import { resolvePathToFrontendURI } from "../../core/utils/uri";
+import { TestType } from "../../core/interfaces/TestType";
+import { TestFramework } from "../../core/interfaces/TestFramework";
 
 const RESPONSE_STATUS = {
-	INSUFFICIENT_INFORMATION: 'INSUFFICIENT_INFORMATION',
-	TEST_CREATED: 'TEST_CREATED',
+	INSUFFICIENT_INFORMATION: "INSUFFICIENT_INFORMATION",
+	TEST_CREATED: "TEST_CREATED",
 };
 
 @Service()
-@Controller('/test')
+@Controller("/test")
 export class TestController {
 	@Inject()
 	private userService: UserService;
@@ -49,20 +49,20 @@ export class TestController {
 		this.dbManager = Container.get(DBManager);
 	}
 
-	@Post('/goToEditor')
-	@ContentType('text/html')
+	@Post("/goToEditor")
+	@ContentType("text/html")
 	async goToEditor(@Body() body, @Res() res) {
 		const { events, totalTime } = body;
 
 		return `<html><body><script> function sendPostDataWithForm(url, options = {}){ const form = document.createElement('form'); form.method = "post"; form.action = url; const optionKeys = Object.keys(options); for(let optionKey of optionKeys){const hiddenField = document.createElement('input'); hiddenField.type = 'hidden'; hiddenField.name = optionKey; hiddenField.value = options[optionKey]; form.appendChild(hiddenField);} document.body.appendChild(form);
 form.submit(); 
 form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
-			'/app/tests/editor',
+			"/app/tests/editor",
 		)}", {events: "${events}", totalTime: ${totalTime} });</script></body></html>`;
 	}
 
 	@Authorized()
-	@Post('/create')
+	@Post("/create")
 	async createTest(@CurrentUser({ required: true }) user, @Body() testDetails) {
 		const { testName, projectId, events, code, framework } = testDetails;
 		const { user_id } = user;
@@ -85,8 +85,8 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 	}
 
 	@Authorized()
-	@Get('/run/:testId')
-	async runTestControllerMethod(@Param('testId') testId: any, @CurrentUser({ required: true }) user: any, @Req() req) {
+	@Get("/run/:testId")
+	async runTestControllerMethod(@Param("testId") testId: any, @CurrentUser({ required: true }) user: any, @Req() req) {
 		const { user_id } = user;
 		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
 
@@ -113,13 +113,13 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			});
 			return {};
 		} else {
-			return { status: 304, message: 'Not authorized' };
+			return { status: 304, message: "Not authorized" };
 		}
 	}
 
 	@Authorized()
-	@Get('/get/:testId')
-	async getTest(@Param('testId') testId: number, @CurrentUser({ required: true }) user) {
+	@Get("/get/:testId")
+	async getTest(@Param("testId") testId: number, @CurrentUser({ required: true }) user) {
 		const { user_id } = user;
 		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
 		const test: any = await this.testService.getCompleteTestInfo(testId);
@@ -127,13 +127,13 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		if (canAccessTest && test) {
 			return { ...test, code: test.code };
 		} else {
-			return { status: 304, message: 'Not authorized' };
+			return { status: 304, message: "Not authorized" };
 		}
 	}
 
-	@Post('/createTestFromDraft/:draftId')
+	@Post("/createTestFromDraft/:draftId")
 	@Authorized()
-	async createTestFromDraft(@CurrentUser({ required: true }) user, @Param('draftId') draftId: number, @Body() body) {
+	async createTestFromDraft(@CurrentUser({ required: true }) user, @Param("draftId") draftId: number, @Body() body) {
 		const { user_id } = user;
 		const { testName: _testName, projectId: _projectId, framework: _framework, code: _code, events: _events } = body;
 		const { name, project_id, code, events } = await this.draftService.getDraftTest(draftId);
@@ -156,14 +156,14 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		} else {
 			return {
 				status: 304,
-				error: new Error('No draft with this draftId available'),
+				error: new Error("No draft with this draftId available"),
 			};
 		}
 	}
 
-	@Post('/updateTest/:testId')
+	@Post("/updateTest/:testId")
 	@Authorized()
-	async updateTest(@CurrentUser({ required: true }) user, @Param('testId') testId, @Body() body) {
+	async updateTest(@CurrentUser({ required: true }) user, @Param("testId") testId, @Body() body) {
 		const { user_id } = user;
 		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
 		if (canAccessTest) {
@@ -171,13 +171,13 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			const s = await this.testService.updateTest(testName, projectId, code, testId);
 			return { status: 200 };
 		} else {
-			return { status: 304, message: 'Not authorized' };
+			return { status: 304, message: "Not authorized" };
 		}
 	}
 
 	@Authorized()
-	@Get('/getAllInfosInProject/:projectId')
-	async getAllTestsInProject(@CurrentUser({ required: true }) user, @Param('projectId') projectId) {
+	@Get("/getAllInfosInProject/:projectId")
+	async getAllTestsInProject(@CurrentUser({ required: true }) user, @Param("projectId") projectId) {
 		const { user_id } = user;
 		const canAccessProject = await this.userService.canAccessProjectId(projectId, user_id);
 		if (!canAccessProject) {
@@ -187,7 +187,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 
 		for (let i = 0; i < tests.length; i++) {
 			const totalTestsToday = await this.testInstanceService.getAllInstancesOfTestToday(tests[i].id);
-			tests[i]['instancesToday'] = totalTestsToday;
+			tests[i]["instancesToday"] = totalTestsToday;
 		}
 
 		return tests;

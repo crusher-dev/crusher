@@ -1,4 +1,4 @@
-import { BaseRowInterface } from './BaseRowInterface';
+import { BaseRowInterface } from "./BaseRowInterface";
 
 export interface CliStatus extends BaseRowInterface {
 	token?: string;

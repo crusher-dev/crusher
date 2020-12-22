@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import * as mongoose from "mongoose";
 
 const ActivitySchema = new mongoose.Schema(
 	{
@@ -10,4 +10,4 @@ const ActivitySchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-module.exports = mongoose.model('Activity', ActivitySchema);
+module.exports = mongoose.model("Activity", ActivitySchema);

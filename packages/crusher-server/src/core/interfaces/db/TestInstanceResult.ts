@@ -1,5 +1,5 @@
-import { BaseRowInterface } from './BaseRowInterface';
-import { TestInstanceResultStatus } from '../TestInstanceResultStatus';
+import { BaseRowInterface } from "./BaseRowInterface";
+import { TestInstanceResultStatus } from "../TestInstanceResultStatus";
 
 export interface TestInstanceResult extends BaseRowInterface {
 	id?: number;

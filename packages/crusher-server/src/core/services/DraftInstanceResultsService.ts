@@ -1,9 +1,9 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from '../../constants';
-import { DraftInstance } from '../interfaces/db/DraftInstance';
-import { InstanceStatus } from '../interfaces/InstanceStatus';
-import { DraftInstanceResult } from '../interfaces/db/DraftInstanceResult';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
+import { DraftInstance } from "../interfaces/db/DraftInstance";
+import { InstanceStatus } from "../interfaces/InstanceStatus";
+import { DraftInstanceResult } from "../interfaces/db/DraftInstanceResult";
 
 @Service()
 export default class DraftInstanceService {

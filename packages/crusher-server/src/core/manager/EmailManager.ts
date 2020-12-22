@@ -1,8 +1,8 @@
-import { resolvePathToBackendURI } from '../utils/uri';
-import { emailType, VERIFICATION_TYPE_EMAIL } from '../../constants';
-import { getWelcomEmailContent } from '../template/email/welcome';
-import { Logger } from '../../utils/logger';
-const sgMail = require('@sendgrid/mail');
+import { resolvePathToBackendURI } from "../utils/uri";
+import { emailType, VERIFICATION_TYPE_EMAIL } from "../../constants";
+import { getWelcomEmailContent } from "../template/email/welcome";
+import { Logger } from "../../utils/logger";
+const sgMail = require("@sendgrid/mail");
 if (!process.env.SENDGRID_API_KEY) {
 	console.error("PLEASE PROVIDE SEND_GRID_API Key, otherwise the email verification functionality won't work");
 } else {
@@ -28,16 +28,16 @@ export class EmailManager {
 				name: serverName,
 			},
 			subject,
-			text: 'hoo',
+			text: "hoo",
 			html: html,
 		};
 		sgMail.send(msg);
-		Logger.info('EmailManager::sendEmail', `Email Sent... [Verification] - to ${to}`);
+		Logger.info("EmailManager::sendEmail", `Email Sent... [Verification] - to ${to}`);
 	}
 
 	public static sendVerificationMail(to, code) {
 		const link = resolvePathToBackendURI(`/user/verify?code=${code}`);
 		const emailHTML = getWelcomEmailContent(link);
-		EmailManager.sendEmail(to, VERIFICATION_TYPE_EMAIL, '[Crusher.dev] Verify your account', emailHTML);
+		EmailManager.sendEmail(to, VERIFICATION_TYPE_EMAIL, "[Crusher.dev] Verify your account", emailHTML);
 	}
 }

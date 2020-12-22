@@ -1,27 +1,27 @@
-import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, Req, UnauthorizedError } from 'routing-controllers';
-import { Container, Inject, Service } from 'typedi';
-import DBManager from '../../core/manager/DBManager';
-import UserService from '../../core/services/UserService';
-import ProjectService from '../../core/services/ProjectService';
-import JobsService, { TRIGGER } from '../../core/services/JobsService';
+import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, Req, UnauthorizedError } from "routing-controllers";
+import { Container, Inject, Service } from "typedi";
+import DBManager from "../../core/manager/DBManager";
+import UserService from "../../core/services/UserService";
+import ProjectService from "../../core/services/ProjectService";
+import JobsService, { TRIGGER } from "../../core/services/JobsService";
 
-import TestService from '../../core/services/TestService';
-import { decodeToken } from '../../core/utils/auth';
-import GithubService from '../../core/services/GithubService';
-import { addJobToRequestQueue } from '../../core/utils/queue';
-import * as chalk from 'chalk';
-import { Logger } from '../../utils/logger';
-import { Platform } from '../../core/interfaces/Platform';
-import { JobTrigger } from '../../core/interfaces/JobTrigger';
-import { TestType } from '../../core/interfaces/TestType';
+import TestService from "../../core/services/TestService";
+import { decodeToken } from "../../core/utils/auth";
+import GithubService from "../../core/services/GithubService";
+import { addJobToRequestQueue } from "../../core/utils/queue";
+import * as chalk from "chalk";
+import { Logger } from "../../utils/logger";
+import { Platform } from "../../core/interfaces/Platform";
+import { JobTrigger } from "../../core/interfaces/JobTrigger";
+import { TestType } from "../../core/interfaces/TestType";
 
 const RESPONSE_STATUS = {
-	PROJECT_CREATED: 'PROJECT_CREATED',
-	PROJECT_CREATION_FAILED: 'PROJECT_CREATION_FAILED',
+	PROJECT_CREATED: "PROJECT_CREATED",
+	PROJECT_CREATION_FAILED: "PROJECT_CREATION_FAILED",
 };
 
 @Service()
-@JsonController('/projects')
+@JsonController("/projects")
 export class ProjectsController {
 	@Inject()
 	private userService: UserService;
@@ -40,7 +40,7 @@ export class ProjectsController {
 	}
 
 	@Authorized()
-	@Post('/create')
+	@Post("/create")
 	async createProject(@CurrentUser({ required: true }) user, @Body() projectDetails) {
 		const { projectName } = projectDetails;
 		const { team_id } = user;
@@ -61,15 +61,15 @@ export class ProjectsController {
 	}
 
 	@Authorized()
-	@Get('/getAll')
+	@Get("/getAll")
 	async getAllProjects(@CurrentUser({ required: true }) user) {
 		const { user_id } = user;
 
 		return this.projectService.getAllProjectsOfUser(user_id);
 	}
 
-	@Get('/testsCount/:projectId')
-	async getTestsCountInProject(@CurrentUser({ required: true }) user, @Param('projectId') projectId) {
+	@Get("/testsCount/:projectId")
+	async getTestsCountInProject(@CurrentUser({ required: true }) user, @Param("projectId") projectId) {
 		const { user_id, team_id } = user;
 
 		const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
@@ -83,24 +83,24 @@ export class ProjectsController {
 		};
 	}
 
-	@Get('/meta/dashboard/info/:projectId')
-	async getMetaDashboardInfoOfProject(@Param("projectId") projectId: number){
+	@Get("/meta/dashboard/info/:projectId")
+	async getMetaDashboardInfoOfProject(@Param("projectId") projectId: number) {
 		const totalJobsToday = await this.projectService.getNoBuildsTodayOfProject(projectId);
 
 		return {
-			totalJobsToday: totalJobsToday.count
-		}
+			totalJobsToday: totalJobsToday.count,
+		};
 	}
 
-	@Post('/runTests/:projectId')
-	async runTestsInProject(@Param('projectId') projectId, @Req() req, @Body() body) {
+	@Post("/runTests/:projectId")
+	async runTestsInProject(@Param("projectId") projectId, @Req() req, @Body() body) {
 		try {
 			const { cliToken, host, branchName, commitId, repoName, commitName, platform, isFromGithub } = body;
 			const { user_id, team_id } = decodeToken(cliToken);
 
 			const user = await this.userService.getUserInfo(user_id);
 			if (!user) {
-				return new UnauthorizedError('Wrong CLI Token provided!!');
+				return new UnauthorizedError("Wrong CLI Token provided!!");
 			}
 
 			const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
@@ -134,7 +134,7 @@ export class ProjectsController {
 
 				let { checkRunId: _check } = (await githubService.createCheckRunFromJob(job)) as any;
 				checkRunId = _check;
-				Logger.debug('ProjectsController::runTestsInProject', chalk.hex('#0b2ce2').bold(`Got check run id: ${checkRunId}`));
+				Logger.debug("ProjectsController::runTestsInProject", chalk.hex("#0b2ce2").bold(`Got check run id: ${checkRunId}`));
 
 				await this.jobService.updateJobInfo(job.id, {
 					check_run_id: checkRunId,
@@ -156,9 +156,9 @@ export class ProjectsController {
 				platform: job.platform,
 			});
 
-			return { status: 'RUNNING_TESTS', jobId: job.id };
+			return { status: "RUNNING_TESTS", jobId: job.id };
 		} catch (err) {
-			Logger.error('ProjectsController::runTestsInProject', '401 Bad request', {
+			Logger.error("ProjectsController::runTestsInProject", "401 Bad request", {
 				err,
 			});
 		}

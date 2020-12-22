@@ -1,4 +1,4 @@
 export enum TestType {
-	DRAFT = 'DRAFT',
-	SAVED = 'SAVED',
+	DRAFT = "DRAFT",
+	SAVED = "SAVED",
 }

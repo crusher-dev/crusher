@@ -1,4 +1,4 @@
-import { ScreenShotComparisionStatus } from '../../ScreenShotComparisionStatus';
+import { ScreenShotComparisionStatus } from "../../ScreenShotComparisionStatus";
 
 export interface ScreenshotComparisionRequest {
 	screenshotId: number;

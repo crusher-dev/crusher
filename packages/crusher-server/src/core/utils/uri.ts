@@ -1,4 +1,4 @@
-const url = require('url');
+const url = require("url");
 
 export function resolvePathToBackendURI(path: string) {
 	return url.resolve(process.env.BACKEND_URL, path);

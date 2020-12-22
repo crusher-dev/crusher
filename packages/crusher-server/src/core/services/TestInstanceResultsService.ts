@@ -1,10 +1,10 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { TestInstanceResult } from '../interfaces/db/TestInstanceResult';
-import { TestInstanceResultStatus } from '../interfaces/TestInstanceResultStatus';
-import { JobBuild } from '../interfaces/db/JobBuild';
-import TestInstanceResultSetsService from './TestInstanceResultSetsService';
-import { Platform } from '../interfaces/Platform';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { TestInstanceResult } from "../interfaces/db/TestInstanceResult";
+import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
+import { JobBuild } from "../interfaces/db/JobBuild";
+import TestInstanceResultSetsService from "./TestInstanceResultSetsService";
+import { Platform } from "../interfaces/Platform";
 
 @Service()
 export default class TestInstanceService {
@@ -53,7 +53,11 @@ export default class TestInstanceService {
 		);
 		const updatePromisesArr = results.map((result) => {
 			return (async () => {
-				await this.dbManager.fetchSingleRow(`UPDATE test_instance_results SET status = ? WHERE id = ?`, [TestInstanceResultStatus.PASSED, result.id, platform]);
+				await this.dbManager.fetchSingleRow(`UPDATE test_instance_results SET status = ? WHERE id = ?`, [
+					TestInstanceResultStatus.PASSED,
+					result.id,
+					platform,
+				]);
 				return result.instance_result_set_id;
 			})();
 		});

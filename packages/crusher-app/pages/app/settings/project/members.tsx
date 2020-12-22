@@ -92,7 +92,7 @@ const ProjectIntegrationSettings = () => {
 	};
 
 	const closeTeamMemberModal = useCallback(() => {
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 		setShowMemberModal(false);
 	}, []);
 
@@ -161,7 +161,6 @@ ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
 			slackIntegrations: slackIntegrations,
 		};
 	} catch (ex) {
-		throw ex;
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

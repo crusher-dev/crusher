@@ -1,16 +1,16 @@
-import { TestsLogs } from '../../../server/models/testLogs';
-import { TestType } from '../../interfaces/TestType';
+import { TestsLogs } from "../../../server/models/testLogs";
+import { TestType } from "../../interfaces/TestType";
 
 export const TEST_LOGS_SERVICE_TAGS = {
-	TEST_ADDED_TO_QUEUE: 'TEST_ADDED_TO_QUEUE',
-	TEST_RUNNING: 'TEST_RUNNING',
-	ELEMENT_CLICK: 'ELEMENT_CLICK',
-	ELEMENT_HOVER: 'ELEMENT_HOVER',
-	NAVIGATE_PAGE: 'NAVIGATE_PAGE',
-	PAGE_SCREENSHOT: 'PAGE_SCREENSHOT',
-	ELEMENT_SCREENSHOT: 'ELEMENT_SCREENSHOT',
-	TEST_EXECUTION_FAILED: 'TEST_EXECUTION_FAILED',
-	TEST_EXECUTION_COMPLETED: 'TEST_EXECUTION_COMPLETED',
+	TEST_ADDED_TO_QUEUE: "TEST_ADDED_TO_QUEUE",
+	TEST_RUNNING: "TEST_RUNNING",
+	ELEMENT_CLICK: "ELEMENT_CLICK",
+	ELEMENT_HOVER: "ELEMENT_HOVER",
+	NAVIGATE_PAGE: "NAVIGATE_PAGE",
+	PAGE_SCREENSHOT: "PAGE_SCREENSHOT",
+	ELEMENT_SCREENSHOT: "ELEMENT_SCREENSHOT",
+	TEST_EXECUTION_FAILED: "TEST_EXECUTION_FAILED",
+	TEST_EXECUTION_COMPLETED: "TEST_EXECUTION_COMPLETED",
 };
 export class TestLogsService {
 	testId: number;
@@ -84,6 +84,6 @@ export class TestLogsService {
 	}
 
 	async getLogsOfInstanceInJob(instanceId: number) {
-		return TestsLogs.find({ type: { $eq: 'SAVED' }, instanceId: { $eq: instanceId } }).sort({ createdAt: 1 });
+		return TestsLogs.find({ type: { $eq: "SAVED" }, instanceId: { $eq: instanceId } }).sort({ createdAt: 1 });
 	}
 }

@@ -1,32 +1,32 @@
-import { Queue } from 'bullmq';
+import { Queue } from "bullmq";
 
-import { REDDIS } from '../../../config/database';
-import { RunJobRequestBody } from '../interfaces/RunJobRequestBody';
-import { RunRequest } from '../interfaces/RunRequest';
-import TestInstanceService from '../services/TestInstanceService';
-import { replaceHostInCode } from './helper';
-import { InstanceStatus } from '../interfaces/InstanceStatus';
-import { TEST_INSTANCE_PLATFORM, TEST_TYPES } from '../../constants';
-import { Platform } from '../interfaces/Platform';
-import DraftInstanceService from '../services/DraftInstanceService';
-import { TestType } from '../interfaces/TestType';
-import { JobLogs } from '../../server/models/jobLogs';
-import * as mongoose from 'mongoose';
-import { TestLogsService } from '../services/mongo/testLogs';
-import CodeGenerator from '../../../../code-generator/src/index';
-import { Logger } from '../../utils/logger';
-import * as chalk from 'chalk';
-import JobReportServiceV2 from '../services/v2/JobReportServiceV2';
-import JobsService from '../services/JobsService';
+import { REDDIS } from "../../../config/database";
+import { RunJobRequestBody } from "../interfaces/RunJobRequestBody";
+import { RunRequest } from "../interfaces/RunRequest";
+import TestInstanceService from "../services/TestInstanceService";
+import { replaceHostInCode } from "./helper";
+import { InstanceStatus } from "../interfaces/InstanceStatus";
+import { TEST_INSTANCE_PLATFORM, TEST_TYPES } from "../../constants";
+import { Platform } from "../interfaces/Platform";
+import DraftInstanceService from "../services/DraftInstanceService";
+import { TestType } from "../interfaces/TestType";
+import { JobLogs } from "../../server/models/jobLogs";
+import * as mongoose from "mongoose";
+import { TestLogsService } from "../services/mongo/testLogs";
+import CodeGenerator from "../../../../code-generator/src/index";
+import { Logger } from "../../utils/logger";
+import * as chalk from "chalk";
+import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
+import JobsService from "../services/JobsService";
 
-const path = require('path');
+const path = require("path");
 
 const testInstanceService = new TestInstanceService();
 const draftInstanceService = new DraftInstanceService();
 const jobReportsService = new JobReportServiceV2();
 const jobsService = new JobsService();
 
-const requestQueue = new Queue('request-queue', {
+const requestQueue = new Queue("request-queue", {
 	// @ts-ignore
 	connection: REDDIS,
 });
@@ -39,7 +39,7 @@ function getGeneratedCode(test, platform, testType) {
 export async function addTestRequestToQueue(testRequest: RunRequest) {
 	const { test, job } = testRequest;
 	const testLogsService = new TestLogsService();
-	Logger.debug('Queue::addTestToQueue', chalk.hex('#0b2ce2').bold(`Got a request for test run :`), [test, job]);
+	Logger.debug("Queue::addTestToQueue", chalk.hex("#0b2ce2").bold(`Got a request for test run :`), [test, job]);
 
 	let instanceId = 0;
 	const { host } = job ? job : ({} as any);
@@ -53,7 +53,7 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 			jobId: job.id,
 			testId: test.id,
 			status: InstanceStatus.QUEUED,
-			host: job.host ? job.host : 'none',
+			host: job.host ? job.host : "none",
 			code: finalCode,
 			platform: job.platform ? job.platform : TEST_INSTANCE_PLATFORM.CHROME,
 		});
@@ -71,8 +71,8 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 
 	const client = await requestQueue.client;
 	if (job) {
-		await client.set(`${job.id}:completed`, '0');
-		await client.set(`${job.id}:started`, '0');
+		await client.set(`${job.id}:completed`, "0");
+		await client.set(`${job.id}:started`, "0");
 	}
 	testLogsService.init(test.id, instanceId, test.testType, job ? job.id : -1);
 	await testLogsService.notifyTestAddedToQueue();
@@ -122,7 +122,7 @@ export async function addJobToRequestQueue(jobRequest) {
 	};
 
 	for (let test of tests) {
-		Logger.debug('addJobToRequestQueue', 'Inside a test loop', {
+		Logger.debug("addJobToRequestQueue", "Inside a test loop", {
 			test: test,
 			platform,
 		});
@@ -147,14 +147,14 @@ export async function addJobToRequestQueue(jobRequest) {
 			});
 		}
 	}
-	Logger.debug('addJobToRequestQueue', 'Time to send logs');
+	Logger.debug("addJobToRequestQueue", "Time to send logs");
 	await new JobLogs({
-		tag: 'TESTS_QUEUED_FOR_JOB',
+		tag: "TESTS_QUEUED_FOR_JOB",
 		message: `${tests.length * (platform === Platform.ALL ? 3 : 1)} tests added to queue`,
 		jobId: jobId,
 	}).save(function (err) {
 		if (err) {
-			Logger.debug('addJobToRequestQueue', 'We got an error period', { err });
+			Logger.debug("addJobToRequestQueue", "We got an error period", { err });
 			console.error(err);
 		}
 	});

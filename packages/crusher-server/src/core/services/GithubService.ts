@@ -1,12 +1,12 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
 
-import { Octokit } from '@octokit/rest';
-import { OCTOKIT_CONFIG } from '../../../config/github';
-import * as chalk from 'chalk';
-import { Logger } from '../../utils/logger';
+import { Octokit } from "@octokit/rest";
+import { OCTOKIT_CONFIG } from "../../../config/github";
+import * as chalk from "chalk";
+import { Logger } from "../../utils/logger";
 
-const { createAppAuth } = require('@octokit/auth');
+const { createAppAuth } = require("@octokit/auth");
 
 @Service()
 export default class GithubService {
@@ -24,7 +24,7 @@ export default class GithubService {
 	}
 
 	async authenticateAsApp(installation_id: string) {
-		await this.octokit.auth({ type: 'app' });
+		await this.octokit.auth({ type: "app" });
 		const {
 			data: { token },
 		} = await this.octokit.apps.createInstallationAccessToken({
@@ -51,7 +51,7 @@ export default class GithubService {
 		return this.octokit.checks.create({
 			owner: owner,
 			repo: repo,
-			name: 'Crusher CI',
+			name: "Crusher CI",
 			head_sha: commitId,
 			external_id: external_id.toString(),
 		});
@@ -60,15 +60,15 @@ export default class GithubService {
 	async createCheckRunFromJob(job) {
 		const { installation_id, repo_name, commit_id, id } = job;
 		if (!installation_id || !repo_name || !commit_id || !id) {
-			Logger.error(`GithubService::createCheckRunFromJob`, 'Not enough data fro creating check run');
+			Logger.error(`GithubService::createCheckRunFromJob`, "Not enough data fro creating check run");
 			return false;
 		}
 
-		const owner_name = repo_name.split('/')[0];
-		const repo_original_name = repo_name.split('/')[1];
+		const owner_name = repo_name.split("/")[0];
+		const repo_original_name = repo_name.split("/")[1];
 
 		if (!owner_name || !repo_original_name) {
-			Logger.error(`GithubService::createCheckRunFromJob`, 'Not good repo name', { repo_name });
+			Logger.error(`GithubService::createCheckRunFromJob`, "Not good repo name", { repo_name });
 			return false;
 		}
 

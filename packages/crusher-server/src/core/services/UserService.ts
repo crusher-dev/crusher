@@ -1,5 +1,5 @@
-import { Service, Container, Inject } from 'typedi';
-import DBManager from '../manager/DBManager';
+import { Service, Container, Inject } from "typedi";
+import DBManager from "../manager/DBManager";
 import {
 	EMAIL_NOT_VERIFIED,
 	ERROR_OCCURED_IN_AUTHENTICATION,
@@ -11,18 +11,18 @@ import {
 	USER_NOT_REGISTERED,
 	USER_REGISTERED,
 	VERIFICATION_MAIL_SENT,
-} from '../../constants';
-import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from '../utils/auth';
-import { EmailManager } from '../manager/EmailManager';
-import { AuthenticationByCredentials } from '../interfaces/services/user/AuthenticationByCredentials';
-import { User } from '../interfaces/db/User';
-import { RegisterUserRequest } from '../interfaces/services/user/RegisterUserRequest';
-import { UserProviderConnection } from '../interfaces/db/UserProviderConnection';
-import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';
-import { Logger } from '../../utils/logger';
-import ProjectService from './ProjectService';
-import TeamService from './TeamService';
-import StripeManager from '../manager/StripeManager';
+} from "../../constants";
+import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from "../utils/auth";
+import { EmailManager } from "../manager/EmailManager";
+import { AuthenticationByCredentials } from "../interfaces/services/user/AuthenticationByCredentials";
+import { User } from "../interfaces/db/User";
+import { RegisterUserRequest } from "../interfaces/services/user/RegisterUserRequest";
+import { UserProviderConnection } from "../interfaces/db/UserProviderConnection";
+import { GithubAppInstallation } from "../interfaces/db/GithubAppInstallation";
+import { Logger } from "../../utils/logger";
+import ProjectService from "./ProjectService";
+import TeamService from "./TeamService";
+import StripeManager from "../manager/StripeManager";
 
 @Service()
 export default class UserService {
@@ -121,7 +121,7 @@ export default class UserService {
 				password: encryptPassword(password),
 			});
 			const team = await this.teamService.createTeam({
-				teamName: 'Default',
+				teamName: "Default",
 				userId: inserted_user.insertId,
 			});
 			const project = team && team.teamId && (await this.projectService.createDefaultProject(team.teamId));
@@ -195,7 +195,7 @@ export default class UserService {
 	}
 
 	async getUserMetaInfo(userId: string): Promise<User> {
-		return this.dbManager.fetchData('SELECT `key` as key_name , value FROM user_meta WHERE user_id = ?', [userId]);
+		return this.dbManager.fetchData("SELECT `key` as key_name , value FROM user_meta WHERE user_id = ?", [userId]);
 	}
 
 	async getUserInfo(userId: string): Promise<User> {
@@ -249,7 +249,7 @@ export default class UserService {
 			]);
 			return { id: providerRecord.id };
 		}
-		const insertedRecord = await this.dbManager.insertData('INSERT INTO user_provider_connections SET ? ', {
+		const insertedRecord = await this.dbManager.insertData("INSERT INTO user_provider_connections SET ? ", {
 			user_id,
 			provider,
 			access_token,
@@ -267,7 +267,7 @@ export default class UserService {
 	}
 
 	async addOrUpdateGithubInstallation(fullRepoName: string, installation_id: string) {
-		const repoNameArr = fullRepoName.split('/');
+		const repoNameArr = fullRepoName.split("/");
 		if (repoNameArr && repoNameArr.length === 2) {
 			const record = await this.getInstallationIdOfRepo(fullRepoName);
 			if (record) {
@@ -284,7 +284,7 @@ export default class UserService {
 				});
 			}
 		} else {
-			Logger.error(`UserService::addOrUpdateGithubInstallation`, 'Bad repo name', {
+			Logger.error(`UserService::addOrUpdateGithubInstallation`, "Bad repo name", {
 				fullRepoName,
 			});
 			return null;
@@ -292,11 +292,14 @@ export default class UserService {
 	}
 
 	async getInstallationIdOfRepo(fullRepoName: string): Promise<GithubAppInstallation> {
-		const repoNameArr = fullRepoName.split('/');
+		const repoNameArr = fullRepoName.split("/");
 		if (repoNameArr && repoNameArr.length === 2) {
-			return this.dbManager.fetchSingleRow(`SELECT * FROM github_app_installations WHERE owner_name = ? AND repo_name = ?`, [repoNameArr[0], repoNameArr[1]]);
+			return this.dbManager.fetchSingleRow(`SELECT * FROM github_app_installations WHERE owner_name = ? AND repo_name = ?`, [
+				repoNameArr[0],
+				repoNameArr[1],
+			]);
 		} else {
-			Logger.error(`UserService::getInstallationIdOfRepo`, 'Bad repo name', {
+			Logger.error(`UserService::getInstallationIdOfRepo`, "Bad repo name", {
 				fullRepoName,
 			});
 			return null;

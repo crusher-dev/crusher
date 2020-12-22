@@ -1,4 +1,4 @@
-import { JobBuild } from '../../db/JobBuild';
+import { JobBuild } from "../../db/JobBuild";
 
 export interface CreateJobRequest {
 	projectId?: JobBuild;

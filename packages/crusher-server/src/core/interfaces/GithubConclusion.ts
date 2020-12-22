@@ -1,4 +1,4 @@
 export enum GithubConclusion {
-	SUCCESS = 'success',
-	FAILURE = 'failure',
+	SUCCESS = "success",
+	FAILURE = "failure",
 }

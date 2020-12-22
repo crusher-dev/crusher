@@ -1,4 +1,4 @@
 export enum ServiceProvider {
-	GITHUB = 'GITHUB',
-	GITLAB = 'GTILAB',
+	GITHUB = "GITHUB",
+	GITLAB = "GTILAB",
 }

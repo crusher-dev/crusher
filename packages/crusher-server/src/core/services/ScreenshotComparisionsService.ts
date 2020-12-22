@@ -1,8 +1,8 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { CreateProjectHostRequest } from '../interfaces/services/projectHosts/CreateProjectHostRequest';
-import { ScreenshotComparisionRequest } from '../interfaces/services/screenshots/ScreenshotComparisionRequest';
-import { ScreenShotComparisionStatus } from '../interfaces/ScreenShotComparisionStatus';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { CreateProjectHostRequest } from "../interfaces/services/projectHosts/CreateProjectHostRequest";
+import { ScreenshotComparisionRequest } from "../interfaces/services/screenshots/ScreenshotComparisionRequest";
+import { ScreenShotComparisionStatus } from "../interfaces/ScreenShotComparisionStatus";
 
 @Service()
 export default class ScreenshotComparisionsService {

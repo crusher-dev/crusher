@@ -1,6 +1,6 @@
-import { InstanceStatus } from '../InstanceStatus';
-import { Platform } from '../Platform';
-import { BaseRowInterface } from './BaseRowInterface';
+import { InstanceStatus } from "../InstanceStatus";
+import { Platform } from "../Platform";
+import { BaseRowInterface } from "./BaseRowInterface";
 
 export interface DraftInstance extends BaseRowInterface {
 	id?: number;

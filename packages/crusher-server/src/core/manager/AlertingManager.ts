@@ -1,11 +1,11 @@
-import { fetch } from '../utils/fetch';
-import { User } from '../interfaces/db/User';
-import { resolvePathToFrontendURI } from '../utils/uri';
-import { JobBuild } from '../interfaces/db/JobBuild';
+import { fetch } from "../utils/fetch";
+import { User } from "../interfaces/db/User";
+import { resolvePathToFrontendURI } from "../utils/uri";
+import { JobBuild } from "../interfaces/db/JobBuild";
 
 const JOB_STATUS_ICONS = {
-	PASSED: 'https://i.imgur.com/gqTSPBm.png',
-	FAILED: 'https://i.imgur.com/gqTSPBm.png',
+	PASSED: "https://i.imgur.com/gqTSPBm.png",
+	FAILED: "https://i.imgur.com/gqTSPBm.png",
 };
 
 export default class AlertingManager {
@@ -15,20 +15,20 @@ export default class AlertingManager {
 		function renderFailedTestIfThere() {
 			const out = failedTestsList.map((test) => {
 				return {
-					type: 'section',
+					type: "section",
 					text: {
-						type: 'mrkdwn',
+						type: "mrkdwn",
 						text: `*${test.test_name}*\n ${test.platform} browsers`,
 					},
 					accessory: {
-						type: 'button',
+						type: "button",
 						text: {
-							type: 'plain_text',
+							type: "plain_text",
 							emoji: true,
-							text: 'View Debug Log',
+							text: "View Debug Log",
 						},
 						url: resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`),
-						value: 'click_me_123',
+						value: "click_me_123",
 					},
 				};
 			});
@@ -37,20 +37,20 @@ export default class AlertingManager {
 
 			return [
 				{
-					type: 'divider',
+					type: "divider",
 				},
 				{
-					type: 'section',
+					type: "section",
 					text: {
-						type: 'mrkdwn',
-						text: '*Failed Tests:*',
+						type: "mrkdwn",
+						text: "*Failed Tests:*",
 					},
 				},
 				...out.slice(0, 3),
 				{
-					type: 'section',
+					type: "section",
 					text: {
-						type: 'mrkdwn',
+						type: "mrkdwn",
 						text: `*<|Load more test>*`,
 					},
 				},
@@ -58,123 +58,123 @@ export default class AlertingManager {
 		}
 
 		return fetch(webhook_url, {
-			method: 'POST',
+			method: "POST",
 			noJSON: true,
 			payload: {
 				blocks: [
 					{
-						type: 'section',
+						type: "section",
 						text: {
-							type: 'mrkdwn',
-							text: ' *E2E Test result by crusher :hammer:*',
+							type: "mrkdwn",
+							text: " *E2E Test result by crusher :hammer:*",
 						},
 						accessory: {
-							type: 'button',
+							type: "button",
 							text: {
-								type: 'plain_text',
+								type: "plain_text",
 								emoji: true,
-								text: 'View Report',
+								text: "View Report",
 							},
 							url: resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`),
-							value: 'click_me_123',
+							value: "click_me_123",
 						},
 					},
 					{
-						type: 'divider',
+						type: "divider",
 					},
 					{
-						type: 'section',
+						type: "section",
 						text: {
-							type: 'mrkdwn',
+							type: "mrkdwn",
 							text: `*<${resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`)}| Build ID : ${jobRecord.id}>*\n Branch - ${
 								jobRecord.branch_name
 							}\n Code run on Travis by ${user.first_name}\n ${new Date(jobRecord.created_at).toTimeString()}`,
 						},
 						accessory: {
-							type: 'image',
-							image_url: status === 'PASSED' ? JOB_STATUS_ICONS.PASSED : JOB_STATUS_ICONS.FAILED,
-							alt_text: 'calendar thumbnail',
+							type: "image",
+							image_url: status === "PASSED" ? JOB_STATUS_ICONS.PASSED : JOB_STATUS_ICONS.FAILED,
+							alt_text: "calendar thumbnail",
 						},
 					},
 					{
-						type: 'divider',
+						type: "divider",
 					},
 					{
-						type: 'context',
+						type: "context",
 						elements: [
 							{
-								type: 'image',
-								image_url: 'https://i.imgur.com/lWCSttN.png',
-								alt_text: 'notifications warning icon',
+								type: "image",
+								image_url: "https://i.imgur.com/lWCSttN.png",
+								alt_text: "notifications warning icon",
 							},
 							{
-								type: 'mrkdwn',
+								type: "mrkdwn",
 								text: `*Failed *: ${countRecords.failed} Test`,
 							},
 							{
-								type: 'image',
-								image_url: 'https://i.imgur.com/gruzdJ8.png',
-								alt_text: 'notifications warning icon',
+								type: "image",
+								image_url: "https://i.imgur.com/gruzdJ8.png",
+								alt_text: "notifications warning icon",
 							},
 							{
-								type: 'mrkdwn',
+								type: "mrkdwn",
 								text: `*Review:* ${countRecords.review} Test`,
 							},
 							{
-								type: 'image',
-								image_url: 'https://i.imgur.com/gqTSPBm.png',
-								alt_text: 'notifications warning icon',
+								type: "image",
+								image_url: "https://i.imgur.com/gqTSPBm.png",
+								alt_text: "notifications warning icon",
 							},
 							{
-								type: 'mrkdwn',
+								type: "mrkdwn",
 								text: `*Passed:* ${countRecords.passed} Test`,
 							},
 						],
 					},
 					...renderFailedTestIfThere(),
 					{
-						type: 'divider',
+						type: "divider",
 					},
 					{
-						type: 'section',
+						type: "section",
 						text: {
-							type: 'mrkdwn',
-							text: '*Take action:*',
+							type: "mrkdwn",
+							text: "*Take action:*",
 						},
 					},
 					{
-						type: 'actions',
+						type: "actions",
 						elements: [
 							{
-								type: 'button',
+								type: "button",
 								text: {
-									type: 'plain_text',
+									type: "plain_text",
 									emoji: true,
-									text: 'Approve',
+									text: "Approve",
 								},
-								style: 'primary',
-								value: 'click_me_123',
+								style: "primary",
+								value: "click_me_123",
 							},
 							{
-								type: 'button',
+								type: "button",
 								text: {
-									type: 'plain_text',
+									type: "plain_text",
 									emoji: true,
-									text: 'Deny',
+									text: "Deny",
 								},
-								style: 'danger',
-								value: 'click_me_123',
+								style: "danger",
+								value: "click_me_123",
 							},
 						],
 					},
 					{
-						type: 'divider',
+						type: "divider",
 					},
 					{
-						type: 'section',
+						type: "section",
 						text: {
-							type: 'mrkdwn',
-							text: '*Crusher* saved you 1 hours of manual testing :smile: \n On typical, we catch 95% more issues. ',
+							type: "mrkdwn",
+							text: "*Crusher* saved you 1 hours of manual testing :smile: \n On typical, we catch 95% more issues. ",
 						},
 					},
 				],

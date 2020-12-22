@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const SECRET = 'U#a03NM3_rVQ!z!:st#k}Gg.PzmUy[l)w.kg6QDR:|t(pVYHOMyX8z:xT<%-3';
+const jwt = require("jsonwebtoken");
+const SECRET = "U#a03NM3_rVQ!z!:st#k}Gg.PzmUy[l)w.kg6QDR:|t(pVYHOMyX8z:xT<%-3";
 
-const CryptoJS = require('crypto-js');
+const CryptoJS = require("crypto-js");
 // Generate a token for 365 days
-export const generateToken = (user_id, team_id, time = '365d') => {
+export const generateToken = (user_id, team_id, time = "365d") => {
 	const token = jwt.sign({ user_id, team_id }, SECRET, { expiresIn: time });
 	return token;
 };
@@ -24,8 +24,8 @@ export function encryptPassword(password: string) {
 
 export function generateSecurePassword() {
 	let length = 8,
-		charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-		retVal = '';
+		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+		retVal = "";
 
 	for (let i = 0, n = charset.length; i < length; ++i) {
 		retVal += charset.charAt(Math.floor(Math.random() * n));
@@ -34,11 +34,11 @@ export function generateSecurePassword() {
 }
 
 export function clearAuthCookies(res) {
-	res.clearCookie('token');
-	res.clearCookie('isLoggedIn');
+	res.clearCookie("token");
+	res.clearCookie("isLoggedIn");
 }
 
 export function generateVerificationCode(user_id, email) {
-	const token = jwt.sign({ user_id, email }, SECRET, { expiresIn: '48h' });
+	const token = jwt.sign({ user_id, email }, SECRET, { expiresIn: "48h" });
 	return token;
 }

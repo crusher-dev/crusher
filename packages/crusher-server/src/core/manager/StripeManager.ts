@@ -1,6 +1,6 @@
-import { Service } from 'typedi';
-const stripe = require('stripe')(process.env.STRIPE_SECRET_API_KEY);
-const _ = require('lodash');
+import { Service } from "typedi";
+const stripe = require("stripe")(process.env.STRIPE_SECRET_API_KEY);
+const _ = require("lodash");
 @Service()
 export default class StripeManager {
 	async createCustomer(name: string, email: string): Promise<string> {
@@ -17,7 +17,7 @@ export default class StripeManager {
 	}
 
 	getCustomerCards(stripeCustomerId: string) {
-		return stripe.customers.listSources(stripeCustomerId, { object: 'card', limit: 3 });
+		return stripe.customers.listSources(stripeCustomerId, { object: "card", limit: 3 });
 	}
 
 	getCurrentSubscription(stringCustomerId: string) {

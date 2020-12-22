@@ -1,12 +1,12 @@
-const { currentEnvironmentName, ENVIRONMENT } = require('./env');
-const LoggerDNA = require('logdna');
+const { currentEnvironmentName, ENVIRONMENT } = require("./env");
+const LoggerDNA = require("logdna");
 const IS_PRODUCTION = process.env.NODE_ENV === ENVIRONMENT.production;
-const chalk = require('chalk');
+const chalk = require("chalk");
 
 const logger = LoggerDNA.setupDefaultLogger(process.env.LOGDNA_API_KEY, {
 	env: currentEnvironmentName,
-	app: 'crusher-server',
-	hostname: 'crusher-server',
+	app: "crusher-server",
+	hostname: "crusher-server",
 	index_meta: true,
 });
 
@@ -84,32 +84,32 @@ module.exports = {
 };
 
 const log = function () {
-	logger.log([...arguments].join(' '));
+	logger.log([...arguments].join(" "));
 	_log.apply(console, arguments);
 };
 
 const info = function () {
-	logger.info([...arguments].join(' '));
+	logger.info([...arguments].join(" "));
 	_info.apply(console, arguments);
 };
 
 const debug = function () {
-	logger.debug([...arguments].join(' '));
+	logger.debug([...arguments].join(" "));
 	_debug.apply(console, arguments);
 };
 
 const trace = function () {
-	logger.debug([...arguments].join(' '));
+	logger.debug([...arguments].join(" "));
 	_trace.apply(console, arguments);
 };
 
 const warn = function () {
-	logger.warn([...arguments].join(' '));
+	logger.warn([...arguments].join(" "));
 	_warn.apply(console, arguments);
 };
 
 const error = function () {
-	logger.error([...arguments].join(' '));
+	logger.error([...arguments].join(" "));
 	_error.apply(console, arguments);
 };
 
@@ -119,4 +119,4 @@ console.warn = warn;
 console.info = info;
 console.trace = trace;
 console.debug = debug;
-console.debug('Server boot complete');
+console.debug("Server boot complete");

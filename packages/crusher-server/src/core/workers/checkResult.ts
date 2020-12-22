@@ -1,40 +1,40 @@
-import JobsService from '../services/JobsService';
-import TestService from '../services/TestService';
-import TestInstanceService from '../services/TestInstanceService';
-import TestInstanceResultSetsService from '../services/TestInstanceResultSetsService';
-import TestInstanceResultsService from '../services/TestInstanceResultsService';
-import TestInstanceScreenShotsService from '../services/TestInstanceScreenShotsService';
-import AlertingService from '../services/AlertingService';
-import UserService from '../services/UserService';
-import { InstanceStatus } from '../interfaces/InstanceStatus';
-import { JobStatus } from '../interfaces/JobStatus';
-import { TestInstance } from '../interfaces/db/TestInstance';
-import { TestInstanceResultSetStatus } from '../interfaces/TestInstanceResultSetStatus';
-import { TestInstanceScreenshot } from '../interfaces/db/TestInstanceScreenshot';
-import { visualDiffWithURI } from '../utils/visualDiff';
-import { uploadImageToBucket } from '../utils/cloudBucket';
-import { TestType } from '../interfaces/TestType';
-import { TestInstanceResultStatus } from '../interfaces/TestInstanceResultStatus';
-import { updateGithubCheckStatus } from '../../utils/github';
-import { GithubCheckStatus } from '../interfaces/GithubCheckStatus';
-import { GithubConclusion } from '../interfaces/GithubConclusion';
-import AlertingManager from '../manager/AlertingManager';
-import { JobConclusion } from '../interfaces/JobConclusion';
-import { Container } from 'typedi';
-import { User } from '../interfaces/db/User';
-import { EmailManager } from '../manager/EmailManager';
-import { resolvePathToFrontendURI } from '../utils/uri';
-import { Job } from 'bullmq';
-import { REDDIS } from '../../../config/database';
-import 'reflect-metadata';
+import JobsService from "../services/JobsService";
+import TestService from "../services/TestService";
+import TestInstanceService from "../services/TestInstanceService";
+import TestInstanceResultSetsService from "../services/TestInstanceResultSetsService";
+import TestInstanceResultsService from "../services/TestInstanceResultsService";
+import TestInstanceScreenShotsService from "../services/TestInstanceScreenShotsService";
+import AlertingService from "../services/AlertingService";
+import UserService from "../services/UserService";
+import { InstanceStatus } from "../interfaces/InstanceStatus";
+import { JobStatus } from "../interfaces/JobStatus";
+import { TestInstance } from "../interfaces/db/TestInstance";
+import { TestInstanceResultSetStatus } from "../interfaces/TestInstanceResultSetStatus";
+import { TestInstanceScreenshot } from "../interfaces/db/TestInstanceScreenshot";
+import { visualDiffWithURI } from "../utils/visualDiff";
+import { uploadImageToBucket } from "../utils/cloudBucket";
+import { TestType } from "../interfaces/TestType";
+import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
+import { updateGithubCheckStatus } from "../../utils/github";
+import { GithubCheckStatus } from "../interfaces/GithubCheckStatus";
+import { GithubConclusion } from "../interfaces/GithubConclusion";
+import AlertingManager from "../manager/AlertingManager";
+import { JobConclusion } from "../interfaces/JobConclusion";
+import { Container } from "typedi";
+import { User } from "../interfaces/db/User";
+import { EmailManager } from "../manager/EmailManager";
+import { resolvePathToFrontendURI } from "../utils/uri";
+import { Job } from "bullmq";
+import { REDDIS } from "../../../config/database";
+import "reflect-metadata";
 
 //@ts-ignore
-import IORedis from 'ioredis';
-import JobReportServiceV2 from '../services/v2/JobReportServiceV2';
-import { TestInstanceResultSetConclusion } from '../interfaces/TestInstanceResultSetConclusion';
-import { JobReportStatus } from '../interfaces/JobReportStatus';
+import IORedis from "ioredis";
+import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
+import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
+import { JobReportStatus } from "../interfaces/JobReportStatus";
 
-const ReddisLock = require('redlock');
+const ReddisLock = require("redlock");
 const jobsService = Container.get(JobsService);
 const jobsReportService = Container.get(JobReportServiceV2);
 
@@ -48,7 +48,7 @@ const userService = Container.get(UserService);
 
 interface TestInstanceWithImages extends TestInstance {
 	images: {
-		[imageKey : string]: TestInstanceScreenshot
+		[imageKey: string]: TestInstanceScreenshot;
 	};
 }
 
@@ -60,7 +60,7 @@ async function getOrganisedTestInstancesWithImages(testInstances: Array<TestInst
 		const imagesMap = images.reduce((prevImages, image) => {
 			return {
 				...prevImages,
-				[image.name + '_' + current.platform]: image,
+				[image.name + "_" + current.platform]: image,
 			};
 		}, {});
 
@@ -77,21 +77,20 @@ async function getOrganisedTestInstancesWithImages(testInstances: Array<TestInst
 	}, Promise.resolve({}));
 }
 
+async function getOrganisedTestInstanceWithImages(testInstance: TestInstance): Promise<TestInstanceWithImages> {
+	const images = await testInstanceScreenshotsService.getAllScreenShotsOfInstance(testInstance.id);
 
-async function getOrganisedTestInstanceWithImages(testInstance: TestInstance) : Promise<TestInstanceWithImages> {
-		const images = await testInstanceScreenshotsService.getAllScreenShotsOfInstance(testInstance.id);
-
-		const imagesMap = images.reduce((prevImages, image) => {
-			return {
-				...prevImages,
-				[image.name + '_' + testInstance.platform]: image,
-			};
-		}, {});
-
+	const imagesMap = images.reduce((prevImages, image) => {
 		return {
-					...testInstance,
-					images: imagesMap
+			...prevImages,
+			[image.name + "_" + testInstance.platform]: image,
 		};
+	}, {});
+
+	return {
+		...testInstance,
+		images: imagesMap,
+	};
 }
 
 function reduceInstancesMapToArr(testInstancesMap): Array<TestInstanceWithImages> {
@@ -105,7 +104,7 @@ function hasTestInstanceFinishedExecuting(testInstance: TestInstance) {
 }
 
 function getReferenceInstance(referenceJobId, testId, platform) {
-	return 	testInstanceService.getReferenceTestInstance(referenceJobId, testId,platform);
+	return testInstanceService.getReferenceTestInstance(referenceJobId, testId, platform);
 }
 
 function _getReferenceInstance(testInstancesMap, testId, platform) {
@@ -118,13 +117,13 @@ function _getReferenceInstance(testInstancesMap, testId, platform) {
 
 async function calculateDiffBetweenImages(testInstanceImage, referenceInstanceImage) {
 	let diffDelta, outputFile;
-	let uploadedDiffUrl = 'none';
-	console.log('Generating visual diff', testInstanceImage.url, referenceInstanceImage.url);
+	let uploadedDiffUrl = "none";
+	console.log("Generating visual diff", testInstanceImage.url, referenceInstanceImage.url);
 	const diff = await visualDiffWithURI(testInstanceImage.url, referenceInstanceImage.url);
 
 	diffDelta = diff.diffDelta;
 	outputFile = diff.outputFile;
-	console.log('Uploading visual diff', diffDelta, outputFile);
+	console.log("Uploading visual diff", diffDelta, outputFile);
 
 	uploadedDiffUrl = await uploadImageToBucket(outputFile, `${TestType.SAVED}/${testInstanceImage.instance_id}`);
 
@@ -221,7 +220,7 @@ async function getResultForTestInstance(
 			}),
 		);
 	} catch (ex) {
-		console.error('Something happened');
+		console.error("Something happened");
 		console.error(ex);
 	}
 
@@ -271,8 +270,8 @@ async function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, us
 			unescape(
 				`
                 %3Chtml%20xmlns%3D%22http%3A//www.w3.org/1999/xhtml%22%3E%0A%20%20%20%3Chead%3E%0A%20%20%20%20%20%20%3Clink%20href%3D%22https%3A//fonts.googleapis.com/css2%3Ffamily%3DDM+Sans%3Awght@400%3B500%3B700%26amp%3Bdisplay%3Dswap%22%20rel%3D%22stylesheet%22%3E%0A%20%20%20%20%20%20%3Cmeta%20http-equiv%3D%22content-type%22%20content%3D%22text/html%3B%20charset%3Dutf-8%22%3E%0A%20%20%20%20%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%3B%22%3E%0A%20%20%20%20%20%20%3Cmeta%20name%3D%22format-detection%22%20content%3D%22telephone%3Dno%22%3E%0A%0A%20%20%20%20%20%20%3Cstyle%3E%20%20%20%20%20%20body%20%7B%20margin%3A%200%3B%20padding%3A%200%3B%20min-width%3A%20100%25%3B%20width%3A%20100%25%20%21important%3B%20height%3A%20100%25%20%21important%3B%7D%20%20%20%20%20%20%20body%2C%20table%2C%20td%2C%20div%2C%20p%2C%20a%20%7B%20-webkit-font-smoothing%3A%20antialiased%3B%20text-size-adjust%3A%20100%25%3B%20-ms-text-size-adjust%3A%20100%25%3B%20-webkit-text-size-adjust%3A%20100%25%3B%20line-height%3A%20100%25%3B%20%7D%20%20%20%20%20%20%20table%2C%20td%20%7B%20mso-table-lspace%3A%200pt%3B%20mso-table-rspace%3A%200pt%3B%20border-collapse%3A%20collapse%20%21important%3B%20border-spacing%3A%200%3B%20%7D%20%20%20%20%20%20%20img%20%7B%20border%3A%200%3B%20line-height%3A%20100%25%3B%20outline%3A%20none%3B%20text-decoration%3A%20none%3B%20-ms-interpolation-mode%3A%20bicubic%3B%20%7D%20%20%20%20%20%20%20%23outlook%20a%20%7B%20padding%3A%200%3B%20%7D%20%20%20%20%20%20%20.ReadMsgBody%20%7B%20width%3A%20100%25%3B%20%7D%20.ExternalClass%20%7B%20width%3A%20100%25%3B%20%7D%20%20%20%20%20%20%20.ExternalClass%2C%20.ExternalClass%20p%2C%20.ExternalClass%20span%2C%20.ExternalClass%20font%2C%20.ExternalClass%20td%2C%20.ExternalClass%20div%20%7B%20line-height%3A%20100%25%3B%20%7D%20%20%20%20%20%20%20%20%20@media%20all%20and%20%28min-width%3A%20560px%29%20%7B%20%20%20%20%20%20%20.container%20%7B%20border-radius%3A%208px%3B%20-webkit-border-radius%3A%208px%3B%20-moz-border-radius%3A%208px%3B%20-khtml-border-radius%3A%208px%3B%20%7D%20%20%20%20%20%20%20%7D%20%20%20%20%20%20%20%20%20%20%20a%2C%20a%3Ahover%20%7B%20%20%20%20%20%20%20color%3A%20%23FFFFFF%3B%20%20%20%20%20%20%20%7D%20%20%20%20%20%20%20.footer%20a%2C%20.footer%20a%3Ahover%20%7B%20%20%20%20%20%20%20color%3A%20%23828999%3B%20%20%20%20%20%20%20%7D%20%20%20%20%20%20%20.heading%7B%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20margin%3A%200%3B%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20padding-left%3A%206.25%25%3B%20%20%20%20%20%20%20padding-right%3A%206.25%25%3B%20%20%20%20%20%20%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20font-size%3A%2026px%3B%20%20%20%20%20%20%20font-weight%3A%20bold%3B%20%20%20%20%20%20%20line-height%3A%20130%25%3B%20%20%20%20%20%20%20padding-top%3A%205px%3B%20%20%20%20%20%20%20color%3A%20%23000000%3B%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20%20%20%20%20%20%20letter-spacing%3A%20-.5px%3B%20%20%20%20%20%20%20%7D%20%20%20%20%20%3C/style%3E%0A%20%20%20%20%20%20%3Ctitle%3EResponsive%20HTML%20email%20templates%3C/title%3E%0A%20%20%20%3C/head%3E%0A%20%20%20%3Cbody%20topmargin%3D%220%22%20rightmargin%3D%220%22%20bottommargin%3D%220%22%20leftmargin%3D%220%22%20marginwidth%3D%220%22%20marginheight%3D%220%22%20width%3D%22100%25%22%20style%3D%22border-collapse%3A%20collapse%3Bborder-spacing%3A%200%3Bmargin%3A%200%3Bpadding%3A%200%3Bbackground%3A%20%23f1f5f9%3Bwidth%3A%20100%25%3Bheight%3A%20100%25%3B-webkit-font-smoothing%3A%20antialiased%3Btext-size-adjust%3A%20100%25%3B-ms-text-size-adjust%3A%20100%25%3B-webkit-text-size-adjust%3A%20100%25%3Bline-height%3A%20100%25%3Bfont-family%3A%20serif%3B%22%3E%0A%20%20%20%20%20%20%3Ctable%20width%3D%22100%25%22%20align%3D%22center%22%20border%3D%220%22%20cellpadding%3D%220%22%20cellspacing%3D%220%22%20style%3D%22border-collapse%3A%20collapse%3Bborder-spacing%3A%200%3Bmargin%3A%200%3Bpadding%3A%200%3Bwidth%3A%20100%25%3Bpadding%3A%2080px%3B%22%20class%3D%22%22%3E%0A%20%20%20%20%20%20%20%20%20%3Ctbody%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3Bborder-spacing%3A%200%3Bmargin%3A%200%3Bpadding%3A%200%3Bbackground%3A%20%23f1f5f9%3B%22%3E%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22center%22%20valign%3D%22top%22%20style%3D%22border-collapse%3A%20collapse%3B%20border-spacing%3A%200%3B%20margin%3A%200%3B%20padding%3A%200%3B%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2040px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-bottom%3A%2040px%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ca%20target%3D%22_blank%22%20style%3D%22text-decoration%3A%20none%3B%22%20href%3D%22${resolvePathToFrontendURI(
-									`/app/job/review?jobId=${jobRecord.id}`,
-								)}%22%3E%3Cimg%20border%3D%220%22%20vspace%3D%220%22%20hspace%3D%220%22%20src%3D%22https%3A//i.imgur.com/i7dbaQI.png%22%20height%3D%2228%22%20alt%3D%22Logo%22%20title%3D%22Logo%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2010px%3B%20margin%3A%200%3B%20padding%3A%200%3B%20outline%3A%20none%3B%20text-decoration%3A%20none%3B%20-ms-interpolation-mode%3A%20bicubic%3B%20border%3A%20none%3B%20display%3A%20block%3B%22%3E%3C/a%3E%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%20%20%3C/table%3E%0A%20%20%20%20%20%20%3Ctable%20border%3D%220%22%20cellpadding%3D%220%22%20cellspacing%3D%220%22%20align%3D%22center%22%20width%3D%22500%22%20style%3D%22%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20width%3A%20inherit%3B%20%20%20%20%20%20%20max-width%3A%20560px%3B%20%20%20%20%20%20%20background%3A%20%23fff%3B%20%20%20%20%20%20%20border-radius%3A%208px%3B%20%20%20%20%20%20%20padding%3A%2020px%200px%3B%20%20%20%20%20%20%20%22%20class%3D%22wrapper%22%3E%0A%20%20%20%20%20%20%20%20%20%3Ctbody%3E%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20margin-top%3A%2012px%3B%20%20%20%20%20%20%20%20%20%20%20%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20margin%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2040px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%22%20class%3D%22hero%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20target%3D%22_blank%22%20style%3D%22text-decoration%3A%20none%3B%22%20href%3D%22https%3A//github.com/konsav/email-templates/%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/a%3E%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20margin%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-left%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-right%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2024px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-weight%3A%20bold%3B%20%20%20%20%20%20%20%20%20%20%20%20%20line-height%3A%20130%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%22%20class%3D%22header%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20Manual%20review%20required%20%uD83D%uDFE1%uD83D%uDFE1%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20margin%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-left%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-right%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2020px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-weight%3A%20bold%3B%20%20%20%20%20%20%20%20%20%20%20%20%20line-height%3A%20130%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2016px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%232d3958%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%22%20class%3D%22header%22%3E%23%20${
+					`/app/job/review?jobId=${jobRecord.id}`,
+				)}%22%3E%3Cimg%20border%3D%220%22%20vspace%3D%220%22%20hspace%3D%220%22%20src%3D%22https%3A//i.imgur.com/i7dbaQI.png%22%20height%3D%2228%22%20alt%3D%22Logo%22%20title%3D%22Logo%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2010px%3B%20margin%3A%200%3B%20padding%3A%200%3B%20outline%3A%20none%3B%20text-decoration%3A%20none%3B%20-ms-interpolation-mode%3A%20bicubic%3B%20border%3A%20none%3B%20display%3A%20block%3B%22%3E%3C/a%3E%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%20%3C/tbody%3E%0A%20%20%20%20%20%20%3C/table%3E%0A%20%20%20%20%20%20%3Ctable%20border%3D%220%22%20cellpadding%3D%220%22%20cellspacing%3D%220%22%20align%3D%22center%22%20width%3D%22500%22%20style%3D%22%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20width%3A%20inherit%3B%20%20%20%20%20%20%20max-width%3A%20560px%3B%20%20%20%20%20%20%20background%3A%20%23fff%3B%20%20%20%20%20%20%20border-radius%3A%208px%3B%20%20%20%20%20%20%20padding%3A%2020px%200px%3B%20%20%20%20%20%20%20%22%20class%3D%22wrapper%22%3E%0A%20%20%20%20%20%20%20%20%20%3Ctbody%3E%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20margin-top%3A%2012px%3B%20%20%20%20%20%20%20%20%20%20%20%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20margin%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-left%3A%206.25%25%3B%20padding-right%3A%206.25%25%3B%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2040px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%22%20class%3D%22hero%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20target%3D%22_blank%22%20style%3D%22text-decoration%3A%20none%3B%22%20href%3D%22https%3A//github.com/konsav/email-templates/%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/a%3E%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20margin%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-left%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-right%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2024px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-weight%3A%20bold%3B%20%20%20%20%20%20%20%20%20%20%20%20%20line-height%3A%20130%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23000000%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%22%20class%3D%22header%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20Manual%20review%20required%20%uD83D%uDFE1%uD83D%uDFE1%20%20%20%20%20%20%20%20%20%20%20%3C/td%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/tr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ctr%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ctd%20align%3D%22left%22%20valign%3D%22top%22%20style%3D%22%20%20%20%20%20%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%20%20%20%20%20%20%20%20%20%20%20%20%20border-spacing%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20margin%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%200%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-left%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-right%3A%206.25%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2087.5%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2020px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-weight%3A%20bold%3B%20%20%20%20%20%20%20%20%20%20%20%20%20line-height%3A%20130%25%3B%20%20%20%20%20%20%20%20%20%20%20%20%20padding-top%3A%2016px%3B%20%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%232d3958%3B%20%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27DM%20Sans%27%2Csans-serif%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%22%20class%3D%22header%22%3E%23%20${
 					jobRecord.id
 				}%20-%20${escape(
 					jobRecord.repo_name,
@@ -325,13 +324,13 @@ async function handlePostChecksOperations(reportId: number, totalTestCount, jobI
 	const state = {
 		passedTestsArray: [],
 		failedTestsArray: [],
-		markedForReviewTestsArray: []
+		markedForReviewTestsArray: [],
 	};
-	allResultSets.map((resultSet)=>{
-		const {conclusion} = resultSet;
-		if(conclusion === TestInstanceResultSetConclusion.PASSED){
+	allResultSets.map((resultSet) => {
+		const { conclusion } = resultSet;
+		if (conclusion === TestInstanceResultSetConclusion.PASSED) {
 			state.passedTestsArray.push(resultSet);
-		} else if(conclusion === TestInstanceResultSetConclusion.FAILED){
+		} else if (conclusion === TestInstanceResultSetConclusion.FAILED) {
 			state.failedTestsArray.push(resultSet);
 		} else {
 			state.markedForReviewTestsArray.push(resultSet);
@@ -350,15 +349,27 @@ async function handlePostChecksOperations(reportId: number, totalTestCount, jobI
 		explanation = "No tests failed, but some of them requires manual review";
 	}
 
-	await jobsReportService.updateJobReportStatus(jobConclusion, reportId, explanation)
+	await jobsReportService.updateJobReportStatus(jobConclusion, reportId, explanation);
 
 	await notifyResultToGithubChecks(jobRecord, jobConclusion, userWhoStartedThisJob);
 	await notifyResultWithEmail(jobRecord, jobConclusion, userWhoStartedThisJob);
 	await notifyResultWithSlackIntegrations(jobRecord, jobConclusion, userWhoStartedThisJob, state);
 }
 
-async function runChecks(details, clearJobTempValues){
-	const { githubInstallationId, githubCheckRunId, platform, reportId, totalTestCount, testLogs, screenshots, testId, jobId, instanceId, fullRepoName } = details;
+async function runChecks(details, clearJobTempValues) {
+	const {
+		githubInstallationId,
+		githubCheckRunId,
+		platform,
+		reportId,
+		totalTestCount,
+		testLogs,
+		screenshots,
+		testId,
+		jobId,
+		instanceId,
+		fullRepoName,
+	} = details;
 
 	const currentJobReport = await jobsReportService.getJobReport(reportId);
 
@@ -412,7 +423,7 @@ module.exports = async (bullJob: Job) => {
 		instanceId,
 		reportId,
 		fullRepoName,
-		platform
+		platform,
 	} = bullJob.data;
 
 	async function clearJobTempValues(jobId) {
@@ -438,14 +449,14 @@ module.exports = async (bullJob: Job) => {
 					instanceId,
 					reportId,
 					fullRepoName,
-					platform
+					platform,
 				},
 				clearJobTempValues,
 			);
 
 			if (completedTestsCount === totalTestCount) {
 				const job = await jobsService.getJob(jobId);
-				if(job.status !== JobStatus.ABORTED) {
+				if (job.status !== JobStatus.ABORTED) {
 					await jobsService.updateJobStatus(JobStatus.FINISHED, jobId);
 				}
 				await clearJobTempValues(jobId);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { cleanHeaders } from "@utils/backendRequest";
 import { redirectToFrontendPath } from "@utils/router";
 import {
@@ -7,6 +7,11 @@ import {
 	USER_NOT_REGISTERED,
 } from "@utils/constants";
 import { getUserInfo } from "@services/user";
+import { store } from "@redux/store";
+import { saveSelectedProjectInRedux } from "@redux/actions/project";
+import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
+import { useSelector } from "react-redux";
+import { getCookies } from "@utils/cookies";
 
 async function handleUserStatus(
 	statusInfo: any,
@@ -44,7 +49,7 @@ function WithSession(Component: any, componentScope?: string) {
 	};
 
 	WrappedComponent.getInitialProps = async (ctx: any) => {
-		const { req, res } = ctx;
+		const { req, res, store } = ctx;
 
 		const headers = req ? req.headers : null;
 
@@ -74,7 +79,27 @@ function WithSession(Component: any, componentScope?: string) {
 			return { status: statusInfo };
 		}
 
-		return { ...pageProps, status: statusInfo, userInfo: userInfo };
+		const projectsList = getProjects(store.getState());
+		const cookies = getCookies(req);
+
+		let selectedProject = getSelectedProject(store.getState());
+		if (!selectedProject) {
+			if (cookies.selectedProject) {
+				selectedProject = cookies.selectedProject;
+			} else {
+				selectedProject =
+					projectsList && projectsList.length ? projectsList[0].id : null;
+			}
+		}
+
+		store.dispatch(saveSelectedProjectInRedux(selectedProject));
+
+		return {
+			...pageProps,
+			status: statusInfo,
+			userInfo: userInfo,
+			selectedProject,
+		};
 	};
 
 	return WrappedComponent;

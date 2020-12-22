@@ -1,6 +1,6 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { CreateProjectHostRequest } from '../interfaces/services/projectHosts/CreateProjectHostRequest';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { CreateProjectHostRequest } from "../interfaces/services/projectHosts/CreateProjectHostRequest";
 
 @Service()
 export default class ProjectHostsService {

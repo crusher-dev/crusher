@@ -1,4 +1,4 @@
-import { HttpError } from 'routing-controllers';
+import { HttpError } from "routing-controllers";
 
 export default class LoginError extends HttpError {
 	operationName: any;

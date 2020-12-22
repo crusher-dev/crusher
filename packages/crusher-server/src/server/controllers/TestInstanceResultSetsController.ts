@@ -1,17 +1,17 @@
-import { JsonController, Authorized, CurrentUser, Body, Post, Get, Param } from 'routing-controllers';
-import { Service, Container, Inject } from 'typedi';
-import DBManager from '../../core/manager/DBManager';
-import UserService from '../../core/services/UserService';
-import ProjectHostsService from '../../core/services/ProjectHostsService';
-import ProjectService from '../../core/services/ProjectService';
-import CommentsService from '../../core/services/CommentsService';
-import TestInstanceResultsService from '../../core/services/TestInstanceResultsService';
-import TestInstanceService from '../../core/services/TestInstanceService';
-import JobsService from '../../core/services/JobsService';
-import TestInstanceResultSetsService from '../../core/services/TestInstanceResultSetsService';
+import { JsonController, Authorized, CurrentUser, Body, Post, Get, Param } from "routing-controllers";
+import { Service, Container, Inject } from "typedi";
+import DBManager from "../../core/manager/DBManager";
+import UserService from "../../core/services/UserService";
+import ProjectHostsService from "../../core/services/ProjectHostsService";
+import ProjectService from "../../core/services/ProjectService";
+import CommentsService from "../../core/services/CommentsService";
+import TestInstanceResultsService from "../../core/services/TestInstanceResultsService";
+import TestInstanceService from "../../core/services/TestInstanceService";
+import JobsService from "../../core/services/JobsService";
+import TestInstanceResultSetsService from "../../core/services/TestInstanceResultSetsService";
 
 @Service()
-@JsonController('/testInstanceResultSet')
+@JsonController("/testInstanceResultSet")
 export class TestInstanceResultSetsController {
 	@Inject()
 	private userService: UserService;
@@ -38,8 +38,8 @@ export class TestInstanceResultSetsController {
 	}
 
 	@Authorized()
-	@Get('/approveAll/:jobId')
-	async approveAll(@CurrentUser({ required: true }) user, @Param('jobId') jobId) {
+	@Get("/approveAll/:jobId")
+	async approveAll(@CurrentUser({ required: true }) user, @Param("jobId") jobId) {
 		const { user_id } = user;
 		const job = await this.jobsService.getJob(jobId);
 		const testInstances = await this.testInstanceService.getAllInstancesWithResultByJobIdWithoutPlatfom(jobId);

@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { TestType } from '../../core/interfaces/TestType';
+import * as mongoose from "mongoose";
+import { TestType } from "../../core/interfaces/TestType";
 
 const TestLiveStepsLogsSchema = new mongoose.Schema(
 	{
@@ -16,4 +16,4 @@ const TestLiveStepsLogsSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-export const TestLiveStepsLogs = mongoose.model('TestLiveStepsLogs', TestLiveStepsLogsSchema);
+export const TestLiveStepsLogs = mongoose.model("TestLiveStepsLogs", TestLiveStepsLogsSchema);

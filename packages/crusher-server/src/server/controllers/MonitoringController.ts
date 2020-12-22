@@ -1,12 +1,12 @@
-import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, UnauthorizedError } from 'routing-controllers';
-import { Service, Container, Inject } from 'typedi';
-import DBManager from '../../core/manager/DBManager';
-import UserService from '../../core/services/UserService';
-import MonitoringService from '../../core/services/MonitoringService';
-import { convertLabelToSeconds, convertSecondsToLabel } from '../../core/utils/helper';
+import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, UnauthorizedError } from "routing-controllers";
+import { Service, Container, Inject } from "typedi";
+import DBManager from "../../core/manager/DBManager";
+import UserService from "../../core/services/UserService";
+import MonitoringService from "../../core/services/MonitoringService";
+import { convertLabelToSeconds, convertSecondsToLabel } from "../../core/utils/helper";
 
 @Service()
-@JsonController('/monitoring')
+@JsonController("/monitoring")
 export class MonitoringController {
 	@Inject()
 	private userService: UserService;
@@ -22,8 +22,8 @@ export class MonitoringController {
 	}
 
 	@Authorized()
-	@Post('/settings/:projectId/save')
-	async createProjectHost(@CurrentUser({ required: true }) user, @Param('projectId') projectId, @Body() body) {
+	@Post("/settings/:projectId/save")
+	async createProjectHost(@CurrentUser({ required: true }) user, @Param("projectId") projectId, @Body() body) {
 		const { user_id } = user;
 		const { test_interval, platform, target_host } = body;
 		const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
@@ -43,12 +43,12 @@ export class MonitoringController {
 			projectId,
 		);
 
-		return { status: 'UPDATED' };
+		return { status: "UPDATED" };
 	}
 
 	@Authorized()
-	@Get('/settings/:projectId/get')
-	async getAllHosts(@CurrentUser({ required: true }) user, @Param('projectId') projectId) {
+	@Get("/settings/:projectId/get")
+	async getAllHosts(@CurrentUser({ required: true }) user, @Param("projectId") projectId) {
 		const { user_id } = user;
 		const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
 		if (!canAccessThisProject) {

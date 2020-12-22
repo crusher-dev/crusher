@@ -1,5 +1,5 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../../manager/DBManager';
+import { Service, Container } from "typedi";
+import DBManager from "../../manager/DBManager";
 
 @Service()
 export default class TestInstanceResultsV2 {
@@ -12,7 +12,7 @@ export default class TestInstanceResultsV2 {
 	async getResultsForReport(reportId: number) {
 		const results = await this.dbManager.fetchData(
 			`SELECT test_instance_results.*, test_instance_result_sets.instance_id as instance_id, test_instance_result_sets.target_instance_id target_instance_id, test_instance_result_sets.status result_set_status, test_instance_result_sets.conclusion result_set_conclusion FROM test_instance_results INNER JOIN test_instance_result_sets ON test_instance_results.instance_result_set_id=test_instance_result_sets.id WHERE test_instance_result_sets.report_id = ?`,
-			[reportId]
+			[reportId],
 		);
 
 		const testResultsMap = results.reduce((prev, current) => {

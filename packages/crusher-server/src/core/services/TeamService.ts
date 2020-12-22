@@ -1,9 +1,9 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from '../../constants';
-import { CreateTeamRequest } from '../interfaces/services/team/CreateTeamRequest';
-import { TierPlan } from '../interfaces/TierPlan';
-import { User } from '../interfaces/db/User';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
+import { CreateTeamRequest } from "../interfaces/services/team/CreateTeamRequest";
+import { TierPlan } from "../interfaces/TierPlan";
+import { User } from "../interfaces/db/User";
 
 @Service()
 export default class TeamService {
@@ -29,14 +29,14 @@ export default class TeamService {
 				await this.dbManager.fetchSingleRow(`UPDATE users SET team_id=? WHERE id=?`, [team.insertId, userId]);
 				return { status: TEAM_CREATED, teamId: team.insertId };
 			} else {
-				throw new Error('Team creation failed');
+				throw new Error("Team creation failed");
 				return false;
 			}
 		}
-		throw new Error('User has already joined some team');
+		throw new Error("User has already joined some team");
 	}
 
 	async getTeamInfo(teamId: string): Promise<User> {
-		return await this.dbManager.fetchSingleRow('SELECT * from teams WHERE id = ?', [teamId]);
+		return await this.dbManager.fetchSingleRow("SELECT * from teams WHERE id = ?", [teamId]);
 	}
 }

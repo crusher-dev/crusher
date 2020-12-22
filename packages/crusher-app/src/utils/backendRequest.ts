@@ -5,9 +5,9 @@ import { RequestMethod, RequestOptions } from "@interfaces/RequestOptions";
 const _fetch = require("node-fetch");
 
 function prepareFetchPayload(uri: string, options: RequestOptions) {
-	let method = options.method ? options.method : RequestMethod.GET;
+	const method = options.method ? options.method : RequestMethod.GET;
 	let headers = options.headers ? options.headers : {};
-	let payload = options.payload ? options.payload : {};
+	const payload = options.payload ? options.payload : {};
 
 	uri = getAbsoluteURIIfRelative(uri);
 
@@ -16,6 +16,7 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 			uri = appendParamsToURI(uri, payload);
 			break;
 		case RequestMethod.POST:
+		case RequestMethod.PUT:
 			headers = {
 				...headers,
 				Accept: "application/json, text/plain, */*",
@@ -32,7 +33,7 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 
 export function backendRequest(_uri, options?: RequestOptions) {
 	const { payload } = options;
-	let { uri, method, headers } = prepareFetchPayload(_uri, options);
+	const { uri, method, headers } = prepareFetchPayload(_uri, options);
 
 	return _fetch(uri, {
 		headers,

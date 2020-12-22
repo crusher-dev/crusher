@@ -1,6 +1,6 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { Draft } from '../interfaces/db/Draft';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { Draft } from "../interfaces/db/Draft";
 
 @Service()
 export default class DraftService {
@@ -27,28 +27,28 @@ export default class DraftService {
 		const columnsToUpdate = {};
 
 		if (testName) {
-			columnsToUpdate['test_name'] = testName;
+			columnsToUpdate["test_name"] = testName;
 		}
 		if (code) {
-			columnsToUpdate['code'] = code;
+			columnsToUpdate["code"] = code;
 		}
 		if (events) {
-			columnsToUpdate['events'] = JSON.stringify(events);
+			columnsToUpdate["events"] = JSON.stringify(events);
 		}
 		if (framework) {
-			columnsToUpdate['framework'] = framework;
+			columnsToUpdate["framework"] = framework;
 		}
 		if (project_id) {
-			columnsToUpdate['project_id'] = project_id;
+			columnsToUpdate["project_id"] = project_id;
 		}
 		if (test_group_id) {
-			columnsToUpdate['test_group_id'] = test_group_id;
+			columnsToUpdate["test_group_id"] = test_group_id;
 		}
 		if (userId) {
-			columnsToUpdate['user_id'] = userId;
+			columnsToUpdate["user_id"] = userId;
 		}
 
-		return this.dbManager.fetchSingleRow('UPDATE drafts SET ? WHERE id=?', [columnsToUpdate, draftId]);
+		return this.dbManager.fetchSingleRow("UPDATE drafts SET ? WHERE id=?", [columnsToUpdate, draftId]);
 	}
 
 	async getDraftTest(draftId: number) {

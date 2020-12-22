@@ -263,16 +263,6 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 				return { label: project.name, value: project.id };
 			});
 
-		useEffect(() => {
-			if (!selectedProject) {
-				store.dispatch(
-					saveSelectedProjectInRedux(
-						projectsList && projectsList.length ? projectsList[0].id : null,
-					),
-				);
-			}
-		}, [projectsList]);
-
 		function onProjectChange(project) {
 			store.dispatch(saveSelectedProjectInRedux(project.value));
 		}

@@ -1,30 +1,30 @@
-import { CronJob } from 'cron';
-import { Container } from 'typedi';
-import JobsService, { TRIGGER } from '../../core/services/JobsService';
-import MonitoringService from '../../core/services/MonitoringService';
-import { Platform } from '../../core/interfaces/Platform';
-import { JobTrigger } from '../../core/interfaces/JobTrigger';
-import { addJobToRequestQueue } from '../../core/utils/queue';
-import TestService from '../../core/services/TestService';
-import ProjectHostsService from '../../core/services/ProjectHostsService';
-import { Logger } from '../../utils/logger';
-import { TestType } from '../../core/interfaces/TestType';
+import { CronJob } from "cron";
+import { Container } from "typedi";
+import JobsService, { TRIGGER } from "../../core/services/JobsService";
+import MonitoringService from "../../core/services/MonitoringService";
+import { Platform } from "../../core/interfaces/Platform";
+import { JobTrigger } from "../../core/interfaces/JobTrigger";
+import { addJobToRequestQueue } from "../../core/utils/queue";
+import TestService from "../../core/services/TestService";
+import ProjectHostsService from "../../core/services/ProjectHostsService";
+import { Logger } from "../../utils/logger";
+import { TestType } from "../../core/interfaces/TestType";
 
 export function init() {
-	console.log('Starting cron jobs');
+	console.log("Starting cron jobs");
 	const checkRunningTestsJob = new CronJob(
-		'* */10 * * * *',
+		"* */10 * * * *",
 		async function () {
 			const jobsService = Container.get(JobsService);
 			await jobsService.stopAllJobsRunningForMoreThanAnHour();
 		},
 		null,
 		true,
-		'America/Los_Angeles',
+		"America/Los_Angeles",
 	);
 
 	const startTestQueue = new CronJob(
-		'*/10 * * * * *',
+		"*/10 * * * * *",
 		async function () {
 			// console.log('Triggered cron for starting tests');
 			const monitoringService = Container.get(MonitoringService);
@@ -68,7 +68,7 @@ export function init() {
 						platform: job.platform,
 					}).catch(async (err) => {
 						// @TODO: Also stop any test instances if any
-						Logger.error('startTestCron', 'Something went wrong while adding a job to queue. Deleting them now', {
+						Logger.error("startTestCron", "Something went wrong while adding a job to queue. Deleting them now", {
 							err,
 						});
 						await jobService.deleteJob(job.id);
@@ -77,11 +77,11 @@ export function init() {
 				}
 			} catch (ex) {
 				// Cleanup job if some error occured during cron
-				Logger.fatal('startTestCron', 'Error occurred when starting the tests', ex);
+				Logger.fatal("startTestCron", "Error occurred when starting the tests", ex);
 			}
 		},
 		null,
 		true,
-		'America/Los_Angeles',
+		"America/Los_Angeles",
 	);
 }

@@ -1,5 +1,5 @@
-import { TestFramework } from '../TestFramework';
-import { BaseRowInterface } from './BaseRowInterface';
+import { TestFramework } from "../TestFramework";
+import { BaseRowInterface } from "./BaseRowInterface";
 
 export interface Test extends BaseRowInterface {
 	id: number;

@@ -1,5 +1,5 @@
-import { BaseRowInterface } from './BaseRowInterface';
-import { ServiceProvider } from '../ServiceProvider';
+import { BaseRowInterface } from "./BaseRowInterface";
+import { ServiceProvider } from "../ServiceProvider";
 
 export interface UserProviderConnection extends BaseRowInterface {
 	id?: number;

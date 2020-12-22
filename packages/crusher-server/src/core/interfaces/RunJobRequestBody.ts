@@ -6,9 +6,9 @@ export interface RunJobRequestBody {
 	commitId?: string;
 	projectId: number;
 	reportId: number;
-	trigger: 'MANUAL' | 'CRON' | 'PR';
-	status: 'QUEUED' | 'RUNNING' | 'FINISHED' | 'TIMEOUT' | 'ABORTED';
-	platform?: 'CHROME' | 'FIREFOX' | 'SAFARI' | 'ALL';
+	trigger: "MANUAL" | "CRON" | "PR";
+	status: "QUEUED" | "RUNNING" | "FINISHED" | "TIMEOUT" | "ABORTED";
+	platform?: "CHROME" | "FIREFOX" | "SAFARI" | "ALL";
 	githubCheckRunId?: string;
 	host?: string;
 	testCount: number;

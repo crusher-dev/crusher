@@ -1,10 +1,10 @@
-import { Container, Inject, Service } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { TestInstanceResultSet } from '../interfaces/db/TestInstanceResultSet';
-import TestInstanceResultsService from './TestInstanceResultsService';
-import { TestInstanceResultStatus } from '../interfaces/TestInstanceResultStatus';
-import { TestInstanceResultSetConclusion } from '../interfaces/TestInstanceResultSetConclusion';
-import { TestInstanceResult } from '../interfaces/db/TestInstanceResult';
+import { Container, Inject, Service } from "typedi";
+import DBManager from "../manager/DBManager";
+import { TestInstanceResultSet } from "../interfaces/db/TestInstanceResultSet";
+import TestInstanceResultsService from "./TestInstanceResultsService";
+import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
+import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
+import { TestInstanceResult } from "../interfaces/db/TestInstanceResult";
 
 @Service()
 export default class TestInstanceResultSetsService {
@@ -60,9 +60,15 @@ export default class TestInstanceResultSetsService {
 
 		console.log(results, results.length, hasTestFailed, hasAllTestsPassed);
 		if (hasTestFailed) {
-			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [TestInstanceResultSetConclusion.FAILED, setId]);
+			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
+				TestInstanceResultSetConclusion.FAILED,
+				setId,
+			]);
 		} else if (hasAllTestsPassed) {
-			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [TestInstanceResultSetConclusion.PASSED, setId]);
+			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
+				TestInstanceResultSetConclusion.PASSED,
+				setId,
+			]);
 		} else if (isStillInReview) {
 			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
 				TestInstanceResultSetConclusion.MANUAL_REVIEW_REQUIRED,
@@ -70,6 +76,6 @@ export default class TestInstanceResultSetsService {
 			]);
 		}
 
-		return { status: 'UPDATED' };
+		return { status: "UPDATED" };
 	}
 }

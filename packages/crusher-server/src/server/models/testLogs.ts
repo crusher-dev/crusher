@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { TestType } from '../../core/interfaces/TestType';
+import * as mongoose from "mongoose";
+import { TestType } from "../../core/interfaces/TestType";
 const TestLogsSchema = new mongoose.Schema(
 	{
 		tag: String,
@@ -14,12 +14,12 @@ const TestLogsSchema = new mongoose.Schema(
 		},
 		level: {
 			type: mongoose.Schema.Types.String,
-			enum: ['low', 'medium', 'high', 'critical'],
-			default: 'medium',
+			enum: ["low", "medium", "high", "critical"],
+			default: "medium",
 		},
 		meta: mongoose.Schema.Types.Mixed,
 	},
 	{ timestamps: true },
 );
 
-export const TestsLogs = mongoose.model('TestLogs', TestLogsSchema);
+export const TestsLogs = mongoose.model("TestLogs", TestLogsSchema);

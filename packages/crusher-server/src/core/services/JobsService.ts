@@ -1,15 +1,15 @@
-import { Container, Service } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { JobBuild } from '../interfaces/db/JobBuild';
-import { JobTrigger } from '../interfaces/JobTrigger';
-import { JobStatus } from '../interfaces/JobStatus';
-import { InsertRecordResponse } from '../interfaces/services/InsertRecordResponse';
-import { JobConclusion } from '../interfaces/JobConclusion';
+import { Container, Service } from "typedi";
+import DBManager from "../manager/DBManager";
+import { JobBuild } from "../interfaces/db/JobBuild";
+import { JobTrigger } from "../interfaces/JobTrigger";
+import { JobStatus } from "../interfaces/JobStatus";
+import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
+import { JobConclusion } from "../interfaces/JobConclusion";
 
 export const TRIGGER = {
-	MANUAL: 'MANUAL',
-	CRON: 'CRON',
-	CLI: 'CLI',
+	MANUAL: "MANUAL",
+	CRON: "CRON",
+	CLI: "CLI",
 };
 
 @Service()
@@ -42,13 +42,24 @@ export default class JobsService {
 	}
 
 	async getAllJobsOfProject(projectId: number, trigger: JobTrigger, limit = 5, offset = 0) {
-		if(!trigger) {
+		if (!trigger) {
 			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
 		}
-		if(trigger === JobTrigger.MONITORING){
-			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND (\`trigger\`=? OR \`trigger\`=?) ORDER BY created_at DESC LIMIT ?,?`, [projectId, JobTrigger.CRON, JobTrigger.CLI, offset, limit]);
+		if (trigger === JobTrigger.MONITORING) {
+			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND (\`trigger\`=? OR \`trigger\`=?) ORDER BY created_at DESC LIMIT ?,?`, [
+				projectId,
+				JobTrigger.CRON,
+				JobTrigger.CLI,
+				offset,
+				limit,
+			]);
 		} else {
-			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND \`trigger\`=? ORDER BY created_at DESC LIMIT ?,?`, [projectId, trigger, offset, limit]);
+			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND \`trigger\`=? ORDER BY created_at DESC LIMIT ?,?`, [
+				projectId,
+				trigger,
+				offset,
+				limit,
+			]);
 		}
 	}
 
@@ -62,7 +73,7 @@ export default class JobsService {
 
 	async getScreenshotsCountInJobReport(
 		reportId: number,
-		jobId: number
+		jobId: number,
 	): Promise<{
 		passedCount: number;
 		failedCount: number;
@@ -70,7 +81,7 @@ export default class JobsService {
 		totalComparisonCount: number;
 	}> {
 		const totalScreenshots = await this.dbManager.fetchSingleRow(
-			'SELECT COUNT(*) as count FROM test_instance_screenshots, test_instances WHERE test_instances.job_id = ? AND test_instance_screenshots.instance_id = test_instances.id',
+			"SELECT COUNT(*) as count FROM test_instance_screenshots, test_instances WHERE test_instances.job_id = ? AND test_instance_screenshots.instance_id = test_instances.id",
 			[jobId],
 		);
 		const countRecord = await this.dbManager.fetchSingleRow(
@@ -95,7 +106,7 @@ export default class JobsService {
 		totalComparisonCount: number;
 	}> {
 		const totalScreenshots = await this.dbManager.fetchSingleRow(
-			'SELECT COUNT(*) as count FROM test_instance_screenshots, test_instances WHERE test_instances.job_id = ? AND test_instance_screenshots.instance_id = test_instances.id',
+			"SELECT COUNT(*) as count FROM test_instance_screenshots, test_instances WHERE test_instances.job_id = ? AND test_instance_screenshots.instance_id = test_instances.id",
 			[jobId],
 		);
 		const countRecord = await this.dbManager.fetchSingleRow(
@@ -112,13 +123,19 @@ export default class JobsService {
 
 	async getTotalJobs(projectId, trigger) {
 		let countRecord;
-		if(!trigger){
+		if (!trigger) {
 			countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ?`, [projectId]);
 		} else {
-			if(trigger === JobTrigger.MONITORING) {
-				countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ? AND (\`trigger\` = ? OR \`trigger\` = ?)`, [projectId, JobTrigger.CLI, JobTrigger.CRON]);
-			} else if(trigger === JobTrigger.MANUAL) {
-				countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ? AND \`trigger\` = ?`, [projectId, trigger]);
+			if (trigger === JobTrigger.MONITORING) {
+				countRecord = await this.dbManager.fetchSingleRow(
+					`SELECT count(*) as totalCount FROM jobs WHERE project_id = ? AND (\`trigger\` = ? OR \`trigger\` = ?)`,
+					[projectId, JobTrigger.CLI, JobTrigger.CRON],
+				);
+			} else if (trigger === JobTrigger.MANUAL) {
+				countRecord = await this.dbManager.fetchSingleRow(`SELECT count(*) as totalCount FROM jobs WHERE project_id = ? AND \`trigger\` = ?`, [
+					projectId,
+					trigger,
+				]);
 			}
 		}
 		return countRecord ? countRecord.totalCount : 0;
@@ -136,11 +153,10 @@ export default class JobsService {
 				id,
 			]);
 		} else {
-			return this.dbManager.fetchSingleRow(`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND status = ? AND NOT (id = ?) ORDER BY created_at DESC`, [
-				JSON.stringify(testIds),
-				JobStatus.FINISHED,
-				id,
-			]);
+			return this.dbManager.fetchSingleRow(
+				`SELECT * FROM jobs WHERE host IS NULL AND meta = ? AND status = ? AND NOT (id = ?) ORDER BY created_at DESC`,
+				[JSON.stringify(testIds), JobStatus.FINISHED, id],
+			);
 		}
 	}
 

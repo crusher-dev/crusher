@@ -1,7 +1,7 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { CliStatus } from '../interfaces/db/CliStatus';
-import { InsertRecordResponse } from '../interfaces/services/InsertRecordResponse';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { CliStatus } from "../interfaces/db/CliStatus";
+import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
 
 @Service()
 export default class ClIService {
@@ -14,7 +14,7 @@ export default class ClIService {
 	async addCLIToken(cliToken: string): Promise<InsertRecordResponse> {
 		return this.dbManager.insertData(`INSERT INTO cli_status SET ?`, {
 			token: cliToken,
-			status: 'Started',
+			status: "Started",
 		});
 	}
 

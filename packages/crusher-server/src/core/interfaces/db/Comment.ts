@@ -1,4 +1,4 @@
-import { BaseRowInterface } from './BaseRowInterface';
+import { BaseRowInterface } from "./BaseRowInterface";
 
 export interface Comment extends BaseRowInterface {
 	id?: number;

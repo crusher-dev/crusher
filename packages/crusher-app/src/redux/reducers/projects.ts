@@ -3,21 +3,26 @@ import {
 	DELETE_PROJECT,
 	SAVE_PROJECTS,
 	SAVE_SELECTED_PROJECT,
+	SET_CURRENT_PROJECT_INFO,
 } from "@redux/actions/project";
 import jsCookie from "js-cookie";
 import { HYDRATE } from "next-redux-wrapper";
 import { extractHostnameFromUrl } from "@utils/helpers";
 import { BACKEND_SERVER_URL } from "@constants/other";
+import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
 
 const initialState = {
 	allProjects: [],
 	selectedProject: null,
+	currentProjectInfo: null as iProjectInfoResponse | null,
 };
 
 const projects = (state = initialState, action) => {
 	switch (action.type) {
 		case HYDRATE:
 			return { ...state, ...action.payload.projects };
+		case SET_CURRENT_PROJECT_INFO:
+			return { ...state, currentProjectInfo: action.payload.info };
 		case SAVE_PROJECTS:
 			return {
 				...state,

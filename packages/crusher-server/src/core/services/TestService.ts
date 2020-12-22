@@ -1,8 +1,8 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../manager/DBManager';
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from '../../constants';
-import { CreateTestRequest } from '../interfaces/services/test/CreateTestRequest';
-import { Test } from '../interfaces/db/Test';
+import { Service, Container } from "typedi";
+import DBManager from "../manager/DBManager";
+import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
+import { CreateTestRequest } from "../interfaces/services/test/CreateTestRequest";
+import { Test } from "../interfaces/db/Test";
 
 @Service()
 export default class TestService {
@@ -29,20 +29,20 @@ export default class TestService {
 
 	async findMembersOfProject(projectId: number) {
 		return this.dbManager.fetchData(
-			'SELECT users.* FROM projects, users, teams WHERE projects.id = ? AND projects.team_id = teams.id AND users.team_id = teams.id',
+			"SELECT users.* FROM projects, users, teams WHERE projects.id = ? AND projects.team_id = teams.id AND users.team_id = teams.id",
 			[projectId],
 		);
 	}
 
 	async findProjectMembersOfTest(testId: number) {
 		return this.dbManager.fetchData(
-			'SELECT users.* FROM tests, projects, users, teams WHERE tests.id = ? AND projects.id = tests.project_id AND projects.team_id = teams.id AND users.team_id = teams.id',
+			"SELECT users.* FROM tests, projects, users, teams WHERE tests.id = ? AND projects.id = tests.project_id AND projects.team_id = teams.id AND users.team_id = teams.id",
 			[testId],
 		);
 	}
 
 	async getTestsCountInProject(projectId: number): Promise<number> {
-		const countRecord = await this.dbManager.fetchSingleRow('SELECT COUNT(*) as totalTests FROM tests WHERE project_id = ?', [projectId]);
+		const countRecord = await this.dbManager.fetchSingleRow("SELECT COUNT(*) as totalTests FROM tests WHERE project_id = ?", [projectId]);
 		return countRecord.totalTests;
 	}
 
@@ -72,13 +72,13 @@ export default class TestService {
 	async updateTest(testName: string, projectId: number, code: string, testId: number) {
 		const fieldsToUpdate = {};
 		if (!!testName) {
-			fieldsToUpdate['name'] = testName;
+			fieldsToUpdate["name"] = testName;
 		}
 		if (!!projectId) {
-			fieldsToUpdate['project_id'] = projectId;
+			fieldsToUpdate["project_id"] = projectId;
 		}
 		if (!!code) {
-			fieldsToUpdate['code'] = code;
+			fieldsToUpdate["code"] = code;
 		}
 		return this.dbManager.fetchSingleRow(`UPDATE tests SET ? WHERE id = ?`, [fieldsToUpdate, testId]);
 	}

@@ -5,7 +5,7 @@
 		"target": "es5",
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"baseUrl": ".",
+		"baseUrl": "../",
 		"outDir": "./build",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
@@ -16,11 +16,17 @@
 		"strictNullChecks": false,
 		"esModuleInterop": false,
 		"suppressImplicitAnyIndexErrors": true,
-		"noImplicitReturns": false
+		"noImplicitReturns": false,
+		"isolatedModules": true,
+		"paths": {
+			"@crusher-shared/*": ["crusher-shared/*"]
+		}
 	},
 	"include": ["**/*.ts"],
 	"typeRoots": ["node_modules/@types"],
-	"files": ["src/app.js"],
+	"files": [
+		"src/app.js"
+	],
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"]
 }

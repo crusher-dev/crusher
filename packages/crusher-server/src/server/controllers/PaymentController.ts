@@ -1,14 +1,14 @@
-import { Body, CurrentUser, Get, InternalServerError, JsonController, Post } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
-import UserService from '../../core/services/UserService';
-import GoogleAPIService from '../../core/services/GoogleAPIService';
-import { USER_NOT_REGISTERED } from '../../constants';
-import TeamService from '../../core/services/TeamService';
-import ProjectService from '../../core/services/ProjectService';
-import PaymentService from '../../core/services/PaymentService';
+import { Body, CurrentUser, Get, InternalServerError, JsonController, Post } from "routing-controllers";
+import { Inject, Service } from "typedi";
+import UserService from "../../core/services/UserService";
+import GoogleAPIService from "../../core/services/GoogleAPIService";
+import { USER_NOT_REGISTERED } from "../../constants";
+import TeamService from "../../core/services/TeamService";
+import ProjectService from "../../core/services/ProjectService";
+import PaymentService from "../../core/services/PaymentService";
 
 @Service()
-@JsonController('/plan')
+@JsonController("/plan")
 export class PaymentController {
 	@Inject()
 	private userService: UserService;
@@ -22,7 +22,7 @@ export class PaymentController {
 	private paymentService: PaymentService;
 	// Returns pricing plans for current user.
 	// Base plan + custom plans if any. This can also be changed after starting a trials
-	@Get('/get/all')
+	@Get("/get/all")
 	async getPricingPlans(@CurrentUser({ required: false }) user, @Body() body) {
 		const { team_id } = user;
 
@@ -50,7 +50,7 @@ export class PaymentController {
 	// Intializes trial and create stripe subscription
 	// Can be overriden for large companies.
 	// In that case set trial equal false and create normal log.
-	@Post('/billing/change_item')
+	@Post("/billing/change_item")
 	async changePlan(@CurrentUser({ required: false }) user, @Body() body) {
 		const { new_plan_id: newPlanId, pricing_log_id: currentPricingLog } = body;
 		const { team_id: teamId, subscription_id } = user;
@@ -60,7 +60,7 @@ export class PaymentController {
 	// Intializes trial and create stripe subscription
 	// Can be overriden for large companies.
 	// In that case set trial equal false and create normal log.
-	@Post('/billing/remove_plans')
+	@Post("/billing/remove_plans")
 	async removeSubscriptionItem(@CurrentUser({ required: false }) user, @Body() body) {
 		const { pricing_log_ids: toRemove } = body;
 		return Promise.all(
@@ -73,7 +73,7 @@ export class PaymentController {
 	// Intializes trial and create stripe subscription
 	// Can be overriden for large companies.
 	// In that case set trial equal false and create normal log.
-	@Post('/billing/add_plans')
+	@Post("/billing/add_plans")
 	async addSubscriptionItem(@CurrentUser({ required: false }) user, @Body() body) {
 		const { team_id: teamId, subscription_id: subscriptionId } = user;
 		const { new_plan_ids: newPlanIds } = body;
@@ -87,7 +87,7 @@ export class PaymentController {
 	// Intializes trial and create stripe subscription
 	// Can be overriden for large companies.
 	// In that case set trial equal false and create normal log.
-	@Post('/start/billing')
+	@Post("/start/billing")
 	async startUserTrial(@CurrentUser({ required: false }) user, @Body() body) {
 		const { team_id: teamId } = user;
 		const { plan_ids: planIds, trial = false } = body;
@@ -97,14 +97,14 @@ export class PaymentController {
 	// Intializes trial and create stripe subscription
 	// Can be overriden for large companies.
 	// In that case set trial equal false and create normal log.
-	@Post('/stop_plan')
+	@Post("/stop_plan")
 	async stopPlan(@CurrentUser({ required: false }) user, @Body() body) {
 		const { team_id } = user;
 		return this.paymentService.switchToFreePlan(team_id);
 	}
 
 	// Get all cards
-	@Get('/get/cards')
+	@Get("/get/cards")
 	async addUserMeta(@CurrentUser({ required: false }) user, @Body() body) {
 		const { user_id } = user;
 		const metaArray = body;
@@ -115,15 +115,15 @@ export class PaymentController {
 		return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
-				return { status: 'success' };
+				return { status: "success" };
 			})
 			.catch((err) => {
-				return new InternalServerError('Some internal error occurred');
+				return new InternalServerError("Some internal error occurred");
 			});
 	}
 
 	// Get all cards
-	@Get('/get/current_plan')
+	@Get("/get/current_plan")
 	async getCurrentPlans(@CurrentUser({ required: false }) user, @Body() body) {
 		const { user_id } = user;
 		const metaArray = body;
@@ -134,15 +134,15 @@ export class PaymentController {
 		return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
-				return { status: 'success' };
+				return { status: "success" };
 			})
 			.catch((err) => {
-				return new InternalServerError('Some internal error occurred');
+				return new InternalServerError("Some internal error occurred");
 			});
 	}
 
 	// Get all cards
-	@Get('/get/invoice')
+	@Get("/get/invoice")
 	async getInvoice(@CurrentUser({ required: false }) user, @Body() body) {
 		const { user_id } = user;
 		const metaArray = body;
@@ -153,10 +153,10 @@ export class PaymentController {
 		return this.userService
 			.addUserMeta(metaArray, user_id)
 			.then(async () => {
-				return { status: 'success' };
+				return { status: "success" };
 			})
 			.catch((err) => {
-				return new InternalServerError('Some internal error occurred');
+				return new InternalServerError("Some internal error occurred");
 			});
 	}
 }

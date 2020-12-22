@@ -1,7 +1,7 @@
-import { TestType } from '../interfaces/TestType';
-import TestInstanceRecordingService from '../services/TestInstanceRecordingService';
-import DraftInstanceResultsService from '../services/DraftInstanceResultsService';
-import 'reflect-metadata';
+import { TestType } from "../interfaces/TestType";
+import TestInstanceRecordingService from "../services/TestInstanceRecordingService";
+import DraftInstanceResultsService from "../services/DraftInstanceResultsService";
+import "reflect-metadata";
 
 const testInstanceRecordingService = new TestInstanceRecordingService();
 const draftInstanceResultsService = new DraftInstanceResultsService();
@@ -9,7 +9,7 @@ const draftInstanceResultsService = new DraftInstanceResultsService();
 export class VideoEventsPostProcessor {
 	static async onVideoProcessed(callback) {
 		const { processed, recordedVideoUrl, instanceId: instanceId, testId: testId, testType: testType } = callback.returnvalue;
-		console.log('Video processed completely', callback.returnValue);
+		console.log("Video processed completely", callback.returnValue);
 		if (processed && recordedVideoUrl) {
 			if (testType === TestType.SAVED) {
 				await testInstanceRecordingService.createTestInstanceRecording({

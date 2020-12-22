@@ -1,5 +1,5 @@
-import { BaseRowInterface } from './BaseRowInterface';
-import { TierPlan } from '../TierPlan';
+import { BaseRowInterface } from "./BaseRowInterface";
+import { TierPlan } from "../TierPlan";
 
 export interface Team extends BaseRowInterface {
 	id: number;

@@ -1,5 +1,5 @@
-import { RunJobRequestBody } from './RunJobRequestBody';
-import { RunTestRequestBody } from './RunTestRequestBody';
+import { RunJobRequestBody } from "./RunJobRequestBody";
+import { RunTestRequestBody } from "./RunTestRequestBody";
 
 export interface RunRequest {
 	job?: RunJobRequestBody;

@@ -1,8 +1,8 @@
-import { Container, Inject, Service } from 'typedi';
-import TeamService from './TeamService';
-import StripeManager from '../manager/StripeManager';
-import DBManager from '../manager/DBManager';
-import { HttpError } from 'routing-controllers';
+import { Container, Inject, Service } from "typedi";
+import TeamService from "./TeamService";
+import StripeManager from "../manager/StripeManager";
+import DBManager from "../manager/DBManager";
+import { HttpError } from "routing-controllers";
 
 @Service()
 export default class PaymentService {
@@ -63,7 +63,7 @@ export default class PaymentService {
 	async addPlan(team_id, subscriptionId, planId) {
 		const [{ stripe_pricing_id }] = await this.getPlanData([planId]);
 		const { id: subscriptionItemId } = await this.stripeManager.addItemInSubscription(subscriptionId, stripe_pricing_id);
-		await this.addNewTeamPricingLog(team_id, planId, 'Stripe', subscriptionItemId);
+		await this.addNewTeamPricingLog(team_id, planId, "Stripe", subscriptionItemId);
 	}
 
 	async removePlan(pricingLogId) {
@@ -91,9 +91,9 @@ export default class PaymentService {
 			await this.removePlan(filteredPlan.stripe_subscription_item_id);
 			await this.addPlan(team_id, subscriptionId, newPlanId);
 
-			return { status: 'success' };
+			return { status: "success" };
 		} catch (e) {
-			throw new Error('Some error occured');
+			throw new Error("Some error occured");
 		}
 	}
 
@@ -105,13 +105,13 @@ export default class PaymentService {
 		const [{ stripe_customer_id, stripe_subscription_id }] = await Promise.all([teamPromise]);
 
 		if (stripe_subscription_id) {
-			return new HttpError(403, 'Subscription already exist. Either update plan or contact contact@crusher.dev');
+			return new HttpError(403, "Subscription already exist. Either update plan or contact contact@crusher.dev");
 		}
 
 		const subscriptionPromise = this.stripeManager.createSubscription(stripe_customer_id, stripe_pricing_ids);
 		const [{ subscriptionData }] = await Promise.all([subscriptionPromise]);
 		const pricingLogPromise = subscriptionData.items.data.map((item, i) => {
-			this.addNewTeamPricingLog(team_id, crusherPlanIds[i], 'Stripe', item.id);
+			this.addNewTeamPricingLog(team_id, crusherPlanIds[i], "Stripe", item.id);
 		});
 		const updateTeamPromise = this.dbManager.fetchSingleRow(`UPDATE teams SET type='PAID', stripe_subscription_id=? WHERE id = ?`, [
 			subscriptionData.id,
@@ -119,7 +119,7 @@ export default class PaymentService {
 		]);
 
 		await Promise.all([updateTeamPromise, ...pricingLogPromise]);
-		return { status: 'success' };
+		return { status: "success" };
 	}
 
 	// Change subscription to free plan. And delete customer.
@@ -128,7 +128,7 @@ export default class PaymentService {
 		try {
 			const updateUserTypePromise = this.dbManager.fetchSingleRow(`UPDATE teams SET type='FREE' WHERE id = ?`, [teamId]);
 			const updateLogsPromise = this.dbManager.fetchSingleRow(`UPDATE team_pricing_log SET ongoing=false and end_at = now() WHERE team_id = ?`, [teamId]);
-			const addFreePricingLog = this.addNewTeamPricingLog(teamId, 1, 'no_payment');
+			const addFreePricingLog = this.addNewTeamPricingLog(teamId, 1, "no_payment");
 			const changeStripePayment = this.stripeManager.expireFreeTrial(stripe_subscription_id, 0);
 			await Promise.all([updateUserTypePromise, updateLogsPromise, addFreePricingLog, changeStripePayment]);
 			return { success: true };

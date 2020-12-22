@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { css } from "@emotion/core";
 import { cleanHeaders } from "@utils/backendRequest";
 import { getAllSlackIntegrationsForProject } from "@services/alerting";
@@ -55,7 +55,6 @@ InviteMembers.getInitialProps = async (ctx: any) => {
 			slackIntegrations: slackIntegrations,
 		};
 	} catch (ex) {
-		throw ex;
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

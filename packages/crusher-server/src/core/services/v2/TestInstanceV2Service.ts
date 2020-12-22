@@ -1,5 +1,5 @@
-import { Service, Container } from 'typedi';
-import DBManager from '../../manager/DBManager';
+import { Service, Container } from "typedi";
+import DBManager from "../../manager/DBManager";
 
 @Service()
 export default class TestInstanceV2Service {

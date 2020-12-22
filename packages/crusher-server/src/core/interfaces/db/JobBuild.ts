@@ -1,8 +1,8 @@
-import { JobStatus } from '../JobStatus';
-import { JobConclusion } from '../JobConclusion';
-import { JobTrigger } from '../JobTrigger';
-import { Platform } from '../Platform';
-import { BaseRowInterface } from './BaseRowInterface';
+import { JobStatus } from "../JobStatus";
+import { JobConclusion } from "../JobConclusion";
+import { JobTrigger } from "../JobTrigger";
+import { Platform } from "../Platform";
+import { BaseRowInterface } from "./BaseRowInterface";
 
 export interface JobBuild extends BaseRowInterface {
 	id?: number;

@@ -1,29 +1,29 @@
-import { appendParamsToURI, checkIfAbsoluteURI } from './url';
-import { Logger } from './logger';
-import * as chalk from 'chalk';
+import { appendParamsToURI, checkIfAbsoluteURI } from "./url";
+import { Logger } from "./logger";
+import * as chalk from "chalk";
 
-const _fetch = require('node-fetch');
+const _fetch = require("node-fetch");
 
 function prepareFetchPayload(uri, options: any = {}) {
-	let method = options.method ? options.method : 'GET';
+	let method = options.method ? options.method : "GET";
 	let headers = options.headers ? options.headers : {};
 	let payload = options.payload ? options.payload : {};
 
-	delete headers['host'];
+	delete headers["host"];
 
 	switch (method.toUpperCase()) {
-		case 'GET':
+		case "GET":
 			uri = appendParamsToURI(uri, payload);
 			break;
-		case 'POST':
+		case "POST":
 			headers = {
 				...headers,
-				Accept: 'application/json, text/plain, */*',
-				'Content-Type': 'application/json',
+				Accept: "application/json, text/plain, */*",
+				"Content-Type": "application/json",
 			};
 			break;
 		default:
-			throw new Error('Invalid post-method passed, only GET and POST supported');
+			throw new Error("Invalid post-method passed, only GET and POST supported");
 			break;
 	}
 	return { uri, method, headers: headers };
@@ -36,8 +36,8 @@ export function request(_uri, options: any = {}) {
 	return _fetch(uri, {
 		headers,
 		method,
-		credentials: 'include',
-		body: method !== 'GET' ? JSON.stringify(payload) : null,
+		credentials: "include",
+		body: method !== "GET" ? JSON.stringify(payload) : null,
 	}).then((requestResponse) => {
 		try {
 			const txt = requestResponse.text();
@@ -45,7 +45,7 @@ export function request(_uri, options: any = {}) {
 			const elapsedHrTime = process.hrtime(startHrTime);
 			const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
 
-			Logger.info('Request', `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)})`, { headers, payload });
+			Logger.info("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)})`, { headers, payload });
 
 			return txt
 				.then((txt) => {
@@ -58,7 +58,7 @@ export function request(_uri, options: any = {}) {
 		} catch (err) {
 			const elapsedHrTime = process.hrtime(startHrTime);
 			const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
-			Logger.error('Request', `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {
+			Logger.error("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {
 				headers,
 				err,
 				payload,

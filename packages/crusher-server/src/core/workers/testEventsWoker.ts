@@ -1,22 +1,22 @@
-import { TestType } from '../interfaces/TestType';
-import TestInstanceService from '../services/TestInstanceService';
-import JobsService from '../services/JobsService';
-import DraftInstanceService from '../services/DraftInstanceService';
-import { InstanceStatus } from '../interfaces/InstanceStatus';
-import { updateGithubCheckStatus } from '../../utils/github';
-import { GithubCheckStatus } from '../interfaces/GithubCheckStatus';
-import { GithubConclusion } from '../interfaces/GithubConclusion';
-import { JobStatus } from '../interfaces/JobStatus';
-import { JobConclusion } from '../interfaces/JobConclusion';
-import DraftInstanceResultsService from '../services/DraftInstanceResultsService';
-import TestInstanceScreenShotsService from '../services/TestInstanceScreenShotsService';
-import TestInstanceRecordingService from '../services/TestInstanceRecordingService';
-import { Logger } from '../../utils/logger';
-import 'reflect-metadata';
-import JobReportServiceV2 from '../services/v2/JobReportServiceV2';
-import { JobReportStatus } from '../interfaces/JobReportStatus';
+import { TestType } from "../interfaces/TestType";
+import TestInstanceService from "../services/TestInstanceService";
+import JobsService from "../services/JobsService";
+import DraftInstanceService from "../services/DraftInstanceService";
+import { InstanceStatus } from "../interfaces/InstanceStatus";
+import { updateGithubCheckStatus } from "../../utils/github";
+import { GithubCheckStatus } from "../interfaces/GithubCheckStatus";
+import { GithubConclusion } from "../interfaces/GithubConclusion";
+import { JobStatus } from "../interfaces/JobStatus";
+import { JobConclusion } from "../interfaces/JobConclusion";
+import DraftInstanceResultsService from "../services/DraftInstanceResultsService";
+import TestInstanceScreenShotsService from "../services/TestInstanceScreenShotsService";
+import TestInstanceRecordingService from "../services/TestInstanceRecordingService";
+import { Logger } from "../../utils/logger";
+import "reflect-metadata";
+import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
+import { JobReportStatus } from "../interfaces/JobReportStatus";
 
-const ReddisLock = require('redlock');
+const ReddisLock = require("redlock");
 
 async function prepareResultForTestInstance(instanceId, logs, images, jobId, video, testId) {
 	const testInstanceScreenshotService = new TestInstanceScreenShotsService();
@@ -41,7 +41,7 @@ async function prepareResultForTestInstance(instanceId, logs, images, jobId, vid
 
 	await Promise.all(screenshotsPromise);
 
-	Logger.info('QueueManager::prepareResultForTestInstance', `\x1b[36m Test ${instanceId}\x1b[0m result created!!`);
+	Logger.info("QueueManager::prepareResultForTestInstance", `\x1b[36m Test ${instanceId}\x1b[0m result created!!`);
 }
 
 async function prepareResultForDraftInstance(instanceId, logs, images, video) {
@@ -80,12 +80,12 @@ export default class TestsEventsWorker {
 			fullRepoName,
 			testType,
 			reportId,
-			platform
+			platform,
 		} = callback.returnvalue;
 
 		try {
 			if (!isError) {
-				Logger.info('QueueManager::testCompleted', `\x1b[36m Test #${testId}\x1b[0m completed!!`);
+				Logger.info("QueueManager::testCompleted", `\x1b[36m Test #${testId}\x1b[0m completed!!`);
 
 				if (testType === TestType.DRAFT) {
 					await prepareResultForDraftInstance(instanceId, logs, images, video);
@@ -103,10 +103,10 @@ export default class TestsEventsWorker {
 						instanceId,
 						fullRepoName,
 						reportId,
-						platform
+						platform,
 					});
 				}
-				Logger.info('QueueManager::testCompleted', 'Added to checkResult queue');
+				Logger.info("QueueManager::testCompleted", "Added to checkResult queue");
 			} else {
 				const testInstanceService = new TestInstanceService();
 				const jobsService = new JobsService();
@@ -146,7 +146,7 @@ export default class TestsEventsWorker {
 								instanceId,
 								fullRepoName,
 								reportId,
-								platform
+								platform,
 							});
 						} catch (ex) {}
 
@@ -157,7 +157,7 @@ export default class TestsEventsWorker {
 				}
 			}
 		} catch (Ex) {
-			Logger.error('QueueManager::testCompleted', 'Error Occured', {
+			Logger.error("QueueManager::testCompleted", "Error Occured", {
 				err: Ex,
 			});
 
@@ -176,7 +176,7 @@ export default class TestsEventsWorker {
 			retryJitter: 200,
 		});
 
-		Logger.info('QueueManager::jobProgress', `\x1b[36m Test ${testInstanceId}\x1b[0m in progress!!`);
+		Logger.info("QueueManager::jobProgress", `\x1b[36m Test ${testInstanceId}\x1b[0m in progress!!`);
 		const testInstanceService = new TestInstanceService();
 		const jobsService = new JobsService();
 

@@ -1,7 +1,7 @@
-import { BaseRowInterface } from './BaseRowInterface';
-import { InstanceStatus } from '../InstanceStatus';
-import { InstanceConclusion } from '../InstanceConclusion';
-import { Platform } from '../Platform';
+import { BaseRowInterface } from "./BaseRowInterface";
+import { InstanceStatus } from "../InstanceStatus";
+import { InstanceConclusion } from "../InstanceConclusion";
+import { Platform } from "../Platform";
 
 export interface TestInstance extends BaseRowInterface {
 	id: number;

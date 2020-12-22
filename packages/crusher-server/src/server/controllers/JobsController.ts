@@ -1,20 +1,20 @@
-import { Authorized, CurrentUser, Get, JsonController, Param, QueryParams } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
-import UserService from '../../core/services/UserService';
-import JobsService from '../../core/services/JobsService';
-import TestInstanceService from '../../core/services/TestInstanceService';
-import TestInstanceScreenShotsService from '../../core/services/TestInstanceScreenShotsService';
-import ScreenshotComparisionsService from '../../core/services/ScreenshotComparisionsService';
-import { Platform } from '../../core/interfaces/Platform';
-import TestInstanceResultsService from '../../core/services/TestInstanceResultsService';
-import TestInstanceResultSetsService from '../../core/services/TestInstanceResultSetsService';
-import CommentsService from '../../core/services/CommentsService';
-import { TestLogsService } from '../../core/services/mongo/testLogs';
-import TestInstanceRecordingService from '../../core/services/TestInstanceRecordingService';
-import { JobTrigger } from '../../core/interfaces/JobTrigger';
+import { Authorized, CurrentUser, Get, JsonController, Param, QueryParams } from "routing-controllers";
+import { Inject, Service } from "typedi";
+import UserService from "../../core/services/UserService";
+import JobsService from "../../core/services/JobsService";
+import TestInstanceService from "../../core/services/TestInstanceService";
+import TestInstanceScreenShotsService from "../../core/services/TestInstanceScreenShotsService";
+import ScreenshotComparisionsService from "../../core/services/ScreenshotComparisionsService";
+import { Platform } from "../../core/interfaces/Platform";
+import TestInstanceResultsService from "../../core/services/TestInstanceResultsService";
+import TestInstanceResultSetsService from "../../core/services/TestInstanceResultSetsService";
+import CommentsService from "../../core/services/CommentsService";
+import { TestLogsService } from "../../core/services/mongo/testLogs";
+import TestInstanceRecordingService from "../../core/services/TestInstanceRecordingService";
+import { JobTrigger } from "../../core/interfaces/JobTrigger";
 
 @Service()
-@JsonController('/job')
+@JsonController("/job")
 export class JobsController {
 	@Inject()
 	private userService: UserService;
@@ -38,19 +38,24 @@ export class JobsController {
 	private testInstanceRecordingService: TestInstanceRecordingService;
 
 	@Authorized()
-	@Get('/getProjectsJob/:projectId')
-	async getAllJobs(@Param('projectId') projectId: number, @QueryParams() queries) {
+	@Get("/getProjectsJob/:projectId")
+	async getAllJobs(@Param("projectId") projectId: number, @QueryParams() queries) {
 		let { page, category, itemsPerPage } = queries;
 		page = !page || page < 1 ? 1 : page;
 		let trigger = null;
-		if(parseInt(category) === 1) {
+		if (parseInt(category) === 1) {
 			trigger = JobTrigger.MONITORING;
-		} else if (parseInt(category) === 2){
+		} else if (parseInt(category) === 2) {
 			trigger = JobTrigger.MANUAL;
 		}
 		const totalCount = await this.jobsService.getTotalJobs(projectId, trigger);
 
-		let jobRecords = await this.jobsService.getAllJobsOfProject(projectId, trigger, itemsPerPage ? itemsPerPage : 5, (page - 1) * (itemsPerPage ? itemsPerPage : 5));
+		let jobRecords = await this.jobsService.getAllJobsOfProject(
+			projectId,
+			trigger,
+			itemsPerPage ? itemsPerPage : 5,
+			(page - 1) * (itemsPerPage ? itemsPerPage : 5),
+		);
 
 		for (let i = 0; i < jobRecords.length; i++) {
 			jobRecords[i].screenshotCount = await this.jobsService.getTotalScreenshotsInJob(jobRecords[i].id);
@@ -60,7 +65,8 @@ export class JobsController {
 				const comparisonScreenshotsCount = await this.jobsService.getScreenshotsCountInJob(jobRecords[i].id, referenceJob.id);
 				jobRecords[i] = {
 					...jobRecords[i],
-					passedScreenshotCount: comparisonScreenshotsCount.totalComparisonCount === 0 ? jobRecords[i].screenshotCount : comparisonScreenshotsCount.passedCount,
+					passedScreenshotCount:
+						comparisonScreenshotsCount.totalComparisonCount === 0 ? jobRecords[i].screenshotCount : comparisonScreenshotsCount.passedCount,
 					failedScreenshotCount: comparisonScreenshotsCount.failedCount,
 					reviewRequiredScreenshotCount: comparisonScreenshotsCount.reviewRequiredCount,
 				};
@@ -83,14 +89,14 @@ export class JobsController {
 	}
 
 	@Authorized()
-	@Get('/getLogsOfProject/:projectId')
-	async getLogsOfProject(@CurrentUser({ required: true }) user, @Param('projectId') projectId) {
+	@Get("/getLogsOfProject/:projectId")
+	async getLogsOfProject(@CurrentUser({ required: true }) user, @Param("projectId") projectId) {
 		return this.jobsService.getLastNLogsOfProject(projectId);
 	}
 
 	@Authorized()
-	@Get('/getVisualDiffsWithFirstJob/:jobId')
-	async getVisualDiffs(@CurrentUser({ required: true }) user, @Param('jobId') jobId) {
+	@Get("/getVisualDiffsWithFirstJob/:jobId")
+	async getVisualDiffs(@CurrentUser({ required: true }) user, @Param("jobId") jobId) {
 		const { user_id } = user;
 		const currentJob = await this.jobsService.getJob(jobId);
 		const referenceJob = await this.jobsService.getFirstJobOfHost(currentJob.host);
@@ -137,8 +143,8 @@ export class JobsController {
 	}
 
 	@Authorized()
-	@Get('/approve/tests/all/:jobId')
-	async approveAllTests(@Param('jobId') jobId, @QueryParams() queries) {
+	@Get("/approve/tests/all/:jobId")
+	async approveAllTests(@Param("jobId") jobId, @QueryParams() queries) {
 		const { referenceJobId } = queries;
 		if (jobId && referenceJobId) {
 			return this.testInstanceResultService.markAllResultsAsApproved(jobId, referenceJobId);
@@ -146,8 +152,8 @@ export class JobsController {
 	}
 
 	@Authorized()
-	@Get('/approve/tests/platform/:platform/:jobId')
-	async approveAllPlatformTests(@Param('jobId') jobId, @Param('platform') platform: Platform, @QueryParams() queries) {
+	@Get("/approve/tests/platform/:platform/:jobId")
+	async approveAllPlatformTests(@Param("jobId") jobId, @Param("platform") platform: Platform, @QueryParams() queries) {
 		const { referenceJobId } = queries;
 		if (jobId && referenceJobId) {
 			return this.testInstanceResultService.markAllPlatformTestResultsAsApproved(jobId, referenceJobId, platform);

@@ -17,17 +17,17 @@ export function extractOwnerAndRepoName(fullRepoName: string) {
 	if (!fullRepoName) {
 		return false;
 	}
-	const splitArr = fullRepoName.split('/');
+	const splitArr = fullRepoName.split("/");
 	return { ownerName: splitArr[0], repoName: splitArr[1] };
 }
 const labelOptions = [
-	{ value: 1800, label: '0.5h' },
-	{ value: 3600, label: '1h' },
-	{ value: 7200, label: '2h' },
-	{ value: 14400, label: '4h' },
-	{ value: 28800, label: '8h' },
-	{ value: 43200, label: '12h' },
-	{ value: 86400, label: '1d' },
+	{ value: 1800, label: "0.5h" },
+	{ value: 3600, label: "1h" },
+	{ value: 7200, label: "2h" },
+	{ value: 14400, label: "4h" },
+	{ value: 28800, label: "8h" },
+	{ value: 43200, label: "12h" },
+	{ value: 86400, label: "1d" },
 ];
 
 export function convertSecondsToLabel(seconds) {
@@ -41,14 +41,14 @@ export function convertLabelToSeconds(labelToFind) {
 		return l.label === labelToFind;
 	});
 	if (!label) {
-		throw new Error('Invalid time interval');
+		throw new Error("Invalid time interval");
 	}
 	return label.value;
 }
 
 export const generateId = (length) => {
-	let result = '';
-	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let result = "";
+	const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	const charactersLength = characters.length;
 	for (let i = 0; i < length; i++) {
 		result += characters.charAt(Math.floor(Math.random() * charactersLength));

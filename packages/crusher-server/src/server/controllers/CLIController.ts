@@ -1,13 +1,13 @@
-import { JsonController, Get, Authorized, CurrentUser, Post, Param } from 'routing-controllers';
-import { Service, Inject } from 'typedi';
-import ProjectService from '../../core/services/ProjectService';
-import TestService from '../../core/services/TestService';
-import ClIService from '../../core/services/ClIService';
-import { generateToken } from '../../core/utils/auth';
-import { v1 as uuidv1 } from 'uuid';
+import { JsonController, Get, Authorized, CurrentUser, Post, Param } from "routing-controllers";
+import { Service, Inject } from "typedi";
+import ProjectService from "../../core/services/ProjectService";
+import TestService from "../../core/services/TestService";
+import ClIService from "../../core/services/ClIService";
+import { generateToken } from "../../core/utils/auth";
+import { v1 as uuidv1 } from "uuid";
 
 @Service()
-@JsonController('/cli')
+@JsonController("/cli")
 export class CLIController {
 	@Inject()
 	private cliService: ClIService;
@@ -16,8 +16,8 @@ export class CLIController {
 	@Inject()
 	private testService: TestService;
 
-	@Get('/add_token/:cli_token')
-	async addToken(@Param('cli_token') cliToken: string) {
+	@Get("/add_token/:cli_token")
+	async addToken(@Param("cli_token") cliToken: string) {
 		await this.cliService.addCLIToken(cliToken);
 		return {
 			success: true,
@@ -25,8 +25,8 @@ export class CLIController {
 	}
 
 	@Authorized()
-	@Post('/update/:cli_token')
-	async updateTokenStatus(@CurrentUser({ required: true }) user, @Param('cli_token') cliToken: string) {
+	@Post("/update/:cli_token")
+	async updateTokenStatus(@CurrentUser({ required: true }) user, @Param("cli_token") cliToken: string) {
 		const { user_id, team_id } = user;
 		await this.cliService.updateTokenStatus(cliToken, user_id, team_id);
 		return {
@@ -35,7 +35,7 @@ export class CLIController {
 	}
 
 	@Authorized()
-	@Get('/createTokenIfNotExists')
+	@Get("/createTokenIfNotExists")
 	async createTokenIfNotExists(@CurrentUser({ required: true }) user) {
 		const { user_id, team_id } = user;
 		const cliToken = await this.cliService.getTokenByUserId(user_id);
@@ -49,8 +49,8 @@ export class CLIController {
 		}
 	}
 
-	@Get('/status/:cli_token')
-	async getTokenStatus(@Param('cli_token') cliToken: string) {
+	@Get("/status/:cli_token")
+	async getTokenStatus(@Param("cli_token") cliToken: string) {
 		const tokenInfo = await this.cliService.getTokenInfo(cliToken);
 
 		const projects = await this.projectService.getAllProjects(parseInt(tokenInfo.team_id));
@@ -70,7 +70,7 @@ export class CLIController {
 			userId: tokenInfo.user_id,
 			teamId: tokenInfo.team_id,
 			projects: projectsWithTestList,
-			requestToken: generateToken(tokenInfo.user_id, tokenInfo.team_id, '999999h'),
+			requestToken: generateToken(tokenInfo.user_id, tokenInfo.team_id, "999999h"),
 		};
 	}
 }

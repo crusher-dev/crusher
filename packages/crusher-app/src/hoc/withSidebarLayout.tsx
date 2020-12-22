@@ -91,7 +91,7 @@ function LeftSection(props: any) {
 		},
 		{
 			name: "Project Settings",
-			link: "/app/project/settings/hosts",
+			link: "/app/settings/project/basic",
 			icon: ProjectSettings,
 		},
 	];

@@ -25,7 +25,7 @@ const FeatureItem = (props: iFeatureItemProps) => {
 
 	return (
 		<li>
-			<div>{title}</div>
+			<div css={featureOptionTitleCSS}>{title}</div>
 			<div css={featureOptionCSS} onClick={onToggleEnable}>
 				<Conditional If={enabled}>
 					<>
@@ -126,12 +126,35 @@ const ProjectBasicSettings = () => {
 							onToggleEnable={handleMultiBrowserSupportToggle}
 						/>
 					</ul>
+					<div css={saveButtonRowCSS}>
+						<button css={saveButtonCSS}>Save</button>
+					</div>
 				</div>
 			</div>
 		</SettingsContent>
 	);
 };
 
+const saveButtonCSS = css`
+	background: #5286ff;
+	border: ${2 / PIXEL_REM_RATIO}rem solid #2f65e4;
+	box-sizing: border-box;
+	padding: ${8 / PIXEL_REM_RATIO}rem;
+	border-radius: ${4 / PIXEL_REM_RATIO}rem;
+	min-width: ${154 / PIXEL_REM_RATIO}rem;
+	color: #fff;
+	font-family: Gilroy;
+	font-size: ${14 / PIXEL_REM_RATIO}rem;
+	text-align: center;
+	font-weight: 600;
+	border: 1.2px solid #6583fe;
+	margin-left: auto;
+`;
+
+const saveButtonRowCSS = css`
+	display: flex;
+	margin-top: ${54 / PIXEL_REM_RATIO}rem;
+`;
 const featuresFormCSS = css`
 	margin-top: ${64 / PIXEL_REM_RATIO}rem;
 	font-family: Gilroy;
@@ -150,11 +173,17 @@ const featuresListCSS = css`
 		}
 	}
 `;
+
+const featureOptionTitleCSS = css`
+	font-size: ${15 / PIXEL_REM_RATIO}rem;
+`;
+
 const featureOptionCSS = css`
 	margin-left: auto;
 	display: flex;
 	align-items: center;
 	cursor: pointer;
+	font-size: ${15 / PIXEL_REM_RATIO}rem;
 	span {
 		margin-left: ${17 / PIXEL_REM_RATIO}rem;
 	}

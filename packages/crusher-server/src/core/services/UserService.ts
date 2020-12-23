@@ -1,5 +1,5 @@
-import { Service, Container, Inject } from "typedi";
-import DBManager from "../manager/DBManager";
+import { Container, Inject, Service } from 'typedi';
+import DBManager from '../manager/DBManager';
 import {
 	EMAIL_NOT_VERIFIED,
 	ERROR_OCCURED_IN_AUTHENTICATION,
@@ -7,28 +7,33 @@ import {
 	SIGNED_IN,
 	SIGNED_UP_WITHOUT_JOINING_TEAM,
 	USER_ALREADY_REGISTERED,
-	USER_FAILED_TO_REGISTERED,
 	USER_NOT_REGISTERED,
 	USER_REGISTERED,
 	VERIFICATION_MAIL_SENT,
-} from "../../constants";
-import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from "../utils/auth";
-import { EmailManager } from "../manager/EmailManager";
-import { AuthenticationByCredentials } from "../interfaces/services/user/AuthenticationByCredentials";
-import { User } from "../interfaces/db/User";
-import { RegisterUserRequest } from "../interfaces/services/user/RegisterUserRequest";
-import { UserProviderConnection } from "../interfaces/db/UserProviderConnection";
-import { GithubAppInstallation } from "../interfaces/db/GithubAppInstallation";
-import { Logger } from "../../utils/logger";
-import ProjectService from "./ProjectService";
-import TeamService from "./TeamService";
-import StripeManager from "../manager/StripeManager";
+} from '../../constants';
+import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from '../utils/auth';
+import { EmailManager } from '../manager/EmailManager';
+import { AuthenticationByCredentials } from '../interfaces/services/user/AuthenticationByCredentials';
+import { User } from '../interfaces/db/User';
+import { RegisterUserRequest } from '../interfaces/services/user/RegisterUserRequest';
+import { UserProviderConnection } from '../interfaces/db/UserProviderConnection';
+import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';
+import { Logger } from '../../utils/logger';
+import ProjectService from './ProjectService';
+import TeamService from './TeamService';
+import StripeManager from '../manager/StripeManager';
+import UserProjectRoleV2Service from './v2/UserProjectRoleV2Service';
+import UserTeamRoleV2Service from './v2/UserTeamRoleV2Service';
+import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
+import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectRole';
 
 @Service()
 export default class UserService {
 	private dbManager: DBManager;
 	private projectService: ProjectService;
 	private teamService: TeamService;
+	private userProjectRoleV2Service: UserProjectRoleV2Service;
+	private userTeamRoleV2Service: UserTeamRoleV2Service;
 	@Inject()
 	private stripeManager: StripeManager;
 
@@ -36,6 +41,8 @@ export default class UserService {
 		this.dbManager = Container.get(DBManager);
 		this.projectService = Container.get(ProjectService);
 		this.teamService = Container.get(TeamService);
+		this.userProjectRoleV2Service = Container.get(UserProjectRoleV2Service);
+		this.userTeamRoleV2Service = Container.get(UserTeamRoleV2Service);
 	}
 
 	async authenticateWithEmailAndPassword(details: AuthenticationByCredentials) {
@@ -74,7 +81,13 @@ export default class UserService {
 		}
 
 		if (!_user) {
-			return await this.createdUserProfile(password, firstName, lastName, email);
+			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email);
+			if(registeredUser){
+				await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
+				await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
+			} else {
+				return registeredUser;
+			}
 		}
 		return { status: USER_ALREADY_REGISTERED };
 	}
@@ -99,10 +112,12 @@ export default class UserService {
 				stripeCustomerId,
 			});
 			const projectName = `${firstName}'s project`;
-			await this.projectService.createDefaultProject(team.teamId, projectName);
+			const project = await this.projectService.createDefaultProject(team.teamId, projectName);
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,
+				teamId: team.teamId,
+				projectId: project.insertId,
 				token: generateToken(insertedUser.insertId, team && team.teamId ? team.teamId : null),
 			};
 		}
@@ -127,7 +142,11 @@ export default class UserService {
 			const project = team && team.teamId && (await this.projectService.createDefaultProject(team.teamId));
 
 			const user_id = inserted_user.insertId;
+
 			if (user_id) {
+				await this.userTeamRoleV2Service.create(user_id, team.teamId, TEAM_ROLE_TYPES.ADMIN);
+				await this.userProjectRoleV2Service.create(user_id, project.insertId, PROJECT_ROLE_TYPES.ADMIN);
+
 				return {
 					status: SIGNED_UP_WITHOUT_JOINING_TEAM,
 					token: generateToken(user_id, null),

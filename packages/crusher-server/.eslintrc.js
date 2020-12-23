@@ -4,19 +4,18 @@ module.exports = {
 		browser: true,
 		es6: true,
 	},
-	plugins: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
-	parser: "@typescript-eslint/parser",
+	plugins: [`eslint:recommended`, `plugin:@typescript-eslint/recommended`, `plugin:prettier/recommended`],
+	parser: `@typescript-eslint/parser`,
 	parserOptions: {
 		ecmaFeatures: {
 			jsx: true,
 		},
 		ecmaVersion: 12,
-		sourceType: "module",
+		sourceType: `module`,
 	},
-	plugins: ["@typescript-eslint"],
+	plugins: [`@typescript-eslint`],
 	rules: {
-		"linebreak-style": ["error", "unix"],
-		quotes: ["error", "double"],
-		indent: [2, "tab"],
+		"linebreak-style": [`error`, `unix`],
+		indent: ["error", "tab"],
 	},
 };

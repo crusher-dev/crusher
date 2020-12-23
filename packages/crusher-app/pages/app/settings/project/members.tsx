@@ -14,45 +14,11 @@ import { iMember } from "@interfaces/redux/settings";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 import { Conditional } from "@ui/components/common/Conditional";
 import ReactDOM from "react-dom";
-
-const DUMMY_MEMBERS: Array<iMember> = [
-	{
-		id: 1,
-		name: "Utkarsh Dixit",
-		role: "Admin",
-		email: "utkarshdix02@gmail.com",
-	},
-	{
-		id: 1,
-		name: "Himanshu Dixit",
-		role: "Admin",
-		email: "hudixt@gmail.com",
-	},
-	{
-		id: 1,
-		name: "Aastha Mathur",
-		role: "Member",
-		email: "aastha.mathur@gmail.com",
-	},
-	{
-		id: 1,
-		name: "Elon Musk",
-		role: "Admin",
-		email: "elon.musk@spacex.com",
-	},
-	{
-		id: 1,
-		name: "Aakash Goel",
-		role: "Member",
-		email: "aakash.goel@headout.com",
-	},
-	{
-		id: 1,
-		name: "Vikram Jeet Singh",
-		role: "Admin",
-		email: "vikram@headout.com",
-	},
-];
+import { _getTeamMembers } from "@services/v2/team";
+import { setTeamMembers } from "@redux/actions/team";
+import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
+import { useSelector } from "react-redux";
+import { getTeamMembers } from "@redux/stateUtils/team";
 
 interface iButtonProps {
 	onClick: () => void;
@@ -80,6 +46,7 @@ const buttonCSS = css`
 `;
 
 const ProjectIntegrationSettings = () => {
+	const members = useSelector(getTeamMembers);
 	const [roleSort, setRoleSort] = useState(null as string | null);
 	const [showMemberModal, setShowMemberModal] = useState(false);
 
@@ -112,7 +79,7 @@ const ProjectIntegrationSettings = () => {
 					<MemberFilterTableList
 						onToggleRoleSort={onToggleRoleSort}
 						filterSort={roleSort}
-						members={DUMMY_MEMBERS}
+						members={Object.values(members)}
 					/>
 				</div>
 			</SettingsContent>
@@ -136,30 +103,19 @@ const mainContainerCSS = css`
 `;
 
 ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
-	const { req, res } = ctx;
+	const { req, res, store } = ctx;
 	try {
 		let headers;
 		if (req) {
 			headers = req.headers;
 			cleanHeaders(headers);
 		}
-		const cookies = getCookies(req);
 
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
+		await _getTeamMembers(headers).then((members: Array<iMemberInfoResponse>) => {
+			store.dispatch(setTeamMembers(members));
+		});
 
-		const slackIntegrations = await getAllSlackIntegrationsForProject(
-			selectedProject,
-			headers,
-		);
-
-		return {
-			isIntegratedWithSlack: false,
-			isIntegratedWithRepo: false,
-			isIntegratedWithEmail: true,
-			slackIntegrations: slackIntegrations,
-		};
+		return {};
 	} catch (ex) {
 		redirectToFrontendPath("/404", res);
 		return null;

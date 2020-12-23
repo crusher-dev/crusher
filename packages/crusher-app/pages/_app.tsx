@@ -14,8 +14,6 @@ import { getThemeFromCookie } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
 import "../src/tailwind.css";
 import { DialogBox } from "@ui/atom/Dialog";
-import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
-import { InstallExtension } from "@ui/containers/modals/installExtensionModal";
 
 const TopProgressBar = dynamic(
 	function () {

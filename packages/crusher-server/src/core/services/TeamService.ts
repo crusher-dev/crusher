@@ -4,6 +4,7 @@ import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
 import { CreateTeamRequest } from "../interfaces/services/team/CreateTeamRequest";
 import { TierPlan } from "../interfaces/TierPlan";
 import { User } from "../interfaces/db/User";
+import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
 
 @Service()
 export default class TeamService {
@@ -15,18 +16,18 @@ export default class TeamService {
 
 	async createTeam(details: CreateTeamRequest): Promise<any> {
 		const { userId, teamName, stripeCustomerId } = details;
-		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=? AND team_id IS NULL`, [userId]);
+		const user = await this.dbManager.fetchSingleRow("SELECT * FROM users WHERE id=? AND team_id IS NULL", [userId]);
 
 		// Only 1 team should be allowed
 		if (!user.team_id) {
-			const team = await this.dbManager.insertData(`INSERT INTO teams SET ?`, {
+			const team = await this.dbManager.insertData("INSERT INTO teams SET ?", {
 				name: teamName,
 				team_email: user.email,
 				tier: TierPlan.FREE,
 				stripe_customer_id: stripeCustomerId,
 			});
 			if (team.insertId) {
-				await this.dbManager.fetchSingleRow(`UPDATE users SET team_id=? WHERE id=?`, [team.insertId, userId]);
+				await this.dbManager.fetchSingleRow("UPDATE users SET team_id=? WHERE id=?", [team.insertId, userId]);
 				return { status: TEAM_CREATED, teamId: team.insertId };
 			} else {
 				throw new Error("Team creation failed");
@@ -38,5 +39,19 @@ export default class TeamService {
 
 	async getTeamInfo(teamId: string): Promise<User> {
 		return await this.dbManager.fetchSingleRow("SELECT * from teams WHERE id = ?", [teamId]);
+	}
+
+	async getMembersInTeam(teamId: number) : Promise<Array<iMemberInfoResponse>>{
+		return this.dbManager.fetchData("SELECT users.* FROM users, teams WHERE users.team_id = teams.id AND teams.id = ?", [teamId]).then((res: Array<any>)=>{
+			return res.map((member: User)=>{
+				return {
+					id: member.id,
+					name: `${member.first_name} ${member.last_name}`,
+					email: member.email,
+					role: "Admin",
+					team_id: member.team_id
+				}
+			});
+		});
 	}
 }

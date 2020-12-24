@@ -13,7 +13,7 @@ import { InviteMembersContainer } from "@ui/containers/settings/inviteMembersCon
 
 const INVITE_LINK = "https://app.crusher.dev/invite/user/f321fasgc32ase";
 
-const InviteProjectMembers = () => {
+const InviteTeamMembers = () => {
 	return (
 		<SettingsContent contentCSS={settingContentCSS}>
 			<SettingsContentHeader
@@ -29,7 +29,7 @@ const settingContentCSS = css`
 	width: ${640 / PIXEL_REM_RATIO}rem;
 `;
 
-InviteProjectMembers.getInitialProps = async (ctx: any) => {
+InviteTeamMembers.getInitialProps = async (ctx: any) => {
 	const { req, res } = ctx;
 	try {
 		let headers;
@@ -60,4 +60,4 @@ InviteProjectMembers.getInitialProps = async (ctx: any) => {
 	}
 };
 
-export default WithSession(WithSettingsLayout(InviteProjectMembers));
+export default WithSession(WithSettingsLayout(InviteTeamMembers));

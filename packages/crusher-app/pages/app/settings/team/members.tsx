@@ -11,15 +11,11 @@ import { MemberFilterTableList } from "@ui/components/settings/MemberFilterTable
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 import { Conditional } from "@ui/components/common/Conditional";
 import ReactDOM from "react-dom";
+import { _getTeamMembers } from "@services/v2/team";
+import { setTeamMembers } from "@redux/actions/team";
 import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
 import { useSelector } from "react-redux";
-import { getCookies } from "@utils/cookies";
-import { _getProjectMembers } from "@services/projects";
-import { setProjectMembers } from "@redux/actions/project";
-import {
-	getProjectMembers,
-	getSelectedProject,
-} from "@redux/stateUtils/projects";
+import { getTeamMembers } from "@redux/stateUtils/team";
 
 interface iButtonProps {
 	onClick: () => void;
@@ -46,9 +42,8 @@ const buttonCSS = css`
 	text-align: center;
 `;
 
-const ProjectMembersSettings = () => {
-	const selectedProject = useSelector(getSelectedProject);
-	const members = useSelector(getProjectMembers(selectedProject));
+const TeamMembersSettings = () => {
+	const members = useSelector(getTeamMembers);
 	const [roleSort, setRoleSort] = useState(null as string | null);
 	const [showMemberModal, setShowMemberModal] = useState(false);
 
@@ -104,7 +99,7 @@ const mainContainerCSS = css`
 	height: ${547 / PIXEL_REM_RATIO}rem;
 `;
 
-ProjectMembersSettings.getInitialProps = async (ctx: any) => {
+TeamMembersSettings.getInitialProps = async (ctx: any) => {
 	const { req, res, store } = ctx;
 	try {
 		let headers;
@@ -113,16 +108,9 @@ ProjectMembersSettings.getInitialProps = async (ctx: any) => {
 			cleanHeaders(headers);
 		}
 
-		const cookies = getCookies(req);
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
-
-		await _getProjectMembers(selectedProject, headers).then(
-			(members: Array<iMemberInfoResponse>) => {
-				store.dispatch(setProjectMembers(selectedProject, members));
-			},
-		);
+		await _getTeamMembers(headers).then((members: Array<iMemberInfoResponse>) => {
+			store.dispatch(setTeamMembers(members));
+		});
 
 		return {};
 	} catch (ex) {
@@ -131,4 +119,4 @@ ProjectMembersSettings.getInitialProps = async (ctx: any) => {
 	}
 };
 
-export default WithSession(WithSettingsLayout(ProjectMembersSettings));
+export default WithSession(WithSettingsLayout(TeamMembersSettings));

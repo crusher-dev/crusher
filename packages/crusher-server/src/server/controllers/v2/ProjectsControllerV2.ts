@@ -1,5 +1,15 @@
 import { Container, Inject, Service } from "typedi";
-import { Body, Get, JsonController, NotFoundError, OnNull, OnUndefined, Param, Put } from "routing-controllers";
+import {
+	Authorized,
+	Body, CurrentUser,
+	Get,
+	JsonController,
+	NotFoundError,
+	OnNull,
+	OnUndefined,
+	Param,
+	Put,
+} from 'routing-controllers';
 import UserService from "../../../core/services/UserService";
 import ProjectService from "../../../core/services/ProjectService";
 import TestService from "../../../core/services/TestService";
@@ -29,6 +39,14 @@ export class ProjectsControllerV2 {
 	@OnNull(404)
 	async getProjectInfo(@Param("projectId") projectId: number) {
 		return this.projectService.getProject(projectId);
+	}
+
+	@Authorized()
+	@Get("/get/members/:projectId")
+	@OnNull(404)
+	async getProjectMembers(@CurrentUser({required: true}) user, @Param("projectId") projectId: number) {
+		const {user_id} = user;
+		return this.projectService.getProjectMembers(user_id, projectId);
 	}
 
 	@Put("/update/:projectId")

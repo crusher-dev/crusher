@@ -1,6 +1,7 @@
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { MonitoringSettings } from "@interfaces/MonitoringSettings";
+import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
 
 const RESPONSE_STATUS = {
 	PROJECT_CREATED: "PROJECT_CREATED",
@@ -109,5 +110,15 @@ export const getMonitoringSettings = async (
 		headers: headers,
 	}).then((res) => {
 		return res;
+	});
+};
+
+export const _getProjectMembers = (
+	projectId: number,
+	headers?: any,
+): Promise<Array<iMemberInfoResponse>> => {
+	return backendRequest(`/v2/project/get/members/${projectId}`, {
+		method: RequestMethod.GET,
+		headers: headers,
 	});
 };

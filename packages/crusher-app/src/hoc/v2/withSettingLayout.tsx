@@ -20,7 +20,7 @@ const projectMenuData = {
 		},
 		{
 			id: "project-members-settings",
-			title: "Team members",
+			title: "Project members",
 			link: "/app/settings/project/members",
 			children: ["/app/settings/project/invite-members"],
 		},
@@ -28,6 +28,24 @@ const projectMenuData = {
 			id: "project-integration-settings",
 			title: "Integration/Notifications",
 			link: "/app/settings/project/integration",
+		},
+	],
+};
+
+const teamMenuData = {
+	title: "Team",
+	primarySVG: TeamSVG,
+	subMenu: [
+		{
+			id: "team-basic-settings",
+			title: "Basic",
+			link: "/app/settings/team/basic",
+		},
+		{
+			id: "team-members-settings",
+			title: "Team members",
+			link: "/app/settings/team/members",
+			children: ["/app/settings/team/invite-members"],
 		},
 	],
 };
@@ -98,6 +116,8 @@ function MenuContainer() {
 					<StarSVG /> <span id="plan-text">Pro Plan </span>
 				</div>
 			</div>
+
+			<MainMenuItem data={teamMenuData} />
 
 			<MainMenuItem data={projectMenuData} />
 

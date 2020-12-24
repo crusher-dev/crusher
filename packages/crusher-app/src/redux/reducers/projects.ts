@@ -4,17 +4,20 @@ import {
 	SAVE_PROJECTS,
 	SAVE_SELECTED_PROJECT,
 	SET_CURRENT_PROJECT_INFO,
+	SET_PROJECT_MEMBERS,
 } from "@redux/actions/project";
 import jsCookie from "js-cookie";
 import { HYDRATE } from "next-redux-wrapper";
 import { extractHostnameFromUrl } from "@utils/helpers";
 import { BACKEND_SERVER_URL } from "@constants/other";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
+import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
 
 const initialState = {
 	allProjects: [],
 	selectedProject: null,
 	currentProjectInfo: null as iProjectInfoResponse | null,
+	members: {},
 };
 
 const projects = (state = initialState, action) => {
@@ -23,6 +26,20 @@ const projects = (state = initialState, action) => {
 			return { ...state, ...action.payload.projects };
 		case SET_CURRENT_PROJECT_INFO:
 			return { ...state, currentProjectInfo: action.payload.info };
+		case SET_PROJECT_MEMBERS: {
+			const _membersMap = (action.payload
+				.members as Array<iMemberInfoResponse>).reduce((prev, current) => {
+				return { ...prev, [current.id]: current };
+			}, {});
+
+			return {
+				...state,
+				members: {
+					...state.members,
+					[action.payload.projectId]: _membersMap,
+				},
+			};
+		}
 		case SAVE_PROJECTS:
 			return {
 				...state,

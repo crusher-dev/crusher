@@ -3,6 +3,9 @@ import DBManager from "../manager/DBManager";
 import { Project } from "../interfaces/db/Project";
 import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
 import {iProjectInfoResponse} from "@crusher-shared/types/response/projectInfoResponse";
+import { iMemberInfoResponse } from '@crusher-shared/types/response/membersInfoResponse';
+import { User } from '../interfaces/db/User';
+import { TEAM_ROLE_TYPES } from '@crusher-shared/types/db/teamRole';
 
 @Service()
 export default class ProjectService {
@@ -45,6 +48,20 @@ export default class ProjectService {
 	async getProject(projectId: number) : Promise<iProjectInfoResponse>{
 		const project: Project = await this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE id=?", [projectId]);
 		return { id: project.id, name: project.name, team_id: project.team_id };
+	}
+
+	async getProjectMembers(userId: number, projectId: number) : Promise<Array<iMemberInfoResponse>>{
+		return this.dbManager.fetchData("SELECT users.*, user_project_roles.role role FROM users, projects, user_project_roles WHERE users.id = ? AND user_project_roles.user_id = users.id AND user_project_roles.project_id = ?", [userId, projectId]).then((res: Array<any>)=>{
+			return res.map((member: User & {role: TEAM_ROLE_TYPES})=>{
+				return {
+					id: member.id,
+					name: `${member.first_name} ${member.last_name}`,
+					email: member.email,
+					role: member.role,
+					team_id: member.team_id
+				}
+			});
+		});
 	}
 
 	async getAllProjects(teamId: number) {

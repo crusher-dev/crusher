@@ -4,7 +4,7 @@ import { Project } from "../interfaces/db/Project";
 import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
 import {iProjectInfoResponse} from "@crusher-shared/types/response/projectInfoResponse";
 import { iMemberInfoResponse } from '@crusher-shared/types/response/membersInfoResponse';
-import { User } from '../interfaces/db/User';
+import { User } from '../../../../crusher-shared/types/db/user';
 import { TEAM_ROLE_TYPES } from '@crusher-shared/types/db/teamRole';
 
 @Service()

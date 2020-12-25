@@ -7,7 +7,7 @@ import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { saveSelectedProjectInRedux } from "@redux/actions/project";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
-import React, { CSSProperties, useCallback, useEffect, useState } from "react";
+import React, { CSSProperties, useCallback, useState } from "react";
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
@@ -25,41 +25,64 @@ import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
 import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
+import { getUserInfo } from "@redux/stateUtils/user";
+import { Conditional } from "@ui/components/common/Conditional";
 
 interface NavItem {
 	name: string;
 	link: string;
 	icon: string;
+	isAuthorized: boolean;
 }
 
 interface NavListProps {
 	navItems: Array<NavItem>;
+	isLoggedIn: boolean;
 	style?: CSSProperties;
 }
 
 function NavList(props: NavListProps) {
-	const { navItems, style } = props;
+	const { navItems, style, isLoggedIn } = props;
 	const router = useRouter();
+
 	return (
 		<ul style={style} css={styles.primaryMenu}>
 			{navItems.map((item: NavItem, i) => {
 				const SVGImage = item.icon;
+				const shouldEnable = item.isAuthorized ? (isLoggedIn ? true : false) : true;
+
 				return (
 					<li
 						className={(router as any).pathname === item.link ? "active" : null}
+						style={{
+							opacity: shouldEnable ? 1 : 0.5,
+						}}
 						key={i}
 					>
-						<Link href={item.link}>
-							<a href={item.link}>
+						<Conditional If={!shouldEnable}>
+							<div style={{ display: "flex" }}>
 								<SVGImage />
 								<span>{item.name}</span>
-							</a>
-						</Link>
+							</div>
+						</Conditional>
+
+						<Conditional If={shouldEnable}>
+							<Link href={item.link}>
+								<a href={item.link}>
+									<SVGImage />
+									<span>{item.name}</span>
+								</a>
+							</Link>
+						</Conditional>
 					</li>
 				);
 			})}
 		</ul>
 	);
+}
+
+function generateRandomUserName() {
+	return "Prince Vegeta";
 }
 
 // Todo- Breakdown in diff component.
@@ -78,21 +101,25 @@ function LeftSection(props: any) {
 			name: "Dashboard",
 			link: "/app/project/dashboard",
 			icon: DasgboardSvg,
+			isAuthorized: true,
 		},
 		{
 			name: "Builds",
 			link: "/app/project/builds",
 			icon: BuildsSVG,
+			isAuthorized: true,
 		},
 		{
 			name: "Tests",
 			link: "/app/project/tests",
 			icon: TestsSVG,
+			isAuthorized: true,
 		},
 		{
 			name: "Project Settings",
 			link: "/app/settings/project/basic",
 			icon: ProjectSettings,
+			isAuthorized: true,
 		},
 	];
 
@@ -101,16 +128,19 @@ function LeftSection(props: any) {
 			name: "New features",
 			link: "/app/new-features",
 			icon: NewFeatures,
+			isAuthorized: false,
 		},
 		{
 			name: "Help & Support",
 			link: "/app/help-support",
 			icon: Help,
+			isAuthorized: false,
 		},
 		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),
 			icon: Logout,
+			isAuthorized: false,
 		},
 	];
 
@@ -118,7 +148,11 @@ function LeftSection(props: any) {
 		setShowDropDwon(!showDropDown);
 	};
 
-	const userFistCharacter = userInfo.name.slice(0, 1);
+	const isUserLoggedIn = !!userInfo;
+	const userName = userInfo ? userInfo.name : generateRandomUserName();
+
+	const userFistCharacter = userName.slice(0, 1);
+
 	const closePaymentModal = () => {
 		setPaymentShow(false);
 		ReactDOM.render(null, document.getElementById("overlay"));
@@ -143,7 +177,7 @@ function LeftSection(props: any) {
 							}}
 							onClick={toggleSettingsDropDown}
 						>
-							{toPascalCase(selectedProject && selectedProject)} project
+							{toPascalCase(selectedProject)} project
 						</span>
 
 						<span
@@ -156,24 +190,38 @@ function LeftSection(props: any) {
 							}}
 							onClick={toggleSettingsDropDown}
 						>
-							{userInfo.name}
+							{userName}
 						</span>
 
-						<div onClick={setPaymentShow.bind(this, true)} css={addPaymentOnTrial}>
-							14 days left. Add payment.
-						</div>
-						{showPayment && <AddPaymentModel onClose={closePaymentModal} />}
+						<Conditional If={isUserLoggedIn}>
+							<>
+								<div onClick={setPaymentShow.bind(this, true)} css={addPaymentOnTrial}>
+									14 days left. Add payment.
+								</div>
+								<Conditional If={showPayment}>
+									<AddPaymentModel onClose={closePaymentModal} />
+								</Conditional>
+							</>
+						</Conditional>
 					</div>
-					<div css={styles.sectionHeaderSetting} onClick={toggleSettingsDropDown}>
+					<div
+						css={styles.sectionHeaderSetting}
+						onClick={toggleSettingsDropDown}
+						style={{ pointerEvents: isUserLoggedIn ? "auto" : "none" }}
+					>
 						<DropdownSVG style={{ marginTop: ".5rem" }} />
 					</div>
-					{showDropDown && (
+
+					<Conditional If={showDropDown}>
 						<SidebarTeamDropdown
 							onAddProjectCallback={setShowAddProject.bind(this, true)}
 							onOutsideClick={toggleSettingsDropDown}
 						/>
-					)}
-					{showAddProject && <CreateProjectModal onClose={closeProjectModal} />}
+					</Conditional>
+
+					<Conditional If={showAddProject}>
+						<CreateProjectModal onClose={closeProjectModal} />
+					</Conditional>
 				</div>
 
 				<NavList navItems={mainNavLinks} />
@@ -248,20 +296,28 @@ function ProjectSelector(props: {
 	);
 }
 
-export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
-	const WrappedComponent = function (props) {
-		const { userInfo } = props;
-		const selectedProject = useSelector(getSelectedProject);
-		const projectsList = useSelector(getProjects);
-		const selectedProjectName = projectsList.find((project) => {
-			return project.id === selectedProject;
-		});
+function generateRandomProjectName() {
+	return "Blip Boom";
+}
 
-		const options =
-			projectsList &&
-			projectsList.map((project) => {
-				return { label: project.name, value: project.id };
-			});
+export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
+	const WrappedComponent = function (props: any) {
+		const userInfo = useSelector(getUserInfo);
+		const projectsList = useSelector(getProjects);
+		const selectedProject = useSelector(getSelectedProject);
+
+		const selectedProjectName = userInfo
+			? projectsList.find((project) => {
+					return project.id === selectedProject;
+			  })
+			: generateRandomProjectName();
+
+		const options = userInfo
+			? projectsList &&
+			  projectsList.map((project) => {
+					return { label: project.name, value: project.id };
+			  })
+			: [];
 
 		function onProjectChange(project) {
 			store.dispatch(saveSelectedProjectInRedux(project.value));
@@ -282,12 +338,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 					/>
 				</Head>
 				<div css={styles.mainContainer}>
-					<LeftSection
-						selectedProject={
-							selectedProjectName ? selectedProjectName.name : selectedProject
-						}
-						userInfo={userInfo}
-					/>
+					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
 					<div css={styles.contentContainer}>
 						<div css={styles.header}>
 							<CrusherLogo />

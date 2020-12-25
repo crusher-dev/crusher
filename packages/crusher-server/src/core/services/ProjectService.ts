@@ -6,6 +6,7 @@ import {iProjectInfoResponse} from "@crusher-shared/types/response/projectInfoRe
 import { iMemberInfoResponse } from '@crusher-shared/types/response/membersInfoResponse';
 import { User } from '../../../../crusher-shared/types/db/user';
 import { TEAM_ROLE_TYPES } from '@crusher-shared/types/db/teamRole';
+import { iAllProjectsItemResponse } from '@crusher-shared/types/response/allProjectsResponse';
 
 @Service()
 export default class ProjectService {
@@ -71,7 +72,7 @@ export default class ProjectService {
 		});
 	}
 
-	async getAllProjectsOfUser(userId: number) {
+	async getAllProjectsOfUser(userId: number): Promise<Array<iAllProjectsItemResponse>> {
 		const projects: Array<Project> = await this.dbManager.fetchData(
 			"SELECT projects.* FROM projects, users WHERE projects.team_id=users.team_id AND users.id=?",
 			[userId],

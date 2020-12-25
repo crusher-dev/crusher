@@ -1,11 +1,12 @@
-import { backendRequest, cleanHeaders } from "@utils/backendRequest";
-import { saveProjectsInRedux } from "@redux/actions/project";
-import { emitter } from "@utils/mitt";
+import { backendRequest } from "@utils/backendRequest";
+import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
 
-export const fetchProjectsFromServer: any = (headers: headers) => {
+export const fetchProjectsFromServer = (
+	headers = null,
+): Promise<Array<iAllProjectsItemResponse>> => {
 	return backendRequest("/projects/getAll", {
 		headers: headers,
-	}).then((projects: Array<any>) => {
+	}).then((projects: Array<iAllProjectsItemResponse>) => {
 		if (Array.isArray(projects)) {
 			return projects;
 		} else {

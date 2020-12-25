@@ -39,6 +39,7 @@ import { PaymentController } from "./server/controllers/PaymentController";
 import { JobReportsController } from "./server/controllers/v2/JobReportsController";
 import { ProjectsControllerV2 } from "./server/controllers/v2/ProjectsControllerV2";
 import { TeamControllerV2 } from "./server/controllers/v2/TeamControllerV2";
+import { InviteMembersController } from './server/controllers/v2/InviteMembersController';
 
 new MongoManager().init();
 useContainer(Container);
@@ -67,7 +68,8 @@ useExpressServer(expressApp, {
 		PaymentController,
 		JobReportsController,
 		ProjectsControllerV2,
-		TeamControllerV2
+		TeamControllerV2,
+		InviteMembersController
 	],
 	middlewares: [CorsMiddleware],
 	authorizationChecker: async (action: Action) => {

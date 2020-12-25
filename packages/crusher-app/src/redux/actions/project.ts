@@ -36,12 +36,12 @@ export const addProjectInRedux = (name: string, id: any) => ({
 	id,
 });
 
-export const deleteProjectFromRedux = (id) => ({
+export const deleteProjectFromRedux = (id: number) => ({
 	type: DELETE_PROJECT,
 	id,
 });
 
-export const saveSelectedProjectInRedux = (projectId) => ({
+export const saveSelectedProjectInRedux = (projectId: number) => ({
 	type: SAVE_SELECTED_PROJECT,
 	projectId,
 });

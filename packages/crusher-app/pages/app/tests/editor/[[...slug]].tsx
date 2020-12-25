@@ -21,6 +21,8 @@ import CodeGenerator from "@code-generator/src/index";
 const parse = require("urlencoded-body-parser");
 
 import WithSessionInfo from "@hoc/withSessionInfo";
+import withSession from "@hoc/withSession";
+import { USER_NOT_REGISTERED } from "@utils/constants";
 
 function checkDraftStatusAgainAndAgain(
 	id: string,
@@ -407,4 +409,4 @@ Test.getInitialProps = async (ctx: any) => {
 	}
 };
 
-export default WithSessionInfo(WithSidebarLayout(Test));
+export default withSession(WithSidebarLayout(Test), USER_NOT_REGISTERED);

@@ -7,7 +7,7 @@ import isEmail from "validator/lib/isEmail";
 import { resolvePathToBackendURI } from "@utils/url";
 import WithoutSession from "@hoc/withoutSession";
 import { USER_NOT_REGISTERED } from "@utils/constants";
-import { authenticateUser } from "@services/user";
+import { _authenticateUser } from "@services/user";
 import {
 	EMAIL_NOT_VERIFIED,
 	NO_TEAM_JOINED,
@@ -48,7 +48,7 @@ function Home() {
 			return;
 		}
 
-		authenticateUser(email, password).then((res) => {
+		_authenticateUser(email, password).then((res) => {
 			const { status } = res;
 			switch (status) {
 				case NO_TEAM_JOINED:

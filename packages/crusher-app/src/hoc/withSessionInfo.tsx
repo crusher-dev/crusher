@@ -5,7 +5,7 @@ import {
 	NO_TEAM_JOINED,
 	USER_NOT_REGISTERED,
 } from "@utils/constants";
-import { _getUserInfo } from "@services/user";
+import { _fetchUserInfo } from "@services/user";
 
 async function handleUserStatus(statusInfo, res, componentScope = null) {
 	switch (statusInfo) {
@@ -43,7 +43,7 @@ function WithSessionInfo(Component, componentScope?: string) {
 		// This is coming from app.tsx.
 		const statusInfo = ctx.userStatus || null;
 		await handleUserStatus(statusInfo, res, componentScope);
-		const userInfo = await _getUserInfo(headers);
+		const userInfo = await _fetchUserInfo(headers);
 
 		const pageProps =
 			Component.getInitialProps && (await Component.getInitialProps(ctx));

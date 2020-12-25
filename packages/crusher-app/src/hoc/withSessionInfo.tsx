@@ -5,7 +5,7 @@ import {
 	NO_TEAM_JOINED,
 	USER_NOT_REGISTERED,
 } from "@utils/constants";
-import { getUserInfo } from "@services/user";
+import { _getUserInfo } from "@services/user";
 
 async function handleUserStatus(statusInfo, res, componentScope = null) {
 	switch (statusInfo) {
@@ -41,9 +41,9 @@ function WithSessionInfo(Component, componentScope?: string) {
 		cleanHeaders(headers);
 		// @TODO: Rethink if there is a better way to do this.
 		// This is coming from app.tsx.
-		let statusInfo = ctx.userStatus || null;
+		const statusInfo = ctx.userStatus || null;
 		await handleUserStatus(statusInfo, res, componentScope);
-		let userInfo = await getUserInfo(headers);
+		const userInfo = await _getUserInfo(headers);
 
 		const pageProps =
 			Component.getInitialProps && (await Component.getInitialProps(ctx));

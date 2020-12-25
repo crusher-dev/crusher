@@ -1,6 +1,8 @@
 import { backendRequest } from "@utils/backendRequest";
 import { USER_NOT_REGISTERED } from "@utils/constants";
 import { RequestMethod } from "@interfaces/RequestOptions";
+import { User } from "crusher-server/crusher-server/src/core/interfaces/db/User";
+import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 
 export const authenticateUser = (email, password) => {
 	return backendRequest("/user/login", {
@@ -56,22 +58,17 @@ export const resendVerification = (headers = null) => {
 export const getUserStatus = (headers = null) => {
 	return backendRequest("/user/getStatus", {
 		headers: headers,
-	})
-		.then((res) => {
-			return res;
-		})
-		.catch((err) => {
-			return USER_NOT_REGISTERED;
-		});
+	}).then((res: any) => {
+		return res;
+	});
 };
 
-export const getUserInfo = (headers = null) => {
+export const _getUserInfo = (headers = null): Promise<iUserInfoResponse> => {
 	return backendRequest("/user/info", {
 		headers: headers,
-	}).then((res) => {
+	}).then((res: User) => {
 		return {
 			...res,
-			name: res.first_name + " " + res.last_name,
 		};
 	});
 };

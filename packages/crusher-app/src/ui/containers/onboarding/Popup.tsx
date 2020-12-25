@@ -9,6 +9,8 @@ import React, { useEffect, useState } from "react";
 import { addUserMeta } from "@services/user";
 import { SURVEY_FIELDS, USER_STEP } from "@constants/backend";
 import { validateSurveyData } from "@utils/validation";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "@redux/stateUtils/user";
 
 const roleOptions = Object.keys(PERSON_TYPE).map((key) => {
 	return { value: key, label: PERSON_TYPE[key] };
@@ -159,10 +161,11 @@ function FreeTrialIntro({ setFilledUserWelcome }) {
 	);
 }
 
-export const OnboardingPopup = ({ userStatus }) => {
+export const OnboardingPopup = () => {
 	const [filledSurvey, setFilledSurvey] = useState(false);
 	const [filledUserWelcome, setFilledUserWelcome] = useState(false);
 	const [canPopupOpen, setPopupState] = useState(true);
+	const userInfo = useSelector(getUserInfo);
 
 	// Close popup if both closed
 	useEffect(() => {
@@ -172,14 +175,13 @@ export const OnboardingPopup = ({ userStatus }) => {
 	});
 
 	const isSurveyFilled =
-		userStatus.user_meta.length > 0 &&
-		userStatus.user_meta.filter(
-			(item) => item.key_name === USER_STEP.SURVEY_FILLED,
-		).length === 1;
+		userInfo.user_meta.length > 0 &&
+		userInfo.user_meta.filter((item) => item.key_name === USER_STEP.SURVEY_FILLED)
+			.length === 1;
 
 	const isUserWelcomed =
-		userStatus.user_meta.length > 0 &&
-		userStatus.user_meta.filter((item) => item.key_name === USER_STEP.FREE_TRIAL)
+		userInfo.user_meta.length > 0 &&
+		userInfo.user_meta.filter((item) => item.key_name === USER_STEP.FREE_TRIAL)
 			.length === 1;
 
 	// Based on API and current actions

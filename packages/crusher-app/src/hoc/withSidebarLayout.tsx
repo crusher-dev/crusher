@@ -310,7 +310,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 			? projectsList.find((project) => {
 					return project.id === selectedProject;
 			  })
-			: generateRandomProjectName();
+			: { name: generateRandomProjectName() };
 
 		const options = userInfo
 			? projectsList &&
@@ -338,7 +338,10 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 					/>
 				</Head>
 				<div css={styles.mainContainer}>
-					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
+					<LeftSection
+						selectedProject={selectedProjectName.name}
+						userInfo={userInfo}
+					/>
 					<div css={styles.contentContainer}>
 						<div css={styles.header}>
 							<CrusherLogo />

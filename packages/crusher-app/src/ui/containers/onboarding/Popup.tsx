@@ -6,7 +6,7 @@ import {
 	WHY_HERE,
 } from "@interfaces/OnboardingScreen";
 import React, { useEffect, useState } from "react";
-import { addUserMeta } from "@services/user";
+import { _addUserMeta } from "@services/user";
 import { SURVEY_FIELDS, USER_STEP } from "@constants/backend";
 import { validateSurveyData } from "@utils/validation";
 import { useSelector } from "react-redux";
@@ -35,7 +35,7 @@ function UserWelcomeInfo({ setFilledSurvey }) {
 			return;
 		}
 
-		addUserMeta([
+		_addUserMeta([
 			{ key: SURVEY_FIELDS.ROLE, value: role },
 			{
 				key: SURVEY_FIELDS.OBJECTIVE,
@@ -108,7 +108,7 @@ function UserWelcomeInfo({ setFilledSurvey }) {
 
 function FreeTrialIntro({ setFilledUserWelcome }) {
 	const startFreeTrial = () => {
-		addUserMeta([{ key: USER_STEP.FREE_TRIAL, value: true }])
+		_addUserMeta([{ key: USER_STEP.FREE_TRIAL, value: true }])
 			.then(() => {
 				setFilledUserWelcome(true);
 			})

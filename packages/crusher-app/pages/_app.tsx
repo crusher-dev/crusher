@@ -6,13 +6,13 @@ import { getMetaFromReq, isUserLoggedInFromCookies } from "@utils/cookies";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { ReactReduxContext } from "react-redux";
-import { _getUserInfo, getUserStatus } from "@services/user";
-import { NextApiRequest, NextPageContext } from "next";
+import { _fetchUserInfo } from "@services/user";
+import { NextApiRequest } from "next";
 import { getThemeFromCookie } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
 import "../src/tailwind.css";
 import { DialogBox } from "@ui/atom/Dialog";
-import { AppContext, AppInitialProps, AppProps } from "next/app";
+import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
 import { saveProjectsInRedux } from "@redux/actions/project";
 
@@ -54,7 +54,7 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 	const theme = getThemeFromCookie(ctx, reqMetaInfo);
 
 	if (loggedInCookies) {
-		await Promise.all([_getUserInfo(headers), fetchProjectsFromServer(headers)])
+		await Promise.all([_fetchUserInfo(headers), fetchProjectsFromServer(headers)])
 			.then((userData) => {
 				const userInfo = userData[0];
 				const projects = userData[1];

@@ -14,7 +14,7 @@ import {
 import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from '../utils/auth';
 import { EmailManager } from '../manager/EmailManager';
 import { AuthenticationByCredentials } from '../interfaces/services/user/AuthenticationByCredentials';
-import { User } from '../interfaces/db/User';
+import { User } from '../../../../crusher-shared/types/db/user';
 import { RegisterUserRequest } from '../interfaces/services/user/RegisterUserRequest';
 import { UserProviderConnection } from '../interfaces/db/UserProviderConnection';
 import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';

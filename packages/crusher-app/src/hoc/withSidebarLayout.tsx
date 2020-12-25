@@ -224,10 +224,10 @@ function LeftSection(props: any) {
 					</Conditional>
 				</div>
 
-				<NavList navItems={mainNavLinks} />
+				<NavList isLoggedIn={isUserLoggedIn} navItems={mainNavLinks} />
 			</div>
 			<div css={styles.settingsBottomFixedContainer}>
-				<NavList navItems={bottomNavLinks} />
+				<NavList isLoggedIn={isUserLoggedIn} navItems={bottomNavLinks} />
 			</div>
 			<div css={styles.inviteMembers}>
 				<img src="/svg/sidebarSettings/team_member.svg" />

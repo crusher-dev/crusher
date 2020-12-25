@@ -27,6 +27,8 @@ import ReactDOM from "react-dom";
 import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { Conditional } from "@ui/components/common/Conditional";
+import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
+import { NextPage, NextPageContext } from "next";
 
 interface NavItem {
 	name: string;
@@ -53,7 +55,7 @@ function NavList(props: NavListProps) {
 
 				return (
 					<li
-						className={(router as any).pathname === item.link ? "active" : null}
+						className={(router as any).pathname === item.link ? "active" : ""}
 						style={{
 							opacity: shouldEnable ? 1 : 0.5,
 						}}
@@ -92,7 +94,7 @@ function LeftSection(props: any) {
 	const [showAddProject, setShowAddProject] = useState(false);
 
 	const closeProjectModal = () => {
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 		setShowAddProject(false);
 	};
 
@@ -140,7 +142,7 @@ function LeftSection(props: any) {
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),
 			icon: Logout,
-			isAuthorized: false,
+			isAuthorized: true,
 		},
 	];
 
@@ -155,7 +157,7 @@ function LeftSection(props: any) {
 
 	const closePaymentModal = () => {
 		setPaymentShow(false);
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 	};
 
 	const [showPayment, setPaymentShow] = useState(false);
@@ -207,9 +209,12 @@ function LeftSection(props: any) {
 					<div
 						css={styles.sectionHeaderSetting}
 						onClick={toggleSettingsDropDown}
-						style={{ pointerEvents: isUserLoggedIn ? "auto" : "none" }}
+						style={{
+							pointerEvents: isUserLoggedIn ? "auto" : "none",
+							marginTop: ".5rem",
+						}}
 					>
-						<DropdownSVG style={{ marginTop: ".5rem" }} />
+						<DropdownSVG />
 					</div>
 
 					<Conditional If={showDropDown}>
@@ -251,7 +256,7 @@ function ProjectSelector(props: {
 	projectsList: any;
 	options: any;
 	selectedProject: any;
-	onChange: (project) => void;
+	onChange: (project: iSelectOption) => void;
 }) {
 	const router = useRouter();
 	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(
@@ -264,7 +269,7 @@ function ProjectSelector(props: {
 		...options,
 		{ label: "View all project", value: "view_all" },
 	];
-	const handleChange = (option) => {
+	const handleChange = (option: iSelectOption) => {
 		if (option.value === "add_project") {
 			setIsShowingCreateProjectModal(true);
 		} else if (option.value === "view_all") {
@@ -275,7 +280,7 @@ function ProjectSelector(props: {
 	};
 
 	const closeProjectModal = useCallback(() => {
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 		setIsShowingCreateProjectModal(false);
 	}, [isShowingCreateProjectModal]);
 
@@ -300,17 +305,28 @@ function generateRandomProjectName() {
 	return "Blip Boom";
 }
 
-export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
+interface iSelectOption {
+	label: string;
+	value: string;
+}
+
+export function WithSidebarLayout(
+	Component: NextPage,
+	shouldHaveGetInitialProps = true,
+) {
 	const WrappedComponent = function (props: any) {
 		const userInfo = useSelector(getUserInfo);
 		const projectsList = useSelector(getProjects);
-		const selectedProject = useSelector(getSelectedProject);
+		const selectedProjectID = useSelector(getSelectedProject);
 
-		const selectedProjectName = userInfo
-			? projectsList.find((project) => {
-					return project.id === selectedProject;
-			  })
-			: { name: generateRandomProjectName() };
+		const selectedProject = projectsList.find((project: iProjectInfoResponse) => {
+			return project.id === selectedProjectID;
+		});
+
+		const selectedProjectName =
+			userInfo && selectedProject
+				? selectedProject.name
+				: generateRandomProjectName();
 
 		const options = userInfo
 			? projectsList &&
@@ -319,8 +335,8 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 			  })
 			: [];
 
-		function onProjectChange(project) {
-			store.dispatch(saveSelectedProjectInRedux(project.value));
+		function onProjectChange(project: iSelectOption) {
+			(store as any).dispatch(saveSelectedProjectInRedux(project.value));
 		}
 
 		return (
@@ -338,17 +354,14 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 					/>
 				</Head>
 				<div css={styles.mainContainer}>
-					<LeftSection
-						selectedProject={selectedProjectName.name}
-						userInfo={userInfo}
-					/>
+					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
 					<div css={styles.contentContainer}>
 						<div css={styles.header}>
 							<CrusherLogo />
 							<ProjectSelector
 								projectsList={projectsList}
 								options={options}
-								selectedProject={selectedProject}
+								selectedProject={selectedProjectID}
 								onChange={onProjectChange}
 							/>
 							<Link href={"/app/project/onboarding/create-test"}>
@@ -367,7 +380,7 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 		);
 	};
 	if (shouldHaveGetInitialProps) {
-		WrappedComponent.getInitialProps = async (ctx) => {
+		WrappedComponent.getInitialProps = async (ctx: NextPageContext) => {
 			const pageProps =
 				Component.getInitialProps && (await Component.getInitialProps(ctx));
 			return { ...pageProps };

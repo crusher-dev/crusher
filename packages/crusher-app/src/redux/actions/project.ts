@@ -1,5 +1,6 @@
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
 import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
+import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
 
 export const SET_USER_DATA = "ADD_USER_DATA";
 export const SAVE_PROJECTS = "SET_PROJECT";
@@ -45,7 +46,9 @@ export const saveSelectedProjectInRedux = (projectId) => ({
 	projectId,
 });
 
-export const saveProjectsInRedux = (allProjects) => ({
+export const saveProjectsInRedux = (
+	allProjects: Array<iAllProjectsItemResponse>,
+) => ({
 	type: SAVE_PROJECTS,
 	allProjects: allProjects,
 });

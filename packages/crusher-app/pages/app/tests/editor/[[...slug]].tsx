@@ -20,7 +20,6 @@ import CodeGenerator from "@code-generator/src/index";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
 
-import WithSessionInfo from "@hoc/withSessionInfo";
 import withSession from "@hoc/withSession";
 import { USER_NOT_REGISTERED } from "@utils/constants";
 

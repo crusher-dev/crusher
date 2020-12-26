@@ -1,6 +1,6 @@
 import { css } from "@emotion/core";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
 import { useState, useEffect } from "react";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
@@ -298,4 +298,4 @@ ProjectOnboardingCreateTest.getInitialProps = async ({ userStatus }) => {
 	return { userStatus };
 };
 
-export default WithSession(WithSidebarLayout(ProjectOnboardingCreateTest));
+export default withSession(WithSidebarLayout(ProjectOnboardingCreateTest));

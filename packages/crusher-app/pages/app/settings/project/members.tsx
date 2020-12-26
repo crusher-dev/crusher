@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { css } from "@emotion/core";
 import { cleanHeaders } from "@utils/backendRequest";
 import { redirectToFrontendPath } from "@utils/router";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
 import { SettingsContent } from "@ui/components/settings/SettingsContent";
 import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHeader";
@@ -131,4 +131,4 @@ ProjectMembersSettings.getInitialProps = async (ctx: any) => {
 	}
 };
 
-export default WithSession(WithSettingsLayout(ProjectMembersSettings));
+export default withSession(WithSettingsLayout(ProjectMembersSettings));

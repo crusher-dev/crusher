@@ -4,7 +4,7 @@ import { getProjects } from "@redux/stateUtils/projects";
 import Router from "next/router";
 
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 import { getTime } from "@utils/helpers";
 import { _deleteProjectFromBackend } from "@services/projects";
 
@@ -208,4 +208,4 @@ const projectDeleteButtonCSS = css`
 	cursor: pointer;
 `;
 
-export default WithSession(WithSidebarLayout(ProjectTestsList));
+export default withSession(WithSidebarLayout(ProjectTestsList));

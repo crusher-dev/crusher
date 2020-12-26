@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
 import { FilterListPagination } from "@ui/containers/FilterListPagination";
 import { cleanHeaders } from "@utils/backendRequest";
@@ -423,4 +423,4 @@ const styles = {
 		font-style: italic;
 	`,
 };
-export default WithSession(WithSidebarLayout(JobBuilds));
+export default withSession(WithSidebarLayout(JobBuilds));

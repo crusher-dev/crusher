@@ -39,6 +39,8 @@ function redirectIfNotThisScope(
 	) {
 		return redirectToFrontendPath("/", res);
 	}
+
+	return null;
 }
 
 async function handleUserStatus(
@@ -51,12 +53,17 @@ async function handleUserStatus(
 	return [redirectIfNotThisScope(userStatus, componentScope, res), userStatus];
 }
 
-function WithSession(Component: any, componentScope?: string) {
-	const WrappedComponent = function (props: any) {
-		return <Component {...props} />;
+function withSession(WrappedComponent: any, componentScope?: string) {
+	const WithSession = function (props: any) {
+		return <WrappedComponent {...props} />;
 	};
 
-	WrappedComponent.getInitialProps = async (ctx: any) => {
+	const wrappedComponentName =
+		WrappedComponent.displayName || WrappedComponent.name || "Component";
+
+	WithSession.displayName = `withSession(${wrappedComponentName})`;
+
+	WithSession.getInitialProps = async (ctx: any) => {
 		const { res, store, metaInfo } = ctx as any;
 
 		const userInfo = getUserInfo(store.getState());
@@ -69,7 +76,8 @@ function WithSession(Component: any, componentScope?: string) {
 
 		if (!redirectResponse) {
 			const pageProps =
-				Component.getInitialProps && (await Component.getInitialProps(ctx));
+				WrappedComponent.getInitialProps &&
+				(await WrappedComponent.getInitialProps(ctx));
 
 			if (!pageProps) {
 				return { status: userStatus };
@@ -100,7 +108,7 @@ function WithSession(Component: any, componentScope?: string) {
 		await redirectResponse;
 	};
 
-	return WrappedComponent;
+	return WithSession;
 }
 
-export default WithSession;
+export default withSession;

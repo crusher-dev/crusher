@@ -4,7 +4,7 @@ import { WithSidebarLayout } from "@hoc/withSidebarLayout";
 import Link from "next/link";
 import { Player } from "@lottiefiles/react-lottie-player";
 import React from "react";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 
 function IntegrationTests(props) {
 	return (
@@ -85,4 +85,4 @@ const styles = {
 
 IntegrationTests.getInitialProps = async (ctx) => {};
 
-export default WithSession(WithSidebarLayout(IntegrationTests));
+export default withSession(WithSidebarLayout(IntegrationTests));

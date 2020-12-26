@@ -1,4 +1,4 @@
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import { css } from "@emotion/core";
 import { cleanHeaders } from "@utils/backendRequest";
 import { getCookies } from "@utils/cookies";
@@ -409,4 +409,4 @@ Test.getInitialProps = async (ctx: any) => {
 	}
 };
 
-export default withSession(WithSidebarLayout(Test), USER_NOT_REGISTERED);
+export default withSession(withSidebarLayout(Test), USER_NOT_REGISTERED);

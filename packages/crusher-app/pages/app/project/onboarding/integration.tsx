@@ -1,5 +1,5 @@
 import { css } from "@emotion/core";
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import Link from "next/link";
 
@@ -150,4 +150,4 @@ const styles = {
 
 ProjectIntegration.getInitialProps = async (ctx) => {};
 
-export default withSession(WithSidebarLayout(ProjectIntegration));
+export default withSession(withSidebarLayout(ProjectIntegration));

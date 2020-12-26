@@ -1,5 +1,5 @@
 import { css } from "@emotion/core";
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
 import {
@@ -522,4 +522,4 @@ ProjectDashboard.getInitialProps = async (ctx) => {
 	}
 };
 
-export default withSession(WithSidebarLayout(ProjectDashboard));
+export default withSession(withSidebarLayout(ProjectDashboard));

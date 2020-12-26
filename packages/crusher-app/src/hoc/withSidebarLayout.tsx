@@ -310,11 +310,11 @@ interface iSelectOption {
 	value: string;
 }
 
-export function WithSidebarLayout(
-	Component: NextPage,
+export function withSidebarLayout(
+	WrappedComponent: NextPage,
 	shouldHaveGetInitialProps = true,
 ) {
-	const WrappedComponent = function (props: any) {
+	const WithSidebarLayout = function (props: any) {
 		const userInfo = useSelector(getUserInfo);
 		const projectsList = useSelector(getProjects);
 		const selectedProjectID = useSelector(getSelectedProject);
@@ -336,7 +336,7 @@ export function WithSidebarLayout(
 			: [];
 
 		function onProjectChange(project: iSelectOption) {
-			(store as any).dispatch(saveSelectedProjectInRedux(project.value));
+			(store as any).dispatch(saveSelectedProjectInRedux(parseInt(project.value)));
 		}
 
 		return (
@@ -371,7 +371,7 @@ export function WithSidebarLayout(
 							</Link>
 						</div>
 						<div css={styles.innerContentContainer}>
-							<Component {...props} />
+							<WrappedComponent {...props} />
 							<FeedbackComponent />
 						</div>
 					</div>
@@ -379,15 +379,22 @@ export function WithSidebarLayout(
 			</div>
 		);
 	};
+
+	const wrappedComponentName =
+		WrappedComponent.displayName || WrappedComponent.name || "Component";
+
+	WithSidebarLayout.displayName = `withSidebarLayout(${wrappedComponentName})`;
+
 	if (shouldHaveGetInitialProps) {
-		WrappedComponent.getInitialProps = async (ctx: NextPageContext) => {
+		WithSidebarLayout.getInitialProps = async (ctx: NextPageContext) => {
 			const pageProps =
-				Component.getInitialProps && (await Component.getInitialProps(ctx));
+				WrappedComponent.getInitialProps &&
+				(await WrappedComponent.getInitialProps(ctx));
 			return { ...pageProps };
 		};
 	}
 
-	return WrappedComponent;
+	return WithSidebarLayout;
 }
 
 const addPaymentOnTrial = css`

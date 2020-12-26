@@ -1,6 +1,6 @@
 const withCSS = require("@zeit/next-css");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
-	enabled: process.env.ANALYZE === "true",
+	enabled: true,
 });
 const withImages = require("next-images");
 const path = require("path");
@@ -8,6 +8,9 @@ const path = require("path");
 module.exports = withImages(
 	withCSS(
 		withBundleAnalyzer({
+			typescript: {
+				ignoreBuildErrors: true,
+			},
 			webpack: function (config, { defaultLoaders }) {
 				const resolvedBaseUrl = path.resolve(config.context, "../");
 				config.module.rules = [

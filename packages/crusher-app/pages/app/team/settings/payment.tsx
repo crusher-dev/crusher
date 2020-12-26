@@ -11,7 +11,7 @@ import { getAllSlackIntegrationsForProject } from "@services/alerting";
 import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
 import { resolvePathToBackendURI } from "@utils/url";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 
 function RenderSlackIntegrations(props) {
 	const { slackIntegrations } = props;
@@ -246,4 +246,4 @@ TeamPaymentSettings.getInitialProps = async (ctx) => {
 	}
 };
 
-export default WithSession(WithSidebarLayout(TeamPaymentSettings));
+export default withSession(WithSidebarLayout(TeamPaymentSettings));

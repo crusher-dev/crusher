@@ -4,7 +4,7 @@ import { cleanHeaders } from "@utils/backendRequest";
 import { getAllSlackIntegrationsForProject } from "@services/alerting";
 import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
 import { SettingsContent } from "@ui/components/settings/SettingsContent";
 import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHeader";
@@ -176,4 +176,4 @@ ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
 	}
 };
 
-export default WithSession(WithSettingsLayout(ProjectIntegrationSettings));
+export default withSession(WithSettingsLayout(ProjectIntegrationSettings));

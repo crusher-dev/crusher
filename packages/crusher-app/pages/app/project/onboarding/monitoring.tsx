@@ -1,6 +1,6 @@
 import { css } from "@emotion/core";
 import { WithSidebarLayout } from "@hoc/withSidebarLayout";
-import WithSession from "@hoc/withSession";
+import withSession from "@hoc/withSession";
 
 function ProjectMonitoring(props) {
 	const { jobs, logs, projectId } = props;
@@ -137,4 +137,4 @@ const styles = {
 
 ProjectMonitoring.getInitialProps = async (ctx) => {};
 
-export default WithSession(WithSidebarLayout(ProjectMonitoring));
+export default withSession(WithSidebarLayout(ProjectMonitoring));

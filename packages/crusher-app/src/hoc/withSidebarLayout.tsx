@@ -11,12 +11,10 @@ import React, { CSSProperties, useCallback, useState } from "react";
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
-import DasgboardSvg from "../../public/svg/sidebarSettings/dashboard.svg";
+import DashboardSvg from "../../public/svg/sidebarSettings/dashboard.svg";
 import BuildsSVG from "../../public/svg/sidebarSettings/builds.svg";
 import TestsSVG from "../../public/svg/sidebarSettings/testsList.svg";
 import ProjectSettings from "../../public/svg/sidebarSettings/projectSettings.svg";
-import NewFeatures from "../../public/svg/sidebarSettings/newFeatures.svg";
-import Help from "../../public/svg/sidebarSettings/help.svg";
 import Logout from "../../public/svg/sidebarSettings/logout.svg";
 import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
@@ -102,7 +100,7 @@ function LeftSection(props: any) {
 		{
 			name: "Dashboard",
 			link: "/app/project/dashboard",
-			icon: DasgboardSvg,
+			icon: DashboardSvg,
 			isAuthorized: true,
 		},
 		{
@@ -126,18 +124,6 @@ function LeftSection(props: any) {
 	];
 
 	const bottomNavLinks = [
-		{
-			name: "New features",
-			link: "/app/new-features",
-			icon: NewFeatures,
-			isAuthorized: false,
-		},
-		{
-			name: "Help & Support",
-			link: "/app/help-support",
-			icon: Help,
-			isAuthorized: false,
-		},
 		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),

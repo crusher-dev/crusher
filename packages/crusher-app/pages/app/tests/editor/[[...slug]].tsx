@@ -187,7 +187,7 @@ function Test(props: any) {
 
 	const handleRunTest = useCallback(
 		function () {
-			const code = new CodeGenerator({}).generate(actions);
+			const code = new CodeGenerator().generate(actions);
 
 			createAndRunDraftTest(
 				testInfo.name ? testInfo.name : "",

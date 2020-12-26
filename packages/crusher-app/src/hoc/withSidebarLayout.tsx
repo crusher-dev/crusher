@@ -48,7 +48,7 @@ function NavList(props: NavListProps) {
 	const router = useRouter();
 
 	return (
-		<ul style={style} css={styles.primaryMenu}>
+		<ul style={style} css={primaryMenuCSS}>
 			{navItems.map((item: NavItem, i) => {
 				const SVGImage = item.icon;
 				const shouldEnable = item.isAuthorized ? (isLoggedIn ? true : false) : true;
@@ -162,14 +162,14 @@ function LeftSection(props: any) {
 
 	const [showPayment, setPaymentShow] = useState(false);
 	return (
-		<div css={styles.leftSection}>
-			<div css={styles.sectionContainer}>
-				<div css={styles.sectionHeaderItem}>
+		<div css={leftSectionCSS}>
+			<div css={sectionContainerCSS}>
+				<div css={sectionHeaderItemCSS}>
 					{/*@Note :- Change hardcoded text*/}
-					<div css={styles.teamIcon} onClick={toggleSettingsDropDown}>
+					<div css={teamIconCSS} onClick={toggleSettingsDropDown}>
 						{userFistCharacter}
 					</div>
-					<div css={styles.sectionHeaderContentArea}>
+					<div css={sectionHeaderContentAreaCSS}>
 						<span
 							style={{
 								color: "#2B2B39",
@@ -197,7 +197,10 @@ function LeftSection(props: any) {
 
 						<Conditional If={isUserLoggedIn}>
 							<>
-								<div onClick={setPaymentShow.bind(this, true)} css={addPaymentOnTrial}>
+								<div
+									onClick={setPaymentShow.bind(this, true)}
+									css={addPaymentOnTrialCSS}
+								>
 									14 days left. Add payment.
 								</div>
 								<Conditional If={showPayment}>
@@ -207,7 +210,7 @@ function LeftSection(props: any) {
 						</Conditional>
 					</div>
 					<div
-						css={styles.sectionHeaderSetting}
+						css={sectionHeaderSettingCSS}
 						onClick={toggleSettingsDropDown}
 						style={{
 							pointerEvents: isUserLoggedIn ? "auto" : "none",
@@ -231,10 +234,10 @@ function LeftSection(props: any) {
 
 				<NavList isLoggedIn={isUserLoggedIn} navItems={mainNavLinks} />
 			</div>
-			<div css={styles.settingsBottomFixedContainer}>
+			<div css={settingsBottomFixedContainerCSS}>
 				<NavList isLoggedIn={isUserLoggedIn} navItems={bottomNavLinks} />
 			</div>
-			<div css={styles.inviteMembers}>
+			<div css={inviteMembersCSS}>
 				<img src="/svg/sidebarSettings/team_member.svg" />
 				<span>Invite members</span>
 			</div>
@@ -285,7 +288,7 @@ function ProjectSelector(props: {
 	}, [isShowingCreateProjectModal]);
 
 	return (
-		<div css={styles.projectDropdownContainer}>
+		<div css={projectDropdownContainerCSS}>
 			{isShowingCreateProjectModal && (
 				<CreateProjectModal onClose={closeProjectModal} />
 			)}
@@ -353,10 +356,10 @@ export function withSidebarLayout(
 						rel="stylesheet"
 					/>
 				</Head>
-				<div css={styles.mainContainer}>
+				<div css={mainContainerCSS}>
 					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
-					<div css={styles.contentContainer}>
-						<div css={styles.header}>
+					<div css={contentContainerCSS}>
+						<div css={headerCSS}>
 							<CrusherLogo />
 							<ProjectSelector
 								projectsList={projectsList}
@@ -365,12 +368,12 @@ export function withSidebarLayout(
 								onChange={onProjectChange}
 							/>
 							<Link href={"/app/project/onboarding/create-test"}>
-								<a href={"/app/project/onboarding/create-test"} css={styles.createTest}>
+								<a href={"/app/project/onboarding/create-test"} css={createTestCSS}>
 									<CreateTest />
 								</a>
 							</Link>
 						</div>
-						<div css={styles.innerContentContainer}>
+						<div css={innerContentContainerCSS}>
 							<WrappedComponent {...props} />
 							<FeedbackComponent />
 						</div>
@@ -397,7 +400,7 @@ export function withSidebarLayout(
 	return WithSidebarLayout;
 }
 
-const addPaymentOnTrial = css`
+const addPaymentOnTrialCSS = css`
 	margin-top: 1rem;
 	font-family: Gilroy;
 
@@ -408,202 +411,171 @@ const addPaymentOnTrial = css`
 
 	color: #2b2b39;
 `;
-const styles = {
-	createTest: css`
-		margin-left: auto;
-		:hover {
-			text-decoration: none !important;
-		}
-	`,
-	inviteMembers: css`
-		cursor: pointer;
-		background: #111313;
-		color: #fff;
-		text-align: center;
-		padding: 1.1rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		span {
-			font-size: 1.125rem;
-			margin-left: 0.75rem;
-			font-weight: 600;
-		}
-		&:hover {
-			background: #5b76f7;
-		}
-	`,
-	mainContainer: css`
-		display: flex;
-		height: 100vh;
-		width: 100vw;
-		font-family: DM Sans;
-	`,
-	leftSection: css`
-		display: flex;
-		flex-direction: column;
-		min-width: 20.75rem;
-		background: #fbfbfb;
-		color: #fff;
-		height: 100vh;
-		overflow-y: scroll;
-	`,
-	sectionContainer: css`
-		padding: 1.2rem 0;
-	`,
-	sectionHeaderItem: css`
-		padding: 0 1.5rem;
-		font-weight: 500;
-		display: flex;
-		position: relative;
-		cursor: pointer;
-	`,
-	teamIcon: css`
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		padding: 0.8rem 1.12rem;
-		font-weight: 900;
-		font-size: 0.85rem;
-		background: rgba(97, 98, 102, 0.2);
-		color: #888888;
-		border-radius: 0.3rem;
-		width: 3.2rem;
-		height: 3.2rem;
-	`,
-	sectionHeaderContentArea: css`
-		margin-left: 1.11rem;
-		display: flex;
-		flex-direction: column;
-		align-self: center;
-	`,
-	sectionHeaderSetting: css`
-		margin-left: auto;
-		display: flex;
-		justify-content: center;
-		cursor: pointer;
-	`,
-	primaryMenu: css`
-		@media (max-width: 1120px) {
-			margin-top: 5rem;
-		}
-		margin-top: 3.3rem;
-		list-style: none;
-		padding: 0;
 
-		.active {
-			::before {
-				position: absolute;
-				top: 0;
-				left: 0;
-				content: url(/svg/sidebarSettings/tab_selected.svg);
-			}
-			color: #506cf5;
-			svg,
-			path {
-				fill: #506cf5;
-			}
+const createTestCSS = css`
+	margin-left: auto;
+	:hover {
+		text-decoration: none !important;
+	}
+`;
+
+const inviteMembersCSS = css`
+	cursor: pointer;
+	background: #111313;
+	color: #fff;
+	text-align: center;
+	padding: 1.1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	span {
+		font-size: 1.125rem;
+		margin-left: 0.75rem;
+		font-weight: 600;
+	}
+	&:hover {
+		background: #5b76f7;
+	}
+`;
+
+const mainContainerCSS = css`
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+	font-family: DM Sans;
+`;
+
+const leftSectionCSS = css`
+	display: flex;
+	flex-direction: column;
+	min-width: 20.75rem;
+	background: #fbfbfb;
+	color: #fff;
+	height: 100vh;
+	overflow-y: scroll;
+`;
+
+const sectionContainerCSS = css`
+	padding: 1.2rem 0;
+`;
+
+const sectionHeaderItemCSS = css`
+	padding: 0 1.5rem;
+	font-weight: 500;
+	display: flex;
+	position: relative;
+	cursor: pointer;
+`;
+
+const teamIconCSS = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 0.8rem 1.12rem;
+	font-weight: 900;
+	font-size: 0.85rem;
+	background: rgba(97, 98, 102, 0.2);
+	color: #888888;
+	border-radius: 0.3rem;
+	width: 3.2rem;
+	height: 3.2rem;
+`;
+
+const sectionHeaderContentAreaCSS = css`
+	margin-left: 1.11rem;
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+`;
+
+const sectionHeaderSettingCSS = css`
+	margin-left: auto;
+	display: flex;
+	justify-content: center;
+	cursor: pointer;
+`;
+
+const primaryMenuCSS = css`
+	@media (max-width: 1120px) {
+		margin-top: 5rem;
+	}
+	margin-top: 3.3rem;
+	list-style: none;
+	padding: 0;
+
+	.active {
+		::before {
+			position: absolute;
+			top: 0;
+			left: 0;
+			content: url(/svg/sidebarSettings/tab_selected.svg);
 		}
+		color: #506cf5;
+		svg,
+		path {
+			fill: #506cf5;
+		}
+	}
 
-		li {
-			&:not(:last-child) {
-				margin-bottom: 1.9rem;
-			}
-			a {
-				align-items: center;
-				display: flex;
-			}
-			padding: 0 1.625rem;
-			position: relative;
-
-			img {
-				height: 1.25rem;
-			}
-			color: #636363;
-			font-weight: 500;
-			font-size: 1.33rem;
-			padding-top: 0.36rem;
-			padding-bottom: 0.36rem;
-			display: flex;
+	li {
+		&:not(:last-child) {
+			margin-bottom: 1.9rem;
+		}
+		a {
 			align-items: center;
-			cursor: pointer;
-			span {
-				font-size: 1rem;
-				margin-left: 1.5rem;
-			}
+			display: flex;
 		}
-	`,
-	settingsBottomFixedContainer: css`
-		margin-top: auto;
-		margin-bottom: 2rem;
-	`,
-	infoSection: css`
-		display: flex;
-		flex-direction: column;
 		padding: 0 1.625rem;
-		color: #f3f3f3;
-	`,
-	infoSectionHeading: css`
-		font-size: 0.925rem;
-		font-weight: 500;
-	`,
-	infoSectionItemList: css`
-		margin-top: 1.5rem;
-		list-style: none;
-		padding: 0;
-		padding-left: 0;
-		padding-right: 0;
-		li {
-			&:not(:last-child) {
-				margin-bottom: 2.1rem;
-			}
-			background: rgba(22, 22, 22, 0.29);
-			border: 1px solid #202026;
-			color: #fbfbfb;
-			font-weight: 500;
-			font-size: 0.9rem;
-			padding: 0;
-			cursor: pointer;
-			border-radius: 0.25rem;
+		position: relative;
+
+		img {
+			height: 1.25rem;
 		}
-	`,
-	infoSectionItem: css`
+		color: #636363;
+		font-weight: 500;
+		font-size: 1.33rem;
+		padding-top: 0.36rem;
+		padding-bottom: 0.36rem;
 		display: flex;
 		align-items: center;
-		padding: 0.75rem 1.5rem;
-	`,
-	infoSectionItemText: css`
-		font-size: 0.92rem;
-		margin-left: 1.15rem;
-		text-align: left;
-		line-height: 1.5rem;
-	`,
-	contentContainer: css`
-		display: flex;
-		background: #fbfbfb;
-		flex: 1;
-		flex-direction: column;
-		height: 100vh;
-		margin-left: -2px;
-		overflow-y: scroll;
-	`,
-	header: css`
-		display: flex;
-		align-items: center;
-		padding: 1rem 3rem;
-	`,
-	projectDropdownContainer: css`
-		margin-left: 4.62rem;
-		align-self: center;
-		font-size: 1rem;
-	`,
-	innerContentContainer: css`
-		flex: 1;
-		border-top-left-radius: 1.35rem;
-		border-style: solid;
-		border-width: 1px;
-		background: #fff;
-		border-color: #e2e2e2;
-	`,
-};
+		cursor: pointer;
+		span {
+			font-size: 1rem;
+			margin-left: 1.5rem;
+		}
+	}
+`;
+
+const settingsBottomFixedContainerCSS = css`
+	margin-top: auto;
+	margin-bottom: 2rem;
+`;
+
+const contentContainerCSS = css`
+	display: flex;
+	background: #fbfbfb;
+	flex: 1;
+	flex-direction: column;
+	height: 100vh;
+	margin-left: -2px;
+	overflow-y: scroll;
+`;
+const headerCSS = css`
+	display: flex;
+	align-items: center;
+	padding: 1rem 3rem;
+`;
+const projectDropdownContainerCSS = css`
+	margin-left: 4.62rem;
+	align-self: center;
+	font-size: 1rem;
+`;
+const innerContentContainerCSS = css`
+	flex: 1;
+	border-top-left-radius: 1.35rem;
+	border-style: solid;
+	border-width: 1px;
+	background: #fff;
+	border-color: #e2e2e2;
+`;

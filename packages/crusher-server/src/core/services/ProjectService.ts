@@ -51,8 +51,8 @@ export default class ProjectService {
 		return { id: project.id, name: project.name, team_id: project.team_id };
 	}
 
-	async getProjectMembers(userId: number, projectId: number) : Promise<Array<iMemberInfoResponse>>{
-		return this.dbManager.fetchData("SELECT users.*, user_project_roles.role role FROM users, projects, user_project_roles WHERE users.id = ? AND user_project_roles.user_id = users.id AND user_project_roles.project_id = ?", [userId, projectId]).then((res: Array<any>)=>{
+	async getProjectMembers(projectId: number) : Promise<Array<iMemberInfoResponse>>{
+		return this.dbManager.fetchData("SELECT users.*, user_project_roles.role role FROM users, projects, user_project_roles WHERE users.id = user_project_roles.user_id AND user_project_roles.user_id = users.id AND user_project_roles.project_id = ?", [projectId]).then((res: Array<any>)=>{
 			return res.map((member: User & {role: TEAM_ROLE_TYPES})=>{
 				return {
 					id: member.id,

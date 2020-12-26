@@ -1,5 +1,5 @@
 import { css } from "@emotion/core";
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import { ProjectSettingsTemplate } from "@ui/template/projectSettingPage";
 import { PROJECT_MENU_ITEMS } from "@constants/other";
 import React, { useEffect, useRef, useState } from "react";
@@ -405,4 +405,4 @@ ProjectMonitoringSettings.getInitialProps = async (ctx) => {
 	};
 };
 
-export default withSession(WithSidebarLayout(ProjectMonitoringSettings));
+export default withSession(withSidebarLayout(ProjectMonitoringSettings));

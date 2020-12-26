@@ -1,5 +1,5 @@
 import { css } from "@emotion/core";
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import { ProjectSettingsTemplate } from "@ui/template/projectSettingPage";
 import { PROJECT_MENU_ITEMS } from "@constants/other";
 import React, { useState } from "react";
@@ -246,4 +246,4 @@ TeamPaymentSettings.getInitialProps = async (ctx) => {
 	}
 };
 
-export default withSession(WithSidebarLayout(TeamPaymentSettings));
+export default withSession(withSidebarLayout(TeamPaymentSettings));

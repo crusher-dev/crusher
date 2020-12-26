@@ -15,8 +15,6 @@ export default class MyDocument extends Document {
 	}
 
 	render() {
-		// @ts-ignore
-		const { theme } = this.props;
 		return (
 			<Html>
 				<Head>

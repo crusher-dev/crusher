@@ -8,9 +8,8 @@ import { Provider } from "react-redux";
 import { ReactReduxContext } from "react-redux";
 import { _fetchUserInfo } from "@services/user";
 import { NextApiRequest } from "next";
-import { getThemeFromCookie } from "@utils/styleUtils";
+import { getThemeFromCookieOrReq } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
-import "../src/tailwind.css";
 import { DialogBox } from "@ui/atom/Dialog";
 import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
@@ -51,7 +50,7 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 	const { cookies, headers } = reqMetaInfo;
 
 	const loggedInCookies = isUserLoggedInFromCookies(cookies);
-	const theme = getThemeFromCookie(ctx, reqMetaInfo);
+	const theme = getThemeFromCookieOrReq(ctx, reqMetaInfo);
 
 	if (loggedInCookies) {
 		await Promise.all([_fetchUserInfo(headers), fetchProjectsFromServer(headers)])

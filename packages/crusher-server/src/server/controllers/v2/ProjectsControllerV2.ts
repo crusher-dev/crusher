@@ -45,8 +45,7 @@ export class ProjectsControllerV2 {
 	@Get("/get/members/:projectId")
 	@OnNull(404)
 	async getProjectMembers(@CurrentUser({required: true}) user, @Param("projectId") projectId: number) {
-		const {user_id} = user;
-		return this.projectService.getProjectMembers(user_id, projectId);
+		return this.projectService.getProjectMembers(projectId);
 	}
 
 	@Put("/update/:projectId")

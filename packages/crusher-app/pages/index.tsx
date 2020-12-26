@@ -5,7 +5,7 @@ import { serialize } from "cookie";
 import React, { useContext, useState } from "react";
 import isEmail from "validator/lib/isEmail";
 import { resolvePathToBackendURI } from "@utils/url";
-import WithoutSession from "@hoc/withoutSession";
+import withoutSession from "@hoc/withoutSession";
 import { USER_NOT_REGISTERED } from "@utils/constants";
 import { _authenticateUser } from "@services/user";
 import {
@@ -308,4 +308,4 @@ const styles = {
 	`,
 };
 
-export default WithoutSession(Home);
+export default withoutSession(Home);

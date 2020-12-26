@@ -1,12 +1,16 @@
+import React from "react";
 import { redirectToFrontendPath } from "@utils/router";
-import { getCookies } from "@utils/cookies";
+import { getMetaFromReq } from "@utils/cookies";
 import { serialize } from "cookie";
+import {
+	NextApiRequest,
+	NextApiResponse,
+	NextPage,
+	NextPageContext,
+} from "next";
+import { getUserInfo } from "@redux/stateUtils/user";
 
-const handleClIToken = (ctx) => {
-	const {
-		query: { cli_token },
-		res,
-	} = ctx;
+const handleClIToken = (cli_token: string, res: NextApiResponse) => {
 	if (cli_token) {
 		res.setHeader(
 			"Set-Cookie",
@@ -15,24 +19,36 @@ const handleClIToken = (ctx) => {
 	}
 };
 
-function WithoutSession(Component) {
-	const WrappedComponent = function (props) {
-		return <Component {...props} />;
+function withoutSession(WrappedComponent: NextPage) {
+	const WithoutSession = function (props: any) {
+		return <WrappedComponent {...props} />;
 	};
 
-	WrappedComponent.getInitialProps = async (ctx) => {
-		const { req, res } = ctx;
-		const cookies = getCookies(req);
-		handleClIToken(ctx);
+	const wrappedComponentName =
+		WrappedComponent.displayName || WrappedComponent.name || "Component";
 
-		const isLoggedIn = cookies.isLoggedIn;
+	WithoutSession.displayName = `withoutSession(${wrappedComponentName})`;
 
-		if (isLoggedIn === "true" || cookies.token) {
-			await redirectToFrontendPath("/app/project/dashboard", res);
+	WithoutSession.getInitialProps = async (ctx: NextPageContext) => {
+		const { req, res, store, query } = ctx;
+		const userInfo = getUserInfo(store.getState());
+		const reqMetaInfo = getMetaFromReq(req as NextApiRequest);
+
+		if (query.cli_token) {
+			handleClIToken(query.cli_token as string, res as NextApiResponse);
+		}
+		const isLoggedIn = reqMetaInfo.cookies.isLoggedIn;
+
+		if (userInfo && isLoggedIn) {
+			return await redirectToFrontendPath(
+				"/app/project/dashboard",
+				res as NextApiResponse,
+			);
 		}
 
 		const pageProps =
-			Component.getInitialProps && (await Component.getInitialProps(ctx));
+			WrappedComponent.getInitialProps &&
+			(await WrappedComponent.getInitialProps(ctx));
 
 		if (!pageProps) {
 			return {};
@@ -41,7 +57,7 @@ function WithoutSession(Component) {
 		return { ...pageProps };
 	};
 
-	return WrappedComponent;
+	return WithoutSession;
 }
 
-export default WithoutSession;
+export default withoutSession;

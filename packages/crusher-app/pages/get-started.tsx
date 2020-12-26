@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useContext, useState } from "react";
 import { resolvePathToBackendURI } from "@utils/url";
-import WithoutSession from "@hoc/withoutSession";
+import withoutSession from "@hoc/withoutSession";
 import { USER_ALREADY_REGISTERED, USER_REGISTERED } from "@utils/constants";
 import { _registerUser } from "@services/user";
 import { redirectToFrontendPath } from "@utils/router";
@@ -290,4 +290,4 @@ const styles = {
 	`,
 };
 
-export default WithoutSession(SignupScreen);
+export default withoutSession(SignupScreen);

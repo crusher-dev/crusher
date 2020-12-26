@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useContext, useState } from "react";
 import Checkbox from "@material-ui/core/Checkbox";
-import WithoutSession from "@hoc/withoutSession";
+import withoutSession from "@hoc/withoutSession";
 import { AuthenticationTemplate } from "@ui/template/authenticationDark";
 import { css } from "@emotion/core";
 
@@ -235,4 +235,4 @@ const styles = {
 	`,
 };
 
-export default WithoutSession(GetStartedScreem);
+export default withoutSession(GetStartedScreem);

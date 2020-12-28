@@ -5,6 +5,8 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const withImages = require("next-images");
 const path = require("path");
 
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
 module.exports = withImages(
 	withCSS(
 		withBundleAnalyzer({
@@ -14,6 +16,12 @@ module.exports = withImages(
 			},
 			webpack: function (config, { defaultLoaders }) {
 				const resolvedBaseUrl = path.resolve(config.context, "../");
+				if (IS_PRODUCTION) {
+					config.modules.rules
+						.filter(({ loader }) => loader === "babel-loader")
+						.map((l) => (l.options.cacheDirectory = false));
+				}
+
 				config.module.rules = [
 					...config.module.rules,
 					{

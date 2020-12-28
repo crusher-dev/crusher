@@ -82,12 +82,12 @@ export default function error404() {
 			</p>
 
 			<button css={styles.reportButton}> Report Issue </button>
-			<div css={styles.websiteHealth}>
+			{/* <div css={styles.websiteHealth}>
 				<p>Current Website Health: </p>
 				<button css={styles.healthButton}>
 					<div css={styles.greenLight}></div>Up: 99.9%
 				</button>
-			</div>
+			</div> */}
 		</div>
 	);
 }

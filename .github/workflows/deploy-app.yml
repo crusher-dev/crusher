@@ -27,7 +27,7 @@ jobs:
       - name: Package crusher-app for deployment
         run: sh scripts/vercel-package.sh
 
-      - uses: amondnet/vercel-action@v20
+      - uses: ngduc/vercel-deploy-action@master
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-args: '--prod'

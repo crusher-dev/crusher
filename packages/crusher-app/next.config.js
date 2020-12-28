@@ -1,6 +1,6 @@
 const withCSS = require("@zeit/next-css");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
-	enabled: true,
+	enabled: process.env.ANALYZE === "true",
 });
 const withImages = require("next-images");
 const path = require("path");
@@ -8,6 +8,7 @@ const path = require("path");
 module.exports = withImages(
 	withCSS(
 		withBundleAnalyzer({
+			target: "serverless",
 			typescript: {
 				ignoreBuildErrors: true,
 			},

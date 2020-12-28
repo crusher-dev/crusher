@@ -49,9 +49,11 @@ const projects = (state = initialState, action) => {
 					: state.selectedProject,
 			};
 		case SAVE_SELECTED_PROJECT:
-			jsCookie.set("selectedProject", action.projectId, {
-				domain: extractHostnameFromUrl(BACKEND_SERVER_URL),
-			});
+			if (action.projectId) {
+				jsCookie.set("selectedProject", action.projectId, {
+					domain: extractHostnameFromUrl(BACKEND_SERVER_URL),
+				});
+			}
 			return { ...state, selectedProject: action.projectId };
 		case ADD_PROJECT:
 			return {

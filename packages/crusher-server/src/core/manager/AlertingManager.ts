@@ -1,5 +1,5 @@
 import { fetch } from "../utils/fetch";
-import { User } from "../interfaces/db/User";
+import { User } from "../../../../crusher-shared/types/db/user";
 import { resolvePathToFrontendURI } from "../utils/uri";
 import { JobBuild } from "../interfaces/db/JobBuild";
 

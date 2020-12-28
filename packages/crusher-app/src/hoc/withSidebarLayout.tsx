@@ -7,16 +7,14 @@ import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { saveSelectedProjectInRedux } from "@redux/actions/project";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
-import React, { CSSProperties, useCallback, useEffect, useState } from "react";
+import React, { CSSProperties, useCallback, useState } from "react";
 import { toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
-import DasgboardSvg from "../../public/svg/sidebarSettings/dashboard.svg";
+import DashboardSvg from "../../public/svg/sidebarSettings/dashboard.svg";
 import BuildsSVG from "../../public/svg/sidebarSettings/builds.svg";
 import TestsSVG from "../../public/svg/sidebarSettings/testsList.svg";
 import ProjectSettings from "../../public/svg/sidebarSettings/projectSettings.svg";
-import NewFeatures from "../../public/svg/sidebarSettings/newFeatures.svg";
-import Help from "../../public/svg/sidebarSettings/help.svg";
 import Logout from "../../public/svg/sidebarSettings/logout.svg";
 import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
@@ -25,41 +23,66 @@ import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
 import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
+import { getUserInfo } from "@redux/stateUtils/user";
+import { Conditional } from "@ui/components/common/Conditional";
+import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
+import { NextPage, NextPageContext } from "next";
 
 interface NavItem {
 	name: string;
 	link: string;
 	icon: string;
+	isAuthorized: boolean;
 }
 
 interface NavListProps {
 	navItems: Array<NavItem>;
+	isLoggedIn: boolean;
 	style?: CSSProperties;
 }
 
 function NavList(props: NavListProps) {
-	const { navItems, style } = props;
+	const { navItems, style, isLoggedIn } = props;
 	const router = useRouter();
+
 	return (
-		<ul style={style} css={styles.primaryMenu}>
+		<ul style={style} css={primaryMenuCSS}>
 			{navItems.map((item: NavItem, i) => {
 				const SVGImage = item.icon;
+				const shouldEnable = item.isAuthorized ? (isLoggedIn ? true : false) : true;
+
 				return (
 					<li
-						className={(router as any).pathname === item.link ? "active" : null}
+						className={(router as any).pathname === item.link ? "active" : ""}
+						style={{
+							opacity: shouldEnable ? 1 : 0.5,
+						}}
 						key={i}
 					>
-						<Link href={item.link}>
-							<a href={item.link}>
+						<Conditional If={!shouldEnable}>
+							<div style={{ display: "flex" }}>
 								<SVGImage />
 								<span>{item.name}</span>
-							</a>
-						</Link>
+							</div>
+						</Conditional>
+
+						<Conditional If={shouldEnable}>
+							<Link href={item.link}>
+								<a href={item.link}>
+									<SVGImage />
+									<span>{item.name}</span>
+								</a>
+							</Link>
+						</Conditional>
 					</li>
 				);
 			})}
 		</ul>
 	);
+}
+
+function generateRandomUserName() {
+	return "Prince Vegeta";
 }
 
 // Todo- Breakdown in diff component.
@@ -69,7 +92,7 @@ function LeftSection(props: any) {
 	const [showAddProject, setShowAddProject] = useState(false);
 
 	const closeProjectModal = () => {
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 		setShowAddProject(false);
 	};
 
@@ -77,40 +100,35 @@ function LeftSection(props: any) {
 		{
 			name: "Dashboard",
 			link: "/app/project/dashboard",
-			icon: DasgboardSvg,
+			icon: DashboardSvg,
+			isAuthorized: true,
 		},
 		{
 			name: "Builds",
 			link: "/app/project/builds",
 			icon: BuildsSVG,
+			isAuthorized: true,
 		},
 		{
 			name: "Tests",
 			link: "/app/project/tests",
 			icon: TestsSVG,
+			isAuthorized: true,
 		},
 		{
 			name: "Project Settings",
 			link: "/app/settings/project/basic",
 			icon: ProjectSettings,
+			isAuthorized: true,
 		},
 	];
 
 	const bottomNavLinks = [
 		{
-			name: "New features",
-			link: "/app/new-features",
-			icon: NewFeatures,
-		},
-		{
-			name: "Help & Support",
-			link: "/app/help-support",
-			icon: Help,
-		},
-		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),
 			icon: Logout,
+			isAuthorized: true,
 		},
 	];
 
@@ -118,22 +136,26 @@ function LeftSection(props: any) {
 		setShowDropDwon(!showDropDown);
 	};
 
-	const userFistCharacter = userInfo.name.slice(0, 1);
+	const isUserLoggedIn = !!userInfo;
+	const userName = userInfo ? userInfo.name : generateRandomUserName();
+
+	const userFistCharacter = userName.slice(0, 1);
+
 	const closePaymentModal = () => {
 		setPaymentShow(false);
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 	};
 
 	const [showPayment, setPaymentShow] = useState(false);
 	return (
-		<div css={styles.leftSection}>
-			<div css={styles.sectionContainer}>
-				<div css={styles.sectionHeaderItem}>
+		<div css={leftSectionCSS}>
+			<div css={sectionContainerCSS}>
+				<div css={sectionHeaderItemCSS}>
 					{/*@Note :- Change hardcoded text*/}
-					<div css={styles.teamIcon} onClick={toggleSettingsDropDown}>
+					<div css={teamIconCSS} onClick={toggleSettingsDropDown}>
 						{userFistCharacter}
 					</div>
-					<div css={styles.sectionHeaderContentArea}>
+					<div css={sectionHeaderContentAreaCSS}>
 						<span
 							style={{
 								color: "#2B2B39",
@@ -143,7 +165,7 @@ function LeftSection(props: any) {
 							}}
 							onClick={toggleSettingsDropDown}
 						>
-							{toPascalCase(selectedProject && selectedProject)} project
+							{toPascalCase(selectedProject)} project
 						</span>
 
 						<span
@@ -156,32 +178,52 @@ function LeftSection(props: any) {
 							}}
 							onClick={toggleSettingsDropDown}
 						>
-							{userInfo.name}
+							{userName}
 						</span>
 
-						<div onClick={setPaymentShow.bind(this, true)} css={addPaymentOnTrial}>
-							14 days left. Add payment.
-						</div>
-						{showPayment && <AddPaymentModel onClose={closePaymentModal} />}
+						<Conditional If={isUserLoggedIn}>
+							<>
+								<div
+									onClick={setPaymentShow.bind(this, true)}
+									css={addPaymentOnTrialCSS}
+								>
+									14 days left. Add payment.
+								</div>
+								<Conditional If={showPayment}>
+									<AddPaymentModel onClose={closePaymentModal} />
+								</Conditional>
+							</>
+						</Conditional>
 					</div>
-					<div css={styles.sectionHeaderSetting} onClick={toggleSettingsDropDown}>
-						<DropdownSVG style={{ marginTop: ".5rem" }} />
+					<div
+						css={sectionHeaderSettingCSS}
+						onClick={toggleSettingsDropDown}
+						style={{
+							pointerEvents: isUserLoggedIn ? "auto" : "none",
+							marginTop: ".5rem",
+						}}
+					>
+						<DropdownSVG />
 					</div>
-					{showDropDown && (
+
+					<Conditional If={showDropDown}>
 						<SidebarTeamDropdown
 							onAddProjectCallback={setShowAddProject.bind(this, true)}
 							onOutsideClick={toggleSettingsDropDown}
 						/>
-					)}
-					{showAddProject && <CreateProjectModal onClose={closeProjectModal} />}
+					</Conditional>
+
+					<Conditional If={showAddProject}>
+						<CreateProjectModal onClose={closeProjectModal} />
+					</Conditional>
 				</div>
 
-				<NavList navItems={mainNavLinks} />
+				<NavList isLoggedIn={isUserLoggedIn} navItems={mainNavLinks} />
 			</div>
-			<div css={styles.settingsBottomFixedContainer}>
-				<NavList navItems={bottomNavLinks} />
+			<div css={settingsBottomFixedContainerCSS}>
+				<NavList isLoggedIn={isUserLoggedIn} navItems={bottomNavLinks} />
 			</div>
-			<div css={styles.inviteMembers}>
+			<div css={inviteMembersCSS}>
 				<img src="/svg/sidebarSettings/team_member.svg" />
 				<span>Invite members</span>
 			</div>
@@ -203,7 +245,7 @@ function ProjectSelector(props: {
 	projectsList: any;
 	options: any;
 	selectedProject: any;
-	onChange: (project) => void;
+	onChange: (project: iSelectOption) => void;
 }) {
 	const router = useRouter();
 	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(
@@ -216,7 +258,7 @@ function ProjectSelector(props: {
 		...options,
 		{ label: "View all project", value: "view_all" },
 	];
-	const handleChange = (option) => {
+	const handleChange = (option: iSelectOption) => {
 		if (option.value === "add_project") {
 			setIsShowingCreateProjectModal(true);
 		} else if (option.value === "view_all") {
@@ -227,12 +269,12 @@ function ProjectSelector(props: {
 	};
 
 	const closeProjectModal = useCallback(() => {
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 		setIsShowingCreateProjectModal(false);
 	}, [isShowingCreateProjectModal]);
 
 	return (
-		<div css={styles.projectDropdownContainer}>
+		<div css={projectDropdownContainerCSS}>
 			{isShowingCreateProjectModal && (
 				<CreateProjectModal onClose={closeProjectModal} />
 			)}
@@ -248,23 +290,42 @@ function ProjectSelector(props: {
 	);
 }
 
-export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
-	const WrappedComponent = function (props) {
-		const { userInfo } = props;
-		const selectedProject = useSelector(getSelectedProject);
+function generateRandomProjectName() {
+	return "Blip Boom";
+}
+
+interface iSelectOption {
+	label: string;
+	value: string;
+}
+
+export function withSidebarLayout(
+	WrappedComponent: NextPage,
+	shouldHaveGetInitialProps = true,
+) {
+	const WithSidebarLayout = function (props: any) {
+		const userInfo = useSelector(getUserInfo);
 		const projectsList = useSelector(getProjects);
-		const selectedProjectName = projectsList.find((project) => {
-			return project.id === selectedProject;
+		const selectedProjectID = useSelector(getSelectedProject);
+
+		const selectedProject = projectsList.find((project: iProjectInfoResponse) => {
+			return project.id === selectedProjectID;
 		});
 
-		const options =
-			projectsList &&
-			projectsList.map((project) => {
-				return { label: project.name, value: project.id };
-			});
+		const selectedProjectName =
+			userInfo && selectedProject
+				? selectedProject.name
+				: generateRandomProjectName();
 
-		function onProjectChange(project) {
-			store.dispatch(saveSelectedProjectInRedux(project.value));
+		const options = userInfo
+			? projectsList &&
+			  projectsList.map((project) => {
+					return { label: project.name, value: project.id };
+			  })
+			: [];
+
+		function onProjectChange(project: iSelectOption) {
+			(store as any).dispatch(saveSelectedProjectInRedux(parseInt(project.value)));
 		}
 
 		return (
@@ -281,30 +342,25 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 						rel="stylesheet"
 					/>
 				</Head>
-				<div css={styles.mainContainer}>
-					<LeftSection
-						selectedProject={
-							selectedProjectName ? selectedProjectName.name : selectedProject
-						}
-						userInfo={userInfo}
-					/>
-					<div css={styles.contentContainer}>
-						<div css={styles.header}>
+				<div css={mainContainerCSS}>
+					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
+					<div css={contentContainerCSS}>
+						<div css={headerCSS}>
 							<CrusherLogo />
 							<ProjectSelector
 								projectsList={projectsList}
 								options={options}
-								selectedProject={selectedProject}
+								selectedProject={selectedProjectID}
 								onChange={onProjectChange}
 							/>
 							<Link href={"/app/project/onboarding/create-test"}>
-								<a href={"/app/project/onboarding/create-test"} css={styles.createTest}>
+								<a href={"/app/project/onboarding/create-test"} css={createTestCSS}>
 									<CreateTest />
 								</a>
 							</Link>
 						</div>
-						<div css={styles.innerContentContainer}>
-							<Component {...props} />
+						<div css={innerContentContainerCSS}>
+							<WrappedComponent {...props} />
 							<FeedbackComponent />
 						</div>
 					</div>
@@ -312,18 +368,25 @@ export function WithSidebarLayout(Component, shouldHaveGetInitialProps = true) {
 			</div>
 		);
 	};
+
+	const wrappedComponentName =
+		WrappedComponent.displayName || WrappedComponent.name || "Component";
+
+	WithSidebarLayout.displayName = `withSidebarLayout(${wrappedComponentName})`;
+
 	if (shouldHaveGetInitialProps) {
-		WrappedComponent.getInitialProps = async (ctx) => {
+		WithSidebarLayout.getInitialProps = async (ctx: NextPageContext) => {
 			const pageProps =
-				Component.getInitialProps && (await Component.getInitialProps(ctx));
+				WrappedComponent.getInitialProps &&
+				(await WrappedComponent.getInitialProps(ctx));
 			return { ...pageProps };
 		};
 	}
 
-	return WrappedComponent;
+	return WithSidebarLayout;
 }
 
-const addPaymentOnTrial = css`
+const addPaymentOnTrialCSS = css`
 	margin-top: 1rem;
 	font-family: Gilroy;
 
@@ -334,202 +397,171 @@ const addPaymentOnTrial = css`
 
 	color: #2b2b39;
 `;
-const styles = {
-	createTest: css`
-		margin-left: auto;
-		:hover {
-			text-decoration: none !important;
-		}
-	`,
-	inviteMembers: css`
-		cursor: pointer;
-		background: #111313;
-		color: #fff;
-		text-align: center;
-		padding: 1.1rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		span {
-			font-size: 1.125rem;
-			margin-left: 0.75rem;
-			font-weight: 600;
-		}
-		&:hover {
-			background: #5b76f7;
-		}
-	`,
-	mainContainer: css`
-		display: flex;
-		height: 100vh;
-		width: 100vw;
-		font-family: DM Sans;
-	`,
-	leftSection: css`
-		display: flex;
-		flex-direction: column;
-		min-width: 20.75rem;
-		background: #fbfbfb;
-		color: #fff;
-		height: 100vh;
-		overflow-y: scroll;
-	`,
-	sectionContainer: css`
-		padding: 1.2rem 0;
-	`,
-	sectionHeaderItem: css`
-		padding: 0 1.5rem;
-		font-weight: 500;
-		display: flex;
-		position: relative;
-		cursor: pointer;
-	`,
-	teamIcon: css`
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		padding: 0.8rem 1.12rem;
-		font-weight: 900;
-		font-size: 0.85rem;
-		background: rgba(97, 98, 102, 0.2);
-		color: #888888;
-		border-radius: 0.3rem;
-		width: 3.2rem;
-		height: 3.2rem;
-	`,
-	sectionHeaderContentArea: css`
-		margin-left: 1.11rem;
-		display: flex;
-		flex-direction: column;
-		align-self: center;
-	`,
-	sectionHeaderSetting: css`
-		margin-left: auto;
-		display: flex;
-		justify-content: center;
-		cursor: pointer;
-	`,
-	primaryMenu: css`
-		@media (max-width: 1120px) {
-			margin-top: 5rem;
-		}
-		margin-top: 3.3rem;
-		list-style: none;
-		padding: 0;
 
-		.active {
-			::before {
-				position: absolute;
-				top: 0;
-				left: 0;
-				content: url(/svg/sidebarSettings/tab_selected.svg);
-			}
-			color: #506cf5;
-			svg,
-			path {
-				fill: #506cf5;
-			}
+const createTestCSS = css`
+	margin-left: auto;
+	:hover {
+		text-decoration: none !important;
+	}
+`;
+
+const inviteMembersCSS = css`
+	cursor: pointer;
+	background: #111313;
+	color: #fff;
+	text-align: center;
+	padding: 1.1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	span {
+		font-size: 1.125rem;
+		margin-left: 0.75rem;
+		font-weight: 600;
+	}
+	&:hover {
+		background: #5b76f7;
+	}
+`;
+
+const mainContainerCSS = css`
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+	font-family: DM Sans;
+`;
+
+const leftSectionCSS = css`
+	display: flex;
+	flex-direction: column;
+	min-width: 20.75rem;
+	background: #fbfbfb;
+	color: #fff;
+	height: 100vh;
+	overflow-y: scroll;
+`;
+
+const sectionContainerCSS = css`
+	padding: 1.2rem 0;
+`;
+
+const sectionHeaderItemCSS = css`
+	padding: 0 1.5rem;
+	font-weight: 500;
+	display: flex;
+	position: relative;
+	cursor: pointer;
+`;
+
+const teamIconCSS = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 0.8rem 1.12rem;
+	font-weight: 900;
+	font-size: 0.85rem;
+	background: rgba(97, 98, 102, 0.2);
+	color: #888888;
+	border-radius: 0.3rem;
+	width: 3.2rem;
+	height: 3.2rem;
+`;
+
+const sectionHeaderContentAreaCSS = css`
+	margin-left: 1.11rem;
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+`;
+
+const sectionHeaderSettingCSS = css`
+	margin-left: auto;
+	display: flex;
+	justify-content: center;
+	cursor: pointer;
+`;
+
+const primaryMenuCSS = css`
+	@media (max-width: 1120px) {
+		margin-top: 5rem;
+	}
+	margin-top: 3.3rem;
+	list-style: none;
+	padding: 0;
+
+	.active {
+		::before {
+			position: absolute;
+			top: 0;
+			left: 0;
+			content: url(/svg/sidebarSettings/tab_selected.svg);
 		}
+		color: #506cf5;
+		svg,
+		path {
+			fill: #506cf5;
+		}
+	}
 
-		li {
-			&:not(:last-child) {
-				margin-bottom: 1.9rem;
-			}
-			a {
-				align-items: center;
-				display: flex;
-			}
-			padding: 0 1.625rem;
-			position: relative;
-
-			img {
-				height: 1.25rem;
-			}
-			color: #636363;
-			font-weight: 500;
-			font-size: 1.33rem;
-			padding-top: 0.36rem;
-			padding-bottom: 0.36rem;
-			display: flex;
+	li {
+		&:not(:last-child) {
+			margin-bottom: 1.9rem;
+		}
+		a {
 			align-items: center;
-			cursor: pointer;
-			span {
-				font-size: 1rem;
-				margin-left: 1.5rem;
-			}
+			display: flex;
 		}
-	`,
-	settingsBottomFixedContainer: css`
-		margin-top: auto;
-		margin-bottom: 2rem;
-	`,
-	infoSection: css`
-		display: flex;
-		flex-direction: column;
 		padding: 0 1.625rem;
-		color: #f3f3f3;
-	`,
-	infoSectionHeading: css`
-		font-size: 0.925rem;
-		font-weight: 500;
-	`,
-	infoSectionItemList: css`
-		margin-top: 1.5rem;
-		list-style: none;
-		padding: 0;
-		padding-left: 0;
-		padding-right: 0;
-		li {
-			&:not(:last-child) {
-				margin-bottom: 2.1rem;
-			}
-			background: rgba(22, 22, 22, 0.29);
-			border: 1px solid #202026;
-			color: #fbfbfb;
-			font-weight: 500;
-			font-size: 0.9rem;
-			padding: 0;
-			cursor: pointer;
-			border-radius: 0.25rem;
+		position: relative;
+
+		img {
+			height: 1.25rem;
 		}
-	`,
-	infoSectionItem: css`
+		color: #636363;
+		font-weight: 500;
+		font-size: 1.33rem;
+		padding-top: 0.36rem;
+		padding-bottom: 0.36rem;
 		display: flex;
 		align-items: center;
-		padding: 0.75rem 1.5rem;
-	`,
-	infoSectionItemText: css`
-		font-size: 0.92rem;
-		margin-left: 1.15rem;
-		text-align: left;
-		line-height: 1.5rem;
-	`,
-	contentContainer: css`
-		display: flex;
-		background: #fbfbfb;
-		flex: 1;
-		flex-direction: column;
-		height: 100vh;
-		margin-left: -2px;
-		overflow-y: scroll;
-	`,
-	header: css`
-		display: flex;
-		align-items: center;
-		padding: 1rem 3rem;
-	`,
-	projectDropdownContainer: css`
-		margin-left: 4.62rem;
-		align-self: center;
-		font-size: 1rem;
-	`,
-	innerContentContainer: css`
-		flex: 1;
-		border-top-left-radius: 1.35rem;
-		border-style: solid;
-		border-width: 1px;
-		background: #fff;
-		border-color: #e2e2e2;
-	`,
-};
+		cursor: pointer;
+		span {
+			font-size: 1rem;
+			margin-left: 1.5rem;
+		}
+	}
+`;
+
+const settingsBottomFixedContainerCSS = css`
+	margin-top: auto;
+	margin-bottom: 2rem;
+`;
+
+const contentContainerCSS = css`
+	display: flex;
+	background: #fbfbfb;
+	flex: 1;
+	flex-direction: column;
+	height: 100vh;
+	margin-left: -2px;
+	overflow-y: scroll;
+`;
+const headerCSS = css`
+	display: flex;
+	align-items: center;
+	padding: 1rem 3rem;
+`;
+const projectDropdownContainerCSS = css`
+	margin-left: 4.62rem;
+	align-self: center;
+	font-size: 1rem;
+`;
+const innerContentContainerCSS = css`
+	flex: 1;
+	border-top-left-radius: 1.35rem;
+	border-style: solid;
+	border-width: 1px;
+	background: #fff;
+	border-color: #e2e2e2;
+`;

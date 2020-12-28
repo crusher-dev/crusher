@@ -1,4 +1,17 @@
-import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
+import {
+	Authorized,
+	Body,
+	CurrentUser,
+	Get,
+	InternalServerError,
+	JsonController,
+	OnNull,
+	Post,
+	QueryParam,
+	QueryParams,
+	Req,
+	Res,
+} from 'routing-controllers';
 import { Container, Inject, Service } from "typedi";
 import DBManager from "../../core/manager/DBManager";
 import UserService from "../../core/services/UserService";
@@ -19,6 +32,7 @@ import ProjectService from "../../core/services/ProjectService";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../utils/cookies";
 import { Logger } from "../../utils/logger";
 import { generateId } from "../../core/utils/helper";
+import { iUserInfoResponse } from '@crusher-shared/types/response/userInfoResponse';
 
 const { google } = require("googleapis");
 
@@ -220,10 +234,17 @@ export class UserController {
 	}
 
 	@Authorized()
+	@OnNull(500)
 	@Get("/info")
-	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res) {
+	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res) : Promise<iUserInfoResponse> {
 		const { user_id } = user;
-		return this.userService.getUserInfo(user_id);
+		const info = await this.userService.getUserInfo(user_id);
+		if(info){
+			const userMeta = await this.userService.getUserMetaInfo(String(user_id));
+
+			return {...info, name: info.first_name + " " + info.last_name, user_meta: userMeta}
+		}
+		return null;
 	}
 
 	/**

@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { useContext, useState } from "react";
 import { resolvePathToBackendURI } from "@utils/url";
-import WithoutSession from "@hoc/withoutSession";
+import withoutSession from "@hoc/withoutSession";
 import { USER_ALREADY_REGISTERED, USER_REGISTERED } from "@utils/constants";
-import { registerUser } from "@services/user";
+import { _registerUser } from "@services/user";
 import { redirectToFrontendPath } from "@utils/router";
 import isEmail from "validator/lib/isEmail";
 import { AuthenticationTemplate } from "@ui/template/authenticationDark";
@@ -21,7 +21,7 @@ function SignupScreen() {
 		const nameArr = name.split(" ");
 		const firstName = nameArr[0] ? nameArr[0] : "";
 		const lastName = nameArr[1] ? nameArr[1] : "";
-		registerUser(firstName, lastName, email, password).then((res) => {
+		_registerUser(firstName, lastName, email, password).then((res) => {
 			const { status } = res;
 
 			if (!isEmail(email)) {
@@ -290,4 +290,4 @@ const styles = {
 	`,
 };
 
-export default WithoutSession(SignupScreen);
+export default withoutSession(SignupScreen);

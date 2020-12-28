@@ -4,8 +4,9 @@ import { Project } from "../interfaces/db/Project";
 import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
 import {iProjectInfoResponse} from "@crusher-shared/types/response/projectInfoResponse";
 import { iMemberInfoResponse } from '@crusher-shared/types/response/membersInfoResponse';
-import { User } from '../interfaces/db/User';
+import { User } from '../../../../crusher-shared/types/db/user';
 import { TEAM_ROLE_TYPES } from '@crusher-shared/types/db/teamRole';
+import { iAllProjectsItemResponse } from '@crusher-shared/types/response/allProjectsResponse';
 
 @Service()
 export default class ProjectService {
@@ -50,8 +51,8 @@ export default class ProjectService {
 		return { id: project.id, name: project.name, team_id: project.team_id };
 	}
 
-	async getProjectMembers(userId: number, projectId: number) : Promise<Array<iMemberInfoResponse>>{
-		return this.dbManager.fetchData("SELECT users.*, user_project_roles.role role FROM users, projects, user_project_roles WHERE users.id = ? AND user_project_roles.user_id = users.id AND user_project_roles.project_id = ?", [userId, projectId]).then((res: Array<any>)=>{
+	async getProjectMembers(projectId: number) : Promise<Array<iMemberInfoResponse>>{
+		return this.dbManager.fetchData("SELECT users.*, user_project_roles.role role FROM users, projects, user_project_roles WHERE users.id = user_project_roles.user_id AND user_project_roles.user_id = users.id AND user_project_roles.project_id = ?", [projectId]).then((res: Array<any>)=>{
 			return res.map((member: User & {role: TEAM_ROLE_TYPES})=>{
 				return {
 					id: member.id,
@@ -71,7 +72,7 @@ export default class ProjectService {
 		});
 	}
 
-	async getAllProjectsOfUser(userId: number) {
+	async getAllProjectsOfUser(userId: number): Promise<Array<iAllProjectsItemResponse>> {
 		const projects: Array<Project> = await this.dbManager.fetchData(
 			"SELECT projects.* FROM projects, users WHERE projects.team_id=users.team_id AND users.id=?",
 			[userId],

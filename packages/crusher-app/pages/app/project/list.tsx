@@ -1,30 +1,28 @@
 import { css } from "@emotion/core";
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
-import WithSession from "@hoc/withSession";
-import { getCookies } from "@utils/cookies";
-import { redirectToFrontendPath } from "@utils/router";
-import { getAllTestsInfosInProject } from "@services/test";
-import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import { cleanHeaders } from "@utils/backendRequest";
 import { useSelector } from "react-redux";
-import { AddProject } from "@ui/components/app/addProject";
-import Chrome from "../../../public/svg/project/chrome.svg";
+import { getProjects } from "@redux/stateUtils/projects";
 import Router from "next/router";
+
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
+import withSession from "@hoc/withSession";
 import { getTime } from "@utils/helpers";
-import { deleteProjectFromBackend } from "@services/projects";
-import React, { useState } from "react";
+import { _deleteProjectFromBackend } from "@services/projects";
+
+import { AddProject } from "@ui/components/app/addProject";
+import { Conditional } from "@ui/components/common/Conditional";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import { CreateTestModal } from "@ui/containers/modals/createTestModal";
+import Chrome from "../../../public/svg/project/chrome.svg";
+
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-function ProjectItem({
-	name,
-	id,
-	team_id,
-	noTests,
-	created_at,
-	showAddTestModal,
-}) {
+interface iProjectItem {
+	project: any;
+	showAddTestModal: any;
+}
+function ProjectItem({ project, showAddTestModal }: iProjectItem) {
+	const { name, id, noTests, created_at } = project;
 	const addTest = (projectId: number) => {
 		if (showAddTestModal) {
 			showAddTestModal(projectId);
@@ -32,25 +30,25 @@ function ProjectItem({
 	};
 
 	const deleteProject = (projectId: number) => {
-		deleteProjectFromBackend(projectId);
+		_deleteProjectFromBackend(projectId);
 	};
 
 	return (
-		<div css={projectCard}>
-			<Chrome css={icon} />
+		<div css={projectCardCSS}>
+			<Chrome css={iconCSS} />
 
-			<div css={projectContent}>
-				<div css={projectName}>{name}</div>
-				<div css={projectMeta}>
-					<div css={projectTest}>{noTests} tests</div>
-					<div css={addProjectTest} onClick={addTest}>
+			<div>
+				<div css={projectNameCSS}>{name}</div>
+				<div css={projectMetaCSS}>
+					<div css={projectTestCSS}>{noTests} tests</div>
+					<div css={addProjectTestCSS} onClick={addTest.bind(this, id)}>
 						Add test
 					</div>
 				</div>
 			</div>
-			<div css={projectRightSection}>
-				<div css={projectCreatedOn}>Created on {getTime(new Date(created_at))}</div>
-				<div css={projectDeleteButton} onClick={deleteProject}>
+			<div css={projectRightSectionCSS}>
+				<div>Created on {getTime(new Date(created_at))}</div>
+				<div css={projectDeleteButtonCSS} onClick={deleteProject.bind(this, id)}>
 					Delete
 				</div>
 			</div>
@@ -59,64 +57,70 @@ function ProjectItem({
 }
 
 function HeaderComponent() {
-	const [showAddProject, setshowAddProjectStatus] = useState(false);
+	const [showAddProject, setShowAddProjectStatus] = useState(false);
 	return (
-		<div css={headingBlock}>
+		<div css={headingBlockCSS}>
 			<div>
-				<div css={heading}>Projects</div>
-				<div css={headingText}>List of projects in your workspace</div>
+				<div css={headingCSS}>Projects</div>
+				<div css={headingTextCSS}>List of projects in your workspace</div>
 			</div>
 			<div>
 				<AddProject
 					label={"Add Project"}
-					onClick={setshowAddProjectStatus.bind(this, true)}
+					onClick={setShowAddProjectStatus.bind(this, true)}
 				/>
-				{showAddProject && (
+
+				<Conditional If={showAddProject}>
 					<CreateProjectModal
 						onClose={() => {
-							setshowAddProjectStatus(false);
+							setShowAddProjectStatus(false);
 						}}
 					/>
-				)}
+				</Conditional>
 			</div>
 		</div>
 	);
 }
 
-function ProjectTestsList(props) {
+function ProjectTestsList() {
 	const [showAddTestModal, setShowAddTestModal] = useState({
 		value: false,
-		projectId: null,
+		projectId: null as number | null,
 	});
 	const projects = useSelector(getProjects);
 
-	const showAddTestModalCallback = (projectId: string) => {
+	const showAddTestModalCallback = (projectId: number) => {
 		setShowAddTestModal({ value: true, projectId: projectId });
 	};
 
 	const closeAddTestModal = () => {
-		ReactDOM.render(null, document.getElementById("overlay"));
+		ReactDOM.render(null as any, document.getElementById("overlay"));
 		setShowAddTestModal({ value: false, projectId: null });
 	};
 
-	const createTestCallback = (url, browsers) => {
+	const createTestCallback = () => {
 		closeAddTestModal();
 		Router.replace("/app/project/onboarding/create-test");
 	};
 
 	return (
-		<div css={container}>
-			{showAddTestModal && showAddTestModal.value && (
+		<div css={containerCSS}>
+			<Conditional If={showAddTestModal && showAddTestModal.value}>
 				<CreateTestModal
 					onSubmit={createTestCallback}
 					onClose={closeAddTestModal}
 				/>
-			)}
-			<div css={innerContainer}>
+			</Conditional>
+
+			<div css={innerContainerCSS}>
 				<HeaderComponent />
-				<div css={projectCardsContainer}>
-					{projects.map((project) => (
-						<ProjectItem {...project} showAddTestModal={showAddTestModalCallback} />
+				<div css={projectCardsContainerCSS}>
+					{projects.map((project: any) => (
+						<ProjectItem
+							key={project.id}
+							project={project}
+							showAddTestModal={showAddTestModalCallback}
+						/>
 					))}
 				</div>
 			</div>
@@ -124,10 +128,10 @@ function ProjectTestsList(props) {
 	);
 }
 
-const projectCardsContainer = css`
+const projectCardsContainerCSS = css`
 	margin-top: 2.25rem;
 `;
-const heading = css`
+const headingCSS = css`
 	font-family: Cera Pro;
 	font-style: normal;
 	font-weight: bold;
@@ -135,7 +139,7 @@ const heading = css`
 	line-height: 1.5rem;
 	color: #2b2b39;
 `;
-const headingText = css`
+const headingTextCSS = css`
 	margin-top: 0.6rem;
 	font-family: Gilroy;
 	font-style: normal;
@@ -143,23 +147,23 @@ const headingText = css`
 	font-size: 1.075rem;
 	color: #2b2b39;
 `;
-const headingBlock = css`
+const headingBlockCSS = css`
 	display: flex;
 	justify-content: space-between;
 	align-items: start;
 `;
 
-const container = css`
+const containerCSS = css`
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
 `;
-const innerContainer = css`
+const innerContainerCSS = css`
 	padding: 3rem 0;
 	width: 49rem;
 `;
 
-const projectCard = css`
+const projectCardCSS = css`
 	padding: 1.06rem 1.5rem;
 	border: 1px solid #dddddd;
 	box-sizing: border-box;
@@ -167,11 +171,10 @@ const projectCard = css`
 	display: flex;
 	margin-bottom: 2.5rem;
 `;
-const icon = css`
+const iconCSS = css`
 	margin-right: 1.75rem;
 `;
-const projectContent = css``;
-const projectName = css`
+const projectNameCSS = css`
 	font-family: Cera Pro;
 	font-style: normal;
 	font-weight: bold;
@@ -179,62 +182,30 @@ const projectName = css`
 	line-height: 1.2rem;
 	margin-bottom: 0.75rem;
 `;
-const projectMeta = css`
+const projectMetaCSS = css`
 	display: flex;
 	font-size: 1rem;
 	color: #2b2b39;
 `;
-
-const projectTest = css`
+const projectTestCSS = css`
 	margin-right: 1rem;
 `;
-
-const addProjectTest = css`
+const addProjectTestCSS = css`
 	text-decoration: underline;
 	cursor: pointer;
 `;
-const projectRightSection = css`
+const projectRightSectionCSS = css`
 	margin-left: auto;
 	flex-direction: column;
 	display: flex;
 	align-items: flex-end;
 `;
-const projectDeleteButton = css`
+const projectDeleteButtonCSS = css`
 	color: #e43756;
 	font-size: 0.86rem;
 	font-weight: 600;
 	margin-top: 1rem;
 	cursor: pointer;
 `;
-const projectCreatedOn = css``;
 
-ProjectTestsList.getInitialProps = async (ctx) => {
-	const { res, req, store } = ctx;
-	try {
-		let headers;
-		if (req) {
-			headers = req.headers;
-			cleanHeaders(headers);
-		}
-
-		const cookies = getCookies(req);
-		const defaultProject = getSelectedProject(store.getState());
-
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
-		const tests = await getAllTestsInfosInProject(
-			selectedProject ? selectedProject : defaultProject,
-			headers,
-		);
-		return {
-			tests: [],
-		};
-	} catch (er) {
-		throw er;
-		await redirectToFrontendPath("/404", res);
-		return {};
-	}
-};
-
-export default WithSession(WithSidebarLayout(ProjectTestsList));
+export default withSession(withSidebarLayout(ProjectTestsList));

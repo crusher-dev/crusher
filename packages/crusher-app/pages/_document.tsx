@@ -1,19 +1,20 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, {
+	Html,
+	Head,
+	Main,
+	NextScript,
+	DocumentContext,
+} from "next/document";
 import { GTMTag, GTMNoScriptTag } from "../src/utils/scriptUtils";
-import { getThemeFromCookie } from "@utils/styleUtils";
 import React from "react";
 
 export default class MyDocument extends Document {
-	static async getInitialProps(ctx) {
-		const { query } = ctx;
-		const theme = getThemeFromCookie(ctx);
+	static async getInitialProps(ctx: DocumentContext) {
 		const initialProps = await Document.getInitialProps(ctx);
-		return { ...initialProps, theme };
+		return { ...initialProps };
 	}
 
 	render() {
-		// @ts-ignore
-		const { theme } = this.props;
 		return (
 			<Html>
 				<Head>

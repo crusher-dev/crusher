@@ -1,0 +1,28 @@
+name: Deploy Crusher app
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 12.19.1
+     
+      - name: Install yarn
+        run: npm install -g yarn
+      
+      - name: Install yarn dependencies
+        run: yarn install
+      
+      - name: Package crusher-app for deployment
+        run: sh scripts/vercel-package.sh

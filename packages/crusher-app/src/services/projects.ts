@@ -77,11 +77,18 @@ export const deleteHostFromProject = async (hostId, headers = null) => {
 	});
 };
 
-export const deleteProjectFromBackend = async (projectId: number) => {
+export const _deleteProjectFromBackend = async (
+	projectId: number,
+	headers = null,
+) => {
 	return backendRequest(`/projects/delete/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
-	}).then((res) => {
+	}).then((res: any) => {
+		if (!res) {
+			return false;
+		}
+
 		const { status } = res;
 		return status === "DELETED";
 	});

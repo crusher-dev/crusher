@@ -1,4 +1,4 @@
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import { css } from "@emotion/core";
 import { cleanHeaders } from "@utils/backendRequest";
 import { getCookies } from "@utils/cookies";
@@ -20,7 +20,8 @@ import CodeGenerator from "@code-generator/src/index";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
 
-import WithSessionInfo from "@hoc/withSessionInfo";
+import withSession from "@hoc/withSession";
+import { USER_NOT_REGISTERED } from "@utils/constants";
 
 function checkDraftStatusAgainAndAgain(
 	id: string,
@@ -186,7 +187,7 @@ function Test(props: any) {
 
 	const handleRunTest = useCallback(
 		function () {
-			const code = new CodeGenerator({}).generate(actions);
+			const code = new CodeGenerator().generate(actions);
 
 			createAndRunDraftTest(
 				testInfo.name ? testInfo.name : "",
@@ -407,4 +408,4 @@ Test.getInitialProps = async (ctx: any) => {
 	}
 };
 
-export default WithSessionInfo(WithSidebarLayout(Test));
+export default withSession(withSidebarLayout(Test), USER_NOT_REGISTERED);

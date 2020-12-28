@@ -13,7 +13,6 @@ export const decodeToken = (token) => {
 		const decoded = jwt.verify(token, SECRET);
 		return decoded;
 	} catch (error) {
-		console.error(error);
 		return false;
 	}
 };

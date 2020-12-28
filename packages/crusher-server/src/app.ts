@@ -90,7 +90,6 @@ useExpressServer(expressApp, {
 			return false;
 		}
 	},
-
 	currentUserChecker: async (action: Action) => {
 		if (action.request.headers.method === "OPTIONS") {
 			action.response.status(200);
@@ -104,7 +103,6 @@ useExpressServer(expressApp, {
 			return false;
 		}
 	},
-
 	defaultErrorHandler: true,
 });
 

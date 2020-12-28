@@ -4,24 +4,33 @@ import {
 	SUPPORTED_THEME,
 } from "@constants/style";
 import { setCookie } from "nookies";
-import { getCookies } from "@utils/cookies";
+import { iMetaInfoNextReq } from "@utils/cookies";
+import { NextPageContext } from "next";
 
-export const getThemeFromCookie = (ctx = null) => {
-	const { req, query } = ctx;
-	if (query.theme) return query.theme;
-	const cookies = getCookies(req);
-	const current_theme = SUPPORTED_THEME.includes(cookies.theme)
-		? cookies.theme
-		: DEFAULT_THEME;
+function getThemeFromString(themeName: string) {
+	return SUPPORTED_THEME.includes(themeName) ? themeName : DEFAULT_THEME;
+}
 
-	if (ctx) {
-		setCookie(ctx, "theme", current_theme, {
+export const getThemeFromCookieOrReq = (
+	ctx: NextPageContext,
+	meta: iMetaInfoNextReq,
+) => {
+	const { cookies } = meta;
+
+	let theme = null;
+
+	if (ctx.query.theme) {
+		theme = getThemeFromString(ctx.query.theme as string);
+
+		setCookie(ctx, "theme", theme, {
 			maxAge: 30 * 24 * 60 * 60,
 			path: "/",
 		});
+	} else {
+		theme = getThemeFromString(cookies.theme);
 	}
 
-	return current_theme;
+	return theme;
 };
 
 export const getStyleFromObject = (styleObject, theme) => {

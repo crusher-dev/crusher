@@ -1,6 +1,6 @@
 import { css } from "@emotion/core";
-import { WithSidebarLayout } from "@hoc/withSidebarLayout";
-import WithSession from "@hoc/withSession";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
+import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
 import { getAllTestsInfosInProject } from "@services/test";
@@ -325,4 +325,4 @@ ProjectTestsList.getInitialProps = async (ctx) => {
 	}
 };
 
-export default WithSession(WithSidebarLayout(ProjectTestsList));
+export default withSession(withSidebarLayout(ProjectTestsList));

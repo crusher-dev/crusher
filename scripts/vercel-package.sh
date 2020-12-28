@@ -54,7 +54,6 @@ packageNextBuild () {
   cp "$CRUSHER_APP/next.config.js" "$OUTPUT/crusher-app/next.config.js"
   cp "$CRUSHER_APP/next-env.d.ts" "$OUTPUT/crusher-app/next-env.d.ts"
   cp "$CRUSHER_APP/package.json" "$OUTPUT/crusher-app/package.json"
-  cp -R "$CRUSHER_APP/.vercel" "$OUTPUT/crusher-app/.vercel"
 }
 
 overridePackageJSON () {

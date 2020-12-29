@@ -120,3 +120,4 @@ dist
 **/.DS_STORE
 logs/
 output/
+ecosystem.config.js

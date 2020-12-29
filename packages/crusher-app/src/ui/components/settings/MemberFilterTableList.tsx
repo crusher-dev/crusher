@@ -113,7 +113,6 @@ const containerCSS = css`
 
 const tableCSS = css`
 	width: 100%;
-
 	border-width: 1px;
 	border-color: #ececec;
 	border-style: solid;

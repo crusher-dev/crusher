@@ -67,7 +67,7 @@ export default class EventRecording {
 		this.handleEventsGridClick = this.handleEventsGridClick.bind(this);
 		this.takePageScreenShot = this.takePageScreenShot.bind(this);
 		this.handleDocumentClick = this.handleDocumentClick.bind(this);
-		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.eventsController = new EventsController(this);
 		this.toggleEventsBox = this.toggleEventsBox.bind(this);
 		this.pollInterval = this.pollInterval.bind(this);
@@ -328,7 +328,7 @@ export default class EventRecording {
 			mousemove: this.handleMouseMove.bind(this),
 			mouseover: this.handleMouseMove.bind(this),
 			mouseout: this.handleMouseOut.bind(this),
-			input: this.handleInputChange.bind(this),
+			input: this.handleKeyPress.bind(this),
 			click: this.handleDocumentClick.bind(this),
 			contextmenu: this.onLeftClick.bind(this),
 		};
@@ -516,12 +516,13 @@ export default class EventRecording {
 		}
 	}
 
-	handleInputChange(event: any) {
+	handleKeyPress(event: any) {
 		const targetElement = event.target;
+		const keyCode = event.code || event.key;
 		this.eventsController.saveCapturedEventInBackground(
-			ACTIONS_IN_TEST.INPUT,
-			event.target,
-			targetElement.value,
+			ACTIONS_IN_TEST.ADD_INPUT,
+			targetElement,
+			event.keyCode,
 		);
 	}
 
@@ -540,7 +541,7 @@ export default class EventRecording {
 			};
 		})(window.open);
 
-		document.body.addEventListener("input", this.handleInputChange, true);
+		document.body.addEventListener("keypress", this.handleKeyPress, true);
 		document.addEventListener("click", this.handleDocumentClick, true);
 		setInterval(this.pollInterval, 300);
 	}

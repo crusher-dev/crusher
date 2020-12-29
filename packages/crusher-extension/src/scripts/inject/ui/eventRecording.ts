@@ -338,6 +338,9 @@ export default class EventRecording {
 				eventExceptions,
 			);
 		}
+
+		this.removeHighLightFromNode(event.target as HTMLElement);
+		this.updateEventTarget(event.target as HTMLElement, event);
 	}
 
 	handleMouseMove(event: MouseEvent) {
@@ -518,7 +521,7 @@ export default class EventRecording {
 
 	handleKeyPress(event: any) {
 		const targetElement = event.target;
-		const keyCode = event.code || event.key;
+
 		this.eventsController.saveCapturedEventInBackground(
 			ACTIONS_IN_TEST.ADD_INPUT,
 			targetElement,

@@ -615,11 +615,22 @@ function App() {
 
 				if (!(navigateEventExist && eventType === ACTIONS_IN_TEST.NAVIGATE_URL)) {
 					if (
-						lastStep.event_type === ACTIONS_IN_TEST.INPUT &&
-						eventType === ACTIONS_IN_TEST.INPUT &&
+						eventType === ACTIONS_IN_TEST.ADD_INPUT &&
+						(lastStep.event_type !== ACTIONS_IN_TEST.ADD_INPUT ||
+							(lastStep.event_type === ACTIONS_IN_TEST.ADD_INPUT &&
+								lastStep.selectors[0].value !== selectors[0].value))
+					) {
+						setSteps([
+							...getSteps(),
+							{ event_type: eventType, value: [value], selectors },
+						]);
+						setLastStepTime(Date.now());
+					} else if (
+						lastStep.event_type === ACTIONS_IN_TEST.ADD_INPUT &&
+						eventType === ACTIONS_IN_TEST.ADD_INPUT &&
 						lastStep.selectors[0].value === selectors[0].value
 					) {
-						steps[steps.length - 1].value = value;
+						steps[steps.length - 1].value = [...steps[steps.length - 1].value, value];
 						setSteps(steps);
 						setLastStepTime(Date.now());
 					} else if (

@@ -25,6 +25,15 @@ function logStep(type, data, meta){
 	}
 }\n`;
 
+const typeFunction = `async function type(elHandle, keyCodesStr) {
+	const keyCodes = JSON.parse(keyCodesStr);
+	
+	for(let i = 0; i < keyCodes.length; i++){
+		await elHandle.press(keyCodes[i]);
+	}
+	return true;
+}\n`
+
 
 const scrollToFunction = `\n`;
 
@@ -179,6 +188,8 @@ export default class CodeGenerator {
 	addHelperFunctionsIfAny(isRecordingVideo = false, isLiveProgress = false) {
 		const helperFunctions = Object.keys(this.helperFunctionsToInclude);
 		let codeToAdd = '';
+		codeToAdd += typeFunction;
+
 		for (let fun of helperFunctions) {
 			if (fun === ACTIONS_IN_TEST.EXTRACT_INFO) {
 				codeToAdd += extractInfoUsingScriptFunction;
@@ -293,6 +304,7 @@ export default class CodeGenerator {
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
+					code += `await page.waitForLoadState();\n`;
 					break;
 				case ACTIONS_IN_TEST.HOVER:
 					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
@@ -348,17 +360,18 @@ export default class CodeGenerator {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
-				case ACTIONS_IN_TEST.INPUT:
+				case ACTIONS_IN_TEST.ADD_INPUT:
 					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
 
-					code += `await page.type(selector_${i}, '${value}', {delay: ${
-						isRecordingVideo ? 'TYPE_DELAY' : 25
-					}});\n`;
+					code += `const stv_${i} = await page.$(selector_${i});\nawait stv_${i}.scrollIntoViewIfNeeded();\n`;
+
+					code += `await type(stv_${i}, '${JSON.stringify(value)}');\n`;
+
 					if (isLiveProgress) {
-						code += `await logStep('${ACTIONS_IN_TEST.INPUT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.INPUT]({
+						code += `await logStep('${ACTIONS_IN_TEST.ADD_INPUT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.ADD_INPUT]({
 							selector: selectors[0].value,
 							value,
-						})}'}, {selector: selector_${i}, value: '${value}'});\n`;
+						})}'}, {selector: selector_${i}, value: '${value.toString()}'});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;

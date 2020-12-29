@@ -75,7 +75,6 @@ export default class MyDocument extends Document {
 
 						border-radius: 4px;
 					}
-
 					.form-row .StripeElement--focus {
 						box-shadow: 0 1px 3px 0 #cfd7df;
 					}
@@ -92,6 +91,11 @@ export default class MyDocument extends Document {
 						font-size: 1rem;
 						color: #ff3838;
 						font-weight: 500;
+					}
+					ul {
+						padding: 0;
+						list-style-type: none;
+						margin: 0;
 					}
 				`}</style>
 			</Html>

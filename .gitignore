@@ -6,6 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# PM2 config
+ecosystem.config.js
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -120,4 +123,3 @@ dist
 **/.DS_STORE
 logs/
 output/
-ecosystem.config.js

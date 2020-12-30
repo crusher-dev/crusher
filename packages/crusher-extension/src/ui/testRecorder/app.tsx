@@ -14,7 +14,7 @@ import {
 } from "../../constants";
 import { META_ACTIONS, SETTINGS_ACTIONS } from "../../constants/actionTypes";
 import { ACTIONS_IN_TEST } from "../../../../crusher-shared/constants/recordedActions";
-import { sendPostDataWithForm } from "../../utils/helpers";
+import { submitPostDataWithForm } from "../../utils/helpers";
 import { AssertModal } from "./containers/modal/assertModal";
 import { SeoModal } from "./containers/modal/seoModal";
 import {
@@ -717,7 +717,7 @@ function App() {
 	};
 
 	function saveTest() {
-		sendPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
+		submitPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
 			events: escape(JSON.stringify(steps)),
 			totalTime: lastStepTime - startingTime,
 		});

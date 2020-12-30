@@ -1,4 +1,6 @@
-export function loadScript(name: string, tabId: any, cb?: any) {
+import { DOM } from "./dom";
+
+export function executeScript(name: string, tabId: number, cb?: any) {
 	return new Promise((resolve, reject) => {
 		if (process.env.NODE_ENV === "production") {
 			chrome.tabs.executeScript(
@@ -28,7 +30,7 @@ export function loadScript(name: string, tabId: any, cb?: any) {
 	});
 }
 
-export function sendPostDataWithForm(url: string, options: any = {}) {
+export function submitPostDataWithForm(url: string, options: any = {}) {
 	const form = document.createElement("form");
 	form.method = "post";
 	form.action = url;
@@ -48,8 +50,13 @@ export function sendPostDataWithForm(url: string, options: any = {}) {
 	form.remove();
 }
 
-export function getAllAttributes(element: any) {
+export function getAllAttributes(element: HTMLElement) {
+	if (!DOM.isElement(element)) {
+		throw new Error("Invalid element provided.");
+	}
+
 	const attributeNamesArr: Array<string> = element.getAttributeNames();
+
 	return [
 		...attributeNamesArr.map((attributeName) => {
 			return {

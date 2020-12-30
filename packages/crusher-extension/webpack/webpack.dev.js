@@ -10,13 +10,14 @@ fsSystem.mkdirp = mkdirp.bind(mkdirp);
 const customPath = path.join(__dirname, "./customPublicPath");
 const host = "localhost";
 const port = 2400;
+
 module.exports = {
 	mode: "development", // The plugin is activated only if mode is set to development
 	watch: true,
 	externals: ["fs", "request", "yamlparser"],
 	entry: {
 		background: [customPath, path.resolve(__dirname, "../src/background.ts")],
-		popup: [customPath, path.resolve(__dirname, "../src/ui/popup/index.tsx")],
+		popup: [customPath, path.resolve(__dirname, "../src/ui/popup.tsx")],
 		record_test: [
 			customPath,
 			path.resolve(__dirname, "../src/ui/testRecorder/index.tsx"),

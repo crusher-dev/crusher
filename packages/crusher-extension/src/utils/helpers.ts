@@ -50,7 +50,14 @@ export function submitPostDataWithForm(url: string, options: any = {}) {
 	form.remove();
 }
 
-export function getAllAttributes(element: HTMLElement) {
+interface iElementAttributeInfo {
+	name: string;
+	value: any;
+}
+
+export function getAllAttributes(
+	element: HTMLElement,
+): Array<iElementAttributeInfo> {
 	if (!DOM.isElement(element)) {
 		throw new Error("Invalid element provided.");
 	}

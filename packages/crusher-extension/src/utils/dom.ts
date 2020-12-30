@@ -1,4 +1,8 @@
 export class DOM {
+	static isElement(element: any) {
+		return element instanceof Element || element instanceof HTMLDocument;
+	}
+
 	static removeAllTargetBlankFromLinks() {
 		const { links } = document;
 		let i;

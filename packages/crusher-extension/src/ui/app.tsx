@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { render } from "react-dom";
 import { SidebarStepsBox } from "./containers/app/sidebarStepsBox";
 import { BrowserWindow } from "./containers/app/browserWindow";

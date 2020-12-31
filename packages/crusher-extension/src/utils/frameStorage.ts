@@ -1,20 +1,29 @@
-const frames: any = {};
+import WebNavigationParentedCallbackDetails = chrome.webNavigation.WebNavigationParentedCallbackDetails;
 
-export default class FrameStorage {
+interface iFrames {
+	[frameId: string]: WebNavigationParentedCallbackDetails;
+}
+
+const frames: iFrames = {};
+
+export class FrameStorage {
 	static makeFrameId(tabId: number, frameId: any): string {
 		return `${tabId}-${frameId}`;
 	}
 
-	static set(details: any) {
+	static set(details: WebNavigationParentedCallbackDetails) {
 		frames[this.makeFrameId(details.tabId, details.frameId)] = details;
 	}
 
-	static get(tabId: number, frameId: any) {
+	static get(
+		tabId: number,
+		frameId: any,
+	): WebNavigationParentedCallbackDetails | null {
 		return frames[this.makeFrameId(tabId, frameId)];
 	}
 
-	static has(tabId: number, frameId: any) {
+	static has(tabId: number, frameId: any): boolean {
 		const id = this.makeFrameId(tabId, frameId);
-		return frames.hasOwnProperty(id) && frames[id] !== null;
+		return frames[id] && frames[id] !== null;
 	}
 }

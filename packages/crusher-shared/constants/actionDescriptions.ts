@@ -26,7 +26,7 @@ const ACTION_DESCRIPTIONS = {
 	[ACTIONS_IN_TEST.SCROLL_TO_VIEW]: (meta: ActionMeta) => {
 		return `Scroll until this is in view, ${meta.selector}`;
 	},
-	[ACTIONS_IN_TEST.INPUT]: (meta: ActionMeta) => {
+	[ACTIONS_IN_TEST.ADD_INPUT]: (meta: ActionMeta) => {
 		return `Type ${meta.value} in ${meta.selector}`;
 	},
 	[ACTIONS_IN_TEST.EXTRACT_INFO]: (meta: ActionMeta) => {
@@ -37,7 +37,7 @@ const ACTION_DESCRIPTIONS = {
 	},
 	[ACTIONS_IN_TEST.VALIDATE_SEO]: (meta: ActionMeta) => {
 		return `Validating SEO info`;
-	},
+	}
 };
 
 export { ACTION_DESCRIPTIONS };

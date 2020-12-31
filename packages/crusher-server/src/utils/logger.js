@@ -28,6 +28,7 @@ function showMeta(meta) {
 		}
 	}
 }
+
 module.exports = {
 	Logger: {
 		info: function (tag, message, meta = null) {

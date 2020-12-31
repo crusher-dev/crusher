@@ -1,14 +1,18 @@
 import { css } from "@emotion/core";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "@redux/stateUtils/user";
 
 export default function Onboarding() {
+    const userInfo = useSelector(getUserInfo);
+    console.log(userInfo);
 	return (
-		<div>
+		<div css={containerCSS}>
 			<p css={deployFastCSS}>
-				<span style={{ color: "#FF4090" }}>Deploy fast</span> with Crusher
+				<span css={{ color: "#FF4090" }}>Deploy fast</span> with Crusher
 			</p>
 
 			<p
-				style={{
+				css={{
 					color: "#2B2B39",
 					fontFamily: "Gilroy",
 					fontSize: "1.75rem",
@@ -21,25 +25,6 @@ export default function Onboarding() {
 			>
 				Get familiar with Crusher
 			</p>
-			{/* <ol>
-				<p css={stepsCSS}>
-					<li>Watch the intro video</li>
-				</p>
-				<p css={stepsCSS}>
-					<li>Create 2 steps</li>
-				</p>
-				<p css={stepsCSS}>
-					<li>Review reports</li>
-				</p>
-				<p css={stepsCSS}>
-					{" "}
-					<li>Integrate</li>
-				</p>
-				<p css={stepsCSS}>
-					{" "}
-					<li>Invite team members</li>
-				</p>
-			</ol> */}
 			<div css={stepsCSS}>
 				<span css={spanCSS}>
 					{returnWhiteTickMark()}
@@ -148,6 +133,13 @@ function returnGreenTickMark() {
 		</svg>
 	);
 }
+
+const containerCSS = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+`;
 
 const deployFastCSS = css`
 	font-size: 1.25rem;

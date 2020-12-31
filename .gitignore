@@ -123,3 +123,6 @@ dist
 **/.DS_STORE
 logs/
 output/
+
+# firebase config
+./packages/crusher-shared/config/fire-config.js

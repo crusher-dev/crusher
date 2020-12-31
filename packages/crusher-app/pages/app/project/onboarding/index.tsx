@@ -3,59 +3,91 @@ import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { useEffect, useState } from "react";
 import fire from "../../../../../crusher-shared/config/fire-config";
-import user from "@redux/reducers/user";
 
 function Onboarding() {
-	const [userInfo, setUserInfo] = useState({});
+	// const userInfo = useSelector(getUserInfo);
+	// const [userInformation, setUserInformation] = useState({});
 
-    useEffect(() => {
-        setUserInfo(useSelector(getUserInfo));
-    }, [])
+	// interface iUserInformation {
+	//     userID: number;
+	//     steps: {
+	//         watchIntroVideo: boolean,
+	//         create2tests: boolean,
+	//         reviewReports: boolean,
+	//         integrate: boolean,
+	//         inviteMembers: boolean
+	//     }
+	// }
 
-	const steps = {
-		watchIntroVideo: false,
-		create2tests: false,
-		reviewReports: false,
-		integrate: false,
-		inviteMembers: false,
-    };
+	// useEffect(() => {
+	// 	fire
+	// 		.firestore()
+	// 		.collection("onboarding")
+	// 		.doc(`${userInfo.id}`)
+	// 		.get()
+	// 		.then((res) => setUserInformation(res.data()))
+	// 		.catch((err) => console.error(err));
+	// }, []);
 
-	const handleOnClick = (e: any) => {
-		if (userInfo) {
-            let userID = userInfo.id;
-			fire
-				.firestore()
-				.collection("onboarding")
-				.add({
-                    userID,
-                    steps
-				});
-		} else {
-			alert("No User logged on!");
-			return;
-		}
-    };
+	// const handleOnClick = (e: any) => {
+	// 	const stepName = e.target.id;
+	// 	if (userInformation.steps) {
+	// 		userInformation.steps[stepName] = true;
+	// 		let objectToBeEntered = userInformation;
+	// 		let userID = userInfo.id;
+	// 		fire
+	// 			.firestore()
+	// 			.collection("onboarding")
+	// 			.doc(`${userInfo.id}`)
+	// 			.set({
+	// 				userID,
+	// 				objectToBeEntered,
+	// 			})
+	// 			.then((docRef) => console.log(docRef))
+	// 			.catch((err) => console.error(err));
+	// 		return;
+	// 	}
+	// 	if (userInfo) {
+	// 		console.log("clicked");
+	// 		let userID = userInfo.id;
+	// 		fire
+	// 			.firestore()
+	// 			.collection("onboarding")
+	// 			.doc(`${userInfo.id}`)
+	// 			.set({
+	// 				userID,
+	// 				steps,
+	// 			})
+	// 			.then((docRef) => console.log(docRef))
+	// 			.catch((err) => console.error(err));
+	// 	} else {
+	// 		alert("No User logged on!");
+	// 		return;
+	// 	}
+	// };
 
 	return (
 		<div css={containerCSS}>
-			<p css={deployFastCSS}>
-				<span css={{ color: "#FF4090" }}>Deploy fast</span> with Crusher
-			</p>
+			<div>
+				<p css={deployFastCSS}>
+					<span css={{ color: "#FF4090" }}>Deploy fast</span> with Crusher
+				</p>
 
-			<p
-				css={{
-					color: "#2B2B39",
-					fontFamily: "Gilroy",
-					fontSize: "1.75rem",
-					lineHeight: "2rem",
-					fontWeight: "bold",
-					marginLeft: "1rem",
-					marginTop: "0rem",
-					marginBottom: "2rem",
-				}}
-			>
-				Get familiar with Crusher
-			</p>
+				<p
+					css={{
+						color: "#2B2B39",
+						fontFamily: "Gilroy",
+						fontSize: "1.75rem",
+						lineHeight: "2rem",
+						fontWeight: "bold",
+						marginLeft: "1rem",
+						marginTop: "0rem",
+						marginBottom: "2rem",
+					}}
+				>
+					Let's get you started with Crusher
+				</p>
+			</div>
 			<div css={stepsCSS}>
 				<span css={spanCSS}>
 					{returnWhiteTickMark()}
@@ -173,7 +205,6 @@ function returnGreenTickMark() {
 const containerCSS = css`
 	display: flex;
 	justify-content: center;
-	align-items: center;
 	flex-direction: column;
 `;
 

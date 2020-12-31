@@ -1,10 +1,41 @@
 import { css } from "@emotion/core";
 import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
+import { useEffect, useState } from "react";
+import fire from "../../../../../crusher-shared/config/fire-config";
+import user from "@redux/reducers/user";
 
-export default function Onboarding() {
-    const userInfo = useSelector(getUserInfo);
-    console.log(userInfo);
+function Onboarding() {
+	const [userInfo, setUserInfo] = useState({});
+
+    useEffect(() => {
+        setUserInfo(useSelector(getUserInfo));
+    }, [])
+
+	const steps = {
+		watchIntroVideo: false,
+		create2tests: false,
+		reviewReports: false,
+		integrate: false,
+		inviteMembers: false,
+    };
+
+	const handleOnClick = (e: any) => {
+		if (userInfo) {
+            let userID = userInfo.id;
+			fire
+				.firestore()
+				.collection("onboarding")
+				.add({
+                    userID,
+                    steps
+				});
+		} else {
+			alert("No User logged on!");
+			return;
+		}
+    };
+
 	return (
 		<div css={containerCSS}>
 			<p css={deployFastCSS}>
@@ -63,6 +94,11 @@ export default function Onboarding() {
 		</div>
 	);
 }
+
+// Onboarding.getInitialProps = async (ctx) => {
+// 	const userInfo = useSelector(getUserInfo);
+// 	return { userInfo };
+// };
 
 function returnWhiteTickMark() {
 	return (
@@ -183,3 +219,5 @@ const checkMarkCSS = css`
 	width: 1.5rem;
 	margin-right: 1rem;
 `;
+
+export default Onboarding;

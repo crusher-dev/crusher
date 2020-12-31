@@ -17,6 +17,7 @@ import { Platform } from "../../core/interfaces/Platform";
 import { resolvePathToFrontendURI } from "../../core/utils/uri";
 import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
+import fire from "../../../../crusher-shared/config/fire-config-server.js";
 
 const RESPONSE_STATUS = {
 	INSUFFICIENT_INFORMATION: "INSUFFICIENT_INFORMATION",
@@ -139,6 +140,17 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		const { name, project_id, code, events } = await this.draftService.getDraftTest(draftId);
 
 		let res = await this.draftService.getLastDraftInstanceResult(draftId);
+
+		let numberOfRows = await this.dbManager.fetchData("select count(*) as total from tests");
+		numberOfRows = numberOfRows[0].total;
+
+		if (numberOfRows >= 2) {
+			fire.firestore()
+				.collection("onboarding")
+				.doc(`${user_id}`)
+				.set({ user_id, create2tests: true })
+				.catch((err) => console.error(err));
+		}
 
 		const video_uri = res ? res.video_uri : null;
 

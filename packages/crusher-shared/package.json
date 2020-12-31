@@ -13,6 +13,7 @@
 		"lint": "prettier --write ."
 	},
 	"dependencies": {
+		"firebase": "^8.2.1",
 		"url-parse": "^1.4.7"
 	}
 }

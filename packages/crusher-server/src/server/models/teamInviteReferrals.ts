@@ -2,7 +2,6 @@ import * as mongoose from "mongoose";
 
 const TeamInviteReferralsSchema = new mongoose.Schema(
 	{
-		code: {type: String, unique: true, required: true},
 		teamId: {type: mongoose.Schema.Types.Number, required: true},
 		expiresOn: {type: mongoose.Schema.Types.Date, required: false},
 		meta: {type: mongoose.Schema.Types.Mixed, required: false}
@@ -10,4 +9,4 @@ const TeamInviteReferralsSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-export const TeamInviteReferrals = mongoose.model("ProjectInviteReferrals", TeamInviteReferralsSchema);
+export const TeamInviteReferrals = mongoose.model("TeamInviteReferrals", TeamInviteReferralsSchema);

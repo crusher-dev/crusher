@@ -23,13 +23,12 @@ export class InviteMembersController {
 
 	@Authorized()
 	@Get("/accept/project/:inviteCode")
-	async acceptProjectInvitation(@CurrentUser({required: true}) user, @Param("projectId") projectId: number) {
+	async acceptProjectInvitation(@CurrentUser({required: true}) user) {
 		const {user_id, team_id} = user;
-		const code = createProjectInviteLinkCode(projectId, team_id);
 
 		return {
 			status: "Invitation sent",
-			code: code
+			code: ""
 		}
 	}
 

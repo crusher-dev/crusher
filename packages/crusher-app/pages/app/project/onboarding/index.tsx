@@ -82,20 +82,17 @@ export default function Onboarding() {
 function returnWhiteTickMark() {
 	return (
 		<svg
-			style={{
-				height: "2rem",
-				width: "2rem",
-			}}
-			width="{15}"
-			height="{17}"
+			css={checkMarkCSS}
+			width="15"
+			height="17"
 			viewBox="0 0 15 17"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<rect
-				x="{1}"
-				y="{1}"
-				width="{13}"
+				x="1"
+				y="1"
+				width="13"
 				height="14.0196"
 				rx="6.5"
 				fill="white"
@@ -113,18 +110,18 @@ function returnWhiteTickMark() {
 function returnGreenTickMark() {
 	return (
 		<svg
-			style={{ height: "2rem", width: "2rem" }}
-			width="{19}"
-			height="{19}"
+			css={checkMarkCSS}
+			width="19"
+			height="19"
 			viewBox="0 0 19 19"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<rect
-				x="{1}"
-				y="{1}"
-				width="{17}"
-				height="{17}"
+				x="1"
+				y="1"
+				width="17"
+				height="17"
 				rx="8.5"
 				fill="#6CFF7B"
 				stroke="#33C441"
@@ -132,7 +129,9 @@ function returnGreenTickMark() {
 			/>
 			<g clipPath="url(#clip0)">
 				<path
-					d="M8.90898 12.0023C8.83496 12.0767 8.73402 12.1183 8.62913 12.1183C8.52423 12.1183 8.42329 12.0767 8.34927 12.0023L6.1144 9.76702C5.88244 9.53506 5.88244 9.15902 6.1144 8.92745L6.39425 8.6476C6.62621 8.41564 7.00186 8.41564 7.23381 8.6476L8.62913 10.0429L12.3994 6.2726C12.6314 6.04064 13.0074 6.04064 13.239 6.2726L13.5189 6.55246C13.7508 6.78441 13.7508 7.16046 13.5189 7.39202L8.90898 12.0023Z"
+					d="M8.90898 12.0023C8.83496 12.0767 8.73402 12.1183 8.62913 12.1183C8.52423 
+                    
+                    12.1183 8.42329 12.0767 8.34927 12.0023L6.1144 9.76702C5.88244 9.53506 5.88244 9.15902 6.1144 8.92745L6.39425 8.6476C6.62621 8.41564 7.00186 8.41564 7.23381 8.6476L8.62913 10.0429L12.3994 6.2726C12.6314 6.04064 13.0074 6.04064 13.239 6.2726L13.5189 6.55246C13.7508 6.78441 13.7508 7.16046 13.5189 7.39202L8.90898 12.0023Z"
 					fill="#4ADB31"
 				/>
 			</g>
@@ -149,6 +148,7 @@ function returnGreenTickMark() {
 		</svg>
 	);
 }
+
 const deployFastCSS = css`
 	font-size: 1.25rem;
 	line-height: 2rem;
@@ -184,4 +184,10 @@ const spanCSS = css`
 
 const doneCSS = css`
 	color: #9c9c9c;
+`;
+
+const checkMarkCSS = css`
+	height: 1.5rem;
+	width: 1.5rem;
+	margin-right: 1rem;
 `;

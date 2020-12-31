@@ -14,7 +14,7 @@ import { Logger } from "../../utils/logger";
 import { Platform } from "../../core/interfaces/Platform";
 import { JobTrigger } from "../../core/interfaces/JobTrigger";
 import { TestType } from "../../core/interfaces/TestType";
-import { iAllProjectsItemResponse } from '@crusher-shared/types/response/allProjectsResponse';
+import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
 
 const RESPONSE_STATUS = {
 	PROJECT_CREATED: "PROJECT_CREATED",
@@ -63,7 +63,7 @@ export class ProjectsController {
 
 	@Authorized()
 	@Get("/getAll")
-	async getAllProjects(@CurrentUser({ required: true }) user) : Promise<Array<iAllProjectsItemResponse>> {
+	async getAllProjects(@CurrentUser({ required: true }) user): Promise<Array<iAllProjectsItemResponse>> {
 		const { user_id } = user;
 
 		return this.projectService.getAllProjectsOfUser(user_id);

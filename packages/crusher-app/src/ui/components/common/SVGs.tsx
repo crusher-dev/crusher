@@ -26,7 +26,7 @@ export const PlaySVG = () => (
 export const GithubSVG = ({ h = 96, w = 96 }) => (
 	<svg
 		id="Bold"
-		enable-background="new 0 0 32 32"
+		enableBackground="new 0 0 32 32"
 		height={h}
 		viewBox="0 0 32 32"
 		width={w}

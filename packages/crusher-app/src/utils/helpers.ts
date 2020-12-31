@@ -28,7 +28,7 @@ export function toPascalCase(str: string) {
 
 /* Converts your url into html hyperlink.  */
 export function urlify(text: string) {
-	let urlRegex = /(https?:\/\/[^\s]+)/g;
+	const urlRegex = /(https?:\/\/[^\s]+)/g;
 	return text.replace(urlRegex, function (url) {
 		return '<a href="' + url + '">' + url + "</a>";
 	});
@@ -72,9 +72,9 @@ export async function getCLICode(projectId: number, host: string) {
 }
 
 export function getTime(date: any) {
-	var seconds = Math.floor(((new Date() as any) - date) / 1000);
+	const seconds = Math.floor(((new Date() as any) - date) / 1000);
 
-	var interval = seconds / 31536000;
+	let interval = seconds / 31536000;
 
 	if (interval > 1) {
 		return Math.floor(interval) + " years ago";

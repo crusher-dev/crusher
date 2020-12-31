@@ -6,7 +6,7 @@ import {
 	START_NON_INSPECTING_RECORDING_MODE,
 	NOT_RECORDING,
 } from "../../constants";
-import { ACTION_FORM_TYPE } from "../../ui/testRecorder/app";
+import { ACTION_FORM_TYPE } from "../../constants/index";
 
 function boot() {
 	const recordingOverlay = new EventRecording({});

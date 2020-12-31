@@ -1,4 +1,9 @@
 import devices from "../../../crusher-shared/constants/devices";
+import { getQueryStringParams } from "../../../crusher-shared/utils/url";
+import { getDevice } from "./helpers";
+import { iDevice } from "../../../crusher-shared/types/extension/device";
+
+const embeddedUrlRegExp = new RegExp(/^(['"])(.*)\1$/);
 
 export class AdvancedURL {
 	static getScheme(url: string) {
@@ -13,6 +18,14 @@ export class AdvancedURL {
 		if (!results) return null;
 		if (!results[2]) return "";
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+
+	static addHttpToUrlIfNotThere(uri: string) {
+		const httpRgx = new RegExp(/^https?\:\/\/[\w\._-]+?\.[\w_-]+/i);
+		if (!uri.match(httpRgx)) {
+			return `http://${uri}`;
+		}
+		return uri;
 	}
 
 	static checkIfCrusherExtension(url: string) {
@@ -34,5 +47,27 @@ export class AdvancedURL {
 		return `${chrome.extension.getURL(
 			"test_recorder.html",
 		)}?url=${url}&device=${selectedDevice}`;
+	}
+
+	static getUrlFromCrusherExtensionUrl(extensionUrl: string): string {
+		const url = getQueryStringParams("url", extensionUrl);
+
+		if (!url || embeddedUrlRegExp.test(url)) {
+			throw new Error("No/Invalid url passed");
+		}
+
+		const embeddedUrlMatches = url.match(embeddedUrlRegExp);
+
+		return new URL(embeddedUrlMatches ? embeddedUrlMatches[2] : url).toString();
+	}
+
+	static getDeviceFromCrusherExtensionUrl(extensionUrl: string): iDevice {
+		const deviceId = getQueryStringParams("device", extensionUrl);
+		const defaultDevice = devices[8];
+		if (deviceId) {
+			const device = getDevice(deviceId);
+			return device ? device : defaultDevice;
+		}
+		return defaultDevice;
 	}
 }

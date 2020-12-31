@@ -123,3 +123,4 @@ dist
 **/.DS_STORE
 logs/
 output/
+trash/

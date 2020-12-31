@@ -1,4 +1,6 @@
 import { DOM } from "./dom";
+import devices from "../../../crusher-shared/constants/devices";
+import { iDevice } from "../../../crusher-shared/types/extension/device";
 
 export function executeScript(name: string, tabId: number, cb?: any) {
 	return new Promise((resolve, reject) => {
@@ -74,4 +76,10 @@ export function getAllAttributes(
 		{ name: "innerHTML", value: element.innerHTML },
 		{ name: "innerText", value: element.innerText },
 	];
+}
+
+export function getDevice(deviceId: string): iDevice | undefined {
+	return devices.find((device) => {
+		return device.id === deviceId;
+	});
 }

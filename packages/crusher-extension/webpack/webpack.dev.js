@@ -18,10 +18,7 @@ module.exports = {
 	entry: {
 		background: [customPath, path.resolve(__dirname, "../src/background.ts")],
 		popup: [customPath, path.resolve(__dirname, "../src/ui/popup.tsx")],
-		record_test: [
-			customPath,
-			path.resolve(__dirname, "../src/ui/testRecorder/index.tsx"),
-		],
+		record_test: [customPath, path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [
 		new webpack.DefinePlugin({

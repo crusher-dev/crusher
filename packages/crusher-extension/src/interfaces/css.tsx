@@ -8,3 +8,29 @@ export const POSITION = {
 export const TEXT_ALIGN = {
 	CENTER: "center",
 } as const;
+
+export const OVERFLOW = {
+	AUTO: "auto",
+	HIDDEN: "hidden",
+} as const;
+
+export const FLEX_DIRECTION = {
+	COLUMN: "column",
+	ROW: "row",
+} as const;
+
+export const FONT_WEIGHT = {
+	BOLD: 700,
+} as const;
+
+export const RESIZE = {
+	NONE: "none",
+} as const;
+
+export const WHITE_SPACE = {
+	NOWRAP: "nowrap",
+} as const;
+
+export const SCROLL_BEHAVIOR = {
+	SMOOTH: "smooth",
+} as const;

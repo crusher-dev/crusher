@@ -91,7 +91,9 @@ const ProjectBasicSettings = (props: any) => {
 
 	const saveBasicSettings = () => {
 		_updateProjectInfo({ name: projectName }, projectInfo.id).then(() => {
-			store.dispatch(setCurrentProjectInfo({ ...projectInfo, name: projectName }));
+			(store as any).dispatch(
+				setCurrentProjectInfo({ ...projectInfo, name: projectName }),
+			);
 		});
 	};
 

@@ -1,37 +1,38 @@
-import { isOfCrusherExtension } from '../../../crusher-shared/utils/url';
+import { isOfCrusherExtension } from "../../../crusher-shared/utils/url";
 import Tab = chrome.tabs.Tab;
 
-export default {
-	tabs: {},
+export interface iSavedTabInfo {
+	details: Tab;
+	crusherAgent: string;
+}
 
-	set(tabId: number, details: Tab, crusherAgent: string) {
-		this.tabs[tabId] = {
-			...details,
+interface iTabs {
+	[tabId: number]: iSavedTabInfo;
+}
+
+const tabs: iTabs = {};
+
+export class TabStorage {
+	static set(tabId: number, details: Tab, crusherAgent: string) {
+		tabs[tabId] = {
+			details,
 			crusherAgent,
 		};
-	},
+	}
 
-	all() {
-		return this.tabs;
-	},
+	static get(tabId: number): iSavedTabInfo {
+		return tabs[tabId];
+	}
 
-	get(tabId: number) {
-		return this.tabs[tabId];
-	},
-
-	has(tabId: number) {
-		return this.tabs.hasOwnProperty(tabId) && this.tabs[tabId] !== null;
-	},
-
-	isExtension(tabId: number) {
+	static isExtension(tabId: number): boolean {
 		const tab = this.get(tabId);
 		if (!tab) {
 			return false;
 		}
-		return isOfCrusherExtension(this.get(tabId).url);
-	},
+		return isOfCrusherExtension(this.get(tabId).details.url as string);
+	}
 
-	remove(tabId: number) {
-		this.tabs[tabId] = null;
-	},
-};
+	static remove(tabId: number) {
+		delete tabs[tabId];
+	}
+}

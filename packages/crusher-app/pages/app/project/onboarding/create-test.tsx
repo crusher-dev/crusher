@@ -35,6 +35,10 @@ function ProjectOnboardingCreateTest(props) {
 
 	useEffect(changeFeatureMessage, [featuresMessage]);
 
+	const handleVideoFinishedCallback = () => {
+		console.log("Video has finished playing");
+	};
+
 	const firstName = userInfo.name.split(" ")[0];
 	return (
 		<>
@@ -48,14 +52,12 @@ function ProjectOnboardingCreateTest(props) {
 				}}
 			>
 				<div css={styles.innerCenterContainer}>
-					<iframe
+					<video
 						css={styles.videoPlayer}
-						src="https://www.loom.com/embed/5f1392d00274403083d151c0183620cb"
-						frameBorder="0"
-						mozallowfullscreen={true}
-						mozallowfullscreen={true}
-						allowFullScreen={true}
-					></iframe>
+						src="/assets/video/onboarding.mp4"
+						onEnded={handleVideoFinishedCallback}
+						controls
+					></video>
 					<div css={styles.crusherFeatures}>
 						<span style={{ color: features[featuresMessage].color }}>
 							{features[featuresMessage].message}

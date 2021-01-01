@@ -113,9 +113,15 @@ const containerCSS = css`
 
 const tableCSS = css`
 	width: 100%;
+	border-width: 1px;
+	border-color: #ececec;
+	border-style: solid;
+	border-collapse: collapse;
 	tr {
 		border-bottom-color: #ececec;
 		border-bottom-width: 1px;
+		border-bottom-style: double;
+		border-collapse: collapse;
 	}
 	th,
 	td {
@@ -124,6 +130,7 @@ const tableCSS = css`
 		&:first-child {
 			width: 70%;
 		}
+		border-collapse: collapse;
 	}
 `;
 

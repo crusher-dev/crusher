@@ -10,6 +10,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === "production";
 module.exports = withImages(
 	withCSS(
 		withBundleAnalyzer({
+			distDir: process.env.DIST || ".next",
 			target: "serverless",
 			typescript: {
 				ignoreBuildErrors: true,
@@ -17,7 +18,7 @@ module.exports = withImages(
 			webpack: function (config, { defaultLoaders }) {
 				const resolvedBaseUrl = path.resolve(config.context, "../");
 				if (IS_PRODUCTION) {
-					config.modules.rules
+					config.module.rules
 						.filter(({ loader }) => loader === "babel-loader")
 						.map((l) => (l.options.cacheDirectory = false));
 				}

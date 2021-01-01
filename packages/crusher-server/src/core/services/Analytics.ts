@@ -1,10 +1,8 @@
-import { Service } from "typedi";
 
-// It's scope should be at request level
-// In some cases event will be async, use other identifier to track them.
-// Monitoring by team
-@Service("AnalyticsService")
-class AnalyticsService {
+/*
+	Note - Never inject this as DI on global scope. It will have shared context.
+ */
+export default class AnalyticsService {
 	private userId: string | null;
 	private teamId: string | null;
 	private projectId: string | null;

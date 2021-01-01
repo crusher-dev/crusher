@@ -5,66 +5,28 @@ import { useEffect, useState } from "react";
 import fire from "../../../../../crusher-shared/config/fire-config";
 
 function Onboarding() {
-	// const userInfo = useSelector(getUserInfo);
-	// const [userInformation, setUserInformation] = useState({});
+	const userInfo = useSelector(getUserInfo);
 
-	// interface iUserInformation {
-	//     userID: number;
-	//     steps: {
-	//         watchIntroVideo: boolean,
-	//         create2tests: boolean,
-	//         reviewReports: boolean,
-	//         integrate: boolean,
-	//         inviteMembers: boolean
-	//     }
-	// }
+	const [watchIntroVideo, setWatchIntroVideo] = useState(false);
+	const [create2tests, setCreate2tests] = useState(false);
+	const [reviewReports, setReviewReports] = useState(false);
+	const [integrate, setIntegrate] = useState(false);
+	const [inviteTeamMembers, setInviteTeamMembers] = useState(false);
 
-	// useEffect(() => {
-	// 	fire
-	// 		.firestore()
-	// 		.collection("onboarding")
-	// 		.doc(`${userInfo.id}`)
-	// 		.get()
-	// 		.then((res) => setUserInformation(res.data()))
-	// 		.catch((err) => console.error(err));
-	// }, []);
-
-	// const handleOnClick = (e: any) => {
-	// 	const stepName = e.target.id;
-	// 	if (userInformation.steps) {
-	// 		userInformation.steps[stepName] = true;
-	// 		let objectToBeEntered = userInformation;
-	// 		let userID = userInfo.id;
-	// 		fire
-	// 			.firestore()
-	// 			.collection("onboarding")
-	// 			.doc(`${userInfo.id}`)
-	// 			.set({
-	// 				userID,
-	// 				objectToBeEntered,
-	// 			})
-	// 			.then((docRef) => console.log(docRef))
-	// 			.catch((err) => console.error(err));
-	// 		return;
-	// 	}
-	// 	if (userInfo) {
-	// 		console.log("clicked");
-	// 		let userID = userInfo.id;
-	// 		fire
-	// 			.firestore()
-	// 			.collection("onboarding")
-	// 			.doc(`${userInfo.id}`)
-	// 			.set({
-	// 				userID,
-	// 				steps,
-	// 			})
-	// 			.then((docRef) => console.log(docRef))
-	// 			.catch((err) => console.error(err));
-	// 	} else {
-	// 		alert("No User logged on!");
-	// 		return;
-	// 	}
-	// };
+	useEffect(() => {
+		(async () => {
+			let userRef = await fire
+				.firestore()
+				.collection("onboarding")
+				.doc(`${userInfo.id}`);
+			let userData = await (await userRef.get()).data();
+			setWatchIntroVideo(userData.watchIntroVideo);
+			setCreate2tests(userData.create2tests);
+			setReviewReports(userData.reviewReports);
+			setIntegrate(userData.integrate);
+			setInviteTeamMembers(userData.inviteTeamMembers);
+		})();
+	}, []);
 
 	return (
 		<div css={containerCSS}>
@@ -88,37 +50,37 @@ function Onboarding() {
 					Let's get you started with Crusher
 				</p>
 			</div>
-			<div css={stepsCSS}>
+			<div css={[stepsCSS, watchIntroVideo ? doneCSS : null]}>
 				<span css={spanCSS}>
-					{returnWhiteTickMark()}
+					{watchIntroVideo ? returnGreenTickMark() : returnWhiteTickMark()}
 					1.) Watch the intro video
 				</span>
 				<span>Get 5$ credits</span>
 			</div>
-			<div css={stepsCSS}>
+			<div css={[stepsCSS, create2tests ? doneCSS : null]}>
 				<span css={spanCSS}>
-					{returnWhiteTickMark()}
-					2.) Create 2 steps
+					{create2tests ? returnGreenTickMark() : returnWhiteTickMark()}
+					2.) Create 2 tests
 				</span>
 				<span>Get 5$ credits</span>
 			</div>
-			<div css={stepsCSS}>
+			<div css={[stepsCSS, reviewReports ? doneCSS : null]}>
 				<span css={spanCSS}>
-					{returnWhiteTickMark()}
+					{reviewReports ? returnGreenTickMark() : returnWhiteTickMark()}
 					3.) Review reports
 				</span>
 				<span>Get 5$ credits</span>
 			</div>
-			<div css={stepsCSS}>
+			<div css={[stepsCSS, integrate ? doneCSS : null]}>
 				<span css={spanCSS}>
-					{returnWhiteTickMark()}
+					{integrate ? returnGreenTickMark() : returnWhiteTickMark()}
 					4.) Integrate
 				</span>
 				<span>Get 5$ credits</span>
 			</div>
-			<div css={[stepsCSS, doneCSS]}>
+			<div css={[stepsCSS, inviteTeamMembers ? doneCSS : null]}>
 				<span css={spanCSS}>
-					{returnGreenTickMark()}
+					{inviteTeamMembers ? returnGreenTickMark() : returnWhiteTickMark()}
 					5.) Invite team members
 				</span>
 				<span>Get 5$ credits</span>
@@ -126,11 +88,6 @@ function Onboarding() {
 		</div>
 	);
 }
-
-// Onboarding.getInitialProps = async (ctx) => {
-// 	const userInfo = useSelector(getUserInfo);
-// 	return { userInfo };
-// };
 
 function returnWhiteTickMark() {
 	return (

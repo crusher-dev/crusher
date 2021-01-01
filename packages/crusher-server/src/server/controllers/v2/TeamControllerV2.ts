@@ -1,11 +1,5 @@
 import { Container, Inject, Service } from "typedi";
-import {
-	Authorized,
-	CurrentUser,
-	Get,
-	JsonController,
-
-} from "routing-controllers";
+import { Authorized, CurrentUser, Get, JsonController } from "routing-controllers";
 import DBManager from "../../../core/manager/DBManager";
 import TeamService from "../../../core/services/TeamService";
 
@@ -24,8 +18,8 @@ export class TeamControllerV2 {
 
 	@Authorized()
 	@Get("/get/members")
-	async getProjectInfo(@CurrentUser({required: true}) user: any, ) {
-		const {team_id} = user;
+	async getProjectInfo(@CurrentUser({ required: true }) user: any) {
+		const { team_id } = user;
 
 		return this.teamService.getMembersInTeam(team_id);
 	}

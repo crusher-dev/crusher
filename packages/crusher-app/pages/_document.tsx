@@ -5,7 +5,7 @@ import Document, {
 	NextScript,
 	DocumentContext,
 } from "next/document";
-import { GTMTag, GTMNoScriptTag } from "../src/utils/scriptUtils";
+import { GTMTag, SegmentTag } from "../src/utils/scriptUtils";
 import React from "react";
 
 export default class MyDocument extends Document {
@@ -30,11 +30,11 @@ export default class MyDocument extends Document {
 					/>
 					<link href="/assets/css/global.css" rel="stylesheet" />
 					<script dangerouslySetInnerHTML={{ __html: GTMTag }} />
+					<script dangerouslySetInnerHTML={{__html: SegmentTag}}/>
 				</Head>
 				<body style={{ margin: 0, padding: 0 }}>
 					<Main />
 					<NextScript />
-					<GTMNoScriptTag />
 
 					<div id={"overlay"}></div>
 				</body>

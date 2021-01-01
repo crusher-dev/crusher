@@ -18,7 +18,7 @@ export function DropDown(props) {
 	} = props;
 
 	width = width ? width : "17rem";
-	let paddingTop = heightFactor ? `${heightFactor * 0.3}rem` : "0.1rem";
+	const paddingTop = heightFactor ? `${heightFactor * 0.3}rem` : "0.1rem";
 
 	const dropdownStyle = {
 		menu: (provided) => ({

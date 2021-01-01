@@ -1,8 +1,8 @@
 import { ProjectInviteReferrals } from '../../../server/models/projectInviteReferrals';
 import { TeamInviteReferrals } from '../../../server/models/teamInviteReferrals';
-import { iTeamInviteReferral } from '@crusher-shared/types/mongo/teamInviteReferral';
-import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
-import { iInviteReferral, INVITE_REFERRAL_TYPES } from '@crusher-shared/types/inviteReferral';
+import { iTeamInviteReferral } from '../../../../../crusher-shared/types/mongo/teamInviteReferral';
+import { iProjectInviteReferral } from '../../../../../crusher-shared/types/mongo/projectInviteReferral';
+import { iInviteReferral, INVITE_REFERRAL_TYPES } from '../../../../../crusher-shared/types/inviteReferral';
 
 export class InviteMembersService {
 	createProjectInviteCode(projectId: number, teamId: number, expiresOn: Date | null = null, emails: Array<String> | null = null, meta: any = {}): Promise<string> {

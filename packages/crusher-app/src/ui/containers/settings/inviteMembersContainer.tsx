@@ -204,6 +204,10 @@ const inviteExternalMembersContainerCSS = css`
 const inviteBirdImageContainerCSS = css`
 	width: ${88 / PIXEL_REM_RATIO}rem;
 	height: ${88 / PIXEL_REM_RATIO}rem;
+	img {
+		width: 100%;
+		height: 100%;
+	}
 `;
 
 const externalCardContentCSS = css`

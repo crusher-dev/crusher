@@ -1,9 +1,11 @@
-import { Inject, Service } from "typedi";
+import { Inject, Service } from 'typedi';
 import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post } from 'routing-controllers';
 import UserService from '../../../core/services/UserService';
 import { InviteMembersService } from '../../../core/services/mongo/inviteMembers';
-import { iInviteProjectMembersRequest } from '@crusher-shared/types/request/inviteProjectMemebersRequest';
-import { iInviteTeamMembersRequest } from '@crusher-shared/types/request/inviteTeamMembersRequest';
+import { iInviteProjectMembersRequest } from '../../../../../crusher-shared/types/request/inviteProjectMemebersRequest';
+import { iInviteTeamMembersRequest } from '../../../../../crusher-shared/types/request/inviteTeamMembersRequest';
+import { EmailManager } from '../../../core/manager/EmailManager';
+import { INVITE_REFERRAL_TYPES } from '../../../../../crusher-shared/types/inviteReferral';
 
 @Service()
 @JsonController("/v2/invite")
@@ -18,7 +20,13 @@ export class InviteMembersController {
 	async inviteProjectMembers(@CurrentUser({required: true}) user, @Param("projectId") projectId: number, @Body() body: iInviteProjectMembersRequest) {
 		const {emails} = body;
 		const {user_id, team_id} = user;
+		const userRecord = await this.userService.getUserInfo(user);
 		const code = await this.inviteMembersService.createProjectInviteCode(projectId, team_id, null, emails);
+		const userName = userRecord.first_name + " " + userRecord.last_name;
+
+		if(emails && emails.length) {
+			await EmailManager.sendInvitations(emails, {code: code, type: INVITE_REFERRAL_TYPES.PROJECT}, {orgName: `${userName}'s Workspace`, adminName: userName});
+		}
 
 		return {
 			status: "Invitation sent",
@@ -31,7 +39,15 @@ export class InviteMembersController {
 	async inviteTeamMembers(@CurrentUser({required: true}) user, @Body() body: iInviteTeamMembersRequest) {
 		const { team_id } = user;
 		const {emails} = body;
+		const userRecord = await this.userService.getUserInfo(user);
+		const userName = userRecord.first_name + " " + userRecord.last_name;
+
+
 		const code = await this.inviteMembersService.createTeamInviteCode( team_id, null, emails);
+
+		if(emails && emails.length) {
+			await EmailManager.sendInvitations(emails, {code: code, type: INVITE_REFERRAL_TYPES.TEAM}, {orgName: `${userName}'s Workspace`, adminName: userName});
+		}
 
 		return {
 			status: "Invitation sent",

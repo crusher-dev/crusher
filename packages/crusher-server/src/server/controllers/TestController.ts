@@ -141,14 +141,43 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 
 		let res = await this.draftService.getLastDraftInstanceResult(draftId);
 
-		let numberOfRows = await this.dbManager.fetchData("select count(*) as total from tests");
+		// getting data from firestore
+		let docsInFirestore;
+		let totalNumberOfTests = 1;
+		try {
+			docsInFirestore = await fire.firestore().collection("onboarding").doc(`${user_id}`).get();
+			docsInFirestore = docsInFirestore.data();
+			totalNumberOfTests = docsInFirestore.totalTests;
+		} catch (err) {
+			console.error(err);
+		}
+
+		console.log(docsInFirestore);
+
+		let numberOfRows = await this.testService.findNumberOfTests(user_id);
 		numberOfRows = numberOfRows[0].total;
+
+		totalNumberOfTests = Math.max(numberOfRows, totalNumberOfTests);
+
+		if (docsInFirestore && docsInFirestore.create2tests) {
+			fire.firestore()
+				.collection("onboarding")
+				.doc(`${user_id}`)
+				.set({ totalNumberOfTests })
+				.catch((err) => console.error(err));
+		}
 
 		if (numberOfRows >= 2) {
 			fire.firestore()
 				.collection("onboarding")
 				.doc(`${user_id}`)
-				.set({ user_id, create2tests: true })
+				.set({ user_id, create2tests: true, totalNumberOfTests })
+				.catch((err) => console.error(err));
+		} else {
+			fire.firestore()
+				.collection("onboarding")
+				.doc(`${user_id}`)
+				.set({ user_id, totalNumberOfTests, create2: false })
 				.catch((err) => console.error(err));
 		}
 

@@ -1,24 +1,23 @@
 import { backendRequest } from "@utils/backendRequest";
-import { USER_NOT_REGISTERED } from "@utils/constants";
 import { RequestMethod } from "@interfaces/RequestOptions";
-import { User } from "crusher-server/crusher-server/src/core/interfaces/db/User";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
+import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
 
-export const _authenticateUser = (email, password) => {
+export const _authenticateUser = (email: string, password: string) => {
 	return backendRequest("/user/login", {
 		method: RequestMethod.POST,
 		payload: { email, password },
 	});
 };
 
-export const _createTeam = (teamName) => {
+export const _createTeam = (teamName: string) => {
 	return backendRequest("/user/createTeam", {
 		method: RequestMethod.POST,
 		payload: { teamName },
 	});
 };
 
-export const _createTeamBackend = (teamName, headers) => {
+export const _createTeamBackend = (teamName: string, headers: any = null) => {
 	return backendRequest("/user/createTeam", {
 		method: RequestMethod.POST,
 		headers: headers,
@@ -26,10 +25,22 @@ export const _createTeamBackend = (teamName, headers) => {
 	});
 };
 
-export const _registerUser = (firstName, lastName, email, password) => {
+export const _registerUser = (
+	firstName: string,
+	lastName: string,
+	email: string,
+	password: string,
+	inviteReferral: iInviteReferral | null = null,
+) => {
 	return backendRequest("/user/signup", {
 		method: RequestMethod.POST,
-		payload: { firstName, lastName, email, password },
+		payload: {
+			firstName,
+			lastName,
+			email,
+			password,
+			inviteReferral,
+		},
 	});
 };
 
@@ -40,7 +51,7 @@ export const _addUserMeta = (data: Array<any>) => {
 	});
 };
 
-export const _verifyUser = (code, headers) => {
+export const _verifyUser = (code: string, headers: any) => {
 	return backendRequest("/user/verify", {
 		method: RequestMethod.POST,
 		headers: headers,
@@ -66,7 +77,7 @@ export const _fetchUserStatus = (headers = null) => {
 export const _fetchUserInfo = (headers = null): Promise<iUserInfoResponse> => {
 	return backendRequest("/user/info", {
 		headers: headers,
-	}).then((res: User) => {
+	}).then((res: iUserInfoResponse) => {
 		return {
 			...res,
 		};

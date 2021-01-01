@@ -33,6 +33,7 @@ import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../.
 import { Logger } from "../../utils/logger";
 import { generateId } from "../../core/utils/helper";
 import { iUserInfoResponse } from '@crusher-shared/types/response/userInfoResponse';
+import { iSignupUserRequest } from '@crusher-shared/types/request/signupUserRequest';
 
 const { google } = require("googleapis");
 
@@ -57,14 +58,15 @@ export class UserController {
 	 * Creates new user entry. And sends a link to DB.
 	 */
 	@Post("/signup")
-	async createUser(@Body() userInfo: any, @Res() res) {
-		const { firstName, lastName, email, password } = userInfo;
+	async createUser(@Body() userInfo: iSignupUserRequest, @Res() res) {
+		const { firstName, lastName, email, password, inviteReferral } = userInfo;
+
 		const { status, userId, token } = await this.userService.registerUser({
 			firstName,
 			lastName,
 			email,
-			password,
-		});
+			password
+		}, inviteReferral);
 
 		if (token) {
 			setUserAuthorizationCookies(token, res);

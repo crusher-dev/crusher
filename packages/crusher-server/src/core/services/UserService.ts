@@ -26,6 +26,8 @@ import UserProjectRoleV2Service from './v2/UserProjectRoleV2Service';
 import UserTeamRoleV2Service from './v2/UserTeamRoleV2Service';
 import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
 import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectRole';
+import { iInviteReferral, INVITE_REFERRAL_TYPES } from '@crusher-shared/types/inviteReferral';
+import { InviteMembersService } from './mongo/inviteMembers';
 
 @Service()
 export default class UserService {
@@ -34,6 +36,8 @@ export default class UserService {
 	private teamService: TeamService;
 	private userProjectRoleV2Service: UserProjectRoleV2Service;
 	private userTeamRoleV2Service: UserTeamRoleV2Service;
+	private inviteMembersService: InviteMembersService;
+
 	@Inject()
 	private stripeManager: StripeManager;
 
@@ -43,6 +47,7 @@ export default class UserService {
 		this.teamService = Container.get(TeamService);
 		this.userProjectRoleV2Service = Container.get(UserProjectRoleV2Service);
 		this.userTeamRoleV2Service = Container.get(UserTeamRoleV2Service);
+		this.inviteMembersService = Container.get(InviteMembersService);
 	}
 
 	async authenticateWithEmailAndPassword(details: AuthenticationByCredentials) {
@@ -71,7 +76,7 @@ export default class UserService {
 		return { status: ERROR_OCCURED_IN_AUTHENTICATION };
 	}
 
-	async registerUser(userData: RegisterUserRequest): Promise<any> {
+	async registerUser(userData: RegisterUserRequest, inviteReferral: iInviteReferral | null = null): Promise<any> {
 		const { email, firstName, lastName, password } = userData;
 
 		const _user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
@@ -80,8 +85,10 @@ export default class UserService {
 			return { status: USER_NOT_REGISTERED };
 		}
 
+		const referralObject =  await this.inviteMembersService.parseInviteReferral(inviteReferral);
+
 		if (!_user) {
-			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email);
+			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email, referralObject ? referralObject.teamId : null);
 			if(registeredUser){
 				await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
 				await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
@@ -92,7 +99,7 @@ export default class UserService {
 		return { status: USER_ALREADY_REGISTERED };
 	}
 
-	private async createdUserProfile(password: string, firstName: string, lastName: string, email: string) {
+	private async createdUserProfile(password: string, firstName: string, lastName: string, email: string, referralTeamId: number = null, referralProjectId: number = null) {
 		let encryptedPassword = encryptPassword(password);
 
 		const insertedUser = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
@@ -106,19 +113,18 @@ export default class UserService {
 			const stripeName = `${firstName} ${lastName}`;
 			const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
 			const teamName = `${firstName}'s team`;
-			const team = await this.teamService.createTeam({
+			const teamId = referralTeamId ? referralTeamId :  (await this.teamService.createTeam({
 				teamName,
 				userId: insertedUser.insertId,
 				stripeCustomerId,
-			});
-			const projectName = `${firstName}'s project`;
-			const project = await this.projectService.createDefaultProject(team.teamId, projectName);
+			})).teamId;
+			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,
-				teamId: team.teamId,
-				projectId: project.insertId,
-				token: generateToken(insertedUser.insertId, team && team.teamId ? team.teamId : null),
+				teamId: teamId,
+				projectId: projectId,
+				token: generateToken(insertedUser.insertId, teamId),
 			};
 		}
 	}

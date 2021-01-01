@@ -1,6 +1,6 @@
 import { Component } from "react";
 import React from "react";
-import { loadScript } from "../../utils/helpers";
+import { executeScript } from "../../utils/helpers";
 import devices from "../../../../crusher-shared/constants/devices";
 
 class App extends Component<any, any> {
@@ -16,7 +16,7 @@ class App extends Component<any, any> {
 	async injectRecorder() {
 		const { tabId } = this.props;
 
-		await loadScript("inject", tabId);
+		await executeScript("inject", tabId);
 		window.close();
 	}
 

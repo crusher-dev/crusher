@@ -1,5 +1,4 @@
 import { css } from "@emotion/core";
-// import Image from "next/image";
 import notFoundSatellite from "../public/assets/img/illustration/not_found_satellite.png";
 
 export default function error404() {
@@ -22,7 +21,6 @@ export default function error404() {
 	);
 }
 
-// CSS Styles
 const satelliteImageCSS = css`
 	width: 13.5rem;
 	height: 13.5rem;

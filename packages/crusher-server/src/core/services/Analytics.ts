@@ -1,4 +1,5 @@
-
+import Analytics = require('analytics-node');
+const analytics = new Analytics('YmhV4TwBMwQ07rQdQPZVNnZLYmS4uNIf');
 /*
 	Note - Never inject this as DI on global scope. It will have shared context.
  */
@@ -8,7 +9,7 @@ export default class AnalyticsService {
 	private projectId: string | null;
 
 	constructor(userId: string | null, teamId: string | null, projectId: string | null) {
-		if (!userId) console.warn("Tracking user with anonymous identity. Make sure to call addUser when user Sign in.");
+		if (!userId) console.warn("Tracking user with anonymous identity. Make sure to call addUser when user sign in.");
 		this.userId = userId;
 		this.teamId = teamId;
 		this.projectId = projectId;

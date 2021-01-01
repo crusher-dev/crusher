@@ -4,6 +4,7 @@ import withSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
 import { useState, useEffect } from "react";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
+import fire from "../../../../../crusher-shared/config/fire-config";
 
 const features = [
 	{ message: "😃 Ship Faster", color: "#FF5A8C" },
@@ -21,6 +22,7 @@ const features = [
 function ProjectOnboardingCreateTest(props) {
 	const { userInfo, userStatus } = props;
 	const [featuresMessage, setFeaturesMessage] = useState(0);
+	const [needsToBeSet, setNeedsToBeSet] = useState(true);
 
 	const changeFeatureMessage = () => {
 		const interval = setInterval(() => {
@@ -33,10 +35,47 @@ function ProjectOnboardingCreateTest(props) {
 		};
 	};
 
+	useEffect(() => {
+		async () => {
+			let userRef;
+			try {
+				userRef = await fire
+					.firestore()
+					.collection("onboarding")
+					.doc(`${userInfo.id}`);
+				let userData = await (await userRef.get()).data();
+				if (userData.watchIntroVideo) {
+					setNeedsToBeSet(false);
+				}
+			} catch (err) {
+				fire
+					.firestore()
+					.collection("onboarding")
+					.doc(`${userInfo.id}`)
+					.set({
+						watchIntroVideo: false,
+						create2tests: false,
+						reviewReports: false,
+						integrate: false,
+						inviteTeamMembers: false,
+					});
+				console.error(err);
+			}
+		};
+	}, []);
+
 	useEffect(changeFeatureMessage, [featuresMessage]);
 
-	const handleVideoFinishedCallback = () => {
-		console.log("Video has finished playing");
+	const handleVideoFinishedCallback = async () => {
+		if (needsToBeSet) {
+			let userRef = await fire
+				.firestore()
+				.collection("onboarding")
+				.doc(`${userInfo.id}`);
+			userRef
+				.update({ watchIntroVideo: true })
+				.catch((err) => console.error(error));
+		}
 	};
 
 	const firstName = userInfo.name.split(" ")[0];

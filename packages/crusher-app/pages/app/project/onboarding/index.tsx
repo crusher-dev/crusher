@@ -15,16 +15,31 @@ function Onboarding() {
 
 	useEffect(() => {
 		(async () => {
-			let userRef = await fire
-				.firestore()
-				.collection("onboarding")
-				.doc(`${userInfo.id}`);
-			let userData = await (await userRef.get()).data();
-			setWatchIntroVideo(userData.watchIntroVideo);
-			setCreate2tests(userData.create2tests);
-			setReviewReports(userData.reviewReports);
-			setIntegrate(userData.integrate);
-			setInviteTeamMembers(userData.inviteTeamMembers);
+			try {
+				let userRef = await fire
+					.firestore()
+					.collection("onboarding")
+					.doc(`${userInfo.id}`);
+				let userData = await (await userRef.get()).data();
+				setWatchIntroVideo(userData.watchIntroVideo || false);
+				setCreate2tests(userData.create2tests || false);
+				setReviewReports(userData.reviewReports || false);
+				setIntegrate(userData.integrate || false);
+				setInviteTeamMembers(userData.inviteTeamMembers || false);
+			} catch (err) {
+				fire
+					.firestore()
+					.collection("onboarding")
+					.doc(`${userInfo.id}`)
+					.set({
+						watchIntroVideo: false,
+						create2tests: false,
+						reviewReports: false,
+						integrate: false,
+						inviteTeamMembers: false,
+					});
+				console.error(err);
+			}
 		})();
 	}, []);
 

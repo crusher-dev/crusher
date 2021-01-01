@@ -147,7 +147,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		try {
 			docsInFirestore = await fire.firestore().collection("onboarding").doc(`${user_id}`).get();
 			docsInFirestore = docsInFirestore.data();
-			totalNumberOfTests = docsInFirestore.totalTests;
+			totalNumberOfTests = docsInFirestore.totalTests || 1;
 		} catch (err) {
 			console.error(err);
 		}
@@ -163,7 +163,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			fire.firestore()
 				.collection("onboarding")
 				.doc(`${user_id}`)
-				.set({ totalNumberOfTests })
+				.update({ totalNumberOfTests })
 				.catch((err) => console.error(err));
 		}
 
@@ -171,13 +171,13 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			fire.firestore()
 				.collection("onboarding")
 				.doc(`${user_id}`)
-				.set({ user_id, create2tests: true, totalNumberOfTests })
+				.update({ user_id, create2tests: true, totalNumberOfTests })
 				.catch((err) => console.error(err));
 		} else {
 			fire.firestore()
 				.collection("onboarding")
 				.doc(`${user_id}`)
-				.set({ user_id, totalNumberOfTests, create2tests: false, watchIntroVideo: false, reviewReports: false, integrate: false, inviteTeamMembers: false })
+				.update({ user_id, totalNumberOfTests, create2tests: false })
 				.catch((err) => console.error(err));
 		}
 

@@ -125,7 +125,7 @@ const CheckoutForm = () => {
 			</div>
 
 			<div className="form-row">
-				<label for="card-element">Credit or debit card</label>
+				<label htmlFor="card-element">Credit or debit card</label>
 				<CardElement
 					id="card-element"
 					options={CARD_ELEMENT_OPTIONS}

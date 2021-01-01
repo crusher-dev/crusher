@@ -109,7 +109,7 @@ export class DraftController {
 							function (err, logsArray) {
 								const logs = logsArray
 									? logsArray.map((log) => {
-										return log.toObject();
+											return log.toObject();
 									  })
 									: null;
 								if (err) {

@@ -1,5 +1,5 @@
-import { Container, Inject, Service } from 'typedi';
-import DBManager from '../manager/DBManager';
+import { Container, Inject, Service } from "typedi";
+import DBManager from "../manager/DBManager";
 import {
 	EMAIL_NOT_VERIFIED,
 	ERROR_OCCURED_IN_AUTHENTICATION,
@@ -10,22 +10,22 @@ import {
 	USER_NOT_REGISTERED,
 	USER_REGISTERED,
 	VERIFICATION_MAIL_SENT,
-} from '../../constants';
-import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from '../utils/auth';
-import { EmailManager } from '../manager/EmailManager';
-import { AuthenticationByCredentials } from '../interfaces/services/user/AuthenticationByCredentials';
-import { User } from '../../../../crusher-shared/types/db/user';
-import { RegisterUserRequest } from '../interfaces/services/user/RegisterUserRequest';
-import { UserProviderConnection } from '../interfaces/db/UserProviderConnection';
-import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';
-import { Logger } from '../../utils/logger';
-import ProjectService from './ProjectService';
-import TeamService from './TeamService';
-import StripeManager from '../manager/StripeManager';
-import UserProjectRoleV2Service from './v2/UserProjectRoleV2Service';
-import UserTeamRoleV2Service from './v2/UserTeamRoleV2Service';
-import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
-import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectRole';
+} from "../../constants";
+import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from "../utils/auth";
+import { EmailManager } from "../manager/EmailManager";
+import { AuthenticationByCredentials } from "../interfaces/services/user/AuthenticationByCredentials";
+import { User } from "../../../../crusher-shared/types/db/user";
+import { RegisterUserRequest } from "../interfaces/services/user/RegisterUserRequest";
+import { UserProviderConnection } from "../interfaces/db/UserProviderConnection";
+import { GithubAppInstallation } from "../interfaces/db/GithubAppInstallation";
+import { Logger } from "../../utils/logger";
+import ProjectService from "./ProjectService";
+import TeamService from "./TeamService";
+import StripeManager from "../manager/StripeManager";
+import UserProjectRoleV2Service from "./v2/UserProjectRoleV2Service";
+import UserTeamRoleV2Service from "./v2/UserTeamRoleV2Service";
+import { TEAM_ROLE_TYPES } from "../../../../crusher-shared/types/db/teamRole";
+import { PROJECT_ROLE_TYPES } from "../../../../crusher-shared/types/db/projectRole";
 
 @Service()
 export default class UserService {
@@ -82,7 +82,7 @@ export default class UserService {
 
 		if (!_user) {
 			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email);
-			if(registeredUser){
+			if (registeredUser) {
 				await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
 				await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
 			} else {

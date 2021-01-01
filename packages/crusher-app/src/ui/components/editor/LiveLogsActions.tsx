@@ -78,7 +78,7 @@ function LiveLogsActions(props: LiveLogsActionsProps) {
 	const { actions, logs } = props;
 	const logsWithStatus = getLogsWithStatus(actions, logs);
 	const divRef = React.createRef();
-	let lastDone = React.createRef();
+	const lastDone = React.createRef();
 	const out = logsWithStatus.map((action, index) => {
 		const out = (
 			<LogActionCard

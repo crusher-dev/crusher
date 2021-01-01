@@ -27,6 +27,10 @@ export default class TestService {
 		});
 	}
 
+	async findNumberOfTests(userID: number) {
+		return this.dbManager.fetchData("SELECT COUNT(*) AS total FROM tests where user_id = ?", [userID]);
+	}
+
 	async findMembersOfProject(projectId: number) {
 		return this.dbManager.fetchData(
 			"SELECT users.* FROM projects, users, teams WHERE projects.id = ? AND projects.team_id = teams.id AND users.team_id = teams.id",

@@ -177,7 +177,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			fire.firestore()
 				.collection("onboarding")
 				.doc(`${user_id}`)
-				.set({ user_id, totalNumberOfTests, create2: false })
+				.set({ user_id, totalNumberOfTests, create2tests: false, watchIntroVideo: false, reviewReports: false, integrate: false, inviteTeamMembers: false })
 				.catch((err) => console.error(err));
 		}
 

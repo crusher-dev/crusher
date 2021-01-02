@@ -31,8 +31,8 @@ export class InviteMembersController {
 
 		return {
 			status: "Invitation sent",
-			code: code
-		}
+			code: code,
+		};
 	}
 
 	@Authorized()
@@ -52,8 +52,8 @@ export class InviteMembersController {
 
 		return {
 			status: "Invitation sent",
-			code: code
-		}
+			code: code,
+		};
 	}
 
 	@Get("/accept/project/:inviteCode")
@@ -75,4 +75,5 @@ export class InviteMembersController {
 			teamId: inviteReferral
 		}
 	}
+
 }

@@ -259,13 +259,13 @@ export class UserController {
 	@Authorized()
 	@OnNull(500)
 	@Get("/info")
-	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res) : Promise<iUserInfoResponse> {
+	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res): Promise<iUserInfoResponse> {
 		const { user_id } = user;
 		const info = await this.userService.getUserInfo(user_id);
-		if(info){
+		if (info) {
 			const userMeta = await this.userService.getUserMetaInfo(String(user_id));
 
-			return {...info, name: info.first_name + " " + info.last_name, user_meta: userMeta}
+			return { ...info, name: info.first_name + " " + info.last_name, user_meta: userMeta };
 		}
 		return null;
 	}

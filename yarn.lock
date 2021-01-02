@@ -2967,6 +2967,14 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@segment/loosely-validate-event@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@segment/loosely-validate-event/-/loosely-validate-event-2.0.0.tgz#87dfc979e5b4e7b82c5f1d8b722dfd5d77644681"
+  integrity sha512-ZMCSfztDBqwotkl848ODgVcAmN4OItEWDCkshcKz0/W6gGSQayuuCtWV/MlodFivAZD793d6UgANd6wCXUfrIw==
+  dependencies:
+    component-type "^1.2.1"
+    join-component "^1.1.0"
+
 "@sendgrid/client@^7.4.0":
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/@sendgrid/client/-/client-7.4.0.tgz#07c26936f88ade43fb845ce00b37d882999c0a04"
@@ -4324,6 +4332,20 @@ amqplib@0.5.2:
     readable-stream "1.x >=1.1.9"
     safe-buffer "^5.0.1"
 
+analytics-node@^3.4.0-beta.3:
+  version "3.4.0-beta.3"
+  resolved "https://registry.yarnpkg.com/analytics-node/-/analytics-node-3.4.0-beta.3.tgz#5eb0694598cff493c64faf5efc1225533a253f13"
+  integrity sha512-NIdpxiwlZ4cKgs9MDlDe89b5bg/pMq2W7XTA+cjzCM66IwW3ujZhVE49vk+zG6Yrxk0s/DXmennJ+cCQIsTKMA==
+  dependencies:
+    "@segment/loosely-validate-event" "^2.0.0"
+    axios "^0.19.2"
+    axios-retry "^3.0.2"
+    lodash.isstring "^4.0.1"
+    md5 "^2.2.1"
+    ms "^2.0.0"
+    remove-trailing-slash "^0.1.0"
+    uuid "^3.2.1"
+
 anser@1.4.9:
   version "1.4.9"
   resolved "https://registry.yarnpkg.com/anser/-/anser-1.4.9.tgz#1f85423a5dcf8da4631a341665ff675b96845760"
@@ -4841,6 +4863,13 @@ aws4@^1.8.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
+
+axios-retry@^3.0.2:
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/axios-retry/-/axios-retry-3.1.9.tgz#6c30fc9aeb4519aebaec758b90ef56fa03fe72e8"
+  integrity sha512-NFCoNIHq8lYkJa6ku4m+V1837TP6lCa7n79Iuf8/AqATAHYB0ISaAS1eyIenDOfHOLtym34W65Sjke2xjg2fsA==
+  dependencies:
+    is-retry-allowed "^1.1.0"
 
 axios@^0.19.0, axios@^0.19.2:
   version "0.19.2"
@@ -6320,6 +6349,11 @@ component-emitter@^1.2.0, component-emitter@^1.2.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.3.0.tgz#16e4070fba8ae29b679f2215853ee181ab2eabc0"
   integrity sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==
+
+component-type@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/component-type/-/component-type-1.2.1.tgz#8a47901700238e4fc32269771230226f24b415a9"
+  integrity sha1-ikeQFwAjjk/DIml3EjAibyS0Fak=
 
 compose-function@3.0.3:
   version "3.0.3"
@@ -11117,7 +11151,7 @@ is-retina@^1.0.3:
   resolved "https://registry.yarnpkg.com/is-retina/-/is-retina-1.0.3.tgz#d7401b286bea2ae37f62477588de504d0b8647e3"
   integrity sha1-10AbKGvqKuN/Ykd1iN5QTQuGR+M=
 
-is-retry-allowed@^1.0.0:
+is-retry-allowed@^1.0.0, is-retry-allowed@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/is-retry-allowed/-/is-retry-allowed-1.2.0.tgz#d778488bd0a4666a3be8a1482b9f2baafedea8b4"
   integrity sha512-RUbUeKwvm3XG2VYamhJL1xFktgjvPzL0Hq8C+6yrWIswDy3BIXGqCxhxkc30N9jqK311gVU137K8Ei55/zVJRg==
@@ -11635,6 +11669,11 @@ jmespath@0.15.0:
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
+
+join-component@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/join-component/-/join-component-1.1.0.tgz#b8417b750661a392bee2c2537c68b2a9d4977cd5"
+  integrity sha1-uEF7dQZho5K+4sJTfGiyqdSXfNU=
 
 jpeg-js@^0.4.2:
   version "0.4.2"
@@ -16583,6 +16622,11 @@ remove-trailing-separator@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
   integrity sha1-wkvOKig62tW8P1jg1IJJuSN52O8=
+
+remove-trailing-slash@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/remove-trailing-slash/-/remove-trailing-slash-0.1.1.tgz#be2285a59f39c74d1bce4f825950061915e3780d"
+  integrity sha512-o4S4Qh6L2jpnCy83ysZDau+VORNvnFw07CKSAymkd6ICNVEPisMyzlc00KlvvicsxKck94SEwhDnMNdICzO+tA==
 
 repeat-element@^1.1.2:
   version "1.1.3"

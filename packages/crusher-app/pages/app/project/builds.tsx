@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { css } from "@emotion/core";
 import withSession from "@hoc/withSession";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
@@ -8,11 +8,11 @@ import { getCookies } from "@utils/cookies";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { getAllJobsOfProject } from "@services/job";
 import { redirectToFrontendPath } from "@utils/router";
-import { JobStatus } from "@interfaces/JobStatus";
-import { JobConclusion } from "@interfaces/JobConclusion";
 import Link from "next/link";
 import { getTime } from "@utils/helpers";
 import { JobReportStatus } from "@interfaces/JobReportStatus";
+import {PAGE_TYPE} from "@constants/page";
+import {ANALYTICS} from "@services/analytics";
 
 const AVAILABLE_FILTERS = [
 	{ title: "Monitoring", value: 1 },
@@ -61,7 +61,7 @@ function RenderStatusImage(props: any) {
 	);
 }
 
-function Build(props: any) {
+function BuildItem(props: any) {
 	const {
 		jobId,
 		reportId,
@@ -78,6 +78,8 @@ function Build(props: any) {
 	} = props;
 
 	const testInstanceReviewLink = `/app/job/review?jobId=${jobId}&reportId=${reportId}`;
+
+
 
 	return (
 		<Link href={testInstanceReviewLink as any}>
@@ -156,14 +158,14 @@ function Build(props: any) {
 	);
 }
 
-function RenderBuilds(props: any) {
+function buildList(props: any) {
 	const { items: builds } = props;
 	const { jobs } = builds;
 	console.log(jobs);
 	const out = jobs
 		? jobs.map((job: any) => {
 				return (
-					<Build
+					<BuildItem
 						reportId={job.reportId}
 						jobId={job.id}
 						createdAt={job.created_at}
@@ -192,8 +194,12 @@ function resolveCategoryUrl(category: number) {
 	return `?category=${category}`;
 }
 
-const JobBuilds = (props: any) => {
+const BuildPage = (props: any) => {
 	const { builds, category, page } = props;
+	useEffect(() => {
+		ANALYTICS.trackPage(PAGE_TYPE.BUILD_PAGE)
+	}, []);
+
 	return (
 		<div css={containerCSS}>
 			<div css={headingCSS}>Previous Builds</div>
@@ -208,14 +214,14 @@ const JobBuilds = (props: any) => {
 					items={builds}
 					itemsPerPage={10}
 					selectedCategory={category}
-					itemsListComponent={RenderBuilds}
+					itemsListComponent={buildList}
 				/>
 			</div>
 		</div>
 	);
 };
 
-JobBuilds.getInitialProps = async (ctx: any) => {
+BuildPage.getInitialProps = async (ctx: any) => {
 	const { res, req, store, query } = ctx;
 	try {
 		let headers;
@@ -423,4 +429,4 @@ const styles = {
 		font-style: italic;
 	`,
 };
-export default withSession(withSidebarLayout(JobBuilds));
+export default withSession(withSidebarLayout(BuildPage));

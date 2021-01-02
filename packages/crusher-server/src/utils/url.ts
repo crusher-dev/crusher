@@ -35,15 +35,17 @@ export function extractHostname(url) {
 	return hostname.split(".").slice(-2).join(".");
 }
 
-export function createTeamInviteLinkCode(teamId: number){
+export function createProjectInviteLinkCode(projectId: number, teamId: number) {
+	return `${projectId}_${teamId}`;
+}
+export function createTeamInviteLinkCode(teamId: number) {
 	return teamId;
-};
+}
 
-
-export function decryptProjectInviteLinkCode(code: string){
+export function decryptProjectInviteLinkCode(code: string) {
 	const projectTeamArr = code.split("|");
 	return projectTeamArr;
 }
-export function decryptTeamInviteLinkCode(code: string){
+export function decryptTeamInviteLinkCode(code: string) {
 	return code;
 }

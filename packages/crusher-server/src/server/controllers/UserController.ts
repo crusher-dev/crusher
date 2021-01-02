@@ -58,29 +58,6 @@ export class UserController {
 	private inviteMembersService: InviteMembersService;
 
 	/**
-	 * Creates new user entry. And sends a link to DB.
-	 */
-	@Post("/signup")
-	async createUser(@Body() userInfo: iSignupUserRequest, @Res() res) {
-		const { firstName, lastName, email, password, inviteReferral } = userInfo;
-
-		const { status, userId, token } = await this.userService.registerUser({
-			firstName,
-			lastName,
-			email,
-			password
-		}, inviteReferral);
-
-
-		if (token) {
-			setUserAuthorizationCookies(token, res);
-
-			EmailManager.sendVerificationMail(email, generateVerificationCode(userId, email));
-			return { status };
-		}
-		return { status };
-	}
-	/**
 	 * Tries to login user
 	 *  | If successful, generate jwt and store it in session
 	 * 	| Else
@@ -101,78 +78,6 @@ export class UserController {
 			return { status };
 		}
 		return { status };
-	}
-
-	/**
-	 * Endpoint to redirect to login with google.
-	 * @param code
-	 * @param res
-	 */
-	@Get("/authenticate/google/callback")
-	async googleCallback(@QueryParam("code") code: string, @QueryParams() queries, @Res() res) {
-		const {inviteType, inviteCode} = queries;
-		const { tokens } = await oauth2Client.getToken(code);
-		const accessToken = tokens.access_token;
-		this.googleAPIService.setAccessToken(accessToken);
-		const profileInfo = await this.googleAPIService.getProfileInfo();
-		const { email, family_name, given_name } = profileInfo as any;
-		const referralObject =  await this.inviteMembersService.parseInviteReferral(inviteType && inviteCode ? {type: inviteType, code: inviteCode} : null);
-
-		const userInfo = await this.userService.authenticateWithGoogleProfile({
-			email,
-			firstName: given_name,
-			lastName: family_name,
-			password: Date.now() + generateId(10)
-		}, referralObject ? referralObject.teamId: null, referralObject ? (referralObject as iProjectInviteReferral).projectId : null);
-
-		if (userInfo.token) {
-			setUserAuthorizationCookies(userInfo.token, res);
-
-			if (userInfo.status === SIGNED_UP_WITHOUT_JOINING_TEAM || userInfo.status === NO_TEAM_JOINED) {
-				res.redirect(
-					appendParamsToURI(resolvePathToFrontendURI("/app/dashboard"), {
-						status: userInfo.status,
-					}),
-				);
-			} else {
-				res.redirect(
-					appendParamsToURI(resolvePathToFrontendURI("/app/dashboard"), {
-						status: userInfo.status,
-					}),
-				);
-			}
-		} else {
-			res.redirect(
-				appendParamsToURI(resolvePathToFrontendURI("/"), {
-					status: userInfo.status,
-				}),
-			);
-		}
-	}
-
-	/**
-	 * Redirect user to new url
-	 */
-	@Get("/authenticate/google")
-	authenticateWithGoogle(@Res() res: any, @QueryParams() params) {
-		const {inviteCode, inviteType} = params;
-		const callbackURL = new URL(resolvePathToBackendURI("/user/authenticate/google/callback"));
-		if(inviteType) {
-			callbackURL.searchParams.append("inviteType", inviteType);
-		}
-		if(inviteCode) {
-			callbackURL.searchParams.append("inviteCode", inviteCode);
-		}
-		const oauth2Client = new google.auth.OAuth2(
-			process.env.GOOGLE_CLIENT_ID,
-			process.env.GOOGLE_CLIENT_SECRET,
-			callbackURL.toString(),
-		);
-
-		const scopes = ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"];
-
-		const url = oauth2Client.generateAuthUrl({ scope: scopes });
-		res.redirect(url);
 	}
 
 	@Get("/getStatus")

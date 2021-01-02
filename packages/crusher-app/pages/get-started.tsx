@@ -11,10 +11,7 @@ import { css } from "@emotion/core";
 import { BackSVG, GoogleIcon } from "@ui/components/common/SVGs";
 import Link from "next/link";
 import { COLORS, ThemeContext } from "@constants/style";
-import {
-	iInviteReferral,
-	INVITE_REFERRAL_TYPES,
-} from "@crusher-shared/types/inviteReferral";
+import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
@@ -26,7 +23,7 @@ interface iSignupScreenProps {
 }
 
 function getRegisterGoogleUrl(inviteReferral: iInviteReferral | null) {
-	const url = new URL(resolvePathToBackendURI("/user/authenticate/google"));
+	const url = new URL(resolvePathToBackendURI("/v2/user/authenticate/google"));
 
 	if (inviteReferral) {
 		url.searchParams.append("inviteType", inviteReferral.type);

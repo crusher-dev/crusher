@@ -17,6 +17,7 @@ import { Response } from 'express';
 import {  setUserCookie } from '../../../utils/cookies';
 import { extractHostname } from '../../../utils/url';
 import { iUser } from '../../../../../crusher-shared/types/db/iUser';
+import { project } from 'gcp-metadata';
 
 const USER_DOMAIN = extractHostname(process.env.FRONTEND_URL);
 
@@ -38,6 +39,10 @@ export class UserV2Service{
 		this.userTeamRoleService = Container.get(UserTeamRoleV2Service);
 		this.userProjectRoleService = Container.get(UserProjectRoleV2Service);
 		this.stripeManager = Container.get(StripeManager);
+	}
+
+	async getUserByEmail(email: string): Promise<iUser | null>{
+		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
 	}
 
 	async updateTeam(userId: number, teamId: number){
@@ -64,13 +69,16 @@ export class UserV2Service{
 		return userRecord.insertId;
 	}
 
-	async createInitialUserWorkspace(userId: number, user: iSignupUserRequest): Promise<{ teamId: number }>{
+	async createInitialUserWorkspace(userId: number, user: iSignupUserRequest): Promise<{ teamId: number, projectId: number }>{
 		const stripeCustomerId = await this.stripeManager.createCustomer(`${user.firstName} ${user.lastName}`, user.email);
 
 		const teamId = await this.teamService.createTeam(userId, `${user.firstName}'s Team`, user.email, TierPlan.FREE, stripeCustomerId);
-		await this.projectService.createProject(`Default`, teamId);
+		await this.updateTeam(userId, teamId);
+		await this.userTeamRoleService.create(userId, teamId, TEAM_ROLE_TYPES.ADMIN);
+		const projectId = await this.projectService.createProject(`Default`, teamId);
+		await this.userProjectRoleService.create(userId, projectId, PROJECT_ROLE_TYPES.ADMIN);
 
-		return { teamId };
+		return { teamId, projectId };
 	}
 
 	async useReferral(userId: number, referral: iInviteReferral) : Promise<{ teamId: number }>{
@@ -98,5 +106,9 @@ export class UserV2Service{
 		setUserCookie({ key: "isLoggedIn", value: true }, { domain: USER_DOMAIN }, res);
 
 		return token;
+	}
+
+	async authenticateWithGoogleProfile(){
+		return true;
 	}
 }

@@ -9,7 +9,7 @@ import { Draft } from "../../core/interfaces/db/Draft";
 import { addTestRequestToQueue } from "../../core/utils/queue";
 import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
-import { User } from "../../../../crusher-shared/types/db/user";
+import { iUser } from "@crusher-shared/types/db/iUser";
 import DraftInstanceService from "../../core/services/DraftInstanceService";
 import { InstanceStatus } from "../../core/interfaces/InstanceStatus";
 import DraftInstanceResultsService from "../../core/services/DraftInstanceResultsService";
@@ -77,7 +77,7 @@ export class DraftController {
 
 	@Authorized()
 	@Post("/getLastInstanceStatus/:draftId")
-	async getStatus(@CurrentUser({ required: true }) user: User, @Param("draftId") draftId: number, @Body() body, @Res() res) {
+	async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body, @Res() res) {
 		const { logsAfter } = body;
 		let count = 0;
 		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);
@@ -109,7 +109,7 @@ export class DraftController {
 							function (err, logsArray) {
 								const logs = logsArray
 									? logsArray.map((log) => {
-											return log.toObject();
+										return log.toObject();
 									  })
 									: null;
 								if (err) {

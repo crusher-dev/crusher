@@ -1,5 +1,5 @@
 import { fetch } from "../utils/fetch";
-import { User } from "../../../../crusher-shared/types/db/user";
+import { iUser } from "@crusher-shared/types/db/iUser";
 import { resolvePathToFrontendURI } from "../utils/uri";
 import { JobBuild } from "../interfaces/db/JobBuild";
 
@@ -11,7 +11,7 @@ const JOB_STATUS_ICONS = {
 export default class AlertingManager {
 	constructor() {}
 
-	public static sendSlackMessage(webhook_url: string, jobRecord: JobBuild, user: User, countRecords: any, failedTestsList: any, status) {
+	public static sendSlackMessage(webhook_url: string, jobRecord: JobBuild, user: iUser, countRecords: any, failedTestsList: any, status) {
 		function renderFailedTestIfThere() {
 			const out = failedTestsList.map((test) => {
 				return {

@@ -34,12 +34,12 @@ export default class TestInstanceV2Service {
 						updated_at: current.updated_at,
 						images: current.screenshot_id
 							? [
-									{
-										id: current.screenshot_id,
-										url: current.screenshot_url,
-										name: current.screenshot_name,
-										created_at: current.screenshot_created_at,
-									},
+								{
+									id: current.screenshot_id,
+									url: current.screenshot_url,
+									name: current.screenshot_name,
+									created_at: current.screenshot_created_at,
+								},
 							  ]
 							: [],
 					},
@@ -52,13 +52,13 @@ export default class TestInstanceV2Service {
 					...prev[current.id],
 					images: current.screenshot_id
 						? [
-								...prev[current.id].images,
-								{
-									id: current.screenshot_id,
-									url: current.screenshot_url,
-									name: current.screenshot_name,
-									created_at: current.screenshot_created_at,
-								},
+							...prev[current.id].images,
+							{
+								id: current.screenshot_id,
+								url: current.screenshot_url,
+								name: current.screenshot_name,
+								created_at: current.screenshot_created_at,
+							},
 						  ]
 						: prev[current.id].images,
 				},

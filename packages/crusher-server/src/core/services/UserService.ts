@@ -14,7 +14,7 @@ import {
 import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from '../utils/auth';
 import { EmailManager } from '../manager/EmailManager';
 import { AuthenticationByCredentials } from '../interfaces/services/user/AuthenticationByCredentials';
-import { User } from '../../../../crusher-shared/types/db/user';
+import { iUser } from '@crusher-shared/types/db/iUser';
 import { RegisterUserRequest } from '../interfaces/services/user/RegisterUserRequest';
 import { UserProviderConnection } from '../interfaces/db/UserProviderConnection';
 import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';
@@ -26,7 +26,7 @@ import UserProjectRoleV2Service from './v2/UserProjectRoleV2Service';
 import UserTeamRoleV2Service from './v2/UserTeamRoleV2Service';
 import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
 import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectRole';
-import { iInviteReferral, INVITE_REFERRAL_TYPES } from '@crusher-shared/types/inviteReferral';
+import { iInviteReferral } from '@crusher-shared/types/inviteReferral';
 import { InviteMembersService } from './mongo/inviteMembers';
 import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
 
@@ -55,7 +55,7 @@ export default class UserService {
 		const { email, password } = details;
 
 		let encryptedPassword = encryptPassword(password);
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptedPassword]);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptedPassword]);
 
 		if (!user) {
 			return { status: USER_NOT_REGISTERED };
@@ -80,7 +80,7 @@ export default class UserService {
 	async registerUser(userData: RegisterUserRequest, inviteReferral: iInviteReferral | null = null): Promise<any> {
 		const { email, firstName, lastName, password } = userData;
 
-		const _user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
+		const _user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
 
 		if (!firstName || !email || !password) {
 			return { status: USER_NOT_REGISTERED };
@@ -133,7 +133,7 @@ export default class UserService {
 
 	async authenticateWithGoogleProfile(profileInfo: RegisterUserRequest, referralTeamId: number = null, referralProjectId: number = null) {
 		const { email, firstName, lastName, password } = profileInfo;
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email='${email}'`);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email='${email}'`);
 		if (!user) {
 			// User not registered
 			const inserted_user = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
@@ -183,7 +183,7 @@ export default class UserService {
 	}
 
 	async resendVerification(userId: string) {
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
 		if (!user) {
 			return { status: USER_NOT_REGISTERED };
 		} else {
@@ -204,7 +204,7 @@ export default class UserService {
 	}
 
 	async getStatus(userId: string, res: any) {
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
 		if (!user) {
 			clearAuthCookies(res);
 			return { status: USER_NOT_REGISTERED };
@@ -221,11 +221,11 @@ export default class UserService {
 		}
 	}
 
-	async getUserMetaInfo(userId: string): Promise<User> {
+	async getUserMetaInfo(userId: string): Promise<iUser> {
 		return this.dbManager.fetchData("SELECT `key` as key_name , value FROM user_meta WHERE user_id = ?", [userId]);
 	}
 
-	async getUserInfo(userId: string): Promise<User> {
+	async getUserInfo(userId: string): Promise<iUser> {
 		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id = ?`, [userId]);
 	}
 

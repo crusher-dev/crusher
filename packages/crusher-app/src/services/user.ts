@@ -2,6 +2,7 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
+import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
 
 export const _authenticateUser = (email: string, password: string) => {
 	return backendRequest("/user/login", {
@@ -32,7 +33,7 @@ export const _registerUser = (
 	password: string,
 	inviteReferral: iInviteReferral | null = null,
 ) => {
-	return backendRequest("/user/signup", {
+	return backendRequest("/v2/user/signup", {
 		method: RequestMethod.POST,
 		payload: {
 			firstName,
@@ -40,7 +41,7 @@ export const _registerUser = (
 			email,
 			password,
 			inviteReferral,
-		},
+		} as iSignupUserRequest,
 	});
 };
 

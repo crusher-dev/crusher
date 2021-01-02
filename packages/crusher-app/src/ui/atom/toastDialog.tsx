@@ -1,38 +1,30 @@
 import React, { useState } from "react";
 import { css } from "@emotion/core";
 import { emitter } from "@utils/mitt";
+import { TOAST_TYPE, iToastInfo } from "@interfaces/toast";
 
-export function DialogBox() {
-	const [message, setMessage] = useState(null);
-	const [type, setType] = useState(null);
+export function ToastDialog() {
+	const [message, setMessage] = useState(null as string | null);
+	const [type, setType] = useState(null as TOAST_TYPE | null);
 
-	emitter.on("error", function (message) {
+	emitter.on("TOAST", function (info: any) {
+		const { type, message } = info as iToastInfo;
 		setMessage(message);
-		setType("error");
+		setType(type);
+
 		setTimeout(() => setMessage(null), 3000);
 	});
 
-	emitter.on("normal", function (message) {
-		setMessage(message);
-		setType("normal");
-		setTimeout(() => setMessage(null), 3000);
-	});
+	const isError = type === TOAST_TYPE.ERROR;
+	const isSuccess = type === TOAST_TYPE.SUCCESS;
+	const isInfo = type === TOAST_TYPE.INFO;
 
-	emitter.on("success", function (message) {
-		setMessage(message);
-		setType("success");
-		setTimeout(() => setMessage(null), 3000);
-	});
-
-	const isError = type === "error";
-	const isSuccess = type === "success";
-	const isNormal = type === "normal";
 	return (
 		<div
 			css={[
 				dialogStyle,
 				isError && errorStyle,
-				isNormal && normalStyle,
+				isInfo && normalStyle,
 				isSuccess && successStyle,
 				message && showDialog,
 			]}
@@ -43,8 +35,8 @@ export function DialogBox() {
 }
 
 const dialogStyle = css`
-  position: fixed;
-    z-index: 100;
+  	position: fixed;
+    z-index: 9999999;
     max-width: 23.8rem;
     top: 2.5rem;
     left: 50%;
@@ -68,13 +60,10 @@ const showDialog = css`
 
 const errorStyle = css`
 	background: #dc476b;
-	border: 2px solid #cc2f55;
 `;
 const successStyle = css`
 	background: #5ccb61;
-	border: 2px solid #23b729;
 `;
 const normalStyle = css`
 	background: #2a3039;
-	border: 2px solid #364152;
 `;

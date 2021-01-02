@@ -4,7 +4,7 @@ import { Project } from "../interfaces/db/Project";
 import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
 import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
-import { User } from "../../../../crusher-shared/types/db/user";
+import { iUser } from "@crusher-shared/types/db/iUser";
 import { TEAM_ROLE_TYPES } from "@crusher-shared/types/db/teamRole";
 import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
 
@@ -55,7 +55,7 @@ export default class ProjectService {
 				[projectId],
 			)
 			.then((res: Array<any>) => {
-				return res.map((member: User & { role: TEAM_ROLE_TYPES }) => {
+				return res.map((member: iUser & { role: TEAM_ROLE_TYPES }) => {
 					return {
 						id: member.id,
 						name: `${member.first_name} ${member.last_name}`,

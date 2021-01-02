@@ -31,7 +31,7 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 	return { uri, method, headers: headers };
 }
 
-export function backendRequest(_uri, options?: RequestOptions) {
+export function backendRequest(_uri: string, options?: RequestOptions) {
 	const { payload } = options;
 	const { uri, method, headers } = prepareFetchPayload(_uri, options);
 
@@ -40,13 +40,12 @@ export function backendRequest(_uri, options?: RequestOptions) {
 		method,
 		credentials: "include",
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
-	})
-		.then((requestResponse) => {
-			return requestResponse.json();
-		})
-		.catch((err) => {
-			console.error(err);
-		});
+	}).then((requestResponse: any) => {
+		if (requestResponse.status === 500) {
+			throw new Error("Internal server error");
+		}
+		return requestResponse.json();
+	});
 }
 
 export function cleanHeaders(headers: IncomingHttpHeaders) {

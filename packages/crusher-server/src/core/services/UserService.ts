@@ -28,6 +28,7 @@ import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
 import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectRole';
 import { iInviteReferral, INVITE_REFERRAL_TYPES } from '@crusher-shared/types/inviteReferral';
 import { InviteMembersService } from './mongo/inviteMembers';
+import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
 
 @Service()
 export default class UserService {
@@ -88,13 +89,10 @@ export default class UserService {
 		const referralObject =  await this.inviteMembersService.parseInviteReferral(inviteReferral);
 
 		if (!_user) {
-			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email, referralObject ? referralObject.teamId : null);
-			if(registeredUser){
-				await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
-				await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
-			} else {
-				return registeredUser;
-			}
+			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email, referralObject ? referralObject.teamId : null, referralObject ? (referralObject as iProjectInviteReferral).projectId : null);
+			await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
+			await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
+			return registeredUser;
 		}
 		return { status: USER_ALREADY_REGISTERED };
 	}
@@ -107,17 +105,21 @@ export default class UserService {
 			last_name: lastName,
 			email: email,
 			password: encryptedPassword,
+			team_id: referralTeamId ? referralTeamId : null,
 			verified: false,
 		});
 		if (insertedUser.insertId) {
 			const stripeName = `${firstName} ${lastName}`;
-			const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
 			const teamName = `${firstName}'s team`;
-			const teamId = referralTeamId ? referralTeamId :  (await this.teamService.createTeam({
-				teamName,
-				userId: insertedUser.insertId,
-				stripeCustomerId,
-			})).teamId;
+			let teamId = referralTeamId;
+			if(!referralTeamId) {
+				const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
+				 teamId = (await this.teamService.createTeam({
+					teamName,
+					userId: insertedUser.insertId,
+					stripeCustomerId,
+				})).teamId;
+			}
 			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
 			return {
 				status: USER_REGISTERED,
@@ -129,7 +131,7 @@ export default class UserService {
 		}
 	}
 
-	async authenticateWithGoogleProfile(profileInfo: RegisterUserRequest) {
+	async authenticateWithGoogleProfile(profileInfo: RegisterUserRequest, referralTeamId: number = null, referralProjectId: number = null) {
 		const { email, firstName, lastName, password } = profileInfo;
 		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email='${email}'`);
 		if (!user) {
@@ -141,21 +143,21 @@ export default class UserService {
 				verified: true,
 				password: encryptPassword(password),
 			});
-			const team = await this.teamService.createTeam({
+			const teamId = referralTeamId ? referralTeamId : (await this.teamService.createTeam({
 				teamName: "Default",
 				userId: inserted_user.insertId,
-			});
-			const project = team && team.teamId && (await this.projectService.createDefaultProject(team.teamId));
+			})).teamId;
+			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId)).insertId;
 
 			const user_id = inserted_user.insertId;
 
 			if (user_id) {
-				await this.userTeamRoleV2Service.create(user_id, team.teamId, TEAM_ROLE_TYPES.ADMIN);
-				await this.userProjectRoleV2Service.create(user_id, project.insertId, PROJECT_ROLE_TYPES.ADMIN);
+				await this.userTeamRoleV2Service.create(user_id, teamId, TEAM_ROLE_TYPES.ADMIN);
+				await this.userProjectRoleV2Service.create(user_id, projectId, PROJECT_ROLE_TYPES.ADMIN);
 
 				return {
 					status: SIGNED_UP_WITHOUT_JOINING_TEAM,
-					token: generateToken(user_id, null),
+					token: generateToken(user_id, teamId),
 				};
 			}
 		} else {

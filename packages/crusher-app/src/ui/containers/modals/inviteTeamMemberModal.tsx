@@ -42,7 +42,6 @@ const externalInputCSS = css`
 
 const topAreaCSS = css`
 	background: linear-gradient(360deg, #8793ff 0%, #a36bff 100%);
-	border-bottom: 2px solid #0a1215;
 `;
 
 const bodyContainerCss = css`

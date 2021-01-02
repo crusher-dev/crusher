@@ -10,7 +10,7 @@ import { _fetchUserInfo } from "@services/user";
 import { NextApiRequest } from "next";
 import { getThemeFromCookieOrReq } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
-import { DialogBox } from "@ui/atom/Dialog";
+import { ToastDialog } from "@ui/atom/toastDialog";
 import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
 import { saveProjectsInRedux } from "@redux/actions/project";
@@ -26,7 +26,7 @@ function App({ Component, pageProps }: AppProps<any>) {
 	return (
 		<>
 			<TopProgressBar />
-			<DialogBox />
+			<ToastDialog />
 			<ReactReduxContext.Consumer>
 				{({ store }) => (
 					<Provider store={store}>

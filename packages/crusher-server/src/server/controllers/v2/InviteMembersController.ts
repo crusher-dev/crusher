@@ -6,6 +6,7 @@ import { iInviteProjectMembersRequest } from '../../../../../crusher-shared/type
 import { iInviteTeamMembersRequest } from '../../../../../crusher-shared/types/request/inviteTeamMembersRequest';
 import { EmailManager } from '../../../core/manager/EmailManager';
 import { INVITE_REFERRAL_TYPES } from '../../../../../crusher-shared/types/inviteReferral';
+import { iInviteLinkResponse } from '../../../../../crusher-shared/types/response/inviteLinkResponse';
 
 @Service()
 @JsonController("/v2/invite")
@@ -17,10 +18,10 @@ export class InviteMembersController {
 
 	@Authorized()
 	@Post("/project/members/:projectId")
-	async inviteProjectMembers(@CurrentUser({required: true}) user, @Param("projectId") projectId: number, @Body() body: iInviteProjectMembersRequest) {
+	async inviteProjectMembers(@CurrentUser({required: true}) user, @Param("projectId") projectId: number, @Body() body: iInviteProjectMembersRequest): Promise<iInviteLinkResponse> {
 		const {emails} = body;
 		const {user_id, team_id} = user;
-		const userRecord = await this.userService.getUserInfo(user);
+		const userRecord = await this.userService.getUserInfo(user_id);
 		const code = await this.inviteMembersService.createProjectInviteCode(projectId, team_id, null, emails);
 		const userName = userRecord.first_name + " " + userRecord.last_name;
 
@@ -36,10 +37,10 @@ export class InviteMembersController {
 
 	@Authorized()
 	@Post("/team/members")
-	async inviteTeamMembers(@CurrentUser({required: true}) user, @Body() body: iInviteTeamMembersRequest) {
-		const { team_id } = user;
+	async inviteTeamMembers(@CurrentUser({required: true}) user, @Body() body: iInviteTeamMembersRequest): Promise<iInviteLinkResponse> {
+		const { user_id, team_id } = user;
 		const {emails} = body;
-		const userRecord = await this.userService.getUserInfo(user);
+		const userRecord = await this.userService.getUserInfo(user_id);
 		const userName = userRecord.first_name + " " + userRecord.last_name;
 
 

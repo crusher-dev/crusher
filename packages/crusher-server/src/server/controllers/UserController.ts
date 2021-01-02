@@ -12,13 +12,11 @@ import {
 	Req,
 	Res,
 } from 'routing-controllers';
-import { Container, Inject, Service } from "typedi";
-import DBManager from "../../core/manager/DBManager";
+import { Inject, Service } from "typedi";
 import UserService from "../../core/services/UserService";
 import { appendParamsToURI, resolvePathToBackendURI, resolvePathToFrontendURI } from "../../core/utils/uri";
 import GoogleAPIService from "../../core/services/GoogleAPIService";
 import {
-	EMAIL_NOT_VERIFIED,
 	EMAIL_VERIFIED_WITH_VERIFICATION_CODE,
 	NO_TEAM_JOINED,
 	SIGNED_UP_WITHOUT_JOINING_TEAM,
@@ -34,6 +32,8 @@ import { Logger } from "../../utils/logger";
 import { generateId } from "../../core/utils/helper";
 import { iUserInfoResponse } from '@crusher-shared/types/response/userInfoResponse';
 import { iSignupUserRequest } from '@crusher-shared/types/request/signupUserRequest';
+import { InviteMembersService } from '../../core/services/mongo/inviteMembers';
+import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
 
 const { google } = require("googleapis");
 
@@ -42,6 +42,7 @@ const oauth2Client = new google.auth.OAuth2(
 	process.env.GOOGLE_CLIENT_SECRET,
 	resolvePathToBackendURI("/user/authenticate/google/callback"),
 );
+
 @Service()
 @JsonController("/user")
 export class UserController {
@@ -53,6 +54,8 @@ export class UserController {
 	private teamService: TeamService;
 	@Inject()
 	private projectService: ProjectService;
+	@Inject()
+	private inviteMembersService: InviteMembersService;
 
 	/**
 	 * Creates new user entry. And sends a link to DB.
@@ -67,6 +70,7 @@ export class UserController {
 			email,
 			password
 		}, inviteReferral);
+
 
 		if (token) {
 			setUserAuthorizationCookies(token, res);
@@ -105,19 +109,21 @@ export class UserController {
 	 * @param res
 	 */
 	@Get("/authenticate/google/callback")
-	async googleCallback(@QueryParam("code") code: string, @Res() res) {
+	async googleCallback(@QueryParam("code") code: string, @QueryParams() queries, @Res() res) {
+		const {inviteType, inviteCode} = queries;
 		const { tokens } = await oauth2Client.getToken(code);
 		const accessToken = tokens.access_token;
 		this.googleAPIService.setAccessToken(accessToken);
 		const profileInfo = await this.googleAPIService.getProfileInfo();
 		const { email, family_name, given_name } = profileInfo as any;
+		const referralObject =  await this.inviteMembersService.parseInviteReferral(inviteType && inviteCode ? {type: inviteType, code: inviteCode} : null);
 
 		const userInfo = await this.userService.authenticateWithGoogleProfile({
 			email,
 			firstName: given_name,
 			lastName: family_name,
-			password: Date.now() + generateId(10),
-		});
+			password: Date.now() + generateId(10)
+		}, referralObject ? referralObject.teamId: null, referralObject ? (referralObject as iProjectInviteReferral).projectId : null);
 
 		if (userInfo.token) {
 			setUserAuthorizationCookies(userInfo.token, res);
@@ -148,8 +154,23 @@ export class UserController {
 	 * Redirect user to new url
 	 */
 	@Get("/authenticate/google")
-	authenticateWithGoogle(@Res() res: any) {
+	authenticateWithGoogle(@Res() res: any, @QueryParams() params) {
+		const {inviteCode, inviteType} = params;
+		const callbackURL = new URL(resolvePathToBackendURI("/user/authenticate/google/callback"));
+		if(inviteType) {
+			callbackURL.searchParams.append("inviteType", inviteType);
+		}
+		if(inviteCode) {
+			callbackURL.searchParams.append("inviteCode", inviteCode);
+		}
+		const oauth2Client = new google.auth.OAuth2(
+			process.env.GOOGLE_CLIENT_ID,
+			process.env.GOOGLE_CLIENT_SECRET,
+			callbackURL.toString(),
+		);
+
 		const scopes = ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"];
+
 		const url = oauth2Client.generateAuthUrl({ scope: scopes });
 		res.redirect(url);
 	}

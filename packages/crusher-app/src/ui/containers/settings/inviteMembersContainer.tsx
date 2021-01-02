@@ -6,6 +6,8 @@ import clipboardCopy from "clipboard-copy";
 import CopyIcon from "../../../../public/svg/settings/copy.svg";
 import { Conditional } from "@ui/components/common/Conditional";
 import CopySparkIcon from "../../../../public/svg/settings/copySpark.svg";
+import { Toast } from "@utils/toast";
+import { _inviteTeamMember } from "@services/v2/invite";
 
 interface iCopyInviteLinkActionProps {
 	value: string;
@@ -131,7 +133,18 @@ const InviteMembersContainer = (props: iInviteMemberContainerProps) => {
 	};
 
 	const inviteNewMember = () => {
-		console.log("Inviting new member by sending invite mail: ", newMemberEmail);
+		if (!newMemberEmail) {
+			return Toast.showError("No email address provided");
+		}
+		_inviteTeamMember([newMemberEmail])
+			.then((info) => {
+				console.log(info);
+				Toast.showSuccess("Successfully invited user");
+				setNewMemberEmail("");
+			})
+			.catch(() => {
+				Toast.showError("Some error occurred while inviting the user");
+			});
 	};
 
 	return (

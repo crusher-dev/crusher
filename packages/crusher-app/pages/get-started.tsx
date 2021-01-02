@@ -11,7 +11,10 @@ import { css } from "@emotion/core";
 import { BackSVG, GoogleIcon } from "@ui/components/common/SVGs";
 import Link from "next/link";
 import { COLORS, ThemeContext } from "@constants/style";
-import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
+import {
+	iInviteReferral,
+	INVITE_REFERRAL_TYPES,
+} from "@crusher-shared/types/inviteReferral";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
@@ -20,6 +23,17 @@ import { iPageContext } from "@interfaces/pageContenxt";
 
 interface iSignupScreenProps {
 	inviteReferral: iInviteReferral | null;
+}
+
+function getRegisterGoogleUrl(inviteReferral: iInviteReferral | null) {
+	const url = new URL(resolvePathToBackendURI("/user/authenticate/google"));
+
+	if (inviteReferral) {
+		url.searchParams.append("inviteType", inviteReferral.type);
+		url.searchParams.append("inviteType", inviteReferral.code);
+	}
+
+	return url.toString();
 }
 
 function SignupScreen(props: iSignupScreenProps) {
@@ -86,7 +100,7 @@ function SignupScreen(props: iSignupScreenProps) {
 						<div css={formHeadingCSS(theme)}>Start 14 days free trial</div>
 					</div>
 
-					<form>
+					<form css={formContainerCSS}>
 						<div css={inputContainerCSS}>
 							<input
 								css={[phoneInputCSS, inputElementCSS(theme)]}
@@ -127,7 +141,7 @@ function SignupScreen(props: iSignupScreenProps) {
 					<div css={requestButtonCSS} onClick={handleSignUp} className={"button"}>
 						Next
 					</div>
-					<a href={resolvePathToBackendURI("/user/authenticate/google")}>
+					<a href={getRegisterGoogleUrl(inviteReferral)}>
 						<div css={googleLoginButtonCSS(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
 							<span>Signup with Google</span>
@@ -186,6 +200,10 @@ const formHeadingCSS = (theme: string) => {
 		color: ${theme === "dark" ? "#fff" : COLORS.dark1};
 	`;
 };
+
+const formContainerCSS = css`
+	margin-top: 1rem;
+`;
 const inputContainerCSS = css`
 	margin-bottom: 1.65rem;
 `;

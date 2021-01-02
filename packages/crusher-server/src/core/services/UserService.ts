@@ -29,7 +29,6 @@ import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectR
 import { iInviteReferral, INVITE_REFERRAL_TYPES } from '@crusher-shared/types/inviteReferral';
 import { InviteMembersService } from './mongo/inviteMembers';
 import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
-import { User } from "../../../../crusher-shared/types/db/user";
 
 @Service()
 export default class UserService {

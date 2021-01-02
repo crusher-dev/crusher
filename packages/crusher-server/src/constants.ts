@@ -50,8 +50,3 @@ export interface emailType {
 	email: string;
 	name: string;
 }
-
-export const VERIFICATION_TYPE_EMAIL: emailType = {
-	email: "welcome@crusher.dev",
-	name: "Crusher.dev",
-};

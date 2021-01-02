@@ -1,3 +1,6 @@
+import { JobLogs } from '../server/models/jobLogs';
+import { Platform } from '../core/interfaces/Platform';
+
 const { exec } = require("child_process");
 
 export function appendParamsToURI(uri, params) {

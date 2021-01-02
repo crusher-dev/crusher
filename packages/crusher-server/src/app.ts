@@ -40,6 +40,7 @@ import { JobReportsController } from "./server/controllers/v2/JobReportsControll
 import { ProjectsControllerV2 } from "./server/controllers/v2/ProjectsControllerV2";
 import { TeamControllerV2 } from "./server/controllers/v2/TeamControllerV2";
 import { InviteMembersController } from "./server/controllers/v2/InviteMembersController";
+import { UserControllerV2 } from './server/controllers/v2/UserControllerV2';
 
 new MongoManager().init();
 useContainer(Container);
@@ -70,6 +71,7 @@ useExpressServer(expressApp, {
 		ProjectsControllerV2,
 		TeamControllerV2,
 		InviteMembersController,
+		UserControllerV2
 	],
 	middlewares: [CorsMiddleware],
 	authorizationChecker: async (action: Action) => {

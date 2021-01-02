@@ -1,6 +1,6 @@
 import { Service, Container } from "typedi";
 import DBManager from "../../manager/DBManager";
-import { iProjectRole, PROJECT_ROLE_TYPES } from "@crusher-shared/types/db/projectRole";
+import { iProjectRole, PROJECT_ROLE_TYPES } from "../../../../../crusher-shared/types/db/projectRole";
 
 @Service()
 export default class UserProjectRoleV2Service {
@@ -20,6 +20,13 @@ export default class UserProjectRoleV2Service {
 			project_id,
 			role,
 		});
+	}
+
+	async createForProjects(userId: number, projectsList: Array<number>, role: PROJECT_ROLE_TYPES){
+		for(let i = 0; i< projectsList.length; i++){
+			await this.create(userId, projectsList[i], role);
+		}
+		return true;
 	}
 
 	async update(user_id: number, project_id: number, role: PROJECT_ROLE_TYPES) {

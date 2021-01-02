@@ -30,7 +30,7 @@ function redirectIfNotThisScope(
 	res: NextApiResponse,
 ) {
 	if (userStatus === EMAIL_NOT_VERIFIED && componentScope !== userStatus) {
-		return redirectToFrontendPath("/verification", res);
+		return null;
 	} else if (userStatus === NO_TEAM_JOINED && componentScope !== userStatus) {
 		return redirectToFrontendPath("/onboarding", res);
 	} else if (

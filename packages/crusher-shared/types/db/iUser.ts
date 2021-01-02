@@ -1,6 +1,6 @@
 import { BaseRowInterface } from "./baseRow";
 
-export interface User extends BaseRowInterface {
+export interface iUser extends BaseRowInterface {
 	id: number;
 	team_id?: number;
 	first_name: string;

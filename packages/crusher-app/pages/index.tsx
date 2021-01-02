@@ -125,7 +125,7 @@ function Home() {
 						Next
 					</div>
 					<a
-						href={resolvePathToBackendURI("/user/authenticate/google")}
+						href={resolvePathToBackendURI("/v2/user/authenticate/google")}
 						css={styles.loginGoogleLink}
 					>
 						<div css={styles.googleLoginButton(theme)}>

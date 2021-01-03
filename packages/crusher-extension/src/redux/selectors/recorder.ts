@@ -5,3 +5,6 @@ export const getInspectModeState = (state: iReduxState) =>
 
 export const getActionsRecordingState = (state: iReduxState) =>
 	state.recorder.actionsRecordingState;
+
+export const isRecorderScriptBooted = (state: iReduxState) =>
+	state.recorder.isRecorderScriptBooted;

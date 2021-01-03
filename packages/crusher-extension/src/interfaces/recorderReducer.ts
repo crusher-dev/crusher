@@ -11,10 +11,12 @@ export interface iElementInfo {
 	attributes: Array<iAttribute>;
 	innerHTML: string;
 }
+
 export interface iRecorderState {
 	isInspectModeOn: boolean;
 	actionsRecordingState: {
 		type: ACTIONS_RECORDING_STATE;
 		elementInfo?: iElementInfo | null;
 	};
+	isRecorderScriptBooted: boolean;
 }

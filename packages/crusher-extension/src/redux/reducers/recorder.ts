@@ -2,6 +2,7 @@ import { AnyAction } from "redux";
 import {
 	UPDATE_ACTIONS_RECORDING_STATE,
 	UPDATE_INSPECT_MODE_STATE,
+	UPDATE_RECORDER_SCRIPT_BOOTED,
 } from "../actions/recorder";
 import { iRecorderState } from "../../interfaces/recorderReducer";
 import { ACTIONS_RECORDING_STATE } from "../../interfaces/actionsRecordingState";
@@ -12,6 +13,7 @@ const initialState: iRecorderState = {
 		type: ACTIONS_RECORDING_STATE.PAGE,
 		elementInfo: null,
 	},
+	isRecorderScriptBooted: false,
 };
 
 export const recorderReducer = (
@@ -32,7 +34,11 @@ export const recorderReducer = (
 					elementInfo: action.payload.elementInfo,
 				},
 			};
-			break;
+		case UPDATE_RECORDER_SCRIPT_BOOTED:
+			return {
+				...state,
+				isRecorderScriptBooted: action.payload.value,
+			};
 		default:
 			return state;
 	}

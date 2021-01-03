@@ -4,6 +4,7 @@ import { recordAction } from "./redux/actions/actions";
 import {
 	updateActionsRecordingState,
 	updateInspectModeState,
+	updateIsRecorderScriptBooted,
 } from "./redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
 import { iSelectorInfo } from "./utils/selector";
@@ -69,6 +70,7 @@ export function recorderMessageListener(event: MessageEvent<iMessage>) {
 			break;
 		}
 		case MESSAGE_TYPES.RECORDER_BOOTED: {
+			store.dispatch(updateIsRecorderScriptBooted(true));
 			break;
 		}
 		case MESSAGE_TYPES.REQUEST_RECORDING_STATUS: {

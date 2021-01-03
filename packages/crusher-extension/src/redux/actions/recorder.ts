@@ -3,6 +3,7 @@ import { iSelectorInfo } from "../../utils/selector";
 
 export const UPDATE_INSPECT_MODE_STATE = "UPDATE_INSPECT_MODE_STATE";
 export const UPDATE_ACTIONS_RECORDING_STATE = "UPDATE_ACTIONS_RECORDER_STATE";
+export const UPDATE_RECORDER_SCRIPT_BOOTED = "UPDATE_RECORDER_SCRIPT_BOOTED";
 
 export const updateInspectModeState = (isInspectModeOn: boolean) => ({
 	type: UPDATE_INSPECT_MODE_STATE,
@@ -19,4 +20,11 @@ export const updateActionsRecordingState = (
 ) => ({
 	type: UPDATE_ACTIONS_RECORDING_STATE,
 	payload: { state: actionState, elementInfo: selectedElementInfo },
+});
+
+export const updateIsRecorderScriptBooted = (
+	isRecorderScriptBooted: boolean,
+) => ({
+	type: UPDATE_RECORDER_SCRIPT_BOOTED,
+	payload: { value: isRecorderScriptBooted },
 });

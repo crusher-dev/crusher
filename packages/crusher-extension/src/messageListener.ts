@@ -1,6 +1,9 @@
 import { iAction } from "./interfaces/actionsReducer";
 import { getStore } from "./redux/store";
-import { recordAction } from "./redux/actions/actions";
+import {
+	recordAction,
+	updateLastRecordedAction,
+} from "./redux/actions/actions";
 import {
 	updateActionsRecordingState,
 	updateInspectModeState,
@@ -23,6 +26,8 @@ import {
 } from "./scripts/inject/responseMessageListener";
 import { TOP_LEVEL_ACTION } from "./interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "./interfaces/elementLevelAction";
+import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
+import { getActions } from "./redux/selectors/actions";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION = "RECORD_ACTION",
@@ -58,9 +63,69 @@ export interface iElementModeMessageMeta {
 
 function handleRecordAction(action: iAction) {
 	const store = getStore();
+	const recordedActions = getActions(store.getState());
+	const lastRecordedAction = recordedActions.length
+		? recordedActions[recordedActions.length - 1]
+		: null;
 
 	const { type } = action;
+
 	switch (type) {
+		case ACTIONS_IN_TEST.NAVIGATE_URL: {
+			const hasInitialNavigationActionRegistered =
+				recordedActions.findIndex(
+					(recordedAction) => recordedAction.type === ACTIONS_IN_TEST.NAVIGATE_URL,
+				) !== -1;
+			if (!hasInitialNavigationActionRegistered) {
+				store.dispatch(recordAction(action));
+			}
+			break;
+		}
+		case ACTIONS_IN_TEST.ADD_INPUT: {
+			if (!lastRecordedAction)
+				throw new Error("Add input recorded before navigate url");
+
+			const isAddingInputToSameLastElement =
+				lastRecordedAction.type === ACTIONS_IN_TEST.ADD_INPUT &&
+				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
+					(action.payload.selectors as iSelectorInfo[])[0].value;
+
+			// Store add inputs in an array values
+			if (!isAddingInputToSameLastElement) {
+				action.payload.meta.value = [action.payload.meta.value];
+				store.dispatch(recordAction(action));
+			} else {
+				action.payload.meta.value = [
+					...lastRecordedAction.payload.meta.value,
+					action.payload.meta.value,
+				];
+				store.dispatch(updateLastRecordedAction(action));
+			}
+
+			break;
+		}
+		case ACTIONS_IN_TEST.SCROLL: {
+			if (!lastRecordedAction)
+				throw new Error("Add input recorded before navigate url");
+
+			const isScrollingToSameLastElement =
+				lastRecordedAction.type === ACTIONS_IN_TEST.SCROLL &&
+				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
+					(action.payload.selectors as iSelectorInfo[])[0].value;
+
+			// Store add inputs in an array values
+			if (!isScrollingToSameLastElement) {
+				action.payload.meta.value = [action.payload.meta.value];
+				store.dispatch(recordAction(action));
+			} else {
+				action.payload.meta.value = [
+					...lastRecordedAction.payload.meta.value,
+					action.payload.meta.value,
+				];
+				store.dispatch(updateLastRecordedAction(action));
+			}
+			break;
+		}
 		default:
 			store.dispatch(recordAction(action));
 			break;
@@ -222,119 +287,3 @@ export function performActionInFrame(
 		"*",
 	);
 }
-
-//
-// export function recorderMessageListener(event: MessageEvent<iMessage>) {
-// 	const { type, eventType, value, selectors } = event.data;
-// 	console.log(type, eventType, value);
-// 	const steps = getSteps();
-// 	if (eventType) {
-// 		const lastStep = steps[steps.length - 1];
-// 		if (!lastStep) {
-// 			setSteps([...getSteps(), { event_type: eventType, value, selectors }]);
-// 			setLastStepTime(Date.now());
-// 		} else {
-// 			const navigateEventExist = steps.find(
-// 				(step) => step.event_type === ACTIONS_IN_TEST.NAVIGATE_URL,
-// 			);
-//
-// 			if (!(navigateEventExist && eventType === ACTIONS_IN_TEST.NAVIGATE_URL)) {
-// 				if (
-// 					eventType === ACTIONS_IN_TEST.ADD_INPUT &&
-// 					(lastStep.event_type !== ACTIONS_IN_TEST.ADD_INPUT ||
-// 						(lastStep.event_type === ACTIONS_IN_TEST.ADD_INPUT &&
-// 							lastStep.selectors[0].value !== selectors[0].value))
-// 				) {
-// 					setSteps([
-// 						...getSteps(),
-// 						{ event_type: eventType, value: [value], selectors },
-// 					]);
-// 					setLastStepTime(Date.now());
-// 				} else if (
-// 					lastStep.event_type === ACTIONS_IN_TEST.ADD_INPUT &&
-// 					eventType === ACTIONS_IN_TEST.ADD_INPUT &&
-// 					lastStep.selectors[0].value === selectors[0].value
-// 				) {
-// 					steps[steps.length - 1].value = [...steps[steps.length - 1].value, value];
-// 					setSteps(steps);
-// 					setLastStepTime(Date.now());
-// 				} else if (
-// 					lastStep.event_type === ACTIONS_IN_TEST.SCROLL &&
-// 					eventType === ACTIONS_IN_TEST.SCROLL &&
-// 					lastStep.selectors[0] === selectors[0]
-// 				) {
-// 					steps[steps.length - 1] = {
-// 						event_type: eventType,
-// 						value: [...lastStep.value, value],
-// 						selectors,
-// 					};
-// 					setSteps([...steps]);
-// 					setLastStepTime(Date.now());
-// 				} else {
-// 					if (eventType === ACTIONS_IN_TEST.SCROLL) {
-// 						setSteps([
-// 							...getSteps(),
-// 							{ event_type: eventType, value: [value], selectors },
-// 						]);
-// 						setLastStepTime(Date.now());
-// 					} else {
-// 						setSteps([...getSteps(), { event_type: eventType, value, selectors }]);
-// 						setLastStepTime(Date.now());
-// 					}
-// 				}
-// 			}
-// 		}
-// 	} else if (type) {
-// 		const cn = iframeRef.current.contentWindow;
-//
-// 		const iframeURL = getQueryStringParams("url", window.location.href) as string;
-// 		const crusherAgent = getQueryStringParams("__crusherAgent__", iframeURL);
-// 		const userAgent = userAgents.find(
-// 			(agent) => agent.name === (crusherAgent || userAgents[6].value),
-// 		);
-//
-// 		switch (type) {
-// 			case SETTINGS_ACTIONS.INSPECT_MODE_ON:
-// 				setIsInspectModeOn(true);
-// 				break;
-// 			case SETTINGS_ACTIONS.INSPECT_MODE_OFF:
-// 				setIsInspectModeOn(false);
-// 				break;
-// 			case SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR:
-// 				setIsShowingElementForm(true);
-// 				setCurrentElementSelectors(selectors);
-// 				setCurrentElementAttributes(event.data.attributes);
-// 				break;
-// 			case SETTINGS_ACTIONS.START_RECORDING:
-// 				setIsRecording(true);
-// 				break;
-// 			// case ACTION_TYPES.TOOGLE_INSPECTOR:
-// 			//     setIsUsingElementInspector(!isUsingElementInspector);
-// 			//     break;
-// 			case META_ACTIONS.FETCH_RECORDING_STATUS:
-// 				cn.postMessage(
-// 					{
-// 						type: META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE,
-// 						value: isUsingElementInspector
-// 							? START_INSPECTING_RECORDING_MODE
-// 							: isRecording
-// 							? START_NON_INSPECTING_RECORDING_MODE
-// 							: NOT_RECORDING,
-// 						isFromParent: true,
-// 					},
-// 					"*",
-// 				);
-// 				break;
-// 			case META_ACTIONS.FETCH_USER_AGENT:
-// 				cn.postMessage(
-// 					{ type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent },
-// 					"*",
-// 				);
-// 				break;
-// 			case META_ACTIONS.FETCH_SEO_META_RESPONSE:
-// 				setSeoMeta({ title: value.title, metaTags: value.metaTags });
-// 				break;
-// 		}
-// 	}
-// 	return true;
-// }

@@ -8,10 +8,15 @@ import {
 import { ActionStepList } from "./actionStepList";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
+import { getActionsRecordingState } from "../../../redux/selectors/recorder";
+import { Conditional } from "../../components/conditional";
+import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
+import { TopLevelActionsList } from "./topLevelActionsList";
+import { ElementLevelActionsList } from "./elementLevelActionsList";
 
 const SidebarActionsBox = () => {
 	const actions = useSelector(getActions);
-
+	const recordingState = useSelector(getActionsRecordingState);
 	return (
 		<div style={sidebarStyle}>
 			<div style={tipContainerStyle}>
@@ -28,13 +33,12 @@ const SidebarActionsBox = () => {
 					<ActionStepList items={actions} />
 				</div>
 				<div style={actionContainerStyle}>
-					{/*<ActionContainer*/}
-					{/*	state={state}*/}
-					{/*	updateState={updateState}*/}
-					{/*	iframeRef={iframeRef}*/}
-					{/*	isShowingElementForm={isShowingElementForm}*/}
-					{/*	setIsShowingElementForm={setIsShowingElementForm}*/}
-					{/*/>*/}
+					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.PAGE}>
+						<TopLevelActionsList />
+					</Conditional>
+					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.ELEMENT}>
+						<ElementLevelActionsList />
+					</Conditional>
 				</div>
 			</div>
 		</div>

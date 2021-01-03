@@ -56,7 +56,7 @@ export function responseMessageListener(
 	switch (type) {
 		case FRAME_MESSAGE_TYPES.PERFORM_ACTION: {
 			const meta = event.data.meta as iPerformActionMeta;
-			this.eventRecording.performSimulatedAction(meta);
+			eventRecording.performSimulatedAction(meta);
 			break;
 		}
 		case FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE: {

@@ -62,11 +62,6 @@ export default class EventRecording {
 		return this.state;
 	}
 
-	hideEventsBoxIfShown() {
-		this.removeInspector();
-		this.isInspectorMoving = false;
-	}
-
 	initNodes() {
 		console.debug("Registering all nodes");
 		this._overlayCover = document.querySelector("#overlay_cover");
@@ -353,23 +348,20 @@ export default class EventRecording {
 		}
 
 		const closestLink: HTMLAnchorElement = target.closest("a");
-		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
-			const href = closestLink.getAttribute("href");
-			this.eventsController.saveCapturedEventInBackground(
-				ACTIONS_IN_TEST.CLICK,
-				closestLink,
-			);
-			console.log("Going to this link", href);
-			if (href) {
-				window.location.href = href;
-			}
-			return event.preventDefault();
-		}
+
 		if (!event.simulatedEvent) {
 			this.eventsController.saveCapturedEventInBackground(
 				ACTIONS_IN_TEST.CLICK,
 				event.target,
 			);
+		}
+		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
+			const href = closestLink.getAttribute("href");
+			console.log("Going to this link", href);
+			if (href) {
+				window.location.href = href;
+			}
+			return event.preventDefault();
 		}
 	}
 
@@ -465,10 +457,6 @@ export default class EventRecording {
 			this.turnInspectModeOnInParentFrame();
 		}
 		console.info("Info Overlay booted up");
-	}
-
-	removeInspector() {
-		this.unpin();
 	}
 
 	shutdown() {

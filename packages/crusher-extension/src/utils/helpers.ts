@@ -73,8 +73,6 @@ export function getAllAttributes(
 				value: element.getAttribute(attributeName),
 			};
 		}),
-		{ name: "innerHTML", value: element.innerHTML },
-		{ name: "innerText", value: element.innerText },
 	];
 }
 

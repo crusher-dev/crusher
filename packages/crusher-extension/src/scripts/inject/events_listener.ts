@@ -7,13 +7,14 @@ import {
 	NOT_RECORDING,
 } from "../../constants";
 import { ACTION_FORM_TYPE } from "../../constants/index";
+import { MESSAGE_TYPES } from "../../messageListener";
 
 function boot() {
 	const recordingOverlay = new EventRecording({});
 
 	window.top.postMessage(
 		{
-			type: META_ACTIONS.FETCH_RECORDING_STATUS,
+			type: MESSAGE_TYPES.REQUEST_RECORDING_STATUS,
 			frameId: null,
 		},
 		"*",
@@ -60,7 +61,7 @@ function boot() {
 						alert(JSON.stringify(metaTagsValuesMap));
 						window.top.postMessage(
 							{
-								type: META_ACTIONS.FETCH_SEO_META_RESPONSE,
+								type: MESSAGE_TYPES.SEO_META_INFORMATION,
 								frameId: null,
 								value: {
 									title: document.title,

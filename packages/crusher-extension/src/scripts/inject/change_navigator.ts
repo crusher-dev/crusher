@@ -1,4 +1,5 @@
 import { NAVIGATOR_ACTIONS } from "../../constants/actionTypes";
+import { MESSAGE_TYPES } from "../../messageListener";
 
 const actualCode = `(${(
 	userAgent: string,
@@ -39,7 +40,7 @@ const actualCode = `(${(
 
 window.top.postMessage(
 	{
-		type: NAVIGATOR_ACTIONS.FETCH_USER_AGENT,
+		type: MESSAGE_TYPES.REQUEST_USER_AGENT,
 		frameId: null,
 		value: true,
 	},

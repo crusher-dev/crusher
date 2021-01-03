@@ -1,9 +1,12 @@
 import { getAllAttributes } from "../../../utils/helpers";
-import { META_ACTIONS, SETTINGS_ACTIONS } from "../../../constants/actionTypes";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
 import { getSelectors } from "../../../utils/selector";
+import {
+	iElementModeMessageMeta,
+	MESSAGE_TYPES,
+} from "../../../messageListener";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createPopper } = require("@popperjs/core");
@@ -388,6 +391,7 @@ export default class EventRecording {
 		const minScrollTime = 100;
 		const now = new Date().getTime();
 		// console.log("Scrolled, ", event.target);
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const _this = this;
 		function processScroll() {
 			const target = event.target;
@@ -452,10 +456,12 @@ export default class EventRecording {
 
 		window.top.postMessage(
 			{
-				type: SETTINGS_ACTIONS.SHOW_ELEMENT_FORM_IN_SIDEBAR,
-				frameId: null,
-				selectors: getSelectors(this.state.targetElement),
-				attributes: getAllAttributes(this.state.targetElement),
+				type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
+				meta: {
+					selectors: getSelectors(this.state.targetElement),
+					attributes: getAllAttributes(this.state.targetElement),
+					innerHTML: this.state.targetElement.innerHTML,
+				} as iElementModeMessageMeta,
 			},
 			"*",
 		);
@@ -600,7 +606,7 @@ export default class EventRecording {
 		}
 		window.top.postMessage(
 			{
-				type: META_ACTIONS.STARTED_RECORDING_TESTS,
+				type: MESSAGE_TYPES.RECORDER_BOOTED,
 				frameId: null,
 			},
 			"*",
@@ -613,7 +619,10 @@ export default class EventRecording {
 		this.isInspectorMoving = true;
 		window.top.postMessage(
 			{
-				type: SETTINGS_ACTIONS.INSPECT_MODE_ON,
+				type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
+				meta: {
+					value: true,
+				},
 				frameId: null,
 			},
 			"*",
@@ -625,7 +634,10 @@ export default class EventRecording {
 		this.isInspectorMoving = false;
 		window.top.postMessage(
 			{
-				type: SETTINGS_ACTIONS.INSPECT_MODE_OFF,
+				type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
+				meta: {
+					value: false,
+				},
 				frameId: null,
 			},
 			"*",

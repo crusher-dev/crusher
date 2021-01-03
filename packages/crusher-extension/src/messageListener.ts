@@ -43,7 +43,7 @@ interface iUpdateInspectorMessageMeta {
 	value: boolean;
 }
 
-interface iElementModeMessageMeta {
+export interface iElementModeMessageMeta {
 	selectors: Array<iSelectorInfo>;
 	attributes: Array<iAttribute>;
 	innerHTML: string;

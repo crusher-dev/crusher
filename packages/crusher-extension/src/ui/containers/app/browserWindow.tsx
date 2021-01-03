@@ -4,16 +4,19 @@ import { SETTINGS_ACTIONS } from "../../../constants/actionTypes";
 import { BrowserToolbar } from "./browserToolbar";
 import { AdvancedURL } from "../../../utils/url";
 import { ACTION_FORM_TYPE } from "../../../constants";
+import { useSelector } from "react-redux";
+import { getInspectModeState } from "../../../redux/selectors/recorder";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
-	isInspectModeOn: boolean;
 	saveTestCallback: () => void;
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
 }
 
 const BrowserWindow = (props: iBrowserWindowProps) => {
-	const { deviceIframeRef, isInspectModeOn, saveTestCallback } = props;
+	const { deviceIframeRef, saveTestCallback } = props;
+	const isInspectModeOn = useSelector(getInspectModeState);
+
 	const [url, setUrl] = useState(
 		AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
 	);

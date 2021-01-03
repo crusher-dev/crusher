@@ -8,8 +8,13 @@ import {
 } from "../../constants";
 import { ACTION_FORM_TYPE } from "../../constants/index";
 import { MESSAGE_TYPES } from "../../messageListener";
+import { getFrameDepth } from "../../utils/helpers";
 
 function boot() {
+	const frameDepth = getFrameDepth(window.self);
+	if (frameDepth !== 1) {
+		return;
+	}
 	const recordingOverlay = new EventRecording({});
 
 	window.top.postMessage(

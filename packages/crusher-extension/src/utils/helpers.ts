@@ -81,3 +81,13 @@ export function getDevice(deviceId: string): iDevice | undefined {
 		return device.id === deviceId;
 	});
 }
+
+export function getFrameDepth(winToID: any): number {
+	if (winToID === window.top) {
+		return 0;
+	} else if (winToID.parent === window.top) {
+		return 1;
+	}
+
+	return 1 + getFrameDepth(winToID.parent);
+}

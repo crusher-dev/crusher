@@ -140,7 +140,6 @@ export default class EventRecording {
 			target.style.outlineColor = "none";
 			target.style.outlineWidth = "0px";
 		}
-		console.error("This is target", target);
 	}
 
 	performSimulatedAction(meta: iPerformActionMeta) {

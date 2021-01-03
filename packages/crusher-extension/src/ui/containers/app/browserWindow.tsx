@@ -5,7 +5,14 @@ import { BrowserToolbar } from "./browserToolbar";
 import { AdvancedURL } from "../../../utils/url";
 import { ACTION_FORM_TYPE } from "../../../constants";
 import { useSelector } from "react-redux";
-import { getInspectModeState } from "../../../redux/selectors/recorder";
+import {
+	getActionsRecordingState,
+	getInspectModeState,
+} from "../../../redux/selectors/recorder";
+import { getStore } from "../../../redux/store";
+import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
+import { recordAction } from "../../../redux/actions/actions";
+import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
@@ -16,6 +23,9 @@ interface iBrowserWindowProps {
 const BrowserWindow = (props: iBrowserWindowProps) => {
 	const { deviceIframeRef, saveTestCallback } = props;
 	const isInspectModeOn = useSelector(getInspectModeState);
+	const actionsRecordingState = useSelector(getActionsRecordingState);
+	const isElementRecordingStateOn =
+		actionsRecordingState.type === ACTIONS_RECORDING_STATE.ELEMENT;
 
 	const [url, setUrl] = useState(
 		AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
@@ -69,6 +79,18 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 	};
 
 	const loadNewPage = (newUrl: string) => {
+		const store = getStore();
+		store.dispatch(
+			recordAction({
+				type: ACTIONS_IN_TEST.NAVIGATE_URL,
+				payload: {
+					selectors: [],
+					meta: {
+						value: newUrl,
+					},
+				},
+			}),
+		);
 		setUrl(newUrl);
 	};
 
@@ -84,7 +106,12 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 					saveTest={saveTestCallback}
 					loadNewPage={loadNewPage}
 				/>
-				<Device url={url} device={selectedDevice} forwardRef={deviceIframeRef} />
+				<Device
+					url={url}
+					device={selectedDevice}
+					isDisabled={isElementRecordingStateOn}
+					forwardRef={deviceIframeRef}
+				/>
 			</div>
 		</div>
 	);

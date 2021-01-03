@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { render } from "react-dom";
 import { SidebarActionsBox } from "./containers/app/sidebarActionsBox";
 import { BrowserWindow } from "./containers/app/browserWindow";
@@ -11,6 +11,13 @@ const App = () => {
 	const saveTest = () => {
 		console.log("Saving test...");
 	};
+
+	useMemo(() => {
+		window.addEventListener(
+			"message",
+			recorderMessageListener.bind(window, deviceIframeRef),
+		);
+	}, []);
 
 	return (
 		<div style={containerStyle}>
@@ -35,8 +42,6 @@ const containerStyle = {
 	height: "auto",
 	background: "rgb(40, 40, 40)",
 };
-
-window.addEventListener("message", recorderMessageListener);
 
 render(
 	<Provider store={configureStore()}>

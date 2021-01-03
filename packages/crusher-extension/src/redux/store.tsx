@@ -7,15 +7,15 @@ import {
 } from "redux";
 import thunkMiddleware from "redux-thunk";
 
-import { rootReducer } from "./reducers";
+import { iReduxState, rootReducer } from "./reducers";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const hotModule = module.hot;
 
-let store: Store<unknown> | null = null;
+let store: Store<iReduxState> | null = null;
 
-export function getStore(): Store<unknown> {
+export function getStore(): Store<iReduxState> {
 	if (!store) throw new Error("Redux store not initialized");
 	return store;
 }

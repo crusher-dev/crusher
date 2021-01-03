@@ -9,6 +9,19 @@ import {
 import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
 import { iSelectorInfo } from "./utils/selector";
 import { iAttribute } from "./interfaces/recorderReducer";
+import { RefObject } from "react";
+import { META_ACTIONS } from "./constants/actionTypes";
+import {
+	getActionsRecordingState,
+	isRecorderScriptBooted,
+} from "./redux/selectors/recorder";
+import {
+	NOT_RECORDING,
+	START_INSPECTING_RECORDING_MODE,
+	START_NON_INSPECTING_RECORDING_MODE,
+} from "./constants";
+import { AdvancedURL } from "./utils/url";
+import userAgents from "../../crusher-shared/constants/userAgents";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION = "RECORD_ACTION",
@@ -36,9 +49,9 @@ interface iElementModeMessageMeta {
 	innerHTML: string;
 }
 
-const store = getStore();
-
 function handleRecordAction(action: iAction) {
+	const store = getStore();
+
 	const { type } = action;
 	switch (type) {
 		default:
@@ -49,7 +62,60 @@ function handleRecordAction(action: iAction) {
 	return true;
 }
 
-export function recorderMessageListener(event: MessageEvent<iMessage>) {
+function sendTestRecorderStatusToFrame(
+	deviceIframeRef: RefObject<HTMLIFrameElement>,
+) {
+	const store = getStore();
+
+	if (!deviceIframeRef.current)
+		throw new Error("Iframe not available yet from ref context");
+
+	const cn = deviceIframeRef.current.contentWindow;
+
+	const inUsingInspectorMode =
+		getActionsRecordingState(store.getState()).type ===
+		ACTIONS_RECORDING_STATE.ELEMENT;
+
+	const isRecording = isRecorderScriptBooted(store.getState());
+
+	cn?.postMessage(
+		{
+			type: META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE,
+			value: inUsingInspectorMode
+				? START_INSPECTING_RECORDING_MODE
+				: isRecording
+				? START_NON_INSPECTING_RECORDING_MODE
+				: NOT_RECORDING,
+			isFromParent: true,
+		},
+		"*",
+	);
+}
+
+function sendUserAgentToFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
+	if (!deviceIframeRef.current)
+		throw new Error("Iframe not available yet from ref context");
+
+	const cn = deviceIframeRef.current.contentWindow;
+	// Extension url contains selected device
+	const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(
+		window?.location.href,
+	);
+	const userAgent = userAgents.find(
+		(agent) => agent.name === (device.userAgent || userAgents[6].value),
+	);
+	cn?.postMessage(
+		{ type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent },
+		"*",
+	);
+}
+
+export function recorderMessageListener(
+	deviceIframeRef: RefObject<HTMLIFrameElement>,
+	event: MessageEvent<iMessage>,
+) {
+	const store = getStore();
+
 	const { type } = event.data;
 	switch (type) {
 		case MESSAGE_TYPES.RECORD_ACTION: {
@@ -74,9 +140,11 @@ export function recorderMessageListener(event: MessageEvent<iMessage>) {
 			break;
 		}
 		case MESSAGE_TYPES.REQUEST_RECORDING_STATUS: {
+			sendTestRecorderStatusToFrame(deviceIframeRef);
 			break;
 		}
 		case MESSAGE_TYPES.REQUEST_USER_AGENT: {
+			sendUserAgentToFrame(deviceIframeRef);
 			break;
 		}
 		case MESSAGE_TYPES.SEO_META_INFORMATION: {

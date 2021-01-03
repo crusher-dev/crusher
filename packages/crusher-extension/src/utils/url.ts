@@ -2,6 +2,8 @@ import devices from "../../../crusher-shared/constants/devices";
 import { getQueryStringParams } from "../../../crusher-shared/utils/url";
 import { getDevice } from "./helpers";
 import { iDevice } from "../../../crusher-shared/types/extension/device";
+import { UserAgent } from "../../../crusher-shared/types/userAgent";
+import UserAgents from "../../../crusher-shared/constants/userAgents";
 
 const embeddedUrlRegExp = new RegExp(/^(['"])(.*)\1$/);
 
@@ -69,5 +71,18 @@ export class AdvancedURL {
 			return device ? device : defaultDevice;
 		}
 		return defaultDevice;
+	}
+
+	static getUserAgentFromUrl(iframeURL: string): UserAgent {
+		const crusherAgent = AdvancedURL.getParameterByName(
+			"__crusherAgent__",
+			iframeURL,
+		);
+
+		const selectedUserAgent: UserAgent | undefined = UserAgents.find(
+			(agent) => agent.name === (crusherAgent || UserAgents[6].value),
+		);
+
+		return selectedUserAgent as UserAgent;
 	}
 }

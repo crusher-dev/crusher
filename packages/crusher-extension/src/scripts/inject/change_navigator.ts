@@ -1,5 +1,6 @@
-import { NAVIGATOR_ACTIONS } from "../../constants/actionTypes";
-import { MESSAGE_TYPES } from "../../messageListener";
+import { iMessage, MESSAGE_TYPES } from "../../messageListener";
+import { FRAME_MESSAGE_TYPES } from "./responseMessageListener";
+import { iUserAgent } from "../../../../crusher-shared/constants/userAgents";
 
 const actualCode = `(${(
 	userAgent: string,
@@ -47,13 +48,11 @@ window.top.postMessage(
 	"*",
 );
 
-window.addEventListener("message", (message) => {
-	const { type, value: userAgent } = message.data;
+window.addEventListener("message", (message: MessageEvent<iMessage>) => {
+	const { type, meta } = message.data;
 
-	if (!!type === false) {
-		return;
-	}
-	if (type === NAVIGATOR_ACTIONS.FETCH_USER_AGENT_RESPONSE) {
+	if (type === FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE) {
+		const userAgent: iUserAgent = meta.value;
 		const s = document.createElement("script");
 		s.textContent = `${actualCode}('${userAgent.value}', '${userAgent.appVersion}', '${userAgent.platform}');`;
 		document.documentElement.appendChild(s);

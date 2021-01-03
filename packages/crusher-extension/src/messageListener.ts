@@ -10,18 +10,13 @@ import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
 import { iSelectorInfo } from "./utils/selector";
 import { iAttribute } from "./interfaces/recorderReducer";
 import { RefObject } from "react";
-import { META_ACTIONS } from "./constants/actionTypes";
 import {
 	getActionsRecordingState,
 	isRecorderScriptBooted,
 } from "./redux/selectors/recorder";
-import {
-	NOT_RECORDING,
-	START_INSPECTING_RECORDING_MODE,
-	START_NON_INSPECTING_RECORDING_MODE,
-} from "./constants";
 import { AdvancedURL } from "./utils/url";
 import userAgents from "../../crusher-shared/constants/userAgents";
+import { FRAME_MESSAGE_TYPES } from "./scripts/inject/responseMessageListener";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION = "RECORD_ACTION",
@@ -34,8 +29,14 @@ export enum MESSAGE_TYPES {
 	SEO_META_INFORMATION = "SEO_META_INFORMATION",
 }
 
-interface iMessage {
-	type: MESSAGE_TYPES;
+export enum RECORDING_STATUS {
+	INSPECTOR_MODE_ON = "INSPECTOR_MODE_ON",
+	INSPECTOR_MODE_OFF = "INSPECTOR_MODE_OFF",
+	RECORDER_SCRIPT_NOT_BOOTED = "RECORDER_SCRIPT_NOT_BOOTED",
+}
+
+export interface iMessage {
+	type: MESSAGE_TYPES | FRAME_MESSAGE_TYPES;
 	meta: any;
 }
 
@@ -80,13 +81,14 @@ function sendTestRecorderStatusToFrame(
 
 	cn?.postMessage(
 		{
-			type: META_ACTIONS.FETCH_RECORDING_STATUS_RESPONSE,
-			value: inUsingInspectorMode
-				? START_INSPECTING_RECORDING_MODE
-				: isRecording
-				? START_NON_INSPECTING_RECORDING_MODE
-				: NOT_RECORDING,
-			isFromParent: true,
+			type: FRAME_MESSAGE_TYPES.RECORDING_STATUS_REQUEST_RESPONSE,
+			meta: {
+				value: inUsingInspectorMode
+					? RECORDING_STATUS.INSPECTOR_MODE_ON
+					: isRecording
+					? RECORDING_STATUS.INSPECTOR_MODE_OFF
+					: RECORDING_STATUS.RECORDER_SCRIPT_NOT_BOOTED,
+			},
 		},
 		"*",
 	);
@@ -105,7 +107,10 @@ function sendUserAgentToFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
 		(agent) => agent.name === (device.userAgent || userAgents[6].value),
 	);
 	cn?.postMessage(
-		{ type: META_ACTIONS.FETCH_USER_AGENT_RESPONSE, value: userAgent },
+		{
+			type: FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE,
+			meta: { value: userAgent },
+		},
 		"*",
 	);
 }
@@ -117,6 +122,7 @@ export function recorderMessageListener(
 	const store = getStore();
 
 	const { type } = event.data;
+
 	switch (type) {
 		case MESSAGE_TYPES.RECORD_ACTION: {
 			const meta = event.data.meta as iAction;

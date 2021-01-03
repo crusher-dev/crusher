@@ -91,3 +91,19 @@ export function getFrameDepth(winToID: any): number {
 
 	return 1 + getFrameDepth(winToID.parent);
 }
+
+export function toPascalCase(str: string) {
+	if (!str || typeof str !== "string") {
+		return str;
+	}
+	let outString = str?.toLowerCase();
+	outString = outString[0]?.toUpperCase() + outString?.substr(1);
+	return outString;
+}
+
+export function toPrettyEventName(eventName: string) {
+	return eventName
+		.split("_")
+		.map((name) => toPascalCase(name))
+		.join(" ");
+}

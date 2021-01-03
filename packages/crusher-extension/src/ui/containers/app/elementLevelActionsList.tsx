@@ -13,6 +13,7 @@ import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { updateActionsRecordingState } from "../../../redux/actions/recorder";
+import { toPrettyEventName } from "../../../utils/helpers";
 
 interface iElementLevelActionListProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -24,7 +25,7 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 		return {
 			id: action.id,
 			icon: action.icon,
-			title: action.id.toUpperCase(),
+			title: toPrettyEventName(action.id),
 			desc: action.value,
 		};
 	});

@@ -11,6 +11,7 @@ import {
 import { getStore } from "../../../redux/store";
 import { useSelector } from "react-redux";
 import { getInspectModeState } from "../../../redux/selectors/recorder";
+import { toPrettyEventName } from "../../../utils/helpers";
 
 interface iTopLevelActionListProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -23,7 +24,7 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 		return {
 			id: action.id,
 			icon: action.icon,
-			title: action.id.toUpperCase(),
+			title: toPrettyEventName(action.id),
 			desc: action.value,
 		};
 	});

@@ -115,29 +115,7 @@ function boot() {
 	// 		}
 	// 	},
 	// 	false,
-	// );
-
-	document.addEventListener(
-		"keydown",
-		(event: KeyboardEvent) => {
-			if (event.repeat) {
-				return;
-			}
-
-			if (event.keyCode === 68 && event.shiftKey) {
-				recordingOverlay.highlightInspectedElement();
-			}
-		},
-		true,
-	);
-
-	document.addEventListener(
-		"keyup",
-		() => {
-			recordingOverlay.stopInspectorIfMoving();
-		},
-		true,
-	);
+	// );s
 }
 
 if (top !== self) {

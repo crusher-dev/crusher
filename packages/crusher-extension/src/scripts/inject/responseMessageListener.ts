@@ -62,10 +62,10 @@ export function responseMessageListener(
 		case FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE: {
 			const meta = event.data.meta as iInspectModeUpdateMeta;
 			if (meta.isInspectModeOn) {
-				eventRecording.toggleInspector();
+				eventRecording.toggleInspectorInParentFrame();
 			} else {
 				eventRecording.enableJavascriptEvents();
-				eventRecording.turnInspectModeOff();
+				eventRecording.turnInspectModeOffInParentFrame();
 				eventRecording.unpin();
 			}
 			break;
@@ -79,7 +79,7 @@ export function responseMessageListener(
 				eventRecording.boot(true);
 			} else if (meta.value === RECORDING_STATUS.INSPECTOR_MODE_ON) {
 				eventRecording.boot();
-				eventRecording.toggleInspector();
+				eventRecording.toggleInspectorInParentFrame();
 			}
 			break;
 		}

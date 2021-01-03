@@ -89,7 +89,6 @@ const mainContainerStyle = {
 };
 
 const stepsContainerStyle = {
-	padding: "0rem 1.25rem",
 	paddingBottom: "0rem",
 	borderTopLeftRadius: 12,
 };

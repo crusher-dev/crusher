@@ -11,6 +11,7 @@ import { iAction } from "../../../interfaces/actionsReducer";
 
 interface iActionProps {
 	action: iAction;
+	style?: React.CSSProperties;
 }
 
 function getActionDescription(action: iAction) {
@@ -57,7 +58,13 @@ const ActionStepList = (props: iActionStepListProps) => {
 	});
 
 	const stepList = items.map((step: iAction, index: number) => {
-		return <Action key={index} action={step} />;
+		return (
+			<Action
+				style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }}
+				key={index}
+				action={step}
+			/>
+		);
 	});
 
 	return (
@@ -81,7 +88,6 @@ const containerStyle = {
 const stepsListContainerStyle = {
 	padding: "1.1rem 1.25rem",
 	position: POSITION.RELATIVE,
-	background: "#1C1F26",
 	marginTop: "-0.55rem",
 	borderTopLeftRadius: "12px",
 	overflow: OVERFLOW.AUTO,
@@ -94,7 +100,8 @@ const stepStyle = {
 	fontStyle: "normal",
 	background: "#1C1F26",
 	borderRadius: "0.25rem",
-	padding: "0.6rem 0",
+	padding: "0.6rem",
+	marginTop: "1rem",
 	overflow: "hidden",
 };
 

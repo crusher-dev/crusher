@@ -25,7 +25,7 @@ const App = () => {
 				deviceIframeRef={deviceIframeRef}
 				saveTestCallback={saveTest}
 			/>
-			<SidebarActionsBox />
+			<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 			<link
 				rel="stylesheet"
 				href={chrome.runtime.getURL("/styles/devices.min.css")}

@@ -7,6 +7,10 @@ import {
 	iElementModeMessageMeta,
 	MESSAGE_TYPES,
 } from "../../../messageListener";
+import { iPerformActionMeta } from "../responseMessageListener";
+import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
+import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
+import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createPopper } = require("@popperjs/core");
@@ -269,58 +273,55 @@ export default class EventRecording {
 			target.style.outlineColor = "none";
 			target.style.outlineWidth = "0px";
 		}
+		console.error("This is target", target);
 	}
 
-	handleSelectedActionFromEventsList(event: any) {
-		// If its coming from testRecorder popup use event.action
-		const action = event.action
-			? event.action
-			: event.target.getAttribute("data-action");
-		switch (action) {
-			case ACTIONS_IN_TEST.CLICK:
-				DOM.removeAllTargetBlankFromLinks();
-				this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.CLICK,
-					this.state.targetElement,
-				);
-				this.eventsController.simulateClickOnElement(this.state.targetElement);
-				break;
-			case ACTIONS_IN_TEST.HOVER:
-				this.eventsController.simulateHoverOnElement(this.state.targetElement);
-				this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.HOVER,
-					this.state.targetElement,
-				);
-				break;
-			case ACTIONS_IN_TEST.BLACKOUT:
-				this.state.targetElement.style.visibility = "hidden";
-				this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.BLACKOUT,
-					this.state.targetElement,
-				);
+	performSimulatedAction(meta: iPerformActionMeta) {
+		const { type, recordingState } = meta;
+		if (recordingState === ACTIONS_RECORDING_STATE.PAGE) {
+			switch (type) {
+				case TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE:
+					this.toggleInspector();
+					break;
+				case TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT:
+					this.takePageScreenShot();
+					break;
+			}
+		} else if (recordingState === ACTIONS_RECORDING_STATE.ELEMENT) {
+			switch (type) {
+				case ELEMENT_LEVEL_ACTION.CLICK:
+					this.performSimulatedClick();
+					break;
+				case ELEMENT_LEVEL_ACTION.HOVER:
+					this.performSimulatedHover();
+					break;
+				case ELEMENT_LEVEL_ACTION.BLACKOUT:
+					this.state.targetElement.style.visibility = "hidden";
+					break;
+			}
 
-				break;
-			case ACTIONS_IN_TEST.ELEMENT_SCREENSHOT:
-				this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
-					this.state.targetElement,
-				);
-				break;
-			case ACTIONS_IN_TEST.SCROLL_TO_VIEW:
-				this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.SCROLL_TO_VIEW,
-					this.state.targetElement,
-				);
-				break;
-			default:
-				break;
+			// Now user has selected an element action
+			this.enableJavascriptEvents();
 		}
+	}
+
+	enableJavascriptEvents() {
 		if (this.resetUserEventsToDefaultCallback) {
 			this.resetUserEventsToDefaultCallback();
 			this.resetUserEventsToDefaultCallback = null;
 		}
-		this.unpin();
-		this.hideEventsBoxIfShown();
+	}
+	performSimulatedClick() {
+		DOM.removeAllTargetBlankFromLinks();
+		this.eventsController.simulateClickOnElement(this.state.targetElement);
+	}
+
+	performSimulatedHover() {
+		this.eventsController.simulateHoverOnElement(this.state.targetElement);
+	}
+
+	handleSelectedActionFromEventsList(event: any) {
+		console.log("This event passed: ", event);
 	}
 
 	onLeftClick(event: Event) {
@@ -474,7 +475,10 @@ export default class EventRecording {
 	unpin() {
 		console.log("Unpinning");
 		this.state.pinned = false;
-		if (this._overlayCover) {
+		if (
+			this._overlayCover &&
+			(!this._overlayCover.style.left || this._overlayCover.style.left !== "0px")
+		) {
 			this._overlayCover.classList.remove("pointerEventsNone");
 			this._overlayCover.style.left = "0px";
 			this._overlayCover.style.top = "0px";
@@ -669,13 +673,8 @@ export default class EventRecording {
 	}
 
 	removeEventsFormWizard() {
-		const { targetElement } = this.state;
-
 		console.debug("Shutting down Recording Overlay");
 		this.removeNodeListeners();
-		if (targetElement) {
-			this.removeHighLightFromNode(targetElement);
-		}
 		this.removeNodes();
 
 		this.state = {

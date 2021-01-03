@@ -5,6 +5,9 @@ import {
 } from "../../messageListener";
 import EventRecording from "./ui/eventRecording";
 import { getAllSeoMetaInfo } from "../../utils/dom";
+import { TOP_LEVEL_ACTION } from "../../interfaces/topLevelAction";
+import { ELEMENT_LEVEL_ACTION } from "../../interfaces/elementLevelAction";
+import { ACTIONS_RECORDING_STATE } from "../../interfaces/actionsRecordingState";
 
 export enum FRAME_MESSAGE_TYPES {
 	USER_AGENT_REQUEST_RESPONSE = "USER_AGENT_REQUEST_RESPONSE",
@@ -17,12 +20,17 @@ export enum FRAME_MESSAGE_TYPES {
 	REFRESH_PAGE = "REFRESH_PAGE",
 }
 
-interface iInspectModeUpdateMeta {
-	value: boolean;
+export interface iInspectModeUpdateMeta {
+	isInspectModeOn: boolean;
 }
 
 interface iRecordStatusResponseMeta {
 	value: RECORDING_STATUS;
+}
+
+export interface iPerformActionMeta {
+	type: TOP_LEVEL_ACTION | ELEMENT_LEVEL_ACTION;
+	recordingState: ACTIONS_RECORDING_STATE;
 }
 
 function sendSeoMetaToParentFrame() {
@@ -46,12 +54,19 @@ export function responseMessageListener(
 ) {
 	const { type } = event.data;
 	switch (type) {
+		case FRAME_MESSAGE_TYPES.PERFORM_ACTION: {
+			const meta = event.data.meta as iPerformActionMeta;
+			this.eventRecording.performSimulatedAction(meta);
+			break;
+		}
 		case FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE: {
 			const meta = event.data.meta as iInspectModeUpdateMeta;
-			if (meta.value) {
+			if (meta.isInspectModeOn) {
 				eventRecording.toggleInspector();
 			} else {
-				eventRecording.removeEventsFormWizard();
+				eventRecording.enableJavascriptEvents();
+				eventRecording.turnInspectModeOff();
+				eventRecording.unpin();
 			}
 			break;
 		}

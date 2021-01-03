@@ -7,7 +7,7 @@ export interface iAction {
 		selectors?: Array<iSelectorInfo>;
 		meta?: any;
 	};
-	url: string;
+	url?: string;
 }
 
 export interface iActionsState {

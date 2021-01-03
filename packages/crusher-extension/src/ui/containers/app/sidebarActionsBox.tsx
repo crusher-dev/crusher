@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import {
 	FLEX_DIRECTION,
 	FONT_WEIGHT,
@@ -14,7 +14,11 @@ import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingSta
 import { TopLevelActionsList } from "./topLevelActionsList";
 import { ElementLevelActionsList } from "./elementLevelActionsList";
 
-const SidebarActionsBox = () => {
+interface iSidebarActionBoxProps {
+	deviceIframeRef: RefObject<HTMLIFrameElement>;
+}
+
+const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const actions = useSelector(getActions);
 	const recordingState = useSelector(getActionsRecordingState);
 	return (
@@ -34,10 +38,10 @@ const SidebarActionsBox = () => {
 				</div>
 				<div style={actionContainerStyle}>
 					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.PAGE}>
-						<TopLevelActionsList />
+						<TopLevelActionsList deviceIframeRef={props.deviceIframeRef} />
 					</Conditional>
 					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.ELEMENT}>
-						<ElementLevelActionsList />
+						<ElementLevelActionsList deviceIframeRef={props.deviceIframeRef} />
 					</Conditional>
 				</div>
 			</div>

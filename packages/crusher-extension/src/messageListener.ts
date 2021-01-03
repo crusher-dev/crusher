@@ -16,7 +16,13 @@ import {
 } from "./redux/selectors/recorder";
 import { AdvancedURL } from "./utils/url";
 import userAgents from "../../crusher-shared/constants/userAgents";
-import { FRAME_MESSAGE_TYPES } from "./scripts/inject/responseMessageListener";
+import {
+	FRAME_MESSAGE_TYPES,
+	iInspectModeUpdateMeta,
+	iPerformActionMeta,
+} from "./scripts/inject/responseMessageListener";
+import { TOP_LEVEL_ACTION } from "./interfaces/topLevelAction";
+import { ELEMENT_LEVEL_ACTION } from "./interfaces/elementLevelAction";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION = "RECORD_ACTION",
@@ -163,6 +169,60 @@ export function recorderMessageListener(
 
 	return true;
 }
+
+export function turnOnInspectModeInFrame(
+	deviceIframeRef: RefObject<HTMLIFrameElement>,
+) {
+	if (!deviceIframeRef.current)
+		throw new Error("Iframe not available yet from ref context");
+
+	const cn = deviceIframeRef.current.contentWindow;
+
+	cn?.postMessage(
+		{
+			type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
+			meta: { isInspectModeOn: true } as iInspectModeUpdateMeta,
+		},
+		"*",
+	);
+}
+
+export function turnOffInspectModeInFrame(
+	deviceIframeRef: RefObject<HTMLIFrameElement>,
+) {
+	if (!deviceIframeRef.current)
+		throw new Error("Iframe not available yet from ref context");
+
+	const cn = deviceIframeRef.current.contentWindow;
+
+	cn?.postMessage(
+		{
+			type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
+			meta: { isInspectModeOn: false } as iInspectModeUpdateMeta,
+		},
+		"*",
+	);
+}
+
+export function performActionInFrame(
+	actionType: TOP_LEVEL_ACTION | ELEMENT_LEVEL_ACTION,
+	recordingState: ACTIONS_RECORDING_STATE,
+	deviceIframeRef: RefObject<HTMLIFrameElement>,
+) {
+	if (!deviceIframeRef.current)
+		throw new Error("Iframe not available yet from ref context");
+
+	const cn = deviceIframeRef.current.contentWindow;
+
+	cn?.postMessage(
+		{
+			type: FRAME_MESSAGE_TYPES.PERFORM_ACTION,
+			meta: { type: actionType, recordingState } as iPerformActionMeta,
+		},
+		"*",
+	);
+}
+
 //
 // export function recorderMessageListener(event: MessageEvent<iMessage>) {
 // 	const { type, eventType, value, selectors } = event.data;

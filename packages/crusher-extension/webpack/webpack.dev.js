@@ -24,11 +24,12 @@ module.exports = {
 		new webpack.DefinePlugin({
 			__HOST__: `'${host}'`,
 			__PORT__: port,
-			"process.env": {
-				NODE_ENV: JSON.stringify("development"),
-			},
+			"process.env.NODE_ENV": JSON.stringify("development"),
 		}),
 	],
+	devServer: {
+		inline: true,
+	},
 	output: {
 		filename: "[name].js",
 		path: path.resolve(__dirname, "../dev/js/"),

@@ -24,7 +24,6 @@ const App = () => {
 			<BrowserWindow
 				deviceIframeRef={deviceIframeRef}
 				saveTestCallback={saveTest}
-				isInspectModeOn={true}
 			/>
 			<SidebarActionsBox />
 			<link

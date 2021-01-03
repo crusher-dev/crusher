@@ -7,24 +7,26 @@ import {
 	WHITE_SPACE,
 } from "../../../interfaces/css";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
+import { iAction } from "../../../interfaces/actionsReducer";
 
-export interface iStep {
-	event_type: string;
-	selectors: Array<{
-		value: string;
-	}>;
-	value: string;
+interface iActionProps {
+	action: iAction;
 }
 
-interface iStepProps {
-	step: iStep;
+function getActionDescription(action: iAction) {
+	if (action.type === ACTIONS_IN_TEST.SCROLL) {
+		return "Performing scroll";
+	}
+
+	if (action.payload.selectors && action.payload.selectors[0]) {
+		return action.payload.selectors[0].value;
+	}
+
+	return "Unknown Action";
 }
 
-const Step = (props: iStepProps) => {
-	const { step } = props;
-
-	const stepValue =
-		step.event_type === ACTIONS_IN_TEST.SCROLL ? "Performing scroll" : step.value;
+const Action = (props: iActionProps) => {
+	const { action } = props;
 
 	return (
 		<li style={stepStyle}>
@@ -32,9 +34,9 @@ const Step = (props: iStepProps) => {
 				<img src={chrome.runtime.getURL("icons/mouse.svg")} />
 			</div>
 			<div>
-				<div style={stepActionStyle}>{step.event_type}</div>
+				<div style={stepActionStyle}>{action.type}</div>
 				<div style={stepSelectorContainerStyle}>
-					<div style={stepSelectorStyle}>{stepValue || step.selectors[0].value}</div>
+					<div style={stepSelectorStyle}>{getActionDescription(action)}</div>
 				</div>
 			</div>
 		</li>
@@ -42,11 +44,11 @@ const Step = (props: iStepProps) => {
 };
 
 interface iActionStepListProps {
-	steps: Array<iStep>;
+	items: Array<iAction>;
 }
 
 const ActionStepList = (props: iActionStepListProps) => {
-	const { steps } = props;
+	const { items } = props;
 
 	useEffect(() => {
 		const testListContainer: any = document.querySelector("#stepsListContainer");
@@ -54,8 +56,8 @@ const ActionStepList = (props: iActionStepListProps) => {
 		testListContainer.scrollBy(0, elementHeight);
 	});
 
-	const stepList = steps.map((step: any, index: number) => {
-		return <Step key={index} step={step} />;
+	const stepList = items.map((step: iAction, index: number) => {
+		return <Action key={index} action={step} />;
 	});
 
 	return (

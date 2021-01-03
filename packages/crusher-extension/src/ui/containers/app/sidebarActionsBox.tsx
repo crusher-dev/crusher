@@ -5,14 +5,12 @@ import {
 	OVERFLOW,
 	POSITION,
 } from "../../../interfaces/css";
-import { ActionStepList, iStep } from "./actionStepList";
+import { ActionStepList } from "./actionStepList";
+import { useSelector } from "react-redux";
+import { getActions } from "../../../redux/selectors/actions";
 
-interface iSidebarStepsBoxProps {
-	steps: Array<iStep>;
-}
-
-const SidebarStepsBox = (props: iSidebarStepsBoxProps) => {
-	const { steps } = props;
+const SidebarActionsBox = () => {
+	const actions = useSelector(getActions);
 
 	return (
 		<div style={sidebarStyle}>
@@ -27,7 +25,7 @@ const SidebarStepsBox = (props: iSidebarStepsBoxProps) => {
 			</div>
 			<div style={mainContainerStyle}>
 				<div style={stepsContainerStyle}>
-					<ActionStepList steps={steps} />
+					<ActionStepList items={actions} />
 				</div>
 				<div style={actionContainerStyle}>
 					{/*<ActionContainer*/}
@@ -101,4 +99,4 @@ const actionContainerStyle = {
 	overflow: OVERFLOW.AUTO,
 };
 
-export { SidebarStepsBox };
+export { SidebarActionsBox };

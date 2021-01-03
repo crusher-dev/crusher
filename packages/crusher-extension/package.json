@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@medv/finder": "^2.0.0",
 		"@popperjs/core": "^2.4.4",
+		"@reduxjs/toolkit": "^1.5.0",
 		"@types/node": "^14.0.27",
 		"@types/react-select": "^3.0.19",
 		"@types/styled-components": "^5.1.4",
@@ -24,7 +25,9 @@
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"react-is": "^17.0.1",
+		"react-redux": "7.1",
 		"react-select": "^3.1.0",
+		"redux": "^4.0.5",
 		"simple-select": "^2.1.4",
 		"styled-components": "^5.2.1",
 		"unique-selector": "^0.4.1",

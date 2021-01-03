@@ -10,7 +10,7 @@ export interface iAction {
 	url: string;
 }
 
-export interface iActionsReducer {
+export interface iActionsState {
 	list: Array<iAction>;
 	last_action: Date | null;
 }

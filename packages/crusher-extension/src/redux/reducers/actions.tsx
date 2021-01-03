@@ -1,8 +1,8 @@
 import { AnyAction } from "redux";
-import { iActionsReducer } from "../../interfaces/actionsReducer";
+import { iActionsState } from "../../interfaces/actionsReducer";
 import { RECORD_ACTION } from "../actions/actions";
 
-const initialState: iActionsReducer = {
+const initialState: iActionsState = {
 	list: [],
 	last_action: null,
 };

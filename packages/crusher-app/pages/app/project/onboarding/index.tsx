@@ -19,7 +19,7 @@ function Onboarding() {
 				let userRef = await fire
 					.firestore()
 					.collection("onboarding")
-					.doc(`${userInfo.id}`);
+                    .doc(`${userInfo.id}`);
 				let userData = await (await userRef.get()).data();
 				setWatchIntroVideo(userData.watchIntroVideo || false);
 				setCreate2tests(userData.create2tests || false);
@@ -36,7 +36,8 @@ function Onboarding() {
 						create2tests: false,
 						reviewReports: false,
 						integrate: false,
-						inviteTeamMembers: false,
+                        inviteTeamMembers: false,
+                        totalNumberOfTests: 0
 					});
 				console.error(err);
 			}

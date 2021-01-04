@@ -13,13 +13,12 @@ export default class FirebaseService {
 		this.userRef
 			.get()
 			.then((docSnapshot) => {
-				if (docSnapshot.exists) {
+				if (docSnapshot.exists) { // if the document exists, we just get the data in the document
 					this.userRef.onSnapshot((doc) => {
 						let data = doc.data();
 						this.docsInFirestore = { ...data };
-						console.log(this.docsInFirestore);
 					});
-				} else {
+				} else { // if the document does not exist, we insert data into the document
 					this.userRef.set({
 						watchIntroVideo: false,
 						create2tests: false,

@@ -1,4 +1,6 @@
-export default [
+import { iDevice } from '../types/extension/device';
+
+const devices : Array<iDevice> =  [
 	{
 		id: 'iphoneXRXSMax',
 		name: 'iPhone XR, XSMax',
@@ -85,3 +87,5 @@ export default [
 		userAgent: 'Google Chrome',
 	},
 ];
+
+export default devices;

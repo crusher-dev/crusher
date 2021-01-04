@@ -8,7 +8,6 @@ import WebRequestFullDetails = chrome.webRequest.WebRequestFullDetails;
 import WebResponseHeadersDetails = chrome.webRequest.WebResponseHeadersDetails;
 import WebNavigationParentedCallbackDetails = chrome.webNavigation.WebNavigationParentedCallbackDetails;
 import HttpHeader = chrome.webRequest.HttpHeader;
-import { UserAgent } from "../../crusher-shared/types/userAgent";
 import { AdvancedURL } from "./utils/url";
 
 class BackgroundEventsListener {
@@ -45,14 +44,7 @@ class BackgroundEventsListener {
 				tab.url,
 			) as string;
 
-			const crusherAgent = AdvancedURL.getParameterByName(
-				"__crusherAgent__",
-				iframeURL,
-			);
-
-			const selectedUserAgent: UserAgent | undefined = UserAgents.find(
-				(agent) => agent.name === (crusherAgent || UserAgents[6].value),
-			);
+			const selectedUserAgent = AdvancedURL.getUserAgentFromUrl(iframeURL);
 
 			TabStorage.set(
 				tabId,

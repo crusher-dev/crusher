@@ -31,7 +31,7 @@ function Onboarding() {
 					.firestore()
 					.collection("onboarding")
 					.doc(`${userInfo.id}`)
-					.set({
+					.update({
 						watchIntroVideo: false,
 						create2tests: false,
 						reviewReports: false,

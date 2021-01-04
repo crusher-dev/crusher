@@ -17,6 +17,7 @@ import { Platform } from "../../core/interfaces/Platform";
 import { resolvePathToFrontendURI } from "../../core/utils/uri";
 import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
+import FirebaseService from "../../core/services/FirebaseService";
 import fire from "../../../../crusher-shared/config/fire-config-server.js";
 
 const RESPONSE_STATUS = {
@@ -42,6 +43,8 @@ export class TestController {
 	private jobService: JobsService;
 	@Inject()
 	private testInstanceService: TestInstanceService;
+	@Inject()
+	private firebaseService: FirebaseService;
 
 	private dbManager: DBManager;
 
@@ -141,45 +144,11 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 
 		let res = await this.draftService.getLastDraftInstanceResult(draftId);
 
-		// getting data from firestore
-		let docsInFirestore;
-		let totalNumberOfTests = 1;
-		try {
-			docsInFirestore = await fire.firestore().collection("onboarding").doc(`${user_id}`).get();
-			docsInFirestore = docsInFirestore.data();
-			totalNumberOfTests = docsInFirestore.totalTests || 1;
-		} catch (err) {
-			console.error(err);
-		}
-
-		console.log(docsInFirestore);
-
 		let numberOfRows = await this.testService.findNumberOfTests(user_id);
 		numberOfRows = numberOfRows[0].total;
 
-		totalNumberOfTests = Math.max(numberOfRows, totalNumberOfTests);
-
-		if (docsInFirestore && docsInFirestore.create2tests) {
-			fire.firestore()
-				.collection("onboarding")
-				.doc(`${user_id}`)
-				.update({ totalNumberOfTests })
-				.catch((err) => console.error(err));
-		}
-
-		if (numberOfRows >= 2) {
-			fire.firestore()
-				.collection("onboarding")
-				.doc(`${user_id}`)
-				.update({ user_id, create2tests: true, totalNumberOfTests })
-				.catch((err) => console.error(err));
-		} else {
-			fire.firestore()
-				.collection("onboarding")
-				.doc(`${user_id}`)
-				.update({ user_id, totalNumberOfTests, create2tests: false })
-				.catch((err) => console.error(err));
-		}
+		await this.firebaseService.createConnection(user_id);
+		await this.firebaseService.insertNumberOfTests(numberOfRows);
 
 		const video_uri = res ? res.video_uri : null;
 

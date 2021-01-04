@@ -8,3 +8,8 @@ export const getActionsRecordingState = (state: iReduxState) =>
 
 export const isRecorderScriptBooted = (state: iReduxState) =>
 	state.recorder.isRecorderScriptBooted;
+
+export const getModalState = (state: iReduxState) => state.recorder.modalState;
+
+export const getSeoMetaInfo = (state: iReduxState) =>
+	state.recorder.seoMetaInfo;

@@ -12,6 +12,8 @@ import { getStore } from "../../../redux/store";
 import { useSelector } from "react-redux";
 import { getInspectModeState } from "../../../redux/selectors/recorder";
 import { toPrettyEventName } from "../../../utils/helpers";
+import { updateActionsModalState } from "../../../redux/actions/recorder";
+import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 
 interface iTopLevelActionListProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -49,6 +51,9 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 				} else {
 					turnOnInspectModeInFrame(props.deviceIframeRef);
 				}
+				break;
+			case TOP_LEVEL_ACTION.SHOW_SEO_MODAL:
+				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.SEO_VALIDATION));
 				break;
 			default:
 				console.debug("Unknown Top Level Action Called");

@@ -6,6 +6,7 @@ export const POSITION = {
 } as const;
 
 export const TEXT_ALIGN = {
+	LEFT: "left",
 	CENTER: "center",
 } as const;
 
@@ -33,4 +34,8 @@ export const WHITE_SPACE = {
 
 export const SCROLL_BEHAVIOR = {
 	SMOOTH: "smooth",
+} as const;
+
+export const APPEARANCE = {
+	NONE: "none",
 } as const;

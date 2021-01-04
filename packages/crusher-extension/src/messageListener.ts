@@ -5,6 +5,7 @@ import {
 	updateLastRecordedAction,
 } from "./redux/actions/actions";
 import {
+	addSEOMetaInfo,
 	updateActionsRecordingState,
 	updateInspectModeState,
 	updateIsRecorderScriptBooted,
@@ -28,6 +29,7 @@ import { TOP_LEVEL_ACTION } from "./interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "./interfaces/elementLevelAction";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
 import { getActions } from "./redux/selectors/actions";
+import { iPageSeoMeta } from "./utils/dom";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION = "RECORD_ACTION",
@@ -59,6 +61,11 @@ export interface iElementModeMessageMeta {
 	selectors: Array<iSelectorInfo>;
 	attributes: Array<iAttribute>;
 	innerHTML: string;
+}
+
+export interface iSeoMetaInformationMeta {
+	title: string;
+	metaTags: iPageSeoMeta;
 }
 
 function handleRecordAction(action: iAction) {
@@ -225,6 +232,8 @@ export function recorderMessageListener(
 			break;
 		}
 		case MESSAGE_TYPES.SEO_META_INFORMATION: {
+			const meta = event.data.meta as iSeoMetaInformationMeta;
+			store.dispatch(addSEOMetaInfo(meta));
 			break;
 		}
 		default:

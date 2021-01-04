@@ -12,8 +12,12 @@ import { getStore } from "../../../redux/store";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
-import { updateActionsRecordingState } from "../../../redux/actions/recorder";
+import {
+	updateActionsModalState,
+	updateActionsRecordingState,
+} from "../../../redux/actions/recorder";
 import { toPrettyEventName } from "../../../utils/helpers";
+import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 
 interface iElementLevelActionListProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -77,10 +81,14 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 					props.deviceIframeRef,
 				);
 				break;
+			case ELEMENT_LEVEL_ACTION.SHOW_ASSERT_MODAL:
+				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.ASSERT_ELEMENT));
+				return;
+			default:
+				console.debug("Unknown Element Level Action");
 		}
 		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(props.deviceIframeRef);
-		console.log("Selected element action: ", id);
 	};
 
 	return (

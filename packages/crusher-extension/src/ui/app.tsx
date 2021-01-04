@@ -5,6 +5,8 @@ import { BrowserWindow } from "./containers/app/browserWindow";
 import configureStore from "../redux/store";
 import { Provider } from "react-redux";
 import { recorderMessageListener } from "../messageListener";
+import ReactModal from "react-modal";
+import { ModalManager } from "./containers/app/modals";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
@@ -26,6 +28,7 @@ const App = () => {
 				saveTestCallback={saveTest}
 			/>
 			<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
+			<ModalManager deviceIframeRef={deviceIframeRef} />
 			<link
 				rel="stylesheet"
 				href={chrome.runtime.getURL("/styles/devices.min.css")}
@@ -41,6 +44,8 @@ const containerStyle = {
 	height: "auto",
 	background: "rgb(40, 40, 40)",
 };
+
+ReactModal.setAppElement("#root");
 
 render(
 	<Provider store={configureStore()}>

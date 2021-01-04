@@ -89,18 +89,22 @@ export interface iPageSeoMeta {
 }
 
 export function getAllSeoMetaInfo() {
-	const metaElements: NodeListOf<HTMLMetaElement> = document.querySelectorAll(
-		"meta",
+	const metaElements: Array<HTMLMetaElement> = [
+		...(document.querySelectorAll("meta") as any),
+	];
+	const metaTagsValuesMap: iPageSeoMeta = metaElements.reduce(
+		(prev: any, current: HTMLMetaElement) => {
+			const name =
+				current && typeof current.getAttribute === "function"
+					? current.getAttribute("name")
+					: null;
+			if (!name) {
+				return prev;
+			}
+			return { ...prev, [name]: { name, value: current.content } };
+		},
+		{},
 	);
-	const metaTagsValuesMap: iPageSeoMeta = (new Array(
-		metaElements,
-	) as any).reduce((prev: any, current: HTMLMetaElement) => {
-		const name = current.getAttribute("name");
-		if (!name) {
-			return prev;
-		}
-		return { ...prev, [name]: { name, value: current.content } };
-	}, {});
 
 	return metaTagsValuesMap;
 }

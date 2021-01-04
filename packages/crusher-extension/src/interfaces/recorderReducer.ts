@@ -1,5 +1,7 @@
 import { ACTIONS_RECORDING_STATE } from "./actionsRecordingState";
 import { iSelectorInfo } from "../utils/selector";
+import { ACTIONS_MODAL_STATE } from "./actionsModalState";
+import { iSeoMetaInformationMeta } from "src/messageListener";
 
 export interface iAttribute {
 	name: string;
@@ -19,4 +21,6 @@ export interface iRecorderState {
 		elementInfo?: iElementInfo | null;
 	};
 	isRecorderScriptBooted: boolean;
+	modalState: ACTIONS_MODAL_STATE | null;
+	seoMetaInfo: iSeoMetaInformationMeta | null;
 }

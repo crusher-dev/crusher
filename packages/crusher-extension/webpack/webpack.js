@@ -1,7 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const ExtensionReloader = require("webpack-extension-reloader");
-const nodeExternals = require("webpack-node-externals");
 
 const customPath = path.join(__dirname, "./customPublicPath");
 const host = "localhost";
@@ -10,11 +8,8 @@ const port = 3000;
 module.exports = {
 	entry: {
 		background: [customPath, path.resolve(__dirname, "../src/background.ts")],
-		popup: [customPath, path.resolve(__dirname, "../src/ui/popup/index.tsx")],
-		record_test: [
-			customPath,
-			path.resolve(__dirname, "../src/ui/testRecorder/index.tsx"),
-		],
+		popup: [customPath, path.resolve(__dirname, "../src/ui/popup.tsx")],
+		record_test: [customPath, path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [
 		new webpack.DefinePlugin({
@@ -31,7 +26,6 @@ module.exports = {
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".jsx"],
-		// modules: ["node_modules"]
 	},
 	module: {
 		rules: [

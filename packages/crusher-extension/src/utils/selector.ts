@@ -1,5 +1,6 @@
 import { finder } from "@medv/finder";
 import * as uniqueSelector2 from "unique-selector-2";
+import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
 
 const _uniqueSelector2 = new uniqueSelector2.default({});
 
@@ -30,12 +31,6 @@ function getXpathTo(element: HTMLElement): string | null {
 function getFinderSelector(elementNode: HTMLElement): string {
 	const optimizedMinLength = elementNode.getAttribute("id") ? 2 : 10; // if the target has an id, use that instead of multiple frames selectors
 	return finder(elementNode, { seedMinLength: 5, optimizedMinLength });
-}
-
-export interface iSelectorInfo {
-	type: string;
-	value: string;
-	uniquenessScore: number;
 }
 
 export function getSelectors(elementNode: HTMLElement): Array<iSelectorInfo> {

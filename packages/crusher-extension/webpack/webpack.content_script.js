@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const ExtensionReloader = require("webpack-extension-reloader");
 
 const customPath = path.join(__dirname, "./customPublicPath");
 const host = "localhost";

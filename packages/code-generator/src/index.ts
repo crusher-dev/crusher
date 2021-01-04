@@ -4,6 +4,8 @@ import devices from '../../crusher-shared/constants/devices';
 import userAgents from '../../crusher-shared/constants/userAgents';
 
 import { ACTION_DESCRIPTIONS } from '../../crusher-shared/constants/actionDescriptions';
+import { iAction } from '../../crusher-shared/types/action';
+import { iAssertionRow } from '../../crusher-shared/types/assertionRow';
 
 const importPlayWright = `const playwright = require('playwright');\n\n`;
 
@@ -62,9 +64,9 @@ const assertElementAttributesFunction = `async function assertElementAttributes(
 	const logs = [];
 	
 	for(let i = 0; i < assertions.length; i++) {
-		const {value, method, attribute} = assertions[i];
+		const {validation: value, operation: method, field: attribute} = assertions[i];
 		const elementAttributeValue = await elHandle.getAttribute(attribute);
-		if(method === "matches") {
+		if(method === "MATCHES") {
 			if(elementAttributeValue !== value){
 				hasPassed = false;
 				logs.push({status: "FAILED", message: "Failed to assert attribute="+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
@@ -72,7 +74,7 @@ const assertElementAttributesFunction = `async function assertElementAttributes(
 			else {
 				logs.push({status: "DONE", message: "Asserted attribute="+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
 			}
-		} else if(method === "contains") {
+		} else if(method === "CONTAINS") {
 			const doesContain =  elementAttributeValue.includes(value);
 			if(!doesContain ){
 				hasPassed = false;
@@ -81,7 +83,7 @@ const assertElementAttributesFunction = `async function assertElementAttributes(
 			else {
 				logs.push({status: "DONE", message: "Asserted attribute contains "+value+" of " + selector + "", meta: {method, valueToMatch: value, attribute, elementValue: elementAttributeValue}});
 			}
-		} else if(method === "regex" ){
+		} else if(method === "REGEX" ){
 			const rgx = new RegExp(value);
 			if (!rgx.test(elementAttributeValue)) {
 				hasPassed = false;
@@ -172,8 +174,8 @@ export default class CodeGenerator {
 		this.helperFunctionsToInclude = {};
 	}
 
-	generate(events: any, isRecordingVideo: boolean = false, isLiveProgress = false) {
-		const generatedEventsCode = this._handleEvents(events, isRecordingVideo, isLiveProgress);
+	generate(events: Array<iAction>, isRecordingVideo: boolean = false, isLiveProgress = false) {
+		const generatedEventsCode = this._handleActions(events, isRecordingVideo, isLiveProgress);
 		return (
 			importPlayWright +
 			this.addHelperFunctionsIfAny(isRecordingVideo, isLiveProgress) +
@@ -208,13 +210,13 @@ export default class CodeGenerator {
 		return codeToAdd;
 	}
 
-	_handleEvents(events: any, isRecordingVideo = false, isLiveProgress = false) {
+	_handleActions(events: Array<iAction>, isRecordingVideo = false, isLiveProgress = false) {
 		let screenShotFileName: string;
 		let code = '\n';
 		let firstTimeNavigate = true;
 		let width = 1280;
 		let height = 720;
-		if (events[0] && events[0].event_type !== ACTIONS_IN_TEST.SET_DEVICE) {
+		if (events[0] && events[0].type !== ACTIONS_IN_TEST.SET_DEVICE) {
 			const device = devices[7];
 			const userAgent: any = userAgents.find((agent) => {
 				return agent.name === device.userAgent;
@@ -241,8 +243,8 @@ export default class CodeGenerator {
 					value: device.name,
 				})}'}, {name: '${device.name}', width: ${width}, height: ${height}, userAgent: '${userAgent.value}'});\n`;
 			}
-		} else if (events[0] && events[0].event_type === ACTIONS_IN_TEST.SET_DEVICE) {
-			const { value: deviceId } = events[0];
+		} else if (events[0] && events[0].type === ACTIONS_IN_TEST.SET_DEVICE) {
+			const deviceId = events[0].payload.meta?.deviceId;
 			const deviceFound = devices.find((_device) => {
 				return _device.id === deviceId;
 			});
@@ -261,10 +263,14 @@ export default class CodeGenerator {
 		}
 
 		for (let i = 0; i < events.length; i++) {
-			const { event_type, selectors, value } = events[i];
+			const event_type = events[i].type;
+			const selectors = events[i].payload.selectors;
+			const value = "";
 
 			switch (event_type) {
-				case ACTIONS_IN_TEST.NAVIGATE_URL:
+				case ACTIONS_IN_TEST.NAVIGATE_URL: {
+					const urlToGo = events[i].payload.meta.value;
+
 					if (firstTimeNavigate) {
 						firstTimeNavigate = false;
 						code +=
@@ -279,20 +285,23 @@ export default class CodeGenerator {
 });\n`
 						code += `page.setDefaultTimeout(10000);` +
 							(isRecordingVideo ? `const {saveVideo} = require('playwright-video');\ncaptureVideo = await saveVideo(page, 'video.mp4');\ntry{\n` : '') +
-							`await page.goto('${value}');\n`;
+							`await page.goto('${urlToGo}');\n`;
 					} else {
-						code += `await page.goto('${value}');\n`;
+						code += `await page.goto('${urlToGo}');\n`;
 					}
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.NAVIGATE_URL}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.NAVIGATE_URL]({
-							value: value,
+							value: urlToGo,
 						})}'});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
+				}
 				case ACTIONS_IN_TEST.CLICK:
+					console.error(events[i]);
+					if(!selectors) {throw new Error("Element with no selector provided for click action")}
 					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
 
 					code += `const stv_${i} = await page.$(selector_${i});\nawait stv_${i}.scrollIntoViewIfNeeded();\nawait stv_${i}.dispatchEvent('click');\n`;
@@ -307,6 +316,8 @@ export default class CodeGenerator {
 					code += `await page.waitForLoadState();\n`;
 					break;
 				case ACTIONS_IN_TEST.HOVER:
+					if(!selectors) {throw new Error("Element with no selector provided for hover action")}
+
 					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
 
 					code += `await page.hover(selector_${i});\n`;
@@ -320,6 +331,8 @@ export default class CodeGenerator {
 					}
 					break;
 				case ACTIONS_IN_TEST.ELEMENT_SCREENSHOT:
+					if(!selectors) {throw new Error("Element with no selector provided for screenshot")}
+
 					screenShotFileName = selectors[0].value.replace(/[^\w\s]/gi, '').replace(/ /g, '_') + `_${i}`;
 					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
 
@@ -337,7 +350,9 @@ export default class CodeGenerator {
 					break;
 				case ACTIONS_IN_TEST.PAGE_SCREENSHOT:
 					screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g, '_') + `_${i}`;
-					code += `await page.screenshot({path: '${screenShotFileName}.png', fullPage: true});\n`;
+					code += `const screenshotFileName_${i} = (await page.title()).replace(/[^\\w\\s]/gi, '').replace(/ /g, '_');\n`;
+					code += `await page.screenshot({path: screenshotFileName_${i}, fullPage: true});\n`;
+
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.PAGE_SCREENSHOT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[
 							ACTIONS_IN_TEST.PAGE_SCREENSHOT
@@ -348,6 +363,8 @@ export default class CodeGenerator {
 					}
 					break;
 				case ACTIONS_IN_TEST.SCROLL_TO_VIEW:
+					if(!selectors) {throw new Error("Element with no selector provided for scroll to view action")}
+
 					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
 
 					code += `const stv_${i} = await page.$(selector_${i});\nawait stv_${i}.scrollIntoViewIfNeeded();\n`;
@@ -360,30 +377,42 @@ export default class CodeGenerator {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
-				case ACTIONS_IN_TEST.ADD_INPUT:
+				case ACTIONS_IN_TEST.ADD_INPUT: {
+					if (!selectors) {
+						throw new Error("Element with no selector provided for add input action")
+					}
+
+					const inputKeys = events[i].payload.meta.value;
+
 					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
 
 					code += `const stv_${i} = await page.$(selector_${i});\nawait stv_${i}.scrollIntoViewIfNeeded();\n`;
 
-					code += `await type(stv_${i}, '${JSON.stringify(value)}');\n`;
+					code += `await type(stv_${i}, '${JSON.stringify(inputKeys)}');\n`;
 
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.ADD_INPUT}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.ADD_INPUT]({
 							selector: selectors[0].value,
-							value,
-						})}'}, {selector: selector_${i}, value: '${value.toString()}'});\n`;
+							value: inputKeys,
+						})}'}, {selector: selector_${i}, value: '${inputKeys.toString()}'});\n`;
 					}
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
-				case ACTIONS_IN_TEST.SCROLL:
+				}
+				case ACTIONS_IN_TEST.SCROLL: {
+					if (!selectors) {
+						throw new Error("Element with no selector provided for scroll action")
+					}
+
+					const scrollDeta = events[i].payload.meta.value;
 					this.helperFunctionsToInclude[ACTIONS_IN_TEST.SCROLL] = true;
 
-					if(selectors[0] !== "window") {
+					if ((selectors[0] as any) !== "window") {
 						code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
 					}
-					if(value && value.length) {
+					if (scrollDeta && scrollDeta.length) {
 						code += `await page.evaluate(async ([scrollPosArr, selectorKey])=>{
 		const scrollTo = async function(element, offset) {
 			const fixedOffset = offset.toFixed();
@@ -406,54 +435,42 @@ export default class CodeGenerator {
 							for(let i = 0; i < scrollPosArr.length; i++){
 								await scrollTo(element, scrollPosArr[i]);
 							}
-						}, [[${value}], ${JSON.stringify("window")}]);\n`;
+						}, [[${scrollDeta}], ${JSON.stringify("window")}]);\n`;
 					}
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.SCROLL}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.EXTRACT_INFO]({
-							selector: selectors[0] === "window" ? selectors[0] : selectors[0].value,
-						})}'}, {selector: ${selectors[0] === "window" ? JSON.stringify("window") : `selector_${i}`}});\n`;
+							selector: (selectors[0] as any) === "window" ? (selectors[0] as any) : selectors[0].value,
+						})}'}, {selector: ${(selectors[0] as any) === "window" ? JSON.stringify("window") : `selector_${i}`}});\n`;
 					}
 					break;
-				case ACTIONS_IN_TEST.EXTRACT_INFO:
-					const variable_name = Object.keys(value)[0];
-					const validation_script = value[variable_name];
-					this.helperFunctionsToInclude[ACTIONS_IN_TEST.EXTRACT_INFO] = true;
-					code += `const selector_${i} = await waitForSelector(${JSON.stringify(JSON.stringify(selectors))}, page, "${selectors[0].value}");\n`;
-
-					code +=
-						`let ${variable_name} = await extractInfoUsingScript(page, selector_${i}, ` +
-						'`' +
-						validation_script +
-						'`' +
-						`)\n`;
-					if (isLiveProgress) {
-						code += `await logStep('${ACTIONS_IN_TEST.EXTRACT_INFO}', {status: 'DONE', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.EXTRACT_INFO]({
-							selector: selectors[0].value,
-						})}'}, {selector: selector_${i}});\n`;
-					}
-					if (isRecordingVideo) {
-						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
-					}
-					break;
+				}
 				case ACTIONS_IN_TEST.VALIDATE_SEO:
 
 					break;
-				case ACTIONS_IN_TEST.ASSERT_ELEMENT:
-					this.helperFunctionsToInclude[ACTIONS_IN_TEST.ASSERT_ELEMENT] = true;
-					code += `[hasAllAssertionPassed, assertionLogs] = await assertElementAttributes(page, '` + selectors[0].value + `', \`` + value +  `\`);\n`;
+				case ACTIONS_IN_TEST.ASSERT_ELEMENT: {
+					if (!selectors) {
+						console.error(events[i]);
+						throw new Error("Element with no selector provided for asset element" + events[i].payload)
+					}
+
+					const value = events[i].payload.meta.validations as iAssertionRow;
+
+						this.helperFunctionsToInclude[ACTIONS_IN_TEST.ASSERT_ELEMENT] = true;
+					code += `[hasAllAssertionPassed, assertionLogs] = await assertElementAttributes(page, '` + selectors[0].value + `', \`` + JSON.stringify(value) + `\`);\n`;
 
 					if (isLiveProgress) {
 						code += `await logStep('${ACTIONS_IN_TEST.ASSERT_ELEMENT}', {status: hasAllAssertionPassed ? 'DONE' : 'FAILED', message: '${ACTION_DESCRIPTIONS[ACTIONS_IN_TEST.ASSERT_ELEMENT]({
 							selector: selectors[0].value,
 						})}'}, {selector: '${selectors[0].value}'});\n`;
 					}
-					code+=`if(!hasAllAssertionPassed){
+					code += `if(!hasAllAssertionPassed){
 						throw new Error("Not all assertions passed");
 					}\n`;
 					if (isRecordingVideo) {
 						code += `await sleep(DEFAULT_SLEEP_TIME);\n`;
 					}
 					break;
+				}
 				default:
 					console.error('Not supported event');
 			}

@@ -126,7 +126,10 @@ const ModalManager = (props: iModalManagerProps) => {
 						closeModal={handleCloseModal}
 					/>
 
-					<AssertElementModalContent />
+					<AssertElementModalContent
+						deviceIframeRef={deviceIframeRef}
+						onClose={handleCloseModal}
+					/>
 				</>
 			</Conditional>
 		</ReactModal>

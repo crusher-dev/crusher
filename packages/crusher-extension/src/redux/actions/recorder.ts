@@ -1,7 +1,7 @@
 import { ACTIONS_RECORDING_STATE } from "../../interfaces/actionsRecordingState";
-import { iSelectorInfo } from "../../utils/selector";
 import { ACTIONS_MODAL_STATE } from "../../interfaces/actionsModalState";
 import { iSeoMetaInformationMeta } from "../../messageListener";
+import { iSelectorInfo } from "../../../../crusher-shared/types/selectorInfo";
 
 export const UPDATE_INSPECT_MODE_STATE = "UPDATE_INSPECT_MODE_STATE";
 export const UPDATE_ACTIONS_RECORDING_STATE = "UPDATE_ACTIONS_RECORDER_STATE";

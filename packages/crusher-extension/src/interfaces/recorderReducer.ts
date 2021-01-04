@@ -1,18 +1,7 @@
 import { ACTIONS_RECORDING_STATE } from "./actionsRecordingState";
-import { iSelectorInfo } from "../utils/selector";
 import { ACTIONS_MODAL_STATE } from "./actionsModalState";
 import { iSeoMetaInformationMeta } from "src/messageListener";
-
-export interface iAttribute {
-	name: string;
-	value: string;
-}
-
-export interface iElementInfo {
-	selectors: Array<iSelectorInfo>;
-	attributes: Array<iAttribute>;
-	innerHTML: string;
-}
+import { iElementInfo } from "../../../crusher-shared/types/elementInfo";
 
 export interface iRecorderState {
 	isInspectModeOn: boolean;

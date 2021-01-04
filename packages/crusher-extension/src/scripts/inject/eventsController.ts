@@ -1,7 +1,7 @@
 import EventRecording from "./ui/eventRecording";
 import { getSelectors } from "../../utils/selector";
 import { MESSAGE_TYPES } from "../../messageListener";
-import { iAction } from "../../interfaces/actionsReducer";
+import { iAction } from "../../../../crusher-shared/types/action";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;

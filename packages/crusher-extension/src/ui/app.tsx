@@ -2,16 +2,21 @@ import React, { useMemo, useRef } from "react";
 import { render } from "react-dom";
 import { SidebarActionsBox } from "./containers/app/sidebarActionsBox";
 import { BrowserWindow } from "./containers/app/browserWindow";
-import configureStore from "../redux/store";
+import configureStore, { getStore } from "../redux/store";
 import { Provider } from "react-redux";
 import { recorderMessageListener } from "../messageListener";
 import ReactModal from "react-modal";
 import { ModalManager } from "./containers/app/modals";
+import CodeGenerator from "../../../code-generator/src";
+
+const codeGenrator = new CodeGenerator();
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
 	const saveTest = () => {
-		console.log("Saving test...");
+		const store = getStore();
+		const steps = store.getState().actions.list;
+		console.log(codeGenrator.generate(steps));
 	};
 
 	useMemo(() => {

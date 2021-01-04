@@ -1,5 +1,5 @@
 import { iReduxState } from "../reducers";
-import { iAction } from "../../interfaces/actionsReducer";
+import { iAction } from "../../../../crusher-shared/types/action";
 
 export const getActions = (state: iReduxState) => state.actions.list;
 

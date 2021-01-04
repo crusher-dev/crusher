@@ -2,19 +2,10 @@ import React, { ChangeEvent } from "react";
 import { ASSERTION_OPERATION_TYPE } from "../../../interfaces/assertionOperation";
 import { APPEARANCE, OVERFLOW, TEXT_ALIGN } from "../../../interfaces/css";
 import { toPrettyEventName } from "../../../utils/helpers";
-
-export interface iAssertionRow {
-	id: string;
-	field: iField;
-	operation: string;
-	validation: string;
-}
-
-export interface iField {
-	name: string;
-	value: string;
-	meta: any;
-}
+import {
+	iAssertionRow,
+	iField,
+} from "../../../../../crusher-shared/types/assertionRow";
 
 interface iAssertionFormTableProps {
 	rowItems: Array<iAssertionRow>;

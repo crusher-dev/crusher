@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getSeoMetaInfo } from "../../../../redux/selectors/recorder";
+import { AssertionFormTable } from "../../../components/app/assertionFormTable";
 import {
-	AssertionFormTable,
 	iAssertionRow,
 	iField,
-} from "../../../components/app/assertionFormTable";
+} from "../.././../../../../crusher-shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
 import { iSeoMetaInformationMeta } from "../../../../messageListener";
 import { TEXT_ALIGN } from "../../../../interfaces/css";

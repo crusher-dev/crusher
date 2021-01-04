@@ -1,14 +1,4 @@
-import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
-import { iSelectorInfo } from "../utils/selector";
-
-export interface iAction {
-	type: ACTIONS_IN_TEST;
-	payload: {
-		selectors?: Array<iSelectorInfo>;
-		meta?: any;
-	};
-	url?: string;
-}
+import { iAction } from "../../../crusher-shared/types/action";
 
 export interface iActionsState {
 	list: Array<iAction>;

@@ -1,4 +1,3 @@
-import { iAction } from "./interfaces/actionsReducer";
 import { getStore } from "./redux/store";
 import {
 	recordAction,
@@ -11,8 +10,6 @@ import {
 	updateIsRecorderScriptBooted,
 } from "./redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
-import { iSelectorInfo } from "./utils/selector";
-import { iAttribute } from "./interfaces/recorderReducer";
 import { RefObject } from "react";
 import {
 	getActionsRecordingState,
@@ -30,6 +27,9 @@ import { ELEMENT_LEVEL_ACTION } from "./interfaces/elementLevelAction";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
 import { getActions } from "./redux/selectors/actions";
 import { iPageSeoMeta } from "./utils/dom";
+import { iSelectorInfo } from "../../crusher-shared/types/selectorInfo";
+import { iAttribute } from "../../crusher-shared/types/elementInfo";
+import { iAction } from "../../crusher-shared/types/action";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION = "RECORD_ACTION",

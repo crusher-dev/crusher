@@ -1,11 +1,11 @@
 import React, { RefObject, useState } from "react";
 import { useSelector } from "react-redux";
 import { getActionsRecordingState } from "../../../../redux/selectors/recorder";
+import { AssertionFormTable } from "../../../components/app/assertionFormTable";
 import {
-	AssertionFormTable,
 	iAssertionRow,
 	iField,
-} from "../../../components/app/assertionFormTable";
+} from "../.././../../../../crusher-shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
 import { TEXT_ALIGN } from "../../../../interfaces/css";
 import { BulbIcon } from "../../../../assets/icons";
@@ -13,10 +13,10 @@ import uniqueId from "lodash/uniqueId";
 import { getStore } from "../../../../redux/store";
 import { recordAction } from "../../../../redux/actions/actions";
 import { ACTIONS_IN_TEST } from "../../../../../../crusher-shared/constants/recordedActions";
-import { iElementInfo } from "../../../../interfaces/recorderReducer";
 import { updateActionsRecordingState } from "../../../../redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
 import { turnOffInspectModeInFrame } from "../../../../messageListener";
+import { iElementInfo } from "../../../../../../crusher-shared/types/elementInfo";
 
 interface iAssertElementModalProps {
 	onClose?: any;
@@ -162,8 +162,8 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 			recordAction({
 				type: ACTIONS_IN_TEST.ASSERT_ELEMENT,
 				payload: {
+					selectors: elementInfo.selectors,
 					meta: {
-						selectors: elementInfo.selectors,
 						validations: validationRows,
 					},
 				},

@@ -1,4 +1,4 @@
-import { iAction } from "../../interfaces/actionsReducer";
+import { iAction } from "../../../../crusher-shared/types/action";
 
 export const RECORD_ACTION = "RECORD_ACTION";
 export const UPDATE_LAST_RECORDED_ACTION = "UPDATE_LAST_RECORDED_ACTION";

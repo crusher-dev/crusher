@@ -7,7 +7,7 @@ import {
 	WHITE_SPACE,
 } from "../../../interfaces/css";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
-import { iAction } from "../../../interfaces/actionsReducer";
+import { iAction } from "../../../../../crusher-shared/types/action";
 
 interface iActionProps {
 	action: iAction;

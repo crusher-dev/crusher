@@ -244,7 +244,7 @@ export default class CodeGenerator {
 				})}'}, {name: '${device.name}', width: ${width}, height: ${height}, userAgent: '${userAgent.value}'});\n`;
 			}
 		} else if (events[0] && events[0].type === ACTIONS_IN_TEST.SET_DEVICE) {
-			const deviceId = events[0].payload.meta?.deviceId;
+			const deviceId = (events[0].payload.meta as any).deviceId;
 			const deviceFound = devices.find((_device) => {
 				return _device.id === deviceId;
 			});

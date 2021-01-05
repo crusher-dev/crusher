@@ -275,6 +275,9 @@ const styles = {
 		color: ${getStyleFromObject(COMPONENTS.font.primary, theme)};
 	`,
 	registerButton: (theme) => css`
+		:hover{
+			text-decoration: none!important;
+		}
 		display: flex;
 		justify-content: center;
 		width: 100%;

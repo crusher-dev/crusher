@@ -15,32 +15,36 @@ function Onboarding() {
 
 	useEffect(() => {
 		(async () => {
-			try {
-				let userRef = await fire
-					.firestore()
-					.collection("onboarding")
-                    .doc(`${userInfo.id}`);
-				let userData = await (await userRef.get()).data();
-				setWatchIntroVideo(userData.watchIntroVideo || false);
-				setCreate2tests(userData.create2tests || false);
-				setReviewReports(userData.reviewReports || false);
-				setIntegrate(userData.integrate || false);
-				setInviteTeamMembers(userData.inviteTeamMembers || false);
-			} catch (err) {
-				fire
-					.firestore()
-					.collection("onboarding")
-					.doc(`${userInfo.id}`)
-					.update({
-						watchIntroVideo: false,
-						create2tests: false,
-						reviewReports: false,
-						integrate: false,
-                        inviteTeamMembers: false,
-                        totalNumberOfTests: 0
-					});
-				console.error(err);
-			}
+			let userRef = await fire
+				.firestore()
+				.collection("onboarding")
+				.doc(`${userInfo.id}`);
+			userRef
+				.get()
+				.then((docSnapshot: any) => {
+					if (docSnapshot.exists) {
+						// if the document exists, we just get the data in the document
+						userRef.onSnapshot((doc: any) => {
+							let userData = doc.data();
+							setWatchIntroVideo(userData.watchIntroVideo || false);
+							setCreate2tests(userData.create2tests || false);
+							setReviewReports(userData.reviewReports || false);
+							setIntegrate(userData.integrate || false);
+							setInviteTeamMembers(userData.inviteTeamMembers || false);
+						});
+					} else {
+						// if the document does not exist, we insert data into the document
+						userRef.set({
+							watchIntroVideo: false,
+							create2tests: false,
+							reviewReports: false,
+							integrate: false,
+							totalNumberOfTests: 0,
+							inviteTeamMembers: false,
+						});
+					}
+				})
+				.catch((err: any) => console.error(err));
 		})();
 	}, []);
 

@@ -20,12 +20,8 @@ export default class FirebaseService {
 					});
 				} else { // if the document does not exist, we insert data into the document
 					this.userRef.set({
-						watchIntroVideo: false,
 						create2tests: false,
-						reviewReports: false,
-						integrate: false,
 						totalNumberOfTests: 0,
-						inviteTeamMembers: false,
 					});
 				}
 			})

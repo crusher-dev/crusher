@@ -36,31 +36,30 @@ function ProjectOnboardingCreateTest(props) {
 	};
 
 	useEffect(() => {
-		async () => {
-			let userRef;
-			try {
-				userRef = await fire
-					.firestore()
-					.collection("onboarding")
-					.doc(`${userInfo.id}`);
-				let userData = await (await userRef.get()).data();
-				if (userData.watchIntroVideo) {
-					setNeedsToBeSet(false);
-				}
-			} catch (err) {
-				fire
-					.firestore()
-					.collection("onboarding")
-					.doc(`${userInfo.id}`)
-					.set({
-						watchIntroVideo: false,
-						create2tests: false,
-						reviewReports: false,
-						integrate: false,
-						inviteTeamMembers: false,
-					});
-				console.error(err);
-			}
+		() => {
+			let userRef = await fire
+				.firestore()
+				.collection("onboarding")
+				.doc(`${userInfo.id}`);
+			userRef
+				.get()
+				.then((docSnapshot: any) => {
+					if (docSnapshot.exists) {
+						// if the document exists, we just get the data in the document
+						userRef.onSnapshot((doc: any) => {
+							let userData = doc.data();
+							if (userData.watchIntroVideo) {
+								setNeedsToBeSet(false);
+							}
+						});
+					} else {
+						// if the document does not exist, we insert data into the document
+						userRef.set({
+							watchIntroVideo: false,
+						});
+					}
+				})
+				.catch((err: any) => console.error(err));
 		};
 	}, []);
 

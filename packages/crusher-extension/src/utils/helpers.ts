@@ -1,4 +1,6 @@
 import { DOM } from "./dom";
+import devices from "../../../crusher-shared/constants/devices";
+import { iDevice } from "../../../crusher-shared/types/extension/device";
 
 export function executeScript(name: string, tabId: number, cb?: any) {
 	return new Promise((resolve, reject) => {
@@ -50,7 +52,14 @@ export function submitPostDataWithForm(url: string, options: any = {}) {
 	form.remove();
 }
 
-export function getAllAttributes(element: HTMLElement) {
+interface iElementAttributeInfo {
+	name: string;
+	value: any;
+}
+
+export function getAllAttributes(
+	element: HTMLElement,
+): Array<iElementAttributeInfo> {
 	if (!DOM.isElement(element)) {
 		throw new Error("Invalid element provided.");
 	}
@@ -64,7 +73,37 @@ export function getAllAttributes(element: HTMLElement) {
 				value: element.getAttribute(attributeName),
 			};
 		}),
-		{ name: "innerHTML", value: element.innerHTML },
-		{ name: "innerText", value: element.innerText },
 	];
+}
+
+export function getDevice(deviceId: string): iDevice | undefined {
+	return devices.find((device) => {
+		return device.id === deviceId;
+	});
+}
+
+export function getFrameDepth(winToID: any): number {
+	if (winToID === window.top) {
+		return 0;
+	} else if (winToID.parent === window.top) {
+		return 1;
+	}
+
+	return 1 + getFrameDepth(winToID.parent);
+}
+
+export function toPascalCase(str: string) {
+	if (!str || typeof str !== "string") {
+		return str;
+	}
+	let outString = str?.toLowerCase();
+	outString = outString[0]?.toUpperCase() + outString?.substr(1);
+	return outString;
+}
+
+export function toPrettyEventName(eventName: string) {
+	return eventName
+		.split("_")
+		.map((name) => toPascalCase(name))
+		.join(" ");
 }

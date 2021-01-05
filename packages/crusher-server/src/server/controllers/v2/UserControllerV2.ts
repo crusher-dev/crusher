@@ -9,6 +9,7 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from '../../../core
 import { google } from 'googleapis';
 import GoogleAPIService from '../../../core/services/GoogleAPIService';
 import { InviteMembersService } from '../../../core/services/mongo/inviteMembers';
+import AnalyticsService from "../../../core/services/Analytics";
 
 const oauth2Client = new google.auth.OAuth2(
 	process.env.GOOGLE_CLIENT_ID,
@@ -46,10 +47,13 @@ export class UserControllerV2 {
 	async createUser(@Body() userInfo: iSignupUserRequest, @Res() res) {
 		const { firstName, lastName, email, password, inviteReferral } = userInfo;
 
+
 		const userId = await this.userService.createUserRecord(userInfo, false);
 		const { teamId } = inviteReferral ? await this.userService.useReferral(userId, inviteReferral) : await this.userService.createInitialUserWorkspace(userId, userInfo);
 
 		const token = await this.userService.setUserAuthCookies(userId, teamId, res);
+
+
 
 		EmailManager.sendVerificationMail(email, generateVerificationCode(userId, email));
 		return { status: USER_REGISTERED, token};

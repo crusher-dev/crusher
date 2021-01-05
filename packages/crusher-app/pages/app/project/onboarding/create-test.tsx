@@ -36,7 +36,7 @@ function ProjectOnboardingCreateTest(props) {
 	};
 
 	useEffect(() => {
-		() => {
+		async () => {
 			let userRef = await fire
 				.firestore()
 				.collection("onboarding")

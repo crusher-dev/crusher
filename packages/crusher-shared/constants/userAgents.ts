@@ -1,4 +1,11 @@
-export default [
+export interface iUserAgent{
+	name: string;
+	value: string;
+	appVersion: string;
+	platform: string;
+};
+
+const userAgents: Array<iUserAgent> = [
 	{
 		name: 'Google Chrome',
 		value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36',
@@ -43,3 +50,5 @@ export default [
 		platform: 'Android',
 	},
 ];
+
+export default userAgents;

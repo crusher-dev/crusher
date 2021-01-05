@@ -37,7 +37,7 @@ export function urlify(text: string) {
 }
 
 /* Transform event constants into pretty pascal case*/
-export function toPrettyEventName(eventName) {
+export function toPrettyEventName(eventName: string) {
 	return eventName
 		.split("_")
 		.map((name) => toPascalCase(name))

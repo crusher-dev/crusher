@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { wrapper } from "@redux/store";
 import { fetchProjectsFromServer } from "@redux/thunks/projects";
 import dynamic from "next/dynamic";
-import { getMetaFromReq, isUserLoggedInFromCookies } from "@utils/cookies";
+import {
+	getCookies,
+	getMetaFromReq,
+	isUserLoggedInFromCookies,
+} from "@utils/cookies";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { ReactReduxContext } from "react-redux";
@@ -10,10 +14,11 @@ import { _fetchUserInfo } from "@services/user";
 import { NextApiRequest } from "next";
 import { getThemeFromCookieOrReq } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
-import { DialogBox } from "@ui/atom/Dialog";
+import { ToastDialog } from "@ui/atom/toastDialog";
 import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
 import { saveProjectsInRedux } from "@redux/actions/project";
+import { ANALYTICS } from "@services/analytics";
 
 const TopProgressBar = dynamic(
 	function () {
@@ -22,11 +27,20 @@ const TopProgressBar = dynamic(
 	{ ssr: false },
 );
 
+function initiliazeAppAnalytics() {
+	const cookies = getCookies(null);
+	ANALYTICS.intialize(
+		cookies["userId"],
+		cookies["teamId"],
+		cookies["projectId"],
+	);
+}
 function App({ Component, pageProps }: AppProps<any>) {
+	useEffect(initiliazeAppAnalytics, []);
 	return (
 		<>
 			<TopProgressBar />
-			<DialogBox />
+			<ToastDialog />
 			<ReactReduxContext.Consumer>
 				{({ store }) => (
 					<Provider store={store}>

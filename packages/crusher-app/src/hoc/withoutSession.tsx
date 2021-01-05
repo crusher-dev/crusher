@@ -5,10 +5,12 @@ import { serialize } from "cookie";
 import {
 	NextApiRequest,
 	NextApiResponse,
+	NextComponentType,
 	NextPage,
 	NextPageContext,
 } from "next";
 import { getUserInfo } from "@redux/stateUtils/user";
+import { AnyAction } from "redux";
 
 const handleClIToken = (cli_token: string, res: NextApiResponse) => {
 	if (cli_token) {
@@ -19,7 +21,11 @@ const handleClIToken = (cli_token: string, res: NextApiResponse) => {
 	}
 };
 
-function withoutSession(WrappedComponent: NextPage) {
+function withoutSession(
+	WrappedComponent:
+		| NextPage
+		| NextComponentType<NextPageContext<any, AnyAction>, any, any>,
+) {
 	const WithoutSession = function (props: any) {
 		return <WrappedComponent {...props} />;
 	};

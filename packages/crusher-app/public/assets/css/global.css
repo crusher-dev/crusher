@@ -426,14 +426,14 @@ a:hover {
 		opacity: 0;
 	}
 	to {
-		top: 30px;
+		top: 2.5rem;
 		opacity: 1;
 	}
 }
 
 @-webkit-keyframes fadeout {
 	from {
-		top: 30px;
+		top: 2.5rem;
 		opacity: 1;
 	}
 	to {

@@ -36,3 +36,12 @@ export const getQueryStringParams = function getParameterByName(name: string, ur
 export const resolveToBackendPath = (relativePath: string) => {
 	return url.resolve(LOCAL_BACKEND_URL, relativePath);
 };
+
+export const getQueryParamsInUrl = (queryParamsUrl: string)=>{
+	if(!queryParamsUrl) return {};
+
+	const params = {};
+	const arr = queryParamsUrl.split("=");
+
+	return params;
+}

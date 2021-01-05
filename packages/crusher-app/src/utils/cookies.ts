@@ -7,7 +7,7 @@ export function isUserLoggedInFromCookies(cookies: any): boolean {
 	return cookies.isLoggedIn === "true";
 }
 
-export function getCookies(req) {
+export function getCookies(req: NextApiRequest) {
 	if (!req) {
 		return jsCookie.get();
 	}

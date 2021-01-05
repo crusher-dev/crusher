@@ -20,7 +20,7 @@ import { GithubCheckStatus } from "../interfaces/GithubCheckStatus";
 import { GithubConclusion } from "../interfaces/GithubConclusion";
 import AlertingManager from "../manager/AlertingManager";
 import { Container } from "typedi";
-import { User } from "../../../../crusher-shared/types/db/user";
+import { iUser } from "@crusher-shared/types/db/iUser";
 import { EmailManager } from "../manager/EmailManager";
 import { resolvePathToFrontendURI } from "../utils/uri";
 import { Job } from "bullmq";
@@ -231,7 +231,7 @@ async function getResultForTestInstance(
 	};
 }
 
-async function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: User) {
+async function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: iUser) {
 	const usersInTeam = await testService.findMembersOfProject(jobRecord.project_id);
 
 	if (result === JobReportStatus.FAILED) {
@@ -283,7 +283,7 @@ async function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, us
 	}
 }
 
-async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: User, state) {
+async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: iUser, state) {
 	const slackIntegrationsArr = await alertingService.getSlackIntegrationsInProject(jobRecord.project_id);
 
 	for (let i = 0; i < slackIntegrationsArr.length; i++) {
@@ -302,7 +302,7 @@ async function notifyResultWithSlackIntegrations(jobRecord: any, result: JobRepo
 	}
 }
 
-async function notifyResultToGithubChecks(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: User) {
+async function notifyResultToGithubChecks(jobRecord: any, result: JobReportStatus, userWhoStartedTheJob: iUser) {
 	await updateGithubCheckStatus(
 		GithubCheckStatus.COMPLETED,
 		{

@@ -1,5 +1,7 @@
 import EventRecording from "./ui/eventRecording";
 import { getSelectors } from "../../utils/selector";
+import { MESSAGE_TYPES } from "../../messageListener";
+import { iAction } from "../../../../crusher-shared/types/action";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -49,10 +51,15 @@ export default class EventsController {
 
 		window.top.postMessage(
 			{
-				eventType: event_type,
-				frameId: null,
-				value,
-				selectors,
+				type: MESSAGE_TYPES.RECORD_ACTION,
+				meta: {
+					type: event_type,
+					payload: {
+						selectors: selectors,
+						meta: { value },
+					},
+					url: window.location.href,
+				} as iAction,
 			},
 			"*",
 		);

@@ -1,5 +1,5 @@
-import { Container, Inject, Service } from 'typedi';
-import DBManager from '../manager/DBManager';
+import { Container, Inject, Service } from "typedi";
+import DBManager from "../manager/DBManager";
 import {
 	EMAIL_NOT_VERIFIED,
 	ERROR_OCCURED_IN_AUTHENTICATION,
@@ -14,7 +14,7 @@ import {
 import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from '../utils/auth';
 import { EmailManager } from '../manager/EmailManager';
 import { AuthenticationByCredentials } from '../interfaces/services/user/AuthenticationByCredentials';
-import { User } from '../../../../crusher-shared/types/db/user';
+import { iUser } from '@crusher-shared/types/db/iUser';
 import { RegisterUserRequest } from '../interfaces/services/user/RegisterUserRequest';
 import { UserProviderConnection } from '../interfaces/db/UserProviderConnection';
 import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';
@@ -26,6 +26,9 @@ import UserProjectRoleV2Service from './v2/UserProjectRoleV2Service';
 import UserTeamRoleV2Service from './v2/UserTeamRoleV2Service';
 import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
 import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectRole';
+import { iInviteReferral } from '@crusher-shared/types/inviteReferral';
+import { InviteMembersService } from './mongo/inviteMembers';
+import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
 
 @Service()
 export default class UserService {
@@ -34,6 +37,8 @@ export default class UserService {
 	private teamService: TeamService;
 	private userProjectRoleV2Service: UserProjectRoleV2Service;
 	private userTeamRoleV2Service: UserTeamRoleV2Service;
+	private inviteMembersService: InviteMembersService;
+
 	@Inject()
 	private stripeManager: StripeManager;
 
@@ -43,13 +48,14 @@ export default class UserService {
 		this.teamService = Container.get(TeamService);
 		this.userProjectRoleV2Service = Container.get(UserProjectRoleV2Service);
 		this.userTeamRoleV2Service = Container.get(UserTeamRoleV2Service);
+		this.inviteMembersService = Container.get(InviteMembersService);
 	}
 
 	async authenticateWithEmailAndPassword(details: AuthenticationByCredentials) {
 		const { email, password } = details;
 
 		let encryptedPassword = encryptPassword(password);
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptedPassword]);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptedPassword]);
 
 		if (!user) {
 			return { status: USER_NOT_REGISTERED };
@@ -71,28 +77,27 @@ export default class UserService {
 		return { status: ERROR_OCCURED_IN_AUTHENTICATION };
 	}
 
-	async registerUser(userData: RegisterUserRequest): Promise<any> {
+	async registerUser(userData: RegisterUserRequest, inviteReferral: iInviteReferral | null = null): Promise<any> {
 		const { email, firstName, lastName, password } = userData;
 
-		const _user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
+		const _user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
 
 		if (!firstName || !email || !password) {
 			return { status: USER_NOT_REGISTERED };
 		}
 
+		const referralObject =  await this.inviteMembersService.parseInviteReferral(inviteReferral);
+
 		if (!_user) {
-			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email);
-			if(registeredUser){
-				await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
-				await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
-			} else {
-				return registeredUser;
-			}
+			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email, referralObject ? referralObject.teamId : null, referralObject ? (referralObject as iProjectInviteReferral).projectId : null);
+			await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
+			await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
+			return registeredUser;
 		}
 		return { status: USER_ALREADY_REGISTERED };
 	}
 
-	private async createdUserProfile(password: string, firstName: string, lastName: string, email: string) {
+	private async createdUserProfile(password: string, firstName: string, lastName: string, email: string, referralTeamId: number = null, referralProjectId: number = null) {
 		let encryptedPassword = encryptPassword(password);
 
 		const insertedUser = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
@@ -100,32 +105,35 @@ export default class UserService {
 			last_name: lastName,
 			email: email,
 			password: encryptedPassword,
+			team_id: referralTeamId ? referralTeamId : null,
 			verified: false,
 		});
 		if (insertedUser.insertId) {
 			const stripeName = `${firstName} ${lastName}`;
-			const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
 			const teamName = `${firstName}'s team`;
-			const team = await this.teamService.createTeam({
-				teamName,
-				userId: insertedUser.insertId,
-				stripeCustomerId,
-			});
-			const projectName = `${firstName}'s project`;
-			const project = await this.projectService.createDefaultProject(team.teamId, projectName);
+			let teamId = referralTeamId;
+			if(!referralTeamId) {
+				const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
+				 teamId = (await this.teamService.createTeam({
+					teamName,
+					userId: insertedUser.insertId,
+					stripeCustomerId,
+				})).teamId;
+			}
+			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,
-				teamId: team.teamId,
-				projectId: project.insertId,
-				token: generateToken(insertedUser.insertId, team && team.teamId ? team.teamId : null),
+				teamId: teamId,
+				projectId: projectId,
+				token: generateToken(insertedUser.insertId, teamId),
 			};
 		}
 	}
 
-	async authenticateWithGoogleProfile(profileInfo: RegisterUserRequest) {
+	async authenticateWithGoogleProfile(profileInfo: RegisterUserRequest, referralTeamId: number = null, referralProjectId: number = null) {
 		const { email, firstName, lastName, password } = profileInfo;
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email='${email}'`);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email='${email}'`);
 		if (!user) {
 			// User not registered
 			const inserted_user = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
@@ -135,21 +143,21 @@ export default class UserService {
 				verified: true,
 				password: encryptPassword(password),
 			});
-			const team = await this.teamService.createTeam({
+			const teamId = referralTeamId ? referralTeamId : (await this.teamService.createTeam({
 				teamName: "Default",
 				userId: inserted_user.insertId,
-			});
-			const project = team && team.teamId && (await this.projectService.createDefaultProject(team.teamId));
+			})).teamId;
+			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId)).insertId;
 
 			const user_id = inserted_user.insertId;
 
 			if (user_id) {
-				await this.userTeamRoleV2Service.create(user_id, team.teamId, TEAM_ROLE_TYPES.ADMIN);
-				await this.userProjectRoleV2Service.create(user_id, project.insertId, PROJECT_ROLE_TYPES.ADMIN);
+				await this.userTeamRoleV2Service.create(user_id, teamId, TEAM_ROLE_TYPES.ADMIN);
+				await this.userProjectRoleV2Service.create(user_id, projectId, PROJECT_ROLE_TYPES.ADMIN);
 
 				return {
 					status: SIGNED_UP_WITHOUT_JOINING_TEAM,
-					token: generateToken(user_id, null),
+					token: generateToken(user_id, teamId),
 				};
 			}
 		} else {
@@ -175,7 +183,7 @@ export default class UserService {
 	}
 
 	async resendVerification(userId: string) {
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
 		if (!user) {
 			return { status: USER_NOT_REGISTERED };
 		} else {
@@ -196,7 +204,7 @@ export default class UserService {
 	}
 
 	async getStatus(userId: string, res: any) {
-		const user: User = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
+		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id=?`, [userId]);
 		if (!user) {
 			clearAuthCookies(res);
 			return { status: USER_NOT_REGISTERED };
@@ -213,11 +221,11 @@ export default class UserService {
 		}
 	}
 
-	async getUserMetaInfo(userId: string): Promise<User> {
+	async getUserMetaInfo(userId: string): Promise<iUser> {
 		return this.dbManager.fetchData("SELECT `key` as key_name , value FROM user_meta WHERE user_id = ?", [userId]);
 	}
 
-	async getUserInfo(userId: string): Promise<User> {
+	async getUserInfo(userId: string): Promise<iUser> {
 		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id = ?`, [userId]);
 	}
 

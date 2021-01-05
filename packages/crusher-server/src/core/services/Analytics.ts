@@ -13,11 +13,16 @@ export default class AnalyticsService {
 		this.userId = userId;
 		this.teamId = teamId;
 		this.projectId = projectId;
+
+		analytics.identify({userId})
 	}
 
-	trackPage() {}
+	trackPage() {
+	}
 
-	trackEvent() {}
+	trackEvent(value) {
+		analytics.track({userId: this.userId,...value})
+	}
 
 	trackCustomEvent() {}
 

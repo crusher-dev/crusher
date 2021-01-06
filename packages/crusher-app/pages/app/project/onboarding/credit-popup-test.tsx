@@ -1,6 +1,28 @@
 import Richie from "../../../../public/assets/img/illustration/richie.png";
 import { css } from "@emotion/core";
 
+function Popup() {
+	return (
+		<div css={popupCSS}>
+			<div
+				css={css`
+					width: 50%;
+				`}
+			>
+				<h1 css={headingCSS}>Get 300$ credits</h1>
+				<p css={headingCSS}>Enjoying Crusher?</p>
+				<p css={paraCSS}>
+					You get 300$ when someone you invite signs up to the pro plan
+				</p>
+				<button css={buttonCSS}>Invite</button>
+			</div>
+			<img src={Richie} />
+		</div>
+	);
+}
+
+export default Popup;
+
 const popupCSS = css`
 	display: flex;
 	width: 30rem;
@@ -39,25 +61,3 @@ const paraCSS = css`
 	font-size: 1rem;
 	line-height: 1.125rem;
 `;
-
-function Popup() {
-	return (
-		<div css={popupCSS}>
-			<div
-				css={css`
-					width: 50%;
-				`}
-			>
-				<h1 css={headingCSS}>Get 300$ credits</h1>
-				<p css={headingCSS}>Enjoying Crusher?</p>
-				<p css={paraCSS}>
-					You get 300$ when someone you invite signs up to the pro plan
-				</p>
-				<button css={buttonCSS}>Invite</button>
-			</div>
-			<img src={Richie} />
-		</div>
-	);
-}
-
-export default Popup;

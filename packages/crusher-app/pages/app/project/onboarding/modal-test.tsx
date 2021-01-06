@@ -1,64 +1,6 @@
 import Modal from "react-modal";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { css } from "@emotion/core";
-
-const customStyles = {
-	content: {
-		top: "50%",
-		left: "50%",
-		background: "rgb(0, 0, 0, 0.85)",
-		height: "100vh",
-		width: "100vw",
-		right: "auto",
-		bottom: "auto",
-		marginRight: "-50%",
-		transform: "translate(-50%, -50%)",
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-};
-
-const backgroundCSS = css`
-	background: white;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-    flex-direction: column;
-    padding: 1rem;
-    width: 70%;
-    margin: 1rem;
-`;
-
-const videoPlayerCSS = css`
-	width: 43.5rem;
-	height: 26.25rem;
-	border-radius: 0.6rem;
-	margin: 0 auto;
-	margin-top: 0.9rem;
-	margin-bottom: 3rem;
-`;
-
-const titleCSS = css`
-	font-family: Gilroy;
-	font-weight: bold;
-	font-size: 1.125rem;
-`;
-
-const buttonCSS = css`
-	text-align: center;
-	height: 2rem;
-	width: 12rem;
-	background: #ffffff;
-	border: 1.5px solid #1c191a;
-	box-sizing: border-box;
-	border-radius: 6px;
-	font-family: Gilroy;
-	font-size: 1rem;
-	line-height: 1rem;
-	font-weight: bold;
-`;
 
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement("#__next");
@@ -133,3 +75,61 @@ function App() {
 }
 
 export default App;
+
+const customStyles = {
+	content: {
+		top: "50%",
+		left: "50%",
+		background: "rgb(0, 0, 0, 0.85)",
+		height: "100vh",
+		width: "100vw",
+		right: "auto",
+		bottom: "auto",
+		marginRight: "-50%",
+		transform: "translate(-50%, -50%)",
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+};
+
+const backgroundCSS = css`
+	background: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+    width: 70%;
+    margin: 1rem;
+`;
+
+const videoPlayerCSS = css`
+	width: 43.5rem;
+	height: 26.25rem;
+	border-radius: 0.6rem;
+	margin: 0 auto;
+	margin-top: 0.9rem;
+	margin-bottom: 3rem;
+`;
+
+const titleCSS = css`
+	font-family: Gilroy;
+	font-weight: bold;
+	font-size: 1.125rem;
+`;
+
+const buttonCSS = css`
+	text-align: center;
+	height: 2rem;
+	width: 12rem;
+	background: #ffffff;
+	border: 1.5px solid #1c191a;
+	box-sizing: border-box;
+	border-radius: 6px;
+	font-family: Gilroy;
+	font-size: 1rem;
+	line-height: 1rem;
+	font-weight: bold;
+`;

@@ -1,7 +1,9 @@
 import React from "react";
-import { OVERFLOW, POSITION } from "../../../interfaces/css";
+import { OVERFLOW, POSITION, TEXT_ALIGN } from "../../../interfaces/css";
 import { Conditional } from "../conditional";
 import { iDevice } from "../../../../../crusher-shared/types/extension/device";
+import { useSelector } from "react-redux";
+import { isRecorderScriptBooted } from "../../../redux/selectors/recorder";
 
 interface iDeviceProps {
 	url: string;
@@ -12,12 +14,27 @@ interface iDeviceProps {
 }
 
 const Device = (props: iDeviceProps) => {
+	const isIframeLoaded = useSelector(isRecorderScriptBooted);
 	const { isMobile, device, url, forwardRef, isDisabled } = props;
 
 	return (
 		<div style={previewBrowserStyle}>
 			<Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
+			</Conditional>
+
+			<Conditional If={!isIframeLoaded}>
+				<div style={pageLoadingBlockCoverStyle}>
+					<div>
+						<img
+							style={pageLoadingCoverIconStyle}
+							src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")}
+						/>
+						<div style={pageLoadingCoverTextStyle}>
+							Pease wait while we’re loading next page
+						</div>
+					</div>
+				</div>
 			</Conditional>
 
 			<div
@@ -41,6 +58,32 @@ const Device = (props: iDeviceProps) => {
 			</div>
 		</div>
 	);
+};
+
+const pageLoadingBlockCoverStyle = {
+	position: POSITION.ABSOLUTE,
+	left: 0,
+	top: 0,
+	width: "100%",
+	height: "100%",
+	zIndex: 99999,
+	background: "rgb(0,0,0,0.7)",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+};
+
+const pageLoadingCoverIconStyle = {
+	marginLeft: "0.35rem",
+};
+
+const pageLoadingCoverTextStyle = {
+	marginTop: "1.5rem",
+	fontFamily: "DM Sans",
+	fontWeight: 500,
+	fontSize: "0.9rem",
+	textAlign: TEXT_ALIGN.CENTER,
+	color: "#DBDBDB",
 };
 
 const blockCoverStyle = {

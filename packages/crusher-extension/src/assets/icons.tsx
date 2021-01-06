@@ -160,7 +160,7 @@ const BulbIcon = (props: any) => {
 	);
 };
 
-export const BackIcon = (props: any) => {
+const BackIcon = (props: any) => {
 	return (
 		<svg width="12" height="12" viewBox="0 0 12 12" fill="none" {...props}>
 			<g clipPath="url(#clip0)">

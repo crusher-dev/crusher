@@ -52,13 +52,13 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	return (
 		<div style={browserToolbarStyle}>
 			<div style={browserMainToolbarStyle} id="top-bar">
-				<div style={goBackIconContainerStyle}>
+				<div style={goBackIconContainerStyle} className={"browser_icon"}>
 					<NavigateBackIcon onClick={goBack} disabled={false} />
 				</div>
-				<div style={forwardIconContainerStyle}>
+				<div style={forwardIconContainerStyle} className={"browser_icon"}>
 					<NavigateForwardIcon onClick={goForward} disabled={false} />
 				</div>
-				<div style={refreshIconContainerStyle}>
+				<div style={refreshIconContainerStyle} className={"browser_icon"}>
 					<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
 				</div>
 				<AddressBar
@@ -68,6 +68,15 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 				/>
 				<Button title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
 			</div>
+
+			<style>{`
+				.browser_icon{
+							padding: 0 0.4rem;
+				}
+				.browser_icon:hover{
+					background: rgb(75,75,75);
+				}
+			`}</style>
 		</div>
 	);
 };
@@ -87,17 +96,18 @@ const goBackIconContainerStyle = {
 	display: "flex",
 	alignItems: "center",
 	marginLeft: "1.1rem",
+	cursor: "pointer",
 };
 
 const forwardIconContainerStyle = {
-	marginLeft: "1.3rem",
+	marginLeft: "0.7rem",
 	display: "flex",
 	alignItems: "center",
 	cursor: "pointer",
 };
 
 const refreshIconContainerStyle = {
-	marginLeft: "1.5rem",
+	marginLeft: "0.8rem",
 	display: "flex",
 	alignItems: "center",
 	cursor: "pointer",

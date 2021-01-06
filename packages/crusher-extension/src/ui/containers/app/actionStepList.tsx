@@ -11,6 +11,7 @@ import { iAction } from "../../../../../crusher-shared/types/action";
 
 interface iActionProps {
 	action: iAction;
+	index: number;
 	style?: React.CSSProperties;
 }
 
@@ -27,7 +28,7 @@ function getActionDescription(action: iAction) {
 }
 
 const Action = (props: iActionProps) => {
-	const { action } = props;
+	const { action, index } = props;
 
 	return (
 		<li style={stepStyle}>
@@ -40,6 +41,7 @@ const Action = (props: iActionProps) => {
 					<div style={stepSelectorStyle}>{getActionDescription(action)}</div>
 				</div>
 			</div>
+			<div style={stepIndexNumberingStyle}>{index + 1}</div>
 		</li>
 	);
 };
@@ -62,6 +64,7 @@ const ActionStepList = (props: iActionStepListProps) => {
 			<Action
 				style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }}
 				key={index}
+				index={index}
 				action={step}
 			/>
 		);
@@ -100,6 +103,7 @@ const stepStyle = {
 	fontStyle: "normal",
 	background: "#1C1F26",
 	borderRadius: "0.25rem",
+	position: POSITION.RELATIVE,
 	padding: "0.6rem",
 	marginTop: "1rem",
 	overflow: "hidden",
@@ -123,6 +127,18 @@ const stepSelectorStyle = {
 	color: "#8C8C8C",
 	fontSize: "0.6rem",
 	whiteSpace: WHITE_SPACE.NOWRAP,
+	width: "70%",
+	overflow: "hidden",
+};
+const stepIndexNumberingStyle = {
+	position: POSITION.ABSOLUTE,
+	color: "#485264",
+	fontFamily: "DM Sans",
+	fontSize: "0.75rem",
+	fontStyle: "normal",
+	fontWeight: FONT_WEIGHT.BOLD,
+	bottom: "0.5rem",
+	right: "1.375rem",
 };
 
 export { ActionStepList };

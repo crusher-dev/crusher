@@ -91,10 +91,18 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 		turnOffInspectModeInFrame(props.deviceIframeRef);
 	};
 
+	const handleBackAction = () => {
+		const store = getStore();
+		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+		turnOffInspectModeInFrame(props.deviceIframeRef);
+	};
+
 	return (
 		<List
 			heading={"Select Element Action"}
 			items={items}
+			showBackButton={true}
+			onBackPressed={handleBackAction}
 			onItemClick={handleActionSelected}
 		></List>
 	);

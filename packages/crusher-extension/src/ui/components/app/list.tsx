@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FLEX_DIRECTION, FONT_WEIGHT } from "../../../interfaces/css";
+import { Conditional } from "../conditional";
+import { BackIcon } from "../../../assets/icons";
 
 interface iItem {
 	id: string;
@@ -83,10 +85,12 @@ interface iListProps {
 	heading: string;
 	items: Array<iItem>;
 	onItemClick: (id: string) => void;
+	onBackPressed?: () => void;
+	showBackButton?: boolean;
 }
 
 const List = (props: iListProps) => {
-	const { heading, items, onItemClick } = props;
+	const { heading, items, onItemClick, showBackButton, onBackPressed } = props;
 
 	const out = items.map((item) => (
 		<Item key={item.id} item={item} onClick={onItemClick} />
@@ -94,7 +98,14 @@ const List = (props: iListProps) => {
 
 	return (
 		<div>
-			<div style={headingStyle}>{heading}</div>
+			<div style={headingStyle}>
+				<Conditional If={showBackButton}>
+					<div onClick={onBackPressed}>
+						<BackIcon style={backIconStyle} />
+					</div>
+				</Conditional>
+				<span style={headingTitleStyle(!!showBackButton)}>{heading}</span>
+			</div>
 			<div style={listContainerStyle}>{out}</div>
 		</div>
 	);
@@ -104,9 +115,19 @@ const headingStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.ROW,
 	fontFamily: "DM Sans",
-	fontSize: "0.875rem",
+	fontSize: "0.825rem",
+	fontWeight: FONT_WEIGHT.BOLD,
 	color: "#fff",
+	alignItems: "center",
 };
+const backIconStyle = {
+	width: "0.75rem",
+	height: "0.75rem",
+	cursor: "pointer",
+};
+const headingTitleStyle = (isBackIconPresent: boolean) => ({
+	marginLeft: isBackIconPresent ? "0.85rem" : 0,
+});
 const listContainerStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,

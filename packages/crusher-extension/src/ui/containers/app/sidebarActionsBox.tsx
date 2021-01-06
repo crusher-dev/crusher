@@ -78,10 +78,12 @@ const tipContentStyle = {
 const tipTitleStyle = {
 	color: "#FFFFFF",
 	fontFamily: "DM Sans",
+	fontSize: "0.85rem",
 };
 
 const tipDescStyle = {
 	fontSize: "0.66rem",
+	marginTop: "0.125rem",
 	fontWeight: FONT_WEIGHT.BOLD,
 };
 

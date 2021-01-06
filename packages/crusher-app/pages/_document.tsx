@@ -52,7 +52,7 @@ export default class MyDocument extends Document {
 					}
 					a:hover {
 						text-decoration: underline !important;
-						color: #5b76f7;
+						color: #324dcf;
 					}
 					.form-row .StripeElement {
 						margin-top: 0.5rem;

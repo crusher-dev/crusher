@@ -56,7 +56,6 @@ const sidebarStyle = {
 	bottom: "0",
 	right: "0%",
 	marginLeft: "auto",
-	maxHeight: "85vh",
 	maxWidth: "22rem",
 	borderTopLeftRadius: 20,
 	width: "25vw",
@@ -79,7 +78,6 @@ const tipContentStyle = {
 const tipTitleStyle = {
 	color: "#FFFFFF",
 	fontFamily: "DM Sans",
-	marginLeft: "0.898rem",
 };
 
 const tipDescStyle = {
@@ -90,6 +88,8 @@ const tipDescStyle = {
 const mainContainerStyle = {
 	borderTopLeftRadius: 12,
 	background: "#14181F",
+	maxHeight: "80vh",
+	overflow: "auto",
 };
 
 const stepsContainerStyle = {

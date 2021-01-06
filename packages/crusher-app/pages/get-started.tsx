@@ -45,24 +45,24 @@ function SignupScreen(props: iSignupScreenProps) {
 		const firstName = nameArr[0] ? nameArr[0] : "";
 		const lastName = nameArr[1] ? nameArr[1] : "";
 
+		if (!isEmail(email)) {
+			alert("Please enter a valid email");
+			return;
+		}
+
+		if (!password || password.length < 1) {
+			alert("Please enter password");
+			return;
+		}
+
+		if (name && firstName.length < 1) {
+			alert("Please enter your first name");
+			return;
+		}
+		
 		_registerUser(firstName, lastName, email, password, inviteReferral).then(
 			(res: any) => {
 				const { status } = res;
-
-				if (!isEmail(email)) {
-					alert("Please enter a valid email");
-					return;
-				}
-
-				if (!password || password.length < 1) {
-					alert("Please enter password");
-					return;
-				}
-
-				if (firstName.length < 1) {
-					alert("Please enter your first name");
-					return;
-				}
 
 				switch (status) {
 					case USER_REGISTERED:
@@ -138,7 +138,7 @@ function SignupScreen(props: iSignupScreenProps) {
 					<div css={requestButtonCSS} onClick={handleSignUp} className={"button"}>
 						Next
 					</div>
-					<a href={getRegisterGoogleUrl(inviteReferral)}>
+					<a href={getRegisterGoogleUrl(inviteReferral)} className={"noDecoration"}>
 						<div css={googleLoginButtonCSS(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
 							<span>Signup with Google</span>
@@ -280,6 +280,9 @@ const googleLoginButtonCSS = (theme: string) => {
 		
 		&:hover {
 			cursor: pointer;
+			span{
+			text-decoration: none;}
+			
 			color: #fff !important;
 			background: ${theme === "dark" ? "#23272f" : "#23272f"};
 		}

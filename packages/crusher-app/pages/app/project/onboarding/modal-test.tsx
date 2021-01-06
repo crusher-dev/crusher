@@ -6,17 +6,30 @@ const customStyles = {
 	content: {
 		top: "50%",
 		left: "50%",
-		backgroundColor: "#D7D7D7",
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		flexDirection: "column",
+		background: "rgb(0, 0, 0, 0.85)",
+		height: "100vh",
+		width: "100vw",
 		right: "auto",
 		bottom: "auto",
 		marginRight: "-50%",
 		transform: "translate(-50%, -50%)",
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 };
+
+const backgroundCSS = css`
+	background: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+    width: 70%;
+    margin: 1rem;
+`;
 
 const videoPlayerCSS = css`
 	width: 43.5rem;
@@ -80,38 +93,40 @@ function App() {
 				style={customStyles}
 				contentLabel="Example Modal"
 			>
-				<h2 css={titleCSS} ref={(_subtitle) => (subtitle = _subtitle)}>
-					Watch a short 2 minute video on how Crusher works
-				</h2>
-				<h3
-					css={css`
-						font-family: Gilroy;
-                        font-size: 1rem;
-                        margin-top: 0;
-                        line-height: 1.125rem;
-                        font-weight: 300;
-                        text-align: center;
-                        color: #0C0C0C;
-					`}
-				>
-					Companies save 50% more time after watching the video
-				</h3>
-				<video
-					css={videoPlayerCSS}
-					src="/assets/video/onboarding.mp4"
-					onEnded={handleVideoFinishedCallback}
-					controls
-				></video>
-				<button css={buttonCSS} onClick={closeModal}>
-					I've watched the video
-				</button>
-				{/* <form>
+				<div css={backgroundCSS}>
+						<h2 css={titleCSS} ref={(_subtitle) => (subtitle = _subtitle)}>
+							Watch a short 2 minute video on how Crusher works
+						</h2>
+						<h3
+							css={css`
+								font-family: Gilroy;
+								font-size: 1rem;
+								margin-top: 0;
+								line-height: 1.125rem;
+								font-weight: 300;
+								text-align: center;
+								color: #0c0c0c;
+							`}
+						>
+							Companies save 50% more time after watching the video
+						</h3>
+						<video
+							css={videoPlayerCSS}
+							src="/assets/video/onboarding.mp4"
+							onEnded={handleVideoFinishedCallback}
+							controls
+						></video>
+						<button css={buttonCSS} onClick={closeModal}>
+							I've watched the video
+						</button>
+						{/* <form>
 					<input />
 					<button>tab navigation</button>
 					<button>stays</button>
 					<button>inside</button>
 					<button>the modal</button>
 				</form> */}
+				</div>
 			</Modal>
 		</div>
 	);

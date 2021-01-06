@@ -8,6 +8,7 @@ import {
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
+import { Button } from "../../components/app/button";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -65,10 +66,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					onKeyDown={handleKeyDown}
 					onChange={handleAddressBarUrlChange}
 				/>
-				<div style={buttonStyle} onClick={saveTest}>
-					<RecordLabelIcon />
-					<span style={{ marginLeft: "1.2rem" }}>Save Test</span>
-				</div>
+				<Button title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
 			</div>
 		</div>
 	);
@@ -103,21 +101,6 @@ const refreshIconContainerStyle = {
 	display: "flex",
 	alignItems: "center",
 	cursor: "pointer",
-};
-
-const buttonStyle = {
-	background: "#5B76F7",
-	borderRadius: 4,
-	fontWeight: 500,
-	fontSize: "0.825rem",
-	color: "#fff",
-	fontFamily: "DM Sans",
-	padding: "0.5rem 0.95rem",
-	display: "flex",
-	alignItems: "center",
-	cursor: "pointer",
-	width: "auto",
-	marginLeft: "auto",
 };
 
 export { BrowserToolbar };

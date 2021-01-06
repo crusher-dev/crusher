@@ -14,6 +14,7 @@ import uniqueId from "lodash/uniqueId";
 import { getStore } from "../../../../redux/store";
 import { recordAction } from "../../../../redux/actions/actions";
 import { ACTIONS_IN_TEST } from "../../../../../../crusher-shared/constants/recordedActions";
+import { Button } from "../../../components/app/button";
 
 interface iSEOModalProps {
 	onClose?: any;
@@ -194,13 +195,11 @@ const SeoModalContent = (props: iSEOModalProps) => {
 						</div>
 					</div>
 				</div>
-				<div
-					id={"modal-button"}
-					onClick={saveSeoValidationAction}
+				<Button
+					title={"Save action"}
 					style={saveButtonStyle}
-				>
-					Save Action
-				</div>
+					onClick={saveSeoValidationAction}
+				></Button>
 			</div>
 		</div>
 	);
@@ -245,16 +244,11 @@ const generateTextStyle = {
 	cursor: "pointer",
 };
 const saveButtonStyle = {
-	padding: "12px 24px",
-	minWidth: "120px",
-	textAlign: TEXT_ALIGN.CENTER,
-	color: " #fff",
-	borderRadius: "4px",
-	fontWeight: 600,
-	marginLeft: 24,
+	padding: "10px 32px",
 	fontSize: "0.9rem",
-	cursor: "pointer",
-	background: "#5B76F7",
+	textAlign: TEXT_ALIGN.CENTER,
+	color: "#fff",
+	marginLeft: 24,
 };
 
 export { SeoModalContent };

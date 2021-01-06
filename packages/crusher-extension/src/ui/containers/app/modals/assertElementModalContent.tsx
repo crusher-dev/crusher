@@ -7,7 +7,6 @@ import {
 	iField,
 } from "../.././../../../../crusher-shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
-import { TEXT_ALIGN } from "../../../../interfaces/css";
 import { BulbIcon } from "../../../../assets/icons";
 import uniqueId from "lodash/uniqueId";
 import { getStore } from "../../../../redux/store";
@@ -17,6 +16,8 @@ import { updateActionsRecordingState } from "../../../../redux/actions/recorder"
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
 import { turnOffInspectModeInFrame } from "../../../../messageListener";
 import { iElementInfo } from "../../../../../../crusher-shared/types/elementInfo";
+import { Button } from "../../../components/app/button";
+import { TEXT_ALIGN } from "../../../../interfaces/css";
 
 interface iAssertElementModalProps {
 	onClose?: any;
@@ -41,7 +42,7 @@ const getValidationFields = (elementInfo: iElementInfo): Array<iField> => {
 	];
 };
 
-const getSeoFieldValue = (fieldInfo: iField) => {
+const getElementFieldValue = (fieldInfo: iField) => {
 	return fieldInfo.value;
 };
 
@@ -95,11 +96,11 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 		setValidationRows([...newValidationRows]);
 	};
 
-	const createNewSeoAssertionRow = () => {
+	const createNewElementAssertionRow = () => {
 		addValidationRow(
 			validationFields[0],
 			validationOperations[0],
-			getSeoFieldValue(validationFields[0]),
+			getElementFieldValue(validationFields[0]),
 		);
 	};
 
@@ -109,7 +110,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 			newValidationRowsData.push({
 				field: validationFields[i],
 				operation: ASSERTION_OPERATION_TYPE.MATCHES,
-				validation: getSeoFieldValue(validationFields[i]),
+				validation: getElementFieldValue(validationFields[i]),
 			});
 		}
 		addValidationRows(newValidationRowsData);
@@ -126,7 +127,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 		if (!newField) throw new Error("Invalid field provided for validation row");
 
 		validationRows[rowIndex].field = newField;
-		validationRows[rowIndex].validation = getSeoFieldValue(newField);
+		validationRows[rowIndex].validation = getElementFieldValue(newField);
 		setValidationRows([...validationRows]);
 	};
 
@@ -156,7 +157,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 		setValidationRows([...validationRows]);
 	};
 
-	const saveSeoValidationAction = () => {
+	const saveElementValidationAction = () => {
 		const store = getStore();
 		store.dispatch(
 			recordAction({
@@ -190,7 +191,10 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 			/>
 			<div style={bottomBarStyle}>
 				<div style={formButtonStyle}>
-					<div style={advanceLinkContainerStyle} onClick={createNewSeoAssertionRow}>
+					<div
+						style={advanceLinkContainerStyle}
+						onClick={createNewElementAssertionRow}
+					>
 						<span>Advance</span>
 						<span style={{ marginLeft: "0.5rem" }}>
 							<img width={12} src={chrome.extension.getURL("/icons/arrow_down.svg")} />
@@ -206,13 +210,11 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 						</div>
 					</div>
 				</div>
-				<div
-					id={"modal-button"}
-					onClick={saveSeoValidationAction}
+				<Button
 					style={saveButtonStyle}
-				>
-					Save Action
-				</div>
+					title={"Save action"}
+					onClick={saveElementValidationAction}
+				></Button>
 			</div>
 		</div>
 	);
@@ -257,16 +259,11 @@ const generateTextStyle = {
 	cursor: "pointer",
 };
 const saveButtonStyle = {
-	padding: "12px 24px",
-	minWidth: "120px",
-	textAlign: TEXT_ALIGN.CENTER,
-	color: " #fff",
-	borderRadius: "4px",
-	fontWeight: 600,
-	marginLeft: 24,
 	fontSize: "0.9rem",
-	cursor: "pointer",
-	background: "#5B76F7",
+	padding: "10px 32px",
+	textAlign: TEXT_ALIGN.CENTER,
+	color: "#fff",
+	marginLeft: 24,
 };
 
 export { AssertElementModalContent };

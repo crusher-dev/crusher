@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FLEX_DIRECTION, FONT_WEIGHT } from "../../../interfaces/css";
 
 interface iItem {
@@ -14,14 +14,26 @@ interface iItemProps {
 }
 
 const Item = (props: iItemProps) => {
+	const [isHovered, setIsHovered] = useState(false);
 	const { item, onClick } = props;
 
 	const handleItemClick = () => {
 		onClick(item.id);
 	};
 
+	const handleMouseOver = () => {
+		setIsHovered(true);
+	};
+	const handleMouseOut = () => {
+		setIsHovered(false);
+	};
+
 	return (
-		<div style={itemRowStyle}>
+		<div
+			style={itemRowStyle(isHovered)}
+			onMouseOver={handleMouseOver}
+			onMouseOut={handleMouseOut}
+		>
 			<div style={itemContainerStyle} id={item.id} onClick={handleItemClick}>
 				<img style={actionImageStyle} src={item.icon} />
 				<div style={actionContentStyle}>
@@ -33,18 +45,18 @@ const Item = (props: iItemProps) => {
 	);
 };
 
-const itemRowStyle = {
+const itemRowStyle = (isHovered: boolean) => ({
 	display: "flex",
 	justifyContent: "space-between",
 	marginBottom: "1rem",
-};
+	background: isHovered ? "rgba(21,24,30, 0.6)" : "#15181E",
+	color: isHovered ? "rgba(255,255,255, 1)" : "rgba(255,255,255, 0.95)",
+});
 const itemContainerStyle = {
 	padding: "0.8rem 0.8rem",
 	fontFamily: "DM Sans",
-	fontWeight: FONT_WEIGHT.BOLD,
 	fontSize: "0.8rem",
-	color: "#fff",
-	background: "#15181E",
+	fontWeight: FONT_WEIGHT.BOLD,
 	borderRadius: "0.2rem",
 	width: "100%",
 	display: "flex",

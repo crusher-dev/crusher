@@ -12,7 +12,7 @@ const AddressBar = (props: iAddressBarProps) => {
 	const { value, onChange, onKeyDown, forwardRef } = props;
 
 	return (
-		<div style={addressBarStyle}>
+		<div style={addressBarStyle} className={"address_bar"}>
 			<div style={sslContainerStyle}>
 				<img style={sslIconStyle} src={chrome.runtime.getURL("/icons/ssl.svg")} />
 			</div>
@@ -24,6 +24,12 @@ const AddressBar = (props: iAddressBarProps) => {
 				contentEditable={true}
 				value={value as any}
 			></textarea>
+
+			<style>{`
+				.address_bar:hover{
+					background: rgba(28,31,38, 1) !important;
+				}
+			`}</style>
 		</div>
 	);
 };
@@ -32,7 +38,7 @@ const addressBarStyle = {
 	width: "33.9%",
 	maxWidth: "25rem",
 	padding: "0 0.1rem",
-	background: "#1C1F26",
+	background: "rgba(28,31,38, 0.7)",
 	overflow: "hidden",
 	display: "flex",
 	alignItems: "center",
@@ -49,7 +55,7 @@ const addressBarInputStyle = {
 	display: "flex",
 	padding: "0.6rem 0.5rem",
 	alignItems: "center",
-	background: "#1C1F26",
+	background: "transparent",
 	color: "#fff",
 	maxHeight: "2rem",
 	whiteSpace: WHITE_SPACE.NOWRAP,

@@ -121,6 +121,7 @@ const stepActionStyle = {
 
 const stepSelectorContainerStyle = {
 	overflow: "hidden",
+	position: "relative",
 };
 const stepSelectorStyle = {
 	marginTop: "0.25rem",

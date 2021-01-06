@@ -114,7 +114,7 @@ function handleRecordAction(action: iAction) {
 		}
 		case ACTIONS_IN_TEST.SCROLL: {
 			if (!lastRecordedAction)
-				throw new Error("Add input recorded before navigate url");
+				throw new Error("Scroll recorded before navigate url");
 
 			const isScrollingToSameLastElement =
 				lastRecordedAction.type === ACTIONS_IN_TEST.SCROLL &&
@@ -131,6 +131,20 @@ function handleRecordAction(action: iAction) {
 					action.payload.meta.value,
 				];
 				store.dispatch(updateLastRecordedAction(action));
+			}
+			break;
+		}
+		case ACTIONS_IN_TEST.HOVER: {
+			if (!lastRecordedAction)
+				throw new Error("Hover recorded before navigate url");
+
+			const isTheLastRecordedActionSame =
+				lastRecordedAction.type === ACTIONS_IN_TEST.HOVER &&
+				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
+					(action.payload.selectors as iSelectorInfo[])[0].value;
+
+			if (!isTheLastRecordedActionSame) {
+				store.dispatch(recordAction(action));
 			}
 			break;
 		}

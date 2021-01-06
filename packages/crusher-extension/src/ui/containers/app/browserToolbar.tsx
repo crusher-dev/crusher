@@ -5,7 +5,6 @@ import {
 	NavigateRefreshIcon,
 	RecordLabelIcon,
 } from "../../../assets/icons";
-import { ToggleSwitchIndicator } from "../../components/app/toggleSwitchIndicator";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
@@ -22,7 +21,6 @@ interface iBrowserToolbarProps {
 const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	const {
 		initialUrl,
-		isInspectModeOn,
 		goBack,
 		goForward,
 		refreshPage,
@@ -67,9 +65,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					onKeyDown={handleKeyDown}
 					onChange={handleAddressBarUrlChange}
 				/>
-				<div style={elementToggleIndicatorContainerStyle}>
-					<ToggleSwitchIndicator label="Element mode" enabled={!!isInspectModeOn} />
-				</div>
 				<div style={buttonStyle} onClick={saveTest}>
 					<RecordLabelIcon />
 					<span style={{ marginLeft: "1.2rem" }}>Save Test</span>
@@ -88,14 +83,6 @@ const browserMainToolbarStyle = {
 	background: "#14181F",
 	display: "flex",
 	padding: "0.73rem 2rem",
-};
-
-const elementToggleIndicatorContainerStyle = {
-	display: "flex",
-	flexDirection: FLEX_DIRECTION.ROW,
-	justifyContent: "center",
-	alignItems: "center",
-	marginLeft: "auto",
 };
 
 const goBackIconContainerStyle = {
@@ -130,7 +117,7 @@ const buttonStyle = {
 	alignItems: "center",
 	cursor: "pointer",
 	width: "auto",
-	marginLeft: "1.6rem",
+	marginLeft: "auto",
 };
 
 export { BrowserToolbar };

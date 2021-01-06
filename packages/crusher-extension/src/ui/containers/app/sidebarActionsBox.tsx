@@ -79,7 +79,6 @@ const tipContentStyle = {
 const tipTitleStyle = {
 	color: "#FFFFFF",
 	fontFamily: "DM Sans",
-	marginLeft: "0.898rem",
 };
 
 const tipDescStyle = {

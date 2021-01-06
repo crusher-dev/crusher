@@ -48,6 +48,7 @@ export default class EventRecording {
 		this.handleMouseOver = this.handleMouseOver.bind(this);
 		this.handleMouseOut = this.handleMouseOut.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
+		this.handleBeforeNavigation = this.handleBeforeNavigation.bind(this);
 
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(
 			this,
@@ -389,6 +390,7 @@ export default class EventRecording {
 			};
 		})(window.open);
 
+		window.onbeforeunload = this.handleBeforeNavigation;
 		document.body.addEventListener("keypress", this.handleKeyPress, true);
 		document.addEventListener("click", this.handleDocumentClick, true);
 		setInterval(this.pollInterval, 300);
@@ -418,6 +420,18 @@ export default class EventRecording {
 			"*",
 		);
 		this.registerNodeListeners();
+	}
+
+	handleBeforeNavigation() {
+		const activeElementHref = (document.activeElement as any).getAttribute(
+			"href",
+		);
+
+		this.eventsController.saveCapturedEventInBackground(
+			ACTIONS_IN_TEST.NAVIGATE_URL,
+			document.body,
+			activeElementHref ? activeElementHref : window.location.href.toString(),
+		);
 	}
 
 	turnInspectModeOnInParentFrame() {

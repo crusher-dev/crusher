@@ -86,6 +86,7 @@ function handleRecordAction(action: iAction) {
 			if (!hasInitialNavigationActionRegistered) {
 				store.dispatch(recordAction(action));
 			}
+			store.dispatch(updateIsRecorderScriptBooted(false));
 			break;
 		}
 		case ACTIONS_IN_TEST.ADD_INPUT: {

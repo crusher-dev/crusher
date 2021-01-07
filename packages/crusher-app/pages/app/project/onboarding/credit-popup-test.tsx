@@ -56,8 +56,7 @@ const headingCSS = css`
 
 const paraCSS = css`
 	font-family: Gilroy;
-	font-size: 1rem;
-	line-height: 1.125rem;
+	font-size: 1rem; line-height: 1.125rem;
 `;
 
 export default CreditPopup;

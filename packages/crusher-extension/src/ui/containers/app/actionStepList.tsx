@@ -120,8 +120,8 @@ const stepActionStyle = {
 };
 
 const stepSelectorContainerStyle = {
-	overflow: "hidden",
-	position: "relative",
+	overflow: OVERFLOW.HIDDEN,
+	position: POSITION.RELATIVE,
 };
 const stepSelectorStyle = {
 	marginTop: "0.25rem",

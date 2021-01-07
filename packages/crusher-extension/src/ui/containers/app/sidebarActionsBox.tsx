@@ -1,10 +1,4 @@
 import React, { RefObject } from "react";
-import {
-	FLEX_DIRECTION,
-	FONT_WEIGHT,
-	OVERFLOW,
-	POSITION,
-} from "../../../interfaces/css";
 import { ActionStepList } from "./actionStepList";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
@@ -13,6 +7,13 @@ import { Conditional } from "../../components/conditional";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TopLevelActionsList } from "./topLevelActionsList";
 import { ElementLevelActionsList } from "./elementLevelActionsList";
+import {
+	FLEX_DIRECTION,
+	FONT_WEIGHT,
+	OVERFLOW,
+	POSITION,
+} from "../../../interfaces/css";
+import { SelectElementPlaceholder } from "./selectElementPlaceholder";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -37,6 +38,11 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					<ActionStepList items={actions} />
 				</div>
 				<div style={actionContainerStyle}>
+					<Conditional
+						If={recordingState.type === ACTIONS_RECORDING_STATE.SELECT_ELEMENT}
+					>
+						<SelectElementPlaceholder deviceIframeRef={props.deviceIframeRef} />
+					</Conditional>
 					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.PAGE}>
 						<TopLevelActionsList deviceIframeRef={props.deviceIframeRef} />
 					</Conditional>

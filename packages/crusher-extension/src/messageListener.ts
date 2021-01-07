@@ -224,7 +224,15 @@ export function recorderMessageListener(
 		}
 		case MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE: {
 			const meta = event.data.meta as iUpdateInspectorMessageMeta;
-			store.dispatch(updateInspectModeState(meta.value));
+			const isInspectModeOn = meta.value;
+			store.dispatch(updateInspectModeState(isInspectModeOn));
+			if (isInspectModeOn) {
+				store.dispatch(
+					updateActionsRecordingState(ACTIONS_RECORDING_STATE.SELECT_ELEMENT),
+				);
+			} else {
+				store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+			}
 			break;
 		}
 		case MESSAGE_TYPES.TURN_ON_ELEMENT_MODE: {

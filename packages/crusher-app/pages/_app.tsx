@@ -19,6 +19,9 @@ import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
 import { saveProjectsInRedux } from "@redux/actions/project";
 import { ANALYTICS } from "@services/analytics";
+import Modal from "react-modal";
+
+Modal.setAppElement("#__next");
 
 const TopProgressBar = dynamic(
 	function () {
@@ -35,6 +38,7 @@ function initiliazeAppAnalytics() {
 		cookies["projectId"],
 	);
 }
+
 function App({ Component, pageProps }: AppProps<any>) {
 	useEffect(initiliazeAppAnalytics, []);
 	return (

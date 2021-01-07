@@ -2,20 +2,12 @@ import Modal from "react-modal";
 import { useState } from "react";
 import { css } from "@emotion/core";
 
-// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
-Modal.setAppElement("#__next");
-
-function App() {
+function modalOverlay() {
 	var subtitle;
 	const [modalIsOpen, setIsOpen] = useState(true);
 	function openModal() {
 		setIsOpen(true);
 	}
-
-	// function afterOpenModal() {
-	// 	// references are now sync'd and can be accessed.
-	// 	subtitle.style.color = "#f00";
-	// }
 
 	function closeModal() {
 		setIsOpen(false);
@@ -30,7 +22,6 @@ function App() {
 			<button onClick={openModal}>Open Modal</button>
 			<Modal
 				isOpen={modalIsOpen}
-				// onAfterOpen={afterOpenModal}
 				onRequestClose={closeModal}
 				style={customStyles}
 				contentLabel="Example Modal"
@@ -61,20 +52,11 @@ function App() {
 						<button css={buttonCSS} onClick={closeModal}>
 							I've watched the video
 						</button>
-						{/* <form>
-					<input />
-					<button>tab navigation</button>
-					<button>stays</button>
-					<button>inside</button>
-					<button>the modal</button>
-				</form> */}
 				</div>
 			</Modal>
 		</div>
 	);
 }
-
-export default App;
 
 const customStyles = {
 	content: {
@@ -133,3 +115,5 @@ const buttonCSS = css`
 	line-height: 1rem;
 	font-weight: bold;
 `;
+
+export default modalOverlay;

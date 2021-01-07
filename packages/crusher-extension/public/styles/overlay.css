@@ -445,7 +445,7 @@ textarea {
 }
 #overlay_cover {
 	width: 100%;
-	cursor: default;
+	cursor: copy;
 	height: 100%;
 }
 .pointerEventsNone {

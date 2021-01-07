@@ -1,7 +1,7 @@
 import Richie from "../../../../public/assets/img/illustration/richie.png";
 import { css } from "@emotion/core";
 
-function Popup() {
+function CreditPopup() {
 	return (
 		<div css={popupCSS}>
 			<div
@@ -20,8 +20,6 @@ function Popup() {
 		</div>
 	);
 }
-
-export default Popup;
 
 const popupCSS = css`
 	display: flex;
@@ -61,3 +59,5 @@ const paraCSS = css`
 	font-size: 1rem;
 	line-height: 1.125rem;
 `;
+
+export default CreditPopup;

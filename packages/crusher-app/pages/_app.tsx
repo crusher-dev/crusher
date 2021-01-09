@@ -30,7 +30,7 @@ const TopProgressBar = dynamic(
 	{ ssr: false },
 );
 
-function initiliazeAppAnalytics() {
+function initializeAppAnalytics() {
 	const cookies = getCookies(null);
 	ANALYTICS.intialize(
 		cookies["userId"],
@@ -40,7 +40,7 @@ function initiliazeAppAnalytics() {
 }
 
 function App({ Component, pageProps }: AppProps<any>) {
-	useEffect(initiliazeAppAnalytics, []);
+	useEffect(initializeAppAnalytics, []);
 	return (
 		<>
 			<TopProgressBar />

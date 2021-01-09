@@ -88,10 +88,15 @@ export function WithSettingsLayout(
 
 function ProjectContainer() {
 	const ProjectItem = () => <div css={projectIcon}>C</div>;
+
+	const addProject = () => {
+		console.log("Adding a project");
+	};
+
 	return (
 		<div css={projectBar}>
 			<ProjectItem />
-			<div id="add-project">
+			<div id="add-project" onClick={addProject}>
 				<PlusSVG />
 			</div>
 		</div>

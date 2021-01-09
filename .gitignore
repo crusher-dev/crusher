@@ -125,5 +125,5 @@ logs/
 output/
 
 # firebase config
-./packages/crusher-shared/config/fire-config.js
-./packages/crusher-shared/config/fire-config-server.js
+packages/crusher-shared/config/fire-config.js
+packages/crusher-shared/config/fire-config-server.js

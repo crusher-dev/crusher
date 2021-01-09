@@ -124,10 +124,6 @@ function RenderCommentsBox(props) {
 	});
 
 	useEffect(() => {
-		console.log("oofe");
-	}, []);
-
-	useEffect(() => {
 		if (commentsListRef.current) {
 			(commentsListRef.current as any).scrollTop = (commentsListRef.current as any).scrollHeight;
 		}

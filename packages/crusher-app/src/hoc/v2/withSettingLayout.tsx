@@ -5,9 +5,15 @@ import BackSVG from "../../../public/svg/settings/back.svg";
 import StarSVG from "../../../public/svg/settings/star.svg";
 import TeamSVG from "../../../public/svg/settings/team.svg";
 
-import React from "react";
+import React, { useState } from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
+import { Conditional } from "@ui/components/common/Conditional";
+import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
+import ReactDOM from "react-dom";
+import { getProjects } from "@redux/stateUtils/projects";
+import { useSelector } from "react-redux";
+import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 
 const projectMenuData = {
 	title: "Project",
@@ -55,6 +61,33 @@ export function WithSettingsLayout(
 	shouldHaveGetInitialProps = true,
 ) {
 	const WrappedComponent = function (props) {
+		const [
+			shouldShowCreateProjectModal,
+			setShouldShowCreateProjectModal,
+		] = useState(false);
+
+		const [
+			shouldShowAddTeamMemberModal,
+			setShouldShowAddTeamMemberModal,
+		] = useState(false);
+
+		const showCreateProjectModal = () => {
+			setShouldShowCreateProjectModal(true);
+		};
+
+		const showAddTeamMemberModal = () => {
+			setShouldShowAddTeamMemberModal(true);
+		};
+
+		const closeCreateProjectModal = () => {
+			ReactDOM.render(null as any, document.getElementById("overlay"));
+			setShouldShowCreateProjectModal(false);
+		};
+		const closeAddTeamMemberModal = () => {
+			ReactDOM.render(null as any, document.getElementById("overlay"));
+			setShouldShowAddTeamMemberModal(false);
+		};
+
 		return (
 			<div>
 				<Head>
@@ -66,11 +99,20 @@ export function WithSettingsLayout(
 					/>
 				</Head>
 				<div css={settingsPage}>
-					<ProjectContainer />
-					<MenuContainer />
+					<ProjectContainer showCreateProjectModal={showCreateProjectModal} />
+					<MenuContainer
+						showAddTeamMemberModal={showAddTeamMemberModal}
+						showCreateProjectModal={showCreateProjectModal}
+					/>
 					<div style={{ flex: 1, overflowY: "auto" }}>
 						<Component {...props} />
 					</div>
+					<Conditional If={shouldShowCreateProjectModal}>
+						<CreateProjectModal onClose={closeCreateProjectModal} />
+					</Conditional>
+					<Conditional If={shouldShowAddTeamMemberModal}>
+						<InviteTeamMemberModal onClose={closeAddTeamMemberModal} />
+					</Conditional>
 				</div>
 			</div>
 		);
@@ -86,19 +128,37 @@ export function WithSettingsLayout(
 	return WrappedComponent;
 }
 
-function ProjectContainer() {
-	const ProjectItem = () => <div css={projectIcon}>C</div>;
+interface iProjectContainerProps {
+	showCreateProjectModal: any;
+}
+function ProjectContainer(props: iProjectContainerProps) {
+	const { showCreateProjectModal } = props;
+	const projectsList = useSelector(getProjects);
+	const projectItems = projectsList.map((projectItem) => {
+		return <div css={projectIcon}>{projectItem.name[0].toUpperCase()}</div>;
+	});
+	const addProject = () => {
+		showCreateProjectModal();
+	};
+
 	return (
 		<div css={projectBar}>
-			<ProjectItem />
-			<div id="add-project">
+			{projectItems}
+			<div id="add-project" onClick={addProject}>
 				<PlusSVG />
 			</div>
 		</div>
 	);
 }
 
-function MenuContainer() {
+interface iMenuContainerProps {
+	showAddTeamMemberModal: () => any;
+	showCreateProjectModal: () => any;
+}
+
+function MenuContainer(props: iMenuContainerProps) {
+	const { showAddTeamMemberModal, showCreateProjectModal } = props;
+
 	const goBackToApp = () => {
 		Router.replace("/app");
 	};
@@ -122,10 +182,10 @@ function MenuContainer() {
 			<MainMenuItem data={projectMenuData} />
 
 			<div style={{ marginTop: "auto" }}>
-				<div css={menuBottomLink}>
+				<div css={menuBottomLink} onClick={showAddTeamMemberModal}>
 					<PlusSVG /> <span>Add team member</span>
 				</div>
-				<div css={menuBottomLink}>
+				<div css={menuBottomLink} onClick={showCreateProjectModal}>
 					<PlusSVG /> <span>Add project</span>
 				</div>
 			</div>

@@ -8,15 +8,19 @@ import { recorderMessageListener } from "../messageListener";
 import ReactModal from "react-modal";
 import { ModalManager } from "./containers/app/modals";
 import CodeGenerator from "../../../code-generator/src";
-
-const codeGenrator = new CodeGenerator();
+import { submitPostDataWithForm } from "../utils/helpers";
+import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
 	const saveTest = () => {
 		const store = getStore();
 		const steps = store.getState().actions.list;
-		console.log(codeGenrator.generate(steps));
+
+		submitPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
+			events: escape(JSON.stringify(steps)),
+			totalTime: 0,
+		});
 	};
 
 	useMemo(() => {

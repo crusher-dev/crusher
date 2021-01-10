@@ -37,8 +37,9 @@ export class DraftControllerV2 {
 				const interval = setInterval(async () => {
 					const testStatus = await this.draftV2Service.getDraftInstanceStatus(lastInstance.id);
 
-					return this.draftV2Service.getDraftLogs(lastInstance.id, logsAfter).then((logs)=>{
+					return this.draftV2Service.getDraftLogs(draftId, logsAfter).then((logs)=>{
 						resolve({ status: DRAFT_LOGS_STATUS.UPDATE_LOGS, logs: logs, test: testStatus });
+						clearInterval(interval);
 					}).catch((err)=>{
 						if(count++ === 5){
 							resolve({ status: DRAFT_LOGS_STATUS.NO_UPDATE, test: testStatus });

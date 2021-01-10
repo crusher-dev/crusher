@@ -22,62 +22,26 @@ export interface ActionsWithStatus {
 
 function getLogsWithStatus(
 	actions: Array<iAction>,
-	logs: Array<LiveLogs>,
+	logs: Array<iLiveStepLogs>,
 ): Array<ActionsWithStatus> {
-	let actionsIndex = 0;
+	const actionsIndex = 0;
 
-	const out = [];
+	const out: Array<ActionsWithStatus> = [];
 
-	console.log(actions);
+	for (let i = 0; i < actions.length; i++) {
+		const selector = actions[i].payload.selectors
+			? actions[i].payload.selectors[0].value
+			: null;
 
-	for (let i = 0; i < logs.length; i++) {
-		const action = actions[actionsIndex];
-		if (actions[actionsIndex++].type === logs[i].actionType) {
-			const descFunction = ACTION_DESCRIPTIONS[action.type];
-			console.log(action.type);
-			const selector = action.payload.selectors
-				? action.payload.selectors[0].value
-				: null;
-			//@ts-ignore
-			out.push({
-				event_type: logs[i].actionType,
-				selector: selector,
-				desc:
-					typeof descFunction === "function"
-						? ACTION_DESCRIPTIONS[action.type]({
-								selector: (action.payload.meta.selectors[0] as any).value,
-								value: action.payload.meta.value,
-						  })
-						: "",
-				timeTaken: logs[i].meta.timeTaken,
-				isCompleted: true,
-			});
-		} else {
-			break;
-		}
-	}
-
-	for (let i = actionsIndex; i < actions.length; i++) {
-		const action = actions[i];
-		const descFunction = ACTION_DESCRIPTIONS[action.type];
-		console.log(action.type);
-
-		//@ts-ignore
 		out.push({
-			event_type: action.type,
-			selector: action.payload.selectors ? action.payload.selectors[0].value : "",
-			desc:
-				typeof descFunction === "function"
-					? ACTION_DESCRIPTIONS[action.type]({
-							selector: (action.payload.selectors[0] as any).value,
-							value: action.value,
-					  })
-					: "",
-			timeTaken: null,
-			isCompleted: false,
+			event_type: actions[i].type,
+			selector: selector as string,
+			desc: "Some description",
+			timeTaken: "0",
+			isCompleted: logs[i] && logs[i].actionType === actions[i].type,
 		});
 	}
-
+	console.log(logs, actions, ")__");
 	return out;
 }
 
@@ -85,6 +49,7 @@ function LiveLogsActions(props: LiveLogsActionsProps) {
 	const { actions, logs } = props;
 	const logsWithStatus = getLogsWithStatus(actions, logs);
 	const lastDone = React.createRef();
+	console.log(logsWithStatus, "OGSS");
 	const out = logsWithStatus.map((action, index) => {
 		const out = (
 			<LogActionCard

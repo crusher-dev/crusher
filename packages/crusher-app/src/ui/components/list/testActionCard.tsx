@@ -43,15 +43,13 @@ export const TestActionCard = (props: any) => {
 interface iLoginActionCardProps {
 	index: number;
 	action: ActionsWithStatus;
-	style: React.CSSProperties;
+	style?: React.CSSProperties;
 	isLast: boolean;
 	timeTaken: number;
 	isActionCompleted: boolean;
 }
 export const LogActionCard = (props: iLoginActionCardProps) => {
 	const { index, action, isActionCompleted, style, timeTaken, isLast } = props;
-
-	const desc = "HELLO WORLD";
 
 	return (
 		<div
@@ -62,9 +60,7 @@ export const LogActionCard = (props: iLoginActionCardProps) => {
 				<div css={styles.actionBoxRow}>
 					<div css={styles.actionBoxRowIndex}>{index}.)</div>
 					<div css={styles.actionBoxInfo}>
-						<div css={styles.actionInfoHeading}>
-							{desc.substr(0, 34)} {desc.length > 34 ? "..." : null}
-						</div>
+						<div css={styles.actionInfoHeading}>{action.event_type}</div>
 						<div css={styles.actionInfoDesc}>{action.selector}</div>
 					</div>
 				</div>

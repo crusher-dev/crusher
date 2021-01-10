@@ -6,6 +6,7 @@ import { NextApiRequest } from "next";
 import {
 	_getLiveLogs,
 	createAndRunDraftTest,
+	createTestFromDraft,
 	getDraftTest,
 	getTest,
 } from "@services/test";
@@ -35,7 +36,7 @@ function checkDraftStatusAgainAndAgain(draftId: number, logsAfter = 0) {
 	return _getLiveLogs(draftId, logsAfter).then((res: iDraftLogsResponse) => {
 		const { status, logs, test } = res;
 
-		if (test && test.result && status === DRAFT_LOGS_STATUS.UPDATE_LOGS) {
+		if (test && status === DRAFT_LOGS_STATUS.UPDATE_LOGS) {
 			if (
 				test.status === InstanceStatus.ABORTED ||
 				test.status === InstanceStatus.TIMEOUT ||
@@ -123,7 +124,24 @@ const TestEditor = (props: iTestEditorProps) => {
 	}, [testInfo.actions]);
 
 	const handleSaveTest = () => {
-		console.debug("Clicked on save test");
+		if (!!testName === false || testName.trim() === "") {
+			alert("Give a name to the test");
+			return false;
+		}
+		if (testInfo.testType === EDITOR_TEST_TYPE.SAVED_DRAFT && testInfo.id) {
+			return createTestFromDraft(testInfo.id, { testName: testName })
+				.then((res: any) => {
+					if (!res) {
+						throw new Error("Empty response");
+					}
+					redirectToFrontendPath("/app/project/tests");
+				})
+				.catch((err: any) => {
+					console.error(err);
+				});
+		} else {
+			return false;
+		}
 	};
 
 	return (
@@ -170,7 +188,6 @@ const TestEditor = (props: iTestEditorProps) => {
 					</div>
 				</div>
 				<TestStatus actions={testInfo.actions} logs={liveLogs} />
-				{/*<ModifyTestSettingsModal/>*/}
 			</div>
 		</div>
 	);

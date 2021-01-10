@@ -66,7 +66,7 @@ export const _getLiveLogs = (
 	return backendRequest(`/v2/draft/getLogs/${draftId}`, {
 		method: RequestMethod.POST,
 		headers,
-		payload: logsAfter ? { logsAfter } : {},
+		payload: logsAfter !== null ? { logsAfter } : {},
 	});
 };
 

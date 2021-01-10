@@ -16,7 +16,7 @@ const tests = (state = initialData, action: any) => {
 		case RECORD_LIVE_LOG:
 			return {
 				...state,
-				liveLogs: [...state.liveLogs, action.payload.logs],
+				liveLogs: [...state.liveLogs, ...action.payload.logs],
 			};
 		case SAVE_TEST_META_INFO:
 			return {

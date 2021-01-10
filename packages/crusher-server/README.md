@@ -18,11 +18,11 @@ Run this command
 
 
 # Migration?
-Load initial sql. Migration should both handle schema or data change. Change to flyway for more control. Has info, repair and baseline support
-1.) Update config dev.json
-2.) Run db:migrate_up to apply migration
-3.) Run db:migrate_dow to downgrade migration
-// Use env variable from travis or secret machine. Load env variable.
+1.) Install flyways and keep it in crusher-server/flyways
+2.) ./flyway/flyway -configFiles=config/flyway.conf info and  ./flyway/flyway -configFiles=config/flyway.migrate 
+
+On CI, use https://flywaydb.org/documentation/v6/envvars
+
 
 # How to fix "Client Does not support authentication protocol requested by the user" error ?
 

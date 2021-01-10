@@ -1,1 +1,0 @@
-DROP table table_name;

@@ -109,6 +109,9 @@
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
-		"lint-fix:ts": "eslint --fix src"
+		"lint-fix:ts": "eslint --fix src",
+		"db:info": "./flyway/flyway -configFiles=config/flyway.conf info",
+		"db:repair": "./flyway/flyway -configFiles=config/flyway.conf repair",
+		"db:migrate": "./flyway/flyway -configFiles=config/flyway.conf migrate"
 	}
 }

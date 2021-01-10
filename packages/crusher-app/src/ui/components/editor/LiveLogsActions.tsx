@@ -4,13 +4,15 @@ import { LogActionCard } from "@ui/components/list/testActionCard";
 import { css } from "@emotion/core";
 
 import { ACTION_DESCRIPTIONS } from "../../../../../crusher-shared/constants/actionDescriptions";
+import { iAction } from "@crusher-shared/types/action";
+import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
 
 interface LiveLogsActionsProps {
-	actions: Array<any>;
-	logs: Array<LiveLogs>;
+	logs: Array<iLiveStepLogs>;
+	actions: Array<iAction>;
 }
 
-interface ActionsWithStatus {
+export interface ActionsWithStatus {
 	event_type: string;
 	desc: string;
 	selector: string;
@@ -19,27 +21,32 @@ interface ActionsWithStatus {
 }
 
 function getLogsWithStatus(
-	actions: Array<{ event_type: string; [key: string]: string }>,
+	actions: Array<iAction>,
 	logs: Array<LiveLogs>,
 ): Array<ActionsWithStatus> {
 	let actionsIndex = 0;
 
 	const out = [];
 
+	console.log(actions);
+
 	for (let i = 0; i < logs.length; i++) {
 		const action = actions[actionsIndex];
-		if (actions[actionsIndex++].event_type === logs[i].actionType) {
-			const descFunction = ACTION_DESCRIPTIONS[action.event_type];
-			console.log(action.event_type);
+		if (actions[actionsIndex++].type === logs[i].actionType) {
+			const descFunction = ACTION_DESCRIPTIONS[action.type];
+			console.log(action.type);
+			const selector = action.payload.selectors
+				? action.payload.selectors[0].value
+				: null;
 			//@ts-ignore
 			out.push({
 				event_type: logs[i].actionType,
-				selector: action.selectors[0].value,
+				selector: selector,
 				desc:
 					typeof descFunction === "function"
-						? ACTION_DESCRIPTIONS[action.event_type]({
-								selector: (action.selectors[0] as any).value,
-								value: action.value,
+						? ACTION_DESCRIPTIONS[action.type]({
+								selector: (action.payload.meta.selectors[0] as any).value,
+								value: action.payload.meta.value,
 						  })
 						: "",
 				timeTaken: logs[i].meta.timeTaken,
@@ -52,17 +59,17 @@ function getLogsWithStatus(
 
 	for (let i = actionsIndex; i < actions.length; i++) {
 		const action = actions[i];
-		const descFunction = ACTION_DESCRIPTIONS[action.event_type];
-		console.log(action.event_type);
+		const descFunction = ACTION_DESCRIPTIONS[action.type];
+		console.log(action.type);
 
 		//@ts-ignore
 		out.push({
-			event_type: action.event_type,
-			selector: action.selectors[0].value,
+			event_type: action.type,
+			selector: action.payload.selectors ? action.payload.selectors[0].value : "",
 			desc:
 				typeof descFunction === "function"
-					? ACTION_DESCRIPTIONS[action.event_type]({
-							selector: (action.selectors[0] as any).value,
+					? ACTION_DESCRIPTIONS[action.type]({
+							selector: (action.payload.selectors[0] as any).value,
 							value: action.value,
 					  })
 					: "",
@@ -77,45 +84,28 @@ function getLogsWithStatus(
 function LiveLogsActions(props: LiveLogsActionsProps) {
 	const { actions, logs } = props;
 	const logsWithStatus = getLogsWithStatus(actions, logs);
-	const divRef = React.createRef();
 	const lastDone = React.createRef();
 	const out = logsWithStatus.map((action, index) => {
 		const out = (
 			<LogActionCard
 				key={index}
 				isLast={index === actions.length - 1}
-				forwardRef={
-					action.isCompleted &&
-					(index === actions.length - 1 ||
-						(actions[index + 1] && actions[index + 1].isCompleted))
-						? lastDone
-						: null
-				}
 				index={index + 1}
 				action={action}
-				timeTaken={action.timeTaken}
-				isFinished={action.isCompleted}
+				timeTaken={parseInt(action.timeTaken)}
+				isActionCompleted={action.isCompleted}
 			/>
 		);
 		return out;
 	});
 
 	useEffect(() => {
-		// const scrollDiv: any = divRef.current;
-		// const newScrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
-		// if(newScrollTop !== 0) {
-		//     scrollDiv.scrollTop = newScrollTop;
-		// }
 		if (lastDone.current) {
 			(lastDone.current as any).scrollIntoView();
 		}
 	}, [logs]);
 
-	return (
-		<div css={styles.container} ref={divRef as any}>
-			{out}
-		</div>
-	);
+	return <div css={styles.container}>{out}</div>;
 }
 
 const styles = {

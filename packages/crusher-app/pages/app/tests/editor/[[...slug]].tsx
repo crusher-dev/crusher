@@ -1,54 +1,47 @@
-import { withSidebarLayout } from "@hoc/withSidebarLayout";
-import { css } from "@emotion/core";
-import { cleanHeaders } from "@utils/backendRequest";
-import { getCookies } from "@utils/cookies";
+import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { iPageContext } from "@interfaces/pageContenxt";
+import { checkIfUserLoggedIn } from "@redux/stateUtils/user";
 import { redirectToFrontendPath } from "@utils/router";
+import { NextApiRequest } from "next";
 import {
-	checkDraftStatus,
+	_getLiveLogs,
 	createAndRunDraftTest,
-	createTestFromDraft,
+	getDraftTest,
 	getTest,
 } from "@services/test";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { css } from "@emotion/core";
+import { Conditional } from "@ui/components/common/Conditional";
+import { EDITOR_TEST_TYPE } from "@crusher-shared/types/editorTestType";
+import { withSidebarLayout } from "@hoc/withSidebarLayout";
+import { recordLiveLogs, saveTestMetaInfo } from "@redux/actions/tests";
+import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 import { useSelector } from "react-redux";
-import { getSelectedProject } from "@redux/stateUtils/projects";
-import { fetchTestsCountInProject } from "@services/projects";
-import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
+import { getTestLiveLogs, getTestMetaInfo } from "@redux/stateUtils/tests";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
-import CodeGenerator from "@code-generator/src/index";
+import CodeGenerator from "@code-generator/src";
+import { getSelectedProject } from "@redux/stateUtils/projects";
+import { iDraft } from "@crusher-shared/types/db/draft";
+import { store } from "@redux/store";
+import {
+	DRAFT_LOGS_STATUS,
+	iDraftLogsResponse,
+} from "@crusher-shared/types/response/draftLogsResponse";
+import { InstanceStatus } from "@crusher-shared/types/instanceStatus";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
 
-import withSession from "@hoc/withSession";
-import { USER_NOT_REGISTERED } from "@utils/constants";
-
-function checkDraftStatusAgainAndAgain(
-	id: string,
-	updateLogsCallback: any,
-	logsAfter = 0,
-) {
-	return checkDraftStatus(id, logsAfter).then((res: any) => {
+function checkDraftStatusAgainAndAgain(draftId: number, logsAfter = 0) {
+	return _getLiveLogs(draftId, logsAfter).then((res: iDraftLogsResponse) => {
 		const { status, logs, test } = res;
 
-		if (test && test.result && status === "FETCHED_LOGS") {
-			const { images } = test.result;
-
+		if (test && test.result && status === DRAFT_LOGS_STATUS.UPDATE_LOGS) {
 			if (
-				test.status === TestInstanceStatus.ABORTED ||
-				test.status === TestInstanceStatus.TIMEOUT
+				test.status === InstanceStatus.ABORTED ||
+				test.status === InstanceStatus.TIMEOUT ||
+				test.status === InstanceStatus.FINISHED
 			) {
-				updateLogsCallback(status, status, logs, images, id, true, test.videos);
-			} else if (test.status === TestInstanceStatus.FINISHED) {
-				updateLogsCallback(
-					status,
-					status,
-					logs,
-					images ? images : "[]",
-					id,
-					true,
-					test.videos,
-				);
+				return store.dispatch(recordLiveLogs(logs!));
 			} else {
 				const lastCreatedAt =
 					logs && logs.length
@@ -57,22 +50,8 @@ function checkDraftStatusAgainAndAgain(
 								return createdDate > prev ? createdDate : prev;
 						  }, new Date(0))
 						: logsAfter;
-				const { currentDraftId } = updateLogsCallback(
-					status,
-					status,
-					logs,
-					images ? images : "[]",
-					id,
-					false,
-					test.videos,
-				);
-				if (currentDraftId === id) {
-					return checkDraftStatusAgainAndAgain(
-						id,
-						updateLogsCallback,
-						lastCreatedAt,
-					);
-				}
+				store.dispatch(recordLiveLogs(logs!));
+				return checkDraftStatusAgainAndAgain(draftId, lastCreatedAt);
 			}
 		} else {
 			const lastCreatedAt =
@@ -82,178 +61,85 @@ function checkDraftStatusAgainAndAgain(
 							return createdDate > prev ? createdDate : prev;
 					  }, new Date(0))
 					: logsAfter;
-			const { currentDraftId } = updateLogsCallback(
-				status,
-				null,
-				logs,
-				test && test.result ? test.result.images : "[]",
-				id,
-				false,
-				test.videos,
-			);
-			if (currentDraftId === id) {
-				return checkDraftStatusAgainAndAgain(id, updateLogsCallback, lastCreatedAt);
-			}
+
+			return checkDraftStatusAgainAndAgain(draftId, lastCreatedAt);
 		}
 	});
 }
 
-const TestState = {
-	CREATED: "CREATED",
-	RUNNING: "RUNNING",
-	COMPLETED: "COMPLETED",
-};
+interface iTestEditorProps {
+	isLoggedIn: boolean;
+	metaInfo: iTestMetaInfo;
+}
 
-function Test(props: any) {
-	const { testId, events, isFirstTest, totalTime } = props;
-	let { testInfo } = props;
-	testInfo = testInfo ? testInfo : {};
-	const [actions] = useState(
-		testInfo.events ? JSON.parse(testInfo.events) : JSON.parse(events),
-	);
-	const [draftInfo, setDraftInfo]: [any, any] = useState(null);
-	const [, setTestState] = useState(TestState.CREATED);
-	const [testResults, setTestResults]: [any, any] = useState(null);
-	const [testName, setTestName] = useState(testInfo ? testInfo.name : "");
-	const [, setIsRunningTest] = useState(false);
-	const [, setIsTestBaseCreated] = useState(false);
+const TestEditor = (props: iTestEditorProps) => {
+	const { metaInfo } = props;
+	const [testName, setTestName] = useState("");
 
+	const testInfo = useSelector(getTestMetaInfo);
+	const liveLogs = useSelector(getTestLiveLogs);
 	const selectedProjectId = useSelector(getSelectedProject);
-	const draftRef: any = useRef(null);
 
-	let tR: any = null;
-	draftRef.current = draftInfo;
-
-	const receiveLogsCallback = useCallback(
-		function (
-			_status,
-			testStatus,
-			logs,
-			images,
-			draftId,
-			isTestFinished,
-			testInstanceRecording,
-		) {
-			if (draftId === draftInfo.id) {
-				setTestResults({
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					//@ts-ignore
-					logs: [...(tR ? tR.logs : []), ...(logs ? logs : [])],
-					images: [...(tR ? tR.images : []), ...(images ? JSON.parse(images) : [])],
-					testInstanceRecording,
-				});
-
-				if (isTestFinished) {
-					setIsRunningTest(false);
-				}
-
-				tR = {
-					logs: [...(tR ? tR.logs : []), ...(logs ? logs : [])],
-					images: [...(tR ? tR.images : []), ...(images ? JSON.parse(images) : [])],
-					testInstanceRecording,
-				};
-				if (testStatus === TestInstanceStatus.FINISHED) {
-					setTestState(TestState.COMPLETED);
-				}
-			}
-			return { currentDraftId: draftRef.current.id };
-		},
-		[draftInfo],
-	);
-
-	useEffect(() => {
-		if (draftInfo && draftInfo.id) {
-			const { id } = draftInfo;
-			setTestState(TestState.RUNNING);
-
-			checkDraftStatusAgainAndAgain(id, receiveLogsCallback).then((res: any) => {
-				if (res) {
-					setIsTestBaseCreated(true);
-				}
-			});
-		}
-	}, [draftInfo]);
-
-	useEffect(() => {
-		handleRunTest();
-	}, [actions]);
-
-	const handleTestNameUpdate = useCallback(
-		function (event) {
-			setTestName(event.target.value);
-		},
-		[testName],
-	);
+	const handleTestNameUpdate = (event: ChangeEvent<HTMLInputElement>) => {
+		setTestName(event.target.value);
+	};
 
 	const handleRunTest = useCallback(
 		function () {
-			const code = new CodeGenerator().generate(actions);
+			if (!testInfo.id) {
+				const code = new CodeGenerator().generate(testInfo.actions);
 
-			createAndRunDraftTest(
-				testInfo.name ? testInfo.name : "",
-				code,
-				actions,
-				selectedProjectId,
-			)
-				.then((res: any) => {
-					setDraftInfo(res);
-					setIsRunningTest(true);
-					setTestResults(null);
-				})
-				.catch((err: any) => {
-					alert("FAILED");
-					console.error(err);
-				});
+				createAndRunDraftTest(testName, code, testInfo.actions, selectedProjectId)
+					.then((res: iDraft) => {
+						if (res) {
+							store.dispatch(
+								saveTestMetaInfo({
+									...metaInfo,
+									id: res.id,
+									testType: EDITOR_TEST_TYPE.SAVED_DRAFT,
+								}),
+							);
+						}
+					})
+					.catch((err: any) => {
+						alert("FAILED");
+						console.error(err);
+					});
+			}
 		},
-		[draftInfo, actions],
+		[testInfo.actions],
 	);
 
-	const handleSaveTest = useCallback(() => {
-		if (!!testName === false || testName.trim() === "") {
-			alert("Give a name to the test");
-			return false;
+	useMemo(() => {
+		if (testInfo.testType === EDITOR_TEST_TYPE.SAVED_DRAFT && testInfo.id) {
+			checkDraftStatusAgainAndAgain(testInfo.id).then((res: any) => {
+				console.log(res);
+			});
 		}
-		if (draftInfo) {
-			return createTestFromDraft(draftInfo.id, { testName: testName })
-				.then((res: any) => {
-					if (!res) {
-						throw new Error("Empty response");
-					}
-					if (isFirstTest) {
-						redirectToFrontendPath("/app/project/onboarding/integrationIntroduction");
-					} else {
-						redirectToFrontendPath("/app/project/tests");
-					}
-				})
-				.catch((err: any) => {
-					console.error(err);
-				});
-		} else {
-			return false;
-		}
-	}, [draftInfo, testName]);
+	}, [testInfo.testType, testInfo.id]);
 
-	// const deleteAction = useCallback(
-	// 	function (index) {
-	// 		setActions(
-	// 			actions.filter((val, _index) => {
-	// 				return _index !== index;
-	// 			}),
-	// 		);
-	// 	},
-	// 	[actions],
-	// );
+	useMemo(() => {
+		handleRunTest();
+	}, [testInfo.actions]);
 
-	if (testResults && testResults.testInstanceRecording) {
-		alert(`Recorded tests, ${testResults.testInstanceRecording}`);
-	}
+	const handleSaveTest = () => {
+		console.debug("Clicked on save test");
+	};
 
 	return (
 		<div css={containerCSS}>
 			<div css={centeredContainerCSS}>
 				<div>
 					<div css={placeholderHeaderTitleCSS}>
-						You just created a test in {Math.floor(totalTime / 1000)} seconds👏
+						<Conditional If={metaInfo.totalTime}>
+							<span>
+								You just created a test in {Math.floor(metaInfo.totalTime! / 1000)}{" "}
+								seconds👏
+							</span>
+						</Conditional>
+						<Conditional If={!metaInfo.totalTime}>
+							<span>Welcome back👏</span>
+						</Conditional>
 					</div>
 					<div css={placeholderHeaderDescCss}>
 						<div>Crusher will check UI/Flow for bugs.</div>
@@ -283,12 +169,12 @@ function Test(props: any) {
 						</div>
 					</div>
 				</div>
-				<TestStatus actions={actions} logs={testResults ? testResults.logs : []} />
+				<TestStatus actions={testInfo.actions} logs={liveLogs} />
 				{/*<ModifyTestSettingsModal/>*/}
 			</div>
 		</div>
 	);
-}
+};
 
 const containerCSS = css`
 	display: flex;
@@ -358,54 +244,84 @@ const addTestButtonCSS = css`
 	cursor: pointer;
 `;
 
-Test.getInitialProps = async (ctx: any) => {
-	const { res, req, store, query } = ctx;
-	try {
-		let headers, postData;
-		if (req) {
-			headers = req.headers;
-			cleanHeaders(headers);
-			postData = await parse(req);
+const parseTestMetaInfo = async (
+	req: NextApiRequest,
+	testType: EDITOR_TEST_TYPE,
+	id: number,
+	headers: any = null,
+): Promise<iTestMetaInfo | null> => {
+	switch (testType) {
+		case EDITOR_TEST_TYPE.UNSAVED: {
+			const postData = await parse(req);
+			if (!postData.events && !postData.totalTime) {
+				throw new Error("No recorded actions passed to run test for");
+			}
+
+			return {
+				actions: JSON.parse(unescape(postData.events)),
+				testType: testType,
+				id: id,
+				totalTime: postData.totalTime,
+			};
 		}
+		case EDITOR_TEST_TYPE.SAVED_TEST: {
+			const testInfo = await getTest(id, headers);
 
-		const cookies = getCookies(req);
-		const defaultProject = getSelectedProject(store.getState());
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
+			return {
+				actions: JSON.parse(testInfo.events),
+				testType: testType,
+				id: id,
+			};
+		}
+		case EDITOR_TEST_TYPE.SAVED_DRAFT: {
+			const testInfo = await getDraftTest(id, headers);
+
+			return {
+				actions: JSON.parse(testInfo.events),
+				testType: testType,
+				id: id,
+			};
+		}
+	}
+	return null;
+};
+
+TestEditor.getInitialProps = async (ctx: iPageContext) => {
+	const { req, query, metaInfo, res, store } = ctx;
+
+	const { slug } = query;
+	if (!slug) {
+		return redirectToFrontendPath("/404", res);
+	}
+
+	const type = slug[0] as EDITOR_TEST_TYPE;
+
+	// const { cookies, headers } = ctx.metaInfo;
+	const isLoggedIn = checkIfUserLoggedIn(store.getState());
+	if (!Object.values(EDITOR_TEST_TYPE).includes(type)) {
+		return redirectToFrontendPath("/404", res);
+	}
+	const id = parseInt(slug[1]);
+
+	try {
+		const testMetaInfo = await parseTestMetaInfo(
+			req!,
+			type,
+			id,
+			metaInfo.headers,
 		);
 
-		const testsCount = await fetchTestsCountInProject(
-			selectedProject ? selectedProject : defaultProject,
-			headers,
-		);
-
-		const isLoggedIn = !!cookies.isLoggedIn || !!cookies.token;
-		const { slug } = query;
-		const testId = slug && slug[0];
-
-		let events, framework, testInfo;
-		events = postData ? postData.events : null;
-		framework = postData ? postData.framework : null;
-		const totalTime = postData ? postData.totalTime : null;
-
-		if (testId) {
-			testInfo = await getTest(testId, headers);
-			events = testInfo.events;
-			framework = testInfo.framework;
+		if (testMetaInfo) {
+			store.dispatch(saveTestMetaInfo(testMetaInfo));
 		}
 
 		return {
 			isLoggedIn: isLoggedIn,
-			events: events ? unescape(events) : "[]",
-			testInfo: testInfo,
-			testId: testId ? testId : null,
-			isFirstTest: testsCount && testsCount.totalTests === 0,
-			totalTime: totalTime,
+			metaInfo: testMetaInfo,
 		};
-	} catch (er) {
-		await redirectToFrontendPath("/", res);
-		return null;
+	} catch (err) {
+		return redirectToFrontendPath("/404", res);
 	}
 };
 
-export default withSession(withSidebarLayout(Test), USER_NOT_REGISTERED);
+export default withSidebarLayout(TestEditor);

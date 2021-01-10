@@ -1,6 +1,8 @@
 import { css } from "@emotion/core";
 import { toPascalCase } from "@utils/helpers";
 import React from "react";
+import { iAction } from "@crusher-shared/types/action";
+import { ActionsWithStatus } from "@ui/components/editor/LiveLogsActions";
 
 function normalizeActionType(type: any) {
 	return type
@@ -38,23 +40,23 @@ export const TestActionCard = (props: any) => {
 	);
 };
 
-export const LogActionCard = (props: any) => {
-	const {
-		isFinished,
-		style,
-		action,
-		index,
-		timeTaken,
-		isLast,
-		forwardRef,
-	} = props;
-	const desc = action.desc;
+interface iLoginActionCardProps {
+	index: number;
+	action: ActionsWithStatus;
+	style: React.CSSProperties;
+	isLast: boolean;
+	timeTaken: number;
+	isActionCompleted: boolean;
+}
+export const LogActionCard = (props: iLoginActionCardProps) => {
+	const { index, action, isActionCompleted, style, timeTaken, isLast } = props;
+
+	const desc = "HELLO WORLD";
 
 	return (
 		<div
-			style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }}
+			style={{ ...style, fontWeight: isActionCompleted ? 700 : 500 }}
 			css={styles.container}
-			ref={forwardRef}
 		>
 			<div css={styles.actionInfo}>
 				<div css={styles.actionBoxRow}>
@@ -73,7 +75,7 @@ export const LogActionCard = (props: any) => {
 			>
 				<img
 					src={
-						isFinished
+						isActionCompleted
 							? "/svg/editor/correctStep.svg"
 							: "/svg/editor/notProcessedStep.svg"
 					}

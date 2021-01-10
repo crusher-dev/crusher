@@ -58,6 +58,18 @@ export const checkDraftStatus = (draftId, logsAfter, headers = null) => {
 	});
 };
 
+export const _getLiveLogs = (
+	draftId: number,
+	logsAfter: number,
+	headers = null,
+) => {
+	return backendRequest(`/v2/draft/getLogs/${draftId}`, {
+		method: RequestMethod.POST,
+		headers,
+		payload: logsAfter ? { logsAfter } : {},
+	});
+};
+
 export const updateAndRunDraftTest = (
 	draftId,
 	testName,

@@ -283,7 +283,7 @@ export default class CodeGenerator {
 				await pages[i].close();
 		}
 });\n`
-						code += `page.setDefaultTimeout(10000);` +
+						code += `page.setDefaultTimeout(30000);` +
 							(isRecordingVideo ? `const {saveVideo} = require('playwright-video');\ncaptureVideo = await saveVideo(page, 'video.mp4');\ntry{\n` : '') +
 							`await page.goto('${urlToGo}');\n`;
 					} else {

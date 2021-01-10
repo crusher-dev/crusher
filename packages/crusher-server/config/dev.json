@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "mysql",
+    "user": "root",
+    "password": "password",
+    "database": "crusher",
+    "host": "localhost"
+  },
+  "sql-file" : true
+}

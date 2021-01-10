@@ -60,11 +60,14 @@
 		"cron": "^1.8.2",
 		"crypto-js": "^4.0.0",
 		"cz-conventional-changelog": "^3.1.0",
+		"db-migrate": "^0.11.12",
+		"db-migrate-mysql": "^2.1.2",
 		"dotenv": "^8.2.0",
 		"envfile": "^3.0.0",
 		"eslint-config-prettier": "^7.1.0",
 		"eslint-plugin-prettier": "^3.3.0",
 		"express": "4.15.3",
+		"flywaydb-cli": "^0.8.3",
 		"google-auth-library": "^5.7.0",
 		"googleapis": "^51.0.0",
 		"husky": "^4.2.5",
@@ -109,6 +112,10 @@
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
-		"lint-fix:ts": "eslint --fix src"
+		"lint-fix:ts": "eslint --fix src",
+		"db:migrate_down": "db-migrate down -c 1 --config ./config/dev.json",
+		"db:migrate_up": "db-migrate up -c 1 --config ./config/dev.json",
+		"db:migrate_up_all": "db-migrate up --config ./config/dev.json",
+		"db:dry_run": "db-migrate up --config ./config/dev.json --dry-run"
 	}
 }

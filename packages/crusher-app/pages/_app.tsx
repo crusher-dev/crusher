@@ -20,6 +20,7 @@ import { setUserLoggedIn } from "@redux/actions/user";
 import { saveProjectsInRedux } from "@redux/actions/project";
 import { ANALYTICS } from "@services/analytics";
 import Modal from "react-modal";
+import "../src/tailwind.css"
 
 Modal.setAppElement("#__next");
 

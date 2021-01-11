@@ -1,13 +1,13 @@
 import { NextApiRequest } from "next";
 
-const cookie = require("cookie");
-const jsCookie = require("js-cookie");
+import * as cookie from "cookie";
+import * as jsCookie from "js-cookie";
 
 export function isUserLoggedInFromCookies(cookies: any): boolean {
 	return cookies.isLoggedIn === "true";
 }
 
-export function getCookies(req: NextApiRequest) {
+export function getCookies(req: NextApiRequest | null = null) {
 	if (!req) {
 		return jsCookie.get();
 	}

@@ -26,7 +26,7 @@ export default async function scroll(
 			};
 
 			const element =
-				selector === "window" ? window : document.querySelector(selector);
+				selectorKey === "window" ? window : document.querySelector(selectorKey);
 
 			for (let i = 0; i < scrollDeltaArr.length; i++) {
 				await scrollTo(element as HTMLElement, scrollDeltaArr[i]);

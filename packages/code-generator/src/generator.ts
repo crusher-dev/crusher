@@ -1,10 +1,13 @@
 import { iAction } from "../../crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
 import { Parser } from "./parser";
+import { BROWSER } from "../../crusher-shared/types/browser";
 
 interface iCodeGeneratorOptions {
 	isLiveLogsOn?: boolean;
 	shouldRecordVideo?: boolean;
+	isHeadless?: boolean;
+	browser?: BROWSER;
 }
 
 export class CodeGenerator {
@@ -19,7 +22,13 @@ export class CodeGenerator {
 	}
 
 	parse(actions: Array<iAction>) {
-		const parser = new Parser(actions);
+		const parser = new Parser({
+			actions,
+			isLiveRecording: true,
+			shouldLogSteps: true,
+			browser: BROWSER.FIREFOX,
+			isHeadless: false,
+		});
 		parser.parseActions();
 		return parser.getCode();
 	}

@@ -27,6 +27,8 @@ const TopProgressBar = dynamic(
 	{ ssr: false },
 );
 
+window;
+
 function initiliazeAppAnalytics() {
 	const cookies = getCookies(null);
 	ANALYTICS.intialize(

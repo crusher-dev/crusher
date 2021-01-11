@@ -1,5 +1,5 @@
 import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
-import waitForSelectors from "../functions/waitForSelectors";
+import { waitForSelectors } from "../functions/";
 import { Page } from "playwright";
 import { iAction } from "../../../crusher-shared/types/action";
 

@@ -1,5 +1,16 @@
 import { iAction } from "../../crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
+import { BROWSER } from "../../crusher-shared/types/browser";
+
+const helperPackageName = "./";
+
+interface iParserOptions {
+	isLiveRecording?: boolean;
+	shouldLogSteps?: boolean;
+	actions: Array<iAction>;
+	browser?: BROWSER;
+	isHeadless?: boolean;
+}
 
 export class Parser {
 	actions: Array<iAction>;
@@ -8,9 +19,17 @@ export class Parser {
 		code: Array<string> | string;
 	}> = [];
 	isFirstTimeNavigate = true;
+	isLiveRecording = false;
+	shouldLogSteps = false;
+	browser = BROWSER.CHROME;
+	isHeadless = true;
 
-	constructor(actions: Array<iAction>) {
-		this.actions = actions;
+	constructor(options: iParserOptions) {
+		this.actions = options.actions;
+		this.isLiveRecording = !!options.isLiveRecording;
+		this.shouldLogSteps = !!options.shouldLogSteps;
+		this.browser = options.browser ? options.browser : this.browser;
+		this.isHeadless = options.isHeadless ? options.isHeadless : this.isHeadless;
 	}
 
 	runPreParseChecks() {
@@ -44,9 +63,17 @@ export class Parser {
 				},
 			),
 		);
-		code.push(
-			"const browserContext = await browser.newContext({userAgent: browserInfo.meta.userAgent, viewport: { width: browserInfo.meta.width, height: browserInfo.meta.height}});",
-		);
+
+		if (!this.isLiveRecording) {
+			code.push(
+				"const browserContext = await browser.newContext({userAgent: browserInfo.meta.userAgent, viewport: { width: browserInfo.meta.width, height: browserInfo.meta.height}});",
+			);
+		} else {
+			code.push(
+				"const browserContext = await browser.newContext({userAgent: browserInfo.meta.userAgent, viewport: { width: browserInfo.meta.width, height: browserInfo.meta.height}, recordVideo: {dir: './video'}});",
+			);
+		}
+
 		return code;
 	}
 
@@ -54,12 +81,79 @@ export class Parser {
 		const code = [];
 		if (this.isFirstTimeNavigate) {
 			code.push("const page = await browserContext.newPage({});");
+			if (this.isLiveRecording) {
+				code.push("await saveVideo(page, '/tmp/video.mp4')");
+			}
+			code.push(
+				`const {handlePopup} = require("${helperPackageName}/middlewares")`,
+			);
+			code.push("handlePopup(page, browserContext)\n;");
 			this.isFirstTimeNavigate = false;
 		}
 		code.push(
 			"await Page.navigate(JSON.parse(#{action}), page)".pretify({
 				action: action,
 			}),
+		);
+		return code;
+	}
+
+	parsePageScreenshot(action: iAction) {
+		const code = [];
+		code.push("await Page.screenshot();");
+		return code;
+	}
+
+	parseElementClick(action: iAction) {
+		const code = [];
+		code.push(
+			"await Element.click(JSON.parse(#{action}), page)".pretify({
+				action: action,
+			}),
+		);
+
+		return code;
+	}
+
+	parseElementHover(action: iAction) {
+		const code = [];
+		code.push(
+			"await Element.hover(JSON.parse(#{action}), page)".pretify({
+				action: action,
+			}),
+		);
+
+		return code;
+	}
+
+	parseElementScreenshot(action: iAction) {
+		const code = [];
+		code.push(
+			"await Element.screenshot(JSON.parse(#{action}), page);".pretify({ action }),
+		);
+		return code;
+	}
+
+	parseScroll(action: iAction) {
+		const code = [];
+		const isWindowScroll = !action.payload.selectors;
+		if (isWindowScroll) {
+			code.push(
+				"await Page.scroll(JSON.parse(#{action}), page)".pretify({ action }),
+			);
+		} else {
+			code.push(
+				"await Element.scroll(JSON.parse(#{action}), page)".pretify({ action }),
+			);
+		}
+
+		return code;
+	}
+
+	parseAddInput(action: iAction) {
+		const code = [];
+		code.push(
+			"await Element.addInput(JSON.parse(#{action}), page)".pretify({ action }),
 		);
 		return code;
 	}
@@ -80,6 +174,46 @@ export class Parser {
 				});
 				break;
 			}
+			case ACTIONS_IN_TEST.PAGE_SCREENSHOT: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.PAGE_SCREENSHOT,
+					code: this.parsePageScreenshot(action),
+				});
+				break;
+			}
+			case ACTIONS_IN_TEST.CLICK: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.CLICK,
+					code: this.parseElementClick(action),
+				});
+				break;
+			}
+			case ACTIONS_IN_TEST.ELEMENT_SCREENSHOT: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
+					code: this.parseElementScreenshot(action),
+				});
+				break;
+			}
+			case ACTIONS_IN_TEST.SCROLL:
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.SCROLL,
+					code: this.parseScroll(action),
+				});
+				break;
+			case ACTIONS_IN_TEST.ADD_INPUT:
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.ADD_INPUT,
+					code: this.parseAddInput(action),
+				});
+				break;
+			case ACTIONS_IN_TEST.HOVER: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.HOVER,
+					code: this.parseElementHover(action),
+				});
+				break;
+			}
 			default:
 				console.debug(`Invalid action recorded, no handler for ${action.type}`);
 		}
@@ -93,18 +227,32 @@ export class Parser {
 	}
 
 	getCode() {
-		const helperPackageName = "crusher-generator";
-		const importCode = `const {Page, Element, Browser} = require("${helperPackageName}");\n`;
+		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions/index.ts");\nconst playwright = require("playwright");\n`;
+		importCode += `await playwright["${
+			this.browser
+		}"].launch({ headless: ${this.isHeadless.toString()} })`;
 
+		if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
+			importCode += "const { saveVideo } = require('playwright-video');\n";
+			importCode += `const { sleep } = require("${helperPackageName}/functions/")`;
+		}
+
+		const footerCode = "await browser.close()";
 		const mainCode = this.codeMap
 			.map((codeItem) => {
-				const code =
+				let code =
 					typeof codeItem.code === "string" ? codeItem : codeItem.code.join("\n");
+				if (this.shouldLogSteps) {
+					code += `\nawait logStep('${codeItem.type}', {status: 'DONE', message: '${codeItem.type} completed'}, {});\n`;
+				}
+				if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
+					code += "\nawait sleep(500);";
+				}
 				return code;
 			})
 			.join("\n\n");
 
-		return importCode + mainCode;
+		return importCode + mainCode + "\n" + footerCode;
 	}
 }
 

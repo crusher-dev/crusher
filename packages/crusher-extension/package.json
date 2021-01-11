@@ -67,6 +67,7 @@
 		"husky": "^4.2.5",
 		"lodash": "^4.17.20",
 		"nodemon": "^2.0.4",
+		"playwright": "^1.7.1",
 		"prettier": "2.1.2",
 		"shelljs": "^0.8.4",
 		"ts-loader": "^8.0.2",

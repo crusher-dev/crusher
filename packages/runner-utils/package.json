@@ -1,11 +1,10 @@
 {
   "name": "crusher-runner-utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Test runner utils for crusher tests",
   "main": "dist/",
   "author": "Utkarsh Dixit<utkarshdix02@gmail.com>",
   "license": "MIT",
-  "private": "true",
   "scripts": {
     "build": "webpack"
   },

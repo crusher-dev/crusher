@@ -2,7 +2,8 @@ import { css } from "@emotion/core";
 import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { useEffect, useState } from "react";
-import fire from "../../../../../crusher-shared/config/fire-config";
+import firebase from "firebase";
+import firebaseConfig from "../../../../../crusher-shared/config/fire-config";
 import GreenTickMark from "../../../../public/svg/onboarding/check_mark_green.svg";
 import WhiteTickMark from "../../../../public/svg/onboarding/check_mark_white.svg";
 
@@ -14,10 +15,24 @@ function Onboarding() {
 	const [reviewReports, setReviewReports] = useState(false);
 	const [integrate, setIntegrate] = useState(false);
 	const [inviteTeamMembers, setInviteTeamMembers] = useState(false);
+	const [firebaseService, setFirebaseService] = useState({});
 
 	useEffect(() => {
+		try {
+			if (!firebase.apps.length) {
+				firebase.initializeApp(firebaseConfig);
+			} else {
+				firebase.app();
+			}
+			setFirebaseService(firebase);
+		} catch (err) {
+			if (!/already exists/.test(err.message)) {
+				console.error("Firebase initialisation error", err.stack);
+			}
+		}
+
 		(async () => {
-			const userDataReference = await fire
+			const userDataReference = await firebaseService 
 				.firestore()
 				.collection("onboarding")
 				.doc(`${userInfo.id}`);

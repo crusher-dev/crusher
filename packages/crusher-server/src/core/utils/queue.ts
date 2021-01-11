@@ -4,20 +4,19 @@ import { REDDIS } from "../../../config/database";
 import { RunJobRequestBody } from "../interfaces/RunJobRequestBody";
 import { RunRequest } from "../interfaces/RunRequest";
 import TestInstanceService from "../services/TestInstanceService";
-import { replaceHostInCode } from "./helper";
 import { InstanceStatus } from "../interfaces/InstanceStatus";
-import { TEST_INSTANCE_PLATFORM, TEST_TYPES } from "../../constants";
+import { TEST_INSTANCE_PLATFORM } from "../../constants";
 import { Platform } from "../interfaces/Platform";
 import DraftInstanceService from "../services/DraftInstanceService";
 import { TestType } from "../interfaces/TestType";
 import { JobLogs } from "../../server/models/jobLogs";
-import * as mongoose from "mongoose";
 import { TestLogsService } from "../services/mongo/testLogs";
-import CodeGenerator from "../../../../code-generator/src/index";
+import { CodeGenerator } from "../../../../code-generator/src/generator";
 import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import JobsService from "../services/JobsService";
+import { BROWSER } from '../../../../crusher-shared/types/browser';
 
 const path = require("path");
 
@@ -30,10 +29,15 @@ const requestQueue = new Queue("request-queue", {
 	// @ts-ignore
 	connection: REDDIS,
 });
-const codeGenerator = new CodeGenerator();
+const codeGenerator = new CodeGenerator({
+	isLiveLogsOn: true,
+	shouldRecordVideo: true,
+	isHeadless: false,
+	browser: BROWSER.FIREFOX
+});
 
 function getGeneratedCode(test, platform, testType) {
-	return codeGenerator.generate(JSON.parse(test.events), platform === TEST_INSTANCE_PLATFORM.CHROME, true);
+	return codeGenerator.parse(JSON.parse(test.events));
 }
 
 export async function addTestRequestToQueue(testRequest: RunRequest) {

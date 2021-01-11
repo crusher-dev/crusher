@@ -19,7 +19,7 @@ import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 import { useSelector } from "react-redux";
 import { getTestLiveLogs, getTestMetaInfo } from "@redux/stateUtils/tests";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
-import CodeGenerator from "@code-generator/src";
+import { CodeGenerator } from "@code-generator/src/generator";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { iDraft } from "@crusher-shared/types/db/draft";
 import { store } from "@redux/store";
@@ -28,6 +28,7 @@ import {
 	iDraftLogsResponse,
 } from "@crusher-shared/types/response/draftLogsResponse";
 import { InstanceStatus } from "@crusher-shared/types/instanceStatus";
+import { BROWSER } from "@crusher-shared/types/browser";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
@@ -88,7 +89,12 @@ const TestEditor = (props: iTestEditorProps) => {
 	const handleRunTest = useCallback(
 		function () {
 			if (!testInfo.id) {
-				const code = new CodeGenerator().generate(testInfo.actions);
+				const code = new CodeGenerator({
+					shouldRecordVideo: true,
+					isLiveLogsOn: true,
+					browser: BROWSER.FIREFOX,
+					isHeadless: false,
+				}).parse(testInfo.actions);
 
 				createAndRunDraftTest(testName, code, testInfo.actions, selectedProjectId)
 					.then((res: iDraft) => {

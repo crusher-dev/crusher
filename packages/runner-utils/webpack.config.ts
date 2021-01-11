@@ -12,6 +12,7 @@ module.exports = {
 		utils: "./src/utils/index.ts"
 	},
 	output: {
+		libraryTarget: 'commonjs',
 		path: path.resolve(__dirname, './build'),
 		filename: "[name].js" // <--- Will be compiled to this single file
 	},

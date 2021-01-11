@@ -1,7 +1,6 @@
 import { Service, Container } from "typedi";
 import DBManager from "../../manager/DBManager";
 import DraftInstanceService from '../DraftInstanceService';
-import { DraftInstance } from '../../interfaces/db/DraftInstance';
 import DraftInstanceResultsService from '../DraftInstanceResultsService';
 import TestInstanceRecordingService from '../TestInstanceRecordingService';
 import { InstanceStatus } from '../../interfaces/InstanceStatus';
@@ -52,7 +51,7 @@ export default class DraftV2Service {
 					console.log(logsArray.length, draftId, "Date is");
 
 					if(logs && logs.length) {
-						resolve(logs);
+						resolve(logs as Array<iLiveStepLogs>);
 					}  else {
 						reject("No logs found");
 					}

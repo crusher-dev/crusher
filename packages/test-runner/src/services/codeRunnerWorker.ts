@@ -88,6 +88,7 @@ module.exports = async bullJob => {
 	} catch (res) {
 		const { error: err } = res;
 		console.error('Test Failed!! Reason: ' + err.toString());
+		console.log(err);
 		let returnInfo;
 		try {
 			await testLogsService.notifyTestExecutionFailed({ err: err });

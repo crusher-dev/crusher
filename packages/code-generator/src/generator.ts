@@ -27,7 +27,7 @@ export class CodeGenerator {
 			isLiveRecording: this.options.shouldRecordVideo,
 			shouldLogSteps: this.options.isLiveLogsOn,
 			browser: this.options.browser,
-			isHeadless: this.options.isHeadless,
+			isHeadless: false,
 		});
 		parser.parseActions();
 		return parser.getCode();

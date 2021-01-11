@@ -2,7 +2,7 @@ import { iAction } from "../../crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
 import { BROWSER } from "../../crusher-shared/types/browser";
 
-const helperPackageName = "runner-utils";
+const helperPackageName = "crusher-runner-utils/build";
 
 interface iParserOptions {
 	isLiveRecording?: boolean;
@@ -82,7 +82,7 @@ export class Parser {
 		if (this.isFirstTimeNavigate) {
 			code.push("const page = await browserContext.newPage({});");
 			if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
-				code.push("await saveVideo(page, '/tmp/video.mp4')");
+				code.push("await saveVideo(page, 'video.mp4');");
 			}
 			code.push(
 				`const {handlePopup} = require("${helperPackageName}/middlewares");`,
@@ -91,7 +91,7 @@ export class Parser {
 			this.isFirstTimeNavigate = false;
 		}
 		code.push(
-			"await Page.navigate(JSON.parse(#{action}), page)".pretify({
+			"await Page.navigate(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -107,7 +107,7 @@ export class Parser {
 	parseElementClick(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.click(JSON.parse(#{action}), page)".pretify({
+			"await Element.click(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -118,7 +118,7 @@ export class Parser {
 	parseElementHover(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.hover(JSON.parse(#{action}), page)".pretify({
+			"await Element.hover(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -139,11 +139,11 @@ export class Parser {
 		const isWindowScroll = !action.payload.selectors;
 		if (isWindowScroll) {
 			code.push(
-				"await Page.scroll(JSON.parse(#{action}), page)".pretify({ action }),
+				"await Page.scroll(JSON.parse(#{action}), page);".pretify({ action }),
 			);
 		} else {
 			code.push(
-				"await Element.scroll(JSON.parse(#{action}), page)".pretify({ action }),
+				"await Element.scroll(JSON.parse(#{action}), page);".pretify({ action }),
 			);
 		}
 
@@ -153,7 +153,7 @@ export class Parser {
 	parseAddInput(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.addInput(JSON.parse(#{action}), page)".pretify({ action }),
+			"await Element.addInput(JSON.parse(#{action}), page);".pretify({ action }),
 		);
 		return code;
 	}
@@ -227,17 +227,17 @@ export class Parser {
 	}
 
 	getCode() {
-		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions/index.ts");\nconst playwright = require("playwright");\n`;
+		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions");\nconst playwright = require("playwright");\n`;
 		importCode += `const browser = await playwright["${
 			this.browser
 		}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
 
 		if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
 			importCode += "const { saveVideo } = require('playwright-video');\n";
-			importCode += `const { sleep } = require("${helperPackageName}/functions/")`;
+			importCode += `const { sleep } = require("${helperPackageName}/functions/");`;
 		}
 
-		const footerCode = "await browser.close()";
+		const footerCode = "await browser.close();";
 		const mainCode = this.codeMap
 			.map((codeItem) => {
 				let code =

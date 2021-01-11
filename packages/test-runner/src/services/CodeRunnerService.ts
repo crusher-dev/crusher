@@ -29,6 +29,8 @@ export default class CodeRunnerService {
 
 	async runTestAndUploadOutputs(testType: string, testId: number, code: string, instanceId: number, destination: string, platform: any = null) {
 		const finalCode = replaceWithPlaywrightWrapper(replaceImportWithRequire(code.replace(/\n/gm, '')));
+		let error = null;
+
 		try {
 			const codeExecute = await new Function(
 				'exports',
@@ -37,7 +39,7 @@ export default class CodeRunnerService {
 				'__filename',
 				'__dirname',
 				'platform',
-				'_logStepToMongo',
+				'logStep',
 				`return new Promise(async function (resolve, reject) {
 				    try{
 				        ${finalCode};
@@ -47,15 +49,22 @@ export default class CodeRunnerService {
 				    }
 				});`,
 			)(exports, require, module, __filename, __dirname, platform, this.logStep.bind(this, testType, testId));
-
-			const images = await uploadAllScreenshotsToTestBucket(destination, instanceId, platform as JobPlatform);
-			const video = await uploadRecordedVideoToBucketIfAny(destination, instanceId, platform as JobPlatform);
-			return { images, logs: getLogs(), video: video };
 		} catch (err) {
-			const images = await uploadAllScreenshotsToTestBucket(destination, instanceId, platform as JobPlatform);
-			let video = await uploadRecordedVideoToBucketIfAny(destination, instanceId, platform as JobPlatform);
-			throw { images, logs: getLogs(), video: video, error: err };
+			error = err;
 		}
+
+			console.debug("Looking for captured screenshots");
+			const images = await uploadAllScreenshotsToTestBucket(destination, instanceId, platform as JobPlatform);
+			console.debug("Uploaded screenshots to bucket");
+			console.debug("Looking for video now");
+			const video = await uploadRecordedVideoToBucketIfAny(destination, instanceId, platform as JobPlatform);
+			console.debug("Uploaded video to bucket");
+
+			if(error){
+				throw({ images, logs: getLogs(), video: video, error});
+			}
+			return { images, logs: getLogs(), video: video };
+
 	}
 
 	async initDirectories(instanceId, platform) {

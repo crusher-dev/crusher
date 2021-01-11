@@ -1,6 +1,6 @@
 {
   "name": "crusher-runner-utils",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Test runner utils for crusher tests",
   "main": "dist/",
   "author": "Utkarsh Dixit<utkarshdix02@gmail.com>",
@@ -11,9 +11,9 @@
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^4.12.0",
+    "ts-loader": "^8.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
-    "ts-loader": "^8.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"

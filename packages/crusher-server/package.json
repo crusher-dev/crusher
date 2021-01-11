@@ -62,6 +62,7 @@
 		"eslint-config-prettier": "^7.1.0",
 		"eslint-plugin-prettier": "^3.3.0",
 		"express": "4.15.3",
+		"firebase": "^8.2.2",
 		"google-auth-library": "^5.7.0",
 		"googleapis": "^51.0.0",
 		"husky": "^4.2.5",

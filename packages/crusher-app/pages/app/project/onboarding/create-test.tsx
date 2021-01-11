@@ -22,7 +22,7 @@ const features = [
 function ProjectOnboardingCreateTest(props) {
 	const { userInfo, userStatus } = props;
 	const [featuresMessage, setFeaturesMessage] = useState(0);
-	const [needsToBeSet, setNeedsToBeSet] = useState(true);
+	const [isSet, setIsSet] = useState(true);
 
 	const changeFeatureMessage = () => {
 		const interval = setInterval(() => {
@@ -37,24 +37,24 @@ function ProjectOnboardingCreateTest(props) {
 
 	useEffect(() => {
 		async () => {
-			let userRef = await fire
+			let userDataReference = await fire
 				.firestore()
 				.collection("onboarding")
 				.doc(`${userInfo.id}`);
-			userRef
+			userDataReference
 				.get()
 				.then((docSnapshot: any) => {
 					if (docSnapshot.exists) {
 						// if the document exists, we just get the data in the document
-						userRef.onSnapshot((doc: any) => {
+						userDataReference.onSnapshot((doc: any) => {
 							let userData = doc.data();
 							if (userData.watchIntroVideo) {
-								setNeedsToBeSet(false);
+								setIsSet(false);
 							}
 						});
 					} else {
 						// if the document does not exist, we insert data into the document
-						userRef.set({
+						userDataReference.set({
 							watchIntroVideo: false,
 						});
 					}
@@ -66,12 +66,12 @@ function ProjectOnboardingCreateTest(props) {
 	useEffect(changeFeatureMessage, [featuresMessage]);
 
 	const handleVideoFinishedCallback = async () => {
-		if (needsToBeSet) {
-			let userRef = await fire
+		if (isSet) {
+			let userDataReference = await fire
 				.firestore()
 				.collection("onboarding")
 				.doc(`${userInfo.id}`);
-			userRef
+			userDataReference
 				.update({ watchIntroVideo: true })
 				.catch((err) => console.error(error));
 		}

@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { useEffect, useState } from "react";
 import fire from "../../../../../crusher-shared/config/fire-config";
+import GreenTickMark from "../../../../public/svg/onboarding/check_mark_green.svg";
 
 function Onboarding() {
 	const userInfo = useSelector(getUserInfo);
@@ -72,7 +73,8 @@ function Onboarding() {
 			</div>
 			<div css={[stepsCSS, watchIntroVideo ? doneCSS : null]}>
 				<span css={spanCSS}>
-					{watchIntroVideo ? returnGreenTickMark() : returnWhiteTickMark()}
+					{/* {watchIntroVideo ? returnGreenTickMark() : returnWhiteTickMark()} */}
+					<GreenTickMark />
 					1.) Watch the intro video
 				</span>
 				<span>Get 5$ credits</span>

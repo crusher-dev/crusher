@@ -2,7 +2,7 @@ import { iAction } from "../../crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
 import { BROWSER } from "../../crusher-shared/types/browser";
 
-const helperPackageName = "./";
+const helperPackageName = "runner-utils";
 
 interface iParserOptions {
 	isLiveRecording?: boolean;

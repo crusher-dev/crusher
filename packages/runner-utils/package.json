@@ -1,6 +1,6 @@
 {
   "name": "crusher-runner-utils",
-  "version": "0.0.3",
+  "version": "0.0.9",
   "description": "Test runner utils for crusher tests",
   "main": "dist/",
   "author": "Utkarsh Dixit<utkarshdix02@gmail.com>",
@@ -16,5 +16,10 @@
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
-  }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/crusherdev",
+    "access": "public"
+  },
+  "gitHead": "e7b5550f27fe470bfe346d4843c02af22766c7c3"
 }

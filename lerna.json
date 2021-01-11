@@ -1,8 +1,8 @@
 {
-  "version": "0.0.2",
-  "npmClient": "npm",
+  "version": "0.0.9",
   "command": {
     "publish": {
+      "npmClient": "npm",
       "ignoreChanges": [
         "ignored-file",
         "*.md"

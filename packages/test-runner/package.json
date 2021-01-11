@@ -22,7 +22,8 @@
 		"reflect-metadata": "^0.1.13",
 		"shelljs": "^0.8.4",
 		"ts-node": "^9.0.0",
-		"uniqid": "^5.2.0"
+		"uniqid": "^5.2.0",
+		"crusher-runner-utils": "0.0.9"
 	},
 	"devDependencies": {
 		"@types/aws-sdk": "^2.7.0",

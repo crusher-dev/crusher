@@ -143,11 +143,11 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 
 		let res = await this.draftService.getLastDraftInstanceResult(draftId);
 
-		let numberOfRows = await this.testService.getTotalTestsForUser(user_id);
-		numberOfRows = numberOfRows[0].total;
+		const numberOfRows = await this.testService.getTotalTestsForUser(user_id);
+		const testCount = numberOfRows[0].total;
 
 		await this.firebaseService.createConnection(user_id);
-		await this.firebaseService.insertNumberOfTests(numberOfRows);
+		await this.firebaseService.insertNumberOfTests(testCount);
 
 		const video_uri = res ? res.video_uri : null;
 

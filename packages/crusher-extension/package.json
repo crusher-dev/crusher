@@ -78,8 +78,7 @@
 		"webpack-dev-server": "^3.11.0",
 		"webpack-extension-reloader": "^1.1.4",
 		"webpack-httpolyglot-server": "^0.3.0",
-		"webpack-node-externals": "^2.5.1",
-		"wepback": "^1.0.0"
+		"webpack-node-externals": "^2.5.1"
 	},
 	"config": {
 		"commitizen": {

@@ -81,13 +81,13 @@ export class Parser {
 		const code = [];
 		if (this.isFirstTimeNavigate) {
 			code.push("const page = await browserContext.newPage({});");
-			if (this.isLiveRecording) {
+			if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
 				code.push("await saveVideo(page, '/tmp/video.mp4')");
 			}
 			code.push(
-				`const {handlePopup} = require("${helperPackageName}/middlewares")`,
+				`const {handlePopup} = require("${helperPackageName}/middlewares");`,
 			);
-			code.push("handlePopup(page, browserContext)\n;");
+			code.push("handlePopup(page, browserContext);");
 			this.isFirstTimeNavigate = false;
 		}
 		code.push(
@@ -228,9 +228,9 @@ export class Parser {
 
 	getCode() {
 		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions/index.ts");\nconst playwright = require("playwright");\n`;
-		importCode += `await playwright["${
+		importCode += `const browser = await playwright["${
 			this.browser
-		}"].launch({ headless: ${this.isHeadless.toString()} })`;
+		}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
 
 		if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
 			importCode += "const { saveVideo } = require('playwright-video');\n";

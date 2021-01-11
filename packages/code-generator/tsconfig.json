@@ -14,6 +14,5 @@
     }
   },
   "include": ["constants/*.ts", "constants/*.tsx", "src/**/*"],
-  "files": ["./src/actions/index.ts"],
   "typeRoots": ["./types/global.d.ts", "node_modules/@types"]
 }

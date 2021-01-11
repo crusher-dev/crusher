@@ -1,6 +1,6 @@
-import { iAction } from "../../../crusher-shared/types/action";
-import { iDevice } from "../../../crusher-shared/types/extension/device";
-import { iUserAgent } from "../../../crusher-shared/constants/userAgents";
+import { iAction } from "@crusher-shared/types/action";
+import { iDevice } from "@crusher-shared/types/extension/device";
+import { iUserAgent } from "@crusher-shared/constants/userAgents";
 
 export default async function setDevice(action: iAction) {
 	return new Promise(async (success, error) => {

@@ -1,7 +1,7 @@
 import { Page } from "playwright";
-import { iAction } from "../../../crusher-shared/types/action";
-import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
-import { type, waitForSelectors } from "../functions/";
+import { iAction } from "@crusher-shared/types/action";
+import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
+import { type, waitForSelectors } from "../functions";
 
 export default function addInput(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {

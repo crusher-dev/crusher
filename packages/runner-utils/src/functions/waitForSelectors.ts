@@ -1,4 +1,4 @@
-import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
+import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 import { Page } from "playwright";
 import { generateQuerySelector, getElementsByXPath } from "../utils/dom";
 

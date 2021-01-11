@@ -1,7 +1,7 @@
-import { waitForSelectors } from "../functions/";
+import { waitForSelectors } from "../functions";
 import { Page } from "playwright";
-import { iAction } from "../../../crusher-shared/types/action";
-import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
+import { iAction } from "@crusher-shared/types/action";
+import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 
 export default function click(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {

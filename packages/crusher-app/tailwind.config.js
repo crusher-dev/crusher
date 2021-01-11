@@ -1,19 +1,40 @@
+const getSpacingSizes = () => {
+	let sizingMap = {};
+	const remBaseUnit = 16;
+	for (let i = 0; i <= 120; i++) sizingMap[i] = `${i / remBaseUnit}rem`;
+	return sizingMap;
+};
+
+// Start constants
+const colors = {
+	grey: "grey",
+};
+
+const background = {
+	grey: "grey",
+};
+
+const border = {
+	grey: "grey",
+};
+
+const spacingSizes = getSpacingSizes();
+
 module.exports = {
 	important: false,
+	darkModeVariant: true,
 	theme: {
-		screens: {},
 		fontFamily: {
 			gilroy: ["Gilroy", "sans-serif"],
 			cera: ["Cera Pro", "sans-serif"],
 		},
-		colors: {},
-		backgroundColor: {},
-		borderColor: {},
+		colors: { ...colors },
+		backgroundColor: { ...background },
+		borderColor: { ...border },
+		fontSize: spacingSizes,
 		extend: {
-			margin: {
-				"1/2": "2px",
-				"1/4": "1px",
-			},
+			margin: spacingSizes,
+			padding: spacingSizes,
 		},
 		objectPosition: {},
 		order: {},
@@ -105,3 +126,4 @@ module.exports = {
 	},
 	plugins: [],
 };
+

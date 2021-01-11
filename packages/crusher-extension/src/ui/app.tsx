@@ -7,11 +7,11 @@ import { Provider } from "react-redux";
 import { recorderMessageListener } from "../messageListener";
 import ReactModal from "react-modal";
 import { ModalManager } from "./containers/app/modals";
+import { AdvancedURL } from "../utils/url";
+import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
+import { recordAction } from "../redux/actions/actions";
 import { submitPostDataWithForm } from "../utils/helpers";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
-import { recordAction } from "../redux/actions/actions";
-import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
-import { AdvancedURL } from "../utils/url";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
@@ -27,15 +27,19 @@ const App = () => {
 
 	useMemo(() => {
 		const store = getStore();
+		const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(
+			window.location.href,
+		);
+		const userAgent = AdvancedURL.getUserAgentFromUrl(
+			AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
+		);
 		store.dispatch(
 			recordAction({
 				type: ACTIONS_IN_TEST.SET_DEVICE,
 				payload: {
 					meta: {
-						userAgent: AdvancedURL.getUserAgentFromUrl(window.location.href),
-						device: AdvancedURL.getDeviceFromCrusherExtensionUrl(
-							window.location.href,
-						),
+						device: device,
+						userAgent: userAgent,
 					},
 				},
 			}),

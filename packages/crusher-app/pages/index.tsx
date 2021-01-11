@@ -84,7 +84,7 @@ function Home() {
 			<AuthenticationTemplate>
 				<div css={styles.form(theme)}>
 					<div css={styles.headingContainer}>
-						<div css={styles.formHeading(theme)} className={"font-cera"}>
+						<div css={styles.formHeading(theme)} className={"font-cera text-100 "}>
 							Login to Crusher
 						</div>
 					</div>

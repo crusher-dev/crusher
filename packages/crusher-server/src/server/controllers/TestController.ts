@@ -18,7 +18,6 @@ import { resolvePathToFrontendURI } from "../../core/utils/uri";
 import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
 import FirebaseService from "../../core/services/FirebaseService";
-import fire from "../../../../crusher-shared/config/fire-config-server.js";
 
 const RESPONSE_STATUS = {
 	INSUFFICIENT_INFORMATION: "INSUFFICIENT_INFORMATION",
@@ -144,7 +143,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 
 		let res = await this.draftService.getLastDraftInstanceResult(draftId);
 
-		let numberOfRows = await this.testService.findNumberOfTests(user_id);
+		let numberOfRows = await this.testService.getTotalTestsForUser(user_id);
 		numberOfRows = numberOfRows[0].total;
 
 		await this.firebaseService.createConnection(user_id);

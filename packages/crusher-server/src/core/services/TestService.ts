@@ -27,7 +27,7 @@ export default class TestService {
 		});
 	}
 
-	async findNumberOfTests(userID: number) {
+	async getTotalTestsForUser(userID: number) {
 		return this.dbManager.fetchData("SELECT COUNT(*) AS total FROM tests where user_id = ?", [userID]);
 	}
 

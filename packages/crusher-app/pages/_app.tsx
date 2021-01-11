@@ -19,6 +19,10 @@ import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
 import { saveProjectsInRedux } from "@redux/actions/project";
 import { ANALYTICS } from "@services/analytics";
+import Modal from "react-modal";
+import "../src/tailwind.css"
+
+Modal.setAppElement("#__next");
 
 const TopProgressBar = dynamic(
 	function () {
@@ -27,9 +31,7 @@ const TopProgressBar = dynamic(
 	{ ssr: false },
 );
 
-window;
-
-function initiliazeAppAnalytics() {
+function initializeAppAnalytics() {
 	const cookies = getCookies(null);
 	ANALYTICS.intialize(
 		cookies["userId"],
@@ -37,8 +39,9 @@ function initiliazeAppAnalytics() {
 		cookies["projectId"],
 	);
 }
+
 function App({ Component, pageProps }: AppProps<any>) {
-	useEffect(initiliazeAppAnalytics, []);
+	useEffect(initializeAppAnalytics, []);
 	return (
 		<>
 			<TopProgressBar />

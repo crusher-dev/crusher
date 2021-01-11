@@ -123,3 +123,6 @@ dist
 **/.DS_STORE
 logs/
 output/
+
+#Flyways binary
+packages/crusher-server/flyway

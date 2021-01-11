@@ -11,14 +11,19 @@ import { CodeGenerator } from "../../../code-generator/src/generator";
 import { AdvancedURL } from "../utils/url";
 import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
+import { submitPostDataWithForm } from "../utils/helpers";
+import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
 	const saveTest = () => {
 		const store = getStore();
 		const steps = store.getState().actions.list;
-		const codeGenerator = new CodeGenerator();
-		console.log(codeGenerator.parse(steps));
+
+		submitPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
+			events: escape(JSON.stringify(steps)),
+			totalTime: 0,
+		});
 	};
 
 	useMemo(() => {

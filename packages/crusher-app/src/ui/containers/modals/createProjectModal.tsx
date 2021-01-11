@@ -41,7 +41,6 @@ const CreateProjectModal = (props: iProps) => {
 	return (
 		<Modal
 			heading={"Create a project"}
-			subHeading={"in your team"}
 			illustration={"/assets/img/illustration/create_project_illustration.png"}
 			subHeading={"in your team"}
 			onClose={onClose}

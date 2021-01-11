@@ -1,0 +1,18 @@
+
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "ES2017",
+    "rootDir": "../../",
+    "baseUrl": "../",
+    "paths": {
+      "@types/*": [
+        "code-generator/types/*"
+      ]
+    }
+  },
+  "include": ["constants/*.ts", "constants/*.tsx", "src/**/*"],
+  "typeRoots": ["./types/global.d.ts", "node_modules/@types"]
+}

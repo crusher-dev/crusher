@@ -251,7 +251,7 @@ export default class EventRecording {
 			if (isDocumentScrolled) {
 				return _this.eventsController.saveCapturedEventInBackground(
 					ACTIONS_IN_TEST.SCROLL,
-					window,
+					null,
 					window.scrollY,
 				);
 			}

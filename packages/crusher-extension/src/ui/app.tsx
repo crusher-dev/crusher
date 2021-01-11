@@ -7,7 +7,10 @@ import { Provider } from "react-redux";
 import { recorderMessageListener } from "../messageListener";
 import ReactModal from "react-modal";
 import { ModalManager } from "./containers/app/modals";
-import CodeGenerator from "../../../code-generator/src";
+import { CodeGenerator } from "../../../code-generator/src/generator";
+import { AdvancedURL } from "../utils/url";
+import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
+import { recordAction } from "../redux/actions/actions";
 import { submitPostDataWithForm } from "../utils/helpers";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 
@@ -24,6 +27,25 @@ const App = () => {
 	};
 
 	useMemo(() => {
+		const store = getStore();
+		const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(
+			window.location.href,
+		);
+		const userAgent = AdvancedURL.getUserAgentFromUrl(
+			AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
+		);
+		store.dispatch(
+			recordAction({
+				type: ACTIONS_IN_TEST.SET_DEVICE,
+				payload: {
+					meta: {
+						device: device,
+						userAgent: userAgent,
+					},
+				},
+			}),
+		);
+
 		window.addEventListener(
 			"message",
 			recorderMessageListener.bind(window, deviceIframeRef),

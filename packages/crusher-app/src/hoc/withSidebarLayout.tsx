@@ -27,6 +27,7 @@ import { getUserInfo } from "@redux/stateUtils/user";
 import { Conditional } from "@ui/components/common/Conditional";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
 import { NextPage, NextPageContext } from "next";
+import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 
 interface NavItem {
 	name: string;
@@ -90,6 +91,7 @@ function LeftSection(props: any) {
 	const { userInfo, selectedProject } = props;
 	const [showDropDown, setShowDropDwon] = useState(false);
 	const [showAddProject, setShowAddProject] = useState(false);
+	const [showInviteMembersModal, setShowInviteMembersModal] = useState(false);
 
 	const closeProjectModal = () => {
 		ReactDOM.render(null as any, document.getElementById("overlay"));
@@ -144,6 +146,15 @@ function LeftSection(props: any) {
 	const closePaymentModal = () => {
 		setPaymentShow(false);
 		ReactDOM.render(null as any, document.getElementById("overlay"));
+	};
+
+	const closeInviteMembersModal = () => {
+		setShowInviteMembersModal(false);
+		ReactDOM.render(null as any, document.getElementById("overlay"));
+	};
+
+	const openInviteMembersModal = () => {
+		setShowInviteMembersModal(true);
 	};
 
 	const [showPayment, setPaymentShow] = useState(false);
@@ -223,10 +234,14 @@ function LeftSection(props: any) {
 			<div css={settingsBottomFixedContainerCSS}>
 				<NavList isLoggedIn={isUserLoggedIn} navItems={bottomNavLinks} />
 			</div>
-			<div css={inviteMembersCSS}>
+			<div css={inviteMembersCSS} onClick={openInviteMembersModal}>
 				<img src="/svg/sidebarSettings/team_member.svg" />
 				<span>Invite members</span>
 			</div>
+
+			<Conditional If={showInviteMembersModal}>
+				<InviteTeamMemberModal onClose={closeInviteMembersModal} />
+			</Conditional>
 		</div>
 	);
 }

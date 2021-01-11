@@ -16,6 +16,14 @@ Steps to run this project:
 Run this command
 `mysqldump -h localhost -u root -p crusher > sample_db.sql`
 
+
+# Migration?
+1.) Install flyways and keep it in crusher-server/flyways
+2.) ./flyway/flyway -configFiles=config/flyway.conf info and  ./flyway/flyway -configFiles=config/flyway.migrate 
+
+On CI, use https://flywaydb.org/documentation/v6/envvars
+
+
 # How to fix "Client Does not support authentication protocol requested by the user" error ?
 
 1. mysql> USE mysql;

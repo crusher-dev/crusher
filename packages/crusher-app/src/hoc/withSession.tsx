@@ -6,11 +6,15 @@ import {
 	SIGNED_IN,
 	USER_NOT_REGISTERED,
 } from "@utils/constants";
+import { useState } from "react";
 import { saveSelectedProjectInRedux } from "@redux/actions/project";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { NextApiResponse } from "next";
+import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
+import { WHAT_DO_YOU_WANT_TO_TEST } from "@interfaces/OnboardingScreen";
+import Cookies from "js-cookie";
 
 function getUserStatus(userInfo: iUserInfoResponse | null) {
 	if (!userInfo || userInfo === null) {
@@ -54,8 +58,25 @@ async function handleUserStatus(
 }
 
 function withSession(WrappedComponent: any, componentScope?: string) {
+	const [isOpen, setIsOpen] = useState(true);
+
+	function onClose() {
+		Cookies.set("skipped", true);
+		setIsOpen(false);
+	}
+
 	const WithSession = function (props: any) {
-		return <WrappedComponent {...props} />;
+		return (
+			<>
+				{!Cookies.get("skipped") && (
+					<WatchVideoModal
+						isOpen={isOpen}
+						onClose={onClose}
+					/>
+				)}
+				<WrappedComponent {...props} />
+			</>
+		);
 	};
 
 	const wrappedComponentName =

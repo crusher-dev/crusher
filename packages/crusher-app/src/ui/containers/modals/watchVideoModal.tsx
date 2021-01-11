@@ -53,7 +53,7 @@ const customStyles = {
 	content: {
 		top: "50%",
 		left: "50%",
-		background: "rgb(0, 0, 0, 0.85)",
+		background: "rgb(0, 0, 0, 0.7)",
 		height: "100vh",
 		width: "100vw",
 		right: "auto",
@@ -64,6 +64,7 @@ const customStyles = {
 		flexDirection: "column",
 		alignItems: "center",
 		justifyContent: "center",
+		zIndex: 100,
 	} as React.CSSProperties,
 };
 

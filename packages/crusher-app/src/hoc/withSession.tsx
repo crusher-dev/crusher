@@ -58,21 +58,20 @@ async function handleUserStatus(
 }
 
 function withSession(WrappedComponent: any, componentScope?: string) {
-	const [isOpen, setIsOpen] = useState(true);
-
-	function onClose() {
-		Cookies.set("skipped", true);
-		setIsOpen(false);
-	}
-
 	const WithSession = function (props: any) {
+		function onClose() {
+			let inFifteenSeconds = new Date(new Date().getTime() + 15 * 1000);
+			// let inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+
+			Cookies.set("skipped", true, { expires: inFifteenSeconds });
+			setIsOpen(false);
+		}
+
+		const [isOpen, setIsOpen] = useState(true);
 		return (
 			<>
 				{!Cookies.get("skipped") && (
-					<WatchVideoModal
-						isOpen={isOpen}
-						onClose={onClose}
-					/>
+					<WatchVideoModal isOpen={isOpen} onClose={onClose} />
 				)}
 				<WrappedComponent {...props} />
 			</>

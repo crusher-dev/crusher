@@ -42,7 +42,7 @@ const WatchVideoModal = (props: iWatchModalProps) => {
 					controls
 				></video>
 				<button css={buttonCSS} onClick={onClose}>
-					{"I've watched the video"}
+					{"I'll watch the video later"}
 				</button>
 			</div>
 		</Modal>

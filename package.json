@@ -19,5 +19,8 @@
     "lerna": "^3.22.1",
     "pm2": "^4.5.0",
     "ts-node-dev": "^1.0.0"
+  },
+  "dependencies": {
+    "array.prototype.find": "^2.1.1"
   }
 }

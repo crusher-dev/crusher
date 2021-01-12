@@ -10,12 +10,16 @@ function generatePageScreenshotName(title: string): string {
 }
 export default function capturePageScreenshot(page: Page) {
 	return new Promise(async (success, error) => {
-		const pageTitle = await page.title();
-		const pageUrl = await page.url();
-		await page.screenshot({ path: generatePageScreenshotName(pageTitle) });
+		try {
+			const pageTitle = await page.title();
+			const pageUrl = await page.url();
+			await page.screenshot({ path: generatePageScreenshotName(pageTitle) });
 
-		return success({
-			message: `Clicked page screenshot for ${pageUrl}`,
-		});
+			return success({
+				message: `Clicked page screenshot for ${pageUrl}`,
+			});
+		} catch(err){
+			return error("Some issue occurred while capturing screenshot of page");
+		}
 	});
 }

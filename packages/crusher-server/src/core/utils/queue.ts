@@ -33,7 +33,7 @@ const codeGenerator = new CodeGenerator({
 	isLiveLogsOn: true,
 	shouldRecordVideo: true,
 	isHeadless: false,
-	browser: BROWSER.FIREFOX
+	browser: BROWSER.CHROME
 });
 
 function getGeneratedCode(test, platform, testType) {

@@ -10,7 +10,6 @@ import { setTestData } from '../wrapper/playwright';
 import { TestTypes } from '../interfaces/TestTypes';
 import { JobPlatform } from '../interfaces/JobPlatform';
 import { TestLogsService } from './mongo/testLogs';
-import { uploadRecordedVideoToBucketIfAny } from '../../util/cloudBucket';
 import { Queue } from 'bullmq';
 
 const Redis = require('ioredis');

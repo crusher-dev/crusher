@@ -70,7 +70,7 @@ export class Parser {
 			);
 		} else {
 			code.push(
-				"const browserContext = await browser.newContext({userAgent: browserInfo.meta.userAgent, viewport: { width: browserInfo.meta.width, height: browserInfo.meta.height}, recordVideo: {dir: './video'}});",
+				"const browserContext = await browser.newContext({userAgent: browserInfo.meta.userAgent, viewport: { width: browserInfo.meta.width, height: browserInfo.meta.height}});",
 			);
 		}
 
@@ -82,7 +82,7 @@ export class Parser {
 		if (this.isFirstTimeNavigate) {
 			code.push("const page = await browserContext.newPage({});");
 			if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
-				code.push("await saveVideo(page, 'video.mp4');");
+				code.push("capturedVideo = await saveVideo(page, 'video.mp4');");
 			}
 			code.push(
 				`const {handlePopup} = require("${helperPackageName}/middlewares");`,
@@ -129,7 +129,9 @@ export class Parser {
 	parseElementScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.screenshot(JSON.parse(#{action}), page);".pretify({ action }),
+			"await Element.screenshot(JSON.parse(#{action}), page);".pretify({
+				action,
+			}),
 		);
 		return code;
 	}
@@ -226,6 +228,20 @@ export class Parser {
 		}
 	}
 
+	addTryCatch(mainCode: string) {
+		const code = [];
+		code.push("try{");
+		code.push(mainCode);
+		code.push("} catch(ex){");
+		code.push(`
+			if(capturedVideo) { await capturedVideo.stop()};
+			if(browser) { await browser.close();}
+			throw ex;
+		`);
+		code.push("}");
+		return code.join("\n");
+	}
+
 	getCode() {
 		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions");\nconst playwright = require("playwright");\n`;
 		importCode += `const browser = await playwright["${
@@ -234,10 +250,16 @@ export class Parser {
 
 		if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
 			importCode += "const { saveVideo } = require('playwright-video');\n";
-			importCode += `const { sleep } = require("${helperPackageName}/functions/");`;
+			importCode += `const { sleep } = require("${helperPackageName}/functions");\n`;
+			importCode += "let capturedVideo;\n";
 		}
 
-		const footerCode = "await browser.close();";
+		let footerCode = "";
+		if (this.isLiveRecording) {
+			footerCode += "if(capturedVideo) { await capturedVideo.stop()}\n";
+		}
+		footerCode += "await browser.close();";
+
 		const mainCode = this.codeMap
 			.map((codeItem) => {
 				let code =
@@ -252,7 +274,7 @@ export class Parser {
 			})
 			.join("\n\n");
 
-		return importCode + mainCode + "\n" + footerCode;
+		return importCode + this.addTryCatch(mainCode) + "\n" + footerCode;
 	}
 }
 

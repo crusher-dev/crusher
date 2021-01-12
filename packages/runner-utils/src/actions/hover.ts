@@ -5,18 +5,22 @@ import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 
 export default async function hover(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
-		const selectors = action.payload.selectors as iSelectorInfo[];
-		const selector = await waitForSelectors(page, selectors);
+		try {
+			const selectors = action.payload.selectors as iSelectorInfo[];
+			const selector = await waitForSelectors(page, selectors);
 
-		if (!selector)
-			return error(
-				`Attempt to hover on element with no valid selector ${selector}`,
-			);
 
-		await page.hover(selector);
+			if(!selector || typeof selector !== "string"){
+				return error(`Invalid selector`);
+			}
 
-		return success({
-			message: `Hovered on the element ${selector}`,
-		});
+			await page.hover(selector);
+
+			return success({
+				message: `Hovered on the element ${selector}`,
+			});
+		} catch(err){
+			return error("Some issue occurred while hovering on element");
+		}
 	});
 }

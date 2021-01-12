@@ -28,7 +28,7 @@ ElementHandle.prototype.___screenshot = ElementHandle.prototype.screenshot;
 export const saveVideo = function(page: Page, savePath: string, options?: any) {
 	console.log('Starting recording video for draft');
 	return new Promise(async (resolve, reject) => {
-		const pageVideoCapture = await saveVideoPlaywright(page, `/tmp/video/${state.instanceId}/${state.platform}/${state.testInfo.id}.mp4`, options);
+		const pageVideoCapture = await saveVideoPlaywright(page, `/tmp/${state.instanceId}/${state.platform}/video/${state.testInfo.id}.mp4`, options);
 		state = { ...state, pageVideoCapture, isRecordingVideo: true };
 		return resolve(pageVideoCapture);
 	});
@@ -55,7 +55,7 @@ Page.prototype.screenshot = async function(options?: any) {
 
 	const screenshotOut = await this._screenshot({
 		...options,
-		path: `/tmp/images/${state.instanceId}/${state.platform}/${imageName}`,
+		path: `/tmp/${state.instanceId}/${state.platform}/images/${imageName}`,
 	});
 
 	return screenshotOut;
@@ -68,7 +68,7 @@ ElementHandle.prototype.screenshot = async function(options?: any) {
 
 	const screenshotOut = await this.___screenshot({
 		...options,
-		path: `/tmp/images/${state.instanceId}/${state.platform}/${imageName}`,
+		path: `/tmp/${state.instanceId}/${state.platform}/images/${imageName}`,
 	});
 	return screenshotOut;
 };

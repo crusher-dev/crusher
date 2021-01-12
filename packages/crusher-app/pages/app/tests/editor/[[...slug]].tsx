@@ -92,7 +92,7 @@ const TestEditor = (props: iTestEditorProps) => {
 				const code = new CodeGenerator({
 					shouldRecordVideo: true,
 					isLiveLogsOn: true,
-					browser: BROWSER.FIREFOX,
+					browser: BROWSER.CHROME,
 					isHeadless: false,
 				}).parse(testInfo.actions);
 

@@ -62,7 +62,7 @@ export class TestLogsService {
 	async notifyTestExecutionFailed(meta?: any) {
 		await new TestsLogs({
 			tag: TEST_LOGS_SERVICE_TAGS.TEST_EXECUTION_FAILED,
-			message: meta.err.toMessage(),
+			message: (meta.err as Error).message,
 			jobId: this.jobId,
 			testId: this.testId,
 			instanceId: this.instanceId,

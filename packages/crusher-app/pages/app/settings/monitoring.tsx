@@ -22,6 +22,7 @@ import { cleanHeaders } from "@utils/backendRequest";
 import { getCookies } from "@utils/cookies";
 import { MonitoringSettings } from "@interfaces/MonitoringSettings";
 import withSession from "@hoc/withSession";
+import { iPageContext } from "@interfaces/pageContenxt";
 
 const runIntervalOptions = [
 	{ value: "0.5h", label: "Every 30 minutes" },
@@ -348,7 +349,7 @@ const styles = {
 	`,
 };
 
-ProjectMonitoringSettings.getInitialProps = async (ctx) => {
+ProjectMonitoringSettings.getInitialProps = async (ctx: iPageContext) => {
 	const { req, store } = ctx;
 	let headers;
 	if (req) {
@@ -356,7 +357,7 @@ ProjectMonitoringSettings.getInitialProps = async (ctx) => {
 		cleanHeaders(headers);
 	}
 
-	const cookies = getCookies(req);
+	const cookies = getCookies(req!);
 
 	const defaultProject = getSelectedProject(store.getState());
 	const selectedProject = JSON.parse(

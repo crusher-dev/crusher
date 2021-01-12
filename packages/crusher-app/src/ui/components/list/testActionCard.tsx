@@ -1,6 +1,9 @@
 import { css } from "@emotion/core";
 import { toPascalCase } from "@utils/helpers";
 import React from "react";
+import { iAction } from "@crusher-shared/types/action";
+import { ActionsWithStatus } from "@ui/components/editor/LiveLogsActions";
+import { Conditional } from "@ui/components/common/Conditional";
 
 function normalizeActionType(type: any) {
 	return type
@@ -38,21 +41,31 @@ export const TestActionCard = (props: any) => {
 	);
 };
 
-export const LogActionCard = (props: any) => {
+interface iLoginActionCardProps {
+	index: number;
+	action: ActionsWithStatus;
+	style?: React.CSSProperties;
+	isLast: boolean;
+	timeTaken: number;
+	isActionCompleted: boolean;
+	isActionAborted?: boolean;
+	forwardRef?: any;
+}
+export const LogActionCard = (props: iLoginActionCardProps) => {
 	const {
-		isFinished,
-		style,
-		action,
 		index,
+		action,
+		isActionCompleted,
+		isActionAborted,
+		style,
 		timeTaken,
 		isLast,
 		forwardRef,
 	} = props;
-	const desc = action.desc;
 
 	return (
 		<div
-			style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }}
+			style={{ ...style, fontWeight: isActionCompleted ? 700 : 500 }}
 			css={styles.container}
 			ref={forwardRef}
 		>
@@ -60,9 +73,7 @@ export const LogActionCard = (props: any) => {
 				<div css={styles.actionBoxRow}>
 					<div css={styles.actionBoxRowIndex}>{index}.)</div>
 					<div css={styles.actionBoxInfo}>
-						<div css={styles.actionInfoHeading}>
-							{desc.substr(0, 34)} {desc.length > 34 ? "..." : null}
-						</div>
+						<div css={styles.actionInfoHeading}>{action.event_type}</div>
 						<div css={styles.actionInfoDesc}>{action.selector}</div>
 					</div>
 				</div>
@@ -71,14 +82,19 @@ export const LogActionCard = (props: any) => {
 				css={styles.correctContainer}
 				style={{ bottom: isLast ? "-0.7rem" : "-2.8rem" }}
 			>
-				<img
-					src={
-						isFinished
-							? "/svg/editor/correctStep.svg"
-							: "/svg/editor/notProcessedStep.svg"
-					}
-					style={{ width: "1.5rem" }}
-				/>
+				<Conditional If={isActionCompleted}>
+					<img src={"/svg/editor/correctStep.svg"} style={{ width: "1.5rem" }} />
+				</Conditional>
+				<Conditional If={isActionAborted}>
+					<img src={"/svg/editor/wrongStep.svg"} style={{ width: "1.5rem" }} />
+				</Conditional>
+				<Conditional If={!isActionCompleted && !isActionAborted}>
+					<img
+						src={"/svg/editor/notProcessedStep.svg"}
+						style={{ width: "1.5rem" }}
+					/>
+				</Conditional>
+
 				{!isLast && (
 					<div
 						style={{

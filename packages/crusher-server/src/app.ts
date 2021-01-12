@@ -41,6 +41,7 @@ import { ProjectsControllerV2 } from "./server/controllers/v2/ProjectsController
 import { TeamControllerV2 } from "./server/controllers/v2/TeamControllerV2";
 import { InviteMembersController } from "./server/controllers/v2/InviteMembersController";
 import { UserControllerV2 } from './server/controllers/v2/UserControllerV2';
+import { DraftControllerV2 } from './server/controllers/v2/DraftControllerV2';
 
 new MongoManager().init();
 useContainer(Container);
@@ -48,6 +49,7 @@ const expressApp = express();
 expressApp.use(ReqLogger);
 expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
+
 useExpressServer(expressApp, {
 	controllers: [
 		UserController,
@@ -71,7 +73,8 @@ useExpressServer(expressApp, {
 		ProjectsControllerV2,
 		TeamControllerV2,
 		InviteMembersController,
-		UserControllerV2
+		UserControllerV2,
+		DraftControllerV2
 	],
 	middlewares: [CorsMiddleware],
 	authorizationChecker: async (action: Action) => {

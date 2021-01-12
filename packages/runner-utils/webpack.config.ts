@@ -7,11 +7,12 @@ module.exports = {
 	entry: {
 		actions: "./src/actions/index.ts",
 		index: "./src/index.ts",
-		functions: "./src/actions/index.ts",
+		functions: "./src/functions/index.ts",
 		middlewares: "./src/middlewares/index.ts",
 		utils: "./src/utils/index.ts"
 	},
 	output: {
+		libraryTarget: 'commonjs',
 		path: path.resolve(__dirname, './build'),
 		filename: "[name].js" // <--- Will be compiled to this single file
 	},

@@ -10,7 +10,6 @@ import { setTestData } from '../wrapper/playwright';
 import { TestTypes } from '../interfaces/TestTypes';
 import { JobPlatform } from '../interfaces/JobPlatform';
 import { TestLogsService } from './mongo/testLogs';
-import { uploadRecordedVideoToBucketIfAny } from '../../util/cloudBucket';
 import { Queue } from 'bullmq';
 
 const Redis = require('ioredis');
@@ -88,11 +87,13 @@ module.exports = async bullJob => {
 	} catch (res) {
 		const { error: err } = res;
 		console.error('Test Failed!! Reason: ' + err.toString());
+		console.log(err);
 		let returnInfo;
 		try {
 			await testLogsService.notifyTestExecutionFailed({ err: err });
 		} catch (ex) {
 			console.error('Failed to notify test execution');
+			console.error(ex);
 		}
 		let { logs, images, video } = res;
 

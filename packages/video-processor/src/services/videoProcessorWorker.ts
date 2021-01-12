@@ -6,6 +6,7 @@ import { ensureFfmpegPath } from '../../utils/helper';
 
 const got = require('got');
 
+
 function processStreamAndSave(videoUrl, savePath: string) {
 	return new Promise((resolve, reject) => {
 		const responseStream = got.stream(videoUrl);
@@ -39,12 +40,13 @@ module.exports = async (bullJob) => {
 	const { instanceId, testType, testId, video } = bullJob.data;
 	console.log(`Processing video for ${testType}/${testId}/${instanceId}`, video);
 	if (video) {
+		let signedUrl;
 		try {
 			await shell.mkdir('-p', `/tmp/videos/`);
 
 			await processStreamAndSave(video, `/tmp/videos/${instanceId}.mp4`);
 
-			const signedUrl = await uploadFileToAwsBucket(s3BucketService, `/tmp/videos/${instanceId}.mp4`, `${instanceId}.mp4`, `${testId}/${instanceId}/`);
+			signedUrl = await uploadFileToAwsBucket(s3BucketService, `/tmp/videos/${instanceId}.mp4`, `${instanceId}.mp4`, `${testId}/${instanceId}/`);
 
 			await shell.rm('-rf', `/tmp/videos/${instanceId}.mp4`);
 
@@ -58,8 +60,8 @@ module.exports = async (bullJob) => {
 		} catch (ex) {
 			console.log(ex);
 			return {
-				processed: false,
-				recordedVideoUrl: null,
+				processed: signedUrl? true : false,
+				recordedVideoUrl: signedUrl,
 				instanceId: instanceId,
 				testId: testId,
 				testType: testType,

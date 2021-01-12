@@ -127,7 +127,6 @@ const repositoryDateCSS = css`
 	font-weight: 500;
 	color: #636363;
 `;
-
 const addRepoContainerCSS = css`
 	font-family: Gilroy;
 	margin-top: ${30 / PIXEL_REM_RATIO}rem;
@@ -144,6 +143,7 @@ const addRepoContainerCSS = css`
 		font-weight: 500;
 	}
 `;
+
 ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
 	const { req, res } = ctx;
 	try {

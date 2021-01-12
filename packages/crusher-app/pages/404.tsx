@@ -1,5 +1,18 @@
+import React from "react";
 import { css } from "@emotion/core";
 import notFoundSatellite from "../public/assets/img/illustration/not_found_satellite.png";
+import { Conditional } from "@ui/components/common/Conditional";
+
+function WebsiteHealthCard() {
+	return (
+		<div css={websiteHealthCSS}>
+			<p>Current Website Health: </p>
+			<button css={healthButtonCSS}>
+				<div css={greenLightCSS}></div>Up: 99.9%
+			</button>
+		</div>
+	);
+}
 
 export default function Error404() {
 	return (
@@ -7,16 +20,13 @@ export default function Error404() {
 			<img src={notFoundSatellite} css={satelliteImageCSS} />
 			<p css={pageUnreachableCSS}>This page is unreachable</p>
 			<p css={thisAnErrorCSS}>
-				If you think this is an error, we'll fix and create a test for it
+				{"If you think this is an error, we'll fix and create a test for it"}
 			</p>
 
 			<button css={reportButtonCSS}> Report Issue </button>
-			{/* <div css={styles.websiteHealth}>
-				<p>Current Website Health: </p>
-				<button css={styles.healthButton}>
-					<div css={styles.greenLight}></div>Up: 99.9%
-				</button>
-			</div> */}
+			<Conditional If={false}>
+				<WebsiteHealthCard />
+			</Conditional>
 		</div>
 	);
 }

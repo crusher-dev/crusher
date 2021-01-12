@@ -14,10 +14,19 @@ import { css } from "@emotion/core";
 import { Conditional } from "@ui/components/common/Conditional";
 import { EDITOR_TEST_TYPE } from "@crusher-shared/types/editorTestType";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
-import { recordLiveLogs, saveTestMetaInfo } from "@redux/actions/tests";
+import {
+	markTestAborted,
+	recordLiveLogs,
+	saveTestMetaInfo,
+} from "@redux/actions/tests";
 import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 import { useSelector } from "react-redux";
-import { getTestLiveLogs, getTestMetaInfo } from "@redux/stateUtils/tests";
+import {
+	checkIsTestAborted,
+	getTestLiveLogs,
+	getTestMetaInfo,
+	isTestAborted,
+} from "@redux/stateUtils/tests";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
 import { CodeGenerator } from "@code-generator/src/generator";
 import { getSelectedProject } from "@redux/stateUtils/projects";
@@ -36,6 +45,10 @@ const parse = require("urlencoded-body-parser");
 function checkDraftStatusAgainAndAgain(draftId: number, logsAfter = 0) {
 	return _getLiveLogs(draftId, logsAfter).then((res: iDraftLogsResponse) => {
 		const { status, logs, test } = res;
+		console.log("Test status", test);
+		if (test.status === InstanceStatus.ABORTED) {
+			store.dispatch(markTestAborted());
+		}
 
 		if (test && status === DRAFT_LOGS_STATUS.UPDATE_LOGS) {
 			if (
@@ -81,6 +94,7 @@ const TestEditor = (props: iTestEditorProps) => {
 	const testInfo = useSelector(getTestMetaInfo);
 	const liveLogs = useSelector(getTestLiveLogs);
 	const selectedProjectId = useSelector(getSelectedProject);
+	const isTestAborted = useSelector(checkIsTestAborted);
 
 	const handleTestNameUpdate = (event: ChangeEvent<HTMLInputElement>) => {
 		setTestName(event.target.value);
@@ -193,7 +207,11 @@ const TestEditor = (props: iTestEditorProps) => {
 						</div>
 					</div>
 				</div>
-				<TestStatus actions={testInfo.actions} logs={liveLogs} />
+				<TestStatus
+					isAborted={isTestAborted}
+					actions={testInfo.actions}
+					logs={liveLogs}
+				/>
 			</div>
 		</div>
 	);

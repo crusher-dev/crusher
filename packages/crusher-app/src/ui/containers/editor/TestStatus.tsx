@@ -8,6 +8,7 @@ import { iAction } from "@crusher-shared/types/action";
 interface TestStatusProps {
 	logs: Array<iLiveStepLogs>;
 	actions: Array<iAction>;
+	isAborted?: boolean;
 }
 
 function TestStatus(props: TestStatusProps) {
@@ -29,7 +30,11 @@ function TestStatus(props: TestStatusProps) {
 				</span>
 			</div>
 			<div css={liveLogsContainerCSS}>
-				<LiveLogsActions actions={actions} logs={logs} />
+				<LiveLogsActions
+					isAborted={props.isAborted}
+					actions={actions}
+					logs={logs}
+				/>
 			</div>
 		</div>
 	);

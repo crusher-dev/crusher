@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { RefObject, useEffect } from "react";
 import { LiveLogs } from "@interfaces/LiveLogs";
 import { LogActionCard } from "@ui/components/list/testActionCard";
 import { css } from "@emotion/core";
@@ -6,8 +6,10 @@ import { css } from "@emotion/core";
 import { ACTION_DESCRIPTIONS } from "../../../../../crusher-shared/constants/actionDescriptions";
 import { iAction } from "@crusher-shared/types/action";
 import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
+import { act } from "react-dom/test-utils";
 
 interface LiveLogsActionsProps {
+	isAborted?: boolean;
 	logs: Array<iLiveStepLogs>;
 	actions: Array<iAction>;
 }
@@ -46,19 +48,26 @@ function getLogsWithStatus(
 }
 
 function LiveLogsActions(props: LiveLogsActionsProps) {
-	const { actions, logs } = props;
+	const { actions, logs, isAborted } = props;
 	const logsWithStatus = getLogsWithStatus(actions, logs);
-	const lastDone = React.createRef();
+	const lastDone: RefObject<HTMLDivElement> = React.createRef();
 	console.log(logsWithStatus, "OGSS");
+	let isLastLog = false;
 	const out = logsWithStatus.map((action, index) => {
+		if (index > 0 && !logsWithStatus[index - 1].isCompleted) return null;
+		if (index >= logs.length) {
+			isLastLog = true;
+		}
 		const out = (
 			<LogActionCard
 				key={index}
 				isLast={index === actions.length - 1}
 				index={index + 1}
+				forwardRef={isLastLog && logs.length === index ? lastDone : null}
 				action={action}
 				timeTaken={parseInt(action.timeTaken)}
 				isActionCompleted={action.isCompleted}
+				isActionAborted={!action.isCompleted && isAborted}
 			/>
 		);
 		return out;
@@ -66,7 +75,7 @@ function LiveLogsActions(props: LiveLogsActionsProps) {
 
 	useEffect(() => {
 		if (lastDone.current) {
-			(lastDone.current as any).scrollIntoView();
+			lastDone.current.scrollIntoView();
 		}
 	}, [logs]);
 

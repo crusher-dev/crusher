@@ -1,14 +1,20 @@
 import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
-import { SAVE_TEST_META_INFO, RECORD_LIVE_LOG } from "@redux/actions/tests";
+import {
+	SAVE_TEST_META_INFO,
+	RECORD_LIVE_LOG,
+	MARK_TEST_ABORTED,
+} from "@redux/actions/tests";
 import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 
 interface iTestsState {
 	liveLogs: Array<iLiveStepLogs>;
 	metaInfo: iTestMetaInfo | null;
+	isError: boolean;
 }
 const initialData: iTestsState = {
 	liveLogs: [],
 	metaInfo: null,
+	isError: false,
 };
 
 const tests = (state = initialData, action: any) => {
@@ -23,6 +29,11 @@ const tests = (state = initialData, action: any) => {
 				...state,
 				metaInfo: action.payload.metaInfo,
 				liveLogs: [],
+			};
+		case MARK_TEST_ABORTED:
+			return {
+				...state,
+				isError: true,
 			};
 		default:
 			return state;

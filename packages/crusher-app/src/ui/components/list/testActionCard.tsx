@@ -3,6 +3,7 @@ import { toPascalCase } from "@utils/helpers";
 import React from "react";
 import { iAction } from "@crusher-shared/types/action";
 import { ActionsWithStatus } from "@ui/components/editor/LiveLogsActions";
+import { Conditional } from "@ui/components/common/Conditional";
 
 function normalizeActionType(type: any) {
 	return type
@@ -47,14 +48,26 @@ interface iLoginActionCardProps {
 	isLast: boolean;
 	timeTaken: number;
 	isActionCompleted: boolean;
+	isActionAborted?: boolean;
+	forwardRef?: any;
 }
 export const LogActionCard = (props: iLoginActionCardProps) => {
-	const { index, action, isActionCompleted, style, timeTaken, isLast } = props;
+	const {
+		index,
+		action,
+		isActionCompleted,
+		isActionAborted,
+		style,
+		timeTaken,
+		isLast,
+		forwardRef,
+	} = props;
 
 	return (
 		<div
 			style={{ ...style, fontWeight: isActionCompleted ? 700 : 500 }}
 			css={styles.container}
+			ref={forwardRef}
 		>
 			<div css={styles.actionInfo}>
 				<div css={styles.actionBoxRow}>
@@ -69,14 +82,19 @@ export const LogActionCard = (props: iLoginActionCardProps) => {
 				css={styles.correctContainer}
 				style={{ bottom: isLast ? "-0.7rem" : "-2.8rem" }}
 			>
-				<img
-					src={
-						isActionCompleted
-							? "/svg/editor/correctStep.svg"
-							: "/svg/editor/notProcessedStep.svg"
-					}
-					style={{ width: "1.5rem" }}
-				/>
+				<Conditional If={isActionCompleted}>
+					<img src={"/svg/editor/correctStep.svg"} style={{ width: "1.5rem" }} />
+				</Conditional>
+				<Conditional If={isActionAborted}>
+					<img src={"/svg/editor/wrongStep.svg"} style={{ width: "1.5rem" }} />
+				</Conditional>
+				<Conditional If={!isActionCompleted && !isActionAborted}>
+					<img
+						src={"/svg/editor/notProcessedStep.svg"}
+						style={{ width: "1.5rem" }}
+					/>
+				</Conditional>
+
 				{!isLast && (
 					<div
 						style={{

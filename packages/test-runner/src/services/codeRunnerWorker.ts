@@ -93,6 +93,7 @@ module.exports = async bullJob => {
 			await testLogsService.notifyTestExecutionFailed({ err: err });
 		} catch (ex) {
 			console.error('Failed to notify test execution');
+			console.error(ex);
 		}
 		let { logs, images, video } = res;
 

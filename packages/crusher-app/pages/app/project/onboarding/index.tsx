@@ -2,10 +2,11 @@ import { css } from "@emotion/core";
 import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { useEffect, useState } from "react";
-import firebase from "firebase";
-import firebaseConfig from "../../../../../crusher-shared/config/fire-config";
+// import firebase from "firebase";
+// import firebaseConfig from "../../../../../crusher-shared/config/fire-config";
 import GreenTickMark from "../../../../public/svg/onboarding/check_mark_green.svg";
 import WhiteTickMark from "../../../../public/svg/onboarding/check_mark_white.svg";
+import FirebaseService from "../../../../src/services/firebaseService";
 
 function Onboarding() {
 	const userInfo = useSelector(getUserInfo);
@@ -15,53 +16,59 @@ function Onboarding() {
 	const [reviewReports, setReviewReports] = useState(false);
 	const [integrate, setIntegrate] = useState(false);
 	const [inviteTeamMembers, setInviteTeamMembers] = useState(false);
-	const [firebaseService, setFirebaseService] = useState({});
+	// const [firebaseService, setFirebaseService] = useState({});
 
 	useEffect(() => {
-		try {
-			if (!firebase.apps.length) {
-				firebase.initializeApp(firebaseConfig);
-			} else {
-				firebase.app();
-			}
-			setFirebaseService(firebase);
-		} catch (err) {
-			if (!/already exists/.test(err.message)) {
-				console.error("Firebase initialisation error", err.stack);
-			}
-		}
+		// try {
+		// 	if (!firebase.apps.length) {
+		// 		firebase.initializeApp(firebaseConfig);
+		// 	} else {
+		// 		firebase.app();
+		// 	}
+		// 	setFirebaseService(firebase);
+		// } catch (err) {
+		// 	if (!/already exists/.test(err.message)) {
+		// 		console.error("Firebase initialisation error", err.stack);
+		// 	}
+		// }
 
+		// (async () => {
+		// 	const userDataReference = await firebaseService
+		// 		.firestore()
+		// 		.collection("onboarding")
+		// 		.doc(`${userInfo.id}`);
+		// 	userDataReference
+		// 		.get()
+		// 		.then((docSnapshot: any) => {
+		// 			if (docSnapshot.exists) {
+		// 				// if the document exists, we just get the data in the document
+		// 				userDataReference.onSnapshot((doc: any) => {
+		// 					const userData = doc.data();
+		// 					setWatchIntroVideo(userData.watchIntroVideo || false);
+		// 					setCreate2tests(userData.create2tests || false);
+		// 					setReviewReports(userData.reviewReports || false);
+		// 					setIntegrate(userData.integrate || false);
+		// 					setInviteTeamMembers(userData.inviteTeamMembers || false);
+		// 				});
+		// 			} else {
+		// 				// if the document does not exist, we insert data into the document
+		// 				userDataReference.set({
+		// 					watchIntroVideo: false,
+		// 					create2tests: false,
+		// 					reviewReports: false,
+		// 					integrate: false,
+		// 					totalNumberOfTests: 0,
+		// 					inviteTeamMembers: false,
+		// 				});
+		// 			}
+		// 		})
+		// 		.catch((err: any) => console.error(err));
+		// })();
 		(async () => {
-			const userDataReference = await firebaseService 
-				.firestore()
-				.collection("onboarding")
-				.doc(`${userInfo.id}`);
-			userDataReference
-				.get()
-				.then((docSnapshot: any) => {
-					if (docSnapshot.exists) {
-						// if the document exists, we just get the data in the document
-						userDataReference.onSnapshot((doc: any) => {
-							const userData = doc.data();
-							setWatchIntroVideo(userData.watchIntroVideo || false);
-							setCreate2tests(userData.create2tests || false);
-							setReviewReports(userData.reviewReports || false);
-							setIntegrate(userData.integrate || false);
-							setInviteTeamMembers(userData.inviteTeamMembers || false);
-						});
-					} else {
-						// if the document does not exist, we insert data into the document
-						userDataReference.set({
-							watchIntroVideo: false,
-							create2tests: false,
-							reviewReports: false,
-							integrate: false,
-							totalNumberOfTests: 0,
-							inviteTeamMembers: false,
-						});
-					}
-				})
-				.catch((err: any) => console.error(err));
+			let firebaseService = new FirebaseService();
+			await firebaseService.createConnection(103);
+
+			// console.log(firebaseService.returnDataInFirestore().then(doc => console.log(doc)));
 		})();
 	}, []);
 

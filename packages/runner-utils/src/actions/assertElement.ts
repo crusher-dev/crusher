@@ -22,6 +22,7 @@
 				 meta: {output}
 			 });
 		 } catch(err){
+		 	console.error(err);
 			 return error("Some issue occurred while asserting element");
 		 }
 	 });

@@ -162,9 +162,13 @@ export class Parser {
 
 	parseAssertElement(action: iAction) {
 		const code = [];
-		code.push("let {meta} = await Element.assertElement(page, #{action});\n");
+		code.push(
+			"let {meta} = await Element.assertElement(#{action}, page);\n".pretify({
+				action,
+			}),
+		);
 		code.push("let [hasPassed, logs] = meta.output;");
-		code.push("if(!hasPassed){throw new Error('Assertion not passed')}");
+		code.push("if(!hasPassed){throw new Error('Assertion not passed');}");
 
 		return code;
 	}

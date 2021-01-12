@@ -160,6 +160,15 @@ export class Parser {
 		return code;
 	}
 
+	parseAssertElement(action: iAction) {
+		const code = [];
+		code.push("let {meta} = await Element.assertElement(page, #{action});\n");
+		code.push("let [hasPassed, logs] = meta.output;");
+		code.push("if(!hasPassed){throw new Error('Assertion not passed')}");
+
+		return code;
+	}
+
 	parseAction(action: iAction) {
 		switch (action.type) {
 			case ACTIONS_IN_TEST.SET_DEVICE: {
@@ -213,6 +222,13 @@ export class Parser {
 				this.codeMap.push({
 					type: ACTIONS_IN_TEST.HOVER,
 					code: this.parseElementHover(action),
+				});
+				break;
+			}
+			case ACTIONS_IN_TEST.ASSERT_ELEMENT: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.ASSERT_ELEMENT,
+					code: this.parseAssertElement(action),
 				});
 				break;
 			}

@@ -36,6 +36,7 @@ const satelliteImageCSS = css`
 	height: 13.5rem;
 	left: 43.4rem;
 	right: 11.8rem;
+	margin-bottom: 1rem;
 `;
 
 const notFoundCSS = css`
@@ -73,4 +74,37 @@ const reportButtonCSS = css`
 	border-radius: 0.25rem;
 	width: 12rem;
 	height: 2.5rem;
+`;
+
+const websiteHealthCSS = css`
+	font-family: Gilroy;
+	font-size: 1rem;
+	line-height: 1.125rem;
+	color: #424242;
+	padding: 5rem;
+	display: flex;
+	align-items: baseline;
+`;
+
+const healthButtonCSS = css`
+	background: #ffffff;
+	border: 0.1rem solid #dcdcdc;
+	box-sizing: border-box;
+	border-radius: 0.5rem;
+	margin: 1rem;
+	width: 10rem;
+	height: 2.25rem;
+	display: flex;
+	justify-content: space-between;
+	padding: 0.5rem;
+	align-items: center;
+`;
+
+const greenLightCSS = css`
+	width: 0.625rem;
+	height: 0.625rem;
+	border: 0.0625rem solid #75ae2d;
+	box-sizing: border-box;
+	border-radius: 0.3125rem;
+	background: #8ddf26;
 `;

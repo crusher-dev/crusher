@@ -1,16 +1,20 @@
-import React, { useEffect } from "react";
+import React, { RefObject, useEffect } from "react";
 import { LiveLogs } from "@interfaces/LiveLogs";
 import { LogActionCard } from "@ui/components/list/testActionCard";
 import { css } from "@emotion/core";
 
 import { ACTION_DESCRIPTIONS } from "../../../../../crusher-shared/constants/actionDescriptions";
+import { iAction } from "@crusher-shared/types/action";
+import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
+import { act } from "react-dom/test-utils";
 
 interface LiveLogsActionsProps {
-	actions: Array<any>;
-	logs: Array<LiveLogs>;
+	isAborted?: boolean;
+	logs: Array<iLiveStepLogs>;
+	actions: Array<iAction>;
 }
 
-interface ActionsWithStatus {
+export interface ActionsWithStatus {
 	event_type: string;
 	desc: string;
 	selector: string;
@@ -19,103 +23,63 @@ interface ActionsWithStatus {
 }
 
 function getLogsWithStatus(
-	actions: Array<{ event_type: string; [key: string]: string }>,
-	logs: Array<LiveLogs>,
+	actions: Array<iAction>,
+	logs: Array<iLiveStepLogs>,
 ): Array<ActionsWithStatus> {
-	let actionsIndex = 0;
+	const actionsIndex = 0;
 
-	const out = [];
+	const out: Array<ActionsWithStatus> = [];
 
-	for (let i = 0; i < logs.length; i++) {
-		const action = actions[actionsIndex];
-		if (actions[actionsIndex++].event_type === logs[i].actionType) {
-			const descFunction = ACTION_DESCRIPTIONS[action.event_type];
-			console.log(action.event_type);
-			//@ts-ignore
-			out.push({
-				event_type: logs[i].actionType,
-				selector: action.selectors[0].value,
-				desc:
-					typeof descFunction === "function"
-						? ACTION_DESCRIPTIONS[action.event_type]({
-								selector: (action.selectors[0] as any).value,
-								value: action.value,
-						  })
-						: "",
-				timeTaken: logs[i].meta.timeTaken,
-				isCompleted: true,
-			});
-		} else {
-			break;
-		}
-	}
+	for (let i = 0; i < actions.length; i++) {
+		const selector = actions[i].payload.selectors
+			? actions[i].payload.selectors[0].value
+			: null;
 
-	for (let i = actionsIndex; i < actions.length; i++) {
-		const action = actions[i];
-		const descFunction = ACTION_DESCRIPTIONS[action.event_type];
-		console.log(action.event_type);
-
-		//@ts-ignore
 		out.push({
-			event_type: action.event_type,
-			selector: action.selectors[0].value,
-			desc:
-				typeof descFunction === "function"
-					? ACTION_DESCRIPTIONS[action.event_type]({
-							selector: (action.selectors[0] as any).value,
-							value: action.value,
-					  })
-					: "",
-			timeTaken: null,
-			isCompleted: false,
+			event_type: actions[i].type,
+			selector: selector as string,
+			desc: "Some description",
+			timeTaken: "0",
+			isCompleted: logs[i] && logs[i].actionType === actions[i].type,
 		});
 	}
-
+	console.log(logs, actions, ")__");
 	return out;
 }
 
 function LiveLogsActions(props: LiveLogsActionsProps) {
-	const { actions, logs } = props;
+	const { actions, logs, isAborted } = props;
 	const logsWithStatus = getLogsWithStatus(actions, logs);
-	const divRef = React.createRef();
-	const lastDone = React.createRef();
+	const lastDone: RefObject<HTMLDivElement> = React.createRef();
+	console.log(logsWithStatus, "OGSS");
+	let isLastLog = false;
 	const out = logsWithStatus.map((action, index) => {
+		if (index > 0 && !logsWithStatus[index - 1].isCompleted) return null;
+		if (index >= logs.length) {
+			isLastLog = true;
+		}
 		const out = (
 			<LogActionCard
 				key={index}
 				isLast={index === actions.length - 1}
-				forwardRef={
-					action.isCompleted &&
-					(index === actions.length - 1 ||
-						(actions[index + 1] && actions[index + 1].isCompleted))
-						? lastDone
-						: null
-				}
 				index={index + 1}
+				forwardRef={isLastLog && logs.length === index ? lastDone : null}
 				action={action}
-				timeTaken={action.timeTaken}
-				isFinished={action.isCompleted}
+				timeTaken={parseInt(action.timeTaken)}
+				isActionCompleted={action.isCompleted}
+				isActionAborted={!action.isCompleted && isAborted}
 			/>
 		);
 		return out;
 	});
 
 	useEffect(() => {
-		// const scrollDiv: any = divRef.current;
-		// const newScrollTop = scrollDiv.scrollHeight - scrollDiv.clientHeight;
-		// if(newScrollTop !== 0) {
-		//     scrollDiv.scrollTop = newScrollTop;
-		// }
 		if (lastDone.current) {
-			(lastDone.current as any).scrollIntoView();
+			lastDone.current.scrollIntoView();
 		}
 	}, [logs]);
 
-	return (
-		<div css={styles.container} ref={divRef as any}>
-			{out}
-		</div>
-	);
+	return <div css={styles.container}>{out}</div>;
 }
 
 const styles = {

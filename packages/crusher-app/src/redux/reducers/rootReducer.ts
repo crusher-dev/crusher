@@ -9,6 +9,7 @@ import testInstance from "@redux/reducers/testInstance";
 import IAction from "@interfaces/redux/action";
 import settings from "@redux/reducers/settings";
 import team from "@redux/reducers/team";
+import tests from "./tests";
 
 const combinedReducer = combineReducers({
 	app,
@@ -19,6 +20,7 @@ const combinedReducer = combineReducers({
 	job,
 	testInstance,
 	settings,
+	tests,
 });
 
 const rootReducer = (state: any, action: IAction<any>) => {

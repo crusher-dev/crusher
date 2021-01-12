@@ -2,13 +2,13 @@ import Router from "next/router";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "./url";
 import { NextApiResponse } from "next";
 
-export function redirectToFrontendPath(path, res?: NextApiResponse) {
+export function redirectToFrontendPath(path: string, res?: NextApiResponse) {
 	if (!res) {
 		// req ans res objects are only provided when on server.
 		return Router.replace(path);
 	}
 
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		res.writeHead(302, {
 			Location: resolvePathToFrontendURI(path),
 			// Add the content-type for SEO considerations

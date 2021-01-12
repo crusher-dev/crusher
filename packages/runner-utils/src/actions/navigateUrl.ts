@@ -3,12 +3,16 @@ import { iAction } from "@crusher-shared/types/action";
 
 export default async function navigateUrl(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
-		const urlToGo = action.payload.meta.value;
+		try {
+			const urlToGo = action.payload.meta.value;
 
-		await page.goto(urlToGo);
+			await page.goto(urlToGo);
 
-		return success({
-			message: `Navigated successfully to ${urlToGo}`,
-		});
+			return success({
+				message: `Navigated successfully to ${urlToGo}`,
+			});
+		} catch(err){
+			return error("Some issue occurred while navigating to webpage");
+		}
 	});
 }

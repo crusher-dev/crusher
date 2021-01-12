@@ -7,7 +7,6 @@ import { Provider } from "react-redux";
 import { recorderMessageListener } from "../messageListener";
 import ReactModal from "react-modal";
 import { ModalManager } from "./containers/app/modals";
-import { CodeGenerator } from "../../../code-generator/src/generator";
 import { AdvancedURL } from "../utils/url";
 import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
@@ -45,7 +44,6 @@ const App = () => {
 				},
 			}),
 		);
-
 		window.addEventListener(
 			"message",
 			recorderMessageListener.bind(window, deviceIframeRef),

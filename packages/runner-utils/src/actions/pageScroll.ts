@@ -4,12 +4,16 @@ import { scroll } from "../functions";
 
 export default function capturePageScreenshot(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
-		const scrollDelta = action.payload.meta.value;
-		const pageUrl = await page.url();
-		await scroll(page, "window", scrollDelta);
+		try {
+			const scrollDelta = action.payload.meta.value;
+			const pageUrl = await page.url();
+			await scroll(page, "window", scrollDelta);
 
-		return success({
-			message: `Scrolled successfully on ${pageUrl}`,
-		});
+			return success({
+				message: `Scrolled successfully on ${pageUrl}`,
+			});
+		} catch(err){
+			return error("Some issue occurred while scrolling the page");
+		}
 	});
 }

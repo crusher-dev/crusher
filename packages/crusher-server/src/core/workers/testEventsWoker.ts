@@ -44,13 +44,13 @@ async function prepareResultForTestInstance(instanceId, logs, images, jobId, vid
 	Logger.info("QueueManager::prepareResultForTestInstance", `\x1b[36m Test ${instanceId}\x1b[0m result created!!`);
 }
 
-async function prepareResultForDraftInstance(instanceId, logs, images, video) {
+async function prepareResultForDraftInstance(instanceId, logs, images, video, isError: boolean = false) {
 	const draftInstanceService = new DraftInstanceService();
 	const draftInstanceResultsService = new DraftInstanceResultsService();
 
 	if (instanceId) {
 		const draftInstanceService = new DraftInstanceService();
-		await draftInstanceService.updateDraftInstanceStatus(InstanceStatus.FINISHED, instanceId);
+		await draftInstanceService.updateDraftInstanceStatus(isError ? InstanceStatus.ABORTED : InstanceStatus.FINISHED, instanceId);
 		await draftInstanceResultsService.createDraftResult({
 			instance_id: instanceId,
 			logs: JSON.stringify(logs),
@@ -116,7 +116,7 @@ export default class TestsEventsWorker {
 					const draftInstanceService = new DraftInstanceService();
 					await draftInstanceService.updateDraftInstanceStatus(InstanceStatus.ABORTED, instanceId);
 
-					await prepareResultForDraftInstance(instanceId, logs, images, video);
+					await prepareResultForDraftInstance(instanceId, logs, images, video, isError);
 				} else {
 					if (githubInstallationId) {
 						await updateGithubCheckStatus(

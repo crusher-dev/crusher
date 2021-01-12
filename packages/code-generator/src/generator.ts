@@ -24,9 +24,9 @@ export class CodeGenerator {
 	parse(actions: Array<iAction>) {
 		const parser = new Parser({
 			actions,
-			isLiveRecording: true,
-			shouldLogSteps: true,
-			browser: BROWSER.FIREFOX,
+			isLiveRecording: this.options.shouldRecordVideo,
+			shouldLogSteps: this.options.isLiveLogsOn,
+			browser: this.options.browser,
 			isHeadless: false,
 		});
 		parser.parseActions();

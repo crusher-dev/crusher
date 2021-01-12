@@ -315,7 +315,7 @@ interface iSelectOption {
 }
 
 export function withSidebarLayout(
-	WrappedComponent: NextPage,
+	WrappedComponent: NextPage<any>,
 	shouldHaveGetInitialProps = true,
 ) {
 	const WithSidebarLayout = function (props: any) {

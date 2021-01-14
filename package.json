@@ -12,7 +12,7 @@
     "start": "pm2 start",
     "log:app": "pm2 logs crusher-app",
     "lint": "lerna run lint",
-    "postinstall": "patch-package && ./scripts/rebuildBullMq.sh && cp -n ecosystem.config.sample.js ecosystem.config.js"
+    "postinstall": "patch-package && sh scripts/rebuildBullMq.sh && cp -n ecosystem.config.sample.js ecosystem.config.js"
   },
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",

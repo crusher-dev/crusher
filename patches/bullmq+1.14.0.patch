@@ -7,7 +7,7 @@ index 0e91fff..223b891 100644
  import { TimerManager } from './timer-manager';
  import { isRedisInstance } from '../utils';
 +import Timeout = NodeJS.Timeout;
- 
+
  // note: sandboxed processors would also like to define concurrency per process
  // for better resource utilization.
 @@ -21,7 +22,7 @@ export class Worker<
@@ -17,23 +17,23 @@ index 0e91fff..223b891 100644
 -> extends QueueBase {
 +  > extends QueueBase {
    opts: WorkerOptions;
- 
+
    private drained: boolean;
 @@ -110,6 +111,31 @@ export class Worker<
      });
    }
- 
+
 +  private async canGoOn(offset: number, client: Redis) {
 +    const waitCount = await client.llen(this.keys.wait);
 +    return waitCount >= offset;
 +  }
 +
-+  private waitUntilCanGoOn(offset: number) {
++  private waitUntilCanGoOn(offset: any) {
 +    return new Promise(async (resolve, reject) => {
 +      const client = await this.client;
 +
 +      const checkIfCanGoOn = async (_interval?: Timeout) => {
-+        const isAlright = await this.canGoOn(offset, client);
++        const isAlright = await this.canGoOn(offset ? offset() : 0, client);
 +        if (isAlright) {
 +          if (_interval) clearInterval(_interval);
 +          resolve(true);
@@ -50,12 +50,12 @@ index 0e91fff..223b891 100644
 +
    private async run() {
      const client = await this.blockingConnection.client;
- 
+
 @@ -139,6 +165,8 @@ export class Worker<
      );
- 
+
      while (!this.closing) {
-+      await this.waitUntilCanGoOn(this.opts.offset ? this.opts.offset : 0);
++      await this.waitUntilCanGoOn(this.opts.getOffset);
 +
        if (processing.size < opts.concurrency) {
          const token = tokens.pop();
@@ -68,7 +68,7 @@ index 605fbd8..fa225a6 100644
    drainDelay?: number;
    lockDuration?: number;
    lockRenewTime?: number;
-+  offset?: number;
++  getOffset?: () => number;
    settings?: AdvancedOptions; // FIXME only backoffStrategies is used
  }
 diff --git a/node_modules/bullmq/tsconfig.json b/node_modules/bullmq/tsconfig.json

@@ -2,7 +2,7 @@ import parse from 'url-parse';
 
 const url = require('url');
 
-const LOCAL_BACKEND_URL = 'http://localhost:8000/';
+const LOCAL_BACKEND_URL = process.env.BACKEND_URL;
 
 const clean = (url: string) => String(url).replace(/^\/|\/$/g, '');
 

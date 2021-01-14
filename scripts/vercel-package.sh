@@ -60,7 +60,7 @@ overridePackageJSON () {
   tr '\n' ' ' < "$OUTPUT/crusher-app/package.json" > "$OUTPUT/crusher-app/package.new.json"
   rm "$OUTPUT/crusher-app/package.json"
   mv "$OUTPUT/crusher-app/package.new.json" "$OUTPUT/crusher-app/package.json"
-  sed  -i -e 's/"scripts": {[^}]*},/"scripts": {"build": "mv build .next", "start": "next start"},/' "$OUTPUT/crusher-app/package.json"
+  sed  -i -e 's/"scripts": {[^}]*},/"scripts": {"build": "cp build .next", "start": "next start"},/' "$OUTPUT/crusher-app/package.json"
 }
 
 cleanupPreviousNextBuildsIfThere

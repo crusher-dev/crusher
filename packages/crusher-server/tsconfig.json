@@ -25,4 +25,6 @@
 	"typeRoots": ["node_modules/@types"],
 	"files": ["src/app.ts"],
 	"include": ["./src/**/*"],
+	"skipLibCheck": true,
+	"exclude": ["**/*.spec.ts"]
 }

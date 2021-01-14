@@ -101,12 +101,16 @@
 		"tsconfig-paths": "^3.9.0",
 		"typedi": "0.5.2",
 		"underscore": "^1.9.1",
-		"uuid": "^8.3.0"
+		"uuid": "^8.3.0",
+		"kcors": "2.2.2",
+		"koa-bodyparser": "4.3.0"
 	},
 	"scripts": {
 		"dev:serverless": "now dev",
 		"dev": "ts-node src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
+		"build": "wepback --config webpack.config.js",
+		"build:start": "node build/app.js",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
 		"lint-fix:ts": "eslint --fix src",

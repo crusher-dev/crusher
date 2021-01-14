@@ -5,7 +5,7 @@ export const REDDIS = {
 };
 
 export const getMongoDBConnectionString = () : string => {
-	if(process.env.MONGODB_CONNECTION_STRING && process.env.MONGODB_CONNECTION_STRING !== null){
+	if(process.env.MONGODB_CONNECTION_STRING && process.env.MONGODB_CONNECTION_STRING !== "null"){
 		return process.env.MONGODB_CONNECTION_STRING;
 	}
 	const host = process.env.MONGODB_HOST;
@@ -14,6 +14,5 @@ export const getMongoDBConnectionString = () : string => {
 	const password = process.env.MONGODB_PASSWORD;
 	const database = process.env.MONGODB_DATABASE;
 
-	console.log(`mongodb://${username}:${password}@${host}:${port}/${database}`);
-	return `mongodb://${username}:${password}@${host}:${port}/${database}`
+	return `mongodb://${username}${password ? `:${password}` : ""}@${host}:${port}/${database}`
 };

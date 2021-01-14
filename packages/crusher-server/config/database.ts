@@ -1,3 +1,6 @@
+console.log(process.env);
+console.log("Printed process env");
+
 export const REDDIS = {
 	host: process.env.REDIS_HOST,
 	port: process.env.REDIS_PORT,

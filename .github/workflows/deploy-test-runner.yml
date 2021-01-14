@@ -27,5 +27,46 @@ jobs:
       - name: Package test-runner for deployment
         run: sh scripts/build-test-runner.sh
 
-      - name: Create docker image
-        run: docker build . --file ci/test-runner/Dockerfile --tag gcr.io/prepstart/test-runner:latest
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: crusher-runner-images
+          IMAGE_TAG: dev-${{ github.sha }}
+          PORT: 80
+        run: |
+         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --file ci/test-runner/Dockerfile
+         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"   
+        
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ProdRunnerV1 --query taskDefinition > task-definition.json
+        
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: TaskRunnerPord
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: crusher-test-runner-service
+          cluster: crusher-tests
+          wait-for-service-stability: true

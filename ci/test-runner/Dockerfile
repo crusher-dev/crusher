@@ -1,30 +1,16 @@
-################################################
-# Compile with:
-#     sudo docker build -t microsoft/playwright:bionic -f Dockerfile.bionic .
-#
-# Run with:
-#     sudo docker run -d -p --rm --name playwright microsoft/playwright:bionic
-#
-#################################################
+FROM node:12.20.1-alpine3.9
 
-FROM mcr.microsoft.com/playwright:bionic
+MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 
-# 1. Add codebase
-ADD ./ /code/
+RUN apk add --no-cache bash
+
+RUN apk add git
 
 RUN npm install -g npm
+RUN npm install pm2 -g
 
-# 2. Give permission to user to edit it
-RUN chown -R pwuser:pwuser ./
+ADD ./ ./crusher
 
-# 3. Run everything after as non-privileged user.
-USER pwuser
+WORKDIR /crusher
 
-RUN npm install
-
-WORKDIR /code/packages/test-runner/
-
-EXPOSE 80
-
-#ENTRYPOINT ["npm"]
-#CMD ["run", "-s", "start"]
+CMD ["pm2-runtime", "ecosystem.config.js", "--only", "test-runner"]

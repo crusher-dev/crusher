@@ -1,6 +1,3 @@
-console.log(process.env);
-console.log("Printed process env");
-
 export const REDDIS = {
 	host: process.env.REDIS_HOST,
 	port: process.env.REDIS_PORT,
@@ -8,7 +5,7 @@ export const REDDIS = {
 };
 
 export const getMongoDBConnectionString = () : string => {
-	if(process.env.MONGODB_CONNECTION_STRING){
+	if(process.env.MONGODB_CONNECTION_STRING && process.env.MONGODB_CONNECTION_STRING !== null){
 		return process.env.MONGODB_CONNECTION_STRING;
 	}
 	const host = process.env.MONGODB_HOST;
@@ -17,5 +14,6 @@ export const getMongoDBConnectionString = () : string => {
 	const password = process.env.MONGODB_PASSWORD;
 	const database = process.env.MONGODB_DATABASE;
 
+	console.log(`mongodb://${username}:${password}@${host}:${port}/${database}`);
 	return `mongodb://${username}:${password}@${host}:${port}/${database}`
 };

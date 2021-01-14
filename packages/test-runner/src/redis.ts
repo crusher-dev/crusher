@@ -3,7 +3,7 @@ import { REDDIS } from '../config/database';
 import IORedis from 'ioredis';
 let offset = 9999999999;
 
-const client = new IORedis({ port: REDDIS.port, host: REDDIS.host, password: REDDIS.password });
+const client = new IORedis({ port: parseInt(REDDIS.port), host: REDDIS.host, password: REDDIS.password });
 
 const uid = generateUid();
 const getOffset = () => {

@@ -18,6 +18,7 @@ queue.client.then(async reddisClient => {
 		connection: reddisClient,
 		concurrency: 3,
 		lockDuration: 120000,
+		//@ts-ignore
 		getOffset: getOffset
 	});
 });

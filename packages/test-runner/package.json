@@ -12,6 +12,7 @@
 		"bullmq": "^1.10.0",
 		"crusher-runner-utils": "0.0.9",
 		"crypt": "^0.0.2",
+		"fluent-ffmpeg": "^2.1.2",
 		"fs-extra": "^9.0.1",
 		"ioredis": "^4.19.4",
 		"logdna": "^3.5.0",
@@ -48,6 +49,7 @@
 	},
 	"scripts": {
 		"build": "WTF is there no build script here",
+		"start:prod": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos node build/index.js",
 		"start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.ts",
 		"start:dev": "NODE_ENV=local AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",

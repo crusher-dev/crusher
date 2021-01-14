@@ -9,6 +9,7 @@ const uid = generateUid();
 const getOffset = () => {
 	return offset;
 };
+
 client.incr("instance_index").then(instanceIndex => {
 	setInterval(async () => {
 		await client.set(`instance:${instanceIndex}`, instanceIndex, 'ex', 60)
@@ -20,4 +21,4 @@ client.incr("instance_index").then(instanceIndex => {
 	}, 2000);
 });
 
-
+export {getOffset}

@@ -41,7 +41,7 @@ export async function visualDiffWithURI(baseFileURI: string, testFileURI: string
 				reject(err);
 			});
 			baseScreenShotstream.on("close", () => {
-				if (!error) resolve();
+				if (!error) resolve(true);
 			});
 		});
 		const testScreenshotStream = fs.createWriteStream(`/tmp/${fName}_${time}_test.png`);
@@ -52,7 +52,7 @@ export async function visualDiffWithURI(baseFileURI: string, testFileURI: string
 				reject(err);
 			});
 			testScreenshotStream.on("close", () => {
-				if (!error) resolve();
+				if (!error) resolve(true);
 			});
 		});
 

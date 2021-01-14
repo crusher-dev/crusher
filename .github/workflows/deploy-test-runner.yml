@@ -1,0 +1,31 @@
+name: Deploy Crusher app
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 12.19.1
+
+      - name: Install yarn
+        run: npm install -g yarn
+        
+      - name: Install crusher modules
+        run: yarn
+        
+      - name: Package test-runner for deployment
+        run: sh scripts/build-test-runner.sh
+
+      - name: Create docker image
+        run: docker build . --file ci/test-runner/Dockerfile --tag gcr.io/prepstart/test-runner:latest

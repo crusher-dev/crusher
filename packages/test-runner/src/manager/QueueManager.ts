@@ -1,5 +1,6 @@
 import { Worker, Queue, QueueScheduler } from 'bullmq';
 import { REDDIS } from '../../config/database';
+import { getOffset } from '../redis';
 const path = require('path');
 require('../services/codeRunnerWorker');
 
@@ -17,5 +18,6 @@ queue.client.then(async reddisClient => {
 		connection: reddisClient,
 		concurrency: 3,
 		lockDuration: 120000,
+		getOffset: getOffset
 	});
 });

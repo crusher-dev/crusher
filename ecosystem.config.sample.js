@@ -115,7 +115,7 @@ module.exports = {
             name: "test-runner",
             cwd: "./packages/test-runner",
             script: "npm",
-            args: "run start:dev",
+            args: "run start:prod",
             watch: ["src", "config", "util"],
             env: {
                 /* Runner MongoDB config */

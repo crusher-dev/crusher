@@ -9,7 +9,7 @@ const MYSQL_DB_CONFIG = {
 };
 
 const MONGODB_CONFIG = {
-    CONNECTION_STRING: process.env.MONGOB_CONNECTION_STRING ? process.env.MONGODB_CONNECTION_STRING : null,
+    CONNECTION_STRING: process.env.MONGODB_CONNECTION_STRING ? process.env.MONGODB_CONNECTION_STRING : null,
     HOST: process.env.MOGNODB_HOST ? process.env.MONGODB_HOST : "localhost",
     PORT: process.env.MONGODB_PORT ? process.env.MONGODB_PORT : "27017",
     USERNAME: process.env.MONGODB_USERNAME ? process.env.MONGODB_USERNAME : "admin",
@@ -29,8 +29,8 @@ const GOOGLE_CONFIG = {
 }
 
 const SLACK_CONFIG = {
-    CLIENT_ID: process.env.SLACK_CLIENT_ID ? process.env.GOOGLE_CLIENT_ID : "650512229650.1194885099766",
-    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? process.env.GOOGLE_CLIENT_SECRET : "c8b73831d4fd48fba5be4f5c4515d6a8"
+    CLIENT_ID: process.env.SLACK_CLIENT_ID ? process.env.SLACK_CLIENT_ID : "650512229650.1194885099766",
+    CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET ? process.env.SLACK_CLIENT_SECRET : "c8b73831d4fd48fba5be4f5c4515d6a8"
 }
 
 const GITHUB_CONFIG = {
@@ -43,8 +43,8 @@ const THIRD_PARTY_API_KEYS = {
     STRIPE: process.env.STRIPE_API_KEY ? process.env.STRIPE_API_KEY : "sk_test_51GpPlSJrl7auivTJtYVJyvBH1lsPnYHousGgR37uZvGo7EktiTRCAqZPlf0dicwkNEjRuXHYCzy6c5WMmX3x14rb00RWsMT0hy"
 }
 
-const BACKEND_URL = "http://localhost:8000/";
-const FRONTEND_URL = "http://localhost:3000/";
+const BACKEND_URL = process.env.BACKEND_URL ? process.env.BACKEND_URL : "http://localhost:8000/";
+const FRONTEND_URL = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "http://localhost:3000/";
 
 module.exports = {
     apps: [

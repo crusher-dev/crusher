@@ -1,4 +1,4 @@
-import { MONGODB } from "../../../config/database";
+import { getMongoDBConnectionString } from "../../../config/database";
 
 export default class MongoManager {
 	constructor() {}
@@ -6,10 +6,7 @@ export default class MongoManager {
 	init() {
 		const mongoose = require("mongoose");
 
-		const connectionString = MONGODB.connection_string
-			? MONGODB.connection_string
-			: `mongodb://${MONGODB.username}:${MONGODB.password}@${MONGODB.host}:${MONGODB.port}/${MONGODB.database}`;
-
+		const connectionString = getMongoDBConnectionString();
 		mongoose.connect(connectionString);
 
 		mongoose.connection.on("connected", function () {

@@ -13,7 +13,9 @@
 	},
 	"include": ["**/*.ts"],
 	"typeRoots": ["node_modules/@types"],
-	"files": ["src/app.js"],
+	"files": [
+		"src/app"
+	],
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"]
 }

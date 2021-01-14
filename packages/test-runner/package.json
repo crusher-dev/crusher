@@ -7,10 +7,13 @@
 		"@google-cloud/storage": "^5.0.1",
 		"@octokit/auth": "^2.0.0",
 		"@octokit/rest": "^18.0.0",
+		"@types/ioredis": "^4.17.11",
 		"aws-sdk": "^2.762.0",
 		"bullmq": "^1.10.0",
+		"crusher-runner-utils": "0.0.9",
 		"crypt": "^0.0.2",
 		"fs-extra": "^9.0.1",
+		"ioredis": "^4.19.4",
 		"logdna": "^3.5.0",
 		"md5": "^2.2.1",
 		"methods": "^1.1.2",
@@ -22,8 +25,7 @@
 		"reflect-metadata": "^0.1.13",
 		"shelljs": "^0.8.4",
 		"ts-node": "^9.0.0",
-		"uniqid": "^5.2.0",
-		"crusher-runner-utils": "0.0.9"
+		"uniqid": "^5.2.0"
 	},
 	"devDependencies": {
 		"@types/aws-sdk": "^2.7.0",
@@ -46,8 +48,8 @@
 	},
 	"scripts": {
 		"build": "WTF is there no build script here",
-		"start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.js",
-		"start:dev": "NODE_ENV=local AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.js",
+		"start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.ts",
+		"start:dev": "NODE_ENV=local AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"
 	},

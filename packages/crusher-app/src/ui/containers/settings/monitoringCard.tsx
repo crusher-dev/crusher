@@ -16,29 +16,30 @@ function MonitoringCard(props) {
 				</div>
 				<div css={innerCSS}>
 					<div css={flexColumnCSS}>
-						<div>
+						<div css={keyValueGroupTogetherCSS}>
 							<span css={keysCSS}>Host:</span>
 							<span css={valuesCSS}>{host}</span>
 						</div>
 
-						<div>
+						<div css={keyValueGroupTogetherCSS}>
 							<span css={keysCSS}>Tags:</span>
 							<span css={valuesCSS}>{tags}</span>
 						</div>
-						<div>
+						<div css={keyValueGroupTogetherCSS}>
 							<span css={keysCSS}>Countries:</span>
 							<span css={valuesCSS}>{countries}</span>
 						</div>
 					</div>
 					<div>
-						<div>
+						<div css={keyValueGroupTogetherCSS}>
 							<span css={keysCSS}>Duration:</span>
 							<span css={valuesCSS}>{duration}</span>
 						</div>
-						<div>
+						<div css={keyValueGroupTogetherCSS}>
 							<span css={keysCSS}>Escalation:</span>
 							<span css={valuesCSS}>{escalation}</span>
 						</div>
+						<div css={keyValueGroupTogetherCSS}></div>
 					</div>
 					<div css={column3CSS}>
 						<div>Run Now</div>
@@ -83,6 +84,7 @@ const modalCSS = css`
 	padding: 1.5rem;
 	margin: 1rem;
 	width: 45rem;
+	height: 12rem;
 `;
 
 const titleCSS = css`
@@ -91,14 +93,16 @@ const titleCSS = css`
 	line-height: 1.25rem;
 	color: #323232;
 	padding: 0.5rem;
-	margin-top: 0rem;
+	margin-bottom: 1rem;
+	padding-top: 0;
+	margin-top: 2px;
 `;
 
 const keysCSS = css`
 	font-size: 0.9rem;
 	line-height: 1.125rem;
 	color: #9b9b9b;
-	padding: 0.5rem;
+	padding: 0.5rem
 `;
 
 const valuesCSS = css`
@@ -125,5 +129,9 @@ const innerCSS = css`
 	display: flex;
 	justify-content: space-between;
 `;
+
+const keyValueGroupTogetherCSS = css`
+	margin-bottom: 1rem;
+`
 
 export default MonitoringCard;

@@ -13,7 +13,8 @@ const MONGODB_CONFIG = {
     HOST: process.env.MOGNODB_HOST ? process.env.MONGODB_HOST : "localhost",
     PORT: process.env.MONGODB_PORT ? process.env.MONGODB_PORT : "27017",
     USERNAME: process.env.MONGODB_USERNAME ? process.env.MONGODB_USERNAME : "admin",
-    PASSWORD: process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD: ""
+    PASSWORD: process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD: "",
+    DATABASE: process.env.MONGODB_DATABASE ? process.env.MONGODB_DATABASE : ""
 };
 
 const REDIS_CONFIG = {
@@ -84,7 +85,7 @@ module.exports = {
                 /* Server Redis DB config */
                 REDIS_CONNECTION_STRING: REDIS_CONFIG.CONNECTION_STRING ? REDIS_CONFIG.CONNECTION_STRING : null,
                 REDIS_HOST: REDIS_CONFIG.HOST,
-                REDIS_PORT: REDIS_CONFIG.PASSWORD,
+                REDIS_PORT: REDIS_CONFIG.PORT,
                 REDIS_PASSWORD: REDIS_CONFIG.PASSWORD,
                 /* Server MongoDB config */
                 MONGODB_CONNECTION_STRING: MONGODB_CONFIG.CONNECTION_STRING ? MONGODB_CONFIG.CONNECTION_STRING : null,
@@ -92,6 +93,7 @@ module.exports = {
                 MONGODB_PORT: MONGODB_CONFIG.PORT,
                 MONGODB_USERNAME: MONGODB_CONFIG.USERNAME,
                 MONGODB_PASSWORD: MONGODB_CONFIG.PASSWORD,
+                MONGODB_DATABASE: MONGODB_CONFIG.DATABASE,
                 /* Server Google client config */
                 GOOGLE_CLIENT_ID: GOOGLE_CONFIG.CLIENT_ID,
                 GOOGLE_CLIENT_SECRET: GOOGLE_CONFIG.CLIENT_SECRET,
@@ -124,6 +126,7 @@ module.exports = {
                 MONGODB_PORT: MONGODB_CONFIG.PORT,
                 MONGODB_USERNAME: MONGODB_CONFIG.USERNAME,
                 MONGODB_PASSWORD: MONGODB_CONFIG.PASSWORD,
+                MONGODB_DATABASE: MONGODB_CONFIG.DATABASE,
                 /* LogDNA API config */
                 LOGDNA_API_KEY: THIRD_PARTY_API_KEYS.LOGDNA,
                 /* Runner Redis DB Config */
@@ -153,7 +156,8 @@ module.exports = {
                 MONGODB_HOST: MONGODB_CONFIG.HOST,
                 MONGODB_PORT: MONGODB_CONFIG.PORT,
                 MONGODB_USERNAME: MONGODB_CONFIG.USERNAME,
-                MONGODB_PASSWORD: MONGODB_CONFIG.PORT,
+                MONGODB_PASSWORD: MONGODB_CONFIG.PASSWORD,
+                MONGODB_DATABASE: MONGODB_CONFIG.DATABASE,
                 /* Redis DB config */
                 REDIS_CONNECTION_STRING: REDIS_CONFIG.CONNECTION_STRING ? REDIS_CONFIG.CONNECTION_STRING : null,
                 REDIS_HOST: REDIS_CONFIG.HOST,

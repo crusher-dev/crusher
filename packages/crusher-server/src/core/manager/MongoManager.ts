@@ -7,6 +7,7 @@ export default class MongoManager {
 		const mongoose = require("mongoose");
 
 		const connectionString = getMongoDBConnectionString();
+		console.log("This is connection string", connectionString);
 		mongoose.connect(connectionString);
 
 		mongoose.connection.on("connected", function () {

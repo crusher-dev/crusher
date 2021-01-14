@@ -71,3 +71,17 @@ index 605fbd8..fa225a6 100644
 +  offset?: number;
    settings?: AdvancedOptions; // FIXME only backoffStrategies is used
  }
+diff --git a/node_modules/bullmq/tsconfig.json b/node_modules/bullmq/tsconfig.json
+index 90fa0de..b6ae09f 100644
+--- a/node_modules/bullmq/tsconfig.json
++++ b/node_modules/bullmq/tsconfig.json
+@@ -18,7 +18,8 @@
+     "paths": {
+       "@src/*": ["src/*"]
+     },
+-    "lib": ["esnext"]
++    "lib": ["esnext"],
++    "skipLibCheck": true
+   },
+   "include": ["src/**/*.ts", "tests/**/*.ts"],
+   "exclude": ["node_modules"]

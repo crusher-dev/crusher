@@ -2,43 +2,45 @@
 // Centralize this config file
 
 const MYSQL_DB_CONFIG = {
-    HOST: "localhost",
-    USERNAME: "root",
-    PASSWORD: "password",
-    PORT: 3306
+    HOST: process.env.DB_HOST ? process.env.DB_HOST : "localhost",
+    USERNAME: process.env.DB_USERNAME ? process.env.DB_USERNAME : "root",
+    PASSWORD: process.env.DB_PASSWORD ? process.env.DB_PASSWORD : "password",
+    PORT: process.env.DB_PORT ? process.env.DB_PORT : 3306
 };
 
 const MONGODB_CONFIG = {
-    HOST: "localhost",
-    PORT: "27017",
-    USERNAME: "admin",
-    PASSWORD: ""
+    CONNECTION_STRING: process.env.MONGOB_CONNECTION_STRING ? process.env.MONGODB_CONNECTION_STRING : null,
+    HOST: process.env.MOGNODB_HOST ? process.env.MONGODB_HOST : "localhost",
+    PORT: process.env.MONGODB_PORT ? process.env.MONGODB_PORT : "27017",
+    USERNAME: process.env.MONGODB_USERNAME ? process.env.MONGODB_USERNAME : "admin",
+    PASSWORD: process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD: ""
 };
 
 const REDIS_CONFIG = {
+    CONNECTION_STRING: process.env.REDIS_CONNECTION_STRING ? process.env.REDIS_CONNECTION_STRING : null,
     HOST: "localhost",
     PORT: 6379,
     PASSWORD: ""
 };
 
 const GOOGLE_CONFIG = {
-    CLIENT_ID: "428880114376-i3jmef0t11n8c3otiqe5rnhtsfq6ldlk.apps.googleusercontent.com",
-    CLIENT_SECRET: "nCNWW2RAGDRzubb7RpjgZOBY"
+    CLIENT_ID: process.env.GOOGLE_CLIENT_ID ? process.env.GOOGLE_CLIENT_ID : "428880114376-i3jmef0t11n8c3otiqe5rnhtsfq6ldlk.apps.googleusercontent.com",
+    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? process.env.GOOGLE_CLIENT_SECRET: "nCNWW2RAGDRzubb7RpjgZOBY"
 }
 
 const SLACK_CONFIG = {
-    CLIENT_ID: "650512229650.1194885099766",
-    CLIENT_SECRET: "c8b73831d4fd48fba5be4f5c4515d6a8"
+    CLIENT_ID: process.env.SLACK_CLIENT_ID ? process.env.GOOGLE_CLIENT_ID : "650512229650.1194885099766",
+    CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? process.env.GOOGLE_CLIENT_SECRET : "c8b73831d4fd48fba5be4f5c4515d6a8"
 }
 
 const GITHUB_CONFIG = {
-    CLIENT_ID: "Iv1.b94bab70cd7aad37"
+    CLIENT_ID: process.env.GITHUB_CLIENT_ID ? process.env.GOOGLE_CLIENT_ID : "Iv1.b94bab70cd7aad37"
 };
 
 const THIRD_PARTY_API_KEYS = {
-    SENDGRID: "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",
-    LOGDNA: "c7bdd500e3cfbfe457a2ec4168b8cfaa",
-    STRIPE: "sk_test_51GpPlSJrl7auivTJtYVJyvBH1lsPnYHousGgR37uZvGo7EktiTRCAqZPlf0dicwkNEjRuXHYCzy6c5WMmX3x14rb00RWsMT0hy"
+    SENDGRID: process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY : "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",
+    LOGDNA: process.env.LOGDNA_API_KEY ? process.env.LOGDNA_API_KEY : "c7bdd500e3cfbfe457a2ec4168b8cfaa",
+    STRIPE: process.env.STRIPE_API_KEY ? process.env.STRIPE_API_KEY : "sk_test_51GpPlSJrl7auivTJtYVJyvBH1lsPnYHousGgR37uZvGo7EktiTRCAqZPlf0dicwkNEjRuXHYCzy6c5WMmX3x14rb00RWsMT0hy"
 }
 
 const BACKEND_URL = "http://localhost:8000/";
@@ -80,10 +82,12 @@ module.exports = {
                 DB_PASSWORD: MYSQL_DB_CONFIG.PASSWORD,
                 DB_DATABASE: "crusher",
                 /* Server Redis DB config */
+                REDIS_CONNECTION_STRING: REDIS_CONFIG.CONNECTION_STRING ? REDIS_CONFIG.CONNECTION_STRING : null,
                 REDIS_HOST: REDIS_CONFIG.HOST,
                 REDIS_PORT: REDIS_CONFIG.PASSWORD,
                 REDIS_PASSWORD: REDIS_CONFIG.PASSWORD,
                 /* Server MongoDB config */
+                MONGODB_CONNECTION_STRING: MONGODB_CONFIG.CONNECTION_STRING ? MONGODB_CONFIG.CONNECTION_STRING : null,
                 MONGODB_HOST: MONGODB_CONFIG.HOST,
                 MONGODB_PORT: MONGODB_CONFIG.PORT,
                 MONGODB_USERNAME: MONGODB_CONFIG.USERNAME,
@@ -115,6 +119,7 @@ module.exports = {
             watch: ["src", "config", "util"],
             env: {
                 /* Runner MongoDB config */
+                MONGODB_CONNECTION_STRING: MONGODB_CONFIG.CONNECTION_STRING ? MONGODB_CONFIG.CONNECTION_STRING : null,
                 MONGODB_HOST: MONGODB_CONFIG.HOST,
                 MONGODB_PORT: MONGODB_CONFIG.PORT,
                 MONGODB_USERNAME: MONGODB_CONFIG.USERNAME,
@@ -122,6 +127,7 @@ module.exports = {
                 /* LogDNA API config */
                 LOGDNA_API_KEY: THIRD_PARTY_API_KEYS.LOGDNA,
                 /* Runner Redis DB Config */
+                REDIS_CONNECTION_STRING: REDIS_CONFIG.CONNECTION_STRING ? REDIS_CONFIG.CONNECTION_STRING : null,
                 REDIS_HOST: REDIS_CONFIG.HOST,
                 REDIS_PORT: REDIS_CONFIG.PORT,
                 REDIS_PASSWORD: REDIS_CONFIG.PASSWORD,
@@ -143,11 +149,13 @@ module.exports = {
             args: "run start",
             env: {
                 /* Video Processor MongoDB config */
+                MONGODB_CONNECTION_STRING: MONGODB_CONFIG.CONNECTION_STRING ? MONGODB_CONFIG.CONNECTION_STRING : null,
                 MONGODB_HOST: MONGODB_CONFIG.HOST,
                 MONGODB_PORT: MONGODB_CONFIG.PORT,
                 MONGODB_USERNAME: MONGODB_CONFIG.USERNAME,
                 MONGODB_PASSWORD: MONGODB_CONFIG.PORT,
                 /* Redis DB config */
+                REDIS_CONNECTION_STRING: REDIS_CONFIG.CONNECTION_STRING ? REDIS_CONFIG.CONNECTION_STRING : null,
                 REDIS_HOST: REDIS_CONFIG.HOST,
                 REDIS_PORT: REDIS_CONFIG.PORT,
                 REDIS_PASSWORD: REDIS_CONFIG.PASSWORD,

@@ -14,5 +14,5 @@ export const getMongoDBConnectionString = () : string => {
 	const password = process.env.MONGODB_PASSWORD;
 	const database = process.env.MONGODB_DATABASE;
 
-	return `mongodb://${username}:${password}@${host}:${port}/${database}`
+	return `mongodb://${username}${password ? `:${password}` : ""}@${host}:${port}/${database}`
 };

@@ -11,7 +11,8 @@
   "scripts": {
     "start": "pm2 start",
     "log:app": "pm2 logs crusher-app",
-    "lint": "lerna run lint"
+    "lint": "lerna run lint",
+    "postinstall": "patch-package && ./scripts/rebuildBullMq.sh"
   },
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
@@ -19,5 +20,9 @@
     "lerna": "^3.22.1",
     "pm2": "^4.5.0",
     "ts-node-dev": "^1.0.0"
+  },
+  "dependencies": {
+    "patch-package": "^6.2.2",
+    "postinstall-postinstall": "^2.1.0"
   }
 }

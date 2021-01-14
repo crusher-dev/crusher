@@ -1,0 +1,73 @@
+diff --git a/node_modules/bullmq/src/classes/worker.ts b/node_modules/bullmq/src/classes/worker.ts
+index 0e91fff..223b891 100644
+--- a/node_modules/bullmq/src/classes/worker.ts
++++ b/node_modules/bullmq/src/classes/worker.ts
+@@ -11,6 +11,7 @@ import { Scripts } from './scripts';
+ import { v4 } from 'uuid';
+ import { TimerManager } from './timer-manager';
+ import { isRedisInstance } from '../utils';
++import Timeout = NodeJS.Timeout;
+ 
+ // note: sandboxed processors would also like to define concurrency per process
+ // for better resource utilization.
+@@ -21,7 +22,7 @@ export class Worker<
+   T = any,
+   R = any,
+   N extends string = string
+-> extends QueueBase {
++  > extends QueueBase {
+   opts: WorkerOptions;
+ 
+   private drained: boolean;
+@@ -110,6 +111,31 @@ export class Worker<
+     });
+   }
+ 
++  private async canGoOn(offset: number, client: Redis) {
++    const waitCount = await client.llen(this.keys.wait);
++    return waitCount >= offset;
++  }
++
++  private waitUntilCanGoOn(offset: number) {
++    return new Promise(async (resolve, reject) => {
++      const client = await this.client;
++
++      const checkIfCanGoOn = async (_interval?: Timeout) => {
++        const isAlright = await this.canGoOn(offset, client);
++        if (isAlright) {
++          if (_interval) clearInterval(_interval);
++          resolve(true);
++        }
++      };
++
++      await checkIfCanGoOn();
++
++      const _interval = setInterval(async () => {
++        await checkIfCanGoOn(_interval);
++      }, 1000);
++    });
++  }
++
+   private async run() {
+     const client = await this.blockingConnection.client;
+ 
+@@ -139,6 +165,8 @@ export class Worker<
+     );
+ 
+     while (!this.closing) {
++      await this.waitUntilCanGoOn(this.opts.offset ? this.opts.offset : 0);
++
+       if (processing.size < opts.concurrency) {
+         const token = tokens.pop();
+         processing.set(this.getNextJob(token), token);
+diff --git a/node_modules/bullmq/src/interfaces/worker-options.ts b/node_modules/bullmq/src/interfaces/worker-options.ts
+index 605fbd8..fa225a6 100644
+--- a/node_modules/bullmq/src/interfaces/worker-options.ts
++++ b/node_modules/bullmq/src/interfaces/worker-options.ts
+@@ -12,5 +12,6 @@ export interface WorkerOptions extends QueueBaseOptions {
+   drainDelay?: number;
+   lockDuration?: number;
+   lockRenewTime?: number;
++  offset?: number;
+   settings?: AdvancedOptions; // FIXME only backoffStrategies is used
+ }

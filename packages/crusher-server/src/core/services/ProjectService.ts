@@ -1,12 +1,15 @@
-import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
-import { Project } from "../interfaces/db/Project";
-import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
-import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
-import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
-import { iUser } from "@crusher-shared/types/db/iUser";
-import { TEAM_ROLE_TYPES } from "@crusher-shared/types/db/teamRole";
-import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
+import { Container, Service } from 'typedi';
+import DBManager from '../manager/DBManager';
+import { Project } from '../interfaces/db/Project';
+import { InsertRecordResponse } from '../interfaces/services/InsertRecordResponse';
+import { iProjectInfoResponse } from '../../../../crusher-shared/types/response/projectInfoResponse';
+import { iMemberInfoResponse } from '../../../../crusher-shared/types/response/membersInfoResponse';
+import { iUser } from '../../../../crusher-shared/types/db/iUser';
+import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
+import { iAllProjectsItemResponse } from '../../../../crusher-shared/types/response/allProjectsResponse';
+import { iJobReports } from '../../../../crusher-shared/types/db/jobReports';
+import { JobReportStatus } from '../../../../crusher-shared/types/jobReportStatus';
+import { ProjectHealthStatus } from '../../../../crusher-shared/types/projectHelathStatus';
 
 @Service()
 export default class ProjectService {
@@ -30,6 +33,25 @@ export default class ProjectService {
 			"SELECT COUNT(*) as count FROM job_reports WHERE job_reports.project_id = ? AND cast(job_reports.created_at as Date) = cast(NOW() as date);",
 			[projectId],
 		);
+	}
+
+	async getHealthAndStatus(projectId: number) {
+		const allJobsToday: Array<iJobReports> = await this.dbManager.fetchData(
+			"SELECT * FROM job_reports WHERE job_reports.project_id = ? AND cast(job_reports.created_at as Date) = cast(NOW() as date) AND created_at > NOW() - interval 180 minute",
+			[projectId],
+		);
+		const passedTests = allJobsToday.filter(jobReport => (jobReport.status === JobReportStatus.PASSED));
+		const totalTests = allJobsToday.filter(jobReport => (jobReport.status !== JobReportStatus.RUNNING_CHECKS));
+		let percentage =  0;
+		if(totalTests.length === 0)
+			percentage = 0;
+		else
+			percentage = (passedTests.length/totalTests.length)*100;
+
+		return {
+			health: percentage,
+			status: percentage > 95 ? ProjectHealthStatus.UP : ProjectHealthStatus.DOWN
+		}
 	}
 
 	async createProject(projectName: string, teamId: number): Promise<InsertRecordResponse> {

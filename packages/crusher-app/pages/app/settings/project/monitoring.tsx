@@ -1,10 +1,13 @@
+import React from "react";
 import { SettingsContent } from "@ui/components/settings/SettingsContent";
 import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";
 import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHeader";
 import MonitoringCard from "@ui/containers/settings/monitoringCard";
+import withSession from "@hoc/withSession";
+import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
 
-export default function monitoring() {
+const MonitoringSettings = () => {
 	const trialObject: iContentsOfModal = {
 		title: "Prod Monitoring",
 		host: "Production",
@@ -28,7 +31,7 @@ export default function monitoring() {
 			</div>
 		</div>
 	);
-}
+};
 
 interface iContentsOfModal {
 	title: string;
@@ -84,3 +87,5 @@ const buttonCSS = css`
 const settingContentCSS = css`
 	width: ${720 / PIXEL_REM_RATIO}rem;
 `;
+
+export default withSession(WithSettingsLayout(MonitoringSettings));

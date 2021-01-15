@@ -107,7 +107,7 @@
 	},
 	"scripts": {
 		"dev:serverless": "now dev",
-		"dev": "ts-node src/app.ts",
+		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"build": "NODE_ENV=production wepback --config webpack.config.js",
 		"build:start": "NODE_ENV=production node build/app.js",

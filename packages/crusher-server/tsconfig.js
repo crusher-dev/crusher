@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"lib": ["es5", "es6", "DOM"],
@@ -26,5 +26,5 @@
 	"files": ["src/app.ts"],
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"],
-	"skipLibCheck": true,
-}
+	"skipLibCheck": process.env.NODE_ENV === true ,
+};

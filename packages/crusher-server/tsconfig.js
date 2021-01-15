@@ -26,6 +26,6 @@ module.exports = {
 	"files": ["src/app.ts"],
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"],
-	"skipLibCheck": process.env.NODE_ENV === true ,
+	"skipLibCheck": process.env.NODE_ENV === "production",
 };
 

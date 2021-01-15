@@ -6,20 +6,14 @@ import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHe
 import MonitoringCard from "@ui/containers/settings/monitoringCard";
 import withSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
-import Router from "next/router";
 
-const MonitoringSettings = () => {
-	const handleAddMonitoringClick = () => {
-		Router.replace("/app/settings/project/add-monitoring");
-	};
-
+const AddMonitoringSettings = () => {
 	return (
 		<div css={monitoringCSS}>
 			<SettingsContent contentCSS={settingContentCSS}>
 				<SettingsContentHeader
-					title={"Monitoring"}
+					title={"Add Monitoring"}
 					desc={"List of all team members in current project"}
-					button={<AddMonitoringButton onClick={handleAddMonitoringClick} />}
 				/>
 				<div css={containerCSS}>
 					<MonitoringCard
@@ -32,19 +26,6 @@ const MonitoringSettings = () => {
 					/>
 				</div>
 			</SettingsContent>
-		</div>
-	);
-};
-
-interface iButtonProps {
-	onClick: () => void;
-}
-
-const AddMonitoringButton = (props: iButtonProps) => {
-	const { onClick } = props;
-	return (
-		<div css={buttonCSS} onClick={onClick}>
-			Add Monitoring
 		</div>
 	);
 };
@@ -64,19 +45,8 @@ const monitoringCSS = css`
 	flex-direction: column;
 `;
 
-const buttonCSS = css`
-	background: #5286ff;
-	border-radius: ${4 / PIXEL_REM_RATIO}rem;
-	padding: ${8 / PIXEL_REM_RATIO}rem ${8 / PIXEL_REM_RATIO}rem;
-	min-width: ${180 / PIXEL_REM_RATIO}rem;
-	font-size: ${16 / PIXEL_REM_RATIO}rem;
-	font-weight: 600;
-	color: #fff;
-	text-align: center;
-`;
-
 const settingContentCSS = css`
 	width: ${720 / PIXEL_REM_RATIO}rem;
 `;
 
-export default withSession(WithSettingsLayout(MonitoringSettings));
+export default withSession(WithSettingsLayout(AddMonitoringSettings));

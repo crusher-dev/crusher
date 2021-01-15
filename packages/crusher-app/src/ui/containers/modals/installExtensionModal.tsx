@@ -3,7 +3,6 @@ import React from "react";
 
 import { css } from "@emotion/core";
 
-import { ExtensionLoadingSVG } from "../../../../public/svg/modals/extension_loading.svg";
 import { ModalButton } from "@ui/components/modal/button";
 
 interface iProps {

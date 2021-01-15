@@ -159,7 +159,7 @@ function ProjectDashboard(props) {
 			});
 	}, [selectedProjectId]);
 
-	const { totalJobsToday } = metaDashboardInfo;
+	const { totalJobsToday, health, status } = metaDashboardInfo;
 	const { projectBuilds, projectActivities } = dashboardInfo;
 	return (
 		<div css={styles.container}>
@@ -169,7 +169,7 @@ function ProjectDashboard(props) {
 					<div css={styles.productionHealthItem}>
 						<div css={styles.productionHealthItemText}>
 							<div css={styles.productionHealthItemHeading}>Status</div>
-							<div css={styles.productionHealthItemDesc}>UP</div>
+							<div css={styles.productionHealthItemDesc}>{status}</div>
 						</div>
 						<img
 							src={"/svg/dashboard/live.svg"}
@@ -184,7 +184,7 @@ function ProjectDashboard(props) {
 						<div css={styles.productionHealthItemText}>
 							<div css={styles.productionHealthItemHeading}>Health</div>
 							<div css={styles.productionHealthItemDesc} style={{ color: "#FB4359" }}>
-								N/A
+								{health}
 							</div>
 						</div>
 						<img
@@ -260,8 +260,10 @@ const styles = {
 		border-radius: 0.25rem;
 		display: flex;
 		flex: 1rem;
-		max-width: 20;
 		padding: 0.75rem 1.2rem;
+		&:not(:first-child) {
+			margin-left: 2rem;
+		}
 	`,
 	productionHealthItemText: css``,
 	productionHealthItemHeading: css`

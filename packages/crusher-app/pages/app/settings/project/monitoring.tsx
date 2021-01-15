@@ -8,7 +8,7 @@ import withSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
 
 const MonitoringSettings = () => {
-	const trialObject: iContentsOfModal = {
+	const cardInfo: iContentsOfModal = {
 		title: "Prod Monitoring",
 		host: "Production",
 		tags: "Production",
@@ -25,10 +25,17 @@ const MonitoringSettings = () => {
 					desc={"List of all team members in current project"}
 					button={<Monitor onClick={buttonTest} />}
 				/>
+				<div css={containerCSS}>
+					<MonitoringCard
+						title={"Prod Monitoring"}
+						host={"Production"}
+						tags={["Production", "Development"]}
+						countries={["India", "UK"]}
+						duration={1800}
+						escalation={"Production"}
+					/>
+				</div>
 			</SettingsContent>
-			<div css={containerCSS}>
-				<MonitoringCard {...trialObject} />
-			</div>
 		</div>
 	);
 };
@@ -63,6 +70,8 @@ const containerCSS = css`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+	width: 100%;
+	margin-top: ${42 / PIXEL_REM_RATIO}rem;
 `;
 
 const monitoringCSS = css`
@@ -79,7 +88,6 @@ const buttonCSS = css`
 	min-width: ${180 / PIXEL_REM_RATIO}rem;
 	font-size: ${16 / PIXEL_REM_RATIO}rem;
 	font-weight: 600;
-	font-family: Gilroy;
 	color: #fff;
 	text-align: center;
 `;

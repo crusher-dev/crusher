@@ -68,7 +68,7 @@ module.exports = {
             name: "crusher-server",
             cwd: "./packages/crusher-server",
             script: "npm",
-            args: "run dev",
+            args: "run build:start",
             watch: ["src", "config"],
             env: {
                 PORT: 8000,

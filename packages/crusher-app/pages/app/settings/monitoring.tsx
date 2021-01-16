@@ -14,7 +14,7 @@ import { getSelectedProject } from "@redux/stateUtils/projects";
 import { useSelector } from "react-redux";
 import { Platform } from "@interfaces/Platform";
 import {
-	getAllHosts,
+	_getProjectHosts,
 	getMonitoringSettings,
 	saveMonitoringSettingsInDB,
 } from "@services/projects";
@@ -25,13 +25,13 @@ import withSession from "@hoc/withSession";
 import { iPageContext } from "@interfaces/pageContenxt";
 
 const runIntervalOptions = [
-	{ value: "0.5h", label: "Every 30 minutes" },
-	{ value: "1h", label: "Every 1 hours" },
-	{ value: "2h", label: "Every 2 hours" },
-	{ value: "4h", label: "Every 4 hours" },
-	{ value: "8h", label: "Every 8 hours" },
-	{ value: "12h", label: "Every 12 hours" },
-	{ value: "1d", label: "Every day" },
+	{ value: 1800, label: "Every 30 minutes" },
+	{ value: 3600, label: "Every 1 hours" },
+	{ value: 7200, label: "Every 2 hours" },
+	{ value: 14400, label: "Every 4 hours" },
+	{ value: 28800, label: "Every 8 hours" },
+	{ value: 57600, label: "Every 12 hours" },
+	{ value: 86400, label: "Every day" },
 ];
 
 const browserOptions = [
@@ -86,7 +86,7 @@ function SettingContent(props) {
 	const [hosts, setHosts] = useState([]);
 
 	useEffect(() => {
-		getAllHosts(selectedProjectId, null).then((allHostsInProject) => {
+		_getProjectHosts(selectedProjectId, null).then((allHostsInProject) => {
 			setHosts(
 				allHostsInProject
 					? allHostsInProject.map((host) => {

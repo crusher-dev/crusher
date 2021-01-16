@@ -8,6 +8,7 @@ import { css } from "@emotion/core";
 
 interface IProps {
 	title: string; // Should be changed text/label
+	css?: any;
 	onClick: () => void;
 	disabled: boolean;
 }
@@ -18,10 +19,10 @@ Button.defaultProps = {
 };
 
 function Button(props: IProps): ReactElement {
-	const { title, onClick, disabled, ...otherProps } = props;
+	const { title, onClick, disabled, css, ...otherProps } = props;
 	return (
 		<div
-			css={[styles.button, disabled && styles.disabled]}
+			css={[styles.button, disabled && styles.disabled, css]}
 			onClick={onClick}
 			{...otherProps}
 		>

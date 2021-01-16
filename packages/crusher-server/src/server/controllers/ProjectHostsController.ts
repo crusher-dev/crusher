@@ -4,6 +4,7 @@ import DBManager from "../../core/manager/DBManager";
 import UserService from "../../core/services/UserService";
 import ProjectHostsService from "../../core/services/ProjectHostsService";
 import ProjectService from "../../core/services/ProjectService";
+import { iHostListResponse } from '@crusher-shared/types/response/hostListResponse';
 
 @Service()
 @JsonController("/hosts")
@@ -47,12 +48,7 @@ export class ProjectHostsController {
 
 	@Authorized()
 	@Get("/getAll/:projectId")
-	async getAllHosts(@CurrentUser({ required: true }) user, @Param("projectId") projectId) {
-		const { user_id } = user;
-		const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
-		if (!canAccessThisProject) {
-			throw new UnauthorizedError();
-		}
+	async getAllHosts(@CurrentUser({ required: true }) user, @Param("projectId") projectId): Promise<Array<iHostListResponse>> {
 		return this.projectHostService.getAllHosts(projectId);
 	}
 

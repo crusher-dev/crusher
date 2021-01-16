@@ -39,7 +39,10 @@ const projectMenuData = {
 			id: "project-monitoring-settings",
 			title: "Hosts/Monitoring",
 			link: "/app/settings/project/monitoring",
-			children: ["/app/settings/project/add-monitoring"],
+			children: [
+				"/app/settings/project/add-monitoring",
+				"/app/settings/project/add-host",
+			],
 		},
 	],
 };

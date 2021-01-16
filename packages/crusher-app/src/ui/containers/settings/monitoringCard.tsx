@@ -1,6 +1,8 @@
 import React from "react";
 import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";
+import RunIcon from "../../../../public/svg/settings/run.svg";
+import { RUN_INTERVAL_OPTIONS } from "@constants/testInterval";
 
 interface iMonitoringCardProps {
 	title: string;
@@ -8,7 +10,7 @@ interface iMonitoringCardProps {
 	tags?: Array<string>;
 	countries?: Array<string>;
 	duration: number;
-	escalation?: string;
+	escalation?: string | null;
 }
 
 interface iMonitoringInfoLabelProps {
@@ -29,22 +31,37 @@ const MonitoringInfoLabel = (props: iMonitoringInfoLabelProps) => {
 function MonitoringCard(props: iMonitoringCardProps) {
 	const { title, host, tags, countries, duration, escalation } = props;
 
+	const durationOption = RUN_INTERVAL_OPTIONS.find((intervalOption) => {
+		console.log(intervalOption.value, duration);
+		return intervalOption.value == duration;
+	});
+
 	return (
 		<div css={containerCSS}>
 			<div css={headerCSS}>
 				<strong css={monitoringNameCSS}>{title}</strong>
-				<div>
-					<span css={monitoringEditActions}>Copy Template</span>
-					<span css={monitoringEditActions}>Edit</span>
+				<span css={monitoringEditButtonCSS}>Edit</span>
+				<div css={monitoringRunActionContainerCSS}>
+					<div css={runNowCSS}>
+						<RunIcon />
+						<span css={runNowTestCSS}>Run test now</span>
+					</div>
 				</div>
 			</div>
 			<div css={mainContentCSS}>
 				<div css={infoContentCSS}>
 					<MonitoringInfoLabel title={"Host"} value={host} />
-					<MonitoringInfoLabel title={"Duration"} value={duration} />
+					<MonitoringInfoLabel
+						title={"Duration"}
+						value={
+							durationOption
+								? (durationOption as any).label
+								: `Every ${duration} seconds`
+						}
+					/>
 					<MonitoringInfoLabel
 						title={"Tags/Test"}
-						value={tags ? tags.join(", ") : "N/A"}
+						value={tags && tags.length ? tags.join(", ") : "N/A"}
 					/>
 					<MonitoringInfoLabel
 						title={"Escalation"}
@@ -52,11 +69,10 @@ function MonitoringCard(props: iMonitoringCardProps) {
 					/>
 					<MonitoringInfoLabel
 						title={"Countries"}
-						value={countries ? countries.join(", ") : "N/A"}
+						value={countries && countries.length ? countries.join(", ") : "N/A"}
 					/>
 				</div>
 				<div css={monitoringQuickActionsCSS}>
-					<div css={runNowCSS}>Run Now</div>
 					<button css={viewBuildCSS}>View Builds</button>
 				</div>
 			</div>
@@ -72,10 +88,6 @@ const headerCSS = css`
 
 const monitoringEditActions = css`
 	cursor: pointer;
-
-	&:not(:first-child) {
-		margin-left: 1rem;
-	}
 `;
 
 const monitoringQuickActionsCSS = css`
@@ -86,6 +98,15 @@ const monitoringQuickActionsCSS = css`
 
 const runNowCSS = css`
 	text-align: right;
+	cursor: pointer;
+	display: flex;
+`;
+
+const runNowTestCSS = css`
+	margin-left: ${15 / PIXEL_REM_RATIO}rem;
+	font-weight: 500;
+	font-size: ${14 / PIXEL_REM_RATIO}rem;
+	text-decoration-line: underline;
 `;
 
 const containerCSS = css`
@@ -109,6 +130,19 @@ const monitoringNameCSS = css`
 	margin-top: 2px;
 `;
 
+const monitoringEditButtonCSS = css`
+	margin-left: ${18 / PIXEL_REM_RATIO}rem;
+	font-weight: 500;
+	font-size: ${14 / PIXEL_REM_RATIO}rem;
+	color: #323232;
+	text-decoration-line: underline;
+	cursor: pointer;
+`;
+const monitoringRunActionContainerCSS = css`
+	flex: 1;
+	display: flex;
+	justify-content: flex-end;
+`;
 const infoLabelCSS = css`
 	font-size: 0.9rem;
 	line-height: 1.125rem;

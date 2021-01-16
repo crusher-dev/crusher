@@ -34,5 +34,5 @@ export const getQueryStringParams = function getParameterByName(name: string, ur
 };
 
 export const resolveToBackendPath = (relativePath: string) => {
-	return url.resolve(LOCAL_BACKEND_URL, relativePath);
+	return url.resolve(LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:8000/", relativePath);
 };

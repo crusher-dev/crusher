@@ -6,6 +6,7 @@ import { PIXEL_REM_RATIO } from "@constants/other";
 interface iSettingsContentHeader {
 	title: string;
 	desc: string;
+	backButton?: React.ReactElement;
 	button?: React.ReactElement;
 }
 const SettingsContentHeader = (props: iSettingsContentHeader) => {

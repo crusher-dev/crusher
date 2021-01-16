@@ -84,7 +84,6 @@
 		"node-fetch": "^2.6.0",
 		"node-persist": "^3.0.5",
 		"node-storage": "0.0.9",
-		"now": "^18.0.0",
 		"pixelmatch": "^5.2.1",
 		"pngjs": "^5.0.0",
 		"prettier": "^2.2.1",
@@ -106,10 +105,9 @@
 		"koa-bodyparser": "4.3.0"
 	},
 	"scripts": {
-		"dev:serverless": "now dev",
 		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
-		"build": "NODE_ENV=production wepback --config webpack.config.js",
+		"build": "NODE_ENV=production webpack --config webpack.config.js",
 		"build:start": "NODE_ENV=production node build/app.js",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",

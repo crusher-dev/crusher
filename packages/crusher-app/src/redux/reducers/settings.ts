@@ -6,15 +6,14 @@ import {
 } from "@redux/actions/settings";
 import IAction from "@interfaces/redux/action";
 import { iMember, iProfile } from "@interfaces/redux/settings";
+import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
 
 export interface iSettingsState {
 	profile: iProfile | null;
-	members: { [memberId: number]: iMember } | null;
 }
 
 const initialState: iSettingsState = {
 	profile: null,
-	members: null,
 };
 
 const settings = (
@@ -32,29 +31,7 @@ const settings = (
 					email: payload.email,
 				},
 			};
-		case SET_MEMBERS:
-			return {
-				...state,
-				members: payload.members,
-			};
-		case UPDATE_MEMBER_ROLE: {
-			const _newMembers = Object.assign({}, state.members);
-			_newMembers[payload.memberId].role = payload.role;
 
-			return {
-				...state,
-				members: _newMembers,
-			};
-		}
-		case REMOVE_MEMBER: {
-			const _newMembers = Object.assign({}, state.members);
-			delete _newMembers[payload.memberId];
-
-			return {
-				...state,
-				members: _newMembers,
-			};
-		}
 		default:
 			return state;
 	}

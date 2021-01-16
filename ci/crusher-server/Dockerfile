@@ -8,12 +8,11 @@ RUN apk add git
 
 RUN npm install -g npm
 RUN npm install pm2 -g
+RUN npm install -g webpack
 
 ADD ./ ./crusher
 
 WORKDIR /crusher
-
-RUN yarn
 
 ARG PORT=8000
 

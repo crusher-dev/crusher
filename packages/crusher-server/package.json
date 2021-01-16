@@ -107,10 +107,10 @@
 	},
 	"scripts": {
 		"dev:serverless": "now dev",
-		"dev": "ts-node src/app.ts",
+		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
-		"build": "wepback --config webpack.config.js",
-		"build:start": "node build/app.js",
+		"build": "NODE_ENV=production wepback --config webpack.config.js",
+		"build:start": "NODE_ENV=production node build/app.js",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
 		"lint-fix:ts": "eslint --fix src",

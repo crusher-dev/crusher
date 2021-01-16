@@ -2,6 +2,7 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { MonitoringSettings } from "@interfaces/MonitoringSettings";
 import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
+import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
 
 const RESPONSE_STATUS = {
 	PROJECT_CREATED: "PROJECT_CREATED",
@@ -43,19 +44,19 @@ export const addProject = async (projectName, headers = null) => {
 	});
 };
 
-export const getAllHosts = async (projectId, headers = null) => {
+export const _getProjectHosts = async (projectId: number, headers = null) => {
 	return backendRequest(`/hosts/getAll/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
-	}).then((hosts) => {
+	}).then((hosts: Array<iHostListResponse>) => {
 		return hosts;
 	});
 };
 
-export const addHostToProject = async (
-	hostName,
-	hostUrl,
-	projectId,
+export const _addHostToProject = async (
+	hostName: string,
+	hostUrl: string,
+	projectId: number,
 	headers = null,
 ) => {
 	return backendRequest(`/hosts/create/${projectId}`, {

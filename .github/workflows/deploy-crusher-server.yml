@@ -30,6 +30,25 @@ jobs:
       - name: Package crusher-server for deployment
         run: sh scripts/build-crusher-server.sh
 
-      - name: Download task definition
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: crusher-server-images
+          IMAGE_TAG: prod-${{ github.sha }}
+          PORT: 80
         run: |
-          docker build . --file ci/crusher-server/Dockerfile --tag gcr.io/prepstart/crusher-server:latest
+         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --file ci/crusher-server/Dockerfile --build-arg PORT=80
+         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

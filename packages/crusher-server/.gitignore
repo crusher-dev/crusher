@@ -11,3 +11,4 @@ temp/
 .now
 _next/i
 logs/
+bullmq/

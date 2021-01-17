@@ -9,6 +9,7 @@ services:
       - "aws-cred-helper:/go/bin:rw"
 
   crusher-server:
+    network_mode: host
     image: crusher-server-image
     environment:
       - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING

@@ -1,5 +1,6 @@
 //webpack.config.js
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
 	mode: 'development',
@@ -9,11 +10,9 @@ module.exports = {
 		index: "./src/app.ts",
 	},
 	output: {
-		path: path.resolve(__dirname, './build'),
-		filename: 'app.js',
-		chunkFilename: `[name]-[chunkhash:4].js`,
-		sourceMapFilename: `[name]-[chunkhash:4].js.map`,
 		libraryTarget: 'umd',
+		filename: "app.js",
+		globalObject: 'this'
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"],

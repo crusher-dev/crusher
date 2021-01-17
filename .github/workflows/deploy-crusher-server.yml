@@ -46,7 +46,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: crusher-server-images
-          IMAGE_TAG: prod-${{ github.sha }}
+          IMAGE_TAG: latest
           PORT: 80
         run: |
          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --file ci/crusher-server/Dockerfile --build-arg PORT=80

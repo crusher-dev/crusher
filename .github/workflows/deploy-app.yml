@@ -21,6 +21,9 @@ jobs:
       - name: Install yarn
         run: npm install -g yarn
 
+      - name: Use cache for yarn if available
+        uses: c-hive/gha-yarn-cache@v1
+
       - name: Install yarn dependencies
         run: yarn install
 

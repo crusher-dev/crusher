@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 12.19.1
 
+      - name: Copy ecosystem.config.js
+        run: cp ecosystem.config.sample.js ecosystem.config.js
+
       - name: Install yarn
         run: npm install -g yarn
 

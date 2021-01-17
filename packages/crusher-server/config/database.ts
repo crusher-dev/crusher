@@ -4,6 +4,9 @@ export const REDDIS = {
 	password: process.env.REDIS_PASSWORD,
 };
 
+console.log("Redis config");
+console.log(REDDIS);
+
 export const getMongoDBConnectionString = () : string => {
 	if(process.env.MONGODB_CONNECTION_STRING && process.env.MONGODB_CONNECTION_STRING !== "null"){
 		return process.env.MONGODB_CONNECTION_STRING;

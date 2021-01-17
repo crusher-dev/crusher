@@ -11,16 +11,16 @@ services:
   crusher-server:
     image: crusher-server-image
     environment:
-      - MONGODB_CONNECTION_STRING=MONGODB_CONNECTION_STRING
-      - DB_HOST=DB_HOST
-      - DB_USERNAME=DB_USERNAME
-      - DB_PASSWORD=DB_PASSWORD
-      - DB_PORT=DB_PORT
-      - REDIS_HOST=REDIS_HOST
-      - REDIS_PORT=REDIS_PORT
-      - REDIS_PASSWORD=REDIS_PASSWORD
-      - BACKEND_URL=BACKEND_URL
-      - FRONTEND_URL=FRONTEND_URL
+      - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING
+      - DB_HOST=$DB_HOST
+      - DB_USERNAME=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_PORT=$DB_PORT
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+      - BACKEND_URL=$BACKEND_URL
+      - FRONTEND_URL=$FRONTEND_URL
 
   # Check for new images and restart things if a new image exists
   # for any of our containers.

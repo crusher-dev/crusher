@@ -10,7 +10,7 @@ services:
 
   crusher-server:
     network_mode: host
-    image: crusher-server-image
+    image: 862866004122.dkr.ecr.us-east-1.amazonaws.com/crusher-server-images
     environment:
       - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING
       - DB_HOST=$DB_HOST

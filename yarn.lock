@@ -13456,7 +13456,7 @@ mysql-promise@^5.0.0:
     bluebird "^3.5.2"
     mysql "^2.16.0"
 
-mysql2@^2.1.0:
+mysql2@^2.1.0, mysql2@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/mysql2/-/mysql2-2.2.5.tgz#72624ffb4816f80f96b9c97fedd8c00935f9f340"
   integrity sha512-XRqPNxcZTpmFdXbJqb+/CtYVLCx14x1RTeNMD4954L331APu75IC74GDqnZMEt1kwaXy6TySo55rF2F3YJS78g==

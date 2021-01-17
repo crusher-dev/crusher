@@ -10,6 +10,8 @@ RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g webpack
 
+RUN cd packages/crusher-server/bullmq && yarn link && cd ../ && yarn link "bullmq"
+
 ADD ./ ./crusher
 
 WORKDIR /crusher

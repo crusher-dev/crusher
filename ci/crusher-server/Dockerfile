@@ -13,7 +13,7 @@ ADD ./ ./crusher
 
 WORKDIR /crusher
 
-RUN yarn install
+RUN cd /crusher/packages/crusher-server/bullmq && yarn link && yarn && cd ../ && yarn link "bullmq"
 
 ARG PORT=8000
 

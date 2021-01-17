@@ -37,6 +37,7 @@ services:
       - AWS_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=AKIAIEQN54PTYHMYGXVA
       - AWS_SECRET_ACCESS_KEY=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
+    command: --interval 15
 
 volumes:
   aws-cred-helper:

@@ -24,12 +24,16 @@ jobs:
 
       - name: Use cache for yarn if available
         uses: c-hive/gha-yarn-cache@v1
-  
+
+      - name: Copy ecosystem.config.js
+        run: cp ecosystem.config.sample.js ecosystem.config.js
+
       - name: Install crusher modules
         run: yarn
 
       - name: Install webpack
         run: npm install -g webpack
+
 
       - name: Install ncc
         run: npm install -g @vercel/ncc

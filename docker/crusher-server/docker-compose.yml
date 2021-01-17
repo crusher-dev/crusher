@@ -9,7 +9,7 @@ services:
       - "aws-cred-helper:/go/bin:rw"
 
   crusher-server:
-    image: 862866004122.dkr.ecr.us-east-1.amazonaws.com/crusher-server-images:latest
+    image: crusher-server-image
     environment:
       - MONGODB_CONNECTION_STRING=MONGODB_CONNECTION_STRING
       - DB_HOST=DB_HOST

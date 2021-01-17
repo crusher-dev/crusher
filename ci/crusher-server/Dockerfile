@@ -9,7 +9,6 @@ RUN apk add git
 RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g webpack
-RUN npm install -g @vercel/ncc
 
 RUN cd packages/crusher-server/bullmq && yarn link && cd ../ && yarn link "bullmq"
 

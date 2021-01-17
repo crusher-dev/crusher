@@ -55,7 +55,7 @@ jobs:
           ECR_REPOSITORY: crusher-server-images
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          REDIS_PASSWORD: ${{ REDIS_PASSWORD }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           IMAGE_TAG: latest
           PORT: 80
         run: |

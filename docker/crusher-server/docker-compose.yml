@@ -29,7 +29,7 @@ services:
     image: containrrr/watchtower:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - .docker/config.json:/config.json
+      - ~/.docker/config.json:/config.json
       - aws-cred-helper:/go/bin
     environment:
       - HOME=/

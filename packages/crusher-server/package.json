@@ -71,8 +71,6 @@
 		"ioredis-lock": "^4.0.0",
 		"jsonfile": "^5.0.0",
 		"jsonwebtoken": "^8.5.1",
-		"kcors": "2.2.2",
-		"koa-bodyparser": "4.3.0",
 		"lint-staged": "^10.1.5",
 		"lodash": "^4.17.20",
 		"logdna": "^3.5.0",
@@ -82,7 +80,6 @@
 		"mysql": "^2.17.1",
 		"mysql-import": "^2.0.2",
 		"mysql-promise": "^5.0.0",
-		"mysql2": "^2.2.5",
 		"mysqldump": "^3.1.0",
 		"node-fetch": "^2.6.0",
 		"node-persist": "^3.0.5",
@@ -103,12 +100,14 @@
 		"tsconfig-paths": "^3.9.0",
 		"typedi": "0.5.2",
 		"underscore": "^1.9.1",
-		"uuid": "^8.3.0"
+		"uuid": "^8.3.0",
+		"kcors": "2.2.2",
+		"koa-bodyparser": "4.3.0"
 	},
 	"scripts": {
 		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
-		"build": "ncc build src/app.ts -o dist --external bullmq",
+		"build": "NODE_ENV=production webpack --config webpack.config.js",
 		"build:start": "NODE_ENV=production node dist/index.js",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",

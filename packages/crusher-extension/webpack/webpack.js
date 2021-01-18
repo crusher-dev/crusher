@@ -17,6 +17,7 @@ module.exports = {
 			__PORT__: port,
 			"process.env": {
 				NODE_ENV: JSON.stringify("production"),
+				BACKEND_URL: process.env.BACKEND_URL,
 			},
 		}),
 	],

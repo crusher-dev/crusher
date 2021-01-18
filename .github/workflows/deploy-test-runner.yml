@@ -24,6 +24,9 @@ jobs:
       - name: Install yarn
         run: npm install -g yarn
 
+      - name: Install ncc
+        run: npm install -g @vercel/ncc
+
       - name: Use cache for yarn if available
         uses: c-hive/gha-yarn-cache@v1
 

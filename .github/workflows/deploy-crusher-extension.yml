@@ -43,7 +43,7 @@ jobs:
         run: sudo apt-get install zip
 
       - name: Package crusher
-        run: mkdir build && zip -j -r build/crusher-extension.zip ./packages/crusher-server/build/
+        run: mkdir build && cd packages/crusher-extension/build && zip -r ../../../build/crusher-extension.zip .
 
       - name: 'Store crusher extension as artifact'
         uses: actions/upload-artifact@v2

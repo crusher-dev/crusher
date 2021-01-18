@@ -12,11 +12,18 @@ RUN chown -R pwuser:pwuser ./
 # 3. Run everything after as non-privileged user.
 USER pwuser
 
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
-RUN export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+ENV NVM_DIR /usr/local/nvm # or ~/.nvm , depending
+ENV NODE_VERSION 12.19.1
+# Install nvm with node and npm
+RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
 
-RUN nvm install 12.19.1
-RUN nvm use 12.19.1
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
+
 RUN yarn
 
 RUN npm install -g npm

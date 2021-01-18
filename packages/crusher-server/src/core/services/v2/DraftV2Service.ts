@@ -48,7 +48,6 @@ export default class DraftV2Service {
 					const logs = logsArray.map((log) => {
 						return log.toObject();
 					});
-					console.log(logsArray.length, draftId, "Date is");
 
 					if(logs && logs.length) {
 						resolve(logs as Array<iLiveStepLogs>);

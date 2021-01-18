@@ -15,7 +15,7 @@ USER pwuser
 ENV NVM_DIR /usr/local/nvm # or ~/.nvm , depending
 ENV NODE_VERSION 12.19.1
 # Install nvm with node and npm
-RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash \
+RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash \
     && . $NVM_DIR/nvm.sh \
     && nvm install $NODE_VERSION \
     && nvm alias default $NODE_VERSION \

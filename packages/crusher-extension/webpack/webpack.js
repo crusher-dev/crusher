@@ -15,6 +15,7 @@ module.exports = {
 		new webpack.DefinePlugin({
 			__HOST__: `'${host}'`,
 			__PORT__: port,
+			NODE_ENV: "production",
 			"process.env": {
 				NODE_ENV: JSON.stringify("production"),
 			},

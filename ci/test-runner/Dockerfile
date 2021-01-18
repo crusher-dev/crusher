@@ -13,6 +13,6 @@ ADD ./ ./crusher
 
 WORKDIR /crusher
 
-RUN cd /crusher/packages/test-runner/bullmq && yarn link && yarn && cd ../ && yarn link "bullmq"
+RUN yarn
 
 CMD ["pm2-runtime", "ecosystem.config.js", "--only", "test-runner"]

@@ -134,6 +134,7 @@ module.exports = {
                 REDIS_HOST: REDIS_CONFIG.HOST,
                 REDIS_PORT: REDIS_CONFIG.PORT,
                 REDIS_PASSWORD: REDIS_CONFIG.PASSWORD,
+                NODE_ENV: "production"
             },
         },
         {

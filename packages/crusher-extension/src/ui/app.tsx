@@ -19,10 +19,13 @@ const App = () => {
 		const store = getStore();
 		const steps = store.getState().actions.list;
 
-		submitPostDataWithForm(resolveToBackendPath("/test/goToEditor"), {
-			events: escape(JSON.stringify(steps)),
-			totalTime: 0,
-		});
+		submitPostDataWithForm(
+			resolveToBackendPath("/test/goToEditor", "https://backend.crusher.dev/"),
+			{
+				events: escape(JSON.stringify(steps)),
+				totalTime: 0,
+			},
+		);
 	};
 
 	useMemo(() => {

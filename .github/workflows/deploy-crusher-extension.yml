@@ -1,0 +1,54 @@
+name: Deploy Crusher Extension
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 12.19.1
+
+      - name: Install yarn
+        run: npm install -g yarn
+
+
+      - name: Use cache for yarn if available
+        uses: c-hive/gha-yarn-cache@v1
+
+      - name: Copy ecosystem.config.js
+        run: cp ecosystem.config.sample.js ecosystem.config.js
+
+      - name: Install crusher modules
+        run: yarn
+
+      - name: Install webpack
+        run: npm install -g webpack
+
+      - name: Create chrome extension build
+        env:
+          BACKEND_URL: https://backend.crusher.dev/
+        run: cd packages/crusher-extension && yarn build
+
+      - name: Install zip
+        run: sudo apt-get install zip
+
+      - name: Package crusher
+        run: mkdir build && cd packages/crusher-extension/build && zip -r ../../../build/crusher-extension.zip .
+
+      - name: 'Store crusher extension as artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: crusher-extension
+          path: build/crusher-extension.zip
+          retention-days: 5
+

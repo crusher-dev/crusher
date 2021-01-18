@@ -33,6 +33,7 @@ export const getQueryStringParams = function getParameterByName(name: string, ur
 	return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 
-export const resolveToBackendPath = (relativePath: string) => {
-	return url.resolve(LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:8000/", relativePath);
+export const resolveToBackendPath = (relativePath: string, customBasePath: string | null = null) => {
+	const basePath = customBasePath ? customBasePath : (LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:8000/");
+	return url.resolve(basePath, relativePath);
 };

@@ -12,7 +12,7 @@ RUN chown -R pwuser:pwuser ./
 # 3. Run everything after as non-privileged user.
 USER pwuser
 
-ENV NVM_DIR ~/.nvm
+ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 12.19.1
 # Install nvm with node and npm
 RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash \

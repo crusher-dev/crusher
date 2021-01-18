@@ -37,7 +37,7 @@ jobs:
       - name: Create chrome extension build
         env:
           BACKEND_URL: https://backend.crusher.dev/
-        run: yarn workspace crusher-extension build
+        run: cd packages/crusher-extension && yarn build
 
       - name: Install zip
         run: sudo apt-get install zip

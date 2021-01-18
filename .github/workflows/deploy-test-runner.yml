@@ -21,21 +21,6 @@ jobs:
       - name: Copy ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js
 
-      - name: Install yarn
-        run: npm install -g yarn
-
-      - name: Install ncc
-        run: npm install -g @vercel/ncc
-
-      - name: Use cache for yarn if available
-        uses: c-hive/gha-yarn-cache@v1
-
-      - name: Install crusher modules
-        run: yarn
-
-      - name: Package test-runner for deployment
-        run: sh scripts/build-test-runner.sh
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

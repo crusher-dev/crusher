@@ -11,7 +11,7 @@ export default class MongoManager {
 		mongoose.connect(connectionString);
 
 		mongoose.connection.on("connected", function () {
-			console.log("Connected to mongodb failed");
+			console.log("Connected to mongodb successfully");
 		});
 
 		mongoose.connection.on("error", function (error) {

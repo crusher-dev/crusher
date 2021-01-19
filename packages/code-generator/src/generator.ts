@@ -8,6 +8,7 @@ interface iCodeGeneratorOptions {
 	shouldRecordVideo?: boolean;
 	isHeadless?: boolean;
 	browser?: BROWSER;
+	assetsDir?: string;
 }
 
 export class CodeGenerator {
@@ -27,7 +28,8 @@ export class CodeGenerator {
 			isLiveRecording: this.options.shouldRecordVideo,
 			shouldLogSteps: this.options.isLiveLogsOn,
 			browser: this.options.browser,
-			isHeadless: false,
+			isHeadless: this.options.isHeadless,
+			assetsDir: this.options.assetsDir,
 		});
 		parser.parseActions();
 		return parser.getCode();

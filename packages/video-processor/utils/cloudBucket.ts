@@ -13,7 +13,7 @@ AWS.config.update({
 // Create S3 service object
 export const s3BucketService = new AWS.S3({
 	apiVersion: '2006-03-01',
-	endpoint: 'http://localhost:4566',
+	endpoint: process.env.NODE_ENV === 'production' ? 'http://localhost:4566' : null,
 	s3ForcePathStyle: true,
 	signatureVersion: 'v4',
 });

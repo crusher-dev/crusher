@@ -1,4 +1,3 @@
-import { TestType } from "../interfaces/TestType";
 import TestInstanceService from "../services/TestInstanceService";
 import JobsService from "../services/JobsService";
 import DraftInstanceService from "../services/DraftInstanceService";
@@ -7,20 +6,22 @@ import { updateGithubCheckStatus } from "../../utils/github";
 import { GithubCheckStatus } from "../interfaces/GithubCheckStatus";
 import { GithubConclusion } from "../interfaces/GithubConclusion";
 import { JobStatus } from "../interfaces/JobStatus";
-import { JobConclusion } from "../interfaces/JobConclusion";
 import DraftInstanceResultsService from "../services/DraftInstanceResultsService";
 import TestInstanceScreenShotsService from "../services/TestInstanceScreenShotsService";
-import TestInstanceRecordingService from "../services/TestInstanceRecordingService";
 import { Logger } from "../../utils/logger";
 import "reflect-metadata";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import { JobReportStatus } from "../interfaces/JobReportStatus";
+import { Job } from "bullmq";
+import { iJobRunRequest } from "../../../../crusher-shared/types/runner/jobRunRequest";
+import { Redis } from "ioredis";
+import { RUNNER_REQUEST_TYPE } from "../../../../crusher-shared/types/runner/requestType";
+import { iTestRunnerJobOutput } from "../../../../crusher-shared/types/runner/jobRunRequestOutput";
 
 const ReddisLock = require("redlock");
 
-async function prepareResultForTestInstance(instanceId, logs, images, jobId, video, testId) {
+async function prepareResultForTestInstance(instanceId, images, jobId, testId) {
 	const testInstanceScreenshotService = new TestInstanceScreenShotsService();
-	const testInstanceRecordingService = new TestInstanceRecordingService();
 
 	const screenshotsPromise = images.map((image) => {
 		const { url, name } = image;
@@ -31,21 +32,12 @@ async function prepareResultForTestInstance(instanceId, logs, images, jobId, vid
 		});
 	});
 
-	if (video) {
-		await testInstanceRecordingService.createTestInstanceRecording({
-			test_instance_id: instanceId,
-			video_uri: video,
-			test_id: testId,
-		});
-	}
-
 	await Promise.all(screenshotsPromise);
 
 	Logger.info("QueueManager::prepareResultForTestInstance", `\x1b[36m Test ${instanceId}\x1b[0m result created!!`);
 }
 
-async function prepareResultForDraftInstance(instanceId, logs, images, video, isError: boolean = false) {
-	const draftInstanceService = new DraftInstanceService();
+async function prepareResultForDraftInstance(instanceId, images, isError: boolean = false) {
 	const draftInstanceResultsService = new DraftInstanceResultsService();
 
 	if (instanceId) {
@@ -53,11 +45,15 @@ async function prepareResultForDraftInstance(instanceId, logs, images, video, is
 		await draftInstanceService.updateDraftInstanceStatus(isError ? InstanceStatus.ABORTED : InstanceStatus.FINISHED, instanceId);
 		await draftInstanceResultsService.createDraftResult({
 			instance_id: instanceId,
-			logs: JSON.stringify(logs),
+			logs: "",
 			images: JSON.stringify(images),
-			video_uri: video,
+			video_uri: "",
 		});
 	}
+}
+
+interface iTestRunnerProgressJob extends Job {
+	data: iJobRunRequest;
 }
 
 export default class TestsEventsWorker {
@@ -65,45 +61,34 @@ export default class TestsEventsWorker {
 
 	constructor(Logger) {}
 
-	static async onTestCompleted(reddisClient, checkResultQueue, callback) {
-		const {
-			isError,
-			logs,
-			images,
-			video,
-			testId,
-			jobId,
-			instanceId,
-			githubInstallationId,
-			githubCheckRunId,
-			testCount,
-			fullRepoName,
-			testType,
-			reportId,
-			platform,
-		} = callback.returnvalue;
+	static async onTestCompleted(redisClient, checkResultQueue, callback) {
+		const { runnerJobRequestInfo, error, output } = callback.returnvalue as iTestRunnerJobOutput;
 
 		try {
-			if (!isError) {
-				Logger.info("QueueManager::testCompleted", `\x1b[36m Test #${testId}\x1b[0m completed!!`);
+			if (!error) {
+				Logger.info("QueueManager::testCompleted", `\x1b[36m Test #${runnerJobRequestInfo.test.id}\x1b[0m completed!!`);
 
-				if (testType === TestType.DRAFT) {
-					await prepareResultForDraftInstance(instanceId, logs, images, video);
+				if (runnerJobRequestInfo.requestType === RUNNER_REQUEST_TYPE.DRAFT) {
+					await prepareResultForDraftInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls);
 				} else {
-					await prepareResultForTestInstance(instanceId, logs, images, jobId, video, testId);
+					await prepareResultForTestInstance(
+						runnerJobRequestInfo.instanceId,
+						output.signedImageUrls,
+						runnerJobRequestInfo.job.id,
+						runnerJobRequestInfo.test.id,
+					);
 
-					await checkResultQueue.add(testId, {
-						githubInstallationId,
-						githubCheckRunId,
-						testCount,
-						logs,
-						images,
-						testId,
-						jobId,
-						instanceId,
-						fullRepoName,
-						reportId,
-						platform,
+					await checkResultQueue.add(runnerJobRequestInfo.test.id, {
+						githubInstallationId: runnerJobRequestInfo.job.installation_id,
+						githubCheckRunId: runnerJobRequestInfo.job.check_run_id,
+						testCount: runnerJobRequestInfo.testCount,
+						images: output.signedImageUrls,
+						testId: runnerJobRequestInfo.test.id,
+						jobId: runnerJobRequestInfo.job.id,
+						instanceId: runnerJobRequestInfo.instanceId,
+						fullRepoName: runnerJobRequestInfo.job.repo_name,
+						reportId: runnerJobRequestInfo.job.report_id,
+						platform: runnerJobRequestInfo.platform,
 					});
 				}
 				Logger.info("QueueManager::testCompleted", "Added to checkResult queue");
@@ -112,47 +97,55 @@ export default class TestsEventsWorker {
 				const jobsService = new JobsService();
 				const jobReportsService = new JobReportServiceV2();
 
-				if (testType === TestType.DRAFT) {
+				if (runnerJobRequestInfo.requestType === RUNNER_REQUEST_TYPE.DRAFT) {
 					const draftInstanceService = new DraftInstanceService();
-					await draftInstanceService.updateDraftInstanceStatus(InstanceStatus.ABORTED, instanceId);
+					await draftInstanceService.updateDraftInstanceStatus(InstanceStatus.ABORTED, runnerJobRequestInfo.instanceId);
 
-					await prepareResultForDraftInstance(instanceId, logs, images, video, isError);
+					await prepareResultForDraftInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls, !!error);
 				} else {
-					if (githubInstallationId) {
+					if (runnerJobRequestInfo.job.installation_id) {
 						await updateGithubCheckStatus(
 							GithubCheckStatus.COMPLETED,
 							{
-								fullRepoName,
-								githubCheckRunId,
-								githubInstallationId,
+								fullRepoName: runnerJobRequestInfo.job.repo_name,
+								githubCheckRunId: runnerJobRequestInfo.job.check_run_id,
+								githubInstallationId: runnerJobRequestInfo.job.repo_name,
 							},
 							GithubConclusion.FAILURE,
 						);
 					}
-					if (jobId) {
-						await jobsService.updateJobStatus(JobStatus.ABORTED, jobId);
+					if (runnerJobRequestInfo.job.id) {
+						await jobsService.updateJobStatus(JobStatus.ABORTED, runnerJobRequestInfo.job.id);
 
 						try {
-							await prepareResultForTestInstance(instanceId, logs, images, jobId, video, testId);
+							await prepareResultForTestInstance(
+								runnerJobRequestInfo.instanceId,
+								output.signedImageUrls,
+								runnerJobRequestInfo.job.id,
+								runnerJobRequestInfo.test.id,
+							);
 
-							await checkResultQueue.add(testId, {
-								githubInstallationId,
-								githubCheckRunId,
-								testCount,
-								logs,
-								images,
-								testId,
-								jobId,
-								instanceId,
-								fullRepoName,
-								reportId,
-								platform,
+							await checkResultQueue.add(runnerJobRequestInfo.test.id, {
+								githubInstallationId: runnerJobRequestInfo.job.installation_id,
+								githubCheckRunId: runnerJobRequestInfo.job.check_run_id,
+								testCount: runnerJobRequestInfo.test,
+								images: output.signedImageUrls,
+								testId: runnerJobRequestInfo.test.id,
+								jobId: runnerJobRequestInfo.job.id,
+								instanceId: runnerJobRequestInfo.instanceId,
+								fullRepoName: runnerJobRequestInfo.job.repo_name,
+								reportId: runnerJobRequestInfo.job.report_id,
+								platform: runnerJobRequestInfo.platform,
 							});
 						} catch (ex) {}
 
-						await jobReportsService.updateJobReportStatus(JobReportStatus.FAILED, reportId, `#${instanceId} failed to execute successfully.`);
+						await jobReportsService.updateJobReportStatus(
+							JobReportStatus.FAILED,
+							runnerJobRequestInfo.job.report_id,
+							`#${runnerJobRequestInfo.instanceId} failed to execute successfully.`,
+						);
 
-						await testInstanceService.updateTestInstanceStatus(InstanceStatus.ABORTED, instanceId);
+						await testInstanceService.updateTestInstanceStatus(InstanceStatus.ABORTED, runnerJobRequestInfo.instanceId);
 					}
 				}
 			}
@@ -166,31 +159,31 @@ export default class TestsEventsWorker {
 		return true;
 	}
 
-	static async onTestProgress(reddisClient, bullJob) {
-		const { repoName: fullRepoName, githubCheckRunId, githubInstallationId, status, testInstanceId, jobId, testType } = bullJob.data;
+	static async onTestProgress(redisClient: Redis, bullJob: iTestRunnerProgressJob) {
+		const jobRequest = bullJob.data;
 
-		const reddisLock = new ReddisLock([reddisClient], {
+		const redisLock = new ReddisLock([redisClient], {
 			driftFactor: 0.01,
 			retryCount: -1,
 			retryDelay: 150,
 			retryJitter: 200,
 		});
 
-		Logger.info("QueueManager::jobProgress", `\x1b[36m Test ${testInstanceId}\x1b[0m in progress!!`);
+		Logger.info("QueueManager::jobProgress", `\x1b[36m Test ${jobRequest.instanceId}\x1b[0m in progress!!`);
 		const testInstanceService = new TestInstanceService();
 		const jobsService = new JobsService();
 
-		if (testType === TestType.DRAFT) {
+		if (jobRequest.requestType === RUNNER_REQUEST_TYPE.DRAFT) {
 			const draftInstanceService = new DraftInstanceService();
-			await draftInstanceService.updateDraftInstanceStatus(InstanceStatus.RUNNING, testInstanceId);
+			await draftInstanceService.updateDraftInstanceStatus(InstanceStatus.RUNNING, jobRequest.instanceId);
 		} else {
 			let firstTest = false;
-			await reddisLock.lock(`${jobId}:started:lock1`, 2000).then(async function (lock) {
-				const startedTests = await reddisClient.get(`${jobId}:started`);
+			await redisLock.lock(`${jobRequest.job.id}:started:lock1`, 2000).then(async function (lock) {
+				const startedTests = await redisClient.get(`${jobRequest.job.id}:started`);
 				if (parseInt(startedTests) === 0) {
 					firstTest = true;
 				}
-				await reddisClient.incr(`${jobId}:started`);
+				await redisClient.incr(`${jobRequest.job.id}:started`);
 				try {
 					return lock.unlock();
 				} catch (ex) {
@@ -198,18 +191,18 @@ export default class TestsEventsWorker {
 				}
 			});
 
-			if (status === GithubCheckStatus.IN_PROGRESS && firstTest) {
-				if (githubInstallationId && githubCheckRunId) {
+			if (firstTest) {
+				if (jobRequest.job.installation_id && jobRequest.job.check_run_id) {
 					await updateGithubCheckStatus(status, {
-						fullRepoName,
-						githubCheckRunId,
-						githubInstallationId,
+						fullRepoName: jobRequest.job.repo_name,
+						githubCheckRunId: jobRequest.job.check_run_id,
+						githubInstallationId: jobRequest.job.installation_id,
 					});
 				}
 
-				await jobsService.updateJobStatus(JobStatus.RUNNING, jobId);
+				await jobsService.updateJobStatus(JobStatus.RUNNING, jobRequest.job.id);
 			}
-			await testInstanceService.updateTestInstanceStatus(InstanceStatus.RUNNING, testInstanceId);
+			await testInstanceService.updateTestInstanceStatus(InstanceStatus.RUNNING, jobRequest.instanceId);
 		}
 	}
 }

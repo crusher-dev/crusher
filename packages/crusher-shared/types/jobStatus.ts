@@ -1,4 +1,4 @@
-export enum JobStatus {
+export enum JOB_STATUS {
 	QUEUED = 'QUEUED',
 	RUNNING = 'RUNNING',
 	FINISHED = 'FINISHED',

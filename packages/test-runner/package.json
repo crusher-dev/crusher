@@ -51,7 +51,7 @@
 	},
 	"scripts": {
 		"build": "ncc build src/index.ts -o dist --external bullmq",
-		"start:prod": "NODE_ENV=production AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/index.ts",
+		"start:prod": "NODE_ENV=production ts-node src/index.ts",
 		"start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/index.ts",
 		"start:dev": "NODE_ENV=local AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",

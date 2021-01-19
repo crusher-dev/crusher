@@ -108,7 +108,7 @@
 		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"build": "NODE_ENV=production webpack --config webpack.config.js",
-		"build:start": "NODE_ENV=production node build/app.js",
+		"build:start": "NODE_ENV=production node build/index.js",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
 		"lint-fix:ts": "eslint --fix src",

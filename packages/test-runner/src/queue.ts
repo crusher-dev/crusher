@@ -19,6 +19,6 @@ queue.client.then(async (client) => {
 		concurrency: 3,
 		lockDuration: 120000,
 		//@ts-ignore
-		getOffset: BootAfterNJobsOffsetManager.get(),
+		getOffset: BootAfterNJobsOffsetManager.get,
 	});
 });

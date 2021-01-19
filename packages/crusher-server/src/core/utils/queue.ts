@@ -1,7 +1,6 @@
 import { Queue } from "bullmq";
 
 import { REDDIS } from "../../../config/database";
-import { RunJobRequestBody } from "../interfaces/RunJobRequestBody";
 import { RunRequest } from "../interfaces/RunRequest";
 import TestInstanceService from "../services/TestInstanceService";
 import { InstanceStatus } from "../interfaces/InstanceStatus";
@@ -16,7 +15,9 @@ import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import JobsService from "../services/JobsService";
-import { BROWSER } from '../../../../crusher-shared/types/browser';
+import { BROWSER } from "../../../../crusher-shared/types/browser";
+import { iJobRunRequest } from "../../../../crusher-shared/types/runner/jobRunRequest";
+import { PLATFORM } from "../../../../crusher-shared/types/platform";
 
 const path = require("path");
 
@@ -33,7 +34,7 @@ const codeGenerator = new CodeGenerator({
 	isLiveLogsOn: true,
 	shouldRecordVideo: true,
 	isHeadless: false,
-	browser: BROWSER.CHROME
+	browser: BROWSER.CHROME,
 });
 
 function getGeneratedCode(test, platform, testType) {
@@ -41,16 +42,12 @@ function getGeneratedCode(test, platform, testType) {
 }
 
 export async function addTestRequestToQueue(testRequest: RunRequest) {
-	const { test, job } = testRequest;
+	const { test, job, testCount } = testRequest;
 	const testLogsService = new TestLogsService();
 	Logger.debug("Queue::addTestToQueue", chalk.hex("#0b2ce2").bold(`Got a request for test run :`), [test, job]);
 
 	let instanceId = 0;
 	const { host } = job ? job : ({} as any);
-
-	const generatedCode = getGeneratedCode(test, testRequest.job ? testRequest.job.platform : Platform.CHROME, testRequest.test.testType);
-
-	const finalCode = generatedCode;
 
 	if (test.testType !== TestType.DRAFT && job) {
 		const instance = await testInstanceService.createNewTestInstance({
@@ -58,7 +55,7 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 			testId: test.id,
 			status: InstanceStatus.QUEUED,
 			host: job.host ? job.host : "none",
-			code: finalCode,
+			code: "",
 			platform: job.platform ? job.platform : TEST_INSTANCE_PLATFORM.CHROME,
 		});
 
@@ -67,7 +64,7 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 		const instance = await draftInstanceService.createNewDraftInstance({
 			draft_id: test.id,
 			status: InstanceStatus.QUEUED,
-			code: finalCode,
+			code: "",
 			platform: job && job.platform ? job.platform : Platform.CHROME,
 		});
 		instanceId = instance.insertId;
@@ -81,73 +78,49 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 	testLogsService.init(test.id, instanceId, test.testType, job ? job.id : -1);
 	await testLogsService.notifyTestAddedToQueue();
 
-	testRequest.test.code = finalCode;
-
-	await requestQueue.add(test.id.toString(), { ...testRequest, instanceId: instanceId }, { lifo: false });
+	await requestQueue.add(
+		test.id.toString(),
+		{
+			job,
+			test: { ...test, events: JSON.parse(test.events) },
+			requestType: test.testType,
+			platform: job && job.platform ? job.platform : Platform.CHROME,
+			testCount: testCount,
+			instanceId: instanceId,
+		} as iJobRunRequest,
+		{ lifo: false },
+	);
 }
 
 export async function addJobToRequestQueue(jobRequest) {
-	const {
-		jobId,
-		prId,
-		branchName,
-		repoName,
-		commitId,
-		projectId,
-		trigger,
-		jobStatus,
-		host,
-		githubInstallationId,
-		platform,
-		tests,
-		testType,
-		githubCheckRunId,
-	} = jobRequest;
+	const { jobId, projectId, platform, tests, testType } = jobRequest;
 
 	const job = await jobsService.getJob(jobId);
 	const referenceJob = await jobsService.getReferenceJob(job);
 	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJob ? referenceJob.id : jobId, projectId);
 
-	const jobDetails: RunJobRequestBody = {
-		id: jobId,
-		prId,
-		branchName,
-		repoName,
-		commitId,
-		projectId,
-		trigger,
-		reportId: jobReportsId.insertId,
-		status: jobStatus,
-		host,
-		githubInstallationId,
-		githubCheckRunId,
-		platform,
-		testCount: tests ? (platform === Platform.ALL ? tests.length * 3 : tests.length) : 0,
-	};
-
 	for (let test of tests) {
-		Logger.debug("addJobToRequestQueue", "Inside a test loop", {
-			test: test,
-			platform,
-		});
-
 		if (platform === Platform.ALL) {
 			await addTestRequestToQueue({
-				job: { ...jobDetails, platform: Platform.CHROME },
+				job: { ...job, report_id: jobReportsId, platform: PLATFORM.CHROME },
 				test: { ...test, testType: testType },
+				testCount: tests.length,
 			});
 			await addTestRequestToQueue({
-				job: { ...jobDetails, platform: Platform.SAFARI },
+				job: { ...job, report_id: jobReportsId, platform: PLATFORM.SAFARI },
 				test: { ...test, testType: testType },
+				testCount: tests.length,
 			});
 			await addTestRequestToQueue({
-				job: { ...jobDetails, platform: Platform.FIREFOX },
+				job: { ...job, report_id: jobReportsId, platform: PLATFORM.FIREFOX },
 				test: { ...test, testType: testType },
+				testCount: tests.length,
 			});
 		} else {
 			await addTestRequestToQueue({
-				job: jobDetails,
+				job: { ...job, report_id: jobReportsId, platform: platform },
 				test: { ...test, testType: testType },
+				testCount: tests.length,
 			});
 		}
 	}

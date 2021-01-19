@@ -22,6 +22,9 @@ module.exports = {
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"],
 	},
+	externals: {
+		bullmq: "bullmq"
+	},
 	module: {
 		rules: [
 			{

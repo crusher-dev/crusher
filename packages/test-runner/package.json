@@ -37,6 +37,8 @@
 		"@types/mongoose": "^5.7.36",
 		"@types/node": "~10",
 		"@types/shelljs": "^0.8.8",
+		"@typescript-eslint/eslint-plugin": "^4.13.0",
+		"@typescript-eslint/parser": "^4.13.0",
 		"husky": "^3.0.5",
 		"jest": "^24.9.0",
 		"lint-staged": "8.2.1",
@@ -45,13 +47,13 @@
 		"ts-node-dev": "^1.0.0-pre.50",
 		"tslint": "^5.20.1",
 		"tslint-config-prettier": "^1.18.0",
-		"typescript": "^4.0.3"
+		"typescript ": "^4.0.3"
 	},
 	"scripts": {
-		"build": "WTF is there no build script here",
-		"start:prod": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos node build/index.js",
-		"start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.ts",
-		"start:dev": "NODE_ENV=local AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/app.ts",
+		"build": "ncc build src/index.ts -o dist --external bullmq",
+		"start:prod": "NODE_ENV=production ts-node src/index.ts",
+		"start": "AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/index.ts",
+		"start:dev": "NODE_ENV=local AWS_S3_REGION=us-east-1 AWS_ACCESS_KEY_ID=AKIAJ42YYRK2DES5CSPQ AWS_SECRET_ACCESS_KEY=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 AWS_S3_VIDEO_BUCKET=crusher-videos ts-node src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"
 	},

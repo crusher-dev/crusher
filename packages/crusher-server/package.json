@@ -19,7 +19,7 @@
 		"shipit-cli": "^5.1.0",
 		"shipit-deploy": "^5.1.0",
 		"ts-node": "3.3.0",
-		"typescript": "3.3.3333"
+		"typescript": "4.1.3"
 	},
 	"lint-staged": {
 		"*.js": [
@@ -84,7 +84,6 @@
 		"node-fetch": "^2.6.0",
 		"node-persist": "^3.0.5",
 		"node-storage": "0.0.9",
-		"now": "^18.0.0",
 		"pixelmatch": "^5.2.1",
 		"pngjs": "^5.0.0",
 		"prettier": "^2.2.1",
@@ -106,11 +105,10 @@
 		"koa-bodyparser": "4.3.0"
 	},
 	"scripts": {
-		"dev:serverless": "now dev",
-		"dev": "ts-node src/app.ts",
+		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
-		"build": "wepback --config webpack.config.js",
-		"build:start": "node build/app.js",
+		"build": "ncc build src/app.ts -o dist --external bullmq",
+		"build:start": "NODE_ENV=production node dist/index.js",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
 		"lint-fix:ts": "eslint --fix src",

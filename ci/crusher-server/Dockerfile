@@ -8,12 +8,14 @@ RUN apk add git
 
 RUN npm install -g npm
 RUN npm install pm2 -g
+RUN npm install -g webpack
+
 
 ADD ./ ./crusher
 
 WORKDIR /crusher
 
-RUN yarn
+RUN cd /crusher/packages/crusher-server/bullmq && yarn link && yarn && cd ../ && yarn link "bullmq"
 
 ARG PORT=8000
 

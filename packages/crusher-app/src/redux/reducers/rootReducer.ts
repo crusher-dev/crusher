@@ -10,6 +10,7 @@ import IAction from "@interfaces/redux/action";
 import settings from "@redux/reducers/settings";
 import team from "@redux/reducers/team";
 import tests from "./tests";
+import monitoring from "@redux/reducers/monitoring";
 
 const combinedReducer = combineReducers({
 	app,
@@ -21,6 +22,7 @@ const combinedReducer = combineReducers({
 	testInstance,
 	settings,
 	tests,
+	monitoring,
 });
 
 const rootReducer = (state: any, action: IAction<any>) => {

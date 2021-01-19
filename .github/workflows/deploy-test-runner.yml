@@ -1,4 +1,4 @@
-name: Deploy Crusher app
+name: Deploy Test Runner
 
 on:
   push:
@@ -18,16 +18,9 @@ jobs:
         with:
           node-version: 12.19.1
 
-      - name: Install yarn
-        run: npm install -g yarn
-        
-      - name: Install crusher modules
-        run: yarn
-        
-      - name: Package test-runner for deployment
-        run: sh scripts/build-test-runner.sh
+      - name: Copy ecosystem.config.js
+        run: cp ecosystem.config.sample.js ecosystem.config.js
 
-      
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -49,12 +42,12 @@ jobs:
         run: |
          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --file ci/test-runner/Dockerfile
          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"   
-        
+         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
       - name: Download task definition
         run: |
           aws ecs describe-task-definition --task-definition ProdRunnerV1 --query taskDefinition > task-definition.json
-        
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1

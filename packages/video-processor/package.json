@@ -51,6 +51,7 @@
 	},
 	"scripts": {
 		"start": "tsnd  --poll --interval 200 --respawn src/app.js",
+		"start:prod": "NODE_ENV=production tsnd src/app.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*"
 	},

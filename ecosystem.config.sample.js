@@ -162,7 +162,7 @@ module.exports = {
 			name: 'video-processor',
 			cwd: './packages/video-processor',
 			script: 'npm',
-			args: 'run start',
+			args: 'run start:prod',
 			env: {
 				/* Video Processor MongoDB config */
 				MONGODB_CONNECTION_STRING: MONGODB_CONFIG.CONNECTION_STRING ? MONGODB_CONFIG.CONNECTION_STRING : null,

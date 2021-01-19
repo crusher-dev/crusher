@@ -34,7 +34,6 @@ jobs:
       - name: Install webpack
         run: npm install -g webpack
 
-
       - name: Install ncc
         run: npm install -g @vercel/ncc
 

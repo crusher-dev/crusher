@@ -1,11 +1,12 @@
+import { iJobRunRequest } from '../../../crusher-shared/types/runner/jobRunRequest';
+
 const ffmpeg = require('fluent-ffmpeg');
 import * as shell from 'shelljs';
 import { s3BucketService, uploadFileToAwsBucket } from '../../utils/cloudBucket';
-import * as fs from 'fs';
 import { ensureFfmpegPath } from '../../utils/helper';
+import { Job } from 'bullmq';
 
 const got = require('got');
-
 
 function processStreamAndSave(videoUrl, savePath: string) {
 	return new Promise((resolve, reject) => {
@@ -36,44 +37,56 @@ function processStreamAndSave(videoUrl, savePath: string) {
 
 ensureFfmpegPath();
 
-module.exports = async (bullJob) => {
-	const { instanceId, testType, testId, video } = bullJob.data;
-	console.log(`Processing video for ${testType}/${testId}/${instanceId}`, video);
+interface iVideoProcessorJob extends Job {
+	data: {
+		runnerJobRequestInfo: iJobRunRequest;
+		video: string;
+	};
+}
+
+module.exports = async (bullJob: iVideoProcessorJob) => {
+	const { runnerJobRequestInfo, video } = bullJob.data;
+	console.log(`Processing video for ${runnerJobRequestInfo.requestType}/${runnerJobRequestInfo.test.id}/${runnerJobRequestInfo.instanceId}`, video);
 	if (video) {
 		let signedUrl;
 		try {
 			await shell.mkdir('-p', `/tmp/videos/`);
 
-			await processStreamAndSave(video, `/tmp/videos/${instanceId}.mp4`);
+			await processStreamAndSave(video, `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
-			signedUrl = await uploadFileToAwsBucket(s3BucketService, `/tmp/videos/${instanceId}.mp4`, `${instanceId}.mp4`, `${testId}/${instanceId}/`);
+			signedUrl = await uploadFileToAwsBucket(
+				s3BucketService,
+				`/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`,
+				`${runnerJobRequestInfo.instanceId}.mp4`,
+				`${runnerJobRequestInfo.test.id}/${runnerJobRequestInfo.instanceId}/`,
+			);
 
-			await shell.rm('-rf', `/tmp/videos/${instanceId}.mp4`);
+			await shell.rm('-rf', `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
 			return {
 				processed: true,
 				recordedVideoUrl: signedUrl,
-				instanceId: instanceId,
-				testId: testId,
-				testType: testType,
+				instanceId: runnerJobRequestInfo.instanceId,
+				testId: runnerJobRequestInfo.test.id,
+				testType: runnerJobRequestInfo.requestType,
 			};
 		} catch (ex) {
 			console.log(ex);
 			return {
-				processed: signedUrl? true : false,
+				processed: signedUrl ? true : false,
 				recordedVideoUrl: signedUrl,
-				instanceId: instanceId,
-				testId: testId,
-				testType: testType,
+				instanceId: runnerJobRequestInfo.instanceId,
+				testId: runnerJobRequestInfo.test.id,
+				testType: runnerJobRequestInfo.requestType,
 			};
 		}
 	} else {
 		return {
 			processed: false,
 			recordedVideoUrl: null,
-			instanceId: instanceId,
-			testId: testId,
-			testType: testType,
+			instanceId: runnerJobRequestInfo.instanceId,
+			testId: runnerJobRequestInfo.test.id,
+			testType: runnerJobRequestInfo.requestType,
 		};
 	}
 };

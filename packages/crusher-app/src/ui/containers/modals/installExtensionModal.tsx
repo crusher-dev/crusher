@@ -22,7 +22,7 @@ const InstallExtension = (props: iProps) => {
 			illustrationContainerCSS={illustrationContainerCss}
 		>
 			<div css={bodyContainerCss}>
-				<div css={modalHeading}>Install extension on chrome browser</div>
+				<div css={modalHeading}>Install extension on chrohme browser</div>
 				<ModalButton
 					title={"Download & Install"}
 					onClick={() => {}}

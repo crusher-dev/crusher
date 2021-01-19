@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { TestTypes } from '../interfaces/TestTypes';
+import { RUNNER_REQUEST_TYPE } from '../../../crusher-shared/types/runner/requestType';
 
 const TestLogsSchema = new mongoose.Schema(
 	{
@@ -10,8 +10,8 @@ const TestLogsSchema = new mongoose.Schema(
 		instanceId: mongoose.Schema.Types.Number,
 		type: {
 			type: mongoose.Schema.Types.String,
-			enum: [TestTypes.DRAFT, TestTypes.SAVED],
-			default: TestTypes.DRAFT,
+			enum: [RUNNER_REQUEST_TYPE.DRAFT, RUNNER_REQUEST_TYPE.SAVED],
+			default: RUNNER_REQUEST_TYPE.DRAFT,
 		},
 		level: {
 			type: mongoose.Schema.Types.String,

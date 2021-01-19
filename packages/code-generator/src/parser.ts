@@ -10,6 +10,7 @@ interface iParserOptions {
 	actions: Array<iAction>;
 	browser?: BROWSER;
 	isHeadless?: boolean;
+	assetsDir?: string;
 }
 
 export class Parser {
@@ -23,6 +24,7 @@ export class Parser {
 	shouldLogSteps = false;
 	browser = BROWSER.CHROME;
 	isHeadless = true;
+	assetsDir = "./";
 
 	constructor(options: iParserOptions) {
 		this.actions = options.actions;
@@ -30,6 +32,7 @@ export class Parser {
 		this.shouldLogSteps = !!options.shouldLogSteps;
 		this.browser = options.browser ? options.browser : this.browser;
 		this.isHeadless = options.isHeadless ? options.isHeadless : this.isHeadless;
+		this.assetsDir = options.assetsDir ? options.assetsDir : this.assetsDir;
 	}
 
 	runPreParseChecks() {
@@ -82,7 +85,8 @@ export class Parser {
 		if (this.isFirstTimeNavigate) {
 			code.push("const page = await browserContext.newPage({});");
 			if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
-				code.push("capturedVideo = await saveVideo(page, 'video.mp4');");
+				const videoPath = this.assetsDir + "/videos/video.mp4";
+				code.push(`capturedVideo = await saveVideo(page, '${videoPath}');`);
 			}
 			code.push(
 				`const {handlePopup} = require("${helperPackageName}/middlewares");`,
@@ -100,7 +104,11 @@ export class Parser {
 
 	parsePageScreenshot(action: iAction) {
 		const code = [];
-		code.push("await Page.screenshot();");
+		code.push(
+			"await Page.screenshot(page, JSON.parse(#{assetsDir}));".pretify({
+				assetsDir: this.assetsDir + "/images/",
+			}),
+		);
 		return code;
 	}
 
@@ -129,9 +137,12 @@ export class Parser {
 	parseElementScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.screenshot(JSON.parse(#{action}), page);".pretify({
-				action,
-			}),
+			"await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{assetsDir}));".pretify(
+				{
+					action,
+					assetsDir: this.assetsDir + "/images/",
+				},
+			),
 		);
 		return code;
 	}

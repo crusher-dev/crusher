@@ -16,7 +16,7 @@ queue.client.then(async (client) => {
 
 	new Worker(REQUEST_QUEUE, path.resolve('src/worker.ts'), {
 		connection: client,
-		concurrency: 3,
+		concurrency: 5,
 		lockDuration: 120000,
 		//@ts-ignore
 		getOffset: BootAfterNJobsOffsetManager.get,

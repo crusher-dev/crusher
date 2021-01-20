@@ -1,33 +1,54 @@
-import { Modal } from "@ui/containers/modals/modal";
 import { useState } from "react";
 import React from "react";
 import { ModalInput } from "@ui/components/modal/input";
 import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
-import { MultiSelect } from "@ui/components/modal/multiSelect";
 import Flag from "../../../../public/svg/modals/flag.svg";
 import Play from "../../../../public/svg/modals/play.svg";
+import Select from "react-select";
+import { Label } from "@ui/components/modal/label";
+import { PIXEL_REM_RATIO } from "@constants/other";
+import { DEVICE_TYPES } from "@crusher-shared/types/deviceTypes";
+import { BaseModal } from "@ui/containers/modals/baseModal";
+import CrossIcon from "../../../../public/svg/modals/cross.svg";
+import {
+	getChromeExtensionId,
+	getDefaultDeviceFromDeviceType,
+} from "@utils/extension";
+import { generateCrusherExtensionUrl } from "@crusher-shared/utils/extension";
 
-interface iProps {
+interface iCreateTestModalProps {
+	isOpen: boolean;
 	onClose: any;
-	onSubmit: any;
 }
 
-const CreateTestModal = (props: iProps) => {
-	const { onClose, onSubmit } = props;
+const deviceTypes = [
+	{ label: "Desktop", value: DEVICE_TYPES.DESKTOP },
+	{ label: "Mobile", value: DEVICE_TYPES.MOBILE },
+];
+
+const CreateTestModal = (props: iCreateTestModalProps) => {
+	const { isOpen, onClose } = props;
 	const [url, setURL] = useState("");
-	const [selectedBrowsers, setSelectedBrowsers] = useState([
-		{ label: "Chrome", value: "CHROME" },
-	]);
+	const [selectedDeviceType, setSelectedDeviceType] = useState({
+		label: "Desktop",
+		value: DEVICE_TYPES.DESKTOP,
+	});
 
 	const handleSubmit = () => {
-		if (url && url.length > 0 && selectedBrowsers.length > 0) {
-			if (onSubmit) {
-				const browsers = selectedBrowsers.map((browserOption) => {
-					return browserOption.value;
-				});
-				onSubmit(url, browsers);
+		if (url && url.length > 0 && selectedDeviceType) {
+			const device = getDefaultDeviceFromDeviceType(selectedDeviceType.value);
+
+			if (device) {
+				window.open(
+					generateCrusherExtensionUrl(
+						`chrome-extension://${getChromeExtensionId()}`,
+						url,
+						device.id,
+					),
+				);
 			}
+			onClose();
 		} else {
 			alert("Invalid inputs");
 		}
@@ -37,51 +58,45 @@ const CreateTestModal = (props: iProps) => {
 		setURL(event.target.value);
 	};
 
-	const handleBrowserChange = (values: any) => {
-		setSelectedBrowsers(values);
+	const handleDeviceChange = (values: any) => {
+		setSelectedDeviceType(values);
 	};
 
-	const browserOptions = [
-		{ label: "Chrome", value: "CHROME" },
-		{ label: "Firefox", value: "FIREFOX" },
-		{ label: "Safari", value: "SAFARI" },
-	];
-
 	return (
-		<Modal
+		<BaseModal
 			heading={"Create a test"}
 			subHeading={"Experience power of no-code testing"}
 			illustration={"/assets/img/illustration/women_running.png"}
 			onClose={onClose}
-			headingCss={modalHeadingCss}
-			descCss={modalDescCss}
-			topAreaCSS={topAreaCSS}
+			closeIcon={CrossIcon}
+			isOpen={isOpen}
+			css={{
+				heading: modalHeadingCSS,
+				desc: modalDescCSS,
+				topArea: topAreaCSS,
+			}}
 		>
-			<div css={bodyContainerCss}>
+			<div css={bodyContainerCSS}>
+				<Label>Enter url</Label>
+
 				<ModalInput
+					customCSS={inputLabelMarginCSS}
 					id={"url"}
 					title={"Enter url"}
 					placeholder={"Enter host url"}
 					value={url}
 					onChange={handleURLChange}
 				/>
-				{/*<ModalInput*/}
-				{/*	id={"url"}*/}
-				{/*	title={"Enter url"}*/}
-				{/*	placeholder={"Enter host url"}*/}
-				{/*	value={url}*/}
-				{/*	onChange={handleURLChange}*/}
-				{/*/>*/}
-				<MultiSelect
-					title={"Browser"}
-					values={selectedBrowsers}
-					options={browserOptions}
-					name={"Browser"}
-					onChange={handleBrowserChange}
-					style={{ marginTop: "1rem" }}
+
+				<Label customCSS={inputItemMarginTopCSS}>On Device</Label>
+				<Select
+					value={selectedDeviceType}
+					onChange={handleDeviceChange}
+					options={deviceTypes}
+					css={inputLabelMarginCSS}
 				/>
-				<div css={modalNoteCss}>
-					<div css={flagContainerCss}>
+				<div css={modalNoteCSS}>
+					<div css={flagContainerCSS}>
 						<Flag />
 					</div>
 					<div style={{ flex: "1" }}>
@@ -92,23 +107,29 @@ const CreateTestModal = (props: iProps) => {
 					</div>
 				</div>
 				<ModalButton
-					containerCss={buttonCss}
+					containerCss={buttonCSS}
 					title={"Start Recording"}
 					onClick={handleSubmit}
 				/>
 				<a
-					css={playContainerCss}
+					css={playContainerCSS}
 					href={"https://www.loom.com/share/5f1392d00274403083d151c0183620cb"}
 				>
 					<Play />{" "}
 					<span style={{ marginLeft: "0.75rem" }}>Watch how to record test</span>
 				</a>
 			</div>
-		</Modal>
+		</BaseModal>
 	);
 };
 
-const playContainerCss = css`
+const inputItemMarginTopCSS = css`
+	margin-top: ${21 / PIXEL_REM_RATIO}rem;
+`;
+const inputLabelMarginCSS = css`
+	margin-top: ${16 / PIXEL_REM_RATIO}rem;
+`;
+const playContainerCSS = css`
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -120,14 +141,14 @@ const playContainerCss = css`
 	cursor: pointer;
 `;
 
-const flagContainerCss = css`
+const flagContainerCSS = css`
 	margin-right: 1rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 `;
 
-const modalNoteCss = css`
+const modalNoteCSS = css`
 	color: #7e7e7e;
 	font-family: Gilroy;
 	font-size: 0.8rem;
@@ -141,21 +162,16 @@ const topAreaCSS = css`
 	border-bottom: 2px solid #0a1215;
 `;
 
-const modalHeadingCss = css`
+const modalHeadingCSS = css`
 	color: #261f18;
 `;
 
-const modalDescCss = css`
+const modalDescCSS = css`
 	color: #2e2e2e;
 	font-size: 1rem !important;
 `;
 
-const modalMoto = css`
-	font-size: 1rem;
-	margin-bottom: 1.25rem;
-`;
-
-const bodyContainerCss = css`
+const bodyContainerCSS = css`
 	display: flex;
 	flex-direction: column;
 	padding-top: 0.75rem;
@@ -168,24 +184,7 @@ const bodyContainerCss = css`
 	min-height: 21rem;
 `;
 
-const membersInputCss = css`
-	margin-top: 2rem;
-	label {
-		font-family: Gilroy;
-		font-weight: bold;
-		color: #2b2b39;
-		font-size: 1rem;
-		line-height: 1.1rem;
-	}
-`;
-
-const membersDescCss = css`
-	font-size: 0.95rem;
-	margin-top: 0.675rem;
-`;
-
-const buttonCss = css`
-	margin-top: auto;
+const buttonCSS = css`
 	background: #3c59cf;
 	margin-top: 2.5rem;
 	font-size: 1rem;

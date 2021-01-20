@@ -94,8 +94,7 @@ function ProjectTestsList() {
 	};
 
 	const closeAddTestModal = () => {
-		ReactDOM.render(null as any, document.getElementById("overlay"));
-		setShowAddTestModal({ value: false, projectId: null });
+		setShowAddTestModal({ ...showAddTestModal, value: false });
 	};
 
 	const createTestCallback = () => {
@@ -105,12 +104,10 @@ function ProjectTestsList() {
 
 	return (
 		<div css={containerCSS}>
-			<Conditional If={showAddTestModal && showAddTestModal.value}>
-				<CreateTestModal
-					onSubmit={createTestCallback}
-					onClose={closeAddTestModal}
-				/>
-			</Conditional>
+			<CreateTestModal
+				isOpen={showAddTestModal && !!showAddTestModal.value}
+				onClose={closeAddTestModal}
+			/>
 
 			<div css={innerContainerCSS}>
 				<HeaderComponent />

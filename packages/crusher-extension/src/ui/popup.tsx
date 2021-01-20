@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { POSITION, TEXT_ALIGN } from "../interfaces/css";
 import devices from "../../../crusher-shared/constants/devices";
 import Tab = chrome.tabs.Tab;
-import { AdvancedURL } from "../utils/url";
 import { SelectDeviceInput } from "./containers/popup/selectDeviceInput";
+import { generateCrusherExtensionUrl } from "../../../crusher-shared/utils/extension";
 
 interface iAppProps {
 	tabId: number;
@@ -18,7 +18,8 @@ const App = (props: iAppProps) => {
 	const handleStartRecordingClick = () => {
 		chrome.tabs.get(tabId, (tab: Tab) => {
 			chrome.tabs.create({
-				url: AdvancedURL.generateCrusherExtensionUrl(
+				url: generateCrusherExtensionUrl(
+					chrome.extension.getURL("/"),
 					tab.url as string,
 					selectedDevice,
 				),

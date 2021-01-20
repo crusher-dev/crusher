@@ -1,46 +1,88 @@
-import { Modal } from "@ui/containers/modals/modal";
-import React from "react";
-
-import { css } from "@emotion/core";
+import React, { RefObject, useMemo, useRef, useState } from "react";
 
 import { ModalButton } from "@ui/components/modal/button";
+import { BaseModal } from "./baseModal";
+import { css } from "@emotion/core";
+import CrossIcon from "../../../../public/svg/modals/cross.svg";
+import { checkIfExtensionPresent } from "@utils/extension";
+import { Conditional } from "@ui/components/common/Conditional";
 
 interface iProps {
+	isOpen: boolean;
 	onClose: any;
+	onExtensionDownloaded: any;
 }
 
-const InstallExtension = (props: iProps) => {
-	const { onClose } = props;
+const InstallExtensionModal = (props: iProps) => {
+	const { isOpen, onClose, onExtensionDownloaded } = props;
+
+	const [shouldStartWaiting, setShouldStartWaiting] = useState(false);
+	const _waitingInterval: RefObject<NodeJS.Timeout> = useRef(null);
+
+	const stopWaitingInterval = () => {
+		clearInterval(_waitingInterval.current!);
+		setShouldStartWaiting(false);
+		(_waitingInterval as any).current = null;
+	};
+
+	useMemo(() => {
+		if (isOpen) {
+			(_waitingInterval as any).current = setInterval(async () => {
+				const isExtensionThere = await checkIfExtensionPresent();
+				if (isExtensionThere) {
+					stopWaitingInterval();
+					onExtensionDownloaded();
+				}
+			}, 500);
+		}
+	}, [isOpen]);
+
+	const downloadExtension = () => {
+		setShouldStartWaiting(true);
+	};
+
+	const handleCloseModal = () => {
+		if (shouldStartWaiting) {
+			stopWaitingInterval();
+		}
+		onClose();
+	};
 
 	return (
-		<Modal
+		<BaseModal
+			isOpen={isOpen}
 			heading={"Install extension"}
 			subHeading={"to create test"}
+			closeIcon={CrossIcon}
 			illustration={"/assets/img/illustration/orange_bouncy.png"}
-			onClose={onClose}
-			topAreaCSS={topAreaCSS}
-			illustrationContainerCSS={illustrationContainerCss}
+			onClose={handleCloseModal}
+			css={{
+				topArea: topAreaCSS,
+				backgroundIllustrationContainer: illustrationContainerCss,
+			}}
 		>
 			<div css={bodyContainerCss}>
-				<div css={modalHeading}>Install extension on chrohme browser</div>
+				<div css={modalHeading}>Install extension on chrome browser</div>
 				<ModalButton
 					title={"Download & Install"}
-					onClick={() => {}}
+					onClick={downloadExtension}
 					containerCss={buttonCss}
 				/>
 				<div css={skipDiv}>skip & browse project</div>
 
-				<div css={loading}>
-					{/*<ExtensionLoadingSVG/>*/}
-					<img src={"/svg/modals/extension_loading.svg"} />
-				</div>
-
-				<div css={loadingLabel}>
-					Waiting for extension installlation. <br />
-					This page will refresh automatically.
-				</div>
+				<Conditional If={shouldStartWaiting}>
+					<div>
+						<div css={loading}>
+							<img src={"/svg/modals/extension_loading.svg"} />
+						</div>
+						<div css={loadingLabel}>
+							Waiting for extension installlation. <br />
+							This page will refresh automatically.
+						</div>
+					</div>
+				</Conditional>
 			</div>
-		</Modal>
+		</BaseModal>
 	);
 };
 
@@ -68,7 +110,7 @@ const skipDiv = css`
 const loading = css`
 	text-align: center;
 	img {
-		height: 8.2rem;
+		height: 5.575rem;
 	}
 `;
 const loadingLabel = css`
@@ -105,4 +147,4 @@ const bodyContainerCss = css`
 	min-height: 26rem;
 `;
 
-export { InstallExtension };
+export { InstallExtensionModal };

@@ -27,6 +27,7 @@ import { Conditional } from "@ui/components/common/Conditional";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
 import { NextPage, NextPageContext } from "next";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
+import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
 
 interface NavItem {
 	name: string;
@@ -298,6 +299,9 @@ export function withSidebarLayout(
 	shouldHaveGetInitialProps = true,
 ) {
 	const WithSidebarLayout = function (props: any) {
+		const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
+			false,
+		);
 		const userInfo = useSelector(getUserInfo);
 		const projectsList = useSelector(getProjects);
 		const selectedProjectID = useSelector(getSelectedProject);
@@ -322,6 +326,14 @@ export function withSidebarLayout(
 			(store as any).dispatch(saveSelectedProjectInRedux(parseInt(project.value)));
 		}
 
+		const showCreateTestModal = () => {
+			setShowInstallExtensionModal(true);
+		};
+
+		const closeInstallExtensionModal = () => {
+			setShowInstallExtensionModal(false);
+		};
+
 		return (
 			<div>
 				<Head>
@@ -338,6 +350,10 @@ export function withSidebarLayout(
 				</Head>
 				<div css={mainContainerCSS}>
 					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
+					<InstallExtensionModal
+						isOpen={showInstallExtensionModal}
+						onClose={closeInstallExtensionModal}
+					/>
 					<div css={contentContainerCSS}>
 						<div css={headerCSS}>
 							<CrusherLogo />
@@ -347,11 +363,9 @@ export function withSidebarLayout(
 								selectedProject={selectedProjectID}
 								onChange={onProjectChange}
 							/>
-							<Link href={"/app/project/onboarding/create-test"}>
-								<a href={"/app/project/onboarding/create-test"} css={createTestCSS}>
-									<CreateTest />
-								</a>
-							</Link>
+							<span css={createTestCSS}>
+								<CreateTest onClick={showCreateTestModal} />
+							</span>
 						</div>
 						<div css={innerContentContainerCSS}>
 							<WrappedComponent {...props} />

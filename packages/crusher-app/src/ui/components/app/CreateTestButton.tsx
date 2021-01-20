@@ -2,14 +2,24 @@ import PlusSVG from "../../../../public/svg/sidebarSettings/plus.svg";
 import React from "react";
 import { css } from "@emotion/core";
 
-export function CreateTest({ label = "Create a test" }) {
+interface iCreateTestProps {
+	label: string;
+	onClick?: () => void;
+}
+export function CreateTest(props: iCreateTestProps) {
+	const { label, onClick } = props;
+
 	return (
-		<div css={styles.createTestButton}>
+		<div css={styles.createTestButton} onClick={onClick}>
 			<PlusSVG />
 			<span css={styles.createTestLabel}>{label}</span>
 		</div>
 	);
 }
+
+CreateTest.defaultProps = {
+	label: "Create a test",
+};
 
 const styles = {
 	createTestButton: css`

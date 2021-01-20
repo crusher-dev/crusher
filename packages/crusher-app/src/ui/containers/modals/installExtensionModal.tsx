@@ -1,31 +1,40 @@
-import { Modal } from "@ui/containers/modals/modal";
 import React from "react";
 
-import { css } from "@emotion/core";
-
 import { ModalButton } from "@ui/components/modal/button";
+import { BaseModal } from "./baseModal";
+import { css } from "@emotion/core";
+import CrossIcon from "../../../../public/svg/modals/cross.svg";
 
 interface iProps {
+	isOpen: boolean;
 	onClose: any;
 }
 
-const InstallExtension = (props: iProps) => {
-	const { onClose } = props;
+const InstallExtensionModal = (props: iProps) => {
+	const { isOpen, onClose } = props;
+
+	const downloadExtension = () => {
+		alert("Downloading extension now");
+	};
 
 	return (
-		<Modal
+		<BaseModal
+			isOpen={isOpen}
 			heading={"Install extension"}
 			subHeading={"to create test"}
+			closeIcon={CrossIcon}
 			illustration={"/assets/img/illustration/orange_bouncy.png"}
 			onClose={onClose}
-			topAreaCSS={topAreaCSS}
-			illustrationContainerCSS={illustrationContainerCss}
+			css={{
+				topArea: topAreaCSS,
+				backgroundIllustrationContainer: illustrationContainerCss,
+			}}
 		>
 			<div css={bodyContainerCss}>
-				<div css={modalHeading}>Install extension on chrohme browser</div>
+				<div css={modalHeading}>Install extension on chrome browser</div>
 				<ModalButton
 					title={"Download & Install"}
-					onClick={() => {}}
+					onClick={downloadExtension}
 					containerCss={buttonCss}
 				/>
 				<div css={skipDiv}>skip & browse project</div>
@@ -40,7 +49,7 @@ const InstallExtension = (props: iProps) => {
 					This page will refresh automatically.
 				</div>
 			</div>
-		</Modal>
+		</BaseModal>
 	);
 };
 
@@ -105,4 +114,4 @@ const bodyContainerCss = css`
 	min-height: 26rem;
 `;
 
-export { InstallExtension };
+export { InstallExtensionModal };

@@ -71,15 +71,16 @@ const InstallExtensionModal = (props: iProps) => {
 				<div css={skipDiv}>skip & browse project</div>
 
 				<Conditional If={shouldStartWaiting}>
-					<div css={loading}>
-						<img src={"/svg/modals/extension_loading.svg"} />
+					<div>
+						<div css={loading}>
+							<img src={"/svg/modals/extension_loading.svg"} />
+						</div>
+						<div css={loadingLabel}>
+							Waiting for extension installlation. <br />
+							This page will refresh automatically.
+						</div>
 					</div>
 				</Conditional>
-
-				<div css={loadingLabel}>
-					Waiting for extension installlation. <br />
-					This page will refresh automatically.
-				</div>
 			</div>
 		</BaseModal>
 	);
@@ -109,7 +110,7 @@ const skipDiv = css`
 const loading = css`
 	text-align: center;
 	img {
-		height: 8.2rem;
+		height: 5.575rem;
 	}
 `;
 const loadingLabel = css`

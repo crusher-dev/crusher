@@ -1,10 +1,14 @@
 import { css } from "@emotion/core";
 import CreateTestPageIllustration from "../../../../public/assets/img/illustration/createTestPageIllustration.png";
 import CreateTestSVG from "../../../../public/svg/tests/createTest.svg";
+import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
+import { useState } from "react";
 
 function CreateTest() {
+	const [open, setOpen] = useState(false);
 	return (
 		<div css={containerCSS}>
+			{open && <WatchVideoModal isOpen={open} onClose={() => setOpen(false)} />}
 			<img src={CreateTestPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>Create a test to fight bugs and downtime</p>
 			<p css={easyToCreateTestCSS}>
@@ -12,7 +16,14 @@ function CreateTest() {
 			</p>
 
 			<div css={buttonsDivCSS}>
-				<button css={[buttonCSS, watchButtonCSS]}>Watch Tutorial</button>
+				<button
+					css={[buttonCSS, watchButtonCSS]}
+					onClick={() => {
+						setOpen(true);
+					}}
+				>
+					Watch Tutorial
+				</button>
 				<button css={[buttonCSS, createTestButtonCSS]}>
 					{" "}
 					<img src={CreateTestSVG} css={createTestImageCSS} /> Create a Test

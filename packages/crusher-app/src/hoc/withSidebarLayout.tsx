@@ -28,6 +28,7 @@ import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfo
 import { NextPage, NextPageContext } from "next";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
+import { checkIfExtensionPresent } from "@utils/extension";
 
 interface NavItem {
 	name: string;
@@ -302,6 +303,7 @@ export function withSidebarLayout(
 		const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
 			false,
 		);
+		const [showCreateTestModal, setShowCreateTestModal] = useState(false);
 		const userInfo = useSelector(getUserInfo);
 		const projectsList = useSelector(getProjects);
 		const selectedProjectID = useSelector(getSelectedProject);
@@ -326,12 +328,22 @@ export function withSidebarLayout(
 			(store as any).dispatch(saveSelectedProjectInRedux(parseInt(project.value)));
 		}
 
-		const showCreateTestModal = () => {
-			setShowInstallExtensionModal(true);
+		const showCreateTestModal = async () => {
+			const isExtensionInstalled = await checkIfExtensionPresent();
+			if (!isExtensionInstalled) {
+				setShowInstallExtensionModal(true);
+			} else {
+				setShowCreateTestModal(true);
+			}
 		};
 
 		const closeInstallExtensionModal = () => {
 			setShowInstallExtensionModal(false);
+			setShowCreateTestModal(true);
+		};
+
+		const handleExtensionDownloaded = () => {
+			closeInstallExtensionModal();
 		};
 
 		return (
@@ -353,6 +365,7 @@ export function withSidebarLayout(
 					<InstallExtensionModal
 						isOpen={showInstallExtensionModal}
 						onClose={closeInstallExtensionModal}
+						onExtensionDownloaded={handleExtensionDownloaded}
 					/>
 					<div css={contentContainerCSS}>
 						<div css={headerCSS}>

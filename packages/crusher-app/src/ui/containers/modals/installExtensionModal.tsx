@@ -1,20 +1,49 @@
-import React from "react";
+import React, { RefObject, useMemo, useRef, useState } from "react";
 
 import { ModalButton } from "@ui/components/modal/button";
 import { BaseModal } from "./baseModal";
 import { css } from "@emotion/core";
 import CrossIcon from "../../../../public/svg/modals/cross.svg";
+import { checkIfExtensionPresent } from "@utils/extension";
+import { Conditional } from "@ui/components/common/Conditional";
 
 interface iProps {
 	isOpen: boolean;
 	onClose: any;
+	onExtensionDownloaded: any;
 }
 
 const InstallExtensionModal = (props: iProps) => {
-	const { isOpen, onClose } = props;
+	const { isOpen, onClose, onExtensionDownloaded } = props;
+
+	const [shouldStartWaiting, setShouldStartWaiting] = useState(false);
+	const _waitingInterval: RefObject<NodeJS.Timeout> = useRef(null);
+
+	const stopWaitingInterval = () => {
+		clearInterval(_waitingInterval.current!);
+		setShouldStartWaiting(false);
+		(_waitingInterval as any).current = null;
+	};
+
+	useMemo(() => {
+		(_waitingInterval as any).current = setInterval(async () => {
+			const isExtensionThere = checkIfExtensionPresent();
+			if (isExtensionThere) {
+				stopWaitingInterval();
+				onExtensionDownloaded();
+			}
+		}, 500);
+	}, []);
 
 	const downloadExtension = () => {
-		alert("Downloading extension now");
+		setShouldStartWaiting(true);
+	};
+
+	const handleCloseModal = () => {
+		if (shouldStartWaiting) {
+			stopWaitingInterval();
+		}
+		onClose();
 	};
 
 	return (
@@ -24,7 +53,7 @@ const InstallExtensionModal = (props: iProps) => {
 			subHeading={"to create test"}
 			closeIcon={CrossIcon}
 			illustration={"/assets/img/illustration/orange_bouncy.png"}
-			onClose={onClose}
+			onClose={handleCloseModal}
 			css={{
 				topArea: topAreaCSS,
 				backgroundIllustrationContainer: illustrationContainerCss,
@@ -39,10 +68,11 @@ const InstallExtensionModal = (props: iProps) => {
 				/>
 				<div css={skipDiv}>skip & browse project</div>
 
-				<div css={loading}>
-					{/*<ExtensionLoadingSVG/>*/}
-					<img src={"/svg/modals/extension_loading.svg"} />
-				</div>
+				<Conditional If={shouldStartWaiting}>
+					<div css={loading}>
+						<img src={"/svg/modals/extension_loading.svg"} />
+					</div>
+				</Conditional>
 
 				<div css={loadingLabel}>
 					Waiting for extension installlation. <br />

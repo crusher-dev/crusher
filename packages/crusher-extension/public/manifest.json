@@ -28,5 +28,8 @@
 		"page": "background_script.html",
 		"persistent": true
 	},
+	"externally_connectable": {
+		"matches": ["*://*.crusher.dev/*"]
+	},
 	"content_security_policy": "script-src 'self' 'sha256-jpNXPlC1/SNQKoWM2XzhImd1yZRB19KfIvY+f8P+b88=' unsafe-inline http://localhost:2400 https://localhost:2400; object-src 'self'; form-action 'self' http: https:"
 }

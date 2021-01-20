@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 interface iCreateTestProps {
 	label: string;
-	onClick?: () => void;
+	onClick?: any;
 }
 export function CreateTest(props: iCreateTestProps) {
 	const { label, onClick } = props;

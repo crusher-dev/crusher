@@ -31,6 +31,8 @@ jobs:
         run: yarn install
 
       - name: Package crusher-app for deployment
+        env:
+          EXTENSION_ID: fdbnpjonlhmjhjfojacolckkbipcecoe
         run: sh scripts/vercel-package.sh
 
       - uses: amondnet/vercel-action@v20

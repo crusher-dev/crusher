@@ -2,7 +2,7 @@ name: Deploy Test Runner
 
 on:
   release:
-    types: [published, created, edited]
+    types: [published, edited]
 
   workflow_dispatch:
 

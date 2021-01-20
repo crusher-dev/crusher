@@ -1,5 +1,5 @@
-export enum BROWSER{
-	CHROME = "chromium",
-	FIREFOX = "firefox",
-	WEBKIT = "webkit"
+export enum BROWSER {
+	CHROME = 'chromium',
+	FIREFOX = 'firefox',
+	WEBKIT = 'webkit',
 }

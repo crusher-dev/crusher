@@ -22,12 +22,14 @@ import { useRouter } from "next/router";
 import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
-import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { Conditional } from "@ui/components/common/Conditional";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
 import { NextPage, NextPageContext } from "next";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
+import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
+import { checkIfExtensionPresent } from "@utils/extension";
+import { CreateTestModal } from "@ui/containers/modals/createTestModal";
 
 interface NavItem {
 	name: string;
@@ -143,11 +145,6 @@ function LeftSection(props: any) {
 
 	const userFistCharacter = userName.slice(0, 1);
 
-	const closePaymentModal = () => {
-		setPaymentShow(false);
-		ReactDOM.render(null as any, document.getElementById("overlay"));
-	};
-
 	const closeInviteMembersModal = () => {
 		setShowInviteMembersModal(false);
 		ReactDOM.render(null as any, document.getElementById("overlay"));
@@ -157,7 +154,6 @@ function LeftSection(props: any) {
 		setShowInviteMembersModal(true);
 	};
 
-	const [showPayment, setPaymentShow] = useState(false);
 	return (
 		<div css={leftSectionCSS}>
 			<div css={sectionContainerCSS}>
@@ -191,20 +187,6 @@ function LeftSection(props: any) {
 						>
 							{userName}
 						</span>
-
-						<Conditional If={isUserLoggedIn}>
-							<>
-								<div
-									onClick={setPaymentShow.bind(this, true)}
-									css={addPaymentOnTrialCSS}
-								>
-									14 days left. Add payment.
-								</div>
-								<Conditional If={showPayment}>
-									<AddPaymentModel onClose={closePaymentModal} />
-								</Conditional>
-							</>
-						</Conditional>
 					</div>
 					<div
 						css={sectionHeaderSettingCSS}
@@ -319,6 +301,10 @@ export function withSidebarLayout(
 	shouldHaveGetInitialProps = true,
 ) {
 	const WithSidebarLayout = function (props: any) {
+		const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
+			false,
+		);
+		const [showCreateTestModal, setShowCreateTestModal] = useState(false);
 		const userInfo = useSelector(getUserInfo);
 		const projectsList = useSelector(getProjects);
 		const selectedProjectID = useSelector(getSelectedProject);
@@ -343,6 +329,27 @@ export function withSidebarLayout(
 			(store as any).dispatch(saveSelectedProjectInRedux(parseInt(project.value)));
 		}
 
+		const handleCreateTest = async () => {
+			const isExtensionInstalled = await checkIfExtensionPresent();
+			if (!isExtensionInstalled) {
+				setShowInstallExtensionModal(true);
+			} else {
+				setShowCreateTestModal(true);
+			}
+		};
+
+		const closeInstallExtensionModal = () => {
+			setShowInstallExtensionModal(false);
+		};
+		const closeShowCreateTestModal = () => {
+			setShowCreateTestModal(false);
+		};
+
+		const handleExtensionDownloaded = () => {
+			closeInstallExtensionModal();
+			setShowCreateTestModal(true);
+		};
+
 		return (
 			<div>
 				<Head>
@@ -359,6 +366,15 @@ export function withSidebarLayout(
 				</Head>
 				<div css={mainContainerCSS}>
 					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
+					<InstallExtensionModal
+						isOpen={showInstallExtensionModal}
+						onClose={closeInstallExtensionModal}
+						onExtensionDownloaded={handleExtensionDownloaded}
+					/>
+					<CreateTestModal
+						isOpen={showCreateTestModal}
+						onClose={closeShowCreateTestModal}
+					/>
 					<div css={contentContainerCSS}>
 						<div css={headerCSS}>
 							<CrusherLogo />
@@ -368,11 +384,9 @@ export function withSidebarLayout(
 								selectedProject={selectedProjectID}
 								onChange={onProjectChange}
 							/>
-							<Link href={"/app/project/onboarding/create-test"}>
-								<a href={"/app/project/onboarding/create-test"} css={createTestCSS}>
-									<CreateTest />
-								</a>
-							</Link>
+							<span css={createTestCSS}>
+								<CreateTest onClick={handleCreateTest} />
+							</span>
 						</div>
 						<div css={innerContentContainerCSS}>
 							<WrappedComponent {...props} />
@@ -400,18 +414,6 @@ export function withSidebarLayout(
 
 	return WithSidebarLayout;
 }
-
-const addPaymentOnTrialCSS = css`
-	margin-top: 1rem;
-	font-family: Gilroy;
-
-	font-weight: 500;
-	font-size: 0.95rem;
-
-	text-decoration-line: underline;
-
-	color: #2b2b39;
-`;
 
 const createTestCSS = css`
 	margin-left: auto;
@@ -510,7 +512,7 @@ const primaryMenuCSS = css`
 			position: absolute;
 			top: 0;
 			left: 0;
-			content: url(/svg/sidebarSettings/tab_selected.svg);
+			content: url("/svg/sidebarSettings/tab_selected.svg");
 		}
 		color: #506cf5;
 		svg,

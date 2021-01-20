@@ -1,52 +1,71 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { css } from "@emotion/core";
-// @ts-ignore
 import OutsideClickHandler from "react-outside-click-handler";
-import AddDropdownSVG from "../../../../public/svg/sidebarSettings/addDropdown.svg";
+import AddIcon from "../../../../public/svg/sidebarSettings/addDropdown.svg";
 import { resolvePathToBackendURI } from "@utils/url";
-import Link from "next/link";
+import { Conditional } from "@ui/components/common/Conditional";
+import { redirectToBackendURI } from "@utils/router";
 
-import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
+interface iListItemProps {
+	title: string;
+	icon?: any;
+	onClick?: () => void;
+}
+export const ListItem = (props: iListItemProps) => {
+	const { title, icon: Icon, onClick } = props;
 
-export const SidebarTeamDropdown = ({
-	onOutsideClick,
-	onAddProjectCallback,
-}) => {
+	return (
+		<li css={addItemContainerCSS} onClick={onClick}>
+			<Conditional If={Icon}>
+				<Icon />
+			</Conditional>
+			<span css={addItemTextCSS}>{title}</span>
+		</li>
+	);
+};
+
+interface iSidebarTeamDropdownProps {
+	onOutsideClick: () => void;
+	onAddProjectCallback: () => void;
+}
+export const SidebarTeamDropdown = (props: iSidebarTeamDropdownProps) => {
+	const { onOutsideClick, onAddProjectCallback } = props;
+
+	const logoutUser = () => {
+		redirectToBackendURI(resolvePathToBackendURI("/user/logout"));
+	};
+
 	return (
 		<OutsideClickHandler onOutsideClick={onOutsideClick}>
-			<ul css={settingsDropdownStyle}>
-				<li style={{ display: "flex", alignItems: "center" }}>
-					<AddDropdownSVG style={{ marginRight: "1rem" }} />
-					<span>Add team member</span>
-				</li>
-				<li
-					style={{ display: "flex", alignItems: "center" }}
+			<ul css={settingsDropdownCSS}>
+				<ListItem title={"Add team member"} icon={AddIcon} />
+				<ListItem
+					title={"Add project"}
+					icon={AddIcon}
 					onClick={onAddProjectCallback}
-				>
-					<AddDropdownSVG style={{ marginRight: "1rem" }} />
-					<span>Add Project</span>
-				</li>
-				<li>Manage Billing/Plan</li>
-				<li>Manage Payment</li>
-				<li>Get Support</li>
-				<Link href={resolvePathToBackendURI("/user/logout")}>
-					<li>Logout</li>
-				</Link>
+				/>
+				<ListItem title={"Get support"} />
+				<ListItem title={"Logout"} onClick={logoutUser} />
 			</ul>
 		</OutsideClickHandler>
 	);
 };
 
-const settingsDropdownStyle = css`
+const addItemContainerCSS = css`
+	display: flex;
+	align-items: center;
+`;
+const addItemTextCSS = css`
+	margin-left: 1rem;
+`;
+const settingsDropdownCSS = css`
 	position: absolute;
-	background: #fff;
 	border: 1px solid #cdd0db;
+	background: #fff;
 	color: black;
 	right: 1.25rem;
 	top: 3.5rem;
 	min-width: 14.3rem;
-	background: #ffffff;
-	border: 1px solid #cdd0db;
 	box-sizing: border-box;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
 	border-radius: 4px;

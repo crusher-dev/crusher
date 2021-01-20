@@ -8,6 +8,8 @@ import WebRequestFullDetails = chrome.webRequest.WebRequestFullDetails;
 import WebResponseHeadersDetails = chrome.webRequest.WebResponseHeadersDetails;
 import WebNavigationParentedCallbackDetails = chrome.webNavigation.WebNavigationParentedCallbackDetails;
 import HttpHeader = chrome.webRequest.HttpHeader;
+import MessageSender = chrome.runtime.MessageSender;
+
 import { AdvancedURL } from "./utils/url";
 
 class BackgroundEventsListener {
@@ -18,6 +20,7 @@ class BackgroundEventsListener {
 		this.onHeadersReceived = this.onHeadersReceived.bind(this);
 		this.onBeforeSendHeaders = this.onBeforeSendHeaders.bind(this);
 		this.onBeforeNavigation = this.onBeforeNavigation.bind(this);
+		this.onExternalMessage = this.onExternalMessage.bind(this);
 	}
 
 	isRegisteredAsCrusherWindow(tabId: number): boolean {
@@ -147,6 +150,23 @@ class BackgroundEventsListener {
 		}
 	}
 
+	onExternalMessage(
+		request: { message: string },
+		sender: MessageSender,
+		sendResponse: any,
+	) {
+		console.log("Got this message", request);
+		if (request) {
+			if (request.message) {
+				if (request.message == "version") {
+					// @TODO: Replace this with the real extension version
+					sendResponse({ version: 1.0 });
+				}
+			}
+		}
+		return true;
+	}
+
 	registerEventListeners() {
 		chrome.tabs.onUpdated.addListener(this.onTabUpdated);
 		chrome.tabs.onRemoved.addListener(this.onTabRemoved);
@@ -170,6 +190,9 @@ class BackgroundEventsListener {
 		);
 
 		chrome.webNavigation.onBeforeNavigate.addListener(this.onBeforeNavigation);
+
+		// This listener is to send information to website asking information about crusher extension
+		chrome.runtime.onMessageExternal.addListener(this.onExternalMessage);
 	}
 
 	boot() {

@@ -6,17 +6,14 @@ interface iProps {
 	title: string;
 	id: string;
 	placeholder: string;
-	css: any;
-	onChange: (newValue: string) => void;
+	customCSS: any;
+	onChange: any;
 }
 
-const ModalInput = (props: any) => {
-	const { id, title, placeholder, value, onChange, css } = props;
+const ModalInput = (props: iProps) => {
+	const { id, placeholder, value, onChange, customCSS } = props;
 	return (
-		<div css={[containerCss, css]}>
-			<div>
-				<label htmlFor={id}>{title}</label>
-			</div>
+		<div css={[containerCss, customCSS]}>
 			<input
 				id={id}
 				onChange={onChange}
@@ -37,7 +34,6 @@ const containerCss = css`
 		line-height: 1rem;
 	}
 	input {
-		margin-top: 0.75rem;
 		padding: 0.5rem 1rem;
 		font-family: Gilroy;
 		font-size: 1rem;

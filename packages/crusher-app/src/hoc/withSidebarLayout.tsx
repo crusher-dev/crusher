@@ -453,7 +453,7 @@ const leftSectionCSS = css`
 	background: #fbfbfb;
 	color: #fff;
 	height: 100vh;
-	overflow-y: scroll;
+	overflow-y: auto;
 `;
 
 const sectionContainerCSS = css`

@@ -3,7 +3,6 @@ import React from "react";
 
 import { css } from "@emotion/core";
 
-import { ExtensionLoadingSVG } from "../../../../public/svg/modals/extension_loading.svg";
 import { ModalButton } from "@ui/components/modal/button";
 
 interface iProps {
@@ -23,7 +22,7 @@ const InstallExtension = (props: iProps) => {
 			illustrationContainerCSS={illustrationContainerCss}
 		>
 			<div css={bodyContainerCss}>
-				<div css={modalHeading}>Install extension on chrome browser</div>
+				<div css={modalHeading}>Install extension on chrohme browser</div>
 				<ModalButton
 					title={"Download & Install"}
 					onClick={() => {}}

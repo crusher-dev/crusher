@@ -13,7 +13,6 @@ import { useContainer, useExpressServer, Action } from "routing-controllers";
 import * as http from "http";
 import { Container } from "typedi";
 import "reflect-metadata";
-import * as cron from "./server/cron/index";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";

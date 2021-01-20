@@ -87,9 +87,12 @@ export class ProjectsController {
 	@Get("/meta/dashboard/info/:projectId")
 	async getMetaDashboardInfoOfProject(@Param("projectId") projectId: number) {
 		const totalJobsToday = await this.projectService.getNoBuildsTodayOfProject(projectId);
+		const info = await this.projectService.getHealthAndStatus(projectId);
 
 		return {
 			totalJobsToday: totalJobsToday.count,
+			health: info.health,
+			status: info.status
 		};
 	}
 

@@ -22,9 +22,9 @@
 			"@crusher-shared/*": ["crusher-shared/*"]
 		}
 	},
-	"include": ["**/*.ts"],
 	"typeRoots": ["node_modules/@types"],
-	"files": ["src/app.js"],
+	"files": ["src/app.ts"],
 	"include": ["./src/**/*"],
-	"exclude": ["node_modules", "**/*.spec.ts"]
+	"exclude": ["node_modules", "**/*.spec.ts"],
+	"skipLibCheck": true,
 }

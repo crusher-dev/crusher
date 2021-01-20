@@ -1,6 +1,7 @@
 {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
+		"baseUrl": "./",
 		"module": "commonjs",
 		"removeComments": true,
 		"sourceMap": true,
@@ -11,9 +12,10 @@
 		"noUnusedLocals": false,
 		"strictNullChecks": false
 	},
-	"include": ["**/*.ts"],
 	"typeRoots": ["node_modules/@types"],
-	"files": ["src/app.js"],
+	"files": [
+		"src/app.ts"
+	],
 	"include": ["./src/**/*"],
-	"exclude": ["node_modules", "**/*.spec.ts"]
+	"exclude": ["**/*.spec.ts"]
 }

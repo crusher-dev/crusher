@@ -1,8 +1,3 @@
-import { JobLogs } from '../server/models/jobLogs';
-import { Platform } from '../core/interfaces/Platform';
-
-const { exec } = require("child_process");
-
 export function appendParamsToURI(uri, params) {
 	const currentURL = new URL(uri);
 	Object.keys(params).forEach((paramKey) => {
@@ -33,19 +28,4 @@ export function extractHostname(url) {
 	hostname = hostname.split("?")[0];
 
 	return hostname.split(".").slice(-2).join(".");
-}
-
-export function createProjectInviteLinkCode(projectId: number, teamId: number) {
-	return `${projectId}_${teamId}`;
-}
-export function createTeamInviteLinkCode(teamId: number) {
-	return teamId;
-}
-
-export function decryptProjectInviteLinkCode(code: string) {
-	const projectTeamArr = code.split("|");
-	return projectTeamArr;
-}
-export function decryptTeamInviteLinkCode(code: string) {
-	return code;
 }

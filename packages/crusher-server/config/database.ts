@@ -1,15 +1,18 @@
 export const REDDIS = {
-	host: process.env.REDIS_HOST ? process.env.REDIS_HOST : "redis",
-	port: process.env.REDIS_PORT ? process.env.REDIS_PORT : 6379,
-	password: process.env.REDIS_PASSWORD ? process.env.REDIS_PASSWORD : null,
+	host: process.env.REDIS_HOST,
+	port: process.env.REDIS_PORT,
+	password: process.env.REDIS_PASSWORD,
 };
 
-export const MONGODB = {
-	connection_string: process.env.MONGODB_CONNECTION_STRING ? process.env.MONGODB_CONNECTION_STRING : null,
-	host: process.env.MONGODB_HOST ? process.env.MONGODB_HOST : "localhost",
-	port: process.env.MONGODB_PORT ? process.env.MONGODB_PORT : 27017,
-	// username: process.env.MONGODB_USERNAME ? process.env.MONGODB_USERNAME : 'remote',
-	username: process.env.MONGODB_USERNAME ? process.env.MONGODB_USERNAME : "remote",
-	password: process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD : "password",
-	database: process.env.MONGODB_DATABASE ? process.env.MONGODB_DATABASE : "crusher",
+export const getMongoDBConnectionString = () : string => {
+	if(process.env.MONGODB_CONNECTION_STRING && process.env.MONGODB_CONNECTION_STRING !== "null"){
+		return process.env.MONGODB_CONNECTION_STRING;
+	}
+	const host = process.env.MONGODB_HOST;
+	const port = process.env.MONGODB_PORT;
+	const username = process.env.MONGODB_USERNAME;
+	const password = process.env.MONGODB_PASSWORD;
+	const database = process.env.MONGODB_DATABASE;
+
+	return `mongodb://${username}${password ? `:${password}` : ""}@${host}:${port}/${database}`
 };

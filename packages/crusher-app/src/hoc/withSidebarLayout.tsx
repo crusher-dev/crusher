@@ -22,7 +22,6 @@ import { useRouter } from "next/router";
 import { SidebarTeamDropdown } from "@ui/containers/sidebar/dropdown";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
-import { AddPaymentModel } from "@ui/containers/modals/addPaymentModal";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { Conditional } from "@ui/components/common/Conditional";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
@@ -143,11 +142,6 @@ function LeftSection(props: any) {
 
 	const userFistCharacter = userName.slice(0, 1);
 
-	const closePaymentModal = () => {
-		setPaymentShow(false);
-		ReactDOM.render(null as any, document.getElementById("overlay"));
-	};
-
 	const closeInviteMembersModal = () => {
 		setShowInviteMembersModal(false);
 		ReactDOM.render(null as any, document.getElementById("overlay"));
@@ -157,7 +151,6 @@ function LeftSection(props: any) {
 		setShowInviteMembersModal(true);
 	};
 
-	const [showPayment, setPaymentShow] = useState(false);
 	return (
 		<div css={leftSectionCSS}>
 			<div css={sectionContainerCSS}>
@@ -191,20 +184,6 @@ function LeftSection(props: any) {
 						>
 							{userName}
 						</span>
-
-						<Conditional If={isUserLoggedIn}>
-							<>
-								<div
-									onClick={setPaymentShow.bind(this, true)}
-									css={addPaymentOnTrialCSS}
-								>
-									14 days left. Add payment.
-								</div>
-								<Conditional If={showPayment}>
-									<AddPaymentModel onClose={closePaymentModal} />
-								</Conditional>
-							</>
-						</Conditional>
 					</div>
 					<div
 						css={sectionHeaderSettingCSS}
@@ -401,18 +380,6 @@ export function withSidebarLayout(
 	return WithSidebarLayout;
 }
 
-const addPaymentOnTrialCSS = css`
-	margin-top: 1rem;
-	font-family: Gilroy;
-
-	font-weight: 500;
-	font-size: 0.95rem;
-
-	text-decoration-line: underline;
-
-	color: #2b2b39;
-`;
-
 const createTestCSS = css`
 	margin-left: auto;
 	:hover {
@@ -510,7 +477,7 @@ const primaryMenuCSS = css`
 			position: absolute;
 			top: 0;
 			left: 0;
-			content: url(/svg/sidebarSettings/tab_selected.svg);
+			content: url("/svg/sidebarSettings/tab_selected.svg");
 		}
 		color: #506cf5;
 		svg,

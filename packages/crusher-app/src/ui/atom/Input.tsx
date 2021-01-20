@@ -85,6 +85,7 @@ const inputCSS = css`
 	font-family: Gilroy;
 	border: none;
 	font-weight: 500;
+	border-radius: ${6 / PIXEL_REM_RATIO}rem;
 	&::placeholder {
 		color: #ababab;
 	}

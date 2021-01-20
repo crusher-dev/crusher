@@ -58,7 +58,7 @@ const ProjectBasicSettings = (props: any) => {
 	const projectInfo: iProjectInfoResponse = useSelector(getProjectInfo);
 
 	const [projectName, setProjectName] = useState(projectInfo.name);
-	const [featuresInfo, setFeaturesInfo] = useState({
+	const [featuresInfo] = useState({
 		video_recording: isVideoRecordingOn,
 		screenshot: isScreenshotOn,
 		multi_browser_support: isMultiBrowserSupportOn,
@@ -69,24 +69,15 @@ const ProjectBasicSettings = (props: any) => {
 	};
 
 	const handleVideoRecordingToggle = useCallback(() => {
-		setFeaturesInfo({
-			...featuresInfo,
-			video_recording: !featuresInfo.video_recording,
-		});
+		console.log("Clicked on video recording feature");
 	}, [featuresInfo]);
 
 	const handleScreenshotToggle = useCallback(() => {
-		setFeaturesInfo({
-			...featuresInfo,
-			screenshot: !featuresInfo.screenshot,
-		});
+		console.log("Clicked on screenshot feature");
 	}, [featuresInfo]);
 
 	const handleMultiBrowserSupportToggle = useCallback(() => {
-		setFeaturesInfo({
-			...featuresInfo,
-			multi_browser_support: !featuresInfo.multi_browser_support,
-		});
+		console.log("Clicked on multi browser support feature");
 	}, [featuresInfo]);
 
 	const saveBasicSettings = () => {
@@ -235,7 +226,7 @@ ProjectBasicSettings.getInitialProps = async (ctx: any) => {
 		return {
 			isVideoRecordingOn: true,
 			isScreenshotOn: true,
-			isMultiBrowserSupportOn: false,
+			isMultiBrowserSupportOn: true,
 		};
 	} catch (ex) {
 		redirectToFrontendPath("/404", res);

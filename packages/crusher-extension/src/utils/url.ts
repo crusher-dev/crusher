@@ -37,20 +37,6 @@ export class AdvancedURL {
 		);
 	}
 
-	static generateCrusherExtensionUrl(
-		targetSiteUrl: string,
-		selectedDevice: string,
-	): string {
-		const url = new URL(targetSiteUrl);
-
-		const crusherAgent = devices.find((device) => device.id === selectedDevice);
-		url.searchParams.set("__crusherAgent__", encodeURI(crusherAgent!.userAgent));
-
-		return `${chrome.extension.getURL(
-			"test_recorder.html",
-		)}?url=${url}&device=${selectedDevice}`;
-	}
-
 	static getUrlFromCrusherExtensionUrl(extensionUrl: string): string {
 		const url = getQueryStringParams("url", extensionUrl);
 

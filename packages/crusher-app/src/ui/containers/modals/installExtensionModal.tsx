@@ -26,14 +26,16 @@ const InstallExtensionModal = (props: iProps) => {
 	};
 
 	useMemo(() => {
-		(_waitingInterval as any).current = setInterval(async () => {
-			const isExtensionThere = checkIfExtensionPresent();
-			if (isExtensionThere) {
-				stopWaitingInterval();
-				onExtensionDownloaded();
-			}
-		}, 500);
-	}, []);
+		if (isOpen) {
+			(_waitingInterval as any).current = setInterval(async () => {
+				const isExtensionThere = await checkIfExtensionPresent();
+				if (isExtensionThere) {
+					stopWaitingInterval();
+					onExtensionDownloaded();
+				}
+			}, 500);
+		}
+	}, [isOpen]);
 
 	const downloadExtension = () => {
 		setShouldStartWaiting(true);

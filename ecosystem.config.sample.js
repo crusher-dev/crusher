@@ -55,6 +55,7 @@ const AWS_CONFIG = {
 
 const BACKEND_URL = process.env.BACKEND_URL ? process.env.BACKEND_URL : 'http://localhost:8000/';
 const FRONTEND_URL = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : 'http://localhost:3000/';
+const EXTENSION_ID = process.env.EXTENSION_ID ? process.env.EXTENSION_ID : 'fdbnpjonlhmjhjfojacolckkbipcecoe';
 
 module.exports = {
 	apps: [
@@ -67,6 +68,7 @@ module.exports = {
 				BACKEND_URL: BACKEND_URL,
 				IS_DEVELOPMENT: true,
 				FRONTEND_URL: FRONTEND_URL,
+				EXTENSION_ID: EXTENSION_ID,
 			},
 			merge_logs: true,
 			out_file: './logs/crusher-app.out',

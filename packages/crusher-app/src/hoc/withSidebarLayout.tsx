@@ -29,6 +29,7 @@ import { NextPage, NextPageContext } from "next";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
 import { checkIfExtensionPresent } from "@utils/extension";
+import { CreateTestModal } from "@ui/containers/modals/createTestModal";
 
 interface NavItem {
 	name: string;
@@ -328,7 +329,7 @@ export function withSidebarLayout(
 			(store as any).dispatch(saveSelectedProjectInRedux(parseInt(project.value)));
 		}
 
-		const showCreateTestModal = async () => {
+		const handleCreateTest = async () => {
 			const isExtensionInstalled = await checkIfExtensionPresent();
 			if (!isExtensionInstalled) {
 				setShowInstallExtensionModal(true);
@@ -339,11 +340,14 @@ export function withSidebarLayout(
 
 		const closeInstallExtensionModal = () => {
 			setShowInstallExtensionModal(false);
-			setShowCreateTestModal(true);
+		};
+		const closeShowCreateTestModal = () => {
+			setShowCreateTestModal(false);
 		};
 
 		const handleExtensionDownloaded = () => {
 			closeInstallExtensionModal();
+			setShowCreateTestModal(true);
 		};
 
 		return (
@@ -367,6 +371,10 @@ export function withSidebarLayout(
 						onClose={closeInstallExtensionModal}
 						onExtensionDownloaded={handleExtensionDownloaded}
 					/>
+					<CreateTestModal
+						isOpen={showCreateTestModal}
+						onClose={closeShowCreateTestModal}
+					/>
 					<div css={contentContainerCSS}>
 						<div css={headerCSS}>
 							<CrusherLogo />
@@ -377,7 +385,7 @@ export function withSidebarLayout(
 								onChange={onProjectChange}
 							/>
 							<span css={createTestCSS}>
-								<CreateTest onClick={showCreateTestModal} />
+								<CreateTest onClick={handleCreateTest} />
 							</span>
 						</div>
 						<div css={innerContentContainerCSS}>

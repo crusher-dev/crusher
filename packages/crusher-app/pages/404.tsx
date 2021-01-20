@@ -14,7 +14,7 @@ function WebsiteHealthCard() {
 	);
 }
 
-export default function error404() {
+export default function Error404() {
 	return (
 		<div css={notFoundCSS}>
 			<img src={notFoundSatellite} css={satelliteImageCSS} />
@@ -36,6 +36,7 @@ const satelliteImageCSS = css`
 	height: 13.5rem;
 	left: 43.4rem;
 	right: 11.8rem;
+	margin-bottom: 1rem;
 `;
 
 const notFoundCSS = css`
@@ -58,6 +59,7 @@ const pageUnreachableCSS = css`
 
 const thisAnErrorCSS = css`
 	font-family: Gilroy;
+	margin-top: 1rem;
 	font-size: 1rem;
 	line-height: 1.125rem;
 	color: #9b9b9b;
@@ -65,6 +67,7 @@ const thisAnErrorCSS = css`
 `;
 
 const reportButtonCSS = css`
+	margin-top: 1.5rem;
 	background: #ffffff;
 	border: 0.125rem solid #1c1c1c;
 	box-sizing: border-box;

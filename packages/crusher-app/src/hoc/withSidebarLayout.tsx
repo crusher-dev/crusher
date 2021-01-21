@@ -327,6 +327,7 @@ export function withSidebarLayout(
 
 		function onProjectChange(project: iSelectOption) {
 			(store as any).dispatch(saveSelectedProjectInRedux(parseInt(project.value)));
+			window.location.reload();
 		}
 
 		const handleCreateTest = async () => {

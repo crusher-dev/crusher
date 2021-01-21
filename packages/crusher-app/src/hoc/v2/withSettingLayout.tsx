@@ -370,7 +370,13 @@ const projectIcon = css`
 `;
 
 const selectedProjectIconCSS = css`
-	border: 2px solid #6583fe;
+	background: #2b2b39;
+	color: #f4f4f4;
+	:hover {
+		cursor: pointer;
+		background: #2b2b39b8 !important;
+		border: 2px solid #2b2b39b8 !important;
+	}
 `;
 
 const projectBar = css`

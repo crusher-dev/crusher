@@ -17,23 +17,28 @@ const InstallExtensionModal = (props: iProps) => {
 	const { isOpen, onClose, onExtensionDownloaded } = props;
 
 	const [shouldStartWaiting, setShouldStartWaiting] = useState(false);
-	const _waitingInterval: RefObject<NodeJS.Timeout> = useRef(null);
+	const _waitingForExtensionInstallInterval: RefObject<NodeJS.Timeout> = useRef(
+		null,
+	);
 
 	const stopWaitingInterval = () => {
-		clearInterval(_waitingInterval.current!);
+		clearInterval(_waitingForExtensionInstallInterval.current!);
 		setShouldStartWaiting(false);
-		(_waitingInterval as any).current = null;
+		(_waitingForExtensionInstallInterval as any).current = null;
 	};
 
 	useMemo(() => {
 		if (isOpen) {
-			(_waitingInterval as any).current = setInterval(async () => {
-				const isExtensionThere = await checkIfExtensionPresent();
-				if (isExtensionThere) {
-					stopWaitingInterval();
-					onExtensionDownloaded();
-				}
-			}, 500);
+			(_waitingForExtensionInstallInterval as any).current = setInterval(
+				async () => {
+					const isExtensionThere = await checkIfExtensionPresent();
+					if (isExtensionThere) {
+						stopWaitingInterval();
+						onExtensionDownloaded();
+					}
+				},
+				500,
+			);
 		}
 	}, [isOpen]);
 

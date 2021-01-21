@@ -17,10 +17,13 @@ import { ThemeContext } from "@constants/style";
 import { ToastDialog } from "@ui/atom/toastDialog";
 import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
-import { saveProjectsInRedux } from "@redux/actions/project";
+import {
+	saveProjectsInRedux,
+	saveSelectedProjectInRedux,
+} from "@redux/actions/project";
 import { ANALYTICS } from "@services/analytics";
 import Modal from "react-modal";
-import "../src/tailwind.css"
+import "../src/tailwind.css";
 
 Modal.setAppElement("#__next");
 
@@ -79,6 +82,11 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 
 				store.dispatch(setUserLoggedIn(userInfo));
 				store.dispatch(saveProjectsInRedux(projects));
+				if (reqMetaInfo.cookies.selectedProject) {
+					store.dispatch(
+						saveSelectedProjectInRedux(parseInt(reqMetaInfo.cookies.selectedProject)),
+					);
+				}
 			})
 			.catch((ex) => {
 				console.debug("Some issue occurred", ex);

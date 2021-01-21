@@ -1,12 +1,6 @@
-import {
-	REMOVE_MEMBER,
-	SET_MEMBERS,
-	SET_PROFILE_INFO,
-	UPDATE_MEMBER_ROLE,
-} from "@redux/actions/settings";
+import { SET_PROFILE_INFO } from "@redux/actions/settings";
 import IAction from "@interfaces/redux/action";
-import { iMember, iProfile } from "@interfaces/redux/settings";
-import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
+import { iProfile } from "@interfaces/redux/settings";
 
 export interface iSettingsState {
 	profile: iProfile | null;

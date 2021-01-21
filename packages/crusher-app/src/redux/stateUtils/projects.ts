@@ -11,4 +11,4 @@ export const getAllHosts = (projectId: number) => (state: any) =>
 export const getProjectInfo = (state: any) => state.projects.currentProjectInfo;
 
 export const getProjectMembers = (projectId: number) => (state: any) =>
-	state.projects.members[projectId];
+	state.projects.members[projectId] ? state.projects.members[projectId] : [];

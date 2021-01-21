@@ -5,15 +5,17 @@ import BackSVG from "../../../public/svg/settings/back.svg";
 import StarSVG from "../../../public/svg/settings/star.svg";
 import TeamSVG from "../../../public/svg/settings/team.svg";
 
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { Conditional } from "@ui/components/common/Conditional";
 import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
 import ReactDOM from "react-dom";
-import { getProjects } from "@redux/stateUtils/projects";
+import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { useSelector } from "react-redux";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
+import { store } from "@redux/store";
+import { saveSelectedProjectInRedux } from "@redux/actions/project";
 
 const projectMenuData = {
 	title: "Project",
@@ -142,10 +144,35 @@ interface iProjectContainerProps {
 }
 function ProjectContainer(props: iProjectContainerProps) {
 	const { showCreateProjectModal } = props;
+	const selectedProject = useSelector(getSelectedProject);
 	const projectsList = useSelector(getProjects);
-	const projectItems = projectsList.map((projectItem) => {
-		return <div css={projectIcon}>{projectItem.name[0].toUpperCase()}</div>;
-	});
+
+	const handleProjectChange = (projectId: number) => {
+		if (selectedProject !== projectId) {
+			store.dispatch(saveSelectedProjectInRedux(projectId));
+			window.location.reload();
+		}
+	};
+
+	const getProjectItems = useCallback(() => {
+		return projectsList.map((projectItem) => {
+			return (
+				<div
+					key={projectItem.id}
+					css={[
+						projectIcon,
+						projectItem.id === selectedProject ? selectedProjectIconCSS : null,
+					]}
+					onClick={handleProjectChange.bind(this, projectItem.id)}
+				>
+					{projectItem.name[0].toUpperCase()}
+				</div>
+			);
+		});
+	}, [projectsList]);
+
+	const projectItems = getProjectItems();
+
 	const addProject = () => {
 		showCreateProjectModal();
 	};
@@ -340,6 +367,10 @@ const projectIcon = css`
 		background: #fff;
 		border: 2px solid #eae8e8;
 	}
+`;
+
+const selectedProjectIconCSS = css`
+	border: 2px solid #6583fe;
 `;
 
 const projectBar = css`

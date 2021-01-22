@@ -26,7 +26,8 @@ function CreateTest() {
 				</button>
 				<button css={[buttonCSS, createTestButtonCSS]}>
 					{" "}
-					<img src={CreateTestSVG} css={createTestImageCSS} /> Create a Test
+					<CreateTestSVG css={createTestImageCSS} />
+					Create a Test
 				</button>
 			</div>
 			<p css={migrateTestCSS}>Already have a test? Migrate it!</p>

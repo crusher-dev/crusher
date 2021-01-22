@@ -1,13 +1,14 @@
 import { css } from "@emotion/core";
 import BuildsPageIllustration from "../../../../public/assets/img/illustration/buildsPageIllustration.png";
 import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
+import RunBuildSVG from "../../../../public/svg/project/createTest.svg";
 import { useState } from "react";
 
 function RunBuild() {
 	const [open, setOpen] = useState(false);
 	return (
 		<div css={containerCSS}>
-            {open && <WatchVideoModal isOpen={open} onClose={() => setOpen(false)} />}
+			{open && <WatchVideoModal isOpen={open} onClose={() => setOpen(false)} />}
 			<img src={BuildsPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>You don't have any builds yet</p>
 			<p css={easyToCreateTestCSS}>
@@ -15,13 +16,12 @@ function RunBuild() {
 			</p>
 
 			<div css={buttonsDivCSS}>
-				<button
-					css={[buttonCSS, watchButtonCSS]}
-					onClick={() => setOpen(true)}
-				>
+				<button css={[buttonCSS, watchButtonCSS]} onClick={() => setOpen(true)}>
 					Show me how?
 				</button>
-				<button css={[buttonCSS, createTestButtonCSS]}>Run a build</button>
+				<button css={[buttonCSS, createTestButtonCSS]}>
+					<RunBuildSVG css={createTestImageCSS} /> Run a build
+				</button>
 			</div>
 			<p css={migrateTestCSS}>Or setup monitoring/CLI integration</p>
 		</div>

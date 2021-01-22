@@ -3,7 +3,6 @@ import { UniqueSelectorResult } from './interfaces/result';
 import { getIDSelectors } from './selectors/id';
 import { getDataAttribute } from './selectors/dataAttribute';
 import { getAttribute } from './selectors/attribute';
-import { getPnC } from './selectors/pnc';
 
 /**
  * Entry File.
@@ -32,22 +31,16 @@ class UniqueSelector {
 		const idSelector = getIDSelectors(element, this._configuration.root);
 		const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
 		const geAttributesSelector = getAttribute(element, this._configuration.root);
-		const genPnCSelectors = getPnC(element, this._configuration.root);
 
 		const selectors = [];
 
 		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector);
 		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
 
-		selectors.push(...(genPnCSelectors ? genPnCSelectors : []));
-
-		console.log('These are the selectors', selectors);
-		console.log(selectors);
-
 		// @ts-ignore
 		return {
 			mostUniqueSelector: selectors[0],
-			list: [...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...genPnCSelectors],
+			list: selectors,
 		} as UniqueSelectorResult;
 	}
 }

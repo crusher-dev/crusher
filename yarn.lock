@@ -19163,19 +19163,6 @@ unique-filename@^1.1.1:
   dependencies:
     unique-slug "^2.0.0"
 
-unique-selector-2@^0.1.5-development:
-  version "0.1.5-development"
-  resolved "https://registry.yarnpkg.com/unique-selector-2/-/unique-selector-2-0.1.5-development.tgz#f9d32e49d1a3327e17bdc1f456a53b2d34e2d01e"
-  integrity sha512-429r5bImZSAmYDx9x4AgpDPe2zEQioAN0ua/KVqcq6biBvYlavnP5XnTfm8kdJo3wsLV/U7Ls7VtzmDSKNpErQ==
-  dependencies:
-    lodash "^4.17.20"
-    tslib "^2.0.1"
-
-unique-selector@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/unique-selector/-/unique-selector-0.4.1.tgz#f14e0f0e3b8fb3667c8245463c3ffe237442b0ac"
-  integrity sha512-7dLxUE1Wu89fpruo7DAH2k+7UcGSZBnEiwjvlPX5p0LuoJkVIgoaR/5YRFjwmQnVq7ZK0ankCdLRx4mRqd6oOQ==
-
 unique-slug@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/unique-slug/-/unique-slug-2.0.2.tgz#baabce91083fc64e945b0f3ad613e264f7cd4e6c"

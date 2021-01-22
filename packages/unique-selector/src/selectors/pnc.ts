@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { SelectorData } from '../interfaces/result';
-import { SELECTOR_TYPE } from '../../../../../unique-selector/src/constants';
+import { SELECTOR_TYPE } from '../constants';
 import _ from 'lodash';
 
 let rootDocument;

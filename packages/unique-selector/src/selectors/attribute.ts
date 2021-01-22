@@ -1,7 +1,7 @@
-import { SELECTOR_TYPE } from '../../../../../unique-selector/src/constants';
+import { SELECTOR_TYPE } from '../constants';
 import { SelectorData } from '../interfaces/result';
 import { Map } from '../interfaces/common';
-import { getQuerySelector, getUniqueScore } from '../../../../../unique-selector/src/utils';
+import { getQuerySelector, getUniqueScore } from '../utils';
 /**
  * Returns attribute map, value and uniqueness of HTML node
  * @param htmlNode

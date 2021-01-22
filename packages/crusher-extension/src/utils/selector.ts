@@ -1,5 +1,5 @@
 import { finder } from "@medv/finder";
-import * as uniqueSelector2 from "unique-selector-2";
+import * as uniqueSelector2 from "unique-selector";
 import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
 
 const _uniqueSelector2 = new uniqueSelector2.default({});
@@ -35,7 +35,12 @@ function getFinderSelector(elementNode: HTMLElement): string {
 
 export function getSelectors(elementNode: HTMLElement): Array<iSelectorInfo> {
 	const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
-	const finderSelector = getFinderSelector(elementNode);
+	let finderSelector;
+	try {
+		finderSelector = getFinderSelector(elementNode);
+	} catch (err) {
+		finderSelector = null;
+	}
 	const xPathSelector = getXpathTo(elementNode);
 
 	const out = [];

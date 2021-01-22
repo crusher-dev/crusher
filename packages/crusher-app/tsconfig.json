@@ -36,13 +36,14 @@
 			"@constants/*": ["crusher-app/src/constants/*"],
 			"@code-generator/*": ["code-generator/*"],
 			"@crusher-shared/*": ["crusher-shared/*"],
-			"@svg/*": ["crusher-app/public/svg/*"]
+			"@svg/*": ["crusher-app/src/svg/*"]
 		},
 
 	},
 	"exclude": ["node_modules"],
 	"include": [
 		"next-env.d.ts",
+
 		"**/*.ts",
 		"**/*.tsx",
 		"**/*.svg",

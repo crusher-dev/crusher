@@ -2,7 +2,6 @@ import React from "react";
 import { css } from "@emotion/core";
 import { Conditional } from "../common/Conditional";
 import { PIXEL_REM_RATIO } from "@constants/other";
-
 interface iSettingsContentHeader {
 	title: string;
 	desc: string;
@@ -11,6 +10,7 @@ interface iSettingsContentHeader {
 }
 const SettingsContentHeader = (props: iSettingsContentHeader) => {
 	const { title, desc, button } = props;
+
 
 	return (
 		<div css={containerCSS}>

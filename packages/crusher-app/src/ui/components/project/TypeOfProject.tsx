@@ -1,7 +1,7 @@
 import { css } from "@emotion/core";
 
 export default function TypeOfProject(props: any) {
-	const { title, cards, onSelect, selectedID } = props;
+	const { title, cards, onSelect, selectedID} = props;
 
 	function handleOnClick(e: any) {
 		const { id } = e.target;

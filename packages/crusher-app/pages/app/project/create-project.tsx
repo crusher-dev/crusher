@@ -96,6 +96,9 @@ function CreateProject() {
 					<input
 						css={[textFieldCSS, isTextFieldSelected ? selectedTextFieldCSS : null]}
 						type="text"
+						onBlur={() => {
+							setIsTextFieldSelected(false);
+						}}
 						onFocus={() => {
 							setIsTextFieldSelected(true);
 						}}
@@ -215,7 +218,7 @@ const progressBarFirstStepDoneCSS = css`
 `;
 
 const progressBarSecondStepDoneCSS = css`
-	width: 100%;
+	width: 90%;
 `;
 
 export default CreateProject;

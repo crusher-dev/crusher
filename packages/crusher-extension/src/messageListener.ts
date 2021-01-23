@@ -118,8 +118,10 @@ function handleRecordAction(action: iAction) {
 
 			const isScrollingToSameLastElement =
 				lastRecordedAction.type === ACTIONS_IN_TEST.SCROLL &&
-				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
-					(action.payload.selectors as iSelectorInfo[])[0].value;
+				((lastRecordedAction.payload.selectors === null &&
+					action.payload.selectors === null) ||
+					(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
+						(action.payload.selectors as iSelectorInfo[])[0].value);
 
 			// Store add inputs in an array values
 			if (!isScrollingToSameLastElement) {

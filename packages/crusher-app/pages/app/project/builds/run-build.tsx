@@ -5,10 +5,12 @@ import RunBuildSVG from "../../../../public/svg/project/createTest.svg";
 import { useState } from "react";
 
 function RunBuild() {
-	const [open, setOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<div css={containerCSS}>
-			{open && <WatchVideoModal isOpen={open} onClose={() => setOpen(false)} />}
+			{isOpen && (
+				<WatchVideoModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+			)}
 			<img src={BuildsPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>You don't have any builds yet</p>
 			<p css={easyToCreateTestCSS}>
@@ -16,7 +18,7 @@ function RunBuild() {
 			</p>
 
 			<div css={buttonsDivCSS}>
-				<button css={[buttonCSS, watchButtonCSS]} onClick={() => setOpen(true)}>
+				<button css={[buttonCSS, watchButtonCSS]} onClick={() => setIsOpen(true)}>
 					Show me how?
 				</button>
 				<button css={[buttonCSS, createTestButtonCSS]}>

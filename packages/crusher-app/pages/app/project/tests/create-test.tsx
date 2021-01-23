@@ -5,10 +5,12 @@ import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
 import { useState } from "react";
 
 function CreateTest() {
-	const [open, setOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<div css={containerCSS}>
-			{open && <WatchVideoModal isOpen={open} onClose={() => setOpen(false)} />}
+			{isOpen && (
+				<WatchVideoModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+			)}
 			<img src={CreateTestPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>Create a test to fight bugs and downtime</p>
 			<p css={easyToCreateTestCSS}>
@@ -19,7 +21,7 @@ function CreateTest() {
 				<button
 					css={[buttonCSS, watchButtonCSS]}
 					onClick={() => {
-						setOpen(true);
+						setIsOpen(true);
 					}}
 				>
 					Watch Tutorial

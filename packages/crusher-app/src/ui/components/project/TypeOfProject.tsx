@@ -1,40 +1,40 @@
 import { css } from "@emotion/core";
 
 export default function TypeOfProject(props: any) {
-	const { title, cards, onSelect, selectedID} = props;
+	const { title, cards, onSelect, selectedID } = props;
 
+	return (
+		<div css={sectionCSS}>
+			<p css={titleCSS}>{title}</p>
+			<div css={cardContainerCSS}>
+				{cards.map((card: any) => Card({ ...card }, selectedID, onSelect))}
+			</div>
+		</div>
+	);
+}
+function Card(
+	{ cardIllustration, cardName, cardDescription, cardID },
+	selectedID,
+	onSelect,
+) {
 	function handleOnClick(e: any) {
 		const { id } = e.target;
 		onSelect(id);
 	}
 
 	return (
-		<div css={sectionCSS}>
-			<p css={titleCSS}>{title}</p>
-			<div css={cardContainerCSS}>
-				{cards.map((card: any) => returnCard({ ...card }, selectedID))}
+		<div
+			css={[cardCSS, cardID === selectedID ? selectedProjectTypeCSS : null]}
+			id={cardID}
+			onClick={(e) => handleOnClick(e)}
+		>
+			<img src={cardIllustration} css={imageCSS} id={cardID} />
+			<div css={cardTextCSS} id={cardID}>
+				<strong id={cardID}>{cardName}</strong>
+				<p id={cardID}>{cardDescription}</p>
 			</div>
 		</div>
 	);
-
-	function returnCard(
-		{ cardIllustration, cardName, cardDescription, cardID },
-		selectedID,
-	) {
-		return (
-			<div
-				css={[cardCSS, cardID === selectedID ? selectedProjectTypeCSS : null]}
-				id={cardID}
-				onClick={(e) => handleOnClick(e)}
-			>
-				<img src={cardIllustration} css={imageCSS} id={cardID} />
-				<div css={cardTextCSS} id={cardID}>
-					<strong id={cardID}>{cardName}</strong>
-					<p id={cardID}>{cardDescription}</p>
-				</div>
-			</div>
-		);
-	}
 }
 
 const sectionCSS = css`

@@ -5,73 +5,72 @@ import GrayPlaceholder from "../../../public/assets/img/general/grayPlaceholder.
 import { useState } from "react";
 // import Input from "@ui/components/form/Input";
 
+const sectionData = {
+	cards: [
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "APP Testing",
+			cardDescription: "Android/iOS App",
+			cardID: "appTesting",
+		},
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "Web Testing",
+			cardDescription: "Android/iOS App",
+			cardID: "webTesting",
+		},
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "API Testing",
+			cardDescription: "Android/iOS App",
+			cardID: "apiTesting",
+		},
+	],
+};
+
+const monitoringObject = {
+	cards: [
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "External Monitoring",
+			cardDescription: "Android/iOS App",
+			cardID: "externalMonitoring",
+		},
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "APM",
+			cardDescription: "Android/iOS App",
+			cardID: "apm",
+		},
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "Infra",
+			cardDescription: "Android/iOS App",
+			cardID: "infra",
+		},
+	],
+};
+
+const otherObject = {
+	cards: [
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "Workflow Automation",
+			cardDescription: "Android/iOS App",
+			cardID: "workflowAutomation",
+		},
+		{
+			cardIllustration: GrayPlaceholder,
+			cardName: "Testing",
+			cardDescription: "Android/iOS App",
+			cardID: "testing",
+		},
+	],
+};
+
 function CreateProject() {
-	const [isTextFieldSelected, setIsTextFieldSelected] = useState(false);
 	const [textFieldData, setTextFieldData] = useState("");
 	const [selectedCardID, setSelectedCardID] = useState("");
-
-	const sectionData = {
-		cards: [
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "APP Testing",
-				cardDescription: "Android/iOS App",
-				cardID: "appTesting",
-			},
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "Web Testing",
-				cardDescription: "Android/iOS App",
-				cardID: "webTesting",
-			},
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "API Testing",
-				cardDescription: "Android/iOS App",
-				cardID: "apiTesting",
-			},
-		],
-	};
-
-	const monitoringObject = {
-		cards: [
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "External Monitoring",
-				cardDescription: "Android/iOS App",
-				cardID: "externalMonitoring",
-			},
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "APM",
-				cardDescription: "Android/iOS App",
-				cardID: "apm",
-			},
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "Infra",
-				cardDescription: "Android/iOS App",
-				cardID: "infra",
-			},
-		],
-	};
-
-	const otherObject = {
-		cards: [
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "Workflow Automation",
-				cardDescription: "Android/iOS App",
-				cardID: "workflowAutomation",
-			},
-			{
-				cardIllustration: GrayPlaceholder,
-				cardName: "Testing",
-				cardDescription: "Android/iOS App",
-				cardID: "testing",
-			},
-		],
-	};
 
 	function handleCardClick(cardID: any) {
 		setSelectedCardID(cardID);
@@ -94,17 +93,10 @@ function CreateProject() {
 				<div css={titleCSS}>
 					<p>What is the name of the project?</p>
 					<input
-						css={[textFieldCSS, isTextFieldSelected ? selectedTextFieldCSS : null]}
+						css={textFieldCSS}
 						type="text"
-						onBlur={() => {
-							setIsTextFieldSelected(false);
-						}}
-						onFocus={() => {
-							setIsTextFieldSelected(true);
-						}}
 						onChange={(e) => setTextFieldData(e.target.value)}
-					/>{" "}
-					{/* Should I use Input Component in @ui/componentes/form/Input? */}
+					/>
 				</div>
 				<div css={titleCSS}>Select type of project</div>
 				<TypeOfProject
@@ -130,12 +122,19 @@ function CreateProject() {
 						buttonCSS,
 						textFieldData && selectedCardID ? fulfilledButtonCSS : null,
 					]}
+					onClick={() => {
+						textFieldData && selectedCardID && handleClick();
+					}}
 				>
 					Create Project
 				</button>
 			</div>
 		</>
 	);
+}
+
+function handleClick() {
+	console.log("Clicked");
 }
 
 const buttonCSS = css`
@@ -198,12 +197,11 @@ const textFieldCSS = css`
 	font-size: 1rem;
 	line-height: 1rem;
 	width: 20rem;
-`;
-
-const selectedTextFieldCSS = css`
-	background: #ffffff;
-	border: 2px solid #6583fe;
-	border-radius: 4px;
+	&:focus {
+		background: #ffffff;
+		border: 2px solid #6583fe;
+		border-radius: 4px;
+	}
 `;
 
 const progressBarCSS = css`

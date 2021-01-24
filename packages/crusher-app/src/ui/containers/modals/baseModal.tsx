@@ -45,7 +45,7 @@ const BaseModal = (props: iBaseModalProps) => {
 			isOpen={isOpen}
 			onRequestClose={onClose}
 			style={customModalStyle(width, height)}
-			contentLabel="Example Modal"
+			contentLabel="Base Modal"
 		>
 			<div css={[containerCSS, customCSS.container]}>
 				<div css={[modalContainerCSS, customCSS.mainContainer]}>

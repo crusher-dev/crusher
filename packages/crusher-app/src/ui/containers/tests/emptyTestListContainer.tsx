@@ -1,20 +1,21 @@
+import React from "react";
+import { useState } from "react";
 import { css } from "@emotion/core";
 import CreateTestPageIllustration from "../../../../public/assets/img/illustration/createTestPageIllustration.png";
-import CreateTestSVG from "../../../../public/svg/tests/createTest.svg";
+import AddIcon from "../../../svg/roundAdd.svg";
 import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
-import { useState } from "react";
 
-function CreateTest() {
+const EmptyTestListContainer = () => {
 	const [isOpen, setIsOpen] = useState(false);
+
 	return (
 		<div css={containerCSS}>
-			{isOpen && (
-				<WatchVideoModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
-			)}
+			<WatchVideoModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+
 			<img src={CreateTestPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>Create a test to fight bugs and downtime</p>
 			<p css={easyToCreateTestCSS}>
-				It's easy to create a test. It just takes a few seconds!
+				{"It's easy to create a test. It just takes a few seconds!"}
 			</p>
 
 			<div css={buttonsDivCSS}>
@@ -28,20 +29,20 @@ function CreateTest() {
 				</button>
 				<button css={[buttonCSS, createTestButtonCSS]}>
 					{" "}
-					<CreateTestSVG css={createTestImageCSS} />
+					<AddIcon css={createTestImageCSS} />
 					Create a Test
 				</button>
 			</div>
 			<p css={migrateTestCSS}>Already have a test? Migrate it!</p>
 		</div>
 	);
-}
+};
 
 const containerCSS = css`
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	height: 100vh;
+	height: 100%;
 	justify-content: center;
 `;
 
@@ -118,4 +119,4 @@ const migrateTestCSS = css`
 	color: #313131;
 `;
 
-export default CreateTest;
+export { EmptyTestListContainer };

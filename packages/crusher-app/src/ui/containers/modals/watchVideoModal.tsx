@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import { css } from "@emotion/core";
+import CrossIcon from "../../../../public/svg/modals/cross.svg";
 
 interface iWatchModalProps {
 	isOpen: boolean;
@@ -20,6 +21,7 @@ const WatchVideoModal = (props: iWatchModalProps) => {
 			style={customStyles}
 			contentLabel="Example Modal"
 		>
+			<CrossIcon css={crossIconCSS} onClick={onClose} />
 			<div css={backgroundCSS}>
 				<h2 css={titleCSS}>Watch a short 2 minute video on how Crusher works</h2>
 				<h3
@@ -49,22 +51,30 @@ const WatchVideoModal = (props: iWatchModalProps) => {
 	);
 };
 
+const crossIconCSS = css`
+	position: absolute;
+	right: 2.25rem;
+	top: 1.5rem;
+	cursor: pointer;
+`;
+
 const customStyles = {
 	content: {
 		top: "50%",
 		left: "50%",
-		background: "rgb(0, 0, 0, 0.85)",
-		height: "100vh",
-		width: "100vw",
-		right: "auto",
-		bottom: "auto",
-		marginRight: "-50%",
 		transform: "translate(-50%, -50%)",
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
 		justifyContent: "center",
+		padding: 0,
+		width: "64rem",
+		height: "38rem",
 	} as React.CSSProperties,
+	overlay: {
+		background: "rgb(0, 0, 0, 0.85)",
+		zIndex: 9999,
+	},
 };
 
 const backgroundCSS = css`
@@ -76,6 +86,7 @@ const backgroundCSS = css`
 	padding: 1rem;
 	width: 70%;
 	margin: 1rem;
+	padding-top: 1.5rem;
 `;
 
 const videoPlayerCSS = css`

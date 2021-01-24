@@ -9,8 +9,8 @@ import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import Link from "next/link";
 import { cleanHeaders } from "@utils/backendRequest";
-import { Player } from "@lottiefiles/react-lottie-player";
-import { CreateProjectModal } from "@ui/containers/modals/createProjectModal";
+import { EmptyTestListContainer } from "@ui/containers/tests/emptyTestListContainer";
+import { Conditional } from "@ui/components/common/Conditional";
 
 function TestCard(props) {
 	const { name, userName, userId, id, featured_video_uri, createdAt } = props;
@@ -124,64 +124,47 @@ function ProjectTestsList(props) {
 	const projectsList = useSelector(getProjects);
 	const selectedProjectId = useSelector(getSelectedProject);
 
-	const isInitialMount = useRef(true);
-
 	const selectedProject = projectsList.find((project) => {
 		return project.id === selectedProjectId;
 	});
 
-	useEffect(() => {
-		if (isInitialMount.current) {
-			isInitialMount.current = false;
-		} else {
-			setIsLoading(true);
-			getAllTestsInfosInProject(selectedProjectId).then((tests) => {
-				setProjectTests(tests);
-				setIsLoading(false);
-			});
-		}
-	}, [selectedProjectId]);
+	const isTestsPresent = !isLoading && projectTests.length > 0;
 
 	return (
-		<div css={styles.container}>
-			<div css={styles.heading}>
-				{selectedProject ? selectedProject.name : "Tests List"}
-			</div>
-			{!isLoading && projectTests.length > 0 ? (
-				<RenderTestCard tests={projectTests} />
-			) : (
-				<ShowEmptyPlaceHolder />
-			)}
+		<div
+			css={[
+				styles.container,
+				isTestsPresent ? containerPaddingCSS : emptyTestContainerPaddingCSS,
+			]}
+		>
+			<Conditional If={isTestsPresent}>
+				<>
+					<div css={styles.heading}>
+						{selectedProject ? selectedProject.name : "Tests List"}
+					</div>
+					<RenderTestCard tests={projectTests} />
+				</>
+			</Conditional>
+			<Conditional If={!isTestsPresent}>
+				<EmptyTestListContainer />
+			</Conditional>
 		</div>
 	);
 }
 
-function ShowEmptyPlaceHolder() {
-	return (
-		<div css={styles.activitiesPlaceholderContainer}>
-			<Player
-				autoplay={true}
-				src={"https://assets2.lottiefiles.com/packages/lf20_S6vWEd.json"}
-				speed={1}
-				background={"transparent"}
-				style={{ width: 220, height: 220, margin: "0 auto" }}
-				loop={true}
-			/>
-			<div css={styles.activitiesPlaceholderHeading}>Alas!</div>
-			<div css={styles.activitiesPlaceholderMessageContainer}>
-				<div>You don’t have any tests to show.</div>
-				<div css={styles.blueItalicText}>Need any help</div>
-			</div>
-		</div>
-	);
-}
+const containerPaddingCSS = css`
+	padding-top: 2.46rem;
+	padding-left: 4.25rem;
+	padding-right: 4.25rem;
+`;
+
+const emptyTestContainerPaddingCSS = css`
+	padding-bottom: 4rem;
+`;
 
 const styles = {
 	container: css`
 		display: flex;
-		padding-top: 2.46rem;
-		padding-left: 4.25rem;
-		padding-right: 4.25rem;
 		flex-direction: column;
 		color: #2b2b39;
 		height: 100%;

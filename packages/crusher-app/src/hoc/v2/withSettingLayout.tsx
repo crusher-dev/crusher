@@ -49,6 +49,23 @@ const projectMenuData = {
 	],
 };
 
+const userMenuData = {
+	title: "User",
+	primarySVG: TeamSVG,
+	subMenu: [
+		{
+			id: "profile",
+			title: "Profile",
+			link: "/app/settings/user/profile",
+		},
+		{
+			id: "login-connections",
+			title: "Login Connections",
+			link: "/app/settings/user/login-connections",
+		},
+	],
+};
+
 const teamMenuData = {
 	title: "Team",
 	primarySVG: TeamSVG,
@@ -212,6 +229,8 @@ function MenuContainer(props: iMenuContainerProps) {
 					<StarSVG /> <span id="plan-text">Pro Plan </span>
 				</div>
 			</div>
+
+			<MainMenuItem data={userMenuData} />
 
 			<MainMenuItem data={teamMenuData} />
 

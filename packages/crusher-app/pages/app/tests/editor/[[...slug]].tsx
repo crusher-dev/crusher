@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
-import { iPageContext } from "@interfaces/pageContenxt";
+import { iPageContext } from "@interfaces/pageContext";
 import { checkIfUserLoggedIn } from "@redux/stateUtils/user";
 import { redirectToFrontendPath } from "@utils/router";
 import { NextApiRequest } from "next";

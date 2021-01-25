@@ -39,9 +39,9 @@ InviteTeamMembers.getInitialProps = async (ctx: any) => {
 		}
 		const cookies = getCookies(req);
 
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
+		const selectedProject = cookies.selectedProject
+			? JSON.parse(cookies.selectedProject)
+			: null;
 
 		const slackIntegrations = await getAllSlackIntegrationsForProject(
 			selectedProject,

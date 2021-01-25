@@ -10,6 +10,7 @@ interface iWatchModalProps {
 
 const WatchVideoModal = (props: iWatchModalProps) => {
 	const { isOpen, onClose } = props;
+
 	const handleVideoFinishedCallback = () => {
 		console.log("Video has finished playing");
 	};
@@ -21,7 +22,9 @@ const WatchVideoModal = (props: iWatchModalProps) => {
 			style={customStyles}
 			contentLabel="Example Modal"
 		>
-			<CrossIcon css={crossIconCSS} onClick={onClose} />
+			<span onClick={onClose} css={crossIconCSS}>
+				<CrossIcon />
+			</span>
 			<div css={backgroundCSS}>
 				<h2 css={titleCSS}>Watch a short 2 minute video on how Crusher works</h2>
 				<h3

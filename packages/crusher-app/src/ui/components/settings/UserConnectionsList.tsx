@@ -69,7 +69,7 @@ const UserConnectionItem = (props: iUserConnectionItemProps) => {
 				<div>{getUserConnectionDesc(item)}</div>
 			</div>
 			<div css={userConnectedTimeCSS}>
-				Connected {getDiffInDays(new Date(), new Date(item.createdAt))}d ago
+				Connected {getDiffInDays(new Date(item.createdAt), new Date())}d ago
 			</div>
 			<div css={userConnectionDeleteCSS} onClick={handleOnDelete}>
 				<DeleteIcon />
@@ -118,7 +118,7 @@ interface iUserConnectionsListProps {
 const UserConnectionsList = (props: iUserConnectionsListProps) => {
 	const { items } = props;
 
-	const handleDeleteuserConnection = (connectionId: string) => {
+	const handleDeleteUserConnection = (connectionId: string) => {
 		_removeUserLoginConnection(connectionId).then(() => {
 			store.dispatch(deleteUserConnection(connectionId));
 		});
@@ -128,7 +128,7 @@ const UserConnectionsList = (props: iUserConnectionsListProps) => {
 		return (
 			<UserConnectionItem
 				key={item.id}
-				onDelete={handleDeleteuserConnection}
+				onDelete={handleDeleteUserConnection}
 				item={item}
 			/>
 		);

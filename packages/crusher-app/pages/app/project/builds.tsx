@@ -11,8 +11,10 @@ import { redirectToFrontendPath } from "@utils/router";
 import Link from "next/link";
 import { getTime } from "@utils/helpers";
 import { JobReportStatus } from "@interfaces/JobReportStatus";
-import {PAGE_TYPE} from "@constants/page";
-import {ANALYTICS} from "@services/analytics";
+import { PAGE_TYPE } from "@constants/page";
+import { ANALYTICS } from "@services/analytics";
+import { Conditional } from "@ui/components/common/Conditional";
+import { EmptyBuildListContainer } from "@ui/containers/builds/emptyBuildListContainer";
 
 const AVAILABLE_FILTERS = [
 	{ title: "Monitoring", value: 1 },
@@ -78,8 +80,6 @@ function BuildItem(props: any) {
 	} = props;
 
 	const testInstanceReviewLink = `/app/job/review?jobId=${jobId}&reportId=${reportId}`;
-
-
 
 	return (
 		<Link href={testInstanceReviewLink as any}>
@@ -197,72 +197,53 @@ function resolveCategoryUrl(category: number) {
 const BuildPage = (props: any) => {
 	const { builds, category, page } = props;
 	useEffect(() => {
-		ANALYTICS.trackPage(PAGE_TYPE.BUILD_PAGE)
+		ANALYTICS.trackPage(PAGE_TYPE.BUILD_PAGE);
 	}, []);
 
-	return (
-		<div css={containerCSS}>
-			<div css={headingCSS}>Previous Builds</div>
+	const isBuildsPresent = builds && builds.length;
 
-			<div css={filterContainerCss}>
-				<FilterListPagination
-					categories={AVAILABLE_FILTERS}
-					resolvePaginationUrl={resolvePaginationUrl}
-					resolveCategoryUrl={resolveCategoryUrl}
-					currentPage={parseInt(page)}
-					totalPages={builds.totalPages}
-					items={builds}
-					itemsPerPage={10}
-					selectedCategory={category}
-					itemsListComponent={buildList}
-				/>
-			</div>
+	return (
+		<div
+			css={[
+				containerCSS,
+				isBuildsPresent ? containerPaddingCSS : emptyBuildsContainerPaddingCSS,
+			]}
+		>
+			<Conditional If={isBuildsPresent}>
+				<div css={filterContainerCss}>
+					<div css={headingCSS}>Previous Builds</div>
+					<FilterListPagination
+						categories={AVAILABLE_FILTERS}
+						resolvePaginationUrl={resolvePaginationUrl}
+						resolveCategoryUrl={resolveCategoryUrl}
+						currentPage={parseInt(page)}
+						totalPages={builds.totalPages}
+						items={builds}
+						itemsPerPage={10}
+						selectedCategory={category}
+						itemsListComponent={buildList as any}
+					/>
+				</div>
+			</Conditional>
+			<Conditional If={!isBuildsPresent}>
+				<EmptyBuildListContainer />
+			</Conditional>
 		</div>
 	);
 };
 
-BuildPage.getInitialProps = async (ctx: any) => {
-	const { res, req, store, query } = ctx;
-	try {
-		let headers;
-		if (req) {
-			headers = req.headers;
-			cleanHeaders(headers);
-		}
-
-		const cookies = getCookies(req);
-		const defaultProject = getSelectedProject(store.getState());
-
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
-		const page = query.page ? query.page : 1;
-		const category = query.category ? query.category : 0;
-
-		const selectedProjectId = selectedProject ? selectedProject : defaultProject;
-		const builds = await getAllJobsOfProject(
-			selectedProjectId,
-			category,
-			page,
-			headers,
-		);
-
-		return {
-			builds: builds,
-			projectId: selectedProjectId,
-			category: category,
-			page: page,
-		};
-	} catch (er) {
-		throw er;
-		redirectToFrontendPath("/404", res);
-		return null;
-	}
-};
-
 const containerCSS = css`
-	padding: 2.5rem 4.25rem;
-	padding-bottom: 0;
+	height: 100%;
+`;
+
+const containerPaddingCSS = css`
+	padding-top: 2.46rem;
+	padding-left: 4.25rem;
+	padding-right: 4.25rem;
+`;
+
+const emptyBuildsContainerPaddingCSS = css`
+	padding-bottom: 4rem;
 `;
 
 const headingCSS = css`
@@ -429,4 +410,44 @@ const styles = {
 		font-style: italic;
 	`,
 };
+
+BuildPage.getInitialProps = async (ctx: any) => {
+	const { res, req, store, query } = ctx;
+	try {
+		let headers;
+		if (req) {
+			headers = req.headers;
+			cleanHeaders(headers);
+		}
+
+		const cookies = getCookies(req);
+		const defaultProject = getSelectedProject(store.getState());
+
+		const selectedProject = JSON.parse(
+			cookies.selectedProject ? cookies.selectedProject : null,
+		);
+		const page = query.page ? query.page : 1;
+		const category = query.category ? query.category : 0;
+
+		const selectedProjectId = selectedProject ? selectedProject : defaultProject;
+		const builds = await getAllJobsOfProject(
+			selectedProjectId,
+			category,
+			page,
+			headers,
+		);
+
+		return {
+			builds: builds,
+			projectId: selectedProjectId,
+			category: category,
+			page: page,
+		};
+	} catch (er) {
+		throw er;
+		redirectToFrontendPath("/404", res);
+		return null;
+	}
+};
+
 export default withSession(withSidebarLayout(BuildPage));

@@ -101,10 +101,9 @@ const FilterListPagination = (props: iFilterListPaginationProps) => {
 		totalPages,
 		selectedCategory,
 		resolveCategoryUrl,
-		itemsListComponent,
+		itemsListComponent: ItemsListComponent,
 	} = props;
 
-	const ItemsListComponent: any = itemsListComponent;
 	const [filters, setFilters] = useState({
 		currentPage: parseInt(currentPage as any),
 		category: selectedCategory,

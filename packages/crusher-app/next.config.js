@@ -37,9 +37,9 @@ module.exports = withImages(
 				return config;
 			},
 			env: {
-				BACKEND_URL: process.env.BACKEND_URL,
-				FRONTEND_URL: process.env.FRONTEND_URL,
-				IS_DEVELOPMENT: process.env.IS_DEVELOPMENT,
+				BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+				FRONTEND_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
+				IS_DEVELOPMENT: process.env.NEXT_PUBLIC_IS_DEVELOPMENT,
 			},
 		}),
 	),

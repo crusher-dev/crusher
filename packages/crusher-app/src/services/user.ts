@@ -3,6 +3,8 @@ import { RequestMethod } from "@interfaces/RequestOptions";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
 import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
+import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
+import { iDeleteLoginConnectionRequest } from "@crusher-shared/types/request/deleteLoginConnectionRequest";
 
 export const _authenticateUser = (email: string, password: string) => {
 	return backendRequest("/user/login", {
@@ -82,5 +84,16 @@ export const _fetchUserInfo = (headers = null): Promise<iUserInfoResponse> => {
 		return {
 			...res,
 		};
+	});
+};
+
+export const _removeUserLoginConnection = (
+	connectionId: string,
+	headers: any = null,
+): Promise<Array<iUserConnection>> => {
+	return backendRequest("/v2/user/connection/remove", {
+		method: RequestMethod.DELETE,
+		payload: { connectionId: connectionId } as iDeleteLoginConnectionRequest,
+		headers: headers,
 	});
 };

@@ -4,11 +4,11 @@ if (IS_DEVELOPMENT) {
 	process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 }
 
-const LOCAL_BACKEND_URL = process.env.BACKEND_URL
-	? process.env.BACKEND_URL
+const LOCAL_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+	? process.env.NEXT_PUBLIC_BACKEND_URL
 	: "https://backend.crusher-test.com/";
-const LOCAL_FRONTEND_URL = process.env.FRONTEND_URL
-	? process.env.FRONTEND_URL
+const LOCAL_FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL
+	? process.env.NEXT_PUBLIC_FRONTEND_URL
 	: "https://www.crusher-test.com/";
 
 export const BACKEND_SERVER_URL = IS_DEVELOPMENT

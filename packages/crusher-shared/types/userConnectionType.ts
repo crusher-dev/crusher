@@ -1,0 +1,4 @@
+export enum USER_CONNECTION_TYPE {
+	GITLAB = 'GITLAB',
+	GITHUB = 'GITHUB',
+}

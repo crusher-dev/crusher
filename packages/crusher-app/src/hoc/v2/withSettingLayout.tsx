@@ -5,7 +5,7 @@ import BackSVG from "../../../public/svg/settings/back.svg";
 import StarSVG from "../../../public/svg/settings/star.svg";
 import TeamSVG from "../../../public/svg/settings/team.svg";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { Conditional } from "@ui/components/common/Conditional";

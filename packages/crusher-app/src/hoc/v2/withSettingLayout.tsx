@@ -33,6 +33,11 @@ const projectMenuData = {
 			children: ["/app/settings/project/invite-members"],
 		},
 		{
+			id: "project-git",
+			title: "Git",
+			link: "/app/settings/project/git",
+		},
+		{
 			id: "project-integration-settings",
 			title: "Integration/Notifications",
 			link: "/app/settings/project/integration",
@@ -45,6 +50,23 @@ const projectMenuData = {
 				"/app/settings/project/add-monitoring",
 				"/app/settings/project/add-host",
 			],
+		},
+	],
+};
+
+const userMenuData = {
+	title: "User",
+	primarySVG: TeamSVG,
+	subMenu: [
+		{
+			id: "profile",
+			title: "Profile",
+			link: "/app/settings/user/profile",
+		},
+		{
+			id: "login-connections",
+			title: "Login connections",
+			link: "/app/settings/user/login-connections",
 		},
 	],
 };
@@ -212,6 +234,8 @@ function MenuContainer(props: iMenuContainerProps) {
 					<StarSVG /> <span id="plan-text">Pro Plan </span>
 				</div>
 			</div>
+
+			<MainMenuItem data={userMenuData} />
 
 			<MainMenuItem data={teamMenuData} />
 

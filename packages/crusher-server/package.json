@@ -38,6 +38,7 @@
 	"dependencies": {
 		"@google-cloud/storage": "^5.1.2",
 		"@octokit/auth": "^2.0.0",
+		"@octokit/auth-oauth-app": "^3.0.7",
 		"@octokit/oauth-app": "^1.1.2",
 		"@octokit/rest": "^18.0.0",
 		"@sendgrid/mail": "^7.1.1",
@@ -71,6 +72,8 @@
 		"ioredis-lock": "^4.0.0",
 		"jsonfile": "^5.0.0",
 		"jsonwebtoken": "^8.5.1",
+		"kcors": "2.2.2",
+		"koa-bodyparser": "4.3.0",
 		"lint-staged": "^10.1.5",
 		"lodash": "^4.17.20",
 		"logdna": "^3.5.0",
@@ -100,9 +103,7 @@
 		"tsconfig-paths": "^3.9.0",
 		"typedi": "0.5.2",
 		"underscore": "^1.9.1",
-		"uuid": "^8.3.0",
-		"kcors": "2.2.2",
-		"koa-bodyparser": "4.3.0"
+		"uuid": "^8.3.0"
 	},
 	"scripts": {
 		"dev": "ts-node --project tsconfig.dev.json src/app.ts",

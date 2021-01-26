@@ -1,0 +1,4 @@
+export enum GIT_INTEGRATION_SERVICES {
+	GITHUB = 'GITHUB',
+	GITLAB = 'GITLAB',
+}

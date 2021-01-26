@@ -16,6 +16,7 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 			uri = appendParamsToURI(uri, payload);
 			break;
 		case RequestMethod.POST:
+		case RequestMethod.DELETE:
 		case RequestMethod.PUT:
 			headers = {
 				...headers,

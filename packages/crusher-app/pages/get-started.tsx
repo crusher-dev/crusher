@@ -16,7 +16,7 @@ import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import isEmail from "validator/lib/isEmail";
-import { iPageContext } from "@interfaces/pageContenxt";
+import { iPageContext } from "@interfaces/pageContext";
 
 interface iSignupScreenProps {
 	inviteReferral: iInviteReferral | null;
@@ -59,7 +59,7 @@ function SignupScreen(props: iSignupScreenProps) {
 			alert("Please enter your first name");
 			return;
 		}
-		
+
 		_registerUser(firstName, lastName, email, password, inviteReferral).then(
 			(res: any) => {
 				const { status } = res;
@@ -280,9 +280,10 @@ const googleLoginButtonCSS = (theme: string) => {
 		
 		&:hover {
 			cursor: pointer;
-			span{
-			text-decoration: none;}
-			
+			span {
+				text-decoration: none;
+			}
+
 			color: #fff !important;
 			background: ${theme === "dark" ? "#23272f" : "#23272f"};
 		}

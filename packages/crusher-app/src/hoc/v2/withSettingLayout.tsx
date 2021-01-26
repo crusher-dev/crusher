@@ -33,6 +33,11 @@ const projectMenuData = {
 			children: ["/app/settings/project/invite-members"],
 		},
 		{
+			id: "project-git",
+			title: "Git",
+			link: "/app/settings/project/git",
+		},
+		{
 			id: "project-integration-settings",
 			title: "Integration/Notifications",
 			link: "/app/settings/project/integration",
@@ -60,7 +65,7 @@ const userMenuData = {
 		},
 		{
 			id: "login-connections",
-			title: "Login Connections",
+			title: "Login connections",
 			link: "/app/settings/user/login-connections",
 		},
 	],

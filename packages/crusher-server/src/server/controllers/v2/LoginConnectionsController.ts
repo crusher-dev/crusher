@@ -29,7 +29,7 @@ class LoginConnectionsController {
 	async githubAuthorizationCallback(@CurrentUser({ required: true }) user, @Res() res: any, @QueryParams() params) {
 		const { user_id } = user;
 		const { code } = params;
-		const tokenAuthentication = (await this.userConnectionsService.getGithubAccessToken(code)) as TokenAuthentication;
+		const tokenAuthentication = (await this.userConnectionsService.parseGithubAccessToken(code)) as TokenAuthentication;
 
 		await this.userConnectionsService.upsertGithubConnection(user_id, tokenAuthentication);
 		res.redirect(resolvePathToFrontendURI("/app/settings/user/login-connections?token=" + tokenAuthentication.token));
@@ -39,12 +39,7 @@ class LoginConnectionsController {
 	@Get("/get")
 	async getListOfUserLoginConnections(@CurrentUser({ required: true }) user): Promise<iListOfUserLoginConnectionsResponse> {
 		const { user_id } = user;
-		const connections = await this.userConnectionsService.getListOfUserConnections(user_id);
-
-		return connections.map((connection) => {
-			if (connection.meta["tokenAuthentication"]) delete connection.meta["tokenAuthentication"];
-			return connection;
-		});
+		return this.userConnectionsService.getListOfUserConnections(user_id);
 	}
 
 	@Authorized()

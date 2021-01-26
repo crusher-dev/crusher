@@ -9,13 +9,12 @@ const getGithubOAuthURL = () => {
 	console.log(process.env);
 	url.searchParams.append(
 		"client_id",
-		process.env.NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID as string,
+		process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID as string,
 	);
 	url.searchParams.append(
 		"redirect_uri",
 		resolveToBackendPath("/v2/user/connection/github/callback"),
 	);
-	url.searchParams.append("scope", "repo, user, admin:org");
 	return url.toString();
 };
 

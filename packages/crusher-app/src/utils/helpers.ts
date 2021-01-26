@@ -116,3 +116,11 @@ export function getDiffInDays(date1: Date, date2: Date) {
 
 	return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
+
+export function isWindowCrossOrigin(window: Window) {
+	try {
+		return !(window.location.href && true);
+	} catch (ex) {
+		return true;
+	}
+}

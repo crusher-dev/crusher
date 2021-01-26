@@ -5,6 +5,7 @@ import { Authentication, TokenAuthentication } from "@octokit/auth-oauth-app/dis
 import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
 import { UserConnectionsMongoService } from "../mongo/userConnections";
 import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
+import { iGithubUserConnection } from "@crusher-shared/types/mongo/githubUserConnection";
 
 @Service()
 export default class UserConnectionsService {
@@ -17,10 +18,10 @@ export default class UserConnectionsService {
 		this.userConnectionsMongoService = Container.get(UserConnectionsMongoService);
 	}
 
-	async getGithubAccessToken(code: string): Promise<Authentication> {
+	async parseGithubAccessToken(code: string): Promise<Authentication> {
 		const auth = createOAuthAppAuth({
-			clientId: process.env.GITHUB_OAUTH_CLIENT_ID,
-			clientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET,
+			clientId: process.env.GITHUB_APP_CLIENT_ID,
+			clientSecret: process.env.GITHUB_APP_CLIENT_SECRET,
 		});
 
 		const tokenAuthentication = await auth({

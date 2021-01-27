@@ -374,6 +374,7 @@ async function runChecks(details, clearJobTempValues) {
 
 	const testInstanceWithImages = await getOrganisedTestInstanceWithImages(testInstance);
 	const referenceInstanceWithImages = await getOrganisedTestInstanceWithImages(referenceInstance);
+	console.log("Reference instance is", testInstanceWithImages, referenceInstanceWithImages);
 
 	const { didAllImagesPass, passedImagesCount, manualReviewImagesCount, failedImagesCount } = await getResultForTestInstance(
 		testInstanceWithImages,

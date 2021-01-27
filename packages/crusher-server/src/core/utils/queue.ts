@@ -99,28 +99,33 @@ export async function addJobToRequestQueue(jobRequest) {
 	const referenceJob = await jobsService.getReferenceJob(job);
 	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJob ? referenceJob.id : jobId, projectId);
 
+	const totalTestCount = tests.reduce((prev, current) => {
+		const count = platform === PLATFORM.ALL ? 3 : 1;
+		return prev + count;
+	}, 0);
+
 	for (let test of tests) {
 		if (platform === Platform.ALL) {
 			await addTestRequestToQueue({
-				job: { ...job, report_id: jobReportsId, platform: PLATFORM.CHROME },
+				job: { ...job, report_id: jobReportsId.insertId, platform: PLATFORM.CHROME },
 				test: { ...test, testType: testType },
-				testCount: tests.length,
+				testCount: totalTestCount,
 			});
 			await addTestRequestToQueue({
-				job: { ...job, report_id: jobReportsId, platform: PLATFORM.SAFARI },
+				job: { ...job, report_id: jobReportsId.insertId, platform: PLATFORM.SAFARI },
 				test: { ...test, testType: testType },
-				testCount: tests.length,
+				testCount: totalTestCount,
 			});
 			await addTestRequestToQueue({
-				job: { ...job, report_id: jobReportsId, platform: PLATFORM.FIREFOX },
+				job: { ...job, report_id: jobReportsId.insertId, platform: PLATFORM.FIREFOX },
 				test: { ...test, testType: testType },
-				testCount: tests.length,
+				testCount: totalTestCount,
 			});
 		} else {
 			await addTestRequestToQueue({
-				job: { ...job, report_id: jobReportsId, platform: platform },
+				job: { ...job, report_id: jobReportsId.insertId, platform: platform },
 				test: { ...test, testType: testType },
-				testCount: tests.length,
+				testCount: totalTestCount,
 			});
 		}
 	}

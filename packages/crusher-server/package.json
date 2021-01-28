@@ -12,7 +12,6 @@
 		"@types/multer": "0.0.33",
 		"@types/node": "^8.0.29",
 		"ejs": "^3.1.5",
-		"pretty-quick": "^2.0.1",
 		"shipit-cli": "^5.1.0",
 		"shipit-deploy": "^5.1.0",
 		"ts-node": "3.3.0",

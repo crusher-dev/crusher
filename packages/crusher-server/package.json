@@ -108,7 +108,7 @@
 	"scripts": {
 		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
-		"build": "ncc build src/app.ts -o dist --external bullmq",
+		"build": "NODE_ENV=production ncc build src/app.ts -o dist --external bullmq",
 		"build:start": "NODE_ENV=production node dist/index.js",
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",

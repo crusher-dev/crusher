@@ -37,7 +37,7 @@
 		"body-parser": "1.17.2",
 		"bullmq": "^1.8.14",
 		"chalk": "^4.0.0",
-		"commitizen": "^4.0.4",
+		"commitizen": "^4.2.3",
 		"cookie": "^0.4.1",
 		"cors": "^2.8.5",
 		"cron": "^1.8.2",

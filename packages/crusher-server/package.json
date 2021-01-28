@@ -62,7 +62,7 @@
 		"mysql-import": "^2.0.2",
 		"mysql-promise": "^5.0.0",
 		"mysqldump": "^3.1.0",
-		"node-fetch": "^2.6.0",
+		"node-fetch": "^2.6.1",
 		"node-persist": "^3.0.5",
 		"node-storage": "0.0.9",
 		"pixelmatch": "^5.2.1",

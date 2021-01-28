@@ -1,7 +1,6 @@
 {
 	"name": "video-processor",
 	"version": "1.0.0",
-	"main": "index.js",
 	"license": "ISC",
 	"dependencies": {
 		"async": "^3.2.0",
@@ -36,7 +35,6 @@
 		"@types/mongoose": "^5.7.36",
 		"@types/node": "~10",
 		"@types/shelljs": "^0.8.8",
-		"husky": "^3.0.5",
 		"jest": "^24.9.0",
 		"lint-staged": "8.2.1",
 		"method-override": "^3.0.0",
@@ -55,5 +53,5 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*"
 	},
-	"author": ""
+	"author": "Utkarsh Dixit<utkarsh@crusher.dev>"
 }

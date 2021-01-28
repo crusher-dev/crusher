@@ -1,8 +1,7 @@
 {
 	"name": "test-runner",
 	"version": "1.0.0",
-	"description": "[Dockerfile.bionic](Dockerfile.bionic) is a playwright-ready image of playwright. This image includes all the dependencies needed to run browsers in a Docker container.",
-	"main": "example.js",
+	"description": "Crusher test runner used to execute and save output",
 	"dependencies": {
 		"@google-cloud/storage": "^5.0.1",
 		"@octokit/auth": "^2.0.0",
@@ -39,7 +38,6 @@
 		"@types/shelljs": "^0.8.8",
 		"@typescript-eslint/eslint-plugin": "^4.13.0",
 		"@typescript-eslint/parser": "^4.14.1",
-		"husky": "^3.0.5",
 		"jest": "^24.9.0",
 		"lint-staged": "8.2.1",
 		"prettier": "^2.2.1",
@@ -57,6 +55,6 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"
 	},
-	"author": "",
+	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"license": "ISC"
 }

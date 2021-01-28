@@ -1,9 +1,6 @@
 {
 	"name": "crusher-extension",
 	"version": "1.0.0",
-	"engines": {
-		"node": ">=12.0 <13.0"
-	},
 	"scripts": {
 		"dev": "ts-node scripts/dev",
 		"build": "node scripts/build.js",
@@ -63,7 +60,6 @@
 		"eslint-plugin-prettier": "^3.2.0",
 		"eslint-plugin-react": "^7.21.5",
 		"eslint-plugin-react-hooks": "^4.2.0",
-		"husky": "^4.2.5",
 		"lodash": "^4.17.20",
 		"nodemon": "^2.0.4",
 		"playwright": "^1.7.1",
@@ -78,10 +74,5 @@
 		"webpack-extension-reloader": "^1.1.4",
 		"webpack-httpolyglot-server": "^0.3.0",
 		"webpack-node-externals": "^2.5.1"
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-conventional-changelog"
-		}
 	}
 }

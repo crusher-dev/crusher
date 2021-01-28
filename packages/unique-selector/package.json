@@ -6,7 +6,7 @@
   "author": "Utkarsh Dixit<utkarshdix02@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@typescript-eslint/parser": "^4.12.0",
+    "@typescript-eslint/parser": "^4.14.1",
     "ts-loader": "^8.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",

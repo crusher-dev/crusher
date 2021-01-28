@@ -52,7 +52,7 @@
 		"@types/lodash": "^4.14.167",
 		"@types/url-parse": "^1.4.3",
 		"@typescript-eslint/eslint-plugin": "^4.9.1",
-		"@typescript-eslint/parser": "^4.9.1",
+		"@typescript-eslint/parser": "^4.14.1",
 		"babel-loader": "^8.1.0",
 		"babel-preset-react": "^6.24.1",
 		"cz-conventional-changelog": "^3.3.0",

@@ -200,8 +200,7 @@ const BuildPage = (props: any) => {
 		ANALYTICS.trackPage(PAGE_TYPE.BUILD_PAGE);
 	}, []);
 
-	const isBuildsPresent = builds && builds.length;
-
+	const isBuildsPresent = builds.jobs && builds.jobs.length;
 	return (
 		<div
 			css={[

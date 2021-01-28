@@ -24,6 +24,7 @@ export class Parser {
 	shouldLogSteps = false;
 	browser = BROWSER.CHROME;
 	isHeadless = true;
+	stepIndex = 0;
 	assetsDir = "./";
 
 	constructor(options: iParserOptions) {
@@ -33,6 +34,7 @@ export class Parser {
 		this.browser = options.browser ? options.browser : this.browser;
 		this.isHeadless = options.isHeadless ? options.isHeadless : this.isHeadless;
 		this.assetsDir = options.assetsDir ? options.assetsDir : this.assetsDir;
+		this.stepIndex = 0;
 	}
 
 	runPreParseChecks() {
@@ -105,9 +107,12 @@ export class Parser {
 	parsePageScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"await Page.screenshot(page, JSON.parse(#{assetsDir}));".pretify({
-				assetsDir: this.assetsDir + "/images/",
-			}),
+			"await Page.screenshot(page, JSON.parse(#{stepIndex}), JSON.parse(#{assetsDir}));".pretify(
+				{
+					stepIndex: this.stepIndex,
+					assetsDir: this.assetsDir + "/images/",
+				},
+			),
 		);
 		return code;
 	}
@@ -137,9 +142,10 @@ export class Parser {
 	parseElementScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{assetsDir}));".pretify(
+			"await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}), JSON.parse(#{assetsDir}));".pretify(
 				{
 					action,
+					stepIndex: this.stepIndex,
 					assetsDir: this.assetsDir + "/images/",
 				},
 			),
@@ -256,6 +262,7 @@ export class Parser {
 		this.runPreParseChecks();
 		for (const action of this.actions) {
 			this.parseAction(action);
+			this.stepIndex++;
 		}
 	}
 

@@ -12,7 +12,6 @@ import { TestInstance } from "../interfaces/db/TestInstance";
 import { TestInstanceResultSetStatus } from "../interfaces/TestInstanceResultSetStatus";
 import { TestInstanceScreenshot } from "../interfaces/db/TestInstanceScreenshot";
 import { visualDiffWithURI } from "../utils/visualDiff";
-import { uploadImageToBucket } from "../utils/cloudBucket";
 import { TestType } from "../interfaces/TestType";
 import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
 import { updateGithubCheckStatus } from "../../utils/github";
@@ -32,6 +31,7 @@ import IORedis from "ioredis";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { JobReportStatus } from "../interfaces/JobReportStatus";
+import { CloudBucketManager } from "../manager/CloudBucketManager";
 
 const ReddisLock = require("redlock");
 const jobsService = Container.get(JobsService);
@@ -44,6 +44,7 @@ const testInstanceResultsService = Container.get(TestInstanceResultsService);
 const testInstanceScreenshotsService = Container.get(TestInstanceScreenShotsService);
 const alertingService = Container.get(AlertingService);
 const userService = Container.get(UserService);
+const cloudBucketManager = new CloudBucketManager({ useLocalStack: process.env.NODE_ENV === "production" ? false : true });
 
 interface TestInstanceWithImages extends TestInstance {
 	images: {
@@ -106,27 +107,17 @@ function getReferenceInstance(referenceJobId, testId, platform) {
 	return testInstanceService.getReferenceTestInstance(referenceJobId, testId, platform);
 }
 
-function _getReferenceInstance(testInstancesMap, testId, platform) {
-	if (testInstancesMap && testInstancesMap[testId] && testInstancesMap[testId][platform]) {
-		return testInstancesMap[testId][platform];
-	}
-
-	return null;
-}
-
-async function calculateDiffBetweenImages(testInstanceImage, referenceInstanceImage) {
-	let diffDelta, outputFile;
+async function calculateDiffBetweenImages(testInstanceImage, referenceInstanceImage, diffPath) {
+	let diffDelta;
 	let uploadedDiffUrl = "none";
 	console.log("Generating visual diff", testInstanceImage.url, referenceInstanceImage.url);
 	const diff = await visualDiffWithURI(testInstanceImage.url, referenceInstanceImage.url);
 
 	diffDelta = diff.diffDelta;
-	outputFile = diff.outputFile;
-	console.log("Uploading visual diff", diffDelta, outputFile);
 
-	uploadedDiffUrl = await uploadImageToBucket(outputFile, `${TestType.SAVED}/${testInstanceImage.instance_id}`);
+	uploadedDiffUrl = await cloudBucketManager.uploadBuffer(diff.outputBuffer, diffPath);
 
-	return { diffDelta, outputFile, uploadedDiffUrl };
+	return { diffDelta, uploadedDiffUrl };
 }
 
 function getInstanceResultStatus(hasPassed, hasFailed) {
@@ -156,11 +147,17 @@ async function getResultForTestInstance(
 		return async () => {
 			const testInstanceImage = testInstanceWithImages.images[testInstanceKey];
 			const referenceInstanceImage = referenceInstanceWithImages.images[testInstanceKey];
+			console.log("Should run diff", testInstanceImage, referenceInstanceImage);
 
 			if (shouldPerformDiffChecks && referenceInstanceImage) {
 				try {
-					const diffResult = await calculateDiffBetweenImages(testInstanceImage, referenceInstanceImage);
-					const { diffDelta, outputFile, uploadedDiffUrl } = diffResult;
+					const timeNow = Date.now();
+					const diffResult = await calculateDiffBetweenImages(
+						testInstanceImage,
+						referenceInstanceImage,
+						`${TestType.SAVED}/${testInstanceImage.instance_id}/diff_${testInstanceKey}_${timeNow}.png`,
+					);
+					const { diffDelta, uploadedDiffUrl } = diffResult;
 					const hasImagePassed = diffDelta <= 0.05 ? true : false;
 					// THe middle area is for marked for review.
 					const hasImageFailed = diffDelta > 5 ? true : false;
@@ -374,6 +371,7 @@ async function runChecks(details, clearJobTempValues) {
 
 	const testInstanceWithImages = await getOrganisedTestInstanceWithImages(testInstance);
 	const referenceInstanceWithImages = await getOrganisedTestInstanceWithImages(referenceInstance);
+	console.log("Reference instance is", testInstanceWithImages, referenceInstanceWithImages);
 
 	const { didAllImagesPass, passedImagesCount, manualReviewImagesCount, failedImagesCount } = await getResultForTestInstance(
 		testInstanceWithImages,

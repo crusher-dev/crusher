@@ -24,3 +24,10 @@ export const _getMonitoringList = (
 		headers: headers,
 	});
 };
+
+export const _runMonitoring = (monitoringId: number, headers = null) => {
+	return backendRequest(`/monitoring/run/${monitoringId}`, {
+		method: RequestMethod.GET,
+		headers: headers,
+	});
+};

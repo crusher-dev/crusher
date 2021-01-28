@@ -3,8 +3,10 @@ import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";
 import RunIcon from "../../../../public/svg/settings/run.svg";
 import { RUN_INTERVAL_OPTIONS } from "@constants/testInterval";
+import { _runMonitoring } from "@services/monitoring";
 
 interface iMonitoringCardProps {
+	id: number;
 	title: string;
 	host: string;
 	tags?: Array<string>;
@@ -29,12 +31,25 @@ const MonitoringInfoLabel = (props: iMonitoringInfoLabelProps) => {
 };
 
 function MonitoringCard(props: iMonitoringCardProps) {
-	const { title, host, tags, countries, duration, escalation } = props;
+	const { id, title, host, tags, countries, duration, escalation } = props;
 
 	const durationOption = RUN_INTERVAL_OPTIONS.find((intervalOption) => {
 		console.log(intervalOption.value, duration);
 		return intervalOption.value == duration;
 	});
+
+	const runMonitoring = () => {
+		_runMonitoring(id)
+			.then(() => {
+				alert(`Running monitoring #${title} for all the tests`);
+			})
+			.catch((err: Error) => {
+				alert(
+					`Some error occured dduring running monitoring #${title} for all the tests`,
+				);
+				console.error(err);
+			});
+	};
 
 	return (
 		<div css={containerCSS}>
@@ -42,7 +57,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 				<strong css={monitoringNameCSS}>{title}</strong>
 				<span css={monitoringEditButtonCSS}>Edit</span>
 				<div css={monitoringRunActionContainerCSS}>
-					<div css={runNowCSS}>
+					<div css={runNowCSS} onClick={runMonitoring}>
 						<RunIcon />
 						<span css={runNowTestCSS}>Run test now</span>
 					</div>

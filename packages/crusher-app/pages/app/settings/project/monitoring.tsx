@@ -32,6 +32,7 @@ const MonitoringSettings = () => {
 		return (
 			<div css={monitoringCardItemCSS} key={record.id}>
 				<MonitoringCard
+					id={record.id}
 					title={"Prod Monitoring"}
 					host={record.target_host_name}
 					tags={[]}

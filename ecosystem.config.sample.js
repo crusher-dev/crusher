@@ -90,6 +90,7 @@ module.exports = {
 			args: 'run build:start',
 			watch: ['src', 'config'],
 			env: {
+				NODE_ENV: 'production',
 				PORT: 8000,
 				BACKEND_URL: BACKEND_URL,
 				FRONTEND_URL: FRONTEND_URL,

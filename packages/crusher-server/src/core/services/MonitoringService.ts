@@ -1,7 +1,8 @@
 import { Service, Container } from "typedi";
 import DBManager from "../manager/DBManager";
 import { MonitoringSettings } from "../interfaces/db/MonitoringSettings";
-import { iMonitoringListResponse } from '@crusher-shared/types/response/monitoringListResponse';
+import { iMonitoringListResponse } from "../../../../crusher-shared/types/response/monitoringListResponse";
+import { iMonitoringSettings } from "../../../../crusher-shared/types/db/monitoringSettings";
 
 @Service()
 export default class MonitoringService {
@@ -20,19 +21,31 @@ export default class MonitoringService {
 	}
 
 	async addMonitoringForProject(settings: MonitoringSettings, projectId: number) {
-		return  this.dbManager.insertData(`INSERT INTO monitoring_settings SET ?`, settings);
-
+		return this.dbManager.insertData(`INSERT INTO monitoring_settings SET ?`, settings);
 	}
 
 	async getMonitoringListForProject(projectId: number): Promise<Array<iMonitoringListResponse>> {
-		return this.dbManager.fetchData("SELECT *, project_hosts.host_name target_host_name FROM monitoring_settings, project_hosts WHERE monitoring_settings.project_id = ? AND project_hosts.id = monitoring_settings.target_host", [projectId]);
+		return this.dbManager.fetchData(
+			"SELECT *, monitoring_settings.id as id, project_hosts.host_name target_host_name FROM monitoring_settings, project_hosts WHERE monitoring_settings.project_id = ? AND project_hosts.id = monitoring_settings.target_host",
+			[projectId],
+		);
 	}
 
 	async getSettingsForProject(projectId: number): Promise<MonitoringSettings> {
-		return this.dbManager.fetchSingleRow("SELECT *, project_hosts.host_name target_host_name FROM monitoring_settings, project_hosts WHERE monitoring_settings.project_id = ? AND project_hosts.id = monitoring_settings.target_host", [projectId]);
+		return this.dbManager.fetchSingleRow(
+			"SELECT *, project_hosts.host_name target_host_name FROM monitoring_settings, project_hosts WHERE monitoring_settings.project_id = ? AND project_hosts.id = monitoring_settings.target_host",
+			[projectId],
+		);
 	}
 
-	async getProjectsForCronNow(): Promise<Array<MonitoringSettings>> {
+	async getMonitoring(monitoringId: number) {
+		return this.dbManager.fetchSingleRow(
+			"SELECT *, project_hosts.host_name target_host_name FROM monitoring_settings, project_hosts WHERE monitoring_settings.id = ? AND project_hosts.id = monitoring_settings.target_host",
+			[monitoringId],
+		);
+	}
+
+	async getQueuedMonitorings(): Promise<Array<iMonitoringSettings>> {
 		return this.dbManager.fetchData(`SELECT * FROM monitoring_settings WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(last_cron_run) > test_interval`);
 	}
 

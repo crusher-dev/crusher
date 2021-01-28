@@ -4,6 +4,7 @@ import BuildsPageIllustration from "../../../../public/assets/img/illustration/b
 import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
 import RunBuildSVG from "../../../../public/svg/project/createTest.svg";
 import { Conditional } from "@ui/components/common/Conditional";
+import { Link } from "@material-ui/core";
 
 const EmptyBuildListContainer = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -24,9 +25,11 @@ const EmptyBuildListContainer = () => {
 				<button css={[buttonCSS, watchButtonCSS]} onClick={() => setIsOpen(true)}>
 					Show me how?
 				</button>
-				<button css={[buttonCSS, createTestButtonCSS]}>
-					<RunBuildSVG css={createTestImageCSS} /> Run a build
-				</button>
+				<Link href={"/app/settings/project/monitoring"}>
+					<button css={[buttonCSS, createTestButtonCSS]}>
+						<RunBuildSVG css={createTestImageCSS} /> Run a build
+					</button>
+				</Link>
 			</div>
 			<a href={"/app/settings/project/monitoring"}>
 				<span css={helpLinkCSS}>Or setup monitoring/CLI integration</span>

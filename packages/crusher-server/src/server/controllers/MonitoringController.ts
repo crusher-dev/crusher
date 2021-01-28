@@ -1,30 +1,27 @@
-import {
-	Authorized,
-	Body,
-	CurrentUser,
-	Get,
-	JsonController,
-	Param,
-	Post,
-	UnauthorizedError,
-} from 'routing-controllers';
-import { Container, Inject, Service } from 'typedi';
-import DBManager from '../../core/manager/DBManager';
-import UserService from '../../core/services/UserService';
-import MonitoringService from '../../core/services/MonitoringService';
-import { convertLabelToSeconds, convertSecondsToLabel } from '../../core/utils/helper';
-import { Platform } from '../../core/interfaces/Platform';
-import { iAddMonitoringRequest } from '@crusher-shared/types/request/addMonitoringRequest';
-import { iMonitoringListResponse } from '@crusher-shared/types/response/monitoringListResponse';
+import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, UnauthorizedError } from "routing-controllers";
+import { Container, Inject, Service } from "typedi";
+import DBManager from "../../core/manager/DBManager";
+import UserService from "../../core/services/UserService";
+import MonitoringService from "../../core/services/MonitoringService";
+import { convertLabelToSeconds, convertSecondsToLabel } from "../../core/utils/helper";
+import { Platform } from "../../core/interfaces/Platform";
+import { iAddMonitoringRequest } from "../../../../crusher-shared/types/request/addMonitoringRequest";
+import { iMonitoringListResponse } from "../../../../crusher-shared/types/response/monitoringListResponse";
+import ProjectHostsService from "../../core/services/ProjectHostsService";
+import JobRunnerService from "../../core/services/v2/JobRunnerService";
+import { JOB_TRIGGER } from "../../../../crusher-shared/types/jobTrigger";
 
 @Service()
 @JsonController("/monitoring")
 export class MonitoringController {
 	@Inject()
 	private userService: UserService;
-
 	@Inject()
 	private monitoringService: MonitoringService;
+	@Inject()
+	private projectHostsService: ProjectHostsService;
+	@Inject()
+	private jobRunnerService: JobRunnerService;
 
 	private dbManager: DBManager;
 
@@ -35,9 +32,9 @@ export class MonitoringController {
 
 	@Authorized()
 	@Post("/add/:projectId")
-	async addMonitoring(@CurrentUser({required: true}) user, @Param("projectId") projectId: number, @Body() body: iAddMonitoringRequest){
-		const {user_id}= user;
-		const {host, interval, tags} = body;
+	async addMonitoring(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number, @Body() body: iAddMonitoringRequest) {
+		const { user_id } = user;
+		const { host, interval, tags } = body;
 
 		return this.monitoringService.addMonitoringForProject(
 			{
@@ -54,10 +51,8 @@ export class MonitoringController {
 
 	@Authorized()
 	@Get("/get/:projectId")
-	async getMonitoringList(@CurrentUser({required: true}) user, @Param("projectId") projectId: number): Promise<Array<iMonitoringListResponse>>{
-		return this.monitoringService.getMonitoringListForProject(
-			projectId
-		);
+	async getMonitoringList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number): Promise<Array<iMonitoringListResponse>> {
+		return this.monitoringService.getMonitoringListForProject(projectId);
 	}
 
 	@Authorized()
@@ -98,5 +93,14 @@ export class MonitoringController {
 			...monitoringSettings,
 			test_interval: convertSecondsToLabel(monitoringSettings.test_interval),
 		};
+	}
+
+	@Authorized()
+	@Get("/run/:monitoringId")
+	async runProjectsInHost(@Param("monitoringId") monitoringId) {
+		const monitoring = await this.monitoringService.getMonitoring(monitoringId);
+		const host = await this.projectHostsService.getHost(monitoring.target_host);
+		await this.jobRunnerService.runTestsInProject(monitoring.project_id, monitoring.platform, JOB_TRIGGER.MANUAL, monitoring.user_id, host, null);
+		return true;
 	}
 }

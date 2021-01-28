@@ -17,18 +17,20 @@ import { iJobRunRequest } from "../../../../crusher-shared/types/runner/jobRunRe
 import { Redis } from "ioredis";
 import { RUNNER_REQUEST_TYPE } from "../../../../crusher-shared/types/runner/requestType";
 import { iTestRunnerJobOutput } from "../../../../crusher-shared/types/runner/jobRunRequestOutput";
+import * as path from "path";
 
 const ReddisLock = require("redlock");
 
 async function prepareResultForTestInstance(instanceId, images, jobId, testId) {
 	const testInstanceScreenshotService = new TestInstanceScreenShotsService();
 
-	const screenshotsPromise = images.map((image) => {
-		const { url, name } = image;
+	const screenshotsPromise = images.map((imageUrl) => {
+		const imageName = path.basename(imageUrl).split("?")[0];
+
 		return testInstanceScreenshotService.addScreenshot({
 			instance_id: instanceId,
-			name: name,
-			url: url,
+			name: imageName,
+			url: imageUrl,
 		});
 	});
 
@@ -137,15 +139,15 @@ export default class TestsEventsWorker {
 								reportId: runnerJobRequestInfo.job.report_id,
 								platform: runnerJobRequestInfo.platform,
 							});
-						} catch (ex) {}
+						} catch (ex) {
+							await jobReportsService.updateJobReportStatus(
+								JobReportStatus.FAILED,
+								runnerJobRequestInfo.job.report_id,
+								`#${runnerJobRequestInfo.instanceId} failed to execute successfully.`,
+							);
 
-						await jobReportsService.updateJobReportStatus(
-							JobReportStatus.FAILED,
-							runnerJobRequestInfo.job.report_id,
-							`#${runnerJobRequestInfo.instanceId} failed to execute successfully.`,
-						);
-
-						await testInstanceService.updateTestInstanceStatus(InstanceStatus.ABORTED, runnerJobRequestInfo.instanceId);
+							await testInstanceService.updateTestInstanceStatus(InstanceStatus.ABORTED, runnerJobRequestInfo.instanceId);
+						}
 					}
 				}
 			}

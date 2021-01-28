@@ -54,7 +54,6 @@
 		"body-parser": "1.17.2",
 		"bullmq": "^1.8.14",
 		"chalk": "^4.0.0",
-		"code-generator": "https://github.com/crusherdev/code-generator.git#82a2023872bd0f6f2cdc6a2a7175378037a45d77",
 		"commitizen": "^4.0.4",
 		"cookie": "^0.4.1",
 		"cors": "^2.8.5",

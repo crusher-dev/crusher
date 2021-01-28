@@ -15,8 +15,7 @@
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "lerna": "^3.22.1",
-    "pm2": "^4.5.0",
-    "ts-node-dev": "^1.0.0"
+    "pm2": "^4.5.0"
   },
   "dependencies": {
     "patch-package": "^6.2.2",

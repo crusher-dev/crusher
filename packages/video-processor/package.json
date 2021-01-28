@@ -36,7 +36,6 @@
 		"@types/node": "~10",
 		"@types/shelljs": "^0.8.8",
 		"jest": "^24.9.0",
-		"lint-staged": "8.2.1",
 		"method-override": "^3.0.0",
 		"morgan": "^1.10.0",
 		"prettier": "^2.2.1",

@@ -4,12 +4,10 @@ import { Page } from 'playwright';
 import { iAction } from '@crusher-shared/types/action';
 import * as path from 'path';
 
-let screenshotIndex = 0;
-
-function generateScreenshotName(selector: string): string {
-	return selector.replace(/[^\w\s]/gi, '').replace(/ /g, '_') + `_${screenshotIndex++}.png`;
+function generateScreenshotName(selector: string, stepIndex: number): string {
+	return selector.replace(/[^\w\s]/gi, '').replace(/ /g, '_') + `_${stepIndex}.png`;
 }
-export default function elementScreenshot(action: iAction, page: Page, assetsDir: string) {
+export default function elementScreenshot(action: iAction, page: Page, stepIndex: number, assetsDir: string) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
@@ -25,7 +23,7 @@ export default function elementScreenshot(action: iAction, page: Page, assetsDir
 			}
 
 			await elementHandle.screenshot({
-				path: path.resolve(assetsDir, generateScreenshotName(selector as string)),
+				path: path.resolve(assetsDir, generateScreenshotName(selector as string, stepIndex)),
 			});
 
 			return success({

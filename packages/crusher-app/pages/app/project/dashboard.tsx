@@ -18,6 +18,7 @@ import { serialize } from "cookie";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { getTime } from "@utils/helpers";
 import { JobReportStatus } from "@interfaces/JobReportStatus";
+import { iPageContext } from "@interfaces/pageContext";
 
 function getBuildStatus(status: JobReportStatus) {
 	if (status === JobReportStatus.FAILED) {
@@ -143,7 +144,8 @@ function ProjectDashboard(props) {
 	useEffect(() => {
 		setDashboardInfo({ ...dashboardInfo, isLoading: true });
 		const activitiesPromise = getAllProjectLogs(selectedProjectId);
-		const buildsPromise = getAllJobsOfProject(selectedProjectId, 1);
+		const buildsPromise = getAllJobsOfProject(selectedProjectId, null);
+
 		Promise.all([activitiesPromise, buildsPromise])
 			.then(([activities, builds]) => {
 				setDashboardInfo({
@@ -463,27 +465,18 @@ const handleCliToken = async (cli_token, res, req) => {
 	);
 };
 
-ProjectDashboard.getInitialProps = async (ctx) => {
+ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 	const { res, req, store } = ctx;
 	try {
-		let headers;
-		if (req) {
-			headers = req.headers;
-			cleanHeaders(headers);
-		}
-
 		const cookies = getCookies(req);
 		if (cookies && cookies.cli_token) {
 			await handleCliToken(cookies.cli_token, res, req);
 		}
-		const defaultProject = getSelectedProject(store.getState());
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
 
+		const selectedProject = getSelectedProject(store.getState());
 		const testsCount = await fetchTestsCountInProject(
-			selectedProject ? selectedProject : defaultProject,
-			headers,
+			selectedProject,
+			ctx.metaInfo.headers,
 		);
 
 		// If 0 test count redirect to welcome screen
@@ -493,18 +486,18 @@ ProjectDashboard.getInitialProps = async (ctx) => {
 		}
 
 		const buildsPromise = getAllJobsOfProject(
-			selectedProject ? selectedProject : defaultProject,
-			1,
-			headers,
+			selectedProject,
+			null,
+			ctx.metaInfo.headers,
 		);
 		const activitiesPromise = getAllProjectLogs(
-			selectedProject ? selectedProject : defaultProject,
-			headers,
+			selectedProject,
+			ctx.metaInfo.headers,
 		);
 
 		const metaDashboardInfo = await getMetaDashboardProjectInfo(
-			selectedProject ? selectedProject : defaultProject,
-			headers,
+			selectedProject,
+			ctx.metaInfo.headers,
 		);
 
 		const [builds, activities] = await Promise.all([
@@ -512,6 +505,7 @@ ProjectDashboard.getInitialProps = async (ctx) => {
 			activitiesPromise,
 		]);
 
+		console.log(selectedProject);
 		return {
 			builds: builds,
 			activities: activities,

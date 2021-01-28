@@ -38,7 +38,7 @@ module.exports = {
 
 			if (IS_PRODUCTION) {
 				// Enable to get more logs in production
-				// logger.info(msgToShow, { meta });
+				logger.info(msgToShow, { meta });
 			}
 		},
 		warn: function (tag, message, meta = null) {
@@ -54,7 +54,7 @@ module.exports = {
 			_debug(msgToShow);
 			showMeta(meta);
 			if (IS_PRODUCTION) {
-				// logger.debug(msgToShow, { meta });
+				logger.debug(msgToShow, { meta });
 			}
 		},
 		error: function (tag, message, meta = null) {
@@ -78,7 +78,7 @@ module.exports = {
 			_trace(msgToShow);
 			showMeta(meta);
 			if (IS_PRODUCTION) {
-				// logger.trace(msgToShow, { meta });
+				logger.trace(msgToShow, { meta });
 			}
 		},
 	},

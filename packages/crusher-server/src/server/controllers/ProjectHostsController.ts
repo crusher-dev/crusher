@@ -4,7 +4,8 @@ import DBManager from "../../core/manager/DBManager";
 import UserService from "../../core/services/UserService";
 import ProjectHostsService from "../../core/services/ProjectHostsService";
 import ProjectService from "../../core/services/ProjectService";
-import { iHostListResponse } from '@crusher-shared/types/response/hostListResponse';
+import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
+import JobRunnerService from "../../core/services/v2/JobRunnerService";
 
 @Service()
 @JsonController("/hosts")

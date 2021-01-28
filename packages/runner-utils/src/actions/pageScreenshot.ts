@@ -1,17 +1,15 @@
 import { Page } from 'playwright';
 import * as path from 'path';
 
-let screenshotIndex = 0;
-
-function generatePageScreenshotName(title: string): string {
-	return title.replace(/[^\\w\\s]/gi, '').replace(/ /g, '_') + `_${screenshotIndex++}.png`;
+function generatePageScreenshotName(title: string, stepIndex: number): string {
+	return title.replace(/[^\\w\\s]/gi, '').replace(/ /g, '_') + `_${stepIndex}.png`;
 }
-export default function capturePageScreenshot(page: Page, assetsDir: string) {
+export default function capturePageScreenshot(page: Page, stepIndex: number, assetsDir: string) {
 	return new Promise(async (success, error) => {
 		try {
 			const pageTitle = await page.title();
 			const pageUrl = await page.url();
-			await page.screenshot({ path: path.resolve(assetsDir, generatePageScreenshotName(pageTitle)) });
+			await page.screenshot({ path: path.resolve(assetsDir, generatePageScreenshotName(pageTitle, stepIndex)) });
 
 			return success({
 				message: `Clicked page screenshot for ${pageUrl}`,

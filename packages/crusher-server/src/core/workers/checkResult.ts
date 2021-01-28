@@ -106,14 +106,6 @@ function getReferenceInstance(referenceJobId, testId, platform) {
 	return testInstanceService.getReferenceTestInstance(referenceJobId, testId, platform);
 }
 
-function _getReferenceInstance(testInstancesMap, testId, platform) {
-	if (testInstancesMap && testInstancesMap[testId] && testInstancesMap[testId][platform]) {
-		return testInstancesMap[testId][platform];
-	}
-
-	return null;
-}
-
 async function calculateDiffBetweenImages(testInstanceImage, referenceInstanceImage) {
 	let diffDelta, outputFile;
 	let uploadedDiffUrl = "none";
@@ -156,6 +148,7 @@ async function getResultForTestInstance(
 		return async () => {
 			const testInstanceImage = testInstanceWithImages.images[testInstanceKey];
 			const referenceInstanceImage = referenceInstanceWithImages.images[testInstanceKey];
+			console.log("Should run diff", testInstanceImage, referenceInstanceImage);
 
 			if (shouldPerformDiffChecks && referenceInstanceImage) {
 				try {

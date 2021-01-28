@@ -24,7 +24,7 @@
 		"playwright-video": "https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704",
 		"reflect-metadata": "^0.1.13",
 		"shelljs": "^0.8.4",
-		"ts-node": "^9.0.0",
+		"ts-node": "^9.1.1",
 		"uniqid": "^5.2.0"
 	},
 	"devDependencies": {
@@ -42,7 +42,6 @@
 		"lint-staged": "8.2.1",
 		"prettier": "^2.2.1",
 		"ts-jest": "^24.0.2",
-		"ts-node-dev": "^1.0.0-pre.50",
 		"tslint": "^5.20.1",
 		"tslint-config-prettier": "^1.18.0",
 		"typescript ": "^4.1.3"

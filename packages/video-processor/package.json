@@ -42,7 +42,7 @@
 		"method-override": "^3.0.0",
 		"morgan": "^1.10.0",
 		"nodemon": "^1.19.4",
-		"prettier": "^1.18.2",
+		"prettier": "^2.2.1",
 		"ts-jest": "^24.0.2",
 		"ts-node-dev": "^1.0.0-pre.50",
 		"tslint": "^5.20.1",

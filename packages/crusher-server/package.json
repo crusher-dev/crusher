@@ -14,26 +14,12 @@
 		"ejs": "^3.1.5",
 		"husky": "^3.0.4",
 		"nodemon": "1.11.0",
-		"prettier": "2.0.5",
 		"pretty-quick": "^2.0.1",
 		"shipit-cli": "^5.1.0",
 		"shipit-deploy": "^5.1.0",
 		"ts-node": "3.3.0",
-		"typescript": "4.1.3"
-	},
-	"lint-staged": {
-		"*.js": [
-			"prettier --write"
-		],
-		"*.jsx": [
-			"prettier --write"
-		],
-		"*.tsx": [
-			"prettier --write"
-		],
-		"*.ts": [
-			"prettier --write"
-		]
+		"typescript": "4.1.3",
+		"prettier": "^2.2.1"
 	},
 	"dependencies": {
 		"@google-cloud/storage": "^5.1.2",
@@ -88,7 +74,6 @@
 		"node-storage": "0.0.9",
 		"pixelmatch": "^5.2.1",
 		"pngjs": "^5.0.0",
-		"prettier": "^2.2.1",
 		"prompts": "^2.2.1",
 		"redislock": "^1.3.0",
 		"redlock": "^4.1.0",

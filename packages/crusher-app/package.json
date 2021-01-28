@@ -98,7 +98,7 @@
 		"next-images": "^1.6.2",
 		"next-purgecss": "^4.0.0",
 		"next-transpile-modules": "^6.0.0",
-		"prettier": "^2.1.1",
+		"prettier": "^2.2.1",
 		"tailwindcss": "^1.9.6",
 		"typescript": "^4.1.3"
 	},

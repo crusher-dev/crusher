@@ -10,7 +10,7 @@
 		"@types/jsonwebtoken": "^8.3.2",
 		"@types/mongoose": "^5.7.36",
 		"@types/multer": "0.0.33",
-		"@types/node": "^8.0.29",
+		"@types/node": "^14.14.22",
 		"ejs": "^3.1.5",
 		"shipit-cli": "^5.1.0",
 		"shipit-deploy": "^5.1.0",

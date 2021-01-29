@@ -1,5 +1,6 @@
 import { TestsLogs } from "../../../server/models/testLogs";
 import { TestType } from "../../interfaces/TestType";
+import { Service } from "typedi";
 
 export const TEST_LOGS_SERVICE_TAGS = {
 	TEST_ADDED_TO_QUEUE: "TEST_ADDED_TO_QUEUE",
@@ -12,6 +13,8 @@ export const TEST_LOGS_SERVICE_TAGS = {
 	TEST_EXECUTION_FAILED: "TEST_EXECUTION_FAILED",
 	TEST_EXECUTION_COMPLETED: "TEST_EXECUTION_COMPLETED",
 };
+
+@Service()
 export class TestLogsService {
 	testId: number;
 	type: string;

@@ -1,9 +1,5 @@
 import { Logger } from "./utils/logger";
 
-require("dotenv").config({
-	path: process.env.NODE_ENV === "production" ? ".env" : ".env.development",
-	debug: true,
-});
 require("./core/manager/QueueManager");
 require("./utils/logger");
 const chalk = require("chalk");

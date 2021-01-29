@@ -22,7 +22,7 @@ export class CodeRunnerService {
 		return replaceImportWithRequire(generator.parse(jobRequest.test.events));
 	}
 
-	static async runTest(jobRequest: iJobRunRequest, logStepsHandler: Function) {
+	static async runTest(jobRequest: iJobRunRequest, logStepsHandler: Function, handleScreenshotImagesBuffer: (buffer: Buffer, screenshotName: string) => void) {
 		const code = this.getCode(jobRequest);
 		let error = null;
 
@@ -34,6 +34,7 @@ export class CodeRunnerService {
 				'__filename',
 				'__dirname',
 				'logStep',
+				'handleImageBuffer',
 				`return new Promise(async function (resolve, reject) {
 				    try{
 				        ${code};
@@ -42,17 +43,16 @@ export class CodeRunnerService {
 				      reject(err);
 				    }
 				});`,
-			)(exports, require, module, __filename, __dirname, logStepsHandler);
+			)(exports, require, module, __filename, __dirname, logStepsHandler, handleScreenshotImagesBuffer);
 		} catch (err) {
 			error = err;
 		}
 
-		const images = getAllCapturedImages(jobRequest);
 		const videos = getAllCapturedVideos(jobRequest);
 
 		const videoKeys = Object.keys(videos);
 		const video = videoKeys.length ? videos[videoKeys[0]] : null;
 
-		return { error: error, output: { images: images, video: video } };
+		return { error: error, output: { video: video } };
 	}
 }

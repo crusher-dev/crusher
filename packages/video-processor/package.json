@@ -8,6 +8,7 @@
 		"fluent-ffmpeg": "^2.1.2",
 		"got": "^11.8.1",
 		"logdna": "^3.5.0",
+		"ts-node": "^9.1.1",
 		"shelljs": "^0.8.4"
 	},
 	"devDependencies": {
@@ -19,8 +20,8 @@
 		"typescript": "^4.1.3"
 	},
 	"scripts": {
-		"start": "tsnd  --poll --interval 200 --respawn src/app.js",
-		"start:prod": "NODE_ENV=production tsnd src/app.js",
+		"start": "ts-node src/app.js",
+		"start:prod": "NODE_ENV=production ts-node src/app.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*"
 	},

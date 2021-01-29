@@ -3,7 +3,7 @@ html
     body
         #upgrade-me(src='app.js')
         #root
-        script(src='http://localhost:2400/record_test.js')
+        script(src=env === 'prod' ? './js/record_test.js':'http://localhost:2400/record_test.js')
         script(type='module').
                     import {upgradeElement} from '/dist/main.mjs';
                     upgradeElement(document.getElementById('upgrade-me'), '/dist/worker/worker.mjs');

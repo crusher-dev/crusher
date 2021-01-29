@@ -41,9 +41,14 @@ module.exports = async (bullJob: iTestRunnerJob): Promise<iTestRunnerJobOutput> 
 			return testLogsService.notifyLivelog(actionType, body, meta, timeTakenForThisStep, bullJob.data);
 		};
 
-		const { output, error } = await CodeRunnerService.runTest(bullJob.data, logSteps);
+		const bufferImages = [];
+		const handleScreenshotImageBuffer = (buffer: Buffer, screenshotName: string) => {
+			bufferImages.push({ name: screenshotName, value: buffer });
+		};
 
-		const { signedImageUrls, signedRawVideoUrl } = await uploadOutputToS3(output, bullJob.data);
+		const { output, error } = await CodeRunnerService.runTest(bullJob.data, logSteps, handleScreenshotImageBuffer);
+
+		const { signedImageUrls, signedRawVideoUrl } = await uploadOutputToS3(bufferImages, output.video, bullJob.data);
 
 		if (signedRawVideoUrl) {
 			// Send the raw video dump to be processed by video-processor

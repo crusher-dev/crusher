@@ -107,12 +107,14 @@ export class Parser {
 	parsePageScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"await Page.screenshot(page, JSON.parse(#{stepIndex}), JSON.parse(#{assetsDir}));".pretify(
+			"let saveScreenshotRequest = await Page.screenshot(page, JSON.parse(#{stepIndex}));".pretify(
 				{
 					stepIndex: this.stepIndex,
-					assetsDir: this.assetsDir + "/images/",
 				},
 			),
+		);
+		code.push(
+			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.value, saveScreenshotRequest.name);",
 		);
 		return code;
 	}
@@ -142,13 +144,15 @@ export class Parser {
 	parseElementScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}), JSON.parse(#{assetsDir}));".pretify(
+			"let saveScreenshotRequest = await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}));".pretify(
 				{
 					action,
 					stepIndex: this.stepIndex,
-					assetsDir: this.assetsDir + "/images/",
 				},
 			),
+		);
+		code.push(
+			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.value, saveScreenshotRequest.name);",
 		);
 		return code;
 	}

@@ -1,7 +1,6 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-await-in-loop */
 import { Logger } from "../../utils/logger";
-import { error } from "util";
 
 const PNG = require("pngjs").PNG;
 const pixelmatch = require("pixelmatch");

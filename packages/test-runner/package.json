@@ -3,7 +3,6 @@
 	"version": "1.0.0",
 	"description": "Crusher test runner used to execute and save output",
 	"dependencies": {
-		"@google-cloud/storage": "^5.0.1",
 		"@octokit/auth": "^2.0.0",
 		"@octokit/rest": "^18.0.14",
 		"@types/ioredis": "^4.17.11",

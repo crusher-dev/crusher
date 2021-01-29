@@ -19,7 +19,6 @@
 		"prettier": "^2.2.1"
 	},
 	"dependencies": {
-		"@google-cloud/storage": "^5.1.2",
 		"@octokit/auth": "^2.0.0",
 		"@octokit/auth-oauth-app": "^3.0.7",
 		"@octokit/oauth-app": "^1.1.2",

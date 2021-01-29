@@ -5,8 +5,7 @@
 	"dependencies": {
 		"async": "^3.2.0",
 		"aws-sdk": "^2.762.0",
-		"axios": "^0.19.2",
-		"body-parser": "^1.19.0",
+		"axios": "^0.21.1",
 		"bullmq": "^1.8.14",
 		"cors": "^2.8.5",
 		"crypt": "^0.0.2",

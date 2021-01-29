@@ -1,6 +1,5 @@
 import { Queue, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import { REDDIS } from "../../../config/database";
-import * as path from "path";
 import TestsEventsWorker from "../workers/testEventsWoker";
 import { VideoEventsPostProcessor } from "../workers/videoEventsPostProcessor";
 const resultWorker = require("../workers/checkResult");

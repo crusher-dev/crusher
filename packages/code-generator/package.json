@@ -1,21 +1,20 @@
 {
 	"name": "code-generator",
+	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"version": "1.0.0",
 	"description": "A package responsible for generating the playwright code for the events recorded from chrome-extension",
-	"author": "Utkarsh Dixit",
 	"license": "MIT",
 	"scripts": {
 		"build": "tsc src/index.ts --outDir dist"
 	},
 	"devDependencies": {
-		"@typescript-eslint/parser": "^4.12.0",
-		"eslint": "^7.17.0",
+		"@typescript-eslint/parser": "^4.14.1",
+		"eslint": "^7.18.0",
 		"ts-node": "^9.1.1",
-		"typescript": "^4.0.3"
+		"typescript": "^4.1.3"
 	},
 	"dependencies": {
-		"crusher-shared": "1.0.0",
-		"nodemon": "^2.0.4"
+		"crusher-shared": "1.0.0"
 	},
 	"private": true
 }

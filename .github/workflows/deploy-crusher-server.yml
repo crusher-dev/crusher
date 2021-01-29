@@ -35,7 +35,7 @@ jobs:
         run: npm install -g webpack
 
       - name: Install ncc
-        run: npm install -g @vercel/ncc
+        run: npm install -g @vercel/ncc@0.23.0
 
       - name: Package crusher-server for deployment
         run: sh scripts/build-crusher-server.sh

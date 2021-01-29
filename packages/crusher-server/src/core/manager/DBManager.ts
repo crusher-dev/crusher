@@ -1,9 +1,11 @@
 import { InternalServerError } from "routing-controllers";
 import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
+import { Service } from "typedi";
 
 const mysql = process.env.NODE_ENV === "production" ? require("mysql2") : require("mysql");
 
+@Service()
 export default class DBManager {
 	private connPool;
 	private queryRunner;

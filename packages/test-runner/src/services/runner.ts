@@ -22,7 +22,7 @@ export class CodeRunnerService {
 		return replaceImportWithRequire(generator.parse(jobRequest.test.events));
 	}
 
-	static async runTest(jobRequest: iJobRunRequest, logStepsHandler: Function, handleScreenshotImagesBuffer: (buffer: Buffer, screenshotName: string) => void) {
+	static async runTest(jobRequest: iJobRunRequest, logStepsHandler: Function, handleScreenshotImagesBuffer: Function) {
 		const code = this.getCode(jobRequest);
 		let error = null;
 

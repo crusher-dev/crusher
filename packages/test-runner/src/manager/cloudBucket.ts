@@ -1,6 +1,6 @@
 import { AWS_BUCKET_REGION, AWS_S3_VIDEO_BUCKET } from '../../config/aws_bucket';
 import * as AWS from 'aws-sdk';
-import fs from 'fs';
+import * as fs from 'fs';
 
 AWS.config.update({
 	region: AWS_BUCKET_REGION,
@@ -36,19 +36,13 @@ export class CloudBucketManager {
 		});
 	}
 
-	upload(filePath, destination) {
+	uploadBuffer(buffer, destination): Promise<string> {
 		return new Promise((resolve, reject) => {
-			const fileStream = fs.createReadStream(filePath);
-
-			fileStream.on('error', function (err) {
-				reject(err);
-			});
-
 			this.s3BucketService.upload(
 				{
 					Bucket: AWS_S3_VIDEO_BUCKET,
 					Key: destination,
-					Body: fileStream,
+					Body: buffer,
 				},
 				(err, data) => {
 					if (err) {
@@ -65,6 +59,14 @@ export class CloudBucketManager {
 					resolve(url);
 				},
 			);
+		});
+	}
+
+	upload(filePath, destination): Promise<string> {
+		return new Promise((resolve, reject) => {
+			const fileStream = fs.readFileSync(filePath);
+
+			return this.uploadBuffer(fileStream, destination);
 		});
 	}
 }

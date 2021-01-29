@@ -45,17 +45,16 @@ export const getAllCapturedVideos = (jobRequest: iJobRunRequest): { [videoName: 
 
 const bucketManager = new CloudBucketManager({ useLocalStack: process.env.NODE_ENV === 'production' ? false : true });
 
-export const uploadOutputToS3 = async (output: { images: { [name: string]: string }; video?: string }, jobRequest: iJobRunRequest) => {
+export const uploadOutputToS3 = async (bufferImages: Array<{ name: string; value: Buffer }>, video: string | null, jobRequest: iJobRunRequest) => {
 	const targetDir = `${jobRequest.requestType}/${jobRequest.instanceId}`;
 
 	let signedRawVideoUrl = null;
-	if (output.video) {
-		signedRawVideoUrl = await bucketManager.upload(output.video, path.resolve(targetDir, `/video.mp4.raw`));
+	if (video) {
+		signedRawVideoUrl = await bucketManager.upload(video, path.resolve(targetDir, `/video.mp4.raw`));
 	}
 	const signedImages = [];
-	const imagesKeys = Object.keys(output.images);
-	for (let imageKey of imagesKeys) {
-		signedImages.push(await bucketManager.upload(output.images[imageKey], path.resolve(targetDir, imageKey)));
+	for (let imageBufferInfo of bufferImages) {
+		signedImages.push(await bucketManager.uploadBuffer(imageBufferInfo.value, path.resolve(targetDir, imageBufferInfo.name)));
 	}
 
 	return { signedImageUrls: signedImages, signedRawVideoUrl };

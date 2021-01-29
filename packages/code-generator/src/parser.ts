@@ -107,14 +107,14 @@ export class Parser {
 	parsePageScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"let saveScreenshotRequest = await Page.screenshot(page, JSON.parse(#{stepIndex}));".pretify(
+			"var saveScreenshotRequest = await Page.screenshot(page, JSON.parse(#{stepIndex}));".pretify(
 				{
 					stepIndex: this.stepIndex,
 				},
 			),
 		);
 		code.push(
-			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.value, saveScreenshotRequest.name);",
+			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);",
 		);
 		return code;
 	}
@@ -144,7 +144,7 @@ export class Parser {
 	parseElementScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"let saveScreenshotRequest = await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}));".pretify(
+			"var saveScreenshotRequest = await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}));".pretify(
 				{
 					action,
 					stepIndex: this.stepIndex,
@@ -152,7 +152,7 @@ export class Parser {
 			),
 		);
 		code.push(
-			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.value, saveScreenshotRequest.name);",
+			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);",
 		);
 		return code;
 	}

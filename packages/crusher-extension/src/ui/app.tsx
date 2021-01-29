@@ -20,7 +20,7 @@ const App = () => {
 		const steps = store.getState().actions.list;
 
 		submitPostDataWithForm(
-			resolveToBackendPath("/test/goToEditor", "https://backend.crusher.dev/"),
+			resolveToBackendPath("/test/goToEditor", "http://localhost:8000/"),
 			{
 				events: escape(JSON.stringify(steps)),
 				totalTime: 0,

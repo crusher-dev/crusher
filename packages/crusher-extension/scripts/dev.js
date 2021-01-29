@@ -35,7 +35,7 @@ async function initDevServer() {
 	});
 
 	exec(
-		"nodemon --watch /Users/himanshu/Desktop/crusher/crusher/src --exec '" +
+		"npx nodemon --watch /Users/himanshu/Desktop/crusher/crusher/src --exec '" +
 			"webpack --config webpack/webpack.content_script.dev.js  --progress --profile --colors'",
 		(error, stdout, stderr) => {
 			if (error) {

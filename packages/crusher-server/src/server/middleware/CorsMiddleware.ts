@@ -1,8 +1,10 @@
 import { Middleware, ExpressMiddlewareInterface } from "routing-controllers";
 import { NextFunction, Request, Response } from "express";
 import * as debug from "debug";
+import { Service } from "typedi";
 
 // Generally later to be shifted to ngnix
+@Service()
 @Middleware({ type: "before" })
 export class CorsMiddleware implements ExpressMiddlewareInterface {
 	// interface implementation is optional

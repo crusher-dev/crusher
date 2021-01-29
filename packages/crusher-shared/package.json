@@ -3,9 +3,10 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"license": "MIT",
+	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"devDependencies": {
 		"@types/url-parse": "^1.4.3",
-		"typescript": "^4.0.5"
+		"typescript": "^4.1.3"
 	},
 	"scripts": {
 		"build": "tsc . --outDir ../../dist",

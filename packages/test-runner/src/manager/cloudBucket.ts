@@ -63,10 +63,8 @@ export class CloudBucketManager {
 	}
 
 	upload(filePath, destination): Promise<string> {
-		return new Promise((resolve, reject) => {
-			const fileStream = fs.readFileSync(filePath);
+		const fileStream = fs.readFileSync(filePath);
 
-			return this.uploadBuffer(fileStream, destination);
-		});
+		return this.uploadBuffer(fileStream, destination);
 	}
 }

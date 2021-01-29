@@ -50,11 +50,11 @@ export const uploadOutputToS3 = async (bufferImages: Array<{ name: string; value
 
 	let signedRawVideoUrl = null;
 	if (video) {
-		signedRawVideoUrl = await bucketManager.upload(video, path.resolve(targetDir, `/video.mp4.raw`));
+		signedRawVideoUrl = await bucketManager.upload(video, path.join(targetDir, `/video.mp4.raw`));
 	}
 	const signedImages = [];
 	for (let imageBufferInfo of bufferImages) {
-		signedImages.push(await bucketManager.uploadBuffer(imageBufferInfo.value, path.resolve(targetDir, imageBufferInfo.name)));
+		signedImages.push(await bucketManager.uploadBuffer(imageBufferInfo.value, path.join(targetDir, imageBufferInfo.name)));
 	}
 
 	return { signedImageUrls: signedImages, signedRawVideoUrl };

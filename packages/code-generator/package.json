@@ -1,8 +1,8 @@
 {
 	"name": "code-generator",
+	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"version": "1.0.0",
 	"description": "A package responsible for generating the playwright code for the events recorded from chrome-extension",
-	"author": "Utkarsh Dixit",
 	"license": "MIT",
 	"scripts": {
 		"build": "tsc src/index.ts --outDir dist"

@@ -3,7 +3,7 @@
   "version": "0.0.9",
   "description": "Test runner utils for crusher tests",
   "main": "dist/",
-  "author": "Utkarsh Dixit<utkarshdix02@gmail.com>",
+  "author": "Utkarsh Dixit<utkarsh@crusher.dev>",
   "license": "MIT",
   "scripts": {
     "build": "webpack"

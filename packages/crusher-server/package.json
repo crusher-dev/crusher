@@ -1,5 +1,6 @@
 {
 	"name": "crusher-server",
+	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"version": "1.0.0",
 	"description": "Backend of crusher.",
 	"devDependencies": {

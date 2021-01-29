@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
-  "author": "Utkarsh Dixit<utkarshdix02@gmail.com>",
+  "author": "Utkarsh Dixit<utkarsh@crusher.dev>",
   "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/parser": "^4.14.1",

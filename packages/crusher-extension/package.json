@@ -1,5 +1,6 @@
 {
 	"name": "crusher-extension",
+	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"version": "1.0.0",
 	"scripts": {
 		"dev": "ts-node scripts/dev",

@@ -12,7 +12,8 @@ const BROWSER_NAME = {
 export class CodeRunnerService {
 	static getCode(jobRequest: iJobRunRequest) {
 		const generator = new CodeGenerator({
-			shouldRecordVideo: jobRequest.platform === PLATFORM.CHROME,
+			// shouldRecordVideo: jobRequest.platform === PLATFORM.CHROME,
+			shouldRecordVideo: false,
 			isHeadless: false,
 			isLiveLogsOn: true,
 			browser: BROWSER_NAME[jobRequest.platform],

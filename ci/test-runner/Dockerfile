@@ -35,4 +35,4 @@ RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g concurrently
 
-CMD ["concurrently", "sh /usr/local/bin/docker-entrypoint.sh", "pm2-runtime ecosystem.config.js --only crusher-extension"]
+CMD ["concurrently", "sh /usr/local/bin/docker-entrypoint.sh", "pm2-runtime ecosystem.config.js --only test-runner"]

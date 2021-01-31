@@ -51,6 +51,7 @@ const Device = (props: iDeviceProps) => {
 						scrolling="auto"
 						sandbox="allow-scripts allow-forms allow-same-origin"
 						id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+						name={"crusher_iframe"}
 						title={device.name}
 						src={url}
 					/>

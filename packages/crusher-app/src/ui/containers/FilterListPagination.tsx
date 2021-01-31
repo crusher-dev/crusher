@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { JSXElementConstructor, useEffect, useState } from "react";
 import { css } from "@emotion/core";
 import { Pagination } from "@ui/components/common/Pagination";
 
@@ -15,7 +15,7 @@ interface iFilterListPaginationProps {
 	totalPages: number;
 	itemsPerPage: number;
 	selectedCategory: number;
-	itemsListComponent: ReactElement;
+	itemsListComponent: JSXElementConstructor<any>;
 	resolvePaginationUrl: any;
 }
 

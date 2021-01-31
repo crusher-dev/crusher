@@ -75,6 +75,8 @@
 		"babel-plugin-inline-react-svg": "^1.1.2",
 		"cross-env": "^7.0.2",
 		"eslint": "^7.18.0",
+		"eslint-config-prettier": "^7.2.0",
+		"eslint-plugin-prettier": "^3.3.1",
 		"eslint-plugin-react": "^7.22.0",
 		"eslint-plugin-react-hooks": "^4.2.0",
 		"next-images": "^1.6.2",

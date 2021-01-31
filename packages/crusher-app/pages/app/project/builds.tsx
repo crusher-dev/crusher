@@ -220,7 +220,7 @@ const BuildPage = (props: any) => {
 						items={builds}
 						itemsPerPage={10}
 						selectedCategory={category}
-						itemsListComponent={buildList as any}
+						itemsListComponent={buildList}
 					/>
 				</div>
 			</Conditional>

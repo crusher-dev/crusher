@@ -3,7 +3,7 @@ import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
 import { Service } from "typedi";
 
-const mysql = process.env.NODE_ENV === "production" ? require("mysql2") : require("mysql");
+const mysql = require("mysql2");
 
 @Service()
 export default class DBManager {

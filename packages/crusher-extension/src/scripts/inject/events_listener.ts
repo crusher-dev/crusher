@@ -11,9 +11,9 @@ function requestRecordingStatusFromExtension() {
 		"*",
 	);
 }
+const frameDepth = getFrameDepth(window.self);
 
 function boot() {
-	const frameDepth = getFrameDepth(window.self);
 	if (frameDepth !== 1) {
 		return;
 	}
@@ -28,7 +28,7 @@ function boot() {
 	);
 }
 
-if (top !== self) {
+if (frameDepth === 1 && window.name === "crusher_iframe") {
 	fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
 		.then((response) => response.text())
 		.then((html) => {

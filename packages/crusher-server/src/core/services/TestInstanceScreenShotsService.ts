@@ -6,7 +6,7 @@ import TestInstanceService from "./TestInstanceService";
 import { TestInstance } from "../interfaces/db/TestInstance";
 import { Platform } from "../interfaces/Platform";
 import { TestInstanceScreenshot } from "../interfaces/db/TestInstanceScreenshot";
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 @Service()
 export default class TestInstanceScreenshotsService {

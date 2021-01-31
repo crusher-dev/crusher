@@ -43,7 +43,6 @@
 		"lodash": "^4.17.20",
 		"logdna": "^3.5.0",
 		"mongoose": "^5.11.14",
-		"mysql": "^2.18.1",
 		"mysql2": "^2.2.5",
 		"node-fetch": "^2.6.1",
 		"pixelmatch": "^5.2.1",

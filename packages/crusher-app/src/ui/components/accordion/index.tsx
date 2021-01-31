@@ -1,16 +1,16 @@
-import React, { ReactElement, useEffect, useRef, useState } from "react";
+import React, { ReactChildren, useEffect, useRef, useState } from "react";
 import { css } from "@emotion/core";
 import DownIcon from "../../../../public/svg/settings/down.svg";
 import { PIXEL_REM_RATIO } from "@constants/other";
 import { Conditional } from "@ui/components/common/Conditional";
 
 interface iAccordionProps {
-	children: ReactElement<any>;
+	children: ReactChildren;
 	containerCSS?: any;
 }
 interface iAccordionTabProps {
 	title: string;
-	children: ReactElement<any>;
+	children: ReactChildren;
 }
 const AccordionTab = (props: iAccordionTabProps) => {
 	const [isActive, setIsActive] = useState(false);

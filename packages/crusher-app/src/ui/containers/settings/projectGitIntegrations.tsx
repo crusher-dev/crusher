@@ -2,11 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { css } from "@emotion/core";
 import { Conditional } from "@ui/components/common/Conditional";
 import WarningIcon from "../../../svg/warning.svg";
-import {
-	BACKEND_SERVER_URL,
-	FRONTEND_SERVER_URL,
-	PIXEL_REM_RATIO,
-} from "@constants/other";
+import { FRONTEND_SERVER_URL, PIXEL_REM_RATIO } from "@constants/other";
 import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
 import { USER_CONNECTION_TYPE } from "@crusher-shared/types/userConnectionType";
 import { iGithubUserConnection } from "@crusher-shared/types/mongo/githubUserConnection";
@@ -120,7 +116,7 @@ const SelectGithubRepo = (props: iSelectGithubRepoProps) => {
 						<Select
 							value={selectedRepoInstallation}
 							options={repoInstallationOptions}
-							onChange={handleInstallationChange}
+							onChange={handleInstallationChange as any}
 							style={customSelectStyle}
 						/>
 					</div>
@@ -140,10 +136,9 @@ const selectInputContainerCSS = css`
 const customSelectStyle = {};
 const selectGithubRepoContainerCSS = css``;
 
-interface iConnectedGitIntegration {}
 interface iProjectGitIntegrationsProps {
 	userConnections: Array<iUserConnection>;
-	connectedGitIntegrations: Array<iConnectedGitIntegration>;
+	connectedGitIntegrations: Array<any>;
 }
 
 const ProjectGitIntegrations = (props: iProjectGitIntegrationsProps) => {

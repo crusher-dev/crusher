@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { render } from "react-dom";
 import { SidebarActionsBox } from "./containers/app/sidebarActionsBox";
 import { BrowserWindow } from "./containers/app/browserWindow";
@@ -15,15 +15,22 @@ import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
+	const [recordingStartTime] = useState(new Date());
+
 	const saveTest = () => {
 		const store = getStore();
 		const steps = store.getState().actions.list;
+		const lastActionTime = store.getState().actions.last_action;
+
+		if (!lastActionTime) {
+			return;
+		}
 
 		submitPostDataWithForm(
 			resolveToBackendPath("/test/goToEditor", "http://localhost:8000/"),
 			{
 				events: escape(JSON.stringify(steps)),
-				totalTime: 0,
+				totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
 			},
 		);
 	};

@@ -4,7 +4,7 @@
 	"version": "2.01",
 	"manifest_version": 2,
 	"permissions": ["webRequest", "webRequestBlocking", "browsingData", "webNavigation", "<all_urls>", "http://*/*", "https://*/*", "activeTab", "tabs"],
-	"web_accessible_resources": ["iframe_inject.html", "test_recorder.html", "popup.html", "styles/*", "icons/*", "assets/*", "fonts/*", "dist/*", "worker.js"],
+	"web_accessible_resources": ["iframe_inject.html", "test_recorder.html", "popup.html", "styles/*", "icons/*", "assets/*", "fonts/*", "dist/*", "worker.js", "js/*"],
 	"content_scripts": [
 		{
 			"matches": ["http://*/*", "https://*/*"],

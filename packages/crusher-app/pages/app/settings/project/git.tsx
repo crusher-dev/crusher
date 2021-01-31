@@ -10,10 +10,12 @@ import { ProjectGitIntegrations } from "@ui/containers/settings/projectGitIntegr
 import { _getUserConnectionsList } from "@services/v2/github";
 import { setUserLoginConnections } from "@redux/actions/user";
 import { iPageContext } from "@interfaces/pageContext";
-import { useSelector } from "react-redux";
 import { getUserLoginConnections } from "@redux/stateUtils/user";
+import { useSelector } from "react-redux";
 
 const ProjectGit = () => {
+	const userConnections = useSelector(getUserLoginConnections);
+
 	return (
 		<>
 			<SettingsContent contentCSS={settingContentCSS}>
@@ -22,7 +24,10 @@ const ProjectGit = () => {
 					desc={"List of all git integrations in current project"}
 				/>
 				<div css={mainContainerCSS}>
-					<ProjectGitIntegrations connectedGitIntegrations={[]} />
+					<ProjectGitIntegrations
+						userConnections={userConnections}
+						connectedGitIntegrations={[]}
+					/>
 				</div>
 			</SettingsContent>
 		</>

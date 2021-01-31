@@ -17,7 +17,13 @@ module.exports = {
 		ecmaVersion: 12,
 		sourceType: "module",
 	},
-	plugins: ["react", "@typescript-eslint", "react-hooks", "@emotion"],
+	plugins: [
+		"react",
+		"@typescript-eslint",
+		"react-hooks",
+		"@emotion",
+		"prettier",
+	],
 	rules: {
 		"linebreak-style": ["error", "unix"],
 		quotes: ["error", "double"],

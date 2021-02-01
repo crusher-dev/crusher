@@ -197,7 +197,7 @@ export class Parser {
 	parseCustomElementScript(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.runCustomScript(#{action}, page);\n".pretify({
+			"await Element.runCustomScript(JSON.parse(#{action}), page);\n".pretify({
 				action,
 			}),
 		);

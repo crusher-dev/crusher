@@ -13,3 +13,6 @@ export const getModalState = (state: iReduxState) => state.recorder.modalState;
 
 export const getSeoMetaInfo = (state: iReduxState) =>
 	state.recorder.seoMetaInfo;
+
+export const getLastElementCustomScriptOutput = (state: iReduxState) =>
+	state.recorder.lastElementExecutionScriptOutput;

@@ -18,6 +18,7 @@ export enum FRAME_MESSAGE_TYPES {
 	GO_BACK_TO_PREVIOUS_URL = "GO_BACK_TO_PREVIOUS_URL",
 	GO_FORWARD_TO_NEXT_URL = "GO_FORWARD_TO_NEXT_URL",
 	REFRESH_PAGE = "REFRESH_PAGE",
+	EXECUTE_ELEMENT_CUSTOM_SCRIPT = "EXECUTE_ELEMENT_CUSTOM_SCRIPT",
 }
 
 export interface iInspectModeUpdateMeta {
@@ -26,6 +27,18 @@ export interface iInspectModeUpdateMeta {
 
 interface iRecordStatusResponseMeta {
 	value: RECORDING_STATUS;
+}
+
+export interface iExecuteScriptResponseMeta {
+	script: string;
+	selector: string;
+}
+
+export interface iExecuteScriptOutputResponseMeta {
+	type: "string" | "error";
+	value: any;
+	script: string;
+	selector: string;
 }
 
 export interface iPerformActionMeta {
@@ -95,6 +108,28 @@ export function responseMessageListener(
 		case FRAME_MESSAGE_TYPES.GO_FORWARD_TO_NEXT_URL:
 			window.history.forward();
 			break;
+		case FRAME_MESSAGE_TYPES.EXECUTE_ELEMENT_CUSTOM_SCRIPT: {
+			const { script, selector } = event.data.meta as iExecuteScriptResponseMeta;
+
+			eventRecording
+				.executeCustomElementScript(script)
+				.then((res: any) => {
+					return { type: "output", value: res };
+				})
+				.catch((err: any) => {
+					return { type: "error", value: err };
+				})
+				.then((response: iExecuteScriptOutputResponseMeta) => {
+					window.top.postMessage(
+						{
+							type: MESSAGE_TYPES.EXECUTE_CUSTOM_SCRIPT_OUTPUT,
+							meta: { ...response, script: script, selector },
+						},
+						"*",
+					);
+				});
+			break;
+		}
 		default:
 			console.debug("Unknown Message type, here");
 			break;

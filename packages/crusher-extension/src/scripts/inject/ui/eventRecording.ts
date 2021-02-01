@@ -101,6 +101,20 @@ export default class EventRecording {
 		return stack;
 	}
 
+	executeCustomElementScript(script: string) {
+		return new Function(
+			"element",
+			`return new Promise(async function (resolve, reject) {
+				    try{
+				        const l = ${script};
+				        resolve(l(element));
+				    } catch(err){
+				      reject(err);
+				    }
+				});`,
+		)(this.state.targetElement);
+	}
+
 	getOffset(el: any) {
 		let _x = 0;
 		let _y = 0;

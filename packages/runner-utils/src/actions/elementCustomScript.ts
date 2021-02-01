@@ -15,6 +15,7 @@ export const runScriptOnElement = (script: string, elHandle: ElementHandle): Pro
 		`return new Promise(async function (resolve, reject) {
 				    try{
 				        const scriptFunction = ${script};
+				        console.log(scriptFunction);
 				        resolve(scriptFunction(elHandle));
 				    } catch(err){
 				      reject(err);
@@ -38,7 +39,9 @@ export default function elementCustomScript(action: iAction, page: Page) {
 				return error(`Attempt to capture screenshot of element with invalid selector: ${selector}`);
 			}
 
-			const scriptOutput = await runScriptOnElement(action.payload.meta.value, elementHandle);
+			const customScript = action.payload.meta.script;
+
+			const scriptOutput = await runScriptOnElement(customScript, elementHandle);
 			if(!!scriptOutput){
 				return success({
 					message: `Clicked on the element ${selector}`,

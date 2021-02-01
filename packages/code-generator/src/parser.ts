@@ -194,6 +194,17 @@ export class Parser {
 		return code;
 	}
 
+	parseCustomElementScript(action: iAction) {
+		const code = [];
+		code.push(
+			"await Element.runCustomScript(#{action}, page);\n".pretify({
+				action,
+			}),
+		);
+
+		return code;
+	}
+
 	parseAction(action: iAction) {
 		switch (action.type) {
 			case ACTIONS_IN_TEST.SET_DEVICE: {
@@ -221,6 +232,13 @@ export class Parser {
 				this.codeMap.push({
 					type: ACTIONS_IN_TEST.CLICK,
 					code: this.parseElementClick(action),
+				});
+				break;
+			}
+			case ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT,
+					code: this.parseCustomElementScript(action),
 				});
 				break;
 			}

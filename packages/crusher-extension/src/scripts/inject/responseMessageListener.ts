@@ -35,7 +35,7 @@ export interface iExecuteScriptResponseMeta {
 }
 
 export interface iExecuteScriptOutputResponseMeta {
-	type: "string" | "error";
+	type: "output" | "error";
 	value: any;
 	script: string;
 	selector: string;

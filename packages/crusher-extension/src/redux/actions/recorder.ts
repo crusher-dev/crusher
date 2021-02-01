@@ -49,7 +49,7 @@ export const addSEOMetaInfo = (info: iSeoMetaInformationMeta) => ({
 });
 
 export const updateLastElementCustomScriptOutput = (
-	info: iExecuteScriptOutputResponseMeta,
+	info: iExecuteScriptOutputResponseMeta | null,
 ) => ({
 	type: UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT,
 	payload: { info },

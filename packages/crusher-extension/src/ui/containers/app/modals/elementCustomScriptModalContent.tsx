@@ -5,12 +5,18 @@ import {
 	executeScriptInFrame,
 	turnOffInspectModeInFrame,
 } from "../../../../messageListener";
-import { getLastElementCustomScriptOutput } from "../../../../redux/selectors/recorder";
+import {
+	getActionsRecordingState,
+	getLastElementCustomScriptOutput,
+} from "../../../../redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { Conditional } from "../../../components/conditional";
 import { getStore } from "../../../../redux/store";
 import { updateActionsRecordingState } from "../../../../redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
+import { recordAction } from "../../../../redux/actions/actions";
+import { ACTIONS_IN_TEST } from "../../../../../../crusher-shared/constants/recordedActions";
+import { iElementInfo } from "../../../../../../crusher-shared/types/elementInfo";
 
 interface iElementCustomScriptModalContent {
 	onClose?: any;
@@ -19,6 +25,9 @@ interface iElementCustomScriptModalContent {
 const ElementCustomScriptModalContent = (
 	props: iElementCustomScriptModalContent,
 ) => {
+	const recordingState = useSelector(getActionsRecordingState);
+	const elementInfo: iElementInfo = recordingState.elementInfo as iElementInfo;
+
 	const { onClose, deviceIframeRef } = props;
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 	const lastElementOutput = useSelector(getLastElementCustomScriptOutput);
@@ -57,6 +66,19 @@ const ElementCustomScriptModalContent = (
 
 	const handleClose = () => {
 		const store = getStore();
+		store.dispatch(
+			recordAction({
+				type: ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT,
+				payload: {
+					selectors: elementInfo.selectors,
+					meta: {
+						script: codeTextAreaRef.current!.value,
+					},
+				},
+				url: "",
+			}),
+		);
+
 		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(deviceIframeRef);
 
@@ -65,8 +87,17 @@ const ElementCustomScriptModalContent = (
 
 	const handleScriptChange = async (cm: any, change: any) => {
 		const script = cm.getValue();
+		codeTextAreaRef.current!.value = script;
 		executeScriptInFrame(script, "", deviceIframeRef);
 	};
+
+	const isThereScriptOutput =
+		lastElementOutput &&
+		lastElementOutput.type === "output" &&
+		lastElementOutput.value;
+
+	const isThereScriptError =
+		lastElementOutput && lastElementOutput.type === "error";
 
 	return (
 		<div style={containerCSS}>
@@ -75,13 +106,13 @@ const ElementCustomScriptModalContent = (
 			<div style={bottomBarStyle}>
 				<div style={validationStatusContainerCSS}>
 					<Conditional If={lastElementOutput}>
-						<Conditional If={lastElementOutput && lastElementOutput.value}>
+						<Conditional If={isThereScriptOutput}>
 							<img
 								src={chrome.runtime.getURL("/icons/correct.svg")}
 								style={{ marginLeft: "0.85rem" }}
 							/>
 						</Conditional>
-						<Conditional If={!(lastElementOutput && lastElementOutput.value)}>
+						<Conditional If={!isThereScriptOutput || isThereScriptError}>
 							<img
 								src={chrome.runtime.getURL("/icons/cross.svg")}
 								style={{ marginLeft: "0.85rem" }}

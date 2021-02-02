@@ -1,17 +1,19 @@
-import * as shell from 'shelljs';
-import { iJobRunRequest } from '../../../crusher-shared/types/runner/jobRunRequest';
-import * as fs from 'fs';
-import path from 'path';
-import { CloudBucketManager } from '../manager/cloudBucket';
+import * as shell from "shelljs";
+import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
+import * as fs from "fs";
+import path from "path";
+import { CloudBucketManager } from "../manager/cloudBucket";
+import { iAction } from "../../../crusher-shared/types/action";
+import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
 
 export const createTmpAssetsDirectoriesIfNotThere = (jobRequest: iJobRunRequest) => {
-	shell.mkdir('-p', `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`);
-	shell.mkdir('-p', `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);
+	shell.mkdir("-p", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`);
+	shell.mkdir("-p", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);
 };
 
 export const deleteTmpAssetsDirectoriesIfThere = (jobRequest: iJobRunRequest) => {
-	shell.rm('-rf', `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`);
-	shell.rm('-rf', `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);
+	shell.rm("-rf", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`);
+	shell.rm("-rf", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);
 };
 
 export const replaceImportWithRequire = (code: string) => {
@@ -43,7 +45,7 @@ export const getAllCapturedVideos = (jobRequest: iJobRunRequest): { [videoName: 
 	}, {});
 };
 
-const bucketManager = new CloudBucketManager({ useLocalStack: process.env.NODE_ENV === 'production' ? false : true });
+const bucketManager = new CloudBucketManager({ useLocalStack: process.env.NODE_ENV === "production" ? false : true });
 
 export const uploadOutputToS3 = async (bufferImages: Array<{ name: string; value: Buffer }>, video: string | null, jobRequest: iJobRunRequest) => {
 	const targetDir = `${jobRequest.requestType}/${jobRequest.instanceId}`;
@@ -53,9 +55,33 @@ export const uploadOutputToS3 = async (bufferImages: Array<{ name: string; value
 		signedRawVideoUrl = await bucketManager.upload(video, path.join(targetDir, `/video.mp4.raw`));
 	}
 	const signedImages = [];
-	for (let imageBufferInfo of bufferImages) {
+	for (const imageBufferInfo of bufferImages) {
 		signedImages.push(await bucketManager.uploadBuffer(imageBufferInfo.value, path.join(targetDir, imageBufferInfo.name)));
 	}
 
 	return { signedImageUrls: signedImages, signedRawVideoUrl };
+};
+
+export const getBaseUrlFromEvents = (actions: Array<iAction>): URL => {
+	const startingNavigateAction = actions.find((action) => action.type === ACTIONS_IN_TEST.NAVIGATE_URL);
+	if (!startingNavigateAction || !startingNavigateAction.payload.meta.value) return null;
+
+	const startingNavigateUrl = startingNavigateAction.payload.meta.value;
+
+	return new URL(startingNavigateUrl);
+};
+
+export const replaceBaseUrlInEvents = (startingUrl: URL, newHost: URL, actions: Array<iAction>): Array<iAction> => {
+	return actions.map((action) => {
+		if (action.type !== ACTIONS_IN_TEST.NAVIGATE_URL) return action;
+
+		const currentActionURL = new URL(action.payload.meta.value);
+
+		if (currentActionURL.origin !== startingUrl.origin) return action;
+
+		currentActionURL.protocol = newHost.protocol;
+		currentActionURL.host = newHost.host;
+		action.payload.meta.value = currentActionURL.toString();
+		return action;
+	});
 };

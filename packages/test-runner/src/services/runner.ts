@@ -1,12 +1,12 @@
-import { iJobRunRequest } from '../../../crusher-shared/types/runner/jobRunRequest';
-import { CodeGenerator } from '../../../code-generator/src/generator';
-import { PLATFORM } from '../../../crusher-shared/types/platform';
-import { getAllCapturedImages, getAllCapturedVideos, replaceImportWithRequire } from '../util/helper';
+import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
+import { CodeGenerator } from "../../../code-generator/src/generator";
+import { PLATFORM } from "../../../crusher-shared/types/platform";
+import { getAllCapturedImages, getAllCapturedVideos, getBaseUrlFromEvents, replaceBaseUrlInEvents, replaceImportWithRequire } from "../util/helper";
 
 const BROWSER_NAME = {
-	[PLATFORM.CHROME]: 'chromium',
-	[PLATFORM.FIREFOX]: 'firefox',
-	[PLATFORM.SAFARI]: 'webkit',
+	[PLATFORM.CHROME]: "chromium",
+	[PLATFORM.FIREFOX]: "firefox",
+	[PLATFORM.SAFARI]: "webkit",
 };
 
 export class CodeRunnerService {
@@ -19,7 +19,13 @@ export class CodeRunnerService {
 			assetsDir: `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}`,
 		});
 
-		return replaceImportWithRequire(generator.parse(jobRequest.test.events));
+		let events = jobRequest.test.events;
+		if (jobRequest.job && jobRequest.job.host) {
+			const baseURL = getBaseUrlFromEvents(events);
+			const finalURL = new URL(jobRequest.job.host);
+			events = replaceBaseUrlInEvents(baseURL, finalURL, events);
+		}
+		return replaceImportWithRequire(generator.parse(events));
 	}
 
 	static async runTest(jobRequest: iJobRunRequest, logStepsHandler: Function, handleScreenshotImagesBuffer: Function) {
@@ -28,13 +34,13 @@ export class CodeRunnerService {
 
 		try {
 			await new Function(
-				'exports',
-				'require',
-				'module',
-				'__filename',
-				'__dirname',
-				'logStep',
-				'handleImageBuffer',
+				"exports",
+				"require",
+				"module",
+				"__filename",
+				"__dirname",
+				"logStep",
+				"handleImageBuffer",
 				`return new Promise(async function (resolve, reject) {
 				    try{
 				        ${code};

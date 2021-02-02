@@ -122,7 +122,6 @@ process.on("uncaughtException", (err: Error) => {
 const httpServer = http.createServer(expressApp);
 const port = process.env.PORT || 8000;
 
-// cron.init();
 httpServer.listen(port);
 
 Logger.info("App", chalk.hex("#ec2e6a").bold(`Starting at ${port}`));

@@ -4,7 +4,9 @@ import { USER_CONNECTION_TYPE } from "../../../../../crusher-shared/types/userCo
 import { iUserConnection } from "../../../../../crusher-shared/types/mongo/userConnection";
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import { iGithubUserConnection } from "@crusher-shared/types/mongo/githubUserConnection";
+import { Service } from "typedi";
 
+@Service()
 export class UserConnectionsMongoService {
 	async upsertGithubConnection(
 		userId: number,

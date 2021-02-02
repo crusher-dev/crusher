@@ -20,8 +20,6 @@
 	},
 	"scripts": {
 		"start": "ts-node src/app.js",
-		"start:prod": "NODE_ENV=production ts-node src/app.js",
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*"
 	},
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>"

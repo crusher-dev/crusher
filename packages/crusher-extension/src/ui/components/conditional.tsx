@@ -2,7 +2,7 @@ import React from "react";
 
 interface iConditional {
 	If: any;
-	children: React.ReactElement;
+	children: any;
 }
 
 const Conditional = (props: iConditional): React.ReactElement | null => {

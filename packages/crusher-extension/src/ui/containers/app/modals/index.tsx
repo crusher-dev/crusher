@@ -6,10 +6,14 @@ import { Conditional } from "../../../components/conditional";
 import { getModalState } from "../../../../redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { getStore } from "../../../../redux/store";
-import { updateActionsModalState } from "../../../../redux/actions/recorder";
+import {
+	updateActionsModalState,
+	updateLastElementCustomScriptOutput,
+} from "../../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../../interfaces/actionsModalState";
 import { FRAME_MESSAGE_TYPES } from "../../../../scripts/inject/responseMessageListener";
 import { AssertElementModalContent } from "./assertElementModalContent";
+import { ElementCustomScriptModalContent } from "./elementCustomScriptModalContent";
 
 interface iModalTopBarProps {
 	title: string;
@@ -99,6 +103,12 @@ const ModalManager = (props: iModalManagerProps) => {
 		}
 	}, [modalState]);
 
+	const handleCloseElementCustomScriptModal = () => {
+		const store = getStore();
+		store.dispatch(updateLastElementCustomScriptOutput(null));
+		handleCloseModal();
+	};
+
 	return (
 		<ReactModal
 			isOpen={shouldShowModal}
@@ -129,6 +139,20 @@ const ModalManager = (props: iModalManagerProps) => {
 					<AssertElementModalContent
 						deviceIframeRef={deviceIframeRef}
 						onClose={handleCloseModal}
+					/>
+				</>
+			</Conditional>
+			<Conditional If={modalState === ACTIONS_MODAL_STATE.ELEMENT_CUSTOM_SCRIPT}>
+				<>
+					<ModalTopBar
+						title={"Element custom script"}
+						desc={"Write your own custom script to validate this element"}
+						closeModal={handleCloseElementCustomScriptModal}
+					/>
+
+					<ElementCustomScriptModalContent
+						deviceIframeRef={deviceIframeRef}
+						onClose={handleCloseElementCustomScriptModal}
 					/>
 				</>
 			</Conditional>

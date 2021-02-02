@@ -84,6 +84,11 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 			case ELEMENT_LEVEL_ACTION.SHOW_ASSERT_MODAL:
 				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.ASSERT_ELEMENT));
 				return;
+			case ELEMENT_LEVEL_ACTION.CUSTOM_SCRIPT:
+				store.dispatch(
+					updateActionsModalState(ACTIONS_MODAL_STATE.ELEMENT_CUSTOM_SCRIPT),
+				);
+				return;
 			default:
 				console.debug("Unknown Element Level Action");
 		}

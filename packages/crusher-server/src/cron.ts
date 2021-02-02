@@ -1,11 +1,11 @@
 import { CronJob } from "cron";
 import { Container } from "typedi";
-import JobsService from "../../core/services/JobsService";
-import MonitoringService from "../../core/services/MonitoringService";
-import { Logger } from "../../utils/logger";
-import JobRunnerService from "../../core/services/v2/JobRunnerService";
-import ProjectHostsService from "../../core/services/ProjectHostsService";
-import { JOB_TRIGGER } from "../../../../crusher-shared/types/jobTrigger";
+import JobsService from "./core/services/JobsService";
+import MonitoringService from "./core/services/MonitoringService";
+import { Logger } from "./utils/logger";
+import JobRunnerService from "./core/services/v2/JobRunnerService";
+import ProjectHostsService from "./core/services/ProjectHostsService";
+import { JOB_TRIGGER } from "../../crusher-shared/types/jobTrigger";
 
 const monitoringService = Container.get(MonitoringService);
 const projectHostsService = Container.get(ProjectHostsService);
@@ -31,7 +31,7 @@ export function init() {
 			const queuedMonitorings = await monitoringService.getQueuedMonitorings();
 
 			try {
-				for (let monitoring of queuedMonitorings) {
+				for (const monitoring of queuedMonitorings) {
 					const host = await projectHostsService.getHost(monitoring.target_host);
 					await jobRunnerService.runTestsInProject(monitoring.project_id, monitoring.platform, JOB_TRIGGER.CRON, monitoring.user_id, host, null);
 					await monitoringService.updateLastCronRunForProject(monitoring.project_id);
@@ -46,3 +46,5 @@ export function init() {
 		"America/Los_Angeles",
 	);
 }
+
+init();

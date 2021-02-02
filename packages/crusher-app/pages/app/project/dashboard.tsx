@@ -505,7 +505,6 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 			activitiesPromise,
 		]);
 
-		console.log(selectedProject);
 		return {
 			builds: builds,
 			activities: activities,

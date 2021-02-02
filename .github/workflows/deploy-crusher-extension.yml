@@ -25,7 +25,7 @@ jobs:
       - name: Use cache for yarn if available
         uses: c-hive/gha-yarn-cache@v1
 
-      - name: Copy ecosystem.config.js
+      - name: Create ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js
 
       - name: Install crusher modules

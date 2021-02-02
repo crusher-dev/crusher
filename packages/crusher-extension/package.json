@@ -3,7 +3,7 @@
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"version": "1.0.0",
 	"scripts": {
-		"dev": "ts-node scripts/dev",
+		"start": "ts-node scripts/dev",
 		"build": "node scripts/build.js",
 		"lint": "prettier --write ."
 	},

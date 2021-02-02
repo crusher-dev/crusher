@@ -21,7 +21,7 @@ jobs:
       - name: Install yarn
         run: npm install -g yarn
 
-      - name: Copy ecosystem.config.js
+      - name: Create ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js
 
       - name: Use cache for yarn if available

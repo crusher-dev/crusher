@@ -32,6 +32,12 @@ const ELEMENT_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 		icon: chrome.runtime.getURL("icons/action.svg"),
 		desc: "Setup Assertion for Element",
 	},
+	{
+		id: ELEMENT_LEVEL_ACTION.CUSTOM_SCRIPT,
+		value: "Custom Script",
+		icon: chrome.runtime.getURL("icons/action.svg"),
+		desc: "",
+	},
 ];
 
 export { ELEMENT_LEVEL_ACTIONS_LIST };

@@ -51,32 +51,6 @@ interface TestInstanceWithImages extends TestInstance {
 		[imageKey: string]: TestInstanceScreenshot;
 	};
 }
-
-async function getOrganisedTestInstancesWithImages(testInstances: Array<TestInstance>) {
-	return testInstances.reduce(async (prevPromise, current) => {
-		const prev = await prevPromise;
-		const images = await testInstanceScreenshotsService.getAllScreenShotsOfInstance(current.id);
-
-		const imagesMap = images.reduce((prevImages, image) => {
-			return {
-				...prevImages,
-				[image.name + "_" + current.platform]: image,
-			};
-		}, {});
-
-		return {
-			...prev,
-			[current.test_id]: {
-				...prev[current.test_id],
-				[current.platform]: {
-					...current,
-					images: imagesMap,
-				},
-			},
-		};
-	}, Promise.resolve({}));
-}
-
 async function getOrganisedTestInstanceWithImages(testInstance: TestInstance): Promise<TestInstanceWithImages> {
 	const images = await testInstanceScreenshotsService.getAllScreenShotsOfInstance(testInstance.id);
 
@@ -92,17 +66,6 @@ async function getOrganisedTestInstanceWithImages(testInstance: TestInstance): P
 		images: imagesMap,
 	};
 }
-
-function reduceInstancesMapToArr(testInstancesMap): Array<TestInstanceWithImages> {
-	return Object.values(testInstancesMap).reduce((prev: Array<any>, current: any) => {
-		return [...prev, ...Object.values(current)];
-	}, []) as any;
-}
-
-function hasTestInstanceFinishedExecuting(testInstance: TestInstance) {
-	return testInstance.status === InstanceStatus.FINISHED;
-}
-
 function getReferenceInstance(referenceJobId, testId, platform) {
 	return testInstanceService.getReferenceTestInstance(referenceJobId, testId, platform);
 }

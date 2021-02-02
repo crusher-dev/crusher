@@ -21,4 +21,4 @@ ARG PORT=8000
 
 EXPOSE $PORT
 
-CMD ["pm2-runtime", "ecosystem.config.old.js", "--only", "crusher-server"]
+CMD ["pm2-runtime", "ecosystem.config.js", "--only", "crusher-server"]

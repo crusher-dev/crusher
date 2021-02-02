@@ -23,4 +23,4 @@ module.exports = {
 	SLACK_CONFIG,
 	THIRD_PARTY_API_KEYS,
 	GOOGLE_CONFIG
-}
+};

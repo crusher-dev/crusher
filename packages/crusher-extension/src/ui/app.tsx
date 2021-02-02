@@ -74,6 +74,11 @@ const App = () => {
 			/>
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/app.css")} />
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")} />
+			<style>{`
+			.CodeMirror {
+font-size: 0.9rem;
+}
+`}</style>
 		</div>
 	);
 };

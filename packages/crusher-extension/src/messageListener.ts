@@ -8,6 +8,7 @@ import {
 	updateActionsRecordingState,
 	updateInspectModeState,
 	updateIsRecorderScriptBooted,
+	updateLastElementCustomScriptOutput,
 } from "./redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
 import { RefObject } from "react";
@@ -19,6 +20,8 @@ import { AdvancedURL } from "./utils/url";
 import userAgents from "../../crusher-shared/constants/userAgents";
 import {
 	FRAME_MESSAGE_TYPES,
+	iExecuteScriptOutputResponseMeta,
+	iExecuteScriptResponseMeta,
 	iInspectModeUpdateMeta,
 	iPerformActionMeta,
 } from "./scripts/inject/responseMessageListener";
@@ -40,6 +43,7 @@ export enum MESSAGE_TYPES {
 	REQUEST_RECORDING_STATUS = "REQUEST_RECORDING_STATUS",
 	REQUEST_USER_AGENT = "REQUEST_USER_AGENT",
 	SEO_META_INFORMATION = "SEO_META_INFORMATION",
+	EXECUTE_CUSTOM_SCRIPT_OUTPUT = "EXECUTE_CUSTOM_SCRIPT_OUTPUT",
 }
 
 export enum RECORDING_STATUS {
@@ -261,6 +265,11 @@ export function recorderMessageListener(
 			store.dispatch(addSEOMetaInfo(meta));
 			break;
 		}
+		case MESSAGE_TYPES.EXECUTE_CUSTOM_SCRIPT_OUTPUT: {
+			const meta = event.data.meta as iExecuteScriptOutputResponseMeta;
+			store.dispatch(updateLastElementCustomScriptOutput(meta));
+			break;
+		}
 		default:
 			console.debug("Unknown Message type");
 			break;
@@ -298,6 +307,25 @@ export function turnOffInspectModeInFrame(
 		{
 			type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
 			meta: { isInspectModeOn: false } as iInspectModeUpdateMeta,
+		},
+		"*",
+	);
+}
+
+export function executeScriptInFrame(
+	script: string,
+	selector: string,
+	deviceIframeRef: RefObject<HTMLIFrameElement>,
+) {
+	if (!deviceIframeRef.current)
+		throw new Error("Iframe not available yet from ref context");
+
+	const cn = deviceIframeRef.current.contentWindow;
+
+	cn?.postMessage(
+		{
+			type: FRAME_MESSAGE_TYPES.EXECUTE_ELEMENT_CUSTOM_SCRIPT,
+			meta: { script: script, selector: selector } as iExecuteScriptResponseMeta,
 		},
 		"*",
 	);

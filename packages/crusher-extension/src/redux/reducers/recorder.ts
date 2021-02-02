@@ -4,6 +4,7 @@ import {
 	UPDATE_ACTIONS_MODAL_STATE,
 	UPDATE_ACTIONS_RECORDING_STATE,
 	UPDATE_INSPECT_MODE_STATE,
+	UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT,
 	UPDATE_RECORDER_SCRIPT_BOOTED,
 } from "../actions/recorder";
 import { iRecorderState } from "../../interfaces/recorderReducer";
@@ -18,6 +19,7 @@ const initialState: iRecorderState = {
 	modalState: null,
 	isRecorderScriptBooted: false,
 	seoMetaInfo: null,
+	lastElementExecutionScriptOutput: null,
 };
 
 export const recorderReducer = (
@@ -25,6 +27,11 @@ export const recorderReducer = (
 	action: AnyAction,
 ) => {
 	switch (action.type) {
+		case UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT:
+			return {
+				...state,
+				lastElementExecutionScriptOutput: action.payload.info,
+			};
 		case UPDATE_INSPECT_MODE_STATE:
 			return {
 				...state,

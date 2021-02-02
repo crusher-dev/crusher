@@ -8,6 +8,7 @@ import pageScroll from "./pageScroll";
 import navigateUrl from "./navigateUrl";
 import setDevice from "./setDevice";
 import assertElement from './assertElement';
+import runCustomScript from "./elementCustomScript";
 
 module.exports = {
 	Element: {
@@ -17,7 +18,8 @@ module.exports = {
 		scroll: elementScroll,
 		screenshot: captureElementScreenshot,
 		elementScroll,
-		assertElement
+		assertElement,
+		runCustomScript: runCustomScript
 	},
 	Page: {
 		screenshot: capturePageScreenshot,

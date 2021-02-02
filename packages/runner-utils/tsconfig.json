@@ -17,5 +17,7 @@
     "./src/functions/index.ts",
     "./src/middlewares/index.ts"
   ],
-  "typeRoots": ["node_modules/@types"]
+  "typeRoots": ["node_modules/@types"],
+  "include": ["./src/**/*"],
+  "exclude": ["**/*.spec.ts"],
 }

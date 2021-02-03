@@ -194,9 +194,9 @@ function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoS
 	// eslint-disable-next-line no-async-promise-executor
 	return new Promise(async (resolve, reject) => {
 		const emailTemplateFilePathMap = {
-			[JobReportStatus.FAILED]: "../../templates/failedJob.ejs",
-			[JobReportStatus.PASSED]: "../../templates/passedJob.ejs",
-			[JobReportStatus.MANUAL_REVIEW_REQUIRED]: "../../templates/manualReviewRequiredJob.ejs",
+			[JobReportStatus.FAILED]: "/../../templates/failedJob.ejs",
+			[JobReportStatus.PASSED]: "/../../templates/passedJob.ejs",
+			[JobReportStatus.MANUAL_REVIEW_REQUIRED]: "/../../templates/manualReviewRequiredJob.ejs",
 		};
 
 		const templatePath = emailTemplateFilePathMap[result];
@@ -209,8 +209,8 @@ function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoS
 			__dirname + templatePath,
 			{ jobId: jobRecord.id, branchName: jobRecord.branch_name, jobReviewUrl: resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`) },
 			function (err, str) {
-				if (err) reject("Can't load the invite member template");
-				EmailManager.sendEmailToUsers(usersInTeam, `Job ${jobRecord.id} Failed`, str);
+				if (err) return reject("Can't load the invite member template");
+				EmailManager.sendEmailToUsers(usersInTeam, `Job ${jobRecord.id} ${result}`, str);
 				resolve(true);
 			},
 		);

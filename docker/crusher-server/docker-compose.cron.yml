@@ -13,6 +13,7 @@ services:
     image: 862866004122.dkr.ecr.us-east-1.amazonaws.com/crusher-server-images
     command: ["pm2-runtime", "ecosystem.config.js", "--only", "crusher-server-cron"]
     environment:
+      - CRUSHER_ENV=$CRUSHER_ENV
       - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING
       - DB_HOST=$DB_HOST
       - DB_USERNAME=$DB_USERNAME

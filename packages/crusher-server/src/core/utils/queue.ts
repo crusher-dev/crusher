@@ -49,6 +49,8 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 	let instanceId = 0;
 	const { host } = job ? job : ({} as any);
 
+	console.log("INSIDE THE TEST ADD QUEUE", true);
+
 	if (test.testType !== TestType.DRAFT && job) {
 		const instance = await testInstanceService.createNewTestInstance({
 			jobId: job.id,
@@ -104,7 +106,8 @@ export async function addJobToRequestQueue(jobRequest) {
 		return prev + count;
 	}, 0);
 
-	for (let test of tests) {
+	console.log("Here are the tests: ", tests);
+	for (const test of tests) {
 		if (platform === Platform.ALL) {
 			await addTestRequestToQueue({
 				job: { ...job, report_id: jobReportsId.insertId, platform: PLATFORM.CHROME },

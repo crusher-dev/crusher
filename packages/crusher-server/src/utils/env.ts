@@ -5,5 +5,3 @@ export const ENVIRONMENT = {
 };
 
 export const currentEnvironmentName = ENVIRONMENT[process.env.NODE_ENV];
-
-export const isDev = currentEnvironmentName === ENVIRONMENT.development;

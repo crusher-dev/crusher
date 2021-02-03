@@ -12,6 +12,7 @@ services:
     network_mode: host
     image: 862866004122.dkr.ecr.us-east-1.amazonaws.com/crusher-server-images
     environment:
+      - CRUSHER_ENV=$CRUSHER_ENV
       - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING
       - DB_HOST=$DB_HOST
       - DB_USERNAME=$DB_USERNAME

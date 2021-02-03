@@ -49,7 +49,7 @@ export default class MonitoringService {
 		return this.dbManager.fetchData(`SELECT * FROM monitoring_settings WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(last_cron_run) > test_interval`);
 	}
 
-	async updateLastCronRunForProject(projectId: number) {
-		return this.dbManager.fetchSingleRow(`UPDATE monitoring_settings SET last_cron_run = NOW() WHERE project_id=?`, [projectId]);
+	async updateLastCronRunForProject(id: number) {
+		return this.dbManager.fetchSingleRow(`UPDATE monitoring_settings SET last_cron_run = NOW() WHERE id=?`, [id]);
 	}
 }

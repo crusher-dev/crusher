@@ -211,17 +211,19 @@ const BuildPage = (props: any) => {
 			<Conditional If={isBuildsPresent}>
 				<div css={filterContainerCss}>
 					<div css={headingCSS}>Previous Builds</div>
-					<FilterListPagination
-						categories={AVAILABLE_FILTERS}
-						resolvePaginationUrl={resolvePaginationUrl}
-						resolveCategoryUrl={resolveCategoryUrl}
-						currentPage={parseInt(page)}
-						totalPages={builds.totalPages}
-						items={builds}
-						itemsPerPage={10}
-						selectedCategory={category}
-						itemsListComponent={buildList}
-					/>
+					<div css={filterPaginationContainerCSS}>
+						<FilterListPagination
+							categories={AVAILABLE_FILTERS}
+							resolvePaginationUrl={resolvePaginationUrl}
+							resolveCategoryUrl={resolveCategoryUrl}
+							currentPage={parseInt(page)}
+							totalPages={builds.totalPages}
+							items={builds}
+							itemsPerPage={10}
+							selectedCategory={category}
+							itemsListComponent={buildList}
+						/>
+					</div>
 				</div>
 			</Conditional>
 			<Conditional If={!isBuildsPresent}>
@@ -253,9 +255,12 @@ const headingCSS = css`
 `;
 
 const filterContainerCss = css`
-	margin-top: 2.75rem;
+	margin-top: 1rem;
 `;
 
+const filterPaginationContainerCSS = css`
+	margin-top: 1.5rem;
+`;
 const styles = {
 	heading: css`
 		font-size: 1.2rem;

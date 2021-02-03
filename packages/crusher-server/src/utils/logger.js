@@ -1,6 +1,6 @@
-const { currentEnvironmentName, ENVIRONMENT } = require("./env");
+const { currentEnvironmentName } = require("./env");
 const LoggerDNA = require("logdna");
-const IS_PRODUCTION = process.env.NODE_ENV === ENVIRONMENT.production;
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const chalk = require("chalk");
 
 const logger = LoggerDNA.setupDefaultLogger(process.env.LOGDNA_API_KEY, {

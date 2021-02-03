@@ -54,6 +54,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
+          CRUSHER_ENV: production
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: crusher-server-images
           REDIS_HOST: ${{ secrets.REDIS_HOST }}

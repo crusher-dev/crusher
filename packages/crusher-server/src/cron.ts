@@ -1,12 +1,15 @@
+import "reflect-metadata";
 import { CronJob } from "cron";
 import { Container } from "typedi";
-import JobsService from "./core/services/JobsService";
 import MonitoringService from "./core/services/MonitoringService";
 import { Logger } from "./utils/logger";
 import JobRunnerService from "./core/services/v2/JobRunnerService";
 import ProjectHostsService from "./core/services/ProjectHostsService";
 import { JOB_TRIGGER } from "../../crusher-shared/types/jobTrigger";
+import MongoManager from "./core/manager/MongoManager";
+import JobsService from "./core/services/JobsService";
 
+new MongoManager().init();
 const monitoringService = Container.get(MonitoringService);
 const projectHostsService = Container.get(ProjectHostsService);
 const jobRunnerService = Container.get(JobRunnerService);
@@ -14,8 +17,9 @@ const jobRunnerService = Container.get(JobRunnerService);
 export function init() {
 	Logger.debug("CRON", "Started STOP_STALLED_TESTS_CHECKER cron job every 10 minutes");
 	const stopStalledTestsCronJob = new CronJob(
-		"* */10 * * * *",
+		"*/10 * * * * *",
 		async function () {
+			console.log("[Stalled]: Stopping stalled jobs");
 			const jobsService = Container.get(JobsService);
 			await jobsService.stopAllJobsRunningForMoreThanAnHour();
 		},
@@ -34,7 +38,7 @@ export function init() {
 				for (const monitoring of queuedMonitorings) {
 					const host = await projectHostsService.getHost(monitoring.target_host);
 					await jobRunnerService.runTestsInProject(monitoring.project_id, monitoring.platform, JOB_TRIGGER.CRON, monitoring.user_id, host, null);
-					await monitoringService.updateLastCronRunForProject(monitoring.project_id);
+					await monitoringService.updateLastCronRunForProject(monitoring.id);
 				}
 			} catch (ex) {
 				// Cleanup job if some error occurred during cron

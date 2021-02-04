@@ -25,6 +25,15 @@ module.exports = {
 			merge_logs: true,
 		},
 		{
+			name: 'crusher-server-cron',
+			cwd: './packages/crusher-server',
+			script: 'npm',
+			args: IS_PRODUCTION ? 'run build:start:cron' : 'run dev:cron',
+			watch: ['src', 'config'],
+			env: CRUSHER_SERVER_ENV,
+			merge_logs: true,
+		},
+		{
 			name: 'test-runner',
 			cwd: './packages/test-runner',
 			script: 'npm',

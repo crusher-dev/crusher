@@ -13,10 +13,6 @@ RUN apt-get update \
     && apt-get install -y openssh-server \
     && mkdir -p /var/run/sshd
 
-# 2. Give permission to user to edit it
-RUN chown -R pwuser:pwuser ./
-RUN chown -R pwuser:pwuser /usr/local/nvm
-
 COPY ci/test-runner/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN export SSH_PUBLIC_KEY="$SSH_PUBLIC_KEY"

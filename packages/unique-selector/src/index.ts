@@ -3,6 +3,7 @@ import { UniqueSelectorResult } from './interfaces/result';
 import { getIDSelectors } from './selectors/id';
 import { getDataAttribute } from './selectors/dataAttribute';
 import { getAttribute } from './selectors/attribute';
+import { getPnC } from './selectors/pnc';
 
 /**
  * Entry File.
@@ -31,10 +32,11 @@ class UniqueSelector {
 		const idSelector = getIDSelectors(element, this._configuration.root);
 		const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
 		const geAttributesSelector = getAttribute(element, this._configuration.root);
+		const classSelectors = getPnC(element, this._configuration.root);
 
 		const selectors = [];
 
-		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector);
+		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
 
 		// @ts-ignore

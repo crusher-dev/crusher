@@ -27,7 +27,7 @@ const App = () => {
 		}
 
 		submitPostDataWithForm(
-			resolveToBackendPath("/test/goToEditor", "http://localhost:8000/"),
+			resolveToBackendPath("/test/goToEditor", process.env.BACKEND_URL),
 			{
 				events: escape(JSON.stringify(steps)),
 				totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),

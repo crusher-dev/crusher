@@ -1,37 +1,49 @@
-const path = require("path");
-const webpack = require("webpack");
+import * as path from "path";
+import * as webpack from "webpack";
 
-const customPath = path.join(__dirname, "./customPublicPath");
-const host = "localhost";
-const port = 3000;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	entry: {
 		content_script: [
-			customPath,
 			path.resolve(__dirname, "../src/scripts/inject/events_listener.ts"),
 		],
 		change_navigator: [
-			customPath,
 			path.resolve(__dirname, "../src/scripts/inject/change_navigator.ts"),
 		],
+		background: [path.resolve(__dirname, "../src/background.ts")],
+		popup: [path.resolve(__dirname, "../src/ui/popup.tsx")],
+		record_test: [path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [
+		new CopyPlugin({
+			patterns: [{ from: "public/", to: "../" }],
+			options: {
+				concurrency: 50,
+			},
+		}),
 		new webpack.DefinePlugin({
-			__HOST__: `'${host}'`,
-			__PORT__: port,
+			NODE_ENV: "production",
 			"process.env": {
-				NODE_ENV: JSON.stringify("development"),
+				BACKEND_URL: JSON.stringify(
+					process.env.BACKEND_URL
+						? process.env.BACKEND_URL
+						: "https://backend.crusher.dev/",
+				),
 			},
 		}),
 	],
 	output: {
 		filename: "[name].js",
-		path: path.resolve(__dirname, "../dev/js/"),
+		path: path.resolve(__dirname, "../build/js/"),
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".jsx"],
-		// modules: ["node_modules"]
+		modules: ["node_modules"],
+		fallback: {
+			path: require.resolve("path-browserify"),
+		},
 	},
 	module: {
 		rules: [

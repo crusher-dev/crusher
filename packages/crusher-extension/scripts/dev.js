@@ -5,12 +5,6 @@ const { exec } = require("child_process");
 
 async function initDevServer() {
 	await tasks.clearDevBuilds();
-	console.log("[Copy assets]");
-	console.log("-".repeat(80));
-	await tasks.copyAssets("dev");
-	console.log("Assets copied to dev build");
-	console.log("-".repeat(80));
-
 	console.log("[Bundle templates]");
 	console.log("-".repeat(80));
 	await tasks.bundleTemplates("dev");

@@ -52,7 +52,8 @@ module.exports = {
 			name: 'crusher-extension',
 			cwd: './packages/crusher-extension',
 			script: 'npm',
-			args: 'run start',
+			args: 'run build',
+			watch: ['src', 'public'],
 			env: CRUSHER_EXTENSION_ENV,
 		}
 	]

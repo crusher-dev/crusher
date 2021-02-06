@@ -1,14 +1,14 @@
-import { TestsLogs } from '../models/testLogs';
-import { RUNNER_REQUEST_TYPE } from '../../../crusher-shared/types/runner/requestType';
-import { iJobRunRequest } from '../../../crusher-shared/types/runner/jobRunRequest';
-import { TestLiveStepsLogs } from '../models/testLiveStepsLogs';
-import { ACTIONS_IN_TEST } from '../../../crusher-shared/constants/recordedActions';
+import { TestsLogs } from "../models/testLogs";
+import { RUNNER_REQUEST_TYPE } from "../../../crusher-shared/types/runner/requestType";
+import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
+import { TestLiveStepsLogs } from "../models/testLiveStepsLogs";
+import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
 
 export const TEST_LOGS_SERVICE_TAGS = {
-	TEST_ADDED_TO_QUEUE: 'TEST_ADDED_TO_QUEUE',
-	TEST_RUNNING: 'TEST_RUNNING',
-	TEST_EXECUTION_FAILED: 'TEST_EXECUTION_FAILED',
-	TEST_EXECUTION_COMPLETED: 'TEST_EXECUTION_COMPLETED',
+	TEST_ADDED_TO_QUEUE: "TEST_ADDED_TO_QUEUE",
+	TEST_RUNNING: "TEST_RUNNING",
+	TEST_EXECUTION_FAILED: "TEST_EXECUTION_FAILED",
+	TEST_EXECUTION_COMPLETED: "TEST_EXECUTION_COMPLETED",
 };
 
 export class TestLogsService {

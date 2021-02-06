@@ -39,7 +39,7 @@ async function prepareResultForTestInstance(instanceId, images, jobId, testId) {
 	Logger.info("QueueManager::prepareResultForTestInstance", `\x1b[36m Test ${instanceId}\x1b[0m result created!!`);
 }
 
-async function prepareResultForDraftInstance(instanceId, images, isError: boolean = false) {
+async function prepareResultForDraftInstance(instanceId, images, isError = false) {
 	const draftInstanceResultsService = new DraftInstanceResultsService();
 
 	if (instanceId) {
@@ -63,8 +63,8 @@ export default class TestsEventsWorker {
 
 	constructor(Logger) {}
 
-	static async onTestCompleted(redisClient, checkResultQueue, callback) {
-		const { runnerJobRequestInfo, error, output } = callback.returnvalue as iTestRunnerJobOutput;
+	static async onTestCompleted(checkResultQueue, data: iTestRunnerJobOutput) {
+		const { runnerJobRequestInfo, error, output } = data;
 
 		try {
 			if (!error) {

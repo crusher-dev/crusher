@@ -1,14 +1,14 @@
-import { Job, Queue } from 'bullmq';
-import { iJobRunRequest } from '../../crusher-shared/types/runner/jobRunRequest';
-import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere, uploadOutputToS3 } from './util/helper';
-import { TestLogsService } from './services/logs';
-import { CodeRunnerService } from './services/runner';
-import { iTestRunnerJobOutput } from '../../crusher-shared/types/runner/jobRunRequestOutput';
-import { ACTIONS_IN_TEST } from '../../crusher-shared/constants/recordedActions';
-import { REDDIS } from '../config/database';
-import { MongoManager } from './manager/mongo';
+import { Job, Queue } from "bullmq";
+import { iJobRunRequest } from "../../crusher-shared/types/runner/jobRunRequest";
+import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere, uploadOutputToS3 } from "./util/helper";
+import { TestLogsService } from "./services/logs";
+import { CodeRunnerService } from "./services/runner";
+import { iTestRunnerJobOutput } from "../../crusher-shared/types/runner/jobRunRequestOutput";
+import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
+import { REDDIS } from "../config/database";
+import { MongoManager } from "./manager/mongo";
 
-const videoProcessingQueue = new Queue('video-processing-queue', {
+const videoProcessingQueue = new Queue("video-processing-queue", {
 	connection: REDDIS as any,
 });
 
@@ -18,7 +18,17 @@ interface iTestRunnerJob extends Job {
 
 new MongoManager().init();
 
-module.exports = async (bullJob: iTestRunnerJob): Promise<iTestRunnerJobOutput> => {
+const testProgressQueue = new Queue("test-progress-queue", {
+	// @ts-ignore
+	connection: REDDIS,
+});
+
+const testCompletedQueue = new Queue("test-completed-queue", {
+	// @ts-ignore
+	connection: REDDIS,
+});
+
+module.exports = async (bullJob: iTestRunnerJob): Promise<boolean> => {
 	let testError, testOutput;
 	createTmpAssetsDirectoriesIfNotThere(bullJob.data);
 	const { requestType, instanceId } = bullJob.data;
@@ -28,9 +38,7 @@ module.exports = async (bullJob: iTestRunnerJob): Promise<iTestRunnerJobOutput> 
 
 		const testLogsService = new TestLogsService(bullJob.data);
 
-		if (typeof bullJob.progress === 'function') {
-			await bullJob.progress(bullJob.data);
-		}
+		await testProgressQueue.add(instanceId.toString(), bullJob.data);
 
 		testLogsService.notifyTestRunning().then(() => {
 			console.log(`[${requestType}/${instanceId}] Successfully notified test is running`);
@@ -74,9 +82,12 @@ module.exports = async (bullJob: iTestRunnerJob): Promise<iTestRunnerJobOutput> 
 	} else {
 		console.log(`[${requestType}/${instanceId}] Test completed successfully`);
 	}
-	return {
+
+	await testCompletedQueue.add(instanceId.toString(), {
 		runnerJobRequestInfo: bullJob.data,
 		output: testOutput,
 		error: testError,
-	};
+	});
+
+	return true;
 };

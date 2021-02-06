@@ -8400,6 +8400,11 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+gibberish-detector@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/gibberish-detector/-/gibberish-detector-1.0.0.tgz#7942872a516939252e20fc431d2ff4dbb0ab1efe"
+  integrity sha1-eUKHKlFpOSUuIPxDHS/027CrHv4=
+
 git-raw-commits@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/git-raw-commits/-/git-raw-commits-2.0.0.tgz#d92addf74440c14bcc5c83ecce3fb7f8a79118b5"

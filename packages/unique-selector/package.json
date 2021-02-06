@@ -15,5 +15,8 @@
     "registry": "https://registry.npmjs.org/crusherdev",
     "access": "public"
   },
-  "gitHead": "e7b5550f27fe470bfe346d4843c02af22766c7c3"
+  "gitHead": "e7b5550f27fe470bfe346d4843c02af22766c7c3",
+  "dependencies": {
+    "gibberish-detector": "^1.0.0"
+  }
 }

@@ -35,22 +35,10 @@ function getFinderSelector(elementNode: HTMLElement): string {
 
 export function getSelectors(elementNode: HTMLElement): Array<iSelectorInfo> {
 	const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
-	let finderSelector;
-	try {
-		finderSelector = getFinderSelector(elementNode);
-	} catch (err) {
-		finderSelector = null;
-	}
 	const xPathSelector = getXpathTo(elementNode);
 
 	const out = [];
-	if (finderSelector) {
-		out.push({
-			type: "customFinder",
-			value: finderSelector as string,
-			uniquenessScore: 1,
-		});
-	}
+	out.push(...(selectors.list as Array<iSelectorInfo>));
 	if (xPathSelector) {
 		out.push({
 			type: "xpath",
@@ -58,7 +46,6 @@ export function getSelectors(elementNode: HTMLElement): Array<iSelectorInfo> {
 			uniquenessScore: 1,
 		});
 	}
-	out.push(...(selectors.list as Array<iSelectorInfo>));
 
 	return out;
 }

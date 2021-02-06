@@ -7,9 +7,8 @@ const testInstanceRecordingService = new TestInstanceRecordingService();
 const draftInstanceResultsService = new DraftInstanceResultsService();
 
 export class VideoEventsPostProcessor {
-	static async onVideoProcessed(callback) {
-		const { processed, recordedVideoUrl, instanceId: instanceId, testId: testId, testType: testType } = callback.returnvalue;
-		console.log("Video processed completely", callback.returnValue);
+	static async onVideoProcessed(data) {
+		const { processed, recordedVideoUrl, instanceId: instanceId, testId: testId, testType: testType } = data;
 		if (processed && recordedVideoUrl) {
 			if (testType === TestType.SAVED) {
 				await testInstanceRecordingService.createTestInstanceRecording({

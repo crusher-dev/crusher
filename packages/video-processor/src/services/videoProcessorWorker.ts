@@ -4,9 +4,12 @@ const ffmpeg = require('fluent-ffmpeg');
 import * as shell from 'shelljs';
 import { s3BucketService, uploadFileToAwsBucket } from '../../utils/cloudBucket';
 import { ensureFfmpegPath } from '../../utils/helper';
-import { Job } from 'bullmq';
+import { Job, Queue } from 'bullmq';
+import { REDDIS } from '../../config/database';
 
 const got = require('got');
+
+const videoProcessingCompleteQueue = new Queue('video-processing-complete-queue', { connection: REDDIS });
 
 function processStreamAndSave(videoUrl, savePath: string) {
 	return new Promise((resolve, reject) => {
@@ -63,31 +66,34 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 
 			await shell.rm('-rf', `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
-			return {
+			await videoProcessingCompleteQueue.add(runnerJobRequestInfo.instanceId.toString(), {
 				processed: true,
 				recordedVideoUrl: signedUrl,
 				instanceId: runnerJobRequestInfo.instanceId,
 				testId: runnerJobRequestInfo.test.id,
 				testType: runnerJobRequestInfo.requestType,
-			};
+			});
+			return true;
 		} catch (ex) {
 			console.log(ex);
-			return {
+			await videoProcessingCompleteQueue.add(runnerJobRequestInfo.instanceId.toString(), {
 				processed: signedUrl ? true : false,
 				recordedVideoUrl: signedUrl,
 				instanceId: runnerJobRequestInfo.instanceId,
 				testId: runnerJobRequestInfo.test.id,
 				testType: runnerJobRequestInfo.requestType,
-			};
+			});
+			return true;
 		}
 	} else {
-		return {
+		await videoProcessingCompleteQueue.add(runnerJobRequestInfo.instanceId.toString(), {
 			processed: false,
 			recordedVideoUrl: null,
 			instanceId: runnerJobRequestInfo.instanceId,
 			testId: runnerJobRequestInfo.test.id,
 			testType: runnerJobRequestInfo.requestType,
-		};
+		});
+		return true;
 	}
 };
 

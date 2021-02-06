@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>Test</title>
+	<script>
+		window.addEventListener("load", function() {
+			let depth = 0;
+			let lastElement = document.body;
+			while(depth++ <= 120){
+				const div = document.createElement("div");
+				div.innerHTML = `${depth}th depth node`;
+				lastElement.replaceChild(div, lastElement.childNodes[0]);
+				lastElement = div;
+			}
+		});
+	</script>
+</head>
+<body>
+
+</body>
+</html>

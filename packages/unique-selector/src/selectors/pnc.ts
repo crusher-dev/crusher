@@ -2,43 +2,21 @@
 import { SelectorData } from '../interfaces/result';
 import { SELECTOR_TYPE } from '../constants';
 import _ from 'lodash';
+import * as gibberish from 'gibberish-detector';
 
 let rootDocument;
 export const getPnC = (htmlNode: HTMLElement, target: HTMLElement): SelectorData[] => {
 	rootDocument = target;
-	let time = Date.now();
-	console.log(0);
-	const seed2Selectors = generateNDepthSelector(htmlNode, target, 2, 2);
+	const time = Date.now();
+	const seed8Selectors = generateNDepthSelector(htmlNode, target, 8);
 	const newTime = Date.now();
 	console.log(newTime - time);
-	time = newTime;
-	const seed3Selectors = generateNDepthSelector(htmlNode, target, 3, 3);
-	const newTime = Date.now();
-	console.log(newTime - time);
-	time = newTime;
-	const seed4Selectors = generateNDepthSelector(htmlNode, target, 4, 4);
-	const newTime = Date.now();
-	console.log(newTime - time);
-	time = newTime;
-	const seed5Selectors = generateNDepthSelector(htmlNode, target, 5, 5);
-	console.log(newTime - time);
-	time = newTime;
-	const seed6Selectors = generateNDepthSelector(htmlNode, target, 6, 6);
-	console.log(newTime - time);
-	time = newTime;
-	const seed7Selectors = generateNDepthSelector(htmlNode, target, 7, 7);
-	console.log(newTime - time);
-	time = newTime;
-	const seed8Selectors = generateNDepthSelector(htmlNode, target, 8, 8);
-	console.log(newTime - time);
-	time = newTime;
-
-	const result = [...seed2Selectors, ...seed3Selectors, ...seed4Selectors, ...seed5Selectors, ...seed6Selectors, ...seed7Selectors, ...seed8Selectors];
+	const result = [...seed8Selectors];
 
 	return _.uniqBy(result, 'value');
 };
 
-const generateNDepthSelector = (htmlNode: HTMLElement, target: HTMLElement, seed: number = 5, optimized: number = 5) => {
+const generateNDepthSelector = (htmlNode: HTMLElement, target: HTMLElement, seed = 5) => {
 	let optimizationLevel = 2;
 	const output = [];
 
@@ -108,8 +86,12 @@ export function finder(input: Element, options?: Partial<Options>) {
 
 	const defaults: Options = {
 		root: document.body,
-		idName: (name: string) => true,
-		className: (name: string) => true,
+		idName: (name: string) => {
+			return gibberish.detect(name.trim()) < 75;
+		},
+		className: (name: string) => {
+			return gibberish.detect(name.trim()) < 75;
+		},
 		tagName: (name: string) => true,
 		attr: (name: string, value: string) => false,
 		seedMinLength: 1,
@@ -147,7 +129,7 @@ function findRootDocument(rootNode: Element | Document, defaults: Options) {
 
 function bottomUpSearch(input: Element, limit: Limit, fallback?: () => Path | null): Path | null {
 	let path: Path | null = null;
-	let stack: Node[][] = [];
+	const stack: Node[][] = [];
 	let current: Element | null = input;
 	let i = 0;
 
@@ -174,7 +156,7 @@ function bottomUpSearch(input: Element, limit: Limit, fallback?: () => Path | nu
 			}
 		}
 
-		for (let node of level) {
+		for (const node of level) {
 			node.level = i;
 		}
 
@@ -205,7 +187,7 @@ function findUniquePath(stack: Node[][], fallback?: () => Path | null): Path | n
 		return fallback ? fallback() : null;
 	}
 
-	for (let candidate of paths) {
+	for (const candidate of paths) {
 		if (unique(candidate)) {
 			return candidate;
 		}
@@ -353,7 +335,7 @@ function notEmpty<T>(value: T | null | undefined): value is T {
 
 function* combinations(stack: Node[][], path: Node[] = []): Generator<Node[]> {
 	if (stack.length > 0) {
-		for (let node of stack[0]) {
+		for (const node of stack[0]) {
 			yield* combinations(stack.slice(1, stack.length), path.concat(node));
 		}
 	} else {

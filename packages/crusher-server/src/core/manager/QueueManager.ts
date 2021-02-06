@@ -20,6 +20,8 @@ const testCompletedQueue = new Queue("test-completed-queue", {
 	connection: REDDIS,
 });
 
+const videoProcessingCompleteQueue = new Queue("video-processing-complete-queue", { connection: REDDIS });
+
 checkResultQueue.client.then(async (reddisClient) => {
 	const queueScheduler = new QueueScheduler("check-result-queue", {
 		stalledInterval: 120000,
@@ -55,11 +57,15 @@ checkResultQueue.client.then(async (reddisClient) => {
 		// @ts-ignore
 		{ connection: reddisClient, concurrency: 1 },
 	);
+
+	new Worker(
+		"video-processing-complete-queue",
+		// @ts-ignore
+		{ connection: reddisClient, concurrency: 1 },
+	);
 });
 
 const videoProcessorEvents = new QueueEvents("video-processing-queue", {
 	// @ts-ignore
 	connection: REDDIS,
 });
-
-videoProcessorEvents.on("completed", VideoEventsPostProcessor.onVideoProcessed);

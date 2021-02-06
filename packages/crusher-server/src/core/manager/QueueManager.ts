@@ -1,10 +1,21 @@
 import { Queue, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import { REDDIS } from "../../../config/database";
-import TestsEventsWorker from "../workers/testEventsWoker";
 import { VideoEventsPostProcessor } from "../workers/videoEventsPostProcessor";
 const resultWorker = require("../workers/checkResult");
+const testCompletedWorker = require("../workers/testCompletedWorker");
+const testProgressWorker = require("../workers/testProgressWorker");
 
 const checkResultQueue = new Queue("check-result-queue", {
+	// @ts-ignore
+	connection: REDDIS,
+});
+
+const testProgressQueue = new Queue("test-progress-queue", {
+	// @ts-ignore
+	connection: REDDIS,
+});
+
+const testCompletedQueue = new Queue("test-completed-queue", {
 	// @ts-ignore
 	connection: REDDIS,
 });
@@ -31,9 +42,19 @@ checkResultQueue.client.then(async (reddisClient) => {
 		connection: reddisClient,
 	});
 
-	requestQueueEvents.on("progress", TestsEventsWorker.onTestProgress.bind(this, reddisClient));
+	new Worker(
+		"test-progress-queue",
+		testProgressWorker,
+		// @ts-ignore
+		{ connection: reddisClient, concurrency: 1 },
+	);
 
-	requestQueueEvents.on("completed", TestsEventsWorker.onTestCompleted.bind(this, reddisClient, checkResultQueue));
+	new Worker(
+		"test-completed-queue",
+		testCompletedWorker,
+		// @ts-ignore
+		{ connection: reddisClient, concurrency: 1 },
+	);
 });
 
 const videoProcessorEvents = new QueueEvents("video-processing-queue", {

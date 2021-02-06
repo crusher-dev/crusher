@@ -19,7 +19,6 @@ export class DOM {
 		console.debug("Disabling all user events");
 
 		const events = [
-			"click",
 			"contextmenu",
 			"dblclick",
 			"mousedown",

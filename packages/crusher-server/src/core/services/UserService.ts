@@ -10,25 +10,25 @@ import {
 	USER_NOT_REGISTERED,
 	USER_REGISTERED,
 	VERIFICATION_MAIL_SENT,
-} from '../../constants';
-import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from '../utils/auth';
-import { EmailManager } from '../manager/EmailManager';
-import { AuthenticationByCredentials } from '../interfaces/services/user/AuthenticationByCredentials';
-import { iUser } from '@crusher-shared/types/db/iUser';
-import { RegisterUserRequest } from '../interfaces/services/user/RegisterUserRequest';
-import { UserProviderConnection } from '../interfaces/db/UserProviderConnection';
-import { GithubAppInstallation } from '../interfaces/db/GithubAppInstallation';
-import { Logger } from '../../utils/logger';
-import ProjectService from './ProjectService';
-import TeamService from './TeamService';
-import StripeManager from '../manager/StripeManager';
-import UserProjectRoleV2Service from './v2/UserProjectRoleV2Service';
-import UserTeamRoleV2Service from './v2/UserTeamRoleV2Service';
-import { TEAM_ROLE_TYPES } from '../../../../crusher-shared/types/db/teamRole';
-import { PROJECT_ROLE_TYPES } from '../../../../crusher-shared/types/db/projectRole';
-import { iInviteReferral } from '@crusher-shared/types/inviteReferral';
-import { InviteMembersService } from './mongo/inviteMembers';
-import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
+} from "../../constants";
+import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from "../utils/auth";
+import { EmailManager } from "../manager/EmailManager";
+import { AuthenticationByCredentials } from "../interfaces/services/user/AuthenticationByCredentials";
+import { iUser } from "../../../../crusher-shared/types/db/iUser";
+import { RegisterUserRequest } from "../interfaces/services/user/RegisterUserRequest";
+import { UserProviderConnection } from "../interfaces/db/UserProviderConnection";
+import { GithubAppInstallation } from "../interfaces/db/GithubAppInstallation";
+import { Logger } from "../../utils/logger";
+import ProjectService from "./ProjectService";
+import TeamService from "./TeamService";
+import StripeManager from "../manager/StripeManager";
+import UserProjectRoleV2Service from "./v2/UserProjectRoleV2Service";
+import UserTeamRoleV2Service from "./v2/UserTeamRoleV2Service";
+import { TEAM_ROLE_TYPES } from "../../../../crusher-shared/types/db/teamRole";
+import { PROJECT_ROLE_TYPES } from "../../../../crusher-shared/types/db/projectRole";
+import { iInviteReferral } from "../../../../crusher-shared/types/inviteReferral";
+import { InviteMembersService } from "./mongo/inviteMembers";
+import { iProjectInviteReferral } from "../../../../crusher-shared/types/mongo/projectInviteReferral";
 
 @Service()
 export default class UserService {
@@ -54,7 +54,7 @@ export default class UserService {
 	async authenticateWithEmailAndPassword(details: AuthenticationByCredentials) {
 		const { email, password } = details;
 
-		let encryptedPassword = encryptPassword(password);
+		const encryptedPassword = encryptPassword(password);
 		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptedPassword]);
 
 		if (!user) {
@@ -86,10 +86,17 @@ export default class UserService {
 			return { status: USER_NOT_REGISTERED };
 		}
 
-		const referralObject =  await this.inviteMembersService.parseInviteReferral(inviteReferral);
+		const referralObject = await this.inviteMembersService.parseInviteReferral(inviteReferral);
 
 		if (!_user) {
-			const registeredUser = await this.createdUserProfile(password, firstName, lastName, email, referralObject ? referralObject.teamId : null, referralObject ? (referralObject as iProjectInviteReferral).projectId : null);
+			const registeredUser = await this.createdUserProfile(
+				password,
+				firstName,
+				lastName,
+				email,
+				referralObject ? referralObject.teamId : null,
+				referralObject ? (referralObject as iProjectInviteReferral).projectId : null,
+			);
 			await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
 			await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
 			return registeredUser;
@@ -97,8 +104,15 @@ export default class UserService {
 		return { status: USER_ALREADY_REGISTERED };
 	}
 
-	private async createdUserProfile(password: string, firstName: string, lastName: string, email: string, referralTeamId: number = null, referralProjectId: number = null) {
-		let encryptedPassword = encryptPassword(password);
+	private async createdUserProfile(
+		password: string,
+		firstName: string,
+		lastName: string,
+		email: string,
+		referralTeamId: number = null,
+		referralProjectId: number = null,
+	) {
+		const encryptedPassword = encryptPassword(password);
 
 		const insertedUser = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
 			first_name: firstName,
@@ -112,15 +126,19 @@ export default class UserService {
 			const stripeName = `${firstName} ${lastName}`;
 			const teamName = `${firstName}'s team`;
 			let teamId = referralTeamId;
-			if(!referralTeamId) {
+			if (!referralTeamId) {
 				const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
-				 teamId = (await this.teamService.createTeam({
-					teamName,
-					userId: insertedUser.insertId,
-					stripeCustomerId,
-				})).teamId;
+				teamId = (
+					await this.teamService.createTeam({
+						teamName,
+						userId: insertedUser.insertId,
+						stripeCustomerId,
+					})
+				).teamId;
 			}
-			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
+			const projectId = referralProjectId
+				? referralProjectId
+				: (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,
@@ -143,10 +161,14 @@ export default class UserService {
 				verified: true,
 				password: encryptPassword(password),
 			});
-			const teamId = referralTeamId ? referralTeamId : (await this.teamService.createTeam({
-				teamName: "Default",
-				userId: inserted_user.insertId,
-			})).teamId;
+			const teamId = referralTeamId
+				? referralTeamId
+				: (
+					await this.teamService.createTeam({
+						teamName: "Default",
+						userId: inserted_user.insertId,
+					})
+				  ).teamId;
 			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId)).insertId;
 
 			const user_id = inserted_user.insertId;

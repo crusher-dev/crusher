@@ -195,13 +195,12 @@ function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoS
 	return new Promise(async (resolve, reject) => {
 		const emailTemplateFilePathMap = {
 			[JobReportStatus.FAILED]: "/../../templates/failedJob.ejs",
-			[JobReportStatus.PASSED]: "/../../templates/passedJob.ejs",
 			[JobReportStatus.MANUAL_REVIEW_REQUIRED]: "/../../templates/manualReviewRequiredJob.ejs",
 		};
 
 		const templatePath = emailTemplateFilePathMap[result];
 		if (!templatePath) {
-			return reject(new Error(`Invalid result of the job #${jobRecord.id} provided: ${result}`));
+			return;
 		}
 
 		const usersInTeam = await testService.findMembersOfProject(jobRecord.project_id);

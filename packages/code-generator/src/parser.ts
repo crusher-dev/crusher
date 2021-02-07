@@ -294,7 +294,7 @@ export class Parser {
 		code.push(mainCode);
 		code.push("} catch(ex){");
 		code.push(`
-			if(capturedVideo) { await capturedVideo.stop()};
+			if(typeof capturedVideo !== "undefined") { await capturedVideo.stop()};
 			if(browser) { await browser.close();}
 			throw ex;
 		`);
@@ -316,7 +316,8 @@ export class Parser {
 
 		let footerCode = "";
 		if (this.isLiveRecording) {
-			footerCode += "if(capturedVideo) { await capturedVideo.stop()}\n";
+			footerCode +=
+				"if(typeof capturedVideo !== 'undefined') { await capturedVideo.stop()}\n";
 		}
 		footerCode += "await browser.close();";
 

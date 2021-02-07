@@ -1,9 +1,9 @@
 import { Queue, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import { REDDIS } from "../../../config/database";
-import { VideoEventsPostProcessor } from "../workers/videoEventsPostProcessor";
 const resultWorker = require("../workers/checkResult");
 const testCompletedWorker = require("../workers/testCompletedWorker");
 const testProgressWorker = require("../workers/testProgressWorker");
+const videoProcessedWorker = require("../workers/videoProcessedQueue");
 
 const checkResultQueue = new Queue("check-result-queue", {
 	// @ts-ignore
@@ -20,7 +20,10 @@ const testCompletedQueue = new Queue("test-completed-queue", {
 	connection: REDDIS,
 });
 
-const videoProcessingCompleteQueue = new Queue("video-processing-complete-queue", { connection: REDDIS });
+const videoProcessingCompleteQueue = new Queue("video-processing-complete-queue", {
+	// @ts-ignore
+	connection: REDDIS,
+});
 
 checkResultQueue.client.then(async (reddisClient) => {
 	const queueScheduler = new QueueScheduler("check-result-queue", {
@@ -45,21 +48,16 @@ checkResultQueue.client.then(async (reddisClient) => {
 	});
 
 	new Worker(
-		"test-progress-queue",
-		testProgressWorker,
-		// @ts-ignore
-		{ connection: reddisClient, concurrency: 1 },
-	);
-
-	new Worker(
 		"test-completed-queue",
 		testCompletedWorker,
 		// @ts-ignore
 		{ connection: reddisClient, concurrency: 1 },
 	);
 
+	console.log("ADDING WORKER FOR VIDEO PROCESSING COMPLETE QUEUE");
 	new Worker(
 		"video-processing-complete-queue",
+		videoProcessedWorker,
 		// @ts-ignore
 		{ connection: reddisClient, concurrency: 1 },
 	);

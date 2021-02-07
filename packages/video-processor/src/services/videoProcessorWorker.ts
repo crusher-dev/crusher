@@ -9,8 +9,9 @@ import { REDDIS } from '../../config/database';
 
 const got = require('got');
 
-const videoProcessingCompleteQueue = new Queue('video-processing-complete-queue', { connection: REDDIS });
-
+const videoProcessingQueue = new Queue('video-processing-complete-queue', {
+	connection: REDDIS as any,
+});
 function processStreamAndSave(videoUrl, savePath: string) {
 	return new Promise((resolve, reject) => {
 		const responseStream = got.stream(videoUrl);
@@ -66,7 +67,7 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 
 			await shell.rm('-rf', `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
-			await videoProcessingCompleteQueue.add(runnerJobRequestInfo.instanceId.toString(), {
+			await videoProcessingQueue.add(runnerJobRequestInfo.test.id.toString(), {
 				processed: true,
 				recordedVideoUrl: signedUrl,
 				instanceId: runnerJobRequestInfo.instanceId,
@@ -76,7 +77,7 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 			return true;
 		} catch (ex) {
 			console.log(ex);
-			await videoProcessingCompleteQueue.add(runnerJobRequestInfo.instanceId.toString(), {
+			await videoProcessingQueue.add(runnerJobRequestInfo.test.id.toString(), {
 				processed: signedUrl ? true : false,
 				recordedVideoUrl: signedUrl,
 				instanceId: runnerJobRequestInfo.instanceId,
@@ -86,7 +87,7 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 			return true;
 		}
 	} else {
-		await videoProcessingCompleteQueue.add(runnerJobRequestInfo.instanceId.toString(), {
+		await videoProcessingQueue.add(runnerJobRequestInfo.test.id.toString(), {
 			processed: false,
 			recordedVideoUrl: null,
 			instanceId: runnerJobRequestInfo.instanceId,

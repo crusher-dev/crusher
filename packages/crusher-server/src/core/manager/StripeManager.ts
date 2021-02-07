@@ -1,6 +1,8 @@
 import { Service } from "typedi";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_API_KEY);
 const _ = require("lodash");
+import "reflect-metadata";
+
 @Service()
 export default class StripeManager {
 	async createCustomer(name: string, email: string): Promise<string> {

@@ -7,6 +7,7 @@ import { ACTION_DESCRIPTIONS } from "../../../../../crusher-shared/constants/act
 import { iAction } from "@crusher-shared/types/action";
 import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
 import { act } from "react-dom/test-utils";
+import PerfectScrollbar from "perfect-scrollbar";
 
 interface LiveLogsActionsProps {
 	isAborted?: boolean;
@@ -55,15 +56,16 @@ function LiveLogsActions(props: LiveLogsActionsProps) {
 	let isLastLog = false;
 	const out = logsWithStatus.map((action, index) => {
 		if (index > 0 && !logsWithStatus[index - 1].isCompleted) return null;
-		if (index >= logs.length) {
+		if (index >= logs.length - 1) {
 			isLastLog = true;
 		}
+
 		const out = (
 			<LogActionCard
 				key={index}
 				isLast={index === actions.length - 1}
 				index={index + 1}
-				forwardRef={isLastLog && logs.length === index ? lastDone : null}
+				forwardRef={isLastLog ? lastDone : null}
 				action={action}
 				timeTaken={parseInt(action.timeTaken)}
 				isActionCompleted={action.isCompleted}
@@ -79,13 +81,33 @@ function LiveLogsActions(props: LiveLogsActionsProps) {
 		}
 	}, [logs]);
 
-	return <div css={styles.container}>{out}</div>;
+	return (
+		<>
+			<div css={styles.container}>{out}</div>
+			<style>
+				{`
+			/* Scrollbar */
+::-webkit-scrollbar {
+    width: .45rem;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(27, 27, 27, .4);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-track{
+    background: transparent;
+}
+`}
+				`
+			</style>
+		</>
+	);
 }
 
 const styles = {
 	container: css`
-		overflow: scroll;
 		height: 14rem;
+		overflow: scroll;
 		scroll-behavior: smooth;
 	`,
 };

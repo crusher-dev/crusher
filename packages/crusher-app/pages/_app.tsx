@@ -82,7 +82,12 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 
 				store.dispatch(setUserLoggedIn(userInfo));
 				store.dispatch(saveProjectsInRedux(projects));
-				if (reqMetaInfo.cookies.selectedProject) {
+				if (
+					reqMetaInfo.cookies.selectedProject &&
+					!["false", "undefined", "null"].includes(
+						reqMetaInfo.cookies.selectedProject,
+					)
+				) {
 					store.dispatch(
 						saveSelectedProjectInRedux(parseInt(reqMetaInfo.cookies.selectedProject)),
 					);

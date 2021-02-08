@@ -8,6 +8,7 @@
 		"build": "tsc src/index.ts --outDir dist"
 	},
 	"devDependencies": {
+		"webpack": "5.21.2",
 		"@typescript-eslint/parser": "^4.14.1",
 		"eslint": "^7.18.0",
 		"ts-node": "^9.1.1",

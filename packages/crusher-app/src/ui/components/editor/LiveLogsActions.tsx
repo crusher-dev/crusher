@@ -1,13 +1,9 @@
 import React, { RefObject, useEffect } from "react";
-import { LiveLogs } from "@interfaces/LiveLogs";
 import { LogActionCard } from "@ui/components/list/testActionCard";
 import { css } from "@emotion/core";
 
-import { ACTION_DESCRIPTIONS } from "../../../../../crusher-shared/constants/actionDescriptions";
 import { iAction } from "@crusher-shared/types/action";
 import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
-import { act } from "react-dom/test-utils";
-import PerfectScrollbar from "perfect-scrollbar";
 
 interface LiveLogsActionsProps {
 	isAborted?: boolean;
@@ -27,13 +23,11 @@ function getLogsWithStatus(
 	actions: Array<iAction>,
 	logs: Array<iLiveStepLogs>,
 ): Array<ActionsWithStatus> {
-	const actionsIndex = 0;
-
 	const out: Array<ActionsWithStatus> = [];
 
 	for (let i = 0; i < actions.length; i++) {
 		const selector = actions[i].payload.selectors
-			? actions[i].payload.selectors[0].value
+			? (actions[i].payload.selectors as any)[0].value
 			: null;
 
 		out.push({
@@ -44,7 +38,6 @@ function getLogsWithStatus(
 			isCompleted: logs[i] && logs[i].actionType === actions[i].type,
 		});
 	}
-	console.log(logs, actions, ")__");
 	return out;
 }
 
@@ -52,7 +45,6 @@ function LiveLogsActions(props: LiveLogsActionsProps) {
 	const { actions, logs, isAborted } = props;
 	const logsWithStatus = getLogsWithStatus(actions, logs);
 	const lastDone: RefObject<HTMLDivElement> = React.createRef();
-	console.log(logsWithStatus, "OGSS");
 	let isLastLog = false;
 	const out = logsWithStatus.map((action, index) => {
 		if (index > 0 && !logsWithStatus[index - 1].isCompleted) return null;

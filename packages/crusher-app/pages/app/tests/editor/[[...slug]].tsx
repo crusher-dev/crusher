@@ -25,7 +25,6 @@ import {
 	checkIsTestAborted,
 	getTestLiveLogs,
 	getTestMetaInfo,
-	isTestAborted,
 } from "@redux/stateUtils/tests";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
 import { CodeGenerator } from "@code-generator/src/generator";

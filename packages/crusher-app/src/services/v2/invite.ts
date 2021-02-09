@@ -15,11 +15,12 @@ export const _inviteTeamMember = (
 	});
 };
 
-export const _getInviteTeamMembersLink = (
+export const _getProjectMemberInviteLink = (
+	projectId: number,
 	headers: any = null,
-): Promise<iInviteLinkResponse> => {
-	return backendRequest("/v2/invite/team/members", {
-		method: RequestMethod.POST,
+): Promise<string> => {
+	return backendRequest(`/v2/invite/project/link/${projectId}`, {
+		method: RequestMethod.GET,
 		headers: headers,
 	});
 };

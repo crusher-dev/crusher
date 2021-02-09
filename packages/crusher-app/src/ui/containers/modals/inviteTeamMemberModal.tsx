@@ -1,17 +1,26 @@
 import { Modal } from "@ui/containers/modals/modal";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { InviteMembersContainer } from "@ui/containers/settings/inviteMembersContainer";
 import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";
+import { _getProjectMemberInviteLink } from "@services/v2/invite";
+import { useSelector } from "react-redux";
+import { getSelectedProject } from "@redux/stateUtils/projects";
 
 interface iProps {
 	onClose: any;
 }
 
-const INVITE_LINK = "https://app.crusher.dev/invite/user/f321fasgc32ase";
-
 const InviteTeamMemberModal = (props: iProps) => {
 	const { onClose } = props;
+	const selectedProject = useSelector(getSelectedProject);
+	const [inviteLink, setInviteLink] = useState(null as null | string);
+
+	useEffect(() => {
+		_getProjectMemberInviteLink(selectedProject).then((link) => {
+			setInviteLink(link);
+		});
+	}, [selectedProject]);
 
 	return (
 		<Modal
@@ -25,7 +34,7 @@ const InviteTeamMemberModal = (props: iProps) => {
 			<div css={bodyContainerCss}>
 				<InviteMembersContainer
 					externalInputCSS={externalInputCSS}
-					link={INVITE_LINK}
+					link={inviteLink}
 				/>
 			</div>
 		</Modal>

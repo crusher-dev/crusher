@@ -497,48 +497,46 @@ function RenderScreenshotComparison({
 					</div>
 					<div className="row pd-0 mg-0 mg-t-35 justify-content-end">
 						<div className="col mt-2 col-6 d-flex flex-column pd-0 pr-0 mr-0 ">
-							{/*<span className="tx-semibold">Comments (8)</span>*/}
+							{/*{comments.length ? (*/}
+							{/*	<span className="tx-semibold"> Comments ({comments.length})</span>*/}
+							{/*) : null}*/}
 
-							{comments.length ? (
-								<span className="tx-semibold"> Comments ({comments.length})</span>
-							) : null}
+							{/*{result && !comments.length ? (*/}
+							{/*	<div className="ml-auto d-flex align-items-center">*/}
+							{/*		<div*/}
+							{/*			css={styles.commentIconContainer}*/}
+							{/*			style={{ display: "inline-block" }}*/}
+							{/*		>*/}
+							{/*			<img*/}
+							{/*				src="/svg/commentIcon.svg"*/}
+							{/*				className="mt-n1"*/}
+							{/*				width={13}*/}
+							{/*				height={18}*/}
+							{/*			/>*/}
+							{/*		</div>*/}
+							{/*		<span*/}
+							{/*			className="ml-4 tx-semibold"*/}
+							{/*			onClick={toggleCommentsBox}*/}
+							{/*			style={{ color: "#D3D3D3", cursor: "pointer" }}*/}
+							{/*		>*/}
+							{/*			Add a comment*/}
+							{/*		</span>*/}
+							{/*	</div>*/}
+							{/*) : null}*/}
 
-							{result && !comments.length ? (
-								<div className="ml-auto d-flex align-items-center">
-									<div
-										css={styles.commentIconContainer}
-										style={{ display: "inline-block" }}
-									>
-										<img
-											src="/svg/commentIcon.svg"
-											className="mt-n1"
-											width={13}
-											height={18}
-										/>
-									</div>
-									<span
-										className="ml-4 tx-semibold"
-										onClick={toggleCommentsBox}
-										style={{ color: "#D3D3D3", cursor: "pointer" }}
-									>
-										Add a comment
-									</span>
-								</div>
-							) : null}
-
-							{result && (shouldShowCommentsBox || commentsCount) ? (
-								<RenderCommentsBox
-									forwardedRef={commentsBoxRef}
-									focusRefCallback={focusCommentsBox}
-									comments={comments}
-									screenshotInfo={screenshot}
-									result={result}
-									reportId={reportId}
-									jobId={instance.job_id}
-									instanceId={instance.id}
-									updateTestsCountCallback={updatedCommentsCount}
-								/>
-							) : null}
+							{/*{result && (shouldShowCommentsBox || commentsCount) ? (*/}
+							{/*	<RenderCommentsBox*/}
+							{/*		forwardedRef={commentsBoxRef}*/}
+							{/*		focusRefCallback={focusCommentsBox}*/}
+							{/*		comments={comments}*/}
+							{/*		screenshotInfo={screenshot}*/}
+							{/*		result={result}*/}
+							{/*		reportId={reportId}*/}
+							{/*		jobId={instance.job_id}*/}
+							{/*		instanceId={instance.id}*/}
+							{/*		updateTestsCountCallback={updatedCommentsCount}*/}
+							{/*	/>*/}
+							{/*) : null}*/}
 						</div>
 					</div>
 				</div>

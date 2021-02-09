@@ -1,28 +1,9 @@
-import {
-	Authorized,
-	Body,
-	CurrentUser,
-	Get,
-	InternalServerError,
-	JsonController,
-	OnNull,
-	Post,
-	QueryParam,
-	QueryParams,
-	Req,
-	Res,
-} from 'routing-controllers';
+import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, OnNull, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import UserService from "../../core/services/UserService";
 import { appendParamsToURI, resolvePathToBackendURI, resolvePathToFrontendURI } from "../../core/utils/uri";
 import GoogleAPIService from "../../core/services/GoogleAPIService";
-import {
-	EMAIL_VERIFIED_WITH_VERIFICATION_CODE,
-	NO_TEAM_JOINED,
-	SIGNED_UP_WITHOUT_JOINING_TEAM,
-	USER_NOT_REGISTERED,
-	USER_REGISTERED,
-} from "../../constants";
+import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, SIGNED_UP_WITHOUT_JOINING_TEAM, USER_NOT_REGISTERED, USER_REGISTERED } from "../../constants";
 import TeamService from "../../core/services/TeamService";
 import { EmailManager } from "../../core/manager/EmailManager";
 import { decodeToken, generateToken, generateVerificationCode } from "../../core/utils/auth";
@@ -30,10 +11,10 @@ import ProjectService from "../../core/services/ProjectService";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../utils/cookies";
 import { Logger } from "../../utils/logger";
 import { generateId } from "../../core/utils/helper";
-import { iUserInfoResponse } from '@crusher-shared/types/response/userInfoResponse';
-import { iSignupUserRequest } from '@crusher-shared/types/request/signupUserRequest';
-import { InviteMembersService } from '../../core/services/mongo/inviteMembers';
-import { iProjectInviteReferral } from '@crusher-shared/types/mongo/projectInviteReferral';
+import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
+import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
+import { InviteMembersService } from "../../core/services/mongo/inviteMembers";
+import { iProjectInviteReferral } from "@crusher-shared/types/mongo/projectInviteReferral";
 
 const { google } = require("googleapis");
 
@@ -193,7 +174,7 @@ export class UserController {
 			return { status: EMAIL_VERIFIED_WITH_VERIFICATION_CODE };
 		}
 
-		res.redirect(resolvePathToFrontendURI("/verification"));
+		res.redirect(resolvePathToFrontendURI("/"));
 	}
 
 	/**

@@ -55,7 +55,7 @@ function Home() {
 					return redirectToFrontendPath("/onboarding");
 					break;
 				case EMAIL_NOT_VERIFIED:
-					return redirectToFrontendPath("/verification");
+					return redirectToFrontendPath("/");
 					break;
 				case SIGNED_IN:
 					return redirectToFrontendPath("/app/dashboard");
@@ -275,8 +275,8 @@ const styles = {
 		color: ${getStyleFromObject(COMPONENTS.font.primary, theme)};
 	`,
 	registerButton: (theme) => css`
-		:hover{
-			text-decoration: none!important;
+		:hover {
+			text-decoration: none !important;
 		}
 		display: flex;
 		justify-content: center;

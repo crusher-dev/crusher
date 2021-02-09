@@ -27,13 +27,30 @@ function getActionDescription(action: iAction) {
 	return "Unknown Action";
 }
 
+const ICONS = {
+	[ACTIONS_IN_TEST.SET_DEVICE as ACTIONS_IN_TEST]: "/icons/actions/set-device.svg",
+	[ACTIONS_IN_TEST.NAVIGATE_URL as ACTIONS_IN_TEST]: "/icons/actions/navigate.svg",
+	[ACTIONS_IN_TEST.CLICK as ACTIONS_IN_TEST]: "/icons/actions/click.svg",
+	[ACTIONS_IN_TEST.HOVER as ACTIONS_IN_TEST]: "/icons/actions/hover.svg",
+	[ACTIONS_IN_TEST.ELEMENT_SCREENSHOT as ACTIONS_IN_TEST]: "/icons/actions/screenshot.svg",
+	[ACTIONS_IN_TEST.PAGE_SCREENSHOT as ACTIONS_IN_TEST]: "/icons/actions/screenshot.svg",
+	[ACTIONS_IN_TEST.VALIDATE_SEO as ACTIONS_IN_TEST]: "/icons/actions/seo.svg",
+	[ACTIONS_IN_TEST.BLACKOUT as ACTIONS_IN_TEST]: "icons/actions/blackout.svg",
+	[ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT as ACTIONS_IN_TEST]: "icons/actions/custom-script.svg",
+	[ACTIONS_IN_TEST.ASSERT_ELEMENT as ACTIONS_IN_TEST]: "icons/actions/assert-modal.svg",
+};
+
 const Action = (props: iActionProps) => {
 	const { action, index } = props;
 
 	return (
 		<li style={stepStyle}>
 			<div style={stepImageStyle}>
-				<img src={chrome.runtime.getURL("icons/mouse.svg")} />
+				<img
+					src={chrome.runtime.getURL(
+						ICONS[action.type] ? ICONS[action.type] : "icons/mouse.svg",
+					)}
+				/>
 			</div>
 			<div>
 				<div style={stepActionStyle}>{action.type}</div>

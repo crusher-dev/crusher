@@ -4,14 +4,58 @@ import { iTeamInviteReferral } from "../../../../../crusher-shared/types/mongo/t
 import { iProjectInviteReferral } from "../../../../../crusher-shared/types/mongo/projectInviteReferral";
 import { iInviteReferral, INVITE_REFERRAL_TYPES } from "../../../../../crusher-shared/types/inviteReferral";
 import { Service } from "typedi";
+import { resolvePathToFrontendURI } from "../../utils/uri";
 
 @Service()
 export class InviteMembersService {
+	getPublicProjectInviteCode(projectId: number, teamId: number, expiresOn: Date | null) {
+		const generatePublicInviteLink = (inviteReferral: iInviteReferral) => {
+			const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/get-started`));
+			inviteLinkUrl.searchParams.append("inviteType", inviteReferral.type);
+			inviteLinkUrl.searchParams.append("inviteCode", inviteReferral.code);
+			return inviteLinkUrl.toString();
+		};
+		return new Promise((resolve, reject) => {
+			ProjectInviteReferrals.findOne(
+				{
+					projectId: { $eq: projectId },
+					isPublic: { $eq: true },
+					$or: [{ expiresOn: { $eq: null } }, { expiresOn: { $gt: new Date() } }],
+				},
+				(err, referral) => {
+					if (err) return reject(err);
+
+					if (!referral) {
+						this.createPublicInviteCode(projectId, teamId, expiresOn).then((referralId: string) => {
+							resolve(generatePublicInviteLink({ code: referralId, type: INVITE_REFERRAL_TYPES.PROJECT }));
+						});
+					} else {
+						resolve(generatePublicInviteLink({ code: referral.id, type: INVITE_REFERRAL_TYPES.PROJECT }));
+					}
+				},
+			);
+		});
+	}
+
+	private createPublicInviteCode(projectId: number, teamId: number, expiresOn: Date | null) {
+		return new Promise((resolve, reject) => {
+			new ProjectInviteReferrals({
+				teamId: teamId,
+				projectId: projectId,
+				expiresOn: expiresOn,
+				isPublic: true,
+			}).save((err, referral) => {
+				if (err) return reject(err);
+				resolve(referral.id);
+			});
+		});
+	}
+
 	createProjectInviteCode(
 		projectId: number,
 		teamId: number,
 		expiresOn: Date | null = null,
-		emails: Array<String> | null = null,
+		emails: Array<string> | null = null,
 		meta: any = {},
 	): Promise<string> {
 		return new Promise((resolve, reject) => {
@@ -30,7 +74,7 @@ export class InviteMembersService {
 		});
 	}
 
-	createTeamInviteCode(teamId: number, expiresOn: Date | null = null, emails: Array<String> | null = null, meta: any = {}): Promise<string> {
+	createTeamInviteCode(teamId: number, expiresOn: Date | null = null, emails: Array<string> | null = null, meta: any = {}): Promise<string> {
 		return new Promise((resolve, reject) => {
 			new TeamInviteReferrals({
 				teamId: teamId,

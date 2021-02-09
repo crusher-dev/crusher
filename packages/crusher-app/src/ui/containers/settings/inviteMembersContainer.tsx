@@ -120,7 +120,7 @@ const separatorCSS = css`
 `;
 
 interface iInviteMemberContainerProps {
-	link: string;
+	link: string | null;
 	externalInputCSS?: any;
 }
 
@@ -183,7 +183,7 @@ const InviteMembersContainer = (props: iInviteMemberContainerProps) => {
 					</div>
 					<div css={externalCardInputCSS}>
 						<Input
-							value={link}
+							value={link ? link : ""}
 							onChange={onNewMemberChange}
 							isOnlyReadable={true}
 							actionButton={<CopyInviteLinkButton link={link} />}

@@ -31,7 +31,7 @@ const Device = (props: iDeviceProps) => {
 							src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")}
 						/>
 						<div style={pageLoadingCoverTextStyle}>
-							Pease wait while we’re loading next page
+							Pease wait while we're loading next page
 						</div>
 					</div>
 				</div>

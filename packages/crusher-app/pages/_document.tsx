@@ -30,7 +30,7 @@ export default class MyDocument extends Document {
 					/>
 					<link href="/assets/css/global.css" rel="stylesheet" />
 					<script dangerouslySetInnerHTML={{ __html: GTMTag }} />
-					<script dangerouslySetInnerHTML={{__html: SegmentTag}}/>
+					<script dangerouslySetInnerHTML={{ __html: SegmentTag }} />
 				</Head>
 				<body style={{ margin: 0, padding: 0 }}>
 					<Main />

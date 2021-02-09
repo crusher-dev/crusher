@@ -218,17 +218,17 @@ function ProjectDashboard(props) {
 						<RenderBuilds userInfo={userInfo} builds={projectBuilds} />
 					</div>
 				</div>
-				<div css={styles.rightSection}>
-					<div css={styles.section}>
-						<div css={styles.sectionHeadingContainer}>
-							<div css={styles.sectionHeading}>Activity</div>
-							<div css={styles.sectionHeadingDesc}>
-								See what’s happening here and there
-							</div>
-						</div>
-						<RenderActivities userInfo={userInfo} activities={[]} />
-					</div>
-				</div>
+				{/*<div css={styles.rightSection}>*/}
+				{/*	<div css={styles.section}>*/}
+				{/*		<div css={styles.sectionHeadingContainer}>*/}
+				{/*			<div css={styles.sectionHeading}>Activity</div>*/}
+				{/*			<div css={styles.sectionHeadingDesc}>*/}
+				{/*				See what’s happening here and there*/}
+				{/*			</div>*/}
+				{/*		</div>*/}
+				{/*		<RenderActivities userInfo={userInfo} activities={[]} />*/}
+				{/*	</div>*/}
+				{/*</div>*/}
 			</div>
 		</div>
 	);

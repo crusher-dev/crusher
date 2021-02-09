@@ -23,7 +23,9 @@ export const FeedbackComponent = () => {
 	const showHotjar = () => {
 		const hotjarElement = document.querySelector("#_hj_feedback_container");
 		hotjarElement.style.visibility = "visible";
-		document.querySelector("#_hj_feedback_container>div>div>div").click();
+		document
+			.querySelector("#_hj_feedback_container")
+			.childNodes[0].childNodes[0].click();
 		setShowFeedbackSVG(false);
 	};
 	if (!showfeedbackSVG) return null;

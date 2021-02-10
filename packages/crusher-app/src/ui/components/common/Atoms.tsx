@@ -14,5 +14,5 @@ export const Logo = (props: any) => {
 };
 
 export const WhiteLogo = (props: any) => (
-	<WhiteLogoSvg className={"logo"} {...props} />
+	<img src={"/assets/img/logo/logo_dark.svg"} className="logo" {...props}></img>
 );

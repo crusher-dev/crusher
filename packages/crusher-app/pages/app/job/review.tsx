@@ -495,49 +495,8 @@ function RenderScreenshotComparison({
 							)}
 						</div>
 					</div>
-					<div className="row pd-0 mg-0 mg-t-35 justify-content-end">
-						<div className="col mt-2 col-6 d-flex flex-column pd-0 pr-0 mr-0 ">
-							{/*{comments.length ? (*/}
-							{/*	<span className="tx-semibold"> Comments ({comments.length})</span>*/}
-							{/*) : null}*/}
-
-							{/*{result && !comments.length ? (*/}
-							{/*	<div className="ml-auto d-flex align-items-center">*/}
-							{/*		<div*/}
-							{/*			css={styles.commentIconContainer}*/}
-							{/*			style={{ display: "inline-block" }}*/}
-							{/*		>*/}
-							{/*			<img*/}
-							{/*				src="/svg/commentIcon.svg"*/}
-							{/*				className="mt-n1"*/}
-							{/*				width={13}*/}
-							{/*				height={18}*/}
-							{/*			/>*/}
-							{/*		</div>*/}
-							{/*		<span*/}
-							{/*			className="ml-4 tx-semibold"*/}
-							{/*			onClick={toggleCommentsBox}*/}
-							{/*			style={{ color: "#D3D3D3", cursor: "pointer" }}*/}
-							{/*		>*/}
-							{/*			Add a comment*/}
-							{/*		</span>*/}
-							{/*	</div>*/}
-							{/*) : null}*/}
-
-							{/*{result && (shouldShowCommentsBox || commentsCount) ? (*/}
-							{/*	<RenderCommentsBox*/}
-							{/*		forwardedRef={commentsBoxRef}*/}
-							{/*		focusRefCallback={focusCommentsBox}*/}
-							{/*		comments={comments}*/}
-							{/*		screenshotInfo={screenshot}*/}
-							{/*		result={result}*/}
-							{/*		reportId={reportId}*/}
-							{/*		jobId={instance.job_id}*/}
-							{/*		instanceId={instance.id}*/}
-							{/*		updateTestsCountCallback={updatedCommentsCount}*/}
-							{/*	/>*/}
-							{/*) : null}*/}
-						</div>
+					<div className="row pd-0 mg-0 mg-t-20 justify-content-end">
+						<div className="col mt-2 col-6 d-flex flex-column pd-0 pr-0 mr-0 "></div>
 					</div>
 				</div>
 			</div>
@@ -629,7 +588,7 @@ function TestInstanceReview({
 	const jobComments = useSelector(getCurrentJobComments);
 	const events = JSON.parse(rawEvents);
 	const sortedScreenshots = screenshots.sort((a, b) => {
-		return a.name > b.name;
+		return a.name < b.name ? -1 : 1;
 	});
 
 	const screenshotsOut = sortedScreenshots.map((screenshot) => {
@@ -839,74 +798,6 @@ function RenderTestInstances(props) {
 	return <>{out}</>;
 }
 
-function WaitForPlatform({ platform }) {
-	const [step, setCurrentStep] = useState(0);
-	const browsers = {
-		[Platform.CHROME]:
-			"https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Google_Chrome_icon_%28September_2014%29.svg/1200px-Google_Chrome_icon_%28September_2014%29.svg.png",
-		[Platform.FIREFOX]:
-			"https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://design.firefox.com/product-identity/firefox/firefox/firefox-logo.png",
-		[Platform.SAFARI]:
-			"https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://image.flaticon.com/icons/svg/564/564442.svg",
-	};
-
-	if (step !== 2) {
-		setTimeout(() => {
-			setCurrentStep(step + 1);
-		}, 500);
-	}
-
-	const steps = [
-		"Interpreting test data",
-		"Fetching screenshots",
-		"Preparing report",
-	];
-
-	return (
-		<div
-			style={{
-				height: "100vh",
-				backgroundColor: "#131415",
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				color: "#CCD2E9",
-			}}
-		>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<div
-					style={{
-						backgroundImage: "url(/svg/loadingSpinner.svg)",
-						height: 102,
-						width: 102,
-						backgroundSize: "contain",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				>
-					<img width={30} height={30} src={browsers[platform]} />
-				</div>
-				<span css={styles.waitPlatformName}>
-					{steps[step]} for {platform.toLowerCase()}
-				</span>
-				<span
-					style={{ color: "#CCD2E9", marginTop: 12, fontWeight: 500, fontSize: 13 }}
-				>
-					{step + 1}/{steps.length}
-				</span>
-			</div>
-		</div>
-	);
-}
-
 function VideoModal({ video_uri }) {
 	return (
 		<div css={styles.videoOverlayContent}>
@@ -934,16 +825,10 @@ function LogsModal({ logs }) {
 
 function JobReviews(props) {
 	const { reportId } = props;
-	const [isLoading, setIsLoading] = useState(false);
 	const platform = useSelector(getCurrentJobReviewPlatform);
 	const referenceJob = useSelector(getReferenceJob);
 
 	const handlePlatformChange = async (platform) => {
-		setIsLoading(true);
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 2000);
-
 		return store.dispatch(setCurrentJobPlatform(platform));
 	};
 
@@ -1014,8 +899,6 @@ function JobReviews(props) {
 				referenceJob={referenceJob}
 				reportId={reportId}
 			></Header>
-
-			{isLoading && <WaitForPlatform platform={platform} />}
 
 			<div style={{ height: "100vh", backgroundColor: "#131415" }}>
 				<JobInfoBox />

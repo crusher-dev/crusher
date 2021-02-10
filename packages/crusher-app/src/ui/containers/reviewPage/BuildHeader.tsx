@@ -147,7 +147,7 @@ const BaseHeader = ({
 					<div className="navbar-brand" style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<a href="/app/dashboard" className="df-logo">
 							{" "}
-							<WhiteLogo style={{ height: "1.75rem" }} />
+							<WhiteLogo style={{ height: "1.5rem" }} />
 						</a>
 					</div>
 
@@ -183,7 +183,11 @@ export const MiddleMenu = () => (
 	<div id="navbarMenu" className="navbar-menu-wrapper">
 		<div className="navbar-menu-header" style={{ background: "#131415" }}>
 			<a href="/app/dashboard" className="df-logo">
-				<img loading="lazy" style={{ height: 24 }} src="/svg/logo-dark.svg"></img>
+				<img
+					loading="lazy"
+					style={{ height: 24 }}
+					src="/assets/img/logo/logo_light.svg"
+				></img>
 			</a>
 
 			<a id="mainMenuClose" onClick={() => {}}>

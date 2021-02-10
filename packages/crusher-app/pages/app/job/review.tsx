@@ -581,10 +581,11 @@ function getInstanceConclusion(
 	) {
 		return "RUNNING";
 	} else if (instanceStatus === TestInstanceStatus.FINISHED) {
-		const passedCount = results.filter(
-			(result) => result.result_set_conclusion === "PASSED",
-		).length;
-		if (results.length === passedCount) {
+		const passedCount = results
+			? results.filter((result) => result.result_set_conclusion === "PASSED")
+					.length
+			: 0;
+		if (results && results.length === passedCount) {
 			return "PASSED";
 		} else {
 			return "FAILED";

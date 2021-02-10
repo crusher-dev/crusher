@@ -58,9 +58,12 @@
 	"scripts": {
 		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
 		"dev:cron": "ts-node --project tsconfig.dev.json src/cron.ts",
+		"dev:queue": "ts-node --project tsconfig.dev.json src/queue.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"build": "NODE_ENV=production ncc build src/app.ts -o dist/server --external bullmq",
 		"build:cron": "NODE_ENV=production ncc build src/cron.ts -o dist/cron --external bullmq",
+		"build:queue": "NODE_ENV=production ncc build src/queue.ts -o dist/queue --external bullmq",
+		"build:queue:start": "NODE_ENV=production node dist/queue/index.js",
 		"build:cron:start": "NODE_ENV=production node dist/cron/index.js",
 		"build:start": "NODE_ENV=production node dist/server/index.js",
 		"lint": "prettier --write .",

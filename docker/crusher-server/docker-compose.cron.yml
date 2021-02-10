@@ -11,7 +11,7 @@ services:
   crusher-server-cron:
     network_mode: host
     image: 862866004122.dkr.ecr.us-east-1.amazonaws.com/crusher-server-images
-    command: ["pm2-runtime", "ecosystem.config.js", "--only", "crusher-server-cron", " && ", "pm2-runtime", "ecosystem.config.js", "--only", "crusher-server-queue"]
+    command: ["pm2-runtime", "ecosystem.config.js", "--only", '"crusher-server-cron,crusher-server-queue"']
     environment:
       - CRUSHER_ENV=$CRUSHER_ENV
       - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING

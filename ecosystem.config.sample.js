@@ -34,6 +34,15 @@ module.exports = {
 			merge_logs: true,
 		},
 		{
+			name: 'crusher-server-queue',
+			cwd: './packages/crusher-server',
+			script: 'npm',
+			args: IS_PRODUCTION ? 'run build:queue:start' : 'run dev:queue',
+			watch: ['src', 'config'],
+			env: CRUSHER_SERVER_ENV,
+			merge_logs: true,
+		},
+		{
 			name: 'test-runner',
 			cwd: './packages/test-runner',
 			script: 'npm',

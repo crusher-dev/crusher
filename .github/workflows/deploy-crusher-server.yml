@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: 12.19.1
+          node-version: 14.15.4
 
       - name: Install yarn
         run: npm install -g yarn
@@ -35,7 +35,7 @@ jobs:
         run: npm install -g webpack
 
       - name: Install ncc
-        run: npm install -g @vercel/ncc@0.23.0
+        run: npm install -g @vercel/ncc@0.27.0
 
       - name: Package crusher-server for deployment
         run: sh scripts/build-crusher-server.sh

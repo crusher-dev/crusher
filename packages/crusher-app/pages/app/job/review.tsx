@@ -17,6 +17,7 @@ import Clock from "../../../public/svg/jobReview/clock.svg";
 import Play from "../../../public/svg/jobReview/play.svg";
 import Passed from "../../../public/svg/jobReview/passed.svg";
 import Failed from "../../../public/svg/jobReview/failed.svg";
+import ReviewIcon from "../../../public/svg/jobReview/review.svg";
 
 import {
 	addCommentInRedux,
@@ -397,38 +398,10 @@ function RenderScreenshotComparison({
 
 	const { diff_image_url, diff_delta } = result ? result : ({} as any);
 	const [shouldShowCommentsBox, setShouldShowCommentsBox] = useState(false);
-	const [hasComments, setHasComments] = useState(
-		comments && comments.length > 0,
-	);
-	const [commentsCount, setCommentsCount] = useState(
-		comments ? comments.length : 0,
-	);
-
-	const commentsBoxRef = useRef(null);
 
 	useEffect(() => {
 		setShouldShowCommentsBox(!shouldShowCommentsBox);
 	}, [screenshot]);
-
-	function focusCommentsBox() {
-		commentsBoxRef.current.scrollIntoView({
-			block: "nearest",
-			behavior: "smooth",
-		});
-	}
-
-	function updatedCommentsCount(newCommentCount) {
-		setCommentsCount(newCommentCount);
-	}
-
-	function toggleCommentsBox() {
-		setShouldShowCommentsBox(!shouldShowCommentsBox);
-		if (!shouldShowCommentsBox) {
-			setTimeout(() => {
-				focusCommentsBox();
-			});
-		}
-	}
 
 	async function handleThumbsUp() {
 		if (!result) {
@@ -561,7 +534,9 @@ function GetStatusImage(props: any) {
 		return <Passed style={{ height: "1.5rem" }} />;
 	} else if (conclusion === "FAILED") {
 		return <Failed style={{ height: "1.5rem" }} />;
-	} else if (conclusion === "RUNNING") {
+	} else if (conclusion === "MANUAL_REVIEW_REQUIRED") {
+		return <ReviewIcon style={{ height: "1.5rem" }} />;
+	} else if (conclusion === "RUNNING_CHECKS") {
 		return (
 			<img style={{ height: "1.5rem" }} src={"/svg/jobReview/loading.svg"} />
 		);
@@ -631,6 +606,14 @@ function TestInstanceReview({
 		alert("Approved instance");
 	};
 
+	const instanceReportConclusion = jobResults[instance_id]
+		? jobResults[instance_id].conclusion
+		: null;
+
+	const handleThumbToggle = () => {
+		console.log(JSON.stringify(jobResults[instance_id].conclusion));
+	};
+
 	return (
 		<div className="" css={styles.bodyBackground}>
 			<div
@@ -650,6 +633,7 @@ function TestInstanceReview({
 						src="/svg/thumbsUp.svg"
 						className="mt-n1"
 						style={{ cursor: "pointer" }}
+						onClick={handleThumbToggle}
 					/>
 					<div
 						css={testInstanceStripContainerCss}
@@ -698,33 +682,31 @@ function TestInstanceReview({
 									<div style={{ marginLeft: "1rem" }}>Play test recording</div>
 								</div>
 							) : null}
-							{/*<a className='tx-12 link-03 mr-4'>View Video</a>*/}
-							{/*<a className='tx-12 link-03'>View Logs</a>*/}
 						</div>
-						<div className="d-flex" css={styles.darkApproveButton}>
-							<img
-								src="/svg/unselectedThumbsIcon.svg"
-								style={{
-									height: "0.9375rem",
-									position: "relative",
-									top: "50%",
-									transform: "translateY(-50%)",
-								}}
-								className="ml-2"
-							/>
-							<div
-								className="text-center flex-1"
-								style={{
-									marginLeft: "1.6rem",
-									marginRight: "1.4rem",
-									fontSize: "1rem",
-									fontFamily: "Gilroy",
-								}}
-								onClick={approve}
-							>
-								Approve
-							</div>
-						</div>
+						{/*<div className="d-flex" css={styles.darkApproveButton}>*/}
+						{/*	<img*/}
+						{/*		src="/svg/unselectedThumbsIcon.svg"*/}
+						{/*		style={{*/}
+						{/*			height: "0.9375rem",*/}
+						{/*			position: "relative",*/}
+						{/*			top: "50%",*/}
+						{/*			transform: "translateY(-50%)",*/}
+						{/*		}}*/}
+						{/*		className="ml-2"*/}
+						{/*	/>*/}
+						{/*	<div*/}
+						{/*		className="text-center flex-1"*/}
+						{/*		style={{*/}
+						{/*			marginLeft: "1.6rem",*/}
+						{/*			marginRight: "1.4rem",*/}
+						{/*			fontSize: "1rem",*/}
+						{/*			fontFamily: "Gilroy",*/}
+						{/*		}}*/}
+						{/*		onClick={approve}*/}
+						{/*	>*/}
+						{/*		Approve*/}
+						{/*	</div>*/}
+						{/*</div>*/}
 					</div>
 				</div>
 			</div>
@@ -741,10 +723,10 @@ function TestInstanceReview({
 				>
 					<div style={{ display: "flex", alignItems: "center" }}>
 						<div>
-							<GetStatusImage conclusion={instanceConclusion} />
+							<GetStatusImage conclusion={instanceReportConclusion} />
 						</div>
 						<div style={{ marginLeft: "1rem" }}>
-							Test {toPascalCase(instanceConclusion)}
+							Test {toPascalCase(instanceReportConclusion)}
 						</div>
 					</div>
 					<div style={{ marginLeft: "auto", display: "flex", flexDirection: "row" }}>

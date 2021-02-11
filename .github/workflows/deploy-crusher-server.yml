@@ -37,8 +37,13 @@ jobs:
       - name: Install ncc
         run: npm install -g @vercel/ncc@0.27.0
 
+      - name: Upgrade heap size of node
+        run: export NODE_OPTIONS=--max_old_space_size=4096
+
       - name: Package crusher-server for deployment
         run: sh scripts/build-crusher-server.sh
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

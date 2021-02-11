@@ -1,4 +1,4 @@
-FROM node:12.20.1-alpine3.9
+FROM node:14.15.5-alpine3.11
 
 MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 

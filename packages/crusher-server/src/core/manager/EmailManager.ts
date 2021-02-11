@@ -37,7 +37,6 @@ export class EmailManager {
 				name: serverName,
 			},
 			subject,
-			text: "hoo",
 			html: html,
 		};
 		sgMail.send(msg);

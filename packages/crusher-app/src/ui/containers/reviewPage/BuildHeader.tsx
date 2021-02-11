@@ -83,43 +83,6 @@ function renderBrowserList(
 	return <div css={styles.browserList}>{out}</div>;
 }
 
-function renderCountriesList(selectedCountry = "global") {
-	const countries = [
-		{
-			name: "global",
-			icon:
-				"https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_64/q_65/https://image.flaticon.com/icons/svg/3039/3039687.svg",
-		},
-	];
-
-	function handleCountrySelection(country) {}
-
-	const out = countries.map((value) => {
-		const { name, icon } = value;
-		return (
-			<div
-				className="pt-2 pb-2 pl-1 pr-1 text-center tx-medium"
-				css={[
-					styles.countryButton,
-					name === selectedCountry ? styles.selectedCountryButton : null,
-				]}
-				onClick={() => {
-					handleCountrySelection(name);
-				}}
-			>
-				<img
-					className="ml-2 mr-2"
-					src={icon}
-					title={toPascalCase(name)}
-					style={{ height: 20 }}
-				/>
-			</div>
-		);
-	});
-
-	return <div css={styles.countryList}>{out}</div>;
-}
-
 const BaseHeader = ({
 	isMobile,
 	isDesktop,
@@ -168,7 +131,6 @@ const BaseHeader = ({
 						{/*<div className="pt-2 pb-2 pl-1 pr-1 text-center tx-medium" css={[styles.greenButton]}>Approve all</div>*/}
 					</div>
 					<div className={"navbar-right"}>
-						{renderCountriesList()}
 						{renderBrowserList(onPlatformChanged, platform)}
 					</div>
 				</div>

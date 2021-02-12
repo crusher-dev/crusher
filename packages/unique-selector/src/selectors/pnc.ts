@@ -87,10 +87,10 @@ export function finder(input: Element, options?: Partial<Options>) {
 	const defaults: Options = {
 		root: document.body,
 		idName: (name: string) => {
-			return gibberish.detect(name.trim()) < 75;
+			return gibberish.detect(name.trim()) < 95;
 		},
 		className: (name: string) => {
-			return gibberish.detect(name.trim()) < 75;
+			return gibberish.detect(name.trim()) < 95;
 		},
 		tagName: (name: string) => true,
 		attr: (name: string, value: string) => false,

@@ -302,8 +302,19 @@ export class Parser {
 		return code.join("\n");
 	}
 
+	registerCrusherSelector(code: string) {
+		code +=
+			"if(playwright.selectors._registrations.findIndex(selectorEngine => selectorEngine.name === 'crusher') === -1){\n";
+		code +=
+			"\tplaywright.selectors.register('crusher', getCrusherSelectorEngine);\n";
+		code += "}\n";
+		return code;
+	}
+
 	getCode() {
 		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions");\nconst playwright = require("playwright");\n`;
+		importCode += `const {getCrusherSelectorEngine} = require("${helperPackageName}/functions");\n`;
+		importCode = this.registerCrusherSelector(importCode);
 		importCode += `const browser = await playwright["${
 			this.browser
 		}"].launch({ headless: ${this.isHeadless.toString()} });\n`;

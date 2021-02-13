@@ -10,7 +10,7 @@ export const recordAction = (action: iAction) => {
 	const store = getStore();
 	const isPageLoaded = isRecorderScriptBooted(store.getState());
 
-	// @TODO: Figure out if there is a better to prevent redundant hover on navigation.
+	// @TODO: Figure out if there is a better to prevent redundant hover action record after navigation.
 	if (!isPageLoaded && action.type === ACTIONS_IN_TEST.HOVER) {
 		return {
 			type: "INVALID_ACTION_RECORDED",

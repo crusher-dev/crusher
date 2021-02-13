@@ -7,12 +7,13 @@ export default function capturePageScreenshot(action: iAction, page: Page) {
 		try {
 			const scrollDelta = action.payload.meta.value;
 			const pageUrl = await page.url();
-			await scroll(page, "window", scrollDelta);
+			await scroll(page, [], scrollDelta);
 
 			return success({
 				message: `Scrolled successfully on ${pageUrl}`,
 			});
 		} catch(err){
+			console.log(err);
 			return error("Some issue occurred while scrolling the page");
 		}
 	});

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { SelectorData } from '../interfaces/result';
 import { SELECTOR_TYPE } from '../constants';
@@ -7,11 +8,35 @@ import * as gibberish from 'gibberish-detector';
 let rootDocument;
 export const getPnC = (htmlNode: HTMLElement, target: HTMLElement): SelectorData[] => {
 	rootDocument = target;
-	const time = Date.now();
-	const seed8Selectors = generateNDepthSelector(htmlNode, target, 8);
-	const newTime = Date.now();
+	let time = Date.now(),
+		newTime;
+	console.log(0);
+	const seed2Selectors = generateNDepthSelector(htmlNode, target, 2);
+	newTime = Date.now();
 	console.log(newTime - time);
-	const result = [...seed8Selectors];
+	time = newTime;
+	const seed3Selectors = generateNDepthSelector(htmlNode, target, 3);
+	newTime = Date.now();
+	console.log(newTime - time);
+	time = newTime;
+	const seed4Selectors = generateNDepthSelector(htmlNode, target, 4);
+	newTime = Date.now();
+	console.log(newTime - time);
+	time = newTime;
+	const seed5Selectors = generateNDepthSelector(htmlNode, target, 5);
+	console.log(newTime - time);
+	time = newTime;
+	const seed6Selectors = generateNDepthSelector(htmlNode, target, 6);
+	console.log(newTime - time);
+	time = newTime;
+	const seed7Selectors = generateNDepthSelector(htmlNode, target, 7);
+	console.log(newTime - time);
+	time = newTime;
+	const seed8Selectors = generateNDepthSelector(htmlNode, target, 8);
+	console.log(newTime - time);
+	time = newTime;
+
+	const result = [...seed2Selectors, ...seed3Selectors, ...seed4Selectors, ...seed5Selectors, ...seed6Selectors, ...seed7Selectors, ...seed8Selectors];
 
 	return _.uniqBy(result, 'value');
 };

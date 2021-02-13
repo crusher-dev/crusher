@@ -1,10 +1,16 @@
 import { Page } from "playwright";
 import { iAssertionRow } from '../../../crusher-shared/types/assertionRow';
+import { iSelectorInfo } from '@crusher-shared/types/selectorInfo';
+import { toCrusherSelectorsFormat } from '../utils/helper';
+import { waitForSelectors } from './index';
 
-export default async function assertElementAttributes(page: Page, selector: string, assertions: Array<iAssertionRow>){
-	const elHandle = await page.$(selector);
+export default async function assertElementAttributes(page: Page, selectors: Array<iSelectorInfo>, assertions: Array<iAssertionRow>){
+	await waitForSelectors(page, selectors);
+	const elHandle = await page.$(toCrusherSelectorsFormat(selectors));
 	let hasPassed = true;
 	const logs = [];
+
+	const selector = selectors[0].value;
 
 	for(let i = 0; i < assertions.length; i++) {
 		const {validation, operation, field} = assertions[i];

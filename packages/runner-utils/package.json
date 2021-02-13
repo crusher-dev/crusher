@@ -10,6 +10,7 @@
     "build": "webpack"
   },
   "devDependencies": {
+    "@types/node": "^14.14.27",
     "@typescript-eslint/parser": "^4.14.1",
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",
@@ -22,5 +23,9 @@
     "registry": "https://registry.npmjs.org/crusherdev",
     "access": "public"
   },
-  "gitHead": "e7b5550f27fe470bfe346d4843c02af22766c7c3"
+  "gitHead": "e7b5550f27fe470bfe346d4843c02af22766c7c3",
+  "dependencies": {
+    "browserify-zlib": "^0.2.0",
+    "stream-browserify": "^3.0.0"
+  }
 }

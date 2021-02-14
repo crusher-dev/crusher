@@ -6,4 +6,5 @@ export interface iTestMetaInfo {
 	id?: number;
 	actions: Array<iAction>;
 	totalTime?: number;
+	postData?: any;
 }

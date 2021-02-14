@@ -47,6 +47,7 @@ import { AuthModal } from "@ui/containers/modals/authModal";
 import Cookies from "js-cookie";
 import { Store } from "redux";
 import { serialize } from "cookie";
+import { submitPostDataWithForm } from "@utils/helpers";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
@@ -179,9 +180,10 @@ const TestEditor = (props: iTestEditorProps) => {
 		if (!userInfo) {
 			authCheckerInterval.current = setInterval(() => {
 				if (Cookies.get("isLoggedIn") === "true") {
-					clearInterval(authCheckerInterval.current);
-					authCheckerInterval.current = null;
-					window.location.reload();
+					submitPostDataWithForm(
+						window.location.href,
+						metaInfo.postData ? metaInfo.postData : {},
+					);
 				}
 			}, 100);
 		}
@@ -329,15 +331,6 @@ const parseTestMetaInfo = async (
 		? postDataFromReq
 		: savedPostTestData;
 
-	const isLoggedIn = await getUserInfo(store.getState());
-
-	if (!isLoggedIn) {
-		res.setHeader(
-			"Set-Cookie",
-			serialize("testPostData", encodeURIComponent(JSON.stringify(postData))),
-		);
-	}
-
 	switch (testType) {
 		case EDITOR_TEST_TYPE.UNSAVED: {
 			if (!postData.events && !postData.totalTime) {
@@ -349,6 +342,7 @@ const parseTestMetaInfo = async (
 				testType: testType,
 				id: id,
 				totalTime: postData.totalTime,
+				postData: postData,
 			};
 		}
 		case EDITOR_TEST_TYPE.SAVED_TEST: {
@@ -358,6 +352,7 @@ const parseTestMetaInfo = async (
 				actions: JSON.parse(testInfo.events),
 				testType: testType,
 				id: id,
+				postData: postData,
 			};
 		}
 		case EDITOR_TEST_TYPE.SAVED_DRAFT: {
@@ -367,6 +362,7 @@ const parseTestMetaInfo = async (
 				actions: JSON.parse(testInfo.events),
 				testType: testType,
 				id: id,
+				postData: postData,
 			};
 		}
 	}

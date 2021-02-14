@@ -14,6 +14,7 @@ import { ACTIONS_MODAL_STATE } from "../../../../interfaces/actionsModalState";
 import { FRAME_MESSAGE_TYPES } from "../../../../scripts/inject/responseMessageListener";
 import { AssertElementModalContent } from "./assertElementModalContent";
 import { ElementCustomScriptModalContent } from "./elementCustomScriptModalContent";
+import { HowToUseVideoModal } from "./howToUseVideoModal";
 
 interface iModalTopBarProps {
 	title: string;
@@ -109,12 +110,15 @@ const ModalManager = (props: iModalManagerProps) => {
 		handleCloseModal();
 	};
 
+	const isHowToUseVideoModal =
+		modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
+
 	return (
 		<ReactModal
 			isOpen={shouldShowModal}
 			contentLabel="onRequestClose Example"
-			onRequestClose={handleCloseModal}
-			style={customModalStyles}
+			onRequestClose={isHowToUseVideoModal ? undefined : handleCloseModal}
+			style={customModalStyles(modalState)}
 			overlayClassName="overlay"
 		>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.SEO_VALIDATION}>
@@ -156,32 +160,41 @@ const ModalManager = (props: iModalManagerProps) => {
 					/>
 				</>
 			</Conditional>
+			<Conditional If={modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO}>
+				<HowToUseVideoModal onClose={handleCloseModal} />
+			</Conditional>
 		</ReactModal>
 	);
 };
 
-const customModalStyles = {
-	content: {
-		top: "50%",
-		left: "50%",
-		right: "auto",
-		bottom: "auto",
-		marginRight: "-50%",
-		transform: "translate(-50%, -50%)",
-		maxHeight: "33.75rem",
-		margin: 0,
-		borderRadius: 8,
-		borderWidth: 0,
-		width: 760,
-		overflow: "auto",
-		boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-		padding: "36px 40px",
-		background: "#1C1F26",
-		zIndex: 100000,
-	},
-	overlay: {
-		zIndex: 100000,
-	},
+const customModalStyles = (modalState: ACTIONS_MODAL_STATE | null) => {
+	const isHowToUseVideoModal =
+		modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
+
+	return {
+		content: {
+			top: isHowToUseVideoModal ? "45%" : "50%",
+			left: "50%",
+			right: "auto",
+			bottom: "auto",
+			marginRight: "-50%",
+			transform: "translate(-50%, -50%)",
+			maxHeight: isHowToUseVideoModal ? "42rem" : "33.75rem",
+			margin: 0,
+			borderRadius: 8,
+			borderWidth: 0,
+			width: isHowToUseVideoModal ? 770 : 760,
+			overflow: "auto",
+			boxShadow: isHowToUseVideoModal ? "none" : "0px 4px 12px rgba(0, 0, 0, 0.1)",
+			padding: "36px 40px",
+			background: isHowToUseVideoModal ? "rgb(0,0,0,0)" : "#1C1F26",
+			zIndex: 100000,
+		},
+		overlay: {
+			background: isHowToUseVideoModal ? "#1f1f20" : "rgba(0,0,0,0.5)",
+			zIndex: 100000,
+		},
+	};
 };
 
 export { ModalManager };

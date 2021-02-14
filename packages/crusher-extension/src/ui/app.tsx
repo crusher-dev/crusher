@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { render } from "react-dom";
 import { SidebarActionsBox } from "./containers/app/sidebarActionsBox";
 import { BrowserWindow } from "./containers/app/browserWindow";
@@ -12,10 +12,24 @@ import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActio
 import { recordAction } from "../redux/actions/actions";
 import { submitPostDataWithForm } from "../utils/helpers";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
+import { updateActionsModalState } from "../redux/actions/recorder";
+import { ACTIONS_MODAL_STATE } from "../interfaces/actionsModalState";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
 	const [recordingStartTime] = useState(new Date());
+
+	useEffect(() => {
+		const store = getStore();
+		const isReturningUser = localStorage.getItem("lastVisit");
+		if (!isReturningUser) {
+			store.dispatch(
+				updateActionsModalState(ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO),
+			);
+		} else {
+			localStorage.setItem("lastVisit", Date.now().toString());
+		}
+	}, []);
 
 	const saveTest = () => {
 		const store = getStore();

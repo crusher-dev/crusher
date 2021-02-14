@@ -9,6 +9,9 @@ import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
 import { Button } from "../../components/app/button";
+import { getStore } from "../../../redux/store";
+import { updateActionsModalState } from "../../../redux/actions/recorder";
+import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -49,6 +52,11 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		[url],
 	);
 
+	const showHowToUseModal = () => {
+		const store = getStore();
+		store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO));
+	};
+
 	return (
 		<div style={browserToolbarStyle}>
 			<div style={browserMainToolbarStyle} id="top-bar">
@@ -67,6 +75,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					onChange={handleAddressBarUrlChange}
 				/>
 				<Button title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
+				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
+					Help
+				</a>
 			</div>
 
 			<style>{`
@@ -111,6 +122,15 @@ const refreshIconContainerStyle = {
 	display: "flex",
 	alignItems: "center",
 	cursor: "pointer",
+};
+
+const helpStyle = {
+	display: "flex",
+	alignItems: "center",
+	textDecoration: "none",
+	color: "#fff",
+	fontSize: 15,
+	marginLeft: "0.75rem",
 };
 
 export { BrowserToolbar };

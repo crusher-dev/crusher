@@ -180,10 +180,12 @@ const TestEditor = (props: iTestEditorProps) => {
 		if (!userInfo) {
 			authCheckerInterval.current = setInterval(() => {
 				if (Cookies.get("isLoggedIn") === "true") {
+					clearInterval(authCheckerInterval.current);
 					submitPostDataWithForm(
 						window.location.href,
 						metaInfo.postData ? metaInfo.postData : {},
 					);
+					authCheckerInterval.current = null;
 				}
 			}, 100);
 		}

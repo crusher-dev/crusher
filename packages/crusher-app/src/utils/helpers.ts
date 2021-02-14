@@ -124,3 +124,23 @@ export function isWindowCrossOrigin(window: Window) {
 		return true;
 	}
 }
+
+export function submitPostDataWithForm(url: string, options: any = {}) {
+	const form = document.createElement("form");
+	form.method = "post";
+	form.action = url;
+	form.target = "_blank";
+	const optionKeys = Object.keys(options);
+	for (const optionKey of optionKeys) {
+		const hiddenField = document.createElement("input");
+		hiddenField.type = "hidden";
+		hiddenField.name = optionKey;
+		hiddenField.value = options[optionKey];
+
+		form.appendChild(hiddenField);
+	}
+
+	document.body.appendChild(form);
+	form.submit();
+	form.remove();
+}

@@ -129,7 +129,7 @@ export function submitPostDataWithForm(url: string, options: any = {}) {
 	const form = document.createElement("form");
 	form.method = "post";
 	form.action = url;
-	form.target = "_blank";
+	form.target = "_self";
 	const optionKeys = Object.keys(options);
 	for (const optionKey of optionKeys) {
 		const hiddenField = document.createElement("input");

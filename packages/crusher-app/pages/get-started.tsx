@@ -85,6 +85,8 @@ function SignupScreen(props: iSignupScreenProps) {
 		}
 	}
 
+	const isIFrame = window.self !== window.top;
+
 	return (
 		<div>
 			<Head>
@@ -138,7 +140,11 @@ function SignupScreen(props: iSignupScreenProps) {
 					<div css={requestButtonCSS} onClick={handleSignUp} className={"button"}>
 						Next
 					</div>
-					<a href={getRegisterGoogleUrl(inviteReferral)} className={"noDecoration"}>
+					<a
+						href={getRegisterGoogleUrl(inviteReferral)}
+						target={isIFrame ? "_blank" : "_self"}
+						className={"noDecoration"}
+					>
 						<div css={googleLoginButtonCSS(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
 							<span>Signup with Google</span>

@@ -75,6 +75,8 @@ function Home() {
 		}
 	}
 
+	const isIFrame = window.self !== window.top;
+
 	return (
 		<div>
 			<Head>
@@ -126,6 +128,7 @@ function Home() {
 					</div>
 					<a
 						href={resolvePathToBackendURI("/v2/user/authenticate/google")}
+						target={isIFrame ? "_blank" : "_self"}
 						css={styles.loginGoogleLink}
 					>
 						<div css={styles.googleLoginButton(theme)}>

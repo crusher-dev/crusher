@@ -1,8 +1,14 @@
-import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
+import React, {
+	ChangeEvent,
+	useCallback,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import { iPageContext } from "@interfaces/pageContext";
-import { checkIfUserLoggedIn } from "@redux/stateUtils/user";
+import { checkIfUserLoggedIn, getUserInfo } from "@redux/stateUtils/user";
 import { redirectToFrontendPath } from "@utils/router";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import {
 	_getLiveLogs,
 	createAndRunDraftTest,
@@ -37,6 +43,10 @@ import {
 } from "@crusher-shared/types/response/draftLogsResponse";
 import { InstanceStatus } from "@crusher-shared/types/instanceStatus";
 import { BROWSER } from "@crusher-shared/types/browser";
+import { AuthModal } from "@ui/containers/modals/authModal";
+import Cookies from "js-cookie";
+import { Store } from "redux";
+import { serialize } from "cookie";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
@@ -90,10 +100,12 @@ const TestEditor = (props: iTestEditorProps) => {
 	const { metaInfo } = props;
 	const [testName, setTestName] = useState("");
 
+	const userInfo = useSelector(getUserInfo);
 	const testInfo = useSelector(getTestMetaInfo);
 	const liveLogs = useSelector(getTestLiveLogs);
 	const selectedProjectId = useSelector(getSelectedProject);
 	const isTestAborted = useSelector(checkIsTestAborted);
+	const authCheckerInterval = useRef(null as any);
 
 	const handleTestNameUpdate = (event: ChangeEvent<HTMLInputElement>) => {
 		setTestName(event.target.value);
@@ -163,8 +175,21 @@ const TestEditor = (props: iTestEditorProps) => {
 		}
 	};
 
+	useMemo(() => {
+		if (!userInfo) {
+			authCheckerInterval.current = setInterval(() => {
+				if (Cookies.get("isLoggedIn") === "true") {
+					clearInterval(authCheckerInterval.current);
+					authCheckerInterval.current = null;
+					window.location.reload();
+				}
+			}, 100);
+		}
+	}, [userInfo]);
+
 	return (
 		<div css={containerCSS}>
+			<AuthModal isOpen={!!userInfo === false} />
 			<div css={centeredContainerCSS}>
 				<div>
 					<div css={placeholderHeaderTitleCSS}>
@@ -286,13 +311,37 @@ const addTestButtonCSS = css`
 
 const parseTestMetaInfo = async (
 	req: NextApiRequest,
+	res: NextApiResponse,
 	testType: EDITOR_TEST_TYPE,
 	id: number,
+	cookies: any = null,
 	headers: any = null,
+	store: Store,
 ): Promise<iTestMetaInfo | null> => {
+	const postDataFromReq = await parse(req);
+	const isComingFromCrusherExtension = postDataFromReq && postDataFromReq.events;
+	const encodedSavedPostTestData = cookies!.testPostData;
+	const savedPostTestData = encodedSavedPostTestData
+		? JSON.parse(decodeURIComponent(encodedSavedPostTestData))
+		: null;
+
+	const postData = isComingFromCrusherExtension
+		? postDataFromReq
+		: savedPostTestData;
+
+	const isLoggedIn = await getUserInfo(store.getState());
+
+	if (!isLoggedIn) {
+		res.setHeader(
+			"Set-Cookie",
+			serialize("testPostData", encodeURIComponent(JSON.stringify(postData)), {
+				path: "/",
+			}),
+		);
+	}
+
 	switch (testType) {
 		case EDITOR_TEST_TYPE.UNSAVED: {
-			const postData = await parse(req);
 			if (!postData.events && !postData.totalTime) {
 				throw new Error("No recorded actions passed to run test for");
 			}
@@ -346,9 +395,12 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 	try {
 		const testMetaInfo = await parseTestMetaInfo(
 			req!,
+			res!,
 			type,
 			id,
+			metaInfo.cookies,
 			metaInfo.headers,
+			store,
 		);
 
 		if (testMetaInfo) {
@@ -360,6 +412,7 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 			metaInfo: testMetaInfo,
 		};
 	} catch (err) {
+		throw err;
 		return redirectToFrontendPath("/404", res);
 	}
 };

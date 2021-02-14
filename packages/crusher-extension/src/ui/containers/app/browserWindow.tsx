@@ -13,6 +13,8 @@ import { getStore } from "../../../redux/store";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
+import { POSITION } from "../../../interfaces/css";
+import { ActionRecordedIndicator } from "../../components/app/actionRecordedIndicator";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
@@ -97,15 +99,18 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 	return (
 		<div style={mainContainerStyle}>
 			<div style={browserStyle}>
-				<BrowserToolbar
-					isInspectModeOn={isInspectModeOn}
-					initialUrl={url}
-					goBack={goBack}
-					goForward={goForward}
-					refreshPage={refreshPage}
-					saveTest={saveTestCallback}
-					loadNewPage={loadNewPage}
-				/>
+				<div style={toolbarContainerStyle}>
+					<BrowserToolbar
+						isInspectModeOn={isInspectModeOn}
+						initialUrl={url}
+						goBack={goBack}
+						goForward={goForward}
+						refreshPage={refreshPage}
+						saveTest={saveTestCallback}
+						loadNewPage={loadNewPage}
+					/>
+					<ActionRecordedIndicator />
+				</div>
 				<Device
 					url={url}
 					device={selectedDevice}
@@ -122,6 +127,10 @@ const mainContainerStyle = {
 	width: "70%",
 	maxHeight: "100vh",
 	overflow: "auto",
+};
+
+const toolbarContainerStyle = {
+	position: POSITION.RELATIVE,
 };
 
 const browserStyle = {

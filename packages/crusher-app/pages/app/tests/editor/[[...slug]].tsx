@@ -332,12 +332,16 @@ const parseTestMetaInfo = async (
 	const isLoggedIn = await getUserInfo(store.getState());
 
 	if (!isLoggedIn) {
+		console.log("SETTING COOKIE", postData);
+
 		res.setHeader(
 			"Set-Cookie",
 			serialize("testPostData", encodeURIComponent(JSON.stringify(postData)), {
 				path: "/",
 			}),
 		);
+	} else {
+		console.log("LOGGED IN", isLoggedIn);
 	}
 
 	switch (testType) {

@@ -11,7 +11,11 @@ class OctokitManager {
 	}
 
 	getInstallationsUserCanAccess() {
-		return this.octokit.apps.listInstallationsForAuthenticatedUser();
+		return this.octokit.apps.listInstallationsForAuthenticatedUser({
+			headers: {
+				"If-None-Match": "",
+			},
+		});
 	}
 }
 

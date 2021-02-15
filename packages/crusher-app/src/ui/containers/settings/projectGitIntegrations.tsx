@@ -40,7 +40,9 @@ const SelectGithubRepo = (props: iSelectGithubRepoProps) => {
 		);
 	}, [userConnections]);
 
-	const fetchGithubInstallations = () => {
+	const isGithubInstallationCheckerRunning = useRef(false);
+
+	const fetchGithubInstallations = async () => {
 		if (!githubUserConnection) {
 			return;
 		}
@@ -48,7 +50,7 @@ const SelectGithubRepo = (props: iSelectGithubRepoProps) => {
 			githubUserConnection?.meta.tokenAuthentication.token,
 		);
 
-		octoKitManager.current
+		return octoKitManager.current
 			?.getInstallationsUserCanAccess()
 			.then((githubInstallations) => {
 				const githubInstallationsOptions = githubInstallations.data.installations.map(
@@ -70,12 +72,41 @@ const SelectGithubRepo = (props: iSelectGithubRepoProps) => {
 			});
 	};
 
+	const setGithubInstallationWindowCheckerInterval = () => {
+		const interval = setInterval(() => {
+			if (!githubConfigureWindow.current) {
+				clearInterval(interval);
+				return;
+			}
+			console.log(isGithubInstallationCheckerRunning.current, "HH");
+			if (
+				!isWindowCrossOrigin(githubConfigureWindow.current) &&
+				githubConfigureWindow.current?.location.href.startsWith(FRONTEND_SERVER_URL)
+			) {
+				isGithubInstallationCheckerRunning.current = false;
+				githubConfigureWindow.current.close();
+				clearInterval(interval);
+				fetchGithubInstallations();
+			}
+		}, 500);
+	};
+
+	const setGithubInstallationsCheckerInterval = () => {
+		const fetchGithubInstallationsContinuously = async () => {
+			if (isGithubInstallationCheckerRunning.current)
+				await fetchGithubInstallations();
+
+			setTimeout(fetchGithubInstallationsContinuously, 500);
+		};
+		setTimeout(fetchGithubInstallationsContinuously, 500);
+	};
+
 	useEffect(() => {
 		if (!githubUserConnection) {
 			return;
 		}
 		fetchGithubInstallations();
-		setInterval(fetchGithubInstallations, 3000);
+		setGithubInstallationsCheckerInterval();
 	}, [githubUserConnection]);
 
 	const handleInstallationChange = (newValue: iRepoInstallationOptions) => {
@@ -85,24 +116,13 @@ const SelectGithubRepo = (props: iSelectGithubRepoProps) => {
 				"crusher-installation",
 				"height=600,width=1080",
 			);
+			githubConfigureWindow.current.onbeforeunload = function (e) {
+				console.log("SHOULD CLOSE");
+				alert("ARE YOU SURE");
+			};
 
-			const interval = setInterval(() => {
-				if (!githubConfigureWindow.current) {
-					clearInterval(interval);
-					return;
-				}
-
-				if (
-					!isWindowCrossOrigin(githubConfigureWindow.current) &&
-					githubConfigureWindow.current?.location.href.startsWith(
-						FRONTEND_SERVER_URL,
-					)
-				) {
-					githubConfigureWindow.current.close();
-					fetchGithubInstallations();
-					clearInterval(interval);
-				}
-			}, 500);
+			isGithubInstallationCheckerRunning.current = true;
+			setGithubInstallationWindowCheckerInterval();
 			return;
 		}
 		setSelectedRepoInstallation(newValue);

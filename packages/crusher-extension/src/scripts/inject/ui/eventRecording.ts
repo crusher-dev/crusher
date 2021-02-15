@@ -331,10 +331,7 @@ export default class EventRecording {
 	unpin() {
 		console.log("Unpinning");
 		this.state.pinned = false;
-		if (
-			this._overlayCover &&
-			(!this._overlayCover.style.left || this._overlayCover.style.left !== "0px")
-		) {
+		if (this._overlayCover) {
 			this._overlayCover.classList.remove("pointerEventsNone");
 			this._overlayCover.style.left = "0px";
 			this._overlayCover.style.top = "0px";

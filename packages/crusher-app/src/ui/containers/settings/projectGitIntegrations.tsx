@@ -20,10 +20,13 @@ import { getUserLoginConnections } from "@redux/stateUtils/user";
 import { store } from "@redux/store";
 import {
 	getGithubInstallationOptions,
+	getLinkedGithubRepos,
 	getReposForSelectedInstallation,
 	getSelectedGithubInstallationOption,
 } from "@redux/stateUtils/github";
 import {
+	addLinkedGithubRepoInList,
+	removeLinkedGithubRepoInList,
 	saveGithubInstallationOptions,
 	saveReposForInstallation,
 	setSelectedGithubInstallationOption,
@@ -31,6 +34,12 @@ import {
 import { iGithubInstallation } from "@interfaces/githubInstallations";
 import { getRelativeSize } from "@utils/styleUtils";
 import SearchIcon from "../../../../public/svg/settings/search.svg";
+import { _linkGithubRepo, _unlinkGithubRepo } from "@services/v2/github";
+import { getSelectedProject } from "@redux/stateUtils/projects";
+import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHeader";
+import { iGithubIntegration } from "@crusher-shared/types/mongo/githubIntegration";
+import GithubIcon from "../../../svg/github.svg";
+import { Toast } from "@utils/toast";
 
 interface iSelectGithubRepoProps {
 	userConnections: Array<iUserConnection>;
@@ -39,19 +48,43 @@ interface iSelectGithubRepoProps {
 const ADD_GITHUB_ORG_OR_ACCOUNT = "ADD_GITHUB_ORG_OR_ACCOUNT";
 
 const GithubRepoItem = (props: any) => {
-	const { item } = props;
+	const { item, installationId, isLinked, linkedIntegrationId } = props;
 
 	const handleRepoConnect = () => {
-		alert(`LINKING ${item.id}`);
+		const selectedProject = getSelectedProject(store.getState());
+		_linkGithubRepo({
+			projectId: selectedProject,
+			repoId: item.id,
+			repoName: item.full_name,
+			repoLink: item.svn_url,
+			installationId: installationId,
+		}).then((integration) => {
+			Toast.showSuccess("Linked to github repo successfully");
+			store.dispatch(addLinkedGithubRepoInList(integration));
+		});
+	};
+
+	const handleRepoDisconnect = () => {
+		_unlinkGithubRepo(linkedIntegrationId).then(() => {
+			Toast.showSuccess("Unlinked repo successfully");
+			store.dispatch(removeLinkedGithubRepoInList(linkedIntegrationId));
+		});
 	};
 
 	return (
 		<li css={githubReposListItemContainerCSS}>
 			<img src={item.owner.avatar_url} css={githubRepoItemAvatarCSS} />
 			<span css={githubItemRepoNameCSS}>{item.name}</span>
-			<div css={githubRepoItemConnectButtonCSS} onClick={handleRepoConnect}>
-				Connect
-			</div>
+			<Conditional If={isLinked}>
+				<button css={githubRepoItemConnectButtonCSS} onClick={handleRepoDisconnect}>
+					Disconnect
+				</button>
+			</Conditional>
+			<Conditional If={!isLinked}>
+				<button css={githubRepoItemConnectButtonCSS} onClick={handleRepoConnect}>
+					Connect
+				</button>
+			</Conditional>
 		</li>
 	);
 };
@@ -91,6 +124,12 @@ const SelectGithubReposList = (props: iSelectGithubReposListProps) => {
 		getReposForSelectedInstallation,
 	);
 
+	const selectedOrgInstallation = useSelector(
+		getSelectedGithubInstallationOption,
+	);
+
+	const linkedGithubRepos = useSelector(getLinkedGithubRepos);
+
 	const selectedGithubInstallationsOut = useMemo(() => {
 		if (
 			selectedGithubInstallationRepos &&
@@ -103,11 +142,23 @@ const SelectGithubReposList = (props: iSelectGithubReposListProps) => {
 						: true;
 				})
 				.map((repo) => {
-					return <GithubRepoItem key={repo.id} item={repo} />;
+					const linkedRepo = linkedGithubRepos.find((linkedRepo) => {
+						return linkedRepo.repoId === repo.id;
+					});
+
+					return (
+						<GithubRepoItem
+							installationId={selectedOrgInstallation.value}
+							key={repo.id}
+							isLinked={!!linkedRepo}
+							linkedIntegrationId={linkedRepo ? linkedRepo._id : null}
+							item={repo}
+						/>
+					);
 				});
 		}
 		return null;
-	}, [selectedGithubInstallationRepos, searchFilter]);
+	}, [selectedGithubInstallationRepos, searchFilter, linkedGithubRepos]);
 
 	return (
 		<div css={githubReposListContainerCSS}>
@@ -348,14 +399,101 @@ interface iProjectGitIntegrationsProps {
 	connectedGitIntegrations: Array<any>;
 }
 
-const ProjectGitIntegrations = (props: iProjectGitIntegrationsProps) => {
-	const { connectedGitIntegrations } = props;
+interface iConnectedGitIntegrationListItemProps {
+	item: iGithubIntegration;
+}
 
+const ConnectedGitIntegrationListItem = (
+	props: iConnectedGitIntegrationListItemProps,
+) => {
+	const { item } = props;
+	const unlinkLinkedGithubRepo = () => {
+		_unlinkGithubRepo(item._id).then(() => {
+			Toast.showSuccess("Unlinked repo successfully");
+			store.dispatch(removeLinkedGithubRepoInList(item._id));
+		});
+	};
+
+	return (
+		<li css={connectedGitIntegrationItemContainerCSS}>
+			<GithubIcon css={{ height: "1.5rem" }} />
+			<a
+				href={item.repoLink}
+				target={"_blank"}
+				rel={"noreferrer"}
+				css={connectedGitIntegrationLinkCSS}
+			>
+				{item.repoName}
+			</a>
+			<div css={disconnectButtonCSS} onClick={unlinkLinkedGithubRepo}>
+				Disconnect
+			</div>
+		</li>
+	);
+};
+
+const disconnectButtonCSS = css`
+	font-size: ${getRelativeSize(13)}rem;
+	margin-left: auto;
+	background: #6583fe;
+	padding: ${getRelativeSize(6)}rem ${getRelativeSize(16)}rem;
+	border-radius: ${getRelativeSize(6)}rem;
+	color: #fff;
+	cursor: pointer;
+`;
+const connectedGitIntegrationItemContainerCSS = css`
+	border: 1px solid #eaeaea;
+	padding: ${getRelativeSize(16)}rem;
+	display: flex;
+	align-items: center;
+	border-radius: ${getRelativeSize(4)}rem;
+	&:not(:first-child) {
+		margin-top: 0.5rem;
+	}
+`;
+const connectedGitIntegrationLinkCSS = css`
+	margin-left: 1rem;
+	color: rgb(0, 112, 243);
+	font-weight: 600;
+`;
+
+const ConnectedGitIntegrationsContainer = () => {
+	const connectedGitIntegrations = useSelector(getLinkedGithubRepos);
+	const showConnectedGitIntegration = connectedGitIntegrations.length;
+
+	if (!showConnectedGitIntegration) return null;
+
+	const connectedGitIntegrationsOut = connectedGitIntegrations.map(
+		(integration: iGithubIntegration) => {
+			return (
+				<ConnectedGitIntegrationListItem
+					key={integration._id}
+					item={integration}
+				></ConnectedGitIntegrationListItem>
+			);
+		},
+	);
+	return (
+		<div css={connectedGitIntegrationsContainerCSS}>
+			<Conditional If={showConnectedGitIntegration}>
+				<SettingsContentHeader title={"Linked Git integrations"} />
+				<ul css={connectedGitIntegrationsListCSS}>{connectedGitIntegrationsOut}</ul>
+			</Conditional>
+		</div>
+	);
+};
+
+const connectedGitIntegrationsContainerCSS = css`
+	margin-top: 2rem;
+`;
+const connectedGitIntegrationsListCSS = css`
+	margin-top: 2rem;
+`;
+const ProjectGitIntegrations = () => {
 	const userConnections = useSelector(getUserLoginConnections);
 	const showLinkGithub =
 		!userConnections.length && !connectedGitIntegrations.length;
 	const showSelectRepoGithub = userConnections.length;
-	const showConnectedGitIntegration = connectedGitIntegrations.length;
 
 	return (
 		<div css={containerCSS}>
@@ -376,9 +514,7 @@ const ProjectGitIntegrations = (props: iProjectGitIntegrationsProps) => {
 			<Conditional If={showSelectRepoGithub}>
 				<SelectGithubRepoContainer userConnections={userConnections} />
 			</Conditional>
-			<Conditional If={showConnectedGitIntegration}>
-				<div>Hello world, already connected to github repo</div>
-			</Conditional>
+			<ConnectedGitIntegrationsContainer />
 		</div>
 	);
 };

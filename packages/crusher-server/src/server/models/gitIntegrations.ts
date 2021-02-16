@@ -1,10 +1,11 @@
-import mongoose from "mongoose";
+import * as mongoose from "mongoose";
 
 const GitIntegrationsSchema = new mongoose.Schema(
 	{
 		projectId: Number,
 		repoId: Number,
 		repoName: String,
+		repoLink: String,
 		installationId: Number,
 	},
 	{ timestamps: true },

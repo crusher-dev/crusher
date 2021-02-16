@@ -1,20 +1,27 @@
 import {
+	ADD_LINKED_GITHUB_REPO,
+	REMOVE_LINKED_GITHUB_REPO,
 	SAVE_GITHUB_INSTALLATION_OPTIONS,
+	SAVE_LINKED_GITHUB_REPOS,
 	SAVE_REPOS_FOR_INSTALLATION,
 	SET_SELECTED_GITHUB_INSTALLATION_OPTION,
 } from "@redux/actions/github";
 import { iGithubInstallation } from "@interfaces/githubInstallations";
+import { iGithubIntegration } from "@crusher-shared/types/mongo/githubIntegration";
+import { act } from "react-dom/test-utils";
 
 interface iGithubInitialState {
 	installationOptions: Array<iGithubInstallation>;
 	selectedInstallation: null | number;
 	installationRepos: any;
+	connectedGithubRepos: Array<iGithubIntegration>;
 }
 
 const initialState: iGithubInitialState = {
 	installationOptions: [],
 	selectedInstallation: null,
 	installationRepos: {},
+	connectedGithubRepos: [],
 };
 
 const github = (state = initialState, action: any) => {
@@ -37,6 +44,29 @@ const github = (state = initialState, action: any) => {
 					[action.payload.installationId]: action.payload.repos,
 				},
 			};
+		case SAVE_LINKED_GITHUB_REPOS:
+			return {
+				...state,
+				connectedGithubRepos: action.payload.linkedRepos,
+			};
+		case ADD_LINKED_GITHUB_REPO:
+			return {
+				...state,
+				connectedGithubRepos: [
+					...state.connectedGithubRepos,
+					action.payload.linkedRepo,
+				],
+			};
+		case REMOVE_LINKED_GITHUB_REPO: {
+			const newConnectedGithubRepos = state.connectedGithubRepos.filter((repo) => {
+				return repo._id !== action.payload.integrationId;
+			});
+
+			return {
+				...state,
+				connectedGithubRepos: newConnectedGithubRepos,
+			};
+		}
 		default:
 			return state;
 	}

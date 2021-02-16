@@ -33,6 +33,7 @@ jobs:
       - name: Package crusher-app for deployment
         env:
           EXTENSION_ID: fdbnpjonlhmjhjfojacolckkbipcecoe
+          NEXT_PUBLIC_GITHUB_APP_CLIENT_ID: Iv1.b94bab70cd7aad37
         run: sh scripts/vercel-package.sh
 
       - uses: amondnet/vercel-action@v20

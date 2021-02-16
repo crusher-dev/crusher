@@ -37,6 +37,8 @@ module.exports = withImages(
 				return config;
 			},
 			env: {
+				NEXT_PUBLIC_GITHUB_APP_CLIENT_ID:
+					process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID,
 				BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
 				FRONTEND_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
 				IS_DEVELOPMENT: process.env.NEXT_PUBLIC_IS_DEVELOPMENT,

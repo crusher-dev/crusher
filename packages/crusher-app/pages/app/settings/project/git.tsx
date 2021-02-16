@@ -6,7 +6,7 @@ import { SettingsContent } from "@ui/components/settings/SettingsContent";
 import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHeader";
 import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";
-import { ProjectGitIntegrations } from "@ui/containers/settings/projectGitIntegrations";
+import { ProjectGitIntegrations } from "@ui/containers/settings/gitIntegrations/projectGitIntegrations";
 import {
 	_getLinkedGithubRepos,
 	_getUserConnectionsList,

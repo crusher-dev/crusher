@@ -34,6 +34,8 @@ jobs:
         env:
           EXTENSION_ID: fdbnpjonlhmjhjfojacolckkbipcecoe
           NEXT_PUBLIC_GITHUB_APP_CLIENT_ID: Iv1.b94bab70cd7aad37
+          NEXT_PUBLIC_BACKEND_URL: https://backend.crusher.dev/
+          NEXT_PUBLIC_FRONTEND_URL: https://app.crusher.dev/
         run: sh scripts/vercel-package.sh
 
       - uses: amondnet/vercel-action@v20

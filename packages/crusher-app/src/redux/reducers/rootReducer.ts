@@ -11,6 +11,7 @@ import settings from "@redux/reducers/settings";
 import team from "@redux/reducers/team";
 import tests from "./tests";
 import monitoring from "@redux/reducers/monitoring";
+import github from "@redux/reducers/github";
 
 const combinedReducer = combineReducers({
 	app,
@@ -23,6 +24,7 @@ const combinedReducer = combineReducers({
 	settings,
 	tests,
 	monitoring,
+	github,
 });
 
 const rootReducer = (state: any, action: IAction<any>) => {

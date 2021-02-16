@@ -3,7 +3,7 @@ import { USER_CONNECTION_TYPE } from "../../../../crusher-shared/types/userConne
 
 const UserConnectionsSchema = new mongoose.Schema(
 	{
-		userId: mongoose.Schema.Types.Number,
+		userId: Number,
 		service: {
 			type: mongoose.Schema.Types.String,
 			enum: [USER_CONNECTION_TYPE.GITHUB, USER_CONNECTION_TYPE.GITLAB],

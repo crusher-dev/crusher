@@ -2,7 +2,7 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { iListOfUserLoginConnectionsResponse } from "@crusher-shared/types/response/listOfUserLoginConnections";
 import { iLinkGithubRepoRequest } from "@crusher-shared/types/request/linkGithubRepoRequest";
-import { iLinkGithubRepoResponse } from "@crusher-shared/types/response/iLinkGithubRepoResponse";
+import { linkGithubRepoResponse } from "@crusher-shared/types/response/linkGithubRepoResponse";
 import { iGithubLinkedReposListResponse } from "@crusher-shared/types/response/githubLinkedReposListResponse";
 
 export const _getUserConnectionsList = (
@@ -17,7 +17,7 @@ export const _getUserConnectionsList = (
 export const _linkGithubRepo = (
 	request: iLinkGithubRepoRequest,
 	headers: any = null,
-): Promise<iLinkGithubRepoResponse> => {
+): Promise<linkGithubRepoResponse> => {
 	return backendRequest("/github/link", {
 		method: RequestMethod.POST,
 		headers: headers,

@@ -2,7 +2,7 @@ import { JsonController, Get, Authorized, CurrentUser, Post, Param, Body } from 
 import { Inject, Service } from "typedi";
 import { GitIntegrationsService } from "../../../core/services/mongo/gitIntegrations";
 import { iLinkGithubRepoRequest } from "../../../../../crusher-shared/types/request/linkGithubRepoRequest";
-import { iLinkGithubRepoResponse } from "@crusher-shared/types/response/iLinkGithubRepoResponse";
+import { linkGithubRepoResponse } from "@crusher-shared/types/response/linkGithubRepoResponse";
 
 @Service()
 @JsonController("/github")
@@ -12,7 +12,7 @@ export class GitIntegrationsController {
 
 	@Authorized()
 	@Post("/link")
-	async linkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: iLinkGithubRepoRequest): Promise<iLinkGithubRepoResponse> {
+	async linkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: iLinkGithubRepoRequest): Promise<linkGithubRepoResponse> {
 		const { user_id } = user;
 		const { projectId, repoId, repoName, repoLink } = body;
 		const doc = await this.gitIntegrationsService.linkRepo(repoId, repoName, repoLink, projectId, user_id);

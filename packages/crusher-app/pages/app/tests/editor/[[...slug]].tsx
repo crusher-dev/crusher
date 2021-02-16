@@ -48,6 +48,7 @@ import Cookies from "js-cookie";
 import { Store } from "redux";
 import { serialize } from "cookie";
 import { submitPostDataWithForm } from "@utils/helpers";
+import { Toast } from "@utils/toast";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
@@ -135,7 +136,7 @@ const TestEditor = (props: iTestEditorProps) => {
 						}
 					})
 					.catch((err: any) => {
-						alert("FAILED");
+						Toast.showError("Some error occurred when running test");
 						console.error(err);
 					});
 			}

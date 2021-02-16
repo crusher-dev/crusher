@@ -1,7 +1,7 @@
 import { resolveToBackendPath } from "@crusher-shared/utils/url";
 
 const getGithubOAuthURL = () => {
-	if (!process.env.NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID) {
+	if (!process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID) {
 		throw new Error("No github oauth client id provided");
 	}
 

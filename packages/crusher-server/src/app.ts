@@ -38,6 +38,7 @@ import { InviteMembersController } from "./server/controllers/v2/InviteMembersCo
 import { UserControllerV2 } from "./server/controllers/v2/UserControllerV2";
 import { DraftControllerV2 } from "./server/controllers/v2/DraftControllerV2";
 import { LoginConnectionsController } from "./server/controllers/v2/LoginConnectionsController";
+import { GitIntegrationsController } from "./server/controllers/integrations/Github";
 
 new MongoManager().init();
 useContainer(Container);
@@ -72,6 +73,7 @@ useExpressServer(expressApp, {
 		UserControllerV2,
 		DraftControllerV2,
 		LoginConnectionsController,
+		GitIntegrationsController,
 	],
 	middlewares: [CorsMiddleware],
 	authorizationChecker: async (action: Action) => {

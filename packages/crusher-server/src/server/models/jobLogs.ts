@@ -4,7 +4,7 @@ const JobLogsSchema = new mongoose.Schema(
 	{
 		tag: String,
 		message: String,
-		jobId: mongoose.Schema.Types.Number,
+		jobId: Number,
 		level: {
 			type: mongoose.Schema.Types.String,
 			enum: ["low", "medium", "high", "critical"],

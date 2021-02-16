@@ -35,7 +35,7 @@ const ProjectGit = () => {
 };
 
 const settingContentCSS = css`
-	width: ${720 / PIXEL_REM_RATIO}rem;
+	width: ${684 / PIXEL_REM_RATIO}rem;
 `;
 const mainContainerCSS = css`
 	margin-top: ${47 / PIXEL_REM_RATIO}rem;

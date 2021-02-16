@@ -6,8 +6,10 @@ class OctokitManager {
 		this.octokit = new Octokit({ auth: accessToken });
 	}
 
-	getReposForAuthenticatedUser() {
-		return this.octokit.repos.listForAuthenticatedUser();
+	getReposForInstallation(installationId) {
+		return this.octokit.apps.listInstallationReposForAuthenticatedUser({
+			installation_id: installationId,
+		});
 	}
 
 	getInstallationsUserCanAccess() {

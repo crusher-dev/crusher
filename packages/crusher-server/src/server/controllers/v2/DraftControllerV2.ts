@@ -1,15 +1,14 @@
 import { JsonController, Get, Authorized, CurrentUser, Body, Post, Param, Res, BadRequestError } from "routing-controllers";
 import { Service, Container, Inject } from "typedi";
-import DBManager from '../../../core/manager/DBManager';
-import { iUser } from '../../../../../crusher-shared/types/db/iUser';
-import DraftV2Service from '../../../core/services/v2/DraftV2Service';
-import DraftInstanceService from '../../../core/services/DraftInstanceService';
-import { DRAFT_LOGS_STATUS, iDraftLogsResponse } from '.././../../../../crusher-shared/types/response/draftLogsResponse';
+import DBManager from "../../../core/manager/DBManager";
+import { iUser } from "../../../../../crusher-shared/types/db/iUser";
+import DraftV2Service from "../../../core/services/v2/DraftV2Service";
+import DraftInstanceService from "../../../core/services/DraftInstanceService";
+import { DRAFT_LOGS_STATUS, iDraftLogsResponse } from ".././../../../../crusher-shared/types/response/draftLogsResponse";
 
 @Service()
 @JsonController("/v2/draft")
 export class DraftControllerV2 {
-
 	private dbManager: DBManager;
 
 	@Inject()
@@ -24,7 +23,12 @@ export class DraftControllerV2 {
 
 	@Authorized()
 	@Post("/getLogs/:draftId")
-	async getStatus(@CurrentUser({ required: true }) user: iUser, @Param("draftId") draftId: number, @Body() body, @Res() res): Promise<iDraftLogsResponse> {
+	async getStatus(
+		@CurrentUser({ required: true }) user: iUser,
+		@Param("draftId") draftId: number,
+		@Body() body,
+		@Res() res,
+	): Promise<iDraftLogsResponse | unknown> {
 		const { logsAfter } = body;
 		let count = 0;
 		const lastInstance = await this.draftInstanceService.getRecentDraftInstance(draftId);
@@ -37,15 +41,18 @@ export class DraftControllerV2 {
 				const interval = setInterval(async () => {
 					const testStatus = await this.draftV2Service.getDraftInstanceStatus(lastInstance.id);
 
-					return this.draftV2Service.getDraftLogs(draftId, logsAfter).then((logs)=>{
-						resolve({ status: DRAFT_LOGS_STATUS.UPDATE_LOGS, logs: logs, test: testStatus });
-						clearInterval(interval);
-					}).catch((err)=>{
-						if(count++ === 5){
-							resolve({ status: DRAFT_LOGS_STATUS.NO_UPDATE, test: testStatus });
+					return this.draftV2Service
+						.getDraftLogs(draftId, logsAfter)
+						.then((logs) => {
+							resolve({ status: DRAFT_LOGS_STATUS.UPDATE_LOGS, logs: logs, test: testStatus });
 							clearInterval(interval);
-						}
-					});
+						})
+						.catch((err) => {
+							if (count++ === 5) {
+								resolve({ status: DRAFT_LOGS_STATUS.NO_UPDATE, test: testStatus });
+								clearInterval(interval);
+							}
+						});
 				}, 1000);
 			} catch (er) {
 				reject(er);

@@ -22,7 +22,7 @@ function initializeQueues() {
 function initializeWorkers() {
 	console.debug("Initializing queue workers");
 
-	new Worker("test-progress-worker", path.resolve("src/core/workers/testProgressWorker.ts"), { connection: REDDIS as any, concurrency: 1 });
+	new Worker("test-progress-queue", path.resolve("src/core/workers/testProgressWorker.ts"), { connection: REDDIS as any, concurrency: 1 });
 	new Worker("test-completed-queue", path.resolve("src/core/workers/testCompletedWorker.ts"), { connection: REDDIS as any, concurrency: 1 });
 	new Worker("check-result-queue", path.resolve("src/core/workers/checkResult.ts"), { connection: REDDIS as any, concurrency: 1 });
 

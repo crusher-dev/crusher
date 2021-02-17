@@ -15,6 +15,17 @@ export class GitIntegrationsService {
 		}).save();
 	}
 
+	async getInstallationRepo(repoName: string, projectId: number): Promise<iGithubIntegration | null> {
+		return new Promise((resolve, reject) => {
+			GitIntegrations.findOne({ projectId: { $eq: projectId }, repoName: { $eq: repoName } }, (err, doc) => {
+				if (err || !doc) return resolve(null);
+
+				const docsObject = { ...(doc.toObject() as any), _id: doc._id.toString() };
+				resolve(docsObject);
+			});
+		});
+	}
+
 	getLinkedRepos(projectId: number): Promise<Array<iGithubIntegration>> {
 		return new Promise((resolve, reject) => {
 			GitIntegrations.find({ projectId: { $eq: projectId } })

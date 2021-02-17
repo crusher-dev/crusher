@@ -15,6 +15,7 @@ import { Platform } from "../../core/interfaces/Platform";
 import { JobTrigger } from "../../core/interfaces/JobTrigger";
 import { TestType } from "../../core/interfaces/TestType";
 import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
+import { GitIntegrationsService } from "../../core/services/mongo/gitIntegrations";
 
 const RESPONSE_STATUS = {
 	PROJECT_CREATED: "PROJECT_CREATED",
@@ -32,6 +33,8 @@ export class ProjectsController {
 	private testService: TestService;
 	@Inject()
 	private jobService: JobsService;
+	@Inject()
+	private gitIntegrationsService: GitIntegrationsService;
 
 	private dbManager: DBManager;
 
@@ -92,7 +95,7 @@ export class ProjectsController {
 		return {
 			totalJobsToday: totalJobsToday.count,
 			health: info.health,
-			status: info.status
+			status: info.status,
 		};
 	}
 
@@ -115,9 +118,9 @@ export class ProjectsController {
 
 			const testsInProject = await this.testService.getAllTestsInProject(projectId);
 			const testIds = testsInProject.map((test) => test.id);
-			const githubInstallationRecord = await this.userService.getInstallationIdOfRepo(repoName);
+			const githubInstallationRecord = await this.gitIntegrationsService.getInstallationRepo(repoName, projectId);
 
-			let job = await this.jobService.createOrUpdateJob(repoName, commitId, {
+			const job = await this.jobService.createOrUpdateJob(repoName, commitId, {
 				projectId,
 				host,
 				branchName,
@@ -125,7 +128,7 @@ export class ProjectsController {
 				testIds: testIds,
 				userId: user_id,
 				platform: Platform.ALL, // @TODO: Remove this
-				installation_id: githubInstallationRecord ? githubInstallationRecord.installation_id : null,
+				installation_id: githubInstallationRecord ? githubInstallationRecord.installationId : null,
 				trigger: githubInstallationRecord || cliToken ? JobTrigger.CLI : JobTrigger.MANUAL,
 			});
 
@@ -136,7 +139,7 @@ export class ProjectsController {
 
 				await githubService.authenticateAsApp(job.installation_id);
 
-				let { checkRunId: _check } = (await githubService.createCheckRunFromJob(job)) as any;
+				const { checkRunId: _check } = (await githubService.createCheckRunFromJob(job)) as any;
 				checkRunId = _check;
 				Logger.debug("ProjectsController::runTestsInProject", chalk.hex("#0b2ce2").bold(`Got check run id: ${checkRunId}`));
 

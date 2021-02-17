@@ -62,13 +62,6 @@ export class AlertingController {
 		const { check_suite, action, installation, repositories } = body;
 		Logger.info("AlertingController::hookReceiver", `Received webhook from github: (${action})`);
 
-		if (action === "created" && installation && repositories) {
-			const { id: installationId } = installation;
-			for (let repo of repositories) {
-				const { full_name } = repo;
-				await this.userService.addOrUpdateGithubInstallation(full_name, installationId);
-			}
-		}
 		return body;
 	}
 

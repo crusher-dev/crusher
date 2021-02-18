@@ -192,8 +192,10 @@ export default class TestsEventsWorker {
 					console.error(ex);
 				}
 			});
+			console.log("GITHUB INSTALLATION ID", jobRequest.job.installation_id, jobRequest.job.check_run_id);
 
 			if (firstTest) {
+				console.log("GITHUB INSTALLATION ID", jobRequest.job.installation_id, jobRequest.job.check_run_id);
 				if (jobRequest.job.installation_id && jobRequest.job.check_run_id) {
 					await updateGithubCheckStatus(status, {
 						fullRepoName: jobRequest.job.repo_name,

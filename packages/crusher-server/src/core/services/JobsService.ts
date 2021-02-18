@@ -188,6 +188,7 @@ export default class JobsService {
 			installation_id: payload.installationId,
 			conclusion: payload.conclusion,
 			user_id: payload.user_id,
+			check_run_id: payload.check_run_id,
 		};
 
 		const valuesToUpdate = Object.keys(payload).reduce((prev, key) => {
@@ -197,6 +198,8 @@ export default class JobsService {
 				return prev;
 			}
 		}, {});
+
+		if (!Object.keys(valuesToUpdate).length) return false;
 
 		return this.dbManager.fetchSingleRow(`UPDATE jobs SET ? WHERE id = ?`, [valuesToUpdate, jobId]);
 	}

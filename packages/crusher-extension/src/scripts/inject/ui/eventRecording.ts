@@ -144,7 +144,7 @@ export default class EventRecording {
 			target.getBoundingClientRect().height + "px";
 		this._overlayCover.style["z-index"] = 299999999;
 		this._overlayCover.style.outlineStyle = "solid";
-		this._overlayCover.style.outlineColor = "#EC2E6A";
+		this._overlayCover.style.outlineColor = "rgb(226, 223, 108)";
 		this._overlayCover.style.outlineWidth = "1px";
 	}
 

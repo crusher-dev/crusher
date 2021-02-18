@@ -444,6 +444,7 @@ textarea {
 	background-color: #ec2e6a !important;
 }
 #overlay_cover {
+	background: rgba(242,255,41,0.18);
 	width: 100%;
 	cursor: copy;
 	height: 100%;

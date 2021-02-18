@@ -43,4 +43,4 @@ services:
 
 volumes:
   aws-cred-helper:
-    external: false
+    external: true

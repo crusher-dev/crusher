@@ -14,6 +14,7 @@ module.exports = {
 		],
 		background: [path.resolve(__dirname, "../src/background.ts")],
 		popup: [path.resolve(__dirname, "../src/ui/popup.tsx")],
+		init: [path.resolve(__dirname, "../src/scripts/inject/init.ts")],
 		record_test: [path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [

@@ -7,10 +7,10 @@ import { getAllTestsInfosInProject } from "@services/test";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import Link from "next/link";
 import { cleanHeaders } from "@utils/backendRequest";
 import { EmptyTestListContainer } from "@ui/containers/tests/emptyTestListContainer";
 import { Conditional } from "@ui/components/common/Conditional";
+import FullScreenIcon from "../../../src/svg/fullscreen.svg";
 
 function TestCard(props) {
 	const { name, userName, userId, id, featured_video_uri, createdAt } = props;
@@ -51,8 +51,8 @@ function TestCard(props) {
 		<div>
 			<div css={styles.testCard}>
 				<div css={styles.testFeaturedImage}>
-					<div css={styles.lightHouse} onCick={goFullScreen}>
-						<img src={"/svg/lighthouse.svg"} />
+					<div css={styles.fullscreenIcon} onClick={goFullScreen}>
+						<FullScreenIcon css={{ width: "1.25rem" }} />
 					</div>
 					{featured_video_uri && (
 						<video
@@ -215,10 +215,10 @@ const styles = {
 		border-radius: 0.25rem;
 		position: relative;
 	`,
-	lightHouse: css`
+	fullscreenIcon: css`
 		 {
 			position: absolute;
-			bottom: 0.4rem;
+			bottom: 0.65rem;
 			right: 0.5rem;
 		}
 	`,

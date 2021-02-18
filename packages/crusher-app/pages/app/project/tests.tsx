@@ -41,11 +41,17 @@ function TestCard(props) {
 		}
 	}, [videoRef]);
 
+	const goFullScreen = async () => {
+		if (videoRef.current) {
+			await (videoRef.current as HTMLVideoElement).requestFullscreen();
+		}
+	};
+
 	return (
-		<Link href={`/app/tests/editor/${id}`}>
-			<a href={`/app/tests/editor/${id}`} css={styles.testCard}>
+		<div>
+			<div css={styles.testCard}>
 				<div css={styles.testFeaturedImage}>
-					<div css={styles.lightHouse}>
+					<div css={styles.lightHouse} onCick={goFullScreen}>
 						<img src={"/svg/lighthouse.svg"} />
 					</div>
 					{featured_video_uri && (
@@ -80,8 +86,8 @@ function TestCard(props) {
 						</div>
 					</div>
 				</div>
-			</a>
-		</Link>
+			</div>
+		</div>
 	);
 }
 
@@ -89,8 +95,13 @@ function RenderTestCard(props) {
 	const { tests } = props;
 
 	const finalOut = tests.reduce(function (prev, current, index) {
-		if (index % 3 == 0) {
-			const rowItems = [tests[index], tests[index + 1], tests[index + 2]]
+		if (index % 4 == 0) {
+			const rowItems = [
+				tests[index],
+				tests[index + 1],
+				tests[index + 2],
+				tests[index + 4],
+			]
 				.filter((val) => {
 					return typeof val !== "undefined";
 				})
@@ -186,6 +197,13 @@ const styles = {
 		padding-bottom: 0.8rem;
 		margin-left: 3.75rem;
 		margin-bottom: 2rem;
+		cursor: pointer;
+		border-radius: 0.4rem;
+
+		&:hover {
+			opacity: 0.95;
+			box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.51);
+		}
 		&:first-child {
 			margin-left: 0;
 		}
@@ -206,8 +224,9 @@ const styles = {
 	`,
 	testCardContentContainer: css`
 		display: flex;
-		margin-top: 1.1rem;
+		margin-top: 0.8rem;
 		padding-right: 0.3rem;
+		padding-left: 0.5rem;
 	`,
 	testCardInfo: css`
 		flex: 1;
@@ -246,6 +265,7 @@ const styles = {
 	testEdit: css``,
 	testsRowContainer: css`
 		display: flex;
+		justify-content: space-between;
 	`,
 	activitiesPlaceholderContainer: css`
 		border-radius: 0.25rem;

@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import { ActionStepList } from "./actionStepList";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
@@ -19,9 +19,26 @@ interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
 }
 
+const TIPS = [
+	"Click on toggle to select element using inspector",
+	"Generate quick seo checks by clicking on auto generate",
+	"Right click on the element to turn on inspector mode",
+	"Use custom script for complex checks",
+	"Blackout an element to avoid running visual checks against that element",
+	"Hover mouse for 2s to record hover on an element",
+	"Remember to record hover if the next actions are dependent on it",
+];
+
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const actions = useSelector(getActions);
 	const recordingState = useSelector(getActionsRecordingState);
+	const [currentTip, setCurrentTip] = useState(TIPS[0]);
+
+	useEffect(() => {
+		const newTipIndex = Math.floor(Math.random() * (TIPS.length - 1 - 0 + 1)) + 0;
+		setCurrentTip(TIPS[newTipIndex]);
+	}, []);
+
 	return (
 		<div style={sidebarStyle}>
 			<div style={tipContainerStyle}>
@@ -30,7 +47,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				</div>
 				<div style={tipContentStyle}>
 					<div style={tipTitleStyle}>Tip of the session</div>
-					<div style={tipDescStyle}>Click on play to replay selected test</div>
+					<div style={tipDescStyle}>{currentTip}</div>
 				</div>
 			</div>
 			<div style={mainContainerStyle}>

@@ -4,7 +4,7 @@ import { iGithubIntegration } from "../../../../../crusher-shared/types/mongo/gi
 
 @Service()
 export class GitIntegrationsService {
-	async linkRepo(repoId: number, repoName: string, repoLink: string, projectId: number, userId: number) {
+	async linkRepo(repoId: number, repoName: string, installationId: string, repoLink: string, projectId: number, userId: number) {
 		console.log(repoId, repoName, repoLink, projectId, userId);
 		return new GitIntegrations({
 			repoId: repoId,
@@ -12,10 +12,12 @@ export class GitIntegrationsService {
 			repoLink: repoLink,
 			projectId: projectId,
 			userId: userId,
+			installationId: installationId,
 		}).save();
 	}
 
 	async getInstallationRepo(repoName: string, projectId: number): Promise<iGithubIntegration | null> {
+		console.log("REPO NAME IS", repoName, projectId);
 		return new Promise((resolve, reject) => {
 			GitIntegrations.findOne({ projectId: { $eq: projectId }, repoName: { $eq: repoName } }, (err, doc) => {
 				if (err || !doc) return resolve(null);

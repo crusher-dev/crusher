@@ -43,7 +43,7 @@ export default class EventRecording {
 			...this.defaultState,
 		};
 
-		this.onLeftClick = this.onLeftClick.bind(this);
+		this.onRightClick = this.onRightClick.bind(this);
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseOver = this.handleMouseOver.bind(this);
 		this.handleMouseOut = this.handleMouseOut.bind(this);
@@ -198,27 +198,33 @@ export default class EventRecording {
 		this.eventsController.simulateHoverOnElement(this.state.targetElement);
 	}
 
-	onLeftClick(event: Event) {
+	onRightClick(event: Event) {
 		event.preventDefault();
-		this.turnInspectModeOnInParentFrame();
+		if (this.isInspectorMoving) {
+			this.removeHighLightFromNode(event.target as HTMLElement);
+			this.enableJavascriptEvents();
+			this.turnInspectModeOffInParentFrame();
+			this.unpin();
+		} else {
+			this.turnInspectModeOnInParentFrame();
+			const eventExceptions = {
+				mousemove: this.handleMouseMove.bind(this),
+				mouseover: this.handleMouseMove.bind(this),
+				mouseout: this.handleMouseOut.bind(this),
+				input: this.handleKeyPress.bind(this),
+				click: this.handleDocumentClick.bind(this),
+				contextmenu: this.onRightClick.bind(this),
+			};
 
-		const eventExceptions = {
-			mousemove: this.handleMouseMove.bind(this),
-			mouseover: this.handleMouseMove.bind(this),
-			mouseout: this.handleMouseOut.bind(this),
-			input: this.handleKeyPress.bind(this),
-			click: this.handleDocumentClick.bind(this),
-			contextmenu: this.onLeftClick.bind(this),
-		};
+			if (!this.resetUserEventsToDefaultCallback) {
+				this.resetUserEventsToDefaultCallback = DOM.disableAllUserEvents(
+					eventExceptions,
+				);
+			}
 
-		if (!this.resetUserEventsToDefaultCallback) {
-			this.resetUserEventsToDefaultCallback = DOM.disableAllUserEvents(
-				eventExceptions,
-			);
+			this.removeHighLightFromNode(event.target as HTMLElement);
+			this.updateEventTarget(event.target as HTMLElement, event);
 		}
-
-		this.removeHighLightFromNode(event.target as HTMLElement);
-		this.updateEventTarget(event.target as HTMLElement, event);
 	}
 
 	handleMouseMove(event: MouseEvent) {
@@ -390,7 +396,7 @@ export default class EventRecording {
 		document.body.addEventListener("mousemove", this.handleMouseMove, true);
 		document.body.addEventListener("mouseover", this.handleMouseOver, true);
 		document.body.addEventListener("mouseout", this.handleMouseOut, true);
-		document.addEventListener("contextmenu", this.onLeftClick, true);
+		document.addEventListener("contextmenu", this.onRightClick, true);
 
 		window.addEventListener("scroll", this.handleScroll, true);
 

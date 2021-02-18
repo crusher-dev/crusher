@@ -14,8 +14,8 @@ export class GitIntegrationsController {
 	@Post("/link")
 	async linkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: iLinkGithubRepoRequest): Promise<linkGithubRepoResponse> {
 		const { user_id } = user;
-		const { projectId, repoId, repoName, repoLink } = body;
-		const doc = await this.gitIntegrationsService.linkRepo(repoId, repoName, repoLink, projectId, user_id);
+		const { projectId, repoId, repoName, repoLink, installationId } = body;
+		const doc = await this.gitIntegrationsService.linkRepo(repoId, repoName, installationId, repoLink, projectId, user_id);
 		return { ...(doc.toObject() as any), _id: doc._id.toString() };
 	}
 

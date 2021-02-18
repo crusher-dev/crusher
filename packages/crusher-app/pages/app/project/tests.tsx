@@ -7,10 +7,10 @@ import { getAllTestsInfosInProject } from "@services/test";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import Link from "next/link";
 import { cleanHeaders } from "@utils/backendRequest";
 import { EmptyTestListContainer } from "@ui/containers/tests/emptyTestListContainer";
 import { Conditional } from "@ui/components/common/Conditional";
+import FullScreenIcon from "../../../src/svg/fullscreen.svg";
 
 function TestCard(props) {
 	const { name, userName, userId, id, featured_video_uri, createdAt } = props;
@@ -41,12 +41,18 @@ function TestCard(props) {
 		}
 	}, [videoRef]);
 
+	const goFullScreen = async () => {
+		if (videoRef.current) {
+			await (videoRef.current as HTMLVideoElement).requestFullscreen();
+		}
+	};
+
 	return (
-		<Link href={`/app/tests/editor/${id}`}>
-			<a href={`/app/tests/editor/${id}`} css={styles.testCard}>
+		<div>
+			<div css={styles.testCard}>
 				<div css={styles.testFeaturedImage}>
-					<div css={styles.lightHouse}>
-						<img src={"/svg/lighthouse.svg"} />
+					<div css={styles.fullscreenIcon} onCick={goFullScreen}>
+						<FullScreenIcon css={{ width: "1.25rem" }} />
 					</div>
 					{featured_video_uri && (
 						<video
@@ -80,8 +86,8 @@ function TestCard(props) {
 						</div>
 					</div>
 				</div>
-			</a>
-		</Link>
+			</div>
+		</div>
 	);
 }
 
@@ -89,8 +95,13 @@ function RenderTestCard(props) {
 	const { tests } = props;
 
 	const finalOut = tests.reduce(function (prev, current, index) {
-		if (index % 3 == 0) {
-			const rowItems = [tests[index], tests[index + 1], tests[index + 2]]
+		if (index % 4 == 0) {
+			const rowItems = [
+				tests[index],
+				tests[index + 1],
+				tests[index + 2],
+				tests[index + 4],
+			]
 				.filter((val) => {
 					return typeof val !== "undefined";
 				})
@@ -186,6 +197,13 @@ const styles = {
 		padding-bottom: 0.8rem;
 		margin-left: 3.75rem;
 		margin-bottom: 2rem;
+		cursor: pointer;
+		border-radius: 0.4rem;
+
+		&:hover {
+			opacity: 0.95;
+			box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.51);
+		}
 		&:first-child {
 			margin-left: 0;
 		}
@@ -197,17 +215,18 @@ const styles = {
 		border-radius: 0.25rem;
 		position: relative;
 	`,
-	lightHouse: css`
+	fullscreenIcon: css`
 		 {
 			position: absolute;
-			bottom: 0.4rem;
+			bottom: 0.65rem;
 			right: 0.5rem;
 		}
 	`,
 	testCardContentContainer: css`
 		display: flex;
-		margin-top: 1.1rem;
+		margin-top: 0.8rem;
 		padding-right: 0.3rem;
+		padding-left: 0.5rem;
 	`,
 	testCardInfo: css`
 		flex: 1;
@@ -246,6 +265,7 @@ const styles = {
 	testEdit: css``,
 	testsRowContainer: css`
 		display: flex;
+		justify-content: space-between;
 	`,
 	activitiesPlaceholderContainer: css`
 		border-radius: 0.25rem;

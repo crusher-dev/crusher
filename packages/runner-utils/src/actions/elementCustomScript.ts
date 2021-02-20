@@ -17,7 +17,7 @@ export const runScriptOnElement = (script: string, elHandle: ElementHandle): Pro
 				    try{
 				        const scriptFunction = ${script};
 				        console.log(scriptFunction);
-				        resolve(scriptFunction(elHandle));
+				        resolve(await scriptFunction(elHandle));
 				    } catch(err){
 				      reject(err);
 				    }

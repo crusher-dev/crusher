@@ -37,11 +37,11 @@ export class AdvancedURL {
 		);
 	}
 
-	static getUrlFromCrusherExtensionUrl(extensionUrl: string): string {
+	static getUrlFromCrusherExtensionUrl(extensionUrl: string): string | null {
 		const url = getQueryStringParams("url", extensionUrl);
 
 		if (!url || embeddedUrlRegExp.test(url)) {
-			throw new Error("No/Invalid url passed");
+			return null;
 		}
 
 		const embeddedUrlMatches = url.match(embeddedUrlRegExp);

@@ -14,10 +14,15 @@ import { submitPostDataWithForm } from "../utils/helpers";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { updateActionsModalState } from "../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../interfaces/actionsModalState";
+import { Conditional } from "./components/conditional";
+import { StartupModal } from "./containers/app/modals/startupModal";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
 	const [recordingStartTime] = useState(new Date());
+	const [url] = useState(
+		AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
+	);
 
 	useEffect(() => {
 		const store = getStore();
@@ -55,7 +60,7 @@ const App = () => {
 			window.location.href,
 		);
 		const userAgent = AdvancedURL.getUserAgentFromUrl(
-			AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
+			AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string,
 		);
 		store.dispatch(
 			recordAction({
@@ -76,12 +81,17 @@ const App = () => {
 
 	return (
 		<div style={containerStyle}>
-			<BrowserWindow
-				deviceIframeRef={deviceIframeRef}
-				saveTestCallback={saveTest}
-			/>
-			<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
-			<ModalManager deviceIframeRef={deviceIframeRef} />
+			<Conditional If={url}>
+				<BrowserWindow
+					deviceIframeRef={deviceIframeRef}
+					saveTestCallback={saveTest}
+				/>
+				<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
+				<ModalManager deviceIframeRef={deviceIframeRef} />
+			</Conditional>
+			<Conditional If={!url}>
+				<StartupModal isOpen={true} />
+			</Conditional>
 			<link
 				rel="stylesheet"
 				href={chrome.runtime.getURL("/styles/devices.min.css")}
@@ -89,17 +99,17 @@ const App = () => {
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/app.css")} />
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")} />
 			<style>{`
-			.CodeMirror {
-font-size: 0.9rem;
-}
-`}</style>
+					.CodeMirror {
+						font-size: 0.9rem;
+					}
+				`}</style>
 		</div>
 	);
 };
 
 const containerStyle = {
 	display: "flex",
-	height: "auto",
+	height: "100%",
 	background: "rgb(40, 40, 40)",
 };
 

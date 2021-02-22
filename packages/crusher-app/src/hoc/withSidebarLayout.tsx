@@ -202,6 +202,7 @@ function LeftSection(props: any) {
 					<Conditional If={showDropDown}>
 						<SidebarTeamDropdown
 							onAddProjectCallback={setShowAddProject.bind(this, true)}
+							onShowInviteTeamMemberModal={openInviteMembersModal}
 							onOutsideClick={toggleSettingsDropDown}
 						/>
 					</Conditional>

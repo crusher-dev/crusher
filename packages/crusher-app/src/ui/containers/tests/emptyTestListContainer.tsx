@@ -5,7 +5,9 @@ import CreateTestPageIllustration from "../../../../public/assets/img/illustrati
 import AddIcon from "../../../svg/roundAdd.svg";
 import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
 
-const EmptyTestListContainer = () => {
+const EmptyTestListContainer = (props: any) => {
+	const { onCreateTest } = props;
+
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -27,7 +29,7 @@ const EmptyTestListContainer = () => {
 				>
 					Watch Tutorial
 				</button>
-				<button css={[buttonCSS, createTestButtonCSS]}>
+				<button css={[buttonCSS, createTestButtonCSS]} onClick={onCreateTest}>
 					{" "}
 					<AddIcon css={createTestImageCSS} />
 					Create a Test

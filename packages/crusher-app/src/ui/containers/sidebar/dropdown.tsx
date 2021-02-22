@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { css } from "@emotion/core";
 import OutsideClickHandler from "react-outside-click-handler";
 import AddIcon from "../../../../public/svg/sidebarSettings/addDropdown.svg";
@@ -26,10 +26,16 @@ export const ListItem = (props: iListItemProps) => {
 
 interface iSidebarTeamDropdownProps {
 	onOutsideClick: () => void;
+	onShowInviteTeamMemberModal: any;
 	onAddProjectCallback: () => void;
 }
+
 export const SidebarTeamDropdown = (props: iSidebarTeamDropdownProps) => {
-	const { onOutsideClick, onAddProjectCallback } = props;
+	const {
+		onOutsideClick,
+		onShowInviteTeamMemberModal,
+		onAddProjectCallback,
+	} = props;
 
 	const logoutUser = () => {
 		redirectToBackendURI(resolvePathToBackendURI("/user/logout"));
@@ -38,7 +44,11 @@ export const SidebarTeamDropdown = (props: iSidebarTeamDropdownProps) => {
 	return (
 		<OutsideClickHandler onOutsideClick={onOutsideClick}>
 			<ul css={settingsDropdownCSS}>
-				<ListItem title={"Add team member"} icon={AddIcon} />
+				<ListItem
+					title={"Add team member"}
+					icon={AddIcon}
+					onClick={onShowInviteTeamMemberModal}
+				/>
 				<ListItem
 					title={"Add project"}
 					icon={AddIcon}

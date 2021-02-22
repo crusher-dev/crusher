@@ -9,7 +9,7 @@ const Chrome = typeof chrome !== "undefined" ? (chrome as any) : null;
 const getChromeExtensionId = (): string => {
 	return process.env.NEXT_PUBLIC_EXTENSION_ID
 		? process.env.NEXT_PUBLIC_EXTENSION_ID
-		: "fdbnpjonlhmjhjfojacolckkbipcecoe";
+		: "gfiagiidgjjnmklhbalcjbmdjbpphdln";
 };
 
 const checkIfExtensionPresent = (): Promise<boolean> => {

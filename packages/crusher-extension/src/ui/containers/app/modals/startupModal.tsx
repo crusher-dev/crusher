@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
+import { generateCrusherExtensionUrl } from "../../../../../../crusher-shared/utils/extension";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -16,6 +17,12 @@ const StartupModal = (props: iStartupModalProps) => {
 	const startRecording = () => {
 		if (targetURL && targetURL !== "") {
 			window.location.href = `/test_recorder.html?url=${targetURL}&device=GoogleChromeLargeScreen`;
+			window.location.href = generateCrusherExtensionUrl(
+				null,
+				targetURL,
+				"GoogleChromeLargeScreen",
+				true,
+			);
 		}
 	};
 

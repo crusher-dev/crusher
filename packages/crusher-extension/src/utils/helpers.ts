@@ -32,11 +32,15 @@ export function executeScript(name: string, tabId: number, cb?: any) {
 	});
 }
 
-export function submitPostDataWithForm(url: string, options: any = {}) {
+export function submitPostDataWithForm(
+	url: string,
+	options: any = {},
+	target = "_blank",
+) {
 	const form = document.createElement("form");
 	form.method = "post";
 	form.action = url;
-	form.target = "_blank";
+	form.target = target;
 	const optionKeys = Object.keys(options);
 	for (const optionKey of optionKeys) {
 		const hiddenField = document.createElement("input");

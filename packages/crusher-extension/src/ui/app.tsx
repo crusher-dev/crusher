@@ -51,6 +51,7 @@ const App = () => {
 				events: escape(JSON.stringify(steps)),
 				totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
 			},
+			"_self",
 		);
 	};
 

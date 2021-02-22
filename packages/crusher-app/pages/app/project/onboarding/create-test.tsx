@@ -4,6 +4,8 @@ import withSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
 import { useState, useEffect } from "react";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "@redux/stateUtils/user";
 
 const features = [
 	{ message: "😃 Ship Faster", color: "#FF5A8C" },
@@ -19,7 +21,8 @@ const features = [
 ];
 
 function ProjectOnboardingCreateTest(props) {
-	const { userInfo, userStatus } = props;
+	const { userStatus } = props;
+	const userInfo = useSelector(getUserInfo);
 	const [featuresMessage, setFeaturesMessage] = useState(0);
 
 	const changeFeatureMessage = () => {
@@ -39,7 +42,11 @@ function ProjectOnboardingCreateTest(props) {
 		console.log("Video has finished playing");
 	};
 
-	const firstName = userInfo.name.split(" ")[0];
+	const handleCreateFirstTest = () => {
+		alert("HELLO WORLD");
+	};
+
+	const firstName = userInfo.first_name;
 	return (
 		<>
 			<OnboardingPopup userStatus={userStatus} />
@@ -69,7 +76,7 @@ function ProjectOnboardingCreateTest(props) {
 					</div>
 					<div>
 						<div css={styles.buttonContainer}>
-							<CreateTest label="Create first test" />
+							<CreateTest onClick={handleCreateFirstTest} label="Create first test" />
 						</div>
 
 						<div css={styles.migrateTest}>Already Have testing? Migrate test</div>

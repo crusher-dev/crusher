@@ -59,11 +59,6 @@ const userMenuData = {
 	primarySVG: TeamSVG,
 	subMenu: [
 		{
-			id: "profile",
-			title: "Profile",
-			link: "/app/settings/user/profile",
-		},
-		{
 			id: "login-connections",
 			title: "Login connections",
 			link: "/app/settings/user/login-connections",
@@ -75,11 +70,6 @@ const teamMenuData = {
 	title: "Team",
 	primarySVG: TeamSVG,
 	subMenu: [
-		{
-			id: "team-basic-settings",
-			title: "Basic",
-			link: "/app/settings/team/basic",
-		},
 		{
 			id: "team-members-settings",
 			title: "Team members",
@@ -172,7 +162,7 @@ function ProjectContainer(props: iProjectContainerProps) {
 	const handleProjectChange = (projectId: number) => {
 		if (selectedProject !== projectId) {
 			store.dispatch(saveSelectedProjectInRedux(projectId));
-			window.location.reload();
+			Router.replace("/app/project/dashboard");
 		}
 	};
 
@@ -235,11 +225,11 @@ function MenuContainer(props: iMenuContainerProps) {
 				</div>
 			</div>
 
+			<MainMenuItem data={projectMenuData} />
+
 			<MainMenuItem data={userMenuData} />
 
 			<MainMenuItem data={teamMenuData} />
-
-			<MainMenuItem data={projectMenuData} />
 
 			<div style={{ marginTop: "auto" }}>
 				<div css={menuBottomLink} onClick={showAddTeamMemberModal}>

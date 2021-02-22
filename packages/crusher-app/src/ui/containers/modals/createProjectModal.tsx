@@ -6,7 +6,10 @@ import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
 import { addProject } from "@services/projects";
 
-import { addProjectInRedux } from "@redux/actions/project";
+import {
+	addProjectInRedux,
+	saveSelectedProjectInRedux,
+} from "@redux/actions/project";
 
 import { store } from "@redux/store";
 import Router from "next/router";
@@ -34,8 +37,9 @@ const CreateProjectModal = (props: iProps) => {
 	const createNewProject = (projectName: string) => {
 		addProject(projectName).then(async (projectId) => {
 			await store.dispatch(addProjectInRedux(projectName, projectId));
-			onClose();
+			await store.dispatch(saveSelectedProjectInRedux(projectId));
 			Router.replace("/app/project/dashboard");
+			onClose();
 		});
 	};
 

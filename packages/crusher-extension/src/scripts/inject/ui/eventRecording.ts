@@ -53,7 +53,7 @@ export default class EventRecording {
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(
 			this,
 		);
-		this.handleDocumentClick = this.handleDocumentClick.bind(this);
+		this.handleWindowClick = this.handleWindowClick.bind(this);
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
@@ -212,7 +212,7 @@ export default class EventRecording {
 				mouseover: this.handleMouseMove.bind(this),
 				mouseout: this.handleMouseOut.bind(this),
 				input: this.handleKeyPress.bind(this),
-				click: this.handleDocumentClick.bind(this),
+				click: this.handleWindowClick.bind(this),
 				contextmenu: this.onRightClick.bind(this),
 			};
 
@@ -347,10 +347,14 @@ export default class EventRecording {
 	}
 
 	// eslint-disable-next-line consistent-return
-	handleDocumentClick(event: any) {
+	handleWindowClick(event: any) {
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		if (isRecorderCover) {
+			// Disable event propagation to stop other event listener to act like outSideClick Detector.
+			event.stopPropagation();
+			event.preventDefault();
+
 			console.log("Printing elements at this location");
 			const elements = this.elementsAtLocation(event.clientX, event.clientY);
 			target = elements[0];
@@ -409,7 +413,7 @@ export default class EventRecording {
 
 		window.onbeforeunload = this.handleBeforeNavigation;
 		document.body.addEventListener("keypress", this.handleKeyPress, true);
-		document.addEventListener("click", this.handleDocumentClick, true);
+		window.addEventListener("click", this.handleWindowClick, true);
 		setInterval(this.pollInterval, 300);
 	}
 

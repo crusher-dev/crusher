@@ -30,7 +30,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 		actionsRecordingState.type === ACTIONS_RECORDING_STATE.ELEMENT;
 
 	const [url, setUrl] = useState(
-		AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
+		AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string,
 	);
 
 	const selectedDevice = AdvancedURL.getDeviceFromCrusherExtensionUrl(

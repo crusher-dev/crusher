@@ -49,10 +49,6 @@ function ProjectOnboardingCreateTest(props) {
 		console.log("Video has finished playing");
 	};
 
-	const handleCreateFirstTest = () => {
-		setShouldShowCreateTestModal(true);
-	};
-
 	const closeCreateTestModal = () => {
 		setShouldShowCreateTestModal(false);
 	};

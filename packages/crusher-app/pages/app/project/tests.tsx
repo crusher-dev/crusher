@@ -11,6 +11,9 @@ import { cleanHeaders } from "@utils/backendRequest";
 import { EmptyTestListContainer } from "@ui/containers/tests/emptyTestListContainer";
 import { Conditional } from "@ui/components/common/Conditional";
 import FullScreenIcon from "../../../src/svg/fullscreen.svg";
+import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
+import { CreateTestModal } from "@ui/containers/modals/createTestModal";
+import { checkIfExtensionPresent } from "@utils/extension";
 
 function TestCard(props) {
 	const { name, userName, userId, id, featured_video_uri, createdAt } = props;
@@ -134,12 +137,36 @@ function ProjectTestsList(props) {
 	const [isLoading, setIsLoading] = useState(false);
 	const projectsList = useSelector(getProjects);
 	const selectedProjectId = useSelector(getSelectedProject);
-
+	const [showCreateTestModal, setShouldShowCreateTestModal] = useState(false);
+	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
+		false,
+	);
 	const selectedProject = projectsList.find((project) => {
 		return project.id === selectedProjectId;
 	});
 
 	const isTestsPresent = !isLoading && projectTests.length > 0;
+
+	const closeCreateTestModal = () => {
+		setShouldShowCreateTestModal(false);
+	};
+
+	const handleCreateTest = async () => {
+		const isExtensionInstalled = await checkIfExtensionPresent();
+		if (!isExtensionInstalled) {
+			setShowInstallExtensionModal(true);
+		} else {
+			setShouldShowCreateTestModal(true);
+		}
+	};
+	const closeInstallExtensionModal = () => {
+		setShowInstallExtensionModal(false);
+	};
+
+	const handleExtensionDownloaded = () => {
+		closeInstallExtensionModal();
+		setShouldShowCreateTestModal(true);
+	};
 
 	return (
 		<div
@@ -157,8 +184,18 @@ function ProjectTestsList(props) {
 				</>
 			</Conditional>
 			<Conditional If={!isTestsPresent}>
-				<EmptyTestListContainer />
+				<EmptyTestListContainer onCreateTest={handleCreateTest} />
 			</Conditional>
+
+			<InstallExtensionModal
+				isOpen={showInstallExtensionModal}
+				onClose={closeInstallExtensionModal}
+				onExtensionDownloaded={handleExtensionDownloaded}
+			/>
+			<CreateTestModal
+				isOpen={showCreateTestModal}
+				onClose={closeCreateTestModal}
+			/>
 		</div>
 	);
 }

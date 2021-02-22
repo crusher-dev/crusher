@@ -108,9 +108,9 @@ export const LogActionCard = (props: iLoginActionCardProps) => {
 					></div>
 				)}
 			</div>
-			<div css={styles.timeTookForStep}>
-				{timeTaken ? (timeTaken / 1000).toFixed(1) : "Few"} sec
-			</div>
+			{/*<div css={styles.timeTookForStep}>*/}
+			{/*	{timeTaken ? (timeTaken / 1000).toFixed(1) : "Few"} sec*/}
+			{/*</div>*/}
 		</div>
 	);
 };

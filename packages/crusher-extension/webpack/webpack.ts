@@ -5,7 +5,7 @@ import * as webpack from "webpack";
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-	mode: "development",
+	mode: "production",
 	entry: {
 		content_script: [
 			path.resolve(__dirname, "../src/scripts/inject/events_listener.ts"),

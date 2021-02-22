@@ -9,6 +9,7 @@ import { addProject } from "@services/projects";
 import { addProjectInRedux } from "@redux/actions/project";
 
 import { store } from "@redux/store";
+import Router from "next/router";
 
 interface iProps {
 	onClose: any;
@@ -34,7 +35,7 @@ const CreateProjectModal = (props: iProps) => {
 		addProject(projectName).then(async (projectId) => {
 			await store.dispatch(addProjectInRedux(projectName, projectId));
 			onClose();
-			window && window.location.reload();
+			Router.replace("/app/project/dashboard");
 		});
 	};
 

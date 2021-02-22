@@ -2,8 +2,13 @@ import { css } from "@emotion/core";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
+import { useSelector } from "react-redux";
+import { getUserInfo } from "@redux/stateUtils/user";
+import { CreateTestModal } from "@ui/containers/modals/createTestModal";
+import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
+import { checkIfExtensionPresent } from "@utils/extension";
 
 const features = [
 	{ message: "😃 Ship Faster", color: "#FF5A8C" },
@@ -19,8 +24,13 @@ const features = [
 ];
 
 function ProjectOnboardingCreateTest(props) {
-	const { userInfo, userStatus } = props;
+	const { userStatus } = props;
+	const userInfo = useSelector(getUserInfo);
 	const [featuresMessage, setFeaturesMessage] = useState(0);
+	const [showCreateTestModal, setShouldShowCreateTestModal] = useState(false);
+	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
+		false,
+	);
 
 	const changeFeatureMessage = () => {
 		const interval = setInterval(() => {
@@ -39,7 +49,28 @@ function ProjectOnboardingCreateTest(props) {
 		console.log("Video has finished playing");
 	};
 
-	const firstName = userInfo.name.split(" ")[0];
+	const closeCreateTestModal = () => {
+		setShouldShowCreateTestModal(false);
+	};
+
+	const handleCreateTest = async () => {
+		const isExtensionInstalled = await checkIfExtensionPresent();
+		if (!isExtensionInstalled) {
+			setShowInstallExtensionModal(true);
+		} else {
+			setShouldShowCreateTestModal(true);
+		}
+	};
+	const closeInstallExtensionModal = () => {
+		setShowInstallExtensionModal(false);
+	};
+
+	const handleExtensionDownloaded = () => {
+		closeInstallExtensionModal();
+		setShouldShowCreateTestModal(true);
+	};
+
+	const firstName = userInfo.first_name;
 	return (
 		<>
 			<OnboardingPopup userStatus={userStatus} />
@@ -69,13 +100,22 @@ function ProjectOnboardingCreateTest(props) {
 					</div>
 					<div>
 						<div css={styles.buttonContainer}>
-							<CreateTest label="Create first test" />
+							<CreateTest onClick={handleCreateTest} label="Create first test" />
 						</div>
 
 						<div css={styles.migrateTest}>Already Have testing? Migrate test</div>
 					</div>
 				</div>
 			</div>
+			<InstallExtensionModal
+				isOpen={showInstallExtensionModal}
+				onClose={closeInstallExtensionModal}
+				onExtensionDownloaded={handleExtensionDownloaded}
+			/>
+			<CreateTestModal
+				isOpen={showCreateTestModal}
+				onClose={closeCreateTestModal}
+			/>
 		</>
 	);
 }

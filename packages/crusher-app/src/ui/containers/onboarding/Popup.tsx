@@ -11,6 +11,7 @@ import { SURVEY_FIELDS, USER_STEP } from "@constants/backend";
 import { validateSurveyData } from "@utils/validation";
 import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
+import { getFullUsername } from "@utils/helpers";
 
 const roleOptions = Object.keys(PERSON_TYPE).map((key) => {
 	return { value: key, label: PERSON_TYPE[key] };
@@ -107,6 +108,8 @@ function UserWelcomeInfo({ setFilledSurvey }) {
 }
 
 function FreeTrialIntro({ setFilledUserWelcome }) {
+	const userInfo = useSelector(getUserInfo);
+
 	const startFreeTrial = () => {
 		_addUserMeta([{ key: USER_STEP.FREE_TRIAL, value: true }])
 			.then(() => {
@@ -124,7 +127,7 @@ function FreeTrialIntro({ setFilledUserWelcome }) {
 				Experience power of no-code testing without any interruption
 			</div>
 
-			<div css={welcomeUserText}>👋 Welcome Max!</div>
+			<div css={welcomeUserText}>👋 Welcome {userInfo.first_name}!</div>
 
 			<div css={welcomeIntro}>
 				If you have feature request, encounter a bug or want to discuss

@@ -6,6 +6,7 @@ import { css } from "@emotion/core";
 import CrossIcon from "../../../../public/svg/modals/cross.svg";
 import { checkIfExtensionPresent } from "@utils/extension";
 import { Conditional } from "@ui/components/common/Conditional";
+import { Link } from "@material-ui/core";
 
 interface iProps {
 	isOpen: boolean;
@@ -43,6 +44,10 @@ const InstallExtensionModal = (props: iProps) => {
 	}, [isOpen]);
 
 	const downloadExtension = () => {
+		window.open(
+			"https://chrome.google.com/webstore/detail/crusher-puppeteerplaywrig/gfiagiidgjjnmklhbalcjbmdjbpphdln?hl=en-GB&authuser=1",
+			"_blank",
+		);
 		setShouldStartWaiting(true);
 	};
 
@@ -73,7 +78,9 @@ const InstallExtensionModal = (props: iProps) => {
 					onClick={downloadExtension}
 					containerCss={buttonCss}
 				/>
-				<div css={skipDiv}>skip & browse project</div>
+				<Link href={"/app/project/tests/"} css={skipDiv}>
+					skip & browse project
+				</Link>
 
 				<Conditional If={shouldStartWaiting}>
 					<div>

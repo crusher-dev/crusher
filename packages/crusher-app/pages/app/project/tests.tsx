@@ -253,11 +253,10 @@ const styles = {
 		position: relative;
 	`,
 	fullscreenIcon: css`
-		 {
-			position: absolute;
-			bottom: 0.65rem;
-			right: 0.5rem;
-		}
+		position: absolute;
+		bottom: 0.65rem;
+		right: 0.5rem;
+		z-index: 999;
 	`,
 	testCardContentContainer: css`
 		display: flex;
@@ -302,7 +301,11 @@ const styles = {
 	testEdit: css``,
 	testsRowContainer: css`
 		display: flex;
-		justify-content: space-between;
+		& > div {
+			&:not(:first-child) {
+				margin-left: 4rem;
+			}
+		}
 	`,
 	activitiesPlaceholderContainer: css`
 		border-radius: 0.25rem;

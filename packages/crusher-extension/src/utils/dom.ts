@@ -69,15 +69,15 @@ export class DOM {
 			if (eventExceptionNames.includes(event.type)) {
 				eventExceptions[event.type](event);
 			}
-			return false;
+			 return false;
 		};
 
 		for (let i = 0, l = events.length; i < l; i++) {
-			document.addEventListener(events[i], handler, true);
+			window.addEventListener(events[i], handler, true);
 		}
 		return () => {
 			for (let i = 0, l = events.length; i < l; i++) {
-				document.removeEventListener(events[i], handler, true);
+				window.removeEventListener(events[i], handler, true);
 			}
 		};
 	}

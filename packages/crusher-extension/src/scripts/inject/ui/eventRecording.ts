@@ -397,10 +397,10 @@ export default class EventRecording {
 	}
 
 	registerNodeListeners() {
-		document.body.addEventListener("mousemove", this.handleMouseMove, true);
-		document.body.addEventListener("mouseover", this.handleMouseOver, true);
-		document.body.addEventListener("mouseout", this.handleMouseOut, true);
-		document.addEventListener("contextmenu", this.onRightClick, true);
+		window.addEventListener("mousemove", this.handleMouseMove, true);
+		window.addEventListener("mouseover", this.handleMouseOver, true);
+		window.addEventListener("mouseout", this.handleMouseOut, true);
+		window.addEventListener("contextmenu", this.onRightClick, true);
 
 		window.addEventListener("scroll", this.handleScroll, true);
 
@@ -412,13 +412,13 @@ export default class EventRecording {
 		})(window.open);
 
 		window.onbeforeunload = this.handleBeforeNavigation;
-		document.body.addEventListener("keypress", this.handleKeyPress, true);
+		window.addEventListener("keypress", this.handleKeyPress, true);
 		window.addEventListener("click", this.handleWindowClick, true);
 		setInterval(this.pollInterval, 300);
 	}
 
 	removeNodeListeners() {
-		document.body.removeEventListener("mousemove", this.handleMouseMove, true);
+		window.removeEventListener("mousemove", this.handleMouseMove, true);
 	}
 
 	boot(isFirstTime = false) {

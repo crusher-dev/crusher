@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "ts-node scripts/dev",
 		"dev": "node scripts/build.js && NODE_ENV=development webpack --config webpack/webpack.ts --mode=development --watch",
-		"build": "node scripts/build.js && webpack --config webpack/webpack.ts --progress",
+		"build": "node scripts/build.js && webpack --config webpack/webpack.prod.ts --progress",
 		"lint": "prettier --write ."
 	},
 	"dependencies": {

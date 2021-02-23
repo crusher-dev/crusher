@@ -97,13 +97,26 @@ function handleRecordAction(action: iAction) {
 			if (!lastRecordedAction)
 				throw new Error("Add input recorded before navigate url");
 
-			const isAddingInputToSameLastElement =
-				lastRecordedAction.type === ACTIONS_IN_TEST.ADD_INPUT &&
-				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
-					(action.payload.selectors as iSelectorInfo[])[0].value;
+			const isLastEventAddInput =
+				lastRecordedAction.type === ACTIONS_IN_TEST.ADD_INPUT;
+			if (!isLastEventAddInput) {
+				action.payload.meta.value = [action.payload.meta.value];
+				store.dispatch(recordAction(action));
+				return false;
+			}
+
+			const currentXpath = action.payload.selectors!.find(
+				(selector) => selector.type === "xpath",
+			);
+
+			const lastActionXpath = lastRecordedAction.payload.selectors!.find(
+				(selector) => selector.type === "xpath",
+			);
 
 			// Store add inputs in an array values
-			if (!isAddingInputToSameLastElement) {
+			if (
+				!(isLastEventAddInput && currentXpath!.value === lastActionXpath!.value)
+			) {
 				action.payload.meta.value = [action.payload.meta.value];
 				store.dispatch(recordAction(action));
 			} else {

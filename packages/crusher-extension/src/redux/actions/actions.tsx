@@ -5,6 +5,7 @@ import { ACTIONS_IN_TEST } from "../../../../crusher-shared/constants/recordedAc
 
 export const RECORD_ACTION = "RECORD_ACTION";
 export const UPDATE_LAST_RECORDED_ACTION = "UPDATE_LAST_RECORDED_ACTION";
+export const DELETE_RECORDED_ACTION = "DELETE_RECORDED_ACTION";
 
 export const recordAction = (action: iAction) => {
 	const store = getStore();
@@ -27,4 +28,9 @@ export const recordAction = (action: iAction) => {
 export const updateLastRecordedAction = (actionToBeReplacedWith: iAction) => ({
 	type: UPDATE_LAST_RECORDED_ACTION,
 	payload: { actionToBeReplacedWith: actionToBeReplacedWith },
+});
+
+export const deleteRecordedAction = (actionIndex: number) => ({
+	type: DELETE_RECORDED_ACTION,
+	payload: { actionIndex: actionIndex },
 });

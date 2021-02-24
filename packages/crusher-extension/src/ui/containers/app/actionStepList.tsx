@@ -8,9 +8,15 @@ import {
 } from "../../../interfaces/css";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { iAction } from "../../../../../crusher-shared/types/action";
+import { useSelector } from "react-redux";
+import { getActions } from "../../../redux/selectors/actions";
+import { getStore } from "../../../redux/store";
+import { deleteRecordedAction } from "../../../redux/actions/actions";
+import { Conditional } from "../../components/conditional";
 
 interface iActionProps {
 	action: iAction;
+	onDelete: (actionIndex: number) => void;
 	index: number;
 	style?: React.CSSProperties;
 }
@@ -41,7 +47,13 @@ const ICONS = {
 };
 
 const Action = (props: iActionProps) => {
-	const { action, index } = props;
+	const { action, index, onDelete } = props;
+
+	const handleDelete = () => {
+		onDelete(index);
+	};
+
+	const isDefaultAction = index < 2;
 
 	return (
 		<li style={stepStyle}>
@@ -52,23 +64,39 @@ const Action = (props: iActionProps) => {
 					)}
 				/>
 			</div>
-			<div>
+			<div style={actionItemTextContainer}>
 				<div style={stepActionStyle}>{action.type}</div>
 				<div style={stepSelectorContainerStyle}>
 					<div style={stepSelectorStyle}>{getActionDescription(action)}</div>
 				</div>
 			</div>
+			<Conditional If={!isDefaultAction}>
+				<div style={deleteIconContainerStyle} onClick={handleDelete}>
+					<img src={"/icons/delete.svg"} style={deleteIconStyle} />
+				</div>
+			</Conditional>
 			<div style={stepIndexNumberingStyle}>{index + 1}</div>
 		</li>
 	);
 };
 
-interface iActionStepListProps {
-	items: Array<iAction>;
-}
+const actionItemTextContainer = {
+	flex: 0.8,
+	overflow: "hidden",
+};
 
-const ActionStepList = (props: iActionStepListProps) => {
-	const { items } = props;
+const deleteIconContainerStyle = {
+	display: "flex",
+	alignItems: "center",
+	marginLeft: "auto",
+	paddingRight: "1rem",
+};
+const deleteIconStyle = {
+	width: 16,
+};
+
+const ActionStepList = () => {
+	const actions = useSelector(getActions);
 
 	useEffect(() => {
 		const testListContainer: any = document.querySelector("#stepsListContainer");
@@ -76,9 +104,15 @@ const ActionStepList = (props: iActionStepListProps) => {
 		testListContainer.scrollBy(0, elementHeight);
 	});
 
-	const stepList = items.map((step: iAction, index: number) => {
+	const handleDeleteAction = (actionIndex: number) => {
+		const store = getStore();
+		store.dispatch(deleteRecordedAction(actionIndex));
+	};
+
+	const stepList = actions.map((step: iAction, index: number) => {
 		return (
 			<Action
+				onDelete={handleDeleteAction}
 				style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }}
 				key={index}
 				index={index}
@@ -127,6 +161,7 @@ const stepStyle = {
 };
 
 const stepImageStyle = {
+	flex: 0.1,
 	padding: "0 0.9rem",
 };
 
@@ -155,8 +190,8 @@ const stepIndexNumberingStyle = {
 	fontSize: "0.75rem",
 	fontStyle: "normal",
 	fontWeight: FONT_WEIGHT.BOLD,
-	bottom: "0.5rem",
-	right: "1.375rem",
+	bottom: "0.375rem",
+	left: "1.875rem",
 };
 
 export { ActionStepList };

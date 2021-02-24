@@ -1,7 +1,6 @@
 import React, { RefObject, useEffect, useState } from "react";
 import { ActionStepList } from "./actionStepList";
 import { useSelector } from "react-redux";
-import { getActions } from "../../../redux/selectors/actions";
 import { getActionsRecordingState } from "../../../redux/selectors/recorder";
 import { Conditional } from "../../components/conditional";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
@@ -30,7 +29,6 @@ const TIPS = [
 ];
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
-	const actions = useSelector(getActions);
 	const recordingState = useSelector(getActionsRecordingState);
 	const [currentTip, setCurrentTip] = useState(TIPS[0]);
 
@@ -52,7 +50,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 			</div>
 			<div style={mainContainerStyle}>
 				<div style={stepsContainerStyle}>
-					<ActionStepList items={actions} />
+					<ActionStepList />
 				</div>
 				<div style={actionContainerStyle}>
 					<Conditional

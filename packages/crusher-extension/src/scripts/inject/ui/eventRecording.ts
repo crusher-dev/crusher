@@ -44,6 +44,7 @@ export default class EventRecording {
 		};
 
 		this.onRightClick = this.onRightClick.bind(this);
+		this.handleFocus = this.handleFocus.bind(this);
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseOver = this.handleMouseOver.bind(this);
 		this.handleMouseOut = this.handleMouseOut.bind(this);
@@ -396,11 +397,23 @@ export default class EventRecording {
 		);
 	}
 
+	handleFocus(event: FocusEvent) {
+		const target = event.target as HTMLElement;
+		if (["textarea", "input"].includes(target.tagName.toLowerCase())) {
+			this.eventsController.saveCapturedEventInBackground(
+				ACTIONS_IN_TEST.ELEMENT_FOCUS,
+				target,
+				true,
+			);
+		}
+	}
+
 	registerNodeListeners() {
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);
 		window.addEventListener("mouseout", this.handleMouseOut, true);
 		window.addEventListener("contextmenu", this.onRightClick, true);
+		window.addEventListener("focus", this.handleFocus, true);
 
 		window.addEventListener("scroll", this.handleScroll, true);
 

@@ -167,6 +167,19 @@ function handleRecordAction(action: iAction) {
 			}
 			break;
 		}
+		case ACTIONS_IN_TEST.CLICK: {
+			if (!lastRecordedAction)
+				throw new Error("Click recorded before navigate url");
+
+			const isTheLastRecordedActionOnSameElementFocus =
+				lastRecordedAction.type === ACTIONS_IN_TEST.ELEMENT_FOCUS &&
+				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
+					(action.payload.selectors as iSelectorInfo[])[0].value;
+			if (!isTheLastRecordedActionOnSameElementFocus) {
+				store.dispatch(recordAction(action));
+			}
+			break;
+		}
 		default:
 			store.dispatch(recordAction(action));
 			break;

@@ -9,6 +9,7 @@ import navigateUrl from "./navigateUrl";
 import setDevice from "./setDevice";
 import assertElement from './assertElement';
 import runCustomScript from "./elementCustomScript";
+import focusOnElement from './elementFocus';
 
 module.exports = {
 	Element: {
@@ -19,7 +20,8 @@ module.exports = {
 		screenshot: captureElementScreenshot,
 		elementScroll,
 		assertElement,
-		runCustomScript: runCustomScript
+		runCustomScript: runCustomScript,
+		focus: focusOnElement
 	},
 	Page: {
 		screenshot: capturePageScreenshot,

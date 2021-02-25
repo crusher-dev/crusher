@@ -16,7 +16,6 @@ import {
 	updateActionsModalState,
 	updateActionsRecordingState,
 } from "../../../redux/actions/recorder";
-import { toPrettyEventName } from "../../../utils/helpers";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 
 interface iElementLevelActionListProps {
@@ -29,8 +28,8 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 		return {
 			id: action.id,
 			icon: action.icon,
-			title: toPrettyEventName(action.id),
-			desc: action.value,
+			title: action.title,
+			desc: action.desc,
 		};
 	});
 

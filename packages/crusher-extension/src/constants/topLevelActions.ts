@@ -4,21 +4,21 @@ import { iActionDescription } from "../interfaces/actionDescription";
 const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 	{
 		id: TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE,
-		value: "Element",
+		title: "Select an element",
 		icon: chrome.runtime.getURL("icons/actions/inspect-mode.svg"),
-		desc: "Take screenshot, add assertion",
+		desc: "",
 	},
 	{
 		id: TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT,
-		value: "Screenshot",
+		title: "Take viewport screenshot",
 		icon: chrome.runtime.getURL("icons/actions/screenshot.svg"),
-		desc: "Take page screenshot",
+		desc: "",
 	},
 	{
 		id: TOP_LEVEL_ACTION.SHOW_SEO_MODAL,
-		value: "SEO",
+		title: "Add SEO checks",
 		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
-		desc: "Select Element",
+		desc: "",
 	},
 ];
 

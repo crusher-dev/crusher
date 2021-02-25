@@ -39,7 +39,6 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 
 const selectInputContainerStyle = {
 	borderRadius: "0.2rem",
-	marginTop: "1rem",
 	width: "100%",
 	fontWeight: 500,
 	fontFamily: "DM Sans",

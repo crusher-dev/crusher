@@ -44,6 +44,7 @@ const ICONS = {
 	[ACTIONS_IN_TEST.BLACKOUT as ACTIONS_IN_TEST]: "icons/actions/blackout.svg",
 	[ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT as ACTIONS_IN_TEST]: "icons/actions/custom-script.svg",
 	[ACTIONS_IN_TEST.ASSERT_ELEMENT as ACTIONS_IN_TEST]: "icons/actions/assert-modal.svg",
+	[ACTIONS_IN_TEST.ELEMENT_FOCUS as ACTIONS_IN_TEST]: "icons/actions/click.svg",
 };
 
 const Action = (props: iActionProps) => {

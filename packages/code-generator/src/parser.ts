@@ -194,6 +194,17 @@ export class Parser {
 		return code;
 	}
 
+	parseElementFocus(action: iAction) {
+		const code = [];
+		code.push(
+			"await Element.focus(JSON.parse(#{action}), page);\n".pretify({
+				action,
+			}),
+		);
+
+		return code;
+	}
+
 	parseCustomElementScript(action: iAction) {
 		const code = [];
 		code.push(
@@ -232,6 +243,13 @@ export class Parser {
 				this.codeMap.push({
 					type: ACTIONS_IN_TEST.CLICK,
 					code: this.parseElementClick(action),
+				});
+				break;
+			}
+			case ACTIONS_IN_TEST.ELEMENT_FOCUS: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.ELEMENT_FOCUS,
+					code: this.parseElementFocus(action),
 				});
 				break;
 			}

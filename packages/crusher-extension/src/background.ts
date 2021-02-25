@@ -11,9 +11,15 @@ import HttpHeader = chrome.webRequest.HttpHeader;
 import MessageSender = chrome.runtime.MessageSender;
 
 import { AdvancedURL } from "./utils/url";
+import {
+	generateCrusherExtensionUrl,
+	getDefaultDeviceFromDeviceType,
+} from "../../crusher-shared/utils/extension";
+import { DEVICE_TYPES } from "../../crusher-shared/types/deviceTypes";
 
 class BackgroundEventsListener {
 	constructor() {
+		this.handleBrowserIconClick = this.handleBrowserIconClick.bind(this);
 		this.onTabUpdated = this.onTabUpdated.bind(this);
 		this.onTabRemoved = this.onTabRemoved.bind(this);
 		this.onBeforeRequest = this.onBeforeRequest.bind(this);
@@ -167,7 +173,19 @@ class BackgroundEventsListener {
 		return true;
 	}
 
+	handleBrowserIconClick(activeTab: Tab) {
+		const defaultDevice = getDefaultDeviceFromDeviceType(DEVICE_TYPES.DESKTOP);
+		const newURL = generateCrusherExtensionUrl(
+			chrome.extension.getURL("/"),
+			activeTab.url as string,
+			defaultDevice!.id,
+		);
+		chrome.tabs.create({ url: newURL });
+	}
+
 	registerEventListeners() {
+		chrome.browserAction.onClicked.addListener(this.handleBrowserIconClick);
+
 		chrome.tabs.onUpdated.addListener(this.onTabUpdated);
 		chrome.tabs.onRemoved.addListener(this.onTabRemoved);
 

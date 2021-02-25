@@ -21,8 +21,7 @@
 	],
 	"browser_action": {
 		"default_icon": "icons/extension_icon.png",
-		"default_title": "Start recording your test",
-		"default_popup": "popup.html"
+		"default_title": "Start recording your test"
 	},
 	"background": {
 		"page": "background_script.html",

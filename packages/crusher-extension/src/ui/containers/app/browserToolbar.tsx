@@ -12,6 +12,9 @@ import { Button } from "../../components/app/button";
 import { getStore } from "../../../redux/store";
 import { updateActionsModalState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
+import { SelectDeviceInput } from "../popup/selectDeviceInput";
+import { AdvancedURL } from "../../../utils/url";
+import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -33,6 +36,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	} = props;
 
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
+	const [selectedDevice] = useState(
+		AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id,
+	);
 
 	const handleAddressBarUrlChange = (event: ChangeEvent) => {
 		setUrl((event.target as any).value);
@@ -51,6 +57,13 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		},
 		[url],
 	);
+
+	const handleDeviceChange = (deviceId: string) => {
+		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(
+			window.location.href,
+		);
+		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId);
+	};
 
 	const showHowToUseModal = () => {
 		const store = getStore();
@@ -74,6 +87,12 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					onKeyDown={handleKeyDown}
 					onChange={handleAddressBarUrlChange}
 				/>
+				<div style={deviceOptionInputContainerStyle}>
+					<SelectDeviceInput
+						selectedDevice={selectedDevice}
+						selectDevice={handleDeviceChange}
+					/>
+				</div>
 				<Button title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
 				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
@@ -92,6 +111,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	);
 };
 
+const deviceOptionInputContainerStyle = {
+	marginLeft: "auto",
+};
 const browserToolbarStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,

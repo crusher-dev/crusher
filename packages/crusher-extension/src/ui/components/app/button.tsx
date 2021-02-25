@@ -47,7 +47,7 @@ const buttonStyle = (isHovered: boolean) => ({
 	alignItems: "center",
 	cursor: "pointer",
 	width: "auto",
-	marginLeft: "auto",
+	marginLeft: "1.5rem",
 });
 
 const buttonNameStyle = (isIconThere: boolean) => ({

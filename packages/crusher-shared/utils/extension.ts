@@ -1,5 +1,7 @@
 import devices from '../constants/devices';
 import * as path from 'path';
+import { DEVICE_TYPES } from '../types/deviceTypes';
+import { iDevice } from '../types/extension/device';
 
 const generateCrusherExtensionUrl = (baseUrl: string, targetSiteUrl: string, selectedDevice: string): string => {
 	const url = new URL(targetSiteUrl);
@@ -10,4 +12,14 @@ const generateCrusherExtensionUrl = (baseUrl: string, targetSiteUrl: string, sel
 	return `${path.join(baseUrl, 'test_recorder.html')}?url=${url}&device=${selectedDevice}`;
 };
 
-export { generateCrusherExtensionUrl };
+const getDefaultDeviceFromDeviceType = (type: DEVICE_TYPES): iDevice | null => {
+	if (type === DEVICE_TYPES.DESKTOP) {
+		return devices[8];
+	} else if (type === DEVICE_TYPES.MOBILE) {
+		return devices[5];
+	} else {
+		return null;
+	}
+};
+
+export { generateCrusherExtensionUrl, getDefaultDeviceFromDeviceType };

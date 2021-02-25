@@ -11,11 +11,11 @@ import { PIXEL_REM_RATIO } from "@constants/other";
 import { DEVICE_TYPES } from "@crusher-shared/types/deviceTypes";
 import { BaseModal } from "@ui/containers/modals/baseModal";
 import CrossIcon from "../../../../public/svg/modals/cross.svg";
+import { getChromeExtensionId } from "@utils/extension";
 import {
-	getChromeExtensionId,
+	generateCrusherExtensionUrl,
 	getDefaultDeviceFromDeviceType,
-} from "@utils/extension";
-import { generateCrusherExtensionUrl } from "@crusher-shared/utils/extension";
+} from "@crusher-shared/utils/extension";
 
 interface iCreateTestModalProps {
 	isOpen: boolean;

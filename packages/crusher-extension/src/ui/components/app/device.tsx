@@ -31,7 +31,7 @@ const Device = (props: iDeviceProps) => {
 							src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")}
 						/>
 						<div style={pageLoadingCoverTextStyle}>
-							Please wait while we're loading next page
+							{"Please wait while we're loading next page"}
 						</div>
 					</div>
 				</div>
@@ -50,7 +50,7 @@ const Device = (props: iDeviceProps) => {
 						style={browserFrameStyle}
 						scrolling="auto"
 						sandbox="allow-scripts allow-forms allow-same-origin"
-						id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+						id="device_browser"
 						name={"crusher_iframe"}
 						title={device.name}
 						src={url}

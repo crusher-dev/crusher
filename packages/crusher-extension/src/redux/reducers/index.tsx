@@ -3,9 +3,12 @@ import { actionsReducer } from "./actions";
 import { iActionsState } from "../../interfaces/actionsReducer";
 import { recorderReducer } from "./recorder";
 import { iRecorderState } from "../../interfaces/recorderReducer";
+import { onboardingReducer } from "./onboarding";
+import { iOnboardingState } from "../../interfaces/onboardingReducer";
 
 export interface iReduxState {
 	actions: iActionsState;
+	onboarding: iOnboardingState;
 	recorder: iRecorderState;
 }
 
@@ -16,6 +19,7 @@ const rootReducer: Reducer<
 > = combineReducers({
 	actions: actionsReducer,
 	recorder: recorderReducer,
+	onboarding: onboardingReducer,
 });
 
 export { rootReducer };

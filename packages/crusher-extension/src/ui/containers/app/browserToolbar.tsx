@@ -15,6 +15,8 @@ import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
+import { OnboardingManager } from "./onboardingManager";
+import { Conditional } from "../../components/conditional";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -35,6 +37,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		loadNewPage,
 	} = props;
 
+	const showOnboarding = false;
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
 	const [selectedDevice] = useState(
 		AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id,
@@ -62,7 +65,12 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(
 			window.location.href,
 		);
-		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId);
+		window.location.href = generateCrusherExtensionUrl(
+			"/",
+			targetUrl!,
+			deviceId,
+			{ isDeviceChanged: true },
+		);
 	};
 
 	const showHowToUseModal = () => {
@@ -87,7 +95,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					onKeyDown={handleKeyDown}
 					onChange={handleAddressBarUrlChange}
 				/>
-				<div style={deviceOptionInputContainerStyle}>
+				<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
 					<SelectDeviceInput
 						selectedDevice={selectedDevice}
 						selectDevice={handleDeviceChange}
@@ -107,6 +115,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					background: rgb(75,75,75);
 				}
 			`}</style>
+			<Conditional If={showOnboarding}>
+				<OnboardingManager />
+			</Conditional>
 		</div>
 	);
 };

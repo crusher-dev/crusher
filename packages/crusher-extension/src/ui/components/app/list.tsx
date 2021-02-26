@@ -32,6 +32,7 @@ const Item = (props: iItemProps) => {
 
 	return (
 		<div
+			id={item.id}
 			style={itemRowStyle(isHovered)}
 			onMouseOver={handleMouseOver}
 			onMouseOut={handleMouseOut}

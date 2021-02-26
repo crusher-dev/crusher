@@ -190,7 +190,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 						onClick={generateDefaultChecksForPage}
 					>
 						<BulbIcon style={bulbIconStyle} />
-						<div id={"modal-generate-test"} style={generateTextStyle}>
+						<div id={"modal-generate-checks-seo"} style={generateTextStyle}>
 							Generate Checks!
 						</div>
 					</div>

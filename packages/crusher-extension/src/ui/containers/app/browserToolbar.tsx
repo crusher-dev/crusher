@@ -16,6 +16,7 @@ import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
+import { Conditional } from "../../components/conditional";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -36,6 +37,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		loadNewPage,
 	} = props;
 
+	const showOnboarding = false;
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
 	const [selectedDevice] = useState(
 		AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id,
@@ -113,7 +115,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					background: rgb(75,75,75);
 				}
 			`}</style>
-			<OnboardingManager />
+			<Conditional If={showOnboarding}>
+				<OnboardingManager />
+			</Conditional>
 		</div>
 	);
 };

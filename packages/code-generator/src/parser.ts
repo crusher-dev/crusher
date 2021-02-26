@@ -26,6 +26,7 @@ export class Parser {
 	isHeadless = true;
 	stepIndex = 0;
 	assetsDir = "./";
+	shouldSleep = true;
 
 	constructor(options: iParserOptions) {
 		this.actions = options.actions;
@@ -333,13 +334,13 @@ export class Parser {
 		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions");\nconst playwright = require("playwright");\n`;
 		importCode += `const {getCrusherSelectorEngine} = require("${helperPackageName}/functions");\n`;
 		importCode = this.registerCrusherSelector(importCode);
-		importCode += `const browser = await playwright["${
-			this.browser
-		}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
+		importCode += `const browser = await playwright["${this.browser}"].launch({ headless: false });\n`;
 
+		if (this.shouldSleep) {
+			importCode += `const { sleep } = require("${helperPackageName}/functions");\n`;
+		}
 		if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
 			importCode += "const { saveVideo } = require('playwright-video');\n";
-			importCode += `const { sleep } = require("${helperPackageName}/functions");\n`;
 			importCode += "let capturedVideo;\n";
 		}
 
@@ -357,8 +358,8 @@ export class Parser {
 				if (this.shouldLogSteps) {
 					code += `\nawait logStep('${codeItem.type}', {status: 'DONE', message: '${codeItem.type} completed'}, {});\n`;
 				}
-				if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
-					code += "\nawait sleep(500);";
+				if (this.shouldSleep) {
+					code += "\nawait sleep(1500);";
 				}
 				return code;
 			})

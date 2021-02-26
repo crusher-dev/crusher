@@ -6,10 +6,7 @@ import { getStore } from "../../../redux/store";
 import { updateCurrentOnboardingStep } from "../../../redux/actions/onboarding";
 import { AdvancedURL } from "../../../utils/url";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
-import {
-	getActionsRecordingState,
-	getModalState,
-} from "../../../redux/selectors/recorder";
+import { getActionsRecordingState } from "../../../redux/selectors/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { getActions } from "../../../redux/selectors/actions";
@@ -89,14 +86,6 @@ const ONBOARDING_STEPS: any = [
 			</div>
 		),
 	},
-	{
-		selector: "#modal-generate-checks-seo",
-		content: (
-			<div>
-				<p>Click on this to generate automatic seo assertion checks.</p>
-			</div>
-		),
-	},
 ];
 
 export const ONBOARDING_STEP_INDEX_MAP = {
@@ -109,7 +98,6 @@ export const ONBOARDING_STEP_INDEX_MAP = {
 	ACTIONS_STEP_LIST_INTRODUCTION: 6,
 	TAKE_PAGE_SCREENSHOT: 7,
 	OPEN_SEO_ASSERTION_MODAL: 8,
-	GENERATE_SEO_CHECKS_INTRO: 9,
 };
 
 const OnboardingManager = () => {
@@ -118,7 +106,6 @@ const OnboardingManager = () => {
 	const actionsRecordingState = useSelector(getActionsRecordingState);
 	const recordedActions = useSelector(getActions);
 	const lastRecordedActionsCount = useRef(recordedActions.length);
-	const modalState = useSelector(getModalState);
 
 	useEffect(() => {
 		const store = getStore();
@@ -194,11 +181,7 @@ const OnboardingManager = () => {
 					if (
 						recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.PAGE_SCREENSHOT
 					) {
-						store.dispatch(
-							updateCurrentOnboardingStep(
-								ONBOARDING_STEP_INDEX_MAP.OPEN_SEO_ASSERTION_MODAL,
-							),
-						);
+						setIsTourOpen(false);
 					}
 					break;
 				}
@@ -220,20 +203,6 @@ const OnboardingManager = () => {
 			}
 		}, 500);
 	}, []);
-
-	useEffect(() => {
-		const store = getStore();
-		switch (currentOnboardingStep) {
-			case ONBOARDING_STEP_INDEX_MAP.OPEN_SEO_ASSERTION_MODAL: {
-				store.dispatch(
-					updateCurrentOnboardingStep(
-						ONBOARDING_STEP_INDEX_MAP.GENERATE_SEO_CHECKS_INTRO,
-					),
-				);
-				break;
-			}
-		}
-	}, [modalState]);
 
 	const closeTour = () => {
 		setIsTourOpen(false);

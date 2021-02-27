@@ -16,9 +16,18 @@ import { CreateTestModal } from "@ui/containers/modals/createTestModal";
 import { checkIfExtensionPresent } from "@utils/extension";
 
 function TestCard(props) {
-	const { name, userName, userId, id, featured_video_uri, createdAt } = props;
+	const {
+		name,
+		userName,
+		userId,
+		id,
+		item,
+		featured_video_uri,
+		createdAt,
+	} = props;
 	const videoRef = useRef(null);
 
+	console.log(item);
 	function onVideoHover(event) {
 		(videoRef.current as HTMLVideoElement).currentTime = 0;
 		(videoRef.current as HTMLVideoElement).play();
@@ -57,7 +66,7 @@ function TestCard(props) {
 					<div css={styles.fullscreenIcon} onClick={goFullScreen}>
 						<FullScreenIcon css={{ width: "1.25rem" }} />
 					</div>
-					{featured_video_uri && (
+					<Conditional If={featured_video_uri}>
 						<video
 							ref={videoRef}
 							onMouseOver={onVideoHover}
@@ -73,7 +82,12 @@ function TestCard(props) {
 								objectPosition: "top",
 							}}
 						/>
-					)}
+					</Conditional>
+					<Conditional If={!featured_video_uri}>
+						<div css={waitingVideoTextContainerCSS}>
+							<span css={waitingVideoTextCSS}>Processing video...</span>
+						</div>
+					</Conditional>
 				</div>
 				<div css={styles.testCardContentContainer}>
 					<div css={styles.testCardInfo}>
@@ -93,6 +107,20 @@ function TestCard(props) {
 		</div>
 	);
 }
+
+const waitingVideoTextContainerCSS = css`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+`;
+
+const waitingVideoTextCSS = css`
+	color: #fff;
+	font-weight: 500;
+`;
 
 function RenderTestCard(props) {
 	const { tests } = props;
@@ -116,6 +144,7 @@ function RenderTestCard(props) {
 						<TestCard
 							name={rowItem.name}
 							userName={userName}
+							item={rowItem}
 							userId={rowItem.user_id}
 							id={rowItem.id}
 							createdAt={rowItem.created_at}
@@ -236,6 +265,7 @@ const styles = {
 		margin-bottom: 2rem;
 		cursor: pointer;
 		border-radius: 0.4rem;
+		max-width: 17.5rem;
 
 		&:hover {
 			opacity: 0.95;

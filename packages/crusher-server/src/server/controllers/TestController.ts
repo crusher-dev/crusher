@@ -7,7 +7,7 @@ import TestService from "../../core/services/TestService";
 import DraftService from "../../core/services/DraftService";
 import DraftInstanceService from "../../core/services/DraftInstanceService";
 import JobsService, { TRIGGER } from "../../core/services/JobsService";
-import { getDefaultHostFromCode } from "../../core/utils/helper";
+import { getDefaultHostFromCode, getTestHostFromActions } from "../../core/utils/helper";
 import TestInstanceService from "../../core/services/TestInstanceService";
 import { JobTrigger } from "../../core/interfaces/JobTrigger";
 import { JobStatus } from "../../core/interfaces/JobStatus";
@@ -17,7 +17,9 @@ import { Platform } from "../../core/interfaces/Platform";
 import { resolvePathToFrontendURI } from "../../core/utils/uri";
 import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
-import { EDITOR_TEST_TYPE } from '../../../../crusher-shared/types/editorTestType';
+import { EDITOR_TEST_TYPE } from "../../../../crusher-shared/types/editorTestType";
+import ProjectHostsService from "../../core/services/ProjectHostsService";
+import MonitoringService from "../../core/services/MonitoringService";
 
 const RESPONSE_STATUS = {
 	INSUFFICIENT_INFORMATION: "INSUFFICIENT_INFORMATION",
@@ -42,6 +44,10 @@ export class TestController {
 	private jobService: JobsService;
 	@Inject()
 	private testInstanceService: TestInstanceService;
+	@Inject()
+	private hostService: ProjectHostsService;
+	@Inject()
+	private monitoringService: MonitoringService;
 
 	private dbManager: DBManager;
 
@@ -139,21 +145,46 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		const { testName: _testName, projectId: _projectId, framework: _framework, code: _code, events: _events } = body;
 		const { name, project_id, code, events } = await this.draftService.getDraftTest(draftId);
 
-		let res = await this.draftService.getLastDraftInstanceResult(draftId);
+		const res = await this.draftService.getLastDraftInstanceResult(draftId);
 
 		const video_uri = res ? res.video_uri : null;
+		const testsCountInProject = await this.testService.getTestsCountInProject(project_id);
+		const isThisFirstTest = testsCountInProject === 0;
 
 		if (project_id) {
-			return this.testService.createTest({
-				testName: isNotEmpty(_testName) ? _testName : name,
-				events: isNotEmpty(_events) ? _events : events,
-				framework: isNotEmpty(_framework) ? _framework : TestFramework.PLAYWRIGHT,
-				code: isNotEmpty(_code) ? _code : code,
-				projectId: project_id,
-				userId: user_id,
-				featured_video_uri: video_uri,
-				draft_id: draftId,
-			});
+			return this.testService
+				.createTest({
+					testName: isNotEmpty(_testName) ? _testName : name,
+					events: isNotEmpty(_events) ? _events : events,
+					framework: isNotEmpty(_framework) ? _framework : TestFramework.PLAYWRIGHT,
+					code: isNotEmpty(_code) ? _code : code,
+					projectId: project_id,
+					userId: user_id,
+					featured_video_uri: video_uri,
+					draft_id: draftId,
+				})
+				.then(async (res) => {
+					if (isThisFirstTest) {
+						const host = await this.hostService.createHost({
+							name: "Default",
+							url: await getTestHostFromActions(JSON.parse(events)),
+							projectId: project_id,
+							userId: user_id,
+						});
+						const hostId = host.insertId;
+						await this.monitoringService.addMonitoringForProject(
+							{
+								target_host: hostId,
+								platform: Platform.ALL,
+								test_interval: 14400,
+								project_id: project_id,
+								user_id: user_id,
+							},
+							project_id,
+						);
+					}
+					return res;
+				});
 		} else {
 			return {
 				status: 304,

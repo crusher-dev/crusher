@@ -5,6 +5,10 @@ import ProjectService from "../../../core/services/ProjectService";
 import TestService from "../../../core/services/TestService";
 import JobsService from "../../../core/services/JobsService";
 import DBManager from "../../../core/manager/DBManager";
+import ProjectHostsService from "../../../core/services/ProjectHostsService";
+import { JOB_TRIGGER } from "../../../../../crusher-shared/types/jobTrigger";
+import { PLATFORM } from "../../../../../crusher-shared/types/platform";
+import JobRunnerService from "../../../core/services/v2/JobRunnerService";
 
 @Service()
 @JsonController("/v2/project")
@@ -17,6 +21,10 @@ export class ProjectsControllerV2 {
 	private testService: TestService;
 	@Inject()
 	private jobService: JobsService;
+	@Inject()
+	private projectHostsService: ProjectHostsService;
+	@Inject()
+	private jobRunnerService: JobRunnerService;
 
 	private dbManager: DBManager;
 
@@ -45,5 +53,17 @@ export class ProjectsControllerV2 {
 			status: "DONE",
 			response: this.projectService.updateProjectName(info.name, projectId),
 		};
+	}
+
+	@Authorized()
+	@Get("/run/:projectId")
+	async runTests(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
+		const { user_id } = user;
+		const projectHosts = await this.projectHostsService.getAllHosts(projectId);
+		if (!projectHosts.length) {
+			throw new Error("No project hosts created to run");
+		}
+		await this.jobRunnerService.runTestsInProject(projectId, PLATFORM.CHROME, JOB_TRIGGER.MANUAL, user_id, projectHosts[0], null);
+		return "Running";
 	}
 }

@@ -103,7 +103,7 @@ function RenderTestCard(props) {
 				tests[index],
 				tests[index + 1],
 				tests[index + 2],
-				tests[index + 4],
+				tests[index + 3],
 			]
 				.filter((val) => {
 					return typeof val !== "undefined";

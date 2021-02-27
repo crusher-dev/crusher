@@ -30,6 +30,10 @@ import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberMod
 import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
 import { checkIfExtensionPresent } from "@utils/extension";
 import { CreateTestModal } from "@ui/containers/modals/createTestModal";
+import { RunTestButton } from "@ui/components/app/RunTestsButton";
+import { runTestsInProject } from "@services/v2/project";
+import { Toast } from "@utils/toast";
+import { redirectToFrontendPath } from "@utils/router";
 
 interface NavItem {
 	name: string;
@@ -352,6 +356,16 @@ export function withSidebarLayout(
 			setShowCreateTestModal(true);
 		};
 
+		const handleRunTests = () => {
+			runTestsInProject(selectedProjectID)
+				.then((e) => {
+					redirectToFrontendPath("/app/project/builds");
+				})
+				.catch((err) => {
+					Toast.showError("Create a host first");
+				});
+		};
+
 		return (
 			<div>
 				<Head>
@@ -389,6 +403,9 @@ export function withSidebarLayout(
 							<span css={createTestCSS}>
 								<CreateTest onClick={handleCreateTest} />
 							</span>
+							<span css={runTestsCSS}>
+								<RunTestButton onClick={handleRunTests} />
+							</span>
 						</div>
 						<div css={innerContentContainerCSS}>
 							<WrappedComponent {...props} />
@@ -419,6 +436,13 @@ export function withSidebarLayout(
 
 const createTestCSS = css`
 	margin-left: auto;
+	:hover {
+		text-decoration: none !important;
+	}
+`;
+
+const runTestsCSS = css`
+	margin-left: 2rem;
 	:hover {
 		text-decoration: none !important;
 	}

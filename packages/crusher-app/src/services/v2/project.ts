@@ -23,3 +23,13 @@ export const _updateProjectInfo = (
 		payload: { info },
 	});
 };
+
+export const runTestsInProject = (
+	projectId: number,
+	headers?: any,
+): Promise<any> => {
+	return backendRequest(`/v2/project/run/${projectId}`, {
+		method: RequestMethod.GET,
+		headers: headers,
+	});
+};

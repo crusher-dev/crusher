@@ -156,22 +156,14 @@ const TestEditor = (props: iTestEditorProps) => {
 		handleRunTest();
 	}, [testInfo.actions]);
 
-	const handleSaveTest = () => {
+	const handleSaveTest = async () => {
 		if (!!testName === false || testName.trim() === "") {
 			alert("Give a name to the test");
 			return false;
 		}
 		if (testInfo.testType === EDITOR_TEST_TYPE.SAVED_DRAFT && testInfo.id) {
-			return createTestFromDraft(testInfo.id, { testName: testName })
-				.then((res: any) => {
-					if (!res) {
-						throw new Error("Empty response");
-					}
-					redirectToFrontendPath("/app/project/tests");
-				})
-				.catch((err: any) => {
-					console.error(err);
-				});
+			await createTestFromDraft(testInfo.id, { testName: testName });
+			redirectToFrontendPath("/app/project/tests");
 		} else {
 			return false;
 		}

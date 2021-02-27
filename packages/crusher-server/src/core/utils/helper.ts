@@ -1,3 +1,13 @@
+import { iAction } from "../../../../crusher-shared/types/action";
+import { ACTIONS_IN_TEST } from "../../../../crusher-shared/constants/recordedActions";
+
+export function getTestHostFromActions(actions: Array<iAction>): string {
+	const navigateAction = actions.find((action) => action.type === ACTIONS_IN_TEST.NAVIGATE_URL);
+	if (!navigateAction) throw new Error("Test created without no navigation action");
+
+	return navigateAction.payload.meta.value;
+}
+
 export function getDefaultHostFromCode(code: string) {
 	const rgx = new RegExp(/goto\((["'])([^\1]+?)\1\)/m);
 	const match = code.match(rgx);

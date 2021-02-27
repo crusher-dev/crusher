@@ -334,7 +334,9 @@ export class Parser {
 		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions");\nconst playwright = require("playwright");\n`;
 		importCode += `const {getCrusherSelectorEngine} = require("${helperPackageName}/functions");\n`;
 		importCode = this.registerCrusherSelector(importCode);
-		importCode += `const browser = await playwright["${this.browser}"].launch({ headless: false });\n`;
+		importCode += `const browser = await playwright["${
+			this.browser
+		}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
 
 		if (this.shouldSleep) {
 			importCode += `const { sleep } = require("${helperPackageName}/functions");\n`;

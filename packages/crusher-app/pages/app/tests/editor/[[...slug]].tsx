@@ -49,6 +49,7 @@ import { Store } from "redux";
 import { serialize } from "cookie";
 import { submitPostDataWithForm } from "@utils/helpers";
 import { Toast } from "@utils/toast";
+import { getRelativeSize } from "@utils/styleUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
@@ -124,7 +125,7 @@ const TestEditor = (props: iTestEditorProps) => {
 				}).parse(testInfo.actions);
 
 				createAndRunDraftTest(testName, code, testInfo.actions, selectedProjectId)
-					.then((res: iDraft) => {
+					.then(async (res: iDraft) => {
 						if (res) {
 							store.dispatch(
 								saveTestMetaInfo({
@@ -133,6 +134,8 @@ const TestEditor = (props: iTestEditorProps) => {
 									testType: EDITOR_TEST_TYPE.SAVED_DRAFT,
 								}),
 							);
+							await createTestFromDraft(res.id, { testName: new Date().toString() });
+							redirectToFrontendPath("/app/project/tests");
 						}
 					})
 					.catch((err: any) => {
@@ -188,68 +191,82 @@ const TestEditor = (props: iTestEditorProps) => {
 		<div css={containerCSS}>
 			<AuthModal isOpen={!!userInfo === false} />
 			<div css={centeredContainerCSS}>
-				<div>
-					<div css={placeholderHeaderTitleCSS}>
-						<Conditional If={metaInfo.totalTime}>
-							<span>
-								You just created a test in {Math.floor(metaInfo.totalTime! / 1000)}{" "}
-								seconds👏
-							</span>
-						</Conditional>
-						<Conditional If={!metaInfo.totalTime}>
-							<span>Welcome back👏</span>
-						</Conditional>
-					</div>
-					<div css={placeholderHeaderDescCss}>
-						<div>Crusher will check UI/Flow for bugs.</div>
-						<div>Ship faster by running all tests in few mins.</div>
-					</div>
-				</div>
-				<div css={addTestContainerCSS}>
-					<div css={addTestInputWithActionContainerCSS}>
-						<div css={addTestInputContainerCSS}>
-							<input
-								css={addTestInputCSS}
-								name="testName"
-								placeholder="Name of your test"
-								value={testName}
-								onChange={handleTestNameUpdate}
-							/>
-						</div>
-						<div
-							css={addTestButtonCSS}
-							style={{
-								color: "#eaeaee",
-								backgroundColor: "#5b76f7",
-							}}
-							onClick={handleSaveTest}
-						>
-							<span>Save test</span>
-						</div>
-					</div>
-				</div>
-				<TestStatus
-					isAborted={isTestAborted}
-					actions={testInfo.actions}
-					logs={liveLogs}
-				/>
+				<img src={"/svg/loadingElipsis.svg"} css={loadingCSS} />
+				<span css={loadingTextCSS}>Loading...</span>
+
+				{/*<div>*/}
+				{/*	<div css={placeholderHeaderTitleCSS}>*/}
+				{/*		<Conditional If={metaInfo.totalTime}>*/}
+				{/*			<span>*/}
+				{/*				You just created a test in {Math.floor(metaInfo.totalTime! / 1000)}{" "}*/}
+				{/*				seconds👏*/}
+				{/*			</span>*/}
+				{/*		</Conditional>*/}
+				{/*		<Conditional If={!metaInfo.totalTime}>*/}
+				{/*			<span>Welcome back👏</span>*/}
+				{/*		</Conditional>*/}
+				{/*	</div>*/}
+				{/*	<div css={placeholderHeaderDescCss}>*/}
+				{/*		<div>Crusher will check UI/Flow for bugs.</div>*/}
+				{/*		<div>Ship faster by running all tests in few mins.</div>*/}
+				{/*	</div>*/}
+				{/*</div>*/}
+				{/*<div css={addTestContainerCSS}>*/}
+				{/*	<div css={addTestInputWithActionContainerCSS}>*/}
+				{/*		<div css={addTestInputContainerCSS}>*/}
+				{/*			<input*/}
+				{/*				css={addTestInputCSS}*/}
+				{/*				name="testName"*/}
+				{/*				placeholder="Name of your test"*/}
+				{/*				value={testName}*/}
+				{/*				onChange={handleTestNameUpdate}*/}
+				{/*			/>*/}
+				{/*		</div>*/}
+				{/*		<div*/}
+				{/*			css={addTestButtonCSS}*/}
+				{/*			style={{*/}
+				{/*				color: "#eaeaee",*/}
+				{/*				backgroundColor: "#5b76f7",*/}
+				{/*			}}*/}
+				{/*			onClick={handleSaveTest}*/}
+				{/*		>*/}
+				{/*			<span>Save test</span>*/}
+				{/*		</div>*/}
+				{/*	</div>*/}
+				{/*</div>*/}
+				{/*<TestStatus*/}
+				{/*	isAborted={isTestAborted}*/}
+				{/*	actions={testInfo.actions}*/}
+				{/*	logs={liveLogs}*/}
+				{/*/>*/}
 			</div>
 		</div>
 	);
 };
 
+const loadingCSS = css`
+	height: ${getRelativeSize(80)}rem;
+`;
+const loadingTextCSS = css`
+	position: relative;
+	top: -1rem;
+	font-weight: 500;
+`;
 const containerCSS = css`
 	display: flex;
-	padding-top: 4.25rem;
 	height: 100%;
 	padding-left: 4.25rem;
 	padding-right: 4rem;
 	justify-content: center;
+	align-items: center;
 `;
 
 const centeredContainerCSS = css`
-	padding-top: 2.75rem;
 	width: 36rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
 `;
 
 const placeholderHeaderTitleCSS = css`

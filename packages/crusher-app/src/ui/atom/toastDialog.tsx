@@ -6,7 +6,7 @@ import { TOAST_TYPE, iToastInfo } from "@interfaces/toast";
 export function ToastDialog() {
 	const [message, setMessage] = useState(null as string | null);
 	const [type, setType] = useState(null as TOAST_TYPE | null);
-
+cd
 	emitter.on("TOAST", function (info: any) {
 		const { type, message } = info as iToastInfo;
 		setMessage(message);

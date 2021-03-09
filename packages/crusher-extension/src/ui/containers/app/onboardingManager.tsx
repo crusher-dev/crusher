@@ -107,6 +107,11 @@ const OnboardingManager = () => {
 	const recordedActions = useSelector(getActions);
 	const lastRecordedActionsCount = useRef(recordedActions.length);
 
+	const handleTourComplete = () => {
+		setIsTourOpen(false);
+		localStorage.setItem("isOnboardingComplete", "true");
+	};
+
 	useEffect(() => {
 		const store = getStore();
 		switch (currentOnboardingStep) {
@@ -181,7 +186,7 @@ const OnboardingManager = () => {
 					if (
 						recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.PAGE_SCREENSHOT
 					) {
-						setIsTourOpen(false);
+						handleTourComplete();
 					}
 					break;
 				}

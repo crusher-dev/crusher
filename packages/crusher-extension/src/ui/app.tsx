@@ -12,8 +12,6 @@ import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActio
 import { recordAction } from "../redux/actions/actions";
 import { submitPostDataWithForm } from "../utils/helpers";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
-import { updateActionsModalState } from "../redux/actions/recorder";
-import { ACTIONS_MODAL_STATE } from "../interfaces/actionsModalState";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
 
@@ -25,13 +23,8 @@ const App = () => {
 	);
 
 	useEffect(() => {
-		const store = getStore();
 		const isReturningUser = localStorage.getItem("lastVisit");
-		if (!isReturningUser) {
-			store.dispatch(
-				updateActionsModalState(ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO),
-			);
-		} else {
+		if (isReturningUser) {
 			localStorage.setItem("lastVisit", Date.now().toString());
 		}
 	}, []);

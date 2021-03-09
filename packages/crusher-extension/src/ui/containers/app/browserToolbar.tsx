@@ -37,7 +37,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		loadNewPage,
 	} = props;
 
-	const showOnboarding = true;
+	const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
 	const [selectedDevice] = useState(
 		AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id,

@@ -57,7 +57,7 @@ const ONBOARDING_STEPS: any = [
 		selector: `#${ELEMENT_LEVEL_ACTION.CLICK}`,
 		content: (
 			<div>
-				<p>Click on this to take screenshot of that element</p>
+				<p>Click on this to record click for this element</p>
 			</div>
 		),
 	},

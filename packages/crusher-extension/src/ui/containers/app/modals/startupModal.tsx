@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
+import { FONT_WEIGHT } from '../../../../interfaces/css';
+import { addHttpToURLIfNotThere } from '../../../../../../crusher-shared/utils/url';
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -15,7 +17,7 @@ const StartupModal = (props: iStartupModalProps) => {
 
 	const startRecording = () => {
 		if (targetURL && targetURL !== "") {
-			window.location.href = `/test_recorder.html?url=${targetURL}&device=GoogleChromeLargeScreen`;
+			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeLargeScreen`;
 		}
 	};
 
@@ -26,15 +28,41 @@ const StartupModal = (props: iStartupModalProps) => {
 			style={customModalStyles}
 			overlayClassName="overlay"
 		>
-			<h2>PLEASE ENTER SOME URL</h2>
-			<div>
-				<input value={targetURL} onChange={handleTargetSiteChange} />
+			<div style={inputContainerStyle}>
+				<input style={inputStyle} placeholder={"Enter URL to test"} value={targetURL} onChange={handleTargetSiteChange} />
+				<button style={buttonStyle} onClick={startRecording}>Let's start</button>
 			</div>
-			<button onClick={startRecording}>Submit</button>
 		</ReactModal>
 	);
 };
 
+const buttonStyle = {
+	background: "#FF42CA",
+	padding: 9,
+	minWidth: 170,
+	borderRadius: 4,
+	color: "#fff",
+	fontWeight: FONT_WEIGHT.BOLD,
+	fontSize: 16,
+	marginLeft: 14,
+	border: 0,
+	cursor: "pointer"
+};
+const inputStyle = {
+	background: "#1A1A1C",
+	borderRadius: 6,
+	border: "1px solid #43434F",
+	padding: "11px 20px",
+	fontFamily: "DM Sans",
+	fontSize: 15,
+	minWidth: 358,
+	color: "#fff",
+	outline: "none"
+};
+const inputContainerStyle = {
+	display: "flex",
+	fontFamily: "DM Sans",
+};
 const customModalStyles = {
 	content: {
 		top: "50%",
@@ -49,13 +77,15 @@ const customModalStyles = {
 		borderWidth: 0,
 		width: 760,
 		overflow: "auto",
-		boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
 		padding: "36px 40px",
-		background: "#1C1F26",
+		background: "rgb(31, 31, 32)",
 		zIndex: 100000,
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center"
 	},
 	overlay: {
-		background: "rgba(0,0,0,0.5)",
+		background: "rgb(31, 31, 32)",
 		zIndex: 100000,
 	},
 };

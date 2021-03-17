@@ -1,6 +1,5 @@
 import { Logger } from "./utils/logger";
 
-require("./core/manager/QueueManager");
 require("./utils/logger");
 const chalk = require("chalk");
 const cookie = require("cookie");

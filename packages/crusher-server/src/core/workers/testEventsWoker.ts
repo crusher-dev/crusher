@@ -105,18 +105,9 @@ export default class TestsEventsWorker {
 
 					await prepareResultForDraftInstance(runnerJobRequestInfo.instanceId, output.signedImageUrls, !!error);
 				} else {
-					if (runnerJobRequestInfo.job.installation_id) {
-						await updateGithubCheckStatus(
-							GithubCheckStatus.COMPLETED,
-							{
-								fullRepoName: runnerJobRequestInfo.job.repo_name,
-								githubCheckRunId: runnerJobRequestInfo.job.check_run_id,
-								githubInstallationId: runnerJobRequestInfo.job.repo_name,
-							},
-							GithubConclusion.FAILURE,
-						);
-					}
-					if (runnerJobRequestInfo.job.id) {
+					const job = runnerJobRequestInfo.job;
+
+					if (job) {
 						await jobsService.updateJobStatus(JobStatus.ABORTED, runnerJobRequestInfo.job.id);
 
 						try {
@@ -148,7 +139,21 @@ export default class TestsEventsWorker {
 
 							await testInstanceService.updateTestInstanceStatus(InstanceStatus.ABORTED, runnerJobRequestInfo.instanceId);
 						}
+
+						if (job.installation_id) {
+							await updateGithubCheckStatus(
+								GithubCheckStatus.COMPLETED,
+								{
+									fullRepoName: runnerJobRequestInfo.job.repo_name,
+									githubCheckRunId: runnerJobRequestInfo.job.check_run_id,
+									githubInstallationId: runnerJobRequestInfo.job.repo_name,
+								},
+								GithubConclusion.FAILURE,
+							);
+						}
 					}
+
+
 				}
 			}
 		} catch (Ex) {

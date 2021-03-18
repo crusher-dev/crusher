@@ -41,7 +41,7 @@ export default class TestInstanceService {
 			return out.indexOf(item) == pos;
 		});
 		for (let i = 0; i < resultSetArr.length; i++) {
-			await this.testInstanceResultSetsService.updateResultSetStatus(resultSetArr[i] as number);
+			await this.testInstanceResultSetsService.updateResultSetStatus(resultSetArr[i] as number, null);
 		}
 		return out;
 	}
@@ -67,7 +67,7 @@ export default class TestInstanceService {
 			return out.indexOf(item) == pos;
 		});
 		for (let i = 0; i < resultSetArr.length; i++) {
-			await this.testInstanceResultSetsService.updateResultSetStatus(resultSetArr[i] as number);
+			await this.testInstanceResultSetsService.updateResultSetStatus(resultSetArr[i] as number, null);
 		}
 		return out;
 	}

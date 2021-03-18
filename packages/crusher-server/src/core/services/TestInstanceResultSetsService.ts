@@ -5,6 +5,7 @@ import TestInstanceResultsService from "./TestInstanceResultsService";
 import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
 import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { TestInstanceResult } from "../interfaces/db/TestInstanceResult";
+import { TestInstanceResultSetStatus } from '../interfaces/TestInstanceResultSetStatus';
 
 @Service()
 export default class TestInstanceResultSetsService {
@@ -45,7 +46,7 @@ export default class TestInstanceResultSetsService {
 	}
 
 	// This should be called everytime a result is approved/disapproved/no_action.
-	async updateResultSetStatus(setId: number) {
+	async updateResultSetStatus(setId: number, error) {
 		const results = await this.getResultsOfInstanceSet(setId);
 		const passedResults = results.filter((result) => {
 			return result.status == TestInstanceResultStatus.PASSED;
@@ -55,22 +56,25 @@ export default class TestInstanceResultSetsService {
 		});
 
 		const hasAllTestsPassed = passedResults.length === results.length;
-		const hasTestFailed = failedResults.length > 0;
+		const hasTestFailed = failedResults.length > 0 || !!error;
 		const isStillInReview = passedResults.length + failedResults.length < results.length;
 
 		console.log(results, results.length, hasTestFailed, hasAllTestsPassed);
 		if (hasTestFailed) {
-			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
+			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET status = ?, conclusion = ? WHERE id = ?`, [
+				TestInstanceResultSetStatus.FINISHED_RUNNING_CHECKS,
 				TestInstanceResultSetConclusion.FAILED,
 				setId,
 			]);
 		} else if (hasAllTestsPassed) {
-			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
+			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET status = ?, conclusion = ? WHERE id = ?`, [
+				TestInstanceResultSetStatus.FINISHED_RUNNING_CHECKS,
 				TestInstanceResultSetConclusion.PASSED,
 				setId,
 			]);
 		} else if (isStillInReview) {
-			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET conclusion = ? WHERE id = ?`, [
+			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET status = ?, conclusion = ? WHERE id = ?`, [
+				TestInstanceResultSetStatus.FINISHED_RUNNING_CHECKS,
 				TestInstanceResultSetConclusion.MANUAL_REVIEW_REQUIRED,
 				setId,
 			]);

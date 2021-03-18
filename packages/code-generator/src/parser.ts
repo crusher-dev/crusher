@@ -80,6 +80,11 @@ export class Parser {
 			);
 		}
 
+		code.push(
+			"browserContext.setDefaultNavigationTimeout(15000);",
+			"browserContext.setDefaultTimeout(5000);"
+		);
+
 		return code;
 	}
 

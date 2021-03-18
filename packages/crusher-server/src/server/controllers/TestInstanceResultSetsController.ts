@@ -51,7 +51,7 @@ export class TestInstanceResultSetsController {
 		await Promise.all(
 			Object.keys(testInstances).map((resultSetId) => {
 				return this.testInstanceResultsService.markResultAsApproved(parseInt(resultSetId), user_id).then((res) => {
-					return this.testInstanceResultSetService.updateResultSetStatus(parseInt(resultSetId));
+					return this.testInstanceResultSetService.updateResultSetStatus(parseInt(resultSetId), null);
 				});
 			}),
 		);

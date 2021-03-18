@@ -81,6 +81,7 @@ export default class TestsEventsWorker {
 					);
 
 					await checkResultQueue.add(runnerJobRequestInfo.test.id, {
+						error: error,
 						githubInstallationId: runnerJobRequestInfo.job.installation_id,
 						githubCheckRunId: runnerJobRequestInfo.job.check_run_id,
 						testCount: runnerJobRequestInfo.testCount,
@@ -119,9 +120,10 @@ export default class TestsEventsWorker {
 							);
 
 							await checkResultQueue.add(runnerJobRequestInfo.test.id, {
+								error: error,
 								githubInstallationId: runnerJobRequestInfo.job.installation_id,
 								githubCheckRunId: runnerJobRequestInfo.job.check_run_id,
-								testCount: runnerJobRequestInfo.test,
+								testCount: runnerJobRequestInfo.testCount,
 								images: output.signedImageUrls,
 								testId: runnerJobRequestInfo.test.id,
 								jobId: runnerJobRequestInfo.job.id,

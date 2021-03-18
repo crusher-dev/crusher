@@ -96,7 +96,7 @@ async function getResultForTestInstance(
 	testInstanceWithImages: TestInstanceWithImages,
 	referenceInstanceWithImages: TestInstanceWithImages,
 	resultSetId: number,
-	shouldPerformDiffChecks,
+	shouldPerformDiffChecks
 ) {
 	const testInstanceImageKeys: Array<string> = Object.keys(testInstanceWithImages.images);
 
@@ -289,7 +289,7 @@ async function handlePostChecksOperations(reportId: number, totalTestCount, jobI
 }
 
 async function runChecks(details, clearJobTempValues) {
-	const { githubInstallationId, githubCheckRunId, platform, reportId, totalTestCount, screenshots, testId, jobId, instanceId, fullRepoName } = details;
+	const { githubInstallationId, githubCheckRunId, error, platform, reportId, totalTestCount, screenshots, testId, jobId, instanceId, fullRepoName } = details;
 
 	const currentJobReport = await jobsReportService.getJobReport(reportId);
 
@@ -313,10 +313,10 @@ async function runChecks(details, clearJobTempValues) {
 		testInstanceWithImages,
 		referenceInstanceWithImages,
 		resultSetId,
-		shouldPerformDiffChecks,
+		shouldPerformDiffChecks
 	);
 
-	await testInstanceResultSetsService.updateResultSetStatus(resultSetId);
+	await testInstanceResultSetsService.updateResultSetStatus(resultSetId, error);
 }
 
 module.exports = async (bullJob: Job) => {
@@ -334,6 +334,7 @@ module.exports = async (bullJob: Job) => {
 	});
 
 	const {
+		error,
 		githubInstallationId,
 		githubCheckRunId,
 		testCount: totalTestCount,
@@ -359,6 +360,7 @@ module.exports = async (bullJob: Job) => {
 
 			await runChecks(
 				{
+					error,
 					githubInstallationId,
 					githubCheckRunId,
 					totalTestCount,
@@ -373,6 +375,7 @@ module.exports = async (bullJob: Job) => {
 				clearJobTempValues,
 			);
 
+			console.log("Cleaning up now", completedTestsCount, totalTestCount);
 			if (completedTestsCount === totalTestCount) {
 				const job = await jobsService.getJob(jobId);
 				if (job.status !== JobStatus.ABORTED) {

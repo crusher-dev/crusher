@@ -43,7 +43,7 @@ export class TestInstanceResultsController {
 		const { user_id } = user;
 		return this.testInstanceResultsService.markResultAsApproved(resultId, user_id).then(async (res) => {
 			await res;
-			return this.testInstanceResultSetService.updateResultSetStatus(resultSetId);
+			return this.testInstanceResultSetService.updateResultSetStatus(resultSetId, null);
 		});
 	}
 
@@ -53,7 +53,7 @@ export class TestInstanceResultsController {
 		const { user_id } = user;
 		return this.testInstanceResultsService.markResultAsRejected(resultId, user_id).then(async (res) => {
 			await res;
-			return this.testInstanceResultSetService.updateResultSetStatus(resultSetId);
+			return this.testInstanceResultSetService.updateResultSetStatus(resultSetId, null);
 		});
 	}
 }

@@ -72,11 +72,6 @@ export async function addTestRequestToQueue(testRequest: RunRequest) {
 		instanceId = instance.insertId;
 	}
 
-	const client = await requestQueue.client;
-	if (job) {
-		await client.set(`${job.id}:completed`, "0");
-		await client.set(`${job.id}:started`, "0");
-	}
 	testLogsService.init(test.id, instanceId, test.testType, job ? job.id : -1);
 	await testLogsService.notifyTestAddedToQueue();
 

@@ -78,7 +78,7 @@ module.exports = async (bullJob: iTestRunnerJob): Promise<boolean> => {
 	deleteTmpAssetsDirectoriesIfThere(bullJob.data);
 
 	if (testError) {
-		console.error(`[${requestType}/${instanceId}] Error occurred during test execution`, testError);
+		console.error(`[${requestType}/${instanceId}] Error occurred during test execution:`, testError);
 	} else {
 		console.log(`[${requestType}/${instanceId}] Test completed successfully`);
 	}

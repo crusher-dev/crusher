@@ -26,6 +26,7 @@ const ONBOARDING_STEPS: any = [
 					This is the browser frame where you have to perform actions to record them.
 				</p>
 				<p>Right click over an element to turn on inspector mode</p>
+				<p>Once you have turned on inspector mode, hover on an element and click on it to select it.</p>
 			</div>
 		),
 	},
@@ -226,6 +227,8 @@ const OnboardingManager = () => {
 				onRequestClose={closeTour}
 				closeWithMask={false}
 				showNumber={false}
+				showNavigation={false}
+				showButtons={false}
 				getCurrentStep={handleNextStep}
 				goToStep={currentOnboardingStep}
 			/>

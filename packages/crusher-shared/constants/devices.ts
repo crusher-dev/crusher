@@ -55,7 +55,7 @@ const devices : Array<iDevice> =  [
 		userAgent: 'Google Pixel',
 	},
 	{
-		id: 'GoogleChromeMediumScreen',
+		id: 'GoogleChromeNormalScreen',
 		name: 'Desktop (1024 * 800)',
 		width: 1024,
 		height: 800,
@@ -63,7 +63,7 @@ const devices : Array<iDevice> =  [
 		userAgent: 'Google Chrome',
 	},
 	{
-		id: 'GoogleChromeLargeScreen',
+		id: 'GoogleChromeMediumScreen',
 		name: 'Desktop M (1280 * 800)',
 		width: 1280,
 		height: 800,
@@ -71,7 +71,7 @@ const devices : Array<iDevice> =  [
 		userAgent: 'Google Chrome',
 	},
 	{
-		id: 'GoogleChromeLargeScreen',
+		id: 'GoogleChromeLargeScreenL',
 		name: 'Desktop L (1440 * 800)',
 		width: 1440,
 		height: 800,
@@ -79,7 +79,7 @@ const devices : Array<iDevice> =  [
 		userAgent: 'Google Chrome',
 	},
 	{
-		id: 'GoogleChromeLargeScreen',
+		id: 'GoogleChromeLargeScreenXL',
 		name: 'Desktop XL (1600 * 800)',
 		width: 1600,
 		height: 800,

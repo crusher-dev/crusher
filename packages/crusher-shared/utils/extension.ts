@@ -18,7 +18,7 @@ const generateCrusherExtensionUrl = (baseUrl: string, targetSiteUrl: string, sel
 
 const getDefaultDeviceFromDeviceType = (type: DEVICE_TYPES): iDevice | null => {
 	if (type === DEVICE_TYPES.DESKTOP) {
-		return devices[8];
+		return devices[6];
 	} else if (type === DEVICE_TYPES.MOBILE) {
 		return devices[5];
 	} else {

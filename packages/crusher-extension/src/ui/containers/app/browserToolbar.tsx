@@ -101,7 +101,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						selectDevice={handleDeviceChange}
 					/>
 				</div>
-				<Button title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
+				<Button id={"saveTest"} title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
 				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
 				</a>

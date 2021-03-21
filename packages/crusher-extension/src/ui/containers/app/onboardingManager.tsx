@@ -87,6 +87,14 @@ const ONBOARDING_STEPS: any = [
 			</div>
 		),
 	},
+	{
+		selector: `#saveTest`,
+		content: (
+			<div>
+				<p>Now click on save test to run and save this test on crusher</p>
+			</div>
+		),
+	},
 ];
 
 export const ONBOARDING_STEP_INDEX_MAP = {

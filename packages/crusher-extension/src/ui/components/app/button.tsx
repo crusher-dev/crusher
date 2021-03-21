@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Conditional } from "../conditional";
 
 interface iButtonProps {
+	id?: string;
 	title: string;
 	style?: React.CSSProperties;
 	icon?: any;
@@ -10,7 +11,7 @@ interface iButtonProps {
 
 const Button = (props: iButtonProps) => {
 	const [isHovered, setIsHovered] = useState(false);
-	const { title, icon: Icon, onClick, style } = props;
+	const { id, title, icon: Icon, onClick, style } = props;
 
 	const handleMouseOver = () => {
 		setIsHovered(true);
@@ -22,6 +23,7 @@ const Button = (props: iButtonProps) => {
 
 	return (
 		<div
+			id={id}
 			style={{ ...buttonStyle(isHovered), ...(style ? style : {}) }}
 			onClick={onClick}
 			onMouseOver={handleMouseOver}

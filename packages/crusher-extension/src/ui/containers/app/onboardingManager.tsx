@@ -239,6 +239,7 @@ const OnboardingManager = () => {
 				showButtons={false}
 				getCurrentStep={handleNextStep}
 				goToStep={currentOnboardingStep}
+				disableFocusLock={true}
 			/>
 		</>
 	);

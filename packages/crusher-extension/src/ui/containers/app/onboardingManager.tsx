@@ -15,8 +15,16 @@ import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recorde
 const ONBOARDING_STEPS: any = [
 	{
 		selector: "#select-device-input",
-		content:
-			"You can select the device you want to create test for from here. Go ahead and select some device",
+		content: (
+			<div>
+				<div>Select a device</div>
+				<div>You can select the device you want to create test for from here. Go ahead and select some device</div>
+			</div>
+		),
+		style: {
+			background: "#1A1D23",
+			color: "#fff"
+		}
 	},
 	{
 		selector: "#device_browser",
@@ -235,7 +243,8 @@ const OnboardingManager = () => {
 				onRequestClose={closeTour}
 				closeWithMask={false}
 				showNumber={false}
-				showNavigation={false}
+				showNavigation={true}
+				disableDotsNavigation={true}
 				showButtons={false}
 				getCurrentStep={handleNextStep}
 				goToStep={currentOnboardingStep}

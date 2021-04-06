@@ -13,10 +13,11 @@ export default async function setDevice(action: iAction) {
 				meta: {
 					width: device.width,
 					height: device.height,
-					userAgent: userAgent.value,
+					userAgent: userAgent.value ? userAgent.value : userAgent,
 				},
 			});
 		} catch(err){
+			console.error(err);
 			return error("Some issue occurred while setting the device");
 		}
 	});

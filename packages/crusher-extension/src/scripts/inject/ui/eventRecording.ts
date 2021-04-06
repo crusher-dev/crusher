@@ -61,7 +61,7 @@ export default class EventRecording {
 			this,
 		);
 		this.handleWindowClick = this.handleWindowClick.bind(this);
-		this.handleKeyPress = this.handleKeyPress.bind(this);
+		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
 		this.handleDOMMutationObserverCallback = this.handleDOMMutationObserverCallback.bind(
@@ -222,7 +222,7 @@ export default class EventRecording {
 				mouseover: this.handleMouseMove.bind(this),
 				pointerenter: this.handlePointerEnter.bind(this),
 				mouseout: this.handleMouseOut.bind(this),
-				input: this.handleKeyPress.bind(this),
+				input: this.handleKeyDown.bind(this),
 				click: this.handleWindowClick.bind(this),
 				contextmenu: this.onRightClick.bind(this),
 			};
@@ -396,14 +396,26 @@ export default class EventRecording {
 		}
 	}
 
-	handleKeyPress(event: any) {
+	handleKeyDown(event: KeyboardEvent) {
 		const targetElement = event.target;
+		let finalKey = "";
+		// Remove them because keydown also tracks unwanted individual keys
+		if (["Shift", "Control", "Alt", "Meta"].includes(event.key)) {
+			return false;
+		}
+		if (event.ctrlKey) finalKey += "Control+";
+		if (event.metaKey) finalKey += "Meta+";
+		if (event.altKey) finalKey += "Alt+";
+		if (event.shiftKey) finalKey += "Shift+";
+
+		finalKey += event.key;
 
 		this.eventsController.saveCapturedEventInBackground(
 			ACTIONS_IN_TEST.ADD_INPUT,
 			targetElement,
-			event.keyCode,
+			finalKey,
 		);
+		return true;
 	}
 
 	handleFocus(event: FocusEvent) {
@@ -562,7 +574,7 @@ export default class EventRecording {
 		})(window.open);
 
 		window.onbeforeunload = this.handleBeforeNavigation;
-		window.addEventListener("keypress", this.handleKeyPress, true);
+		window.addEventListener("keydown", this.handleKeyDown, true);
 		window.addEventListener("click", this.handleWindowClick, true);
 		setInterval(this.pollInterval, 300);
 	}

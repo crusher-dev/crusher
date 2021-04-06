@@ -16,3 +16,6 @@ export const getSeoMetaInfo = (state: iReduxState) =>
 
 export const getLastElementCustomScriptOutput = (state: iReduxState) =>
 	state.recorder.lastElementExecutionScriptOutput;
+
+export const getAutoRecorderState = (state: iReduxState) =>
+	state.recorder.isAutoRecordOn;

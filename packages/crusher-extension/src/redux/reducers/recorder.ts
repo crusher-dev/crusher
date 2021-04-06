@@ -1,6 +1,8 @@
 import { AnyAction } from "redux";
 import {
 	ADD_SEO_META_INFO,
+	TURN_OFF_AUTO_RECORDER,
+	TURN_ON_AUTO_RECORDER,
 	UPDATE_ACTIONS_MODAL_STATE,
 	UPDATE_ACTIONS_RECORDING_STATE,
 	UPDATE_INSPECT_MODE_STATE,
@@ -16,6 +18,7 @@ const initialState: iRecorderState = {
 		type: ACTIONS_RECORDING_STATE.PAGE,
 		elementInfo: null,
 	},
+	isAutoRecordOn: false,
 	modalState: null,
 	isRecorderScriptBooted: false,
 	seoMetaInfo: null,
@@ -59,6 +62,16 @@ export const recorderReducer = (
 			return {
 				...state,
 				seoMetaInfo: action.payload.info,
+			};
+		case TURN_ON_AUTO_RECORDER:
+			return {
+				...state,
+				isAutoRecordOn: true,
+			};
+		case TURN_OFF_AUTO_RECORDER:
+			return {
+				...state,
+				isAutoRecordOn: false,
 			};
 		default:
 			return state;

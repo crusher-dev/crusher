@@ -10,7 +10,10 @@ import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
 import { Button } from "../../components/app/button";
 import { getStore } from "../../../redux/store";
-import { updateActionsModalState } from "../../../redux/actions/recorder";
+import {
+	updateActionsModalState,
+	updateAutoRecorderSetting,
+} from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
@@ -78,6 +81,11 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO));
 	};
 
+	const handleAutoDetectModeToggle = (event: ChangeEvent<HTMLInputElement>) => {
+		const store = getStore();
+		store.dispatch(updateAutoRecorderSetting(event.target.checked));
+	};
+
 	return (
 		<div style={browserToolbarStyle}>
 			<div style={browserMainToolbarStyle} id="top-bar">
@@ -95,19 +103,88 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					onKeyDown={handleKeyDown}
 					onChange={handleAddressBarUrlChange}
 				/>
+				<div style={authDetectModeToggleContainerStyle}>
+					<div style={autoDetectModeToggleHeadingStyle}>Auto Detect:</div>
+					<label className="switch">
+						<input type="checkbox" onChange={handleAutoDetectModeToggle} />
+						<span className="slider round"></span>
+					</label>
+				</div>
 				<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
 					<SelectDeviceInput
 						selectedDevice={selectedDevice}
 						selectDevice={handleDeviceChange}
 					/>
 				</div>
-				<Button id={"saveTest"} title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
+				<Button
+					id={"saveTest"}
+					title={"Save test"}
+					icon={RecordLabelIcon}
+					onClick={saveTest}
+				/>
 				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
 				</a>
 			</div>
 
 			<style>{`
+				.switch {
+					position: relative;
+					display: inline-block;
+					width: 3rem;
+					height: 1rem;
+				}
+
+				.switch input { 
+					opacity: 0;
+					width: 0;
+					height: 0;
+				}
+
+				.slider {
+					position: absolute;
+					cursor: pointer;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					background-color: #ccc;
+					-webkit-transition: .4s;
+					transition: .4s;
+				}
+				
+				.slider:before {
+					position: absolute;
+					content: "";
+					height: 0.725rem;
+					width: 0.725rem;
+					left: 4px;
+					bottom: 2.75px;
+					background-color: white;
+					-webkit-transition: .4s;
+					transition: .4s;
+				}
+				
+				input:checked + .slider {
+					background-color: #2196F3;
+				}
+				
+				input:focus + .slider {
+					box-shadow: 0 0 1px #2196F3;
+				}
+				
+				input:checked + .slider:before {
+					transform: translateX(1.875rem);
+				}
+				
+				/* Rounded sliders */
+				.slider.round {
+					border-radius: 34px;
+				}
+				
+				.slider.round:before {
+					border-radius: 50%;
+				}
 				.browser_icon{
 							padding: 0 0.4rem;
 				}
@@ -120,6 +197,19 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 			</Conditional>
 		</div>
 	);
+};
+
+const autoDetectModeToggleHeadingStyle = {
+	color: "#fff",
+	marginRight: "1rem",
+	fontSize: "0.9rem",
+};
+
+const authDetectModeToggleContainerStyle = {
+	display: "flex",
+	alignItems: "center",
+	marginLeft: "auto",
+	color: "#fff",
 };
 
 const deviceOptionInputContainerStyle = {

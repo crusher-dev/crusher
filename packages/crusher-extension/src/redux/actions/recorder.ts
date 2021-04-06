@@ -12,6 +12,9 @@ export const ADD_SEO_META_INFO = "ADD_SEO_META_INFO";
 export const UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT =
 	"UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT";
 
+export const TURN_ON_AUTO_RECORDER = "TURN_ON_AUTO_RECORDER";
+export const TURN_OFF_AUTO_RECORDER = "TURN_OFF_AUTO_RECORDER";
+
 export const updateInspectModeState = (isInspectModeOn: boolean) => ({
 	type: UPDATE_INSPECT_MODE_STATE,
 	payload: { isInspectModeOn },
@@ -53,4 +56,8 @@ export const updateLastElementCustomScriptOutput = (
 ) => ({
 	type: UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT,
 	payload: { info },
+});
+
+export const updateAutoRecorderSetting = (shouldAutoRecorder: boolean) => ({
+	type: shouldAutoRecorder ? TURN_ON_AUTO_RECORDER : TURN_OFF_AUTO_RECORDER,
 });

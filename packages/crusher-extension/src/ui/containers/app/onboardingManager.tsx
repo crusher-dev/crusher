@@ -96,11 +96,6 @@ const ONBOARDING_STEPS: any = [
 		"Click on this to take page screenshot of whole viewport.",
 	),
 	createOnboardingStep(
-		`#${TOP_LEVEL_ACTION.SHOW_SEO_MODAL}`,
-		"Setup SEO Assertion checks",
-		"Click on this to setup seo assertion checks.",
-	),
-	createOnboardingStep(
 		"#saveTest",
 		"Save Test",
 		"Now click on save test to run and save this test on crusher",
@@ -116,8 +111,7 @@ export const ONBOARDING_STEP_INDEX_MAP = {
 	RECORD_CLICK_ELEMENT: 5,
 	ACTIONS_STEP_LIST_INTRODUCTION: 6,
 	TAKE_PAGE_SCREENSHOT: 7,
-	OPEN_SEO_ASSERTION_MODAL: 8,
-	SAVE_TEST: 9,
+	SAVE_TEST: 8,
 };
 
 const OnboardingManager = () => {
@@ -207,21 +201,10 @@ const OnboardingManager = () => {
 						recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.PAGE_SCREENSHOT
 					) {
 						store.dispatch(
-							updateCurrentOnboardingStep(
-								ONBOARDING_STEP_INDEX_MAP.OPEN_SEO_ASSERTION_MODAL,
-							),
-						);
-					}
-					break;
-				}
-				case ONBOARDING_STEP_INDEX_MAP.OPEN_SEO_ASSERTION_MODAL: {
-					if (
-						recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.VALIDATE_SEO
-					) {
-						store.dispatch(
 							updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SAVE_TEST),
 						);
 					}
+					break;
 				}
 			}
 		}

@@ -11,98 +11,100 @@ import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingSta
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { getActions } from "../../../redux/selectors/actions";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { MyCustomHelper } from "../../components/app/onboarding/tourCustomHelper";
 
-const ONBOARDING_STEPS: any = [
-	{
-		selector: "#select-device-input",
+const createOnboardingStep = (selector: string, heading: string, desc: any) => {
+	return {
+		selector,
 		content: (
-			<div>
-				<div>Select a device</div>
-				<div>You can select the device you want to create test for from here. Go ahead and select some device</div>
+			<div style={{ paddingBottom: "0.1rem" }}>
+				<div
+					style={{
+						fontWeight: "bold",
+						fontSize: "1rem",
+					}}
+				>
+					{heading}
+				</div>
+				<p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.925rem" }}>
+					{desc}
+				</p>
 			</div>
 		),
 		style: {
 			background: "#1A1D23",
-			color: "#fff"
-		}
-	},
-	{
-		selector: "#device_browser",
-		content: (
+			color: "#fff",
+		},
+	};
+};
+
+const ONBOARDING_STEPS: any = [
+	createOnboardingStep(
+		"#select-device-input",
+		"Select a device",
+		"You can select the device you want to create test for from here. Go ahead" +
+			"and select some device",
+	),
+	createOnboardingStep(
+		"#device_browser",
+		"Browser Frame",
+		<>
 			<div>
-				<p>
-					This is the browser frame where you have to perform actions to record them.
-				</p>
-				<p>Right click over an element to turn on inspector mode</p>
-				<p>Once you have turned on inspector mode, hover on an element and click on it to select it.</p>
+				This is the browser frame where you have to perform actions to record them.
 			</div>
-		),
-	},
-	{
-		selector: `#${ELEMENT_LEVEL_ACTION.SCREENSHOT}`,
-		content: (
+			<br />
+			<div>Right click over an element to turn on inspector mode</div>
+			<br />
 			<div>
-				<p>Click on this to take screenshot of that element</p>
+				Once you have turned on inspector mode, hover on an element and click on it
+				to select it.
 			</div>
-		),
-	},
-	{
-		selector: `#${TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE}`,
-		content: (
-			<div>
-				<p>Now select an element using this button</p>
-			</div>
-		),
-	},
-	{
-		selector: "#device_browser",
-		content: (
-			<div>
-				<p>Click on an overlay to select the element again.</p>
-			</div>
-		),
-	},
-	{
-		selector: `#${ELEMENT_LEVEL_ACTION.CLICK}`,
-		content: (
-			<div>
-				<p>Click on this to record click for this element</p>
-			</div>
-		),
-	},
-	{
-		selector: "#stepsListContainer",
-		content: (
-			<div>
-				<p>This the list of all recorded actions.</p>
-				<p>Go ahead and delete any action</p>
-			</div>
-		),
-	},
-	{
-		selector: `#${TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT}`,
-		content: (
-			<div>
-				<p>Click on this to take page screenshot of whole viewport.</p>
-			</div>
-		),
-	},
-	{
-		selector: `#${TOP_LEVEL_ACTION.SHOW_SEO_MODAL}`,
-		content: (
-			<div>
-				<p>Click on this to setup seo assertion checks.</p>
-			</div>
-		),
-	},
-	{
-		selector: `#saveTest`,
-		content: (
-			<div>
-				<p>Now click on save test to run and save this test on crusher</p>
-			</div>
-		),
-	},
+		</>,
+	),
+	createOnboardingStep(
+		`#${ELEMENT_LEVEL_ACTION.SCREENSHOT}`,
+		"Take Screenshot",
+		"Click on this to take screenshot of that element",
+	),
+	createOnboardingStep(
+		`#${TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE}`,
+		"Toggle Inspect Mode",
+		"Now select an element using this button",
+	),
+	createOnboardingStep(
+		"#device_browser",
+		"Select an element",
+		"Click on an overlay to select the element again.",
+	),
+	createOnboardingStep(
+		`#${ELEMENT_LEVEL_ACTION.CLICK}`,
+		"Click on the element",
+		"Click on this to record click for this element",
+	),
+	createOnboardingStep(
+		"#stepsListContainer",
+		"Recorded Events List",
+		<>
+			<div>This the list of all recorded actions.</div>
+			<p>Go ahead and delete any action</p>
+		</>,
+	),
+	createOnboardingStep(
+		`#${TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT}`,
+		"Take whole page screenshot",
+		"Click on this to take page screenshot of whole viewport.",
+	),
+	createOnboardingStep(
+		`#${TOP_LEVEL_ACTION.SHOW_SEO_MODAL}`,
+		"Setup SEO Assertion checks",
+		"Click on this to setup seo assertion checks.",
+	),
+	createOnboardingStep(
+		"#saveTest",
+		"Save Test",
+		"Now click on save test to run and save this test on crusher",
+	),
 ];
 
 export const ONBOARDING_STEP_INDEX_MAP = {
@@ -115,6 +117,7 @@ export const ONBOARDING_STEP_INDEX_MAP = {
 	ACTIONS_STEP_LIST_INTRODUCTION: 6,
 	TAKE_PAGE_SCREENSHOT: 7,
 	OPEN_SEO_ASSERTION_MODAL: 8,
+	SAVE_TEST: 9,
 };
 
 const OnboardingManager = () => {
@@ -203,9 +206,22 @@ const OnboardingManager = () => {
 					if (
 						recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.PAGE_SCREENSHOT
 					) {
-						handleTourComplete();
+						store.dispatch(
+							updateCurrentOnboardingStep(
+								ONBOARDING_STEP_INDEX_MAP.OPEN_SEO_ASSERTION_MODAL,
+							),
+						);
 					}
 					break;
+				}
+				case ONBOARDING_STEP_INDEX_MAP.OPEN_SEO_ASSERTION_MODAL: {
+					if (
+						recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.VALIDATE_SEO
+					) {
+						store.dispatch(
+							updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SAVE_TEST),
+						);
+					}
 				}
 			}
 		}
@@ -214,7 +230,12 @@ const OnboardingManager = () => {
 
 	useEffect(() => {
 		const store = getStore();
+
 		setTimeout(() => {
+			document.getElementById("saveTest")!.addEventListener("click", () => {
+				handleTourComplete();
+				window.location.reload();
+			});
 			const isDeviceAlreadyChanged = AdvancedURL.getParameterByName(
 				"isDeviceChanged",
 				window.location.href,
@@ -230,6 +251,9 @@ const OnboardingManager = () => {
 		setIsTourOpen(false);
 	};
 
+	const disableBody = (target: any) => disableBodyScroll(target);
+	const enableBody = (target: any) => enableBodyScroll(target);
+
 	const handleNextStep = (step: number) => {
 		const store = getStore();
 		store.dispatch(updateCurrentOnboardingStep(step));
@@ -238,6 +262,8 @@ const OnboardingManager = () => {
 	return (
 		<>
 			<Tour
+				onAfterOpen={disableBody}
+				onBeforeClose={enableBody}
 				steps={ONBOARDING_STEPS}
 				isOpen={isTourOpen}
 				onRequestClose={closeTour}
@@ -249,6 +275,7 @@ const OnboardingManager = () => {
 				getCurrentStep={handleNextStep}
 				goToStep={currentOnboardingStep}
 				disableFocusLock={true}
+				CustomHelper={MyCustomHelper}
 			/>
 		</>
 	);

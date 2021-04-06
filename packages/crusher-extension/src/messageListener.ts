@@ -14,6 +14,7 @@ import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
 import { RefObject } from "react";
 import {
 	getActionsRecordingState,
+	getAutoRecorderState,
 	isRecorderScriptBooted,
 } from "./redux/selectors/recorder";
 import { AdvancedURL } from "./utils/url";
@@ -80,6 +81,19 @@ function handleRecordAction(action: iAction) {
 		: null;
 
 	const { type } = action;
+
+	// We can assume any event coming to this is auto-based
+	const shouldAutoRecord = getAutoRecorderState(store.getState());
+	if (
+		!shouldAutoRecord &&
+		![
+			ACTIONS_IN_TEST.NAVIGATE_URL,
+			ACTIONS_IN_TEST.SCROLL,
+			ACTIONS_IN_TEST.SET_DEVICE,
+		].includes(type)
+	) {
+		return;
+	}
 
 	switch (type) {
 		case ACTIONS_IN_TEST.NAVIGATE_URL: {

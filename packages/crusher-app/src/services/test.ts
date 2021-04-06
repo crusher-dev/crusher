@@ -22,6 +22,20 @@ export const createTest = (
 	});
 };
 
+export const updateTestName = (
+	testName: string,
+	testId: number,
+	headers = null,
+) => {
+	return backendRequest(`/test/updateTest/${testId}`, {
+		method: RequestMethod.POST,
+		headers: headers,
+		payload: {
+			testName,
+		},
+	});
+};
+
 export const getTest = (testId, headers = null) => {
 	return backendRequest(`/test/get/${testId}`, {
 		method: RequestMethod.GET,

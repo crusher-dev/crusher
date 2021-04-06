@@ -71,13 +71,13 @@ export default class TestService {
 
 	async updateTest(testName: string, projectId: number, code: string, testId: number) {
 		const fieldsToUpdate = {};
-		if (!!testName) {
+		if (testName) {
 			fieldsToUpdate["name"] = testName;
 		}
-		if (!!projectId) {
+		if (projectId) {
 			fieldsToUpdate["project_id"] = projectId;
 		}
-		if (!!code) {
+		if (code) {
 			fieldsToUpdate["code"] = code;
 		}
 		return this.dbManager.fetchSingleRow(`UPDATE tests SET ? WHERE id = ?`, [fieldsToUpdate, testId]);

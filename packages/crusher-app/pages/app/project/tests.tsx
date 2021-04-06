@@ -3,7 +3,7 @@ import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
-import { getAllTestsInfosInProject } from "@services/test";
+import { getAllTestsInfosInProject, updateTestName } from "@services/test";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
@@ -14,6 +14,59 @@ import FullScreenIcon from "../../../src/svg/fullscreen.svg";
 import { InstallExtensionModal } from "@ui/containers/modals/installExtensionModal";
 import { CreateTestModal } from "@ui/containers/modals/createTestModal";
 import { checkIfExtensionPresent } from "@utils/extension";
+import { Toast } from "@utils/toast";
+
+const INPUT_MODE = {
+	VISIBLE_NAME: "VISIBLE_NAME",
+	RENAME: "RENAME",
+};
+function RenderInputName(props: any) {
+	const { name, mode, setTestNameCallback, turnOnNameInputModeCallback } = props;
+	const inputRef = useRef(null as any);
+
+	const handleKeyPress = (e: KeyboardEvent) => {
+		if (e.key === "Enter" || e.keyCode === 13) {
+			setTestNameCallback((e as any).target.value);
+		}
+	};
+
+	useEffect(() => {
+		if (mode === INPUT_MODE.RENAME) {
+			inputRef.current.focus();
+		}
+	}, [mode]);
+
+	return (
+		<>
+			<Conditional If={mode === INPUT_MODE.RENAME}>
+				<div css={styles.testName}>
+					<input
+						ref={inputRef}
+						css={renameInputCSS}
+						defaultValue={name}
+						onKeyPress={handleKeyPress as any}
+					/>
+				</div>
+			</Conditional>
+			<Conditional If={!mode || mode === INPUT_MODE.VISIBLE_NAME}>
+				<div onDoubleClick={turnOnNameInputModeCallback} css={styles.testName}>
+					{name}
+				</div>
+			</Conditional>
+		</>
+	);
+}
+
+const renameInputCSS = css`
+	border: 1px solid #000;
+	padding: 0.3rem 0.2rem;
+	font-family: Cera Pro;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 1rem;
+	width: 100%;
+	color: #2d3958;
+`;
 
 function TestCard(props) {
 	const {
@@ -25,7 +78,9 @@ function TestCard(props) {
 		featured_video_uri,
 		createdAt,
 	} = props;
+	const [testName, setTestName] = useState(name);
 	const videoRef = useRef(null);
+	const [testNameMode, setTestNameMode] = useState(INPUT_MODE.VISIBLE_NAME);
 
 	console.log(item);
 	function onVideoHover(event) {
@@ -57,6 +112,22 @@ function TestCard(props) {
 		if (videoRef.current) {
 			await (videoRef.current as HTMLVideoElement).requestFullscreen();
 		}
+	};
+
+	const setTestNameCallback = async (newTestName: string) => {
+		updateTestName(newTestName, id)
+			.then((res) => {
+				setTestName(newTestName);
+				Toast.showSuccess("Test name updated successfully");
+			})
+			.catch((err) => {
+				Toast.showError("Error occurred when trying to update test name");
+			});
+		setTestNameMode(INPUT_MODE.VISIBLE_NAME);
+	};
+
+	const turnOnNameInputModeCallback = () => {
+		setTestNameMode(INPUT_MODE.RENAME);
 	};
 
 	return (
@@ -91,7 +162,12 @@ function TestCard(props) {
 				</div>
 				<div css={styles.testCardContentContainer}>
 					<div css={styles.testCardInfo}>
-						<div css={styles.testName}>{name}</div>
+						<RenderInputName
+							setTestNameCallback={setTestNameCallback}
+							name={testName}
+							mode={testNameMode}
+							turnOnNameInputModeCallback={turnOnNameInputModeCallback}
+						/>
 						<div css={styles.gridContainer}>
 							<div css={styles.girdLeftHeading}>Device</div>
 							<div css={styles.gridRightValue}>1920*1080, 1200*1000</div>

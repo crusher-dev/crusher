@@ -14,7 +14,6 @@ import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recorde
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { POSITION } from "../../../interfaces/css";
-import { ActionRecordedIndicator } from "../../components/app/actionRecordedIndicator";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
@@ -109,7 +108,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 						saveTest={saveTestCallback}
 						loadNewPage={loadNewPage}
 					/>
-					<ActionRecordedIndicator />
+					{/*<ActionRecordedIndicator />*/}
 				</div>
 				<Device
 					url={url}

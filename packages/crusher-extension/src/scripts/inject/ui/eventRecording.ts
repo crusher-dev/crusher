@@ -388,11 +388,12 @@ export default class EventRecording {
 		}
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
 			const href = closestLink.getAttribute("href");
+			const isBlank = closestLink.getAttribute("target") === "_blank";
 			console.log("Going to this link", href);
-			if (href) {
+			if (href && isBlank) {
 				window.location.href = href;
+				return event.preventDefault();
 			}
-			return event.preventDefault();
 		}
 	}
 

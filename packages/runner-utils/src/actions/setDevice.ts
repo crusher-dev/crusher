@@ -13,7 +13,7 @@ export default async function setDevice(action: iAction) {
 				meta: {
 					width: device.width,
 					height: device.height,
-					userAgent: userAgent.value ? userAgent.value : userAgent,
+					userAgent: userAgent && userAgent.value ? userAgent.value : userAgent,
 				},
 			});
 		} catch(err){

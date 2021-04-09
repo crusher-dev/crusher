@@ -18,7 +18,7 @@ const initialState: iRecorderState = {
 		type: ACTIONS_RECORDING_STATE.PAGE,
 		elementInfo: null,
 	},
-	isAutoRecordOn: false,
+	isAutoRecordOn: true,
 	modalState: null,
 	isRecorderScriptBooted: false,
 	seoMetaInfo: null,

@@ -553,6 +553,7 @@ export default class EventRecording {
 		window.addEventListener("mouseout", this.handleMouseOut, true);
 		window.addEventListener("contextmenu", this.onRightClick, true);
 		window.addEventListener("focus", this.handleFocus, true);
+
 		document.body.addEventListener("pointerenter", this.handlePointerEnter, true);
 
 		this.mutationObserver = new MutationObserver(
@@ -566,13 +567,6 @@ export default class EventRecording {
 		});
 
 		window.addEventListener("scroll", this.handleScroll, true);
-
-		(window as any).open = (function (open) {
-			return function (url: string) {
-				console.log("Opening a new tab", url);
-				window.location.href = url;
-			};
-		})(window.open);
 
 		window.onbeforeunload = this.handleBeforeNavigation;
 		window.addEventListener("keydown", this.handleKeyDown, true);

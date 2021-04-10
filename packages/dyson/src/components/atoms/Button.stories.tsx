@@ -1,4 +1,9 @@
 import React from 'react';
+/*
+  @Note - This is bad implementation. After releasing. Move output directory to dyson/exports
+  This should be done either via Storybook templating or webpack inclusion of css (Postcss).
+ */
+import "../../exports/dyson_style.css"
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from '@storybook/react/types-6-0';
 

@@ -61,5 +61,5 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: crusher-test-runner-service
-          cluster: crusher-tests
+          cluster: crusher-test
           wait-for-service-stability: true

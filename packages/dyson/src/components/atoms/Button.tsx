@@ -5,19 +5,28 @@ export interface ButtonProps {
   /**
    * Is this the principal call to action on the page?
    */
-  primary?: boolean;
+  type?: 'primary'|'secondary'|'tertiary';
   /**
    * What background color to use
    */
-  backgroundColor?: string;
+  bgColor?: 'blue'|'pink'|'green'|'tertiary-strong'|'tertiary-medium'|'tertiary-light';
   /**
-   * How large should the button be?
+   * Size of the component
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small'|'medium'|'large';
+
+  /**
+   * Disabled;
+   */
+  disabled?: boolean;
+  /**
+   * Emotion CSS style if any
+   */
+  css?: [string]|string;
   /**
    * Button contents
    */
-  label: string;
+  children: string;
   /**
    * Optional click handler
    */
@@ -25,24 +34,24 @@ export interface ButtonProps {
 }
 
 /**
- * Primary UI component for user interaction
+ * Unified button component for Dyson UI system
  */
 export const Button: React.FC<ButtonProps> = ({
-  primary = false,
-  size = 'medium',
-  backgroundColor,
-  label,
+  type = "primary",
+  bgColor = 'blue',
+  size="medium",
+  children,
   ...props
 }) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+  const mode = type==="primary" ? 'storybook-button--primary' : 'storybook-button--secondary';
+
   return (
     <button
       type="button"
       className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-      style={{ backgroundColor }}
       {...props}
     >
-      {label}
+      {children}
     </button>
   );
 };

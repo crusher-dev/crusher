@@ -21,6 +21,20 @@ jobs:
       - name: Create ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js
 
+      - name: Install crusher node_modules
+        run: yarn
+
+      - name: Upgrade heap size of node
+        run: export NODE_OPTIONS=--max_old_space_size=4096
+
+      - name: Build test-runner for deployment
+        run: sh scripts/build-test-runner.sh
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+
+      - name: Delete main node_modules
+        run: rm -R node_modules
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

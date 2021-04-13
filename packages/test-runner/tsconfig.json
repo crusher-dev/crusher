@@ -14,7 +14,7 @@
 	},
 	"typeRoots": ["node_modules/@types"],
 	"files": [
-		"src/app.ts"
+		"src/index.ts"
 	],
 	"include": ["./src/**/*"],
 	"exclude": ["**/*.spec.ts"]

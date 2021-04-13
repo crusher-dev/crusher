@@ -45,6 +45,9 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
+      - name: Delete main node_modules
+        run: rm -R node_modules
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

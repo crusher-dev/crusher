@@ -12,3 +12,4 @@ temp/
 _next/i
 logs/
 bullmq/
+dist/

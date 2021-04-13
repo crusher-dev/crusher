@@ -1,9 +1,9 @@
-import { Worker, Queue, QueueScheduler } from 'bullmq';
-import { REDDIS } from '../config/database';
-import { BootAfterNJobsOffsetManager } from './manager/offsetManger';
-import * as path from 'path';
+import { Worker, Queue, QueueScheduler } from "bullmq";
+import { REDDIS } from "../config/database";
+import { BootAfterNJobsOffsetManager } from "./manager/offsetManger";
+import * as path from "path";
 
-const REQUEST_QUEUE = 'request-queue';
+const REQUEST_QUEUE = "request-queue";
 const queue = new Queue(REQUEST_QUEUE, { connection: REDDIS as any });
 
 queue.client.then(async (client) => {
@@ -14,7 +14,7 @@ queue.client.then(async (client) => {
 	});
 	await queueScheduler.waitUntilReady();
 
-	new Worker(REQUEST_QUEUE, path.resolve('src/worker.ts'), {
+	new Worker(REQUEST_QUEUE, path.resolve("src/worker.ts"), {
 		connection: client,
 		concurrency: 5,
 		lockDuration: 120000,

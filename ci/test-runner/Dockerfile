@@ -25,8 +25,6 @@ RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use
 ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
 
-RUN yarn
-
 RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g concurrently

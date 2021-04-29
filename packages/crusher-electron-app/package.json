@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "compile": "rm -R build && tsc",
-    "start": "yarn compile && electron ."
+    "compile": "rm -rf build && tsc",
+    "start": "yarn compile && /home/utkarsh/electron/src/out/Testing/electron --trace-warnings ."
   },
   "dependencies": {
     "electron": "^12.0.2",

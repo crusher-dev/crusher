@@ -11,6 +11,7 @@ import { iPerformActionMeta } from "../responseMessageListener";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
+import { getEventNodeInCaseDOMWasMutated } from "../relevantMutationDetector";
 
 export default class EventRecording {
 	defaultState: any = {
@@ -41,8 +42,6 @@ export default class EventRecording {
 
 	private resetUserEventsToDefaultCallback: any = undefined;
 
-	private mutationObserver: MutationObserver | null = null;
-
 	constructor(options = {} as any) {
 		this.state = {
 			...this.defaultState,
@@ -64,9 +63,6 @@ export default class EventRecording {
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
-		this.handleDOMMutationObserverCallback = this.handleDOMMutationObserverCallback.bind(
-			this,
-		);
 	}
 
 	getState() {
@@ -381,6 +377,7 @@ export default class EventRecording {
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
 		if (!event.simulatedEvent) {
+			console.log("somelog", getEventNodeInCaseDOMWasMutated(event.target));
 			this.eventsController.saveCapturedEventInBackground(
 				ACTIONS_IN_TEST.CLICK,
 				event.target,
@@ -452,101 +449,6 @@ export default class EventRecording {
 		this.recordedHoverArr.push(event);
 	}
 
-	handleDOMMutationObserverCallback(mutations: any) {
-		const newMuationsList = mutations
-			.map((m: MutationRecord) => {
-				function getStylesMap(str: string) {
-					const rgx = new RegExp(/([\w-]+)\s*:\s*([^;]+)/gm);
-					const styleMatches: any = Array.from(str.matchAll(rgx));
-					const styleMaps = styleMatches.reduce((prev: any, match: any) => {
-						return { ...prev, [match[1]]: match[2] };
-					}, {});
-					return styleMaps;
-				}
-				function differenceInStylesMap(map1: any, map2: any) {
-					const map1Keys = Object.keys(map1);
-					let diff = {};
-					for (let i = 0; i < map1Keys.length; i++) {
-						const map1Value = map1[map1Keys[i]];
-						const map2Value = map2[map1Keys[i]];
-						if (!map2Value) {
-							diff = {
-								...diff,
-								[map1Keys[i]]: { firstValue: map1Value, secondValue: map2Value },
-							};
-						} else if (map1Value !== map2Value) {
-							diff = {
-								...diff,
-								[map1Keys[i]]: { firstValue: map1Value, secondValue: map2Value },
-							};
-						}
-						delete map2[map1Keys[i]];
-					}
-					const map2Keys = Object.keys(map2);
-					for (let i = 0; i < map2Keys.length; i++) {
-						diff = {
-							...diff,
-							[map2Keys[i]]: { firstValue: undefined, secondValue: map2[map2Keys[i]] },
-						};
-					}
-					return diff;
-				}
-				if (m.type !== "attributes") return m;
-				const newAttributeValue = (m.target as any).getAttribute(m.attributeName);
-				if (m.attributeName !== "style")
-					return Object.assign(m, { newAttributeValue: newAttributeValue });
-
-				const getOldStylesMap = getStylesMap(m.oldValue ? m.oldValue : "");
-				const newAttributeStylesMap = getStylesMap(newAttributeValue);
-				const diffMap = differenceInStylesMap(
-					getOldStylesMap,
-					newAttributeStylesMap,
-				);
-				const diffKeys = Object.keys(diffMap);
-
-				const onlyOutlineChanged = diffKeys.filter((key) => {
-					return key.startsWith("outline");
-				});
-				if (
-					onlyOutlineChanged.length &&
-					onlyOutlineChanged.length === diffKeys.length
-				) {
-					return null;
-				}
-				return Object.assign(m, {
-					newAttributeValue: newAttributeValue,
-					diff: [getOldStylesMap, newAttributeStylesMap, diffMap],
-				});
-			})
-			.filter((a: any) => {
-				return a !== null;
-			});
-		if (this.pointerEventsMap.length === 0 || newMuationsList.length === 0)
-			return;
-		const currentTime = window.performance.now();
-		const event = this.pointerEventsMap[this.pointerEventsMap.length - 1];
-		const lastHoverElement =
-			this.pointerEventsMap.length > 0
-				? this.pointerEventsMap[this.pointerEventsMap.length - 1]
-				: null;
-		if (
-			currentTime - event.data.timeStamp < 50 &&
-			event.data.type === "pointerenter" &&
-			(event.data as any).target.id !== "overlay_cover" &&
-			!this.isInspectorMoving
-		) {
-			if (lastHoverElement === event.data.target) {
-				return;
-			}
-			console.log("Mutations linked to this event are: ", newMuationsList);
-			this.eventsController.saveCapturedEventInBackground(
-				ACTIONS_IN_TEST.HOVER,
-				event.data.target,
-			);
-			this.pointerEventsMap = [];
-		}
-	}
-
 	registerNodeListeners() {
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);
@@ -555,16 +457,6 @@ export default class EventRecording {
 		window.addEventListener("focus", this.handleFocus, true);
 
 		document.body.addEventListener("pointerenter", this.handlePointerEnter, true);
-
-		this.mutationObserver = new MutationObserver(
-			this.handleDOMMutationObserverCallback,
-		);
-		this.mutationObserver.observe(document.body, {
-			attributes: true,
-			childList: true,
-			subtree: true,
-			attributeOldValue: true,
-		});
 
 		window.addEventListener("scroll", this.handleScroll, true);
 

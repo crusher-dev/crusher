@@ -13,7 +13,7 @@ export function pushToEventMutationArr(
 	targetNode: any,
 	targetChanges: any,
 ) {
-	console.log("gotthislog", eventStackMapKey, targetChanges, targetChanges);
+	// console.log("gotthislog", eventStackMapKey, targetChanges, targetChanges);
 	const eventNode = (window as any).crusherMap[eventStackMapKey];
 	if (!eventNode) return;
 	const dependentOn = getEventNodeInCaseDOMWasMutated(eventNode);
@@ -37,5 +37,3 @@ export function getEventNodeInCaseDOMWasMutated(currentActionNode: Node) {
 		? relevantEvents[relevantEvents.length - 1]
 		: eventMutationArr[0];
 }
-
-(window as any).pushToEventMutationArr = pushToEventMutationArr;

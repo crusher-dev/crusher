@@ -3,7 +3,7 @@ import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
 
 const _uniqueSelector2 = new uniqueSelector2.default({});
 
-function getXpathTo(element: HTMLElement): string | null {
+export function getXpathTo(element: HTMLElement): string | null {
 	if (element === document.body) return element.tagName;
 	if (!element.parentNode) return null;
 

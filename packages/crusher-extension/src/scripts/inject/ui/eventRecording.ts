@@ -2,7 +2,7 @@ import { getAllAttributes } from "../../../utils/helpers";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
-import { getSelectors } from "../../../utils/selector";
+import { getSelectors, getXpathTo } from "../../../utils/selector";
 import {
 	iElementModeMessageMeta,
 	MESSAGE_TYPES,
@@ -11,7 +11,7 @@ import { iPerformActionMeta } from "../responseMessageListener";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
-import { getEventNodeInCaseDOMWasMutated } from "../relevantMutationDetector";
+import { iSelectorInfo } from "../../../../../crusher-shared/types/selectorInfo";
 
 export default class EventRecording {
 	defaultState: any = {
@@ -41,6 +41,7 @@ export default class EventRecording {
 	private lastScrollFireTime = 0;
 
 	private resetUserEventsToDefaultCallback: any = undefined;
+	private isRegistered = false;
 
 	constructor(options = {} as any) {
 		this.state = {
@@ -352,8 +353,29 @@ export default class EventRecording {
 		}
 	}
 
+	async handleWithHoverMeta(actionType: ACTIONS_IN_TEST, target: HTMLElement) {
+		const eventa = new CustomEvent("FromExtension", {
+			detail: {
+				currentEventType: actionType,
+				currentTargetXpath: "//" + getXpathTo(target),
+			},
+		} as any);
+		if (!this.isRegistered) {
+			(window as any).addEventListener("FromPage", async (evt: any) => {
+				const response = evt.detail;
+				console.log("CLICKED ON WINDOW", response);
+
+				this.eventsController.saveRelevantCapturedEventInBackground(
+					response.response.meta.finalActions,
+				);
+			});
+			this.isRegistered = true;
+		}
+
+		window.dispatchEvent(eventa);
+	}
 	// eslint-disable-next-line consistent-return
-	handleWindowClick(event: any) {
+	async handleWindowClick(event: any) {
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		if (isRecorderCover) {
@@ -377,12 +399,9 @@ export default class EventRecording {
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
 		if (!event.simulatedEvent) {
-			console.log("somelog", getEventNodeInCaseDOMWasMutated(event.target));
-			this.eventsController.saveCapturedEventInBackground(
-				ACTIONS_IN_TEST.CLICK,
-				event.target,
-			);
+			await this.handleWithHoverMeta(ACTIONS_IN_TEST.CLICK, event.target);
 		}
+
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
 			const href = closestLink.getAttribute("href");
 			const isBlank = closestLink.getAttribute("target") === "_blank";
@@ -418,7 +437,10 @@ export default class EventRecording {
 
 	handleFocus(event: FocusEvent) {
 		const target = event.target as HTMLElement;
-		if (["textarea", "input"].includes(target.tagName.toLowerCase())) {
+		if (
+			(target as any) != window &&
+			["textarea", "input"].includes(target.tagName.toLowerCase())
+		) {
 			this.eventsController.saveCapturedEventInBackground(
 				ACTIONS_IN_TEST.ELEMENT_FOCUS,
 				target,
@@ -462,6 +484,7 @@ export default class EventRecording {
 
 		window.onbeforeunload = this.handleBeforeNavigation;
 		window.addEventListener("keydown", this.handleKeyDown, true);
+
 		window.addEventListener("click", this.handleWindowClick, true);
 		setInterval(this.pollInterval, 300);
 	}

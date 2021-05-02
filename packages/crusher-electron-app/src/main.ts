@@ -50,9 +50,7 @@ async function createWindow () {
 		if(method==="Runtime.consoleAPICalled"){
 			if(params.type === 'log' && params.args && params.args.length){
 				if(params.args[0].value === "somelog"){
-					// console.log(params.args[1]);
-				} else if(params.args[0].value === "gotthislog"){
-					// console.log(params.args[1]); // event key
+					console.log(params.args[1], params.args[2]);
 				}
 			}
 			if(params.type === 'trace' && params.args && params.args.length == 4){

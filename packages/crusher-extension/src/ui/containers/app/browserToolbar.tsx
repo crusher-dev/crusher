@@ -3,7 +3,7 @@ import {
 	NavigateBackIcon,
 	NavigateForwardIcon,
 	NavigateRefreshIcon,
-	RecordLabelIcon,
+	SaveIcon,
 } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
@@ -118,16 +118,18 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<span className="slider round"></span>
 					</label>
 				</div>
-				<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
-					<SelectDeviceInput
-						selectedDevice={selectedDevice}
-						selectDevice={handleDeviceChange}
-					/>
-				</div>
+				{false && (
+					<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
+						<SelectDeviceInput
+							selectedDevice={selectedDevice}
+							selectDevice={handleDeviceChange}
+						/>
+					</div>
+				)}
 				<Button
 					id={"saveTest"}
 					title={"Save test"}
-					icon={RecordLabelIcon}
+					icon={SaveIcon}
 					onClick={saveTest}
 				/>
 				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
@@ -229,7 +231,7 @@ const browserToolbarStyle = {
 };
 
 const browserMainToolbarStyle = {
-	background: "#14181F",
+	//background: "#14181F",
 	display: "flex",
 	padding: "0.73rem 2rem",
 };

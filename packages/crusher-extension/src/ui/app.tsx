@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { render } from "react-dom";
-import { SidebarActionsBox } from "./containers/app/sidebarActionsBox";
 import { BrowserWindow } from "./containers/app/browserWindow";
 import configureStore, { getStore } from "../redux/store";
 import { Provider } from "react-redux";
@@ -14,6 +13,7 @@ import { submitPostDataWithForm } from "../utils/helpers";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
+import "../style/main.css";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
@@ -79,7 +79,6 @@ const App = () => {
 					deviceIframeRef={deviceIframeRef}
 					saveTestCallback={saveTest}
 				/>
-				<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 				<ModalManager deviceIframeRef={deviceIframeRef} />
 			</Conditional>
 			<Conditional If={!url}>
@@ -103,7 +102,7 @@ const App = () => {
 const containerStyle = {
 	display: "flex",
 	height: "100%",
-	background: "rgb(40, 40, 40)",
+	//background: "rgb(40, 40, 40)",
 };
 
 ReactModal.setAppElement("#root");

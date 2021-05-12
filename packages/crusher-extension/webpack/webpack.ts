@@ -70,6 +70,10 @@ module.exports = {
 				},
 			},
 			{ test: /\.ts(x)?$/, loader: "ts-loader" },
+			{
+				test: /\.css$/i,
+				use: ["style-loader", "css-loader"],
+			},
 		],
 	},
 	devtool: "cheap-module-source-map",

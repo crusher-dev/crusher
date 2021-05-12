@@ -4,6 +4,7 @@ import { Conditional } from "../conditional";
 import { iDevice } from "../../../../../crusher-shared/types/extension/device";
 import { useSelector } from "react-redux";
 import { isRecorderScriptBooted } from "../../../redux/selectors/recorder";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 
 interface iDeviceProps {
 	url: string;
@@ -24,7 +25,7 @@ const Device = (props: iDeviceProps) => {
 			</Conditional>
 
 			<Conditional If={!isIframeLoaded}>
-				<div style={pageLoadingBlockCoverStyle}>
+				<div>
 					<div>
 						<img
 							style={pageLoadingCoverIconStyle}
@@ -37,42 +38,44 @@ const Device = (props: iDeviceProps) => {
 				</div>
 			</Conditional>
 
-			<div
-				className={isMobile ? "smartphone" : ""}
-				style={{
-					width: device.width,
-					height: device.height,
-				}}
-			>
-				<div className="content" style={{ width: "100%", height: "100%" }}>
-					<iframe
-						ref={forwardRef}
-						style={browserFrameStyle}
-						scrolling="auto"
-						sandbox="allow-scripts allow-forms allow-same-origin"
-						id="device_browser"
-						name={"crusher_iframe"}
-						title={device.name}
-						src={url}
-					/>
+			<Conditional If={isIframeLoaded}>
+				<div
+					className={isMobile ? "smartphone" : ""}
+					style={{
+						width: device.width,
+						height: device.height,
+					}}
+				>
+					<div className="content" style={browserFrameContainerStyle}>
+						<iframe
+							ref={forwardRef}
+							style={browserFrameStyle}
+							scrolling="auto"
+							sandbox="allow-scripts allow-forms allow-same-origin"
+							id="device_browser"
+							name={"crusher_iframe"}
+							title={device.name}
+							src={url}
+						/>
+					</div>
 				</div>
-			</div>
+			</Conditional>
 		</div>
 	);
 };
 
-const pageLoadingBlockCoverStyle = {
-	position: POSITION.ABSOLUTE,
-	left: 0,
-	top: 0,
-	width: "100%",
-	height: "100%",
-	zIndex: 99999,
-	background: "rgb(0,0,0,0.7)",
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "center",
-};
+// const pageLoadingBlockCoverStyle = {
+// 	position: POSITION.ABSOLUTE,
+// 	left: 0,
+// 	top: 0,
+// 	width: "100%",
+// 	height: "100%",
+// 	zIndex: 99999,
+// 	background: "rgb(0,0,0,0.7)",
+// 	display: "flex",
+// 	alignItems: "center",
+// 	justifyContent: "center",
+// };
 
 const pageLoadingCoverIconStyle = {
 	marginLeft: "0.35rem",
@@ -98,24 +101,31 @@ const blockCoverStyle = {
 };
 
 const previewBrowserStyle = {
-	flex: 1,
 	maxWidth: "75vw",
 	display: "flex",
 	justifyContent: "center",
-
 	overflowY: OVERFLOW.AUTO,
-	background: "#010101",
+	background: "#0A0A0A",
 	position: POSITION.RELATIVE,
 	alignItems: "center",
-	height: "calc(100vh - 2.58rem)",
+	height: "calc(100vh - 4rem)",
+	borderTopRightRadius: "2rem",
+	border: `solid ${COLOR_CONSTANTS.BORDER}`,
+	borderWidth: "1px",
+	borderLeft: "none",
+	borderBottom: "none",
 };
 
 const browserFrameStyle = {
 	border: "none",
 	display: "block",
-	borderRadius: 2,
 	maxWidth: "100%",
-	backgroundColor: "#fff",
+	backgroundColor: "#010101",
+	width: "100%",
+	height: "100%",
+};
+
+const browserFrameContainerStyle = {
 	width: "100%",
 	height: "100%",
 };

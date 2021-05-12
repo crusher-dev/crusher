@@ -14,6 +14,9 @@ import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recorde
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { POSITION } from "../../../interfaces/css";
+import { Conditional } from "../../../ui/components/conditional";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { SidebarActionsBox } from "./sidebarActionsBox";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
@@ -117,6 +120,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 					forwardRef={deviceIframeRef}
 				/>
 			</div>
+			<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 		</div>
 	);
 };
@@ -125,15 +129,16 @@ const mainContainerStyle = {
 	flex: 1,
 	width: "70%",
 	maxHeight: "100vh",
-	overflow: "auto",
+	//overflow: "auto",
 };
 
 const toolbarContainerStyle = {
 	position: POSITION.RELATIVE,
+	height: "4rem",
 };
 
 const browserStyle = {
-	background: "#010101",
+	background: COLOR_CONSTANTS.PRIMARY,
 	minHeight: "100vh",
 	overflow: "hidden",
 };

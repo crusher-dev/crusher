@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 import { Conditional } from "../conditional";
 
 interface iButtonProps {
@@ -41,15 +42,16 @@ const buttonStyle = (isHovered: boolean) => ({
 	borderRadius: 4,
 	fontWeight: 600,
 	fontSize: "0.825rem",
-	background: isHovered ? "rgba(91,118,247, 0.85)" : "rgb(91,118,247, 1)",
-	color: isHovered ? "rgba(255,255,255, 1)" : "rgba(255,255,255, 0.95)",
-	fontFamily: "DM Sans",
-	padding: "0.5rem 0.95rem",
+	background: COLOR_CONSTANTS.TRINARY,
 	display: "flex",
-	alignItems: "center",
-	cursor: "pointer",
-	width: "auto",
-	marginLeft: "1.5rem",
+	color: "#fff",
+	border: `solid ${COLOR_CONSTANTS.BORDER}`,
+	borderWidth: "1px",
+	alignItems:"center",
+	justifyContent:"space-evenly",
+	padding:"0.3rem",
+	paddingRight:"0.5rem",
+	paddingLeft:"0.5rem"
 });
 
 const buttonNameStyle = (isIconThere: boolean) => ({

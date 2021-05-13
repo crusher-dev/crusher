@@ -1,18 +1,23 @@
-import React, { RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState, ChangeEvent } from "react";
 import { ActionStepList } from "./actionStepList";
 import { useSelector } from "react-redux";
-import { getActionsRecordingState } from "../../../redux/selectors/recorder";
+import {
+	getActionsRecordingState,
+	getAutoRecorderState,
+} from "../../../redux/selectors/recorder";
 import { Conditional } from "../../components/conditional";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TopLevelActionsList } from "./topLevelActionsList";
 import { ElementLevelActionsList } from "./elementLevelActionsList";
 import {
-	FLEX_DIRECTION,
-	FONT_WEIGHT,
 	OVERFLOW,
 	POSITION,
 } from "../../../interfaces/css";
 import { SelectElementPlaceholder } from "./selectElementPlaceholder";
+import { SwitchOffIcon, SwitchOnIcon } from "../../../assets/icons";
+import { getStore } from "../../../redux/store";
+import { updateAutoRecorderSetting } from "../../../redux/actions/recorder";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -37,15 +42,38 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		setCurrentTip(TIPS[newTipIndex]);
 	}, []);
 
+	const handleAutoDetectModeToggle = (event: ChangeEvent<HTMLInputElement>) => {
+		const store = getStore();
+		store.dispatch(updateAutoRecorderSetting(event.target.checked));
+	};
+
+	const isAutoHoverOn = useSelector(getAutoRecorderState);
+
 	return (
-		<div style={sidebarStyle}>
-			<div style={tipContainerStyle}>
-				<div>
-					<img src="/icons/bulb.svg" width={31} />
-				</div>
-				<div style={tipContentStyle}>
-					<div style={tipTitleStyle}>Tip of the session</div>
-					<div style={tipDescStyle}>{currentTip}</div>
+		<div style={sidebarStyle} className="flex flex-col h-screen">
+			<div className="flex flex-col  h-1/2">
+				<h5 className="text-white">Actions</h5>
+				<div className="flex flex-col items-center justify-center h-full">
+					<div>
+						<label className="switch cursor-pointer">
+							<input
+								type="checkbox"
+								defaultChecked={isAutoHoverOn}
+								onChange={handleAutoDetectModeToggle}
+							/>
+							{/* <span className="slider round"></span> */}
+							{isAutoHoverOn ? <SwitchOnIcon /> : <SwitchOffIcon />}
+						</label>
+					</div>
+
+					<div className="mt-4 ml-5 mr-5">
+						<h5 className="text-white text-center">
+							We're detecting your basic actions
+						</h5>
+						<h6 className="text-gray-300 text-center">
+							For manual control, you can add custom checks
+						</h6>
+					</div>
 				</div>
 			</div>
 			<div style={mainContainerStyle}>
@@ -71,41 +99,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 };
 
 const sidebarStyle = {
-	display: "flex",
-	flexDirection: FLEX_DIRECTION.COLUMN,
-	position: POSITION.FIXED,
-	bottom: "0",
-	right: "0%",
-	marginLeft: "auto",
+	background: COLOR_CONSTANTS.PRIMARY,
 	maxWidth: "22rem",
-	borderTopLeftRadius: 20,
 	width: "25vw",
-};
-
-const tipContainerStyle = {
-	display: "flex",
-	flexDirection: FLEX_DIRECTION.ROW,
-	background: "rgb(1, 1, 1)",
-	borderRadius: "0.62rem 0 0 0",
-	padding: "0.88rem 1.63rem",
-};
-
-const tipContentStyle = {
-	color: "#FFFFFF",
-	fontFamily: "DM Sans",
-	marginLeft: "0.898rem",
-};
-
-const tipTitleStyle = {
-	color: "#FFFFFF",
-	fontFamily: "DM Sans",
-	fontSize: "0.85rem",
-};
-
-const tipDescStyle = {
-	fontSize: "0.66rem",
-	marginTop: "0.125rem",
-	fontWeight: FONT_WEIGHT.BOLD,
 };
 
 const mainContainerStyle = {

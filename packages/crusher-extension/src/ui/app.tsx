@@ -14,6 +14,7 @@ import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
 import "../style/main.css";
+import { SidebarActionsBox } from "./containers/app/sidebarActionsBox";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
@@ -73,7 +74,7 @@ const App = () => {
 	}, []);
 
 	return (
-		<div style={containerStyle}>
+		<div className="flex">
 			<Conditional If={url}>
 				<BrowserWindow
 					deviceIframeRef={deviceIframeRef}
@@ -84,6 +85,7 @@ const App = () => {
 			<Conditional If={!url}>
 				<StartupModal isOpen={true} />
 			</Conditional>
+			<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 			<link
 				rel="stylesheet"
 				href={chrome.runtime.getURL("/styles/devices.min.css")}
@@ -97,12 +99,6 @@ const App = () => {
 				`}</style>
 		</div>
 	);
-};
-
-const containerStyle = {
-	display: "flex",
-	height: "100%",
-	//background: "rgb(40, 40, 40)",
 };
 
 ReactModal.setAppElement("#root");

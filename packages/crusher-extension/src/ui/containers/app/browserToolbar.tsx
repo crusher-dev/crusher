@@ -12,7 +12,6 @@ import { Button } from "../../components/app/button";
 import { getStore } from "../../../redux/store";
 import {
 	updateActionsModalState,
-	updateAutoRecorderSetting,
 } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
@@ -20,8 +19,7 @@ import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
-import { useSelector } from "react-redux";
-import { getAutoRecorderState } from "../../../redux/selectors/recorder";
+
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -83,12 +81,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO));
 	};
 
-	const handleAutoDetectModeToggle = (event: ChangeEvent<HTMLInputElement>) => {
-		const store = getStore();
-		store.dispatch(updateAutoRecorderSetting(event.target.checked));
-	};
-
-	const isAutoHoverOn = useSelector(getAutoRecorderState);
 
 	return (
 		<div style={browserToolbarStyle}>
@@ -107,25 +99,15 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					onKeyDown={handleKeyDown}
 					onChange={handleAddressBarUrlChange}
 				/>
-				<div style={authDetectModeToggleContainerStyle}>
-					<div style={autoDetectModeToggleHeadingStyle}>Auto Detect:</div>
-					<label className="switch">
-						<input
-							type="checkbox"
-							defaultChecked={isAutoHoverOn}
-							onChange={handleAutoDetectModeToggle}
-						/>
-						<span className="slider round"></span>
-					</label>
+				
+
+				<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
+					<SelectDeviceInput
+						selectedDevice={selectedDevice}
+						selectDevice={handleDeviceChange}
+					/>
 				</div>
-				{false && (
-					<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
-						<SelectDeviceInput
-							selectedDevice={selectedDevice}
-							selectDevice={handleDeviceChange}
-						/>
-					</div>
-				)}
+
 				<Button
 					id={"saveTest"}
 					title={"Save test"}
@@ -209,18 +191,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	);
 };
 
-const autoDetectModeToggleHeadingStyle = {
-	color: "#fff",
-	marginRight: "1rem",
-	fontSize: "0.9rem",
-};
 
-const authDetectModeToggleContainerStyle = {
-	display: "flex",
-	alignItems: "center",
-	marginLeft: "auto",
-	color: "#fff",
-};
 
 const deviceOptionInputContainerStyle = {
 	marginLeft: "auto",
@@ -228,10 +199,10 @@ const deviceOptionInputContainerStyle = {
 const browserToolbarStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,
+	width: "75vw",
 };
 
 const browserMainToolbarStyle = {
-	//background: "#14181F",
 	display: "flex",
 	padding: "0.73rem 2rem",
 };

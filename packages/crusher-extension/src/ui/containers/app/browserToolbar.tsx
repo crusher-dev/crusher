@@ -101,7 +101,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 				/>
 				
 
-				<div className="ml-auto" id={"select-device-input"}>
+				<div className="ml-auto mr-3" id={"select-device-input"}>
 					<SelectDeviceInput
 						selectedDevice={selectedDevice}
 						selectDevice={handleDeviceChange}

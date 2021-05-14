@@ -101,7 +101,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 				/>
 				
 
-				<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
+				<div className="ml-auto" id={"select-device-input"}>
 					<SelectDeviceInput
 						selectedDevice={selectedDevice}
 						selectDevice={handleDeviceChange}
@@ -114,9 +114,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					icon={SaveIcon}
 					onClick={saveTest}
 				/>
-				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
+				{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
-				</a>
+				</a> */}
 			</div>
 
 			<style>{`
@@ -191,11 +191,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	);
 };
 
-
-
-const deviceOptionInputContainerStyle = {
-	marginLeft: "auto",
-};
 const browserToolbarStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,
@@ -228,13 +223,13 @@ const refreshIconContainerStyle = {
 	cursor: "pointer",
 };
 
-const helpStyle = {
-	display: "flex",
-	alignItems: "center",
-	textDecoration: "none",
-	color: "#fff",
-	fontSize: 15,
-	marginLeft: "0.75rem",
-};
+// const helpStyle = {
+// 	display: "flex",
+// 	alignItems: "center",
+// 	textDecoration: "none",
+// 	color: "#fff",
+// 	fontSize: 15,
+// 	marginLeft: "0.75rem",
+// };
 
 export { BrowserToolbar };

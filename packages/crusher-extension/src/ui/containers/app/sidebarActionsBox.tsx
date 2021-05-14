@@ -9,12 +9,13 @@ import { Conditional } from "../../components/conditional";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TopLevelActionsList } from "./topLevelActionsList";
 import { ElementLevelActionsList } from "./elementLevelActionsList";
-import {
-	OVERFLOW,
-	POSITION,
-} from "../../../interfaces/css";
+import { OVERFLOW, POSITION } from "../../../interfaces/css";
 import { SelectElementPlaceholder } from "./selectElementPlaceholder";
-import { SwitchOffIcon, SwitchOnIcon } from "../../../assets/icons";
+import {
+	SettingsIcon,
+	SwitchOffIcon,
+	SwitchOnIcon,
+} from "../../../assets/icons";
 import { getStore } from "../../../redux/store";
 import { updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
@@ -51,7 +52,12 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 
 	return (
 		<div style={sidebarStyle} className="flex flex-col h-screen">
-			<div className="flex flex-col  h-1/2">
+			<div className="flex justify-end h-16 items-center">
+				<div className="mr-5 cursor-pointer">
+					<SettingsIcon />
+				</div>
+			</div>
+			<div className="flex flex-col  h-1/2 p-2 border-b-2 border-gray-800">
 				<h5 className="text-white">Actions</h5>
 				<div className="flex flex-col items-center justify-center h-full">
 					<div>
@@ -61,18 +67,29 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 								defaultChecked={isAutoHoverOn}
 								onChange={handleAutoDetectModeToggle}
 							/>
-							{/* <span className="slider round"></span> */}
 							{isAutoHoverOn ? <SwitchOnIcon /> : <SwitchOffIcon />}
 						</label>
 					</div>
 
-					<div className="mt-4 ml-5 mr-5">
+					<div className="mt-4 ml-5 mr-5 flex flex-col items-center">
 						<h5 className="text-white text-center">
 							We're detecting your basic actions
 						</h5>
-						<h6 className="text-gray-300 text-center">
+						<h6 className="text-gray-300 text-center text-sm">
 							For manual control, you can add custom checks
 						</h6>
+						<button
+							className="p-2 focus:outline-none pr-5 pl-5 
+						    max-w-max mt-4 rounded-md bg-blue-400 text-white"
+						>
+							Add custom check
+						</button>
+						<a
+							href="https://www.google.com"
+							className="underline text-gray-500 text-sm mt-5"
+						>
+							which actions are automatically detected?
+						</a>
 					</div>
 				</div>
 			</div>

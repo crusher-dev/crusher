@@ -71,15 +71,16 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		<div className="flex flex-col items-center justify-center h-full">
 			<DetectActionSwitch />
 			<div className="mt-4 ml-5 mr-5 flex flex-col items-center">
-				<h5 className="text-white text-center">
+				<div className="text-white text-center text-lg my-2">
 					We're detecting your basic actions
-				</h5>
+				</div>
 				<h6 className="text-gray-300 text-center text-sm">
 					For manual control, you can add custom checks
 				</h6>
 				<button
 					onClick={toggleCustomIsCheck}
-					className="p-2 focus:outline-nmainContainerStyleone pr-5 pl-5 
+					className="p-2 focus:outline-none pr-5 pl-5 
+					text-md
 				max-w-max mt-4 rounded-md bg-blue-400 text-white"
 				>
 					Add custom check
@@ -97,7 +98,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const [isSearching, setIsSearching] = useState(false);
 	const toggleSearching = () => setIsSearching(!isSearching);
 	return (
-		<div style={sidebarStyle} className="flex flex-col h-screen">
+		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
 			<div
 				className={`flex h-16 
 			${!isCustomCheck ? "justify-end" : "justify-center"} 
@@ -108,27 +109,32 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 						<SettingsIcon />
 					</div>
 				) : (
-					<div className="flex text-white">
+					<div className="flex text-white h-10 max-w-max">
 						<DetectActionSwitch />
-						{isAutoHoverOn ? "Detecting Actions" : "Not Detecting Actions"}
+						{isAutoHoverOn ? (
+							<div>Detecting Actions</div>
+						) : (
+							<div>Not Detecting Actions</div>
+						)}
 					</div>
 				)}
 			</div>
 			<div className="flex h-1/2 mt-1 flex-col p-2 border-b-2 border-gray-800">
 				{!isSearching ? (
 					<div className="flex justify-between">
-						<h5 className="text-white">Actions</h5>
+						<h5 className="text-white text-xl">Actions</h5>
 						{isCustomCheck && (
 							<SearchIcon className="cursor-pointer" onClick={toggleSearching} />
 						)}
 					</div>
 				) : (
-					<div className="flex justify-between">
-						<InputField placeholder="Search an Action" />
+					<div className="flex">
+						<InputField style={{ width: "80%" }} placeholder="Search an Action" />
 						<div
 							onClick={toggleSearching}
-							className="h-full mr-6 text-white text-3xl 
-							 cursor-pointer"
+							style={{ width: "20%" }}
+							className="h-full text-white text-3xl 
+							 cursor-pointer flex items-center justify-center"
 						>
 							&times;
 						</div>
@@ -160,8 +166,8 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 
 			<div className="flex flex-col">
 				<div className="flex justify-between text-white p-3">
-					<h5>Recorded</h5>
-					<div className="text-sm text-center pr-2 pl-2 bg-gray-800 rounded-md">
+					<h3>Recorded</h3>
+					<div className="text-md text-center pr-2 pl-2 bg-gray-800 rounded-md">
 						11 steps
 					</div>
 				</div>
@@ -173,7 +179,6 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 
 const sidebarStyle = {
 	background: COLOR_CONSTANTS.PRIMARY,
-	maxWidth: "22rem",
 	width: "25vw",
 };
 

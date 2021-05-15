@@ -132,7 +132,7 @@ const headingTitleStyle = (isBackIconPresent: boolean) => ({
 const listContainerStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,
-	marginTop: "2rem",
+	marginTop: "1rem",
 };
 
 export { List };

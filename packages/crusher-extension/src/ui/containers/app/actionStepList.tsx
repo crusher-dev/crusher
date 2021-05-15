@@ -76,6 +76,12 @@ const Action = (props: iActionProps) => {
 					<img src={"/icons/delete.svg"} style={deleteIconStyle} />
 				</div>
 			</Conditional>
+			<div
+				className="text-white flex items-center text-xl"
+				style={{ color: stepActionStyle.color }}
+			>
+				&gt;
+			</div>
 			<div style={stepIndexNumberingStyle}>{index + 1}</div>
 		</li>
 	);
@@ -123,7 +129,7 @@ const ActionStepList = () => {
 	});
 
 	return (
-		<div style={containerStyle} id="stepsListContainer">
+		<div className="h-full" style={containerStyle} id="stepsListContainer">
 			<ul style={stepsListContainerStyle} className="margin-list-item">
 				{stepList}
 			</ul>
@@ -133,10 +139,10 @@ const ActionStepList = () => {
 
 const containerStyle = {
 	height: "auto",
-	maxHeight: 240,
+	maxHeight: 290,
 	minHeight: 100,
-	overflowY: OVERFLOW.AUTO,
-	marginBottom: "0.5rem",
+	overflowY: OVERFLOW.SCROLL,
+	//marginBottom: "0.5rem",
 	scrollBehavior: SCROLL_BEHAVIOR.SMOOTH,
 };
 
@@ -153,7 +159,7 @@ const stepStyle = {
 	cursor: "pointer",
 	fontFamily: "DM Sans",
 	fontStyle: "normal",
-	background: "#1C1F26",
+	//	background: "#1C1F26",
 	borderRadius: "0.25rem",
 	position: POSITION.RELATIVE,
 	padding: "0.6rem",

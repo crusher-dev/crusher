@@ -62,7 +62,7 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 
 	return (
 		<List
-			heading={"Select Action"}
+			heading={"Element actions"}
 			items={items}
 			onItemClick={handleActionSelected}
 		></List>

@@ -14,7 +14,7 @@ const AddressBar = (props: iAddressBarProps) => {
 
 	return (
 		<>
-			<div style={addressBarStyle} className={"address_bar"}>
+			<div style={addressBarStyle} id="address-bar" className={"address_bar"}>
 				<div style={sslContainerStyle}>
 					<img style={sslIconStyle} src={chrome.runtime.getURL("/icons/ssl.svg")} />
 				</div>

@@ -71,7 +71,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		<div className="flex flex-col items-center justify-center h-full">
 			<DetectActionSwitch />
 			<div className="mt-4 ml-5 mr-5 flex flex-col items-center">
-				<div className="text-white text-center text-lg my-2">
+				<div className="text-white text-center text-md my-2">
 					We're detecting your basic actions
 				</div>
 				<h6 className="text-gray-300 text-center text-sm">
@@ -112,9 +112,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					<div className="flex text-white h-10 max-w-max">
 						<DetectActionSwitch />
 						{isAutoHoverOn ? (
-							<div>Detecting Actions</div>
+							<div className="pl-3">Detecting Actions</div>
 						) : (
-							<div>Not Detecting Actions</div>
+							<div className="pl-3">Not Detecting Actions</div>
 						)}
 					</div>
 				)}
@@ -122,7 +122,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 			<div className="flex h-1/2 mt-1 flex-col p-2 border-b-2 border-gray-800">
 				{!isSearching ? (
 					<div className="flex justify-between">
-						<h5 className="text-white text-xl">Actions</h5>
+						<h5 className="text-white text-md">Actions</h5>
 						{isCustomCheck && (
 							<SearchIcon className="cursor-pointer" onClick={toggleSearching} />
 						)}
@@ -167,7 +167,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 			<div className="flex flex-col">
 				<div className="flex justify-between text-white p-3">
 					<h3>Recorded</h3>
-					<div className="text-md text-center pr-2 pl-2 bg-gray-800 rounded-md">
+					<div className="text-sm text-center pr-2 pl-2 bg-gray-800 rounded-md">
 						11 steps
 					</div>
 				</div>
@@ -183,21 +183,12 @@ const sidebarStyle = {
 };
 
 const mainContainerStyle = {
-	//	borderTopLeftRadius: 12,
-	//background: "#14181F",
 	maxHeight: "80vh",
-	// overflow: "auto",
 };
-
-// const stepsContainerStyle = {
-// 	paddingBottom: "0rem",
-// 	borderTopLeftRadius: 12,
-// };
 
 const actionContainerStyle = {
 	padding: "1.1rem 1.25rem",
 	position: POSITION.RELATIVE,
-	//background: "#1C1F26",
 	marginTop: "-0.55rem",
 	borderTopLeftRadius: "12px",
 	overflow: OVERFLOW.AUTO,

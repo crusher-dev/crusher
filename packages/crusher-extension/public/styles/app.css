@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-   font-size: calc(10px + 0.7vw);
+    font-size: calc(10px + 0.5vw);
     overflow: hidden;
 }
 

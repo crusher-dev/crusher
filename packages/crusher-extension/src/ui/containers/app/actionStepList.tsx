@@ -142,7 +142,7 @@ const containerStyle = {
 	maxHeight: 290,
 	minHeight: 100,
 	overflowY: OVERFLOW.SCROLL,
-	//marginBottom: "0.5rem",
+	marginBottom: "0.4rem",
 	scrollBehavior: SCROLL_BEHAVIOR.SMOOTH,
 };
 

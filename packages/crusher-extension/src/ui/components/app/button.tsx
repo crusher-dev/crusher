@@ -47,11 +47,12 @@ const buttonStyle = (isHovered: boolean) => ({
 	color: "#fff",
 	border: `solid ${COLOR_CONSTANTS.BORDER}`,
 	borderWidth: "1px",
-	alignItems:"center",
-	justifyContent:"space-evenly",
-	padding:"0.2rem",
-	paddingRight:"0.5rem",
-	paddingLeft:"0.5rem"
+	alignItems: "center",
+	justifyContent: "space-evenly",
+	padding: "0.2rem",
+	paddingRight: "0.5rem",
+	paddingLeft: "0.5rem",
+	cursor: "pointer",
 });
 
 const buttonNameStyle = (isIconThere: boolean) => ({

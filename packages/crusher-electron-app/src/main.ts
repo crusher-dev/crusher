@@ -1,11 +1,14 @@
-import {app, BrowserWindow, session} from 'electron';
+import {app, BrowserWindow, session, ipcMain} from 'electron';
 
 import * as path from "path";
 const Element = function(){};
 
 const loadExtension =  (mainWindow) => {
 	return new Promise((resolve, reject) => {
-		session.defaultSession.loadExtension(path.resolve(__dirname, '../../crusher-extension/build/'), {allowFileAccess: true}).then(async ({ id: extensionId }) => {
+		session.defaultSession.loadExtension(
+			path.resolve(__dirname, '../../crusher-extension/build/'),
+			{ allowFileAccess: true}
+		).then(async ({ id: extensionId }) => {
 			await mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
 			resolve(true);
 		});
@@ -18,7 +21,7 @@ async function createWindow () {
 
 	const mainWindow = new BrowserWindow({
 		webPreferences: {
-			// preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, 'preload.js'),
 			nativeWindowOpen: true,
 			nodeIntegration: true,
 			nodeIntegrationInSubFrames: true,
@@ -40,37 +43,55 @@ async function createWindow () {
 	);
 
 	await loadExtension(mainWindow);
-	await mainWindow.webContents.debugger.attach();
+	await mainWindow.webContents.debugger.attach("1.3");
 
 	await mainWindow.webContents.debugger.sendCommand('Debugger.enable');
+	await mainWindow.webContents.debugger.sendCommand('DOM.enable');
+
 	await mainWindow.webContents.debugger.sendCommand('Runtime.enable');
+	await mainWindow.webContents.debugger.sendCommand('Overlay.enable');
 	await mainWindow.webContents.debugger.sendCommand("Debugger.setAsyncCallStackDepth", {maxDepth: 9999});
 
-	mainWindow.webContents.debugger.on('message', async (event, method, params) => {
-		if(method==="Runtime.consoleAPICalled"){
-			if(params.type === 'log' && params.args && params.args.length){
-				if(params.args[0].value === "somelog"){
-					console.log(params.args[1], params.args[2]);
+	ipcMain.on('turn-on-inspect-mode', async (e, msg) => {
+		await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
+			mode: "searchForNode", highlightConfig: {
+				'showInfo': true,
+				'showStyles':true,
+				'contentColor':{r: 233, g: 255, b: 177, a: 0.39}
+			}
+		});
+	});
+	ipcMain.on('turn-off-inspect-mode', async (e, msg) => {
+		await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
+			mode: "none",
+			highlightConfig: {
+				'showInfo': true,
+				'showStyles':true,
+				'contentColor':{
+					r: 233,
+					g: 255,
+					b: 177,
+					a: 0.39
 				}
 			}
-			if(params.type === 'trace' && params.args && params.args.length == 4){
-				if(params.stackTrace.callFrames.length < 2) return;
-				let lastFrame = params.stackTrace.callFrames[params.stackTrace.callFrames.length - 2];
-				if(params.stackTrace.parent){
-					if(params.stackTrace.parent.callFrames.length < 2) return;
-					lastFrame = params.stackTrace.parent.callFrames[params.stackTrace.parent.callFrames.length - 2];
-				}
+		});
+	});
 
-				if(lastFrame.functionName.startsWith("crusher__stack")) {
-					if(["link", "meta", "body"].includes(params.args[1].description.trim())) return;
-					const options = params.args[3];
-					if(options.value) {
-						const eventKeyMapArr = lastFrame.functionName.split("__");
-						await mainWindow.webContents.debugger.sendCommand("Runtime.callFunctionOn", {functionDeclaration: "pushToEventMutationArr", silent: true, executionContextId: params.executionContextId, arguments: [{value: eventKeyMapArr[eventKeyMapArr.length - 1]},{objectId: params.args[1].objectId}, {value: "test"}]});
-						console.log("DOM mutation on ", params.args[0].value, " from hover:", params.args[1].description, lastFrame.functionName);
+	mainWindow.webContents.debugger.on('message', async (event, method, params) => {
+		if(method === "Overlay.inspectNodeRequested"){
+			await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
+				mode: "none",
+				highlightConfig: {
+					'showInfo': true,
+					'showStyles':true,
+					'contentColor':{
+						r: 233,
+						g: 255,
+						b: 177,
+						a: 0.39
 					}
 				}
-			}
+			});
 		}
 	});
 

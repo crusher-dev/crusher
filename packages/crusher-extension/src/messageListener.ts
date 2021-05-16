@@ -281,6 +281,8 @@ export function recorderMessageListener(
 			const isInspectModeOn = meta.value;
 			store.dispatch(updateInspectModeState(isInspectModeOn));
 			if (isInspectModeOn) {
+				(window as any).electron.turnOnInspectMode();
+
 				store.dispatch(
 					updateActionsRecordingState(ACTIONS_RECORDING_STATE.SELECT_ELEMENT),
 				);
@@ -348,6 +350,8 @@ export function turnOffInspectModeInFrame(
 ) {
 	if (!deviceIframeRef.current)
 		throw new Error("Iframe not available yet from ref context");
+
+	(window as any).electron.turnOffInspectMode()
 
 	const cn = deviceIframeRef.current.contentWindow;
 

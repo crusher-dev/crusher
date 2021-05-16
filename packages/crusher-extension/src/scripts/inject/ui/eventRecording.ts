@@ -2,7 +2,7 @@ import { getAllAttributes } from "../../../utils/helpers";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
-import { getSelectors, getXpathTo } from "../../../utils/selector";
+import { getSelectors } from "../../../utils/selector";
 import {
 	iElementModeMessageMeta,
 	MESSAGE_TYPES,
@@ -11,7 +11,19 @@ import { iPerformActionMeta } from "../responseMessageListener";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
-import { iSelectorInfo } from "../../../../../crusher-shared/types/selectorInfo";
+
+interface iEventDomMutationRecord {
+	eventNode: Node;
+	targetNode: Node;
+}
+interface iRegisteredMutationRecord extends iEventDomMutationRecord {
+	dependentOn: iRegisteredMutationRecord | null;
+}
+interface iRelevantEvent {
+	evt: iRegisteredMutationRecord;
+	index: number;
+	isSame: boolean;
+}
 
 export default class EventRecording {
 	defaultState: any = {
@@ -41,7 +53,7 @@ export default class EventRecording {
 	private lastScrollFireTime = 0;
 
 	private resetUserEventsToDefaultCallback: any = undefined;
-	private isRegistered = false;
+	private eventMutationArr: Array<iRegisteredMutationRecord> = [];
 
 	constructor(options = {} as any) {
 		this.state = {
@@ -56,6 +68,9 @@ export default class EventRecording {
 		this.handleScroll = this.handleScroll.bind(this);
 		this.handleBeforeNavigation = this.handleBeforeNavigation.bind(this);
 		this.handlePointerEnter = this.handlePointerEnter.bind(this);
+		this.handleCrusherHoverTrace = this.handleCrusherHoverTrace.bind(this);
+		this.saveHoverFinalEvents = this.saveHoverFinalEvents.bind(this);
+		this.handleElementSelected = this.handleElementSelected.bind(this);
 
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(
 			this,
@@ -64,6 +79,54 @@ export default class EventRecording {
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
+	}
+
+	getEventNodeInCaseDOMWasMutated(
+		currentActionNode: Node,
+		shouldModify = false,
+	): iRegisteredMutationRecord | null {
+		const relevantEvents: Array<iRelevantEvent> = [];
+		this.eventMutationArr.filter((record, index) => {
+			const n =
+				record.targetNode.isEqualNode(currentActionNode) ||
+				record.targetNode.contains(currentActionNode);
+			if (n) {
+				relevantEvents.push({
+					evt: record,
+					index,
+					isSame: record.targetNode.isEqualNode(currentActionNode),
+				});
+			}
+			return;
+		});
+		const otherArr: Array<iRelevantEvent & { secondIndex: number }> = [];
+		relevantEvents.filter(function (e, index) {
+			if (e.isSame) {
+				otherArr.push({
+					...e,
+					secondIndex: index,
+				});
+			}
+		});
+		if (shouldModify) {
+			if (otherArr.length > 1) {
+				const firstDepedent = otherArr[0].evt.dependentOn;
+				for (let i = 0; i < otherArr.length - 1; i++) {
+					delete this.eventMutationArr[otherArr[i].index];
+					otherArr.splice(i, 1);
+					relevantEvents.splice(otherArr[i].secondIndex, 1);
+				}
+				otherArr[0].evt.dependentOn = firstDepedent;
+			}
+		}
+		if (shouldModify) {
+			for (let i = 0; i < otherArr.length; i++) {
+				relevantEvents[otherArr[i].secondIndex] = otherArr[i];
+			}
+		}
+		return relevantEvents.length > 0
+			? relevantEvents[relevantEvents.length - 1].evt
+			: null;
 	}
 
 	getState() {
@@ -80,10 +143,6 @@ export default class EventRecording {
 			...this.state,
 			targetElement: target,
 		};
-
-		if (this.isInspectorMoving) {
-			this.highlightNode(target, event);
-		}
 	}
 
 	elementsAtLocation(x: number, y: number) {
@@ -229,9 +288,6 @@ export default class EventRecording {
 					eventExceptions,
 				);
 			}
-
-			this.removeHighLightFromNode(event.target as HTMLElement);
-			this.updateEventTarget(event.target as HTMLElement, event);
 		}
 	}
 
@@ -327,14 +383,14 @@ export default class EventRecording {
 		}
 	}
 
-	turnOnElementModeInParentFrame() {
+	turnOnElementModeInParentFrame(element = this.state.targetElement) {
 		window.top.postMessage(
 			{
 				type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
 				meta: {
-					selectors: getSelectors(this.state.targetElement),
-					attributes: getAllAttributes(this.state.targetElement),
-					innerHTML: this.state.targetElement.innerHTML,
+					selectors: getSelectors(element),
+					attributes: getAllAttributes(element),
+					innerHTML: element.innerHTML,
 				} as iElementModeMessageMeta,
 			},
 			"*",
@@ -353,26 +409,41 @@ export default class EventRecording {
 		}
 	}
 
-	async handleWithHoverMeta(actionType: ACTIONS_IN_TEST, target: HTMLElement) {
-		const eventa = new CustomEvent("FromExtension", {
-			detail: {
-				currentEventType: actionType,
-				currentTargetXpath: "//" + getXpathTo(target),
-			},
-		} as any);
-		if (!this.isRegistered) {
-			(window as any).addEventListener("FromPage", async (evt: any) => {
-				const response = evt.detail;
-				console.log("CLICKED ON WINDOW", response);
-
-				this.eventsController.saveRelevantCapturedEventInBackground(
-					response.response.meta.finalActions,
-				);
-			});
-			this.isRegistered = true;
+	async getHoverNodes(actionType: ACTIONS_IN_TEST, target: HTMLElement) {
+		let finalActions: Array<any> = [];
+		finalActions.push(target);
+		let relevantNodeRecord = this.getEventNodeInCaseDOMWasMutated(target);
+		if (relevantNodeRecord && relevantNodeRecord.eventNode) {
+			let isLast = false;
+			while (!isLast) {
+				finalActions = [relevantNodeRecord.eventNode, ...finalActions];
+				if (!relevantNodeRecord.dependentOn) {
+					isLast = true;
+					break;
+				}
+				relevantNodeRecord = relevantNodeRecord.dependentOn;
+			}
 		}
+		return finalActions;
+	}
 
-		window.dispatchEvent(eventa);
+	async saveHoverFinalEvents(
+		eventType: ACTIONS_IN_TEST,
+		finalEvents: Array<Node>,
+	) {
+		for (let i = 0; i < finalEvents.length; i++) {
+			if (i == finalEvents.length - 1) {
+				await this.eventsController.saveCapturedEventInBackground(
+					eventType,
+					finalEvents[i],
+				);
+			} else {
+				await this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.HOVER,
+					finalEvents[i],
+				);
+			}
+		}
 	}
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
@@ -399,7 +470,11 @@ export default class EventRecording {
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
 		if (!event.simulatedEvent) {
-			await this.handleWithHoverMeta(ACTIONS_IN_TEST.CLICK, event.target);
+			const finalEvents = await this.getHoverNodes(
+				ACTIONS_IN_TEST.CLICK,
+				event.target,
+			);
+			await this.saveHoverFinalEvents(ACTIONS_IN_TEST.CLICK, finalEvents);
 		}
 
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
@@ -471,12 +546,35 @@ export default class EventRecording {
 		this.recordedHoverArr.push(event);
 	}
 
+	handleCrusherHoverTrace(
+		event: CustomEvent & {
+			detail: { type: string; eventNode: Node; targetNode: Node };
+		},
+	) {
+		const { eventNode, targetNode } = event.detail;
+		const dependentOn = this.getEventNodeInCaseDOMWasMutated(eventNode);
+		this.eventMutationArr.push({
+			eventNode,
+			targetNode,
+			dependentOn,
+		});
+	}
+
+	handleElementSelected(
+		event: CustomEvent & { detail: { element: HTMLElement } },
+	) {
+		this.turnOnElementModeInParentFrame(event.detail.element);
+		console.log(event.detail);
+	}
+
 	registerNodeListeners() {
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);
 		window.addEventListener("mouseout", this.handleMouseOut, true);
 		window.addEventListener("contextmenu", this.onRightClick, true);
 		window.addEventListener("focus", this.handleFocus, true);
+		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
+		window.addEventListener("elementSelected", this.handleElementSelected);
 
 		document.body.addEventListener("pointerenter", this.handlePointerEnter, true);
 
@@ -494,6 +592,7 @@ export default class EventRecording {
 	}
 
 	boot(isFirstTime = false) {
+		console.log("Starting...");
 		this.initNodes();
 
 		if (isFirstTime) {

@@ -39,7 +39,10 @@ export default class EventsController {
 
 	saveRelevantCapturedEventInBackground(finalActions: Array<any>) {
 		window.top.postMessage(
-			{ type: MESSAGE_TYPES.RECORD_ACTION_META, meta: { finalActions } },
+			{
+				type: MESSAGE_TYPES.RECORD_ACTION_META,
+				meta: { finalActions: finalActions },
+			},
 			"*",
 		);
 	}

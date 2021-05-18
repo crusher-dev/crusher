@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-size: calc(10px + 0.5vw);
+    font-size: calc(10px + 0.3vw);
     overflow: hidden;
 }
 
@@ -116,7 +116,7 @@ html, body {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
   
   /* Track */

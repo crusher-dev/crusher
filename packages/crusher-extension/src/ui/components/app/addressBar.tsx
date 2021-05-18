@@ -36,9 +36,9 @@ const goBtnStyle = {
 	background: COLOR_CONSTANTS.TRINARY,
 	border: `solid ${COLOR_CONSTANTS.BORDER}`,
 	color:"#fff",
-	width:"4.8rem",
-	borderTopRightRadius:"10px",
-	borderBottomRightRadius:"10px",
+	width:"5.8rem",
+	borderTopRightRadius:"5px",
+	borderBottomRightRadius:"5px",
 	display:"flex",
 	alignItems:"center",
 	justifyContent:"center",
@@ -47,8 +47,7 @@ const goBtnStyle = {
 };
 
 const addressBarStyle = {
-	width: "33.9%",
-	maxWidth: "25rem",
+	width: "42%",
 	background: COLOR_CONSTANTS.PRIMARY,
 	overflow: "hidden",
 	display: "flex",

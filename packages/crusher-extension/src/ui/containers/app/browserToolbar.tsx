@@ -10,16 +10,13 @@ import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
 import { Button } from "../../components/app/button";
 import { getStore } from "../../../redux/store";
-import {
-	updateActionsModalState,
-} from "../../../redux/actions/recorder";
+import { updateActionsModalState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
-
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -81,42 +78,42 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO));
 	};
 
-
 	return (
 		<div style={browserToolbarStyle}>
-			<div style={browserMainToolbarStyle} id="top-bar">
-				<div style={goBackIconContainerStyle} className={"browser_icon"}>
-					<NavigateBackIcon onClick={goBack} disabled={false} />
-				</div>
-				<div style={forwardIconContainerStyle} className={"browser_icon"}>
-					<NavigateForwardIcon onClick={goForward} disabled={false} />
-				</div>
-				<div style={refreshIconContainerStyle} className={"browser_icon"}>
-					<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
-				</div>
-				<AddressBar
-					value={url}
-					onKeyDown={handleKeyDown}
-					onChange={handleAddressBarUrlChange}
-				/>
-				
-
-				<div className="ml-auto mr-3" id={"select-device-input"}>
-					<SelectDeviceInput
-						selectedDevice={selectedDevice}
-						selectDevice={handleDeviceChange}
+			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
+				<div className="h-11 w-full flex">
+					<div style={goBackIconContainerStyle} className={"browser_icon"}>
+						<NavigateBackIcon onClick={goBack} disabled={false} />
+					</div>
+					<div style={forwardIconContainerStyle} className={"browser_icon"}>
+						<NavigateForwardIcon onClick={goForward} disabled={false} />
+					</div>
+					<div style={refreshIconContainerStyle} className={"browser_icon"}>
+						<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
+					</div>
+					<AddressBar
+						value={url}
+						onKeyDown={handleKeyDown}
+						onChange={handleAddressBarUrlChange}
 					/>
-				</div>
 
-				<Button
-					id={"saveTest"}
-					title={"Save test"}
-					icon={SaveIcon}
-					onClick={saveTest}
-				/>
-				{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
+					<div className="ml-auto mr-3" id={"select-device-input"}>
+						<SelectDeviceInput
+							selectedDevice={selectedDevice}
+							selectDevice={handleDeviceChange}
+						/>
+					</div>
+
+					<Button
+						id={"saveTest"}
+						title={"Save test"}
+						icon={SaveIcon}
+						onClick={saveTest}
+					/>
+					{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
 				</a> */}
+				</div>
 			</div>
 
 			<style>{`
@@ -194,13 +191,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 const browserToolbarStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,
-	width: "75vw",
+	width: "100%",
 };
 
-const browserMainToolbarStyle = {
-	display: "flex",
-	padding: "0.73rem 2rem",
-};
 
 const goBackIconContainerStyle = {
 	display: "flex",

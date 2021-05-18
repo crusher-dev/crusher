@@ -101,7 +101,7 @@ const blockCoverStyle = {
 };
 
 const previewBrowserStyle = {
-	maxWidth: "75vw",
+	//maxWidth: "75vw",
 	display: "flex",
 	justifyContent: "center",
 	overflowY: OVERFLOW.AUTO,
@@ -111,7 +111,7 @@ const previewBrowserStyle = {
 	height: "calc(100vh - 4rem)",
 	borderTopRightRadius: "2rem",
 	border: `solid ${COLOR_CONSTANTS.BORDER}`,
-	borderWidth: "1px",
+	borderWidth: "2px",
 	borderLeft: "none",
 	borderBottom: "none",
 };

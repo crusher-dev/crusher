@@ -96,34 +96,31 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 	};
 
 	return (
-		<div className="flex">
-			<div style={{ ...browserStyle, ...mainContainerStyle }}>
-				<BrowserToolbar
-					isInspectModeOn={isInspectModeOn}
-					initialUrl={url}
-					goBack={goBack}
-					goForward={goForward}
-					refreshPage={refreshPage}
-					saveTest={saveTestCallback}
-					loadNewPage={loadNewPage}
-				/>
-				{/*<ActionRecordedIndicator />*/}
+		<div style={{ ...browserStyle, ...mainContainerStyle }}>
+			<BrowserToolbar
+				isInspectModeOn={isInspectModeOn}
+				initialUrl={url}
+				goBack={goBack}
+				goForward={goForward}
+				refreshPage={refreshPage}
+				saveTest={saveTestCallback}
+				loadNewPage={loadNewPage}
+			/>
+			{/*<ActionRecordedIndicator />*/}
 
-				<Device
-					url={url}
-					device={selectedDevice}
-					isDisabled={isElementRecordingStateOn}
-					forwardRef={deviceIframeRef}
-				/>
-			</div>
-			
+			<Device
+				url={url}
+				device={selectedDevice}
+				isDisabled={isElementRecordingStateOn}
+				forwardRef={deviceIframeRef}
+			/>
 		</div>
 	);
 };
 
 const mainContainerStyle = {
 	flex: 1,
-	width: "75%",
+	//width: "90%",
 	maxHeight: "100vh",
 	//overflow: "auto",
 };

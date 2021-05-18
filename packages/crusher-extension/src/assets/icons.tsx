@@ -204,8 +204,8 @@ const SaveIcon = () => {
 const SwitchOnIcon = () => {
 	return (
 		<svg
-			width="60"
-			height="30"
+			width="30"
+			height="20"
 			viewBox="0 0 31 19"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
@@ -237,8 +237,8 @@ const SwitchOnIcon = () => {
 const SwitchOffIcon = () => {
 	return (
 		<svg
-			width="60"
-			height="30"
+			width="30"
+			height="20"
 			viewBox="0 0 31 19"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
@@ -271,8 +271,8 @@ const SettingsIcon = (props: any) => {
 	return (
 		<svg
 			{...props}
-			width="22"
-			height="22"
+			width="14"
+			height="14"
 			viewBox="0 0 14 14"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
@@ -296,8 +296,8 @@ const SettingsIcon = (props: any) => {
 const SearchIcon = (props: any) => {
 	return (
 		<svg
-			width="18"
-			height="18"
+			width="12"
+			height="12"
 			{...props}
 			viewBox="0 0 13 13"
 			fill="none"

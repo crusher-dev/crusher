@@ -21,6 +21,7 @@ import { getStore } from "../../../redux/store";
 import { updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import InputField from "../../components/app/InputField";
+import { BlueButton } from "../../components/app/BlueButton";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -71,25 +72,22 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		<div className="flex flex-col items-center justify-center h-full">
 			<DetectActionSwitch />
 			<div className="mt-4 ml-5 mr-5 flex flex-col items-center">
-				<div className="text-white text-center text-md my-2">
+				<div
+					className="text-white
+				font-semibold mt-3
+				text-center text-md my-2"
+				>
 					We're detecting your basic actions
 				</div>
 				<h6 className="text-gray-300 text-center text-sm">
 					For manual control, you can add custom checks
 				</h6>
-				<button
-					onClick={toggleCustomIsCheck}
-					className="p-2 focus:outline-none pr-5 pl-5 
-					text-md
-				max-w-max mt-4 rounded-md bg-blue-400 text-white"
-				>
-					Add custom check
-				</button>
+				<BlueButton onClick={toggleCustomIsCheck} title="Add custom check" />
 				<a
 					href="https://www.google.com"
-					className="underline text-gray-500 text-sm mt-5"
+					className="underline text-gray-500 text-sm mt-11"
 				>
-					which actions are automatically detected?
+					Which actions are automatically detected?
 				</a>
 			</div>
 		</div>
@@ -112,17 +110,27 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					<div className="flex text-white h-10 max-w-max">
 						<DetectActionSwitch />
 						{isAutoHoverOn ? (
-							<div className="pl-3">Detecting Actions</div>
+							<div className="pl-1">Detecting Actions</div>
 						) : (
-							<div className="pl-3">Not Detecting Actions</div>
+							<div className="pl-1">Not Detecting Actions</div>
 						)}
 					</div>
 				)}
 			</div>
-			<div className="flex h-1/2 mt-1 flex-col p-2 border-b-2 border-gray-800">
+			<div
+				style={{ height: "55%" }}
+				className="flex mt-1 flex-col 
+				  border-b-2 
+				  2xl:p-7  md:p-3  border-gray-800"
+			>
 				{!isSearching ? (
-					<div className="flex justify-between">
-						<h5 className="text-white text-md">Actions</h5>
+					<div className="flex justify-between items-center">
+						<h5
+							className="text-white font-semibold 
+						text-md 2xl:text-lg"
+						>
+							Actions
+						</h5>
 						{isCustomCheck && (
 							<SearchIcon className="cursor-pointer" onClick={toggleSearching} />
 						)}
@@ -164,10 +172,19 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				)}
 			</div>
 
-			<div className="flex flex-col">
-				<div className="flex justify-between text-white p-3">
-					<h3>Recorded</h3>
-					<div className="text-sm text-center pr-2 pl-2 bg-gray-800 rounded-md">
+			<div className="flex flex-col 2xl:p-7 2xl:pt-10 md:p-3 ">
+				<div className="flex justify-between text-white">
+					<h5
+						className="font-semibold text-md
+					2xl:text-lg"
+					>
+						Recorded
+					</h5>
+					<div
+						className="text-sm text-center
+					flex items-center justify-center
+					pr-2 pl-2 bg-gray-800 rounded-md"
+					>
 						11 steps
 					</div>
 				</div>
@@ -179,7 +196,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 
 const sidebarStyle = {
 	background: COLOR_CONSTANTS.PRIMARY,
-	width: "25vw",
+	width: "22%",
 };
 
 const mainContainerStyle = {
@@ -187,10 +204,8 @@ const mainContainerStyle = {
 };
 
 const actionContainerStyle = {
-	padding: "1.1rem 1.25rem",
 	position: POSITION.RELATIVE,
-	marginTop: "-0.55rem",
-	borderTopLeftRadius: "12px",
+	marginTop: "1rem",
 	overflow: OVERFLOW.AUTO,
 };
 

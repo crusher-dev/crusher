@@ -49,9 +49,9 @@ const buttonStyle = (isHovered: boolean) => ({
 	borderWidth: "1px",
 	alignItems: "center",
 	justifyContent: "space-evenly",
-	padding: "0.2rem",
-	paddingRight: "0.5rem",
-	paddingLeft: "0.5rem",
+	padding: "0.1rem",
+	paddingRight: "0.8rem",
+	paddingLeft: "0.8rem",
 	cursor: "pointer",
 });
 

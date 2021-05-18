@@ -74,7 +74,7 @@ const App = () => {
 	}, []);
 
 	return (
-		<div className="flex">
+		<div className="flex w-full">
 			<Conditional If={url}>
 				<BrowserWindow
 					deviceIframeRef={deviceIframeRef}

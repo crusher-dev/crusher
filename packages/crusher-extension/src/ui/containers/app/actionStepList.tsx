@@ -147,7 +147,7 @@ const containerStyle = {
 };
 
 const stepsListContainerStyle = {
-	padding: "1.1rem 1.25rem",
+//	padding: "1.1rem 1.25rem",
 	position: POSITION.RELATIVE,
 	marginTop: "-0.55rem",
 	borderTopLeftRadius: "12px",

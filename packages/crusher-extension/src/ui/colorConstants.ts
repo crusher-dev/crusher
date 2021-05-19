@@ -1,9 +1,12 @@
 export const COLOR_CONSTANTS = {
     BORDER: "#21252A",
     PRIMARY: "#111314",
-    SECONDARY: "",
-    TRINARY: "#161A1C",
+    SECONDARY: "#161A1C",
+    TRINARY: "#1C1D1E",
     TEXT_LIGHT: '#E5E5E5',
-    BUTTON_BLUE: "#5F6DEE"
+    BUTTON_BLUE: "#5F6DEE",
+    BUTTON_BORDER_COLOR: "#303235",
+    GREEN_HEADING: ' #ABD257'
+
 
 } as const;

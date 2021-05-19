@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FLEX_DIRECTION, FONT_WEIGHT } from "../../../interfaces/css";
 import { Conditional } from "../conditional";
 import { BackIcon } from "../../../assets/icons";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 
 interface iItem {
 	id: string;
@@ -105,7 +106,9 @@ const List = (props: iListProps) => {
 						<BackIcon style={backIconStyle} />
 					</div>
 				</Conditional>
-				<span style={headingTitleStyle(!!showBackButton)}>{heading}</span>
+				<span style={headingTitleStyle(!!showBackButton)}>
+					{heading}
+				</span>
 			</div>
 			<div style={listContainerStyle}>{out}</div>
 		</div>
@@ -116,9 +119,9 @@ const headingStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.ROW,
 	fontFamily: "DM Sans",
-	fontSize: "0.825rem",
+	fontSize: "0.925rem",
 	fontWeight: FONT_WEIGHT.BOLD,
-	color: "#fff",
+	color: COLOR_CONSTANTS.GREEN_HEADING,
 	alignItems: "center",
 };
 const backIconStyle = {

@@ -107,7 +107,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 						<SettingsIcon />
 					</div>
 				) : (
-					<div className="flex text-white h-10 max-w-max">
+					<div className="flex items-center text-white h-10 max-w-max">
 						<DetectActionSwitch />
 						{isAutoHoverOn ? (
 							<div className="pl-1">Detecting Actions</div>
@@ -132,7 +132,8 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 							Actions
 						</h5>
 						{isCustomCheck && (
-							<SearchIcon className="cursor-pointer" onClick={toggleSearching} />
+							<SearchIcon className="cursor-pointer mr-2" 
+							onClick={toggleSearching} />
 						)}
 					</div>
 				) : (

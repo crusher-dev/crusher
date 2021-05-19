@@ -33,25 +33,23 @@ const Button = (props: iButtonProps) => {
 			<Conditional If={Icon}>
 				<Icon />
 			</Conditional>
-			<span style={buttonNameStyle(!!Icon)}>{title}</span>
+			<div style={buttonNameStyle(!!Icon)}>{title}</div>
 		</div>
 	);
 };
 
 const buttonStyle = (isHovered: boolean) => ({
-	borderRadius: 4,
-	fontWeight: 600,
-	fontSize: "0.825rem",
+	borderRadius: 6,
+	fontWeight: 500,
+	fontSize: "0.925rem",
 	background: COLOR_CONSTANTS.TRINARY,
 	display: "flex",
 	color: "#fff",
-	border: `solid ${COLOR_CONSTANTS.BORDER}`,
+	border: `solid ${COLOR_CONSTANTS.BUTTON_BORDER_COLOR}`,
 	borderWidth: "1px",
 	alignItems: "center",
 	justifyContent: "space-evenly",
-	padding: "0.1rem",
-	paddingRight: "0.8rem",
-	paddingLeft: "0.8rem",
+	padding: "0.1rem 2rem",
 	cursor: "pointer",
 });
 

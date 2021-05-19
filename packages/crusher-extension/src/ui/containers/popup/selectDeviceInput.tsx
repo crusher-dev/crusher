@@ -42,16 +42,16 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 const dropdownStyle = {
 	menu: (provided: any) => ({
 		...provided,
-		backgroundColor: `${COLOR_CONSTANTS.TRINARY}`,
+		backgroundColor: `${COLOR_CONSTANTS.SECONDARY}`,
 		zIndex: 20000,
 	}),
 	control: (provided: any) => ({
 		...provided,
-		backgroundColor: `${COLOR_CONSTANTS.TRINARY}`,
-		border: `1px solid ${COLOR_CONSTANTS.BORDER}`,
+		background: "transparent",
+		border: `1px solid ${COLOR_CONSTANTS.BUTTON_BORDER_COLOR}`,
 		outline: "none",
 		zIndex: 1000,
-		padding: `0.25rem .75rem`,
+		//padding: `0.25rem .75rem`,
 		borderRadius: "0.425rem",
 		paddingRight: "0.25rem",
 	}),
@@ -60,7 +60,11 @@ const dropdownStyle = {
 		//width: "20rem",
 	}),
 	singleValue: (provided: any) => {
-		return { ...provided, color: COLOR_CONSTANTS.TEXT_LIGHT, fontSize: "0.85rem" };
+		return {
+			...provided,
+			color: COLOR_CONSTANTS.TEXT_LIGHT,
+			fontSize: "0.85rem",
+		};
 	},
 	option: (provided: any, state: any) => {
 		const value = state.data.value;
@@ -77,7 +81,9 @@ const dropdownStyle = {
 		return {
 			...provided,
 			color: state.isSelected ? "white" : COLOR_CONSTANTS.TEXT_LIGHT,
-			backgroundColor: state.isSelected ? COLOR_CONSTANTS.PRIMARY : COLOR_CONSTANTS.TRINARY,
+			backgroundColor: state.isSelected
+				? COLOR_CONSTANTS.PRIMARY
+				: COLOR_CONSTANTS.TRINARY,
 			cursor: "pointer",
 			...additionalStyle,
 		};

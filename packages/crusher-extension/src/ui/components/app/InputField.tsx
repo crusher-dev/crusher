@@ -11,10 +11,10 @@ const InputField = (props: iInputField) => {
 	return (
 		<input
 			type="text"
-			style={style ? style : {}}
+			style={{ borderWidth: "1px" }}
 			onChange={onChange}
 			placeholder={placeholder}
-			className={`p-2 border-2 
+			className={`p-2  
             focus:outline-none
             focus:border-gray-400
             rounded-md

@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "compile": "rm -rf build && tsc",
-    "start": "yarn compile && /home/utkarsh/electron/src/out/Testing/electron --trace-warnings ."
+    "start": "yarn compile && /home/utkarsh/src/electron1/src/out/Release/electron ."
   },
   "dependencies": {
     "electron": "^12.0.2",

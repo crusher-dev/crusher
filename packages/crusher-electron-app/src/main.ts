@@ -16,15 +16,14 @@ const loadExtension =  (mainWindow) => {
 };
 
 async function createWindow () {
-	app.commandLine.appendSwitch('disable-site-isolation-trials');
-	app.commandLine.appendSwitch('disable-web-security');
+	app.commandLine.appendSwitch('--disable-site-isolation-trials');
+	app.commandLine.appendSwitch('--disable-web-security');
+	app.commandLine.appendSwitch("--allow-top-navigation");
 
 	const mainWindow = new BrowserWindow({
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nativeWindowOpen: true,
-			nodeIntegration: true,
-			nodeIntegrationInSubFrames: true,
 			webSecurity: false,
 			devTools: true
 		}

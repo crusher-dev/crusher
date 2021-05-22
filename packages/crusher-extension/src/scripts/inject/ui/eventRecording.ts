@@ -83,7 +83,7 @@ export default class EventRecording {
 
 	getEventNodeInCaseDOMWasMutated(
 		currentActionNode: Node,
-		shouldModify = false,
+		shouldModify = true,
 	): iRegisteredMutationRecord | null {
 		const relevantEvents: Array<iRelevantEvent> = [];
 		this.eventMutationArr.filter((record, index) => {
@@ -110,20 +110,19 @@ export default class EventRecording {
 		});
 		if (shouldModify) {
 			if (otherArr.length > 1) {
-				const firstDepedent = otherArr[0].evt.dependentOn;
+				const firstDependent = otherArr[0].evt.dependentOn;
 				for (let i = 0; i < otherArr.length - 1; i++) {
-					delete this.eventMutationArr[otherArr[i].index];
-					otherArr.splice(i, 1);
-					relevantEvents.splice(otherArr[i].secondIndex, 1);
+					delete this.eventMutationArr[otherArr[0].index];
+					otherArr.splice(0, 1);
+					relevantEvents.splice(otherArr[0].secondIndex, 1);
 				}
-				otherArr[0].evt.dependentOn = firstDepedent;
+				otherArr[0].evt.dependentOn = firstDependent;
 			}
-		}
-		if (shouldModify) {
 			for (let i = 0; i < otherArr.length; i++) {
 				relevantEvents[otherArr[i].secondIndex] = otherArr[i];
 			}
 		}
+
 		return relevantEvents.length > 0
 			? relevantEvents[relevantEvents.length - 1].evt
 			: null;
@@ -436,11 +435,17 @@ export default class EventRecording {
 				await this.eventsController.saveCapturedEventInBackground(
 					eventType,
 					finalEvents[i],
+					"",
+					null,
+					true,
 				);
 			} else {
 				await this.eventsController.saveCapturedEventInBackground(
 					ACTIONS_IN_TEST.HOVER,
 					finalEvents[i],
+					"",
+					null,
+					true,
 				);
 			}
 		}
@@ -548,7 +553,7 @@ export default class EventRecording {
 
 	handleCrusherHoverTrace(
 		event: CustomEvent & {
-			detail: { type: string; eventNode: Node; targetNode: Node };
+			detail: { type: string; key: string; eventNode: Node; targetNode: Node };
 		},
 	) {
 		const { eventNode, targetNode } = event.detail;

@@ -47,13 +47,21 @@ export default class EventsController {
 		);
 	}
 
-	saveCapturedEventInBackground(
+	async saveCapturedEventInBackground(
 		event_type: string,
 		capturedTarget: any,
 		value: any = "",
 		callback?: any,
+		shouldLogImage = false,
 	) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
+
+		if (shouldLogImage) {
+			console.log(capturedTarget);
+			// html2canvas(capturedTarget).then((canvas: any) => {
+			// 	console.log(canvas.toDataURL());
+			// });
+		}
 
 		window.top.postMessage(
 			{

@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "compile": "rm -rf build && tsc",
-    "start": "yarn compile && /Users/himanshu/electron1/src/out/Testing/Electron.app/Contents/MacOS/Electron ."
+    "start": "yarn compile && /Users/utkarsh/Desktop/electron/src/out/Release/Electron.app/Contents/MacOS/Electron ."
   },
   "dependencies": {
     "electron": "^12.0.2",

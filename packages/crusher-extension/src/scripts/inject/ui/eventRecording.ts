@@ -423,6 +423,21 @@ export default class EventRecording {
 				relevantNodeRecord = relevantNodeRecord.dependentOn;
 			}
 		}
+
+		const newArray = [];
+		if (finalActions.length) newArray.push(finalActions[0]);
+		for (let i = 1; i < finalActions.length; i++) {
+			const current = finalActions[i];
+			if (current.contains(finalActions[i - 1])) {
+				continue;
+			}
+			if (newArray[newArray.length - 1].contains(current)) {
+				newArray[newArray.length - 1] = current;
+				continue;
+			}
+			newArray.push(current);
+		}
+
 		return finalActions;
 	}
 
@@ -569,7 +584,6 @@ export default class EventRecording {
 		event: CustomEvent & { detail: { element: HTMLElement } },
 	) {
 		this.turnOnElementModeInParentFrame(event.detail.element);
-		console.log(event.detail);
 	}
 
 	registerNodeListeners() {

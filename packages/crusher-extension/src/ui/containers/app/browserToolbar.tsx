@@ -192,8 +192,8 @@ const browserToolbarStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,
 	width: "100%",
+	height: "4.75rem",
 };
-
 
 const goBackIconContainerStyle = {
 	display: "flex",

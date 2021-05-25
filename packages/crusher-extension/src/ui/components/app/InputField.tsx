@@ -1,19 +1,18 @@
 import React from "react";
 
-interface iInputField {
+interface IInputField {
 	className?: string;
 	style?: object;
 	placeholder: string;
 	onChange?: () => void;
 }
-const InputField = (props: iInputField) => {
-	const { className, style, onChange, placeholder } = props;
+const InputField = (props: IInputField) => {
+	const { className } = props;
 	return (
 		<input
+			{...props}
 			type="text"
 			style={{ borderWidth: "1px" }}
-			onChange={onChange}
-			placeholder={placeholder}
 			className={`p-2  
             focus:outline-none
             focus:border-gray-400

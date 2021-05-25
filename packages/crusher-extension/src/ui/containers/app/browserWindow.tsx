@@ -120,7 +120,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 
 const mainContainerStyle = {
 	flex: 1,
-	//width: "90%",
+//	width: "75%",
 	maxHeight: "100vh",
 	//overflow: "auto",
 };

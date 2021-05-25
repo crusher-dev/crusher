@@ -69,9 +69,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		</div>
 	);
 	const AddCustomCheckView = () => (
-		<div className="flex flex-col items-center justify-center h-full">
+		<div className="flex flex-col p-8 items-center justify-center h-full">
 			<DetectActionSwitch />
-			<div className="mt-4 ml-5 mr-5 flex flex-col items-center">
+			<div className="mt-4  flex flex-col items-center">
 				<div
 					className="text-white
 				font-semibold mt-3
@@ -121,19 +121,18 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				style={{ height: "55%" }}
 				className="flex mt-1 flex-col 
 				  border-b-2 
-				  2xl:p-7  md:p-3  border-gray-800"
+				  p-24   border-gray-800"
 			>
 				{!isSearching ? (
 					<div className="flex justify-between items-center">
 						<h5
 							className="text-white font-semibold 
-						text-md 2xl:text-lg"
+						text-md text-lg"
 						>
 							Actions
 						</h5>
 						{isCustomCheck && (
-							<SearchIcon className="cursor-pointer mr-2" 
-							onClick={toggleSearching} />
+							<SearchIcon className="cursor-pointer mr-2" onClick={toggleSearching} />
 						)}
 					</div>
 				) : (
@@ -173,7 +172,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				)}
 			</div>
 
-			<div className="flex flex-col 2xl:p-7 2xl:pt-10 md:p-3 ">
+			<div className="flex flex-col p-24" style={{ height: "45%" }}>
 				<div className="flex justify-between text-white">
 					<h5
 						className="font-semibold text-md
@@ -184,7 +183,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					<div
 						className="text-sm text-center
 					flex items-center justify-center
-					pr-2 pl-2 bg-gray-800 rounded-md"
+					px-12 py-4 bg-gray-800 rounded-md"
 					>
 						11 steps
 					</div>
@@ -202,6 +201,7 @@ const sidebarStyle = {
 
 const mainContainerStyle = {
 	maxHeight: "80vh",
+	overflow: OVERFLOW.AUTO,
 };
 
 const actionContainerStyle = {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { pxToRemValue } from "../../../utils/helpers";
 import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 import { Conditional } from "../conditional";
 
@@ -49,8 +50,9 @@ const buttonStyle = (isHovered: boolean) => ({
 	borderWidth: "1px",
 	alignItems: "center",
 	justifyContent: "space-evenly",
-	padding: "0.1rem 2rem",
+	padding: `${pxToRemValue(12)} ${pxToRemValue(28)}`,
 	cursor: "pointer",
+	height: pxToRemValue(34),
 });
 
 const buttonNameStyle = (isIconThere: boolean) => ({

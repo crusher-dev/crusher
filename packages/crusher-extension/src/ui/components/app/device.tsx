@@ -64,19 +64,6 @@ const Device = (props: iDeviceProps) => {
 	);
 };
 
-// const pageLoadingBlockCoverStyle = {
-// 	position: POSITION.ABSOLUTE,
-// 	left: 0,
-// 	top: 0,
-// 	width: "100%",
-// 	height: "100%",
-// 	zIndex: 99999,
-// 	background: "rgb(0,0,0,0.7)",
-// 	display: "flex",
-// 	alignItems: "center",
-// 	justifyContent: "center",
-// };
-
 const pageLoadingCoverIconStyle = {
 	marginLeft: "0.35rem",
 };
@@ -108,7 +95,7 @@ const previewBrowserStyle = {
 	background: "#0A0A0A",
 	position: POSITION.RELATIVE,
 	alignItems: "center",
-	height: "calc(100vh - 4rem)",
+	height: "100%",
 	borderTopRightRadius: "2rem",
 	border: `solid ${COLOR_CONSTANTS.BORDER}`,
 	borderWidth: "2px",

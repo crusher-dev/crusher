@@ -1,6 +1,6 @@
 /* Capture actions */
 @import url(//db.onlinewebfonts.com/c/24398819ac2f8f57d97b6d2c131686fe?family=Arial,Helvetica,sans-serif-Bold);
-div[data-recorder='true'] {
+div[data-recorder="true"] {
 	box-sizing: border-box;
 }
 .overlay_heading_container {
@@ -135,7 +135,7 @@ div[data-recorder='true'] {
 }
 
 #overlay_add_action #popper_arrow::before {
-	content: '';
+	content: "";
 	background: #ff3c79;
 	border: 1px solid #ff3c79;
 	right: 22%;
@@ -143,8 +143,8 @@ div[data-recorder='true'] {
 	transform: rotate(45deg);
 }
 
-#overlay_add_action[data-popper-placement='left-start'] #popper_arrow::before {
-	content: '';
+#overlay_add_action[data-popper-placement="left-start"] #popper_arrow::before {
+	content: "";
 	background: #ff3c79;
 	border: 1px solid #ff3c79;
 	right: -22%;
@@ -152,7 +152,7 @@ div[data-recorder='true'] {
 	transform: translateX(580%) rotate(45deg);
 }
 
-#overlay_add_events_container[data-popper-placement='left-start'] {
+#overlay_add_events_container[data-popper-placement="left-start"] {
 	right: -113% !important;
 	left: auto !important;
 }
@@ -174,7 +174,8 @@ div[data-recorder='true'] {
 
 .paper-snackbar {
 	box-shadow: 1px 1px 10px -4px #000000b5 !important;
-	-webkit-transition-property: opacity, bottom, left, right, width, margin, border-radius;
+	-webkit-transition-property: opacity, bottom, left, right, width, margin,
+		border-radius;
 	transition-property: opacity, bottom, left, right, width, margin, border-radius;
 	-webkit-transition-duration: 0.5s;
 	transition-duration: 0.5s;
@@ -353,12 +354,16 @@ div[data-recorder='true'] {
 	animation: 1s ease-out 0s 1 both scaleAnimation;
 }
 #successAnimation.animated #successAnimationCircle {
-	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle, 0.3s linear 0.9s 1 both fadeOut;
-	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle, 0.3s linear 0.9s 1 both fadeOut;
+	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle,
+		0.3s linear 0.9s 1 both fadeOut;
+	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle,
+		0.3s linear 0.9s 1 both fadeOut;
 }
 #successAnimation.animated #successAnimationCheck {
-	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck, 0.3s linear 0.9s 1 both fadeOut;
-	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck, 0.3s linear 0.9s 1 both fadeOut;
+	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck,
+		0.3s linear 0.9s 1 both fadeOut;
+	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck,
+		0.3s linear 0.9s 1 both fadeOut;
 }
 #successAnimation.animated #successAnimationResult {
 	-webkit-animation: 0.3s linear 0.9s both fadeIn;
@@ -444,7 +449,7 @@ textarea {
 	background-color: #ec2e6a !important;
 }
 #overlay_cover {
-	background: rgba(242,255,41,0.18);
+	background: rgba(242, 255, 41, 0.18);
 	width: 100%;
 	cursor: copy;
 	height: 100%;

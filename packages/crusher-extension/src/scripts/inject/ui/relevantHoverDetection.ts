@@ -4,17 +4,17 @@ import { IRelevantEvent } from "./types/IRelevantEvent";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 
 class RelevantHoverDetection {
-    #_mutationRecords: Array<IRegisteredMutationRecord>;
+    private _mutationRecords: Array<IRegisteredMutationRecord>;
 
     registerDOMMutation(record: IEventMutationRecord){
         const { eventNode } = record;
 		const dependentOn = this.getInterdependentHoverNode(eventNode);
-        this.#_mutationRecords.push({...record, dependentOn: dependentOn});
+        this._mutationRecords.push({...record, dependentOn: dependentOn});
     }
 
     getInterdependentHoverNode(currentActionNode: Node) : IRegisteredMutationRecord | null{
         const relevantEvents: Array<any> = [];
-		this.#_mutationRecords.filter((record, index) => {
+		this._mutationRecords.filter((record, index) => {
 			const n =
 				record.targetNode.isEqualNode(currentActionNode) ||
 				record.targetNode.contains(currentActionNode);
@@ -40,7 +40,7 @@ class RelevantHoverDetection {
         if (otherArr.length > 1) {
 			const firstDependent = otherArr[0].evt.dependentOn;
 			for (let i = 0; i < otherArr.length - 1; i++) {
-				delete this.#_mutationRecords[otherArr[0].index];
+				delete this._mutationRecords[otherArr[0].index];
 				otherArr.splice(0, 1);
 				relevantEvents.splice(otherArr[0].secondIndex, 1);
 			}

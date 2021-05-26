@@ -11,7 +11,7 @@
 		"strict": false,
 		"noImplicitReturns": true,
 		"moduleResolution": "node",
-		"target": "es2015",
+		"target": "es5",
 		"baseUrl": ".",
 		"allowJs": true,
 		"jsx": "react",

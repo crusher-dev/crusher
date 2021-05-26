@@ -11,19 +11,7 @@ import { iPerformActionMeta } from "../responseMessageListener";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
-
-interface iEventDomMutationRecord {
-	eventNode: Node;
-	targetNode: Node;
-}
-interface iRegisteredMutationRecord extends iEventDomMutationRecord {
-	dependentOn: iRegisteredMutationRecord | null;
-}
-interface iRelevantEvent {
-	evt: iRegisteredMutationRecord;
-	index: number;
-	isSame: boolean;
-}
+import { RelevantHoverDetection } from "./relevantHoverDetection";
 
 export default class EventRecording {
 	defaultState: any = {
@@ -53,7 +41,7 @@ export default class EventRecording {
 	private lastScrollFireTime = 0;
 
 	private resetUserEventsToDefaultCallback: any = undefined;
-	private eventMutationArr: Array<iRegisteredMutationRecord> = [];
+	private releventHoverDetectionManager: RelevantHoverDetection;
 
 	constructor(options = {} as any) {
 		this.state = {
@@ -71,6 +59,8 @@ export default class EventRecording {
 		this.handleCrusherHoverTrace = this.handleCrusherHoverTrace.bind(this);
 		this.saveHoverFinalEvents = this.saveHoverFinalEvents.bind(this);
 		this.handleElementSelected = this.handleElementSelected.bind(this);
+		
+		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(
 			this,
@@ -79,53 +69,6 @@ export default class EventRecording {
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
-	}
-
-	getEventNodeInCaseDOMWasMutated(
-		currentActionNode: Node,
-		shouldModify = true,
-	): iRegisteredMutationRecord | null {
-		const relevantEvents: Array<iRelevantEvent> = [];
-		this.eventMutationArr.filter((record, index) => {
-			const n =
-				record.targetNode.isEqualNode(currentActionNode) ||
-				record.targetNode.contains(currentActionNode);
-			if (n) {
-				relevantEvents.push({
-					evt: record,
-					index,
-					isSame: record.targetNode.isEqualNode(currentActionNode),
-				});
-			}
-			return;
-		});
-		const otherArr: Array<iRelevantEvent & { secondIndex: number }> = [];
-		relevantEvents.filter(function (e, index) {
-			if (e.isSame) {
-				otherArr.push({
-					...e,
-					secondIndex: index,
-				});
-			}
-		});
-		if (shouldModify) {
-			if (otherArr.length > 1) {
-				const firstDependent = otherArr[0].evt.dependentOn;
-				for (let i = 0; i < otherArr.length - 1; i++) {
-					delete this.eventMutationArr[otherArr[0].index];
-					otherArr.splice(0, 1);
-					relevantEvents.splice(otherArr[0].secondIndex, 1);
-				}
-				otherArr[0].evt.dependentOn = firstDependent;
-			}
-			for (let i = 0; i < otherArr.length; i++) {
-				relevantEvents[otherArr[i].secondIndex] = otherArr[i];
-			}
-		}
-
-		return relevantEvents.length > 0
-			? relevantEvents[relevantEvents.length - 1].evt
-			: null;
 	}
 
 	getState() {
@@ -408,39 +351,6 @@ export default class EventRecording {
 		}
 	}
 
-	async getHoverNodes(actionType: ACTIONS_IN_TEST, target: HTMLElement) {
-		let finalActions: Array<any> = [];
-		finalActions.push(target);
-		let relevantNodeRecord = this.getEventNodeInCaseDOMWasMutated(target);
-		if (relevantNodeRecord && relevantNodeRecord.eventNode) {
-			let isLast = false;
-			while (!isLast) {
-				finalActions = [relevantNodeRecord.eventNode, ...finalActions];
-				if (!relevantNodeRecord.dependentOn) {
-					isLast = true;
-					break;
-				}
-				relevantNodeRecord = relevantNodeRecord.dependentOn;
-			}
-		}
-
-		const newArray = [];
-		if (finalActions.length) newArray.push(finalActions[0]);
-		for (let i = 1; i < finalActions.length; i++) {
-			const current = finalActions[i];
-			if (current.contains(finalActions[i - 1])) {
-				continue;
-			}
-			if (newArray[newArray.length - 1].contains(current)) {
-				newArray[newArray.length - 1] = current;
-				continue;
-			}
-			newArray.push(current);
-		}
-
-		return finalActions;
-	}
-
 	async saveHoverFinalEvents(
 		eventType: ACTIONS_IN_TEST,
 		finalEvents: Array<Node>,
@@ -490,7 +400,7 @@ export default class EventRecording {
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
 		if (!event.simulatedEvent) {
-			const finalEvents = await this.getHoverNodes(
+			const finalEvents = await this.releventHoverDetectionManager.getDependentHoverNodesList(
 				ACTIONS_IN_TEST.CLICK,
 				event.target,
 			);
@@ -571,12 +481,8 @@ export default class EventRecording {
 			detail: { type: string; key: string; eventNode: Node; targetNode: Node };
 		},
 	) {
-		const { eventNode, targetNode } = event.detail;
-		const dependentOn = this.getEventNodeInCaseDOMWasMutated(eventNode);
-		this.eventMutationArr.push({
-			eventNode,
-			targetNode,
-			dependentOn,
+		this.releventHoverDetectionManager.registerDOMMutation({
+			...event.detail
 		});
 	}
 

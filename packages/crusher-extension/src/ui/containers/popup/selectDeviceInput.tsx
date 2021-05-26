@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import devices from "../../../../../crusher-shared/constants/devices";
 import Select from "react-select";
 import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { pxToRemValue } from "../../../utils/helpers";
 
 interface iRenderDeviceInputProps {
 	selectedDevice: any;
@@ -51,19 +52,17 @@ const dropdownStyle = {
 		border: `1px solid ${COLOR_CONSTANTS.BUTTON_BORDER_COLOR}`,
 		outline: "none",
 		zIndex: 1000,
-		//padding: `0.25rem .75rem`,
 		borderRadius: "0.425rem",
 		paddingRight: "0.25rem",
 	}),
 	container: () => ({
 		position: "relative",
-		//width: "20rem",
 	}),
 	singleValue: (provided: any) => {
 		return {
 			...provided,
 			color: COLOR_CONSTANTS.TEXT_LIGHT,
-			fontSize: "0.85rem",
+			fontSize: pxToRemValue(13),
 		};
 	},
 	option: (provided: any, state: any) => {
@@ -95,7 +94,7 @@ const selectInputContainerStyle = {
 	minWidth: "12rem",
 	fontWeight: 500,
 	fontFamily: "DM Sans",
-	fontSize: "0.7rem",
+	fontSize: pxToRemValue(13),
 	borderWidth: 0,
 };
 

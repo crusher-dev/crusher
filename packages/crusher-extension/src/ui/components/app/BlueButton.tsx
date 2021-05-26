@@ -16,12 +16,10 @@ const BlueButton = (props: iButtonProps) => {
 			onClick={onClick}
 			style={{
 				backgroundColor: COLOR_CONSTANTS.BUTTON_BLUE,
-				paddingTop: "6px",
-				paddingBottom: "6px",
 				...style,
 			}}
-			className="focus:outline-none pr-8 pl-8 
-					text-sm max-w-max mt-4 rounded-md  text-white"
+			className="focus:outline-none px-32 py-8
+					text-13 max-w-max mt-4 rounded-md  text-white"
 		>
 			{title}
 		</button>

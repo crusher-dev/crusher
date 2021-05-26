@@ -19,7 +19,13 @@ module.exports = {
     screens: {},
     margin: {
       ...getSpacingSizes(16)
-    }
+    },
+    fontSize: {
+      '12': '0.75rem',
+      '13': '0.81rem',
+      '15': '0.94rem',
+      '17': '1.05rem'
+    },
   },
 
   variants: {

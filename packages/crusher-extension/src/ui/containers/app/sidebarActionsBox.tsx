@@ -75,17 +75,17 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				<div
 					className="text-white
 				font-semibold mt-3
-				text-center text-md my-2"
+				text-center text-15 my-2"
 				>
 					We're detecting your basic actions
 				</div>
-				<h6 className="text-gray-300 text-center text-sm">
+				<h6 className="text-gray-300 text-center text-13">
 					For manual control, you can add custom checks
 				</h6>
 				<BlueButton onClick={toggleCustomIsCheck} title="Add custom check" />
 				<a
 					href="https://www.google.com"
-					className="underline text-gray-500 text-sm mt-11"
+					className="underline text-gray-500 text-12 mt-11"
 				>
 					Which actions are automatically detected?
 				</a>
@@ -98,7 +98,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	return (
 		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
 			<div
-				className={`flex h-16 
+				className={`flex h-20 
 			${!isCustomCheck ? "justify-end" : "justify-center"} 
 			items-center`}
 			>
@@ -109,11 +109,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				) : (
 					<div className="flex items-center text-white h-10 max-w-max">
 						<DetectActionSwitch />
-						{isAutoHoverOn ? (
-							<div className="pl-1">Detecting Actions</div>
-						) : (
-							<div className="pl-1">Not Detecting Actions</div>
-						)}
+						<div className="pl-1">
+							{isAutoHoverOn ? "Detecting Actions" : "Not Detecting Actions"}
+						</div>
 					</div>
 				)}
 			</div>
@@ -127,7 +125,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					<div className="flex justify-between items-center">
 						<h5
 							className="text-white font-semibold 
-						text-md text-lg"
+						text-md text-17"
 						>
 							Actions
 						</h5>
@@ -173,21 +171,6 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 			</div>
 
 			<div className="flex flex-col p-24" style={{ height: "45%" }}>
-				<div className="flex justify-between text-white">
-					<h5
-						className="font-semibold text-md
-					2xl:text-lg"
-					>
-						Recorded
-					</h5>
-					<div
-						className="text-sm text-center
-					flex items-center justify-center
-					px-12 py-4 bg-gray-800 rounded-md"
-					>
-						11 steps
-					</div>
-				</div>
 				<ActionStepList />
 			</div>
 		</div>

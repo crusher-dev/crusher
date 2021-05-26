@@ -13,6 +13,7 @@ import { getActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
 import { deleteRecordedAction } from "../../../redux/actions/actions";
 import { Conditional } from "../../components/conditional";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 
 interface iActionProps {
 	action: iAction;
@@ -57,7 +58,7 @@ const Action = (props: iActionProps) => {
 	const isDefaultAction = index < 2;
 
 	return (
-		<li style={stepStyle}>
+		<li style={stepStyle} className="mt-20">
 			<div style={stepImageStyle}>
 				<img
 					src={chrome.runtime.getURL(
@@ -66,9 +67,13 @@ const Action = (props: iActionProps) => {
 				/>
 			</div>
 			<div style={actionItemTextContainer}>
-				<div style={stepActionStyle}>{action.type}</div>
+				<div className="text-13" style={stepActionStyle}>
+					{action.type}
+				</div>
 				<div style={stepSelectorContainerStyle}>
-					<div style={stepSelectorStyle}>{getActionDescription(action)}</div>
+					<div className="text-12" style={stepSelectorStyle}>
+						{getActionDescription(action)}
+					</div>
 				</div>
 			</div>
 			<Conditional If={!isDefaultAction}>
@@ -82,7 +87,6 @@ const Action = (props: iActionProps) => {
 			>
 				&gt;
 			</div>
-			<div style={stepIndexNumberingStyle}>{index + 1}</div>
 		</li>
 	);
 };
@@ -129,15 +133,41 @@ const ActionStepList = () => {
 	});
 
 	return (
-		<div className="h-full" style={containerStyle} id="stepsListContainer">
-			<ul style={stepsListContainerStyle} className="margin-list-item">
-				{stepList}
-			</ul>
-		</div>
+		<>
+			<div className="flex justify-between text-white">
+				<h5 className="font-semibold text-17">Recorded</h5>
+				<div
+					className="text-13 text-center
+					flex items-center justify-center
+					px-12 py-4 bg-gray-800 rounded-md
+					cursor-pointer"
+				>
+					{stepList.length} steps
+				</div>
+			</div>
+			<div className="h-full" style={containerStyle} id="stepsListContainer">
+				<div className="absolute inset-0">
+					<div style={lineStyle}></div>
+				</div>
+				<ul style={stepsListContainerStyle} className="margin-list-item">
+					{stepList}
+				</ul>
+			</div>
+		</>
 	);
 };
 
+const lineStyle = {
+	position: POSITION.FIXED,
+	width: "2px",
+	backgroundColor: COLOR_CONSTANTS.BORDER,
+	height: "30%",
+	marginTop: "1rem",
+	marginLeft: "1.34rem",
+};
+
 const containerStyle = {
+	position: POSITION.RELATIVE,
 	height: "auto",
 	maxHeight: 290,
 	minHeight: 100,
@@ -147,7 +177,6 @@ const containerStyle = {
 };
 
 const stepsListContainerStyle = {
-//	padding: "1.1rem 1.25rem",
 	position: POSITION.RELATIVE,
 	marginTop: "-0.55rem",
 	borderTopLeftRadius: "12px",
@@ -159,10 +188,8 @@ const stepStyle = {
 	cursor: "pointer",
 	fontFamily: "DM Sans",
 	fontStyle: "normal",
-	//	background: "#1C1F26",
 	borderRadius: "0.25rem",
 	position: POSITION.RELATIVE,
-	padding: "0.6rem",
 	marginTop: "1rem",
 	overflow: "hidden",
 };
@@ -175,7 +202,6 @@ const stepImageStyle = {
 const stepActionStyle = {
 	fontWeight: FONT_WEIGHT.BOLD,
 	color: "#8C8C8C",
-	fontSize: "0.8rem",
 };
 
 const stepSelectorContainerStyle = {
@@ -185,20 +211,9 @@ const stepSelectorContainerStyle = {
 const stepSelectorStyle = {
 	marginTop: "0.25rem",
 	color: "#8C8C8C",
-	fontSize: "0.6rem",
 	whiteSpace: WHITE_SPACE.NOWRAP,
 	width: "70%",
 	overflow: "hidden",
-};
-const stepIndexNumberingStyle = {
-	position: POSITION.ABSOLUTE,
-	color: "#485264",
-	fontFamily: "DM Sans",
-	fontSize: "0.75rem",
-	fontStyle: "normal",
-	fontWeight: FONT_WEIGHT.BOLD,
-	bottom: "0.375rem",
-	left: "1.875rem",
 };
 
 export { ActionStepList };

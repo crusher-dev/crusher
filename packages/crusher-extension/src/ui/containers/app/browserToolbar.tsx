@@ -81,7 +81,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	return (
 		<div style={browserToolbarStyle}>
 			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
-				<div className="h-11 w-full flex">
+				<div className="h-10 w-full flex">
 					<div style={goBackIconContainerStyle} className={"browser_icon"}>
 						<NavigateBackIcon onClick={goBack} disabled={false} />
 					</div>
@@ -97,19 +97,21 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						onChange={handleAddressBarUrlChange}
 					/>
 
-					<div className="ml-auto mr-3" id={"select-device-input"}>
-						<SelectDeviceInput
-							selectedDevice={selectedDevice}
-							selectDevice={handleDeviceChange}
+					<div className="flex justify-evenly">
+						<div className="ml-auto mr-3" id={"select-device-input"}>
+							<SelectDeviceInput
+								selectedDevice={selectedDevice}
+								selectDevice={handleDeviceChange}
+							/>
+						</div>
+
+						<Button
+							id={"saveTest"}
+							title={"Save test"}
+							icon={SaveIcon}
+							onClick={saveTest}
 						/>
 					</div>
-
-					<Button
-						id={"saveTest"}
-						title={"Save test"}
-						icon={SaveIcon}
-						onClick={saveTest}
-					/>
 					{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
 				</a> */}

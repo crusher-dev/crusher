@@ -20,6 +20,7 @@ const AddressBar = (props: iAddressBarProps) => {
 				</div>
 				<textarea
 					ref={forwardRef}
+					className="text-15"
 					style={addressBarInputStyle}
 					onChange={onChange as any}
 					onKeyDown={onKeyDown as any}
@@ -27,7 +28,9 @@ const AddressBar = (props: iAddressBarProps) => {
 					value={value as any}
 				></textarea>
 			</div>
-			<div style={goBtnStyle}>Go</div>
+			<div className="text-15" style={goBtnStyle}>
+				Go
+			</div>
 		</>
 	);
 };
@@ -35,19 +38,20 @@ const AddressBar = (props: iAddressBarProps) => {
 const goBtnStyle = {
 	background: COLOR_CONSTANTS.TRINARY,
 	border: `solid ${COLOR_CONSTANTS.BORDER}`,
-	color:"#fff",
-	width:"5.8rem",
-	borderTopRightRadius:"5px",
-	borderBottomRightRadius:"5px",
-	display:"flex",
-	alignItems:"center",
-	justifyContent:"center",
-	cursor:"pointer",
+	color: "#fff",
+	width: "5.8rem",
+	borderTopRightRadius: "5px",
+	borderBottomRightRadius: "5px",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	cursor: "pointer",
 	borderWidth: "1px",
+	height: "100%",
 };
 
 const addressBarStyle = {
-	width: "42%",
+	width: "45%",
 	background: COLOR_CONSTANTS.PRIMARY,
 	overflow: "hidden",
 	display: "flex",

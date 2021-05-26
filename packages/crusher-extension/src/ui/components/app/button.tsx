@@ -26,6 +26,7 @@ const Button = (props: iButtonProps) => {
 	return (
 		<div
 			id={id}
+			className="text-15"
 			style={{ ...buttonStyle(isHovered), ...(style ? style : {}) }}
 			onClick={onClick}
 			onMouseOver={handleMouseOver}
@@ -42,7 +43,6 @@ const Button = (props: iButtonProps) => {
 const buttonStyle = (isHovered: boolean) => ({
 	borderRadius: 6,
 	fontWeight: 500,
-	fontSize: "0.925rem",
 	background: COLOR_CONSTANTS.TRINARY,
 	display: "flex",
 	color: "#fff",
@@ -52,7 +52,6 @@ const buttonStyle = (isHovered: boolean) => ({
 	justifyContent: "space-evenly",
 	padding: `${pxToRemValue(12)} ${pxToRemValue(28)}`,
 	cursor: "pointer",
-	height: pxToRemValue(34),
 });
 
 const buttonNameStyle = (isIconThere: boolean) => ({

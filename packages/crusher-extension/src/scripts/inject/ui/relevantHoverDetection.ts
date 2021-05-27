@@ -4,12 +4,21 @@ import { IRelevantEvent } from "./types/IRelevantEvent";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 
 class RelevantHoverDetection {
-    private _mutationRecords: Array<IRegisteredMutationRecord>;
+    private _mutationRecords: Array<IRegisteredMutationRecord> = [];
+    private _mapRecords: Map<Node, Array<IRegisteredMutationRecord>> = new Map();
 
     registerDOMMutation(record: IEventMutationRecord){
-        const { eventNode } = record;
-		const dependentOn = this.getInterdependentHoverNode(eventNode);
-        this._mutationRecords.push({...record, dependentOn: dependentOn});
+        if(!(window as any).mapRecords) {
+            (window as any).mapRecords = this._mapRecords;
+        }
+        const { targetNode } = record;
+        const targetNodeRecords: Array<IRegisteredMutationRecord> = this._mapRecords.has(targetNode) ? this._mapRecords.get(targetNode)! : [];
+
+        targetNodeRecords.push({
+            ...record,
+            dependentOn: null
+        });
+        this._mapRecords.set(targetNode, targetNodeRecords);
     }
 
     getInterdependentHoverNode(currentActionNode: Node) : IRegisteredMutationRecord | null{

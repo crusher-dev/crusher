@@ -37,13 +37,31 @@ export default class EventsController {
 		}
 	}
 
-	saveCapturedEventInBackground(
+	saveRelevantCapturedEventInBackground(finalActions: Array<any>) {
+		window.top.postMessage(
+			{
+				type: MESSAGE_TYPES.RECORD_ACTION_META,
+				meta: { finalActions: finalActions },
+			},
+			"*",
+		);
+	}
+
+	async saveCapturedEventInBackground(
 		event_type: string,
 		capturedTarget: any,
 		value: any = "",
 		callback?: any,
+		shouldLogImage = false,
 	) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
+
+		if (shouldLogImage) {
+			console.log(capturedTarget);
+			// html2canvas(capturedTarget).then((canvas: any) => {
+			// 	console.log(canvas.toDataURL());
+			// });
+		}
 
 		window.top.postMessage(
 			{

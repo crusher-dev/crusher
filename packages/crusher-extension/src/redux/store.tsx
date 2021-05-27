@@ -44,7 +44,7 @@ export default function configureStore(): Store<unknown> {
 
 	store = createStore(rootReducer, composedEnhancers);
 
-	if (process.env.NODE_ENV !== "production" && hotModule) {
+	if (hotModule) {
 		hotModule.accept("./reducers", () => store?.replaceReducer(rootReducer));
 	}
 

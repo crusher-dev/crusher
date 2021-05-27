@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
-import { FONT_WEIGHT } from '../../../../interfaces/css';
-import { addHttpToURLIfNotThere } from '../../../../../../crusher-shared/utils/url';
+import { FONT_WEIGHT } from "../../../../interfaces/css";
+import { addHttpToURLIfNotThere } from "../../../../../../crusher-shared/utils/url";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -9,7 +9,7 @@ interface iStartupModalProps {
 
 const StartupModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
-	const [targetURL, setTargetURL] = useState("");
+	const [targetURL, setTargetURL] = useState("https://www.headout.com/burj-khalifa-tickets-c-158/");
 
 	const handleTargetSiteChange = (event: any) => {
 		setTargetURL(event.target.value);
@@ -17,10 +17,17 @@ const StartupModal = (props: iStartupModalProps) => {
 
 	const startRecording = () => {
 		if (targetURL && targetURL !== "") {
-			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeLargeScreen`;
+			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(
+				targetURL,
+			)}&device=GoogleChromeLargeScreen`;
 		}
 	};
 
+	const handleKeyPress = (e: any) => {
+		if (e.key === "Enter") {
+			startRecording();
+		}
+	};
 	return (
 		<ReactModal
 			isOpen={isOpen}
@@ -29,8 +36,17 @@ const StartupModal = (props: iStartupModalProps) => {
 			overlayClassName="overlay"
 		>
 			<div style={inputContainerStyle}>
-				<input style={inputStyle} placeholder={"Enter URL to test"} value={targetURL} onChange={handleTargetSiteChange} />
-				<button style={buttonStyle} onClick={startRecording}>Let's start</button>
+				<input
+					style={inputStyle}
+					autoFocus={true}
+					placeholder={"Enter URL to test"}
+					value={targetURL}
+					onKeyPress={handleKeyPress}
+					onChange={handleTargetSiteChange}
+				/>
+				<button style={buttonStyle} onClick={startRecording}>
+					{"Let's start"}
+				</button>
 			</div>
 		</ReactModal>
 	);
@@ -46,7 +62,7 @@ const buttonStyle = {
 	fontSize: 16,
 	marginLeft: 14,
 	border: 0,
-	cursor: "pointer"
+	cursor: "pointer",
 };
 const inputStyle = {
 	background: "#1A1A1C",
@@ -57,7 +73,7 @@ const inputStyle = {
 	fontSize: 15,
 	minWidth: 358,
 	color: "#fff",
-	outline: "none"
+	outline: "none",
 };
 const inputContainerStyle = {
 	display: "flex",
@@ -82,7 +98,7 @@ const customModalStyles = {
 		zIndex: 100000,
 		display: "flex",
 		alignItems: "center",
-		justifyContent: "center"
+		justifyContent: "center",
 	},
 	overlay: {
 		background: "rgb(31, 31, 32)",

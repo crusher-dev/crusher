@@ -35,7 +35,7 @@
 		},
 		{
 			"matches": ["http://*/*", "https://*/*"],
-			"js": ["js/content_script.js"],
+			"js": ["js/init_content_script.js"],
 			"run_at": "document_end",
 			"all_frames": true
 		}

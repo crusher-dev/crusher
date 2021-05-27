@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { OVERFLOW, POSITION, TEXT_ALIGN } from "../../../interfaces/css";
 import { Conditional } from "../conditional";
 import { iDevice } from "../../../../../crusher-shared/types/extension/device";
@@ -17,6 +17,12 @@ interface iDeviceProps {
 const Device = (props: iDeviceProps) => {
 	const isIframeLoaded = useSelector(isRecorderScriptBooted);
 	const { isMobile, device, url, forwardRef, isDisabled } = props;
+
+	useEffect(() => {
+		window.onload = function () {
+			return forwardRef.current.click();
+		};
+	}, []);
 
 	return (
 		<div style={previewBrowserStyle}>

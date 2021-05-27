@@ -11,6 +11,7 @@ import { iPerformActionMeta } from "../responseMessageListener";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
+import { RelevantHoverDetection } from "./relevantHoverDetection";
 
 export default class EventRecording {
 	defaultState: any = {
@@ -40,8 +41,7 @@ export default class EventRecording {
 	private lastScrollFireTime = 0;
 
 	private resetUserEventsToDefaultCallback: any = undefined;
-
-	private mutationObserver: MutationObserver | null = null;
+	private releventHoverDetectionManager: RelevantHoverDetection;
 
 	constructor(options = {} as any) {
 		this.state = {
@@ -56,6 +56,11 @@ export default class EventRecording {
 		this.handleScroll = this.handleScroll.bind(this);
 		this.handleBeforeNavigation = this.handleBeforeNavigation.bind(this);
 		this.handlePointerEnter = this.handlePointerEnter.bind(this);
+		this.handleCrusherHoverTrace = this.handleCrusherHoverTrace.bind(this);
+		this.saveHoverFinalEvents = this.saveHoverFinalEvents.bind(this);
+		this.handleElementSelected = this.handleElementSelected.bind(this);
+		
+		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(
 			this,
@@ -64,9 +69,6 @@ export default class EventRecording {
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
-		this.handleDOMMutationObserverCallback = this.handleDOMMutationObserverCallback.bind(
-			this,
-		);
 	}
 
 	getState() {
@@ -83,10 +85,6 @@ export default class EventRecording {
 			...this.state,
 			targetElement: target,
 		};
-
-		if (this.isInspectorMoving) {
-			this.highlightNode(target, event);
-		}
 	}
 
 	elementsAtLocation(x: number, y: number) {
@@ -232,9 +230,6 @@ export default class EventRecording {
 					eventExceptions,
 				);
 			}
-
-			this.removeHighLightFromNode(event.target as HTMLElement);
-			this.updateEventTarget(event.target as HTMLElement, event);
 		}
 	}
 
@@ -330,14 +325,14 @@ export default class EventRecording {
 		}
 	}
 
-	turnOnElementModeInParentFrame() {
+	turnOnElementModeInParentFrame(element = this.state.targetElement) {
 		window.top.postMessage(
 			{
 				type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
 				meta: {
-					selectors: getSelectors(this.state.targetElement),
-					attributes: getAllAttributes(this.state.targetElement),
-					innerHTML: this.state.targetElement.innerHTML,
+					selectors: getSelectors(element),
+					attributes: getAllAttributes(element),
+					innerHTML: element.innerHTML,
 				} as iElementModeMessageMeta,
 			},
 			"*",
@@ -356,8 +351,32 @@ export default class EventRecording {
 		}
 	}
 
+	async saveHoverFinalEvents(
+		eventType: ACTIONS_IN_TEST,
+		finalEvents: Array<Node>,
+	) {
+		for (let i = 0; i < finalEvents.length; i++) {
+			if (i == finalEvents.length - 1) {
+				await this.eventsController.saveCapturedEventInBackground(
+					eventType,
+					finalEvents[i],
+					"",
+					null,
+					true,
+				);
+			} else {
+				await this.eventsController.saveCapturedEventInBackground(
+					ACTIONS_IN_TEST.HOVER,
+					finalEvents[i],
+					"",
+					null,
+					true,
+				);
+			}
+		}
+	}
 	// eslint-disable-next-line consistent-return
-	handleWindowClick(event: any) {
+	async handleWindowClick(event: any) {
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		if (isRecorderCover) {
@@ -381,11 +400,13 @@ export default class EventRecording {
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
 		if (!event.simulatedEvent) {
-			this.eventsController.saveCapturedEventInBackground(
+			const finalEvents = await this.releventHoverDetectionManager.getDependentHoverNodesList(
 				ACTIONS_IN_TEST.CLICK,
 				event.target,
 			);
+			await this.saveHoverFinalEvents(ACTIONS_IN_TEST.CLICK, finalEvents);
 		}
+
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
 			const href = closestLink.getAttribute("href");
 			const isBlank = closestLink.getAttribute("target") === "_blank";
@@ -421,7 +442,10 @@ export default class EventRecording {
 
 	handleFocus(event: FocusEvent) {
 		const target = event.target as HTMLElement;
-		if (["textarea", "input"].includes(target.tagName.toLowerCase())) {
+		if (
+			(target as any) != window &&
+			["textarea", "input"].includes(target.tagName.toLowerCase())
+		) {
 			this.eventsController.saveCapturedEventInBackground(
 				ACTIONS_IN_TEST.ELEMENT_FOCUS,
 				target,
@@ -452,99 +476,20 @@ export default class EventRecording {
 		this.recordedHoverArr.push(event);
 	}
 
-	handleDOMMutationObserverCallback(mutations: any) {
-		const newMuationsList = mutations
-			.map((m: MutationRecord) => {
-				function getStylesMap(str: string) {
-					const rgx = new RegExp(/([\w-]+)\s*:\s*([^;]+)/gm);
-					const styleMatches: any = Array.from(str.matchAll(rgx));
-					const styleMaps = styleMatches.reduce((prev: any, match: any) => {
-						return { ...prev, [match[1]]: match[2] };
-					}, {});
-					return styleMaps;
-				}
-				function differenceInStylesMap(map1: any, map2: any) {
-					const map1Keys = Object.keys(map1);
-					let diff = {};
-					for (let i = 0; i < map1Keys.length; i++) {
-						const map1Value = map1[map1Keys[i]];
-						const map2Value = map2[map1Keys[i]];
-						if (!map2Value) {
-							diff = {
-								...diff,
-								[map1Keys[i]]: { firstValue: map1Value, secondValue: map2Value },
-							};
-						} else if (map1Value !== map2Value) {
-							diff = {
-								...diff,
-								[map1Keys[i]]: { firstValue: map1Value, secondValue: map2Value },
-							};
-						}
-						delete map2[map1Keys[i]];
-					}
-					const map2Keys = Object.keys(map2);
-					for (let i = 0; i < map2Keys.length; i++) {
-						diff = {
-							...diff,
-							[map2Keys[i]]: { firstValue: undefined, secondValue: map2[map2Keys[i]] },
-						};
-					}
-					return diff;
-				}
-				if (m.type !== "attributes") return m;
-				const newAttributeValue = (m.target as any).getAttribute(m.attributeName);
-				if (m.attributeName !== "style")
-					return Object.assign(m, { newAttributeValue: newAttributeValue });
+	handleCrusherHoverTrace(
+		event: CustomEvent & {
+			detail: { type: string; key: string; eventNode: Node; targetNode: Node };
+		},
+	) {
+		this.releventHoverDetectionManager.registerDOMMutation({
+			...event.detail
+		});
+	}
 
-				const getOldStylesMap = getStylesMap(m.oldValue ? m.oldValue : "");
-				const newAttributeStylesMap = getStylesMap(newAttributeValue);
-				const diffMap = differenceInStylesMap(
-					getOldStylesMap,
-					newAttributeStylesMap,
-				);
-				const diffKeys = Object.keys(diffMap);
-
-				const onlyOutlineChanged = diffKeys.filter((key) => {
-					return key.startsWith("outline");
-				});
-				if (
-					onlyOutlineChanged.length &&
-					onlyOutlineChanged.length === diffKeys.length
-				) {
-					return null;
-				}
-				return Object.assign(m, {
-					newAttributeValue: newAttributeValue,
-					diff: [getOldStylesMap, newAttributeStylesMap, diffMap],
-				});
-			})
-			.filter((a: any) => {
-				return a !== null;
-			});
-		if (this.pointerEventsMap.length === 0 || newMuationsList.length === 0)
-			return;
-		const currentTime = window.performance.now();
-		const event = this.pointerEventsMap[this.pointerEventsMap.length - 1];
-		const lastHoverElement =
-			this.pointerEventsMap.length > 0
-				? this.pointerEventsMap[this.pointerEventsMap.length - 1]
-				: null;
-		if (
-			currentTime - event.data.timeStamp < 50 &&
-			event.data.type === "pointerenter" &&
-			(event.data as any).target.id !== "overlay_cover" &&
-			!this.isInspectorMoving
-		) {
-			if (lastHoverElement === event.data.target) {
-				return;
-			}
-			console.log("Mutations linked to this event are: ", newMuationsList);
-			this.eventsController.saveCapturedEventInBackground(
-				ACTIONS_IN_TEST.HOVER,
-				event.data.target,
-			);
-			this.pointerEventsMap = [];
-		}
+	handleElementSelected(
+		event: CustomEvent & { detail: { element: HTMLElement } },
+	) {
+		this.turnOnElementModeInParentFrame(event.detail.element);
 	}
 
 	registerNodeListeners() {
@@ -553,23 +498,16 @@ export default class EventRecording {
 		window.addEventListener("mouseout", this.handleMouseOut, true);
 		window.addEventListener("contextmenu", this.onRightClick, true);
 		window.addEventListener("focus", this.handleFocus, true);
+		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
+		window.addEventListener("elementSelected", this.handleElementSelected);
 
 		document.body.addEventListener("pointerenter", this.handlePointerEnter, true);
-
-		this.mutationObserver = new MutationObserver(
-			this.handleDOMMutationObserverCallback,
-		);
-		this.mutationObserver.observe(document.body, {
-			attributes: true,
-			childList: true,
-			subtree: true,
-			attributeOldValue: true,
-		});
 
 		window.addEventListener("scroll", this.handleScroll, true);
 
 		window.onbeforeunload = this.handleBeforeNavigation;
 		window.addEventListener("keydown", this.handleKeyDown, true);
+
 		window.addEventListener("click", this.handleWindowClick, true);
 		setInterval(this.pollInterval, 300);
 	}
@@ -579,6 +517,7 @@ export default class EventRecording {
 	}
 
 	boot(isFirstTime = false) {
+		console.log("Starting...");
 		this.initNodes();
 
 		if (isFirstTime) {

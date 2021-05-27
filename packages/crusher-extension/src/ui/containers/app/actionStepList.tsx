@@ -133,7 +133,7 @@ const ActionStepList = () => {
 	});
 
 	return (
-		<>
+		<div className="flex flex-col p-24" style={{ height: "45%" }}>
 			<div className="flex justify-between text-white">
 				<h5 className="font-semibold text-17">Recorded</h5>
 				<div
@@ -145,7 +145,7 @@ const ActionStepList = () => {
 					{stepList.length} steps
 				</div>
 			</div>
-			<div className="h-full" style={containerStyle} id="stepsListContainer">
+			<div className="h-full mt-12" style={containerStyle} id="stepsListContainer">
 				<div className="absolute inset-0">
 					<div style={lineStyle}></div>
 				</div>
@@ -153,7 +153,7 @@ const ActionStepList = () => {
 					{stepList}
 				</ul>
 			</div>
-		</>
+		</div>
 	);
 };
 
@@ -163,7 +163,7 @@ const lineStyle = {
 	backgroundColor: COLOR_CONSTANTS.BORDER,
 	height: "30%",
 	marginTop: "1rem",
-	marginLeft: "1.34rem",
+	marginLeft: "1.44rem",
 };
 
 const containerStyle = {

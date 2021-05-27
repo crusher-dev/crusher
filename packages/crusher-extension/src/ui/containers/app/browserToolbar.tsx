@@ -98,7 +98,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					/>
 
 					<div className="flex justify-evenly">
-						<div className="ml-auto mr-3" id={"select-device-input"}>
+						<div className="mx-24" id={"select-device-input"}>
 							<SelectDeviceInput
 								selectedDevice={selectedDevice}
 								selectDevice={handleDeviceChange}

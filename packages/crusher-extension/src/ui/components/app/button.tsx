@@ -42,6 +42,7 @@ const Button = (props: iButtonProps) => {
 
 const buttonStyle = (isHovered: boolean) => ({
 	borderRadius: 6,
+	width: "max-content",
 	fontWeight: 500,
 	background: COLOR_CONSTANTS.TRINARY,
 	display: "flex",

@@ -22,6 +22,7 @@ import { updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import InputField from "../../components/app/InputField";
 import { BlueButton } from "../../components/app/BlueButton";
+import { divide } from "lodash";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -69,23 +70,27 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		</div>
 	);
 	const AddCustomCheckView = () => (
-		<div className="flex flex-col p-8 items-center justify-center h-full">
+		<div className="flex flex-col pt-72 items-center justify-center h-full">
 			<DetectActionSwitch />
-			<div className="mt-4  flex flex-col items-center">
+			<div className="mt-4  flex flex-col items-center pb-100">
 				<div
 					className="text-white
-				font-semibold mt-3
-				text-center text-15 my-2"
+				font-semibold mt-28
+				text-center text-15 mb-12"
 				>
 					We're detecting your basic actions
 				</div>
 				<h6 className="text-gray-300 text-center text-13">
 					For manual control, you can add custom checks
 				</h6>
-				<BlueButton onClick={toggleCustomIsCheck} title="Add custom check" />
+				<BlueButton
+					className="mt-24"
+					onClick={toggleCustomIsCheck}
+					title="Add custom check"
+				/>
 				<a
 					href="https://www.google.com"
-					className="underline text-gray-500 text-12 mt-11"
+					className="underline text-gray-500 text-12 mt-44"
 				>
 					Which actions are automatically detected?
 				</a>
@@ -103,7 +108,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 			items-center`}
 			>
 				{!isCustomCheck ? (
-					<div className="mr-5 cursor-pointer">
+					<div className="mr-28 cursor-pointer">
 						<SettingsIcon />
 					</div>
 				) : (
@@ -139,7 +144,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 						<div
 							onClick={toggleSearching}
 							style={{ width: "20%" }}
-							className="h-full text-white text-3xl 
+							className="h-full text-white text-17 
 							 cursor-pointer flex items-center justify-center"
 						>
 							&times;
@@ -170,9 +175,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				)}
 			</div>
 
-			<div className="flex flex-col p-24" style={{ height: "45%" }}>
-				<ActionStepList />
-			</div>
+			<ActionStepList />
 		</div>
 	);
 };

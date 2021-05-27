@@ -1,6 +1,6 @@
 const getSpacingSizes = (remBaseUnit) => {
   const sizingMap = {};
-  for (let i = 0; i <= 50; i++) {
+  for (let i = 0; i <= 100; i++) {
     if (i > 8 && i % 4 !== 0) {
       continue;
     }

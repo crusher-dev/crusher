@@ -5,11 +5,12 @@ interface iButtonProps {
 	id?: string;
 	title: string;
 	style?: React.CSSProperties;
+	className?: string;
 	onClick?: () => void;
 }
 
 const BlueButton = (props: iButtonProps) => {
-	const { id, title, onClick, style } = props;
+	const { id, title, onClick, style, className } = props;
 	return (
 		<button
 			id={id}
@@ -18,8 +19,8 @@ const BlueButton = (props: iButtonProps) => {
 				backgroundColor: COLOR_CONSTANTS.BUTTON_BLUE,
 				...style,
 			}}
-			className="focus:outline-none px-32 py-8
-					text-13 max-w-max mt-4 rounded-md  text-white"
+			className={`focus:outline-none px-32 py-8
+					text-13 max-w-max rounded-md  text-white ${className || ""}`}
 		>
 			{title}
 		</button>

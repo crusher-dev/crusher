@@ -1,6 +1,25 @@
 import {app, BrowserWindow, session, ipcMain} from 'electron';
 
 import * as path from "path";
+const Element = function(){};
+
+const loadExtension =  (mainWindow) => {
+	return new Promise((resolve, reject) => {
+		session.defaultSession.loadExtension(
+			path.resolve(__dirname, '../../crusher-extension/build/'),
+			{ allowFileAccess: true}
+		).then(async ({ id: extensionId }) => {
+			await mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
+			resolve(true);
+		});
+	});
+};
+
+async function createWindow () {
+	app.commandLine.appendSwitch('--disable-site-isolation-trials');
+	app.commandLine.appendSwitch('--disable-web-security');
+	app.commandLine.appendSwitch("--allow-top-navigation");
+
 
 const loadExtension =  (mainWindow) => {
 	console.log(process.env.NODE_ENV)

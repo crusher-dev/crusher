@@ -7,8 +7,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "compile": "rm -rf build && tsc",
-    "start": "yarn compile && /Users/utkarsh-dixit/Desktop/Electron/Electron.app/Contents/MacOS/Electron ."
+    "compile": "rm -rf out/dist/resources/app/build && tsc",
+    "start": "yarn compile && NODE_ENV=testing  /home/himanshu/Downloads/dist/electron .",
+    "build:release:all": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-linux-dist.sh",
+    "now": "bash scripts/build-and-copy-chrome.sh"
   },
   "dependencies": {
     "electron": "^12.0.2",

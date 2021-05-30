@@ -1,12 +1,13 @@
 import {app, BrowserWindow, session, ipcMain} from 'electron';
 
 import * as path from "path";
-const Element = function(){};
 
 const loadExtension =  (mainWindow) => {
+	console.log(process.env.NODE_ENV)
+	const isTesting = process.env.NODE_ENV === "testing";
 	return new Promise((resolve, reject) => {
 		session.defaultSession.loadExtension(
-			path.resolve(__dirname, '../../crusher-extension/build/'),
+			path.resolve(__dirname, `${isTesting?"../../crusher-extension/build":"./extension/"}`),
 			{ allowFileAccess: true}
 		).then(async ({ id: extensionId }) => {
 			await mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);

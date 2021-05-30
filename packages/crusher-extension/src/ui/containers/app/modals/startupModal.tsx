@@ -9,7 +9,9 @@ interface iStartupModalProps {
 
 const StartupModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
-	const [targetURL, setTargetURL] = useState("https://www.headout.com/burj-khalifa-tickets-c-158/");
+	const [targetURL, setTargetURL] = useState(
+		"https://www.stage-headout.com/dubai-desert-safari-c-262/",
+	);
 
 	const handleTargetSiteChange = (event: any) => {
 		setTargetURL(event.target.value);

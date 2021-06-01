@@ -28,13 +28,7 @@ export const _createTeamBackend = (teamName: string, headers: any = null) => {
 	});
 };
 
-export const _registerUser = (
-	firstName: string,
-	lastName: string,
-	email: string,
-	password: string,
-	inviteReferral: iInviteReferral | null = null,
-) => {
+export const _registerUser = (firstName: string, lastName: string, email: string, password: string, inviteReferral: iInviteReferral | null = null) => {
 	return backendRequest("/v2/user/signup", {
 		method: RequestMethod.POST,
 		payload: {
@@ -87,10 +81,7 @@ export const _fetchUserInfo = (headers = null): Promise<iUserInfoResponse> => {
 	});
 };
 
-export const _removeUserLoginConnection = (
-	connectionId: string,
-	headers: any = null,
-): Promise<Array<iUserConnection>> => {
+export const _removeUserLoginConnection = (connectionId: string, headers: any = null): Promise<Array<iUserConnection>> => {
 	return backendRequest("/v2/user/connection/remove", {
 		method: RequestMethod.DELETE,
 		payload: { connectionId: connectionId } as iDeleteLoginConnectionRequest,

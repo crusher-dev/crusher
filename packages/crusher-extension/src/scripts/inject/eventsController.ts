@@ -47,13 +47,7 @@ export default class EventsController {
 		);
 	}
 
-	async saveCapturedEventInBackground(
-		event_type: string,
-		capturedTarget: any,
-		value: any = "",
-		callback?: any,
-		shouldLogImage = false,
-	) {
+	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = false) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
 
 		if (shouldLogImage) {

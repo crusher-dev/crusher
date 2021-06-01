@@ -15,7 +15,7 @@ module.exports = {
 	},
 	plugins: [`@typescript-eslint`],
 	rules: {
-		'linebreak-style': [`error`, `unix`],
-		indent: ['error', 'tab'],
+		"linebreak-style": [`error`, `unix`],
+		indent: ["error", "tab"],
 	},
 };

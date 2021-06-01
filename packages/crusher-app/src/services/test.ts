@@ -1,14 +1,7 @@
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "@interfaces/RequestOptions";
 
-export const createTest = (
-	testName,
-	project,
-	actions,
-	code,
-	framework,
-	headers = null,
-) => {
+export const createTest = (testName, project, actions, code, framework, headers = null) => {
 	return backendRequest("/test/create", {
 		method: RequestMethod.POST,
 		headers: headers,
@@ -22,11 +15,7 @@ export const createTest = (
 	});
 };
 
-export const updateTestName = (
-	testName: string,
-	testId: number,
-	headers = null,
-) => {
+export const updateTestName = (testName: string, testId: number, headers = null) => {
 	return backendRequest(`/test/updateTest/${testId}`, {
 		method: RequestMethod.POST,
 		headers: headers,
@@ -50,13 +39,7 @@ export const runTestAPI = (testId, headers = null) => {
 	});
 };
 
-export const createAndRunDraftTest = (
-	testName,
-	code,
-	events,
-	projectId,
-	headers = null,
-) => {
+export const createAndRunDraftTest = (testName, code, events, projectId, headers = null) => {
 	return backendRequest("/draft/createAndRun/", {
 		method: RequestMethod.POST,
 		payload: { testName, projectId, events, code },
@@ -72,11 +55,7 @@ export const checkDraftStatus = (draftId, logsAfter, headers = null) => {
 	});
 };
 
-export const _getLiveLogs = (
-	draftId: number,
-	logsAfter: number,
-	headers = null,
-) => {
+export const _getLiveLogs = (draftId: number, logsAfter: number, headers = null) => {
 	return backendRequest(`/v2/draft/getLogs/${draftId}`, {
 		method: RequestMethod.POST,
 		headers,
@@ -84,15 +63,7 @@ export const _getLiveLogs = (
 	});
 };
 
-export const updateAndRunDraftTest = (
-	draftId,
-	testName,
-	code,
-	events,
-	projectId,
-	framework,
-	headers,
-) => {
+export const updateAndRunDraftTest = (draftId, testName, code, events, projectId, framework, headers) => {
 	return backendRequest(`/draft/runTest/${draftId}`, {
 		method: RequestMethod.POST,
 		payload: { testName, code, events, projectId, framework },
@@ -107,11 +78,7 @@ export const getDraftTest = (draftId, headers = null) => {
 	});
 };
 
-export const createTestFromDraft = (
-	draft_id,
-	fieldsToUpdate = {},
-	headers = null,
-) => {
+export const createTestFromDraft = (draft_id, fieldsToUpdate = {}, headers = null) => {
 	return backendRequest(`/test/createTestFromDraft/${draft_id}`, {
 		method: RequestMethod.POST,
 		payload: { ...fieldsToUpdate },
@@ -126,13 +93,7 @@ export const getAllTestsInfosInProject = (project_id, headers = null) => {
 	});
 };
 
-export const updateTest = (
-	testId,
-	testName,
-	code,
-	projectId,
-	headers = null,
-) => {
+export const updateTest = (testId, testName, code, projectId, headers = null) => {
 	return backendRequest(`/test/updateTest/${testId}`, {
 		method: RequestMethod.POST,
 		payload: { testName, projectId, code },
@@ -147,11 +108,7 @@ export const approveAllTests = (jobId: number, referenceJobId: number) => {
 	});
 };
 
-export const approveAllTestsInPlatform = (
-	jobId: number,
-	referenceJobId: number,
-	platform,
-) => {
+export const approveAllTestsInPlatform = (jobId: number, referenceJobId: number, platform) => {
 	return backendRequest(`/job/approve/tests/platform/${platform}/${jobId}`, {
 		method: RequestMethod.GET,
 		payload: { referenceJobId: referenceJobId },

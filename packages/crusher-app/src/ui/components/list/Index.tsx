@@ -33,9 +33,7 @@ function List(props) {
 	const { onClick, onDeleteItem, items, selected, onSelected } = props;
 
 	const itemsOut = items.map((item) => {
-		return (
-			<RenderItem onClick={onClick} onDeleteItem={onDeleteItem} item={item} />
-		);
+		return <RenderItem onClick={onClick} onDeleteItem={onDeleteItem} item={item} />;
 	});
 
 	return <ul css={styles.container}>{itemsOut}</ul>;

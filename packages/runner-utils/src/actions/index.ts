@@ -7,9 +7,9 @@ import elementScroll from "./elementScroll";
 import pageScroll from "./pageScroll";
 import navigateUrl from "./navigateUrl";
 import setDevice from "./setDevice";
-import assertElement from './assertElement';
+import assertElement from "./assertElement";
 import runCustomScript from "./elementCustomScript";
-import focusOnElement from './elementFocus';
+import focusOnElement from "./elementFocus";
 
 module.exports = {
 	Element: {
@@ -21,7 +21,7 @@ module.exports = {
 		elementScroll,
 		assertElement,
 		runCustomScript: runCustomScript,
-		focus: focusOnElement
+		focus: focusOnElement,
 	},
 	Page: {
 		screenshot: capturePageScreenshot,

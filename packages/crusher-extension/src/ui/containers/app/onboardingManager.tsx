@@ -27,9 +27,7 @@ const createOnboardingStep = (selector: string, heading: string, desc: any) => {
 				>
 					{heading}
 				</div>
-				<p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.925rem" }}>
-					{desc}
-				</p>
+				<p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.925rem" }}>{desc}</p>
 			</div>
 		),
 		style: {
@@ -43,45 +41,23 @@ const ONBOARDING_STEPS: any = [
 	createOnboardingStep(
 		"#select-device-input",
 		"Select a device",
-		"You can select the device you want to create test for from here. Go ahead" +
-			"and select some device",
+		"You can select the device you want to create test for from here. Go ahead" + "and select some device",
 	),
 	createOnboardingStep(
 		"#device_browser",
 		"Browser Frame",
 		<>
-			<div>
-				This is the browser frame where you have to perform actions to record them.
-			</div>
+			<div>This is the browser frame where you have to perform actions to record them.</div>
 			<br />
 			<div>Right click over an element to turn on inspector mode</div>
 			<br />
-			<div>
-				Once you have turned on inspector mode, hover on an element and click on it
-				to select it.
-			</div>
+			<div>Once you have turned on inspector mode, hover on an element and click on it to select it.</div>
 		</>,
 	),
-	createOnboardingStep(
-		`#${ELEMENT_LEVEL_ACTION.SCREENSHOT}`,
-		"Take Screenshot",
-		"Click on this to take screenshot of that element",
-	),
-	createOnboardingStep(
-		`#${TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE}`,
-		"Toggle Inspect Mode",
-		"Now select an element using this button",
-	),
-	createOnboardingStep(
-		"#device_browser",
-		"Select an element",
-		"Click on an overlay to select the element again.",
-	),
-	createOnboardingStep(
-		`#${ELEMENT_LEVEL_ACTION.CLICK}`,
-		"Click on the element",
-		"Click on this to record click for this element",
-	),
+	createOnboardingStep(`#${ELEMENT_LEVEL_ACTION.SCREENSHOT}`, "Take Screenshot", "Click on this to take screenshot of that element"),
+	createOnboardingStep(`#${TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE}`, "Toggle Inspect Mode", "Now select an element using this button"),
+	createOnboardingStep("#device_browser", "Select an element", "Click on an overlay to select the element again."),
+	createOnboardingStep(`#${ELEMENT_LEVEL_ACTION.CLICK}`, "Click on the element", "Click on this to record click for this element"),
 	createOnboardingStep(
 		"#stepsListContainer",
 		"Recorded Events List",
@@ -90,16 +66,8 @@ const ONBOARDING_STEPS: any = [
 			<p>Go ahead and delete any action</p>
 		</>,
 	),
-	createOnboardingStep(
-		`#${TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT}`,
-		"Take whole page screenshot",
-		"Click on this to take page screenshot of whole viewport.",
-	),
-	createOnboardingStep(
-		"#saveTest",
-		"Save Test",
-		"Now click on save test to run and save this test on crusher",
-	),
+	createOnboardingStep(`#${TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT}`, "Take whole page screenshot", "Click on this to take page screenshot of whole viewport."),
+	createOnboardingStep("#saveTest", "Save Test", "Now click on save test to run and save this test on crusher"),
 ];
 
 export const ONBOARDING_STEP_INDEX_MAP = {
@@ -131,52 +99,31 @@ const OnboardingManager = () => {
 		switch (currentOnboardingStep) {
 			case ONBOARDING_STEP_INDEX_MAP.DEVICE_BROWSER_INTRODUCTION: {
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.ELEMENT) break;
-				store.dispatch(
-					updateCurrentOnboardingStep(
-						ONBOARDING_STEP_INDEX_MAP.TAKE_SCREENSHOT_ONBOARDING,
-					),
-				);
+				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.TAKE_SCREENSHOT_ONBOARDING));
 				break;
 			}
 			case ONBOARDING_STEP_INDEX_MAP.TAKE_SCREENSHOT_ONBOARDING: {
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.PAGE) break;
-				store.dispatch(
-					updateCurrentOnboardingStep(
-						ONBOARDING_STEP_INDEX_MAP.TOGGLE_INSPECT_BUTTON_INTRODUCTION,
-					),
-				);
+				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.TOGGLE_INSPECT_BUTTON_INTRODUCTION));
 				break;
 			}
 			case ONBOARDING_STEP_INDEX_MAP.TOGGLE_INSPECT_BUTTON_INTRODUCTION: {
-				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.SELECT_ELEMENT)
-					break;
-				store.dispatch(
-					updateCurrentOnboardingStep(
-						ONBOARDING_STEP_INDEX_MAP.SELECT_ELEMENT_USING_BUTTON,
-					),
-				);
+				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.SELECT_ELEMENT) break;
+				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SELECT_ELEMENT_USING_BUTTON));
 				break;
 			}
 			case ONBOARDING_STEP_INDEX_MAP.SELECT_ELEMENT_USING_BUTTON: {
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.ELEMENT) {
 					break;
 				}
-				store.dispatch(
-					updateCurrentOnboardingStep(
-						ONBOARDING_STEP_INDEX_MAP.RECORD_CLICK_ELEMENT,
-					),
-				);
+				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.RECORD_CLICK_ELEMENT));
 				break;
 			}
 			case ONBOARDING_STEP_INDEX_MAP.RECORD_CLICK_ELEMENT: {
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.PAGE) {
 					break;
 				}
-				store.dispatch(
-					updateCurrentOnboardingStep(
-						ONBOARDING_STEP_INDEX_MAP.ACTIONS_STEP_LIST_INTRODUCTION,
-					),
-				);
+				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.ACTIONS_STEP_LIST_INTRODUCTION));
 				break;
 			}
 		}
@@ -186,23 +133,13 @@ const OnboardingManager = () => {
 		const store = getStore();
 		const currentCount = recordedActions.length;
 		const prevCount = lastRecordedActionsCount.current;
-		if (
-			currentCount < prevCount &&
-			currentOnboardingStep ===
-				ONBOARDING_STEP_INDEX_MAP.ACTIONS_STEP_LIST_INTRODUCTION
-		) {
-			store.dispatch(
-				updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.TAKE_PAGE_SCREENSHOT),
-			);
+		if (currentCount < prevCount && currentOnboardingStep === ONBOARDING_STEP_INDEX_MAP.ACTIONS_STEP_LIST_INTRODUCTION) {
+			store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.TAKE_PAGE_SCREENSHOT));
 		} else if (currentCount > prevCount) {
 			switch (currentOnboardingStep) {
 				case ONBOARDING_STEP_INDEX_MAP.TAKE_PAGE_SCREENSHOT: {
-					if (
-						recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.PAGE_SCREENSHOT
-					) {
-						store.dispatch(
-							updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SAVE_TEST),
-						);
+					if (recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.PAGE_SCREENSHOT) {
+						store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SAVE_TEST));
 					}
 					break;
 				}
@@ -219,10 +156,7 @@ const OnboardingManager = () => {
 				handleTourComplete();
 				window.location.reload();
 			});
-			const isDeviceAlreadyChanged = AdvancedURL.getParameterByName(
-				"isDeviceChanged",
-				window.location.href,
-			);
+			const isDeviceAlreadyChanged = AdvancedURL.getParameterByName("isDeviceChanged", window.location.href);
 			setIsTourOpen(true);
 			if (isDeviceAlreadyChanged === "true") {
 				store.dispatch(updateCurrentOnboardingStep(1));

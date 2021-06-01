@@ -12,10 +12,7 @@ import { DEVICE_TYPES } from "@crusher-shared/types/deviceTypes";
 import { BaseModal } from "@ui/containers/modals/baseModal";
 import CrossIcon from "../../../../public/svg/modals/cross.svg";
 import { getChromeExtensionId } from "@utils/extension";
-import {
-	generateCrusherExtensionUrl,
-	getDefaultDeviceFromDeviceType,
-} from "@crusher-shared/utils/extension";
+import { generateCrusherExtensionUrl, getDefaultDeviceFromDeviceType } from "@crusher-shared/utils/extension";
 
 interface iCreateTestModalProps {
 	isOpen: boolean;
@@ -40,13 +37,7 @@ const CreateTestModal = (props: iCreateTestModalProps) => {
 			const device = getDefaultDeviceFromDeviceType(selectedDeviceType.value);
 
 			if (device) {
-				window.open(
-					generateCrusherExtensionUrl(
-						`chrome-extension://${getChromeExtensionId()}`,
-						url,
-						device.id,
-					),
-				);
+				window.open(generateCrusherExtensionUrl(`chrome-extension://${getChromeExtensionId()}`, url, device.id));
 			}
 			onClose();
 		} else {
@@ -89,34 +80,19 @@ const CreateTestModal = (props: iCreateTestModalProps) => {
 				/>
 
 				<Label customCSS={inputItemMarginTopCSS}>On Device</Label>
-				<Select
-					value={selectedDeviceType}
-					onChange={handleDeviceChange}
-					options={deviceTypes}
-					css={inputLabelMarginCSS}
-				/>
+				<Select value={selectedDeviceType} onChange={handleDeviceChange} options={deviceTypes} css={inputLabelMarginCSS} />
 				<div css={modalNoteCSS}>
 					<div css={flagContainerCSS}>
 						<Flag />
 					</div>
 					<div style={{ flex: "1" }}>
-						<div>
-							If your app shows different version for different device, country, etc.
-						</div>
+						<div>If your app shows different version for different device, country, etc.</div>
 						<div>Create different version or fork a test</div>
 					</div>
 				</div>
-				<ModalButton
-					containerCss={buttonCSS}
-					title={"Start Recording"}
-					onClick={handleSubmit}
-				/>
-				<a
-					css={playContainerCSS}
-					href={"https://www.loom.com/share/5f1392d00274403083d151c0183620cb"}
-				>
-					<Play />{" "}
-					<span style={{ marginLeft: "0.75rem" }}>Watch how to record test</span>
+				<ModalButton containerCss={buttonCSS} title={"Start Recording"} onClick={handleSubmit} />
+				<a css={playContainerCSS} href={"https://www.loom.com/share/5f1392d00274403083d151c0183620cb"}>
+					<Play /> <span style={{ marginLeft: "0.75rem" }}>Watch how to record test</span>
 				</a>
 			</div>
 		</BaseModal>

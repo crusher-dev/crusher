@@ -25,42 +25,18 @@ function RenderStatusImage(props: any) {
 	const { status } = props;
 
 	if (status === JobReportStatus.FAILED) {
-		return (
-			<img
-				src={"/svg/tests/buttons/failed.svg"}
-				css={styles.button}
-				style={{ width: "10.37500rem" }}
-			/>
-		);
+		return <img src={"/svg/tests/buttons/failed.svg"} css={styles.button} style={{ width: "10.37500rem" }} />;
 	}
 
 	if (status === JobReportStatus.PASSED) {
-		return (
-			<img
-				src={"/svg/tests/buttons/approved.svg"}
-				css={styles.button}
-				style={{ width: "10.37500rem" }}
-			/>
-		);
+		return <img src={"/svg/tests/buttons/approved.svg"} css={styles.button} style={{ width: "10.37500rem" }} />;
 	}
 
 	if (status === JobReportStatus.MANUAL_REVIEW_REQUIRED) {
-		return (
-			<img
-				src={"/svg/tests/buttons/needsReview.svg"}
-				css={styles.button}
-				style={{ width: "10.37500rem" }}
-			/>
-		);
+		return <img src={"/svg/tests/buttons/needsReview.svg"} css={styles.button} style={{ width: "10.37500rem" }} />;
 	}
 
-	return (
-		<img
-			src={"/svg/tests/buttons/running.svg"}
-			css={styles.button}
-			style={{ width: "10.37500rem" }}
-		/>
-	);
+	return <img src={"/svg/tests/buttons/running.svg"} css={styles.button} style={{ width: "10.37500rem" }} />;
 }
 
 function BuildItem(props: any) {
@@ -103,14 +79,8 @@ function BuildItem(props: any) {
 					<div css={styles.buildInfo}>
 						<div>
 							<div css={styles.buildCommitIds}>
-								<div css={styles.buildCommitBranch}>
-									{branchName ? branchName : "N/A"}
-								</div>
-								{commitId && (
-									<div css={styles.buildCommit}>
-										{commitId ? commitId.slice(0, 5) : "** No Commit **"}
-									</div>
-								)}
+								<div css={styles.buildCommitBranch}>{branchName ? branchName : "N/A"}</div>
+								{commitId && <div css={styles.buildCommit}>{commitId ? commitId.slice(0, 5) : "** No Commit **"}</div>}
 							</div>
 							<div css={styles.buildCommitName}>{commitName}</div>
 						</div>
@@ -119,20 +89,15 @@ function BuildItem(props: any) {
 						<div style={{ margin: "0 auto" }}>
 							<div css={styles.buildShortTwoItemsContainer}>
 								<div css={styles.buildShortInfo}>
-									<img
-										src={"/svg/tests/screenshot.svg"}
-										style={{ width: "1.3125rem" }}
-									/>
+									<img src={"/svg/tests/screenshot.svg"} style={{ width: "1.3125rem" }} />
 									<span>
-										{`${totalScreenshotCount ? totalScreenshotCount : 0} `}{" "}
-										<span style={{ fontWeight: 600 }}> Screenshots</span>
+										{`${totalScreenshotCount ? totalScreenshotCount : 0} `} <span style={{ fontWeight: 600 }}> Screenshots</span>
 									</span>
 								</div>
 								<div css={styles.buildShortInfo} style={{ margin: "0 auto" }}>
 									<img src={"/svg/tests/passed.svg"} style={{ width: "1.3125rem" }} />
 									<span>
-										{`${passedScreenshotCount ? passedScreenshotCount : 0} `}{" "}
-										<span style={{ fontWeight: 600 }}> passed</span>
+										{`${passedScreenshotCount ? passedScreenshotCount : 0} `} <span style={{ fontWeight: 600 }}> passed</span>
 									</span>
 								</div>
 							</div>
@@ -140,9 +105,7 @@ function BuildItem(props: any) {
 								<div css={styles.buildShortInfo}>
 									<img src={"/svg/tests/review.svg"} style={{ width: "1.3125rem" }} />
 									<span>
-										{`${
-											reviewRequiredScreenshotCount ? reviewRequiredScreenshotCount : 0
-										} `}{" "}
+										{`${reviewRequiredScreenshotCount ? reviewRequiredScreenshotCount : 0} `}{" "}
 										<span style={{ fontWeight: 600 }}> Review required</span>
 									</span>
 								</div>
@@ -202,12 +165,7 @@ const BuildPage = (props: any) => {
 
 	const isBuildsPresent = builds.jobs && builds.jobs.length;
 	return (
-		<div
-			css={[
-				containerCSS,
-				isBuildsPresent ? containerPaddingCSS : emptyBuildsContainerPaddingCSS,
-			]}
-		>
+		<div css={[containerCSS, isBuildsPresent ? containerPaddingCSS : emptyBuildsContainerPaddingCSS]}>
 			<Conditional If={isBuildsPresent}>
 				<div css={filterContainerCss}>
 					<div css={headingCSS}>Previous Builds</div>
@@ -427,19 +385,12 @@ BuildPage.getInitialProps = async (ctx: any) => {
 		const cookies = getCookies(req);
 		const defaultProject = getSelectedProject(store.getState());
 
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
+		const selectedProject = JSON.parse(cookies.selectedProject ? cookies.selectedProject : null);
 		const page = query.page ? query.page : 1;
 		const category = query.category ? query.category : 0;
 
 		const selectedProjectId = selectedProject ? selectedProject : defaultProject;
-		const builds = await getAllJobsOfProject(
-			selectedProjectId,
-			category,
-			page,
-			headers,
-		);
+		const builds = await getAllJobsOfProject(selectedProjectId, category, page, headers);
 
 		return {
 			builds: builds,

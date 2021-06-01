@@ -7,8 +7,7 @@ export const FeedbackComponent = () => {
 	const [imgUrl, setImgUrl] = useState(normalImageUrl);
 	const [showfeedbackSVG, setShowFeedbackSVG] = useState(true);
 	const hideHotjarFeedback = () => {
-		const hotjarElement =
-			document && document.querySelector("#_hj_feedback_container");
+		const hotjarElement = document && document.querySelector("#_hj_feedback_container");
 		if (hotjarElement) {
 			hotjarElement.style.visibility = "hidden";
 		} else {
@@ -23,9 +22,7 @@ export const FeedbackComponent = () => {
 	const showHotjar = () => {
 		const hotjarElement = document.querySelector("#_hj_feedback_container");
 		hotjarElement.style.visibility = "visible";
-		document
-			.querySelector("#_hj_feedback_container")
-			.childNodes[0].childNodes[0].click();
+		document.querySelector("#_hj_feedback_container").childNodes[0].childNodes[0].click();
 		setShowFeedbackSVG(false);
 	};
 	if (!showfeedbackSVG) return null;

@@ -1,8 +1,5 @@
 import { getStore } from "./redux/store";
-import {
-	recordAction,
-	updateLastRecordedAction,
-} from "./redux/actions/actions";
+import { recordAction, updateLastRecordedAction } from "./redux/actions/actions";
 import {
 	addSEOMetaInfo,
 	updateActionsRecordingState,
@@ -12,11 +9,7 @@ import {
 } from "./redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
 import { RefObject } from "react";
-import {
-	getActionsRecordingState,
-	getAutoRecorderState,
-	isRecorderScriptBooted,
-} from "./redux/selectors/recorder";
+import { getActionsRecordingState, getAutoRecorderState, isRecorderScriptBooted } from "./redux/selectors/recorder";
 import { AdvancedURL } from "./utils/url";
 import userAgents from "../../crusher-shared/constants/userAgents";
 import {
@@ -77,31 +70,20 @@ export interface iSeoMetaInformationMeta {
 function handleRecordAction(action: iAction) {
 	const store = getStore();
 	const recordedActions = getActions(store.getState());
-	const lastRecordedAction = recordedActions.length
-		? recordedActions[recordedActions.length - 1]
-		: null;
+	const lastRecordedAction = recordedActions.length ? recordedActions[recordedActions.length - 1] : null;
 
 	const { type } = action;
 
 	// We can assume any event coming to this is auto-based
 	const shouldAutoRecord = getAutoRecorderState(store.getState());
-	if (
-		!shouldAutoRecord &&
-		![
-			ACTIONS_IN_TEST.NAVIGATE_URL,
-			ACTIONS_IN_TEST.SCROLL,
-			ACTIONS_IN_TEST.SET_DEVICE,
-		].includes(type)
-	) {
+	if (!shouldAutoRecord && ![ACTIONS_IN_TEST.NAVIGATE_URL, ACTIONS_IN_TEST.SCROLL, ACTIONS_IN_TEST.SET_DEVICE].includes(type)) {
 		return;
 	}
 
 	switch (type) {
 		case ACTIONS_IN_TEST.NAVIGATE_URL: {
 			const hasInitialNavigationActionRegistered =
-				recordedActions.findIndex(
-					(recordedAction) => recordedAction.type === ACTIONS_IN_TEST.NAVIGATE_URL,
-				) !== -1;
+				recordedActions.findIndex((recordedAction) => recordedAction.type === ACTIONS_IN_TEST.NAVIGATE_URL) !== -1;
 			if (!hasInitialNavigationActionRegistered) {
 				store.dispatch(recordAction(action));
 			}
@@ -109,73 +91,54 @@ function handleRecordAction(action: iAction) {
 			break;
 		}
 		case ACTIONS_IN_TEST.ADD_INPUT: {
-			if (!lastRecordedAction)
-				throw new Error("Add input recorded before navigate url");
+			if (!lastRecordedAction) throw new Error("Add input recorded before navigate url");
 
-			const isLastEventAddInput =
-				lastRecordedAction.type === ACTIONS_IN_TEST.ADD_INPUT;
+			const isLastEventAddInput = lastRecordedAction.type === ACTIONS_IN_TEST.ADD_INPUT;
 			if (!isLastEventAddInput) {
 				action.payload.meta.value = [action.payload.meta.value];
 				store.dispatch(recordAction(action));
 				return false;
 			}
 
-			const currentXpath = action.payload.selectors!.find(
-				(selector) => selector.type === "xpath",
-			);
+			const currentXpath = action.payload.selectors!.find((selector) => selector.type === "xpath");
 
-			const lastActionXpath = lastRecordedAction.payload.selectors!.find(
-				(selector) => selector.type === "xpath",
-			);
+			const lastActionXpath = lastRecordedAction.payload.selectors!.find((selector) => selector.type === "xpath");
 
 			// Store add inputs in an array values
-			if (
-				!(isLastEventAddInput && currentXpath!.value === lastActionXpath!.value)
-			) {
+			if (!(isLastEventAddInput && currentXpath!.value === lastActionXpath!.value)) {
 				action.payload.meta.value = [action.payload.meta.value];
 				store.dispatch(recordAction(action));
 			} else {
-				action.payload.meta.value = [
-					...lastRecordedAction.payload.meta.value,
-					action.payload.meta.value,
-				];
+				action.payload.meta.value = [...lastRecordedAction.payload.meta.value, action.payload.meta.value];
 				store.dispatch(updateLastRecordedAction(action));
 			}
 
 			break;
 		}
 		case ACTIONS_IN_TEST.SCROLL: {
-			if (!lastRecordedAction)
-				throw new Error("Scroll recorded before navigate url");
+			if (!lastRecordedAction) throw new Error("Scroll recorded before navigate url");
 
 			const isScrollingToSameLastElement =
 				lastRecordedAction.type === ACTIONS_IN_TEST.SCROLL &&
-				((lastRecordedAction.payload.selectors === null &&
-					action.payload.selectors === null) ||
-					(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
-						(action.payload.selectors as iSelectorInfo[])[0].value);
+				((lastRecordedAction.payload.selectors === null && action.payload.selectors === null) ||
+					(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value);
 
 			// Store add inputs in an array values
 			if (!isScrollingToSameLastElement) {
 				action.payload.meta.value = [action.payload.meta.value];
 				store.dispatch(recordAction(action));
 			} else {
-				action.payload.meta.value = [
-					...lastRecordedAction.payload.meta.value,
-					action.payload.meta.value,
-				];
+				action.payload.meta.value = [...lastRecordedAction.payload.meta.value, action.payload.meta.value];
 				store.dispatch(updateLastRecordedAction(action));
 			}
 			break;
 		}
 		case ACTIONS_IN_TEST.HOVER: {
-			if (!lastRecordedAction)
-				throw new Error("Hover recorded before navigate url");
+			if (!lastRecordedAction) throw new Error("Hover recorded before navigate url");
 
 			const isTheLastRecordedActionSame =
 				lastRecordedAction.type === ACTIONS_IN_TEST.HOVER &&
-				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
-					(action.payload.selectors as iSelectorInfo[])[0].value;
+				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;
 
 			if (!isTheLastRecordedActionSame) {
 				store.dispatch(recordAction(action));
@@ -183,13 +146,11 @@ function handleRecordAction(action: iAction) {
 			break;
 		}
 		case ACTIONS_IN_TEST.CLICK: {
-			if (!lastRecordedAction)
-				throw new Error("Click recorded before navigate url");
+			if (!lastRecordedAction) throw new Error("Click recorded before navigate url");
 
 			const isTheLastRecordedActionOnSameElementFocus =
 				lastRecordedAction.type === ACTIONS_IN_TEST.ELEMENT_FOCUS &&
-				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value ===
-					(action.payload.selectors as iSelectorInfo[])[0].value;
+				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;
 			if (!isTheLastRecordedActionOnSameElementFocus) {
 				store.dispatch(recordAction(action));
 			}
@@ -203,19 +164,14 @@ function handleRecordAction(action: iAction) {
 	return true;
 }
 
-function sendTestRecorderStatusToFrame(
-	deviceIframeRef: RefObject<HTMLIFrameElement>,
-) {
+function sendTestRecorderStatusToFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
 	const store = getStore();
 
-	if (!deviceIframeRef.current)
-		throw new Error("Iframe not available yet from ref context");
+	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
 	const cn = deviceIframeRef.current.contentWindow;
 
-	const inUsingInspectorMode =
-		getActionsRecordingState(store.getState()).type ===
-		ACTIONS_RECORDING_STATE.ELEMENT;
+	const inUsingInspectorMode = getActionsRecordingState(store.getState()).type === ACTIONS_RECORDING_STATE.ELEMENT;
 
 	const isRecording = isRecorderScriptBooted(store.getState());
 
@@ -235,17 +191,12 @@ function sendTestRecorderStatusToFrame(
 }
 
 function sendUserAgentToFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
-	if (!deviceIframeRef.current)
-		throw new Error("Iframe not available yet from ref context");
+	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
 	const cn = deviceIframeRef.current.contentWindow;
 	// Extension url contains selected device
-	const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(
-		window?.location.href,
-	);
-	const userAgent = userAgents.find(
-		(agent) => agent.name === (device.userAgent || userAgents[6].value),
-	);
+	const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(window?.location.href);
+	const userAgent = userAgents.find((agent) => agent.name === (device.userAgent || userAgents[6].value));
 	cn?.postMessage(
 		{
 			type: FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE,
@@ -255,10 +206,7 @@ function sendUserAgentToFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
 	);
 }
 
-export function recorderMessageListener(
-	deviceIframeRef: RefObject<HTMLIFrameElement>,
-	event: MessageEvent<iMessage>,
-) {
+export function recorderMessageListener(deviceIframeRef: RefObject<HTMLIFrameElement>, event: MessageEvent<iMessage>) {
 	const store = getStore();
 
 	const { type } = event.data;
@@ -283,9 +231,7 @@ export function recorderMessageListener(
 			if (isInspectModeOn) {
 				(window as any).electron.turnOnInspectMode();
 
-				store.dispatch(
-					updateActionsRecordingState(ACTIONS_RECORDING_STATE.SELECT_ELEMENT),
-				);
+				store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.SELECT_ELEMENT));
 			} else {
 				store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 			}
@@ -293,9 +239,7 @@ export function recorderMessageListener(
 		}
 		case MESSAGE_TYPES.TURN_ON_ELEMENT_MODE: {
 			const meta = event.data.meta as iElementModeMessageMeta;
-			store.dispatch(
-				updateActionsRecordingState(ACTIONS_RECORDING_STATE.ELEMENT, meta),
-			);
+			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.ELEMENT, meta));
 			break;
 		}
 		case MESSAGE_TYPES.RECORDER_BOOTED: {
@@ -328,11 +272,8 @@ export function recorderMessageListener(
 	return true;
 }
 
-export function turnOnInspectModeInFrame(
-	deviceIframeRef: RefObject<HTMLIFrameElement>,
-) {
-	if (!deviceIframeRef.current)
-		throw new Error("Iframe not available yet from ref context");
+export function turnOnInspectModeInFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
+	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
 	const cn = deviceIframeRef.current.contentWindow;
 
@@ -345,13 +286,10 @@ export function turnOnInspectModeInFrame(
 	);
 }
 
-export function turnOffInspectModeInFrame(
-	deviceIframeRef: RefObject<HTMLIFrameElement>,
-) {
-	if (!deviceIframeRef.current)
-		throw new Error("Iframe not available yet from ref context");
+export function turnOffInspectModeInFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
+	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
-	(window as any).electron.turnOffInspectMode()
+	(window as any).electron.turnOffInspectMode();
 
 	const cn = deviceIframeRef.current.contentWindow;
 
@@ -364,13 +302,8 @@ export function turnOffInspectModeInFrame(
 	);
 }
 
-export function executeScriptInFrame(
-	script: string,
-	selector: string,
-	deviceIframeRef: RefObject<HTMLIFrameElement>,
-) {
-	if (!deviceIframeRef.current)
-		throw new Error("Iframe not available yet from ref context");
+export function executeScriptInFrame(script: string, selector: string, deviceIframeRef: RefObject<HTMLIFrameElement>) {
+	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
 	const cn = deviceIframeRef.current.contentWindow;
 
@@ -388,8 +321,7 @@ export function performActionInFrame(
 	recordingState: ACTIONS_RECORDING_STATE,
 	deviceIframeRef: RefObject<HTMLIFrameElement>,
 ) {
-	if (!deviceIframeRef.current)
-		throw new Error("Iframe not available yet from ref context");
+	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
 	const cn = deviceIframeRef.current.contentWindow;
 

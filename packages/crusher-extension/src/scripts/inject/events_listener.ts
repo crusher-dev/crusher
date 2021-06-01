@@ -21,11 +21,7 @@ function boot() {
 
 	requestRecordingStatusFromExtension();
 
-	window.addEventListener(
-		"message",
-		responseMessageListener.bind(window, recordingOverlay),
-		false,
-	);
+	window.addEventListener("message", responseMessageListener.bind(window, recordingOverlay), false);
 }
 
 boot();

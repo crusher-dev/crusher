@@ -12,10 +12,7 @@ function LeftMenuComponent({ selected }) {
 				return (
 					<Link href={key.toLowerCase()}>
 						<a>
-							<div
-								css={[styles.menuItem, isSelected && styles.selectedMenuItem]}
-								key={key}
-							>
+							<div css={[styles.menuItem, isSelected && styles.selectedMenuItem]} key={key}>
 								{value}
 							</div>
 						</a>

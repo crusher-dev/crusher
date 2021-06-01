@@ -44,7 +44,11 @@ export class DraftControllerV2 {
 					return this.draftV2Service
 						.getDraftLogs(draftId, logsAfter)
 						.then((logs) => {
-							resolve({ status: DRAFT_LOGS_STATUS.UPDATE_LOGS, logs: logs, test: testStatus });
+							resolve({
+								status: DRAFT_LOGS_STATUS.UPDATE_LOGS,
+								logs: logs,
+								test: testStatus,
+							});
 							clearInterval(interval);
 						})
 						.catch((err) => {

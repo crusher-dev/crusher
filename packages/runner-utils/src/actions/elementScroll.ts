@@ -16,7 +16,7 @@ export default function capturePageScreenshot(action: iAction, page: Page) {
 			return success({
 				message: `Scrolled successfully on ${pageUrl}`,
 			});
-		} catch(err){
+		} catch (err) {
 			console.log(err);
 			return error("Some issue occurred while scrolling on element");
 		}

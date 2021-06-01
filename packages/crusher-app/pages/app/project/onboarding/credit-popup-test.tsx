@@ -11,9 +11,7 @@ function CreditPopup() {
 			>
 				<h1 css={headingCSS}>Get 300$ credits</h1>
 				<p css={headingCSS}>Enjoying Crusher?</p>
-				<p css={paraCSS}>
-					You get 300$ when someone you invite signs up to the pro plan
-				</p>
+				<p css={paraCSS}>You get 300$ when someone you invite signs up to the pro plan</p>
 				<button css={buttonCSS}>Invite</button>
 			</div>
 			<img src={Richie} />
@@ -56,7 +54,8 @@ const headingCSS = css`
 
 const paraCSS = css`
 	font-family: Gilroy;
-	font-size: 1rem; line-height: 1.125rem;
+	font-size: 1rem;
+	line-height: 1.125rem;
 `;
 
 export default CreditPopup;

@@ -14,13 +14,7 @@ const ModalInput = (props: iProps) => {
 	const { id, placeholder, value, onChange, customCSS } = props;
 	return (
 		<div css={[containerCss, customCSS]}>
-			<input
-				id={id}
-				onChange={onChange}
-				placeholder={placeholder}
-				value={value}
-				css={containerCss}
-			></input>
+			<input id={id} onChange={onChange} placeholder={placeholder} value={value} css={containerCss}></input>
 		</div>
 	);
 };

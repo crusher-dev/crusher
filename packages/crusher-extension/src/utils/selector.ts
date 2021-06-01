@@ -13,15 +13,9 @@ export function getXpathTo(element: HTMLElement): string | null {
 	for (let i = 0; i < siblings.length; i++) {
 		const sibling: ChildNode = siblings[i];
 		if (sibling === element) {
-			return `${getXpathTo(element.parentNode as HTMLElement)}/${
-				element.tagName
-			}[${ix + 1}]`;
+			return `${getXpathTo(element.parentNode as HTMLElement)}/${element.tagName}[${ix + 1}]`;
 		}
-		if (
-			sibling.nodeType === 1 &&
-			(sibling as HTMLElement).tagName === element.tagName
-		)
-			ix++;
+		if (sibling.nodeType === 1 && (sibling as HTMLElement).tagName === element.tagName) ix++;
 	}
 
 	return null;

@@ -17,7 +17,12 @@ export class UserConnectionsMongoService {
 			{
 				userId: userId,
 				service: USER_CONNECTION_TYPE.GITHUB,
-				meta: { userId: githubUserInfo.data.id, loginName: githubUserInfo.data.login, userName: githubUserInfo.data.name, tokenAuthentication },
+				meta: {
+					userId: githubUserInfo.data.id,
+					loginName: githubUserInfo.data.login,
+					userName: githubUserInfo.data.name,
+					tokenAuthentication,
+				},
 			},
 			{ upsert: true },
 		);

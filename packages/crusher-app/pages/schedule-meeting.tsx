@@ -45,13 +45,7 @@ function CrusherSelectBox({ checked, setChecked, text, description }) {
 	return (
 		<div css={SelectBox}>
 			<div>
-				<Checkbox
-					defaultChecked
-					color="primary"
-					checked={checked}
-					onChange={handleChange}
-					inputProps={{ "aria-label": "secondary checkbox" }}
-				/>
+				<Checkbox defaultChecked color="primary" checked={checked} onChange={handleChange} inputProps={{ "aria-label": "secondary checkbox" }} />
 			</div>
 			<div>
 				<div css={headingStyle}>{text}</div>
@@ -62,14 +56,7 @@ function CrusherSelectBox({ checked, setChecked, text, description }) {
 }
 
 function PhoneInputElement({ phone, setPhoneNumber }) {
-	return (
-		<PhoneInput
-			country={"us"}
-			value={phone}
-			enableSearch={true}
-			onChange={(phone) => setPhoneNumber(phone)}
-		/>
-	);
+	return <PhoneInput country={"us"} value={phone} enableSearch={true} onChange={(phone) => setPhoneNumber(phone)} />;
 }
 
 function GetStartedScreem() {
@@ -97,17 +84,11 @@ function GetStartedScreem() {
 							checked={checked}
 							setChecked={setChecked}
 							text={"Connect with a Crusher team member"}
-							description={
-								"Tell us about your use case and we’ll show you what's possible."
-							}
+							description={"Tell us about your use case and we’ll show you what's possible."}
 						/>
 
 						<form>
-							<div css={styles.inputContainer}>
-								{checked && (
-									<PhoneInputElement phone={phone} setPhoneNumber={setPhoneNumber} />
-								)}
-							</div>
+							<div css={styles.inputContainer}>{checked && <PhoneInputElement phone={phone} setPhoneNumber={setPhoneNumber} />}</div>
 						</form>
 						<div css={styles.requestButton} onClick={handleNext} className={"button"}>
 							Next

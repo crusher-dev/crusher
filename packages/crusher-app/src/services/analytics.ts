@@ -1,32 +1,25 @@
-import {PAGE_TYPE} from "@constants/page";
+import { PAGE_TYPE } from "@constants/page";
 
 class AnalyticsService {
-	 intialize(
-		userId: string | null,
-		teamId: string | null,
-		projectId: string | null,
-	) {
-		if (!userId)
-			console.log(
-				"Tracking user with anonymous identity. Make sure to call addUser when user Sign in.",
-			);
+	intialize(userId: string | null, teamId: string | null, projectId: string | null) {
+		if (!userId) console.log("Tracking user with anonymous identity. Make sure to call addUser when user Sign in.");
 	}
 
-	 trackPage(pageType: PAGE_TYPE) {
-		 window.analytics.page(pageType);
+	trackPage(pageType: PAGE_TYPE) {
+		window.analytics.page(pageType);
 	}
 
-	 trackEvent() {}
+	trackEvent() {}
 
-	 trackCustomEvent() {}
+	trackCustomEvent() {}
 
-	 addGroupId() {}
+	addGroupId() {}
 
-	 addGroupTrait() {}
+	addGroupTrait() {}
 
-	 addUserId() {}
+	addUserId() {}
 
-	 addUserTrait() {}
+	addUserTrait() {}
 }
 
 /*

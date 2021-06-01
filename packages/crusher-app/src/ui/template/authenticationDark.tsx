@@ -21,10 +21,7 @@ const styles = {
 	backgroundLayer: (theme) => css`
 		background-size: 110%;
 		background-image: ${`url("/assets/img/background/${theme}_pattern.svg")`};
-		background-color: ${getStyleFromObject(
-			COMPONENTS.dashboard.background,
-			theme,
-		)};
+		background-color: ${getStyleFromObject(COMPONENTS.dashboard.background, theme)};
 		position: fixed;
 		width: 100vw;
 		height: 100vh;

@@ -1,2 +1,3 @@
-build
+build/*
+base/*
 node_modules

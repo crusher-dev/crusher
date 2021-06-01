@@ -34,7 +34,10 @@ export class GitIntegrationsService {
 				.sort({ createdAt: 1 })
 				.exec((err, docs) => {
 					if (err) return reject(err);
-					const docsObjectArr = docs.map((doc) => ({ ...(doc.toObject() as any), _id: doc._id.toString() }));
+					const docsObjectArr = docs.map((doc) => ({
+						...(doc.toObject() as any),
+						_id: doc._id.toString(),
+					}));
 					resolve(docsObjectArr);
 				});
 		});

@@ -18,9 +18,7 @@ const InstallExtensionModal = (props: iProps) => {
 	const { isOpen, onClose, onExtensionDownloaded } = props;
 
 	const [shouldStartWaiting, setShouldStartWaiting] = useState(false);
-	const _waitingForExtensionInstallInterval: RefObject<NodeJS.Timeout> = useRef(
-		null,
-	);
+	const _waitingForExtensionInstallInterval: RefObject<NodeJS.Timeout> = useRef(null);
 
 	const stopWaitingInterval = () => {
 		clearInterval(_waitingForExtensionInstallInterval.current!);
@@ -30,24 +28,18 @@ const InstallExtensionModal = (props: iProps) => {
 
 	useMemo(() => {
 		if (isOpen) {
-			(_waitingForExtensionInstallInterval as any).current = setInterval(
-				async () => {
-					const isExtensionThere = await checkIfExtensionPresent();
-					if (isExtensionThere) {
-						stopWaitingInterval();
-						onExtensionDownloaded();
-					}
-				},
-				500,
-			);
+			(_waitingForExtensionInstallInterval as any).current = setInterval(async () => {
+				const isExtensionThere = await checkIfExtensionPresent();
+				if (isExtensionThere) {
+					stopWaitingInterval();
+					onExtensionDownloaded();
+				}
+			}, 500);
 		}
 	}, [isOpen]);
 
 	const downloadExtension = () => {
-		window.open(
-			"https://chrome.google.com/webstore/detail/crusher-puppeteerplaywrig/gfiagiidgjjnmklhbalcjbmdjbpphdln?hl=en-GB&authuser=1",
-			"_blank",
-		);
+		window.open("https://chrome.google.com/webstore/detail/crusher-puppeteerplaywrig/gfiagiidgjjnmklhbalcjbmdjbpphdln?hl=en-GB&authuser=1", "_blank");
 		setShouldStartWaiting(true);
 	};
 
@@ -73,11 +65,7 @@ const InstallExtensionModal = (props: iProps) => {
 		>
 			<div css={bodyContainerCss}>
 				<div css={modalHeading}>Install extension on chrome browser</div>
-				<ModalButton
-					title={"Download & Install"}
-					onClick={downloadExtension}
-					containerCss={buttonCss}
-				/>
+				<ModalButton title={"Download & Install"} onClick={downloadExtension} containerCss={buttonCss} />
 				<Link href={"/app/project/tests/"} css={skipDiv}>
 					skip & browse project
 				</Link>

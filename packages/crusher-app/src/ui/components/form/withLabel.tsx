@@ -7,11 +7,7 @@ function withLabel(props) {
 
 	return (
 		<div css={styles.container} style={style}>
-			<Label
-				style={labelStyle}
-				title={labelTitle}
-				description={labelDescription}
-			/>
+			<Label style={labelStyle} title={labelTitle} description={labelDescription} />
 			<div css={styles.inputContainer}>{children}</div>
 		</div>
 	);

@@ -178,9 +178,7 @@ const InviteMembersContainer = (props: iInviteMemberContainerProps) => {
 				</div>
 				<div css={externalCardContentCSS}>
 					<div css={externalCardHeadingCSS}>Invite external members</div>
-					<div css={externalCardDescCSS}>
-						You both get 1 month free when they upgrade to pro plan.
-					</div>
+					<div css={externalCardDescCSS}>You both get 1 month free when they upgrade to pro plan.</div>
 					<div css={externalCardInputCSS}>
 						<Input
 							value={link ? link : ""}

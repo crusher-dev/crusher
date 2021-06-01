@@ -40,12 +40,7 @@ function RenderInputName(props: any) {
 		<>
 			<Conditional If={mode === INPUT_MODE.RENAME}>
 				<div css={styles.testName}>
-					<input
-						ref={inputRef}
-						css={renameInputCSS}
-						defaultValue={name}
-						onKeyPress={handleKeyPress as any}
-					/>
+					<input ref={inputRef} css={renameInputCSS} defaultValue={name} onKeyPress={handleKeyPress as any} />
 				</div>
 			</Conditional>
 			<Conditional If={!mode || mode === INPUT_MODE.VISIBLE_NAME}>
@@ -69,15 +64,7 @@ const renameInputCSS = css`
 `;
 
 function TestCard(props) {
-	const {
-		name,
-		userName,
-		userId,
-		id,
-		item,
-		featured_video_uri,
-		createdAt,
-	} = props;
+	const { name, userName, userId, id, item, featured_video_uri, createdAt } = props;
 	const [testName, setTestName] = useState(name);
 	const videoRef = useRef(null);
 	const [testNameMode, setTestNameMode] = useState(INPUT_MODE.VISIBLE_NAME);
@@ -93,11 +80,7 @@ function TestCard(props) {
 	}
 
 	useEffect(() => {
-		if (
-			videoRef &&
-			videoRef.current &&
-			videoRef.current.tagName.toLowerCase() === "video"
-		) {
+		if (videoRef && videoRef.current && videoRef.current.tagName.toLowerCase() === "video") {
 			videoRef.current.addEventListener(
 				"loadedmetadata",
 				function () {
@@ -203,12 +186,7 @@ function RenderTestCard(props) {
 
 	const finalOut = tests.reduce(function (prev, current, index) {
 		if (index % 4 == 0) {
-			const rowItems = [
-				tests[index],
-				tests[index + 1],
-				tests[index + 2],
-				tests[index + 3],
-			]
+			const rowItems = [tests[index], tests[index + 1], tests[index + 2], tests[index + 3]]
 				.filter((val) => {
 					return typeof val !== "undefined";
 				})
@@ -243,9 +221,7 @@ function ProjectTestsList(props) {
 	const projectsList = useSelector(getProjects);
 	const selectedProjectId = useSelector(getSelectedProject);
 	const [showCreateTestModal, setShouldShowCreateTestModal] = useState(false);
-	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
-		false,
-	);
+	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(false);
 	const selectedProject = projectsList.find((project) => {
 		return project.id === selectedProjectId;
 	});
@@ -274,17 +250,10 @@ function ProjectTestsList(props) {
 	};
 
 	return (
-		<div
-			css={[
-				styles.container,
-				isTestsPresent ? containerPaddingCSS : emptyTestContainerPaddingCSS,
-			]}
-		>
+		<div css={[styles.container, isTestsPresent ? containerPaddingCSS : emptyTestContainerPaddingCSS]}>
 			<Conditional If={isTestsPresent}>
 				<>
-					<div css={styles.heading}>
-						{selectedProject ? selectedProject.name : "Tests List"}
-					</div>
+					<div css={styles.heading}>{selectedProject ? selectedProject.name : "Tests List"}</div>
 					<RenderTestCard tests={projectTests} />
 				</>
 			</Conditional>
@@ -292,15 +261,8 @@ function ProjectTestsList(props) {
 				<EmptyTestListContainer onCreateTest={handleCreateTest} />
 			</Conditional>
 
-			<InstallExtensionModal
-				isOpen={showInstallExtensionModal}
-				onClose={closeInstallExtensionModal}
-				onExtensionDownloaded={handleExtensionDownloaded}
-			/>
-			<CreateTestModal
-				isOpen={showCreateTestModal}
-				onClose={closeCreateTestModal}
-			/>
+			<InstallExtensionModal isOpen={showInstallExtensionModal} onClose={closeInstallExtensionModal} onExtensionDownloaded={handleExtensionDownloaded} />
+			<CreateTestModal isOpen={showCreateTestModal} onClose={closeCreateTestModal} />
 		</div>
 	);
 }
@@ -457,13 +419,8 @@ ProjectTestsList.getInitialProps = async (ctx) => {
 		const cookies = getCookies(req);
 		const defaultProject = getSelectedProject(store.getState());
 
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
-		);
-		const tests = await getAllTestsInfosInProject(
-			selectedProject ? selectedProject : defaultProject,
-			headers,
-		);
+		const selectedProject = JSON.parse(cookies.selectedProject ? cookies.selectedProject : null);
+		const tests = await getAllTestsInfosInProject(selectedProject ? selectedProject : defaultProject, headers);
 		return {
 			tests: tests && Array.isArray(tests) ? tests : [],
 		};

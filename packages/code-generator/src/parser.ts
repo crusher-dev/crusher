@@ -47,13 +47,8 @@ export class Parser {
 			throw new Error("First action should always be to set the device");
 		}
 
-		if (
-			this.actions.length > 1 &&
-			this.actions[1].type !== ACTIONS_IN_TEST.NAVIGATE_URL
-		) {
-			throw new Error(
-				"Navigation to no url is set after setting the device for testing",
-			);
+		if (this.actions.length > 1 && this.actions[1].type !== ACTIONS_IN_TEST.NAVIGATE_URL) {
+			throw new Error("Navigation to no url is set after setting the device for testing");
 		}
 
 		return true;
@@ -63,11 +58,9 @@ export class Parser {
 		const code = [];
 
 		code.push(
-			"const browserInfo = await Browser.setDevice(JSON.parse(#{action}));".pretify(
-				{
-					action: action,
-				},
-			),
+			"const browserInfo = await Browser.setDevice(JSON.parse(#{action}));".pretify({
+				action: action,
+			}),
 		);
 
 		if (!this.isLiveRecording) {
@@ -80,10 +73,7 @@ export class Parser {
 			);
 		}
 
-		code.push(
-			"browserContext.setDefaultNavigationTimeout(15000);",
-			"browserContext.setDefaultTimeout(5000);"
-		);
+		code.push("browserContext.setDefaultNavigationTimeout(15000);", "browserContext.setDefaultTimeout(5000);");
 
 		return code;
 	}
@@ -96,9 +86,7 @@ export class Parser {
 				const videoPath = this.assetsDir + "/videos/video.mp4";
 				code.push(`capturedVideo = await saveVideo(page, '${videoPath}');`);
 			}
-			code.push(
-				`const {handlePopup} = require("${helperPackageName}/middlewares");`,
-			);
+			code.push(`const {handlePopup} = require("${helperPackageName}/middlewares");`);
 			code.push("handlePopup(page, browserContext);");
 			this.isFirstTimeNavigate = false;
 		}
@@ -113,15 +101,11 @@ export class Parser {
 	parsePageScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"var saveScreenshotRequest = await Page.screenshot(page, JSON.parse(#{stepIndex}));".pretify(
-				{
-					stepIndex: this.stepIndex,
-				},
-			),
+			"var saveScreenshotRequest = await Page.screenshot(page, JSON.parse(#{stepIndex}));".pretify({
+				stepIndex: this.stepIndex,
+			}),
 		);
-		code.push(
-			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);",
-		);
+		code.push("if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
 		return code;
 	}
 
@@ -150,16 +134,12 @@ export class Parser {
 	parseElementScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"var saveScreenshotRequest = await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}));".pretify(
-				{
-					action,
-					stepIndex: this.stepIndex,
-				},
-			),
+			"var saveScreenshotRequest = await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}));".pretify({
+				action,
+				stepIndex: this.stepIndex,
+			}),
 		);
-		code.push(
-			"if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);",
-		);
+		code.push("if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
 		return code;
 	}
 
@@ -167,13 +147,9 @@ export class Parser {
 		const code = [];
 		const isWindowScroll = !action.payload.selectors;
 		if (isWindowScroll) {
-			code.push(
-				"await Page.scroll(JSON.parse(#{action}), page);".pretify({ action }),
-			);
+			code.push("await Page.scroll(JSON.parse(#{action}), page);".pretify({ action }));
 		} else {
-			code.push(
-				"await Element.scroll(JSON.parse(#{action}), page);".pretify({ action }),
-			);
+			code.push("await Element.scroll(JSON.parse(#{action}), page);".pretify({ action }));
 		}
 
 		return code;
@@ -181,9 +157,7 @@ export class Parser {
 
 	parseAddInput(action: iAction) {
 		const code = [];
-		code.push(
-			"await Element.addInput(JSON.parse(#{action}), page);".pretify({ action }),
-		);
+		code.push("await Element.addInput(JSON.parse(#{action}), page);".pretify({ action }));
 		return code;
 	}
 
@@ -327,10 +301,8 @@ export class Parser {
 	}
 
 	registerCrusherSelector(code: string) {
-		code +=
-			"if(playwright.selectors._registrations.findIndex(selectorEngine => selectorEngine.name === 'crusher') === -1){\n";
-		code +=
-			"\tplaywright.selectors.register('crusher', getCrusherSelectorEngine);\n";
+		code += "if(playwright.selectors._registrations.findIndex(selectorEngine => selectorEngine.name === 'crusher') === -1){\n";
+		code += "\tplaywright.selectors.register('crusher', getCrusherSelectorEngine);\n";
 		code += "}\n";
 		return code;
 	}
@@ -339,9 +311,7 @@ export class Parser {
 		let importCode = `const {Page, Element, Browser} = require("${helperPackageName}/actions");\nconst playwright = require("playwright");\n`;
 		importCode += `const {getCrusherSelectorEngine} = require("${helperPackageName}/functions");\n`;
 		importCode = this.registerCrusherSelector(importCode);
-		importCode += `const browser = await playwright["${
-			this.browser
-		}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
+		importCode += `const browser = await playwright["${this.browser}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
 
 		if (this.shouldSleep) {
 			importCode += `const { sleep } = require("${helperPackageName}/functions");\n`;
@@ -353,15 +323,13 @@ export class Parser {
 
 		let footerCode = "";
 		if (this.isLiveRecording) {
-			footerCode +=
-				"if(typeof capturedVideo !== 'undefined') { await capturedVideo.stop()}\n";
+			footerCode += "if(typeof capturedVideo !== 'undefined') { await capturedVideo.stop()}\n";
 		}
 		footerCode += "await browser.close();";
 
 		const mainCode = this.codeMap
 			.map((codeItem) => {
-				let code =
-					typeof codeItem.code === "string" ? codeItem : codeItem.code.join("\n");
+				let code = typeof codeItem.code === "string" ? codeItem : codeItem.code.join("\n");
 				if (this.shouldLogSteps) {
 					code += `\nawait logStep('${codeItem.type}', {status: 'DONE', message: '${codeItem.type} completed'}, {});\n`;
 				}
@@ -391,10 +359,7 @@ String.prototype.pretify = function (values) {
 		const match = matches[m];
 		const evalCode = match.substr(2, match.length - 3);
 
-		pretified = pretified.replace(
-			match,
-			JSON.stringify(JSON.stringify(values[evalCode])),
-		);
+		pretified = pretified.replace(match, JSON.stringify(JSON.stringify(values[evalCode])));
 	}
 
 	return pretified;

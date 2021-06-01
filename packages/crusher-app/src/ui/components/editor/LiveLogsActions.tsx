@@ -19,16 +19,11 @@ export interface ActionsWithStatus {
 	isCompleted: boolean;
 }
 
-function getLogsWithStatus(
-	actions: Array<iAction>,
-	logs: Array<iLiveStepLogs>,
-): Array<ActionsWithStatus> {
+function getLogsWithStatus(actions: Array<iAction>, logs: Array<iLiveStepLogs>): Array<ActionsWithStatus> {
 	const out: Array<ActionsWithStatus> = [];
 
 	for (let i = 0; i < actions.length; i++) {
-		const selector = actions[i].payload.selectors
-			? (actions[i].payload.selectors as any)[0].value
-			: null;
+		const selector = actions[i].payload.selectors ? (actions[i].payload.selectors as any)[0].value : null;
 
 		out.push({
 			event_type: actions[i].type,

@@ -2,7 +2,7 @@ import { Page } from "playwright";
 import { iAction } from "@crusher-shared/types/action";
 import { waitForSelectors } from "../functions";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
-import { toCrusherSelectorsFormat } from '../utils/helper';
+import { toCrusherSelectorsFormat } from "../utils/helper";
 
 export default function focusOnElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
@@ -16,7 +16,7 @@ export default function focusOnElement(action: iAction, page: Page) {
 			return success({
 				message: `Successfully focused on element`,
 			});
-		} catch(err){
+		} catch (err) {
 			console.log(err);
 			return error("Some issue occurred while focusing on element");
 		}

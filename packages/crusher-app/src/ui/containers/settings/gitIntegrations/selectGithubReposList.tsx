@@ -1,9 +1,5 @@
 import { useSelector } from "react-redux";
-import {
-	getLinkedGithubRepos,
-	getReposForSelectedInstallation,
-	getSelectedGithubInstallationOption,
-} from "@redux/stateUtils/github";
+import { getLinkedGithubRepos, getReposForSelectedInstallation, getSelectedGithubInstallationOption } from "@redux/stateUtils/github";
 import React, { useMemo } from "react";
 import { Conditional } from "@ui/components/common/Conditional";
 import { css } from "@emotion/core";
@@ -17,26 +13,17 @@ interface iSelectGithubReposListProps {
 const SelectGithubReposList = (props: iSelectGithubReposListProps) => {
 	const { searchFilter } = props;
 
-	const selectedGithubInstallationRepos = useSelector(
-		getReposForSelectedInstallation,
-	);
+	const selectedGithubInstallationRepos = useSelector(getReposForSelectedInstallation);
 
-	const selectedOrgInstallation = useSelector(
-		getSelectedGithubInstallationOption,
-	);
+	const selectedOrgInstallation = useSelector(getSelectedGithubInstallationOption);
 
 	const linkedGithubRepos = useSelector(getLinkedGithubRepos);
 
 	const selectedGithubInstallationsOut = useMemo(() => {
-		if (
-			selectedGithubInstallationRepos &&
-			selectedGithubInstallationRepos.length
-		) {
+		if (selectedGithubInstallationRepos && selectedGithubInstallationRepos.length) {
 			return selectedGithubInstallationRepos
 				.filter((repo) => {
-					return searchFilter.trim().length > 0
-						? repo.name.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1
-						: true;
+					return searchFilter.trim().length > 0 ? repo.name.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1 : true;
 				})
 				.map((repo) => {
 					const linkedRepo = linkedGithubRepos.find((linkedRepo) => {

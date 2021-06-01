@@ -1,46 +1,23 @@
-import React, {
-	ChangeEvent,
-	useCallback,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import React, { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
 import { iPageContext } from "@interfaces/pageContext";
 import { checkIfUserLoggedIn, getUserInfo } from "@redux/stateUtils/user";
 import { redirectToFrontendPath } from "@utils/router";
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-	_getLiveLogs,
-	createAndRunDraftTest,
-	createTestFromDraft,
-	getDraftTest,
-	getTest,
-} from "@services/test";
+import { _getLiveLogs, createAndRunDraftTest, createTestFromDraft, getDraftTest, getTest } from "@services/test";
 import { css } from "@emotion/core";
 import { Conditional } from "@ui/components/common/Conditional";
 import { EDITOR_TEST_TYPE } from "@crusher-shared/types/editorTestType";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
-import {
-	markTestAborted,
-	recordLiveLogs,
-	saveTestMetaInfo,
-} from "@redux/actions/tests";
+import { markTestAborted, recordLiveLogs, saveTestMetaInfo } from "@redux/actions/tests";
 import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 import { useSelector } from "react-redux";
-import {
-	checkIsTestAborted,
-	getTestLiveLogs,
-	getTestMetaInfo,
-} from "@redux/stateUtils/tests";
+import { checkIsTestAborted, getTestLiveLogs, getTestMetaInfo } from "@redux/stateUtils/tests";
 import { TestStatus } from "@ui/containers/editor/TestStatus";
 import { CodeGenerator } from "@code-generator/src/generator";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { iDraft } from "@crusher-shared/types/db/draft";
 import { store } from "@redux/store";
-import {
-	DRAFT_LOGS_STATUS,
-	iDraftLogsResponse,
-} from "@crusher-shared/types/response/draftLogsResponse";
+import { DRAFT_LOGS_STATUS, iDraftLogsResponse } from "@crusher-shared/types/response/draftLogsResponse";
 import { InstanceStatus } from "@crusher-shared/types/instanceStatus";
 import { BROWSER } from "@crusher-shared/types/browser";
 import { AuthModal } from "@ui/containers/modals/authModal";
@@ -63,11 +40,7 @@ function checkDraftStatusAgainAndAgain(draftId: number, logsAfter = 0) {
 		}
 
 		if (test && status === DRAFT_LOGS_STATUS.UPDATE_LOGS) {
-			if (
-				test.status === InstanceStatus.ABORTED ||
-				test.status === InstanceStatus.TIMEOUT ||
-				test.status === InstanceStatus.FINISHED
-			) {
+			if (test.status === InstanceStatus.ABORTED || test.status === InstanceStatus.TIMEOUT || test.status === InstanceStatus.FINISHED) {
 				return store.dispatch(recordLiveLogs(logs!));
 			} else {
 				const lastCreatedAt =
@@ -177,10 +150,7 @@ const TestEditor = (props: iTestEditorProps) => {
 			authCheckerInterval.current = setInterval(() => {
 				if (Cookies.get("isLoggedIn") === "true") {
 					clearInterval(authCheckerInterval.current);
-					submitPostDataWithForm(
-						window.location.href,
-						metaInfo.postData ? metaInfo.postData : {},
-					);
+					submitPostDataWithForm(window.location.href, metaInfo.postData ? metaInfo.postData : {});
 					authCheckerInterval.current = null;
 				}
 			}, 100);
@@ -335,13 +305,9 @@ const parseTestMetaInfo = async (
 	const postDataFromReq = await parse(req);
 	const isComingFromCrusherExtension = postDataFromReq && postDataFromReq.events;
 	const encodedSavedPostTestData = cookies!.testPostData;
-	const savedPostTestData = encodedSavedPostTestData
-		? JSON.parse(decodeURIComponent(encodedSavedPostTestData))
-		: null;
+	const savedPostTestData = encodedSavedPostTestData ? JSON.parse(decodeURIComponent(encodedSavedPostTestData)) : null;
 
-	const postData = isComingFromCrusherExtension
-		? postDataFromReq
-		: savedPostTestData;
+	const postData = isComingFromCrusherExtension ? postDataFromReq : savedPostTestData;
 
 	switch (testType) {
 		case EDITOR_TEST_TYPE.UNSAVED: {
@@ -399,15 +365,7 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 	const id = parseInt(slug[1]);
 
 	try {
-		const testMetaInfo = await parseTestMetaInfo(
-			req!,
-			res!,
-			type,
-			id,
-			metaInfo.cookies,
-			metaInfo.headers,
-			store,
-		);
+		const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies, metaInfo.headers, store);
 
 		if (testMetaInfo) {
 			store.dispatch(saveTestMetaInfo(testMetaInfo));

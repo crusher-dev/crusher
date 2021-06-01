@@ -87,6 +87,9 @@ export class TestLogsService {
 	}
 
 	async getLogsOfInstanceInJob(instanceId: number) {
-		return TestsLogs.find({ type: { $eq: "SAVED" }, instanceId: { $eq: instanceId } }).sort({ createdAt: 1 });
+		return TestsLogs.find({
+			type: { $eq: "SAVED" },
+			instanceId: { $eq: instanceId },
+		}).sort({ createdAt: 1 });
 	}
 }

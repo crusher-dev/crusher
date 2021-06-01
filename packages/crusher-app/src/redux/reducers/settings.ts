@@ -10,10 +10,7 @@ const initialState: iSettingsState = {
 	profile: null,
 };
 
-const settings = (
-	state: iSettingsState = initialState,
-	action: IAction<any>,
-) => {
+const settings = (state: iSettingsState = initialState, action: IAction<any>) => {
 	const { type, payload } = action;
 
 	switch (type) {

@@ -2,36 +2,22 @@ import React from "react";
 import { redirectToFrontendPath } from "@utils/router";
 import { getMetaFromReq } from "@utils/cookies";
 import { serialize } from "cookie";
-import {
-	NextApiRequest,
-	NextApiResponse,
-	NextComponentType,
-	NextPage,
-	NextPageContext,
-} from "next";
+import { NextApiRequest, NextApiResponse, NextComponentType, NextPage, NextPageContext } from "next";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { AnyAction } from "redux";
 
 const handleClIToken = (cli_token: string, res: NextApiResponse) => {
 	if (cli_token) {
-		res.setHeader(
-			"Set-Cookie",
-			serialize("cli_token", cli_token, { path: "/", maxAge: 90000 }),
-		);
+		res.setHeader("Set-Cookie", serialize("cli_token", cli_token, { path: "/", maxAge: 90000 }));
 	}
 };
 
-function withoutSession(
-	WrappedComponent:
-		| NextPage
-		| NextComponentType<NextPageContext<any, AnyAction>, any, any>,
-) {
+function withoutSession(WrappedComponent: NextPage | NextComponentType<NextPageContext<any, AnyAction>, any, any>) {
 	const WithoutSession = function (props: any) {
 		return <WrappedComponent {...props} />;
 	};
 
-	const wrappedComponentName =
-		WrappedComponent.displayName || WrappedComponent.name || "Component";
+	const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || "Component";
 
 	WithoutSession.displayName = `withoutSession(${wrappedComponentName})`;
 
@@ -46,15 +32,10 @@ function withoutSession(
 		const isLoggedIn = reqMetaInfo.cookies.isLoggedIn;
 
 		if (userInfo && isLoggedIn) {
-			return await redirectToFrontendPath(
-				"/app/project/dashboard",
-				res as NextApiResponse,
-			);
+			return await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
 		}
 
-		const pageProps =
-			WrappedComponent.getInitialProps &&
-			(await WrappedComponent.getInitialProps(ctx));
+		const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));
 
 		if (!pageProps) {
 			return {};

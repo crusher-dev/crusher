@@ -2,10 +2,7 @@ import React, { RefObject, useState } from "react";
 import { useSelector } from "react-redux";
 import { getActionsRecordingState } from "../../../../redux/selectors/recorder";
 import { AssertionFormTable } from "../../../components/app/assertionFormTable";
-import {
-	iAssertionRow,
-	iField,
-} from "../.././../../../../crusher-shared/types/assertionRow";
+import { iAssertionRow, iField } from "../.././../../../../crusher-shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
 import { BulbIcon } from "../../../../assets/icons";
 import uniqueId from "lodash/uniqueId";
@@ -36,10 +33,7 @@ const getValidationFields = (elementInfo: iElementInfo): Array<iField> => {
 			meta: { type: "ATTRIBUTE" },
 		};
 	});
-	return [
-		{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } },
-		...MetaTagsFields,
-	];
+	return [{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } }, ...MetaTagsFields];
 };
 
 const getElementFieldValue = (fieldInfo: iField) => {
@@ -51,21 +45,11 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	const recordingState = useSelector(getActionsRecordingState);
 	const elementInfo: iElementInfo = recordingState.elementInfo as iElementInfo;
 
-	const [validationRows, setValidationRows] = useState(
-		[] as Array<iAssertionRow>,
-	);
+	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(elementInfo!);
-	const validationOperations = [
-		ASSERTION_OPERATION_TYPE.MATCHES,
-		ASSERTION_OPERATION_TYPE.CONTAINS,
-		ASSERTION_OPERATION_TYPE.REGEX,
-	];
+	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
-	const addValidationRow = (
-		rowField: iField,
-		rowOperation: ASSERTION_OPERATION_TYPE,
-		rowValidation: string,
-	) => {
+	const addValidationRow = (rowField: iField, rowOperation: ASSERTION_OPERATION_TYPE, rowValidation: string) => {
 		setValidationRows([
 			...validationRows,
 			{
@@ -97,11 +81,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	};
 
 	const createNewElementAssertionRow = () => {
-		addValidationRow(
-			validationFields[0],
-			validationOperations[0],
-			getElementFieldValue(validationFields[0]),
-		);
+		addValidationRow(validationFields[0], validationOperations[0], getElementFieldValue(validationFields[0]));
 	};
 
 	const generateDefaultChecksForPage = () => {
@@ -117,13 +97,9 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	};
 
 	const updateFieldOfValidationRow = (newFieldName: string, rowId: string) => {
-		const rowIndex = validationRows.findIndex(
-			(validationRow) => validationRow.id === rowId,
-		);
+		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
-		const newField = validationFields.find(
-			(validationField) => validationField.name === newFieldName,
-		);
+		const newField = validationFields.find((validationField) => validationField.name === newFieldName);
 		if (!newField) throw new Error("Invalid field provided for validation row");
 
 		validationRows[rowIndex].field = newField;
@@ -131,26 +107,16 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 		setValidationRows([...validationRows]);
 	};
 
-	const updateOperationOfValidationRow = (
-		newFieldName: string,
-		rowId: string,
-	) => {
-		const rowIndex = validationRows.findIndex(
-			(validationRow) => validationRow.id === rowId,
-		);
+	const updateOperationOfValidationRow = (newFieldName: string, rowId: string) => {
+		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].operation = newFieldName;
 		setValidationRows([...validationRows]);
 	};
 
-	const updateValidationValueOfValidationRow = (
-		newValidationValue: string,
-		rowId: string,
-	) => {
-		const rowIndex = validationRows.findIndex(
-			(validationRow) => validationRow.id === rowId,
-		);
+	const updateValidationValueOfValidationRow = (newValidationValue: string, rowId: string) => {
+		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].validation = newValidationValue;
@@ -191,30 +157,20 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 			/>
 			<div style={bottomBarStyle}>
 				<div style={formButtonStyle}>
-					<div
-						style={advanceLinkContainerStyle}
-						onClick={createNewElementAssertionRow}
-					>
+					<div style={advanceLinkContainerStyle} onClick={createNewElementAssertionRow}>
 						<span>Advance</span>
 						<span style={{ marginLeft: "0.5rem" }}>
 							<img width={12} src={chrome.extension.getURL("/icons/arrow_down.svg")} />
 						</span>
 					</div>
-					<div
-						style={generateChecksContainerStyle}
-						onClick={generateDefaultChecksForPage}
-					>
+					<div style={generateChecksContainerStyle} onClick={generateDefaultChecksForPage}>
 						<BulbIcon style={bulbIconStyle} />
 						<div id={"modal-generate-test"} style={generateTextStyle}>
 							Generate Checks!
 						</div>
 					</div>
 				</div>
-				<Button
-					style={saveButtonStyle}
-					title={"Save action"}
-					onClick={saveElementValidationAction}
-				></Button>
+				<Button style={saveButtonStyle} title={"Save action"} onClick={saveElementValidationAction}></Button>
 			</div>
 		</div>
 	);

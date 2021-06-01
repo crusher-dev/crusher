@@ -44,9 +44,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 				alert(`Running monitoring #${title} for all the tests`);
 			})
 			.catch((err: Error) => {
-				alert(
-					`Some error occured dduring running monitoring #${title} for all the tests`,
-				);
+				alert(`Some error occured dduring running monitoring #${title} for all the tests`);
 				console.error(err);
 			});
 	};
@@ -66,26 +64,10 @@ function MonitoringCard(props: iMonitoringCardProps) {
 			<div css={mainContentCSS}>
 				<div css={infoContentCSS}>
 					<MonitoringInfoLabel title={"Host"} value={host} />
-					<MonitoringInfoLabel
-						title={"Duration"}
-						value={
-							durationOption
-								? (durationOption as any).label
-								: `Every ${duration} seconds`
-						}
-					/>
-					<MonitoringInfoLabel
-						title={"Tags/Test"}
-						value={tags && tags.length ? tags.join(", ") : "N/A"}
-					/>
-					<MonitoringInfoLabel
-						title={"Escalation"}
-						value={escalation ? escalation : "N/A"}
-					/>
-					<MonitoringInfoLabel
-						title={"Countries"}
-						value={countries && countries.length ? countries.join(", ") : "N/A"}
-					/>
+					<MonitoringInfoLabel title={"Duration"} value={durationOption ? (durationOption as any).label : `Every ${duration} seconds`} />
+					<MonitoringInfoLabel title={"Tags/Test"} value={tags && tags.length ? tags.join(", ") : "N/A"} />
+					<MonitoringInfoLabel title={"Escalation"} value={escalation ? escalation : "N/A"} />
+					<MonitoringInfoLabel title={"Countries"} value={countries && countries.length ? countries.join(", ") : "N/A"} />
 				</div>
 				<div css={monitoringQuickActionsCSS}>
 					<button css={viewBuildCSS}>View Builds</button>

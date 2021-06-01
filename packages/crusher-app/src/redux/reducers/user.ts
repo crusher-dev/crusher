@@ -1,11 +1,6 @@
 import { UserInfo } from "@interfaces/userInfo";
 import { SET_USER_DATA } from "@redux/actions/project";
-import {
-	DELETE_USER_LOGIN_CONNECTION,
-	SET_USER_LOGGED_IN,
-	SET_USER_LOGIN_CONNECTIONS,
-	USER_LOGOUT,
-} from "@redux/actions/user";
+import { DELETE_USER_LOGIN_CONNECTION, SET_USER_LOGGED_IN, SET_USER_LOGIN_CONNECTIONS, USER_LOGOUT } from "@redux/actions/user";
 import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
 
 interface UserData {
@@ -37,9 +32,7 @@ const user = (state = initialState, action: any) => {
 				loginConnections: action.payload.connections,
 			};
 		case DELETE_USER_LOGIN_CONNECTION: {
-			const newLoginConnections = state.loginConnections.filter(
-				(connection) => connection.id !== action.payload.connectionId,
-			);
+			const newLoginConnections = state.loginConnections.filter((connection) => connection.id !== action.payload.connectionId);
 
 			return {
 				...state,

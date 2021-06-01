@@ -16,12 +16,7 @@ const WatchVideoModal = (props: iWatchModalProps) => {
 	};
 
 	return (
-		<Modal
-			isOpen={isOpen}
-			onRequestClose={onClose}
-			style={customStyles}
-			contentLabel="Example Modal"
-		>
+		<Modal isOpen={isOpen} onRequestClose={onClose} style={customStyles} contentLabel="Example Modal">
 			<span onClick={onClose} css={crossIconCSS}>
 				<CrossIcon />
 			</span>
@@ -40,12 +35,7 @@ const WatchVideoModal = (props: iWatchModalProps) => {
 				>
 					Companies save 50% more time after watching the video
 				</h3>
-				<video
-					css={videoPlayerCSS}
-					src="/assets/video/onboarding.mp4"
-					onEnded={handleVideoFinishedCallback}
-					controls
-				></video>
+				<video css={videoPlayerCSS} src="/assets/video/onboarding.mp4" onEnded={handleVideoFinishedCallback} controls></video>
 				<button css={buttonCSS} onClick={onClose}>
 					{"I've watched the video"}
 				</button>

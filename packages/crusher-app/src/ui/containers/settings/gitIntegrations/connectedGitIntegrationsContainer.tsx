@@ -13,16 +13,9 @@ const ConnectedGitIntegrationsContainer = () => {
 
 	if (!showConnectedGitIntegration) return null;
 
-	const connectedGitIntegrationsOut = connectedGitIntegrations.map(
-		(integration: iGithubIntegration) => {
-			return (
-				<ConnectedGitIntegrationListItem
-					key={integration._id}
-					item={integration}
-				></ConnectedGitIntegrationListItem>
-			);
-		},
-	);
+	const connectedGitIntegrationsOut = connectedGitIntegrations.map((integration: iGithubIntegration) => {
+		return <ConnectedGitIntegrationListItem key={integration._id} item={integration}></ConnectedGitIntegrationListItem>;
+	});
 	return (
 		<div css={connectedGitIntegrationsContainerCSS}>
 			<Conditional If={showConnectedGitIntegration}>

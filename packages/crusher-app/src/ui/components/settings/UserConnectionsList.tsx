@@ -24,8 +24,7 @@ const getUserConnectionDesc = (userConnection: iUserConnection): any => {
 
 		return (
 			<span css={userConnectionDescCSS}>
-				{userName} (
-				<a href={url.resolve("https://github.com/", loginName)}>@{loginName}</a>)
+				{userName} (<a href={url.resolve("https://github.com/", loginName)}>@{loginName}</a>)
 			</span>
 		);
 	}
@@ -63,14 +62,10 @@ const UserConnectionItem = (props: iUserConnectionItemProps) => {
 		<li css={connectionItemCSS}>
 			<div css={connectionIconCSS}>{getGithubIcon(item)}</div>
 			<div css={connectionInfoCSS}>
-				<div css={connectionInfoServiceNameCSS}>
-					{getUserConnectionServiceName(item)}
-				</div>
+				<div css={connectionInfoServiceNameCSS}>{getUserConnectionServiceName(item)}</div>
 				<div>{getUserConnectionDesc(item)}</div>
 			</div>
-			<div css={userConnectedTimeCSS}>
-				Connected {getDiffInDays(new Date(item.createdAt), new Date())}d ago
-			</div>
+			<div css={userConnectedTimeCSS}>Connected {getDiffInDays(new Date(item.createdAt), new Date())}d ago</div>
 			<div css={userConnectionDeleteCSS} onClick={handleOnDelete}>
 				<DeleteIcon />
 			</div>
@@ -125,13 +120,7 @@ const UserConnectionsList = (props: iUserConnectionsListProps) => {
 	};
 
 	const out = items.map((item) => {
-		return (
-			<UserConnectionItem
-				key={item.id}
-				onDelete={handleDeleteUserConnection}
-				item={item}
-			/>
-		);
+		return <UserConnectionItem key={item.id} onDelete={handleDeleteUserConnection} item={item} />;
 	});
 	return <ul css={containerCSS}>{out}</ul>;
 };

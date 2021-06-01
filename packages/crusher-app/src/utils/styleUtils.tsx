@@ -1,8 +1,4 @@
-import {
-	DEFAULT_THEME,
-	FIGMA_REM_COEFFICIENT,
-	SUPPORTED_THEME,
-} from "@constants/style";
+import { DEFAULT_THEME, FIGMA_REM_COEFFICIENT, SUPPORTED_THEME } from "@constants/style";
 import { setCookie } from "nookies";
 import { iMetaInfoNextReq } from "@utils/cookies";
 import { NextPageContext } from "next";
@@ -11,10 +7,7 @@ function getThemeFromString(themeName: string) {
 	return SUPPORTED_THEME.includes(themeName) ? themeName : DEFAULT_THEME;
 }
 
-export const getThemeFromCookieOrReq = (
-	ctx: NextPageContext,
-	meta: iMetaInfoNextReq,
-) => {
+export const getThemeFromCookieOrReq = (ctx: NextPageContext, meta: iMetaInfoNextReq) => {
 	const { cookies } = meta;
 
 	let theme = null;
@@ -40,5 +33,4 @@ export const getStyleFromObject = (styleObject, theme) => {
 };
 
 // Used to convert values in figma to rem, which are adjusted to screen size.
-export const getRelativeSize = (sizeInPx: number): number =>
-	sizeInPx / FIGMA_REM_COEFFICIENT;
+export const getRelativeSize = (sizeInPx: number): number => sizeInPx / FIGMA_REM_COEFFICIENT;

@@ -33,9 +33,7 @@ const ActionRecordedIndicator = () => {
 		<Conditional If={shouldShow}>
 			<div style={actionRecordedIndicatorContainerStyle}>
 				<img src={chrome.runtime.getURL("/icons/tickAction.svg")} />
-				<span style={actionRecordedIndicatorStyle}>
-					{actions[actions.length - 1].type} Action recorded
-				</span>
+				<span style={actionRecordedIndicatorStyle}>{actions[actions.length - 1].type} Action recorded</span>
 			</div>
 		</Conditional>
 	);

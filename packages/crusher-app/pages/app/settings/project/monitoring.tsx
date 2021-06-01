@@ -147,15 +147,11 @@ MonitoringSettings.getInitialProps = async (ctx: any) => {
 		}
 
 		const cookies = getCookies(req);
-		const selectedProject = cookies.selectedProject
-			? JSON.parse(cookies.selectedProject)
-			: null;
+		const selectedProject = cookies.selectedProject ? JSON.parse(cookies.selectedProject) : null;
 
-		await _getProjectHosts(selectedProject, headers).then(
-			(hosts: Array<iHostListResponse>) => {
-				store.dispatch(setProjectHosts(hosts));
-			},
-		);
+		await _getProjectHosts(selectedProject, headers).then((hosts: Array<iHostListResponse>) => {
+			store.dispatch(setProjectHosts(hosts));
+		});
 
 		await _getMonitoringList(selectedProject, headers).then((monitoringList) => {
 			store.dispatch(setMonitoringList(monitoringList));

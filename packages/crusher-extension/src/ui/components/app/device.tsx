@@ -32,13 +32,8 @@ const Device = (props: iDeviceProps) => {
 			<Conditional If={!isIframeLoaded}>
 				<div style={pageLoadingBlockCoverStyle}>
 					<div>
-						<img
-							style={pageLoadingCoverIconStyle}
-							src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")}
-						/>
-						<div style={pageLoadingCoverTextStyle}>
-							{"Please wait while we're loading next page"}
-						</div>
+						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
+						<div style={pageLoadingCoverTextStyle}>{"Please wait while we're loading next page"}</div>
 					</div>
 				</div>
 			</Conditional>

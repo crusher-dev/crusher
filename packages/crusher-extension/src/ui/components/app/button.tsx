@@ -22,13 +22,7 @@ const Button = (props: iButtonProps) => {
 	};
 
 	return (
-		<div
-			id={id}
-			style={{ ...buttonStyle(isHovered), ...(style ? style : {}) }}
-			onClick={onClick}
-			onMouseOver={handleMouseOver}
-			onMouseOut={handleMouseOut}
-		>
+		<div id={id} style={{ ...buttonStyle(isHovered), ...(style ? style : {}) }} onClick={onClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
 			<Conditional If={Icon}>
 				<Icon />
 			</Conditional>

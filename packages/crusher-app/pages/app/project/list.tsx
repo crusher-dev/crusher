@@ -65,10 +65,7 @@ function HeaderComponent() {
 				<div css={headingTextCSS}>List of projects in your workspace</div>
 			</div>
 			<div>
-				<AddProject
-					label={"Add Project"}
-					onClick={setShowAddProjectStatus.bind(this, true)}
-				/>
+				<AddProject label={"Add Project"} onClick={setShowAddProjectStatus.bind(this, true)} />
 
 				<Conditional If={showAddProject}>
 					<CreateProjectModal
@@ -104,20 +101,13 @@ function ProjectTestsList() {
 
 	return (
 		<div css={containerCSS}>
-			<CreateTestModal
-				isOpen={showAddTestModal && !!showAddTestModal.value}
-				onClose={closeAddTestModal}
-			/>
+			<CreateTestModal isOpen={showAddTestModal && !!showAddTestModal.value} onClose={closeAddTestModal} />
 
 			<div css={innerContainerCSS}>
 				<HeaderComponent />
 				<div css={projectCardsContainerCSS}>
 					{projects.map((project: any) => (
-						<ProjectItem
-							key={project.id}
-							project={project}
-							showAddTestModal={showAddTestModalCallback}
-						/>
+						<ProjectItem key={project.id} project={project} showAddTestModal={showAddTestModalCallback} />
 					))}
 				</div>
 			</div>

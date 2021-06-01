@@ -5,7 +5,7 @@ import TestInstanceResultsService from "./TestInstanceResultsService";
 import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
 import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { TestInstanceResult } from "../interfaces/db/TestInstanceResult";
-import { TestInstanceResultSetStatus } from '../interfaces/TestInstanceResultSetStatus';
+import { TestInstanceResultSetStatus } from "../interfaces/TestInstanceResultSetStatus";
 
 @Service()
 export default class TestInstanceResultSetsService {

@@ -18,19 +18,7 @@ export function ToastDialog() {
 	const isSuccess = type === TOAST_TYPE.SUCCESS;
 	const isInfo = type === TOAST_TYPE.INFO;
 
-	return (
-		<div
-			css={[
-				dialogStyle,
-				isError && errorStyle,
-				isInfo && normalStyle,
-				isSuccess && successStyle,
-				message && showDialog,
-			]}
-		>
-			{message}
-		</div>
-	);
+	return <div css={[dialogStyle, isError && errorStyle, isInfo && normalStyle, isSuccess && successStyle, message && showDialog]}>{message}</div>;
 }
 
 const dialogStyle = css`

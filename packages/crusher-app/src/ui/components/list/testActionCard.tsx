@@ -18,17 +18,11 @@ export const TestActionCard = (props: any) => {
 	const { isFinished, style, action } = props;
 	const defaultSelector = action.selectors[0].value;
 	return (
-		<div
-			style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }}
-			css={styles.container}
-		>
+		<div style={{ ...style, fontWeight: isFinished ? "bold" : "regular" }} css={styles.container}>
 			<div css={styles.actionInfo}>
-				<div css={styles.actionInfoHeading}>
-					{normalizeActionType(action.event_type)}
-				</div>
+				<div css={styles.actionInfoHeading}>{normalizeActionType(action.event_type)}</div>
 				<div css={styles.actionInfoDesc}>
-					{defaultSelector.substr(0, 15)}{" "}
-					{defaultSelector.length > 15 ? "..." : null}
+					{defaultSelector.substr(0, 15)} {defaultSelector.length > 15 ? "..." : null}
 				</div>
 			</div>
 			{isFinished ? (
@@ -52,23 +46,10 @@ interface iLoginActionCardProps {
 	forwardRef?: any;
 }
 export const LogActionCard = (props: iLoginActionCardProps) => {
-	const {
-		index,
-		action,
-		isActionCompleted,
-		isActionAborted,
-		style,
-		timeTaken,
-		isLast,
-		forwardRef,
-	} = props;
+	const { index, action, isActionCompleted, isActionAborted, style, timeTaken, isLast, forwardRef } = props;
 
 	return (
-		<div
-			style={{ ...style, fontWeight: isActionCompleted ? 700 : 500 }}
-			css={styles.container}
-			ref={forwardRef}
-		>
+		<div style={{ ...style, fontWeight: isActionCompleted ? 700 : 500 }} css={styles.container} ref={forwardRef}>
 			<div css={styles.actionInfo}>
 				<div css={styles.actionBoxRow}>
 					<div css={styles.actionBoxRowIndex}>{index}.)</div>
@@ -78,10 +59,7 @@ export const LogActionCard = (props: iLoginActionCardProps) => {
 					</div>
 				</div>
 			</div>
-			<div
-				css={styles.correctContainer}
-				style={{ bottom: isLast ? "-0.7rem" : "-2.8rem" }}
-			>
+			<div css={styles.correctContainer} style={{ bottom: isLast ? "-0.7rem" : "-2.8rem" }}>
 				<Conditional If={isActionCompleted}>
 					<img src={"/svg/editor/correctStep.svg"} style={{ width: "1.5rem" }} />
 				</Conditional>
@@ -89,10 +67,7 @@ export const LogActionCard = (props: iLoginActionCardProps) => {
 					<img src={"/svg/editor/wrongStep.svg"} style={{ width: "1.5rem" }} />
 				</Conditional>
 				<Conditional If={!isActionCompleted && !isActionAborted}>
-					<img
-						src={"/svg/editor/notProcessedStep.svg"}
-						style={{ width: "1.5rem" }}
-					/>
+					<img src={"/svg/editor/notProcessedStep.svg"} style={{ width: "1.5rem" }} />
 				</Conditional>
 
 				{!isLast && (

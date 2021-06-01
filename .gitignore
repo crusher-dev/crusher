@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 
 # PM2 config
+ecosystem/*
 ecosystem.config.js
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

@@ -3,3 +3,7 @@
 img {
 	display: unset;
 }
+
+html,body{
+	font-size: 14.5px;
+}

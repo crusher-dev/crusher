@@ -244,16 +244,13 @@ function CrusherLogo() {
 }
 
 function ProjectSelector(props: { projectsList: any; options: any; selectedProject: any; onChange: (project: iSelectOption) => void }) {
-	const router = useRouter();
 	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(false);
 
 	const { options, onChange, selectedProject } = props;
-	const modifiedOption = [{ label: "Add new project", value: "add_project" }, ...options, { label: "View all project", value: "view_all" }];
+	const modifiedOption = [{ label: "Add new project", value: "add_project" }, ...options];
 	const handleChange = (option: iSelectOption) => {
 		if (option.value === "add_project") {
 			setIsShowingCreateProjectModal(true);
-		} else if (option.value === "view_all") {
-			router.push("/app/project/list");
 		} else {
 			onChange(option);
 		}

@@ -16,10 +16,7 @@ const INVITE_LINK = "https://app.crusher.dev/invite/user/f321fasgc32ase";
 const InviteTeamMembers = () => {
 	return (
 		<SettingsContent contentCSS={settingContentCSS}>
-			<SettingsContentHeader
-				title={"Invite team members"}
-				desc={"Invite your friends, employees or co-workers in current project"}
-			/>
+			<SettingsContentHeader title={"Invite team members"} desc={"Invite your friends, employees or co-workers in current project"} />
 			<InviteMembersContainer link={INVITE_LINK} />
 		</SettingsContent>
 	);
@@ -39,14 +36,9 @@ InviteTeamMembers.getInitialProps = async (ctx: any) => {
 		}
 		const cookies = getCookies(req);
 
-		const selectedProject = cookies.selectedProject
-			? JSON.parse(cookies.selectedProject)
-			: null;
+		const selectedProject = cookies.selectedProject ? JSON.parse(cookies.selectedProject) : null;
 
-		const slackIntegrations = await getAllSlackIntegrationsForProject(
-			selectedProject,
-			headers,
-		);
+		const slackIntegrations = await getAllSlackIntegrationsForProject(selectedProject, headers);
 
 		return {
 			isIntegratedWithSlack: false,

@@ -1,17 +1,17 @@
-import { Container, Service } from 'typedi';
-import DBManager from '../../manager/DBManager';
-import { iProject } from '@crusher-shared/types/db/project';
-import { InsertRecordResponse } from '../../interfaces/services/InsertRecordResponse';
+import { Container, Service } from "typedi";
+import DBManager from "../../manager/DBManager";
+import { iProject } from "@crusher-shared/types/db/project";
+import { InsertRecordResponse } from "../../interfaces/services/InsertRecordResponse";
 
 @Service()
-export class ProjectV2Service{
+export class ProjectV2Service {
 	private dbManager: DBManager;
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
 	}
 
-	async getAllProjectsOfTeam(teamId: number): Promise<Array<iProject>>{
+	async getAllProjectsOfTeam(teamId: number): Promise<Array<iProject>> {
 		return this.dbManager.fetchData(`SELECT * FROM projects WHERE team_id = ?`, [teamId]);
 	}
 

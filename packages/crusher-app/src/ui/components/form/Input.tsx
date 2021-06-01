@@ -3,16 +3,7 @@ import { css } from "@emotion/core";
 
 function Input(props) {
 	const { name, value, onChange, width, height, style, placeholder } = props;
-	return (
-		<input
-			css={styles.input(width, height)}
-			style={style}
-			placeholder={placeholder}
-			value={value}
-			name={name}
-			onChange={onChange}
-		/>
-	);
+	return <input css={styles.input(width, height)} style={style} placeholder={placeholder} value={value} name={name} onChange={onChange} />;
 }
 
 const styles = {

@@ -52,10 +52,7 @@ const github = (state = initialState, action: any) => {
 		case ADD_LINKED_GITHUB_REPO:
 			return {
 				...state,
-				connectedGithubRepos: [
-					...state.connectedGithubRepos,
-					action.payload.linkedRepo,
-				],
+				connectedGithubRepos: [...state.connectedGithubRepos, action.payload.linkedRepo],
 			};
 		case REMOVE_LINKED_GITHUB_REPO: {
 			const newConnectedGithubRepos = state.connectedGithubRepos.filter((repo) => {

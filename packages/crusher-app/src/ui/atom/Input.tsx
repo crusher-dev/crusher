@@ -16,17 +16,7 @@ interface iInputProps {
 }
 
 const Input = (props: iInputProps) => {
-	const {
-		placeholder,
-		value,
-		onChange,
-		label,
-		isOnlyReadable,
-		actionIcon,
-		actionButton,
-		inputContainerCSS: _customInputContainerCSS,
-		onKeySubmit,
-	} = props;
+	const { placeholder, value, onChange, label, isOnlyReadable, actionIcon, actionButton, inputContainerCSS: _customInputContainerCSS, onKeySubmit } = props;
 	const _inputRef: Ref<HTMLInputElement> = useRef(null);
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -62,9 +52,7 @@ const Input = (props: iInputProps) => {
 						<div css={actionIconContainerCSS}>{actionIcon}</div>
 					</Conditional>
 				</div>
-				<Conditional If={actionButton}>
-					{actionButton as React.ReactElement}
-				</Conditional>
+				<Conditional If={actionButton}>{actionButton as React.ReactElement}</Conditional>
 			</div>
 		</div>
 	);

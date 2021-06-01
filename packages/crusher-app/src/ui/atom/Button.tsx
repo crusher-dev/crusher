@@ -21,11 +21,7 @@ Button.defaultProps = {
 function Button(props: IProps): ReactElement {
 	const { title, onClick, disabled, css, ...otherProps } = props;
 	return (
-		<div
-			css={[styles.button, disabled && styles.disabled, css]}
-			onClick={onClick}
-			{...otherProps}
-		>
+		<div css={[styles.button, disabled && styles.disabled, css]} onClick={onClick} {...otherProps}>
 			{title}
 		</div>
 	);

@@ -16,7 +16,7 @@ export default async function setDevice(action: iAction) {
 					userAgent: userAgent && userAgent.value ? userAgent.value : userAgent,
 				},
 			});
-		} catch(err){
+		} catch (err) {
 			console.error(err);
 			return error("Some issue occurred while setting the device");
 		}

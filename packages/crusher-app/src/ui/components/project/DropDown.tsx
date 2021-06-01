@@ -6,16 +6,7 @@ import React from "react";
 	@Note - Don't use this component this is not standardised.
 */
 export function DropDown(props) {
-	let {
-		options,
-		selected,
-		onChange,
-		placeholder,
-		width,
-		heightFactor,
-		isSearchable,
-		isMulti,
-	} = props;
+	let { options, selected, onChange, placeholder, width, heightFactor, isSearchable, isMulti } = props;
 
 	width = width ? width : "17rem";
 	const paddingTop = heightFactor ? `${heightFactor * 0.3}rem` : "0.1rem";
@@ -68,16 +59,7 @@ export function DropDown(props) {
 	};
 
 	if (isMulti) {
-		return (
-			<Select
-				styles={dropdownStyle}
-				placeholder={placeholder}
-				options={options}
-				onChange={onChange}
-				isSearchable={isSearchable}
-				isMulti={isMulti}
-			/>
-		);
+		return <Select styles={dropdownStyle} placeholder={placeholder} options={options} onChange={onChange} isSearchable={isSearchable} isMulti={isMulti} />;
 	}
 
 	return (
@@ -87,9 +69,7 @@ export function DropDown(props) {
 			options={options}
 			onChange={onChange}
 			isSearchable={isSearchable}
-			value={options.filter(
-				(option) => selected && option.value == selected.value,
-			)}
+			value={options.filter((option) => selected && option.value == selected.value)}
 		/>
 	);
 }

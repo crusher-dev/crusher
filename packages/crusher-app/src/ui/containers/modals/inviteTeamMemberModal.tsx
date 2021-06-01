@@ -32,10 +32,7 @@ const InviteTeamMemberModal = (props: iProps) => {
 			mainContainerCSS={containerCSS}
 		>
 			<div css={bodyContainerCss}>
-				<InviteMembersContainer
-					externalInputCSS={externalInputCSS}
-					link={inviteLink}
-				/>
+				<InviteMembersContainer externalInputCSS={externalInputCSS} link={inviteLink} />
 			</div>
 		</Modal>
 	);

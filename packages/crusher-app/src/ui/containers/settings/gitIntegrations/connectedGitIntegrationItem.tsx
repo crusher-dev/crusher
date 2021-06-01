@@ -12,9 +12,7 @@ interface iConnectedGitIntegrationListItemProps {
 	item: iGithubIntegration;
 }
 
-const ConnectedGitIntegrationListItem = (
-	props: iConnectedGitIntegrationListItemProps,
-) => {
+const ConnectedGitIntegrationListItem = (props: iConnectedGitIntegrationListItemProps) => {
 	const { item } = props;
 	const unlinkLinkedGithubRepo = () => {
 		_unlinkGithubRepo(item._id).then(() => {
@@ -26,12 +24,7 @@ const ConnectedGitIntegrationListItem = (
 	return (
 		<li css={connectedGitIntegrationItemContainerCSS}>
 			<GithubIcon css={{ height: "1.5rem" }} />
-			<a
-				href={item.repoLink}
-				target={"_blank"}
-				rel={"noreferrer"}
-				css={connectedGitIntegrationLinkCSS}
-			>
+			<a href={item.repoLink} target={"_blank"} rel={"noreferrer"} css={connectedGitIntegrationLinkCSS}>
 				{item.repoName}
 			</a>
 			<div css={disconnectButtonCSS} onClick={unlinkLinkedGithubRepo}>

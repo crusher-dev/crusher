@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "prettify": "prettier --write .",
     "compile": "rm -rf out/dist/resources/app/build && tsc",
     "start": "yarn compile && NODE_ENV=testing  /home/himanshu/Downloads/dist/electron .",
     "build:release:linux": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-linux-dist.sh",

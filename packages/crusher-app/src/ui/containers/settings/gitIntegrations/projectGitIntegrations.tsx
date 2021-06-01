@@ -18,13 +18,8 @@ const ProjectGitIntegrations = () => {
 			<Conditional If={showLinkGithub}>
 				<div css={noLoginConnectionCSS}>
 					<WarningIcon css={{ width: "1.25rem", height: "auto" }} />
-					<span css={noLoginConnectionTextCSS}>
-						{"Link your github account to link your repos"}
-					</span>
-					<a
-						href={"/app/settings/user/login-connections"}
-						css={noLoginConnectionLinkCSS}
-					>
+					<span css={noLoginConnectionTextCSS}>{"Link your github account to link your repos"}</span>
+					<a href={"/app/settings/user/login-connections"} css={noLoginConnectionLinkCSS}>
 						Link
 					</a>
 				</div>

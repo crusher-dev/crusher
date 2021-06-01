@@ -1,8 +1,4 @@
-import {
-	iMessage,
-	MESSAGE_TYPES,
-	RECORDING_STATUS,
-} from "../../messageListener";
+import { iMessage, MESSAGE_TYPES, RECORDING_STATUS } from "../../messageListener";
 import EventRecording from "./ui/eventRecording";
 import { getAllSeoMetaInfo } from "../../utils/dom";
 import { TOP_LEVEL_ACTION } from "../../interfaces/topLevelAction";
@@ -61,10 +57,7 @@ function sendSeoMetaToParentFrame() {
 	);
 }
 
-export function responseMessageListener(
-	eventRecording: EventRecording,
-	event: MessageEvent<iMessage>,
-) {
+export function responseMessageListener(eventRecording: EventRecording, event: MessageEvent<iMessage>) {
 	const { type } = event.data;
 	switch (type) {
 		case FRAME_MESSAGE_TYPES.PERFORM_ACTION: {
@@ -85,10 +78,7 @@ export function responseMessageListener(
 		}
 		case FRAME_MESSAGE_TYPES.RECORDING_STATUS_REQUEST_RESPONSE: {
 			const meta = event.data.meta as iRecordStatusResponseMeta;
-			if (
-				meta.value === RECORDING_STATUS.INSPECTOR_MODE_OFF ||
-				meta.value === RECORDING_STATUS.RECORDER_SCRIPT_NOT_BOOTED
-			) {
+			if (meta.value === RECORDING_STATUS.INSPECTOR_MODE_OFF || meta.value === RECORDING_STATUS.RECORDER_SCRIPT_NOT_BOOTED) {
 				eventRecording.boot(true);
 			} else if (meta.value === RECORDING_STATUS.INSPECTOR_MODE_ON) {
 				eventRecording.boot();

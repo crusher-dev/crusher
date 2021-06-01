@@ -19,10 +19,7 @@ function TestStatus(props: TestStatusProps) {
 	return (
 		<div css={containerCSS}>
 			<div css={infoHeadingCSS}>{"We're verifying your test in background"}</div>
-			<ProgressBar
-				progress={(logs.length / actionsCount) * 100}
-				style={{ width: "100%", height: "0.38rem", marginTop: "0.9rem" }}
-			/>
+			<ProgressBar progress={(logs.length / actionsCount) * 100} style={{ width: "100%", height: "0.38rem", marginTop: "0.9rem" }} />
 			<div css={statusDescContainerCSS}>
 				<span>You can go ahead and save test.</span>
 				<span css={stepsStatusCSS}>
@@ -30,11 +27,7 @@ function TestStatus(props: TestStatusProps) {
 				</span>
 			</div>
 			<div css={liveLogsContainerCSS}>
-				<LiveLogsActions
-					isAborted={props.isAborted}
-					actions={actions}
-					logs={logs}
-				/>
+				<LiveLogsActions isAborted={props.isAborted} actions={actions} logs={logs} />
 			</div>
 		</div>
 	);

@@ -17,9 +17,7 @@ const StartupModal = (props: iStartupModalProps) => {
 
 	const startRecording = () => {
 		if (targetURL && targetURL !== "") {
-			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(
-				targetURL,
-			)}&device=GoogleChromeLargeScreen`;
+			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeLargeScreen`;
 		}
 	};
 
@@ -29,12 +27,7 @@ const StartupModal = (props: iStartupModalProps) => {
 		}
 	};
 	return (
-		<ReactModal
-			isOpen={isOpen}
-			contentLabel="Startup Modal"
-			style={customModalStyles}
-			overlayClassName="overlay"
-		>
+		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
 			<div style={inputContainerStyle}>
 				<input
 					style={inputStyle}

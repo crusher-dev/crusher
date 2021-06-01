@@ -2,28 +2,18 @@ import React, { ChangeEvent } from "react";
 import { ASSERTION_OPERATION_TYPE } from "../../../interfaces/assertionOperation";
 import { APPEARANCE, OVERFLOW, TEXT_ALIGN } from "../../../interfaces/css";
 import { toPrettyEventName } from "../../../utils/helpers";
-import {
-	iAssertionRow,
-	iField,
-} from "../../../../../crusher-shared/types/assertionRow";
+import { iAssertionRow, iField } from "../../../../../crusher-shared/types/assertionRow";
 
 interface iAssertionFormTableProps {
 	rowItems: Array<iAssertionRow>;
 	fields: Array<iField>;
 	operations: Array<ASSERTION_OPERATION_TYPE>;
 	onFieldChange?: (selectedFieldName: string, rowId: string) => void;
-	onOperationChange?: (
-		selectedOperation: ASSERTION_OPERATION_TYPE,
-		rowId: string,
-	) => void;
+	onOperationChange?: (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => void;
 	onValidationChange?: (newValidation: string, rowId: string) => void;
 }
 
-function checkIfValidationPasses(
-	fieldValue: string,
-	validationValue: string,
-	operation: ASSERTION_OPERATION_TYPE,
-) {
+function checkIfValidationPasses(fieldValue: string, validationValue: string, operation: ASSERTION_OPERATION_TYPE) {
 	switch (operation) {
 		case ASSERTION_OPERATION_TYPE.MATCHES:
 			return fieldValue === validationValue;
@@ -47,14 +37,7 @@ function checkIfValidationPasses(
 }
 
 const AssertionFormTable = (props: iAssertionFormTableProps) => {
-	const {
-		rowItems,
-		fields,
-		operations,
-		onFieldChange,
-		onOperationChange,
-		onValidationChange,
-	} = props;
+	const { rowItems, fields, operations, onFieldChange, onOperationChange, onValidationChange } = props;
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 		const fieldOptions = fields.map((field, index) => {
@@ -72,20 +55,13 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<select
-				style={selectStyle}
-				value={selectedField}
-				onChange={handleOnFieldChange}
-			>
+			<select style={selectStyle} value={selectedField} onChange={handleOnFieldChange}>
 				{fieldOptions}
 			</select>
 		);
 	};
 
-	const renderFieldOperationInput = (
-		selectedOperation: ASSERTION_OPERATION_TYPE,
-		rowId: string,
-	) => {
+	const renderFieldOperationInput = (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => {
 		const operationOptions = operations.map((operation) => {
 			return (
 				<option key={operation} value={operation}>
@@ -101,11 +77,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<select
-				style={{ ...selectStyle, minWidth: "60%" }}
-				value={selectedOperation}
-				onChange={handleOnOperationChange}
-			>
+			<select style={{ ...selectStyle, minWidth: "60%" }} value={selectedOperation} onChange={handleOnOperationChange}>
 				{operationOptions}
 			</select>
 		);
@@ -118,39 +90,18 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 			}
 		};
 
-		return (
-			<input
-				placeholder={"Enter value"}
-				value={validationValue}
-				style={inputTableGridOptionValueInputStyle}
-				onChange={handleInputChange}
-			/>
-		);
+		return <input placeholder={"Enter value"} value={validationValue} style={inputTableGridOptionValueInputStyle} onChange={handleInputChange} />;
 	};
 
 	const rowOut = rowItems.map((row, index: number) => {
-		const isValidationCorrect = checkIfValidationPasses(
-			row.field.value,
-			row.validation,
-			row.operation as ASSERTION_OPERATION_TYPE,
-		);
+		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
 			<tr key={row.id} style={inputTableGridItemStyle}>
 				<td style={inputTableItemFieldContainerStyle}>
 					{renderFieldInput(row.field.name, row.id)}
-					<img
-						src={chrome.runtime.getURL(
-							isValidationCorrect ? "/icons/correct.svg" : "/icons/cross.svg",
-						)}
-						style={{ marginLeft: "0.85rem" }}
-					/>
+					<img src={chrome.runtime.getURL(isValidationCorrect ? "/icons/correct.svg" : "/icons/cross.svg")} style={{ marginLeft: "0.85rem" }} />
 				</td>
-				<td style={inputTableGridOptionStyle}>
-					{renderFieldOperationInput(
-						row.operation as ASSERTION_OPERATION_TYPE,
-						row.id,
-					)}
-				</td>
+				<td style={inputTableGridOptionStyle}>{renderFieldOperationInput(row.operation as ASSERTION_OPERATION_TYPE, row.id)}</td>
 				<td>{renderValidationInput(row.validation, row.id)}</td>
 			</tr>
 		);

@@ -4,29 +4,27 @@ import { IRelevantEvent } from "./types/IRelevantEvent";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 
 class RelevantHoverDetection {
-    private _mutationRecords: Array<IRegisteredMutationRecord> = [];
-    private _mapRecords: Map<Node, Array<IRegisteredMutationRecord>> = new Map();
+	private _mutationRecords: Array<IRegisteredMutationRecord> = [];
+	private _mapRecords: Map<Node, Array<IRegisteredMutationRecord>> = new Map();
 
-    registerDOMMutation(record: IEventMutationRecord){
-        if(!(window as any).mapRecords) {
-            (window as any).mapRecords = this._mapRecords;
-        }
-        const { targetNode } = record;
-        const targetNodeRecords: Array<IRegisteredMutationRecord> = this._mapRecords.has(targetNode) ? this._mapRecords.get(targetNode)! : [];
+	registerDOMMutation(record: IEventMutationRecord) {
+		if (!(window as any).mapRecords) {
+			(window as any).mapRecords = this._mapRecords;
+		}
+		const { targetNode } = record;
+		const targetNodeRecords: Array<IRegisteredMutationRecord> = this._mapRecords.has(targetNode) ? this._mapRecords.get(targetNode)! : [];
 
-        targetNodeRecords.push({
-            ...record,
-            dependentOn: null
-        });
-        this._mapRecords.set(targetNode, targetNodeRecords);
-    }
+		targetNodeRecords.push({
+			...record,
+			dependentOn: null,
+		});
+		this._mapRecords.set(targetNode, targetNodeRecords);
+	}
 
-    getInterdependentHoverNode(currentActionNode: Node) : IRegisteredMutationRecord | null{
-        const relevantEvents: Array<any> = [];
+	getInterdependentHoverNode(currentActionNode: Node): IRegisteredMutationRecord | null {
+		const relevantEvents: Array<any> = [];
 		this._mutationRecords.filter((record, index) => {
-			const n =
-				record.targetNode.isEqualNode(currentActionNode) ||
-				record.targetNode.contains(currentActionNode);
+			const n = record.targetNode.isEqualNode(currentActionNode) || record.targetNode.contains(currentActionNode);
 			if (n) {
 				relevantEvents.push({
 					evt: record,
@@ -45,8 +43,8 @@ class RelevantHoverDetection {
 				});
 			}
 		});
-		
-        if (otherArr.length > 1) {
+
+		if (otherArr.length > 1) {
 			const firstDependent = otherArr[0].evt.dependentOn;
 			for (let i = 0; i < otherArr.length - 1; i++) {
 				delete this._mutationRecords[otherArr[0].index];
@@ -60,12 +58,10 @@ class RelevantHoverDetection {
 			relevantEvents[otherArr[i].secondIndex] = otherArr[i];
 		}
 
-		return relevantEvents.length > 0
-			? relevantEvents[relevantEvents.length - 1].evt
-			: null;
-    }
+		return relevantEvents.length > 0 ? relevantEvents[relevantEvents.length - 1].evt : null;
+	}
 
-    async getDependentHoverNodesList(actionType: ACTIONS_IN_TEST, target: HTMLElement) {
+	async getDependentHoverNodesList(actionType: ACTIONS_IN_TEST, target: HTMLElement) {
 		let finalActions: Array<any> = [];
 		finalActions.push(target);
 		let relevantNodeRecord = this.getInterdependentHoverNode(target);

@@ -11,10 +11,7 @@ import HttpHeader = chrome.webRequest.HttpHeader;
 import MessageSender = chrome.runtime.MessageSender;
 
 import { AdvancedURL } from "./utils/url";
-import {
-	generateCrusherExtensionUrl,
-	getDefaultDeviceFromDeviceType,
-} from "../../crusher-shared/utils/extension";
+import { generateCrusherExtensionUrl, getDefaultDeviceFromDeviceType } from "../../crusher-shared/utils/extension";
 import { DEVICE_TYPES } from "../../crusher-shared/types/deviceTypes";
 
 class BackgroundEventsListener {
@@ -48,18 +45,11 @@ class BackgroundEventsListener {
 	onTabUpdated(tabId: number, changeInfo: TabChangeInfo, tab: Tab) {
 		if (tab.url && AdvancedURL.checkIfCrusherExtension(tab.url)) {
 			// @TODO: In case `iframeURL` is empty, show a modal asking for target website url.
-			const iframeURL: string = AdvancedURL.getParameterByName(
-				"url",
-				tab.url,
-			) as string;
+			const iframeURL: string = AdvancedURL.getParameterByName("url", tab.url) as string;
 
 			const selectedUserAgent = AdvancedURL.getUserAgentFromUrl(iframeURL);
 
-			TabStorage.set(
-				tabId,
-				tab,
-				selectedUserAgent ? selectedUserAgent.value : UserAgents[0].value,
-			);
+			TabStorage.set(tabId, tab, selectedUserAgent ? selectedUserAgent.value : UserAgents[0].value);
 		}
 	}
 
@@ -81,9 +71,7 @@ class BackgroundEventsListener {
 	}
 
 	onHeadersReceived(details: WebResponseHeadersDetails) {
-		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(
-			details.tabId,
-		);
+		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(details.tabId);
 		const headers: Array<HttpHeader> | undefined = details.responseHeaders;
 
 		if (!headers || !isRegisteredAsCrusherWindow || details.parentFrameId !== 0) {
@@ -92,16 +80,10 @@ class BackgroundEventsListener {
 
 		const responseHeaders = headers.filter((header) => {
 			const name = header.name.toLowerCase();
-			return (
-				["x-frame-options", "content-security-policy", "frame-options"].indexOf(
-					name,
-				) === -1
-			);
+			return ["x-frame-options", "content-security-policy", "frame-options"].indexOf(name) === -1;
 		});
 
-		const redirectUrl = headers.find(
-			(header) => header.name.toLowerCase() === "location",
-		);
+		const redirectUrl = headers.find((header) => header.name.toLowerCase() === "location");
 
 		if (redirectUrl) {
 			chrome.browsingData.remove(
@@ -118,9 +100,7 @@ class BackgroundEventsListener {
 	}
 
 	onBeforeSendHeaders(details: WebRequestFullDetails) {
-		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(
-			details.tabId,
-		);
+		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(details.tabId);
 		const headers: Array<HttpHeader> | undefined = details.requestHeaders;
 
 		if (!isRegisteredAsCrusherWindow || details.parentFrameId !== 0) {
@@ -156,11 +136,7 @@ class BackgroundEventsListener {
 		}
 	}
 
-	onExternalMessage(
-		request: { message: string },
-		sender: MessageSender,
-		sendResponse: any,
-	) {
+	onExternalMessage(request: { message: string }, sender: MessageSender, sendResponse: any) {
 		console.log("Got this message", request);
 		if (request) {
 			if (request.message) {
@@ -175,11 +151,7 @@ class BackgroundEventsListener {
 
 	handleBrowserIconClick(activeTab: Tab) {
 		const defaultDevice = getDefaultDeviceFromDeviceType(DEVICE_TYPES.DESKTOP);
-		const newURL = generateCrusherExtensionUrl(
-			chrome.extension.getURL("/"),
-			activeTab.url as string,
-			defaultDevice!.id,
-		);
+		const newURL = generateCrusherExtensionUrl(chrome.extension.getURL("/"), activeTab.url as string, defaultDevice!.id);
 		chrome.tabs.create({ url: newURL });
 	}
 
@@ -189,23 +161,17 @@ class BackgroundEventsListener {
 		chrome.tabs.onUpdated.addListener(this.onTabUpdated);
 		chrome.tabs.onRemoved.addListener(this.onTabRemoved);
 
-		chrome.webRequest.onBeforeRequest.addListener(
-			this.onBeforeRequest,
-			{ urls: ["<all_urls>"] },
-			["blocking"],
-		);
+		chrome.webRequest.onBeforeRequest.addListener(this.onBeforeRequest, { urls: ["<all_urls>"] }, ["blocking"]);
 
-		chrome.webRequest.onBeforeSendHeaders.addListener(
-			this.onBeforeSendHeaders,
-			{ urls: ["<all_urls>"], types: ["sub_frame"] },
-			["blocking", "requestHeaders"],
-		);
+		chrome.webRequest.onBeforeSendHeaders.addListener(this.onBeforeSendHeaders, { urls: ["<all_urls>"], types: ["sub_frame"] }, [
+			"blocking",
+			"requestHeaders",
+		]);
 
-		chrome.webRequest.onHeadersReceived.addListener(
-			this.onHeadersReceived,
-			{ urls: ["<all_urls>"], types: ["sub_frame", "main_frame"] },
-			["blocking", "responseHeaders"],
-		);
+		chrome.webRequest.onHeadersReceived.addListener(this.onHeadersReceived, { urls: ["<all_urls>"], types: ["sub_frame", "main_frame"] }, [
+			"blocking",
+			"responseHeaders",
+		]);
 
 		chrome.webNavigation.onBeforeNavigate.addListener(this.onBeforeNavigation);
 

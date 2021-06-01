@@ -31,11 +31,7 @@ interface iSidebarTeamDropdownProps {
 }
 
 export const SidebarTeamDropdown = (props: iSidebarTeamDropdownProps) => {
-	const {
-		onOutsideClick,
-		onShowInviteTeamMemberModal,
-		onAddProjectCallback,
-	} = props;
+	const { onOutsideClick, onShowInviteTeamMemberModal, onAddProjectCallback } = props;
 
 	const logoutUser = () => {
 		redirectToBackendURI(resolvePathToBackendURI("/user/logout"));
@@ -44,16 +40,8 @@ export const SidebarTeamDropdown = (props: iSidebarTeamDropdownProps) => {
 	return (
 		<OutsideClickHandler onOutsideClick={onOutsideClick}>
 			<ul css={settingsDropdownCSS}>
-				<ListItem
-					title={"Add team member"}
-					icon={AddIcon}
-					onClick={onShowInviteTeamMemberModal}
-				/>
-				<ListItem
-					title={"Add project"}
-					icon={AddIcon}
-					onClick={onAddProjectCallback}
-				/>
+				<ListItem title={"Add team member"} icon={AddIcon} onClick={onShowInviteTeamMemberModal} />
+				<ListItem title={"Add project"} icon={AddIcon} onClick={onAddProjectCallback} />
 				<ListItem title={"Get support"} />
 				<ListItem title={"Logout"} onClick={logoutUser} />
 			</ul>

@@ -1,11 +1,6 @@
 const purgecss = require("@fullhuman/postcss-purgecss")({
 	// Specify the paths to all of the template files in your project
-	content: [
-		"./pages/**/*.jsx",
-		"./pages/**/*.tsx",
-		"./src/**/*.tsx",
-		"./src/**/*.jsx",
-	],
+	content: ["./pages/**/*.jsx", "./pages/**/*.tsx", "./src/**/*.tsx", "./src/**/*.jsx"],
 
 	// make sure css reset isnt removed on html and body
 	whitelist: ["html", "body"],
@@ -15,8 +10,5 @@ const purgecss = require("@fullhuman/postcss-purgecss")({
 });
 
 module.exports = {
-	plugins: [
-		require("tailwindcss"),
-		process.env.NODE_ENV === "production" ? purgecss : undefined,
-	],
+	plugins: [require("tailwindcss"), process.env.NODE_ENV === "production" ? purgecss : undefined],
 };

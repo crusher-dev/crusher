@@ -2,11 +2,7 @@ import React, { useEffect } from "react";
 import { wrapper } from "@redux/store";
 import { fetchProjectsFromServer } from "@redux/thunks/projects";
 import dynamic from "next/dynamic";
-import {
-	getCookies,
-	getMetaFromReq,
-	isUserLoggedInFromCookies,
-} from "@utils/cookies";
+import { getCookies, getMetaFromReq, isUserLoggedInFromCookies } from "@utils/cookies";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { ReactReduxContext } from "react-redux";
@@ -17,10 +13,7 @@ import { ThemeContext } from "@constants/style";
 import { ToastDialog } from "@ui/atom/toastDialog";
 import { AppContext, AppProps } from "next/app";
 import { setUserLoggedIn } from "@redux/actions/user";
-import {
-	saveProjectsInRedux,
-	saveSelectedProjectInRedux,
-} from "@redux/actions/project";
+import { saveProjectsInRedux, saveSelectedProjectInRedux } from "@redux/actions/project";
 import { ANALYTICS } from "@services/analytics";
 import Modal from "react-modal";
 import "../src/tailwind.css";
@@ -36,11 +29,7 @@ const TopProgressBar = dynamic(
 
 function initializeAppAnalytics() {
 	const cookies = getCookies(null);
-	ANALYTICS.intialize(
-		cookies["userId"],
-		cookies["teamId"],
-		cookies["projectId"],
-	);
+	ANALYTICS.intialize(cookies["userId"], cookies["teamId"], cookies["projectId"]);
 }
 
 function App({ Component, pageProps }: AppProps<any>) {
@@ -82,15 +71,8 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 
 				store.dispatch(setUserLoggedIn(userInfo));
 				store.dispatch(saveProjectsInRedux(projects));
-				if (
-					reqMetaInfo.cookies.selectedProject &&
-					!["false", "undefined", "null"].includes(
-						reqMetaInfo.cookies.selectedProject,
-					)
-				) {
-					store.dispatch(
-						saveSelectedProjectInRedux(parseInt(reqMetaInfo.cookies.selectedProject)),
-					);
+				if (reqMetaInfo.cookies.selectedProject && !["false", "undefined", "null"].includes(reqMetaInfo.cookies.selectedProject)) {
+					store.dispatch(saveSelectedProjectInRedux(parseInt(reqMetaInfo.cookies.selectedProject)));
 				}
 			})
 			.catch((ex) => {
@@ -98,9 +80,7 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 			});
 	}
 
-	const pageProps = Component.getInitialProps
-		? await Component.getInitialProps(ctx)
-		: {};
+	const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
 
 	return {
 		pageProps: { ...pageProps, theme },

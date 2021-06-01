@@ -1,14 +1,8 @@
 import React, { RefObject, useEffect, useRef } from "react";
 import { Button } from "../../../components/app/button";
 import { POSITION, TEXT_ALIGN } from "../../../../interfaces/css";
-import {
-	executeScriptInFrame,
-	turnOffInspectModeInFrame,
-} from "../../../../messageListener";
-import {
-	getActionsRecordingState,
-	getLastElementCustomScriptOutput,
-} from "../../../../redux/selectors/recorder";
+import { executeScriptInFrame, turnOffInspectModeInFrame } from "../../../../messageListener";
+import { getActionsRecordingState, getLastElementCustomScriptOutput } from "../../../../redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { Conditional } from "../../../components/conditional";
 import { getStore } from "../../../../redux/store";
@@ -22,9 +16,7 @@ interface iElementCustomScriptModalContent {
 	onClose?: any;
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
 }
-const ElementCustomScriptModalContent = (
-	props: iElementCustomScriptModalContent,
-) => {
+const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent) => {
 	const recordingState = useSelector(getActionsRecordingState);
 	const elementInfo: iElementInfo = recordingState.elementInfo as iElementInfo;
 
@@ -34,33 +26,17 @@ const ElementCustomScriptModalContent = (
 
 	useEffect(() => {
 		if (codeTextAreaRef.current) {
-			codeTextAreaRef.current!.value =
-				"async function validate(element){\n  /* Write your logic here, and return true or false */\n}";
-			const editor = (window as any).CodeMirror.fromTextArea(
-				codeTextAreaRef.current!,
-				{
-					mode: "javascript",
-					theme: "mdn-like",
-				},
-			);
+			codeTextAreaRef.current!.value = "async function validate(element){\n  /* Write your logic here, and return true or false */\n}";
+			const editor = (window as any).CodeMirror.fromTextArea(codeTextAreaRef.current!, {
+				mode: "javascript",
+				theme: "mdn-like",
+			});
 
 			editor.on("change", handleScriptChange);
 
-			editor
-				.getDoc()
-				.markText(
-					{ line: 0, ch: 0 },
-					{ line: 1 },
-					{ readOnly: true, inclusiveLeft: true },
-				);
+			editor.getDoc().markText({ line: 0, ch: 0 }, { line: 1 }, { readOnly: true, inclusiveLeft: true });
 
-			editor
-				.getDoc()
-				.markText(
-					{ line: 2, ch: 0 },
-					{ line: 2, ch: 1 },
-					{ readOnly: true, inclusiveLeft: true, inclusiveRight: true },
-				);
+			editor.getDoc().markText({ line: 2, ch: 0 }, { line: 2, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
 		}
 	}, [codeTextAreaRef]);
 
@@ -91,13 +67,9 @@ const ElementCustomScriptModalContent = (
 		executeScriptInFrame(script, "", deviceIframeRef);
 	};
 
-	const isThereScriptOutput =
-		lastElementOutput &&
-		lastElementOutput.type === "output" &&
-		lastElementOutput.value;
+	const isThereScriptOutput = lastElementOutput && lastElementOutput.type === "output" && lastElementOutput.value;
 
-	const isThereScriptError =
-		lastElementOutput && lastElementOutput.type === "error";
+	const isThereScriptError = lastElementOutput && lastElementOutput.type === "error";
 
 	return (
 		<div style={containerCSS}>
@@ -107,24 +79,14 @@ const ElementCustomScriptModalContent = (
 				<div style={validationStatusContainerCSS}>
 					<Conditional If={lastElementOutput}>
 						<Conditional If={isThereScriptOutput}>
-							<img
-								src={chrome.runtime.getURL("/icons/correct.svg")}
-								style={{ marginLeft: "0.85rem" }}
-							/>
+							<img src={chrome.runtime.getURL("/icons/correct.svg")} style={{ marginLeft: "0.85rem" }} />
 						</Conditional>
 						<Conditional If={!isThereScriptOutput || isThereScriptError}>
-							<img
-								src={chrome.runtime.getURL("/icons/cross.svg")}
-								style={{ marginLeft: "0.85rem" }}
-							/>
+							<img src={chrome.runtime.getURL("/icons/cross.svg")} style={{ marginLeft: "0.85rem" }} />
 						</Conditional>
 					</Conditional>
 				</div>
-				<Button
-					style={saveButtonStyle}
-					title={"Save action"}
-					onClick={handleClose}
-				></Button>
+				<Button style={saveButtonStyle} title={"Save action"} onClick={handleClose}></Button>
 			</div>
 		</div>
 	);

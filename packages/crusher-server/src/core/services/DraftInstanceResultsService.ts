@@ -17,7 +17,7 @@ export default class DraftInstanceService {
 		return this.dbManager.insertData(`INSERT INTO draft_instance_results SET ?`, details);
 	}
 
-	async getDraftResult(draftInstanceId: number) : Promise<DraftInstanceResult> {
+	async getDraftResult(draftInstanceId: number): Promise<DraftInstanceResult> {
 		return this.dbManager.fetchSingleRow(`SELECT * FROM draft_instance_results WHERE instance_id = ? LIMIT 1`, [draftInstanceId]);
 	}
 

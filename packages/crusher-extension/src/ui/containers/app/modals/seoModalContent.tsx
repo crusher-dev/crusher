@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getSeoMetaInfo } from "../../../../redux/selectors/recorder";
 import { AssertionFormTable } from "../../../components/app/assertionFormTable";
-import {
-	iAssertionRow,
-	iField,
-} from "../.././../../../../crusher-shared/types/assertionRow";
+import { iAssertionRow, iField } from "../.././../../../../crusher-shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
 import { iSeoMetaInformationMeta } from "../../../../messageListener";
 import { TEXT_ALIGN } from "../../../../interfaces/css";
@@ -20,9 +17,7 @@ interface iSEOModalProps {
 	onClose?: any;
 }
 
-const getValidationFields = (
-	seoInfo: iSeoMetaInformationMeta,
-): Array<iField> => {
+const getValidationFields = (seoInfo: iSeoMetaInformationMeta): Array<iField> => {
 	if (!seoInfo) return [];
 	const title = seoInfo.title;
 	const metaTags = Object.values(seoInfo.metaTags);
@@ -30,10 +25,7 @@ const getValidationFields = (
 	const MetaTagsFields = metaTags.map((metaTag) => {
 		return { name: metaTag.name, value: metaTag.value, meta: { type: "META" } };
 	});
-	return [
-		{ name: "title", value: title, meta: { type: "TITLE" } },
-		...MetaTagsFields,
-	];
+	return [{ name: "title", value: title, meta: { type: "TITLE" } }, ...MetaTagsFields];
 };
 
 const getSeoFieldValue = (fieldInfo: iField) => {
@@ -43,21 +35,11 @@ const getSeoFieldValue = (fieldInfo: iField) => {
 const SeoModalContent = (props: iSEOModalProps) => {
 	const { onClose } = props;
 	const seoInfo = useSelector(getSeoMetaInfo);
-	const [validationRows, setValidationRows] = useState(
-		[] as Array<iAssertionRow>,
-	);
+	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(seoInfo!);
-	const validationOperations = [
-		ASSERTION_OPERATION_TYPE.MATCHES,
-		ASSERTION_OPERATION_TYPE.CONTAINS,
-		ASSERTION_OPERATION_TYPE.REGEX,
-	];
+	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
-	const addValidationRow = (
-		rowField: iField,
-		rowOperation: ASSERTION_OPERATION_TYPE,
-		rowValidation: string,
-	) => {
+	const addValidationRow = (rowField: iField, rowOperation: ASSERTION_OPERATION_TYPE, rowValidation: string) => {
 		setValidationRows([
 			...validationRows,
 			{
@@ -89,11 +71,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	};
 
 	const createNewSeoAssertionRow = () => {
-		addValidationRow(
-			validationFields[0],
-			validationOperations[0],
-			getSeoFieldValue(validationFields[0]),
-		);
+		addValidationRow(validationFields[0], validationOperations[0], getSeoFieldValue(validationFields[0]));
 	};
 
 	const generateDefaultChecksForPage = () => {
@@ -109,13 +87,9 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	};
 
 	const updateFieldOfValidationRow = (newFieldName: string, rowId: string) => {
-		const rowIndex = validationRows.findIndex(
-			(validationRow) => validationRow.id === rowId,
-		);
+		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
-		const newField = validationFields.find(
-			(validationField) => validationField.name === newFieldName,
-		);
+		const newField = validationFields.find((validationField) => validationField.name === newFieldName);
 		if (!newField) throw new Error("Invalid field provided for validation row");
 
 		validationRows[rowIndex].field = newField;
@@ -123,26 +97,16 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		setValidationRows([...validationRows]);
 	};
 
-	const updateOperationOfValidationRow = (
-		newFieldName: string,
-		rowId: string,
-	) => {
-		const rowIndex = validationRows.findIndex(
-			(validationRow) => validationRow.id === rowId,
-		);
+	const updateOperationOfValidationRow = (newFieldName: string, rowId: string) => {
+		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].operation = newFieldName;
 		setValidationRows([...validationRows]);
 	};
 
-	const updateValidationValueOfValidationRow = (
-		newValidationValue: string,
-		rowId: string,
-	) => {
-		const rowIndex = validationRows.findIndex(
-			(validationRow) => validationRow.id === rowId,
-		);
+	const updateValidationValueOfValidationRow = (newValidationValue: string, rowId: string) => {
+		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].validation = newValidationValue;
@@ -185,21 +149,14 @@ const SeoModalContent = (props: iSEOModalProps) => {
 							<img width={12} src={chrome.extension.getURL("/icons/arrow_down.svg")} />
 						</span>
 					</div>
-					<div
-						style={generateChecksContainerStyle}
-						onClick={generateDefaultChecksForPage}
-					>
+					<div style={generateChecksContainerStyle} onClick={generateDefaultChecksForPage}>
 						<BulbIcon style={bulbIconStyle} />
 						<div id={"modal-generate-checks-seo"} style={generateTextStyle}>
 							Generate Checks!
 						</div>
 					</div>
 				</div>
-				<Button
-					title={"Save action"}
-					style={saveButtonStyle}
-					onClick={saveSeoValidationAction}
-				></Button>
+				<Button title={"Save action"} style={saveButtonStyle} onClick={saveSeoValidationAction}></Button>
 			</div>
 		</div>
 	);

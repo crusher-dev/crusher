@@ -32,10 +32,7 @@ function getCurrentRoute(router: any) {
 	}
 }
 
-function renderBrowserList(
-	onPlatformChanged,
-	selectedBrowser = Platform.CHROME,
-) {
+function renderBrowserList(onPlatformChanged, selectedBrowser = Platform.CHROME) {
 	const browsers = [
 		{
 			name: Platform.CHROME,
@@ -49,8 +46,7 @@ function renderBrowserList(
 		},
 		{
 			name: Platform.SAFARI,
-			icon:
-				"https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://image.flaticon.com/icons/svg/564/564442.svg",
+			icon: "https://res.cloudinary.com/dnanbuigy/image/fetch/c_scale,h_30/q_99/https://image.flaticon.com/icons/svg/564/564442.svg",
 		},
 	];
 
@@ -62,20 +58,12 @@ function renderBrowserList(
 		return (
 			<div
 				className="pt-2 pb-2 pl-1 pr-1 text-center tx-medium"
-				css={[
-					styles.browserButton,
-					name === selectedBrowser ? styles.selectedBrowserButton : null,
-				]}
+				css={[styles.browserButton, name === selectedBrowser ? styles.selectedBrowserButton : null]}
 				onClick={() => {
 					handleBrowserSelection(name);
 				}}
 			>
-				<img
-					className="ml-2 mr-2"
-					src={icon}
-					title={toPascalCase(name)}
-					style={{ height: 20 }}
-				/>
+				<img className="ml-2 mr-2" src={icon} title={toPascalCase(name)} style={{ height: 20 }} />
 			</div>
 		);
 	});
@@ -83,15 +71,7 @@ function renderBrowserList(
 	return <div css={styles.browserList}>{out}</div>;
 }
 
-const BaseHeader = ({
-	isMobile,
-	isDesktop,
-	reportId,
-	referenceJob,
-	router,
-	onPlatformChanged,
-	platform,
-}: any) => {
+const BaseHeader = ({ isMobile, isDesktop, reportId, referenceJob, router, onPlatformChanged, platform }: any) => {
 	const [search, toggleSearch] = useState(false);
 	const [mobileMenu, showMobileMenu] = useState(false);
 	const currentRoute = getCurrentRoute(router);
@@ -130,9 +110,7 @@ const BaseHeader = ({
 						</div>
 						{/*<div className="pt-2 pb-2 pl-1 pr-1 text-center tx-medium" css={[styles.greenButton]}>Approve all</div>*/}
 					</div>
-					<div className={"navbar-right"}>
-						{renderBrowserList(onPlatformChanged, platform)}
-					</div>
+					<div className={"navbar-right"}>{renderBrowserList(onPlatformChanged, platform)}</div>
 				</div>
 			</header>
 		</div>
@@ -145,11 +123,7 @@ export const MiddleMenu = () => (
 	<div id="navbarMenu" className="navbar-menu-wrapper">
 		<div className="navbar-menu-header" style={{ background: "#131415" }}>
 			<a href="/app/dashboard" className="df-logo">
-				<img
-					loading="lazy"
-					style={{ height: 24 }}
-					src="/assets/img/logo/logo_light.svg"
-				></img>
+				<img loading="lazy" style={{ height: 24 }} src="/assets/img/logo/logo_light.svg"></img>
 			</a>
 
 			<a id="mainMenuClose" onClick={() => {}}>

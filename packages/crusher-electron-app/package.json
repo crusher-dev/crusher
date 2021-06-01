@@ -7,8 +7,12 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "compile": "rm -R build && tsc",
-    "start": "yarn compile && electron ."
+    "compile": "rm -rf out/dist/resources/app/build && tsc",
+    "start": "yarn compile && NODE_ENV=testing  /home/himanshu/Downloads/dist/electron .",
+    "build:release:linux": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-linux-dist.sh",
+    "build:release:mac": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-darwin-dist.sh",
+    "build:release:windows": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-windows-dist.sh",
+    "build:release:all": "yarn build:release:linux && build:release:mac && build:release:windows"
   },
   "dependencies": {
     "electron": "^12.0.2",

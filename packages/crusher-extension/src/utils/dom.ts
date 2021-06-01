@@ -69,7 +69,7 @@ export class DOM {
 			if (eventExceptionNames.includes(event.type)) {
 				eventExceptions[event.type](event);
 			}
-			 return false;
+			return false;
 		};
 
 		for (let i = 0, l = events.length; i < l; i++) {

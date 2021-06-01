@@ -10,6 +10,9 @@ module.exports = {
 		content_script: [
 			path.resolve(__dirname, "../src/scripts/inject/events_listener.ts"),
 		],
+		init_content_script: [
+			path.resolve(__dirname, "../src/scripts/inject/init_event_listener.ts"),
+		],
 		change_navigator: [
 			path.resolve(__dirname, "../src/scripts/inject/change_navigator.ts"),
 		],

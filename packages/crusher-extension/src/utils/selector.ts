@@ -1,9 +1,9 @@
-import * as uniqueSelector2 from "unique-selector";
+// import * as uniqueSelector2 from "unique-selector";
 import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
 
-const _uniqueSelector2 = new uniqueSelector2.default({});
+// const _uniqueSelector2 = new uniqueSelector2.default({});
 
-function getXpathTo(element: HTMLElement): string | null {
+export function getXpathTo(element: HTMLElement): string | null {
 	if (element === document.body) return element.tagName;
 	if (!element.parentNode) return null;
 
@@ -28,11 +28,11 @@ function getXpathTo(element: HTMLElement): string | null {
 }
 
 export function getSelectors(elementNode: HTMLElement): Array<iSelectorInfo> {
-	const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
+	// const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
 	const xPathSelector = getXpathTo(elementNode);
 
 	const out = [];
-	out.push(...(selectors.list as Array<iSelectorInfo>));
+	// out.push(...(selectors.list as Array<iSelectorInfo>));
 	if (xPathSelector) {
 		out.push({
 			type: "xpath",

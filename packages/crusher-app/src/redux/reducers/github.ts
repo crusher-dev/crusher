@@ -8,7 +8,6 @@ import {
 } from "@redux/actions/github";
 import { iGithubInstallation } from "@interfaces/githubInstallations";
 import { iGithubIntegration } from "@crusher-shared/types/mongo/githubIntegration";
-import { act } from "react-dom/test-utils";
 
 interface iGithubInitialState {
 	installationOptions: Array<iGithubInstallation>;

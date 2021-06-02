@@ -82,7 +82,7 @@ export class Parser {
 
 		code.push(
 			"browserContext.setDefaultNavigationTimeout(15000);",
-			"browserContext.setDefaultTimeout(5000);"
+			"browserContext.setDefaultTimeout(5000);",
 		);
 
 		return code;
@@ -104,6 +104,17 @@ export class Parser {
 		}
 		code.push(
 			"await Page.navigate(JSON.parse(#{action}), page);".pretify({
+				action: action,
+			}),
+		);
+		return code;
+	}
+
+	parseWaitForNavigation(action: iAction) {
+		const code = [];
+
+		code.push(
+			"await Page.waitForNavigation(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -238,6 +249,13 @@ export class Parser {
 				});
 				break;
 			}
+			case ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION: {
+				this.codeMap.push({
+					type: ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION,
+					code: this.parseWaitForNavigation(action),
+				});
+				break;
+			}
 			case ACTIONS_IN_TEST.PAGE_SCREENSHOT: {
 				this.codeMap.push({
 					type: ACTIONS_IN_TEST.PAGE_SCREENSHOT,
@@ -359,13 +377,21 @@ export class Parser {
 		footerCode += "await browser.close();";
 
 		const mainCode = this.codeMap
-			.map((codeItem) => {
+			.map((codeItem, index) => {
 				let code =
 					typeof codeItem.code === "string" ? codeItem : codeItem.code.join("\n");
 				if (this.shouldLogSteps) {
 					code += `\nawait logStep('${codeItem.type}', {status: 'DONE', message: '${codeItem.type} completed'}, {});\n`;
 				}
-				if (this.shouldSleep) {
+				const nextItem =
+					index + 1 < this.codeMap.length ? this.codeMap[index + 1] : undefined;
+
+				if (
+					this.shouldSleep &&
+					codeItem.type !== ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION &&
+					nextItem &&
+					nextItem.type != ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION
+				) {
 					code += "\nawait sleep(1500);";
 				}
 				return code;

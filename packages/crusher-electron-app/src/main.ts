@@ -1,7 +1,6 @@
 import {app, BrowserWindow, session, ipcMain} from 'electron';
 import * as path from "path";
 const loadExtension =  (mainWindow) => {
-	console.log(process.env.NODE_ENV)
 	const isTesting = process.env.NODE_ENV === "testing";
 	return new Promise((resolve, reject) => {
 		session.defaultSession.loadExtension(
@@ -13,11 +12,14 @@ const loadExtension =  (mainWindow) => {
 		});
 	});
 };
+
+let mainWindow;
+
 async function createWindow () {
 	app.commandLine.appendSwitch('--disable-site-isolation-trials');
 	app.commandLine.appendSwitch('--disable-web-security');
 	app.commandLine.appendSwitch("--allow-top-navigation");
-	const mainWindow = new BrowserWindow({
+	mainWindow = new BrowserWindow({
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nativeWindowOpen: true,
@@ -37,6 +39,16 @@ async function createWindow () {
 		}
 	);
 	await loadExtension(mainWindow);
+
+	await session.defaultSession.cookies.set({
+		name: "h-sid",
+		value: "AQAAAXnN6yuZAAAAOKcCQqwRAAJ2fHLwkMzVKsxdxrCwXfy3",
+		domain: ".test-headout.com",
+		url: "https://www.test-headout.com/burj-khalifa-tickets-c-158/",
+		path: "/",
+		expirationDate: 1638209412
+	});
+
 	await mainWindow.webContents.debugger.attach("1.3");
 	await mainWindow.webContents.debugger.sendCommand('Debugger.enable');
 	await mainWindow.webContents.debugger.sendCommand('DOM.enable');
@@ -95,6 +107,14 @@ async function createWindow () {
 			mainWindow.webContents.executeJavaScript(`window.location.href = "${popupUrl}"`);
 		}
 	});
+}
+app.whenReady().then(() => {
+	createWindow()
+	app.on('activate', function () {
+		if (BrowserWindow.getAllWindows().length === 0) createWindow()
+	})
+})
+app.on('window-all-closed', function () {
 	mainWindow.webContents.session.clearStorageData({
 		storages: [
 			"cookies",
@@ -107,13 +127,5 @@ async function createWindow () {
 			"appcache"
 		]
 	});
-}
-app.whenReady().then(() => {
-	createWindow()
-	app.on('activate', function () {
-		if (BrowserWindow.getAllWindows().length === 0) createWindow()
-	})
-})
-app.on('window-all-closed', function () {
 	if (process.platform !== 'darwin') app.quit()
 })

@@ -1,4 +1,4 @@
-const { Browser, Page } = require("../src/actions");
+const { Element, Browser, Page } = require("../src/actions");
 import { getCrusherSelectorEngine, sleep } from "../src/functions";
 import {handlePopup} from '../src/middlewares/popup';
 
@@ -12,7 +12,7 @@ beforeAll(async () => {
 	}
 
 	browser = await playwright["chromium"].launch({
-		headless: true
+		headless: false
 	});
 });
 
@@ -80,4 +80,256 @@ describe('playwright test', () => {
 		}, page);
 		return expect(page.url()).toBe("https://www.w3schools.com/");
 	});
+
+
+	test('Tutorials click', async () => {
+		await Element.click({
+			"type": "CLICK",
+			"payload": {
+				"selectors": [
+					{
+						"type": "playwright",
+						"value": "text=Tutorials",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "id",
+						"value": "#navbtn_tutorials",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "attribute",
+						"value": "a[onclick=\"w3_open_nav('tutorials')\"]",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "attribute",
+						"value": "a[title=\"Tutorials\"]",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "attribute",
+						"value": "a[style=\"width: 116px; outline-style: none; outline-width: 0px;\"]",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "PnC",
+						"value": ".w3-bar > #navbtn_tutorials",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 2,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": "body #navbtn_tutorials",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 3,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": "html #navbtn_tutorials",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 4,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "attribute",
+						"value": "a[href=\"javascript:void(0)\"]",
+						"uniquenessScore": 0.125
+					},
+					{
+						"type": "xpath",
+						"value": "BODY/DIV[3]/A[2]",
+						"uniquenessScore": 1
+					}
+				],
+				"meta": {
+					"value": ""
+				}
+			},
+			"url": "https://www.w3schools.com/"
+		}, page);
+		expect(true).toBeTruthy();
+	});
+
+	test('Learn icons click', async () => {
+		await Element.click({
+			"type": "CLICK",
+			"payload": {
+				"selectors": [
+					{
+						"type": "playwright",
+						"value": "text=Learn Icons",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "PnC",
+						"value": "#nav_tutorials .w3-col:nth-child(2) > .w3-bar-item:nth-child(7)",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 2,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": "body > #nav_tutorials .w3-col:nth-child(2) > .w3-bar-item:nth-child(7)",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 6,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": "html #nav_tutorials .w3-col:nth-child(2) > .w3-bar-item:nth-child(7)",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 7,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "attribute",
+						"value": "a[href=\"/icons/default.asp\"]",
+						"uniquenessScore": 0.5
+					},
+					{
+						"type": "attribute",
+						"value": "a[style=\"outline-style: none; outline-width: 0px;\"]",
+						"uniquenessScore": 0.0625
+					},
+					{
+						"type": "xpath",
+						"value": "BODY/NAV[1]/DIV[1]/DIV[1]/DIV[2]/A[6]",
+						"uniquenessScore": 1
+					}
+				],
+				"meta": {
+					"value": ""
+				}
+			},
+			"url": "https://www.w3schools.com/"
+		}, page);
+		expect(true).toBeTruthy();
+	});
+
+	test('wait for navigation', async() => {
+		await Page.waitForNavigation({
+			"type": "WAIT_FOR_NAVIGATION",
+			"payload": {
+				"selectors": [
+					{
+						"type": "playwright",
+						"value": "body",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "attribute",
+						"value": "body[style=\"position:relative;min-height:100%;font-family: 'Source Sans Pro', sans-serif;\"]",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "PnC",
+						"value": "html > body",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 2,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "xpath",
+						"value": "BODY",
+						"uniquenessScore": 1
+					}
+				],
+				"meta": {
+					"value": "/icons/default.asp"
+				}
+			},
+			"url": "https://www.w3schools.com/"
+		}, page);
+		expect(true).toBeTruthy();
+	});
+
+	test('take screenshot', async() => {
+		const saveScreenshotRequest = await Element.screenshot({
+			"type": "ELEMENT_SCREENSHOT",
+			"payload": {
+				"selectors": [
+					{
+						"type": "playwright",
+						"value": "h1",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "attribute",
+						"value": "h1[style=\"outline-style: none; outline-width: 0px;\"]",
+						"uniquenessScore": 1
+					},
+					{
+						"type": "PnC",
+						"value": "#main > h1",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 2,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": ".w3-row h1",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 3,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": "#belowtopnav h1",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 4,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": "body > #belowtopnav h1",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 5,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "PnC",
+						"value": "html h1",
+						"uniquenessScore": 1,
+						"meta": {
+							"seedLength": 6,
+							"optimized": 2
+						}
+					},
+					{
+						"type": "xpath",
+						"value": "BODY/DIV[7]/DIV[1]/DIV[1]/H1[1]",
+						"uniquenessScore": 1
+					}
+				],
+				"meta": null
+			},
+			"url": ""
+		}, page, JSON.parse("6"));
+		expect(!!saveScreenshotRequest).toBeTruthy();
+	})
 });

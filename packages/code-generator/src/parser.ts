@@ -83,6 +83,13 @@ export class Parser {
 		code.push(
 			"browserContext.setDefaultNavigationTimeout(15000);",
 			"browserContext.setDefaultTimeout(5000);",
+			`await browserContext.addCookies([{
+				name: "h-sid",
+				value: "AQAAAXnN6yuZAAAAOKcCQqwRAAJ2fHLwkMzVKsxdxrCwXfy3",
+				domain: ".test-headout.com",
+				path: "/",
+				expires: 1638209412,
+			}]);`,
 		);
 
 		return code;

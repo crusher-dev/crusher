@@ -27,7 +27,8 @@ interface iBrowserToolbarProps {
 const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	const { initialUrl, goBack, goForward, refreshPage, saveTest, loadNewPage } = props;
 
-	const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
+	// const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
+	const showOnboarding = false;
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
 	const [selectedDevice] = useState(AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id);
 

@@ -4,6 +4,8 @@ import { getIDSelectors } from './selectors/id';
 import { getDataAttribute } from './selectors/dataAttribute';
 import { getAttribute } from './selectors/attribute';
 import { getPnC } from './selectors/pnc';
+import { getSelector } from './crusher-selector/generateSelectors';
+import { SELECTOR_TYPE } from './constants';
 
 /**
  * Entry File.
@@ -34,11 +36,22 @@ class UniqueSelector {
 		const geAttributesSelector = getAttribute(element, this._configuration.root);
 		const classSelectors = getPnC(element, this._configuration.root);
 
-		const selectors = [];
+		let selectors = [];
+		const playwrightSelector = getSelector(element);
 
 		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
 
+		if (playwrightSelector) {
+			selectors = [
+				{
+					type: SELECTOR_TYPE.PLAYWRIGHT,
+					value: playwrightSelector,
+					uniquenessScore: 1,
+				},
+				...selectors,
+			];
+		}
 		// @ts-ignore
 		return {
 			mostUniqueSelector: selectors[0],

@@ -1,7 +1,10 @@
-// import * as uniqueSelector2 from "unique-selector";
+// eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as uniqueSelector2 from "unique-selector";
 import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
 
-// const _uniqueSelector2 = new uniqueSelector2.default({});
+console.log(uniqueSelector2);
+const _uniqueSelector2 = new uniqueSelector2.default({});
 
 export function getXpathTo(element: HTMLElement): string | null {
 	if (element === document.body) return element.tagName;
@@ -22,11 +25,11 @@ export function getXpathTo(element: HTMLElement): string | null {
 }
 
 export function getSelectors(elementNode: HTMLElement): Array<iSelectorInfo> {
-	// const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
+	const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
 	const xPathSelector = getXpathTo(elementNode);
 
-	const out = [];
-	// out.push(...(selectors.list as Array<iSelectorInfo>));
+	const out: Array<any> = [];
+	out.push(...(selectors.list as Array<iSelectorInfo>));
 	if (xPathSelector) {
 		out.push({
 			type: "xpath",

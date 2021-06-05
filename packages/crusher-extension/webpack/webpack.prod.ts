@@ -3,6 +3,23 @@ import * as webpack from "webpack";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyPlugin = require("copy-webpack-plugin");
+const VirtualModulesPlugin = require("webpack-virtual-modules");
+const injectedScriptSource = require("playwright-core/lib/generated/injectedScriptSource");
+
+const virtualModules = new VirtualModulesPlugin({
+	"../node_modules/playwright-evaluator.js": `
+  let pwQuerySelector;
+  (() => {
+    ${injectedScriptSource.source}
+    const injected = new pwExport(1, false, []);
+    window.injected = injected;
+    pwQuerySelector = (selector, root) => {
+      const parsed = injected.parseSelector(selector);
+      return injected.querySelector(parsed, root);
+    };
+  })();
+  module.exports = { querySelector: pwQuerySelector };`,
+});
 
 module.exports = {
 	mode: "production",
@@ -15,6 +32,7 @@ module.exports = {
 		record_test: [path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [
+		virtualModules,
 		new CopyPlugin({
 			patterns: [{ from: "public/", to: "../" }],
 			options: {

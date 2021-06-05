@@ -1,13 +1,12 @@
 import { css } from "@emotion/core";
 import { DropDown } from "@ui/components/project/DropDown";
-import { PERSON_TYPE, WHAT_DO_YOU_WANT_TO_TEST, WHY_HERE } from "@interfaces/OnboardingScreen";
+import { PERSON_TYPE, WHY_HERE } from "@interfaces/OnboardingScreen";
 import React, { useEffect, useState } from "react";
 import { _addUserMeta } from "@services/user";
 import { SURVEY_FIELDS, USER_STEP } from "@constants/backend";
 import { validateSurveyData } from "@utils/validation";
 import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
-import { getFullUsername } from "@utils/helpers";
 
 const roleOptions = Object.keys(PERSON_TYPE).map((key) => {
 	return { value: key, label: PERSON_TYPE[key] };
@@ -17,17 +16,12 @@ const whyHereOption = Object.keys(WHY_HERE).map((key) => {
 	return { value: key, label: WHY_HERE[key] };
 });
 
-const whatOptions = Object.keys(WHAT_DO_YOU_WANT_TO_TEST).map((key) => {
-	return { value: key, label: WHAT_DO_YOU_WANT_TO_TEST[key] };
-});
-
-function UserWelcomeInfo({ setFilledSurvey }) {
+function UserWelcomeInfo({ setFilledSurvey }: any) {
 	const [role, setRole] = useState(null);
 	const [objective, setObjective] = useState(null);
-	const [whatToTest, setWhatToSet] = useState(null);
 
 	const submitWelcomeData = () => {
-		if (!validateSurveyData(role, objective, whatToTest)) {
+		if (!validateSurveyData(role!, objective!)) {
 			alert("Please select all the value");
 			return;
 		}
@@ -36,18 +30,14 @@ function UserWelcomeInfo({ setFilledSurvey }) {
 			{ key: SURVEY_FIELDS.ROLE, value: role },
 			{
 				key: SURVEY_FIELDS.OBJECTIVE,
-				value: JSON.stringify(Object.values(objective)),
-			},
-			{
-				key: SURVEY_FIELDS.WHAT_TO_TEST,
-				value: JSON.stringify(Object.values(whatToTest)),
+				value: JSON.stringify(Object.values(objective!)),
 			},
 			{ key: USER_STEP.SURVEY_FILLED, value: true },
 		])
 			.then(() => {
 				setFilledSurvey(true);
 			})
-			.catch((e) => {
+			.catch((e: Error) => {
 				console.error(e);
 			});
 	};
@@ -56,22 +46,31 @@ function UserWelcomeInfo({ setFilledSurvey }) {
 		<>
 			<div css={modalHeading}>Welcome To Crusher</div>
 			<div css={illustrationContainer}>
-				<img src={"/assets/img/illustration/welcome_illustration.png"} css={welcomeIllustration} />
+				<img
+					src={"/assets/img/illustration/welcome_illustration.png"}
+					css={welcomeIllustration}
+				/>
 			</div>
 
 			<div css={optionContainer}>
 				<div css={selectionHeading}> What is your role?</div>
-				<DropDown options={roleOptions} width={"100%"} onChange={setRole} selected={role} />
+				<DropDown
+					options={roleOptions}
+					width={"100%"}
+					onChange={setRole}
+					selected={role}
+				/>
 			</div>
 
 			<div css={optionContainer}>
 				<div css={selectionHeading}>What brings you to crusher today?</div>
-				<DropDown options={whyHereOption} width={"100%"} isMulti onChange={setObjective} selected={objective} />
-			</div>
-
-			<div css={optionContainer}>
-				<div css={selectionHeading}> What do you want to test?</div>
-				<DropDown options={whatOptions} width={"100%"} isMulti onChange={setWhatToSet} selected={whatToTest} />
+				<DropDown
+					options={whyHereOption}
+					width={"100%"}
+					isMulti
+					onChange={setObjective}
+					selected={objective}
+				/>
 			</div>
 
 			<div css={bottomContainer}>
@@ -83,7 +82,7 @@ function UserWelcomeInfo({ setFilledSurvey }) {
 	);
 }
 
-function FreeTrialIntro({ setFilledUserWelcome }) {
+function FreeTrialIntro({ setFilledUserWelcome }: any) {
 	const userInfo = useSelector(getUserInfo);
 
 	const startFreeTrial = () => {
@@ -91,7 +90,7 @@ function FreeTrialIntro({ setFilledUserWelcome }) {
 			.then(() => {
 				setFilledUserWelcome(true);
 			})
-			.catch((e) => {
+			.catch((e: Error) => {
 				console.error(e);
 			});
 	};
@@ -99,7 +98,9 @@ function FreeTrialIntro({ setFilledUserWelcome }) {
 	return (
 		<>
 			<div css={modalHeading}>Start your 21 Days Free Trial</div>
-			<div css={modalDescription}>Experience power of no-code testing without any interruption</div>
+			<div css={modalDescription}>
+				Experience power of no-code testing without any interruption
+			</div>
 
 			<div css={welcomeUserText}>👋 Welcome {userInfo.first_name}!</div>
 
@@ -109,16 +110,13 @@ function FreeTrialIntro({ setFilledUserWelcome }) {
 				about an adventure sport. I’m available 24/7 for a nice conversation.
 			</div>
 
-			<div css={contactIntroContainer}>
-				<strong>Email</strong>: hello@himanshudixit.me
-				<br />
-				<strong>Phone</strong>: +91-7296823551
-			</div>
-
 			<div css={shipContainer}>Let’s ship 🚀 on web faster with confidence.</div>
 
 			<div css={founderBlock}>
-				<img css={founderImage} src={"/assets/img/illustration/himanshu_illustrated.png"} />
+				<img
+					css={founderImage}
+					src={"/assets/img/illustration/himanshu_illustrated.png"}
+				/>
 
 				<div css={founderDescription}>
 					<div css={founderName}>Himanshu Dixit</div>
@@ -148,9 +146,17 @@ export const OnboardingPopup = () => {
 		}
 	});
 
-	const isSurveyFilled = userInfo.user_meta.length > 0 && userInfo.user_meta.filter((item) => item.key_name === USER_STEP.SURVEY_FILLED).length === 1;
+	const isSurveyFilled =
+		userInfo.user_meta.length > 0 &&
+		userInfo.user_meta.filter(
+			(item: any) => item.key_name === USER_STEP.SURVEY_FILLED,
+		).length === 1;
 
-	const isUserWelcomed = userInfo.user_meta.length > 0 && userInfo.user_meta.filter((item) => item.key_name === USER_STEP.FREE_TRIAL).length === 1;
+	const isUserWelcomed =
+		userInfo.user_meta.length > 0 &&
+		userInfo.user_meta.filter(
+			(item: any) => item.key_name === USER_STEP.FREE_TRIAL,
+		).length === 1;
 
 	// Based on API and current actions
 	const showPopup = !(isUserWelcomed && isSurveyFilled) && canPopupOpen;
@@ -159,8 +165,12 @@ export const OnboardingPopup = () => {
 	return (
 		<div css={overlay}>
 			<div css={modalContainer}>
-				{!isSurveyFilled && !filledSurvey ? <UserWelcomeInfo setFilledSurvey={setFilledSurvey} /> : null}
-				{(isSurveyFilled || filledSurvey) && !isUserWelcomed ? <FreeTrialIntro setFilledUserWelcome={setFilledUserWelcome} /> : null}
+				{!isSurveyFilled && !filledSurvey ? (
+					<UserWelcomeInfo setFilledSurvey={setFilledSurvey} />
+				) : null}
+				{(isSurveyFilled || filledSurvey) && !isUserWelcomed ? (
+					<FreeTrialIntro setFilledUserWelcome={setFilledUserWelcome} />
+				) : null}
 			</div>
 		</div>
 	);

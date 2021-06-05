@@ -614,6 +614,10 @@ function TestInstanceReview({
 		console.log(JSON.stringify(jobResults[instance_id].conclusion));
 	};
 
+	const instanceFinishedRunning =
+		instance.status !== TestInstanceStatus.RUNNING &&
+		instance.status !== TestInstanceStatus.QUEUED;
+
 	return (
 		<div className="" css={styles.bodyBackground}>
 			<div
@@ -665,9 +669,10 @@ function TestInstanceReview({
 									<Clock style={{ height: "1.125rem" }} />
 								</div>
 								<div style={{ marginLeft: "1rem" }}>
-									{Math.floor(
-										new Date(instance.updated_at) - new Date(instance.created_at),
-									)}{" "}
+									{instanceFinishedRunning
+										? (new Date(instance.updated_at) - new Date(instance.created_at)) /
+										  1000
+										: "N/A"}{" "}
 									Sec
 								</div>
 							</div>

@@ -54,7 +54,6 @@ export const SidebarTeamDropdown = (props: iSidebarTeamDropdownProps) => {
 					icon={AddIcon}
 					onClick={onAddProjectCallback}
 				/>
-				<ListItem title={"Get support"} />
 				<ListItem title={"Logout"} onClick={logoutUser} />
 			</ul>
 		</OutsideClickHandler>

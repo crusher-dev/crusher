@@ -31,9 +31,6 @@ const EmptyBuildListContainer = () => {
 					</button>
 				</Link>
 			</div>
-			<a href={"/app/settings/project/monitoring"}>
-				<span css={helpLinkCSS}>Or setup monitoring/CLI integration</span>
-			</a>
 		</div>
 	);
 };

@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-	FONT_WEIGHT,
-	OVERFLOW,
-	POSITION,
-	SCROLL_BEHAVIOR,
-	WHITE_SPACE,
-} from "../../../interfaces/css";
+import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { iAction } from "../../../../../crusher-shared/types/action";
 import { useSelector } from "react-redux";
@@ -59,11 +53,7 @@ const Action = (props: iActionProps) => {
 	return (
 		<li style={stepStyle}>
 			<div style={stepImageStyle}>
-				<img
-					src={chrome.runtime.getURL(
-						ICONS[action.type] ? ICONS[action.type] : "icons/mouse.svg",
-					)}
-				/>
+				<img src={chrome.runtime.getURL(ICONS[action.type] ? ICONS[action.type] : "icons/mouse.svg")} />
 			</div>
 			<div style={actionItemTextContainer}>
 				<div style={stepActionStyle}>{action.type}</div>
@@ -111,15 +101,7 @@ const ActionStepList = () => {
 	};
 
 	const stepList = actions.map((step: iAction, index: number) => {
-		return (
-			<Action
-				onDelete={handleDeleteAction}
-				style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }}
-				key={index}
-				index={index}
-				action={step}
-			/>
-		);
+		return <Action onDelete={handleDeleteAction} style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }} key={index} index={index} action={step} />;
 	});
 
 	return (

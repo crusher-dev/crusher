@@ -1,7 +1,4 @@
-import {
-	CLEAR_ALL_LOGS,
-	SET_TEST_INSTANCE_LOGS,
-} from "@redux/actions/testInstance";
+import { CLEAR_ALL_LOGS, SET_TEST_INSTANCE_LOGS } from "@redux/actions/testInstance";
 
 const initialState = {
 	logs: {},

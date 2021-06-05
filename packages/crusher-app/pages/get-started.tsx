@@ -60,23 +60,21 @@ function SignupScreen(props: iSignupScreenProps) {
 			return;
 		}
 
-		_registerUser(firstName, lastName, email, password, inviteReferral).then(
-			(res: any) => {
-				const { status } = res;
+		_registerUser(firstName, lastName, email, password, inviteReferral).then((res: any) => {
+			const { status } = res;
 
-				switch (status) {
-					case USER_REGISTERED:
-						return redirectToFrontendPath("/app/dashboard");
-						break;
-					case USER_ALREADY_REGISTERED:
-						alert("An account with this email has already been registered");
-						break;
-					default:
-						break;
-				}
-				return false;
-			},
-		);
+			switch (status) {
+				case USER_REGISTERED:
+					return redirectToFrontendPath("/app/dashboard");
+					break;
+				case USER_ALREADY_REGISTERED:
+					alert("An account with this email has already been registered");
+					break;
+				default:
+					break;
+			}
+			return false;
+		});
 	};
 
 	function handleKeyDown(event: any) {
@@ -140,11 +138,7 @@ function SignupScreen(props: iSignupScreenProps) {
 					<div css={requestButtonCSS} onClick={handleSignUp} className={"button"}>
 						Next
 					</div>
-					<a
-						href={getRegisterGoogleUrl(inviteReferral)}
-						target={isIFrame ? "_blank" : "_self"}
-						className={"noDecoration"}
-					>
+					<a href={getRegisterGoogleUrl(inviteReferral)} target={isIFrame ? "_blank" : "_self"} className={"noDecoration"}>
 						<div css={googleLoginButtonCSS(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
 							<span>Signup with Google</span>
@@ -155,10 +149,7 @@ function SignupScreen(props: iSignupScreenProps) {
 				<div>
 					<Link href={"/"} prefetch>
 						<a css={loginButtonCSS(theme)}>
-							<BackSVG
-								fill={theme === "dark" ? "#FFFFFF" : COLORS.dark1}
-								css={{ marginRight: "1rem", height: "1.5rem" }}
-							/>
+							<BackSVG fill={theme === "dark" ? "#FFFFFF" : COLORS.dark1} css={{ marginRight: "1rem", height: "1.5rem" }} />
 							Already registered? Login
 						</a>
 					</Link>

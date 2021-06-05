@@ -131,7 +131,12 @@ function LeftSection(props: any) {
 		},
 	];
 
-	const bottomNavLinks = [
+	const bottomNavLinks = [{
+		name: "Share Feedback",
+		link: resolvePathToBackendURI("/user/logout"),
+		icon: Logout,
+		isAuthorized: false,
+	},
 		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),
@@ -243,28 +248,14 @@ function CrusherLogo() {
 	);
 }
 
-function ProjectSelector(props: {
-	projectsList: any;
-	options: any;
-	selectedProject: any;
-	onChange: (project: iSelectOption) => void;
-}) {
-	const router = useRouter();
-	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(
-		false,
-	);
+function ProjectSelector(props: { projectsList: any; options: any; selectedProject: any; onChange: (project: iSelectOption) => void }) {
+	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(false);
 
 	const { options, onChange, selectedProject } = props;
-	const modifiedOption = [
-		{ label: "Add new project", value: "add_project" },
-		...options,
-		{ label: "View all project", value: "view_all" },
-	];
+	const modifiedOption = [{ label: "Add new project", value: "add_project" }, ...options];
 	const handleChange = (option: iSelectOption) => {
 		if (option.value === "add_project") {
 			setIsShowingCreateProjectModal(true);
-		} else if (option.value === "view_all") {
-			router.push("/app/project/list");
 		} else {
 			onChange(option);
 		}
@@ -277,9 +268,7 @@ function ProjectSelector(props: {
 
 	return (
 		<div css={projectDropdownContainerCSS}>
-			{isShowingCreateProjectModal && (
-				<CreateProjectModal onClose={closeProjectModal} />
-			)}
+			{isShowingCreateProjectModal && <CreateProjectModal onClose={closeProjectModal} />}
 			{props.projectsList && (
 				<DropDown
 					options={modifiedOption}
@@ -301,14 +290,9 @@ interface iSelectOption {
 	value: string;
 }
 
-export function withSidebarLayout(
-	WrappedComponent: NextPage<any>,
-	shouldHaveGetInitialProps = true,
-) {
+export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGetInitialProps = true) {
 	const WithSidebarLayout = function (props: any) {
-		const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
-			false,
-		);
+		const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(false);
 		const [showCreateTestModal, setShowCreateTestModal] = useState(false);
 		const userInfo = useSelector(getUserInfo);
 		const projectsList = useSelector(getProjects);
@@ -318,10 +302,7 @@ export function withSidebarLayout(
 			return project.id === selectedProjectID;
 		});
 
-		const selectedProjectName =
-			userInfo && selectedProject
-				? selectedProject.name
-				: generateRandomProjectName();
+		const selectedProjectName = userInfo && selectedProject ? selectedProject.name : generateRandomProjectName();
 
 		const options = userInfo
 			? projectsList &&
@@ -370,15 +351,8 @@ export function withSidebarLayout(
 			<div>
 				<Head>
 					<title>Crusher | Create your first test</title>
-					<link
-						href="/assets/img/favicon.png"
-						rel="shortcut icon"
-						type="image/x-icon"
-					/>
-					<link
-						href="/lib/@fortawesome/fontawesome-free/css/all.min.css"
-						rel="stylesheet"
-					/>
+					<link href="/assets/img/favicon.png" rel="shortcut icon" type="image/x-icon" />
+					<link href="/lib/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
 				</Head>
 				<div css={mainContainerCSS}>
 					<LeftSection selectedProject={selectedProjectName} userInfo={userInfo} />
@@ -387,19 +361,11 @@ export function withSidebarLayout(
 						onClose={closeInstallExtensionModal}
 						onExtensionDownloaded={handleExtensionDownloaded}
 					/>
-					<CreateTestModal
-						isOpen={showCreateTestModal}
-						onClose={closeShowCreateTestModal}
-					/>
+					<CreateTestModal isOpen={showCreateTestModal} onClose={closeShowCreateTestModal} />
 					<div css={contentContainerCSS}>
 						<div css={headerCSS}>
 							<CrusherLogo />
-							<ProjectSelector
-								projectsList={projectsList}
-								options={options}
-								selectedProject={selectedProjectID}
-								onChange={onProjectChange}
-							/>
+							<ProjectSelector projectsList={projectsList} options={options} selectedProject={selectedProjectID} onChange={onProjectChange} />
 							<span css={createTestCSS}>
 								<CreateTest onClick={handleCreateTest} />
 							</span>
@@ -417,16 +383,13 @@ export function withSidebarLayout(
 		);
 	};
 
-	const wrappedComponentName =
-		WrappedComponent.displayName || WrappedComponent.name || "Component";
+	const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || "Component";
 
 	WithSidebarLayout.displayName = `withSidebarLayout(${wrappedComponentName})`;
 
 	if (shouldHaveGetInitialProps) {
 		WithSidebarLayout.getInitialProps = async (ctx: NextPageContext) => {
-			const pageProps =
-				WrappedComponent.getInitialProps &&
-				(await WrappedComponent.getInitialProps(ctx));
+			const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));
 			return { ...pageProps };
 		};
 	}

@@ -94,6 +94,8 @@ export default class JobRunnerService {
 
 		const jobRequest = await this.addJobToQueue(projectId, userId, tests, platform, jobTrigger, host ? host.url : null, gitInfo);
 
-		Logger.debug("JOB_RUNNER", `Adding ${jobRequest.jobId} to the queue`, { jobRequest });
+		Logger.debug("JOB_RUNNER", `Adding ${jobRequest.jobId} to the queue`, {
+			jobRequest,
+		});
 	}
 }

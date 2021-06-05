@@ -1,12 +1,12 @@
 import { Service, Container } from "typedi";
 import DBManager from "../../manager/DBManager";
-import DraftInstanceService from '../DraftInstanceService';
-import DraftInstanceResultsService from '../DraftInstanceResultsService';
-import TestInstanceRecordingService from '../TestInstanceRecordingService';
-import { InstanceStatus } from '../../interfaces/InstanceStatus';
-import { TestLiveStepsLogs } from '../../../server/models/testLiveStepsLogs';
-import { TestType } from '../../interfaces/TestType';
-import { iLiveStepLogs } from '@crusher-shared/types/mongo/liveStepsLogs';
+import DraftInstanceService from "../DraftInstanceService";
+import DraftInstanceResultsService from "../DraftInstanceResultsService";
+import TestInstanceRecordingService from "../TestInstanceRecordingService";
+import { InstanceStatus } from "../../interfaces/InstanceStatus";
+import { TestLiveStepsLogs } from "../../../server/models/testLiveStepsLogs";
+import { TestType } from "../../interfaces/TestType";
+import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
 
 @Service()
 export default class DraftV2Service {
@@ -35,7 +35,7 @@ export default class DraftV2Service {
 		};
 	}
 
-	getDraftLogs(draftId: number, logsAfter: number = 0): Promise<Array<iLiveStepLogs>>{
+	getDraftLogs(draftId: number, logsAfter: number = 0): Promise<Array<iLiveStepLogs>> {
 		return new Promise((resolve, reject) => {
 			TestLiveStepsLogs.find(
 				{
@@ -44,17 +44,18 @@ export default class DraftV2Service {
 					createdAt: { $gt: new Date(logsAfter) },
 				},
 				function (err, logsArray) {
-					if(err) reject(err);
+					if (err) reject(err);
 					const logs = logsArray.map((log) => {
 						return log.toObject();
 					});
 
-					if(logs && logs.length) {
+					if (logs && logs.length) {
 						resolve(logs as Array<iLiveStepLogs>);
-					}  else {
+					} else {
 						reject("No logs found");
 					}
-				});
+				},
+			);
 		});
 	}
 }

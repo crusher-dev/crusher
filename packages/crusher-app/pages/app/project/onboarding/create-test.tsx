@@ -28,15 +28,11 @@ function ProjectOnboardingCreateTest(props) {
 	const userInfo = useSelector(getUserInfo);
 	const [featuresMessage, setFeaturesMessage] = useState(0);
 	const [showCreateTestModal, setShouldShowCreateTestModal] = useState(false);
-	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
-		false,
-	);
+	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(false);
 
 	const changeFeatureMessage = () => {
 		const interval = setInterval(() => {
-			setFeaturesMessage(
-				featuresMessage + 1 < features.length ? featuresMessage + 1 : 0,
-			);
+			setFeaturesMessage(featuresMessage + 1 < features.length ? featuresMessage + 1 : 0);
 		}, 4500);
 		return () => {
 			clearInterval(interval);
@@ -83,21 +79,11 @@ function ProjectOnboardingCreateTest(props) {
 				}}
 			>
 				<div css={styles.innerCenterContainer}>
-					<video
-						css={styles.videoPlayer}
-						src="/assets/video/onboarding.mp4"
-						onEnded={handleVideoFinishedCallback}
-						controls
-					></video>
+					<video css={styles.videoPlayer} src="/assets/video/onboarding.mp4" onEnded={handleVideoFinishedCallback} controls></video>
 					<div css={styles.crusherFeatures}>
-						<span style={{ color: features[featuresMessage].color }}>
-							{features[featuresMessage].message}
-						</span>{" "}
-						with Crusher
+						<span style={{ color: features[featuresMessage].color }}>{features[featuresMessage].message}</span> with Crusher
 					</div>
-					<div css={styles.heyText}>
-						Hey {firstName}, Experience power of no code testing
-					</div>
+					<div css={styles.heyText}>Hey {firstName}, Experience power of no code testing</div>
 					<div>
 						<div css={styles.buttonContainer}>
 							<CreateTest onClick={handleCreateTest} label="Create first test" />
@@ -105,15 +91,8 @@ function ProjectOnboardingCreateTest(props) {
 					</div>
 				</div>
 			</div>
-			<InstallExtensionModal
-				isOpen={showInstallExtensionModal}
-				onClose={closeInstallExtensionModal}
-				onExtensionDownloaded={handleExtensionDownloaded}
-			/>
-			<CreateTestModal
-				isOpen={showCreateTestModal}
-				onClose={closeCreateTestModal}
-			/>
+			<InstallExtensionModal isOpen={showInstallExtensionModal} onClose={closeInstallExtensionModal} onExtensionDownloaded={handleExtensionDownloaded} />
+			<CreateTestModal isOpen={showCreateTestModal} onClose={closeCreateTestModal} />
 		</>
 	);
 }

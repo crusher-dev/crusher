@@ -1,5 +1,5 @@
 //webpack.config.js
-const path = require('path');
+const path = require("path");
 
 module.exports = {
 	mode: "development",
@@ -9,12 +9,12 @@ module.exports = {
 		index: "./src/index.ts",
 		functions: "./src/functions/index.ts",
 		middlewares: "./src/middlewares/index.ts",
-		utils: "./src/utils/index.ts"
+		utils: "./src/utils/index.ts",
 	},
 	output: {
-		libraryTarget: 'commonjs',
-		path: path.resolve(__dirname, './build'),
-		filename: "[name].js" // <--- Will be compiled to this single file
+		libraryTarget: "commonjs",
+		path: path.resolve(__dirname, "./build"),
+		filename: "[name].js", // <--- Will be compiled to this single file
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"],
@@ -23,8 +23,8 @@ module.exports = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				loader: "ts-loader"
-			}
-		]
-	}
+				loader: "ts-loader",
+			},
+		],
+	},
 };

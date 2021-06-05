@@ -1,9 +1,5 @@
 import React from "react";
-import {
-	FLEX_DIRECTION,
-	FONT_WEIGHT,
-	TEXT_ALIGN,
-} from "../../../../interfaces/css";
+import { FLEX_DIRECTION, FONT_WEIGHT, TEXT_ALIGN } from "../../../../interfaces/css";
 
 interface iHowToUseVideoModalProps {
 	onClose: any;
@@ -20,12 +16,7 @@ const HowToUseVideoModal = (props: iHowToUseVideoModalProps) => {
 	return (
 		<div style={containerStyle}>
 			<div style={titleStyle}>How to use crusher?</div>
-			<video
-				style={videoStyle}
-				src={"https://app.crusher.dev/assets/video/onboarding.mp4"}
-				controls
-				autoPlay={true}
-			></video>
+			<video style={videoStyle} src={"https://app.crusher.dev/assets/video/onboarding.mp4"} controls autoPlay={true}></video>
 			<div style={infoTextContainerStyle}>
 				<div>{"We're pushing a lot of boundaries."}</div>
 				<div>Although some things might not work as expected.</div>

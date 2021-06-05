@@ -11,7 +11,6 @@ interface iSettingsContentHeader {
 const SettingsContentHeader = (props: iSettingsContentHeader) => {
 	const { title, desc, button } = props;
 
-
 	return (
 		<div css={containerCSS}>
 			<Conditional If={button}>

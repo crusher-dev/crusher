@@ -7,10 +7,7 @@ import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHe
 import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";
 import { ProjectGitIntegrations } from "@ui/containers/settings/gitIntegrations/projectGitIntegrations";
-import {
-	_getLinkedGithubRepos,
-	_getUserConnectionsList,
-} from "@services/v2/github";
+import { _getLinkedGithubRepos, _getUserConnectionsList } from "@services/v2/github";
 import { setUserLoginConnections } from "@redux/actions/user";
 import { iPageContext } from "@interfaces/pageContext";
 import { getUserLoginConnections } from "@redux/stateUtils/user";
@@ -24,10 +21,7 @@ const ProjectGit = () => {
 	return (
 		<>
 			<SettingsContent contentCSS={settingContentCSS}>
-				<SettingsContentHeader
-					title={"Git integrations"}
-					desc={"List of all git integrations in current project"}
-				/>
+				<SettingsContentHeader title={"Git integrations"} desc={"List of all git integrations in current project"} />
 				<div css={mainContainerCSS}>
 					<ProjectGitIntegrations userConnections={userConnections} />
 				</div>
@@ -50,14 +44,8 @@ ProjectGit.getInitialProps = async (ctx: iPageContext) => {
 	try {
 		const selectedProject = getSelectedProject(store.getState());
 		const userConnectionsPromise = _getUserConnectionsList(ctx.metaInfo.headers);
-		const linkedGithubReposPromise = _getLinkedGithubRepos(
-			selectedProject,
-			ctx.metaInfo.headers,
-		);
-		const [userConnections, linkedGithubRepos] = (await Promise.all([
-			userConnectionsPromise,
-			linkedGithubReposPromise,
-		])) as any;
+		const linkedGithubReposPromise = _getLinkedGithubRepos(selectedProject, ctx.metaInfo.headers);
+		const [userConnections, linkedGithubRepos] = (await Promise.all([userConnectionsPromise, linkedGithubReposPromise])) as any;
 		store.dispatch(setUserLoginConnections(userConnections));
 		store.dispatch(saveLinkedGithubRepos(linkedGithubRepos));
 		return {};

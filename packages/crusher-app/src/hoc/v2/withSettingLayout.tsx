@@ -36,10 +36,7 @@ const projectMenuData = {
 			id: "project-monitoring-settings",
 			title: "Hosts/Monitoring",
 			link: "/app/settings/project/monitoring",
-			children: [
-				"/app/settings/project/add-monitoring",
-				"/app/settings/project/add-host",
-			],
+			children: ["/app/settings/project/add-monitoring", "/app/settings/project/add-host"],
 		},
 	],
 };
@@ -57,20 +54,11 @@ const teamMenuData = {
 	],
 };
 
-export function WithSettingsLayout(
-	Component,
-	shouldHaveGetInitialProps = true,
-) {
+export function WithSettingsLayout(Component, shouldHaveGetInitialProps = true) {
 	const WrappedComponent = function (props) {
-		const [
-			shouldShowCreateProjectModal,
-			setShouldShowCreateProjectModal,
-		] = useState(false);
+		const [shouldShowCreateProjectModal, setShouldShowCreateProjectModal] = useState(false);
 
-		const [
-			shouldShowAddTeamMemberModal,
-			setShouldShowAddTeamMemberModal,
-		] = useState(false);
+		const [shouldShowAddTeamMemberModal, setShouldShowAddTeamMemberModal] = useState(false);
 
 		const showCreateProjectModal = () => {
 			setShouldShowCreateProjectModal(true);
@@ -93,18 +81,11 @@ export function WithSettingsLayout(
 			<div>
 				<Head>
 					<title>Crusher | Create your first test</title>
-					<link
-						href="/assets/img/favicon.png"
-						rel="shortcut icon"
-						type="image/x-icon"
-					/>
+					<link href="/assets/img/favicon.png" rel="shortcut icon" type="image/x-icon" />
 				</Head>
 				<div css={settingsPage}>
 					<ProjectContainer showCreateProjectModal={showCreateProjectModal} />
-					<MenuContainer
-						showAddTeamMemberModal={showAddTeamMemberModal}
-						showCreateProjectModal={showCreateProjectModal}
-					/>
+					<MenuContainer showAddTeamMemberModal={showAddTeamMemberModal} showCreateProjectModal={showCreateProjectModal} />
 					<div style={{ flex: 1, overflowY: "auto" }}>
 						<Component {...props} />
 					</div>
@@ -120,8 +101,7 @@ export function WithSettingsLayout(
 	};
 	if (shouldHaveGetInitialProps) {
 		WrappedComponent.getInitialProps = async (ctx) => {
-			const pageProps =
-				Component.getInitialProps && (await Component.getInitialProps(ctx));
+			const pageProps = Component.getInitialProps && (await Component.getInitialProps(ctx));
 			return { ...pageProps };
 		};
 	}
@@ -149,10 +129,7 @@ function ProjectContainer(props: iProjectContainerProps) {
 			return (
 				<div
 					key={projectItem.id}
-					css={[
-						projectIcon,
-						projectItem.id === selectedProject ? selectedProjectIconCSS : null,
-					]}
+					css={[projectIcon, projectItem.id === selectedProject ? selectedProjectIconCSS : null]}
 					onClick={handleProjectChange.bind(this, projectItem.id)}
 				>
 					{projectItem.name[0].toUpperCase()}
@@ -199,7 +176,7 @@ function MenuContainer(props: iMenuContainerProps) {
 					<div id="back-text">Settings</div>
 				</div>
 				<div id="plan-container">
-					<StarSVG /> <span id="plan-text">Pro Plan </span>
+
 				</div>
 			</div>
 
@@ -267,12 +244,7 @@ function MainMenuItem({ data }) {
 						<div
 							css={menuItem}
 							onClick={handleItemClick.bind(this, item)}
-							className={
-								currentRoute === item.link ||
-								(item.children && item.children.includes(currentRoute))
-									? "selected"
-									: ""
-							}
+							className={currentRoute === item.link || (item.children && item.children.includes(currentRoute)) ? "selected" : ""}
 						>
 							<div className="selected-bar"></div>
 							<div className="menu-text">{item.title}</div>

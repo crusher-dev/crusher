@@ -53,21 +53,14 @@ const DUMMY_ALERTING = [
 const ProjectIntegrationSettings = () => {
 	return (
 		<SettingsContent contentCSS={settingContentCSS}>
-			<SettingsContentHeader
-				title={"Integration"}
-				desc={"Integrate crusher in CI Pipelines, community channel and emails"}
-			/>
+			<SettingsContentHeader title={"Integration"} desc={"Integrate crusher in CI Pipelines, community channel and emails"} />
 			<div css={mainContainerCSS}>
 				<Accordion>
 					<AccordionTab title={"Repositories"}>
 						<div css={accordionContentCSS}>
 							<ItemsList items={DUMMY_REPOSITORIES} />
 							<div css={addRepoContainerCSS}>
-								<a
-									href={"https://github.com/invite/test"}
-									rel="noreferrer"
-									target={"_blank"}
-								>
+								<a href={"https://github.com/invite/test"} rel="noreferrer" target={"_blank"}>
 									Add a repo source
 								</a>
 								<span>from github, gitlab, etc</span>
@@ -154,14 +147,9 @@ ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
 		}
 		const cookies = getCookies(req);
 
-		const selectedProject = cookies.selectedProject
-			? JSON.parse(cookies.selectedProject)
-			: null;
+		const selectedProject = cookies.selectedProject ? JSON.parse(cookies.selectedProject) : null;
 
-		const slackIntegrations = await getAllSlackIntegrationsForProject(
-			selectedProject,
-			headers,
-		);
+		const slackIntegrations = await getAllSlackIntegrationsForProject(selectedProject, headers);
 
 		return {
 			isIntegratedWithSlack: false,

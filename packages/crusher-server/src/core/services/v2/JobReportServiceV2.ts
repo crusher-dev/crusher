@@ -12,7 +12,11 @@ export default class JobReportServiceV2 {
 	}
 
 	async createJobReport(jobId: number, referenceJobId: number, projectId: number) {
-		return this.dbManager.insertData(`INSERT INTO job_reports SET ?`, { job_id: jobId, reference_job_id: referenceJobId, project_id: projectId });
+		return this.dbManager.insertData(`INSERT INTO job_reports SET ?`, {
+			job_id: jobId,
+			reference_job_id: referenceJobId,
+			project_id: projectId,
+		});
 	}
 
 	async getTotalJobsReportsCountInProject(projectId: number, trigger: JobTrigger) {

@@ -13,9 +13,7 @@ export class DOM {
 		}
 	}
 
-	static disableAllUserEvents(eventExceptions: {
-		[eventName: string]: any;
-	}): () => void {
+	static disableAllUserEvents(eventExceptions: { [eventName: string]: any }): () => void {
 		console.debug("Disabling all user events");
 
 		const events = [
@@ -88,22 +86,14 @@ export interface iPageSeoMeta {
 }
 
 export function getAllSeoMetaInfo() {
-	const metaElements: Array<HTMLMetaElement> = [
-		...(document.querySelectorAll("meta") as any),
-	];
-	const metaTagsValuesMap: iPageSeoMeta = metaElements.reduce(
-		(prev: any, current: HTMLMetaElement) => {
-			const name =
-				current && typeof current.getAttribute === "function"
-					? current.getAttribute("name")
-					: null;
-			if (!name) {
-				return prev;
-			}
-			return { ...prev, [name]: { name, value: current.content } };
-		},
-		{},
-	);
+	const metaElements: Array<HTMLMetaElement> = [...(document.querySelectorAll("meta") as any)];
+	const metaTagsValuesMap: iPageSeoMeta = metaElements.reduce((prev: any, current: HTMLMetaElement) => {
+		const name = current && typeof current.getAttribute === "function" ? current.getAttribute("name") : null;
+		if (!name) {
+			return prev;
+		}
+		return { ...prev, [name]: { name, value: current.content } };
+	}, {});
 
 	return metaTagsValuesMap;
 }

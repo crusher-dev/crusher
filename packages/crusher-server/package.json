@@ -69,6 +69,7 @@
 		"lint": "prettier --write .",
 		"lint:ts": "eslint --ext=jsx,ts,tsx src",
 		"lint-fix:ts": "eslint --fix src",
+		"prettify": "prettier --write .",
 		"db:info": "./flyway/flyway -configFiles=config/flyway.conf info",
 		"db:repair": "./flyway/flyway -configFiles=config/flyway.conf repair",
 		"db:migrate": "./flyway/flyway -configFiles=config/flyway.conf migrate"

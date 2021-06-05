@@ -1,12 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 import devices from "../../../../../crusher-shared/constants/devices";
-import Select from 'react-select';
+import Select from "react-select";
 
 interface iRenderDeviceInputProps {
 	selectedDevice: any;
 	selectDevice: (deviceId: string) => void;
 }
-
 
 const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 	const { selectedDevice, selectDevice } = props;
@@ -14,18 +13,17 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 	let deviceOptions = useMemo(() => {
 		return devices.map((device) => ({
 			label: device.name,
-			value: device.id
+			value: device.id,
 		}));
 	}, [devices]);
 
-	const selectedDeviceOption = deviceOptions.find(device => {
-		return device.value === selectedDevice
+	const selectedDeviceOption = deviceOptions.find((device) => {
+		return device.value === selectedDevice;
 	});
 
 	const handleDeviceSelected = (selectedOption: any) => {
 		selectDevice(selectedOption.value);
 	};
-
 
 	return (
 		<div style={selectInputContainerStyle} className="select">
@@ -35,8 +33,7 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 				onChange={handleDeviceSelected}
 				styles={dropdownStyle as any}
 				placeholder={"Please select some device"}
-			>
-			</Select>
+			></Select>
 		</div>
 	);
 };
@@ -56,7 +53,7 @@ const dropdownStyle = {
 		zIndex: 1000,
 		padding: `0.25rem .75rem`,
 		borderRadius: "0.225rem",
-		paddingRight: "0.25rem"
+		paddingRight: "0.25rem",
 	}),
 	container: () => ({
 		position: "relative",

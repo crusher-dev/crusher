@@ -18,9 +18,7 @@ module.exports = withImages(
 			webpack: function (config, { defaultLoaders }) {
 				const resolvedBaseUrl = path.resolve(config.context, "../");
 				if (IS_PRODUCTION) {
-					config.module.rules
-						.filter(({ loader }) => loader === "babel-loader")
-						.map((l) => (l.options.cacheDirectory = false));
+					config.module.rules.filter(({ loader }) => loader === "babel-loader").map((l) => (l.options.cacheDirectory = false));
 				}
 
 				config.module.rules = [
@@ -37,8 +35,7 @@ module.exports = withImages(
 				return config;
 			},
 			env: {
-				GITHUB_APP_CLIENT_ID:
-					process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID,
+				GITHUB_APP_CLIENT_ID: process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID,
 				BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
 				FRONTEND_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
 				IS_DEVELOPMENT: process.env.NEXT_PUBLIC_IS_DEVELOPMENT,

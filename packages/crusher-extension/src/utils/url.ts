@@ -31,10 +31,7 @@ export class AdvancedURL {
 	}
 
 	static checkIfCrusherExtension(url: string) {
-		return (
-			Boolean(url) &&
-			this.getScheme(url).startsWith(this.getScheme(chrome.runtime.getURL("/")))
-		);
+		return Boolean(url) && this.getScheme(url).startsWith(this.getScheme(chrome.runtime.getURL("/")));
 	}
 
 	static getUrlFromCrusherExtensionUrl(extensionUrl: string): string | null {
@@ -60,14 +57,9 @@ export class AdvancedURL {
 	}
 
 	static getUserAgentFromUrl(iframeURL: string): UserAgent {
-		const crusherAgent = AdvancedURL.getParameterByName(
-			"__crusherAgent__",
-			iframeURL,
-		);
+		const crusherAgent = AdvancedURL.getParameterByName("__crusherAgent__", iframeURL);
 
-		const selectedUserAgent: UserAgent | undefined = UserAgents.find(
-			(agent) => agent.name === (crusherAgent || UserAgents[6].value),
-		);
+		const selectedUserAgent: UserAgent | undefined = UserAgents.find((agent) => agent.name === (crusherAgent || UserAgents[6].value));
 
 		return selectedUserAgent as UserAgent;
 	}

@@ -8,11 +8,7 @@ import { resolvePathToBackendURI } from "@utils/url";
 import withoutSession from "@hoc/withoutSession";
 import { USER_NOT_REGISTERED } from "@utils/constants";
 import { _authenticateUser } from "@services/user";
-import {
-	EMAIL_NOT_VERIFIED,
-	NO_TEAM_JOINED,
-	SIGNED_IN,
-} from "@utils/constants";
+import { EMAIL_NOT_VERIFIED, NO_TEAM_JOINED, SIGNED_IN } from "@utils/constants";
 import { redirectToFrontendPath } from "@utils/router";
 import { AuthenticationTemplate } from "@ui/template/authenticationDark";
 import { GoogleIcon } from "@ui/components/common/SVGs";
@@ -26,10 +22,7 @@ const handleClIToken = (ctx) => {
 		res,
 	} = ctx;
 	if (cli_token) {
-		res.setHeader(
-			"Set-Cookie",
-			serialize("cli_token", cli_token, { path: "/", maxAge: 90000 }),
-		);
+		res.setHeader("Set-Cookie", serialize("cli_token", cli_token, { path: "/", maxAge: 90000 }));
 	}
 };
 
@@ -119,18 +112,10 @@ function Home() {
 							/>
 						</form>
 					</div>
-					<div
-						css={styles.requestButton}
-						onClick={handleLogin}
-						className={"font-medium button"}
-					>
+					<div css={styles.requestButton} onClick={handleLogin} className={"font-medium button"}>
 						Next
 					</div>
-					<a
-						href={resolvePathToBackendURI("/v2/user/authenticate/google")}
-						target={isIFrame ? "_blank" : "_self"}
-						css={styles.loginGoogleLink}
-					>
+					<a href={resolvePathToBackendURI("/v2/user/authenticate/google")} target={isIFrame ? "_blank" : "_self"} css={styles.loginGoogleLink}>
 						<div css={styles.googleLoginButton(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
 							<span className={"font-medium button"}>Login with Google</span>
@@ -143,11 +128,7 @@ function Home() {
 						Ship faster, better without bugs
 					</div>
 					<Link href={"/get-started"} prefetch>
-						<a
-							href={"/get-started"}
-							css={styles.registerButton(theme)}
-							className={"font-medium button"}
-						>
+						<a href={"/get-started"} css={styles.registerButton(theme)} className={"font-medium button"}>
 							Try no-code testing free
 						</a>
 					</Link>

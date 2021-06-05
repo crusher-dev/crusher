@@ -13,10 +13,7 @@ export interface iReduxState {
 }
 
 // Use ES6 object literal shorthand syntax to define the object shape
-const rootReducer: Reducer<
-	CombinedState<iReduxState>,
-	AnyAction
-> = combineReducers({
+const rootReducer: Reducer<CombinedState<iReduxState>, AnyAction> = combineReducers({
 	actions: actionsReducer,
 	recorder: recorderReducer,
 	onboarding: onboardingReducer,

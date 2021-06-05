@@ -23,12 +23,7 @@ const InputLabel = (props: iInputLabelProps) => {
 	return (
 		<div css={inputWithLabelCSS}>
 			<div css={labelCSS}>{label}</div>
-			<input
-				css={inputCSS}
-				placeholder={placeholder}
-				value={value}
-				onChange={onChange}
-			/>
+			<input css={inputCSS} placeholder={placeholder} value={value} onChange={onChange} />
 		</div>
 	);
 };
@@ -57,24 +52,11 @@ const AddHostSettings = () => {
 	return (
 		<div css={monitoringCSS}>
 			<SettingsContent contentCSS={settingContentCSS}>
-				<SettingsContentHeader
-					title={"Add Monitoring"}
-					desc={"List of all team members in current project"}
-				/>
+				<SettingsContentHeader title={"Add Monitoring"} desc={"List of all team members in current project"} />
 				<div css={containerCSS}>
 					<div css={formContainerCSS}>
-						<InputLabel
-							placeholder={"Host name"}
-							label={"Name"}
-							onChange={handleHostNameChange}
-							value={hostName}
-						/>
-						<InputLabel
-							placeholder={"Host url"}
-							label={"URL"}
-							onChange={handleHostUrlChange}
-							value={hostUrl}
-						/>
+						<InputLabel placeholder={"Host name"} label={"Name"} onChange={handleHostNameChange} value={hostName} />
+						<InputLabel placeholder={"Host url"} label={"URL"} onChange={handleHostUrlChange} value={hostUrl} />
 					</div>
 					<div css={actionContainerCSS}>
 						<Button onClick={handleAddHost} title={"Add"} css={buttonCss} />

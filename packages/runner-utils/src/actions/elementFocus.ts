@@ -8,8 +8,8 @@ export default function focusOnElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
-			await waitForSelectors(page, selectors);
-			const elementHandle = await page.$(toCrusherSelectorsFormat(selectors));
+			const output = await waitForSelectors(page, selectors);
+			const elementHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
 
 			await elementHandle?.focus();
 

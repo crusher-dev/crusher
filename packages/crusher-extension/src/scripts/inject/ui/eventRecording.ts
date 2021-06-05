@@ -352,19 +352,9 @@ export default class EventRecording {
 	}
 
 	async saveHoverFinalEvents(
-		eventType: ACTIONS_IN_TEST,
 		finalEvents: Array<Node>,
 	) {
 		for (let i = 0; i < finalEvents.length; i++) {
-			if (i == finalEvents.length - 1) {
-				await this.eventsController.saveCapturedEventInBackground(
-					eventType,
-					finalEvents[i],
-					"",
-					null,
-					true,
-				);
-			} else {
 				await this.eventsController.saveCapturedEventInBackground(
 					ACTIONS_IN_TEST.HOVER,
 					finalEvents[i],
@@ -372,9 +362,9 @@ export default class EventRecording {
 					null,
 					true,
 				);
-			}
 		}
 	}
+
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
 		let target = event.target;
@@ -400,11 +390,13 @@ export default class EventRecording {
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
 		if (!event.simulatedEvent) {
-			const finalEvents = await this.releventHoverDetectionManager.getDependentHoverNodesList(
-				ACTIONS_IN_TEST.CLICK,
-				event.target,
-			);
-			await this.saveHoverFinalEvents(ACTIONS_IN_TEST.CLICK, finalEvents);
+			const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(target);
+			if(needsOtherActions){
+				const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(target);
+				const hoverNodes = hoverNodesRecord.map(record => record.eventNode);
+				await this.saveHoverFinalEvents(hoverNodes);
+			}
+			await this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.CLICK, event.target);
 		}
 
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {

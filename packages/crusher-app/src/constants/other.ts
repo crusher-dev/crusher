@@ -4,20 +4,12 @@ if (IS_DEVELOPMENT) {
 	process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 }
 
-const LOCAL_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
-	? process.env.NEXT_PUBLIC_BACKEND_URL
-	: "https://backend.crusher-test.com/";
-const LOCAL_FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL
-	? process.env.NEXT_PUBLIC_FRONTEND_URL
-	: "https://www.crusher-test.com/";
+const LOCAL_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ? process.env.NEXT_PUBLIC_BACKEND_URL : "https://backend.crusher-test.com/";
+const LOCAL_FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL ? process.env.NEXT_PUBLIC_FRONTEND_URL : "https://www.crusher-test.com/";
 
-export const BACKEND_SERVER_URL = IS_DEVELOPMENT
-	? LOCAL_BACKEND_URL
-	: "https://backend.crusher.dev/";
+export const BACKEND_SERVER_URL = IS_DEVELOPMENT ? LOCAL_BACKEND_URL : "https://backend.crusher.dev/";
 
-export const FRONTEND_SERVER_URL = IS_DEVELOPMENT
-	? LOCAL_FRONTEND_URL
-	: "https://app.crusher.dev/";
+export const FRONTEND_SERVER_URL = IS_DEVELOPMENT ? LOCAL_FRONTEND_URL : "https://app.crusher.dev/";
 
 export const TEST_TYPES = {
 	DRAFT: "DRAFT",

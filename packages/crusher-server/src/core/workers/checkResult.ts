@@ -44,7 +44,9 @@ const testInstanceResultsService = Container.get(TestInstanceResultsService);
 const testInstanceScreenshotsService = Container.get(TestInstanceScreenShotsService);
 const alertingService = Container.get(AlertingService);
 const userService = Container.get(UserService);
-const cloudBucketManager = new CloudBucketManager({ useLocalStack: process.env.NODE_ENV === "production" ? false : true });
+const cloudBucketManager = new CloudBucketManager({
+	useLocalStack: process.env.NODE_ENV === "production" ? false : true,
+});
 
 interface TestInstanceWithImages extends TestInstance {
 	images: {
@@ -96,7 +98,7 @@ async function getResultForTestInstance(
 	testInstanceWithImages: TestInstanceWithImages,
 	referenceInstanceWithImages: TestInstanceWithImages,
 	resultSetId: number,
-	shouldPerformDiffChecks
+	shouldPerformDiffChecks,
 ) {
 	const testInstanceImageKeys: Array<string> = Object.keys(testInstanceWithImages.images);
 
@@ -206,7 +208,11 @@ function notifyResultWithEmail(jobRecord: any, result: JobReportStatus, userWhoS
 		const usersInTeam = await testService.findMembersOfProject(jobRecord.project_id);
 		return ejs.renderFile(
 			__dirname + templatePath,
-			{ jobId: jobRecord.id, branchName: jobRecord.branch_name, jobReviewUrl: resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`) },
+			{
+				jobId: jobRecord.id,
+				branchName: jobRecord.branch_name,
+				jobReviewUrl: resolvePathToFrontendURI(`/app/job/review?jobId=${jobRecord.id}`),
+			},
 			function (err, str) {
 				if (err) return reject("Can't load the invite member template");
 				EmailManager.sendEmailToUsers(usersInTeam, `Job ${jobRecord.id} ${result}`, str);
@@ -313,7 +319,7 @@ async function runChecks(details, clearJobTempValues) {
 		testInstanceWithImages,
 		referenceInstanceWithImages,
 		resultSetId,
-		shouldPerformDiffChecks
+		shouldPerformDiffChecks,
 	);
 
 	await testInstanceResultSetsService.updateResultSetStatus(resultSetId, error);

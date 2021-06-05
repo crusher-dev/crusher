@@ -7,6 +7,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"lint": "eslint --ext=jsx,ts,tsx src",
+		"prettify": "prettier --write .",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
 		"analyze:browser": "cross-env BUNDLE_ANALYZE=browser ANALYZE=true next build"
 	},

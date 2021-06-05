@@ -20,7 +20,8 @@
 	},
 	"scripts": {
 		"start": "ts-node src/app.js",
-		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*"
+		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*",
+		"prettify": "prettier --write ."
 	},
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>"
 }

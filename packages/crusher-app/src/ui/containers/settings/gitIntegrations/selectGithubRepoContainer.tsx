@@ -1,25 +1,12 @@
-import React, {
-	ChangeEvent,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUserLoginConnections } from "@redux/stateUtils/user";
-import {
-	getGithubInstallationOptions,
-	getSelectedGithubInstallationOption,
-} from "@redux/stateUtils/github";
+import { getGithubInstallationOptions, getSelectedGithubInstallationOption } from "@redux/stateUtils/github";
 import { OctokitManager } from "@services/octokit";
 import { iGithubUserConnection } from "@crusher-shared/types/mongo/githubUserConnection";
 import { USER_CONNECTION_TYPE } from "@crusher-shared/types/userConnectionType";
 import { store } from "@redux/store";
-import {
-	saveGithubInstallationOptions,
-	saveReposForInstallation,
-	setSelectedGithubInstallationOption,
-} from "@redux/actions/github";
+import { saveGithubInstallationOptions, saveReposForInstallation, setSelectedGithubInstallationOption } from "@redux/actions/github";
 import { isWindowCrossOrigin } from "@utils/helpers";
 import { FRONTEND_SERVER_URL } from "@constants/other";
 import { iGithubInstallation } from "@interfaces/githubInstallations";
@@ -41,17 +28,13 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 
 	const repoInstallationOptions = useSelector(getGithubInstallationOptions);
 
-	const selectedOrgInstallation = useSelector(
-		getSelectedGithubInstallationOption,
-	);
+	const selectedOrgInstallation = useSelector(getSelectedGithubInstallationOption);
 
 	const octoKitManager = useRef(null as OctokitManager | null);
 	const githubConfigureWindow = useRef(null as Window | null);
 
 	const githubUserConnection: iGithubUserConnection | undefined = useMemo(() => {
-		return userConnections.find(
-			(connection) => connection.service === USER_CONNECTION_TYPE.GITHUB,
-		);
+		return userConnections.find((connection) => connection.service === USER_CONNECTION_TYPE.GITHUB);
 	}, [userConnections]);
 
 	const isGithubInstallationCheckerRunning = useRef(false);
@@ -60,34 +43,21 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 		if (!githubUserConnection) {
 			return;
 		}
-		octoKitManager.current = new OctokitManager(
-			githubUserConnection?.meta.tokenAuthentication.token as string,
-		);
+		octoKitManager.current = new OctokitManager(githubUserConnection?.meta.tokenAuthentication.token as string);
 
-		return octoKitManager.current
-			?.getInstallationsUserCanAccess()
-			.then((githubInstallations) => {
-				const githubInstallationsOptions = githubInstallations.data.installations.map(
-					(installation) => {
-						return {
-							label: installation.account.login,
-							value: installation.id.toString(),
-						};
-					},
-				);
-				const newGithubInstallationOptions = [
-					...githubInstallationsOptions,
-					{ label: "Add Github Org or Account", value: ADD_GITHUB_ORG_OR_ACCOUNT },
-				];
-				if (newGithubInstallationOptions != repoInstallationOptions) {
-					store.dispatch(
-						saveGithubInstallationOptions(newGithubInstallationOptions),
-					);
-					store.dispatch(
-						setSelectedGithubInstallationOption(githubInstallationsOptions[0]),
-					);
-				}
+		return octoKitManager.current?.getInstallationsUserCanAccess().then((githubInstallations) => {
+			const githubInstallationsOptions = githubInstallations.data.installations.map((installation) => {
+				return {
+					label: installation.account.login,
+					value: installation.id.toString(),
+				};
 			});
+			const newGithubInstallationOptions = [...githubInstallationsOptions, { label: "Add Github Org or Account", value: ADD_GITHUB_ORG_OR_ACCOUNT }];
+			if (newGithubInstallationOptions != repoInstallationOptions) {
+				store.dispatch(saveGithubInstallationOptions(newGithubInstallationOptions));
+				store.dispatch(setSelectedGithubInstallationOption(githubInstallationsOptions[0]));
+			}
+		});
 	};
 
 	const setGithubInstallationWindowCheckerInterval = () => {
@@ -96,10 +66,7 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 				clearInterval(interval);
 				return;
 			}
-			if (
-				!isWindowCrossOrigin(githubConfigureWindow.current as Window) &&
-				githubConfigureWindow.current?.location.href.startsWith(FRONTEND_SERVER_URL)
-			) {
+			if (!isWindowCrossOrigin(githubConfigureWindow.current as Window) && githubConfigureWindow.current?.location.href.startsWith(FRONTEND_SERVER_URL)) {
 				isGithubInstallationCheckerRunning.current = false;
 				githubConfigureWindow.current.close();
 				clearInterval(interval);
@@ -110,8 +77,7 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 
 	const setGithubInstallationsCheckerInterval = () => {
 		const fetchGithubInstallationsContinuously = async () => {
-			if (isGithubInstallationCheckerRunning.current)
-				await fetchGithubInstallations();
+			if (isGithubInstallationCheckerRunning.current) await fetchGithubInstallations();
 
 			setTimeout(fetchGithubInstallationsContinuously, 500);
 		};
@@ -121,18 +87,11 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 	useEffect(() => {
 		if (selectedOrgInstallation) {
 			if (octoKitManager.current) {
-				octoKitManager.current
-					?.getReposForInstallation(selectedOrgInstallation.value)
-					.then((info) => {
-						if (info.data && info.data.repositories) {
-							store.dispatch(
-								saveReposForInstallation(
-									selectedOrgInstallation.value,
-									info.data.repositories,
-								),
-							);
-						}
-					});
+				octoKitManager.current?.getReposForInstallation(selectedOrgInstallation.value).then((info) => {
+					if (info.data && info.data.repositories) {
+						store.dispatch(saveReposForInstallation(selectedOrgInstallation.value, info.data.repositories));
+					}
+				});
 			}
 		}
 	}, [selectedOrgInstallation]);
@@ -180,12 +139,7 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 					</div>
 					<div css={repoSearchInputContainerCSS}>
 						<SearchIcon css={searchIconCSS} />
-						<input
-							value={searchInputValue}
-							placeholder={"Search..."}
-							onChange={handleSearchInputChange}
-							css={repoSearchInputCSS}
-						/>
+						<input value={searchInputValue} placeholder={"Search..."} onChange={handleSearchInputChange} css={repoSearchInputCSS} />
 					</div>
 				</div>
 				<SelectGithubReposList searchFilter={searchInputValue} />

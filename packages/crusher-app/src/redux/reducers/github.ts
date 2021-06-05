@@ -8,7 +8,6 @@ import {
 } from "@redux/actions/github";
 import { iGithubInstallation } from "@interfaces/githubInstallations";
 import { iGithubIntegration } from "@crusher-shared/types/mongo/githubIntegration";
-import { act } from "react-dom/test-utils";
 
 interface iGithubInitialState {
 	installationOptions: Array<iGithubInstallation>;
@@ -52,10 +51,7 @@ const github = (state = initialState, action: any) => {
 		case ADD_LINKED_GITHUB_REPO:
 			return {
 				...state,
-				connectedGithubRepos: [
-					...state.connectedGithubRepos,
-					action.payload.linkedRepo,
-				],
+				connectedGithubRepos: [...state.connectedGithubRepos, action.payload.linkedRepo],
 			};
 		case REMOVE_LINKED_GITHUB_REPO: {
 			const newConnectedGithubRepos = state.connectedGithubRepos.filter((repo) => {

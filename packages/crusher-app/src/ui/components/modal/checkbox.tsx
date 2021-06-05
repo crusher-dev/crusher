@@ -14,9 +14,7 @@ const ModalCheckbox = (props: any) => {
 	const { enabled, containerCss, title, onToggle } = props;
 	return (
 		<div css={[containerCssS, containerCss]}>
-			<div onClick={onToggle}>
-				{enabled ? <TickCheckbox /> : <UnTickCheckbox />}
-			</div>
+			<div onClick={onToggle}>{enabled ? <TickCheckbox /> : <UnTickCheckbox />}</div>
 			<div css={titleCss}>{title}</div>
 		</div>
 	);

@@ -1,5 +1,5 @@
-import { Page } from 'playwright';
-import { generateScreenshotName } from '../utils/helper';
+import { Page } from "playwright";
+import { generateScreenshotName } from "../utils/helper";
 
 export default function capturePageScreenshot(page: Page, stepIndex: number) {
 	return new Promise(async (success, error) => {
@@ -10,10 +10,13 @@ export default function capturePageScreenshot(page: Page, stepIndex: number) {
 
 			return success({
 				message: `Clicked page screenshot for ${pageUrl}`,
-				output: { name: generateScreenshotName(pageTitle, stepIndex), value: screenshotBuffer },
+				output: {
+					name: generateScreenshotName(pageTitle, stepIndex),
+					value: screenshotBuffer,
+				},
 			});
 		} catch (err) {
-			return error('Some issue occurred while capturing screenshot of page');
+			return error("Some issue occurred while capturing screenshot of page");
 		}
 	});
 }

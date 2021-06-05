@@ -58,7 +58,11 @@ export class EmailManager {
 
 			ejs.renderFile(
 				__dirname + "/../../templates/inviteMembers.ejs",
-				{ invite_link: inviteLinkUrl.toString(), org_name: `${adminName}'s workspace`, invited_by: adminName },
+				{
+					invite_link: inviteLinkUrl.toString(),
+					org_name: `${adminName}'s workspace`,
+					invited_by: adminName,
+				},
 				(err, str) => {
 					if (err) return reject("Can't load the invite member template");
 					for (let i = 0; i < members.length; i++) {

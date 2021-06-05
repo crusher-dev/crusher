@@ -1,7 +1,4 @@
-import {
-	SET_MONITORING_LIST,
-	SET_PROJECT_HOSTS,
-} from "@redux/actions/monitoring";
+import { SET_MONITORING_LIST, SET_PROJECT_HOSTS } from "@redux/actions/monitoring";
 import IAction from "@interfaces/redux/action";
 import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
 import { iMonitoringListResponse } from "@crusher-shared/types/response/monitoringListResponse";
@@ -16,10 +13,7 @@ const initialState: iSettingsState = {
 	monitoringList: [],
 };
 
-const monitoring = (
-	state: iSettingsState = initialState,
-	action: IAction<any>,
-) => {
+const monitoring = (state: iSettingsState = initialState, action: IAction<any>) => {
 	const { type, payload } = action;
 
 	switch (type) {

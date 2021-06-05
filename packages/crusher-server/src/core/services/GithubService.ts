@@ -68,7 +68,9 @@ export default class GithubService {
 		const repo_original_name = repo_name.split("/")[1];
 
 		if (!owner_name || !repo_original_name) {
-			Logger.error(`GithubService::createCheckRunFromJob`, "Not good repo name", { repo_name });
+			Logger.error(`GithubService::createCheckRunFromJob`, "Not good repo name", {
+				repo_name,
+			});
 			return false;
 		}
 

@@ -19,9 +19,7 @@ export default function Error404() {
 		<div css={notFoundCSS}>
 			<img src={notFoundSatellite} css={satelliteImageCSS} />
 			<p css={pageUnreachableCSS}>This page is unreachable</p>
-			<p css={thisAnErrorCSS}>
-				{"If you think this is an error, we'll fix and create a test for it"}
-			</p>
+			<p css={thisAnErrorCSS}>{"If you think this is an error, we'll fix and create a test for it"}</p>
 
 			<button css={reportButtonCSS}> Report Issue </button>
 			<Conditional If={false}>

@@ -19,15 +19,10 @@ function ProjectMonitoring(props) {
 					<li>
 						<div css={styles.serviceInfoContainer}>
 							<div css={styles.serviceInfoHeading}>Integrate with repo</div>
-							<div css={styles.serviceInfoDesc}>
-								This allows you to setup check on PR and branches
-							</div>
+							<div css={styles.serviceInfoDesc}>This allows you to setup check on PR and branches</div>
 						</div>
 						<div css={styles.serviceInfoButton}>
-							<img
-								style={{ width: "10.95rem", height: "2.7rem" }}
-								src={"/svg/github.svg"}
-							/>
+							<img style={{ width: "10.95rem", height: "2.7rem" }} src={"/svg/github.svg"} />
 						</div>
 					</li>
 					<li>
@@ -36,10 +31,7 @@ function ProjectMonitoring(props) {
 							<div css={styles.serviceInfoDesc}>This allows you to setup check</div>
 						</div>
 						<div css={styles.serviceInfoButton}>
-							<img
-								style={{ width: "10.95rem", height: "2.7rem" }}
-								src={"/svg/slack.svg"}
-							/>
+							<img style={{ width: "10.95rem", height: "2.7rem" }} src={"/svg/slack.svg"} />
 						</div>
 					</li>
 					<li>
@@ -48,10 +40,7 @@ function ProjectMonitoring(props) {
 							<div css={styles.serviceInfoDesc}>This allows you to setup check</div>
 						</div>
 						<div css={styles.serviceInfoButton}>
-							<img
-								style={{ width: "10.95rem", height: "2.7rem" }}
-								src={"/svg/done.svg"}
-							/>
+							<img style={{ width: "10.95rem", height: "2.7rem" }} src={"/svg/done.svg"} />
 						</div>
 					</li>
 				</ul>

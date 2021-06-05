@@ -25,28 +25,12 @@ interface iBaseModalProps {
 }
 
 const BaseModal = (props: iBaseModalProps) => {
-	const {
-		heading,
-		subHeading,
-		illustration,
-		closeIcon: CloseIcon,
-		css,
-		onClose,
-		children,
-		isOpen,
-		width,
-		height,
-	} = props;
+	const { heading, subHeading, illustration, closeIcon: CloseIcon, css, onClose, children, isOpen, width, height } = props;
 
 	const customCSS = css ? css : {};
 
 	return (
-		<Modal
-			isOpen={isOpen}
-			onRequestClose={onClose}
-			style={customModalStyle(width, height)}
-			contentLabel="Base Modal"
-		>
+		<Modal isOpen={isOpen} onRequestClose={onClose} style={customModalStyle(width, height)} contentLabel="Base Modal">
 			<div css={[containerCSS, customCSS.container]}>
 				<div css={[modalContainerCSS, customCSS.mainContainer]}>
 					<div css={[topContainerCSS, customCSS.topArea]}>
@@ -62,12 +46,7 @@ const BaseModal = (props: iBaseModalProps) => {
 							</div>
 						</Conditional>
 						<Conditional If={illustration}>
-							<div
-								css={[
-									illustrationContainerCSS,
-									customCSS.backgroundIllustrationContainer,
-								]}
-							>
+							<div css={[illustrationContainerCSS, customCSS.backgroundIllustrationContainer]}>
 								<img src={illustration} />
 							</div>
 						</Conditional>

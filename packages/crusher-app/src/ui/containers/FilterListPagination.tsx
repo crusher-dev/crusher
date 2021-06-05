@@ -43,13 +43,7 @@ const FilterCaps = (props: iFilterCapsProps) => {
 		return (
 			<a key={cap.value} href={resolveCategoryUrl(cap.value)}>
 				<li
-					className={
-						parseInt(selectedCap as any) === cap.value
-							? "active"
-							: !selectedCap && index === 0
-							? "active"
-							: ""
-					}
+					className={parseInt(selectedCap as any) === cap.value ? "active" : !selectedCap && index === 0 ? "active" : ""}
 					key={cap.value}
 					onClick={() => {
 						onFilterCapClickCallback(cap);
@@ -122,12 +116,7 @@ const FilterListPagination = (props: iFilterListPaginationProps) => {
 
 	return (
 		<div>
-			<FilterCaps
-				onChangeCap={onChangeFilter}
-				selectedCap={filters.category}
-				resolveCategoryUrl={resolveCategoryUrl}
-				caps={categories}
-			/>
+			<FilterCaps onChangeCap={onChangeFilter} selectedCap={filters.category} resolveCategoryUrl={resolveCategoryUrl} caps={categories} />
 			<ItemsListComponent items={items} />
 
 			<Pagination

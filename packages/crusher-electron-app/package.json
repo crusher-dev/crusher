@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "prettify": "prettier --write .",
     "compile": "rm -rf out/dist/resources/app/build && tsc",
     "compile:basic": "rm -rf build && tsc",
     "start": "yarn compile:basic && NODE_ENV=testing /home/utkarsh/Downloads/dist/electron .",

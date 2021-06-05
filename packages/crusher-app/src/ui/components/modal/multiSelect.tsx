@@ -14,30 +14,14 @@ interface iProps {
 }
 
 const MultiSelect = (props: iProps) => {
-	const {
-		className,
-		title,
-		name,
-		options,
-		values,
-		css,
-		onChange,
-		style,
-	} = props;
+	const { className, title, name, options, values, css, onChange, style } = props;
 
 	return (
 		<div css={[containerCss, css]} style={style}>
 			<div style={{ marginBottom: "0.75rem" }}>
 				<label>{title}</label>
 			</div>
-			<Select
-				value={values}
-				isMulti
-				onChange={onChange}
-				name={name}
-				className={className}
-				options={options}
-			/>
+			<Select value={values} isMulti onChange={onChange} name={name} className={className} options={options} />
 		</div>
 	);
 };

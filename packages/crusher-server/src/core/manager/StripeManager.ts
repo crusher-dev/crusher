@@ -19,7 +19,10 @@ export default class StripeManager {
 	}
 
 	getCustomerCards(stripeCustomerId: string) {
-		return stripe.customers.listSources(stripeCustomerId, { object: "card", limit: 3 });
+		return stripe.customers.listSources(stripeCustomerId, {
+			object: "card",
+			limit: 3,
+		});
 	}
 
 	getCurrentSubscription(stringCustomerId: string) {
@@ -93,6 +96,8 @@ export default class StripeManager {
 	}
 
 	expireFreeTrial(stripe_subscription_id, date) {
-		return stripe.subscriptions.update(stripe_subscription_id, { cancel_at_period_end: true });
+		return stripe.subscriptions.update(stripe_subscription_id, {
+			cancel_at_period_end: true,
+		});
 	}
 }

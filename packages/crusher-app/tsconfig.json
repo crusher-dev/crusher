@@ -37,17 +37,8 @@
 			"@code-generator/*": ["code-generator/*"],
 			"@crusher-shared/*": ["crusher-shared/*"],
 			"@svg/*": ["crusher-app/src/svg/*"]
-		},
-
+		}
 	},
 	"exclude": ["node_modules"],
-	"include": [
-		"next-env.d.ts",
-
-		"**/*.ts",
-		"**/*.tsx",
-		"**/*.svg",
-		"../crusher-shared/constants/*.ts",
-		"../crusher-shared/constants/*.tsx"
-	]
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.svg", "../crusher-shared/constants/*.ts", "../crusher-shared/constants/*.tsx"]
 }

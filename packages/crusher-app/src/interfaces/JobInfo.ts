@@ -67,11 +67,7 @@ export interface JobInfo {
 		[instance_id: number]: {
 			instance_id: number;
 			reference_instance_id: number;
-			status:
-				| "RUNNING_CHECKS"
-				| "FINISHED_RUNNING_CHECKS"
-				| "ERROR_RUNNING_CHECKS"
-				| "TIMEOUT";
+			status: "RUNNING_CHECKS" | "FINISHED_RUNNING_CHECKS" | "ERROR_RUNNING_CHECKS" | "TIMEOUT";
 			conclusion: "PASSED" | "FAILED" | "MANUAL_REVIEW_REQUIRED";
 			results: Array<{
 				id: number;
@@ -80,11 +76,7 @@ export interface JobInfo {
 				instance_result_set_id: number;
 				diff_delta: number;
 				diff_image_url?: string;
-				status:
-					| "PASSED"
-					| "FAILED"
-					| "ERROR_CREATING_DIFF"
-					| "MANUAL_REVIEW_REQUIRED";
+				status: "PASSED" | "FAILED" | "ERROR_CREATING_DIFF" | "MANUAL_REVIEW_REQUIRED";
 				action_by?: number;
 				created_at: string;
 				updated_at: string;

@@ -2,11 +2,7 @@ import { css } from "@emotion/core";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
-import {
-	getAllJobsOfProject,
-	getAllProjectLogs,
-	getMetaDashboardProjectInfo,
-} from "@services/job";
+import { getAllJobsOfProject, getAllProjectLogs, getMetaDashboardProjectInfo } from "@services/job";
 import { redirectToFrontendPath } from "@utils/router";
 import { backendRequest, cleanHeaders } from "@utils/backendRequest";
 import { useSelector } from "react-redux";
@@ -37,17 +33,7 @@ function getBuildStatus(status: JobReportStatus) {
 }
 
 function Build(props: any) {
-	const {
-		jobId,
-		createdAt,
-		branchName,
-		reportStatus,
-		reportId,
-		conclusion,
-		commitId,
-		commitName,
-		status,
-	} = props;
+	const { jobId, createdAt, branchName, reportStatus, reportId, conclusion, commitId, commitName, status } = props;
 
 	return (
 		<Link href={`/app/job/review?jobId=${jobId}&reportId=${reportId}`}>
@@ -173,38 +159,23 @@ function ProjectDashboard(props) {
 							<div css={styles.productionHealthItemHeading}>Status</div>
 							<div css={styles.productionHealthItemDesc}>{status}</div>
 						</div>
-						<img
-							src={"/svg/dashboard/live.svg"}
-							css={styles.productionHealthItemImage}
-							style={{ width: "2.5rem" }}
-						/>
+						<img src={"/svg/dashboard/live.svg"} css={styles.productionHealthItemImage} style={{ width: "2.5rem" }} />
 					</div>
-					<div
-						css={styles.productionHealthItem}
-						style={{ borderColor: "#FB4359", color: "#FB4359" }}
-					>
+					<div css={styles.productionHealthItem} style={{ borderColor: "#FB4359", color: "#FB4359" }}>
 						<div css={styles.productionHealthItemText}>
 							<div css={styles.productionHealthItemHeading}>Health</div>
 							<div css={styles.productionHealthItemDesc} style={{ color: "#FB4359" }}>
 								{health}
 							</div>
 						</div>
-						<img
-							src={"/svg/dashboard/health.svg"}
-							css={styles.productionHealthItemImage}
-							style={{ width: "1.65rem" }}
-						/>
+						<img src={"/svg/dashboard/health.svg"} css={styles.productionHealthItemImage} style={{ width: "1.65rem" }} />
 					</div>
 					<div css={styles.productionHealthItem}>
 						<div css={styles.productionHealthItemText}>
 							<div css={styles.productionHealthItemHeading}>Jobs ran today</div>
 							<div css={styles.productionHealthItemDesc}>{totalJobsToday}</div>
 						</div>
-						<img
-							src={"/svg/dashboard/calendar.svg"}
-							css={styles.productionHealthItemImage}
-							style={{ width: "1.65rem" }}
-						/>
+						<img src={"/svg/dashboard/calendar.svg"} css={styles.productionHealthItemImage} style={{ width: "1.65rem" }} />
 					</div>
 				</div>
 			</div>
@@ -459,10 +430,7 @@ const handleCliToken = async (cli_token, res, req) => {
 		headers: req.headers,
 	});
 
-	res.setHeader(
-		"Set-Cookie",
-		serialize("cli_token", cli_token, { path: "/", maxAge: 0 }),
-	);
+	res.setHeader("Set-Cookie", serialize("cli_token", cli_token, { path: "/", maxAge: 0 }));
 };
 
 ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
@@ -474,10 +442,7 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 		}
 
 		const selectedProject = getSelectedProject(store.getState());
-		const testsCount = await fetchTestsCountInProject(
-			selectedProject,
-			ctx.metaInfo.headers,
-		);
+		const testsCount = await fetchTestsCountInProject(selectedProject, ctx.metaInfo.headers);
 
 		// If 0 test count redirect to welcome screen
 		if (!!testsCount && testsCount.totalTests === 0) {
@@ -485,25 +450,12 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 			return {};
 		}
 
-		const buildsPromise = getAllJobsOfProject(
-			selectedProject,
-			null,
-			ctx.metaInfo.headers,
-		);
-		const activitiesPromise = getAllProjectLogs(
-			selectedProject,
-			ctx.metaInfo.headers,
-		);
+		const buildsPromise = getAllJobsOfProject(selectedProject, null, ctx.metaInfo.headers);
+		const activitiesPromise = getAllProjectLogs(selectedProject, ctx.metaInfo.headers);
 
-		const metaDashboardInfo = await getMetaDashboardProjectInfo(
-			selectedProject,
-			ctx.metaInfo.headers,
-		);
+		const metaDashboardInfo = await getMetaDashboardProjectInfo(selectedProject, ctx.metaInfo.headers);
 
-		const [builds, activities] = await Promise.all([
-			buildsPromise,
-			activitiesPromise,
-		]);
+		const [builds, activities] = await Promise.all([buildsPromise, activitiesPromise]);
 
 		return {
 			builds: builds,

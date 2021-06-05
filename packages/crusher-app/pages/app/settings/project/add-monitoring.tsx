@@ -65,12 +65,7 @@ const InputLabel = (props: iInputLabelProps) => {
 	return (
 		<div css={inputWithLabelCSS}>
 			<div css={labelCSS}>{label}</div>
-			<input
-				css={inputCSS}
-				placeholder={placeholder}
-				value={value}
-				onChange={onChange}
-			/>
+			<input css={inputCSS} placeholder={placeholder} value={value} onChange={onChange} />
 		</div>
 	);
 };
@@ -83,12 +78,8 @@ const AddMonitoringSettings = () => {
 		value: host.id,
 	}));
 
-	const [selectedHost, setSelectedHost] = useState(
-		hostOptions ? hostOptions[0] : null,
-	);
-	const [selectedDuration, setSelectedDuration] = useState(
-		RUN_INTERVAL_OPTIONS[0],
-	);
+	const [selectedHost, setSelectedHost] = useState(hostOptions ? hostOptions[0] : null);
+	const [selectedDuration, setSelectedDuration] = useState(RUN_INTERVAL_OPTIONS[0]);
 	const [tags, setTags] = useState("");
 
 	const handleAddMonitoring = () => {
@@ -96,10 +87,7 @@ const AddMonitoringSettings = () => {
 			alert("Please fill all the required fields");
 			return;
 		}
-		_addMonitoring(
-			{ host: selectedHost.value, interval: selectedDuration.value, tags: tags },
-			selectedProject,
-		).then(() => {
+		_addMonitoring({ host: selectedHost.value, interval: selectedDuration.value, tags: tags }, selectedProject).then(() => {
 			Router.replace("/app/settings/project/monitoring");
 		});
 	};
@@ -118,10 +106,7 @@ const AddMonitoringSettings = () => {
 	return (
 		<div css={monitoringCSS}>
 			<SettingsContent contentCSS={settingContentCSS}>
-				<SettingsContentHeader
-					title={"Add Monitoring"}
-					desc={"List of all team members in current project"}
-				/>
+				<SettingsContentHeader title={"Add Monitoring"} desc={"List of all team members in current project"} />
 				<div css={containerCSS}>
 					<div css={formContainerCSS}>
 						<SelectInputLabel
@@ -138,12 +123,7 @@ const AddMonitoringSettings = () => {
 							label={"Duration"}
 							options={RUN_INTERVAL_OPTIONS}
 						/>
-						<InputLabel
-							placeholder={"Enter tags separated by comma"}
-							label={"TestId/Tags"}
-							value={tags}
-							onChange={handleTagsChange}
-						/>
+						<InputLabel placeholder={"Enter tags separated by comma"} label={"TestId/Tags"} value={tags} onChange={handleTagsChange} />
 					</div>
 					<div css={actionContainerCSS}>
 						<Button onClick={handleAddMonitoring} title={"Add"} css={buttonCss} />
@@ -227,15 +207,11 @@ AddMonitoringSettings.getInitialProps = async (ctx: any) => {
 		}
 
 		const cookies = getCookies(req);
-		const selectedProject = cookies.selectedProject
-			? JSON.parse(cookies.selectedProject)
-			: null;
+		const selectedProject = cookies.selectedProject ? JSON.parse(cookies.selectedProject) : null;
 
-		await _getProjectHosts(selectedProject, headers).then(
-			(hosts: Array<iHostListResponse>) => {
-				store.dispatch(setProjectHosts(hosts));
-			},
-		);
+		await _getProjectHosts(selectedProject, headers).then((hosts: Array<iHostListResponse>) => {
+			store.dispatch(setProjectHosts(hosts));
+		});
 
 		return {};
 	} catch (ex) {

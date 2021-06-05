@@ -78,7 +78,10 @@ export class UserController {
 
 				const userMeta = await this.userService.getUserMetaInfo(String(user_id));
 
-				return { status: user_id ? USER_REGISTERED : USER_NOT_REGISTERED, user_meta: userMeta };
+				return {
+					status: user_id ? USER_REGISTERED : USER_NOT_REGISTERED,
+					user_meta: userMeta,
+				};
 			})
 			.catch((err) => {
 				return { status: USER_NOT_REGISTERED };
@@ -151,7 +154,11 @@ export class UserController {
 		if (info) {
 			const userMeta = await this.userService.getUserMetaInfo(String(user_id));
 
-			return { ...info, name: info.first_name + " " + info.last_name, user_meta: userMeta };
+			return {
+				...info,
+				name: info.first_name + " " + info.last_name,
+				user_meta: userMeta,
+			};
 		}
 		return null;
 	}

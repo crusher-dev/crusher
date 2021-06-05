@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-	CardElement,
-	Elements,
-	PaymentRequestButtonElement,
-	useElements,
-	useStripe,
-} from "@stripe/react-stripe-js";
+import { CardElement, Elements, PaymentRequestButtonElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { css } from "@emotion/core";
 
 // Custom styling can be passed to options when creating an Element.
@@ -82,10 +76,7 @@ const CheckoutForm = () => {
 	}, [stripe]);
 
 	return (
-		<form
-			onSubmit={handleSubmit}
-			css={[!paymentRequest && noPayButton, stripeForm]}
-		>
+		<form onSubmit={handleSubmit} css={[!paymentRequest && noPayButton, stripeForm]}>
 			{paymentRequest && (
 				<>
 					<div css={addCardOneClick}>Add card with one click</div>
@@ -126,11 +117,7 @@ const CheckoutForm = () => {
 
 			<div className="form-row">
 				<label htmlFor="card-element">Credit or debit card</label>
-				<CardElement
-					id="card-element"
-					options={CARD_ELEMENT_OPTIONS}
-					onChange={handleChange}
-				/>
+				<CardElement id="card-element" options={CARD_ELEMENT_OPTIONS} onChange={handleChange} />
 				<div className="card-errors" role="alert" css={cardError}>
 					{error}
 				</div>

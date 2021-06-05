@@ -154,8 +154,6 @@ export default class TestsEventsWorker {
 							);
 						}
 					}
-
-
 				}
 			}
 		} catch (Ex) {

@@ -22,25 +22,28 @@ RunTestButton.defaultProps = {
 
 const styles = {
 	createTestButton: css`
-		align-items: center;
-		align-self: center;
-		display: flex;
-		cursor: pointer;
-		background: #5b76f7;
-		border: 1px solid #3f60f5;
-		box-sizing: border-box;
-		border-radius: 5px;
-		padding: 0.5rem 1.5rem;
-		text-align: center;
-		:hover {
-			background: #4361ed;
-		}
-		:hover {
-			text-decoration: none !important;
-		}
+    align-items: center;
+    align-self: center;
+    display: flex;
+    cursor: pointer;
+    background: #242428;
+    border: 1px solid #242428;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+
+    :hover {
+      background: #37383b;
+    }
+
+    :hover {
+      text-decoration: none !important;
+    }
 	`,
 	createTestLabel: css`
 		font-size: 1.06rem;
+
 		align-self: center;
 		color: #fff;
 		font-weight: 600;

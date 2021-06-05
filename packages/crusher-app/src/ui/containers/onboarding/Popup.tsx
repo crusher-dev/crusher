@@ -21,7 +21,7 @@ function UserWelcomeInfo({ setFilledSurvey }: any) {
 	const [objective, setObjective] = useState(null);
 
 	const submitWelcomeData = () => {
-		if (!validateSurveyData(role, objective)) {
+		if (!validateSurveyData(role!, objective!)) {
 			alert("Please select all the value");
 			return;
 		}
@@ -108,12 +108,6 @@ function FreeTrialIntro({ setFilledUserWelcome }: any) {
 				If you have feature request, encounter a bug or want to discuss
 				<br />
 				about an adventure sport. I’m available 24/7 for a nice conversation.
-			</div>
-
-			<div css={contactIntroContainer}>
-				<strong>Email</strong>: hello@himanshudixit.me
-				<br />
-				<strong>Phone</strong>: +91-7296823551
 			</div>
 
 			<div css={shipContainer}>Let’s ship 🚀 on web faster with confidence.</div>

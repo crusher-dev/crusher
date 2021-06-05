@@ -17,7 +17,6 @@ import {
 	getTest,
 } from "@services/test";
 import { css } from "@emotion/core";
-import { Conditional } from "@ui/components/common/Conditional";
 import { EDITOR_TEST_TYPE } from "@crusher-shared/types/editorTestType";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import {
@@ -46,8 +45,7 @@ import { BROWSER } from "@crusher-shared/types/browser";
 import { AuthModal } from "@ui/containers/modals/authModal";
 import Cookies from "js-cookie";
 import { Store } from "redux";
-import { serialize } from "cookie";
-import { submitPostDataWithForm } from "@utils/helpers";
+import { getShortDate, submitPostDataWithForm } from "@utils/helpers";
 import { Toast } from "@utils/toast";
 import { getRelativeSize } from "@utils/styleUtils";
 
@@ -134,7 +132,9 @@ const TestEditor = (props: iTestEditorProps) => {
 									testType: EDITOR_TEST_TYPE.SAVED_DRAFT,
 								}),
 							);
-							await createTestFromDraft(res.id, { testName: new Date().toString() });
+							await createTestFromDraft(res.id, {
+								testName: getShortDate(new Date()),
+							});
 							redirectToFrontendPath("/app/project/tests");
 						}
 					})

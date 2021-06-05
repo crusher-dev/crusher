@@ -1,4 +1,4 @@
-export const PERSON_TYPE = {
+export const PERSON_TYPE: any = {
 	DEVELOPER: "Developer",
 	FOUNDER: "Founder",
 	QA: "QA",
@@ -6,7 +6,7 @@ export const PERSON_TYPE = {
 	OTHER: "Other",
 };
 
-export const WHY_HERE = {
+export const WHY_HERE: any = {
 	SPEED: "Write and test with speed",
 	STABILITY: "Get more stability in software",
 	IMPROVE_QA: "Imrove QA Process",

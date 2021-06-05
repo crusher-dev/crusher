@@ -9,13 +9,14 @@ export default async function hover(action: iAction, page: Page) {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
 
-			await waitForSelectors(page, selectors);
-			await page.hover(toCrusherSelectorsFormat(selectors));
+			const output = await waitForSelectors(page, selectors);
+			await page.hover(output ? output.value : toCrusherSelectorsFormat(selectors));
 
 			return success({
 				message: `Hovered on the element ${selectors[0].value}`,
 			});
 		} catch(err){
+			console.error(err);
 			return error("Some issue occurred while hovering on element");
 		}
 	});

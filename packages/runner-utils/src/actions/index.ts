@@ -10,6 +10,7 @@ import setDevice from "./setDevice";
 import assertElement from './assertElement';
 import runCustomScript from "./elementCustomScript";
 import focusOnElement from './elementFocus';
+import waitForNavigation from './waitForNavigation';
 
 module.exports = {
 	Element: {
@@ -27,6 +28,7 @@ module.exports = {
 		screenshot: capturePageScreenshot,
 		scroll: pageScroll,
 		navigate: navigateUrl,
+		waitForNavigation: waitForNavigation
 	},
 	Browser: {
 		setDevice,

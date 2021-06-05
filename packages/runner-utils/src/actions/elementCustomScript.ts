@@ -29,9 +29,9 @@ export default function elementCustomScript(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try{
 			const selectors = action.payload.selectors as iSelectorInfo[];
-			await waitForSelectors(page, selectors);
+			const output = await waitForSelectors(page, selectors);
 
-			const elementHandle = await page.$(toCrusherSelectorsFormat(selectors));
+			const elementHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
 			if (!elementHandle) {
 				return error(`Attempt to capture screenshot of element with invalid selector: ${selectors[0].value}`);
 			}

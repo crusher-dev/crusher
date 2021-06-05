@@ -5,8 +5,8 @@ import { toCrusherSelectorsFormat } from '../utils/helper';
 import { waitForSelectors } from './index';
 
 export default async function assertElementAttributes(page: Page, selectors: Array<iSelectorInfo>, assertions: Array<iAssertionRow>){
-	await waitForSelectors(page, selectors);
-	const elHandle = await page.$(toCrusherSelectorsFormat(selectors));
+	const output = await waitForSelectors(page, selectors);
+	const elHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
 	let hasPassed = true;
 	const logs = [];
 

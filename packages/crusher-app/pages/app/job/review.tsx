@@ -670,8 +670,11 @@ function TestInstanceReview({
 								</div>
 								<div style={{ marginLeft: "1rem" }}>
 									{instanceFinishedRunning
-										? (new Date(instance.updated_at) - new Date(instance.created_at)) /
-										  1000
+										? Math.floor(
+												((new Date(instance.updated_at) - new Date(instance.created_at)) /
+													1000) *
+													10,
+										  ) / 10
 										: "N/A"}{" "}
 									Sec
 								</div>

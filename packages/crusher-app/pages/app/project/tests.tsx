@@ -15,43 +15,62 @@ import { InstallExtensionModal } from "@ui/containers/modals/installExtensionMod
 import { CreateTestModal } from "@ui/containers/modals/createTestModal";
 import { checkIfExtensionPresent } from "@utils/extension";
 import { Toast } from "@utils/toast";
+import EditIcon from "../../../src/svg/edit.svg";
+import { setCurrentCursorPositionInContentEditable } from "@utils/dom";
 
 const INPUT_MODE = {
 	VISIBLE_NAME: "VISIBLE_NAME",
 	RENAME: "RENAME",
 };
 function RenderInputName(props: any) {
-	const { name, mode, setTestNameCallback, turnOnNameInputModeCallback } = props;
+	const { name, mode, setTestNameCallback } = props;
+	const [lastValue, setLastValue] = useState(null);
 	const inputRef = useRef(null as any);
 
 	const handleKeyPress = (e: KeyboardEvent) => {
 		if (e.key === "Enter" || e.keyCode === 13) {
-			setTestNameCallback((e as any).target.value);
+			if (lastValue !== inputRef.current.innerText) {
+				setTestNameCallback((e as any).target.innerText);
+			} else {
+				setTestNameCallback(null);
+			}
 		}
 	};
 
 	useEffect(() => {
 		if (mode === INPUT_MODE.RENAME) {
+			setLastValue(inputRef.current.innerText);
 			inputRef.current.focus();
+			setCurrentCursorPositionInContentEditable(
+				inputRef.current,
+				inputRef.current.innerText.length,
+			);
 		}
 	}, [mode]);
+
+	const handleInputBlur = () => {
+		(window as any).getSelection().removeAllRanges();
+		if (lastValue !== inputRef.current.innerText) {
+			setTestNameCallback(inputRef.current.innerText);
+			setLastValue(inputRef.current.innerText);
+		}
+	};
 
 	return (
 		<>
 			<Conditional If={mode === INPUT_MODE.RENAME}>
-				<div css={styles.testName}>
-					<input
-						ref={inputRef}
-						css={renameInputCSS}
-						defaultValue={name}
-						onKeyPress={handleKeyPress as any}
-					/>
+				<div
+					ref={inputRef}
+					onKeyPress={handleKeyPress as any}
+					contentEditable={true}
+					css={styles.testName}
+					onFocusOut={handleInputBlur}
+				>
+					{name}
 				</div>
 			</Conditional>
 			<Conditional If={!mode || mode === INPUT_MODE.VISIBLE_NAME}>
-				<div onDoubleClick={turnOnNameInputModeCallback} css={styles.testName}>
-					{name}
-				</div>
+				<div css={styles.testName}>{name}</div>
 			</Conditional>
 		</>
 	);
@@ -82,7 +101,6 @@ function TestCard(props) {
 	const videoRef = useRef(null);
 	const [testNameMode, setTestNameMode] = useState(INPUT_MODE.VISIBLE_NAME);
 
-	console.log(item);
 	function onVideoHover(event) {
 		(videoRef.current as HTMLVideoElement).currentTime = 0;
 		(videoRef.current as HTMLVideoElement).play();
@@ -115,18 +133,21 @@ function TestCard(props) {
 	};
 
 	const setTestNameCallback = async (newTestName: string) => {
-		updateTestName(newTestName, id)
-			.then((res) => {
-				setTestName(newTestName);
-				Toast.showSuccess("Test name updated successfully");
-			})
-			.catch((err) => {
-				Toast.showError("Error occurred when trying to update test name");
-			});
+		if (newTestName) {
+			updateTestName(newTestName, id)
+				.then((res) => {
+					setTestName(newTestName);
+					Toast.showSuccess("Test name updated successfully");
+				})
+				.catch((err) => {
+					Toast.showError("Error occurred when trying to update test name");
+				});
+			setTestName(newTestName);
+		}
 		setTestNameMode(INPUT_MODE.VISIBLE_NAME);
 	};
 
-	const turnOnNameInputModeCallback = () => {
+	const editInputName = () => {
 		setTestNameMode(INPUT_MODE.RENAME);
 	};
 
@@ -162,12 +183,16 @@ function TestCard(props) {
 				</div>
 				<div css={styles.testCardContentContainer}>
 					<div css={styles.testCardInfo}>
-						<RenderInputName
-							setTestNameCallback={setTestNameCallback}
-							name={testName}
-							mode={testNameMode}
-							turnOnNameInputModeCallback={turnOnNameInputModeCallback}
-						/>
+						<div css={testCardNameContainerCSS}>
+							<RenderInputName
+								setTestNameCallback={setTestNameCallback}
+								name={testName}
+								mode={testNameMode}
+							/>
+							<div css={editIconCSS} onClick={editInputName}>
+								<EditIcon css={editIconSVGCSS} />
+							</div>
+						</div>
 						<div css={styles.gridContainer}>
 							<div css={styles.girdLeftHeading}>Device</div>
 							<div css={styles.gridRightValue}>1920*1080, 1200*1000</div>
@@ -367,7 +392,7 @@ const styles = {
 	testCardContentContainer: css`
 		display: flex;
 		margin-top: 0.8rem;
-		padding-right: 0.3rem;
+		padding-right: 0.7rem;
 		padding-left: 0.5rem;
 	`,
 	testCardInfo: css`
@@ -444,6 +469,20 @@ const styles = {
 		font-style: italic;
 	`,
 };
+
+const testCardNameContainerCSS = css`
+	display: flex;
+`;
+const editIconCSS = css`
+	margin-left: auto;
+	padding-top: 0.24rem;
+	&:hover {
+		opacity: 0.7;
+	}
+`;
+const editIconSVGCSS = css`
+	width: 0.75rem;
+`;
 
 ProjectTestsList.getInitialProps = async (ctx) => {
 	const { res, req, store } = ctx;

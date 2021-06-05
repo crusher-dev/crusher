@@ -4,7 +4,7 @@ import * as webpack from "webpack";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyPlugin = require("copy-webpack-plugin");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ExtensionReloader = require("webpack-extension-reloader");
+// const ExtensionReloader = require("webpack-extension-reloader");
 
 module.exports = {
 	mode: "development",
@@ -17,15 +17,15 @@ module.exports = {
 		record_test: [path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [
-		new ExtensionReloader({
-			port: 2400, // Which port use to create the server
-			reloadPage: true, // Force the reload of the page also
-			entries: {
-				contentScript: ["content_script", "change_navigator"],
-				background: "background",
-				extensionPage: ["popup", "record_test"],
-			},
-		}),
+		// new ExtensionReloader({
+		// 	port: 2400, // Which port use to create the server
+		// 	reloadPage: true, // Force the reload of the page also
+		// 	entries: {
+		// 		contentScript: ["content_script", "change_navigator"],
+		// 		background: "background",
+		// 		extensionPage: ["popup", "record_test"],
+		// 	},
+		// }),
 		new CopyPlugin({
 			patterns: [{ from: "public/", to: "../" }],
 			options: {

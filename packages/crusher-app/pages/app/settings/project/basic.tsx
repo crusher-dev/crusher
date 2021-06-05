@@ -82,13 +82,18 @@ const ProjectBasicSettings = (props: any) => {
 
 	const saveBasicSettings = () => {
 		_updateProjectInfo({ name: projectName }, projectInfo.id).then(() => {
-			(store as any).dispatch(setCurrentProjectInfo({ ...projectInfo, name: projectName }));
+			(store as any).dispatch(
+				setCurrentProjectInfo({ ...projectInfo, name: projectName }),
+			);
 		});
 	};
 
 	return (
 		<SettingsContent contentCSS={settingContentCSS}>
-			<SettingsContentHeader title={"Basic Settings"} desc={"Configure crusher name and enable/disables features for the test"} />
+			<SettingsContentHeader
+				title={"Basic Settings"}
+				desc={"Configure crusher name and enable/disables features for the test"}
+			/>
 			<div css={mainContainerCSS}>
 				<Input
 					label={"Name of the project"}
@@ -98,16 +103,6 @@ const ProjectBasicSettings = (props: any) => {
 					inputContainerCSS={inputContainerCSS}
 				/>
 				<div css={featuresFormCSS}>
-					<div css={featuresHeadingCSS}>Features</div>
-					<ul css={featuresListCSS}>
-						<FeatureItem title={"Video Recording"} enabled={featuresInfo.video_recording} onToggleEnable={handleVideoRecordingToggle} />
-						<FeatureItem title={"Screenshot"} enabled={featuresInfo.screenshot} onToggleEnable={handleScreenshotToggle} />
-						<FeatureItem
-							title={"Multi browser support"}
-							enabled={featuresInfo.multi_browser_support}
-							onToggleEnable={handleMultiBrowserSupportToggle}
-						/>
-					</ul>
 					<div css={saveButtonRowCSS}>
 						<button css={saveButtonCSS} onClick={saveBasicSettings}>
 							Save
@@ -176,7 +171,7 @@ const settingContentCSS = css`
 	width: ${600 / PIXEL_REM_RATIO}rem;
 `;
 const inputContainerCSS = css`
-	width: 95%;
+	width: 100%;
 `;
 const mainContainerCSS = css`
 	margin-top: ${47 / PIXEL_REM_RATIO}rem;
@@ -204,9 +199,11 @@ ProjectBasicSettings.getInitialProps = async (ctx: any) => {
 
 		const selectedProject = getSelectedProject(store.getState());
 
-		await _getProjectInfo(parseInt(selectedProject), headers).then((projectInfo) => {
-			store.dispatch(setCurrentProjectInfo(projectInfo));
-		});
+		await _getProjectInfo(parseInt(selectedProject), headers).then(
+			(projectInfo) => {
+				store.dispatch(setCurrentProjectInfo(projectInfo));
+			},
+		);
 
 		return {
 			isVideoRecordingOn: true,

@@ -88,8 +88,6 @@ function ProjectOnboardingCreateTest(props) {
 						<div css={styles.buttonContainer}>
 							<CreateTest onClick={handleCreateTest} label="Create first test" />
 						</div>
-
-						<div css={styles.migrateTest}>Already Have testing? Migrate test</div>
 					</div>
 				</div>
 			</div>

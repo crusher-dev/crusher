@@ -7,6 +7,9 @@
     "rootDir": "../../",
     "baseUrl": "../",
     "outDir": "dist",
+    "lib": [
+      "es5", "es6", "dom", "dom.iterable"
+    ],
     "paths": {
       "@crusher-shared/*": ["crusher-shared/*"]
     }

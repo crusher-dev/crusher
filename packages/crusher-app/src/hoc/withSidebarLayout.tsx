@@ -131,7 +131,12 @@ function LeftSection(props: any) {
 		},
 	];
 
-	const bottomNavLinks = [
+	const bottomNavLinks = [{
+		name: "Share Feedback",
+		link: resolvePathToBackendURI("/user/logout"),
+		icon: Logout,
+		isAuthorized: false,
+	},
 		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),

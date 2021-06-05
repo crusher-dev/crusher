@@ -198,7 +198,7 @@ function MenuContainer(props: iMenuContainerProps) {
 					<div id="back-text">Settings</div>
 				</div>
 				<div id="plan-container">
-					<StarSVG /> <span id="plan-text">Pro Plan </span>
+
 				</div>
 			</div>
 

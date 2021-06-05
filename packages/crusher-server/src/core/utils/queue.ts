@@ -105,17 +105,29 @@ export async function addJobToRequestQueue(jobRequest) {
 	for (const test of tests) {
 		if (platform === Platform.ALL) {
 			await addTestRequestToQueue({
-				job: { ...job, report_id: jobReportsId.insertId, platform: PLATFORM.CHROME },
+				job: {
+					...job,
+					report_id: jobReportsId.insertId,
+					platform: PLATFORM.CHROME,
+				},
 				test: { ...test, testType: testType },
 				testCount: totalTestCount,
 			});
 			await addTestRequestToQueue({
-				job: { ...job, report_id: jobReportsId.insertId, platform: PLATFORM.SAFARI },
+				job: {
+					...job,
+					report_id: jobReportsId.insertId,
+					platform: PLATFORM.SAFARI,
+				},
 				test: { ...test, testType: testType },
 				testCount: totalTestCount,
 			});
 			await addTestRequestToQueue({
-				job: { ...job, report_id: jobReportsId.insertId, platform: PLATFORM.FIREFOX },
+				job: {
+					...job,
+					report_id: jobReportsId.insertId,
+					platform: PLATFORM.FIREFOX,
+				},
 				test: { ...test, testType: testType },
 				testCount: totalTestCount,
 			});

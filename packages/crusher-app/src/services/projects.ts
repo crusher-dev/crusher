@@ -53,12 +53,7 @@ export const _getProjectHosts = async (projectId: number, headers = null) => {
 	});
 };
 
-export const _addHostToProject = async (
-	hostName: string,
-	hostUrl: string,
-	projectId: number,
-	headers = null,
-) => {
+export const _addHostToProject = async (hostName: string, hostUrl: string, projectId: number, headers = null) => {
 	return backendRequest(`/hosts/create/${projectId}`, {
 		method: RequestMethod.POST,
 		headers: headers,
@@ -78,10 +73,7 @@ export const deleteHostFromProject = async (hostId, headers = null) => {
 	});
 };
 
-export const _deleteProjectFromBackend = async (
-	projectId: number,
-	headers = null,
-) => {
+export const _deleteProjectFromBackend = async (projectId: number, headers = null) => {
 	return backendRequest(`/projects/delete/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
@@ -95,11 +87,7 @@ export const _deleteProjectFromBackend = async (
 	});
 };
 
-export const saveMonitoringSettingsInDB = async (
-	settings,
-	projectId,
-	headers = null,
-) => {
+export const saveMonitoringSettingsInDB = async (settings, projectId, headers = null) => {
 	return backendRequest(`/monitoring/settings/${projectId}/save`, {
 		method: RequestMethod.POST,
 		payload: settings,
@@ -109,10 +97,7 @@ export const saveMonitoringSettingsInDB = async (
 	});
 };
 
-export const getMonitoringSettings = async (
-	projectId,
-	headers = null,
-): Promise<MonitoringSettings> => {
+export const getMonitoringSettings = async (projectId, headers = null): Promise<MonitoringSettings> => {
 	return backendRequest(`/monitoring/settings/${projectId}/get`, {
 		method: RequestMethod.GET,
 		headers: headers,
@@ -121,10 +106,7 @@ export const getMonitoringSettings = async (
 	});
 };
 
-export const _getProjectMembers = (
-	projectId: number,
-	headers?: any,
-): Promise<Array<iMemberInfoResponse>> => {
+export const _getProjectMembers = (projectId: number, headers?: any): Promise<Array<iMemberInfoResponse>> => {
 	return backendRequest(`/v2/project/get/members/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,

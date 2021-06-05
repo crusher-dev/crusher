@@ -5,18 +5,13 @@ import { createWrapper } from "next-redux-wrapper";
 import { createLogger } from "redux-logger";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import createFilter, {
-	createBlacklistFilter,
-} from "redux-persist-transform-filter";
+import createFilter, { createBlacklistFilter } from "redux-persist-transform-filter";
 
 const logger = createLogger({
 	// ...options
 });
 
-const saveSubsetFilter = createFilter("projects", [
-	"selectedProject",
-	"allProjects",
-]);
+const saveSubsetFilter = createFilter("projects", ["selectedProject", "allProjects"]);
 
 const persistConfig = {
 	key: "root",
@@ -26,9 +21,7 @@ const persistConfig = {
 };
 
 const composeEnhancers =
-	typeof window === "object" && window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]
-		? window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]({})
-		: compose;
+	typeof window === "object" && window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] ? window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]({}) : compose;
 
 const enhancer = composeEnhancers(applyMiddleware(thunk));
 

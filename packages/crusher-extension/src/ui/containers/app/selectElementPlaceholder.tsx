@@ -1,9 +1,5 @@
 import React, { RefObject } from "react";
-import {
-	FLEX_DIRECTION,
-	FONT_WEIGHT,
-	TEXT_ALIGN,
-} from "../../../interfaces/css";
+import { FLEX_DIRECTION, FONT_WEIGHT, TEXT_ALIGN } from "../../../interfaces/css";
 import { turnOffInspectModeInFrame } from "../../../messageListener";
 
 interface iSelectElementPlaceholderProps {

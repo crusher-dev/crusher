@@ -13,14 +13,9 @@ interface iProps {
 
 const ModifyTestSettingsModal = (props: iProps) => {
 	const { onClose, onSubmit } = props;
-	const [selectedBrowsers, setSelectedBrowsers] = useState([
-		{ label: "Chrome", value: "CHROME" },
-	]);
+	const [selectedBrowsers, setSelectedBrowsers] = useState([{ label: "Chrome", value: "CHROME" }]);
 	const [selectedResolutions, setSelectedResolutions] = useState([]);
-	const [
-		shouldSaveTestSettingsForFuture,
-		setShouldSaveTestSettingsForFuture,
-	] = useState(false);
+	const [shouldSaveTestSettingsForFuture, setShouldSaveTestSettingsForFuture] = useState(false);
 
 	const handleSubmit = () => {};
 
@@ -104,11 +99,7 @@ const ModifyTestSettingsModal = (props: iProps) => {
 					enabled={shouldSaveTestSettingsForFuture}
 					onToggle={onCheckboxToggle}
 				/>
-				<ModalButton
-					containerCss={buttonCss}
-					title={"Save for test"}
-					onClick={handleSubmit}
-				/>
+				<ModalButton containerCss={buttonCss} title={"Save for test"} onClick={handleSubmit} />
 			</div>
 		</Modal>
 	);

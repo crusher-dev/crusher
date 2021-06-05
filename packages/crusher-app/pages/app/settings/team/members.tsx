@@ -73,17 +73,11 @@ const TeamMembersSettings = () => {
 					button={<InviteMemberButton onClick={onInviteMember} />}
 				/>
 				<div css={mainContainerCSS}>
-					<MemberFilterTableList
-						onToggleRoleSort={onToggleRoleSort}
-						filterSort={roleSort}
-						members={Object.values(members)}
-					/>
+					<MemberFilterTableList onToggleRoleSort={onToggleRoleSort} filterSort={roleSort} members={Object.values(members)} />
 				</div>
 			</SettingsContent>
 			<Conditional If={showMemberModal}>
-				<InviteTeamMemberModal
-					onClose={closeTeamMemberModal}
-				></InviteTeamMemberModal>
+				<InviteTeamMemberModal onClose={closeTeamMemberModal}></InviteTeamMemberModal>
 			</Conditional>
 		</>
 	);

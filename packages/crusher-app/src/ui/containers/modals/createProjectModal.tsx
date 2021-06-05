@@ -6,10 +6,7 @@ import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
 import { addProject } from "@services/projects";
 
-import {
-	addProjectInRedux,
-	saveSelectedProjectInRedux,
-} from "@redux/actions/project";
+import { addProjectInRedux, saveSelectedProjectInRedux } from "@redux/actions/project";
 
 import { store } from "@redux/store";
 import Router from "next/router";
@@ -53,39 +50,22 @@ const CreateProjectModal = (props: iProps) => {
 		>
 			<div css={bodyContainerCss}>
 				<div css={modalMoto}>Organize your test in different projects</div>
-				<ModalInput
-					id={"project_name"}
-					title={"Project Name"}
-					placeholder={"Enter project name"}
-					value={projectName}
-					onChange={handleChange}
-				/>
+				<ModalInput id={"project_name"} title={"Project Name"} placeholder={"Enter project name"} value={projectName} onChange={handleChange} />
 				<div css={membersInputCss}>
 					<div>
 						<label>Members of this project</label>
 					</div>
-					<div css={membersDescCss}>
-						Everyone gets project update. Change this in project settings.
-					</div>
+					<div css={membersDescCss}>Everyone gets project update. Change this in project settings.</div>
 				</div>
 
-				<ModalButton
-					containerCss={buttonCss}
-					title={"Create a new Project"}
-					onClick={handleSubmit}
-				/>
+				<ModalButton containerCss={buttonCss} title={"Create a new Project"} onClick={handleSubmit} />
 			</div>
 		</Modal>
 	);
 };
 
 const topAreaCSS = css`
-	background: linear-gradient(
-		-184deg,
-		#262f39 16.9%,
-		#242d37 35.74%,
-		#112128 79.28%
-	);
+	background: linear-gradient(-184deg, #262f39 16.9%, #242d37 35.74%, #112128 79.28%);
 	border-bottom: 2px solid #0a1215;
 `;
 

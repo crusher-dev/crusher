@@ -2,10 +2,7 @@ import { getSelectedProject } from "@redux/stateUtils/projects";
 import { store } from "@redux/store";
 import { _linkGithubRepo, _unlinkGithubRepo } from "@services/v2/github";
 import { Toast } from "@utils/toast";
-import {
-	addLinkedGithubRepoInList,
-	removeLinkedGithubRepoInList,
-} from "@redux/actions/github";
+import { addLinkedGithubRepoInList, removeLinkedGithubRepoInList } from "@redux/actions/github";
 import { Conditional } from "@ui/components/common/Conditional";
 import { css } from "@emotion/core";
 import { getRelativeSize } from "@utils/styleUtils";

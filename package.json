@@ -9,7 +9,7 @@
   "scripts": {
     "start": "pm2 start",
     "log:app": "pm2 logs crusher-app",
-    "lint": "lerna run lint",
+    "lint": "lerna run prettify",
     "postinstall": "patch-package && sh scripts/rebuild-bull-mq.sh"
   },
   "devDependencies": {

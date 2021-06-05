@@ -1,10 +1,6 @@
 import { AnyAction } from "redux";
 import { iActionsState } from "../../interfaces/actionsReducer";
-import {
-	DELETE_RECORDED_ACTION,
-	RECORD_ACTION,
-	UPDATE_LAST_RECORDED_ACTION,
-} from "../actions/actions";
+import { DELETE_RECORDED_ACTION, RECORD_ACTION, UPDATE_LAST_RECORDED_ACTION } from "../actions/actions";
 import { iAction } from "../../../../crusher-shared/types/action";
 
 const initialState: iActionsState = {
@@ -12,10 +8,7 @@ const initialState: iActionsState = {
 	last_action: null,
 };
 
-export const actionsReducer = (
-	state: any = initialState,
-	action: AnyAction,
-) => {
+export const actionsReducer = (state: any = initialState, action: AnyAction) => {
 	switch (action.type) {
 		case RECORD_ACTION:
 			return {

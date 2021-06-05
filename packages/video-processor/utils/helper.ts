@@ -1,8 +1,8 @@
-import { setFfmpegPath as setFluentFfmpegPath } from 'fluent-ffmpeg';
+import { setFfmpegPath as setFluentFfmpegPath } from "fluent-ffmpeg";
 
 export const getFfmpegFromModule = (): string | null => {
 	try {
-		const ffmpeg = require('@ffmpeg-installer/ffmpeg'); // eslint-disable-line @typescript-eslint/no-var-requires
+		const ffmpeg = require("@ffmpeg-installer/ffmpeg"); // eslint-disable-line @typescript-eslint/no-var-requires
 		if (ffmpeg.path) {
 			return ffmpeg.path;
 		}
@@ -22,7 +22,7 @@ export const getFfmpegPath = (): string | null => {
 export const ensureFfmpegPath = (): void => {
 	const ffmpegPath = getFfmpegPath();
 	if (!ffmpegPath) {
-		throw new Error('pw-video: FFmpeg path not set. Set the FFMPEG_PATH env variable or install @ffmpeg-installer/ffmpeg as a dependency.');
+		throw new Error("pw-video: FFmpeg path not set. Set the FFMPEG_PATH env variable or install @ffmpeg-installer/ffmpeg as a dependency.");
 	}
 
 	setFluentFfmpegPath(ffmpegPath);

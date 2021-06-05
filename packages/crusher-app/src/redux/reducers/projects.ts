@@ -1,11 +1,4 @@
-import {
-	ADD_PROJECT,
-	DELETE_PROJECT,
-	SAVE_PROJECTS,
-	SAVE_SELECTED_PROJECT,
-	SET_CURRENT_PROJECT_INFO,
-	SET_PROJECT_MEMBERS,
-} from "@redux/actions/project";
+import { ADD_PROJECT, DELETE_PROJECT, SAVE_PROJECTS, SAVE_SELECTED_PROJECT, SET_CURRENT_PROJECT_INFO, SET_PROJECT_MEMBERS } from "@redux/actions/project";
 import jsCookie from "js-cookie";
 import { HYDRATE } from "next-redux-wrapper";
 import { extractHostnameFromUrl } from "@utils/helpers";
@@ -27,8 +20,7 @@ const projects = (state = initialState, action) => {
 		case SET_CURRENT_PROJECT_INFO:
 			return { ...state, currentProjectInfo: action.payload.info };
 		case SET_PROJECT_MEMBERS: {
-			const _membersMap = (action.payload
-				.members as Array<iMemberInfoResponse>).reduce((prev, current) => {
+			const _membersMap = (action.payload.members as Array<iMemberInfoResponse>).reduce((prev, current) => {
 				return { ...prev, [current.id]: current };
 			}, {});
 
@@ -44,9 +36,7 @@ const projects = (state = initialState, action) => {
 			return {
 				...state,
 				allProjects: action.allProjects,
-				selectedProject: !state.selectedProject
-					? action.allProjects[0].id
-					: state.selectedProject,
+				selectedProject: !state.selectedProject ? action.allProjects[0].id : state.selectedProject,
 			};
 		case SAVE_SELECTED_PROJECT:
 			if (action.projectId) {
@@ -74,10 +64,7 @@ const projects = (state = initialState, action) => {
 		case "persist/REHYDRATE":
 			return {
 				...state,
-				selectedProject:
-					action.payload && action.payload.selectedProject
-						? action.payload.projects.selectedProject
-						: state.selectedProject,
+				selectedProject: action.payload && action.payload.selectedProject ? action.payload.projects.selectedProject : state.selectedProject,
 				allProjects: state.allProjects,
 			};
 		default:

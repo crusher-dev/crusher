@@ -1,8 +1,5 @@
 import { AnyAction } from "redux";
-import {
-	MARK_ONBOARDING_COMPLETE,
-	SET_CURRENT_ONBOARDING_STEP,
-} from "../actions/onboarding";
+import { MARK_ONBOARDING_COMPLETE, SET_CURRENT_ONBOARDING_STEP } from "../actions/onboarding";
 import { iOnboardingState } from "../../interfaces/onboardingReducer";
 
 const initialState: iOnboardingState = {
@@ -10,10 +7,7 @@ const initialState: iOnboardingState = {
 	currentStep: 0,
 };
 
-export const onboardingReducer = (
-	state: any = initialState,
-	action: AnyAction,
-) => {
+export const onboardingReducer = (state: any = initialState, action: AnyAction) => {
 	switch (action.type) {
 		case MARK_ONBOARDING_COMPLETE:
 			return {

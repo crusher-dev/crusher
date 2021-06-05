@@ -28,9 +28,7 @@ export interface iMetaInfoNextReq {
 export function getMetaFromReq(req: NextApiRequest): iMetaInfoNextReq {
 	const isClient = isRequestFromClientSide(req);
 
-	const cookies = isClient
-		? jsCookie.get()
-		: cookie.parse(req.headers.cookie || "");
+	const cookies = isClient ? jsCookie.get() : cookie.parse(req.headers.cookie || "");
 
 	const headers = isClient ? {} : req.headers;
 

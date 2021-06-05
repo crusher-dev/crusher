@@ -25,10 +25,7 @@ const initialState: iRecorderState = {
 	lastElementExecutionScriptOutput: null,
 };
 
-export const recorderReducer = (
-	state: iRecorderState = initialState,
-	action: AnyAction,
-) => {
+export const recorderReducer = (state: iRecorderState = initialState, action: AnyAction) => {
 	switch (action.type) {
 		case UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT:
 			return {

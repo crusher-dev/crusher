@@ -78,7 +78,7 @@ li {
 	display: flex;
 }
 li:before {
-	content: counter(item) ') ';
+	content: counter(item) ") ";
 	counter-increment: item;
 	margin-right: 3px;
 }
@@ -100,7 +100,7 @@ li:before {
 }
 
 #events_list li:before {
-	content: counters(item, '.', decimal-leading-zero);
+	content: counters(item, ".", decimal-leading-zero);
 	counter-increment: item;
 	display: flex;
 	align-items: flex-end;
@@ -165,7 +165,7 @@ select {
 }
 /* Arrow */
 .select::after {
-	content: '\25BC';
+	content: "\25BC";
 	position: absolute;
 	height: 2.9rem;
 	top: 0;

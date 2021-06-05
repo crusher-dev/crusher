@@ -1,19 +1,11 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
-import {
-	NavigateBackIcon,
-	NavigateForwardIcon,
-	NavigateRefreshIcon,
-	RecordLabelIcon,
-} from "../../../assets/icons";
+import { NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
 import { Button } from "../../components/app/button";
 import { getStore } from "../../../redux/store";
-import {
-	updateActionsModalState,
-	updateAutoRecorderSetting,
-} from "../../../redux/actions/recorder";
+import { updateActionsModalState, updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
@@ -33,21 +25,12 @@ interface iBrowserToolbarProps {
 	loadNewPage: (newUrl: string) => void;
 }
 const BrowserToolbar = (props: iBrowserToolbarProps) => {
-	const {
-		initialUrl,
-		goBack,
-		goForward,
-		refreshPage,
-		saveTest,
-		loadNewPage,
-	} = props;
+	const { initialUrl, goBack, goForward, refreshPage, saveTest, loadNewPage } = props;
 
 	// const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
 	const showOnboarding = false;
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
-	const [selectedDevice] = useState(
-		AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id,
-	);
+	const [selectedDevice] = useState(AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id);
 
 	const handleAddressBarUrlChange = (event: ChangeEvent) => {
 		setUrl((event.target as any).value);
@@ -57,9 +40,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		(event: KeyboardEvent) => {
 			if (event.keyCode === 13) {
 				event.preventDefault();
-				const newUrl = addHttpToURLIfNotThere(
-					(event.target as any).value as string,
-				);
+				const newUrl = addHttpToURLIfNotThere((event.target as any).value as string);
 				setUrl(newUrl);
 				loadNewPage(newUrl);
 			}
@@ -68,15 +49,8 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	);
 
 	const handleDeviceChange = (deviceId: string) => {
-		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(
-			window.location.href,
-		);
-		window.location.href = generateCrusherExtensionUrl(
-			"/",
-			targetUrl!,
-			deviceId,
-			{ isDeviceChanged: true },
-		);
+		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href);
+		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId, { isDeviceChanged: true });
 	};
 
 	const showHowToUseModal = () => {
@@ -103,34 +77,18 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 				<div style={refreshIconContainerStyle} className={"browser_icon"}>
 					<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
 				</div>
-				<AddressBar
-					value={url}
-					onKeyDown={handleKeyDown}
-					onChange={handleAddressBarUrlChange}
-				/>
+				<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
 				<div style={authDetectModeToggleContainerStyle}>
 					<div style={autoDetectModeToggleHeadingStyle}>Auto Detect:</div>
 					<label className="switch">
-						<input
-							type="checkbox"
-							defaultChecked={isAutoHoverOn}
-							onChange={handleAutoDetectModeToggle}
-						/>
+						<input type="checkbox" defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
 						<span className="slider round"></span>
 					</label>
 				</div>
 				<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
-					<SelectDeviceInput
-						selectedDevice={selectedDevice}
-						selectDevice={handleDeviceChange}
-					/>
+					<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
 				</div>
-				<Button
-					id={"saveTest"}
-					title={"Save test"}
-					icon={RecordLabelIcon}
-					onClick={saveTest}
-				/>
+				<Button id={"saveTest"} title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
 				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
 				</a>

@@ -16,9 +16,7 @@ const EmptyTestListContainer = (props: any) => {
 
 			<img src={CreateTestPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>Create a test to fight bugs and downtime</p>
-			<p css={easyToCreateTestCSS}>
-				{"It's easy to create a test. It just takes a few seconds!"}
-			</p>
+			<p css={easyToCreateTestCSS}>{"It's easy to create a test. It just takes a few seconds!"}</p>
 
 			<div css={buttonsDivCSS}>
 				<button

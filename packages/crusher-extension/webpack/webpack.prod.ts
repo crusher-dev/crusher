@@ -24,15 +24,9 @@ const virtualModules = new VirtualModulesPlugin({
 module.exports = {
 	mode: "production",
 	entry: {
-		content_script: [
-			path.resolve(__dirname, "../src/scripts/inject/events_listener.ts"),
-		],
-		init_content_script: [
-			path.resolve(__dirname, "../src/scripts/inject/init_event_listener.ts"),
-		],
-		change_navigator: [
-			path.resolve(__dirname, "../src/scripts/inject/change_navigator.ts"),
-		],
+		content_script: [path.resolve(__dirname, "../src/scripts/inject/events_listener.ts")],
+		init_content_script: [path.resolve(__dirname, "../src/scripts/inject/init_event_listener.ts")],
+		change_navigator: [path.resolve(__dirname, "../src/scripts/inject/change_navigator.ts")],
 		background: [path.resolve(__dirname, "../src/background.ts")],
 		popup: [path.resolve(__dirname, "../src/ui/popup.tsx")],
 		record_test: [path.resolve(__dirname, "../src/ui/app.tsx")],
@@ -48,11 +42,7 @@ module.exports = {
 		new webpack.DefinePlugin({
 			NODE_ENV: "production",
 			"process.env": {
-				BACKEND_URL: JSON.stringify(
-					process.env.BACKEND_URL
-						? process.env.BACKEND_URL
-						: "https://backend.crusher.dev/",
-				),
+				BACKEND_URL: JSON.stringify(process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://backend.crusher.dev/"),
 			},
 		}),
 	],

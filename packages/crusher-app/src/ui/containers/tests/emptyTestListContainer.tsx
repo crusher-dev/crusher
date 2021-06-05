@@ -35,7 +35,6 @@ const EmptyTestListContainer = (props: any) => {
 					Create a Test
 				</button>
 			</div>
-			<p css={migrateTestCSS}>Already have a test? Migrate it!</p>
 		</div>
 	);
 };
@@ -108,17 +107,6 @@ const createTestButtonCSS = css`
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
-`;
-
-const migrateTestCSS = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 0.95rem;
-	line-height: 1rem;
-	text-align: center;
-	text-decoration-line: underline;
-	color: #313131;
 `;
 
 export { EmptyTestListContainer };

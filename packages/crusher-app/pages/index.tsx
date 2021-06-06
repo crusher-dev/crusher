@@ -118,7 +118,7 @@ function Home() {
 					<a href={resolvePathToBackendURI("/v2/user/authenticate/google")} target={isIFrame ? "_blank" : "_self"} css={styles.loginGoogleLink}>
 						<div css={styles.googleLoginButton(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
-							<span className={"font-medium button"}>Login with Google</span>
+							<span className={"font-medium button"} style={{marginLeft: 12}}>Login with Google</span>
 						</div>
 					</a>
 				</div>
@@ -224,7 +224,7 @@ const styles = {
 	googleLoginButton: (theme) => css`
 		display: flex;
 		align-item: center;
-		justify-content: space-between;
+		justify-content: center;
 
 		border: ${theme === "dark" ? "0" : "1px"} solid #e1e1e1;
 		box-sizing: border-box;

@@ -88,7 +88,7 @@ function SignupScreen(props: iSignupScreenProps) {
 	return (
 		<div>
 			<Head>
-				<title>Get Started | Crusher</title>
+				<title>Signup | Crusher</title>
 			</Head>
 
 			<AuthenticationTemplate>

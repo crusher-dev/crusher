@@ -57,8 +57,8 @@ export class CLIController {
 
 		const projectsWithTestList = [];
 
-		for (let project of projects) {
-			const projectTestList = await this.testService.getAllTestsInProject(project.id);
+		for (const project of projects) {
+			const projectTestList = await this.testService.getAllTestsInProject(project.id, true);
 			projectsWithTestList.push({
 				...project,
 				projectTestList,

@@ -16,6 +16,8 @@ import BuildsSVG from "../../public/svg/sidebarSettings/builds.svg";
 import TestsSVG from "../../public/svg/sidebarSettings/testsList.svg";
 import ProjectSettings from "../../public/svg/sidebarSettings/projectSettings.svg";
 import Logout from "../../public/svg/sidebarSettings/logout.svg";
+import FeedbackSVG from "../../public/svg/sidebarSettings/feedback.svg";
+import Support from "../../public/svg/sidebarSettings/support.svg";
 import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
 import { useRouter } from "next/router";
@@ -132,9 +134,14 @@ function LeftSection(props: any) {
 	];
 
 	const bottomNavLinks = [{
+		name: "Documentation & Support",
+		link: "https://docs.crusher.dev",
+		icon: Support,
+		isAuthorized: false,
+	},{
 		name: "Share Feedback",
-		link: resolvePathToBackendURI("/user/logout"),
-		icon: Logout,
+		link: "/feedback",
+		icon: FeedbackSVG,
 		isAuthorized: false,
 	},
 		{

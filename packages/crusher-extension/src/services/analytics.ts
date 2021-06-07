@@ -1,7 +1,6 @@
 import { TSentryTracking } from '@crusher-shared/types/common/sentryTracking';
 
-
-class SentryService implements TSentryTracking{
+class SentryService implements TSentryTracking {
 
 	// Lazy initialization
 	intialize(userId: string | null) {
@@ -10,7 +9,7 @@ class SentryService implements TSentryTracking{
 
 	trackPage() {}
 
-	trackEvent(value) {
+	trackEvent(value: string) {
 		analytics.track({ userId: this.userId, ...value });
 	}
 

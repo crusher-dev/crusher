@@ -9,7 +9,7 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "../../../core
 import { google } from "googleapis";
 import GoogleAPIService from "../../../core/services/GoogleAPIService";
 import { InviteMembersService } from "../../../core/services/mongo/inviteMembers";
-import AnalyticsService from "../../../core/services/Analytics";
+import SentryService from "../../../core/services/Analytics";
 
 const oauth2Client = new google.auth.OAuth2(
 	process.env.GOOGLE_CLIENT_ID,

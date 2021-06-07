@@ -46,6 +46,10 @@ export default class TestService {
 		return countRecord.totalTests;
 	}
 
+	async markDeleted(testId: number) {
+		return this.dbManager.fetchSingleRow("UPDATE tests SET deleted = TRUE WHERE id = ?", [testId]);
+	}
+
 	async getTest(testId: number): Promise<Test> {
 		const test: Test = await this.dbManager.fetchSingleRow(`SELECT * FROM tests WHERE id= ?`, [testId]);
 		if (test) {
@@ -62,9 +66,10 @@ export default class TestService {
 		);
 	}
 
-	async getAllTestsInProject(projectId: number) {
+	async getAllTestsInProject(projectId: number, findOnlyActiveTests = false) {
 		return this.dbManager.fetchData(
-			`SELECT tests.*, users.id userId, users.first_name userFirstName, users.last_name userLastName FROM tests, users WHERE tests.project_id = ? AND users.id = tests.user_id`,
+			`SELECT tests.*, users.id userId, users.first_name userFirstName, users.last_name userLastName FROM tests, users WHERE tests.project_id = ? AND users.id = tests.user_id` +
+				(findOnlyActiveTests ? " AND tests.deleted = FALSE " : ""),
 			[projectId],
 		);
 	}

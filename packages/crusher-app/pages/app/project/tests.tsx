@@ -3,7 +3,11 @@ import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
 import { redirectToFrontendPath } from "@utils/router";
-import { getAllTestsInfosInProject, updateTestName } from "@services/test";
+import {
+	_deleteTest,
+	getAllTestsInfosInProject,
+	updateTestName,
+} from "@services/test";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
@@ -16,6 +20,7 @@ import { CreateTestModal } from "@ui/containers/modals/createTestModal";
 import { checkIfExtensionPresent } from "@utils/extension";
 import { Toast } from "@utils/toast";
 import EditIcon from "../../../src/svg/edit.svg";
+import DeleteIcon from "../../../src/svg/delete.svg";
 import { setCurrentCursorPositionInContentEditable } from "@utils/dom";
 
 const INPUT_MODE = {
@@ -151,6 +156,16 @@ function TestCard(props) {
 		setTestNameMode(INPUT_MODE.RENAME);
 	};
 
+	const deleteTest = () => {
+		_deleteTest(id)
+			.then(() => {
+				window.location.reload();
+			})
+			.catch((err) => {
+				Toast.showError("Error occured when trying to delete the test");
+			});
+	};
+
 	return (
 		<div>
 			<div css={styles.testCard}>
@@ -199,8 +214,13 @@ function TestCard(props) {
 							<div css={styles.girdLeftHeading}>Browsers</div>
 							<div css={styles.gridRightValue}>Firefox, Safari, Chrome</div>
 						</div>
-						<div css={styles.testCreator}>
-							{userName} | {new Date(createdAt).toDateString()}
+						<div css={testCardBottomContainerCSS}>
+							<div css={testCreatorCSS}>
+								{userName} | {new Date(createdAt).toDateString()}
+							</div>
+							<div css={deleteIconContainerCSS} onClick={deleteTest}>
+								<DeleteIcon />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -208,6 +228,25 @@ function TestCard(props) {
 		</div>
 	);
 }
+
+const testCreatorCSS = css`
+	font-size: 0.65rem;
+	color: #2d3958;
+	margin-top: 1rem;
+	flex: 1;
+`;
+const testCardBottomContainerCSS = css`
+	display: flex;
+`;
+const deleteIconContainerCSS = css`
+	svg {
+		width: 1rem;
+		height: auto;
+	}
+	&:hover {
+		opacity: 0.7;
+	}
+`;
 
 const waitingVideoTextContainerCSS = css`
 	display: flex;
@@ -423,11 +462,6 @@ const styles = {
 		font-style: normal;
 		font-size: 0.65rem;
 		font-weight: normal;
-	`,
-	testCreator: css`
-		font-size: 0.65rem;
-		color: #2d3958;
-		margin-top: 1rem;
 	`,
 	testEdit: css``,
 	testsRowContainer: css`

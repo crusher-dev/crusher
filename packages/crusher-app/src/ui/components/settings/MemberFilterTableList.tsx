@@ -45,14 +45,6 @@ const MemberItem = (props: iMemberItemProps) => {
 			<td>
 				<div className={"roleColumn"}>{member.role}</div>
 			</td>
-			<td>
-				<div css={settingsColumnCSS}>
-					<GearIcon />
-					<span className={"downIcon"}>
-						<DownIcon />
-					</span>
-				</div>
-			</td>
 		</tr>
 	);
 };

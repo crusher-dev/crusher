@@ -138,6 +138,19 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		}
 	}
 
+	@Get("/delete/:testId")
+	@Authorized()
+	async deleteTest(@CurrentUser({ required: true }) user, @Param("testId") testId: number) {
+		const { user_id } = user;
+		const canAccessTest = await this.userService.canAccessTestWithID(testId, user_id);
+
+		if (canAccessTest)
+			return this.testService.markDeleted(testId).then(() => {
+				return { status: "DONE" };
+			});
+		else throw new UnauthorizedError();
+	}
+
 	@Post("/createTestFromDraft/:draftId")
 	@Authorized()
 	async createTestFromDraft(@CurrentUser({ required: true }) user, @Param("draftId") draftId: number, @Body() body) {
@@ -215,7 +228,7 @@ form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 		if (!canAccessProject) {
 			throw new UnauthorizedError();
 		}
-		const tests = await this.testService.getAllTestsInProject(projectId);
+		const tests = await this.testService.getAllTestsInProject(projectId, true);
 
 		for (let i = 0; i < tests.length; i++) {
 			const totalTestsToday = await this.testInstanceService.getAllInstancesOfTestToday(tests[i].id);

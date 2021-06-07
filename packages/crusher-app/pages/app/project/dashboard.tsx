@@ -70,18 +70,17 @@ function Build(props: any) {
 	);
 }
 
-function Activity(props) {
+function Tests({test}) {
 	return (
 		<li>
-			<div css={styles.userImage}></div>
 			<div css={styles.activityInfoContainer}>
-				<div css={styles.userName}>Himanshu Dixit</div>
+				<div css={styles.userName}>{test.testName}</div>
 				<div css={styles.activityInfo}>Approved build</div>
 			</div>
 			<div css={styles.buildsIdNDate} style={{ marginLeft: "auto" }}>
-				<div css={styles.buildsId}>#7982</div>
+				<div css={styles.buildsId}>Working</div>
 				<div css={styles.buildsDate} style={{ marginTop: "0" }}>
-					21 Aug | 9:15 pm
+					{test.lastRunAt}
 				</div>
 			</div>
 		</li>
@@ -111,125 +110,66 @@ function RenderBuilds(props) {
 	return <ul css={styles.buildsList}>{out}</ul>;
 }
 
-function RenderActivities(props) {
-	const { activities, userInfo } = props;
-	const activitiesOut = activities.map((activity) => {
-		return <Activity />;
-	});
+function RenderTests(props) {
+	const { tests } = props;
+	return <ul css={styles.activityList}>{tests.map((test) =>{
+		return <Tests test={test} />;
+	})}</ul>;
+}
 
-	if (activitiesOut.length === 0) {
-		return (
-			<div css={styles.activitiesPlaceholderContainer}>
-				<div css={styles.activitiesPlaceholderHeading}>Alas!</div>
-				<div css={styles.activitiesPlaceholderMessageContainer}>
-					<div>You don’t have any activity to show.</div>
-					<div css={styles.blueItalicText}>Need any help</div>
-				</div>
-			</div>
-		);
-	}
+function OverviewItem(props: { heading: string, itemStatus: string, desc: string, src: string }) {
+	return (<div css={styles.overviewItem}>
+		<div css={styles.productionHealthItemText}>
+			<div className={'heading'}>{props.heading}</div>
+			<div css={styles.productionHealthItemDesc}>{props.itemStatus}</div>
+			<div css={styles.overviewItemInfo}>{props.desc}</div>
 
-	return <ul css={styles.activityList}>{activitiesOut}</ul>;
+		</div>
+		<img
+			src={props.src}
+			css={styles.productionHealthItemImage}
+			style={{ width: '2.5rem' }}
+		/>
+	</div>);
 }
 
 function ProjectDashboard(props) {
-	const { builds, activities, userInfo, metaDashboardInfo } = props;
-	const [dashboardInfo, setDashboardInfo] = useState({
-		projectBuilds: builds ? builds : [],
-		projectActivities: activities ? activities : [],
-		isLoading: false,
-	});
-	const selectedProjectId = useSelector(getSelectedProject);
+	const { builds: projectBuilds, userInfo, metaDashboardInfo, tests } = props;
 
-	useEffect(() => {
-		setDashboardInfo({ ...dashboardInfo, isLoading: true });
-		const activitiesPromise = getAllProjectLogs(selectedProjectId);
-		const buildsPromise = getAllJobsOfProject(selectedProjectId, null);
-
-		Promise.all([activitiesPromise, buildsPromise])
-			.then(([activities, builds]) => {
-				setDashboardInfo({
-					projectBuilds: builds,
-					projectActivities: activities,
-					isLoading: false,
-				});
-			})
-			.catch((err) => {
-				// Show some error;
-				console.error("Can't perform network requests");
-				setDashboardInfo({ ...dashboardInfo, isLoading: false });
-			});
-	}, [selectedProjectId]);
-
-	const { totalJobsToday, health, status } = metaDashboardInfo;
-	const { projectBuilds, projectActivities } = dashboardInfo;
+	const { lastStatus, last30DaysStatus, hoursSaved, buildTime } = metaDashboardInfo;
 	return (
 		<div css={styles.container}>
 			<div css={styles.productionContainer}>
 				<div css={styles.productionHeading}>Production Health</div>
-				<div css={styles.productionHealthItemsContainer}>
-					<div css={styles.productionHealthItem}>
-						<div css={styles.productionHealthItemText}>
-							<div css={styles.productionHealthItemHeading}>Status</div>
-							<div css={styles.productionHealthItemDesc}>{status}</div>
-						</div>
-						<img
-							src={"/svg/dashboard/live.svg"}
-							css={styles.productionHealthItemImage}
-							style={{ width: "2.5rem" }}
-						/>
-					</div>
-					<div
-						css={styles.productionHealthItem}
-						style={{ borderColor: "#FB4359", color: "#FB4359" }}
-					>
-						<div css={styles.productionHealthItemText}>
-							<div css={styles.productionHealthItemHeading}>Health</div>
-							<div css={styles.productionHealthItemDesc} style={{ color: "#FB4359" }}>
-								{health}
-							</div>
-						</div>
-						<img
-							src={"/svg/dashboard/health.svg"}
-							css={styles.productionHealthItemImage}
-							style={{ width: "1.65rem" }}
-						/>
-					</div>
-					<div css={styles.productionHealthItem}>
-						<div css={styles.productionHealthItemText}>
-							<div css={styles.productionHealthItemHeading}>Jobs ran today</div>
-							<div css={styles.productionHealthItemDesc}>{totalJobsToday}</div>
-						</div>
-						<img
-							src={"/svg/dashboard/calendar.svg"}
-							css={styles.productionHealthItemImage}
-							style={{ width: "1.65rem" }}
-						/>
-					</div>
+				<div css={styles.overviewContainer}>
+				<OverviewItem heading={"Last run status"} itemStatus={lastStatus.status} desc={lastStatus.info} src={"/svg/dashboard/live.svg"} />
+				<OverviewItem heading={"Last 30 days status"} itemStatus={last30DaysStatus.status} desc={last30DaysStatus.info} src={"/svg/dashboard/live.svg"} />
+				<OverviewItem heading={"Hours Saved"} itemStatus={hoursSaved.status} desc={hoursSaved.info} src={"/svg/dashboard/live.svg"} />
+				<OverviewItem heading={"Average Build time"} itemStatus={buildTime.status} desc={buildTime.info} src={"/svg/dashboard/live.svg"} />
 				</div>
-			</div>
+				</div>
+
 			<div css={styles.buildActivityContainer}>
 				<div css={styles.leftSection}>
 					<div css={styles.section}>
 						<div css={styles.sectionHeadingContainer}>
 							<div css={styles.sectionHeading}>Builds</div>
-							<div css={styles.sectionHeadingDesc}>Triggered from CI/Github</div>
 						</div>
 						<RenderBuilds userInfo={userInfo} builds={projectBuilds} />
 					</div>
 				</div>
-				{/*<div css={styles.rightSection}>*/}
-				{/*	<div css={styles.section}>*/}
-				{/*		<div css={styles.sectionHeadingContainer}>*/}
-				{/*			<div css={styles.sectionHeading}>Activity</div>*/}
-				{/*			<div css={styles.sectionHeadingDesc}>*/}
-				{/*				See what’s happening here and there*/}
-				{/*			</div>*/}
-				{/*		</div>*/}
-				{/*		<RenderActivities userInfo={userInfo} activities={[]} />*/}
-				{/*	</div>*/}
-				{/*</div>*/}
+
+				<div css={styles.rightSection}>
+					<div css={styles.section}>
+						<div css={styles.sectionHeadingContainer}>
+							<div css={styles.sectionHeading}>Tests</div>
+						</div>
+						<RenderTests userInfo={userInfo} tests={tests} />
+					</div>
+				</div>
+
 			</div>
+
 		</div>
 	);
 }
@@ -252,31 +192,42 @@ const styles = {
 		font-size: 1.1rem;
 		font-weight: 700;
 	`,
-	productionHealthItemsContainer: css`
+	overviewContainer: css`
 		display: flex;
 		margin-top: 1.5rem;
 		justify-content: space-between;
 	`,
-	productionHealthItem: css`
-		border: 1px solid #d8e9ff;
-		border-radius: 0.25rem;
+	overviewItem: css`
+		border: 1px solid #C4C4C4;
+    border-bottom: 4px solid #C4C4C4;
+		border-radius: 0.55rem;
 		display: flex;
 		flex: 1rem;
+		max-width: 25%;
 		padding: 0.75rem 1.2rem;
+		
+		.heading{
+			font-size: 1rem;
+      font-weight: bold;
+		
+      color: #636363B2;
+    }
 		&:not(:first-child) {
 			margin-left: 2rem;
 		}
 	`,
 	productionHealthItemText: css``,
-	productionHealthItemHeading: css`
+	overviewItemInfo: css`
 		font-size: 0.9rem;
-		font-weight: 500;
+    margin-top: .25rem;
+		color: #636363;
 	`,
 	productionHealthItemDesc: css`
 		color: #513879;
-		font-size: 1.1rem;
+		font-size: 1.5rem;
 		font-weight: 700;
-		margin-top: 0.25rem;
+		margin-top: 1rem;
+    text-transform: uppercase;
 	`,
 	productionHealthItemImage: css`
 		margin-left: auto;
@@ -350,10 +301,10 @@ const styles = {
 	activityInfoContainer: css`
 		color: #000000;
 		flex: 1;
-		margin-left: 1.2rem;
+		margin-left: .5rem;
 	`,
 	userName: css`
-		font-size: 0.75rem;
+		font-size: 0.95rem;
 		font-weight: 700;
 	`,
 	activityInfo: css`
@@ -363,7 +314,7 @@ const styles = {
 	`,
 	buildsIdNDate: css``,
 	buildsId: css`
-		font-size: 1.1rem;
+		font-size: 1rem;
 		color: #513879;
 		font-weight: 700;
 	`,
@@ -490,7 +441,7 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 			null,
 			ctx.metaInfo.headers,
 		);
-		const activitiesPromise = getAllProjectLogs(
+		const testPromise = getAllProjectLogs(
 			selectedProject,
 			ctx.metaInfo.headers,
 		);
@@ -500,15 +451,16 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 			ctx.metaInfo.headers,
 		);
 
-		const [builds, activities] = await Promise.all([
+		const [builds, tests] = await Promise.all([
 			buildsPromise,
-			activitiesPromise,
+			testPromise,
 		]);
 
+
 		return {
-			builds: builds,
-			activities: activities,
-			metaDashboardInfo: metaDashboardInfo,
+			builds,
+			tests,
+			metaDashboardInfo,
 		};
 	} catch (er) {
 		console.error(er);

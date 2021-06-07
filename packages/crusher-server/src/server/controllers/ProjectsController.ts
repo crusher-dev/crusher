@@ -116,7 +116,7 @@ export class ProjectsController {
 				return new UnauthorizedError("Don't have access for this project");
 			}
 
-			const testsInProject = await this.testService.getAllTestsInProject(projectId);
+			const testsInProject = await this.testService.getAllTestsInProject(projectId, true);
 			const testIds = testsInProject.map((test) => test.id);
 			const githubInstallationRecord = await this.gitIntegrationsService.getInstallationRepo(repoName, projectId);
 

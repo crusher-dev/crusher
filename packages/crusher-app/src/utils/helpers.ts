@@ -145,7 +145,41 @@ export function submitPostDataWithForm(url: string, options: any = {}) {
 	form.remove();
 }
 
+export function nth(d: number) {
+	if (d > 3 && d < 21) return "th";
+	switch (d % 10) {
+		case 1:
+			return "st";
+		case 2:
+			return "nd";
+		case 3:
+			return "rd";
+		default:
+			return "th";
+	}
+}
+
+export function formatAMPM(date: Date) {
+	let hours = date.getHours();
+	let minutes: string | number = date.getMinutes();
+	const ampm = hours >= 12 ? "PM" : "AM";
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+	const strTime = hours + ":" + minutes + " " + ampm;
+	return strTime;
+}
+
+// Mainly for generating default test name
 export function getShortDate(date: Date) {
+	const currentDate: Date = new Date();
+	if (currentDate.getUTCFullYear() === date.getUTCFullYear()) {
+		const day = date.getUTCDate();
+		const monthName = date.toLocaleString("default", { month: "long" });
+		return `${day}${nth(day)} ${monthName} ${formatAMPM(date)}`;
+	}
+
+	// @NOTE: This should never hit but just here a precaution
 	return (
 		date.getUTCFullYear() +
 		"/" +

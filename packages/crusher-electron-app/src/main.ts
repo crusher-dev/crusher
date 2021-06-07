@@ -28,6 +28,7 @@ async function createWindow () {
 		}
 	});
 	await mainWindow.maximize();
+
 	await mainWindow.webContents.session.webRequest.onHeadersReceived({ urls: [ "*://*/*" ] },
 		(responseDetails, updateCallback)=>{
 			Object.keys(responseDetails.responseHeaders).map(headers => {
@@ -39,6 +40,7 @@ async function createWindow () {
 		}
 	);
 	await loadExtension(mainWindow);
+
 
 	await session.defaultSession.cookies.set({
 		name: "h-sid",
@@ -114,18 +116,35 @@ app.whenReady().then(() => {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow()
 	})
 })
-app.on('window-all-closed', function () {
-	mainWindow.webContents.session.clearStorageData({
+app.on('window-all-closed', async function () {
+	const cookies = await session.defaultSession.cookies.get({domain: "localhost"});
+	// console.log(crusherCookies, typeof crusherCookies);
+	await session.defaultSession.clearStorageData({
 		storages: [
 			"cookies",
-			"serviceworkers",
-			"cachestorage",
-			"websql",
-			"shadercache",
-			"filesystem",
-			"indexdb",
-			"appcache"
+			"localstorage"
 		]
 	});
+
+	if(cookies && cookies.length){
+
+		for(let cookie of cookies) {
+			const nextYearDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+
+			await session.defaultSession.cookies.set({
+				url: `http://${cookie.domain}`,
+				name: cookie.name,
+				value: cookie.value,
+				domain: cookie.domain,
+				path: cookie.path,
+				secure: cookie.secure,
+				httpOnly: cookie.httpOnly,
+				expirationDate: cookie.expirationDate ? cookie.expirationDate : nextYearDate.valueOf(),
+				sameSite: cookie.sameSite
+			});
+		}
+	}
+
+	// console.log( await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' }));
 	if (process.platform !== 'darwin') app.quit()
 })

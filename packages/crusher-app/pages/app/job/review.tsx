@@ -289,11 +289,12 @@ function JobInfoBox() {
 					<div style={{ display: "flex" }} className="card-body col col-lg-3">
 						<div className="d-lg-block align-items-end">
 							<div className="d-flex align-items-center">
+								{branchName && (
 								<code
 									className="tx-normal mg-b-0 mg-r-5 lh-1 tx-color-01"
 									css={styles.branchContainer}
 								>
-									{branchName ? (
+
 										<span
 											style={{
 												fontSize: "0.8375rem",
@@ -303,21 +304,11 @@ function JobInfoBox() {
 										>
 											{branchName}
 										</span>
-									) : (
-										<span
-											style={{
-												fontSize: "0.8375rem",
-												fontFamily: "Gilroy",
-												color: "#ffffffa8",
-											}}
-										>
-											N/A branch
-										</span>
-									)}
-								</code>
+
+								</code>		)}
 							</div>
 							<div className="tx-14 tx-color-03" css={styles.commitName}>
-								{commitName ? (
+								{commitName && (
 									<span
 										style={{
 											fontSize: "0.875rem",
@@ -327,17 +318,7 @@ function JobInfoBox() {
 									>
 										{commitName}
 									</span>
-								) : (
-									<span
-										style={{
-											fontSize: "0.875rem",
-											fontFamily: "Gilroy",
-											color: "#ffffffa8",
-										}}
-									>
-										**No Commit Message**
-									</span>
-								)}
+								) }
 							</div>
 						</div>
 					</div>

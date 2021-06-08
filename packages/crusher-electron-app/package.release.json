@@ -1,6 +1,0 @@
-{
-  "name": "crusher-electron-app",
-  "version": "1.0.0",
-  "description": "Electron app for crusher",
-  "main": "main.js"
-}

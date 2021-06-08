@@ -11,16 +11,10 @@ import { InstallExtensionModal } from "@ui/containers/modals/installExtensionMod
 import { checkIfExtensionPresent } from "@utils/extension";
 
 const features = [
-	{ message: "😃 Ship Faster", color: "#FF5A8C" },
-	{ message: "Increase your productivity", color: "#885FFF" },
-	{ message: "Catch UI/Flow Issues", color: "#FB7237" },
+	{ message: "😃 Ship Faster", color: "#ff3ed5" },
+	{ message: "Catch UI/User Flow Issues", color: "#FB7237" },
 	{ message: "Monitor Product changes", color: "#4E75FF" },
-	{ message: "Test on different devices", color: "#53D6FF" },
-	{ message: "Test from different browsers", color: "#4E75FF" },
-	{ message: "Test without writing code", color: "#69A5FF" },
-	{ message: "Increase Revenue", color: "#4E75FF" },
-	{ message: "Decrease Unhappy Customers", color: "#4E75FF" },
-	{ message: "Test in Development", color: "#4E75FF" },
+	{ message: "Test on different configurations", color: "#33a5c9" },
 ];
 
 function ProjectOnboardingCreateTest(props) {

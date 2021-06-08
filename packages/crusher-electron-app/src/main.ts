@@ -1,13 +1,21 @@
 import {app, BrowserWindow, session, ipcMain} from 'electron';
 import * as path from "path";
+
+require('dotenv').config();
+
+const APP_DOMAIN = process.env.NODE_ENV === "development" ?
+	process.env.LOCAL_DOMAIN : process.env.PRODUCTION_DOMAIN;
+
 const loadExtension =  (mainWindow) => {
-	const isTesting = process.env.NODE_ENV === "testing";
-	return new Promise((resolve, reject) => {
+	const isBundlingForRelease = process.env.TARGET === "release";
+
+	return new Promise((resolve) => {
 		session.defaultSession.loadExtension(
-			path.resolve(__dirname, `${isTesting?"../../crusher-extension/build":"./extension/"}`),
+			path.resolve(__dirname, `${isBundlingForRelease ? "./extension" : "../../crusher-extension/build"}`),
 			{ allowFileAccess: true}
-		).then(async ({ id: extensionId }) => {
-			await mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
+		).then(({ id: extensionId }) => {
+			return mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
+		}).then(() => {
 			resolve(true);
 		});
 	});
@@ -40,7 +48,6 @@ async function createWindow () {
 		}
 	);
 	await loadExtension(mainWindow);
-
 
 	await session.defaultSession.cookies.set({
 		name: "h-sid",
@@ -100,7 +107,7 @@ async function createWindow () {
 	});
 	mainWindow.webContents.on('new-window', function(event, popupUrl) {
 		if(mainWindow.webContents.getURL().startsWith("chrome-extension")) {
-			if(!popupUrl.includes("localhost:8000") && !popupUrl.includes("crusher.dev")) {
+			if(!popupUrl.includes(APP_DOMAIN)) {
 				event.preventDefault();
 				mainWindow.webContents.executeJavaScript(`document.querySelector('#device_browser').src = "${popupUrl}"`);
 			}
@@ -117,8 +124,7 @@ app.whenReady().then(() => {
 	})
 })
 app.on('window-all-closed', async function () {
-	const cookies = await session.defaultSession.cookies.get({domain: "localhost"});
-	// console.log(crusherCookies, typeof crusherCookies);
+	const cookies = await session.defaultSession.cookies.get({domain: APP_DOMAIN});
 	await session.defaultSession.clearStorageData({
 		storages: [
 			"cookies",
@@ -145,6 +151,5 @@ app.on('window-all-closed', async function () {
 		}
 	}
 
-	// console.log( await session.defaultSession.cookies.get({ url: 'http://localhost:3000/' }));
 	if (process.platform !== 'darwin') app.quit()
 })

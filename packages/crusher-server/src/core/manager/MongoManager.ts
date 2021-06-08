@@ -1,10 +1,13 @@
 import { getMongoDBConnectionString } from "../../../config/database";
+import { Service } from "typedi";
 
+@Service()
 export default class MongoManager {
 	isConnected: boolean;
 
 	constructor() {
 		this.isConnected = false;
+		this.init();
 	}
 
 	init() {

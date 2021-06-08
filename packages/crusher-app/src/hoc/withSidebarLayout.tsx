@@ -115,7 +115,13 @@ function LeftSection(props: any) {
 		},
 		{
 			name: "Builds",
-			link: "/app/project/builds",
+			link: "/app/project/builds?category=1",
+			icon: BuildsSVG,
+			isAuthorized: true,
+		},
+		{
+			name: "Monitoring",
+			link: "/app/project/builds?category=0",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},
@@ -126,7 +132,7 @@ function LeftSection(props: any) {
 			isAuthorized: true,
 		},
 		{
-			name: "Project Settings",
+			name: "Settings",
 			link: "/app/settings/project/basic",
 			icon: ProjectSettings,
 			isAuthorized: true,

@@ -56,9 +56,9 @@
 		"uuid": "^8.3.2"
 	},
 	"scripts": {
-		"dev": "ts-node --project tsconfig.dev.json src/app.ts",
-		"dev:cron": "ts-node --project tsconfig.dev.json src/cron.ts",
-		"dev:queue": "ts-node --project tsconfig.dev.json src/queue.ts",
+		"dev": "ts-node --project tsconfig.json src/app.ts",
+		"dev:cron": "ts-node --project tsconfig.json src/cron.ts",
+		"dev:queue": "ts-node --project tsconfig.json src/queue.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"build": "NODE_ENV=production ncc build src/app.ts -o dist/server --external bullmq",
 		"build:cron": "NODE_ENV=production ncc build src/cron.ts -o dist/cron --external bullmq",

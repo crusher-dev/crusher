@@ -27,7 +27,7 @@ interface iFilterCapsProps {
 	onChangeCap: (cap: iFilter) => void;
 }
 
-const FilterCaps = (props: iFilterCapsProps) => {
+const BuildFilter = (props: iFilterCapsProps) => {
 	const { disableAllCap, selectedCap, resolveCategoryUrl, onChangeCap } = props;
 	let { caps } = props;
 
@@ -39,84 +39,33 @@ const FilterCaps = (props: iFilterCapsProps) => {
 		onChangeCap(cap);
 	};
 
-	const out = caps.map((cap, index) => {
-		return (
-			<a key={cap.value} href={resolveCategoryUrl(cap.value)}>
-				<li
-					className={parseInt(selectedCap as any) === cap.value ? "active" : !selectedCap && index === 0 ? "active" : ""}
-					key={cap.value}
-					onClick={() => {
-						onFilterCapClickCallback(cap);
-					}}
-				>
-					{cap.title}
-				</li>
-			</a>
-		);
-	});
 
-	return <ul css={filterCapsContainerCss}>{out}</ul>;
+	return null;
 };
 
-const filterCapsContainerCss = css`
-	display: flex;
-	li {
-		margin-right: 3rem;
-		padding: 0.2rem 1rem;
-		min-width: 7.5rem;
-		text-align: center;
-		color: #3c4454;
-		font-size: 1.25rem;
-		font-family: Cera Pro;
-		font-weight: normal;
-		font-style: normal;
-		cursor: pointer;
-		box-sizing: border-box;
-		border: 1px solid transparent;
-		border-radius: 0.125rem;
-		&.active {
-			border-color: #f2f2f2;
-			background: #fbfbfb;
-		}
-	}
-`;
 
 interface iFilters {
 	category: number;
 	currentPage: number;
 }
 
-const FilterListPagination = (props: iFilterListPaginationProps) => {
+const BuildList = (props: iFilterListPaginationProps) => {
 	const {
-		categories,
 		currentPage,
 		items,
 		resolvePaginationUrl,
 		totalPages,
 		selectedCategory,
-		resolveCategoryUrl,
 		itemsListComponent: ItemsListComponent,
 	} = props;
 
-	const [filters, setFilters] = useState({
+	const [filters] = useState({
 		currentPage: parseInt(currentPage as any),
 		category: selectedCategory,
 	} as iFilters);
 
-	const onChangeFilter = (newCap: iFilter) => {
-		setFilters({
-			...filters,
-			category: newCap.value,
-		});
-	};
-
-	useEffect(() => {
-		// getPaginationEndpoint("/ge");
-	}, [filters]);
-
 	return (
 		<div>
-			<FilterCaps onChangeCap={onChangeFilter} selectedCap={filters.category} resolveCategoryUrl={resolveCategoryUrl} caps={categories} />
 			<ItemsListComponent items={items} />
 
 			<Pagination
@@ -129,4 +78,4 @@ const FilterListPagination = (props: iFilterListPaginationProps) => {
 	);
 };
 
-export { FilterListPagination };
+export { BuildList };

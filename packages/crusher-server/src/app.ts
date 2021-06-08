@@ -24,7 +24,6 @@ import { ProjectHostsController } from "./server/controllers/ProjectHostsControl
 import { CommentsController } from "./server/controllers/CommentsController";
 import { TestInstanceResultSetsController } from "./server/controllers/TestInstanceResultSetsController";
 import { TestInstanceResultsController } from "./server/controllers/TestInstanceResultsController";
-import MongoManager from "./core/manager/MongoManager";
 import { MonitoringController } from "./server/controllers/MonitoringController";
 import { Slack } from "./server/controllers/integrations/Slack";
 import { JobsControllerV2 } from "./server/controllers/v2/JobsControllerV2";
@@ -39,7 +38,6 @@ import { DraftControllerV2 } from "./server/controllers/v2/DraftControllerV2";
 import { LoginConnectionsController } from "./server/controllers/v2/LoginConnectionsController";
 import { GitIntegrationsController } from "./server/controllers/integrations/Github";
 
-new MongoManager().init();
 useContainer(Container);
 const expressApp = express();
 expressApp.use(ReqLogger);

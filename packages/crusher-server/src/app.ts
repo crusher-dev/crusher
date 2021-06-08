@@ -37,12 +37,15 @@ import { UserControllerV2 } from "./server/controllers/v2/UserControllerV2";
 import { DraftControllerV2 } from "./server/controllers/v2/DraftControllerV2";
 import { LoginConnectionsController } from "./server/controllers/v2/LoginConnectionsController";
 import { GitIntegrationsController } from "./server/controllers/integrations/Github";
+import MongoManager from "./core/manager/MongoManager";
 
 useContainer(Container);
 const expressApp = express();
 expressApp.use(ReqLogger);
 expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
+
+const mongoManager = Container.get(MongoManager);
 
 useExpressServer(expressApp, {
 	controllers: [

@@ -4,6 +4,7 @@ import { Conditional } from "../conditional";
 import { iDevice } from "../../../../../crusher-shared/types/extension/device";
 import { useSelector } from "react-redux";
 import { isRecorderScriptBooted } from "../../../redux/selectors/recorder";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 
 interface iDeviceProps {
 	url: string;
@@ -30,7 +31,7 @@ const Device = (props: iDeviceProps) => {
 			</Conditional>
 
 			<Conditional If={!isIframeLoaded}>
-				<div style={pageLoadingBlockCoverStyle}>
+				<div>
 					<div>
 						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
 						<div style={pageLoadingCoverTextStyle}>{"Please wait while we're loading next page"}</div>
@@ -45,7 +46,7 @@ const Device = (props: iDeviceProps) => {
 					height: device.height,
 				}}
 			>
-				<div className="content" style={{ width: "100%", height: "100%" }}>
+				<div className="content" style={browserFrameContainerStyle}>
 					<iframe
 						ref={forwardRef}
 						style={browserFrameStyle}
@@ -60,19 +61,6 @@ const Device = (props: iDeviceProps) => {
 			</div>
 		</div>
 	);
-};
-
-const pageLoadingBlockCoverStyle = {
-	position: POSITION.ABSOLUTE,
-	left: 0,
-	top: 0,
-	width: "100%",
-	height: "100%",
-	zIndex: 99999,
-	background: "rgb(0,0,0,0.7)",
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "center",
 };
 
 const pageLoadingCoverIconStyle = {
@@ -99,24 +87,31 @@ const blockCoverStyle = {
 };
 
 const previewBrowserStyle = {
-	flex: 1,
-	maxWidth: "75vw",
+	//maxWidth: "75vw",
 	display: "flex",
 	justifyContent: "center",
-
 	overflowY: OVERFLOW.AUTO,
-	background: "#010101",
+	background: "#0A0A0A",
 	position: POSITION.RELATIVE,
 	alignItems: "center",
-	height: "calc(100vh - 2.58rem)",
+	height: "100%",
+	borderTopRightRadius: "2rem",
+	border: `solid ${COLOR_CONSTANTS.BORDER}`,
+	borderWidth: "2px",
+	borderLeft: "none",
+	borderBottom: "none",
 };
 
 const browserFrameStyle = {
 	border: "none",
 	display: "block",
-	borderRadius: 2,
 	maxWidth: "100%",
-	backgroundColor: "#fff",
+	backgroundColor: "#010101",
+	width: "100%",
+	height: "100%",
+};
+
+const browserFrameContainerStyle = {
 	width: "100%",
 	height: "100%",
 };

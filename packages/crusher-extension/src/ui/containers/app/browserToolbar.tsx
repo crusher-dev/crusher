@@ -1,12 +1,11 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, RecordLabelIcon } from "../../../assets/icons";
+import { NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
 import { Button } from "../../components/app/button";
 import { getStore } from "../../../redux/store";
-import { updateActionsModalState, updateAutoRecorderSetting } from "../../../redux/actions/recorder";
-import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
+import { updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
@@ -53,11 +52,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId, { isDeviceChanged: true });
 	};
 
-	const showHowToUseModal = () => {
-		const store = getStore();
-		store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO));
-	};
-
 	const handleAutoDetectModeToggle = (event: ChangeEvent<HTMLInputElement>) => {
 		const store = getStore();
 		store.dispatch(updateAutoRecorderSetting(event.target.checked));
@@ -67,31 +61,36 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 
 	return (
 		<div style={browserToolbarStyle}>
-			<div style={browserMainToolbarStyle} id="top-bar">
-				<div style={goBackIconContainerStyle} className={"browser_icon"}>
-					<NavigateBackIcon onClick={goBack} disabled={false} />
-				</div>
-				<div style={forwardIconContainerStyle} className={"browser_icon"}>
-					<NavigateForwardIcon onClick={goForward} disabled={false} />
-				</div>
-				<div style={refreshIconContainerStyle} className={"browser_icon"}>
-					<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
-				</div>
-				<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
-				<div style={authDetectModeToggleContainerStyle}>
-					<div style={autoDetectModeToggleHeadingStyle}>Auto Detect:</div>
-					<label className="switch">
-						<input type="checkbox" defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
-						<span className="slider round"></span>
-					</label>
-				</div>
-				<div style={deviceOptionInputContainerStyle} id={"select-device-input"}>
-					<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
-				</div>
-				<Button id={"saveTest"} title={"Save test"} icon={RecordLabelIcon} onClick={saveTest} />
-				<a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
+			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
+				<div className="h-10 w-full flex">
+					<div style={goBackIconContainerStyle} className={"browser_icon"}>
+						<NavigateBackIcon onClick={goBack} disabled={false} />
+					</div>
+					<div style={forwardIconContainerStyle} className={"browser_icon"}>
+						<NavigateForwardIcon onClick={goForward} disabled={false} />
+					</div>
+					<div style={refreshIconContainerStyle} className={"browser_icon"}>
+						<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
+					</div>
+					<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
+					<div style={authDetectModeToggleContainerStyle}>
+						<div style={autoDetectModeToggleHeadingStyle}>Auto Detect:</div>
+						<label className="switch">
+							<input type="checkbox" defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
+							<span className="slider round"></span>
+						</label>
+					</div>
+					<div className="flex justify-evenly">
+						<div className="mx-24" id={"select-device-input"}>
+							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
+						</div>
+
+						<Button id={"saveTest"} title={"Save test"} icon={SaveIcon} onClick={saveTest} />
+					</div>
+					{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
 					Help
-				</a>
+				</a> */}
+				</div>
 			</div>
 
 			<style>{`
@@ -179,18 +178,11 @@ const authDetectModeToggleContainerStyle = {
 	color: "#fff",
 };
 
-const deviceOptionInputContainerStyle = {
-	marginLeft: "auto",
-};
 const browserToolbarStyle = {
 	display: "flex",
 	flexDirection: FLEX_DIRECTION.COLUMN,
-};
-
-const browserMainToolbarStyle = {
-	background: "#14181F",
-	display: "flex",
-	padding: "0.73rem 2rem",
+	width: "100%",
+	height: "4.75rem",
 };
 
 const goBackIconContainerStyle = {
@@ -212,15 +204,6 @@ const refreshIconContainerStyle = {
 	display: "flex",
 	alignItems: "center",
 	cursor: "pointer",
-};
-
-const helpStyle = {
-	display: "flex",
-	alignItems: "center",
-	textDecoration: "none",
-	color: "#fff",
-	fontSize: 15,
-	marginLeft: "0.75rem",
 };
 
 export { BrowserToolbar };

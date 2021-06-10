@@ -14,6 +14,7 @@ import { submitPostDataWithForm } from "../utils/helpers";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
+import "../style/main.css";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
@@ -64,15 +65,16 @@ const App = () => {
 		<div style={containerStyle}>
 			<Conditional If={url}>
 				<BrowserWindow deviceIframeRef={deviceIframeRef} saveTestCallback={saveTest} />
-				<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 				<ModalManager deviceIframeRef={deviceIframeRef} />
 			</Conditional>
 			<Conditional If={!url}>
 				<StartupModal isOpen={true} />
 			</Conditional>
+			<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/devices.min.css")} />
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/app.css")} />
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")} />
+
 			<style>{`
 					.CodeMirror {
 						font-size: 0.9rem;

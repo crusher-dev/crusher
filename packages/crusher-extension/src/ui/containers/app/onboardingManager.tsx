@@ -38,6 +38,9 @@ const createOnboardingStep = (selector: string, heading: string, desc: any) => {
 };
 
 const ONBOARDING_STEPS: any = [
+	createOnboardingStep("#address-bar",
+	"Enter URL you want to test",
+	"Hey lets get familiar to testing"),
 	createOnboardingStep(
 		"#select-device-input",
 		"Select a device",

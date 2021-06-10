@@ -19,9 +19,7 @@ import { SidebarActionsBox } from "./containers/app/sidebarActionsBox";
 const App = () => {
 	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
 	const [recordingStartTime] = useState(new Date());
-	const [url] = useState(
-		AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href),
-	);
+	const [url] = useState(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href));
 
 	useEffect(() => {
 		const isReturningUser = localStorage.getItem("lastVisit");
@@ -39,23 +37,16 @@ const App = () => {
 			return;
 		}
 
-		submitPostDataWithForm(
-			resolveToBackendPath("/test/goToEditor", process.env.BACKEND_URL),
-			{
-				events: escape(JSON.stringify(steps)),
-				totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
-			},
-		);
+		submitPostDataWithForm(resolveToBackendPath("/test/goToEditor", process.env.BACKEND_URL), {
+			events: escape(JSON.stringify(steps)),
+			totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
+		});
 	};
 
 	useMemo(() => {
 		const store = getStore();
-		const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(
-			window.location.href,
-		);
-		const userAgent = AdvancedURL.getUserAgentFromUrl(
-			AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string,
-		);
+		const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href);
+		const userAgent = AdvancedURL.getUserAgentFromUrl(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string);
 		store.dispatch(
 			recordAction({
 				type: ACTIONS_IN_TEST.SET_DEVICE,
@@ -67,10 +58,7 @@ const App = () => {
 				},
 			}),
 		);
-		window.addEventListener(
-			"message",
-			recorderMessageListener.bind(window, deviceIframeRef),
-		);
+		window.addEventListener("message", recorderMessageListener.bind(window, deviceIframeRef));
 	}, []);
 
 	return (

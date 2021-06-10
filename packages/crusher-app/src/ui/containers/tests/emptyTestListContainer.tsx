@@ -16,9 +16,7 @@ const EmptyTestListContainer = (props: any) => {
 
 			<img src={CreateTestPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>Create a test to fight bugs and downtime</p>
-			<p css={easyToCreateTestCSS}>
-				{"It's easy to create a test. It just takes a few seconds!"}
-			</p>
+			<p css={easyToCreateTestCSS}>{"It's easy to create a test. It just takes a few seconds!"}</p>
 
 			<div css={buttonsDivCSS}>
 				<button
@@ -35,7 +33,6 @@ const EmptyTestListContainer = (props: any) => {
 					Create a Test
 				</button>
 			</div>
-			<p css={migrateTestCSS}>Already have a test? Migrate it!</p>
 		</div>
 	);
 };
@@ -108,17 +105,6 @@ const createTestButtonCSS = css`
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
-`;
-
-const migrateTestCSS = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 0.95rem;
-	line-height: 1rem;
-	text-align: center;
-	text-decoration-line: underline;
-	color: #313131;
 `;
 
 export { EmptyTestListContainer };

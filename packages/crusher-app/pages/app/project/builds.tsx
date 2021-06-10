@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { css } from "@emotion/core";
 import withSession from "@hoc/withSession";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
-import { FilterListPagination } from "@ui/containers/FilterListPagination";
+import { BuildList } from "@ui/containers/BuildList";
 import { cleanHeaders } from "@utils/backendRequest";
 import { getCookies } from "@utils/cookies";
 import { getSelectedProject } from "@redux/stateUtils/projects";
@@ -103,9 +103,7 @@ function BuildItem(props: any) {
 					<div css={styles.buildInfo}>
 						<div>
 							<div css={styles.buildCommitIds}>
-								<div css={styles.buildCommitBranch}>
-									{branchName ? branchName : "N/A"}
-								</div>
+								{/*<div css={styles.buildCommitBranch}>{branchName ? branchName : "N/A"}</div>*/}
 								{commitId && (
 									<div css={styles.buildCommit}>
 										{commitId ? commitId.slice(0, 5) : "** No Commit **"}
@@ -161,7 +159,6 @@ function BuildItem(props: any) {
 function buildList(props: any) {
 	const { items: builds } = props;
 	const { jobs } = builds;
-	console.log(jobs);
 	const out = jobs
 		? jobs.map((job: any) => {
 				return (
@@ -212,7 +209,7 @@ const BuildPage = (props: any) => {
 				<div css={filterContainerCss}>
 					<div css={headingCSS}>Previous Builds</div>
 					<div css={filterPaginationContainerCSS}>
-						<FilterListPagination
+						<BuildList
 							categories={AVAILABLE_FILTERS}
 							resolvePaginationUrl={resolvePaginationUrl}
 							resolveCategoryUrl={resolveCategoryUrl}

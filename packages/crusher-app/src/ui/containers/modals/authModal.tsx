@@ -9,12 +9,7 @@ const AuthModal = (props: iAuthModalProps) => {
 	const { isOpen, onClose } = props;
 
 	return (
-		<Modal
-			isOpen={isOpen}
-			onRequestClose={onClose}
-			style={customModalStyle}
-			contentLabel="Base Modal"
-		>
+		<Modal isOpen={isOpen} onRequestClose={onClose} style={customModalStyle} contentLabel="Base Modal">
 			<iframe src={"/"} css={{ width: "100%", height: "100%" }} />
 		</Modal>
 	);

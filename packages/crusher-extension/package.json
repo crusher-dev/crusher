@@ -7,9 +7,9 @@
 		"start": "ts-node scripts/dev",
 		"dev": "node scripts/build.js && NODE_ENV=development webpack --config webpack/webpack.ts --mode=development --watch",
 		"build": "node scripts/build.js && webpack --config webpack/webpack.prod.ts --progress",
-		"lint": "prettier --write .",
 		"build:css": "postcss ./src/style/tailwind.css -o ./src/style/main.css",
-		"build:csswatch": "postcss ./src/style/tailwind.css -o src/style/main.css --watch"
+		"build:csswatch": "postcss ./src/style/tailwind.css -o src/style/main.css --watch",
+		"prettify": "prettier --write ."
 	},
 	"dependencies": {
 		"@medv/finder": "^2.0.0",
@@ -45,7 +45,11 @@
 		"url": "^0.11.0",
 		"url-parse": "^1.4.7",
 		"webpack": "5.21.2",
-		"worker-dom": "^0.1.0"
+		"worker-dom": "^0.1.0",
+		"an-array-of-english-words": "^2.0.0",
+		"html-tags": "^3.1.0",
+		"playwright": "^1.11.1",
+		"playwright-core": "^1.11.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.11.1",
@@ -80,15 +84,18 @@
 		"playwright": "^1.7.1",
 		"postcss": "^8.2.15",
 		"postcss-cli": "^8.3.1",
+		"tailwindcss": "^2.1.2",
 		"prettier": "^2.2.1",
 		"shelljs": "^0.8.4",
-		"tailwindcss": "^2.1.2",
+		"css.escape": "^1.5.1",
 		"ts-loader": "^8.0.2",
 		"ts-node": "^9.1.1",
 		"typescript": "^4.1.3",
 		"webpack-cli": "^4.5.0",
 		"webpack-extension-reloader": "https://github.com/crusherdev/webpack-extension-reloader.git",
 		"webpack-httpolyglot-server": "^0.3.0",
-		"webpack-node-externals": "^2.5.2"
+		"webpack-node-externals": "^2.5.2",
+		"webpack-virtual-modules": "^0.4.3"
+
 	}
 }

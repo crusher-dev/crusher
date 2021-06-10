@@ -1,23 +1,19 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "target": "ES2017",
-    "rootDir": "../../",
-    "baseUrl": "../",
-    "outDir": "dist",
-    "paths": {
-      "@crusher-shared/*": ["crusher-shared/*"]
-    }
-  },
-  "include": ["./src/actions/index.ts", "./src/functions/index.ts", "./src/middlewares/index.ts"],
-  "files": [
-    "./src/actions/index.ts",
-    "./src/functions/index.ts",
-    "./src/middlewares/index.ts"
-  ],
-  "typeRoots": ["node_modules/@types"],
-  "include": ["./src/**/*"],
-  "exclude": ["**/*.spec.ts"],
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"module": "commonjs",
+		"target": "ES2017",
+		"rootDir": "../../",
+		"baseUrl": "../",
+		"outDir": "dist",
+		"paths": {
+			"@crusher-shared/*": ["crusher-shared/*"]
+		}
+	},
+	"include": ["./src/actions/index.ts", "./src/functions/index.ts", "./src/middlewares/index.ts"],
+	"files": ["./src/actions/index.ts", "./src/functions/index.ts", "./src/middlewares/index.ts"],
+	"typeRoots": ["node_modules/@types"],
+	"include": ["./src/**/*"],
+	"exclude": ["**/*.spec.ts"]
 }

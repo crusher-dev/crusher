@@ -10,7 +10,11 @@ interface iStartupModalProps {
 const StartupModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
 	const [targetURL, setTargetURL] = useState(
+<<<<<<< HEAD
 		"https://www.headout.com/burj-khalifa-tickets-c-158/",
+=======
+		"https://www.test-headout.com/burj-khalifa-tickets-c-158/",
+>>>>>>> 5da04c0191eeef9d706f3a70beaff4001d34cbc6
 	);
 
 	const handleTargetSiteChange = (event: any) => {
@@ -19,9 +23,7 @@ const StartupModal = (props: iStartupModalProps) => {
 
 	const startRecording = () => {
 		if (targetURL && targetURL !== "") {
-			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(
-				targetURL,
-			)}&device=GoogleChromeLargeScreen`;
+			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeLargeScreen`;
 		}
 	};
 
@@ -31,12 +33,7 @@ const StartupModal = (props: iStartupModalProps) => {
 		}
 	};
 	return (
-		<ReactModal
-			isOpen={isOpen}
-			contentLabel="Startup Modal"
-			style={customModalStyles}
-			overlayClassName="overlay"
-		>
+		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
 			<div style={inputContainerStyle}>
 				<input
 					style={inputStyle}

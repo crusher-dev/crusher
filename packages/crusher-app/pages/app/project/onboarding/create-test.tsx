@@ -11,16 +11,10 @@ import { InstallExtensionModal } from "@ui/containers/modals/installExtensionMod
 import { checkIfExtensionPresent } from "@utils/extension";
 
 const features = [
-	{ message: "😃 Ship Faster", color: "#FF5A8C" },
-	{ message: "Increase your productivity", color: "#885FFF" },
-	{ message: "Catch UI/Flow Issues", color: "#FB7237" },
+	{ message: "😃 Ship Faster", color: "#ff3ed5" },
+	{ message: "Catch UI/User Flow Issues", color: "#FB7237" },
 	{ message: "Monitor Product changes", color: "#4E75FF" },
-	{ message: "Test on different devices", color: "#53D6FF" },
-	{ message: "Test from different browsers", color: "#4E75FF" },
-	{ message: "Test without writing code", color: "#69A5FF" },
-	{ message: "Increase Revenue", color: "#4E75FF" },
-	{ message: "Decrease Unhappy Customers", color: "#4E75FF" },
-	{ message: "Test in Development", color: "#4E75FF" },
+	{ message: "Test on different configurations", color: "#33a5c9" },
 ];
 
 function ProjectOnboardingCreateTest(props) {
@@ -28,15 +22,11 @@ function ProjectOnboardingCreateTest(props) {
 	const userInfo = useSelector(getUserInfo);
 	const [featuresMessage, setFeaturesMessage] = useState(0);
 	const [showCreateTestModal, setShouldShowCreateTestModal] = useState(false);
-	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(
-		false,
-	);
+	const [showInstallExtensionModal, setShowInstallExtensionModal] = useState(false);
 
 	const changeFeatureMessage = () => {
 		const interval = setInterval(() => {
-			setFeaturesMessage(
-				featuresMessage + 1 < features.length ? featuresMessage + 1 : 0,
-			);
+			setFeaturesMessage(featuresMessage + 1 < features.length ? featuresMessage + 1 : 0);
 		}, 4500);
 		return () => {
 			clearInterval(interval);
@@ -83,39 +73,20 @@ function ProjectOnboardingCreateTest(props) {
 				}}
 			>
 				<div css={styles.innerCenterContainer}>
-					<video
-						css={styles.videoPlayer}
-						src="/assets/video/onboarding.mp4"
-						onEnded={handleVideoFinishedCallback}
-						controls
-					></video>
+					<video css={styles.videoPlayer} src="/assets/video/onboarding.mp4" onEnded={handleVideoFinishedCallback} controls></video>
 					<div css={styles.crusherFeatures}>
-						<span style={{ color: features[featuresMessage].color }}>
-							{features[featuresMessage].message}
-						</span>{" "}
-						with Crusher
+						<span style={{ color: features[featuresMessage].color }}>{features[featuresMessage].message}</span> with Crusher
 					</div>
-					<div css={styles.heyText}>
-						Hey {firstName}, Experience power of no code testing
-					</div>
+					<div css={styles.heyText}>Hey {firstName}, Experience power of no code testing</div>
 					<div>
 						<div css={styles.buttonContainer}>
 							<CreateTest onClick={handleCreateTest} label="Create first test" />
 						</div>
-
-						<div css={styles.migrateTest}>Already Have testing? Migrate test</div>
 					</div>
 				</div>
 			</div>
-			<InstallExtensionModal
-				isOpen={showInstallExtensionModal}
-				onClose={closeInstallExtensionModal}
-				onExtensionDownloaded={handleExtensionDownloaded}
-			/>
-			<CreateTestModal
-				isOpen={showCreateTestModal}
-				onClose={closeCreateTestModal}
-			/>
+			<InstallExtensionModal isOpen={showInstallExtensionModal} onClose={closeInstallExtensionModal} onExtensionDownloaded={handleExtensionDownloaded} />
+			<CreateTestModal isOpen={showCreateTestModal} onClose={closeCreateTestModal} />
 		</>
 	);
 }

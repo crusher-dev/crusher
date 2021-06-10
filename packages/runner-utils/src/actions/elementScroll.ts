@@ -7,16 +7,16 @@ export default function capturePageScreenshot(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
-			await waitForSelectors(page, selectors);
+			const output = await waitForSelectors(page, selectors);
 
 			const scrollDelta = action.payload.meta.value;
 			const pageUrl = await page.url();
-			await scroll(page, selectors, scrollDelta, false);
+			await scroll(page, output ? [output] : selectors, scrollDelta, false);
 
 			return success({
 				message: `Scrolled successfully on ${pageUrl}`,
 			});
-		} catch(err){
+		} catch (err) {
 			console.log(err);
 			return error("Some issue occurred while scrolling on element");
 		}

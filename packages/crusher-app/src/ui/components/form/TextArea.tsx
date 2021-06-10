@@ -4,15 +4,7 @@ import { css } from "@emotion/core";
 function TextArea(props) {
 	const { placeholder, value, style, width, height, onChange } = props;
 
-	return (
-		<textarea
-			placeholder={placeholder}
-			css={styles.textArea(width, height)}
-			onChange={onChange}
-			style={style}
-			value={value}
-		/>
-	);
+	return <textarea placeholder={placeholder} css={styles.textArea(width, height)} onChange={onChange} style={style} value={value} />;
 }
 
 const styles = {

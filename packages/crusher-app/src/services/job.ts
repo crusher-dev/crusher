@@ -8,12 +8,7 @@ export const getVisualDiffsJob = (jobId, headers = null) => {
 	});
 };
 
-export const getAllJobsOfProject = (
-	projectId,
-	category = 0,
-	page = 1,
-	headers = null,
-) => {
+export const getAllJobsOfProject = (projectId, category = 0, page = 1, headers = null) => {
 	return backendRequest(`/v2/job/report/list/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
@@ -21,11 +16,7 @@ export const getAllJobsOfProject = (
 	});
 };
 
-export const getPaginationEndpoint = (
-	endpoint: string,
-	payload: any,
-	headers = null,
-) => {
+export const getPaginationEndpoint = (endpoint: string, payload: any, headers = null) => {
 	return backendRequest(endpoint, {
 		method: RequestMethod.GET,
 		headers: headers,
@@ -34,17 +25,17 @@ export const getPaginationEndpoint = (
 };
 
 export const getAllProjectLogs = (projectId: number, headers = null) => {
-	return backendRequest(`/job/getLogsOfProject/${projectId}`, {
+	const mockUrl = "https://api.jsonbin.io/b/60bdbcf19fc30168f1c6714e"
+	return backendRequest(mockUrl || `/job/getLogsOfProject/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 	});
 };
 
-export const getMetaDashboardProjectInfo = (
-	projectId: number,
-	headers = null,
-) => {
-	return backendRequest(`/projects/meta/dashboard/info/${projectId}`, {
+export const getMetaDashboardProjectInfo = (projectId: number, headers = null) => {
+	const mockURL = "https://api.jsonbin.io/b/60bdbbbd92164b68bec2e230";
+
+	return backendRequest(mockURL || `/projects/meta/dashboard/info/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 	});

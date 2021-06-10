@@ -103,24 +103,6 @@ const ProjectBasicSettings = (props: any) => {
 					inputContainerCSS={inputContainerCSS}
 				/>
 				<div css={featuresFormCSS}>
-					<div css={featuresHeadingCSS}>Features</div>
-					<ul css={featuresListCSS}>
-						<FeatureItem
-							title={"Video Recording"}
-							enabled={featuresInfo.video_recording}
-							onToggleEnable={handleVideoRecordingToggle}
-						/>
-						<FeatureItem
-							title={"Screenshot"}
-							enabled={featuresInfo.screenshot}
-							onToggleEnable={handleScreenshotToggle}
-						/>
-						<FeatureItem
-							title={"Multi browser support"}
-							enabled={featuresInfo.multi_browser_support}
-							onToggleEnable={handleMultiBrowserSupportToggle}
-						/>
-					</ul>
 					<div css={saveButtonRowCSS}>
 						<button css={saveButtonCSS} onClick={saveBasicSettings}>
 							Save
@@ -189,7 +171,7 @@ const settingContentCSS = css`
 	width: ${600 / PIXEL_REM_RATIO}rem;
 `;
 const inputContainerCSS = css`
-	width: 95%;
+	width: 100%;
 `;
 const mainContainerCSS = css`
 	margin-top: ${47 / PIXEL_REM_RATIO}rem;

@@ -15,6 +15,7 @@
 		"baseUrl": ".",
 		"allowJs": true,
 		"jsx": "react",
+		"downlevelIteration": true,
 		"allowSyntheticDefaultImports": true
 	},
 	"typeRoots": ["node_modules/@types"],

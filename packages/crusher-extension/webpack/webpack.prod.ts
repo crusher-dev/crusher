@@ -3,24 +3,36 @@ import * as webpack from "webpack";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyPlugin = require("copy-webpack-plugin");
+const VirtualModulesPlugin = require("webpack-virtual-modules");
+const injectedScriptSource = require("playwright-core/lib/generated/injectedScriptSource");
+
+const virtualModules = new VirtualModulesPlugin({
+	"../node_modules/playwright-evaluator.js": `
+  let pwQuerySelector;
+  (() => {
+    ${injectedScriptSource.source}
+    const injected = new pwExport(1, false, []);
+    window.injected = injected;
+    pwQuerySelector = (selector, root) => {
+      const parsed = injected.parseSelector(selector);
+      return injected.querySelector(parsed, root);
+    };
+  })();
+  module.exports = { querySelector: pwQuerySelector };`,
+});
 
 module.exports = {
 	mode: "production",
 	entry: {
-		content_script: [
-			path.resolve(__dirname, "../src/scripts/inject/events_listener.ts"),
-		],
-		init_content_script: [
-			path.resolve(__dirname, "../src/scripts/inject/init_event_listener.ts"),
-		],
-		change_navigator: [
-			path.resolve(__dirname, "../src/scripts/inject/change_navigator.ts"),
-		],
+		content_script: [path.resolve(__dirname, "../src/scripts/inject/events_listener.ts")],
+		init_content_script: [path.resolve(__dirname, "../src/scripts/inject/init_event_listener.ts")],
+		change_navigator: [path.resolve(__dirname, "../src/scripts/inject/change_navigator.ts")],
 		background: [path.resolve(__dirname, "../src/background.ts")],
 		popup: [path.resolve(__dirname, "../src/ui/popup.tsx")],
 		record_test: [path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [
+		virtualModules,
 		new CopyPlugin({
 			patterns: [{ from: "public/", to: "../" }],
 			options: {
@@ -30,11 +42,7 @@ module.exports = {
 		new webpack.DefinePlugin({
 			NODE_ENV: "production",
 			"process.env": {
-				BACKEND_URL: JSON.stringify(
-					process.env.BACKEND_URL
-						? process.env.BACKEND_URL
-						: "https://backend.crusher.dev/",
-				),
+				BACKEND_URL: JSON.stringify(process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://backend.crusher.dev/"),
 			},
 		}),
 	],

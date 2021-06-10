@@ -41,7 +41,7 @@ export default class JobRunnerService {
 	) {
 		const testIds = tests.map((test) => test.id);
 
-		let job = await this.jobsService.createOrUpdateJob(null, null, {
+		const job = await this.jobsService.createOrUpdateJob(null, null, {
 			projectId: projectId,
 			host: hostUrl,
 			repoName: gitInfo?.repoName,
@@ -90,10 +90,12 @@ export default class JobRunnerService {
 		host: iHost | null = null,
 		gitInfo: iGitInfo | null = null,
 	) {
-		const tests = await this.testService.getAllTestsInProject(projectId);
+		const tests = await this.testService.getAllTestsInProject(projectId, true);
 
 		const jobRequest = await this.addJobToQueue(projectId, userId, tests, platform, jobTrigger, host ? host.url : null, gitInfo);
 
-		Logger.debug("JOB_RUNNER", `Adding ${jobRequest.jobId} to the queue`, { jobRequest });
+		Logger.debug("JOB_RUNNER", `Adding ${jobRequest.jobId} to the queue`, {
+			jobRequest,
+		});
 	}
 }

@@ -5,10 +5,7 @@ import { BrowserToolbar } from "./browserToolbar";
 import { AdvancedURL } from "../../../utils/url";
 import { ACTION_FORM_TYPE } from "../../../constants";
 import { useSelector } from "react-redux";
-import {
-	getActionsRecordingState,
-	getInspectModeState,
-} from "../../../redux/selectors/recorder";
+import { getActionsRecordingState, getInspectModeState } from "../../../redux/selectors/recorder";
 import { getStore } from "../../../redux/store";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { recordAction } from "../../../redux/actions/actions";
@@ -25,16 +22,11 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 	const { deviceIframeRef, saveTestCallback } = props;
 	const isInspectModeOn = useSelector(getInspectModeState);
 	const actionsRecordingState = useSelector(getActionsRecordingState);
-	const isElementRecordingStateOn =
-		actionsRecordingState.type === ACTIONS_RECORDING_STATE.ELEMENT;
+	const isElementRecordingStateOn = actionsRecordingState.type === ACTIONS_RECORDING_STATE.ELEMENT;
 
-	const [url, setUrl] = useState(
-		AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string,
-	);
+	const [url, setUrl] = useState(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string);
 
-	const selectedDevice = AdvancedURL.getDeviceFromCrusherExtensionUrl(
-		window.location.href,
-	);
+	const selectedDevice = AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href);
 
 	function handleKeyPress(event: KeyboardEvent) {
 		const cn = deviceIframeRef?.current?.contentWindow;
@@ -58,19 +50,13 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 	const goBack = () => {
 		const cn = deviceIframeRef?.current?.contentWindow;
 
-		cn?.postMessage(
-			{ type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true },
-			"*",
-		);
+		cn?.postMessage({ type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true }, "*");
 	};
 
 	const goForward = () => {
 		const cn = deviceIframeRef?.current?.contentWindow;
 
-		cn?.postMessage(
-			{ type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true },
-			"*",
-		);
+		cn?.postMessage({ type: SETTINGS_ACTIONS.GO_FORWARD_TO_NEXT_URL, value: true }, "*");
 	};
 
 	const refreshPage = () => {
@@ -96,6 +82,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 	};
 
 	return (
+<<<<<<< HEAD
 		<div style={{ ...browserStyle, ...mainContainerStyle }}>
 			<BrowserToolbar
 				isInspectModeOn={isInspectModeOn}
@@ -114,6 +101,24 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 				isDisabled={isElementRecordingStateOn}
 				forwardRef={deviceIframeRef}
 			/>
+=======
+		<div style={mainContainerStyle}>
+			<div style={browserStyle}>
+				<div style={toolbarContainerStyle}>
+					<BrowserToolbar
+						isInspectModeOn={isInspectModeOn}
+						initialUrl={url}
+						goBack={goBack}
+						goForward={goForward}
+						refreshPage={refreshPage}
+						saveTest={saveTestCallback}
+						loadNewPage={loadNewPage}
+					/>
+					{/*<ActionRecordedIndicator />*/}
+				</div>
+				<Device url={url} device={selectedDevice} isDisabled={isElementRecordingStateOn} forwardRef={deviceIframeRef} />
+			</div>
+>>>>>>> 5da04c0191eeef9d706f3a70beaff4001d34cbc6
 		</div>
 	);
 };

@@ -56,6 +56,11 @@ module.exports = async (bullJob: iTestRunnerJob): Promise<boolean> => {
 
 		const { output, error } = await CodeRunnerService.runTest(bullJob.data, logSteps, handleScreenshotImageBuffer);
 
+		/*
+			@TODO -  Improve this to continuously stream buffer to remote object.
+			Why - Consider you have 4 gb machine, browser is using 2 GB memory. With buffer space the memory will be
+			less available, this should be making things slow.
+		 */
 		const { signedImageUrls, signedRawVideoUrl } = await uploadOutputToS3(bufferImages, output.video, bullJob.data);
 
 		if (signedRawVideoUrl) {

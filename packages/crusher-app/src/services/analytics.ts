@@ -1,35 +1,31 @@
-import {PAGE_TYPE} from "@constants/page";
+import { TSentryTracking } from '@crusher-shared/types/common/sentryTracking';
 
-class AnalyticsService {
-	 intialize(
-		userId: string | null,
-		teamId: string | null,
-		projectId: string | null,
-	) {
-		if (!userId)
-			console.log(
-				"Tracking user with anonymous identity. Make sure to call addUser when user Sign in.",
-			);
+
+class SentryService implements TSentryTracking{
+
+	// Lazy initialization
+	intialize(userId: string | null) {
+		if (!userId) console.log("Tracking user with anonymous identity. Make sure to call addUser when user Sign in.");
 	}
 
-	 trackPage(pageType: PAGE_TYPE) {
-		 window.analytics.page(pageType);
+	trackPage() {}
+
+	trackEvent(value) {
+		analytics.track({ userId: this.userId, ...value });
 	}
 
-	 trackEvent() {}
+	trackCustomEvent() {}
 
-	 trackCustomEvent() {}
+	addUserInfo() {
+	}
 
-	 addGroupId() {}
+	addGroupInfo(){
 
-	 addGroupTrait() {}
-
-	 addUserId() {}
-
-	 addUserTrait() {}
+	}
 }
 
 /*
+		// We can also use static as only one instance is available
     Pass userId, teamId, projectId after reading from cookies
  */
-export const ANALYTICS = Object.freeze(new AnalyticsService());
+export const ANALYTICS = Object.freeze(new SentryService());

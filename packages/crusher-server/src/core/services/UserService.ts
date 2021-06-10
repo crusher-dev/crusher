@@ -164,10 +164,10 @@ export default class UserService {
 			const teamId = referralTeamId
 				? referralTeamId
 				: (
-					await this.teamService.createTeam({
-						teamName: "Default",
-						userId: inserted_user.insertId,
-					})
+						await this.teamService.createTeam({
+							teamName: "Default",
+							userId: inserted_user.insertId,
+						})
 				  ).teamId;
 			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId)).insertId;
 

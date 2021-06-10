@@ -16,10 +16,7 @@ import { useSelector } from "react-redux";
 import { getCookies } from "@utils/cookies";
 import { _getProjectMembers } from "@services/projects";
 import { setProjectMembers } from "@redux/actions/project";
-import {
-	getProjectMembers,
-	getSelectedProject,
-} from "@redux/stateUtils/projects";
+import { getProjectMembers, getSelectedProject } from "@redux/stateUtils/projects";
 
 interface iButtonProps {
 	onClick: () => void;
@@ -78,17 +75,11 @@ const ProjectMembersSettings = () => {
 					button={<InviteMemberButton onClick={onInviteMember} />}
 				/>
 				<div css={mainContainerCSS}>
-					<MemberFilterTableList
-						onToggleRoleSort={onToggleRoleSort}
-						filterSort={roleSort}
-						members={Object.values(members)}
-					/>
+					<MemberFilterTableList onToggleRoleSort={onToggleRoleSort} filterSort={roleSort} members={Object.values(members)} />
 				</div>
 			</SettingsContent>
 			<Conditional If={showMemberModal}>
-				<InviteTeamMemberModal
-					onClose={closeTeamMemberModal}
-				></InviteTeamMemberModal>
+				<InviteTeamMemberModal onClose={closeTeamMemberModal}></InviteTeamMemberModal>
 			</Conditional>
 		</>
 	);
@@ -114,15 +105,11 @@ ProjectMembersSettings.getInitialProps = async (ctx: any) => {
 		}
 
 		const cookies = getCookies(req);
-		const selectedProject = cookies.selectedProject
-			? JSON.parse(cookies.selectedProject)
-			: null;
+		const selectedProject = cookies.selectedProject ? JSON.parse(cookies.selectedProject) : null;
 
-		await _getProjectMembers(selectedProject, headers).then(
-			(members: Array<iMemberInfoResponse>) => {
-				store.dispatch(setProjectMembers(selectedProject, members));
-			},
-		);
+		await _getProjectMembers(selectedProject, headers).then((members: Array<iMemberInfoResponse>) => {
+			store.dispatch(setProjectMembers(selectedProject, members));
+		});
 
 		return {};
 	} catch (ex) {

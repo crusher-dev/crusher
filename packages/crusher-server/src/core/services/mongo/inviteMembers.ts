@@ -27,10 +27,20 @@ export class InviteMembersService {
 
 					if (!referral) {
 						this.createPublicInviteCode(projectId, teamId, expiresOn).then((referralId: string) => {
-							resolve(generatePublicInviteLink({ code: referralId, type: INVITE_REFERRAL_TYPES.PROJECT }));
+							resolve(
+								generatePublicInviteLink({
+									code: referralId,
+									type: INVITE_REFERRAL_TYPES.PROJECT,
+								}),
+							);
 						});
 					} else {
-						resolve(generatePublicInviteLink({ code: referral.id, type: INVITE_REFERRAL_TYPES.PROJECT }));
+						resolve(
+							generatePublicInviteLink({
+								code: referral.id,
+								type: INVITE_REFERRAL_TYPES.PROJECT,
+							}),
+						);
 					}
 				},
 			);
@@ -94,7 +104,9 @@ export class InviteMembersService {
 		return new Promise((resolve, reject) => {
 			TeamInviteReferrals.findById(code, (err, referral) => {
 				if (err) return reject(err);
-				const referralObject: iTeamInviteReferral = referral.toObject({ getters: true });
+				const referralObject: iTeamInviteReferral = referral.toObject({
+					getters: true,
+				});
 
 				if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
 				resolve(referralObject);
@@ -106,7 +118,9 @@ export class InviteMembersService {
 		return new Promise((resolve, reject) => {
 			ProjectInviteReferrals.findById(code, (err, referral) => {
 				if (err) return reject(err);
-				const referralObject: iProjectInviteReferral = referral.toObject({ getters: true });
+				const referralObject: iProjectInviteReferral = referral.toObject({
+					getters: true,
+				});
 
 				if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
 				resolve(referralObject);

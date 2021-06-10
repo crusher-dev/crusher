@@ -16,6 +16,8 @@ import BuildsSVG from "../../public/svg/sidebarSettings/builds.svg";
 import TestsSVG from "../../public/svg/sidebarSettings/testsList.svg";
 import ProjectSettings from "../../public/svg/sidebarSettings/projectSettings.svg";
 import Logout from "../../public/svg/sidebarSettings/logout.svg";
+import FeedbackSVG from "../../public/svg/sidebarSettings/feedback.svg";
+import Support from "../../public/svg/sidebarSettings/support.svg";
 import DropdownSVG from "../../public/svg/sidebarSettings/drodpown.svg";
 import { CreateTest } from "@ui/components/app/CreateTestButton";
 import { useRouter } from "next/router";
@@ -113,7 +115,13 @@ function LeftSection(props: any) {
 		},
 		{
 			name: "Builds",
-			link: "/app/project/builds",
+			link: "/app/project/builds?category=1",
+			icon: BuildsSVG,
+			isAuthorized: true,
+		},
+		{
+			name: "Monitoring",
+			link: "/app/project/builds?category=0",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},
@@ -124,14 +132,24 @@ function LeftSection(props: any) {
 			isAuthorized: true,
 		},
 		{
-			name: "Project Settings",
+			name: "Settings",
 			link: "/app/settings/project/basic",
 			icon: ProjectSettings,
 			isAuthorized: true,
 		},
 	];
 
-	const bottomNavLinks = [
+	const bottomNavLinks = [{
+		name: "Documentation & Support",
+		link: "https://docs.crusher.dev",
+		icon: Support,
+		isAuthorized: false,
+	},{
+		name: "Share Feedback",
+		link: "/feedback",
+		icon: FeedbackSVG,
+		isAuthorized: false,
+	},
 		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),
@@ -249,7 +267,6 @@ function ProjectSelector(props: {
 	selectedProject: any;
 	onChange: (project: iSelectOption) => void;
 }) {
-	const router = useRouter();
 	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(
 		false,
 	);
@@ -258,13 +275,10 @@ function ProjectSelector(props: {
 	const modifiedOption = [
 		{ label: "Add new project", value: "add_project" },
 		...options,
-		{ label: "View all project", value: "view_all" },
 	];
 	const handleChange = (option: iSelectOption) => {
 		if (option.value === "add_project") {
 			setIsShowingCreateProjectModal(true);
-		} else if (option.value === "view_all") {
-			router.push("/app/project/list");
 		} else {
 			onChange(option);
 		}

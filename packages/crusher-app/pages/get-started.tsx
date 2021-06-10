@@ -60,23 +60,21 @@ function SignupScreen(props: iSignupScreenProps) {
 			return;
 		}
 
-		_registerUser(firstName, lastName, email, password, inviteReferral).then(
-			(res: any) => {
-				const { status } = res;
+		_registerUser(firstName, lastName, email, password, inviteReferral).then((res: any) => {
+			const { status } = res;
 
-				switch (status) {
-					case USER_REGISTERED:
-						return redirectToFrontendPath("/app/dashboard");
-						break;
-					case USER_ALREADY_REGISTERED:
-						alert("An account with this email has already been registered");
-						break;
-					default:
-						break;
-				}
-				return false;
-			},
-		);
+			switch (status) {
+				case USER_REGISTERED:
+					return redirectToFrontendPath("/app/dashboard");
+					break;
+				case USER_ALREADY_REGISTERED:
+					alert("An account with this email has already been registered");
+					break;
+				default:
+					break;
+			}
+			return false;
+		});
 	};
 
 	function handleKeyDown(event: any) {
@@ -90,13 +88,13 @@ function SignupScreen(props: iSignupScreenProps) {
 	return (
 		<div>
 			<Head>
-				<title>Get Started | Crusher</title>
+				<title>Signup | Crusher</title>
 			</Head>
 
 			<AuthenticationTemplate>
 				<div css={formCSS(theme)}>
 					<div>
-						<div css={formHeadingCSS(theme)}>Start 14 days free trial</div>
+						<div css={formHeadingCSS(theme)}>Start testing</div>
 					</div>
 
 					<form css={formContainerCSS}>
@@ -140,14 +138,10 @@ function SignupScreen(props: iSignupScreenProps) {
 					<div css={requestButtonCSS} onClick={handleSignUp} className={"button"}>
 						Next
 					</div>
-					<a
-						href={getRegisterGoogleUrl(inviteReferral)}
-						target={isIFrame ? "_blank" : "_self"}
-						className={"noDecoration"}
-					>
+					<a href={getRegisterGoogleUrl(inviteReferral)} target={isIFrame ? "_blank" : "_self"} className={"noDecoration"}>
 						<div css={googleLoginButtonCSS(theme)}>
 							<GoogleIcon width={"1.5rem"} height={"1.44rem"} />
-							<span>Signup with Google</span>
+							<span style={{marginLeft: 15}}>Signup with Google</span>
 						</div>
 					</a>
 				</div>
@@ -155,10 +149,7 @@ function SignupScreen(props: iSignupScreenProps) {
 				<div>
 					<Link href={"/"} prefetch>
 						<a css={loginButtonCSS(theme)}>
-							<BackSVG
-								fill={theme === "dark" ? "#FFFFFF" : COLORS.dark1}
-								css={{ marginRight: "1rem", height: "1.5rem" }}
-							/>
+							<BackSVG fill={theme === "dark" ? "#FFFFFF" : COLORS.dark1} css={{ marginRight: "1rem", height: "1.5rem" }} />
 							Already registered? Login
 						</a>
 					</Link>
@@ -257,7 +248,7 @@ const googleLoginButtonCSS = (theme: string) => {
 	return css`
 		display: flex;
 		align-item: center;
-		justify-content: space-between;
+		justify-content: center;
 
 		box-sizing: border-box;
 		border-radius: 5px;

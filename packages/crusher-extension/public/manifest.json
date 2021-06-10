@@ -3,17 +3,7 @@
 	"description": "Record extensive tests for playwright, Puppeteer and other frameworks.",
 	"version": "2.01",
 	"manifest_version": 2,
-	"permissions": [
-		"webRequest",
-		"webRequestBlocking",
-		"browsingData",
-		"webNavigation",
-		"<all_urls>",
-		"http://*/*",
-		"https://*/*",
-		"activeTab",
-		"tabs"
-	],
+	"permissions": ["webRequest", "webRequestBlocking", "browsingData", "webNavigation", "<all_urls>", "http://*/*", "https://*/*", "activeTab", "tabs"],
 	"web_accessible_resources": [
 		"iframe_inject.html",
 		"test_recorder.html",

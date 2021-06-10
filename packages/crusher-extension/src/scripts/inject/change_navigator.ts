@@ -2,11 +2,7 @@ import { iMessage, MESSAGE_TYPES } from "../../messageListener";
 import { FRAME_MESSAGE_TYPES } from "./responseMessageListener";
 import { iUserAgent } from "../../../../crusher-shared/constants/userAgents";
 
-const actualCode = `(${(
-	userAgent: string,
-	appVersion: string,
-	platformVersion: string,
-) => {
+const actualCode = `(${(userAgent: string, appVersion: string, platformVersion: string) => {
 	const { navigator } = window;
 	let modifiedNavigator;
 	if ("userAgent" in Navigator.prototype) {

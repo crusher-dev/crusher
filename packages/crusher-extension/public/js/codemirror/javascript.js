@@ -117,10 +117,7 @@
 				return ret(ch);
 			} else if (ch == "=" && stream.eat(">")) {
 				return ret("=>", "operator");
-			} else if (
-				ch == "0" &&
-				stream.match(/^(?:x[\dA-Fa-f_]+|o[0-7_]+|b[01_]+)n?/)
-			) {
+			} else if (ch == "0" && stream.match(/^(?:x[\dA-Fa-f_]+|o[0-7_]+|b[01_]+)n?/)) {
 				return ret("number", "number");
 			} else if (/\d/.test(ch)) {
 				stream.match(/^[\d_]*(?:n|(?:\.[\d_]*)?(?:[eE][+\-]?[\d_]+)?)?/);
@@ -148,12 +145,7 @@
 				return ret("meta", "meta");
 			} else if (ch == "#" && stream.eatWhile(wordRE)) {
 				return ret("variable", "property");
-			} else if (
-				(ch == "<" && stream.match("!--")) ||
-				(ch == "-" &&
-					stream.match("->") &&
-					!/\S/.test(stream.string.slice(0, stream.start)))
-			) {
+			} else if ((ch == "<" && stream.match("!--")) || (ch == "-" && stream.match("->") && !/\S/.test(stream.string.slice(0, stream.start)))) {
 				stream.skipToEnd();
 				return ret("comment", "comment");
 			} else if (isOperatorChar.test(ch)) {
@@ -175,11 +167,7 @@
 						var kw = keywords[word];
 						return ret(kw.type, kw.style, word);
 					}
-					if (
-						word == "async" &&
-						stream.match(/^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[\[\(\w]/, false)
-					)
-						return ret("async", "keyword", word);
+					if (word == "async" && stream.match(/^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[\[\(\w]/, false)) return ret("async", "keyword", word);
 				}
 				return ret("variable", "variable", word);
 			}
@@ -243,9 +231,7 @@
 
 			if (isTS) {
 				// Try to skip TypeScript return type declarations after the arguments
-				var m = /:\s*(?:\w+(?:<[^>]*>|\[\])?|\{[^}]*\})\s*$/.exec(
-					stream.string.slice(stream.start, arrow),
-				);
+				var m = /:\s*(?:\w+(?:<[^>]*>|\[\])?|\{[^}]*\})\s*$/.exec(stream.string.slice(stream.start, arrow));
 				if (m) arrow = m.index;
 			}
 
@@ -306,8 +292,7 @@
 		}
 
 		function inScope(state, varname) {
-			for (var v = state.localVars; v; v = v.next)
-				if (v.name == varname) return true;
+			for (var v = state.localVars; v; v = v.next) if (v.name == varname) return true;
 			for (var cx = state.context; cx; cx = cx.prev) {
 				for (var v = cx.vars; v; v = v.next) if (v.name == varname) return true;
 			}
@@ -366,8 +351,7 @@
 				}
 			}
 			// Fall through means this is global
-			if (parserConfig.globalVars && !inList(varname, state.globalVars))
-				state.globalVars = new Var(varname, state.globalVars);
+			if (parserConfig.globalVars && !inList(varname, state.globalVars)) state.globalVars = new Var(varname, state.globalVars);
 		}
 		function registerVarScoped(varname, context) {
 			if (!context) {
@@ -385,13 +369,7 @@
 		}
 
 		function isModifier(name) {
-			return (
-				name == "public" ||
-				name == "private" ||
-				name == "protected" ||
-				name == "abstract" ||
-				name == "readonly"
-			);
+			return name == "public" || name == "private" || name == "protected" || name == "abstract" || name == "readonly";
 		}
 
 		// Combinators
@@ -425,21 +403,8 @@
 				var state = cx.state,
 					indent = state.indented;
 				if (state.lexical.type == "stat") indent = state.lexical.indented;
-				else
-					for (
-						var outer = state.lexical;
-						outer && outer.type == ")" && outer.align;
-						outer = outer.prev
-					)
-						indent = outer.indented;
-				state.lexical = new JSLexical(
-					indent,
-					cx.stream.column(),
-					type,
-					null,
-					state.lexical,
-					info,
-				);
+				else for (var outer = state.lexical; outer && outer.type == ")" && outer.align; outer = outer.prev) indent = outer.indented;
+				state.lexical = new JSLexical(indent, cx.stream.column(), type, null, state.lexical, info);
 			};
 			result.lex = true;
 			return result;
@@ -456,68 +421,39 @@
 		function expect(wanted) {
 			function exp(type) {
 				if (type == wanted) return cont();
-				else if (wanted == ";" || type == "}" || type == ")" || type == "]")
-					return pass();
+				else if (wanted == ";" || type == "}" || type == ")" || type == "]") return pass();
 				else return cont(exp);
 			}
 			return exp;
 		}
 
 		function statement(type, value) {
-			if (type == "var")
-				return cont(pushlex("vardef", value), vardef, expect(";"), poplex);
-			if (type == "keyword a")
-				return cont(pushlex("form"), parenExpr, statement, poplex);
+			if (type == "var") return cont(pushlex("vardef", value), vardef, expect(";"), poplex);
+			if (type == "keyword a") return cont(pushlex("form"), parenExpr, statement, poplex);
 			if (type == "keyword b") return cont(pushlex("form"), statement, poplex);
-			if (type == "keyword d")
-				return cx.stream.match(/^\s*$/, false)
-					? cont()
-					: cont(pushlex("stat"), maybeexpression, expect(";"), poplex);
+			if (type == "keyword d") return cx.stream.match(/^\s*$/, false) ? cont() : cont(pushlex("stat"), maybeexpression, expect(";"), poplex);
 			if (type == "debugger") return cont(expect(";"));
-			if (type == "{")
-				return cont(pushlex("}"), pushblockcontext, block, poplex, popcontext);
+			if (type == "{") return cont(pushlex("}"), pushblockcontext, block, poplex, popcontext);
 			if (type == ";") return cont();
 			if (type == "if") {
-				if (
-					cx.state.lexical.info == "else" &&
-					cx.state.cc[cx.state.cc.length - 1] == poplex
-				)
-					cx.state.cc.pop()();
+				if (cx.state.lexical.info == "else" && cx.state.cc[cx.state.cc.length - 1] == poplex) cx.state.cc.pop()();
 				return cont(pushlex("form"), parenExpr, statement, poplex, maybeelse);
 			}
 			if (type == "function") return cont(functiondef);
 			if (type == "for") return cont(pushlex("form"), forspec, statement, poplex);
 			if (type == "class" || (isTS && value == "interface")) {
 				cx.marked = "keyword";
-				return cont(
-					pushlex("form", type == "class" ? type : value),
-					className,
-					poplex,
-				);
+				return cont(pushlex("form", type == "class" ? type : value), className, poplex);
 			}
 			if (type == "variable") {
 				if (isTS && value == "declare") {
 					cx.marked = "keyword";
 					return cont(statement);
-				} else if (
-					isTS &&
-					(value == "module" || value == "enum" || value == "type") &&
-					cx.stream.match(/^\s*\w/, false)
-				) {
+				} else if (isTS && (value == "module" || value == "enum" || value == "type") && cx.stream.match(/^\s*\w/, false)) {
 					cx.marked = "keyword";
 					if (value == "enum") return cont(enumdef);
-					else if (value == "type")
-						return cont(typename, expect("operator"), typeexpr, expect(";"));
-					else
-						return cont(
-							pushlex("form"),
-							pattern,
-							expect("{"),
-							pushlex("}"),
-							block,
-							poplex,
-							poplex,
-						);
+					else if (value == "type") return cont(typename, expect("operator"), typeexpr, expect(";"));
+					else return cont(pushlex("form"), pattern, expect("{"), pushlex("}"), block, poplex, poplex);
 				} else if (isTS && value == "namespace") {
 					cx.marked = "keyword";
 					return cont(pushlex("form"), expression, statement, poplex);
@@ -529,28 +465,10 @@
 				}
 			}
 			if (type == "switch")
-				return cont(
-					pushlex("form"),
-					parenExpr,
-					expect("{"),
-					pushlex("}", "switch"),
-					pushblockcontext,
-					block,
-					poplex,
-					poplex,
-					popcontext,
-				);
+				return cont(pushlex("form"), parenExpr, expect("{"), pushlex("}", "switch"), pushblockcontext, block, poplex, poplex, popcontext);
 			if (type == "case") return cont(expression, expect(":"));
 			if (type == "default") return cont(expect(":"));
-			if (type == "catch")
-				return cont(
-					pushlex("form"),
-					pushcontext,
-					maybeCatchBinding,
-					statement,
-					poplex,
-					popcontext,
-				);
+			if (type == "catch") return cont(pushlex("form"), pushcontext, maybeCatchBinding, statement, poplex, popcontext);
 			if (type == "export") return cont(pushlex("stat"), afterExport, poplex);
 			if (type == "import") return cont(pushlex("stat"), afterImport, poplex);
 			if (type == "async") return cont(statement);
@@ -573,18 +491,8 @@
 		function expressionInner(type, value, noComma) {
 			if (cx.state.fatArrowAt == cx.stream.start) {
 				var body = noComma ? arrowBodyNoComma : arrowBody;
-				if (type == "(")
-					return cont(
-						pushcontext,
-						pushlex(")"),
-						commasep(funarg, ")"),
-						poplex,
-						expect("=>"),
-						body,
-						popcontext,
-					);
-				else if (type == "variable")
-					return pass(pushcontext, pattern, expect("=>"), body, popcontext);
+				if (type == "(") return cont(pushcontext, pushlex(")"), commasep(funarg, ")"), poplex, expect("=>"), body, popcontext);
+				else if (type == "variable") return pass(pushcontext, pattern, expect("=>"), body, popcontext);
 			}
 
 			var maybeop = noComma ? maybeoperatorNoComma : maybeoperatorComma;
@@ -594,12 +502,9 @@
 				cx.marked = "keyword";
 				return cont(pushlex("form"), classExpression, poplex);
 			}
-			if (type == "keyword c" || type == "async")
-				return cont(noComma ? expressionNoComma : expression);
-			if (type == "(")
-				return cont(pushlex(")"), maybeexpression, expect(")"), poplex, maybeop);
-			if (type == "operator" || type == "spread")
-				return cont(noComma ? expressionNoComma : expression);
+			if (type == "keyword c" || type == "async") return cont(noComma ? expressionNoComma : expression);
+			if (type == "(") return cont(pushlex(")"), maybeexpression, expect(")"), poplex, maybeop);
+			if (type == "operator" || type == "spread") return cont(noComma ? expressionNoComma : expression);
 			if (type == "[") return cont(pushlex("]"), arrayLiteral, poplex, maybeop);
 			if (type == "{") return contCommasep(objprop, "}", null, maybeop);
 			if (type == "quasi") return pass(quasi, maybeop);
@@ -619,20 +524,10 @@
 		function maybeoperatorNoComma(type, value, noComma) {
 			var me = noComma == false ? maybeoperatorComma : maybeoperatorNoComma;
 			var expr = noComma == false ? expression : expressionNoComma;
-			if (type == "=>")
-				return cont(
-					pushcontext,
-					noComma ? arrowBodyNoComma : arrowBody,
-					popcontext,
-				);
+			if (type == "=>") return cont(pushcontext, noComma ? arrowBodyNoComma : arrowBody, popcontext);
 			if (type == "operator") {
 				if (/\+\+|--/.test(value) || (isTS && value == "!")) return cont(me);
-				if (
-					isTS &&
-					value == "<" &&
-					cx.stream.match(/^([^<>]|<[^<>]*>)*>\s*\(/, false)
-				)
-					return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, me);
+				if (isTS && value == "<" && cx.stream.match(/^([^<>]|<[^<>]*>)*>\s*\(/, false)) return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, me);
 				if (value == "?") return cont(expression, expect(":"), expr);
 				return cont(expr);
 			}
@@ -642,8 +537,7 @@
 			if (type == ";") return;
 			if (type == "(") return contCommasep(expressionNoComma, ")", "call", me);
 			if (type == ".") return cont(property, me);
-			if (type == "[")
-				return cont(pushlex("]"), maybeexpression, expect("]"), poplex, me);
+			if (type == "[") return cont(pushlex("]"), maybeexpression, expect("]"), poplex, me);
 			if (isTS && value == "as") {
 				cx.marked = "keyword";
 				return cont(typeexpr, me);
@@ -677,11 +571,7 @@
 		function maybeTarget(noComma) {
 			return function (type) {
 				if (type == ".") return cont(noComma ? targetNoComma : target);
-				else if (type == "variable" && isTS)
-					return cont(
-						maybeTypeArgs,
-						noComma ? maybeoperatorNoComma : maybeoperatorComma,
-					);
+				else if (type == "variable" && isTS) return cont(maybeTypeArgs, noComma ? maybeoperatorNoComma : maybeoperatorComma);
 				else return pass(noComma ? expressionNoComma : expression);
 			};
 		}
@@ -715,11 +605,7 @@
 				cx.marked = "property";
 				if (value == "get" || value == "set") return cont(getterSetter);
 				var m; // Work around fat-arrow-detection complication for detecting typescript typed arrow params
-				if (
-					isTS &&
-					cx.state.fatArrowAt == cx.stream.start &&
-					(m = cx.stream.match(/^\s*:\s*/, false))
-				)
+				if (isTS && cx.state.fatArrowAt == cx.stream.start && (m = cx.stream.match(/^\s*:\s*/, false)))
 					cx.state.fatArrowAt = cx.stream.pos + m[0].length;
 				return cont(afterprop);
 			} else if (type == "number" || type == "string") {
@@ -788,8 +674,7 @@
 		}
 		function mayberettype(type) {
 			if (isTS && type == ":") {
-				if (cx.stream.match(/^\s*\w+\s+is\b/, false))
-					return cont(expression, isKW, typeexpr);
+				if (cx.stream.match(/^\s*\w+\s+is\b/, false)) return cont(expression, isKW, typeexpr);
 				else return cont(typeexpr);
 			}
 		}
@@ -809,13 +694,10 @@
 				return cont(afterType);
 			}
 			if (value == "|" || value == "&") return cont(typeexpr);
-			if (type == "string" || type == "number" || type == "atom")
-				return cont(afterType);
-			if (type == "[")
-				return cont(pushlex("]"), commasep(typeexpr, "]", ","), poplex, afterType);
+			if (type == "string" || type == "number" || type == "atom") return cont(afterType);
+			if (type == "[") return cont(pushlex("]"), commasep(typeexpr, "]", ","), poplex, afterType);
 			if (type == "{") return cont(pushlex("}"), typeprops, poplex, afterType);
-			if (type == "(")
-				return cont(commasep(typearg, ")"), maybeReturnType, afterType);
+			if (type == "(") return cont(commasep(typearg, ")"), maybeReturnType, afterType);
 			if (type == "<") return cont(commasep(typeexpr, ">"), typeexpr);
 		}
 		function maybeReturnType(type) {
@@ -843,18 +725,13 @@
 			}
 		}
 		function typearg(type, value) {
-			if (
-				(type == "variable" && cx.stream.match(/^\s*[?:]/, false)) ||
-				value == "?"
-			)
-				return cont(typearg);
+			if ((type == "variable" && cx.stream.match(/^\s*[?:]/, false)) || value == "?") return cont(typearg);
 			if (type == ":") return cont(typeexpr);
 			if (type == "spread") return cont(typearg);
 			return pass(typeexpr);
 		}
 		function afterType(type, value) {
-			if (value == "<")
-				return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, afterType);
+			if (value == "<") return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, afterType);
 			if (value == "|" || type == "." || value == "&") return cont(typeexpr);
 			if (type == "[") return cont(typeexpr, expect("]"), afterType);
 			if (value == "extends" || value == "implements") {
@@ -864,8 +741,7 @@
 			if (value == "?") return cont(typeexpr, expect(":"), typeexpr);
 		}
 		function maybeTypeArgs(_, value) {
-			if (value == "<")
-				return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, afterType);
+			if (value == "<") return cont(pushlex(">"), commasep(typeexpr, ">"), poplex, afterType);
 		}
 		function typeparam() {
 			return pass(typeexpr, maybeTypeDefault);
@@ -901,8 +777,7 @@
 			if (type == "variable") cx.marked = "property";
 			if (type == "spread") return cont(pattern);
 			if (type == "}") return pass();
-			if (type == "[")
-				return cont(expression, expect("]"), expect(":"), proppattern);
+			if (type == "[") return cont(expression, expect("]"), expect(":"), proppattern);
 			return cont(expect(":"), pattern, maybeAssign);
 		}
 		function eltpattern() {
@@ -915,8 +790,7 @@
 			if (type == ",") return cont(vardef);
 		}
 		function maybeelse(type, value) {
-			if (type == "keyword b" && value == "else")
-				return cont(pushlex("form", "else"), statement, poplex);
+			if (type == "keyword b" && value == "else") return cont(pushlex("form", "else"), statement, poplex);
 		}
 		function forspec(type, value) {
 			if (value == "await") return cont(forspec);
@@ -945,18 +819,8 @@
 				register(value);
 				return cont(functiondef);
 			}
-			if (type == "(")
-				return cont(
-					pushcontext,
-					pushlex(")"),
-					commasep(funarg, ")"),
-					poplex,
-					mayberettype,
-					statement,
-					popcontext,
-				);
-			if (isTS && value == "<")
-				return cont(pushlex(">"), commasep(typeparam, ">"), poplex, functiondef);
+			if (type == "(") return cont(pushcontext, pushlex(")"), commasep(funarg, ")"), poplex, mayberettype, statement, popcontext);
+			if (isTS && value == "<") return cont(pushlex(">"), commasep(typeparam, ">"), poplex, functiondef);
 		}
 		function functiondecl(type, value) {
 			if (value == "*") {
@@ -967,17 +831,8 @@
 				register(value);
 				return cont(functiondecl);
 			}
-			if (type == "(")
-				return cont(
-					pushcontext,
-					pushlex(")"),
-					commasep(funarg, ")"),
-					poplex,
-					mayberettype,
-					popcontext,
-				);
-			if (isTS && value == "<")
-				return cont(pushlex(">"), commasep(typeparam, ">"), poplex, functiondecl);
+			if (type == "(") return cont(pushcontext, pushlex(")"), commasep(funarg, ")"), poplex, mayberettype, popcontext);
+			if (isTS && value == "<") return cont(pushlex(">"), commasep(typeparam, ">"), poplex, functiondecl);
 		}
 		function typename(type, value) {
 			if (type == "keyword" || type == "variable") {
@@ -1009,8 +864,7 @@
 			}
 		}
 		function classNameAfter(type, value) {
-			if (value == "<")
-				return cont(pushlex(">"), commasep(typeparam, ">"), poplex, classNameAfter);
+			if (value == "<") return cont(pushlex(">"), commasep(typeparam, ">"), poplex, classNameAfter);
 			if (value == "extends" || value == "implements" || (isTS && type == ",")) {
 				if (value == "implements") cx.marked = "keyword";
 				return cont(isTS ? typeexpr : expression, classNameAfter);
@@ -1021,10 +875,7 @@
 			if (
 				type == "async" ||
 				(type == "variable" &&
-					(value == "static" ||
-						value == "get" ||
-						value == "set" ||
-						(isTS && isModifier(value))) &&
+					(value == "static" || value == "get" || value == "set" || (isTS && isModifier(value))) &&
 					cx.stream.match(/^\s+[\w$\xa1-\uffff]/, false))
 			) {
 				cx.marked = "keyword";
@@ -1035,8 +886,7 @@
 				return cont(classfield, classBody);
 			}
 			if (type == "number" || type == "string") return cont(classfield, classBody);
-			if (type == "[")
-				return cont(expression, maybetype, expect("]"), classfield, classBody);
+			if (type == "[") return cont(expression, maybetype, expect("]"), classfield, classBody);
 			if (value == "*") {
 				cx.marked = "keyword";
 				return cont(classBody);
@@ -1063,8 +913,7 @@
 				cx.marked = "keyword";
 				return cont(expression, expect(";"));
 			}
-			if (type == "{")
-				return cont(commasep(exportField, "}"), maybeFrom, expect(";"));
+			if (type == "{") return cont(commasep(exportField, "}"), maybeFrom, expect(";"));
 			return pass(statement);
 		}
 		function exportField(type, value) {
@@ -1105,37 +954,20 @@
 			return pass(commasep(expressionNoComma, "]"));
 		}
 		function enumdef() {
-			return pass(
-				pushlex("form"),
-				pattern,
-				expect("{"),
-				pushlex("}"),
-				commasep(enummember, "}"),
-				poplex,
-				poplex,
-			);
+			return pass(pushlex("form"), pattern, expect("{"), pushlex("}"), commasep(enummember, "}"), poplex, poplex);
 		}
 		function enummember() {
 			return pass(pattern, maybeAssign);
 		}
 
 		function isContinuedStatement(state, textAfter) {
-			return (
-				state.lastType == "operator" ||
-				state.lastType == "," ||
-				isOperatorChar.test(textAfter.charAt(0)) ||
-				/[,.]/.test(textAfter.charAt(0))
-			);
+			return state.lastType == "operator" || state.lastType == "," || isOperatorChar.test(textAfter.charAt(0)) || /[,.]/.test(textAfter.charAt(0));
 		}
 
 		function expressionAllowed(stream, state, backUp) {
 			return (
-				(state.tokenize == tokenBase &&
-					/^(?:operator|sof|keyword [bcd]|case|new|export|default|spread|[\[{}\(,;:]|=>)$/.test(
-						state.lastType,
-					)) ||
-				(state.lastType == "quasi" &&
-					/\{\s*$/.test(stream.string.slice(0, stream.pos - (backUp || 0))))
+				(state.tokenize == tokenBase && /^(?:operator|sof|keyword [bcd]|case|new|export|default|spread|[\[{}\(,;:]|=>)$/.test(state.lastType)) ||
+				(state.lastType == "quasi" && /\{\s*$/.test(stream.string.slice(0, stream.pos - (backUp || 0))))
 			);
 		}
 
@@ -1152,8 +984,7 @@
 					context: parserConfig.localVars && new Context(null, null, false),
 					indented: basecolumn || 0,
 				};
-				if (parserConfig.globalVars && typeof parserConfig.globalVars == "object")
-					state.globalVars = parserConfig.globalVars;
+				if (parserConfig.globalVars && typeof parserConfig.globalVars == "object") state.globalVars = parserConfig.globalVars;
 				return state;
 			},
 
@@ -1166,16 +997,12 @@
 				if (state.tokenize != tokenComment && stream.eatSpace()) return null;
 				var style = state.tokenize(stream, state);
 				if (type == "comment") return style;
-				state.lastType =
-					type == "operator" && (content == "++" || content == "--")
-						? "incdec"
-						: type;
+				state.lastType = type == "operator" && (content == "++" || content == "--") ? "incdec" : type;
 				return parseJS(state, style, type, content, stream);
 			},
 
 			indent: function (state, textAfter) {
-				if (state.tokenize == tokenComment || state.tokenize == tokenQuasi)
-					return CodeMirror.Pass;
+				if (state.tokenize == tokenComment || state.tokenize == tokenQuasi) return CodeMirror.Pass;
 				if (state.tokenize != tokenBase) return 0;
 				var firstChar = textAfter && textAfter.charAt(0),
 					lexical = state.lexical,
@@ -1195,36 +1022,16 @@
 							!/^[,\.=+\-*:?[\(]/.test(textAfter)))
 				)
 					lexical = lexical.prev;
-				if (statementIndent && lexical.type == ")" && lexical.prev.type == "stat")
-					lexical = lexical.prev;
+				if (statementIndent && lexical.type == ")" && lexical.prev.type == "stat") lexical = lexical.prev;
 				var type = lexical.type,
 					closing = firstChar == type;
 
-				if (type == "vardef")
-					return (
-						lexical.indented +
-						(state.lastType == "operator" || state.lastType == ","
-							? lexical.info.length + 1
-							: 0)
-					);
+				if (type == "vardef") return lexical.indented + (state.lastType == "operator" || state.lastType == "," ? lexical.info.length + 1 : 0);
 				else if (type == "form" && firstChar == "{") return lexical.indented;
 				else if (type == "form") return lexical.indented + indentUnit;
-				else if (type == "stat")
-					return (
-						lexical.indented +
-						(isContinuedStatement(state, textAfter)
-							? statementIndent || indentUnit
-							: 0)
-					);
-				else if (
-					lexical.info == "switch" &&
-					!closing &&
-					parserConfig.doubleIndentSwitch != false
-				)
-					return (
-						lexical.indented +
-						(/^(?:case|default)\b/.test(textAfter) ? indentUnit : 2 * indentUnit)
-					);
+				else if (type == "stat") return lexical.indented + (isContinuedStatement(state, textAfter) ? statementIndent || indentUnit : 0);
+				else if (lexical.info == "switch" && !closing && parserConfig.doubleIndentSwitch != false)
+					return lexical.indented + (/^(?:case|default)\b/.test(textAfter) ? indentUnit : 2 * indentUnit);
 				else if (lexical.align) return lexical.column + (closing ? 0 : 1);
 				else return lexical.indented + (closing ? 0 : indentUnit);
 			},

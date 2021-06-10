@@ -1,26 +1,33 @@
 import {app, BrowserWindow, session, ipcMain} from 'electron';
-
 import * as path from "path";
-const Element = function(){};
+
+require('dotenv').config();
+
+const APP_DOMAIN = process.env.NODE_ENV === "development" ?
+	process.env.LOCAL_DOMAIN : process.env.PRODUCTION_DOMAIN;
 
 const loadExtension =  (mainWindow) => {
-	return new Promise((resolve, reject) => {
+	const isBundlingForRelease = process.env.TARGET === "release";
+
+	return new Promise((resolve) => {
 		session.defaultSession.loadExtension(
-			path.resolve(__dirname, '../../crusher-extension/build/'),
+			path.resolve(__dirname, `${isBundlingForRelease ? "./extension" : "../../crusher-extension/build"}`),
 			{ allowFileAccess: true}
-		).then(async ({ id: extensionId }) => {
-			await mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
+		).then(({ id: extensionId }) => {
+			return mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
+		}).then(() => {
 			resolve(true);
 		});
 	});
 };
 
+let mainWindow;
+
 async function createWindow () {
 	app.commandLine.appendSwitch('--disable-site-isolation-trials');
 	app.commandLine.appendSwitch('--disable-web-security');
 	app.commandLine.appendSwitch("--allow-top-navigation");
-
-	const mainWindow = new BrowserWindow({
+	mainWindow = new BrowserWindow({
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nativeWindowOpen: true,
@@ -29,6 +36,7 @@ async function createWindow () {
 		}
 	});
 	await mainWindow.maximize();
+
 	await mainWindow.webContents.session.webRequest.onHeadersReceived({ urls: [ "*://*/*" ] },
 		(responseDetails, updateCallback)=>{
 			Object.keys(responseDetails.responseHeaders).map(headers => {
@@ -36,21 +44,26 @@ async function createWindow () {
 					delete responseDetails.responseHeaders[headers];
 				}
 			});
-
 			updateCallback({cancel: false, responseHeaders: responseDetails.responseHeaders});
 		}
 	);
-
 	await loadExtension(mainWindow);
-	await mainWindow.webContents.debugger.attach("1.3");
 
+	await session.defaultSession.cookies.set({
+		name: "h-sid",
+		value: "AQAAAXnN6yuZAAAAOKcCQqwRAAJ2fHLwkMzVKsxdxrCwXfy3",
+		domain: ".test-headout.com",
+		url: "https://www.test-headout.com/burj-khalifa-tickets-c-158/",
+		path: "/",
+		expirationDate: 1638209412
+	});
+
+	await mainWindow.webContents.debugger.attach("1.3");
 	await mainWindow.webContents.debugger.sendCommand('Debugger.enable');
 	await mainWindow.webContents.debugger.sendCommand('DOM.enable');
-
 	await mainWindow.webContents.debugger.sendCommand('Runtime.enable');
 	await mainWindow.webContents.debugger.sendCommand('Overlay.enable');
 	await mainWindow.webContents.debugger.sendCommand("Debugger.setAsyncCallStackDepth", {maxDepth: 9999});
-
 	ipcMain.on('turn-on-inspect-mode', async (e, msg) => {
 		await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
 			mode: "searchForNode", highlightConfig: {
@@ -75,7 +88,6 @@ async function createWindow () {
 			}
 		});
 	});
-
 	mainWindow.webContents.debugger.on('message', async (event, method, params) => {
 		if(method === "Overlay.inspectNodeRequested"){
 			await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
@@ -93,10 +105,9 @@ async function createWindow () {
 			});
 		}
 	});
-
 	mainWindow.webContents.on('new-window', function(event, popupUrl) {
 		if(mainWindow.webContents.getURL().startsWith("chrome-extension")) {
-			if(!popupUrl.includes("localhost:8000") && !popupUrl.includes("crusher.dev")) {
+			if(!popupUrl.includes(APP_DOMAIN)) {
 				event.preventDefault();
 				mainWindow.webContents.executeJavaScript(`document.querySelector('#device_browser').src = "${popupUrl}"`);
 			}
@@ -105,29 +116,40 @@ async function createWindow () {
 			mainWindow.webContents.executeJavaScript(`window.location.href = "${popupUrl}"`);
 		}
 	});
-
-	mainWindow.webContents.session.clearStorageData({
-		storages: [
-			"cookies",
-			"serviceworkers",
-			"cachestorage",
-			"websql",
-			"shadercache",
-			"filesystem",
-			"indexdb",
-			"appcache"
-		]
-	});
 }
-
 app.whenReady().then(() => {
 	createWindow()
-
 	app.on('activate', function () {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow()
 	})
 })
+app.on('window-all-closed', async function () {
+	const cookies = await session.defaultSession.cookies.get({domain: APP_DOMAIN});
+	await session.defaultSession.clearStorageData({
+		storages: [
+			"cookies",
+			"localstorage"
+		]
+	});
 
-app.on('window-all-closed', function () {
+	if(cookies && cookies.length){
+
+		for(let cookie of cookies) {
+			const nextYearDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+
+			await session.defaultSession.cookies.set({
+				url: `http://${cookie.domain}`,
+				name: cookie.name,
+				value: cookie.value,
+				domain: cookie.domain,
+				path: cookie.path,
+				secure: cookie.secure,
+				httpOnly: cookie.httpOnly,
+				expirationDate: cookie.expirationDate ? cookie.expirationDate : nextYearDate.valueOf(),
+				sameSite: cookie.sameSite
+			});
+		}
+	}
+
 	if (process.platform !== 'darwin') app.quit()
 })

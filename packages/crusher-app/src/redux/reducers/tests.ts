@@ -1,9 +1,5 @@
 import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
-import {
-	SAVE_TEST_META_INFO,
-	RECORD_LIVE_LOG,
-	MARK_TEST_ABORTED,
-} from "@redux/actions/tests";
+import { SAVE_TEST_META_INFO, RECORD_LIVE_LOG, MARK_TEST_ABORTED } from "@redux/actions/tests";
 import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 
 interface iTestsState {

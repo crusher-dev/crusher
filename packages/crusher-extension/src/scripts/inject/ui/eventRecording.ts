@@ -3,10 +3,7 @@ import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recorde
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
 import { getSelectors } from "../../../utils/selector";
-import {
-	iElementModeMessageMeta,
-	MESSAGE_TYPES,
-} from "../../../messageListener";
+import { iElementModeMessageMeta, MESSAGE_TYPES } from "../../../messageListener";
 import { iPerformActionMeta } from "../responseMessageListener";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
@@ -62,9 +59,7 @@ export default class EventRecording {
 
 		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
-		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(
-			this,
-		);
+		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(this);
 		this.handleWindowClick = this.handleWindowClick.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.eventsController = new EventsController(this);
@@ -103,8 +98,7 @@ export default class EventRecording {
 		} while (el?.tagName !== "HTML");
 
 		// clean up
-		for (let i = 0; i < stack.length; i += 1)
-			stack[i]?.classList.remove("pointerEventsNone");
+		for (let i = 0; i < stack.length; i += 1) stack[i]?.classList.remove("pointerEventsNone");
 
 		return stack;
 	}
@@ -143,13 +137,10 @@ export default class EventRecording {
 				target = elements[1];
 			}
 		}
-		this._overlayCover.style.top =
-			window.scrollY + target.getBoundingClientRect().y + "px";
-		this._overlayCover.style.left =
-			window.scrollX + target.getBoundingClientRect().x + "px";
+		this._overlayCover.style.top = window.scrollY + target.getBoundingClientRect().y + "px";
+		this._overlayCover.style.left = window.scrollX + target.getBoundingClientRect().x + "px";
 		this._overlayCover.style.width = target.getBoundingClientRect().width + "px";
-		this._overlayCover.style.height =
-			target.getBoundingClientRect().height + "px";
+		this._overlayCover.style.height = target.getBoundingClientRect().height + "px";
 		this._overlayCover.style["z-index"] = 299999999;
 		this._overlayCover.style.outlineStyle = "solid";
 		this._overlayCover.style.outlineColor = "rgb(226, 223, 108)";
@@ -226,9 +217,7 @@ export default class EventRecording {
 			};
 
 			if (!this.resetUserEventsToDefaultCallback) {
-				this.resetUserEventsToDefaultCallback = DOM.disableAllUserEvents(
-					eventExceptions,
-				);
+				this.resetUserEventsToDefaultCallback = DOM.disableAllUserEvents(eventExceptions);
 			}
 		}
 	}
@@ -244,10 +233,7 @@ export default class EventRecording {
 	}
 
 	handleMouseOver(event: MouseEvent) {
-		if (
-			this.hoveringState !== event.target &&
-			(event.target as any).id !== "overlay_cover"
-		) {
+		if (this.hoveringState !== event.target && (event.target as any).id !== "overlay_cover") {
 			this.hoveringState = {
 				element: event.target,
 				time: Date.now(),
@@ -275,20 +261,12 @@ export default class EventRecording {
 
 			const isDocumentScrolled = event.target === document;
 			if (isDocumentScrolled) {
-				return _this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.SCROLL,
-					null,
-					window.scrollY,
-				);
+				return _this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, null, window.scrollY);
 			}
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				_this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.SCROLL,
-					event.target,
-					event.target.scrollTop,
-				);
+				_this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}
@@ -351,27 +329,12 @@ export default class EventRecording {
 		}
 	}
 
-	async saveHoverFinalEvents(
-		eventType: ACTIONS_IN_TEST,
-		finalEvents: Array<Node>,
-	) {
+	async saveHoverFinalEvents(eventType: ACTIONS_IN_TEST, finalEvents: Array<Node>) {
 		for (let i = 0; i < finalEvents.length; i++) {
 			if (i == finalEvents.length - 1) {
-				await this.eventsController.saveCapturedEventInBackground(
-					eventType,
-					finalEvents[i],
-					"",
-					null,
-					true,
-				);
+				await this.eventsController.saveCapturedEventInBackground(eventType, finalEvents[i], "", null, true);
 			} else {
-				await this.eventsController.saveCapturedEventInBackground(
-					ACTIONS_IN_TEST.HOVER,
-					finalEvents[i],
-					"",
-					null,
-					true,
-				);
+				await this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.HOVER, finalEvents[i], "", null, true);
 			}
 		}
 	}
@@ -400,10 +363,7 @@ export default class EventRecording {
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
 		if (!event.simulatedEvent) {
-			const finalEvents = await this.releventHoverDetectionManager.getDependentHoverNodesList(
-				ACTIONS_IN_TEST.CLICK,
-				event.target,
-			);
+			const finalEvents = await this.releventHoverDetectionManager.getDependentHoverNodesList(ACTIONS_IN_TEST.CLICK, event.target);
 			await this.saveHoverFinalEvents(ACTIONS_IN_TEST.CLICK, finalEvents);
 		}
 
@@ -432,25 +392,14 @@ export default class EventRecording {
 
 		finalKey += event.key;
 
-		this.eventsController.saveCapturedEventInBackground(
-			ACTIONS_IN_TEST.ADD_INPUT,
-			targetElement,
-			finalKey,
-		);
+		this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.ADD_INPUT, targetElement, finalKey);
 		return true;
 	}
 
 	handleFocus(event: FocusEvent) {
 		const target = event.target as HTMLElement;
-		if (
-			(target as any) != window &&
-			["textarea", "input"].includes(target.tagName.toLowerCase())
-		) {
-			this.eventsController.saveCapturedEventInBackground(
-				ACTIONS_IN_TEST.ELEMENT_FOCUS,
-				target,
-				true,
-			);
+		if ((target as any) != window && ["textarea", "input"].includes(target.tagName.toLowerCase())) {
+			this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.ELEMENT_FOCUS, target, true);
 		}
 	}
 
@@ -460,10 +409,7 @@ export default class EventRecording {
 		if (this.scrollTimer) {
 			return;
 		}
-		const lastEvent =
-			this.recordedHoverArr.length > 0
-				? this.recordedHoverArr[this.recordedHoverArr.length - 1]
-				: null;
+		const lastEvent = this.recordedHoverArr.length > 0 ? this.recordedHoverArr[this.recordedHoverArr.length - 1] : null;
 		if (lastEvent) {
 			const diff = timeNow - lastEvent.timeStamp;
 			if (diff > 200) {
@@ -486,9 +432,7 @@ export default class EventRecording {
 		});
 	}
 
-	handleElementSelected(
-		event: CustomEvent & { detail: { element: HTMLElement } },
-	) {
+	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
 		this.turnOnElementModeInParentFrame(event.detail.element);
 	}
 
@@ -523,11 +467,7 @@ export default class EventRecording {
 		if (isFirstTime) {
 			const currentURL = new URL(window.location.href);
 			currentURL.searchParams.delete("__crusherAgent__");
-			this.eventsController.saveCapturedEventInBackground(
-				ACTIONS_IN_TEST.NAVIGATE_URL,
-				document.body,
-				currentURL.toString(),
-			);
+			this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.NAVIGATE_URL, document.body, currentURL.toString());
 		}
 		window.top.postMessage(
 			{
@@ -540,9 +480,7 @@ export default class EventRecording {
 	}
 
 	handleBeforeNavigation() {
-		const activeElementHref = (document.activeElement as any).getAttribute(
-			"href",
-		);
+		const activeElementHref = (document.activeElement as any).getAttribute("href");
 
 		this.eventsController.saveCapturedEventInBackground(
 			ACTIONS_IN_TEST.NAVIGATE_URL,

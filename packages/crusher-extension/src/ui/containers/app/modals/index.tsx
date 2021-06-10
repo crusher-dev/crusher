@@ -6,10 +6,7 @@ import { Conditional } from "../../../components/conditional";
 import { getModalState } from "../../../../redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { getStore } from "../../../../redux/store";
-import {
-	updateActionsModalState,
-	updateLastElementCustomScriptOutput,
-} from "../../../../redux/actions/recorder";
+import { updateActionsModalState, updateLastElementCustomScriptOutput } from "../../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../../interfaces/actionsModalState";
 import { FRAME_MESSAGE_TYPES } from "../../../../scripts/inject/responseMessageListener";
 import { AssertElementModalContent } from "./assertElementModalContent";
@@ -91,8 +88,7 @@ const ModalManager = (props: iModalManagerProps) => {
 
 	useMemo(() => {
 		if (modalState === ACTIONS_MODAL_STATE.SEO_VALIDATION) {
-			if (!deviceIframeRef.current)
-				throw new Error("Iframe not available yet from ref context");
+			if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
 			const cn = deviceIframeRef.current.contentWindow;
 			cn?.postMessage(
@@ -110,8 +106,7 @@ const ModalManager = (props: iModalManagerProps) => {
 		handleCloseModal();
 	};
 
-	const isHowToUseVideoModal =
-		modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
+	const isHowToUseVideoModal = modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
 
 	return (
 		<ReactModal
@@ -123,27 +118,16 @@ const ModalManager = (props: iModalManagerProps) => {
 		>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.SEO_VALIDATION}>
 				<>
-					<ModalTopBar
-						title={"SEO Checks"}
-						desc={"These are run when page is loaded"}
-						closeModal={handleCloseModal}
-					/>
+					<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleCloseModal} />
 
 					<SeoModalContent onClose={handleCloseModal} />
 				</>
 			</Conditional>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.ASSERT_ELEMENT}>
 				<>
-					<ModalTopBar
-						title={"Assert element"}
-						desc={"These are used to assert the selected element"}
-						closeModal={handleCloseModal}
-					/>
+					<ModalTopBar title={"Assert element"} desc={"These are used to assert the selected element"} closeModal={handleCloseModal} />
 
-					<AssertElementModalContent
-						deviceIframeRef={deviceIframeRef}
-						onClose={handleCloseModal}
-					/>
+					<AssertElementModalContent deviceIframeRef={deviceIframeRef} onClose={handleCloseModal} />
 				</>
 			</Conditional>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.ELEMENT_CUSTOM_SCRIPT}>
@@ -154,10 +138,7 @@ const ModalManager = (props: iModalManagerProps) => {
 						closeModal={handleCloseElementCustomScriptModal}
 					/>
 
-					<ElementCustomScriptModalContent
-						deviceIframeRef={deviceIframeRef}
-						onClose={handleCloseElementCustomScriptModal}
-					/>
+					<ElementCustomScriptModalContent deviceIframeRef={deviceIframeRef} onClose={handleCloseElementCustomScriptModal} />
 				</>
 			</Conditional>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO}>
@@ -168,8 +149,7 @@ const ModalManager = (props: iModalManagerProps) => {
 };
 
 const customModalStyles = (modalState: ACTIONS_MODAL_STATE | null) => {
-	const isHowToUseVideoModal =
-		modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
+	const isHowToUseVideoModal = modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
 
 	return {
 		content: {

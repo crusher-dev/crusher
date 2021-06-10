@@ -18,11 +18,7 @@ const App = (props: iAppProps) => {
 	const handleStartRecordingClick = () => {
 		chrome.tabs.get(tabId, (tab: Tab) => {
 			chrome.tabs.create({
-				url: generateCrusherExtensionUrl(
-					chrome.extension.getURL("/"),
-					tab.url as string,
-					selectedDevice,
-				),
+				url: generateCrusherExtensionUrl(chrome.extension.getURL("/"), tab.url as string, selectedDevice),
 			});
 
 			window.close();
@@ -36,10 +32,7 @@ const App = (props: iAppProps) => {
 			</div>
 			<div style={subHeadingStyle}>Experience power of no-code testing ✨✨</div>
 			<div style={paddingContainerStyle}>
-				<SelectDeviceInput
-					selectedDevice={selectedDevice}
-					selectDevice={setSelectedDevice}
-				/>
+				<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={setSelectedDevice} />
 				<div style={buttonStyle} onClick={handleStartRecordingClick}>
 					Start recording
 				</div>

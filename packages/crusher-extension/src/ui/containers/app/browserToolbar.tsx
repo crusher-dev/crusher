@@ -10,7 +10,7 @@ import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
 import { Button } from "../../components/app/button";
 import { getStore } from "../../../redux/store";
-import { updateActionsModalState } from "../../../redux/actions/recorder";
+import { updateActionsModalState, updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
@@ -28,20 +28,12 @@ interface iBrowserToolbarProps {
 	loadNewPage: (newUrl: string) => void;
 }
 const BrowserToolbar = (props: iBrowserToolbarProps) => {
-	const {
-		initialUrl,
-		goBack,
-		goForward,
-		refreshPage,
-		saveTest,
-		loadNewPage,
-	} = props;
+	const { initialUrl, goBack, goForward, refreshPage, saveTest, loadNewPage } = props;
 
-	const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
+	// const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
+	const showOnboarding = false;
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
-	const [selectedDevice] = useState(
-		AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id,
-	);
+	const [selectedDevice] = useState(AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id);
 
 	const handleAddressBarUrlChange = (event: ChangeEvent) => {
 		setUrl((event.target as any).value);
@@ -51,9 +43,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		(event: KeyboardEvent) => {
 			if (event.keyCode === 13) {
 				event.preventDefault();
-				const newUrl = addHttpToURLIfNotThere(
-					(event.target as any).value as string,
-				);
+				const newUrl = addHttpToURLIfNotThere((event.target as any).value as string);
 				setUrl(newUrl);
 				loadNewPage(newUrl);
 			}
@@ -62,15 +52,8 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	);
 
 	const handleDeviceChange = (deviceId: string) => {
-		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(
-			window.location.href,
-		);
-		window.location.href = generateCrusherExtensionUrl(
-			"/",
-			targetUrl!,
-			deviceId,
-			{ isDeviceChanged: true },
-		);
+		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href);
+		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId, { isDeviceChanged: true });
 	};
 
 	const showHowToUseModal = () => {
@@ -112,9 +95,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 							onClick={saveTest}
 						/>
 					</div>
-					{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
-					Help
-				</a> */}
 				</div>
 			</div>
 

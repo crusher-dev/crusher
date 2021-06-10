@@ -18,10 +18,7 @@ function IntegrationTests(props) {
 			}}
 		>
 			<Head>
-				<script
-					src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
-					defer
-				/>
+				<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer />
 				<title>Test</title>
 			</Head>
 			<Player
@@ -37,9 +34,7 @@ function IntegrationTests(props) {
 				<div>
 					3 step to setup alerting, monitoring and integrating <br /> with your repo
 				</div>
-				<div style={{ marginTop: "0.75rem", fontSize: "0.9rem" }}>
-					You can always change this later.
-				</div>
+				<div style={{ marginTop: "0.75rem", fontSize: "0.9rem" }}>You can always change this later.</div>
 			</div>
 			<Link href={"/app/project/onboarding/integration"}>
 				<a href={"/app/project/onboarding/integration"}>

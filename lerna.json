@@ -18,6 +18,13 @@
     }
   },
   "packages": [
-    "packages/runner-utils"
+    "packages/code-generator",
+    "packages/crusher-app",
+    "packages/crusher-extension",
+    "packages/crusher-server",
+    "packages/crusher-shared",
+    "packages/dyson",
+    "packages/runner-utils",
+    "packages/video-processor"
   ]
 }

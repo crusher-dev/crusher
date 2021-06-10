@@ -10,10 +10,7 @@ export const DELETE_PROJECT = "DELETE_PROJECT";
 export const SET_CURRENT_PROJECT_INFO = "SET_CURRENT_PROJECT_INFO";
 export const SET_PROJECT_MEMBERS = "SET_TEAM_MEMBERS";
 
-export const setProjectMembers = (
-	projectId: number,
-	members: Array<iMemberInfoResponse>,
-) => ({
+export const setProjectMembers = (projectId: number, members: Array<iMemberInfoResponse>) => ({
 	type: SET_PROJECT_MEMBERS,
 	payload: { projectId, members },
 });
@@ -46,9 +43,7 @@ export const saveSelectedProjectInRedux = (projectId: number) => ({
 	projectId,
 });
 
-export const saveProjectsInRedux = (
-	allProjects: Array<iAllProjectsItemResponse>,
-) => ({
+export const saveProjectsInRedux = (allProjects: Array<iAllProjectsItemResponse>) => ({
 	type: SAVE_PROJECTS,
 	allProjects: allProjects,
 });

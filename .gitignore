@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 
 # PM2 config
+
 ecosystem.config.js
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
@@ -126,3 +127,4 @@ output/
 
 #Flyways binary
 packages/crusher-server/flyway
+ecosystem/config/*

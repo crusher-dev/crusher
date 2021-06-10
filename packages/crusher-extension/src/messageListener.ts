@@ -102,8 +102,19 @@ function handleRecordAction(action: iAction) {
 				recordedActions.findIndex(
 					(recordedAction) => recordedAction.type === ACTIONS_IN_TEST.NAVIGATE_URL,
 				) !== -1;
+
+			const isLastEventWaitForNavigation =
+				lastRecordedAction &&
+				lastRecordedAction!.type !== ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION;
+
 			if (!hasInitialNavigationActionRegistered) {
 				store.dispatch(recordAction(action));
+			} else {
+				if (isLastEventWaitForNavigation) {
+					store.dispatch(
+						recordAction({ ...action, type: ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION }),
+					);
+				}
 			}
 			store.dispatch(updateIsRecorderScriptBooted(false));
 			break;

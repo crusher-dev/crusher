@@ -1,8 +1,4 @@
-import {
-	ADD_COMMENT_TO_SCREENSHOT,
-	SET_CURRENT_JOB_INFO,
-	SET_CURRENT_JOB_PLATFORM,
-} from "@redux/actions/job";
+import { ADD_COMMENT_TO_SCREENSHOT, SET_CURRENT_JOB_INFO, SET_CURRENT_JOB_PLATFORM } from "@redux/actions/job";
 
 const initialState = {
 	platform: "CHROME",
@@ -31,9 +27,7 @@ const job = (state = initialState, action: any) => {
 				comments: {
 					...state.comments,
 					[action.comment.result_id]: [
-						...(state.comments[action.comment.result_id]
-							? state.comments[action.comment.result_id]
-							: []),
+						...(state.comments[action.comment.result_id] ? state.comments[action.comment.result_id] : []),
 						{
 							id: action.comment.id,
 							user_id: action.comment.user_id,

@@ -1,15 +1,15 @@
-import { iJobRunRequest } from '../../../crusher-shared/types/runner/jobRunRequest';
+import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
 
-const ffmpeg = require('fluent-ffmpeg');
-import * as shell from 'shelljs';
-import { s3BucketService, uploadFileToAwsBucket } from '../../utils/cloudBucket';
-import { ensureFfmpegPath } from '../../utils/helper';
-import { Job, Queue } from 'bullmq';
-import { REDDIS } from '../../config/database';
+const ffmpeg = require("fluent-ffmpeg");
+import * as shell from "shelljs";
+import { s3BucketService, uploadFileToAwsBucket } from "../../utils/cloudBucket";
+import { ensureFfmpegPath } from "../../utils/helper";
+import { Job, Queue } from "bullmq";
+import { REDDIS } from "../../config/database";
 
-const got = require('got');
+const got = require("got");
 
-const videoProcessingQueue = new Queue('video-processing-complete-queue', {
+const videoProcessingQueue = new Queue("video-processing-complete-queue", {
 	connection: REDDIS as any,
 });
 function processStreamAndSave(videoUrl, savePath: string) {
@@ -17,20 +17,20 @@ function processStreamAndSave(videoUrl, savePath: string) {
 		const responseStream = got.stream(videoUrl);
 
 		const ffmpegStream = ffmpeg({ source: responseStream, priority: 20 })
-			.videoCodec('libx264')
-			.inputFormat('image2pipe')
+			.videoCodec("libx264")
+			.inputFormat("image2pipe")
 			.inputFPS(25)
-			.outputOptions('-preset ultrafast')
-			.outputOptions('-pix_fmt yuv420p')
-			.on('error', function (err) {
+			.outputOptions("-preset ultrafast")
+			.outputOptions("-pix_fmt yuv420p")
+			.on("error", function (err) {
 				reject(err);
 			})
-			.on('end', function () {
+			.on("end", function () {
 				resolve(savePath);
 			})
 			.save(savePath);
 
-		responseStream.on('error', (err) => {
+		responseStream.on("error", (err) => {
 			if (ffmpegStream.end) {
 				ffmpegStream.end();
 			}
@@ -54,7 +54,7 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 	if (video) {
 		let signedUrl;
 		try {
-			await shell.mkdir('-p', `/tmp/videos/`);
+			await shell.mkdir("-p", `/tmp/videos/`);
 
 			await processStreamAndSave(video, `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
@@ -65,7 +65,7 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 				`${runnerJobRequestInfo.test.id}/${runnerJobRequestInfo.instanceId}/`,
 			);
 
-			await shell.rm('-rf', `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
+			await shell.rm("-rf", `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
 			await videoProcessingQueue.add(runnerJobRequestInfo.test.id.toString(), {
 				processed: true,
@@ -98,4 +98,4 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 	}
 };
 
-require('../../utils/logger');
+require("../../utils/logger");

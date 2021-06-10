@@ -34,11 +34,7 @@ export const Pagination = (props) => {
 	if (currentPage - 2 > 3) {
 		out.push(renderDots());
 	}
-	for (
-		let page = currentPage - 3 > 1 ? currentPage - 3 : 2, count = 0;
-		page < currentPage && count < 3 && page <= totalPages;
-		page++, count++
-	) {
+	for (let page = currentPage - 3 > 1 ? currentPage - 3 : 2, count = 0; page < currentPage && count < 3 && page <= totalPages; page++, count++) {
 		itemsToShow--;
 		out.push(renderPageItem(page, currentPage, resolvePaginationUrl));
 	}
@@ -46,11 +42,7 @@ export const Pagination = (props) => {
 		out.push(renderPageItem(currentPage, currentPage, resolvePaginationUrl));
 	}
 	let countOnRight = 0;
-	for (
-		let page = currentPage + 1;
-		page <= totalPages && countOnRight <= itemsToShow;
-		page++, countOnRight++
-	) {
+	for (let page = currentPage + 1; page <= totalPages && countOnRight <= itemsToShow; page++, countOnRight++) {
 		out.push(renderPageItem(page, currentPage, resolvePaginationUrl));
 	}
 	if (currentPage + countOnRight < totalPages - 1) {

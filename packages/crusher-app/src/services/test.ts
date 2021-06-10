@@ -119,9 +119,18 @@ export const createTestFromDraft = (
 	});
 };
 
-export const getAllTestsInfosInProject = (project_id, headers = null) => {
+export const getAllTestsInfosInProject = (
+	project_id: number,
+	headers = null,
+) => {
 	return backendRequest(`/test/getAllInfosInProject/${project_id}`, {
 		method: RequestMethod.GET,
+		headers: headers,
+	});
+};
+
+export const _deleteTest = (testId: number, headers = null) => {
+	return backendRequest(`/test/delete/${testId}`, {
 		headers: headers,
 	});
 };

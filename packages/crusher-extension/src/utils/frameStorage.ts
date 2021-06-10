@@ -15,10 +15,7 @@ export class FrameStorage {
 		frames[this.makeFrameId(details.tabId, details.frameId)] = details;
 	}
 
-	static get(
-		tabId: number,
-		frameId: any,
-	): WebNavigationParentedCallbackDetails | null {
+	static get(tabId: number, frameId: any): WebNavigationParentedCallbackDetails | null {
 		return frames[this.makeFrameId(tabId, frameId)];
 	}
 

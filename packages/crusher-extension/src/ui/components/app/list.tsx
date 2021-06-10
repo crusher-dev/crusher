@@ -32,12 +32,7 @@ const Item = (props: iItemProps) => {
 	};
 
 	return (
-		<div
-			id={item.id}
-			style={itemRowStyle(isHovered)}
-			onMouseOver={handleMouseOver}
-			onMouseOut={handleMouseOut}
-		>
+		<div id={item.id} style={itemRowStyle(isHovered)} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
 			<div style={itemContainerStyle} id={item.id} onClick={handleItemClick}>
 				<img style={actionImageStyle} src={item.icon} />
 				<div style={actionContentStyle}>
@@ -95,9 +90,7 @@ interface iListProps {
 const List = (props: iListProps) => {
 	const { heading, items, onItemClick, showBackButton, onBackPressed } = props;
 
-	const out = items.map((item) => (
-		<Item key={item.id} item={item} onClick={onItemClick} />
-	));
+	const out = items.map((item) => <Item key={item.id} item={item} onClick={onItemClick} />);
 
 	return (
 		<div>

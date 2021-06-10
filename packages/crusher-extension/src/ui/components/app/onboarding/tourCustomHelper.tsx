@@ -2,23 +2,13 @@ import { Controls, CustomHelperProps, Navigation } from "reactour";
 import React from "react";
 import { POSITION } from "../../../../interfaces/css";
 
-const MyCustomHelper = ({
-	current,
-	content,
-	totalSteps,
-	gotoStep,
-	close,
-}: CustomHelperProps) => {
+const MyCustomHelper = ({ current, content, totalSteps, gotoStep, close }: CustomHelperProps) => {
 	return (
 		<>
 			<main className="CustomHelper__wrapper" style={wrapperStyle}>
 				<div className="CustomHelper__content">
 					{content}
-					<Controls
-						data-tour-elem="controls"
-						className="CustomHelper__controls"
-						style={controlsStyle}
-					>
+					<Controls data-tour-elem="controls" className="CustomHelper__controls" style={controlsStyle}>
 						<Navigation data-tour-elem="navigation">
 							{Array.from(Array(totalSteps).keys()).map((li, i) => (
 								<div key={li} style={dotStyle(current, i)}></div>

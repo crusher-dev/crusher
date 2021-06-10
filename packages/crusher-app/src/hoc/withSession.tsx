@@ -1,11 +1,6 @@
 import React from "react";
 import { redirectToFrontendPath } from "@utils/router";
-import {
-	EMAIL_NOT_VERIFIED,
-	NO_TEAM_JOINED,
-	SIGNED_IN,
-	USER_NOT_REGISTERED,
-} from "@utils/constants";
+import { EMAIL_NOT_VERIFIED, NO_TEAM_JOINED, SIGNED_IN, USER_NOT_REGISTERED } from "@utils/constants";
 import { saveSelectedProjectInRedux } from "@redux/actions/project";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
@@ -24,30 +19,19 @@ function getUserStatus(userInfo: iUserInfoResponse | null) {
 	}
 }
 
-function redirectIfNotThisScope(
-	userStatus: any,
-	componentScope: any,
-	res: NextApiResponse,
-) {
+function redirectIfNotThisScope(userStatus: any, componentScope: any, res: NextApiResponse) {
 	if (userStatus === EMAIL_NOT_VERIFIED && componentScope !== userStatus) {
 		return null;
 	} else if (userStatus === NO_TEAM_JOINED && componentScope !== userStatus) {
 		return redirectToFrontendPath("/onboarding", res);
-	} else if (
-		userStatus === USER_NOT_REGISTERED &&
-		componentScope !== userStatus
-	) {
+	} else if (userStatus === USER_NOT_REGISTERED && componentScope !== userStatus) {
 		return redirectToFrontendPath("/", res);
 	}
 
 	return null;
 }
 
-async function handleUserStatus(
-	userInfo: iUserInfoResponse,
-	res: any,
-	componentScope: string | null = null,
-) {
+async function handleUserStatus(userInfo: iUserInfoResponse, res: any, componentScope: string | null = null) {
 	const userStatus = getUserStatus(userInfo);
 
 	return [redirectIfNotThisScope(userStatus, componentScope, res), userStatus];
@@ -58,8 +42,7 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 		return <WrappedComponent {...props} />;
 	};
 
-	const wrappedComponentName =
-		WrappedComponent.displayName || WrappedComponent.name || "Component";
+	const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || "Component";
 
 	WithSession.displayName = `withSession(${wrappedComponentName})`;
 
@@ -68,16 +51,10 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 
 		const userInfo = getUserInfo(store.getState());
 
-		const [redirectResponse, userStatus] = await handleUserStatus(
-			userInfo,
-			res,
-			componentScope ? componentScope : null,
-		);
+		const [redirectResponse, userStatus] = await handleUserStatus(userInfo, res, componentScope ? componentScope : null);
 
 		if (!redirectResponse) {
-			const pageProps =
-				WrappedComponent.getInitialProps &&
-				(await WrappedComponent.getInitialProps(ctx));
+			const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));
 
 			if (!pageProps) {
 				return { status: userStatus };
@@ -90,8 +67,7 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 				if (cookies.selectedProject) {
 					selectedProject = cookies.selectedProject;
 				} else {
-					selectedProject =
-						projectsList && projectsList.length ? projectsList[0].id : null;
+					selectedProject = projectsList && projectsList.length ? projectsList[0].id : null;
 				}
 			}
 

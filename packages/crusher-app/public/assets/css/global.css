@@ -235,7 +235,7 @@ a:link{
 
 /* For Mobile and small device*/
 html {
-	font-size: 14px;
+	font-size: 13px;
 	/*-webkit-transition: all 0.3s ease;*/
 	/*-moz-transition: all 0.3s ease;*/
 	/*-o-transition: all 0.3s ease;*/
@@ -252,14 +252,14 @@ html {
 /* For 125% MBP zoom*/
 @media (min-width: 1200px) {
 	html {
-		font-size: 14.3px;
+		font-size: 13px;
 	}
 }
 
 /* For 110% MBP zoom*/
 @media (min-width: 1400px) {
 	html {
-		font-size: 16px;
+		font-size: 15px;
 	}
 }
 

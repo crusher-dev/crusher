@@ -17,9 +17,7 @@ const EmptyBuildListContainer = () => {
 
 			<img src={BuildsPageIllustration} css={imageCSS} />
 			<p css={fightBugsCSS}>{"You don't have any builds yet"}</p>
-			<p css={easyToCreateTestCSS}>
-				BTW, a few builds a day keeps the bugs away :D
-			</p>
+			<p css={easyToCreateTestCSS}>BTW, a few builds a day keeps the bugs away :D</p>
 
 			<div css={buttonsDivCSS}>
 				<button css={[buttonCSS, watchButtonCSS]} onClick={() => setIsOpen(true)}>
@@ -31,9 +29,6 @@ const EmptyBuildListContainer = () => {
 					</button>
 				</Link>
 			</div>
-			<a href={"/app/settings/project/monitoring"}>
-				<span css={helpLinkCSS}>Or setup monitoring/CLI integration</span>
-			</a>
 		</div>
 	);
 };

@@ -4,10 +4,7 @@ import { List } from "../../components/app/list";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
-import {
-	turnOffInspectModeInFrame,
-	turnOnInspectModeInFrame,
-} from "../../../messageListener";
+import { turnOffInspectModeInFrame, turnOnInspectModeInFrame } from "../../../messageListener";
 import { getStore } from "../../../redux/store";
 import { useSelector } from "react-redux";
 import { getInspectModeState } from "../../../redux/selectors/recorder";

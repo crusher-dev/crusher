@@ -3,7 +3,7 @@ import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { OnboardingPopup } from "@ui/containers/onboarding/Popup";
 import React, { useState, useEffect } from "react";
-import { CreateTest } from "@ui/components/app/CreateTestButton";
+import { CreateTest } from "@components/app/CreateTestButton";
 import { useSelector } from "react-redux";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { CreateTestModal } from "@ui/containers/modals/createTestModal";

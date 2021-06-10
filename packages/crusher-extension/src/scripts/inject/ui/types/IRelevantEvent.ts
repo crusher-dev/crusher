@@ -1,4 +1,4 @@
-import {IRegisteredMutationRecord} from "./IRegisteredMutationRecord";
+import { IRegisteredMutationRecord } from "./IRegisteredMutationRecord";
 
 export interface IRelevantEvent {
 	evt: IRegisteredMutationRecord;

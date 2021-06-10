@@ -59,7 +59,7 @@ export default class EventRecording {
 		this.handleCrusherHoverTrace = this.handleCrusherHoverTrace.bind(this);
 		this.saveHoverFinalEvents = this.saveHoverFinalEvents.bind(this);
 		this.handleElementSelected = this.handleElementSelected.bind(this);
-		
+
 		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(
@@ -482,7 +482,7 @@ export default class EventRecording {
 		},
 	) {
 		this.releventHoverDetectionManager.registerDOMMutation({
-			...event.detail
+			...event.detail,
 		});
 	}
 

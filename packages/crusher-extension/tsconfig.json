@@ -18,6 +18,10 @@
 		"allowSyntheticDefaultImports": true
 	},
 	"typeRoots": ["node_modules/@types"],
-	"files": ["src/background.ts", "src/ui/popup.tsx", "../../node_modules/react/index.js"],
+	"files": [
+		"src/background.ts",
+		"src/ui/popup.tsx",
+		"../../node_modules/react/index.js"
+	],
 	"include": ["./src/**/*"]
 }

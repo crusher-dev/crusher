@@ -1,4 +1,5 @@
 {
+  "isEnterprise": "true",
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "lib": ["es5", "es6", "DOM"],

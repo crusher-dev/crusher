@@ -42,6 +42,7 @@
 		"cors": "^2.8.5",
 		"cron": "^1.8.2",
 		"crypto-js": "^4.0.0",
+		"dotenv": "^10.0.0",
 		"express": "^4.17.1",
 		"googleapis": "^67.0.0",
 		"jsonwebtoken": "^8.5.1",
@@ -56,15 +57,15 @@
 		"redlock": "^4.2.0",
 		"reflect-metadata": "^0.1.13",
 		"routing-controllers": "0.9.0-alpha.6",
+		"shelljs": "^0.8.4",
 		"stripe": "^8.132.0",
 		"tsconfig-paths": "^3.9.0",
 		"typedi": "0.10.0",
 		"uuid": "^8.3.2"
 	},
 	"scripts": {
+		"setup": "node setup/tsconfig.js",
 		"dev": "ts-node -r tsconfig-paths/register --project tsconfig.json src/app.ts",
-		"dev:ee": "ts-node -r tsconfig-paths/register --project tsconfig.ee.json src/app.ts",
-
 		"dev:cron": "ts-node --project tsconfig.json src/cron.ts",
 		"dev:queue": "ts-node --project tsconfig.json src/queue.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",

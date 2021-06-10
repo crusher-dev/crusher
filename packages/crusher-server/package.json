@@ -3,6 +3,10 @@
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"version": "1.0.0",
 	"description": "Backend of crusher.",
+	"_moduleAliases": {
+		"@root": ".",
+		"@manager": "src/core/manager/"
+	},
 	"devDependencies": {
 		"@types/body-parser": "1.19.0",
 		"@types/cron": "^1.7.2",
@@ -43,6 +47,7 @@
 		"jsonwebtoken": "^8.5.1",
 		"lodash": "^4.17.20",
 		"logdna": "^3.5.0",
+		"module-alias": "^2.2.2",
 		"mongoose": "^5.11.14",
 		"mysql2": "^2.2.5",
 		"node-fetch": "^2.6.1",
@@ -52,11 +57,14 @@
 		"reflect-metadata": "^0.1.13",
 		"routing-controllers": "0.9.0-alpha.6",
 		"stripe": "^8.132.0",
+		"tsconfig-paths": "^3.9.0",
 		"typedi": "0.10.0",
 		"uuid": "^8.3.2"
 	},
 	"scripts": {
-		"dev": "ts-node --project tsconfig.json src/app.ts",
+		"dev": "ts-node -r tsconfig-paths/register --project tsconfig.json src/app.ts",
+		"dev:ee": "ts-node -r tsconfig-paths/register --project tsconfig.ee.json src/app.ts",
+
 		"dev:cron": "ts-node --project tsconfig.json src/cron.ts",
 		"dev:queue": "ts-node --project tsconfig.json src/queue.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",

@@ -19,7 +19,8 @@
 		"noImplicitReturns": false,
 		"isolatedModules": true,
 		"paths": {
-			"@crusher-shared/*": ["crusher-shared/*"]
+			"@crusher-shared/*": ["crusher-shared/*"],
+			"@manager/*": ["crusher-server/src/core/manager/*"]
 		}
 	},
 	"typeRoots": ["node_modules/@types"],

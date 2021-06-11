@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import { Queue, QueueScheduler, Worker } from "bullmq";
 import { REDDIS } from "../config/database";
 import * as path from "path";

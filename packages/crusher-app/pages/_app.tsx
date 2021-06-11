@@ -7,7 +7,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { ReactReduxContext } from "react-redux";
 import { _fetchUserInfo } from "@services/user";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { getThemeFromCookieOrReq } from "@utils/styleUtils";
 import { ThemeContext } from "@constants/style";
 import { ToastDialog } from "@ui/atom/toastDialog";
@@ -66,6 +66,7 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 	if (loggedInCookies) {
 		await Promise.all([_fetchUserInfo(headers), fetchProjectsFromServer(headers)])
 			.then((userData) => {
+				console.log("SOME PROJECT INSIDE", userData);
 				const userInfo = userData[0];
 				const projects = userData[1];
 

@@ -1,10 +1,11 @@
 import React from "react";
-import { redirectToFrontendPath } from "@utils/router";
+import { redirectToBackendURI, redirectToFrontendPath } from "@utils/router";
 import { getMetaFromReq } from "@utils/cookies";
 import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse, NextComponentType, NextPage, NextPageContext } from "next";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { AnyAction } from "redux";
+import { isEnterpriseEdition } from "@utils/helpers";
 
 const handleClIToken = (cli_token: string, res: NextApiResponse) => {
 	if (cli_token) {
@@ -33,6 +34,8 @@ function withoutSession(WrappedComponent: NextPage | NextComponentType<NextPageC
 
 		if (userInfo && isLoggedIn) {
 			return await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
+		} else if (!isEnterpriseEdition()) {
+			return await redirectToBackendURI("/v2/user/init", res as NextApiResponse);
 		}
 
 		const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));

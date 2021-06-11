@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import "reflect-metadata";
 import { CronJob } from "cron";
 import { Container } from "typedi";

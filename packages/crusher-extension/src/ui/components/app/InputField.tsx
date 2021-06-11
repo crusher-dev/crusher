@@ -12,7 +12,7 @@ const InputField = (props: IInputField) => {
 		<input
 			{...props}
 			type="text"
-			style={{ borderWidth: "1px" }}
+			style={{ borderWidth: "1px", maxHeight: "2rem", ...props.style }}
 			className={`p-4  
             focus:outline-none
             focus:border-gray-400

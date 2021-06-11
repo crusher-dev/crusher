@@ -97,12 +97,13 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 						{isCustomCheck && <SearchIcon className="cursor-pointer mr-2" onClick={toggleSearching} />}
 					</div>
 				) : (
-					<div className="flex">
-						<InputField style={{ width: "80%" }} placeholder="Search an Action" />
+					<div className="flex h-8">
+						<InputField style={{ maxWidth: "12rem", width: "auto" }} placeholder="Search an Action" />
 						<div
 							onClick={toggleSearching}
-							style={{ width: "20%" }}
+							style={{ fontSize: "x-large" }}
 							className="h-full text-white text-17
+							  ml-8
 							 cursor-pointer flex items-center justify-center"
 						>
 							&times;

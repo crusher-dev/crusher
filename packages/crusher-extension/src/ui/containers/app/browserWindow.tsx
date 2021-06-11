@@ -94,12 +94,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 			/>
 			{/*<ActionRecordedIndicator />*/}
 
-			<Device
-				url={url}
-				device={selectedDevice}
-				isDisabled={isElementRecordingStateOn}
-				forwardRef={deviceIframeRef}
-			/>
+			<Device url={url} device={selectedDevice} isDisabled={isElementRecordingStateOn} forwardRef={deviceIframeRef} />
 		</div>
 	);
 };
@@ -114,6 +109,5 @@ const browserStyle = {
 	minHeight: "100vh",
 	overflow: "hidden",
 };
-
 
 export { BrowserWindow };

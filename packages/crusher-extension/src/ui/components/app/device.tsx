@@ -30,37 +30,34 @@ const Device = (props: iDeviceProps) => {
 			<Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
 			</Conditional>
-			{/* isssue isIframeLoaded is always false */}
-			<Conditional If={isIframeLoaded}>
-				<div>
+			<Conditional If={!isIframeLoaded}>
+				<div className="absolute flex h-full w-full justify-center items-center">
 					<div>
 						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
 						<div style={pageLoadingCoverTextStyle}>{"Please wait while we're loading next page"}</div>
 					</div>
 				</div>
 			</Conditional>
-			<Conditional If={!isIframeLoaded}>
-				<div
-					className={isMobile ? "smartphone" : ""}
-					style={{
-						width: device.width,
-						height: device.height,
-					}}
-				>
-					<div className="content" style={browserFrameContainerStyle}>
-						<iframe
-							ref={forwardRef}
-							style={browserFrameStyle}
-							scrolling="auto"
-							sandbox="allow-scripts allow-forms allow-same-origin"
-							id="device_browser"
-							name={"crusher_iframe"}
-							title={device.name}
-							src={url}
-						/>
-					</div>
+			<div
+				className={isMobile ? "smartphone" : ""}
+				style={{
+					width: device.width,
+					height: device.height,
+				}}
+			>
+				<div className="content" style={browserFrameContainerStyle}>
+					<iframe
+						ref={forwardRef}
+						style={browserFrameStyle}
+						scrolling="auto"
+						sandbox="allow-scripts allow-forms allow-same-origin"
+						id="device_browser"
+						name={"crusher_iframe"}
+						title={device.name}
+						src={url}
+					/>
 				</div>
-			</Conditional>
+			</div>
 		</div>
 	);
 };
@@ -92,7 +89,6 @@ const previewBrowserStyle = {
 	display: "flex",
 	justifyContent: "center",
 	overflowY: OVERFLOW.AUTO,
-	height: "-webkit-fill-available",
 	background: "#0A0A0A",
 	position: POSITION.RELATIVE,
 	alignItems: "center",

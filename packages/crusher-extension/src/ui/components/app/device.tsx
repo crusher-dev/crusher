@@ -19,6 +19,7 @@ const Device = (props: iDeviceProps) => {
 	const { isMobile, device, url, forwardRef, isDisabled } = props;
 
 	useEffect(() => {
+		console.log(isIframeLoaded, "____ loaded value ");
 		window.onload = function () {
 			return forwardRef.current.click();
 		};
@@ -29,7 +30,7 @@ const Device = (props: iDeviceProps) => {
 			<Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
 			</Conditional>
-
+			//isssue isIframeLoaded is always false
 			<Conditional If={!isIframeLoaded}>
 				<div>
 					<div>
@@ -38,27 +39,28 @@ const Device = (props: iDeviceProps) => {
 					</div>
 				</div>
 			</Conditional>
-
-			<div
-				className={isMobile ? "smartphone" : ""}
-				style={{
-					width: device.width,
-					height: device.height,
-				}}
-			>
-				<div className="content" style={browserFrameContainerStyle}>
-					<iframe
-						ref={forwardRef}
-						style={browserFrameStyle}
-						scrolling="auto"
-						sandbox="allow-scripts allow-forms allow-same-origin"
-						id="device_browser"
-						name={"crusher_iframe"}
-						title={device.name}
-						src={url}
-					/>
+			<Conditional If={isIframeLoaded}>
+				<div
+					className={isMobile ? "smartphone" : ""}
+					style={{
+						width: device.width,
+						height: device.height,
+					}}
+				>
+					<div className="content" style={browserFrameContainerStyle}>
+						<iframe
+							ref={forwardRef}
+							style={browserFrameStyle}
+							scrolling="auto"
+							sandbox="allow-scripts allow-forms allow-same-origin"
+							id="device_browser"
+							name={"crusher_iframe"}
+							title={device.name}
+							src={url}
+						/>
+					</div>
 				</div>
-			</div>
+			</Conditional>
 		</div>
 	);
 };
@@ -87,14 +89,12 @@ const blockCoverStyle = {
 };
 
 const previewBrowserStyle = {
-	//maxWidth: "75vw",
 	display: "flex",
 	justifyContent: "center",
 	overflowY: OVERFLOW.AUTO,
 	background: "#0A0A0A",
 	position: POSITION.RELATIVE,
 	alignItems: "center",
-	height: "100%",
 	borderTopRightRadius: "2rem",
 	border: `solid ${COLOR_CONSTANTS.BORDER}`,
 	borderWidth: "2px",

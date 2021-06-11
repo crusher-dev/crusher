@@ -4,15 +4,11 @@ import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
 import { Button } from "../../components/app/button";
-import { getStore } from "../../../redux/store";
-import { updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { SelectDeviceInput } from "../popup/selectDeviceInput";
 import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "../../../../../crusher-shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
-import { useSelector } from "react-redux";
-import { getAutoRecorderState } from "../../../redux/selectors/recorder";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -52,13 +48,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId, { isDeviceChanged: true });
 	};
 
-	const handleAutoDetectModeToggle = (event: ChangeEvent<HTMLInputElement>) => {
-		const store = getStore();
-		store.dispatch(updateAutoRecorderSetting(event.target.checked));
-	};
-
-	const isAutoHoverOn = useSelector(getAutoRecorderState);
-
 	return (
 		<div style={browserToolbarStyle}>
 			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
@@ -73,13 +62,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
 					</div>
 					<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
-					<div style={authDetectModeToggleContainerStyle}>
-						<div style={autoDetectModeToggleHeadingStyle}>Auto Detect:</div>
-						<label className="switch">
-							<input type="checkbox" defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
-							<span className="slider round"></span>
-						</label>
-					</div>
 					<div className="flex justify-evenly">
 						<div className="mx-24" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
@@ -163,19 +145,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 			</Conditional>
 		</div>
 	);
-};
-
-const autoDetectModeToggleHeadingStyle = {
-	color: "#fff",
-	marginRight: "1rem",
-	fontSize: "0.9rem",
-};
-
-const authDetectModeToggleContainerStyle = {
-	display: "flex",
-	alignItems: "center",
-	marginLeft: "auto",
-	color: "#fff",
 };
 
 const browserToolbarStyle = {

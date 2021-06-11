@@ -1,7 +1,10 @@
 import { getUserCLIToken } from "@services/cli";
 
+export function isEnterpriseEdition() {
+	return process.env.CRUSHER_MODE === "ee";
+}
+
 export function findArrayItemByProperty(arr: Array<any>, property: string) {
-	// console.log(arr, property);
 	if (!arr || !arr.length) {
 		return false;
 	}

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import { Logger } from "./utils/logger";
 
 require("./utils/logger");

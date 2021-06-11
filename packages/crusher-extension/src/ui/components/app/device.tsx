@@ -30,8 +30,8 @@ const Device = (props: iDeviceProps) => {
 			<Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
 			</Conditional>
-			//isssue isIframeLoaded is always false
-			<Conditional If={!isIframeLoaded}>
+			{/* isssue isIframeLoaded is always false */}
+			<Conditional If={isIframeLoaded}>
 				<div>
 					<div>
 						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
@@ -39,7 +39,7 @@ const Device = (props: iDeviceProps) => {
 					</div>
 				</div>
 			</Conditional>
-			<Conditional If={isIframeLoaded}>
+			<Conditional If={!isIframeLoaded}>
 				<div
 					className={isMobile ? "smartphone" : ""}
 					style={{
@@ -92,6 +92,7 @@ const previewBrowserStyle = {
 	display: "flex",
 	justifyContent: "center",
 	overflowY: OVERFLOW.AUTO,
+	height: "-webkit-fill-available",
 	background: "#0A0A0A",
 	position: POSITION.RELATIVE,
 	alignItems: "center",

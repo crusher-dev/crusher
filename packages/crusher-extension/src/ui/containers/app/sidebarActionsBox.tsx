@@ -70,7 +70,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 			items-center`}
 			>
 				{!isCustomCheck ? (
-					<div className="mr-28 cursor-pointer">
+					<div className="mr-28 mt-12 cursor-pointer">
 						<SettingsIcon />
 					</div>
 				) : (

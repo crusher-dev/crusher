@@ -6,9 +6,10 @@ import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { NextApiResponse } from "next";
-import { isEnterpriseEdition } from "@utils/helpers";
+import { getEdition } from "@utils/helpers";
 import { isUserLoggedInFromCookies } from "@utils/cookies";
 import { iPageContext } from "@interfaces/pageContext";
+import { EDITION_TYPE } from '@crusher-shared/types/common/general';
 
 function getUserStatus(userInfo: iUserInfoResponse | null) {
 	if (!userInfo || userInfo === null) {
@@ -58,7 +59,7 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 
 		const loggedInCookies = isUserLoggedInFromCookies(cookies);
 
-		if (!loggedInCookies && !isEnterpriseEdition()) {
+		if (!loggedInCookies && getEdition() === EDITION_TYPE.OPEN_SOURCE) {
 			return redirectToBackendURI("/v2/user/init", ctx.res as NextApiResponse);
 		}
 

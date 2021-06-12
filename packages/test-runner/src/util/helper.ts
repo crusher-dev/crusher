@@ -6,6 +6,10 @@ import { CloudBucketManager } from "../manager/cloudBucket";
 import { iAction } from "../../../crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
 
+export function getEdition() {
+	return process.env.CRUSHER_MODE;
+}
+
 export const createTmpAssetsDirectoriesIfNotThere = (jobRequest: iJobRunRequest) => {
 	shell.mkdir("-p", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`);
 	shell.mkdir("-p", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);

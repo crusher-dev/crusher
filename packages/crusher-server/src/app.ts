@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import { Logger } from "./utils/logger";
 
 require("./utils/logger");
@@ -38,6 +40,7 @@ import { DraftControllerV2 } from "./server/controllers/v2/DraftControllerV2";
 import { LoginConnectionsController } from "./server/controllers/v2/LoginConnectionsController";
 import { GitIntegrationsController } from "./server/controllers/integrations/Github";
 import MongoManager from "./core/manager/MongoManager";
+import { EmailManager } from "@manager/EmailManager";
 
 useContainer(Container);
 const expressApp = express();
@@ -46,6 +49,8 @@ expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
 
 const mongoManager = Container.get(MongoManager);
+
+EmailManager.sendVerificationMail("test@gmail.com", "");
 
 useExpressServer(expressApp, {
 	controllers: [

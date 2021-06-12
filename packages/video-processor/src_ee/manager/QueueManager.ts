@@ -13,6 +13,7 @@ queue.client.then(async (redisClient) => {
 	await queueScheduler.waitUntilReady();
 
 	new Worker("video-processing-queue", path.resolve("src/services/videoProcessorWorker.ts"), {
-		connection: redisClient
+		connection: redisClient,
+		concurrency: 2
 	});
 });

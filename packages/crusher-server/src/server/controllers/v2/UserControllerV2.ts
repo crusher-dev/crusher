@@ -9,8 +9,9 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "../../../core
 import { google } from "googleapis";
 import GoogleAPIService from "../../../core/services/GoogleAPIService";
 import { InviteMembersService } from "../../../core/services/mongo/inviteMembers";
-import { isEnterpriseEdition } from "../../../utils/helper";
+import { getEdition } from '../../../utils/helper';
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../../utils/cookies";
+import { EDITION_TYPE } from '@crusher-shared/types/common/general';
 const cookie = require("cookie");
 const oauth2Client = new google.auth.OAuth2(
 	process.env.GOOGLE_CLIENT_ID,
@@ -30,7 +31,7 @@ export class UserControllerV2 {
 
 	@Get("/init")
 	initUser(@Req() req: any, @Res() res: any) {
-		if (!isEnterpriseEdition()) {
+		if (getEdition() === EDITION_TYPE.EE) {
 			const { token } = cookie.parse(req.headers.cookie || "");
 			if (token && decodeToken(token)) {
 				res.redirect(resolvePathToFrontendURI("/"));

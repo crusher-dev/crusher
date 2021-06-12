@@ -1,0 +1,29 @@
+{
+  "name": "crusher-electron-app",
+  "version": "1.0.0",
+  "description": "Electron app for crusher",
+  "main": "build/main.js",
+  "author": "Utkarsh Dixit<utkarsh@crusher.dev>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "prettify": "prettier --write .",
+    "compile": "rm -rf out/dist/resources/app/build && tsc",
+    "compile:basic": "rm -rf build && tsc",
+    "start": "yarn compile:basic && /home/utkarsh/Downloads/dist/electron .",
+    "build:release:linux": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-linux-dist.sh",
+    "build:release:mac": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-darwin-dist.sh",
+    "build:release:windows": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-windows-dist.sh",
+    "build:release:all": "yarn build:release:linux && build:release:mac && build:release:windows"
+  },
+  "dependencies": {
+    "@types/node": "^14.14.27",
+    "@typescript-eslint/parser": "^4.14.1",
+    "dotenv": "^10.0.0",
+    "electron": "^12.0.2",
+    "ts-loader": "^8.0.14",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  },
+  "devDependencies": {}
+}

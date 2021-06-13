@@ -8,7 +8,7 @@ module.exports = {
 	devtool: "inline-source-map",
 	target: "node",
 	entry: {
-		index: "./src/index.ts",
+		index: "./index.ts",
 	},
 	output: {
 		libraryTarget: "commonjs",

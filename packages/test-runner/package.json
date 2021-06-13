@@ -7,6 +7,7 @@
 		"aws-sdk": "^2.833.0",
 		"bullmq": "^1.14.0",
 		"crusher-runner-utils": "0.0.9",
+		"dotenv": "^10.0.0",
 		"ioredis": "^4.19.4",
 		"logdna": "^3.5.0",
 		"mongoose": "^5.11.14",
@@ -28,7 +29,8 @@
 		"webpack-cli": "^4.6.0"
 	},
 	"scripts": {
-		"start": "ts-node src/index.ts",
+		"setup": "node setup/tsconfig.js",
+		"start": "ts-node index.ts",
 		"build": "webpack -c webpack.config.js",
 		"start:build": "node build/index.js",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"

@@ -21,7 +21,7 @@ function handleEESetup() {
 	}
 
 	shell.rm("-rf", "../tsconfig.json");
-	shell.cp(path.resolve(__dirname, ".tsconfig.json.template"), path.resolve(__dirname, "../tsconfig.json"));
+	shell.cp(path.resolve(__dirname, ".tsconfig.ee.json.template"), path.resolve(__dirname, "../tsconfig.json"));
 }
 
 function handleOpenSourceSetup() {
@@ -32,7 +32,7 @@ function handleOpenSourceSetup() {
 	}
 
 	shell.rm("-rf", path.resolve(__dirname, "../tsconfig.json"));
-	shell.cp(path.resolve(__dirname, ".tsconfig.json.template"), path.resolve(__dirname, "../tsconfig.json"));
+	shell.cp(path.resolve(__dirname, ".tsconfig.ee.json.template"), path.resolve(__dirname, "../tsconfig.json"));
 }
 
 function init() {

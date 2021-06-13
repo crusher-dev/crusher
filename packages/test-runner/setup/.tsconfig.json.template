@@ -1,5 +1,5 @@
 {
-	"isEnterprise": "true",
+	"isEnterprise": "false",
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"baseUrl": "./",
@@ -12,9 +12,9 @@
 		"noImplicitAny": false,
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
-		"paths": {
-			"@src/*": ["src_ee/*", "src/*"]
-		}
+        "paths": {
+            "@src/*": ["src/*"]
+        }
 	},
 	"typeRoots": ["node_modules/@types"],
 	"files": [

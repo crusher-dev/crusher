@@ -3,8 +3,8 @@ import Timeout = NodeJS.Timeout;
 import { RedisManager } from "./manager/redis";
 import { REDDIS } from "../config/database";
 import { BootAfterNJobsOffsetManager } from "../src_ee/manager/offsetManger";
-import { getEdition } from '../src/util/helper';
-import { EDITION_TYPE } from '../../crusher-shared/types/common/general';
+import { getEdition } from "../src/util/helper";
+import { EDITION_TYPE } from "../../crusher-shared/types/common/general";
 require("./queue.ts");
 require("./util/logger");
 
@@ -18,10 +18,8 @@ class TestRunner {
 	_registeredInstanceNo: number;
 
 	constructor() {
-		if(getEdition() !== EDITION_TYPE.EE){
-			throw (
-				"Enterprise support is not available with open source edition"
-			)
+		if (getEdition() !== EDITION_TYPE.EE) {
+			throw "Enterprise support is not available with open source edition";
 		}
 		this.sessionId = generateUid();
 		this.redisManager = new RedisManager(REDDIS.host, parseInt(REDDIS.port), REDDIS.password);
@@ -71,4 +69,4 @@ class TestRunner {
 	}
 }
 
-new TestRunner().boot();
+export { TestRunner };

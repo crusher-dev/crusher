@@ -20,4 +20,4 @@ class TestRunner {
 	}
 }
 
-new TestRunner().boot();
+export { TestRunner };

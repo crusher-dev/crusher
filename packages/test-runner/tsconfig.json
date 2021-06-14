@@ -13,13 +13,15 @@
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
 		"paths": {
-			"@src/*": ["src_ee/*", "src/*"]
+			"@src/*": ["./src_ee/*", "./src/*"]
 		}
 	},
 	"typeRoots": ["node_modules/@types"],
 	"files": [
-		"src/index.ts"
+		"./src/index.ts",
+		"./src_ee/index.ts",
+		"./index.ts"
 	],
-	"include": ["./src/**/*"],
+	"include": ["./src_ee/**/*","./src/**/*"],
 	"exclude": ["**/*.spec.ts"]
 }

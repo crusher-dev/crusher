@@ -6,7 +6,7 @@ import ProjectService from "../../core/services/ProjectService";
 import TestService from "../../core/services/TestService";
 import DraftService from "../../core/services/DraftService";
 import { Draft } from "../../core/interfaces/db/Draft";
-import { addTestRequestToQueue } from "../../core/utils/queue";
+import { addTestRequestToQueue } from "@utils/queue";
 import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
 import { iUser } from "@crusher-shared/types/db/iUser";

@@ -1,8 +1,8 @@
 export type TSentryTracking = {
-	trackPage: ()=>{},
-	trackEvent: ()=>{},
-	trackCustomEvent: ()=>{},
-	addUserToGroup: ()=>{},
-	addUserInfo: ()=>{},
-	addGroupInfo: ()=>{}
+	trackPage: () => void,
+	trackEvent: () => void,
+	trackCustomEvent: () => void,
+	addUserToGroup: () => void,
+	addUserInfo: () => void,
+	addGroupInfo: () => void
 }

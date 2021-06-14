@@ -1,7 +1,7 @@
 import { getUserCLIToken } from "@services/cli";
 
 export function getEdition() {
-	return process.env.CRUSHER_MODE
+	return process.env.NEXT_PUBLIC_CRUSHER_MODE;
 }
 
 export function findArrayItemByProperty(arr: Array<any>, property: string) {

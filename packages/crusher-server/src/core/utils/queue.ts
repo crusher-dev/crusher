@@ -18,6 +18,8 @@ import JobsService from "../services/JobsService";
 import { BROWSER } from "../../../../crusher-shared/types/browser";
 import { iJobRunRequest } from "../../../../crusher-shared/types/runner/jobRunRequest";
 import { PLATFORM } from "../../../../crusher-shared/types/platform";
+import { getEdition } from "../../utils/helper";
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 
 const path = require("path");
 
@@ -113,24 +115,27 @@ export async function addJobToRequestQueue(jobRequest) {
 				test: { ...test, testType: testType },
 				testCount: totalTestCount,
 			});
-			await addTestRequestToQueue({
-				job: {
-					...job,
-					report_id: jobReportsId.insertId,
-					platform: PLATFORM.SAFARI,
-				},
-				test: { ...test, testType: testType },
-				testCount: totalTestCount,
-			});
-			await addTestRequestToQueue({
-				job: {
-					...job,
-					report_id: jobReportsId.insertId,
-					platform: PLATFORM.FIREFOX,
-				},
-				test: { ...test, testType: testType },
-				testCount: totalTestCount,
-			});
+
+			if (getEdition() === EDITION_TYPE.EE) {
+				await addTestRequestToQueue({
+					job: {
+						...job,
+						report_id: jobReportsId.insertId,
+						platform: PLATFORM.SAFARI,
+					},
+					test: { ...test, testType: testType },
+					testCount: totalTestCount,
+				});
+				await addTestRequestToQueue({
+					job: {
+						...job,
+						report_id: jobReportsId.insertId,
+						platform: PLATFORM.FIREFOX,
+					},
+					test: { ...test, testType: testType },
+					testCount: totalTestCount,
+				});
+			}
 		} else {
 			await addTestRequestToQueue({
 				job: { ...job, report_id: jobReportsId.insertId, platform: platform },

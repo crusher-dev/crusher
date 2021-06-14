@@ -8,7 +8,7 @@ import { saveSelectedProjectInRedux } from "@redux/actions/project";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
 import React, { CSSProperties, useCallback, useState } from "react";
-import { toPascalCase } from "@utils/helpers";
+import { getEdition, toPascalCase } from "@utils/helpers";
 import { Logo } from "@ui/components/common/Atoms";
 import { FeedbackComponent } from "@ui/components/app/feedbackComponent";
 import DashboardSvg from "../../public/svg/sidebarSettings/dashboard.svg";
@@ -36,6 +36,7 @@ import { RunTestButton } from "@ui/components/app/RunTestsButton";
 import { runTestsInProject } from "@services/v2/project";
 import { Toast } from "@utils/toast";
 import { redirectToFrontendPath } from "@utils/router";
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 
 interface NavItem {
 	name: string;
@@ -267,9 +268,15 @@ function ProjectSelector(props: { projectsList: any; options: any; selectedProje
 	const [isShowingCreateProjectModal, setIsShowingCreateProjectModal] = useState(false);
 
 	const { options, onChange, selectedProject } = props;
-	const modifiedOption = [{ label: "Add new project", value: "add_project" }, ...options];
+	let modifiedOption = options;
+	if (getEdition() === EDITION_TYPE.EE) {
+		modifiedOption = [{ label: "Add new project", value: "add_project" }, ...options];
+	} else {
+		console.log(getEdition());
+	}
+
 	const handleChange = (option: iSelectOption) => {
-		if (option.value === "add_project") {
+		if (option.value === "add_project" && getEdition() === EDITION_TYPE.EE) {
 			setIsShowingCreateProjectModal(true);
 		} else {
 			onChange(option);

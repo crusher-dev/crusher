@@ -1,12 +1,14 @@
 import { generateUid } from "../../crusher-shared/utils/helper";
 import Timeout = NodeJS.Timeout;
-import { RedisManager } from "./manager/redis";
+import { RedisManager } from "../src/manager/redis";
 import { REDDIS } from "../config/database";
 import { BootAfterNJobsOffsetManager } from "../src_ee/manager/offsetManger";
 import { getEdition } from "../src/util/helper";
 import { EDITION_TYPE } from "../../crusher-shared/types/common/general";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require("dotenv").config();
 require("./queue.ts");
-require("./util/logger");
+require("../src/util/logger");
 
 const TEST_PER_INSTANCE = 5;
 

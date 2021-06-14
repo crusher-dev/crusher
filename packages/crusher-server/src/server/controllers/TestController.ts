@@ -11,7 +11,7 @@ import { getDefaultHostFromCode, getTestHostFromActions } from "../../core/utils
 import TestInstanceService from "../../core/services/TestInstanceService";
 import { JobTrigger } from "../../core/interfaces/JobTrigger";
 import { JobStatus } from "../../core/interfaces/JobStatus";
-import { addJobToRequestQueue } from "../../core/utils/queue";
+import { addJobToRequestQueue } from "@utils/queue";
 import { InsertRecordResponse } from "../../core/interfaces/services/InsertRecordResponse";
 import { Platform } from "../../core/interfaces/Platform";
 import { resolvePathToFrontendURI } from "../../core/utils/uri";

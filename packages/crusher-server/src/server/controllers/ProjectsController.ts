@@ -8,7 +8,7 @@ import JobsService, { TRIGGER } from "../../core/services/JobsService";
 import TestService from "../../core/services/TestService";
 import { decodeToken } from "../../core/utils/auth";
 import GithubService from "../../core/services/GithubService";
-import { addJobToRequestQueue } from "../../core/utils/queue";
+import { addJobToRequestQueue } from "@utils/queue";
 import * as chalk from "chalk";
 import { Logger } from "../../utils/logger";
 import { Platform } from "../../core/interfaces/Platform";

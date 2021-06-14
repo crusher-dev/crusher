@@ -12,13 +12,13 @@
 		"noImplicitAny": false,
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
-        "paths": {
-            "@src/*": ["src/*"]
-        }
+		"paths": {
+			"@src/*": ["./src/*"]
+		}
 	},
 	"typeRoots": ["node_modules/@types"],
 	"files": [
-		"src/index.ts"
+		"./index.ts"
 	],
 	"include": ["./src/**/*"],
 	"exclude": ["**/*.spec.ts"]

@@ -22,7 +22,8 @@
 		"paths": {
 			"@crusher-shared/*": ["crusher-shared/*"],
 			"@manager/*": ["crusher-server/src/core/manager/*"],
-			"@controllers/*": ["crusher-server/src/server/controllers/*"]
+			"@controllers/*": ["crusher-server/src/server/controllers/*"],
+	        "@utils/*": ["crusher-server/src/core/utils/*"]
 		}
 	},
 	"typeRoots": ["node_modules/@types"],

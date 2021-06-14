@@ -1,19 +1,19 @@
 import { Queue } from "bullmq";
 
 import { REDDIS } from "../../../config/database";
-import { RunRequest } from "../interfaces/RunRequest";
-import TestInstanceService from "../services/TestInstanceService";
-import { InstanceStatus } from "../interfaces/InstanceStatus";
+import { RunRequest } from "../../core/interfaces/RunRequest";
+import TestInstanceService from "../../core/services/TestInstanceService";
+import { InstanceStatus } from "../../core/interfaces/InstanceStatus";
 import { TEST_INSTANCE_PLATFORM } from "../../constants";
-import { Platform } from "../interfaces/Platform";
-import DraftInstanceService from "../services/DraftInstanceService";
-import { TestType } from "../interfaces/TestType";
+import { Platform } from "../../core/interfaces/Platform";
+import DraftInstanceService from "../../core/services/DraftInstanceService";
+import { TestType } from "../../core/interfaces/TestType";
 import { JobLogs } from "../../server/models/jobLogs";
-import { TestLogsService } from "../services/mongo/testLogs";
+import { TestLogsService } from "../../core/services/mongo/testLogs";
 import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
-import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
-import JobsService from "../services/JobsService";
+import JobReportServiceV2 from "../../core/services/v2/JobReportServiceV2";
+import JobsService from "../../core/services/JobsService";
 import { iJobRunRequest } from "../../../../crusher-shared/types/runner/jobRunRequest";
 import { PLATFORM } from "../../../../crusher-shared/types/platform";
 
@@ -94,6 +94,25 @@ export async function addJobToRequestQueue(jobRequest) {
 					...job,
 					report_id: jobReportsId.insertId,
 					platform: PLATFORM.CHROME,
+				},
+				test: { ...test, testType: testType },
+				testCount: totalTestCount,
+			});
+
+			await addTestRequestToQueue({
+				job: {
+					...job,
+					report_id: jobReportsId.insertId,
+					platform: PLATFORM.SAFARI,
+				},
+				test: { ...test, testType: testType },
+				testCount: totalTestCount,
+			});
+			await addTestRequestToQueue({
+				job: {
+					...job,
+					report_id: jobReportsId.insertId,
+					platform: PLATFORM.FIREFOX,
 				},
 				test: { ...test, testType: testType },
 				testCount: totalTestCount,

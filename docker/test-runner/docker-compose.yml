@@ -3,7 +3,7 @@ services:
   test-runner:
     build:
       context: ../../
-      dockerfile: ci/test-runner/Dockerfile
+      dockerfile: Dockerfile
       args:
         SSH_PUBLIC_KEY: $SSH_PUBLIC_KEY
     container_name: test-runner

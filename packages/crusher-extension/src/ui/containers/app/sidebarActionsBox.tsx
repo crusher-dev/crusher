@@ -1,6 +1,6 @@
 import React, { RefObject, useState, ChangeEvent } from "react";
 import { ActionStepList } from "./actionStepList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getActionsRecordingState, getAutoRecorderState } from "../../../redux/selectors/recorder";
 import { Conditional } from "../../components/conditional";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
@@ -8,9 +8,9 @@ import { TopLevelActionsList } from "./topLevelActionsList";
 import { ElementLevelActionsList } from "./elementLevelActionsList";
 import { OVERFLOW, POSITION } from "../../../interfaces/css";
 import { SelectElementPlaceholder } from "./selectElementPlaceholder";
-import { SearchIcon, SettingsIcon, SwitchOffIcon, SwitchOnIcon } from "../../../assets/icons";
+import { SearchIcon, TimesIcon, SettingsIcon, SwitchOffIcon, SwitchOnIcon } from "../../../assets/icons";
 import { getStore } from "../../../redux/store";
-import { updateAutoRecorderSetting } from "../../../redux/actions/recorder";
+import { updateActionsRecordingState, updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import InputField from "../../components/app/InputField";
 import { BlueButton } from "../../components/app/BlueButton";
@@ -21,7 +21,7 @@ interface iSidebarActionBoxProps {
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const recordingState = useSelector(getActionsRecordingState);
-
+	const dispatch = useDispatch();
 	const handleAutoDetectModeToggle = (event: ChangeEvent<HTMLInputElement>) => {
 		const store = getStore();
 		store.dispatch(updateAutoRecorderSetting(event.target.checked));
@@ -29,8 +29,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 
 	const isAutoHoverOn = useSelector(getAutoRecorderState);
 
-	const [isCustomCheck, setIsCustomCheck] = useState(false);
-	const toggleCustomIsCheck = () => setIsCustomCheck(!isCustomCheck);
+	const toggleCustomIsCheck = () => {
+		dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+	};
 
 	const DetectActionSwitch = () => (
 		<div>
@@ -66,10 +67,10 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
 			<div
 				className={`flex h-20 
-			${!isCustomCheck ? "justify-end" : "justify-center"} 
+			${!(recordingState.type === ACTIONS_RECORDING_STATE.PAGE) ? "justify-end" : "justify-center"} 
 			items-center`}
 			>
-				{!isCustomCheck ? (
+				{!(recordingState.type === ACTIONS_RECORDING_STATE.PAGE) ? (
 					<div className="mr-28 mt-12 cursor-pointer">
 						<SettingsIcon />
 					</div>
@@ -94,40 +95,38 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 						>
 							Actions
 						</h5>
-						{isCustomCheck && <SearchIcon className="cursor-pointer mr-2" onClick={toggleSearching} />}
+						{recordingState.type === ACTIONS_RECORDING_STATE.PAGE && <SearchIcon className="cursor-pointer mr-2" onClick={toggleSearching} />}
 					</div>
 				) : (
 					<div className="flex h-8">
-						<InputField style={{ maxWidth: "12rem", width: "auto" }} placeholder="Search an Action" />
-						<div
-							onClick={toggleSearching}
-							style={{ fontSize: "x-large" }}
-							className="h-full text-white text-17
+						<InputField style={{ width: "80%" }} placeholder="Search an Action" />
+						<div style={{ width: "20%" }}>
+							<TimesIcon
+								onClick={toggleSearching}
+								className="h-full text-white text-17
 							  ml-8
 							 cursor-pointer flex items-center justify-center"
-						>
-							&times;
+							/>
 						</div>
 					</div>
 				)}
 
-				{!isCustomCheck ? (
+				<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.INITIAL_STATE}>
 					<AddCustomCheckView />
-				) : (
-					<div style={mainContainerStyle}>
-						<div style={actionContainerStyle}>
-							<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.SELECT_ELEMENT}>
-								<SelectElementPlaceholder deviceIframeRef={props.deviceIframeRef} />
-							</Conditional>
-							<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.PAGE}>
-								<TopLevelActionsList deviceIframeRef={props.deviceIframeRef} />
-							</Conditional>
-							<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.ELEMENT}>
-								<ElementLevelActionsList deviceIframeRef={props.deviceIframeRef} />
-							</Conditional>
-						</div>
+				</Conditional>
+				<div style={mainContainerStyle}>
+					<div style={actionContainerStyle}>
+						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.SELECT_ELEMENT}>
+							<SelectElementPlaceholder deviceIframeRef={props.deviceIframeRef} />
+						</Conditional>
+						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.PAGE}>
+							<TopLevelActionsList deviceIframeRef={props.deviceIframeRef} />
+						</Conditional>
+						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.ELEMENT}>
+							<ElementLevelActionsList deviceIframeRef={props.deviceIframeRef} />
+						</Conditional>
 					</div>
-				)}
+				</div>
 			</div>
 
 			<ActionStepList />

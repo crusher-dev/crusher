@@ -1,25 +1,23 @@
 FROM zenika/alpine-chrome:with-playwright
+ENV NPM_CONFIG_PREFIX=/usr/src/app/.npm-global
 
-## install docker dependecy
-#ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
-#
-#RUN apk add cmd:pip3
-#
-#RUN apk update && \
-#    apk add --no-cache python3 && \
-#    apk add --no-cache --virtual .docker-compose-deps python3-dev libffi-dev openssl-dev gcc libc-dev make && \
-#    pip3 install wheel && \
-#    pip3 install docker-compose && \
-#    apk del .docker-compose-deps
+# Only permission for file access is in /usr/src. Find other places
 
-RUN mkdir crusher && mkdir crusher/crusher-app && mkdir crusher/crusher-server && mkdir crusher/test-runner && mkdir crusher/video-processor
-ADD ./packages/crusher-app/.next ./crusher/crusher-app/.next
-ADD ./packages/crusher-server/dist ./crusher/crusher-server/dist
-ADD ./packages/test-runner/dist ./crusher/test-runner/dist
-ADD ./packages/test-runner/dist ./crusher/test-runner/dist
+RUN npm install pm2
+ADD ./ecosystem.oss.js ecosystem.config.js
+RUN mkdir packages && mkdir packages/crusher-app && mkdir packages/crusher-server && mkdir packages/test-runner && mkdir packages/video-processor
+ADD ./packages/crusher-app/.next packages/crusher-app/.next
+ADD ./packages/crusher-app/.next packages/crusher-app/.next
+ADD  ./packages/crusher-app/package.json packages/crusher-app/package.json
+RUN cd packages/crusher-app && npm install
+ADD ./packages/crusher-app/server.js packages/crusher-app/server.js
+ADD ./packages/crusher-server/dist packages/crusher-server/dist
+ADD ./packages/test-runner/dist packages/test-runner/dist
+ADD ./packages/test-runner/dist packages/test-runner/dist
 
-RUN echo npm root -g
 
-WORKDIR "crusher"
+ADD ./docker/oss/start.sh start.sh
 
-CMD ["docker", "run", "hello-world"]
+WORKDIR "/usr/src/app/"
+
+CMD ["sh", "start.sh"]

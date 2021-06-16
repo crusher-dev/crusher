@@ -1,1 +1,1 @@
-cd packages/crusher-app && yarn build && cd ../../
+cd packages/crusher-app && yarn build:server && cd ../../

@@ -1,0 +1,7 @@
+version: "2.2"
+services:
+  oss:
+    image: "oss"
+    ports:
+      - "5000:9000"
+    container_name: "oss"

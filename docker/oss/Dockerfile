@@ -7,9 +7,8 @@ RUN npm install pm2
 ADD ./ecosystem.oss.js ecosystem.config.js
 RUN mkdir packages && mkdir packages/crusher-app && mkdir packages/crusher-server && mkdir packages/test-runner && mkdir packages/video-processor
 ADD ./packages/crusher-app/.next packages/crusher-app/.next
-ADD ./packages/crusher-app/.next packages/crusher-app/.next
 ADD  ./packages/crusher-app/package.json packages/crusher-app/package.json
-RUN cd packages/crusher-app && npm install
+RUN  cd packages/crusher-app && npm install
 ADD ./packages/crusher-app/server.js packages/crusher-app/server.js
 ADD ./packages/crusher-server/dist packages/crusher-server/dist
 ADD ./packages/test-runner/dist packages/test-runner/dist

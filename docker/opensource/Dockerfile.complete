@@ -5,10 +5,19 @@ RUN apt update && \
 
 RUN apt install -y git
 RUN apt install -y libcurl4-openssl-dev
-RUN git clone https://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@github.com/crusherdev/deployment.git deployment
+RUN git clone https://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@github.com/crusherdev/deployment.git /deployment
+RUN git clone https://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@github.com/crusherdev/crusher.git /crusher
 
-WORKDIR deployment
+WORKDIR /deployment
 RUN make setup
 RUN make install
+
+RUN ls
+WORKDIR ../crusher
+RUN rm yarn.lock
+RUN yarn
+RUN ls
+
+WORKDIR /deployment
 
 CMD ["echo", "hello"]

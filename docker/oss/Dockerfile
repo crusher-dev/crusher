@@ -1,5 +1,6 @@
 FROM docker:dind
 
+# install docker dependecy
 ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 RUN apk add cmd:pip3
@@ -10,7 +11,7 @@ RUN apk update && \
     pip3 install docker-compose && \
     apk del .docker-compose-deps
 
-ADD ./ ./crusher
+ADD ../../docker/opensource ./crusher
 
 WORKDIR "crusher"
 

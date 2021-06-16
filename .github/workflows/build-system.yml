@@ -38,6 +38,6 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Build docker image
-        run: docker build -t oss --file docker/oss/Dockerfile .
+        run: DOCKER_BUILDKIT=1 docker build -t oss --file docker/oss/Dockerfile .
         env:
           NODE_OPTIONS: --max_old_space_size=4096

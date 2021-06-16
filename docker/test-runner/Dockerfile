@@ -13,7 +13,7 @@ RUN apt-get update \
     && apt-get install -y openssh-server \
     && mkdir -p /var/run/sshd
 
-COPY ci/test-runner/docker-entrypoint.sh /usr/local/bin/
+COPY docker/test-runner/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN export SSH_PUBLIC_KEY="$SSH_PUBLIC_KEY"
 

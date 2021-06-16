@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/playwright:focal
+
+RUN apt update && \
+        apt-get -y install sudo wget
+
+RUN apt install -y git
+RUN apt install -y libcurl4-openssl-dev
+RUN git clone https://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@github.com/crusherdev/deployment.git deployment
+
+WORKDIR deployment
+RUN make setup
+RUN make install
+
+CMD ["echo", "hello"]

@@ -1,6 +1,7 @@
 {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
+		"baseUrl": "./",
 		"module": "commonjs",
 		"removeComments": true,
 		"sourceMap": true,

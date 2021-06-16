@@ -1,1 +1,1 @@
-cd packages/test-runner && yarn build && cd ../../
+cd packages/crusher-app && yarn build && cd ../../

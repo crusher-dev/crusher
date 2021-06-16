@@ -1,12 +1,13 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
-const webpack = require("webpack");
 module.exports = {
   mode: 'development',
   devtool: 'source-map',
   target: "node",
   entry: {
-    index: "./index.ts",
+    app: "./src/app.ts",
+    cron: "./src/cron.ts",
+    queue: "./src/queue.ts",
   },
   output: {
     path: path.resolve(__dirname, './dist/'),
@@ -14,11 +15,16 @@ module.exports = {
     sourceMapFilename: `[name]-[chunkhash:4].js.map`,
     libraryTarget: 'umd',
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
+    }),
+  ],
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: resolveTsconfigPathsToAlias({
       tsconfigPath: './tsconfig.json', // Using custom path
-      webpackConfigBasePath: './', // Using custom path
+      webpackConfigBasePath: '../', // Using custom path
     }),
 
   },
@@ -40,17 +46,9 @@ module.exports = {
             replace: `"./commands"`,
           },
         },
-      },
+      }
     ]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      "process.env.FLUENTFFMPEG_COV": false,
-    }),
-    new CopyPlugin({
-      patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
-    }),
-  ],
+  }
 };
 
 /**

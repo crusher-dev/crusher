@@ -33,7 +33,7 @@
 		"setup": "node setup/tsconfig.js",
 		"start": "ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
 		"build": "webpack -c webpack.config.js",
-		"start:build": "node build/index.js",
+		"start:build": "node dist/index.js",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"
 	},
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",

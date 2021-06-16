@@ -21,7 +21,8 @@
 	"scripts": {
 		"start": "ts-node src/app.ts",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/*",
-		"prettify": "prettier --write ."
+		"prettify": "prettier --write .",
+		"build": "webpack -c webpack.config.js"
 	},
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>"
 }

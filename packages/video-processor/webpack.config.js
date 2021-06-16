@@ -1,12 +1,13 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
-const webpack = require("webpack");
+
+
 module.exports = {
   mode: 'development',
   devtool: 'source-map',
   target: "node",
   entry: {
-    index: "./index.ts",
+    index: "./src/app.ts",
   },
   output: {
     path: path.resolve(__dirname, './dist/'),
@@ -44,9 +45,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      "process.env.FLUENTFFMPEG_COV": false,
-    }),
     new CopyPlugin({
       patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
     }),
@@ -68,7 +66,7 @@ function resolveTsconfigPathsToAlias({
   const aliases = {};
 
   const getItemName = (alias) => path.resolve(webpackConfigBasePath, alias.replace('/*', '').replace('*', ''))
-  Object.keys(paths).forEach((item) => {
+  paths && Object.keys(paths).forEach((item) => {
     const modifiedKey = item.replace('/*', '');
 
     const aliasItems = paths[item]

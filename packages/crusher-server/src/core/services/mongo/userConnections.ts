@@ -35,7 +35,7 @@ export class UserConnectionsMongoService {
 					return reject(err);
 				}
 
-				const userConnections: Array<iUserConnection> = connections.map((connection) => connection.toObject({ getters: true }) as iUserConnection);
+				const userConnections: Array<iUserConnection> = connections.map((connection: any) => connection.toObject({ getters: true }) as iUserConnection);
 
 				resolve(userConnections);
 			});

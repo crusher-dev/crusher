@@ -26,16 +26,15 @@ export default class SentryService implements TSentryTracking {
 
 	trackPage() {}
 
-	trackEvent(value) {
-		analytics.track({ userId: this.userId, ...value });
+	trackEvent() {
+		// analytics.track({ userId: this.userId, ...value });
 	}
 
 	trackCustomEvent() {}
 
-	addUserInfo() {
-	}
+	addUserInfo() {}
 
-	addGroupInfo(){
+	addGroupInfo() {}
 
-	}
+	addUserToGroup() {}
 }

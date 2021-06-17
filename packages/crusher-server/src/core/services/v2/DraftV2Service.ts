@@ -35,7 +35,7 @@ export default class DraftV2Service {
 		};
 	}
 
-	getDraftLogs(draftId: number, logsAfter: number = 0): Promise<Array<iLiveStepLogs>> {
+	getDraftLogs(draftId: number, logsAfter = 0): Promise<Array<iLiveStepLogs>> {
 		return new Promise((resolve, reject) => {
 			TestLiveStepsLogs.find(
 				{
@@ -45,7 +45,7 @@ export default class DraftV2Service {
 				},
 				function (err, logsArray) {
 					if (err) reject(err);
-					const logs = logsArray.map((log) => {
+					const logs = logsArray.map((log: any) => {
 						return log.toObject();
 					});
 

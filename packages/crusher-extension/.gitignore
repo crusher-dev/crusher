@@ -1,2 +1,4 @@
 dev/
 build/
+tailwind.generated.css
+src/style/main.css

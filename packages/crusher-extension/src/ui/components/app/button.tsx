@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { pxToRemValue } from "../../../utils/helpers";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 import { Conditional } from "../conditional";
 
 interface iButtonProps {
@@ -22,28 +24,35 @@ const Button = (props: iButtonProps) => {
 	};
 
 	return (
-		<div id={id} style={{ ...buttonStyle(isHovered), ...(style ? style : {}) }} onClick={onClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+		<div
+			id={id}
+			className="text-15"
+			style={{ ...buttonStyle(isHovered), ...(style ? style : {}) }}
+			onClick={onClick}
+			onMouseOver={handleMouseOver}
+			onMouseOut={handleMouseOut}
+		>
 			<Conditional If={Icon}>
 				<Icon />
 			</Conditional>
-			<span style={buttonNameStyle(!!Icon)}>{title}</span>
+			<div style={buttonNameStyle(!!Icon)}>{title}</div>
 		</div>
 	);
 };
 
 const buttonStyle = (isHovered: boolean) => ({
-	borderRadius: 4,
-	fontWeight: 600,
-	fontSize: "0.825rem",
-	background: isHovered ? "rgba(91,118,247, 0.85)" : "rgb(91,118,247, 1)",
-	color: isHovered ? "rgba(255,255,255, 1)" : "rgba(255,255,255, 0.95)",
-	fontFamily: "DM Sans",
-	padding: "0.5rem 0.95rem",
+	borderRadius: 6,
+	width: "max-content",
+	fontWeight: 500,
+	background: COLOR_CONSTANTS.TRINARY,
 	display: "flex",
+	color: "#fff",
+	border: `solid ${COLOR_CONSTANTS.BUTTON_BORDER_COLOR}`,
+	borderWidth: "1px",
 	alignItems: "center",
+	justifyContent: "space-evenly",
+	padding: `${pxToRemValue(12)} ${pxToRemValue(28)}`,
 	cursor: "pointer",
-	width: "auto",
-	marginLeft: "1.5rem",
 });
 
 const buttonNameStyle = (isIconThere: boolean) => ({

@@ -174,7 +174,8 @@ div[data-recorder="true"] {
 
 .paper-snackbar {
 	box-shadow: 1px 1px 10px -4px #000000b5 !important;
-	-webkit-transition-property: opacity, bottom, left, right, width, margin, border-radius;
+	-webkit-transition-property: opacity, bottom, left, right, width, margin,
+		border-radius;
 	transition-property: opacity, bottom, left, right, width, margin, border-radius;
 	-webkit-transition-duration: 0.5s;
 	transition-duration: 0.5s;
@@ -353,12 +354,16 @@ div[data-recorder="true"] {
 	animation: 1s ease-out 0s 1 both scaleAnimation;
 }
 #successAnimation.animated #successAnimationCircle {
-	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle, 0.3s linear 0.9s 1 both fadeOut;
-	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle, 0.3s linear 0.9s 1 both fadeOut;
+	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle,
+		0.3s linear 0.9s 1 both fadeOut;
+	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle,
+		0.3s linear 0.9s 1 both fadeOut;
 }
 #successAnimation.animated #successAnimationCheck {
-	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck, 0.3s linear 0.9s 1 both fadeOut;
-	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck, 0.3s linear 0.9s 1 both fadeOut;
+	-webkit-animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck,
+		0.3s linear 0.9s 1 both fadeOut;
+	animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck,
+		0.3s linear 0.9s 1 both fadeOut;
 }
 #successAnimation.animated #successAnimationResult {
 	-webkit-animation: 0.3s linear 0.9s both fadeIn;

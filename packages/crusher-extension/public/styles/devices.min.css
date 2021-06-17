@@ -73,7 +73,13 @@
 	bottom: 22px;
 	z-index: 3;
 	background: #303233;
-	background: linear-gradient(135deg, #303233 0%, #b5b7b9 50%, #f0f2f2 69%, #303233 100%);
+	background: linear-gradient(
+		135deg,
+		#303233 0%,
+		#b5b7b9 50%,
+		#f0f2f2 69%,
+		#303233 100%
+	);
 }
 .marvel-device.iphone8 .home:before {
 	background: #f8f8f8;
@@ -196,7 +202,8 @@
 	background: #080808;
 }
 .marvel-device.iphone8.black:after {
-	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
+	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1),
+		inset 0 0 6px 3px #212121;
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
 }
 .marvel-device.iphone8.black .top-bar,
@@ -329,7 +336,13 @@
 	bottom: 24px;
 	z-index: 3;
 	background: #303233;
-	background: linear-gradient(135deg, #303233 0%, #b5b7b9 50%, #f0f2f2 69%, #303233 100%);
+	background: linear-gradient(
+		135deg,
+		#303233 0%,
+		#b5b7b9 50%,
+		#f0f2f2 69%,
+		#303233 100%
+	);
 }
 .marvel-device.iphone8plus .home:before {
 	background: #f8f8f8;
@@ -452,7 +465,8 @@
 	background: #080808;
 }
 .marvel-device.iphone8plus.black:after {
-	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
+	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1),
+		inset 0 0 6px 3px #212121;
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
 }
 .marvel-device.iphone8plus.black .top-bar,
@@ -1237,7 +1251,8 @@
 	height: calc(100% - 10px);
 	top: 5px;
 	left: 5px;
-	background: radial-gradient(rgba(0, 0, 0, 0.02) 20%, transparent 60%) 0 0, radial-gradient(rgba(0, 0, 0, 0.02) 20%, transparent 60%) 3px 3px;
+	background: radial-gradient(rgba(0, 0, 0, 0.02) 20%, transparent 60%) 0 0,
+		radial-gradient(rgba(0, 0, 0, 0.02) 20%, transparent 60%) 3px 3px;
 	background-color: white;
 	background-size: 4px 4px;
 	background-position: center;
@@ -1429,7 +1444,8 @@
 	background: #1e1e1e;
 }
 .marvel-device.s5.black .top-bar {
-	background: radial-gradient(rgba(0, 0, 0, 0.05) 20%, transparent 60%) 0 0, radial-gradient(rgba(0, 0, 0, 0.05) 20%, transparent 60%) 3px 3px;
+	background: radial-gradient(rgba(0, 0, 0, 0.05) 20%, transparent 60%) 0 0,
+		radial-gradient(rgba(0, 0, 0, 0.05) 20%, transparent 60%) 3px 3px;
 	background-color: #2c2b2c;
 	background-size: 4px 4px;
 }
@@ -1639,7 +1655,8 @@
 	z-index: 2;
 	left: 50%;
 	margin-left: -108px;
-	background: radial-gradient(#343434 25%, transparent 50%) 0 0, radial-gradient(#343434 25%, transparent 50%) 4px 4px;
+	background: radial-gradient(#343434 25%, transparent 50%) 0 0,
+		radial-gradient(#343434 25%, transparent 50%) 4px 4px;
 	background-size: 4px 4px;
 	background-position: top left;
 }
@@ -1921,7 +1938,16 @@
 		color-stop(100%, #f0f0f0),
 		to(#f0f0f0)
 	);
-	background: linear-gradient(to right, #747474 0%, #c3c3c3 5%, #ebebeb 14%, #979797 41%, #f0f0f0 80%, #f0f0f0 100%, #f0f0f0 100%);
+	background: linear-gradient(
+		to right,
+		#747474 0%,
+		#c3c3c3 5%,
+		#ebebeb 14%,
+		#979797 41%,
+		#f0f0f0 80%,
+		#f0f0f0 100%,
+		#f0f0f0 100%
+	);
 }
 .marvel-device.macbook .bottom-bar:after {
 	right: 0;
@@ -1938,7 +1964,16 @@
 		color-stop(95%, #c3c3c3),
 		to(#747474)
 	);
-	background: linear-gradient(to right, #f0f0f0 0%, #f0f0f0 0%, #f0f0f0 20%, #979797 59%, #ebebeb 86%, #c3c3c3 95%, #747474 100%);
+	background: linear-gradient(
+		to right,
+		#f0f0f0 0%,
+		#f0f0f0 0%,
+		#f0f0f0 20%,
+		#979797 59%,
+		#ebebeb 86%,
+		#c3c3c3 95%,
+		#747474 100%
+	);
 }
 .marvel-device.macbook .camera {
 	background: #3c3d3d;
@@ -1976,7 +2011,11 @@
 	width: 90px;
 	height: 90px;
 	position: absolute;
-	background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, rgba(255, 255, 255, 0) 60%);
+	background: radial-gradient(
+		ellipse at center,
+		rgba(0, 0, 0, 0.6) 0%,
+		rgba(255, 255, 255, 0) 60%
+	);
 }
 .marvel-device.iphone-x .shadow--tl {
 	top: -20px;
@@ -2117,11 +2156,23 @@
 	width: 8px;
 }
 .marvel-device.iphone-x .notch:after {
-	background: radial-gradient(circle at bottom left, transparent 0, transparent 70%, black 70%, black 100%);
+	background: radial-gradient(
+		circle at bottom left,
+		transparent 0,
+		transparent 70%,
+		black 70%,
+		black 100%
+	);
 	left: -8px;
 }
 .marvel-device.iphone-x .notch:before {
-	background: radial-gradient(circle at bottom right, transparent 0, transparent 70%, black 70%, black 100%);
+	background: radial-gradient(
+		circle at bottom right,
+		transparent 0,
+		transparent 70%,
+		black 70%,
+		black 100%
+	);
 	right: -8px;
 }
 .marvel-device.iphone-x.landscape {
@@ -2205,12 +2256,24 @@
 	left: 0;
 }
 .marvel-device.iphone-x.landscape .notch:after {
-	background: radial-gradient(circle at bottom right, transparent 0, transparent 70%, black 70%, black 100%);
+	background: radial-gradient(
+		circle at bottom right,
+		transparent 0,
+		transparent 70%,
+		black 70%,
+		black 100%
+	);
 	bottom: -8px;
 	top: auto;
 }
 .marvel-device.iphone-x.landscape .notch:before {
-	background: radial-gradient(circle at top right, transparent 0, transparent 70%, black 70%, black 100%);
+	background: radial-gradient(
+		circle at top right,
+		transparent 0,
+		transparent 70%,
+		black 70%,
+		black 100%
+	);
 	top: -8px;
 }
 .marvel-device.note8 {
@@ -2346,8 +2409,11 @@
 	box-shadow: inset 0 0 6px 0 rgba(255, 255, 255, 0.5);
 }
 .marvel-device.note8 .shadow {
-	-webkit-box-shadow: inset 0 0 60px 0 white, inset 0 0 30px 0 rgba(255, 255, 255, 0.5), 0 0 20px 0 white, 0 0 20px 0 rgba(255, 255, 255, 0.5);
-	box-shadow: inset 0 0 60px 0 white, inset 0 0 30px 0 rgba(255, 255, 255, 0.5), 0 0 20px 0 white, 0 0 20px 0 rgba(255, 255, 255, 0.5);
+	-webkit-box-shadow: inset 0 0 60px 0 white,
+		inset 0 0 30px 0 rgba(255, 255, 255, 0.5), 0 0 20px 0 white,
+		0 0 20px 0 rgba(255, 255, 255, 0.5);
+	box-shadow: inset 0 0 60px 0 white, inset 0 0 30px 0 rgba(255, 255, 255, 0.5),
+		0 0 20px 0 white, 0 0 20px 0 rgba(255, 255, 255, 0.5);
 	height: 101%;
 	position: absolute;
 	top: -0.5%;

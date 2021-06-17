@@ -1,16 +1,18 @@
 import { Inject, Service } from "typedi";
-import { Body, Get, JsonController, Post, QueryParam, QueryParams, Res } from "routing-controllers";
+import { Body, Get, JsonController, Post, QueryParam, QueryParams, Res, Req } from "routing-controllers";
 import { iSignupUserRequest } from "../../../../../crusher-shared/types/request/signupUserRequest";
 import { EmailManager } from "../../../core/manager/EmailManager";
-import { encryptPassword, generateVerificationCode } from "../../../core/utils/auth";
+import { decodeToken, encryptPassword, generateToken, generateVerificationCode } from "../../../core/utils/auth";
 import { UserV2Service } from "../../../core/services/v2/UserV2Service";
 import { USER_REGISTERED } from "../../../constants";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "../../../core/utils/uri";
 import { google } from "googleapis";
 import GoogleAPIService from "../../../core/services/GoogleAPIService";
 import { InviteMembersService } from "../../../core/services/mongo/inviteMembers";
-import SentryService from "../../../core/services/Analytics";
-
+import { getEdition } from '../../../utils/helper';
+import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../../utils/cookies";
+import { EDITION_TYPE } from '@crusher-shared/types/common/general';
+const cookie = require("cookie");
 const oauth2Client = new google.auth.OAuth2(
 	process.env.GOOGLE_CLIENT_ID,
 	process.env.GOOGLE_CLIENT_SECRET,
@@ -27,6 +29,20 @@ export class UserControllerV2 {
 	@Inject()
 	private inviteMembersService: InviteMembersService;
 
+	@Get("/init")
+	initUser(@Req() req: any, @Res() res: any) {
+		if (getEdition() === EDITION_TYPE.EE) {
+			const { token } = cookie.parse(req.headers.cookie || "");
+			if (token && decodeToken(token)) {
+				res.redirect(resolvePathToFrontendURI("/"));
+			}
+
+			const generatedToken = generateToken(0, 0);
+			clearUserAuthorizationCookies(res);
+			setUserAuthorizationCookies(generatedToken, res);
+		}
+		res.redirect(resolvePathToFrontendURI("/"));
+	}
 	/**
 	 * Redirect user to new url
 	 */

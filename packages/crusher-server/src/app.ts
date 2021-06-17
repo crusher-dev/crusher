@@ -1,10 +1,12 @@
-import { Logger } from "./utils/logger";
+import { getEdition } from "./utils/helper";
 
+require("dotenv").config();
 require("./utils/logger");
-const chalk = require("chalk");
-const cookie = require("cookie");
+
+import { authorization, getCurrentUserChecker } from "./server/middleware/Authorization";
+import { Logger } from "./utils/logger";
 import * as bodyParser from "body-parser";
-import { useContainer, useExpressServer, Action } from "routing-controllers";
+import { useContainer, useExpressServer } from "routing-controllers";
 import * as http from "http";
 import { Container } from "typedi";
 import "reflect-metadata";
@@ -13,7 +15,6 @@ import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
 import { UserController } from "./server/controllers/UserController";
 import { ProjectsController } from "./server/controllers/ProjectsController";
-import { clearAuthCookies, decodeToken } from "./core/utils/auth";
 import { TestController } from "./server/controllers/TestController";
 import { TestInstanceController } from "./server/controllers/TestInstanceController";
 import { DraftController } from "./server/controllers/DraftController";
@@ -37,7 +38,10 @@ import { UserControllerV2 } from "./server/controllers/v2/UserControllerV2";
 import { DraftControllerV2 } from "./server/controllers/v2/DraftControllerV2";
 import { LoginConnectionsController } from "./server/controllers/v2/LoginConnectionsController";
 import { GitIntegrationsController } from "./server/controllers/integrations/Github";
-import MongoManager from "./core/manager/MongoManager";
+import { EmailManager } from "@manager/EmailManager";
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+
+const chalk = require("chalk");
 
 useContainer(Container);
 const expressApp = express();
@@ -45,68 +49,45 @@ expressApp.use(ReqLogger);
 expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
 
-const mongoManager = Container.get(MongoManager);
+EmailManager.sendVerificationMail("test@gmail.com", "");
 
+const controllersArr: any = [
+	UserController,
+	ProjectsController,
+	TestController,
+	TestInstanceController,
+	DraftController,
+	JobsController,
+	CLIController,
+	AlertingController,
+	ProjectHostsController,
+	CommentsController,
+	TestInstanceResultSetsController,
+	TestInstanceResultsController,
+	MonitoringController,
+	JobsControllerV2,
+	TestInstanceControllerV2,
+	Slack,
+	PaymentController,
+	JobReportsController,
+	ProjectsControllerV2,
+	TeamControllerV2,
+	InviteMembersController,
+	UserControllerV2,
+	DraftControllerV2,
+	LoginConnectionsController,
+	GitIntegrationsController,
+];
+
+if (getEdition() === EDITION_TYPE.EE) {
+	const eeControllerArr: any = require("./ee/controllers");
+	controllersArr.push(...Object.values(eeControllerArr));
+}
 useExpressServer(expressApp, {
-	controllers: [
-		UserController,
-		ProjectsController,
-		TestController,
-		TestInstanceController,
-		DraftController,
-		JobsController,
-		CLIController,
-		AlertingController,
-		ProjectHostsController,
-		CommentsController,
-		TestInstanceResultSetsController,
-		TestInstanceResultsController,
-		MonitoringController,
-		JobsControllerV2,
-		TestInstanceControllerV2,
-		Slack,
-		PaymentController,
-		JobReportsController,
-		ProjectsControllerV2,
-		TeamControllerV2,
-		InviteMembersController,
-		UserControllerV2,
-		DraftControllerV2,
-		LoginConnectionsController,
-		GitIntegrationsController,
-	],
+	controllers: controllersArr,
 	middlewares: [CorsMiddleware],
-	authorizationChecker: async (action: Action) => {
-		if (action.request.headers.method === "OPTIONS") {
-			action.response.status(200);
-			action.response.end();
-		}
-		try {
-			const cookies = cookie.parse(action.request.headers.cookie || "");
-			const user = decodeToken(cookies.token);
-			if (!user) {
-				clearAuthCookies(action.response);
-				return false;
-			}
-			return user;
-		} catch (error) {
-			clearAuthCookies(action.response);
-			return false;
-		}
-	},
-	currentUserChecker: async (action: Action) => {
-		if (action.request.headers.method === "OPTIONS") {
-			action.response.status(200);
-			action.response.end();
-		}
-		try {
-			const { token } = cookie.parse(action.request.headers.cookie);
-			return decodeToken(token);
-		} catch (error) {
-			console.error(error);
-			return false;
-		}
-	},
+	authorizationChecker: authorization(),
+	currentUserChecker: getCurrentUserChecker(),
 	defaultErrorHandler: true,
 });
 

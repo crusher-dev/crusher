@@ -8,7 +8,7 @@ import JobsService, { TRIGGER } from "../../core/services/JobsService";
 import TestService from "../../core/services/TestService";
 import { decodeToken } from "../../core/utils/auth";
 import GithubService from "../../core/services/GithubService";
-import { addJobToRequestQueue } from "../../core/utils/queue";
+import { addJobToRequestQueue } from "@utils/queue";
 import * as chalk from "chalk";
 import { Logger } from "../../utils/logger";
 import { Platform } from "../../core/interfaces/Platform";
@@ -16,11 +16,6 @@ import { JobTrigger } from "../../core/interfaces/JobTrigger";
 import { TestType } from "../../core/interfaces/TestType";
 import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
 import { GitIntegrationsService } from "../../core/services/mongo/gitIntegrations";
-
-const RESPONSE_STATUS = {
-	PROJECT_CREATED: "PROJECT_CREATED",
-	PROJECT_CREATION_FAILED: "PROJECT_CREATION_FAILED",
-};
 
 @Service()
 @JsonController("/projects")
@@ -41,27 +36,6 @@ export class ProjectsController {
 	constructor() {
 		// This passes on only one DB containers
 		this.dbManager = Container.get(DBManager);
-	}
-
-	@Authorized()
-	@Post("/create")
-	async createProject(@CurrentUser({ required: true }) user, @Body() projectDetails) {
-		const { projectName } = projectDetails;
-		const { team_id } = user;
-		return this.projectService
-			.createProject(projectName, team_id)
-			.then((project) => {
-				if (!project) {
-					throw new Error("Can't create project");
-				}
-				return {
-					status: RESPONSE_STATUS.PROJECT_CREATED,
-					projectId: project.insertId,
-				};
-			})
-			.catch((err) => {
-				return { status: RESPONSE_STATUS.PROJECT_CREATION_FAILED };
-			});
 	}
 
 	@Authorized()

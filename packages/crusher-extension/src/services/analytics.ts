@@ -10,13 +10,15 @@ class SentryService implements TSentryTracking {
 
 	trackPage() {}
 
-	trackEvent(value: any) {
+	trackEvent() {
 		// analytics.track({ userId: this.userId, ...value });
 	}
 
 	trackCustomEvent() {}
 
 	addUserInfo() {}
+
+	addUserToGroup() {}
 
 	addGroupInfo() {}
 }

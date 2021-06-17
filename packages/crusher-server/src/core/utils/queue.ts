@@ -10,16 +10,12 @@ import DraftInstanceService from "../services/DraftInstanceService";
 import { TestType } from "../interfaces/TestType";
 import { JobLogs } from "../../server/models/jobLogs";
 import { TestLogsService } from "../services/mongo/testLogs";
-import { CodeGenerator } from "../../../../code-generator/src/generator";
 import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import JobsService from "../services/JobsService";
-import { BROWSER } from "../../../../crusher-shared/types/browser";
 import { iJobRunRequest } from "../../../../crusher-shared/types/runner/jobRunRequest";
 import { PLATFORM } from "../../../../crusher-shared/types/platform";
-
-const path = require("path");
 
 const testInstanceService = new TestInstanceService();
 const draftInstanceService = new DraftInstanceService();
@@ -30,16 +26,6 @@ const requestQueue = new Queue("request-queue", {
 	// @ts-ignore
 	connection: REDDIS,
 });
-const codeGenerator = new CodeGenerator({
-	isLiveLogsOn: true,
-	shouldRecordVideo: true,
-	isHeadless: false,
-	browser: BROWSER.CHROME,
-});
-
-function getGeneratedCode(test, platform, testType) {
-	return codeGenerator.parse(JSON.parse(test.events));
-}
 
 export async function addTestRequestToQueue(testRequest: RunRequest) {
 	const { test, job, testCount } = testRequest;
@@ -101,7 +87,6 @@ export async function addJobToRequestQueue(jobRequest) {
 		return prev + count;
 	}, 0);
 
-	console.log("Here are the tests: ", tests);
 	for (const test of tests) {
 		if (platform === Platform.ALL) {
 			await addTestRequestToQueue({
@@ -109,24 +94,6 @@ export async function addJobToRequestQueue(jobRequest) {
 					...job,
 					report_id: jobReportsId.insertId,
 					platform: PLATFORM.CHROME,
-				},
-				test: { ...test, testType: testType },
-				testCount: totalTestCount,
-			});
-			await addTestRequestToQueue({
-				job: {
-					...job,
-					report_id: jobReportsId.insertId,
-					platform: PLATFORM.SAFARI,
-				},
-				test: { ...test, testType: testType },
-				testCount: totalTestCount,
-			});
-			await addTestRequestToQueue({
-				job: {
-					...job,
-					report_id: jobReportsId.insertId,
-					platform: PLATFORM.FIREFOX,
 				},
 				test: { ...test, testType: testType },
 				testCount: totalTestCount,
@@ -139,6 +106,7 @@ export async function addJobToRequestQueue(jobRequest) {
 			});
 		}
 	}
+
 	Logger.debug("addJobToRequestQueue", "Time to send logs");
 	await new JobLogs({
 		tag: "TESTS_QUEUED_FOR_JOB",

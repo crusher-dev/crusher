@@ -1,7 +1,7 @@
 import { Container, Service } from "typedi";
 import DBManager from "../../manager/DBManager";
 import { JOB_TRIGGER } from "../../../../../crusher-shared/types/jobTrigger";
-import { addJobToRequestQueue } from "../../utils/queue";
+import { addJobToRequestQueue } from "@utils/queue";
 import JobsService from "../JobsService";
 import TestService from "../TestService";
 import { iHost } from "../../../../../crusher-shared/types/db/host";

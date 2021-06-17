@@ -7,6 +7,7 @@
 		"aws-sdk": "^2.833.0",
 		"bullmq": "^1.14.0",
 		"crusher-runner-utils": "0.0.9",
+		"dotenv": "^10.0.0",
 		"ioredis": "^4.19.4",
 		"logdna": "^3.5.0",
 		"mongoose": "^5.11.14",
@@ -24,11 +25,13 @@
 		"copy-webpack-plugin": "6.2.1",
 		"prettier": "^2.2.1",
 		"string-replace-loader": "^3.0.1",
+		"tsconfig-paths-webpack-plugin": "^3.5.1",
 		"typescript ": "^4.1.3",
 		"webpack-cli": "^4.6.0"
 	},
 	"scripts": {
-		"start": "ts-node src/index.ts",
+		"setup": "node setup/tsconfig.js",
+		"start": "ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
 		"build": "webpack -c webpack.config.js",
 		"start:build": "node build/index.js",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"

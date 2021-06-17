@@ -2,7 +2,6 @@ import { css } from "@emotion/core";
 import Head from "next/head";
 import PlusSVG from "../../../public/svg/sidebarSettings/plus.svg";
 import BackSVG from "../../../public/svg/settings/back.svg";
-import StarSVG from "../../../public/svg/settings/star.svg";
 import TeamSVG from "../../../public/svg/settings/team.svg";
 
 import React, { useCallback, useState } from "react";
@@ -16,6 +15,8 @@ import { useSelector } from "react-redux";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 import { store } from "@redux/store";
 import { saveSelectedProjectInRedux } from "@redux/actions/project";
+import { getEdition } from "@utils/helpers";
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 
 const projectMenuData = {
 	title: "Project",
@@ -147,9 +148,11 @@ function ProjectContainer(props: iProjectContainerProps) {
 	return (
 		<div css={projectBar}>
 			{projectItems}
-			<div id="add-project" onClick={addProject}>
-				<PlusSVG />
-			</div>
+			{getEdition() === EDITION_TYPE.EE && (
+				<div id="add-project" onClick={addProject}>
+					<PlusSVG />
+				</div>
+			)}
 		</div>
 	);
 }
@@ -175,9 +178,7 @@ function MenuContainer(props: iMenuContainerProps) {
 					</div>
 					<div id="back-text">Settings</div>
 				</div>
-				<div id="plan-container">
-
-				</div>
+				<div id="plan-container"></div>
 			</div>
 
 			<MainMenuItem data={projectMenuData} />
@@ -188,9 +189,11 @@ function MenuContainer(props: iMenuContainerProps) {
 				<div css={menuBottomLink} onClick={showAddTeamMemberModal}>
 					<PlusSVG /> <span>Add team member</span>
 				</div>
-				<div css={menuBottomLink} onClick={showCreateProjectModal}>
-					<PlusSVG /> <span>Add project</span>
-				</div>
+				{getEdition() === EDITION_TYPE.EE && (
+					<div css={menuBottomLink} onClick={showCreateProjectModal}>
+						<PlusSVG /> <span>Add project</span>
+					</div>
+				)}
 			</div>
 		</div>
 	);

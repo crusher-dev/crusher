@@ -1,11 +1,15 @@
 import React from "react";
-import { redirectToFrontendPath } from "@utils/router";
+import { redirectToBackendURI, redirectToFrontendPath } from "@utils/router";
 import { EMAIL_NOT_VERIFIED, NO_TEAM_JOINED, SIGNED_IN, USER_NOT_REGISTERED } from "@utils/constants";
 import { saveSelectedProjectInRedux } from "@redux/actions/project";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { getUserInfo } from "@redux/stateUtils/user";
 import { NextApiResponse } from "next";
+import { getEdition } from "@utils/helpers";
+import { isUserLoggedInFromCookies } from "@utils/cookies";
+import { iPageContext } from "@interfaces/pageContext";
+import { EDITION_TYPE } from '@crusher-shared/types/common/general';
 
 function getUserStatus(userInfo: iUserInfoResponse | null) {
 	if (!userInfo || userInfo === null) {
@@ -46,10 +50,18 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 
 	WithSession.displayName = `withSession(${wrappedComponentName})`;
 
-	WithSession.getInitialProps = async (ctx: any) => {
+	WithSession.getInitialProps = async (ctx: iPageContext) => {
 		const { res, store, metaInfo } = ctx as any;
 
 		const userInfo = getUserInfo(store.getState());
+
+		const { cookies } = ctx.metaInfo;
+
+		const loggedInCookies = isUserLoggedInFromCookies(cookies);
+
+		if (!loggedInCookies && getEdition() === EDITION_TYPE.OPEN_SOURCE) {
+			return redirectToBackendURI("/v2/user/init", ctx.res as NextApiResponse);
+		}
 
 		const [redirectResponse, userStatus] = await handleUserStatus(userInfo, res, componentScope ? componentScope : null);
 

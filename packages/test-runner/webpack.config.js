@@ -2,13 +2,14 @@
 const path = require("path");
 const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
 	mode: "development",
 	devtool: "inline-source-map",
 	target: "node",
 	entry: {
-		index: "./src/index.ts",
+		index: "./index.ts",
 	},
 	output: {
 		libraryTarget: "commonjs",
@@ -24,6 +25,7 @@ module.exports = {
 		}),
 	],
 	resolve: {
+		plugins: [new TsconfigPathsPlugin({ configFile: path.resolve("./tsconfig.json") })],
 		extensions: [".ts", ".tsx", ".js"],
 	},
 	module: {

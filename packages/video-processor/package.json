@@ -4,7 +4,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"aws-sdk": "^2.833.0",
-		"bullmq": "^1.14.0",
+		"bullmq": "1.14.0",
 		"fluent-ffmpeg": "^2.1.2",
 		"got": "^11.8.1",
 		"logdna": "^3.5.0",

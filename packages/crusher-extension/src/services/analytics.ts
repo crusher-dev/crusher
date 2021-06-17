@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { TSentryTracking } from "../../../crusher-shared/types/common/sentryTracking";
 
 class SentryService implements TSentryTracking {

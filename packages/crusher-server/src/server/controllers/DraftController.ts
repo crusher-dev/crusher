@@ -108,7 +108,7 @@ export class DraftController {
 							},
 							function (err, logsArray) {
 								const logs = logsArray
-									? logsArray.map((log) => {
+									? logsArray.map((log: any) => {
 											return log.toObject();
 									  })
 									: null;
@@ -133,7 +133,7 @@ export class DraftController {
 								testType: TestType.DRAFT,
 							},
 							function (err, logsArray) {
-								const logs = logsArray.map((log) => {
+								const logs = logsArray.map((log: any) => {
 									return log.toObject();
 								});
 

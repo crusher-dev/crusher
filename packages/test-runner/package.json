@@ -10,6 +10,7 @@
 		"dotenv": "^10.0.0",
 		"ioredis": "^4.19.4",
 		"logdna": "^3.5.0",
+		"mongodb-client-encryption": "^1.2.5",
 		"mongoose": "^5.11.14",
 		"playwright": "^1.7.1",
 		"playwright-video": "https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704",

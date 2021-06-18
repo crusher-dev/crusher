@@ -14,7 +14,7 @@ queue.client.then(async (client) => {
 	});
 	await queueScheduler.waitUntilReady();
 
-	new Worker(REQUEST_QUEUE, path.resolve("../src/worker.ts"), {
+	new Worker(REQUEST_QUEUE, path.resolve("src/worker.ts"), {
 		connection: client,
 		concurrency: 3,
 		lockDuration: 120000,

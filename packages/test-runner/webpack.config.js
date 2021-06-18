@@ -40,7 +40,7 @@ module.exports = {
 					loader: "string-replace-loader",
 					options: {
 						search: "__dirname",
-						replace: `"./commands"`,
+						replace: `__dirname + "/commands/"`,
 					},
 				},
 			},

@@ -20,9 +20,6 @@ class TestRunner {
 	_registeredInstanceNo: number;
 
 	constructor() {
-		if (getEdition() !== EDITION_TYPE.EE) {
-			throw "Enterprise support is not available with open source edition";
-		}
 		this.sessionId = generateUid();
 		this.redisManager = new RedisManager(REDDIS.host, parseInt(REDDIS.port), REDDIS.password);
 		// During booting, make sure test runner doesn't pickup any jobs without checking its bootAfterNJobsOffset

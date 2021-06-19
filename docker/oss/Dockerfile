@@ -12,8 +12,8 @@ RUN  cd packages/crusher-app && npm install
 ADD ./packages/crusher-app/server.js packages/crusher-app/server.js
 ADD ./packages/crusher-server/dist packages/crusher-server/dist
 ADD ./packages/test-runner/dist packages/test-runner/dist
-ADD ./packages/test-runner/dist packages/test-runner/dist
-
+ADD ./packages/video-processor/dist packages/video-processor/dist
+ADD ./ecosystem ecosystem
 
 ADD ./docker/oss/start.sh start.sh
 

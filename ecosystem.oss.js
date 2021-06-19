@@ -1,9 +1,4 @@
-// This is used by pm2
-// Centralize this config file
-// const { CRUSHER_APP_ENV, CRUSHER_SERVER_ENV, TEST_RUNNER_ENV, VIDEO_PROCESSOR_ENV, CRUSHER_EXTENSION_ENV } = require('./ecosystem/env');
-// const { IS_PRODUCTION } = require('./ecosystem/config');
-//
-// console.log(`Starting pm2 for ${IS_PRODUCTION ? 'production' : 'development'}`);
+const { CRUSHER_APP_ENV, CRUSHER_SERVER_ENV, TEST_RUNNER_ENV, VIDEO_PROCESSOR_ENV } = require('./ecosystem/env');
 
 module.exports = {
 	apps: [
@@ -12,6 +7,7 @@ module.exports = {
 			cwd: './packages/crusher-app',
 			script: 'node',
 			args: 'server.js',
+			env: CRUSHER_APP_ENV,
 			merge_logs: true,
 		},
 		{
@@ -20,6 +16,7 @@ module.exports = {
 			script: 'node',
 			args: "dist/app.js",
 			watch: [],
+			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
 		},
 		{
@@ -28,6 +25,7 @@ module.exports = {
 			script: 'node',
 			args: "dist/cron.js",
 			watch: [],
+			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
 		},
 		{
@@ -36,6 +34,7 @@ module.exports = {
 			script: 'node',
 			args: "dist/queue.js",
 			watch: [],
+			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
 		},
 		{
@@ -43,6 +42,7 @@ module.exports = {
 			cwd: './packages/test-runner',
 			script: 'node',
 			args: "dist/index.js",
+			env: TEST_RUNNER_ENV,
 			watch: [],
 		},
 		{
@@ -50,6 +50,7 @@ module.exports = {
 			cwd: './packages/video-processor',
 			script: 'node',
 			args: "dist/index.js",
+			env: VIDEO_PROCESSOR_ENV,
 			watch: [],
 		},
 	],

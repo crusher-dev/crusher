@@ -5,11 +5,7 @@ module.exports = {
 	mode: "development",
 	devtool: "inline-source-map",
 	entry: {
-		actions: "./src/actions/index.ts",
 		index: "./src/index.ts",
-		functions: "./src/functions/index.ts",
-		middlewares: "./src/middlewares/index.ts",
-		utils: "./src/utils/index.ts",
 	},
 	output: {
 		libraryTarget: "commonjs",

@@ -3,7 +3,7 @@
   "name": "crusher-runner-utils",
   "version": "0.0.9",
   "description": "Test runner utils for crusher tests",
-  "main": "dist/",
+  "main": "build/index.js",
   "author": "Utkarsh Dixit<utkarsh@crusher.dev>",
   "license": "MIT",
   "scripts": {

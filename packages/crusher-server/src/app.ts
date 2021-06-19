@@ -40,8 +40,10 @@ import { LoginConnectionsController } from "./server/controllers/v2/LoginConnect
 import { GitIntegrationsController } from "./server/controllers/integrations/Github";
 import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+import MongoManager from "@manager/MongoManager";
 
 const chalk = require("chalk");
+Container.get(MongoManager);
 
 useContainer(Container);
 const expressApp = express();

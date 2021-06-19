@@ -13,6 +13,7 @@ export const TEXT_ALIGN = {
 export const OVERFLOW = {
 	AUTO: "auto",
 	HIDDEN: "hidden",
+	SCROLL: "scroll",
 } as const;
 
 export const FLEX_DIRECTION = {

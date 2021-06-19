@@ -28,7 +28,7 @@ const testCompletedQueue = new Queue("test-completed-queue", {
 	connection: REDDIS,
 });
 
-module.exports = async (bullJob: iTestRunnerJob): Promise<boolean> => {
+export default async (bullJob: iTestRunnerJob): Promise<boolean> => {
 	let testError, testOutput;
 	createTmpAssetsDirectoriesIfNotThere(bullJob.data);
 	const { requestType, instanceId } = bullJob.data;

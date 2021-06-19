@@ -1,4 +1,5 @@
 import React, { ChangeEvent } from "react";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 import { RESIZE, WHITE_SPACE } from "../../../interfaces/css";
 
 interface iAddressBarProps {
@@ -12,44 +13,56 @@ const AddressBar = (props: iAddressBarProps) => {
 	const { value, onChange, onKeyDown, forwardRef } = props;
 
 	return (
-		<div style={addressBarStyle} className={"address_bar"}>
-			<div style={sslContainerStyle}>
-				<img style={sslIconStyle} src={chrome.runtime.getURL("/icons/ssl.svg")} />
+		<>
+			<div style={addressBarStyle} id="address-bar" className={"address_bar"}>
+				<div style={sslContainerStyle}>
+					<img style={sslIconStyle} src={chrome.runtime.getURL("/icons/ssl.svg")} />
+				</div>
+				<textarea
+					ref={forwardRef}
+					className="text-15"
+					style={addressBarInputStyle}
+					onChange={onChange as any}
+					onKeyDown={onKeyDown as any}
+					contentEditable={true}
+					value={value as any}
+				></textarea>
 			</div>
-			<textarea
-				ref={forwardRef}
-				style={addressBarInputStyle}
-				onChange={onChange as any}
-				onKeyDown={onKeyDown as any}
-				contentEditable={true}
-				value={value as any}
-			></textarea>
-
-			<style>{`
-				.address_bar:hover{
-					background: rgba(28,31,38, 1) !important;
-				}
-			`}</style>
-		</div>
+			<div className="text-15" style={goBtnStyle}>
+				Go
+			</div>
+		</>
 	);
 };
 
+const goBtnStyle = {
+	background: COLOR_CONSTANTS.TRINARY,
+	border: `solid ${COLOR_CONSTANTS.BORDER}`,
+	color: "#fff",
+	width: "5.8rem",
+	borderTopRightRadius: "5px",
+	borderBottomRightRadius: "5px",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	cursor: "pointer",
+	borderWidth: "1px",
+	height: "100%",
+};
+
 const addressBarStyle = {
-	width: "33.9%",
-	maxWidth: "25rem",
-	padding: "0 0.1rem",
-	background: "rgba(28,31,38, 0.7)",
+	width: "45%",
+	background: COLOR_CONSTANTS.PRIMARY,
 	overflow: "hidden",
 	display: "flex",
 	alignItems: "center",
+	border: `solid ${COLOR_CONSTANTS.BORDER}`,
+	borderWidth: "1px",
 	color: "#fff",
 	borderRadius: "0.1rem",
-	marginLeft: "1.6rem",
-	paddingRight: "1rem",
 };
 
 const addressBarInputStyle = {
-	flex: 1,
 	fontSize: "0.77rem",
 	outline: "none",
 	display: "flex",
@@ -62,6 +75,7 @@ const addressBarInputStyle = {
 	overflow: "hidden",
 	border: 0,
 	resize: RESIZE.NONE,
+	width: "100%",
 };
 
 const sslContainerStyle = {

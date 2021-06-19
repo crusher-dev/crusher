@@ -10,7 +10,7 @@ import { getStore } from "../../../redux/store";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
-import { POSITION } from "../../../interfaces/css";
+import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
@@ -82,39 +82,30 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 	};
 
 	return (
-		<div style={mainContainerStyle}>
-			<div style={browserStyle}>
-				<div style={toolbarContainerStyle}>
-					<BrowserToolbar
-						isInspectModeOn={isInspectModeOn}
-						initialUrl={url}
-						goBack={goBack}
-						goForward={goForward}
-						refreshPage={refreshPage}
-						saveTest={saveTestCallback}
-						loadNewPage={loadNewPage}
-					/>
-					{/*<ActionRecordedIndicator />*/}
-				</div>
-				<Device url={url} device={selectedDevice} isDisabled={isElementRecordingStateOn} forwardRef={deviceIframeRef} />
-			</div>
+		<div style={{ ...browserStyle, ...mainContainerStyle }}>
+			<BrowserToolbar
+				isInspectModeOn={isInspectModeOn}
+				initialUrl={url}
+				goBack={goBack}
+				goForward={goForward}
+				refreshPage={refreshPage}
+				saveTest={saveTestCallback}
+				loadNewPage={loadNewPage}
+			/>
+			{/*<ActionRecordedIndicator />*/}
+
+			<Device url={url} device={selectedDevice} isDisabled={isElementRecordingStateOn} forwardRef={deviceIframeRef} />
 		</div>
 	);
 };
 
 const mainContainerStyle = {
 	flex: 1,
-	width: "70%",
 	maxHeight: "100vh",
-	overflow: "auto",
-};
-
-const toolbarContainerStyle = {
-	position: POSITION.RELATIVE,
 };
 
 const browserStyle = {
-	background: "#010101",
+	background: COLOR_CONSTANTS.PRIMARY,
 	minHeight: "100vh",
 	overflow: "hidden",
 };

@@ -15,7 +15,7 @@ import { ACTIONS_RECORDING_STATE } from "../../interfaces/actionsRecordingState"
 const initialState: iRecorderState = {
 	isInspectModeOn: false,
 	actionsRecordingState: {
-		type: ACTIONS_RECORDING_STATE.PAGE,
+		type: ACTIONS_RECORDING_STATE.INITIAL_STATE,
 		elementInfo: null,
 	},
 	isAutoRecordOn: true,

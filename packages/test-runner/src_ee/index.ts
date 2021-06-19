@@ -3,8 +3,7 @@ import Timeout = NodeJS.Timeout;
 import { RedisManager } from "../src/manager/redis";
 import { REDDIS } from "../config/database";
 import { BootAfterNJobsOffsetManager } from "../src_ee/manager/offsetManger";
-import { getEdition } from "../src/util/helper";
-import { EDITION_TYPE } from "../../crusher-shared/types/common/general";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 require("./queue.ts");
@@ -20,9 +19,6 @@ class TestRunner {
 	_registeredInstanceNo: number;
 
 	constructor() {
-		if (getEdition() !== EDITION_TYPE.EE) {
-			throw "Enterprise support is not available with open source edition";
-		}
 		this.sessionId = generateUid();
 		this.redisManager = new RedisManager(REDDIS.host, parseInt(REDDIS.port), REDDIS.password);
 		// During booting, make sure test runner doesn't pickup any jobs without checking its bootAfterNJobsOffset

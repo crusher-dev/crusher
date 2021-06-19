@@ -97,3 +97,7 @@ export function toPrettyEventName(eventName: string) {
 		.map((name) => toPascalCase(name))
 		.join(" ");
 }
+
+export function pxToRemValue(pxValue: number): string {
+	return `${pxValue / 16}rem`;
+}

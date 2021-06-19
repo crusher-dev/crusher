@@ -5,11 +5,12 @@
 	"dependencies": {
 		"@types/ioredis": "^4.17.11",
 		"aws-sdk": "^2.833.0",
-		"bullmq": "^1.14.0",
+		"bullmq": "1.14.0",
 		"crusher-runner-utils": "0.0.9",
 		"dotenv": "^10.0.0",
 		"ioredis": "^4.19.4",
 		"logdna": "^3.5.0",
+		"mongodb-client-encryption": "^1.2.5",
 		"mongoose": "^5.11.14",
 		"playwright": "^1.7.1",
 		"playwright-video": "https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704",
@@ -32,8 +33,8 @@
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
 		"start": "ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
-		"build": "yarn setup && webpack -c webpack.config.js",
-		"start:build": "node dist/index.js",
+		"build": "webpack -c webpack.config.js",
+		"start:build": "node build/index.js",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"
 	},
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",

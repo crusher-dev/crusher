@@ -41,6 +41,7 @@ export class CodeRunnerService {
 				"__dirname",
 				"logStep",
 				"handleImageBuffer",
+				"GLOBAL_NODE_MODULES_PATH",
 				`return new Promise(async function (resolve, reject) {
 				    try{
 				        ${code};
@@ -49,7 +50,18 @@ export class CodeRunnerService {
 				      reject(err);
 				    }
 				});`,
-			)(exports, require, module, __filename, __dirname, logStepsHandler, handleScreenshotImagesBuffer);
+			)(
+				exports,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				//@ts-ignore
+				typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+				module,
+				__filename,
+				__dirname,
+				logStepsHandler,
+				handleScreenshotImagesBuffer,
+				process.env.GLOBAL_NODE_MODULES_PATH,
+			);
 		} catch (err) {
 			error = err;
 		}

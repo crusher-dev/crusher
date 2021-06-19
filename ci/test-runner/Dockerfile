@@ -28,6 +28,6 @@ ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
 RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g concurrently
-RUN npm install -g playwright@^1.7.1 https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
+RUN npm install -g playwright@^1.7.1 @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
 
 CMD ["concurrently", "sh /usr/local/bin/docker-entrypoint.sh", "pm2-runtime ecosystem.config.js --only test-runner"]

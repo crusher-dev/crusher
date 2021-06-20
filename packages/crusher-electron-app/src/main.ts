@@ -6,6 +6,8 @@ require('dotenv').config();
 const APP_DOMAIN = process.env.NODE_ENV === "development" ?
 	process.env.LOCAL_DOMAIN : process.env.PRODUCTION_DOMAIN;
 
+console.log("APP DOMAIN", APP_DOMAIN);
+
 const loadExtension =  (mainWindow) => {
 	const isBundlingForRelease = process.env.TARGET === "release";
 

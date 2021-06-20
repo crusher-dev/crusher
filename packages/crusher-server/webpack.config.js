@@ -1,16 +1,19 @@
 const path = require('path');
+const glob = require('glob');
 const CopyPlugin = require("copy-webpack-plugin");
+
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   devtool: 'source-map',
   target: "node",
   entry: {
     app: "./src/app.ts",
     cron: "./src/cron.ts",
     queue: "./src/queue.ts",
+    ...getAllWorker()
   },
   output: {
-    path: path.resolve(__dirname, './dist/'),
+    path: path.resolve(__dirname, '../../output/crusher-server'),
     chunkFilename: `[name]-[chunkhash:4].js`,
     sourceMapFilename: `[name]-[chunkhash:4].js.map`,
     libraryTarget: 'umd',
@@ -28,14 +31,32 @@ module.exports = {
     }),
 
   },
-  externals: {
-    // kcors: 'kcors',
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 25000,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module) {
+            // get the name. E.g. node_modules/packageName/not/this/part.js
+            // or node_modules/packageName
+            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+
+            // npm package names are URL-safe, but some servers don't like @ symbols
+            return `npm.${packageName.replace('@', '')}`;
+          },
+        },
+      },
+    },
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: "ts-loader"
+        loader: "ts-loader",
       },
       {
         test: /node_modules\/bullmq\/dist\/commands\/index\.js$/,
@@ -43,12 +64,22 @@ module.exports = {
           loader: "string-replace-loader",
           options: {
             search: "__dirname",
-            replace: `"./commands"`,
+            replace: `__dirname + "/commands/"`,
           },
         },
-      }
-    ]
-  }
+      },
+      {
+        test: /node_modules\/bullmq\/dist\/classes\/master\.js$/,
+        use: {
+          loader: "string-replace-loader",
+          options: {
+            search: "require(msg.value)",
+            replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(msg.value) : require(msg.value)`,
+          },
+        },
+      },
+    ],
+  },
 };
 
 /**
@@ -78,4 +109,11 @@ function resolveTsconfigPathsToAlias({
   });
 
   return aliases;
+}
+
+function getAllWorker(){
+  return glob.sync('./src/core/workers/**.ts').reduce(function(obj, el){
+    obj[el] = el;
+    return obj
+  },{})
 }

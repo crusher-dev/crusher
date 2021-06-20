@@ -24,6 +24,7 @@ const loadExtension =  (mainWindow) => {
 let mainWindow;
 
 async function createWindow () {
+	console.log("dsf")
 	app.commandLine.appendSwitch('--disable-site-isolation-trials');
 	app.commandLine.appendSwitch('--disable-web-security');
 	app.commandLine.appendSwitch("--allow-top-navigation");
@@ -117,7 +118,9 @@ async function createWindow () {
 		}
 	});
 }
-app.whenReady().then(() => {
+
+	app.whenReady().then(() => {
+		console.log("dsf")
 	createWindow()
 	app.on('activate', function () {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -153,3 +156,5 @@ app.on('window-all-closed', async function () {
 
 	if (process.platform !== 'darwin') app.quit()
 })
+
+console.log("dsf")

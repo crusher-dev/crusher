@@ -6,7 +6,7 @@
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
 		"dev": "next dev",
-		"build": "next build",
+		"build": "NODE_ENV=production next build",
 		"lint": "eslint --ext=jsx,ts,tsx src",
 		"prettify": "prettier --write .",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
@@ -27,6 +27,7 @@
 		"clipboard-copy": "^3.1.0",
 		"commitizen": "^4.2.3",
 		"cookie": "^0.4.1",
+		"copy-webpack-plugin": "^6.3.2",
 		"cors": "^2.8.5",
 		"dotenv": "^10.0.0",
 		"emotion": "^10.0.27",

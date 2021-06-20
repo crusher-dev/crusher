@@ -67,32 +67,3 @@ module.exports = {
 		],
 	},
 };
-
-/**
- * Resolve tsconfig.json paths to Webpack aliases
- * @param  {string} tsconfigPath           - Path to tsconfig
- * @param  {string} webpackConfigBasePath  - Path from tsconfig to Webpack config to create absolute aliases
- * @return {object}                        - Webpack alias config
- */
-function resolveTsconfigPathsToAlias({
-                                       tsconfigPath = './tsconfig.json',
-                                       webpackConfigBasePath = __dirname,
-                                     } = {}) {
-  const { paths } = require(tsconfigPath).compilerOptions;
-
-  const aliases = {};
-
-  const getItemName = (alias) => path.resolve(webpackConfigBasePath, alias.replace('/*', '').replace('*', ''))
-  Object.keys(paths).forEach((item) => {
-    const modifiedKey = item.replace('/*', '');
-
-    const aliasItems = paths[item]
-
-    const processedAliases = Array.isArray(aliasItems) ? aliasItems.map((alias)=> getItemName(alias)): getItemName(aliasItems)
-
-    aliases[modifiedKey] = processedAliases
-
-  });
-
-  return aliases;
-}

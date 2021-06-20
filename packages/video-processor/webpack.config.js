@@ -3,17 +3,16 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   devtool: 'source-map',
   target: "node",
   entry: {
     index: "./src/app.ts",
   },
   output: {
-    path: path.resolve(__dirname, './dist/'),
-    chunkFilename: `[name]-[chunkhash:4].js`,
-    sourceMapFilename: `[name]-[chunkhash:4].js.map`,
-    libraryTarget: 'umd',
+    libraryTarget: "commonjs",
+    path: path.resolve(__dirname, "../../output/video-processor/"),
+    filename: "[name].js", // <--- Will be compiled to this single file
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],

@@ -1,5 +1,4 @@
-import { iTestRunnerJobOutput } from "../../../../crusher-shared/types/runner/jobRunRequestOutput";
-import { Job, Queue } from "bullmq";
+import { Job } from "bullmq";
 import TestsEventsWorker from "./testEventsWoker";
 import { REDDIS } from "../../../config/database";
 import * as IORedis from "ioredis";

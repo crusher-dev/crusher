@@ -1,8 +1,0 @@
-const SLACK_CONFIG = {
-	CLIENT_ID: process.env.SLACK_CLIENT_ID ? process.env.SLACK_CLIENT_ID : '650512229650.1194885099766',
-	CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET ? process.env.SLACK_CLIENT_SECRET : 'c8b73831d4fd48fba5be4f5c4515d6a8',
-};
-
-module.exports = {
-	SLACK_CONFIG
-};

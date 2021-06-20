@@ -1,5 +1,5 @@
 #echo "Building extension"
-cd ../crusher-extension && yarn build
+cd ../crusher-extension && BACKEND_URL=http://localhost:3000/server/ yarn build
 
 cd ../crusher-electron-app
 

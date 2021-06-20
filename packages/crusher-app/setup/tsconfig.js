@@ -21,22 +21,27 @@ function handleEESetup() {
 	}
 
 	shell.rm("-rf", "../tsconfig.json");
+	shell.rm("-rf", path.resolve(__dirname, "../.env"));
+
 	shell.cp(path.resolve(__dirname, ".tsconfig.ee.json.template"), path.resolve(__dirname, "../tsconfig.json"));
+	shell.cp(path.resolve(__dirname, ".env.ee.template"), path.resolve(__dirname, "../.env"));
 }
 
 function handleOpenSourceSetup() {
 	const currentTSConfig = getTSConfig();
-
 	if (currentTSConfig && currentTSConfig.isEnterprise != "true") {
 		return;
 	}
 
 	shell.rm("-rf", path.resolve(__dirname, "../tsconfig.json"));
-	shell.cp(path.resolve(__dirname, ".tsconfig.ee.json.template"), path.resolve(__dirname, "../tsconfig.json"));
+	shell.rm("-rf", path.resolve(__dirname, "../.env"));
+
+	shell.cp(path.resolve(__dirname, ".tsconfig.json.template"), path.resolve(__dirname, "../tsconfig.json"));
+	shell.cp(path.resolve(__dirname, ".env.template"), path.resolve(__dirname, "../.env"));
 }
 
 function init() {
-	if (CRUSHER_MODE === "ee") {
+	if (CRUSHER_MODE === "enterprise") {
 		handleEESetup();
 	} else {
 		handleOpenSourceSetup();

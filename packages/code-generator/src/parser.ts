@@ -92,10 +92,10 @@ export class Parser {
 		const code = [];
 		if (this.isFirstTimeNavigate) {
 			code.push("const page = await browserContext.newPage({});");
-			if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
-				const videoPath = this.assetsDir + "/videos/video.mp4";
-				code.push(`capturedVideo = await saveVideo(page, '${videoPath}');`);
-			}
+			// if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
+			// 	const videoPath = this.assetsDir + "/videos/video.mp4";
+			// 	code.push(`capturedVideo = await saveVideo(page, '${videoPath}');`);
+			// }
 			code.push(`const {handlePopup} = require(${helperPackageRequire}).Middlewares;`);
 			code.push("handlePopup(page, browserContext);");
 			this.isFirstTimeNavigate = false;
@@ -336,11 +336,14 @@ export class Parser {
 	}
 
 	getCode() {
-		let importCode = `const {Page, Element, Browser} = require(${helperPackageRequire}).Actions;\nconst playwright = require("playwright");\n`;
+		let importCode = `const {Page, Element, Browser} = require(${helperPackageRequire}).Actions;\nconst playwright = require("playwright-chromium");\n`;
 		importCode += `const {getCrusherSelectorEngine} = require(${helperPackageRequire}).Functions;\n`;
 		importCode = this.registerCrusherSelector(importCode);
-		importCode += `const browser = await playwright["${this.browser}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
+		importCode += `const browser = await playwright["${this.browser}"].launch({
+		 executablePath: "${process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}",
+		 headless: ${this.isHeadless.toString()} });\n`;
 
+		this.isLiveRecording = false;
 		if (this.shouldSleep) {
 			importCode += `const { sleep } = require(${helperPackageRequire}).Functions;\n`;
 		}

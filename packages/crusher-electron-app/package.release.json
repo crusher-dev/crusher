@@ -1,0 +1,14 @@
+{
+  "name": "crusher-electron-app",
+  "version": "1.0.0",
+  "description": "Electron app for crusher",
+  "main": "main.js",
+  "author": "Utkarsh Dixit<utkarsh@crusher.dev>",
+  "license": "MIT",
+  "scripts": {
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {}
+}

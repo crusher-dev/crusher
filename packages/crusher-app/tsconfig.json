@@ -1,5 +1,5 @@
 {
-	"isEnterprise": "true",
+	"isEnterprise": "false",
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"target": "es5",
@@ -23,7 +23,7 @@
 		"types": ["@emotion/react/types/css-prop"],
 		"typeRoots": [",./@types", ",./node_modules/@types"],
 		"paths": {
-			"@components/*": ["crusher-app/src_ee/ui/components/*", "crusher-app/src/ui/components/*"],
+			"@components/*": ["crusher-app/src/ui/components/*"],
 			"@pages/*": ["crusher-app/pages/*"],
 			"@services/*": ["crusher-app/src/services/*"],
 			"@ui/*": ["crusher-app/src/ui/*"],

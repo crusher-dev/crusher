@@ -1,5 +1,5 @@
 {
-	"isEnterprise": "false",
+    "isEnterprise": "true",
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"baseUrl": "./",
@@ -9,17 +9,19 @@
 		"target": "es5",
 		"outDir": "build",
 		"allowJs": true,
+		"noEmitHelpers": false,
 		"noImplicitAny": false,
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
 		"paths": {
-			"@src/*": ["./src/*"]
+			"@src/*": ["./src_ee/*", "./src/*"],
+			"@manager/*": ["./src_ee/manager/*", "./src/manager/*"],
+			"@services/*": ["./src/services/*"]
 		}
 	},
-	"typeRoots": ["node_modules/@types"],
 	"files": [
 		"./index.ts"
 	],
 	"include": ["./src/**/*"],
-	"exclude": ["**/*.spec.ts"]
+	"exclude": ["node_modules", "**/*.spec.ts"]
 }

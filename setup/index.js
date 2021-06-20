@@ -53,7 +53,10 @@ async function init() {
 	}
 
 	process.env.CRUSHER_MODE = installOptions.mode;
-	require("packages/crusher-app/setup/tsconfig");
+
+	require("../packages/crusher-app/setup/tsconfig");
+	require("../packages/crusher-server/setup/tsconfig");
+	require("../packages/test-runner/setup/tsconfig");
 }
 
 init();

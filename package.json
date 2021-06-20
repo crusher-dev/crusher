@@ -20,7 +20,8 @@
   "dependencies": {
     "enquirer": "^2.3.6",
     "patch-package": "^6.2.2",
-    "postinstall-postinstall": "^2.1.0"
+    "postinstall-postinstall": "^2.1.0",
+    "yargs": "^17.0.1"
   },
   "license": "MIT"
 }

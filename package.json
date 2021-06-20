@@ -7,6 +7,8 @@
   ],
   "description": "Mono repository for crusher",
   "scripts": {
+    "setup:oss": "node setup.js -m open-source",
+    "setup:ee": "node setup.js -m enterprise",
     "start": "pm2 start",
     "log:app": "pm2 logs crusher-app",
     "lint": "lerna run prettify",

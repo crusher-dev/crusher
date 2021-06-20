@@ -31,6 +31,9 @@ jobs:
       - name: Install crusher modules
         run: yarn
 
+      - name: Setup crusher
+        run: yarn setup:ee
+
       - name: Install webpack
         run: npm install -g webpack
 
@@ -39,7 +42,7 @@ jobs:
 
       - name: Upgrade heap size of node
         run: export NODE_OPTIONS=--max_old_space_size=4096
-        
+
       - name: Set Crusher Mode
         run: export CRUSHER_MODE=ee
 

@@ -57,6 +57,7 @@ async function init() {
 	require("../packages/crusher-app/setup/tsconfig");
 	require("../packages/crusher-server/setup/tsconfig");
 	require("../packages/test-runner/setup/tsconfig");
+	require("../packages/video-processor/setup/tsconfig");
 }
 
 init();

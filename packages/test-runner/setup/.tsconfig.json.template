@@ -13,7 +13,13 @@
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
 		"paths": {
-			"@src/*": ["./src/*"]
+			"@src/*": ["./src/*"],
+			"@manager/*": ["./src/manager/*"],
+			"@shared/*": ["../crusher-shared/*"],
+			"@models/*": ["./src/models/*"],
+			"@config/*": ["./config/*"],
+			"@util/*": ["./src/util/*"],
+			"@generator/*": ["../code-generator/*"]
 		}
 	},
 	"typeRoots": ["node_modules/@types"],

@@ -1,10 +1,12 @@
 import * as shell from "shelljs";
-import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
+import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
 import * as fs from "fs";
 import path from "path";
-import { CloudBucketManager } from "../manager/cloudBucket";
-import { iAction } from "../../../crusher-shared/types/action";
-import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
+import { LocalFileStorage } from "@shared/lib/storage";
+import { AwsCloudStorage } from "@shared/lib/storage/aws";
+import { iAction } from "@shared/types/action";
+import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { EDITION_TYPE } from "@shared/types/common/general";
 
 export function getEdition() {
 	return process.env.CRUSHER_MODE;
@@ -49,7 +51,18 @@ export const getAllCapturedVideos = (jobRequest: iJobRunRequest): { [videoName: 
 	}, {});
 };
 
-const bucketManager = new CloudBucketManager({ useLocalStack: process.env.NODE_ENV === "production" ? false : true });
+const setupBucketManager = () => {
+	if (process.env.NODE_ENV === "production" && getEdition() === EDITION_TYPE.EE) {
+		return new AwsCloudStorage({
+			bucketName: "crusher-videos",
+			bucketRegion: "us-east-1",
+		});
+	}
+
+	return new LocalFileStorage({ port: 3001, bucketName: "crusher-videos", baseFolder: "/tmp" });
+};
+
+const bucketManager = setupBucketManager();
 
 export const uploadOutputToS3 = async (bufferImages: Array<{ name: string; value: Buffer }>, video: string | null, jobRequest: iJobRunRequest) => {
 	const targetDir = `${jobRequest.requestType}/${jobRequest.instanceId}`;

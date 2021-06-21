@@ -1,5 +1,5 @@
 {
-    "isEnterprise": "false",
+    "isEnterprise": "<%= isEnterprise ? "true" : "false" %>",
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"baseUrl": "./",
@@ -14,9 +14,17 @@
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
 		"paths": {
-			"@src/*": ["./src/*"],
-			"@manager/*": ["./src/manager/*"],
-			"@services/*": ["./src/services/*"]
+<% if(isEnterprise) { %>
+			"@src/*": ["./src_ee/*", "./src/*"],
+			"@manager/*": ["./src_ee/manager/*", "./src/manager/*"],
+<% } else { %>
+            "@src/*": ["./src/*"],
+            "@manager/*": ["./src/manager/*"],
+<% } %>
+			"@services/*": ["./src/services/*"],
+			"@config/*": ["./config/*"],
+			"@shared/*": ["../crusher-shared/*"],
+ 			"@utils/*": ["./utils/*"]
 		}
 	},
 	"files": [
@@ -25,3 +33,4 @@
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"]
 }
+

@@ -13,3 +13,4 @@ _next/i
 logs/
 bullmq/
 dist/
+tsconfig.json

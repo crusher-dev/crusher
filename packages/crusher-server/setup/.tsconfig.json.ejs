@@ -1,5 +1,5 @@
 {
-  "isEnterprise": "true",
+  "isEnterprise": "<%= isEnterprise ? "true" : "false" %>",
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "lib": ["es5", "es6", "DOM"],
@@ -21,9 +21,15 @@
     "isolatedModules": true,
     "paths": {
       "@crusher-shared/*": ["crusher-shared/*"],
+<% if(isEnterprise){ %>
       "@manager/*": ["crusher-server/src/ee/manager/*","crusher-server/src/core/manager/*"],
       "@controllers/*": ["crusher-server/src/ee/controllers/*", "crusher-server/src/server/controllers/*"],
       "@utils/*": ["crusher-server/src/ee/utils/*", "crusher-server/src/core/utils/*"]
+<% } else { %>
+      "@manager/*": ["crusher-server/src/core/manager/*"],
+      "@controllers/*": ["crusher-server/src/server/controllers/*"],
+      "@utils/*": ["crusher-server/src/core/utils/*"]
+<% } %>
     }
   },
   "typeRoots": ["node_modules/@types"],
@@ -32,3 +38,4 @@
   "exclude": ["node_modules", "**/*.spec.ts"],
   "skipLibCheck": true
 }
+

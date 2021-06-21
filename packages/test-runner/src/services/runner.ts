@@ -1,7 +1,7 @@
-import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
-import { CodeGenerator } from "../../../code-generator/src/generator";
-import { PLATFORM } from "../../../crusher-shared/types/platform";
-import { getAllCapturedVideos, getBaseUrlFromEvents, replaceBaseUrlInEvents, replaceImportWithRequire } from "../util/helper";
+import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
+import { CodeGenerator } from "@generator/src/generator";
+import { PLATFORM } from "@shared/types/platform";
+import { getAllCapturedVideos, getBaseUrlFromEvents, replaceBaseUrlInEvents, replaceImportWithRequire } from "@util/helper";
 
 const BROWSER_NAME = {
 	[PLATFORM.CHROME]: "chromium",

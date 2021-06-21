@@ -1,5 +1,5 @@
 import { Worker, Queue, QueueScheduler } from "bullmq";
-import { REDDIS } from "../../config/database";
+import { REDDIS } from "@config/database";
 const path = require("path");
 const r = require("@services/videoProcessorWorker");
 

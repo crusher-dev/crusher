@@ -5,7 +5,6 @@ import { REDDIS } from "@config/database";
 import { BootAfterNJobsOffsetManager } from "@manager/offsetManger";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require("dotenv").config();
 require("./queue.ts");
 require("../src/util/logger");
 

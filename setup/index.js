@@ -11,17 +11,29 @@ function preParseArgv() {
 			describe: "Version of crusher to be used",
 			choices: modeChoices
 		},
-		bdomain: {
+		be: {
 			alias: "backend-domain",
 			describe: "Backend domain for server request",
 			string: true,
 			default: "localhost:8000"
 		},
-		fdomain: {
+		fe: {
 			alias: "frontend-domain",
 			describe: "Frontend domain for app dashboard",
 			string: true,
 			default: "localhost:3000"
+		},
+		s: {
+			alias: "storage",
+			describe: "Local path to server as storage",
+			string: true,
+			default: "/tmp/"
+		},
+		sp: {
+			alias: "storage-port",
+			describe: "Port to serve storage files on",
+			string: true,
+			default: 3001
 		}
 	})
 		.help()

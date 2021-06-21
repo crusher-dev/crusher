@@ -2,7 +2,7 @@ import { iAction } from "../../crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
 import { BROWSER } from "../../crusher-shared/types/browser";
 
-const helperPackageRequire = '__dirname + "/crusher-runner-utils/index.js"';
+const helperPackageRequire = process.env.NODE_ENV === "production" ? '__dirname + "/crusher-runner-utils/index.js"' : "'crusher-runner-utils'";
 
 interface iParserOptions {
 	isLiveRecording?: boolean;

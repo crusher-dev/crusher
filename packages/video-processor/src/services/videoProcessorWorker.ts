@@ -1,11 +1,11 @@
-import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
+import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
 
 const ffmpeg = require("fluent-ffmpeg");
 import * as shell from "shelljs";
-import { s3BucketService, uploadFileToAwsBucket } from "../../utils/cloudBucket";
-import { ensureFfmpegPath } from "../../utils/helper";
+import { uploadFileToAwsBucket } from "@utils/cloudBucket";
+import { ensureFfmpegPath } from "@utils/helper";
 import { Job, Queue } from "bullmq";
-import { REDDIS } from "../../config/database";
+import { REDDIS } from "@config/database";
 
 const got = require("got");
 
@@ -59,7 +59,6 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 			await processStreamAndSave(video, `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
 			signedUrl = await uploadFileToAwsBucket(
-				s3BucketService,
 				`/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`,
 				`${runnerJobRequestInfo.instanceId}.mp4`,
 				`${runnerJobRequestInfo.test.id}/${runnerJobRequestInfo.instanceId}/`,

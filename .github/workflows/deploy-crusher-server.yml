@@ -30,6 +30,9 @@ jobs:
       - name: Install crusher modules
         run: yarn
 
+      - name: Setup crusher
+        run: yarn setup:prod
+
       - name: Install webpack
         run: npm install -g webpack
 

@@ -1,6 +1,6 @@
-import IORedis, { Redis } from 'ioredis';
+import IORedis, { Redis } from "ioredis";
 
-export class RedisManager{
+export class RedisManager {
 	client: Redis;
 
 	constructor(host: string, port: number, password: string) {
@@ -11,4 +11,4 @@ export class RedisManager{
 	get() {
 		return this.client;
 	}
-};
+}

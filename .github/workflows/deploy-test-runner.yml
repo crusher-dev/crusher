@@ -24,6 +24,9 @@ jobs:
       - name: Install crusher node_modules
         run: yarn
 
+      - name: Setup crusher
+        run: yarn setup:prod
+
       - name: Upgrade heap size of node
         run: export NODE_OPTIONS=--max_old_space_size=4096
 

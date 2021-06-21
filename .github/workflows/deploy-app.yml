@@ -30,6 +30,9 @@ jobs:
       - name: Install yarn dependencies
         run: yarn install
 
+      - name: Setup crusher
+        run: yarn setup:ee
+
       - name: Package crusher-app for deployment
         env:
           EXTENSION_ID: gfiagiidgjjnmklhbalcjbmdjbpphdln

@@ -1,8 +1,8 @@
 import { TestsLogs } from "../models/testLogs";
-import { RUNNER_REQUEST_TYPE } from "../../../crusher-shared/types/runner/requestType";
-import { iJobRunRequest } from "../../../crusher-shared/types/runner/jobRunRequest";
-import { TestLiveStepsLogs } from "../models/testLiveStepsLogs";
-import { ACTIONS_IN_TEST } from "../../../crusher-shared/constants/recordedActions";
+import { RUNNER_REQUEST_TYPE } from "@shared/types/runner/requestType";
+import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
+import { TestLiveStepsLogs } from "@models/testLiveStepsLogs";
+import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 
 export const TEST_LOGS_SERVICE_TAGS = {
 	TEST_ADDED_TO_QUEUE: "TEST_ADDED_TO_QUEUE",

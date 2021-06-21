@@ -2,7 +2,7 @@ import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
 
 const ffmpeg = require("fluent-ffmpeg");
 import * as shell from "shelljs";
-import { uploadFileToAwsBucket } from "@utils/cloudBucket";
+import { setupBucketManager, uploadFileToAwsBucket } from "@utils/cloudBucket";
 import { ensureFfmpegPath } from "@utils/helper";
 import { Job, Queue } from "bullmq";
 import { REDDIS } from "@config/database";
@@ -48,6 +48,9 @@ interface iVideoProcessorJob extends Job {
 	};
 }
 
+// Create S3 service object
+const fileStorageService = setupBucketManager();
+
 module.exports = async (bullJob: iVideoProcessorJob) => {
 	const { runnerJobRequestInfo, video } = bullJob.data;
 	console.log(`Processing video for ${runnerJobRequestInfo.requestType}/${runnerJobRequestInfo.test.id}/${runnerJobRequestInfo.instanceId}`, video);
@@ -59,12 +62,14 @@ module.exports = async (bullJob: iVideoProcessorJob) => {
 			await processStreamAndSave(video, `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
 
 			signedUrl = await uploadFileToAwsBucket(
+				fileStorageService,
 				`/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`,
 				`${runnerJobRequestInfo.instanceId}.mp4`,
 				`${runnerJobRequestInfo.test.id}/${runnerJobRequestInfo.instanceId}/`,
 			);
 
 			await shell.rm("-rf", `/tmp/videos/${runnerJobRequestInfo.instanceId}.mp4`);
+			await fileStorageService.remove(`${runnerJobRequestInfo.requestType}/${runnerJobRequestInfo.instanceId}/video.mp4.raw`);
 
 			await videoProcessingQueue.add(runnerJobRequestInfo.test.id.toString(), {
 				processed: true,

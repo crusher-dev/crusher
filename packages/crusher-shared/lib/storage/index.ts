@@ -41,6 +41,20 @@ class LocalFileStorage {
 
 		return this.uploadBuffer(fileStream, destination);
 	}
+
+	remove(filePath: string) : Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			try {
+				const absoluteFilePath = path.resolve(this.basePath, filePath);
+				if (fs.existsSync(absoluteFilePath)) {
+					fs.unlinkSync(absoluteFilePath);
+				}
+				resolve(true);
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
 }
 
 export {LocalFileStorage}

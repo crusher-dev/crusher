@@ -1,5 +1,6 @@
 import * as AWS from 'aws-sdk';
 import * as fs from 'fs';
+import path from 'path';
 
 type ICloudBucketOptions = {
 	bucketName: string;
@@ -64,6 +65,18 @@ class AwsCloudStorage {
 	upload(filePath, destination): Promise<string> {
 		const fileStream = fs.readFileSync(filePath);
 		return this.uploadBuffer(fileStream, destination);
+	}
+
+	remove(filePath: string): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			this.s3BucketService.deleteObject({
+				Bucket: this.bucketName,
+				Key: filePath
+			}, (err) => {
+				if(err) return reject(err);
+				resolve(true);
+			});
+		});
 	}
 }
 

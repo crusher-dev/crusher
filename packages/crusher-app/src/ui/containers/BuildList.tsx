@@ -19,29 +19,6 @@ interface iFilterListPaginationProps {
 	resolvePaginationUrl: any;
 }
 
-interface iFilterCapsProps {
-	caps: Array<iFilter>;
-	disableAllCap?: boolean;
-	selectedCap?: number | null;
-	resolveCategoryUrl: any;
-	onChangeCap: (cap: iFilter) => void;
-}
-
-const BuildFilter = (props: iFilterCapsProps) => {
-	const { disableAllCap, selectedCap, resolveCategoryUrl, onChangeCap } = props;
-	let { caps } = props;
-
-	if (!disableAllCap) {
-		caps = [{ title: "All", value: 0 }, ...caps];
-	}
-
-	const onFilterCapClickCallback = (cap: iFilter) => {
-		onChangeCap(cap);
-	};
-
-
-	return null;
-};
 
 
 interface iFilters {

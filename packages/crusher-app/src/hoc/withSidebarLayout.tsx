@@ -116,13 +116,13 @@ function LeftSection(props: any) {
 		},
 		{
 			name: "Builds",
-			link: "/app/project/builds?category=1",
+			link: "/app/project/builds?category=2",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},
 		{
 			name: "Monitoring",
-			link: "/app/project/builds?category=0",
+			link: "/app/project/builds?category=1",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},

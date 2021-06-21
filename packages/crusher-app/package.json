@@ -17,7 +17,7 @@
 		"@emotion/core": "^10.0.35",
 		"@emotion/react": "^11.1.4",
 		"@lottiefiles/react-lottie-player": "^2.1.7",
-		"@material-ui/core": "^4.11.2",
+		"@material-ui/core": "^4.11.4",
 		"@octokit/auth-oauth-app": "^3.0.7",
 		"@octokit/rest": "^18.0.14",
 		"@stripe/react-stripe-js": "^1.1.2",

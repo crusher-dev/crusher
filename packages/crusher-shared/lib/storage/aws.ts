@@ -1,26 +1,26 @@
-import { AWS_BUCKET_REGION, AWS_S3_VIDEO_BUCKET } from '../../config/aws_bucket';
 import * as AWS from 'aws-sdk';
 import * as fs from 'fs';
+import path from 'path';
 
-AWS.config.update({
-	region: AWS_BUCKET_REGION,
-});
-
-interface iCloudBucketOptions {
-	useLocalStack?: boolean;
+type ICloudBucketOptions = {
+	bucketName: string;
+	bucketRegion: string;
 }
 
-export class CloudBucketManager {
-	options: iCloudBucketOptions;
+class AwsCloudStorage {
+	bucketName: string;
+	bucketRegion: string;
 	s3BucketService: AWS.S3;
 
-	constructor(options: iCloudBucketOptions) {
-		this.options = options;
+	constructor(options: ICloudBucketOptions) {
+		this.bucketName = options.bucketName;
+		this.bucketRegion = options.bucketRegion;
+
 		this.s3BucketService = new AWS.S3({
 			apiVersion: '2006-03-01',
-			endpoint: options.useLocalStack ? 'http://localhost:4566' : null,
 			s3ForcePathStyle: true,
 			signatureVersion: 'v4',
+			region: this.bucketRegion
 		});
 
 		this.verifyConnection();
@@ -40,7 +40,7 @@ export class CloudBucketManager {
 		return new Promise((resolve, reject) => {
 			this.s3BucketService.upload(
 				{
-					Bucket: AWS_S3_VIDEO_BUCKET,
+					Bucket: this.bucketName,
 					Key: destination,
 					Body: buffer,
 				},
@@ -52,7 +52,7 @@ export class CloudBucketManager {
 					}
 
 					const url = this.s3BucketService.getSignedUrl('getObject', {
-						Bucket: AWS_S3_VIDEO_BUCKET,
+						Bucket: this.bucketName,
 						Key: data.Key,
 						Expires: 60 * 60 * 24 * 5,
 					});
@@ -64,7 +64,20 @@ export class CloudBucketManager {
 
 	upload(filePath, destination): Promise<string> {
 		const fileStream = fs.readFileSync(filePath);
-
 		return this.uploadBuffer(fileStream, destination);
 	}
+
+	remove(filePath: string): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			this.s3BucketService.deleteObject({
+				Bucket: this.bucketName,
+				Key: filePath
+			}, (err) => {
+				if(err) return reject(err);
+				resolve(true);
+			});
+		});
+	}
 }
+
+export {AwsCloudStorage}

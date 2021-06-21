@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { RUNNER_REQUEST_TYPE } from '../../../crusher-shared/types/runner/requestType';
+import * as mongoose from "mongoose";
+import { RUNNER_REQUEST_TYPE } from "@shared/types/runner/requestType";
 
 const TestLogsSchema = new mongoose.Schema(
 	{
@@ -15,12 +15,12 @@ const TestLogsSchema = new mongoose.Schema(
 		},
 		level: {
 			type: mongoose.Schema.Types.String,
-			enum: ['low', 'medium', 'high', 'critical'],
-			default: 'medium',
+			enum: ["low", "medium", "high", "critical"],
+			default: "medium",
 		},
 		meta: mongoose.Schema.Types.Mixed,
 	},
 	{ timestamps: true },
 );
 
-export const TestsLogs = mongoose.model('TestLogs', TestLogsSchema);
+export const TestsLogs = mongoose.model("TestLogs", TestLogsSchema);

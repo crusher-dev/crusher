@@ -1,11 +1,10 @@
-import { generateUid } from "../../crusher-shared/utils/helper";
+import { generateUid } from "@shared/utils/helper";
 import Timeout = NodeJS.Timeout;
-import { RedisManager } from "../src/manager/redis";
-import { REDDIS } from "../config/database";
-import { BootAfterNJobsOffsetManager } from "../src_ee/manager/offsetManger";
+import { RedisManager } from "@manager/redis";
+import { REDDIS } from "@config/database";
+import { BootAfterNJobsOffsetManager } from "@manager/offsetManger";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require("dotenv").config();
 require("./queue.ts");
 require("../src/util/logger");
 

@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { RUNNER_REQUEST_TYPE } from '../../../crusher-shared/types/runner/requestType';
+import * as mongoose from "mongoose";
+import { RUNNER_REQUEST_TYPE } from "@shared/types/runner/requestType";
 
 const TestLiveStepsLogsSchema = new mongoose.Schema(
 	{
@@ -16,4 +16,4 @@ const TestLiveStepsLogsSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-export const TestLiveStepsLogs = mongoose.model('TestLiveStepsLogs', TestLiveStepsLogsSchema);
+export const TestLiveStepsLogs = mongoose.model("TestLiveStepsLogs", TestLiveStepsLogsSchema);

@@ -11,14 +11,20 @@ export function getEdition() {
 }
 
 export const setupBucketManager = () => {
-	if (process.env.NODE_ENV === "production" && getEdition() === EDITION_TYPE.EE) {
-		return new AwsCloudStorage({
-			bucketName: VIDEO_BUCKET_NAME,
-			bucketRegion: "us-east-1",
+	if (process.env.STORAGE_MODE === "local") {
+		const storagePort = parseInt(process.env.STORAGE_PORT, 10);
+
+		return new LocalFileStorage({
+			port: storagePort,
+			bucketName: "crusher-videos",
+			baseFolder: process.env.BASE_STORAGE_FOLDER,
 		});
 	}
 
-	return new LocalFileStorage({ port: 3001, bucketName: VIDEO_BUCKET_NAME, baseFolder: "/tmp" });
+	return new AwsCloudStorage({
+		bucketName: "crusher-videos",
+		bucketRegion: "us-east-1",
+	});
 };
 
 export async function uploadFileToAwsBucket(fileStorageService: any, filePath: string, fileName: string, destination = "/") {

@@ -53,15 +53,19 @@ expressApp.use(bodyParser.urlencoded({ extended: false }));
 
 EmailManager.sendVerificationMail("test@gmail.com", "");
 
-const serveStatic = require("serve-static");
-const finalhandler = require("finalhandler");
-const serve = serveStatic("/tmp/");
-const server = http.createServer(function (req: any, res: any) {
-	const done = finalhandler(req, res);
-	serve(req, res, done);
-});
+if (process.env.STORAGE_MODE === "local") {
+	const serveStatic = require("serve-static");
+	const finalhandler = require("finalhandler");
+	const serve = serveStatic(process.env.BASE_STORAGE_FOLDER);
 
-server.listen(3001);
+	const storagePort = parseInt(process.env.STORAGE_PORT, 10);
+	const server = http.createServer(function (req: any, res: any) {
+		const done = finalhandler(req, res);
+		serve(req, res, done);
+	});
+
+	server.listen(storagePort);
+}
 
 const controllersArr: any = [
 	UserController,

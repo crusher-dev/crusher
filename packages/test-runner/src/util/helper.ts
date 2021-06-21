@@ -52,14 +52,20 @@ export const getAllCapturedVideos = (jobRequest: iJobRunRequest): { [videoName: 
 };
 
 const setupBucketManager = () => {
-	if (process.env.NODE_ENV === "production" && getEdition() === EDITION_TYPE.EE) {
-		return new AwsCloudStorage({
+	if (process.env.STORAGE_MODE === "local") {
+		const storagePort = parseInt(process.env.STORAGE_PORT, 10);
+
+		return new LocalFileStorage({
+			port: storagePort,
 			bucketName: "crusher-videos",
-			bucketRegion: "us-east-1",
+			baseFolder: process.env.BASE_STORAGE_FOLDER,
 		});
 	}
 
-	return new LocalFileStorage({ port: 3001, bucketName: "crusher-videos", baseFolder: "/tmp" });
+	return new AwsCloudStorage({
+		bucketName: "crusher-videos",
+		bucketRegion: "us-east-1",
+	});
 };
 
 const bucketManager = setupBucketManager();

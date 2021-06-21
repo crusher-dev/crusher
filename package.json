@@ -9,6 +9,7 @@
   "scripts": {
     "setup:oss": "node setup/index.js -m open-source",
     "setup:ee": "node setup/index.js -m enterprise",
+    "setup:prod": "node setup/index.js -m enterprise --sm aws",
     "start": "pm2 start",
     "log:app": "pm2 logs crusher-app",
     "lint": "lerna run prettify",

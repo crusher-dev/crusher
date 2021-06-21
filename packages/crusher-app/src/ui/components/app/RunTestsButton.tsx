@@ -1,4 +1,3 @@
-import PlusSVG from "../../../../public/svg/sidebarSettings/plus.svg";
 import React from "react";
 import { css } from "@emotion/core";
 

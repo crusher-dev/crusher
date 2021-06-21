@@ -49,7 +49,7 @@ ProjectGit.getInitialProps = async (ctx: iPageContext) => {
 		store.dispatch(setUserLoginConnections(userConnections));
 		store.dispatch(saveLinkedGithubRepos(linkedGithubRepos));
 		return {};
-	} catch (ex) {
+	} catch {
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

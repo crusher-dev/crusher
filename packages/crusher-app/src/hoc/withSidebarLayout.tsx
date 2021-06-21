@@ -46,7 +46,7 @@ interface NavItem {
 }
 
 interface NavListProps {
-	navItems: Array<NavItem>;
+	navItems: NavItem[];
 	isLoggedIn: boolean;
 	style?: CSSProperties;
 }
@@ -327,10 +327,9 @@ export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGet
 		const selectedProjectName = userInfo && selectedProject ? selectedProject.name : generateRandomProjectName();
 
 		const options = userInfo
-			? projectsList &&
-			  projectsList.map((project) => {
-					return { label: project.name, value: project.id };
-			  })
+			? projectsList?.map((project) => {
+              return { label: project.name, value: project.id };
+        })
 			: [];
 
 		function onProjectChange(project: iSelectOption) {
@@ -361,10 +360,10 @@ export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGet
 
 		const handleRunTests = () => {
 			runTestsInProject(selectedProjectID)
-				.then((e) => {
+				.then(() => {
 					redirectToFrontendPath("/app/project/builds");
 				})
-				.catch((err) => {
+				.catch(() => {
 					Toast.showError("Create a host first");
 				});
 		};
@@ -412,7 +411,7 @@ export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGet
 	if (shouldHaveGetInitialProps) {
 		WithSidebarLayout.getInitialProps = async (ctx: NextPageContext) => {
 			const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));
-			return { ...pageProps };
+			return pageProps;
 		};
 	}
 

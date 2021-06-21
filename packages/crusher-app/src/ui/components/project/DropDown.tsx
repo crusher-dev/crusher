@@ -6,12 +6,13 @@ import React from "react";
 	@Note - Don't use this component this is not standardised.
 */
 export function DropDown(props) {
-	let { options, selected, onChange, placeholder, width, heightFactor, isSearchable, isMulti } = props;
+    let { options, selected, onChange, placeholder, width, heightFactor, isSearchable, isMulti } = props;
 
-	width = width ? width : "17rem";
-	const paddingTop = heightFactor ? `${heightFactor * 0.3}rem` : "0.1rem";
+    if (!width)
+        width = "17rem";
+    const paddingTop = heightFactor ? `${heightFactor * 0.3}rem` : "0.1rem";
 
-	const dropdownStyle = {
+    const dropdownStyle = {
 		menu: (provided) => ({
 			...provided,
 			backgroundColor: "#fff",
@@ -37,7 +38,9 @@ export function DropDown(props) {
 			return { ...provided, color: "#2D3958", fontSize: "1rem" };
 		},
 		option: (provided, state) => {
-			const value = state.data.value;
+			const {
+                value
+            } = state.data;
 			let additionalStyle = {};
 
 			if (value === "add_project") {
@@ -50,7 +53,7 @@ export function DropDown(props) {
 
 			return {
 				...provided,
-				color: state.isSelected ? "#18181A" : "#18181A",
+				color: '#18181A',
 				backgroundColor: state.isSelected ? "#F8F8F8" : "#fff",
 				cursor: "pointer",
 				...additionalStyle,
@@ -58,18 +61,18 @@ export function DropDown(props) {
 		},
 	};
 
-	if (isMulti) {
+    if (isMulti) {
 		return <Select styles={dropdownStyle} placeholder={placeholder} options={options} onChange={onChange} isSearchable={isSearchable} isMulti={isMulti} />;
 	}
 
-	return (
-		<Select
+    return (
+        <Select
 			styles={dropdownStyle}
 			placeholder={placeholder}
 			options={options}
 			onChange={onChange}
 			isSearchable={isSearchable}
-			value={options.filter((option) => selected && option.value == selected.value)}
+			value={options.filter((option) => selected && option.value === selected.value)}
 		/>
-	);
+    );
 }

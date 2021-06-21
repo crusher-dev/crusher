@@ -24,35 +24,36 @@ function renderDots() {
 }
 
 export const Pagination = (props) => {
-	let { totalPages, currentPage, resolvePaginationUrl, style } = props;
-	let itemsToShow = 6;
-	currentPage = !currentPage || currentPage < 1 ? 1 : currentPage;
+    let { totalPages, currentPage, resolvePaginationUrl, style } = props;
+    let itemsToShow = 6;
+    if (!currentPage || currentPage < 1)
+        currentPage = 1;
 
-	const out = [];
-	out.push(renderPageItem(1, currentPage, resolvePaginationUrl));
-	itemsToShow--;
-	if (currentPage - 2 > 3) {
+    const out = [];
+    out.push(renderPageItem(1, currentPage, resolvePaginationUrl));
+    itemsToShow--;
+    if (currentPage - 2 > 3) {
 		out.push(renderDots());
 	}
-	for (let page = currentPage - 3 > 1 ? currentPage - 3 : 2, count = 0; page < currentPage && count < 3 && page <= totalPages; page++, count++) {
+    for (let page = currentPage - 3 > 1 ? currentPage - 3 : 2, count = 0; page < currentPage && count < 3 && page <= totalPages; page++, count++) {
 		itemsToShow--;
 		out.push(renderPageItem(page, currentPage, resolvePaginationUrl));
 	}
-	if (itemsToShow && currentPage !== 1 && currentPage <= totalPages) {
+    if (itemsToShow && currentPage !== 1 && currentPage <= totalPages) {
 		out.push(renderPageItem(currentPage, currentPage, resolvePaginationUrl));
 	}
-	let countOnRight = 0;
-	for (let page = currentPage + 1; page <= totalPages && countOnRight <= itemsToShow; page++, countOnRight++) {
+    let countOnRight = 0;
+    for (let page = currentPage + 1; page <= totalPages && countOnRight <= itemsToShow; page++, countOnRight++) {
 		out.push(renderPageItem(page, currentPage, resolvePaginationUrl));
 	}
-	if (currentPage + countOnRight < totalPages - 1) {
+    if (currentPage + countOnRight < totalPages - 1) {
 		out.push(renderDots());
 	}
-	if (totalPages > 1 && currentPage + countOnRight < totalPages) {
+    if (totalPages > 1 && currentPage + countOnRight < totalPages) {
 		out.push(renderPageItem(totalPages, currentPage, resolvePaginationUrl));
 	}
 
-	return (
+    return (
 		<div style={style} css={styles.paginationContainer}>
 			{out}
 		</div>

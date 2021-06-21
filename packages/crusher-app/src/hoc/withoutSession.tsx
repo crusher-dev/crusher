@@ -31,7 +31,9 @@ function withoutSession(WrappedComponent: NextPage | NextComponentType<NextPageC
 		if (query.cli_token) {
 			handleClIToken(query.cli_token as string, res as NextApiResponse);
 		}
-		const isLoggedIn = reqMetaInfo.cookies.isLoggedIn;
+		const {
+            isLoggedIn
+        } = reqMetaInfo.cookies;
 
 		if (userInfo && isLoggedIn) {
 			 await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
@@ -47,7 +49,7 @@ function withoutSession(WrappedComponent: NextPage | NextComponentType<NextPageC
 			return {};
 		}
 
-		return { ...pageProps };
+		return pageProps;
 	};
 
 	return WithoutSession;

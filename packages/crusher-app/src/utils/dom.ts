@@ -38,18 +38,16 @@ function setCurrentCursorPositionInContentEditable(
 	chars: number,
 ) {
 	if (chars >= 0) {
-		const selection = window.getSelection();
-
-		const range = createRange(root.parentNode!, {
+        const range = createRange(root.parentNode!, {
 			count: chars,
 		});
 
-		if (range) {
+        if (range) {
 			range.collapse(false);
 			selection!.removeAllRanges();
 			selection!.addRange(range);
 		}
-	}
+    }
 }
 
 export { setCurrentCursorPositionInContentEditable };

@@ -46,7 +46,7 @@ InviteTeamMembers.getInitialProps = async (ctx: any) => {
 			isIntegratedWithEmail: true,
 			slackIntegrations: slackIntegrations,
 		};
-	} catch (ex) {
+	} catch {
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

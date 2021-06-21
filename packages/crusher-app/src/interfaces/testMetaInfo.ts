@@ -4,7 +4,7 @@ import { iAction } from "@crusher-shared/types/action";
 export interface iTestMetaInfo {
 	testType: EDITOR_TEST_TYPE;
 	id?: number;
-	actions: Array<iAction>;
+	actions: iAction[];
 	totalTime?: number;
 	postData?: any;
 }

@@ -102,12 +102,12 @@ TeamMembersSettings.getInitialProps = async (ctx: any) => {
 			cleanHeaders(headers);
 		}
 
-		await _getTeamMembers(headers).then((members: Array<iMemberInfoResponse>) => {
+		await _getTeamMembers(headers).then((members: iMemberInfoResponse[]) => {
 			store.dispatch(setTeamMembers(members));
 		});
 
 		return {};
-	} catch (ex) {
+	} catch {
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

@@ -1,6 +1,5 @@
 import { Modal } from "@ui/containers/modals/modal";
-import { useState } from "react";
-import React from "react";
+import React, {useState} from "react";
 import { css } from "@emotion/core";
 import { ModalButton } from "@ui/components/modal/button";
 import { MultiSelect } from "@ui/components/modal/multiSelect";
@@ -12,7 +11,9 @@ interface iProps {
 }
 
 const ModifyTestSettingsModal = (props: iProps) => {
-	const { onClose, onSubmit } = props;
+	const {
+        onClose
+    } = props;
 	const [selectedBrowsers, setSelectedBrowsers] = useState([{ label: "Chrome", value: "CHROME" }]);
 	const [selectedResolutions, setSelectedResolutions] = useState([]);
 	const [shouldSaveTestSettingsForFuture, setShouldSaveTestSettingsForFuture] = useState(false);
@@ -123,34 +124,6 @@ const inputInfoValueCss = css`
 	margin-top: 0.5rem;
 `;
 
-const playContainerCss = css`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 1.06rem;
-	color: #1e1d1d;
-	font-size: 1rem;
-	font-family: Gilroy;
-	text-decoration-line: underline;
-	cursor: pointer;
-`;
-
-const flagContainerCss = css`
-	margin-right: 1rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-`;
-
-const modalNoteCss = css`
-	color: #7e7e7e;
-	font-family: Gilroy;
-	font-size: 0.8rem;
-	margin-top: 2.562rem;
-	display: flex;
-	flex-direction: row;
-`;
-
 const topAreaCSS = css`
 	background: #edf8ff;
 	border-bottom: 2px solid #0a1215;
@@ -165,11 +138,6 @@ const modalDescCss = css`
 	font-size: 1rem !important;
 `;
 
-const modalMoto = css`
-	font-size: 1rem;
-	margin-bottom: 1.25rem;
-`;
-
 const bodyContainerCss = css`
 	display: flex;
 	flex-direction: column;
@@ -181,22 +149,6 @@ const bodyContainerCss = css`
 		font-size: 1rem;
 	}
 	min-height: 21rem;
-`;
-
-const membersInputCss = css`
-	margin-top: 2rem;
-	label {
-		font-family: Gilroy;
-		font-weight: bold;
-		color: #2b2b39;
-		font-size: 1rem;
-		line-height: 1.1rem;
-	}
-`;
-
-const membersDescCss = css`
-	font-size: 0.95rem;
-	margin-top: 0.675rem;
 `;
 
 const buttonCss = css`

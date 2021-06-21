@@ -1,5 +1,4 @@
 import { iMember, iProfile } from "@interfaces/redux/settings";
-import { iHostListResponse } from "@crusher-shared/types/response/hostListResponse";
 
 export const SET_PROFILE_INFO = "SET_PROFILE_INFO";
 export const UPDATE_PROFILE_INFO = "UPDATE_PROFILE_INFO";

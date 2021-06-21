@@ -49,7 +49,7 @@ const CheckoutForm = () => {
 		} else {
 			setError(null);
 			// Send the token to your server.
-			stripeTokenHandler(result.token);
+			await stripeTokenHandler(result.token);
 		}
 	};
 

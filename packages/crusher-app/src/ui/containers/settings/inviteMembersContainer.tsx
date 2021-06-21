@@ -147,51 +147,49 @@ const InviteMembersContainer = (props: iInviteMemberContainerProps) => {
 			});
 	};
 
-	return (
-		<>
-			<div css={mainContainerCSS}>
-				<div>
-					<Input
-						label={"Invite by Email"}
-						value={newMemberEmail}
-						placeholder={"Enter email address"}
-						onChange={onNewMemberChange}
-						actionButton={<InviteUserFromEmailButton onClick={inviteNewMember} />}
-						onKeySubmit={inviteNewMember}
-					/>
-				</div>
-				<div css={inviteLinkContainerCSS}>
-					<Input
-						label={"Or share invite link"}
-						value={link}
-						onChange={onNewMemberChange}
-						isOnlyReadable={true}
-						actionIcon={<CopyInviteLinkAction value={link} />}
-						inputContainerCSS={customInviteLinkInputContainerCSS}
-					/>
-				</div>
-			</div>
-			<Separator />
-			<div css={inviteExternalMembersContainerCSS}>
-				<div css={inviteBirdImageContainerCSS}>
-					<img src={"/assets/img/inviteBird.png"} />
-				</div>
-				<div css={externalCardContentCSS}>
-					<div css={externalCardHeadingCSS}>Invite external members</div>
-					<div css={externalCardDescCSS}>You both get 1 month free when they upgrade to pro plan.</div>
-					<div css={externalCardInputCSS}>
-						<Input
-							value={link ? link : ""}
-							onChange={onNewMemberChange}
-							isOnlyReadable={true}
-							actionButton={<CopyInviteLinkButton link={link} />}
-							inputContainerCSS={[customInviteLinkInputContainerCSS, externalInputCSS]}
-						/>
-					</div>
-				</div>
-			</div>
-		</>
-	);
+	return <>
+        <div css={mainContainerCSS}>
+            <div>
+                <Input
+                    label={"Invite by Email"}
+                    value={newMemberEmail}
+                    placeholder={"Enter email address"}
+                    onChange={onNewMemberChange}
+                    actionButton={<InviteUserFromEmailButton onClick={inviteNewMember} />}
+                    onKeySubmit={inviteNewMember}
+                />
+            </div>
+            <div css={inviteLinkContainerCSS}>
+                <Input
+                    label={"Or share invite link"}
+                    value={link}
+                    onChange={onNewMemberChange}
+                    isOnlyReadable={true}
+                    actionIcon={<CopyInviteLinkAction value={link} />}
+                    inputContainerCSS={customInviteLinkInputContainerCSS}
+                />
+            </div>
+        </div>
+        <Separator />
+        <div css={inviteExternalMembersContainerCSS}>
+            <div css={inviteBirdImageContainerCSS}>
+                <img src={"/assets/img/inviteBird.png"} />
+            </div>
+            <div css={externalCardContentCSS}>
+                <div css={externalCardHeadingCSS}>Invite external members</div>
+                <div css={externalCardDescCSS}>You both get 1 month free when they upgrade to pro plan.</div>
+                <div css={externalCardInputCSS}>
+                    <Input
+                        value={link || ""}
+                        onChange={onNewMemberChange}
+                        isOnlyReadable={true}
+                        actionButton={<CopyInviteLinkButton link={link} />}
+                        inputContainerCSS={[customInviteLinkInputContainerCSS, externalInputCSS]}
+                    />
+                </div>
+            </div>
+        </div>
+    </>;
 };
 
 const mainContainerCSS = css`

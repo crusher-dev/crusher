@@ -7,8 +7,8 @@ import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
 
 interface LiveLogsActionsProps {
 	isAborted?: boolean;
-	logs: Array<iLiveStepLogs>;
-	actions: Array<iAction>;
+	logs: iLiveStepLogs[];
+	actions: iAction[];
 }
 
 export interface ActionsWithStatus {
@@ -19,8 +19,8 @@ export interface ActionsWithStatus {
 	isCompleted: boolean;
 }
 
-function getLogsWithStatus(actions: Array<iAction>, logs: Array<iLiveStepLogs>): Array<ActionsWithStatus> {
-	const out: Array<ActionsWithStatus> = [];
+function getLogsWithStatus(actions: iAction[], logs: iLiveStepLogs[]): ActionsWithStatus[] {
+	const out: ActionsWithStatus[] = [];
 
 	for (let i = 0; i < actions.length; i++) {
 		const selector = actions[i].payload.selectors ? (actions[i].payload.selectors as any)[0].value : null;

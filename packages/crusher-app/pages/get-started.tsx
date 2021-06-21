@@ -42,8 +42,8 @@ function SignupScreen(props: iSignupScreenProps) {
 
 	const handleSignUp = () => {
 		const nameArr = name.split(" ");
-		const firstName = nameArr[0] ? nameArr[0] : "";
-		const lastName = nameArr[1] ? nameArr[1] : "";
+		const firstName = nameArr[0] || "";
+		const lastName = nameArr[1] || "";
 
 		if (!isEmail(email)) {
 			alert("Please enter a valid email");
@@ -65,8 +65,7 @@ function SignupScreen(props: iSignupScreenProps) {
 
 			switch (status) {
 				case USER_REGISTERED:
-					return redirectToFrontendPath("/app/dashboard");
-					break;
+                    return redirectToFrontendPath("/app/dashboard");
 				case USER_ALREADY_REGISTERED:
 					alert("An account with this email has already been registered");
 					break;
@@ -246,45 +245,44 @@ const requestButtonCSS = css`
 
 const googleLoginButtonCSS = (theme: string) => {
 	return css`
-		display: flex;
-		align-item: center;
-		justify-content: center;
+    display: flex;
+    align-item: center;
+    justify-content: center;
 
-		box-sizing: border-box;
-		border-radius: 5px;
-		width: 100%;
-		padding: 1rem 1.75rem;
-		margin-bottom: 1rem;
+    box-sizing: border-box;
+    border-radius: 5px;
+    width: 100%;
+    padding: 1rem 1.75rem;
+    margin-bottom: 1rem;
 
-		font-size: 1rem;
-		line-height: 1.375rem;
-		font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.375rem;
+    font-weight: 500;
 
-		cursor: pointer;
+    cursor: pointer;
 
-		${theme === "light" &&
-		`
-		 background: ${COLORS.dark1};
-		 color: ${COLORS.white};
-		`}
+    ${theme === "light" &&
+    `
+     background: ${COLORS.dark1};
+     color: ${COLORS.white};
+    `}
 
-		${theme === "dark" &&
-		`
-		 background: ${COLORS.darkgrey};
-		 border: 1px solid ${COLORS.lightgrey};
-		 color: ${COLORS.white};
-		`}
-		
-		&:hover {
-			cursor: pointer;
-			span {
-				text-decoration: none;
-			}
+    ${theme === "dark" && `
+ background: ${COLORS.darkgrey};
+ border: 1px solid ${COLORS.lightgrey};
+ color: ${COLORS.white};
+`}
+        
+        &:hover {
+            cursor: pointer;
+            span {
+                text-decoration: none;
+            }
 
-			color: #fff !important;
-			background: ${theme === "dark" ? "#23272f" : "#23272f"};
-		}
-	`;
+            color: #fff !important;
+            background: #23272f;
+        }
+    `;
 };
 
 const loginButtonCSS = (theme: string) => {

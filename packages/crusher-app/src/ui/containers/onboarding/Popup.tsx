@@ -135,16 +135,12 @@ function FreeTrialIntro({ setFilledUserWelcome }: any) {
 
 export const OnboardingPopup = () => {
 	const [filledSurvey, setFilledSurvey] = useState(false);
-	const [filledUserWelcome, setFilledUserWelcome] = useState(false);
-	const [canPopupOpen, setPopupState] = useState(true);
+	const [, setFilledUserWelcome] = useState(false);
+	const [canPopupOpen] = useState(true);
 	const userInfo = useSelector(getUserInfo);
 
 	// Close popup if both closed
-	useEffect(() => {
-		if (filledUserWelcome && filledUserWelcome) {
-			setPopupState(false);
-		}
-	});
+	useEffect(() => {});
 
 	const isSurveyFilled =
 		userInfo.user_meta.length > 0 &&
@@ -274,13 +270,6 @@ const welcomeIntro = css`
 	font-size: 1rem;
 	font-family: Gilroy;
 	margin-bottom: 1.5rem;
-	color: #2b2b39;
-`;
-
-const contactIntroContainer = css`
-	font-size: 1rem;
-	font-family: Gilroy;
-	margin-bottom: 3.25rem;
 	color: #2b2b39;
 `;
 

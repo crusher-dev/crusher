@@ -16,13 +16,9 @@ import SearchIcon from "../../../../../public/svg/settings/search.svg";
 import { css } from "@emotion/core";
 import { getRelativeSize } from "@utils/styleUtils";
 import { SelectGithubReposList } from "@ui/containers/settings/gitIntegrations/selectGithubReposList";
-import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
 
 const ADD_GITHUB_ORG_OR_ACCOUNT = "ADD_GITHUB_ORG_OR_ACCOUNT";
-interface iSelectGithubRepoProps {
-	userConnections: Array<iUserConnection>;
-}
-const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
+const SelectGithubRepoContainer = () => {
 	const [searchInputValue, setSearchInputValue] = useState("");
 	const userConnections = useSelector(getUserLoginConnections);
 
@@ -53,7 +49,7 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 				};
 			});
 			const newGithubInstallationOptions = [...githubInstallationsOptions, { label: "Add Github Org or Account", value: ADD_GITHUB_ORG_OR_ACCOUNT }];
-			if (newGithubInstallationOptions != repoInstallationOptions) {
+			if (newGithubInstallationOptions !== repoInstallationOptions) {
 				store.dispatch(saveGithubInstallationOptions(newGithubInstallationOptions));
 				store.dispatch(setSelectedGithubInstallationOption(githubInstallationsOptions[0]));
 			}
@@ -85,15 +81,13 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 	};
 
 	useEffect(() => {
-		if (selectedOrgInstallation) {
-			if (octoKitManager.current) {
-				octoKitManager.current?.getReposForInstallation(selectedOrgInstallation.value).then((info) => {
-					if (info.data && info.data.repositories) {
-						store.dispatch(saveReposForInstallation(selectedOrgInstallation.value, info.data.repositories));
-					}
-				});
-			}
-		}
+		if (selectedOrgInstallation && octoKitManager.current) {
+            octoKitManager.current?.getReposForInstallation(selectedOrgInstallation.value).then((info) => {
+                if (info.data?.repositories) {
+                    store.dispatch(saveReposForInstallation(selectedOrgInstallation.value, info.data.repositories));
+                }
+            });
+        }
 	}, [selectedOrgInstallation]);
 
 	useEffect(() => {
@@ -106,7 +100,7 @@ const SelectGithubRepoContainer = (props: iSelectGithubRepoProps) => {
 
 	const handleInstallationChange = (newValue: iGithubInstallation) => {
 		console.log(newValue.value, ADD_GITHUB_ORG_OR_ACCOUNT);
-		if (newValue.value == ADD_GITHUB_ORG_OR_ACCOUNT) {
+		if (newValue.value === ADD_GITHUB_ORG_OR_ACCOUNT) {
 			githubConfigureWindow.current = window.open(
 				"https://github.com/apps/crusher-test/installations/new",
 				"crusher-installation",

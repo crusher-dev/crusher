@@ -15,7 +15,7 @@ const initialState: iState = {
 const team = (state = initialState, action: IAction<any>) => {
 	switch (action.type) {
 		case SET_TEAM_MEMBERS: {
-			const _membersMap = (action.payload.members as Array<iMemberInfoResponse>).reduce((prev, current) => {
+			const _membersMap = ((action.payload.members as iMemberInfoResponse[])).reduce((prev, current) => {
 				return { ...prev, [current.id]: current };
 			}, {});
 			return {

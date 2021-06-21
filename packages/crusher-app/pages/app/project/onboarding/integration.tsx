@@ -3,7 +3,7 @@ import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import Link from "next/link";
 
-function ProjectIntegration(props) {
+function ProjectIntegration() {
 	const handleGithubClick = () => {
 		const _newWindow = window.open("https://github.com/apps/Crusher-Test/installations/new", "Github authorization");
 		if (window.focus) {
@@ -134,6 +134,6 @@ const styles = {
 	`,
 };
 
-ProjectIntegration.getInitialProps = async (ctx) => {};
+ProjectIntegration.getInitialProps = async () => {};
 
 export default withSession(withSidebarLayout(ProjectIntegration));

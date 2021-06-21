@@ -10,10 +10,10 @@ import { iGithubInstallation } from "@interfaces/githubInstallations";
 import { iGithubIntegration } from "@crusher-shared/types/mongo/githubIntegration";
 
 interface iGithubInitialState {
-	installationOptions: Array<iGithubInstallation>;
+	installationOptions: iGithubInstallation[];
 	selectedInstallation: null | number;
 	installationRepos: any;
-	connectedGithubRepos: Array<iGithubIntegration>;
+	connectedGithubRepos: iGithubIntegration[];
 }
 
 const initialState: iGithubInitialState = {

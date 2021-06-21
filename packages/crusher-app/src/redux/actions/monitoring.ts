@@ -3,14 +3,14 @@ import { iMonitoringListResponse } from "@crusher-shared/types/response/monitori
 
 export const SET_PROJECT_HOSTS = "SET_PROJECT_HOSTS";
 
-export const setProjectHosts = (hosts: Array<iHostListResponse>) => ({
+export const setProjectHosts = (hosts: iHostListResponse[]) => ({
 	type: SET_PROJECT_HOSTS,
 	payload: { hosts },
 });
 
 export const SET_MONITORING_LIST = "SET_MONITORING_LIST";
 
-export const setMonitoringList = (list: Array<iMonitoringListResponse>) => ({
+export const setMonitoringList = (list: iMonitoringListResponse[]) => ({
 	type: SET_MONITORING_LIST,
 	payload: { list },
 });

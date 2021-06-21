@@ -8,10 +8,9 @@ import {
 	getMetaDashboardProjectInfo,
 } from "@services/job";
 import { redirectToFrontendPath } from "@utils/router";
-import { backendRequest, cleanHeaders } from "@utils/backendRequest";
-import { useSelector } from "react-redux";
+import {backendRequest} from "@utils/backendRequest";
 import { getSelectedProject } from "@redux/stateUtils/projects";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { fetchTestsCountInProject } from "@services/projects";
 import { serialize } from "cookie";
@@ -38,16 +37,11 @@ function getBuildStatus(status: JobReportStatus) {
 
 function Build(props: any) {
 	const {
-		jobId,
-		createdAt,
-		branchName,
-		reportStatus,
-		reportId,
-		conclusion,
-		commitId,
-		commitName,
-		status,
-	} = props;
+        jobId,
+        createdAt,
+        reportStatus,
+        reportId
+    } = props;
 
 	return (
 		<Link href={`/app/job/review?jobId=${jobId}&reportId=${reportId}`}>
@@ -90,7 +84,7 @@ function Tests({test}) {
 function RenderBuilds(props) {
 	const { builds } = props;
 	const out =
-		builds && builds.jobs && Array.isArray(builds.jobs)
+		builds?.jobs && Array.isArray(builds.jobs)
 			? builds.jobs.map((job) => {
 					return (
 						<Build
@@ -420,7 +414,7 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 	const { res, req, store } = ctx;
 	try {
 		const cookies = getCookies(req);
-		if (cookies && cookies.cli_token) {
+		if (cookies?.cli_token) {
 			await handleCliToken(cookies.cli_token, res, req);
 		}
 
@@ -431,7 +425,7 @@ ProjectDashboard.getInitialProps = async (ctx: iPageContext) => {
 		);
 
 		// If 0 test count redirect to welcome screen
-		if (!!testsCount && testsCount.totalTests === 0) {
+		if (testsCount && testsCount.totalTests === 0) {
 			await redirectToFrontendPath("/app/project/onboarding/create-test", res);
 			return {};
 		}

@@ -6,32 +6,6 @@ import { WhiteLogo } from "@ui/components/common/Atoms";
 import { getTime, toPascalCase } from "@utils/helpers";
 import { Platform } from "@interfaces/Platform";
 
-const ROUTES = {
-	PROJECT_DASHBOARD: "PROJECT_DASHBOARD",
-	PROJECT_BUILDS: "PROJECT_BUILD",
-	PROJECT_HOSTS: "PROJECT_HOSTS",
-	PROJECT_SETTINGS: "PROJECT_SETTINGS",
-	PROJECT_TESTS: "PROJECT_TESTS",
-};
-
-function getCurrentRoute(router: any) {
-	const pathName = router.pathname;
-	switch (pathName) {
-		case "/app/project/dashboard":
-			return ROUTES.PROJECT_DASHBOARD;
-		case "/app/project/builds":
-			return ROUTES.PROJECT_BUILDS;
-		case "/app/project/hosts":
-			return ROUTES.PROJECT_HOSTS;
-		case "/app/project/sidebarSettings":
-			return ROUTES.PROJECT_SETTINGS;
-		case "/app/project/tests":
-			return ROUTES.PROJECT_TESTS;
-		default:
-			return null;
-	}
-}
-
 function renderBrowserList(onPlatformChanged, selectedBrowser = Platform.CHROME) {
 	const browsers = [
 		{
@@ -71,12 +45,14 @@ function renderBrowserList(onPlatformChanged, selectedBrowser = Platform.CHROME)
 	return <div css={styles.browserList}>{out}</div>;
 }
 
-const BaseHeader = ({ isMobile, isDesktop, reportId, referenceJob, router, onPlatformChanged, platform }: any) => {
-	const [search, toggleSearch] = useState(false);
-	const [mobileMenu, showMobileMenu] = useState(false);
-	const currentRoute = getCurrentRoute(router);
+const BaseHeader = ({
+    referenceJob,
+    onPlatformChanged,
+    platform
+}: any) => {
+    const [mobileMenu] = useState(false);
 
-	return (
+    return (
 		<div className={mobileMenu ? "navbar-nav-show" : ""}>
 			<header
 				className="navbar navbar-header navbar-header-fixed "

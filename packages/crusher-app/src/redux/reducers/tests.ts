@@ -3,7 +3,7 @@ import { SAVE_TEST_META_INFO, RECORD_LIVE_LOG, MARK_TEST_ABORTED } from "@redux/
 import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 
 interface iTestsState {
-	liveLogs: Array<iLiveStepLogs>;
+	liveLogs: iLiveStepLogs[];
 	metaInfo: iTestMetaInfo | null;
 	isError: boolean;
 }

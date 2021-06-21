@@ -11,7 +11,7 @@ export const _addMonitoring = (payload: iAddMonitoringRequest, projectId: number
 	});
 };
 
-export const _getMonitoringList = (projectId: number, headers = null): Promise<Array<iMonitoringListResponse>> => {
+export const _getMonitoringList = (projectId: number, headers = null): Promise<iMonitoringListResponse[]> => {
 	return backendRequest(`/monitoring/get/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,

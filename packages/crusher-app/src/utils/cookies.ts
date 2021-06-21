@@ -16,7 +16,7 @@ export function getCookies(req: NextApiRequest | null = null) {
 }
 
 function isRequestFromClientSide(req: NextApiRequest) {
-	return req ? false : true;
+	return !req;
 }
 
 export interface iMetaInfoNextReq {

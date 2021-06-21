@@ -6,7 +6,7 @@ import { iUserConnection } from "@crusher-shared/types/mongo/userConnection";
 interface UserData {
 	loggedIn: boolean;
 	info: UserInfo | null;
-	loginConnections: Array<iUserConnection>;
+	loginConnections: iUserConnection[];
 }
 
 const initialState: UserData = {

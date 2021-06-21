@@ -2,7 +2,6 @@ import { css } from "@emotion/core";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 import { getCookies } from "@utils/cookies";
-import { redirectToFrontendPath } from "@utils/router";
 import {
 	_deleteTest,
 	getAllTestsInfosInProject,
@@ -81,44 +80,30 @@ function RenderInputName(props: any) {
 	);
 }
 
-const renameInputCSS = css`
-	border: 1px solid #000;
-	padding: 0.3rem 0.2rem;
-	font-family: Cera Pro;
-	font-style: normal;
-	font-weight: bold;
-	font-size: 1rem;
-	width: 100%;
-	color: #2d3958;
-`;
-
 function TestCard(props) {
 	const {
-		name,
-		userName,
-		userId,
-		id,
-		item,
-		featured_video_uri,
-		createdAt,
-	} = props;
+        name,
+        userName,
+        id,
+        featured_video_uri,
+        createdAt
+    } = props;
 	const [testName, setTestName] = useState(name);
 	const videoRef = useRef(null);
 	const [testNameMode, setTestNameMode] = useState(INPUT_MODE.VISIBLE_NAME);
 
-	function onVideoHover(event) {
+	function onVideoHover() {
 		(videoRef.current as HTMLVideoElement).currentTime = 0;
 		(videoRef.current as HTMLVideoElement).play();
 	}
 
-	function onVideoHoverExit(event) {
+	function onVideoHoverExit() {
 		(videoRef.current as HTMLVideoElement).pause();
 	}
 
 	useEffect(() => {
 		if (
-			videoRef &&
-			videoRef.current &&
+			videoRef?.current &&
 			videoRef.current.tagName.toLowerCase() === "video"
 		) {
 			videoRef.current.addEventListener(
@@ -137,14 +122,14 @@ function TestCard(props) {
 		}
 	};
 
-	const setTestNameCallback = async (newTestName: string) => {
+	const setTestNameCallback = (newTestName: string) => {
 		if (newTestName) {
 			updateTestName(newTestName, id)
-				.then((res) => {
+				.then(() => {
 					setTestName(newTestName);
 					Toast.showSuccess("Test name updated successfully");
 				})
-				.catch((err) => {
+				.catch(() => {
 					Toast.showError("Error occurred when trying to update test name");
 				});
 			setTestName(newTestName);
@@ -161,7 +146,7 @@ function TestCard(props) {
 			.then(() => {
 				window.location.reload();
 			})
-			.catch((err) => {
+			.catch(() => {
 				Toast.showError("Error occured when trying to delete the test");
 			});
 	};
@@ -266,7 +251,7 @@ function RenderTestCard(props) {
 	const { tests } = props;
 
 	const finalOut = tests.reduce(function (prev, current, index) {
-		if (index % 4 == 0) {
+		if (index % 4 === 0) {
 			const rowItems = [
 				tests[index],
 				tests[index + 1],
@@ -302,8 +287,8 @@ function RenderTestCard(props) {
 
 function ProjectTestsList(props) {
 	const { tests } = props;
-	const [projectTests, setProjectTests] = useState(tests || []);
-	const [isLoading, setIsLoading] = useState(false);
+	const [projectTests] = useState(tests || []);
+	const [isLoading] = useState(false);
 	const projectsList = useSelector(getProjects);
 	const selectedProjectId = useSelector(getSelectedProject);
 	const [showCreateTestModal, setShouldShowCreateTestModal] = useState(false);
@@ -519,7 +504,10 @@ const editIconSVGCSS = css`
 `;
 
 ProjectTestsList.getInitialProps = async (ctx) => {
-	const { res, req, store } = ctx;
+	const {
+        req,
+        store
+    } = ctx;
 	try {
 		let headers;
 		if (req) {
@@ -531,20 +519,18 @@ ProjectTestsList.getInitialProps = async (ctx) => {
 		const defaultProject = getSelectedProject(store.getState());
 
 		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
+			cookies.selectedProject || null,
 		);
 		const tests = await getAllTestsInfosInProject(
-			selectedProject ? selectedProject : defaultProject,
+			selectedProject || defaultProject,
 			headers,
 		);
 		return {
 			tests: tests && Array.isArray(tests) ? tests : [],
 		};
 	} catch (er) {
-		throw er;
-		await redirectToFrontendPath("/404", res);
-		return null;
-	}
+        throw er;
+    }
 };
 
 export default withSession(withSidebarLayout(ProjectTestsList));

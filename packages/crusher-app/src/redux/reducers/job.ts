@@ -12,7 +12,7 @@ const initialState = {
 const job = (state = initialState, action: any) => {
 	switch (action.type) {
 		case SET_CURRENT_JOB_INFO:
-			return {
+            return {
 				...state,
 				job: action.job,
 				referenceJob: action.referenceJob,
@@ -20,14 +20,13 @@ const job = (state = initialState, action: any) => {
 				instances: action.instances,
 				results: action.results,
 			};
-			break;
 		case ADD_COMMENT_TO_SCREENSHOT:
-			return {
+            return {
 				...state,
 				comments: {
 					...state.comments,
 					[action.comment.result_id]: [
-						...(state.comments[action.comment.result_id] ? state.comments[action.comment.result_id] : []),
+						...((state.comments[action.comment.result_id] || [])),
 						{
 							id: action.comment.id,
 							user_id: action.comment.user_id,
@@ -41,13 +40,11 @@ const job = (state = initialState, action: any) => {
 					],
 				},
 			};
-			break;
 		case SET_CURRENT_JOB_PLATFORM:
-			return {
+            return {
 				...state,
 				platform: action.platform,
 			};
-			break;
 		default:
 			return state;
 	}

@@ -42,7 +42,7 @@ const buttonCSS = css`
 const LoginConnections = () => {
 	const userLoginConnections = useSelector(getUserLoginConnections);
 
-	const connectWithGithub = async () => {
+	const connectWithGithub = () => {
 		window.open(getGithubOAuthURL());
 	};
 
@@ -75,7 +75,7 @@ LoginConnections.getInitialProps = async (ctx: iPageContext) => {
 		const userConnections = await _getUserConnectionsList(ctx.metaInfo.headers);
 		store.dispatch(setUserLoginConnections(userConnections));
 		return {};
-	} catch (ex) {
+	} catch {
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

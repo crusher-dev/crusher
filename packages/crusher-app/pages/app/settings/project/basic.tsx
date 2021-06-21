@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, {useState} from "react";
 
 import { cleanHeaders } from "@utils/backendRequest";
 import { redirectToFrontendPath } from "@utils/router";
@@ -53,34 +53,16 @@ FeatureItem.defaultProps = {
 	enabled: false,
 };
 
-const ProjectBasicSettings = (props: any) => {
-	const { isVideoRecordingOn, isScreenshotOn, isMultiBrowserSupportOn } = props;
-	const projectInfo: iProjectInfoResponse = useSelector(getProjectInfo);
+const ProjectBasicSettings = () => {
+    const projectInfo: iProjectInfoResponse = useSelector(getProjectInfo);
 
-	const [projectName, setProjectName] = useState(projectInfo.name);
-	const [featuresInfo] = useState({
-		video_recording: isVideoRecordingOn,
-		screenshot: isScreenshotOn,
-		multi_browser_support: isMultiBrowserSupportOn,
-	});
+    const [projectName, setProjectName] = useState(projectInfo.name);
 
-	const handleProjectNameChange = (event: any) => {
+    const handleProjectNameChange = (event: any) => {
 		setProjectName(event.target.value);
 	};
 
-	const handleVideoRecordingToggle = useCallback(() => {
-		console.log("Clicked on video recording feature");
-	}, [featuresInfo]);
-
-	const handleScreenshotToggle = useCallback(() => {
-		console.log("Clicked on screenshot feature");
-	}, [featuresInfo]);
-
-	const handleMultiBrowserSupportToggle = useCallback(() => {
-		console.log("Clicked on multi browser support feature");
-	}, [featuresInfo]);
-
-	const saveBasicSettings = () => {
+    const saveBasicSettings = () => {
 		_updateProjectInfo({ name: projectName }, projectInfo.id).then(() => {
 			(store as any).dispatch(
 				setCurrentProjectInfo({ ...projectInfo, name: projectName }),
@@ -88,7 +70,7 @@ const ProjectBasicSettings = (props: any) => {
 		});
 	};
 
-	return (
+    return (
 		<SettingsContent contentCSS={settingContentCSS}>
 			<SettingsContentHeader
 				title={"Basic Settings"}
@@ -138,19 +120,6 @@ const featuresFormCSS = css`
 	margin-top: ${64 / PIXEL_REM_RATIO}rem;
 	font-family: Gilroy;
 	color: #323232;
-`;
-const featuresHeadingCSS = css`
-	font-size: ${18 / PIXEL_REM_RATIO}rem;
-	font-weight: 700;
-`;
-const featuresListCSS = css`
-	margin-top: ${24 / PIXEL_REM_RATIO}rem;
-	li {
-		display: flex;
-		&:not(:first-child) {
-			margin-top: ${30 / PIXEL_REM_RATIO}rem;
-		}
-	}
 `;
 
 const featureOptionTitleCSS = css`
@@ -210,7 +179,7 @@ ProjectBasicSettings.getInitialProps = async (ctx: any) => {
 			isScreenshotOn: true,
 			isMultiBrowserSupportOn: true,
 		};
-	} catch (ex) {
+	} catch {
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

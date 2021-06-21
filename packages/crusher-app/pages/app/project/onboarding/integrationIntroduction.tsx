@@ -6,7 +6,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import React from "react";
 import withSession from "@hoc/withSession";
 
-function IntegrationTests(props) {
+function IntegrationTests() {
 	return (
 		<div
 			style={{
@@ -78,6 +78,6 @@ const styles = {
 	`,
 };
 
-IntegrationTests.getInitialProps = async (ctx) => {};
+IntegrationTests.getInitialProps = async () => {};
 
 export default withSession(withSidebarLayout(IntegrationTests));

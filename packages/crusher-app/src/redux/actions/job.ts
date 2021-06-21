@@ -17,7 +17,7 @@ export const addCommentInRedux = (comment: string) => ({
 
 export const setJobInfo = (platform: JobPlatform, jobInfo: JobInfo) => ({
 	type: SET_CURRENT_JOB_INFO,
-	platform: platform ? platform : "CHROME",
+	platform: platform || "CHROME",
 	job: jobInfo ? jobInfo.job : null,
 	referenceJob: jobInfo ? jobInfo.referenceJob : null,
 	comments: jobInfo ? jobInfo.comments : {},

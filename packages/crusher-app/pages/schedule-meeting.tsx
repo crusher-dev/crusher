@@ -102,7 +102,7 @@ function GetStartedScreem() {
 	return BookMeetingScreen();
 }
 
-GetStartedScreem.getInitialProps = (ctx) => {
+GetStartedScreem.getInitialProps = () => {
 	return {};
 };
 

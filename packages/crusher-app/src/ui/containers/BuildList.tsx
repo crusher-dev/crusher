@@ -1,5 +1,4 @@
-import React, { JSXElementConstructor, useEffect, useState } from "react";
-import { css } from "@emotion/core";
+import React, {JSXElementConstructor, useState} from "react";
 import { Pagination } from "@ui/components/common/Pagination";
 
 interface iFilter {
@@ -8,7 +7,7 @@ interface iFilter {
 }
 
 interface iFilterListPaginationProps {
-	categories: Array<iFilter>;
+	categories: iFilter[];
 	items: any;
 	currentPage: number;
 	resolveCategoryUrl: any;
@@ -42,17 +41,17 @@ const BuildList = (props: iFilterListPaginationProps) => {
 	} as iFilters);
 
 	return (
-		<div>
+        <div>
 			<ItemsListComponent items={items} />
 
 			<Pagination
 				style={{ marginTop: "2.75rem" }}
-				totalPages={totalPages ? totalPages : 1}
+				totalPages={totalPages || 1}
 				currentPage={filters.currentPage}
 				resolvePaginationUrl={resolvePaginationUrl}
 			/>
 		</div>
-	);
+    );
 };
 
 export { BuildList };

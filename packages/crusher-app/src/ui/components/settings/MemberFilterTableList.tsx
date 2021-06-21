@@ -1,14 +1,13 @@
 import React from "react";
 import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";
-import GearIcon from "../../../../public/svg/settings/gear.svg";
 import DownIcon from "../../../../public/svg/settings/down.svg";
 import { iMember } from "@interfaces/redux/settings";
 import { Conditional } from "@ui/components/common/Conditional";
 import Avatar from "react-avatar";
 
 interface iMemberFilterTableListProps {
-	members: Array<iMember>;
+	members: iMember[];
 	filterSort: string | null;
 	onToggleRoleSort: () => void;
 }
@@ -69,7 +68,7 @@ const MemberFilterTableList = (props: iMemberFilterTableListProps) => {
 	});
 
 	return (
-		<div css={containerCSS}>
+        <div css={containerCSS}>
 			<table css={tableCSS}>
 				<tr css={headerRowCSS}>
 					<th>{membersOut.length} people in crusher</th>
@@ -79,7 +78,7 @@ const MemberFilterTableList = (props: iMemberFilterTableListProps) => {
 							<Conditional If={!filterSort || filterSort === "ASC"}>
 								<DownIcon />
 							</Conditional>
-							<Conditional If={!!filterSort && filterSort !== "ASC"}>
+							<Conditional If={filterSort && filterSort !== "ASC"}>
 								<span css={upIconContainerCSS}>
 									<DownIcon />
 								</span>
@@ -91,7 +90,7 @@ const MemberFilterTableList = (props: iMemberFilterTableListProps) => {
 				{membersOut}
 			</table>
 		</div>
-	);
+    );
 };
 
 const containerCSS = css`
@@ -129,21 +128,6 @@ const tableCSS = css`
 const headerRowCSS = css`
 	th {
 		padding: ${15 / PIXEL_REM_RATIO}rem ${23 / PIXEL_REM_RATIO}rem;
-	}
-`;
-
-const settingsColumnCSS = css`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-color: #ececec;
-	border-width: 1px;
-	background: #fcfcfc;
-	max-width: ${94 / PIXEL_REM_RATIO}rem;
-	border-radius: ${4 / PIXEL_REM_RATIO}rem;
-	padding: ${7 / PIXEL_REM_RATIO}rem ${7 / PIXEL_REM_RATIO}rem;
-	.downIcon {
-		margin-left: ${23 / PIXEL_REM_RATIO}rem;
 	}
 `;
 

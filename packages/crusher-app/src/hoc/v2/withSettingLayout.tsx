@@ -103,7 +103,7 @@ export function WithSettingsLayout(Component, shouldHaveGetInitialProps = true) 
 	if (shouldHaveGetInitialProps) {
 		WrappedComponent.getInitialProps = async (ctx) => {
 			const pageProps = Component.getInitialProps && (await Component.getInitialProps(ctx));
-			return { ...pageProps };
+			return pageProps;
 		};
 	}
 
@@ -237,25 +237,24 @@ function MainMenuItem({ data }) {
 	};
 
 	return (
-		<div css={mainMenu}>
+        <div css={mainMenu}>
 			<div className="menu-heading">
 				<SVG /> <span>{data.title}</span>
 			</div>
-			{data.subMenu &&
-				data.subMenu.map((item, i) => {
-					return (
-						<div
-							css={menuItem}
-							onClick={handleItemClick.bind(this, item)}
-							className={currentRoute === item.link || (item.children && item.children.includes(currentRoute)) ? "selected" : ""}
-						>
-							<div className="selected-bar"></div>
-							<div className="menu-text">{item.title}</div>
-						</div>
-					);
-				})}
+			{data.subMenu?.map(item => {
+                return (
+                    <div
+                        css={menuItem}
+                        onClick={handleItemClick.bind(this, item)}
+                        className={currentRoute === item.link || (item.children && item.children.includes(currentRoute)) ? "selected" : ""}
+                    >
+                        <div className="selected-bar"></div>
+                        <div className="menu-text">{item.title}</div>
+                    </div>
+                );
+            })}
 		</div>
-	);
+    );
 }
 
 const menuItem = css`

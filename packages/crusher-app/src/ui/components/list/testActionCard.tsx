@@ -1,7 +1,6 @@
 import { css } from "@emotion/core";
 import { toPascalCase } from "@utils/helpers";
 import React from "react";
-import { iAction } from "@crusher-shared/types/action";
 import { ActionsWithStatus } from "@ui/components/editor/LiveLogsActions";
 import { Conditional } from "@ui/components/common/Conditional";
 
@@ -46,7 +45,15 @@ interface iLoginActionCardProps {
 	forwardRef?: any;
 }
 export const LogActionCard = (props: iLoginActionCardProps) => {
-	const { index, action, isActionCompleted, isActionAborted, style, timeTaken, isLast, forwardRef } = props;
+	const {
+        index,
+        action,
+        isActionCompleted,
+        isActionAborted,
+        style,
+        isLast,
+        forwardRef
+    } = props;
 
 	return (
 		<div style={{ ...style, fontWeight: isActionCompleted ? 700 : 500 }} css={styles.container} ref={forwardRef}>

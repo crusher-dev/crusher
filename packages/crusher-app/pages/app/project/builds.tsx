@@ -7,7 +7,6 @@ import { cleanHeaders } from "@utils/backendRequest";
 import { getCookies } from "@utils/cookies";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { getAllJobsOfProject } from "@services/job";
-import { redirectToFrontendPath } from "@utils/router";
 import Link from "next/link";
 import { getTime } from "@utils/helpers";
 import { JobReportStatus } from "@interfaces/JobReportStatus";
@@ -65,24 +64,21 @@ function RenderStatusImage(props: any) {
 
 function BuildItem(props: any) {
 	const {
-		jobId,
-		reportId,
-		reportStatus,
-		createdAt,
-		branchName,
-		conclusion,
-		commitId,
-		commitName,
-		status,
-		totalScreenshotCount,
-		passedScreenshotCount,
-		reviewRequiredScreenshotCount,
-	} = props;
+        jobId,
+        reportId,
+        reportStatus,
+        createdAt,
+        commitId,
+        commitName,
+        totalScreenshotCount,
+        passedScreenshotCount,
+        reviewRequiredScreenshotCount
+    } = props;
 
 	const testInstanceReviewLink = `/app/job/review?jobId=${jobId}&reportId=${reportId}`;
 
 	return (
-		<Link href={testInstanceReviewLink as any}>
+        <Link href={testInstanceReviewLink as any}>
 			<li css={styles.step}>
 				<div
 					style={{
@@ -122,14 +118,14 @@ function BuildItem(props: any) {
 										style={{ width: "1.3125rem" }}
 									/>
 									<span>
-										{`${totalScreenshotCount ? totalScreenshotCount : 0} `}{" "}
+										{`${totalScreenshotCount || 0} `}{" "}
 										<span style={{ fontWeight: 600 }}> Screenshots</span>
 									</span>
 								</div>
 								<div css={styles.buildShortInfo} style={{ margin: "0 auto" }}>
 									<img src={"/svg/tests/passed.svg"} style={{ width: "1.3125rem" }} />
 									<span>
-										{`${passedScreenshotCount ? passedScreenshotCount : 0} `}{" "}
+										{`${passedScreenshotCount || 0} `}{" "}
 										<span style={{ fontWeight: 600 }}> passed</span>
 									</span>
 								</div>
@@ -139,7 +135,7 @@ function BuildItem(props: any) {
 									<img src={"/svg/tests/review.svg"} style={{ width: "1.3125rem" }} />
 									<span>
 										{`${
-											reviewRequiredScreenshotCount ? reviewRequiredScreenshotCount : 0
+											reviewRequiredScreenshotCount || 0
 										} `}{" "}
 										<span style={{ fontWeight: 600 }}> Review required</span>
 									</span>
@@ -153,7 +149,7 @@ function BuildItem(props: any) {
 				</div>
 			</li>
 		</Link>
-	);
+    );
 }
 
 function buildList(props: any) {
@@ -197,7 +193,7 @@ const BuildPage = (props: any) => {
 		ANALYTICS.trackPage(PAGE_TYPE.BUILD_PAGE);
 	}, []);
 
-	const isBuildsPresent = builds.jobs && builds.jobs.length;
+	const isBuildsPresent = builds.jobs?.length;
 	return (
 		<div
 			css={[
@@ -413,42 +409,46 @@ const styles = {
 };
 
 BuildPage.getInitialProps = async (ctx: any) => {
-	const { res, req, store, query } = ctx;
+	const {
+        req,
+        store,
+        query
+    } = ctx;
 	try {
-		let headers;
-		if (req) {
+        let headers;
+        if (req) {
 			headers = req.headers;
 			cleanHeaders(headers);
 		}
 
-		const cookies = getCookies(req);
-		const defaultProject = getSelectedProject(store.getState());
+        const cookies = getCookies(req);
+        const defaultProject = getSelectedProject(store.getState());
 
-		const selectedProject = JSON.parse(
-			cookies.selectedProject ? cookies.selectedProject : null,
+        const selectedProject = JSON.parse(
+			cookies.selectedProject || null,
 		);
-		const page = query.page ? query.page : 1;
-		const category = query.category ? query.category : 0;
+        const {
+            page = 1,
+            category = 0
+        } = query;
 
-		const selectedProjectId = selectedProject ? selectedProject : defaultProject;
-		const builds = await getAllJobsOfProject(
+        const selectedProjectId = selectedProject || defaultProject;
+        const builds = await getAllJobsOfProject(
 			selectedProjectId,
 			category,
 			page,
 			headers,
 		);
 
-		return {
+        return {
 			builds: builds,
 			projectId: selectedProjectId,
 			category: category,
 			page: page,
 		};
-	} catch (er) {
-		throw er;
-		redirectToFrontendPath("/404", res);
-		return null;
-	}
+    } catch (er) {
+        throw er;
+    }
 };
 
 export default withSession(withSidebarLayout(BuildPage));

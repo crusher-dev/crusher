@@ -3,7 +3,6 @@ import React from "react";
 import { cleanHeaders } from "@utils/backendRequest";
 import { getAllSlackIntegrationsForProject } from "@services/alerting";
 import { getCookies } from "@utils/cookies";
-import { redirectToFrontendPath } from "@utils/router";
 import withSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
 import { SettingsContent } from "@ui/components/settings/SettingsContent";
@@ -13,7 +12,7 @@ import { PIXEL_REM_RATIO } from "@constants/other";
 import { Accordion, AccordionTab } from "@ui/components/accordion";
 
 interface iItemsListProps {
-	items: Array<{ title: string; date: string }>;
+	items: { title: string; date: string }[];
 }
 const ItemsList = (props: iItemsListProps) => {
 	const { items } = props;
@@ -138,7 +137,9 @@ const addRepoContainerCSS = css`
 `;
 
 ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
-	const { req, res } = ctx;
+	const {
+        req
+    } = ctx;
 	try {
 		let headers;
 		if (req) {
@@ -158,10 +159,8 @@ ProjectIntegrationSettings.getInitialProps = async (ctx: any) => {
 			slackIntegrations: slackIntegrations,
 		};
 	} catch (ex) {
-		throw ex;
-		redirectToFrontendPath("/404", res);
-		return null;
-	}
+        throw ex;
+    }
 };
 
 export default withSession(WithSettingsLayout(ProjectIntegrationSettings));

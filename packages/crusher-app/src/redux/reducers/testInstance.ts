@@ -7,14 +7,13 @@ const initialState = {
 const testInstance = (state = initialState, action) => {
 	switch (action.type) {
 		case SET_TEST_INSTANCE_LOGS:
-			return {
+            return {
 				...state,
 				logs: {
 					...state.logs,
 					[action.instanceId]: action.logs,
 				},
 			};
-			break;
 		case CLEAR_ALL_LOGS:
 			return {
 				...state,

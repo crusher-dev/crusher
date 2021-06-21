@@ -55,12 +55,12 @@ export interface JobInfo {
 			created_at: string;
 			updated_at: string;
 			recorded_video_uri?: string;
-			images: Array<{
+			images: {
 				id: number;
 				url: string;
 				name: string;
 				created_at: string;
-			}>;
+			}[];
 		};
 	};
 	results: {
@@ -69,7 +69,7 @@ export interface JobInfo {
 			reference_instance_id: number;
 			status: "RUNNING_CHECKS" | "FINISHED_RUNNING_CHECKS" | "ERROR_RUNNING_CHECKS" | "TIMEOUT";
 			conclusion: "PASSED" | "FAILED" | "MANUAL_REVIEW_REQUIRED";
-			results: Array<{
+			results: {
 				id: number;
 				screenshot_id: number;
 				target_screenshot_id: number;
@@ -84,12 +84,12 @@ export interface JobInfo {
 				target_instance_id: number;
 				result_set_status: string;
 				result_set_conclusion: string;
-			}>;
+			}[];
 		};
 	};
 	comments: {
 		[instance_id: number]: {
-			[screenshot_id: number]: Array<{
+			[screenshot_id: number]: {
 				id: number;
 				user_id: number;
 				user_name: string;
@@ -101,7 +101,7 @@ export interface JobInfo {
 				replied_to?: number;
 				created_at: string;
 				updated_at: string;
-			}>;
+			}[];
 		};
 	};
 }

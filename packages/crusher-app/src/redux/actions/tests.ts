@@ -5,7 +5,7 @@ export const RECORD_LIVE_LOG = "RECORD_LIVE_LOG";
 export const SAVE_TEST_META_INFO = "SAVE_TEST_META_INFO";
 export const MARK_TEST_ABORTED = "MARK_TEST_ABORTED";
 
-export const recordLiveLogs = (logs: Array<iLiveStepLogs>) => ({
+export const recordLiveLogs = (logs: iLiveStepLogs[]) => ({
 	type: RECORD_LIVE_LOG,
 	payload: {
 		logs,

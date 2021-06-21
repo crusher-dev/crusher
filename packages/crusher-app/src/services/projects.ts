@@ -15,7 +15,7 @@ const RESPONSE_STATUS = {
 export const fetchAllProjects = async (headers = null) => {
 	return backendRequest("/projects/getAll", {
 		headers: headers,
-	}).catch((err) => {
+	}).catch(() => {
 		return null;
 	});
 };
@@ -48,7 +48,7 @@ export const _getProjectHosts = async (projectId: number, headers = null) => {
 	return backendRequest(`/hosts/getAll/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
-	}).then((hosts: Array<iHostListResponse>) => {
+	}).then((hosts: iHostListResponse[]) => {
 		return hosts;
 	});
 };
@@ -106,7 +106,7 @@ export const getMonitoringSettings = async (projectId, headers = null): Promise<
 	});
 };
 
-export const _getProjectMembers = (projectId: number, headers?: any): Promise<Array<iMemberInfoResponse>> => {
+export const _getProjectMembers = (projectId: number, headers?: any): Promise<iMemberInfoResponse[]> => {
 	return backendRequest(`/v2/project/get/members/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,

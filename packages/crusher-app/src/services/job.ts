@@ -12,7 +12,7 @@ export const getAllJobsOfProject = (projectId, category = 0, page = 1, headers =
 	return backendRequest(`/v2/job/report/list/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
-		payload: { page: page ? page : 1, category },
+		payload: { page: page || 1, category },
 	});
 };
 

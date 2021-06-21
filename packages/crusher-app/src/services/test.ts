@@ -114,7 +114,7 @@ export const createTestFromDraft = (
 ) => {
 	return backendRequest(`/test/createTestFromDraft/${draft_id}`, {
 		method: RequestMethod.POST,
-		payload: { ...fieldsToUpdate },
+		payload: fieldsToUpdate,
 		headers: headers,
 	});
 };

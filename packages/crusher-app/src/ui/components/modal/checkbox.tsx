@@ -3,13 +3,6 @@ import TickCheckbox from "../../../../public/svg/modals/tick_checkbox.svg";
 import UnTickCheckbox from "../../../../public/svg/modals/untick_checkbox.svg";
 import { css } from "@emotion/core";
 
-interface iProps {
-	enabled: boolean;
-	title: string;
-	onToggle: () => void;
-	containerCss: any;
-}
-
 const ModalCheckbox = (props: any) => {
 	const { enabled, containerCss, title, onToggle } = props;
 	return (

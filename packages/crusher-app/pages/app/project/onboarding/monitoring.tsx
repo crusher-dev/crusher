@@ -2,11 +2,9 @@ import { css } from "@emotion/core";
 import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import withSession from "@hoc/withSession";
 
-function ProjectMonitoring(props) {
-	const { jobs, logs, projectId } = props;
-
-	return (
-		<div
+function ProjectMonitoring() {
+    return (
+        <div
 			style={{
 				display: "flex",
 				flexDirection: "column",
@@ -50,7 +48,7 @@ function ProjectMonitoring(props) {
 				</div>
 			</div>
 		</div>
-	);
+    );
 }
 
 const styles = {
@@ -124,6 +122,6 @@ const styles = {
 	`,
 };
 
-ProjectMonitoring.getInitialProps = async (ctx) => {};
+ProjectMonitoring.getInitialProps = async () => {};
 
 export default withSession(withSidebarLayout(ProjectMonitoring));

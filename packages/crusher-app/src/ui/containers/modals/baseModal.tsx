@@ -27,7 +27,7 @@ interface iBaseModalProps {
 const BaseModal = (props: iBaseModalProps) => {
 	const { heading, subHeading, illustration, closeIcon: CloseIcon, css, onClose, children, isOpen, width, height } = props;
 
-	const customCSS = css ? css : {};
+	const customCSS = css || {};
 
 	return (
 		<Modal isOpen={isOpen} onRequestClose={onClose} style={customModalStyle(width, height)} contentLabel="Base Modal">
@@ -111,8 +111,8 @@ const closeModalCSS = css`
 
 const customModalStyle = (width: any, height: any) => ({
 	content: {
-		width: width ? width : "33.33rem",
-		height: height ? height : "auto",
+		width: width || "33.33rem",
+		height: height || "auto",
 		top: "50%",
 		left: "50%",
 		right: "auto",

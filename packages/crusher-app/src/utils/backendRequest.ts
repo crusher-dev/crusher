@@ -5,9 +5,13 @@ import { RequestMethod, RequestOptions } from "@interfaces/RequestOptions";
 const _fetch = require("node-fetch");
 
 function prepareFetchPayload(uri: string, options: RequestOptions) {
-	const method = options.method ? options.method : RequestMethod.GET;
-	let headers = options.headers ? options.headers : {};
-	const payload = options.payload ? options.payload : {};
+	const method = options.method || RequestMethod.GET;
+	let {
+        headers = {}
+    } = options;
+	const {
+        payload = {}
+    } = options;
 
 	uri = getAbsoluteURIIfRelative(uri);
 
@@ -25,8 +29,7 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 			};
 			break;
 		default:
-			throw new Error("Invalid post-method passed, only GET and POST supported");
-			break;
+            throw new Error("Invalid post-method passed, only GET and POST supported");
 	}
 
 	return { uri, method, headers: headers };

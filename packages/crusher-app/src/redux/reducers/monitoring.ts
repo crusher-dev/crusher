@@ -4,8 +4,8 @@ import { iHostListResponse } from "@crusher-shared/types/response/hostListRespon
 import { iMonitoringListResponse } from "@crusher-shared/types/response/monitoringListResponse";
 
 export interface iSettingsState {
-	hosts: Array<iHostListResponse>;
-	monitoringList: Array<iMonitoringListResponse>;
+	hosts: iHostListResponse[];
+	monitoringList: iMonitoringListResponse[];
 }
 
 const initialState: iSettingsState = {

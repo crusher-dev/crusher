@@ -22,7 +22,7 @@ const handleClIToken = (ctx) => {
 		res,
 	} = ctx;
 	if (cli_token) {
-		res.setHeader("Set-Cookie", serialize("cli_token", cli_token, { path: "/", maxAge: 90000 }));
+		res.setHeader("Set-Cookie", serialize("cli_token", cli_token, { path: "/", maxAge: 90_000 }));
 	}
 };
 
@@ -45,14 +45,11 @@ function Home() {
 			const { status } = res;
 			switch (status) {
 				case NO_TEAM_JOINED:
-					return redirectToFrontendPath("/onboarding");
-					break;
+                    return redirectToFrontendPath("/onboarding");
 				case EMAIL_NOT_VERIFIED:
-					return redirectToFrontendPath("/");
-					break;
+                    return redirectToFrontendPath("/");
 				case SIGNED_IN:
-					return redirectToFrontendPath("/app/dashboard");
-					break;
+                    return redirectToFrontendPath("/app/dashboard");
 				case USER_NOT_REGISTERED:
 					alert("Wrong email or password");
 					break;
@@ -259,37 +256,36 @@ const styles = {
 		color: ${getStyleFromObject(COMPONENTS.font.primary, theme)};
 	`,
 	registerButton: (theme) => css`
-		:hover {
-			text-decoration: none !important;
-		}
-		display: flex;
-		justify-content: center;
-		width: 100%;
+    :hover {
+        text-decoration: none !important;
+    }
+    display: flex;
+    justify-content: center;
+    width: 100%;
 
-		${theme === "light" &&
-		`
-		 background: ${COLORS.dark1};
-		 color: ${COLORS.white};
-		`}
+    ${theme === "light" &&
+    `
+     background: ${COLORS.dark1};
+     color: ${COLORS.white};
+    `}
 
-		${theme === "dark" &&
-		`
-		 background: ${COLORS.darkgrey};
-		 border: 1px solid ${COLORS.lightgrey};
-		 color: ${COLORS.white};
-		`}
+    ${theme === "dark" && `
+ background: ${COLORS.darkgrey};
+ border: 1px solid ${COLORS.lightgrey};
+ color: ${COLORS.white};
+`}
 
-		border-radius: 5px;
-		font-size: 1.06rem;
-		padding: 1.13rem;
-		color: #fff;
-		cursor: pointer;
-		&:hover {
-			cursor: pointer;
-			color: #fff !important;
-			background: ${theme === "dark" ? "#23272f" : "#23272f"};
-		}
-	`,
+        border-radius: 5px;
+        font-size: 1.06rem;
+        padding: 1.13rem;
+        color: #fff;
+        cursor: pointer;
+        &:hover {
+            cursor: pointer;
+            color: #fff !important;
+            background: #23272f;
+        }
+    `,
 	passwordInput: css`
 		width: 100%;
 	`,

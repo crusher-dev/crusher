@@ -13,7 +13,7 @@ const styles = {
 			border-radius: 0.2rem;
 			padding: 0.5rem 0;
 			padding-left: 1.2rem;
-			width: ${!!width || width == 0 ? width : "auto"};
+			width: ${!!width || width === 0 ? width : "auto"};
 			height: ${!!height || height === 0 ? height : "auto"};
 			font-family: DM Sans;
 			font-weight: 500;

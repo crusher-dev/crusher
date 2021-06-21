@@ -9,8 +9,8 @@ interface iMonitoringCardProps {
 	id: number;
 	title: string;
 	host: string;
-	tags?: Array<string>;
-	countries?: Array<string>;
+	tags?: string[];
+	countries?: string[];
 	duration: number;
 	escalation?: string | null;
 }
@@ -35,7 +35,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 
 	const durationOption = RUN_INTERVAL_OPTIONS.find((intervalOption) => {
 		console.log(intervalOption.value, duration);
-		return intervalOption.value == duration;
+		return intervalOption.value === duration;
 	});
 
 	const runMonitoring = () => {
@@ -50,7 +50,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 	};
 
 	return (
-		<div css={containerCSS}>
+        <div css={containerCSS}>
 			<div css={headerCSS}>
 				<strong css={monitoringNameCSS}>{title}</strong>
 				<span css={monitoringEditButtonCSS}>Edit</span>
@@ -65,26 +65,22 @@ function MonitoringCard(props: iMonitoringCardProps) {
 				<div css={infoContentCSS}>
 					<MonitoringInfoLabel title={"Host"} value={host} />
 					<MonitoringInfoLabel title={"Duration"} value={durationOption ? (durationOption as any).label : `Every ${duration} seconds`} />
-					<MonitoringInfoLabel title={"Tags/Test"} value={tags && tags.length ? tags.join(", ") : "N/A"} />
-					<MonitoringInfoLabel title={"Escalation"} value={escalation ? escalation : "N/A"} />
-					<MonitoringInfoLabel title={"Countries"} value={countries && countries.length ? countries.join(", ") : "N/A"} />
+					<MonitoringInfoLabel title={"Tags/Test"} value={tags?.length ? tags.join(", ") : "N/A"} />
+					<MonitoringInfoLabel title={"Escalation"} value={escalation || "N/A"} />
+					<MonitoringInfoLabel title={"Countries"} value={countries?.length ? countries.join(", ") : "N/A"} />
 				</div>
 				<div css={monitoringQuickActionsCSS}>
 					<button css={viewBuildCSS}>View Builds</button>
 				</div>
 			</div>
 		</div>
-	);
+    );
 }
 
 const headerCSS = css`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-`;
-
-const monitoringEditActions = css`
-	cursor: pointer;
 `;
 
 const monitoringQuickActionsCSS = css`

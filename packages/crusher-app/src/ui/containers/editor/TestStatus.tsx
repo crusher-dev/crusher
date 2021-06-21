@@ -6,8 +6,8 @@ import { iLiveStepLogs } from "@crusher-shared/types/mongo/liveStepsLogs";
 import { iAction } from "@crusher-shared/types/action";
 
 interface TestStatusProps {
-	logs: Array<iLiveStepLogs>;
-	actions: Array<iAction>;
+	logs: iLiveStepLogs[];
+	actions: iAction[];
 	isAborted?: boolean;
 }
 

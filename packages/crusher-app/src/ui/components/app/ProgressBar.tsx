@@ -10,10 +10,10 @@ function ProgressBar(props: ProgressBarProps) {
 	const { progress, style } = props;
 
 	return (
-		<div css={styles.container} style={style}>
-			<div css={styles.barIndicator} style={{ width: `${progress ? progress : 0}%` }}></div>
+        <div css={styles.container} style={style}>
+			<div css={styles.barIndicator} style={{ width: `${progress || 0}%` }}></div>
 		</div>
-	);
+    );
 }
 
 const styles = {

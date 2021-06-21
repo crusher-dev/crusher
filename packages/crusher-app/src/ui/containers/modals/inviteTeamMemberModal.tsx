@@ -1,5 +1,5 @@
 import { Modal } from "@ui/containers/modals/modal";
-import React, { useEffect, useMemo, useState } from "react";
+import React, {useEffect, useState} from "react";
 import { InviteMembersContainer } from "@ui/containers/settings/inviteMembersContainer";
 import { css } from "@emotion/core";
 import { PIXEL_REM_RATIO } from "@constants/other";

@@ -13,7 +13,7 @@ export const setUserLoggedIn = (info: iUserInfoResponse) => {
 	};
 };
 
-export const setUserLoginConnections = (connections: Array<iUserConnection>) => ({
+export const setUserLoginConnections = (connections: iUserConnection[]) => ({
 	type: SET_USER_LOGIN_CONNECTIONS,
 	payload: { connections },
 });

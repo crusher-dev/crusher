@@ -3,7 +3,7 @@ import { TestInstanceStatus } from "@interfaces/TestInstanceStatus";
 
 export function LogsBox(props) {
 	const { testInfo, style } = props;
-	const { logs, status } = testInfo ? testInfo : { logs: [], status: TestInstanceStatus.QUEUED };
+	const { logs, status } = testInfo || { logs: [], status: TestInstanceStatus.QUEUED };
 
 	const logsOut = logs
 		? logs.map((log) => {

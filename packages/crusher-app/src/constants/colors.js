@@ -1,16 +1,9 @@
-// These are available and can be controlled by
-const FUNDATMENTAL_COLORS = {
-	grey: "grey",
-};
-
-const getColorsSet = (light, dark) => {
-	light, dark;
-};
+const getColorsSet = () => {};
 
 // For times when utility classes are not enough
 // This prevents from writing lot of CSS without ref
 const TEMPLATE_COLORS = {
-	bodyColor: getColorsSet("red", "green"),
+	bodyColor: getColorsSet(),
 };
 
 export const useVar = (value) => {

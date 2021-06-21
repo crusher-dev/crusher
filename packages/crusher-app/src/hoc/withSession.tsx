@@ -63,7 +63,7 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 			return redirectToBackendURI("/v2/user/init", ctx.res as NextApiResponse);
 		}
 
-		const [redirectResponse, userStatus] = await handleUserStatus(userInfo, res, componentScope ? componentScope : null);
+		const [redirectResponse, userStatus] = await handleUserStatus(userInfo, res, componentScope || null);
 
 		if (!redirectResponse) {
 			const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));
@@ -72,14 +72,16 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 				return { status: userStatus };
 			}
 			const projectsList = getProjects(store.getState());
-			const cookies = metaInfo.cookies;
+			const {
+                cookies
+            } = metaInfo;
 
 			let selectedProject = getSelectedProject(store.getState());
 			if (!selectedProject) {
 				if (cookies.selectedProject) {
 					selectedProject = cookies.selectedProject;
 				} else {
-					selectedProject = projectsList && projectsList.length ? projectsList[0].id : null;
+					selectedProject = projectsList?.length ? projectsList[0].id : null;
 				}
 			}
 

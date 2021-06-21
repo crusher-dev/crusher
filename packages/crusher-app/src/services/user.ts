@@ -41,7 +41,7 @@ export const _registerUser = (firstName: string, lastName: string, email: string
 	});
 };
 
-export const _addUserMeta = (data: Array<any>) => {
+export const _addUserMeta = (data: any[]) => {
 	return backendRequest("/user/meta/add", {
 		method: RequestMethod.POST,
 		payload: data,
@@ -75,13 +75,11 @@ export const _fetchUserInfo = (headers = null): Promise<iUserInfoResponse> => {
 	return backendRequest("/user/info", {
 		headers: headers,
 	}).then((res: iUserInfoResponse) => {
-		return {
-			...res,
-		};
+		return res;
 	});
 };
 
-export const _removeUserLoginConnection = (connectionId: string, headers: any = null): Promise<Array<iUserConnection>> => {
+export const _removeUserLoginConnection = (connectionId: string, headers: any = null): Promise<iUserConnection[]> => {
 	return backendRequest("/v2/user/connection/remove", {
 		method: RequestMethod.DELETE,
 		payload: { connectionId: connectionId } as iDeleteLoginConnectionRequest,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { css } from "@emotion/core";
 import OutsideClickHandler from "react-outside-click-handler";
 import AddIcon from "../../../../public/svg/sidebarSettings/addDropdown.svg";

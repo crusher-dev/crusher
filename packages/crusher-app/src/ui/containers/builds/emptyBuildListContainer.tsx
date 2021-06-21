@@ -103,16 +103,4 @@ const createTestButtonCSS = css`
 	justify-content: space-around;
 `;
 
-const helpLinkCSS = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 0.95rem;
-	line-height: 1rem;
-	text-align: center;
-	text-decoration-line: underline;
-	color: #313131;
-	cursor: pointer;
-`;
-
 export { EmptyBuildListContainer };

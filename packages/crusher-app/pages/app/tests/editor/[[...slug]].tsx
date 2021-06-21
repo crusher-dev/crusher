@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import { iPageContext } from "@interfaces/pageContext";
 import { checkIfUserLoggedIn, getUserInfo } from "@redux/stateUtils/user";
 import { redirectToFrontendPath } from "@utils/router";
@@ -10,8 +10,7 @@ import { withSidebarLayout } from "@hoc/withSidebarLayout";
 import { markTestAborted, recordLiveLogs, saveTestMetaInfo } from "@redux/actions/tests";
 import { iTestMetaInfo } from "@interfaces/testMetaInfo";
 import { useSelector } from "react-redux";
-import { checkIsTestAborted, getTestLiveLogs, getTestMetaInfo } from "@redux/stateUtils/tests";
-import { TestStatus } from "@ui/containers/editor/TestStatus";
+import {getTestMetaInfo} from "@redux/stateUtils/tests";
 import { CodeGenerator } from "@code-generator/src/generator";
 import { getSelectedProject } from "@redux/stateUtils/projects";
 import { iDraft } from "@crusher-shared/types/db/draft";
@@ -21,7 +20,6 @@ import { InstanceStatus } from "@crusher-shared/types/instanceStatus";
 import { BROWSER } from "@crusher-shared/types/browser";
 import { AuthModal } from "@ui/containers/modals/authModal";
 import Cookies from "js-cookie";
-import { Store } from "redux";
 import { getShortDate, submitPostDataWithForm } from "@utils/helpers";
 import { Toast } from "@utils/toast";
 import { getRelativeSize } from "@utils/styleUtils";
@@ -42,7 +40,7 @@ function checkDraftStatusAgainAndAgain(draftId: number, logsAfter = 0) {
 				return store.dispatch(recordLiveLogs(logs!));
 			} else {
 				const lastCreatedAt =
-					logs && logs.length
+					logs?.length
 						? logs.reduce((prev: any, current: any) => {
 								const createdDate = new Date(current.createdAt);
 								return createdDate > prev ? createdDate : prev;
@@ -53,7 +51,7 @@ function checkDraftStatusAgainAndAgain(draftId: number, logsAfter = 0) {
 			}
 		} else {
 			const lastCreatedAt =
-				logs && logs.length
+				logs?.length
 					? logs.reduce((prev: any, current: any) => {
 							const createdDate = new Date(current.createdAt);
 							return createdDate > prev ? createdDate : prev;
@@ -71,21 +69,15 @@ interface iTestEditorProps {
 }
 
 const TestEditor = (props: iTestEditorProps) => {
-	const { metaInfo } = props;
-	const [testName, setTestName] = useState("");
+    const { metaInfo } = props;
+    const [testName] = useState("");
 
-	const userInfo = useSelector(getUserInfo);
-	const testInfo = useSelector(getTestMetaInfo);
-	const liveLogs = useSelector(getTestLiveLogs);
-	const selectedProjectId = useSelector(getSelectedProject);
-	const isTestAborted = useSelector(checkIsTestAborted);
-	const authCheckerInterval = useRef(null as any);
+    const userInfo = useSelector(getUserInfo);
+    const testInfo = useSelector(getTestMetaInfo);
+    const selectedProjectId = useSelector(getSelectedProject);
+    const authCheckerInterval = useRef(null as any);
 
-	const handleTestNameUpdate = (event: ChangeEvent<HTMLInputElement>) => {
-		setTestName(event.target.value);
-	};
-
-	const handleRunTest = useCallback(
+    const handleRunTest = useCallback(
 		function () {
 			if (!testInfo.id) {
 				const code = new CodeGenerator({
@@ -120,7 +112,7 @@ const TestEditor = (props: iTestEditorProps) => {
 		[testInfo.actions],
 	);
 
-	useMemo(() => {
+    useMemo(() => {
 		if (testInfo.testType === EDITOR_TEST_TYPE.SAVED_DRAFT && testInfo.id) {
 			checkDraftStatusAgainAndAgain(testInfo.id).then((res: any) => {
 				console.log(res);
@@ -128,38 +120,25 @@ const TestEditor = (props: iTestEditorProps) => {
 		}
 	}, [testInfo.testType, testInfo.id]);
 
-	useMemo(() => {
+    useMemo(() => {
 		handleRunTest();
 	}, [testInfo.actions]);
 
-	const handleSaveTest = async () => {
-		if (!!testName === false || testName.trim() === "") {
-			alert("Give a name to the test");
-			return false;
-		}
-		if (testInfo.testType === EDITOR_TEST_TYPE.SAVED_DRAFT && testInfo.id) {
-			await createTestFromDraft(testInfo.id, { testName: testName });
-			redirectToFrontendPath("/app/project/tests");
-		} else {
-			return false;
-		}
-	};
-
-	useMemo(() => {
+    useMemo(() => {
 		if (!userInfo) {
 			authCheckerInterval.current = setInterval(() => {
 				if (Cookies.get("isLoggedIn") === "true") {
 					clearInterval(authCheckerInterval.current);
-					submitPostDataWithForm(window.location.href, metaInfo.postData ? metaInfo.postData : {});
+					submitPostDataWithForm(window.location.href, metaInfo.postData || {});
 					authCheckerInterval.current = null;
 				}
 			}, 100);
 		}
 	}, [userInfo]);
 
-	return (
-		<div css={containerCSS}>
-			<AuthModal isOpen={!!userInfo === false} />
+    return (
+        <div css={containerCSS}>
+			<AuthModal isOpen={!!!userInfo} />
 			<div css={centeredContainerCSS}>
 				<img src={"/svg/loadingElipsis.svg"} css={loadingCSS} />
 				<span css={loadingTextCSS}>Loading...</span>
@@ -211,7 +190,7 @@ const TestEditor = (props: iTestEditorProps) => {
 				{/*/>*/}
 			</div>
 		</div>
-	);
+    );
 };
 
 const loadingCSS = css`
@@ -239,90 +218,27 @@ const centeredContainerCSS = css`
 	text-align: center;
 `;
 
-const placeholderHeaderTitleCSS = css`
-	font-family: DM Sans;
-	font-style: normal;
-	font-weight: bold;
-	font-size: 1.4rem;
-`;
-
-const placeholderHeaderDescCss = css`
-	font-family: DM Sans;
-	margin-top: 0.6rem;
-	font-size: 0.9rem;
-	line-height: 1.4rem;
-`;
-
-const addTestContainerCSS = css`
-	margin-top: 1.625rem;
-	color: #2d3958;
-`;
-
-const addTestInputWithActionContainerCSS = css`
-	display: flex;
-	flex-direction: row;
-	margin-top: 2.4rem;
-`;
-
-const addTestInputContainerCSS = css`
-	flex: 1;
-`;
-
-const addTestInputCSS = css`
-	background: #fff;
-	border-radius: 0.25rem;
-	border: 1.5px solid #e2e2e2;
-	font-size: 0.85rem;
-	color: #2d3958;
-	padding: 0.5rem 1.1rem;
-	width: 100%;
-`;
-
-const addTestButtonCSS = css`
-	background: #5b76f7;
-	border-radius: 5px;
-	width: auto;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-size: 0.9rem;
-	padding: 0.5rem 2.75rem;
-	margin-left: 0.8rem;
-	color: #eaeaee;
-	font-weight: 500;
-	cursor: pointer;
-`;
-
-const parseTestMetaInfo = async (
-	req: NextApiRequest,
-	res: NextApiResponse,
-	testType: EDITOR_TEST_TYPE,
-	id: number,
-	cookies: any = null,
-	headers: any = null,
-	store: Store,
-): Promise<iTestMetaInfo | null> => {
+const parseTestMetaInfo = async (req: NextApiRequest, res: NextApiResponse, testType: EDITOR_TEST_TYPE, id: number, headers: any = null): Promise<iTestMetaInfo | null> => {
 	const postDataFromReq = await parse(req);
-	const isComingFromCrusherExtension = postDataFromReq && postDataFromReq.events;
+	const isComingFromCrusherExtension = postDataFromReq?.events;
 	const encodedSavedPostTestData = cookies!.testPostData;
 	const savedPostTestData = encodedSavedPostTestData ? JSON.parse(decodeURIComponent(encodedSavedPostTestData)) : null;
 
 	const postData = isComingFromCrusherExtension ? postDataFromReq : savedPostTestData;
 
 	switch (testType) {
-		case EDITOR_TEST_TYPE.UNSAVED: {
-			if (!postData.events && !postData.totalTime) {
+		case EDITOR_TEST_TYPE.UNSAVED:
+            if (!postData.events && !postData.totalTime) {
 				throw new Error("No recorded actions passed to run test for");
 			}
 
-			return {
+            return {
 				actions: JSON.parse(unescape(postData.events)),
 				testType: testType,
 				id: id,
 				totalTime: postData.totalTime,
 				postData: postData,
 			};
-		}
 		case EDITOR_TEST_TYPE.SAVED_TEST: {
 			const testInfo = await getTest(id, headers);
 
@@ -348,7 +264,12 @@ const parseTestMetaInfo = async (
 };
 
 TestEditor.getInitialProps = async (ctx: iPageContext) => {
-	const { req, query, metaInfo, res, store } = ctx;
+	const {
+        query,
+        metaInfo,
+        res,
+        store
+    } = ctx;
 
 	const { slug } = query;
 	if (!slug) {
@@ -365,7 +286,7 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 	const id = parseInt(slug[1]);
 
 	try {
-		const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies, metaInfo.headers, store);
+		const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies);
 
 		if (testMetaInfo) {
 			store.dispatch(saveTestMetaInfo(testMetaInfo));
@@ -376,9 +297,8 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 			metaInfo: testMetaInfo,
 		};
 	} catch (err) {
-		throw err;
-		return redirectToFrontendPath("/404", res);
-	}
+        throw err;
+    }
 };
 
 export default withSidebarLayout(TestEditor);

@@ -6,8 +6,8 @@ interface iProps {
 	className: string;
 	name: string;
 	title: string;
-	values: Array<any>;
-	options: Array<any>;
+	values: any[];
+	options: any[];
 	css: any;
 	style: any;
 	onChange: any;

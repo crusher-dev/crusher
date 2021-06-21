@@ -23,7 +23,7 @@ import { RUN_INTERVAL_OPTIONS } from "@constants/testInterval";
 interface iSelectInputLabel {
 	label: string;
 	value: any;
-	options: Array<any>;
+	options: any[];
 	placeholder?: string;
 	onChange?: any;
 }
@@ -209,7 +209,7 @@ AddMonitoringSettings.getInitialProps = async (ctx: any) => {
 		const cookies = getCookies(req);
 		const selectedProject = cookies.selectedProject ? JSON.parse(cookies.selectedProject) : null;
 
-		await _getProjectHosts(selectedProject, headers).then((hosts: Array<iHostListResponse>) => {
+		await _getProjectHosts(selectedProject, headers).then((hosts: iHostListResponse[]) => {
 			store.dispatch(setProjectHosts(hosts));
 		});
 

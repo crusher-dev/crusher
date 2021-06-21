@@ -20,10 +20,10 @@ const SelectGithubReposList = (props: iSelectGithubReposListProps) => {
 	const linkedGithubRepos = useSelector(getLinkedGithubRepos);
 
 	const selectedGithubInstallationsOut = useMemo(() => {
-		if (selectedGithubInstallationRepos && selectedGithubInstallationRepos.length) {
+		if (selectedGithubInstallationRepos?.length) {
 			return selectedGithubInstallationRepos
 				.filter((repo) => {
-					return searchFilter.trim().length > 0 ? repo.name.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1 : true;
+					return searchFilter.trim().length > 0 ? repo.name.toLowerCase().includes(searchFilter.toLowerCase()) : true;
 				})
 				.map((repo) => {
 					const linkedRepo = linkedGithubRepos.find((linkedRepo) => {

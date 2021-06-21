@@ -107,12 +107,12 @@ ProjectMembersSettings.getInitialProps = async (ctx: any) => {
 		const cookies = getCookies(req);
 		const selectedProject = cookies.selectedProject ? JSON.parse(cookies.selectedProject) : null;
 
-		await _getProjectMembers(selectedProject, headers).then((members: Array<iMemberInfoResponse>) => {
+		await _getProjectMembers(selectedProject, headers).then((members: iMemberInfoResponse[]) => {
 			store.dispatch(setProjectMembers(selectedProject, members));
 		});
 
 		return {};
-	} catch (ex) {
+	} catch {
 		redirectToFrontendPath("/404", res);
 		return null;
 	}

@@ -5,10 +5,10 @@ import Link from "next/link";
 
 function LeftMenuComponent({ selected }) {
 	return (
-		<div>
+        <div>
 			<div css={styles.leftSection}>
 				<div css={styles.menuHeading}>Teams Settings</div>
-				{Object.entries(TEAM_SETTING_MENU_ITEMS).map(([key, value], i) => {
+				{Object.entries(TEAM_SETTING_MENU_ITEMS).map(([key, value]) => {
 					const isSelected = value === selected;
 					return (
 						<Link href={key.toLowerCase()}>
@@ -22,7 +22,7 @@ function LeftMenuComponent({ selected }) {
 				})}
 			</div>
 		</div>
-	);
+    );
 }
 
 export function TeamSettingsTemplate({ selected, children }) {

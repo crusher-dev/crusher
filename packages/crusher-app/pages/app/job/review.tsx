@@ -1,13 +1,12 @@
 import Head from "next/head";
 import { Header } from "@ui/containers/reviewPage/BuildHeader";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import withSession from "@hoc/withSession";
 
 import { css } from "@emotion/core";
 import { redirectToFrontendPath } from "@utils/router";
 import { cleanHeaders } from "@utils/backendRequest";
 import { Platform } from "@interfaces/Platform";
-import { addCommentForScreenshot } from "@services/comments";
 import { approveResult, rejectResult } from "@services/results";
 import { getTime, toPascalCase } from "@utils/helpers";
 import { LogsBox } from "@ui/components/editor/LogsBox";
@@ -19,11 +18,7 @@ import Passed from "../../../public/svg/jobReview/passed.svg";
 import Failed from "../../../public/svg/jobReview/failed.svg";
 import ReviewIcon from "../../../public/svg/jobReview/review.svg";
 
-import {
-	addCommentInRedux,
-	setCurrentJobPlatform,
-	setJobInfo,
-} from "@redux/actions/job";
+import {setCurrentJobPlatform, setJobInfo} from "@redux/actions/job";
 import { useSelector } from "react-redux";
 import {
 	getCurrentJob,
@@ -43,192 +38,20 @@ const MODAL_TYPE = {
 	TEST_INSTANCE_VIDEO: "TEST_INSTANCE_VIDEO",
 };
 
-function RenderComment(props) {
-	const {
-		id,
-		message,
-		user_id,
-		user_name,
-		user_first_name,
-		user_last_name,
-		created_at,
-	} = props.comment;
-
-	return (
-		<li css={styles.commentItem}>
-			<div css={styles.commentAvatarContainer}>
-				<div css={styles.commentAvatar}>U</div>
-			</div>
-			<div css={styles.commentContentContainer}>
-				<div css={styles.commentHeadingContainer}>
-					<div css={styles.commentUserName}>
-						{user_first_name} {user_last_name}
-					</div>
-					<div css={styles.commentHeadingSettings}>
-						<div css={styles.timeAgoText}>{getTime(new Date(created_at))}</div>
-						<div css={styles.commentCountContainer}>
-							<img src="/svg/tests/commentCount.svg" style={{ width: "0.75rem" }} />
-							{/*<span css={styles.commentCount}>1</span>*/}
-						</div>
-					</div>
-				</div>
-				<div css={styles.commentMessage}>
-					<div style={{ whiteSpace: "pre-line" }}>{message}</div>
-				</div>
-			</div>
-		</li>
-	);
-}
-
-function RenderCommentsBox(props) {
-	const {
-		forwardedRef,
-		focusRefCallback,
-		screenshotInfo,
-		updateTestsCountCallback,
-		jobId,
-		instanceId,
-		reportId,
-		comments,
-		result,
-	} = props;
-
-	const [isAddingComment, setIsAddingComment] = useState(false);
-	const inputEl = useRef(null);
-	const commentsListRef = useRef(null);
-
-	async function addComment() {
-		setIsAddingComment(true);
-		const commentMessage = inputEl.current.innerHTML;
-		const l = await addCommentForScreenshot(commentMessage, reportId, result.id);
-
-		if (l && l.result_id) {
-			updateTestsCountCallback(comments.length + 1);
-			store.dispatch(addCommentInRedux(l));
-			inputEl.current.innerHTML = "";
-			setIsAddingComment(false);
-			setTimeout(() => {
-				focusRefCallback();
-			});
-		}
-	}
-
-	function handleCommentInput(event) {
-		if (event.keyCode === 13 && !event.shiftKey) {
-			addComment();
-			event.preventDefault();
-		}
-	}
-
-	const commentsOut = comments.map((comment) => {
-		return <RenderComment comment={comment} />;
-	});
-
-	useEffect(() => {
-		if (commentsListRef.current) {
-			(commentsListRef.current as any).scrollTop = (commentsListRef.current as any).scrollHeight;
-		}
-	}, [comments]);
-	return (
-		<div css={styles.commentBoxContainer} ref={forwardedRef}>
-			<ul css={styles.commentsList} ref={commentsListRef}>
-				{commentsOut}
-			</ul>
-			<div style={{ position: "relative" }} css={styles.commentBoxInputContainer}>
-				<div
-					css={styles.commentBox}
-					ref={inputEl}
-					onKeyDown={handleCommentInput}
-					contentEditable={true}
-					placeholder={"Add your comment"}
-				></div>
-				<div style={{ marginTop: "0.75rem" }}>
-					P.s. - You can higlight area by going over image
-				</div>
-				{isAddingComment && (
-					<img
-						src={"/svg/tests/loading.svg"}
-						style={{ height: "1.4rem" }}
-						css={styles.commentIcon}
-					/>
-				)}
-				{!isAddingComment && (
-					<img
-						src={"/svg/tests/comment.svg"}
-						onClick={addComment}
-						style={{ width: "1.75rem" }}
-						css={styles.commentIcon}
-					/>
-				)}
-			</div>
-		</div>
-	);
-}
-
-function getScreenshotsCountFromResult(
-	resultsMap: JobInfo["results"],
-	instancesMap: JobInfo["instances"],
-) {
-	const instancesArr = Object.values(resultsMap);
-
-	const totalTestCount = Object.values(instancesMap).length;
-	let passedTestCount = 0;
-	let failedTestCount = 0;
-	let manualReviewRequiredTestCount = 0;
-
-	for (let i = 0; i < instancesArr.length; i++) {
-		const { conclusion } = instancesArr[i];
-
-		switch (conclusion) {
-			case "PASSED":
-				passedTestCount++;
-				break;
-			case "FAILED":
-				failedTestCount++;
-				break;
-			case "MANUAL_REVIEW_REQUIRED":
-				manualReviewRequiredTestCount++;
-				break;
-		}
-	}
-
-	return {
-		passedTestCount,
-		failedTestCount,
-		totalTestCount,
-		manualReviewRequiredTestCount,
-	};
-}
-
 function JobInfoBox() {
-	const jobInfo: JobInfo["job"] = useSelector(getCurrentJob);
-	const testInstancesMap: JobInfo["instances"] = useSelector(
-		getCurrentJobInstances,
-	);
-	const resultsMap: JobInfo["results"] = useSelector(getCurrentJobResults);
+    const jobInfo: JobInfo["job"] = useSelector(getCurrentJob);
 
-	const testInstances = Object.values(testInstancesMap);
-	const {
-		totalTestCount,
-		passedTestCount,
-		failedTestCount,
-		manualReviewRequiredTestCount,
-	} = getScreenshotsCountFromResult(resultsMap, testInstancesMap);
+    const {
+        id: jobId,
+        branch_name: branchName,
+        commit_name: commitName
+    } = jobInfo;
 
-	const {
-		id: jobId,
-		branch_name: branchName,
-		repo_name: repoName,
-		commit_id: commitId,
-		commit_name: commitName,
-		status,
-	} = jobInfo;
-
-	const approveAll = () => {
+    const approveAll = () => {
 		alert("Approved");
 	};
 
-	return (
+    return (
 		<div className=" mg-t-70">
 			<div
 				className="card ht-md-100p d-flex justify-content-center "
@@ -360,24 +183,22 @@ function JobInfoBox() {
 }
 
 function RenderScreenshotComparison({
-	screenshot,
-	result,
-	comments,
-	reportId,
-	instance,
+    screenshot,
+    result
 }) {
 	// null value means that the status of screenshot is getting loaded
 	const {
-		name: screenshotName,
-		url: screenshotUrl,
-		id: screenshotId,
-	} = screenshot;
+        name: screenshotName,
+        url: screenshotUrl
+    } = screenshot;
 
 	const [approvedScreenshot, setScreenshotApproved] = useState(
 		result ? result.status === "PASSED" : false,
 	);
 
-	const { diff_image_url, diff_delta } = result ? result : ({} as any);
+	const {
+        diff_image_url
+    } = result || {} as any;
 	const [shouldShowCommentsBox, setShouldShowCommentsBox] = useState(false);
 
 	useEffect(() => {
@@ -398,7 +219,7 @@ function RenderScreenshotComparison({
 				await rejectResult(result.instance_result_set_id, result.id);
 			}
 			setScreenshotApproved(approved);
-		} catch (ex) {
+		} catch {
 			setScreenshotApproved(!approved);
 		}
 	}
@@ -461,51 +282,20 @@ function RenderScreenshotComparison({
 function OverlayModal(props) {
 	const { shouldShow, children, closeModalCallback } = props;
 	if (!shouldShow) return null;
-	return (
-		<>
-			<div css={styles.overlay} onClick={closeModalCallback}></div>
-			<div
-				style={{
-					position: "fixed",
-					zIndex: 100001,
-					left: "50%",
-					transform: "translate(-50%, -50%)",
-					top: "50%",
-				}}
-			>
-				{children}
-			</div>
-		</>
-	);
-}
-
-function getInstanceConclusion(
-	instanceStatus: TestInstanceStatus,
-	results: Array<any>,
-) {
-	if (
-		instanceStatus === TestInstanceStatus.ABORTED ||
-		instanceStatus === TestInstanceStatus.TIMEOUT
-	) {
-		return "FAILED";
-	} else if (
-		instanceStatus === TestInstanceStatus.QUEUED &&
-		instanceStatus === TestInstanceStatus.RUNNING
-	) {
-		return "RUNNING";
-	} else if (instanceStatus === TestInstanceStatus.FINISHED) {
-		const passedCount = results
-			? results.filter((result) => result.result_set_conclusion === "PASSED")
-					.length
-			: 0;
-		if (results && results.length === passedCount) {
-			return "PASSED";
-		} else {
-			return "FAILED";
-		}
-	} else {
-		return "UNKNOWN";
-	}
+	return <>
+        <div css={styles.overlay} onClick={closeModalCallback}></div>
+        <div
+            style={{
+                position: "fixed",
+                zIndex: 100_001,
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                top: "50%",
+            }}
+        >
+            {children}
+        </div>
+    </>;
 }
 
 function GetStatusImage(props: any) {
@@ -532,24 +322,21 @@ function TestInstanceReview({
 	showVideoModalCallback,
 	showLogsModalCallback,
 }) {
-	const {
-		id: instance_id,
-		test_name,
-		test_id,
-		images: screenshots,
-		events: rawEvents,
-		recorded_video_uri,
-	} = instance;
-	const jobResults = useSelector(getCurrentJobResults);
-	const jobComments = useSelector(getCurrentJobComments);
-	const events = JSON.parse(rawEvents);
-	const sortedScreenshots = screenshots.sort((a, b) => {
+    const {
+        id: instance_id,
+        test_name,
+        images: screenshots,
+        recorded_video_uri
+    } = instance;
+    const jobResults = useSelector(getCurrentJobResults);
+    const jobComments = useSelector(getCurrentJobComments);
+    const sortedScreenshots = screenshots.sort((a, b) => {
 		return a.name < b.name ? -1 : 1;
 	});
 
-	const screenshotsOut = sortedScreenshots.map((screenshot) => {
+    const screenshotsOut = sortedScreenshots.map((screenshot) => {
 		const result =
-			jobResults[instance_id] && jobResults[instance_id].results
+			jobResults[instance_id]?.results
 				? jobResults[instance_id].results.filter((result) => {
 						return result.screenshot_id === screenshot.id;
 				  })[0]
@@ -571,35 +358,29 @@ function TestInstanceReview({
 		);
 	});
 
-	const results = jobResults[instance_id] && jobResults[instance_id].results;
+    const results = jobResults[instance_id]?.results;
 
-	function playVideo() {
+    function playVideo() {
 		showVideoModalCallback(recorded_video_uri, instance_id);
 	}
 
-	function showLogsInModal() {
+    function showLogsInModal() {
 		showLogsModalCallback(instance_id);
 	}
 
-	const instanceConclusion = getInstanceConclusion(instance.status, results);
-
-	const approve = () => {
-		alert("Approved instance");
-	};
-
-	const instanceReportConclusion = jobResults[instance_id]
+    const instanceReportConclusion = jobResults[instance_id]
 		? jobResults[instance_id].conclusion
 		: null;
 
-	const handleThumbToggle = () => {
+    const handleThumbToggle = () => {
 		console.log(JSON.stringify(jobResults[instance_id].conclusion));
 	};
 
-	const instanceFinishedRunning =
+    const instanceFinishedRunning =
 		instance.status !== TestInstanceStatus.RUNNING &&
 		instance.status !== TestInstanceStatus.QUEUED;
 
-	return (
+    return (
 		<div className="" css={styles.bodyBackground}>
 			<div
 				className="card-header"
@@ -843,7 +624,7 @@ function JobReviews(props) {
 
 	// @ts-ignore
 	return (
-		<div
+        <div
 			className=""
 			style={{ display: "flex", flexDirection: "column", background: "#131415" }}
 		>
@@ -880,15 +661,13 @@ function JobReviews(props) {
 				/>
 			</div>
 
-			{modalStatus &&
-				modalStatus.shown === true &&
+			{modalStatus?.shown &&
 				modalStatus.type === MODAL_TYPE.TEST_INSTANCE_VIDEO && (
 					<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
 						<VideoModal video_uri={modalStatus.value.uri} />
 					</OverlayModal>
 				)}
-			{modalStatus &&
-				modalStatus.shown === true &&
+			{modalStatus?.shown &&
 				modalStatus.type === MODAL_TYPE.TEST_INSTANCE_LOGS && (
 					<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
 						{testsLogsForInstancesMap[modalStatus.instanceId] ? (
@@ -899,7 +678,7 @@ function JobReviews(props) {
 					</OverlayModal>
 				)}
 		</div>
-	);
+    );
 }
 
 JobReviews.getInitialProps = async ({ req, res, query, store }) => {
@@ -919,7 +698,7 @@ JobReviews.getInitialProps = async ({ req, res, query, store }) => {
 			store.dispatch(setJobInfo("CHROME", res));
 			return res;
 		})
-		.catch(async (error) => {
+		.catch(async () => {
 			await redirectToFrontendPath("/error", res);
 		});
 

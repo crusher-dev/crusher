@@ -1,6 +1,6 @@
-import { generateUid } from "../../crusher-shared/utils/helper";
-import { RedisManager } from "./manager/redis";
-import { REDDIS } from "../config/database";
+import { generateUid } from "@shared/utils/helper";
+import { RedisManager } from "@manager/redis";
+import { REDDIS } from "@config/database";
 require("./queue.ts");
 require("./util/logger");
 

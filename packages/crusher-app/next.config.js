@@ -51,6 +51,9 @@ module.exports = withImages(
 							},
 						],
 					}),
+					new CopyPlugin({
+						patterns: [{ from: path.resolve(__dirname, ".env") }],
+					}),
 				);
 
 				return config;

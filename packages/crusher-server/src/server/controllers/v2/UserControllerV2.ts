@@ -39,6 +39,7 @@ export class UserControllerV2 {
 					const { token } = cookie.parse(req.headers.cookie || "");
 					if (token && decodeToken(token)) {
 						res.redirect(resolvePathToFrontendURI("/"));
+						return resolve(res);
 					}
 
 					let user: iUser = await this.userService.getOpenSourceUser();
@@ -51,7 +52,7 @@ export class UserControllerV2 {
 					setUserAuthorizationCookies(generatedToken, res);
 				}
 				res.redirect(resolvePathToFrontendURI("/"));
-				resolve(true);
+				resolve(res);
 			} catch (err) {
 				reject(err);
 			}

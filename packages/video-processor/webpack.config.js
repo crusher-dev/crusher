@@ -45,6 +45,9 @@ module.exports = {
 		new CopyPlugin({
 			patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
 		}),
+		new CopyPlugin({
+			patterns: [{ from: path.resolve(__dirname, ".env") }],
+		}),
 	],
 };
 

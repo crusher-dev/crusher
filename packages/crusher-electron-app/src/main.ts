@@ -6,8 +6,6 @@ require('dotenv').config();
 const APP_DOMAIN = process.env.NODE_ENV === "development" ?
 	process.env.LOCAL_DOMAIN : process.env.PRODUCTION_DOMAIN;
 
-console.log("APP DOMAIN", APP_DOMAIN);
-
 const loadExtension =  (mainWindow) => {
 	const isBundlingForRelease = process.env.TARGET === "release";
 
@@ -26,7 +24,6 @@ const loadExtension =  (mainWindow) => {
 let mainWindow;
 
 async function createWindow () {
-	console.log("dsf")
 	app.commandLine.appendSwitch('--disable-site-isolation-trials');
 	app.commandLine.appendSwitch('--disable-web-security');
 	app.commandLine.appendSwitch("--allow-top-navigation");
@@ -121,13 +118,13 @@ async function createWindow () {
 	});
 }
 
-	app.whenReady().then(() => {
-		console.log("dsf")
-	createWindow()
+app.whenReady().then(() => {
+	createWindow();
 	app.on('activate', function () {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow()
-	})
-})
+	});
+});
+
 app.on('window-all-closed', async function () {
 	const cookies = await session.defaultSession.cookies.get({domain: APP_DOMAIN});
 	await session.defaultSession.clearStorageData({
@@ -157,6 +154,4 @@ app.on('window-all-closed', async function () {
 	}
 
 	if (process.platform !== 'darwin') app.quit()
-})
-
-console.log("dsf")
+});

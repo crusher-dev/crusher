@@ -43,7 +43,7 @@ jobs:
         run: export NODE_OPTIONS=--max_old_space_size=4096
 
       - name: Package crusher-server for deployment
-        run: sh scripts/build-crusher-server.sh
+        run: sh scripts/build/build-crusher-server.sh
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 

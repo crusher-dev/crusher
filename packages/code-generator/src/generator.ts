@@ -9,6 +9,7 @@ interface iCodeGeneratorOptions {
 	isHeadless?: boolean;
 	browser?: BROWSER;
 	assetsDir?: string;
+	usePlaywrightChromium?: boolean;
 }
 
 export class CodeGenerator {
@@ -30,6 +31,7 @@ export class CodeGenerator {
 			browser: this.options.browser,
 			isHeadless: this.options.isHeadless,
 			assetsDir: this.options.assetsDir,
+			usePlaywrightChromium: this.options.usePlaywrightChromium,
 		});
 		parser.parseActions();
 		return parser.getCode();

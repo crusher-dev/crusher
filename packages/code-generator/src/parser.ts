@@ -11,6 +11,7 @@ interface iParserOptions {
 	browser?: BROWSER;
 	isHeadless?: boolean;
 	assetsDir?: string;
+	usePlaywrightChromium?: boolean;
 }
 
 export class Parser {
@@ -27,6 +28,7 @@ export class Parser {
 	stepIndex = 0;
 	assetsDir = "./";
 	shouldSleep = true;
+	usePlaywrightChromium = false;
 
 	constructor(options: iParserOptions) {
 		this.actions = options.actions;
@@ -35,6 +37,7 @@ export class Parser {
 		this.browser = options.browser ? options.browser : this.browser;
 		this.isHeadless = options.isHeadless ? options.isHeadless : this.isHeadless;
 		this.assetsDir = options.assetsDir ? options.assetsDir : this.assetsDir;
+		this.usePlaywrightChromium = options.usePlaywrightChromium || false;
 		this.stepIndex = 0;
 	}
 
@@ -336,10 +339,14 @@ export class Parser {
 	}
 
 	getCode() {
-		let importCode = `const {Page, Element, Browser} = require(${helperPackageRequire}).Actions;\nconst playwright = require("playwright");\n`;
+		let importCode = `const {Page, Element, Browser} = require(${helperPackageRequire}).Actions;\nconst playwright = require("${
+			this.usePlaywrightChromium ? "playwright-chromium" : "playwright"
+		}");\n`;
 		importCode += `const {getCrusherSelectorEngine} = require(${helperPackageRequire}).Functions;\n`;
 		importCode = this.registerCrusherSelector(importCode);
-		importCode += `const browser = await playwright["${this.browser}"].launch({ headless: ${this.isHeadless.toString()} });\n`;
+		importCode += `const browser = await playwright["${this.browser}"].launch({ ${
+			this.usePlaywrightChromium ? `executablePath: "${process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}",` : ""
+		} headless: ${this.isHeadless.toString()} });\n`;
 
 		if (this.shouldSleep) {
 			importCode += `const { sleep } = require(${helperPackageRequire}).Functions;\n`;

@@ -9,9 +9,10 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "../../../core
 import { google } from "googleapis";
 import GoogleAPIService from "../../../core/services/GoogleAPIService";
 import { InviteMembersService } from "../../../core/services/mongo/inviteMembers";
-import { getEdition } from '../../../utils/helper';
+import { getEdition } from "../../../utils/helper";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../../utils/cookies";
-import { EDITION_TYPE } from '@crusher-shared/types/common/general';
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+import { iUser } from "@crusher-shared/types/db/iUser";
 const cookie = require("cookie");
 const oauth2Client = new google.auth.OAuth2(
 	process.env.GOOGLE_CLIENT_ID,
@@ -30,18 +31,32 @@ export class UserControllerV2 {
 	private inviteMembersService: InviteMembersService;
 
 	@Get("/init")
-	initUser(@Req() req: any, @Res() res: any) {
-		if (getEdition() === EDITION_TYPE.EE) {
-			const { token } = cookie.parse(req.headers.cookie || "");
-			if (token && decodeToken(token)) {
-				res.redirect(resolvePathToFrontendURI("/"));
-			}
+	initUser(@Req() req: any, @Res() res: any): Promise<boolean> {
+		// eslint-disable-next-line no-async-promise-executor
+		return new Promise(async (resolve, reject) => {
+			try {
+				if (getEdition() === EDITION_TYPE.OPEN_SOURCE) {
+					const { token } = cookie.parse(req.headers.cookie || "");
+					if (token && decodeToken(token)) {
+						res.redirect(resolvePathToFrontendURI("/"));
+						return resolve(res);
+					}
 
-			const generatedToken = generateToken(0, 0);
-			clearUserAuthorizationCookies(res);
-			setUserAuthorizationCookies(generatedToken, res);
-		}
-		res.redirect(resolvePathToFrontendURI("/"));
+					let user: iUser = await this.userService.getOpenSourceUser();
+					if (!user) {
+						user = await this.userService.createOpenSourceUser();
+					}
+
+					const generatedToken = generateToken(user.id, user.team_id);
+					clearUserAuthorizationCookies(res);
+					setUserAuthorizationCookies(generatedToken, res);
+				}
+				res.redirect(resolvePathToFrontendURI("/"));
+				resolve(res);
+			} catch (err) {
+				reject(err);
+			}
+		});
 	}
 	/**
 	 * Redirect user to new url

@@ -11,4 +11,5 @@ export interface iUser extends BaseRowInterface {
 	stripe_customer_id?: string;
 	on_hold?: boolean;
 	stripe_subscription_id?: string;
+	is_oss: boolean;
 }

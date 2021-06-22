@@ -1,7 +1,8 @@
 import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
 import { CodeGenerator } from "@generator/src/generator";
 import { PLATFORM } from "@shared/types/platform";
-import { getAllCapturedVideos, getBaseUrlFromEvents, replaceBaseUrlInEvents, replaceImportWithRequire } from "@util/helper";
+import { getAllCapturedVideos, getBaseUrlFromEvents, getEdition, replaceBaseUrlInEvents, replaceImportWithRequire } from "@util/helper";
+import { EDITION_TYPE } from "@shared/types/common/general";
 
 const BROWSER_NAME = {
 	[PLATFORM.CHROME]: "chromium",
@@ -12,7 +13,8 @@ const BROWSER_NAME = {
 export class CodeRunnerService {
 	static getCode(jobRequest: iJobRunRequest) {
 		const generator = new CodeGenerator({
-			shouldRecordVideo: jobRequest.platform === PLATFORM.CHROME,
+			shouldRecordVideo: getEdition() === EDITION_TYPE.EE && jobRequest.platform === PLATFORM.CHROME,
+			usePlaywrightChromium: getEdition() === EDITION_TYPE.OPEN_SOURCE,
 			isHeadless: false,
 			isLiveLogsOn: true,
 			browser: BROWSER_NAME[jobRequest.platform],

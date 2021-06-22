@@ -4,7 +4,7 @@ import BuildsPageIllustration from "../../../../public/assets/img/illustration/b
 import { WatchVideoModal } from "@ui/containers/modals/watchVideoModal";
 import RunBuildSVG from "../../../../public/svg/project/createTest.svg";
 import { Conditional } from "@ui/components/common/Conditional";
-import { Link } from "@material-ui/core";
+import Link from "next/link";
 
 const EmptyBuildListContainer = () => {
 	const [isOpen, setIsOpen] = useState(false);

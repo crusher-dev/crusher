@@ -1,0 +1,43 @@
+name: Build OSS docker-image
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.15.4
+
+      - name: Install yarn
+        run: npm install -g yarn
+
+      - name: Use cache for yarn if available
+        uses: c-hive/gha-yarn-cache@v1
+
+      - name: Create ecosystem.config.js
+        run: cp ecosystem.config.sample.js ecosystem.config.js
+
+      - name: Install crusher modules
+        run: yarn
+
+      - name: Install webpack
+        run: npm install -g webpack
+
+      - name: Upgrade heap size of node
+        run: export NODE_OPTIONS=--max_old_space_size=4096
+
+      - name: Build all modules
+        run: sh scripts/build/build-oss.sh
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+
+      - name: Build docker image
+        run: DOCKER_BUILDKIT=1 docker build -t oss --file docker/oss/Dockerfile .
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096

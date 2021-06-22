@@ -66,7 +66,6 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 	if (loggedInCookies) {
 		await Promise.all([_fetchUserInfo(headers), fetchProjectsFromServer(headers)])
 			.then((userData) => {
-				console.log("SOME PROJECT INSIDE", userData);
 				const userInfo = userData[0];
 				const projects = userData[1];
 

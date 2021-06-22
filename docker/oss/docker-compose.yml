@@ -1,0 +1,12 @@
+version: "2.2"
+services:
+  oss:
+    build:
+      context: ../../
+      dockerfile: docker/oss/Dockerfile
+    network_mode: host
+    environment:
+      - LOGDNA=c7bdd500e3cfbfe457a2ec4168b8cfaa
+    container_name: "oss"
+    stdin_open: true # docker run -i
+    tty: true

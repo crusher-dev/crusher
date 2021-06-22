@@ -41,6 +41,27 @@ export class UserV2Service {
 		this.stripeManager = Container.get(StripeManager);
 	}
 
+	// For Oss
+	async getOpenSourceUser(): Promise<iUser | null> {
+		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE is_oss = ?`, [true]);
+	}
+
+	// For oss
+	async createOpenSourceUser(): Promise<iUser> {
+		const signupRequestPayload = {
+			firstName: "Open",
+			lastName: "Source",
+			email: "open@source.com",
+			password: "opensource",
+		};
+
+		const userId = await this.createUserRecord(signupRequestPayload, true, true);
+
+		await this.createInitialUserWorkspace(userId, signupRequestPayload);
+
+		return this.getOpenSourceUser();
+	}
+
 	async getUserByEmail(email: string): Promise<iUser | null> {
 		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
 	}
@@ -49,14 +70,14 @@ export class UserV2Service {
 		return this.dbManager.fetchSingleRow(`UPDATE users SET ? WHERE id = ?`, [{ team_id: teamId }, userId]);
 	}
 
-	async createUserRecord(user: iSignupUserRequest, isVerified: boolean = false): Promise<number> {
+	async createUserRecord(user: iSignupUserRequest, isVerified = false, isOss = false): Promise<number> {
 		const _user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [user.email]);
 
 		if (_user) {
 			throw new Error("User already registered");
 		}
 
-		let encryptedPassword = encryptPassword(user.password);
+		const encryptedPassword = encryptPassword(user.password);
 
 		const userRecord = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
 			first_name: user.firstName,
@@ -64,6 +85,7 @@ export class UserV2Service {
 			email: user.email,
 			password: encryptedPassword,
 			verified: isVerified,
+			is_oss: isOss,
 		});
 
 		return userRecord.insertId;

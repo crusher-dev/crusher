@@ -31,7 +31,7 @@ jobs:
         run: export NODE_OPTIONS=--max_old_space_size=4096
 
       - name: Build test-runner for deployment
-        run: sh scripts/build-test-runner.sh
+        run: sh scripts/build/build-test-runner.sh
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 

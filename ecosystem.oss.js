@@ -5,8 +5,8 @@ module.exports = {
 		{
 			name: 'crusher-app',
 			cwd: './packages/crusher-app',
-			script: 'node',
-			args: 'server.js',
+			script: 'npm',
+			args: 'run start',
 			env: CRUSHER_APP_ENV,
 			merge_logs: true,
 		},

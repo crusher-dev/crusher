@@ -1,10 +1,9 @@
 version: "2.2"
 services:
   oss:
-    image: "oss"
-#    build:
-#      context: ../../
-#      dockerfile: docker/oss/Dockerfile
+    build:
+      context: ../../
+      dockerfile: docker/oss/Dockerfile
     network_mode: host
     environment:
       - LOGDNA=c7bdd500e3cfbfe457a2ec4168b8cfaa

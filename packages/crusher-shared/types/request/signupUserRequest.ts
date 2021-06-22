@@ -5,5 +5,5 @@ export interface iSignupUserRequest{
 	lastName: string;
 	email: string;
 	password: string;
-	inviteReferral: iInviteReferral;
+	inviteReferral?: iInviteReferral;
 };

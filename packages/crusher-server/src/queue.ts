@@ -1,8 +1,10 @@
+import { resoveWorkerPath } from './utils/env';
+
 require("dotenv").config();
 
 import { Queue, QueueScheduler, Worker } from "bullmq";
 import { REDDIS } from "../config/database";
-import * as path from "path";
+
 
 function initializeQueues() {
 	console.debug("Initializing queues");
@@ -24,11 +26,11 @@ function initializeQueues() {
 function initializeWorkers() {
 	console.debug("Initializing queue workers");
 
-	new Worker("test-progress-queue", path.resolve("src/core/workers/testProgressWorker.ts"), { connection: REDDIS as any, concurrency: 1 });
-	new Worker("test-completed-queue", path.resolve("src/core/workers/testCompletedWorker.ts"), { connection: REDDIS as any, concurrency: 1 });
-	new Worker("check-result-queue", path.resolve("src/core/workers/checkResult.ts"), { connection: REDDIS as any, concurrency: 1 });
+	new Worker("test-progress-queue", resoveWorkerPath("src/core/workers/testProgressWorker.ts"), { connection: REDDIS as any, concurrency: 1 });
+	new Worker("test-completed-queue", resoveWorkerPath("src/core/workers/testCompletedWorker.ts"), { connection: REDDIS as any, concurrency: 1 });
+	new Worker("check-result-queue", resoveWorkerPath("src/core/workers/checkResult.ts"), { connection: REDDIS as any, concurrency: 1 });
 
-	new Worker("video-processing-complete-queue", path.resolve("src/core/workers/videoProcessedQueue.ts"), { connection: REDDIS as any, concurrency: 1 });
+	new Worker("video-processing-complete-queue", resoveWorkerPath("src/core/workers/videoProcessedQueue.ts"), { connection: REDDIS as any, concurrency: 1 });
 }
 
 (async () => {

@@ -34,6 +34,6 @@ export const getQueryStringParams = function getParameterByName(name: string, ur
 };
 
 export const resolveToBackendPath = (relativePath: string, customBasePath: string | null = null) => {
-	const basePath = customBasePath ? customBasePath : (LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:8000/");
+	const basePath = customBasePath ? customBasePath : (LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:3000/server");
 	return url.resolve(basePath, relativePath);
 };

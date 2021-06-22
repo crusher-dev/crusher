@@ -6,7 +6,7 @@ import { css } from "@emotion/core";
 import CrossIcon from "../../../../public/svg/modals/cross.svg";
 import { checkIfExtensionPresent } from "@utils/extension";
 import { Conditional } from "@ui/components/common/Conditional";
-import { Link } from "@material-ui/core";
+import Link from "next/link";
 
 interface iProps {
 	isOpen: boolean;

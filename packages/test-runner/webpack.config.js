@@ -32,6 +32,9 @@ module.exports = {
 				},
 			],
 		}),
+		new CopyPlugin({
+			patterns: [{ from: path.resolve(__dirname, ".env") }],
+		}),
 	],
 	externals: ["crusher_runner_utils"],
 	resolve: {

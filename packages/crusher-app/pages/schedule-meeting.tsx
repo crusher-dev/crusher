@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useContext, useState } from "react";
-import Checkbox from "@material-ui/core/Checkbox";
+// import Checkbox from "@material-ui/core/Checkbox";
 import withoutSession from "@hoc/withoutSession";
 import { AuthenticationTemplate } from "@ui/template/authenticationDark";
 import { css } from "@emotion/core";
@@ -45,7 +45,7 @@ function CrusherSelectBox({ checked, setChecked, text, description }) {
 	return (
 		<div css={SelectBox}>
 			<div>
-				<Checkbox defaultChecked color="primary" checked={checked} onChange={handleChange} inputProps={{ "aria-label": "secondary checkbox" }} />
+				{/*<Checkbox defaultChecked color="primary" checked={checked} onChange={handleChange} inputProps={{ "aria-label": "secondary checkbox" }} />*/}
 			</div>
 			<div>
 				<div css={headingStyle}>{text}</div>

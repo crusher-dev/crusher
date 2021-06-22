@@ -3,10 +3,9 @@ import DBManager from "../manager/DBManager";
 
 import { Octokit } from "@octokit/rest";
 import { OCTOKIT_CONFIG } from "../../../config/github";
-import * as chalk from "chalk";
 import { Logger } from "../../utils/logger";
 
-const { createAppAuth } = require("@octokit/auth");
+const { createAppAuth } = require("@octokit/auth/dist-node");
 
 @Service()
 export default class GithubService {

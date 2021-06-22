@@ -1,0 +1,117 @@
+version: '3'
+
+services:
+  mysql:
+    image: mariadb:10.3
+    container_name: crusher_mysql
+    restart: always
+    networks:
+      - crusher
+    ports:
+      - "3307:3306"
+    volumes:
+      - "~/.workspace/mysql:/var/lib/mysql:rw"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_USERNAME:  'root'
+      MYSQL_DATABASE: 'crusher'
+
+  mongodb:
+    image: bitnami/mongodb:3.6.19
+    container_name: crusher_mongodb
+    restart: always
+    networks:
+      - crusher
+    ports:
+      - "27000:27017"
+    volumes:
+      - "~/.workspace/mongodb:/bitnami/mongodb:rw"
+    environment:
+      MONGODB_ROOT_PASSWORD: 'password'
+      MONGODB_USERNAME: 'root'
+      MONGODB_PASSWORD: 'password'
+      MONGODB_DATABASE: 'crusher'
+
+  redis:
+    image: redis:6.0.5-alpine
+    container_name: crusher-redis
+    restart: always
+    networks:
+      - crusher
+    ports:
+      - "6380:6379"
+    volumes:
+      - "~/.workspace/redis:/data:rw"
+
+  server:
+    image: crusher/server
+    build:
+      context: ../
+      dockerfile: docker/crusher-server/Dockerfile
+    container_name: crusher-server
+    restart: always
+    stdin_open: true
+    tty: true
+    links:
+      - "mysql:mysql"
+      - "redis:redis"
+      - "mongodb:mongodb"
+    environment:
+      - CODE_RUNNER_URL=http://test_runner:3000
+      - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_USERNAME=root
+    networks:
+      - crusher
+    ports:
+      - "8000:80"
+
+  app:
+    image: crusher/app
+    build:
+      context: ../
+      dockerfile: docker/crusher-app/Dockerfile
+    container_name: crusher-app
+    restart: always
+    stdin_open: true
+    tty: true
+    networks:
+      - crusher
+#    extra_hosts:
+#      - "backend.{{ nginx.root_domain }}:172.12.23.35"
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_USERNAME=root
+
+  test_runner:
+    image: crusher/test_runner
+    build:
+      context: ../
+      dockerfile: docker/test-runner/Dockerfile
+    container_name: test-runner
+    restart: always
+    stdin_open: true
+    tty: true
+    security_opt:
+      - seccomp:"chrome.json"
+    links:
+      - "mysql:mysql"
+      - "redis:redis"
+      - "mongodb:mongodb"
+    networks:
+      - crusher
+    environment:
+      - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_USERNAME=root
+
+networks:
+  crusher:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.12.23.0/24

@@ -15,7 +15,7 @@ WORKDIR /crusher
 ADD ./ecosystem.oss.js ecosystem.config.js
 ADD ./output/crusher-server/ packages/crusher-server
 
-RUN CRUSHER_ENV=production
+RUN export CRUSHER_ENV=production
 
 ARG PORT=8000
 

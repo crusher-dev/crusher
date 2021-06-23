@@ -63,8 +63,13 @@ overridePackageJSON () {
   sed  -i -e 's/"scripts": {[^}]*},/"scripts": {"build": "cp -R build .next", "start": "next start"},/' "$OUTPUT/crusher-app/package.json"
 }
 
+renameNextToBuild () {
+  mv -R "$OUTPUT/crusher-app/.next" "$OUTPUT/crusher-app/build"
+}
+
 cleanupPreviousNextBuildsIfThere
 runNextBuild
 clearNextBabelCache
 packageNextBuild
 overridePackageJSON
+renameNextToBuild

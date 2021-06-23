@@ -10,12 +10,12 @@ RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g webpack
 
-
-ADD ./ ./crusher
-
 WORKDIR /crusher
 
-RUN cd /crusher/packages/crusher-server/bullmq && yarn link && yarn && cd ../ && yarn link "bullmq"
+ADD ./ecosystem.oss.js ecosystem.config.js
+ADD ./output/crusher-server/ packages/crusher-server
+
+RUN CRUSHER_ENV=production
 
 ARG PORT=8000
 

@@ -18,8 +18,8 @@ module.exports = {
 		{
 			name: 'crusher-server',
 			cwd: './packages/crusher-server',
-			script: 'npm',
-			args: IS_PRODUCTION ? 'run build:start' : 'run dev',
+			script: IS_PRODUCTION ? 'node' : 'npm',
+			args: IS_PRODUCTION ? 'app.js' : 'run dev',
 			watch: ['src', 'config'],
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
@@ -27,8 +27,8 @@ module.exports = {
 		{
 			name: 'crusher-server-cron',
 			cwd: './packages/crusher-server',
-			script: 'npm',
-			args: IS_PRODUCTION ? 'run build:cron:start' : 'run dev:cron',
+			script: IS_PRODUCTION ? 'node' : 'npm',
+			args: IS_PRODUCTION ? 'cron.js' : 'run dev:cron',
 			watch: ['src', 'config'],
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
@@ -36,8 +36,8 @@ module.exports = {
 		{
 			name: 'crusher-server-queue',
 			cwd: './packages/crusher-server',
-			script: 'npm',
-			args: IS_PRODUCTION ? 'run build:queue:start' : 'run dev:queue',
+			script: IS_PRODUCTION ? 'node' : 'npm',
+			args: IS_PRODUCTION ? 'queue.js' : 'run dev:queue',
 			watch: ['src', 'config'],
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,

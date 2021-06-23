@@ -12,7 +12,7 @@ RUN apt-get update \
     && apt-get install -y openssh-server \
     && mkdir -p /var/run/sshd
 
-COPY docker/test-runner/docker-entrypoint.sh /usr/local/bin/
+COPY docker/ee/test-runner/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN export SSH_PUBLIC_KEY="$SSH_PUBLIC_KEY"
 
@@ -31,5 +31,7 @@ RUN npm install -g playwright@^1.7.1 @ffmpeg-installer/ffmpeg https://github.com
 
 ADD ./ecosystem.oss.js ecosystem.config.js
 ADD ./output/test-runner/ packages/test-runner
+
+RUN CRUSHER_ENV=production
 
 CMD ["concurrently", "sh /usr/local/bin/docker-entrypoint.sh", "pm2-runtime ecosystem.config.js --only test-runner"]

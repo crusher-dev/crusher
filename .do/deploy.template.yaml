@@ -2,18 +2,8 @@ spec:
   name: crusher
   services:
     - http_port: 3000
-      image:
-        registry: "7296823551"
-        registry_type: DOCKER_HUB
-        repository: test
-        tag: latest
-      instance_count: 1
+      dockerfile_path: Dockerfile
       github:
         repo: crusherdev/crusher
         branch: master
         deploy_on_push: true
-      instance_size_slug: basic-s
-      name: crusher-app
-      routes:
-        - path: /
-      source_dir: /

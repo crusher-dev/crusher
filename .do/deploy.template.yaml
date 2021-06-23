@@ -9,7 +9,7 @@ spec:
         tag: latest
       instance_count: 1
       github:
-        repo: himanshu-dixit/crusher
+        repo: crusherdev/crusher
         branch: master
         deploy_on_push: true
       instance_size_slug: basic-s

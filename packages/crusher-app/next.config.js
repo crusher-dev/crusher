@@ -11,7 +11,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = withImages(
 	withCSS(
 		withBundleAnalyzer({
-			// target: "serverless",
+			target: process.env.PACKAGE_VERCEL ? "serverless" : "server",
 			distDir: "../../output/crusher-app/.next",
 			typescript: {
 				ignoreBuildErrors: true,

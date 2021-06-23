@@ -2,6 +2,8 @@ const path = require("path");
 const glob = require("glob");
 const CopyPlugin = require("copy-webpack-plugin");
 
+console.log("All workers", getAllWorker());
+
 module.exports = {
 	mode: "development",
 	devtool: "source-map",

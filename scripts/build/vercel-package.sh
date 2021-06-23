@@ -69,4 +69,4 @@ runNextBuild
 clearNextBabelCache
 packageNextBuild
 overridePackageJSON
-renameNextToBuildf
+renameNextToBuild

@@ -4,9 +4,8 @@ MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 
 ARG SSH_PUBLIC_KEY
 
-ADD ./ ./crusher
-
 WORKDIR /crusher
+
 RUN mkdir -p /usr/local/nvm
 RUN mkdir -p /var/run/sshd
 RUN apt-get update \
@@ -29,5 +28,8 @@ RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g concurrently
 RUN npm install -g playwright@^1.7.1 @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
+
+ADD ./ecosystem.oss.js ecosystem.config.js
+ADD ./output/test-runner/ packages/test-runner
 
 CMD ["concurrently", "sh /usr/local/bin/docker-entrypoint.sh", "pm2-runtime ecosystem.config.js --only test-runner"]

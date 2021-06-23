@@ -45,8 +45,8 @@ module.exports = {
 		{
 			name: 'test-runner',
 			cwd: './packages/test-runner',
-			script: 'npm',
-			args: IS_PRODUCTION ? 'run start:build' : 'run start',
+			script: IS_PRODUCTION ? 'node' : 'npm',
+			args: IS_PRODUCTION ? 'index.js' : 'run start',
 			watch: ['src', 'config', 'util'],
 			env: TEST_RUNNER_ENV
 		},

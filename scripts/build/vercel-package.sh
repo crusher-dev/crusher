@@ -21,7 +21,7 @@ cleanupPreviousBuildsIfThere () {
 
 runNextBuild () {
   echo "[Script]: Starting next build..."
-  yarn workspace crusher-app build
+  PACKAGE_VERCEL=true yarn workspace crusher-app build
 }
 
 clearNextBabelCache () {

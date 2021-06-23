@@ -44,9 +44,6 @@ packageNextBuild () {
 
   mkdir "$OUTPUT/crusher-app"
 
-  echo "[Script]: Moving next build folder to ${OUTPUT}/crusher-app"
-  mv "$CRUSHER_APP/.next" "$OUTPUT/crusher-app/build"
-
   echo "[Script]: Copying public files to ${OUTPUT}/crusher-app"
   cp -R "$CRUSHER_APP/public" "$OUTPUT/crusher-app/public"
 
@@ -64,7 +61,7 @@ overridePackageJSON () {
 }
 
 renameNextToBuild () {
-  mv -R "$OUTPUT/crusher-app/.next" "$OUTPUT/crusher-app/build"
+  mv "$OUTPUT/crusher-app/.next" "$OUTPUT/crusher-app/build"
 }
 
 cleanupPreviousNextBuildsIfThere
@@ -72,4 +69,4 @@ runNextBuild
 clearNextBabelCache
 packageNextBuild
 overridePackageJSON
-renameNextToBuild
+renameNextToBuildf

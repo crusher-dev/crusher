@@ -1,5 +1,5 @@
 CRUSHER_APP="packages/crusher-app"
-OUTPUT="output"
+OUTPUT="output/crusher-app"
 
 if [ ! -d "$CRUSHER_APP" ]; then
    echo '[Script]: Error: Directory /$CRUSHER_APP DOES NOT exists.\nExiting now...' >&2
@@ -11,10 +11,11 @@ if ! [ -x "$(command -v yarn)" ]; then
   exit 1
 fi
 
-cleanupPreviousNextBuildsIfThere () {
-  if [ -d "$CRUSHER_APP/.next" ]; then
-      echo "[Script]: Found previous next build caches"
+cleanupPreviousBuildsIfThere () {
+  if [ -d "$OUTPUT" ]; then
+      echo "[Script]: Found previous build"
       echo "[Script]: Deleting now..."
+      rm -rf $OUTPUT
   fi
 }
 
@@ -24,49 +25,32 @@ runNextBuild () {
 }
 
 clearNextBabelCache () {
-  if [ -d "$CRUSHER_APP/.next/cache/next-babel-loader" ]; then
+  if [ -d "$OUTPUT/.next/cache/next-babel-loader" ]; then
       echo "[Script]: Found redundant next-babel-loader caches"
       echo "[Script]: Clearing now..."
-      rm -R "$CRUSHER_APP/.next/cache/next-babel-loader"
-      mkdir "$CRUSHER_APP/.next/cache/next-babel-loader"
+      rm -R "$OUTPUT/.next/cache/next-babel-loader"
+      mkdir "$OUTPUT/.next/cache/next-babel-loader"
   fi
 }
 
 packageNextBuild () {
-  if [ ! -d "$OUTPUT" ]; then
-    echo "[Script]: Creating ${OUTPUT} now..."
-    mkdir -p "$OUTPUT"
-  fi
-
-  if [ -d "$OUTPUT/crusher-app" ]; then
-   rm -R "$OUTPUT/crusher-app"
-  fi
-
-  mkdir "$OUTPUT/crusher-app"
-
-  echo "[Script]: Copying public files to ${OUTPUT}/crusher-app"
-  cp -R "$CRUSHER_APP/public" "$OUTPUT/crusher-app/public"
+  yarn workspace crusher-app build
+  mv -T "$OUTPUT/.next" "$OUTPUT/build"
 
   echo "[Script]: Copying some necessary files..."
-  cp "$CRUSHER_APP/next.config.js" "$OUTPUT/crusher-app/next.config.js"
-  cp "$CRUSHER_APP/next-env.d.ts" "$OUTPUT/crusher-app/next-env.d.ts"
-  cp "$CRUSHER_APP/package.json" "$OUTPUT/crusher-app/package.json"
+  cp "$CRUSHER_APP/next.config.js" "$OUTPUT/next.config.js"
+  cp "$CRUSHER_APP/next-env.d.ts" "$OUTPUT/next-env.d.ts"
 }
 
 overridePackageJSON () {
-  tr '\n' ' ' < "$OUTPUT/crusher-app/package.json" > "$OUTPUT/crusher-app/package.new.json"
-  rm "$OUTPUT/crusher-app/package.json"
-  mv "$OUTPUT/crusher-app/package.new.json" "$OUTPUT/crusher-app/package.json"
-  sed  -i -e 's/"scripts": {[^}]*},/"scripts": {"build": "cp -R build .next", "start": "next start"},/' "$OUTPUT/crusher-app/package.json"
+  tr '\n' ' ' < "$OUTPUT/package.json" > "$OUTPUT/package.new.json"
+  rm "$OUTPUT/package.json"
+  mv "$OUTPUT/package.new.json" "$OUTPUT/package.json"
+  sed  -i -e 's/"scripts": {[^}]*},/"scripts": {"build": "cp build .next", "start": "next start"},/' "$OUTPUT/package.json"
 }
 
-renameNextToBuild () {
-  mv "$OUTPUT/crusher-app/.next" "$OUTPUT/crusher-app/build"
-}
-
-cleanupPreviousNextBuildsIfThere
+cleanupPreviousBuildsIfThere
 runNextBuild
 clearNextBabelCache
 packageNextBuild
 overridePackageJSON
-renameNextToBuild

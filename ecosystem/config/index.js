@@ -1,6 +1,5 @@
 const config = {
-	IS_PRODUCTION: false,
-	IS_OPEN_SOURCE: false,
+	IS_PRODUCTION: process.env.CRUSHER_ENV === "production",
 	BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:3000/server',
 	INTERNAL_BACKEND_URL: process.env.INTERNAL_BACKEND_URL ||'http://localhost:3000/server',
 	FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000/',

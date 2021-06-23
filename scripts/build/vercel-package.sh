@@ -37,6 +37,9 @@ packageNextBuild () {
   yarn workspace crusher-app build
   mv -T "$OUTPUT/.next" "$OUTPUT/build"
 
+  echo "[Script]: Copying public files to ${OUTPUT}/crusher-app"
+  cp -R "$CRUSHER_APP/public" "$OUTPUT/public"
+
   echo "[Script]: Copying some necessary files..."
   cp "$CRUSHER_APP/next.config.js" "$OUTPUT/next.config.js"
   cp "$CRUSHER_APP/next-env.d.ts" "$OUTPUT/next-env.d.ts"

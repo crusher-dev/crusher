@@ -1,0 +1,15 @@
+{
+  "name": "Crusher",
+  "description": "Crusher is no-code open source testing tool",
+  "keywords": [
+    "testing",
+    "uitesting",
+    "javascript"
+  ],
+  "logo": "https://crusher.dev/images/webclip.png",
+  "website": "https://crusher.dev",
+  "repository": "https://github.com/crusherdev/crusher",
+  "env": {
+  },
+  "stack": "container"
+}

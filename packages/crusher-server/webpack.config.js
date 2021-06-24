@@ -2,8 +2,6 @@ const path = require("path");
 const glob = require("glob");
 const CopyPlugin = require("copy-webpack-plugin");
 
-console.log("All workers", getAllWorker());
-
 module.exports = {
 	mode: "development",
 	devtool: "source-map",
@@ -12,6 +10,8 @@ module.exports = {
 		app: "./src/app.ts",
 		cron: "./src/cron.ts",
 		queue: "./src/queue.ts",
+		master: "bullmq/dist/classes/master.js",
+		"./src/core/workers/master": "bullmq/dist/classes/master.js",
 		...getAllWorker(),
 	},
 	output: {

@@ -28,8 +28,10 @@ RUN npm install -g npm
 RUN npm install pm2 -g
 RUN npm install -g concurrently
 RUN npm install -g playwright@^1.7.1 @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
+RUN export CRUSHER_ENV=production
 
 ADD ./ecosystem.oss.js ecosystem.config.js
+ADD ./ecosystem ecosystem
 ADD ./output/test-runner/ packages/test-runner
 
 RUN CRUSHER_ENV=production

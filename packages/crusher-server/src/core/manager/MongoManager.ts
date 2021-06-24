@@ -1,12 +1,18 @@
 import { getMongoDBConnectionString } from "../../../config/database";
 import { Service } from "typedi";
 
+const IMongoStatus = {
+	CONNECTING: "CONNECTING",
+	CONNECTED: "CONNECTED",
+	DISCONNECTED: "DISCONNECTED",
+};
+
 @Service()
 export default class MongoManager {
-	isConnected: boolean;
+	status: string;
 
 	constructor() {
-		this.isConnected = false;
+		this.status = IMongoStatus.CONNECTING;
 		this.init();
 	}
 
@@ -18,23 +24,23 @@ export default class MongoManager {
 		mongoose.connect(connectionString);
 
 		mongoose.connection.on("connected", function () {
-			_this.isConnected = true;
+			_this.status = IMongoStatus.CONNECTED;
 			console.log("Connected to mongodb successfully");
 		});
 
 		mongoose.connection.on("error", function (error) {
-			_this.isConnected = false;
+			_this.status = IMongoStatus.DISCONNECTED;
 			console.log("Connection to mongodb failed:" + error);
 		});
 
 		mongoose.connection.on("disconnected", function () {
-			_this.isConnected = false;
+			_this.status = IMongoStatus.DISCONNECTED;
 			console.log("Disconnected from mongodb");
 		});
 
 		process.on("SIGINT", function () {
 			mongoose.connection.close(function () {
-				_this.isConnected = false;
+				_this.status = IMongoStatus.DISCONNECTED;
 				console.log("Disconnected from mongodb through app termination");
 				process.exit(0);
 			});
@@ -42,6 +48,14 @@ export default class MongoManager {
 	}
 
 	isAlive() {
-		return this.isConnected;
+		return new Promise((resolve, reject) => {
+			setInterval(() => {
+				if (this.status === IMongoStatus.DISCONNECTED) {
+					return resolve(false);
+				} else if (this.status === IMongoStatus.CONNECTED) {
+					resolve(true);
+				}
+			}, 500);
+		});
 	}
 }

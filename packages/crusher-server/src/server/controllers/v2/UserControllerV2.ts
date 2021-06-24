@@ -62,14 +62,14 @@ export class UserControllerV2 {
 	 * Redirect user to new url
 	 */
 	@Get("/authenticate/google")
-	authenticateWithGoogle(@Res() res: any, @QueryParams() params) {
+	async authenticateWithGoogle(@Res() res: any, @QueryParams() params) {
 		const { inviteCode, inviteType } = params;
 
 		const scopes = ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"];
 
 		const state = inviteCode && inviteType ? Buffer.from(JSON.stringify({ inviteCode, inviteType })).toString("base64") : null;
 		const url = oauth2Client.generateAuthUrl({ scope: scopes, state: state });
-		res.redirect(url);
+		return res.redirect(url);
 	}
 	/**
 	 * Creates new user entry. And sends a link to DB.

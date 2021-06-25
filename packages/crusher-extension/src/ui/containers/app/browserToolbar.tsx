@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
+import { HelpIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "../../../../../crusher-shared/utils/url";
@@ -66,7 +66,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<div className="mx-24" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
 						</div>
-
+						<a href="https://docs.crusher.dev/docs/help ">
+							<HelpIcon />
+						</a>
 						<Button id={"saveTest"} title={"Save test"} icon={SaveIcon} onClick={saveTest} />
 					</div>
 					{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>

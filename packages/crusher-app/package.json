@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
-		"dev": "node server.js",
+		"dev": "NODE_ENV=development node server.js",
 		"start": "NODE_ENV=production node server.js",
 		"build": "NODE_ENV=production next build",
 		"lint": "eslint --ext=jsx,ts,tsx src",

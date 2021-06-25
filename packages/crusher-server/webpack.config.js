@@ -3,7 +3,7 @@ const glob = require("glob");
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-	mode: "development",
+	mode: "production",
 	devtool: "source-map",
 	target: "node",
 	entry: {
@@ -19,6 +19,7 @@ module.exports = {
 		chunkFilename: `[name]-[chunkhash:4].js`,
 		sourceMapFilename: `[name]-[chunkhash:4].js.map`,
 		libraryTarget: "umd",
+		clean: true,
 	},
 	plugins: [
 		new CopyPlugin({

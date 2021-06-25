@@ -1,6 +1,5 @@
 import * as AWS from 'aws-sdk';
 import * as fs from 'fs';
-import path from 'path';
 
 type ICloudBucketOptions = {
 	bucketName: string;

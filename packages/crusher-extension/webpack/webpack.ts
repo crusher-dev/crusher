@@ -3,8 +3,25 @@ import * as webpack from "webpack";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyPlugin = require("copy-webpack-plugin");
+const VirtualModulesPlugin = require("webpack-virtual-modules");
+const injectedScriptSource = require("playwright-core/lib/generated/injectedScriptSource");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-// const ExtensionReloader = require("webpack-extension-reloader");
+const ExtensionReloader = require("webpack-extension-reloader");
+
+const virtualModules = new VirtualModulesPlugin({
+	"../node_modules/playwright-evaluator.js": `
+  let pwQuerySelector;
+  (() => {
+    ${injectedScriptSource.source}
+    const injected = new pwExport(1, false, []);
+    window.injected = injected;
+    pwQuerySelector = (selector, root) => {
+      const parsed = injected.parseSelector(selector);
+      return injected.querySelector(parsed, root);
+    };
+  })();
+  module.exports = { querySelector: pwQuerySelector };`,
+});
 
 module.exports = {
 	mode: "development",
@@ -17,15 +34,16 @@ module.exports = {
 		record_test: [path.resolve(__dirname, "../src/ui/app.tsx")],
 	},
 	plugins: [
-		// new ExtensionReloader({
-		// 	port: 2400, // Which port use to create the server
-		// 	reloadPage: true, // Force the reload of the page also
-		// 	entries: {
-		// 		contentScript: ["content_script", "change_navigator"],
-		// 		background: "background",
-		// 		extensionPage: ["popup", "record_test"],
-		// 	},
-		// }),
+		virtualModules,
+		new ExtensionReloader({
+			port: 2400, // Which port use to create the server
+			reloadPage: true, // Force the reload of the page also
+			entries: {
+				contentScript: ["content_script", "change_navigator"],
+				background: "background",
+				extensionPage: ["popup", "record_test"],
+			},
+		}),
 		new CopyPlugin({
 			patterns: [{ from: "public/", to: "../" }],
 			options: {

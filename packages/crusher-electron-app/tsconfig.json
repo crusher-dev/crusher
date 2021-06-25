@@ -15,7 +15,8 @@
   },
   "typeRoots": ["node_modules/@types"],
   "files": [
-    "./src/main.ts"
+    "./src/main/index.ts",
+    "./src/preload.ts"
   ],
   "include": ["./src/**/*"],
   "exclude": ["**/*.spec.ts"]

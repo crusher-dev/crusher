@@ -30,9 +30,10 @@ import * as IORedis from "ioredis";
 import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { JobReportStatus } from "../interfaces/JobReportStatus";
-import { CloudBucketManager } from "../manager/CloudBucketManager";
 import * as ejs from "ejs";
 import * as ReddisLock from "redlock";
+import { LocalFileStorage } from "@crusher-shared/lib/storage";
+import { AwsCloudStorage } from "@crusher-shared/lib/storage/aws";
 
 const jobsService = Container.get(JobsService);
 const jobsReportService = Container.get(JobReportServiceV2);
@@ -44,9 +45,24 @@ const testInstanceResultsService = Container.get(TestInstanceResultsService);
 const testInstanceScreenshotsService = Container.get(TestInstanceScreenShotsService);
 const alertingService = Container.get(AlertingService);
 const userService = Container.get(UserService);
-const cloudBucketManager = new CloudBucketManager({
-	useLocalStack: process.env.NODE_ENV === "production" ? false : true,
-});
+const setupBucketManager = () => {
+	if (process.env.STORAGE_MODE === "local") {
+		const storagePort = parseInt(process.env.STORAGE_PORT, 10);
+
+		return new LocalFileStorage({
+			port: storagePort,
+			bucketName: "crusher-videos",
+			baseFolder: process.env.BASE_STORAGE_FOLDER,
+		});
+	}
+
+	return new AwsCloudStorage({
+		bucketName: "crusher-videos",
+		bucketRegion: "us-east-1",
+	});
+};
+
+const cloudBucketManager = setupBucketManager();
 
 interface TestInstanceWithImages extends TestInstance {
 	images: {
@@ -79,7 +95,7 @@ async function calculateDiffBetweenImages(testInstanceImage, referenceInstanceIm
 
 	const diffDelta = diff.diffDelta;
 
-	uploadedDiffUrl = await cloudBucketManager.uploadBuffer(diff.outputBuffer, diffPath);
+	uploadedDiffUrl = await cloudBucketManager.uploadBuffer(diff.outputBuffer as any, diffPath);
 
 	return { diffDelta, uploadedDiffUrl };
 }

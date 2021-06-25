@@ -71,12 +71,6 @@ const Action = (props: iActionProps) => {
 					<img src={"/icons/delete.svg"} style={deleteIconStyle} />
 				</div>
 			</Conditional>
-			<div
-				className="text-white flex items-center text-xl"
-				style={{ color: stepActionStyle.color }}
-			>
-				&gt;
-			</div>
 		</li>
 	);
 };
@@ -117,7 +111,7 @@ const ActionStepList = () => {
 	return (
 		<div className="flex flex-col p-24" style={{ height: "45%" }}>
 			<div className="flex justify-between text-white">
-				<h5 className="font-semibold text-17">Recorded</h5>
+				<h5 className="font-semibold text-17">Recorded steps</h5>
 				<div
 					className="text-13 text-center
 					flex items-center justify-center

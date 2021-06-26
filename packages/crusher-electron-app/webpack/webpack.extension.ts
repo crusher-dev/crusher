@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as webpack from "webpack";
 import * as fs from "fs";
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/extension/js");
 

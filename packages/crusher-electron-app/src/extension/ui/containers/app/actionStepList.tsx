@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ACTIONS_IN_TEST, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
@@ -58,7 +58,7 @@ const Action = (props: iActionProps) => {
 			</div>
 			<div style={actionItemTextContainer}>
 				<div className="text-13" style={stepActionStyle}>
-					{action.type}
+					{ACTIONS_TO_LABEL_MAP[action.type]}
 				</div>
 				<div style={stepSelectorContainerStyle}>
 					<div className="text-12" style={stepSelectorStyle}>
@@ -71,9 +71,6 @@ const Action = (props: iActionProps) => {
 					<img src={"/icons/delete.svg"} style={deleteIconStyle} />
 				</div>
 			</Conditional>
-			<div className="text-white flex items-center text-xl" style={{ color: stepActionStyle.color }}>
-				&gt;
-			</div>
 		</li>
 	);
 };
@@ -114,7 +111,7 @@ const ActionStepList = () => {
 	return (
 		<div className="flex flex-col p-24" style={{ height: "45%" }}>
 			<div className="flex justify-between text-white">
-				<h5 className="font-semibold text-17">Recorded</h5>
+				<h5 className="font-semibold text-17">Recorded steps</h5>
 				<div
 					className="text-13 text-center
 					flex items-center justify-center

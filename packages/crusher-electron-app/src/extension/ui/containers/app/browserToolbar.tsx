@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
+import { HelpIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
@@ -52,26 +52,26 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		<div style={browserToolbarStyle}>
 			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
 				<div className="h-10 w-full flex">
-					<div style={goBackIconContainerStyle} className={"browser_icon"}>
-						<NavigateBackIcon onClick={goBack} disabled={false} />
+					<div className="flex" style={{ width: "15%" }}>
+						<div style={goBackIconContainerStyle} className={"browser_icon"}>
+							<NavigateBackIcon onClick={goBack} disabled={false} />
+						</div>
+						<div style={forwardIconContainerStyle} className={"browser_icon"}>
+							<NavigateForwardIcon onClick={goForward} disabled={false} />
+						</div>
+						<div style={refreshIconContainerStyle} className={"browser_icon"}>
+							<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
+						</div>
 					</div>
-					<div style={forwardIconContainerStyle} className={"browser_icon"}>
-						<NavigateForwardIcon onClick={goForward} disabled={false} />
+					<div style={{width:"50%"}}>
+						<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
 					</div>
-					<div style={refreshIconContainerStyle} className={"browser_icon"}>
-						<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
-					</div>
-					<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
-					<div className="flex justify-evenly">
+					<div className="flex justify-end" style={{ width: "35%" }}>
 						<div className="mx-24" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
 						</div>
-
 						<Button id={"saveTest"} title={"Save test"} icon={SaveIcon} onClick={saveTest} />
 					</div>
-					{/* <a href={"javascript:;"} style={helpStyle} onClick={showHowToUseModal}>
-					Help
-				</a> */}
 				</div>
 			</div>
 

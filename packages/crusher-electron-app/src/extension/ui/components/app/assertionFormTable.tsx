@@ -42,7 +42,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 		const fieldOptions = fields.map((field, index) => {
 			return (
-				<option key={index} value={field.name}>
+				<option key={index} style={{color:"black"}} value={field.name}>
 					{field.name}
 				</option>
 			);
@@ -126,7 +126,6 @@ const inputTableItemFieldContainerStyle = {
 	minWidth: "7rem",
 	fontStyle: "normal",
 	fontSize: "0.82rem",
-	color: "#fff",
 	display: "flex",
 };
 const selectStyle = {

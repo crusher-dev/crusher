@@ -1,8 +1,9 @@
 {
   "extends": "../../tsconfig.json",
+  "basePath": "../",
   "compilerOptions": {
-    "baseUrl": "./src",
-    "rootDir": "./src/",
+    "baseUrl": "../",
+    "rootDir": "../../",
     "module": "commonjs",
     "removeComments": true,
     "sourceMap": true,
@@ -11,13 +12,26 @@
     "allowJs": true,
     "noImplicitAny": false,
     "noUnusedLocals": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "preserveConstEnums": true,
+    "strict": false,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "jsx": "react",
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@shared/*": ["crusher-shared/*"]
+    }
   },
   "typeRoots": ["node_modules/@types"],
   "files": [
-    "./src/main/index.ts",
-    "./src/preload.ts"
+    "./src/main.ts",
+    "./src/preload.ts",
+    "./src/extension/background.ts",
+    "./src/extension/ui/popup.tsx",
+    "../../node_modules/react/index.js"
   ],
   "include": ["./src/**/*"],
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.spec.ts"],
 }

@@ -1,8 +1,8 @@
-import { getXpath } from './element';
-import { generateSortedCueSets } from './generateCueSets';
-import { CLICK_TYPES } from './isElementMatch';
-import { buildSelectorForCues, isSelectorMatch } from './selectorEngine';
-import { RankedSelector, Rect } from './types';
+import { getXpath } from "./element";
+import { generateSortedCueSets } from "./generateCueSets";
+import { CLICK_TYPES } from "./isElementMatch";
+import { buildSelectorForCues, isSelectorMatch } from "./selectorEngine";
+import { RankedSelector, Rect } from "./types";
 
 function getLikelyTarget(target: HTMLElement): HTMLElement {
 	return (
@@ -64,5 +64,5 @@ export function getSelector(target: HTMLElement, timeout = 1000, selectorCache?:
 		return selector.selector;
 	}
 
-	return;
+	return null;
 }

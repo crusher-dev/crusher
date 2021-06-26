@@ -1,17 +1,12 @@
+require('dotenv').config();
+
 import {app, BrowserWindow, session, ipcMain} from 'electron';
 import * as path from "path";
 
-require('dotenv').config();
-
-const APP_DOMAIN = process.env.NODE_ENV === "development" ?
-	process.env.LOCAL_DOMAIN : process.env.PRODUCTION_DOMAIN;
-
 const loadExtension =  (mainWindow) => {
-	const isBundlingForRelease = process.env.TARGET === "release";
-
 	return new Promise((resolve) => {
 		session.defaultSession.loadExtension(
-			path.resolve(__dirname, `${isBundlingForRelease ? "./extension" : "../../crusher-extension/build"}`),
+			path.resolve(__dirname, "./extension"),
 			{ allowFileAccess: true}
 		).then(({ id: extensionId }) => {
 			return mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
@@ -107,7 +102,7 @@ async function createWindow () {
 	});
 	mainWindow.webContents.on('new-window', function(event, popupUrl) {
 		if(mainWindow.webContents.getURL().startsWith("chrome-extension")) {
-			if(!popupUrl.includes(APP_DOMAIN)) {
+			if(!popupUrl.includes(process.env.APP_DOMAIN)) {
 				event.preventDefault();
 				mainWindow.webContents.executeJavaScript(`document.querySelector('#device_browser').src = "${popupUrl}"`);
 			}
@@ -126,7 +121,7 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', async function () {
-	const cookies = await session.defaultSession.cookies.get({domain: APP_DOMAIN});
+	const cookies = await session.defaultSession.cookies.get({domain: process.env.APP_DOMAIN});
 	await session.defaultSession.clearStorageData({
 		storages: [
 			"cookies",

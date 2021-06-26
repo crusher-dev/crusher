@@ -1,4 +1,10 @@
+const fs = require('fs');
 const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
+
+const OUTPUT_DIR = path.resolve(__dirname, '../../output/crusher-electron-app/');
+
+fs.rmdirSync(OUTPUT_DIR, {force: true, recursive: true});
 
 const commonConfig = {
 	mode: process.env.NODE_ENV || 'development',
@@ -11,8 +17,8 @@ const commonConfig = {
 		]
 	},
 	output: {
-		filename: '[name]-bundle.js',
-		path: path.resolve(__dirname, '../../output/crusher-electron-app/')
+		filename: '[name].js',
+		path: OUTPUT_DIR
 	},
 	resolve: {
 		extensions: [ '.tsx', '.ts', '.js' ]
@@ -23,8 +29,13 @@ module.exports = [
 	{
 		...commonConfig,
 		target: "electron-main",
+		plugins: [
+			new CopyPlugin({
+				patterns: [{ from: path.resolve(__dirname, "../crusher-extension/build"), to: "extension/" }],
+			}),
+		],
 		entry: {
-			main: './src/main/index.ts'
+			main: './src/main.ts'
 		}
 	},
 	{

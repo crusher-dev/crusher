@@ -14,6 +14,8 @@ function extractZipIfNotThere(binaryZipInfoArr) {
 		}
 		const zip = new AdmZip(binaryZipInfoArr[platform].path);
 		zip.extractAllTo(path.resolve(BIN_DIR, platform), true);
+
+		fs.unlinkSync(binaryZipInfoArr[platform].path);
 	}
 }
 

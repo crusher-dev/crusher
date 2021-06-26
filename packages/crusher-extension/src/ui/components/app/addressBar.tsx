@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 import { RESIZE, WHITE_SPACE } from "../../../interfaces/css";
 
 interface iAddressBarProps {

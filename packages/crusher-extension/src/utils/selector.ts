@@ -3,7 +3,6 @@
 import * as uniqueSelector2 from "unique-selector";
 import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
 
-console.log(uniqueSelector2);
 const _uniqueSelector2 = new uniqueSelector2.default({});
 
 export function getXpathTo(element: HTMLElement): string | null {

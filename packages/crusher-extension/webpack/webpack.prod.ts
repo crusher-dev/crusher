@@ -5,6 +5,9 @@ import * as webpack from "webpack";
 const CopyPlugin = require("copy-webpack-plugin");
 const VirtualModulesPlugin = require("webpack-virtual-modules");
 const injectedScriptSource = require("playwright-core/lib/generated/injectedScriptSource");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+
+const smp = new SpeedMeasurePlugin();
 
 const virtualModules = new VirtualModulesPlugin({
 	"../node_modules/playwright-evaluator.js": `
@@ -21,7 +24,8 @@ const virtualModules = new VirtualModulesPlugin({
   module.exports = { querySelector: pwQuerySelector };`,
 });
 
-module.exports = {
+console.log(path.resolve(__dirname, "../build/js", "vendor-manifest.json"));
+module.exports = smp.wrap({
 	mode: "production",
 	entry: {
 		content_script: [path.resolve(__dirname, "../src/scripts/inject/events_listener.ts")],
@@ -77,4 +81,4 @@ module.exports = {
 		],
 	},
 	devtool: "cheap-module-source-map",
-};
+});

@@ -7,7 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack",
+    "build": "yarn workspace crusher-extension build && webpack",
+    "start": "yarn build && ./base/linux/dist/electron ../../output/crusher-electron-app/",
     "prettify": "prettier --write .",
     "compile": "rm -rf out/dist/resources/app/build && tsc",
     "compile:basic": "tsc",

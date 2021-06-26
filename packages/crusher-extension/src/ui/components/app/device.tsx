@@ -4,7 +4,7 @@ import { Conditional } from "../conditional";
 import { iDevice } from "../../../../../crusher-shared/types/extension/device";
 import { useSelector } from "react-redux";
 import { isRecorderScriptBooted } from "../../../redux/selectors/recorder";
-import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 
 interface iDeviceProps {
 	url: string;

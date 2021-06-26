@@ -1,5 +1,5 @@
 import React from "react";
-import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 
 interface iButtonProps {
 	id?: string;

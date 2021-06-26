@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 import devices from "../../../../../crusher-shared/constants/devices";
 import Select from "react-select";
-import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 import { pxToRemValue } from "../../../utils/helpers";
 
 interface iRenderDeviceInputProps {
@@ -9,14 +9,13 @@ interface iRenderDeviceInputProps {
 	selectDevice: (deviceId: string) => void;
 }
 
-
 const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 	const { selectedDevice, selectDevice } = props;
 
-	let deviceOptions = useMemo(() => {
+	const deviceOptions = useMemo(() => {
 		return devices.map((device) => ({
 			label: device.name,
-			value: device.id
+			value: device.id,
 		}));
 	}, [devices]);
 
@@ -28,7 +27,6 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 		selectDevice(selectedOption.value);
 	};
 
-
 	return (
 		<div style={selectInputContainerStyle} className="select">
 			<Select
@@ -37,8 +35,7 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 				onChange={handleDeviceSelected}
 				styles={dropdownStyle as any}
 				placeholder={"Please select some device"}
-			>
-			</Select>
+			></Select>
 		</div>
 	);
 };
@@ -47,7 +44,7 @@ const dropdownStyle = {
 	menu: (provided: any) => ({
 		...provided,
 		backgroundColor: `${COLOR_CONSTANTS.SECONDARY}`,
-		zIndex: 20000
+		zIndex: 20000,
 	}),
 	control: (provided: any) => ({
 		...provided,
@@ -84,9 +81,7 @@ const dropdownStyle = {
 		return {
 			...provided,
 			color: state.isSelected ? "white" : COLOR_CONSTANTS.TEXT_LIGHT,
-			backgroundColor: state.isSelected
-				? COLOR_CONSTANTS.PRIMARY
-				: COLOR_CONSTANTS.TRINARY,
+			backgroundColor: state.isSelected ? COLOR_CONSTANTS.PRIMARY : COLOR_CONSTANTS.TRINARY,
 			cursor: "pointer",
 			...additionalStyle,
 		};

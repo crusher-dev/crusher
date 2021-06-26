@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { pxToRemValue } from "../../../utils/helpers";
-import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 import { Conditional } from "../conditional";
 
 interface iButtonProps {

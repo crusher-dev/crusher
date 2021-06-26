@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getSeoMetaInfo } from "../../../../redux/selectors/recorder";
 import { AssertionFormTable } from "../../../components/app/assertionFormTable";
-import { iAssertionRow, iField } from "../.././../../../../crusher-shared/types/assertionRow";
+import { iAssertionRow, iField } from "../../../../../../crusher-shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
 import { iSeoMetaInformationMeta } from "../../../../messageListener";
 import { TEXT_ALIGN } from "../../../../interfaces/css";

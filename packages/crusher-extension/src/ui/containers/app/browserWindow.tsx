@@ -10,7 +10,7 @@ import { getStore } from "../../../redux/store";
 import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
-import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;

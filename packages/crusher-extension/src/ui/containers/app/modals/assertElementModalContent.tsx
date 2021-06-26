@@ -2,7 +2,7 @@ import React, { RefObject, useState } from "react";
 import { useSelector } from "react-redux";
 import { getActionsRecordingState } from "../../../../redux/selectors/recorder";
 import { AssertionFormTable } from "../../../components/app/assertionFormTable";
-import { iAssertionRow, iField } from "../.././../../../../crusher-shared/types/assertionRow";
+import { iAssertionRow, iField } from "../../../../../../crusher-shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
 import { BulbIcon } from "../../../../assets/icons";
 import uniqueId from "lodash/uniqueId";

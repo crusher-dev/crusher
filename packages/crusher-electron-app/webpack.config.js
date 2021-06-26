@@ -31,7 +31,11 @@ module.exports = [
 		target: "electron-main",
 		plugins: [
 			new CopyPlugin({
-				patterns: [{ from: path.resolve(__dirname, "../crusher-extension/build"), to: "extension/" }],
+				patterns: [
+					{ from: path.resolve(__dirname, "../crusher-extension/build"), to: "extension/" },
+					{ from: ".env" },
+					{ from: "package.release.json", to: "package.json"}
+				],
 			}),
 		],
 		entry: {

@@ -7,7 +7,7 @@ import { getActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
 import { deleteRecordedAction } from "../../../redux/actions/actions";
 import { Conditional } from "../../components/conditional";
-import { COLOR_CONSTANTS } from "../../../ui/colorConstants";
+import { COLOR_CONSTANTS } from "../../colorConstants";
 
 interface iActionProps {
 	action: iAction;
@@ -71,10 +71,7 @@ const Action = (props: iActionProps) => {
 					<img src={"/icons/delete.svg"} style={deleteIconStyle} />
 				</div>
 			</Conditional>
-			<div
-				className="text-white flex items-center text-xl"
-				style={{ color: stepActionStyle.color }}
-			>
+			<div className="text-white flex items-center text-xl" style={{ color: stepActionStyle.color }}>
 				&gt;
 			</div>
 		</li>

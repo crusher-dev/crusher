@@ -12,17 +12,23 @@ function preParseArgv() {
 			describe: "Version of crusher to be used",
 			choices: modeChoices
 		},
-		be: {
+		ah: {
+			alias: "app-host",
+			describe: "App host to identify cookie owners",
+			string: true,
+			default: "localhost"
+		},
+		bd: {
 			alias: "backend-domain",
 			describe: "Backend domain for server request",
 			string: true,
-			default: "localhost:8000"
+			default: "http://localhost:8000"
 		},
-		fe: {
+		fd: {
 			alias: "frontend-domain",
 			describe: "Frontend domain for app dashboard",
 			string: true,
-			default: "localhost:3000"
+			default: "http://localhost:3000"
 		},
 		sm: {
 			alias: "storage-mode",
@@ -50,11 +56,14 @@ function preParseArgv() {
 	if(argv.mode) {
 		installOptions["mode"] = argv.mode;
 	}
-	if(argv.bdomain) {
-		installOptions["bdomain"] = argv.bdomain;
+	if(argv.ah) {
+		installOptions["ah"] = argv.ah;
 	}
-	if(argv.fdomain) {
-		installOptions["fdomain"] = argv.fdomain;
+	if(argv.bd) {
+		installOptions["bd"] = argv.bd;
+	}
+	if(argv.fd) {
+		installOptions["fd"] = argv.fd;
 	}
 	if(argv.sm) {
 		installOptions["storage_mode"] = argv.sm;
@@ -82,6 +91,10 @@ async function init() {
 
 	process.env.CRUSHER_MODE = installOptions.mode;
 	process.env.STORAGE_MODE = installOptions.storage_mode;
+	process.env.BACKEND_URL = installOptions.bd;
+	process.env.FRONTEND_URL = installOptions.fd;
+	process.env.APP_HOST = installOptions.ah;
+
 	if(installOptions.storage_mode === "local") {
 		process.env.STORAGE_PORT = installOptions.storage_port;
 		process.env.BASE_STORAGE_FOLDER = installOptions.storage_dir;
@@ -91,6 +104,7 @@ async function init() {
 	require("../packages/crusher-server/setup/tsconfig");
 	require("../packages/test-runner/setup/tsconfig");
 	require("../packages/video-processor/setup/tsconfig");
+	require("../packages/crusher-electron-app/setup/");
 }
 
 init();

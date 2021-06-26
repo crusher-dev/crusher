@@ -31,7 +31,8 @@ const Device = (props: iDeviceProps) => {
 				<div style={blockCoverStyle}></div>
 			</Conditional>
 			<Conditional If={!isIframeLoaded}>
-				<div className="absolute flex h-full w-full justify-center items-center">
+				<div style={{ background: "#0A0A0A" }}
+					className="absolute flex h-full w-full justify-center items-center">
 					<div>
 						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
 						<div style={pageLoadingCoverTextStyle}>{"Please wait while we're loading next page"}</div>
@@ -42,7 +43,7 @@ const Device = (props: iDeviceProps) => {
 				className={isMobile ? "smartphone" : ""}
 				style={{
 					width: device.width,
-					height: device.height,
+					height: device.height,//need to fix UI bug here
 				}}
 			>
 				<div className="content" style={browserFrameContainerStyle}>
@@ -97,6 +98,7 @@ const previewBrowserStyle = {
 	borderWidth: "2px",
 	borderLeft: "none",
 	borderBottom: "none",
+	height: "calc(100vh - 4.75rem)"
 };
 
 const browserFrameStyle = {
@@ -106,6 +108,7 @@ const browserFrameStyle = {
 	backgroundColor: "#010101",
 	width: "100%",
 	height: "100%",
+	//marginTop: "4.75rem"
 };
 
 const browserFrameContainerStyle = {

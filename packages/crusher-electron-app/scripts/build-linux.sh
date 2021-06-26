@@ -10,4 +10,4 @@ cp -rfT "$ELECTRON_BUILD" $DIST_DIR/resources/app
 
 cd $DIST_DIR
 # Build distribution
-zip --symlinks -r ../crusher-linux.zip ./
+cross-zip ./ ../crusher-linux.zip 

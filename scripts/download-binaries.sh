@@ -6,4 +6,5 @@ fi
 
 echo 'Downloading latest binaries...'
 curl -s https://api.github.com/repos/crusherdev/electron/releases/latest  | grep "celectron.*.zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - -cP packages/crusher-electron-app/bin
+npm install -g cross-zip-cli
 yarn workspace crusher-electron-app extract:deps

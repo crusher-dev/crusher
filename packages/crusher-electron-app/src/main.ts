@@ -1,7 +1,5 @@
-require("dotenv").config();
-
-import { app, BrowserWindow, session, ipcMain } from "electron";
 import * as path from "path";
+import { app, BrowserWindow, session, ipcMain } from "electron";
 
 const loadExtension = (mainWindow) => {
 	return new Promise((resolve) => {

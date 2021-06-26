@@ -1,5 +1,9 @@
+import * as webpack from "webpack";
+
 const fs = require("fs");
 const path = require("path");
+
+const dotEnv = require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const CopyPlugin = require("copy-webpack-plugin");
 const extensionConfig = require("./webpack.extension");
 
@@ -32,8 +36,12 @@ module.exports = [
 		...commonConfig,
 		target: "electron-main",
 		plugins: [
+			new webpack.EnvironmentPlugin({
+				NODE_ENV: "production",
+				...dotEnv.parsed,
+			}),
 			new CopyPlugin({
-				patterns: [{ from: ".env" }, { from: "package.release.json", to: "package.json" }],
+				patterns: [{ from: "package.release.json", to: "package.json" }],
 			}),
 		],
 		entry: {

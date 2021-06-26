@@ -7,16 +7,12 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "start": "yarn build && ./bin/linux/electron ../../output/crusher-electron-app/",
+
     "build": "webpack --config webpack/webpack.config.ts",
-    "start": "yarn build && ./base/linux/dist/electron ../../output/crusher-electron-app/",
-    "prettify": "prettier --write .",
-    "compile": "rm -rf out/dist/resources/app/build && tsc",
-    "compile:basic": "tsc",
-    "start:linux": "yarn compile:basic && ./base/linux/dist/electron .",
-    "build:release:linux": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-linux-dist.sh",
-    "build:release:mac": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-darwin-dist.sh",
-    "build:release:windows": "yarn compile && bash scripts/build-and-copy-chrome.sh && bash scripts/dist/build-windows-dist.sh",
-    "build:release:all": "yarn build:release:linux && build:release:mac && build:release:windows"
+    "release:linux": "yarn build && bash scripts/build-linux-dist.sh",
+    "release:mac": "yarn build && bash scripts/build-darwin-dist.sh",
+    "release:all": "yarn build && bash scripts/build-all.sh"
   },
   "dependencies": {
     "@medv/finder": "^2.0.0",

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
-import { ACTIONS_IN_TEST } from "../../../../../crusher-shared/constants/recordedActions";
+import { ACTIONS_IN_TEST, ACTIONS_TO_LABEL_MAP } from "../../../../../crusher-shared/constants/recordedActions";
 import { iAction } from "../../../../../crusher-shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
@@ -58,7 +58,7 @@ const Action = (props: iActionProps) => {
 			</div>
 			<div style={actionItemTextContainer}>
 				<div className="text-13" style={stepActionStyle}>
-					{action.type}
+					{ACTIONS_TO_LABEL_MAP[action.type]}
 				</div>
 				<div style={stepSelectorContainerStyle}>
 					<div className="text-12" style={stepSelectorStyle}>

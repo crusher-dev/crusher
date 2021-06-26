@@ -19,3 +19,25 @@ export enum ACTIONS_IN_TEST {
 	PAGE_SCREENSHOT = 'PAGE_SCREENSHOT',
 	CAPTURE_CONSOLE = 'CAPTURE_CONSOLE',
 }
+
+export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
+	[ACTIONS_IN_TEST.SET_DEVICE]: "Set a device",
+	[ACTIONS_IN_TEST.NAVIGATE_URL]: "Navigate URL to",
+	[ACTIONS_IN_TEST.ADD_INPUT]: "Add an input",
+	[ACTIONS_IN_TEST.ASSERT_ELEMENT]: "Assert an element",
+	[ACTIONS_IN_TEST.EXTRACT_INFO]: "Extract an information",
+	[ACTIONS_IN_TEST.ELEMENT_SCREENSHOT]: "Screenshot an element",
+	[ACTIONS_IN_TEST.PAGE_SCREENSHOT]: "Screenshot page",
+	[ACTIONS_IN_TEST.ELEMENT_FOCUS]: "Focus on an element",
+	[ACTIONS_IN_TEST.VALIDATE_SEO]: "Validate SEO",
+	[ACTIONS_IN_TEST.BLACKOUT]: "Blackout",
+	[ACTIONS_IN_TEST.WAIT]: "Wait",
+	[ACTIONS_IN_TEST.CAPTURE_CONSOLE]: "Capture Console",
+	[ACTIONS_IN_TEST.PRESS_KEY]: "Press a key",
+	[ACTIONS_IN_TEST.CLICK]: "Click",
+	[ACTIONS_IN_TEST.SCROLL_TO_VIEW]: "Scroll to the view",
+	[ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION]: "Wait for the navigation",
+	[ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT]: "Add a custom element script",
+	[ACTIONS_IN_TEST.HOVER]: "Hover",
+	[ACTIONS_IN_TEST.SCROLL]: "Scroll"
+};

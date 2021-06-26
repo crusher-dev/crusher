@@ -79,6 +79,9 @@ const App = () => {
 					.CodeMirror {
 						font-size: 0.9rem;
 					}
+					.ReactModalPortal {
+						height: 100%;
+					}
 				`}</style>
 		</div>
 	);

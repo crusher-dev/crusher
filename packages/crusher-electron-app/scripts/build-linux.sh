@@ -8,6 +8,6 @@ cp -rfT bin/linux $DIST_DIR
 mkdir -p $DIST_DIR/resources
 cp -rfT "$ELECTRON_BUILD" $DIST_DIR/resources/app
 
-cd $DIST_DIR
+cd $DIST_DIR/
 # Build distribution
-cross-zip ./ ../crusher-linux.zip 
+tar -cvzf ../crusher-linux.tar.gz ./

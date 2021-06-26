@@ -10,4 +10,4 @@ cp -rfT "$ELECTRON_BUILD" $DIST_DIR/Electron.app/Contents/Resources/app
 
 cd $DIST_DIR
 # Build distribution
-cross-zip ./ ../crusher-darwin.zip 
+tar -cvzf ../crusher-darwin.tar.gz ./

@@ -11,8 +11,8 @@
     "start": "yarn build && ./bin/linux/electron ../../output/crusher-electron-app/",
     "build:extension": "webpack --config webpack/webpack.extension.ts",
     "build": "webpack --config webpack/webpack.config.ts",
-    "release:linux": "yarn build && bash scripts/build-linux-dist.sh",
-    "release:mac": "yarn build && bash scripts/build-darwin-dist.sh",
+    "release:linux": "yarn build && bash scripts/build-linux.sh",
+    "release:mac": "yarn build && bash scripts/build-darwin.sh",
     "release:all": "yarn build && bash scripts/build-all.sh"
   },
   "dependencies": {

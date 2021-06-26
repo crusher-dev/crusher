@@ -1,3 +1,7 @@
+dev/
+build/
+tailwind.generated.css
+src/extension/style/main.css
 node_modules
 out
 base

@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "extract:deps": "node scripts/extract-binaries.js",
     "start": "yarn build && ./bin/linux/electron ../../output/crusher-electron-app/",
-
     "build:extension": "webpack --config webpack/webpack.extension.ts",
     "build": "webpack --config webpack/webpack.config.ts",
     "release:linux": "yarn build && bash scripts/build-linux-dist.sh",
@@ -26,6 +26,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/parser": "^4.14.1",
+    "adm-zip": "^0.5.5",
     "an-array-of-english-words": "^2.0.0",
     "body-scroll-lock": "^3.1.5",
     "child_process": "^1.0.2",
@@ -100,7 +101,6 @@
     "postcss-cli": "^8.3.1",
     "prettier": "^2.2.1",
     "pug-loader": "^2.4.0",
-    "shelljs": "^0.8.4",
     "speed-measure-webpack-plugin": "^1.5.0",
     "style-loader": "^2.0.0",
     "tailwindcss": "^2.1.2",

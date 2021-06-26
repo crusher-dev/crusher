@@ -15,7 +15,7 @@
     "start": "pm2 start",
     "log:app": "pm2 logs crusher-app",
     "lint": "lerna run prettify",
-    "postinstall": "patch-package && sh scripts/rebuild-bull-mq.sh"
+    "postinstall": "patch-package && sh scripts/rebuild-bull-mq.sh && sh scripts/download-binaries.sh"
   },
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",

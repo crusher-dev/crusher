@@ -22,7 +22,7 @@ export enum ACTIONS_IN_TEST {
 
 export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.SET_DEVICE]: "Set a device",
-	[ACTIONS_IN_TEST.NAVIGATE_URL]: "Navigate URL to",
+	[ACTIONS_IN_TEST.NAVIGATE_URL]: "Navigate to URL",
 	[ACTIONS_IN_TEST.ADD_INPUT]: "Add an input",
 	[ACTIONS_IN_TEST.ASSERT_ELEMENT]: "Assert an element",
 	[ACTIONS_IN_TEST.EXTRACT_INFO]: "Extract an information",

@@ -86,7 +86,6 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				  border-b-2
 				  p-24   border-gray-800"
 			>
-
 				<div className="flex justify-between items-center">
 					<h5
 						className="text-white font-semibold
@@ -95,12 +94,10 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 						Actions
 					</h5>
 				</div>
-
-
 				<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.INITIAL_STATE}>
 					<AddCustomCheckView />
 				</Conditional>
-				<div style={mainContainerStyle}>
+				<div >
 					<div style={actionContainerStyle}>
 						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.SELECT_ELEMENT}>
 							<SelectElementPlaceholder deviceIframeRef={props.deviceIframeRef} />
@@ -114,7 +111,6 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					</div>
 				</div>
 			</div>
-
 			<ActionStepList />
 		</div>
 	);
@@ -123,11 +119,6 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 const sidebarStyle = {
 	background: COLOR_CONSTANTS.PRIMARY,
 	width: "22%",
-};
-
-const mainContainerStyle = {
-	maxHeight: "80vh",
-	overflow: OVERFLOW.AUTO,
 };
 
 const actionContainerStyle = {

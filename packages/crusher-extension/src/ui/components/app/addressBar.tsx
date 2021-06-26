@@ -13,7 +13,7 @@ const AddressBar = (props: iAddressBarProps) => {
 	const { value, onChange, onKeyDown, forwardRef } = props;
 
 	return (
-		<>
+		<div className="flex">
 			<div style={addressBarStyle} id="address-bar" className={"address_bar"}>
 				<div style={sslContainerStyle}>
 					<img style={sslIconStyle} src={chrome.runtime.getURL("/icons/ssl.svg")} />
@@ -31,13 +31,14 @@ const AddressBar = (props: iAddressBarProps) => {
 			<div className="text-15" style={goBtnStyle}>
 				Go
 			</div>
-		</>
+		</div>
 	);
 };
 
 const goBtnStyle = {
 	background: COLOR_CONSTANTS.TRINARY,
 	border: `solid ${COLOR_CONSTANTS.BORDER}`,
+	borderLeft: "none",
 	color: "#fff",
 	width: "5.8rem",
 	borderTopRightRadius: "5px",
@@ -47,11 +48,10 @@ const goBtnStyle = {
 	justifyContent: "center",
 	cursor: "pointer",
 	borderWidth: "1px",
-	height: "100%",
 };
 
 const addressBarStyle = {
-	width: "45%",
+	width: "100%",
 	background: COLOR_CONSTANTS.PRIMARY,
 	overflow: "hidden",
 	display: "flex",
@@ -60,6 +60,7 @@ const addressBarStyle = {
 	borderWidth: "1px",
 	color: "#fff",
 	borderRadius: "0.1rem",
+	maxWidth: "573px"
 };
 
 const addressBarInputStyle = {

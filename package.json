@@ -9,7 +9,7 @@
   "scripts": {
     "setup:oss": "node setup/index.js -m open-source",
     "setup:ee": "node setup/index.js -m enterprise",
-    "setup:prod": "node setup/index.js -m enterprise --sm aws",
+    "setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
 
     "build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
     "start": "pm2 start",

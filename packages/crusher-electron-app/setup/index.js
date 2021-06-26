@@ -17,7 +17,8 @@ async function index() {
 	shell.rm("-rf", path.resolve(__dirname, "../.env"));
 
 	await copyTemplate(path.resolve(__dirname, ".env.ejs"), path.resolve(__dirname, "../.env"), {
-		env: "production",
+		appHost: process.env.APP_HOST,
+		backendUrl: process.env.BACKEND_URL,
 	});
 }
 

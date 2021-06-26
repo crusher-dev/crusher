@@ -42,13 +42,13 @@ jobs:
       - name: 'Store crusher-darwin as artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: crusher-linux
+          name: crusher-darwin
           path: output/crusher-electron-app-release/crusher-darwin.zip
           retention-days: 5
 
       - name: 'Store crusher-linux as artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: crusher-darwin
+          name: crusher-linux
           path: output/crusher-electron-app-release/crusher-linux.zip
           retention-days: 5

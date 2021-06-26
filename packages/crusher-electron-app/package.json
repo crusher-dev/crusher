@@ -9,6 +9,7 @@
   "scripts": {
     "start": "yarn build && ./bin/linux/electron ../../output/crusher-electron-app/",
 
+    "build:extension": "webpack --config webpack/webpack.extension.ts",
     "build": "webpack --config webpack/webpack.config.ts",
     "release:linux": "yarn build && bash scripts/build-linux-dist.sh",
     "release:mac": "yarn build && bash scripts/build-darwin-dist.sh",

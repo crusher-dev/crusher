@@ -3,7 +3,7 @@ const path = require("path");
 const AdmZip = require("adm-zip");
 
 const BIN_DIR = path.resolve(__dirname, "../bin");
-const celectronRegexp = new RegExp(/^celectron-v([\d.]+)-(linux|mac)-x64.zip/);
+const celectronRegExp = new RegExp(/^celectron-v([\d.]+)-(linux|darwin)-x64.zip/);
 
 function extractZipIfNotThere(binaryZipInfoArr) {
 	const platforms = Object.keys(binaryZipInfoArr);
@@ -26,9 +26,9 @@ function init() {
 	fs.mkdirSync(BIN_DIR, { recursive: true });
 
 	const entries = fs.readdirSync(BIN_DIR, { withFileTypes: true });
-	const binaryZipEntries = entries.filter((entry) => entry.isFile() && entry.name.match(celectronRegexp));
+	const binaryZipEntries = entries.filter((entry) => entry.isFile() && entry.name.match(celectronRegExp));
 	const binaryZipsInfo = binaryZipEntries.reduce((prev, zipEntry) => {
-		const regexGroups = zipEntry.name.match(celectronRegexp);
+		const regexGroups = zipEntry.name.match(celectronRegExp);
 		const platformName = regexGroups[2];
 		return { ...prev, [platformName]: { path: path.resolve(BIN_DIR, regexGroups[0]), version: regexGroups[1], platform: platformName } };
 	}, {});

@@ -30472,3 +30472,30 @@ video {
 .backdrop-sepia {
   --tw-backdrop-sepia: sepia(100%);
 }
+
+.popper-arrow, .popper-arrow:before {
+   width: 10px;
+   height: 10px;
+   position: absolute;
+   z-index: -1;
+}
+.popper-arrow::before {
+  content: '';
+  transform: rotate(45deg);
+  background: #333;
+  top: 0;
+  left: 0;
+}
+
+[data-popper-placement^='top'] > [data-popper-arrow] {
+   bottom: -4px;
+}
+[data-popper-placement^='right'] > [data-popper-arrow] {
+   left: -4px;
+}
+[data-popper-placement^='bottom'] > [data-popper-arrow] {
+   top: -4px;
+}
+[data-popper-placement^='left'] > [data-popper-arrow] {
+   right: -4px;
+}

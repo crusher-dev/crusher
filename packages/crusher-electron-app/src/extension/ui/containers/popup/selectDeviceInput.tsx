@@ -24,7 +24,9 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 	});
 
 	const handleDeviceSelected = (selectedOption: any) => {
-		selectDevice(selectedOption.value);
+		if (selectedDevice !== selectedOption.value && confirm("All recorded actions would be lost. Are you sure you want to continue?")) {
+			selectDevice(selectedOption.value);
+		}
 	};
 
 	return (

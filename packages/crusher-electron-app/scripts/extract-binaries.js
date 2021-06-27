@@ -19,6 +19,10 @@ function extractZipIfNotThere(binaryZipInfoArr) {
 		zip.extractAllTo(path.resolve(BIN_DIR, platform), true);
 
 		fs.unlinkSync(binaryZipInfoArr[platform].path);
+
+		if (platform === "linux") {
+			fs.renameSync(path.resolve(BIN_DIR, "linux/electron"), path.resolve(BIN_DIR, "linux/crusher"));
+		}
 	}
 }
 

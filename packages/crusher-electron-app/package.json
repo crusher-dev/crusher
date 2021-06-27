@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "extract:deps": "node scripts/extract-binaries.js",
-    "start": "yarn build && ./bin/linux/electron ../../output/crusher-electron-app/",
+    "start": "yarn build && ./bin/linux/crusher ../../output/crusher-electron-app/",
     "build:extension": "webpack --config webpack/webpack.extension.ts",
     "build": "webpack --config webpack/webpack.config.ts",
     "release:linux": "yarn build && bash scripts/build-linux.sh",

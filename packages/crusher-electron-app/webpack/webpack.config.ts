@@ -41,7 +41,10 @@ module.exports = [
 				...dotEnv.parsed,
 			}),
 			new CopyPlugin({
-				patterns: [{ from: "package.release.json", to: "package.json" }],
+				patterns: [
+					{ from: "package.release.json", to: "package.json" },
+					{ from: "src/icons", to: "icons" },
+				],
 			}),
 		],
 		entry: {

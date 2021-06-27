@@ -9,7 +9,7 @@ interface iStartupModalProps {
 
 const StartupModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
-	const [targetURL, setTargetURL] = useState("https://www.test-headout.com/burj-khalifa-tickets-c-158/");
+	const [targetURL, setTargetURL] = useState(null);
 
 	const handleTargetSiteChange = (event: any) => {
 		setTargetURL(event.target.value);
@@ -38,7 +38,7 @@ const StartupModal = (props: iStartupModalProps) => {
 					onChange={handleTargetSiteChange}
 				/>
 				<button style={buttonStyle} onClick={startRecording}>
-					{"Let's start"}
+					{"Record start"}
 				</button>
 			</div>
 		</ReactModal>

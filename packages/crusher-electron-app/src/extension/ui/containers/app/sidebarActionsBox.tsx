@@ -1,4 +1,4 @@
-import React, { RefObject, ChangeEvent } from "react";
+import React, { RefObject, ChangeEvent, useRef, useEffect, useState } from "react";
 import { ActionStepList } from "./actionStepList";
 import { useDispatch, useSelector } from "react-redux";
 import { getActionsRecordingState, getAutoRecorderState } from "../../../redux/selectors/recorder";
@@ -13,14 +13,20 @@ import { getStore } from "../../../redux/store";
 import { updateActionsRecordingState, updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
+import { createPopper } from "@popperjs/core";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
 }
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
+	const [isTooltipHovered, setIsTooltipHovered] = useState(false);
+	const popperArrowRef = useRef(null as HTMLDivElement);
+	const autoActionsTagRef = useRef(null as HTMLDivElement);
+	const autoActionsTooltipRef = useRef(null as HTMLDivElement);
 	const recordingState = useSelector(getActionsRecordingState);
 	const dispatch = useDispatch();
+
 	const handleAutoDetectModeToggle = (event: ChangeEvent<HTMLInputElement>) => {
 		const store = getStore();
 		store.dispatch(updateAutoRecorderSetting(event.target.checked));
@@ -40,6 +46,29 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 			</label>
 		</div>
 	);
+
+	const handleAutoActionsTagMouseEnter = () => {
+		setIsTooltipHovered(true);
+		createPopper(autoActionsTagRef.current, autoActionsTooltipRef.current, {
+			placement: "bottom",
+			modifiers: [
+				{
+					name: "offset",
+					options: {
+						offset: [0, 10],
+					},
+				},
+				{
+					name: "arrow",
+				},
+			],
+		});
+	};
+
+	const handleAutoActionsTagMouseOut = () => {
+		setIsTooltipHovered(false);
+	};
+
 	const AddCustomCheckView = () => (
 		<div className="flex flex-col pt-72 items-center justify-center h-full">
 			<DetectActionSwitch />
@@ -53,9 +82,18 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				</div>
 				<h6 className="text-gray-300 text-center text-13">For manual control, you can add custom checks</h6>
 				<BlueButton className="mt-24" onClick={toggleCustomIsCheck} title="Add custom check" />
-				<a href="https://www.google.com" className="underline text-gray-500 text-12 mt-44">
+				<div
+					onMouseOver={handleAutoActionsTagMouseEnter}
+					onMouseOut={handleAutoActionsTagMouseOut}
+					ref={autoActionsTagRef}
+					className="underline text-gray-500 text-12 mt-44"
+				>
 					Which actions are automatically detected?
-				</a>
+				</div>
+				<div ref={autoActionsTooltipRef} style={{ ...autoActionsTooltipStyle, display: isTooltipHovered ? "block" : "none" }}>
+					<span>Navigation, Scroll, Hover and Click actions are recorded automatically.</span>
+					<div className={"popper-arrow"} data-popper-arrow></div>
+				</div>
 			</div>
 		</div>
 	);
@@ -74,9 +112,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				) : (
 					<div className="flex items-center text-white h-10 max-w-max">
 						<DetectActionSwitch />
-						<div className="pl-1 pt-1 text-15">
-							Detect actions
-						</div>
+						<div className="pl-1 pt-1 text-15">Detect actions</div>
 					</div>
 				)}
 			</div>
@@ -97,7 +133,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.INITIAL_STATE}>
 					<AddCustomCheckView />
 				</Conditional>
-				<div >
+				<div>
 					<div style={actionContainerStyle}>
 						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.SELECT_ELEMENT}>
 							<SelectElementPlaceholder deviceIframeRef={props.deviceIframeRef} />
@@ -116,6 +152,16 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	);
 };
 
+const autoActionsTooltipStyle = {
+	position: POSITION.ABSOLUTE,
+	backgroundColor: "#333",
+	color: "white",
+	padding: "5px 10px",
+	borderRadius: "4px",
+	fontSize: "13px",
+	top: -100,
+	left: -100,
+};
 const sidebarStyle = {
 	background: COLOR_CONSTANTS.PRIMARY,
 	width: "22%",

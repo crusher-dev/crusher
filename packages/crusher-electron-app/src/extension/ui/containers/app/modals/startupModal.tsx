@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactModal from "react-modal";
 import { FONT_WEIGHT } from "../../../../interfaces/css";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
+import { COLOR_CONSTANTS } from "../../../colorConstants";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -46,7 +47,7 @@ const StartupModal = (props: iStartupModalProps) => {
 };
 
 const buttonStyle = {
-	background: "#FF42CA",
+	backgroundColor: COLOR_CONSTANTS.BUTTON_BLUE,
 	padding: 9,
 	minWidth: 170,
 	borderRadius: 4,

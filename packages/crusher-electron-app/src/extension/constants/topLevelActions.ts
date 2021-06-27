@@ -4,7 +4,7 @@ import { iActionDescription } from "../interfaces/actionDescription";
 const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 	{
 		id: TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE,
-		title: "Select and add an element checks",
+		title: "Select & add element check",
 		icon: chrome.runtime.getURL("icons/actions/inspect-mode.svg"),
 		desc: "",
 	},

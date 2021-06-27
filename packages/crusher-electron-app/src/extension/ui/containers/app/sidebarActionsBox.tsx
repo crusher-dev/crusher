@@ -79,9 +79,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				font-semibold mt-28
 				text-center text-15 mb-12"
 				>
-					{"We're detecting your actions"}
+					{"We're detecting your basic actions"}
 				</div>
-				<h6 className="text-gray-300 text-center text-13">For manual control, you can add custom checks</h6>
+				<h6 className="text-gray-300 text-center text-13">For advanced control, add a custom check</h6>
 				<BlueButton className="mt-24" onClick={toggleCustomIsCheck} title="Add custom check" />
 				<div
 					onMouseOver={handleAutoActionsTagMouseEnter}
@@ -103,7 +103,8 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	);
 
 	const setCustomBackendUrl = () => {
-		const backendUrl = prompt("Please enter your name", "");
+		console.log(window.prompt);
+		const backendUrl = window.prompt("Please enter your name", "");
 		if (!(window as any).electron) {
 			throw new Error("Cannot find exposed electron API");
 		}
@@ -117,7 +118,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
 			<div className={"flex h-20 justify-end items-center"}>
 				{recordingState.type === ACTIONS_RECORDING_STATE.PAGE ? (
-					<div className="flex items-center text-white h-10 max-w-max mr-12">
+					<div className="flex items-center text-white h-10 max-w-max mr-24">
 						<DetectActionSwitch />
 						<div className="pl-1 pt-1 text-15">Detect actions</div>
 					</div>
@@ -167,6 +168,7 @@ const checkBoxInputStyle = {
 };
 const autoActionsTooltipStyle = {
 	position: POSITION.ABSOLUTE,
+	cursor: "pointer",
 	backgroundColor: "#333",
 	color: "white",
 	padding: "5px 10px",

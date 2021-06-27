@@ -100,7 +100,9 @@ const List = (props: iListProps) => {
 						<BackIcon style={backIconStyle} />
 					</div>
 				</Conditional>
-				<span style={headingTitleStyle(!!showBackButton)}>{heading}</span>
+				<Conditional If={heading}>
+					<span style={headingTitleStyle(!!showBackButton)}>{heading}</span>
+				</Conditional>
 			</div>
 			<div style={listContainerStyle}>{out}</div>
 		</div>

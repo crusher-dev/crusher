@@ -9,6 +9,7 @@ export const ENVIRONMENT = {
 export const currentEnvironmentName = ENVIRONMENT[process.env.NODE_ENV];
 
 export const resoveWorkerPath = (fileName): string => {
+	if (process.env.NODE_ENV === "development") return fileName;
 	try {
 		const workerPath = path.resolve(fileName);
 		return workerPath;

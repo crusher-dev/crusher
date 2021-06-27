@@ -6,10 +6,23 @@ import { UserAgent } from "@shared/types/userAgent";
 import UserAgents from "@shared/constants/userAgents";
 
 const embeddedUrlRegExp = new RegExp(/^(['"])(.*)\1$/);
+let BACKEND_URL = process.env.BACKEND_URL;
 
 export class AdvancedURL {
 	static getScheme(url: string) {
 		return String(url).replace(/^\/|\/$/g, "");
+	}
+
+	static setCustomBackendURL(url: string) {
+		BACKEND_URL = url;
+	}
+
+	static getAppDomainFromBackendURL() {
+		return "crusher.dev";
+	}
+
+	static getBackendURL(): string {
+		return BACKEND_URL;
 	}
 
 	static getParameterByName(name: string, url: string) {

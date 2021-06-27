@@ -14,6 +14,7 @@ import { updateActionsRecordingState, updateAutoRecorderSetting } from "../../..
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
 import { createPopper } from "@popperjs/core";
+import { AdvancedURL } from "../../../utils/url";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -78,7 +79,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				font-semibold mt-28
 				text-center text-15 mb-12"
 				>
-					We're detecting your actions
+					{"We're detecting your actions"}
 				</div>
 				<h6 className="text-gray-300 text-center text-13">For manual control, you can add custom checks</h6>
 				<BlueButton className="mt-24" onClick={toggleCustomIsCheck} title="Add custom check" />
@@ -101,6 +102,17 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		</div>
 	);
 
+	const setCustomBackendUrl = () => {
+		const backendUrl = prompt("Please enter your name", "");
+		if (!(window as any).electron) {
+			throw new Error("Cannot find exposed electron API");
+		}
+		if (backendUrl && backendUrl.length) {
+			AdvancedURL.setCustomBackendURL(AdvancedURL.getAppDomainFromBackendURL());
+			(window as any).electron.setCustomBackendDomain(backendUrl);
+		}
+	};
+
 	return (
 		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
 			<div className={"flex h-20 justify-end items-center"}>
@@ -111,7 +123,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					</div>
 				) : null}
 				<div className="mr-28 cursor-pointer">
-					<SettingsIcon />
+					<SettingsIcon onClick={setCustomBackendUrl} />
 				</div>
 			</div>
 			<div

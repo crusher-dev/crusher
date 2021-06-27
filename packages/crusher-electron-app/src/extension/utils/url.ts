@@ -48,7 +48,7 @@ export class AdvancedURL {
 
 	static getDeviceFromCrusherExtensionUrl(extensionUrl: string): iDevice {
 		const deviceId = getQueryStringParams("device", extensionUrl);
-		const defaultDevice = devices[8];
+		const defaultDevice = devices[1];
 		if (deviceId) {
 			const device = getDevice(deviceId);
 			return device ? device : defaultDevice;

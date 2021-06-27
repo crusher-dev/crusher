@@ -41,7 +41,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const DetectActionSwitch = () => (
 		<div>
 			<label className="switch cursor-pointer">
-				<input type="checkbox" defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
+				<input type="checkbox" style={checkBoxInputStyle} defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
 				{isAutoHoverOn ? <SwitchOnIcon /> : <SwitchOffIcon />}
 			</label>
 		</div>
@@ -103,21 +103,16 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 
 	return (
 		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
-			<div
-				className={`flex h-20 
-			${!(recordingState.type === ACTIONS_RECORDING_STATE.PAGE) ? "justify-end" : "justify-center"} 
-			items-center`}
-			>
-				{!(recordingState.type === ACTIONS_RECORDING_STATE.PAGE) ? (
-					<div className="mr-28 mt-12 cursor-pointer">
-						<SettingsIcon />
-					</div>
-				) : (
-					<div className="flex items-center text-white h-10 max-w-max">
+			<div className={"flex h-20 justify-end items-center"}>
+				{recordingState.type === ACTIONS_RECORDING_STATE.PAGE ? (
+					<div className="flex items-center text-white h-10 max-w-max mr-12">
 						<DetectActionSwitch />
 						<div className="pl-1 pt-1 text-15">Detect actions</div>
 					</div>
-				)}
+				) : null}
+				<div className="mr-28 cursor-pointer">
+					<SettingsIcon />
+				</div>
 			</div>
 			<div
 				style={{ height: "55%" }}
@@ -155,6 +150,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	);
 };
 
+const checkBoxInputStyle = {
+	display: "none",
+};
 const autoActionsTooltipStyle = {
 	position: POSITION.ABSOLUTE,
 	backgroundColor: "#333",

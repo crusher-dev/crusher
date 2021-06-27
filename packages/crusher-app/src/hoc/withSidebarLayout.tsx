@@ -116,13 +116,13 @@ function LeftSection(props: any) {
 		},
 		{
 			name: "Builds",
-			link: "/app/project/builds?category=1",
+			link: "/app/project/builds?category=0",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},
 		{
 			name: "Monitoring",
-			link: "/app/project/builds?category=0",
+			link: "/app/project/builds?category=1",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},
@@ -361,10 +361,10 @@ export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGet
 
 		const handleRunTests = () => {
 			runTestsInProject(selectedProjectID)
-				.then((e) => {
+				.then(() => {
 					redirectToFrontendPath("/app/project/builds");
 				})
-				.catch((err) => {
+				.catch(() => {
 					Toast.showError("Create a host first");
 				});
 		};

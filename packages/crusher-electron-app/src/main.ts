@@ -16,11 +16,23 @@ const loadExtension = (mainWindow) => {
 
 let mainWindow;
 
+function getIconPath() {
+	switch (process.platform) {
+		case "win32":
+			return path.join(__dirname, "icons/app.ico");
+		default:
+			return path.join(__dirname, "icons/app.png");
+	}
+}
+
 async function createWindow() {
 	app.commandLine.appendSwitch("--disable-site-isolation-trials");
 	app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	mainWindow = new BrowserWindow({
+		title: "Crusher Test Recorder",
+		show: false,
+		icon: getIconPath(),
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 			nativeWindowOpen: true,
@@ -28,7 +40,10 @@ async function createWindow() {
 			devTools: true,
 		},
 	});
+
 	await mainWindow.maximize();
+	await mainWindow.show();
+	await mainWindow.setResizable(false);
 
 	await mainWindow.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, (responseDetails, updateCallback) => {
 		Object.keys(responseDetails.responseHeaders).map((headers) => {

@@ -91,7 +91,10 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 					Which actions are automatically detected?
 				</div>
 				<div ref={autoActionsTooltipRef} style={{ ...autoActionsTooltipStyle, display: isTooltipHovered ? "block" : "none" }}>
-					<span>Navigation, Scroll, Hover and Click actions are recorded automatically.</span>
+					<span>
+						Navigation, Scroll, Hover and Click actions
+						<br /> are recorded automatically.
+					</span>
 					<div className={"popper-arrow"} data-popper-arrow></div>
 				</div>
 			</div>

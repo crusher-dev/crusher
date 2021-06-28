@@ -35,6 +35,11 @@ function getIconPath() {
 	}
 }
 
+function reloadApp(mainWindow) {
+	app.relaunch({ args: process.argv.slice(1).concat([`--openExtensionURL=${mainWindow.webContents.getURL()}`]) });
+	app.exit();
+}
+
 async function createWindow() {
 	app.commandLine.appendSwitch("--disable-site-isolation-trials");
 	app.commandLine.appendSwitch("--disable-web-security");
@@ -86,8 +91,7 @@ async function createWindow() {
 	});
 
 	ipcMain.on("reload-extension", async () => {
-		app.relaunch({ args: process.argv.slice(1).concat([`--openExtensionURL=${mainWindow.webContents.getURL()}`]) });
-		app.exit();
+		reloadApp(mainWindow);
 	});
 
 	ipcMain.on("turn-on-inspect-mode", async (e, msg) => {

@@ -10,6 +10,7 @@
     "extract:deps": "node scripts/extract-binaries.js",
     "start": "yarn build && ./bin/linux/crusher ../../output/crusher-electron-app/",
     "build:extension": "webpack --config webpack/webpack.extension.ts",
+    "dev:extension": "webpack --config webpack/webpack.extension.dev.ts",
     "build": "webpack --config webpack/webpack.config.ts",
     "release:linux": "yarn build && bash scripts/build-linux.sh",
     "release:mac": "yarn build && bash scripts/build-darwin.sh",

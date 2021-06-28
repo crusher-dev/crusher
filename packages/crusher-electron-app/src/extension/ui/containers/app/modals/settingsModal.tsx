@@ -8,7 +8,7 @@ interface iStartupModalProps {
 	isOpen: boolean;
 }
 
-const StartupModal = (props: iStartupModalProps) => {
+const SettingsModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
 	const [targetURL, setTargetURL] = useState(null);
 
@@ -40,7 +40,7 @@ const StartupModal = (props: iStartupModalProps) => {
 					onChange={handleTargetSiteChange}
 				/>
 				<button style={buttonStyle} onClick={startRecording}>
-					{"Record test"}
+					{"Record test for me"}
 				</button>
 			</div>
 		</ReactModal>
@@ -102,4 +102,4 @@ const customModalStyles = {
 		zIndex: 100000,
 	},
 };
-export { StartupModal };
+export { SettingsModal };

@@ -40,7 +40,7 @@ const SettingsModal = (props: iStartupModalProps) => {
 					onChange={handleTargetSiteChange}
 				/>
 				<button style={buttonStyle} onClick={startRecording}>
-					{"Record test for me"}
+					{"Record test"}
 				</button>
 			</div>
 		</ReactModal>

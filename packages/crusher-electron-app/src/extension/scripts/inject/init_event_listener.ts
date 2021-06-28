@@ -1,7 +1,10 @@
 import { getFrameDepth } from "../../utils/helpers";
+import { setupContentScriptForElectronReload } from "../../utils/electronReload";
 const frameDepth = getFrameDepth(window.self);
 
 if (frameDepth === 1 && window.name === "crusher_iframe") {
+	setupContentScriptForElectronReload();
+
 	fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
 		.then((response) => response.text())
 		.then((html) => {

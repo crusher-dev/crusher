@@ -44,7 +44,7 @@ function getHTMLWebpackPluginConfigArrForTemplates() {
 	});
 }
 
-module.exports = smp.wrap({
+let finalConfig: any = {
 	mode: "production",
 	entry: {
 		content_script: [path.resolve(__dirname, "../src/extension/scripts/inject/events_listener.ts")],
@@ -103,4 +103,31 @@ module.exports = smp.wrap({
 		],
 	},
 	devtool: "cheap-module-source-map",
-});
+};
+
+if (process.env.NODE_ENV === "development") {
+	const ExtensionReloader = require("webpack-extension-reloader");
+	const RunElectronOnFirstCompile = require("./plugin/runElectronFirstCompile");
+
+	finalConfig = {
+		...finalConfig,
+		plugins: [
+			...finalConfig.plugins,
+			new ExtensionReloader({
+				isElectron: true,
+				port: 2400, // Which port use to create the server
+				reloadPage: true, // Force the reload of the page also
+				entries: {
+					background: "background",
+					extensionPage: ["popup", "record_test"],
+					contentScript: ["content_script", "change_navigator"],
+				},
+			}),
+			new RunElectronOnFirstCompile(),
+		],
+		mode: "development",
+		watch: true,
+	};
+}
+
+module.exports = smp.wrap(finalConfig);

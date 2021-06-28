@@ -75,6 +75,10 @@ async function createWindow() {
 	ipcMain.on("set-custom-backend-domain", async (e, domain) => {
 		APP_DOMAIN = domain;
 	});
+	ipcMain.on("reload-extension", async () => {
+		app.relaunch();
+		app.exit();
+	});
 
 	ipcMain.on("turn-on-inspect-mode", async (e, msg) => {
 		await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {

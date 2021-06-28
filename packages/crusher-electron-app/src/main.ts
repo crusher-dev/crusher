@@ -3,12 +3,20 @@ import { app, BrowserWindow, session, ipcMain } from "electron";
 
 let APP_DOMAIN = process.env.APP_DOMAIN;
 
+const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
+
 const loadExtension = (mainWindow) => {
 	return new Promise((resolve) => {
 		session.defaultSession
 			.loadExtension(path.resolve(__dirname, "./extension"), { allowFileAccess: true })
 			.then(({ id: extensionId }) => {
-				return mainWindow.loadURL(`chrome-extension://${extensionId}/test_recorder.html`);
+				const urlToOpen = app.commandLine.getSwitchValue("openExtensionURL") || "chrome-extension://<EXTENSION_ID_HERE>/test_recorder.html";
+				if (!urlToOpen.match(extensionURLRegExp)) {
+					return mainWindow.loadURL(urlToOpen);
+				}
+
+				const finalExtensionURL = urlToOpen.replace(extensionURLRegExp, `$1${extensionId}$3`);
+				return mainWindow.loadURL(finalExtensionURL);
 			})
 			.then(() => {
 				resolve(true);
@@ -72,11 +80,13 @@ async function createWindow() {
 	await mainWindow.webContents.debugger.sendCommand("Runtime.enable");
 	await mainWindow.webContents.debugger.sendCommand("Overlay.enable");
 	await mainWindow.webContents.debugger.sendCommand("Debugger.setAsyncCallStackDepth", { maxDepth: 9999 });
+
 	ipcMain.on("set-custom-backend-domain", async (e, domain) => {
 		APP_DOMAIN = domain;
 	});
+
 	ipcMain.on("reload-extension", async () => {
-		app.relaunch();
+		app.relaunch({ args: process.argv.slice(1).concat([`--openExtensionURL=${mainWindow.webContents.getURL()}`]) });
 		app.exit();
 	});
 

@@ -13,6 +13,7 @@ import MessageSender = chrome.runtime.MessageSender;
 import { AdvancedURL } from "./utils/url";
 import { generateCrusherExtensionUrl, getDefaultDeviceFromDeviceType } from "@shared/utils/extension";
 import { DEVICE_TYPES } from "@shared/types/deviceTypes";
+import { setupBackgroundScriptForExtensionReload } from "./utils/electronReload";
 
 class BackgroundEventsListener {
 	constructor() {
@@ -24,6 +25,8 @@ class BackgroundEventsListener {
 		this.onBeforeSendHeaders = this.onBeforeSendHeaders.bind(this);
 		this.onBeforeNavigation = this.onBeforeNavigation.bind(this);
 		this.onExternalMessage = this.onExternalMessage.bind(this);
+
+		setupBackgroundScriptForExtensionReload();
 	}
 
 	isRegisteredAsCrusherWindow(tabId: number): boolean {

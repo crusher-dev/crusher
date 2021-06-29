@@ -5,7 +5,7 @@ const path = require("path");
 
 const dotEnv = require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const CopyPlugin = require("copy-webpack-plugin");
-const extensionConfig = require("./webpack.extension");
+const extensionConfig = process.env.DO_NOT_BUILD_EXTENSION !== "undefined" ? require("./webpack.extension") : null;
 
 const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/");
 
@@ -30,7 +30,7 @@ const commonConfig = {
 	},
 };
 
-module.exports = [
+const finalConfig = [
 	extensionConfig,
 	{
 		...commonConfig,
@@ -59,3 +59,5 @@ module.exports = [
 		},
 	},
 ];
+
+module.exports = finalConfig.filter((config) => config !== null);

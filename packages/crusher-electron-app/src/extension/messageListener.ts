@@ -39,6 +39,7 @@ export enum MESSAGE_TYPES {
 	REQUEST_USER_AGENT = "REQUEST_USER_AGENT",
 	SEO_META_INFORMATION = "SEO_META_INFORMATION",
 	EXECUTE_CUSTOM_SCRIPT_OUTPUT = "EXECUTE_CUSTOM_SCRIPT_OUTPUT",
+	RELOAD_ELECTRON_EXTENSION = "RELOAD_ELECTRON_EXTENSION",
 }
 
 export enum RECORDING_STATUS {
@@ -259,6 +260,14 @@ export function recorderMessageListener(deviceIframeRef: RefObject<HTMLIFrameEle
 		}
 		case MESSAGE_TYPES.REQUEST_USER_AGENT: {
 			sendUserAgentToFrame(deviceIframeRef);
+			break;
+		}
+		case MESSAGE_TYPES.RELOAD_ELECTRON_EXTENSION: {
+			if (!(window as any).electron) {
+				throw new Error("This should be only hit from inside the electron");
+			}
+
+			(window as any).electron.reloadExtension();
 			break;
 		}
 		case MESSAGE_TYPES.SEO_META_INFORMATION: {

@@ -12,6 +12,7 @@ import { getStore } from "../../../../redux/store";
 import { recordAction } from "../../../../redux/actions/actions";
 import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 import { Button } from "../../../components/app/button";
+import { pxToRemValue } from "../../../../utils/helpers";
 
 interface iSEOModalProps {
 	onClose?: any;
@@ -132,7 +133,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	};
 
 	return (
-		<div style={containerStyle}>
+		<div style={containerStyle(validationRows.length)}>
 			<AssertionFormTable
 				rowItems={validationRows}
 				fields={validationFields}
@@ -162,7 +163,9 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	);
 };
 
-const containerStyle = {};
+const containerStyle = (isRowsPresent) => {
+	return { marginTop: isRowsPresent ? pxToRemValue(36) : pxToRemValue(24) };
+};
 const bottomBarStyle = {
 	display: "flex",
 	justifyContent: "flex-end",

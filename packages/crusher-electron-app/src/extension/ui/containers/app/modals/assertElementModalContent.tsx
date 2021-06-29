@@ -15,6 +15,7 @@ import { turnOffInspectModeInFrame } from "../../../../messageListener";
 import { iElementInfo } from "@shared/types/elementInfo";
 import { Button } from "../../../components/app/button";
 import { TEXT_ALIGN } from "../../../../interfaces/css";
+import { pxToRemValue } from "../../../../utils/helpers";
 
 interface iAssertElementModalProps {
 	onClose?: any;
@@ -146,7 +147,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	};
 
 	return (
-		<div style={containerStyle}>
+		<div style={containerStyle(validationRows.length)}>
 			<AssertionFormTable
 				rowItems={validationRows}
 				fields={validationFields}
@@ -176,7 +177,9 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	);
 };
 
-const containerStyle = {};
+const containerStyle = (areRowsPresent) => {
+	return { marginTop: areRowsPresent ? pxToRemValue(36) : pxToRemValue(24) };
+};
 const bottomBarStyle = {
 	display: "flex",
 	justifyContent: "flex-end",

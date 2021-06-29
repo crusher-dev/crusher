@@ -62,7 +62,7 @@ export default class ProjectService {
 	async getHoursSavedMetric(projectId: number) {
 		const noTests = await this.dbManager.fetchSingleRow(`SELECT COUNT(*) as count FROM tests WHERE project_id = ?`, [projectId]);
 		const noJobs = await this.dbManager.fetchSingleRow(`SELECT COUNT(*) as count from jobs WHERE project_id = ?`, [projectId]);
-		return (noTests.count * 0.25 * 25 + 0.3 * noJobs.count) / 60;
+		return (noTests.count * 5 * 25 + 2 * noJobs.count) / 60;
 	}
 
 	async getAverageBuildTime(projectId: number) {

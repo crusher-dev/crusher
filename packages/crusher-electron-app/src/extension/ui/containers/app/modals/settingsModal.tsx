@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
 import { FONT_WEIGHT, POSITION } from "../../../../interfaces/css";
-import { addHttpToURLIfNotThere } from "@shared/utils/url";
 import { COLOR_CONSTANTS } from "../../../colorConstants";
 import { pxToRemValue } from "../../../../utils/helpers";
 import { ModalTopBar } from "./index";
@@ -61,13 +60,6 @@ const SettingsModal = (props: iStartupModalProps) => {
 	);
 };
 
-const headingStyle = {
-	fontFamily: "DM Sans",
-	fontStyle: "normal",
-	fontWeight: FONT_WEIGHT.BOLD,
-	fontSize: pxToRemValue(18),
-	color: "#fff",
-};
 const formContainerStyle = {
 	marginTop: pxToRemValue(54),
 };

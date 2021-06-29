@@ -25,6 +25,7 @@ export function executeScript(name: string, tabId: number, cb?: any) {
 }
 
 export function submitPostDataWithForm(url: string, options: any = {}) {
+	console.log("URL IS", url);
 	const form = document.createElement("form");
 	form.method = "post";
 	form.action = url;

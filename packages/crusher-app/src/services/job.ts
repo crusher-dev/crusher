@@ -25,17 +25,15 @@ export const getPaginationEndpoint = (endpoint: string, payload: any, headers = 
 };
 
 export const getAllProjectLogs = (projectId: number, headers = null) => {
-	const mockUrl = "https://api.jsonbin.io/b/60bdbcf19fc30168f1c6714e"
-	return backendRequest(mockUrl || `/job/getLogsOfProject/${projectId}`, {
+	// const mockUrl = "https://api.jsonbin.io/b/60bdbcf19fc30168f1c6714e";
+	return backendRequest(`/job/getLogsOfProject/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 	});
 };
 
 export const getMetaDashboardProjectInfo = (projectId: number, headers = null) => {
-	const mockURL = "https://api.jsonbin.io/b/60bdbbbd92164b68bec2e230";
-
-	return backendRequest(mockURL || `/projects/meta/dashboard/info/${projectId}`, {
+	return backendRequest(`/projects/meta/dashboard/info/${projectId}`, {
 		method: RequestMethod.GET,
 		headers: headers,
 	});

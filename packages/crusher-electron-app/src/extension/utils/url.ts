@@ -1,5 +1,5 @@
 import devices from "@shared/constants/devices";
-import { getQueryStringParams } from "@shared/utils/url";
+import { addHttpToURLIfNotThere, getQueryStringParams } from "@shared/utils/url";
 import { getDevice } from "./helpers";
 import { iDevice } from "@shared/types/extension/device";
 import { UserAgent } from "@shared/types/userAgent";
@@ -22,7 +22,14 @@ export class AdvancedURL {
 	}
 
 	static getAppDomainFromBackendURL() {
-		return "crusher.dev";
+		const cleanURL = addHttpToURLIfNotThere(BACKEND_URL);
+		const hostName = new URL(cleanURL).hostname;
+
+		const hostNameSubDomainsArr = hostName.split(".");
+		if (hostNameSubDomainsArr.length > 2) {
+			hostNameSubDomainsArr.shift();
+		}
+		return hostNameSubDomainsArr.join(".");
 	}
 
 	static getBackendURL(): string {

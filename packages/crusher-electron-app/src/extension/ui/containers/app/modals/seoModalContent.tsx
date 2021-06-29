@@ -163,8 +163,8 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	);
 };
 
-const containerStyle = (isRowsPresent) => {
-	return { marginTop: isRowsPresent ? pxToRemValue(36) : pxToRemValue(24) };
+const containerStyle = (areRowsPresent) => {
+	return { marginTop: areRowsPresent ? pxToRemValue(36) : pxToRemValue(24) };
 };
 const bottomBarStyle = {
 	display: "flex",

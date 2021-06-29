@@ -12,6 +12,7 @@ import { FRAME_MESSAGE_TYPES } from "../../../../scripts/inject/responseMessageL
 import { AssertElementModalContent } from "./assertElementModalContent";
 import { ElementCustomScriptModalContent } from "./elementCustomScriptModalContent";
 import { HowToUseVideoModal } from "./howToUseVideoModal";
+import { POSITION } from "../../../../interfaces/css";
 
 interface iModalTopBarProps {
 	title: string;
@@ -46,7 +47,7 @@ const topBarStyle = {
 	display: "flex",
 	justifyContent: "space-between",
 	marginBottom: "1rem",
-	background: "#1C1F26",
+	background: "rgb(17,18,19)",
 };
 const topLeftSectionStyle = {
 	display: "flex",
@@ -167,14 +168,19 @@ const customModalStyles = (modalState: ACTIONS_MODAL_STATE | null) => {
 			overflow: "auto",
 			boxShadow: isHowToUseVideoModal ? "none" : "0px 4px 12px rgba(0, 0, 0, 0.1)",
 			padding: "36px 40px",
-			background: isHowToUseVideoModal ? "rgb(0,0,0,0)" : "#1C1F26",
+			background: isHowToUseVideoModal ? "rgb(0,0,0,0)" : "rgb(17,18,19)",
 			zIndex: 100000,
 		},
 		overlay: {
 			background: isHowToUseVideoModal ? "#1f1f20" : "rgba(0,0,0,0.5)",
+			position: POSITION.ABSOLUTE,
+			left: 0,
+			top: 0,
+			height: "100%",
+			width: "100%",
 			zIndex: 100000,
 		},
 	};
 };
 
-export { ModalManager };
+export { ModalManager, ModalTopBar };

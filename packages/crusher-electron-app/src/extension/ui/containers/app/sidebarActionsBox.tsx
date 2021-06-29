@@ -14,13 +14,15 @@ import { updateActionsRecordingState, updateAutoRecorderSetting } from "../../..
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
 import { createPopper } from "@popperjs/core";
+import { SettingsModal } from "./modals/settingsModal";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
 }
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
-	const [isTooltipHovered, setIsTooltipHovered] = useState(false);
+	const [isTooltipHovered, setIsTooltipHovered] = useState(true);
+	const [shouldShowSettingsModal, setShouldShowSettingsModal] = useState(false);
 	const popperArrowRef = useRef(null as HTMLDivElement);
 	const autoActionsTagRef = useRef(null as HTMLDivElement);
 	const autoActionsTooltipRef = useRef(null as HTMLDivElement);
@@ -41,7 +43,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const DetectActionSwitch = () => (
 		<div>
 			<label className="switch cursor-pointer">
-				<input type="checkbox" defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
+				<input type="checkbox" style={checkBoxInputStyle} defaultChecked={isAutoHoverOn} onChange={handleAutoDetectModeToggle} />
 				{isAutoHoverOn ? <SwitchOnIcon /> : <SwitchOffIcon />}
 			</label>
 		</div>
@@ -78,9 +80,9 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				font-semibold mt-28
 				text-center text-15 mb-12"
 				>
-					We're detecting your actions
+					{"We're detecting your basic actions"}
 				</div>
-				<h6 className="text-gray-300 text-center text-13">For manual control, you can add custom checks</h6>
+				<h6 className="text-gray-300 text-center text-13">For advanced control, add a custom check</h6>
 				<BlueButton className="mt-24" onClick={toggleCustomIsCheck} title="Add custom check" />
 				<div
 					onMouseOver={handleAutoActionsTagMouseEnter}
@@ -101,23 +103,26 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		</div>
 	);
 
+	const openSettings = () => {
+		setShouldShowSettingsModal(true);
+	};
+
+	const handleCloseSettingsModalCallback = () => {
+		setShouldShowSettingsModal(false);
+	};
+
 	return (
 		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
-			<div
-				className={`flex h-20 
-			${!(recordingState.type === ACTIONS_RECORDING_STATE.PAGE) ? "justify-end" : "justify-center"} 
-			items-center`}
-			>
-				{!(recordingState.type === ACTIONS_RECORDING_STATE.PAGE) ? (
-					<div className="mr-28 mt-12 cursor-pointer">
-						<SettingsIcon />
-					</div>
-				) : (
-					<div className="flex items-center text-white h-10 max-w-max">
+			<div className={"flex h-20 justify-end items-center"}>
+				{recordingState.type === ACTIONS_RECORDING_STATE.PAGE ? (
+					<div className="flex items-center text-white h-10 max-w-max mr-24">
 						<DetectActionSwitch />
 						<div className="pl-1 pt-1 text-15">Detect actions</div>
 					</div>
-				)}
+				) : null}
+				<div className="mr-28 cursor-pointer">
+					<SettingsIcon onClick={openSettings} />
+				</div>
 			</div>
 			<div
 				style={{ height: "55%" }}
@@ -151,12 +156,17 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				</div>
 			</div>
 			<ActionStepList />
+			<SettingsModal isOpen={shouldShowSettingsModal} onClose={handleCloseSettingsModalCallback} />
 		</div>
 	);
 };
 
+const checkBoxInputStyle = {
+	display: "none",
+};
 const autoActionsTooltipStyle = {
 	position: POSITION.ABSOLUTE,
+	cursor: "pointer",
 	backgroundColor: "#333",
 	color: "white",
 	padding: "5px 10px",

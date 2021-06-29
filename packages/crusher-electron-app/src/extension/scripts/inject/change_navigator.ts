@@ -1,6 +1,14 @@
 import { iMessage, MESSAGE_TYPES } from "../../messageListener";
 import { FRAME_MESSAGE_TYPES } from "./responseMessageListener";
 import { iUserAgent } from "@shared/constants/userAgents";
+import { getFrameDepth } from "../../utils/helpers";
+import { setupContentScriptForElectronReload } from "../../utils/electronReload";
+
+const frameDepth = getFrameDepth(window.self);
+
+if (frameDepth === 1 && window.name === "crusher_iframe") {
+	setupContentScriptForElectronReload();
+}
 
 const actualCode = `(${(userAgent: string, appVersion: string, platformVersion: string) => {
 	const { navigator } = window;

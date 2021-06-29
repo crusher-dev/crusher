@@ -9,8 +9,11 @@
   "scripts": {
     "extract:deps": "node scripts/extract-binaries.js",
     "start": "yarn build && ./bin/linux/crusher ../../output/crusher-electron-app/",
+    "start:dev": "DO_NOT_BUILD_EXTENSION=true NODE_ENV=development webpack --config webpack/webpack.config.ts && yarn dev:extension",
     "build:extension": "webpack --config webpack/webpack.extension.ts",
+    "dev:extension": "NODE_ENV=development webpack --config webpack/webpack.extension.ts",
     "build": "webpack --config webpack/webpack.config.ts",
+    "build:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",
     "release:linux": "yarn build && bash scripts/build-linux.sh",
     "release:mac": "yarn build && bash scripts/build-darwin.sh",
     "release:all": "yarn build && bash scripts/build-all.sh"
@@ -109,7 +112,7 @@
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^4.1.3",
     "webpack-cli": "^4.5.0",
-    "webpack-extension-reloader": "https://github.com/crusherdev/webpack-extension-reloader.git",
+    "webpack-extension-reloader": "https://github.com/crusherdev/webpack-extension-reloader.git#ef1a48f07c4658c914005994d3d5eb4b30d98534",
     "webpack-httpolyglot-server": "^0.3.0",
     "webpack-node-externals": "^2.5.2",
     "webpack-virtual-modules": "^0.4.3"

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactModal from "react-modal";
 import { FONT_WEIGHT } from "../../../../interfaces/css";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
+import { COLOR_CONSTANTS } from "../../../colorConstants";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -26,6 +27,7 @@ const StartupModal = (props: iStartupModalProps) => {
 			startRecording();
 		}
 	};
+
 	return (
 		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
 			<div style={inputContainerStyle}>
@@ -46,7 +48,7 @@ const StartupModal = (props: iStartupModalProps) => {
 };
 
 const buttonStyle = {
-	background: "#FF42CA",
+	backgroundColor: COLOR_CONSTANTS.BUTTON_BLUE,
 	padding: 9,
 	minWidth: 170,
 	borderRadius: 4,
@@ -87,14 +89,14 @@ const customModalStyles = {
 		width: 760,
 		overflow: "auto",
 		padding: "36px 40px",
-		background: "rgb(31, 31, 32)",
+		background: "rgb(17,18,19)",
 		zIndex: 100000,
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	overlay: {
-		background: "rgb(31, 31, 32)",
+		background: "rgb(17,18,19)",
 		width: "100%",
 		height: "100%",
 		zIndex: 100000,

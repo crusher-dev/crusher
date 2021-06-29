@@ -1,15 +1,39 @@
 import devices from "@shared/constants/devices";
-import { getQueryStringParams } from "@shared/utils/url";
+import { addHttpToURLIfNotThere, getQueryStringParams } from "@shared/utils/url";
 import { getDevice } from "./helpers";
 import { iDevice } from "@shared/types/extension/device";
 import { UserAgent } from "@shared/types/userAgent";
 import UserAgents from "@shared/constants/userAgents";
 
 const embeddedUrlRegExp = new RegExp(/^(['"])(.*)\1$/);
+let BACKEND_URL = process.env.BACKEND_URL;
 
 export class AdvancedURL {
+	static validateURL(url: string) {
+		return /(?:^|\s)((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/.test(url);
+	}
+
 	static getScheme(url: string) {
 		return String(url).replace(/^\/|\/$/g, "");
+	}
+
+	static setCustomBackendURL(url: string) {
+		BACKEND_URL = url;
+	}
+
+	static getAppDomainFromBackendURL() {
+		const cleanURL = addHttpToURLIfNotThere(BACKEND_URL);
+		const hostName = new URL(cleanURL).hostname;
+
+		const hostNameSubDomainsArr = hostName.split(".");
+		if (hostNameSubDomainsArr.length > 2) {
+			hostNameSubDomainsArr.shift();
+		}
+		return hostNameSubDomainsArr.join(".");
+	}
+
+	static getBackendURL(): string {
+		return BACKEND_URL;
 	}
 
 	static getParameterByName(name: string, url: string) {

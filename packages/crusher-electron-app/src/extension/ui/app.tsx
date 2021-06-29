@@ -11,7 +11,7 @@ import { AdvancedURL } from "../utils/url";
 import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
 import { submitPostDataWithForm } from "../utils/helpers";
-import { resolveToBackendPath } from "@shared/utils/url";
+import { addHttpToURLIfNotThere, resolveToBackendPath } from "@shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
 import "../style/main.css";
@@ -36,8 +36,8 @@ const App = () => {
 		if (!lastActionTime) {
 			return;
 		}
-
-		submitPostDataWithForm(resolveToBackendPath("test/goToEditor", process.env.BACKEND_URL), {
+		console.log(AdvancedURL.getBackendURL());
+		submitPostDataWithForm(resolveToBackendPath("test/goToEditor#crusherBackendServer", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), {
 			events: escape(JSON.stringify(steps)),
 			totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
 		});

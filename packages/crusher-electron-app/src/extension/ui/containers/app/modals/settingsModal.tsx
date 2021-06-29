@@ -1,52 +1,81 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
-import { FONT_WEIGHT } from "../../../../interfaces/css";
+import { FONT_WEIGHT, POSITION } from "../../../../interfaces/css";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
 import { COLOR_CONSTANTS } from "../../../colorConstants";
+import { pxToRemValue } from "../../../../utils/helpers";
+import { ModalTopBar } from "./index";
+import { AdvancedURL } from "../../../../utils/url";
 
 interface iStartupModalProps {
 	isOpen: boolean;
+	onClose: () => void;
 }
 
 const SettingsModal = (props: iStartupModalProps) => {
-	const { isOpen } = props;
-	const [targetURL, setTargetURL] = useState(null);
+	const { isOpen, onClose } = props;
+	const [backendURL, setBackendURL] = useState(AdvancedURL.getBackendURL);
 
-	const handleTargetSiteChange = (event: any) => {
-		setTargetURL(event.target.value);
+	const handleBackendURLChange = (event: any) => {
+		setBackendURL(event.target.value);
 	};
 
-	const startRecording = () => {
-		if (targetURL && targetURL !== "") {
-			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeLargeScreen`;
+	const saveSettings = () => {
+		if (backendURL && backendURL !== "") {
+			if (!(window as any).electron) {
+				onClose();
+				throw new Error("Cannot find exposed electron API");
+			}
+			if (!AdvancedURL.validateURL(backendURL)) {
+				alert("Invalid URL");
+				return;
+			}
+
+			AdvancedURL.setCustomBackendURL(backendURL);
+			(window as any).electron.setCustomBackendDomain(AdvancedURL.getAppDomainFromBackendURL());
+			onClose();
 		}
 	};
 
 	const handleKeyPress = (e: any) => {
 		if (e.key === "Enter") {
-			startRecording();
+			saveSettings();
 		}
 	};
 
 	return (
-		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
-			<div style={inputContainerStyle}>
-				<input
-					style={inputStyle}
-					autoFocus={true}
-					placeholder={"Enter URL to test"}
-					value={targetURL}
-					onKeyPress={handleKeyPress}
-					onChange={handleTargetSiteChange}
-				/>
-				<button style={buttonStyle} onClick={startRecording}>
-					{"Record test"}
-				</button>
+		<ReactModal isOpen={isOpen} onRequestClose={onClose} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
+			<ModalTopBar title={"Custom Settings"} desc={"These are used to configure the extension"} closeModal={onClose} />
+			<div style={formContainerStyle}>
+				<div style={inputContainerStyle}>
+					<div>Set custom backend server</div>
+					<input style={inputStyle} autoFocus={true} value={backendURL} onKeyPress={handleKeyPress} onChange={handleBackendURLChange} />
+				</div>
+				<div style={submitFormContainerStyle}>
+					<button style={buttonStyle} onClick={saveSettings}>
+						{"Save settings"}
+					</button>
+				</div>
 			</div>
 		</ReactModal>
 	);
 };
 
+const headingStyle = {
+	fontFamily: "DM Sans",
+	fontStyle: "normal",
+	fontWeight: FONT_WEIGHT.BOLD,
+	fontSize: pxToRemValue(18),
+	color: "#fff",
+};
+const formContainerStyle = {
+	marginTop: pxToRemValue(54),
+};
+const submitFormContainerStyle = {
+	width: "100%",
+	display: "flex",
+	marginTop: pxToRemValue(36),
+};
 const buttonStyle = {
 	backgroundColor: COLOR_CONSTANTS.BUTTON_BLUE,
 	padding: 9,
@@ -54,8 +83,8 @@ const buttonStyle = {
 	borderRadius: 4,
 	color: "#fff",
 	fontWeight: FONT_WEIGHT.BOLD,
-	fontSize: 16,
-	marginLeft: 14,
+	fontSize: pxToRemValue(15),
+	marginLeft: "auto",
 	border: 0,
 	cursor: "pointer",
 };
@@ -69,10 +98,13 @@ const inputStyle = {
 	minWidth: 358,
 	color: "#fff",
 	outline: "none",
+	marginLeft: "auto",
 };
 const inputContainerStyle = {
 	display: "flex",
 	fontFamily: "DM Sans",
+	alignItems: "center",
+	color: "#fff",
 };
 const customModalStyles = {
 	content: {
@@ -89,16 +121,16 @@ const customModalStyles = {
 		width: 760,
 		overflow: "auto",
 		padding: "36px 40px",
-		background: "rgb(31, 31, 32)",
+		background: "rgb(17,18,19)",
 		zIndex: 100000,
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
 	},
 	overlay: {
-		background: "rgb(31, 31, 32)",
-		width: "100%",
+		background: "rgba(0,0,0,0.5)",
+		position: POSITION.ABSOLUTE,
+		left: 0,
+		top: 0,
 		height: "100%",
+		width: "100%",
 		zIndex: 100000,
 	},
 };

@@ -14,7 +14,6 @@ import { updateActionsRecordingState, updateAutoRecorderSetting } from "../../..
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
 import { createPopper } from "@popperjs/core";
-import { AdvancedURL } from "../../../utils/url";
 import { SettingsModal } from "./modals/settingsModal";
 
 interface iSidebarActionBoxProps {
@@ -23,7 +22,7 @@ interface iSidebarActionBoxProps {
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const [isTooltipHovered, setIsTooltipHovered] = useState(true);
-	const [shouldShowSettingsModal, setShouldShowSettingsModal] = useState(true);
+	const [shouldShowSettingsModal, setShouldShowSettingsModal] = useState(false);
 	const popperArrowRef = useRef(null as HTMLDivElement);
 	const autoActionsTagRef = useRef(null as HTMLDivElement);
 	const autoActionsTooltipRef = useRef(null as HTMLDivElement);
@@ -105,15 +104,11 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	);
 
 	const openSettings = () => {
-		// console.log(window.prompt);
-		// const backendUrl = window.prompt("Please enter your name", "");
-		// if (!(window as any).electron) {
-		// 	throw new Error("Cannot find exposed electron API");
-		// }
-		// if (backendUrl && backendUrl.length) {
-		// 	AdvancedURL.setCustomBackendURL(AdvancedURL.getAppDomainFromBackendURL());
-		// 	(window as any).electron.setCustomBackendDomain(backendUrl);
-		// }
+		setShouldShowSettingsModal(true);
+	};
+
+	const handleCloseSettingsModalCallback = () => {
+		setShouldShowSettingsModal(false);
 	};
 
 	return (
@@ -161,7 +156,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				</div>
 			</div>
 			<ActionStepList />
-			<SettingsModal isOpen={shouldShowSettingsModal} />
+			<SettingsModal isOpen={shouldShowSettingsModal} onClose={handleCloseSettingsModalCallback} />
 		</div>
 	);
 };

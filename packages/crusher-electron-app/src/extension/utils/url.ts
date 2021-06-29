@@ -9,6 +9,10 @@ const embeddedUrlRegExp = new RegExp(/^(['"])(.*)\1$/);
 let BACKEND_URL = process.env.BACKEND_URL;
 
 export class AdvancedURL {
+	static validateURL(url: string) {
+		return /(?:^|\s)((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/.test(url);
+	}
+
 	static getScheme(url: string) {
 		return String(url).replace(/^\/|\/$/g, "");
 	}

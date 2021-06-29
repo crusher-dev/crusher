@@ -63,13 +63,16 @@ export class ProjectsController {
 
 	@Get("/meta/dashboard/info/:projectId")
 	async getMetaDashboardInfoOfProject(@Param("projectId") projectId: number) {
-		const totalJobsToday = await this.projectService.getNoBuildsTodayOfProject(projectId);
-		const info = await this.projectService.getHealthAndStatus(projectId);
+		const info = await this.projectService.getHealth(projectId);
+		const status = await this.projectService.getLastBuildStatus(projectId);
+		const hoursSaved = await this.projectService.getHoursSavedMetric(projectId);
+		const averageBuildTime = await this.projectService.getAverageBuildTime(projectId);
 
 		return {
-			totalJobsToday: totalJobsToday.count,
 			health: info.health,
-			status: info.status,
+			status: status,
+			hoursSaved: parseFloat(hoursSaved.toFixed(2)),
+			averageBuildTime: averageBuildTime ? parseFloat(averageBuildTime) : null,
 		};
 	}
 

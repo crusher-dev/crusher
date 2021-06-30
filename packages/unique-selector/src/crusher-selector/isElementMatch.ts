@@ -1,7 +1,5 @@
-import { getDescriptor, isFillable } from './element';
-import { Rect } from './types';
-
-export const CLICK_TYPES = 'a,button,iframe,input,label,textarea,[contenteditable=true],[role=button],[role=checkbox],[role=radio]';
+import { getDescriptor, isFillable } from "./element";
+import { Rect } from "./types";
 
 export function hasCommonAncestor(element: HTMLElement, other: HTMLElement, maxSiblingLevels = 3): boolean {
 	const isDescendant = element.contains(other) || other.contains(element);
@@ -45,17 +43,7 @@ export function isElementMatch(element: HTMLElement, target: HTMLElement, cache:
 
 	if (!isWithin(elementRect, targetRect)) return false;
 
-	// make sure the element is within the same click boundary
-	// ex. we don't want to click on a button within our target
-	const isSameBoundary = element.closest(CLICK_TYPES) === target.closest(CLICK_TYPES);
-	if (!isSameBoundary) return false;
-
-	// make sure the elements have a nearby common ancestor
-	// ex. a modal might be on top but we don't want
-	// to consider the element behind it as a match
-	if (!hasCommonAncestor(element, target)) return false;
-
-	return true;
+	return false;
 }
 
 /**
@@ -73,7 +61,7 @@ export function isWithin(other: Rect, container: Rect): boolean {
 
 export function requireExactMatch(target: HTMLElement): boolean {
 	// do not allow position match for iframes
-	if (target.tagName === 'IFRAME') return true;
+	if (target.tagName === "IFRAME") return true;
 
 	// do not allow position match if the element is fillable
 	if (isFillable(getDescriptor(target))) return true;

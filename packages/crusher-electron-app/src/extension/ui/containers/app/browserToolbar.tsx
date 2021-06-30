@@ -79,9 +79,9 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<div className="mx-24" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
 						</div>
-						<div className="mx-8 cursor-pointer">
+						<a target="_blank" href="https://docs.crusher.dev/docs/help" className="mx-8 cursor-pointer">
 							<HelpIcon />
-						</div>
+						</a>
 						<div className="mx-8 cursor-pointer">
 							<SettingsIcon onClick={openSettings} />
 						</div>

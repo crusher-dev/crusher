@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { HelpIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
+import { HelpIcon, SettingsIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
@@ -9,6 +9,7 @@ import { AdvancedURL } from "../../../utils/url";
 import { generateCrusherExtensionUrl } from "@shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
+import { SettingsModal } from "./modals/settingsModal";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -26,7 +27,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	const showOnboarding = false;
 	const [url, setUrl] = useState(initialUrl || "http://google.com");
 	const [selectedDevice] = useState(AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href).id);
-
+	const [shouldShowSettingsModal, setShouldShowSettingsModal] = useState(false);
 	const handleAddressBarUrlChange = (event: ChangeEvent) => {
 		setUrl((event.target as any).value);
 	};
@@ -43,6 +44,14 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		[url],
 	);
 
+
+	const openSettings = () => {
+		setShouldShowSettingsModal(true);
+	};
+	const handleCloseSettingsModalCallback = () => {
+		setShouldShowSettingsModal(false);
+	};
+
 	const handleDeviceChange = (deviceId: string) => {
 		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href);
 		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId, { isDeviceChanged: true });
@@ -52,7 +61,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		<div style={browserToolbarStyle}>
 			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
 				<div className="h-10 w-full flex">
-					<div className="flex" style={{ width: "15%" }}>
+					<div className="flex" style={{ width: "14%" }}>
 						<div style={goBackIconContainerStyle} className={"browser_icon"}>
 							<NavigateBackIcon onClick={goBack} disabled={false} />
 						</div>
@@ -63,12 +72,18 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 							<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
 						</div>
 					</div>
-					<div style={{width:"50%"}}>
+					<div style={{ width: "48%" }}>
 						<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
 					</div>
-					<div className="flex justify-end" style={{ width: "35%" }}>
+					<div className="flex justify-end items-center" style={{ width: "38%" }}>
 						<div className="mx-24" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
+						</div>
+						<div className="mx-8 cursor-pointer">
+							<HelpIcon />
+						</div>
+						<div className="mx-8 cursor-pointer">
+							<SettingsIcon onClick={openSettings} />
 						</div>
 						<Button id={"saveTest"} title={"Save test"} icon={SaveIcon} onClick={saveTest} />
 					</div>
@@ -143,6 +158,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 			<Conditional If={showOnboarding}>
 				<OnboardingManager />
 			</Conditional>
+			<SettingsModal isOpen={shouldShowSettingsModal} onClose={handleCloseSettingsModalCallback} />
 		</div>
 	);
 };

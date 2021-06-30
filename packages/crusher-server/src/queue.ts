@@ -7,6 +7,14 @@ import { REDDIS } from "../config/database";
 // import * as path from "path";
 const path = require("path");
 
+if (process.env.NODE_ENV === "development") {
+	// For ts-node
+	require(resoveWorkerPath(path.resolve("src/core/workers/testProgressWorker.ts")));
+	require(resoveWorkerPath(path.resolve("src/core/workers/testCompletedWorker.ts")));
+	require(resoveWorkerPath(path.resolve("src/core/workers/checkResult.ts")));
+	require(resoveWorkerPath(path.resolve("src/core/workers/videoProcessedQueue.ts")));
+}
+
 function initializeQueues() {
 	console.debug("Initializing queues");
 	new Queue("test-progress-queue", {
@@ -27,20 +35,20 @@ function initializeQueues() {
 function initializeWorkers() {
 	console.debug("Initializing queue workers");
 
-	new Worker("test-progress-queue", resoveWorkerPath("src/core/workers/testProgressWorker.ts"), {
+	new Worker("test-progress-queue", resoveWorkerPath(path.resolve("src/core/workers/testProgressWorker.ts")), {
 		connection: REDDIS as any,
 		concurrency: 1,
 	});
-	new Worker("test-completed-queue", resoveWorkerPath("src/core/workers/testCompletedWorker.ts"), {
+	new Worker("test-completed-queue", resoveWorkerPath(path.resolve("src/core/workers/testCompletedWorker.ts")), {
 		connection: REDDIS as any,
 		concurrency: 1,
 	});
-	new Worker("check-result-queue", resoveWorkerPath("src/core/workers/checkResult.ts"), {
+	new Worker("check-result-queue", resoveWorkerPath(path.resolve("src/core/workers/checkResult.ts")), {
 		connection: REDDIS as any,
 		concurrency: 1,
 	});
 
-	new Worker("video-processing-complete-queue", resoveWorkerPath("src/core/workers/videoProcessedQueue.ts"), {
+	new Worker("video-processing-complete-queue", resoveWorkerPath(path.resolve("src/core/workers/videoProcessedQueue.ts")), {
 		connection: REDDIS as any,
 		concurrency: 1,
 	});

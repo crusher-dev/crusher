@@ -10,6 +10,7 @@ import { iAllProjectsItemResponse } from "../../../../crusher-shared/types/respo
 import { iJobReports } from "../../../../crusher-shared/types/db/jobReports";
 import { JobReportStatus } from "../../../../crusher-shared/types/jobReportStatus";
 import { ProjectHealthStatus } from "../../../../crusher-shared/types/projectHelathStatus";
+import { JobStatus } from "../interfaces/JobStatus";
 
 @Service()
 export default class ProjectService {
@@ -28,28 +29,49 @@ export default class ProjectService {
 		return !!record;
 	}
 
-	async getNoBuildsTodayOfProject(projectId: number) {
-		return this.dbManager.fetchSingleRow(
-			"SELECT COUNT(*) as count FROM job_reports WHERE job_reports.project_id = ? AND cast(job_reports.created_at as Date) = cast(NOW() as date);",
+	async getHealth(projectId: number) {
+		const allJobsThisMonth: Array<iJobReports> = await this.dbManager.fetchData(
+			"SELECT * FROM job_reports WHERE job_reports.project_id = ? AND job_reports.created_at > NOW() - interval 43200 minute",
 			[projectId],
 		);
-	}
-
-	async getHealthAndStatus(projectId: number) {
-		const allJobsToday: Array<iJobReports> = await this.dbManager.fetchData(
-			"SELECT * FROM job_reports WHERE job_reports.project_id = ? AND cast(job_reports.created_at as Date) = cast(NOW() as date) AND created_at > NOW() - interval 180 minute",
-			[projectId],
-		);
-		const passedTests = allJobsToday.filter((jobReport) => jobReport.status === JobReportStatus.PASSED);
-		const totalTests = allJobsToday.filter((jobReport) => jobReport.status !== JobReportStatus.RUNNING_CHECKS);
+		const passedTests = allJobsThisMonth.filter((jobReport) => jobReport.status === JobReportStatus.PASSED);
+		const totalTests = allJobsThisMonth.filter((jobReport) => jobReport.status !== JobReportStatus.RUNNING_CHECKS);
 		let percentage = 0;
 		if (totalTests.length === 0) percentage = 0;
 		else percentage = (passedTests.length / totalTests.length) * 100;
 
 		return {
 			health: percentage,
-			status: percentage > 95 ? ProjectHealthStatus.UP : ProjectHealthStatus.DOWN,
 		};
+	}
+
+	async getLastBuildStatus(projectId: number) {
+		const lastBuild = await this.dbManager.fetchSingleRow(
+			"SELECT job_reports.status as status FROM jobs, job_reports WHERE jobs.project_id = ? AND job_reports.job_id = jobs.id AND job_reports.status != ? ORDER BY jobs.created_at DESC LIMIT 1",
+			[projectId, JobReportStatus.RUNNING_CHECKS],
+		);
+		if (!lastBuild) {
+			return ProjectHealthStatus.NOT_ENOUGH_DATA;
+		}
+
+		if (lastBuild.status === JobReportStatus.PASSED) return ProjectHealthStatus.UP;
+
+		return ProjectHealthStatus.DOWN;
+	}
+
+	async getHoursSavedMetric(projectId: number) {
+		const noTests = await this.dbManager.fetchSingleRow(`SELECT COUNT(*) as count FROM tests WHERE project_id = ?`, [projectId]);
+		const noJobs = await this.dbManager.fetchSingleRow(`SELECT COUNT(*) as count from jobs WHERE project_id = ?`, [projectId]);
+		return (noTests.count * 5 * 25 + 2 * noJobs.count) / 60;
+	}
+
+	async getAverageBuildTime(projectId: number) {
+		const averageBuildTimeRecord = await this.dbManager.fetchSingleRow(
+			`SELECT AVG(TIMESTAMPDIFF(SECOND, created_at, updated_at)) as avgTime FROM jobs WHERE status = ? AND project_id = ?`,
+			[JobStatus.FINISHED, projectId],
+		);
+
+		return averageBuildTimeRecord.avgTime;
 	}
 
 	async createProject(projectName: string, teamId: number): Promise<InsertRecordResponse> {

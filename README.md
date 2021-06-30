@@ -58,13 +58,13 @@ But we should know where, when and how's it breaking.
 
 **What's so cool about this**
 
-As engineers, we work tirelessly to execute our vision. In the process some taska repetitive, boring and take most of workflow time, they eat up both our time and energy.
+As engineers, we work tirelessly to execute our vision. In the process some tasks are repetitive, boring and take most of workflow time, they eat up both our time and energy.
 
-We call it noise, it can be UX and worflow. At first we improve workflow and then UX . In end, we're creating better software for people who create software.
+We call it noise, it can be UX or worflow. At first we improve workflow and then UX . At the end, we're creating better software for people who create software.
 
-We want to be platform solving boring dev tasks and hence improving workflow. We take inspiration from Figma and Linear.
+We want to be a platform, solving boring dev tasks and hence improving workflow. We take inspiration from Figma and Linear.
 
-For us it's both about how it looks and feel, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.
+For us it's both about how it looks and feels, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.
 
 
 **Roadmap**
@@ -83,7 +83,7 @@ Check about deployment plan here.
 
 **License**
 
-The code is open source and is licensed under Apache 2.0 license.This is our core. Some properietary and patent pending features are under BSD license.
+The code is open source and is licensed under Apache 2.0 license.This is our core. Some Proprietary and patent pending features are under BSD license.
 
 **Contributors**<hr/>
 <img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>

@@ -69,7 +69,9 @@ const App = () => {
 				<ModalManager deviceIframeRef={deviceIframeRef} />
 			</Conditional>
 			<Conditional If={!url}>
-				<StartupModal isOpen={true} />
+				<div style={{ height: "100vh", width: "100vh" }}>
+					<StartupModal isOpen={true} />
+				</div>
 			</Conditional>
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/devices.min.css")} />
 			<link rel="stylesheet" href={chrome.runtime.getURL("/styles/app.css")} />
@@ -79,9 +81,6 @@ const App = () => {
 					.CodeMirror {
 						font-size: 0.9rem;
 					}
-					.ReactModalPortal {
-						height: 100%;
-					}
 				`}</style>
 		</div>
 	);
@@ -90,7 +89,7 @@ const App = () => {
 const containerStyle = {
 	display: "flex",
 	height: "100%",
-	background: "rgb(40, 40, 40)",
+	background: "rgb(17, 18, 19)",
 };
 
 ReactModal.setAppElement("#root");

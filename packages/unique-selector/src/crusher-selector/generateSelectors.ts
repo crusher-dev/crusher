@@ -1,15 +1,7 @@
 import { getXpath } from "./element";
 import { generateSortedCueSets } from "./generateCueSets";
-import { CLICK_TYPES } from "./isElementMatch";
 import { buildSelectorForCues, isSelectorMatch } from "./selectorEngine";
 import { RankedSelector, Rect } from "./types";
-
-function getLikelyTarget(target: HTMLElement): HTMLElement {
-	return (
-		// XXX we may want to gate this for click actions only
-		target.closest(CLICK_TYPES) || target
-	);
-}
 
 export function* generateSelectors(
 	target: HTMLElement,
@@ -31,20 +23,18 @@ export function* generateSelectors(
 		}
 	}
 
-	const likelyTarget = getLikelyTarget(target);
-	const cueSets = generateSortedCueSets(likelyTarget);
+	const cueSets = generateSortedCueSets(target);
 
 	let count = 0;
 
 	for (const cueSet of cueSets) {
 		const selector = buildSelectorForCues(cueSet.cues);
 
-		const isMatch = isSelectorMatch(selector, likelyTarget, rectCache);
+		const isMatch = isSelectorMatch(selector, target, rectCache);
 		if (isMatch) {
 			const rankedSelector = { penalty: cueSet.penalty, selector };
 			if (selectorCache) {
 				selectorCache.set(target, rankedSelector);
-				selectorCache.set(likelyTarget, rankedSelector);
 			}
 			yield rankedSelector;
 			count += 1;

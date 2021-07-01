@@ -1,8 +1,9 @@
-export const REDDIS = {
+export const REDIS = {
 	host: process.env.REDIS_HOST,
 	port: process.env.REDIS_PORT,
 	password: process.env.REDIS_PASSWORD,
 };
+
 
 export const getMongoDBConnectionString = (): string => {
 	if (process.env.MONGODB_CONNECTION_STRING && process.env.MONGODB_CONNECTION_STRING !== "null") {

@@ -24,16 +24,16 @@ const config = {
 		DATABASE: process.env.MONGODB_DATABASE || 'crusher',
 	},
 	MYSQL_DB_CONFIG: {
-		HOST: process.env.DB_HOST || 'localhost',
-		USERNAME: process.env.DB_USERNAME ||'root',
-		PASSWORD: process.env.DB_PASSWORD ||'password',
-		PORT: process.env.DB_PORT ||3306,
+		HOST: process.env.DB_HOST || 'db-mysql-nyc3-51235-do-user-9421575-0.b.db.ondigitalocean.com',
+		USERNAME: process.env.DB_USERNAME ||'doadmin',
+		PASSWORD: process.env.DB_PASSWORD ||'c1y6sb2379tx2alr',
+		PORT: process.env.DB_PORT ||25060,
 	},
 	REDIS_CONFIG: {
 		CONNECTION_STRING: process.env.REDIS_CONNECTION_STRING || null,
-		HOST: process.env.REDIS_HOST ||'localhost',
-		PORT: process.env.REDIS_PORT || 6379,
-		PASSWORD:  process.env.REDIS_PASSWORD || '',
+		HOST: process.env.REDIS_HOST ||'redis-12413.c262.us-east-1-3.ec2.cloud.redislabs.com',
+		PORT: process.env.REDIS_PORT || 12413,
+		PASSWORD:  process.env.REDIS_PASSWORD || 'DBFZ4hkYpLffHOPsO2qbarUuFOmoSGK4',
 	},
 	SLACK_CONFIG: {
 		CLIENT_ID:  process.env.SLACK_CLIENT_ID || '650512229650.1194885099766',

@@ -24,10 +24,10 @@ const config = {
 		DATABASE: process.env.MONGODB_DATABASE || 'crusher',
 	},
 	MYSQL_DB_CONFIG: {
-		HOST: process.env.DB_HOST || 'db-mysql-nyc3-51235-do-user-9421575-0.b.db.ondigitalocean.com',
-		USERNAME: process.env.DB_USERNAME ||'doadmin',
-		PASSWORD: process.env.DB_PASSWORD ||'c1y6sb2379tx2alr',
-		PORT: process.env.DB_PORT ||25060,
+		HOST: process.env.DB_HOST || 'localhost',
+		USERNAME: process.env.DB_USERNAME ||'root',
+		PASSWORD: process.env.DB_PASSWORD ||'password',
+		PORT: process.env.DB_PORT ||3306,
 	},
 	REDIS_CONFIG: {
 		CONNECTION_STRING: process.env.REDIS_CONNECTION_STRING || null,

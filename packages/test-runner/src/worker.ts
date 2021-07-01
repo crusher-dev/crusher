@@ -4,11 +4,11 @@ import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere
 import { TestLogsService } from "./services/logs";
 import { CodeRunnerService } from "./services/runner";
 import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
-import { REDDIS } from "@config/database";
 import { MongoManager } from "@manager/mongo";
+import { RedisManager } from '@manager/redis';
 
 const videoProcessingQueue = new Queue("video-processing-queue", {
-	connection: REDDIS as any,
+	connection: RedisManager.client,
 });
 
 interface iTestRunnerJob extends Job {
@@ -19,12 +19,12 @@ new MongoManager().init();
 
 const testProgressQueue = new Queue("test-progress-queue", {
 	// @ts-ignore
-	connection: REDDIS,
+	connection: RedisManager.client,
 });
 
 const testCompletedQueue = new Queue("test-completed-queue", {
 	// @ts-ignore
-	connection: REDDIS,
+	connection: RedisManager.client,
 });
 
 export default async (bullJob: iTestRunnerJob): Promise<boolean> => {

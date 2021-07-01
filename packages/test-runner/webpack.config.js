@@ -27,7 +27,7 @@ module.exports = {
 		new CopyPlugin({
 			patterns: [
 				{
-					from: `../runner-utils/build`,
+					from: path.resolve(__dirname, `../../output/crusher-runner-utils/`),
 					to: "crusher-runner-utils/",
 				},
 			],

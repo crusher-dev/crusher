@@ -1,6 +1,6 @@
 import { Job } from "bullmq";
 import TestsEventsWorker from "./testEventsWoker";
-import { REDDIS } from "../../../config/database";
+import { REDIS } from "../../../config/database";
 import * as IORedis from "ioredis";
 
 module.exports = async (bullJob: Job) => {
@@ -8,9 +8,9 @@ module.exports = async (bullJob: Job) => {
 	const data = bullJob as any;
 	await TestsEventsWorker.onTestProgress(
 		new IORedis({
-			host: REDDIS.host,
-			password: REDDIS.password,
-			port: parseInt(REDDIS.port),
+			host: REDIS.host,
+			password: REDIS.password,
+			port: parseInt(REDIS.port),
 		}),
 		data,
 	);

@@ -12,7 +12,7 @@ class TestRunner {
 
 	constructor() {
 		this.sessionId = generateUid();
-		this.redisManager = new RedisManager(REDDIS.host, parseInt(REDDIS.port), REDDIS.password);
+		RedisManager.initialize(REDDIS.host, parseInt(REDDIS.port), REDDIS.password);
 	}
 
 	async boot() {

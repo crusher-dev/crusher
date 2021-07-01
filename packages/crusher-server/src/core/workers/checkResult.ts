@@ -23,7 +23,7 @@ import { iUser } from "@crusher-shared/types/db/iUser";
 import { EmailManager } from "../manager/EmailManager";
 import { resolvePathToFrontendURI } from "../utils/uri";
 import { Job } from "bullmq";
-import { REDDIS } from "../../../config/database";
+import { REDIS } from "../../../config/database";
 import "reflect-metadata";
 
 import * as IORedis from "ioredis";
@@ -343,9 +343,9 @@ async function runChecks(details, clearJobTempValues) {
 
 module.exports = async (bullJob: Job) => {
 	const reddisClient = new IORedis({
-		port: parseInt(REDDIS.port),
-		host: REDDIS.host,
-		password: REDDIS.password,
+		port: parseInt(REDIS.port),
+		host: REDIS.host,
+		password: REDIS.password,
 	});
 
 	const reddisLock = new ReddisLock([reddisClient], {

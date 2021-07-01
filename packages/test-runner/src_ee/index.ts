@@ -19,7 +19,8 @@ class TestRunner {
 
 	constructor() {
 		this.sessionId = generateUid();
-		this.redisManager = new RedisManager(REDDIS.host, parseInt(REDDIS.port), REDDIS.password);
+		this.redisManager = RedisManager;
+		RedisManager.initialize(REDDIS.host, parseInt(REDDIS.port), REDDIS.password)
 		// During booting, make sure test runner doesn't pickup any jobs without checking its bootAfterNJobsOffset
 	}
 
@@ -27,10 +28,10 @@ class TestRunner {
 		/*
 			Note - Check if this working correctly an
 		 */
-		this._registeredInstanceNo = await this.redisManager.get().incr("instance_index");
+		this._registeredInstanceNo = await RedisManager.get().incr("instance_index");
 
 		const sendHeartbeat = () => {
-			const client = this.redisManager.get();
+			const client = RedisManager.get();
 			return client
 				.set(`instance:${this._registeredInstanceNo}`, this._registeredInstanceNo, "ex", 60)
 				.catch((err) => {

@@ -1,6 +1,6 @@
 import { Queue } from "bullmq";
 
-import { REDDIS } from "../../../config/database";
+import { REDIS } from "../../../config/database";
 import { RunRequest } from "../../core/interfaces/RunRequest";
 import TestInstanceService from "../../core/services/TestInstanceService";
 import { InstanceStatus } from "../../core/interfaces/InstanceStatus";
@@ -24,7 +24,7 @@ const jobsService = new JobsService();
 
 const requestQueue = new Queue("request-queue", {
 	// @ts-ignore
-	connection: REDDIS,
+	connection: REDIS,
 });
 
 export async function addTestRequestToQueue(testRequest: RunRequest) {

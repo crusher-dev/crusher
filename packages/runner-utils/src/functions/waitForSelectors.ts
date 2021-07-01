@@ -22,5 +22,5 @@ export default async function waitForSelectors(
 
 	await page.waitForSelector(toCrusherSelectorsFormat(selectors));
 
-	return;
+	return undefined;
 }

@@ -1,17 +1,21 @@
 {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
+		"baseUrl": "./",
 		"esModuleInterop": true,
 		"module": "commonjs",
-		"target": "ES2017",
-		"rootDir": "../../",
-		"baseUrl": "../",
+		"removeComments": true,
+		"sourceMap": true,
+		"target": "es5",
+		"allowJs": true,
+		"noImplicitAny": false,
+		"noUnusedLocals": false,
+		"strictNullChecks": false,
 		"outDir": "dist",
 		"paths": {
-			"@crusher-shared/*": ["crusher-shared/*"]
+			"@crusher-shared/*": ["../crusher-shared/*"]
 		}
 	},
-	"include": ["./src/actions/index.ts", "./src/functions/index.ts", "./src/middlewares/index.ts"],
 	"files": ["./src/actions/index.ts", "./src/functions/index.ts", "./src/middlewares/index.ts"],
 	"typeRoots": ["node_modules/@types"],
 	"include": ["./src/**/*"],

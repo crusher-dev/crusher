@@ -4,7 +4,7 @@ require("dotenv").config();
 
 import { Queue, QueueScheduler, Worker } from "bullmq";
 import { REDIS } from "../config/database";
-import IORedis from "ioredis";
+const IORedis = require("ioredis");
 const path = require("path");
 
 const connection = new IORedis({ host: REDIS.host, port: REDIS.port, password: REDIS.password });

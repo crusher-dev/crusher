@@ -31,6 +31,7 @@ RUN npm install -g playwright@^1.7.1 @ffmpeg-installer/ffmpeg https://github.com
 RUN export CRUSHER_ENV=production
 
 ADD ./ecosystem.oss.js ecosystem.config.js
+ADD ./.env.sample .env
 ADD ./ecosystem ecosystem
 ADD ./output/test-runner/ packages/test-runner
 

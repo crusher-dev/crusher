@@ -93,7 +93,7 @@ const List = (props: iListProps) => {
 	const out = items.map((item) => <Item key={item.id} item={item} onClick={onItemClick} />);
 
 	return (
-		<div>
+		<div className="h-full">
 			<div className="text-15" style={headingStyle}>
 				<Conditional If={showBackButton}>
 					<div onClick={onBackPressed}>
@@ -104,7 +104,7 @@ const List = (props: iListProps) => {
 					<span style={headingTitleStyle(!!showBackButton)}>{heading}</span>
 				</Conditional>
 			</div>
-			<div style={listContainerStyle}>{out}</div>
+			<div className="overflow-y-auto" style={listContainerStyle}>{out}</div>
 		</div>
 	);
 };

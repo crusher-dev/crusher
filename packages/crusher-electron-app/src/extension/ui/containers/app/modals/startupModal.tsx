@@ -3,6 +3,7 @@ import ReactModal from "react-modal";
 import { FONT_WEIGHT } from "../../../../interfaces/css";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
 import { COLOR_CONSTANTS } from "../../../colorConstants";
+import { validURL } from "crusher-electron-app/src/extension/utils/helpers";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -11,12 +12,17 @@ interface iStartupModalProps {
 const StartupModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
 	const [targetURL, setTargetURL] = useState(null);
+	const [isURLValid, setURLValid] = useState(false);
+	const [shouldShowError, setShowError] = useState(false);
 
 	const handleTargetSiteChange = (event: any) => {
 		setTargetURL(event.target.value);
+		setURLValid(validURL(event.target.value));
 	};
 
 	const startRecording = () => {
+		setShowError(true);
+		if (!isURLValid) return;
 		if (targetURL && targetURL !== "") {
 			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeLargeScreen`;
 		}
@@ -29,20 +35,27 @@ const StartupModal = (props: iStartupModalProps) => {
 	};
 
 	return (
-		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
-			<div style={inputContainerStyle}>
-				<input
-					style={inputStyle}
-					autoFocus={true}
-					placeholder={"Enter URL to test"}
-					value={targetURL}
-					onKeyPress={handleKeyPress}
-					onChange={handleTargetSiteChange}
-				/>
-				<button style={buttonStyle} onClick={startRecording}>
-					{"Record test"}
-				</button>
+		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles}
+			overlayClassName="overlay">
+			<div className="flex flex-col">
+				<div className="flex">
+					<input
+						style={inputStyle}
+						autoFocus={true}
+						placeholder={"Enter URL to test"}
+						value={targetURL}
+						onKeyPress={handleKeyPress}
+						onChange={handleTargetSiteChange}
+					/>
+					<button style={buttonStyle} onClick={startRecording}>
+						{"Record test"}
+					</button>
+				</div>
+				{shouldShowError &&
+					!isURLValid &&
+					<div className="text-white m-4"> URL is not valid</div>}
 			</div>
+
 		</ReactModal>
 	);
 };
@@ -73,6 +86,7 @@ const inputStyle = {
 const inputContainerStyle = {
 	display: "flex",
 	fontFamily: "DM Sans",
+	flexDirection: "column"
 };
 const customModalStyles = {
 	content: {

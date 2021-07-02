@@ -1,6 +1,5 @@
 const { IS_PRODUCTION, GITHUB_CONFIG, FRONTEND_URL, BACKEND_URL } = require('../config');
 
-
 module.exports = {
 	CRUSHER_APP_ENV: {
 		NODE_ENV: IS_PRODUCTION ? "production" : "development",

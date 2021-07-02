@@ -13,6 +13,7 @@ RUN npm install -g webpack
 WORKDIR /crusher
 
 ADD ./ecosystem.config.sample.js ecosystem.config.js
+ADD ./.env.sample .env
 ADD ./ecosystem ecosystem
 ADD ./output/crusher-server/ packages/crusher-server
 

@@ -83,11 +83,7 @@ const inputStyle = {
 	color: "#fff",
 	outline: "none",
 };
-const inputContainerStyle = {
-	display: "flex",
-	fontFamily: "DM Sans",
-	flexDirection: "column"
-};
+
 const customModalStyles = {
 	content: {
 		top: "50%",

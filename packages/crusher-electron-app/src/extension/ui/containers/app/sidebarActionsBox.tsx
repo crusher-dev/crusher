@@ -8,13 +8,12 @@ import { TopLevelActionsList } from "./topLevelActionsList";
 import { ElementLevelActionsList } from "./elementLevelActionsList";
 import { OVERFLOW, POSITION } from "../../../interfaces/css";
 import { SelectElementPlaceholder } from "./selectElementPlaceholder";
-import { SettingsIcon, SwitchOffIcon, SwitchOnIcon } from "../../../assets/icons";
+import { SwitchOffIcon, SwitchOnIcon } from "../../../assets/icons";
 import { getStore } from "../../../redux/store";
 import { updateActionsRecordingState, updateAutoRecorderSetting } from "../../../redux/actions/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
 import { createPopper } from "@popperjs/core";
-import { SettingsModal } from "./modals/settingsModal";
 
 interface iSidebarActionBoxProps {
 	deviceIframeRef: RefObject<HTMLIFrameElement>;
@@ -22,7 +21,6 @@ interface iSidebarActionBoxProps {
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const [isTooltipHovered, setIsTooltipHovered] = useState(true);
-	const [shouldShowSettingsModal, setShouldShowSettingsModal] = useState(false);
 	const popperArrowRef = useRef(null as HTMLDivElement);
 	const autoActionsTagRef = useRef(null as HTMLDivElement);
 	const autoActionsTooltipRef = useRef(null as HTMLDivElement);
@@ -103,26 +101,15 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 		</div>
 	);
 
-	const openSettings = () => {
-		setShouldShowSettingsModal(true);
-	};
-
-	const handleCloseSettingsModalCallback = () => {
-		setShouldShowSettingsModal(false);
-	};
-
 	return (
 		<div style={sidebarStyle} className="flex flex-col h-screen pt-2">
-			<div className={"flex h-20 justify-end items-center"}>
+			<div className={"flex h-20 justify-center items-center"}>
 				{recordingState.type === ACTIONS_RECORDING_STATE.PAGE ? (
 					<div className="flex items-center text-white h-10 max-w-max mr-24">
 						<DetectActionSwitch />
 						<div className="pl-1 pt-1 text-15">Detect actions</div>
 					</div>
 				) : null}
-				<div className="mr-28 cursor-pointer">
-					<SettingsIcon onClick={openSettings} />
-				</div>
 			</div>
 			<div
 				style={{ height: "55%" }}
@@ -141,22 +128,19 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.INITIAL_STATE}>
 					<AddCustomCheckView />
 				</Conditional>
-				<div>
-					<div style={actionContainerStyle}>
-						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.SELECT_ELEMENT}>
-							<SelectElementPlaceholder deviceIframeRef={props.deviceIframeRef} />
-						</Conditional>
-						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.PAGE}>
-							<TopLevelActionsList deviceIframeRef={props.deviceIframeRef} />
-						</Conditional>
-						<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.ELEMENT}>
-							<ElementLevelActionsList deviceIframeRef={props.deviceIframeRef} />
-						</Conditional>
-					</div>
+				<div style={actionContainerStyle}>
+					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.SELECT_ELEMENT}>
+						<SelectElementPlaceholder deviceIframeRef={props.deviceIframeRef} />
+					</Conditional>
+					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.PAGE}>
+						<TopLevelActionsList deviceIframeRef={props.deviceIframeRef} />
+					</Conditional>
+					<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.ELEMENT}>
+						<ElementLevelActionsList deviceIframeRef={props.deviceIframeRef} />
+					</Conditional>
 				</div>
 			</div>
 			<ActionStepList />
-			<SettingsModal isOpen={shouldShowSettingsModal} onClose={handleCloseSettingsModalCallback} />
 		</div>
 	);
 };
@@ -183,7 +167,7 @@ const sidebarStyle = {
 const actionContainerStyle = {
 	position: POSITION.RELATIVE,
 	marginTop: "1rem",
-	overflow: OVERFLOW.AUTO,
+	overflowY: OVERFLOW.AUTO,
 };
 
 export { SidebarActionsBox };

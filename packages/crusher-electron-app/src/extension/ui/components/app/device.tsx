@@ -98,7 +98,6 @@ const previewBrowserStyle = {
 	borderWidth: "2px",
 	borderLeft: "none",
 	borderBottom: "none",
-	height: "calc(100vh - 4.75rem)"
 };
 
 const browserFrameStyle = {

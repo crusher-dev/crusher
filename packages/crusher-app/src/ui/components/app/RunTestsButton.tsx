@@ -1,9 +1,7 @@
-import PlusSVG from "../../../../public/svg/sidebarSettings/plus.svg";
 import React from "react";
 import { css } from "@emotion/core";
 
 interface iRunTestButtonProps {
-	label: string;
 	onClick?: any;
 }
 export function RunTestButton(props: iRunTestButtonProps) {
@@ -15,10 +13,6 @@ export function RunTestButton(props: iRunTestButtonProps) {
 		</div>
 	);
 }
-
-RunTestButton.defaultProps = {
-	label: "Create a test",
-};
 
 const styles = {
 	createTestButton: css`

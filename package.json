@@ -10,7 +10,6 @@
     "setup:oss": "node setup/index.js -m open-source",
     "setup:ee": "node setup/index.js -m enterprise",
     "setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
-
     "build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
     "start": "pm2 start",
     "log:app": "pm2 logs crusher-app",
@@ -23,6 +22,7 @@
     "pm2": "^4.5.0"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "enquirer": "^2.3.6",
     "patch-package": "^6.2.2",

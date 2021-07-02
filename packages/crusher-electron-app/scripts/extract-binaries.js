@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const AdmZip = require("adm-zip");
+const {execSync} = require("child_process");
 
 const BIN_DIR = path.resolve(__dirname, "../bin");
 const celectronRegExp = new RegExp(/^celectron-v([\d.]+)-(linux|darwin)-x64.zip/);
@@ -15,8 +15,9 @@ function extractZipIfNotThere(binaryZipInfoArr) {
 			console.log(`Binaries already extracted for ${platform}. Skipping...`);
 			break;
 		}
-		const zip = new AdmZip(binaryZipInfoArr[platform].path);
-		zip.extractAllTo(path.resolve(BIN_DIR, platform), true);
+		const zipPath = binaryZipInfoArr[platform].path;
+
+		execSync(`cd ${path.dirname(zipPath)} && unzip ${path.basename(zipPath)} -d ${platform}`);
 
 		fs.unlinkSync(binaryZipInfoArr[platform].path);
 

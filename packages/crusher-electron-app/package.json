@@ -29,7 +29,6 @@
     "@types/redux-logger": "^3.0.8",
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/parser": "^4.14.1",
-    "adm-zip": "^0.5.5",
     "an-array-of-english-words": "^2.0.0",
     "body-scroll-lock": "^3.1.5",
     "child_process": "^1.0.2",

@@ -1,8 +1,9 @@
 import React, { ChangeEvent } from "react";
 import { ASSERTION_OPERATION_TYPE } from "../../../interfaces/assertionOperation";
-import { APPEARANCE, OVERFLOW, TEXT_ALIGN } from "../../../interfaces/css";
-import { toPrettyEventName } from "../../../utils/helpers";
+import { TEXT_ALIGN } from "../../../interfaces/css";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
+import Select from "react-select";
+import { iReactSelectOption } from "crusher-electron-app/src/extension/interfaces/reactSelectOptions";
 
 interface iAssertionFormTableProps {
 	rowItems: Array<iAssertionRow>;
@@ -40,46 +41,43 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 	const { rowItems, fields, operations, onFieldChange, onOperationChange, onValidationChange } = props;
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
-		const fieldOptions = fields.map((field, index) => {
-			return (
-				<option key={index} style={{color:"black"}} value={field.name}>
-					{field.name}
-				</option>
-			);
-		});
 
-		const handleOnFieldChange = (event: ChangeEvent<HTMLSelectElement>) => {
+		const fieldOptions = () => {
+			let options: iReactSelectOption[] = [];
+			fields.forEach((field) => {
+				options.push({ value: field.name, label: field.name })
+			});
+			return options;
+		}
+
+		const handleOnFieldChange = (option: iReactSelectOption) => {
 			if (onFieldChange) {
-				onFieldChange(event.target.value, rowId);
+				onFieldChange(option.value, rowId);
 			}
 		};
 
 		return (
-			<select style={selectStyle} value={selectedField} onChange={handleOnFieldChange}>
-				{fieldOptions}
-			</select>
+			<Select className="w-40" options={fieldOptions()} onChange={handleOnFieldChange} />
 		);
 	};
 
 	const renderFieldOperationInput = (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => {
-		const operationOptions = operations.map((operation) => {
-			return (
-				<option key={operation} value={operation}>
-					{toPrettyEventName(operation)}
-				</option>
-			);
-		});
+		const operationOptions = () => {
+			let options: iReactSelectOption[] = [];
+			operations.forEach((operation) => {
+				options.push({ value: operation, label: operation })
+			});
+			return options;
+		}
 
-		const handleOnOperationChange = (event: ChangeEvent<HTMLSelectElement>) => {
+		const handleOnOperationChange = (option: iReactSelectOption) => {
 			if (onOperationChange) {
-				onOperationChange(event.target.value as ASSERTION_OPERATION_TYPE, rowId);
+				onOperationChange(option.value as ASSERTION_OPERATION_TYPE, rowId);
 			}
 		};
 
 		return (
-			<select style={{ ...selectStyle, minWidth: "60%" }} value={selectedOperation} onChange={handleOnOperationChange}>
-				{operationOptions}
-			</select>
+			<Select options={operationOptions()} onChange={handleOnOperationChange} className="w-40" />
 		);
 	};
 
@@ -96,18 +94,21 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 	const rowOut = rowItems.map((row, index: number) => {
 		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
-			<tr key={row.id} style={inputTableGridItemStyle}>
-				<td style={inputTableItemFieldContainerStyle}>
+			<div key={row.id} className="grid grid-cols-3 gap-4 my-8">
+				<div style={inputTableItemFieldContainerStyle}>
 					{renderFieldInput(row.field.name, row.id)}
-					<img src={chrome.runtime.getURL(isValidationCorrect ? "/icons/correct.svg" : "/icons/cross.svg")} style={{ marginLeft: "0.85rem" }} />
-				</td>
-				<td style={inputTableGridOptionStyle}>{renderFieldOperationInput(row.operation as ASSERTION_OPERATION_TYPE, row.id)}</td>
-				<td>{renderValidationInput(row.validation, row.id)}</td>
-			</tr>
+					<div className="flex items-center justify-center">
+						<img src={chrome.runtime.getURL(isValidationCorrect ? "/icons/correct.svg" : "/icons/cross.svg")}
+							style={{ marginLeft: "0.85rem", height: "1.4rem" }} />
+					</div>
+				</div>
+				<div>{renderFieldOperationInput(row.operation as ASSERTION_OPERATION_TYPE, row.id)}</div>
+				<div>{renderValidationInput(row.validation, row.id)}</div>
+			</div>
 		);
 	});
 
-	return <table style={containerStyle}>{rowOut}</table>;
+	return <div style={containerStyle}>{rowOut}</div>;
 };
 
 const containerStyle = {
@@ -115,12 +116,8 @@ const containerStyle = {
 	textAlign: TEXT_ALIGN.LEFT,
 	borderSpacing: "0 0.75rem",
 	maxHeight: "47vh",
-	overflowY: OVERFLOW.AUTO,
 };
-const inputTableGridItemStyle = {
-	display: "table-row",
-	gridTemplateColumns: "auto auto auto",
-};
+
 const inputTableItemFieldContainerStyle = {
 	fontFamily: "DM Sans",
 	minWidth: "7rem",
@@ -128,28 +125,9 @@ const inputTableItemFieldContainerStyle = {
 	fontSize: "0.82rem",
 	display: "flex",
 };
-const selectStyle = {
-	minWidth: 120,
-	maxWidth: "10rem",
-	width: "100%",
-	fontSize: 18,
-	appearance: APPEARANCE.NONE,
-	background: "#FAFAFA",
-	border: "1px solid #DADADA",
-	borderRadius: "0.20rem",
-	padding: "12px 1rem",
-	backgroundImage:
-		"url(\"data:image/svg+xml;utf8,<svg fill='black' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>\")",
-	backgroundRepeat: "no-repeat",
-	backgroundPositionX: "96.5%",
-	backgroundPositionY: "50%",
-};
-const inputTableGridOptionStyle = {
-	width: "50%",
-	textAlign: TEXT_ALIGN.CENTER,
-};
+
 const inputTableGridOptionValueInputStyle = {
-	padding: "12px 1rem",
+	padding: "6px 16px",
 	borderRadius: "0.25rem",
 	width: "100%",
 	fontSize: 18,

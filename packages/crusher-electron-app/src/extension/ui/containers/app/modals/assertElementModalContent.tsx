@@ -159,7 +159,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 			<div style={bottomBarStyle}>
 				<div style={formButtonStyle}>
 					<div style={advanceLinkContainerStyle} onClick={createNewElementAssertionRow}>
-						<span>Advance</span>
+						<span>{"Add a check"}</span>
 						<span style={{ marginLeft: "0.5rem" }}>
 							<img width={12} src={chrome.extension.getURL("/icons/arrow_down.svg")} />
 						</span>

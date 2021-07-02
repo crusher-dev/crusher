@@ -1,13 +1,16 @@
-ELECTRON_BUILD="../../output/crusher-electron-app/"
+ELECTRON_BUILD="../../output/crusher-electron-app"
 DIST_DIR="../../output/crusher-electron-app-release/darwin"
+APP_RESOURCE_DIR=$DIST_DIR/Electron.app/Contents/Resources
 
-rm -rf "$DIST_DIR" && mkdir -p "$DIST_DIR"
-cp -rfT bin/darwin $DIST_DIR
+mkdir -p ../../output/crusher-electron-app-release
+
+rm -rf "$DIST_DIR"
+cp -rf bin/darwin/ $DIST_DIR/
 
 # Copy JS binding bundle
-mkdir -p $DIST_DIR/Electron.app/Contents/Resources/
-cp -rfT "$ELECTRON_BUILD" $DIST_DIR/Electron.app/Contents/Resources/app
+rm -rf "$APP_RESOURCE_DIR/app"
+cp -rf "$ELECTRON_BUILD/" $APP_RESOURCE_DIR/app
 
 cd $DIST_DIR
 # Build distribution
-tar -cvzf ../crusher-darwin.tar.gz ./
+zip --symlinks -r ../crusher-darwin.zip ./

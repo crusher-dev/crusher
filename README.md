@@ -34,7 +34,7 @@ Faster and powerful way to try Crusher is using Crusher cloud. Click on button t
 
 ## **Features**
 
- E2E simple no-code testing  
+- E2E simple no-code testing  
 - UI & User Flow testing.  
 - Latest chromium support.
 - Auto-hover detectation functionality.  

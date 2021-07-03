@@ -38,23 +38,28 @@ Faster and powerful way to try Crusher. Click to get started.
 
 ## 🔮 Features
 
-- E2E simple no-code testing  
-- UI & User Flow testing.  
+- Create test without writing code. We track basic action by creating a fork of chromium.
+- Test UI and compare pixel perfect with last version
+- Replay user flows within test.  
 - Latest chromium support.
-- Auto-hover detection functionality.  
+- Auto-hover detection functionality.
+- Detailed reports with video and e2e repors (coming soon)
 - Scheduled monitoring (EE feature)
 - Github integration and Alerting (EE feature)  
 - All browser + different browser version(EE feature).
+- Super easy deploy using Docker or Heroku.
+- Host it on your infra or Crusher cloud.
 
+We're still early and need to do lot of things to make this a end to end platform. We you need any feature, please file it in github issues.
 
 ## 📹 Demo
 
-Creating a test
+**Creating a test**
 
 <a target="_blank" href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">
 <img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>
   
-Running a test  
+**Running a test**  
 
 <a target="_blank" href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">
 <img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>
@@ -91,6 +96,14 @@ Check about roadmap plan here.
   
  Check guide for other deployments.
  
+### 📝 Contributing
+<hr/>  
+  
+This repo is entirely MIT licensed, with the exception of the **/src_ee directory (if applicable). This to ensure we get fairely rewarded for work done.  
+  
+Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.  
+  
+   
 ### 📝 License
 <hr/>  
   

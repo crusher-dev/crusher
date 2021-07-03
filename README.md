@@ -6,7 +6,11 @@
     <a href="#backers" alt="Backers on Open Collective">  
         <img src="https://img.shields.io/badge/node-%3E=%2014.0.0-brightgreen?style=flat-square" /></a>  
             <a href="#backers" alt="Backers on Open Collective">  
-        <img src="https://img.shields.io/badge/node-%3E=%2014.0.0-brightgreen?style=flat-square" /></a>  
+        <img src="https://img.shields.io/github/last-commit/crusherdev/crusher?color=8e3dff&style=flat-square" /></a>  
+                    <a href="#backers" alt="Backers on Open Collective">  
+                <img src="https://img.shields.io/docker/image-size/7296823551/test?style=flat-square" /></a>  
+                                    <a href="#backers" alt="Backers on Open Collective">  
+                                <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>  
 </p>  
   
 Crusher is **no-code e2e web testing/monitoring** built for devs  a.k.a *selenium on steroids*.  
@@ -37,41 +41,38 @@ Faster and powerful way to try Crusher. Click to get started.
 - E2E simple no-code testing  
 - UI & User Flow testing.  
 - Latest chromium support.
-- Auto-hover detectation functionality.  
-- Monitoring (EE feature)
-- Github integration and Aerting (EE feature)  
-- All browser + OSS version. Support coming soon (EE feature).
-
+- Auto-hover detection functionality.  
+- Scheduled monitoring (EE feature)
+- Github integration and Alerting (EE feature)  
+- All browser + different browser version(EE feature).
 
 
 ## 📹 Demo
 
-
-
-<a href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">
+<a target="_blank" href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">
 <img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>
   
 ## 💡 Philosophy
   
-Web is becoming more and more complex, we have dozens of API. Different framework, things will break due to complexity of systems we create.  
-  
-But we should know where, when and how's it breaking.  
-  
-  
+Web is becoming more and more complex everyday, we have dozens of API and infra items.   
+
+Due to nature of complexity it'll be hard to avoid bugs/issues, but we should know where, when and how's it breaking.
+
 ## 😎 What's so cool about this 
   
-As devs, we work hard to build process.  Although, some tasks are boring, hard and eat up our energy.
+As devs, we work hard to build software.  Although, in the process some tasks are boring, hard and eat up our energy.
   
-We call it noise, it can be UX or worflow. At first we improve workflow and then UX . At the end, we're creating better software for people who create software.  
+We call it noise, it can be UX or workflow noise. At first we reimagine existing workflow and then UX . At the end, we're creating better software for people who create software.  
   
-We want to be a platform, solving boring dev tasks and hence improving workflow. We take inspiration from Figma and Linear.  
+We want to be a platform, solving boring dev tasks and hence improving workflow. We take inspiration from Figma, Linear and Loom on software they create.  
   
 For us it's both about how it looks and feels, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.  
-  
+
+Note :- Major FE revamp is underway for ^.
   
 ## 🛣️ Roadmap 
   
-Check about deployment plan here.  
+Check about roadmap plan here.  
   
 ## 🧱 Self deployment 
   

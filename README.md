@@ -81,30 +81,6 @@ Note :- Major FE revamp is underway for ^.
   
  Check guide for other deployments.
 
-## 📦 **Docker**
-
-**Official container**  [![hoppscotch/hoppscotch](https://camo.githubusercontent.com/7da6a7dee142c66d3acf19e5db9232f5edc6dd95f997ddd9038fb356f2415a0d/68747470733a2f2f696d672e736869656c64732e696f2f646f636b65722f70756c6c732f686f707073636f7463682f686f707073636f7463683f7374796c653d736f6369616c)](https://hub.docker.com/r/hoppscotch/hoppscotch)
-
-docker run --rm --name hoppscotch -p 3000:3000 7296823551/test:latest
-
-### 👨‍👩‍👧‍👦 **Contributing**
-<hr/>
-
-Check out our  [contributing guide](https://github.com/hasura/graphql-engine/blob/master/CONTRIBUTING.md)  for more details.
-   
-### 📫 Support & Troubleshooting  
-<hr/>    
-   
-
-The documentation and community will help you troubleshoot most issues. If you have encountered a bug or need to get in touch with us, you can contact us using one of the following channels:
-
--   Support & feedback:  [Discord](https://discord.gg/hasura)
--   Issue & bug tracking:  [GitHub issues](https://github.com/hasura/graphql-engine/issues)
--   Follow product updates:  [@HasuraHQ](https://twitter.com/hasurahq)
--   Talk to us on our  [website chat](https://hasura.io/)
-
-If you want to report a security issue, please  [read this](https://github.com/hasura/graphql-engine/blob/master/SECURITY.md).
-  
 ### 📝 License  
 <hr/>    
     

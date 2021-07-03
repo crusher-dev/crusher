@@ -96,7 +96,7 @@ Note :- Major FE revamp is underway for ^.
 
 docker run --rm --name hoppscotch -p 3000:3000 7296823551/test:latest
 
-### **Contributing**
+### 👨‍👩‍👧‍👦 **Contributing**
 <hr/>
 
 Check out our  [contributing guide](https://github.com/hasura/graphql-engine/blob/master/CONTRIBUTING.md)  for more details.
@@ -108,7 +108,7 @@ This repo is entirely MIT licensed, with the exception of the **/src_ee director
     
 Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.    
     
-### Support & Troubleshooting  
+### 📫 Support & Troubleshooting  
 <hr/>    
    
 

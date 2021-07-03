@@ -30,7 +30,7 @@ Integrate **user flow and visual regression** without managing infra, creating a
  
 Faster and powerful way to try Crusher. Click to get started.  
 
-<img src="https://i.imgur.com/3S1jWeA.png" height="42px"/>  
+<img src="https://i.imgur.com/BUYY8Jp.png" height="50px"/>  
 
 ## 🔮 Features
 

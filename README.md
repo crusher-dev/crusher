@@ -17,7 +17,7 @@ Integrate **user flow and visual regression** without managing infra, creating a
 > Dev has evolved a lot in last decades, testing not so much, our goal is to help dev ship HQ software. We started this because we were genuinely frustrated from current worflows. Read more about philosophy.
  
 
-## Start Using
+## ✨Start using
 
 **One click deploy (self-host)**
 
@@ -32,7 +32,7 @@ Faster and powerful way to try Crusher. Click to get started.
 
 <img src="https://i.imgur.com/3S1jWeA.png" height="42px"/>  
 
-## **Features**
+## 🔮 Feature
 
 - E2E simple no-code testing  
 - UI & User Flow testing.  
@@ -44,21 +44,21 @@ Faster and powerful way to try Crusher. Click to get started.
 
 
 
-## Demo
+## 📹 Demo
 
 
 
 <a href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">
 <img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>
   
-## Philosophy
+## 💡 Philosophy
   
 Web is becoming more and more complex, we have dozens of API. Different framework, things will break due to complexity of systems we create.  
   
 But we should know where, when and how's it breaking.  
   
   
-## What's so cool about this 
+## 😎 What's so cool about this 
   
 As devs, we work hard to build process.  Although, some tasks are boring, hard and eat up our energy.
   
@@ -69,11 +69,11 @@ We want to be a platform, solving boring dev tasks and hence improving workflow.
 For us it's both about how it looks and feels, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.  
   
   
-## Roadmap 
+## 🛣️ Roadmap 
   
 Check about deployment plan here.  
   
-## Self deployment 
+## 🧱 Self deployment 
   
   
 | **Infra provider** | **One-click link** | **Additional information** |  

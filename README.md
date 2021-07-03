@@ -90,7 +90,7 @@ This repo is entirely MIT licensed, with the exception of the **/src_ee director
   
 Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.  
   
-###🤝Contributors
+### 🤝Contributors
 <hr/>  
 <p float="left">
 

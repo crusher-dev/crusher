@@ -16,7 +16,10 @@ Integrate **user flow and visual regression** without managing infra, creating a
    
 > Dev has evolved a lot in last decades, testing not so much, our goal is to help dev ship HQ software. We started this because we were genuinely frustrated from current worflows. Read more about philosophy.
  
-**1 click deploy**
+
+## Start Using
+
+**One click deploy**
 
 
 <img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="28px"/>  
@@ -29,9 +32,9 @@ Faster and powerful way to try Crusher is using Crusher cloud. Click on button t
 
 <img src="https://i.imgur.com/3S1jWeA.png" height="42px"/>  
 
- 
-**Features**  
-- E2E simple no-code testing  
+## **Features**
+
+ E2E simple no-code testing  
 - UI & User Flow testing.  
 - Latest chromium support.
 - Auto-hover detectation functionality.  
@@ -39,18 +42,22 @@ Faster and powerful way to try Crusher is using Crusher cloud. Click on button t
 - Github integration and Aerting (EE feature)  
 - All browser + OSS version. Support coming soon (EE feature).
 
-**Demo of  crusher**  
+
+
+## Demo
+
+
 
 <a href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033"> <img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="90%"> </a>
   
-**Philosophy**  
+## Philosophy
   
 Web is becoming more and more complex, we have dozens of API. Different framework, things will break due to complexity of systems we create.  
   
 But we should know where, when and how's it breaking.  
   
   
-**What's so cool about this**  
+## What's so cool about this 
   
 As devs, we work hard to build process.  Although, some tasks are boring, hard and eat up our energy.
   
@@ -61,11 +68,11 @@ We want to be a platform, solving boring dev tasks and hence improving workflow.
 For us it's both about how it looks and feels, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.  
   
   
-**Roadmap**  
+## Roadmap 
   
 Check about deployment plan here.  
   
-**Self deployment**  
+## Self deployment 
   
   
 | **Infra provider** | **One-click link** | **Additional information** |  
@@ -75,7 +82,8 @@ Check about deployment plan here.
   
  Check guide for other deployments.
  
-**License**  
+### License
+<hr/>  
   
 This repo is entirely MIT licensed, with the exception of the **/src_ee directory (if applicable). This to ensure we get fairely rewarded for work done.  
   

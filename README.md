@@ -102,14 +102,7 @@ docker run --rm --name hoppscotch -p 3000:3000 7296823551/test:latest
 <hr/>
 
 Check out our  [contributing guide](https://github.com/hasura/graphql-engine/blob/master/CONTRIBUTING.md)  for more details.
-
-### 📝 License  
-<hr/>    
-    
-This repo is entirely MIT licensed, with the exception of the **/src_ee directory (if applicable). This to ensure we get fairely rewarded for work done.    
-    
-Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.    
-    
+   
 ### 📫 Support & Troubleshooting  
 <hr/>    
    
@@ -130,7 +123,7 @@ This repo is entirely MIT licensed, with the exception of the **/src_ee director
     
 Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.    
     
-### 🤝 Contributors  
+## 🤝 Contributors  
 <hr/>    
 <p float="left">  
   

@@ -321,12 +321,7 @@ function ProjectTestsList(props) {
 	};
 
 	const handleCreateTest = async () => {
-		const isExtensionInstalled = await checkIfExtensionPresent();
-		if (!isExtensionInstalled) {
-			setShowInstallExtensionModal(true);
-		} else {
-			setShouldShowCreateTestModal(true);
-		}
+		window.open("https://docs.crusher.dev/docs/download", "__blank");
 	};
 	const closeInstallExtensionModal = () => {
 		setShowInstallExtensionModal(false);

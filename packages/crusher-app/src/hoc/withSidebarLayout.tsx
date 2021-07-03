@@ -339,12 +339,7 @@ export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGet
 		}
 
 		const handleCreateTest = async () => {
-			const isExtensionInstalled = await checkIfExtensionPresent();
-			if (!isExtensionInstalled) {
-				setShowInstallExtensionModal(true);
-			} else {
-				setShowCreateTestModal(true);
-			}
+			window.open("https://docs.crusher.dev/docs/download", "__blank");
 		};
 
 		const closeInstallExtensionModal = () => {

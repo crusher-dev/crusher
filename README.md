@@ -17,7 +17,7 @@ Integrate **user flow and visual regression** without managing infra, creating a
 > Dev has evolved a lot in last decades, testing not so much, our goal is to help dev ship HQ software. We started this because we were genuinely frustrated from current worflows. Read more about philosophy.
  
 
-## ✨Start using
+## 😀 Start using
 
 **One click deploy (self-host)**
 
@@ -83,12 +83,12 @@ Check about deployment plan here.
   
  Check guide for other deployments.
  
-### License
+### 📝 License
 <hr/>  
   
 This repo is entirely MIT licensed, with the exception of the **/src_ee directory (if applicable). This to ensure we get fairely rewarded for work done.  
   
 Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.  
   
-**Contributors**<hr/>  
+**🤝Contributors**<hr/>  
 <img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>

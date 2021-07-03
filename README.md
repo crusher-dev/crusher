@@ -21,20 +21,22 @@ Integrate **user flow and visual regression** without managing infra, creating a
      
 > Dev has evolved a lot in last decades, testing not so much, our goal is to help dev ship HQ software. We started this because we were genuinely frustrated from current worflows. Read more about philosophy.  
     
-## 😀 Start using  
+## ❤️ Start using  Crisjer
   
-**One click deploy (self-host)**  
+**Start with crusher cloud for free**    
+ Fastest and most powerful way to try Crusher. Click to get started.    
+  
+<img src="https://i.imgur.com/BUYY8Jp.png" height="50px"/>    
+  
+  
+**Deploy it on your own infra (self-host)**  
   
   
 <img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>    
     
   
    
-**Start with crusher cloud for free**    
- Faster and powerful way to try Crusher. Click to get started.    
-  
-<img src="https://i.imgur.com/BUYY8Jp.png" height="50px"/>    
-  
+
 ## 🔮 Features  
   
 - Create test without writing code. We track basic action by creating a fork of chromium.  
@@ -49,7 +51,7 @@ Integrate **user flow and visual regression** without managing infra, creating a
 - Super easy deploy using Docker or Heroku.  
 - Host it on your infra or Crusher cloud.  
   
-We're still early and need to do lot of things to make this a end to end platform. We you need any feature, please file it in github issues.  
+We're still early and need to do lot of things to build this as complete platform. If you need any feature, please file it in github issues.  
   
 ## 📹 Demo  
   

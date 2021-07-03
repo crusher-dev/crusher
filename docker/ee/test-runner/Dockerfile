@@ -2,9 +2,9 @@ FROM mcr.microsoft.com/playwright:bionic
 
 MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 
-ARG SSH_PUBLIC_KEY
-
 WORKDIR /crusher
+
+ARG SSH_PUBLIC_KEY
 
 RUN mkdir -p /usr/local/nvm
 RUN mkdir -p /var/run/sshd

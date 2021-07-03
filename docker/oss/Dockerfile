@@ -3,7 +3,7 @@ ENV NPM_CONFIG_PREFIX=/usr/src/app/.npm-global
 #RUN apk add  --no-cache ffmpeg
 # Only permission for file access is in /usr/src. Find other places
 
-RUN npm install pm2
+RUN npm install pm2 dotenv
 ADD ./ecosystem.oss.js ecosystem.config.js
 COPY --chown=chrome ./output packages
 RUN rm -rf packages/crusher-app/.next/cache

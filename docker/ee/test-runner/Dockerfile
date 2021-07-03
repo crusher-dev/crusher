@@ -24,10 +24,8 @@ RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use
 ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
 
-RUN npm install -g npm
-RUN npm install pm2 -g
-RUN npm install -g concurrently
-RUN npm install -g playwright@^1.7.1 @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
+RUN npm install -g npm pm2 concurrently playwright@^1.7.1 @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704 dotenv
+
 RUN export CRUSHER_ENV=production
 
 ADD ./ecosystem.oss.js ecosystem.config.js

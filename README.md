@@ -21,7 +21,7 @@ Integrate **user flow and visual regression** without managing infra, creating a
      
 > Dev has evolved a lot in last decades, testing not so much, our goal is to help dev ship HQ software. We started this because we were genuinely frustrated from current worflows. Read more about philosophy.  
     
-## ❤️ Start using  Crisjer
+## 🚀 Start using  Crusher
   
 **Start with crusher cloud for free**    
  Fastest and most powerful way to try Crusher. Click to get started.    
@@ -92,7 +92,7 @@ Note :- Major FE revamp is underway for ^.
   
  Check guide for other deployments.
 
-## **Docker**
+## 📦 **Docker**
 
 **Official container**  [![hoppscotch/hoppscotch](https://camo.githubusercontent.com/7da6a7dee142c66d3acf19e5db9232f5edc6dd95f997ddd9038fb356f2415a0d/68747470733a2f2f696d672e736869656c64732e696f2f646f636b65722f70756c6c732f686f707073636f7463682f686f707073636f7463683f7374796c653d736f6369616c)](https://hub.docker.com/r/hoppscotch/hoppscotch)
 

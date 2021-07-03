@@ -1,91 +1,120 @@
-![enter image description here](https://i.imgur.com/IGir73J.png)
 
-<p align="center">
-    <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/badges/shields" /></a>
-    <a href="#backers" alt="Backers on Open Collective">
-        <img src="https://img.shields.io/opencollective/backers/shields" /></a>
-    <a href="#sponsors" alt="Sponsors on Open Collective">
-        <img src="https://img.shields.io/opencollective/sponsors/shields" /></a>
-    <a href="https://github.com/badges/shields/pulse" alt="Activity">
-        <img src="https://img.shields.io/github/commit-activity/m/badges/shields" /></a>
-    <a href="https://circleci.com/gh/badges/shields/tree/master">
-        <img src="https://img.shields.io/circleci/project/github/badges/shields/master" alt="build status"></a>
-    <a href="https://circleci.com/gh/badges/daily-tests">
-        <img src="https://img.shields.io/circleci/project/github/badges/daily-tests?label=service%20tests"
-            alt="service-test status"></a>
-    <a href="https://coveralls.io/github/badges/shields">
-        <img src="https://img.shields.io/coveralls/github/badges/shields"
-            alt="coverage"></a>
-    <a href="https://lgtm.com/projects/g/badges/shields/alerts/">
-        <img src="https://img.shields.io/lgtm/alerts/g/badges/shields"
-            alt="Total alerts"/></a>
-    <a href="https://discord.gg/HjJCwm5">
-        <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
-            alt="chat on Discord"></a>
-    <a href="https://twitter.com/intent/follow?screen_name=shields_io">
-        <img src="https://img.shields.io/twitter/follow/shields_io?style=social&logo=twitter"
-            alt="follow on Twitter"></a>
+![enter image description here](https://i.imgur.com/pMMNokt.png)    
+    
+<p align="center">    
+    <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">    
+        <img src="https://img.shields.io/badge/license-MIT-%23373737?style=flat-square&color=ff3db6" /></a>    
+    <a href="#backers" alt="Backers on Open Collective">    
+        <img src="https://img.shields.io/badge/node-%3E=%2014.0.0-brightgreen?style=flat-square" /></a>    
+            <a href="#backers" alt="Backers on Open Collective">    
+        <img src="https://img.shields.io/github/last-commit/crusherdev/crusher?color=8e3dff&style=flat-square" /></a>    
+                    <a href="#backers" alt="Backers on Open Collective">    
+                <img src="https://img.shields.io/docker/image-size/7296823551/test?style=flat-square" /></a>    
+                                    <a href="#backers" alt="Backers on Open Collective">    
+                                <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>    
+</p>    
+    
+Crusher is **no-code e2e web testing/monitoring** built for devs  a.k.a *selenium on steroids*.    
+  
+Integrate **user flow and visual regression** without managing infra, creating a framework or managing breaking selectors.     
+    
+     
+> Dev has evolved a lot in last decades, testing not so much, our goal is to help dev ship HQ software. We started this because we were genuinely frustrated from current worflows. Read more about philosophy.  
+    
+## 🚀 Start using  Crusher
+  
+**Start with crusher cloud for free**    
+ Fastest and most powerful way to try Crusher. Click to get started.    
+  
+<img src="https://i.imgur.com/BUYY8Jp.png" height="50px"/>    
+  
+  
+**Deploy it on your own infra (self-host)**  
+  
+  
+<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>    
+    
+  
+   
+
+## 🔮 Features  
+  
+- Create test without writing code. We track basic action by creating a fork of chromium.  
+- Test UI and compare pixel perfect with last version  
+- Replay user flows within test.    
+- Latest chromium support.  
+- Auto-hover detection functionality.  
+- Detailed reports with video and e2e repors (coming soon)  
+- Scheduled monitoring (EE feature)  
+- Github integration and Alerting (EE feature)    
+- All browser + different browser version(EE feature).  
+- Super easy deploy using Docker or Heroku.  
+- Host it on your infra or Crusher cloud.  
+  
+We're still early and need to do lot of things to build this as complete platform. If you need any feature, please file it in github issues.  
+
+## 💡 Philosophy  
+  Web is becoming more and more complex everyday, we have dozens of API and infra items.     
+  
+Due to nature of complexity it'll be hard to avoid bugs/issues, but we should know where, when and how's it breaking.  
+  
+## 😎 What's so cool about this   
+ As devs, we work hard to build software.  Although, in the process some tasks are boring, hard and eat up our energy.  
+    
+We call it noise, it can be UX or workflow noise. At first we reimagine existing workflow and then UX . At the end, we're creating better software for people who create software.    
+    
+We want to be a platform, solving boring dev tasks and hence improving workflow. We take inspiration from Figma, Linear and Loom on software they create.    
+    
+For us it's both about how it looks and feels, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.    
+  
+Note :- Major FE revamp is underway for ^.  
+    
+## 🛣️ Roadmap   
+ Check about roadmap plan here.    
+    
+## 🧱 Self deployment   
+    
+| **Infra provider** | **One-click link** | **Additional information** |  
+|:------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------:|  
+| Heroku | [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html) |  
+| DigitalOcean | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |  
+  
+ Check guide for other deployments.
+
+## 📦 **Docker**
+
+**Official container**  [![hoppscotch/hoppscotch](https://camo.githubusercontent.com/7da6a7dee142c66d3acf19e5db9232f5edc6dd95f997ddd9038fb356f2415a0d/68747470733a2f2f696d672e736869656c64732e696f2f646f636b65722f70756c6c732f686f707073636f7463682f686f707073636f7463683f7374796c653d736f6369616c)](https://hub.docker.com/r/hoppscotch/hoppscotch)
+
+docker run --rm --name hoppscotch -p 3000:3000 7296823551/test:latest
+
+### 👨‍👩‍👧‍👦 **Contributing**
+<hr/>
+
+Check out our  [contributing guide](https://github.com/hasura/graphql-engine/blob/master/CONTRIBUTING.md)  for more details.
+   
+### 📫 Support & Troubleshooting  
+<hr/>    
+   
+
+The documentation and community will help you troubleshoot most issues. If you have encountered a bug or need to get in touch with us, you can contact us using one of the following channels:
+
+-   Support & feedback:  [Discord](https://discord.gg/hasura)
+-   Issue & bug tracking:  [GitHub issues](https://github.com/hasura/graphql-engine/issues)
+-   Follow product updates:  [@HasuraHQ](https://twitter.com/hasurahq)
+-   Talk to us on our  [website chat](https://hasura.io/)
+
+If you want to report a security issue, please  [read this](https://github.com/hasura/graphql-engine/blob/master/SECURITY.md).
+  
+### 📝 License  
+<hr/>    
+    
+This repo is entirely MIT licensed, with the exception of the **/src_ee directory (if applicable). This to ensure we get fairely rewarded for work done.    
+    
+Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.    
+    
+## 🤝 Contributors  
+<hr/>    
+<p float="left">  
+  
+<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>  
 </p>
-
-Crusher is **no-code e2e web testing/monitoring** built for developers. Integrate **user flow and visual test** without hassle. We have one click deploy to infra.
-
-*Dev has evolved but testing not so much, our goal is to help dev ship HQ software.*
-
-**Start using**
-
-Faster and powerful way to try Crusher is using Crusher cloud. Click on button to get started.
-
-**Demo Video**
-
-**Features**
-- E2E No-code testing
-- Supports Chrome. Safari and Firefox available on cloud (Pro).
-- Auto-hover detectation functionality.
-- UI/Flow testing.
-- SDK for complex edge case.
-- Visual regression with last builds.
-- Reports page with session video and reports.
-- Github integration and alerting (Pro feature)
-- Version support coming soon.
-
-**Philosophy**
-
-Web is becoming more and more complex, we have dozens of API. Different framework, things will break due to complexity of systems we create.
-
-But we should know where, when and how's it breaking.
-
-
-**What's so cool about this**
-
-As engineers, we work tirelessly to execute our vision. In the process some tasks are repetitive, boring and take most of workflow time, they eat up both our time and energy.
-
-We call it noise, it can be UX or worflow. At first we improve workflow and then UX . At the end, we're creating better software for people who create software.
-
-We want to be a platform, solving boring dev tasks and hence improving workflow. We take inspiration from Figma and Linear.
-
-For us it's both about how it looks and feels, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.
-
-
-**Roadmap**
-
-Check about deployment plan here.
-
-**Self deployment**
-
-
-| **Infra provider** | **One-click link** | **Additional information** |
-|:------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Heroku | [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html) |
-| DigitalOcean | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |
-| Azure | [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3a%2f%2fraw.githubusercontent.com%2fhasura%2fgraphql-engine%2fmaster%2finstall-manifests%2fazure-container-with-pg%2fazuredeploy.json) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/azure-container-instances-postgres.html) |
-| Render | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/render-examples/hasura-graphql) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/render-one-click.html) |
-
-**License**
-
-The code is open source and is licensed under Apache 2.0 license.This is our core. Some Proprietary and patent pending features are under BSD license.
-
-**Contributors**<hr/>
-<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>
-
-

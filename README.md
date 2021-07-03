@@ -19,16 +19,16 @@ Integrate **user flow and visual regression** without managing infra, creating a
 
 ## Start Using
 
-**One click deploy**
+**One click deploy (self-host)**
 
 
-<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="28px"/>  
+<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>  
   
 
  
-**Start using for free**  
+**Start with crusher cloud for free**  
  
-Faster and powerful way to try Crusher is using Crusher cloud. Click on button to get started.  
+Faster and powerful way to try Crusher. Click to get started.  
 
 <img src="https://i.imgur.com/3S1jWeA.png" height="42px"/>  
 

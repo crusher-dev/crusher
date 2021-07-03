@@ -6,7 +6,9 @@ RUN apk add --no-cache bash
 
 RUN apk add git
 
-RUN npm install -g npm pm2 webpack dotenv
+RUN npm install -g npm pm2 webpack
+RUN npm init -y
+RUN npm install dotenv
 
 WORKDIR /crusher
 

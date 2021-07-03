@@ -49,6 +49,13 @@ Faster and powerful way to try Crusher. Click to get started.
 
 ## 📹 Demo
 
+Creating a test
+
+<a target="_blank" href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">
+<img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>
+  
+Running a test  
+
 <a target="_blank" href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">
 <img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>
   

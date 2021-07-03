@@ -861,7 +861,6 @@ function JobReviews(props) {
 				<link href="/lib/ionicons/css/ionicons.min.css" rel="stylesheet" />
 
 				<link href="/assets/css/dashforge.css" rel="stylesheet" />
-				<link href="/assets/css/dashforge.dashboard.css" rel="stylesheet" />
 			</Head>
 			<div>Hi everyone!!</div>
 			<Header

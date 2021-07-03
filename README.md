@@ -52,18 +52,7 @@ Integrate **user flow and visual regression** without managing infra, creating a
 - Host it on your infra or Crusher cloud.  
   
 We're still early and need to do lot of things to build this as complete platform. If you need any feature, please file it in github issues.  
-  
-## 📹 Demo  
-  
-**Creating a test**  
-  
-<a target="_blank" href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">  
-<img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>  
-    
-**Running a test**   
-<a target="_blank" href="https://www.loom.com/share/b8a0f8f1b4b74661a9b5efb7ad66d033">  
-<img  src="https://cdn.loom.com/sessions/thumbnails/b8a0f8f1b4b74661a9b5efb7ad66d033-with-play.gif" width="100%"> </a>  
-    
+
 ## 💡 Philosophy  
   Web is becoming more and more complex everyday, we have dozens of API and infra items.     
   

@@ -20,7 +20,7 @@ class TestRunner {
 	constructor() {
 		this.sessionId = generateUid();
 		this.redisManager = RedisManager;
-		RedisManager.initialize(REDDIS.host, parseInt(REDDIS.port), REDDIS.password)
+		RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password)
 		// During booting, make sure test runner doesn't pickup any jobs without checking its bootAfterNJobsOffset
 	}
 

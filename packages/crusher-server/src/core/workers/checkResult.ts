@@ -343,7 +343,7 @@ async function runChecks(details, clearJobTempValues) {
 
 module.exports = async (bullJob: Job) => {
 	const reddisClient = new IORedis({
-		port: parseInt(REDIS.port),
+		port: REDIS.port,
 		host: REDIS.host,
 		password: REDIS.password,
 	});

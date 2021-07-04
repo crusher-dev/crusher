@@ -7,7 +7,7 @@ import { REDIS } from "../config/database";
 const IORedis = require("ioredis");
 const path = require("path");
 
-const connection = new IORedis({ host: REDIS.host, port: REDIS.port, password: REDIS.password });
+const redisClient = new IORedis({ host: REDIS.host, port: REDIS.port, password: REDIS.password });
 
 if (process.env.NODE_ENV === "development") {
 	// For ts-node
@@ -20,17 +20,17 @@ if (process.env.NODE_ENV === "development") {
 function initializeQueues() {
 	console.debug("Initializing queues");
 	new Queue("test-progress-queue", {
-		connection: connection,
+		client: redisClient,
 	});
 	new Queue("test-completed-queue", {
-		connection: connection,
+		client: redisClient,
 	});
 	new Queue("check-result-queue", {
-		connection: connection,
+		client: redisClient,
 	});
 
 	new Queue("video-processing-complete-queue", {
-		connection: connection,
+		client: redisClient,
 	});
 }
 
@@ -38,20 +38,20 @@ function initializeWorkers() {
 	console.debug("Initializing queue workers");
 
 	new Worker("test-progress-queue", resoveWorkerPath(path.resolve("src/core/workers/testProgressWorker.ts")), {
-		connection: connection,
+		client: redisClient,
 		concurrency: 1,
 	});
 	new Worker("test-completed-queue", resoveWorkerPath(path.resolve("src/core/workers/testCompletedWorker.ts")), {
-		connection: connection,
+		client: redisClient,
 		concurrency: 1,
 	});
 	new Worker("check-result-queue", resoveWorkerPath(path.resolve("src/core/workers/checkResult.ts")), {
-		connection: connection,
+		client: redisClient,
 		concurrency: 1,
 	});
 
 	new Worker("video-processing-complete-queue", resoveWorkerPath(path.resolve("src/core/workers/videoProcessedQueue.ts")), {
-		connection: connection,
+		client: redisClient,
 		concurrency: 1,
 	});
 }
@@ -60,7 +60,7 @@ function initializeWorkers() {
 	const queueScheduler = new QueueScheduler("check-result-queue", {
 		stalledInterval: 120000,
 		maxStalledCount: 1,
-		connection: connection,
+		connection: REDIS,
 	});
 	await queueScheduler.waitUntilReady();
 	initializeQueues();

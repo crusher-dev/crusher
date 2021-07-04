@@ -1,6 +1,6 @@
 export const REDDIS = {
 	host: process.env.REDIS_HOST,
-	port: process.env.REDIS_PORT,
+	port: parseInt(process.env.REDIS_PORT, 10),
 	password: process.env.REDIS_PASSWORD,
 };
 

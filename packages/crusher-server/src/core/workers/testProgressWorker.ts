@@ -10,7 +10,7 @@ module.exports = async (bullJob: Job) => {
 		new IORedis({
 			host: REDIS.host,
 			password: REDIS.password,
-			port: parseInt(REDIS.port),
+			port: REDIS.port,
 		}),
 		data,
 	);

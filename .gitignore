@@ -128,3 +128,6 @@ output/
 #Flyways binary
 packages/crusher-server/flyway
 ecosystem/config/*
+
+#Env
+./.env

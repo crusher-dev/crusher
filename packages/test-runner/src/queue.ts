@@ -1,16 +1,16 @@
 import { Worker, Queue, QueueScheduler } from "bullmq";
-import { REDDIS } from "@config/database";
 import * as path from "path";
 import { RedisManager } from "@manager/redis";
+import { REDDIS } from '@config/database';
 
 const REQUEST_QUEUE = "request-queue";
-const queue = new Queue(REQUEST_QUEUE, { connection: RedisManager.client });
+const queue = new Queue(REQUEST_QUEUE, { client: RedisManager.client });
 
 queue.client.then(async (client) => {
 	const queueScheduler = new QueueScheduler(REQUEST_QUEUE, {
 		stalledInterval: 120000,
 		maxStalledCount: 1,
-		connection: client,
+		connection: REDDIS,
 	});
 	await queueScheduler.waitUntilReady();
 

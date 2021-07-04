@@ -1,5 +1,5 @@
 import * as path from "path";
-import { app, BrowserWindow, session, ipcMain } from "electron";
+import { app, BrowserWindow, session, ipcMain, protocol, screen } from "electron";
 
 let APP_DOMAIN = process.env.APP_DOMAIN;
 
@@ -44,10 +44,17 @@ async function createWindow() {
 	app.commandLine.appendSwitch("--disable-site-isolation-trials");
 	app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
+
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+
 	mainWindow = new BrowserWindow({
 		title: "Crusher Test Recorder",
-		show: false,
+		show: true,
 		icon: getIconPath(),
+		minWidth: width > 1600 ? 1600 : width,
+		minHeight: height > 873 ? 873 : height,
+		enableLargerThanScreen: true,
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 			nativeWindowOpen: true,
@@ -56,9 +63,6 @@ async function createWindow() {
 		},
 	});
 
-	await mainWindow.maximize();
-	await mainWindow.show();
-	await mainWindow.setResizable(false);
 
 	await mainWindow.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, (responseDetails, updateCallback) => {
 		Object.keys(responseDetails.responseHeaders).map((headers) => {
@@ -68,6 +72,7 @@ async function createWindow() {
 		});
 		updateCallback({ cancel: false, responseHeaders: responseDetails.responseHeaders });
 	});
+
 	await loadExtension(mainWindow);
 
 	await session.defaultSession.cookies.set({

@@ -2,17 +2,19 @@ FROM node:14.15.5-alpine3.11
 
 MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 
+WORKDIR /crusher
+
 RUN apk add --no-cache bash
 
 RUN apk add git
 
-RUN npm install -g npm
-RUN npm install pm2 -g
-RUN npm install -g webpack
+RUN npm install -g npm pm2 webpack
+RUN npm init -y
 
-WORKDIR /crusher
+RUN npm install dotenv
 
 ADD ./ecosystem.config.sample.js ecosystem.config.js
+ADD ./.env.sample .env
 ADD ./ecosystem ecosystem
 ADD ./output/crusher-server/ packages/crusher-server
 

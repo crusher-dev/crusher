@@ -192,7 +192,7 @@ function TestCard(props) {
 					</Conditional>
 					<Conditional If={!featured_video_uri}>
 						<div css={waitingVideoTextContainerCSS}>
-							<span css={waitingVideoTextCSS}>Processing video...</span>
+							<span css={waitingVideoTextCSS}>Processing test...</span>
 						</div>
 					</Conditional>
 				</div>
@@ -321,12 +321,7 @@ function ProjectTestsList(props) {
 	};
 
 	const handleCreateTest = async () => {
-		const isExtensionInstalled = await checkIfExtensionPresent();
-		if (!isExtensionInstalled) {
-			setShowInstallExtensionModal(true);
-		} else {
-			setShouldShowCreateTestModal(true);
-		}
+		window.open("https://docs.crusher.dev/docs/download", "__blank");
 	};
 	const closeInstallExtensionModal = () => {
 		setShowInstallExtensionModal(false);

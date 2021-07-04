@@ -20,17 +20,17 @@ if (process.env.NODE_ENV === "development") {
 function initializeQueues() {
 	console.debug("Initializing queues");
 	new Queue("test-progress-queue", {
-		client: redisClient,
+		connection: redisClient,
 	});
 	new Queue("test-completed-queue", {
-		client: redisClient,
+		connection: redisClient,
 	});
 	new Queue("check-result-queue", {
-		client: redisClient,
+		connection: redisClient,
 	});
 
 	new Queue("video-processing-complete-queue", {
-		client: redisClient,
+		connection: redisClient,
 	});
 }
 
@@ -38,20 +38,20 @@ function initializeWorkers() {
 	console.debug("Initializing queue workers");
 
 	new Worker("test-progress-queue", resoveWorkerPath(path.resolve("src/core/workers/testProgressWorker.ts")), {
-		client: redisClient,
+		connection: redisClient,
 		concurrency: 1,
 	});
 	new Worker("test-completed-queue", resoveWorkerPath(path.resolve("src/core/workers/testCompletedWorker.ts")), {
-		client: redisClient,
+		connection: redisClient,
 		concurrency: 1,
 	});
 	new Worker("check-result-queue", resoveWorkerPath(path.resolve("src/core/workers/checkResult.ts")), {
-		client: redisClient,
+		connection: redisClient,
 		concurrency: 1,
 	});
 
 	new Worker("video-processing-complete-queue", resoveWorkerPath(path.resolve("src/core/workers/videoProcessedQueue.ts")), {
-		client: redisClient,
+		connection: redisClient,
 		concurrency: 1,
 	});
 }
@@ -60,7 +60,7 @@ function initializeWorkers() {
 	const queueScheduler = new QueueScheduler("check-result-queue", {
 		stalledInterval: 120000,
 		maxStalledCount: 1,
-		connection: REDIS,
+		connection: redisClient,
 	});
 	await queueScheduler.waitUntilReady();
 	initializeQueues();

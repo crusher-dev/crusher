@@ -192,7 +192,7 @@ function TestCard(props) {
 					</Conditional>
 					<Conditional If={!featured_video_uri}>
 						<div css={waitingVideoTextContainerCSS}>
-							<span css={waitingVideoTextCSS}>Processing video...</span>
+							<span css={waitingVideoTextCSS}>Processing test...</span>
 						</div>
 					</Conditional>
 				</div>

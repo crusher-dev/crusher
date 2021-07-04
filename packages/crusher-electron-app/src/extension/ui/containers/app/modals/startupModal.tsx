@@ -12,17 +12,16 @@ interface iStartupModalProps {
 const StartupModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
 	const [targetURL, setTargetURL] = useState(null);
-	const [isURLValid, setURLValid] = useState(false);
-	const [shouldShowError, setShowError] = useState(false);
 
 	const handleTargetSiteChange = (event: any) => {
 		setTargetURL(event.target.value);
-		setURLValid(validURL(event.target.value));
 	};
 
 	const startRecording = () => {
-		setShowError(true);
-		if (!isURLValid) return;
+		if (!validURL(targetURL)) {
+			alert("URL is not valid");
+			return;
+		}
 		if (targetURL && targetURL !== "") {
 			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeLargeScreen`;
 		}
@@ -51,9 +50,6 @@ const StartupModal = (props: iStartupModalProps) => {
 						{"Record test"}
 					</button>
 				</div>
-				{shouldShowError &&
-					!isURLValid &&
-					<div className="text-white m-4"> URL is not valid</div>}
 			</div>
 
 		</ReactModal>

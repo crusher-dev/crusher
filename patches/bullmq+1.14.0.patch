@@ -1,5 +1,17 @@
+diff --git a/node_modules/bullmq/src/classes/redis-connection.ts b/node_modules/bullmq/src/classes/redis-connection.ts
+index e105a56..d51d7cd 100644
+--- a/node_modules/bullmq/src/classes/redis-connection.ts
++++ b/node_modules/bullmq/src/classes/redis-connection.ts
+@@ -15,6 +15,7 @@ export class RedisConnection extends EventEmitter {
+     super();
+ 
+     if (!isRedisInstance(opts)) {
++      console.error("Not an redis instance", opts, typeof opts);
+       this.opts = {
+         port: 6379,
+         host: '127.0.0.1',
 diff --git a/node_modules/bullmq/src/classes/worker.ts b/node_modules/bullmq/src/classes/worker.ts
-index 0e91fff..223b891 100644
+index 0e91fff..c91bc34 100644
 --- a/node_modules/bullmq/src/classes/worker.ts
 +++ b/node_modules/bullmq/src/classes/worker.ts
 @@ -11,6 +11,7 @@ import { Scripts } from './scripts';
@@ -7,7 +19,7 @@ index 0e91fff..223b891 100644
  import { TimerManager } from './timer-manager';
  import { isRedisInstance } from '../utils';
 +import Timeout = NodeJS.Timeout;
-
+ 
  // note: sandboxed processors would also like to define concurrency per process
  // for better resource utilization.
 @@ -21,7 +22,7 @@ export class Worker<
@@ -17,12 +29,12 @@ index 0e91fff..223b891 100644
 -> extends QueueBase {
 +  > extends QueueBase {
    opts: WorkerOptions;
-
+ 
    private drained: boolean;
 @@ -110,6 +111,31 @@ export class Worker<
      });
    }
-
+ 
 +  private async canGoOn(offset: number, client: Redis) {
 +    const waitCount = await client.llen(this.keys.wait);
 +    return waitCount >= offset;
@@ -50,10 +62,10 @@ index 0e91fff..223b891 100644
 +
    private async run() {
      const client = await this.blockingConnection.client;
-
+ 
 @@ -139,6 +165,8 @@ export class Worker<
      );
-
+ 
      while (!this.closing) {
 +      await this.waitUntilCanGoOn(this.opts.getOffset);
 +
@@ -61,7 +73,7 @@ index 0e91fff..223b891 100644
          const token = tokens.pop();
          processing.set(this.getNextJob(token), token);
 diff --git a/node_modules/bullmq/src/interfaces/worker-options.ts b/node_modules/bullmq/src/interfaces/worker-options.ts
-index 605fbd8..fa225a6 100644
+index 605fbd8..7578759 100644
 --- a/node_modules/bullmq/src/interfaces/worker-options.ts
 +++ b/node_modules/bullmq/src/interfaces/worker-options.ts
 @@ -12,5 +12,6 @@ export interface WorkerOptions extends QueueBaseOptions {

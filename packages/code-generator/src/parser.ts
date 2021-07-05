@@ -188,7 +188,7 @@ export class Parser {
 	parseAssertElement(action: iAction) {
 		const code = [];
 		code.push(
-			"let {meta} = await Element.assertElement(#{action}, page);\n".pretify({
+			"let {meta} = await Element.assertElement(JSON.parse(#{action}), page);\n".pretify({
 				action,
 			}),
 		);

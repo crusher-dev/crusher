@@ -42,13 +42,14 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 
-		const fieldOptions = () => {
+		const getFieldOptions = () => {
 			let options: iReactSelectOption[] = [];
 			fields.forEach((field) => {
 				options.push({ value: field.name, label: field.name })
 			});
 			return options;
 		}
+		const fieldOptions = getFieldOptions();
 
 		const handleOnFieldChange = (option: iReactSelectOption) => {
 			if (onFieldChange) {
@@ -57,18 +58,21 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<Select className="w-40" options={fieldOptions()} onChange={handleOnFieldChange} />
+			<Select className="w-40" defaultValue={fieldOptions[0]}
+				options={fieldOptions} onChange={handleOnFieldChange} />
 		);
 	};
 
 	const renderFieldOperationInput = (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => {
-		const operationOptions = () => {
+		const getOperationOptions = () => {
 			let options: iReactSelectOption[] = [];
 			operations.forEach((operation) => {
 				options.push({ value: operation, label: operation })
 			});
 			return options;
-		}
+		};
+
+		const operationOptions = getOperationOptions();
 
 		const handleOnOperationChange = (option: iReactSelectOption) => {
 			if (onOperationChange) {
@@ -77,7 +81,8 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<Select options={operationOptions()} onChange={handleOnOperationChange} className="w-40" />
+			<Select options={operationOptions} defaultValue={operationOptions[0]}
+				onChange={handleOnOperationChange} className="w-40" />
 		);
 	};
 

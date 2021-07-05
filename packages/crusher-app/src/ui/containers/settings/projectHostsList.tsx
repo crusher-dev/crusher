@@ -20,10 +20,10 @@ const ProjectHost = (props: iProjectHostProps) => {
 			<div css={projectHostValueCSS}>
 				<span css={labelCSS}>Host :</span> {host}
 			</div>
-			<div css={projectDeleteActionCSS}>
-				<DeleteIcon />
-				<span css={projectDeleteButtonTextCSS}>Delete</span>
-			</div>
+			{/*<div css={projectDeleteActionCSS}>*/}
+			{/*	<DeleteIcon />*/}
+			{/*	<span css={projectDeleteButtonTextCSS}>Delete</span>*/}
+			{/*</div>*/}
 		</li>
 	);
 };
@@ -54,18 +54,18 @@ const projectHostValueCSS = css`
 	font-size: ${15 / PIXEL_REM_RATIO}rem;
 	color: #323232;
 `;
-const projectDeleteActionCSS = css`
-	display: flex;
-	font-family: Gilroy;
-	font-size: ${14 / PIXEL_REM_RATIO}rem;
-	font-weight: 500;
-	cursor: pointer;
-`;
-
-const projectDeleteButtonTextCSS = css`
-	margin-left: ${10 / PIXEL_REM_RATIO}rem;
-	color: #d94467;
-`;
+// const projectDeleteActionCSS = css`
+// 	display: flex;
+// 	font-family: Gilroy;
+// 	font-size: ${14 / PIXEL_REM_RATIO}rem;
+// 	font-weight: 500;
+// 	cursor: pointer;
+// `;
+//
+// const projectDeleteButtonTextCSS = css`
+// 	margin-left: ${10 / PIXEL_REM_RATIO}rem;
+// 	color: #d94467;
+// `;
 
 const ProjectHostsList = () => {
 	const hosts = useSelector(getProjectHosts);

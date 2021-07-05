@@ -11,7 +11,7 @@ import { REDDIS } from '@config/database';
 RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password);
 
 const videoProcessingQueue = new Queue("video-processing-queue", {
-	client: RedisManager.client,
+	connection: RedisManager.client,
 });
 
 interface iTestRunnerJob extends Job {
@@ -21,11 +21,11 @@ interface iTestRunnerJob extends Job {
 new MongoManager().init();
 
 const testProgressQueue = new Queue("test-progress-queue", {
-	client: RedisManager.client,
+	connection: RedisManager.client,
 });
 
 const testCompletedQueue = new Queue("test-completed-queue", {
-	client: RedisManager.client,
+	connection: RedisManager.client,
 });
 
 export default async (bullJob: iTestRunnerJob): Promise<boolean> => {

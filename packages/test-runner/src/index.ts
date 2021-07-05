@@ -1,6 +1,8 @@
 import { generateUid } from "@shared/utils/helper";
 import { RedisManager } from "@manager/redis";
 import { REDDIS } from "@config/database";
+RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password);
+
 require("./queue.ts");
 require("./util/logger");
 
@@ -12,7 +14,6 @@ class TestRunner {
 
 	constructor() {
 		this.sessionId = generateUid();
-		RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password);
 	}
 
 	async boot() {

@@ -3,6 +3,7 @@ import Timeout = NodeJS.Timeout;
 import { RedisManager } from "@manager/redis";
 import { REDDIS } from "@config/database";
 import { BootAfterNJobsOffsetManager } from "@manager/offsetManger";
+RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password)
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("./queue.ts");
@@ -20,7 +21,6 @@ class TestRunner {
 	constructor() {
 		this.sessionId = generateUid();
 		this.redisManager = RedisManager;
-		RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password)
 		// During booting, make sure test runner doesn't pickup any jobs without checking its bootAfterNJobsOffset
 	}
 

@@ -78,13 +78,13 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<AddressBar value={url} onKeyDown={handleKeyDown} onChange={handleAddressBarUrlChange} />
 					</div>
 					<div className="flex justify-end items-center" style={{ width: "38%" }}>
-						<div className="mx-24" id={"select-device-input"}>
+						<div className="mx-12" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
 						</div>
-						<a target="_blank" href="https://docs.crusher.dev/docs/help" className="mx-8 cursor-pointer">
+						<a target="_blank" href="https://docs.crusher.dev/docs/help" className="mx-12 cursor-pointer">
 							<HelpIcon />
 						</a>
-						<div className="mx-8 cursor-pointer">
+						<div className="mx-12 cursor-pointer">
 							<SettingsIcon onClick={openSettings} />
 						</div>
 						<Button id={"saveTest"} title={"Save test"} icon={SaveIcon} onClick={saveTest} />

@@ -92,7 +92,7 @@ const dropdownStyle = {
 
 const selectInputContainerStyle = {
 	borderRadius: "0.4rem",
-	minWidth: "12rem",
+	minWidth: "10rem",
 	fontWeight: 500,
 	fontFamily: "DM Sans",
 	fontSize: pxToRemValue(13),

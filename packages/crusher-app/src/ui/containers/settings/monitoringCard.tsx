@@ -53,7 +53,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 		<div css={containerCSS}>
 			<div css={headerCSS}>
 				<strong css={monitoringNameCSS}>{title}</strong>
-				<span css={monitoringEditButtonCSS}>Edit</span>
+				{/*<span css={monitoringEditButtonCSS}>Edit</span>*/}
 				<div css={monitoringRunActionContainerCSS}>
 					<div css={runNowCSS} onClick={runMonitoring}>
 						<RunIcon />
@@ -70,7 +70,7 @@ function MonitoringCard(props: iMonitoringCardProps) {
 					<MonitoringInfoLabel title={"Countries"} value={countries && countries.length ? countries.join(", ") : "N/A"} />
 				</div>
 				<div css={monitoringQuickActionsCSS}>
-					<button css={viewBuildCSS}>View Builds</button>
+					{/*<button css={viewBuildCSS}>View Builds</button>*/}
 				</div>
 			</div>
 		</div>
@@ -83,9 +83,9 @@ const headerCSS = css`
 	align-items: center;
 `;
 
-const monitoringEditActions = css`
-	cursor: pointer;
-`;
+// const monitoringEditActions = css`
+// 	cursor: pointer;
+// `;
 
 const monitoringQuickActionsCSS = css`
 	display: flex;
@@ -127,14 +127,14 @@ const monitoringNameCSS = css`
 	margin-top: 2px;
 `;
 
-const monitoringEditButtonCSS = css`
-	margin-left: ${18 / PIXEL_REM_RATIO}rem;
-	font-weight: 500;
-	font-size: ${14 / PIXEL_REM_RATIO}rem;
-	color: #323232;
-	text-decoration-line: underline;
-	cursor: pointer;
-`;
+// const monitoringEditButtonCSS = css`
+// 	margin-left: ${18 / PIXEL_REM_RATIO}rem;
+// 	font-weight: 500;
+// 	font-size: ${14 / PIXEL_REM_RATIO}rem;
+// 	color: #323232;
+// 	text-decoration-line: underline;
+// 	cursor: pointer;
+// `;
 const monitoringRunActionContainerCSS = css`
 	flex: 1;
 	display: flex;

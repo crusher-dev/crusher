@@ -7,8 +7,7 @@ export default function assert(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
-
-			const validationRows = action.payload.meta.validationRows;
+			const validationRows = action.payload.meta.validations;
 			const output = await assertElement(page, selectors, validationRows);
 
 			return success({
@@ -16,6 +15,7 @@ export default function assert(action: iAction, page: Page) {
 				meta: { output },
 			});
 		} catch (err) {
+			console.error(err);
 			return error("Some issue occurred while asserting element");
 		}
 	});

@@ -22,7 +22,7 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 
 			return {
 				...state,
-				list: newList,
+				list: [...newList],
 				last_action: new Date(),
 			};
 		}

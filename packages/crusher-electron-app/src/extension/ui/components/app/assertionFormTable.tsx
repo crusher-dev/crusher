@@ -3,7 +3,7 @@ import { ASSERTION_OPERATION_TYPE } from "../../../interfaces/assertionOperation
 import { TEXT_ALIGN } from "../../../interfaces/css";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
 import Select from "react-select";
-import { iReactSelectOption } from "crusher-electron-app/src/extension/interfaces/reactSelectOptions";
+import { iReactSelectOption } from "../../../interfaces/reactSelectOptions";
 
 interface iAssertionFormTableProps {
 	rowItems: Array<iAssertionRow>;

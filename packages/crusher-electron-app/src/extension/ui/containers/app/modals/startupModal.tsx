@@ -3,7 +3,7 @@ import ReactModal from "react-modal";
 import { FONT_WEIGHT } from "../../../../interfaces/css";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
 import { COLOR_CONSTANTS } from "../../../colorConstants";
-import { validURL } from "crusher-electron-app/src/extension/utils/helpers";
+import { validURL } from "../../../../utils/helpers";
 
 interface iStartupModalProps {
 	isOpen: boolean;

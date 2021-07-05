@@ -10,7 +10,7 @@ import { generateCrusherExtensionUrl } from "@shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
 import { SettingsModal } from "./modals/settingsModal";
-import { validURL } from "crusher-electron-app/src/extension/utils/helpers";
+import { validURL } from "../../../utils/helpers";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -81,7 +81,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<div className="mx-12" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
 						</div>
-						<a target="_blank" href="https://docs.crusher.dev/docs/help" className="mx-12 cursor-pointer">
+						<a target="_blank" href="https://docs.crusher.dev/docs/help#crusherExternalLink" className="mx-12 cursor-pointer">
 							<HelpIcon />
 						</a>
 						<div className="mx-12 cursor-pointer">

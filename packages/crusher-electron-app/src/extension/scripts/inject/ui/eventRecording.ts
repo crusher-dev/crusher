@@ -61,7 +61,7 @@ export default class EventRecording {
 
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(this);
 		this.handleWindowClick = this.handleWindowClick.bind(this);
-		this.handleKeyDown = this.handleKeyDown.bind(this);
+		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
 	}
@@ -211,7 +211,7 @@ export default class EventRecording {
 				mouseover: this.handleMouseMove.bind(this),
 				pointerenter: this.handlePointerEnter.bind(this),
 				mouseout: this.handleMouseOut.bind(this),
-				input: this.handleKeyDown.bind(this),
+				input: this.handleKeyPress.bind(this),
 				click: this.handleWindowClick.bind(this),
 				contextmenu: this.onRightClick.bind(this),
 			};
@@ -380,7 +380,7 @@ export default class EventRecording {
 		}
 	}
 
-	handleKeyDown(event: KeyboardEvent) {
+	handleKeyPress(event: KeyboardEvent) {
 		const targetElement = event.target;
 		let finalKey = "";
 		// Remove them because keydown also tracks unwanted individual keys
@@ -452,7 +452,7 @@ export default class EventRecording {
 		window.addEventListener("scroll", this.handleScroll, true);
 
 		window.onbeforeunload = this.handleBeforeNavigation;
-		window.addEventListener("keydown", this.handleKeyDown, true);
+		window.addEventListener("keypress", this.handleKeyPress, true);
 
 		window.addEventListener("click", this.handleWindowClick, true);
 		setInterval(this.pollInterval, 300);

@@ -10,6 +10,7 @@ import { generateCrusherExtensionUrl } from "@shared/utils/extension";
 import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
 import { SettingsModal } from "./modals/settingsModal";
+import { validURL } from "crusher-electron-app/src/extension/utils/helpers";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -38,7 +39,8 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 				event.preventDefault();
 				const newUrl = addHttpToURLIfNotThere((event.target as any).value as string);
 				setUrl(newUrl);
-				loadNewPage(newUrl);
+				if (!validURL(newUrl)) alert("URL is not valid!")
+				else loadNewPage(newUrl);
 			}
 		},
 		[url],

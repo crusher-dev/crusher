@@ -1,5 +1,5 @@
 import * as path from "path";
-import { app, BrowserWindow, session, ipcMain, protocol, screen } from "electron";
+import { app, BrowserWindow, session, ipcMain, screen, shell } from "electron";
 
 let APP_DOMAIN = process.env.APP_DOMAIN;
 
@@ -143,7 +143,10 @@ async function createWindow() {
 	});
 	mainWindow.webContents.on("new-window", function (event, popupUrl) {
 		if (mainWindow.webContents.getURL().startsWith("chrome-extension")) {
-			if (!popupUrl.endsWith("#crusherBackendServer")) {
+			if(popupUrl.endsWith("#crusherExternalLink")) {
+				event.preventDefault();
+				shell.openExternal(popupUrl);
+			} else if (!popupUrl.endsWith("#crusherBackendServer")) {
 				event.preventDefault();
 				mainWindow.webContents.executeJavaScript(`document.querySelector('#device_browser').src = "${popupUrl}"`);
 			}

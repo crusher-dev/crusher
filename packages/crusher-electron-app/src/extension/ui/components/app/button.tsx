@@ -51,7 +51,7 @@ const buttonStyle = (isHovered: boolean) => ({
 	borderWidth: "1px",
 	alignItems: "center",
 	justifyContent: "space-evenly",
-	padding: `${pxToRemValue(12)} ${pxToRemValue(28)}`,
+	padding: `${pxToRemValue(6)} ${pxToRemValue(14)}`,
 	cursor: "pointer",
 });
 

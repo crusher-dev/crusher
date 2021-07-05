@@ -98,6 +98,7 @@ const previewBrowserStyle = {
 	borderWidth: "2px",
 	borderLeft: "none",
 	borderBottom: "none",
+	minHeight: "90%"
 };
 
 const browserFrameStyle = {
@@ -107,7 +108,6 @@ const browserFrameStyle = {
 	backgroundColor: "#010101",
 	width: "100%",
 	height: "100%",
-	//marginTop: "4.75rem"
 };
 
 const browserFrameContainerStyle = {

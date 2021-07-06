@@ -50,7 +50,7 @@ const MonitoringSettings = () => {
 				<div css={sectionCSS}>
 					<SettingsContentHeader
 						title={"Hosts"}
-						desc={"List of all the hosts you want to run monitoring/testing on"}
+						desc={"Add test/staging environment here"}
 						button={<AddHost onClick={handleAddHostClick} />}
 					/>
 
@@ -61,7 +61,7 @@ const MonitoringSettings = () => {
 				<div css={sectionCSS}>
 					<SettingsContentHeader
 						title={"Monitoring"}
-						desc={"List of all team members in current project"}
+						desc={"Run test at particular interval eg - Every hour,etc"}
 						button={<AddMonitoringButton onClick={handleAddMonitoringClick} />}
 					/>
 					<div css={containerCSS}>{monitoringOut}</div>

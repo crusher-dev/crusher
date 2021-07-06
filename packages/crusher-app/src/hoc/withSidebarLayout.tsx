@@ -147,12 +147,12 @@ function LeftSection(props: any) {
 			icon: Support,
 			isAuthorized: false,
 		},
-		{
-			name: "Share Feedback",
-			link: "/feedback",
-			icon: FeedbackSVG,
-			isAuthorized: false,
-		},
+		// {
+		// 	name: "Share Feedback",
+		// 	link: "/feedback",
+		// 	icon: FeedbackSVG,
+		// 	isAuthorized: false,
+		// },
 		{
 			name: "Logout",
 			link: resolvePathToBackendURI("/user/logout"),

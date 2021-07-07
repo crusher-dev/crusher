@@ -75,7 +75,7 @@
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"build:cron": "NODE_ENV=production ncc build src/cron.ts -o dist/cron --external bullmq",
 		"build:queue": "NODE_ENV=production ncc build src/queue.ts -o dist/queue --external bullmq",
-		"build": "NODE_ENV=production webpack",
+		"build": "NODE_OPTIONS=--max-old-space-size=8096 NODE_ENV=production webpack",
 		"build:queue:start": "NODE_ENV=production node dist/queue/index.js",
 		"build:cron:start": "NODE_ENV=production node dist/cron/index.js",
 		"build:start": "NODE_ENV=production node dist/server/index.js",

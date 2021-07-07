@@ -1,0 +1,28 @@
+FROM zenika/alpine-chrome:with-playwright
+USER root
+ENV NPM_CONFIG_PREFIX=/usr/src/app/.npm-global
+WORKDIR "/usr/src/app/"
+
+RUN apk --update add mysql
+RUN apk --update add redis
+
+# Install MongoDB,MySQL, Redis
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/main' >> /etc/apk/repositories
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
+RUN apk update
+RUN apk add mongodb=3.4.4-r0
+RUN mongo --version
+
+#RUN npm install pm2
+#RUN npm init -y
+#RUN npm install dotenv
+#ADD ./ecosystem.oss.js ecosystem.config.js
+#COPY --chown=chrome ./output packages
+#RUN rm -rf packages/crusher-app/.next/cache
+#RUN  cd packages/crusher-app && npm install
+#ADD ./ecosystem ecosystem
+
+ADD ./docker/oss/start.sh start.sh
+
+
+CMD ["sh", "start.sh"]

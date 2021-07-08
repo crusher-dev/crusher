@@ -1,6 +1,6 @@
 version: "2.2"
 services:
-  oss_complete:
+  oss_complete3:
     build:
       context: ../../
       dockerfile: docker/oss/Dockerfile.complete
@@ -22,6 +22,6 @@ services:
       - REDIS_PORT=12413
       - REDIS_PASSWORD=
       - BACKEND_SERVER_URL=http://localhost:3000/server
-    container_name: "oss_complete"
+    container_name: "oss_complete3"
     stdin_open: true # docker run -i
     tty: true

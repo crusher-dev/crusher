@@ -26,7 +26,6 @@
     "generateStyle": "postcss src/style/tailwind_base.css -o src/exports/dyson_style.css",
     "watchStyle": "nodemon --watch src/style/tailwind_base.css --exec postcss src/style/tailwind_base.css -o src/exports/dyson_style.css",
     "build-storybook": "yarn generateStyle && build-storybook -c .storybook -o public",
-    "postinstall": ""
   },
   "eslintConfig": {
     "extends": [

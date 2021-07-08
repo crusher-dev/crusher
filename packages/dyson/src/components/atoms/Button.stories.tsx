@@ -4,6 +4,7 @@ import React from 'react';
   This should be done either via Storybook templating or webpack inclusion of css (Postcss).
  */
 import "../../exports/dyson_style.css"
+// @ts-ignore
 import markdown from './info.stories.md';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from '@storybook/react/types-6-0';

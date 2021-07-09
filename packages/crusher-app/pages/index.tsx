@@ -2,6 +2,7 @@ import Head from "next/head";
 import { serialize } from "cookie";
 import React from "react";
 import withoutSession from "@hoc/withoutSession";
+import {Button} from 'dyson/src/components/atoms/Button';
 
 const handleClIToken = (ctx) => {
 	const {
@@ -21,6 +22,7 @@ function Home() {
 				<title>Login | Crusher</title>
 			</Head>
 
+			<Button>sds</Button>
 			<div>Test</div>
 		</div>
 	);

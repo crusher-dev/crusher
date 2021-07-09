@@ -1,5 +1,5 @@
 import React from 'react';
-import "../../style/tailwind_base.css"
+import "../../style/base.css"
 // @ts-ignore
 import markdown from './info.stories.md';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1

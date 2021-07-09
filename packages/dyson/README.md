@@ -33,3 +33,6 @@ So it's always evolving and can change spec in early days.
 
 Wait for V1 if you want stable version.
 
+# Inculding style
+- Include style separately. It's not part of the JS bundle.
+- If you're developing on Crusher. You can use same style tailwind in crusher-app, crusher-app includes this already.

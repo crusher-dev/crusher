@@ -1,9 +1,5 @@
 import React from 'react';
-/*
-  @Note - This is bad implementation. After releasing. Move output directory to dyson/exports
-  This should be done either via Storybook templating or webpack inclusion of css (Postcss).
- */
-import "../../exports/dyson_style.css"
+import "../../style/tailwind_base.css"
 // @ts-ignore
 import markdown from './info.stories.md';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
@@ -39,7 +35,7 @@ Secondary.args = {
 export const Large = Template.bind({});
 Large.args = {
   size: 'large',
-  children: 'Button',
+  children: 'Buttons',
 };
 
 export const Small = Template.bind({});

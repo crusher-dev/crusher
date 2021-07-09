@@ -48,7 +48,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+      className={['storybook-button', 'mt-10',`storybook-button--${size}`, mode].join(' ')}
       {...props}
     >
       {children}

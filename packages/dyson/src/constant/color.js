@@ -1,8 +1,12 @@
-export const colors = {
+ const colors = {
 };
 
-export const background = {
+ const background = {
 };
 
-export const border = {
+ const border = {
 };
+
+module.exports={
+	colors, background,border
+}

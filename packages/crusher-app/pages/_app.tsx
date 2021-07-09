@@ -12,7 +12,6 @@ import "../src/tailwind.css";
 function App({ Component, pageProps }: AppProps<any>) {
 	return (
 		<>
-
 			<Component {...pageProps} />
 		</>
 	);

@@ -13,8 +13,6 @@ export default class MyDocument extends Document {
 			<Html>
 				<Head>
 					<link rel="icon" href="/assets/img/favicon.png" type="image/png" sizes="16x16" />
-					<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
-					<link href="/assets/css/global.css" rel="stylesheet" />
 					<script dangerouslySetInnerHTML={{ __html: GTMTag }} />
 					<script dangerouslySetInnerHTML={{ __html: SegmentTag }} />
 				</Head>

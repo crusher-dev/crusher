@@ -17,12 +17,6 @@ function Home() {
 
 	return (
 		<div>
-			<Head>
-				<title>Login | Crusher</title>
-			</Head>
-
-			<Button>sds</Button>
-			<div>Test</div>
 			<LoadingView />
 		</div>
 	);

@@ -13,7 +13,7 @@ export const CenterLayout: React.FC<CenterLayoutProps> = ({
 }) => {
 
     return (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center h-full">
             {children}
         </div>
     );

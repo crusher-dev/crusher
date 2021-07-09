@@ -4,7 +4,7 @@ import { CrusherLogo } from "./Logo"
 export const LoadingView = () => {
     return <BlankBase>
         <CenterLayout>
-            <div>
+            <div className="flex flex-col justify-center items-center">
                 <Logo imgEelement={<CrusherLogo />} onlyIcon={true} height={"small"} />
                 Firing up all the booster
             </div>

@@ -1,28 +1,10 @@
-const getSpacingSizes = () => {
-	let sizingMap = {};
-	const remBaseUnit = 16;
-	for (let i = 0; i <= 120; i++) sizingMap[i] = `${i / remBaseUnit}rem`;
-	return sizingMap;
-};
+const {spacingSizes} = require("../dyson/src/constant/layout")
+const {colors,background, border} = require("../dyson/src/constant/color")
 
-// Start constants
-const colors = {
-	grey: "grey",
-};
-
-const background = {
-	grey: "grey",
-};
-
-const border = {
-	grey: "grey",
-};
-
-const spacingSizes = getSpacingSizes();
 
 module.exports = {
 	important: false,
-	darkModeVariant: true,
+	darkModeVariant: false,
 	theme: {
 		fontFamily: {
 			gilroy: ["Gilroy", "sans-serif"],

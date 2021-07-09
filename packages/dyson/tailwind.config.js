@@ -1,27 +1,22 @@
-// const { FUNDAMENTAL_COLORS } = require("./src/constant/color");
-// const { PADDING_SIZES, MARGIN_SIZES } = require("./src/constant/layout");
-// const { FONTS, FONT_WEIGHT_VALUE, LINE_HEIGHT_VALUE, FONT_SIZES } = require("./src/constant/fonts");
+const {spacingSizes} = require("./src/constant/layout")
+const {colors,background, border} = require("./src/constant/color")
 
 module.exports = {
   important: false,
+  darkModeVariant: false,
   theme: {
-    screens: {},
     fontFamily: {
-      heading: ["Cera Pro", "sans-serif"],
-      content: ["Gilroy", "sans-serif"],
+      gilroy: ["Gilroy", "sans-serif"],
+      cera: ["Cera Pro", "sans-serif"],
     },
-    // colors: FUNDAMENTAL_COLORS,
-    // backgroundColor: FUNDAMENTAL_COLORS,
-    // borderColor: FUNDAMENTAL_COLORS,
-    // fontSize: FONT_SIZES,
-    // fontWeight: FONT_WEIGHT_VALUE,
-    // extend: {
-    // 	gridColumnStart: 0,
-    // 	gridColumnEnd: 1,
-    // 	margin: MARGIN_SIZES,
-    // 	padding: PADDING_SIZES,
-    // 	lineHeight: MARGIN_SIZES, // Change it line height later on
-    // },
+    colors: { ...colors },
+    backgroundColor: { ...background },
+    borderColor: { ...border },
+    fontSize: spacingSizes,
+    extend: {
+      margin: spacingSizes,
+      padding: spacingSizes,
+    },
     objectPosition: {},
     order: {},
   },
@@ -40,9 +35,7 @@ module.exports = {
     borderColor: ["hover", "focus"],
     borderRadius: [],
     borderStyle: [],
-    borderWidth: {
-      0: "0px;",
-    },
+    borderWidth: [],
     boxShadow: ["hover", "focus"],
     cursor: [],
     display: [],
@@ -101,16 +94,16 @@ module.exports = {
     gradientColorStops: false,
     skew: false,
     scale: false,
-    // gridAutoFlow: false,
-    // gridColumn: false,
-    // gridColumnEnd: false,
-    // gridColumnStart: false,
-    // gridRow: false,
-    // gridAutoColumns: false,
-    // gridRowEnd: false,
-    // gridRowStart: false,
-    // gridTemplateColumns: false,
-    // gridTemplateRows: false,
+    gridAutoFlow: false,
+    gridColumn: false,
+    gridColumnEnd: false,
+    gridColumnStart: false,
+    gridRow: false,
+    gridAutoColumns: false,
+    gridRowEnd: false,
+    gridRowStart: false,
+    gridTemplateColumns: false,
+    gridTemplateRows: false,
   },
   plugins: [],
 };

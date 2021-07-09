@@ -2,7 +2,7 @@ import Head from "next/head";
 import { serialize } from "cookie";
 import React from "react";
 import withoutSession from "@hoc/withoutSession";
-import {Button} from 'dyson/src/components/atoms/Button';
+import { Button } from "dyson/src/components/atoms/Button";
 
 const handleClIToken = (ctx) => {
 	const {

@@ -1,10 +1,6 @@
+@import "../../dyson/src/style/base.css";
 @tailwind base;
 @tailwind utilities;
 img {
 	display: unset;
-}
-
-html,
-body {
-	font-size: 14.5px;
 }

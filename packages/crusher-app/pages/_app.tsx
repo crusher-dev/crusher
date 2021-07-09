@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 import { getMetaFromReq } from "@utils/cookies";
 import { NextApiRequest } from "next";
@@ -39,3 +39,4 @@ App.getInitialProps = async ({ Component, ctx }: AppContext) => {
 };
 
 export default App;
+

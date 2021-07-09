@@ -1,4 +1,4 @@
-@import "../../dyson/src/style/base.css";
+@import "../../dyson/src/exports/dyson_style.css";
 @tailwind base;
 @tailwind utilities;
 img {

@@ -19,10 +19,10 @@ OnlyIcon.parameters = {
     status: 'ready',
 }
 OnlyIcon.args = {
-    ImgEelement: <img style={{ height: "inherit" }} src="https://www.tailorbrands.com/wp-content/uploads/2020/07/mcdonalds-logo.jpg">
+    imgEelement: <img style={{ height: "inherit" }} src="https://www.tailorbrands.com/wp-content/uploads/2020/07/mcdonalds-logo.jpg">
 
     </img>,
-    height: HEIGHT_NAMES.small,
+    height: "small",
     onlyIcon: true
 
 };

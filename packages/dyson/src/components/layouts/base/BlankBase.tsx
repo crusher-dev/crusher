@@ -3,10 +3,6 @@
 import React from 'react';
 import { css, jsx, SerializedStyles } from "@emotion/core"
 
-
-const style = css`
-  background-color:black;
-`
 export interface BlankBaseProps {
     children: React.ReactNode;
 }

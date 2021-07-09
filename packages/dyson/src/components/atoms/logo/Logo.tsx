@@ -1,15 +1,11 @@
 import React from 'react';
 
-export enum HEIGHT_NAMES {
-  small = "small",
-  medium = "medium",
-  large = "large"
-};
+export type HEIGHT_NAMES = "small" | "medium" | "large";
 export interface LogoProps {
   onlyIcon: boolean;
+  imgEelement: JSX.Element
   monochrome?: boolean;
   height: HEIGHT_NAMES;
-  ImgEelement: JSX.Element
   /**
    * Emotion CSS style if any
    */
@@ -24,24 +20,24 @@ export interface LogoProps {
  * Unified button component for Dyson UI system
  */
 export const Logo: React.FC<LogoProps> = ({
-  ImgEelement,
+  imgEelement,
   height,
   ...props
 }) => {
   return (
     <div className={`${getClassNameByHeight(height)}`}>
-      {ImgEelement}
+      {imgEelement}
     </div>
   );
 };
 
 const getClassNameByHeight = (height: HEIGHT_NAMES) => {
   switch (height) {
-    case HEIGHT_NAMES.small:
+    case "small":
       return "h-24";
-    case HEIGHT_NAMES.medium:
+    case "medium":
       return "h-28";
-    case HEIGHT_NAMES.large:
+    case "large":
       return "h-32";
   }
 }

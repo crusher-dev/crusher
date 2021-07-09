@@ -2,7 +2,7 @@ import Head from "next/head";
 import { serialize } from "cookie";
 import React from "react";
 import { Button } from "dyson/src/components/atoms/Button";
-
+import { LoadingView } from "../src/components/LoadingView";
 const handleClIToken = (ctx) => {
 	const {
 		query: { cli_token },
@@ -23,6 +23,7 @@ function Home() {
 
 			<Button>sds</Button>
 			<div>Test</div>
+			<LoadingView />
 		</div>
 	);
 }

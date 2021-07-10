@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@emotion/babel-preset-css-prop": "^11.2.0",
 		"@emotion/react": "^11.4.0",
 		"@etchteam/storybook-addon-status": "^3.0.0",
 		"@storybook/addon-info": "^5.3.21",

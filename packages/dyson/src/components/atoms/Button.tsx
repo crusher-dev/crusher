@@ -1,5 +1,9 @@
 import React from "react";
-
+import {css} from "@emotion/react"
+const button = css`
+	font-size: 16rem;
+	border: 3px solid red;
+`
 export interface ButtonProps {
 	/**
 	 * Is this the principal call to action on the page?
@@ -39,7 +43,7 @@ export const Button: React.FC<ButtonProps> = ({ type = "primary", bgColor = "blu
 	const mode = type === "primary" ? "storybook-button--primary" : "storybook-button--secondary";
 
 	return (
-		<button type="button" className={["storybook-button", "mt-10", `storybook-button--${size}`, mode].join(" ")} {...props}>
+		<button  css={button} type="button" className={["storybook-button", "mt-10", `storybook-button--${size}`, mode].join(" ")} {...props}>
 			{children}
 		</button>
 	);

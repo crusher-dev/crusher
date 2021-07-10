@@ -24,6 +24,23 @@ module.exports = {
 			],
 			include: path.resolve(__dirname, "../"),
 		});
+
+
+		// Add Webpack rules for TypeScript
+		// ========================================================
+		config.module.rules.push({
+			test: /\.(ts|tsx)$/,
+			loader: require.resolve("babel-loader"),
+			options: {
+				presets: [
+					["react-app", { flow: false, typescript: true }],
+					require.resolve("@emotion/babel-preset-css-prop")
+				]
+				// ... other configs
+			}
+		});
+
+
 		return config;
 	},
 };

@@ -4,7 +4,7 @@ import { css, jsx } from "@emotion/core";
 import { BlankBase, CenterLayout } from "dyson/src/components/layouts";
 import { useState } from "react";
 import CrusherBase from "../src/components/CrusherBase";
-import { Button } from "dyson/src/components/atoms";
+import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
 
 const HowItWorksView = () => {
 	return (
@@ -38,7 +38,9 @@ const OpenDashView = () => {
 			<div className="my-4 text-16 flex flex-col">
 				Start us to show some love
 				{/* replace with dyson github */}
-				<button>Github</button>
+				<div className="m-20">
+					<GithubSocialBtn />
+				</div>
 			</div>
 			<div className="my-4 text-16 flex flex-col">
 				Join us and ship products with other devs
@@ -70,8 +72,8 @@ const BeforeDashboard = () => {
 			<CenterLayout>
 				<div className="flex flex-col items-center" css={containerCSS}>
 					{getViewByStep(step)}
-					{step < 1 ? <Button children="Next" className="my-12" onClick={handleNext} /> 
-					: <Button children="Open Dashboard" className="my-32" /> }
+					{step < 1 ? <Button children="Next" className="my-12" onClick={handleNext} />
+						: <Button children="Open Dashboard" className="my-32" />}
 				</div>
 			</CenterLayout>
 		</CrusherBase>

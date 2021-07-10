@@ -27,7 +27,7 @@ function redirectIfNotThisScope(userStatus: any, componentScope: any, res: NextA
 	if (userStatus === EMAIL_NOT_VERIFIED && componentScope !== userStatus) {
 		return null;
 	} else if (userStatus === NO_TEAM_JOINED && componentScope !== userStatus) {
-		return redirectToFrontendPath("/onboarding", res);
+		return redirectToFrontendPath("/setup", res);
 	} else if (userStatus === USER_NOT_REGISTERED && componentScope !== userStatus) {
 		return redirectToFrontendPath("/", res);
 	}

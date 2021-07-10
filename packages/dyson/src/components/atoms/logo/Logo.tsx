@@ -25,7 +25,7 @@ const LogoDefaultProps = {
  */
 export const Logo: React.FC<LogoProps> = ({ showOnlyIcon, isMonochrome, height, ...props }) => {
 	return (
-		<svg height={height} viewBox="0 0 644 100" fill="none" {...props}>
+		<svg height={height} viewBox={`0 0 ${showOnlyIcon?"100":644} 100`} fill="none" {...props}>
 			{!showOnlyIcon && (
 				<>
 					<path

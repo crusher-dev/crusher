@@ -17,7 +17,7 @@ export const Default = Template.bind({});
 Default.parameters = {
 	status: "ready",
 };
-Default.args = {};
+Default.args = {	height: "100rem"};
 
 export const OnlyIcon = Template.bind({});
 OnlyIcon.parameters = {
@@ -25,6 +25,7 @@ OnlyIcon.parameters = {
 };
 OnlyIcon.args = {
 	showOnlyIcon: true,
+	height: "100rem"
 };
 
 export const OnlyMonoChrome = Template.bind({});

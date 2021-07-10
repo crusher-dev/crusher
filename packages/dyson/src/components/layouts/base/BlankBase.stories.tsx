@@ -5,7 +5,7 @@ import { Story, Meta } from "@storybook/react/types-6-0";
 
 import { BlankBase, BlankBaseProps } from "./BlankBase";
 export default {
-	title: "Example/Layouts/BlankBase",
+	title: "Layouts/Base/BlankBase",
 	component: BlankBase,
 } as Meta;
 

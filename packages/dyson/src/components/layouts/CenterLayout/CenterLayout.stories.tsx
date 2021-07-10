@@ -2,7 +2,7 @@ import { Story, Meta } from "@storybook/react/types-6-0";
 
 import { CenterLayout, CenterLayoutProps } from "./CenterLayout";
 export default {
-	title: "Example/Layouts/CenterLayout",
+	title: "Layouts/CenterLayout",
 	component: CenterLayout,
 } as Meta;
 

@@ -1,7 +1,6 @@
-/** @jsx jsx */
 import React from "react";
 import { css, jsx } from "@emotion/core";
-import { BlankBase, CenterLayout } from "dyson/src/components/layouts";
+import { BlankBase, CenterLayout, Conditional } from "dyson/src/components/layouts";
 import { useState } from "react";
 import CrusherBase from "../src/components/CrusherBase";
 import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
@@ -39,7 +38,7 @@ const OpenDashView = () => {
 				Start us to show some love
 				{/* replace with dyson github */}
 				<div className="m-20">
-					<GithubSocialBtn />
+					<GithubSocialBtn count={234} />
 				</div>
 			</div>
 			<div className="my-4 text-16 flex flex-col">
@@ -72,8 +71,12 @@ const BeforeDashboard = () => {
 			<CenterLayout>
 				<div className="flex flex-col items-center" css={containerCSS}>
 					{getViewByStep(step)}
-					{step < 1 ? <Button children="Next" className="my-12" onClick={handleNext} />
-						: <Button children="Open Dashboard" className="my-32" />}
+					<Conditional showIf={step < 1}>
+						<Button children="Next" className="my-12" onClick={handleNext} />
+					</Conditional>
+					<Conditional showIf={step === 1}>
+						<Button children="Open Dashboard" className="my-32" />
+					</Conditional>
 				</div>
 			</CenterLayout>
 		</CrusherBase>

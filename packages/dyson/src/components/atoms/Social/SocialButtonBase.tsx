@@ -18,6 +18,5 @@ const SocialBtnCSS: React.CSSProperties = {
     color: "white",
     fontSize: "14rem",
     width: "auto",
-    maxWidth: "200rem",
     minHeight: "42rem"
 }

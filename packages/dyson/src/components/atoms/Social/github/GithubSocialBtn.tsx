@@ -6,8 +6,10 @@ const GithubIcon = () => {
     </svg>
 
 }
-
-export const GithubSocialBtn = () => {
+export interface GithubSocialBtnProps {
+    count: number;
+}
+export const GithubSocialBtn = (props: GithubSocialBtnProps) => {
     return <SocialBtnBase>
         <div className="flex w-full">
             <div style={{ width: "25%" }}>
@@ -17,7 +19,7 @@ export const GithubSocialBtn = () => {
                 Github
             </div>
             <div className="ml-auto" style={{ width: "25%" }}>
-                2000
+                {props.count}
             </div>
         </div>
     </SocialBtnBase>

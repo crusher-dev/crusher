@@ -1,8 +1,10 @@
+/** @jsx jsx */
 import React from "react";
-import { css } from "@emotion/react";
+import { css, jsx } from "@emotion/core";
 import { BlankBase, CenterLayout } from "dyson/src/components/layouts";
 import { useState } from "react";
 import CrusherBase from "../src/components/CrusherBase";
+import { Button } from "dyson/src/components/atoms";
 
 const HowItWorksView = () => {
 	return (
@@ -17,8 +19,12 @@ const HowItWorksView = () => {
 					overflow:hidden;
 				`}
 			>
-				<video autoPlay src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"></video>
+				<video width="100%" controls>
+					<source src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4" type="video/mp4" />
+					Your browser does not support HTML video.
+				</video>
 			</div>
+
 		</>
 	);
 };
@@ -64,7 +70,8 @@ const BeforeDashboard = () => {
 			<CenterLayout>
 				<div className="flex flex-col items-center" css={containerCSS}>
 					{getViewByStep(step)}
-					{step < 1 ? <button onClick={handleNext}>Next</button> : <button className="my-8">Open Dashboard</button>}
+					{step < 1 ? <Button children="Next" className="my-12" onClick={handleNext} /> 
+					: <Button children="Open Dashboard" className="my-32" /> }
 				</div>
 			</CenterLayout>
 		</CrusherBase>

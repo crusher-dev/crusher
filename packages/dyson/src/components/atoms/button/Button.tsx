@@ -1,9 +1,4 @@
 import React from "react";
-import {css} from "@emotion/react"
-const button = css`
-	font-size: 16rem;
-	border: 3px solid red;
-`
 
 export interface ButtonProps {
 	/**
@@ -35,20 +30,24 @@ export interface ButtonProps {
 	 * Optional click handler
 	 */
 	onClick?: () => void;
+	className?: string;
 }
 
 /**
  * Unified button component for Dyson UI system
  */
-export const Button: React.FC<ButtonProps> = ({ type = "primary", bgColor = "blue", size = "medium", children, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ type = "primary", bgColor = "blue", size = "medium", children, className, ...props }) => {
 	return (
-		<button css={button} className="py-10 px-60 text-14 text-white" {...props}>
+		<button className={`py-10 px-60 text-14 text-white ${className}`} style={buttonCSS} {...props} >
 			{children}
 		</button>
 	);
 };
 
 
-const buttonCSS = css`
-   background-color:#687EF2;
-`
+const buttonCSS: React.CSSProperties = {
+	backgroundColor: "#687EF2",
+	borderRadius: "4rem",
+	color: "white",
+	fontWeight: 700,
+}

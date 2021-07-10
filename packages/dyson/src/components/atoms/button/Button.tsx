@@ -4,6 +4,7 @@ const button = css`
 	font-size: 16rem;
 	border: 3px solid red;
 `
+
 export interface ButtonProps {
 	/**
 	 * Is this the principal call to action on the page?
@@ -40,11 +41,14 @@ export interface ButtonProps {
  * Unified button component for Dyson UI system
  */
 export const Button: React.FC<ButtonProps> = ({ type = "primary", bgColor = "blue", size = "medium", children, ...props }) => {
-	const mode = type === "primary" ? "storybook-button--primary" : "storybook-button--secondary";
-
 	return (
-		<button  css={button} type="button" className={["storybook-button", "mt-10", `storybook-button--${size}`, mode].join(" ")} {...props}>
+		<button css={button} className="py-10 px-60 text-14 text-white" {...props}>
 			{children}
 		</button>
 	);
 };
+
+
+const buttonCSS = css`
+   background-color:#687EF2;
+`

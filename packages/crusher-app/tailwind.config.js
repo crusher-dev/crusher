@@ -15,6 +15,7 @@ module.exports = {
 		},
 		colors: { ...colors },
 		backgroundColor: { ...background },
+		borderRadius: spacingSize,
 		borderColor: { ...border },
 		fontSize: spacingSize,
 		extend: {

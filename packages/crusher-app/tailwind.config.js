@@ -1,7 +1,6 @@
 const {spacingSizes} = require("../dyson/src/constant/layout")
 const {colors,background, border} = require("../dyson/src/constant/color")
 
-
 module.exports = {
 	important: false,
 	darkModeVariant: false,

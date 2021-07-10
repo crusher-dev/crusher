@@ -1,10 +1,15 @@
 @import "../../dyson/src/style/base.css";
+@import "../public/assets/css/fonts.css";
+@import "../public/assets/css/base.css";
+@tailwind base;
+@tailwind utilities;
+
 html,body{
 	padding: 0;
 	margin: 0;
+	font-size: 1px;
 }
-@tailwind base;
-@tailwind utilities;
+
 img {
 	display: unset;
 }

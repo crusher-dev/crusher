@@ -12,7 +12,9 @@ export const LoadingView = () => {
         <CenterLayout>
             <div className="flex flex-col justify-center items-center">
                 <Logo showOnlyIcon={true} height={42}/>
-                Firing up all the boosters
+                <span className={"text-17 font-content"}>
+                    Firing up all the boosters
+                </span>
             </div>
         </CenterLayout>
     </BlankBase>

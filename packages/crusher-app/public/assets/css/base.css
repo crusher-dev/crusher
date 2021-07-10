@@ -13,33 +13,30 @@ a:link{
 
 /* For Mobile and small device*/
 html {
-	font-size: 13px;
-	/*-webkit-transition: all 0.3s ease;*/
-	/*-moz-transition: all 0.3s ease;*/
-	/*-o-transition: all 0.3s ease;*/
-	/*-ms-transition: all 0.3s ease;*/
+	font-size: 1px;
+	font-family: "Gilroy";
 }
 
-/* For 150% MBP zoom*/
-@media (min-width: 900px) {
-	html {
-		font-size: 12.5px;
-	}
-}
+/*!* For 150% MBP zoom*!*/
+/*@media (min-width: 900px) {*/
+/*	html {*/
+/*		font-size: 12.5px;*/
+/*	}*/
+/*}*/
 
-/* For 125% MBP zoom*/
-@media (min-width: 1200px) {
-	html {
-		font-size: 13px;
-	}
-}
+/*!* For 125% MBP zoom*!*/
+/*@media (min-width: 1200px) {*/
+/*	html {*/
+/*		font-size: 13px;*/
+/*	}*/
+/*}*/
 
-/* For 110% MBP zoom*/
-@media (min-width: 1400px) {
-	html {
-		font-size: 15px;
-	}
-}
+/*!* For 110% MBP zoom*!*/
+/*@media (min-width: 1400px) {*/
+/*	html {*/
+/*		font-size: 15px;*/
+/*	}*/
+/*}*/
 
 *:focus {
 	outline: none !important;

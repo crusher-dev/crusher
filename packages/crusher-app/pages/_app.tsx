@@ -1,9 +1,6 @@
 import React from "react";
-import { AppContext, AppProps } from "next/app";
-
+import { AppProps } from "next/app";
 import "../src/tailwind.css";
-
-
 
 function App({ Component, pageProps }: AppProps<any>) {
 	return (
@@ -13,12 +10,10 @@ function App({ Component, pageProps }: AppProps<any>) {
 	);
 }
 
-App.getInitialProps = async ({ Component, ctx }: AppContext) => {
-	
+App.getInitialProps = async () => {
 	return {
-		pageProps: { },
+		pageProps: {},
 	};
 };
 
 export default App;
-

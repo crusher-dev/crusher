@@ -14,7 +14,7 @@ a:link{
 /* For Mobile and small device*/
 html {
 	font-size: 1px;
-	font-family: "Gilroy";
+	font-family: "Gilroy" !important;
 }
 
 /*!* For 150% MBP zoom*!*/

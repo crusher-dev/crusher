@@ -9,7 +9,7 @@ import { NextApiResponse } from "next";
 import { getEdition } from "@utils/helpers";
 import { isUserLoggedInFromCookies } from "@utils/cookies";
 import { iPageContext } from "@interfaces/pageContext";
-import { EDITION_TYPE } from '@crusher-shared/types/common/general';
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 
 function getUserStatus(userInfo: iUserInfoResponse | null) {
 	if (!userInfo || userInfo === null) {

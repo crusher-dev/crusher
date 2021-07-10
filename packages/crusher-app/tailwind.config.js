@@ -1,5 +1,9 @@
-const {spacingSizes} = require("../dyson/src/constant/layout")
-const {colors,background, border} = require("../dyson/src/constant/color")
+/*
+@Note - Extend this tailwind config and use dyson tailwind as base
+Or use distributed css of dyson
+ */
+const { spacingSize } = require("../dyson/src/constant/layout");
+const { colors, background, border } = require("../dyson/src/constant/color");
 
 module.exports = {
 	important: false,
@@ -12,10 +16,10 @@ module.exports = {
 		colors: { ...colors },
 		backgroundColor: { ...background },
 		borderColor: { ...border },
-		fontSize: spacingSizes,
+		fontSize: spacingSize,
 		extend: {
-			margin: spacingSizes,
-			padding: spacingSizes,
+			margin: spacingSize,
+			padding: spacingSize,
 		},
 		objectPosition: {},
 		order: {},

@@ -1,7 +1,6 @@
-
 import { serialize } from "cookie";
 import React from "react";
-import { LoadingView } from "../src/components/LoadingView";
+import { LoadingScreen } from "../src/components/LoadingScreen";
 const handleClIToken = (ctx) => {
 	const {
 		query: { cli_token },
@@ -13,10 +12,9 @@ const handleClIToken = (ctx) => {
 };
 
 function Home() {
-
 	return (
 		<div>
-			<LoadingView />
+			<LoadingScreen />
 		</div>
 	);
 }

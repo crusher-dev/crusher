@@ -16,6 +16,11 @@ module.exports = {
 		extend: {
 			margin: spacingSizes,
 			padding: spacingSizes,
+			height: spacingSizes,
+			width: spacingSizes,
+		},
+		borderRadius: {
+			full: "50%",
 		},
 		objectPosition: {},
 		order: {},

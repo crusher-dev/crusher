@@ -3,7 +3,7 @@ import { css, jsx } from "@emotion/core";
 import { BlankBase, CenterLayout, Conditional } from "dyson/src/components/layouts";
 import { useState } from "react";
 import CrusherBase from "../src/components/CrusherBase";
-import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
+import { Button, DiscordSocialBtn, GithubSocialBtn } from "dyson/src/components/atoms";
 
 const HowItWorksView = () => {
 	return (
@@ -34,17 +34,19 @@ const OpenDashView = () => {
 			<div className="m-8 text-17 text-center">{`"We help devs ship HQ fast. We do this by eliminating
      chores and removing noise from their workflow."`}</div>
 			{/* github button */}
-			<div className="my-4 text-16 flex flex-col">
+			<div className="my-4 text-16 flex flex-col items-center">
 				Start us to show some love
 				{/* replace with dyson github */}
 				<div className="m-20">
 					<GithubSocialBtn count={234} />
 				</div>
 			</div>
-			<div className="my-4 text-16 flex flex-col">
+			<div className="my-4 text-16 flex flex-col items-center">
 				Join us and ship products with other devs
 				{/* replace it with dyson discord */}
-				<button>Discord</button>
+				<div className="m-20">
+					<DiscordSocialBtn count={234} />
+				</div>
 			</div>
 		</>
 	);

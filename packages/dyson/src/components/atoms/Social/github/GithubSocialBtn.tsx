@@ -11,16 +11,14 @@ export interface GithubSocialBtnProps {
 }
 export const GithubSocialBtn = (props: GithubSocialBtnProps) => {
     return <SocialBtnBase>
-        <div className="flex w-full">
-            <div style={{ width: "25%" }}>
-                <GithubIcon />
-            </div>
-            <div style={{ width: "50%" }}>
-                Github
-            </div>
-            <div className="ml-auto" style={{ width: "25%" }}>
-                {props.count}
-            </div>
+        <div>
+            <GithubIcon />
+        </div>
+        <div style={{ marginRight: "10rem" }}>
+            Github
+        </div>
+        <div style={{ color: "#88A2FF" }}>
+            {props.count}
         </div>
     </SocialBtnBase>
 }

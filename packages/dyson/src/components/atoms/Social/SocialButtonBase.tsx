@@ -6,7 +6,7 @@ interface SocialBtnBaseProps {
 
 export const SocialBtnBase = (props: SocialBtnBaseProps) => {
     return <div className="flex items-center 
-    rounded-md text-14 p-10" style={SocialBtnCSS}>
+    rounded-md text-14 p-10 space-x-20" style={SocialBtnCSS}>
         {props.children}
     </div>
 };
@@ -17,6 +17,6 @@ const SocialBtnCSS: React.CSSProperties = {
     border: "1px solid #292F33",
     color: "white",
     fontSize: "14rem",
-    width: "auto",
+    width: "fit-content",
     minHeight: "42rem"
 }

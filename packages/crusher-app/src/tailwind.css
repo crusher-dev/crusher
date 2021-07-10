@@ -1,4 +1,8 @@
-@import "../../dyson/src/exports/dyson_style.css";
+@import "../../dyson/src/style/base.css";
+html,body{
+	padding: 0;
+	margin: 0;
+}
 @tailwind base;
 @tailwind utilities;
 img {

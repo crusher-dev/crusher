@@ -1,12 +1,11 @@
- const colors = {
-};
+const colors = {};
 
- const background = {
-};
+const background = {};
 
- const border = {
-};
+const border = {};
 
-module.exports={
-	colors, background,border
-}
+module.exports = {
+	colors,
+	background,
+	border,
+};

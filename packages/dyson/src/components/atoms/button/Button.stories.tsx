@@ -1,13 +1,13 @@
 import React from "react";
-import "../../style/base.css";
+import "../../../style/base.css";
 // @ts-ignore
-import markdown from "./info.stories.md";
+import markdown from "../info.stories.md";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
 
 import { Button, ButtonProps } from "./Button";
 export default {
-	title: "Example/Button",
+	title: "Atoms/Button",
 	component: Button,
 } as Meta;
 

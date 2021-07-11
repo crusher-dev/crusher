@@ -1,22 +1,32 @@
 import React from "react";
+import { css } from '@emotion/react';
 
-interface SocialBtnBaseProps {
+type SocialBtnBaseProps = {
     children: React.ReactNode
-}
+} & Record<any, any>
 
-export const SocialBtnBase = (props: SocialBtnBaseProps) => {
-    return <div className="flex items-center 
-    rounded-md text-14 p-10 space-x-20" style={SocialBtnCSS}>
-        {props.children}
+export const SocialButtonBase = ({children, ...props }: SocialBtnBaseProps) => {
+    return <div className="flex items-center justify-between
+    rounded-md text-14 p-y-12 px-15 space-x-20" style={SocialBtnCSS} css={buttonCSS} {...props}>
+        {children}
     </div>
 };
 
 const SocialBtnCSS: React.CSSProperties = {
     backgroundColor: "#0F1214",
-    borderRadius: "9px",
-    border: "1px solid #292F33",
+    borderRadius: "9rem",
+    border: "1rem solid #292F33",
     color: "white",
     fontSize: "14rem",
-    width: "fit-content",
+    lineHeight: "14rem",
+    minWidth: "200rem",
     minHeight: "42rem"
 }
+
+const buttonCSS = css`
+  background-color:  #0F1214;
+ :hover {
+     border: 1rem solid rgb(54 65 72);
+     background-color: #191B1D !important;
+ }
+`

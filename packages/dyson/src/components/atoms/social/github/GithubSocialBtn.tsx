@@ -1,4 +1,5 @@
-import { SocialBtnBase } from "../SocialButtonBase"
+import { SocialButtonBase } from "../SocialButtonBase"
+import React from 'react';
 
 const GithubIcon = () => {
     return <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
@@ -6,19 +7,27 @@ const GithubIcon = () => {
     </svg>
 
 }
-export interface GithubSocialBtnProps {
+export type GithubSocialBtnProps = {
     count: number;
-}
-export const GithubSocialBtn = (props: GithubSocialBtnProps) => {
-    return <SocialBtnBase>
-        <div>
-            <GithubIcon />
+} & Record<any, any>
+
+export const GithubSocialBtn = ({count, ...props}: GithubSocialBtnProps) => {
+    return <SocialButtonBase {...props}>
+
+        <div className={"flex items-center"}>
+            <div className={"mr-10"}>
+                <GithubIcon />
+            </div>
+            <div className={"mr-10"}>
+                Github
+            </div>
         </div>
-        <div style={{ marginRight: "10rem" }}>
-            Github
+
+        <div className={"flex items-center"}>
+            <div style={{ color: "#88A2FF" }}>
+                {count}
+            </div>
         </div>
-        <div style={{ color: "#88A2FF" }}>
-            {props.count}
-        </div>
-    </SocialBtnBase>
+
+    </SocialButtonBase>
 }

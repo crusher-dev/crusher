@@ -1,23 +1,24 @@
 const { spacingSizes } = require("./src/constant/layout");
 const { colors, background, border } = require("./src/constant/color");
+const { FONTS, FONT_WEIGHT_VALUE, LINE_HEIGHT_VALUE, FONT_SIZES } = require("./src/constant/font");
 
 module.exports = {
 	important: false,
 	darkModeVariant: false,
 	theme: {
-		fontFamily: {
-			gilroy: ["Gilroy", "sans-serif"],
-			cera: ["Cera Pro", "sans-serif"],
-		},
+		fontFamily: FONTS,
 		colors: { ...colors },
 		backgroundColor: { ...background },
 		borderColor: { ...border },
 		fontSize: spacingSizes,
+		fontSize: FONT_SIZES,
+		fontWeight: FONT_WEIGHT_VALUE,
 		extend: {
 			margin: spacingSizes,
 			padding: spacingSizes,
 			height: spacingSizes,
 			width: spacingSizes,
+			lineHeight: LINE_HEIGHT_VALUE
 		},
 		borderRadius: {
 			full: "50%",

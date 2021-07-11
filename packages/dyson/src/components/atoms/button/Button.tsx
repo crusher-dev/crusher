@@ -38,7 +38,7 @@ export interface ButtonProps {
  */
 export const Button: React.FC<ButtonProps> = ({ type = "primary", bgColor = "blue", size = "medium", children, className, ...props }) => {
 	return (
-		<button className={`py-10 px-60 text-14 text-white ${className}`} style={buttonCSS} {...props} >
+		<button className={`py-8 px-16 text-14 text-white ${className}`} style={buttonCSS} {...props} >
 			{children}
 		</button>
 	);
@@ -50,4 +50,5 @@ const buttonCSS: React.CSSProperties = {
 	borderRadius: "4rem",
 	color: "white",
 	fontWeight: 700,
+	fontSize: "14rem"
 }

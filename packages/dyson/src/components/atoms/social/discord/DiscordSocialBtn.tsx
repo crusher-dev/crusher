@@ -1,5 +1,5 @@
 import React from "react";
-import { SocialBtnBase } from "../SocialButtonBase"
+import { SocialButtonBase } from "../SocialButtonBase"
 
 const DiscordIcon = () => {
     return <svg fill="#ffffff" viewBox="0 0 50 50" style={{ height: "17px" }}>
@@ -16,24 +16,31 @@ const DiscordIcon = () => {
            8.425781 C 20.0625 7.929688 19.925781 7.617188 19.914063 7.589844 C 19.738281 7.203125 19.34375 6.960938 18.921875 7.003906 C 18.652344 7.023438 12.355469 7.566406 8.320313 10.8125 C 6.214844 12.761719 2 24.152344 2 34 C 2 34.175781 2.046875 34.34375 2.132813 34.496094 C 5.039063 39.605469 12.972656 40.941406 14.78125 41 C 14.789063 41 14.800781 41 14.8125 41 C 15.132813 41 15.433594 40.847656 15.621094 40.589844 L 17.449219 38.074219 C 12.515625 36.800781 9.996094 34.636719 9.851563 34.507813 C 9.4375 34.144531 9.398438 33.511719 9.765625 33.097656 C 10.128906 32.683594 10.761719 32.644531 11.175781 33.007813 C 11.234375 33.0625 15.875 37 25 37 C 34.140625 37 38.78125 33.046875 38.828125 33.007813 C 39.242188 32.648438 39.871094 32.683594 40.238281 33.101563 C 40.601563 33.515625 40.5625 34.144531 40.148438 34.507813 C 40.003906 34.636719 37.484375 36.800781 32.550781 38.074219 L 34.378906 40.589844 C 34.566406 40.847656 34.867188 41 35.1875 41 C 35.199219 41 35.210938 41 35.21875 41 C 37.027344 40.941406 44.960938 39.605469 47.867188 34.496094 C 47.953125 34.34375 48 34.175781 48 34 C 48 24.152344 43.785156 12.761719 41.625 10.769531 Z M 18.5 30 C 16.566406 30 15 28.210938 15 26 C 15 23.789063 16.566406 22 18.5 22 C 20.433594 22 22 23.789063 22 26 C 22 28.210938 20.433594 30 18.5 30 Z M 31.5 30 C 29.566406 30 28 28.210938 28 26 C 28 23.789063 29.566406 22 31.5 22 C 33.433594 22 35 23.789063 35 26 C 35 28.210938 33.433594 30 31.5 30 Z" /></svg>
 }
 
-export interface DiscordSocialBtnProps {
+export type GithubSocialBtnProps = {
     count: number;
-}
-export const DiscordSocialBtn = (props: DiscordSocialBtnProps) => {
-    return <SocialBtnBase>
-        <div>
-            <DiscordIcon />
-        </div>
-        <div style={{ marginRight: "10rem" }}>
-            Discord
-        </div>
-        <div style={{ color: "#88A2FF" }}>
-            {props.count}
-        </div>
-        <div style={OnlineDotCSS}>
+} & Record<any, any>
 
+export const DiscordSocialBtn = ({count, ...props}: GithubSocialBtnProps) => {
+    return <SocialButtonBase {...props}>
+
+        <div className={"flex items-center"}>
+            <div className={"mr-10"}>
+                <DiscordIcon />
+            </div>
+            <div className={"mr-10"}>
+                Discord
+            </div>
         </div>
-    </SocialBtnBase>
+
+        <div className={"flex items-center"}>
+
+            <div style={{ color: "#88A2FF" }}>
+                {count}
+            </div>
+            <div style={OnlineDotCSS} className={"ml-10"}>
+            </div>
+        </div>
+    </SocialButtonBase>
 };
 
 const OnlineDotCSS: React.CSSProperties = {

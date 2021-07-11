@@ -1,8 +1,8 @@
 import React from "react";
 
-export interface CenterLayoutProps {
+ type CenterLayoutProps =  {
 	children: React.ReactNode;
-}
+} & Record<any,any>
 
 /**
  * Just a Layout which centers its children

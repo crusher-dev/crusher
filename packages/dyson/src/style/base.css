@@ -6,7 +6,15 @@ html,body{
     font-size: 1px;
 }
 
-.sb-show-main.sb-main-padded{
+* {
+    cursor: inherit;
+    font-size: 16rem;
+}
 
+body {
+    cursor: default;
+}
+
+.sb-show-main.sb-main-padded{
     transform-origin: left top 0px;
 }

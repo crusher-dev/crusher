@@ -3,7 +3,7 @@ import { Story, Meta } from "@storybook/react/types-6-0";
 
 import { GithubSocialBtn, GithubSocialBtnProps } from "./GithubSocialBtn";
 export default {
-    title: "Atoms/Social Buttons/GithubSocialBtn",
+    title: "Atoms/social Buttons/GithubSocialBtn",
     component: GithubSocialBtn,
 } as Meta;
 

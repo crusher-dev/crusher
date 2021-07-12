@@ -58,7 +58,7 @@ const App = () => {
 				},
 			}),
 		);
-		window.addEventListener("message", recorderMessageListener.bind(window, deviceIframeRef));
+		(window as any).electron.host.addEventListener("message", recorderMessageListener.bind(window, deviceIframeRef));
 	}, []);
 
 	return (

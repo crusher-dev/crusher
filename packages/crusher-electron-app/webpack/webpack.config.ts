@@ -58,6 +58,13 @@ const finalConfig = [
 			preload: path.resolve(__dirname, "../src/preload.ts"),
 		},
 	},
+	{
+		...commonConfig,
+		target: "electron-preload",
+		entry: {
+			webViewPreload: path.resolve(__dirname, "../src/webViewPreload.ts"),
+		},
+	},
 ];
 
 module.exports = finalConfig.filter((config) => config !== null);

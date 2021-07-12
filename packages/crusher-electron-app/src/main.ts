@@ -99,6 +99,19 @@ async function createWindow() {
 		reloadApp(mainWindow);
 	});
 
+	ipcMain.on("get-app-path",(event) => {
+		event.returnValue = app.getAppPath();
+	});
+
+	ipcMain.on("post-message-to-host",(event, data) => {
+		mainWindow.webContents.send("post-message-to-host", data);
+	});
+
+	ipcMain.on("post-message-to-webview",(event, data) => {
+		const webViewContent = getWebViewContent();
+		webViewContent.send("post-message-to-webview", data);
+	});
+
 	ipcMain.on("init-web-view", async(e, webContentsId) => {
 		const webViewContent = getWebViewContent();
 		// console.log("Web view content is", webViewContent);
@@ -113,6 +126,27 @@ async function createWindow() {
 		// @TODO: This should not be necessary. Look into this
 		// It's here to enable DOMDebugger, which is not getting enabled by default
 		await webViewContent.debugger.sendCommand("DOMDebugger.setXHRBreakpoint", {url: "http://nonsense.com"});
+
+		webViewContent.debugger.on("message", async (event, method, params) => {
+			if (method === "Overlay.inspectNodeRequested") {
+				await webViewContent.debugger.sendCommand("Overlay.setInspectMode", {
+					mode: "none",
+					highlightConfig: {
+						showInfo: true,
+						showStyles: true,
+						contentColor: {
+							r: 233,
+							g: 255,
+							b: 177,
+							a: 0.39,
+						},
+					},
+				});
+				const nodeObject = await webViewContent.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
+				await webViewContent.debugger.sendCommand("Runtime.callFunctionOn", {functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}", objectId: nodeObject.object.objectId})
+				console.log(nodeObject);
+			}
+		});
 	});
 
 	ipcMain.on("turn-on-inspect-mode", async (e, msg) => {

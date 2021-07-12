@@ -54,6 +54,7 @@ const Device = (props: iDeviceProps) => {
 						style={browserFrameStyle}
 						id="device_browser"
 						nodeintegration={true}
+						preload={"file://" + (window as any).electron.getAppPath() + "/webViewPreload.js"}
 						//@ts-ignore
 						enableremotemodule={"true"}
 						title={device.name}

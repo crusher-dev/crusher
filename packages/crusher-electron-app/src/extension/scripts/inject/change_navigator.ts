@@ -1,16 +1,7 @@
 import { iMessage, MESSAGE_TYPES } from "../../messageListener";
 import { FRAME_MESSAGE_TYPES } from "./responseMessageListener";
 import { iUserAgent } from "@shared/constants/userAgents";
-import { getFrameDepth } from "../../utils/helpers";
-import { setupContentScriptForElectronReload } from "../../utils/electronReload";
-
 (window as any).isCrusherRecorder = true;
-
-const frameDepth = getFrameDepth(window.self);
-
-if (frameDepth === 1 && window.name === "crusher_iframe") {
-	setupContentScriptForElectronReload();
-}
 
 const actualCode = `(${(userAgent: string, appVersion: string, platformVersion: string) => {
 	const { navigator } = window;
@@ -45,16 +36,13 @@ const actualCode = `(${(userAgent: string, appVersion: string, platformVersion: 
 	});
 }})`;
 
-window.top.postMessage(
-	{
-		type: MESSAGE_TYPES.REQUEST_USER_AGENT,
-		frameId: null,
-		value: true,
-	},
-	"*",
-);
+(window as any).electron.host.postMessage({
+	type: MESSAGE_TYPES.REQUEST_USER_AGENT,
+	frameId: null,
+	value: true,
+});
 
-window.addEventListener("message", (message: MessageEvent<iMessage>) => {
+(window as any).electron.webview.addEventListener("message", (message: MessageEvent<iMessage>) => {
 	const { type, meta } = message.data;
 
 	if (type === FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE) {
@@ -66,7 +54,7 @@ window.addEventListener("message", (message: MessageEvent<iMessage>) => {
 	}
 });
 
-if(document.documentElement){
+if (document.documentElement) {
 	const s = document.createElement("div");
 	s.setAttribute("id", "test");
 	document.documentElement.appendChild(s);

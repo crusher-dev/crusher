@@ -108,7 +108,7 @@ const browserFrameStyle = {
 	border: "none",
 	display: "inline-flex",
 	maxWidth: "100%",
-	backgroundColor: "#010101",
+	backgroundColor: "#fff",
 	width: "100%",
 	height: "100%",
 };

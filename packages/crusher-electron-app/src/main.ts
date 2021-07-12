@@ -144,7 +144,6 @@ async function createWindow() {
 				});
 				const nodeObject = await webViewContent.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
 				await webViewContent.debugger.sendCommand("Runtime.callFunctionOn", {functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}", objectId: nodeObject.object.objectId})
-				console.log(nodeObject);
 			}
 		});
 	});

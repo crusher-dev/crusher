@@ -6,4 +6,5 @@ contextBridge.exposeInMainWorld("electron", {
 	turnOffInspectMode: () => ipcRenderer.send("turn-off-inspect-mode"),
 	setCustomBackendDomain: (domain) => ipcRenderer.send("set-custom-backend-domain", domain),
 	reloadExtension: () => ipcRenderer.send("reload-extension"),
+	initWebView: (webContentsId) => ipcRenderer.send("init-web-view", webContentsId)
 });

@@ -1,4 +1,4 @@
-import React, { RefObject, useMemo, useState } from "react";
+import React, { RefObject, useEffect, useMemo, useState } from 'react';
 import { Device } from "../../components/app/device";
 import { SETTINGS_ACTIONS } from "../../../constants/actionTypes";
 import { BrowserToolbar } from "./browserToolbar";
@@ -11,11 +11,12 @@ import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { COLOR_CONSTANTS } from "../../colorConstants";
+import { WebviewTag } from 'electron';
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
 	saveTestCallback: () => void;
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<any>;
 }
 
 const BrowserWindow = (props: iBrowserWindowProps) => {
@@ -28,6 +29,14 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 
 	const selectedDevice = AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href);
 
+	useEffect(() => {
+			if(deviceIframeRef.current) {
+				setTimeout(() => {
+					(window as any).electron.initWebView(2);
+				},500);
+				// console.log((deviceIframeRef.current as WebviewTag).getWebContentsId);
+			}
+	}, [deviceIframeRef.current]);
 	function handleKeyPress(event: KeyboardEvent) {
 		const cn = deviceIframeRef?.current?.contentWindow;
 

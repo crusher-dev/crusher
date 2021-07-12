@@ -4,6 +4,8 @@ import { iUserAgent } from "@shared/constants/userAgents";
 import { getFrameDepth } from "../../utils/helpers";
 import { setupContentScriptForElectronReload } from "../../utils/electronReload";
 
+(window as any).isCrusherRecorder = true;
+
 const frameDepth = getFrameDepth(window.self);
 
 if (frameDepth === 1 && window.name === "crusher_iframe") {
@@ -63,3 +65,9 @@ window.addEventListener("message", (message: MessageEvent<iMessage>) => {
 		s.remove();
 	}
 });
+
+if(document.documentElement){
+	const s = document.createElement("div");
+	s.setAttribute("id", "test");
+	document.documentElement.appendChild(s);
+}

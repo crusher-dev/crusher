@@ -1,5 +1,6 @@
 import * as path from "path";
-import { app, BrowserWindow, session, ipcMain, screen, shell } from "electron";
+import { app, BrowserWindow, session, ipcMain, screen, shell, webContents } from "electron";
+app.commandLine.appendSwitch('disable-features', 'CrossOriginOpenerPolicy');
 
 let APP_DOMAIN = process.env.APP_DOMAIN;
 
@@ -10,7 +11,7 @@ const loadExtension = (mainWindow) => {
 		session.defaultSession
 			.loadExtension(path.resolve(__dirname, "./extension"), { allowFileAccess: true })
 			.then(({ id: extensionId }) => {
-				const urlToOpen = app.commandLine.getSwitchValue("openExtensionURL") || "chrome-extension://<EXTENSION_ID_HERE>/test_recorder.html";
+				const urlToOpen = app.commandLine.getSwitchValue("open-extension-url") || "chrome-extension://<EXTENSION_ID_HERE>/test_recorder.html";
 				if (!urlToOpen.match(extensionURLRegExp)) {
 					return mainWindow.loadURL(urlToOpen);
 				}
@@ -36,8 +37,13 @@ function getIconPath() {
 }
 
 function reloadApp(mainWindow) {
-	app.relaunch({ args: process.argv.slice(1).concat([`--openExtensionURL=${mainWindow.webContents.getURL()}`]) });
+	app.relaunch({ args: process.argv.slice(1).concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
 	app.exit();
+}
+
+function getWebViewContent() {
+	const webViewContents = webContents.getAllWebContents();
+	return webViewContents.find(a => a.getType() === "webview");
 }
 
 async function createWindow() {
@@ -56,9 +62,10 @@ async function createWindow() {
 		minHeight: height > 873 ? 873 : height,
 		enableLargerThanScreen: true,
 		webPreferences: {
+			webviewTag: true,
+			webSecurity: false,
 			preload: path.join(__dirname, "preload.js"),
 			nativeWindowOpen: true,
-			webSecurity: false,
 			devTools: true,
 		},
 	});
@@ -84,13 +91,6 @@ async function createWindow() {
 		expirationDate: 1638209412,
 	});
 
-	await mainWindow.webContents.debugger.attach("1.3");
-	await mainWindow.webContents.debugger.sendCommand("Debugger.enable");
-	await mainWindow.webContents.debugger.sendCommand("DOM.enable");
-	await mainWindow.webContents.debugger.sendCommand("Runtime.enable");
-	await mainWindow.webContents.debugger.sendCommand("Overlay.enable");
-	await mainWindow.webContents.debugger.sendCommand("Debugger.setAsyncCallStackDepth", { maxDepth: 9999 });
-
 	ipcMain.on("set-custom-backend-domain", async (e, domain) => {
 		APP_DOMAIN = domain;
 	});
@@ -99,34 +99,43 @@ async function createWindow() {
 		reloadApp(mainWindow);
 	});
 
+	ipcMain.on("init-web-view", async(e, webContentsId) => {
+		const webViewContent = getWebViewContent();
+		// console.log("Web view content is", webViewContent);
+		if(!webViewContent || webViewContent.debugger.isAttached()) return;
+		console.log("Attaching now...");
+		await webViewContent.debugger.attach("1.3");
+		await webViewContent.debugger.sendCommand("Debugger.enable");
+		await webViewContent.debugger.sendCommand("DOM.enable");
+		await webViewContent.debugger.sendCommand("Runtime.enable");
+		await webViewContent.debugger.sendCommand("Overlay.enable");
+		await webViewContent.debugger.sendCommand("Debugger.setAsyncCallStackDepth", { maxDepth: 9999 });
+		// @TODO: This should not be necessary. Look into this
+		// It's here to enable DOMDebugger, which is not getting enabled by default
+		await webViewContent.debugger.sendCommand("DOMDebugger.setXHRBreakpoint", {url: "http://nonsense.com"});
+	});
+
 	ipcMain.on("turn-on-inspect-mode", async (e, msg) => {
-		await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
-			mode: "searchForNode",
-			highlightConfig: {
-				showInfo: true,
-				showStyles: true,
-				contentColor: { r: 233, g: 255, b: 177, a: 0.39 },
-			},
-		});
+		const webViewContent = getWebViewContent();
+
+
+		if(webViewContent) {
+			await webViewContent.debugger.sendCommand("Overlay.setInspectMode", {
+				mode: "searchForNode",
+				highlightConfig: {
+					showInfo: true,
+					showStyles: true,
+					contentColor: { r: 233, g: 255, b: 177, a: 0.39 },
+				},
+			});
+		}
 	});
 	ipcMain.on("turn-off-inspect-mode", async (e, msg) => {
-		await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
-			mode: "none",
-			highlightConfig: {
-				showInfo: true,
-				showStyles: true,
-				contentColor: {
-					r: 233,
-					g: 255,
-					b: 177,
-					a: 0.39,
-				},
-			},
-		});
-	});
-	mainWindow.webContents.debugger.on("message", async (event, method, params) => {
-		if (method === "Overlay.inspectNodeRequested") {
-			await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
+		const webViewContent = getWebViewContent();
+
+
+		if(webViewContent) {
+			await webViewContent.debugger.sendCommand("Overlay.setInspectMode", {
 				mode: "none",
 				highlightConfig: {
 					showInfo: true,
@@ -140,6 +149,23 @@ async function createWindow() {
 				},
 			});
 		}
+	});
+	mainWindow.webContents.debugger.on("message", async (event, method, params) => {
+		// if (method === "Overlay.inspectNodeRequested") {
+		// 	await mainWindow.webContents.debugger.sendCommand("Overlay.setInspectMode", {
+		// 		mode: "none",
+		// 		highlightConfig: {
+		// 			showInfo: true,
+		// 			showStyles: true,
+		// 			contentColor: {
+		// 				r: 233,
+		// 				g: 255,
+		// 				b: 177,
+		// 				a: 0.39,
+		// 			},
+		// 		},
+		// 	});
+		// }
 	});
 	mainWindow.webContents.on("new-window", function (event, popupUrl) {
 		if (mainWindow.webContents.getURL().startsWith("chrome-extension")) {

@@ -51,7 +51,6 @@ let finalConfig: any = {
 		init_content_script: [path.resolve(__dirname, "../src/extension/scripts/inject/init_event_listener.ts")],
 		change_navigator: [path.resolve(__dirname, "../src/extension/scripts/inject/change_navigator.ts")],
 		background: [path.resolve(__dirname, "../src/extension/background.ts")],
-		popup: [path.resolve(__dirname, "../src/extension/ui/popup.tsx")],
 		record_test: [path.resolve(__dirname, "../src/extension/ui/app.tsx")],
 	},
 	plugins: [
@@ -64,7 +63,7 @@ let finalConfig: any = {
 			},
 		}),
 		new webpack.DefinePlugin({
-			NODE_ENV: "production",
+			NODE_ENV: process.env.NODE_ENV === "development" ? "development" : "production",
 			"process.env": {
 				BACKEND_URL: JSON.stringify(process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://backend.crusher.dev/"),
 			},
@@ -119,8 +118,8 @@ if (process.env.NODE_ENV === "development") {
 				reloadPage: true, // Force the reload of the page also
 				entries: {
 					background: "background",
-					extensionPage: ["popup", "record_test"],
-					contentScript: ["content_script", "change_navigator"],
+					extensionPage: ["record_test"],
+					contentScript: ["content_script"],
 				},
 			}),
 			new RunElectronOnFirstCompile(),

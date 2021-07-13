@@ -13,7 +13,7 @@ import { updateActionsModalState, updateActionsRecordingState } from "../../../r
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 
 interface iElementLevelActionListProps {
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 
 const ElementLevelActionsList = (props: iElementLevelActionListProps) => {

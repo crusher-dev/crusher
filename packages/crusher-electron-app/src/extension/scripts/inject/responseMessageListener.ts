@@ -45,16 +45,13 @@ export interface iPerformActionMeta {
 function sendSeoMetaToParentFrame() {
 	const metaTagsValuesMap = getAllSeoMetaInfo();
 
-	window.top.postMessage(
-		{
-			type: MESSAGE_TYPES.SEO_META_INFORMATION,
-			meta: {
-				title: document.title,
-				metaTags: metaTagsValuesMap,
-			},
+	(window as any).electron.host.postMessage({
+		type: MESSAGE_TYPES.SEO_META_INFORMATION,
+		meta: {
+			title: document.title,
+			metaTags: metaTagsValuesMap,
 		},
-		"*",
-	);
+	});
 }
 
 export function responseMessageListener(eventRecording: EventRecording, event: MessageEvent<iMessage>) {
@@ -110,13 +107,10 @@ export function responseMessageListener(eventRecording: EventRecording, event: M
 					return { type: "error", value: err };
 				})
 				.then((response: iExecuteScriptOutputResponseMeta) => {
-					window.top.postMessage(
-						{
-							type: MESSAGE_TYPES.EXECUTE_CUSTOM_SCRIPT_OUTPUT,
-							meta: { ...response, script: script, selector },
-						},
-						"*",
-					);
+					(window as any).electron.host.postMessage({
+						type: MESSAGE_TYPES.EXECUTE_CUSTOM_SCRIPT_OUTPUT,
+						meta: { ...response, script: script, selector },
+					});
 				});
 			break;
 		}

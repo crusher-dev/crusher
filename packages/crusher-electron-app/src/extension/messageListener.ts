@@ -172,49 +172,40 @@ function handleRecordAction(action: iAction): any {
 	return true;
 }
 
-function sendTestRecorderStatusToFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
+function sendTestRecorderStatusToFrame(webviewRef: RefObject<HTMLWebViewElement>) {
 	const store = getStore();
 
-	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
-
-	const cn = deviceIframeRef.current.contentWindow;
+	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
 
 	const inUsingInspectorMode = getActionsRecordingState(store.getState()).type === ACTIONS_RECORDING_STATE.ELEMENT;
 
 	const isRecording = isRecorderScriptBooted(store.getState());
 
-	cn?.postMessage(
-		{
-			type: FRAME_MESSAGE_TYPES.RECORDING_STATUS_REQUEST_RESPONSE,
-			meta: {
-				value: inUsingInspectorMode
-					? RECORDING_STATUS.INSPECTOR_MODE_ON
-					: isRecording
-					? RECORDING_STATUS.INSPECTOR_MODE_OFF
-					: RECORDING_STATUS.RECORDER_SCRIPT_NOT_BOOTED,
-			},
+	(window as any).electron.webview.postMessage({
+		type: FRAME_MESSAGE_TYPES.RECORDING_STATUS_REQUEST_RESPONSE,
+		meta: {
+			value: inUsingInspectorMode
+				? RECORDING_STATUS.INSPECTOR_MODE_ON
+				: isRecording
+				? RECORDING_STATUS.INSPECTOR_MODE_OFF
+				: RECORDING_STATUS.RECORDER_SCRIPT_NOT_BOOTED,
 		},
-		"*",
-	);
+	});
 }
 
-function sendUserAgentToFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
-	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
+function sendUserAgentToFrame(webviewRef: RefObject<HTMLWebViewElement>) {
+	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
 
-	const cn = deviceIframeRef.current.contentWindow;
 	// Extension url contains selected device
 	const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(window?.location.href);
-	const userAgent = userAgents.find((agent) => agent.name === (device.userAgent || userAgents[6].value));
-	cn?.postMessage(
-		{
-			type: FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE,
-			meta: { value: userAgent },
-		},
-		"*",
-	);
+	const userAgent = userAgents.find((agent) => agent.name === (device.userAgent || userAgents[0].value));
+	(window as any).electron.webview.postMessage({
+		type: FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE,
+		meta: { value: userAgent },
+	});
 }
 
-export function recorderMessageListener(deviceIframeRef: RefObject<HTMLIFrameElement>, event: MessageEvent<iMessage>) {
+export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement>, event: MessageEvent<iMessage>) {
 	const store = getStore();
 
 	const { type } = event.data;
@@ -255,11 +246,11 @@ export function recorderMessageListener(deviceIframeRef: RefObject<HTMLIFrameEle
 			break;
 		}
 		case MESSAGE_TYPES.REQUEST_RECORDING_STATUS: {
-			sendTestRecorderStatusToFrame(deviceIframeRef);
+			sendTestRecorderStatusToFrame(webviewRef);
 			break;
 		}
 		case MESSAGE_TYPES.REQUEST_USER_AGENT: {
-			sendUserAgentToFrame(deviceIframeRef);
+			sendUserAgentToFrame(webviewRef);
 			break;
 		}
 		case MESSAGE_TYPES.RELOAD_ELECTRON_EXTENSION: {
@@ -288,64 +279,44 @@ export function recorderMessageListener(deviceIframeRef: RefObject<HTMLIFrameEle
 	return true;
 }
 
-export function turnOnInspectModeInFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
-	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
+export function turnOnInspectModeInFrame(webviewRef: RefObject<HTMLWebViewElement>) {
+	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
 
-	const cn = deviceIframeRef.current.contentWindow;
-
-	cn?.postMessage(
-		{
-			type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
-			meta: { isInspectModeOn: true } as iInspectModeUpdateMeta,
-		},
-		"*",
-	);
+	(window as any).electron.webview.postMessage({
+		type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
+		meta: { isInspectModeOn: true } as iInspectModeUpdateMeta,
+	});
 }
 
-export function turnOffInspectModeInFrame(deviceIframeRef: RefObject<HTMLIFrameElement>) {
-	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
+export function turnOffInspectModeInFrame(webviewRef: RefObject<HTMLWebViewElement>) {
+	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
 
 	(window as any).electron.turnOffInspectMode();
 
-	const cn = deviceIframeRef.current.contentWindow;
-
-	cn?.postMessage(
-		{
-			type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
-			meta: { isInspectModeOn: false } as iInspectModeUpdateMeta,
-		},
-		"*",
-	);
+	(window as any).electron.webview.postMessage({
+		type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
+		meta: { isInspectModeOn: false } as iInspectModeUpdateMeta,
+	});
 }
 
-export function executeScriptInFrame(script: string, selector: string, deviceIframeRef: RefObject<HTMLIFrameElement>) {
-	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
+export function executeScriptInFrame(script: string, selector: string, webviewRef: RefObject<HTMLWebViewElement>) {
+	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
 
-	const cn = deviceIframeRef.current.contentWindow;
-
-	cn?.postMessage(
-		{
-			type: FRAME_MESSAGE_TYPES.EXECUTE_ELEMENT_CUSTOM_SCRIPT,
-			meta: { script: script, selector: selector } as iExecuteScriptResponseMeta,
-		},
-		"*",
-	);
+	(window as any).electron.webview.postMessage({
+		type: FRAME_MESSAGE_TYPES.EXECUTE_ELEMENT_CUSTOM_SCRIPT,
+		meta: { script: script, selector: selector } as iExecuteScriptResponseMeta,
+	});
 }
 
 export function performActionInFrame(
 	actionType: TOP_LEVEL_ACTION | ELEMENT_LEVEL_ACTION,
 	recordingState: ACTIONS_RECORDING_STATE,
-	deviceIframeRef: RefObject<HTMLIFrameElement>,
+	webViewRef: RefObject<HTMLWebViewElement>,
 ) {
-	if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
+	if (!webViewRef.current) throw new Error("Webview not available yet from ref context");
 
-	const cn = deviceIframeRef.current.contentWindow;
-
-	cn?.postMessage(
-		{
-			type: FRAME_MESSAGE_TYPES.PERFORM_ACTION,
-			meta: { type: actionType, recordingState } as iPerformActionMeta,
-		},
-		"*",
-	);
+	(window as any).electron.webview.postMessage({
+		type: FRAME_MESSAGE_TYPES.PERFORM_ACTION,
+		meta: { type: actionType, recordingState } as iPerformActionMeta,
+	});
 }

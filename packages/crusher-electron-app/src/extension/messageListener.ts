@@ -198,7 +198,7 @@ function sendUserAgentToFrame(webviewRef: RefObject<HTMLWebViewElement>) {
 
 	// Extension url contains selected device
 	const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(window?.location.href);
-	const userAgent = userAgents.find((agent) => agent.name === (device.userAgent || userAgents[6].value));
+	const userAgent = userAgents.find((agent) => agent.name === (device.userAgent || userAgents[0].value));
 	(window as any).electron.webview.postMessage({
 		type: FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE,
 		meta: { value: userAgent },

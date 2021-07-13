@@ -12,6 +12,7 @@ ipcRenderer.on("post-message-to-webview", (event, data) => {
 contextBridge.exposeInMainWorld("isCrusherRecorder", true);
 
 contextBridge.exposeInMainWorld("electron", {
+	reloadExtension: () => ipcRenderer.send("reload-extension"),
 	webview: {
 		addEventListener: (type, callback) => {
 			callbacks.push({ type, callback });

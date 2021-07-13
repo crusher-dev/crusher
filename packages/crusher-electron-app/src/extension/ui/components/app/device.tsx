@@ -5,7 +5,7 @@ import { iDevice } from "@shared/types/extension/device";
 import { useSelector } from "react-redux";
 import { isRecorderScriptBooted } from "../../../redux/selectors/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
-import { WebviewTag } from 'electron';
+import { WebviewTag } from "electron";
 import webviewTag = Electron.Renderer.webviewTag;
 
 interface iDeviceProps {
@@ -32,20 +32,19 @@ const Device = (props: iDeviceProps) => {
 			<Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
 			</Conditional>
-			{/*<Conditional If={!isWebviewLoaded}>*/}
-			{/*	<div style={{ background: "#0A0A0A" }}*/}
-			{/*		className="absolute flex h-full w-full justify-center items-center">*/}
-			{/*		<div>*/}
-			{/*			<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />*/}
-			{/*			<div style={pageLoadingCoverTextStyle}>{"Please wait while we're loading next page"}</div>*/}
-			{/*		</div>*/}
-			{/*	</div>*/}
-			{/*</Conditional>*/}
+			<Conditional If={!isWebviewLoaded}>
+				<div style={{ background: "rgba(10, 10, 10, 0.925)" }} className="absolute flex h-full w-full justify-center items-center">
+					<div>
+						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
+						<div style={pageLoadingCoverTextStyle}>{"Please wait while we're loading next page"}</div>
+					</div>
+				</div>
+			</Conditional>
 			<div
 				className={isMobile ? "smartphone" : ""}
 				style={{
 					width: device.width,
-					height: device.height,//need to fix UI bug here
+					height: device.height, //need to fix UI bug here
 				}}
 			>
 				<div className="content" style={browserFrameContainerStyle}>
@@ -101,7 +100,7 @@ const previewBrowserStyle = {
 	borderWidth: "2px",
 	borderLeft: "none",
 	borderBottom: "none",
-	minHeight: "90%"
+	minHeight: "90%",
 };
 
 const browserFrameStyle = {

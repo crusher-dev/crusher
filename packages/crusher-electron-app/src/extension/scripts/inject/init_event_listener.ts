@@ -1,9 +1,7 @@
 import { getFrameDepth } from "../../utils/helpers";
-import { setupContentScriptForElectronReload } from "../../utils/electronReload";
 const frameDepth = getFrameDepth(window.self);
 
 if (frameDepth === 0 && !window.location.href.startsWith("chrome-extension://")) {
-	setupContentScriptForElectronReload();
 	fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
 		.then((response) => response.text())
 		.then((html) => {

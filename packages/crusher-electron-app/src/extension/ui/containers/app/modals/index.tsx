@@ -75,7 +75,7 @@ const closeButtonStyle = {
 };
 
 interface iModalManagerProps {
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 const ModalManager = (props: iModalManagerProps) => {
 	const { deviceIframeRef } = props;
@@ -91,12 +91,10 @@ const ModalManager = (props: iModalManagerProps) => {
 		if (modalState === ACTIONS_MODAL_STATE.SEO_VALIDATION) {
 			if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
-			const cn = deviceIframeRef.current.contentWindow;
-			cn?.postMessage(
+			(window as any).electron.webview.postMessage(
 				{
 					type: FRAME_MESSAGE_TYPES.REQUEST_SEO_META,
 				},
-				"*",
 			);
 		}
 	}, [modalState]);

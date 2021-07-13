@@ -3,7 +3,7 @@ import { FLEX_DIRECTION, FONT_WEIGHT, TEXT_ALIGN } from "../../../interfaces/css
 import { turnOffInspectModeInFrame } from "../../../messageListener";
 
 interface iSelectElementPlaceholderProps {
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 const SelectElementPlaceholder = (props: iSelectElementPlaceholderProps) => {
 	const handleGoBackClick = () => {

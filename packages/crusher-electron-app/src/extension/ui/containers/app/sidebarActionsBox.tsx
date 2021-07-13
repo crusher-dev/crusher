@@ -16,7 +16,7 @@ import { BlueButton } from "../../components/app/BlueButton";
 import { createPopper } from "@popperjs/core";
 
 interface iSidebarActionBoxProps {
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {

@@ -28,8 +28,9 @@
   "files": [
     "./src/main.ts",
     "./src/preload.ts",
+    "./src/webViewPreload.ts",
     "./src/extension/background.ts",
-    "./src/extension/ui/popup.tsx",
+    "./src/extension/ui/app.tsx",
     "../../node_modules/react/index.js"
   ],
   "include": ["./src/**/*"],

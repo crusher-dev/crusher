@@ -5,6 +5,8 @@ import { iDevice } from "@shared/types/extension/device";
 import { useSelector } from "react-redux";
 import { isRecorderScriptBooted } from "../../../redux/selectors/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
+import { WebviewTag } from "electron";
+import webviewTag = Electron.Renderer.webviewTag;
 
 interface iDeviceProps {
 	url: string;
@@ -15,11 +17,11 @@ interface iDeviceProps {
 }
 
 const Device = (props: iDeviceProps) => {
-	const isIframeLoaded = useSelector(isRecorderScriptBooted);
+	const isWebviewLoaded = useSelector(isRecorderScriptBooted);
 	const { isMobile, device, url, forwardRef, isDisabled } = props;
 
 	useEffect(() => {
-		console.log(isIframeLoaded, "____ loaded value ");
+		console.log(isWebviewLoaded, "____ loaded value ");
 		window.onload = function () {
 			return forwardRef.current.click();
 		};
@@ -30,9 +32,8 @@ const Device = (props: iDeviceProps) => {
 			<Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
 			</Conditional>
-			<Conditional If={!isIframeLoaded}>
-				<div style={{ background: "#0A0A0A" }}
-					className="absolute flex h-full w-full justify-center items-center">
+			<Conditional If={!isWebviewLoaded}>
+				<div style={{ background: "rgba(10, 10, 10, 0.925)" }} className="absolute flex h-full w-full justify-center items-center">
 					<div>
 						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
 						<div style={pageLoadingCoverTextStyle}>{"Please wait while we're loading next page"}</div>
@@ -43,17 +44,18 @@ const Device = (props: iDeviceProps) => {
 				className={isMobile ? "smartphone" : ""}
 				style={{
 					width: device.width,
-					height: device.height,//need to fix UI bug here
+					height: device.height, //need to fix UI bug here
 				}}
 			>
 				<div className="content" style={browserFrameContainerStyle}>
-					<iframe
+					<webview
 						ref={forwardRef}
 						style={browserFrameStyle}
-						scrolling="auto"
-						sandbox="allow-scripts allow-forms allow-same-origin"
 						id="device_browser"
-						name={"crusher_iframe"}
+						nodeintegration={true}
+						preload={"file://" + (window as any).electron.getAppPath() + "/webViewPreload.js"}
+						//@ts-ignore
+						enableremotemodule={"true"}
 						title={device.name}
 						src={url}
 					/>
@@ -98,14 +100,14 @@ const previewBrowserStyle = {
 	borderWidth: "2px",
 	borderLeft: "none",
 	borderBottom: "none",
-	minHeight: "90%"
+	minHeight: "90%",
 };
 
 const browserFrameStyle = {
 	border: "none",
-	display: "block",
+	display: "inline-flex",
 	maxWidth: "100%",
-	backgroundColor: "#010101",
+	backgroundColor: "#fff",
 	width: "100%",
 	height: "100%",
 };

@@ -1,0 +1,2 @@
+
+window.isCrusherRecorder = true;

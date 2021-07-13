@@ -14,7 +14,7 @@ import { iElementInfo } from "@shared/types/elementInfo";
 
 interface iElementCustomScriptModalContent {
 	onClose?: any;
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent) => {
 	const recordingState = useSelector(getActionsRecordingState);

@@ -1,10 +1,7 @@
 import { getFrameDepth } from "../../utils/helpers";
-import { setupContentScriptForElectronReload } from "../../utils/electronReload";
 const frameDepth = getFrameDepth(window.self);
 
-if (frameDepth === 1 && window.name === "crusher_iframe") {
-	setupContentScriptForElectronReload();
-
+if (frameDepth === 0 && !window.location.href.startsWith("chrome-extension://")) {
 	fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
 		.then((response) => response.text())
 		.then((html) => {
@@ -17,9 +14,9 @@ if (frameDepth === 1 && window.name === "crusher_iframe") {
 			linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
 			fetch(chrome.runtime.getURL("js/content_script.js")).then(async (res) => {
 				const script = document.createElement("script");
+				script.setAttribute("id", "crusher_content_script");
 				script.textContent = await res.text();
 				(document.head || document.documentElement).appendChild(script);
-				script.remove();
 			});
 			document.head.appendChild(linkRel);
 		})

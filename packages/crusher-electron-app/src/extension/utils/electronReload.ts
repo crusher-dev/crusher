@@ -1,25 +1,6 @@
 // @DEV: Setup helper for CElectron dev env
-
-import { MESSAGE_TYPES } from "../messageListener";
-
 function setupContentScriptForElectronReload() {
 	window["CRUSHER_CONTENT_SCRIPT"] = true;
-	// Mock electron injected object
-	if (!(window as any).electron) {
-		(window as any).electron = {
-			reloadExtension: () => {
-				console.log("TRYING TO RELOAD");
-				window.top.postMessage(
-					{
-						type: MESSAGE_TYPES.RELOAD_ELECTRON_EXTENSION,
-						frameId: null,
-						value: true,
-					},
-					"*",
-				);
-			},
-		};
-	}
 }
 
 function setupBackgroundScriptForExtensionReload() {

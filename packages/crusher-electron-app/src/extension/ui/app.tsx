@@ -17,7 +17,7 @@ import { StartupModal } from "./containers/app/modals/startupModal";
 import "../style/main.css";
 
 const App = () => {
-	const deviceIframeRef = useRef<HTMLIFrameElement>(null);
+	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
 	const [recordingStartTime] = useState(new Date());
 	const [url] = useState(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href));
 
@@ -58,7 +58,7 @@ const App = () => {
 				},
 			}),
 		);
-		window.addEventListener("message", recorderMessageListener.bind(window, deviceIframeRef));
+		(window as any).electron.host.addEventListener("message", recorderMessageListener.bind(window, deviceIframeRef));
 	}, []);
 
 	return (

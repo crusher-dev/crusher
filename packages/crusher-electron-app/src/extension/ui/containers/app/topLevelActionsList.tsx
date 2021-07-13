@@ -12,7 +12,7 @@ import { updateActionsModalState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 
 interface iTopLevelActionListProps {
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 
 const TopLevelActionsList = (props: iTopLevelActionListProps) => {
@@ -43,8 +43,10 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 				break;
 			case TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE:
 				if (isInspectModeOn) {
+					(window as any).electron.turnOffInspectMode();
 					turnOffInspectModeInFrame(props.deviceIframeRef);
 				} else {
+					(window as any).electron.turnOnInspectMode();
 					turnOnInspectModeInFrame(props.deviceIframeRef);
 				}
 				break;

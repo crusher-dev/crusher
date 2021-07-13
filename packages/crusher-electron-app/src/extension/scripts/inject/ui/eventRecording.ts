@@ -304,17 +304,14 @@ export default class EventRecording {
 	}
 
 	turnOnElementModeInParentFrame(element = this.state.targetElement) {
-		window.top.postMessage(
-			{
-				type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
-				meta: {
-					selectors: getSelectors(element),
-					attributes: getAllAttributes(element),
-					innerHTML: element.innerHTML,
-				} as iElementModeMessageMeta,
-			},
-			"*",
-		);
+		(window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
+			meta: {
+				selectors: getSelectors(element),
+				attributes: getAllAttributes(element),
+				innerHTML: element.innerHTML,
+			} as iElementModeMessageMeta,
+		});
 	}
 
 	unpin() {
@@ -337,6 +334,7 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
+		console.log("WINDOW CLICK");
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		if (isRecorderCover) {
@@ -471,13 +469,10 @@ export default class EventRecording {
 			currentURL.searchParams.delete("__crusherAgent__");
 			this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.NAVIGATE_URL, document.body, currentURL.toString());
 		}
-		window.top.postMessage(
-			{
-				type: MESSAGE_TYPES.RECORDER_BOOTED,
-				frameId: null,
-			},
-			"*",
-		);
+		(window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.RECORDER_BOOTED,
+			frameId: null,
+		});
 		this.registerNodeListeners();
 	}
 
@@ -494,30 +489,24 @@ export default class EventRecording {
 	turnInspectModeOnInParentFrame() {
 		console.debug("Turning inspect element mode on");
 		this.isInspectorMoving = true;
-		window.top.postMessage(
-			{
-				type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
-				meta: {
-					value: true,
-				},
-				frameId: null,
+		(window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
+			meta: {
+				value: true,
 			},
-			"*",
-		);
+			frameId: null,
+		});
 	}
 
 	turnInspectModeOffInParentFrame() {
 		this.isInspectorMoving = false;
-		window.top.postMessage(
-			{
-				type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
-				meta: {
-					value: false,
-				},
-				frameId: null,
+		(window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
+			meta: {
+				value: false,
 			},
-			"*",
-		);
+			frameId: null,
+		});
 	}
 
 	toggleInspectorInParentFrame() {

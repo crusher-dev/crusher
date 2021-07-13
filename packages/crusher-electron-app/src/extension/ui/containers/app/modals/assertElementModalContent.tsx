@@ -19,7 +19,7 @@ import { pxToRemValue } from "../../../../utils/helpers";
 
 interface iAssertElementModalProps {
 	onClose?: any;
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 
 const getValidationFields = (elementInfo: iElementInfo): Array<iField> => {

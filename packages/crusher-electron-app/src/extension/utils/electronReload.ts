@@ -9,14 +9,11 @@ function setupContentScriptForElectronReload() {
 		(window as any).electron = {
 			reloadExtension: () => {
 				console.log("TRYING TO RELOAD");
-				window.top.postMessage(
-					{
-						type: MESSAGE_TYPES.RELOAD_ELECTRON_EXTENSION,
-						frameId: null,
-						value: true,
-					},
-					"*",
-				);
+				(window as any).electron.host.postMessage({
+					type: MESSAGE_TYPES.RELOAD_ELECTRON_EXTENSION,
+					frameId: null,
+					value: true,
+				});
 			},
 		};
 	}

@@ -38,13 +38,10 @@ export default class EventsController {
 	}
 
 	saveRelevantCapturedEventInBackground(finalActions: Array<any>) {
-		window.top.postMessage(
-			{
-				type: MESSAGE_TYPES.RECORD_ACTION_META,
-				meta: { finalActions: finalActions },
-			},
-			"*",
-		);
+		(window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.RECORD_ACTION_META,
+			meta: { finalActions: finalActions },
+		});
 	}
 
 	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = false) {
@@ -57,19 +54,16 @@ export default class EventsController {
 			// });
 		}
 
-		window.top.postMessage(
-			{
-				type: MESSAGE_TYPES.RECORD_ACTION,
-				meta: {
-					type: event_type,
-					payload: {
-						selectors: selectors,
-						meta: { value },
-					},
-					url: window.location.href,
-				} as iAction,
-			},
-			"*",
-		);
+		(window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.RECORD_ACTION,
+			meta: {
+				type: event_type,
+				payload: {
+					selectors: selectors,
+					meta: { value },
+				},
+				url: window.location.href,
+			} as iAction,
+		});
 	}
 }

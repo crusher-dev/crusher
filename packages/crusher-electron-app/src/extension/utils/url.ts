@@ -82,7 +82,7 @@ export class AdvancedURL {
 	static getUserAgentFromUrl(iframeURL: string): UserAgent {
 		const crusherAgent = AdvancedURL.getParameterByName("__crusherAgent__", iframeURL);
 
-		const selectedUserAgent: UserAgent | undefined = UserAgents.find((agent) => agent.name === (crusherAgent || UserAgents[6].value));
+		const selectedUserAgent: UserAgent | undefined = UserAgents.find((agent) => agent.name === (crusherAgent || UserAgents[0].value));
 
 		return selectedUserAgent as UserAgent;
 	}

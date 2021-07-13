@@ -87,6 +87,8 @@ async function createWindow() {
 
 	await loadExtension(mainWindow);
 
+	await mainWindow.maximize();
+
 	await session.defaultSession.cookies.set({
 		name: "h-sid",
 		value: "AQAAAXnN6yuZAAAAOKcCQqwRAAJ2fHLwkMzVKsxdxrCwXfy3",

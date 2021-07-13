@@ -3,7 +3,7 @@ import { AppProps } from "next/app";
 import {SidebarTopBar} from '@ui/layout/DashboardBase';
 import { Download } from '@ui/containers/dashboard/Download';
 
-function App({ Component, pageProps }: AppProps<any>) {
+function App({}: AppProps<any>) {
 	return (
 		<>
 		<SidebarTopBar/>

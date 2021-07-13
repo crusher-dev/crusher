@@ -51,9 +51,11 @@
 		"@storybook/addon-essentials": "^6.2.7",
 		"@storybook/addon-links": "^6.2.7",
 		"@storybook/addon-notes": "^5.3.21",
+		"@storybook/addons": "^6.3.4",
 		"@storybook/node-logger": "^6.2.7",
 		"@storybook/preset-create-react-app": "^3.1.7",
 		"@storybook/react": "^6.2.7",
+		"@storybook/theming": "^6.3.4",
 		"postcss-loader": "^4.2.0"
 	}
 }

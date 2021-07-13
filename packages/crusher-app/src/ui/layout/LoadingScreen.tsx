@@ -1,8 +1,7 @@
 import { css } from "@emotion/core";
-import { CenterLayout, BlankBase } from "dyson/src/components/layouts/";
+import { CenterLayout } from "dyson/src/components/layouts/";
 import { Logo } from "dyson/src/components/atoms";
-import CrusherBase from "./CrusherBase";
-
+import CrusherBase from "../layout/CrusherBase";
 
 const logoStyle = css`
 	box-shadow: 0px 0px 38px 12px rgb(153 136 255 / 12%);

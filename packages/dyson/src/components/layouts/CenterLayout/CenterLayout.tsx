@@ -1,12 +1,12 @@
 import React from "react";
 
-export interface CenterLayoutProps {
+type CenterLayoutProps =  {
 	children: React.ReactNode;
-}
+} & Record<any,any>
 
 /**
  * Just a Layout which centers its children
  */
 export const CenterLayout: React.FC<CenterLayoutProps> = ({ children ,...props}) => {
-	return <div className={`flex justify-center items-center h-full ${props.className}`}>{children}</div>;
+	return <div className={`flex justify-center items-center h-full w-full ${props.className}`}>{children}</div>;
 };

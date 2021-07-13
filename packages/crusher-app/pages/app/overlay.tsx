@@ -1,13 +1,14 @@
 import React from "react";
 import { AppProps } from "next/app";
-import "../src/tailwind.css";
-import { useBasicSEO } from '../src/hooks/seo';
+import {SidebarTopBar} from '@ui/layout/DashboardBase';
+import { Download } from '@ui/containers/dashboard/Download';
 
 function App({ Component, pageProps }: AppProps<any>) {
-	useBasicSEO({favicon: "/assets/img/favicon.png"})
 	return (
 		<>
-			<Component {...pageProps} />
+		<SidebarTopBar/>
+		<Download/>
+
 		</>
 	);
 }

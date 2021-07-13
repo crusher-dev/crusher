@@ -6,7 +6,7 @@ import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHe
 import withSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
 import ReactSelect from "react-select";
-import Button from "@ui/atom/Button";
+import Button from "@ui/atom/Input";
 import { cleanHeaders } from "@utils/backendRequest";
 import { getCookies } from "@utils/cookies";
 import { _getProjectHosts } from "@services/projects";

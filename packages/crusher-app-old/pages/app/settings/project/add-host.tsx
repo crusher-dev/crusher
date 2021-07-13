@@ -5,7 +5,7 @@ import { PIXEL_REM_RATIO } from "@constants/other";
 import { SettingsContentHeader } from "@ui/components/settings/SettingsContentHeader";
 import withSession from "@hoc/withSession";
 import { WithSettingsLayout } from "@hoc/v2/withSettingLayout";
-import Button from "@ui/atom/Button";
+import Button from "@ui/atom/Input";
 import { _addHostToProject } from "@services/projects";
 import { useSelector } from "react-redux";
 import { getSelectedProject } from "@redux/stateUtils/projects";

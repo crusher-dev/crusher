@@ -1,6 +1,6 @@
 import { serialize } from "cookie";
 import React from "react";
-import { LoadingScreen } from "../src/components/LoadingScreen";
+import { LoadingScreen } from "../src/ui/layout/LoadingScreen";
 const handleClIToken = (ctx) => {
 	const {
 		query: { cli_token },

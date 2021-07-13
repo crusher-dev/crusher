@@ -1,4 +1,4 @@
-import { getUserCLIToken } from "@services/cli";
+// import { getUserCLIToken } from "@services/cli";
 
 export function getEdition() {
 	return process.env.NEXT_PUBLIC_CRUSHER_MODE;
@@ -65,14 +65,14 @@ export function extractHostnameFromUrl(url) {
 	return hostname.split(".").slice(-2).join(".");
 }
 
-export async function getCLICode(projectId: number, host: string) {
-	const token = await getUserCLIToken();
-	if (token) {
-		return `crusher-cli run --project_id=${projectId}  --crusher_token=${token}`;
-	} else {
-		return null;
-	}
-}
+// export async function getCLICode(projectId: number, host: string) {
+// 	const token = await getUserCLIToken();
+// 	if (token) {
+// 		return `crusher-cli run --project_id=${projectId}  --crusher_token=${token}`;
+// 	} else {
+// 		return null;
+// 	}
+// }
 
 export function getTime(date: any) {
 	const seconds = Math.floor(((new Date() as any) - date) / 1000);

@@ -1,9 +1,6 @@
-/*
-@Note - Extend this tailwind config and use dyson tailwind as base
-Or use distributed css of dyson
- */
 const { spacingSize } = require("../dyson/src/constant/layout");
 const { colors, background, border } = require("../dyson/src/constant/color");
+const { FONT_WEIGHT_VALUE } = require("../dyson/src/constant/font");
 
 module.exports = {
 	important: false,
@@ -18,6 +15,7 @@ module.exports = {
 		borderRadius: spacingSize,
 		borderColor: { ...border },
 		fontSize: spacingSize,
+		fontWeight: FONT_WEIGHT_VALUE,
 		extend: {
 			margin: spacingSize,
 			padding: spacingSize,

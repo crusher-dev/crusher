@@ -75,7 +75,7 @@ const closeButtonStyle = {
 };
 
 interface iModalManagerProps {
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 const ModalManager = (props: iModalManagerProps) => {
 	const { deviceIframeRef } = props;

@@ -12,7 +12,7 @@ import { updateActionsModalState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 
 interface iTopLevelActionListProps {
-	deviceIframeRef: RefObject<HTMLIFrameElement>;
+	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 
 const TopLevelActionsList = (props: iTopLevelActionListProps) => {

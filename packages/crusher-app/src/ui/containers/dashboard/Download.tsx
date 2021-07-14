@@ -27,7 +27,7 @@ function DownloadButton() {
 		const linuxZIP = LINUX_INFO.Linux_ZIP;
 		const linuxDeb = LINUX_INFO.Linux_DEB;
 		return (<div className={"flex flex-col items-center"}>
-			<div className={"flex items-center"}>
+			<div className={"flex  items-center"}>
 				<DownloadButton downloadLink={linuxZIP.downloadLink} label={linuxZIP.label} icon={null}/>
 				<div className={"ml-20"}>
 					<DownloadButton downloadLink={linuxDeb.downloadLink} label={linuxDeb.label} icon={null}/>
@@ -54,9 +54,9 @@ function DownloadButton() {
 /*
 	@Note - Extract component overlay to dyson
  */
-export function Download() {
+export function Download({onClose}) {
 
-	return <OverlayTransparent>
+	return <OverlayTransparent onClose={onClose}>
 		<CenterLayout>
 			<div css={downloadSection} className={"flex flex-col items-center pb-16"}>
 				<div><LoadingSVG height={28} /></div>

@@ -6,6 +6,8 @@ import { AddSVG, HelpSVG, LayoutSVG, PlaySVG, RightArrow, SearchSVG, TraySVG } f
 import { Button } from 'dyson/src/components/atoms';
 import { Input } from 'dyson/src/components/atoms';
 import Link from 'next/link';
+import { Conditional } from 'dyson/src/components/layouts';
+import { Download } from '@ui/containers/dashboard/Download';
 
 
 const MENU_ITEM_LIST = [{
@@ -138,6 +140,7 @@ const TOP_NAV_LINK = [{
 
 export const SidebarTopBar = ()=>{
 
+	const [showCreateTest,setShowCreateTest] = useState(false);
 	return (	<div className={"flex"} css={background}>
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 
@@ -157,13 +160,17 @@ export const SidebarTopBar = ()=>{
 
 				</div>
 
+				<Conditional showIf={showCreateTest}>
+					<Download onClose={setShowCreateTest.bind(this,false)}/>
+				</Conditional>
+
 				<div className={"flex items-center"}>
 					<Button bgColor={"tertiary-dark"}>
 						<div className={"flex items-center"}>
 							<PlaySVG className={"mr-12"}/>Run test
 						</div>
 					</Button>
-					<Button className={"ml-20"} css={css`width: 160rem;`}>Create a test</Button>
+					<Button className={"ml-20"} css={css`width: 160rem;`} onClick={setShowCreateTest.bind(this,true)}>Create a test</Button>
 					<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>Share</span>
 
 				</div>

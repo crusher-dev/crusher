@@ -7,7 +7,7 @@ function App({}: AppProps<any>) {
 	return (
 		<>
 		<SidebarTopBar/>
-		<Download/>
+
 
 		</>
 	);

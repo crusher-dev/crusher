@@ -1,10 +1,10 @@
 import React from "react";
-import SignupContainer, { LoginContainer } from '@ui/containers/signup/loginAndEmailScreen';
+import { LoginContainer } from '@ui/containers/signup/loginAndEmailScreen';
 import { usePageTitle } from '../src/hooks/seo';
 
-function Home() {
+function LoginPage() {
+	usePageTitle("Login");
 
-	usePageTitle("Login")
 	return (
 		<div>
 			<LoginContainer />
@@ -12,4 +12,4 @@ function Home() {
 	);
 }
 
-export default Home;
+export default LoginPage;

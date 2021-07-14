@@ -2,8 +2,9 @@ import React from "react";
 import SignupContainer from "@ui/containers/signup/loginAndEmailScreen";
 import { usePageTitle } from '../src/hooks/seo';
 
-function Home() {
-	usePageTitle("Create account")
+function SignupPage() {
+	usePageTitle("Create account");
+
 	return (
 		<div>
 			<SignupContainer />
@@ -11,4 +12,4 @@ function Home() {
 	);
 }
 
-export default Home;
+export default SignupPage;

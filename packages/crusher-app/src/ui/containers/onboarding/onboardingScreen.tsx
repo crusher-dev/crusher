@@ -152,4 +152,4 @@ const containerCSS = css`
 	max-width: 473rem;
 `;
 
-export default CrusherOnboarding;
+export { CrusherOnboarding };

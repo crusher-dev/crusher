@@ -3,12 +3,14 @@ import { CenterLayout } from 'dyson/src/components/layouts';
 import { Button } from 'dyson/src/components/atoms';
 import { AppleSVG,  LoadingSVG } from '@svg/dashboard';
 import { OverlayTransparent } from 'dyson/src/components/layouts/OverlayTransparent/OverlayTransparent';
+import { getOSType } from '@utils/common';
 
 
 /*
 	@Note - Extract component overlay to dyson
  */
 export function Download() {
+	console.log(getOSType())
 	return <OverlayTransparent>
 		<CenterLayout>
 			<div css={downloadSection} className={"flex flex-col items-center pb-16"}>

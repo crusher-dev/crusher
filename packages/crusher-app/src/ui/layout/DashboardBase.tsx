@@ -5,6 +5,7 @@ import { AddSVG, HelpSVG, LayoutSVG, PlaySVG, RightArrow, SearchSVG, TraySVG } f
 
 import { Button } from 'dyson/src/components/atoms';
 import { Input } from 'dyson/src/components/atoms';
+import Link from 'next/link';
 
 
 const MENU_ITEM_LIST = [{
@@ -87,9 +88,16 @@ function LeftSection() {
 					<AddSVG className={'mr-12 mb-2'} /> Invite People
 				</div>
 
-				<div css={navLink} className={'flex items-center text-13 mt-4'}>
-					<HelpSVG className={'mr-12 mb-2'} /> Help & Feedback
-				</div>
+				<a href={"https://docs.crusher.dev/docs/references/contact-us"} target={"_blank"}>
+					<div css={navLink} className={'flex items-center text-13 mt-4'}>
+						<HelpSVG className={'mr-12 mb-2'} /> Help & Feedback
+					</div>
+				</a>
+				<a href={"https://docs.crusher.dev/"} target={"_blank"}>
+					<div css={navLink} className={'flex items-center text-13 mt-4'}>
+						<HelpSVG className={'mr-12 mb-2'} /> Documentation
+					</div>
+				</a>
 			</div>
 
 			<div className={'flex justify-between py-8 px-12 pb-6 mt-20'} css={upgradeCard}>

@@ -1,0 +1,10 @@
+import { OS } from '@constants/app';
+
+export const getOSType = () => {
+	const ua = window.navigator.userAgent;
+	if (ua.includes("Windows")) return OS.Windows;
+	if (ua.includes("Mac")) return OS.MAC;
+	if (ua.includes("Linux")) return OS.Linux;
+	if (ua.includes("X11")) return OS.OTHER;
+	return OS.OTHER;
+};

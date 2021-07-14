@@ -7,21 +7,44 @@ import { Button } from 'dyson/src/components/atoms';
 import { Input } from 'dyson/src/components/atoms';
 
 
-const MENU_ITEM_LIST = [{
+const CURRENT_PROJECT_LIST = [{
 	name: "Dashboard",
 	ICON: LayoutSVG,
 	isSelected: false
 },
 	{
-		name: "Search",
-		ICON: SearchSVG,
-		isSelected: false
-	}
-	,{
 		name: "Activity",
-		ICON: TraySVG,
+		ICON: LayoutSVG,
+		isSelected: false
+	},
+	{
+		name: "Settings",
+		ICON: LayoutSVG,
+		isSelected: false
+	}];
+
+
+const PROJECTS_LIST = [{
+	name: "Default",
+	ICON: LayoutSVG,
+	isSelected: false
+},
+	{
+		name: "Google",
+		ICON: LayoutSVG,
+		isSelected: false
+	},
+	{
+		name: "Facebook",
+		ICON: LayoutSVG,
+		isSelected: false
+	},
+	{
+		name: "Yahoo",
+		ICON: LayoutSVG,
 		isSelected: false
 	}]
+
 
 function ProjectList() {
 	const [search,setSearch] = useState(false)
@@ -29,7 +52,6 @@ function ProjectList() {
 		<div className={'flex pl-10 mr-2 mt- justify-between mt-36'} css={project}>
 			<div className={'flex items-center'}>
 				<span className={'text-13 leading-none mr-8 font-600'}>Projects</span>
-				<div css={hoverCSS} onClick={setSearch.bind(this, !search)}><SearchSVG /></div>
 
 			</div>
 
@@ -48,7 +70,7 @@ function ProjectList() {
 		}
 
 		<div className={'mt-6'}>
-			{MENU_ITEM_LIST.map(({ name, ICON }) => (
+			{PROJECTS_LIST.map(({ name, ICON }) => (
 				<MenuItemHorizontal className={'mt-2'}>
 					<ICON height={12} />
 					<span className={'text-13 ml-16 font-500 mt-2 leading-none'}>{name}</span>
@@ -63,14 +85,14 @@ function LeftSection() {
 		<div>
 			<UserNProject />
 
-			<div>
-				<div css={OutlinedButton} className={' mt-28 flex justify-between'}>
-					<span className={'text-13'}>Upgrade to pro</span> <RightArrow/>
-				</div>
-			</div>
+			{/*<div>*/}
+			{/*	<div css={OutlinedButton} className={' mt-28 flex justify-between'}>*/}
+			{/*		<span className={'text-13'}>Upgrade to pro</span> <RightArrow/>*/}
+			{/*	</div>*/}
+			{/*</div>*/}
 
 			<div className={'mt-24'}>
-				{MENU_ITEM_LIST.map(({ name, ICON }) => (
+				{CURRENT_PROJECT_LIST.map(({ name, ICON }) => (
 					<MenuItemHorizontal className={'mt-2'}>
 						<ICON height={12} />
 						<span className={'text-13 ml-16 font-500 mt-2 leading-none'}>{name}</span>

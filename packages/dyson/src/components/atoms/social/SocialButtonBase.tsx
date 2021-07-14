@@ -5,9 +5,9 @@ type SocialBtnBaseProps = {
     children: React.ReactNode
 } & Record<any, any>
 
-export const SocialButtonBase = ({children, ...props }: SocialBtnBaseProps) => {
-    return <div className="flex items-center justify-between
-    rounded-md text-14 p-y-12 px-15 space-x-20" style={SocialBtnCSS} css={buttonCSS} {...props}>
+export const SocialButtonBase = ({children, className, ...props }: SocialBtnBaseProps) => {
+    return <div className={`flex items-center justify-between
+    rounded-md text-14 py-12 px-15 space-x-20 ${className}`} style={SocialBtnCSS} css={buttonCSS} {...props}>
         {children}
     </div>
 };
@@ -20,7 +20,7 @@ const SocialBtnCSS: React.CSSProperties = {
     fontSize: "14rem",
     lineHeight: "14rem",
     minWidth: "200rem",
-    minHeight: "42rem"
+    height: "42rem",
 }
 
 const buttonCSS = css`

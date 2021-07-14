@@ -20,3 +20,7 @@ body {
 
     transform-origin: left top 0px;
 }
+
+.sbdocs-wrapper{
+    background: #181717 !important;
+}

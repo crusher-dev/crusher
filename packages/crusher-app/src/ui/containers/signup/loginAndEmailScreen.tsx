@@ -7,24 +7,64 @@ import { GithubSVG, GoogleSVG } from "@svg/social";
 import Link from "next/link";
 import { resolvePathToBackendURI } from '@utils/url';
 import { Input } from 'dyson/src/components/atoms';
+import { backendRequest } from '@utils/backendRequest';
+import { RequestMethod } from '@interfaces/RequestOptions';
 
-function EmailPasswordBox({ setShowBox }) {
+const emailLogin = (email,password)=>{
+	return backendRequest("/user/login", {
+		method: RequestMethod.POST,
+		payload: { email, password },
+	})
+}
+
+function EmailPasswordBox({ setShowBox, isSignup=false }) {
+
+	const [email,setEmail] = useState({value: "",error:null});
+	const [password, setPassword] = useState({value: "",error:null})
+
+
+	const emailChange = (e)=>{setEmail({...email,value: e.target.value})};
+	const passwordChange =  (e)=>{setPassword({...password,value: e.target.value})};
+
+	const verifyEmailAndPass = ({isSignupVerify=false})=>{
+		if(email.value || isSignupVerify){
+			setEmail({...email, error: "Please enter valid email"})
+		}
+		if(password.value || isSignupVerify){
+			setPassword({...password, error: "Please enter a password"})
+		}
+
+	}
+
+	const onLoginOrSignupClick = ()=>{
+		verifyEmailAndPass({isSignupVerify:true})
+		emailLogin(email,password).then((res)=>{
+			console.log(res)
+		})
+	}
+
+
 	return (
 		<div css={[loginBox]}>
 			<div className={"mb-12"}>
-				<Input placeholder={"Enter email"} />
-			</div>
-			<div className={"mb-20"}>
-				<Input placeholder={"Enter email"} type={"password"}/>
+				<Input value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyEmailAndPass}/>
+				<Conditional showIf={email.error}>
+					<div className={"mt-8 text-12"} css={errorState}>{email.error}</div>
+				</Conditional>
 			</div>
 
-			<div>
-				<Button size={"large"} className={"mb-20"}>
+			<div className={"mb-20"}>
+				<Input  value={password.value} placeholder={"Enter your password"} type={"password"} onChange={passwordChange} isError={password.error} onBlur={verifyEmailAndPass}/>
+				<Conditional showIf={password.error}>
+					<div className={"mt-8 text-12"} css={errorState}>{password.error}</div>
+				</Conditional>
+			</div>
+
+				<Button size={"large"} className={"mb-20"} onClick={onLoginOrSignupClick}>
 					<div className={"flex justify-center items-center"}>
 						<span className={"mt-2"}>Login</span>
 					</div>
 				</Button>
-			</div>
 			<div className="text-13 underline text-center" onClick={setShowBox.bind(this, false)}>
 				Go back
 			</div>
@@ -198,5 +238,9 @@ const loginBox = css`
 const containerCSS = css`
 	max-width: 473rem;
 `;
+
+const errorState = css`
+  color: #ff4583;
+`
 
 export default SignupContainer;

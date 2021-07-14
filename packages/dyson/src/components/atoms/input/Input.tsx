@@ -8,6 +8,12 @@ export interface ButtonProps {
 	size?: "small" | "medium" | "large";
 
 	/**
+	 * Is error
+	 */
+	isError: boolean;
+
+
+	/**
 	 * Disabled;
 	 */
 	disabled?: boolean;
@@ -26,9 +32,13 @@ export interface ButtonProps {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<ButtonProps> = ({ size = "medium", children, className, ...props }) => {
+export const Input: React.FC<ButtonProps> = ({
+																							 size = "medium",
+	isError=false,
+																							 children,
+																							 className, ...props }) => {
 	return (
-		<input css={inputBox} {...props} className={`${className}`}/>
+		<input css={[inputBox, isError && errorState ]} {...props} className={`${className}`}/>
 	);
 }
 
@@ -48,3 +58,8 @@ const inputBox = css`
 		border-color: #6893E7;
 	}
 `;
+
+const errorState = css`
+
+  border-color: #ff4583;;
+	`

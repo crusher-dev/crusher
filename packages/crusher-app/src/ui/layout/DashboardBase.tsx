@@ -84,7 +84,7 @@ function ProjectList() {
 }
 
 function LeftSection() {
-	return <>
+	return 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 		<div>
 			<UserNProject />
 
@@ -135,7 +135,7 @@ function LeftSection() {
 				</div>
 			</div>
 		</div>
-	</>;
+	</div>;
 }
 
 const TOP_NAV_LINK = [{
@@ -160,44 +160,59 @@ const TOP_NAV_LINK = [{
 	}
 ]
 
-export const SidebarTopBar = ()=>{
-
+function TopNavbar() {
 	const [showCreateTest,setShowCreateTest] = useState(false);
-	return (	<div className={"flex"} css={background}>
-		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
+	return (
+		<div css={[nav]} className={""}>
+			<div css={[containerWidth]}>
+			<div className={"w-full flex px-47 pl-32 justify-between"}>
+				<div className={'flex'}>
+					{TOP_NAV_LINK.map(({ name, selected }) => (
+						<div className={'pt-24 mr-6'} css={navLinkSquare}>
+							<div className={'font-cera font-500 px-24 capitalize'}>{name}</div>
 
-			<LeftSection/>
-
-		</div>
-		<div className={"w-full"}>
-			<div css={nav} className={"flex justify-between px-47 pl-32"}>
-				<div className={"flex"}>
-					{TOP_NAV_LINK.map(({name,selected})=>(
-						<div className={"pt-24 mr-6"} css={navLinkSquare}>
-							<div className={"font-cera font-500 px-24 capitalize"}>{name}</div>
-
-							{selected && (<div className={"selected mt-19"}></div>)}
+							{selected && (<div className={'selected mt-19'}></div>)}
 						</div>
 					))}
 
 				</div>
 
 				<Conditional showIf={showCreateTest}>
-					<Download onClose={setShowCreateTest.bind(this,false)}/>
+					<Download onClose={setShowCreateTest.bind(this, false)} />
 				</Conditional>
 
-				<div className={"flex items-center"}>
-					<Button bgColor={"tertiary-dark"}>
-						<div className={"flex items-center"}>
-							<PlaySVG className={"mr-12"}/>Run test
+				<div className={'flex items-center'}>
+					<Button bgColor={'tertiary-dark'}>
+						<div className={'flex items-center'}>
+							<PlaySVG className={'mr-12'} />Run test
 						</div>
 					</Button>
-					<Button className={"ml-20"} css={css`width: 160rem;`} onClick={setShowCreateTest.bind(this,true)}>Create a test</Button>
-					<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>Share</span>
+					<Button className={'ml-20'} css={css`width: 160rem;`} onClick={setShowCreateTest.bind(this, true)}>Create a
+						test</Button>
+					<span className={'ml-24 font-500 text-14 leading-none'} css={shareLink}>Share</span>
 
 				</div>
 			</div>
+			</div>
+	</div>);
+}
 
+
+export const SidebarTopBarBase = ({children, hideSidebar = false})=>{
+
+	return (	<div className={"flex"} css={background}>
+
+
+		<Conditional showIf={!hideSidebar}>
+			<LeftSection />
+		</Conditional>
+
+
+		<div className={"w-full"}>
+			<TopNavbar/>
+			<div css={containerWidth}>
+				{children}
+			</div>
 		</div>
 	</div>)
 }
@@ -214,26 +229,9 @@ const navLinkSquare = css`
 	}
 `
 
-const OutlinedButton = css`
-  border: .5rem solid rgba(255, 255, 255, 0.12);
-  box-sizing: border-box;
-  border-radius: 6rem;
-	line-height: 13rem;
-	height: 31rem;
-	padding: 0 12rem;
-  color: rgba(189, 189, 189, 0.8);
-	font-weight: 600;
-	display: flex;
-	align-items: center;
-	margin-left: 6px;
-  margin-right: 6px;
-	:hover{
-    background: rgba(255, 255, 255, 0.03);
-	}
-`
-
 const background = css`
 	background: #0A0B0E;
+	min-height: 100vh;
 `
 
 const sidebar = css`
@@ -248,6 +246,10 @@ const nav = css`
 	width: 100%;
 	background: #101215;
 	height: 68rem;
+`
+const containerWidth = css`
+	max-width: calc(100vw - 250rem);
+  margin: 0 auto;
 `
 
 const project = css`

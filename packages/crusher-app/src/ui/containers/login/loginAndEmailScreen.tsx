@@ -116,61 +116,7 @@ export const LoginContainer = () => {
 			<CenterLayout className={"pb-120"}>
 				<div className="flex flex-col items-center" css={containerCSS}>
 					<Logo height={"24rem"} className={"mb-24 mt-80"} />
-					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Log in to Crusher</div>
-
-					<a href={resolvePathToBackendURI(("/v2/user/authenticate/google"))}>
-						<Button size={"large"} css={googleButton} className={"mb-20"}>
-							<div className={"flex justify-center items-center"}>
-								<GoogleSVG className={"mr-12"} />
-								<span className={"mt-2"}>Continue with Google</span>
-							</div>
-						</Button>
-					</a>
-
-					<a href={resolvePathToBackendURI(("/v2/user/authenticate/github"))}>
-					<Button
-						size={"large"}
-						css={css`
-							font-weight: 500;
-						`}
-						bgColor={"tertiary-dark"}
-						className={"mb-32"}
-					>
-						<div className={"flex justify-center items-center"}>
-							<GithubSVG className={"mr-12"} />
-							<span className={"mt-2"}>Continue with Github</span>
-						</div>
-					</Button>
-					</a>
-
-					<EmailBox />
-					<div className={"font-cera text-15 leading-none font-500"}>
-						No account?
-						<Link href={"/signup"}>
-							<span
-								css={css`
-								color: #8a96ff;
-							`}
-								className={"underline ml-8"}
-							>
-							Create an account
-						</span>
-						</Link>
-					</div>
-				</div>
-			</CenterLayout>
-		</CrusherBase>
-	);
-};
-
-
-export const SignupContainer = () => {
-	return (
-		<CrusherBase>
-			<CenterLayout className={"pb-120"}>
-				<div className="flex flex-col items-center" css={containerCSS}>
-					<Logo height={"24rem"} className={"mb-24 mt-80"} />
-					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Create your account</div>
+					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Login to your account</div>
 
 
 					<a href={resolvePathToBackendURI(("/v2/user/authenticate/google"))}>
@@ -200,15 +146,15 @@ export const SignupContainer = () => {
 
 					<EmailBox  type={"signup"}/>
 					<div className={"font-cera text-15 leading-none font-500"}>
-						Already have an account?
-						<Link href={"/login"}>
+						Don't have an account?
+						<Link href={"/signup"}>
 							<span
 								css={css`
 								color: #8a96ff;
 							`}
 								className={"underline ml-8"}
 							>
-							Login
+							Signup
 						</span>
 						</Link>
 					</div>
@@ -243,4 +189,4 @@ const errorState = css`
   color: #ff4583;
 `
 
-export default SignupContainer;
+export default LoginContainer;

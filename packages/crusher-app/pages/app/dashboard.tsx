@@ -1,10 +1,10 @@
 import React from "react";
-import { SidebarTopBarBase } from '@ui/layout/DashboardBase';
+import { SidebarTopBarLayout } from '@ui/layout/DashboardBase';
 
 function App() {
 	return (
 		<>
-		<SidebarTopBarBase/>
+		<SidebarTopBarLayout/>
 		</>
 	);
 }

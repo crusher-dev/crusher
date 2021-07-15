@@ -198,7 +198,7 @@ function TopNavbar() {
 }
 
 
-export const SidebarTopBarBase = ({children, hideSidebar = false})=>{
+export const SidebarTopBarLayout = ({children, hideSidebar = false})=>{
 
 	return (	<div className={"flex"} css={background}>
 

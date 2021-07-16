@@ -248,8 +248,9 @@ const nav = css`
 	height: 68rem;
 `
 const containerWidth = css`
-	max-width: calc(100vw - 250rem);
+	width: calc(100vw - 250rem);
   margin: 0 auto;
+	max-width: 1500px;
 `
 
 const project = css`

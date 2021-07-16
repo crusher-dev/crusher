@@ -9,7 +9,6 @@ import Link from 'next/link';
 import { Conditional } from 'dyson/src/components/layouts';
 import { Download } from '@ui/containers/dashboard/Download';
 
-
 const CURRENT_PROJECT_LIST = [{
 	name: "Dashboard",
 	ICON: LayoutSVG,
@@ -237,6 +236,7 @@ const background = css`
 const sidebar = css`
 	width: 286rem;
 	background: #101215;
+	height: 100vh;
 	border: 1px solid #171B20;
 	box-sizing: border-box;
 `
@@ -248,7 +248,9 @@ const nav = css`
 `
 const containerWidth = css`
 	max-width: calc(100vw - 250rem);
-  margin: 0 auto;
+	max-height: calc(100vh - 68rem);
+  	margin: 0 auto;
+  	overflow-y: scroll;
 `
 
 const project = css`

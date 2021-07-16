@@ -265,33 +265,39 @@ function TestCard({id}) {
 	const [sticky, setSticky] = useState(false);
 
 	useEffect(()=>{
-		if(id !== 1) return
+
 		const testCard = document.querySelector(`#test-card-${id}`);
 		const stickyOverview =document.querySelector("#sticky-overview-bar")
 		const observer = new IntersectionObserver(() => {
 			const stickyLastPoint = 96;
 			const cardStartingOffset = testCard.getBoundingClientRect().top;
 			const cardLastOffset = testCard.getBoundingClientRect().top+ testCard.getBoundingClientRect().height;
-
 			if(cardStartingOffset<stickyLastPoint){
 				setSticky(true)
-				console.log("show")
-			}
-			if( cardStartingOffset>0 && cardLastOffset < stickyLastPoint){
+			}else {
 				setSticky(false)
-				console.log("hide")
+			}
+			if(  (cardLastOffset-50) < stickyLastPoint){
+				setSticky(false)
 			}
 
 
-		},{ root: stickyOverview, threshold: 0});
+		},{ root: stickyOverview, threshold: [0,.01,.3,.6,.85,1], rootMargin: "28px"});
 
 		observer.observe(testCard);
 	},[])
 
-	return <div css={testCard} className={" flex-col mt-24 "} onClick={setExpand.bind(this, !expand)}
+	const onCardClick = ()=>{
+		// if(expand===true){
+		// 	window.scrollTo()
+		// }
+		setExpand(!expand)
+	}
+
+	return <div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick}
 							id={`test-card-${id}`}>
 
-		<Conditional showIf={ sticky}>
+		<Conditional showIf={ expand && sticky}>
 
 			<div css={stickyCSS} className={" px-42 "}>
 				<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
@@ -455,9 +461,13 @@ function ReportSection() {
 			<FilterBar />
 		</div>
 
-		<div css={css`height: 10000px;`} className={"mt-40"}>
+		<div className={"mt-40 pb-60"}>
 			<TestCard id={1}/>
 			<TestCard id={2}/>
+			<TestCard id={3}/>
+			<TestCard id={4}/>
+			<TestCard id={5}/>
+			<TestCard id={6}/>
 		</div>
 	</div>;
 }

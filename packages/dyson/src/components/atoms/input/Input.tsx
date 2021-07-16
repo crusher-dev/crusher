@@ -10,7 +10,7 @@ export interface ButtonProps {
 	/**
 	 * Is error
 	 */
-	isError: boolean;
+	isError?: boolean;
 
 
 	/**
@@ -21,10 +21,6 @@ export interface ButtonProps {
 	 * Emotion CSS style if any
 	 */
 	css?: [string] | string;
-	/**
-	 * Input contents
-	 */
-	children: string;
 
 	className?: string;
 }

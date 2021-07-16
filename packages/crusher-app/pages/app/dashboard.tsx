@@ -3,7 +3,7 @@ import { SidebarTopBarLayout } from '@ui/layout/DashboardBase';
 import { TestIntegrationList } from "@ui/containers/dashboard/testIntegrationList";
 import {css} from "@emotion/core";
 
-function App() {
+function Dashboard() {
 	return (
 		<>
 		<SidebarTopBarLayout>
@@ -36,4 +36,4 @@ const footerPlaceholderStyle = css`
 	color: rgba(255, 255, 255, 0.5);
 `;
 
-export default App;
+export default Dashboard

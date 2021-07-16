@@ -26,7 +26,7 @@ export interface ButtonProps {
 	/**
 	 * Input contents
 	 */
-	children: string;
+	children: any;
 	/**
 	 * Optional click handler
 	 */
@@ -37,13 +37,14 @@ export interface ButtonProps {
 /**
  * Unified button component for Dyson UI system
  */
-export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = "blue", size = "medium", children, className, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = "blue", size = "none", children, className, ...props }) => {
 	return (
 		<button className={` px-24 text-14 text-white ${className} leading-none`}
 						css={[
 							buttonCSS,
 							blue,
 							size==="small" && smallButton,
+							size==="medium" && mediumButton,
 							size==="large" && largeButton,
 							bgColor==="tertiary-dark" &&tertiaryDark
 
@@ -82,6 +83,16 @@ const largeButton = css`
   font-size: 14rem;
 	width: 348px;
 `
+
+const mediumButton = css`
+	box-sizing: border-box;
+	border: 1px solid #4675BD;
+ 	height: 32rem;
+
+	font-weight: 600;
+	font-size: 14rem;
+	width: 182rem;
+`;
 
 const blue = css`
   background-color: #687EF2;

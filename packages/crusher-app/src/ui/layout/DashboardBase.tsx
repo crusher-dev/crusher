@@ -236,9 +236,8 @@ const background = css`
 
 const sidebar = css`
 	width: 286rem;
-  background: #101215;
-  border: 1px solid #171B20;
-	height: 100vh;
+	background: #101215;
+	border: 1px solid #171B20;
 	box-sizing: border-box;
 `
 

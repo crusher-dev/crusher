@@ -180,6 +180,8 @@ export function LoadingSVG(props) {
 
 
 export function AppleSVG(props) {
+	const {variant} = props;
+
 	return (
 		<svg
 			width={17}
@@ -188,7 +190,7 @@ export function AppleSVG(props) {
 			fill="none"
 			{...props}
 		>
-			<g fill="#293264">
+			<g fill={variant === "white" ? "#fff" : "#293264"}>
 				<path d="M11.356.47c-.86.056-1.865.57-2.45 1.24-.535.606-.974 1.508-.803 2.384.94.028 1.91-.499 2.473-1.18.526-.632.924-1.528.78-2.443z" />
 				<path d="M14.754 5.523c-.826-.967-1.986-1.528-3.082-1.528-1.446 0-2.058.647-3.063.647-1.037 0-1.824-.645-3.075-.645-1.229 0-2.538.701-3.367 1.9C1 7.586 1.2 10.76 3.09 13.464c.677.968 1.58 2.056 2.761 2.065 1.052.01 1.348-.63 2.773-.636 1.424-.008 1.694.645 2.744.634 1.182-.008 2.135-1.214 2.811-2.181.485-.694.666-1.043 1.042-1.826-2.735-.973-3.174-4.603-.467-5.997z" />
 			</g>
@@ -213,3 +215,46 @@ export function CloseSVG(props) {
 		</svg>
 	)
 }
+
+export function FullScreenSVG(props) {
+	return (
+		<svg
+		  width={13}
+		  height={13}
+		  viewBox="0 0 13 13"
+		  fill="none"
+		  xmlns="http://www.w3.org/2000/svg"
+		  {...props}
+		>
+		  <g clipPath="url(#prefix__clip0)" fill="#899CFF">
+			<path d="M7.639 0v1.389h2.49L3.301 8.215l.982.983 6.827-6.826v2.49H12.5V0H7.639z" />
+			<path d="M11.111 11.111H1.39V1.39H6.25V0H1.389C.622 0 0 .622 0 1.389v9.722C0 11.88.622 12.5 1.389 12.5h9.722c.768 0 1.389-.621 1.389-1.389V6.25h-1.389v4.861z" />
+		  </g>
+		  <defs>
+			<clipPath id="prefix__clip0">
+			  <path fill="#fff" d="M0 0h12.5v12.5H0z" />
+			</clipPath>
+		  </defs>
+		</svg>
+	  )
+}
+
+export function CompleteStatusIconSVG(props) {
+	const {isCompleted} = props;
+
+	return (
+	  <svg
+		width={16}
+		height={16}
+		viewBox="0 0 16 16"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm4.471 5.895l-5.113 5.072c-.3.301-.782.321-1.102.02L3.549 8.521a.813.813 0 01-.06-1.123c.3-.32.802-.34 1.123-.04l2.145 1.965 4.571-4.571a.799.799 0 011.143 0c.321.32.321.822 0 1.143z"
+		  fill={isCompleted ? "#AACB65" : "#404144"}
+		/>
+	  </svg>
+	)
+  }

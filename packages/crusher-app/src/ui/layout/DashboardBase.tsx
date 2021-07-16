@@ -247,7 +247,8 @@ const nav = css`
 	height: 68rem;
 `
 const containerWidth = css`
-	max-width: calc(100vw - 250rem);
+	width: calc(100vw - 250rem);
+	max-width: 1500px;
 	max-height: calc(100vh - 68rem);
   	margin: 0 auto;
   	overflow-y: scroll;

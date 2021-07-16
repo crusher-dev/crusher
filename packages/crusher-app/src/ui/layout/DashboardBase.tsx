@@ -257,7 +257,7 @@ const containerWidth = css`
 const project = css`
 	color: rgba(255, 255, 255, 0.9);
 	font-size: 1;
-`
+`;
 
 const hoverCSS = css`
   padding: 6px 10px 6px 10px;

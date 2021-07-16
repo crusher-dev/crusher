@@ -178,7 +178,6 @@ export function LoadingSVG(props) {
 	)
 }
 
-
 export function AppleSVG(props) {
 	const {variant} = props;
 

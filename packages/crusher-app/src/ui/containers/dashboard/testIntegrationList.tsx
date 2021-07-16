@@ -60,6 +60,7 @@ function TestIntegrationList(props: ITestIntegrationListProps) {
                 <ExpandableListItem title="View reports" completed={false}>
                 </ExpandableListItem>
             </ExpandableList>
+
             <div className={"flex flex-row mt-30"}>
                 <div css={haveTestStyle} className="text-13">Have tests? Import them over</div>
                 <div className={"ml-auto flex items-center"}>

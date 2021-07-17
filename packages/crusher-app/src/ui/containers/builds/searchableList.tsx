@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useState, useMemo } from "react";
-import { Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { CompleteStatusIconSVG } from "@svg/dashboard";
 import { ClockIconSVG, CommentIconSVG, DangerIconSVG, DropdownIconSVG } from "@svg/builds";
-import {css} from "@emotion/core";
+import { css } from "@emotion/core";
+import { SearchFilterBar } from "../common/searchFilterBar";
 
 interface IBuildItemCardProps {
     buildId: string;
@@ -110,21 +110,7 @@ function BuildSearchableList() {
 
     return (
         <div>
-            <div className="flex flex-row items-center" css={filterBarStyle}>
-                <div className={"flex-1 mr-26"}>
-                    <Input css={inputStyle} placeholder={"Search builds"} onChange={handleInputChange} isError={false} size="large" />
-                </div>
-                <div className="flex flex-row ml-auto">
-                <div className="flex flex-row items-center">
-                    <span className="text-14">Status</span>
-                    <DropdownIconSVG className={"ml-8"}/>
-                </div>
-                <div className="flex flex-row items-center ml-26">
-                    <span className="text-14">Author</span>
-                    <DropdownIconSVG className={"ml-8"}/>
-                </div>
-                </div>
-            </div>
+            <SearchFilterBar placeholder={"Search builds"} handleInputChange={handleInputChange} value={searchQuery} />
             <div className={"mt-34"}>
                 {buildItems}
             </div>
@@ -132,11 +118,4 @@ function BuildSearchableList() {
     );
 }
 
-const inputStyle = css`
-    height: 41rem;
-    width: 100%;
-`;
-const filterBarStyle = css`
-    color: ##D0D0D0;
-`;
 export { BuildSearchableList };

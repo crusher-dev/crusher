@@ -51,7 +51,7 @@ Integrate **user flow and visual regression** without managing infra, creating a
 - Super easy deploy using Docker or Heroku.  
 - Host it on your infra or Crusher cloud.  
   
-We're still early and need to do lot of things to build this as complete platform. If you need any feature, please file it in github issues.  
+We're still early and need to do a lot of things to build this as a complete platform. If you require a feature, please file it in the github issues tab.  
 
 ## 💡 Philosophy  
   Web is becoming more and more complex everyday, we have dozens of API and infra items.     

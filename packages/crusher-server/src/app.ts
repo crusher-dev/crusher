@@ -42,6 +42,11 @@ import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import MongoManager from "@manager/MongoManager";
 
+if (process.env.RUN_ALL_TOGETHER) {
+	require("./cron");
+	require("./queue");
+}
+
 const chalk = require("chalk");
 Container.get(MongoManager);
 

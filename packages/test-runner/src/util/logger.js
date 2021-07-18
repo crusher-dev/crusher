@@ -1,4 +1,4 @@
-const Logger = require("logdna");
+import { setupDefaultLogger } from "logdna";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -14,7 +14,7 @@ if (IS_PRODUCTION) {
 	const _log = console.log;
 	const _error = console.error;
 
-	const logger = Logger.setupDefaultLogger(process.env.LOGDNA_API_KEY, options);
+	const logger = setupDefaultLogger(process.env.LOGDNA_API_KEY, options);
 
 	const log = function () {
 		logger.log([...arguments].join(" "));

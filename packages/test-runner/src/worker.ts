@@ -5,13 +5,13 @@ import { TestLogsService } from "./services/logs";
 import { CodeRunnerService } from "./services/runner";
 import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 import { MongoManager } from "@manager/mongo";
-import { RedisManager } from '@manager/redis';
-import { REDDIS } from '@config/database';
+import { RedisManager } from "@manager/redis";
+import { REDDIS } from "@config/database";
 
 RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password);
 
 const videoProcessingQueue = new Queue("video-processing-queue", {
-	connection: RedisManager.client,
+	connection: RedisManager.client as any,
 });
 
 interface iTestRunnerJob extends Job {
@@ -21,11 +21,11 @@ interface iTestRunnerJob extends Job {
 new MongoManager().init();
 
 const testProgressQueue = new Queue("test-progress-queue", {
-	connection: RedisManager.client,
+	connection: RedisManager.client as any,
 });
 
 const testCompletedQueue = new Queue("test-completed-queue", {
-	connection: RedisManager.client,
+	connection: RedisManager.client as any,
 });
 
 export default async (bullJob: iTestRunnerJob): Promise<boolean> => {

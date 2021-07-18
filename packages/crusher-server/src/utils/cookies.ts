@@ -1,6 +1,6 @@
 import { extractHostname } from "./url";
 
-const USER_DOMAIN = extractHostname(process.env.FRONTEND_URL);
+const USER_DOMAIN = process.env.FRONTEND_URL ? extractHostname(process.env.FRONTEND_URL) : null;
 
 export function setUserCookie(cookie, options = {}, res) {
 	if (!res) {

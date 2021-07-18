@@ -17,10 +17,6 @@ import { Response } from "express";
 import { setUserCookie } from "../../../utils/cookies";
 import { extractHostname } from "../../../utils/url";
 import { iUser } from "../../../../../crusher-shared/types/db/iUser";
-import { project } from "gcp-metadata";
-
-const USER_DOMAIN = extractHostname(process.env.FRONTEND_URL);
-
 @Service()
 export class UserV2Service {
 	private dbManager: DBManager;
@@ -122,6 +118,7 @@ export class UserV2Service {
 	}
 
 	async setUserAuthCookies(userId: number, teamId: number, res: Response): Promise<string> {
+		const USER_DOMAIN = extractHostname(process.env.FRONTEND_URL);
 		const token = generateToken(userId, teamId);
 
 		setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: USER_DOMAIN }, res);

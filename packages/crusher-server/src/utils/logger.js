@@ -1,14 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { currentEnvironmentName } = require("./env");
 const LoggerDNA = require("logdna");
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const chalk = require("chalk");
-
-const logger = LoggerDNA.setupDefaultLogger(process.env.LOGDNA_API_KEY, {
-	env: currentEnvironmentName,
-	app: "crusher-server",
-	hostname: "crusher-server",
-	index_meta: true,
-});
 
 const _log = console.log;
 const _error = console.error;
@@ -17,7 +11,16 @@ const _trace = console.trace;
 const _warn = console.warn;
 const _debug = console.debug;
 
-function showMeta(meta) {
+const logger = process.env.LOGDNA_API_KEY
+	? LoggerDNA.setupDefaultLogger(process.env.LOGDNA_API_KEY, {
+			env: currentEnvironmentName,
+			app: "crusher-server",
+			hostname: "crusher-server",
+			index_meta: true,
+	  })
+	: { log: () => null, info: () => null, debug: () => null, warn: () => null, error: () => null };
+
+const showMeta = (meta) => {
 	if (!meta) {
 		return;
 	}
@@ -27,7 +30,7 @@ function showMeta(meta) {
 			_info(`> [${key}]: `, meta[key]);
 		}
 	}
-}
+};
 
 module.exports = {
 	Logger: {

@@ -1,6 +1,6 @@
 import { getMongoDBConnectionString } from "@config/database";
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 export class MongoManager {
 	init() {

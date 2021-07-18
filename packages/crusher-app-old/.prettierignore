@@ -1,5 +1,0 @@
-# Ignore artifacts:
-.next
-logs
-node_modules
-public

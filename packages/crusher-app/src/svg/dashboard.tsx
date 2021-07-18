@@ -160,7 +160,7 @@ export function LoadingSVG(props) {
 				cx={50}
 				cy={50}
 				fill="none"
-				stroke="#85a2b6"
+				stroke={props.color || "#85a2b6"}
 				strokeWidth={10}
 				r={35}
 				strokeDasharray="164.93361431346415 56.97787143782138"

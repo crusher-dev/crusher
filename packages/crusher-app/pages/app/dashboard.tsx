@@ -1,16 +1,16 @@
 import React from "react";
 import { SidebarTopBarLayout } from '@ui/layout/DashboardBase';
-import { TestIntegrationList } from "@ui/containers/dashboard/testIntegrationList";
+import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
 import {css} from "@emotion/core";
 
 function Dashboard() {
 	return (
 		<>
 		<SidebarTopBarLayout>
-			<div css={containerStyle} className="pl-48 pt-42 pr-48">
+			<div css={containerStyle} className="pl-32 pt-42 pr-48">
 				<div css={headingStyle} className={"font-cera text-16 font-bold"}>Integrate and start testing</div>
-				<div className="mt-12 text-13">It’ll hardly take 5 seconds</div>
-				<TestIntegrationList className={"mt-32"}/>
+				<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
+				<OnboardingSteps className={"mt-32"}/>
 				<div className={"flex flex-row items-center mt-84 justify-center"} css={footerContainerStyle}>
 					<div className={"text-14"} css={footerPlaceholderStyle}>We’ll fill this space when data starts to come in</div>
 				</div>

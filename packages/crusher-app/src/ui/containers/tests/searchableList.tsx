@@ -49,7 +49,9 @@ const itemContainerStyle = css`
     border: 1px solid #171C24;
     border-radius: 8rem;
     color: rgba(255, 255, 255, 0.6);
-    width: 265rem;
+    width: 252rem;
+    margin-bottom: 40px;
+    margin-right: 32px;
 `;
 const itemImageStyle = css`
     height: 183rem;
@@ -82,7 +84,7 @@ function TestSearchableList() {
     return (
         <div>
             <SearchFilterBar placeholder={"Search tests"} handleInputChange={handleInputChange} value={searchQuery!} />
-            <div css={testItemsGridContainerStyle} className={"mt-34"}>
+            <div css={testItemsGridContainerStyle} className={"flex mt-44"}>
                 {testsItems}
             </div>
         </div>
@@ -90,9 +92,7 @@ function TestSearchableList() {
 }
 
 const testItemsGridContainerStyle = css`
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: auto;
-    grid-row-gap: 42rem;
+    flex-wrap: wrap;
+    
 `;
 export { TestSearchableList };

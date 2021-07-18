@@ -11,21 +11,25 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { atom } from "jotai";
 import { useAtom } from "jotai";
-
+import {validateEmail, validateName, validatePassword} from "@utils/validationUtils"
+import { useRouter } from 'next/router';
+import { LoadingSVG } from '@svg/dashboard';
 const showRegistrationFormAtom = atom(false);
 
 const registerUser = (name, email, password) => {
 	return backendRequest("/v2/user/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name },
+		payload: { email, password, firstName:name, lastName: "" },
 	});
 };
 
 function EmailPasswordBox() {
+	const router = useRouter();
 	const [email, setEmail] = useState({ value: "", error: "" });
 	const [_, setRegistrationBox] = useAtom(showRegistrationFormAtom);
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [name, setName] = useState({ value: "", error: "" });
+	const [processingSignup, setProcessingSignup] = useState(false);
 
 	const emailChange = useCallback(
 		(e) => {
@@ -46,30 +50,47 @@ function EmailPasswordBox() {
 		[name],
 	);
 
-	const verifyInfo = ({ isSignupVerify = false }) => {
-		if (email.value || isSignupVerify) {
-			setEmail({ ...email, error: "Please enter valid email" });
-		}
-		if (password.value || isSignupVerify) {
-			setPassword({ ...password, error: "Please enter a password" });
-		}
+	const verifyInfo = (completeVerify=false) => {
 
-		if (name.value || isSignupVerify) {
+		const shouldValidateEmail = completeVerify || email.value;
+		const shouldValidatePassword = completeVerify || password.value;
+		const shouldValidateName = completeVerify || name.value;
+		if (!validateEmail(email.value) && shouldValidateEmail) {
+			setEmail({ ...email, error: "Please enter valid email" });
+		} else setEmail({ ...email, error: "" });
+
+		if (!validatePassword(password.value) && shouldValidatePassword) {
+			setPassword({ ...password, error: "Please enter a password with length > 4" });
+		} else setPassword({ ...password, error: "" });
+
+		if (!validateName(name.value) && shouldValidateName) {
 			setName({ ...name, error: "Please enter a valid name" });
-		}
+		} else setName({ ...name, error: "" });
 	};
 
-	const signupUser = () => {
-		verifyInfo();
-		registerUser(name, email, password).then((res) => {
-			console.log(res);
-		});
+	const signupUser = async () => {
+
+		verifyInfo(true)
+
+		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
+		setProcessingSignup(true)
+		try {
+			const { status } = await registerUser(name.value, email.value, password.value);
+			if(status === "USER_NOT_REGISTERED"){
+				alert("Please enter corre")
+			}
+
+		}
+		catch (e){
+			alert(e)
+		}
+		setProcessingSignup(false)
 	};
 
 	return (
 		<div css={loginBoxlarge}>
 			<div className={"mb-12"}>
-				<Input value={name.value} placeholder={"Enter name"} onChange={nameChange} isError={email.error} onBlur={verifyInfo} />
+				<Input value={name.value} placeholder={"Enter name"} onChange={nameChange} isError={name.error} onBlur={verifyInfo.bind(this,false)} />
 				<Conditional showIf={name.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{name.error}
@@ -78,7 +99,7 @@ function EmailPasswordBox() {
 			</div>
 
 			<div className={"mb-12"}>
-				<Input value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyInfo} />
+				<Input value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyInfo.bind(this,false)} />
 				<Conditional showIf={email.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{email.error}
@@ -93,7 +114,7 @@ function EmailPasswordBox() {
 					type={"password"}
 					onChange={passwordChange}
 					isError={password.error}
-					onBlur={verifyInfo}
+					onBlur={verifyInfo.bind(this,false)}
 				/>
 				<Conditional showIf={password.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
@@ -102,9 +123,14 @@ function EmailPasswordBox() {
 				</Conditional>
 			</div>
 
-			<Button size={"large"} className={"mb-20"} onClick={signupUser}>
+			<Button size={"large"} className={"mb-20"} onClick={signupUser} disabled={processingSignup}>
 				<div className={"flex justify-center items-center"}>
-					<span className={"mt-2"}>Login</span>
+						<Conditional showIf={!processingSignup}>
+							<span className={"mt-2"}>Create an account</span>
+						</Conditional>
+					<Conditional showIf={processingSignup}>
+						<span>	<LoadingSVG color={"#fff"} height={16} width={16}/></span><span className={"mt-2 ml-8"}>Processing</span>
+					</Conditional>
 				</div>
 			</Button>
 			<div className="text-13 underline text-center" onClick={setRegistrationBox.bind(this, false)}>

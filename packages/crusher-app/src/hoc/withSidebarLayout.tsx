@@ -568,7 +568,6 @@ const contentContainerCSS = css`
 	flex-direction: column;
 	height: 100vh;
 	margin-left: -2px;
-	overflow-y: scroll;
 `;
 const headerCSS = css`
 	display: flex;

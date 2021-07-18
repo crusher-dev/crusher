@@ -9,6 +9,11 @@ import { resolvePathToBackendURI } from '@utils/url';
 import { Input } from 'dyson/src/components/atoms';
 import { backendRequest } from '@utils/backendRequest';
 import { RequestMethod } from '@interfaces/RequestOptions';
+import { validateEmail, validatePassword } from '@utils/validationUtils';
+import { useRouter } from 'next/router';
+import { LoadingSVG } from '@svg/dashboard';
+import { getUserStatus } from '@utils/user';
+
 
 const emailLogin = (email,password)=>{
 	return backendRequest("/user/login", {
@@ -18,51 +23,70 @@ const emailLogin = (email,password)=>{
 }
 
 function EmailPasswordBox({ setShowBox, isSignup=false }) {
-
+	const router = useRouter();
 	const [email,setEmail] = useState({value: "",error:null});
 	const [password, setPassword] = useState({value: "",error:null})
-
+	const [processingSignup, setProcessingSignup] = useState(false);
 
 	const emailChange = (e)=>{setEmail({...email,value: e.target.value})};
 	const passwordChange =  (e)=>{setPassword({...password,value: e.target.value})};
 
-	const verifyEmailAndPass = ({isSignupVerify=false})=>{
-		if(email.value || isSignupVerify){
-			setEmail({...email, error: "Please enter valid email"})
-		}
-		if(password.value || isSignupVerify){
-			setPassword({...password, error: "Please enter a password"})
-		}
+	const verifyInfo = (completeVerify=false)=>{
+		const shouldValidateEmail = completeVerify || email.value;
+		const shouldValidatePassword = completeVerify || password.value;
+		if (!validateEmail(email.value) && shouldValidateEmail) {
+			setEmail({ ...email, error: "Please enter valid email" });
+		} else setEmail({ ...email, error: "" });
+
+		if (!validatePassword(password.value) && shouldValidatePassword) {
+			setPassword({ ...password, error: "Please enter a password with length > 4" });
+		} else setPassword({ ...password, error: "" });
 
 	}
 
-	const onLoginOrSignupClick = ()=>{
-		verifyEmailAndPass({isSignupVerify:true})
-		emailLogin(email,password).then((res)=>{
-			console.log(res)
-		})
+	const onLogin = async ()=>{
+		verifyInfo(true)
+
+		if (!validateEmail(email.value) || !validatePassword(password.value)) return;
+		setProcessingSignup(true);
+		try {
+			const data = await emailLogin(email.value, password.value);
+			const userStatus = getUserStatus(data);
+			if(userStatus !== "USER_NOT_REGISTERED"){
+				router.push("/app/dashboard")
+			}
+		}
+		catch (e){
+			alert(e)
+		}
+		setProcessingSignup(false)
 	}
 
 
 	return (
 		<div css={[loginBox]}>
 			<div className={"mb-12"}>
-				<Input value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyEmailAndPass}/>
+				<Input value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyInfo.bind(this,true)}/>
 				<Conditional showIf={email.error}>
 					<div className={"mt-8 text-12"} css={errorState}>{email.error}</div>
 				</Conditional>
 			</div>
 
 			<div className={"mb-20"}>
-				<Input  value={password.value} placeholder={"Enter your password"} type={"password"} onChange={passwordChange} isError={password.error} onBlur={verifyEmailAndPass}/>
+				<Input  value={password.value} placeholder={"Enter your password"} type={"password"} onChange={passwordChange} isError={password.error} onBlur={verifyInfo.bind(this,true)}/>
 				<Conditional showIf={password.error}>
 					<div className={"mt-8 text-12"} css={errorState}>{password.error}</div>
 				</Conditional>
 			</div>
 
-				<Button size={"large"} className={"mb-20"} onClick={onLoginOrSignupClick}>
+				<Button size={"large"} className={"mb-20"} onClick={onLogin}>
 					<div className={"flex justify-center items-center"}>
-						<span className={"mt-2"}>Login</span>
+						<Conditional showIf={!processingSignup}>
+							<span className={"mt-2"}>Login</span>
+						</Conditional>
+						<Conditional showIf={processingSignup}>
+							<span>	<LoadingSVG color={"#fff"} height={16} width={16}/></span><span className={"mt-2 ml-8"}>Processing</span>
+						</Conditional>
 					</div>
 				</Button>
 			<div className="text-13 underline text-center" onClick={setShowBox.bind(this, false)}>

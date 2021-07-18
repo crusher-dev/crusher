@@ -25,7 +25,6 @@ export default class DBManager {
 	isAlive(): Promise<boolean> {
 		return new Promise((resolve) => {
 			this.connPool.getConnection((err, connection) => {
-				connection.release();
 				if (err) return resolve(false);
 				return resolve(true);
 			});

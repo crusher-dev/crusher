@@ -30,6 +30,7 @@ module.exports = {
 		HOST: process.env.DB_HOST,
 		USERNAME: process.env.DB_USERNAME,
 		PASSWORD: process.env.DB_PASSWORD,
+		DATABASE: process.env.DB_DATABASE || "crusher",
 		PORT: parseInt(process.env.DB_PORT, 10) || 3306,
 	},
 	REDIS_CONFIG: {

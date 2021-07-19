@@ -62,5 +62,10 @@ module.exports = withImages(
 			FRONTEND_SERVER_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
 			IS_DEVELOPMENT: process.env.NEXT_PUBLIC_IS_DEVELOPMENT,
 		},
+		eslint: {
+			// Warning: Dangerously allow production builds to successfully complete even if
+			// your project has ESLint errors.
+			ignoreDuringBuilds: true,
+		},
 	}),
 );

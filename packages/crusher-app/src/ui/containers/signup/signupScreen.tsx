@@ -140,7 +140,7 @@ function EmailPasswordBox() {
 	);
 }
 
-function SingupDetailBox() {
+function SignupBox() {
 	const [showRegistrationBox, setRegistrationBox] = useAtom(showRegistrationFormAtom);
 	if (showRegistrationBox) {
 		return <EmailPasswordBox />;
@@ -199,7 +199,7 @@ export const SignupContainer = () => {
 						</a>
 					</Conditional>
 
-					<SingupDetailBox />
+					<SignupBox />
 					<div className={"font-cera text-15 leading-none font-500"}>
 						Already have an account?
 						<Link href={"/login"}>

@@ -36,10 +36,12 @@ export function backendRequest(_uri: string, options?: RequestOptions) {
 	const { payload } = options;
 	const { uri, method, headers } = prepareFetchPayload(_uri, options);
 
+	const isMockAPI = uri.includes("jsonbin")
+
 	return _fetch(uri, {
 		headers,
 		method,
-		credentials: "include",
+		credentials: !isMockAPI ? "include" : "omit",
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
 	}).then((requestResponse: any) => {
 		if (requestResponse.status === 500) {

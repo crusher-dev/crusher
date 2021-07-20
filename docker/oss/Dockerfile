@@ -9,7 +9,7 @@ RUN npm init -y
 RUN npm install dotenv
 USER root
 RUN touch  /etc/profile.d/node.sh
-RUN echo "export PATH=$PATH:$(npm get prefix)/bin" >> /etc/profile.d/node.sh
+RUN printf "export PATH=$PATH:$(npm get prefix)/bin\nexport NODE_OPTIONS=--enable-source-maps" >> /etc/profile.d/node.sh
 USER chrome
 COPY --chown=chrome ./output packages
 RUN rm -rf packages/crusher-app/.next/cache

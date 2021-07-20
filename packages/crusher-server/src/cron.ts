@@ -11,6 +11,10 @@ import { JOB_TRIGGER } from "../../crusher-shared/types/jobTrigger";
 import MongoManager from "./core/manager/MongoManager";
 import JobsService from "./core/services/JobsService";
 import DBManager from "./core/manager/DBManager";
+import { RedisManager } from "@manager/redis";
+import { REDIS } from "crusher-server/config/database";
+
+RedisManager.initialize(REDIS.host, REDIS.port, REDIS.password);
 
 const monitoringService = Container.get(MonitoringService);
 const projectHostsService = Container.get(ProjectHostsService);

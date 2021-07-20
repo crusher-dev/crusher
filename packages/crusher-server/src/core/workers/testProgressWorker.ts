@@ -1,18 +1,12 @@
 import { Job } from "bullmq";
 import TestsEventsWorker from "./testEventsWoker";
+import { RedisManager } from "@manager/redis";
 import { REDIS } from "../../../config/database";
-import * as IORedis from "ioredis";
+RedisManager.initialize(REDIS.host, REDIS.port, REDIS.password);
 
 module.exports = async (bullJob: Job) => {
 	console.log("GOT JOB");
 	const data = bullJob as any;
-	await TestsEventsWorker.onTestProgress(
-		new IORedis({
-			host: REDIS.host,
-			password: REDIS.password,
-			port: REDIS.port,
-		}),
-		data,
-	);
+	await TestsEventsWorker.onTestProgress(RedisManager.get(), data);
 	return true;
 };

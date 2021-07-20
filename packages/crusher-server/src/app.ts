@@ -41,6 +41,10 @@ import { GitIntegrationsController } from "./server/controllers/integrations/Git
 import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import MongoManager from "@manager/MongoManager";
+import { RedisManager } from "@manager/redis";
+import { REDIS } from "../config/database";
+
+RedisManager.initialize(REDIS.host, REDIS.port, REDIS.password);
 
 if (process.env.RUN_ALL_TOGETHER) {
 	require("./cron");

@@ -8,6 +8,7 @@ import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { atom, useAtom } from "jotai";
 import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
 import { usePageTitle } from '../../../hooks/seo';
+import Link from "next/link";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -109,15 +110,17 @@ const GithubDiscordSection = () => {
 				</div>
 			</div>
 
-			<Button
-				className="mt-100"
-				css={css`
+			<Link href={"/app/dashboard"}>
+				<Button
+					className="mt-100"
+					css={css`
 					width: 220px;
 					height: 34rem;
 				`}
-			>
-				Open Dashboard
-			</Button>
+				>
+					Open Dashboard
+				</Button>
+			</Link>
 		</>
 	);
 };

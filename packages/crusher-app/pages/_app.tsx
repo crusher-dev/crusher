@@ -3,34 +3,12 @@ import { AppProps } from "next/app";
 import { useBasicSEO } from "../src/hooks/seo";
 import Head from "next/head";
 import "../src/tailwind.css";
-import { USER_SYSTEM_API, userSystemAPI } from "@constants/api";
-import { NextRouter, useRouter } from "next/router";
-import { backendRequest } from "@utils/backendRequest";
+import { userSystemAPI } from "@constants/api";
+import {  useRouter } from "next/router";
 import { LoadingScreen } from "@ui/layout/LoadingScreen";
 import { Conditional } from "dyson/src/components/layouts";
-import { ROOT_PATH, ROUTES_ACCESSIBLE_WITHOUT_SESSION, ROUTES_TO_REDIRECT_WHEN_SESSION } from "@constants/page";
 
-const redirectUserOnMount = async (router: NextRouter, loadCallback: any) => {
-	const data = await backendRequest(USER_SYSTEM_API, {});
-	const { userId } = data;
-	const { pathname } = router;
-	const loggedIn = !!userId;
-
-	if (!loggedIn) {
-		if (!ROUTES_ACCESSIBLE_WITHOUT_SESSION.includes(pathname) || pathname === ROOT_PATH) {
-			await router.push("/login");
-		}
-	}
-	if (loggedIn) {
-		if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
-			await router.push("/app/dashboard");
-		}
-	}
-
-	if (loadCallback) {
-		loadCallback();
-	}
-};
+import { redirectUserOnMount } from "@utils/routing";
 
 function onAppMount() {
 	const router = useRouter();

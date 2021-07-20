@@ -5,7 +5,7 @@ import { BuildSearchableList } from "@ui/containers/builds/searchableList";
 function Builds() {
 	return (
 		<SidebarTopBarLayout>
-            <div className="pl-32 pt-42 pr-48 pb-24">
+            <div className="pt-42 pb-24">
                 <BuildSearchableList/>
             </div>
 		</SidebarTopBarLayout>

@@ -179,7 +179,7 @@ function TopNavbar() {
 	return (
 		<div css={[nav]} className={""}>
 			<div css={[containerWidth]}>
-				<div className={"w-full flex px-47 pl-32 justify-between"}>
+				<div className={"w-full flex px-8 pl-0 justify-between"}>
 					<div className={"flex"}>
 						{TOP_NAV_LINK.map(({ name, selected }) => (
 							<div className={"pt-24 mr-6"} css={navLinkSquare}>

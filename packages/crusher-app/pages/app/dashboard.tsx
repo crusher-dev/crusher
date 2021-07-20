@@ -7,7 +7,7 @@ function Dashboard() {
 	return (
 		<>
 		<SidebarTopBarLayout>
-			<div css={containerStyle} className="pl-32 pt-42 pr-48">
+			<div css={containerStyle} className=" pt-42 ">
 				<div css={headingStyle} className={"font-cera text-16 font-bold"}>Integrate and start testing</div>
 				<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
 				<OnboardingSteps className={"mt-32"}/>

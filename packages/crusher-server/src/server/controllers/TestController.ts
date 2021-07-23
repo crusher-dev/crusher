@@ -62,7 +62,7 @@ export class TestController {
 		const { events, totalTime } = body;
 
 		return `<html><body><script> function sendPostDataWithForm(url, options = {}){ const form = document.createElement('form'); form.method = "post"; form.action = url; const optionKeys = Object.keys(options); for(let optionKey of optionKeys){const hiddenField = document.createElement('input'); hiddenField.type = 'hidden'; hiddenField.name = optionKey; hiddenField.value = options[optionKey]; form.appendChild(hiddenField);} document.body.appendChild(form);
-form.submit(); 
+form.submit();
 form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			`/app/tests/editor/${EDITOR_TEST_TYPE.UNSAVED}/`,
 		)}", {events: "${events}", totalTime: ${totalTime} });</script></body></html>`;

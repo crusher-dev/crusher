@@ -37,7 +37,7 @@ const App = () => {
 			return;
 		}
 		console.log(AdvancedURL.getBackendURL());
-		submitPostDataWithForm(resolveToBackendPath("test/goToEditor#crusherBackendServer", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), {
+		submitPostDataWithForm(resolveToBackendPath("/app/tests/editor/u/#crusherBackendServer", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), {
 			events: escape(JSON.stringify(steps)),
 			totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
 		});

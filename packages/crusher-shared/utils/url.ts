@@ -36,3 +36,8 @@ export const resolveToBackendPath = (relativePath: string, customBasePath: strin
 	const basePath = customBasePath ? customBasePath : (LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:3000/server");
 	return url.resolve(basePath, relativePath);
 };
+
+export const resolveToFrontEndPath = (relativePath: string, customBasePath: string | null = null) => {
+	const backendURL = new URL(customBasePath ? customBasePath : (LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:3000/server"));
+	return url.resolve(backendURL.origin, relativePath);
+};

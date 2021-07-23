@@ -25,6 +25,7 @@ import { Store } from "redux";
 import { getShortDate, submitPostDataWithForm } from "@utils/helpers";
 import { Toast } from "@utils/toast";
 import { getRelativeSize } from "@utils/styleUtils";
+import { serialize } from "cookie";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
@@ -303,24 +304,23 @@ const parseTestMetaInfo = async (
 	store: Store,
 ): Promise<iTestMetaInfo | null> => {
 	const postDataFromReq = await parse(req);
-	const isComingFromCrusherExtension = postDataFromReq && postDataFromReq.events;
 	const encodedSavedPostTestData = cookies!.testPostData;
-	const savedPostTestData = encodedSavedPostTestData ? JSON.parse(decodeURIComponent(encodedSavedPostTestData)) : null;
-
-	const postData = isComingFromCrusherExtension ? postDataFromReq : savedPostTestData;
+	const { events, totalTime } = cookies!;
+	res.setHeader("Set-Cookie", serialize("events", "", { path: "/", maxAge: 0 }));
+	res.setHeader("Set-Cookie", serialize("totalTime", "", { path: "/", maxAge: 0 }));
 
 	switch (testType) {
 		case EDITOR_TEST_TYPE.UNSAVED: {
-			if (!postData.events && !postData.totalTime) {
+			if (!events && !totalTime) {
 				throw new Error("No recorded actions passed to run test for");
 			}
 
 			return {
-				actions: JSON.parse(unescape(postData.events)),
+				actions: JSON.parse(events),
 				testType: testType,
 				id: id,
-				totalTime: postData.totalTime,
-				postData: postData,
+				totalTime: totalTime,
+				postData: { events, totalTime },
 			};
 		}
 		case EDITOR_TEST_TYPE.SAVED_TEST: {
@@ -330,7 +330,7 @@ const parseTestMetaInfo = async (
 				actions: JSON.parse(testInfo.events),
 				testType: testType,
 				id: id,
-				postData: postData,
+				postData: { events, totalTime },
 			};
 		}
 		case EDITOR_TEST_TYPE.SAVED_DRAFT: {
@@ -340,7 +340,7 @@ const parseTestMetaInfo = async (
 				actions: JSON.parse(testInfo.events),
 				testType: testType,
 				id: id,
-				postData: postData,
+				postData: { events, totalTime },
 			};
 		}
 	}

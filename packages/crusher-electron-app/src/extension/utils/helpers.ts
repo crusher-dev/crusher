@@ -24,6 +24,21 @@ export function executeScript(name: string, tabId: number, cb?: any) {
 	});
 }
 
+export function submitTestDataToBeSavedInCookie(url: string, data: any): Promise<boolean> {
+	return fetch(url, {
+		method: "POST",
+		headers: {
+			Accept: "application/json, text/plain, */*",
+			"Content-Type": "application/json",
+		},
+		redirect: "follow",
+		body: JSON.stringify({ encodedRequestBody: data }),
+	})
+		.then((res) => res.text())
+		.then((resText) => resText === "Successful");
+}
+
+
 export function submitPostDataWithForm(url: string, options: any = {}) {
 	console.log("URL IS", url);
 	const form = document.createElement("form");

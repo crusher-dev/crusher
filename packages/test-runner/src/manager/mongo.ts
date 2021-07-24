@@ -3,7 +3,9 @@ import { getMongoDBConnectionString } from "@config/database";
 import mongoose from "mongoose";
 
 export class MongoManager {
-	init() {
+	alreadyConnected = false;
+	init(): any {
+		if (this.alreadyConnected) return;
 		const connectionString = getMongoDBConnectionString();
 
 		mongoose.connect(connectionString);

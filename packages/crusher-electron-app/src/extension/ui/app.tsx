@@ -10,8 +10,8 @@ import { ModalManager } from "./containers/app/modals";
 import { AdvancedURL } from "../utils/url";
 import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
-import { submitPostDataWithForm, submitTestDataToBeSavedInCookie } from "../utils/helpers";
-import { addHttpToURLIfNotThere, resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
+import { submitPostDataWithForm } from "../utils/helpers";
+import { addHttpToURLIfNotThere, resolveToBackendPath } from "@shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
 import "../style/main.css";
@@ -37,13 +37,9 @@ const App = () => {
 			return;
 		}
 		console.log(AdvancedURL.getBackendURL());
-		submitTestDataToBeSavedInCookie(resolveToBackendPath("/app/tests/saveDataForTestEditor", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), {
-			events: JSON.stringify(steps),
+		submitPostDataWithForm(resolveToBackendPath("test/goToEditor#crusherBackendServer", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), {
+			events: encodeURIComponent(JSON.stringify(steps)),
 			totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
-		}).then((saved) => {
-			if (saved) {
-				window.open(resolveToFrontEndPath("/app/tests/editor/u/", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), "_blank");
-			}
 		});
 	};
 

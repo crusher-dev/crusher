@@ -6,9 +6,12 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
+const bodyParser = require('body-parser');
 
 app.prepare().then(() => {
 	const server = express();
+	server.use(bodyParser({ limit: "50mb" }));
+	server.use(bodyParser.urlencoded({ extended: false }));
 
 	server.use("/server", proxy("localhost:8000"));
 	// // This is currently used for

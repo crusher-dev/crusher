@@ -1,6 +1,9 @@
 import { DOM } from "./dom";
 import devices from "@shared/constants/devices";
 import { iDevice } from "@shared/types/extension/device";
+import * as pako from "pako";
+
+const buffer = require('buffer').Buffer;
 
 export function executeScript(name: string, tabId: number, cb?: any) {
 	return new Promise((resolve, reject) => {
@@ -24,22 +27,7 @@ export function executeScript(name: string, tabId: number, cb?: any) {
 	});
 }
 
-export function submitTestDataToBeSavedInCookie(url: string, data: any): Promise<boolean> {
-	return fetch(url, {
-		method: "POST",
-		headers: {
-			Accept: "application/json, text/plain, */*",
-			"Content-Type": "application/json",
-		},
-		redirect: "follow",
-		body: JSON.stringify({ encodedRequestBody: data }),
-	})
-		.then((res) => res.text())
-		.then((resText) => resText === "Successful");
-}
-
-
-export function submitPostDataWithForm(url: string, options: any = {}) {
+export function submitPostDataWithForm(url: string, options: any = {}): void {
 	console.log("URL IS", url);
 	const form = document.createElement("form");
 	form.method = "post";
@@ -119,7 +107,7 @@ export function pxToRemValue(pxValue: number): string {
 }
 
 export function validURL(str) {
-	var pattern = new RegExp(
+	const pattern = new RegExp(
 		"^(https?:\\/\\/)?" + // protocol
 			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
 			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address

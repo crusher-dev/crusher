@@ -25,7 +25,6 @@ import { Store } from "redux";
 import { getShortDate, submitPostDataWithForm } from "@utils/helpers";
 import { Toast } from "@utils/toast";
 import { getRelativeSize } from "@utils/styleUtils";
-import { serialize } from "cookie";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parse = require("urlencoded-body-parser");
@@ -303,24 +302,28 @@ const parseTestMetaInfo = async (
 	headers: any = null,
 	store: Store,
 ): Promise<iTestMetaInfo | null> => {
-	const postDataFromReq = await parse(req);
+
+	const postDataFromReq = req.body;
+
+	const isComingFromCrusherExtension = postDataFromReq && postDataFromReq.events;
 	const encodedSavedPostTestData = cookies!.testPostData;
-	const { events, totalTime } = cookies!;
-	res.setHeader("Set-Cookie", serialize("events", "", { path: "/", maxAge: 0 }));
-	res.setHeader("Set-Cookie", serialize("totalTime", "", { path: "/", maxAge: 0 }));
+
+	const savedPostTestData = encodedSavedPostTestData ? JSON.parse(decodeURIComponent(encodedSavedPostTestData)) : null;
+
+	const postData = isComingFromCrusherExtension ? postDataFromReq : savedPostTestData;
 
 	switch (testType) {
 		case EDITOR_TEST_TYPE.UNSAVED: {
-			if (!events && !totalTime) {
+			if (!postData.events && !postData.totalTime) {
 				throw new Error("No recorded actions passed to run test for");
 			}
 
 			return {
-				actions: JSON.parse(events),
+				actions: JSON.parse(decodeURIComponent(postData.events)),
 				testType: testType,
 				id: id,
-				totalTime: totalTime,
-				postData: { events, totalTime },
+				totalTime: postData.totalTime,
+				postData: postData,
 			};
 		}
 		case EDITOR_TEST_TYPE.SAVED_TEST: {
@@ -330,7 +333,7 @@ const parseTestMetaInfo = async (
 				actions: JSON.parse(testInfo.events),
 				testType: testType,
 				id: id,
-				postData: { events, totalTime },
+				postData: postData,
 			};
 		}
 		case EDITOR_TEST_TYPE.SAVED_DRAFT: {
@@ -340,7 +343,7 @@ const parseTestMetaInfo = async (
 				actions: JSON.parse(testInfo.events),
 				testType: testType,
 				id: id,
-				postData: { events, totalTime },
+				postData: postData,
 			};
 		}
 	}
@@ -351,6 +354,7 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 	const { req, query, metaInfo, res, store } = ctx;
 
 	const { slug } = query;
+
 	if (!slug) {
 		return redirectToFrontendPath("/404", res);
 	}
@@ -366,6 +370,7 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 
 	try {
 		const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies, metaInfo.headers, store);
+		console.log("POST DATA IS", "HELLO3");
 
 		if (testMetaInfo) {
 			store.dispatch(saveTestMetaInfo(testMetaInfo));

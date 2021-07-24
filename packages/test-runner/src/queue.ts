@@ -17,6 +17,7 @@ queue.client.then(async (client) => {
 	await queueScheduler.waitUntilReady();
 
 	new Worker(REQUEST_QUEUE, workerModule, {
+		concurrency: 1,
 		connection: client,
 		lockDuration: 120000,
 	});

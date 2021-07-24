@@ -129,7 +129,7 @@ export class Parser {
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
+		code.push("if(handleImageBuffer) await handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
 		return code;
 	}
 
@@ -163,7 +163,7 @@ export class Parser {
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
+		code.push("if(handleImageBuffer) await handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
 		return code;
 	}
 
@@ -346,7 +346,7 @@ export class Parser {
 		importCode = this.registerCrusherSelector(importCode);
 		importCode += `const browser = await playwright["${this.browser}"].launch({ ${
 			this.usePlaywrightChromium ? `executablePath: "${process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}",` : ""
-		} headless: ${this.isHeadless.toString()} });\n`;
+		} headless: ${this.isHeadless.toString()}, args: ['--disable-dev-shm-usage'] });\n`;
 
 		if (this.shouldSleep) {
 			importCode += `const { sleep } = require(${helperPackageRequire}).Functions;\n`;

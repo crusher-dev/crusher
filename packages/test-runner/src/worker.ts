@@ -1,6 +1,6 @@
 import { Job, Queue } from "bullmq";
 import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
-import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere, uploadOutputToS3 } from "./util/helper";
+import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere, uploadOutputImageToS3, uploadOutputVideoToS3 } from "./util/helper";
 import { TestLogsService } from "./services/logs";
 import { CodeRunnerService } from "./services/runner";
 import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
@@ -49,9 +49,9 @@ export default async (bullJob: iTestRunnerJob): Promise<boolean> => {
 			return testLogsService.notifyLivelog(actionType, body, meta, timeTakenForThisStep, bullJob.data);
 		};
 
-		const bufferImages = [];
-		const handleScreenshotImageBuffer = (buffer: Buffer, screenshotName: string) => {
-			bufferImages.push({ name: screenshotName, value: buffer });
+		const signedImageUrls = [];
+		const handleScreenshotImageBuffer = async (buffer: Buffer, screenshotName: string) => {
+			signedImageUrls.push(await uploadOutputImageToS3({ name: screenshotName, value: buffer }, bullJob.data));
 		};
 
 		const { output, error } = await CodeRunnerService.runTest(bullJob.data, logSteps, handleScreenshotImageBuffer);
@@ -61,7 +61,7 @@ export default async (bullJob: iTestRunnerJob): Promise<boolean> => {
 			Why - Consider you have 4 gb machine, browser is using 2 GB memory. With buffer space the memory will be
 			less available, this should be making things slow.
 		 */
-		const { signedImageUrls, signedRawVideoUrl } = await uploadOutputToS3(bufferImages, output.video, bullJob.data);
+		const signedRawVideoUrl = await uploadOutputVideoToS3(output.video, bullJob.data);
 
 		if (signedRawVideoUrl) {
 			// Send the raw video dump to be processed by video-processor

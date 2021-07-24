@@ -37,7 +37,7 @@ export async function init() {
 
 	Logger.debug("CRON", "Started STOP_STALLED_TESTS_CHECKER cron job every 10 minutes");
 	const stopStalledTestsCronJob = new CronJob(
-		"*/10 * * * * *",
+		"* */2 * * * *",
 		async function () {
 			console.log("[Stalled]: Stopping stalled jobs");
 			try {
@@ -57,7 +57,7 @@ export async function init() {
 
 	Logger.debug("CRON", "Started RUN_MONITORING_TESTS cron job every 10 seconds");
 	const startTestQueue = new CronJob(
-		"*/10 * * * * *",
+		"* */2 * * * *",
 		async function () {
 			const queuedMonitorings = await monitoringService.getQueuedMonitorings();
 

@@ -11,7 +11,7 @@ import { PLATFORM } from "../../../../../crusher-shared/types/platform";
 import JobRunnerService from "../../../core/services/v2/JobRunnerService";
 
 @Service()
-@JsonController("/v2/project")
+@JsonController("/v2/currentProject")
 export class ProjectsControllerV2 {
 	@Inject()
 	private userService: UserService;
@@ -61,7 +61,7 @@ export class ProjectsControllerV2 {
 		const { user_id } = user;
 		const projectHosts = await this.projectHostsService.getAllHosts(projectId);
 		if (!projectHosts.length) {
-			throw new Error("No project hosts created to run");
+			throw new Error("No currentProject hosts created to run");
 		}
 		await this.jobRunnerService.runTestsInProject(projectId, PLATFORM.CHROME, JOB_TRIGGER.MANUAL, user_id, projectHosts[0], null);
 		return "Running";

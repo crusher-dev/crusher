@@ -30,7 +30,7 @@ export class CreateProjectsController {
 			.createProject(projectName, team_id)
 			.then((project) => {
 				if (!project) {
-					throw new Error("Can't create project");
+					throw new Error("Can't create currentProject");
 				}
 				return {
 					status: RESPONSE_STATUS.PROJECT_CREATED,

@@ -37,7 +37,7 @@ export interface ButtonProps {
 /**
  * Unified button component for Dyson UI system
  */
-export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = "blue", size = "none", children, className, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = "blue", size = "none", children,disabled=false, className, ...props }) => {
 	return (
 		<button className={` px-24 text-14 text-white ${className} leading-none`}
 						css={[
@@ -49,6 +49,7 @@ export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = 
 							bgColor==="tertiary-dark" &&tertiaryDark
 
 						]}
+						disabled={disabled}
 						{...props} >
 			{children}
 		</button>

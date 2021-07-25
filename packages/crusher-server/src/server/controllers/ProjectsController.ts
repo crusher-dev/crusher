@@ -53,7 +53,7 @@ export class ProjectsController {
 		const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
 
 		if (!canAccessThisProject) {
-			return new UnauthorizedError("Don't have access for this project");
+			return new UnauthorizedError("Don't have access for this currentProject");
 		}
 
 		return {
@@ -90,7 +90,7 @@ export class ProjectsController {
 			const canAccessThisProject = await this.userService.canAccessProjectId(projectId, user_id);
 
 			if (!canAccessThisProject) {
-				return new UnauthorizedError("Don't have access for this project");
+				return new UnauthorizedError("Don't have access for this currentProject");
 			}
 
 			const testsInProject = await this.testService.getAllTestsInProject(projectId, true);

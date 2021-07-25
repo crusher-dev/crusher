@@ -257,3 +257,19 @@ export function CompleteStatusIconSVG(props) {
 	  </svg>
 	)
   }
+
+export function NewTabSVG(props) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			width={14}
+			height={14}
+			{...props}
+		>
+			<path d="M19 21H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h7v2H5v14h14v-7h2v7c0 1.1-.9 2-2 2z" fill={"#BDBDBD"}/>
+			<path d="M21 10h-2V5h-5V3h7z" fill={"#BDBDBD"}/>
+			<path d="M8.278 14.308l11.03-11.03 1.414 1.414-11.03 11.03z" fill={"#BDBDBD"}/>
+		</svg>
+	)
+}

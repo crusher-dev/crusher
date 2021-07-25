@@ -78,7 +78,7 @@ export class AlertingController {
 			const { insertId: integrationId } = await this.alertingService.addSlackIntegration(integrationConfig, user_id);
 			await this.alertingService.addAlertIntegrationToProject(integrationId, project_id, user_id, integrationConfig);
 		} catch (ex) {}
-		res.redirect(resolvePathToFrontendURI("app/project/settings/alerting"));
+		res.redirect(resolvePathToFrontendURI("app/currentProject/settings/alerting"));
 		return;
 	}
 

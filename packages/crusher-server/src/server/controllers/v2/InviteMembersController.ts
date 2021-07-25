@@ -17,7 +17,7 @@ export class InviteMembersController {
 	private inviteMembersService: InviteMembersService;
 
 	@Authorized()
-	@Get("/project/link/:projectId")
+	@Get("/currentProject/link/:projectId")
 	async getProjectInviteLink(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
 		const { user_id, team_id } = user;
 		const inviteLink = await this.inviteMembersService.getPublicProjectInviteCode(projectId, team_id, null);
@@ -26,7 +26,7 @@ export class InviteMembersController {
 	}
 
 	@Authorized()
-	@Post("/project/members/:projectId")
+	@Post("/currentProject/members/:projectId")
 	async inviteProjectMembers(
 		@CurrentUser({ required: true }) user,
 		@Param("projectId") projectId: number,
@@ -76,7 +76,7 @@ export class InviteMembersController {
 		};
 	}
 
-	@Get("/accept/project/:inviteCode")
+	@Get("/accept/currentProject/:inviteCode")
 	async acceptProjectInvitation(@Param("inviteCode") inviteCode: string) {
 		const inviteReferral = await this.inviteMembersService.verifyTeamInviteCode(inviteCode);
 

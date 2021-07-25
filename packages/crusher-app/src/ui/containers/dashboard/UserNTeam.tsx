@@ -1,28 +1,33 @@
 import { css } from '@emotion/react';
 import { UserImage } from 'dyson/src/components/atoms/userimage/UserImage';
+import { userAtom } from '../../../store/atoms/global/user';
+import { useAtom } from 'jotai';
+import { teamAtom } from '../../../store/atoms/global/team';
 
-export function UserNProject() {
+export function UserNTeam() {
+	const [user] = useAtom(userAtom)
+	const [team] = useAtom(teamAtom)
 	return <div className={'flex justify-between leading-none'} css={userCard}>
 		<div className={'flex'} css={orgName}>
-			<div css={nameInitial} className={'flex items-center justify-center uppercase font-700 pt-2 mr-14'}>H</div>
+			<div css={nameInitial} className={'flex items-center justify-center uppercase font-700 pt-2 mr-14'}>{team.name.substr(0,1)}</div>
 			<div>
 				<div className={'font-cera mb-4 font-600'} css={name}>
-					Crusher
+					{team.name}
 				</div>
-				<div css={description} className={'font-500 leading-none'}>
-					Hobby
+				<div css={description} className={'font-500 leading-none capitalize'}>
+					{team.plan.toLowerCase()}
 				</div>
 			</div>
 		</div>
 		<div className={'flex items-center pr'}>
-				<UserImage url={"/assets/img/dashboard/user.png"}/>
+				<UserImage url={user.avatar}/>
 		</div>
 	</div>;
 }
 
-export function MenuItemHorizontal({children, ...props}){
+export function MenuItemHorizontal({children, selected, ...props}){
 	return (
-			<div css={menuLink} {...props}>{children}</div>
+			<div css={[menuLink, selected && menuSelected]} {...props}>{children}</div>
 	)
 }
 
@@ -40,6 +45,10 @@ const menuLink = css`
   :hover{
     background: rgba(255, 255, 255, 0.05);
   }
+`
+
+const menuSelected = css`
+    background: rgba(255, 255, 255, 0.05);
 `
 
 const orgName = css`

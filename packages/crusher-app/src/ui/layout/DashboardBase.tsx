@@ -1,62 +1,33 @@
 import { css } from "@emotion/react";
-import { MenuItemHorizontal, UserNProject } from "@ui/containers/dashboard/UserNProject";
+import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 import React, { useState } from "react";
-import { AddSVG, HelpSVG, LayoutSVG, PlaySVG, RightArrow, SearchSVG, TraySVG } from "@svg/dashboard";
+import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from '@svg/dashboard';
 
-import { Button } from "dyson/src/components/atoms";
+import { Button, DiscordSocialBtn, GithubSocialBtn } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
-import Link from "next/link";
 import { Conditional } from "dyson/src/components/layouts";
-import { Download } from "@ui/containers/dashboard/Download";
 
-const CURRENT_PROJECT_LIST = [
-	{
-		name: "Dashboard",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-	{
-		name: "Builds",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-	{
-		name: "Tests",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-	{
-		name: "Settings",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-];
+import { useAtom } from "jotai";
 
-const PROJECTS_LIST = [
-	{
-		name: "Default",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-	{
-		name: "Google",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-	{
-		name: "Facebook",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-	{
-		name: "Yahoo",
-		ICON: LayoutSVG,
-		isSelected: false,
-	},
-];
+import { projectsAtom } from "../../store/atoms/global/project";
+import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { addQueryParamToPath, appendParamsToURI } from "@utils/url";
+import dynamic from "next/dynamic";
+import { getEdition } from "@utils/helpers";
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+import { GithubSVG } from "@svg/social";
+
+const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
 function ProjectList() {
 	const [search, setSearch] = useState(false);
+
+	const [projects] = useAtom(projectsAtom);
+	const [appState] = useAtom(appStateAtom);
+	const [, setAppStateItem] = useAtom(appStateItemMutator);
+
 	return (
 		<>
 			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
@@ -77,9 +48,15 @@ function ProjectList() {
 			)}
 
 			<div className={"mt-6"}>
-				{PROJECTS_LIST.map(({ name, ICON }) => (
-					<MenuItemHorizontal className={"mt-2"}>
-						<ICON height={12} />
+				{projects.map(({ id, name, ICON }) => (
+					<MenuItemHorizontal
+						className={"mt-2"}
+						selected={appState.selectedProjectId == id}
+						onClick={() => {
+							setAppStateItem({ key: "selectedProjectId", value: id });
+						}}
+					>
+						<LayoutSVG />
 						<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
 					</MenuItemHorizontal>
 				))}
@@ -88,11 +65,32 @@ function ProjectList() {
 	);
 }
 
+function BottomSection({ name, description, link }) {
+	return (
+		<div className={"flex justify-between py-8 px-12 pb-6 mt-20"} css={upgradeCard}>
+			<div>
+				<div className={"label font-700"}>{name}</div>
+				<div className={"description text-12"}>{description}</div>
+			</div>
+			<div>
+				<div>
+					<TraySVG
+						css={css`
+							margin-left: auto;
+						`}
+					/>
+				</div>
+				<div className={"upgrade text-12 mt-6 font-600"}>Upgrade</div>
+			</div>
+		</div>
+	);
+}
+
 function LeftSection() {
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 			<div>
-				<UserNProject />
+				<UserNTeam />
 
 				{/*<div>*/}
 				{/*	<div css={OutlinedButton} className={' mt-28 flex justify-between'}>*/}
@@ -100,94 +98,118 @@ function LeftSection() {
 				{/*	</div>*/}
 				{/*</div>*/}
 
-				<div className={"mt-24"}>
-					{CURRENT_PROJECT_LIST.map(({ name, ICON }) => (
-						<MenuItemHorizontal className={"mt-2"}>
-							<ICON height={12} />
-							<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
-						</MenuItemHorizontal>
-					))}
-				</div>
+				{/*<div className={"mt-24"}>*/}
+				{/*	{CURRENT_PROJECT_LIST.map(({ name, ICON }) => (*/}
+				{/*		<MenuItemHorizontal className={"mt-2"}>*/}
+				{/*			<ICON height={12} />*/}
+				{/*			<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>*/}
+				{/*		</MenuItemHorizontal>*/}
+				{/*	))}*/}
+				{/*</div>*/}
 
 				<ProjectList />
 			</div>
 
 			<div>
 				<div>
-					<div css={navLink} className={"flex items-center text-13 mt-4"}>
-						<AddSVG className={"mr-12 mb-2"} /> Invite People
-					</div>
+					<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
+						<a href={"https://crusher.dev"}>
+							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
+								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
+							</div>
+						</a>
+						<a href={"https://crusher.dev"}>
+							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
+								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>
+							</div>
+						</a>
+					</Conditional>
 
-					<a href={"https://docs.crusher.dev/docs/references/contact-us"} target={"_blank"}>
+					<Conditional showIf={getEdition() == EDITION_TYPE.OPEN_SOURCE}>
 						<div css={navLink} className={"flex items-center text-13 mt-4"}>
-							<HelpSVG className={"mr-12 mb-2"} /> Help & Feedback
+							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
+						</div>
+					</Conditional>
+
+					<a href={"https://docs.crusher.dev/docs/references/contact-us"} target={"_blank"} rel="noreferrer">
+						<div css={navLink} className={"flex items-center text-13 mt-4"}>
+							<NewTabSVG className={"mr-12 mb-2"} /> Help & Docs
 						</div>
 					</a>
-					<a href={"https://docs.crusher.dev/"} target={"_blank"}>
+					<a href={"https://docs.crusher.dev/"} target={"_blank"} rel="noreferrer">
 						<div css={navLink} className={"flex items-center text-13 mt-4"}>
-							<HelpSVG className={"mr-12 mb-2"} /> Documentation
+							<HelpSVG className={"mr-12 mb-2"} /> Give feedback
 						</div>
 					</a>
 				</div>
 
-				<div className={"flex justify-between py-8 px-12 pb-6 mt-20"} css={upgradeCard}>
-					<div>
-						<div className={"label font-700"}>Free Plan</div>
-						<div className={"description text-12"}>Get 50% off</div>
-					</div>
-					<div>
-						<div>
-							<TraySVG
-								css={css`
-									margin-left: auto;
-								`}
-							/>
-						</div>
-						<div className={"upgrade text-12 mt-6 font-600"}>Upgrade</div>
-					</div>
-				</div>
+				<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
+					<a href={"https://crusher.dev"}>
+						<BottomSection name={"Use Crusher Cloud"} description={"Get 50% more"} />
+					</a>
+				</Conditional>
+
+				<BottomSection name={"Free plan"} description={"Get 50% more"} />
 			</div>
 		</div>
 	);
 }
 
+
 const TOP_NAV_LINK = [
 	{
 		name: "overview",
-		selected: false,
+		path: "/app/dashboard",
 	},
 	{
 		name: "Test",
-		selected: false,
+		path: "/app/tests",
 	},
 	{
 		name: "Monitoring",
-		selected: false,
+		path: "/app/builds",
+		queryParam: "monitoring=true",
 	},
 	{
 		name: "Builds",
-		selected: true,
+		path: "/app/builds",
+		keyToCheck: "monitoring",
 	},
 	{
 		name: "Settings",
-		selected: false,
+		path: "/app/setting",
 	},
 ];
 
 function TopNavbar() {
+	const router = useRouter();
+	const { pathname, query, asPath } = router;
 	const [showCreateTest, setShowCreateTest] = useState(false);
+	console.log(router);
 	return (
 		<div css={[nav]} className={""}>
 			<div css={[containerWidth]}>
 				<div className={"w-full flex px-8 pl-0 justify-between"}>
 					<div className={"flex"}>
-						{TOP_NAV_LINK.map(({ name, selected }) => (
-							<div className={"pt-24 mr-6"} css={navLinkSquare}>
-								<div className={"font-cera font-500 px-24 capitalize"}>{name}</div>
+						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam }) => {
+							let isNavLinkSelected = false;
 
-								{selected && <div className={"selected mt-19"}></div>}
-							</div>
-						))}
+							if (queryParam) {
+								const [key] = queryParam.split("=");
+								isNavLinkSelected = key && path === pathname && asPath.includes(queryParam);
+							} else {
+								isNavLinkSelected = path === pathname && query[keyToCheck] === undefined;
+							}
+							return (
+								<Link href={addQueryParamToPath(path, queryParam)}>
+									<div className={"pt-20 mr-6 relative"} css={navLinkSquare}>
+										<div className={"font-cera font-500 px-24 capitalize nav-top-link"}>{name}</div>
+
+										{isNavLinkSelected && <div className={"selected mt-19"}></div>}
+									</div>
+								</Link>
+							);
+						})}
 					</div>
 
 					<Conditional showIf={showCreateTest}>
@@ -236,14 +258,30 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
 };
 
 const navLinkSquare = css`
+	height: 68rem;
+
 	div {
 		color: #d0d0d0;
 		font-size: 13.5px;
 	}
+
 	.selected {
 		background: #23272e;
 		border-radius: 4px 4px 0px 0px;
 		height: 5px;
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+	}
+
+	.nav-top-link {
+		padding-bottom: 4px;
+		border-radius: 4px;
+		padding-top: 4px;
+	}
+
+	.nav-top-link:hover {
+		background: rgba(255, 255, 255, 0.05);
 	}
 `;
 
@@ -268,7 +306,6 @@ const nav = css`
 const containerWidth = css`
 	width: calc(100vw - 250rem);
 	max-width: 1500px;
-	max-height: calc(100vh - 68rem);
 	margin: 0 auto;
 `;
 
@@ -310,7 +347,7 @@ const upgradeCard = css`
 	border-radius: 6rem;
 
 	path {
-		fill: #6372ff;
+		fill: #929dff;
 	}
 	.label {
 		color: rgba(255, 255, 255, 0.88);
@@ -322,7 +359,7 @@ const upgradeCard = css`
 	}
 
 	.upgrade {
-		color: #6372ff;
+		color: #929dff;
 	}
 
 	:hover {

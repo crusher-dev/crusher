@@ -1,10 +1,10 @@
 import { css } from "@emotion/core";
 import Head from "next/head";
-import { DropDown } from "@ui/components/project/DropDown";
+import { DropDown } from "@ui/components/currentProject/DropDown";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import { saveSelectedProjectInRedux } from "@redux/actions/project";
+import { saveSelectedProjectInRedux } from "@redux/actions/currentProject";
 import { store } from "@redux/store";
 import { resolvePathToBackendURI } from "@utils/url";
 import React, { CSSProperties, useCallback, useState } from "react";
@@ -33,7 +33,7 @@ import { InstallExtensionModal } from "@ui/containers/modals/installExtensionMod
 import { checkIfExtensionPresent } from "@utils/extension";
 import { CreateTestModal } from "@ui/containers/modals/createTestModal";
 import { RunTestButton } from "@ui/components/app/RunTestsButton";
-import { runTestsInProject } from "@services/v2/project";
+import { runTestsInProject } from "@services/v2/currentProject";
 import { Toast } from "@utils/toast";
 import { redirectToFrontendPath } from "@utils/router";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
@@ -110,31 +110,31 @@ function LeftSection(props: any) {
 	const mainNavLinks = [
 		{
 			name: "Dashboard",
-			link: "/app/project/dashboard",
+			link: "/app/currentProject/dashboard",
 			icon: DashboardSvg,
 			isAuthorized: true,
 		},
 		{
 			name: "Builds",
-			link: "/app/project/builds?category=0",
+			link: "/app/currentProject/builds?category=0",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},
 		{
 			name: "Monitoring",
-			link: "/app/project/builds?category=1",
+			link: "/app/currentProject/builds?category=1",
 			icon: BuildsSVG,
 			isAuthorized: true,
 		},
 		{
 			name: "Tests",
-			link: "/app/project/tests",
+			link: "/app/currentProject/tests",
 			icon: TestsSVG,
 			isAuthorized: true,
 		},
 		{
 			name: "Settings",
-			link: "/app/settings/project/basic",
+			link: "/app/settings/currentProject/basic",
 			icon: ProjectSettings,
 			isAuthorized: true,
 		},
@@ -256,8 +256,8 @@ function LeftSection(props: any) {
 
 function CrusherLogo() {
 	return (
-		<Link href={"/app/project/dashboard"}>
-			<a href={"/app/project/dashboard"}>
+		<Link href={"/app/currentProject/dashboard"}>
+			<a href={"/app/currentProject/dashboard"}>
 				<Logo style={{ cursor: "pointer", height: "1.6625rem" }} />
 			</a>
 		</Link>
@@ -270,7 +270,7 @@ function ProjectSelector(props: { projectsList: any; options: any; selectedProje
 	const { options, onChange, selectedProject } = props;
 	let modifiedOption = options;
 	if (getEdition() === EDITION_TYPE.EE) {
-		modifiedOption = [{ label: "Add new project", value: "add_project" }, ...options];
+		modifiedOption = [{ label: "Add new currentProject", value: "add_project" }, ...options];
 	} else {
 		console.log(getEdition());
 	}
@@ -296,7 +296,7 @@ function ProjectSelector(props: { projectsList: any; options: any; selectedProje
 					options={modifiedOption}
 					selected={selectedProject ? { value: selectedProject } : {}}
 					onChange={handleChange}
-					placeholder={"Select project"}
+					placeholder={"Select currentProject"}
 				/>
 			)}
 		</div>
@@ -357,7 +357,7 @@ export function withSidebarLayout(WrappedComponent: NextPage<any>, shouldHaveGet
 		const handleRunTests = () => {
 			runTestsInProject(selectedProjectID)
 				.then(() => {
-					redirectToFrontendPath("/app/project/builds");
+					redirectToFrontendPath("/app/currentProject/builds");
 				})
 				.catch(() => {
 					Toast.showError("Create a host first");

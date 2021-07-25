@@ -19,7 +19,7 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
     return (
         <div  {...props} >
             <ExpandableList css={listStyle} currentSelected={selected} changeSelected={handleChangeItem}>
-                <ExpandableListItem title="Download extention & create test" completed={false}>
+                <ExpandableListItem title="Download recorded & create test" completed={false}>
                     <div className="mt-40 pl-32 pb-16">
                         <table css={downloadGridContainerStyle}>
                             <tr>

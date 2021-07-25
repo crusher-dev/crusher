@@ -14,7 +14,7 @@ import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { useSelector } from "react-redux";
 import { InviteTeamMemberModal } from "@ui/containers/modals/inviteTeamMemberModal";
 import { store } from "@redux/store";
-import { saveSelectedProjectInRedux } from "@redux/actions/project";
+import { saveSelectedProjectInRedux } from "@redux/actions/currentProject";
 import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 
@@ -23,21 +23,21 @@ const projectMenuData = {
 	primarySVG: TeamSVG,
 	subMenu: [
 		{
-			id: "project-basic-settings",
+			id: "currentProject-basic-settings",
 			title: "Basic",
-			link: "/app/settings/project/basic",
+			link: "/app/settings/currentProject/basic",
 		},
 		{
-			id: "project-members-settings",
+			id: "currentProject-members-settings",
 			title: "Project members",
-			link: "/app/settings/project/members",
-			children: ["/app/settings/project/invite-members"],
+			link: "/app/settings/currentProject/members",
+			children: ["/app/settings/currentProject/invite-members"],
 		},
 		{
-			id: "project-monitoring-settings",
+			id: "currentProject-monitoring-settings",
 			title: "Hosts/Monitoring",
-			link: "/app/settings/project/monitoring",
-			children: ["/app/settings/project/add-monitoring", "/app/settings/project/add-host"],
+			link: "/app/settings/currentProject/monitoring",
+			children: ["/app/settings/currentProject/add-monitoring", "/app/settings/currentProject/add-host"],
 		},
 	],
 };
@@ -121,7 +121,7 @@ function ProjectContainer(props: iProjectContainerProps) {
 	const handleProjectChange = (projectId: number) => {
 		if (selectedProject !== projectId) {
 			store.dispatch(saveSelectedProjectInRedux(projectId));
-			Router.replace("/app/project/dashboard");
+			Router.replace("/app/currentProject/dashboard");
 		}
 	};
 
@@ -191,7 +191,7 @@ function MenuContainer(props: iMenuContainerProps) {
 				</div>
 				{getEdition() === EDITION_TYPE.EE && (
 					<div css={menuBottomLink} onClick={showCreateProjectModal}>
-						<PlusSVG /> <span>Add project</span>
+						<PlusSVG /> <span>Add currentProject</span>
 					</div>
 				)}
 			</div>
@@ -352,7 +352,7 @@ const projectBar = css`
 	padding: 0 0.65rem;
 	padding-top: 2rem;
 
-	#add-project {
+	#add-currentProject {
 		cursor: pointer;
 		display: flex;
 		justify-content: center;
@@ -365,7 +365,7 @@ const projectBar = css`
 		}
 	}
 
-	#add-project:hover {
+	#add-currentProject:hover {
 		svg > path {
 			fill: #5b76f7;
 		}

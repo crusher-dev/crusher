@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 import { css } from "@emotion/core";
 import { CenterLayout } from "dyson/src/components/layouts";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
@@ -86,11 +86,21 @@ const HowItWorksView = () => {
 };
 
 const GithubDiscordSection = () => {
+	const [githubStars, setGithubStars] = useState(0);
+
 	const openLinkInNewTab = useCallback((url) => {
 		window.open(url, "_blank").focus();
 	}, []);
 
-	usePageTitle("Support")
+	usePageTitle("Support");
+	useEffect(()=>{
+
+		fetch('https://api.github.com/repos/crusherdev/crusher').then((res=>res.json())).then((json)=>{
+			setGithubStars(json.stargazers_count)
+		})
+	})
+
+
 
 	return (
 		<>
@@ -100,7 +110,7 @@ const GithubDiscordSection = () => {
 			<div className=" text-16 font-600 flex flex-col items-center mb-56">
 				<span className={"mb-20 leading-none"}>If you like crusher, give it a star 🔯</span>
 				<div>
-					<GithubSocialBtn count={234} onClick={openLinkInNewTab.bind(this, "https://github.com/crusherdev/crusher")} />
+					<GithubSocialBtn count={githubStars} onClick={openLinkInNewTab.bind(this, "https://github.com/crusherdev/crusher")} />
 				</div>
 			</div>
 			<div className="text-16 flex flex-col items-center">

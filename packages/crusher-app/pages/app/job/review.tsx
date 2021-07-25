@@ -19,11 +19,7 @@ import Passed from "../../../public/svg/jobReview/passed.svg";
 import Failed from "../../../public/svg/jobReview/failed.svg";
 import ReviewIcon from "../../../public/svg/jobReview/review.svg";
 
-import {
-	addCommentInRedux,
-	setCurrentJobPlatform,
-	setJobInfo,
-} from "@redux/actions/job";
+import { addCommentInRedux, setCurrentJobPlatform, setJobInfo } from "@redux/actions/job";
 import { useSelector } from "react-redux";
 import {
 	getCurrentJob,
@@ -37,6 +33,7 @@ import { store } from "@redux/store";
 import { JobInfo } from "@interfaces/JobInfo";
 import { TestInstanceService } from "@services/v2/testInstance";
 import { getAllTestInstancesLogs } from "@redux/stateUtils/testInstance";
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 
 const MODAL_TYPE = {
 	TEST_INSTANCE_LOGS: "TEST_INSTANCE_LOGS",
@@ -44,15 +41,7 @@ const MODAL_TYPE = {
 };
 
 function RenderComment(props) {
-	const {
-		id,
-		message,
-		user_id,
-		user_name,
-		user_first_name,
-		user_last_name,
-		created_at,
-	} = props.comment;
+	const { id, message, user_id, user_name, user_first_name, user_last_name, created_at } = props.comment;
 
 	return (
 		<li css={styles.commentItem}>
@@ -81,17 +70,7 @@ function RenderComment(props) {
 }
 
 function RenderCommentsBox(props) {
-	const {
-		forwardedRef,
-		focusRefCallback,
-		screenshotInfo,
-		updateTestsCountCallback,
-		jobId,
-		instanceId,
-		reportId,
-		comments,
-		result,
-	} = props;
+	const { forwardedRef, focusRefCallback, screenshotInfo, updateTestsCountCallback, jobId, instanceId, reportId, comments, result } = props;
 
 	const [isAddingComment, setIsAddingComment] = useState(false);
 	const inputEl = useRef(null);
@@ -135,40 +114,16 @@ function RenderCommentsBox(props) {
 				{commentsOut}
 			</ul>
 			<div style={{ position: "relative" }} css={styles.commentBoxInputContainer}>
-				<div
-					css={styles.commentBox}
-					ref={inputEl}
-					onKeyDown={handleCommentInput}
-					contentEditable={true}
-					placeholder={"Add your comment"}
-				></div>
-				<div style={{ marginTop: "0.75rem" }}>
-					P.s. - You can higlight area by going over image
-				</div>
-				{isAddingComment && (
-					<img
-						src={"/svg/tests/loading.svg"}
-						style={{ height: "1.4rem" }}
-						css={styles.commentIcon}
-					/>
-				)}
-				{!isAddingComment && (
-					<img
-						src={"/svg/tests/comment.svg"}
-						onClick={addComment}
-						style={{ width: "1.75rem" }}
-						css={styles.commentIcon}
-					/>
-				)}
+				<div css={styles.commentBox} ref={inputEl} onKeyDown={handleCommentInput} contentEditable={true} placeholder={"Add your comment"}></div>
+				<div style={{ marginTop: "0.75rem" }}>P.s. - You can higlight area by going over image</div>
+				{isAddingComment && <img src={"/svg/tests/loading.svg"} style={{ height: "1.4rem" }} css={styles.commentIcon} />}
+				{!isAddingComment && <img src={"/svg/tests/comment.svg"} onClick={addComment} style={{ width: "1.75rem" }} css={styles.commentIcon} />}
 			</div>
 		</div>
 	);
 }
 
-function getScreenshotsCountFromResult(
-	resultsMap: JobInfo["results"],
-	instancesMap: JobInfo["instances"],
-) {
+function getScreenshotsCountFromResult(resultsMap: JobInfo["results"], instancesMap: JobInfo["instances"]) {
 	const instancesArr = Object.values(resultsMap);
 
 	const totalTestCount = Object.values(instancesMap).length;
@@ -202,27 +157,13 @@ function getScreenshotsCountFromResult(
 
 function JobInfoBox() {
 	const jobInfo: JobInfo["job"] = useSelector(getCurrentJob);
-	const testInstancesMap: JobInfo["instances"] = useSelector(
-		getCurrentJobInstances,
-	);
+	const testInstancesMap: JobInfo["instances"] = useSelector(getCurrentJobInstances);
 	const resultsMap: JobInfo["results"] = useSelector(getCurrentJobResults);
 
 	const testInstances = Object.values(testInstancesMap);
-	const {
-		totalTestCount,
-		passedTestCount,
-		failedTestCount,
-		manualReviewRequiredTestCount,
-	} = getScreenshotsCountFromResult(resultsMap, testInstancesMap);
+	const { totalTestCount, passedTestCount, failedTestCount, manualReviewRequiredTestCount } = getScreenshotsCountFromResult(resultsMap, testInstancesMap);
 
-	const {
-		id: jobId,
-		branch_name: branchName,
-		repo_name: repoName,
-		commit_id: commitId,
-		commit_name: commitName,
-		status,
-	} = jobInfo;
+	const { id: jobId, branch_name: branchName, repo_name: repoName, commit_id: commitId, commit_name: commitName, status } = jobInfo;
 
 	const approveAll = () => {
 		alert("Approved");
@@ -230,11 +171,7 @@ function JobInfoBox() {
 
 	return (
 		<div className=" mg-t-70">
-			<div
-				className="card ht-md-100p d-flex justify-content-center "
-				style={{ padding: 0 }}
-				css={[containerCss, styles.blackTopCard]}
-			>
+			<div className="card ht-md-100p d-flex justify-content-center " style={{ padding: 0 }} css={[containerCss, styles.blackTopCard]}>
 				<div className="d-flex" style={{ display: "flex", padding: "20px 0px" }}>
 					<div
 						style={{
@@ -290,11 +227,7 @@ function JobInfoBox() {
 						<div className="d-lg-block align-items-end">
 							<div className="d-flex align-items-center">
 								{branchName && (
-								<code
-									className="tx-normal mg-b-0 mg-r-5 lh-1 tx-color-01"
-									css={styles.branchContainer}
-								>
-
+									<code className="tx-normal mg-b-0 mg-r-5 lh-1 tx-color-01" css={styles.branchContainer}>
 										<span
 											style={{
 												fontSize: "0.8375rem",
@@ -304,8 +237,8 @@ function JobInfoBox() {
 										>
 											{branchName}
 										</span>
-
-								</code>		)}
+									</code>
+								)}
 							</div>
 							<div className="tx-14 tx-color-03" css={styles.commitName}>
 								{commitName && (
@@ -318,28 +251,16 @@ function JobInfoBox() {
 									>
 										{commitName}
 									</span>
-								) }
+								)}
 							</div>
 						</div>
 					</div>
 
 					<div className="card-body col col-lg-4 ml-5"></div>
 
-					<div
-						className="card-body col col-lg1 d-flex justify-content-center align-items-center"
-						style={{ paddingRight: "0.3rem" }}
-					>
-						<div
-							className="tx-bold d-flex"
-							css={styles.approveButton}
-							style={{ marginLeft: "auto" }}
-						>
-							<img
-								src="/svg/unselectedThumbsIcon.svg"
-								width={14}
-								height={18}
-								className="ml-2"
-							/>
+					<div className="card-body col col-lg1 d-flex justify-content-center align-items-center" style={{ paddingRight: "0.3rem" }}>
+						<div className="tx-bold d-flex" css={styles.approveButton} style={{ marginLeft: "auto" }}>
+							<img src="/svg/unselectedThumbsIcon.svg" width={14} height={18} className="ml-2" />
 							<div
 								className="text-center flex-1"
 								style={{
@@ -359,26 +280,24 @@ function JobInfoBox() {
 	);
 }
 
-function RenderScreenshotComparison({
-	screenshot,
-	result,
-	comments,
-	reportId,
-	instance,
-}) {
+function RenderScreenshotComparison({ screenshot, result, comments, reportId, instance }) {
 	// null value means that the status of screenshot is getting loaded
-	const {
-		name: screenshotName,
-		url: screenshotUrl,
-		id: screenshotId,
-	} = screenshot;
+	const { name: screenshotName, url: screenshotUrl, id: screenshotId } = screenshot;
 
-	const [approvedScreenshot, setScreenshotApproved] = useState(
-		result ? result.status === "PASSED" : false,
-	);
+	const [approvedScreenshot, setScreenshotApproved] = useState(result ? result.status === "PASSED" : false);
 
 	const { diff_image_url, diff_delta } = result ? result : ({} as any);
 	const [shouldShowCommentsBox, setShouldShowCommentsBox] = useState(false);
+
+	const finalScreenshotURL =
+		process.env.NEXT_PUBLIC_CRUSHER_MODE === EDITION_TYPE.OPEN_SOURCE && screenshotUrl
+			? screenshotUrl.replace("http://localhost:3001/", "/output/")
+			: screenshotUrl;
+
+	const finalDiffImageURL =
+		process.env.NEXT_PUBLIC_CRUSHER_MODE === EDITION_TYPE.OPEN_SOURCE && diff_image_url
+			? diff_image_url.replace("http://localhost:3001/", "/output/")
+			: diff_image_url;
 
 	useEffect(() => {
 		setShouldShowCommentsBox(!shouldShowCommentsBox);
@@ -441,12 +360,10 @@ function RenderScreenshotComparison({
 					<span className="tx-medium tx-13">{screenshotName} screenshot</span>
 					<div className="row pd-0 mg-0 mt-4" style={{ width: "100%" }}>
 						<div className="col col-6 d-flex pd-0 pr-0 mr-0" css={styles.visualImage}>
-							<img src={screenshotUrl} width={"auto"} style={{ maxWidth: "100%" }} />
+							<img src={finalScreenshotURL} width={"auto"} style={{ maxWidth: "100%" }} />
 						</div>
 						<div className="col col-6 d-flex pd-0 pr-0 mr-0" css={styles.visualImage}>
-							{diff_image_url && (
-								<img src={diff_image_url} width={"auto"} style={{ maxWidth: "100%" }} />
-							)}
+							{finalDiffImageURL && <img src={finalDiffImageURL} width={"auto"} style={{ maxWidth: "100%" }} />}
 						</div>
 					</div>
 					<div className="row pd-0 mg-0 mg-t-20 justify-content-end">
@@ -479,25 +396,13 @@ function OverlayModal(props) {
 	);
 }
 
-function getInstanceConclusion(
-	instanceStatus: TestInstanceStatus,
-	results: Array<any>,
-) {
-	if (
-		instanceStatus === TestInstanceStatus.ABORTED ||
-		instanceStatus === TestInstanceStatus.TIMEOUT
-	) {
+function getInstanceConclusion(instanceStatus: TestInstanceStatus, results: Array<any>) {
+	if (instanceStatus === TestInstanceStatus.ABORTED || instanceStatus === TestInstanceStatus.TIMEOUT) {
 		return "FAILED";
-	} else if (
-		instanceStatus === TestInstanceStatus.QUEUED &&
-		instanceStatus === TestInstanceStatus.RUNNING
-	) {
+	} else if (instanceStatus === TestInstanceStatus.QUEUED && instanceStatus === TestInstanceStatus.RUNNING) {
 		return "RUNNING";
 	} else if (instanceStatus === TestInstanceStatus.FINISHED) {
-		const passedCount = results
-			? results.filter((result) => result.result_set_conclusion === "PASSED")
-					.length
-			: 0;
+		const passedCount = results ? results.filter((result) => result.result_set_conclusion === "PASSED").length : 0;
 		if (results && results.length === passedCount) {
 			return "PASSED";
 		} else {
@@ -518,28 +423,14 @@ function GetStatusImage(props: any) {
 	} else if (conclusion === "MANUAL_REVIEW_REQUIRED") {
 		return <ReviewIcon style={{ height: "1.5rem" }} />;
 	} else if (conclusion === "RUNNING_CHECKS") {
-		return (
-			<img style={{ height: "1.5rem" }} src={"/svg/jobReview/loading.svg"} />
-		);
+		return <img style={{ height: "1.5rem" }} src={"/svg/jobReview/loading.svg"} />;
 	} else {
 		return null;
 	}
 }
 
-function TestInstanceReview({
-	instance,
-	reportId,
-	showVideoModalCallback,
-	showLogsModalCallback,
-}) {
-	const {
-		id: instance_id,
-		test_name,
-		test_id,
-		images: screenshots,
-		events: rawEvents,
-		recorded_video_uri,
-	} = instance;
+function TestInstanceReview({ instance, reportId, showVideoModalCallback, showLogsModalCallback }) {
+	const { id: instance_id, test_name, test_id, images: screenshots, events: rawEvents, recorded_video_uri } = instance;
 	const jobResults = useSelector(getCurrentJobResults);
 	const jobComments = useSelector(getCurrentJobComments);
 	const events = JSON.parse(rawEvents);
@@ -555,20 +446,9 @@ function TestInstanceReview({
 				  })[0]
 				: null;
 
-		const comments =
-			jobComments && result && jobComments[result.id]
-				? jobComments[result.id]
-				: [];
+		const comments = jobComments && result && jobComments[result.id] ? jobComments[result.id] : [];
 
-		return (
-			<RenderScreenshotComparison
-				instance={instance}
-				result={result}
-				reportId={reportId}
-				comments={comments}
-				screenshot={screenshot}
-			/>
-		);
+		return <RenderScreenshotComparison instance={instance} result={result} reportId={reportId} comments={comments} screenshot={screenshot} />;
 	});
 
 	const results = jobResults[instance_id] && jobResults[instance_id].results;
@@ -587,17 +467,13 @@ function TestInstanceReview({
 		alert("Approved instance");
 	};
 
-	const instanceReportConclusion = jobResults[instance_id]
-		? jobResults[instance_id].conclusion
-		: null;
+	const instanceReportConclusion = jobResults[instance_id] ? jobResults[instance_id].conclusion : null;
 
 	const handleThumbToggle = () => {
 		console.log(JSON.stringify(jobResults[instance_id].conclusion));
 	};
 
-	const instanceFinishedRunning =
-		instance.status !== TestInstanceStatus.RUNNING &&
-		instance.status !== TestInstanceStatus.QUEUED;
+	const instanceFinishedRunning = instance.status !== TestInstanceStatus.RUNNING && instance.status !== TestInstanceStatus.QUEUED;
 
 	return (
 		<div className="" css={styles.bodyBackground}>
@@ -614,16 +490,8 @@ function TestInstanceReview({
 				}}
 			>
 				<div css={containerCss} className="d-flex pos-relative">
-					<img
-						src="/svg/thumbsUp.svg"
-						className="mt-n1"
-						style={{ cursor: "pointer" }}
-						onClick={handleThumbToggle}
-					/>
-					<div
-						css={testInstanceStripContainerCss}
-						className="tx-white d-flex justify-content-between pl-3"
-					>
+					<img src="/svg/thumbsUp.svg" className="mt-n1" style={{ cursor: "pointer" }} onClick={handleThumbToggle} />
+					<div css={testInstanceStripContainerCss} className="tx-white d-flex justify-content-between pl-3">
 						<h6 className="lh-5 mb-0 tx-white" css={styles.pinBoxHeading}>
 							{test_name}
 						</h6>
@@ -651,20 +519,13 @@ function TestInstanceReview({
 								</div>
 								<div style={{ marginLeft: "1rem" }}>
 									{instanceFinishedRunning
-										? Math.floor(
-												((new Date(instance.updated_at) - new Date(instance.created_at)) /
-													1000) *
-													10,
-										  ) / 10
+										? Math.floor(((new Date(instance.updated_at) - new Date(instance.created_at)) / 1000) * 10) / 10
 										: "N/A"}{" "}
 									Sec
 								</div>
 							</div>
 							{instance && instance.platform === Platform.CHROME ? (
-								<div
-									onClick={playVideo}
-									style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-								>
+								<div onClick={playVideo} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
 									<div>
 										<Play style={{ height: "1.125rem" }} />
 									</div>
@@ -714,9 +575,7 @@ function TestInstanceReview({
 						<div>
 							<GetStatusImage conclusion={instanceReportConclusion} />
 						</div>
-						<div style={{ marginLeft: "1rem" }}>
-							Test {toPascalCase(instanceReportConclusion)}
-						</div>
+						<div style={{ marginLeft: "1rem" }}>Test {toPascalCase(instanceReportConclusion)}</div>
 					</div>
 					<div style={{ marginLeft: "auto", display: "flex", flexDirection: "row" }}>
 						<div
@@ -733,9 +592,7 @@ function TestInstanceReview({
 							}}
 						>
 							<img src={"/svg/debug.svg"} width={22} />
-							<span style={{ marginLeft: "0.8rem", marginTop: "0.1rem" }}>
-								Debug info
-							</span>
+							<span style={{ marginLeft: "0.8rem", marginTop: "0.1rem" }}>Debug info</span>
 						</div>
 					</div>
 				</div>
@@ -770,14 +627,11 @@ function RenderTestInstances(props) {
 }
 
 function VideoModal({ video_uri }) {
+	const finalVideoURI = video_uri ? video_uri.replace("http://localhost:3001/", "/output/") : null;
+
 	return (
 		<div css={styles.videoOverlayContent}>
-			<video
-				controls={true}
-				style={{ width: "40" }}
-				autoPlay={true}
-				src={video_uri}
-			/>
+			<video controls={true} style={{ width: "40" }} autoPlay={true} src={finalVideoURI} />
 		</div>
 	);
 }
@@ -785,11 +639,7 @@ function VideoModal({ video_uri }) {
 function LogsModal({ logs }) {
 	return (
 		<div css={styles.logsOverlayContent}>
-			<LogsBox
-				style={{ background: "#fff" }}
-				status={TestInstanceStatus.FINISHED}
-				testInfo={{ logs, status: TestInstanceStatus.QUEUED }}
-			/>
+			<LogsBox style={{ background: "#fff" }} status={TestInstanceStatus.FINISHED} testInfo={{ logs, status: TestInstanceStatus.QUEUED }} />
 		</div>
 	);
 }
@@ -843,60 +693,37 @@ function JobReviews(props) {
 
 	// @ts-ignore
 	return (
-		<div
-			className=""
-			style={{ display: "flex", flexDirection: "column", background: "#131415" }}
-		>
+		<div className="" style={{ display: "flex", flexDirection: "column", background: "#131415" }}>
 			<Head>
 				<title>Add a Test Group | Control center to maintain all your tests</title>
-				<link
-					href="/assets/img/favicon.png"
-					rel="shortcut icon"
-					type="image/x-icon"
-				/>
-				<link
-					href="/lib/@fortawesome/fontawesome-free/css/all.min.css"
-					rel="stylesheet"
-				/>
+				<link href="/assets/img/favicon.png" rel="shortcut icon" type="image/x-icon" />
+				<link href="/lib/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
 				<link href="/lib/ionicons/css/ionicons.min.css" rel="stylesheet" />
 
 				<link href="/assets/css/dashforge.css" rel="stylesheet" />
 			</Head>
 			<div>Hi everyone!!</div>
-			<Header
-				onPlatformChanged={handlePlatformChange}
-				platform={platform}
-				referenceJob={referenceJob}
-				reportId={reportId}
-			></Header>
+			<Header onPlatformChanged={handlePlatformChange} platform={platform} referenceJob={referenceJob} reportId={reportId}></Header>
 
 			<div style={{ height: "100vh", backgroundColor: "#131415" }}>
 				<JobInfoBox />
-				<RenderTestInstances
-					showLogsModalCallback={showLogsModalCallback}
-					showVideoModalCallback={showVideoModalCallback}
-					reportId={reportId}
-				/>
+				<RenderTestInstances showLogsModalCallback={showLogsModalCallback} showVideoModalCallback={showVideoModalCallback} reportId={reportId} />
 			</div>
 
-			{modalStatus &&
-				modalStatus.shown === true &&
-				modalStatus.type === MODAL_TYPE.TEST_INSTANCE_VIDEO && (
-					<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
-						<VideoModal video_uri={modalStatus.value.uri} />
-					</OverlayModal>
-				)}
-			{modalStatus &&
-				modalStatus.shown === true &&
-				modalStatus.type === MODAL_TYPE.TEST_INSTANCE_LOGS && (
-					<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
-						{testsLogsForInstancesMap[modalStatus.instanceId] ? (
-							<LogsModal logs={testsLogsForInstancesMap[modalStatus.instanceId]} />
-						) : (
-							<div>Loading.....</div>
-						)}
-					</OverlayModal>
-				)}
+			{modalStatus && modalStatus.shown === true && modalStatus.type === MODAL_TYPE.TEST_INSTANCE_VIDEO && (
+				<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
+					<VideoModal video_uri={modalStatus.value.uri} />
+				</OverlayModal>
+			)}
+			{modalStatus && modalStatus.shown === true && modalStatus.type === MODAL_TYPE.TEST_INSTANCE_LOGS && (
+				<OverlayModal closeModalCallback={closeModal} shouldShow={true}>
+					{testsLogsForInstancesMap[modalStatus.instanceId] ? (
+						<LogsModal logs={testsLogsForInstancesMap[modalStatus.instanceId]} />
+					) : (
+						<div>Loading.....</div>
+					)}
+				</OverlayModal>
+			)}
 		</div>
 	);
 }

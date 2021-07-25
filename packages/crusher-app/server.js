@@ -1,3 +1,4 @@
+require("dotenv").config();
 // Created this for proxy. Not be used in other cases
 const express = require("express");
 const next = require("next");
@@ -14,6 +15,10 @@ app.prepare().then(() => {
 	server.use(bodyParser.urlencoded({ extended: false }));
 
 	server.use("/server", proxy("localhost:8000"));
+	if (process.env.NEXT_PUBLIC_CRUSHER_MODE === "open-source") {
+		server.use("/output", proxy("localhost:3001"));
+	}
+
 	// // This is currently used for
 	server.use("/assets", express.static(".next/public/assets"));
 	server.use("/js", express.static(".next/public/js"));

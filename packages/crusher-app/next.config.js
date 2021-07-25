@@ -46,6 +46,10 @@ module.exports = withImages(
 								to: "../server.js",
 							},
 							{
+								from: ".env",
+								to: "../.env",
+							},
+							{
 								from: "./public",
 								to: "./public",
 							},

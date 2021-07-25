@@ -46,17 +46,13 @@ module.exports = withImages(
 								to: "../server.js",
 							},
 							{
-								from: ".env",
-								to: "../.env",
-							},
-							{
 								from: "./public",
 								to: "./public",
 							},
 						],
 					}),
 					new CopyPlugin({
-						patterns: [{ from: path.resolve(__dirname, ".env") }],
+						patterns: [{ from: path.resolve(__dirname, ".env") }, { from: path.resolve(__dirname, ".env"), to: "../" }],
 					}),
 				);
 

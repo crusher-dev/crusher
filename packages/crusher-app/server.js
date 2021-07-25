@@ -28,7 +28,7 @@ app.prepare().then(() => {
 		return handle(req, res);
 	});
 
-	const serverInstance = server.listen(port, (err) => {
+	server.listen(port, (err) => {
 		if (err) throw err;
 		//eslint-disable-next-line
 		console.log(`> Ready on http://localhost:${port}`);

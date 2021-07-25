@@ -1,11 +1,21 @@
+const url = require('url');
 const IS_DEVELOPMENT = process.env.NODE_ENV !== "production";
 
 if (IS_DEVELOPMENT) {
 	process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 }
 
-export const BACKEND_SERVER_URL = process.env.NEXT_PUBLIC_BACKEND_URL ? process.env.NEXT_PUBLIC_BACKEND_URL : "https://backend.crusher-test.com/";
-export const FRONTEND_SERVER_URL = process.env.NEXT_PUBLIC_FRONTEND_URL ? process.env.NEXT_PUBLIC_FRONTEND_URL : "https://www.crusher-test.com/";
+function isClient() {
+	return eval("typeof window !== \"undefined\"");
+}
+
+function relativeURLToWindow(relativeURL: string){
+	const currentURL = new URL(window.location.href);
+	return url.resolve(currentURL, relativeURL);
+}
+
+export const BACKEND_SERVER_URL = process.env.NEXT_PUBLIC_BACKEND_URL || (isClient() ? relativeURLToWindow("/server/") : "http://localhost:3000/server/");
+export const FRONTEND_SERVER_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || (isClient() ? relativeURLToWindow("/") : "http://localhost:3000/");
 
 export const TEST_TYPES = {
 	DRAFT: "DRAFT",

@@ -9,17 +9,20 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "../../../core
 import { google } from "googleapis";
 import GoogleAPIService from "../../../core/services/GoogleAPIService";
 import { InviteMembersService } from "../../../core/services/mongo/inviteMembers";
-import { getEdition } from "../../../utils/helper";
+import { getEdition, isOpenSourceEdition } from "../../../utils/helper";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../../utils/cookies";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { iUser } from "@crusher-shared/types/db/iUser";
 const cookie = require("cookie");
-const oauth2Client = new google.auth.OAuth2(
-	process.env.GOOGLE_CLIENT_ID,
-	process.env.GOOGLE_CLIENT_SECRET,
-	resolvePathToBackendURI("/v2/user/authenticate/google/callback"),
-);
+let oauth2Client = null;
 
+if (process.env.BACKEND_URL) {
+	oauth2Client = new google.auth.OAuth2(
+		process.env.GOOGLE_CLIENT_ID,
+		process.env.GOOGLE_CLIENT_SECRET,
+		resolvePathToBackendURI("/v2/user/authenticate/google/callback"),
+	);
+}
 @Service()
 @JsonController(`/v2/user`)
 export class UserControllerV2 {
@@ -63,6 +66,10 @@ export class UserControllerV2 {
 	 */
 	@Get("/authenticate/google")
 	async authenticateWithGoogle(@Res() res: any, @QueryParams() params) {
+		if (!oauth2Client) {
+			throw new Error("This functionality is not supported");
+		}
+
 		const { inviteCode, inviteType } = params;
 
 		const scopes = ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"];
@@ -96,6 +103,10 @@ export class UserControllerV2 {
 	 */
 	@Get("/authenticate/google/callback")
 	async googleCallback(@QueryParam("code") code: string, @QueryParam("state") encodedState, @Res() res) {
+		if (!oauth2Client) {
+			throw new Error("This functionality is not supported");
+		}
+
 		const { tokens } = await oauth2Client.getToken(code);
 		const accessToken = tokens.access_token;
 		let inviteCode, inviteType;

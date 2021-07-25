@@ -2,7 +2,16 @@ import parse from 'url-parse';
 
 const url = require('url');
 
-const LOCAL_BACKEND_URL = process.env.BACKEND_URL;
+function isClient() {
+	return eval("typeof window !== \"undefined\"");
+}
+
+function relativeURLToWindow(relativeURL: string){
+	const currentURL = new URL(window.location.href);
+	return url.resolve(currentURL, relativeURL);
+}
+
+const LOCAL_BACKEND_URL = process.env.BACKEND_URL ? process.env.BACKEND_URL : (isClient() ? relativeURLToWindow("/server/") : "http://localhost:3000/server/");
 
 const clean = (url: string) => String(url).replace(/^\/|\/$/g, '');
 
@@ -33,11 +42,11 @@ export const getQueryStringParams = function getParameterByName(name: string, ur
 };
 
 export const resolveToBackendPath = (relativePath: string, customBasePath: string | null = null) => {
-	const basePath = customBasePath ? customBasePath : (LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:3000/server");
+	const basePath = customBasePath ? customBasePath : (LOCAL_BACKEND_URL);
 	return url.resolve(basePath, relativePath);
 };
 
 export const resolveToFrontEndPath = (relativePath: string, customBasePath: string | null = null) => {
-	const backendURL = new URL(customBasePath ? customBasePath : (LOCAL_BACKEND_URL ? LOCAL_BACKEND_URL : "http://localhost:3000/server"));
+	const backendURL = new URL(customBasePath ? customBasePath : (LOCAL_BACKEND_URL));
 	return url.resolve(backendURL.origin, relativePath);
 };

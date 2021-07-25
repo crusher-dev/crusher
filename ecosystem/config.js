@@ -1,11 +1,11 @@
 const path = require("path");
+const url = require("url");
 require('dotenv').config({path: path.resolve(__dirname, "../.env")});
 
 module.exports = {
 	IS_PRODUCTION: process.env.CRUSHER_ENV === "production",
-	BACKEND_URL: process.env.BACKEND_URL,
-	INTERNAL_BACKEND_URL: process.env.INTERNAL_BACKEND_URL,
-	FRONTEND_URL: process.env.FRONTEND_URL,
+	BACKEND_URL: process.env.STANDALONE_APP_URL ? url.resolve(process.env.STANDALONE_APP_URL, "/server/") : process.env.BACKEND_URL,
+	FRONTEND_URL: process.env.STANDALONE_APP_URL ? process.env.STANDALONE_APP_URL : process.env.FRONTEND_URL,
 	AWS_CONFIG: {
 		AWS_ACCESS_KEY_ID:  process.env.AWS_ACCESS_KEY_ID,
 		AWS_S3_REGION:process.env.AWS_S3_REGION,

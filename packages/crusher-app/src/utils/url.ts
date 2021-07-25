@@ -1,13 +1,13 @@
 import { BACKEND_SERVER_URL, FRONTEND_SERVER_URL } from "@constants/other";
 
-export const resolvePathToBackendURI = (endpoint: string) => resolveURl(BACKEND_SERVER_URL || "/server",endpoint);
-export const resolvePathToFrontendURI = (endpoint: string) => resolveURl(FRONTEND_SERVER_URL || "",endpoint);
+export const resolvePathToBackendURI = (endpoint: string) => resolveURl(BACKEND_SERVER_URL, endpoint);
+export const resolvePathToFrontendURI = (endpoint: string) => resolveURl(FRONTEND_SERVER_URL, endpoint);
 
-const resolveURl = (host: string,path: string) : string=>{
-	const isBackslashPresent = host.split("")[host.length-1] === "/";
-	const hostName = isBackslashPresent ? host.slice(0, host.length-1) : host;
+const resolveURl = (host: string, path: string): string => {
+	const isBackslashPresent = host.split("")[host.length - 1] === "/";
+	const hostName = isBackslashPresent ? host.slice(0, host.length - 1) : host;
 
-	return  hostName+path
+	return hostName + path;
 }
 
 export function appendParamsToURI(uri: string, params: { [paramKey: string]: string }) {

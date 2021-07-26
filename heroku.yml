@@ -1,6 +1,3 @@
-setup:
-  config:
-    IS_HEROKU: true
 build:
   docker:
     web: docker/oss/Dockerfile.heroku

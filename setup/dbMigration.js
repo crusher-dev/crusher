@@ -8,7 +8,7 @@ console.log("Running db migration script now...");
 var IS_HEROKU = process.env.IS_HEROKU;
 var connectionString = IS_HEROKU ? process.env.CLEARDB_DATABASE_URL : process.env.DB_CONNECTION_STRING;
 
-var connectionObject = connectionString ? { url: connectionString } : {
+var connectionObject = connectionString ? { uri: connectionString } : {
   host: process.env.DB_HOST || "localhost",
   port: process.env.DB_PORT,
   user: process.env.DB_USERNAME,

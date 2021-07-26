@@ -20,7 +20,7 @@
   ],
   "env": {
     "MONGODB_CONNECTION_STRING": {
-      "description": "Mongodb connection string from mongodb atlas",
+      "description": "Mongodb connection string from mongodb atlas (Can get it for free from here https://www.mongodb.com/) ",
       "required": true
     },
     "IS_HEROKU": {

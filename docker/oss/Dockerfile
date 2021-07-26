@@ -7,6 +7,8 @@ WORKDIR "/usr/src/app/"
 USER root
 # Workaround to enable bash in heroku
 RUN apk add --no-cache bash && rm /bin/sh && ln -s /bin/bash /bin/sh
+# For heroku release phase
+RUN apk add curl
 RUN touch  /etc/profile.d/node.sh
 USER chrome
 
@@ -19,6 +21,7 @@ RUN rm -rf packages/crusher-app/.next/cache && cd packages/crusher-app && npm in
 ADD ./ecosystem ecosystem
 ADD ./ecosystem.oss.js ecosystem.config.js
 ADD ./.env.oss .env
+ADD ./db/schema.sql db/schema.sql
 ADD ./setup/dbMigration.js scripts/dbMigration.js
 
 ADD ./docker/oss/start.sh start.sh

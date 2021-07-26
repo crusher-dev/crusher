@@ -22,7 +22,7 @@ ADD ./ecosystem ecosystem
 ADD ./ecosystem.oss.js ecosystem.config.js
 ADD ./.env.oss .env
 ADD ./db/schema.sql db/schema.sql
-ADD ./setup/dbMigration.js scripts/dbMigration.js
+ADD ./setup/dbMigration.js setup/dbMigration.js
 
 ADD ./docker/oss/start.sh start.sh
 

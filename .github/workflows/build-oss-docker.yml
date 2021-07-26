@@ -53,7 +53,7 @@ jobs:
       - name: Build all packages
         run: sh scripts/build/build-oss.sh
         env:
-          NODE_OPTIONS: --max_old_space_size=4096
+          NODE_OPTIONS: --max_old_space_size=8048
 
       - name: Build and push
         id: docker_build

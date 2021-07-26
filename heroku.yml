@@ -1,7 +1,7 @@
 setup:
   addons:
-    - cleardb
-    - heroku-redis
+    - plan: cleardb
+    - plan: heroku-redis
   config:
     IS_HEROKU: true
 build:

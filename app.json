@@ -19,15 +19,15 @@
     }
   ],
   "env": {
-    "MONGODB_CONNECTION_STRING": {
-      "description": "Mongodb connection string from mongodb atlas",
-      "required": true
-    },
     "IS_HEROKU": {
       "description": "An env identifier for heroku platform",
       "value": "true",
       "required": true
-    }
+    },
+    "MONGODB_CONNECTION_STRING": {
+      "description": "Mongodb connection string from mongodb atlas",
+      "required": true
+    },
   },
   "stack": "container"
 }

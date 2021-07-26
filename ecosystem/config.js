@@ -2,6 +2,8 @@ const path = require("path");
 const url = require("url");
 require('dotenv').config({path: path.resolve(__dirname, "../.env")});
 
+const IS_HEROKU = process.env.IS_HEROKU;
+
 module.exports = {
 	IS_PRODUCTION: process.env.CRUSHER_ENV === "production",
 	BACKEND_URL: process.env.STANDALONE_APP_URL ? url.resolve(process.env.STANDALONE_APP_URL, "/server/") : process.env.BACKEND_URL,
@@ -27,7 +29,7 @@ module.exports = {
 		DATABASE: process.env.MONGODB_DATABASE,
 	},
 	MYSQL_DB_CONFIG: {
-		CONNECTION_STRING: process.env.DB_CONNECTION_STRING,
+		CONNECTION_STRING: IS_HEROKU ? process.env.CLEARDB_DATABASE_URL : process.env.DB_CONNECTION_STRING,
 		HOST: process.env.DB_HOST,
 		USERNAME: process.env.DB_USERNAME,
 		PASSWORD: process.env.DB_PASSWORD,
@@ -35,7 +37,7 @@ module.exports = {
 		PORT: parseInt(process.env.DB_PORT, 10) || 3306,
 	},
 	REDIS_CONFIG: {
-		CONNECTION_STRING: process.env.REDIS_CONNECTION_STRING,
+		CONNECTION_STRING: IS_HEROKU ? process.env.REDIS_URL : process.env.REDIS_CONNECTION_STRING,
 		HOST: process.env.REDIS_HOST,
 		PORT: parseInt(process.env.REDIS_PORT, 10),
 		PASSWORD:  process.env.REDIS_PASSWORD,

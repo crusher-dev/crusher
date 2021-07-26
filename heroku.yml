@@ -1,3 +1,9 @@
+setup:
+  addons:
+    - cleardb
+    - heroku-redis
+  config:
+    IS_HEROKU: true
 build:
   docker:
     web: docker/oss/Dockerfile.heroku

@@ -10,6 +10,10 @@
   "website": "https://crusher.dev",
   "repository": "https://github.com/crusherdev/crusher",
   "env": {
+    "MONGODB_CONNECTION_STRING": {
+      "description": "Mongodb connection string from mongodb atlas",
+      "required": true
+    }
   },
   "stack": "container"
 }

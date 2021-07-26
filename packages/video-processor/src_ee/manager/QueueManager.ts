@@ -1,5 +1,4 @@
 import { Worker, Queue, QueueScheduler } from "bullmq";
-import { REDDIS } from "@config/database";
 import { RedisManager } from "../../src/manager/RedisManager";
 
 const path = require("path");

@@ -1,5 +1,4 @@
 import { Worker, Queue, QueueScheduler } from "bullmq";
-import { REDDIS } from "@config/database";
 import { RedisManager } from "./RedisManager";
 RedisManager.initialize();
 

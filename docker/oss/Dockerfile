@@ -11,7 +11,7 @@ RUN touch  /etc/profile.d/node.sh
 USER chrome
 
 RUN printf "export PATH=$PATH:$(npm get prefix)/bin\nexport NODE_OPTIONS=--enable-source-maps" >> ~/.profile
-RUN npm init -y && npm install dotenv && npm install -g pm2 playwright@^1.7.1
+RUN npm init -y && npm install dotenv mysql2 && npm install -g pm2 playwright@^1.7.1
 
 COPY --chown=chrome ./output packages
 RUN rm -rf packages/crusher-app/.next/cache && cd packages/crusher-app && npm install
@@ -19,6 +19,7 @@ RUN rm -rf packages/crusher-app/.next/cache && cd packages/crusher-app && npm in
 ADD ./ecosystem ecosystem
 ADD ./ecosystem.oss.js ecosystem.config.js
 ADD ./.env.oss .env
+ADD ./setup/dbMigration.js scripts/dbMigration.js
 
 ADD ./docker/oss/start.sh start.sh
 

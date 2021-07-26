@@ -1,3 +1,7 @@
 build:
   docker:
     web: docker/oss/Dockerfile.heroku
+release:
+  command:
+    - ./scripts/db:migration.sh
+  image: web

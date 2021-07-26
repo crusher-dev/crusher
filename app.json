@@ -24,7 +24,7 @@
       "required": true
     },
     "IS_HEROKU": {
-      "description": "An env identifier for heroku platform",
+      "description": "An env identifier for heroku platform (Don't change this)",
       "value": "true",
       "required": true
     }

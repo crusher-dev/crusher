@@ -43,7 +43,7 @@ export function backendRequest(_uri: string, options?: RequestOptions) {
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
 	}).then((requestResponse: any) => {
 		if (requestResponse.status === 500) {
-			throw new Error("Internal server error");
+			throw new Error("Internal server error at " + uri);
 		}
 		return requestResponse.json();
 	});

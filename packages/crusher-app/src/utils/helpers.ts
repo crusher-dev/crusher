@@ -1,3 +1,4 @@
+import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { getUserCLIToken } from "@services/cli";
 
 export function getEdition() {
@@ -196,4 +197,8 @@ export function getShortDate(date: Date) {
 		":" +
 		("0" + date.getUTCSeconds()).slice(-2)
 	);
+}
+
+export function isOpenSourceEdition() {
+	return getEdition() === EDITION_TYPE.OPEN_SOURCE;
 }

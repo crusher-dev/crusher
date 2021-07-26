@@ -10,12 +10,12 @@ function isClient() {
 }
 
 function relativeURLToWindow(relativeURL: string){
-	const currentURL = new URL(window.location.href);
-	return url.resolve(currentURL, relativeURL);
+	return url.resolve(window.location.href, relativeURL);
 }
 
-export const BACKEND_SERVER_URL = process.env.NEXT_PUBLIC_BACKEND_URL || (isClient() ? relativeURLToWindow("/server/") : "http://localhost:3000/server/");
-export const FRONTEND_SERVER_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || (isClient() ? relativeURLToWindow("/") : "http://localhost:3000/");
+const EXPOSED_FRONTEND_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+export const BACKEND_SERVER_URL = process.env.NEXT_PUBLIC_BACKEND_URL || (isClient() ? relativeURLToWindow("/server/") : `http://localhost:${EXPOSED_FRONTEND_PORT}/server/`);
+export const FRONTEND_SERVER_URL = process.env.NEXT_PUBLIC_FRONTEND_URL || (isClient() ? relativeURLToWindow("/") : `http://localhost:${EXPOSED_FRONTEND_PORT}/`);
 
 export const TEST_TYPES = {
 	DRAFT: "DRAFT",

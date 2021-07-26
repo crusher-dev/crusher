@@ -11,7 +11,9 @@ function relativeURLToWindow(relativeURL: string){
 	return url.resolve(currentURL, relativeURL);
 }
 
-const LOCAL_BACKEND_URL = process.env.BACKEND_URL ? process.env.BACKEND_URL : (isClient() ? relativeURLToWindow("/server/") : "http://localhost:3000/server/");
+const EXPOSED_FRONTEND_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+
+const LOCAL_BACKEND_URL = process.env.BACKEND_URL ? process.env.BACKEND_URL : (isClient() ? relativeURLToWindow("/server/") : `http://localhost:${EXPOSED_FRONTEND_PORT}/server/`);
 
 const clean = (url: string) => String(url).replace(/^\/|\/$/g, '');
 

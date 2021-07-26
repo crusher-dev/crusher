@@ -136,7 +136,7 @@ export class UserController {
 	@Authorized()
 	@OnNull(500)
 	@Get("/info")
-	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res): Promise<iUserInfoResponse> {
+	async getUserInfo(@CurrentUser({ required: true }) user, @Req() req, @Res() res): Promise<iUserInfoResponse | any> {
 		const { user_id } = user;
 		const info = await this.userService.getUserInfo(user_id);
 		if (info) {

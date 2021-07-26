@@ -14,7 +14,7 @@ import DBManager from "./core/manager/DBManager";
 import { RedisManager } from "@manager/redis";
 import { REDIS } from "crusher-server/config/database";
 
-RedisManager.initialize(REDIS.host, REDIS.port, REDIS.password);
+RedisManager.initialize();
 
 const monitoringService = Container.get(MonitoringService);
 const projectHostsService = Container.get(ProjectHostsService);

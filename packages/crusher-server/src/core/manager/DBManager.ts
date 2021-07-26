@@ -3,16 +3,19 @@ import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
 import { Service } from "typedi";
 import { Pool } from "mysql2";
+import { isOpenSourceEdition } from "../../utils/helper";
 
 const mysql = require("mysql2");
+
+const DEFAULT_DB_CONNECTION_POOL_LIMIT = isOpenSourceEdition() ? 5 : 10;
 
 @Service()
 export default class DBManager {
 	private connPool: Pool;
 
 	constructor() {
-		this.connPool = mysql.createPool({
-			connectionLimit: process.env.DB_CONNECTION_POOL || 10,
+		this.connPool = mysql.createPool(process.env.DB_CONNECTION_STRING ? process.env.DB_CONNECTION_STRING : {
+			connectionLimit: process.env.DB_CONNECTION_POOL || DEFAULT_DB_CONNECTION_POOL_LIMIT,
 			host: process.env.DB_HOST || "localhost",
 			user: process.env.DB_USERNAME,
 			port: process.env.DB_PORT,

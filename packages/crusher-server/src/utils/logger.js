@@ -18,7 +18,7 @@ const logger = process.env.LOGDNA_API_KEY
 			hostname: "crusher-server",
 			index_meta: true,
 	  })
-	: { log: () => null, info: () => null, debug: () => null, warn: () => null, error: () => null };
+	: { log: () => null, info: () => null, debug: () => null, warn: () => null, error: () => null, fatal: () => null };
 
 const showMeta = (meta) => {
 	if (!meta) {

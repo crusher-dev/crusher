@@ -1,9 +1,12 @@
 import { Worker, Queue, QueueScheduler } from "bullmq";
 import { REDDIS } from "@config/database";
+import { RedisManager } from "./RedisManager";
+RedisManager.initialize();
+
 const path = require("path");
 const r = require("@services/videoProcessorWorker");
 
-const queue = new Queue("video-processing-queue", { connection: REDDIS });
+const queue = new Queue("video-processing-queue", { connection: RedisManager.client as any });
 
 queue.client.then(async (redisClient) => {
 	const queueScheduler = new QueueScheduler("video-processing-queue", {

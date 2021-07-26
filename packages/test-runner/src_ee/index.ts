@@ -1,9 +1,8 @@
 import { generateUid } from "@shared/utils/helper";
 import Timeout = NodeJS.Timeout;
 import { RedisManager } from "@manager/redis";
-import { REDDIS } from "@config/database";
 import { BootAfterNJobsOffsetManager } from "@manager/offsetManger";
-RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password)
+RedisManager.initialize();
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("./queue.ts");

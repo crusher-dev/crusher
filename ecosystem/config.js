@@ -27,6 +27,7 @@ module.exports = {
 		DATABASE: process.env.MONGODB_DATABASE,
 	},
 	MYSQL_DB_CONFIG: {
+		CONNECTION_STRING: process.env.DB_CONNECTION_STRING,
 		HOST: process.env.DB_HOST,
 		USERNAME: process.env.DB_USERNAME,
 		PASSWORD: process.env.DB_PASSWORD,

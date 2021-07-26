@@ -1,13 +1,15 @@
+import { REDIS } from "../../../config/database";
+
 import { Redis } from "ioredis";
 import IORedis = require("ioredis");
-
 export class RedisManager {
 	static client: Redis;
 
-	static initialize(host: string, port: number, password: string) {
-		if(!RedisManager.client) {
-			RedisManager.client = new IORedis({ host, port: port || null, password });
-			console.log(`Connected to ${host}, ${port}`);
+	static initialize() {
+		if (!RedisManager.client) {
+			const connectionObject = REDIS.connectionString ? REDIS.connectionString : { host: REDIS.host, port: REDIS.port || null, password: REDIS.password };
+			RedisManager.client = new IORedis(connectionObject as any);
+			console.log(`Connected to ${this.client.options.host}, ${this.client.options.port}`);
 		} else {
 			console.error(`Already connected to redis...`);
 		}

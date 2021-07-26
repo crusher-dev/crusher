@@ -17,6 +17,7 @@ import { Response } from "express";
 import { setUserCookie } from "../../../utils/cookies";
 import { extractHostname } from "../../../utils/url";
 import { iUser } from "../../../../../crusher-shared/types/db/iUser";
+import { isOpenSourceEdition } from "crusher-server/src/utils/helper";
 @Service()
 export class UserV2Service {
 	private dbManager: DBManager;
@@ -25,7 +26,7 @@ export class UserV2Service {
 	private userProjectRoleService: UserProjectRoleV2Service;
 	private projectService: ProjectV2Service;
 	private teamService: TeamV2Service;
-	private stripeManager: StripeManager;
+	private stripeManager: StripeManager | undefined;
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
@@ -34,7 +35,9 @@ export class UserV2Service {
 		this.teamService = Container.get(TeamV2Service);
 		this.userTeamRoleService = Container.get(UserTeamRoleV2Service);
 		this.userProjectRoleService = Container.get(UserProjectRoleV2Service);
-		this.stripeManager = Container.get(StripeManager);
+		if (!isOpenSourceEdition() && process.env.STRIPE_SECRET_API_KEY) {
+			this.stripeManager = Container.get(StripeManager);
+		}
 	}
 
 	// For Oss
@@ -53,7 +56,7 @@ export class UserV2Service {
 
 		const userId = await this.createUserRecord(signupRequestPayload, true, true);
 
-		await this.createInitialUserWorkspace(userId, signupRequestPayload);
+		await this.createInitialUserWorkspace(userId, signupRequestPayload, false);
 
 		return this.getOpenSourceUser();
 	}
@@ -87,8 +90,9 @@ export class UserV2Service {
 		return userRecord.insertId;
 	}
 
-	async createInitialUserWorkspace(userId: number, user: iSignupUserRequest): Promise<{ teamId: number; projectId: number }> {
-		const stripeCustomerId = await this.stripeManager.createCustomer(`${user.firstName} ${user.lastName}`, user.email);
+	async createInitialUserWorkspace(userId: number, user: iSignupUserRequest, shouldInitializeStripe = true): Promise<{ teamId: number; projectId: number }> {
+		const stripeCustomerId =
+			shouldInitializeStripe && this.stripeManager ? await this.stripeManager.createCustomer(`${user.firstName} ${user.lastName}`, user.email) : null;
 
 		const teamId = await this.teamService.createTeam(userId, `${user.firstName}'s Team`, user.email, TierPlan.FREE, stripeCustomerId);
 		await this.updateTeam(userId, teamId);

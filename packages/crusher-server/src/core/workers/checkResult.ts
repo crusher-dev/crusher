@@ -342,11 +342,8 @@ async function runChecks(details, clearJobTempValues) {
 }
 
 module.exports = async (bullJob: Job) => {
-	const reddisClient = new IORedis({
-		port: REDIS.port,
-		host: REDIS.host,
-		password: REDIS.password,
-	});
+	const redisConnectionObject = REDIS.connectionString ? REDIS.connectionString : { port: REDIS.port, host: REDIS.host, password: REDIS.password };
+	const reddisClient = new IORedis(redisConnectionObject as any);
 
 	const reddisLock = new ReddisLock([reddisClient], {
 		driftFactor: 0.01,

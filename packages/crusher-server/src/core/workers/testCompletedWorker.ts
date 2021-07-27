@@ -1,10 +1,12 @@
 import { iTestRunnerJobOutput } from "../../../../crusher-shared/types/runner/jobRunRequestOutput";
 import { Job, Queue } from "bullmq";
 import TestsEventsWorker from "./testEventsWoker";
+import { RedisManager } from "@manager/redis";
 import { REDIS } from "../../../config/database";
+RedisManager.initialize();
+
 const checkResultQueue = new Queue("check-result-queue", {
-	// @ts-ignore
-	connection: REDIS,
+	connection: RedisManager.get() as any,
 });
 
 module.exports = async (bullJob: Job) => {

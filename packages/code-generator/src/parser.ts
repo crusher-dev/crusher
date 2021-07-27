@@ -129,7 +129,7 @@ export class Parser {
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
+		code.push("if(handleImageBuffer) await handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
 		return code;
 	}
 
@@ -163,7 +163,7 @@ export class Parser {
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
+		code.push("if(handleImageBuffer) await handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
 		return code;
 	}
 
@@ -344,9 +344,17 @@ export class Parser {
 		}");\n`;
 		importCode += `const {getCrusherSelectorEngine} = require(${helperPackageRequire}).Functions;\n`;
 		importCode = this.registerCrusherSelector(importCode);
+
+		// --disable-dev-shm-usage and --disable-gpu are used to make running
+		// playwright tests more stable on container platforms like heroku and AWS
+		// lambda.
+		// @Link: https://playwright.dev/docs/ci/#docker
+
+		const browserArgs = this.browser === BROWSER.CHROME ? ["--disable-dev-shm-usage", "--disable-gpu"] : [];
+
 		importCode += `const browser = await playwright["${this.browser}"].launch({ ${
 			this.usePlaywrightChromium ? `executablePath: "${process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}",` : ""
-		} headless: ${this.isHeadless.toString()} });\n`;
+		} headless: ${this.isHeadless.toString()}, args: ${JSON.stringify(browserArgs)} });\n`;
 
 		if (this.shouldSleep) {
 			importCode += `const { sleep } = require(${helperPackageRequire}).Functions;\n`;

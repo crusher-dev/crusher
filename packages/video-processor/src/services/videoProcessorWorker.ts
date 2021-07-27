@@ -5,12 +5,13 @@ import * as shell from "shelljs";
 import { setupBucketManager, uploadFileToAwsBucket } from "@utils/cloudBucket";
 import { ensureFfmpegPath } from "@utils/helper";
 import { Job, Queue } from "bullmq";
-import { REDDIS } from "@config/database";
+import { RedisManager } from "@src/manager/RedisManager";
+RedisManager.initialize();
 
 const got = require("got");
 
 const videoProcessingQueue = new Queue("video-processing-complete-queue", {
-	connection: REDDIS as any,
+	connection: RedisManager.client as any,
 });
 function processStreamAndSave(videoUrl, savePath: string) {
 	return new Promise((resolve, reject) => {

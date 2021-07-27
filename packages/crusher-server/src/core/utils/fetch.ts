@@ -1,4 +1,4 @@
-import { appendParamsToURI, checkIfAbsoluteURI, getAbsoluteURIIfRelative } from "./uri";
+import { appendParamsToURI } from "./uri";
 import { Logger } from "../../utils/logger";
 import * as chalk from "chalk";
 const _fetch = require("node-fetch");
@@ -7,8 +7,6 @@ export function prepareFetchPayload(uri: string, info: any = {}) {
 	let method = info.method ? info.method : "GET";
 	let header = info.header ? info.header : {};
 	let payload = info.payload ? info.payload : {};
-
-	uri = getAbsoluteURIIfRelative(uri);
 
 	switch (method.toUpperCase()) {
 		case "GET":

@@ -1,28 +1,16 @@
-import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, OnNull, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
+import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, OnNull, Post, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import UserService from "../../core/services/UserService";
-import { appendParamsToURI, resolvePathToBackendURI, resolvePathToFrontendURI } from "../../core/utils/uri";
+import { resolvePathToFrontendURI } from "../../core/utils/uri";
 import GoogleAPIService from "../../core/services/GoogleAPIService";
-import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, SIGNED_UP_WITHOUT_JOINING_TEAM, USER_NOT_REGISTERED, USER_REGISTERED } from "../../constants";
+import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, USER_NOT_REGISTERED, USER_REGISTERED } from "../../constants";
 import TeamService from "../../core/services/TeamService";
-import { EmailManager } from "../../core/manager/EmailManager";
-import { decodeToken, generateToken, generateVerificationCode } from "../../core/utils/auth";
+import { decodeToken, generateToken } from "../../core/utils/auth";
 import ProjectService from "../../core/services/ProjectService";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../utils/cookies";
 import { Logger } from "../../utils/logger";
-import { generateId } from "../../core/utils/helper";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
-import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
 import { InviteMembersService } from "../../core/services/mongo/inviteMembers";
-import { iProjectInviteReferral } from "@crusher-shared/types/mongo/projectInviteReferral";
-
-const { google } = require("googleapis");
-
-const oauth2Client = new google.auth.OAuth2(
-	process.env.GOOGLE_CLIENT_ID,
-	process.env.GOOGLE_CLIENT_SECRET,
-	resolvePathToBackendURI("/user/authenticate/google/callback"),
-);
 
 @Service()
 @JsonController("/user")
@@ -148,7 +136,7 @@ export class UserController {
 	@Authorized()
 	@OnNull(500)
 	@Get("/info")
-	async getUserInfo(@CurrentUser({ required: true }) user, @Res() res): Promise<iUserInfoResponse> {
+	async getUserInfo(@CurrentUser({ required: true }) user, @Req() req, @Res() res): Promise<iUserInfoResponse | any> {
 		const { user_id } = user;
 		const info = await this.userService.getUserInfo(user_id);
 		if (info) {

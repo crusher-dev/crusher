@@ -1,6 +1,10 @@
 name: Build OSS docker-image
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  release:
+    types: [published, edited]
 
 jobs:
   build:

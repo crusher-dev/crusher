@@ -5,12 +5,15 @@ import { LayoutSVG, PlaySVG } from '@svg/dashboard';
 import { Conditional } from "dyson/src/components/layouts";
 import { atom, useAtom } from "jotai";
 import React, { useEffect, useState } from 'react';
+import { BackSVG } from '@svg/builds';
 
 
 function TitleSection() {
 	return (
 		<div>
-			<div className={"font-cera text-19 font-700 leading-none"} id={"title"}>feat: integrated test GTM #517</div>
+			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
+				<BackSVG height={22} className={"mr-12"} onClick={()=>{  window.history.back();}}/> feat: integrated test GTM #517
+			</div>
 		</div>
 	);
 }
@@ -499,20 +502,20 @@ const filterSection = css`
 `
 
 export const TestReport = () => {
-	const [secltedTabIndex] = useAtom(selectedTabAtom);
+	const [selectedTabIndex] = useAtom(selectedTabAtom);
 	return (
-		<div className={"px-42 mt-62"}>
+		<div className={"px-42 mt-40"}>
 			<NameNStatusSection />
 			<div className={"flex items-center leading-none mt-16 text-13"}>
 				<CalendarSVG className={"mr-16"} />2 mins
 			</div>
-			<Conditional showIf={secltedTabIndex !== 1}>
+			<Conditional showIf={selectedTabIndex !== 1}>
 				<div className={"flex items-center leading-none mt-24 text-13"}>
 					<ThunderSVG className={"mr-16"} />
 					Wohoo! You saved 20 hours of testing
 				</div>
 			</Conditional>
-			<Conditional showIf={secltedTabIndex === 1}>
+			<Conditional showIf={selectedTabIndex === 1}>
 				<div className={"flex leading-none mt-56 mb-52  items-center"}>
 					<div className={"text-13"} css={css`width: 100px`}>Comparing to</div>
 					<div css={timeLine} className={"ml-40 relative"}>
@@ -529,10 +532,10 @@ export const TestReport = () => {
 				</div>
 			</Conditional>
 			<TabBar />
-			<Conditional showIf={secltedTabIndex === 0}>
+			<Conditional showIf={selectedTabIndex === 0}>
 				<TestOverviewTab />
 			</Conditional>
-			<Conditional showIf={secltedTabIndex === 1}>
+			<Conditional showIf={selectedTabIndex === 1}>
 				<ReportSection/>
 			</Conditional>
 		</div>

@@ -3,6 +3,8 @@ import { CompleteStatusIconSVG } from "@svg/dashboard";
 import { css } from "@emotion/core";
 import { SearchFilterBar } from "../common/searchFilterBar";
 import { getTime } from "@utils/helpers";
+import useSWR from 'swr';
+import { TEST_LIST_API } from '@constants/api';
 
 interface IBuildItemCardProps {
     testName: string;
@@ -11,14 +13,14 @@ interface IBuildItemCardProps {
     createdAt: Date;
 };
 
-function BuildItemCard(props: IBuildItemCardProps) {
-    const { testName, isPassing, createdAt } = props;
+function TestCard(props: IBuildItemCardProps) {
+    const { testName, isPassing, createdAt,imageURL } = props;
 
     const statusIcon = isPassing ? (<CompleteStatusIconSVG isCompleted={true} />) : (<CompleteStatusIconSVG isCompleted={false} />);
 
     return (
         <div css={itemContainerStyle}>
-            <img css={itemImageStyle} />
+            <img css={itemImageStyle} src={imageURL} />
             <div css={itemMainContainerStyle}>
                 <div className={"flex flex-row items-center"}>
                     <div css={testNameStyle} className={"font-cera"}>{testName}</div>
@@ -42,7 +44,7 @@ const testNameStyle = css`
 
 const itemMainContainerStyle = css`
     background: rgba(16, 18, 21, 0.5);
-    padding: 20rem 24rem;
+    padding: 20rem 16rem;
 `;
 const itemContainerStyle = css`
     background: rgba(16, 18, 21, 0.5);
@@ -51,30 +53,35 @@ const itemContainerStyle = css`
     color: rgba(255, 255, 255, 0.6);
     width: 252rem;
     margin-bottom: 40px;
+    overflow: hidden;
     margin-right: 32px;
+:hover{        background: rgba(16, 18, 21,1);
+}
 `;
 const itemImageStyle = css`
     height: 183rem;
+    width: 100%;
 `;
-const DUMMY_TESTS_LIST = require("./dummyTests.json");
 
 function TestSearchableList() {
-    const [testsList, _] = useState(DUMMY_TESTS_LIST);
     const [searchQuery, setSearchQuery] = useState(null as null | string);
+    const {data} = useSWR(TEST_LIST_API,  { suspense: true })
+
 
     const testsItems = useMemo(() => {
-        return testsList.map((dummyTest: any) => {
-            const { testName, isPassing, createdAt } = dummyTest;
+        return data.map((test: any) => {
+            const { testName, isPassing, createdAt,imageURL } = test;
 
             return (
-                <BuildItemCard
+                <TestCard
+                  imageURL={imageURL}
                     testName={testName}
                     isPassing={isPassing}
-                    createdAt={new Date(createdAt)}
+                    createdAt={createdAt}
                 />
             )
         })
-    }, [searchQuery]);
+    }, [data]);
 
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {

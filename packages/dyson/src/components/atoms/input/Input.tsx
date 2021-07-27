@@ -34,7 +34,7 @@ export const Input: React.FC<ButtonProps> = ({
 																							 children,
 																							 className, ...props }) => {
 	return (
-		<input css={[inputBox, isError && errorState ]} {...props} className={`${className}`}/>
+		<input css={[inputBox, isError && errorState ]} {...props} className={`${className ? className : ""}`}/>
 	);
 }
 

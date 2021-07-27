@@ -90,7 +90,7 @@ function EmailPasswordBox() {
 	return (
 		<div css={loginBoxlarge}>
 			<div className={"mb-12"}>
-				<Input value={name.value} placeholder={"Enter name"} onChange={nameChange} isError={name.error} onBlur={verifyInfo.bind(this,false)} />
+				<Input autoComplete="name" value={name.value} placeholder={"Enter name"} onChange={nameChange} isError={name.error} onBlur={verifyInfo.bind(this,false)} />
 				<Conditional showIf={name.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{name.error}
@@ -99,7 +99,7 @@ function EmailPasswordBox() {
 			</div>
 
 			<div className={"mb-12"}>
-				<Input value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyInfo.bind(this,false)} />
+				<Input autoComplete="email" value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyInfo.bind(this,false)} />
 				<Conditional showIf={email.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{email.error}
@@ -182,21 +182,21 @@ export const SignupContainer = () => {
 								</div>
 							</Button>
 						</a>
-						<a href={resolvePathToBackendURI("/v2/user/authenticate/github")}>
-							<Button
-								size={"large"}
-								css={css`
-									font-weight: 500;
-								`}
-								bgColor={"tertiary-dark"}
-								className={"mb-32"}
-							>
-								<div className={"flex justify-center items-center"}>
-									<GithubSVG className={"mr-12"} />
-									<span className={"mt-2"}>Continue with Github</span>
-								</div>
-							</Button>
-						</a>
+						{/*<a href={resolvePathToBackendURI("/v2/user/authenticate/github")}>*/}
+						{/*	<Button*/}
+						{/*		size={"large"}*/}
+						{/*		css={css`*/}
+						{/*			font-weight: 500;*/}
+						{/*		`}*/}
+						{/*		bgColor={"tertiary-dark"}*/}
+						{/*		className={"mb-32"}*/}
+						{/*	>*/}
+						{/*		<div className={"flex justify-center items-center"}>*/}
+						{/*			<GithubSVG className={"mr-12"} />*/}
+						{/*			<span className={"mt-2"}>Continue with Github</span>*/}
+						{/*		</div>*/}
+						{/*	</Button>*/}
+						{/*</a>*/}
 					</Conditional>
 
 					<SignupBox />

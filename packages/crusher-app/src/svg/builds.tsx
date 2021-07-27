@@ -84,4 +84,18 @@ function DropdownIconSVG(props) {
     )
   }
 
+export function BackSVG(props) {
+  return (
+    <svg viewBox="0 0 26 32" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <title />
+      <path
+        d="M10.1 23a1 1 0 000-1.41L5.5 17h23.55a1 1 0 000-2H5.53l4.57-4.57A1 1 0 008.68 9l-6.36 6.37a.9.9 0 000 1.27L8.68 23a1 1 0 001.42 0z"
+        data-name="Layer 2"
+        fill={"#fff"}
+      />
+    </svg>
+  )
+}
+
+
 export {CommentIconSVG, DangerIconSVG, ClockIconSVG, DropdownIconSVG};

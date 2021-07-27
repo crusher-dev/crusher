@@ -4,6 +4,9 @@ import { CompleteStatusIconSVG } from "@svg/dashboard";
 import { ClockIconSVG, CommentIconSVG, DangerIconSVG, DropdownIconSVG } from "@svg/builds";
 import { css } from "@emotion/core";
 import { SearchFilterBar } from "../common/searchFilterBar";
+import Link from "next/link";
+import useSWR from 'swr';
+import { BUILD_LIST_API, TEST_LIST_API } from '@constants/api';
 
 interface IBuildItemCardProps {
     buildId: string;
@@ -20,25 +23,32 @@ interface IBuildItemCardProps {
 };
 
 function BuildItemCard(props: IBuildItemCardProps) {
-    const { buildId, status, buildTimeTaken, triggeredBy, noTests, noComments, hasPassed, shouldShowProductionWarning } = props;
+    const {info} = props;
+    console.log(info,props)
 
-    const statusIcon = hasPassed ? (<CompleteStatusIconSVG isCompleted={true} />) : (<CompleteStatusIconSVG isCompleted={false} />);
+    const {id,name,createdAt, tests, status,reviewMessage, commentCount, startedBy,duration} = info;
+
+    // return null
+    // // const { buildId, status, buildTimeTaken, triggeredBy, noTests, noComments, hasPassed, shouldShowProductionWarning } = props;
+
+    const statusIcon = status === "passed" ? (<CompleteStatusIconSVG isCompleted={true} />) : (<CompleteStatusIconSVG isCompleted={false} />);
 
     return (
-        <div css={itemContainerStyle}>
+      <Link href={`/app/build/${id}`}>
+        <div css={itemContainerStyle} className={"relative"}>
             <div className={"flex flex-row items-center"}>
                 <div className={"flex flex-row items-center"}>
-                    <span css={itemBuildStyle} className={"font-cera"}>#{buildId}</span>
-                    <span className={"ml-18 text-14"}>{noTests} tests</span>
+                    <span css={itemBuildStyle} className={"font-cera"}>#{id}</span>
+                    <span className={"ml-18 text-14"}>{tests.totalCount} tests</span>
                     <div className={"flex flex-row items-center ml-21"}>
                         <ClockIconSVG />
-                        <span className={"ml-9 text-14"}>{buildTimeTaken} mins</span>
+                        <span className={"ml-9 text-14"}>{duration} mins</span>
                     </div>
                 </div>
                 <div className={"flex flex-row items-center ml-auto"}>
                     <div className={"flex flex-row items-center"}>
                         <CommentIconSVG />
-                        <span css={noCommentsStyle} className={"ml-7 text-14"}>{noComments}</span>
+                        <span css={noCommentsStyle} className={"ml-7 text-14"}>{commentCount}</span>
                     </div>
                     <span className={"ml-18"}>
                         {statusIcon}
@@ -46,17 +56,18 @@ function BuildItemCard(props: IBuildItemCardProps) {
                 </div>
             </div>
             <div className={"mt-14 text-13"}>
-                <span className={"text-13"}>opened 3 days ago</span>
-                <span className={"text-13 ml-23"}>{status}</span>
-                <span className={"text-13 ml-28"}>by - {triggeredBy}</span>
+                <span className={"text-13"}>{createdAt}</span>
+                <span className={"text-13 ml-23 capitalize"}>{status}</span>
+                <span className={"text-13 ml-28"}>by - {startedBy}</span>
             </div>
-            <Conditional showIf={shouldShowProductionWarning}>
+            <Conditional showIf={reviewMessage.message.length>1}>
                 <div className={"flex flex-row items-center mt-17"}>
                     <DangerIconSVG width={17} height={17} />
-                    <span className={"pt-1 text-13 ml-13"}>This is ongoing production issues. Please check</span>
+                    <span className={"pt-1 text-13 ml-13"}>{reviewMessage.message}</span>
                 </div>
             </Conditional>
         </div>
+      </Link>
     );
 }
 
@@ -67,6 +78,9 @@ const itemContainerStyle = css`
     padding: 20rem 24rem;
     color: rgba(255, 255, 255, 0.6);
 
+    :hover{
+        background: rgba(16, 18, 21,1);
+    }
     &:not(:first-child){
         margin-top: 24rem;
     }
@@ -82,23 +96,18 @@ const DUMMY_BUILDS_LIST = require("./dummyBuilds.json");
 function BuildSearchableList() {
     const [buildsList, _] = useState(DUMMY_BUILDS_LIST);
     const [searchQuery, setSearchQuery] = useState(null as null | string);
+    const {data} = useSWR(BUILD_LIST_API,  { suspense: true })
+
+    console.log(data)
 
     const buildItems = useMemo(() => {
-        return buildsList.map((dummyBuild: any) => {
-            const { buildId, noTests, buildTimeTaken, createdAt, status, triggeredBy, noComments, hasPassed, shouldShowProductionWarning } = dummyBuild;
-
+        return data.map((buildInfo: any) => {
             return (
-                <BuildItemCard
-                    buildId={buildId}
-                    noTests={noTests}
-                    buildTimeTaken={buildTimeTaken}
-                    createdAt={new Date(createdAt)}
-                    status={status}
-                    triggeredBy={triggeredBy}
-                    noComments={noComments}
-                    hasPassed={hasPassed}
-                    shouldShowProductionWarning={shouldShowProductionWarning}
-                />
+               <Link href={`/app/build/${buildInfo.id}`}>
+                   <BuildItemCard
+                     info={buildInfo}
+                   />
+               </Link>
             )
         })
     }, [searchQuery]);

@@ -1,9 +1,9 @@
 import { css } from "@emotion/react";
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 import React, { useState } from "react";
-import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from '@svg/dashboard';
+import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
 
-import { Button, DiscordSocialBtn, GithubSocialBtn } from "dyson/src/components/atoms";
+import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
@@ -13,11 +13,14 @@ import { projectsAtom } from "../../store/atoms/global/project";
 import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { addQueryParamToPath, appendParamsToURI } from "@utils/url";
+import { addQueryParamToPath, resolvePathToBackendURI } from "@utils/url";
 import dynamic from "next/dynamic";
 import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
+import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
+import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
+import { openChatBox } from "@utils/scriptUtils";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
@@ -65,9 +68,9 @@ function ProjectList() {
 	);
 }
 
-function BottomSection({ name, description, link }) {
+function BottomSection({ name, description, link, ...props }) {
 	return (
-		<div className={"flex justify-between py-8 px-12 pb-6 mt-20"} css={upgradeCard}>
+		<div className={"flex justify-between py-8 px-12 pb-6 mt-20"} css={upgradeCard} {...props}>
 			<div>
 				<div className={"label font-700"}>{name}</div>
 				<div className={"description text-12"}>{description}</div>
@@ -87,6 +90,7 @@ function BottomSection({ name, description, link }) {
 }
 
 function LeftSection() {
+	const router = useRouter();
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 			<div>
@@ -125,22 +129,27 @@ function LeftSection() {
 						</a>
 					</Conditional>
 
-					<Conditional showIf={getEdition() == EDITION_TYPE.OPEN_SOURCE}>
+					<Conditional showIf={getEdition() !== EDITION_TYPE.OPEN_SOURCE}>
 						<div css={navLink} className={"flex items-center text-13 mt-4"}>
 							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
 
-					<a href={"https://docs.crusher.dev/docs/references/contact-us"} target={"_blank"} rel="noreferrer">
-						<div css={navLink} className={"flex items-center text-13 mt-4"}>
-							<NewTabSVG className={"mr-12 mb-2"} /> Help & Docs
+					<ShowOnClick component={<Dropdown />} callback={() => {}}>
+						<div css={navLink} className={"flex items-center pr text-13 mt-4"}>
+							<NewTabSVG className={"mr-12 mb-2"} /> Help & Support
 						</div>
-					</a>
-					<a href={"https://docs.crusher.dev/"} target={"_blank"} rel="noreferrer">
-						<div css={navLink} className={"flex items-center text-13 mt-4"}>
-							<HelpSVG className={"mr-12 mb-2"} /> Give feedback
-						</div>
-					</a>
+					</ShowOnClick>
+
+					<div
+						css={navLink}
+						className={"flex items-center text-13 mt-4"}
+						onClick={() => {
+							window.UserLeap("track", "basic-nps");
+						}}
+					>
+						<HelpSVG className={"mr-12 mb-2"} /> Give feedback
+					</div>
 				</div>
 
 				<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
@@ -149,13 +158,96 @@ function LeftSection() {
 					</a>
 				</Conditional>
 
-				<BottomSection name={"Free plan"} description={"Get 50% more"} />
+				<BottomSection
+					name={"Free plan"}
+					description={"Get 50% more"}
+					onClick={() => {
+						router.push(
+							"https://checkout.stripe.com/pay/cs_live_a150LMbDFNkKrOt9FMdzD16JhGEEQbu51GEBFy2D4MOxa3cIJUMKoI3c8Z#fidkdWxOYHwnPyd1blppbHNgWkFMQ0l%2FYFFXM0hoMUtKM0RSZFRfNWB3aScpJ2hsYXYnP34nYnBsYSc%2FJ0tEJyknaHBsYSc%2FJ2E3M2cwMT1mKGNgPWEoMTQyNCg8YzA1KD0zMTM3Zj09ZzA8Z2MyMWQ2YScpJ3ZsYSc%2FJzIwMTFhY2M1KGM3YDAoMTYyNCg8YWQyKDMxYzQ0NGdgYWYyY2FnPT02Myd4KSdnYHFkdic%2FXlgpJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ3dgY2B3d2B3SndsYmxrJz8nbXFxdXY%2FKippbGtgZHcrZHV1J3gl",
+						);
+					}}
+				/>
 			</div>
 		</div>
 	);
 }
 
+export const dropdDown = css`
+	bottom: -10px;
+	left: calc(100% - 54px);
+	position: absolute;
 
+	width: 206.03px;
+
+	background: #0f1112;
+	border: 1px solid rgba(42, 47, 50, 0.8);
+	box-sizing: border-box;
+	box-shadow: 0px 4px 15px rgba(16, 15, 15, 0.4);
+	border-radius: 6px;
+	padding: 8rem 0;
+	z-index: 1;
+`;
+
+function Dropdown() {
+	const router = useRouter();
+	return (
+		<div css={dropdDown} className={"flex flex-col justify-between"}>
+			<div>
+				<div css={dropDownItem} className={"flex justify-between items-center px-16 py-12"} onClick={openChatBox}>
+					<span className={"name font-500 leading-none font-cera"}>Get live support</span>
+				</div>
+
+				<div
+					css={dropDownItem}
+					className={"flex justify-between items-center px-16 py-12"}
+					onClick={() => {
+						router.push("https://github.com/crusherdev/crusher/issues");
+					}}
+				>
+					<span className={"name font-500 leading-none font-cera"}>Request a feature</span>
+				</div>
+
+				<div
+					css={dropDownItem}
+					className={"flex justify-between items-center px-16 py-12"}
+					onClick={() => {
+						router.push("https://github.com/crusherdev/crusher/issues");
+					}}
+				>
+					<span className={"name font-500 leading-none font-cera"}>Report issue</span>
+				</div>
+
+				<div
+					css={dropDownItem}
+					className={"flex justify-between items-center px-16 py-12"}
+					onClick={() => {
+						router.push("https://docs.crusher.dev");
+					}}
+				>
+					<span className={"name font-500 leading-none font-cera"}>View docs</span>
+				</div>
+			</div>
+		</div>
+	);
+}
+const dropDownItem = css`
+	.name {
+		font-size: 12.5rem;
+		color: #e7e7e8;
+	}
+
+	.shortcut {
+		color: #7b7b7b;
+	}
+
+	:hover {
+		background: rgba(32, 35, 36, 0.62);
+	}
+
+	hr {
+		background: red;
+	}
+`;
 const TOP_NAV_LINK = [
 	{
 		name: "overview",

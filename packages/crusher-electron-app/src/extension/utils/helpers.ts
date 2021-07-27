@@ -24,7 +24,7 @@ export function executeScript(name: string, tabId: number, cb?: any) {
 	});
 }
 
-export function submitPostDataWithForm(url: string, options: any = {}) {
+export function submitPostDataWithForm(url: string, options: any = {}): void {
 	console.log("URL IS", url);
 	const form = document.createElement("form");
 	form.method = "post";
@@ -104,7 +104,7 @@ export function pxToRemValue(pxValue: number): string {
 }
 
 export function validURL(str) {
-	var pattern = new RegExp(
+	const pattern = new RegExp(
 		"^(https?:\\/\\/)?" + // protocol
 			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
 			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address

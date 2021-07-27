@@ -14,12 +14,12 @@ import { JobStatus } from "../../core/interfaces/JobStatus";
 import { addJobToRequestQueue } from "@utils/queue";
 import { InsertRecordResponse } from "../../core/interfaces/services/InsertRecordResponse";
 import { Platform } from "../../core/interfaces/Platform";
-import { resolvePathToFrontendURI } from "../../core/utils/uri";
 import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
-import { EDITOR_TEST_TYPE } from "../../../../crusher-shared/types/editorTestType";
 import ProjectHostsService from "../../core/services/ProjectHostsService";
 import MonitoringService from "../../core/services/MonitoringService";
+import { resolvePathToFrontendURI } from "@utils/uri";
+import { EDITOR_TEST_TYPE } from "../../../../crusher-shared/types/editorTestType";
 
 const RESPONSE_STATUS = {
 	INSUFFICIENT_INFORMATION: "INSUFFICIENT_INFORMATION",
@@ -62,10 +62,10 @@ export class TestController {
 		const { events, totalTime } = body;
 
 		return `<html><body><script> function sendPostDataWithForm(url, options = {}){ const form = document.createElement('form'); form.method = "post"; form.action = url; const optionKeys = Object.keys(options); for(let optionKey of optionKeys){const hiddenField = document.createElement('input'); hiddenField.type = 'hidden'; hiddenField.name = optionKey; hiddenField.value = options[optionKey]; form.appendChild(hiddenField);} document.body.appendChild(form);
-form.submit(); 
+form.submit();
 form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(
 			`/app/tests/editor/${EDITOR_TEST_TYPE.UNSAVED}/`,
-		)}", {events: "${events}", totalTime: ${totalTime} });</script></body></html>`;
+		)}", {events: "${encodeURIComponent(events)}", totalTime: ${totalTime} });</script></body></html>`;
 	}
 
 	@Authorized()

@@ -1,3 +1,4 @@
+require("dotenv").config();
 // Created this for proxy. Not be used in other cases
 const express = require("express");
 const next = require("next");
@@ -6,11 +7,21 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
+const bodyParser = require('body-parser');
 
 app.prepare().then(() => {
 	const server = express();
+	server.use(bodyParser({ limit: "50mb" }));
+	server.use(bodyParser.urlencoded({ extended: false }));
 
 	server.use("/server", proxy("localhost:8000"));
+
+	// Expose storage folder if using local storage
+	// (Default Storage Method in OSS)
+	if (process.env.NEXT_PUBLIC_CRUSHER_MODE === "open-source") {
+		server.use("/output", proxy("localhost:3001"));
+	}
+
 	// // This is currently used for
 	server.use("/assets", express.static(".next/public/assets"));
 	server.use("/js", express.static(".next/public/js"));
@@ -20,7 +31,7 @@ app.prepare().then(() => {
 		return handle(req, res);
 	});
 
-	const serverInstance = server.listen(port, (err) => {
+	server.listen(port, (err) => {
 		if (err) throw err;
 		//eslint-disable-next-line
 		console.log(`> Ready on http://localhost:${port}`);

@@ -34,11 +34,11 @@ function withoutSession(WrappedComponent: NextPage | NextComponentType<NextPageC
 		const isLoggedIn = reqMetaInfo.cookies.isLoggedIn;
 
 		if (userInfo && isLoggedIn) {
-			 await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
-			 return
+			await redirectToFrontendPath("/app/project/dashboard", res as NextApiResponse);
+			return;
 		} else if (getEdition() === EDITION_TYPE.OPEN_SOURCE) {
-			 await redirectToBackendURI("/v2/user/init", res as NextApiResponse);
-			 return ;
+			await redirectToBackendURI("/v2/user/init", res as NextApiResponse);
+			return;
 		}
 
 		const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));

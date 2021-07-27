@@ -52,7 +52,7 @@ module.exports = withImages(
 						],
 					}),
 					new CopyPlugin({
-						patterns: [{ from: path.resolve(__dirname, ".env") }],
+						patterns: [{ from: path.resolve(__dirname, ".env") }, { from: path.resolve(__dirname, ".env"), to: "../" }],
 					}),
 				);
 
@@ -60,7 +60,7 @@ module.exports = withImages(
 			},
 			env: {
 				GITHUB_APP_CLIENT_ID: process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID,
-				NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000/server",
+				NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
 				FRONTEND_SERVER_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
 				IS_DEVELOPMENT: process.env.NEXT_PUBLIC_IS_DEVELOPMENT,
 			},

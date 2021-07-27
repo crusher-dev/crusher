@@ -4,14 +4,25 @@ ENV NPM_CONFIG_PREFIX=/usr/src/app/.npm-global
 # Only permission for file access is in /usr/src. Find other places
 WORKDIR "/usr/src/app/"
 
-RUN npm install pm2
-RUN npm init -y
-RUN npm install dotenv
-ADD ./ecosystem.oss.js ecosystem.config.js
+USER root
+
+# Workaround to enable bash in heroku
+RUN apk add --no-cache bash && rm /bin/sh && ln -s /bin/bash /bin/sh
+
+RUN touch  /etc/profile.d/node.sh
+USER chrome
+
+RUN printf "export PATH=$PATH:$(npm get prefix)/bin\nexport NODE_OPTIONS=--enable-source-maps" >> ~/.profile
+RUN npm init -y && npm install dotenv mysql2 && npm install -g pm2 playwright@^1.7.1
+
 COPY --chown=chrome ./output packages
-RUN rm -rf packages/crusher-app/.next/cache
-RUN  cd packages/crusher-app && npm install
+RUN rm -rf packages/crusher-app/.next/cache && cd packages/crusher-app && npm install
+
 ADD ./ecosystem ecosystem
+ADD ./ecosystem.oss.js ecosystem.config.js
+ADD ./.env.oss .env
+ADD ./db/schema.sql db/schema.sql
+ADD ./setup/dbMigration.js setup/dbMigration.js
 
 ADD ./docker/oss/start.sh start.sh
 

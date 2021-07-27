@@ -1,6 +1,8 @@
 import { extractHostname } from "./url";
 
-const USER_DOMAIN = extractHostname(process.env.FRONTEND_URL);
+// Setting an empty user domain in cookie, sets the current opened
+// domain by default.
+const USER_DOMAIN = process.env.FRONTEND_URL ? extractHostname(process.env.FRONTEND_URL) : "";
 
 export function setUserCookie(cookie, options = {}, res) {
 	if (!res) {

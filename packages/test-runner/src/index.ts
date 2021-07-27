@@ -1,7 +1,6 @@
 import { generateUid } from "@shared/utils/helper";
 import { RedisManager } from "@manager/redis";
-import { REDDIS } from "@config/database";
-RedisManager.initialize(REDDIS.host, REDDIS.port, REDDIS.password);
+RedisManager.initialize();
 
 require("./queue.ts");
 require("./util/logger");

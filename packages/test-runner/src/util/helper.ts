@@ -70,19 +70,17 @@ const setupBucketManager = () => {
 
 const bucketManager = setupBucketManager();
 
-export const uploadOutputToS3 = async (bufferImages: Array<{ name: string; value: Buffer }>, video: string | null, jobRequest: iJobRunRequest) => {
+export const uploadOutputVideoToS3 = async (video: string | null, jobRequest: iJobRunRequest) => {
+	if (!video) return null;
+
 	const targetDir = `${jobRequest.requestType}/${jobRequest.instanceId}`;
 
-	let signedRawVideoUrl = null;
-	if (video) {
-		signedRawVideoUrl = await bucketManager.upload(video, path.join(targetDir, `/video.mp4.raw`));
-	}
-	const signedImages = [];
-	for (const imageBufferInfo of bufferImages) {
-		signedImages.push(await bucketManager.uploadBuffer(imageBufferInfo.value, path.join(targetDir, imageBufferInfo.name)));
-	}
+	return bucketManager.upload(video, path.join(targetDir, `/video.mp4.raw`));
+};
 
-	return { signedImageUrls: signedImages, signedRawVideoUrl };
+export const uploadOutputImageToS3 = async (imageBufferInfo: { name: string; value: Buffer}, jobRequest: iJobRunRequest) => {
+	const targetDir = `${jobRequest.requestType}/${jobRequest.instanceId}`;
+	return bucketManager.uploadBuffer(imageBufferInfo.value, path.join(targetDir, imageBufferInfo.name));
 };
 
 export const getBaseUrlFromEvents = (actions: Array<iAction>): URL => {

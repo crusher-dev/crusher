@@ -1,4 +1,4 @@
-import { REDDIS } from "@config/database";
+import { REDDIS } from "../../config/database";
 import IORedis, { Redis } from "ioredis";
 
 export class RedisManager {

@@ -11,6 +11,10 @@ import { JOB_TRIGGER } from "../../crusher-shared/types/jobTrigger";
 import MongoManager from "./core/manager/MongoManager";
 import JobsService from "./core/services/JobsService";
 import DBManager from "./core/manager/DBManager";
+import { RedisManager } from "@manager/redis";
+import { REDIS } from "crusher-server/config/database";
+
+RedisManager.initialize();
 
 const monitoringService = Container.get(MonitoringService);
 const projectHostsService = Container.get(ProjectHostsService);
@@ -33,7 +37,7 @@ export async function init() {
 
 	Logger.debug("CRON", "Started STOP_STALLED_TESTS_CHECKER cron job every 10 minutes");
 	const stopStalledTestsCronJob = new CronJob(
-		"*/10 * * * * *",
+		"*/2 * * * *",
 		async function () {
 			console.log("[Stalled]: Stopping stalled jobs");
 			try {
@@ -53,7 +57,7 @@ export async function init() {
 
 	Logger.debug("CRON", "Started RUN_MONITORING_TESTS cron job every 10 seconds");
 	const startTestQueue = new CronJob(
-		"*/10 * * * * *",
+		"*/2 * * * *",
 		async function () {
 			const queuedMonitorings = await monitoringService.getQueuedMonitorings();
 

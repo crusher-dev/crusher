@@ -9,33 +9,20 @@ module.exports = {
 			args: 'run start',
 			env: CRUSHER_APP_ENV,
 			merge_logs: true,
+			node_args: [
+				"--max_old_space_size=100"
+			]
 		},
 		{
 			name: 'crusher-server',
 			cwd: './packages/crusher-server',
 			script: 'node',
 			args: "app.js",
-			watch: [],
-			env: CRUSHER_SERVER_ENV,
+			env: { ...CRUSHER_SERVER_ENV, RUN_ALL_TOGETHER: "true" },
 			merge_logs: true,
-		},
-		{
-			name: 'crusher-server-cron',
-			cwd: './packages/crusher-server',
-			script: 'node',
-			args: "cron.js",
-			watch: [],
-			env: CRUSHER_SERVER_ENV,
-			merge_logs: true,
-		},
-		{
-			name: 'crusher-server-queue',
-			cwd: './packages/crusher-server',
-			script: 'node',
-			args: "queue.js",
-			watch: [],
-			env: CRUSHER_SERVER_ENV,
-			merge_logs: true,
+			node_args: [
+				"--max_old_space_size=200"
+			]
 		},
 		{
 			name: 'test-runner',
@@ -43,15 +30,6 @@ module.exports = {
 			script: 'node',
 			args: "index.js",
 			env: TEST_RUNNER_ENV,
-			watch: [],
-		},
-		{
-			name: 'video-processor',
-			cwd: './packages/video-processor',
-			script: 'node',
-			args: "index.js",
-			env: VIDEO_PROCESSOR_ENV,
-			watch: [],
 		},
 	],
 };

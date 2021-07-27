@@ -302,9 +302,10 @@ const parseTestMetaInfo = async (
 	headers: any = null,
 	store: Store,
 ): Promise<iTestMetaInfo | null> => {
-	const postDataFromReq = await parse(req);
+	const postDataFromReq = req.body;
 	const isComingFromCrusherExtension = postDataFromReq && postDataFromReq.events;
 	const encodedSavedPostTestData = cookies!.testPostData;
+
 	const savedPostTestData = encodedSavedPostTestData ? JSON.parse(decodeURIComponent(encodedSavedPostTestData)) : null;
 
 	const postData = isComingFromCrusherExtension ? postDataFromReq : savedPostTestData;
@@ -316,7 +317,7 @@ const parseTestMetaInfo = async (
 			}
 
 			return {
-				actions: JSON.parse(unescape(postData.events)),
+				actions: JSON.parse(decodeURIComponent(postData.events)),
 				testType: testType,
 				id: id,
 				totalTime: postData.totalTime,
@@ -351,6 +352,7 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 	const { req, query, metaInfo, res, store } = ctx;
 
 	const { slug } = query;
+
 	if (!slug) {
 		return redirectToFrontendPath("/404", res);
 	}
@@ -364,21 +366,16 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 	}
 	const id = parseInt(slug[1]);
 
-	try {
-		const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies, metaInfo.headers, store);
+	const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies, metaInfo.headers, store);
 
-		if (testMetaInfo) {
-			store.dispatch(saveTestMetaInfo(testMetaInfo));
-		}
-
-		return {
-			isLoggedIn: isLoggedIn,
-			metaInfo: testMetaInfo,
-		};
-	} catch (err) {
-		throw err;
-		return redirectToFrontendPath("/404", res);
+	if (testMetaInfo) {
+		store.dispatch(saveTestMetaInfo(testMetaInfo));
 	}
+
+	return {
+		isLoggedIn: isLoggedIn,
+		metaInfo: testMetaInfo,
+	};
 };
 
 export default withSidebarLayout(TestEditor);

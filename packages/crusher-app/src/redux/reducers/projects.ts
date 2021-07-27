@@ -1,7 +1,7 @@
 import { ADD_PROJECT, DELETE_PROJECT, SAVE_PROJECTS, SAVE_SELECTED_PROJECT, SET_CURRENT_PROJECT_INFO, SET_PROJECT_MEMBERS } from "@redux/actions/project";
 import jsCookie from "js-cookie";
 import { HYDRATE } from "next-redux-wrapper";
-import { extractHostnameFromUrl } from "@utils/helpers";
+import { extractHostnameFromUrl, isOpenSourceEdition } from "@utils/helpers";
 import { BACKEND_SERVER_URL } from "@constants/other";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
 import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
@@ -41,7 +41,7 @@ const projects = (state = initialState, action) => {
 		case SAVE_SELECTED_PROJECT:
 			if (action.projectId) {
 				jsCookie.set("selectedProject", action.projectId, {
-					domain: extractHostnameFromUrl(BACKEND_SERVER_URL),
+					domain: isOpenSourceEdition() ? "" : extractHostnameFromUrl(BACKEND_SERVER_URL),
 				});
 			}
 			return { ...state, selectedProject: action.projectId };

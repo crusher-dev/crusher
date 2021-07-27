@@ -29,8 +29,10 @@ export function getCurrentUserChecker() {
 			action.response.status(200);
 			action.response.end();
 		}
+
 		try {
 			const { token } = cookie.parse(action.request.headers.cookie);
+
 			return decodeToken(token);
 		} catch (error) {
 			console.error(error);

@@ -1,6 +1,5 @@
 import { Queue } from "bullmq";
 
-import { REDIS } from "../../../config/database";
 import { RunRequest } from "../interfaces/RunRequest";
 import TestInstanceService from "../services/TestInstanceService";
 import { InstanceStatus } from "../interfaces/InstanceStatus";
@@ -16,6 +15,8 @@ import JobReportServiceV2 from "../services/v2/JobReportServiceV2";
 import JobsService from "../services/JobsService";
 import { iJobRunRequest } from "../../../../crusher-shared/types/runner/jobRunRequest";
 import { PLATFORM } from "../../../../crusher-shared/types/platform";
+import { RedisManager } from "@manager/redis";
+RedisManager.initialize();
 
 const testInstanceService = new TestInstanceService();
 const draftInstanceService = new DraftInstanceService();
@@ -23,8 +24,7 @@ const jobReportsService = new JobReportServiceV2();
 const jobsService = new JobsService();
 
 const requestQueue = new Queue("request-queue", {
-	// @ts-ignore
-	connection: REDIS,
+	connection: RedisManager.client as any,
 });
 
 export async function addTestRequestToQueue(testRequest: RunRequest) {

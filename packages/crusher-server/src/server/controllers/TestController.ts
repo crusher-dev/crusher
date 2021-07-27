@@ -18,8 +18,6 @@ import { TestType } from "../../core/interfaces/TestType";
 import { TestFramework } from "../../core/interfaces/TestFramework";
 import ProjectHostsService from "../../core/services/ProjectHostsService";
 import MonitoringService from "../../core/services/MonitoringService";
-import { saveTestEditorDataInCookies } from "crusher-server/src/utils/cookies";
-import * as pako from "pako";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { EDITOR_TEST_TYPE } from "../../../../crusher-shared/types/editorTestType";
 
@@ -63,7 +61,6 @@ export class TestController {
 	async goToEditor(@Body() body, @Res() res) {
 		const { events, totalTime } = body;
 
-		console.log("EVENT IS", events);
 		return `<html><body><script> function sendPostDataWithForm(url, options = {}){ const form = document.createElement('form'); form.method = "post"; form.action = url; const optionKeys = Object.keys(options); for(let optionKey of optionKeys){const hiddenField = document.createElement('input'); hiddenField.type = 'hidden'; hiddenField.name = optionKey; hiddenField.value = options[optionKey]; form.appendChild(hiddenField);} document.body.appendChild(form);
 form.submit();
 form.remove();} sendPostDataWithForm("${resolvePathToFrontendURI(

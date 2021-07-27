@@ -17,7 +17,7 @@ import { Response } from "express";
 import { setUserCookie } from "../../../utils/cookies";
 import { extractHostname } from "../../../utils/url";
 import { iUser } from "../../../../../crusher-shared/types/db/iUser";
-import { isOpenSourceEdition } from "crusher-server/src/utils/helper";
+import { isOpenSourceEdition } from "../../../utils/helper";
 @Service()
 export class UserV2Service {
 	private dbManager: DBManager;

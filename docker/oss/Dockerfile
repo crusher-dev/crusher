@@ -5,10 +5,10 @@ ENV NPM_CONFIG_PREFIX=/usr/src/app/.npm-global
 WORKDIR "/usr/src/app/"
 
 USER root
+
 # Workaround to enable bash in heroku
 RUN apk add --no-cache bash && rm /bin/sh && ln -s /bin/bash /bin/sh
-# For heroku release phase
-RUN apk add curl
+
 RUN touch  /etc/profile.d/node.sh
 USER chrome
 

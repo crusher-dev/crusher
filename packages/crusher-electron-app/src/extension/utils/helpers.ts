@@ -1,9 +1,6 @@
 import { DOM } from "./dom";
 import devices from "@shared/constants/devices";
 import { iDevice } from "@shared/types/extension/device";
-import * as pako from "pako";
-
-const buffer = require('buffer').Buffer;
 
 export function executeScript(name: string, tabId: number, cb?: any) {
 	return new Promise((resolve, reject) => {

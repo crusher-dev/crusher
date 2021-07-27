@@ -66,7 +66,6 @@ function initializeWorkers() {
 		videoProcessedQueueWorker ? videoProcessedQueueWorker : getWorkerForCurrentEdition("src/core/workers/videoProcessedQueue.ts"),
 		{
 			connection: redisClient,
-			concurrency: 1,
 		},
 	);
 }

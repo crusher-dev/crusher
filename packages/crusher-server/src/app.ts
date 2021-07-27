@@ -45,6 +45,8 @@ import { RedisManager } from "@manager/redis";
 
 RedisManager.initialize();
 
+// For bundling one standalone server instead of seperate
+// cron, queue and backend servers. (Used in OSS)
 if (process.env.RUN_ALL_TOGETHER) {
 	require("./cron");
 	require("./queue");

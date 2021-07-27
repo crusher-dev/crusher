@@ -1,5 +1,7 @@
 import { extractHostname } from "./url";
 
+// Setting an empty user domain in cookie, sets the current opened
+// domain by default.
 const USER_DOMAIN = process.env.FRONTEND_URL ? extractHostname(process.env.FRONTEND_URL) : "";
 
 export function setUserCookie(cookie, options = {}, res) {
@@ -18,10 +20,4 @@ export function clearUserAuthorizationCookies(res) {
 	setUserCookie({ key: "token", value: "" }, { httpOnly: true, domain: USER_DOMAIN }, res);
 	setUserCookie({ key: "selectedProject", value: false }, { domain: USER_DOMAIN }, res);
 	setUserCookie({ key: "isLoggedIn", value: false }, { domain: USER_DOMAIN }, res);
-}
-
-export function saveTestEditorDataInCookies(data: any, res: any) {
-	const { events, totalTime } = data;
-	setUserCookie({ key: "events", value: events }, { domain: USER_DOMAIN }, res);
-	setUserCookie({ key: "totalTime", value: totalTime }, { domain: USER_DOMAIN }, res);
 }

@@ -22,12 +22,17 @@ var connection = mysql.createConnection(Object.assign(connectionObject, {
 
 var schema = fs.readFileSync(path.resolve(__dirname, "../db/schema.sql"));
 
-connection.promise().query(schema.toString()).then(function () {
-  console.log("Finished running all db migrations... Done...");
-  connection.close();
-  process.exit(0);
-}).catch(function (err) {
-  console.error("Some error occured while running migration", err);
-  connection.release();
-  process.exit(1);
+connection.query("SHOW TABLES", function (err, results) {
+  if (err) throw err;
+  if (results.length) { console.debug("DB already bootstrap-ed... Exiting now..."); process.exit(0); }
+
+  connection.promise().query(schema.toString()).then(function () {
+    console.log("Finished running all db migrations... Done...");
+    connection.close();
+    process.exit(0);
+  }).catch(function (err) {
+    console.error("Some error occured while running migration", err);
+    connection.release();
+    process.exit(1);
+  });
 });

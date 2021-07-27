@@ -15,7 +15,7 @@
     "log:app": "pm2 logs crusher-app",
     "lint": "lerna run prettify",
     "postinstall": "patch-package && sh scripts/rebuild-bull-mq.sh && sh scripts/download-binaries.sh && yarn workspace crusher-runner-utils build && cp -rf .env.sample .env",
-    "docker:heroku": "cd docker/oss/ && DOCKER_BUILDKIT=1 docker-compose up --build -d",
+    "docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
     "docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
     "db:migration": "node setup/dbMigration.js"
   },

@@ -302,9 +302,7 @@ const parseTestMetaInfo = async (
 	headers: any = null,
 	store: Store,
 ): Promise<iTestMetaInfo | null> => {
-
 	const postDataFromReq = req.body;
-
 	const isComingFromCrusherExtension = postDataFromReq && postDataFromReq.events;
 	const encodedSavedPostTestData = cookies!.testPostData;
 
@@ -368,22 +366,16 @@ TestEditor.getInitialProps = async (ctx: iPageContext) => {
 	}
 	const id = parseInt(slug[1]);
 
-	try {
-		const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies, metaInfo.headers, store);
-		console.log("POST DATA IS", "HELLO3");
+	const testMetaInfo = await parseTestMetaInfo(req!, res!, type, id, metaInfo.cookies, metaInfo.headers, store);
 
-		if (testMetaInfo) {
-			store.dispatch(saveTestMetaInfo(testMetaInfo));
-		}
-
-		return {
-			isLoggedIn: isLoggedIn,
-			metaInfo: testMetaInfo,
-		};
-	} catch (err) {
-		throw err;
-		return redirectToFrontendPath("/404", res);
+	if (testMetaInfo) {
+		store.dispatch(saveTestMetaInfo(testMetaInfo));
 	}
+
+	return {
+		isLoggedIn: isLoggedIn,
+		metaInfo: testMetaInfo,
+	};
 };
 
 export default withSidebarLayout(TestEditor);

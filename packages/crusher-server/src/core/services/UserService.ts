@@ -36,6 +36,7 @@ import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequ
 import { TierPlan } from "../interfaces/TierPlan";
 import { RedisManager } from "@manager/redis";
 import MongoManager from "@manager/MongoManager";
+import { iUserAndSystemInfoResponse } from "@crusher-shared/types/response/iUserAndSystemInfoResponse";
 
 @Service()
 export default class UserService {
@@ -462,7 +463,7 @@ export default class UserService {
 		return [firstName, lastName].filter((name) => !!name).join(" ");
 	}
 
-	async getUserAndSystemInfo(user: any): Promise<any> {
+	async getUserAndSystemInfo(user: any): Promise<iUserAndSystemInfoResponse> {
 		const { user_id, team_id } = user;
 
 		// @Note: Remove the next line after development of this API
@@ -478,13 +479,13 @@ export default class UserService {
 						name: this.getFullName(userInfo.first_name, userInfo.last_name),
 						avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
 						// @NOTE: Remove hardcoding from the next 3 fields
-						lastVisitedURL: "/app/dashboard",
+						lastVisitedURL: null,
 						lastProjectSelectedId: null,
 						onboardingSteps: {
-							INITIAL_ONBOARDING: "true",
-							CREATED_TEST: "",
-							WATCHED_VIDEO: "",
-							ADDED_ALERT: "",
+							INITIAL_ONBOARDING: true,
+							CREATED_TEST: false,
+							WATCHED_VIDEO: false,
+							ADDED_ALERT: false,
 						},
 				  }
 				: null,
@@ -508,7 +509,7 @@ export default class UserService {
 				MONGO_DB_OPERATIONS: {
 					working: await this.mongoManager.isAlive(),
 					message: null,
-				}
+				},
 			},
 		};
 	}

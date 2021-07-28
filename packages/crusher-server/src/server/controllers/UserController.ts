@@ -7,7 +7,6 @@ import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, USER_NOT_REGISTE
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "../../utils/cookies";
 import { Logger } from "../../utils/logger";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
-import { InviteMembersService } from "../../core/services/mongo/inviteMembers";
 import { getEdition } from "../../utils/helper";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { iUser } from "@crusher-shared/types/db/iUser";
@@ -15,6 +14,8 @@ import { EmailManager } from "../../core/manager/EmailManager";
 import { decodeToken, encryptPassword, generateToken, generateVerificationCode } from "../../core/utils/auth";
 import { google } from "googleapis";
 import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
+import { iUserAndSystemInfoResponse } from "@crusher-shared/types/response/iUserAndSystemInfoResponse";
+
 const cookie = require("cookie");
 
 let oauth2Client = null;
@@ -173,7 +174,7 @@ export class UserController {
 	}
 
 	@Get("/getUserAndSystemInfo")
-	async getUserAndSystemInfo(@CurrentUser() user) {
+	async getUserAndSystemInfo(@CurrentUser() user): Promise<iUserAndSystemInfoResponse> {
 		return this.userService.getUserAndSystemInfo(user);
 	}
 

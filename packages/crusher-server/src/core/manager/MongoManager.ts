@@ -47,7 +47,7 @@ export default class MongoManager {
 		});
 	}
 
-	isAlive() {
+	isAlive(): Promise<boolean> {
 		return new Promise((resolve, reject) => {
 			setInterval(() => {
 				if (this.status === IMongoStatus.DISCONNECTED) {

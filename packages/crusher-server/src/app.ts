@@ -14,7 +14,6 @@ import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
 import { UserController } from "./server/controllers/UserController";
-import { UserControllerV2 } from "./server/controllers/v2/UserControllerV2";
 import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import MongoManager from "@manager/MongoManager";
@@ -54,7 +53,7 @@ if (process.env.STORAGE_MODE === "local") {
 	server.listen(storagePort);
 }
 
-const controllersArr: any = [UserController, UserControllerV2];
+const controllersArr: any = [UserController];
 
 if (getEdition() === EDITION_TYPE.EE) {
 	const eeControllerArr: any = require("./ee/controllers");

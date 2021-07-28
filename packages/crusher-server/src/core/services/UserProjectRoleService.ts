@@ -1,9 +1,9 @@
 import { Service, Container } from "typedi";
-import DBManager from "../../manager/DBManager";
-import { iProjectRole, PROJECT_ROLE_TYPES } from "../../../../../crusher-shared/types/db/projectRole";
+import DBManager from "../manager/DBManager";
+import { iProjectRole, PROJECT_ROLE_TYPES } from "@crusher-shared/types/db/projectRole";
 
 @Service()
-export default class UserProjectRoleV2Service {
+export default class UserProjectRoleService {
 	private dbManager: DBManager;
 
 	constructor() {

@@ -32,7 +32,7 @@ function Dropdown() {
 					<span
 						className={"name font-500 leading-none font-cera"}
 						onClick={() => {
-							router.push(resolvePathToBackendURI("/v2/user/logout"));
+							router.push(resolvePathToBackendURI("/user/logout"));
 						}}
 					>
 						Logout

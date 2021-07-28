@@ -1,11 +1,11 @@
 import { Service, Container } from "typedi";
 import DBManager from "../manager/DBManager";
-import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
+import { TEAM_CREATED } from "../../constants";
 import { CreateTeamRequest } from "../interfaces/services/team/CreateTeamRequest";
 import { TierPlan } from "../interfaces/TierPlan";
 import { iUser } from "@crusher-shared/types/db/iUser";
-import { iMemberInfoResponse } from "../../../../crusher-shared/types/response/membersInfoResponse";
-import { TEAM_ROLE_TYPES } from "../../../../crusher-shared/types/db/teamRole";
+import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
+import { TEAM_ROLE_TYPES } from "@crusher-shared/types/db/teamRole";
 
 @Service()
 export default class TeamService {
@@ -13,6 +13,17 @@ export default class TeamService {
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
+	}
+
+	async createTeamWithArgs(userId: number, teamName: string, teamEmail: string, tier: TierPlan, stripeCustomerId: string): Promise<number> {
+		const teamRecord = await this.dbManager.insertData("INSERT INTO teams SET ?", {
+			name: teamName,
+			team_email: teamEmail,
+			tier: TierPlan.FREE,
+			stripe_customer_id: stripeCustomerId,
+		});
+
+		return teamRecord.insertId;
 	}
 
 	async createTeam(details: CreateTeamRequest): Promise<any> {
@@ -38,7 +49,7 @@ export default class TeamService {
 		throw new Error("User has already joined some team");
 	}
 
-	async getTeamInfo(teamId: string): Promise<iUser> {
+	async getTeamInfo(teamId: string): Promise<any> {
 		return await this.dbManager.fetchSingleRow("SELECT * from teams WHERE id = ?", [teamId]);
 	}
 

@@ -2,15 +2,16 @@ import { Container, Service } from "typedi";
 import DBManager from "../manager/DBManager";
 import { Project } from "../interfaces/db/Project";
 import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
-import { iProjectInfoResponse } from "../../../../crusher-shared/types/response/projectInfoResponse";
-import { iMemberInfoResponse } from "../../../../crusher-shared/types/response/membersInfoResponse";
-import { iUser } from "../../../../crusher-shared/types/db/iUser";
-import { TEAM_ROLE_TYPES } from "../../../../crusher-shared/types/db/teamRole";
-import { iAllProjectsItemResponse } from "../../../../crusher-shared/types/response/allProjectsResponse";
-import { iJobReports } from "../../../../crusher-shared/types/db/jobReports";
-import { JobReportStatus } from "../../../../crusher-shared/types/jobReportStatus";
-import { ProjectHealthStatus } from "../../../../crusher-shared/types/projectHelathStatus";
+import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
+import { iMemberInfoResponse } from "@crusher-shared/types/response/membersInfoResponse";
+import { iUser } from "@crusher-shared/types/db/iUser";
+import { TEAM_ROLE_TYPES } from "@crusher-shared/types/db/teamRole";
+import { iAllProjectsItemResponse } from "@crusher-shared/types/response/allProjectsResponse";
+import { iJobReports } from "@crusher-shared/types/db/jobReports";
+import { JobReportStatus } from "@crusher-shared/types/jobReportStatus";
+import { ProjectHealthStatus } from "@crusher-shared/types/projectHelathStatus";
 import { JobStatus } from "../interfaces/JobStatus";
+import { iProject } from "@crusher-shared/types/db/project";
 
 @Service()
 export default class ProjectService {
@@ -18,6 +19,10 @@ export default class ProjectService {
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
+	}
+
+	async getAllProjectsOfTeam(teamId: number): Promise<Array<iProject>> {
+		return this.dbManager.fetchData(`SELECT * FROM projects WHERE team_id = ?`, [teamId]);
 	}
 
 	async isUserInProject(projectId: number, userId: number) {
@@ -110,10 +115,7 @@ export default class ProjectService {
 	}
 
 	async getAllProjects(teamId: number) {
-		const projects = await this.dbManager.fetchData("SELECT * FROM projects WHERE team_id=?", [teamId]);
-		return projects.map((project) => {
-			return { id: project.id, name: project.name, team_id: project.team_id };
-		});
+		return this.dbManager.fetchData("SELECT id, name, team_id FROM projects WHERE team_id=?", [teamId]);
 	}
 
 	async getAllProjectsOfUser(userId: number): Promise<Array<iAllProjectsItemResponse>> {

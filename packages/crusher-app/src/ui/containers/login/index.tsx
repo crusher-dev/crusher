@@ -143,7 +143,7 @@ export const LoginContainer = () => {
 					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Login to your account</div>
 
 
-					<a href={resolvePathToBackendURI(("/v2/user/authenticate/google"))}>
+					<a href={resolvePathToBackendURI(("/user/authenticate/google"))}>
 						<Button size={"large"} css={googleButton} className={"mb-20"}>
 							<div className={"flex justify-center items-center"}>
 								<GoogleSVG className={"mr-12"} />
@@ -151,7 +151,7 @@ export const LoginContainer = () => {
 							</div>
 						</Button>
 					</a>
-					{/*<a href={resolvePathToBackendURI(("/v2/user/authenticate/github"))}>*/}
+					{/*<a href={resolvePathToBackendURI(("/user/authenticate/github"))}>*/}
 					{/*	<Button*/}
 					{/*		size={"large"}*/}
 					{/*		css={css`*/}

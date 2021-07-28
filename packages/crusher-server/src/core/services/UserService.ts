@@ -1,4 +1,4 @@
-import { Container, Inject, Service } from "typedi";
+import { Container, Service } from "typedi";
 import DBManager from "../manager/DBManager";
 import {
 	EMAIL_NOT_VERIFIED,
@@ -22,33 +22,137 @@ import { Logger } from "../../utils/logger";
 import ProjectService from "./ProjectService";
 import TeamService from "./TeamService";
 import StripeManager from "../manager/StripeManager";
-import UserProjectRoleV2Service from "./v2/UserProjectRoleV2Service";
-import UserTeamRoleV2Service from "./v2/UserTeamRoleV2Service";
+import userProjectRoleService from "./UserProjectRoleService";
+import userTeamRoleService from "./UserTeamRoleService";
 import { TEAM_ROLE_TYPES } from "../../../../crusher-shared/types/db/teamRole";
 import { PROJECT_ROLE_TYPES } from "../../../../crusher-shared/types/db/projectRole";
-import { iInviteReferral } from "../../../../crusher-shared/types/inviteReferral";
+import { iInviteReferral, INVITE_REFERRAL_TYPES } from "../../../../crusher-shared/types/inviteReferral";
 import { InviteMembersService } from "./mongo/inviteMembers";
 import { iProjectInviteReferral } from "../../../../crusher-shared/types/mongo/projectInviteReferral";
+import { isOpenSourceEdition } from "../../utils/helper";
+import { setUserCookie } from "../../utils/cookies";
+import { extractHostname } from "../../utils/url";
+import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
+import { TierPlan } from "../interfaces/TierPlan";
+import { RedisManager } from "@manager/redis";
+import MongoManager from "@manager/MongoManager";
+import { iUserAndSystemInfoResponse } from "@crusher-shared/types/response/iUserAndSystemInfoResponse";
 
 @Service()
 export default class UserService {
 	private dbManager: DBManager;
+	private mongoManager: MongoManager;
 	private projectService: ProjectService;
 	private teamService: TeamService;
-	private userProjectRoleV2Service: UserProjectRoleV2Service;
-	private userTeamRoleV2Service: UserTeamRoleV2Service;
 	private inviteMembersService: InviteMembersService;
 
-	@Inject()
-	private stripeManager: StripeManager;
+	private userTeamRoleService: userTeamRoleService;
+	private userProjectRoleService: userProjectRoleService;
+	private stripeManager: StripeManager | undefined;
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
 		this.projectService = Container.get(ProjectService);
 		this.teamService = Container.get(TeamService);
-		this.userProjectRoleV2Service = Container.get(UserProjectRoleV2Service);
-		this.userTeamRoleV2Service = Container.get(UserTeamRoleV2Service);
+		this.userProjectRoleService = Container.get(userProjectRoleService);
+		this.userTeamRoleService = Container.get(userTeamRoleService);
 		this.inviteMembersService = Container.get(InviteMembersService);
+		this.mongoManager = Container.get(MongoManager);
+
+		if (!isOpenSourceEdition() && process.env.STRIPE_SECRET_API_KEY) {
+			this.stripeManager = Container.get(StripeManager);
+		}
+	}
+
+	// For Oss
+	async getOpenSourceUser(): Promise<iUser | null> {
+		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE is_oss = ?`, [true]);
+	}
+
+	// For oss
+	async createOpenSourceUser(): Promise<iUser> {
+		const signupRequestPayload = {
+			firstName: "Open",
+			lastName: "Source",
+			email: "open@source.com",
+			password: "opensource",
+		};
+
+		const userId = await this.createUserRecord(signupRequestPayload, true, true);
+
+		await this.createInitialUserWorkspace(userId, signupRequestPayload, false);
+
+		return this.getOpenSourceUser();
+	}
+
+	async getUserByEmail(email: string): Promise<iUser | null> {
+		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
+	}
+
+	async updateTeam(userId: number, teamId: number) {
+		return this.dbManager.fetchSingleRow(`UPDATE users SET ? WHERE id = ?`, [{ team_id: teamId }, userId]);
+	}
+
+	async createUserRecord(user: iSignupUserRequest, isVerified = false, isOss = false): Promise<number> {
+		const _user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [user.email]);
+
+		if (_user) {
+			throw new Error("User already registered");
+		}
+
+		const encryptedPassword = encryptPassword(user.password);
+
+		const userRecord = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
+			first_name: user.firstName,
+			last_name: user.lastName,
+			email: user.email,
+			password: encryptedPassword,
+			verified: isVerified,
+			is_oss: isOss,
+		});
+
+		return userRecord.insertId;
+	}
+
+	async createInitialUserWorkspace(userId: number, user: iSignupUserRequest, shouldInitializeStripe = true): Promise<{ teamId: number; projectId: number }> {
+		const stripeCustomerId =
+			shouldInitializeStripe && this.stripeManager ? await this.stripeManager.createCustomer(`${user.firstName} ${user.lastName}`, user.email) : null;
+
+		const teamId = await this.teamService.createTeamWithArgs(userId, `${user.firstName}'s Team`, user.email, TierPlan.FREE, stripeCustomerId);
+		await this.updateTeam(userId, teamId);
+		await this.userTeamRoleService.create(userId, teamId, TEAM_ROLE_TYPES.ADMIN);
+		const projectId = (await this.projectService.createProject(`Default`, teamId)).insertId;
+		await this.userProjectRoleService.create(userId, projectId, PROJECT_ROLE_TYPES.ADMIN);
+
+		return { teamId, projectId };
+	}
+
+	async useReferral(userId: number, referral: iInviteReferral): Promise<{ teamId: number }> {
+		const referralObject = await this.inviteMembersService.parseInviteReferral(referral);
+
+		await this.updateTeam(userId, referralObject.teamId);
+		const role = referralObject.meta && referralObject.meta.role ? referralObject.meta.role : null;
+
+		await this.userTeamRoleService.create(userId, referralObject.teamId, role ? role : TEAM_ROLE_TYPES.ADMIN);
+
+		if (referral.type === INVITE_REFERRAL_TYPES.TEAM) {
+			const projects = await this.projectService.getAllProjectsOfTeam(referralObject.teamId);
+			const projectIdList = projects.map((project) => project.id);
+			await this.userProjectRoleService.createForProjects(userId, projectIdList, role ? role : PROJECT_ROLE_TYPES.ADMIN);
+		} else {
+			await this.userProjectRoleService.create(userId, (referralObject as iProjectInviteReferral).projectId, role ? role : PROJECT_ROLE_TYPES.ADMIN);
+		}
+		return { teamId: referralObject.teamId };
+	}
+
+	async setUserAuthCookies(userId: number, teamId: number, res: Response): Promise<string> {
+		const USER_DOMAIN = process.env.FRONTEND_URL ? extractHostname(process.env.FRONTEND_URL) : "";
+		const token = generateToken(userId, teamId);
+
+		setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: USER_DOMAIN }, res);
+		setUserCookie({ key: "isLoggedIn", value: true }, { domain: USER_DOMAIN }, res);
+
+		return token;
 	}
 
 	async authenticateWithEmailAndPassword(details: AuthenticationByCredentials) {
@@ -97,8 +201,8 @@ export default class UserService {
 				referralObject ? referralObject.teamId : null,
 				referralObject ? (referralObject as iProjectInviteReferral).projectId : null,
 			);
-			await this.userTeamRoleV2Service.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
-			await this.userProjectRoleV2Service.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
+			await this.userTeamRoleService.create(registeredUser.userId, registeredUser.teamId, TEAM_ROLE_TYPES.ADMIN);
+			await this.userProjectRoleService.create(registeredUser.userId, registeredUser.projectId, PROJECT_ROLE_TYPES.ADMIN);
 			return registeredUser;
 		}
 		return { status: USER_ALREADY_REGISTERED };
@@ -174,8 +278,8 @@ export default class UserService {
 			const user_id = inserted_user.insertId;
 
 			if (user_id) {
-				await this.userTeamRoleV2Service.create(user_id, teamId, TEAM_ROLE_TYPES.ADMIN);
-				await this.userProjectRoleV2Service.create(user_id, projectId, PROJECT_ROLE_TYPES.ADMIN);
+				await this.userTeamRoleService.create(user_id, teamId, TEAM_ROLE_TYPES.ADMIN);
+				await this.userProjectRoleService.create(user_id, projectId, PROJECT_ROLE_TYPES.ADMIN);
 
 				return {
 					status: SIGNED_UP_WITHOUT_JOINING_TEAM,
@@ -353,5 +457,60 @@ export default class UserService {
 			});
 			return null;
 		}
+	}
+
+	getFullName(firstName: string, lastName: string) {
+		return [firstName, lastName].filter((name) => !!name).join(" ");
+	}
+
+	async getUserAndSystemInfo(user: any): Promise<iUserAndSystemInfoResponse> {
+		const { user_id, team_id } = user;
+
+		// @Note: Remove the next line after development of this API
+		const userInfo = user_id ? await this.getUserInfo(user_id) : null;
+		const teamInfo = userInfo ? await this.teamService.getTeamInfo(team_id) : null;
+		const teamProjects = userInfo && teamInfo ? await this.projectService.getAllProjects(team_id): null;
+
+		return {
+			userId: userInfo ? userInfo.id : null,
+			isUserLoggedIn: !!userInfo,
+			userData: userInfo
+				? {
+						name: this.getFullName(userInfo.first_name, userInfo.last_name),
+						avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
+						// @NOTE: Remove hardcoding from the next 3 fields
+						lastVisitedURL: null,
+						lastProjectSelectedId: null,
+						onboardingSteps: {
+							INITIAL_ONBOARDING: true,
+							CREATED_TEST: false,
+							WATCHED_VIDEO: false,
+							ADDED_ALERT: false,
+						},
+				  }
+				: null,
+			team: teamInfo
+				? {
+						id: teamInfo.id,
+						name: teamInfo.name,
+						plan: teamInfo.tier,
+				  }
+				: null,
+			projects: teamProjects,
+			system: {
+				REDIS_OPERATION: {
+					working: RedisManager.isAlive(),
+					message: null,
+				},
+				MYSQL_OPERATION: {
+					working: await this.dbManager.isAlive(),
+					message: null,
+				},
+				MONGO_DB_OPERATIONS: {
+					working: await this.mongoManager.isAlive(),
+					message: null,
+				},
+			},
+		};
 	}
 }

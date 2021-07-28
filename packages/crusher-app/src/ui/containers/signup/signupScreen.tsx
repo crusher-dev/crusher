@@ -17,7 +17,7 @@ import { LoadingSVG } from '@svg/dashboard';
 const showRegistrationFormAtom = atom(false);
 
 const registerUser = (name, email, password) => {
-	return backendRequest("/v2/user/signup", {
+	return backendRequest("/user/signup", {
 		method: RequestMethod.POST,
 		payload: { email, password, firstName:name, lastName: "" },
 	});
@@ -174,7 +174,7 @@ export const SignupContainer = () => {
 					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Create your account</div>
 
 					<Conditional showIf={!showRegistrationBox}>
-						<a href={resolvePathToBackendURI("/v2/user/authenticate/google")}>
+						<a href={resolvePathToBackendURI("/user/authenticate/google")}>
 							<Button size={"large"} css={googleButton} className={"mb-20"}>
 								<div className={"flex justify-center items-center"}>
 									<GoogleSVG className={"mr-12"} />

@@ -60,7 +60,7 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 		const loggedInCookies = isUserLoggedInFromCookies(cookies);
 
 		if (!loggedInCookies && getEdition() === EDITION_TYPE.OPEN_SOURCE) {
-			return redirectToBackendURI("/v2/user/init", ctx.res as NextApiResponse);
+			return redirectToBackendURI("/user/init", ctx.res as NextApiResponse);
 		}
 
 		const [redirectResponse, userStatus] = await handleUserStatus(userInfo, res, componentScope ? componentScope : null);

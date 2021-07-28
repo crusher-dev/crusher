@@ -15,6 +15,10 @@ export class RedisManager {
 		}
 	}
 
+	static isAlive() {
+		return this.client && this.client.status === "ready";
+	}
+
 	static get() {
 		return RedisManager.client;
 	}

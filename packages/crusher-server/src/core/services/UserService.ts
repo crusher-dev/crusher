@@ -34,10 +34,13 @@ import { setUserCookie } from "../../utils/cookies";
 import { extractHostname } from "../../utils/url";
 import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
 import { TierPlan } from "../interfaces/TierPlan";
+import { RedisManager } from "@manager/redis";
+import MongoManager from "@manager/MongoManager";
 
 @Service()
 export default class UserService {
 	private dbManager: DBManager;
+	private mongoManager: MongoManager;
 	private projectService: ProjectService;
 	private teamService: TeamService;
 	private inviteMembersService: InviteMembersService;
@@ -53,6 +56,7 @@ export default class UserService {
 		this.userProjectRoleService = Container.get(userProjectRoleService);
 		this.userTeamRoleService = Container.get(userTeamRoleService);
 		this.inviteMembersService = Container.get(InviteMembersService);
+		this.mongoManager = Container.get(MongoManager);
 
 		if (!isOpenSourceEdition() && process.env.STRIPE_SECRET_API_KEY) {
 			this.stripeManager = Container.get(StripeManager);
@@ -452,5 +456,60 @@ export default class UserService {
 			});
 			return null;
 		}
+	}
+
+	getFullName(firstName: string, lastName: string) {
+		return [firstName, lastName].filter((name) => !!name).join(" ");
+	}
+
+	async getUserAndSystemInfo(user: any): Promise<any> {
+		const { user_id, team_id } = user;
+
+		// @Note: Remove the next line after development of this API
+		const userInfo = user_id ? await this.getUserInfo(user_id) : null;
+		const teamInfo = userInfo ? await this.teamService.getTeamInfo(team_id) : null;
+		const teamProjects = userInfo && teamInfo ? await this.projectService.getAllProjects(team_id): null;
+
+		return {
+			userId: userInfo ? userInfo.id : null,
+			isUserLoggedIn: !!userInfo,
+			userData: userInfo
+				? {
+						name: this.getFullName(userInfo.first_name, userInfo.last_name),
+						avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
+						// @NOTE: Remove hardcoding from the next 3 fields
+						lastVisitedURL: "/app/dashboard",
+						lastProjectSelectedId: null,
+						onboardingSteps: {
+							INITIAL_ONBOARDING: "true",
+							CREATED_TEST: "",
+							WATCHED_VIDEO: "",
+							ADDED_ALERT: "",
+						},
+				  }
+				: null,
+			team: teamInfo
+				? {
+						id: teamInfo.id,
+						name: teamInfo.name,
+						plan: teamInfo.tier,
+				  }
+				: null,
+			projects: teamProjects,
+			system: {
+				REDIS_OPERATION: {
+					working: RedisManager.isAlive(),
+					message: null,
+				},
+				MYSQL_OPERATION: {
+					working: await this.dbManager.isAlive(),
+					message: null,
+				},
+				MONGO_DB_OPERATIONS: {
+					working: await this.mongoManager.isAlive(),
+					message: null,
+				}
+			},
+		};
 	}
 }

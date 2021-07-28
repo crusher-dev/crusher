@@ -172,6 +172,11 @@ export class UserController {
 		return { status };
 	}
 
+	@Get("/getUserAndSystemInfo")
+	async getUserAndSystemInfo(@CurrentUser() user) {
+		return this.userService.getUserAndSystemInfo(user);
+	}
+
 	@Get("/getStatus")
 	async getStatus(@CurrentUser({ required: false }) user, @Res() res) {
 		const { user_id } = user;

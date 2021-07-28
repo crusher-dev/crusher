@@ -115,10 +115,7 @@ export default class ProjectService {
 	}
 
 	async getAllProjects(teamId: number) {
-		const projects = await this.dbManager.fetchData("SELECT * FROM projects WHERE team_id=?", [teamId]);
-		return projects.map((project) => {
-			return { id: project.id, name: project.name, team_id: project.team_id };
-		});
+		return this.dbManager.fetchData("SELECT id, name, team_id FROM projects WHERE team_id=?", [teamId]);
 	}
 
 	async getAllProjectsOfUser(userId: number): Promise<Array<iAllProjectsItemResponse>> {

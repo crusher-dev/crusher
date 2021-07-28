@@ -49,7 +49,7 @@ export default class TeamService {
 		throw new Error("User has already joined some team");
 	}
 
-	async getTeamInfo(teamId: string): Promise<iUser> {
+	async getTeamInfo(teamId: string): Promise<any> {
 		return await this.dbManager.fetchSingleRow("SELECT * from teams WHERE id = ?", [teamId]);
 	}
 

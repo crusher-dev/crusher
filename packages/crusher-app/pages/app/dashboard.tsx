@@ -2,8 +2,10 @@ import React from "react";
 import { SidebarTopBarLayout } from '@ui/layout/DashboardBase';
 import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
 import {css} from "@emotion/core";
+import { usePageTitle } from '../../src/hooks/seo';
 
 function Dashboard() {
+	usePageTitle("Dashboard");
 	return (
 		<>
 		<SidebarTopBarLayout>

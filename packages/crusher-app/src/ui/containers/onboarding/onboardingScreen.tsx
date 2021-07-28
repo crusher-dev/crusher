@@ -113,12 +113,12 @@ const GithubDiscordSection = () => {
 					<GithubSocialBtn count={githubStars} onClick={openLinkInNewTab.bind(this, "https://github.com/crusherdev/crusher")} />
 				</div>
 			</div>
-			<div className="text-16 flex flex-col items-center">
-				<span className={"mb-20 leading-none font-600 "}>Join us the community of builders</span>
-				<div>
-					<DiscordSocialBtn count={234} onClick={openLinkInNewTab.bind(this, "https://discord.com")} />
-				</div>
-			</div>
+			{/*<div className="text-16 flex flex-col items-center">*/}
+			{/*	<span className={"mb-20 leading-none font-600 "}>Join us the community of builders</span>*/}
+			{/*	<div>*/}
+			{/*		<DiscordSocialBtn count={234} onClick={openLinkInNewTab.bind(this, "https://discord.com")} />*/}
+			{/*	</div>*/}
+			{/*</div>*/}
 
 			<Link href={"/app/dashboard"}>
 				<Button

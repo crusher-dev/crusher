@@ -20,7 +20,7 @@ import {  projectsAtom } from "../src/store/atoms/global/project";
 import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
 import { appStateAtom, appStateItemMutator } from '../src/store/atoms/global/appState';
 import  { SWRConfig } from 'swr'
-import { addChat, addScript, handleUserFeedback } from '@utils/scriptUtils';
+import { addChat, addPosthog, addScript, handleUserFeedback } from '@utils/scriptUtils';
 
 
 function loadUserDataAndRedirect() {
@@ -50,7 +50,7 @@ function loadUserDataAndRedirect() {
 
 		handleUserFeedback()
 
-
+addPosthog()
 	}, []);
 
 	return [dataLoaded];

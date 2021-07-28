@@ -1,9 +1,9 @@
 import { atom } from "jotai";
 import { appStateAtom } from "./appState";
-import { systemConfigAtom } from './systemConfig';
+import { systemConfigAtom } from "./systemConfig";
 import { userAtom } from "./user";
-import { projectsAtom } from './project';
-import { teamAtom } from './team';
+import { projectsAtom } from "./project";
+import { teamAtom } from "./team";
 
 /*
 	Combine different atom and user

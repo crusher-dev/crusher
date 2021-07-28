@@ -19,13 +19,12 @@ import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
-import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
 import { openChatBox } from "@utils/scriptUtils";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
 function ProjectList() {
-	const [search, setSearch] = useState(false);
+	const [search] = useState(false);
 
 	const [projects] = useAtom(projectsAtom);
 	const [appState] = useAtom(appStateAtom);

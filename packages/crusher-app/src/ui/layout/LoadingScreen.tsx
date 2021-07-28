@@ -2,7 +2,7 @@ import { css } from "@emotion/core";
 import { CenterLayout } from "dyson/src/components/layouts/";
 import { Logo } from "dyson/src/components/atoms";
 import CrusherBase from "../layout/CrusherBase";
-import { usePageTitle } from '../../hooks/seo';
+import { usePageTitle } from "../../hooks/seo";
 
 const logoStyle = css`
 	box-shadow: 0px 0px 38px 12px rgb(153 136 255 / 12%);
@@ -10,7 +10,7 @@ const logoStyle = css`
 `;
 
 export const LoadingScreen = () => {
-	usePageTitle("🦖")
+	usePageTitle("🦖");
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-100"}>

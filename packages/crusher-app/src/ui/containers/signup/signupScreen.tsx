@@ -11,15 +11,15 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "@interfaces/RequestOptions";
 import { atom } from "jotai";
 import { useAtom } from "jotai";
-import {validateEmail, validateName, validatePassword} from "@utils/validationUtils"
-import { useRouter } from 'next/router';
-import { LoadingSVG } from '@svg/dashboard';
+import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
+import { useRouter } from "next/router";
+import { LoadingSVG } from "@svg/dashboard";
 const showRegistrationFormAtom = atom(false);
 
 const registerUser = (name, email, password) => {
 	return backendRequest("/user/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, firstName:name, lastName: "" },
+		payload: { email, password, firstName: name, lastName: "" },
 	});
 };
 
@@ -50,8 +50,7 @@ function EmailPasswordBox() {
 		[name],
 	);
 
-	const verifyInfo = (completeVerify=false) => {
-
+	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateName = completeVerify || name.value;
@@ -69,28 +68,32 @@ function EmailPasswordBox() {
 	};
 
 	const signupUser = async () => {
-
-		verifyInfo(true)
+		verifyInfo(true);
 
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
-		setProcessingSignup(true)
+		setProcessingSignup(true);
 		try {
 			const { status } = await registerUser(name.value, email.value, password.value);
-			if(status === "USER_NOT_REGISTERED"){
-				alert("Please enter corre")
+			if (status === "USER_NOT_REGISTERED") {
+				alert("Please enter corre");
 			}
-
+		} catch (e) {
+			alert(e);
 		}
-		catch (e){
-			alert(e)
-		}
-		setProcessingSignup(false)
+		setProcessingSignup(false);
 	};
 
 	return (
 		<div css={loginBoxlarge}>
 			<div className={"mb-12"}>
-				<Input autoComplete="name" value={name.value} placeholder={"Enter name"} onChange={nameChange} isError={name.error} onBlur={verifyInfo.bind(this,false)} />
+				<Input
+					autoComplete="name"
+					value={name.value}
+					placeholder={"Enter name"}
+					onChange={nameChange}
+					isError={name.error}
+					onBlur={verifyInfo.bind(this, false)}
+				/>
 				<Conditional showIf={name.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{name.error}
@@ -99,7 +102,14 @@ function EmailPasswordBox() {
 			</div>
 
 			<div className={"mb-12"}>
-				<Input autoComplete="email" value={email.value} placeholder={"Enter email"} onChange={emailChange} isError={email.error} onBlur={verifyInfo.bind(this,false)} />
+				<Input
+					autoComplete="email"
+					value={email.value}
+					placeholder={"Enter email"}
+					onChange={emailChange}
+					isError={email.error}
+					onBlur={verifyInfo.bind(this, false)}
+				/>
 				<Conditional showIf={email.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{email.error}
@@ -114,7 +124,7 @@ function EmailPasswordBox() {
 					type={"password"}
 					onChange={passwordChange}
 					isError={password.error}
-					onBlur={verifyInfo.bind(this,false)}
+					onBlur={verifyInfo.bind(this, false)}
 				/>
 				<Conditional showIf={password.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
@@ -125,11 +135,15 @@ function EmailPasswordBox() {
 
 			<Button size={"large"} className={"mb-20"} onClick={signupUser} disabled={processingSignup}>
 				<div className={"flex justify-center items-center"}>
-						<Conditional showIf={!processingSignup}>
-							<span className={"mt-2"}>Create an account</span>
-						</Conditional>
+					<Conditional showIf={!processingSignup}>
+						<span className={"mt-2"}>Create an account</span>
+					</Conditional>
 					<Conditional showIf={processingSignup}>
-						<span>	<LoadingSVG color={"#fff"} height={16} width={16}/></span><span className={"mt-2 ml-8"}>Processing</span>
+						<span>
+							{" "}
+							<LoadingSVG color={"#fff"} height={16} width={16} />
+						</span>
+						<span className={"mt-2 ml-8"}>Processing</span>
 					</Conditional>
 				</div>
 			</Button>

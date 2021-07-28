@@ -36,7 +36,7 @@ import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequ
 import { TierPlan } from "../interfaces/TierPlan";
 import { RedisManager } from "@manager/redis";
 import MongoManager from "@manager/MongoManager";
-import { iUserAndSystemInfoResponse } from "@crusher-shared/types/response/iUserAndSystemInfoResponse";
+import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
 @Service()
 export default class UserService {
@@ -463,7 +463,7 @@ export default class UserService {
 		return [firstName, lastName].filter((name) => !!name).join(" ");
 	}
 
-	async getUserAndSystemInfo(user: any): Promise<iUserAndSystemInfoResponse> {
+	async getUserAndSystemInfo(user: any): Promise<IUserAndSystemInfoResponse> {
 		const { user_id, team_id } = user;
 
 		// @Note: Remove the next line after development of this API

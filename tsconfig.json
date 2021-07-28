@@ -3,7 +3,7 @@
     "noErrorTruncation": true,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": false,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,

@@ -1,5 +1,8 @@
 import { atomWithImmer } from "jotai/immer";
 
+import { TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
-export const systemConfigAtom = atomWithImmer({});
+const initialValue: TSystemInfo = null;
+
+export const systemConfigAtom = atomWithImmer<TSystemInfo>(initialValue);
 systemConfigAtom.debugLabel = "systemConfigAtom";

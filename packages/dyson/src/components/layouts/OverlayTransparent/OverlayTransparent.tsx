@@ -20,7 +20,7 @@ export function CloseSVG({ ...props }) {
 
 type TransparentOverlayProps = {
 	children: ReactElement,
-	onClose: () => void
+	onClose: Function
 } & Record<any, any>
 
 export function OverlayTransparent({children, onClose}:TransparentOverlayProps) {

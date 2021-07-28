@@ -1,18 +1,24 @@
 import { Button } from "dyson/src/components/atoms";
-import { BottomSVG, CalendarSVG, RerunSVG, ThreeEllipsisSVG, ThunderSVG, TickSVG } from '@svg/testReport';
+import { BottomSVG, CalendarSVG, RerunSVG, ThreeEllipsisSVG, ThunderSVG, TickSVG } from "@svg/testReport";
 import { css } from "@emotion/core";
-import { LayoutSVG, PlaySVG } from '@svg/dashboard';
+import { LayoutSVG, PlaySVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
 import { atom, useAtom } from "jotai";
-import React, { useEffect, useState } from 'react';
-import { BackSVG } from '@svg/builds';
-
+import React, { useEffect, useState } from "react";
+import { BackSVG } from "@svg/builds";
 
 function TitleSection() {
 	return (
 		<div>
 			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
-				<BackSVG height={22} className={"mr-12"} onClick={()=>{  window.history.back();}}/> feat: integrated test GTM #517
+				<BackSVG
+					height={22}
+					className={"mr-12"}
+					onClick={() => {
+						window.history.back();
+					}}
+				/>{" "}
+				feat: integrated test GTM #517
 			</div>
 		</div>
 	);
@@ -171,12 +177,18 @@ function TestOverviewTab() {
 			<div css={rightSection} className={"ml-36 pt-12"}>
 				<div className={"mb-32"}>
 					<div className={"font-600 text-14 mb-16"}>Reviewers</div>
-					<div css={tag} className={"text-13 px-18 py-7 mb-12"}>Himanshu</div>
-					<div css={tag} className={"text-13 px-18  py-7"}>Himanshu</div>
+					<div css={tag} className={"text-13 px-18 py-7 mb-12"}>
+						Himanshu
+					</div>
+					<div css={tag} className={"text-13 px-18  py-7"}>
+						Himanshu
+					</div>
 				</div>
 				<div>
 					<div className={"font-600 text-14 mb-16"}>Environment</div>
-					<div css={tag} className={"text-13 px-18  py-7 mb-12"}>Production</div>
+					<div css={tag} className={"text-13 px-18  py-7 mb-12"}>
+						Production
+					</div>
 				</div>
 			</div>
 		</div>
@@ -184,11 +196,11 @@ function TestOverviewTab() {
 }
 
 const tag = css`
-  background: rgba(16, 18, 21, 0.5);
-  border: 1px solid #171c24;
-  border-radius: 4px;
+	background: rgba(16, 18, 21, 0.5);
+	border: 1px solid #171c24;
+	border-radius: 4px;
 	height: 32px;
-`
+`;
 
 const overviewCard = css`
 	width: 100%;
@@ -207,299 +219,330 @@ const rightSection = css`
 `;
 
 function FilterBar() {
-	return(
+	return (
 		<div className={"flex items-center text-14"}>
-			<div className={'text-14'}>Filter by <img className={'ml-16'} src={'/browsers.png'} height={16} /></div>
-			<div className={'ml-48'}>
-				<span className={'text-14 font-500'}>Version</span>
-				<span className={'text-14 ml-16 underline'}>All</span>
+			<div className={"text-14"}>
+				Filter by <img className={"ml-16"} src={"/browsers.png"} height={16} />
 			</div>
-			<div className={'ml-48'}>
-				<span className={'text-14 font-500'}>Version</span>
-				<span className={'text-14 ml-16 underline'}>All</span>
+			<div className={"ml-48"}>
+				<span className={"text-14 font-500"}>Version</span>
+				<span className={"text-14 ml-16 underline"}>All</span>
+			</div>
+			<div className={"ml-48"}>
+				<span className={"text-14 font-500"}>Version</span>
+				<span className={"text-14 ml-16 underline"}>All</span>
 			</div>
 		</div>
 	);
 }
 
 function NormalStep() {
-	return <div className={' flex px-44 relative mb-32'}>
-		<div css={tick}>
-			<TickSVG height={20} width={20} />
+	return (
+		<div className={" flex px-44 relative mb-32"}>
+			<div css={tick}>
+				<TickSVG height={20} width={20} />
+			</div>
+			<div>
+				<span
+					className={"text-13 font-600"}
+					css={css`
+						color: #d0d0d0;
+					`}
+				>
+					Open URL
+				</span>
+				<span
+					className={"text-12 ml-20"}
+					css={css`
+						color: #848484;
+					`}
+				>
+					Open URL to check if things are working fine or not
+				</span>
+			</div>
 		</div>
-		<div>
-			<span className={'text-13 font-600'} css={css`color: #D0D0D0;`}>Open URL</span>
-			<span className={'text-12 ml-20'}
-						css={css`color: #848484;`}>Open URL to check if things are working fine or not</span>
-		</div>
-	</div>;
+	);
 }
 
 function TestOverview() {
-	return <div className={'flex justify-between mt-8 '}>
-		<div className={'text-13'}>Switch to</div>
-		<div className={'flex'}>
-			<div className={'flex items-center mr-32'}>
-				<div className={'mr-8 text-13'}>
-					<img src={'/chrome.png'} height={16} className={'mr-8'} />Chrome
+	return (
+		<div className={"flex justify-between mt-8 "}>
+			<div className={"text-13"}>Switch to</div>
+			<div className={"flex"}>
+				<div className={"flex items-center mr-32"}>
+					<div className={"mr-8 text-13"}>
+						<img src={"/chrome.png"} height={16} className={"mr-8"} />
+						Chrome
+					</div>
+					<BottomSVG width={12} />
 				</div>
-				<BottomSVG width={12} />
-			</div>
 
-			<div className={'flex items-center mr-32'}>
-				<div className={'mr-8 text-13'}>
-					Chrome
+				<div className={"flex items-center mr-32"}>
+					<div className={"mr-8 text-13"}>Chrome</div>
+					<BottomSVG width={12} />
 				</div>
-				<BottomSVG width={12} />
-			</div>
 
-			<div className={'flex items-center'}>
-				<div className={'mr-8 text-13'}>
-					Chrome
+				<div className={"flex items-center"}>
+					<div className={"mr-8 text-13"}>Chrome</div>
+					<BottomSVG width={12} />
 				</div>
-				<BottomSVG width={12} />
 			</div>
 		</div>
-	</div>;
+	);
 }
 
-function TestCard({id}) {
-	const [expand,setExpand] = useState(false);
+function TestCard({ id }) {
+	const [expand, setExpand] = useState(false);
 	const [sticky, setSticky] = useState(false);
 
-	useEffect(()=>{
-
+	useEffect(() => {
 		const testCard = document.querySelector(`#test-card-${id}`);
-		const stickyOverview =document.querySelector("#sticky-overview-bar")
-		const observer = new IntersectionObserver(() => {
-			const stickyLastPoint = 96;
-			const cardStartingOffset = testCard.getBoundingClientRect().top;
-			const cardLastOffset = testCard.getBoundingClientRect().top+ testCard.getBoundingClientRect().height;
-			if(cardStartingOffset<stickyLastPoint){
-				setSticky(true)
-			}else {
-				setSticky(false)
-			}
-			if(  (cardLastOffset-50) < stickyLastPoint){
-				setSticky(false)
-			}
-
-
-		},{ root: stickyOverview, threshold: [0,.01,.3,.6,.85,1], rootMargin: "28px"});
+		const stickyOverview = document.querySelector("#sticky-overview-bar");
+		const observer = new IntersectionObserver(
+			() => {
+				const stickyLastPoint = 96;
+				const cardStartingOffset = testCard.getBoundingClientRect().top;
+				const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;
+				if (cardStartingOffset < stickyLastPoint) {
+					setSticky(true);
+				} else {
+					setSticky(false);
+				}
+				if (cardLastOffset - 50 < stickyLastPoint) {
+					setSticky(false);
+				}
+			},
+			{ root: stickyOverview, threshold: [0, 0.01, 0.3, 0.6, 0.85, 1], rootMargin: "28px" },
+		);
 
 		observer.observe(testCard);
-	},[])
+	}, []);
 
-	const onCardClick = ()=>{
+	const onCardClick = () => {
 		// if(expand===true){
 		// 	window.scrollTo()
 		// }
-		setExpand(!expand)
-	}
+		setExpand(!expand);
+	};
 
-	return <div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick}
-							id={`test-card-${id}`}>
-
-		<Conditional showIf={ expand && sticky}>
-
-			<div css={stickyCSS} className={" px-42 "}>
-				<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
-					<div className={"flex justify-between items-center"}>
-						<div className={"flex items-center leading-none text-15 font-600 mt-20"}><TickSVG height={18} className={"mr-16"} />Checkout
-							flow
+	return (
+		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
+			<Conditional showIf={expand && sticky}>
+				<div css={stickyCSS} className={" px-42 "}>
+					<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
+						<div className={"flex justify-between items-center"}>
+							<div className={"flex items-center leading-none text-15 font-600 mt-20"}>
+								<TickSVG height={18} className={"mr-16"} />
+								Checkout flow
+							</div>
+							<div className={"flex items-center mt-8"}>
+								<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
+								<span className={"flex text-13 mr-26"}>
+									<PlaySVG className={"mr-10"} /> Replay recording
+								</span>
+								<span>
+									<BottomSVG css={expand && close} />
+								</span>
+							</div>
 						</div>
-						<div className={"flex items-center mt-8"}>
+						<div className={"mt-12 mb-16"}>{TestOverview()}</div>
+					</div>
+				</div>
+			</Conditional>
+			<div>
+				<div className={"px-32 w-full"}>
+					<div css={header} className={"flex justify-between items-center w-full"}>
+						<div className={"flex items-center leading-none text-15 font-600"}>
+							<TickSVG height={18} className={"mr-16"} />
+							Checkout flow
+						</div>
+						<div className={"flex items-center"}>
 							<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-							<span className={"flex text-13 mr-26"}><PlaySVG className={"mr-10"} /> Replay recording</span>
-							<span><BottomSVG css={expand && close} /></span>
+							<span className={"flex text-13 mr-26"}>
+								<PlaySVG className={"mr-10"} /> Replay recording
+							</span>
+							<span>
+								<BottomSVG css={expand && close} />
+							</span>
 						</div>
 					</div>
-					<div className={"mt-12 mb-16"}>
-						{TestOverview()}
-					</div>
 
+					<Conditional showIf={expand}>{TestOverview()}</Conditional>
 				</div>
-
 			</div>
-		</Conditional>
-		<div>
-			<div className={"px-32 w-full"}>
-				<div css={header} className={"flex justify-between items-center w-full"}>
-					<div className={"flex items-center leading-none text-15 font-600"}><TickSVG height={18} className={"mr-16"} />Checkout
-						flow
-					</div>
-					<div className={"flex items-center"}>
-						<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-						<span className={"flex text-13 mr-26"}><PlaySVG className={"mr-10"} /> Replay recording</span>
-						<span><BottomSVG css={expand && close} /></span>
+			<Conditional showIf={expand}>
+				<div className={"px-32 w-full mt-16"} css={stepsContainer}>
+					<div className={"ml-32 py-32"} css={stepsList}>
+						{Array.apply(null, Array(25)).map(() => (
+							<NormalStep />
+						))}
 					</div>
 				</div>
-
-
-				<Conditional showIf={expand}>
-					{TestOverview()}
-				</Conditional>
-			</div>
+			</Conditional>
 		</div>
-		<Conditional showIf={expand}>
-
-			<div className={"px-32 w-full mt-16"} css={stepsContainer}>
-				<div className={"ml-32 py-32"} css={stepsList}>
-					{Array.apply(null, Array(25)).map(() => <NormalStep />)}
-				</div>
-			</div>
-		</Conditional>
-	</div>;
+	);
 }
 
-const stickyCSS=css`
+const stickyCSS = css`
 	position: fixed;
-  width: calc(100vw - 250rem);
- 	left: 50%;
+	width: calc(100vw - 250rem);
+	left: 50%;
 	transform: translateX(-50%);
-  max-width: 1500px;
+	max-width: 1500px;
 	top: 95px;
 	z-index: 10;
-`
+`;
 
 const stickyContainer = css`
-  background: rgb(13, 14, 17);
-  border: 1px solid #171C24;
-  box-sizing: border-box;
-  border-radius: 0px;
-  min-height: 56px;
+	background: rgb(13, 14, 17);
+	border: 1px solid #171c24;
+	box-sizing: border-box;
+	border-radius: 0px;
+	min-height: 56px;
 	border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 2px;
-`
+	border-bottom-right-radius: 2px;
+`;
 
 const tick = css`
 	position: absolute;
-	left:0;
+	left: 0;
 	transform: translate(-50%, 3px);
-
-`
+`;
 
 const close = css`
-  transform: rotate(
-          180deg
-  );
-`
+	transform: rotate(180deg);
+`;
 
-const stepsList= css`
-  border-left: 1px solid #171C24;
-`
+const stepsList = css`
+	border-left: 1px solid #171c24;
+`;
 
-
-const stepsContainer= css`
-  border-top: 1px solid #171C24;
-`
+const stepsContainer = css`
+	border-top: 1px solid #171c24;
+`;
 
 const testCard = css`
-  background: rgba(16, 18, 21, 0.5);
-  border: 1px solid #171C24;
+	background: rgba(16, 18, 21, 0.5);
+	border: 1px solid #171c24;
 
-  :hover {
-    background: rgba(34, 38, 43, 0.5);
-    border: 1px solid rgba(77, 84, 92, 0.5);
-  }
+	:hover {
+		background: rgba(34, 38, 43, 0.5);
+		border: 1px solid rgba(77, 84, 92, 0.5);
+	}
 
-  box-sizing: border-box;
-  border-radius: 8px;
-`
+	box-sizing: border-box;
+	border-radius: 8px;
+`;
 
 const header = css`
-
-  min-height: 56px;
-`
+	min-height: 56px;
+`;
 
 function ReportSection() {
-	const [stickyOverviewSection, setStickOverviewSection] = useState(false)
+	const [stickyOverviewSection, setStickOverviewSection] = useState(false);
 
-	useEffect(()=>{
-		const heading = document.querySelector('#review-section');
-		const observer = new IntersectionObserver((entry, observer) => {
-			const {y}= heading.getBoundingClientRect();
+	useEffect(() => {
+		const heading = document.querySelector("#review-section");
+		const observer = new IntersectionObserver(
+			(entry, observer) => {
+				const { y } = heading.getBoundingClientRect();
 
-			const bottomOffset = y+heading.clientHeight;
+				const bottomOffset = y + heading.clientHeight;
 
-			setStickOverviewSection(bottomOffset<0?true:false)
-		},{rootMargin: "0px"});
+				setStickOverviewSection(bottomOffset < 0 ? true : false);
+			},
+			{ rootMargin: "0px" },
+		);
 
 		observer.observe(heading);
-	},[])
+	}, []);
 
-	return <div className={"mt-40"}>
-		<div className={"flex justify-between items-center"} id={"review-section"}>
-			<div className={"text-14"}>Jump to</div>
-			<div className={"flex items-center"}>
-				<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>
-				<Button css={css`width: 144px;`}>Review</Button>
-			</div>
-		</div>
-
-		<Conditional showIf={stickyOverviewSection && stickyOverviewSection}>
-			<div className={"fixed"} css={stickyBar} id={"sticky-overview-bar"}>
-				<div css={containerCSS} className={'px-42 pt-10'}>
-					<div>
-						<div className={"flex justify-between items-center"}>
-							<div className={"text-14"}>
-								<span className={"text-16 font-cera font-600 mr-38"}>feat: integrated test GTM #517</span>
-								<span className={"text-12 mr-16"}>12 june baseline</span>
-								<span className={"text-12"}>Jump to</span>
-							</div>
-							<div className={"flex items-center pt-4"}>
-								<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>
-								<Button css={css`width: 144px;`}>Review</Button>
-							</div>
-						</div>
-					</div>
-					<div className={"mt-6"}>
-						<FilterBar />
-					</div>
+	return (
+		<div className={"mt-40"}>
+			<div className={"flex justify-between items-center"} id={"review-section"}>
+				<div className={"text-14"}>Jump to</div>
+				<div className={"flex items-center"}>
+					<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>
+					<Button
+						css={css`
+							width: 144px;
+						`}
+					>
+						Review
+					</Button>
 				</div>
 			</div>
-		</Conditional>
 
-		<div css={filterSection} className={'flex items-center mt-32  px-24'} id={"filter-section"}>
-			<FilterBar />
-		</div>
+			<Conditional showIf={stickyOverviewSection && stickyOverviewSection}>
+				<div className={"fixed"} css={stickyBar} id={"sticky-overview-bar"}>
+					<div css={containerCSS} className={"px-42 pt-10"}>
+						<div>
+							<div className={"flex justify-between items-center"}>
+								<div className={"text-14"}>
+									<span className={"text-16 font-cera font-600 mr-38"}>feat: integrated test GTM #517</span>
+									<span className={"text-12 mr-16"}>12 june baseline</span>
+									<span className={"text-12"}>Jump to</span>
+								</div>
+								<div className={"flex items-center pt-4"}>
+									<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>
+									<Button
+										css={css`
+											width: 144px;
+										`}
+									>
+										Review
+									</Button>
+								</div>
+							</div>
+						</div>
+						<div className={"mt-6"}>
+							<FilterBar />
+						</div>
+					</div>
+				</div>
+			</Conditional>
 
-		<div className={"mt-40 pb-60"}>
-			<TestCard id={1}/>
-			<TestCard id={2}/>
-			<TestCard id={3}/>
-			<TestCard id={4}/>
-			<TestCard id={5}/>
-			<TestCard id={6}/>
+			<div css={filterSection} className={"flex items-center mt-32  px-24"} id={"filter-section"}>
+				<FilterBar />
+			</div>
+
+			<div className={"mt-40 pb-60"}>
+				<TestCard id={1} />
+				<TestCard id={2} />
+				<TestCard id={3} />
+				<TestCard id={4} />
+				<TestCard id={5} />
+				<TestCard id={6} />
+			</div>
 		</div>
-	</div>;
+	);
 }
 
 const containerCSS = css`
 	width: calc(100vw - 250rem);
-  margin: 0 auto;
+	margin: 0 auto;
 	max-width: 1500px;
-`
+`;
 
 const stickyBar = css`
-  background: #0D0E11;
-  border: 1px solid #171C24;
-  box-sizing: border-box;
-  height: 96px;
+	background: #0d0e11;
+	border: 1px solid #171c24;
+	box-sizing: border-box;
+	height: 96px;
 	width: 100%;
 	z-index: 100;
 	top: 0;
-	left:0
-`
+	left: 0;
+`;
 
 const filterSection = css`
-  height: 42px;
+	height: 42px;
 
-  background: #0D0E11;
-  border: 1px solid #171C24;
-  box-sizing: border-box;
-  border-radius: 8px;
-`
+	background: #0d0e11;
+	border: 1px solid #171c24;
+	box-sizing: border-box;
+	border-radius: 8px;
+`;
 
 export const TestReport = () => {
 	const [selectedTabIndex] = useAtom(selectedTabAtom);
@@ -517,17 +560,27 @@ export const TestReport = () => {
 			</Conditional>
 			<Conditional showIf={selectedTabIndex === 1}>
 				<div className={"flex leading-none mt-56 mb-52  items-center"}>
-					<div className={"text-13"} css={css`width: 100px`}>Comparing to</div>
+					<div
+						className={"text-13"}
+						css={css`
+							width: 100px;
+						`}
+					>
+						Comparing to
+					</div>
 					<div css={timeLine} className={"ml-40 relative"}>
 						<div className={"absolute flex flex-col items-center"} css={currentSelected}>
 							<div className={"mb-8 text-12"}>12Jun</div>
-							<div><TickSVG /></div>
+							<div>
+								<TickSVG />
+							</div>
 						</div>
 
 						<div className={"absolute flex flex-col items-center"} css={timelineItem}>
-							<div><TickSVG /></div>
+							<div>
+								<TickSVG />
+							</div>
 						</div>
-
 					</div>
 				</div>
 			</Conditional>
@@ -536,28 +589,28 @@ export const TestReport = () => {
 				<TestOverviewTab />
 			</Conditional>
 			<Conditional showIf={selectedTabIndex === 1}>
-				<ReportSection/>
+				<ReportSection />
 			</Conditional>
 		</div>
 	);
 };
 
-const timeLine= css`
+const timeLine = css`
 	height: 2px;
 	width: 100%;
-	background: #1E242C;
-`
+	background: #1e242c;
+`;
 
-const currentSelected= css`
-  position: absolute;
-  transform: translateY(-72%);
-`
+const currentSelected = css`
+	position: absolute;
+	transform: translateY(-72%);
+`;
 
-const timelineItem= css`
-  position: absolute;
-  transform: translateY(-50%);
+const timelineItem = css`
+	position: absolute;
+	transform: translateY(-50%);
 	left: 50%;
-`
+`;
 
 const statusTag = css`
 	min-width: 152px;

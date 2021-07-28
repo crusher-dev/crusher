@@ -1,4 +1,3 @@
-
 export const validateEmail = (email) => {
 	if (email.length < 3) {
 		return false;

@@ -14,7 +14,7 @@ import { EmailManager } from "../../core/manager/EmailManager";
 import { decodeToken, encryptPassword, generateToken, generateVerificationCode } from "../../core/utils/auth";
 import { google } from "googleapis";
 import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
-import { iUserAndSystemInfoResponse } from "@crusher-shared/types/response/iUserAndSystemInfoResponse";
+import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
 const cookie = require("cookie");
 
@@ -174,7 +174,7 @@ export class UserController {
 	}
 
 	@Get("/getUserAndSystemInfo")
-	async getUserAndSystemInfo(@CurrentUser() user): Promise<iUserAndSystemInfoResponse> {
+	async getUserAndSystemInfo(@CurrentUser() user): Promise<IUserAndSystemInfoResponse> {
 		return this.userService.getUserAndSystemInfo(user);
 	}
 

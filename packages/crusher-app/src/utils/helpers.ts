@@ -9,6 +9,7 @@ export function findArrayItemByProperty(arr: Array<any>, property: string) {
 		return false;
 	}
 	const keyToMatch = Object.keys(property)[0];
+	// @ts-ignore
 	const valueToMatch = property[keyToMatch];
 
 	for (const item of arr) {

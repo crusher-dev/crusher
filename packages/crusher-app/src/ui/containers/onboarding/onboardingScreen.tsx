@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import { css } from "@emotion/core";
 import { CenterLayout } from "dyson/src/components/layouts";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
@@ -7,7 +7,7 @@ import { getEdition } from "../../../utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { atom, useAtom } from "jotai";
 import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
-import { usePageTitle } from '../../../hooks/seo';
+import { usePageTitle } from "../../../hooks/seo";
 import Link from "next/link";
 
 enum ONBOARDING_STEP {
@@ -21,7 +21,7 @@ const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EDITION_TYPE.E
 const SetupCrusher = () => {
 	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
 
-	usePageTitle("Setup Crusher")
+	usePageTitle("Setup Crusher");
 	return (
 		<>
 			<div className="m-8 text-18 leading-none mb-12 font-700">Setup Crusher</div>
@@ -51,7 +51,7 @@ const SetupCrusher = () => {
 const HowItWorksView = () => {
 	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
 
-	usePageTitle("How it works?")
+	usePageTitle("How it works?");
 
 	return (
 		<>
@@ -93,14 +93,13 @@ const GithubDiscordSection = () => {
 	}, []);
 
 	usePageTitle("Support");
-	useEffect(()=>{
-
-		fetch('https://api.github.com/repos/crusherdev/crusher').then((res=>res.json())).then((json)=>{
-			setGithubStars(json.stargazers_count)
-		})
-	})
-
-
+	useEffect(() => {
+		fetch("https://api.github.com/repos/crusherdev/crusher")
+			.then((res) => res.json())
+			.then((json) => {
+				setGithubStars(json.stargazers_count);
+			});
+	});
 
 	return (
 		<>
@@ -124,9 +123,9 @@ const GithubDiscordSection = () => {
 				<Button
 					className="mt-100"
 					css={css`
-					width: 220px;
-					height: 34rem;
-				`}
+						width: 220px;
+						height: 34rem;
+					`}
 				>
 					Open Dashboard
 				</Button>

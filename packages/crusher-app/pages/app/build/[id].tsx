@@ -1,11 +1,11 @@
 import React from "react";
-import { SidebarTopBarLayout } from '@ui/layout/DashboardBase';
-import { TestReport } from '@ui/containers/testReport/testReport';
+import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
+import { TestReport } from "@ui/containers/testReport/testReport";
 
 function App() {
 	return (
 		<SidebarTopBarLayout hideSidebar={true}>
-			<TestReport/>
+			<TestReport />
 		</SidebarTopBarLayout>
 	);
 }

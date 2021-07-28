@@ -2,7 +2,7 @@ import React from "react";
 import { Suspense } from "react";
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 import { TestSearchableList } from "@ui/containers/tests/searchableList";
-import { usePageTitle } from '../../src/hooks/seo';
+import { usePageTitle } from "../../src/hooks/seo";
 
 function Tests() {
 	usePageTitle("Tests");

@@ -7,8 +7,7 @@ const port = process.env.port || 3000;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
-const bodyParser = require('body-parser');
-
+const bodyParser = require("body-parser");
 
 app.prepare().then(() => {
 	const server = express();

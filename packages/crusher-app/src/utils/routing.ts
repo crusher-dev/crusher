@@ -21,11 +21,10 @@ export const handleOpenSourceMounting = async (data, router: NextRouter, loadCal
 	Move to src_ee
  */
 export const handleEERouting = async (data, router: NextRouter, loadCallback: any) => {
-	const { userId, user } = data;
+	const { userId, userData: user,isUserLoggedIn } = data;
 	const { pathname } = router;
-	const loggedIn = !!userId;
 
-	if (loggedIn) {
+	if (isUserLoggedIn) {
 		if (user.onboardingSteps.INITIAL_ONBOARDING === "false") {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {

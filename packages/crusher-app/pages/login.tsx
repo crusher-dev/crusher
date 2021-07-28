@@ -1,6 +1,6 @@
 import React from "react";
 
-import { usePageTitle } from '../src/hooks/seo';
+import { usePageTitle } from "../src/hooks/seo";
 import { LoginContainer } from "@ui/containers/login/";
 
 function LoginPage() {
@@ -8,7 +8,7 @@ function LoginPage() {
 
 	return (
 		<div>
-			<LoginContainer/>
+			<LoginContainer />
 		</div>
 	);
 }

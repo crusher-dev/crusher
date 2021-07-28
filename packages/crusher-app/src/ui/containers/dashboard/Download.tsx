@@ -1,3 +1,4 @@
+import React from "react";
 import { css } from "@emotion/react";
 import { CenterLayout } from "dyson/src/components/layouts";
 import { Button } from "dyson/src/components/atoms";
@@ -12,7 +13,7 @@ function DownloadButton() {
 	const { downloadLink, label } = OS_INFO[osType];
 	const [isDownloading, setDownload] = useState(false);
 
-	const DownloadButton = useCallback(({ downloadLink, label, icon }) => {
+	const DownloadButton = useCallback(({ downloadLink, label }) => {
 		return (
 			<a href={downloadLink} onClick={setDownload.bind(this, true)}>
 				<Button
@@ -41,6 +42,7 @@ function DownloadButton() {
 						<DownloadButton downloadLink={linuxDeb.downloadLink} label={linuxDeb.label} icon={null} />
 					</div>
 				</div>
+				{/* eslint-disable-next-line react/no-unescaped-entities */}
 				{isDownloading && <div className={"mt-32 text-13"}>Initiaing download, if it doesn't download. Open link in new tab.</div>}
 			</div>
 		);
@@ -59,7 +61,7 @@ function DownloadButton() {
 /*
 	@Note - Extract component overlay to dyson
  */
-export function Download({ onClose }) {
+export function Download({ onClose }: { onClose: Function }) {
 	return (
 		<OverlayTransparent onClose={onClose}>
 			<CenterLayout>

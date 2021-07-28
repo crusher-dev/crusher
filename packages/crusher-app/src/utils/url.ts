@@ -1,7 +1,6 @@
-import { BACKEND_SERVER_URL, FRONTEND_SERVER_URL } from "@constants/other";
-
-export const resolvePathToBackendURI = (endpoint: string) => getPathWithHost("/server" || BACKEND_SERVER_URL, endpoint);
-export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(FRONTEND_SERVER_URL || "", endpoint);
+export const resolvePathToBackendURI = (endpoint: string) =>
+	getPathWithHost(process.env.NEXT_PUBLIC_BACKEND_SERVER_URL || `${window.location.origin}/server`, endpoint);
+export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(window.location.origin, endpoint);
 
 const getPathWithHost = (host: string, path: string): string => {
 	const isBackslashPresent = host.split("")[host.length - 1] === "/";
@@ -19,7 +18,7 @@ export function appendParamsToURI(url: string, params: { [paramKey: string]: str
 	return currentURL.href;
 }
 
-export function addQueryParamToPath(uri, params) {
+export function addQueryParamToPath(uri: string, params: string) {
 	return params ? `${uri}?${params}` : `${uri}`;
 }
 

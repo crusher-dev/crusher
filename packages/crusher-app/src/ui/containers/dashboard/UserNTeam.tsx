@@ -6,13 +6,13 @@ import { teamAtom } from "../../../store/atoms/global/team";
 import { useEffect, useRef, useState } from "react";
 
 import { resolvePathToBackendURI } from "@utils/url";
-import { ShowOnClick } from 'dyson/src/components/layouts/ShowonAction/ShowOnAction';
-import { useRouter } from 'next/router';
+import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
+import { useRouter } from "next/router";
 
 function Dropdown() {
 	const router = useRouter();
 	return (
-		<div  css={dropdDown} className={"flex flex-col justify-between"}>
+		<div css={dropdDown} className={"flex flex-col justify-between"}>
 			<div>
 				{[0, 0, 0, 0, 0].map((item) => (
 					<div css={dropDownItem} className={"flex justify-between items-center px-16 py-12"}>
@@ -44,7 +44,6 @@ function Dropdown() {
 	);
 }
 
-
 export function UserNTeam() {
 	const [user] = useAtom(userAtom);
 	const [team] = useAtom(teamAtom);
@@ -66,7 +65,7 @@ export function UserNTeam() {
 				</div>
 			</div>
 
-			<ShowOnClick component={<Dropdown />} callback={setShow.bind(this)} >
+			<ShowOnClick component={<Dropdown />} callback={setShow.bind(this)}>
 				<div className={"flex items-center pr"}>
 					<UserImage url={user.avatar} />
 				</div>

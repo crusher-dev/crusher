@@ -1,8 +1,9 @@
-import { atomWithImmer } from 'jotai/immer';
-import { atom } from 'jotai';
-import { appStateAtom } from './appState';
+import { atomWithImmer } from "jotai/immer";
+import { atom } from "jotai";
+import { appStateAtom } from "./appState";
+import { TProjectsData } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
-export const projectsAtom = atomWithImmer([]);
+export const projectsAtom = atomWithImmer<TProjectsData>(null);
 projectsAtom.debugLabel = "projectsAtom";
 
 /*
@@ -11,5 +12,6 @@ projectsAtom.debugLabel = "projectsAtom";
 export const currentProject = atom((get) => {
 	const { selectedProjectId } = get(appStateAtom);
 	const projects = get(projectsAtom);
-	return projects.filter(({ id }) => selectedProjectId === id)[0];
+	if (projects === null) return null;
+	return projects?.filter(({ id }) => selectedProjectId === id)[0];
 });

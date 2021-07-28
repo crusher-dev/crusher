@@ -1,6 +1,6 @@
 import React from "react";
 import SignupContainer from "@ui/containers/signup/signupScreen";
-import { usePageTitle } from '../src/hooks/seo';
+import { usePageTitle } from "../src/hooks/seo";
 
 function SignupPage() {
 	usePageTitle("Create account");

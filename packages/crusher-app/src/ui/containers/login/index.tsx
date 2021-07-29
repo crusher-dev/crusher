@@ -52,9 +52,9 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 		if (!validateEmail(email.value) || !validatePassword(password.value)) return;
 		setProcessingSignup(true);
 		try {
-			const data = await emailLogin(email.value, password.value);
-			const userStatus = getUserStatus(data);
-			if (userStatus !== "USER_NOT_REGISTERED") {
+			const userData = await emailLogin(email.value, password.value);
+			const userStatus = getUserStatus(userData);
+			if (userData.status !== "USER_NOT_REGISTERED") {
 				router.push("/app/dashboard");
 			}
 			else{

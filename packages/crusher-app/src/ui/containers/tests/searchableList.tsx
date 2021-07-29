@@ -4,13 +4,17 @@ import { css } from "@emotion/core";
 import { SearchFilterBar } from "../common/searchFilterBar";
 import { getTime } from "@utils/helpers";
 import useSWR from "swr";
-import { TEST_LIST_API } from "@constants/api";
-
+import { getTestListAPI } from "@constants/api";
+import { useAtom } from "jotai";
+import { currentProject } from "../../../store/atoms/global/project";
+import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
 interface IBuildItemCardProps {
 	testName: string;
-	isPassing: number;
+	isPassing: boolean;
+	imageURL: string | null;
+	videoURL: null | string;
 	// In seconds
-	createdAt: Date;
+	createdAt: number;
 }
 
 function TestCard(props: IBuildItemCardProps) {
@@ -70,13 +74,15 @@ const itemImageStyle = css`
 
 function TestSearchableList() {
 	const [searchQuery, setSearchQuery] = useState(null as null | string);
-	const { data } = useSWR(TEST_LIST_API, { suspense: true });
+	const [porject] = useAtom(currentProject);
+
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(porject.id), { suspense: true });
 
 	const testsItems = useMemo(() => {
-		return data.map((test: any) => {
-			const { testName, isPassing, createdAt, imageURL } = test;
+		return data.map((test: IProjectTestItem) => {
+			const { testName, isPassing, createdAt, imageURL,videoURL } = test;
 
-			return <TestCard imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} />;
+			return <TestCard videoURL={videoURL} imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} />;
 		});
 	}, [data]);
 

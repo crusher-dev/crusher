@@ -1,4 +1,4 @@
-interface IProjectTestItem {
+export interface IProjectTestItem {
   id: number;
   testName: string;
   createdAt: number;
@@ -8,6 +8,6 @@ interface IProjectTestItem {
   firstRunCompleted: boolean;
 };
 
-type IProjectTestsListResponse = Array<IProjectTestItem>;
+export type IProjectTestsListResponse = Array<IProjectTestItem>;
 
 export {IProjectTestItem, IProjectTestsListResponse};

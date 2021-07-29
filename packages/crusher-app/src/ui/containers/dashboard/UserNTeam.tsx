@@ -48,7 +48,7 @@ export function UserNTeam() {
 	const [user] = useAtom(userAtom);
 	const [team] = useAtom(teamAtom);
 
-	const [showDropDown, setShow] = useState(false);
+	const [, setShow] = useState(false);
 	return (
 		<div className={"flex justify-between leading-none relative"} css={userCard}>
 			<div className={"flex"} css={orgName}>
@@ -57,7 +57,7 @@ export function UserNTeam() {
 				</div>
 				<div>
 					<div className={"font-cera mb-4 font-600"} css={name}>
-						{team.name}
+						{team.name.substr(0,15)}
 					</div>
 					<div css={description} className={"font-500 leading-none capitalize"}>
 						{team.plan.toLowerCase()}

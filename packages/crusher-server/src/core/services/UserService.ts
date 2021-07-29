@@ -507,7 +507,7 @@ export default class UserService {
 					message: null,
 				},
 				MONGO_DB_OPERATIONS: {
-					working: await this.mongoManager.isAlive(),
+					working: this.mongoManager.isAlive(),
 					message: null,
 				},
 			},

@@ -25,6 +25,7 @@ async function preChecks() {
 	const mongodbService: MongoManager = Container.get(MongoManager);
 
 	const isDbAlive = await dbManager.isAlive();
+	await mongodbService.waitUntilAlive();
 	console.log(isDbAlive, mongodbService.isAlive());
 	return isDbAlive && mongodbService.isAlive();
 }

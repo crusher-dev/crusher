@@ -47,13 +47,19 @@ export default class MongoManager {
 		});
 	}
 
-	isAlive(): Promise<boolean> {
+	isAlive(): boolean {
+		if (this.status === IMongoStatus.CONNECTED) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	waitUntilAlive(): Promise<boolean> {
 		return new Promise((resolve, reject) => {
 			setInterval(() => {
-				if (this.status === IMongoStatus.CONNECTED) {
+				if (this.isAlive()) {
 					resolve(true);
-				} else {
-					resolve(false);
 				}
 			}, 500);
 		});

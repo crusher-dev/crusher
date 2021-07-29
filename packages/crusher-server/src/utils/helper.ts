@@ -8,4 +8,8 @@ function isOpenSourceEdition(): boolean {
 	return getEdition() === EDITION_TYPE.OPEN_SOURCE;
 }
 
-export { getEdition, isOpenSourceEdition };
+function isUsingLocalStorage(): boolean {
+	return process.env.STORAGE_MODE === "local";
+}
+
+export { getEdition, isOpenSourceEdition, isUsingLocalStorage };

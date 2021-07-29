@@ -14,6 +14,7 @@ import { useAtom } from "jotai";
 import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
 import { useRouter } from "next/router";
 import { LoadingSVG } from "@svg/dashboard";
+import { loadUserDataAndRedirect } from '../../../hooks/user';
 const showRegistrationFormAtom = atom(false);
 
 const registerUser = (name, email, password) => {
@@ -25,8 +26,11 @@ const registerUser = (name, email, password) => {
 
 function EmailPasswordBox() {
 	const router = useRouter();
+	const [data, setData] = useState(null);
+
+
+	const [_, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
 	const [email, setEmail] = useState({ value: "", error: "" });
-	const [_, setRegistrationBox] = useAtom(showRegistrationFormAtom);
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [name, setName] = useState({ value: "", error: "" });
 	const [processingSignup, setProcessingSignup] = useState(false);
@@ -73,17 +77,19 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			const { status } = await registerUser(name.value, email.value, password.value);
+			const { status,systemInfo } = await registerUser(name.value, email.value, password.value);
 			if (status === "USER_NOT_REGISTERED") {
-				alert("Please enter corre");
+				alert("Some error occurred.");
 			}else{
-				router.push("/setup/onboarding")
+				setData(systemInfo);
 			}
 		} catch (e) {
 			alert(e);
 		}
 		setProcessingSignup(false);
 	};
+
+	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
 	return (
 		<div css={loginBoxlarge}>
@@ -149,7 +155,7 @@ function EmailPasswordBox() {
 					</Conditional>
 				</div>
 			</Button>
-			<div className="text-13 underline text-center" onClick={setRegistrationBox.bind(this, false)}>
+			<div className="text-13 underline text-center" onClick={setShowRegistrationBox.bind(this, false)}>
 				Go back
 			</div>
 		</div>
@@ -181,7 +187,7 @@ function SignupBox() {
 }
 
 export const SignupContainer = () => {
-	const [showRegistrationBox, setRegistrationBox] = useAtom(showRegistrationFormAtom);
+	const [showRegistrationBox] = useAtom(showRegistrationFormAtom);
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-120"}>
@@ -198,21 +204,6 @@ export const SignupContainer = () => {
 								</div>
 							</Button>
 						</a>
-						{/*<a href={resolvePathToBackendURI("/v2/user/authenticate/github")}>*/}
-						{/*	<Button*/}
-						{/*		size={"large"}*/}
-						{/*		css={css`*/}
-						{/*			font-weight: 500;*/}
-						{/*		`}*/}
-						{/*		bgColor={"tertiary-dark"}*/}
-						{/*		className={"mb-32"}*/}
-						{/*	>*/}
-						{/*		<div className={"flex justify-center items-center"}>*/}
-						{/*			<GithubSVG className={"mr-12"} />*/}
-						{/*			<span className={"mt-2"}>Continue with Github</span>*/}
-						{/*		</div>*/}
-						{/*	</Button>*/}
-						{/*</a>*/}
 					</Conditional>
 
 					<SignupBox />

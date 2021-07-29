@@ -32,7 +32,7 @@ export function addScript(id, attribute, text, callback) {
 	document.body.appendChild(s);
 }
 
-export const handleUserFeedback = () => {
+export const loadUserLeap = () => {
 	addScript(
 		"userLeap",
 		{},

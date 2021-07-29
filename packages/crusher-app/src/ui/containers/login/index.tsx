@@ -13,6 +13,7 @@ import { validateEmail, validatePassword } from "@utils/validationUtils";
 import { useRouter } from "next/router";
 import { LoadingSVG } from "@svg/dashboard";
 import { getUserStatus } from "@utils/user";
+import { loadUserDataAndRedirect } from "../../../hooks/user";
 
 const emailLogin = (email, password) => {
 	return backendRequest("/user/login", {
@@ -26,6 +27,7 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 	const [email, setEmail] = useState({ value: "", error: null });
 	const [password, setPassword] = useState({ value: "", error: null });
 	const [processingSignup, setProcessingSignup] = useState(false);
+	const [data, setData] = useState(null);
 
 	const emailChange = (e) => {
 		setEmail({ ...email, value: e.target.value });
@@ -52,19 +54,20 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 		if (!validateEmail(email.value) || !validatePassword(password.value)) return;
 		setProcessingSignup(true);
 		try {
-			const userData = await emailLogin(email.value, password.value);
-			const userStatus = getUserStatus(userData);
-			if (userData.status !== "USER_NOT_REGISTERED") {
+			const { status, systemInfo } = await emailLogin(email.value, password.value);
+			if (status !== "USER_NOT_REGISTERED") {
+				setData(systemInfo);
 				router.push("/app/dashboard");
-			}
-			else{
-				alert("Please add valid ceredentials.")
+			} else {
+				alert("Please add valid ceredentials.");
 			}
 		} catch (e) {
 			alert(e);
 		}
 		setProcessingSignup(false);
 	};
+
+	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
 	return (
 		<div css={[loginBox]}>

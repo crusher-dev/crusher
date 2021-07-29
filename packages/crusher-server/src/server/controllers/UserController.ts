@@ -93,9 +93,14 @@ export class UserController {
 			: await this.userService.createInitialUserWorkspace(userId, userInfo);
 
 		const token = await this.userService.setUserAuthCookies(userId, teamId, res);
+		const systemInfo = await this.userService.getUserAndSystemInfo(userId);
 
 		EmailManager.sendVerificationMail(email, generateVerificationCode(userId, email));
-		return { status: USER_REGISTERED, token };
+		return {
+			status: USER_REGISTERED,
+			token,
+			systemInfo,
+		};
 	}
 
 	/**
@@ -162,20 +167,28 @@ export class UserController {
 	@Post("/login")
 	async loginUser(@Body() info: any, @Res() res: any) {
 		const { email, password } = info;
-		const { status, token } = await this.userService.authenticateWithEmailAndPassword({
+		const { status, token, userId } = await this.userService.authenticateWithEmailAndPassword({
 			email,
 			password,
 		});
+
+		const systemInfo = await this.userService.getUserAndSystemInfo(userId);
+
 		if (token) {
 			setUserAuthorizationCookies(token, res);
-			return { status };
+			return {
+				status,
+				systemInfo,
+			};
 		}
-		return { status };
+		return { status, systemInfo };
 	}
 
 	@Get("/getUserAndSystemInfo")
 	async getUserAndSystemInfo(@CurrentUser() user): Promise<IUserAndSystemInfoResponse> {
-		return this.userService.getUserAndSystemInfo(user);
+		const { user_id } = user;
+
+		return this.userService.getUserAndSystemInfo(user_id);
 	}
 
 	@Get("/getStatus")

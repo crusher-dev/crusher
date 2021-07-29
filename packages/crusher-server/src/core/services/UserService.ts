@@ -169,12 +169,13 @@ export default class UserService {
 					status: EMAIL_NOT_VERIFIED,
 					email,
 					token: generateToken(user.id, user.team_id),
+					userId: user.id,
 				};
 			} else {
 				if (user.team_id) {
-					return { status: SIGNED_IN, token: generateToken(user.id, user.team_id) };
+					return { status: SIGNED_IN, token: generateToken(user.id, user.team_id), userId: user.id };
 				} else {
-					return { status: NO_TEAM_JOINED, token: generateToken(user.id, null) };
+					return { status: NO_TEAM_JOINED, token: generateToken(user.id, null), userId: user.id };
 				}
 			}
 		}
@@ -463,13 +464,12 @@ export default class UserService {
 		return [firstName, lastName].filter((name) => !!name).join(" ");
 	}
 
-	async getUserAndSystemInfo(user: any): Promise<IUserAndSystemInfoResponse> {
-		const { user_id, team_id } = user;
+	async getUserAndSystemInfo(user_id: any): Promise<IUserAndSystemInfoResponse> {
 
 		// @Note: Remove the next line after development of this API
 		const userInfo = user_id ? await this.getUserInfo(user_id) : null;
-		const teamInfo = userInfo ? await this.teamService.getTeamInfo(team_id) : null;
-		const teamProjects = userInfo && teamInfo ? await this.projectService.getAllProjects(team_id) : null;
+		const teamInfo = userInfo ? await this.teamService.getTeamInfo(userInfo.team_id!.toString()) : null;
+		const teamProjects = userInfo && teamInfo ? await this.projectService.getAllProjects(teamInfo.id) : null;
 
 		return {
 			userId: userInfo ? userInfo.id : null,

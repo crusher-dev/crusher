@@ -24,7 +24,7 @@ export class TestController {
 			return {
 				id: testData.id,
 				testName: testData.name,
-				createdAt: new Date(),
+				createdAt: new Date(testData.created_at).getTime() / 1000,
 				videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
 				// @Note: Add support for taking random screenshots in case video is switched off
 				imageURL: null,

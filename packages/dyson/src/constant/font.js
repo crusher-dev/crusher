@@ -19,5 +19,4 @@ const LINE_HEIGHT_VALUE = {
 	NORMAL: "1.33",
 };
 
-
 module.exports = { FONTS, FONT_WEIGHT_VALUE, LINE_HEIGHT_VALUE };

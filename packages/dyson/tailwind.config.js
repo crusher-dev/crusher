@@ -18,7 +18,7 @@ module.exports = {
 			padding: spacingSizes,
 			height: spacingSizes,
 			width: spacingSizes,
-			lineHeight: LINE_HEIGHT_VALUE
+			lineHeight: LINE_HEIGHT_VALUE,
 		},
 		borderRadius: {
 			full: "50%",

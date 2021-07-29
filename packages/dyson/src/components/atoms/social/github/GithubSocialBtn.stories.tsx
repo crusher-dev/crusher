@@ -1,29 +1,27 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 import { GithubSocialBtn, GithubSocialBtnProps } from "./GithubSocialBtn";
 export default {
-    title: "Atoms/Social Buttons/GithubSocialBtn",
-    component: GithubSocialBtn,
+	title: "Atoms/Social Buttons/GithubSocialBtn",
+	component: GithubSocialBtn,
 } as Meta;
 
-const basicCSS =     css`
-      width: 300rem;
-    `
+const basicCSS = css`
+	width: 300rem;
+`;
 
 const Template: Story<GithubSocialBtnProps> = (args) => <GithubSocialBtn css={basicCSS} {...args} />;
 
 Template.parameters = {
-    status: "beta",
+	status: "beta",
 };
 
 export const Primary = Template.bind({});
 
 Primary.parameters = {
-    status: "ready",
+	status: "ready",
 };
 Primary.args = {
-    count: 234,
-
+	count: 234,
 };
-

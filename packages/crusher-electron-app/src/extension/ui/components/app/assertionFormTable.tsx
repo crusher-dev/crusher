@@ -41,14 +41,13 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 	const { rowItems, fields, operations, onFieldChange, onOperationChange, onValidationChange } = props;
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
-
 		const getFieldOptions = () => {
 			let options: iReactSelectOption[] = [];
 			fields.forEach((field) => {
-				options.push({ value: field.name, label: field.name })
+				options.push({ value: field.name, label: field.name });
 			});
 			return options;
-		}
+		};
 		const fieldOptions = getFieldOptions();
 
 		const handleOnFieldChange = (option: iReactSelectOption) => {
@@ -57,17 +56,14 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 			}
 		};
 
-		return (
-			<Select className="w-40" defaultValue={fieldOptions[0]}
-				options={fieldOptions} onChange={handleOnFieldChange} />
-		);
+		return <Select className="w-40" defaultValue={fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />;
 	};
 
 	const renderFieldOperationInput = (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => {
 		const getOperationOptions = () => {
 			let options: iReactSelectOption[] = [];
 			operations.forEach((operation) => {
-				options.push({ value: operation, label: operation })
+				options.push({ value: operation, label: operation });
 			});
 			return options;
 		};
@@ -80,10 +76,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 			}
 		};
 
-		return (
-			<Select options={operationOptions} defaultValue={operationOptions[0]}
-				onChange={handleOnOperationChange} className="w-40" />
-		);
+		return <Select options={operationOptions} defaultValue={operationOptions[0]} onChange={handleOnOperationChange} className="w-40" />;
 	};
 
 	const renderValidationInput = (validationValue: string, rowId: string) => {
@@ -103,8 +96,10 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 				<div style={inputTableItemFieldContainerStyle}>
 					{renderFieldInput(row.field.name, row.id)}
 					<div className="flex items-center justify-center">
-						<img src={chrome.runtime.getURL(isValidationCorrect ? "/icons/correct.svg" : "/icons/cross.svg")}
-							style={{ marginLeft: "0.85rem", height: "1.4rem" }} />
+						<img
+							src={chrome.runtime.getURL(isValidationCorrect ? "/icons/correct.svg" : "/icons/cross.svg")}
+							style={{ marginLeft: "0.85rem", height: "1.4rem" }}
+						/>
 					</div>
 				</div>
 				<div>{renderFieldOperationInput(row.operation as ASSERTION_OPERATION_TYPE, row.id)}</div>

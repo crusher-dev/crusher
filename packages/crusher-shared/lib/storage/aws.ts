@@ -1,10 +1,10 @@
-import * as AWS from 'aws-sdk';
-import * as fs from 'fs';
+import * as AWS from "aws-sdk";
+import * as fs from "fs";
 
 type ICloudBucketOptions = {
 	bucketName: string;
 	bucketRegion: string;
-}
+};
 
 class AwsCloudStorage {
 	bucketName: string;
@@ -16,10 +16,10 @@ class AwsCloudStorage {
 		this.bucketRegion = options.bucketRegion;
 
 		this.s3BucketService = new AWS.S3({
-			apiVersion: '2006-03-01',
+			apiVersion: "2006-03-01",
 			s3ForcePathStyle: true,
-			signatureVersion: 'v4',
-			region: this.bucketRegion
+			signatureVersion: "v4",
+			region: this.bucketRegion,
 		});
 
 		this.verifyConnection();
@@ -30,7 +30,7 @@ class AwsCloudStorage {
 			if (err) {
 				console.log("Couldn't connect to crusher S3", err);
 			} else {
-				console.log('Successfully connected to crusher S3');
+				console.log("Successfully connected to crusher S3");
 			}
 		});
 	}
@@ -45,12 +45,12 @@ class AwsCloudStorage {
 				},
 				(err, data) => {
 					if (err) {
-						console.error('Encountered error while uploading to aws bucket');
+						console.error("Encountered error while uploading to aws bucket");
 						console.error(err);
 						return reject(err);
 					}
 
-					const url = this.s3BucketService.getSignedUrl('getObject', {
+					const url = this.s3BucketService.getSignedUrl("getObject", {
 						Bucket: this.bucketName,
 						Key: data.Key,
 						Expires: 60 * 60 * 24 * 5,
@@ -68,15 +68,18 @@ class AwsCloudStorage {
 
 	remove(filePath: string): Promise<boolean> {
 		return new Promise((resolve, reject) => {
-			this.s3BucketService.deleteObject({
-				Bucket: this.bucketName,
-				Key: filePath
-			}, (err) => {
-				if(err) return reject(err);
-				resolve(true);
-			});
+			this.s3BucketService.deleteObject(
+				{
+					Bucket: this.bucketName,
+					Key: filePath,
+				},
+				(err) => {
+					if (err) return reject(err);
+					resolve(true);
+				},
+			);
 		});
 	}
 }
 
-export {AwsCloudStorage}
+export { AwsCloudStorage };

@@ -1,9 +1,9 @@
 ---
 name: "\U0001F941  Feature request"
 about: Raise a feature request
-title: ""
+title: ''
 labels: feature, improvement
-assignees: ""
+assignees: ''
 ---
 
 **Describe the feature**

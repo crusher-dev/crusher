@@ -9,6 +9,7 @@ import { atom, useAtom } from "jotai";
 import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
 import { usePageTitle } from "../../../hooks/seo";
 import Link from "next/link";
+import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -20,8 +21,14 @@ const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EDITION_TYPE.E
 
 const SetupCrusher = () => {
 	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [system] = useAtom(systemConfigAtom);
 
-	usePageTitle("Setup Crusher");
+	useEffect(() => {
+		const isWorkingFine = system.MONGO_DB_OPERATIONS && system.MYSQL_OPERATION && system.REDIS_OPERATION;
+		if (isWorkingFine) {
+			setOnboardingStep(ONBOARDING_STEP.TUTORIAL);
+		}
+	}, []);
 	return (
 		<>
 			<div className="m-8 text-18 leading-none mb-12 font-700">Setup Crusher</div>

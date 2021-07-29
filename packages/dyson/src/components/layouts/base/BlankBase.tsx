@@ -10,11 +10,15 @@ export interface BlankBaseProps {
  * Just a Dark container
  */
 export const BlankBase: React.FC<BlankBaseProps> = ({ className, children }) => {
-	return <div css={[baseCSS]} className={className}>{children}</div>;
+	return (
+		<div css={[baseCSS]} className={className}>
+			{children}
+		</div>
+	);
 };
 
 const baseCSS = css`
-  background: linear-gradient(179deg, #12161b 10.44%, #0c0d0e 100%);
+	background: linear-gradient(179deg, #12161b 10.44%, #0c0d0e 100%);
 	color: white;
 	height: 100%;
 	width: 100%;

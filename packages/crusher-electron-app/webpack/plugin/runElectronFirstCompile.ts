@@ -7,13 +7,18 @@ const pluginName = "RunElectronOnFirstCompile";
 class RunElectronOnFirstCompile {
 	alreadyCompiled = false;
 
-	runElectronApp(platform){
-		switch(platform) {
+	runElectronApp(platform) {
+		switch (platform) {
 			case "linux":
 				exec(`${path.resolve(__dirname, "../../bin/linux/crusher")} ${path.resolve(__dirname, "../../../../output/crusher-electron-app")}`);
 				break;
 			case "darwin":
-				exec(`${path.resolve(__dirname, "../../bin/darwin/Electron.app/Contents/MacOS/Electron")} ${path.resolve(__dirname, "../../../../output/crusher-electron-app")}`);
+				exec(
+					`${path.resolve(__dirname, "../../bin/darwin/Electron.app/Contents/MacOS/Electron")} ${path.resolve(
+						__dirname,
+						"../../../../output/crusher-electron-app",
+					)}`,
+				);
 				break;
 			default:
 				throw new Error("This OS is not supported. Only linux and darwin are supported...");

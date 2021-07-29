@@ -1,4 +1,4 @@
-import { iJobRunRequest } from './jobRunRequest';
+import { iJobRunRequest } from "./jobRunRequest";
 
 export interface iTestRunnerJobOutput {
 	runnerJobRequestInfo: iJobRunRequest;

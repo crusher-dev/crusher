@@ -60,7 +60,7 @@ const addressBarStyle = {
 	borderWidth: "1px",
 	color: "#fff",
 	borderRadius: "0.1rem",
-	maxWidth: "573px"
+	maxWidth: "573px",
 };
 
 const addressBarInputStyle = {

@@ -4,8 +4,8 @@ function setPageUrl(url: string) {
 	pageUrl = url;
 }
 
-function getLastSavedPageUrl(){
+function getLastSavedPageUrl() {
 	return pageUrl;
 }
 
-export {setPageUrl, getLastSavedPageUrl};
+export { setPageUrl, getLastSavedPageUrl };

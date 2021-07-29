@@ -1,5 +1,5 @@
 import React from "react";
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export interface ButtonProps {
 	/**
@@ -11,7 +11,6 @@ export interface ButtonProps {
 	 * Is error
 	 */
 	isError?: boolean;
-
 
 	/**
 	 * Disabled;
@@ -28,15 +27,9 @@ export interface ButtonProps {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<ButtonProps> = ({
-																							 size = "medium",
-	isError=false,
-																							 children,
-																							 className, ...props }) => {
-	return (
-		<input css={[inputBox, isError && errorState ]} {...props} className={`${className ? className : ""}`}/>
-	);
-}
+export const Input: React.FC<ButtonProps> = ({ size = "medium", isError = false, children, className, ...props }) => {
+	return <input css={[inputBox, isError && errorState]} {...props} className={`${className ? className : ""}`} />;
+};
 
 const inputBox = css`
 	width: 348rem;
@@ -49,13 +42,12 @@ const inputBox = css`
 	font-size: 14rem;
 	padding-left: 16rem;
 	color: #fff;
-	
-	:focus{
-		border-color: #6893E7;
+
+	:focus {
+		border-color: #6893e7;
 	}
 `;
 
 const errorState = css`
-
-  border-color: #ff4583;;
-	`
+	border-color: #ff4583; ;
+`;

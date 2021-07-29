@@ -1,7 +1,7 @@
-import { SELECTOR_TYPE } from '../constants';
-import { SelectorData } from '../interfaces/result';
-import { Map } from '../interfaces/common';
-import { getQuerySelector, getUniqueScore } from '../utils';
+import { SELECTOR_TYPE } from "../constants";
+import { SelectorData } from "../interfaces/result";
+import { Map } from "../interfaces/common";
+import { getQuerySelector, getUniqueScore } from "../utils";
 
 /**
  * Returns data attribute map, value and uniqueness of HTML node
@@ -21,7 +21,7 @@ export const getDataAttribute = (htmlNode: HTMLElement, target: HTMLElement): Se
 		const attributeValue = attribute.nodeValue;
 
 		// If data-id is not present, continue
-		if (attributeName.indexOf('data-') === -1) continue;
+		if (attributeName.indexOf("data-") === -1) continue;
 		attributeList[attributeName] = attributeValue;
 	}
 

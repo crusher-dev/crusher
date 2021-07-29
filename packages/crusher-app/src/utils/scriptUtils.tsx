@@ -90,8 +90,6 @@ window['_fs_namespace'] = 'FS';
     g._v="1.3.0";
 })(window,document,window['_fs_namespace'],'script','user');`,
 	);
-	console.log("heloo");
-	addChat()
 };
 
 export const openChatBox = () => {

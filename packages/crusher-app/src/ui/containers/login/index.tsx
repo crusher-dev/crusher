@@ -57,6 +57,9 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 			if (userStatus !== "USER_NOT_REGISTERED") {
 				router.push("/app/dashboard");
 			}
+			else{
+				alert("Please add valid ceredentials.")
+			}
 		} catch (e) {
 			alert(e);
 		}
@@ -119,7 +122,7 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 	);
 }
 
-function EmailBox({ type }) {
+function EmailBox() {
 	const [showBox, setShowBox] = useState(false);
 
 	if (showBox) {
@@ -141,16 +144,16 @@ function EmailBox({ type }) {
 				</div>
 			</Button>
 
-			<Conditional showIf={type !== "signup" && false}>
-				<div
-					className={"text-13 leading-none text-center mt-36"}
-					css={css`
-						color: rgba(255, 255, 255, 0.5);
-					`}
-				>
-					Continue with SAML SSO
-				</div>
-			</Conditional>
+			{/*<Conditional showIf={type !== "signup" && false}>*/}
+			{/*	<div*/}
+			{/*		className={"text-13 leading-none text-center mt-36"}*/}
+			{/*		css={css`*/}
+			{/*			color: rgba(255, 255, 255, 0.5);*/}
+			{/*		`}*/}
+			{/*	>*/}
+			{/*		Continue with SAML SSO*/}
+			{/*	</div>*/}
+			{/*</Conditional>*/}
 		</div>
 	);
 }
@@ -187,7 +190,7 @@ export const LoginContainer = () => {
 					{/*	</Button>*/}
 					{/*</a>*/}
 
-					<EmailBox type={"signup"} />
+					<EmailBox />
 					<div className={"font-cera text-15 leading-none font-500"}>
 						Don't have an account?
 						<Link href={"/signup"}>

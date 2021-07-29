@@ -1,7 +1,7 @@
-import { combine } from './combine';
-import { getCues } from './getCues';
-import { requireExactMatch } from './isElementMatch';
-import { Cue, CueSet } from './types';
+import { combine } from "./combine";
+import { getCues } from "./getCues";
+import { requireExactMatch } from "./isElementMatch";
+import { Cue, CueSet } from "./types";
 
 type GenerateRelativeCueSets = {
 	exactMatchOnly: boolean;
@@ -46,7 +46,7 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 	yield* targetCues.map((cue) => buildCueSet([cue])) as any;
 
 	// do not combine text cues because they are very expensive to evaluate
-	targetCues = targetCues.filter((c) => c.type !== 'text');
+	targetCues = targetCues.filter((c) => c.type !== "text");
 
 	// yield 2 target cue sets
 	const twoTargetCueSets = combine(targetCues, 2);
@@ -58,7 +58,7 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 
 	const exactMatchOnly = requireExactMatch(target);
 
-	const descendants = target.querySelectorAll('*');
+	const descendants = target.querySelectorAll("*");
 	let level = 1;
 	let ancestor = target.parentElement;
 	while (level - 1 < descendants.length || ancestor) {
@@ -172,7 +172,7 @@ export function* generateSortedCueSets(
 				const hash = cueSet.cues
 					.map((c) => c.value)
 					.sort()
-					.join(',');
+					.join(",");
 				if (yieldedHashes.has(hash)) return;
 
 				yieldedHashes.add(hash);

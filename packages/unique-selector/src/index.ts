@@ -1,11 +1,11 @@
-import { Configuration, UserConfiguration, DefaultConfiguration } from './interfaces/config';
-import { UniqueSelectorResult } from './interfaces/result';
-import { getIDSelectors } from './selectors/id';
-import { getDataAttribute } from './selectors/dataAttribute';
-import { getAttribute } from './selectors/attribute';
-import { getPnC } from './selectors/pnc';
-import { getSelector } from './crusher-selector/generateSelectors';
-import { SELECTOR_TYPE } from './constants';
+import { Configuration, UserConfiguration, DefaultConfiguration } from "./interfaces/config";
+import { UniqueSelectorResult } from "./interfaces/result";
+import { getIDSelectors } from "./selectors/id";
+import { getDataAttribute } from "./selectors/dataAttribute";
+import { getAttribute } from "./selectors/attribute";
+import { getPnC } from "./selectors/pnc";
+import { getSelector } from "./crusher-selector/generateSelectors";
+import { SELECTOR_TYPE } from "./constants";
 
 /**
  * Entry File.

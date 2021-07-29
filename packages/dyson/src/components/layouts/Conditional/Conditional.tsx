@@ -8,4 +8,4 @@ export interface ConditionalProps {
 /**
  * A smart way to wrap condition.
  */
-export const Conditional: React.FC<ConditionalProps> = ({ children, showIf }) => (showIf? children : null);
+export const Conditional: React.FC<ConditionalProps> = ({ children, showIf }) => (showIf ? children : null);

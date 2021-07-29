@@ -1,15 +1,16 @@
-a{
-	text-decoration: none!important;
+a {
+	text-decoration: none !important;
 }
 
-a:link{
-	text-decoration: none!important;
+a:link {
+	text-decoration: none !important;
 }
 
-.noDecoration:hover, a:link, a:visited {
-	text-decoration: none!important;
+.noDecoration:hover,
+a:link,
+a:visited {
+	text-decoration: none !important;
 }
-
 
 /* For Mobile and small device*/
 html {

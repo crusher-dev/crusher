@@ -1,33 +1,29 @@
 {
-  "name": "Crusher",
-  "description": "Crusher is no-code open source testing tool",
-  "keywords": [
-    "testing",
-    "uitesting",
-    "javascript"
-  ],
-  "logo": "https://crusher.dev/images/webclip.png",
-  "website": "https://crusher.dev",
-  "repository": "https://github.com/crusherdev/crusher",
-  "addons": [
-    "cleardb",
-    {
-        "plan": "heroku-redis",
-        "options": {
-            "maxmemory_policy": "allkeys-lru"
-        }
-    }
-  ],
-  "env": {
-    "MONGODB_CONNECTION_STRING": {
-      "description": "Mongodb connection string from mongodb atlas (Can get it for free from MongoDB Atlas) ",
-      "required": true
-    },
-    "IS_HEROKU": {
-      "description": "An env identifier for heroku platform (Don't change this)",
-      "value": "true",
-      "required": true
-    }
-  },
-  "stack": "container"
+	"name": "Crusher",
+	"description": "Crusher is no-code open source testing tool",
+	"keywords": ["testing", "uitesting", "javascript"],
+	"logo": "https://crusher.dev/images/webclip.png",
+	"website": "https://crusher.dev",
+	"repository": "https://github.com/crusherdev/crusher",
+	"addons": [
+		"cleardb",
+		{
+			"plan": "heroku-redis",
+			"options": {
+				"maxmemory_policy": "allkeys-lru"
+			}
+		}
+	],
+	"env": {
+		"MONGODB_CONNECTION_STRING": {
+			"description": "Mongodb connection string from mongodb atlas (Can get it for free from MongoDB Atlas) ",
+			"required": true
+		},
+		"IS_HEROKU": {
+			"description": "An env identifier for heroku platform (Don't change this)",
+			"value": "true",
+			"required": true
+		}
+	},
+	"stack": "container"
 }

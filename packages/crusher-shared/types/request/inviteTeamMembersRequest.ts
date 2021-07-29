@@ -1,3 +1,3 @@
-export interface iInviteTeamMembersRequest{
+export interface iInviteTeamMembersRequest {
 	emails?: Array<string>;
 }

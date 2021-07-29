@@ -1,5 +1,5 @@
-import { ACTIONS_IN_TEST } from '../constants/recordedActions';
-import { iSelectorInfo } from './selectorInfo';
+import { ACTIONS_IN_TEST } from "../constants/recordedActions";
+import { iSelectorInfo } from "./selectorInfo";
 
 export interface iAction {
 	type: ACTIONS_IN_TEST;

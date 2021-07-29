@@ -76,6 +76,8 @@ function EmailPasswordBox() {
 			const { status } = await registerUser(name.value, email.value, password.value);
 			if (status === "USER_NOT_REGISTERED") {
 				alert("Please enter corre");
+			}else{
+				router.push("/setup/onboarding")
 			}
 		} catch (e) {
 			alert(e);

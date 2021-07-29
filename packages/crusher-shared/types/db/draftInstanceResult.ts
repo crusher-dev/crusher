@@ -1,4 +1,4 @@
-import { BaseRowInterface } from './baseRow';
+import { BaseRowInterface } from "./baseRow";
 
 export interface iDraftInstanceResult extends BaseRowInterface {
 	id?: number;

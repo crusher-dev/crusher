@@ -1,10 +1,10 @@
-version: "2.2"
+version: '2.2'
 services:
   oss_complete3:
     build:
       context: ../../
       dockerfile: docker/oss/Dockerfile.complete
-#    network_mode: host
+    #    network_mode: host
     environment:
       - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
       - DB_HOST=db-mysql-nyc3-51235-do-user-9421575-0.b.db.ondigitalocean.com
@@ -22,6 +22,6 @@ services:
       - REDIS_PORT=12413
       - REDIS_PASSWORD=
       - BACKEND_SERVER_URL=http://localhost:3000/server
-    container_name: "oss_complete3"
+    container_name: 'oss_complete3'
     stdin_open: true # docker run -i
     tty: true

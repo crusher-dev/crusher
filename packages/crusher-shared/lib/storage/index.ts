@@ -1,6 +1,6 @@
 import * as path from "path";
-import * as fs from 'fs';
-import * as url from 'url';
+import * as fs from "fs";
+import * as url from "url";
 
 type IStorageOptions = {
 	baseFolder: string;
@@ -20,17 +20,17 @@ class LocalFileStorage {
 		this.basePath = path.join(this.baseFolder, this.bucketName);
 		this.port = options.port;
 
-		fs.mkdirSync(this.basePath, {recursive: true});
+		fs.mkdirSync(this.basePath, { recursive: true });
 	}
 
 	uploadBuffer(buffer: Buffer, destination: string): Promise<string> {
 		return new Promise((resolve, reject) => {
 			try {
 				const destinationPath = path.join(this.basePath, destination);
-				fs.mkdirSync(path.parse(destinationPath).dir, {recursive: true});
+				fs.mkdirSync(path.parse(destinationPath).dir, { recursive: true });
 				fs.writeFileSync(destinationPath, buffer);
 				resolve(url.resolve(`http://localhost:${this.port}`, path.join(this.bucketName, destination)));
-			} catch(err) {
+			} catch (err) {
 				reject(err);
 			}
 		});
@@ -42,7 +42,7 @@ class LocalFileStorage {
 		return this.uploadBuffer(fileStream, destination);
 	}
 
-	remove(filePath: string) : Promise<boolean> {
+	remove(filePath: string): Promise<boolean> {
 		return new Promise((resolve, reject) => {
 			try {
 				const absoluteFilePath = path.resolve(this.basePath, filePath);
@@ -57,4 +57,4 @@ class LocalFileStorage {
 	}
 }
 
-export {LocalFileStorage}
+export { LocalFileStorage };

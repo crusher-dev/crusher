@@ -3,4 +3,4 @@ import * as Middlewares from "./middlewares";
 import * as Functions from "./functions";
 import * as Utils from "./utils";
 
-export {Actions, Middlewares, Functions, Utils};
+export { Actions, Middlewares, Functions, Utils };

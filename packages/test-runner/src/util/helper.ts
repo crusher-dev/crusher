@@ -78,7 +78,7 @@ export const uploadOutputVideoToS3 = async (video: string | null, jobRequest: iJ
 	return bucketManager.upload(video, path.join(targetDir, `/video.mp4.raw`));
 };
 
-export const uploadOutputImageToS3 = async (imageBufferInfo: { name: string; value: Buffer}, jobRequest: iJobRunRequest) => {
+export const uploadOutputImageToS3 = async (imageBufferInfo: { name: string; value: Buffer }, jobRequest: iJobRunRequest) => {
 	const targetDir = `${jobRequest.requestType}/${jobRequest.instanceId}`;
 	return bucketManager.uploadBuffer(imageBufferInfo.value, path.join(targetDir, imageBufferInfo.name));
 };

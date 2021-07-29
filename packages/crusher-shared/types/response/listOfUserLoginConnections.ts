@@ -1,3 +1,3 @@
-import { iUserConnection } from '../mongo/userConnection';
+import { iUserConnection } from "../mongo/userConnection";
 
 export type iListOfUserLoginConnectionsResponse = Array<iUserConnection>;

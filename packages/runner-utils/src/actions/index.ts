@@ -7,10 +7,10 @@ import elementScroll from "./elementScroll";
 import pageScroll from "./pageScroll";
 import navigateUrl from "./navigateUrl";
 import setDevice from "./setDevice";
-import assertElement from './assertElement';
+import assertElement from "./assertElement";
 import runCustomScript from "./elementCustomScript";
-import focusOnElement from './elementFocus';
-import waitForNavigation from './waitForNavigation';
+import focusOnElement from "./elementFocus";
+import waitForNavigation from "./waitForNavigation";
 
 module.exports = {
 	Element: {
@@ -22,13 +22,13 @@ module.exports = {
 		elementScroll,
 		assertElement,
 		runCustomScript: runCustomScript,
-		focus: focusOnElement
+		focus: focusOnElement,
 	},
 	Page: {
 		screenshot: capturePageScreenshot,
 		scroll: pageScroll,
 		navigate: navigateUrl,
-		waitForNavigation: waitForNavigation
+		waitForNavigation: waitForNavigation,
 	},
 	Browser: {
 		setDevice,

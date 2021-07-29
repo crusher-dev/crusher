@@ -1,5 +1,5 @@
-import { iUserConnection } from './userConnection';
-import { TokenAuthentication } from '@octokit/auth-oauth-app/dist-types/types';
+import { iUserConnection } from "./userConnection";
+import { TokenAuthentication } from "@octokit/auth-oauth-app/dist-types/types";
 
 export interface iGithubUserConnection extends iUserConnection {
 	meta: {

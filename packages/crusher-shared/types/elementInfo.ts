@@ -1,4 +1,4 @@
-import { iSelectorInfo } from './selectorInfo';
+import { iSelectorInfo } from "./selectorInfo";
 
 export interface iAttribute {
 	name: string;

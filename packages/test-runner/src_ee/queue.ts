@@ -1,7 +1,7 @@
 import * as path from "path";
 import { Worker, Queue, QueueScheduler } from "bullmq";
 import { BootAfterNJobsOffsetManager } from "@manager/offsetManger";
-import { RedisManager } from '@manager/redis';
+import { RedisManager } from "@manager/redis";
 
 const REQUEST_QUEUE = "request-queue";
 const queue = new Queue(REQUEST_QUEUE, { connection: RedisManager.client as any });

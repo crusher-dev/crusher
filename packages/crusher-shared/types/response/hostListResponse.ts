@@ -1,4 +1,3 @@
-import { iHost } from '../db/host';
+import { iHost } from "../db/host";
 
-export interface iHostListResponse extends iHost{
-}
+export interface iHostListResponse extends iHost {}

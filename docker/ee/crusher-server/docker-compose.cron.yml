@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 services:
   cred-helper:
     build:
@@ -6,12 +6,12 @@ services:
       dockerfile: AWS_CRED_HELPER.Dockerfile
     container_name: aws-cred-helper
     volumes:
-      - "aws-cred-helper:/go/bin:rw"
+      - 'aws-cred-helper:/go/bin:rw'
 
   crusher-server-cron:
     network_mode: host
     image: 862866004122.dkr.ecr.us-east-1.amazonaws.com/crusher-server-images
-    command: ["pm2-runtime", "ecosystem.config.js", "--only", 'crusher-server-cron,crusher-server-queue']
+    command: ['pm2-runtime', 'ecosystem.config.js', '--only', 'crusher-server-cron,crusher-server-queue']
     environment:
       - CRUSHER_ENV=$CRUSHER_ENV
       - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING

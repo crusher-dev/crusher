@@ -1,7 +1,7 @@
-import { SELECTOR_TYPE } from '../constants';
-import { SelectorData } from '../interfaces/result';
-import { Map } from '../interfaces/common';
-import { getQuerySelector, getUniqueScore } from '../utils';
+import { SELECTOR_TYPE } from "../constants";
+import { SelectorData } from "../interfaces/result";
+import { Map } from "../interfaces/common";
+import { getQuerySelector, getUniqueScore } from "../utils";
 /**
  * Returns attribute map, value and uniqueness of HTML node
  * @param htmlNode
@@ -20,7 +20,7 @@ export const getAttribute = (htmlNode: HTMLElement, target: HTMLElement): Select
 		const attributeValue = attribute.nodeValue;
 
 		// Skip id, class and data-* attributes
-		if (attributeName.indexOf('data-') !== -1 || attributeName.indexOf('id') !== -1 || attributeName.indexOf('class') !== -1) continue;
+		if (attributeName.indexOf("data-") !== -1 || attributeName.indexOf("id") !== -1 || attributeName.indexOf("class") !== -1) continue;
 
 		attributeList[attributeName] = attributeValue;
 	}

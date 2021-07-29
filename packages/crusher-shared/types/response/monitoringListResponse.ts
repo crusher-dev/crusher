@@ -1,4 +1,4 @@
-export interface iMonitoringListResponse{
+export interface iMonitoringListResponse {
 	id: number;
 	project_id: number;
 	test_interval: number;

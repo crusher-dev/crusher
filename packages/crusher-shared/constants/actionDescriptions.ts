@@ -1,4 +1,4 @@
-import { ACTIONS_IN_TEST } from './recordedActions';
+import { ACTIONS_IN_TEST } from "./recordedActions";
 interface ActionMeta {
 	selector?: string;
 	value?: string;
@@ -37,7 +37,7 @@ const ACTION_DESCRIPTIONS = {
 	},
 	[ACTIONS_IN_TEST.VALIDATE_SEO]: (meta: ActionMeta) => {
 		return `Validating SEO info`;
-	}
+	},
 };
 
 export { ACTION_DESCRIPTIONS };

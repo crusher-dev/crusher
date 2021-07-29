@@ -469,7 +469,7 @@ export default class UserService {
 		// @Note: Remove the next line after development of this API
 		const userInfo = user_id ? await this.getUserInfo(user_id) : null;
 		const teamInfo = userInfo ? await this.teamService.getTeamInfo(team_id) : null;
-		const teamProjects = userInfo && teamInfo ? await this.projectService.getAllProjects(team_id): null;
+		const teamProjects = userInfo && teamInfo ? await this.projectService.getAllProjects(team_id) : null;
 
 		return {
 			userId: userInfo ? userInfo.id : null,

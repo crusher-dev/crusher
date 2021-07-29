@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const {execSync} = require("child_process");
+const { execSync } = require("child_process");
 
 const BIN_DIR = path.resolve(__dirname, "../bin");
 const celectronRegExp = new RegExp(/^celectron-v([\d.]+)-(linux|darwin)-x64.zip/);

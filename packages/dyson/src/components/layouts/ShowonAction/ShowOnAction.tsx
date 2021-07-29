@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-export function ShowOnClick({ children, component,callback, initialState, }) {
+export function ShowOnClick({ children, component, callback, initialState }) {
 	const [showDropDown, setShow] = useState(initialState || false);
 
 	const ref = useRef();
@@ -8,7 +8,7 @@ export function ShowOnClick({ children, component,callback, initialState, }) {
 			e.stopPropagation();
 			const insideClick = ref.current.contains(e.target) || ref.current === e.target;
 
-			if (!insideClick ) setShow(false);
+			if (!insideClick) setShow(false);
 		};
 		document.body.addEventListener("click", handleClick, { passive: true });
 
@@ -17,11 +17,11 @@ export function ShowOnClick({ children, component,callback, initialState, }) {
 		};
 	}, []);
 
-	useEffect(()=>{
-		callback && callback(showDropDown)
-	},[showDropDown])
+	useEffect(() => {
+		callback && callback(showDropDown);
+	}, [showDropDown]);
 	return (
-		<div className={"flex relative"} ref={ref} onClick={setShow.bind(this,true)}>
+		<div className={"flex relative"} ref={ref} onClick={setShow.bind(this, true)}>
 			{children}
 			{showDropDown && component}
 		</div>

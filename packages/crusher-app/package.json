@@ -39,6 +39,7 @@
 		"mitt": "^2.1.0",
 		"next": "11",
 		"next-cookies": "^2.0.3",
+		"next-pwa": "^5.2.24",
 		"next-redux-wrapper": "^6.0.2",
 		"node-fetch": "^2.6.1",
 		"nookies": "^2.4.1",

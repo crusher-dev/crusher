@@ -1,7 +1,7 @@
-import { RUNNER_REQUEST_TYPE } from './requestType';
-import { iJob } from '../db/job';
-import { iTestJobRequestBody } from './testJobRequestBody';
-import { PLATFORM } from '../platform';
+import { RUNNER_REQUEST_TYPE } from "./requestType";
+import { iJob } from "../db/job";
+import { iTestJobRequestBody } from "./testJobRequestBody";
+import { PLATFORM } from "../platform";
 
 interface iRequestJob extends iJob {
 	report_id: number;

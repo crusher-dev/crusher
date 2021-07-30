@@ -74,13 +74,14 @@ const itemImageStyle = css`
 
 function TestSearchableList() {
 	const [searchQuery, setSearchQuery] = useState(null as null | string);
-	const [porject] = useAtom(currentProject);
+	const [project] = useAtom(currentProject);
 
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(porject.id), { suspense: true });
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id), { suspense: true });
+
 
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL,videoURL } = test;
+			const { testName, isPassing, createdAt, imageURL, videoURL } = test;
 
 			return <TestCard videoURL={videoURL} imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} />;
 		});

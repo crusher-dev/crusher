@@ -43,7 +43,7 @@ export class BuildsController {
 					id: buildData.triggeredById,
 					name: getFullName(buildData.triggeredByFirstName, buildData.triggeredByLastName),
 				},
-				commentCount: buildData.commentCount,
+				commentCount: buildData.commentCount ? buildData.commentCount : 0,
 			};
 		});
 	}

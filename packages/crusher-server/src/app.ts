@@ -18,8 +18,8 @@ import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import MongoManager from "@manager/MongoManager";
 import { RedisManager } from "@manager/redis";
-import { TestController } from "./tests/controller/testController";
-import { BuildsController } from "./builds/controller/buildsController";
+import { TestController } from "./tests/controller";
+import { BuildsController } from "./builds/controller";
 
 RedisManager.initialize();
 

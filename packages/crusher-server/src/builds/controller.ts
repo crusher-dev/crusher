@@ -1,10 +1,11 @@
-import UserService from "../../core/services/UserService";
+import UserService from "../core/services/UserService";
 import { JsonController, Get, QueryParams, Authorized, BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { getFullName } from "../../utils/helper";
+import { getFullName } from "../utils/helper";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
-import CommentsServiceV2 from "../../core/services/CommentsService";
-import { BuildsService } from "crusher-server/src/core/services/BuildsService";
+import CommentsServiceV2 from "../core/services/CommentsService";
+import { BuildsService } from "./service";
+
 @Service()
 @JsonController("/build")
 export class BuildsController {

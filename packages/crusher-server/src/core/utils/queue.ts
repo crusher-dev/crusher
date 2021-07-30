@@ -81,6 +81,7 @@ export async function addJobToRequestQueue(jobRequest) {
 	const job = await jobsService.getJob(jobId);
 	const referenceJob = await jobsService.getReferenceJob(job);
 	const jobReportsId = await jobReportsService.createJobReport(jobId, referenceJob ? referenceJob.id : jobId, projectId);
+	await jobsService.updateJobInfo(jobId, { latest_report_id: jobReportsId });
 
 	const totalTestCount = tests.reduce((prev, current) => {
 		const count = platform === PLATFORM.ALL ? 3 : 1;

@@ -40,7 +40,7 @@ export default class ProjectService {
 			[projectId],
 		);
 		const passedTests = allJobsThisMonth.filter((jobReport) => jobReport.status === JobReportStatus.PASSED);
-		const totalTests = allJobsThisMonth.filter((jobReport) => jobReport.status !== JobReportStatus.RUNNING_CHECKS);
+		const totalTests = allJobsThisMonth.filter((jobReport) => jobReport.status !== JobReportStatus.RUNNING);
 		let percentage = 0;
 		if (totalTests.length === 0) percentage = 0;
 		else percentage = (passedTests.length / totalTests.length) * 100;
@@ -53,7 +53,7 @@ export default class ProjectService {
 	async getLastBuildStatus(projectId: number) {
 		const lastBuild = await this.dbManager.fetchSingleRow(
 			"SELECT job_reports.status as status FROM jobs, job_reports WHERE jobs.project_id = ? AND job_reports.job_id = jobs.id AND job_reports.status != ? ORDER BY jobs.created_at DESC LIMIT 1",
-			[projectId, JobReportStatus.RUNNING_CHECKS],
+			[projectId, JobReportStatus.RUNNING],
 		);
 		if (!lastBuild) {
 			return ProjectHealthStatus.NOT_ENOUGH_DATA;

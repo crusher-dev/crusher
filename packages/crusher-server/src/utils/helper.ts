@@ -12,4 +12,8 @@ function isUsingLocalStorage(): boolean {
 	return process.env.STORAGE_MODE === "local";
 }
 
-export { getEdition, isOpenSourceEdition, isUsingLocalStorage };
+function getFullName(firstName: string | null, lastName: string | null) {
+	return [firstName, lastName].filter((name) => !!name).join(" ");
+}
+
+export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName };

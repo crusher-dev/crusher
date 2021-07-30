@@ -189,6 +189,7 @@ export default class JobsService {
 			conclusion: payload.conclusion,
 			user_id: payload.user_id,
 			check_run_id: payload.check_run_id,
+			latest_report_id: payload.latest_report_id,
 		};
 
 		const valuesToUpdate = Object.keys(payload).reduce((prev, key) => {

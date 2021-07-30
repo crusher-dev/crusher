@@ -1,37 +1,48 @@
 import UserService from "../../core/services/UserService";
 import { JsonController, Get, QueryParams, Authorized, BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import TestService from "../../core/services/TestService";
-import { isUsingLocalStorage } from "../../utils/helper";
-
+import { getFullName } from "../../utils/helper";
+import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import CommentsServiceV2 from "../../core/services/CommentsService";
+import { BuildsService } from "crusher-server/src/core/services/BuildsService";
 @Service()
 @JsonController("/build")
 export class BuildsController {
 	@Inject()
 	private userService: UserService;
 	@Inject()
-	private testService: TestService;
+	private buildsService: BuildsService;
+	@Inject()
+	private commentsService: CommentsServiceV2;
 
 	@Authorized()
 	@Get("/list")
-	public async getList(@QueryParams() params): Promise<any> {
+	public async getList(@QueryParams() params): Promise<IProjectBuildListResponse> {
 		const { project_id } = params;
 		if (!project_id) throw new BadRequestError();
 
-		return (await this.testService.getAllTestsInProject(project_id)).map((testData) => {
-			const videoUrl = testData.featured_video_uri ? testData.featured_video_uri : null;
-
+		const builds = await this.buildsService.getBuildInfoList(project_id);
+		return builds.map((buildData) => {
 			return {
-				id: testData.id,
-				testName: testData.name,
-				createdAt: new Date(testData.created_at).getTime() / 1000,
-				videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
-				// @Note: Add support for taking random screenshots in case video is switched off
-				imageURL: null,
-				// @Note: Hardcoded for now, will be changed later
-				isPassing: true,
-				// @Note: Hardcoded for now, will be changed later
-				firstRunCompleted: true,
+				id: buildData.buildId,
+				// @Note: There is no exact such thing as build name. For now build name
+				// is same as commit name if it present otherwise it will be null
+				name: buildData.buildName,
+				createdAt: new Date(buildData.buildCreatedAt).getTime() / 1000,
+				tests: {
+					totalCount: buildData.totalTestCount,
+					passedCount: buildData.passedTestCount,
+					failedCount: buildData.failedTestCount,
+					reviewRequiredCount: buildData.reviewRequiredTestCount,
+				},
+				status: buildData.buildStatus,
+				// In seconds
+				duration: buildData.buildDuration,
+				triggeredBy: {
+					id: buildData.triggeredById,
+					name: getFullName(buildData.triggeredByFirstName, buildData.triggeredByLastName),
+				},
+				commentCount: buildData.commentCount,
 			};
 		});
 	}

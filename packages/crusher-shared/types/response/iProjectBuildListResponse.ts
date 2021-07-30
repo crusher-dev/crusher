@@ -1,3 +1,5 @@
+import { JobReportStatus } from "../../types/jobReportStatus";
+
 interface Tests {
   totalCount:     number;
   passedCount:         number;
@@ -10,7 +12,7 @@ export interface IProjectBuildListItem {
   name:          string;
   createdAt:     number;
   tests:         Tests;
-  status:        string;
+  status:        JobReportStatus;
   duration:      number;
   triggeredBy: {
     id: number;

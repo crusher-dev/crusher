@@ -66,4 +66,30 @@ export default class JobReportServiceV2 {
 	async updateJobReportStatus(status: JobReportStatus, reportId: number, explanation: string | null = null) {
 		return this.dbManager.fetchSingleRow(`UPDATE job_reports SET ? WHERE id = ?`, [{ status: status, status_explanation: explanation }, reportId]);
 	}
+
+	async updateTestStatusCount(reportId: number, payload: any) {
+		const updatePayload = Object.keys(payload)
+			.filter((a) => ["passed_test_count", "failed_test_count", "review_required_test_count"].includes(a))
+			.reduce((prev, current) => {
+				return { ...prev, [current]: payload[current] };
+			}, {});
+
+		return this.dbManager.fetchSingleRow(`UPDATE job_reports SET ? WHERE id = ?`, [updatePayload, reportId]);
+	}
+
+	async incrementTestStatusCount(reportId: number, payload: any) {
+		let incrementCountColumnName: string | null = null;
+
+		if (payload["passed_test_count"]) {
+			incrementCountColumnName = "passed_test_count";
+		} else if (payload["failed_test_count"]) {
+			incrementCountColumnName = "failed_test_count";
+		} else if (payload["review_required_test_count"]) {
+			incrementCountColumnName = "review_required_test_count";
+		} else {
+			throw new Error("Invalid count type to update");
+		}
+
+		return this.dbManager.fetchSingleRow(`UPDATE job_reports SET ${incrementCountColumnName} = ${incrementCountColumnName} + 1 WHERE id = ?`, [reportId]);
+	}
 }

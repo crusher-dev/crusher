@@ -6,10 +6,14 @@ import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus
 import { TestInstanceResultSetConclusion } from "../interfaces/TestInstanceResultSetConclusion";
 import { TestInstanceResult } from "../interfaces/db/TestInstanceResult";
 import { TestInstanceResultSetStatus } from "../interfaces/TestInstanceResultSetStatus";
+import JobReportServiceV2 from "./v2/JobReportServiceV2";
 
 @Service()
 export default class TestInstanceResultSetsService {
 	private dbManager: DBManager;
+
+	@Inject()
+	private jobReportService: JobReportServiceV2;
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
@@ -46,7 +50,7 @@ export default class TestInstanceResultSetsService {
 	}
 
 	// This should be called everytime a result is approved/disapproved/no_action.
-	async updateResultSetStatus(setId: number, error) {
+	async updateResultSetStatus(setId: number, reportId: number, error) {
 		const results = await this.getResultsOfInstanceSet(setId);
 		const passedResults = results.filter((result) => {
 			return result.status == TestInstanceResultStatus.PASSED;
@@ -66,18 +70,21 @@ export default class TestInstanceResultSetsService {
 				TestInstanceResultSetConclusion.FAILED,
 				setId,
 			]);
+			await this.jobReportService.incrementTestStatusCount(reportId, { failed_test_count: true });
 		} else if (hasAllTestsPassed) {
 			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET status = ?, conclusion = ? WHERE id = ?`, [
 				TestInstanceResultSetStatus.FINISHED_RUNNING_CHECKS,
 				TestInstanceResultSetConclusion.PASSED,
 				setId,
 			]);
+			await this.jobReportService.incrementTestStatusCount(reportId, { passed_test_count: true });
 		} else if (isStillInReview) {
 			await this.dbManager.fetchSingleRow(`UPDATE test_instance_result_sets SET status = ?, conclusion = ? WHERE id = ?`, [
 				TestInstanceResultSetStatus.FINISHED_RUNNING_CHECKS,
 				TestInstanceResultSetConclusion.MANUAL_REVIEW_REQUIRED,
 				setId,
 			]);
+			await this.jobReportService.incrementTestStatusCount(reportId, { review_required_test_count: true });
 		}
 
 		return { status: "UPDATED" };

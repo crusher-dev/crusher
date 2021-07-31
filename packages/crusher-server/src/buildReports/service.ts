@@ -102,7 +102,6 @@ export class BuildReportService {
 						name: current.testName,
 						// @TODO: Add this in tests table
 						meta: {},
-						status: current.testResultStatus,
 						testInstances: [testInstance],
 					};
 				}

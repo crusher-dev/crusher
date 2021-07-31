@@ -1,17 +1,20 @@
+import { TestInstanceResultSetConclusion } from 'crusher-server/crusher-server/src/core/interfaces/TestInstanceResultSetConclusion';
+import { TestInstanceResultSetStatus } from 'crusher-server/crusher-server/src/core/interfaces/TestInstanceResultSetStatus';
+
 export interface IBuildReportResponse {
-	id: number;
-	name: string;
-	startedAt: number;
-	projectId: number;
+	id:    number;
+	name:           string;
+	startedAt:       number;
+	projectId:       number;
 	baselineId: number;
 	hasNoReferenceBuildToCompare: boolean;
-	status: string;
+	status:          string;
 	reviewer: any[];
-	history: any[];
-	configuration: Configuration;
-	meta: any;
-	tests: Test[];
-	comments: any[];
+	history:         any[];
+	configuration:   Configuration;
+	meta:            any;
+	tests:           Test[];
+	comments:        any[];
 }
 
 export interface Configuration {
@@ -20,27 +23,28 @@ export interface Configuration {
 
 interface Environment {
 	name: string;
-	id: string;
+	id:   string;
 }
 
-export interface TTestInfo {
-	name: string;
-	meta: {};
-	status: string;
+interface Test {
+	name:      string;
+	meta: 		 {  };
 	instances: Instance[];
 }
 
 interface Instance {
-	id: number;
-	title: string;
+	id:     number;
+	title:  string;
+	verboseStatus: TestInstanceResultSetStatus;
+	status: TestInstanceResultSetConclusion;
 	config: TestInstanceConfig;
 	output: TestInstanceOutput;
-	steps: TestInstanceStep[];
+	steps:  TestInstanceStep[];
 }
 
 interface TestInstanceOutput {
 	video: string | null;
-	images: Array<TestInstanceImage>;
+	images: Array<TestInstanceImage>
 }
 
 interface TestInstanceImage {
@@ -49,18 +53,18 @@ interface TestInstanceImage {
 	baselineURL: string;
 	diffDelta: number;
 	diffURL: string;
-}
+};
 
 interface TestInstanceConfig {
 	browserType: string;
 }
 
 interface TestInstanceStep {
-	index: number;
-	stepType: string;
+	index:          number;
+	stepType:    string;
 	description: string;
-	status: string;
-	payload: TestInstanceStepPayload;
+	status:      string;
+	payload:     TestInstanceStepPayload;
 }
 
 interface TestInstanceStepPayload {

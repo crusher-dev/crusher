@@ -1,13 +1,13 @@
 import UserService from "../core/services/UserService";
-import { JsonController, Get, QueryParams, Authorized, BadRequestError } from "routing-controllers";
+import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { getFullName } from "../utils/helper";
-import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import CommentsServiceV2 from "../core/services/CommentsService";
 import { BuildsService } from "./service";
+import { IProjectBuildListResponse } from '@crusher-shared/types/response/iProjectBuildListResponse';
 
 @Service()
-@JsonController("/build")
+@JsonController("/teams/:team_id/projects/:project_id/builds")
 export class BuildsController {
 	@Inject()
 	private userService: UserService;
@@ -17,13 +17,10 @@ export class BuildsController {
 	private commentsService: CommentsServiceV2;
 
 	@Authorized()
-	@Get("/list")
-	public async getList(@QueryParams() params): Promise<IProjectBuildListResponse> {
-		const { project_id } = params;
-		if (!project_id) throw new BadRequestError();
-
+	@Get("/")
+	public async getList(@Param("team_id") teamId, @Param("project_id") projectId, @Param("project_id") project_id): Promise<IProjectBuildListResponse> {
 		const builds = await this.buildsService.getBuildInfoList(project_id);
-		return builds.map((buildData) => {
+		const buildsList = builds.map((buildData) => {
 			return {
 				id: buildData.buildId,
 				// @Note: There is no exact such thing as build name. For now build name
@@ -46,5 +43,7 @@ export class BuildsController {
 				commentCount: buildData.commentCount ? buildData.commentCount : 0,
 			};
 		});
+
+		return buildsList;
 	}
 }

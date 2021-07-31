@@ -18,8 +18,9 @@ import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import MongoManager from "@manager/MongoManager";
 import { RedisManager } from "@manager/redis";
-import { TestController } from "./tests/controller/testController";
-import { BuildsController } from "./builds/controller/buildsController";
+import { TestController } from "./tests/controller";
+import { BuildsController } from "./builds/controller";
+import { BuildReportController } from "./buildReports/controller";
 
 RedisManager.initialize();
 
@@ -55,7 +56,7 @@ if (process.env.STORAGE_MODE === "local") {
 	server.listen(storagePort);
 }
 
-const controllersArr: any = [UserController, TestController, BuildsController];
+const controllersArr: any = [UserController, TestController, BuildsController, BuildReportController];
 
 if (getEdition() === EDITION_TYPE.EE) {
 	const eeControllerArr: any = require("./ee/controllers");

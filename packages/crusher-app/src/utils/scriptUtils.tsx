@@ -93,8 +93,5 @@ window['_fs_namespace'] = 'FS';
 };
 
 export const openChatBox = () => {
-	addChat();
-	setTimeout(() => {
-		window["$crisp"].push(["do", "chat:open"]);
-	}, 1000);
+	window["$crisp"].push(["do", "chat:open"]);
 };

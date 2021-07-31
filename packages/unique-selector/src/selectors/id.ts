@@ -1,6 +1,6 @@
 import { SELECTOR_TYPE } from "../constants";
 import { SelectorData } from "../interfaces/result";
-import { getUniqueScore } from "..//utils";
+import { getUniqueScore } from "..//utils.ts";
 
 /**
  * Returns id, value and uniqueness of HTML node

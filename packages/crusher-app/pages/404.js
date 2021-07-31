@@ -1,5 +1,5 @@
 import { BlankBase, CenterLayout } from "dyson/src/components/layouts";
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import Link from "next/link";
 function ErrorSVG(props) {
 	return (

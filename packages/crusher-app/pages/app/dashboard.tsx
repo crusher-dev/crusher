@@ -1,7 +1,7 @@
 import React from "react";
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { usePageTitle } from "../../src/hooks/seo";
 
 function Dashboard() {

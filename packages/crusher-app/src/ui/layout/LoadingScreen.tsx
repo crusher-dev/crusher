@@ -1,4 +1,4 @@
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { CenterLayout } from "dyson/src/components/layouts/";
 import { Logo } from "dyson/src/components/atoms";
 import CrusherBase from "../layout/CrusherBase";

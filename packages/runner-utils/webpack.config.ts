@@ -10,7 +10,7 @@ module.exports = {
 	},
 	output: {
 		libraryTarget: "commonjs",
-		path: path.resolve(__dirname, "../../output/crusher-runner-utils"),
+		path: path.resolve(__dirname, "../../output/crusher-runner-utils.ts"),
 		filename: "[name].js", // <--- Will be compiled to this single file
 	},
 	resolve: {

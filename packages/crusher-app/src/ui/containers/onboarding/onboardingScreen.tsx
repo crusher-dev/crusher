@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { CenterLayout } from "dyson/src/components/layouts";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 import { Button, DiscordSocialBtn, GithubSocialBtn } from "dyson/src/components/atoms";

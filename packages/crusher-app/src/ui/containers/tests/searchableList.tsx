@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState, useMemo } from "react";
 import { CompleteStatusIconSVG } from "@svg/dashboard";
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
 import { getTime } from "@utils/helpers";
 import useSWR from "swr";

@@ -1,4 +1,4 @@
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { DropdownIconSVG } from "@svg/builds";
 import { Input } from "dyson/src/components/atoms/input/Input";
 

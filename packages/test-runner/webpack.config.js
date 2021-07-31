@@ -28,7 +28,7 @@ module.exports = {
 			patterns: [
 				{
 					from: path.resolve(__dirname, `../../output/crusher-runner-utils/`),
-					to: "crusher-runner-utils/",
+					to: "crusher-runner-utils.ts/",
 				},
 			],
 		}),

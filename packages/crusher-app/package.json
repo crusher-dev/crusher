@@ -12,7 +12,7 @@
 		"lint": "eslint --ext=jsx,ts,tsx src",
 		"prettify": "prettier --write .",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-		"analyze:browser": "cross-env BUNDLE_ANALYZE=browser ANALYZE=true next build"
+		"analyze:browser": "cross-env ANALYZE=true ANALYZE=true next build"
 	},
 	"dependencies": {
 		"@emotion/babel-preset-css-prop": "^10.0.27",
@@ -28,6 +28,7 @@
 		"copy-webpack-plugin": "^6.3.2",
 		"cors": "^2.8.5",
 		"dotenv": "^10.0.0",
+		"duplicate-package-checker-webpack-plugin": "^3.0.0",
 		"express": "^4.17.1",
 		"express-http-proxy": "^1.6.2",
 		"global": "^4.4.0",

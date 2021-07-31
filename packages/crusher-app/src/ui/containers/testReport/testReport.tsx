@@ -1,6 +1,6 @@
 import { Button } from "dyson/src/components/atoms";
 import { BottomSVG, CalendarSVG, RerunSVG, ThreeEllipsisSVG, ThunderSVG, TickSVG } from "@svg/testReport";
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { LayoutSVG, PlaySVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
 import { atom, useAtom } from "jotai";

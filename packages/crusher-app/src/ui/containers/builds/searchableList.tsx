@@ -2,12 +2,11 @@ import React, { ChangeEvent, useState, useMemo } from "react";
 import { Conditional } from "dyson/src/components/layouts";
 import { CompleteStatusIconSVG } from "@svg/dashboard";
 import { ClockIconSVG, CommentIconSVG, DangerIconSVG, DropdownIconSVG } from "@svg/builds";
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
 import Link from "next/link";
 import useSWR from "swr";
-import { BUILD_LIST_API, getBuildsList, getTestListAPI, TEST_LIST_API } from '@constants/api';
-import { IProjectTestsListResponse } from '@crusher-shared/types/response/iProjectTestsListResponse';
+import {getBuildsList} from '@constants/api';
 import { useAtom } from 'jotai';
 import { currentProject } from '../../../store/atoms/global/project';
 import {
@@ -43,6 +42,8 @@ function BuildItemCard(props: IBuildItemCardProps) {
 							<span className={"ml-9 text-14"}>{duration} mins</span>
 						</div>
 					</div>
+
+
 					<div className={"flex flex-row items-center ml-auto"}>
 						<div className={"flex flex-row items-center"}>
 							<CommentIconSVG />
@@ -53,6 +54,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 						<span className={"ml-18"}>{statusIcon}</span>
 					</div>
 				</div>
+
 				<div className={"mt-14 text-13"}>
 					<span className={"text-13"}>{createdAt}</span>
 					<span className={"text-13 ml-23 capitalize"}>{status}</span>
@@ -68,6 +70,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 		</Link>
 	);
 }
+
 
 const itemContainerStyle = css`
 	background: rgba(16, 18, 21, 0.5);
@@ -89,21 +92,12 @@ const itemBuildStyle = css`
 const noCommentsStyle = css`
 	color: #d0d0d0;
 `;
-const DUMMY_BUILDS_LIST = require("./dummyBuilds.json");
 
 function BuildSearchableList() {
-	const [buildsList, _] = useState(DUMMY_BUILDS_LIST);
 	const [project] = useAtom(currentProject);
 
 	const [searchQuery, setSearchQuery] = useState(null as null | string);
 	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id), { suspense: true });
-	// const { data1 } = useSWR(BUILD_LIST_API, { suspense: true });
-	//
-	// const [project] = useAtom(currentProject);
-	//
-	//
-	//
-	console.log(data);
 
 	const buildItems = useMemo(() => {
 

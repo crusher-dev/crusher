@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ExpandableList, ExpandableListItem } from "./expandableList";
 import { FullScreenSVG } from "@svg/dashboard";
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { Button } from "dyson/src/components/atoms/button/Button";
 import { PlaySVG, AppleSVG } from "@svg/dashboard";
 

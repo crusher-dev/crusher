@@ -1,3 +1,6 @@
+import { TestInstanceResultSetConclusion } from 'crusher-server/crusher-server/src/core/interfaces/TestInstanceResultSetConclusion';
+import { TestInstanceResultSetStatus } from 'crusher-server/crusher-server/src/core/interfaces/TestInstanceResultSetStatus';
+
 export interface IBuildReportResponse {
 	id:    number;
 	name:           string;
@@ -26,13 +29,14 @@ interface Environment {
 interface Test {
 	name:      string;
 	meta: 		 {  };
-	status:    string;
 	instances: Instance[];
 }
 
 interface Instance {
 	id:     number;
 	title:  string;
+	verboseStatus: TestInstanceResultSetStatus;
+	status: TestInstanceResultSetConclusion;
 	config: TestInstanceConfig;
 	output: TestInstanceOutput;
 	steps:  TestInstanceStep[];

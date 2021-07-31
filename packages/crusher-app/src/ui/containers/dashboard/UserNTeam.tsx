@@ -57,7 +57,7 @@ export function UserNTeam() {
 				</div>
 				<div>
 					<div className={"font-cera mb-4 font-600"} css={name}>
-						{team.name.substr(0,15)}
+						{team.name.substr(0, 15)}
 					</div>
 					<div css={description} className={"font-500 leading-none capitalize"}>
 						{team.plan.toLowerCase()}

@@ -6,25 +6,19 @@ import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
 import Link from "next/link";
 import useSWR from "swr";
-import {getBuildsList} from '@constants/api';
-import { useAtom } from 'jotai';
-import { currentProject } from '../../../store/atoms/global/project';
-import {
-	IProjectBuildListItem,
-	IProjectBuildListResponse,
-} from '@crusher-shared/types/response/iProjectBuildListResponse';
+import { getBuildsList } from "@constants/api";
+import { useAtom } from "jotai";
+import { currentProject } from "../../../store/atoms/global/project";
+import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 
 interface IBuildItemCardProps {
-	info: IProjectBuildListItem
+	info: IProjectBuildListItem;
 }
 
-
 function BuildItemCard(props: IBuildItemCardProps) {
-	const { info }:{info: IProjectBuildListItem} = props;
-
+	const { info }: { info: IProjectBuildListItem } = props;
 
 	const { id, createdAt, tests, status, reviewMessage, commentCount, triggeredBy, duration } = info;
-
 
 	const statusIcon = status === "passed" ? <CompleteStatusIconSVG isCompleted={true} /> : <CompleteStatusIconSVG isCompleted={false} />;
 
@@ -42,7 +36,6 @@ function BuildItemCard(props: IBuildItemCardProps) {
 							<span className={"ml-9 text-14"}>{duration} mins</span>
 						</div>
 					</div>
-
 
 					<div className={"flex flex-row items-center ml-auto"}>
 						<div className={"flex flex-row items-center"}>
@@ -70,7 +63,6 @@ function BuildItemCard(props: IBuildItemCardProps) {
 		</Link>
 	);
 }
-
 
 const itemContainerStyle = css`
 	background: rgba(16, 18, 21, 0.5);
@@ -100,7 +92,6 @@ function BuildSearchableList() {
 	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id), { suspense: true });
 
 	const buildItems = useMemo(() => {
-
 		return data.map((buildInfo: IProjectBuildListItem) => {
 			return (
 				<Link href={`/app/build/${buildInfo.id}`}>

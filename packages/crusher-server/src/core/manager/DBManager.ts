@@ -26,7 +26,6 @@ export default class DBManager {
 					insecureAuth: true,
 			  };
 		this.connPool = mysql.createPool(connectionObject);
-
 	}
 
 	isAlive(): Promise<boolean> {

@@ -82,10 +82,6 @@
 	font-style: italic;
 }
 
-
-
-
-
 @font-face {
 	font-family: "Gilroy";
 	src: url("../fonts/Gilroy/Gilroy-Regular.woff2") format("woff2");
@@ -142,12 +138,9 @@
 	font-style: normal;
 }
 
-
-
 @font-face {
 	font-family: "Gilroy";
 	src: url("../fonts/Gilroy/Gilroy-Black.woff2") format("woff2");
 	font-weight: 900;
 	font-style: normal;
 }
-

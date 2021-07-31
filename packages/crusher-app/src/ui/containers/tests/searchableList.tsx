@@ -78,7 +78,6 @@ function TestSearchableList() {
 
 	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id), { suspense: true });
 
-
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {
 			const { testName, isPassing, createdAt, imageURL, videoURL } = test;

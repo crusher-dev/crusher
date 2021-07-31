@@ -1,13 +1,22 @@
 import { Button } from "dyson/src/components/atoms";
-import { BottomSVG, CalendarSVG, RerunSVG, ThreeEllipsisSVG, ThunderSVG, TickSVG } from "@svg/testReport";
+import { BottomSVG, CalendarSVG, RerunSVG, StatusSVG, ThreeEllipsisSVG, ThunderSVG, TickSVG } from "@svg/testReport";
 import { css } from "@emotion/react";
 import { LayoutSVG, PlaySVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
 import { atom, useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { BackSVG } from "@svg/builds";
+import { useBuildReport } from "../../../store/swr/buildReports";
+import { useRouter } from "next/router";
+import { timeSince } from "@utils/dateTimeUtils";
+import { getStatusString } from "@utils/pages/buildReportUtils";
+import { TTestInfo } from "@crusher-shared/types/response/iBuildReportResponse";
+import { usePageTitle } from "../../../hooks/seo";
+import { test } from 'shelljs';
 
 function TitleSection() {
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
 	return (
 		<div>
 			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
@@ -18,21 +27,53 @@ function TitleSection() {
 						window.history.back();
 					}}
 				/>{" "}
-				feat: integrated test GTM #517
+				{data?.name} #{data?.id}
 			</div>
 		</div>
 	);
 }
 
-function StatusTag() {
+function StatusTag({ type }) {
+	if (type === "REVIEW") {
+		return (
+			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, review]}>
+				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Review required</span>
+			</div>
+		);
+	}
+	if (type === "FAILED") {
+		return (
+			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, failed]}>
+				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Failed</span>
+			</div>
+		);
+	}
+	if (type === "PASSED") {
+		return (
+			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
+				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Passed</span>
+			</div>
+		);
+	}
+	if (type === "RUNNING") {
+		return (
+			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, running]}>
+				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Running</span>
+			</div>
+		);
+	}
 	return (
-		<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-			<TickSVG height={20} /> <span className={"text-14 font-600 ml-16"}>Review req</span>
+		<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, waiting]}>
+			<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Waiting</span>
 		</div>
 	);
 }
 
 function NameNStatusSection() {
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
+
+	usePageTitle(data?.name)
 	return (
 		<div className={"flex items-center justify-between"}>
 			<div className={"flex items-center"}>
@@ -53,7 +94,7 @@ function NameNStatusSection() {
 				<ThreeEllipsisSVG className={"ml-22"} width={25} />
 			</div>
 
-			<StatusTag />
+			<StatusTag type={data.status} />
 		</div>
 	);
 }
@@ -75,7 +116,7 @@ const section = [
 	},
 ];
 
-const selectedTabAtom = atom(1);
+const selectedTabAtom = atom(0);
 function TabBar() {
 	const [secltedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
@@ -95,6 +136,8 @@ function TabBar() {
 }
 
 function TestOverviewTab() {
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
@@ -112,7 +155,7 @@ function TestOverviewTab() {
 						>
 							<TickSVG height={30} width={28} />
 						</div>
-						<div className={"font-cera text-15 font-500 mb-24"}>Your build has passes succesfully. No review is required</div>
+						<div className={"font-cera text-15 font-500 mb-24"}>{getStatusString(data?.status)}</div>
 						<div className={"flex items-center"}>
 							<Button
 								bgColor={"tertiary-dark"}
@@ -222,15 +265,15 @@ function FilterBar() {
 	return (
 		<div className={"flex items-center text-14"}>
 			<div className={"text-14"}>
-				Filter by <img className={"ml-16"} src={"/browsers.png"} height={16} />
+				Filter by <img className={"ml-8"} src={"/browsers.png"} height={16} />
 			</div>
 			<div className={"ml-48"}>
 				<span className={"text-14 font-500"}>Version</span>
-				<span className={"text-14 ml-16 underline"}>All</span>
+				<span className={"text-14 ml-8 underline"}>All</span>
 			</div>
 			<div className={"ml-48"}>
 				<span className={"text-14 font-500"}>Version</span>
-				<span className={"text-14 ml-16 underline"}>All</span>
+				<span className={"text-14 ml-8 underline"}>All</span>
 			</div>
 		</div>
 	);
@@ -291,10 +334,11 @@ function TestOverview() {
 	);
 }
 
-function TestCard({ id }) {
-	const [expand, setExpand] = useState(false);
-	const [sticky, setSticky] = useState(false);
+function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
+	const { name } = testData;
 
+	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
+	const [sticky, setSticky] = useState(false);
 	useEffect(() => {
 		const testCard = document.querySelector(`#test-card-${id}`);
 		const stickyOverview = document.querySelector("#sticky-overview-bar");
@@ -325,36 +369,42 @@ function TestCard({ id }) {
 		setExpand(!expand);
 	};
 
+
+
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={expand && sticky}>
+
+
 				<div css={stickyCSS} className={" px-42 "}>
 					<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
 						<div className={"flex justify-between items-center"}>
 							<div className={"flex items-center leading-none text-15 font-600 mt-20"}>
-								<TickSVG height={18} className={"mr-16"} />
-								Checkout flow
+								<StatusSVG height={18} className={"mr-16"} />
+								{name}
 							</div>
 							<div className={"flex items-center mt-8"}>
 								<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
 								<span className={"flex text-13 mr-26"}>
-									<PlaySVG className={"mr-10"} /> Replay recording
-								</span>
+								<PlaySVG className={"mr-10"} /> Replay recording
+							</span>
 								<span>
-									<BottomSVG css={expand && close} />
-								</span>
+								<BottomSVG css={expand && close} />
+							</span>
 							</div>
 						</div>
 						<div className={"mt-12 mb-16"}>{TestOverview()}</div>
 					</div>
 				</div>
+
+
 			</Conditional>
 			<div>
 				<div className={"px-32 w-full"}>
 					<div css={header} className={"flex justify-between items-center w-full"}>
 						<div className={"flex items-center leading-none text-15 font-600"}>
 							<TickSVG height={18} className={"mr-16"} />
-							Checkout flow
+							{name}
 						</div>
 						<div className={"flex items-center"}>
 							<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
@@ -441,6 +491,9 @@ const header = css`
 function ReportSection() {
 	const [stickyOverviewSection, setStickOverviewSection] = useState(false);
 
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
+
 	useEffect(() => {
 		const heading = document.querySelector("#review-section");
 		const observer = new IntersectionObserver(
@@ -507,12 +560,9 @@ function ReportSection() {
 			</div>
 
 			<div className={"mt-40 pb-60"}>
-				<TestCard id={1} />
-				<TestCard id={2} />
-				<TestCard id={3} />
-				<TestCard id={4} />
-				<TestCard id={5} />
-				<TestCard id={6} />
+				{data?.tests.map((testData) => (
+					<TestCard id={1} testData={testData} />
+				))}
 			</div>
 		</div>
 	);
@@ -546,14 +596,17 @@ const filterSection = css`
 
 export const TestReport = () => {
 	const [selectedTabIndex] = useAtom(selectedTabAtom);
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
 	return (
-		<div className={"px-42 mt-40"}>
+		<div className={"px-42 mt-56"}>
 			<NameNStatusSection />
 			<div className={"flex items-center leading-none mt-16 text-13"}>
-				<CalendarSVG className={"mr-16"} />2 mins
+				<CalendarSVG className={"mr-16"} />
+				Ran {timeSince(new Date(data.startedAt))}
 			</div>
 			<Conditional showIf={selectedTabIndex !== 1}>
-				<div className={"flex items-center leading-none mt-24 text-13"}>
+				<div className={"flex items-center leading-none mt-60 text-13"}>
 					<ThunderSVG className={"mr-16"} />
 					Wohoo! You saved 20 hours of testing
 				</div>
@@ -613,12 +666,15 @@ const timelineItem = css`
 `;
 
 const statusTag = css`
-	min-width: 152px;
+	min-width: 140px;
 	height: 30px;
-	background: rgba(152, 38, 127, 0.8);
-	border: 1px solid rgba(255, 64, 213, 0.46);
 	box-sizing: border-box;
 	border-radius: 15.5px;
+`;
+
+const failed = css`
+	background: rgba(152, 38, 127, 0.8);
+	border: 1px solid rgba(255, 64, 213, 0.46);
 `;
 
 const passed = css`
@@ -633,6 +689,10 @@ const review = css`
 
 const running = css`
 	background: #1e242c;
+	border: 1px solid #545e6b;
+`;
+
+const waiting = css`
 	border: 1px solid #545e6b;
 `;
 

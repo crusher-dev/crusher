@@ -465,7 +465,6 @@ export default class UserService {
 	}
 
 	async getUserAndSystemInfo(user_id: any): Promise<IUserAndSystemInfoResponse> {
-
 		// @Note: Remove the next line after development of this API
 		const userInfo = user_id ? await this.getUserInfo(user_id) : null;
 		const teamInfo = userInfo ? await this.teamService.getTeamInfo(userInfo.team_id!.toString()) : null;

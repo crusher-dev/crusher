@@ -14,7 +14,7 @@ import { useAtom } from "jotai";
 import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
 import { useRouter } from "next/router";
 import { LoadingSVG } from "@svg/dashboard";
-import { loadUserDataAndRedirect } from '../../../hooks/user';
+import { loadUserDataAndRedirect } from "../../../hooks/user";
 const showRegistrationFormAtom = atom(false);
 
 const registerUser = (name, email, password) => {
@@ -27,7 +27,6 @@ const registerUser = (name, email, password) => {
 function EmailPasswordBox() {
 	const router = useRouter();
 	const [data, setData] = useState(null);
-
 
 	const [_, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
 	const [email, setEmail] = useState({ value: "", error: "" });
@@ -77,10 +76,10 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			const { status,systemInfo } = await registerUser(name.value, email.value, password.value);
+			const { status, systemInfo } = await registerUser(name.value, email.value, password.value);
 			if (status === "USER_NOT_REGISTERED") {
 				alert("Some error occurred.");
-			}else{
+			} else {
 				setData(systemInfo);
 			}
 		} catch (e) {

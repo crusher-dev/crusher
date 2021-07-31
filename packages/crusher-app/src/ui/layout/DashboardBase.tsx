@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
 
 import { Button } from "dyson/src/components/atoms";
@@ -19,7 +19,7 @@ import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
-import { addChat, openChatBox } from '@utils/scriptUtils';
+import { addChat, openChatBox } from "@utils/scriptUtils";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
@@ -191,9 +191,11 @@ export const dropdDown = css`
 
 function Dropdown() {
 	const router = useRouter();
-	useEffect(()=>{
-		addChat(()=>{``})
-	},[])
+	useEffect(() => {
+		addChat(() => {
+			``;
+		});
+	}, []);
 	return (
 		<div css={dropdDown} className={"flex flex-col justify-between"}>
 			<div>

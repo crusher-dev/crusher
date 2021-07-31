@@ -1,4 +1,7 @@
-export function RerunSVG(props) {
+import { ReactPropTypes } from "react";
+import React from "react";
+
+export function RerunSVG(props: ReactPropTypes) {
 	return (
 		<svg width={16} height={17} viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g>
@@ -11,7 +14,7 @@ export function RerunSVG(props) {
 	);
 }
 
-export function ThreeEllipsisSVG(props) {
+export function ThreeEllipsisSVG(props: ReactPropTypes) {
 	return (
 		<svg width={25} height={25} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -23,7 +26,7 @@ export function ThreeEllipsisSVG(props) {
 	);
 }
 
-export function TickSVG(props) {
+export function TickSVG(props: ReactPropTypes) {
 	return (
 		<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -34,7 +37,7 @@ export function TickSVG(props) {
 	);
 }
 
-export function CalendarSVG(props) {
+export function CalendarSVG(props: ReactPropTypes) {
 	return (
 		<svg width={13} height={13} viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -56,7 +59,7 @@ export function ThunderSVG(props) {
 	);
 }
 
-export function BottomSVG(props) {
+export function BottomSVG(props: ReactPropTypes) {
 	return (
 		<svg width={14} height={14} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g>
@@ -69,3 +72,9 @@ export function BottomSVG(props) {
 		</svg>
 	);
 }
+
+export const StatusSVG = ({ type, ...prop }) => {
+	if (type === "PASSED") {
+		return <TickSVG className={"mr-16"} />;
+	}
+};

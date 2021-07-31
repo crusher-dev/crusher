@@ -12,7 +12,6 @@ import { timeSince } from "@utils/dateTimeUtils";
 import { getStatusString } from "@utils/pages/buildReportUtils";
 import { TTestInfo } from "@crusher-shared/types/response/iBuildReportResponse";
 import { usePageTitle } from "../../../hooks/seo";
-import { test } from 'shelljs';
 
 function TitleSection() {
 	const { query } = useRouter();

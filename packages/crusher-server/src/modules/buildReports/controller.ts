@@ -1,7 +1,7 @@
-import UserService from "../core/services/UserService";
+import UserService from "../../core/services/UserService";
 import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import CommentsServiceV2 from "../core/services/CommentsService";
+import CommentsServiceV2 from "../../core/services/CommentsService";
 import { BuildReportService } from "./service";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 

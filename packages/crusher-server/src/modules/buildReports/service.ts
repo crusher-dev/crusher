@@ -2,8 +2,8 @@ import { Inject, Service } from "typedi";
 import DBManager from "@manager/DBManager";
 import { JobReportStatus } from "@crusher-shared/types/jobReportStatus";
 import { PLATFORM } from "@crusher-shared/types/platform";
-import { TestInstanceResultSetStatus } from "../core/interfaces/TestInstanceResultSetStatus";
-import { TestInstanceResultSetConclusion } from "../core/interfaces/TestInstanceResultSetConclusion";
+import { TestInstanceResultSetStatus } from "../../core/interfaces/TestInstanceResultSetStatus";
+import { TestInstanceResultSetConclusion } from "../../core/interfaces/TestInstanceResultSetConclusion";
 import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 

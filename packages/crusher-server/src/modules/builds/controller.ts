@@ -4,7 +4,7 @@ import { Inject, Service } from "typedi";
 import { getFullName } from "../../utils/helper";
 import CommentsServiceV2 from "../../core/services/CommentsService";
 import { BuildsService } from "./service";
-import { IProjectBuildListResponse } from '@crusher-shared/types/response/iProjectBuildListResponse';
+import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 
 @Service()
 @JsonController("/projects/:project_id/builds")
@@ -18,7 +18,7 @@ export class BuildsController {
 
 	@Authorized()
 	@Get("/")
-	public async getList( @Param("project_id") project_id): Promise<IProjectBuildListResponse> {
+	public async getList(@Param("project_id") project_id): Promise<IProjectBuildListResponse> {
 		const builds = await this.buildsService.getBuildInfoList(project_id);
 		const buildsList = builds.map((buildData) => {
 			return {

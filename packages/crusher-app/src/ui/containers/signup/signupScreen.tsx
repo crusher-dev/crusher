@@ -8,7 +8,7 @@ import Link from "next/link";
 import { resolvePathToBackendURI } from "@utils/url";
 import { Input } from "dyson/src/components/atoms";
 import { backendRequest } from "@utils/backendRequest";
-import { RequestMethod } from "@interfaces/RequestOptions";
+import { RequestMethod } from "../../../types/RequestOptions";
 import { atom } from "jotai";
 import { useAtom } from "jotai";
 import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";

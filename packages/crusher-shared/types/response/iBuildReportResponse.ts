@@ -1,5 +1,5 @@
-import { TestInstanceResultSetConclusion } from 'crusher-server/crusher-server/src/core/interfaces/TestInstanceResultSetConclusion';
-import { TestInstanceResultSetStatus } from 'crusher-server/crusher-server/src/core/interfaces/TestInstanceResultSetStatus';
+import { TestInstanceResultSetConclusion } from 'crusher-server/crusher-server/src/core/types/TestInstanceResultSetConclusion';
+import { TestInstanceResultSetStatus } from 'crusher-server/crusher-server/src/core/types/TestInstanceResultSetStatus';
 
 export interface IBuildReportResponse {
 	id:    number;

@@ -6,7 +6,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { atom, useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { BackSVG } from "@svg/builds";
-import { useBuildReport } from "../../../store/swr/buildReports";
+import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
 import { getStatusString } from "@utils/pages/buildReportUtils";

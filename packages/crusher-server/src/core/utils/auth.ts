@@ -9,28 +9,12 @@ export const generateToken = (user_id, team_id, time = "365d") => {
 };
 
 export const decodeToken = (token) => {
-	try {
-		const decoded = jwt.verify(token, SECRET);
-		return decoded;
-	} catch (error) {
-		console.error("Error while decoding token", error);
-		return false;
-	}
+	const decoded = jwt.verify(token, SECRET);
+	return decoded;
 };
 
 export function encryptPassword(password: string) {
 	return CryptoJS.MD5(password).toString();
-}
-
-export function generateSecurePassword() {
-	let length = 8,
-		charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-		retVal = "";
-
-	for (let i = 0, n = charset.length; i < length; ++i) {
-		retVal += charset.charAt(Math.floor(Math.random() * n));
-	}
-	return retVal;
 }
 
 export function clearAuthCookies(res) {

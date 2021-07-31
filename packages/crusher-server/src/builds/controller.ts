@@ -7,7 +7,7 @@ import { BuildsService } from "./service";
 import { IProjectBuildListResponse } from '@crusher-shared/types/response/iProjectBuildListResponse';
 
 @Service()
-@JsonController("/teams/:team_id/projects/:project_id/builds")
+@JsonController("/projects/:project_id/builds")
 export class BuildsController {
 	@Inject()
 	private userService: UserService;
@@ -18,7 +18,7 @@ export class BuildsController {
 
 	@Authorized()
 	@Get("/")
-	public async getList(@Param("team_id") teamId, @Param("project_id") projectId, @Param("project_id") project_id): Promise<IProjectBuildListResponse> {
+	public async getList( @Param("project_id") project_id): Promise<IProjectBuildListResponse> {
 		const builds = await this.buildsService.getBuildInfoList(project_id);
 		const buildsList = builds.map((buildData) => {
 			return {

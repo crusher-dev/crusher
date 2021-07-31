@@ -6,7 +6,7 @@ import { BuildReportService } from "./service";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 
 @Service()
-@JsonController("/teams/:team_id/projects/:project_id/builds/:build_id/reports")
+@JsonController("/builds/:build_id/reports")
 class BuildReportController {
 	@Inject()
 	private userService: UserService;
@@ -17,7 +17,15 @@ class BuildReportController {
 
 	@Authorized()
 	@Get("/:report_id")
-	public async getReport(@Param("team_id") teamId, @Param("project_id") projectId, @Param("build_id") buildId: number, @Param("report_id") reportId: number): Promise<IBuildReportResponse> {
+	public async getReport( @Param("build_id") buildId: number, @Param("report_id") reportId: number): Promise<IBuildReportResponse> {
+		// @TODO: Use report_id here instead of build_id
+
+		return this.buildReportService.getBuildReport(buildId);
+	}
+
+	@Authorized()
+	@Get("/")
+	public async getReports( @Param("build_id") buildId: number): Promise<IBuildReportResponse> {
 		// @TODO: Use report_id here instead of build_id
 
 		return this.buildReportService.getBuildReport(buildId);

@@ -92,7 +92,7 @@ function NameNStatusSection() {
 					bgColor={"tertiary-dark"}
 					className={"ml-20"}
 					css={css`
-						width: 96px;
+						width: 96rem;
 					`}
 				>
 					<div className={"flex items-center justify-center text-13 font-400"}>
@@ -164,7 +164,7 @@ function TestOverviewTab() {
 							<Button
 								bgColor={"tertiary-dark"}
 								css={css`
-									width: 148px;
+									width: 148rem;
 								`}
 							>
 								<span className={"font-400"}>Review</span>
@@ -172,7 +172,7 @@ function TestOverviewTab() {
 							<Button
 								bgColor={"tertiary-dark"}
 								css={css`
-									width: 148px;
+									width: 148rem;
 								`}
 								className={"ml-16"}
 							>
@@ -244,7 +244,7 @@ function TestOverviewTab() {
 
 const tag = css`
 	background: rgba(16, 18, 21, 0.5);
-	border: 1px solid #171c24;
+	border: 1rem solid #171c24;
 	border-radius: 4px;
 	height: 32px;
 `;

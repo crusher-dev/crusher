@@ -403,9 +403,13 @@ const nav = css`
 	height: 68rem;
 `;
 const containerWidth = css`
-	width: calc(100vw - 250rem);
-	max-width: 1500px;
+	//width: calc(100vw - 250rem);
+	//max-width: 1500rem;
+
+  width: calc(100vw - 250rem);
+  max-width: calc(100vw - 380rem);
 	margin: 0 auto;
+	padding: 0 0rem;
 `;
 
 const project = css`

@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
 import { DraftInstance } from "../interfaces/db/DraftInstance";
 import { InstanceStatus } from "../interfaces/InstanceStatus";
@@ -13,7 +13,7 @@ export default class DraftInstanceService {
 	}
 
 	async createNewDraftInstance(details: { code: string; draft_id: number; platform: "CHROME" | "FIREFOX" | "SAFARI" | "ALL"; status: InstanceStatus }) {
-		return this.dbManager.insertData(`INSERT INTO draft_instances SET ?, created_at = NOW()`, details);
+		return this.dbManager.insert(`INSERT INTO draft_instances SET ?, created_at = NOW()`, details);
 	}
 
 	async getRecentDraftInstance(draftId: number) {
@@ -25,7 +25,7 @@ export default class DraftInstanceService {
 	}
 
 	async getAllDraftInstances(draftId: number) {
-		return this.dbManager.fetchData("SELECT * FROM draft_instances WHERE test_id = ?", [draftId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM draft_instances WHERE test_id = ?", [draftId]);
 	}
 
 	async getDraftInstance(draftInstanceId: number) {

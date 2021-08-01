@@ -1,8 +1,8 @@
-import UserService from "../../core/services/UserService";
+import { UserService } from "../users/service";
 import { JsonController, Get, QueryParams, Authorized, BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import TestService from "../../core/services/TestService";
-import { isUsingLocalStorage } from "../../utils/helper";
+import TestService from "@core/services/TestService";
+import { isUsingLocalStorage } from "@utils/helper";
 
 @Service()
 @JsonController("/tests")

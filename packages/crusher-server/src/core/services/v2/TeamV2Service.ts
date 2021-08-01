@@ -1,4 +1,4 @@
-import DBManager from "@manager/DBManager";
+import { DBManager } from "@modules/db";
 import { Container, Service } from "typedi";
 import { TierPlan } from "../../interfaces/TierPlan";
 
@@ -11,7 +11,7 @@ export class TeamV2Service {
 	}
 
 	async createTeam(userId: number, teamName: string, teamEmail: string, tier: TierPlan, stripeCustomerId: string): Promise<number> {
-		const teamRecord = await this.dbManager.insertData("INSERT INTO teams SET ?", {
+		const teamRecord = await this.dbManager.insert("INSERT INTO teams SET ?", {
 			name: teamName,
 			team_email: teamEmail,
 			tier: TierPlan.FREE,

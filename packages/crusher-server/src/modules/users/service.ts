@@ -1,5 +1,5 @@
-import { Container, Service } from "typedi";
-import DBManager from "../manager/DBManager";
+import { Container, Inject, Service } from "typedi";
+import { DBManager } from "@modules/db";
 import {
 	EMAIL_NOT_VERIFIED,
 	ERROR_OCCURED_IN_AUTHENTICATION,
@@ -10,55 +10,54 @@ import {
 	USER_NOT_REGISTERED,
 	USER_REGISTERED,
 	VERIFICATION_MAIL_SENT,
-} from "../../constants";
-import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from "../utils/auth";
-import { EmailManager } from "../manager/EmailManager";
-import { AuthenticationByCredentials } from "../interfaces/services/user/AuthenticationByCredentials";
-import { iUser } from "../../../../crusher-shared/types/db/iUser";
-import { RegisterUserRequest } from "../interfaces/services/user/RegisterUserRequest";
-import { UserProviderConnection } from "../interfaces/db/UserProviderConnection";
-import { GithubAppInstallation } from "../interfaces/db/GithubAppInstallation";
-import { Logger } from "../../utils/logger";
-import ProjectService from "./ProjectService";
-import TeamService from "./TeamService";
-import StripeManager from "../manager/StripeManager";
-import userProjectRoleService from "./UserProjectRoleService";
-import userTeamRoleService from "./UserTeamRoleService";
-import { TEAM_ROLE_TYPES } from "../../../../crusher-shared/types/db/teamRole";
-import { PROJECT_ROLE_TYPES } from "../../../../crusher-shared/types/db/projectRole";
-import { iInviteReferral, INVITE_REFERRAL_TYPES } from "../../../../crusher-shared/types/inviteReferral";
-import { InviteMembersService } from "./mongo/inviteMembers";
-import { iProjectInviteReferral } from "../../../../crusher-shared/types/mongo/projectInviteReferral";
-import { isOpenSourceEdition } from "../../utils/helper";
-import { setUserCookie } from "../../utils/cookies";
-import { extractHostname } from "../../utils/url";
+} from "@constants";
+import { clearAuthCookies, encryptPassword, generateToken, generateVerificationCode } from "@utils/auth";
+import { EmailManager } from "@core/manager/EmailManager";
+import { AuthenticationByCredentials } from "@core/interfaces/services/user/AuthenticationByCredentials";
+import { iUser } from "@crusher-shared/types/db/iUser";
+import { RegisterUserRequest } from "@core/interfaces/services/user/RegisterUserRequest";
+import { UserProviderConnection } from "@core/interfaces/db/UserProviderConnection";
+import { GithubAppInstallation } from "@core/interfaces/db/GithubAppInstallation";
+import { Logger } from "@utils/logger";
+import ProjectService from "@core/services/ProjectService";
+import TeamService from "@core/services/TeamService";
+import StripeManager from "@core/manager/StripeManager";
+import userProjectRoleService from "@core/services/UserProjectRoleService";
+import userTeamRoleService from "@core/services/UserTeamRoleService";
+import { TEAM_ROLE_TYPES } from "@crusher-shared/types/db/teamRole";
+import { PROJECT_ROLE_TYPES } from "@crusher-shared/types/db/projectRole";
+import { iInviteReferral, INVITE_REFERRAL_TYPES } from "@crusher-shared/types/inviteReferral";
+import { InviteMembersService } from "@core/services/mongo/inviteMembers";
+import { iProjectInviteReferral } from "@crusher-shared/types/mongo/projectInviteReferral";
+import { isOpenSourceEdition } from "@utils/helper";
+import { setUserCookie } from "@utils/cookies";
+import { extractHostname } from "@utils/url";
 import { iSignupUserRequest } from "@crusher-shared/types/request/signupUserRequest";
-import { TierPlan } from "../interfaces/TierPlan";
+import { TierPlan } from "@core/interfaces/TierPlan";
 import { RedisManager } from "@manager/redis";
 import MongoManager from "@manager/MongoManager";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
 @Service()
-export default class UserService {
+export class UserService {
+	@Inject()
 	private dbManager: DBManager;
+	@Inject()
 	private mongoManager: MongoManager;
+	@Inject()
 	private projectService: ProjectService;
+	@Inject()
 	private teamService: TeamService;
+	@Inject()
 	private inviteMembersService: InviteMembersService;
-
+	@Inject()
 	private userTeamRoleService: userTeamRoleService;
+	@Inject()
 	private userProjectRoleService: userProjectRoleService;
-	private stripeManager: StripeManager | undefined;
+
+	private readonly stripeManager: StripeManager | undefined;
 
 	constructor() {
-		this.dbManager = Container.get(DBManager);
-		this.projectService = Container.get(ProjectService);
-		this.teamService = Container.get(TeamService);
-		this.userProjectRoleService = Container.get(userProjectRoleService);
-		this.userTeamRoleService = Container.get(userTeamRoleService);
-		this.inviteMembersService = Container.get(InviteMembersService);
-		this.mongoManager = Container.get(MongoManager);
-
 		if (!isOpenSourceEdition() && process.env.STRIPE_SECRET_API_KEY) {
 			this.stripeManager = Container.get(StripeManager);
 		}
@@ -102,7 +101,7 @@ export default class UserService {
 
 		const encryptedPassword = encryptPassword(user.password);
 
-		const userRecord = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
+		const userRecord = await this.dbManager.insert(`INSERT INTO users SET ?`, {
 			first_name: user.firstName,
 			last_name: user.lastName,
 			email: user.email,
@@ -219,7 +218,7 @@ export default class UserService {
 	) {
 		const encryptedPassword = encryptPassword(password);
 
-		const insertedUser = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
+		const insertedUser = await this.dbManager.insert(`INSERT INTO users SET ?`, {
 			first_name: firstName,
 			last_name: lastName,
 			email: email,
@@ -259,7 +258,7 @@ export default class UserService {
 		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email='${email}'`);
 		if (!user) {
 			// User not registered
-			const inserted_user = await this.dbManager.insertData(`INSERT INTO users SET ?`, {
+			const inserted_user = await this.dbManager.insert(`INSERT INTO users SET ?`, {
 				first_name: firstName,
 				last_name: lastName,
 				email: email,
@@ -306,7 +305,7 @@ export default class UserService {
 	}
 
 	async verify(userId: number) {
-		return this.dbManager.insertData(`UPDATE users SET verified=1 WHERE id=?`, [userId]);
+		return this.dbManager.insert(`UPDATE users SET verified=1 WHERE id=?`, [userId]);
 	}
 
 	async resendVerification(userId: string) {
@@ -321,7 +320,7 @@ export default class UserService {
 
 	async addUserMeta(meta: [{ key: string; value: string }], user_id) {
 		const queryPromise = meta.map(({ key, value }) => {
-			this.dbManager.insertData(`INSERT INTO user_meta SET ?`, {
+			this.dbManager.insert(`INSERT INTO user_meta SET ?`, {
 				user_id,
 				key,
 				value,
@@ -349,7 +348,7 @@ export default class UserService {
 	}
 
 	async getUserMetaInfo(userId: string): Promise<iUser> {
-		return this.dbManager.fetchData("SELECT `key` as key_name , value FROM user_meta WHERE user_id = ?", [userId]);
+		return this.dbManager.fetchAllRows("SELECT `key` as key_name , value FROM user_meta WHERE user_id = ?", [userId]);
 	}
 
 	async getUserInfo(userId: string): Promise<iUser> {
@@ -403,7 +402,7 @@ export default class UserService {
 			]);
 			return { id: providerRecord.id };
 		}
-		const insertedRecord = await this.dbManager.insertData("INSERT INTO user_provider_connections SET ? ", {
+		const insertedRecord = await this.dbManager.insert("INSERT INTO user_provider_connections SET ? ", {
 			user_id,
 			provider,
 			access_token,
@@ -431,7 +430,7 @@ export default class UserService {
 					repoNameArr[1],
 				]);
 			} else {
-				return this.dbManager.insertData(`INSERT INTO github_app_installations SET ? `, {
+				return this.dbManager.insert(`INSERT INTO github_app_installations SET ? `, {
 					owner_name: repoNameArr[0],
 					repo_name: repoNameArr[1],
 					installation_id,
@@ -502,7 +501,7 @@ export default class UserService {
 					message: null,
 				},
 				MYSQL_OPERATION: {
-					working: await this.dbManager.isAlive(),
+					working: await this.dbManager.isConnectionAlive(),
 					message: null,
 				},
 				MONGO_DB_OPERATIONS: {

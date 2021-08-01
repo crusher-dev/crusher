@@ -1,8 +1,7 @@
-import { getEdition } from "./utils/helper";
-
 require("dotenv").config();
 require("./utils/logger");
 
+import { getEdition } from "@utils/helper";
 import { authorization, getCurrentUserChecker } from "./server/middleware/Authorization";
 import { Logger } from "./utils/logger";
 import * as bodyParser from "body-parser";
@@ -13,14 +12,14 @@ import "reflect-metadata";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
-import { UserController } from "./server/controllers/UserController";
+import { UserController } from "@modules/users/controller";
 import { EmailManager } from "@manager/EmailManager";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import MongoManager from "@manager/MongoManager";
 import { RedisManager } from "@manager/redis";
-import { TestController } from "./modules/tests/controller";
-import { BuildsController } from "./modules/builds/controller";
-import { BuildReportController } from "./modules/buildReports/controller";
+import { TestController } from "@modules/tests/controller";
+import { BuildsController } from "@modules/builds/controller";
+import { BuildReportController } from "@modules/buildReports/controller";
 
 RedisManager.initialize();
 
@@ -58,10 +57,11 @@ if (process.env.STORAGE_MODE === "local") {
 
 const controllersArr: any = [UserController, TestController, BuildsController, BuildReportController];
 
-if (getEdition() === EDITION_TYPE.EE) {
-	const eeControllerArr: any = require("./ee/controllers");
-	controllersArr.push(...Object.values(eeControllerArr));
-}
+// @TODO: Look into this
+// if (getEdition() === EDITION_TYPE.EE) {
+// 	const eeControllerArr: any = require("./ee/controllers");
+// 	controllersArr.push(...Object.values(eeControllerArr));
+// }
 useExpressServer(expressApp, {
 	controllers: controllersArr,
 	middlewares: [CorsMiddleware],

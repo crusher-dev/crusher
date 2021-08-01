@@ -1,4 +1,4 @@
-import UserService from "../../core/services/UserService";
+import { UserService } from "../users/service";
 import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import CommentsServiceV2 from "../../core/services/CommentsService";
@@ -6,7 +6,7 @@ import { BuildReportService } from "./service";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 
 @Service()
-@JsonController("/builds/:build_id/reports")
+@JsonController("/teams/:team_id/projects/:project_id/builds/:build_id/reports")
 class BuildReportController {
 	@Inject()
 	private userService: UserService;

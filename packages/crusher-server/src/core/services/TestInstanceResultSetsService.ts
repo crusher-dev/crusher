@@ -1,5 +1,5 @@
 import { Container, Inject, Service } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { TestInstanceResultSet } from "../interfaces/db/TestInstanceResultSet";
 import TestInstanceResultsService from "./TestInstanceResultsService";
 import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
@@ -20,19 +20,19 @@ export default class TestInstanceResultSetsService {
 	}
 
 	async getResultsOfInstanceSet(setId: number): Promise<Array<TestInstanceResult>> {
-		return this.dbManager.fetchData(`SELECT * FROM test_instance_results WHERE instance_result_set_id = ?`, [setId]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM test_instance_results WHERE instance_result_set_id = ?`, [setId]);
 	}
 
 	async createResultSet(details: TestInstanceResultSet) {
-		return this.dbManager.insertData(`INSERT INTO test_instance_result_sets SET ?`, details);
+		return this.dbManager.insert(`INSERT INTO test_instance_result_sets SET ?`, details);
 	}
 
 	async getResultSetsBetweenTwoJobs(baseJobId: number, referenceJobId: number) {
-		return this.dbManager.fetchData(`SELECT * FROM test_instance_result_sets WHERE job_id = ? AND target_job_id = ?`, [baseJobId, referenceJobId]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM test_instance_result_sets WHERE job_id = ? AND target_job_id = ?`, [baseJobId, referenceJobId]);
 	}
 
 	async getResultSets(reportId: number) {
-		return this.dbManager.fetchData(`SELECT * FROM test_instance_result_sets WHERE report_id = ? `, [reportId]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM test_instance_result_sets WHERE report_id = ? `, [reportId]);
 	}
 
 	async getResultSetStatusBetweenTwoJobs(
@@ -43,7 +43,7 @@ export default class TestInstanceResultSetsService {
 		failedCount: number;
 		manualReviewCount: number;
 	}> {
-		return this.dbManager.fetchData(
+		return this.dbManager.fetchAllRows(
 			`SELECT COUNT(CASE WHEN conclusion = "PASSED" THEN 1 ELSE NULL END) as passedCount, COUNT(CASE WHEN conclusion = "FAILED" THEN 1 ELSE NULL END) as failedCount, COUNT(CASE WHEN conclusion = "MANUAL_REVIEW_REQUIRED" THEN 1 ELSE NULL END) as manualReviewCount FROM test_instance_result_sets WHERE job_id = ? AND target_job_id = ?`,
 			[baseJobId, referenceJobId],
 		);

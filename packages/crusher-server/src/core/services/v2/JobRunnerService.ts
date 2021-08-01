@@ -1,5 +1,5 @@
 import { Container, Service } from "typedi";
-import DBManager from "../../manager/DBManager";
+import { DBManager } from "@mdoules/db";
 import { JOB_TRIGGER } from "../../../../../crusher-shared/types/jobTrigger";
 import { addJobToRequestQueue } from "@utils/queue";
 import JobsService from "../JobsService";

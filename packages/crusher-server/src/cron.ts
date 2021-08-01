@@ -10,7 +10,7 @@ import ProjectHostsService from "./core/services/ProjectHostsService";
 import { JOB_TRIGGER } from "../../crusher-shared/types/jobTrigger";
 import MongoManager from "./core/manager/MongoManager";
 import JobsService from "./core/services/JobsService";
-import DBManager from "./core/manager/DBManager";
+import { DBManager } from "@modules/db";
 import { RedisManager } from "@manager/redis";
 import { REDIS } from "crusher-server/config/database";
 
@@ -24,7 +24,7 @@ async function preChecks() {
 	const dbManager: DBManager = Container.get(DBManager);
 	const mongodbService: MongoManager = Container.get(MongoManager);
 
-	const isDbAlive = await dbManager.isAlive();
+	const isDbAlive = await dbManager.isConnectionAlive();
 	await mongodbService.waitUntilAlive();
 	console.log(isDbAlive, mongodbService.isAlive());
 	return isDbAlive && mongodbService.isAlive();

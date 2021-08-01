@@ -1,13 +1,13 @@
-import UserService from "../../core/services/UserService";
+import { UserService } from "@modules/users/service";
 import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { getFullName } from "../../utils/helper";
-import CommentsServiceV2 from "../../core/services/CommentsService";
+import { getFullName } from "@utils/helper";
+import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildsService } from "./service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 
 @Service()
-@JsonController("/projects/:project_id/builds")
+@JsonController("/teams/:team_id/projects/:project_id/builds")
 export class BuildsController {
 	@Inject()
 	private userService: UserService;

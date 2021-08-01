@@ -1,5 +1,5 @@
 import { Container, Service } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { Project } from "../interfaces/db/Project";
 import { InsertRecordResponse } from "../interfaces/services/InsertRecordResponse";
 import { iProjectInfoResponse } from "@crusher-shared/types/response/projectInfoResponse";
@@ -22,7 +22,7 @@ export default class ProjectService {
 	}
 
 	async getAllProjectsOfTeam(teamId: number): Promise<Array<iProject>> {
-		return this.dbManager.fetchData(`SELECT * FROM projects WHERE team_id = ?`, [teamId]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM projects WHERE team_id = ?`, [teamId]);
 	}
 
 	async isUserInProject(projectId: number, userId: number) {
@@ -35,7 +35,7 @@ export default class ProjectService {
 	}
 
 	async getHealth(projectId: number) {
-		const allJobsThisMonth: Array<iJobReports> = await this.dbManager.fetchData(
+		const allJobsThisMonth: Array<iJobReports> = await this.dbManager.fetchAllRows(
 			"SELECT * FROM job_reports WHERE job_reports.project_id = ? AND job_reports.created_at > NOW() - interval 43200 minute",
 			[projectId],
 		);
@@ -80,7 +80,7 @@ export default class ProjectService {
 	}
 
 	async createProject(projectName: string, teamId: number): Promise<InsertRecordResponse> {
-		return this.dbManager.insertData("INSERT INTO projects SET ?", {
+		return this.dbManager.insert("INSERT INTO projects SET ?", {
 			name: projectName,
 			team_id: teamId,
 		});
@@ -97,7 +97,7 @@ export default class ProjectService {
 
 	async getProjectMembers(projectId: number): Promise<Array<iMemberInfoResponse>> {
 		return this.dbManager
-			.fetchData(
+			.fetchAllRows(
 				"SELECT users.*, user_project_roles.role role FROM users, projects, user_project_roles WHERE users.id = user_project_roles.user_id AND user_project_roles.user_id = users.id AND user_project_roles.project_id = ?",
 				[projectId],
 			)
@@ -115,11 +115,11 @@ export default class ProjectService {
 	}
 
 	async getAllProjects(teamId: number) {
-		return this.dbManager.fetchData("SELECT id, name, team_id FROM projects WHERE team_id=?", [teamId]);
+		return this.dbManager.fetchAllRows("SELECT id, name, team_id FROM projects WHERE team_id=?", [teamId]);
 	}
 
 	async getAllProjectsOfUser(userId: number): Promise<Array<iAllProjectsItemResponse>> {
-		const projects: Array<Project> = await this.dbManager.fetchData(
+		const projects: Array<Project> = await this.dbManager.fetchAllRows(
 			"SELECT projects.* FROM projects, users WHERE projects.team_id=users.team_id AND users.id=?",
 			[userId],
 		);
@@ -146,7 +146,7 @@ export default class ProjectService {
 	}
 
 	async createDefaultProject(teamId: number, name?: string) {
-		return this.dbManager.insertData("INSERT INTO projects SET ?", {
+		return this.dbManager.insert("INSERT INTO projects SET ?", {
 			name: "Default",
 			team_id: teamId,
 		});

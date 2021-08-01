@@ -1,6 +1,6 @@
 import { Authorized, Body, CurrentUser, JsonController, Post } from "routing-controllers";
 import { Container, Inject, Service } from "typedi";
-import DBManager from "../../core/manager/DBManager";
+import { DBManager } from "@modules/db";
 import ProjectService from "../../core/services/ProjectService";
 
 const RESPONSE_STATUS = {
@@ -10,10 +10,11 @@ const RESPONSE_STATUS = {
 
 @Service()
 @JsonController("/projects")
-export class CreateProjectsController {
+class ProjectsController {
 	@Inject()
 	private projectService: ProjectService;
 
+	@Inject()
 	private dbManager: DBManager;
 
 	constructor() {
@@ -42,3 +43,5 @@ export class CreateProjectsController {
 			});
 	}
 }
+
+export { ProjectsController };

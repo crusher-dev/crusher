@@ -1,9 +1,9 @@
-import { UserService } from "@modules/users/service";
+import { UserService } from "@modules/resources/users/service";
 import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { getFullName } from "@utils/helper";
 import CommentsServiceV2 from "@core/services/CommentsService";
-import { BuildsService } from "@modules/builds/service";
+import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 
 @Service()

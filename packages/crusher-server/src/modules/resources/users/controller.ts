@@ -1,6 +1,6 @@
 import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, OnNull, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { UserService } from "@modules/users/service";
+import { UserService } from "@modules/resources/users/service";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import GoogleAPIService from "@core/services/GoogleAPIService";
 import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, USER_NOT_REGISTERED, USER_REGISTERED } from "@constants";

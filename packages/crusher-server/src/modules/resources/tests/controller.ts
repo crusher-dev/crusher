@@ -1,4 +1,4 @@
-import { UserService } from "@modules/users/service";
+import { UserService } from "@modules/resources/users/service";
 import { JsonController, Get, QueryParams, Authorized, BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import TestService from "@core/services/TestService";

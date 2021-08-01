@@ -1,3 +1,3 @@
-import { ProjectsController } from "@modules/projects/controller";
+import { ProjectsController } from "@modules/resources/projects/controller";
 
 export { ProjectsController };

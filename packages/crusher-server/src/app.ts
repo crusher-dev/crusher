@@ -11,13 +11,13 @@ import "reflect-metadata";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
-import { UserController } from "@modules/users/controller";
+import { UserController } from "@modules/resources/users/controller";
 import { EmailManager } from "@manager/EmailManager";
 import MongoManager from "@manager/MongoManager";
 import { RedisManager } from "@manager/redis";
-import { TestController } from "@modules/tests/controller";
-import { BuildsController } from "@modules/builds/controller";
-import { BuildReportController } from "@modules/buildReports/controller";
+import { TestController } from "@modules/resources/tests/controller";
+import { BuildsController } from "@modules/resources/builds/controller";
+import { BuildReportController } from "@modules/resources/buildReports/controller";
 import { ReleaseController } from "@controllers/ReleaseController";
 
 RedisManager.initialize();

@@ -1,7 +1,7 @@
 import { Authorized, Body, CurrentUser, JsonController, Post } from "routing-controllers";
 import { Container, Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
-import ProjectService from "../../core/services/ProjectService";
+import ProjectService from "@core/services/ProjectService";
 
 const RESPONSE_STATUS = {
 	PROJECT_CREATED: "PROJECT_CREATED",

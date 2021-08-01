@@ -3,16 +3,15 @@ require("dotenv").config();
 import "reflect-metadata";
 import { CronJob } from "cron";
 import { Container } from "typedi";
-import MonitoringService from "./core/services/MonitoringService";
+import MonitoringService from "@core/services/MonitoringService";
 import { Logger } from "./utils/logger";
-import JobRunnerService from "./core/services/v2/JobRunnerService";
-import ProjectHostsService from "./core/services/ProjectHostsService";
-import { JOB_TRIGGER } from "../../crusher-shared/types/jobTrigger";
-import MongoManager from "./core/manager/MongoManager";
-import JobsService from "./core/services/JobsService";
+import JobRunnerService from "@core/services/v2/JobRunnerService";
+import ProjectHostsService from "@core/services/ProjectHostsService";
+import { JOB_TRIGGER } from "@crusher-shared/types/jobTrigger";
+import MongoManager from "@core/manager/MongoManager";
+import JobsService from "@core/services/JobsService";
 import { DBManager } from "@modules/db";
 import { RedisManager } from "@manager/redis";
-import { REDIS } from "crusher-server/config/database";
 
 RedisManager.initialize();
 

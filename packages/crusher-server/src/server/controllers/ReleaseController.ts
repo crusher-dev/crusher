@@ -1,7 +1,7 @@
 import { Get, JsonController, Req, Res } from "routing-controllers";
 import { Service } from "typedi";
 
-import { fetch } from "../../core/utils/fetch";
+import { fetch } from "@core/utils/fetch";
 @Service()
 @JsonController("/release")
 export class ReleaseController {

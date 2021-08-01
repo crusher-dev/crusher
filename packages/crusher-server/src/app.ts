@@ -20,7 +20,7 @@ import { RedisManager } from "@manager/redis";
 import { TestController } from "@modules/tests/controller";
 import { BuildsController } from "@modules/builds/controller";
 import { BuildReportController } from "@modules/buildReports/controller";
-import { ReleaseController } from '@controllers/ReleaseController';
+import { ReleaseController } from "@controllers/ReleaseController";
 
 RedisManager.initialize();
 

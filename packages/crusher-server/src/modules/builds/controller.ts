@@ -3,7 +3,7 @@ import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { getFullName } from "@utils/helper";
 import CommentsServiceV2 from "@core/services/CommentsService";
-import { BuildsService } from "./service";
+import { BuildsService } from "@modules/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 
 @Service()

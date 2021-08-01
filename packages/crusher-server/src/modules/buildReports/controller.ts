@@ -1,8 +1,8 @@
-import { UserService } from "../users/service";
+import { UserService } from "@modules/users/service";
 import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import CommentsServiceV2 from "../../core/services/CommentsService";
-import { BuildReportService } from "./service";
+import CommentsServiceV2 from "@core/services/CommentsService";
+import { BuildReportService } from "@modules/buildReports/service";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 
 @Service()

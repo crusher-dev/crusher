@@ -1,5 +1,14 @@
 import { Button } from "dyson/src/components/atoms";
-import { BottomSVG, CalendarSVG, RerunSVG, StatusSVG, ThreeEllipsisSVG, ThunderSVG, TickSVG } from "@svg/testReport";
+import {
+	BottomSVG,
+	CalendarSVG,
+	RerunSVG,
+	StatusSVG,
+	ThreeEllipsisSVG,
+	ThunderSVG,
+	PassedSVG,
+	FailedSVG, ReviewRequiredSVG, RunningSVG, InitiatedSVG,
+} from '@svg/testReport';
 import { css } from "@emotion/react";
 import { LayoutSVG, PlaySVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
@@ -33,37 +42,38 @@ function TitleSection() {
 }
 
 function StatusTag({ type }) {
-	if (type === "REVIEW") {
+
+	if (type === "REVIEW_REQUIRED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, review]}>
-				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Review required</span>
+				<ReviewRequiredSVG height={18} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Review required</span>
 			</div>
 		);
 	}
 	if (type === "FAILED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, failed]}>
-				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Failed</span>
+				<FailedSVG height={18} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Failed</span>
 			</div>
 		);
 	}
 	if (type === "PASSED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Passed</span>
+				<PassedSVG height={20} isMonchrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Passed</span>
 			</div>
 		);
 	}
 	if (type === "RUNNING") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, running]}>
-				<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Running</span>
+				<RunningSVG height={16} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Running</span>
 			</div>
 		);
 	}
 	return (
 		<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, waiting]}>
-			<TickSVG height={20} /> <span className={"text-14 font-600 ml-12 leading-none"}>Waiting</span>
+			<InitiatedSVG height={16} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Waiting</span>
 		</div>
 	);
 }
@@ -93,7 +103,7 @@ function NameNStatusSection() {
 				<ThreeEllipsisSVG className={"ml-22"} width={25} />
 			</div>
 
-			<StatusTag type={data.status} />
+			<StatusTag type={data.status} isMonochrome={true}/>
 		</div>
 	);
 }
@@ -146,13 +156,8 @@ function TestOverviewTab() {
 
 						<div
 							className={"mb-28"}
-							css={css`
-								path {
-									fill: #aacb65;
-								}
-							`}
 						>
-							<TickSVG height={30} width={28} />
+							<PassedSVG height={30} width={28} />
 						</div>
 						<div className={"font-cera text-15 font-500 mb-24"}>{getStatusString(data?.status)}</div>
 						<div className={"flex items-center"}>
@@ -282,7 +287,7 @@ function NormalStep() {
 	return (
 		<div className={" flex px-44 relative mb-32"}>
 			<div css={tick}>
-				<TickSVG height={20} width={20} />
+				<PassedSVG height={20} width={20} />
 			</div>
 			<div>
 				<span
@@ -399,10 +404,10 @@ function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 
 			</Conditional>
 			<div>
-				<div className={"px-32 w-full"}>
+				<div className={"px-28 w-full"}>
 					<div css={header} className={"flex justify-between items-center w-full"}>
 						<div className={"flex items-center leading-none text-15 font-600"}>
-							<TickSVG height={18} className={"mr-16"} />
+							<PassedSVG height={18} className={"mr-16"} />
 							{name}
 						</div>
 						<div className={"flex items-center"}>
@@ -484,7 +489,7 @@ const testCard = css`
 `;
 
 const header = css`
-	min-height: 56px;
+	min-height: 52px;
 `;
 
 function ReportSection() {
@@ -624,13 +629,13 @@ export const TestReport = () => {
 						<div className={"absolute flex flex-col items-center"} css={currentSelected}>
 							<div className={"mb-8 text-12"}>12Jun</div>
 							<div>
-								<TickSVG />
+								<PassedSVG />
 							</div>
 						</div>
 
 						<div className={"absolute flex flex-col items-center"} css={timelineItem}>
 							<div>
-								<TickSVG />
+								<PassedSVG />
 							</div>
 						</div>
 					</div>
@@ -684,6 +689,7 @@ const passed = css`
 const review = css`
 	background: #9d6852;
 	border: 1px solid #ebb9a4;
+  min-width: 172px;
 `;
 
 const running = css`

@@ -26,16 +26,6 @@ export function ThreeEllipsisSVG(props: ReactPropTypes) {
 	);
 }
 
-export function TickSVG(props: ReactPropTypes) {
-	return (
-		<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm4.471 5.895l-5.113 5.072c-.3.301-.782.321-1.102.02L3.549 8.521a.813.813 0 01-.06-1.123c.3-.32.802-.34 1.123-.04l2.145 1.965 4.571-4.571a.799.799 0 011.143 0c.321.32.321.822 0 1.143z"
-				fill="#fff"
-			/>
-		</svg>
-	);
-}
 
 export function CalendarSVG(props: ReactPropTypes) {
 	return (
@@ -73,8 +63,112 @@ export function BottomSVG(props: ReactPropTypes) {
 	);
 }
 
-export const StatusSVG = ({ type, ...prop }) => {
+
+export function PassedSVG(props: ReactPropTypes) {
+	const {isMonochrome} = props;
+	return (
+		<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm4.471 5.895l-5.113 5.072c-.3.301-.782.321-1.102.02L3.549 8.521a.813.813 0 01-.06-1.123c.3-.32.802-.34 1.123-.04l2.145 1.965 4.571-4.571a.799.799 0 011.143 0c.321.32.321.822 0 1.143z"
+				fill={isMonochrome? "#fff": "#aacb65"}
+			/>
+		</svg>
+	);
+}
+
+export function InitiatedSVG(props) {
+	const {isMonochrome} = props;
+	return (
+		<svg
+			width={21}
+			height={21}
+			viewBox="0 0 21 21"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<rect width={21} height={21} rx={10.5} fill={isMonochrome? "#fff": "#47484A" } />
+			<path
+				d="M10.5 8A2.503 2.503 0 008 10.5c0 1.378 1.122 2.5 2.5 2.5s2.5-1.122 2.5-2.5S11.878 8 10.5 8z"
+				fill="#0a0b0e"
+			/>
+		</svg>
+	)
+}
+
+export function FailedSVG(props) {
+	const {isMonochrome} = props;
+	return (
+		<svg
+			width={22}
+			height={22}
+			viewBox="0 0 22 22"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<rect width={22} height={22} rx={11} fill={isMonochrome? "#fff": "#EF4074"} />
+			<path
+				d="M14.5 7.5l-7 7M7.5 7.5l7 7"
+				stroke="#7b2067"
+				strokeWidth={2.2}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	)
+}
+
+export function ReviewRequiredSVG(props) {
+	const {isMonochrome} = props;
+	return (
+		<svg
+			width={22}
+			height={22}
+			viewBox="0 0 22 22"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<rect width={22} height={22} rx={11} fill={isMonochrome?"#EAAA70":"#fff"} />
+			<path
+				d="M12.235 14.75v1.75a.48.48 0 01-.149.352.48.48 0 01-.351.148h-2a.48.48 0 01-.352-.148.48.48 0 01-.148-.352v-1.75a.48.48 0 01.148-.352.48.48 0 01.352-.148h2a.48.48 0 01.351.148.48.48 0 01.149.352zm.234-8.25l-.219 6a.503.503 0 01-.16.352.494.494 0 01-.355.148h-2a.494.494 0 01-.356-.148.503.503 0 01-.16-.352L9 6.5a.46.46 0 01.137-.352A.468.468 0 019.485 6h2.5c.135 0 .251.05.347.148a.46.46 0 01.137.352z"
+				fill="#9d6852"
+			/>
+		</svg>
+	)
+}
+
+
+export function RunningSVG(props) {
+	const {isMonochrome} = props;
+	return (
+		<svg
+			width={21}
+			height={21}
+			viewBox="0 0 21 21"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<rect width={21} height={21} rx={10.5} fill={isMonochrome? "#fff": "#47484A" } />
+			<path
+				d="M10.375 8.906c-.879 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.879 0 1.594-.715 1.594-1.594 0-.879-.715-1.594-1.594-1.594zM5.188 8.906c-.88 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.878 0 1.593-.715 1.593-1.594 0-.879-.715-1.594-1.593-1.594zM15.563 8.906c-.88 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.878 0 1.593-.715 1.593-1.594 0-.879-.715-1.594-1.593-1.594z"
+				fill="#1e242c"
+			/>
+		</svg>
+	)
+}
+
+
+
+
+export const StatusSVG = ({ type, ...props }) => {
 	if (type === "PASSED") {
-		return <TickSVG className={"mr-16"} />;
+		return <PassedSVG className={"mr-16"} { ...props} />;
 	}
+	if (type === "PASSED") {
+		return <PassedSVG className={"mr-16"} { ...props}/>;
+	}
+	return <PassedSVG className={"mr-16"} { ...props}/>;
 };

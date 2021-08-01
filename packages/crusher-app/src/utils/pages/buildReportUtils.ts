@@ -1,4 +1,4 @@
-import { TickSVG } from "@svg/testReport";
+import { PassedSVG } from "@svg/testReport";
 import React from "react";
 
 export const getStatusString = (type) => {

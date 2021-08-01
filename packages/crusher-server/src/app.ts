@@ -21,6 +21,7 @@ import { RedisManager } from "@manager/redis";
 import { TestController } from "./modules/tests/controller";
 import { BuildsController } from "./modules/builds/controller";
 import { BuildReportController } from "./modules/buildReports/controller";
+import { ReleaseController } from '@controllers/ReleaseController';
 
 RedisManager.initialize();
 
@@ -56,7 +57,7 @@ if (process.env.STORAGE_MODE === "local") {
 	server.listen(storagePort);
 }
 
-const controllersArr: any = [UserController, TestController, BuildsController, BuildReportController];
+const controllersArr: any = [UserController, TestController, BuildsController, BuildReportController, ReleaseController];
 
 if (getEdition() === EDITION_TYPE.EE) {
 	const eeControllerArr: any = require("./ee/controllers");

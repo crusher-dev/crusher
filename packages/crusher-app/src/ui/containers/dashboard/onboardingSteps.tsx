@@ -4,6 +4,7 @@ import { FullScreenSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { Button } from "dyson/src/components/atoms/button/Button";
 import { PlaySVG, AppleSVG } from "@svg/dashboard";
+import { DownloadButton } from '@ui/containers/dashboard/Download';
 
 interface TTestIntegrationListProps {
 	className?: string;
@@ -19,21 +20,16 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 	return (
 		<div {...props}>
 			<ExpandableList css={listStyle} currentSelected={selected} changeSelected={handleChangeItem}>
-				<ExpandableListItem title="Download recorded & create test" completed={false}>
+				<ExpandableListItem title="Download recorder & create test" completed={false}>
 					<div className="mt-40 pl-32 pb-16">
 						<table css={downloadGridContainerStyle}>
 							<tr>
-								<td>
+								<td css={css`    vertical-align: baseline;`}>
 									<span className={"label font-14"}>Download</span>
 								</td>
 								<td>
-									<div className={"ml-40"}>
-										<Button onClick={() => {}} size="medium">
-											<div className={"flex items-center justify-center"}>
-												<AppleSVG variant={"white"} className={"mr-12"} />
-												<span className={"mt-2"}>Download dmg</span>
-											</div>
-										</Button>
+									<div className={"ml-40 "}>
+										<DownloadButton css={css`align-items: flex-start;`}/>
 									</div>
 								</td>
 							</tr>

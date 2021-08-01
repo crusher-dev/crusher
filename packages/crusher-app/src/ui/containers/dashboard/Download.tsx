@@ -1,23 +1,29 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CenterLayout } from "dyson/src/components/layouts";
+import { CenterLayout, Conditional } from 'dyson/src/components/layouts';
 import { Button } from "dyson/src/components/atoms";
 import { AppleSVG, LoadingSVG } from "@svg/dashboard";
 import { OverlayTransparent } from "dyson/src/components/layouts/OverlayTransparent/OverlayTransparent";
 import { getOSType } from "@utils/common";
 import { useCallback, useMemo, useState } from "react";
 import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
+import useSWR from 'swr';
+import { RELEASE_API } from '@constants/api';
 
-function DownloadButton() {
+export function DownloadButton(props) {
 	const osType = useMemo(getOSType, []);
 	const { downloadLink, label } = OS_INFO[osType];
 	const [isDownloading, setDownload] = useState(false);
+
+	const {data} = useSWR(RELEASE_API)
+
+
 
 	const DownloadButton = useCallback(({ downloadLink, label }) => {
 		return (
 			<a href={downloadLink} onClick={setDownload.bind(this, true)}>
 				<Button
-					className={"mt-28"}
+					className={""}
 					css={css`
 						width: 182rem;
 					`}
@@ -29,31 +35,48 @@ function DownloadButton() {
 				</Button>
 			</a>
 		);
-	}, []);
+	}, [data]);
 
 	if (osType === OS.Linux) {
-		const linuxZIP = LINUX_INFO.Linux_ZIP;
-		const linuxDeb = LINUX_INFO.Linux_DEB;
+		const zipLink = data?.assets?.filter(({name})=>name.includes("linux-x64"))[0].browser_download_url;
+
 		return (
-			<div className={"flex flex-col items-center"}>
+			<div className={"flex flex-col items-center"}  {...props}>
 				<div className={"flex  items-center"}>
-					<DownloadButton downloadLink={linuxZIP.downloadLink} label={linuxZIP.label} icon={null} />
+					<DownloadButton downloadLink={zipLink} label={LINUX_INFO.Linux_ZIP.label} icon={null} />
 					<div className={"ml-20"}>
-						<DownloadButton downloadLink={linuxDeb.downloadLink} label={linuxDeb.label} icon={null} />
+						<DownloadButton downloadLink={zipLink} label={LINUX_INFO.Linux_DEB.label} icon={null} />
 					</div>
 				</div>
 				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				{isDownloading && <div className={"mt-32 text-13"}>Initiaing download, if it doesn't download. Open link in new tab.</div>}
+				{isDownloading && <div className={"mt-32 text-13"}>Initiating download, if it doesn't download. Open link in new tab.</div>}
 			</div>
 		);
 	}
 
-	return (
-		<div className={"flex flex-col items-center"}>
-			<div>
-				<DownloadButton downloadLink={downloadLink} label={label} icon={null} />
+	if (osType === OS.MAC) {
+		const dmgLink = data?.assets?.filter(({name})=>name.includes(".dmg"))[0].browser_download_url;
+
+		return (
+			<div className={"flex flex-col items-center"}  {...props}>
+				<div className={"flex  items-center"}>
+					<DownloadButton downloadLink={dmgLink} label={OS_INFO.MAC.label} icon={null} />
+				</div>
+				{/* eslint-disable-next-line react/no-unescaped-entities */}
+				{isDownloading && <div className={"mt-32 text-13"}>Initiating download, if it doesn't download. Open link in new tab.</div>}
 			</div>
-			{isDownloading && <div className={"mt-32 text-13"}>Iniitiaing download, if it doesn't download. Open link in new tab.</div>}
+		);
+	}
+
+
+	return (
+		<div className={"flex flex-col items-center"} {...props}>
+			<Conditional>
+				<div>
+					<DownloadButton downloadLink={downloadLink} label={label} icon={null} />
+				</div>
+			</Conditional>
+			{isDownloading && <div className={"mt-32 text-13"}>Initiaing download, if it doesn't download. Open link in new tab.</div>}
 		</div>
 	);
 }
@@ -71,7 +94,9 @@ export function Download({ onClose }: { onClose: Function }) {
 					</div>
 					<div className={"font-cera text-15 font-500 mt-24"}>Opening recorder for you</div>
 					<div className={"mt-68 text-16 font-600"}>Not opening? Install and open recorder</div>
-					<DownloadButton />
+					<div className={"mt-28"}>
+						<DownloadButton />
+					</div>
 					<div className={"mt-28 underline text-13"}>View downloads for other platform</div>
 				</div>
 			</CenterLayout>

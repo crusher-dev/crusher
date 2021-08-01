@@ -93,12 +93,12 @@ const dropDownItem = css`
 	}
 `;
 export const dropdDown = css`
-	top: calc(100% + 4px);
-	left: calc(100% - 54px);
+	top: calc(100% + 4rem);
+	left: calc(100% - 54rem);
 	position: absolute;
 
-	width: 206.03px;
-	height: 276px;
+	width: 206.03rem;
+	height: 276rem;
 
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);

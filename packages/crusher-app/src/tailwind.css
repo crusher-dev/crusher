@@ -14,6 +14,43 @@ body {
 	color: #eeeeee;
 }
 
+@media only screen and (max-width: 1581px) {
+	html {
+		font-size: .9px;
+	}
+}
+
+@media only screen and (max-width: 1493px) {
+	html {
+		font-size: .85px;
+	}
+}
+
+@media only screen and (max-width: 1400px) {
+	html {
+		font-size: .8px;
+	}
+}
+
+@media only screen and (max-width: 1317px) {
+	html {
+		font-size: .75px;
+	}
+}
+@media only screen and (max-width: 1229px) {
+	html {
+		font-size: .75px;
+	}
+}
+
+@media only screen and (max-width: 1054px) {
+	html {
+		font-size: .6px;
+	}
+}
+
+
+
 img {
 	display: unset;
 }

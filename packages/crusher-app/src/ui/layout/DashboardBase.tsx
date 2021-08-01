@@ -20,6 +20,7 @@ import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { addChat, openChatBox } from "@utils/scriptUtils";
+import useSWR from 'swr';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
@@ -29,6 +30,7 @@ function ProjectList() {
 	const [projects] = useAtom(projectsAtom);
 	const [appState] = useAtom(appStateAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
+
 
 	return (
 		<>
@@ -283,7 +285,6 @@ function TopNavbar() {
 	const router = useRouter();
 	const { pathname, query, asPath } = router;
 	const [showCreateTest, setShowCreateTest] = useState(false);
-	console.log(router);
 	return (
 		<div css={[nav]} className={""}>
 			<div css={[containerWidth]}>
@@ -402,9 +403,13 @@ const nav = css`
 	height: 68rem;
 `;
 const containerWidth = css`
-	width: calc(100vw - 250rem);
-	max-width: 1500px;
+	//width: calc(100vw - 250rem);
+	//max-width: 1500rem;
+
+  width: calc(100vw - 250rem);
+  max-width: calc(100vw - 380rem);
 	margin: 0 auto;
+	padding: 0 0rem;
 `;
 
 const project = css`

@@ -23,6 +23,10 @@ class TestService {
 		return this.dbManager.insert(`INSERT INTO tests SET ?`, [getSnakedObject(testInfo)]);
 	}
 
+	async updateTest(testId: number, newInfo: { name: string }) {
+		return this.dbManager.update(`UPDATE tests SET ? WHERE id = ?`, [newInfo, testId]);
+	}
+
 	async runTestsInProject(projectId: number, userId: number) {
 		const tests = await this.getTestsInProject(projectId, true);
 

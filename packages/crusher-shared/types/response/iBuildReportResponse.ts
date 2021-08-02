@@ -68,5 +68,7 @@ interface TestInstanceStep {
 }
 
 interface TestInstanceStepPayload {
+	// Only available when stepType is screenshot related
+	screenshot?: string;
 	message: any;
 }

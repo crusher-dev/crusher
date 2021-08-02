@@ -6,6 +6,7 @@ import { TestInstanceResultSetStatus } from "@core/interfaces/TestInstanceResult
 import { TestInstanceResultSetConclusion } from "@core/interfaces/TestInstanceResultSetConclusion";
 import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
+import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 
 interface TestBuildReport {
 	buildId: number;
@@ -52,7 +53,7 @@ export class BuildReportService {
 				const steps: Array<iAction> = current.testStepsJSON ? JSON.parse(current.testStepsJSON) : [];
 
 				const finalStepsFormat = steps.map((step, index) => {
-					return {
+					const formattedStep = {
 						// @TODO: This has to be replaces for an identifier
 						index: index,
 						stepType: step.type,
@@ -70,6 +71,12 @@ export class BuildReportService {
 							message: step.payload,
 						},
 					};
+
+					// @TODO: Replace this with real implementation
+					if ([ACTIONS_IN_TEST.PAGE_SCREENSHOT, ACTIONS_IN_TEST.ELEMENT_SCREENSHOT].includes(step.type)) {
+						(formattedStep.payload as any).screenshot = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
+					}
+					return formattedStep;
 				});
 
 				const testInstance = {

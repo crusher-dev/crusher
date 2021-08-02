@@ -1,5 +1,5 @@
-import GithubService from "../core/services/GithubService";
-import { extractOwnerAndRepoName } from "../core/utils/helper";
+import GithubService from "@core/services/GithubService";
+import { extractOwnerAndRepoName } from "@core/utils/helper";
 import { Logger } from "./logger";
 
 export function getGithubToken() {

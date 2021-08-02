@@ -1,7 +1,7 @@
 import { Container, Inject, Service } from "typedi";
 import TeamService from "./TeamService";
 import StripeManager from "../manager/StripeManager";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { HttpError } from "routing-controllers";
 
 @Service()
@@ -34,15 +34,15 @@ export default class PaymentService {
 	}
 
 	async getPlanData(planIds: number[]) {
-		return this.dbManager.fetchData(`SELECT * from pricing_plan where id IN (?)`, [planIds]);
+		return this.dbManager.fetchAllRows(`SELECT * from pricing_plan where id IN (?)`, [planIds]);
 	}
 
 	async getPlans(teamId) {
-		const featurePlansPromise = this.dbManager.fetchData(
+		const featurePlansPromise = this.dbManager.fetchAllRows(
 			`SELECT * from pricing_plan where listing_type = 'FEATURED' || listing_type = 'FEATURED_ADDON' & listing_type = 'FEATURED_ADDON'`,
 			[],
 		);
-		const currentPlanPromise = this.dbManager.fetchData(
+		const currentPlanPromise = this.dbManager.fetchAllRows(
 			`Select pricing_plan.*,team_pricing_log.* from pricing_plan,team_pricing_log where team_pricing_log.team_id = ? and team_pricing_log.ongoing= true and team_pricing_log.plan_id = pricing_plan.id `,
 			[teamId],
 		);
@@ -51,7 +51,7 @@ export default class PaymentService {
 	}
 
 	private async addNewTeamPricingLog(teamId, planId, paymentType, stripe_subscription_item_id = null) {
-		await this.dbManager.insertData(`INSERT INTO team_pricing_log SET ?`, {
+		await this.dbManager.insert(`INSERT INTO team_pricing_log SET ?`, {
 			team_id: teamId,
 			plan_id: planId,
 			payment_type: paymentType,

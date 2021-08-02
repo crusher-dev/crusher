@@ -1,10 +1,10 @@
-import { resolvePathToBackendURI, resolvePathToFrontendURI } from "../../core/utils/uri";
-import { emailType } from "../../constants";
-import { getWelcomEmailContent } from "../../core/template/email/welcome";
-import { Logger } from "../../utils/logger";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
+import { emailType } from "@constants";
+import { getWelcomEmailContent } from "@modules/email/welcome.email.template";
+import { Logger } from "@utils/logger";
 import * as sgMail from "@sendgrid/mail";
 import * as ejs from "ejs";
-import { iInviteReferral } from "../../../../crusher-shared/types/inviteReferral";
+import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
 
 if (!process.env.SENDGRID_API_KEY) {
 	console.error("PLEASE PROVIDE SEND_GRID_API Key, otherwise the email verification functionality won't work");

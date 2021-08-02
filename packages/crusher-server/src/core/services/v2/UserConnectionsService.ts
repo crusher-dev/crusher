@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Authentication, TokenAuthentication } from "@octokit/auth-oauth-app/dist-types/types";
 import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";

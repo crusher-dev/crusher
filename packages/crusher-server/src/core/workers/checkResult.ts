@@ -5,7 +5,7 @@ import TestInstanceResultSetsService from "../services/TestInstanceResultSetsSer
 import TestInstanceResultsService from "../services/TestInstanceResultsService";
 import TestInstanceScreenShotsService from "../services/TestInstanceScreenShotsService";
 import AlertingService from "../services/AlertingService";
-import UserService from "../services/UserService";
+import { UserService } from "@modules/users/service";
 import { InstanceStatus } from "../interfaces/InstanceStatus";
 import { JobStatus } from "../interfaces/JobStatus";
 import { TestInstance } from "../interfaces/db/TestInstance";

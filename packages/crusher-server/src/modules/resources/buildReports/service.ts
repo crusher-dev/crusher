@@ -1,11 +1,12 @@
 import { Inject, Service } from "typedi";
-import DBManager from "@manager/DBManager";
+import { DBManager } from "@modules/db";
 import { JobReportStatus } from "@crusher-shared/types/jobReportStatus";
 import { PLATFORM } from "@crusher-shared/types/platform";
-import { TestInstanceResultSetStatus } from "../../core/interfaces/TestInstanceResultSetStatus";
-import { TestInstanceResultSetConclusion } from "../../core/interfaces/TestInstanceResultSetConclusion";
+import { TestInstanceResultSetStatus } from "@core/interfaces/TestInstanceResultSetStatus";
+import { TestInstanceResultSetConclusion } from "@core/interfaces/TestInstanceResultSetConclusion";
 import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
+import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 
 interface TestBuildReport {
 	buildId: number;
@@ -39,7 +40,7 @@ export class BuildReportService {
 	private dbManager: DBManager;
 
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
-		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchData(
+		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
 			"SELECT jobs.id buildId, jobs.meta buildMeta, jobs.project_id buildProjectId, jobs.commit_name buildName, job_reports.id buildReportId, job_reports.reference_job_id buildBaselineId, job_reports.created_at buildReportCreatedAt, jobs.created_at buildCreatedAt, jobs.updated_at buildUpdatedAt, job_reports.updated_at buildReportUpdatedAt, job_reports.status buildReportStatus, buildTests.* FROM jobs, job_reports LEFT JOIN (SELECT test_instances.id testInstanceId, test_instance_result_sets.report_id testBuildReportId, test_instance_result_sets.status testResultStatus, test_instance_result_sets.conclusion testResultConclusion, test_instance_result_sets.target_instance_id testBaselineInstanceId, tests.name testName, test_instances.platform testInstanceBrowser, tests.id testId, tests.events testStepsJSON, test_instances.host testInstanceHost FROM test_instances, tests, test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) buildTests ON buildTests.testBuildReportId = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
 			[buildId],
 		);
@@ -52,10 +53,11 @@ export class BuildReportService {
 				const steps: Array<iAction> = current.testStepsJSON ? JSON.parse(current.testStepsJSON) : [];
 
 				const finalStepsFormat = steps.map((step, index) => {
-					return {
+					const formattedStep = {
 						// @TODO: This has to be replaces for an identifier
 						index: index,
 						stepType: step.type,
+						isScreenshot: false,
 						// @TODO: Need a real more-readable description of action types
 						description: step.type
 							.split("_")
@@ -70,6 +72,13 @@ export class BuildReportService {
 							message: step.payload,
 						},
 					};
+
+					// @TODO: Replace this with real implementation
+					if ([ACTIONS_IN_TEST.PAGE_SCREENSHOT, ACTIONS_IN_TEST.ELEMENT_SCREENSHOT].includes(step.type)) {
+						formattedStep.isScreenshot = true;
+						(formattedStep.payload as any).screenshot = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
+					}
+					return formattedStep;
 				});
 
 				const testInstance = {

@@ -1,6 +1,4 @@
 import { appendParamsToURI } from "./uri";
-import { Logger } from "../../utils/logger";
-import * as chalk from "chalk";
 const _fetch = require("node-fetch");
 
 export function prepareFetchPayload(uri: string, info: any = {}) {
@@ -39,13 +37,6 @@ export function fetch(_uri, info: any = {}) {
 			body: body ? body : payload && method !== "GET" ? JSON.stringify(payload) : null,
 		})
 			.then(async (res) => {
-				const elapsedHrTime = process.hrtime(startHrTime);
-				const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
-				Logger.info("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)})`, {
-					header,
-					res,
-					payload,
-				});
 				if (noJSON) {
 					return res.text();
 				} else {
@@ -53,13 +44,6 @@ export function fetch(_uri, info: any = {}) {
 				}
 			})
 			.catch((err) => {
-				const elapsedHrTime = process.hrtime(startHrTime);
-				const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
-				Logger.error("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {
-					header,
-					err,
-					payload,
-				});
 				reject(err);
 			});
 	});

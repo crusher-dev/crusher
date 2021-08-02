@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { TEAM_CREATED } from "../../constants";
 import { CreateTeamRequest } from "../interfaces/services/team/CreateTeamRequest";
 import { TierPlan } from "../interfaces/TierPlan";
@@ -16,7 +16,7 @@ export default class TeamService {
 	}
 
 	async createTeamWithArgs(userId: number, teamName: string, teamEmail: string, tier: TierPlan, stripeCustomerId: string): Promise<number> {
-		const teamRecord = await this.dbManager.insertData("INSERT INTO teams SET ?", {
+		const teamRecord = await this.dbManager.insert("INSERT INTO teams SET ?", {
 			name: teamName,
 			team_email: teamEmail,
 			tier: TierPlan.FREE,
@@ -32,7 +32,7 @@ export default class TeamService {
 
 		// Only 1 team should be allowed
 		if (!user.team_id) {
-			const team = await this.dbManager.insertData("INSERT INTO teams SET ?", {
+			const team = await this.dbManager.insert("INSERT INTO teams SET ?", {
 				name: teamName,
 				team_email: user.email,
 				tier: TierPlan.FREE,
@@ -55,7 +55,7 @@ export default class TeamService {
 
 	async getMembersInTeam(teamId: number): Promise<Array<iMemberInfoResponse>> {
 		return this.dbManager
-			.fetchData(
+			.fetchAllRows(
 				"SELECT users.*, user_team_roles.role role FROM users, teams, user_team_roles WHERE users.team_id = teams.id AND teams.id = ? AND user_team_roles.user_id = users.id AND user_team_roles.team_id = ?",
 				[teamId, teamId],
 			)

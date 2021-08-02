@@ -1,11 +1,10 @@
-import { resolveWorkerPath } from "./utils/env";
+import { resolveWorkerPath } from "@utils/env";
 
 require("dotenv").config();
 
 import { Queue, QueueScheduler, Worker } from "bullmq";
-import { isOpenSourceEdition } from "./utils/helper";
+import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@manager/redis";
-import path = require("path");
 
 RedisManager.initialize();
 const redisClient: any = RedisManager.get();

@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { iTeamRole, TEAM_ROLE_TYPES } from "@crusher-shared/types/db/teamRole";
 
 @Service()
@@ -15,7 +15,7 @@ export default class UserTeamRoleService {
 	}
 
 	async create(user_id: number, team_id: number, role: TEAM_ROLE_TYPES) {
-		return this.dbManager.insertData(`INSERT INTO user_team_roles SET ?`, {
+		return this.dbManager.insert(`INSERT INTO user_team_roles SET ?`, {
 			user_id,
 			team_id,
 			role,
@@ -23,6 +23,6 @@ export default class UserTeamRoleService {
 	}
 
 	async update(user_id: number, team_id: number, role: TEAM_ROLE_TYPES) {
-		return this.dbManager.fetchData(`UPDATE user_team_roles SET role = ? WHERE user_id = ? AND team_id = ?`, [role, user_id, team_id]);
+		return this.dbManager.fetchAllRows(`UPDATE user_team_roles SET role = ? WHERE user_id = ? AND team_id = ?`, [role, user_id, team_id]);
 	}
 }

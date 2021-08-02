@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { fetch } from "../utils/fetch";
 import { SLACK_CLIENT_ID, SLACK_CLIENT_SECRET } from "../../../config/slack";
 import { SlackOAuthResponse } from "../interfaces/SlackOAuthResponse";
@@ -19,7 +19,7 @@ export default class AlertingService {
 	async createRowIfNotThere(userId) {
 		const row = await this.fetchRow(userId);
 		if (!!row === false) {
-			await this.dbManager.insertData(`INSERT INTO alerting SET ?`, [{ user_id: userId }]);
+			await this.dbManager.insert(`INSERT INTO alerting SET ?`, [{ user_id: userId }]);
 		}
 	}
 
@@ -45,7 +45,7 @@ export default class AlertingService {
 	}
 
 	async addSlackIntegration(config: SlackOAuthResponse, user_id) {
-		return this.dbManager.insertData(`INSERT INTO user_integrations SET ?`, {
+		return this.dbManager.insert(`INSERT INTO user_integrations SET ?`, {
 			user_id: user_id,
 			integration_name: "SLACK",
 			label: `${config.team.name}___${config.incoming_webhook.channel}`,
@@ -56,7 +56,7 @@ export default class AlertingService {
 	}
 
 	async addAlertIntegrationToProject(integration_id: number, project_id: number, user_id: number, config: SlackOAuthResponse) {
-		return this.dbManager.insertData("INSERT INTO integration_alerting SET ?", {
+		return this.dbManager.insert("INSERT INTO integration_alerting SET ?", {
 			project_id,
 			integration_id,
 			user_id,
@@ -65,7 +65,7 @@ export default class AlertingService {
 	}
 
 	async getSlackIntegrationsInProject(project_id: number) {
-		return this.dbManager.fetchData(
+		return this.dbManager.fetchAllRows(
 			`SELECT integration_alerting.*, user_integrations.label, user_integrations.webhook_url as webhook_url FROM integration_alerting, user_integrations WHERE integration_alerting.project_id = ? AND integration_alerting.integration_id = user_integrations.id AND user_integrations.integration_name = ?`,
 			[project_id, "SLACK"],
 		);

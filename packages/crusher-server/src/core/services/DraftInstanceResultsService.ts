@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
 import { DraftInstance } from "../interfaces/db/DraftInstance";
 import { InstanceStatus } from "../interfaces/InstanceStatus";
@@ -14,7 +14,7 @@ export default class DraftInstanceService {
 	}
 
 	async createDraftResult(details: DraftInstanceResult) {
-		return this.dbManager.insertData(`INSERT INTO draft_instance_results SET ?`, details);
+		return this.dbManager.insert(`INSERT INTO draft_instance_results SET ?`, details);
 	}
 
 	async getDraftResult(draftInstanceId: number): Promise<DraftInstanceResult> {

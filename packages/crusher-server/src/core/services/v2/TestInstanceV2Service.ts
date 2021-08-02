@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../../manager/DBManager";
+import { DBManager } from "@modules/db";
 
 @Service()
 export default class TestInstanceV2Service {
@@ -10,7 +10,7 @@ export default class TestInstanceV2Service {
 	}
 
 	async getTestInstancesMapWithMedia(jobId: number) {
-		const testInstanceScreenshots = await this.dbManager.fetchData(
+		const testInstanceScreenshots = await this.dbManager.fetchAllRows(
 			`SELECT test_instance_screenshots.url as screenshot_url, test_instance_recordings.video_uri as video_uri, test_instance_screenshots.created_at as screenshot_created_at, test_instance_screenshots.id screenshot_id, test_instance_screenshots.name screenshot_name, test_instances.*, tests.name as test_name, tests.events as events  FROM tests, test_instances LEFT JOIN test_instance_screenshots ON test_instance_screenshots.instance_id = test_instances.id LEFT JOIN test_instance_recordings ON test_instance_recordings.test_instance_id = test_instances.id WHERE test_instances.job_id = ? AND tests.id = test_instances.test_id`,
 			[jobId],
 		);

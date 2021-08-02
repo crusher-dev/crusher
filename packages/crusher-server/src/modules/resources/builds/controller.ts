@@ -1,13 +1,13 @@
 import { UserService } from "@modules/resources/users/service";
 import { JsonController, Get, Authorized, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { getFullName } from "@utils/helper";
+import { getFullName, getSnakedObject } from '@utils/helper';
 import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 
 @Service()
-@JsonController("/")
+@JsonController("")
 export class BuildsController {
 	@Inject()
 	private userService: UserService;
@@ -16,7 +16,6 @@ export class BuildsController {
 	@Inject()
 	private commentsService: CommentsServiceV2;
 
-	@Authorized()
 	@Get("/projects/:project_id/builds")
 	public async getList(@Param("project_id") project_id): Promise<IProjectBuildListResponse> {
 		const builds = await this.buildsService.getBuildInfoList(project_id);

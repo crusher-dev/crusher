@@ -7,7 +7,7 @@ import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildRepor
 import { BuildsService } from "@modules/resources/builds/service";
 
 @Service()
-@JsonController("/")
+@JsonController("")
 class BuildReportController {
 	@Inject()
 	private userService: UserService;

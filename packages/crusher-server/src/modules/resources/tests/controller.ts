@@ -5,9 +5,10 @@ import { TestService } from "@modules/resources/tests/service";
 import { isUsingLocalStorage } from "@utils/helper";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { SnakleResponse } from '@modules/decorators/sankleResponse';
 
 @Service()
-@JsonController("/")
+@JsonController("")
 export class TestController {
 	@Inject()
 	private userService: UserService;
@@ -16,7 +17,6 @@ export class TestController {
 
 	@Authorized()
 	@Get("/projects/:project_id/tests/")
-	@CamelizeResponse()
 	async getList(@Param("project_id") projectId: number): Promise<IProjectTestsListResponse> {
 		return (await this.testService.getTestsInProject(projectId)).map((testData) => {
 			const videoUrl = testData.featured_video_uri ? testData.featured_video_uri : null;

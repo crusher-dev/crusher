@@ -1,7 +1,7 @@
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { iAction } from "@crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
-import { camelCase, forEach, isArray, isPlainObject, snakeCase } from 'lodash';
+import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
 
 export function getTestHostFromActions(actions: Array<iAction>): string {
 	const navigateAction = actions.find((action) => action.type === ACTIONS_IN_TEST.NAVIGATE_URL);
@@ -86,6 +86,13 @@ function getFullName(firstName: string | null, lastName: string | null) {
 
 function getCamelizeObject(object: any) {
 	const camelCaseObject = {};
+	if (object instanceof Array) {
+		return object.map((obj) => {
+			return getCamelizeObject(obj);
+		});
+	}
+	if (typeof object !== "object") return object;
+
 	forEach(object, function (value, key) {
 		if (isPlainObject(value) || isArray(value)) {
 			value = getCamelizeObject(value);
@@ -98,6 +105,13 @@ function getCamelizeObject(object: any) {
 
 function getSnakedObject(object: any) {
 	const snakeCaseObject = {};
+	if (object instanceof Array) {
+		return object.map((obj) => {
+			return getSnakedObject(obj);
+		});
+	}
+	if (typeof object !== "object") return object;
+
 	forEach(object, function (value, key) {
 		if (isPlainObject(value) || isArray(value)) {
 			value = getSnakedObject(value);
@@ -108,4 +122,4 @@ function getSnakedObject(object: any) {
 	return snakeCaseObject;
 }
 
-export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName, getCamelizeObject, getSnakedObject};
+export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName, getCamelizeObject, getSnakedObject };

@@ -109,6 +109,7 @@ class TestService {
 	}
 
 	async deleteTest(testId: number) {
+		console.log("CALLED TO UPDATE");
 		return this.dbManager.update(`UPDATE tests SET ? WHERE id = ?`, [{ deleted: true }, testId]);
 	}
 

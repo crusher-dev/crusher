@@ -36,3 +36,4 @@ export type SnakeCase<S extends string> = S extends `${infer L}${Upper}${infer R
 
 export type KeysToSnakeCase<T> = { [K in keyof T as SnakeCase<K>]: T[K] };
 
+export type Nullable<T> = { [P in keyof T]?: T[P] | null };

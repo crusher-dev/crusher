@@ -1,9 +1,10 @@
 import { UserService } from "@modules/resources/users/service";
-import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser } from "routing-controllers";
+import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { TestService } from "@modules/resources/tests/service";
 import { isUsingLocalStorage } from "@utils/helper";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { ICreateTestPayload } from "@modules/resources/tests/interface";
 
 @Service()
 @JsonController("")
@@ -30,7 +31,7 @@ export class TestController {
 				isPassing: true,
 				// @Note: Hardcoded for now, will be changed later
 				firstRunCompleted: true,
-				deleted: true,
+				deleted: false,
 			};
 		});
 	}
@@ -48,5 +49,22 @@ export class TestController {
 		if (!deleteResult.changedRows) throw new BadRequestError("No such test found with given id");
 
 		return "Success";
+	}
+
+	// @TODO: Need strict type checks here. (Security Issue)
+	@Authorized()
+	@Post("/projects/:project_id/tests/actions/create")
+	async createTest(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
+		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId">,
+	) {
+		const { user_id } = user;
+
+		return this.testService.createTest({
+			...body,
+			projectId: projectId,
+			userId: user_id,
+		});
 	}
 }

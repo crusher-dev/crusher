@@ -20,6 +20,7 @@ export class BuildsController {
 	@Get("/")
 	public async getList(@Param("project_id") project_id): Promise<IProjectBuildListResponse> {
 		const builds = await this.buildsService.getBuildInfoList(project_id);
+
 		const buildsList = builds.map((buildData) => {
 			return {
 				id: buildData.buildId,

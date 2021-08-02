@@ -50,6 +50,7 @@
 		"googleapis": "^67.0.0",
 		"jsonwebtoken": "^8.5.1",
 		"kcors": "^2.2.2",
+		"loadash": "^1.0.0",
 		"lodash": "^4.17.20",
 		"logdna": "^3.5.0",
 		"module-alias": "^2.2.2",

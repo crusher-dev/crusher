@@ -1,24 +1,24 @@
 import { UserService } from "@modules/resources/users/service";
-import { JsonController, Get, QueryParams, Authorized, BadRequestError } from "routing-controllers";
+import { JsonController, Get, QueryParams, Authorized, BadRequestError, Post, Param, CurrentUser } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import TestService from "@core/services/TestService";
+import { TestService } from "@modules/resources/tests/service";
 import { isUsingLocalStorage } from "@utils/helper";
+import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 
 @Service()
-@JsonController("/tests")
+@JsonController("/teams/:team_id/projects/:project_id/tests")
 export class TestController {
 	@Inject()
 	private userService: UserService;
 	@Inject()
 	private testService: TestService;
 
+	@CamelizeResponse()
 	@Authorized()
-	@Get("/list")
-	public async getList(@QueryParams() params): Promise<any> {
-		const { project_id } = params;
-		if (!project_id) throw new BadRequestError();
-
-		return (await this.testService.getAllTestsInProject(project_id)).map((testData) => {
+	@Get("/")
+	async getList(@Param("project_id") projectId: number): Promise<IProjectTestsListResponse> {
+		return (await this.testService.getTestsInProject(projectId)).map((testData) => {
 			const videoUrl = testData.featured_video_uri ? testData.featured_video_uri : null;
 
 			return {
@@ -32,7 +32,14 @@ export class TestController {
 				isPassing: true,
 				// @Note: Hardcoded for now, will be changed later
 				firstRunCompleted: true,
+				deleted: true,
 			};
 		});
+	}
+
+	@Authorized()
+	@Post("/actions/run")
+	async runTest(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
+		return this.testService.runTestsInProject(projectId, user.user_id);
 	}
 }

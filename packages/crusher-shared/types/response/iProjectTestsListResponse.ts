@@ -5,6 +5,7 @@ export interface IProjectTestItem {
 	videoURL: null | string;
 	imageURL: null | string;
 	isPassing: boolean;
+	deleted: boolean;
 	firstRunCompleted: boolean;
 }
 

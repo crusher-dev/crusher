@@ -3,7 +3,7 @@ import { Inject, Service } from "typedi";
 import { UserService } from "@modules/resources/users/service";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import GoogleAPIService from "@core/services/GoogleAPIService";
-import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, USER_NOT_REGISTERED, USER_REGISTERED } from "@constants";
+import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, USER_REGISTERED } from "@constants";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "@utils/cookies";
 import { getEdition } from "@utils/helper";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";

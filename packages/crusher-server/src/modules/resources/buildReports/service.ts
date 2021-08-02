@@ -57,6 +57,7 @@ export class BuildReportService {
 						// @TODO: This has to be replaces for an identifier
 						index: index,
 						stepType: step.type,
+						isScreenshot: false,
 						// @TODO: Need a real more-readable description of action types
 						description: step.type
 							.split("_")
@@ -74,6 +75,7 @@ export class BuildReportService {
 
 					// @TODO: Replace this with real implementation
 					if ([ACTIONS_IN_TEST.PAGE_SCREENSHOT, ACTIONS_IN_TEST.ELEMENT_SCREENSHOT].includes(step.type)) {
+						formattedStep.isScreenshot = true;
 						(formattedStep.payload as any).screenshot = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
 					}
 					return formattedStep;

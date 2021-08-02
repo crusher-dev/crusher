@@ -62,6 +62,7 @@ interface TestInstanceConfig {
 interface TestInstanceStep {
 	index:          number;
 	stepType:    string;
+	isScreenshot?: boolean;
 	description: string;
 	status:      string;
 	payload:     TestInstanceStepPayload;

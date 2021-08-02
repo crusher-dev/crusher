@@ -38,6 +38,12 @@ class MysqlDatabase implements IDatabaseManager {
 		});
 	}
 
+	delete(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
+		return this.mysqlClient.query(query, valuesToEscape).then(([result]) => {
+			return { deletedRows: result.changedRows };
+		});
+	}
+
 	fetchSingleRow(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		return this.mysqlClient.execute(query, valuesToEscape).then(([rows]) => {
 			if (!rows.length) throw new Error("No row available for selection");

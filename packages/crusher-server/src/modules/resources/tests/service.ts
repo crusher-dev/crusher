@@ -109,7 +109,7 @@ class TestService {
 	}
 
 	async deleteTest(testId: number) {
-		return this.dbManager.fetchSingleRow(`DELETE FROM tests WHERE id=?`, [testId]);
+		return this.dbManager.update(`UPDATE tests SET ? WHERE id = ?`, [{ deleted: true }, testId]);
 	}
 
 	async deleteAllTestsInProject(projectId: number) {

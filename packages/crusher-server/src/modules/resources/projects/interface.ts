@@ -10,4 +10,14 @@ interface IProjectTable extends BaseRowInterface {
 // Create Project Payload, everything except id
 type ICreateProjectPayload = KeysToCamelCase<Exclude<IProjectTable, "id">>;
 
-export { ICreateProjectPayload, IProjectTable, IProjectRow };
+interface IProjectEnvironmentTable extends BaseRowInterface {
+	id: number;
+	url: string;
+	host_name: string;
+	project_id: number;
+	user_id: number;
+}
+
+type ICreateProjectEnvironmentPayload = KeysToCamelCase<Omit<IProjectEnvironmentTable, "id">>;
+
+export { ICreateProjectPayload, IProjectTable, IProjectRow, IProjectEnvironmentTable, ICreateProjectEnvironmentPayload };

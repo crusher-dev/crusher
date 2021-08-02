@@ -1,17 +1,17 @@
 import { Container, Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
-import { ProjectService } from "@modules/resources/projects/service";
+import { ProjectsService } from "@modules/resources/projects/service";
 import { TestsRunner } from "@modules/runner";
 import { BuildStatusEnum, BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { ICreateTestPayload } from "@modules/resources/tests/interface";
-import { getSnakedObject } from '@utils/helper';
+import { getSnakedObject } from "@utils/helper";
 
 @Service()
 class TestService {
 	private dbManager: DBManager;
 	@Inject()
-	private projectService: ProjectService;
+	private projectService: ProjectsService;
 	@Inject()
 	private testsRunner: TestsRunner;
 

@@ -1,13 +1,29 @@
 import { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
-import { ICreateProjectPayload, IProjectRow, IProjectTable } from "@modules/resources/projects/interface";
+import {
+	ICreateProjectEnvironmentPayload,
+	ICreateProjectPayload,
+	IProjectEnvironmentTable,
+	IProjectRow,
+	IProjectTable,
+} from "@modules/resources/projects/interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { getSnakedObject } from "@utils/helper";
 
 @Service()
-class ProjectService {
+class ProjectsService {
 	@Inject()
 	private dbManager: DBManager;
+
+	@CamelizeResponse()
+	async getProjectEnvironments(projectId: Pick<IProjectEnvironmentTable, "id">): Promise<Array<KeysToCamelCase<IProjectEnvironmentTable>>> {
+		return this.dbManager.fetchAllRows("SELECT * FROM project_hosts WHERE project_id = ?", [projectId]);
+	}
+
+	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload) {
+		return this.dbManager.insert("INSERT INTO projects SET ?", [getSnakedObject(environmentInfo)]);
+	}
 
 	@CamelizeResponse()
 	async getProject(projectId: Pick<IProjectTable, "id">): Promise<KeysToCamelCase<IProjectTable>> {
@@ -19,4 +35,4 @@ class ProjectService {
 	}
 }
 
-export { ProjectService };
+export { ProjectsService };

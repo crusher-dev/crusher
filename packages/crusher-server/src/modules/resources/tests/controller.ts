@@ -7,7 +7,7 @@ import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProje
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 
 @Service()
-@JsonController("/teams/:team_id/projects/:project_id/tests")
+@JsonController("/")
 export class TestController {
 	@Inject()
 	private userService: UserService;
@@ -15,7 +15,7 @@ export class TestController {
 	private testService: TestService;
 
 	@Authorized()
-	@Get("/")
+	@Get("/projects/:project_id/tests/")
 	@CamelizeResponse()
 	async getList(@Param("project_id") projectId: number): Promise<IProjectTestsListResponse> {
 		return (await this.testService.getTestsInProject(projectId)).map((testData) => {
@@ -38,13 +38,13 @@ export class TestController {
 	}
 
 	@Authorized()
-	@Post("/actions/run")
+	@Post("/projects/:project_id/tests/actions/run")
 	async runProjectTests(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
 		return this.testService.runTestsInProject(projectId, user.user_id);
 	}
 
 	@Authorized()
-	@Post("/:test_id/actions/delete")
+	@Post("/tests/:test_id/actions/delete")
 	async deleteTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number) {
 		const deleteResult = await this.testService.deleteTest(testId);
 		if (!deleteResult.changedRows) throw new BadRequestError("No such test found with given id");

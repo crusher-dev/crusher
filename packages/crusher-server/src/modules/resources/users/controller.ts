@@ -1,12 +1,10 @@
-import { Authorized, Body, CurrentUser, Get, InternalServerError, JsonController, OnNull, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
+import { Authorized, Body, CurrentUser, Get, JsonController, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { UserService } from "@modules/resources/users/service";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import GoogleAPIService from "@core/services/GoogleAPIService";
 import { EMAIL_VERIFIED_WITH_VERIFICATION_CODE, NO_TEAM_JOINED, USER_NOT_REGISTERED, USER_REGISTERED } from "@constants";
 import { clearUserAuthorizationCookies, setUserAuthorizationCookies } from "@utils/cookies";
-import { Logger } from "@utils/logger";
-import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { getEdition } from "@utils/helper";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { iUser } from "@crusher-shared/types/db/iUser";

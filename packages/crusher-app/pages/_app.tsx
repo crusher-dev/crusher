@@ -21,7 +21,6 @@ function App({ Component, pageProps }: AppProps<any>) {
 
 	useEffect(() => {
 		loadUserLeap();
-		addPosthog();
 	}, []);
 	return (
 		<>

@@ -70,6 +70,9 @@ const itemContainerStyle = css`
 const itemImageStyle = css`
 	height: 183rem;
 	width: 100%;
+border-top-left-radius: 12rem;
+  border-top-right-radius: 12rem;
+	border-width: 0px;
 `;
 
 function TestSearchableList() {

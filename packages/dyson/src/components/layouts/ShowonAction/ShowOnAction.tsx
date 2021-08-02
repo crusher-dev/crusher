@@ -6,7 +6,7 @@ export function ShowOnClick({ children, component, callback, initialState }) {
 	useEffect(() => {
 		const handleClick = (e) => {
 			e.stopPropagation();
-			const insideClick = ref.current.contains(e.target) || ref.current === e.target;
+			const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
 
 			if (!insideClick) setShow(false);
 		};

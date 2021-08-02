@@ -603,7 +603,7 @@ export const TestReport = () => {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 	return (
-		<div className={"px-42 mt-56"}>
+		<div className={"px-16 mt-56"}>
 			<NameNStatusSection />
 			<div className={"flex items-center leading-none mt-16 text-13"}>
 				<CalendarSVG className={"mr-16"} />

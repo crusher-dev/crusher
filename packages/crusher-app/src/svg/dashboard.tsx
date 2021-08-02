@@ -160,10 +160,10 @@ export function FullScreenSVG(props) {
 }
 
 export function CompleteStatusIconSVG(props) {
-	const { isCompleted } = props;
+	const { isCompleted, ...otherProps } = props;
 
 	return (
-		<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...otherProps}>
 			<path
 				d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm4.471 5.895l-5.113 5.072c-.3.301-.782.321-1.102.02L3.549 8.521a.813.813 0 01-.06-1.123c.3-.32.802-.34 1.123-.04l2.145 1.965 4.571-4.571a.799.799 0 011.143 0c.321.32.321.822 0 1.143z"
 				fill={isCompleted ? "#AACB65" : "#404144"}

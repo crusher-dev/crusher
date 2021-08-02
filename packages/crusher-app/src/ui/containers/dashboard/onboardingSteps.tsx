@@ -23,9 +23,10 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 				<ExpandableListItem title="Download recorder & create test" completed={false}>
 					<div className="mt-40 pl-32 pb-16">
 						<table css={downloadGridContainerStyle}>
+							<tbody>
 							<tr>
 								<td css={css`    vertical-align: baseline;`}>
-									<span className={"label font-14"}>Download</span>
+									<span className={"label text-14"}>Download</span>
 								</td>
 								<td>
 									<div className={"ml-40 "}>
@@ -35,7 +36,7 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 							</tr>
 							<tr>
 								<td>
-									<span className={"label font-14"}>& Then</span>
+									<span className={"label text-14"}>& Then</span>
 								</td>
 								<td>
 									<div className={"ml-40"}>
@@ -48,6 +49,7 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 									</div>
 								</td>
 							</tr>
+							</tbody>
 						</table>
 					</div>
 				</ExpandableListItem>

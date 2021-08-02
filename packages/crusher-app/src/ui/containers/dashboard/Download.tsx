@@ -49,7 +49,7 @@ export function DownloadButton(props) {
 					</div>
 				</div>
 				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				{isDownloading && <div className={"mt-32 text-13"}>Initiating download, if it doesn't download. Open link in new tab.</div>}
+				{isDownloading && <div className={"mt-16 text-13"}>Initiating download, if it doesn't download. Open link in new tab.</div>}
 			</div>
 		);
 	}
@@ -63,7 +63,7 @@ export function DownloadButton(props) {
 					<DownloadButton downloadLink={dmgLink} label={OS_INFO.MAC.label} icon={null} />
 				</div>
 				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				{isDownloading && <div className={"mt-32 text-13"}>Initiating download, if it doesn't download. Open link in new tab.</div>}
+				{isDownloading && <div className={"mt-16 text-13"}>Initiating download, if it doesn't download. Open link in new tab.</div>}
 			</div>
 		);
 	}

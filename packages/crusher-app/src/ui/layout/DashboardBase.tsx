@@ -59,6 +59,7 @@ function ProjectList() {
 						onClick={() => {
 							setAppStateItem({ key: "selectedProjectId", value: id });
 						}}
+						key={id}
 					>
 						<LayoutSVG />
 						<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
@@ -118,13 +119,14 @@ function LeftSection() {
 			<div>
 				<div>
 					<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
+						<div className={'text-12 font-700 leading-none mt-16 mb-8 ml-8'} id={"support-tagline"}>Join community 💓</div>
 						<a href={"https://crusher.dev"}>
 							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
 							</div>
 						</a>
 						<a href={"https://crusher.dev"}>
-							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
+							<div css={navLink} className={"flex items-center text-13 mt-4 mb-12 leading-none"}>
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>
 							</div>
 						</a>
@@ -290,7 +292,7 @@ function TopNavbar() {
 			<div css={[containerWidth]}>
 				<div className={"w-full flex px-8 pl-0 justify-between"}>
 					<div className={"flex"}>
-						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam }) => {
+						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam },i) => {
 							let isNavLinkSelected = false;
 
 							if (queryParam) {
@@ -300,7 +302,7 @@ function TopNavbar() {
 								isNavLinkSelected = path === pathname && query[keyToCheck] === undefined;
 							}
 							return (
-								<Link href={addQueryParamToPath(path, queryParam)}>
+								<Link href={addQueryParamToPath(path, queryParam)} key={i}>
 									<div className={"pt-20 mr-6 relative"} css={navLinkSquare}>
 										<div className={"font-cera font-500 px-24 capitalize nav-top-link"}>{name}</div>
 
@@ -350,7 +352,10 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
 
 			<div className={"w-full"}>
 				<TopNavbar />
-				<div css={containerWidth}>{children}</div>
+				<div css={scrollContainer} className={"custom-scroll"}>
+					<div css={[containerWidth]} >{children}</div>
+				</div>
+
 			</div>
 		</div>
 	);
@@ -406,11 +411,16 @@ const containerWidth = css`
 	//width: calc(100vw - 250rem);
 	//max-width: 1500rem;
 
-  width: calc(100vw - 250rem);
-  max-width: calc(100vw - 380rem);
+  width: 1488rem;
+  max-width: calc(100vw - 352rem);
 	margin: 0 auto;
 	padding: 0 0rem;
 `;
+
+const scrollContainer = css`
+	overflow-y: scroll;
+	height: calc(100vh - 68rem);
+`
 
 const project = css`
 	color: rgba(255, 255, 255, 0.9);

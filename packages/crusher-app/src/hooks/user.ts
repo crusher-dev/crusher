@@ -39,14 +39,15 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			}
 
 			const { userData, team, system, projects } = dataToConsider;
-
 			setUser(userData);
 			setTeam(team);
 			setSystem(system);
 			setProjects(projects);
+
 			if (!appState.selectedProjectId) {
 				setAppStateItem({ key: "selectedProjectId", value: projects && projects[0].id });
 			}
+
 			await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 
 			setDataLoaded(true);

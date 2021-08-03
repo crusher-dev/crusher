@@ -10,6 +10,8 @@ import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
 import { usePageTitle } from "../../../hooks/seo";
 import Link from "next/link";
 import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
+import { isTempTestPending } from "@utils/user";
+import { sendSnackBarEvent } from "@utils/notify";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -126,7 +128,7 @@ const GithubDiscordSection = () => {
 			{/*	</div>*/}
 			{/*</div>*/}
 
-			<Link href={"/app/dashboard"}>
+			<Link href={isTempTestPending() ? "/app/tests" : "/app/dashboard"}>
 				<Button
 					className="mt-100"
 					css={css`
@@ -156,6 +158,11 @@ const GetViewByStep = () => {
 };
 
 const CrusherOnboarding = () => {
+	useEffect(() => {
+		if (isTempTestPending()) {
+			sendSnackBarEvent({ message: "Your test will be saved after onboarding" });
+		}
+	}, []);
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-120"}>

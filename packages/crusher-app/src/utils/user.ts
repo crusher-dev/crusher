@@ -4,3 +4,5 @@ import { EMAIL_NOT_VERIFIED, NO_TEAM_JOINED, SIGNED_IN, USER_NOT_REGISTERED } fr
 export function getUserStatus(userInfo: iUserInfoResponse | null) {}
 
 export function loginAndRedirectUser(userInfo);
+
+export const isTempTestPending = () => localStorage.getItem("tempTest") !== null;

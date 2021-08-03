@@ -3,15 +3,21 @@ import { ROOT_PATH, ROUTES_ACCESSIBLE_WITHOUT_SESSION, ROUTES_TO_REDIRECT_WHEN_S
 import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
+import { isTempTestPending } from "@utils/user";
 
 export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
 	const { userData: user } = data;
 	const { pathname } = router;
+
 	if (getEdition() === EDITION_TYPE.OPEN_SOURCE) {
 		if (Boolean(user.onboardingSteps.INITIAL_ONBOARDING) === false) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
-			await router.push("/app/dashboard");
+			if (isTempTestPending()) {
+				await router.push("/app/tests");
+			} else {
+				await router.push("/app/dashboard");
+			}
 		}
 
 		loadCallback();
@@ -29,7 +35,11 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 		if (user.onboardingSteps.INITIAL_ONBOARDING === "false") {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
-			await router.push("/app/dashboard");
+			if (isTempTestPending()) {
+				await router.push("/app/tests");
+			} else {
+				await router.push("/app/dashboard");
+			}
 		}
 	} else {
 		if (!ROUTES_ACCESSIBLE_WITHOUT_SESSION.includes(pathname) || pathname === ROOT_PATH) {

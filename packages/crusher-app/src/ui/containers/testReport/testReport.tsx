@@ -341,7 +341,6 @@ function TestOverview() {
 function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 	const { name } = testData;
 
-
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
 	useEffect(() => {
@@ -375,7 +374,7 @@ function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 		setExpand(!expand);
 	};
 
-	console.log(testData)
+	console.log(testData);
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={expand && sticky}>

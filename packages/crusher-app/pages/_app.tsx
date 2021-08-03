@@ -12,6 +12,7 @@ import { SWRConfig } from "swr";
 import { loadUserDataAndRedirect } from "../src/hooks/user";
 import { loadCrisp, loadUserLeap } from "@utils/scriptUtils";
 import { Snackbar } from "@ui/containers/common/Snackbar";
+import { useSaveTemp } from "../src/hooks/tempTest";
 
 function App({ Component, pageProps }: AppProps<any>) {
 	const [userDataLoaded] = loadUserDataAndRedirect({ fetchData: true, userData: null });
@@ -19,7 +20,7 @@ function App({ Component, pageProps }: AppProps<any>) {
 	// @ts-ignore
 	useAtomDevtools(rootGlobalAtom);
 	useBasicSEO({ favicon: "/assets/img/favicon.png" });
-
+	useSaveTemp();
 	useEffect(() => {
 		loadUserLeap();
 		setTimeout(() => {

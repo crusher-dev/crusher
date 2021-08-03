@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useMemo } from "react";
+import React, { ChangeEvent, useState, useMemo, useEffect } from "react";
 import { CompleteStatusIconSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
@@ -10,6 +10,12 @@ import { currentProject } from "../../../store/atoms/global/project";
 import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import dynamic from "next/dynamic";
 import { Conditional } from "dyson/src/components/layouts";
+import { tempTestAtom } from "../../../store/atoms/global/tempTestId";
+import { snackBarEmitter } from "@ui/containers/common/Snackbar";
+import { sendSnackBarEvent } from "@utils/notify";
+import { backendRequest } from "@utils/backendRequest";
+import { RequestMethod } from "../../../types/RequestOptions";
+import { appStateAtom } from "../../../store/atoms/global/appState";
 interface IBuildItemCardProps {
 	testName: string;
 	isPassing: boolean;
@@ -20,6 +26,13 @@ interface IBuildItemCardProps {
 }
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
+
+const saveTest = (projectId: number, tempTestId: string) => {
+	return backendRequest(`/projects/${projectId}/tests/actions/create`, {
+		method: RequestMethod.POST,
+		payload: { tempTestId },
+	});
+};
 
 function TestCard(props: IBuildItemCardProps) {
 	const { testName, isPassing, createdAt, imageURL } = props;
@@ -82,8 +95,11 @@ const itemImageStyle = css`
 function TestSearchableList() {
 	const [searchQuery, setSearchQuery] = useState(null as null | string);
 	const [project] = useAtom(currentProject);
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
+	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
+	const [newTestCreated, setNewTestCreated] = useState(false);
 
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id), { suspense: true });
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, newTestCreated), { suspense: true });
 
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {
@@ -96,6 +112,17 @@ function TestSearchableList() {
 	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(event.target.value);
 	};
+
+	useEffect(() => {
+		if (!tempTestId) return;
+		(async () => {
+			setTempTest(null);
+
+			await saveTest(selectedProjectId, tempTestId);
+			sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
+			setNewTestCreated(true);
+		})();
+	}, []);
 
 	return (
 		<div>

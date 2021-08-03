@@ -4,7 +4,7 @@ import { FullScreenSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { Button } from "dyson/src/components/atoms/button/Button";
 import { PlaySVG, AppleSVG } from "@svg/dashboard";
-import { DownloadButton } from '@ui/containers/dashboard/Download';
+import { DownloadButton } from "@ui/containers/dashboard/Download";
 
 interface TTestIntegrationListProps {
 	className?: string;
@@ -23,31 +23,41 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 				<ExpandableListItem title="Download recorder & create test" completed={false}>
 					<div className="mt-40 pl-32 pb-16">
 						<table css={downloadGridContainerStyle}>
-							<tr>
-								<td css={css`    vertical-align: baseline;`}>
-									<span className={"label font-14"}>Download</span>
-								</td>
-								<td>
-									<div className={"ml-40 "}>
-										<DownloadButton css={css`align-items: flex-start;`}/>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<span className={"label font-14"}>& Then</span>
-								</td>
-								<td>
-									<div className={"ml-40"}>
-										<Button bgColor={"tertiary-dark"} onClick={() => {}} size="medium">
-											<div className={"flex items-center justify-center"}>
-												<PlaySVG className={"mr-12"} />
-												<span className={"mt-2"}>Create a test</span>
-											</div>
-										</Button>
-									</div>
-								</td>
-							</tr>
+							<tbody>
+								<tr>
+									<td
+										css={css`
+											vertical-align: baseline;
+										`}
+									>
+										<span className={"label text-14"}>Download</span>
+									</td>
+									<td>
+										<div className={"ml-40 "}>
+											<DownloadButton
+												css={css`
+													align-items: flex-start;
+												`}
+											/>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span className={"label text-14"}>& Then</span>
+									</td>
+									<td>
+										<div className={"ml-40"}>
+											<Button bgColor={"tertiary-dark"} onClick={() => {}} size="medium">
+												<div className={"flex items-center justify-center"}>
+													<PlaySVG className={"mr-12"} />
+													<span className={"mt-2"}>Create a test</span>
+												</div>
+											</Button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 				</ExpandableListItem>

@@ -13,11 +13,10 @@ export const atomWithQuery = (atomName, value) => {
 			router.push({
 				pathname,
 				href,
-				query
+				query,
 			});
 
 			set(atomName, query);
 		},
 	);
 };
-

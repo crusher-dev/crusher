@@ -32,7 +32,7 @@ export default function Custom404() {
 							Page not found
 						</div>
 						<div className={"font-500 mb-48 text-13 leading-none"} css={textColor}>
-							Are you at the right place :(.
+							Are you at the right place?
 						</div>
 						<div className={"mb-80 text-13 leading-none italic"}>Error id #212</div>
 						<Link href={"/app/dashboard"}>

@@ -23,7 +23,6 @@ module.exports = withImages(
 				config.module.rules.filter(({ loader }) => loader === "babel-loader").map((l) => (l.options.cacheDirectory = false));
 
 				config.plugins.push(new DuplicatePackageCheckerPlugin());
-
 			}
 
 			config.module.rules = [

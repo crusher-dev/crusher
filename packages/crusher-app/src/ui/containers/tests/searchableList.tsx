@@ -8,6 +8,8 @@ import { getTestListAPI } from "@constants/api";
 import { useAtom } from "jotai";
 import { currentProject } from "../../../store/atoms/global/project";
 import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import dynamic from "next/dynamic";
+import { Conditional } from "dyson/src/components/layouts";
 interface IBuildItemCardProps {
 	testName: string;
 	isPassing: boolean;
@@ -16,6 +18,8 @@ interface IBuildItemCardProps {
 	// In seconds
 	createdAt: number;
 }
+
+const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
 function TestCard(props: IBuildItemCardProps) {
 	const { testName, isPassing, createdAt, imageURL } = props;
@@ -70,6 +74,9 @@ const itemContainerStyle = css`
 const itemImageStyle = css`
 	height: 183rem;
 	width: 100%;
+	border-top-left-radius: 12rem;
+	border-top-right-radius: 12rem;
+	border-width: 0px;
 `;
 
 function TestSearchableList() {
@@ -92,10 +99,16 @@ function TestSearchableList() {
 
 	return (
 		<div>
-			<SearchFilterBar placeholder={"Search tests"} handleInputChange={handleInputChange} value={searchQuery!} />
-			<div css={testItemsGridContainerStyle} className={"flex mt-44"}>
-				{testsItems}
-			</div>
+			<Conditional showIf={data && data.length > 0}>
+				<SearchFilterBar placeholder={"Search tests"} handleInputChange={handleInputChange} value={searchQuery!} />
+				<div css={testItemsGridContainerStyle} className={"flex mt-44"}>
+					{testsItems}
+				</div>
+			</Conditional>
+
+			<Conditional showIf={data && data.length === 0}>
+				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
+			</Conditional>
 		</div>
 	);
 }

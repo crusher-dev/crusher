@@ -13,18 +13,20 @@ import { projectsAtom } from "../../store/atoms/global/project";
 import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { addQueryParamToPath, resolvePathToBackendURI } from "@utils/url";
+import { addQueryParamToPath } from "@utils/url";
 import dynamic from "next/dynamic";
 import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { addChat, openChatBox } from "@utils/scriptUtils";
-import useSWR from 'swr';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
+const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
+const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
 function ProjectList() {
+	const router = useRouter()
 	const [search] = useState(false);
 
 	const [projects] = useAtom(projectsAtom);
@@ -32,6 +34,7 @@ function ProjectList() {
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
 
 
+	const [showAddProject, setShowAddProject] = useState(false);
 	return (
 		<>
 			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
@@ -39,7 +42,10 @@ function ProjectList() {
 					<span className={"text-13 leading-none mr-8 font-600"}>Projects</span>
 				</div>
 
-				<div className={"flex items-center"} css={hoverCSS}>
+				<Conditional showIf={showAddProject}>
+					<AddProject onClose={setShowAddProject.bind(this, false)} />
+				</Conditional>
+				<div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
 					<AddSVG />
 					<div className={"text-13 leading-none ml-8 leading-none mt-2"}>Add</div>
 				</div>
@@ -58,7 +64,9 @@ function ProjectList() {
 						selected={appState.selectedProjectId == id}
 						onClick={() => {
 							setAppStateItem({ key: "selectedProjectId", value: id });
+							router.push("/app/dashboard");
 						}}
+						key={id}
 					>
 						<LayoutSVG />
 						<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
@@ -92,6 +100,7 @@ function BottomSection({ name, description, link, ...props }) {
 
 function LeftSection() {
 	const router = useRouter();
+	const [inviteTeammates, setInviteTeamMates] = useState(false)
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 			<div>
@@ -116,22 +125,29 @@ function LeftSection() {
 			</div>
 
 			<div>
+
+				<Conditional showIf={inviteTeammates}>
+					<InviteMembers onClose={setInviteTeamMates.bind(this,false)}/>
+				</Conditional>
 				<div>
 					<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
+						<div className={"text-12 font-700 leading-none mt-16 mb-8 ml-8"} id={"support-tagline"}>
+							Join community 💓
+						</div>
 						<a href={"https://crusher.dev"}>
 							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
 							</div>
 						</a>
 						<a href={"https://crusher.dev"}>
-							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
+							<div css={navLink} className={"flex items-center text-13 mt-4 mb-12 leading-none"}>
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>
 							</div>
 						</a>
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EDITION_TYPE.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-13 mt-4"}>
+						<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setInviteTeamMates.bind(this,true)}>
 							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
@@ -290,7 +306,7 @@ function TopNavbar() {
 			<div css={[containerWidth]}>
 				<div className={"w-full flex px-8 pl-0 justify-between"}>
 					<div className={"flex"}>
-						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam }) => {
+						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam }, i) => {
 							let isNavLinkSelected = false;
 
 							if (queryParam) {
@@ -300,7 +316,7 @@ function TopNavbar() {
 								isNavLinkSelected = path === pathname && query[keyToCheck] === undefined;
 							}
 							return (
-								<Link href={addQueryParamToPath(path, queryParam)}>
+								<Link href={addQueryParamToPath(path, queryParam)} key={i}>
 									<div className={"pt-20 mr-6 relative"} css={navLinkSquare}>
 										<div className={"font-cera font-500 px-24 capitalize nav-top-link"}>{name}</div>
 
@@ -350,7 +366,9 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
 
 			<div className={"w-full"}>
 				<TopNavbar />
-				<div css={containerWidth}>{children}</div>
+				<div css={scrollContainer} className={"custom-scroll"}>
+					<div css={[containerWidth]}>{children}</div>
+				</div>
 			</div>
 		</div>
 	);
@@ -406,10 +424,15 @@ const containerWidth = css`
 	//width: calc(100vw - 250rem);
 	//max-width: 1500rem;
 
-  width: calc(100vw - 250rem);
-  max-width: calc(100vw - 380rem);
+	width: 1488rem;
+	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
 	padding: 0 0rem;
+`;
+
+const scrollContainer = css`
+	overflow-y: scroll;
+	height: calc(100vh - 68rem);
 `;
 
 const project = css`

@@ -17,9 +17,9 @@ const ExpandableListItem = (props: IExpandableListItemProps) => {
 
 	return (
 		<div css={itemContainerStyle(!!isActive)} onClick={changeSelected.bind(null, index)}>
-			<div className={"flex flex-row items-center"} css={itemHeadingStyle}>
+			<div className={"flex flex-row items-center"} css={itemHeadingStyle(!!isActive)}>
 				<span css={itemIndexStyle}>{index! + 1}.)</span>
-				<span className={"font-cera font-600"}>{title}</span>
+				<span className={"font-cera"}>{title}</span>
 				<div className={"ml-auto"}>
 					<CompleteStatusIconSVG isCompleted={completed} />
 				</div>
@@ -33,12 +33,22 @@ const ExpandableListItem = (props: IExpandableListItemProps) => {
 
 const itemContainerStyle = (isActive: boolean) => css`
 	background: ${isActive ? "#101215" : "#0A0B0E"};
-	border: 1px solid ${isActive ? "inherit" : "#171C24"};
-	padding: 24rem 26rem;
+	border-bottom: 1px solid ${isActive ? "inherit" : "#171C24"};
+	padding: 21rem 26rem 20rem;
+	:first-child {
+		border-top-left-radius: 12rem;
+		border-top-right-radius: 12rem;
+	}
+	:last-child {
+		border-bottom-left-radius: 12rem;
+		border-bottom-right-radius: 12rem;
+		border-bottom-width: 0px;
+	}
 `;
-const itemHeadingStyle = css`
+const itemHeadingStyle = (isActive: boolean) => css`
 	color: #fff !important;
-	font-size: 15.5rem;
+	font-size: ${isActive ? "15.5rem" : "14rem"};
+	font-weight: ${isActive ? "600" : "400"};
 `;
 const itemIndexStyle = css`
 	color: #d0d0d0 !important;
@@ -54,14 +64,20 @@ interface IExpandableListProps {
 }
 
 function ExpandableList(props: IExpandableListProps) {
-	const { children, currentSelected, changeSelected } = props;
+	const { children, currentSelected, changeSelected, ...otherProps } = props;
 
 	const childrenArr = children.map((child, index) =>
-		React.cloneElement(child, { changeSelected: changeSelected, completed: index < currentSelected, index, isActive: currentSelected === index }),
+		React.cloneElement(child, {
+			changeSelected: changeSelected,
+			completed: index < currentSelected,
+			index,
+			isActive: currentSelected === index,
+			key: index,
+		}),
 	);
 
 	return (
-		<div {...props} css={listContainerStyle}>
+		<div {...otherProps} css={listContainerStyle}>
 			{childrenArr}
 		</div>
 	);

@@ -1,4 +1,4 @@
-import { Inject, Service } from 'typedi';
+import { Inject, Service } from "typedi";
 import { iTest } from "@crusher-shared/types/db/test";
 import { TestType } from "@core/interfaces/TestType";
 import { addJobToRequestQueue } from "@utils/queue";

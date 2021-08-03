@@ -1,5 +1,5 @@
 import { UserService } from "@modules/resources/users/service";
-import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body, QueryParams } from "routing-controllers";
+import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body, QueryParams, Params } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { TestService } from "@modules/resources/tests/service";
 import { isUsingLocalStorage } from "@utils/helper";
@@ -75,12 +75,21 @@ export class TestController {
 	async createTest(
 		@CurrentUser({ required: true }) user,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId">,
+		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; tempTestId?: string },
 	) {
 		const { user_id } = user;
 
+		let events = body.events;
+		if (!body.tempTestId) {
+			const tempTest = await this.testService.getTempTest(body.tempTestId);
+			events = tempTest.events;
+		}
+
+		if (!events) throw new Error("No events passed");
+
 		return this.testService.createTest({
 			...body,
+			events: JSON.stringify(events),
 			projectId: projectId,
 			userId: user_id,
 		});

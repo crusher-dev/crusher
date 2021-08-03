@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { css } from "@emotion/react";
 import { CenterLayout } from "dyson/src/components/layouts";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-import { Button, DiscordSocialBtn, GithubSocialBtn } from "dyson/src/components/atoms";
+import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
 import { getEdition } from "../../../utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { atom, useAtom } from "jotai";

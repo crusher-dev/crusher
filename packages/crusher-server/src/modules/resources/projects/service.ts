@@ -1,12 +1,6 @@
 import { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
-import {
-	ICreateProjectEnvironmentPayload,
-	ICreateProjectPayload,
-	IProjectEnvironmentTable,
-	IProjectRow,
-	IProjectTable,
-} from "@modules/resources/projects/interface";
+import { ICreateProjectEnvironmentPayload, ICreateProjectPayload, IProjectEnvironmentTable, IProjectTable } from "@modules/resources/projects/interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { getSnakedObject } from "@utils/helper";

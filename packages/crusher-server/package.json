@@ -18,6 +18,7 @@
 		"@types/lodash": "^4.14.168",
 		"@types/mongoose": "^5.10.3",
 		"@types/node": "^14.14.22",
+		"@types/uuid": "^8.3.1",
 		"class-transformer": "^0.3.2",
 		"class-validator": "^0.13.1",
 		"ejs": "^3.1.5",

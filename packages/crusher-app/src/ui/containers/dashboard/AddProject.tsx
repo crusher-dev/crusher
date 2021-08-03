@@ -5,6 +5,8 @@ import { Modal } from 'dyson/src/components/molecules/Modal';
 import { useCallback, useState } from 'react';
 import { backendRequest } from '@utils/backendRequest';
 import { RequestMethod } from '../../../types/RequestOptions';
+import { LoadingSVG } from '@svg/dashboard';
+import { Conditional } from 'dyson/src/components/layouts';
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {
@@ -54,14 +56,19 @@ export const AddProjectMondal = ({ onClose }) => {
 			<div className={"flex justify-end mt-12"}>
 				<Button
 					css={css`
-						width: 124rem;
+						min-width: 132rem;
 					`}
 					disabled={isNoName || processing}
 					bgColor={isNoName ? "disabled" : ""}
 					title={isNoName && "Please enter project name"}
 					onClick={addProjectCallback}
 				>
-					Save test
+					<div className={"flex justify-center items-center"}>
+						<Conditional showIf={processing}>
+							<LoadingSVG css={css`margin-right: 8rem !important;`} color={"#fff"} height={16} width={16}/>
+						</Conditional>
+						Save test
+					</div>
 				</Button>
 			</div>
 		</Modal>

@@ -7,6 +7,10 @@ import { backendRequest } from '@utils/backendRequest';
 import { RequestMethod } from '../../../types/RequestOptions';
 import { LoadingSVG } from '@svg/dashboard';
 import { Conditional } from 'dyson/src/components/layouts';
+import { projectsAtom } from '../../../store/atoms/global/project';
+import { useAtom } from 'jotai';
+import { appStateItemMutator } from '../../../store/atoms/global/appState';
+import { useRouter } from 'next/router';
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {
@@ -18,7 +22,11 @@ const addProject = (name) => {
 
 export const AddProjectMondal = ({ onClose }) => {
 	const [projectName, changeProjectName] = useState("")
-	const [processing, setProcessing] = useState(false)
+	const [processing, setProcessing] = useState(false);
+	const [projects, setProjectsAtom] = useAtom(projectsAtom);
+	const [, setAppStateItem] = useAtom(appStateItemMutator);
+	const router = useRouter()
+
 	const isNoName = projectName.length ===0;
 
 	const addProjectCallback = useCallback(()=>{
@@ -27,6 +35,11 @@ export const AddProjectMondal = ({ onClose }) => {
 			const data = await addProject(projectName);
 			debugger;
 			console.log(data)
+
+			// setProjectsAtom([...setProjectsAtom,])
+			// setAppStateItem({ key: "selectedProjectId", value: projects && projects[0].id });
+			// await router.push("app/dashboard");
+
 		})()
 
 		setProcessing(true)

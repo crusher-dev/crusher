@@ -35,20 +35,20 @@ const itemContainerStyle = (isActive: boolean) => css`
 	background: ${isActive ? "#101215" : "#0A0B0E"};
 	border-bottom: 1px solid ${isActive ? "inherit" : "#171C24"};
 	padding: 21rem 26rem 20rem;
-	:first-child{
-    border-top-left-radius: 12rem;
-    border-top-right-radius: 12rem;
+	:first-child {
+		border-top-left-radius: 12rem;
+		border-top-right-radius: 12rem;
 	}
-	:last-child{
-    border-bottom-left-radius: 12rem;
-    border-bottom-right-radius: 12rem;
+	:last-child {
+		border-bottom-left-radius: 12rem;
+		border-bottom-right-radius: 12rem;
 		border-bottom-width: 0px;
 	}
 `;
 const itemHeadingStyle = (isActive: boolean) => css`
 	color: #fff !important;
-	font-size: ${isActive? "15.5rem" : "14rem"};
-  font-weight: ${isActive? "600" : "400"};
+	font-size: ${isActive ? "15.5rem" : "14rem"};
+	font-weight: ${isActive ? "600" : "400"};
 `;
 const itemIndexStyle = css`
 	color: #d0d0d0 !important;
@@ -67,7 +67,13 @@ function ExpandableList(props: IExpandableListProps) {
 	const { children, currentSelected, changeSelected, ...otherProps } = props;
 
 	const childrenArr = children.map((child, index) =>
-		React.cloneElement(child, { changeSelected: changeSelected, completed: index < currentSelected, index, isActive: currentSelected === index, key: index }),
+		React.cloneElement(child, {
+			changeSelected: changeSelected,
+			completed: index < currentSelected,
+			index,
+			isActive: currentSelected === index,
+			key: index,
+		}),
 	);
 
 	return (

@@ -70,7 +70,7 @@ export class TestController {
 
 	@Authorized()
 	@Post("/tests/:test_id/actions/edit")
-	async editTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: {name: string}) {
+	async editTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { name: string }) {
 		const result = await this.testService.updateTest(testId, {
 			name: body.name,
 		});

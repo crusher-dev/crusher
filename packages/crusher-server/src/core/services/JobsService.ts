@@ -46,13 +46,10 @@ export default class JobsService {
 			return this.dbManager.fetchAllRows(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
 		}
 		if (trigger === JobTrigger.MONITORING) {
-			return this.dbManager.fetchAllRows(`SELECT * FROM jobs WHERE project_id = ? AND (\`trigger\`=? OR \`trigger\`=?) ORDER BY created_at DESC LIMIT ?,?`, [
-				projectId,
-				JobTrigger.CRON,
-				JobTrigger.CLI,
-				offset,
-				limit,
-			]);
+			return this.dbManager.fetchAllRows(
+				`SELECT * FROM jobs WHERE project_id = ? AND (\`trigger\`=? OR \`trigger\`=?) ORDER BY created_at DESC LIMIT ?,?`,
+				[projectId, JobTrigger.CRON, JobTrigger.CLI, offset, limit],
+			);
 		} else {
 			return this.dbManager.fetchAllRows(`SELECT * FROM jobs WHERE project_id = ? AND \`trigger\`=? ORDER BY created_at DESC LIMIT ?,?`, [
 				projectId,

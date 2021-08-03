@@ -3,7 +3,7 @@ import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
 import { css } from "@emotion/react";
 import { usePageTitle } from "../../src/hooks/seo";
-import { OnBoardingTutorialVideo } from '@ui/containers/dashboard/tutorials';
+import { OnBoardingTutorialVideo } from "@ui/containers/dashboard/tutorials";
 
 function Dashboard() {
 	usePageTitle("Dashboard");
@@ -17,8 +17,7 @@ function Dashboard() {
 					<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
 					<OnboardingSteps className={"mt-32"} />
 
-
-					<OnBoardingTutorialVideo/>
+					<OnBoardingTutorialVideo />
 
 					<div className={"flex flex-row items-center mt-96 justify-center"} css={footerContainerStyle}>
 						<div className={"text-14"} css={footerPlaceholderStyle}>

@@ -1,5 +1,5 @@
 import { BaseRowInterface } from "./baseRow";
-import { PLATFORM } from '../platform';
+import { PLATFORM } from "../platform";
 
 export interface iTest extends BaseRowInterface {
 	id: number;

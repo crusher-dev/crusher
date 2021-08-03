@@ -20,9 +20,9 @@ import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { addChat, openChatBox } from "@utils/scriptUtils";
-import useSWR from 'swr';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
+const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 
 function ProjectList() {
 	const [search] = useState(false);
@@ -31,7 +31,7 @@ function ProjectList() {
 	const [appState] = useAtom(appStateAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
 
-
+	const [showAddProject, setShowAddProject] = useState(false);
 	return (
 		<>
 			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
@@ -39,7 +39,10 @@ function ProjectList() {
 					<span className={"text-13 leading-none mr-8 font-600"}>Projects</span>
 				</div>
 
-				<div className={"flex items-center"} css={hoverCSS}>
+				<Conditional showIf={showAddProject}>
+					<AddProject onClose={setShowAddProject.bind(this, false)} />
+				</Conditional>
+				<div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
 					<AddSVG />
 					<div className={"text-13 leading-none ml-8 leading-none mt-2"}>Add</div>
 				</div>
@@ -119,7 +122,9 @@ function LeftSection() {
 			<div>
 				<div>
 					<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
-						<div className={'text-12 font-700 leading-none mt-16 mb-8 ml-8'} id={"support-tagline"}>Join community 💓</div>
+						<div className={"text-12 font-700 leading-none mt-16 mb-8 ml-8"} id={"support-tagline"}>
+							Join community 💓
+						</div>
 						<a href={"https://crusher.dev"}>
 							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
@@ -292,7 +297,7 @@ function TopNavbar() {
 			<div css={[containerWidth]}>
 				<div className={"w-full flex px-8 pl-0 justify-between"}>
 					<div className={"flex"}>
-						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam },i) => {
+						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam }, i) => {
 							let isNavLinkSelected = false;
 
 							if (queryParam) {
@@ -353,9 +358,8 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
 			<div className={"w-full"}>
 				<TopNavbar />
 				<div css={scrollContainer} className={"custom-scroll"}>
-					<div css={[containerWidth]} >{children}</div>
+					<div css={[containerWidth]}>{children}</div>
 				</div>
-
 			</div>
 		</div>
 	);
@@ -411,8 +415,8 @@ const containerWidth = css`
 	//width: calc(100vw - 250rem);
 	//max-width: 1500rem;
 
-  width: 1488rem;
-  max-width: calc(100vw - 352rem);
+	width: 1488rem;
+	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
 	padding: 0 0rem;
 `;
@@ -420,7 +424,7 @@ const containerWidth = css`
 const scrollContainer = css`
 	overflow-y: scroll;
 	height: calc(100vh - 68rem);
-`
+`;
 
 const project = css`
 	color: rgba(255, 255, 255, 0.9);

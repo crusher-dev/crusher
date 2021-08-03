@@ -16,40 +16,38 @@ body {
 
 @media only screen and (max-width: 1581px) {
 	html {
-		font-size: .9px;
+		font-size: 0.9px;
 	}
 }
 
 @media only screen and (max-width: 1493px) {
 	html {
-		font-size: .85px;
+		font-size: 0.85px;
 	}
 }
 
 @media only screen and (max-width: 1400px) {
 	html {
-		font-size: .8px;
+		font-size: 0.8px;
 	}
 }
 
 @media only screen and (max-width: 1317px) {
 	html {
-		font-size: .75px;
+		font-size: 0.75px;
 	}
 }
 @media only screen and (max-width: 1229px) {
 	html {
-		font-size: .75px;
+		font-size: 0.75px;
 	}
 }
 
 @media only screen and (max-width: 1054px) {
 	html {
-		font-size: .6px;
+		font-size: 0.6px;
 	}
 }
-
-
 
 img {
 	display: unset;

@@ -10,6 +10,9 @@ import { getBuildsList } from "@constants/api";
 import { useAtom } from "jotai";
 import { currentProject } from "../../../store/atoms/global/project";
 import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import dynamic from "next/dynamic";
+
+const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
 interface IBuildItemCardProps {
 	info: IProjectBuildListItem;
@@ -99,7 +102,7 @@ function BuildSearchableList() {
 				</Link>
 			);
 		});
-	}, [searchQuery]);
+	}, [searchQuery, data]);
 
 	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(event.target.value);
@@ -107,8 +110,14 @@ function BuildSearchableList() {
 
 	return (
 		<div>
-			<SearchFilterBar placeholder={"Search builds"} handleInputChange={handleInputChange} value={searchQuery} />
-			<div className={"mt-34"}>{buildItems}</div>
+			<Conditional showIf={data && data.length > 0}>
+				<SearchFilterBar placeholder={"Search builds"} handleInputChange={handleInputChange} value={searchQuery} />
+				<div className={"mt-34"}>{buildItems}</div>
+			</Conditional>
+
+			<Conditional showIf={data && data.length === 0}>
+				<EmptyList title={"We don’t have any build right now."} subTitle={"Once ran, builds will pop here."} />
+			</Conditional>
 		</div>
 	);
 }

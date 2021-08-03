@@ -25,11 +25,13 @@ const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 
 function ProjectList() {
+	const router = useRouter()
 	const [search] = useState(false);
 
 	const [projects] = useAtom(projectsAtom);
 	const [appState] = useAtom(appStateAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
+
 
 	const [showAddProject, setShowAddProject] = useState(false);
 	return (
@@ -61,6 +63,7 @@ function ProjectList() {
 						selected={appState.selectedProjectId == id}
 						onClick={() => {
 							setAppStateItem({ key: "selectedProjectId", value: id });
+							router.push("/app/dashboard");
 						}}
 						key={id}
 					>

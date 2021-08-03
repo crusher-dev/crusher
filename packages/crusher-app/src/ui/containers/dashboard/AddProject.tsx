@@ -33,13 +33,13 @@ export const AddProjectModal = ({ onClose }) => {
 
 		(async ()=>{
 			const data = await addProject(projectName);
-			debugger;
-			console.log(data)
+			const {id, name, teamID} = data;
+			const projectObject = {id, name, teamID}
+			setProjectsAtom([...projects,projectObject])
 
-			// setProjectsAtom([...setProjectsAtom,])
-			// setAppStateItem({ key: "selectedProjectId", value: projects && projects[0].id });
-			// await router.push("app/dashboard");
-
+			setAppStateItem({ key: "selectedProjectId", value: id });
+			onClose();
+			await router.push("/app/dashboard");
 		})()
 
 		setProcessing(true)

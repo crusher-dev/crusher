@@ -28,12 +28,11 @@ function Dropdown() {
 						color: #1a1d26;
 					`}
 				/>
-				<div css={dropDownItem} className={"flex justify-between items-center px-16 py-12"} onClick={() => {}}>
+				<div css={dropDownItem} className={"flex justify-between items-center px-16 py-12"} 			onClick={() => {
+							router.push(resolvePathToBackendURI("/user/logout"));
+						}}>
 					<span
 						className={"name font-500 leading-none font-cera"}
-						onClick={() => {
-							router.push(resolvePathToBackendURI("/user/logout"));
-						}}
 					>
 						Logout
 					</span>

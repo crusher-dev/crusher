@@ -12,10 +12,12 @@ class ProjectsController {
 	@Authorized()
 	@Post("/projects/actions/create")
 	async createProject(@CurrentUser({ required: true }) user, @Body() body: ICreateProjectPayload) {
-		return this.projectsService.createProject({
+		const result = await this.projectsService.createProject({
 			name: body.name,
 			teamId: user.team_id,
 		});
+
+		return this.projectsService.getProject(result.insertId);
 	}
 
 	@Authorized()

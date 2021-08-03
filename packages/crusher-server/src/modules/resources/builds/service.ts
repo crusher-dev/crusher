@@ -38,17 +38,6 @@ class BuildsService {
 			[projectId],
 		);
 	}
-
-	createBuild(buildInfo: ICreateBuildRequestPayload): any {
-		const buildConfig = Object.assign({ browser: PLATFORM.CHROME }, buildInfo.config);
-
-		return this.dbManager.insert(`INSERT INTO jobs SET ?`, [
-			getSnakedObject({
-				...buildInfo,
-				config: JSON.stringify(buildConfig),
-			}),
-		]);
-	}
 }
 
 export { BuildsService };

@@ -22,5 +22,9 @@ export const Snackbar = () => {
 	}, []);
 
 	if (event === null) return null;
-	return <Toast type={event.type} onClose={setEvent.bind(this, null)}>{event.message}</Toast>;
+	return (
+		<Toast type={event.type} onClose={setEvent.bind(this, null)}>
+			{event.message}
+		</Toast>
+	);
 };

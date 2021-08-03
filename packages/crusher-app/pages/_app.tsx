@@ -11,7 +11,7 @@ import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
 import { SWRConfig } from "swr";
 import { loadUserDataAndRedirect } from "../src/hooks/user";
 import { loadCrisp, loadUserLeap } from "@utils/scriptUtils";
-import { Snackbar } from '@ui/containers/common/Snackbar';
+import { Snackbar } from "@ui/containers/common/Snackbar";
 
 function App({ Component, pageProps }: AppProps<any>) {
 	const [userDataLoaded] = loadUserDataAndRedirect({ fetchData: true, userData: null });
@@ -44,7 +44,7 @@ function App({ Component, pageProps }: AppProps<any>) {
 					<Component {...pageProps} />
 				</Conditional>
 
-				<Snackbar/>
+				<Snackbar />
 			</SWRConfig>
 		</>
 	);

@@ -199,7 +199,7 @@ export const dropdDown = css`
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);
 	box-sizing: border-box;
-	box-shadow: 0px 4px 15px rgba(16, 15, 15, 0.4);
+	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);
 	border-radius: 6px;
 	padding: 8rem 0;
 	z-index: 1;
@@ -364,7 +364,7 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
 
 			<div className={"w-full"}>
 				<TopNavbar />
-				<div css={scrollContainer} className={"custom-scroll"}>
+				<div css={scrollContainer} className={"custom-scroll relative"}>
 					<div css={[containerWidth]}>{children}</div>
 				</div>
 			</div>
@@ -382,7 +382,7 @@ const navLinkSquare = css`
 
 	.selected {
 		background: #23272e;
-		border-radius: 4px 4px 0px 0px;
+		border-radius: 4px 4px 0 0;
 		height: 5px;
 		position: absolute;
 		width: 100%;

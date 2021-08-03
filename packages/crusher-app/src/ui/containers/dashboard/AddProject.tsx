@@ -11,7 +11,7 @@ import { projectsAtom } from "../../../store/atoms/global/project";
 import { useAtom } from "jotai";
 import { appStateItemMutator } from "../../../store/atoms/global/appState";
 import { useRouter } from "next/router";
-import { sendSnackBarEvent } from '@utils/notify';
+import { sendSnackBarEvent } from "@utils/notify";
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {
@@ -40,8 +40,7 @@ export const AddProjectModal = ({ onClose }) => {
 			onClose();
 			await router.push("/app/dashboard");
 
-			sendSnackBarEvent({message: "Created and switched project"})
-
+			sendSnackBarEvent({ message: "Created and switched project" });
 		})();
 
 		setProcessing(true);

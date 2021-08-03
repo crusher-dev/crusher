@@ -103,7 +103,7 @@ export const dropdDown = css`
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);
 	box-sizing: border-box;
-	box-shadow: 0px 4px 15px rgba(16, 15, 15, 0.4);
+	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);
 	border-radius: 6px;
 	padding: 8rem 0;
 	z-index: 1;

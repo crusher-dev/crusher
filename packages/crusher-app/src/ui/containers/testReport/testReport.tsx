@@ -341,6 +341,7 @@ function TestOverview() {
 function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 	const { name } = testData;
 
+
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
 	useEffect(() => {
@@ -348,24 +349,20 @@ function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 		const stickyOverview = document.querySelector("#sticky-overview-bar");
 		const observer = new IntersectionObserver(
 			() => {
-				console.log(testCard);
-				/*
-					Note - Fix this intersection observer logic. We had changed root by changing scroll.
-				 */
-				// const stickyLastPoint = 0;
-				// const cardStartingOffset = testCard.getBoundingClientRect().top;
-				// const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;
-				// if (cardStartingOffset < stickyLastPoint) {
-				// 	setSticky(true);
-				// } else {
-				// 	setSticky(false);
-				// }
-				// if (cardLastOffset  < stickyLastPoint) {
-				// 	setSticky(false);
-				// }
-				// debugger;
+				console.log("hi", name, testCard, stickyOverview);
+				const stickyLastPoint = 0;
+				const cardStartingOffset = testCard.getBoundingClientRect().top;
+				const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;
+				if (cardStartingOffset < stickyLastPoint) {
+					setSticky(true);
+				} else {
+					setSticky(false);
+				}
+				if (cardLastOffset - 50 < stickyLastPoint) {
+					setSticky(false);
+				}
 			},
-			{ root: stickyOverview, threshold: [0, 0.01, 0.3, 0.6, 0.85, 1], rootMargin: "0px" },
+			{ root: stickyOverview, threshold: [0, 0.01, 0.1, 0.5, 0.85, 1], rootMargin: "0px" },
 		);
 
 		observer.observe(testCard);
@@ -378,10 +375,11 @@ function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 		setExpand(!expand);
 	};
 
+	console.log(testData)
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={expand && sticky}>
-				<div css={stickyCSS} className={" px-16 "}>
+				<div css={stickyCSS} className={" px-0 "}>
 					<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
 						<div className={"flex justify-between items-center"}>
 							<div className={"flex items-center leading-none text-15 font-600 mt-20"}>
@@ -441,16 +439,17 @@ const stickyCSS = css`
 	width: calc(100vw - 250rem);
 	left: 50%;
 	transform: translateX(-50%);
-	max-width: 1476px;
-	top: 95px;
+	top: 95rem;
 	z-index: 10;
+	max-width: 1456px;
+	margin-left: -6px;
 `;
 
 const stickyContainer = css`
 	background: rgb(13, 14, 17);
 	border: 1px solid #171c24;
 	box-sizing: border-box;
-	border-radius: 0px;
+	border-radius: 0;
 	min-height: 56px;
 	border-bottom-left-radius: 2px;
 	border-bottom-right-radius: 2px;
@@ -562,8 +561,8 @@ function ReportSection() {
 			</div>
 
 			<div className={"mt-40 pb-60"}>
-				{data?.tests.map((testData) => (
-					<TestCard id={1} testData={testData} />
+				{data?.tests.map((testData, i) => (
+					<TestCard id={i} testData={testData} />
 				))}
 			</div>
 		</div>
@@ -725,7 +724,7 @@ const selected = css`
 	top: 1px;
 	position: relative;
 	border: 1px solid #1e242c;
-	border-radius: 6px 6px 0px 0px;
+	border-radius: 6px 6px 0 0;
 	border-bottom: 1px solid #0a0b0e;
 	color: #fff;
 	min-width: 136px;

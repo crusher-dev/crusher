@@ -42,7 +42,7 @@ const itemContainerStyle = (isActive: boolean) => css`
 	:last-child {
 		border-bottom-left-radius: 12rem;
 		border-bottom-right-radius: 12rem;
-		border-bottom-width: 0px;
+		border-bottom-width: 0;
 	}
 `;
 const itemHeadingStyle = (isActive: boolean) => css`

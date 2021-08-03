@@ -5,7 +5,7 @@ import CrusherBase from "../layout/CrusherBase";
 import { usePageTitle } from "../../hooks/seo";
 
 const logoStyle = css`
-	box-shadow: 0px 0px 38px 12px rgb(153 136 255 / 12%);
+	box-shadow: 0 0 38px 12px rgb(153 136 255 / 12%);
 	animation: logo-animation 0.8s alternate infinite cubic-bezier(0, 0, 1, 0.32);
 `;
 

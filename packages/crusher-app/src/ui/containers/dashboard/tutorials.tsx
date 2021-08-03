@@ -69,7 +69,7 @@ const video = css`
 	background: #1e242c;
 	border: 1px solid #2e3744;
 	border-radius: 8px;
-	opacity: .7;
+	opacity: 0.7;
 
 	:hover img {
 		border: 1px solid #647cff;

@@ -76,7 +76,7 @@ const itemImageStyle = css`
 	width: 100%;
 	border-top-left-radius: 12rem;
 	border-top-right-radius: 12rem;
-	border-width: 0px;
+	border-width: 0;
 `;
 
 function TestSearchableList() {

@@ -17,7 +17,7 @@ class ProjectsService {
 	private dbManager: DBManager;
 
 	@CamelizeResponse()
-	async getProjectEnvironments(projectId: Pick<IProjectEnvironmentTable, "id">): Promise<Array<KeysToCamelCase<IProjectEnvironmentTable>>> {
+	async getProjectEnvironments(projectId: number): Promise<Array<KeysToCamelCase<IProjectEnvironmentTable>>> {
 		return this.dbManager.fetchAllRows("SELECT * FROM project_hosts WHERE project_id = ?", [projectId]);
 	}
 
@@ -26,8 +26,8 @@ class ProjectsService {
 	}
 
 	@CamelizeResponse()
-	async getProject(projectId: Pick<IProjectTable, "id">): Promise<KeysToCamelCase<IProjectTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE project_id = ?", [projectId]);
+	async getProject(projectId: number): Promise<KeysToCamelCase<IProjectTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE id = ?", [projectId]);
 	}
 
 	async createProject(payload: ICreateProjectPayload) {

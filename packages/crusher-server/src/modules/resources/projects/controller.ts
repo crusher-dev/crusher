@@ -43,3 +43,5 @@ class ProjectsController {
 		return { insertId: result.insertId };
 	}
 }
+
+export { ProjectsController };

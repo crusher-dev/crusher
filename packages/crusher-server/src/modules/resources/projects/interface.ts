@@ -8,7 +8,7 @@ interface IProjectTable extends BaseRowInterface {
 }
 
 // Create Project Payload, everything except id
-type ICreateProjectPayload = KeysToCamelCase<Exclude<IProjectTable, "id">>;
+type ICreateProjectPayload = KeysToCamelCase<Omit<IProjectTable, "id">>;
 
 interface IProjectEnvironmentTable extends BaseRowInterface {
 	id: number;

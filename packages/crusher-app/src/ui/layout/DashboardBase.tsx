@@ -13,7 +13,7 @@ import { projectsAtom } from "../../store/atoms/global/project";
 import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { addQueryParamToPath, resolvePathToBackendURI } from "@utils/url";
+import { addQueryParamToPath } from "@utils/url";
 import dynamic from "next/dynamic";
 import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
@@ -23,6 +23,7 @@ import { addChat, openChatBox } from "@utils/scriptUtils";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
+const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
 function ProjectList() {
 	const router = useRouter()
@@ -99,6 +100,7 @@ function BottomSection({ name, description, link, ...props }) {
 
 function LeftSection() {
 	const router = useRouter();
+	const [inviteTeammates, setInviteTeamMates] = useState(false)
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 			<div>
@@ -123,6 +125,10 @@ function LeftSection() {
 			</div>
 
 			<div>
+
+				<Conditional showIf={inviteTeammates}>
+					<InviteMembers onClose={setInviteTeamMates.bind(this,false)}/>
+				</Conditional>
 				<div>
 					<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
 						<div className={"text-12 font-700 leading-none mt-16 mb-8 ml-8"} id={"support-tagline"}>
@@ -141,7 +147,7 @@ function LeftSection() {
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EDITION_TYPE.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-13 mt-4"}>
+						<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setInviteTeamMates.bind(this,true)}>
 							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>

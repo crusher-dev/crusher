@@ -24,7 +24,7 @@ class TestService {
 	}
 
 	async updateTest(testId: number, newInfo: { name: string }) {
-		return this.dbManager.update(`UPDATE tests SET ? WHERE id = ?`, [newInfo, testId]);
+		return this.dbManager.update(`UPDATE tests SET name = ? WHERE id = ?`, [newInfo.name, testId]);
 	}
 
 	async runTestsInProject(projectId: number, userId: number) {
@@ -56,7 +56,7 @@ class TestService {
 	}
 
 	async deleteTest(testId: number) {
-		return this.dbManager.update(`UPDATE tests SET ? WHERE id = ?`, [{ deleted: true }, testId]);
+		return this.dbManager.update(`UPDATE tests SET deleted = ? WHERE id = ?`, [true, testId]);
 	}
 }
 

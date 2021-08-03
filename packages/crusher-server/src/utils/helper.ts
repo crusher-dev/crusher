@@ -2,6 +2,7 @@ import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { iAction } from "@crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
 
 export function getTestHostFromActions(actions: Array<iAction>): string {
 	const navigateAction = actions.find((action) => action.type === ACTIONS_IN_TEST.NAVIGATE_URL);
@@ -103,23 +104,24 @@ function getCamelizeObject(object: any) {
 	return camelCaseObject;
 }
 
-function getSnakedObject(object: any) {
-	const snakeCaseObject = {};
+// @TODO: Make this compatible with typescript array and objects
+function getSnakedObject<Type>(object: Type): KeysToCamelCase<Type> {
 	if (object instanceof Array) {
 		return object.map((obj) => {
 			return getSnakedObject(obj);
-		});
+		}) as any;
 	}
-	if (typeof object !== "object") return object;
+	if (typeof object !== "object") return object as any;
+	const snakeCaseObject = {};
 
-	forEach(object, function (value, key) {
+	forEach(object as any, function (value, key) {
 		if (isPlainObject(value) || isArray(value)) {
 			value = getSnakedObject(value);
 		}
 		snakeCaseObject[snakeCase(key)] = value;
 	});
 
-	return snakeCaseObject;
+	return snakeCaseObject as any;
 }
 
 export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName, getCamelizeObject, getSnakedObject };

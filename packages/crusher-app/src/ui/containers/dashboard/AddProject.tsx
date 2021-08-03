@@ -20,7 +20,7 @@ const addProject = (name) => {
 };
 
 
-export const AddProjectMondal = ({ onClose }) => {
+export const AddProjectModal = ({ onClose }) => {
 	const [projectName, changeProjectName] = useState("")
 	const [processing, setProcessing] = useState(false);
 	const [projects, setProjectsAtom] = useAtom(projectsAtom);
@@ -88,4 +88,4 @@ export const AddProjectMondal = ({ onClose }) => {
 	);
 };
 
-export default AddProjectMondal;
+export default AddProjectModal;

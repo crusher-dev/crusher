@@ -11,7 +11,6 @@ import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/typ
 import dynamic from "next/dynamic";
 import { Conditional } from "dyson/src/components/layouts";
 import { tempTestAtom } from "../../../store/atoms/global/tempTestId";
-import { snackBarEmitter } from "@ui/containers/common/Snackbar";
 import { sendSnackBarEvent } from "@utils/notify";
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
@@ -103,9 +102,9 @@ function TestSearchableList() {
 
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL, videoURL } = test;
+			const { testName, isPassing, createdAt, imageURL, videoURL, id } = test;
 
-			return <TestCard videoURL={videoURL} imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} />;
+			return <TestCard videoURL={videoURL} imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} key={id} />;
 		});
 	}, [data]);
 

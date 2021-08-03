@@ -1,5 +1,5 @@
 import React from "react";
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from '@emotion/react';
 
 export interface ButtonProps {
 	/**
@@ -22,7 +22,7 @@ export interface ButtonProps {
 	/**
 	 * Emotion CSS style if any
 	 */
-	css?: [string] | string;
+	css?: SerializedStyles;
 	/**
 	 * Input contents
 	 */

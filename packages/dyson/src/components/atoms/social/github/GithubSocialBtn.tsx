@@ -10,8 +10,9 @@ const GithubIcon = () => {
 		</svg>
 	);
 };
-export interface GithubSocialBtnProps {
+export type GithubSocialBtnProps =  {
 	count: number;
+	onClick: Function
 }
 
 export const GithubSocialBtn = ({ count, ...props }: GithubSocialBtnProps) => {

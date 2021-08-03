@@ -9,7 +9,7 @@ export interface ButtonProps {
 	/**
 	 * What background color to use
 	 */
-	bgColor?: "blue" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white"| "disabled";
+	bgColor?: "blue" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white" | "disabled";
 	/**
 	 * Size of the component
 	 */
@@ -48,7 +48,7 @@ export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = 
 				size === "medium" && mediumButton,
 				size === "large" && largeButton,
 				bgColor === "tertiary-dark" && tertiaryDark,
-				bgColor === "disabled"  && disabledButton
+				bgColor === "disabled" && disabledButton,
 			]}
 			disabled={disabled}
 			{...props}
@@ -115,9 +115,7 @@ const tertiaryDark = css`
 	}
 `;
 
-
 const disabledButton = css`
-  background-color: #1e242c !important;
-  border: 1px solid #2e3744 !important;
-
+	background-color: #1e242c !important;
+	border: 1px solid #2e3744 !important;
 `;

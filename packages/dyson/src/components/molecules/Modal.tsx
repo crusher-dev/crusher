@@ -1,8 +1,8 @@
-import { OverlayTransparent } from '../layouts/OverlayTransparent/OverlayTransparent';
-import { CenterLayout, Conditional } from '../layouts';
-import { css } from '@emotion/react';
-import { OnOutsideClick } from '../layouts/onOutsideClick/onOutsideClick';
-import { CloseSVG } from '../icons/CloseSVG';
+import { OverlayTransparent } from "../layouts/OverlayTransparent/OverlayTransparent";
+import { CenterLayout, Conditional } from "../layouts";
+import { css } from "@emotion/react";
+import { OnOutsideClick } from "../layouts/onOutsideClick/onOutsideClick";
+import { CloseSVG } from "../icons/CloseSVG";
 
 export const Modal = ({ modalStyle, children, onClose, onOutsideClick }) => {
 	return (

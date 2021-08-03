@@ -121,13 +121,14 @@ const section = [
 		icon: null,
 		key: "reports",
 	},
-	{
-		name: "History",
-		icon: null,
-	},
+	// {
+	// 	name: "History",
+	// 	icon: null,
+	// },
 ];
 
 const selectedTabAtom = atom(0);
+
 function TabBar() {
 	const [secltedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (

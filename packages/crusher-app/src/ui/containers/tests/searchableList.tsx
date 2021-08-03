@@ -27,9 +27,10 @@ interface IBuildItemCardProps {
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
 const saveTest = (projectId: number, tempTestId: string) => {
+	const testName = (new Date()).toDateString().substr(4,6) + " " + (new Date()).toLocaleTimeString().substr(0,10);
 	return backendRequest(`/projects/${projectId}/tests/actions/create`, {
 		method: RequestMethod.POST,
-		payload: { tempTestId },
+		payload: { tempTestId, name: testName },
 	});
 };
 

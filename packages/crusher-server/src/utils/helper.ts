@@ -2,6 +2,7 @@ import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { iAction } from "@crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
+import { KeysToCamelCase, KeysToSnakeCase } from "@modules/common/typescript/interface";
 
 export function getTestHostFromActions(actions: Array<iAction>): string {
 	const navigateAction = actions.find((action) => action.type === ACTIONS_IN_TEST.NAVIGATE_URL);
@@ -84,42 +85,44 @@ function getFullName(firstName: string | null, lastName: string | null) {
 	return [firstName, lastName].filter((name) => !!name).join(" ");
 }
 
-function getCamelizeObject(object: any) {
+// @TODO: Make this compatible with typescript array and objects
+function getCamelizeObject<Type>(object: Type): KeysToCamelCase<Type> {
 	const camelCaseObject = {};
 	if (object instanceof Array) {
 		return object.map((obj) => {
 			return getCamelizeObject(obj);
-		});
+		}) as any;
 	}
-	if (typeof object !== "object") return object;
+	if (typeof object !== "object") return object as any;
 
-	forEach(object, function (value, key) {
+	forEach(object as any, function (value, key) {
 		if (isPlainObject(value) || isArray(value)) {
 			value = getCamelizeObject(value);
 		}
 		camelCaseObject[camelCase(key)] = value;
 	});
 
-	return camelCaseObject;
+	return camelCaseObject as any;
 }
 
-function getSnakedObject(object: any) {
-	const snakeCaseObject = {};
+// @TODO: Make this compatible with typescript array and objects
+function getSnakedObject<Type>(object: Type): KeysToSnakeCase<Type> {
 	if (object instanceof Array) {
 		return object.map((obj) => {
 			return getSnakedObject(obj);
-		});
+		}) as any;
 	}
-	if (typeof object !== "object") return object;
+	if (typeof object !== "object") return object as any;
+	const snakeCaseObject = {};
 
-	forEach(object, function (value, key) {
+	forEach(object as any, function (value, key) {
 		if (isPlainObject(value) || isArray(value)) {
 			value = getSnakedObject(value);
 		}
 		snakeCaseObject[snakeCase(key)] = value;
 	});
 
-	return snakeCaseObject;
+	return snakeCaseObject as any;
 }
 
 export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName, getCamelizeObject, getSnakedObject };

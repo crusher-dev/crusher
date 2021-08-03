@@ -1,10 +1,11 @@
 import { UserService } from "@modules/resources/users/service";
-import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body } from "routing-controllers";
+import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body, QueryParams, Params } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { TestService } from "@modules/resources/tests/service";
 import { isUsingLocalStorage } from "@utils/helper";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { ICreateTestPayload } from "@modules/resources/tests/interface";
+import { iAction } from "@crusher-shared/types/action";
 
 @Service()
 @JsonController("")
@@ -14,7 +15,24 @@ export class TestController {
 	@Inject()
 	private testService: TestService;
 
-	@Authorized()
+	@Post("/tests/actions/save.temp")
+	async saveTempTest(@Body() body: { events: Array<iAction> }) {
+		if (!body.events) throw new BadRequestError("No events provided");
+
+		const result = await this.testService.saveTempTest(body.events);
+
+		return { insertId: result.insertId };
+	}
+
+	@Get("/tests/actions/get.temp")
+	async getTempTest(@QueryParams() params: { id: string }) {
+		if (!params.id) throw new BadRequestError("No id provided");
+
+		const result = await this.testService.getTempTest(params.id);
+
+		return { events: result.events };
+	}
+
 	@Get("/projects/:project_id/tests/")
 	async getList(@Param("project_id") projectId: number): Promise<IProjectTestsListResponse> {
 		return (await this.testService.getTestsInProject(projectId)).map((testData) => {
@@ -57,12 +75,21 @@ export class TestController {
 	async createTest(
 		@CurrentUser({ required: true }) user,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId">,
+		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; tempTestId?: string },
 	) {
 		const { user_id } = user;
 
+		let events = body.events;
+		if (!body.tempTestId) {
+			const tempTest = await this.testService.getTempTest(body.tempTestId);
+			events = tempTest.events;
+		}
+
+		if (!events) throw new Error("No events passed");
+
 		return this.testService.createTest({
 			...body,
+			events: JSON.stringify(events),
 			projectId: projectId,
 			userId: user_id,
 		});

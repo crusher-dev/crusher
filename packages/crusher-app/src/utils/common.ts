@@ -9,3 +9,6 @@ export const getOSType = () => {
 	if (ua.includes("X11")) return OS.OTHER;
 	return OS.OTHER;
 };
+
+
+export const isBrowser = typeof(window) !== "undefined" ;

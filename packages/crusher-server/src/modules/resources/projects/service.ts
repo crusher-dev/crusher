@@ -31,7 +31,7 @@ class ProjectsService {
 	}
 
 	async createProject(payload: ICreateProjectPayload) {
-		return this.dbManager.insert("INSERT INTO projects SET ?", [payload]);
+		return this.dbManager.insert("INSERT INTO projects SET ?", [getSnakedObject(payload)]);
 	}
 }
 

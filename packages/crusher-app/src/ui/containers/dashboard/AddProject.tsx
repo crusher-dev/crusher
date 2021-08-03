@@ -1,16 +1,17 @@
 import { css } from "@emotion/react";
 
 import { Button, Input } from "dyson/src/components/atoms";
-import { Modal } from 'dyson/src/components/molecules/Modal';
-import { useCallback, useState } from 'react';
-import { backendRequest } from '@utils/backendRequest';
-import { RequestMethod } from '../../../types/RequestOptions';
-import { LoadingSVG } from '@svg/dashboard';
-import { Conditional } from 'dyson/src/components/layouts';
-import { projectsAtom } from '../../../store/atoms/global/project';
-import { useAtom } from 'jotai';
-import { appStateItemMutator } from '../../../store/atoms/global/appState';
-import { useRouter } from 'next/router';
+import { Modal } from "dyson/src/components/molecules/Modal";
+import { useCallback, useState } from "react";
+import { backendRequest } from "@utils/backendRequest";
+import { RequestMethod } from "../../../types/RequestOptions";
+import { LoadingSVG } from "@svg/dashboard";
+import { Conditional } from "dyson/src/components/layouts";
+import { projectsAtom } from "../../../store/atoms/global/project";
+import { useAtom } from "jotai";
+import { appStateItemMutator } from "../../../store/atoms/global/appState";
+import { useRouter } from "next/router";
+import { sendSnackBarEvent } from '@utils/notify';
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {
@@ -19,31 +20,32 @@ const addProject = (name) => {
 	});
 };
 
-
 export const AddProjectModal = ({ onClose }) => {
-	const [projectName, changeProjectName] = useState("")
+	const [projectName, changeProjectName] = useState("");
 	const [processing, setProcessing] = useState(false);
 	const [projects, setProjectsAtom] = useAtom(projectsAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
-	const router = useRouter()
+	const router = useRouter();
 
-	const isNoName = projectName.length ===0;
+	const isNoName = projectName.length === 0;
 
-	const addProjectCallback = useCallback(()=>{
-
-		(async ()=>{
+	const addProjectCallback = useCallback(() => {
+		(async () => {
 			const data = await addProject(projectName);
-			const {id, name, teamID} = data;
-			const projectObject = {id, name, teamID}
-			setProjectsAtom([...projects,projectObject])
+			const { id, name, teamID } = data;
+			const projectObject = { id, name, teamID };
+			setProjectsAtom([...projects, projectObject]);
 
 			setAppStateItem({ key: "selectedProjectId", value: id });
 			onClose();
 			await router.push("/app/dashboard");
-		})()
 
-		setProcessing(true)
-	},[projectName])
+			sendSnackBarEvent({message: "Created and switched project"})
+
+		})();
+
+		setProcessing(true);
+	}, [projectName]);
 	return (
 		<Modal onOutsideClick={onClose} onClose={onClose}>
 			<div className={"font-cera text-16 font-600 leading-none"}>Create new project</div>
@@ -61,7 +63,9 @@ export const AddProjectModal = ({ onClose }) => {
 				css={css`
 					width: 100%;
 				`}
-				onChange={(e)=>{changeProjectName(e.target.value)}}
+				onChange={(e) => {
+					changeProjectName(e.target.value);
+				}}
 				value={projectName}
 				disabled={processing}
 			/>
@@ -78,7 +82,14 @@ export const AddProjectModal = ({ onClose }) => {
 				>
 					<div className={"flex justify-center items-center"}>
 						<Conditional showIf={processing}>
-							<LoadingSVG css={css`margin-right: 8rem !important;`} color={"#fff"} height={16} width={16}/>
+							<LoadingSVG
+								css={css`
+									margin-right: 8rem !important;
+								`}
+								color={"#fff"}
+								height={16}
+								width={16}
+							/>
 						</Conditional>
 						Save test
 					</div>

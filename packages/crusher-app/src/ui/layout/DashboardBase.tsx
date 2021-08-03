@@ -19,20 +19,19 @@ import { getEdition } from "@utils/helpers";
 import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
-import { addChat, openChatBox } from "@utils/scriptUtils";
+import { loadCrisp, openChatBox } from "@utils/scriptUtils";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
 function ProjectList() {
-	const router = useRouter()
+	const router = useRouter();
 	const [search] = useState(false);
 
 	const [projects] = useAtom(projectsAtom);
 	const [appState] = useAtom(appStateAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
-
 
 	const [showAddProject, setShowAddProject] = useState(false);
 	return (
@@ -100,7 +99,7 @@ function BottomSection({ name, description, link, ...props }) {
 
 function LeftSection() {
 	const router = useRouter();
-	const [inviteTeammates, setInviteTeamMates] = useState(false)
+	const [inviteTeammates, setInviteTeamMates] = useState(false);
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 			<div>
@@ -125,9 +124,8 @@ function LeftSection() {
 			</div>
 
 			<div>
-
 				<Conditional showIf={inviteTeammates}>
-					<InviteMembers onClose={setInviteTeamMates.bind(this,false)}/>
+					<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
 				</Conditional>
 				<div>
 					<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
@@ -147,7 +145,7 @@ function LeftSection() {
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EDITION_TYPE.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setInviteTeamMates.bind(this,true)}>
+						<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
 							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
@@ -210,7 +208,7 @@ export const dropdDown = css`
 function Dropdown() {
 	const router = useRouter();
 	useEffect(() => {
-		addChat(() => {
+		loadCrisp(() => {
 			``;
 		});
 	}, []);

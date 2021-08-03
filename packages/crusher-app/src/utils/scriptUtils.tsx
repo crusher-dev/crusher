@@ -31,7 +31,7 @@ export const loadUserLeap = () => {
 	setTimeout(() => {}, 5000);
 };
 
-export const addChat = (callback) => {
+export const loadCrisp = (callback = () => {}) => {
 	addScript(
 		"crisp",
 		{},

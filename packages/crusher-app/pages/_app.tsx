@@ -10,7 +10,8 @@ import { Conditional } from "dyson/src/components/layouts";
 import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
 import { SWRConfig } from "swr";
 import { loadUserDataAndRedirect } from "../src/hooks/user";
-import { loadUserLeap } from "@utils/scriptUtils";
+import { loadCrisp, loadUserLeap } from "@utils/scriptUtils";
+import { Snackbar } from '@ui/containers/common/Snackbar';
 
 function App({ Component, pageProps }: AppProps<any>) {
 	const [userDataLoaded] = loadUserDataAndRedirect({ fetchData: true, userData: null });
@@ -21,6 +22,9 @@ function App({ Component, pageProps }: AppProps<any>) {
 
 	useEffect(() => {
 		loadUserLeap();
+		setTimeout(() => {
+			loadCrisp();
+		}, 6000);
 	}, []);
 	return (
 		<>
@@ -39,6 +43,8 @@ function App({ Component, pageProps }: AppProps<any>) {
 				<Conditional showIf={userDataLoaded}>
 					<Component {...pageProps} />
 				</Conditional>
+
+				<Snackbar/>
 			</SWRConfig>
 		</>
 	);

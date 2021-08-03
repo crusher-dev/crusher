@@ -80,16 +80,17 @@ export class TestController {
 		const { user_id } = user;
 
 		let events = body.events;
-		if (!body.tempTestId) {
+		if (body.tempTestId) {
 			const tempTest = await this.testService.getTempTest(body.tempTestId);
 			events = tempTest.events;
 		}
 
 		if (!events) throw new Error("No events passed");
+		if (!body.name) throw new Error("No name passed for the test");
 
 		return this.testService.createTest({
 			...body,
-			events: JSON.stringify(events),
+			events: events,
 			projectId: projectId,
 			userId: user_id,
 		});

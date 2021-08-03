@@ -27,7 +27,7 @@ class TestService {
 
 	async saveTempTest(events: Array<iAction>): Promise<{ insertId: string }> {
 		const keyId = `temp_test_${uuidv4()}`;
-		await this.redisManager.set(keyId, JSON.stringify(events), { expiry: { type: "s", value: 10 * 60 }});
+		await this.redisManager.set(keyId, JSON.stringify(events), { expiry: { type: "s", value: 10 * 60 } });
 		return { insertId: keyId };
 	}
 
@@ -36,8 +36,17 @@ class TestService {
 		return { events: JSON.parse(result) };
 	}
 
-	async createTest(testInfo: ICreateTestPayload) {
-		return this.dbManager.insert(`INSERT INTO tests SET ?`, [getSnakedObject(testInfo)]);
+	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & {events: Array<iAction>}) {
+		return this.dbManager.insert(`INSERT INTO tests SET ?`, [
+			getSnakedObject({
+				projectId: testInfo.projectId,
+				name: testInfo.name,
+				events: JSON.stringify(testInfo.events),
+				userId: testInfo.userId,
+				featuredVideoUri: testInfo.featuredVideoUri,
+				featuredScreenshotUri: testInfo.featuredScreenshotUri,
+			}),
+		]);
 	}
 
 	async updateTest(testId: number, newInfo: { name: string }) {

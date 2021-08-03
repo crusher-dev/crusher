@@ -19,6 +19,7 @@ import { TestController } from "@modules/resources/tests/controller";
 import { BuildsController } from "@modules/resources/builds/controller";
 import { BuildReportController } from "@modules/resources/buildReports/controller";
 import { ReleaseController } from "@controllers/ReleaseController";
+import { ProjectsController } from "@modules/resources/projects/controller";
 
 RedisManager.initialize();
 
@@ -54,7 +55,7 @@ if (process.env.STORAGE_MODE === "local") {
 	server.listen(storagePort);
 }
 
-const controllersArr: any = [UserController, TestController, BuildsController, BuildReportController, ReleaseController];
+const controllersArr: any = [UserController, TestController, BuildsController, BuildReportController, ReleaseController, ProjectsController];
 
 // @TODO: Look into this
 // if (getEdition() === EDITION_TYPE.EE) {

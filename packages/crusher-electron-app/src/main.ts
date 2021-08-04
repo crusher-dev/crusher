@@ -204,10 +204,12 @@ async function createWindow() {
 		if (mainWindow.webContents.getURL().startsWith("chrome-extension")) {
 			if (popupUrl.endsWith("#crusherExternalLink")) {
 				event.preventDefault();
-				shell.openExternal(popupUrl);
+				shell.openExternal(popupUrl.substring(0, popupUrl.length - "#crusherExternalLink".length));
 			} else if (!popupUrl.endsWith("#crusherBackendServer")) {
 				event.preventDefault();
-				mainWindow.webContents.executeJavaScript(`document.querySelector('#device_browser').src = "${popupUrl}"`);
+				mainWindow.webContents.executeJavaScript(
+					`document.querySelector('#device_browser').src = "${popupUrl.substring(0, popupUrl.length - "#crusherBackendServer".length)}"`,
+				);
 			}
 		} else {
 			event.preventDefault();

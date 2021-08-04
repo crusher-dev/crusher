@@ -14,6 +14,7 @@ import { submitPostDataWithForm } from "../utils/helpers";
 import { addHttpToURLIfNotThere, resolveToBackendPath } from "@shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
+import * as _url from "url";
 import "../style/main.css";
 
 const App = () => {
@@ -37,10 +38,16 @@ const App = () => {
 			return;
 		}
 		console.log(AdvancedURL.getBackendURL());
-		submitPostDataWithForm(resolveToBackendPath("test/goToEditor#crusherBackendServer", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), {
-			events: encodeURIComponent(JSON.stringify(steps)),
-			totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
-		});
+		fetch(resolveToBackendPath(`/server/tests/actions/save.temp`), {
+			method: "POST",
+			headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
+			body: JSON.stringify({ events: steps }),
+		})
+			.then((res) => res.text())
+			.then((res) => {
+				const result = JSON.parse(res);
+				window.open(resolveToBackendPath(`/?temp_test_id=${result.insertId}#crusherExternalLink`));
+			});
 	};
 
 	useMemo(() => {

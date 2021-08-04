@@ -37,6 +37,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 			// console.log((deviceIframeRef.current as WebviewTag).getWebContentsId);
 		}
 	}, [deviceIframeRef.current]);
+
 	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === "q") {
 			(window as any).electron.webview.postMessage({

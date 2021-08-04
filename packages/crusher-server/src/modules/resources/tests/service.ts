@@ -84,6 +84,10 @@ class TestService {
 	async deleteTest(testId: number) {
 		return this.dbManager.update(`UPDATE tests SET deleted = ? WHERE id = ?`, [true, testId]);
 	}
+
+	async updateMeta(meta: string, testId: number) {
+		return this.dbManager.update("UPDATE tests SET meta = ? WHERE id = ?", [meta, testId]);
+	}
 }
 
 export { TestService };

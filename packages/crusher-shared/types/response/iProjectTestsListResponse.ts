@@ -1,6 +1,7 @@
 export interface IProjectTestItem {
 	id: number;
 	testName: string;
+	meta?: any | null;
 	createdAt: number;
 	videoURL: null | string;
 	imageURL: null | string;

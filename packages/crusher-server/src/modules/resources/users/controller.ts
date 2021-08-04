@@ -1,4 +1,4 @@
-import { Authorized, Body, CurrentUser, Get, JsonController, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
+import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Post, QueryParam, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { UserService } from "@modules/resources/users/service";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
@@ -26,7 +26,7 @@ if (process.env.BACKEND_URL) {
 }
 
 @Service()
-@JsonController("/user")
+@JsonController("")
 export class UserController {
 	@Inject()
 	private userService: UserService;
@@ -34,7 +34,7 @@ export class UserController {
 	private googleAPIService: GoogleAPIService;
 
 	// @OSS
-	@Get("/init")
+	@Get("/user/init")
 	initUser(@Req() req: any, @Res() res: any): Promise<boolean> {
 		// eslint-disable-next-line no-async-promise-executor
 		return new Promise(async (resolve, reject) => {
@@ -63,7 +63,7 @@ export class UserController {
 		});
 	}
 
-	@Get("/authenticate/google")
+	@Get("/user/authenticate/google")
 	async authenticateWithGoogle(@Res() res: any, @QueryParams() params) {
 		if (!oauth2Client) {
 			throw new Error("This functionality is not supported");
@@ -78,7 +78,7 @@ export class UserController {
 		return res.redirect(url);
 	}
 
-	@Post("/signup")
+	@Post("/user/signup")
 	async createUser(@Body() userInfo: iSignupUserRequest, @Res() res) {
 		const { firstName, lastName, email, password, inviteReferral } = userInfo;
 
@@ -98,7 +98,7 @@ export class UserController {
 		};
 	}
 
-	@Get("/authenticate/google/callback")
+	@Get("/user/authenticate/google/callback")
 	async googleCallback(@QueryParam("code") code: string, @QueryParam("state") encodedState, @Res() res) {
 		if (!oauth2Client) {
 			throw new Error("This functionality is not supported");
@@ -145,7 +145,7 @@ export class UserController {
 		return true;
 	}
 
-	@Post("/login")
+	@Post("/user/login")
 	async loginUser(@Body() info: any, @Res() res: any) {
 		const { email, password } = info;
 		const { status, token, userId } = await this.userService.authenticateWithEmailAndPassword({
@@ -165,7 +165,7 @@ export class UserController {
 		return { status, systemInfo };
 	}
 
-	@Get("/getUserAndSystemInfo")
+	@Get("/user/getUserAndSystemInfo")
 	async getUserAndSystemInfo(@CurrentUser() user): Promise<IUserAndSystemInfoResponse> {
 		const { user_id } = user;
 
@@ -173,7 +173,7 @@ export class UserController {
 	}
 
 	@Authorized()
-	@Get("/verify")
+	@Get("/user/verify")
 	async verifyUser(@CurrentUser({ required: true }) user, @QueryParams() params, @Res() res) {
 		const { code } = params;
 		const { user_id } = decodeToken(code);
@@ -187,14 +187,23 @@ export class UserController {
 	}
 
 	@Authorized()
-	@Post("/resendVerification")
+	@Post("/user/resendVerification")
 	async resendVerificationLink(@CurrentUser({ required: true }) user) {
 		return this.userService.resendVerification(user.user_id);
 	}
 
-	@Get("/logout")
+	@Get("/user/logout")
 	async logout(@Req() req, @Res() res) {
 		clearUserAuthorizationCookies(res);
 		res.redirect(resolvePathToFrontendURI("/"));
+	}
+
+	@Authorized()
+	@Post("/users/actions/update.meta")
+	async updateMeta(@CurrentUser({ required: true }) user, @Body() body: { meta: any }) {
+		if (typeof body.meta !== "object") throw new BadRequestError("meta is not JSON compatible");
+
+		await this.userService.updateMeta(JSON.stringify(body.meta), user.user_id);
+		return "Successful";
 	}
 }

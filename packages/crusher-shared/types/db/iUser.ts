@@ -5,6 +5,7 @@ export interface iUser extends BaseRowInterface {
 	team_id?: number;
 	first_name: string;
 	last_name: string;
+	meta?: string;
 	email: string;
 	password?: string;
 	verified: boolean;

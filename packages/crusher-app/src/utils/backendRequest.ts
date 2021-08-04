@@ -35,7 +35,6 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 export function backendRequest(_uri: string, options?: RequestOptions) {
 	const { payload } = options;
 	const { uri, method, headers } = prepareFetchPayload(_uri, options);
-
 	const isMockAPI = uri.includes("jsonbin");
 
 	return _fetch(uri, {

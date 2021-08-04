@@ -7,10 +7,6 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { LoadingSVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
-import { projectsAtom } from "../../../store/atoms/global/project";
-import { useAtom } from "jotai";
-import { appStateItemMutator } from "../../../store/atoms/global/appState";
-import { useRouter } from "next/router";
 
 const inviteTeamMember = (name) => {
 	return backendRequest("/projects/actions/create", {

@@ -78,7 +78,7 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 					placeholder={"Enter email"}
 					onChange={emailChange}
 					isError={email.error}
-					onBlur={verifyInfo.bind(this, true)}
+					onBlur={verifyInfo.bind(this, false)}
 				/>
 				<Conditional showIf={email.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
@@ -95,7 +95,7 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 					type={"password"}
 					onChange={passwordChange}
 					isError={password.error}
-					onBlur={verifyInfo.bind(this, true)}
+					onBlur={verifyInfo.bind(this, false)}
 				/>
 				<Conditional showIf={password.error}>
 					<div className={"mt-8 text-12"} css={errorState}>

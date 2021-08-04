@@ -1,14 +1,14 @@
 import { css, SerializedStyles } from "@emotion/react";
-import React, { ReactPropTypes } from "react";
+import React from 'react';
 
 export type VideoProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
 	css?: SerializedStyles;
-	url: string;
-	autoPlay: boolean;
-} & ReactPropTypes;
+	src: string;
+	autoPlay?: boolean;
+} & React.DetailedHTMLProps<any,any>;
 
 const VideoComponentSource = {
 	autoPlay: false,
@@ -17,11 +17,11 @@ const VideoComponentSource = {
 /**
  * Crusher Video component.
  */
-export const VideoComponent: React.FC<VideoProps> = ({ url, autoPlay, css, ...props }) => {
+export const VideoComponent: React.FC<VideoProps> = ({ src, autoPlay, css, ...props }) => {
 	return (
 		<div className="rounded-10" css={[videoStyle, css]}>
 			<video controls height={"100%"} autoPlay={autoPlay} {...props}>
-				<source src={url} type="video/mp4" />
+				<source src={src} type="video/mp4" />
 				Your browser does not support HTML video.
 			</video>
 		</div>

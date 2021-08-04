@@ -1,7 +1,7 @@
 import React from "react";
 import { css, SerializedStyles } from "@emotion/react";
 
-export interface ButtonProps {
+export type ButtonProps = {
 	/**
 	 * Is this the principal call to action on the page?
 	 */
@@ -32,7 +32,7 @@ export interface ButtonProps {
 	 */
 	onClick?: () => void;
 	className?: string;
-}
+} & React.DetailedHTMLProps<any,any>;
 
 /**
  * Unified button component for Dyson UI system

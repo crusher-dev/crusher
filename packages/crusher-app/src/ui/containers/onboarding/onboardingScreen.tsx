@@ -12,6 +12,7 @@ import Link from "next/link";
 import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
 import { isTempTestPending } from "@utils/user";
 import { sendSnackBarEvent } from "@utils/notify";
+import { VideoComponent } from 'dyson/src/components/atoms/video/video';
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -61,24 +62,10 @@ const HowItWorksView = () => {
 	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
 
 	usePageTitle("How it works?");
-
 	return (
 		<>
 			<div className="m-8 text-18 leading-none mb-36 font-700">How it works in 60 seconds?</div>
-			<div
-				className="rounded-10"
-				css={css`
-					background-color: #191e22;
-					height: 400rem;
-					width: 544rem;
-					overflow: hidden;
-				`}
-			>
-				<video width="100%" controls height={"544rem"} autoPlay={true}>
-					<source src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4" type="video/mp4" />
-					Your browser does not support HTML video.
-				</video>
-			</div>
+			<VideoComponent src={"https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"} autoPlay={true} />
 
 			<Button
 				className="mt-42"

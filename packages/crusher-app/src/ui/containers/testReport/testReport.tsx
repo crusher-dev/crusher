@@ -383,9 +383,15 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={openVideoModal}>
-				<Modal onClose={setOpenVideoModal.bind(this, false)} onOutsideClick={setOpenVideoModal.bind(this, false)}>
-					<div className={"font-cera text-16 font-600 leading-none"}>Test recording</div>
-					<div className={"text-13 mt-8 mb-24"}>View in full screen mode</div>
+				<Modal
+					onClose={setOpenVideoModal.bind(this, false)}
+					onOutsideClick={setOpenVideoModal.bind(this, false)}
+					modalStyle={css`
+						padding: 28rem 36rem 36rem;
+					`}
+				>
+					<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
+					<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
 					<VideoComponent src={videoUrl} />
 				</Modal>
 			</Conditional>

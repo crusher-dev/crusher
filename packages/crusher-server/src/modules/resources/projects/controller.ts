@@ -18,7 +18,25 @@ class ProjectsController {
 			teamId: user.team_id,
 		});
 
-		return this.projectsService.getProject(result.insertId);
+		const project = await this.projectsService.getProject(result.insertId);
+		if (!project) throw new BadRequestError("No such project found");
+
+		return {
+			...project,
+			meta: project.meta ? JSON.parse(project.meta) : null,
+		};
+	}
+
+	@Authorized()
+	@Get("/projects/:project_id")
+	async getProject(@Param("project_id") projectId: number) {
+		const project = await this.projectsService.getProject(projectId);
+		if (!project) throw new BadRequestError("No such project found");
+
+		return {
+			...project,
+			meta: project.meta ? JSON.parse(project.meta) : null,
+		};
 	}
 
 	@Authorized()

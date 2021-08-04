@@ -366,9 +366,9 @@ function TopNavbar() {
 						>
 							Create a test
 						</Button>
-						<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>
-							Share
-						</span>
+						{/*<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>*/}
+						{/*	Share*/}
+						{/*</span>*/}
 					</div>
 				</div>
 			</div>

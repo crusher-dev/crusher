@@ -15,7 +15,7 @@ function Dashboard() {
 						Integrate and start testing
 					</div>
 					<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
-					<OnboardingSteps className={"mt-32"} />
+					<OnboardingSteps className={"mt-36"} />
 
 					<OnBoardingTutorialVideo />
 

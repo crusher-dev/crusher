@@ -1,5 +1,5 @@
+import React from "react";
 import { css } from "@emotion/react";
-
 import { Button, Input } from "dyson/src/components/atoms";
 import { Modal } from "dyson/src/components/molecules/Modal";
 import { useCallback, useState } from "react";
@@ -7,11 +7,12 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { LoadingSVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
+import { sendSnackBarEvent } from '@utils/notify';
 
-const inviteTeamMember = (name) => {
-	return backendRequest("/projects/actions/create", {
+const inviteTeamMember = (emailList: string) => {
+	return backendRequest("/users/actions/invite", {
 		method: RequestMethod.POST,
-		payload: { name },
+		payload: emailList.split(","),
 	});
 };
 
@@ -24,8 +25,9 @@ export const InvitePeople = ({ onClose }) => {
 	const addProjectCallback = useCallback(() => {
 		(async () => {
 			await inviteTeamMember(emailList);
+			sendSnackBarEvent({type: "normal", message: "We have sent invitation links to their email"})
+			onClose()
 		})();
-
 		setProcessing(true);
 	}, [emailList]);
 	return (

@@ -36,7 +36,7 @@ class TestService {
 		return { events: JSON.parse(result) };
 	}
 
-	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & {events: Array<iAction>}) {
+	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }) {
 		return this.dbManager.insert(`INSERT INTO tests SET ?`, [
 			getSnakedObject({
 				projectId: testInfo.projectId,
@@ -83,6 +83,10 @@ class TestService {
 
 	async deleteTest(testId: number) {
 		return this.dbManager.update(`UPDATE tests SET deleted = ? WHERE id = ?`, [true, testId]);
+	}
+
+	async updateMeta(meta: string, testId: number) {
+		return this.dbManager.update("UPDATE tests SET meta = ? WHERE id = ?", [meta, testId]);
 	}
 }
 

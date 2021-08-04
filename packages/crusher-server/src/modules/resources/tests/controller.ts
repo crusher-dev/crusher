@@ -41,6 +41,7 @@ export class TestController {
 			return {
 				id: testData.id,
 				testName: testData.name,
+				meta: testData.meta ? JSON.parse(testData.meta) : null,
 				createdAt: new Date(testData.created_at).getTime() / 1000,
 				videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
 				// @Note: Add support for taking random screenshots in case video is switched off
@@ -104,5 +105,14 @@ export class TestController {
 		});
 
 		return result.changedRows ? "Updated" : "No change";
+	}
+
+	@Authorized()
+	@Post("/tests/:test_id/actions/update.meta")
+	async updateTestMeta(@Param("test_id") testId: number, @Body() body: { meta: any }) {
+		if (typeof body.meta !== "object") throw new BadRequestError("meta is not JSON compatible");
+
+		await this.testService.updateMeta(JSON.stringify(body.meta), testId);
+		return "Successful";
 	}
 }

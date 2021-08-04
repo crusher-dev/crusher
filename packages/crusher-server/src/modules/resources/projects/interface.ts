@@ -5,6 +5,7 @@ interface IProjectTable extends BaseRowInterface {
 	id: number;
 	name: string;
 	team_id: number;
+	meta?: string;
 }
 
 // Create Project Payload, everything except id

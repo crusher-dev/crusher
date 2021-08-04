@@ -478,6 +478,7 @@ export class UserService {
 						avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
 						// @NOTE: Remove hardcoding from the next 3 fields
 						lastVisitedURL: null,
+						meta: userInfo ? JSON.parse(userInfo.meta) : null,
 						lastProjectSelectedId: null,
 						onboardingSteps: {
 							INITIAL_ONBOARDING: true,
@@ -491,6 +492,7 @@ export class UserService {
 				? {
 						id: teamInfo.id,
 						name: teamInfo.name,
+						meta: teamInfo.meta ? JSON.parse(teamInfo.meta) : null,
 						plan: teamInfo.tier,
 				  }
 				: null,
@@ -510,5 +512,9 @@ export class UserService {
 				},
 			},
 		};
+	}
+
+	async updateMeta(meta: string, userId: number) {
+		return this.dbManager.update("UPDATE users SET meta = ? WHERE id = ?", [meta, userId]);
 	}
 }

@@ -1,11 +1,13 @@
 export type ITeamAPIData = {
 	id: number;
 	name: string;
+	meta?: any;
 	plan: "FREE" | "STARTER" | "PRO";
 } | null;
 
 export type TUserAPIData = {
 	name: string;
+	meta?: any;
 	avatar: string;
 	lastVisitedURL: string | null;
 	lastProjectSelectedId: number | null;

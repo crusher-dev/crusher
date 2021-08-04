@@ -27,6 +27,10 @@ class ProjectsService {
 	async createProject(payload: ICreateProjectPayload) {
 		return this.dbManager.insert("INSERT INTO projects SET ?", [getSnakedObject(payload)]);
 	}
+
+	async updateMeta(meta: string, projectId: number) {
+		return this.dbManager.update("UPDATE projects SET meta = ? WHERE id = ?", [meta, projectId]);
+	}
 }
 
 export { ProjectsService };

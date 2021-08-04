@@ -10,6 +10,7 @@ export interface ITestTable extends BaseRowInterface {
 	featured_video_uri: string;
 	featured_screenshot_uri: string;
 	deleted: boolean;
+	meta?: string;
 }
 
 export type ICreateTestPayload = KeysToCamelCase<

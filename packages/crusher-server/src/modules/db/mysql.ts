@@ -27,7 +27,6 @@ class MysqlDatabase implements IDatabaseManager {
 
 	insert(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		return this.mysqlClient.query(query, valuesToEscape).then(([result]) => {
-			if (!result.insertId) throw new Error("Some unexpected error occurred while inserting the row");
 			return { insertId: result.insertId };
 		});
 	}
@@ -46,7 +45,6 @@ class MysqlDatabase implements IDatabaseManager {
 
 	fetchSingleRow(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		return this.mysqlClient.execute(query, valuesToEscape).then(([rows]) => {
-			if (!rows.length) throw new Error("No row available for selection");
 			return rows[0];
 		});
 	}

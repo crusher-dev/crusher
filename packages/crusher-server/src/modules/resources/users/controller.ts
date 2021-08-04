@@ -80,7 +80,7 @@ export class UserController {
 
 	@Post("/user/signup")
 	async createUser(@Body() userInfo: iSignupUserRequest, @Res() res) {
-		const { firstName, lastName, email, password, inviteReferral } = userInfo;
+		const { email, password, inviteReferral } = userInfo;
 
 		const userId = await this.userService.createUserRecord(userInfo, false);
 		const { teamId } = inviteReferral
@@ -126,8 +126,7 @@ export class UserController {
 			const inviteReferral = inviteType && inviteCode ? { type: inviteType, code: inviteCode } : null;
 
 			const signUpUserInfo = {
-				firstName: given_name,
-				lastName: family_name,
+				name: given_name,
 				email: email,
 				password: encryptPassword(Date.now().toString()),
 				inviteReferral: inviteReferral,

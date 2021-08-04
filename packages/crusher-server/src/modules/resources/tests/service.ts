@@ -75,7 +75,7 @@ class TestService {
 
 	async getTestsInProject(projectId: number, findOnlyActiveTests = false) {
 		return this.dbManager.fetchAllRows(
-			`SELECT tests.*, users.id userId, users.first_name userFirstName, users.last_name userLastName FROM tests, users WHERE tests.project_id = ? AND users.id = tests.user_id` +
+			`SELECT tests.*, users.id userId, users.name userName FROM tests, users WHERE tests.project_id = ? AND users.id = tests.user_id` +
 				(findOnlyActiveTests ? " AND tests.deleted = FALSE " : ""),
 			[projectId],
 		);

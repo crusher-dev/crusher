@@ -71,8 +71,7 @@ export class UserService {
 	// For oss
 	async createOpenSourceUser(): Promise<iUser> {
 		const signupRequestPayload = {
-			firstName: "Open",
-			lastName: "Source",
+			name: "Open Source",
 			email: "open@source.com",
 			password: "opensource",
 		};
@@ -89,7 +88,7 @@ export class UserService {
 	}
 
 	async updateTeam(userId: number, teamId: number) {
-		return this.dbManager.fetchSingleRow(`UPDATE users SET ? WHERE id = ?`, [{ team_id: teamId }, userId]);
+		return this.dbManager.update(`UPDATE users SET ? WHERE id = ?`, [{ team_id: teamId }, userId]);
 	}
 
 	async createUserRecord(user: iSignupUserRequest, isVerified = false, isOss = false): Promise<number> {
@@ -102,8 +101,7 @@ export class UserService {
 		const encryptedPassword = encryptPassword(user.password);
 
 		const userRecord = await this.dbManager.insert(`INSERT INTO users SET ?`, {
-			first_name: user.firstName,
-			last_name: user.lastName,
+			name: user.name,
 			email: user.email,
 			password: encryptedPassword,
 			verified: isVerified,
@@ -115,9 +113,9 @@ export class UserService {
 
 	async createInitialUserWorkspace(userId: number, user: iSignupUserRequest, shouldInitializeStripe = true): Promise<{ teamId: number; projectId: number }> {
 		const stripeCustomerId =
-			shouldInitializeStripe && this.stripeManager ? await this.stripeManager.createCustomer(`${user.firstName} ${user.lastName}`, user.email) : null;
+			shouldInitializeStripe && this.stripeManager ? await this.stripeManager.createCustomer(`${user.name}`, user.email) : null;
 
-		const teamId = await this.teamService.createTeamWithArgs(userId, `${user.firstName}'s Team`, user.email, TierPlan.FREE, stripeCustomerId);
+		const teamId = await this.teamService.createTeamWithArgs(userId, `${user.name}'s Team`, user.email, TierPlan.FREE, stripeCustomerId);
 		await this.updateTeam(userId, teamId);
 		await this.userTeamRoleService.create(userId, teamId, TEAM_ROLE_TYPES.ADMIN);
 		const projectId = (await this.projectService.createProject(`Default`, teamId)).insertId;
@@ -182,11 +180,11 @@ export class UserService {
 	}
 
 	async registerUser(userData: RegisterUserRequest, inviteReferral: iInviteReferral | null = null): Promise<any> {
-		const { email, firstName, lastName, password } = userData;
+		const { email, name, password } = userData;
 
 		const _user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ?`, [email]);
 
-		if (!firstName || !email || !password) {
+		if (!name || !email || !password) {
 			return { status: USER_NOT_REGISTERED };
 		}
 
@@ -195,8 +193,7 @@ export class UserService {
 		if (!_user) {
 			const registeredUser = await this.createdUserProfile(
 				password,
-				firstName,
-				lastName,
+				name,
 				email,
 				referralObject ? referralObject.teamId : null,
 				referralObject ? (referralObject as iProjectInviteReferral).projectId : null,
@@ -210,8 +207,7 @@ export class UserService {
 
 	private async createdUserProfile(
 		password: string,
-		firstName: string,
-		lastName: string,
+		name: string,
 		email: string,
 		referralTeamId: number = null,
 		referralProjectId: number = null,
@@ -219,16 +215,15 @@ export class UserService {
 		const encryptedPassword = encryptPassword(password);
 
 		const insertedUser = await this.dbManager.insert(`INSERT INTO users SET ?`, {
-			first_name: firstName,
-			last_name: lastName,
+			name: name,
 			email: email,
 			password: encryptedPassword,
 			team_id: referralTeamId ? referralTeamId : null,
 			verified: false,
 		});
 		if (insertedUser.insertId) {
-			const stripeName = `${firstName} ${lastName}`;
-			const teamName = `${firstName}'s team`;
+			const stripeName = `${name}`;
+			const teamName = `${name}'s team`;
 			let teamId = referralTeamId;
 			if (!referralTeamId) {
 				const stripeCustomerId = await this.stripeManager.createCustomer(stripeName, email);
@@ -242,7 +237,7 @@ export class UserService {
 			}
 			const projectId = referralProjectId
 				? referralProjectId
-				: (await this.projectService.createDefaultProject(teamId, `${firstName}'s project`)).insertId;
+				: (await this.projectService.createDefaultProject(teamId, `${name}'s project`)).insertId;
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,
@@ -254,13 +249,12 @@ export class UserService {
 	}
 
 	async authenticateWithGoogleProfile(profileInfo: RegisterUserRequest, referralTeamId: number = null, referralProjectId: number = null) {
-		const { email, firstName, lastName, password } = profileInfo;
+		const { email, name, password } = profileInfo;
 		const user: iUser = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email='${email}'`);
 		if (!user) {
 			// User not registered
 			const inserted_user = await this.dbManager.insert(`INSERT INTO users SET ?`, {
-				first_name: firstName,
-				last_name: lastName,
+				name: name,
 				email: email,
 				verified: true,
 				password: encryptPassword(password),
@@ -459,10 +453,6 @@ export class UserService {
 		}
 	}
 
-	getFullName(firstName: string, lastName: string) {
-		return [firstName, lastName].filter((name) => !!name).join(" ");
-	}
-
 	async getUserAndSystemInfo(user_id: any): Promise<IUserAndSystemInfoResponse> {
 		// @Note: Remove the next line after development of this API
 		const userInfo = user_id ? await this.getUserInfo(user_id) : null;
@@ -474,7 +464,7 @@ export class UserService {
 			isUserLoggedIn: !!userInfo,
 			userData: userInfo
 				? {
-						name: this.getFullName(userInfo.first_name, userInfo.last_name),
+						name: userInfo.name,
 						avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
 						// @NOTE: Remove hardcoding from the next 3 fields
 						lastVisitedURL: null,

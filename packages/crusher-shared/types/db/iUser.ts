@@ -3,8 +3,7 @@ import { BaseRowInterface } from "./baseRow";
 export interface iUser extends BaseRowInterface {
 	id: number;
 	team_id?: number;
-	first_name: string;
-	last_name: string;
+	name: string;
 	meta?: string;
 	email: string;
 	password?: string;

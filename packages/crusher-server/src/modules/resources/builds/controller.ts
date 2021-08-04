@@ -38,7 +38,7 @@ export class BuildsController {
 				duration: buildData.buildDuration,
 				triggeredBy: {
 					id: buildData.triggeredById,
-					name: getFullName(buildData.triggeredByFirstName, buildData.triggeredByLastName),
+					name: buildData.triggeredByName,
 				},
 				commentCount: buildData.commentCount ? buildData.commentCount : 0,
 			};

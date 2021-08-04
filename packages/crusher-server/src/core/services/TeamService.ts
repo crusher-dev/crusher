@@ -63,7 +63,7 @@ export default class TeamService {
 				return res.map((member: iUser & { role: TEAM_ROLE_TYPES }) => {
 					return {
 						id: member.id,
-						name: `${member.first_name} ${member.last_name}`,
+						name: `${member.name}`,
 						email: member.email,
 						role: member.role,
 						team_id: member.team_id,

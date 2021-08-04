@@ -20,7 +20,7 @@ const showRegistrationFormAtom = atom(false);
 const registerUser = (name, email, password) => {
 	return backendRequest("/user/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, firstName: name, lastName: "" },
+		payload: { email, password, name: name, lastName: "" },
 	});
 };
 

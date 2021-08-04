@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
 
 import { Button } from "dyson/src/components/atoms";
@@ -20,6 +20,10 @@ import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { loadCrisp, openChatBox } from "@utils/scriptUtils";
+import { backendRequest } from "@utils/backendRequest";
+import { RequestMethod } from "../../types/RequestOptions";
+import { getRunTestApi } from "@constants/api";
+import { sendSnackBarEvent } from "@utils/notify";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -295,10 +299,27 @@ const TOP_NAV_LINK = [
 	},
 ];
 
+const runTests = (projectId: number) => {
+	return backendRequest(getRunTestApi(projectId), {
+		method: RequestMethod.POST,
+	});
+};
+
 function TopNavbar() {
 	const router = useRouter();
 	const { pathname, query, asPath } = router;
 	const [showCreateTest, setShowCreateTest] = useState(false);
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
+
+	const runProjectTest = useCallback(() => {
+		(async ()=>{
+			await runTests(selectedProjectId);
+
+			sendSnackBarEvent({ type: "normal", message: "We have started running test" });
+
+			router.push("/app/builds")
+		})()
+	}, []);
 	return (
 		<div css={[nav]} className={""}>
 			<div css={[containerWidth]}>
@@ -330,7 +351,7 @@ function TopNavbar() {
 					</Conditional>
 
 					<div className={"flex items-center"}>
-						<Button bgColor={"tertiary-dark"}>
+						<Button bgColor={"tertiary-dark"} onClick={runProjectTest}>
 							<div className={"flex items-center"}>
 								<PlaySVG className={"mr-12"} />
 								Run test

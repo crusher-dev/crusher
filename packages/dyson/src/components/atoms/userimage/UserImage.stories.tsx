@@ -3,7 +3,7 @@ import { Story, Meta } from "@storybook/react/types-6-0";
 
 import { UserImage } from "./UserImage";
 export default {
-	title: "Atoms/UserImage",
+	title: "Atoms/VideoComponent",
 	component: UserImage,
 } as Meta;
 

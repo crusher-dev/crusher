@@ -6,7 +6,7 @@ export const snackBarEmitter = mitt();
 
 export type SnackbarEvent = {
 	message: string;
-	type?: string;
+	type?:  "normal" | "success" | "info" | "error";
 };
 
 export const Snackbar = () => {
@@ -17,11 +17,12 @@ export const Snackbar = () => {
 
 			setTimeout(() => {
 				setEvent(null);
-			}, 3000);
+			}, 7000);
 		});
 	}, []);
 
 	if (event === null) return null;
+
 	return (
 		<Toast type={event.type} onClose={setEvent.bind(this, null)}>
 			{event.message}

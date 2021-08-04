@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 
-export interface LogoProps {
+export interface UserImageProps {
 	/**
 	 * Emotion CSS style if any
 	 */
@@ -18,7 +18,7 @@ const UserDefaultProps = {};
 /**
  * Crusher Logo component.
  */
-export const UserImage: React.FC<LogoProps> = ({ url, ...props }) => {
+export const UserImage: React.FC<UserImageProps> = ({ url, ...props }) => {
 	return (
 		<div css={userImage}>
 			<div className={"relative"}>

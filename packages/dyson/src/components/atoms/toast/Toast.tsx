@@ -3,14 +3,15 @@ import { CloseSVG } from "../../icons/CloseSVG";
 import { ReactElement } from "react";
 
 type Toast = {
-	children: ReactElement;
+	children: ReactElement | string;
 	onClose: Function;
 	type: "normal" | "success" | "info" | "error";
 };
-export const Toast = ({ children, onClose, type = "normal" }) => {
+
+export const Toast = ({ children, onClose, type = "normal" }:Toast) => {
 	return (
 		<div
-			css={[alertContainer, postionCSS,success, type === "success" && success, type === "error" && error]}
+			css={[alertContainer, postionCSS, type === "success" && success, type === "error" && error]}
 			className={"flex items-center justify-between"}
 		>
 			<div>{children}</div>
@@ -60,4 +61,3 @@ const error = css`
 		fill: #592c42;
 	}
 `;
-

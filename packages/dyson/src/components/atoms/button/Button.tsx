@@ -1,5 +1,5 @@
 import React from "react";
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles } from "@emotion/react";
 
 export interface ButtonProps {
 	/**

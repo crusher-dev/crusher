@@ -10,7 +10,7 @@ type Toast = {
 export const Toast = ({ children, onClose, type = "normal" }) => {
 	return (
 		<div
-			css={[alertContainer, postionCSS,success, type === "success" && success, type === "error" && error]}
+			css={[alertContainer, postionCSS, success, type === "success" && success, type === "error" && error]}
 			className={"flex items-center justify-between"}
 		>
 			<div>{children}</div>
@@ -60,4 +60,3 @@ const error = css`
 		fill: #592c42;
 	}
 `;
-

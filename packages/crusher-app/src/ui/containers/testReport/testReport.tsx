@@ -22,8 +22,10 @@ import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
 import { getStatusString } from "@utils/pages/buildReportUtils";
-import { TTestInfo } from "@crusher-shared/types/response/iBuildReportResponse";
+import { TTestInfo, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { usePageTitle } from "../../../hooks/seo";
+import { Modal } from "../../../../../dyson/src/components/molecules/Modal";
+import { VideoComponent } from "../../../../../dyson/src/components/atoms/video/video";
 
 function TitleSection() {
 	const { query } = useRouter();
@@ -339,8 +341,8 @@ function TestOverview() {
 	);
 }
 
-function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
-	const { name } = testData;
+function TestCard({ id, testData }: { id: string; testData: Test }) {
+	const { name, testInstances } = testData;
 
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
@@ -375,9 +377,18 @@ function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 		setExpand(!expand);
 	};
 
-	console.log(testData);
+	const [openVideoModal, setOpenVideoModal] = useState(false);
+
+	const videoUrl = testInstances[0]?.output?.video;
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
+			<Conditional showIf={openVideoModal}>
+				<Modal onClose={setOpenVideoModal.bind(this, false)} onOutsideClick={setOpenVideoModal.bind(this, false)}>
+					<div className={"font-cera text-16 font-600 leading-none"}>Test recording</div>
+					<div className={"text-13 mt-8 mb-24"}>View in full screen mode</div>
+					<VideoComponent src={videoUrl} />
+				</Modal>
+			</Conditional>
 			<Conditional showIf={expand && sticky}>
 				<div css={stickyCSS} className={" px-0 "}>
 					<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
@@ -388,7 +399,7 @@ function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 							</div>
 							<div className={"flex items-center mt-8"}>
 								<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-								<span className={"flex text-13 mr-26"}>
+								<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
 									<PlaySVG className={"mr-10"} /> Replay recording
 								</span>
 								<span>
@@ -409,7 +420,7 @@ function TestCard({ id, testData }: { id: string; testData: TTestInfo }) {
 						</div>
 						<div className={"flex items-center"}>
 							<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-							<span className={"flex text-13 mr-26"}>
+							<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
 								<PlaySVG className={"mr-10"} /> Replay recording
 							</span>
 							<span>

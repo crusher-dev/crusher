@@ -27,7 +27,7 @@ const overlay = css`
 	width: 100vw;
 	height: 100vh;
 	position: fixed;
-	z-index: 10;
+	z-index: 100000;
 	top: 0;
 	left: 0;
 `;

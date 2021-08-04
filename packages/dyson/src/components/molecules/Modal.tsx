@@ -7,11 +7,7 @@ import { CloseSVG } from "../icons/CloseSVG";
 export const Modal = ({ modalStyle, children, onClose, onOutsideClick }) => {
 	return (
 		<OverlayTransparent lightOverlay={true}>
-			<CenterLayout
-				css={css`
-					padding-bottom: 100px;
-				`}
-			>
+			<CenterLayout>
 				<OnOutsideClick onOutsideClick={onOutsideClick}>
 					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
 						{children}
@@ -36,7 +32,7 @@ const primaryModalStyle = css`
 	border: 1px solid #1a1d26;
 	box-sizing: border-box;
 	border-radius: 6px;
-	margin-top: -300rem;
+	margin-top: -200rem;
 
 	/*
 	Horizontal modal style

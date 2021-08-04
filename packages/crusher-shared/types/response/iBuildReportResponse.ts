@@ -26,10 +26,10 @@ interface Environment {
 	id: string;
 }
 
-interface Test {
+export interface Test {
 	name: string;
 	meta: {};
-	instances: Instance[];
+	testInstances: Instance[];
 }
 
 interface Instance {

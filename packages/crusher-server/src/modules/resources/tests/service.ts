@@ -36,7 +36,7 @@ class TestService {
 		return { events: JSON.parse(result) };
 	}
 
-	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & {events: Array<iAction>}) {
+	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }) {
 		return this.dbManager.insert(`INSERT INTO tests SET ?`, [
 			getSnakedObject({
 				projectId: testInfo.projectId,

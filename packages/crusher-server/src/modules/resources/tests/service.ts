@@ -39,7 +39,14 @@ class TestService {
 	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }) {
 		return this.dbManager.insert(
 			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ? `,
-			[testInfo.projectId, testInfo.name, JSON.stringify(testInfo.events), testInfo.userId, testInfo.featuredVideoUri, testInfo.featuredScreenshotUri],
+			[
+				testInfo.projectId,
+				testInfo.name,
+				JSON.stringify(testInfo.events),
+				testInfo.userId,
+				testInfo.featuredVideoUri ? testInfo.featuredVideoUri : null,
+				testInfo.featuredScreenshotUri ? testInfo.featuredScreenshotUri : null,
+			],
 		);
 	}
 

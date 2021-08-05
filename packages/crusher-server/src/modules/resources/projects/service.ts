@@ -3,7 +3,6 @@ import { DBManager } from "@modules/db";
 import { ICreateProjectEnvironmentPayload, ICreateProjectPayload, IProjectEnvironmentTable, IProjectTable } from "@modules/resources/projects/interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
-import { getSnakedObject } from "@utils/helper";
 
 @Service()
 class ProjectsService {
@@ -15,8 +14,13 @@ class ProjectsService {
 		return this.dbManager.fetchAllRows("SELECT * FROM project_hosts WHERE project_id = ?", [projectId]);
 	}
 
-	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload) {
-		return this.dbManager.insert("INSERT INTO projects SET ?", [getSnakedObject(environmentInfo)]);
+	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload): Promise<{ insertId: number }> {
+		return this.dbManager.insert("INSERT INTO project_hosts SET url = ?, host_name = ?, project_id = ?, user_id = ?", [
+			environmentInfo.url,
+			environmentInfo.hostName,
+			environmentInfo.projectId,
+			environmentInfo.userId,
+		]);
 	}
 
 	@CamelizeResponse()
@@ -24,8 +28,17 @@ class ProjectsService {
 		return this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE id = ?", [projectId]);
 	}
 
-	async createProject(payload: ICreateProjectPayload) {
-		return this.dbManager.insert("INSERT INTO projects SET ?", [getSnakedObject(payload)]);
+	@CamelizeResponse()
+	async getProjects(teamId: number): Promise<Array<KeysToCamelCase<IProjectTable>>> {
+		return this.dbManager.fetchAllRows("SELECT * FROM projects WHERE team_id = ?", [teamId]);
+	}
+
+	async createProject(payload: ICreateProjectPayload): Promise<{ insertId: number }> {
+		return this.dbManager.insert("INSERT INTO projects SET name = ?, team_id = ?, meta = ?", [
+			payload.name,
+			payload.teamId,
+			payload.meta ? JSON.stringify(payload.meta) : "",
+		]);
 	}
 
 	async updateMeta(meta: string, projectId: number) {

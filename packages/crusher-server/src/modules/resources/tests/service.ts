@@ -37,16 +37,10 @@ class TestService {
 	}
 
 	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }) {
-		return this.dbManager.insert(`INSERT INTO tests SET ?`, [
-			getSnakedObject({
-				projectId: testInfo.projectId,
-				name: testInfo.name,
-				events: JSON.stringify(testInfo.events),
-				userId: testInfo.userId,
-				featuredVideoUri: testInfo.featuredVideoUri,
-				featuredScreenshotUri: testInfo.featuredScreenshotUri,
-			}),
-		]);
+		return this.dbManager.insert(
+			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ? `,
+			[testInfo.projectId, testInfo.name, JSON.stringify(testInfo.events), testInfo.userId, testInfo.featuredVideoUri, testInfo.featuredScreenshotUri],
+		);
 	}
 
 	async updateTest(testId: number, newInfo: { name: string }) {
@@ -68,7 +62,7 @@ class TestService {
 
 	async getCompleteTestInfo(testId: number) {
 		return this.dbManager.fetchSingleRow(
-			`SELECT tests.*, projects.id projectId, projects.name projectName, users.id userId, users.first_name userFirstName, users.last_name userLastName FROM tests, projects, users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
+			`SELECT tests.*, projects.id projectId, projects.name projectName, users.id userId, users.name userName FROM tests, projects, users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
 			[testId],
 		);
 	}

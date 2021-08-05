@@ -22,7 +22,7 @@ export type TUserAPIData = {
 export type TProjectsData = Array<{
 	id: number;
 	name: string;
-	team_id: number;
+	teamId: number;
 }> | null;
 
 export type TSystemInfo = {

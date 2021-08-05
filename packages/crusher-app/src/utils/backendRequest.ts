@@ -42,9 +42,13 @@ export function backendRequest(_uri: string, options?: RequestOptions) {
 		method,
 		credentials: !isMockAPI ? "include" : "omit",
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
-	}).then((requestResponse: any) => {
+	}).then(async (requestResponse: any) => {
 		if (requestResponse.status === 500) {
 			throw new Error("Internal server error at " + uri);
+		}
+		if (requestResponse.status === 400) {
+			const { message } = await requestResponse.json();
+			throw new Error(message);
 		}
 		return requestResponse.json();
 	});

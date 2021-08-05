@@ -5,7 +5,7 @@ export interface IUserTable extends BaseRowInterface {
 	id: number;
 	team_id: number;
 	name: string;
-	emaiL: string;
+	email: string;
 	password: string;
 	verified: boolean;
 	is_oss: boolean;

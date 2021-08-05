@@ -1,9 +1,10 @@
 import { UsersService } from "@modules/resources/users/service";
-import { JsonController, Get, Param } from "routing-controllers";
+import { JsonController, Get, Param, QueryParams } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import { BuildTriggerEnum } from "./interface";
 
 @Service()
 @JsonController("")
@@ -16,8 +17,16 @@ export class BuildsController {
 	private commentsService: CommentsServiceV2;
 
 	@Get("/projects/:project_id/builds")
-	public async getList(@Param("project_id") project_id): Promise<IProjectBuildListResponse> {
-		const builds = await this.buildsService.getBuildInfoList(project_id);
+	public async getBuildsList(
+		@Param("project_id") projectId: number,
+		@QueryParams() params: { trigger?: BuildTriggerEnum },
+	): Promise<IProjectBuildListResponse> {
+		const filter: any = {};
+		if (params.trigger) {
+			filter.trigger = params.trigger;
+		}
+
+		const builds = await this.buildsService.getBuildInfoList(projectId, filter);
 
 		const buildsList = builds.map((buildData) => {
 			return {
@@ -25,6 +34,7 @@ export class BuildsController {
 				// @Note: There is no exact such thing as build name. For now build name
 				// is same as commit name if it present otherwise it will be null
 				name: buildData.buildName,
+				trigger: buildData.buildTrigger,
 				createdAt: new Date(buildData.buildCreatedAt).getTime() / 1000,
 				tests: {
 					totalCount: buildData.totalTestCount,

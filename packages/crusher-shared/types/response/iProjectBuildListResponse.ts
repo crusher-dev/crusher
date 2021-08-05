@@ -7,9 +7,17 @@ interface Tests {
 	reviewRequiredCount: number;
 }
 
+
+export enum BuildTriggerEnum {
+	MANUAL = "MANUAL",
+	CLI = "CLI",
+	CRON = "CRON",
+}
+
 export interface IProjectBuildListItem {
 	id: number;
 	name: string;
+	trigger: BuildTriggerEnum;
 	createdAt: number;
 	tests: Tests;
 	status: JobReportStatus;

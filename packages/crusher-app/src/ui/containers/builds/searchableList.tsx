@@ -93,7 +93,7 @@ function BuildSearchableList() {
 	const [project] = useAtom(currentProject);
 	const { query } = useRouter();
 	const [searchQuery, setSearchQuery] = useState(null as null | string);
-	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.monitoring), { suspense: true });
+	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger), { suspense: true });
 
 	const buildItems = useMemo(() => {
 		return data.map((buildInfo: IProjectBuildListItem) => {

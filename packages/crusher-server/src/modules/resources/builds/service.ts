@@ -3,9 +3,8 @@ import { DBManager } from "@modules/db";
 import { Service, Inject } from "typedi";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
-import { getCamelizeObject, getSnakedObject } from "@utils/helper";
+import { getSnakedObject } from "@utils/helper";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
-import { SnakleParam } from "@modules/decorators/snakleParam";
 
 interface IBuildInfoItem {
 	buildId: number;

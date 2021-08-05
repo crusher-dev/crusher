@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { resolveWorkerPath } from "@utils/env";
 
 require("dotenv").config();

@@ -1,4 +1,4 @@
-import { UserService } from "@modules/resources/users/service";
+import { UsersService } from "@modules/resources/users/service";
 import { Authorized, Get, JsonController, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import CommentsServiceV2 from "@core/services/CommentsService";
@@ -10,7 +10,7 @@ import { BuildsService } from "@modules/resources/builds/service";
 @JsonController("")
 class BuildReportController {
 	@Inject()
-	private userService: UserService;
+	private userService: UsersService;
 	@Inject()
 	private buildReportService: BuildReportService;
 	@Inject()

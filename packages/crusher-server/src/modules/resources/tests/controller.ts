@@ -1,4 +1,4 @@
-import { UserService } from "@modules/resources/users/service";
+import { UsersService } from "@modules/resources/users/service";
 import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body, QueryParams, Params } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { TestService } from "@modules/resources/tests/service";
@@ -11,7 +11,7 @@ import { iAction } from "@crusher-shared/types/action";
 @JsonController("")
 export class TestController {
 	@Inject()
-	private userService: UserService;
+	private userService: UsersService;
 	@Inject()
 	private testService: TestService;
 

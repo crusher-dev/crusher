@@ -26,19 +26,19 @@ class MysqlDatabase implements IDatabaseManager {
 	}
 
 	insert(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
-		return this.mysqlClient.query(query, valuesToEscape).then(([result]) => {
+		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => {
 			return { insertId: result.insertId };
 		});
 	}
 
 	update(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
-		return this.mysqlClient.query(query, valuesToEscape).then(([result]) => {
+		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => {
 			return { changedRows: result.changedRows };
 		});
 	}
 
 	delete(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
-		return this.mysqlClient.query(query, valuesToEscape).then(([result]) => {
+		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => {
 			return { deletedRows: result.changedRows };
 		});
 	}

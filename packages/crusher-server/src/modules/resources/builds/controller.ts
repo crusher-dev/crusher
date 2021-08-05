@@ -1,7 +1,6 @@
-import { UserService } from "@modules/resources/users/service";
+import { UsersService } from "@modules/resources/users/service";
 import { JsonController, Get, Param } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { getFullName } from "@utils/helper";
 import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
@@ -10,7 +9,7 @@ import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProje
 @JsonController("")
 export class BuildsController {
 	@Inject()
-	private userService: UserService;
+	private userService: UsersService;
 	@Inject()
 	private buildsService: BuildsService;
 	@Inject()

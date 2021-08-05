@@ -35,7 +35,7 @@ class UserAuthService {
 		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptPassword(password)]);
 
 		if (!user) {
-			throw new BadRequestError("No such user exists");
+			throw new BadRequestError("INVALID_CREDENTIALS");
 		}
 
 		await this.setUserAuthCookies(user.id, user.team_id, res);

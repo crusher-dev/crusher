@@ -65,10 +65,12 @@ export class UserController {
 	async createUser(@Body() userInfo: ICreateUserPayload & { inviteReferral: any }, @Res() res) {
 		const userEntries = await this.userAuthService.signupUser(userInfo, res, userInfo.inviteReferral);
 		// @TODO: Send verification mail
-		EmailManager.sendVerificationMail(userInfo.email, generateVerificationCode(userEntries.userId, userInfo.email));
+		// EmailManager.sendVerificationMail(userInfo.email, generateVerificationCode(userEntries.userId, userInfo.email));
+
 		return {
 			status: "Successful",
-			systemInfo: this.usersService.getUserAndSystemInfo(userEntries.userId)
+			userEntries: userEntries,
+			systemInfo: await this.usersService.getUserAndSystemInfo(userEntries.userId),
 		};
 	}
 
@@ -106,7 +108,6 @@ export class UserController {
 	@Get("/users/actions/getUserAndSystemInfo")
 	async getUserAndSystemInfo(@CurrentUser() user): Promise<IUserAndSystemInfoResponse> {
 		const { user_id } = user;
-
 		return this.usersService.getUserAndSystemInfo(user_id);
 	}
 

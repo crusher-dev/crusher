@@ -32,7 +32,7 @@ function Dropdown() {
 					css={dropDownItem}
 					className={"flex justify-between items-center px-16 py-12"}
 					onClick={() => {
-						router.push(resolvePathToBackendURI("/user/logout"));
+						router.push(resolvePathToBackendURI("/users/actions/logout"));
 					}}
 				>
 					<span className={"name font-500 leading-none font-cera"}>Logout</span>

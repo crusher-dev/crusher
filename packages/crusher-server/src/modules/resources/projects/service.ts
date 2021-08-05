@@ -34,7 +34,11 @@ class ProjectsService {
 	}
 
 	async createProject(payload: ICreateProjectPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO projects SET name = ?, team_id = ?, meta = ?", [payload.name, payload.teamId, payload.meta]);
+		return this.dbManager.insert("INSERT INTO projects SET name = ?, team_id = ?, meta = ?", [
+			payload.name,
+			payload.teamId,
+			payload.meta ? JSON.stringify(payload.meta) : "",
+		]);
 	}
 
 	async updateMeta(meta: string, projectId: number) {

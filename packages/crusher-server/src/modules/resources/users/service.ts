@@ -49,7 +49,7 @@ class UsersService {
 	}
 
 	async addUserToTeam(userId: number, teamId: number) {
-		return this.dbManager.update(`UPDATE users SET team_id = ? WHERE id = ?`, [{ team_id: teamId }, userId]);
+		return this.dbManager.update(`UPDATE users SET team_id = ? WHERE id = ?`, [teamId, userId]);
 	}
 
 	async setupInitialUserWorkspace(
@@ -78,13 +78,13 @@ class UsersService {
 		});
 
 		// Create and setup project
-		const userProjectId = user.projectId;
+		let userProjectId = user.projectId;
 		if (!userProjectId) {
 			const projectRecord = await this.projectsService.createProject({
 				name: `Default`,
 				teamId: userTeamId,
 			});
-			userTeamId = projectRecord.insertId;
+			userProjectId = projectRecord.insertId;
 		}
 		await this.userProjectRolesService.create({
 			userId: user.id,
@@ -96,13 +96,13 @@ class UsersService {
 	}
 
 	async createUserRecord(user: ICreateUserPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert(`INSERT INTO users SET name = ?`, {
-			name: user.name,
-			email: user.email,
-			password: encryptPassword(user.password),
-			verified: 0,
-			is_oss: isOpenSourceEdition(),
-		});
+		return this.dbManager.insert("INSERT INTO users SET name = ?, email = ?, password = ?, verified = ?, is_oss = ?", [
+			user.name,
+			user.email,
+			encryptPassword(user.password),
+			false,
+			isOpenSourceEdition(),
+		]);
 	}
 
 	@CamelizeResponse()

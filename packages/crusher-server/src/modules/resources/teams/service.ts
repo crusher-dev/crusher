@@ -18,12 +18,12 @@ class TeamsService {
 	}
 
 	async createTeam(payload: ICreateTeamPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO teams SET name = ?, team_email = ?, tier = ?, stripe_customer_id = ?", {
-			name: payload.name,
-			team_email: payload.teamEmail,
-			tier: payload.tier,
-			stripe_customer_id: payload.stripeCustomerId,
-		});
+		return this.dbManager.insert("INSERT INTO teams SET name = ?, team_email = ?, tier = ?, stripe_customer_id = ?", [
+			payload.name,
+			payload.teamEmail,
+			payload.tier,
+			payload.stripeCustomerId,
+		]);
 	}
 }
 

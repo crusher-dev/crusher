@@ -15,8 +15,8 @@ import { LoadingSVG } from "@svg/dashboard";
 import { getUserStatus } from "@utils/user";
 import { loadUserDataAndRedirect } from "../../../hooks/user";
 
-const emailLogin = (email, password) => {
-	return backendRequest("/user/login", {
+const emailLogin = (email: string, password: string) => {
+	return backendRequest("/users/actions/login", {
 		method: RequestMethod.POST,
 		payload: { email, password },
 	});
@@ -54,15 +54,15 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 		if (!validateEmail(email.value) || !validatePassword(password.value)) return;
 		setProcessingSignup(true);
 		try {
-			const { status, systemInfo } = await emailLogin(email.value, password.value);
-			if (status !== "USER_NOT_REGISTERED") {
-				setData(systemInfo);
-				router.push("/app/dashboard");
-			} else {
+			const { systemInfo } = await emailLogin(email.value, password.value);
+			setData(systemInfo);
+			router.push("/app/dashboard");
+		} catch (e: any) {
+			if (e.message === "INVALID_CREDENTIALS") {
 				alert("Please add valid ceredentials.");
+			} else {
+				alert(e);
 			}
-		} catch (e) {
-			alert(e);
 		}
 		setProcessingSignup(false);
 	};
@@ -169,7 +169,7 @@ export const LoginContainer = () => {
 					<Logo height={"24rem"} className={"mb-24 mt-80"} />
 					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Login to your account</div>
 
-					<a href={resolvePathToBackendURI("/user/authenticate/google")}>
+					<a href={resolvePathToBackendURI("/users/actions/auth.google")}>
 						<Button size={"large"} css={googleButton} className={"mb-20"}>
 							<div className={"flex justify-center items-center"}>
 								<GoogleSVG className={"mr-12"} />

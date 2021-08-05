@@ -17,8 +17,8 @@ import { LoadingSVG } from "@svg/dashboard";
 import { loadUserDataAndRedirect } from "../../../hooks/user";
 const showRegistrationFormAtom = atom(false);
 
-const registerUser = (name, email, password) => {
-	return backendRequest("/user/signup", {
+const registerUser = (name: string, email: string, password: string) => {
+	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
 		payload: { email, password, name: name, lastName: "" },
 	});
@@ -76,14 +76,11 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			const { status, systemInfo } = await registerUser(name.value, email.value, password.value);
-			if (status === "USER_NOT_REGISTERED") {
-				alert("Some error occurred.");
-			} else {
-				setData(systemInfo);
-			}
-		} catch (e) {
-			alert(e);
+			await registerUser(name.value, email.value, password.value);
+			// @TODO: Use router push here
+			window.location.href = "/app/dashboard";
+		} catch (e: any) {
+			alert(e.message);
 		}
 		setProcessingSignup(false);
 	};
@@ -195,7 +192,7 @@ export const SignupContainer = () => {
 					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Create your account</div>
 
 					<Conditional showIf={!showRegistrationBox}>
-						<a href={resolvePathToBackendURI("/user/authenticate/google")}>
+						<a href={resolvePathToBackendURI("/users/actions/auth.google")}>
 							<Button size={"large"} css={googleButton} className={"mb-20"}>
 								<div className={"flex justify-center items-center"}>
 									<GoogleSVG className={"mr-12"} />

@@ -1,6 +1,6 @@
 import { Service } from "typedi";
 import Stripe from "stripe";
-import Logger from "@utils/logger";
+import { Logger } from "@utils/logger";
 
 @Service()
 class StripeManager {

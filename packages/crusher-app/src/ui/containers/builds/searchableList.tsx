@@ -11,6 +11,7 @@ import { useAtom } from "jotai";
 import { currentProject } from "../../../store/atoms/global/project";
 import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -90,9 +91,9 @@ const noCommentsStyle = css`
 
 function BuildSearchableList() {
 	const [project] = useAtom(currentProject);
-
+	const { query } = useRouter();
 	const [searchQuery, setSearchQuery] = useState(null as null | string);
-	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id), { suspense: true });
+	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.monitoring), { suspense: true });
 
 	const buildItems = useMemo(() => {
 		return data.map((buildInfo: IProjectBuildListItem) => {

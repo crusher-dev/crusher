@@ -12,7 +12,7 @@ import Link from "next/link";
 import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
 import { isTempTestPending } from "@utils/user";
 import { sendSnackBarEvent } from "@utils/notify";
-import { VideoComponent } from 'dyson/src/components/atoms/video/video';
+import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
 enum ONBOARDING_STEP {
 	SETUP,

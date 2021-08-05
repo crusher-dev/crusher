@@ -16,7 +16,7 @@ function VideoComponent() {
 export const OnBoardingTutorialVideo = () => {
 	return (
 		<>
-			<div className="font-cera text-16 font-bold font-600 mt-72">Watch videos aimed to help you integrate testing</div>
+			<div className="font-cera text-16 font-bold font-600 mt-96">Watch videos aimed to help you integrate testing</div>
 			<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
 			<div className={"flex flex-row items-center mt-32"} css={footerContainerStyle}>
 				<div className={"flex flex-wrap text-14"} css={footerPlaceholderStyle}>

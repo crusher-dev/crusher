@@ -312,13 +312,13 @@ function TopNavbar() {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
 	const runProjectTest = useCallback(() => {
-		(async ()=>{
+		(async () => {
 			await runTests(selectedProjectId);
 
 			sendSnackBarEvent({ type: "normal", message: "We have started running test" });
 
-			router.push("/app/builds")
-		})()
+			router.push("/app/builds");
+		})();
 	}, []);
 	return (
 		<div css={[nav]} className={""}>
@@ -366,9 +366,9 @@ function TopNavbar() {
 						>
 							Create a test
 						</Button>
-						<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>
-							Share
-						</span>
+						{/*<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>*/}
+						{/*	Share*/}
+						{/*</span>*/}
 					</div>
 				</div>
 			</div>

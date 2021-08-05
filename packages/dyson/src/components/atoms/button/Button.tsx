@@ -32,7 +32,7 @@ export type ButtonProps = {
 	 */
 	onClick?: () => void;
 	className?: string;
-} & React.DetailedHTMLProps<any,any>;
+} & React.DetailedHTMLProps<any, any>;
 
 /**
  * Unified button component for Dyson UI system

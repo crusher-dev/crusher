@@ -1,13 +1,15 @@
 import React from "react";
+import { SerializedStyles } from '@emotion/react';
 
 export interface LogoProps {
-	showOnlyIcon: boolean;
-	isMonochrome: boolean;
+	showOnlyIcon?: boolean;
+	isMonochrome?: boolean;
 	height?: number | string;
+	className: string;
 	/**
 	 * Emotion CSS style if any
 	 */
-	css?: [string] | string;
+	css?: SerializedStyles;
 	/**
 	 * Optional click handler
 	 */

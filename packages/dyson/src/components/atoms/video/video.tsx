@@ -1,5 +1,5 @@
 import { css, SerializedStyles } from "@emotion/react";
-import React from 'react';
+import React from "react";
 
 export type VideoProps = {
 	/**
@@ -8,7 +8,7 @@ export type VideoProps = {
 	css?: SerializedStyles;
 	src: string;
 	autoPlay?: boolean;
-} & React.DetailedHTMLProps<any,any>;
+} & React.DetailedHTMLProps<any, any>;
 
 const VideoComponentSource = {
 	autoPlay: false,

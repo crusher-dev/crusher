@@ -92,18 +92,7 @@ export function RightArrow(props) {
 
 export function LoadingSVG(props) {
 	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			style={{
-				margin: "auto",
-			}}
-			width={200}
-			height={200}
-			viewBox="0 0 100 100"
-			preserveAspectRatio="xMidYMid"
-			display="block"
-			{...props}
-		>
+		<svg xmlns="http://www.w3.org/2000/svg" width={200} height={200} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" display="block" {...props}>
 			<circle
 				cx={50}
 				cy={50}

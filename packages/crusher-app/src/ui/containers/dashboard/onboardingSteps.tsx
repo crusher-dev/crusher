@@ -1,18 +1,21 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ExpandableList, ExpandableListItem } from "./expandableList";
 import { FullScreenSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { Button } from "dyson/src/components/atoms/button/Button";
-import { PlaySVG, AppleSVG } from "@svg/dashboard";
+import { PlaySVG } from "@svg/dashboard";
 import { DownloadButton } from "@ui/containers/dashboard/Download";
+import { Conditional } from "dyson/src/components/layouts";
+import dynamic from "next/dynamic";
 
 interface TTestIntegrationListProps {
 	className?: string;
 }
+const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
 function OnboardingSteps(props: TTestIntegrationListProps) {
 	const [selected, setSelected] = useState(0);
-
+	const [showCreateTest, setShowCreateTest] = useState(false);
 	const handleChangeItem = (index: number) => {
 		setSelected(index);
 	};
@@ -48,12 +51,16 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 									</td>
 									<td>
 										<div className={"ml-40"}>
-											<Button bgColor={"tertiary-dark"} onClick={() => {}} size="medium">
+											<Button bgColor={"tertiary-dark"} size="medium" onClick={setShowCreateTest.bind(this, true)}>
 												<div className={"flex items-center justify-center"}>
 													<PlaySVG className={"mr-12"} />
 													<span className={"mt-2"}>Create a test</span>
 												</div>
 											</Button>
+
+											<Conditional showIf={showCreateTest}>
+												<Download onClose={setShowCreateTest.bind(this, false)} />
+											</Conditional>
 										</div>
 									</td>
 								</tr>

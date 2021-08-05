@@ -20,11 +20,11 @@ export class EmailManager {
 	async sendEmail(to: string, subject: string, html: string) {
 		if (!this.emailClient) throw new Error("No email client available to send emails...");
 
-		this.emailClient.send({
+		return this.emailClient.send({
 			to: to,
 			from: {
 				name: "Crusher",
-				email: "welcome@crusher.dev",
+				email: "utkarsh@crusher.dev",
 			},
 			subject: subject,
 			html: html,

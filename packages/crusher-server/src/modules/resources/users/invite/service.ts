@@ -4,9 +4,10 @@ import { ProjectInviteReferrals } from "@modules/resources/users/invite/mongo/us
 import { TeamInviteReferrals } from "@modules/resources/users/invite/mongo/userTeamInviteReferrals";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { ICreateProjectInviteCode, ICreateTeamInviteCode, IInviteReferral, InviteReferralEnum, iProjectInviteReferral, iTeamInviteReferral } from "./interface";
-import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
 import { EmailManager } from "@modules/email";
 import * as ejs from "ejs";
+import * as path from "path";
+
 @Service()
 class UserInviteService {
 	@Inject()
@@ -126,7 +127,7 @@ class UserInviteService {
 	async sendInvitationsToEmails(emails: Array<string>, inviteReferral: { code: string; type: InviteReferralEnum }, adminName: string) {
 		return new Promise((resolve, reject) => {
 			ejs.renderFile(
-				__dirname + "/templates/inviteMembers.ejs",
+				path.resolve(__dirname, "./templates/inviteMember.ejs"),
 				{
 					invite_link: this.getInviteLink(inviteReferral.code, inviteReferral.type),
 					org_name: `${adminName}'s workspace`,
@@ -134,9 +135,10 @@ class UserInviteService {
 				},
 				async (err, html) => {
 					if (err) return reject("Can't load the invite member template");
-					for (let i = 0; i < emails.length; i++) {
-						await this.emailManager.sendEmail(emails[i], `[Crusher.dev] Invitation for ${adminName}'s workspace`, html);
-					}
+					const emailPromises = emails.map((email: string) => {
+						return this.emailManager.sendEmail(email, `[Crusher.dev] Invitation for ${adminName}'s workspace`, html);
+					});
+					await Promise.all(emailPromises);
 					resolve(true);
 				},
 			);

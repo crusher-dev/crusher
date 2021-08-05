@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React, { SyntheticEvent } from "react";
 import { css } from "@emotion/react";
 import { Button, Input } from "dyson/src/components/atoms";
 import { Modal } from "dyson/src/components/molecules/Modal";
@@ -8,28 +8,40 @@ import { RequestMethod } from "../../../types/RequestOptions";
 import { LoadingSVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
 import { sendSnackBarEvent } from "@utils/notify";
+import { appStateAtom } from "crusher-app/src/store/atoms/global/appState";
+import { useAtom } from "jotai";
 
-const inviteTeamMember = (emailList: string) => {
-	return backendRequest("/users/actions/invite", {
+const inviteTeamMembers = (projectId: number, emailList: string) => {
+	return backendRequest("/users/actions/invite.project.members", {
 		method: RequestMethod.POST,
-		payload: emailList.split(","),
+		payload: {
+			projectId: projectId,
+			emails: emailList.split(","),
+		},
 	});
 };
 
 export const InvitePeople = ({ onClose }) => {
 	const [emailList, changeEmailList] = useState("");
 	const [processing, setProcessing] = useState(false);
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
 	const isNoName = emailList.length === 0;
 
-	const addProjectCallback = useCallback(() => {
+	const inviteMembersCallback = useCallback(() => {
 		(async () => {
-			await inviteTeamMember(emailList);
-			sendSnackBarEvent({ type: "normal", message: "We have sent invitation links to their email" });
-			onClose();
+			try {
+				await inviteTeamMembers(selectedProjectId, emailList);
+				sendSnackBarEvent({ type: "normal", message: "We have sent invitation links to their email" });
+				onClose();
+			} catch (err) {
+				sendSnackBarEvent({ type: "error", message: "Failed to send invitations" });
+			}
+			setProcessing(false);
 		})();
 		setProcessing(true);
 	}, [emailList]);
+
 	return (
 		<Modal onOutsideClick={onClose} onClose={onClose}>
 			<div className={"font-cera text-16 font-600 leading-none"}>Invite your teammates</div>
@@ -69,7 +81,7 @@ export const InvitePeople = ({ onClose }) => {
 					disabled={isNoName || processing}
 					bgColor={isNoName ? "disabled" : ""}
 					title={isNoName && "Please enter project name"}
-					onClick={addProjectCallback}
+					onClick={inviteMembersCallback}
 				>
 					<div className={"flex justify-center items-center"}>
 						<Conditional showIf={processing}>

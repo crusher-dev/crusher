@@ -6,7 +6,7 @@ export const snackBarEmitter = mitt();
 
 export type SnackbarEvent = {
 	message: string;
-	type?:  "normal" | "success" | "info" | "error";
+	type?: "normal" | "success" | "info" | "error";
 };
 
 export const Snackbar = () => {

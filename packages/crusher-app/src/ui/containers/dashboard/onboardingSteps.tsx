@@ -6,13 +6,12 @@ import { Button } from "dyson/src/components/atoms/button/Button";
 import { PlaySVG } from "@svg/dashboard";
 import { DownloadButton } from "@ui/containers/dashboard/Download";
 import { Conditional } from "dyson/src/components/layouts";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 interface TTestIntegrationListProps {
 	className?: string;
 }
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
-
 
 function OnboardingSteps(props: TTestIntegrationListProps) {
 	const [selected, setSelected] = useState(0);
@@ -44,7 +43,6 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 												`}
 											/>
 										</div>
-
 									</td>
 								</tr>
 								<tr>
@@ -53,7 +51,7 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 									</td>
 									<td>
 										<div className={"ml-40"}>
-											<Button bgColor={"tertiary-dark"} size="medium" 	onClick={setShowCreateTest.bind(this, true)}>
+											<Button bgColor={"tertiary-dark"} size="medium" onClick={setShowCreateTest.bind(this, true)}>
 												<div className={"flex items-center justify-center"}>
 													<PlaySVG className={"mr-12"} />
 													<span className={"mt-2"}>Create a test</span>

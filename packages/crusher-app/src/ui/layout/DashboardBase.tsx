@@ -312,13 +312,13 @@ function TopNavbar() {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
 	const runProjectTest = useCallback(() => {
-		(async ()=>{
+		(async () => {
 			await runTests(selectedProjectId);
 
 			sendSnackBarEvent({ type: "normal", message: "We have started running test" });
 
-			router.push("/app/builds")
-		})()
+			router.push("/app/builds");
+		})();
 	}, []);
 	return (
 		<div css={[nav]} className={""}>

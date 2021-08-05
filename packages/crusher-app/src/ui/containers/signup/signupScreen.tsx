@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 import { Button, Logo } from "dyson/src/components/atoms";
-import { GithubSVG, GoogleSVG } from "@svg/social";
+import { GoogleSVG } from "@svg/social";
 import Link from "next/link";
 import { resolvePathToBackendURI } from "@utils/url";
 import { Input } from "dyson/src/components/atoms";
@@ -12,12 +12,11 @@ import { RequestMethod } from "../../../types/RequestOptions";
 import { atom } from "jotai";
 import { useAtom } from "jotai";
 import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
-import { useRouter } from "next/router";
 import { LoadingSVG } from "@svg/dashboard";
 import { loadUserDataAndRedirect } from "../../../hooks/user";
 const showRegistrationFormAtom = atom(false);
 
-const registerUser = (name, email, password) => {
+const registerUser = (name: string, email: string, password: string) => {
 	return backendRequest("/user/signup", {
 		method: RequestMethod.POST,
 		payload: { email, password, name: name, lastName: "" },
@@ -25,7 +24,6 @@ const registerUser = (name, email, password) => {
 };
 
 function EmailPasswordBox() {
-	const router = useRouter();
 	const [data, setData] = useState(null);
 
 	const [_, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
@@ -101,7 +99,7 @@ function EmailPasswordBox() {
 					isError={name.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>
-				<Conditional showIf={name.error}>
+				<Conditional showIf={!!name.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{name.error}
 					</div>
@@ -117,7 +115,7 @@ function EmailPasswordBox() {
 					isError={email.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>
-				<Conditional showIf={email.error}>
+				<Conditional showIf={!!email.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{email.error}
 					</div>
@@ -133,7 +131,7 @@ function EmailPasswordBox() {
 					isError={password.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>
-				<Conditional showIf={password.error}>
+				<Conditional showIf={!!password.error}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{password.error}
 					</div>

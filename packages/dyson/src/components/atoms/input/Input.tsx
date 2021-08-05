@@ -1,7 +1,7 @@
 import React from "react";
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from '@emotion/react';
 
-export interface ButtonProps {
+export type ButtonProps = {
 	/**
 	 * Size of the component
 	 */
@@ -19,10 +19,10 @@ export interface ButtonProps {
 	/**
 	 * Emotion CSS style if any
 	 */
-	css?: [string] | string;
+	css?: SerializedStyles;
 
 	className?: string;
-}
+}  & React.DetailedHTMLProps<any, any>;
 
 /**
  * Unified button component for Dyson UI system

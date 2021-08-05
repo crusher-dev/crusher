@@ -112,8 +112,7 @@ export class UserService {
 	}
 
 	async createInitialUserWorkspace(userId: number, user: iSignupUserRequest, shouldInitializeStripe = true): Promise<{ teamId: number; projectId: number }> {
-		const stripeCustomerId =
-			shouldInitializeStripe && this.stripeManager ? await this.stripeManager.createCustomer(`${user.name}`, user.email) : null;
+		const stripeCustomerId = shouldInitializeStripe && this.stripeManager ? await this.stripeManager.createCustomer(`${user.name}`, user.email) : null;
 
 		const teamId = await this.teamService.createTeamWithArgs(userId, `${user.name}'s Team`, user.email, TierPlan.FREE, stripeCustomerId);
 		await this.updateTeam(userId, teamId);
@@ -205,13 +204,7 @@ export class UserService {
 		return { status: USER_ALREADY_REGISTERED };
 	}
 
-	private async createdUserProfile(
-		password: string,
-		name: string,
-		email: string,
-		referralTeamId: number = null,
-		referralProjectId: number = null,
-	) {
+	private async createdUserProfile(password: string, name: string, email: string, referralTeamId: number = null, referralProjectId: number = null) {
 		const encryptedPassword = encryptPassword(password);
 
 		const insertedUser = await this.dbManager.insert(`INSERT INTO users SET ?`, {
@@ -235,9 +228,7 @@ export class UserService {
 					})
 				).teamId;
 			}
-			const projectId = referralProjectId
-				? referralProjectId
-				: (await this.projectService.createDefaultProject(teamId, `${name}'s project`)).insertId;
+			const projectId = referralProjectId ? referralProjectId : (await this.projectService.createDefaultProject(teamId, `${name}'s project`)).insertId;
 			return {
 				status: USER_REGISTERED,
 				userId: insertedUser.insertId,

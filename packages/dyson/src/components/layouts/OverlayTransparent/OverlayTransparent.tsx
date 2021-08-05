@@ -5,7 +5,7 @@ import { CloseSVG } from "../../icons/CloseSVG";
 
 type TransparentOverlayProps = {
 	children: ReactElement;
-	onClose: Function;
+	onClose?: Function;
 	lightOverlay?: boolean;
 } & Record<any, any>;
 

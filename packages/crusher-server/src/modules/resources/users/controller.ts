@@ -4,14 +4,13 @@ import { UsersService } from "@modules/resources/users/service";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import GoogleAPIService from "@core/services/GoogleAPIService";
 import { clearUserAuthorizationCookies } from "@utils/cookies";
-import { EmailManager } from "@manager/EmailManager";
-import { generateVerificationCode } from "@utils/auth";
 import { google } from "googleapis";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { UserAuthService } from "./auth.service";
 import { ICreateUserPayload } from "./interface";
 import { v4 as uuidv4 } from "uuid";
 import { UserInviteService } from "./invite/service";
+import { InviteReferralEnum } from "./invite/interface";
 
 @Service()
 @JsonController("")
@@ -97,7 +96,7 @@ export class UserController {
 	}
 
 	@Post("/users/actions/login")
-	async loginUser(@Body() body: { email: string, password: string }, @Res() res: any) {
+	async loginUser(@Body() body: { email: string; password: string }, @Res() res: any) {
 		const user = await this.userAuthService.loginWithBasicAuth(body.email, body.password, res);
 
 		const systemInfo = await this.usersService.getUserAndSystemInfo(user.id);
@@ -138,5 +137,24 @@ export class UserController {
 
 		const { team_id } = user;
 		return this.userInviteService.fetchPublicProjectInviteCode(projectId, team_id, null);
+	}
+
+	@Authorized()
+	@Post("/users/actions/invite.project.members")
+	async inviteMembersToProject(@CurrentUser({ required: true }) user, @Body() body: { projectId: number; emails: Array<string> }) {
+		const userRecord = await this.usersService.getUserInfo(user.user_id);
+
+		const referralCode = await this.userInviteService.createProjectInviteCode({
+			teamId: user.team_id,
+			projectId: body.projectId,
+			emails: body.emails,
+			// Expire after one day
+			expiresOn: new Date(Date.now() + 1440000),
+			isPublic: false,
+		});
+
+		await this.userInviteService.sendInvitationsToEmails(body.emails, { code: referralCode, type: InviteReferralEnum.PROJECT }, userRecord.name);
+
+		return "Successful";
 	}
 }

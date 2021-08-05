@@ -4,11 +4,23 @@ import { ProjectInviteReferrals } from "@modules/resources/users/invite/mongo/us
 import { TeamInviteReferrals } from "@modules/resources/users/invite/mongo/userTeamInviteReferrals";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { ICreateProjectInviteCode, ICreateTeamInviteCode, IInviteReferral, InviteReferralEnum, iProjectInviteReferral, iTeamInviteReferral } from "./interface";
-
+import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
+import { EmailManager } from "@modules/email";
+import * as ejs from "ejs";
 @Service()
 class UserInviteService {
 	@Inject()
 	private dbManager: DBManager;
+	@Inject()
+	private emailManager: EmailManager;
+
+	getInviteLink(inviteCode: string, inviteType: InviteReferralEnum): string {
+		const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/signup`));
+		inviteLinkUrl.searchParams.append("inviteType", inviteType);
+		inviteLinkUrl.searchParams.append("inviteCode", inviteCode);
+
+		return inviteLinkUrl.toString();
+	}
 
 	fetchPublicProjectInviteCode(projectId: number, teamId: number, expiresOn: Date | null) {
 		return new Promise((resolve, reject) => {
@@ -21,21 +33,19 @@ class UserInviteService {
 				async (err, referral: iProjectInviteReferral & { id: string }) => {
 					if (err) return reject(err);
 
-					const refferalCode = referral
-						? referral.id
-						: await this.createProjectInviteCode({
-								teamId: teamId,
-							  projectId: projectId,
-                expiresOn: expiresOn,
-                meta: {},
-							  isPublic: true,
-						  });
+					let refferalCode = referral.id;
 
-					const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/signup`));
-					inviteLinkUrl.searchParams.append("inviteType", InviteReferralEnum.PROJECT);
-					inviteLinkUrl.searchParams.append("inviteCode", refferalCode);
+					if (!refferalCode) {
+						refferalCode = await this.createProjectInviteCode({
+							teamId: teamId,
+							projectId: projectId,
+							expiresOn: expiresOn,
+							meta: {},
+							isPublic: true,
+						});
+					}
 
-					resolve(inviteLinkUrl.toString());
+					resolve(this.getInviteLink(refferalCode, InviteReferralEnum.PROJECT));
 				},
 			);
 		});
@@ -111,6 +121,26 @@ class UserInviteService {
 		} else {
 			return this.getTeamInviteCode(referralInfo.code);
 		}
+	}
+
+	async sendInvitationsToEmails(emails: Array<string>, inviteReferral: { code: string; type: InviteReferralEnum }, adminName: string) {
+		return new Promise((resolve, reject) => {
+			ejs.renderFile(
+				__dirname + "/templates/inviteMembers.ejs",
+				{
+					invite_link: this.getInviteLink(inviteReferral.code, inviteReferral.type),
+					org_name: `${adminName}'s workspace`,
+					invited_by: adminName,
+				},
+				async (err, html) => {
+					if (err) return reject("Can't load the invite member template");
+					for (let i = 0; i < emails.length; i++) {
+						await this.emailManager.sendEmail(emails[i], `[Crusher.dev] Invitation for ${adminName}'s workspace`, html);
+					}
+					resolve(true);
+				},
+			);
+		});
 	}
 }
 

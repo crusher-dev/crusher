@@ -16,7 +16,12 @@ class ProjectsService {
 	}
 
 	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload) {
-		return this.dbManager.insert("INSERT INTO projects SET ?", [getSnakedObject(environmentInfo)]);
+		return this.dbManager.insert("INSERT INTO project_hosts SET url = ?, host_name = ?, project_id = ?, user_id = ?", [
+			environmentInfo.url,
+			environmentInfo.hostName,
+			environmentInfo.projectId,
+			environmentInfo.userId,
+		]);
 	}
 
 	@CamelizeResponse()
@@ -25,7 +30,7 @@ class ProjectsService {
 	}
 
 	async createProject(payload: ICreateProjectPayload) {
-		return this.dbManager.insert("INSERT INTO projects SET ?", [getSnakedObject(payload)]);
+		return this.dbManager.insert("INSERT INTO projects SET name = ?, team_id = ?, meta = ?", [payload.name, payload.teamId, payload.meta]);
 	}
 
 	async updateMeta(meta: string, projectId: number) {

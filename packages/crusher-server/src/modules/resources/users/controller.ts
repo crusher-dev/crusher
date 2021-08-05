@@ -63,6 +63,9 @@ export class UserController {
 
 	@Post("/users/actions/signup")
 	async createUser(@Body() userInfo: ICreateUserPayload & { inviteReferral: any }, @Res() res) {
+		const userDBRecord = await this.usersService.getUserByEmail(userInfo.email);
+		if (userDBRecord) throw new BadRequestError("USER_EMAIL_NOT_AVAILABLE");
+
 		const userEntries = await this.userAuthService.signupUser(userInfo, res, userInfo.inviteReferral);
 		// @TODO: Send verification mail
 		// EmailManager.sendVerificationMail(userInfo.email, generateVerificationCode(userEntries.userId, userInfo.email));

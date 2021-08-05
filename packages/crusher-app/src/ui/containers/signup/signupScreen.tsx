@@ -80,7 +80,8 @@ function EmailPasswordBox() {
 			// @TODO: Use router push here
 			window.location.href = "/app/dashboard";
 		} catch (e: any) {
-			alert(e.message);
+			console.error(e);
+			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered": "Some error occurred while registering");
 		}
 		setProcessingSignup(false);
 	};

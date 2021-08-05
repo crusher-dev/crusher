@@ -29,11 +29,17 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 	const [processingSignup, setProcessingSignup] = useState(false);
 	const [data, setData] = useState(null);
 
-	const emailChange = (e) => {
-		setEmail({ ...email, value: e.target.value });
+	const emailChange = (event: any) => {
+		setEmail({ ...email, value: event.target.value });
 	};
-	const passwordChange = (e) => {
-		setPassword({ ...password, value: e.target.value });
+	const passwordChange = (event: any) => {
+		setPassword({ ...password, value: event.target.value });
+	};
+
+	const loginOnEnter = (event: any) => {
+		if (event.key === "Enter") {
+			return onLogin();
+		}
 	};
 
 	const verifyInfo = (completeVerify = false) => {
@@ -75,8 +81,8 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 				<Input
 					autoComplete={"email"}
 					value={email.value}
-					placeholder={"Enter email"}
 					onChange={emailChange}
+					placeholder={"Enter email"}
 					isError={email.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>
@@ -94,6 +100,7 @@ function EmailPasswordBox({ setShowBox, isSignup = false }) {
 					placeholder={"Enter your password"}
 					type={"password"}
 					onChange={passwordChange}
+					onKeyUp={loginOnEnter}
 					isError={password.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>

@@ -86,6 +86,12 @@ function EmailPasswordBox() {
 		setProcessingSignup(false);
 	};
 
+	const signupOnEnter = (event: any) => {
+		if (event.key === "Enter") {
+			signupUser();
+		}
+	};
+
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
 	return (
@@ -128,6 +134,7 @@ function EmailPasswordBox() {
 					placeholder={"Enter your password"}
 					type={"password"}
 					onChange={passwordChange}
+					onKeyDown={signupOnEnter}
 					isError={password.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>

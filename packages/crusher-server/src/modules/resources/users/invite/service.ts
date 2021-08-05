@@ -31,7 +31,7 @@ class UserInviteService {
 							  isPublic: true,
 						  });
 
-					const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/get-started`));
+					const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/signup`));
 					inviteLinkUrl.searchParams.append("inviteType", InviteReferralEnum.PROJECT);
 					inviteLinkUrl.searchParams.append("inviteCode", refferalCode);
 

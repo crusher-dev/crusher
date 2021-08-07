@@ -1,5 +1,16 @@
-FROM gitpod/workspace-full-vnc
+FROM gitpod/workspace-full-vnc:latest
 
-RUN sudo apt-get update && \
-    sudo apt-get install -y libx11-dev libxkbfile-dev libsecret-1-dev libgconf2–4 libnss3 && \
-    sudo rm -rf /var/lib/apt/lists/*
+    # Install custom tools, runtime, etc.
+RUN sudo apt-get update \
+    # window manager
+    && sudo apt-get install -y jwm \
+    # electron
+    && sudo apt-get install -y libgtk-3-0 libnss3 libasound2 libgbm1 \
+    # native-keymap
+    && sudo apt-get install -y libx11-dev libxkbfile-dev \
+    # keytar
+    && sudo apt-get install -y libsecret-1-dev \
+    && sudo rm -rf /var/lib/apt/lists/*
+
+RUN yarn install
+ 

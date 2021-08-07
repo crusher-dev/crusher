@@ -29,9 +29,9 @@ export default function elementCustomScript(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
-			const output = await waitForSelectors(page, selectors);
+			const selectorInfo = await waitForSelectors(page, selectors);
 
-			const elementHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
+			const elementHandle = await page.$(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
 			if (!elementHandle) {
 				return error(`Attempt to capture screenshot of element with invalid selector: ${selectors[0].value}`);
 			}
@@ -39,9 +39,13 @@ export default function elementCustomScript(action: iAction, page: Page) {
 			const customScript = action.payload.meta.script;
 
 			const scriptOutput = await runScriptOnElement(customScript, elementHandle);
+			const pageUrl = await page.url();
+
 			if (!!scriptOutput) {
 				return success({
 					message: `Clicked on the element ${selectors[0].value}`,
+					selector: selectorInfo,
+					pageUrl: pageUrl
 				});
 			} else {
 				return error(`Assertion failed according to the script with output: ${JSON.stringify(scriptOutput)}`);

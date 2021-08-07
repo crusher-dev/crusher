@@ -24,25 +24,45 @@ function getCrusherSelectorEngine() {
 		return generateQuerySelector((el as any).parentNode) + " > " + str;
 	};
 
-	const getValidSelectorFromArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
+	const getElementFromSelectorArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
 		for (const selector of selectors) {
 			try {
+				let selectedElement = null;
 				if (selector.type === "xpath") {
 					const elements = getElementsByXPath(selector.value);
-					if (elements.length) {
-						const elementSelectorFromXpath = generateQuerySelector(elements[0] as HTMLElement);
-
-						return {
-							element: elements[0] as Element,
-							selector: elementSelectorFromXpath,
-						};
-					}
+					if (elements.length) selectedElement = elements[0];
 				} else if (root.querySelector(selector.value)) {
-					return {
-						element: root.querySelector(selector.value)!,
-						selector: selector.value,
-					};
+					selectedElement = root.querySelector(selector.value)!;
 				}
+				if (selectedElement) {
+					(selectedElement as any).selector = selector.value;
+					(selectedElement as any).selectorType = selector.type;
+
+					return selectedElement;
+				}
+			} catch {}
+		}
+		return null;
+	};
+
+	const getElementsFromSelectorArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
+		for (const selector of selectors) {
+			try {
+				let selectedElements = [];
+				if (selector.type === "xpath") {
+					const elements = getElementsByXPath(selector.value);
+					if (elements.length) selectedElements = elements;
+				} else if (root.querySelector(selector.value)) {
+					selectedElements = new Array(root.querySelectorAll(selector.value)!);
+				}
+				selectedElements.map((selectedElement) => {
+					(selectedElement as any).selector = selector.value;
+					(selectedElement as any).selectorType = selector.type;
+
+					return selectedElement;
+				});
+				if(selectedElements.length)
+				return selectedElements;
 			} catch {}
 		}
 		return null;
@@ -52,17 +72,17 @@ function getCrusherSelectorEngine() {
 		// Returns the first element matching given selector in the root's subtree.
 		query(root: Element, selector: string) {
 			const selectorArr = JSON.parse(decodeURIComponent(selector));
-			const validSelectorElementInfo = getValidSelectorFromArr(selectorArr);
+			const validElement = getElementFromSelectorArr(selectorArr);
 
-			return validSelectorElementInfo ? validSelectorElementInfo.element : null;
+			return  validElement;
 		},
 
 		// Returns all elements matching given selector in the root's subtree.
 		queryAll(root: Element, selector: string) {
 			const selectorArr = JSON.parse(decodeURIComponent(selector));
-			const validSelectorElementInfo = getValidSelectorFromArr(selectorArr);
+			const validElementsArr = getElementsFromSelectorArr(selectorArr);
 
-			return validSelectorElementInfo ? Array.from(root.querySelectorAll(validSelectorElementInfo.selector)) : [];
+			return validElementsArr;
 		},
 	};
 }

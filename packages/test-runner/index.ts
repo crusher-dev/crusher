@@ -1,4 +1,6 @@
 require("dotenv").config();
-import { TestRunner } from "@src/index";
+import TestRunnerBootstrap from "@bootstrap";
 
-new TestRunner().boot();
+const runnerBoostrap = new TestRunnerBootstrap();
+
+runnerBoostrap.boot();

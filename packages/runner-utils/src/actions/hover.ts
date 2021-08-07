@@ -9,11 +9,15 @@ export default async function hover(action: iAction, page: Page) {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
 
-			const output = await waitForSelectors(page, selectors);
-			await page.hover(output ? output.value : toCrusherSelectorsFormat(selectors));
+			const selectorInfo = await waitForSelectors(page, selectors);
+			await page.hover(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
+
+			const pageUrl = await page.url();
 
 			return success({
 				message: `Hovered on the element ${selectors[0].value}`,
+				pageUrl: pageUrl,
+				selector: selectorInfo
 			});
 		} catch (err) {
 			console.error(err);

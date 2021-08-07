@@ -1,8 +1,8 @@
 import { Page } from "playwright";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 
-export default async function scroll(page: Page, selectors: Array<iSelectorInfo>, scrollDeltaArr: Array<number>, isWindow: boolean = true) {
-	await page.evaluate(
+export default async function scroll(page: Page, selectors: Array<iSelectorInfo>, scrollDeltaArr: Array<number>, isWindow: boolean = true): Promise<iSelectorInfo> {
+	return page.evaluate(
 		([scrollDeltaArr, selectorKeys, isWindow]: [number[], Array<iSelectorInfo>, boolean]) => {
 			const getElementsByXPath = (xpath: string, parent: Node | null = null): Node[] => {
 				const results = [];
@@ -27,26 +27,29 @@ export default async function scroll(page: Page, selectors: Array<iSelectorInfo>
 				return generateQuerySelector((el as any).parentNode) + " > " + str;
 			};
 
-			const getValidSelectorFromArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
+			const getElementFromSelectorArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
 				for (const selector of selectors) {
 					try {
+						let selectedElement = null;
 						if (selector.type === "xpath") {
 							const elements = getElementsByXPath(selector.value);
-							if (elements.length) {
-								const elementSelectorFromXpath = generateQuerySelector(elements[0] as HTMLElement);
-
-								return { element: elements[0] as Element, selector: elementSelectorFromXpath };
-							}
+							if (elements.length) selectedElement = elements[0];
 						} else if (root.querySelector(selector.value)) {
-							return { element: root.querySelector(selector.value)!, selector: selector.value };
+							selectedElement = root.querySelector(selector.value)!;
+						}
+						if (selectedElement) {
+							(selectedElement as any).selector = selector.value;
+							(selectedElement as any).selectorType = selector.type;
+
+							return selectedElement;
 						}
 					} catch {}
 				}
 				return null;
 			};
 
-			const selectorKeyInfo = getValidSelectorFromArr(selectorKeys);
-			if (!selectorKeyInfo && !isWindow) throw new Error("No valid selector found");
+			const selectedElement = getElementFromSelectorArr(selectorKeys);
+			if (!selectedElement && !isWindow) throw new Error("No valid selector found");
 
 			const scrollTo = function (element: HTMLElement, offset: number) {
 				const fixedOffset = offset.toFixed();
@@ -66,11 +69,13 @@ export default async function scroll(page: Page, selectors: Array<iSelectorInfo>
 				});
 			};
 
-			const element = isWindow ? window : document.querySelector(selectorKeyInfo!.selector);
+			const element = isWindow ? window : document.querySelector(selectedElement!.selector);
 
 			for (let i = 0; i < scrollDeltaArr.length; i++) {
 				if (scrollDeltaArr[i]) scrollTo(element as HTMLElement, scrollDeltaArr[i]);
 			}
+
+			return { type: selectedElement.selectorType, value: selectedElement.selector };
 		},
 		[scrollDeltaArr, selectors, isWindow],
 	);

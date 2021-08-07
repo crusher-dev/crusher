@@ -14,6 +14,7 @@ export default async function waitForNavigation(action: iAction, page: Page) {
 			}
 			return success({
 				message: `Waited for navigation successfully`,
+				isSamePageAsNow: currentUrl === lastSavedUrl
 			});
 		} catch (err) {
 			console.error(err);

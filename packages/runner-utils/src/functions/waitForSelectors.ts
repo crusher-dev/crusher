@@ -14,10 +14,9 @@ export default async function waitForSelectors(page: Page, selectors: Array<iSel
 	}
 
 	if (playwrightOut) {
-		return playwrightOut;
+		return {value: playwrightOut as any, type: SELECTOR_TYPE.PLAYWRIGHT};
 	}
 
-	await page.waitForSelector(toCrusherSelectorsFormat(selectors));
-
-	return undefined;
+	const elementHandle = (await page.waitForSelector(toCrusherSelectorsFormat(selectors))).asElement();
+	return {value: (elementHandle as any).selector as any, type: (elementHandle as any).selectorType as any};
 }

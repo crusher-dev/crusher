@@ -48,5 +48,6 @@ export type ICreateBuildRequestPayload = KeysToCamelCase<
 	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status"> & {
 		config?: IBuildConfig;
 		status?: BuildStatusEnum;
+		latestReportId?: number | null;
 	}
 >;

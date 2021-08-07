@@ -14,12 +14,15 @@
 		"strictNullChecks": false,
 		"paths": {
 <% if(isEnterprise) { %>
-			"@src/*": ["./src_ee/*", "./src/*"],
+			"@modules/*": ["./ee/modules/*", "./src/modules/*"],
+			"@bootstrap": ["./ee/bootstrap.ts"]
 			"@manager/*": ["./src_ee/manager/*", "./src/manager/*"],
 <% } else {%>
-            "@src/*": ["./src/*"],
-            "@manager/*": ["./src/manager/*"],
+			"@bootstrap": ["./src/bootstrap.ts"]
+			"@modules/*": ["./src/modules/*"],
+      "@manager/*": ["./src/manager/*"],
 <% } %>
+			"@src/*": ["./src/*"],
 			"@shared/*": ["../crusher-shared/*"],
 			"@crusher-shared/*": ["../crusher-shared/*"],
 			"@models/*": ["./src/models/*"],

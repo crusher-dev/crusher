@@ -10,17 +10,20 @@ export default function addInput(action: iAction, page: Page) {
 			const selectors = action.payload.selectors as iSelectorInfo[];
 			const inputKeys = action.payload.meta.value;
 
-			const output = await waitForSelectors(page, selectors);
-			const elementHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
+			const selectorInfo = await waitForSelectors(page, selectors);
+			const elementHandle = await page.$(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
 			if (!elementHandle) {
 				return error(`Attempt to press keycodes on element with invalid selector: ${selectors[0].value}`);
 			}
 
 			await elementHandle.scrollIntoViewIfNeeded();
 			await type(elementHandle, inputKeys);
+			const pageUrl = await page.url();
 
 			return success({
-				message: `Pressed keys on the element ${selectors[0].value}`,
+				message: `Pressed keys on the element ${selectorInfo.value}`,
+				selector: selectorInfo,
+				pageUrl: pageUrl
 			});
 		} catch (err) {
 			return error("Some issue occurred while adding input to element");

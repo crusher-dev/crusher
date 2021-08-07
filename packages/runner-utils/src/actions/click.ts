@@ -10,18 +10,20 @@ export default function click(action: iAction, page: Page) {
 		setPageUrl(await page.url());
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
-			const output = await waitForSelectors(page, selectors);
+			const selectorInfo = await waitForSelectors(page, selectors);
 
-			const elementHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
+			const elementHandle = await page.$(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
 			if (!elementHandle) {
 				return error(`No element with selector as ${selectors[0].value} exists`);
 			}
 
 			await elementHandle.scrollIntoViewIfNeeded();
 			await elementHandle.dispatchEvent("click");
-
+			const pageUrl = await page.url();
 			return success({
 				message: `Clicked on the element ${selectors[0].value}`,
+				pageUrl: pageUrl,
+				selector: selectorInfo,
 			});
 		} catch (err) {
 			console.error(err);

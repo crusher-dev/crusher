@@ -14,7 +14,7 @@ import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
 import { UserController } from "@modules/resources/users/controller";
 import { EmailManager } from "@manager/EmailManager";
-import MongoManager from "@manager/MongoManager";
+import { MongoManager } from "@modules/db/mongo";
 import { RedisManager } from "@manager/redis";
 import { TestController } from "@modules/resources/tests/controller";
 import { BuildsController } from "@modules/resources/builds/controller";
@@ -22,6 +22,7 @@ import { BuildReportController } from "@modules/resources/buildReports/controlle
 import { ReleaseController } from "@controllers/ReleaseController";
 import { ProjectsController } from "@modules/resources/projects/controller";
 import { TeamsController } from "@modules/resources/teams/controller";
+import { BuildTestInstancesController } from "@modules/resources/builds/instances/controller";
 
 RedisManager.initialize();
 
@@ -57,7 +58,16 @@ if (process.env.STORAGE_MODE === "local") {
 	server.listen(storagePort);
 }
 
-const controllersArr: any = [UserController, TestController, BuildsController, BuildReportController, ReleaseController, ProjectsController, TeamsController];
+const controllersArr: any = [
+	UserController,
+	TestController,
+	BuildsController,
+	BuildReportController,
+	ReleaseController,
+	ProjectsController,
+	TeamsController,
+	BuildTestInstancesController,
+];
 
 // @TODO: Look into this
 // if (getEdition() === EDITION_TYPE.EE) {

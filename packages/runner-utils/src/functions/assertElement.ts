@@ -4,13 +4,13 @@ import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 import { toCrusherSelectorsFormat } from "../utils/helper";
 import { waitForSelectors } from "./index";
 
-export default async function assertElementAttributes(page: Page, selectors: Array<iSelectorInfo>, assertions: Array<iAssertionRow>) {
-	const output = await waitForSelectors(page, selectors);
-	const elHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
+export default async function assertElementAttributes(page: Page, selectors: Array<iSelectorInfo>, assertions: Array<iAssertionRow>): Promise<{selector: iSelectorInfo, hasPassed: boolean, logs: Array<{status: "FAILED" | "DONE", message: string, meta: any}>}> {
+	const selectorInfo = await waitForSelectors(page, selectors);
+	const elHandle = await page.$(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
 	let hasPassed = true;
 	const logs = [];
 
-	const selector = selectors[0].value;
+	const selector = selectorInfo.value;
 
 	for (let i = 0; i < assertions.length; i++) {
 		const { validation, operation, field } = assertions[i];
@@ -65,5 +65,5 @@ export default async function assertElementAttributes(page: Page, selectors: Arr
 		}
 	}
 
-	return [hasPassed, logs];
+	return {hasPassed, logs, selector: selectorInfo}
 }

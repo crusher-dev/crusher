@@ -10,6 +10,7 @@ export default function capturePageScreenshot(page: Page, stepIndex: number) {
 
 			return success({
 				message: `Clicked page screenshot for ${pageUrl}`,
+				pageUrl: pageUrl,
 				output: {
 					name: generateScreenshotName(pageTitle, stepIndex),
 					value: screenshotBuffer,

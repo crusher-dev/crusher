@@ -9,13 +9,14 @@ export default function assert(action: iAction, page: Page) {
 			const selectors = action.payload.selectors as iSelectorInfo[];
 			const validationRows = action.payload.meta.validations;
 			const output = await assertElement(page, selectors, validationRows);
-
+			const pageUrl = await page.url();
 			return success({
 				message: `Successfully asserted element ${selectors[0].value}`,
-				meta: { output },
+				selector: output.selector,
+				pageUrl: pageUrl,
+				result: output,
 			});
 		} catch (err) {
-			console.error(err);
 			return error("Some issue occurred while asserting element");
 		}
 	});

@@ -7,6 +7,7 @@ import { ICreateProjectInviteCode, ICreateTeamInviteCode, IInviteReferral, Invit
 import { EmailManager } from "@modules/email";
 import * as ejs from "ejs";
 import * as path from "path";
+import { MyDecorator } from "@modules/decorators/camelizeResponse";
 
 @Service()
 class UserInviteService {

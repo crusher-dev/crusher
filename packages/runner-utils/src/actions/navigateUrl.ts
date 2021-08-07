@@ -8,8 +8,10 @@ export default async function navigateUrl(action: iAction, page: Page) {
 
 			await page.goto(urlToGo);
 
+			const urlNow = await page.url();
 			return success({
 				message: `Navigated successfully to ${urlToGo}`,
+				pageUrl: urlNow,
 			});
 		} catch (err) {
 			console.error(err);

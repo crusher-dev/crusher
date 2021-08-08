@@ -13,6 +13,7 @@ RUN sudo apt-get update \
     # keytar
     && sudo apt-get install -y libsecret-1-dev
 
+USER root
 # Install MySQL
 RUN install-packages mysql-server \
  && mkdir -p /var/run/mysqld /var/log/mysql \

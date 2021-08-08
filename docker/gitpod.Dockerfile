@@ -10,5 +10,5 @@ RUN sudo apt-get update \
     && sudo apt-get install -y libx11-dev libxkbfile-dev \
     # keytar
     && sudo apt-get install -y libsecret-1-dev \
-    && sudo rm -rf /var/lib/apt/lists/*
+    && sudo rm -rf /var/lib/apt/lists/* \
     && sudo apt-get install -y mysql-server mysql-client

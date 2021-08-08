@@ -36,7 +36,6 @@ RUN mkdir -p /tmp/mongodb && \
 # Install Redis.
 RUN sudo apt-get update  && sudo apt-get install -y   redis-server  && sudo rm -rf /var/lib/apt/lists/*
 
-
 # Install our own MySQL config
 COPY docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 
@@ -44,5 +43,9 @@ COPY docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 COPY docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
 
 COPY docker/gitpod/mysql/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
+
+USER root
+RUN  chown -R gitpod:gitpod /etc/mysql 
+USER gitpod
 
 RUN echo "/etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc

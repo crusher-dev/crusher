@@ -11,6 +11,4 @@ RUN sudo apt-get update \
     # keytar
     && sudo apt-get install -y libsecret-1-dev \
     && sudo rm -rf /var/lib/apt/lists/*
-
-RUN yarn install
- 
+    && sudo apt-get install -y mysql-server mysql-client

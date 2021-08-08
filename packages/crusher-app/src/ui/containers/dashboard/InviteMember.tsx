@@ -10,6 +10,8 @@ import { Conditional } from "dyson/src/components/layouts";
 import { sendSnackBarEvent } from "@utils/notify";
 import { appStateAtom } from "crusher-app/src/store/atoms/global/appState";
 import { useAtom } from "jotai";
+import useSWR from 'swr';
+import { getInviteMemberAPI, getRunTestApi } from '@constants/api';
 
 const inviteTeamMembers = (projectId: number, emailList: string) => {
 	return backendRequest("/users/actions/invite.project.members", {
@@ -26,6 +28,7 @@ export const InvitePeople = ({ onClose }) => {
 	const [processing, setProcessing] = useState(false);
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
+	const {data} = useSWR(getInviteMemberAPI(selectedProjectId))
 	const isNoName = emailList.length === 0;
 
 	const inviteMembersCallback = useCallback(() => {
@@ -114,7 +117,7 @@ export const InvitePeople = ({ onClose }) => {
 						flex: 1;
 						height: 40rem !important;
 					`}
-					value={"https://google.com"}
+					value={data || "Loading.."}
 					disabled={true}
 				/>
 			</div>

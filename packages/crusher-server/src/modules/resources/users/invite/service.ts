@@ -34,7 +34,7 @@ class UserInviteService {
 				async (err, referral: iProjectInviteReferral & { id: string }) => {
 					if (err) return reject(err);
 
-					let refferalCode = referral.id;
+					let refferalCode = referral?.id;
 
 					if (!refferalCode) {
 						refferalCode = await this.createProjectInviteCode({

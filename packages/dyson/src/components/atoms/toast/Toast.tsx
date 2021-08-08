@@ -19,6 +19,7 @@ export const Toast = ({ children, onClose, type = "normal" }: Toast) => {
 
 const postionCSS = css`
 	position: fixed;
+	z-index: 10000000;
 	top: 50rem;
 	left: 50%;
 	transform: translateX(-50%);

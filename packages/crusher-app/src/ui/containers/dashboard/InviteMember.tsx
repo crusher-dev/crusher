@@ -1,17 +1,17 @@
-import React, { SyntheticEvent } from "react";
-import { css } from "@emotion/react";
-import { Button, Input } from "dyson/src/components/atoms";
-import { Modal } from "dyson/src/components/molecules/Modal";
-import { useCallback, useState } from "react";
-import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { getInviteMemberAPI, getRunTestApi } from "@constants/api";
+import { css } from "@emotion/react";
 import { LoadingSVG } from "@svg/dashboard";
-import { Conditional } from "dyson/src/components/layouts";
+import { backendRequest } from "@utils/backendRequest";
 import { sendSnackBarEvent } from "@utils/notify";
 import { appStateAtom } from "crusher-app/src/store/atoms/global/appState";
+import { Button, Input } from "dyson/src/components/atoms";
+import { Conditional } from "dyson/src/components/layouts";
+import { Modal } from "dyson/src/components/molecules/Modal";
 import { useAtom } from "jotai";
-import useSWR from 'swr';
-import { getInviteMemberAPI, getRunTestApi } from '@constants/api';
+import { useCallback, useState } from "react";
+import React  from "react";
+import useSWR from "swr";
 
 const inviteTeamMembers = (projectId: number, emailList: string) => {
 	return backendRequest("/users/actions/invite.project.members", {
@@ -28,7 +28,7 @@ export const InvitePeople = ({ onClose }) => {
 	const [processing, setProcessing] = useState(false);
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
-	const {data} = useSWR(getInviteMemberAPI(selectedProjectId))
+	const { data } = useSWR(getInviteMemberAPI(selectedProjectId));
 	const isNoName = emailList.length === 0;
 
 	const inviteMembersCallback = useCallback(() => {
@@ -118,7 +118,13 @@ export const InvitePeople = ({ onClose }) => {
 						height: 40rem !important;
 					`}
 					value={data || "Loading.."}
-					disabled={true}
+					onFocus={(event) => {
+						event.target.select();
+						event.target.setSelectionRange(0, 99999);
+						document.execCommand("copy");
+						sendSnackBarEvent({ type: "normal", message: "Copied invite link to clipboard" });
+
+					}}
 				/>
 			</div>
 		</Modal>

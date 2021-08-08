@@ -40,7 +40,7 @@ export type ButtonProps = {
 export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = "blue", size = "", children, disabled = false, className, ...props }) => {
 	return (
 		<button
-			className={` px-24 text-14 text-white ${className} leading-none`}
+			className={` rem-24 text-14 text-white ${className} leading-none`}
 			css={[
 				buttonCSS,
 				blue,
@@ -79,17 +79,17 @@ const smallButton = css`
 
 const largeButton = css`
 	box-sizing: border-box;
-	border: 1px solid #4675bd;
+	border: 1rem solid #4675bd;
 	height: 44rem;
 
 	font-weight: 600;
 	font-size: 14rem;
-	width: 348px;
+	width: 348rem;
 `;
 
 const mediumButton = css`
 	box-sizing: border-box;
-	border: 1px solid #4675bd;
+	border: 1rem solid #4675bd;
 	height: 32rem;
 
 	font-weight: 600;
@@ -107,15 +107,15 @@ const blue = css`
 
 const tertiaryDark = css`
 	background-color: #1e242c;
-	border: 1px solid #2e3744;
+	border: 1rem solid #2e3744;
 
 	:hover {
 		background-color: #1b1d1f;
-		border: 1px solid #2a2e38;
+		border: 1rem solid #2a2e38;
 	}
 `;
 
 const disabledButton = css`
 	background-color: #1e242c !important;
-	border: 1px solid #2e3744 !important;
+	border: 1rem solid #2e3744 !important;
 `;

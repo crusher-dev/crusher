@@ -11,11 +11,7 @@ RUN sudo apt-get update \
     # native-keymap
     && sudo apt-get install -y libx11-dev libxkbfile-dev \
     # keytar
-    && sudo apt-get install -y libsecret-1-dev \
-    && sudo rm -rf /var/lib/apt/lists/*
-
-# Install Redis.
-RUN sudo apt-get update  && sudo apt-get install -y   redis-server  && sudo rm -rf /var/lib/apt/lists/*
+    && sudo apt-get install -y libsecret-1-dev
 
 # Install MongoDB
 # Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition
@@ -41,6 +37,9 @@ COPY mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 COPY mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
 
 COPY mysql/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
+
+# Install Redis.
+RUN sudo apt-get update  && sudo apt-get install -y   redis-server  && sudo rm -rf /var/lib/apt/lists/*
 
 USER gitpod
 

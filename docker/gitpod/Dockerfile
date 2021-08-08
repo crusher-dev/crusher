@@ -19,8 +19,6 @@ RUN install-packages mysql-server \
  && mkdir -p /var/run/mysqld /var/log/mysql \
  && chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade
 
-USER gitpod
-
 # Install MongoDB
 # Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition
 RUN mkdir -p /tmp/mongodb && \
@@ -33,8 +31,12 @@ RUN mkdir -p /tmp/mongodb && \
     sudo mkdir -p /data/db && \
     sudo chown gitpod:gitpod -R /data/db
 
+RUN echo "/etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc
+
+USER gitpod
+
 # Install Redis.
-RUN sudo apt-get update  && sudo apt-get install -y   redis-server  && sudo rm -rf /var/lib/apt/lists/*
+RUN sudo apt-get update  && sudo apt-get install -y  redis-server redis-tools  && sudo rm -rf /var/lib/apt/lists/*
 
 # Install our own MySQL config
 COPY docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf

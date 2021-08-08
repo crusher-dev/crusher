@@ -1,6 +1,6 @@
 FROM gitpod/workspace-full-vnc:latest
 
-ENV TRIGGER_REBUILD=4
+ENV TRIGGER_REBUILD=5
 
 # Install custom tools, redis, runtime, etc.
 RUN sudo apt-get update \

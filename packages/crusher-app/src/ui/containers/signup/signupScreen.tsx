@@ -1,26 +1,27 @@
-import React, { useCallback, useState } from "react";
-import { css } from "@emotion/react";
-import { CenterLayout, Conditional } from "dyson/src/components/layouts";
-import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-import { Button, Logo } from "dyson/src/components/atoms";
-import { GithubSVG, GoogleSVG } from "@svg/social";
-import Link from "next/link";
-import { resolvePathToBackendURI } from "@utils/url";
-import { Input } from "dyson/src/components/atoms";
-import { backendRequest } from "@utils/backendRequest";
+import { loadUserDataAndRedirect } from "../../../hooks/user";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { css } from "@emotion/react";
+import { LoadingSVG } from "@svg/dashboard";
+import { GithubSVG, GoogleSVG } from "@svg/social";
+import { backendRequest } from "@utils/backendRequest";
+import { resolvePathToBackendURI } from "@utils/url";
+import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
+import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
+import { Input } from "dyson/src/components/atoms";
+import { Button, Logo } from "dyson/src/components/atoms";
+import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 import { atom } from "jotai";
 import { useAtom } from "jotai";
-import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { LoadingSVG } from "@svg/dashboard";
-import { loadUserDataAndRedirect } from "../../../hooks/user";
+import React, { useCallback, useState } from "react";
+
 const showRegistrationFormAtom = atom(false);
 
-const registerUser = (name: string, email: string, password: string) => {
+const registerUser = (name: string, email: string, password: string, inviteCode = "") => {
 	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "" },
+		payload: { email, password, name: name, lastName: "", inviteCode },
 	});
 };
 
@@ -33,6 +34,7 @@ function EmailPasswordBox() {
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [name, setName] = useState({ value: "", error: "" });
 	const [processingSignup, setProcessingSignup] = useState(false);
+	const { query } = useRouter;
 
 	const emailChange = useCallback(
 		(e) => {
@@ -76,12 +78,12 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			await registerUser(name.value, email.value, password.value);
+			await registerUser(name.value, email.value, password.value, query.inviteCode);
 			// @TODO: Use router push here
 			window.location.href = "/app/dashboard";
 		} catch (e: any) {
 			console.error(e);
-			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered": "Some error occurred while registering");
+			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
 		setProcessingSignup(false);
 	};
@@ -192,6 +194,9 @@ function SignupBox() {
 
 export const SignupContainer = () => {
 	const [showRegistrationBox] = useAtom(showRegistrationFormAtom);
+	const { query:{inviteCode} } = useRouter;
+
+	const googleSignupLink = inviteCode ? `/users/actions/auth.google?inviteCode=${inviteCode}`: "/users/actions/auth.google"
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-120"}>
@@ -200,7 +205,7 @@ export const SignupContainer = () => {
 					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Create your account</div>
 
 					<Conditional showIf={!showRegistrationBox}>
-						<a href={resolvePathToBackendURI("/users/actions/auth.google")}>
+						<a href={resolvePathToBackendURI(googleSignupLink)}>
 							<Button size={"large"} css={googleButton} className={"mb-20"}>
 								<div className={"flex justify-center items-center"}>
 									<GoogleSVG className={"mr-12"} />

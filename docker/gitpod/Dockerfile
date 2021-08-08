@@ -10,9 +10,10 @@ RUN sudo apt-get update \
     && sudo apt-get install -y libx11-dev libxkbfile-dev \
     # keytar
     && sudo apt-get install -y libsecret-1-dev \
-    && sudo rm -rf /var/lib/apt/lists/* \
-    && sudo apt-get dist-upgrade \
-    &&  sudo apt-get install -y  redis-server 
+    && sudo rm -rf /var/lib/apt/lists/*
+
+# Install Redis.
+RUN sudo apt-get update  && sudo apt-get install -y   redis-server  && sudo rm -rf /var/lib/apt/lists/*
 
 # Install MongoDB
 # Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition

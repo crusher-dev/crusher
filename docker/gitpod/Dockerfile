@@ -46,4 +46,4 @@ COPY --chown=10000:10000 docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/
 USER gitpod
 COPY --chown=10000:10000 docker/gitpod/mysql/mysql-bashrc-launch.sh mysql-bashrc-launch.sh
 
-RUN echo "~/mysql-bashrc-launch.sh" >> ~/.bashrc
+RUN echo "bash ~/mysql-bashrc-launch.sh" >> ~/.bashrc

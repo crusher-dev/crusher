@@ -42,10 +42,8 @@ COPY --chown=10000:10000 docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/m
 # Install default-login for MySQL clients
 COPY --chown=10000:10000 docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
 
-COPY --chown=10000:10000 docker/gitpod/mysql/mysql-bashrc-launch.sh ~/mysql-bashrc-launch.sh
-
-USER root
 # RUN  chown -R gitpod:gitpod /etc/mysql 
 USER gitpod
+COPY --chown=10000:10000 docker/gitpod/mysql/mysql-bashrc-launch.sh mysql-bashrc-launch.sh
 
 RUN echo "~/mysql-bashrc-launch.sh" >> ~/.bashrc

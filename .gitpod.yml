@@ -9,7 +9,9 @@ ports:
 tasks:
   - name: "Start redis-server"
     command: "redis-server"
+  - name: "Start mongodb"
+    command: "mongod --dbpath /data/db --logpath ~/mongod.log --fork"
   - name: "Start crusher app"
     init: yarn install && yarn setup:ee && cp ecosystem.config.sample.js ecosystem.config.js && rm .env && cp .env.gitpod .env && mysql -uroot -e "CREATE DATABASE crusher /*\!40100 DEFAULT CHARACTER SET utf8 */;" && DB_USERNAME=root yarn db:migration
     command: "pm2 start --only='crusher-server' && yarn workspace crusher-app dev"
-    openMode: split-right
+    openMode: tab-after

@@ -37,13 +37,11 @@ USER gitpod
 RUN sudo apt-get update  && sudo apt-get install -y  redis-server redis-tools  && sudo rm -rf /var/lib/apt/lists/*
 
 # Install our own MySQL config
-COPY --chown=10000:10000 docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+COPY docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 
 # Install default-login for MySQL clients
-COPY --chown=10000:10000 docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
+COPY docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
 
-# RUN  chown -R gitpod:gitpod /etc/mysql 
-USER gitpod
-COPY --chown=10000:10000 docker/gitpod/mysql/mysql-bashrc-launch.sh mysql-bashrc-launch.sh
+COPY docker/gitpod/mysql/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
 
-RUN echo "bash ~/mysql-bashrc-launch.sh" >> ~/.bashrc
+RUN echo "bash /etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc

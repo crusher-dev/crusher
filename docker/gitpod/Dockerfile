@@ -31,8 +31,6 @@ RUN mkdir -p /tmp/mongodb && \
     sudo mkdir -p /data/db && \
     sudo chown gitpod:gitpod -R /data/db
 
-RUN echo "/etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc
-
 USER gitpod
 
 # Install Redis.
@@ -44,10 +42,10 @@ COPY --chown=10000:10000 docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/m
 # Install default-login for MySQL clients
 COPY --chown=10000:10000 docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
 
-COPY --chown=10000:10000 docker/gitpod/mysql/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
+COPY --chown=10000:10000 docker/gitpod/mysql/mysql-bashrc-launch.sh ~/mysql-bashrc-launch.sh
 
 USER root
 # RUN  chown -R gitpod:gitpod /etc/mysql 
 USER gitpod
 
-RUN echo "/etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc
+RUN echo "~/mysql-bashrc-launch.sh" >> ~/.bashrc

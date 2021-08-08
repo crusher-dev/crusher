@@ -224,9 +224,9 @@ export class Parser {
 	actionHandlerHOC(actionHander: any, action: iAction) {
 		const codeMap: Array<any> = [];
 
-		codeMap.join("");
+		codeMap.join("logStep({action: action, isBeforeStep: true});");
 		codeMap.join(actionHander(action));
-		codeMap.join("");
+		codeMap.join("logStep({action: action, isAfterStep: true,, actionResult: actionResult });");
 
 		this.codeMap.push({
 			type: ACTIONS_IN_TEST.CLICK,

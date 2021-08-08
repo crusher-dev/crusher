@@ -62,18 +62,18 @@ export class Parser {
 		const code = [];
 
 		code.push(
-			"const browserInfo = await Browser.setDevice(JSON.parse(#{action}));".pretify({
+			"var actionResult = await Browser.setDevice(JSON.parse(#{action}));".pretify({
 				action: action,
 			}),
 		);
 
 		if (!this.isLiveRecording) {
 			code.push(
-				"const browserContext = await browser.newContext({userAgent: browserInfo.meta.userAgent, viewport: { width: browserInfo.meta.width, height: browserInfo.meta.height}});",
+				"const browserContext = await browser.newContext({userAgent: actionResult.meta.userAgent, viewport: { width: actionResult.meta.width, height: actionResult.meta.height}});",
 			);
 		} else {
 			code.push(
-				"const browserContext = await browser.newContext({userAgent: browserInfo.meta.userAgent, viewport: { width: browserInfo.meta.width, height: browserInfo.meta.height}});",
+				"const browserContext = await browser.newContext({userAgent: actionResult.meta.userAgent, viewport: { width: actionResult.meta.width, height: actionResult.meta.height}});",
 			);
 		}
 
@@ -105,7 +105,7 @@ export class Parser {
 			this.isFirstTimeNavigate = false;
 		}
 		code.push(
-			"await Page.navigate(JSON.parse(#{action}), page);".pretify({
+			"var actionResult = await Page.navigate(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -116,7 +116,7 @@ export class Parser {
 		const code = [];
 
 		code.push(
-			"await Page.waitForNavigation(JSON.parse(#{action}), page);".pretify({
+			"var actionResult = await Page.waitForNavigation(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -126,18 +126,18 @@ export class Parser {
 	parsePageScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"var saveScreenshotRequest = await Page.screenshot(page, JSON.parse(#{stepIndex}));".pretify({
+			"var actionResult = await Page.screenshot(page, JSON.parse(#{stepIndex}));".pretify({
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) await handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
+		code.push("if(handleImageBuffer) await handleImageBuffer(actionResult.output.value, actionResult.output.name);");
 		return code;
 	}
 
 	parseElementClick(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.click(JSON.parse(#{action}), page);".pretify({
+			"var actionResult = await Element.click(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -148,7 +148,7 @@ export class Parser {
 	parseElementHover(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.hover(JSON.parse(#{action}), page);".pretify({
+			"var actionResult = await Element.hover(JSON.parse(#{action}), page);".pretify({
 				action: action,
 			}),
 		);
@@ -159,12 +159,12 @@ export class Parser {
 	parseElementScreenshot(action: iAction) {
 		const code = [];
 		code.push(
-			"var saveScreenshotRequest = await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}));".pretify({
+			"var actionResult = await Element.screenshot(JSON.parse(#{action}), page, JSON.parse(#{stepIndex}));".pretify({
 				action,
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) await handleImageBuffer(saveScreenshotRequest.output.value, saveScreenshotRequest.output.name);");
+		code.push("if(handleImageBuffer) await handleImageBuffer(actionResult.output.value, actionResult.output.name);");
 		return code;
 	}
 
@@ -172,9 +172,9 @@ export class Parser {
 		const code = [];
 		const isWindowScroll = !action.payload.selectors;
 		if (isWindowScroll) {
-			code.push("await Page.scroll(JSON.parse(#{action}), page);".pretify({ action }));
+			code.push("var actionResult = await Page.scroll(JSON.parse(#{action}), page);".pretify({ action }));
 		} else {
-			code.push("await Element.scroll(JSON.parse(#{action}), page);".pretify({ action }));
+			code.push("var actionResult = await Element.scroll(JSON.parse(#{action}), page);".pretify({ action }));
 		}
 
 		return code;
@@ -182,18 +182,18 @@ export class Parser {
 
 	parseAddInput(action: iAction) {
 		const code = [];
-		code.push("await Element.addInput(JSON.parse(#{action}), page);".pretify({ action }));
+		code.push("var actionResult = await Element.addInput(JSON.parse(#{action}), page);".pretify({ action }));
 		return code;
 	}
 
 	parseAssertElement(action: iAction) {
 		const code = [];
 		code.push(
-			"let {meta} = await Element.assertElement(JSON.parse(#{action}), page);\n".pretify({
+			"let actionResult = await Element.assertElement(JSON.parse(#{action}), page);\n".pretify({
 				action,
 			}),
 		);
-		code.push("let [hasPassed, logs] = meta.output;");
+		code.push("let [hasPassed, logs] = actionResult.meta.output;");
 		code.push("if(!hasPassed){throw new Error('Assertion not passed');}");
 
 		return code;
@@ -202,7 +202,7 @@ export class Parser {
 	parseElementFocus(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.focus(JSON.parse(#{action}), page);\n".pretify({
+			"var actionResult = await Element.focus(JSON.parse(#{action}), page);\n".pretify({
 				action,
 			}),
 		);
@@ -213,7 +213,7 @@ export class Parser {
 	parseCustomElementScript(action: iAction) {
 		const code = [];
 		code.push(
-			"await Element.runCustomScript(JSON.parse(#{action}), page);\n".pretify({
+			"var actionResult = await Element.runCustomScript(JSON.parse(#{action}), page);\n".pretify({
 				action,
 			}),
 		);
@@ -221,92 +221,37 @@ export class Parser {
 		return code;
 	}
 
+	actionHandlerHOC(actionHander: any, action: iAction) {
+		const codeMap: Array<any> = [];
+
+		codeMap.join("");
+		codeMap.join(actionHander(action));
+		codeMap.join("");
+
+		this.codeMap.push({
+			type: ACTIONS_IN_TEST.CLICK,
+			code: codeMap,
+		});
+	}
+
 	parseAction(action: iAction) {
-		switch (action.type) {
-			case ACTIONS_IN_TEST.SET_DEVICE: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.SET_DEVICE,
-					code: this.parseSetDeviceAction(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.NAVIGATE_URL: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.NAVIGATE_URL,
-					code: this.parseNavigateUriAction(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION,
-					code: this.parseWaitForNavigation(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.PAGE_SCREENSHOT: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.PAGE_SCREENSHOT,
-					code: this.parsePageScreenshot(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.CLICK: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.CLICK,
-					code: this.parseElementClick(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.ELEMENT_FOCUS: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.ELEMENT_FOCUS,
-					code: this.parseElementFocus(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT,
-					code: this.parseCustomElementScript(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.ELEMENT_SCREENSHOT: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.ELEMENT_SCREENSHOT,
-					code: this.parseElementScreenshot(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.SCROLL:
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.SCROLL,
-					code: this.parseScroll(action),
-				});
-				break;
-			case ACTIONS_IN_TEST.ADD_INPUT:
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.ADD_INPUT,
-					code: this.parseAddInput(action),
-				});
-				break;
-			case ACTIONS_IN_TEST.HOVER: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.HOVER,
-					code: this.parseElementHover(action),
-				});
-				break;
-			}
-			case ACTIONS_IN_TEST.ASSERT_ELEMENT: {
-				this.codeMap.push({
-					type: ACTIONS_IN_TEST.ASSERT_ELEMENT,
-					code: this.parseAssertElement(action),
-				});
-				break;
-			}
-			default:
-				console.debug(`Invalid action recorded, no handler for ${action.type}`);
+		const actionHandlerMap: any = {
+			[ACTIONS_IN_TEST.SET_DEVICE]: this.parseSetDeviceAction,
+			[ACTIONS_IN_TEST.NAVIGATE_URL]: this.parseNavigateUriAction,
+			[ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION]: this.parseWaitForNavigation,
+			[ACTIONS_IN_TEST.PAGE_SCREENSHOT]: this.parsePageScreenshot,
+			[ACTIONS_IN_TEST.CLICK]: this.parseElementClick,
+			[ACTIONS_IN_TEST.ELEMENT_FOCUS]: this.parseElementFocus,
+			[ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT]: this.parseCustomElementScript,
+			[ACTIONS_IN_TEST.ELEMENT_SCREENSHOT]: this.parseElementScreenshot,
+			[ACTIONS_IN_TEST.SCROLL]: this.parseScroll,
+			[ACTIONS_IN_TEST.ADD_INPUT]: this.parseAddInput,
+			[ACTIONS_IN_TEST.HOVER]: this.parseElementHover,
+			[ACTIONS_IN_TEST.ASSERT_ELEMENT]: this.parseAssertElement,
+		};
+
+		if (Object.prototype.hasOwnProperty.call(actionHandlerMap, action.type)) {
+			return this.actionHandlerHOC(actionHandlerMap[action.type], action);
 		}
 	}
 
@@ -373,20 +318,8 @@ export class Parser {
 
 		const mainCode = this.codeMap
 			.map((codeItem, index) => {
-				let code = typeof codeItem.code === "string" ? codeItem : codeItem.code.join("\n");
-				if (this.shouldLogSteps) {
-					code += `\nawait logStep('${codeItem.type}', {status: 'DONE', message: '${codeItem.type} completed'}, {});\n`;
-				}
-				const nextItem = index + 1 < this.codeMap.length ? this.codeMap[index + 1] : undefined;
+				const code = typeof codeItem.code === "string" ? codeItem : codeItem.code.join("\n");
 
-				if (
-					this.shouldSleep &&
-					codeItem.type !== ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION &&
-					nextItem &&
-					nextItem.type != ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION
-				) {
-					code += "\nawait sleep(1500);";
-				}
 				return code;
 			})
 			.join("\n\n");

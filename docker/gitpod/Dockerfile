@@ -44,4 +44,6 @@ COPY docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
 
 COPY docker/gitpod/mysql/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
 
+RUN npm install -g pm2
+
 RUN echo "bash /etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc

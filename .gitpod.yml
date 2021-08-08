@@ -11,5 +11,5 @@ tasks:
     command: "redis-server"
   - name: "Start crusher app"
     init: yarn install && yarn setup:ee
-    command: "yarn workspace crusher-app dev"
+    command: "yarn workspace crusher-app dev && pm2 start --only='crusher-server'"
     openMode: split-right

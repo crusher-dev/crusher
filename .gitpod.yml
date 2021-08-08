@@ -7,11 +7,9 @@ ports:
     visibility: "public"
 
 tasks:
-  - name: "Initial Setup"
-    init: yarn install && yarn setup:ee
   - name: "Start redis-server"
     command: "redis-server"
-    openMode: split-right
   - name: "Start crusher app"
-    command: "cd packages/crusher-app && yarn dev"
+    init: yarn install && yarn setup:ee
+    command: "yarn workspace crusher-app dev"
     openMode: split-right

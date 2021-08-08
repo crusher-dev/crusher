@@ -14,7 +14,7 @@ var connectionObject = connectionString
 			port: process.env.DB_PORT,
 			user: process.env.DB_USERNAME,
 			password: process.env.DB_PASSWORD,
-			database: 'crusher2',
+			database: process.env.DB_DATABASE || 'crusher',
 			insecureAuth: true,
 	  };
 var connection = mysql.createConnection(

@@ -12,7 +12,7 @@ export default function click(action: iAction, page: Page) {
 			const selectors = action.payload.selectors as iSelectorInfo[];
 			const selectorInfo = await waitForSelectors(page, selectors);
 
-			const elementHandle = await page.$(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
+			const elementHandle = await page.$(selectorInfo.value);
 			if (!elementHandle) {
 				return error(`No element with selector as ${selectors[0].value} exists`);
 			}

@@ -9,14 +9,14 @@ export default function elementScreenshot(action: iAction, page: Page, stepIndex
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];
 			const selectorInfo = await waitForSelectors(page, selectors);
-			const elementHandle = await page.$(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
+			const elementHandle = await page.$(selectorInfo.value);
 			if (!elementHandle) {
 				return error(`Attempt to capture screenshot of element with invalid selector: ${selectors[0].value}`);
 			}
 
 			const elementScreenshotBuffer = await elementHandle.screenshot();
 			const pageUrl = await page.url();
-
+			console.log("ELEMENT SCREEN", selectorInfo);
 			return success({
 				message: `Captured element screenshot for ${selectorInfo.value}`,
 				selector: selectorInfo,

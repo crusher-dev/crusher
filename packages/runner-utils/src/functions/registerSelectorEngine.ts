@@ -24,7 +24,10 @@ function getCrusherSelectorEngine() {
 		return generateQuerySelector((el as any).parentNode) + " > " + str;
 	};
 
-	const getElementFromSelectorArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
+	const getElementFromSelectorArr = (selectorsEncoded: string, root: Element | Document = document) => {
+		const selectorsData: { uuid: string, selectors: Array<iSelectorInfo>} = JSON.parse(decodeURIComponent(selectorsEncoded));
+		const selectors = selectorsData.selectors;
+
 		for (const selector of selectors) {
 			try {
 				let selectedElement = null;
@@ -35,9 +38,8 @@ function getCrusherSelectorEngine() {
 					selectedElement = root.querySelector(selector.value)!;
 				}
 				if (selectedElement) {
-					(selectedElement as any).selector = selector.value;
-					(selectedElement as any).selectorType = selector.type;
-
+					// @TODO: Find a better workaround for this
+					(window as any)[selectorsData.uuid] = { selector: selector.value, selectorType: selector.type };
 					return selectedElement;
 				}
 			} catch {}
@@ -45,7 +47,10 @@ function getCrusherSelectorEngine() {
 		return null;
 	};
 
-	const getElementsFromSelectorArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
+	const getElementsFromSelectorArr = (selectorsEncoded: string, root: Element | Document = document) => {
+		const selectorsData: { uuid: string, selectors: Array<iSelectorInfo>} = JSON.parse(decodeURIComponent(selectorsEncoded));
+		const selectors = selectorsData.selectors;
+
 		for (const selector of selectors) {
 			try {
 				let selectedElements = [];
@@ -55,12 +60,8 @@ function getCrusherSelectorEngine() {
 				} else if (root.querySelector(selector.value)) {
 					selectedElements = new Array(root.querySelectorAll(selector.value)!);
 				}
-				selectedElements.map((selectedElement) => {
-					(selectedElement as any).selector = selector.value;
-					(selectedElement as any).selectorType = selector.type;
-
-					return selectedElement;
-				});
+				// @TODO: Find a better workaround for this
+				(window as any)[selectorsData.uuid] = { selector: selector.value, selectorType: selector.type };
 				if(selectedElements.length)
 				return selectedElements;
 			} catch {}
@@ -71,8 +72,7 @@ function getCrusherSelectorEngine() {
 	return {
 		// Returns the first element matching given selector in the root's subtree.
 		query(root: Element, selector: string) {
-			const selectorArr = JSON.parse(decodeURIComponent(selector));
-			const validElement = getElementFromSelectorArr(selectorArr);
+			const validElement = getElementFromSelectorArr(selector);
 
 			return  validElement;
 		},
@@ -80,7 +80,7 @@ function getCrusherSelectorEngine() {
 		// Returns all elements matching given selector in the root's subtree.
 		queryAll(root: Element, selector: string) {
 			const selectorArr = JSON.parse(decodeURIComponent(selector));
-			const validElementsArr = getElementsFromSelectorArr(selectorArr);
+			const validElementsArr = getElementsFromSelectorArr(selector);
 
 			return validElementsArr;
 		},

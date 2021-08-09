@@ -48,7 +48,23 @@ export class NotifyService {
 			});
 	}
 
-	async logStep(action: iAction, status: "RUNNING" | "COMPLETED" | "FAILED", payload: any): Promise<boolean> {
+	async logStep(
+		action: iAction,
+		status: "RUNNING" | "COMPLETED" | "FAILED",
+		payload:
+			| {
+					selector: { type: string; value: string };
+					pageUrl: string;
+					result?: {
+						hasPassed: boolean;
+						logs: Array<any>;
+						selector: { type: string; value: string };
+						output?: { name: string; value: string };
+						isSamePageAsBefore?: boolean;
+					};
+			  }
+			| { error: Error },
+	): Promise<boolean> {
 		console.debug(`Instance #${this.buildTestInstanceId} of #${this.buildId}: ${action.type}[${status}]`);
 
 		return fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`, {

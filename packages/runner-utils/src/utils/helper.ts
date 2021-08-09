@@ -1,11 +1,19 @@
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 const generateScreenshotName = (selector: string, stepIndex: number): string => {
 	return selector.replace(/[^\w\s]/gi, "").replace(/ /g, "_") + `_${stepIndex}.png`;
 };
 
 const toCrusherSelectorsFormat = (selectors: Array<iSelectorInfo>) => {
-	return `crusher=${encodeURIComponent(JSON.stringify(selectors))}`;
+	const id = uuidv4();
+	return { value: `crusher=${encodeURIComponent(JSON.stringify({ selectors, uuid: id }))}`, uuid: id};
 };
 
 const promiseTillSuccess = (promises: Array<Promise<any>>) => {

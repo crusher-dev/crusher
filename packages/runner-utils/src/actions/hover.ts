@@ -10,7 +10,7 @@ export default async function hover(action: iAction, page: Page) {
 			const selectors = action.payload.selectors as iSelectorInfo[];
 
 			const selectorInfo = await waitForSelectors(page, selectors);
-			await page.hover(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
+			await page.hover(selectorInfo.value);
 
 			const pageUrl = await page.url();
 

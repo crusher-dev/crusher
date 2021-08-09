@@ -6,7 +6,7 @@ import { waitForSelectors } from "./index";
 
 export default async function assertElementAttributes(page: Page, selectors: Array<iSelectorInfo>, assertions: Array<iAssertionRow>): Promise<{selector: iSelectorInfo, hasPassed: boolean, logs: Array<{status: "FAILED" | "DONE", message: string, meta: any}>}> {
 	const selectorInfo = await waitForSelectors(page, selectors);
-	const elHandle = await page.$(selectorInfo ? selectorInfo.value : toCrusherSelectorsFormat(selectors));
+	const elHandle = await page.$(selectorInfo.value);
 	let hasPassed = true;
 	const logs = [];
 

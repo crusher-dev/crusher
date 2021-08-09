@@ -1,5 +1,4 @@
 {
-	"private": "true",
 	"name": "crusher-runner-utils",
 	"version": "0.0.9",
 	"description": "Test runner utils for crusher tests",

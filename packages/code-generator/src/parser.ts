@@ -66,14 +66,13 @@ export class Parser {
 				action: action,
 			}),
 		);
-
 		if (!this.isLiveRecording) {
 			code.push(
-				"const browserContext = await browser.newContext({userAgent: actionResult.meta.userAgent, viewport: { width: actionResult.meta.width, height: actionResult.meta.height}});",
+				"var browserContext = await browser.newContext({userAgent: actionResult.meta.userAgent, viewport: { width: actionResult.meta.width, height: actionResult.meta.height}});",
 			);
 		} else {
 			code.push(
-				"const browserContext = await browser.newContext({userAgent: actionResult.meta.userAgent, viewport: { width: actionResult.meta.width, height: actionResult.meta.height}});",
+				"var browserContext = await browser.newContext({userAgent: actionResult.meta.userAgent, viewport: { width: actionResult.meta.width, height: actionResult.meta.height}});",
 			);
 		}
 
@@ -95,12 +94,12 @@ export class Parser {
 	parseNavigateUriAction(action: iAction) {
 		const code = [];
 		if (this.isFirstTimeNavigate) {
-			code.push("const page = await browserContext.newPage({});");
+			code.push("var page = await browserContext.newPage({});");
 			if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
 				const videoPath = this.assetsDir + "/videos/video.mp4";
 				code.push(`capturedVideo = await saveVideo(page, '${videoPath}');`);
 			}
-			code.push(`const {handlePopup} = require(${helperPackageRequire}).Middlewares;`);
+			code.push(`var {handlePopup} = require(${helperPackageRequire}).Middlewares;`);
 			code.push("handlePopup(page, browserContext);");
 			this.isFirstTimeNavigate = false;
 		}
@@ -130,7 +129,9 @@ export class Parser {
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) await handleImageBuffer(actionResult.output.value, actionResult.output.name);");
+		code.push(
+			"if(handleImageBuffer) {const imageUrl = await handleImageBuffer(actionResult.output.value, actionResult.output.name); actionResult = {...actionResult, output: {...actionResult.output, value: imageUrl}};}",
+		);
 		return code;
 	}
 
@@ -164,7 +165,9 @@ export class Parser {
 				stepIndex: this.stepIndex,
 			}),
 		);
-		code.push("if(handleImageBuffer) await handleImageBuffer(actionResult.output.value, actionResult.output.name);");
+		code.push(
+			"if(handleImageBuffer) {const imageUrl = await handleImageBuffer(actionResult.output.value, actionResult.output.name); actionResult = {...actionResult, output: {...actionResult.output, value: imageUrl}};}",
+		);
 		return code;
 	}
 
@@ -189,7 +192,7 @@ export class Parser {
 	parseAssertElement(action: iAction) {
 		const code = [];
 		code.push(
-			"let actionResult = await Element.assertElement(JSON.parse(#{action}), page);\n".pretify({
+			"var actionResult = await Element.assertElement(JSON.parse(#{action}), page);\n".pretify({
 				action,
 			}),
 		);
@@ -222,11 +225,26 @@ export class Parser {
 	}
 
 	actionHandlerHOC(actionHander: any, action: iAction) {
-		const codeMap: Array<any> = [];
+		const codeMap: Array<string> = [];
 
-		codeMap.join("logStep({action: action, isBeforeStep: true});");
-		codeMap.join(actionHander(action));
-		codeMap.join("logStep({action: action, isAfterStep: true,, actionResult: actionResult });");
+		codeMap.push(
+			"var actionResult = {};\nawait logStep(JSON.parse(#{action}), 'RUNNING'); try{\n".pretify({
+				action,
+			}),
+		);
+		codeMap.push(actionHander(action).join("\n"));
+		codeMap.push(
+			"await logStep(JSON.parse(#{action}), 'COMPLETED', actionResult);".pretify({
+				action,
+			}),
+		);
+		codeMap.push("} catch(err) {");
+		codeMap.push(
+			"await logStep(JSON.parse(#{action}), 'FAILED', {error: err} ); throw err;".pretify({
+				action,
+			}),
+		);
+		codeMap.push("}");
 
 		this.codeMap.push({
 			type: ACTIONS_IN_TEST.CLICK,
@@ -251,7 +269,7 @@ export class Parser {
 		};
 
 		if (Object.prototype.hasOwnProperty.call(actionHandlerMap, action.type)) {
-			return this.actionHandlerHOC(actionHandlerMap[action.type], action);
+			return this.actionHandlerHOC(actionHandlerMap[action.type].bind(this), action);
 		}
 	}
 
@@ -285,10 +303,10 @@ export class Parser {
 	}
 
 	getCode() {
-		let importCode = `const {Page, Element, Browser} = require(${helperPackageRequire}).Actions;\nconst playwright = require("${
+		let importCode = `var {Page, Element, Browser} = require(${helperPackageRequire}).Actions;\nconst playwright = require("${
 			this.usePlaywrightChromium ? "playwright-chromium" : "playwright"
 		}");\n`;
-		importCode += `const {getCrusherSelectorEngine} = require(${helperPackageRequire}).Functions;\n`;
+		importCode += `var {getCrusherSelectorEngine} = require(${helperPackageRequire}).Functions;\n`;
 		importCode = this.registerCrusherSelector(importCode);
 
 		// --disable-dev-shm-usage and --disable-gpu are used to make running
@@ -298,16 +316,16 @@ export class Parser {
 
 		const browserArgs = this.browser === BROWSER.CHROME ? ["--disable-dev-shm-usage", "--disable-gpu"] : [];
 
-		importCode += `const browser = await playwright["${this.browser}"].launch({ ${
+		importCode += `var browser = await playwright["${this.browser}"].launch({ ${
 			this.usePlaywrightChromium ? `executablePath: "${process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}",` : ""
 		} headless: ${this.isHeadless.toString()}, args: ${JSON.stringify(browserArgs)} });\n`;
 
 		if (this.shouldSleep) {
-			importCode += `const { sleep } = require(${helperPackageRequire}).Functions;\n`;
+			importCode += `var { sleep } = require(${helperPackageRequire}).Functions;\n`;
 		}
 		if (this.isLiveRecording && this.browser === BROWSER.CHROME) {
-			importCode += "const { saveVideo } = require('playwright-video');\n";
-			importCode += "let capturedVideo;\n";
+			importCode += "var { saveVideo } = require('playwright-video');\n";
+			importCode += "var capturedVideo;\n";
 		}
 
 		let footerCode = "";

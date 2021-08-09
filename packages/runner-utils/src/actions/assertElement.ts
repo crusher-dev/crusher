@@ -82,7 +82,3 @@ module.exports = {
     description: "Assertions on element",
     handler: runAssertionOnElement,
 }
-
-function assertElement(page: any, selectors: any, validationRows: any) {
-    throw new Error("Function not implemented.");
-}

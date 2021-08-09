@@ -4,7 +4,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { generateScreenshotName, toCrusherSelectorsFormat } from "../utils/helper";
 import { waitForSelectors } from "../functions";
 
-export default function elementScreenshot(action: iAction, page: Page, stepIndex: number) {
+export  function takeElementScreenshot(action: iAction, page: Page, stepIndex: number) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];

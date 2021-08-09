@@ -2,7 +2,7 @@ import { Page } from "playwright";
 import { iAction } from "@crusher-shared/types/action";
 import { getLastSavedPageUrl } from "../utils/state";
 
-export default async function waitForNavigation(action: iAction, page: Page) {
+export async function waitForNavigation(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const currentUrl = await page.url();

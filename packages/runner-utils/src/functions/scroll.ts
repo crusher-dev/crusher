@@ -1,7 +1,7 @@
 import { Page } from "playwright";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 
-export default async function scroll(page: Page, selectors: Array<iSelectorInfo>, scrollDeltaArr: Array<number>, isWindow: boolean = true): Promise<iSelectorInfo> {
+export async function scroll(page: Page, selectors: Array<iSelectorInfo>, scrollDeltaArr: Array<number>, isWindow: boolean = true): Promise<iSelectorInfo> {
 	return page.evaluate(
 		([scrollDeltaArr, selectorKeys, isWindow]: [number[], Array<iSelectorInfo>, boolean]) => {
 			const getElementsByXPath = (xpath: string, parent: Node | null = null): Node[] => {

@@ -5,7 +5,7 @@ import { toCrusherSelectorsFormat } from "../utils/helper";
 import { waitForSelectors } from "../functions";
 import { setPageUrl } from "../utils/state";
 
-export default function click(action: iAction, page: Page) {
+export function clickOnElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		setPageUrl(await page.url());
 		try {

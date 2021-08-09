@@ -4,7 +4,7 @@ import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 import { toCrusherSelectorsFormat } from "../utils/helper";
 import { waitForSelectors } from "../functions";
 
-export default async function hover(action: iAction, page: Page) {
+export async function hoverOnElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];

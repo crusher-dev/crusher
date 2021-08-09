@@ -4,7 +4,7 @@ import { waitForSelectors } from "../functions";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 import { toCrusherSelectorsFormat } from "../utils/helper";
 
-export default function focusOnElement(action: iAction, page: Page) {
+export function focusOnElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];

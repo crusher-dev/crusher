@@ -2,7 +2,7 @@ import { Page } from "playwright";
 import { iAction } from "@crusher-shared/types/action";
 import { scroll } from "../functions";
 
-export default function pageScroll(action: iAction, page: Page) {
+export async function scrollPage(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const scrollDelta = action.payload.meta.value;

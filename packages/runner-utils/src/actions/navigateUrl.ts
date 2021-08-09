@@ -1,7 +1,7 @@
 import { Page } from "playwright";
 import { iAction } from "@crusher-shared/types/action";
 
-export default async function navigateUrl(action: iAction, page: Page) {
+export async function navigateToUrl(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const urlToGo = action.payload.meta.value;

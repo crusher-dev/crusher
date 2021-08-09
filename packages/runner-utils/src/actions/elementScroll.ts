@@ -3,7 +3,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { scroll, waitForSelectors } from "../functions";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 
-export default function elementScroll(action: iAction, page: Page) {
+export function scrollElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];

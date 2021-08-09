@@ -3,7 +3,7 @@ import { Page } from "playwright";
 import { iAction } from "../../../crusher-shared/types/action";
 import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
 
-export default function assert(action: iAction, page: Page) {
+export function runAssertionOnElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];

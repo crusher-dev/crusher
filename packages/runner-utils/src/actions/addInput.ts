@@ -4,7 +4,7 @@ import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 import { type, waitForSelectors } from "../functions";
 import { toCrusherSelectorsFormat } from "../utils/helper";
 
-export default function addInput(action: iAction, page: Page) {
+export function addInputInElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];

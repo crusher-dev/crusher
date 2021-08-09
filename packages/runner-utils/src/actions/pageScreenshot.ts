@@ -1,7 +1,7 @@
 import { Page } from "playwright";
 import { generateScreenshotName } from "../utils/helper";
 
-export default function capturePageScreenshot(page: Page, stepIndex: number) {
+export function takePageScreenshot(page: Page, stepIndex: number) {
 	return new Promise(async (success, error) => {
 		try {
 			const pageTitle = await page.title();

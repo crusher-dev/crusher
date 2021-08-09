@@ -1,36 +1,35 @@
-import addInput from "./addInput";
-import click from "./click";
-import hover from "./hover";
-import captureElementScreenshot from "./elementScreenshot";
-import capturePageScreenshot from "./pageScreenshot";
-import elementScroll from "./elementScroll";
-import pageScroll from "./pageScroll";
-import navigateUrl from "./navigateUrl";
-import setDevice from "./setDevice";
-import assertElement from "./assertElement";
-import runCustomScript from "./elementCustomScript";
-import focusOnElement from "./elementFocus";
-import waitForNavigation from "./waitForNavigation";
+import { addInputInElement } from "./addInput";
+import { clickOnElement } from "./click";
+import { hoverOnElement } from "./hover";
+import { takeElementScreenshot } from "./elementScreenshot";
+import { takePageScreenshot } from "./pageScreenshot";
+import { scrollElement } from "./elementScroll";
+import { scrollPage } from "./pageScroll";
+import { navigateToUrl } from "./navigateUrl";
+import { setDevice } from "./setDevice";
+import { runAssertionOnElement } from "./assertElement";
+import { runCustomScriptOnElement } from "./elementCustomScript";
+import { focusOnElement } from "./elementFocus";
+import { waitForNavigation } from "./waitForNavigation";
 
 module.exports = {
 	Element: {
-		addInput,
-		click,
-		hover,
-		scroll: elementScroll,
-		screenshot: captureElementScreenshot,
-		elementScroll,
-		assertElement,
-		runCustomScript: runCustomScript,
+		addInputInElement,
+		clickOnElement,
+		hoverOnElement,
+		scrollElement,
+		takeElementScreenshot,
+		runAssertionOnElement,
+		runCustomScriptOnElement,
 		focus: focusOnElement,
 	},
 	Page: {
-		screenshot: capturePageScreenshot,
-		scroll: pageScroll,
-		navigate: navigateUrl,
-		waitForNavigation: waitForNavigation,
+		takePageScreenshot,
+		scrollPage,
+		waitForNavigation,
 	},
 	Browser: {
 		setDevice,
+		navigateToUrl
 	},
 };

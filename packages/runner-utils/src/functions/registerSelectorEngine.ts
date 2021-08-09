@@ -87,4 +87,4 @@ function getCrusherSelectorEngine() {
 	};
 }
 
-export default getCrusherSelectorEngine;
+export { getCrusherSelectorEngine };

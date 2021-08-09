@@ -25,7 +25,7 @@ export const runScriptOnElement = (script: string, elHandle: ElementHandle): Pro
 	)(exports, require, module, __filename, __dirname, script, elHandle);
 };
 
-export default function elementCustomScript(action: iAction, page: Page) {
+export function runCustomScriptOnElement(action: iAction, page: Page) {
 	return new Promise(async (success, error) => {
 		try {
 			const selectors = action.payload.selectors as iSelectorInfo[];

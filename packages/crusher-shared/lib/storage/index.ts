@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as url from "url";
+import { StorageManagerInterface } from "./interface";
 
 type IStorageOptions = {
 	baseFolder: string;
@@ -8,7 +9,7 @@ type IStorageOptions = {
 	port: number;
 };
 
-class LocalFileStorage {
+class LocalFileStorage implements StorageManagerInterface {
 	baseFolder: string;
 	bucketName: string;
 	basePath: string;

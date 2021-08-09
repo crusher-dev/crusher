@@ -1,23 +1,23 @@
 import { Page } from "playwright";
-import { generateScreenshotName } from "../utils/helper";
+import { uploadAsset } from "src/functions/storage";
+import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
-export function takePageScreenshot(page: Page, stepIndex: number) {
-	return new Promise(async (success, error) => {
-		try {
-			const pageTitle = await page.title();
-			const pageUrl = await page.url();
-			const screenshotBuffer = await page.screenshot();
+async function takePageScreenshot(page: Page, logStepResult: any) {
+    const screenshotBuffer = await page.screenshot();
+    const screenshotName =  generateScreenshotName(await page.title(), uuidv4());
+    const uploadedScreenshotUrl = await uploadAsset(screenshotName, screenshotBuffer);
 
-			return success({
-				message: `Clicked page screenshot for ${pageUrl}`,
-				pageUrl: pageUrl,
-				output: {
-					name: generateScreenshotName(pageTitle, stepIndex),
-					value: screenshotBuffer,
-				},
-			});
-		} catch (err) {
-			return error("Some issue occurred while capturing screenshot of page");
-		}
-	});
+    return {
+        customLogMessage: "Took screenshot of current page",
+        outputs: [{
+            name: screenshotName,
+            value: uploadedScreenshotUrl,
+        }],
+    };
+}
+
+module.exports = {
+    name: "PAGE_SCREENSHOT",
+    description: "Take page screenshot of page",
+    handler: takePageScreenshot,
 }

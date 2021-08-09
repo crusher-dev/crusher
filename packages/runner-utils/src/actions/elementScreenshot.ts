@@ -1,34 +1,24 @@
-import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
-import { Page } from "playwright";
 import { iAction } from "@crusher-shared/types/action";
-import { generateScreenshotName, toCrusherSelectorsFormat } from "../utils/helper";
-import { waitForSelectors } from "../functions";
+import { ElementHandle, Page } from "playwright";
+import { uploadAsset } from "src/functions/storage";
+import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
-export  function takeElementScreenshot(action: iAction, page: Page, stepIndex: number) {
-	return new Promise(async (success, error) => {
-		try {
-			const selectors = action.payload.selectors as iSelectorInfo[];
-			const selectorInfo = await waitForSelectors(page, selectors);
-			const elementHandle = await page.$(selectorInfo.value);
-			if (!elementHandle) {
-				return error(`Attempt to capture screenshot of element with invalid selector: ${selectors[0].value}`);
-			}
+async function takeElementScreenshot(element: ElementHandle, action: iAction) {
+    const screenshotBuffer = await element.screenshot();
+    const screenshotName =  generateScreenshotName(action.payload.selectors[0].value, uuidv4());
+    const uploadedScreenshotUrl = await uploadAsset(screenshotName, screenshotBuffer);
 
-			const elementScreenshotBuffer = await elementHandle.screenshot();
-			const pageUrl = await page.url();
-			console.log("ELEMENT SCREEN", selectorInfo);
-			return success({
-				message: `Captured element screenshot for ${selectorInfo.value}`,
-				selector: selectorInfo,
-				pageUrl: pageUrl,
-				output: {
-					name: generateScreenshotName(selectors[0].value, stepIndex),
-					value: elementScreenshotBuffer,
-				},
-			});
-		} catch (err) {
-			console.log(err);
-			return error("Some issue occurred while capturing screenshot of element");
-		}
-	});
+    return {
+        customLogMessage: "Took screenshot of element",
+        outputs: [{
+            name: screenshotName,
+            value: uploadedScreenshotUrl,
+        }],
+    };
+}
+
+module.exports = {
+    name: "ELEMENT_SCREENSHOT",
+    description: "Take element screenshot",
+    handler: takeElementScreenshot,
 }

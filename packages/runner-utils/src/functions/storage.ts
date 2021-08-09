@@ -1,12 +1,19 @@
-export class StorageManager {
-  private static storageManager: any;
+import { StorageManagerInterface } from "@crusher-shared/lib/storage/interface";
+import * as path from "path";
 
-  static initialize(storageManager: any) {
+export class StorageManager {
+  private static storageManager: StorageManagerInterface;
+  private static baseAssetPath: string;
+
+  static initialize(storageManager: StorageManagerInterface, baseAssetPath: string) {
     this.storageManager = storageManager;
+    this.baseAssetPath = baseAssetPath;
+
+    return this;
   }
 
   static async uploadAsset(name: string, buffer: Buffer): Promise<string> {
-    return this.storageManager.uploadAsset(name, buffer);
+    return this.storageManager.uploadBuffer(buffer, path.resolve(this.baseAssetPath, name));
   }
 };
 

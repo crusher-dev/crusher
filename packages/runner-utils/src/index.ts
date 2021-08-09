@@ -1,7 +1,11 @@
+import { StorageManagerInterface } from "@crusher-shared/lib/storage/interface";
+import { ActionStatusEnum, IRunnerLogManagerInterface, IRunnerLogStepMeta } from "@crusher-shared/lib/runnerLog/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { Browser, Page } from "playwright";
-import { LogManager } from "./functions/log";
+import { LogManager, logStep } from "./functions/log";
+import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
+import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
@@ -12,52 +16,70 @@ export enum ActionCategoryEnum {
 };
 
 const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[A-Z0-1_]$*/);
-class CrusheRunnerActions {
-  actionHandlers: {[type: string]: any};
-  cloudStorage: any;
 
-  constructor(logManger: any, cloudStorage: any) {
+class CrusherRunnerActions {
+  actionHandlers: {[type: string]: any};
+  actionResults: Array<{actionType: ACTIONS_IN_TEST, status: ActionStatusEnum; message: string; meta: IRunnerLogStepMeta}>;
+  storageManager: StorageManager;
+
+  constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string) {
     this.actionHandlers = {};
+    this.actionResults = [];
+  
     LogManager.initalize(logManger);
-    this.cloudStorage = this.cloudStorage;
+    StorageManager.initialize(storageManager, baseAssetPath);
   }
 
-  stepHandlerHOC(wrappedHandler: any, actionCategory: IActionCategory, actionDescription = ""): (browser: Browser, page: Page, steps: iAction) => Promise<any> {
-    return async (browser: Browser, page: Page, step: iAction): Promise<void> => {
-      this.logManager.logStep(`Running ${actionDescription}`);
+  async handleActionExecutionStatus(actionType: ACTIONS_IN_TEST, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {
+    await logStep(actionType, status, message, meta);
 
-      switch (actionCategory) {
-        case ActionCategoryEnum.BROWSER:
-          await wrappedHandler.apply(this, browser);
-          break;
-        case ActionCategoryEnum.PAGE:
-          await wrappedHandler.apply(this, page, step);
-          break;
-        case ActionCategoryEnum.ELEMENT:
-          const elementInfo = await waitForSelectors(page, step.payload.selectors);
-        await wrappedHandler.apply(this, elementInfo.elementHandle, step);
-          break;
-        default:
-          throw new Error("Invalid action category handler");
-          break;
-
-      }
-
-      this.logManager.logStep(`Completed ${actionDescription}`);
+    if(status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
+      this.actionResults.push({actionType, status, message, meta});
     }
   }
 
-  registerStepHandler(actionType: string, handler: any) {
+  stepHandlerHOC(wrappedHandler: any, action: {name: ACTIONS_IN_TEST; category: IActionCategory, description: string}): (browser: Browser, page: Page, steps: iAction) => Promise<any> {
+    return async (browser: Browser, page: Page, step: iAction): Promise<void> => {
+      await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`);
+
+      let stepResult = null;
+
+      try{
+        switch (action.category) {
+          case ActionCategoryEnum.BROWSER:
+            stepResult = await wrappedHandler.apply(this, browser);
+            break;
+          case ActionCategoryEnum.PAGE:
+            stepResult = await wrappedHandler.apply(this, page, step);
+            break;
+          case ActionCategoryEnum.ELEMENT:
+            const elementInfo = await waitForSelectors(page, step.payload.selectors);
+            stepResult = await wrappedHandler.apply(this, elementInfo.elementHandle, step);
+            break;
+          default:
+            throw new Error("Invalid action category handler");
+        } 
+      } catch(err) {
+        await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {failedReason: err.messsage, meta: err.meta ? err.meta : {}});
+        throw err;
+      }
+
+      // Woohoo! Action executed without any errors.
+      await this.handleActionExecutionStatus(action.name, ActionStatusEnum.COMPLETED, `Finished performing ${action.description}`, stepResult ? stepResult : {});
+    }
+  }
+
+  registerStepHandler(actionType: ACTIONS_IN_TEST, description: string, handler: any) {
     const validActionRegexMatches = validActionTypeRegex.exec(actionType);
     if (!validActionRegexMatches) throw new Error("Invalid format for action type");
 
     const actionCategory: IActionCategory = validActionTypeRegex[1];
-    if (actionCategory === "PAGE") {
-      this.actionHandlers[actionType] = this.stepHandlerHOC(handler, actionCategory);
-    }
+    this.actionHandlers[actionType] = this.stepHandlerHOC(handler, {name: actionType, description: description, category: actionCategory});
   }
 
   getStepHandlers() {
     return this.actionHandlers;
   }
 }
+
+export { CrusherRunnerActions };

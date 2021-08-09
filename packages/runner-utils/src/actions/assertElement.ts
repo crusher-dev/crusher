@@ -1,23 +1,91 @@
-import { assertElement } from "../functions";
-import { Page } from "playwright";
-import { iAction } from "../../../crusher-shared/types/action";
-import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
+import { iAction } from "@crusher-shared/types/action";
+import { iAssertionRow } from "@crusher-shared/types/assertionRow";
+import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
+import { ElementHandle, Page } from "playwright";
+import { logStep, logStepResult } from "src/functions/log";
+import { markTestFail } from "src/utils/helper";
 
-export function runAssertionOnElement(action: iAction, page: Page) {
-	return new Promise(async (success, error) => {
-		try {
-			const selectors = action.payload.selectors as iSelectorInfo[];
-			const validationRows = action.payload.meta.validations;
-			const output = await assertElement(page, selectors, validationRows);
-			const pageUrl = await page.url();
-			return success({
-				message: `Successfully asserted element ${selectors[0].value}`,
-				selector: output.selector,
-				pageUrl: pageUrl,
-				result: output,
-			});
-		} catch (err) {
-			return error("Some issue occurred while asserting element");
+
+async function assertElementAttributes(element: ElementHandle, assertions: Array<iAssertionRow>): Promise<{hasPassed: boolean, logs: Array<{status: "FAILED" | "DONE", message: string, meta: any}>}> {
+	let hasPassed = true;
+	const logs = [];
+
+	for (let i = 0; i < assertions.length; i++) {
+		const { validation, operation, field } = assertions[i];
+		const elementAttributeValue = await element.getAttribute(field.name);
+		if (operation === "matches") {
+			if (elementAttributeValue !== validation) {
+				hasPassed = false;
+				logs.push({
+					status: "FAILED",
+					message: "Failed to assert attribute=" + validation + " of element",
+					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
+				});
+			} else {
+				logs.push({
+					status: "DONE",
+					message: "Asserted attribute=" + validation + " of element",
+					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
+				});
+			}
+		} else if (operation === "contains") {
+			const doesContain = elementAttributeValue!.includes(validation);
+			if (!doesContain) {
+				hasPassed = false;
+				logs.push({
+					status: "FAILED",
+					message: "Failed to assert attribute contains " + validation + " of element",
+					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
+				});
+			} else {
+				logs.push({
+					status: "DONE",
+					message: "Asserted attribute contains " + validation + " of element",
+					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
+				});
+			}
+		} else if (operation === "regex") {
+			const rgx = new RegExp(validation);
+			if (!rgx.test(elementAttributeValue!)) {
+				hasPassed = false;
+				logs.push({
+					status: "FAILED",
+					message: "Failed to assert attribute matches regex: " + validation + " of element",
+					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
+				});
+			} else {
+				logs.push({
+					status: "DONE",
+					message: "Asserted attribute matches regex: " + validation + " of element",
+					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
+				});
+			}
 		}
-	});
+	}
+
+	return {hasPassed, logs}
+}
+
+async function runAssertionOnElement(element: ElementHandle, action: iAction) {
+    const validationRows = action.payload.meta.validations;
+    const actionResult = await assertElementAttributes(element, validationRows);
+
+    if(!actionResult.hasPassed) markTestFail("Failed assertions on element", {meta: {logs: actionResult.logs}});
+
+    return {
+        customLogMessage: "Ran custom assertions on element",
+        meta: {
+            logs: actionResult.logs,
+        }
+    };
+}
+
+module.exports = {
+    name: "ELEMENT_ASSERT",
+    description: "Assertions on element",
+    handler: runAssertionOnElement,
+}
+
+function assertElement(page: any, selectors: any, validationRows: any) {
+    throw new Error("Function not implemented.");
 }

@@ -1,21 +1,13 @@
-import { Page } from "playwright";
 import { iAction } from "@crusher-shared/types/action";
+import { Page } from "playwright";
 
-export async function navigateToUrl(action: iAction, page: Page) {
-	return new Promise(async (success, error) => {
-		try {
-			const urlToGo = action.payload.meta.value;
+async function goToUrl(page: Page, action: iAction) {
+    const urlToGo = action.payload.meta.value;
+    await page.goto(urlToGo);
+}
 
-			await page.goto(urlToGo);
-
-			const urlNow = await page.url();
-			return success({
-				message: `Navigated successfully to ${urlToGo}`,
-				pageUrl: urlNow,
-			});
-		} catch (err) {
-			console.error(err);
-			return error("Some issue occurred while navigating to webpage");
-		}
-	});
+module.exports = {
+    name: "PAGE_NAVIGATE_URL",
+    description: "Navigation to url",
+    handler: goToUrl,
 }

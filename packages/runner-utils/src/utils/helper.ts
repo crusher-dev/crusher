@@ -7,7 +7,7 @@ function uuidv4() {
   });
 }
 
-const generateScreenshotName = (selector: string, stepIndex: number): string => {
+const generateScreenshotName = (selector: string, stepIndex: string): string => {
 	return selector.replace(/[^\w\s]/gi, "").replace(/ /g, "_") + `_${stepIndex}.png`;
 };
 
@@ -35,4 +35,11 @@ const promiseTillSuccess = (promises: Array<Promise<any>>) => {
 	);
 };
 
-export { generateScreenshotName, toCrusherSelectorsFormat, promiseTillSuccess };
+function markTestFail(message: string, meta: any = {}): void {
+    const customError = new Error(message);
+    (customError as any).meta = meta;
+
+    throw customError;
+}
+
+export { uuidv4, generateScreenshotName, toCrusherSelectorsFormat, promiseTillSuccess, markTestFail };

@@ -1,4 +1,4 @@
-import { ACTIONS_IN_TEST } from "~/crusher-shared/constants/recordedActions";
+import { ACTIONS_IN_TEST } from "../../constants/recordedActions";
 
 export enum ActionStatusEnum {
     STARTED = "STARTED",

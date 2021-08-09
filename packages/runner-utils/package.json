@@ -1,5 +1,6 @@
 {
 	"name": "crusher-runner-utils",
+	"private": "true",
 	"version": "0.0.9",
 	"description": "Test runner utils for crusher tests",
 	"main": "src/index.ts",

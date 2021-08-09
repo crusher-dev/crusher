@@ -6,6 +6,8 @@ import { LogManager, logStep } from "./functions/log";
 import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
+import * as fs from "fs";
+import * as path from "path";
 
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
@@ -15,7 +17,7 @@ export enum ActionCategoryEnum {
   ELEMENT = "ELEMENT"
 };
 
-const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[A-Z0-1_]$*/);
+const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[A-Z0-1_]*$/);
 
 class CrusherRunnerActions {
   actionHandlers: {[type: string]: any};
@@ -28,6 +30,14 @@ class CrusherRunnerActions {
   
     LogManager.initalize(logManger);
     StorageManager.initialize(storageManager, baseAssetPath);
+    this.initActionHandlers();
+  }
+
+  initActionHandlers() {
+    fs.readdirSync("./actions").map((files) => {
+      const {name, description, handler} = require(path.join("./actions", files));
+      this.registerStepHandler(name, description, handler)
+    });
   }
 
   async handleActionExecutionStatus(actionType: ACTIONS_IN_TEST, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {
@@ -46,9 +56,6 @@ class CrusherRunnerActions {
 
       try{
         switch (action.category) {
-          case ActionCategoryEnum.BROWSER:
-            stepResult = await wrappedHandler.apply(this, browser);
-            break;
           case ActionCategoryEnum.PAGE:
             stepResult = await wrappedHandler.apply(this, page, step);
             break;

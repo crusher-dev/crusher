@@ -1,6 +1,6 @@
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
-import { uploadAsset } from "src/functions/storage";
+import { uploadAsset } from "../functions/storage";
 import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
 async function takeElementScreenshot(element: ElementHandle, action: iAction) {

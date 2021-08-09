@@ -1,5 +1,5 @@
 import { Page } from "playwright";
-import { uploadAsset } from "src/functions/storage";
+import { uploadAsset } from "../functions/storage";
 import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
 async function takePageScreenshot(page: Page, logStepResult: any) {

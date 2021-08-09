@@ -1,10 +1,7 @@
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
-import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
-import { ElementHandle, Page } from "playwright";
-import { logStep, logStepResult } from "src/functions/log";
+import { ElementHandle } from "playwright";
 import { markTestFail } from "src/utils/helper";
-
 
 async function assertElementAttributes(element: ElementHandle, assertions: Array<iAssertionRow>): Promise<{hasPassed: boolean, logs: Array<{status: "FAILED" | "DONE", message: string, meta: any}>}> {
 	let hasPassed = true;

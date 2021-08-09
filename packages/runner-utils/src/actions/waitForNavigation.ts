@@ -1,6 +1,5 @@
 import { iAction } from "@crusher-shared/types/action";
 import { Page } from "playwright";
-import { scroll } from "../functions/scroll";
 
 async function waitForNavigation(page: Page, action: iAction) {    
     await page.waitForLoadState('networkidle');

@@ -1,5 +1,5 @@
 import { iAction } from "@crusher-shared/types/action";
-import { ElementHandle, Page } from "playwright";
+import { ElementHandle } from "playwright";
 import { uploadAsset } from "src/functions/storage";
 import { generateScreenshotName, uuidv4 } from "../utils/helper";
 

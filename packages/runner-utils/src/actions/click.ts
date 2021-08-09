@@ -1,5 +1,5 @@
 import { iAction } from "@crusher-shared/types/action";
-import { ElementHandle, Page } from "playwright";
+import { ElementHandle } from "playwright";
 
 async function clickOnElement(element: ElementHandle, action: iAction) {
 	await element.dispatchEvent("click");

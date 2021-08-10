@@ -9,6 +9,8 @@ import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import * as fs from "fs";
 import * as path from "path";
 
+const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
+
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -27,15 +29,15 @@ class CrusherRunnerActions {
   constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string) {
     this.actionHandlers = {};
     this.actionResults = [];
-  
+
     LogManager.initalize(logManger);
     StorageManager.initialize(storageManager, baseAssetPath);
     this.initActionHandlers();
   }
 
   initActionHandlers() {
-    fs.readdirSync("./actions").map((files) => {
-      const {name, description, handler} = require(path.join("./actions", files));
+    actionsRequireContext.keys().forEach(fileName => {
+      const { name, description, handler } = actionsRequireContext(fileName);
       this.registerStepHandler(name, description, handler)
     });
   }
@@ -65,7 +67,7 @@ class CrusherRunnerActions {
             break;
           default:
             throw new Error("Invalid action category handler");
-        } 
+        }
       } catch(err) {
         await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {failedReason: err.messsage, meta: err.meta ? err.meta : {}});
         throw err;

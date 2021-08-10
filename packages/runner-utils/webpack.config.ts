@@ -6,6 +6,7 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 module.exports = {
 	mode: "development",
 	devtool: "inline-source-map",
+	target: "node",
 	entry: {
 		index: "./src/index.ts",
 	},
@@ -18,9 +19,7 @@ module.exports = {
 		extensions: [".ts", ".tsx", ".js"],
 		plugins: [new TsconfigPathsPlugin({ configFile: path.resolve("./tsconfig.json") })],
 	},
-	plugins: [
-		new NodePolyfillPlugin()
-	],
+
 	module: {
 		rules: [
 			{

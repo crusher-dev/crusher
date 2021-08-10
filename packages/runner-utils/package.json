@@ -19,6 +19,7 @@
 		"@typescript-eslint/parser": "^4.14.1",
 		"babel-jest": "^27.0.2",
 		"jest": "^27.0.3",
+		"node-polyfill-webpack-plugin": "1.1.4",
 		"ts-loader": "^8.0.14",
 		"ts-node": "^9.1.1",
 		"tsconfig-paths-webpack-plugin": "^3.5.1",
@@ -33,7 +34,6 @@
 	},
 	"dependencies": {
 		"browserify-zlib": "^0.2.0",
-		"playwright": "^1.11.1",
-		"stream-browserify": "^3.0.0"
+		"playwright": "^1.11.1"
 	}
 }

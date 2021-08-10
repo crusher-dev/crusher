@@ -1,4 +1,6 @@
+import { iAction } from "@crusher-shared/types/action";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
+const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[A-Z0-1_]*$/);
 
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -42,4 +44,19 @@ function markTestFail(message: string, meta: any = {}): void {
     throw customError;
 }
 
-export { uuidv4, generateScreenshotName, toCrusherSelectorsFormat, promiseTillSuccess, markTestFail };
+function getBrowserActions(actions: iAction[]) {
+	return actions.filter((action: iAction) => {
+		const matches = validActionTypeRegex.exec(action.type);
+		return action && matches[1] === "BROWSER";
+	});
+
+}
+
+function getMainActions(actions: iAction[]) {
+	return actions.filter((action: iAction) => {
+		const matches = validActionTypeRegex.exec(action.type);
+		return action && matches[1] !== "BROWSER";
+	});
+}
+
+export { uuidv4, generateScreenshotName, toCrusherSelectorsFormat, promiseTillSuccess, markTestFail, getBrowserActions, getMainActions, validActionTypeRegex };

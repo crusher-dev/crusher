@@ -9,6 +9,7 @@ import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
 import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
 import { GlobalManager } from "./globals";
+import { getBrowserActions, getMainActions, validActionTypeRegex } from "./utils/helper";
 
 const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
 
@@ -19,8 +20,6 @@ export enum ActionCategoryEnum {
   BROWSER = "BROWSER",
   ELEMENT = "ELEMENT"
 };
-
-const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[A-Z0-1_]*$/);
 
 class CrusherRunnerActions {
   actionHandlers: {[type: string]: any};
@@ -108,4 +107,4 @@ class CrusherRunnerActions {
   }
 }
 
-export { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, GlobalManager };
+export { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, GlobalManager, getBrowserActions, getMainActions };

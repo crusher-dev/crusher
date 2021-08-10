@@ -1,13 +1,13 @@
 import { iAction } from "../../crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
 import { Parser } from "./parser";
-import { BROWSER } from "../../crusher-shared/types/browser";
+import { BrowserEnum } from "../../crusher-shared/types/browser";
 
 interface iCodeGeneratorOptions {
 	isLiveLogsOn?: boolean;
 	shouldRecordVideo?: boolean;
 	isHeadless?: boolean;
-	browser?: BROWSER;
+	browser?: BrowserEnum;
 	assetsDir?: string;
 	usePlaywrightChromium?: boolean;
 }
@@ -23,17 +23,15 @@ export class CodeGenerator {
 		this.options = options;
 	}
 
-	parse(actions: Array<iAction>) {
+	getCode(actions: Array<iAction>): Promise<string> {
 		const parser = new Parser({
 			actions,
-			isLiveRecording: this.options.shouldRecordVideo,
-			shouldLogSteps: this.options.isLiveLogsOn,
+			shouldRecordVideo: this.options.shouldRecordVideo,
 			browser: this.options.browser,
-			isHeadless: this.options.isHeadless,
 			assetsDir: this.options.assetsDir,
-			usePlaywrightChromium: this.options.usePlaywrightChromium,
+			shouldUsePlaywrightChromium: this.options.usePlaywrightChromium,
 		});
-		parser.parseActions();
+
 		return parser.getCode();
 	}
 }

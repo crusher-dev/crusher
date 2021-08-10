@@ -5202,6 +5202,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/ioredis@^4.26.4":
+  version "4.26.7"
+  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.26.7.tgz#8c8174b9db38f71f0e372174c66a031a2ca7d9cf"
+  integrity sha512-TOGRR+e1to00CihjgPNygD7+G7ruVnMi62YdIvGUBRfj11k/aWq+Fv5Ea8St0Oy56NngTBfA8GvLn1uvHvhX6Q==
+  dependencies:
+    "@types/node" "*"
+
 "@types/is-function@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/is-function/-/is-function-1.0.0.tgz#1b0b819b1636c7baf0d6785d030d12edf70c3e83"
@@ -7920,6 +7927,20 @@ bullmq@1.14.0:
     get-port "^5.0.0"
     ioredis "^4.17.3"
     lodash "^4.17.11"
+    semver "^6.3.0"
+    tslib "^1.10.0"
+    uuid "^8.2.0"
+
+bullmq@^1.40.4:
+  version "1.40.4"
+  resolved "https://registry.yarnpkg.com/bullmq/-/bullmq-1.40.4.tgz#109e30b0f78e904d9af33c71d0a1d68d450864f8"
+  integrity sha512-MTFnW5+VF4YLGnHhgRQ50kE4NhfV2e8dmr8AcaiFN1Jtmms5FLee9p/NqUnRatQnxscKLxYn17hV2vn5urd4Yw==
+  dependencies:
+    "@types/ioredis" "^4.26.4"
+    cron-parser "^2.7.3"
+    get-port "^5.0.0"
+    ioredis "^4.27.5"
+    lodash "^4.17.21"
     semver "^6.3.0"
     tslib "^1.10.0"
     uuid "^8.2.0"
@@ -13757,6 +13778,23 @@ ioredis@^4.17.3, ioredis@^4.19.4:
     redis-parser "^3.0.0"
     standard-as-callback "^2.1.0"
 
+ioredis@^4.27.5, ioredis@^4.27.7:
+  version "4.27.7"
+  resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-4.27.7.tgz#11bf2947e23a0e8055931afa7c2da89fc48c8ff3"
+  integrity sha512-lqvFFmUyGIHlrNyDvBoakzy1+ioJzNyoP6CP97GWtdTjWq9IOAnv6l0HUTsqhvd/z9etGgtrDHZ4kWCMAwNkug==
+  dependencies:
+    cluster-key-slot "^1.1.0"
+    debug "^4.3.1"
+    denque "^1.1.0"
+    lodash.defaults "^4.2.0"
+    lodash.flatten "^4.4.0"
+    lodash.isarguments "^3.1.0"
+    p-map "^2.1.0"
+    redis-commands "1.7.0"
+    redis-errors "^1.2.0"
+    redis-parser "^3.0.0"
+    standard-as-callback "^2.1.0"
+
 ip-regex@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"
@@ -16037,6 +16075,11 @@ lodash.includes@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.includes/-/lodash.includes-4.3.0.tgz#60bb98a87cb923c68ca1e51325483314849f553f"
   integrity sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=
+
+lodash.isarguments@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/lodash.isarguments/-/lodash.isarguments-3.1.0.tgz#2f573d85c6a24289ff00663b491c1d338ff3458a"
+  integrity sha1-L1c9hcaiQon/AGY7SRwdM4/zRYo=
 
 lodash.isboolean@^3.0.3:
   version "3.0.3"
@@ -24841,7 +24884,7 @@ webpack-cli@^3.3.12:
     v8-compile-cache "^2.1.1"
     yargs "^13.3.2"
 
-webpack-cli@^4.5.0, webpack-cli@^4.6.0, webpack-cli@^4.7.0:
+webpack-cli@^4.5.0, webpack-cli@^4.7.0:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-4.7.2.tgz#a718db600de6d3906a4357e059ae584a89f4c1a5"
   integrity sha512-mEoLmnmOIZQNiRl0ebnjzQ74Hk0iKS5SiEEnpq3dRezoyR3yPaeQZCMCe+db4524pj1Pd5ghZXjT41KLzIhSLw==

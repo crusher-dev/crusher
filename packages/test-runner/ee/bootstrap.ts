@@ -25,7 +25,10 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 			stalledInterval: 120000,
 			maxStalledCount: 1,
 		});
-		await this.queueManager.addWorkerForQueue("test-execution-queue", path.resolve(__dirname, "./worker.js"), {
+
+		const workerPath = process.env.NODE_ENV === "production" ? path.resolve(__dirname, "./worker.js") : path.resolve("src/worker/index.ts");
+
+		await this.queueManager.addWorkerForQueue("test-execution-queue", workerPath, {
 			concurrency: 3,
 			lockDuration: 120000,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -39,10 +42,10 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		Note - Check if this working correctly an
 	*/
 	async setupInstanceHeartbeat() {
-		this._registeredInstanceNo = await this.redisManager.client.incr("instance_index");
+		this._registeredInstanceNo = await this.redisManager.redisClient.incr("instance_index");
 
 		const sendHeartbeat = () => {
-			const client = this.redisManager.client;
+			const client = this.redisManager.redisClient;
 			return client
 				.set(`instance:${this._registeredInstanceNo}`, this._registeredInstanceNo, "ex", 60)
 				.catch((err) => {

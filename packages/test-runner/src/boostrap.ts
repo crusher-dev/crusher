@@ -1,5 +1,5 @@
 import { RedisManager } from "@modules/redis";
-import { QueueManager } from "@modules/queue";
+import { QueueManager } from "@shared/modules/queue";
 import * as worker from "./worker";
 import { getQueueManager, getRedisManager } from "@util/cache";
 

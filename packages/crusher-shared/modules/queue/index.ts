@@ -1,5 +1,5 @@
 import { Worker, Processor, Queue, QueueScheduler, QueueSchedulerOptions, WorkerOptions } from "bullmq";
-import { RedisManager } from "@modules/redis";
+import { RedisManager } from "../redis";
 
 class QueueManager {
 	redisManager: RedisManager;
@@ -19,7 +19,7 @@ class QueueManager {
 		this.queues[queueName] = this.queues[queueName] ? this.queues[queueName] : {};
 		this.queues[queueName] = {
 			...this.queues[queueName],
-			value: new Queue(queueName, { connection: this.redisManager.client as any }),
+			value: new Queue(queueName, { connection: this.redisManager.redisClient as any }),
 		};
 
 		await this.queues[queueName].value.waitUntilReady();
@@ -39,7 +39,7 @@ class QueueManager {
 			...this.queues[queueName],
 			scheduler: new QueueScheduler(queueName, {
 				...options,
-				connection: this.redisManager.client as any,
+				connection: this.redisManager.redisClient as any,
 			}),
 		};
 
@@ -64,7 +64,7 @@ class QueueManager {
 			...this.queues[queueName],
 			worker: new Worker(queueName, processor, {
 				...options,
-				connection: this.redisManager.client as any,
+				connection: this.redisManager.redisClient as any,
 			}),
 		};
 

@@ -7,6 +7,7 @@ import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
+import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
 
 const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
 
@@ -90,4 +91,4 @@ class CrusherRunnerActions {
   }
 }
 
-export { CrusherRunnerActions, handlePopup };
+export { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine };

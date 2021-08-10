@@ -1,5 +1,4 @@
 import TestRunnerBootstrap from "@src/boostrap";
-import { RedisManager } from "@src/manager/redis";
 import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
 
@@ -40,10 +39,10 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		Note - Check if this working correctly an
 	*/
 	async setupInstanceHeartbeat() {
-		this._registeredInstanceNo = await RedisManager.get().incr("instance_index");
+		this._registeredInstanceNo = await this.redisManager.client.incr("instance_index");
 
 		const sendHeartbeat = () => {
-			const client = RedisManager.get();
+			const client = this.redisManager.client;
 			return client
 				.set(`instance:${this._registeredInstanceNo}`, this._registeredInstanceNo, "ex", 60)
 				.catch((err) => {

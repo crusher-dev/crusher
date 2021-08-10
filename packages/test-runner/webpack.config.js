@@ -9,7 +9,7 @@ module.exports = {
 	target: "node",
 	entry: {
 		index: "./index.ts",
-		worker: ["src/worker.ts"],
+		worker: ["src/worker/index.ts"],
 		master: "bullmq/dist/classes/master.js",
 	},
 	output: {

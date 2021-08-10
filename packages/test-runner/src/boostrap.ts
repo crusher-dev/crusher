@@ -1,7 +1,7 @@
 import { RedisManager } from "@modules/redis";
 import { QueueManager } from "@modules/queue";
 import * as worker from "./worker";
-import { getQueueManager, getRedisManager } from "./cacheDeps";
+import { getQueueManager, getRedisManager } from "@util/cache";
 
 class TestRunnerBootstrap {
 	redisManager: RedisManager;

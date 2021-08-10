@@ -1,3 +1,4 @@
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { Page } from "playwright";
 import { GlobalManager } from "src/globals";
@@ -19,7 +20,7 @@ async function takePageScreenshot(page: Page, step: iAction, globals: GlobalMana
 }
 
 module.exports = {
-    name: "PAGE_SCREENSHOT",
+	name: ActionsInTestEnum.PAGE_SCREENSHOT,
     description: "Take page screenshot of page",
     handler: takePageScreenshot,
 }

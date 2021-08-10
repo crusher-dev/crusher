@@ -23,14 +23,8 @@ const ACTION_DESCRIPTIONS = {
 	[ACTIONS_IN_TEST.PAGE_SCREENSHOT]: () => {
 		return `Took page screenshot`;
 	},
-	[ACTIONS_IN_TEST.SCROLL_TO_VIEW]: (meta: ActionMeta) => {
-		return `Scroll until this is in view, ${meta.selector}`;
-	},
 	[ACTIONS_IN_TEST.ADD_INPUT]: (meta: ActionMeta) => {
 		return `Type ${meta.value} in ${meta.selector}`;
-	},
-	[ACTIONS_IN_TEST.EXTRACT_INFO]: (meta: ActionMeta) => {
-		return `Extract info from ${meta.selector}`;
 	},
 	[ACTIONS_IN_TEST.ASSERT_ELEMENT]: (meta: ActionMeta) => {
 		return `Assert element info from ${meta.selector}`;

@@ -1,12 +1,13 @@
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
 
-async function focusOnElement(element: ElementHandle, action: iAction) {
+export async function focusOnElement(element: ElementHandle, step: iAction) {
 	await element.focus();
 }
 
 module.exports = {
-    name: "ELEMENT_FOCUS",
-    description: "Focus on element",
-    handler: focusOnElement,
+	name: ActionsInTestEnum.ELEMENT_FOCUS,
+	description: "Focus on element",
+	handler: focusOnElement,
 }

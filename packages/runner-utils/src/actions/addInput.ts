@@ -1,6 +1,7 @@
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
 import { type } from "../functions/type";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 async function addInput(element: ElementHandle, actionInfo: iAction) {
     const inputKeys = actionInfo.payload.meta.value;
@@ -9,8 +10,9 @@ async function addInput(element: ElementHandle, actionInfo: iAction) {
     await type(element, inputKeys);
 }
 
+
 module.exports = {
-    name: "ELEMENT_ADD_INPUT",
+    name: ActionsInTestEnum.ADD_INPUT,
     description: "Adding input to element",
     handler: addInput,
 }

@@ -3,6 +3,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { Browser, BrowserContextOptions, Page } from "playwright";
 import { iDevice } from "@crusher-shared/types/extension/device";
 import { GlobalManager } from "src/globals";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 async function setDevice(browser: Browser, action: iAction, globals: GlobalManager) {
 	const device: { width: number, height: number } = action.payload.meta.device as iDevice;
@@ -30,7 +31,7 @@ async function setDevice(browser: Browser, action: iAction, globals: GlobalManag
 }
 
 module.exports = {
-    name: "BROWSER_SET_DEVICE",
+		name: ActionsInTestEnum.SET_DEVICE,
     description: "Configuration of device config",
     handler: setDevice,
 }

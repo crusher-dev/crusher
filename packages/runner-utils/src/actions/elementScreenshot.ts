@@ -1,3 +1,4 @@
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
 import { GlobalManager } from "src/globals";
@@ -19,7 +20,7 @@ async function takeElementScreenshot(element: ElementHandle, action: iAction, gl
 }
 
 module.exports = {
-    name: "ELEMENT_SCREENSHOT",
+	name: ActionsInTestEnum.ELEMENT_SCREENSHOT,
     description: "Take element screenshot",
     handler: takeElementScreenshot,
 }

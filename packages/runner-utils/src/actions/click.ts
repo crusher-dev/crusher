@@ -1,3 +1,4 @@
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
 
@@ -6,7 +7,7 @@ async function clickOnElement(element: ElementHandle, action: iAction) {
 }
 
 module.exports = {
-    name: "ELEMENT_CLICK",
+    name: ActionsInTestEnum.CLICK,
     description: "Click on element",
     handler: clickOnElement,
 }

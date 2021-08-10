@@ -1,3 +1,4 @@
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
 import { markTestFail } from "src/utils/helper";
@@ -31,7 +32,7 @@ async function runCustomScriptOnElement(element: ElementHandle, action: iAction)
 }
 
 module.exports = {
-    name: "ELEMENT_CUSTOM_SCRIPT",
+    name: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
     description: "Custom script on element",
     handler: runCustomScriptOnElement,
 }

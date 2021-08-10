@@ -3,20 +3,19 @@ const playwright = require("<%= usePlaywrightChromium ? "playwright-chromium" : 
 const { saveVideo } = require("playwright-video");
 <% } %>
 
-const { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, GlobalManager, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
+const { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
 
-const globals = new GlobalManager();
-
-const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globals);
+// @TODO: globalManager, logManager and storageManager are supposed to be injected globally
+const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager);
 
 const browser = await playwright["<%= browserName %>"].launch(<%- JSON.stringify(defaultBrowserLaunchOptions) %>);
 
-globals.set("browserContextOptions", <%- JSON.stringify(defaultBrowserContextOptions) %>);
+globalManager.set("browserContextOptions", <%- JSON.stringify(defaultBrowserContextOptions) %>);
 
 const actions = <%- JSON.stringify(actions) %>
 crusherRunnerActionManager.runActions(getBrowserActions(actions), browser);
 
-browserContextOptions = globals.get("browserContextOptions");
+browserContextOptions = globalManager.get("browserContextOptions");
 
 browserContext = await browser.newContext({
   ...browserContextOptions,

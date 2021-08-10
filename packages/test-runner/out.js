@@ -1,4 +1,19 @@
 (async function() {
+    class GlobalManagerPolyfill {
+        map;
+        constructor() {
+            this.map = new Map();
+        }
+        has(key) {
+            return this.map.has(key);
+        }
+        get(key) {
+            return this.map.get(key);
+        }
+        set(key, value) {
+            this.map.set(key, value);
+        }
+    }
     class LogManagerPolyfill {
         logStep(...args) {
             console.log(args[2]);
@@ -17,6 +32,7 @@
     }
     const logManager = new LogManagerPolyfill();
     const storageManager = new StorageManagerPolyfill();
+    const globalManager = new GlobalManagerPolyfill();
     const playwright = require("playwright");
 
     const {
@@ -28,21 +44,19 @@
         CrusherRunnerActions,
         handlePopup,
         registerCrusherSelectorEngine,
-        GlobalManager,
         getBrowserActions,
         getMainActions
     } = require("../../output/crusher-runner-utils/");
 
-    const globals = new GlobalManager();
-
-    const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "/tmp/crusher/somedir/", globals);
+    // @TODO: globalManager, logManager and storageManager are supposed to be injected globally
+    const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "/tmp/crusher/somedir/", globalManager);
 
     const browser = await playwright["chromium"].launch({
         "headless": false,
         "args": ["--disable-shm-usage", "--disable-gpu"]
     });
 
-    globals.set("browserContextOptions", {
+    globalManager.set("browserContextOptions", {
         "defaultNavigationTimeout": 15000,
         "defaultTimeout": 5000
     });
@@ -323,7 +337,7 @@
     }]
     crusherRunnerActionManager.runActions(getBrowserActions(actions), browser);
 
-    browserContextOptions = globals.get("browserContextOptions");
+    browserContextOptions = globalManager.get("browserContextOptions");
 
     browserContext = await browser.newContext({
         ...browserContextOptions,
@@ -344,4 +358,6 @@
     await capturedVideo.stop();
 
     await browser.close();
+
+    console.log("Final Result", globalManager.get("TEST_RESULT"));
 })()

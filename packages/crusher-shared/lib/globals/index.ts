@@ -1,4 +1,6 @@
-class GlobalManager {
+import { IGlobalManager } from "./interface";
+
+class GlobalManager implements IGlobalManager {
   entires: Map<string, any>;
 
   constructor() {

@@ -8,8 +8,8 @@ import { waitForSelectors } from "./functions/waitForSelectors";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
 import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
-import { GlobalManager } from "./globals";
 import { getBrowserActions, getMainActions, validActionTypeRegex } from "./utils/helper";
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 
 const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
 
@@ -21,21 +21,22 @@ export enum ActionCategoryEnum {
   ELEMENT = "ELEMENT"
 };
 
+const TEST_RESULT_KEY = "TEST_RESULT";
 class CrusherRunnerActions {
   actionHandlers: {[type: string]: any};
   logManager: LogManager;
   storageManager: StorageManager;
-  globals: GlobalManager;
+  globals: IGlobalManager;
 
-  constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: GlobalManager) {
+  constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager) {
     this.actionHandlers = {};
     this.globals = globalManager;
 
     this.logManager =  new LogManager(logManger);
     this.storageManager = new StorageManager(storageManager, baseAssetPath);
 
-    if (!this.globals.has("actionResults")) {
-      this.globals.set("actionResults", []);
+    if (!this.globals.has(TEST_RESULT_KEY)) {
+      this.globals.set(TEST_RESULT_KEY, []);
     }
 
     this.initActionHandlers();
@@ -52,7 +53,7 @@ class CrusherRunnerActions {
     await this.logManager.logStep(actionType, status, message, meta);
 
     if(status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
-      this.globals.get("actionResults").push({actionType, status, message, meta});
+      this.globals.get(TEST_RESULT_KEY).push({actionType, status, message, meta});
     }
   }
 
@@ -107,4 +108,4 @@ class CrusherRunnerActions {
   }
 }
 
-export { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, GlobalManager, getBrowserActions, getMainActions };
+export { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBrowserActions, getMainActions };

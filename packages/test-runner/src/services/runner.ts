@@ -3,76 +3,71 @@ import { CodeGenerator } from "@generator/src/generator";
 import { PLATFORM } from "@shared/types/platform";
 import { getAllCapturedVideos, getBaseUrlFromEvents, getEdition, replaceBaseUrlInEvents, replaceImportWithRequire } from "@util/helper";
 import { EDITION_TYPE } from "@shared/types/common/general";
-
-const BROWSER_NAME = {
-	[PLATFORM.CHROME]: "chromium",
-	[PLATFORM.FIREFOX]: "firefox",
-	[PLATFORM.SAFARI]: "webkit",
-};
+import { iAction } from "@shared/types/action";
+import { ITestRunConfig } from "@shared/types/runner/jobRunRequest";
+import * as path from "path";
+import { IRunnerLogManagerInterface } from "@shared/lib/runnerLog/interface";
+import { IStorageManager } from "@shared/lib/storage/interface";
+import { timeStamp } from "console";
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 export class CodeRunnerService {
-	static getCode(jobRequest: iJobRunRequest) {
-		const generator = new CodeGenerator({
-			shouldRecordVideo: getEdition() === EDITION_TYPE.EE && jobRequest.platform === PLATFORM.CHROME,
-			usePlaywrightChromium: getEdition() === EDITION_TYPE.OPEN_SOURCE,
-			isHeadless: false,
-			isLiveLogsOn: true,
-			browser: BROWSER_NAME[jobRequest.platform],
-			assetsDir: `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}`,
-		});
+	codeGenerator: CodeGenerator;
+	actions: Array<iAction>;
+	runnerConfig: ITestRunConfig;
 
-		let events = jobRequest.test.events;
-		if (jobRequest.job && jobRequest.job.host) {
-			const baseURL = getBaseUrlFromEvents(events);
-			const finalURL = new URL(jobRequest.job.host);
-			events = replaceBaseUrlInEvents(baseURL, finalURL, events);
-		}
-		return replaceImportWithRequire(generator.parse(events));
+	logManager: IRunnerLogManagerInterface;
+	storageManager: IStorageManager;
+	globalManager: GlobalManager;
+
+	constructor(
+		actions: Array<iAction>,
+		runnerConfig: ITestRunConfig,
+		buildId: number,
+		testId: number,
+		storageManager: IStorageManager,
+		logManager: IRunnerLogManagerInterface,
+	) {
+		this.codeGenerator = new CodeGenerator({
+			shouldRecordVideo: runnerConfig.shouldRecordVideo,
+			usePlaywrightChromium: getEdition() === EDITION_TYPE.OPEN_SOURCE,
+			browser: runnerConfig.browser,
+			assetsDir: `/tmp/crusher/$${buildId}/${testId}`,
+		});
+		this.actions = actions;
+		this.runnerConfig = runnerConfig;
+
+		this.storageManager = storageManager;
+		this.logManager = logManager;
 	}
 
-	static async runTest(jobRequest: iJobRunRequest, logStepsHandler: Function, handleScreenshotImagesBuffer: Function) {
-		const code = this.getCode(jobRequest);
-		let error = null;
+	async runTest() {
+		const code = await this.codeGenerator.getCode(this.actions);
+		let error, recordedRawVideoUrl;
 
 		try {
-			await new Function(
-				"exports",
-				"require",
-				"module",
-				"__filename",
-				"__dirname",
-				"logStep",
-				"handleImageBuffer",
-				"GLOBAL_NODE_MODULES_PATH",
-				`return new Promise(async function (resolve, reject) {
-				    try{
-				        ${code};
-				        resolve(true);
-				    } catch(err){
-				      reject(err);
-				    }
-				});`,
-			)(
+			await new AsyncFunction("exports", "require", "module", "__filename", "__dirname", "logManager", "storageManager", code)(
 				exports,
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				//@ts-ignore
 				typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
 				module,
 				__filename,
 				__dirname,
-				logStepsHandler,
-				handleScreenshotImagesBuffer,
+				this.logManager,
+				this.storageManager,
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);
 		} catch (err) {
 			error = err;
 		}
 
-		const videos = getAllCapturedVideos(jobRequest);
+		const codeGeneratorConfig = this.codeGenerator.getConfig();
 
-		const videoKeys = Object.keys(videos);
-		const video = videoKeys.length ? videos[videoKeys[0]] : null;
+		if (codeGeneratorConfig.shouldRecordVideo) {
+			const recordedVideoRawPath = path.join(codeGeneratorConfig.assetsDir, "video.mp4");
+			recordedRawVideoUrl = await this.storageManager.upload(recordedVideoRawPath, path.join(codeGeneratorConfig.assetsDir, "video.mp4"));
+		}
 
-		return { error: error, output: { video: video } };
+		return { recordedRawVideo: recordedRawVideoUrl, error: error };
 	}
 }

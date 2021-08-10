@@ -4,9 +4,7 @@ import { Parser } from "./parser";
 import { BrowserEnum } from "../../crusher-shared/types/browser";
 
 interface iCodeGeneratorOptions {
-	isLiveLogsOn?: boolean;
 	shouldRecordVideo?: boolean;
-	isHeadless?: boolean;
 	browser?: BrowserEnum;
 	assetsDir?: string;
 	usePlaywrightChromium?: boolean;
@@ -21,6 +19,10 @@ export class CodeGenerator {
 
 	constructor(options: iCodeGeneratorOptions = {}) {
 		this.options = options;
+	}
+
+	getConfig(): iCodeGeneratorOptions {
+		return this.options;
 	}
 
 	getCode(actions: Array<iAction>): Promise<string> {

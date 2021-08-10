@@ -2,10 +2,10 @@
 import { iAction } from "@crusher-shared/types/action";
 import { Browser, BrowserContextOptions, Page } from "playwright";
 import { iDevice } from "@crusher-shared/types/extension/device";
-import { GlobalManager } from "src/globals";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 
-async function setDevice(browser: Browser, action: iAction, globals: GlobalManager) {
+async function setDevice(browser: Browser, action: iAction, globals: IGlobalManager) {
 	const device: { width: number, height: number } = action.payload.meta.device as iDevice;
 	const userAgent = action.payload.meta.userAgent && action.payload.meta.userAgent.value ? action.payload.meta.userAgent.value : action.payload.meta.userAgent;
 

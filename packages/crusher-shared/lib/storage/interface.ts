@@ -3,3 +3,5 @@ export interface StorageManagerInterface {
     upload: (filePath: string, destination: string) => Promise<string>;
     remove: (filePath: string) => Promise<boolean>;
 }
+
+export type IStorageManager = StorageManagerInterface;

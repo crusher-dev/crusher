@@ -40,6 +40,6 @@ export async function scrollPage(scrollDeltaArr: Array<number>, page: Page) {
 		(arg: Array<any>) => {
 			scroll(scrollDeltaArr, window) ;
 		},
-		[scrollDeltaArr, isWindow],
+		[scrollDeltaArr],
 	);
 }

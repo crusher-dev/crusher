@@ -1,5 +1,5 @@
 import { Job, Queue } from "bullmq";
-import { iJobRunRequest } from "@shared/types/runner/jobRunRequest";
+import { IJobRunRequest, iJobRunRequest } from "@shared/types/runner/jobRunRequest";
 import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere, uploadOutputImageToS3, uploadOutputVideoToS3 } from "./util/helper";
 import { NotifyService } from "./services/notify";
 import { CodeRunnerService } from "./services/runner";
@@ -8,9 +8,8 @@ import { getQueueManager, getRedisManager } from "./cacheDeps";
 
 const queueManager = getQueueManager();
 
-
 interface iTestRunnerJob extends Job {
-	data: iJobRunRequest;
+	data: IJobRunRequest;
 }
 
 export default async function (bullJob: iTestRunnerJob): Promise<boolean> {

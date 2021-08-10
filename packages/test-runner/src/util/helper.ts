@@ -22,17 +22,6 @@ export const deleteTmpAssetsDirectoriesIfThere = (jobRequest: iJobRunRequest) =>
 	shell.rm("-rf", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);
 };
 
-export const replaceImportWithRequire = (code: string) => {
-	const matchImportRegex = new RegExp(/import(\s+\S+\s+)from\s+(\S+);/gm);
-
-	return code.replace(matchImportRegex, function (match, variableName, packageName) {
-		if (!variableName || !packageName) {
-			return match;
-		}
-		return `const ${variableName} = require(${packageName});`;
-	});
-};
-
 export const getAllCapturedImages = (jobRequest: iJobRunRequest): { [imageName: string]: string } => {
 	const imageDirPath = `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`;
 	const images = fs.readdirSync(imageDirPath);

@@ -15,4 +15,5 @@ export interface IRunnerLogStepMeta {
 
 export interface IRunnerLogManagerInterface {
     logStep: (actionType: ACTIONS_IN_TEST, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta) => Promise<void>;
+    logTest: (status: ActionStatusEnum, message: string, meta: any) => Promise<void>;
 }

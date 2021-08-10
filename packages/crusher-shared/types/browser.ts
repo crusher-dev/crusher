@@ -3,3 +3,9 @@ export enum BROWSER {
 	FIREFOX = "firefox",
 	WEBKIT = "webkit",
 }
+
+export enum BrowserEnum {
+	CHROME = "chromium",
+	FIREFOX = "firefox",
+	WEBKIT = "webkit",
+}

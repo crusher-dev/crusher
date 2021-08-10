@@ -1,12 +1,13 @@
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
-import { uploadAsset } from "../functions/storage";
+import { GlobalManager } from "src/globals";
+import { StorageManager } from "../functions/storage";
 import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
-async function takeElementScreenshot(element: ElementHandle, action: iAction) {
+async function takeElementScreenshot(element: ElementHandle, action: iAction, globals: GlobalManager, storageManager: StorageManager) {
     const screenshotBuffer = await element.screenshot();
     const screenshotName =  generateScreenshotName(action.payload.selectors[0].value, uuidv4());
-    const uploadedScreenshotUrl = await uploadAsset(screenshotName, screenshotBuffer);
+    const uploadedScreenshotUrl = await storageManager.uploadAsset(screenshotName, screenshotBuffer);
 
     return {
         customLogMessage: "Took screenshot of element",

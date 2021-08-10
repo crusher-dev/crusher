@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import { ActionStatusEnum, IRunnerLogManagerInterface, IRunnerLogStepMeta } from "@shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
-export class NotifyService implements IRunnerLogManagerInterface {
+export class Notifier implements IRunnerLogManagerInterface {
 	buildId: number;
 	buildTestInstanceId: number;
 	githubCheckRunId?: string | null;

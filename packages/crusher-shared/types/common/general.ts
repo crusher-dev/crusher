@@ -1,4 +1,4 @@
-export enum EDITION_TYPE {
+export enum EditionTypeEnum {
 	EE = "enterprise",
 	OPEN_SOURCE = "open-source",
 }

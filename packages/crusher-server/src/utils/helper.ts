@@ -1,4 +1,4 @@
-import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { iAction } from "@crusher-shared/types/action";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
@@ -69,12 +69,12 @@ export const generateId = (length) => {
 	return result;
 };
 
-function getEdition(): EDITION_TYPE {
-	return process.env.CRUSHER_MODE as EDITION_TYPE;
+function getEdition(): EditionTypeEnum {
+	return process.env.CRUSHER_MODE as EditionTypeEnum;
 }
 
 function isOpenSourceEdition(): boolean {
-	return getEdition() === EDITION_TYPE.OPEN_SOURCE;
+	return getEdition() === EditionTypeEnum.OPEN_SOURCE;
 }
 
 function isUsingLocalStorage(): boolean {

@@ -16,7 +16,7 @@ import Link from "next/link";
 import { addQueryParamToPath } from "@utils/url";
 import dynamic from "next/dynamic";
 import { getEdition } from "@utils/helpers";
-import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { GithubSVG } from "@svg/social";
 import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { loadCrisp, openChatBox } from "@utils/scriptUtils";
@@ -132,7 +132,7 @@ function LeftSection() {
 					<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
 				</Conditional>
 				<div>
-					<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
+					<Conditional showIf={getEdition() === EditionTypeEnum.OPEN_SOURCE}>
 						<div className={"text-12 font-700 leading-none mt-16 mb-8 ml-8"} id={"support-tagline"}>
 							Join community 💓
 						</div>
@@ -148,7 +148,7 @@ function LeftSection() {
 						</a>
 					</Conditional>
 
-					<Conditional showIf={getEdition() !== EDITION_TYPE.OPEN_SOURCE}>
+					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
 						<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
 							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 						</div>
@@ -171,13 +171,13 @@ function LeftSection() {
 					</div>
 				</div>
 
-				<Conditional showIf={getEdition() === EDITION_TYPE.OPEN_SOURCE}>
+				<Conditional showIf={getEdition() === EditionTypeEnum.OPEN_SOURCE}>
 					<a href={"https://crusher.dev"}>
 						<BottomSection name={"Use Crusher Cloud"} description={"Get 50% more"} />
 					</a>
 				</Conditional>
 
-				<Conditional showIf={getEdition() === EDITION_TYPE.EE}>
+				<Conditional showIf={getEdition() === EditionTypeEnum.EE}>
 					<BottomSection
 						name={"Free plan"}
 						description={"Get 50% more"}

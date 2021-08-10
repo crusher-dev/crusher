@@ -6,8 +6,7 @@ import { LogManager, logStep } from "./functions/log";
 import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
-import * as fs from "fs";
-import * as path from "path";
+import { handlePopup } from "./middlewares/popup";
 
 const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
 
@@ -91,4 +90,4 @@ class CrusherRunnerActions {
   }
 }
 
-export { CrusherRunnerActions };
+export { CrusherRunnerActions, handlePopup };

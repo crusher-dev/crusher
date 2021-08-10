@@ -1,6 +1,6 @@
 import { BrowserContext, Page } from "playwright";
 
-export function handlePopup(page: Page, browserContext: BrowserContext) {
+function handlePopup(page: Page, browserContext: BrowserContext) {
 	page.on("popup", async (popup) => {
 		const popupUrl = await popup.url();
 		page.evaluate('window.location.href = "' + popupUrl + '"');
@@ -10,3 +10,5 @@ export function handlePopup(page: Page, browserContext: BrowserContext) {
 		}
 	});
 }
+
+export { handlePopup };

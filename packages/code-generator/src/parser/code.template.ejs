@@ -1,0 +1,38 @@
+const playwright = require("playwright");
+const { saveVideo } = require("playwright-video");
+
+const { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, GlobalManager } = require("../../output/crusher-runner-utils/");
+
+const globals = new GlobalManager();
+
+const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "baseAssetsPath", globals);
+
+const browser = await playwright["chromium"].launch({
+	headless: false,
+	args: ["--disable-dev-shm-usage", "--disable-gpu"],
+});
+
+globals.set("browserContextOptions", { defaultNavigationTimeout: 15000, defaultTimeout: 5000 });
+const browserActions = [];
+crusherRunnerActionManager.runActions(browserActions, browser);
+
+browserContextOptions = globals.get("browserContextOptions");
+
+browserContext = await browser.newContext({
+  ...browserContextOptions,
+});
+
+browserContext.setDefaultNavigationTimeout(browserContextOptions.defaultNavigationTimeout);
+browserContext.setDefaultTimeout(browserContextOptions.defaultTimeout);
+
+const page = await browserContext.newPage({});
+await handlePopup(page, browserContext);
+await registerCrusherSelectorEngine();
+
+const capturedVideo = await saveVideo(page, "/tmp/crusher/somedir/videos/video.mp4");
+
+const mainActions = [];
+await crusherRunnerActionManager.runActions(mainActions, browser, page);
+
+await capturedVideo.stop();
+await browser.close();

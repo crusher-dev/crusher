@@ -1,4 +1,4 @@
-import { QueueManager } from "@modules/queue";
+import { QueueManager } from "@shared/modules/queue";
 import { RedisManager } from "@modules/redis";
 import { setupStorage } from "./storage";
 

@@ -12,14 +12,12 @@ export function getEdition() {
 	return process.env.CRUSHER_MODE;
 }
 
-export const createTmpAssetsDirectoriesIfNotThere = (jobRequest: iJobRunRequest) => {
-	shell.mkdir("-p", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`);
-	shell.mkdir("-p", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);
+export const createTmpAssetsDirectoriesIfNotThere = (identifer: string) => {
+	shell.mkdir("-p", path.join("/tmp/crusher", identifer, "videos"));
 };
 
-export const deleteTmpAssetsDirectoriesIfThere = (jobRequest: iJobRunRequest) => {
-	shell.rm("-rf", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/images`);
-	shell.rm("-rf", `/tmp/crusher/${jobRequest.requestType}/${jobRequest.test.id}/${jobRequest.instanceId}/videos`);
+export const deleteTmpAssetsDirectoriesIfThere = (identifer: string) => {
+	shell.rm("-rf", path.join("/tmp/crusher", identifer));
 };
 
 export const getAllCapturedImages = (jobRequest: iJobRunRequest): { [imageName: string]: string } => {
@@ -57,7 +55,7 @@ const setupBucketManager = () => {
 	});
 };
 
-const bucketManager = setupBucketManager();
+export const bucketManager = setupBucketManager();
 
 export const uploadOutputVideoToS3 = async (video: string | null, jobRequest: iJobRunRequest) => {
 	if (!video) return null;

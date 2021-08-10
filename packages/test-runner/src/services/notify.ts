@@ -1,7 +1,8 @@
 import fetch from "node-fetch";
-import { iAction } from "@shared/types/action";
+import { ActionStatusEnum, IRunnerLogManagerInterface, IRunnerLogStepMeta } from "@shared/lib/runnerLog/interface";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
-export class NotifyService {
+export class NotifyService implements IRunnerLogManagerInterface {
 	buildId: number;
 	buildTestInstanceId: number;
 	githubCheckRunId?: string | null;
@@ -12,16 +13,16 @@ export class NotifyService {
 		this.githubCheckRunId = githubCheckRunId;
 	}
 
-	async notifyTestAddedToQueue(): Promise<boolean> {
-		console.debug(`Instance #${this.buildTestInstanceId} of #${this.buildId} started`);
+	async notifyTestStarted(message: string, meta: any) {
+		console.debug(message);
 
-		return fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`, {
+		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`, {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ githubCheckRunId: this.githubCheckRunId }),
+			body: JSON.stringify({ message, githubCheckRunId: this.githubCheckRunId }),
 		})
 			.then((res) => res.text())
 			.then((res) => {
@@ -30,16 +31,16 @@ export class NotifyService {
 			});
 	}
 
-	async notifyTestFinished(hasFailed: boolean): Promise<boolean> {
+	async notifyTestFinished(message: string, hasFailed: boolean, meta: any) {
 		console.debug(`Instance #${this.buildTestInstanceId} of #${this.buildId} ${hasFailed ? "failed" : "completed"}`);
 
-		return fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`, {
+		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`, {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ hasFailed, githubCheckRunId: this.githubCheckRunId }),
+			body: JSON.stringify({ hasFailed, message: message, githubCheckRunId: this.githubCheckRunId, meta }),
 		})
 			.then((res) => res.text())
 			.then((res) => {
@@ -48,32 +49,28 @@ export class NotifyService {
 			});
 	}
 
-	async logStep(
-		action: iAction,
-		status: "RUNNING" | "COMPLETED" | "FAILED",
-		payload:
-			| {
-					selector: { type: string; value: string };
-					pageUrl: string;
-					result?: {
-						hasPassed: boolean;
-						logs: Array<any>;
-						selector: { type: string; value: string };
-						output?: { name: string; value: string };
-						isSamePageAsBefore?: boolean;
-					};
-			  }
-			| { error: Error },
-	): Promise<boolean> {
-		console.debug(`Instance #${this.buildTestInstanceId} of #${this.buildId}: ${action.type}[${status}]`);
+	async logTest(status: ActionStatusEnum, message: string, meta: any = {}): Promise<void> {
+		if (status === ActionStatusEnum.STARTED) {
+			return this.notifyTestStarted(message, meta);
+		} else if (status === ActionStatusEnum.COMPLETED) {
+			return this.notifyTestFinished(message, false, meta);
+		} else if (status === ActionStatusEnum.FAILED) {
+			return this.notifyTestFinished(message, true, meta);
+		}
 
-		return fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`, {
+		throw new Error("Invalid format to log test state");
+	}
+
+	async logStep(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta): Promise<void> {
+		console.debug(message);
+
+		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`, {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ action, status, payload, githubCheckRunId: this.githubCheckRunId }),
+			body: JSON.stringify({ actionType, status, message: message, payload: meta, githubCheckRunId: this.githubCheckRunId }),
 		})
 			.then((res) => res.text())
 			.then((res) => {

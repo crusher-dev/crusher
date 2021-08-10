@@ -24,10 +24,11 @@ export interface ITestRunConfig {
 }
 
 export interface IJobRunRequest {
-	events: Array<iAction>;
+	actions: Array<iAction>;
 	config: ITestRunConfig;
 	buildId; number
-	testId: number;
+	testInstanceId: number;
 	testName: string;
 	buildTestCount: number;
+	githubCheckRunId?: string;
 }

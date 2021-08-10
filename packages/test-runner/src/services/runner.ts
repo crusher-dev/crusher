@@ -9,6 +9,10 @@ import * as path from "path";
 import { IRunnerLogManagerInterface } from "@shared/lib/runnerLog/interface";
 import { IStorageManager } from "@shared/lib/storage/interface";
 import { timeStamp } from "console";
+import { GlobalManager } from "@crusher-shared/lib/globals";
+
+const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
+
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
@@ -24,16 +28,15 @@ export class CodeRunnerService {
 	constructor(
 		actions: Array<iAction>,
 		runnerConfig: ITestRunConfig,
-		buildId: number,
-		testId: number,
 		storageManager: IStorageManager,
 		logManager: IRunnerLogManagerInterface,
+		identifer: string,
 	) {
 		this.codeGenerator = new CodeGenerator({
 			shouldRecordVideo: runnerConfig.shouldRecordVideo,
 			usePlaywrightChromium: getEdition() === EDITION_TYPE.OPEN_SOURCE,
 			browser: runnerConfig.browser,
-			assetsDir: `/tmp/crusher/$${buildId}/${testId}`,
+			assetsDir: path.join("/tmp/crusher", identifer),
 		});
 		this.actions = actions;
 		this.runnerConfig = runnerConfig;
@@ -42,7 +45,7 @@ export class CodeRunnerService {
 		this.logManager = logManager;
 	}
 
-	async runTest() {
+	async runTest(): Promise<{ recordedRawVideo: string; hasPassed: boolean; error: Error | undefined; actionResults: any }> {
 		const code = await this.codeGenerator.getCode(this.actions);
 		let error, recordedRawVideoUrl;
 
@@ -68,6 +71,8 @@ export class CodeRunnerService {
 			recordedRawVideoUrl = await this.storageManager.upload(recordedVideoRawPath, path.join(codeGeneratorConfig.assetsDir, "video.mp4"));
 		}
 
-		return { recordedRawVideo: recordedRawVideoUrl, error: error };
+		const testActionResults = this.globalManager.get(TEST_ACTIONS_RESULT_KEY);
+
+		return { recordedRawVideo: recordedRawVideoUrl, hasPassed: !error, error: error, actionResults: testActionResults };
 	}
 }

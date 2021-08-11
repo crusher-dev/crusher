@@ -35,7 +35,7 @@ export interface IBuildTable extends BaseRowInterface {
 	installation_id?: string;
 	status: BuildStatusEnum;
 	host: string;
-	trigger: BuildTriggerEnum;
+	build_trigger: BuildTriggerEnum;
 	// @TODO: Remove this in the future.
 	browser: BrowserEnum;
 	// @TODO: Should this be JSON. Contains fields l

@@ -51,14 +51,19 @@ class BuildsService {
 	}
 
 	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<{ insertId: number }> {
-		const buildConfig = Object.assign({ browser: PLATFORM.CHROME }, buildInfo.config);
-
-		return this.dbManager.insert(`INSERT INTO jobs SET ?`, [
-			getSnakedObject({
-				...buildInfo,
-				config: JSON.stringify(buildConfig),
-			}),
+		return this.dbManager.insert(`INSERT INTO jobs SET user_id = ?, project_id = ?, host = ?, status = ?, build_trigger = ?, browser = ?, config = ?`, [
+			buildInfo.userId,
+			buildInfo.projectId,
+			buildInfo.host,
+			buildInfo.status,
+			buildInfo.buildTrigger,
+			buildInfo.browser,
+			JSON.stringify(buildInfo.config),
 		]);
+	}
+
+	async updateLatestReportId(latestReportId: number, buildId: number) {
+		return this.dbManager.update("UPDATE jobs SET latest_report_id = ? WHERE id = ?", [buildId]);
 	}
 }
 

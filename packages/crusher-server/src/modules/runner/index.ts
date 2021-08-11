@@ -97,6 +97,8 @@ class TestsRunner {
 			buildPayload.projectId,
 		);
 
+		await this.buildsService.updateLatestReportId(buildReportInsertRecord.insertId, build.insertId);
+
 		const testsResultsSetsInsertPromiseArr = testInstancesArr.map((testInstance) => {
 			return this.buildTestInstanceService.createBuildTestInstanceResultSet({
 				reportId: buildReportInsertRecord.insertId,

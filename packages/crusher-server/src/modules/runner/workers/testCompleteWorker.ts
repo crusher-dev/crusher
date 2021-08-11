@@ -1,6 +1,5 @@
 import { BuildsService } from "@modules/resources/builds/service";
 import { Job } from "bullmq";
-import { IActionResultItem } from "@crusher-shared/types/common/general";
 import Container from "typedi";
 import { BuildTestInstanceScreenshotService } from "@modules/resources/builds/instances/screenshots.service";
 import { getScreenshotActionsResult } from "@utils/helper";
@@ -8,6 +7,7 @@ import { BuildTestInstancesService } from "@modules/resources/builds/instances/s
 import * as RedisLock from "redlock";
 import { RedisManager } from "@modules/redis";
 import { BuildReportService } from "@modules/resources/buildReports/service";
+import { ITestCompleteQueuePayload } from "@crusher-shared/types/queues/";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -24,14 +24,7 @@ const redisLock = new RedisLock([redisManager.redisClient], {
 });
 
 interface ITestResultWorkerJob extends Job {
-	data: {
-		actionResults: Array<IActionResultItem>;
-		buildId: number;
-		testInstanceId: number;
-		buildTestCount: number;
-		hasPassed: boolean;
-		failedReason?: Error;
-	};
+	data: ITestCompleteQueuePayload;
 }
 
 export default async function (bullJob: ITestResultWorkerJob): Promise<any> {

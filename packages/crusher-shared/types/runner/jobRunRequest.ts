@@ -30,5 +30,6 @@ export interface IJobRunRequest {
 	testInstanceId: number;
 	testName: string;
 	buildTestCount: number;
+	// @TODO: Revisit. Is there a reference to this?
 	githubCheckRunId?: string;
 }

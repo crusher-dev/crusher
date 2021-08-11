@@ -5,12 +5,10 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 export class Notifier implements IRunnerLogManagerInterface {
 	buildId: number;
 	buildTestInstanceId: number;
-	githubCheckRunId?: string | null;
 
 	constructor(buildId: number, buildTestInstanceId: number, githubCheckRunId: string | null = null) {
 		this.buildId = buildId;
 		this.buildTestInstanceId = buildTestInstanceId;
-		this.githubCheckRunId = githubCheckRunId;
 	}
 
 	async notifyTestStarted(message: string, meta: any) {
@@ -22,7 +20,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ message, githubCheckRunId: this.githubCheckRunId }),
+			body: JSON.stringify({ message }),
 		})
 			.then((res) => res.text())
 			.then((res) => {
@@ -40,7 +38,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ hasFailed, message: message, githubCheckRunId: this.githubCheckRunId, meta }),
+			body: JSON.stringify({ hasFailed, message: message, meta }),
 		})
 			.then((res) => res.text())
 			.then((res) => {
@@ -70,7 +68,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ actionType, status, message: message, payload: meta, githubCheckRunId: this.githubCheckRunId }),
+			body: JSON.stringify({ actionType, status, message: message, payload: meta }),
 		})
 			.then((res) => res.text())
 			.then((res) => {

@@ -5,22 +5,23 @@ import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere
 
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { Job } from "bullmq";
-import { IJobRunRequest } from "@shared/types/runner/jobRunRequest";
+import { TEST_COMPLETE_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@shared/constants/queues";
+import { ITestExecutionQueuePayload, ITestCompleteQueuePayload, IVideoProcessorQueuePayload } from "@shared/types/queues/";
 
 const queueManager = getQueueManager();
 const storageManager = getStorageManager();
 
 interface iTestRunnerJob extends Job {
-	data: IJobRunRequest;
+	data: ITestExecutionQueuePayload;
 }
 
 export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 	const identifier = bullJob.name;
 
-	const testOutputProcessorQueue = await queueManager.setupQueue("test-output-processor-queue");
-	const videoProcessorQueue = await queueManager.setupQueue("video-processor-queue");
+	const testCompleteQueue = await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
+	const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 
-	const notifyManager = new Notifier(bullJob.data.buildId, bullJob.data.testInstanceId, bullJob.data.githubCheckRunId);
+	const notifyManager = new Notifier(bullJob.data.buildId, bullJob.data.testInstanceId);
 	await notifyManager.logTest(ActionStatusEnum.STARTED, `Test ${identifier} started...`);
 
 	createTmpAssetsDirectoriesIfNotThere(identifier);
@@ -32,8 +33,12 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 	if (recordedRawVideo) {
 		await videoProcessorQueue.add(
 			identifier,
-			{ runnerJobRequestInfo: bullJob.data, video: recordedRawVideo },
-			{ lifo: false, removeOnComplete: true, attempts: 1 },
+			{ testInstanceId: bullJob.data.testInstanceId, videoRawUrl: recordedRawVideo } as IVideoProcessorQueuePayload,
+			{
+				lifo: false,
+				removeOnComplete: true,
+				attempts: 1,
+			},
 		);
 	}
 
@@ -46,9 +51,14 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 	}
 
 	// @TODO: Fix this paylaod
-	await testOutputProcessorQueue.add(identifier, {
-		runnerJobRequestInfo: bullJob.data,
-	});
+	await testCompleteQueue.add(identifier, {
+		actionResults: actionResults,
+		buildId: bullJob.data.buildId,
+		testInstanceId: bullJob.data.testInstanceId,
+		buildTestCount: bullJob.data.buildTestCount,
+		hasPassed: hasPassed,
+		failedReason: error ? error : null,
+	} as ITestCompleteQueuePayload);
 
 	return true;
 }

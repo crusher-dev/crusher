@@ -4,16 +4,14 @@ import { ensureFfmpegPath, processRemoteRawVideoAndSave } from "@utils/ffmpeg";
 import { Job } from "bullmq";
 import * as path from "path";
 import { v4 as uuidv4 } from "uuid";
+import { IVideoProcessorQueuePayload } from "@shared/types/queues/";
 
 const storageManager = getStorageManager();
 
 ensureFfmpegPath();
 
 interface iVideoProcessorJob extends Job {
-	data: {
-		testInstanceId: string;
-		videoRawUrl: string;
-	};
+	data: IVideoProcessorQueuePayload;
 }
 
 export default async function (bullJob: iVideoProcessorJob){

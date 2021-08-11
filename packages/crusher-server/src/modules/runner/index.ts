@@ -1,17 +1,24 @@
-import { Inject, Service } from "typedi";
+import Container, { Inject, Service } from "typedi";
 import { BuildsService } from "@modules/resources/builds/service";
 import { ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { IBuildTaskPayload } from "./interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ITestTable } from "@modules/resources/tests/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
+import { QueueManager } from "@modules/queue";
 
+const queueManager = Container.get(QueueManager);
+queueManager.setupQueue("crusher-test-queue");
 @Service()
 class TestsRunner {
 	@Inject()
 	private buildsService: BuildsService;
+	@Inject()
+	private queueManager: QueueManager;
 
-	private async addTestRequestToQueue(...args) {}
+	private async addTestRequestToQueue(...args) {
+		// this.queue
+	}
 
 	private async startBuildTask(buildTaskInfo: IBuildTaskPayload) {
 		const { tests } = buildTaskInfo;

@@ -7,6 +7,8 @@ import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProje
 import { ICreateTestPayload } from "@modules/resources/tests/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { TestsRunner } from "@modules/runner";
+import { BuildStatusEnum, BuildTriggerEnum } from "../builds/interface";
+import { BrowserEnum } from "@modules/runner/interface";
 
 @Service()
 @JsonController("")
@@ -15,6 +17,8 @@ export class TestController {
 	private userService: UsersService;
 	@Inject()
 	private testService: TestService;
+	@Inject()
+	private testRunnerService: TestsRunner;
 
 	@Post("/tests/actions/save.temp")
 	async saveTempTest(@Body() body: { events: Array<iAction> }) {
@@ -95,6 +99,17 @@ export class TestController {
 			events: events,
 			projectId: projectId,
 			userId: user_id,
+		});
+
+		const testRecord = await this.testService.getTest(testInsertRecord);
+
+		await this.testRunnerService.runTests([testRecord], {
+			userId: user_id,
+			projectId: projectId,
+			host: "null",
+			status: BuildStatusEnum.CREATED,
+			trigger: BuildTriggerEnum.MANUAL,
+			browser: BrowserEnum.ALL,
 		});
 
 		return testInsertRecord;

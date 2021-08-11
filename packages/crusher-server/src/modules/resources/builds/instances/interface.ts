@@ -10,7 +10,6 @@ export enum TestInstanceStatusEnum {
 	TIMEOUT = "TIMEOUT",
 	ABORTED = "ABORTED",
 }
-
 export interface ITestInstancesTable extends BaseRowInterface {
 	id: number;
 	job_id: number;
@@ -68,7 +67,7 @@ export interface ITestInstanceResultSetsTable extends BaseRowInterface {
 	target_instance_id: number;
 	status: TestInstanceResultSetStatusEnum;
 	conclusion: TestInstanceResultSetConclusionEnum | null;
-	failedReason: string | null;
+	failed_reason: string | null;
 }
 
 export type ILogProgressRequestPayload = {

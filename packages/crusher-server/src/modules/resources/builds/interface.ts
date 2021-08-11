@@ -1,6 +1,7 @@
 import { BaseRowInterface } from "@crusher-shared/types/db/baseRow";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { BrowserEnum } from "@modules/runner/interface";
 
 export enum BuildStatusEnum {
 	"CREATED" = "CREATED",
@@ -18,7 +19,8 @@ export enum BuildTriggerEnum {
 }
 
 export interface IBuildConfig {
-	browser?: PLATFORM;
+	browser?: BrowserEnum;
+	shouldRecordVideo: boolean;
 	testIds: Array<number>;
 }
 
@@ -35,7 +37,7 @@ export interface IBuildTable extends BaseRowInterface {
 	host: string;
 	trigger: BuildTriggerEnum;
 	// @TODO: Remove this in the future.
-	browser: PLATFORM;
+	browser: BrowserEnum;
 	// @TODO: Should this be JSON. Contains fields l
 	meta: string;
 	user_id: number;

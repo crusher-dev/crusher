@@ -5,6 +5,7 @@ import {
 	ILogProgressRequestPayload,
 	ITestInstanceResultSetsTable,
 	ITestInstanceScreenshotsTable,
+	ITestInstancesTable,
 	TestInstanceResultSetConclusionEnum,
 	TestInstanceResultSetStatusEnum,
 	TestInstanceResultStatusEnum,
@@ -19,6 +20,7 @@ import { BuildTestInstanceScreenshotService } from "./screenshots.service";
 import * as path from "path";
 import { IVisualDiffResult } from "@modules/visualDiff/interface";
 import { TestInstanceResultSetConclusion } from "@core/interfaces/TestInstanceResultSetConclusion";
+import { BrowserEnum } from "@modules/runner/interface";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
 const DIFF_DELTA_PASS_THRESHOLD = 0.05;
@@ -158,7 +160,7 @@ class BuildTestInstancesService {
 		instanceId: number,
 		failedReason: string | null = null,
 	) {
-		return this.dbManager.update("UPDATE test_instance_result_sets SET status = ?, conclusion = ?, failedReason = ? WHERE instance_id = ?", [
+		return this.dbManager.update("UPDATE test_instance_result_sets SET status = ?, conclusion = ?, failed_reason = ? WHERE instance_id = ?", [
 			status,
 			conclusion,
 			failedReason,
@@ -178,6 +180,34 @@ class BuildTestInstancesService {
 	@CamelizeResponse()
 	getResultSets(reportId: number): Promise<Array<KeysToCamelCase<ITestInstanceResultSetsTable>>> {
 		return this.dbManager.fetchAllRows("SELECT * FROM test_instance_result_sets WHERE report_id = ?", [reportId]);
+	}
+
+	async createBuildTestInstanceResultSet(
+		payload: KeysToCamelCase<Omit<ITestInstanceResultSetsTable, "id" | "status" | "conclusion" | "failed_reason">>,
+	): Promise<{ insertId: number }> {
+		return this.dbManager.insert("INSERT INTO test_instance_result_sets SET report_id = ?, instance_id = ?, target_instance_id = ?, status = ?", [
+			payload.reportId,
+			payload.instanceId,
+			payload.targetInstanceId,
+			TestInstanceResultSetStatusEnum.WAITING_FOR_TEST_EXECUTION,
+		]);
+	}
+
+	async createBuildTestInstance(
+		payload: KeysToCamelCase<Omit<ITestInstancesTable, "id" | "browser" | "status" | "code">> & { browser: Omit<BrowserEnum, "ALL"> },
+	): Promise<{ insertId: number }> {
+		return this.dbManager.insert("INSERT INTO test_instances SET job_id = ?, test_id = ?, status = ?, host = ?, browser = ?", [
+			payload.jobId,
+			payload.testId,
+			TestInstanceStatusEnum.QUEUED,
+			payload.host,
+			payload.browser,
+		]);
+	}
+
+	@CamelizeResponse()
+	async getInstance(instanceId: number): Promise<KeysToCamelCase<ITestInstancesTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM test_instances WHERE id = ?", [instanceId]);
 	}
 }
 

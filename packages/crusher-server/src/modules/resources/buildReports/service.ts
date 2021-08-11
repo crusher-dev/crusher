@@ -197,4 +197,14 @@ export class BuildReportService {
 		// @TODO: Add proper explanation for here (Will help in debugging in case test fails)
 		return this.saveReportResult(reportId, passedTestCount, failedTestCount, reviewRequiredTestCount, finalBuildReportResult, "Unknown");
 	}
+
+	async createBuildReport(totalTestCount: number, buildId: number, referenceBuildId: number, projectId: number): Promise<{ insertId: number }> {
+		return this.dbManager.fetchSingleRow(`INSERT INTO job_reports SET job_id = ?, reference_job_id = ?, total_test_count = ?, project_id = ?, status = ?`, [
+			buildId,
+			referenceBuildId,
+			totalTestCount,
+			projectId,
+			BuildReportStatusEnum.RUNNING,
+		]);
+	}
 }

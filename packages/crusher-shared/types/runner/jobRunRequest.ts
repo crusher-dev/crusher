@@ -26,7 +26,7 @@ export interface ITestRunConfig {
 export interface IJobRunRequest {
 	actions: Array<iAction>;
 	config: ITestRunConfig;
-	buildId; number
+	buildId: number;
 	testInstanceId: number;
 	testName: string;
 	buildTestCount: number;

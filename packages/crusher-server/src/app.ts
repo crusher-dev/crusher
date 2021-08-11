@@ -12,17 +12,17 @@ import { Container } from "typedi";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
-import { UserController } from "@modules/resources/users/controller";
 import { EmailManager } from "@manager/EmailManager";
 import { MongoManager } from "@modules/db/mongo";
 import { RedisManager } from "@manager/redis";
+import { UserController } from "@modules/resources/users/controller";
 import { TestController } from "@modules/resources/tests/controller";
-import { BuildsController } from "@modules/resources/builds/controller";
 import { BuildReportController } from "@modules/resources/buildReports/controller";
+import { BuildsController } from "@modules/resources/builds/controller";
+import { BuildTestInstancesController } from "@modules/resources/builds/instances/controller";
 import { ReleaseController } from "@controllers/ReleaseController";
 import { ProjectsController } from "@modules/resources/projects/controller";
 import { TeamsController } from "@modules/resources/teams/controller";
-import { BuildTestInstancesController } from "@modules/resources/builds/instances/controller";
 
 RedisManager.initialize();
 

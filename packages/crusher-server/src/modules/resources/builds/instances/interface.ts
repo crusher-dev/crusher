@@ -1,5 +1,6 @@
 import { iAction } from "@crusher-shared/types/action";
 import { BaseRowInterface } from "@crusher-shared/types/db/baseRow";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 
 export enum TestInstanceStatusEnum {
@@ -18,6 +19,56 @@ export interface ITestInstancesTable extends BaseRowInterface {
 	code: string;
 	browser: BrowserEnum;
 	host: string;
+}
+
+export interface ITestInstanceScreenshotsTable extends BaseRowInterface {
+	id: number;
+	instance_id: number;
+	name: string;
+	url: string;
+	action_index: number;
+}
+
+export type IAddTestIntanceScreenshotPayload = KeysToCamelCase<Omit<ITestInstanceScreenshotsTable, "id">>;
+
+export interface IBuildTestInstanceResultsTable {
+	id: number;
+	screenshot_id: number;
+	target_screenshot_id: number;
+	instance_result_set_id: number;
+	diff_delta: number;
+	diff_image_url: string;
+	status: TestInstanceResultStatusEnum;
+}
+
+export type ICreateBuildTestInstanceResultPayload = KeysToCamelCase<Omit<IBuildTestInstanceResultsTable, "id">>;
+
+export enum TestInstanceResultSetStatusEnum {
+	WAITING_FOR_TEST_EXECUTION = "WAITING_FOR_TEST_EXECUTION",
+	RUNNING_CHECKS = "RUNNING_CHECKS",
+	FINISHED_RUNNING_CHECKS = "FINISHED_RUNNING_CHECKS",
+}
+
+export enum TestInstanceResultSetConclusionEnum {
+	PASSED = "PASSED",
+	FAILED = "FAILED",
+	MANUAL_REVIEW_REQUIRED = "MANUAL_REVIEW_REQUIRED",
+}
+
+export enum TestInstanceResultStatusEnum {
+	PASSED = "PASSED",
+	FAILED = "FAILED",
+	MANUAL_REVIEW_REQUIRED = "MANUAL_REVIEW_REQUIRED",
+}
+
+export interface ITestInstanceResultSetsTable extends BaseRowInterface {
+	id: number;
+	report_id: number;
+	instance_id: number;
+	target_instance_id: number;
+	status: TestInstanceResultSetStatusEnum;
+	conclusion: TestInstanceResultSetConclusionEnum | null;
+	failedReason: string | null;
 }
 
 export type ILogProgressRequestPayload = {

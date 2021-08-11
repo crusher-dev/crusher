@@ -20,7 +20,7 @@ class TestsRunner {
 			switch (buildTaskInfo.browser) {
 				case PLATFORM.ALL: {
 					const testsQueueRequestPromises = [PLATFORM.CHROME, PLATFORM.FIREFOX, PLATFORM.SAFARI].map((platform) => {
-						return this.addTestRequestToQueue();
+						return this.addTestRequestToQueue(test);
 					});
 					await Promise.all(testsQueueRequestPromises);
 					break;
@@ -28,7 +28,7 @@ class TestsRunner {
 				case PLATFORM.CHROME:
 				case PLATFORM.FIREFOX:
 				case PLATFORM.SAFARI:
-					await this.addTestRequestToQueue();
+					await this.addTestRequestToQueue(test);
 					break;
 				default:
 					throw new Error("Browser not available");

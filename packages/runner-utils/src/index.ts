@@ -5,7 +5,7 @@ import { Browser, Page } from "playwright";
 import { LogManager } from "./functions/log";
 import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
-import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
+import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
 import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
 import { getBrowserActions, getMainActions, validActionTypeRegex } from "./utils/helper";
@@ -49,7 +49,7 @@ class CrusherRunnerActions {
     });
   }
 
-  async handleActionExecutionStatus(actionType: ACTIONS_IN_TEST, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {
+  async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {
     await this.logManager.logStep(actionType, status, message, meta);
 
     if(status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {

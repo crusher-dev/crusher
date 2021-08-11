@@ -2,9 +2,10 @@ import { JobReportStatus } from "@crusher-shared/types/jobReportStatus";
 import { DBManager } from "@modules/db";
 import { Service, Inject } from "typedi";
 import { PLATFORM } from "@crusher-shared/types/platform";
-import { BuildTriggerEnum, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
+import { BuildTriggerEnum, IBuildTable, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { getSnakedObject } from "@utils/helper";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
 
 interface IBuildInfoItem {
 	buildId: number;
@@ -44,7 +45,12 @@ class BuildsService {
 		return this.dbManager.fetchAllRows(query, queryParams);
 	}
 
-	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<any> {
+	@CamelizeResponse()
+	async getBuild(buildId: number): Promise<KeysToCamelCase<IBuildTable> | null> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM jobs WHERE id = ?", [buildId]);
+	}
+
+	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<{ insertId: number }> {
 		const buildConfig = Object.assign({ browser: PLATFORM.CHROME }, buildInfo.config);
 
 		return this.dbManager.insert(`INSERT INTO jobs SET ?`, [

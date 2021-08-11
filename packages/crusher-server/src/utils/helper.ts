@@ -1,6 +1,6 @@
-import { EditionTypeEnum } from "@crusher-shared/types/common/general";
+import { EditionTypeEnum, IActionResultItemWithIndex } from "@crusher-shared/types/common/general";
 import { iAction } from "@crusher-shared/types/action";
-import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
+import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
 import { KeysToCamelCase, KeysToSnakeCase } from "@modules/common/typescript/interface";
 
@@ -125,4 +125,8 @@ function getSnakedObject<Type>(object: Type): KeysToSnakeCase<Type> {
 	return snakeCaseObject as any;
 }
 
-export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName, getCamelizeObject, getSnakedObject };
+function getScreenshotActionsResult(actionsResult: Array<IActionResultItemWithIndex>) {
+	return actionsResult.filter((actionResult) => [ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.ELEMENT_SCREENSHOT].includes(actionResult.actionType));
+}
+
+export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName, getCamelizeObject, getSnakedObject, getScreenshotActionsResult };

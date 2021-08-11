@@ -31,6 +31,10 @@ class RedisManager {
 
 		return this.redisClient.set(keyName, value);
 	}
+
+	incr(keyName: string) {
+		return this.redisClient.incr(keyName);
+	}
 }
 
 export { RedisManager };

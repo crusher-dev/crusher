@@ -1,5 +1,5 @@
 import { CodeGenerator } from "@generator/src/generator";
-import { isOpenSource } from "@util/helper";
+import { isOpenSource } from "@shared/utils/helper";
 import { iAction } from "@shared/types/action";
 import { ITestRunConfig } from "@shared/types/runner/jobRunRequest";
 import * as path from "path";

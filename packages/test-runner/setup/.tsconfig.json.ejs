@@ -16,11 +16,9 @@
 <% if(isEnterprise) { %>
 			"@modules/*": ["./ee/modules/*", "./src/modules/*"],
 			"@bootstrap": ["./ee/bootstrap.ts"],
-			"@manager/*": ["./src_ee/manager/*", "./src/manager/*"],
 <% } else {%>
 			"@bootstrap": ["./src/bootstrap.ts"],
 			"@modules/*": ["./src/modules/*"],
-      		"@manager/*": ["./src/manager/*"],
 <% } %>
 			"@src/*": ["./src/*"],
 			"@shared/*": ["../crusher-shared/*"],

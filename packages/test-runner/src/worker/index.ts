@@ -1,7 +1,7 @@
 import { CodeRunnerService } from "./runner.service";
 import { getQueueManager, getStorageManager } from "../util/cache";
 import { Notifier } from "@modules/notifier/index";
-import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere } from "../util/helper";
+import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere } from "@shared/utils/helper";
 
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { Job } from "bullmq";
@@ -15,7 +15,7 @@ interface iTestRunnerJob extends Job {
 }
 
 export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
-	const identifier = `${bullJob.data.buildId}/${bullJob.data.testInstanceId}`;
+	const identifier = bullJob.name;
 
 	const testOutputProcessorQueue = await queueManager.setupQueue("test-output-processor-queue");
 	const videoProcessorQueue = await queueManager.setupQueue("video-processor-queue");

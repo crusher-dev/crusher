@@ -64,6 +64,7 @@ const buttonCSS = css`
 	color: white;
 	font-weight: 700;
 	height: 32rem;
+	padding: 0 12rem;
 	span,
 	div {
 		font-size: 14rem;

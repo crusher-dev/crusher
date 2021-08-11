@@ -4,7 +4,7 @@ export enum BuildReportStatusEnum {
 	PASSED = "PASSED",
 	FAILED = "FAILED",
 	MANUAL_REVIEW_REQUIRED = "MANUAL_REVIEW_REQUIRED",
-	RUNNING = "RUNNNING",
+	RUNNING = "RUNNING",
 }
 
 export interface IBuildReportTable extends BaseRowInterface {

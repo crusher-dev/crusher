@@ -63,7 +63,7 @@ class BuildsService {
 	}
 
 	async updateLatestReportId(latestReportId: number, buildId: number) {
-		return this.dbManager.update("UPDATE jobs SET latest_report_id = ? WHERE id = ?", [buildId]);
+		return this.dbManager.update("UPDATE jobs SET latest_report_id = ? WHERE id = ?", [latestReportId, buildId]);
 	}
 }
 

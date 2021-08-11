@@ -29,7 +29,7 @@ class TestsRunner {
 	}
 
 	private getTotalTestsCount(testsCount: number, browser: BrowserEnum) {
-		return testsCount * (browser === BrowserEnum.ALL ? Object.values(BrowserEnum).length : 1);
+		return testsCount * (browser === BrowserEnum.ALL ? this.getValidBrowsers(Object.values(BrowserEnum)).length : 1);
 	}
 
 	private async startBuildTask(
@@ -53,13 +53,17 @@ class TestsRunner {
 		await Promise.all(addTestInstancePromiseArr);
 	}
 
+	private getValidBrowsers(browsers: Array<BrowserEnum>) {
+		return browsers.filter((browser) => browser !== BrowserEnum.ALL);
+	}
+
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload) {
 		const build = await this.buildsService.createBuild(buildPayload);
 
 		const testInstancesArr: Array<KeysToCamelCase<ITestInstancesTable> & { testInfo: KeysToCamelCase<ITestTable> }> = [];
 		// Create test instances and store their ids
 		const testInitPromiseArr = tests.map(async (test) => {
-			const browserArr = buildPayload.browser === BrowserEnum.ALL ? Object.values(BrowserEnum) : [buildPayload.browser];
+			const browserArr = this.getValidBrowsers(buildPayload.browser === BrowserEnum.ALL ? Object.values(BrowserEnum) : [buildPayload.browser]);
 
 			const testInstanceInitPromiseArr = browserArr.map(async (browser) => {
 				const buildInstanceInsertRecord = await this.buildTestInstanceService.createBuildTestInstance({
@@ -80,12 +84,6 @@ class TestsRunner {
 		});
 
 		await Promise.all(testInitPromiseArr);
-
-		buildPayload.config = {
-			...buildPayload.config,
-			testIds: tests.map((test) => test.id),
-			shouldRecordVideo: true,
-		};
 
 		// @TODO: Remove dummy reference job from here
 		const referenceBuild = await this.buildsService.getBuild(build.insertId);

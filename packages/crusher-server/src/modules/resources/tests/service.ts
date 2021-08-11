@@ -39,7 +39,7 @@ class TestService {
 		return { events: JSON.parse(result) };
 	}
 
-	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }) {
+	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
 			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ? `,
 			[
@@ -65,7 +65,7 @@ class TestService {
 			projectId: projectId,
 			host: "null",
 			status: BuildStatusEnum.CREATED,
-			trigger: BuildTriggerEnum.MANUAL,
+			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: BrowserEnum.ALL,
 		});
 	}

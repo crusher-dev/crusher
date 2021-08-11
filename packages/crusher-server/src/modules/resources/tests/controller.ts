@@ -101,15 +101,16 @@ export class TestController {
 			userId: user_id,
 		});
 
-		const testRecord = await this.testService.getTest(testInsertRecord);
+		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
 
 		await this.testRunnerService.runTests([testRecord], {
 			userId: user_id,
 			projectId: projectId,
 			host: "null",
 			status: BuildStatusEnum.CREATED,
-			trigger: BuildTriggerEnum.MANUAL,
+			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: BrowserEnum.ALL,
+			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
 		});
 
 		return testInsertRecord;

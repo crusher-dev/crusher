@@ -7,6 +7,7 @@ class QueueManager {
 
 	constructor(redisManager: RedisManager) {
 		this.redisManager = redisManager;
+		this.queues = {};
 	}
 
 	async setupQueue(queueName: string): Promise<Queue> {

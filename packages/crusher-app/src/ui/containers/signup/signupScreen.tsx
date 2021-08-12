@@ -18,10 +18,10 @@ import React, { useCallback, useState } from "react";
 
 const showRegistrationFormAtom = atom(false);
 
-const registerUser = (name: string, email: string, password: string, inviteCode = "") => {
+const registerUser = (name: string, email: string, password: string, inviteCode: string | null = null) => {
 	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", inviteCode },
+		payload: { email, password, name: name, lastName: "", inviteCode: inviteCode ? inviteCode : null },
 	});
 };
 
@@ -78,7 +78,7 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			await registerUser(name.value, email.value, password.value, query.inviteCode);
+			await registerUser(name.value, email.value, password.value, query && query.inviteCode ? query.inviteCode : null);
 			// @TODO: Use router push here
 			window.location.href = "/app/dashboard";
 		} catch (e: any) {
@@ -194,9 +194,10 @@ function SignupBox() {
 
 export const SignupContainer = () => {
 	const [showRegistrationBox] = useAtom(showRegistrationFormAtom);
-	const { query:{inviteCode} } = useRouter;
+	const { query } = useRouter;
 
-	const googleSignupLink = inviteCode ? `/users/actions/auth.google?inviteCode=${inviteCode}`: "/users/actions/auth.google"
+	const googleSignupLink = query && query.inviteCode ? `/users/actions/auth.google?inviteCode=${query.inviteCode}` : "/users/actions/auth.google";
+
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-120"}>

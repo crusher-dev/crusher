@@ -42,6 +42,8 @@ class BuildsService {
 			queryParams.push(filter.triggerType!);
 		}
 
+		query += " ORDER BY jobs.created_at DESC";
+
 		return this.dbManager.fetchAllRows(query, queryParams);
 	}
 

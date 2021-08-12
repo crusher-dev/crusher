@@ -21,7 +21,7 @@ class ProjectsService {
 			environmentInfo.projectId,
 			environmentInfo.userId,
 		]);
-	}
+	} 
 
 	@CamelizeResponse()
 	async getProject(projectId: number): Promise<KeysToCamelCase<IProjectTable>> {

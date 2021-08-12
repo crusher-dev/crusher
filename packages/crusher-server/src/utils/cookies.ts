@@ -14,6 +14,10 @@ export function setUserCookie(cookie, options = {}, res) {
 export function setUserAuthorizationCookies(token: string, res) {
 	setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: USER_DOMAIN }, res);
 	setUserCookie({ key: "isLoggedIn", value: true }, { domain: USER_DOMAIN }, res);
+
+	// @TODO: Move this logic somewhere else (For gitpod)
+	setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: ".gitpod.io" }, res);
+	setUserCookie({ key: "isLoggedIn", value: true }, { domain: ".gitpod.io" }, res);	
 }
 
 export function clearUserAuthorizationCookies(res) {

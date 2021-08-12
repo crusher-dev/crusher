@@ -1,22 +1,26 @@
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
+import { iAction } from "@crusher-shared/types/action";
 import { Page } from "playwright";
-import { generateScreenshotName } from "../utils/helper";
+import { StorageManager } from "../functions/storage";
+import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
-export default function capturePageScreenshot(page: Page, stepIndex: number) {
-	return new Promise(async (success, error) => {
-		try {
-			const pageTitle = await page.title();
-			const pageUrl = await page.url();
-			const screenshotBuffer = await page.screenshot();
+async function takePageScreenshot(page: Page, step: iAction, globals: IGlobalManager, storageManager: StorageManager) {
+    const screenshotBuffer = await page.screenshot();
+    const screenshotName =  generateScreenshotName(await page.title(), uuidv4());
+    const uploadedScreenshotUrl = await storageManager.uploadAsset(screenshotName, screenshotBuffer);
 
-			return success({
-				message: `Clicked page screenshot for ${pageUrl}`,
-				output: {
-					name: generateScreenshotName(pageTitle, stepIndex),
-					value: screenshotBuffer,
-				},
-			});
-		} catch (err) {
-			return error("Some issue occurred while capturing screenshot of page");
-		}
-	});
+    return {
+        customLogMessage: "Took screenshot of current page",
+        outputs: [{
+            name: screenshotName,
+            value: uploadedScreenshotUrl,
+        }],
+    };
+}
+
+module.exports = {
+	name: ActionsInTestEnum.PAGE_SCREENSHOT,
+    description: "Take page screenshot of page",
+    handler: takePageScreenshot,
 }

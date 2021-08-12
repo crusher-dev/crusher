@@ -6,6 +6,9 @@ import { isUsingLocalStorage } from "@utils/helper";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { ICreateTestPayload } from "@modules/resources/tests/interface";
 import { iAction } from "@crusher-shared/types/action";
+import { TestsRunner } from "@modules/runner";
+import { BuildStatusEnum, BuildTriggerEnum } from "../builds/interface";
+import { BrowserEnum } from "@modules/runner/interface";
 
 @Service()
 @JsonController("")
@@ -14,6 +17,8 @@ export class TestController {
 	private userService: UsersService;
 	@Inject()
 	private testService: TestService;
+	@Inject()
+	private testRunnerService: TestsRunner;
 
 	@Post("/tests/actions/save.temp")
 	async saveTempTest(@Body() body: { events: Array<iAction> }) {
@@ -89,12 +94,26 @@ export class TestController {
 		if (!events) throw new Error("No events passed");
 		if (!body.name) throw new Error("No name passed for the test");
 
-		return this.testService.createTest({
+		const testInsertRecord = await this.testService.createTest({
 			...body,
 			events: events,
 			projectId: projectId,
 			userId: user_id,
 		});
+
+		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
+
+		await this.testRunnerService.runTests([testRecord], {
+			userId: user_id,
+			projectId: projectId,
+			host: "null",
+			status: BuildStatusEnum.CREATED,
+			buildTrigger: BuildTriggerEnum.MANUAL,
+			browser: BrowserEnum.ALL,
+			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+		});
+
+		return testInsertRecord;
 	}
 
 	@Authorized()

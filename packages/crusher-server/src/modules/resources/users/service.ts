@@ -14,7 +14,7 @@ import { ProjectsService } from "../projects/service";
 import { UserProjectRoleEnum } from "./roles/project/interface";
 import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@modules/redis";
-import MongoManager from "@core/manager/MongoManager";
+import { MongoManager } from "@modules/db/mongo";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
 @Service()

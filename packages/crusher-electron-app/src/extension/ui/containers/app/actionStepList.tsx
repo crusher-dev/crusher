@@ -17,7 +17,7 @@ interface iActionProps {
 }
 
 function getActionDescription(action: iAction) {
-	if (action.type === ACTIONS_IN_TEST.SCROLL) {
+	if (action.type === ACTIONS_IN_TEST.PAGE_SCROLL || action.type === ACTIONS_IN_TEST.ELEMENT_SCROLL) {
 		return "Performing scroll";
 	}
 

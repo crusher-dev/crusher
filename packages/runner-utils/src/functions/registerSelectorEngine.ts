@@ -1,4 +1,6 @@
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
+import { Browser } from "playwright";
+import { isWebpack } from "../utils/helper";
 
 function getCrusherSelectorEngine() {
 	const getElementsByXPath = (xpath: string, parent: Node | null = null): Node[] => {
@@ -24,25 +26,46 @@ function getCrusherSelectorEngine() {
 		return generateQuerySelector((el as any).parentNode) + " > " + str;
 	};
 
-	const getValidSelectorFromArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document) => {
+	const getElementFromSelectorArr = (selectorsEncoded: string, root: Element | Document = document) => {
+		const selectorsData: { uuid: string, selectors: Array<iSelectorInfo>} = JSON.parse(decodeURIComponent(selectorsEncoded));
+		const selectors = selectorsData.selectors;
+
 		for (const selector of selectors) {
 			try {
+				let selectedElement = null;
 				if (selector.type === "xpath") {
 					const elements = getElementsByXPath(selector.value);
-					if (elements.length) {
-						const elementSelectorFromXpath = generateQuerySelector(elements[0] as HTMLElement);
-
-						return {
-							element: elements[0] as Element,
-							selector: elementSelectorFromXpath,
-						};
-					}
+					if (elements.length) selectedElement = elements[0];
 				} else if (root.querySelector(selector.value)) {
-					return {
-						element: root.querySelector(selector.value)!,
-						selector: selector.value,
-					};
+					selectedElement = root.querySelector(selector.value)!;
 				}
+				if (selectedElement) {
+					// @TODO: Find a better workaround for this
+					(window as any)[selectorsData.uuid] = { selector: selector.value, selectorType: selector.type };
+					return selectedElement;
+				}
+			} catch {}
+		}
+		return null;
+	};
+
+	const getElementsFromSelectorArr = (selectorsEncoded: string, root: Element | Document = document) => {
+		const selectorsData: { uuid: string, selectors: Array<iSelectorInfo>} = JSON.parse(decodeURIComponent(selectorsEncoded));
+		const selectors = selectorsData.selectors;
+
+		for (const selector of selectors) {
+			try {
+				let selectedElements = [];
+				if (selector.type === "xpath") {
+					const elements = getElementsByXPath(selector.value);
+					if (elements.length) selectedElements = elements;
+				} else if (root.querySelector(selector.value)) {
+					selectedElements = new Array(root.querySelectorAll(selector.value)!);
+				}
+				// @TODO: Find a better workaround for this
+				(window as any)[selectorsData.uuid] = { selector: selector.value, selectorType: selector.type };
+				if(selectedElements.length)
+				return selectedElements;
 			} catch {}
 		}
 		return null;
@@ -51,20 +74,28 @@ function getCrusherSelectorEngine() {
 	return {
 		// Returns the first element matching given selector in the root's subtree.
 		query(root: Element, selector: string) {
-			const selectorArr = JSON.parse(decodeURIComponent(selector));
-			const validSelectorElementInfo = getValidSelectorFromArr(selectorArr);
+			const validElement = getElementFromSelectorArr(selector);
 
-			return validSelectorElementInfo ? validSelectorElementInfo.element : null;
+			return  validElement;
 		},
 
 		// Returns all elements matching given selector in the root's subtree.
 		queryAll(root: Element, selector: string) {
 			const selectorArr = JSON.parse(decodeURIComponent(selector));
-			const validSelectorElementInfo = getValidSelectorFromArr(selectorArr);
+			const validElementsArr = getElementsFromSelectorArr(selector);
 
-			return validSelectorElementInfo ? Array.from(root.querySelectorAll(validSelectorElementInfo.selector)) : [];
+			return validElementsArr;
 		},
 	};
 }
 
-export default getCrusherSelectorEngine;
+const requireFunction = isWebpack() ? __non_webpack_require__ : require;
+
+function registerCrusherSelectorEngine(userPlaywrightChromium: boolean = false) {
+	const playwright = requireFunction(userPlaywrightChromium ? "playwright-chromium" : "playwright");
+	if (playwright.selectors._registrations.findIndex(selectorEngine => selectorEngine.name === 'crusher') === -1) {
+		playwright.selectors.register('crusher', getCrusherSelectorEngine);
+	}
+}
+
+export { registerCrusherSelectorEngine };

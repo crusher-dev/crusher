@@ -19,4 +19,18 @@ function CamelizeResponse() {
 	};
 }
 
-export { CamelizeResponse };
+function MyDecorator() {
+	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		const originalMethod = descriptor.value;
+		const types = Reflect.getMetadata("design:paramtypes", target, propertyKey);
+		console.log("TYPES", types[0].name);
+		return {
+			value: function (...args: any[]): Promise<any> {
+				const result = originalMethod.apply(this, args);
+				return result;
+			},
+		};
+	};
+}
+
+export { CamelizeResponse, MyDecorator };

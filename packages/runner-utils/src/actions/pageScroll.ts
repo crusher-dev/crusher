@@ -1,20 +1,16 @@
-import { Page } from "playwright";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { scroll } from "../functions";
+import { Page } from "playwright";
+import { scrollPage } from "../functions/scroll";
 
-export default function capturePageScreenshot(action: iAction, page: Page) {
-	return new Promise(async (success, error) => {
-		try {
-			const scrollDelta = action.payload.meta.value;
-			const pageUrl = await page.url();
-			await scroll(page, [], scrollDelta);
+async function scrollOnPage(page: Page, action: iAction) {
+    const scrollDelta = action.payload.meta.value;
 
-			return success({
-				message: `Scrolled successfully on ${pageUrl}`,
-			});
-		} catch (err) {
-			console.log(err);
-			return error("Some issue occurred while scrolling the page");
-		}
-	});
+    await scrollPage(scrollDelta, page);
+}
+
+module.exports = {
+	name: ActionsInTestEnum.PAGE_SCROLL,
+    description: "Scroll on page",
+    handler: scrollOnPage,
 }

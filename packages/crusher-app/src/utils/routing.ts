@@ -1,7 +1,7 @@
 import { NextRouter } from "next/router";
 import { ROOT_PATH, ROUTES_ACCESSIBLE_WITHOUT_SESSION, ROUTES_TO_REDIRECT_WHEN_SESSION } from "@constants/page";
 import { getEdition } from "@utils/helpers";
-import { EDITION_TYPE } from "@crusher-shared/types/common/general";
+import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { isTempTestPending } from "@utils/user";
 
@@ -9,7 +9,7 @@ export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse,
 	const { userData: user } = data;
 	const { pathname } = router;
 
-	if (getEdition() === EDITION_TYPE.OPEN_SOURCE) {
+	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
 		if (Boolean(user.onboardingSteps.INITIAL_ONBOARDING) === false) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
@@ -59,7 +59,7 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 	loadCallback, router dependecy can be removed.
  */
 export const redirectUserOnMount = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
-	if (getEdition() === EDITION_TYPE.OPEN_SOURCE) {
+	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
 		await handleOpenSourceMounting(data, router, loadCallback);
 	} else {
 		await handleEERouting(data, router, loadCallback);

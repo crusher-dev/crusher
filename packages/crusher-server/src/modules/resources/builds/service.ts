@@ -2,9 +2,10 @@ import { JobReportStatus } from "@crusher-shared/types/jobReportStatus";
 import { DBManager } from "@modules/db";
 import { Service, Inject } from "typedi";
 import { PLATFORM } from "@crusher-shared/types/platform";
-import { BuildTriggerEnum, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
+import { BuildTriggerEnum, IBuildTable, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { getSnakedObject } from "@utils/helper";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
 
 interface IBuildInfoItem {
 	buildId: number;
@@ -44,15 +45,25 @@ class BuildsService {
 		return this.dbManager.fetchAllRows(query, queryParams);
 	}
 
-	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<any> {
-		const buildConfig = Object.assign({ browser: PLATFORM.CHROME }, buildInfo.config);
+	@CamelizeResponse()
+	async getBuild(buildId: number): Promise<KeysToCamelCase<IBuildTable> | null> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM jobs WHERE id = ?", [buildId]);
+	}
 
-		return this.dbManager.insert(`INSERT INTO jobs SET ?`, [
-			getSnakedObject({
-				...buildInfo,
-				config: JSON.stringify(buildConfig),
-			}),
+	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<{ insertId: number }> {
+		return this.dbManager.insert(`INSERT INTO jobs SET user_id = ?, project_id = ?, host = ?, status = ?, build_trigger = ?, browser = ?, config = ?`, [
+			buildInfo.userId,
+			buildInfo.projectId,
+			buildInfo.host,
+			buildInfo.status,
+			buildInfo.buildTrigger,
+			buildInfo.browser,
+			JSON.stringify(buildInfo.config),
 		]);
+	}
+
+	async updateLatestReportId(latestReportId: number, buildId: number) {
+		return this.dbManager.update("UPDATE jobs SET latest_report_id = ? WHERE id = ?", [latestReportId, buildId]);
 	}
 }
 

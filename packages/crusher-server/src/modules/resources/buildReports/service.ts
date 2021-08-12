@@ -7,6 +7,11 @@ import { TestInstanceResultSetConclusion } from "@core/interfaces/TestInstanceRe
 import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
+import { BuildTestInstancesService } from "../builds/instances/service";
+import { TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum } from "../builds/instances/interface";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { BuildReportStatusEnum, IBuildReportTable } from "./interface";
+import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 
 interface TestBuildReport {
 	buildId: number;
@@ -38,6 +43,8 @@ interface TestBuildReport {
 export class BuildReportService {
 	@Inject()
 	private dbManager: DBManager;
+	@Inject()
+	private buildTestInstanceService: BuildTestInstancesService;
 
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
 		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
@@ -141,5 +148,63 @@ export class BuildReportService {
 			// @TODO: Add implementation for this
 			comments: [],
 		};
+	}
+
+	private getFinalBuildResult(
+		totalTestCount: number,
+		passedTestCount: number,
+		failedTestCount: number,
+		reviewRequiredTestCount: number,
+	): BuildReportStatusEnum {
+		if (totalTestCount === passedTestCount) {
+			return BuildReportStatusEnum.PASSED;
+		} else if (failedTestCount === 0 && reviewRequiredTestCount) {
+			return BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED;
+		}
+
+		return BuildReportStatusEnum.FAILED;
+	}
+
+	private saveReportResult(
+		reportId: number,
+		passedTestCount: number,
+		failedTestCount: number,
+		reviewRequiredTestCount: number,
+		status: string,
+		statusExplanation = "",
+	) {
+		return this.dbManager.update(
+			"UPDATE job_reports SET passed_test_count = ?, failed_test_count = ?, review_required_test_count = ?, status = ?, status_explanation = ? WHERE id = ?",
+			[passedTestCount, failedTestCount, reviewRequiredTestCount, status, statusExplanation, reportId],
+		);
+	}
+
+	async calculateResultAndSave(reportId: number, totalTestCount: number) {
+		const testInstancesResultsInReport = await this.buildTestInstanceService.getResultSets(reportId);
+		const haveAllTestInstanceCompletedChecks = testInstancesResultsInReport.every(
+			(result) => result.status === TestInstanceResultSetStatusEnum.FINISHED_RUNNING_CHECKS,
+		);
+		if (!haveAllTestInstanceCompletedChecks) throw new Error("Not every test have finished performing checks");
+
+		const passedTestCount = testInstancesResultsInReport.filter((result) => result.conclusion === TestInstanceResultSetConclusionEnum.PASSED).length;
+		const failedTestCount = testInstancesResultsInReport.filter((result) => result.conclusion === TestInstanceResultSetConclusionEnum.FAILED).length;
+		const reviewRequiredTestCount = testInstancesResultsInReport.filter(
+			(result) => result.conclusion === TestInstanceResultSetConclusionEnum.MANUAL_REVIEW_REQUIRED,
+		).length;
+
+		const finalBuildReportResult = this.getFinalBuildResult(totalTestCount, passedTestCount, failedTestCount, reviewRequiredTestCount);
+
+		// @TODO: Add proper explanation for here (Will help in debugging in case test fails)
+		return this.saveReportResult(reportId, passedTestCount, failedTestCount, reviewRequiredTestCount, finalBuildReportResult, "Unknown");
+	}
+
+	async createBuildReport(totalTestCount: number, buildId: number, referenceBuildId: number, projectId: number): Promise<{ insertId: number }> {
+		return this.dbManager.insert(`INSERT INTO job_reports SET job_id = ?, reference_job_id = ?, total_test_count = ?, project_id = ?, status = ?`, [
+			buildId,
+			referenceBuildId,
+			totalTestCount,
+			projectId,
+			BuildReportStatusEnum.RUNNING,
+		]);
 	}
 }

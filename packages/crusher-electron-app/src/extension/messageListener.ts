@@ -77,7 +77,10 @@ function handleRecordAction(action: iAction): any {
 
 	// We can assume any event coming to this is auto-based
 	const shouldAutoRecord = getAutoRecorderState(store.getState());
-	if (!shouldAutoRecord && ![ACTIONS_IN_TEST.NAVIGATE_URL, ACTIONS_IN_TEST.SCROLL, ACTIONS_IN_TEST.SET_DEVICE].includes(type)) {
+	if (
+		!shouldAutoRecord &&
+		![ACTIONS_IN_TEST.NAVIGATE_URL, ACTIONS_IN_TEST.PAGE_SCROLL, ACTIONS_IN_TEST.ELEMENT_SCROLL, ACTIONS_IN_TEST.SET_DEVICE].includes(type)
+	) {
 		return;
 	}
 
@@ -123,11 +126,12 @@ function handleRecordAction(action: iAction): any {
 
 			break;
 		}
-		case ACTIONS_IN_TEST.SCROLL: {
+		case ACTIONS_IN_TEST.PAGE_SCROLL:
+			case ACTIONS_IN_TEST.ELEMENT_SCROLL: {
 			if (!lastRecordedAction) throw new Error("Scroll recorded before navigate url");
 
 			const isScrollingToSameLastElement =
-				lastRecordedAction.type === ACTIONS_IN_TEST.SCROLL &&
+				[ACTIONS_IN_TEST.PAGE_SCROLL, ACTIONS_IN_TEST.ELEMENT_SCROLL].includes(lastRecordedAction.type) &&
 				((lastRecordedAction.payload.selectors === null && action.payload.selectors === null) ||
 					(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value);
 

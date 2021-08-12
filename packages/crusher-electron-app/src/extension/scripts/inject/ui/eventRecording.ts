@@ -261,12 +261,12 @@ export default class EventRecording {
 
 			const isDocumentScrolled = event.target === document;
 			if (isDocumentScrolled) {
-				return _this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, null, window.scrollY);
+				return _this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.PAGE_SCROLL, null, window.scrollY);
 			}
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				_this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, event.target, event.target.scrollTop);
+				_this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.ELEMENT_SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}

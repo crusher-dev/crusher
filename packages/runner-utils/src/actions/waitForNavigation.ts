@@ -1,23 +1,13 @@
-import { Page } from "playwright";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { getLastSavedPageUrl } from "../utils/state";
+import { Page } from "playwright";
 
-export default async function waitForNavigation(action: iAction, page: Page) {
-	return new Promise(async (success, error) => {
-		try {
-			const currentUrl = await page.url();
-			const lastSavedUrl = getLastSavedPageUrl();
-			if (currentUrl === lastSavedUrl) {
-				await page.waitForNavigation();
-			} else {
-				await page.waitForLoadState();
-			}
-			return success({
-				message: `Waited for navigation successfully`,
-			});
-		} catch (err) {
-			console.error(err);
-			return error("Error occured while waiting for navigation");
-		}
-	});
+async function waitForNavigation(page: Page, action: iAction) {
+    await page.waitForLoadState('networkidle');
+}
+
+module.exports = {
+    name: ActionsInTestEnum.WAIT_FOR_NAVIGATION,
+    description: "Wait for navigation",
+    handler: waitForNavigation,
 }

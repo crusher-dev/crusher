@@ -16,7 +16,7 @@
 			"@crusher-shared/*": ["../crusher-shared/*"]
 		}
 	},
-	"files": ["./src/actions/index.ts", "./src/functions/index.ts", "./src/middlewares/index.ts"],
+	"files": ["./src/index.ts"],
 	"typeRoots": ["node_modules/@types"],
 	"include": ["./src/**/*"],
 	"exclude": ["**/*.spec.ts"]

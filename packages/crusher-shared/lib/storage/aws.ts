@@ -1,12 +1,13 @@
 import * as AWS from "aws-sdk";
 import * as fs from "fs";
+import { StorageManagerInterface } from "./interface";
 
 type ICloudBucketOptions = {
 	bucketName: string;
 	bucketRegion: string;
 };
 
-class AwsCloudStorage {
+class AwsCloudStorage implements StorageManagerInterface {
 	bucketName: string;
 	bucketRegion: string;
 	s3BucketService: AWS.S3;
@@ -35,7 +36,7 @@ class AwsCloudStorage {
 		});
 	}
 
-	uploadBuffer(buffer, destination): Promise<string> {
+	uploadBuffer(buffer: Buffer, destination: string): Promise<string> {
 		return new Promise((resolve, reject) => {
 			this.s3BucketService.upload(
 				{
@@ -61,7 +62,7 @@ class AwsCloudStorage {
 		});
 	}
 
-	upload(filePath, destination): Promise<string> {
+	upload(filePath: string, destination: string): Promise<string> {
 		const fileStream = fs.readFileSync(filePath);
 		return this.uploadBuffer(fileStream, destination);
 	}

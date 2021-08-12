@@ -1,7 +1,7 @@
 import { isBrowser } from "@utils/common";
 
 export const resolvePathToBackendURI = (endpoint: string) =>
-	getPathWithHost(process.env.NEXT_PUBLIC_BACKEND_SERVER_URL || isBrowser ? `${window.location.origin}/server` : "", endpoint);
+	getPathWithHost(process.env.NEXT_PUBLIC_BACKEND_SERVER_URL || isBrowser ? `${window.location.origin}/server` : (process.env.NEXT_INTERNAL_BACKEND_URL ? process.env.NEXT_INTERNAL_BACKEND_URL : "" ), endpoint);
 export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(isBrowser ? window.location.origin : "", endpoint);
 
 const getPathWithHost = (host: string, path: string): string => {

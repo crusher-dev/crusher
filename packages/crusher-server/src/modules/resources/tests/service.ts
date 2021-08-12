@@ -4,11 +4,14 @@ import { ProjectsService } from "@modules/resources/projects/service";
 import { TestsRunner } from "@modules/runner";
 import { BuildStatusEnum, BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
-import { ICreateTestPayload } from "@modules/resources/tests/interface";
+import { ICreateTestPayload, ITestTable } from "@modules/resources/tests/interface";
 import { getSnakedObject } from "@utils/helper";
 import { iAction } from "@crusher-shared/types/action";
 import { RedisManager } from "@modules/redis";
 import { v4 as uuidv4 } from "uuid";
+import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { BrowserEnum } from "@modules/runner/interface";
 
 @Service()
 class TestService {
@@ -36,7 +39,7 @@ class TestService {
 		return { events: JSON.parse(result) };
 	}
 
-	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }) {
+	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
 			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ? `,
 			[
@@ -62,8 +65,8 @@ class TestService {
 			projectId: projectId,
 			host: "null",
 			status: BuildStatusEnum.CREATED,
-			trigger: BuildTriggerEnum.MANUAL,
-			browser: PLATFORM.ALL,
+			buildTrigger: BuildTriggerEnum.MANUAL,
+			browser: BrowserEnum.ALL,
 		});
 	}
 
@@ -88,6 +91,11 @@ class TestService {
 
 	async updateMeta(meta: string, testId: number) {
 		return this.dbManager.update("UPDATE tests SET meta = ? WHERE id = ?", [meta, testId]);
+	}
+
+	@CamelizeResponse()
+	async getTest(testId: number): Promise<KeysToCamelCase<ITestTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM tests WHERE id = ?", [testId]);
 	}
 }
 

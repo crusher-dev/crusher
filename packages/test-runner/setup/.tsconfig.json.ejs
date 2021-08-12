@@ -14,12 +14,13 @@
 		"strictNullChecks": false,
 		"paths": {
 <% if(isEnterprise) { %>
-			"@src/*": ["./src_ee/*", "./src/*"],
-			"@manager/*": ["./src_ee/manager/*", "./src/manager/*"],
+			"@modules/*": ["./ee/modules/*", "./src/modules/*"],
+			"@bootstrap": ["./ee/bootstrap.ts"],
 <% } else {%>
-            "@src/*": ["./src/*"],
-            "@manager/*": ["./src/manager/*"],
+			"@bootstrap": ["./src/bootstrap.ts"],
+			"@modules/*": ["./src/modules/*"],
 <% } %>
+			"@src/*": ["./src/*"],
 			"@shared/*": ["../crusher-shared/*"],
 			"@crusher-shared/*": ["../crusher-shared/*"],
 			"@models/*": ["./src/models/*"],
@@ -30,15 +31,11 @@
 	},
 	"typeRoots": ["node_modules/@types"],
 	"files": [
-		"./src/index.ts",
-<% if(isEnterprise) { %>
-		"./src_ee/index.ts",
-<% } %>
 		"./index.ts"
 	],
 	"include": [
 <% if(isEnterprise) { %>
-		"./src_ee/**/*",
+		"./ee/**/*",
 <% } %>
 		"./src/**/*"
 	],

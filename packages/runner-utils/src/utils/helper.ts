@@ -59,4 +59,8 @@ function getMainActions(actions: iAction[]) {
 	});
 }
 
-export { uuidv4, generateScreenshotName, toCrusherSelectorsFormat, promiseTillSuccess, markTestFail, getBrowserActions, getMainActions, validActionTypeRegex };
+function isWebpack() {
+	return typeof __webpack_require__ === "function";
+}
+
+export { uuidv4, generateScreenshotName, toCrusherSelectorsFormat, isWebpack, promiseTillSuccess, markTestFail, getBrowserActions, getMainActions, validActionTypeRegex };

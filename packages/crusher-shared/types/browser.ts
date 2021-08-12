@@ -5,7 +5,13 @@ export enum BROWSER {
 }
 
 export enum BrowserEnum {
-	CHROME = "chromium",
-	FIREFOX = "firefox",
-	WEBKIT = "webkit",
+	CHROME = "CHROME",
+	FIREFOX = "FIREFOX",
+	SAFARI = "SAFARI",
 }
+
+export const PlaywrightBrowserMap = {
+	[BrowserEnum.CHROME]: "chromium",
+	[BrowserEnum.FIREFOX]: "firefox",
+	[BrowserEnum.SAFARI]: "webkit",
+};

@@ -31,10 +31,10 @@ class Parser {
 	getCode(): Promise<string> {
 		return ejs.renderFile(path.join(__dirname, "./code.template.ejs"), {
 			shouldRecordVideo: this.shouldRecordVideo,
-			runnerUtilsPackagePath: "../../output/crusher-runner-utils/",
+			runnerUtilsPackagePath: "crusher-runner-utils",
 			baseAssetsPath: this.assetsDir,
 			defaultBrowserLaunchOptions: {
-				headless: false,
+				headless: true,
 				args: ["--disable-shm-usage", "--disable-gpu"],
 			},
 			usePlaywrightChromium: this.shouldUsePlaywrightChromium,

@@ -1,5 +1,5 @@
 import { CodeRunnerService } from "./runner.service";
-import { getQueueManager, getStorageManager } from "../util/cache";
+import { getGlobalManager, getQueueManager, getStorageManager } from "../util/cache";
 import { Notifier } from "@modules/notifier/index";
 import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere } from "@shared/utils/helper";
 
@@ -10,6 +10,7 @@ import { ITestExecutionQueuePayload, ITestCompleteQueuePayload, IVideoProcessorQ
 
 const queueManager = getQueueManager();
 const storageManager = getStorageManager();
+const globalManager = getGlobalManager();
 
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
@@ -26,8 +27,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 
 	createTmpAssetsDirectoriesIfNotThere(identifier);
 
-	const codeRunnerService = new CodeRunnerService(bullJob.data.actions, bullJob.data.config, storageManager, notifyManager, identifier);
-
+	const codeRunnerService = new CodeRunnerService(bullJob.data.actions, bullJob.data.config, storageManager, notifyManager, globalManager, identifier);
 	const { recordedRawVideo, hasPassed, error, actionResults } = await codeRunnerService.runTest();
 
 	if (recordedRawVideo) {

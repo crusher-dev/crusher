@@ -1,13 +1,17 @@
 import { CodeGenerator } from "@generator/src/generator";
-import { isOpenSource } from "@shared/utils/helper";
+import { isOpenSource } from "@util/helper";
 import { iAction } from "@shared/types/action";
 import { ITestRunConfig } from "@shared/types/runner/jobRunRequest";
 import * as path from "path";
 import { IRunnerLogManagerInterface } from "@shared/lib/runnerLog/interface";
 import { IStorageManager } from "@shared/lib/storage/interface";
-import { IGlobalManager } from "@shared/lib/globals/interface";
-import { PlaywrightBrowserMap } from "@shared/types/browser";
+import { GlobalManager } from "@crusher-shared/lib/globals";
+
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+
 export class CodeRunnerService {
 	codeGenerator: CodeGenerator;
 	actions: Array<iAction>;
@@ -15,20 +19,19 @@ export class CodeRunnerService {
 
 	logManager: IRunnerLogManagerInterface;
 	storageManager: IStorageManager;
-	globalManager: IGlobalManager;
+	globalManager: GlobalManager;
 
 	constructor(
 		actions: Array<iAction>,
 		runnerConfig: ITestRunConfig,
 		storageManager: IStorageManager,
 		logManager: IRunnerLogManagerInterface,
-		globalManager: IGlobalManager,
 		identifer: string,
 	) {
 		this.codeGenerator = new CodeGenerator({
 			shouldRecordVideo: runnerConfig.shouldRecordVideo,
 			usePlaywrightChromium: isOpenSource(),
-			browser: PlaywrightBrowserMap[runnerConfig.browser] as any,
+			browser: runnerConfig.browser,
 			assetsDir: path.join("/tmp/crusher", identifer),
 		});
 		this.actions = actions;
@@ -36,7 +39,6 @@ export class CodeRunnerService {
 
 		this.storageManager = storageManager;
 		this.logManager = logManager;
-		this.globalManager = globalManager;
 	}
 
 	async runTest(): Promise<{ recordedRawVideo: string; hasPassed: boolean; error: Error | undefined; actionResults: any }> {
@@ -44,17 +46,7 @@ export class CodeRunnerService {
 		let error, recordedRawVideoUrl;
 
 		try {
-			await new Function(
-				"exports",
-				"require",
-				"module",
-				"__filename",
-				"__dirname",
-				"logManager",
-				"storageManager",
-				"globalManager",
-				`async function f(){ ${code} } return f();`,
-			)(
+			await new AsyncFunction("exports", "require", "module", "__filename", "__dirname", "logManager", "storageManager", code)(
 				exports,
 				typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
 				module,
@@ -62,7 +54,6 @@ export class CodeRunnerService {
 				__dirname,
 				this.logManager,
 				this.storageManager,
-				this.globalManager,
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);
 		} catch (err) {

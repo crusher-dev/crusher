@@ -40,7 +40,7 @@ class TestsRunner {
 			return this.addTestRequestToQueue({
 				actions: JSON.parse(testInstance.testInfo.events),
 				config: {
-					browser: buildTaskInfo.config.browser as any,
+					browser: testInstance.browser as any,
 					shouldRecordVideo: buildTaskInfo.config.shouldRecordVideo,
 				},
 				buildId: buildTaskInfo.buildId,

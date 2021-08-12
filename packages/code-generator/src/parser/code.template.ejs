@@ -1,4 +1,5 @@
 const playwright = require("<%= usePlaywrightChromium ? "playwright-chromium" : "playwright" %>");
+const path = require("path");
 <% if (shouldRecordVideo) { %>
 const { saveVideo } = require("playwright-video");
 <% } %>
@@ -28,7 +29,7 @@ const page = await browserContext.newPage({});
 await handlePopup(page, browserContext);
 await registerCrusherSelectorEngine();
 <% if (shouldRecordVideo) { %>
-const capturedVideo = await saveVideo(page, "/tmp/crusher/somedir/videos/video.mp4");
+const capturedVideo = await saveVideo(page, path.join("<%= baseAssetsPath %>", "video.mp4"));
 <% } %>
 
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);

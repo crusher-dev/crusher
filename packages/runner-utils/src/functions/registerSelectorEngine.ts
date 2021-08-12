@@ -1,5 +1,6 @@
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 import { Browser } from "playwright";
+import { isWebpack } from "../utils/helper";
 
 function getCrusherSelectorEngine() {
 	const getElementsByXPath = (xpath: string, parent: Node | null = null): Node[] => {
@@ -88,8 +89,10 @@ function getCrusherSelectorEngine() {
 	};
 }
 
+const requireFunction = isWebpack() ? __non_webpack_require__ : require;
+
 function registerCrusherSelectorEngine(userPlaywrightChromium: boolean = false) {
-	const playwright = __non_webpack_require__(userPlaywrightChromium ? "playwright-chromium" : "playwright");
+	const playwright = requireFunction(userPlaywrightChromium ? "playwright-chromium" : "playwright");
 	if (playwright.selectors._registrations.findIndex(selectorEngine => selectorEngine.name === 'crusher') === -1) {
 		playwright.selectors.register('crusher', getCrusherSelectorEngine);
 	}

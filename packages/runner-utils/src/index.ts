@@ -8,11 +8,10 @@ import { waitForSelectors } from "./functions/waitForSelectors";
 import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
 import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
-import { getBrowserActions, getMainActions, validActionTypeRegex } from "./utils/helper";
+import { getBrowserActions, getMainActions, isWebpack, validActionTypeRegex } from "./utils/helper";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
-
-const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
-
+import * as fs from "fs";
+import * as path from "path";
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -43,10 +42,20 @@ class CrusherRunnerActions {
   }
 
   initActionHandlers() {
-    actionsRequireContext.keys().forEach(fileName => {
-      const { name, description, handler } = actionsRequireContext(fileName);
-      this.registerStepHandler(name, description, handler)
-    });
+    if (isWebpack()) {
+      const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
+
+      actionsRequireContext.keys().forEach(fileName => {
+        const { name, description, handler } = actionsRequireContext(fileName);
+        this.registerStepHandler(name, description, handler)
+      });
+    } else {
+      const actionsDir = fs.readdirSync(path.join(__dirname, "./actions"));
+      for (let actionFilePath of actionsDir) {
+        const { name, description, handler } = require(path.join(__dirname, "./actions", actionFilePath));
+        this.registerStepHandler(name, description, handler);
+      }
+    }
   }
 
   async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {

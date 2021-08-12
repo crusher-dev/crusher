@@ -1,7 +1,7 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
-import { markTestFail } from "src/utils/helper";
+import { markTestFail } from "../utils/helper";
 
 const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<boolean> => {
 	return new Function(

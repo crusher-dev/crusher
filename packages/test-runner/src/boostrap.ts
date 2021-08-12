@@ -20,7 +20,7 @@ class TestRunnerBootstrap {
 			stalledInterval: 120000,
 			maxStalledCount: 1,
 		});
-		await this.queueManager.addWorkerForQueue(TEST_EXECUTION_QUEUE, worker as any, {
+		await this.queueManager.addWorkerForQueue(TEST_EXECUTION_QUEUE, worker.default as any, {
 			concurrency: 1,
 			lockDuration: 120000,
 		});

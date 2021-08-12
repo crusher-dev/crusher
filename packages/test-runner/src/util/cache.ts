@@ -1,8 +1,10 @@
 import { QueueManager } from "@shared/modules/queue";
 import { RedisManager } from "@modules/redis";
 import { setupStorage } from "@shared/utils/storage";
+import { GlobalManager } from "@shared/lib/globals";
 
 import { IStorageManager } from "@shared/lib/storage/interface";
+import { IGlobalManager } from "@shared/lib/globals/interface";
 
 let redisManager: RedisManager | null = null;
 
@@ -30,4 +32,12 @@ function getStorageManager(): IStorageManager {
 	return storageManager;
 }
 
-export { getRedisManager, getQueueManager, getStorageManager };
+let globalManager: IGlobalManager | null = null;
+
+function getGlobalManager(): IGlobalManager {
+	if (!globalManager) globalManager = new GlobalManager();
+
+	return globalManager;
+}
+
+export { getRedisManager, getQueueManager, getStorageManager, getGlobalManager };

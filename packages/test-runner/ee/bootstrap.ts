@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
 
 import Timeout = NodeJS.Timeout;
+import { TEST_EXECUTION_QUEUE } from "@shared/constants/queues";
 
 class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	sessionId: string;
@@ -17,23 +18,27 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		this._bootAfterNJobsOffset = Number.MAX_SAFE_INTEGER;
 	}
 
+	private getBootAfterNJobsOffset() {
+		return this._bootAfterNJobsOffset;
+	}
+
 	async boot() {
 		this.setupInstanceHeartbeat();
 
-		await this.queueManager.setupQueue("test-execution-queue");
-		await this.queueManager.setupQueueScheduler("test-execution-queue", {
+		await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
+		await this.queueManager.setupQueueScheduler(TEST_EXECUTION_QUEUE, {
 			stalledInterval: 120000,
 			maxStalledCount: 1,
 		});
 
 		const workerPath = process.env.NODE_ENV === "production" ? path.resolve(__dirname, "./worker.js") : path.resolve("src/worker/index.ts");
 
-		await this.queueManager.addWorkerForQueue("test-execution-queue", workerPath, {
+		await this.queueManager.addWorkerForQueue(TEST_EXECUTION_QUEUE, workerPath, {
 			concurrency: 3,
 			lockDuration: 120000,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			//@ts-ignore
-			getOffset: BootAfterNJobsOffsetManager.get,
+			getOffset: this.getBootAfterNJobsOffset.bind(this),
 		});
 		console.log("Booted up test runner...");
 	}

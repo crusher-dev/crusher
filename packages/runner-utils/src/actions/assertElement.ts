@@ -2,7 +2,7 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import { ElementHandle } from "playwright";
-import { markTestFail } from "src/utils/helper";
+import { markTestFail } from "../utils/helper";
 
 async function assertElementAttributes(element: ElementHandle, assertions: Array<iAssertionRow>): Promise<{hasPassed: boolean, logs: Array<{status: "FAILED" | "DONE", message: string, meta: any}>}> {
 	let hasPassed = true;

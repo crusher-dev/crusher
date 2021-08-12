@@ -90,7 +90,7 @@ export const AddProjectModal = ({ onClose }) => {
 								width={16}
 							/>
 						</Conditional>
-						Save test
+						Add Project
 					</div>
 				</Button>
 			</div>

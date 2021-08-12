@@ -38,7 +38,7 @@
 		"js-cookie": "^2.2.1",
 		"lodash": "^4.17.20",
 		"mitt": "^3.0.0",
-		"next": "11",
+		"next": "11.1",
 		"next-cookies": "^2.0.3",
 		"next-pwa": "^5.2.24",
 		"next-redux-wrapper": "^6.0.2",

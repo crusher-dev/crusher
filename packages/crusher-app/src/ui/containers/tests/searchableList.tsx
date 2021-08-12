@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState, useMemo, useEffect } from "react";
-import { CompleteStatusIconSVG } from "@svg/dashboard";
+import { CompleteStatusIconSVG, LoadingSVG } from '@svg/dashboard';
 import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
 import { getTime } from "@utils/helpers";
@@ -15,6 +15,7 @@ import { sendSnackBarEvent } from "@utils/notify";
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
+import { FailedSVG } from '@svg/testReport';
 interface IBuildItemCardProps {
 	testName: string;
 	isPassing: boolean;
@@ -25,6 +26,7 @@ interface IBuildItemCardProps {
 }
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
+const FirstTestRunStatus = dynamic(() => import("@ui/containers/tests/firstTestStatus"));
 
 const saveTest = (projectId: number, tempTestId: string) => {
 	const testName = new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
@@ -41,7 +43,10 @@ function TestCard(props: IBuildItemCardProps) {
 
 	return (
 		<div css={itemContainerStyle}>
-			<img css={itemImageStyle} src={imageURL} />
+			<div css={itemImageStyle}>
+				<FirstTestRunStatus isRunning={true}/>
+				<img  src={imageURL} />
+			</div>
 			<div css={itemMainContainerStyle}>
 				<div className={"flex flex-row items-center"}>
 					<div css={testNameStyle} className={"font-cera"}>

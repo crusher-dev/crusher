@@ -30,8 +30,9 @@ RedisManager.initialize();
 // cron, queue and backend servers. (Used in OSS)
 if (process.env.RUN_ALL_TOGETHER) {
 	require("./cron");
-	require("./queue");
 }
+
+require("./queue.new.ts");
 
 const chalk = require("chalk");
 Container.get(MongoManager);

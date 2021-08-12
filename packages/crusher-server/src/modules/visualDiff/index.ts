@@ -3,6 +3,7 @@ import { PNG } from "pngjs";
 import * as pixelmatch from "pixelmatch";
 import axios from "axios";
 import { StorageManager } from "@modules/storage";
+import { result } from "lodash";
 
 @Service()
 class VisualDiffService {
@@ -14,12 +15,13 @@ class VisualDiffService {
 		referenceImageBuffer: Buffer,
 	): Promise<{ diffDeltaFactor: number; diffDelta: number; diffBuffer: Buffer }> {
 		const basePngImage = PNG.sync.read(baseImageBuffer);
+		const referenceImage = PNG.sync.read(referenceImageBuffer);
 
 		const diffImageWidth = basePngImage.width;
 		const diffImageHeight = basePngImage.height;
 		const diffPngImage = new PNG({ width: diffImageWidth, height: diffImageHeight });
 
-		const diffDeltaFactor = pixelmatch(baseImageBuffer, referenceImageBuffer, diffPngImage.data, diffImageWidth, diffImageHeight, {
+		const diffDeltaFactor = pixelmatch(basePngImage.data, referenceImage.data, diffPngImage.data, diffImageWidth, diffImageHeight, {
 			threshold: 0.25,
 			alpha: 0.8,
 		});
@@ -31,12 +33,14 @@ class VisualDiffService {
 		};
 	}
 
-	private getImageBufferFromUrl(imageUrl: string): Buffer {
+	private getImageBufferFromUrl(imageUrl: string): Promise<Buffer> {
 		return axios({
 			method: "get",
 			url: imageUrl,
 			responseType: "arraybuffer",
-		}) as any;
+		}).then((result: any) => {
+			return result.data;
+		});
 	}
 
 	async getDiffResult(
@@ -46,9 +50,8 @@ class VisualDiffService {
 	): Promise<{ diffDeltaFactor: number; diffDelta: number; outputDiffImageUrl: string }> {
 		const baseImageBuffer = await this.getImageBufferFromUrl(baseImageUrl);
 		const referenceImageBuffer = await this.getImageBufferFromUrl(referenceImageUrl);
-
 		const diffResult = await this.visualDiff(baseImageBuffer, referenceImageBuffer);
-		const diffImageUrl = await this.storageManager.uploadBuffer(diffResult.diffBuffer, diffImageDestination);
+	 	const diffImageUrl = await this.storageManager.uploadBuffer(diffResult.diffBuffer, diffImageDestination);
 
 		return {
 			diffDeltaFactor: diffResult.diffDeltaFactor,

@@ -55,7 +55,6 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 		await notifyManager.logTest(ActionStatusEnum.COMPLETED, `Test ${identifier} executed successfully...`, { actionResults });
 	}
 
-	// @TODO: Fix this paylaod
 	await testCompleteQueue.add(identifier, {
 		actionResults: actionResults,
 		buildId: bullJob.data.buildId,

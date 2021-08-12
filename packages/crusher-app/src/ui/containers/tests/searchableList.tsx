@@ -15,7 +15,7 @@ import { sendSnackBarEvent } from "@utils/notify";
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { FailedSVG } from '@svg/testReport';
+import { getBoolean } from '@utils/common';
 interface IBuildItemCardProps {
 	testName: string;
 	isPassing: boolean;
@@ -37,22 +37,26 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName, isPassing, createdAt, imageURL } = props;
+	const { testName, isPassing, createdAt, imageURL,videoURL,firstRunCompleted } = props;
 
 	const statusIcon = isPassing ? <CompleteStatusIconSVG isCompleted={true} /> : <CompleteStatusIconSVG isCompleted={false} />;
 
 	return (
 		<div css={itemContainerStyle}>
 			<div css={itemImageStyle}>
-				<FirstTestRunStatus isRunning={true}/>
-				<img  src={imageURL} />
+				<Conditional showIf={getBoolean(firstRunCompleted)}>
+					<FirstTestRunStatus isRunning={true}/>
+				</Conditional>
+				<img src={imageURL} />
 			</div>
 			<div css={itemMainContainerStyle}>
 				<div className={"flex flex-row items-center"}>
 					<div css={testNameStyle} className={"font-cera"}>
 						{testName}
 					</div>
-					<div className={"ml-auto"}>{statusIcon}</div>
+					<Conditional showIf={isPassing}>
+						<div className={"ml-auto"}>{statusIcon}</div>
+					</Conditional>
 				</div>
 				<div css={createdAtStyle} className={"mt-24 text-13"}>
 					{getTime(createdAt)}
@@ -104,7 +108,7 @@ function TestSearchableList() {
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, newTestCreated), { suspense: true });
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, newTestCreated), { suspense: true, refreshInterval: newTestCreated? 4000 : 200000 });
 
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {

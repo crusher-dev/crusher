@@ -3,10 +3,13 @@ import { isOpenSource } from "@shared/utils/helper";
 import { iAction } from "@shared/types/action";
 import { ITestRunConfig } from "@shared/types/runner/jobRunRequest";
 import * as path from "path";
-import { IRunnerLogManagerInterface } from "@shared/lib/runnerLog/interface";
+import { ActionStatusEnum, IRunnerLogManagerInterface } from "@shared/lib/runnerLog/interface";
 import { IStorageManager } from "@shared/lib/storage/interface";
 import { IGlobalManager } from "@shared/lib/globals/interface";
 import { PlaywrightBrowserMap } from "@shared/types/browser";
+import * as fs from "fs";
+import { IActionResultItem } from "@shared/types/common/general";
+
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
 export class CodeRunnerService {
 	codeGenerator: CodeGenerator;
@@ -39,6 +42,20 @@ export class CodeRunnerService {
 		this.globalManager = globalManager;
 	}
 
+	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
+		return this.actions.map((action, index) => {
+			if (index >= runnerActionResults.length) {
+				return {
+					actionType: action.type,
+					status: ActionStatusEnum.FAILED,
+					message: "Never reached this action",
+					meta: {},
+				};
+			}
+			return runnerActionResults[index];
+		});
+	}
+
 	async runTest(): Promise<{ recordedRawVideo: string; hasPassed: boolean; error: Error | undefined; actionResults: any }> {
 		const code = await this.codeGenerator.getCode(this.actions);
 		let error, recordedRawVideoUrl;
@@ -66,6 +83,7 @@ export class CodeRunnerService {
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);
 		} catch (err) {
+			console.error(err);
 			error = err;
 		}
 
@@ -73,11 +91,13 @@ export class CodeRunnerService {
 
 		if (codeGeneratorConfig.shouldRecordVideo) {
 			const recordedVideoRawPath = path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw");
-			recordedRawVideoUrl = await this.storageManager.upload(recordedVideoRawPath, path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw"));
+			if (fs.existsSync(recordedVideoRawPath)) {
+				recordedRawVideoUrl = await this.storageManager.upload(recordedVideoRawPath, path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw"));
+			}
 		}
 
 		const testActionResults = this.globalManager.get(TEST_ACTIONS_RESULT_KEY);
 
-		return { recordedRawVideo: recordedRawVideoUrl, hasPassed: !error, error: error, actionResults: testActionResults };
+		return { recordedRawVideo: recordedRawVideoUrl, hasPassed: !error, error: error, actionResults: this.getCompleteActionsResult(testActionResults) };
 	}
 }

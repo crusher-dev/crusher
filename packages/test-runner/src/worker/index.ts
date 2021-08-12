@@ -10,17 +10,23 @@ import { ITestExecutionQueuePayload, ITestCompleteQueuePayload, IVideoProcessorQ
 
 const queueManager = getQueueManager();
 const storageManager = getStorageManager();
-const globalManager = getGlobalManager();
 
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
+
+const TEST_RESULT_KEY = "TEST_RESULT";
 
 export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 	const identifier = bullJob.name;
 
 	const testCompleteQueue = await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 	const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
+	const globalManager = getGlobalManager();
+
+	if (!this.globals.has(TEST_RESULT_KEY)) {
+		this.globals.set(TEST_RESULT_KEY, []);
+	}
 
 	const notifyManager = new Notifier(bullJob.data.buildId, bullJob.data.testInstanceId);
 	await notifyManager.logTest(ActionStatusEnum.STARTED, `Test ${identifier} started...`);

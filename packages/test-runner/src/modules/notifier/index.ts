@@ -12,8 +12,6 @@ export class Notifier implements IRunnerLogManagerInterface {
 	}
 
 	async notifyTestStarted(message: string, meta: any) {
-		console.debug(message);
-
 		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`, {
 			method: "POST",
 			headers: {
@@ -30,8 +28,6 @@ export class Notifier implements IRunnerLogManagerInterface {
 	}
 
 	async notifyTestFinished(message: string, hasFailed: boolean, meta: any) {
-		console.debug(`Instance #${this.buildTestInstanceId} of #${this.buildId} ${hasFailed ? "failed" : "completed"}`);
-
 		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`, {
 			method: "POST",
 			headers: {
@@ -48,6 +44,8 @@ export class Notifier implements IRunnerLogManagerInterface {
 	}
 
 	async logTest(status: ActionStatusEnum, message: string, meta: any = {}): Promise<void> {
+		console.debug(message);
+
 		if (status === ActionStatusEnum.STARTED) {
 			return this.notifyTestStarted(message, meta);
 		} else if (status === ActionStatusEnum.COMPLETED) {

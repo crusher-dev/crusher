@@ -9,6 +9,7 @@ interface IParserOptions {
 	browser: BrowserEnum;
 	actions: Array<iAction>;
 	assetsDir: string;
+	defaultBrowserLaunchOptions: any;
 }
 
 class Parser {
@@ -17,6 +18,7 @@ class Parser {
 	actionsList: iAction[];
 	browser: BrowserEnum;
 	assetsDir: string;
+	defaultBrowserLaunchOptions: any;
 
 	constructor(options: IParserOptions) {
 		this.shouldRecordVideo = !!options.shouldRecordVideo;
@@ -24,6 +26,7 @@ class Parser {
 		this.actionsList = options.actions;
 		this.browser = options.browser;
 		this.assetsDir = options.assetsDir;
+		this.defaultBrowserLaunchOptions = options.defaultBrowserLaunchOptions;
 
 		ParserChecks.validateActions(this.actionsList);
 	}
@@ -33,10 +36,7 @@ class Parser {
 			shouldRecordVideo: this.shouldRecordVideo,
 			runnerUtilsPackagePath: "crusher-runner-utils",
 			baseAssetsPath: this.assetsDir,
-			defaultBrowserLaunchOptions: {
-				headless: true,
-				args: ["--disable-shm-usage", "--disable-gpu"],
-			},
+			defaultBrowserLaunchOptions: this.defaultBrowserLaunchOptions,
 			usePlaywrightChromium: this.shouldUsePlaywrightChromium,
 			browserName: this.browser,
 			defaultBrowserContextOptions: { defaultNavigationTimeout: 15000, defaultTimeout: 5000 },

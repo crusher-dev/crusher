@@ -6,7 +6,7 @@ import * as path from "path";
 import { ActionStatusEnum, IRunnerLogManagerInterface } from "@shared/lib/runnerLog/interface";
 import { IStorageManager } from "@shared/lib/storage/interface";
 import { IGlobalManager } from "@shared/lib/globals/interface";
-import { PlaywrightBrowserMap } from "@shared/types/browser";
+import { BrowserEnum, PlaywrightBrowserMap } from "@shared/types/browser";
 import * as fs from "fs";
 import { IActionResultItem } from "@shared/types/common/general";
 
@@ -33,6 +33,10 @@ export class CodeRunnerService {
 			usePlaywrightChromium: isOpenSource(),
 			browser: PlaywrightBrowserMap[runnerConfig.browser] as any,
 			assetsDir: path.join("/tmp/crusher", identifer),
+			defaultBrowserLaunchOptions: {
+				headless: true,
+				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-shm-usage", "--disable-gpu"],
+			},
 		});
 		this.actions = actions;
 		this.runnerConfig = runnerConfig;

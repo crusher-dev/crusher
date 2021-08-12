@@ -1,5 +1,5 @@
 import { CodeRunnerService } from "./runner.service";
-import { getGlobalManager, getQueueManager, getStorageManager } from "../util/cache";
+import { getGlobalManager, getQueueManager, getRedisManager, getStorageManager } from "../util/cache";
 import { Notifier } from "@modules/notifier/index";
 import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere } from "@shared/utils/helper";
 
@@ -7,13 +7,12 @@ import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { Job } from "bullmq";
 import { TEST_COMPLETE_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@shared/constants/queues";
 import { ITestExecutionQueuePayload, ITestCompleteQueuePayload, IVideoProcessorQueuePayload } from "@shared/types/queues/";
-
-const queueManager = getQueueManager();
-const storageManager = getStorageManager();
-
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
+
+const queueManager = getQueueManager();
+const storageManager = getStorageManager();
 
 const TEST_RESULT_KEY = "TEST_RESULT";
 
@@ -24,8 +23,8 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 	const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 	const globalManager = getGlobalManager();
 
-	if (!this.globals.has(TEST_RESULT_KEY)) {
-		this.globals.set(TEST_RESULT_KEY, []);
+	if (!globalManager.has(TEST_RESULT_KEY)) {
+		globalManager.set(TEST_RESULT_KEY, []);
 	}
 
 	const notifyManager = new Notifier(bullJob.data.buildId, bullJob.data.testInstanceId);

@@ -5,6 +5,7 @@ import { BrowserEnum } from "../../crusher-shared/types/browser";
 
 interface iCodeGeneratorOptions {
 	shouldRecordVideo?: boolean;
+	defaultBrowserLaunchOptions?: any;
 	browser?: BrowserEnum;
 	assetsDir?: string;
 	usePlaywrightChromium?: boolean;
@@ -32,6 +33,11 @@ export class CodeGenerator {
 			browser: this.options.browser,
 			assetsDir: this.options.assetsDir,
 			shouldUsePlaywrightChromium: this.options.usePlaywrightChromium,
+			defaultBrowserLaunchOptions: {
+				headless: true,
+				args: ["--disable-shm-usage", "--disable-gpu"],
+				...this.options.defaultBrowserLaunchOptions,
+			},
 		});
 
 		return parser.getCode();

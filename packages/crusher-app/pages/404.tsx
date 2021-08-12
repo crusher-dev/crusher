@@ -24,7 +24,7 @@ export default function Custom404() {
 				height: 100vh;
 			`}
 		>
-			<BlankBase>
+			<BlankBase css={css`background: #0a0b0e;`}>
 				<CenterLayout>
 					<div className="flex flex-col justify-center items-center pb-56">
 						<ErrorSVG height={32} />

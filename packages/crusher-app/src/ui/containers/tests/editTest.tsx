@@ -1,5 +1,5 @@
 import { RequestMethod } from "../../../types/RequestOptions";
-import { changeTestInfoAPI, deleteTestApi, getInviteMemberAPI, getRunTestApi, getTestListAPI } from '@constants/api';
+import { changeTestInfoAPI, deleteTestApi, getInviteMemberAPI, getRunTestApi, getTestListAPI } from "@constants/api";
 import { css } from "@emotion/react";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/backendRequest";
@@ -11,9 +11,9 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 import { useAtom } from "jotai";
 import { useCallback, useState } from "react";
 import React from "react";
-import useSWR, { mutate } from 'swr';
-import { currentProject } from '../../../store/atoms/global/project';
-import { IProjectTestsListResponse } from '@crusher-shared/types/response/iProjectTestsListResponse';
+import useSWR, { mutate } from "swr";
+import { currentProject } from "../../../store/atoms/global/project";
+import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 
 const changeTestNameInServer = (testId: number, name: string) => {
 	return backendRequest(changeTestInfoAPI(testId), {
@@ -27,8 +27,7 @@ const changeTestNameInServer = (testId: number, name: string) => {
 const deleteTestInServer = (testId: number) => {
 	return backendRequest(deleteTestApi(testId), {
 		method: RequestMethod.POST,
-		payload: {
-		},
+		payload: {},
 	});
 };
 
@@ -41,9 +40,9 @@ export const EditTestModal = ({ name, id, onClose }) => {
 	const changeTestNameCallback = useCallback(() => {
 		(async () => {
 			try {
-				await changeTestNameInServer(id, testName)
+				await changeTestNameInServer(id, testName);
 				sendSnackBarEvent({ type: "normal", message: "Changes have been saved." });
-				await mutate(getTestListAPI(project.id))
+				await mutate(getTestListAPI(project.id));
 				onClose();
 			} catch (err) {
 				sendSnackBarEvent({ type: "error", message: "Failed to save changes" });
@@ -53,13 +52,12 @@ export const EditTestModal = ({ name, id, onClose }) => {
 		setProcessing(true);
 	}, [testName]);
 
-
 	const deleteTest = useCallback(() => {
 		(async () => {
 			try {
-				await deleteTestInServer(id)
+				await deleteTestInServer(id);
 				sendSnackBarEvent({ type: "normal", message: "We have deleted this test." });
-				await mutate(getTestListAPI(project.id))
+				await mutate(getTestListAPI(project.id));
 				onClose();
 			} catch (err) {
 				sendSnackBarEvent({ type: "error", message: "Failed to delete test." });
@@ -69,16 +67,19 @@ export const EditTestModal = ({ name, id, onClose }) => {
 		setProcessing(true);
 	}, []);
 	return (
-		<Modal onOutsideClick={onClose} onClose={()=>{onClose()}}>
+		<Modal
+			onOutsideClick={onClose}
+			onClose={() => {
+				onClose();
+			}}
+		>
 			<div className={"font-cera text-16 font-600 leading-none"}>Edit info</div>
 			<div
 				className={"text-13 mt-8"}
 				css={css`
 					font-size: 12.5rem;
 				`}
-			>
-
-			</div>
+			></div>
 			<div
 				className={"mt-44 text-13 font-600 mb-16"}
 				css={css`
@@ -135,16 +136,14 @@ export const EditTestModal = ({ name, id, onClose }) => {
 				</div>
 				<Button
 					css={css`
-            min-width: 122rem;
-            color: #e74174 !important;
-            border: 1px solid #C93965;
-            background-color: #101215;
+						min-width: 122rem;
+						color: #e74174 !important;
+						border: 1px solid #c93965;
+						background-color: #101215;
 
-            :hover {
-              background-color: #1e2126 !important;
-            }
-
-
+						:hover {
+							background-color: #1e2126 !important;
+						}
 					`}
 					size={"small"}
 					onClick={deleteTest}
@@ -163,7 +162,6 @@ export const EditTestModal = ({ name, id, onClose }) => {
 						Delete test
 					</div>
 				</Button>
-
 			</div>
 		</Modal>
 	);

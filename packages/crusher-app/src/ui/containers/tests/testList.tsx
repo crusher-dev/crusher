@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState, useMemo, useEffect } from "react";
 import { CompleteStatusIconSVG, LoadingSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate } from "swr";
 import { getTestListAPI } from "@constants/api";
 import { useAtom } from "jotai";
 import { currentProject } from "../../../store/atoms/global/project";
@@ -40,16 +40,27 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName,id, isPassing, createdAt, imageURL, videoUrl, firstRunCompleted } = props;
+	const { testName, id, isPassing, createdAt, imageURL, videoUrl, firstRunCompleted } = props;
 	const statusIcon = isPassing ? <CompleteStatusIconSVG isCompleted={true} /> : <CompleteStatusIconSVG isCompleted={false} />;
 
 	const shouldPlayVideo = !imageURL && !!videoUrl;
 
 	const [showEditBox, setShowEditBox] = useState(false);
 	return (
-		<div css={itemContainerStyle} onClick={()=>{!showEditBox && setShowEditBox( true)}}>
+		<div
+			css={itemContainerStyle}
+			onClick={() => {
+				!showEditBox && setShowEditBox(true);
+			}}
+		>
 			<Conditional showIf={showEditBox}>
-				<EditTest id={id} name={testName} onClose={()=>{setShowEditBox(false)}} />
+				<EditTest
+					id={id}
+					name={testName}
+					onClose={() => {
+						setShowEditBox(false);
+					}}
+				/>
 			</Conditional>
 
 			<div css={itemImageStyle}>
@@ -122,18 +133,18 @@ const itemContainerStyle = css`
 	:hover {
 		background: rgba(16, 18, 21, 1);
 	}
-	
-	.edit{
+
+	.edit {
 		display: none;
 	}
-	
-	:hover{
-    .edit{
-      display: block !important;
-			:hover{
+
+	:hover {
+		.edit {
+			display: block !important;
+			:hover {
 				text-decoration: underline;
 			}
-    }
+		}
 	}
 `;
 const itemImageStyle = css`
@@ -187,7 +198,7 @@ function TestSearchableList() {
 			await saveTest(selectedProjectId, tempTestId);
 			sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
 
-			await mutate(getTestListAPI(project.id))
+			await mutate(getTestListAPI(project.id));
 			setNewTestCreated(true);
 		})();
 	}, []);

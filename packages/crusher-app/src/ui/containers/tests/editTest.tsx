@@ -71,7 +71,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 	}, []);
 	return (
 		<Modal onOutsideClick={onClose} onClose={()=>{onClose()}}>
-			<div className={"font-cera text-16 font-600 leading-none"}>Edit test info</div>
+			<div className={"font-cera text-16 font-600 leading-none"}>Edit info</div>
 			<div
 				className={"text-13 mt-8"}
 				css={css`

@@ -38,7 +38,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 	if (recordedRawVideo) {
 		await videoProcessorQueue.add(
 			identifier,
-			{ testInstanceId: bullJob.data.testInstanceId, videoRawUrl: recordedRawVideo } as IVideoProcessorQueuePayload,
+			{ testInstanceId: bullJob.data.testInstanceId, buildId: bullJob.data.buildId, videoRawUrl: recordedRawVideo } as IVideoProcessorQueuePayload,
 			{
 				lifo: false,
 				removeOnComplete: true,

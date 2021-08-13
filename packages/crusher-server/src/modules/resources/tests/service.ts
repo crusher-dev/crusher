@@ -41,14 +41,14 @@ class TestService {
 
 	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
-			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ?`,
+			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_url = ?, featured_screenshot_url = ?`,
 			[
 				testInfo.projectId,
 				testInfo.name,
 				JSON.stringify(testInfo.events),
 				testInfo.userId,
-				testInfo.featuredVideoUri ? testInfo.featuredVideoUri : null,
-				testInfo.featuredScreenshotUri ? testInfo.featuredScreenshotUri : null,
+				testInfo.featuredVideoUrl ? testInfo.featuredVideoUrl : null,
+				testInfo.featuredScreenshotUrl ? testInfo.featuredScreenshotUrl : null,
 			],
 		);
 	}
@@ -100,6 +100,10 @@ class TestService {
 	@CamelizeResponse()
 	async getTest(testId: number): Promise<KeysToCamelCase<ITestTable>> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM tests WHERE id = ?", [testId]);
+	}
+
+	async addFeaturedVideo(featuredVideoUrl: string, testId: number): Promise<{ insertId: number }> {
+		return this.dbManager.update("UPDATE tests SET featured_video_url = ? WHERE id = ?", [featuredVideoUrl, testId]);
 	}
 }
 

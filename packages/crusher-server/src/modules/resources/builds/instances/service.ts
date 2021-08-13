@@ -209,6 +209,10 @@ class BuildTestInstancesService {
 	async getInstance(instanceId: number): Promise<KeysToCamelCase<ITestInstancesTable>> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM test_instances WHERE id = ?", [instanceId]);
 	}
+
+	async addRecordedVideo(videoUrl: string, instanceId: number) {
+		return this.dbManager.fetchSingleRow("UPDATE test_instances SET recorded_video_url = ? WHERE id = ?", [videoUrl, instanceId]);
+	}
 }
 
 export { BuildTestInstancesService };

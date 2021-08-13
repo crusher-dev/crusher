@@ -15,7 +15,7 @@ interface iVideoProcessorJob extends Job {
 }
 
 export default async function (bullJob: iVideoProcessorJob) {
-	const { testInstanceId, videoRawUrl } = bullJob.data;
+	const { testInstanceId, buildId, videoRawUrl } = bullJob.data;
 	console.log(`Processing video for ${bullJob.name}`, videoRawUrl);
 
 	const savedVideoPath = await processRemoteRawVideoAndSave(videoRawUrl, path.join("/tmp/videos", testInstanceId + uuidv4()) + ".mp4");
@@ -25,5 +25,15 @@ export default async function (bullJob: iVideoProcessorJob) {
 	await shell.rm("-rf", savedVideoPath);
 
 	// @TODO: Make an api call and set featured_video_uri of this test instance
+	await fetch(`http://localhost:8000/builds/${buildId}/instances/${testInstanceId}/action.addRecordedVideo`, {
+		method: "POST",
+		headers: {
+			Accept: "application/json, text/plain, */*",
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			recordedVideoUrl: uploadedVideoUrl,
+		}),
+	});
 	console.log("Uploaded video url", uploadedVideoUrl);
 }

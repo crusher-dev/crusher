@@ -15,6 +15,7 @@ import { sendSnackBarEvent } from "@utils/notify";
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
+import { timeSince } from '@utils/dateTimeUtils';
 interface IBuildItemCardProps {
 	testName: string;
 	isPassing: boolean;
@@ -60,7 +61,7 @@ function TestCard(props: IBuildItemCardProps) {
 					</Conditional>
 				</div>
 				<div css={createdAtStyle} className={"mt-24 text-13"}>
-					{getTime(createdAt)}
+					{timeSince(new Date(createdAt ))}
 				</div>
 			</div>
 		</div>

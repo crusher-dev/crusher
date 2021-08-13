@@ -10,8 +10,8 @@ const intervals = [
 export function timeSince(date: Date): string {
 	const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
 	const interval = intervals.find((i) => i.seconds < seconds);
-	const count = Math.floor(seconds / interval.seconds);
-	return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
+	const count = Math.floor(seconds / interval?.seconds);
+	return `${count} ${interval?.label}${count !== 1 ? "s" : ""} ago`;
 }
 
 export function getTimeString(date: string): string {

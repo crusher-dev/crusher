@@ -15,12 +15,12 @@ import { sendSnackBarEvent } from "@utils/notify";
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { getBoolean } from '@utils/common';
 interface IBuildItemCardProps {
 	testName: string;
 	isPassing: boolean;
 	imageURL: string | null;
 	videoURL: null | string;
+	firstRunCompleted: boolean;
 	// In seconds
 	createdAt: number;
 }
@@ -44,8 +44,9 @@ function TestCard(props: IBuildItemCardProps) {
 	return (
 		<div css={itemContainerStyle}>
 			<div css={itemImageStyle}>
-				<Conditional showIf={getBoolean(firstRunCompleted)}>
+				<Conditional showIf={!firstRunCompleted}>
 					<FirstTestRunStatus isRunning={true}/>
+
 				</Conditional>
 				<img src={imageURL} />
 			</div>
@@ -112,9 +113,9 @@ function TestSearchableList() {
 
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL, videoURL, id } = test;
+			const { testName, isPassing, createdAt, imageURL, videoURL, id,firstRunCompleted } = test;
 
-			return <TestCard videoURL={videoURL} imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} key={id} />;
+			return <TestCard firstRunCompleted={firstRunCompleted} videoURL={videoURL} imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} key={id} />;
 		});
 	}, [data]);
 

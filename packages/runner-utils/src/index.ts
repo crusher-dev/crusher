@@ -81,7 +81,7 @@ class CrusherRunnerActions {
             break;
           case ActionCategoryEnum.ELEMENT:
             const elementInfo = await waitForSelectors(page, step.payload.selectors);
-            stepResult = await wrappedHandler(elementInfo.elementHandle, step, this.globals, this.storageManager);
+            stepResult = await wrappedHandler(elementInfo.elementHandle, elementInfo.workingSelector, step, this.globals, this.storageManager);
             break;
           default:
             throw new Error("Invalid action category handler");

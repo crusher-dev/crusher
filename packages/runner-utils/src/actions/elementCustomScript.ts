@@ -24,7 +24,7 @@ const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<bo
 	)(exports, require, module, __filename, __dirname, script, elHandle);
 };
 
-async function runCustomScriptOnElement(element: ElementHandle, action: iAction) {
+async function runCustomScriptOnElement(element: ElementHandle, workingSelector: any, action: iAction) {
     const customScript = action.payload.meta.script;
     const actionResult = await runScriptOnElement(customScript, element);
 

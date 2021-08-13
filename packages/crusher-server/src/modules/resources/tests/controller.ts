@@ -113,7 +113,7 @@ export class TestController {
 			host: "null",
 			status: BuildStatusEnum.CREATED,
 			buildTrigger: BuildTriggerEnum.MANUAL,
-			browser: BrowserEnum.ALL,
+			browser: BrowserEnum.CHROME,
 			isDraftJob: true,
 			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
 		});

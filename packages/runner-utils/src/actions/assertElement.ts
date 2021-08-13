@@ -64,7 +64,7 @@ async function assertElementAttributes(element: ElementHandle, assertions: Array
 	return {hasPassed, logs}
 }
 
-async function runAssertionOnElement(element: ElementHandle, action: iAction) {
+async function runAssertionOnElement(element: ElementHandle, workingSelector: any, action: iAction) {
     const validationRows = action.payload.meta.validations;
     const actionResult = await assertElementAttributes(element, validationRows);
 

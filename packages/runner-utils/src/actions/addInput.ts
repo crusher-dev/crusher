@@ -3,7 +3,7 @@ import { ElementHandle } from "playwright";
 import { type } from "../functions/type";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
-async function addInput(element: ElementHandle, actionInfo: iAction) {
+async function addInput(element: ElementHandle, workingSelector: any, actionInfo: iAction) {
     const inputKeys = actionInfo.payload.meta.value;
 
     await element.scrollIntoViewIfNeeded();

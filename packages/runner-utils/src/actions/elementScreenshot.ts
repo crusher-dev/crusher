@@ -5,7 +5,7 @@ import { ElementHandle } from "playwright";
 import { StorageManager } from "../functions/storage";
 import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
-async function takeElementScreenshot(element: ElementHandle, action: iAction, globals: IGlobalManager, storageManager: StorageManager) {
+async function takeElementScreenshot(element: ElementHandle, workingSelector: any, action: iAction, globals: IGlobalManager, storageManager: StorageManager) {
     const screenshotBuffer = await element.screenshot();
     const screenshotName =  generateScreenshotName(action.payload.selectors[0].value, uuidv4());
     const uploadedScreenshotUrl = await storageManager.uploadAsset(screenshotName, screenshotBuffer);

@@ -35,7 +35,7 @@ export class CodeRunnerService {
 			assetsDir: identifer,
 			videoSavePath: `/tmp/crusher/${identifer}`,
 			defaultBrowserLaunchOptions: {
-				headless: true,
+				headless: false,
 				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-shm-usage", "--disable-gpu"],
 			},
 		});

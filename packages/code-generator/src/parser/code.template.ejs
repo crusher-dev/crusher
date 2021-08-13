@@ -10,7 +10,8 @@ const { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBro
 const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager);
 
 const browser = await playwright["<%= browserName %>"].launch(<%- JSON.stringify(defaultBrowserLaunchOptions) %>);
-
+let capturedVideo;
+try {
 globalManager.set("browserContextOptions", <%- JSON.stringify(defaultBrowserContextOptions) %>);
 
 const actions = <%- JSON.stringify(actions) %>
@@ -29,11 +30,14 @@ const page = await browserContext.newPage({});
 await handlePopup(page, browserContext);
 await registerCrusherSelectorEngine();
 <% if (shouldRecordVideo) { %>
-const capturedVideo = await saveVideo(page, path.join("<%= videoSavePath %>", "video.mp4"));
+capturedVideo = await saveVideo(page, path.join("<%= videoSavePath %>", "video.mp4"));
 <% } %>
 
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);
-<% if (shouldRecordVideo) { %>
-await capturedVideo.stop();
-<% } %>
-await browser.close();
+} catch(ex) {
+  <% if (shouldRecordVideo) { %>
+    capturedVideo && await capturedVideo.stop();
+  <% } %>
+  await browser.close();
+  throw ex;
+}

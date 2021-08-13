@@ -9,6 +9,7 @@ interface IParserOptions {
 	browser: BrowserEnum;
 	actions: Array<iAction>;
 	assetsDir: string;
+	videoSavePath: string;
 	defaultBrowserLaunchOptions: any;
 }
 
@@ -19,6 +20,7 @@ class Parser {
 	browser: BrowserEnum;
 	assetsDir: string;
 	defaultBrowserLaunchOptions: any;
+	videoSavePath: string;
 
 	constructor(options: IParserOptions) {
 		this.shouldRecordVideo = !!options.shouldRecordVideo;
@@ -27,6 +29,7 @@ class Parser {
 		this.browser = options.browser;
 		this.assetsDir = options.assetsDir;
 		this.defaultBrowserLaunchOptions = options.defaultBrowserLaunchOptions;
+		this.videoSavePath = options.videoSavePath;
 
 		ParserChecks.validateActions(this.actionsList);
 	}
@@ -36,6 +39,7 @@ class Parser {
 			shouldRecordVideo: this.shouldRecordVideo,
 			runnerUtilsPackagePath: "crusher-runner-utils",
 			baseAssetsPath: this.assetsDir,
+			videoSavePath: this.videoSavePath,
 			defaultBrowserLaunchOptions: this.defaultBrowserLaunchOptions,
 			usePlaywrightChromium: this.shouldUsePlaywrightChromium,
 			browserName: this.browser,

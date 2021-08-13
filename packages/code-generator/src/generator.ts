@@ -9,6 +9,7 @@ interface iCodeGeneratorOptions {
 	browser?: BrowserEnum;
 	assetsDir?: string;
 	usePlaywrightChromium?: boolean;
+	videoSavePath: string;
 }
 
 export class CodeGenerator {
@@ -18,7 +19,7 @@ export class CodeGenerator {
 		code: Array<string> | string;
 	}>;
 
-	constructor(options: iCodeGeneratorOptions = {}) {
+	constructor(options: iCodeGeneratorOptions) {
 		this.options = options;
 	}
 
@@ -33,6 +34,7 @@ export class CodeGenerator {
 			browser: this.options.browser,
 			assetsDir: this.options.assetsDir,
 			shouldUsePlaywrightChromium: this.options.usePlaywrightChromium,
+			videoSavePath: this.options.videoSavePath,
 			defaultBrowserLaunchOptions: {
 				headless: true,
 				args: ["--disable-shm-usage", "--disable-gpu"],

@@ -24,15 +24,15 @@ const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<bo
 	)(exports, require, module, __filename, __dirname, script, elHandle);
 };
 
-async function runCustomScriptOnElement(element: ElementHandle, action: iAction) {
-	const customScript = action.payload.meta.script;
-	const actionResult = await runScriptOnElement(customScript, element);
+async function runCustomScriptOnElement(element: ElementHandle, workingSelector: any, action: iAction) {
+    const customScript = action.payload.meta.script;
+    const actionResult = await runScriptOnElement(customScript, element);
 
-	if (!actionResult) markTestFail("Failed according to custom script assertions");
+    if(!actionResult) markTestFail("Failed according to custom script assertions");
 }
 
 module.exports = {
-	name: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
-	description: "Custom script on element",
-	handler: runCustomScriptOnElement,
-};
+    name: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
+    description: "Custom script on element",
+    handler: runCustomScriptOnElement,
+}

@@ -18,11 +18,11 @@ class VideoProcessorBootstrap {
 			stalledInterval: 120000,
 			maxStalledCount: 1,
 		});
-		await this.queueManager.addWorkerForQueue(VIDEO_PROCESSOR_QUEUE, worker as any, {
+		await this.queueManager.addWorkerForQueue(VIDEO_PROCESSOR_QUEUE, worker.default as any, {
 			concurrency: 1,
 		});
 
-		console.log("Test runner booted up");
+		console.log("Video processor booted up");
 	}
 }
 

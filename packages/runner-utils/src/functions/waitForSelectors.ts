@@ -7,7 +7,7 @@ async function findSelectorFromPlaywright(page: Page, selectors: Array<iSelector
 	let playwrightOut, elementHandle;
 	if (selectors[0].type == SelectorTypeEnum.PLAYWRIGHT) {
 		try {
-			elementHandle = await page.waitForSelector(selectors[0].value, { state: "attached" });
+			elementHandle = await page.waitForSelector(selectors[0].value, { state: "visible" });
 			playwrightOut = selectors[0].value;
 		} catch (ex) {
 			return false;

@@ -15,116 +15,106 @@ import * as path from "path";
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
-	PAGE = "PAGE",
-	BROWSER = "BROWSER",
-	ELEMENT = "ELEMENT",
-}
+  PAGE = "PAGE",
+  BROWSER = "BROWSER",
+  ELEMENT = "ELEMENT"
+};
 
 const TEST_RESULT_KEY = "TEST_RESULT";
 class CrusherRunnerActions {
-	actionHandlers: { [type: string]: any };
-	logManager: LogManager;
-	storageManager: StorageManager;
-	globals: IGlobalManager;
+  actionHandlers: {[type: string]: any};
+  logManager: LogManager;
+  storageManager: StorageManager;
+  globals: IGlobalManager;
 
-	constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager) {
-		this.actionHandlers = {};
-		this.globals = globalManager;
+  constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager) {
+    this.actionHandlers = {};
+    this.globals = globalManager;
 
-		this.logManager = new LogManager(logManger);
-		this.storageManager = new StorageManager(storageManager, baseAssetPath);
+    this.logManager =  new LogManager(logManger);
+    this.storageManager = new StorageManager(storageManager, baseAssetPath);
 
-		if (!this.globals.has(TEST_RESULT_KEY)) {
-			this.globals.set(TEST_RESULT_KEY, []);
-		}
+    if (!this.globals.has(TEST_RESULT_KEY)) {
+      this.globals.set(TEST_RESULT_KEY, []);
+    }
 
-		this.initActionHandlers();
-	}
+    this.initActionHandlers();
+  }
 
-	initActionHandlers() {
-		if (isWebpack()) {
-			const actionsRequireContext = require.context("./actions/", true, /\.ts$/);
+  initActionHandlers() {
+    if (isWebpack()) {
+      const actionsRequireContext = require.context('./actions/', true, /\.ts$/);
 
-			actionsRequireContext.keys().forEach((fileName) => {
-				const { name, description, handler } = actionsRequireContext(fileName);
-				this.registerStepHandler(name, description, handler);
-			});
-		} else {
-			const actionsDir = fs.readdirSync(path.join(__dirname, "./actions"));
-			for (let actionFilePath of actionsDir) {
-				const { name, description, handler } = require(path.join(__dirname, "./actions", actionFilePath));
-				this.registerStepHandler(name, description, handler);
-			}
-		}
-	}
+      actionsRequireContext.keys().forEach(fileName => {
+        const { name, description, handler } = actionsRequireContext(fileName);
+        this.registerStepHandler(name, description, handler)
+      });
+    } else {
+      const actionsDir = fs.readdirSync(path.join(__dirname, "./actions"));
+      for (let actionFilePath of actionsDir) {
+        const { name, description, handler } = require(path.join(__dirname, "./actions", actionFilePath));
+        this.registerStepHandler(name, description, handler);
+      }
+    }
+  }
 
-	async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {
-		await this.logManager.logStep(actionType, status, message, meta);
+  async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {
+    await this.logManager.logStep(actionType, status, message, meta);
 
-		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
-			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
-		}
-	}
+    if(status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
+      this.globals.get(TEST_RESULT_KEY).push({actionType, status, message, meta});
+    }
+  }
 
-	stepHandlerHOC(
-		wrappedHandler: any,
-		action: { name: ACTIONS_IN_TEST; category: IActionCategory; description: string },
-	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
-		return async (step: iAction, browser: Browser, page: Page | null = null): Promise<void> => {
-			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`);
-			let stepResult = null;
+  stepHandlerHOC(wrappedHandler: any, action: {name: ACTIONS_IN_TEST; category: IActionCategory, description: string}): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
+    return async (step: iAction, browser: Browser, page: Page | null = null): Promise<void> => {
+      await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`);
+      let stepResult = null;
 
-			try {
-				switch (action.category) {
-					case ActionCategoryEnum.PAGE:
-						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager);
-						break;
-					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager);
-						break;
-					case ActionCategoryEnum.ELEMENT:
-						const elementInfo = await waitForSelectors(page, step.payload.selectors);
-						stepResult = await wrappedHandler(elementInfo.elementHandle, step, this.globals, this.storageManager);
-						break;
-					default:
-						throw new Error("Invalid action category handler");
-				}
-			} catch (err) {
-				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
-					failedReason: err.messsage,
-					meta: err.meta ? err.meta : {},
-				});
-				throw err;
-			}
+      try{
+        switch (action.category) {
+          case ActionCategoryEnum.PAGE:
+            stepResult = await wrappedHandler(page, step, this.globals, this.storageManager);
+            break;
+          case ActionCategoryEnum.BROWSER:
+            stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager);
+            break;
+          case ActionCategoryEnum.ELEMENT:
+            const elementInfo = await waitForSelectors(page, step.payload.selectors);
+            stepResult = await wrappedHandler(elementInfo.elementHandle, elementInfo.workingSelector, step, this.globals, this.storageManager);
+            break;
+          default:
+            throw new Error("Invalid action category handler");
+        }
+      } catch(err) {
+        await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {failedReason: err.messsage, meta: err.meta ? err.meta : {}});
+        throw err;
+      }
 
-			// Woohoo! Action executed without any errors.
-			await this.handleActionExecutionStatus(
-				action.name,
-				ActionStatusEnum.COMPLETED,
-				stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`,
-				stepResult ? stepResult : {},
-			);
-		};
-	}
+      // Woohoo! Action executed without any errors.
+      await this.handleActionExecutionStatus(action.name, ActionStatusEnum.COMPLETED, stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`, stepResult ? stepResult : {});
+    }
+  }
 
-	registerStepHandler(actionType: ACTIONS_IN_TEST, description: string, handler: any) {
-		const validActionRegexMatches = validActionTypeRegex.exec(actionType);
-		if (!validActionRegexMatches) throw new Error("Invalid format for action type");
+  registerStepHandler(actionType: ACTIONS_IN_TEST, description: string, handler: any) {
+    const validActionRegexMatches = validActionTypeRegex.exec(actionType);
+    if (!validActionRegexMatches) throw new Error("Invalid format for action type");
 
-		const actionCategory: IActionCategory = validActionRegexMatches[1] as any;
-		this.actionHandlers[actionType] = this.stepHandlerHOC(handler, { name: actionType, description: description, category: actionCategory });
-	}
+    const actionCategory: IActionCategory = validActionRegexMatches[1] as any;
+    this.actionHandlers[actionType] = this.stepHandlerHOC(handler, {name: actionType, description: description, category: actionCategory});
+  }
 
-	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null) {
-		for (let action of actions) {
-			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
-			await this.actionHandlers[action.type](action, browser, page);
-		}
-	}
+  async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null) {
 
-	getStepHandlers() {
-		return this.actionHandlers;
-	}
+    for (let action of actions) {
+      if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
+      await this.actionHandlers[action.type](action, browser, page);
+    }
+  }
+
+  getStepHandlers() {
+    return this.actionHandlers;
+  }
 }
 
 export { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBrowserActions, getMainActions };

@@ -4,10 +4,7 @@ import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import { ElementHandle } from "playwright";
 import { markTestFail } from "../utils/helper";
 
-async function assertElementAttributes(
-	element: ElementHandle,
-	assertions: Array<iAssertionRow>,
-): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
+async function assertElementAttributes(element: ElementHandle, assertions: Array<iAssertionRow>): Promise<{hasPassed: boolean, logs: Array<{status: "FAILED" | "DONE", message: string, meta: any}>}> {
 	let hasPassed = true;
 	const logs = [];
 
@@ -64,25 +61,25 @@ async function assertElementAttributes(
 		}
 	}
 
-	return { hasPassed, logs };
+	return {hasPassed, logs}
 }
 
-async function runAssertionOnElement(element: ElementHandle, action: iAction) {
-	const validationRows = action.payload.meta.validations;
-	const actionResult = await assertElementAttributes(element, validationRows);
+async function runAssertionOnElement(element: ElementHandle, workingSelector: any, action: iAction) {
+    const validationRows = action.payload.meta.validations;
+    const actionResult = await assertElementAttributes(element, validationRows);
 
-	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });
+    if(!actionResult.hasPassed) markTestFail("Failed assertions on element", {meta: {logs: actionResult.logs}});
 
-	return {
-		customLogMessage: "Ran custom assertions on element",
-		meta: {
-			logs: actionResult.logs,
-		},
-	};
+    return {
+        customLogMessage: "Ran custom assertions on element",
+        meta: {
+            logs: actionResult.logs,
+        }
+    };
 }
 
 module.exports = {
-	name: ActionsInTestEnum.ASSERT_ELEMENT,
-	description: "Assertions on element",
-	handler: runAssertionOnElement,
-};
+    name: ActionsInTestEnum.ASSERT_ELEMENT,
+    description: "Assertions on element",
+    handler: runAssertionOnElement,
+}

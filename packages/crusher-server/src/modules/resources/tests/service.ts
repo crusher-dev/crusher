@@ -41,14 +41,14 @@ class TestService {
 
 	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
-			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ?`,
+			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_url = ?, featured_screenshot_url = ?`,
 			[
 				testInfo.projectId,
 				testInfo.name,
 				JSON.stringify(testInfo.events),
 				testInfo.userId,
-				testInfo.featuredVideoUri ? testInfo.featuredVideoUri : null,
-				testInfo.featuredScreenshotUri ? testInfo.featuredScreenshotUri : null,
+				testInfo.featuredVideoUrl ? testInfo.featuredVideoUrl : null,
+				testInfo.featuredScreenshotUrl ? testInfo.featuredScreenshotUrl : null,
 			],
 		);
 	}
@@ -83,7 +83,7 @@ class TestService {
 
 	async getTestsInProject(projectId: number, findOnlyActiveTests = false) {
 		return this.dbManager.fetchAllRows(
-			`SELECT tests.*, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id` +
+			`SELECT tests.*, tests.featured_video_url featuredVideoUrl, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id` +
 				(findOnlyActiveTests ? " AND tests.deleted = FALSE " : ""),
 			[projectId],
 		);
@@ -100,6 +100,10 @@ class TestService {
 	@CamelizeResponse()
 	async getTest(testId: number): Promise<KeysToCamelCase<ITestTable>> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM tests WHERE id = ?", [testId]);
+	}
+
+	async addFeaturedVideo(featuredVideoUrl: string, testId: number): Promise<{ insertId: number }> {
+		return this.dbManager.update("UPDATE tests SET featured_video_url = ? WHERE id = ?", [featuredVideoUrl, testId]);
 	}
 }
 

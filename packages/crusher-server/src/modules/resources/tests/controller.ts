@@ -42,7 +42,7 @@ export class TestController {
 	@Get("/projects/:project_id/tests/")
 	async getList(@Param("project_id") projectId: number): Promise<IProjectTestsListResponse> {
 		return (await this.testService.getTestsInProject(projectId)).map((testData) => {
-			const videoUrl = testData.featured_video_uri ? testData.featured_video_uri : null;
+			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
 			const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
 
 			return {
@@ -51,7 +51,7 @@ export class TestController {
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
 				createdAt: new Date(testData.created_at).getTime(),
 				// @TODO: Remove this line
-				videoUrl: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? "https://www.w3schools.com/html/mov_bbb.mp4" : null,
+				videoUrl: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
 				// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
 				// @Note: Add support for taking random screenshots in case video is switched off
 				imageURL: null,

@@ -65,7 +65,8 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 			hasPassed: hasPassed,
 			failedReason: error ? error : null,
 		} as ITestCompleteQueuePayload);
-
-	} catch (err) { console.error(err); }
+	} catch (err) {
+		console.error(err);
+	}
 	return true;
 }

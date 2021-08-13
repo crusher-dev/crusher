@@ -44,6 +44,8 @@ export const AddProjectModal = ({ onClose }) => {
 
 		setProcessing(true);
 	}, [projectName]);
+
+
 	return (
 		<Modal onOutsideClick={onClose} onClose={onClose}>
 			<div className={"font-cera text-16 font-600 leading-none"}>Create new project</div>

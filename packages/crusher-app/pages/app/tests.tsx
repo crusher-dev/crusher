@@ -1,7 +1,7 @@
 import React from "react";
 import { Suspense } from "react";
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
-import { TestSearchableList } from "@ui/containers/tests/searchableList";
+import { TestSearchableList } from "@ui/containers/tests/testList";
 import { usePageTitle } from "../../src/hooks/seo";
 
 function Tests() {

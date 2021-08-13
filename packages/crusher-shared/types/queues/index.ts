@@ -13,7 +13,7 @@ export interface ITestCompleteQueuePayload {
 }
 
 export interface IVideoProcessorQueuePayload {
-  buildId: number;
+	buildId: number;
 	testInstanceId: number;
 	videoRawUrl: string;
 }

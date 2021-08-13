@@ -4,15 +4,14 @@ import { type } from "../functions/type";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 async function addInput(element: ElementHandle, workingSelector: any, actionInfo: iAction) {
-    const inputKeys = actionInfo.payload.meta.value;
+	const inputKeys = actionInfo.payload.meta.value;
 
-    await element.scrollIntoViewIfNeeded();
-    await type(element, inputKeys);
+	await element.scrollIntoViewIfNeeded();
+	await type(element, inputKeys);
 }
-
 
 module.exports = {
-    name: ActionsInTestEnum.ADD_INPUT,
-    description: "Adding input to element",
-    handler: addInput,
-}
+	name: ActionsInTestEnum.ADD_INPUT,
+	description: "Adding input to element",
+	handler: addInput,
+};

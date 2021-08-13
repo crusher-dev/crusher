@@ -36,7 +36,6 @@ export const EditTestModal = ({ name, id, onClose }) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [project] = useAtom(currentProject);
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id));
 	const isNameSame = testName === name;
 
 	const changeTestNameCallback = useCallback(() => {
@@ -150,7 +149,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 					size={"small"}
 					onClick={deleteTest}
 				>
-					<div className={"flex justify-center items-center"}>
+					<div className={"flex justify-center items-center pt-2"}>
 						<Conditional showIf={processing}>
 							<LoadingSVG
 								css={css`

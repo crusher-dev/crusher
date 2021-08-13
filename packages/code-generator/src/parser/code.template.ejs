@@ -1,8 +1,5 @@
 const playwright = require("<%= usePlaywrightChromium ? "playwright-chromium" : "playwright" %>");
 const path = require("path");
-<% if (shouldRecordVideo) { %>
-const { saveVideo } = require("playwright-video");
-<% } %>
 
 const { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
 
@@ -10,7 +7,7 @@ const { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBro
 const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager);
 
 const browser = await playwright["<%= browserName %>"].launch(<%- JSON.stringify(defaultBrowserLaunchOptions) %>);
-let capturedVideo;
+let capturedVideo, browserContext, page;
 try {
 globalManager.set("browserContextOptions", <%- JSON.stringify(defaultBrowserContextOptions) %>);
 
@@ -26,18 +23,25 @@ browserContext = await browser.newContext({
 browserContext.setDefaultNavigationTimeout(browserContextOptions.defaultNavigationTimeout);
 browserContext.setDefaultTimeout(browserContextOptions.defaultTimeout);
 
-const page = await browserContext.newPage({});
+page = await browserContext.newPage({});
 await handlePopup(page, browserContext);
 await registerCrusherSelectorEngine();
-<% if (shouldRecordVideo) { %>
-capturedVideo = await saveVideo(page, path.join("<%= videoSavePath %>", "video.mp4"));
-<% } %>
+
 
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);
 } catch(ex) {
   <% if (shouldRecordVideo) { %>
-    capturedVideo && await capturedVideo.stop();
+  globalManager.set("recordedVideoPath", await page.video().path());
   <% } %>
+  await page.close();
+  await browserContext.close();
   await browser.close();
   throw ex;
 }
+
+<% if (shouldRecordVideo) { %>
+globalManager.set("recordedVideoPath", await page.video().path());
+<% } %>
+await page.close();
+await browserContext.close();
+await browser.close();

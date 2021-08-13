@@ -64,7 +64,7 @@ export class CodeRunnerService {
 	async runTest(): Promise<{ recordedRawVideo: string; hasPassed: boolean; error: Error | undefined; actionResults: any }> {
 		const code = await this.codeGenerator.getCode(this.actions);
 		let error, recordedRawVideoUrl;
-
+		console.log("Running code", code);
 		try {
 			await new Function(
 				"exports",
@@ -93,9 +93,8 @@ export class CodeRunnerService {
 		}
 
 		const codeGeneratorConfig = this.codeGenerator.getConfig();
-
-		if (codeGeneratorConfig.shouldRecordVideo && this.runnerConfig.browser === BrowserEnum.CHROME) {
-			const recordedVideoRawPath = path.join(codeGeneratorConfig.videoSavePath, "video.mp4.raw");
+		const recordedVideoRawPath = this.globalManager.get("recordedVideoPath");
+		if (codeGeneratorConfig.shouldRecordVideo && this.runnerConfig.browser === BrowserEnum.CHROME && recordedVideoRawPath) {
 			if (fs.existsSync(recordedVideoRawPath)) {
 				const videoBuffer = fs.readFileSync(recordedVideoRawPath);
 				fs.unlinkSync(recordedVideoRawPath);

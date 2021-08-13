@@ -37,7 +37,7 @@ export async function scrollElement(scrollDeltaArr: Array<number>, element: Elem
 export async function scrollPage(scrollDeltaArr: Array<number>, page: Page) {
 	return page.evaluate(
 		(arg: Array<any>) => {
-			scroll(scrollDeltaArr, window);
+			scroll(arg[0], window);
 		},
 		[scrollDeltaArr],
 	);

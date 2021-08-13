@@ -87,8 +87,9 @@ function TestCard(props: IBuildItemCardProps) {
 						<div className={"ml-auto"}>{statusIcon}</div>
 					</Conditional>
 				</div>
-				<div css={createdAtStyle} className={"mt-24 text-13"}>
-					{timeSince(new Date(createdAt))}
+				<div css={createdAtStyle} className={"flex justify-between mt-24 text-13"}>
+					<span>{timeSince(new Date(createdAt))}</span>
+					<span className={"edit"}>Edit</span>
 				</div>
 			</div>
 		</div>
@@ -120,6 +121,19 @@ const itemContainerStyle = css`
 	margin-right: 32px;
 	:hover {
 		background: rgba(16, 18, 21, 1);
+	}
+	
+	.edit{
+		display: none;
+	}
+	
+	:hover{
+    .edit{
+      display: block !important;
+			:hover{
+				text-decoration: underline;
+			}
+    }
 	}
 `;
 const itemImageStyle = css`

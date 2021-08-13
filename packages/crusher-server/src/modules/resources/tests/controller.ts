@@ -43,6 +43,7 @@ export class TestController {
 	async getList(@Param("project_id") projectId: number): Promise<IProjectTestsListResponse> {
 		return (await this.testService.getTestsInProject(projectId)).map((testData) => {
 			const videoUrl = testData.featured_video_uri ? testData.featured_video_uri : null;
+			const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
 
 			return {
 				id: testData.id,
@@ -55,9 +56,9 @@ export class TestController {
 				// @Note: Add support for taking random screenshots in case video is switched off
 				imageURL: null,
 				// @Note: Hardcoded for now, will be changed later
-				isPassing: testData.draftBuildReportStatus === BuildReportStatusEnum.PASSED,
+				isPassing: isFirstRunCompleted ? testData.draftBuildReportStatus === BuildReportStatusEnum.PASSED : null,
 				// @Note: Hardcoded for now, will be changed later
-				firstRunCompleted: testData.draftBuildStatus === BuildStatusEnum.FINISHED,
+				firstRunCompleted: isFirstRunCompleted,
 				deleted: false,
 			};
 		});

@@ -49,7 +49,9 @@ export class TestController {
 				testName: testData.name,
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
 				createdAt: new Date(testData.created_at).getTime() / 1000,
-				videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
+				// @TODO: Remove this line
+				videoUrl: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? "https://www.w3schools.com/html/mov_bbb.mp4" : null,
+				// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
 				// @Note: Add support for taking random screenshots in case video is switched off
 				imageURL: null,
 				// @Note: Hardcoded for now, will be changed later

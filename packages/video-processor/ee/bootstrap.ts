@@ -1,3 +1,4 @@
+import { VIDEO_PROCESSOR_QUEUE } from "@shared/constants/queues";
 import VideoProcessorBootstrap from "@src/bootstrap";
 import * as worker from "@worker/index";
 
@@ -9,16 +10,16 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 	}
 
 	async boot() {
-		await this.queueManager.setupQueue("video-processing-queue");
-		await this.queueManager.setupQueueScheduler("video-processing-queue", {
+		await this.queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
+		await this.queueManager.setupQueueScheduler(VIDEO_PROCESSOR_QUEUE, {
 			stalledInterval: 120000,
 			maxStalledCount: 1,
 		});
-		await this.queueManager.addWorkerForQueue("video-processing-queue", worker as any, {
+		await this.queueManager.addWorkerForQueue(VIDEO_PROCESSOR_QUEUE, worker.default as any, {
 			concurrency: 1,
 		});
 
-		console.log("Test runner booted up");
+		console.log("Video processor booted up");
 	}
 }
 

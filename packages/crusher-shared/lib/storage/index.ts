@@ -27,7 +27,7 @@ class LocalFileStorage implements StorageManagerInterface {
 	uploadBuffer(buffer: Buffer, destination: string): Promise<string> {
 		return new Promise((resolve, reject) => {
 			try {
-				const destinationPath = path.join(this.basePath, destination);
+				const destinationPath = path.join(this.basePath,  destination);
 				fs.mkdirSync(path.parse(destinationPath).dir, { recursive: true });
 				fs.writeFileSync(destinationPath, buffer);
 				resolve(url.resolve(`http://localhost:${this.port}`, path.join(this.bucketName, destination)));

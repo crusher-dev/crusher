@@ -18,22 +18,26 @@ export default async function (bullJob: iVideoProcessorJob) {
 	const { testInstanceId, buildId, videoRawUrl } = bullJob.data;
 	console.log(`Processing video for ${bullJob.name}`, videoRawUrl);
 
-	const savedVideoPath = await processRemoteRawVideoAndSave(videoRawUrl, path.join("/tmp/videos", testInstanceId + uuidv4()) + ".mp4");
+	try {
+		const savedVideoPath = await processRemoteRawVideoAndSave(videoRawUrl, path.join("/tmp/videos", testInstanceId + uuidv4()) + ".mp4");
 
-	const uploadedVideoUrl = await storageManager.upload(savedVideoPath, path.join(bullJob.name, "videos/video.mp4"));
+		const uploadedVideoUrl = await storageManager.upload(savedVideoPath, path.join(bullJob.name, "videos/video.mp4"));
 
-	await shell.rm("-rf", savedVideoPath);
+		await shell.rm("-rf", savedVideoPath);
 
-	// @TODO: Make an api call and set featured_video_uri of this test instance
-	await fetch(`http://localhost:8000/builds/${buildId}/instances/${testInstanceId}/action.addRecordedVideo`, {
-		method: "POST",
-		headers: {
-			Accept: "application/json, text/plain, */*",
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			recordedVideoUrl: uploadedVideoUrl,
-		}),
-	});
-	console.log("Uploaded video url", uploadedVideoUrl);
+		// @TODO: Make an api call and set featured_video_uri of this test instance
+		await fetch(`http://localhost:8000/builds/${buildId}/instances/${testInstanceId}/action.addRecordedVideo`, {
+			method: "POST",
+			headers: {
+				Accept: "application/json, text/plain, */*",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				recordedVideoUrl: uploadedVideoUrl,
+			}),
+		});
+		console.log("Uploaded video url", uploadedVideoUrl);
+	} catch (err) {
+		console.error(err);
+	}
 }

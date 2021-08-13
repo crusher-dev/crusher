@@ -29,7 +29,7 @@ const page = await browserContext.newPage({});
 await handlePopup(page, browserContext);
 await registerCrusherSelectorEngine();
 <% if (shouldRecordVideo) { %>
-const capturedVideo = await saveVideo(page, path.join("<%= baseAssetsPath %>", "video.mp4"));
+const capturedVideo = await saveVideo(page, path.join("<%= videoSavePath %>", "video.mp4"));
 <% } %>
 
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);

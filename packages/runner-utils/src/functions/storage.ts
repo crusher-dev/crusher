@@ -13,6 +13,6 @@ export class StorageManager {
   }
 
   async uploadAsset(name: string, buffer: Buffer): Promise<string> {
-    return this.storageManager.uploadBuffer(buffer, path.resolve(this.baseAssetPath, name));
+    return this.storageManager.uploadBuffer(buffer, path.join(this.baseAssetPath, name));
   }
 };

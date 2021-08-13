@@ -32,7 +32,8 @@ export class CodeRunnerService {
 			shouldRecordVideo: runnerConfig.shouldRecordVideo,
 			usePlaywrightChromium: isOpenSource(),
 			browser: PlaywrightBrowserMap[runnerConfig.browser] as any,
-			assetsDir: path.join("/tmp/crusher", identifer),
+			assetsDir: identifer,
+			videoSavePath: `/tmp/crusher-videos/${identifer}`,
 			defaultBrowserLaunchOptions: {
 				headless: true,
 				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-shm-usage", "--disable-gpu"],
@@ -93,10 +94,12 @@ export class CodeRunnerService {
 
 		const codeGeneratorConfig = this.codeGenerator.getConfig();
 
-		if (codeGeneratorConfig.shouldRecordVideo) {
-			const recordedVideoRawPath = path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw");
+		if (codeGeneratorConfig.shouldRecordVideo && codeGeneratorConfig.browser === BrowserEnum.CHROME) {
+			const recordedVideoRawPath = path.join(codeGeneratorConfig.videoSavePath, "video.mp4.raw");
 			if (fs.existsSync(recordedVideoRawPath)) {
-				recordedRawVideoUrl = await this.storageManager.upload(recordedVideoRawPath, path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw"));
+				const videoBuffer = fs.readFileSync(recordedVideoRawPath);
+				fs.unlinkSync(recordedVideoRawPath);
+				recordedRawVideoUrl = await this.storageManager.uploadBuffer(videoBuffer, path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw"));
 			}
 		}
 

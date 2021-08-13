@@ -4,13 +4,13 @@ import { Page } from "playwright";
 import { scrollPage } from "../functions/scroll";
 
 async function scrollOnPage(page: Page, action: iAction) {
-    const scrollDelta = action.payload.meta.value;
+	const scrollDelta = action.payload.meta.value;
 
-    await scrollPage(scrollDelta, page);
+	await scrollPage(scrollDelta, page);
 }
 
 module.exports = {
 	name: ActionsInTestEnum.PAGE_SCROLL,
-    description: "Scroll on page",
-    handler: scrollOnPage,
-}
+	description: "Scroll on page",
+	handler: scrollOnPage,
+};

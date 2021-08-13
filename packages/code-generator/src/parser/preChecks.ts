@@ -17,4 +17,4 @@ class ParserChecks {
 	}
 }
 
-export { ParserChecks }
+export { ParserChecks };

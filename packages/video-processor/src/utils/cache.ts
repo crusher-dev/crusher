@@ -6,7 +6,6 @@ import { IStorageManager } from "@shared/lib/storage/interface";
 
 let redisManager: RedisManager | null = null;
 
-
 function getRedisManager(): RedisManager {
 	if (!redisManager) redisManager = new RedisManager();
 	return redisManager;

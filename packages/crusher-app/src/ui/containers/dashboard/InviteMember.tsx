@@ -10,7 +10,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 import { useAtom } from "jotai";
 import { useCallback, useState } from "react";
-import React  from "react";
+import React from "react";
 import useSWR from "swr";
 
 const inviteTeamMembers = (projectId: number, emailList: string) => {
@@ -123,7 +123,6 @@ export const InvitePeople = ({ onClose }) => {
 						event.target.setSelectionRange(0, 99999);
 						document.execCommand("copy");
 						sendSnackBarEvent({ type: "normal", message: "Copied invite link to clipboard" });
-
 					}}
 				/>
 			</div>

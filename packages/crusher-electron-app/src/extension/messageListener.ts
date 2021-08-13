@@ -127,7 +127,7 @@ function handleRecordAction(action: iAction): any {
 			break;
 		}
 		case ACTIONS_IN_TEST.PAGE_SCROLL:
-			case ACTIONS_IN_TEST.ELEMENT_SCROLL: {
+		case ACTIONS_IN_TEST.ELEMENT_SCROLL: {
 			if (!lastRecordedAction) throw new Error("Scroll recorded before navigate url");
 
 			const isScrollingToSameLastElement =

@@ -1,5 +1,5 @@
 import React from "react";
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles } from "@emotion/react";
 
 export type ButtonProps = {
 	/**
@@ -22,7 +22,7 @@ export type ButtonProps = {
 	css?: SerializedStyles;
 
 	className?: string;
-}  & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<any, any>;
 
 /**
  * Unified button component for Dyson UI system

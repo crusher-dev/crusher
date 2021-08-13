@@ -1,5 +1,5 @@
 import IORedis = require("ioredis");
-import { RedisManager as ParentRedisManager} from "@shared/modules/redis";
+import { RedisManager as ParentRedisManager } from "@shared/modules/redis";
 
 // @TODO: This should come from where the class is initalized.
 function getConnectionObject(): IORedis.RedisOptions {

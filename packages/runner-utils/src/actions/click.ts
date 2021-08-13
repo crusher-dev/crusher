@@ -7,7 +7,7 @@ async function clickOnElement(element: ElementHandle, action: iAction) {
 }
 
 module.exports = {
-    name: ActionsInTestEnum.CLICK,
-    description: "Click on element",
-    handler: clickOnElement,
-}
+	name: ActionsInTestEnum.CLICK,
+	description: "Click on element",
+	handler: clickOnElement,
+};

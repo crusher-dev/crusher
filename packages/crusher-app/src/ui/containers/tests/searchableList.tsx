@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState, useMemo, useEffect } from "react";
-import { CompleteStatusIconSVG, LoadingSVG } from '@svg/dashboard';
+import { CompleteStatusIconSVG, LoadingSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
 import { getTime } from "@utils/helpers";
@@ -15,7 +15,8 @@ import { sendSnackBarEvent } from "@utils/notify";
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { timeSince } from '@utils/dateTimeUtils';
+import { timeSince } from "@utils/dateTimeUtils";
+import { VideoComponent } from "../../../../../dyson/src/components/atoms/video/video";
 interface IBuildItemCardProps {
 	testName: string;
 	isPassing: boolean;
@@ -38,18 +39,37 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName, isPassing, createdAt, imageURL,videoURL,firstRunCompleted } = props;
-
+	const { testName, isPassing, createdAt, imageURL, videoUrl, firstRunCompleted } = props;
 	const statusIcon = isPassing ? <CompleteStatusIconSVG isCompleted={true} /> : <CompleteStatusIconSVG isCompleted={false} />;
 
+	const shouldPlayVideo = !imageURL && !!videoUrl;
 	return (
 		<div css={itemContainerStyle}>
 			<div css={itemImageStyle}>
 				<Conditional showIf={!firstRunCompleted}>
-					<FirstTestRunStatus isRunning={true}/>
-
+					<FirstTestRunStatus isRunning={true} />
 				</Conditional>
-				<img src={imageURL} />
+
+				<Conditional showIf={!!imageURL}>
+					<img src={imageURL} />
+				</Conditional>
+
+				<Conditional showIf={shouldPlayVideo}>
+					<video
+						height={"100%"}
+						css={css`
+							height: 100%;
+						`}
+						onMouseOver={(event) => event.target.play()}
+						onMouseOut={(event) => {
+							event.target.pause();
+							event.target.currentTime = 0;
+						}}
+						muted={true}
+					>
+						<source src={videoUrl} type="video/mp4" />
+					</video>
+				</Conditional>
 			</div>
 			<div css={itemMainContainerStyle}>
 				<div className={"flex flex-row items-center"}>
@@ -61,7 +81,7 @@ function TestCard(props: IBuildItemCardProps) {
 					</Conditional>
 				</div>
 				<div css={createdAtStyle} className={"mt-24 text-13"}>
-					{timeSince(new Date(createdAt ))}
+					{timeSince(new Date(createdAt))}
 				</div>
 			</div>
 		</div>
@@ -110,13 +130,26 @@ function TestSearchableList() {
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, newTestCreated), { suspense: true, refreshInterval: newTestCreated? 4000 : 200000 });
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, newTestCreated), {
+		suspense: true,
+		refreshInterval: newTestCreated ? 4000 : 200000,
+	});
 
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL, videoURL, id,firstRunCompleted } = test;
+			const { testName, isPassing, createdAt, imageURL, videoUrl, id, firstRunCompleted } = test;
 
-			return <TestCard firstRunCompleted={firstRunCompleted} videoURL={videoURL} imageURL={imageURL} testName={testName} isPassing={isPassing} createdAt={createdAt} key={id} />;
+			return (
+				<TestCard
+					firstRunCompleted={firstRunCompleted}
+					videoUrl={videoUrl}
+					imageURL={imageURL}
+					testName={testName}
+					isPassing={isPassing}
+					createdAt={createdAt}
+					key={id}
+				/>
+			);
 		});
 	}, [data]);
 

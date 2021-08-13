@@ -51,7 +51,7 @@ class VisualDiffService {
 		const baseImageBuffer = await this.getImageBufferFromUrl(baseImageUrl);
 		const referenceImageBuffer = await this.getImageBufferFromUrl(referenceImageUrl);
 		const diffResult = await this.visualDiff(baseImageBuffer, referenceImageBuffer);
-	 	const diffImageUrl = await this.storageManager.uploadBuffer(diffResult.diffBuffer, diffImageDestination);
+		const diffImageUrl = await this.storageManager.uploadBuffer(diffResult.diffBuffer, diffImageDestination);
 
 		return {
 			diffDeltaFactor: diffResult.diffDeltaFactor,

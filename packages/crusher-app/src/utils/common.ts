@@ -12,6 +12,6 @@ export const getOSType = () => {
 
 export const isBrowser = typeof window !== "undefined";
 
-export const getBoolean = (booleanInStr)=>{
-	return  booleanInStr === 'true'
-}
+export const getBoolean = (booleanInStr) => {
+	return booleanInStr === "true";
+};

@@ -3,10 +3,11 @@ import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[A-Z0-1_]*$/);
 
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+		var r = (Math.random() * 16) | 0,
+			v = c == "x" ? r : (r & 0x3) | 0x8;
+		return v.toString(16);
+	});
 }
 
 const generateScreenshotName = (selector: string, stepIndex: string): string => {
@@ -15,7 +16,7 @@ const generateScreenshotName = (selector: string, stepIndex: string): string => 
 
 const toCrusherSelectorsFormat = (selectors: Array<iSelectorInfo>) => {
 	const id = uuidv4();
-	return { value: `crusher=${encodeURIComponent(JSON.stringify({ selectors, uuid: id }))}`, uuid: id};
+	return { value: `crusher=${encodeURIComponent(JSON.stringify({ selectors, uuid: id }))}`, uuid: id };
 };
 
 const promiseTillSuccess = (promises: Array<Promise<any>>) => {
@@ -38,10 +39,10 @@ const promiseTillSuccess = (promises: Array<Promise<any>>) => {
 };
 
 function markTestFail(message: string, meta: any = {}): void {
-    const customError = new Error(message);
-    (customError as any).meta = meta;
+	const customError = new Error(message);
+	(customError as any).meta = meta;
 
-    throw customError;
+	throw customError;
 }
 
 function getBrowserActions(actions: iAction[]) {
@@ -49,7 +50,6 @@ function getBrowserActions(actions: iAction[]) {
 		const matches = validActionTypeRegex.exec(action.type);
 		return action && matches[1] === "BROWSER";
 	});
-
 }
 
 function getMainActions(actions: iAction[]) {
@@ -63,4 +63,14 @@ function isWebpack() {
 	return typeof __webpack_require__ === "function";
 }
 
-export { uuidv4, generateScreenshotName, toCrusherSelectorsFormat, isWebpack, promiseTillSuccess, markTestFail, getBrowserActions, getMainActions, validActionTypeRegex };
+export {
+	uuidv4,
+	generateScreenshotName,
+	toCrusherSelectorsFormat,
+	isWebpack,
+	promiseTillSuccess,
+	markTestFail,
+	getBrowserActions,
+	getMainActions,
+	validActionTypeRegex,
+};

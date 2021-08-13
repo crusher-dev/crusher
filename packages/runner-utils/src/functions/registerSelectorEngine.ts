@@ -27,7 +27,7 @@ function getCrusherSelectorEngine() {
 	};
 
 	const getElementFromSelectorArr = (selectorsEncoded: string, root: Element | Document = document) => {
-		const selectorsData: { uuid: string, selectors: Array<iSelectorInfo>} = JSON.parse(decodeURIComponent(selectorsEncoded));
+		const selectorsData: { uuid: string; selectors: Array<iSelectorInfo> } = JSON.parse(decodeURIComponent(selectorsEncoded));
 		const selectors = selectorsData.selectors;
 
 		for (const selector of selectors) {
@@ -50,7 +50,7 @@ function getCrusherSelectorEngine() {
 	};
 
 	const getElementsFromSelectorArr = (selectorsEncoded: string, root: Element | Document = document) => {
-		const selectorsData: { uuid: string, selectors: Array<iSelectorInfo>} = JSON.parse(decodeURIComponent(selectorsEncoded));
+		const selectorsData: { uuid: string; selectors: Array<iSelectorInfo> } = JSON.parse(decodeURIComponent(selectorsEncoded));
 		const selectors = selectorsData.selectors;
 
 		for (const selector of selectors) {
@@ -64,8 +64,7 @@ function getCrusherSelectorEngine() {
 				}
 				// @TODO: Find a better workaround for this
 				(window as any)[selectorsData.uuid] = { selector: selector.value, selectorType: selector.type };
-				if(selectedElements.length)
-				return selectedElements;
+				if (selectedElements.length) return selectedElements;
 			} catch {}
 		}
 		return null;
@@ -76,7 +75,7 @@ function getCrusherSelectorEngine() {
 		query(root: Element, selector: string) {
 			const validElement = getElementFromSelectorArr(selector);
 
-			return  validElement;
+			return validElement;
 		},
 
 		// Returns all elements matching given selector in the root's subtree.
@@ -93,8 +92,8 @@ const requireFunction = isWebpack() ? __non_webpack_require__ : require;
 
 function registerCrusherSelectorEngine(userPlaywrightChromium: boolean = false) {
 	const playwright = requireFunction(userPlaywrightChromium ? "playwright-chromium" : "playwright");
-	if (playwright.selectors._registrations.findIndex(selectorEngine => selectorEngine.name === 'crusher') === -1) {
-		playwright.selectors.register('crusher', getCrusherSelectorEngine);
+	if (playwright.selectors._registrations.findIndex((selectorEngine) => selectorEngine.name === "crusher") === -1) {
+		playwright.selectors.register("crusher", getCrusherSelectorEngine);
 	}
 }
 

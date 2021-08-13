@@ -4,8 +4,7 @@ import { EditionTypeEnum } from "../types/common/general";
 
 function generateUid() {
 	return Date.now().toString(36) + Math.random().toString(36).substr(2);
-};
-
+}
 
 function isOpenSource(): boolean {
 	return process.env.CRUSHER_MODE === EditionTypeEnum.OPEN_SOURCE;

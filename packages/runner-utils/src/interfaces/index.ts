@@ -8,14 +8,14 @@ export enum SelectorTypeEnum {
 	ATTRIBUTE = "attribute",
 	INNER_VALUE = "innerValue",
 	PNC = "PnC",
-};
+}
 
 export type IFoundSelectorInfo = {
 	elementHandle: ElementHandle;
 	workingSelector: {
 		value: string;
 		type: SelectorTypeEnum;
-	}
+	};
 };
 
 export type IElementActionPayload = (elementHandle: ElementHandle, action: iAction) => Promise<void>;

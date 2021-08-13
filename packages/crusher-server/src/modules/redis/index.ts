@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import { RedisManager as ParentRedisManager} from "@crusher-shared/modules/redis";
+import { RedisManager as ParentRedisManager } from "@crusher-shared/modules/redis";
 
 import IORedis = require("ioredis");
 

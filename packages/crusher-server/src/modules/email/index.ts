@@ -1,4 +1,3 @@
-
 import * as sgMail from "@sendgrid/mail";
 import { MailService } from "@sendgrid/mail";
 import { Service } from "typedi";

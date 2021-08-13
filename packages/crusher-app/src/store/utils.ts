@@ -20,4 +20,3 @@ export const atomWithQuery = (atomName, value) => {
 		},
 	);
 };
-

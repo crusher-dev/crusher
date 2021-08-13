@@ -1,11 +1,11 @@
 import { OverlayTransparent } from "../layouts/OverlayTransparent/OverlayTransparent";
 import { CenterLayout, Conditional } from "../layouts";
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles } from "@emotion/react";
 import { OnOutsideClick } from "../layouts/onOutsideClick/onOutsideClick";
 import { CloseSVG } from "../icons/CloseSVG";
-import React, { ReactElement } from 'react';
+import React, { ReactElement } from "react";
 
- type TModalProps = {
+type TModalProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
@@ -15,7 +15,7 @@ import React, { ReactElement } from 'react';
 	onOutsideClick?: () => void;
 } & React.DetailedHTMLProps<any, any>;
 
-export const Modal = ({ modalStyle, children, onClose, onOutsideClick } : TModalProps) => {
+export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalProps) => {
 	return (
 		<OverlayTransparent lightOverlay={true}>
 			<CenterLayout>

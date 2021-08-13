@@ -10,4 +10,4 @@ module.exports = {
 	name: ActionsInTestEnum.ELEMENT_FOCUS,
 	description: "Focus on element",
 	handler: focusOnElement,
-}
+};

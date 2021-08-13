@@ -2,7 +2,6 @@ import { ElementHandle, Page } from "playwright";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
 
 function scroll(scrollDeltaArr: Array<number>, element: Window | Element = null) {
-
 	const scrollTo = function (element: HTMLElement, offset: number) {
 		const fixedOffset = offset.toFixed();
 		const onScroll = () => {
@@ -29,7 +28,7 @@ function scroll(scrollDeltaArr: Array<number>, element: Window | Element = null)
 export async function scrollElement(scrollDeltaArr: Array<number>, element: ElementHandle) {
 	return element.evaluate(
 		(on: Element, scrollDeltaArr: Array<any>) => {
-			scroll(scrollDeltaArr, on) ;
+			scroll(scrollDeltaArr, on);
 		},
 		[scrollDeltaArr],
 	);
@@ -38,7 +37,7 @@ export async function scrollElement(scrollDeltaArr: Array<number>, element: Elem
 export async function scrollPage(scrollDeltaArr: Array<number>, page: Page) {
 	return page.evaluate(
 		(arg: Array<any>) => {
-			scroll(scrollDeltaArr, window) ;
+			scroll(scrollDeltaArr, window);
 		},
 		[scrollDeltaArr],
 	);

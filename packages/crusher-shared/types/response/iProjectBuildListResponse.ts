@@ -7,7 +7,6 @@ interface Tests {
 	reviewRequiredCount: number;
 }
 
-
 export enum BuildTriggerEnum {
 	MANUAL = "MANUAL",
 	CLI = "CLI",

@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState, useMemo, useEffect } from "react";
 import { CompleteStatusIconSVG, LoadingSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
-import useSWR from "swr";
+import useSWR, { mutate } from 'swr';
 import { getTestListAPI } from "@constants/api";
 import { useAtom } from "jotai";
 import { currentProject } from "../../../store/atoms/global/project";
@@ -137,7 +137,7 @@ function TestSearchableList() {
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, newTestCreated), {
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id), {
 		suspense: true,
 		refreshInterval: newTestCreated ? 4000 : 200000,
 	});
@@ -172,6 +172,8 @@ function TestSearchableList() {
 
 			await saveTest(selectedProjectId, tempTestId);
 			sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
+
+			await mutate(getTestListAPI(project.id))
 			setNewTestCreated(true);
 		})();
 	}, []);

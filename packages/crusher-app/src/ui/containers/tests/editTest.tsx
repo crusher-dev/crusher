@@ -1,5 +1,5 @@
 import { RequestMethod } from "../../../types/RequestOptions";
-import { changeTestInfoAPI, deleteTestApi, getInviteMemberAPI, getRunTestApi } from '@constants/api';
+import { changeTestInfoAPI, deleteTestApi, getInviteMemberAPI, getRunTestApi, getTestListAPI } from '@constants/api';
 import { css } from "@emotion/react";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/backendRequest";
@@ -11,6 +11,9 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 import { useAtom } from "jotai";
 import { useCallback, useState } from "react";
 import React from "react";
+import useSWR, { mutate } from 'swr';
+import { currentProject } from '../../../store/atoms/global/project';
+import { IProjectTestsListResponse } from '@crusher-shared/types/response/iProjectTestsListResponse';
 
 const changeTestNameInServer = (testId: number, name: string) => {
 	return backendRequest(changeTestInfoAPI(testId), {
@@ -32,6 +35,8 @@ const deleteTestInServer = (testId: number) => {
 export const EditTestModal = ({ name, id, onClose }) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
+	const [project] = useAtom(currentProject);
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id));
 	const isNameSame = testName === name;
 
 	const changeTestNameCallback = useCallback(() => {
@@ -39,6 +44,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 			try {
 				await changeTestNameInServer(id, testName)
 				sendSnackBarEvent({ type: "normal", message: "Changes have been saved." });
+				await mutate(getTestListAPI(project.id))
 				onClose();
 			} catch (err) {
 				sendSnackBarEvent({ type: "error", message: "Failed to save changes" });
@@ -54,6 +60,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 			try {
 				await deleteTestInServer(id)
 				sendSnackBarEvent({ type: "normal", message: "We have deleted this test." });
+				await mutate(getTestListAPI(project.id))
 				onClose();
 			} catch (err) {
 				sendSnackBarEvent({ type: "error", message: "Failed to delete test." });
@@ -130,13 +137,15 @@ export const EditTestModal = ({ name, id, onClose }) => {
 				<Button
 					css={css`
             min-width: 122rem;
-            background-color: #C93965 !important;
+            color: #e74174 !important;
+            border: 1px solid #C93965;
+            background-color: #101215;
 
             :hover {
-              background-color: #a93055 !important;
+              background-color: #1e2126 !important;
             }
 
-            border: 0px !important;;
+
 					`}
 					size={"small"}
 					onClick={deleteTest}

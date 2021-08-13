@@ -2,8 +2,8 @@ import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildLi
 import { resolvePathToBackendURI } from "@utils/url";
 
 export const USER_SYSTEM_API = resolvePathToBackendURI("/users/actions/getUserAndSystemInfo");
-export const getTestListAPI = (projectId: number, fetchTestAfterSaving: boolean) =>
-	resolvePathToBackendURI(`/projects/${projectId}/tests?fetchTestAfterSaving=${fetchTestAfterSaving}`);
+export const getTestListAPI = (projectId: number) =>
+	resolvePathToBackendURI(`/projects/${projectId}/tests`);
 export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum) =>
 	resolvePathToBackendURI(`/projects/${projectId}/builds?trigger=${triggerType}`);
 export const getRunTestApi = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests/actions/run`);

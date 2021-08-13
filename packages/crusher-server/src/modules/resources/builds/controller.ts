@@ -35,7 +35,7 @@ export class BuildsController {
 				// is same as commit name if it present otherwise it will be null
 				name: buildData.buildName,
 				trigger: buildData.buildTrigger,
-				createdAt: new Date(buildData.buildCreatedAt).getTime() / 1000,
+				createdAt: new Date(buildData.buildCreatedAt).getTime(),
 				tests: {
 					totalCount: buildData.totalTestCount,
 					passedCount: buildData.passedTestCount,

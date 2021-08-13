@@ -49,7 +49,7 @@ export class TestController {
 				id: testData.id,
 				testName: testData.name,
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
-				createdAt: new Date(testData.created_at).getTime() / 1000,
+				createdAt: new Date(testData.created_at).getTime(),
 				// @TODO: Remove this line
 				videoUrl: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? "https://www.w3schools.com/html/mov_bbb.mp4" : null,
 				// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,

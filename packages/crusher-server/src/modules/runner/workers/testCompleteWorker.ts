@@ -8,6 +8,8 @@ import * as RedisLock from "redlock";
 import { RedisManager } from "@modules/redis";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { ITestCompleteQueuePayload } from "@crusher-shared/types/queues/";
+import { BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
+import { BuildStatusEnum } from "@modules/resources/builds/interface";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -51,8 +53,11 @@ export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
 
 	if (completedTestCount === bullJob.data.buildTestCount) {
 		// This is the last test result to finish
-		await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
+		const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
+
+		await buildService.updateStatus(BuildStatusEnum.FINISHED, buildRecord.id);
 		// @TODO: Add integrations here (Notify slack, etc.)
+		console.log("Build status: ", buildReportStatus);
 		return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 	}
 }

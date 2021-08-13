@@ -44,12 +44,14 @@ export interface IBuildTable extends BaseRowInterface {
 	project_id: number;
 	check_run_id?: string;
 	config: IBuildConfig;
+	is_draft_job: boolean;
 }
 
 export type ICreateBuildRequestPayload = KeysToCamelCase<
-	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status"> & {
+	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status" | "is_draft_job"> & {
 		config?: IBuildConfig;
 		status?: BuildStatusEnum;
 		latestReportId?: number | null;
+		isDraftJob?: boolean;
 	}
 >;

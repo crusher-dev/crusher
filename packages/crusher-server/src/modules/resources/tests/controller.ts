@@ -9,6 +9,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { TestsRunner } from "@modules/runner";
 import { BuildStatusEnum, BuildTriggerEnum } from "../builds/interface";
 import { BrowserEnum } from "@modules/runner/interface";
+import { BuildReportStatusEnum } from "../buildReports/interface";
 
 @Service()
 @JsonController("")
@@ -52,9 +53,9 @@ export class TestController {
 				// @Note: Add support for taking random screenshots in case video is switched off
 				imageURL: null,
 				// @Note: Hardcoded for now, will be changed later
-				isPassing: true,
+				isPassing: testData.draftBuildReportStatus === BuildReportStatusEnum.PASSED,
 				// @Note: Hardcoded for now, will be changed later
-				firstRunCompleted: true,
+				firstRunCompleted: testData.draftBuildStatus === BuildStatusEnum.FINISHED,
 				deleted: false,
 			};
 		});
@@ -103,15 +104,18 @@ export class TestController {
 
 		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
 
-		await this.testRunnerService.runTests([testRecord], {
+		const buildRunInfo = await this.testRunnerService.runTests([testRecord], {
 			userId: user_id,
 			projectId: projectId,
 			host: "null",
 			status: BuildStatusEnum.CREATED,
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: BrowserEnum.ALL,
+			isDraftJob: true,
 			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
 		});
+
+		await this.testService.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
 
 		return testInsertRecord;
 	}

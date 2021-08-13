@@ -41,7 +41,7 @@ class TestService {
 
 	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
-			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ? `,
+			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_uri = ?, featured_screenshot_uri = ?`,
 			[
 				testInfo.projectId,
 				testInfo.name,
@@ -51,6 +51,10 @@ class TestService {
 				testInfo.featuredScreenshotUri ? testInfo.featuredScreenshotUri : null,
 			],
 		);
+	}
+
+	async linkToDraftBuild(buildId: number, testId: number) {
+		return this.dbManager.update("UPDATE tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}
 
 	async updateTest(testId: number, newInfo: { name: string }) {
@@ -79,7 +83,7 @@ class TestService {
 
 	async getTestsInProject(projectId: number, findOnlyActiveTests = false) {
 		return this.dbManager.fetchAllRows(
-			`SELECT tests.*, users.id userId, users.name userName FROM tests, users WHERE tests.project_id = ? AND users.id = tests.user_id` +
+			`SELECT tests.*, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id` +
 				(findOnlyActiveTests ? " AND tests.deleted = FALSE " : ""),
 			[projectId],
 		);

@@ -14,7 +14,7 @@ interface iVideoProcessorJob extends Job {
 	data: IVideoProcessorQueuePayload;
 }
 
-export default async function (bullJob: iVideoProcessorJob){
+export default async function (bullJob: iVideoProcessorJob) {
 	const { testInstanceId, videoRawUrl } = bullJob.data;
 	console.log(`Processing video for ${bullJob.name}`, videoRawUrl);
 
@@ -26,5 +26,4 @@ export default async function (bullJob: iVideoProcessorJob){
 
 	// @TODO: Make an api call and set featured_video_uri of this test instance
 	console.log("Uploaded video url", uploadedVideoUrl);
-};
-
+}

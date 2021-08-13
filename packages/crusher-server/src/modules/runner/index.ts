@@ -11,7 +11,6 @@ import { ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
 import { ITestInstancesTable } from "@modules/resources/builds/instances/interface";
-import { Instance } from "chalk";
 @Service()
 class TestsRunner {
 	@Inject()

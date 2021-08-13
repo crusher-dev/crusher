@@ -179,7 +179,7 @@ export class BuildReportService {
 		);
 	}
 
-	async calculateResultAndSave(reportId: number, totalTestCount: number) {
+	async calculateResultAndSave(reportId: number, totalTestCount: number): Promise<BuildReportStatusEnum> {
 		const testInstancesResultsInReport = await this.buildTestInstanceService.getResultSets(reportId);
 		const haveAllTestInstanceCompletedChecks = testInstancesResultsInReport.every(
 			(result) => result.status === TestInstanceResultSetStatusEnum.FINISHED_RUNNING_CHECKS,
@@ -195,7 +195,9 @@ export class BuildReportService {
 		const finalBuildReportResult = this.getFinalBuildResult(totalTestCount, passedTestCount, failedTestCount, reviewRequiredTestCount);
 
 		// @TODO: Add proper explanation for here (Will help in debugging in case test fails)
-		return this.saveReportResult(reportId, passedTestCount, failedTestCount, reviewRequiredTestCount, finalBuildReportResult, "Unknown");
+		await this.saveReportResult(reportId, passedTestCount, failedTestCount, reviewRequiredTestCount, finalBuildReportResult, "Unknown");
+
+		return finalBuildReportResult;
 	}
 
 	async createBuildReport(totalTestCount: number, buildId: number, referenceBuildId: number, projectId: number): Promise<{ insertId: number }> {

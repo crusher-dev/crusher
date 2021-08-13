@@ -1,0 +1,94 @@
+diff --git a/node_modules/playwright-core/lib/server/chromium/videoRecorder.js b/node_modules/playwright-core/lib/server/chromium/videoRecorder.js
+index 00f0b58..fcd145b 100644
+--- a/node_modules/playwright-core/lib/server/chromium/videoRecorder.js
++++ b/node_modules/playwright-core/lib/server/chromium/videoRecorder.js
+@@ -21,6 +21,9 @@ const page_1 = require("../page");
+ const processLauncher_1 = require("../processLauncher");
+ const progress_1 = require("../progress");
+ const instrumentation_1 = require("../instrumentation");
++const { PassThrough } = require('stream');
++const fs = require("fs");
++
+ const fps = 25;
+ class VideoRecorder {
+     constructor(page, ffmpegPath, progress) {
+@@ -34,6 +37,8 @@ class VideoRecorder {
+         this._isStopped = false;
+         this._progress = progress;
+         this._ffmpegPath = ffmpegPath;
++        this._stream = new PassThrough();
++
+         page.on(page_1.Page.Events.ScreencastFrame, frame => this.writeFrame(frame.buffer, frame.timestamp));
+     }
+     static async launch(page, ffmpegPath, options) {
+@@ -78,34 +83,25 @@ class VideoRecorder {
+         // "-an" means no audio.
+         const w = options.width;
+         const h = options.height;
+-        const args = `-loglevel error -f image2pipe -c:v mjpeg -i - -y -an -r ${fps} -c:v vp8 -qmin 0 -qmax 50 -crf 8 -deadline realtime -b:v 1M -vf pad=${w}:${h}:0:0:gray,crop=${w}:${h}:0:0`.split(' ');
+-        args.push(options.outputFile);
++
+         const progress = this._progress;
+-        const { launchedProcess, gracefullyClose } = await processLauncher_1.launchProcess({
+-            executablePath: this._ffmpegPath,
+-            args,
+-            stdio: 'stdin',
+-            log: (message) => progress.log(message),
+-            tempDirectories: [],
+-            attemptToGracefullyClose: async () => {
+-                progress.log('Closing stdin...');
+-                launchedProcess.stdin.end();
+-            },
+-            onExit: (exitCode, signal) => {
+-                progress.log(`ffmpeg onkill exitCode=${exitCode} signal=${signal}`);
+-            },
++        const writeStream = fs.createWriteStream(options.outputFile);
++        this._stream.pipe(writeStream);
++        this._stream.on('error', function (e) {
++            progress.log(`video error`);
++              // do not reject as a result of not having frames
++              if (
++                !this._lastFrameBuffer &&
++                e.message.includes('pipe:0: End of file')
++              ) {
++                return;
++              }
++              progress.log(`pw-video: error capturing video: ${e.message}`);
+         });
+-        launchedProcess.stdin.on('finish', () => {
+-            progress.log('ffmpeg finished input.');
++        this._stream.on('end', function () {
+         });
+-        launchedProcess.stdin.on('error', () => {
+-            progress.log('ffmpeg error.');
+-        });
+-        this._process = launchedProcess;
+-        this._gracefullyClose = gracefullyClose;
+     }
+     writeFrame(frame, timestamp) {
+-        utils_1.assert(this._process);
+         if (this._isStopped)
+             return;
+         this._progress.log(`writing frame ` + timestamp);
+@@ -125,18 +121,15 @@ class VideoRecorder {
+             await this._sendFrame(this._frameQueue.shift());
+     }
+     async _sendFrame(frame) {
+-        return new Promise(f => this._process.stdin.write(frame, f)).then(error => {
+-            if (error)
+-                this._progress.log(`ffmpeg failed to write: ${error}`);
+-        });
++        return this._stream.write(frame);
+     }
+     async stop() {
+         if (this._isStopped)
+             return;
+         this.writeFrame(Buffer.from([]), this._lastFrameTimestamp + (utils_1.monotonicTime() - this._lastWriteTimestamp) / 1000);
+-        this._isStopped = true;
++        this._isStopped = true
+         await this._lastWritePromise;
+-        await this._gracefullyClose();
++        await this._stream.end();
+     }
+ }
+ exports.VideoRecorder = VideoRecorder;

@@ -129,7 +129,6 @@ export class BuildReportService {
 		return {
 			id: testsWithReportData[0].buildId,
 			name: testsWithReportData[0].buildName,
-			// @TODO: Need to use a single timezone to calculate epoch time
 			startedAt: new Date(testsWithReportData[0].buildReportCreatedAt).getTime(),
 			projectId: testsWithReportData[0].buildProjectId,
 			baselineId: testsWithReportData[0].buildBaselineId,

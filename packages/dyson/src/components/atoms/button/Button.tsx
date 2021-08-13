@@ -73,7 +73,7 @@ const buttonCSS = css`
 
 const smallButton = css`
 	padding: 0 12rem;
-	height: 26rem;
+	height: 28rem;
 	font-weight: 600 !important;
 	font-size: 13rem;
 `;

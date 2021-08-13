@@ -3,12 +3,12 @@ import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
 
 async function hoverOnElement(element: ElementHandle) {
-    await element.scrollIntoViewIfNeeded();
-    await element.hover({ force: true });
+	await element.scrollIntoViewIfNeeded();
+	await element.hover({ force: true });
 }
 
 module.exports = {
 	name: ActionsInTestEnum.HOVER,
-    description: "Hover on element",
-    handler: hoverOnElement,
-}
+	description: "Hover on element",
+	handler: hoverOnElement,
+};

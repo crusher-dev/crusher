@@ -2,7 +2,6 @@ import React, { ChangeEvent, useState, useMemo, useEffect } from "react";
 import { CompleteStatusIconSVG, LoadingSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { SearchFilterBar } from "../common/searchFilterBar";
-import { getTime } from "@utils/helpers";
 import useSWR from "swr";
 import { getTestListAPI } from "@constants/api";
 import { useAtom } from "jotai";
@@ -16,12 +15,13 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
-import { VideoComponent } from "../../../../../dyson/src/components/atoms/video/video";
+
 interface IBuildItemCardProps {
+	id: number;
 	testName: string;
 	isPassing: boolean;
 	imageURL: string | null;
-	videoURL: null | string;
+	videoUrl: null | string;
 	firstRunCompleted: boolean;
 	// In seconds
 	createdAt: number;
@@ -29,6 +29,7 @@ interface IBuildItemCardProps {
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 const FirstTestRunStatus = dynamic(() => import("@ui/containers/tests/firstTestStatus"));
+const EditTest = dynamic(() => import("@ui/containers/tests/editTest"));
 
 const saveTest = (projectId: number, tempTestId: string) => {
 	const testName = new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
@@ -39,12 +40,18 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName, isPassing, createdAt, imageURL, videoUrl, firstRunCompleted } = props;
+	const { testName,id, isPassing, createdAt, imageURL, videoUrl, firstRunCompleted } = props;
 	const statusIcon = isPassing ? <CompleteStatusIconSVG isCompleted={true} /> : <CompleteStatusIconSVG isCompleted={false} />;
 
 	const shouldPlayVideo = !imageURL && !!videoUrl;
+
+	const [showEditBox, setShowEditBox] = useState(false);
 	return (
-		<div css={itemContainerStyle}>
+		<div css={itemContainerStyle} onClick={()=>{!showEditBox && setShowEditBox( true)}}>
+			<Conditional showIf={showEditBox}>
+				<EditTest id={id} name={testName} onClose={()=>{setShowEditBox(false)}} />
+			</Conditional>
+
 			<div css={itemImageStyle}>
 				<Conditional showIf={!firstRunCompleted}>
 					<FirstTestRunStatus isRunning={true} />
@@ -148,6 +155,7 @@ function TestSearchableList() {
 					isPassing={isPassing}
 					createdAt={createdAt}
 					key={id}
+					id={id}
 				/>
 			);
 		});

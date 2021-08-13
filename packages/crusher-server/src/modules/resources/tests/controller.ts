@@ -73,8 +73,7 @@ export class TestController {
 	@Authorized()
 	@Post("/tests/:test_id/actions/delete")
 	async deleteTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number) {
-		const deleteResult = await this.testService.deleteTest(testId);
-		if (!deleteResult.changedRows) throw new BadRequestError("No such test found with given id");
+		await this.testService.deleteTest(testId);
 
 		return "Success";
 	}

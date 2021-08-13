@@ -5,6 +5,7 @@ import { Job } from "bullmq";
 import * as path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { IVideoProcessorQueuePayload } from "@shared/types/queues/";
+import fetch from "node-fetch";
 
 const storageManager = getStorageManager();
 
@@ -17,6 +18,7 @@ interface iVideoProcessorJob extends Job {
 export default async function (bullJob: iVideoProcessorJob) {
 	const { testInstanceId, buildId, videoRawUrl } = bullJob.data;
 	console.log(`Processing video for ${bullJob.name}`, videoRawUrl);
+	await shell.mkdir("-p", path.join("/tmp/videos"));
 
 	try {
 		const savedVideoPath = await processRemoteRawVideoAndSave(videoRawUrl, path.join("/tmp/videos", testInstanceId + uuidv4()) + ".mp4");

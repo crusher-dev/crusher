@@ -33,7 +33,7 @@ export class CodeRunnerService {
 			usePlaywrightChromium: isOpenSource(),
 			browser: PlaywrightBrowserMap[runnerConfig.browser] as any,
 			assetsDir: identifer,
-			videoSavePath: `/tmp/crusher-videos/${identifer}`,
+			videoSavePath: `/tmp/crusher/${identifer}`,
 			defaultBrowserLaunchOptions: {
 				headless: true,
 				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-shm-usage", "--disable-gpu"],
@@ -94,7 +94,7 @@ export class CodeRunnerService {
 
 		const codeGeneratorConfig = this.codeGenerator.getConfig();
 
-		if (codeGeneratorConfig.shouldRecordVideo && codeGeneratorConfig.browser === BrowserEnum.CHROME) {
+		if (codeGeneratorConfig.shouldRecordVideo && this.runnerConfig.browser === BrowserEnum.CHROME) {
 			const recordedVideoRawPath = path.join(codeGeneratorConfig.videoSavePath, "video.mp4.raw");
 			if (fs.existsSync(recordedVideoRawPath)) {
 				const videoBuffer = fs.readFileSync(recordedVideoRawPath);

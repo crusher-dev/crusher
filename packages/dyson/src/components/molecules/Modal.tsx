@@ -24,7 +24,7 @@ export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalP
 						{children}
 
 						<Conditional showIf={true}>
-							<div css={closeIcon} onClick={onClose && onClose} >
+							<div css={closeIcon} onClick={onClose && onClose}>
 								<CloseSVG height={13} width={13} />
 							</div>
 						</Conditional>
@@ -52,14 +52,14 @@ const primaryModalStyle = css`
 `;
 
 const closeIcon = css`
-  position: absolute;
-  top: 26rem;
-  right: 30rem;
+	position: absolute;
+	top: 26rem;
+	right: 30rem;
 
-  padding: 4px;
+	padding: 4px;
 
-  :hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-radius: 2px;
-  }
+	:hover {
+		background: rgba(255, 255, 255, 0.14);
+		border-radius: 2px;
+	}
 `;

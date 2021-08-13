@@ -7,7 +7,7 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 			e.stopPropagation();
 			const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
 
-			console.log(insideClick)
+			console.log(insideClick);
 			if (!insideClick) onOutsideClick();
 		};
 		document.body.addEventListener("click", handleClick, { passive: true });

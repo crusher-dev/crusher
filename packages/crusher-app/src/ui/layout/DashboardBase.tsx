@@ -280,7 +280,7 @@ const TOP_NAV_LINK = [
 		path: "/app/dashboard",
 	},
 	{
-		name: "Test",
+		name: "Tests",
 		path: "/app/tests",
 	},
 	{

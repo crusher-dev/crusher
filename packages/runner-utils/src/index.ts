@@ -119,7 +119,6 @@ class CrusherRunnerActions {
 		for (let action of actions) {
 			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
 			await this.actionHandlers[action.type](action, browser, page);
-			await sleep(500);
 		}
 	}
 

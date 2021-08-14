@@ -33,6 +33,7 @@ export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
 	const buildRecord = await buildService.getBuild(bullJob.data.buildId);
 
 	const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
+
 	const screenshotActionsResultWithIndex = getScreenshotActionsResult(actionsResultWithIndex);
 
 	const savedScreenshotRecords = await buildTestInstanceScreenshotService.saveScreenshots(screenshotActionsResultWithIndex, bullJob.data.testInstanceId);

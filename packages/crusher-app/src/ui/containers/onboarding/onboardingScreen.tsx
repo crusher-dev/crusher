@@ -4,7 +4,6 @@ import { CenterLayout } from "dyson/src/components/layouts";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
 import { getEdition } from "../../../utils/helpers";
-import { EDITION_TYPE } from "@crusher-shared/types/common/general";
 import { atom, useAtom } from "jotai";
 import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
 import { usePageTitle } from "../../../hooks/seo";
@@ -13,6 +12,7 @@ import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
 import { isTempTestPending } from "@utils/user";
 import { sendSnackBarEvent } from "@utils/notify";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
+import { EditionTypeEnum } from '@crusher-shared/types/common/general';
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -20,7 +20,7 @@ enum ONBOARDING_STEP {
 	SUPPORT,
 }
 
-const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EDITION_TYPE.EE ? ONBOARDING_STEP.TUTORIAL : ONBOARDING_STEP.SETUP);
+const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EditionTypeEnum.EE ? ONBOARDING_STEP.TUTORIAL : ONBOARDING_STEP.SETUP);
 
 const SetupCrusher = () => {
 	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);

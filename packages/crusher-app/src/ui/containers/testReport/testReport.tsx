@@ -50,34 +50,34 @@ function StatusTag({ type }) {
 	if (type === "REVIEW_REQUIRED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, review]}>
-				<ReviewRequiredSVG height={18} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Review required</span>
+				<ReviewRequiredSVG height={18} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Review required</span>
 			</div>
 		);
 	}
 	if (type === "FAILED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, failed]}>
-				<FailedSVG height={18} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Failed</span>
+				<FailedSVG height={18} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Failed</span>
 			</div>
 		);
 	}
 	if (type === "PASSED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-				<PassedSVG height={20} isMonchrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Passed</span>
+				<PassedSVG height={20} isMonchrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
 			</div>
 		);
 	}
 	if (type === "RUNNING") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, running]}>
-				<RunningSVG height={16} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Running</span>
+				<RunningSVG height={16} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Running</span>
 			</div>
 		);
 	}
 	return (
 		<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, waiting]}>
-			<InitiatedSVG height={16} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Waiting</span>
+			<InitiatedSVG height={16} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Waiting</span>
 		</div>
 	);
 }

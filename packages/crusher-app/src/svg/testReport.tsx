@@ -125,13 +125,13 @@ export const TestStatusSVG = ({ type, ...props }) => {
 		return <FailedSVG {...props} />;
 	}
 	if (type === "RUNNING") {
-		return <RunningSVG  {...props} />;
+		return <RunningSVG {...props} />;
 	}
 	if (type === "INITIATED") {
-		return <InitiatedSVG  {...props} />;
+		return <InitiatedSVG {...props} />;
 	}
 	if (type === "REVIEW_REQUIRED") {
-		return <ReviewRequiredSVG  {...props} />;
+		return <ReviewRequiredSVG {...props} />;
 	}
 	return <PassedSVG {...props} />;
 };

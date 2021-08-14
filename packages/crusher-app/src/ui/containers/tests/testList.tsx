@@ -15,7 +15,7 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
-import { TestStatusSVG } from '@svg/testReport';
+import { TestStatusSVG } from "@svg/testReport";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -42,7 +42,11 @@ const saveTest = (projectId: number, tempTestId: string) => {
 
 function TestCard(props: IBuildItemCardProps) {
 	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted } = props;
-	const statusIcon = isPassing ? <TestStatusSVG type={"PASSED"} height={16} /> : <TestStatusSVG type={firstRunCompleted ? "FAILED" : "RUNNING"} height={16}/>;
+	const statusIcon = isPassing ? (
+		<TestStatusSVG type={"PASSED"} height={16} />
+	) : (
+		<TestStatusSVG type={firstRunCompleted ? "FAILED" : "RUNNING"} height={16} />
+	);
 
 	const shouldPlayVideo = !imageURL && !!videoURL;
 

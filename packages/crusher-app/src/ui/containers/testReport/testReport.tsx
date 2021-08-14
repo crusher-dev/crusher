@@ -3,7 +3,7 @@ import {
 	BottomSVG,
 	CalendarSVG,
 	RerunSVG,
-	StatusSVG,
+	TestStatusSVG,
 	ThreeEllipsisSVG,
 	ThunderSVG,
 	PassedSVG,
@@ -400,7 +400,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 					<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
 						<div className={"flex justify-between items-center"}>
 							<div className={"flex items-center leading-none text-15 font-600 mt-20"}>
-								<StatusSVG height={18} className={"mr-16"} />
+								<TestStatusSVG height={18} className={"mr-16"} />
 								{name}
 							</div>
 							<div className={"flex items-center mt-8"}>

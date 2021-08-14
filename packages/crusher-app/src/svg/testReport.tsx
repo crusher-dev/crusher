@@ -110,7 +110,7 @@ export function ReviewRequiredSVG(props) {
 export function RunningSVG(props) {
 	const { isMonochrome } = props;
 	return (
-		<svg width={21} height={21} viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={20} height={20} viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<rect width={21} height={21} rx={10.5} fill={isMonochrome ? "#fff" : "#47484A"} />
 			<path
 				d="M10.375 8.906c-.879 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.879 0 1.594-.715 1.594-1.594 0-.879-.715-1.594-1.594-1.594zM5.188 8.906c-.88 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.878 0 1.593-.715 1.593-1.594 0-.879-.715-1.594-1.593-1.594zM15.563 8.906c-.88 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.878 0 1.593-.715 1.593-1.594 0-.879-.715-1.594-1.593-1.594z"
@@ -120,12 +120,18 @@ export function RunningSVG(props) {
 	);
 }
 
-export const StatusSVG = ({ type, ...props }) => {
-	if (type === "PASSED") {
-		return <PassedSVG className={"mr-16"} {...props} />;
+export const TestStatusSVG = ({ type, ...props }) => {
+	if (type === "FAILED") {
+		return <FailedSVG {...props} />;
 	}
-	if (type === "PASSED") {
-		return <PassedSVG className={"mr-16"} {...props} />;
+	if (type === "RUNNING") {
+		return <RunningSVG  {...props} />;
 	}
-	return <PassedSVG className={"mr-16"} {...props} />;
+	if (type === "INITIATED") {
+		return <InitiatedSVG  {...props} />;
+	}
+	if (type === "REVIEW_REQUIRED") {
+		return <ReviewRequiredSVG  {...props} />;
+	}
+	return <PassedSVG {...props} />;
 };

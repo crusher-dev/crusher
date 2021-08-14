@@ -117,7 +117,7 @@ function BuildSearchableList() {
 			</Conditional>
 
 			<Conditional showIf={data && data.length === 0}>
-				<EmptyList title={"We don’t have any build right now."} subTitle={"Once ran, builds will pop here."} />
+				<EmptyList title={"You don’t have any build right now."} subTitle={"Once ran, builds will pop here."} />
 			</Conditional>
 		</div>
 	);

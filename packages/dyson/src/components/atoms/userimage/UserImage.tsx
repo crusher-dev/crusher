@@ -16,7 +16,7 @@ export interface UserImageProps {
 const UserDefaultProps = {};
 
 /**
- * Crusher Logo component.
+ * Crusher Text component.
  */
 export const UserImage: React.FC<UserImageProps> = ({ url, ...props }) => {
 	return (

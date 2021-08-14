@@ -18704,10 +18704,10 @@ platform@1.3.6:
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.6.tgz#48b4ce983164b209c2d45a107adb31f473a6e7a7"
   integrity sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==
 
-playwright-chromium@^1.13.0:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/playwright-chromium/-/playwright-chromium-1.13.0.tgz#8d12c6dfa11a0ca2bdedfe08e349b0e7fb419a09"
-  integrity sha512-Y1vB1eZZsH/LRdulLYWF1+1lo0TRJ3DkGoMO+QMBEs1Gh0pIoGRTcG25WHIE7z9dGfLaSpkfE11mf2vqU6LLKA==
+playwright-chromium@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/playwright-chromium/-/playwright-chromium-1.14.0.tgz#b153eb96412fd6a4fa8d9233a4fdf694fc9f3139"
+  integrity sha512-qWQN9VTPhvEZdRpn1564EOtiNU+hRHhogKg1heBX9VsfGy6WHytR9XPFJjD4M6fhNAV1WKM2McVPYIbi1EOYww==
   dependencies:
     commander "^6.1.0"
     debug "^4.1.1"
@@ -18724,7 +18724,27 @@ playwright-chromium@^1.13.0:
     ws "^7.4.6"
     yazl "^2.5.1"
 
-playwright-core@^1.11.1, playwright-core@^1.2.0:
+playwright-core@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.14.0.tgz#af51da7b201c11eeda780e2db3f05c8bca74c8be"
+  integrity sha512-n6NdknezSfRgB6LkLwcrbm5orRQZSpbd8LZmlc4YrIXV0VEvJr5tzP3xlHXpiFBfTr3yoFuagldI3T7bD/8H3w==
+  dependencies:
+    commander "^6.1.0"
+    debug "^4.1.1"
+    extract-zip "^2.0.1"
+    https-proxy-agent "^5.0.0"
+    jpeg-js "^0.4.2"
+    mime "^2.4.6"
+    pngjs "^5.0.0"
+    progress "^2.0.3"
+    proper-lockfile "^4.1.1"
+    proxy-from-env "^1.1.0"
+    rimraf "^3.0.2"
+    stack-utils "^2.0.3"
+    ws "^7.4.6"
+    yazl "^2.5.1"
+
+playwright-core@^1.2.0:
   version "1.12.2"
   resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.12.2.tgz#d525c83b7b891708235f5b317164d2acf80e4357"
   integrity sha512-bXRidCBIzdF+GHY/Wk8YLqLWaqnXIr3uJrK3YxnNIE9j9tQQEH/A4N04H6blJmYrAECTetvTjaI8Z4YbX8IZOg==
@@ -18754,10 +18774,10 @@ playwright-core@^1.11.1, playwright-core@^1.2.0:
     playwright-core "^1.2.0"
     tslib "^2.0.0"
 
-playwright@^1.11.1, playwright@^1.7.1:
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.12.2.tgz#a484447177b061dd76247734fe65d77e3fb139fa"
-  integrity sha512-tSZGeILY70T4imhCMCsvzhoaDm9baosIG5fQncSWprpjVc/X4yYdBQCLBMvOi98H50hvu9fhgy2hpsgFKCsUaw==
+playwright@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.14.0.tgz#18301b11f5278a446d36b5cf96f67db36ce2cd20"
+  integrity sha512-aR5oZ1iVsjQkGfYCjgYAmyMAVu0MQ0i8MgdnfdqDu9EVLfbnpuuFmTv/Rb7/Yjno1kOrDUP9+RyNC+zfG3wozA==
   dependencies:
     commander "^6.1.0"
     debug "^4.1.1"

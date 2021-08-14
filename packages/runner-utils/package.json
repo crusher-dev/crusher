@@ -34,6 +34,6 @@
 	},
 	"dependencies": {
 		"browserify-zlib": "^0.2.0",
-		"playwright": "^1.11.1"
+		"playwright": "^1.14.0"
 	}
 }

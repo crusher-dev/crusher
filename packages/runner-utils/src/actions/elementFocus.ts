@@ -1,8 +1,8 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { ElementHandle } from "playwright";
+import { ElementHandle, Page } from "playwright";
 
-export async function focusOnElement(element: ElementHandle, workingSelector: any, step: iAction) {
+export async function focusOnElement(page: Page, element: ElementHandle, workingSelector: any, step: iAction) {
 	await element.focus();
 }
 

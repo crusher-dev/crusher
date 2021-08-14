@@ -1,9 +1,9 @@
 import { iAction } from "@crusher-shared/types/action";
-import { ElementHandle } from "playwright";
+import { ElementHandle, Page } from "playwright";
 import { type } from "../functions/type";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
-async function addInput(element: ElementHandle, workingSelector: any, actionInfo: iAction) {
+async function addInput(page: Page, element: ElementHandle, workingSelector: any, actionInfo: iAction) {
 	const inputKeys = actionInfo.payload.meta.value;
 
 	await element.scrollIntoViewIfNeeded();

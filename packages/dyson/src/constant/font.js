@@ -4,7 +4,6 @@ const FONTS = {
 };
 
 const FONT_WEIGHT_VALUE = {
-	300: "300",
 	400: "400",
 	500: "500",
 	600: "600",

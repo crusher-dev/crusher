@@ -23,7 +23,7 @@ const LogoDefaultProps = {
 };
 
 /**
- * Crusher Logo component.
+ * Crusher Text component.
  */
 export const Logo: React.FC<LogoProps> = ({ showOnlyIcon, isMonochrome, height, ...props }) => {
 	return (

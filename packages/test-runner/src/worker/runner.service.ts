@@ -49,7 +49,7 @@ export class CodeRunnerService {
 
 	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
 		return this.actions.map((action, index) => {
-			if (index >= runnerActionResults.length) {
+			if (!runnerActionResults[index]) {
 				return {
 					actionType: action.type,
 					status: ActionStatusEnum.FAILED,

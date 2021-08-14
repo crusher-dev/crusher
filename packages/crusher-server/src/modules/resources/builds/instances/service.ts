@@ -101,6 +101,7 @@ class BuildTestInstancesService {
 	}
 
 	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, hasInstancePassed: boolean) {
+		console.log("Trying to save this", actionsResult);
 		const buildInstanceResult = new BuildInstanceResults({
 			instanceId: instanceId,
 			actionsResult: actionsResult,

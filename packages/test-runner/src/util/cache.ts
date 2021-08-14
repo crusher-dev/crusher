@@ -34,8 +34,8 @@ function getStorageManager(): IStorageManager {
 
 let globalManager: IGlobalManager | null = null;
 
-function getGlobalManager(): IGlobalManager {
-	if (!globalManager) globalManager = new GlobalManager();
+function getGlobalManager(forceInit: boolean): IGlobalManager {
+	if (!globalManager || forceInit) globalManager = new GlobalManager();
 
 	return globalManager;
 }

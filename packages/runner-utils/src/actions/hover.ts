@@ -3,7 +3,6 @@ import { iAction } from "@crusher-shared/types/action";
 import { ElementHandle } from "playwright";
 
 async function hoverOnElement(element: ElementHandle) {
-	await element.scrollIntoViewIfNeeded();
 	await element.hover({ force: true });
 }
 

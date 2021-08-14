@@ -12,6 +12,7 @@ import { getBrowserActions, getMainActions, isWebpack, validActionTypeRegex } fr
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import * as fs from "fs";
 import * as path from "path";
+import { sleep } from "./functions";
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {

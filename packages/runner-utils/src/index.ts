@@ -89,6 +89,13 @@ class CrusherRunnerActions {
 					default:
 						throw new Error("Invalid action category handler");
 				}
+							// Woohoo! Action executed without any errors.
+			await this.handleActionExecutionStatus(
+				action.name,
+				ActionStatusEnum.COMPLETED,
+				stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`,
+				stepResult ? stepResult : {},
+			);
 			} catch (err) {
 				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
 					failedReason: err.messsage,
@@ -96,14 +103,6 @@ class CrusherRunnerActions {
 				});
 				throw err;
 			}
-
-			// Woohoo! Action executed without any errors.
-			await this.handleActionExecutionStatus(
-				action.name,
-				ActionStatusEnum.COMPLETED,
-				stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`,
-				stepResult ? stepResult : {},
-			);
 		};
 	}
 

@@ -22,7 +22,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 
 		const testCompleteQueue = await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
-		const globalManager = getGlobalManager();
+		const globalManager = getGlobalManager(true);
 
 		if (!globalManager.has(TEST_RESULT_KEY)) {
 			globalManager.set(TEST_RESULT_KEY, []);
@@ -35,7 +35,6 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 
 		const codeRunnerService = new CodeRunnerService(bullJob.data.actions, bullJob.data.config, storageManager, notifyManager, globalManager, identifier);
 		const { recordedRawVideo, hasPassed, error, actionResults } = await codeRunnerService.runTest();
-
 		if (recordedRawVideo) {
 			console.log("Adding video in processing queue", recordedRawVideo);
 			await videoProcessorQueue.add(

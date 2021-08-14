@@ -1,3 +1,4 @@
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 import { IActionResultItemWithIndex, ISavedActionResultItemWithIndex } from "@crusher-shared/types/common/general";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
@@ -20,22 +21,24 @@ class BuildTestInstanceScreenshotService {
 	}
 
 	async saveScreenshots(screenshotActionsResult: Array<IActionResultItemWithIndex>, instanceId: number): Promise<Array<ISavedActionResultItemWithIndex>> {
-		const insertPromises = screenshotActionsResult.map((screenshotActionResult) => {
-			// For an scresnhot-type action, there will be only one output
-			const outputImage = screenshotActionResult.meta.outputs[0];
+		const insertPromises = screenshotActionsResult
+			.filter((result) => result.status === ActionStatusEnum.COMPLETED)
+			.map((screenshotActionResult) => {
+				// For an scresnhot-type action, there will be only one output
+				const outputImage = screenshotActionResult.meta.outputs[0];
 
-			return this.insertScreenshot({
-				instanceId: instanceId,
-				name: outputImage.name,
-				url: outputImage.value,
-				actionIndex: screenshotActionResult.actionIndex,
-			}).then((insertRecord) => {
-				return {
-					...screenshotActionResult,
-					recordId: insertRecord.insertId,
-				};
+				return this.insertScreenshot({
+					instanceId: instanceId,
+					name: outputImage.name,
+					url: outputImage.value,
+					actionIndex: screenshotActionResult.actionIndex,
+				}).then((insertRecord) => {
+					return {
+						...screenshotActionResult,
+						recordId: insertRecord.insertId,
+					};
+				});
 			});
-		});
 
 		return Promise.all(insertPromises);
 	}

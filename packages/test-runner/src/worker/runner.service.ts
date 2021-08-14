@@ -49,7 +49,7 @@ export class CodeRunnerService {
 
 	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
 		return this.actions.map((action, index) => {
-			if (index >= runnerActionResults.length) {
+			if (!runnerActionResults[index]) {
 				return {
 					actionType: action.type,
 					status: ActionStatusEnum.FAILED,
@@ -64,7 +64,6 @@ export class CodeRunnerService {
 	async runTest(): Promise<{ recordedRawVideo: string; hasPassed: boolean; error: Error | undefined; actionResults: any }> {
 		const code = await this.codeGenerator.getCode(this.actions);
 		let error, recordedRawVideoUrl;
-		console.log("Running code", code);
 		try {
 			await new Function(
 				"exports",

@@ -12,6 +12,7 @@ import { TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum } 
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum, IBuildReportTable } from "./interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { BuildInstanceResults } from "../builds/instances/mongo/buildInstanceResults";
 
 interface TestBuildReport {
 	buildId: number;
@@ -53,41 +54,25 @@ export class BuildReportService {
 		);
 		if (!testsWithReportData.length) throw new Error(`No information available about build reports with this build id ${buildId}`);
 
+		const testsWithReportDataAndActionResultsPromises: Array<Promise<TestBuildReport & { actionsResult: Array<any> }>> = testsWithReportData.map(
+			async (reportData) => {
+				const instanceResult = await BuildInstanceResults.findOne({
+					instanceId: { $eq: reportData.testInstanceId },
+				}).exec();
+
+				return {
+					...reportData,
+					actionsResult: instanceResult ? instanceResult.actionsResult : null,
+				};
+			},
+		);
+
+		const testsWithReportDataAndActionResults = await Promise.all(testsWithReportDataAndActionResultsPromises);
+
 		// If no test data is available, testBuildReportId would be null as per the LEFT JOIN
-		const testsMap = testsWithReportData
+		const testsMap = testsWithReportDataAndActionResults
 			.filter((testReportData) => !!testReportData.testId)
 			.reduce((prev: any, current) => {
-				const steps: Array<iAction> = current.testStepsJSON ? JSON.parse(current.testStepsJSON) : [];
-
-				const finalStepsFormat = steps.map((step, index) => {
-					const formattedStep = {
-						// @TODO: This has to be replaces for an identifier
-						index: index,
-						stepType: step.type,
-						isScreenshot: false,
-						// @TODO: Need a real more-readable description of action types
-						description: step.type
-							.split("_")
-							.map((word) => {
-								if (word.length) return word[0].toUpperCase() + word[0].slice(1);
-								return null;
-							})
-							.filter((word) => word !== null)
-							.join(" "),
-						status: current.testResultStatus,
-						payload: {
-							message: step.payload,
-						},
-					};
-
-					// @TODO: Replace this with real implementation
-					if ([ACTIONS_IN_TEST.PAGE_SCREENSHOT, ACTIONS_IN_TEST.ELEMENT_SCREENSHOT].includes(step.type)) {
-						formattedStep.isScreenshot = true;
-						(formattedStep.payload as any).screenshot = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
-					}
-					return formattedStep;
-				});
-
 				const testInstance = {
 					id: current.testInstanceId,
 					verboseStatus: current.testResultStatus,
@@ -108,7 +93,7 @@ export class BuildReportService {
 							},
 						],
 					},
-					steps: finalStepsFormat,
+					steps: current.actionsResult,
 				};
 
 				if (prev[current.testId]) {

@@ -5,6 +5,7 @@ import { Page } from "playwright";
 async function goToUrl(page: Page, action: iAction) {
 	const urlToGo = action.payload.meta.value;
 	await page.goto(urlToGo);
+	await page.waitForLoadState("networkidle");
 }
 
 module.exports = {

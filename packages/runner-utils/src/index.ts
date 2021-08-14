@@ -12,6 +12,7 @@ import { getBrowserActions, getMainActions, isWebpack, validActionTypeRegex } fr
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import * as fs from "fs";
 import * as path from "path";
+import { sleep } from "./functions";
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -118,6 +119,7 @@ class CrusherRunnerActions {
 		for (let action of actions) {
 			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
 			await this.actionHandlers[action.type](action, browser, page);
+			await sleep(500);
 		}
 	}
 

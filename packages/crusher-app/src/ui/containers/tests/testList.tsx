@@ -15,13 +15,14 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
+import { TestStatusSVG } from "@svg/testReport";
 
 interface IBuildItemCardProps {
 	id: number;
 	testName: string;
 	isPassing: boolean;
 	imageURL: string | null;
-	videoUrl: null | string;
+	videoURL: null | string;
 	firstRunCompleted: boolean;
 	// In seconds
 	createdAt: number;
@@ -40,10 +41,14 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName, id, isPassing, createdAt, imageURL, videoUrl, firstRunCompleted } = props;
-	const statusIcon = isPassing ? <CompleteStatusIconSVG isCompleted={true} /> : <CompleteStatusIconSVG isCompleted={false} />;
+	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted } = props;
+	const statusIcon = isPassing ? (
+		<TestStatusSVG type={"PASSED"} height={16} />
+	) : (
+		<TestStatusSVG type={firstRunCompleted ? "FAILED" : "RUNNING"} height={16} />
+	);
 
-	const shouldPlayVideo = !imageURL && !!videoUrl;
+	const shouldPlayVideo = !imageURL && !!videoURL;
 
 	const [showEditBox, setShowEditBox] = useState(false);
 	return (
@@ -85,7 +90,7 @@ function TestCard(props: IBuildItemCardProps) {
 						}}
 						muted={true}
 					>
-						<source src={videoUrl} type="video/mp4" />
+						<source src={videoURL} type="video/mp4" />
 					</video>
 				</Conditional>
 			</div>

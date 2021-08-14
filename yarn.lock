@@ -19784,10 +19784,22 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
+prettier-plugin-tailwind@^2.2.12:
+  version "2.2.12"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-tailwind/-/prettier-plugin-tailwind-2.2.12.tgz#959b4710f9245eb37765a922d3117c2df8c556f3"
+  integrity sha512-2SvZxpsYme0g5MrxGsKM43rx28f9AVlJrbwMnx4a03svCfsHwVGtcN6oN1YlClnEwZbquu3IhVAMcawEMKTjuA==
+  dependencies:
+    tailwind-classes-sorter "^0.2.5"
+
 prettier@^2.2.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.1.tgz#76903c3f8c4449bc9ac597acefa24dc5ad4cbea6"
   integrity sha512-p+vNbgpLjif/+D+DwAZAbndtRrR0md0MwfmOVN9N+2RgyACMT+7tfaRnT+WDPkqnuVwleyuBIG2XBxKDme3hPA==
+
+prettier@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.2.tgz#ef280a05ec253712e486233db5c6f23441e7342d"
+  integrity sha512-lnJzDfJ66zkMy58OL5/NY5zp70S7Nz6KqcKkXYzn2tMVrNxvbqaBpg7H3qHaLxCJ5lNMsGuM8+ohS7cZrthdLQ==
 
 prettier@~2.2.1:
   version "2.2.1"
@@ -23297,6 +23309,13 @@ table@^6.0.9:
     slice-ansi "^4.0.0"
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
+
+tailwind-classes-sorter@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/tailwind-classes-sorter/-/tailwind-classes-sorter-0.2.5.tgz#fa499fb5564783e5edd77259ce1a3ba9e0c8b3ad"
+  integrity sha512-7S0AaDitt+Fjy9m3v0GrQ/KZrCswNDD25SSXX9U/HIB5h9lk0ImSkq/VVcnzu78cRQxR0fFfvHYFdfcqN3dCGA==
+  dependencies:
+    find-up "^5.0.0"
 
 tailwind@^4.0.0:
   version "4.0.0"

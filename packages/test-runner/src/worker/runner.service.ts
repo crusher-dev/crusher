@@ -64,7 +64,6 @@ export class CodeRunnerService {
 	async runTest(): Promise<{ recordedRawVideo: string; hasPassed: boolean; error: Error | undefined; actionResults: any }> {
 		const code = await this.codeGenerator.getCode(this.actions);
 		let error, recordedRawVideoUrl;
-		console.log("Running code", code);
 		try {
 			await new Function(
 				"exports",

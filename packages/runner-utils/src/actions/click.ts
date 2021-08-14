@@ -1,8 +1,8 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { ElementHandle, Page } from "playwright";
+import { ElementHandle } from "playwright";
 
-async function clickOnElement(page: Page, element: ElementHandle) {
+async function clickOnElement(element: ElementHandle) {
 	await element.hover();
 	await element.scrollIntoViewIfNeeded();
 	await element.dispatchEvent("click");

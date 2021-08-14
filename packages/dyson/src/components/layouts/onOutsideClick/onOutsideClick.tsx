@@ -6,8 +6,6 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 		const handleClick = (e: SyntheticEvent) => {
 			e.stopPropagation();
 			const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
-
-			console.log(insideClick);
 			if (!insideClick) onOutsideClick();
 		};
 		document.body.addEventListener("click", handleClick, { passive: true });

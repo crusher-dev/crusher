@@ -293,11 +293,32 @@ function FilterBar() {
 	);
 }
 
+function RenderImageInfo({data}) {
+	const {meta} = data;
+	const imageName = meta.outputs[0].name;
+	const firstImage = meta.outputs[0].value;
+	const currentImage = meta.outputs[0].value
+	return <div className={"  pl-44 mt-12"} css={imageTestStep}>
+		<div className={"text-12"}>{imageName}</div>
+		<div className={"mt-20 flex"}>
+			<img src={firstImage}/> <img src={currentImage} css={css`margin-left: 2%`}/>
+		</div>
+	</div>;
+}
+
+const imageTestStep = css`
+	img{
+		max-width: 49%;
+		
+	}
+`
+
 function RenderStep({data}) {
 	const {status, message, actionType} = data
 	const isPassed = status === "COMPLETED"
 	return (
-		<div className={" flex px-44 relative mb-32"}>
+	<div className={"relative mb-32"}>
+		<div className={" flex px-44"}>
 			<div css={tick}>
 				<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
 			</div>
@@ -305,7 +326,7 @@ function RenderStep({data}) {
 				<span
 					className={"text-13 font-600"}
 					css={css`
-						color: #d0d0d0;
+            color: #d0d0d0;
 					`}
 				>
 					{getActionLabel(actionType)}
@@ -313,13 +334,20 @@ function RenderStep({data}) {
 				<span
 					className={"text-12 ml-20"}
 					css={css`
-						color: #848484;
+            color: #848484;
 					`}
 				>
 					{message}
 				</span>
 			</div>
+
+
 		</div>
+
+		<Conditional showIf={actionType==="ELEMENT_SCREENSHOT"}>
+			<RenderImageInfo data={data}/>
+		</Conditional>
+	</div>
 	);
 }
 

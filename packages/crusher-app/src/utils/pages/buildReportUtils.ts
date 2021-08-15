@@ -15,3 +15,12 @@ export const showReviewButton = (type) => {
 		default: return false;
 	}
 };
+
+export const getActionLabel = (type) => {
+	switch (type){
+		case "BROWSER_SET_DEVICE": return "Set Browser config";  break;
+		case "PAGE_NAVIGATE_URL": return "Open URL"; break;
+		case "ELEMENT_SCREENSHOT": return "Take element screenshot"; break;
+		default: return false;
+	}
+};

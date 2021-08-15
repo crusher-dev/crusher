@@ -6,6 +6,8 @@ import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { BuildTriggerEnum } from "./interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { IUserTable } from "../users/interface";
 
 @Service()
 @JsonController("")
@@ -21,11 +23,12 @@ export class BuildsController {
 	public async getBuildsList(
 		@Param("project_id") projectId: number,
 		@QueryParams() params: { trigger?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string; page?: number; status?: BuildReportStatusEnum },
-	): Promise<IProjectBuildListResponse> {
+	): Promise<IProjectBuildListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
+		if (!params.page) params.page = 0;
 
-		const builds = await this.buildsService.getBuildInfoList(projectId, params);
+		const buildsData = await this.buildsService.getBuildInfoList(projectId, params);
 
-		const buildsList = builds.map((buildData) => {
+		const buildsList = buildsData.list.map((buildData) => {
 			return {
 				id: buildData.buildId,
 				// @Note: There is no exact such thing as build name. For now build name
@@ -50,6 +53,14 @@ export class BuildsController {
 			};
 		});
 
-		return buildsList;
+		const availableAuthors = (await this.userService.getUsersInProject(projectId)).map((user) => {
+			return { name: user.name, email: user.email, id: user.id };
+		});
+
+		return {
+			list: buildsList,
+			totalPages: buildsData.totalPages,
+			availableAuthors: availableAuthors,
+		};
 	}
 }

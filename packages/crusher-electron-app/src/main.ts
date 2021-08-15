@@ -1,6 +1,9 @@
 import * as path from "path";
 import { app, BrowserWindow, session, ipcMain, screen, shell, webContents } from "electron";
 import userAgents from "../../crusher-shared/constants/userAgents";
+const { Deeplink } = require('electron-deeplink');
+
+const protocol = 'prod';
 
 // To fix twitter webview issue
 app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
@@ -74,6 +77,12 @@ async function createWindow() {
 			nativeWindowOpen: true,
 			devTools: true,
 		},
+	});
+
+	const deeplink = new Deeplink({ app, mainWindow, protocol, isDev: true });
+
+	deeplink.on("received", (link) => {
+		console.log("Rceived this link", link);
 	});
 
 	await mainWindow.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, (responseDetails, updateCallback) => {

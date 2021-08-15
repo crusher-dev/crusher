@@ -28,4 +28,7 @@ export interface IProjectBuildListItem {
 	commentCount: number;
 }
 
-export type IProjectBuildListResponse = Array<IProjectBuildListItem>;
+export type IProjectBuildListResponse = {
+	list: Array<IProjectBuildListItem>;
+	totalPages: number;
+};

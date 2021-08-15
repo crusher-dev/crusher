@@ -10,6 +10,8 @@ import { TestsRunner } from "@modules/runner";
 import { BuildStatusEnum, BuildTriggerEnum } from "../builds/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { IUserTable } from "../users/interface";
 
 @Service()
 @JsonController("")
@@ -42,9 +44,10 @@ export class TestController {
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { searchQuery?: string; page?: number; status?: BuildReportStatusEnum },
-	): Promise<IProjectTestsListResponse> {
-		return (await this.testService.getTestsInProject(projectId, true, params)).map((testData) => {
+		@QueryParams() params: { searchQuery?: string; page: number; status?: BuildReportStatusEnum },
+	): Promise<IProjectTestsListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
+		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
+		const testsList = testsListData.list.map((testData) => {
 			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
 			const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
 
@@ -65,6 +68,12 @@ export class TestController {
 				deleted: false,
 			};
 		});
+
+		const availableAuthors = (await this.userService.getUsersInProject(projectId)).map((user) => {
+			return { id: user.id, name: user.name, email: user.email };
+		});
+
+		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors };
 	}
 
 	@Authorized()

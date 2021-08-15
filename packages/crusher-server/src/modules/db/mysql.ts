@@ -56,6 +56,10 @@ class MysqlDatabase implements IDatabaseManager {
 		});
 	}
 
+	format(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
+		return this.mysqlClient.format(query, valuesToEscape);
+	}
+
 	fetchAllRows(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		console.log("[SQL QUERY]", query, valuesToEscape);
 

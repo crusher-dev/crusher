@@ -1,11 +1,11 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
-import { ElementHandle } from "playwright";
+import { Locator } from "playwright";
 import { markTestFail } from "../utils/helper";
 
 async function assertElementAttributes(
-	element: ElementHandle,
+	element: Locator,
 	assertions: Array<iAssertionRow>,
 ): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
 	let hasPassed = true;
@@ -67,7 +67,7 @@ async function assertElementAttributes(
 	return { hasPassed, logs };
 }
 
-async function runAssertionOnElement(element: ElementHandle, workingSelector: any, action: iAction) {
+async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction) {
 	const validationRows = action.payload.meta.validations;
 	const actionResult = await assertElementAttributes(element, validationRows);
 

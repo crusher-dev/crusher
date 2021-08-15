@@ -1,6 +1,6 @@
-import { ElementHandle } from "playwright";
+import { Locator } from "playwright";
 
-export async function type(elHandle: ElementHandle, keyCodes: Array<string>) {
+export async function type(elHandle: Locator, keyCodes: Array<string>) {
 	for (let i = 0; i < keyCodes.length; i++) {
 		await elHandle.press(keyCodes[i]);
 	}

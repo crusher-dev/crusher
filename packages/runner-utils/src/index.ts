@@ -8,7 +8,7 @@ import { waitForSelectors } from "./functions/waitForSelectors";
 import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
 import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
-import { getBrowserActions, getMainActions, isWebpack, validActionTypeRegex } from "./utils/helper";
+import { getBrowserActions, getMainActions, isWebpack, toCrusherSelectorsFormat, validActionTypeRegex } from "./utils/helper";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import * as fs from "fs";
 import * as path from "path";
@@ -84,8 +84,8 @@ class CrusherRunnerActions {
 						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager);
 						break;
 					case ActionCategoryEnum.ELEMENT:
-						const elementInfo = await waitForSelectors(page, step.payload.selectors);
-						stepResult = await wrappedHandler(elementInfo.elementHandle, elementInfo.workingSelector, step, this.globals, this.storageManager);
+						const elementLocator = page.locator(toCrusherSelectorsFormat(step.payload.selectors).value);
+						stepResult = await wrappedHandler(elementLocator, null, step, this.globals, this.storageManager);
 						break;
 					default:
 						throw new Error("Invalid action category handler");

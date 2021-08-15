@@ -6,6 +6,7 @@ import { BuildStatusEnum, BuildTriggerEnum, IBuildTable, ICreateBuildRequestPayl
 import { getSnakedObject } from "@utils/helper";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { BuildReportStatusEnum } from "../buildReports/interface";
 
 interface IBuildInfoItem {
 	buildId: number;
@@ -34,7 +35,7 @@ class BuildsService {
 	@CamelizeResponse()
 	async getBuildInfoList(
 		projectId: number,
-		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string },
+		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string; page?: number; status?: BuildReportStatusEnum },
 	): Promise<Array<IBuildInfoItem>> {
 		let query =
 			"SELECT jobs.id buildId, jobs.commit_name buildName, jobs.build_trigger buildTrigger, TIME_TO_SEC(TIMEDIFF(job_reports.updated_at, job_reports.created_at)) buildDuration, jobs.created_at buildCreatedAt, job_reports.created_at buildReportCreatedAt, job_reports.updated_at buildReportUpdatedAt, jobs.latest_report_id latestReportId, job_reports.status buildStatus, job_reports.total_test_count totalTestCount, job_reports.passed_test_count passedTestCount, job_reports.failed_test_count failedTestCount, job_reports.review_required_test_count reviewRequiredTestCount, comments.count commentCount, users.id triggeredById, users.name triggeredByName FROM users, jobs, job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id WHERE jobs.project_id = ? AND job_reports.id = jobs.latest_report_id AND jobs.user_id = users.id AND jobs.is_draft_job = FALSE";
@@ -50,12 +51,25 @@ class BuildsService {
 			queryParams.push(filter.triggeredBy!);
 		}
 
+		if (filter.status) {
+			query += " AND job_reports.status = ?";
+			queryParams.push(filter.status);
+		}
+
 		if (filter.searchQuery) {
 			query += ` AND Match(jobs.commit_name, jobs.repo_name, jobs.host) AGAINST (?)`;
 			queryParams.push(filter.searchQuery);
 		}
 
 		query += " ORDER BY jobs.created_at DESC";
+
+		if (filter.page) {
+			query += " LIMIT ? OFFSET ?";
+			// Weird bug in node-mysql2
+			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
+			queryParams.push(`10`);
+			queryParams.push(`${filter.page * 10}`);
+		}
 
 		return this.dbManager.fetchAllRows(query, queryParams);
 	}

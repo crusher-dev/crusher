@@ -5,6 +5,7 @@ import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { BuildTriggerEnum } from "./interface";
+import { BuildReportStatusEnum } from "../buildReports/interface";
 
 @Service()
 @JsonController("")
@@ -19,14 +20,10 @@ export class BuildsController {
 	@Get("/projects/:project_id/builds")
 	public async getBuildsList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { trigger?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string },
+		@QueryParams() params: { trigger?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string; page?: number; status?: BuildReportStatusEnum; },
 	): Promise<IProjectBuildListResponse> {
-		const filter: any = {};
-		filter.triggerType = params.trigger ? params.trigger : null;
-		filter.triggeredBy = params.triggeredBy ? params.triggeredBy : null;
-		filter.searchQuery = params.searchQuery ? params.searchQuery : null;
 
-		const builds = await this.buildsService.getBuildInfoList(projectId, filter);
+		const builds = await this.buildsService.getBuildInfoList(projectId, params);
 
 		const buildsList = builds.map((buildData) => {
 			return {

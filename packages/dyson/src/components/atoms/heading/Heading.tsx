@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 export type HeadingProps = {
 	type: 1 | 2 | 3 | 4 | 5| 6,
-	fontSize: string,
+	fontSize?: number,
 	leading: boolean,
 	weight: number,
 	color: string
@@ -11,9 +11,8 @@ export type HeadingProps = {
 
 const HeadingDefaultProps = {
 	type: 1,
-	fontSize: 16,
 	leading: false,
-	weight: 700,
+	weight: 600,
 	color: "#fff"
 };
 
@@ -41,15 +40,28 @@ const HeadingElement = ({size, children, ...props}:BaseHeading)=>{
 		return <h6 {...props}>{children}</h6>
 }
 
+const getDefaultFontSize= (type)=>{
+	switch (type){
+		case 1: return 28; break;
+		case 2: return 26; break;
+		case 3: return 24; break;
+		case 4: return 22; break;
+		case 5: return 20; break;
+		default: return 18; break;
+	}
+}
+
 /**
  * Crusher Text component.
  */
 export const Heading: React.FC<HeadingProps> = (props: HeadingProps) => {
 	const {type, children, fontSize, leading ,weight, color, ...otherProps} = props;
+
 	return (
 
-			<HeadingElement size={type} className={`font-cera font-${weight}`} css={css`
-font-size: ${fontSize}rem; color: ${color};`} {...otherProps}>
+			<HeadingElement size={type} className={`font-cera font-${weight}`}
+											css={css`
+font-size: ${fontSize || getDefaultFontSize(type)}rem; color: ${color};`} {...otherProps}>
 				{children}
 			</HeadingElement>
 	);

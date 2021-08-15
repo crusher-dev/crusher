@@ -12,6 +12,8 @@ body {
 	margin: 0;
 	font-size: 1px;
 	color: #eeeeee;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizelegibility;
 }
 
 @media only screen and (max-width: 1581px) {

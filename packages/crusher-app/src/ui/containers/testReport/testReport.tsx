@@ -435,9 +435,10 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 					<VideoComponent src={videoUrl} />
 				</Modal>
 			</Conditional>
+
 			<Conditional showIf={expand && sticky}>
 				<div css={stickyCSS} className={" px-0 "}>
-					<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
+					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
 						<div className={"flex justify-between items-center"}>
 							<div className={"flex items-center leading-none text-15 font-600 mt-20"}>
 								<TestStatusSVG height={18} className={"mr-16"} />
@@ -461,8 +462,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				</div>
 			</Conditional>
 			<div>
-				<div className={"px-28 w-full"}>
-					<div css={header} className={"flex justify-between items-center w-full"}>
+				<div className={"px-28 pb-16 w-full test-card-header"}>
+					<div css={header} className={" flex justify-between items-center w-full"}>
 						<div className={"flex items-center leading-none text-15 font-600"}>
 							<PassedSVG height={18} className={"mr-16"} />
 							{name}
@@ -482,7 +483,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				</div>
 			</div>
 			<Conditional showIf={expand}>
-				<div className={"px-32 w-full mt-16"} css={stepsContainer}>
+				<div className={"px-32 w-full"} css={stepsContainer}>
 					<div className={"ml-32 py-32"} css={stepsList}>
 						{steps.map((step,index) => (
 							<RenderStep data={step} key={index}/>
@@ -538,8 +539,10 @@ const testCard = css`
 	border: 1px solid #171c24;
 
 	:hover {
-		background: rgba(34, 38, 43, 0.5);
-		border: 1px solid rgba(77, 84, 92, 0.5);
+		.test-card-header{
+      background: rgba(34, 38, 43, 0.5);
+      box-sizing: border-box;
+		}
 	}
 
 	box-sizing: border-box;

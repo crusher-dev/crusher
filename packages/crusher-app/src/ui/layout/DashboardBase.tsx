@@ -482,9 +482,6 @@ const navLink = css`
 	}
 `;
 
-const shareLink = css`
-	color: rgba(189, 189, 189, 1);
-`;
 
 const upgradeCard = css`
 	background: #1a1d21;

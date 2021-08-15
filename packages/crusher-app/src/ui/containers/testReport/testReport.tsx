@@ -309,7 +309,7 @@ function RenderImageInfo({data}) {
 const imageTestStep = css`
 	img{
 		max-width: 49%;
-		
+    border-radius: 6rem;
 	}
 `
 

@@ -49,7 +49,9 @@ class UniqueSelector {
 					value: playwrightSelector,
 					uniquenessScore: 1,
 				},
-				...selectors,
+				...selectors.filter((a) => {
+					return a.uniquenessScore === 1;
+				}),
 			];
 		}
 		// @ts-ignore

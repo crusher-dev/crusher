@@ -3,15 +3,21 @@ import { Browser } from "playwright";
 import { isWebpack } from "../utils/helper";
 
 function getCrusherSelectorEngine() {
-	const getElementsByXPath = (xpath: string, parent: Node | null = null): Node[] => {
-		const results = [];
-		const query = document.evaluate(xpath, parent || document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-		for (let i = 0, length = query.snapshotLength; i < length; ++i) {
-			const item = query.snapshotItem(i);
-			if (item) results.push(item);
-		}
-		return results;
+	const getElementsByXPath = (selector: string, root: Node | null = null): Node[] => {
+    if (selector.startsWith('/'))
+      selector = '.' + selector;
+    const result: Element[] = [];
+    const document = root instanceof Document ? root : root.ownerDocument;
+    if (!document)
+      return result;
+    const it = document.evaluate(selector, root, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE);
+    for (let node = it.iterateNext(); node; node = it.iterateNext()) {
+      if (node.nodeType === Node.ELEMENT_NODE)
+        result.push(node as Element);
+    }
+    return result;
 	};
+
 
 	const generateQuerySelector = (el: HTMLElement): string => {
 		if (!el) return null;
@@ -56,19 +62,18 @@ function getCrusherSelectorEngine() {
 
 		for (const selector of selectors) {
 			try {
-				let selectedElements = [];
+				let selectedElements = null;
 				if (selector.type === "xpath") {
-					const elements = getElementsByXPath(selector.value);
-					if (elements.length) selectedElements = elements;
+					selectedElements = getElementsByXPath(selector.value);
 				} else if (root.querySelector(selector.value)) {
-					selectedElements = new Array(root.querySelectorAll(selector.value)!);
+					selectedElements = root.querySelectorAll(selector.value)!;
 				}
 				// @TODO: Find a better workaround for this
 				(window as any)[selectorsData.uuid] = { selector: selector.value, selectorType: selector.type };
-				if (selectedElements.length) return selectedElements;
+				if (selectedElements && selectedElements.length) return selectedElements;
 			} catch {}
 		}
-		return null;
+		return [];
 	};
 
 	return {
@@ -81,7 +86,6 @@ function getCrusherSelectorEngine() {
 
 		// Returns all elements matching given selector in the root's subtree.
 		queryAll(root: Element, selector: string) {
-			const selectorArr = JSON.parse(decodeURIComponent(selector));
 			const validElementsArr = getElementsFromSelectorArr(selector);
 
 			return validElementsArr;

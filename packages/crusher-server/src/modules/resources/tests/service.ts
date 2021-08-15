@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BrowserEnum } from "@modules/runner/interface";
+import { BuildReportStatusEnum } from "../buildReports/interface";
 
 @Service()
 class TestService {
@@ -71,6 +72,8 @@ class TestService {
 			status: BuildStatusEnum.CREATED,
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: BrowserEnum.ALL,
+			isDraftJob: false,
+			config: { shouldRecordVideo: true, testIds: tests.map((test) => test.id) },
 		});
 	}
 
@@ -81,12 +84,40 @@ class TestService {
 		);
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false) {
-		return this.dbManager.fetchAllRows(
-			`SELECT tests.*, tests.featured_video_url featuredVideoUrl, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id` +
-				(findOnlyActiveTests ? " AND tests.deleted = FALSE " : ""),
-			[projectId],
-		);
+	async getTestsInProject(
+		projectId: number,
+		findOnlyActiveTests = false,
+		filter: { searchQuery?: string; page?: number; status?: BuildReportStatusEnum } = {},
+	) {
+		let query = `SELECT tests.*, tests.featured_video_url featuredVideoUrl, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		const queryParams: Array<any> = [projectId];
+
+		if (findOnlyActiveTests) {
+			query += " AND tests.deleted = ?";
+			queryParams.push(findOnlyActiveTests ? false : true);
+		}
+
+		if (filter.status) {
+			query += " AND job_reports.status = ?";
+			queryParams.push(filter.status);
+		}
+
+		if (filter.searchQuery) {
+			query += ` AND Match(tests.name) AGAINST (?)`;
+			queryParams.push(filter.searchQuery);
+		}
+
+		query += " ORDER BY tests.created_at DESC";
+
+		if (filter.page) {
+			query += " LIMIT ? OFFSET ?";
+			// Weird bug in node-mysql2
+			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
+			queryParams.push(`10`);
+			queryParams.push(`${filter.page * 10}`);
+		}
+
+		return this.dbManager.fetchAllRows(query, queryParams);
 	}
 
 	async deleteTest(testId: number) {

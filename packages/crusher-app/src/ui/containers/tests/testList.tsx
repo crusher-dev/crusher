@@ -48,6 +48,7 @@ function TestCard(props: IBuildItemCardProps) {
 		<TestStatusSVG type={firstRunCompleted ? "FAILED" : "RUNNING"} height={16} />
 	);
 
+	console.log("VIDEO URL IS", videoURL);
 	const shouldPlayVideo = !imageURL && !!videoURL;
 
 	const [showEditBox, setShowEditBox] = useState(false);
@@ -174,12 +175,12 @@ function TestSearchableList() {
 
 	const testsItems = useMemo(() => {
 		return data.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL, videoUrl, id, firstRunCompleted } = test;
+			const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted } = test;
 
 			return (
 				<TestCard
 					firstRunCompleted={firstRunCompleted}
-					videoUrl={videoUrl}
+					videoURL={videoURL}
 					imageURL={imageURL}
 					testName={testName}
 					isPassing={isPassing}

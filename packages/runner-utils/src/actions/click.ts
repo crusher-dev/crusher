@@ -3,9 +3,11 @@ import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
 
 async function clickOnElement(element: Locator) {
-	await element.hover();
-	await element.scrollIntoViewIfNeeded();
-	await element.dispatchEvent("click");
+	const el = (await element.elementHandles())[0];
+
+	await el.scrollIntoViewIfNeeded();
+	await el.hover();
+	await el.dispatchEvent("click");
 }
 
 module.exports = {

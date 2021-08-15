@@ -51,7 +51,7 @@ export class TestController {
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
 				createdAt: new Date(testData.created_at).getTime(),
 				// @TODO: Remove this line
-				videoUrl: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
+				videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
 				// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
 				// @Note: Add support for taking random screenshots in case video is switched off
 				imageURL: null,

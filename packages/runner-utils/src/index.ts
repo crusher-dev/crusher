@@ -84,7 +84,7 @@ class CrusherRunnerActions {
 						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager);
 						break;
 					case ActionCategoryEnum.ELEMENT:
-						const elementLocator = page.locator(toCrusherSelectorsFormat(step.payload.selectors).value);
+						const elementLocator = page.locator(step.payload.selectors[0].value);
 						stepResult = await wrappedHandler(elementLocator, null, step, this.globals, this.storageManager);
 						break;
 					default:

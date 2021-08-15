@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Conditional } from "dyson/src/components/layouts";
 import { ChevronRight } from "@svg/settings";
 import { AddSVG } from "@svg/dashboard";
+import { useRouter } from 'next/router';
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
 	return (
@@ -32,7 +33,7 @@ const menuSelected = css`
 	background: rgba(255, 255, 255, 0.05);
 `;
 
-export const CompressibleMenu = ({ name, children, initialState = false }) => {
+export const CompressibleMenu = ({ name, children, initialState = true }) => {
 	const [show, setShow] = useState(initialState);
 
 	return (
@@ -87,9 +88,10 @@ const clickableCSS = css`
 	padding: 4px 8rem;
 `;
 function LeftSection() {
+	const router = useRouter();
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
-			<div>
+			<div onClick={()=>{router.push("/app/dashboard")}}>
 				<div className={"flex items-center pl-2 mt-10 text-13 mb-32"}>
 					<span css={clickableCSS}>
 						{"<"}

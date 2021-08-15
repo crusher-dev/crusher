@@ -1,8 +1,8 @@
 import { css } from "@emotion/react";
 import React, { useState } from "react";
 import { Conditional } from "dyson/src/components/layouts";
-import { ChevronRight } from '@svg/settings';
-import { AddSVG } from '@svg/dashboard';
+import { ChevronRight } from "@svg/settings";
+import { AddSVG } from "@svg/dashboard";
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
 	return (
@@ -32,70 +32,73 @@ const menuSelected = css`
 	background: rgba(255, 255, 255, 0.05);
 `;
 
-export const CompressibleMenu = ({name,children, initialState=false})=>{
-  const [show,setShow] = useState(initialState)
+export const CompressibleMenu = ({ name, children, initialState = false }) => {
+	const [show, setShow] = useState(initialState);
 
 	return (
 		<>
-			<div className={"flex items-center pl-10 mr-2 mt- justify-between mt-28 mb-12"} css={project} onClick={setShow.bind(this,!show)}>
+			<div className={"flex items-center pl-10 mr-2 mt- justify-between mt-28 mb-12"} css={project} onClick={setShow.bind(this, !show)}>
 				<div className={"flex items-center"}>
 					<span className={"text-14 leading-none mr-8 font-700"}>{name}</span>
 				</div>
 				<Conditional showIf={!show}>
-					<ChevronRight height={10} width={10} className={"mr-8"}/>
+					<ChevronRight height={10} width={10} className={"mr-8"} />
 				</Conditional>
 			</div>
 
 			<Conditional showIf={show}>
-				<div className={"mt-6"}>
-					{children}
-				</div>
+				<div className={"mt-6"}>{children}</div>
 			</Conditional>
 		</>
 	);
-}
+};
 function ProjectSetting() {
 	return (
 		<>
-		<CompressibleMenu name={"Project settings"}>
-			<div className={"mt-6 mb-32"}>
-				<MenuItemHorizontal
-					className={"mt-2"}
-				>
-					<span css={css`font-size: 12.5rem;`} className={" font-500 mt-2 leading-none"}>General</span>
-				</MenuItemHorizontal>
-				<MenuItemHorizontal
-					className={"mt-2"}
-				>
-					<span css={css`font-size: 12.5rem;`} className={" font-500 mt-2 leading-none"}>General</span>
-				</MenuItemHorizontal>
-
-			</div>
-		</CompressibleMenu>
-
-
-
+			<CompressibleMenu name={"Project settings"}>
+				<div className={"mt-6 mb-32"}>
+					<MenuItemHorizontal className={"mt-2"}>
+						<span
+							css={css`
+								font-size: 12.5rem;
+							`}
+							className={" font-500 mt-2 leading-none"}
+						>
+							General
+						</span>
+					</MenuItemHorizontal>
+					<MenuItemHorizontal className={"mt-2"}>
+						<span
+							css={css`
+								font-size: 12.5rem;
+							`}
+							className={" font-500 mt-2 leading-none"}
+						>
+							General
+						</span>
+					</MenuItemHorizontal>
+				</div>
+			</CompressibleMenu>
 		</>
 	);
 }
 
 const clickableCSS = css`
-  padding: 4px 8rem;
-
-`
+	padding: 4px 8rem;
+`;
 function LeftSection() {
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
 			<div>
 				<div className={"flex items-center pl-2 mt-10 text-13 mb-32"}>
 					<span css={clickableCSS}>
-						{'<'}<span className={" leading-none mr-8 underline ml-8"}> Go back</span>
+						{"<"}
+						<span className={" leading-none mr-8 underline ml-8"}> Go back</span>
 					</span>
 				</div>
 				<ProjectSetting />
 
 				<ProjectSetting />
-
 
 				<ProjectSetting />
 			</div>
@@ -105,12 +108,9 @@ function LeftSection() {
 					<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 				</div>
 			</div>
-
-
 		</div>
 	);
 }
-
 
 export const SettingsLayout = ({ children, hideSidebar = false }) => {
 	return (
@@ -142,7 +142,6 @@ const sidebar = css`
 `;
 
 const containerWidth = css`
-
 	width: 1280rem;
 	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
@@ -159,9 +158,9 @@ const scrollContainer = css`
 const project = css`
 	color: rgba(255, 255, 255, 0.8);
 
-	:hover{
-    color: rgba(255, 255, 255, 1);
-		path{
+	:hover {
+		color: rgba(255, 255, 255, 1);
+		path {
 			fill: #fff;
 		}
 	}

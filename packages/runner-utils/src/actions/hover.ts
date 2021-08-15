@@ -3,7 +3,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
 
 async function hoverOnElement(element: Locator) {
-	await ((await element.elementHandles())[0]).hover();
+	await (await element.elementHandles())[0].hover();
 }
 
 module.exports = {

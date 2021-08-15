@@ -12,7 +12,7 @@ import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
 import { isTempTestPending } from "@utils/user";
 import { sendSnackBarEvent } from "@utils/notify";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
-import { EditionTypeEnum } from '@crusher-shared/types/common/general';
+import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 
 enum ONBOARDING_STEP {
 	SETUP,

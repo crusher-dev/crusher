@@ -482,7 +482,6 @@ const navLink = css`
 	}
 `;
 
-
 const upgradeCard = css`
 	background: #1a1d21;
 	border: 1px solid #212529;

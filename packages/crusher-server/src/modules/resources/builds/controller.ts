@@ -22,7 +22,6 @@ export class BuildsController {
 		@Param("project_id") projectId: number,
 		@QueryParams() params: { trigger?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string; page?: number; status?: BuildReportStatusEnum },
 	): Promise<IProjectBuildListResponse> {
-
 		const builds = await this.buildsService.getBuildInfoList(projectId, params);
 
 		const buildsList = builds.map((buildData) => {

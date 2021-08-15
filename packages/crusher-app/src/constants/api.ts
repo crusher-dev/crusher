@@ -4,7 +4,7 @@ import { resolvePathToBackendURI } from "@utils/url";
 export const USER_SYSTEM_API = resolvePathToBackendURI("/users/actions/getUserAndSystemInfo");
 export const getTestListAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests`);
 export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum) =>
-	resolvePathToBackendURI(`/projects/${projectId}/builds?trigger=${triggerType}`);
+	resolvePathToBackendURI(`/projects/${projectId}/builds?${triggerType ? `?trigger=${triggerType}` : ""}`);
 export const getRunTestApi = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests/actions/run`);
 export const getBuildReportAPI = (buildId: string) => resolvePathToBackendURI(`/builds/${buildId}/reports`);
 export const RELEASE_API = resolvePathToBackendURI("/release/info");

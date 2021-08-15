@@ -19,12 +19,12 @@ export class BuildsController {
 	@Get("/projects/:project_id/builds")
 	public async getBuildsList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { trigger?: BuildTriggerEnum },
+		@QueryParams() params: { trigger?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string },
 	): Promise<IProjectBuildListResponse> {
 		const filter: any = {};
-		if (params.trigger) {
-			filter.trigger = params.trigger;
-		}
+		filter.triggerType = params.trigger ? params.trigger : null;
+		filter.triggeredBy = params.triggeredBy ? params.triggeredBy : null;
+		filter.searchQuery = params.searchQuery ? params.searchQuery : null;
 
 		const builds = await this.buildsService.getBuildInfoList(projectId, filter);
 

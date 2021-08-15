@@ -1,10 +1,17 @@
-import { PassedSVG } from "@svg/testReport";
-import React from "react";
-
 export const getStatusString = (type) => {
-	if (type === "PASSED") {
-		return "Your build has passes succesfully. No review is required";
+	switch (type){
+		case "PASSED": return "Your build has passes succesfully. No review is required"; break;
+		case "FAILED": return "Your build has failed. Please see reports to see what went wrong."; break;
+		case "REVIEW_REQUIRED": return "Your build requires some review. Please see reports."; break;
+		case "INITIATED": return "Your build has been initiated.";; break;
+		default: return "We're running your test";
 	}
+};
 
-	return "We're running your test";
+export const showReviewButton = (type) => {
+	switch (type){
+		case "FAILED": return true;  break;
+		case "REVIEW_REQUIRED": return true; break;
+		default: return false;
+	}
 };

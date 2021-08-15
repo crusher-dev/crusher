@@ -1,5 +1,5 @@
 import { BaseRowInterface } from "@crusher-shared/types/db/baseRow";
-import { KeysToCamelCase, KeysToSnakeCase, SnakeToCamelCase } from "@modules/common/typescript/interface";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
 
 interface IProjectTable extends BaseRowInterface {
 	id: number;
@@ -21,4 +21,4 @@ interface IProjectEnvironmentTable extends BaseRowInterface {
 
 type ICreateProjectEnvironmentPayload = KeysToCamelCase<Omit<IProjectEnvironmentTable, "id">>;
 
-export { ICreateProjectPayload, IProjectTable, IProjectRow, IProjectEnvironmentTable, ICreateProjectEnvironmentPayload };
+export { ICreateProjectPayload, IProjectTable, IProjectEnvironmentTable, ICreateProjectEnvironmentPayload };

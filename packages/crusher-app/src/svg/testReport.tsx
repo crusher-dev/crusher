@@ -89,7 +89,7 @@ export function FailedSVG(props) {
 	return (
 		<svg width={22} height={22} viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<rect width={22} height={22} rx={11} fill={isMonochrome ? "#fff" : "#EF4074"} />
-			<path d="M14.5 7.5l-7 7M7.5 7.5l7 7" stroke="#7b2067" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+			<path d="M14.5 7.5l-7 7M7.5 7.5l7 7" stroke="#0d0e11" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
 		</svg>
 	);
 }

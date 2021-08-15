@@ -21,7 +21,7 @@ import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
-import { getStatusString } from "@utils/pages/buildReportUtils";
+import { getStatusString, showReviewButton } from '@utils/pages/buildReportUtils';
 import { TTestInfo, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { usePageTitle } from "../../../hooks/seo";
 import { Modal } from "../../../../../dyson/src/components/molecules/Modal";
@@ -64,7 +64,7 @@ function StatusTag({ type }) {
 	if (type === "PASSED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-				<PassedSVG height={20} isMonchrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
+				<PassedSVG height={20} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
 			</div>
 		);
 	}
@@ -86,7 +86,8 @@ function NameNStatusSection() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
-	usePageTitle(data?.name);
+	const title = data.name ||  `#${data?.id}`
+	usePageTitle(title);
 	return (
 		<div className={"flex items-center justify-between"}>
 			<div className={"flex items-center"}>
@@ -132,12 +133,12 @@ const section = [
 const selectedTabAtom = atom(0);
 
 function TabBar() {
-	const [secltedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
+	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
 		<div css={Tab} className={"flex mt-48 "}>
 			{section.map(({ name, icon, key }, i) => (
-				<div className={""} onClick={setSelectedTabIndex.bind(this, i)}>
-					<div css={[TabItem, secltedTabIndex === i && selected]} className={"flex items-center justify-center text-15"}>
+				<div className={""} onClick={setSelectedTabIndex.bind(this, i)} key={key}>
+					<div css={[TabItem, selectedTabIndex === i && selected]} className={"flex items-center justify-center text-15"}>
 						<Conditional showIf={icon}>
 							<span className={"mr-8"}>{icon}</span>
 						</Conditional>
@@ -152,6 +153,9 @@ function TabBar() {
 function TestOverviewTab() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
+
+	const showReview = showReviewButton(data?.status)
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
@@ -160,18 +164,21 @@ function TestOverviewTab() {
 						<div></div>
 
 						<div className={"mb-28"}>
-							<PassedSVG height={30} width={28} />
+							<TestStatusSVG type={data?.status} height={24} width={28} />
 						</div>
 						<div className={"font-cera text-15 font-500 mb-24"}>{getStatusString(data?.status)}</div>
 						<div className={"flex items-center"}>
-							<Button
-								bgColor={"tertiary-dark"}
-								css={css`
+							<Conditional showIf={showReview}>
+								<Button
+									bgColor={"tertiary-dark"}
+									css={css`
 									width: 148rem;
 								`}
-							>
-								<span className={"font-400"}>Review</span>
-							</Button>
+									onClick={setSelectedTabIndex.bind(this, 1)}
+								>
+									<span className={"font-400"}>Review</span>
+								</Button>
+							</Conditional>
 							<Button
 								bgColor={"tertiary-dark"}
 								css={css`
@@ -351,7 +358,6 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		const stickyOverview = document.querySelector("#sticky-overview-bar");
 		const observer = new IntersectionObserver(
 			() => {
-				console.log("hi", name, testCard, stickyOverview);
 				const stickyLastPoint = 0;
 				const cardStartingOffset = testCard.getBoundingClientRect().top;
 				const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;

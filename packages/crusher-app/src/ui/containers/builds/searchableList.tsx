@@ -12,6 +12,8 @@ import { currentProject } from "../../../store/atoms/global/project";
 import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { TestStatusSVG } from '@svg/testReport';
+import { showReviewButton } from '@utils/pages/buildReportUtils';
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -24,7 +26,8 @@ function BuildItemCard(props: IBuildItemCardProps) {
 
 	const { id, createdAt, tests, status, reviewMessage, commentCount, triggeredBy, duration } = info;
 
-	const statusIcon = status === "passed" ? <CompleteStatusIconSVG isCompleted={true} /> : <CompleteStatusIconSVG isCompleted={false} />;
+	const statusIcon = 		<TestStatusSVG type={status} height={16} />;
+
 
 	return (
 		<Link href={`/app/build/${id}`}>

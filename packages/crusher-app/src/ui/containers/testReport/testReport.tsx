@@ -21,7 +21,7 @@ import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
-import { getStatusString } from "@utils/pages/buildReportUtils";
+import { getActionLabel, getStatusString, showReviewButton } from '@utils/pages/buildReportUtils';
 import { TTestInfo, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { usePageTitle } from "../../../hooks/seo";
 import { Modal } from "../../../../../dyson/src/components/molecules/Modal";
@@ -64,7 +64,7 @@ function StatusTag({ type }) {
 	if (type === "PASSED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-				<PassedSVG height={20} isMonchrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
+				<PassedSVG height={20} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
 			</div>
 		);
 	}
@@ -86,7 +86,8 @@ function NameNStatusSection() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
-	usePageTitle(data?.name);
+	const title = data.name ||  `#${data?.id}`
+	usePageTitle(title);
 	return (
 		<div className={"flex items-center justify-between"}>
 			<div className={"flex items-center"}>
@@ -132,12 +133,12 @@ const section = [
 const selectedTabAtom = atom(0);
 
 function TabBar() {
-	const [secltedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
+	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
 		<div css={Tab} className={"flex mt-48 "}>
 			{section.map(({ name, icon, key }, i) => (
-				<div className={""} onClick={setSelectedTabIndex.bind(this, i)}>
-					<div css={[TabItem, secltedTabIndex === i && selected]} className={"flex items-center justify-center text-15"}>
+				<div className={""} onClick={setSelectedTabIndex.bind(this, i)} key={key}>
+					<div css={[TabItem, selectedTabIndex === i && selected]} className={"flex items-center justify-center text-15"}>
 						<Conditional showIf={icon}>
 							<span className={"mr-8"}>{icon}</span>
 						</Conditional>
@@ -152,6 +153,9 @@ function TabBar() {
 function TestOverviewTab() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
+
+	const showReview = showReviewButton(data?.status)
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
@@ -160,18 +164,21 @@ function TestOverviewTab() {
 						<div></div>
 
 						<div className={"mb-28"}>
-							<PassedSVG height={30} width={28} />
+							<TestStatusSVG type={data?.status} height={24} width={28} />
 						</div>
 						<div className={"font-cera text-15 font-500 mb-24"}>{getStatusString(data?.status)}</div>
 						<div className={"flex items-center"}>
-							<Button
-								bgColor={"tertiary-dark"}
-								css={css`
+							<Conditional showIf={showReview}>
+								<Button
+									bgColor={"tertiary-dark"}
+									css={css`
 									width: 148rem;
 								`}
-							>
-								<span className={"font-400"}>Review</span>
-							</Button>
+									onClick={setSelectedTabIndex.bind(this, 1)}
+								>
+									<span className={"font-400"}>Review</span>
+								</Button>
+							</Conditional>
 							<Button
 								bgColor={"tertiary-dark"}
 								css={css`
@@ -286,31 +293,61 @@ function FilterBar() {
 	);
 }
 
-function NormalStep() {
+function RenderImageInfo({data}) {
+	const {meta} = data;
+	const imageName = meta.outputs[0].name;
+	const firstImage = meta.outputs[0].value;
+	const currentImage = meta.outputs[0].value
+	return <div className={"  pl-44 mt-12"} css={imageTestStep}>
+		<div className={"text-12"}>{imageName}</div>
+		<div className={"mt-20 flex"}>
+			<img src={firstImage}/> <img src={currentImage} css={css`margin-left: 2%`}/>
+		</div>
+	</div>;
+}
+
+const imageTestStep = css`
+	img{
+		max-width: 49%;
+    border-radius: 6rem;
+	}
+`
+
+function RenderStep({data}) {
+	const {status, message, actionType} = data
+	const isPassed = status === "COMPLETED"
 	return (
-		<div className={" flex px-44 relative mb-32"}>
+	<div className={"relative mb-32"}>
+		<div className={" flex px-44"}>
 			<div css={tick}>
-				<PassedSVG height={20} width={20} />
+				<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
 			</div>
-			<div>
+			<div className={"mt-4"}>
 				<span
 					className={"text-13 font-600"}
 					css={css`
-						color: #d0d0d0;
+            color: #d0d0d0;
 					`}
 				>
-					Open URL
+					{getActionLabel(actionType)}
 				</span>
 				<span
 					className={"text-12 ml-20"}
 					css={css`
-						color: #848484;
+            color: #848484;
 					`}
 				>
-					Open URL to check if things are working fine or not
+					{message}
 				</span>
 			</div>
+
+
 		</div>
+
+		<Conditional showIf={actionType==="ELEMENT_SCREENSHOT"}>
+			<RenderImageInfo data={data}/>
+		</Conditional>
+	</div>
 	);
 }
 
@@ -343,15 +380,15 @@ function TestOverview() {
 
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
-
+	const [openVideoModal, setOpenVideoModal] = useState(false);
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
+
 	useEffect(() => {
 		const testCard = document.querySelector(`#test-card-${id}`);
 		const stickyOverview = document.querySelector("#sticky-overview-bar");
 		const observer = new IntersectionObserver(
 			() => {
-				console.log("hi", name, testCard, stickyOverview);
 				const stickyLastPoint = 0;
 				const cardStartingOffset = testCard.getBoundingClientRect().top;
 				const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;
@@ -369,7 +406,6 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 		observer.observe(testCard);
 	}, []);
-
 	const onCardClick = () => {
 		// if(expand===true){
 		// 	window.scrollTo()
@@ -377,9 +413,13 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		setExpand(!expand);
 	};
 
-	const [openVideoModal, setOpenVideoModal] = useState(false);
 
-	const videoUrl = testInstances[0]?.output?.video;
+
+	const testIndexByFilteration = 0; // Filter based on testreport and other configuration
+	const videoUrl = testInstances[testIndexByFilteration]?.output?.video;
+	const testInstanceData = testInstances[testIndexByFilteration];
+
+	const {steps} = testInstanceData
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={openVideoModal}>
@@ -405,7 +445,10 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 							</div>
 							<div className={"flex items-center mt-8"}>
 								<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-								<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
+								<span className={"flex text-13 mr-26"} onClick={(e)=>{
+									e.stopPropagation()
+									setOpenVideoModal.bind(this, true)
+								}}>
 									<PlaySVG className={"mr-10"} /> Replay recording
 								</span>
 								<span>
@@ -441,8 +484,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			<Conditional showIf={expand}>
 				<div className={"px-32 w-full mt-16"} css={stepsContainer}>
 					<div className={"ml-32 py-32"} css={stepsList}>
-						{Array.apply(null, Array(25)).map(() => (
-							<NormalStep />
+						{steps.map((step,index) => (
+							<RenderStep data={step} key={index}/>
 						))}
 					</div>
 				</div>
@@ -704,8 +747,8 @@ const passed = css`
 `;
 
 const review = css`
-	background: #9d6852;
-	border: 1px solid #ebb9a4;
+	background: #44293c;
+	border: 1px solid #77516c;
 	min-width: 172px;
 `;
 

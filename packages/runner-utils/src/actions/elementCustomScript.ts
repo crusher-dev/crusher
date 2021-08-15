@@ -1,6 +1,6 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { ElementHandle } from "playwright";
+import { Locator, ElementHandle } from "playwright";
 import { markTestFail } from "../utils/helper";
 
 const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<boolean> => {
@@ -24,9 +24,9 @@ const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<bo
 	)(exports, require, module, __filename, __dirname, script, elHandle);
 };
 
-async function runCustomScriptOnElement(element: ElementHandle, workingSelector: any, action: iAction) {
+async function runCustomScriptOnElement(element: Locator, workingSelector: any, action: iAction) {
 	const customScript = action.payload.meta.script;
-	const actionResult = await runScriptOnElement(customScript, element);
+	const actionResult = await runScriptOnElement(customScript, await element.elementHandle());
 
 	if (!actionResult) markTestFail("Failed according to custom script assertions");
 }

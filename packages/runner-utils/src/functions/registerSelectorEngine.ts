@@ -14,6 +14,7 @@ function getCrusherSelectorEngine() {
 	};
 
 	const generateQuerySelector = (el: HTMLElement): string => {
+		if (!el) return null;
 		if (el.tagName.toLowerCase() == "html") return "HTML";
 		let str = el.tagName;
 		str += el.id != "" ? "#" + el.id : "";

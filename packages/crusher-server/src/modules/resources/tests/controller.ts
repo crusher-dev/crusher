@@ -40,8 +40,11 @@ export class TestController {
 	}
 
 	@Get("/projects/:project_id/tests/")
-	async getList(@Param("project_id") projectId: number): Promise<IProjectTestsListResponse> {
-		return (await this.testService.getTestsInProject(projectId, true)).map((testData) => {
+	async getList(
+		@Param("project_id") projectId: number,
+		@QueryParams() params: { searchQuery?: string; page?: number; status?: BuildReportStatusEnum },
+	): Promise<IProjectTestsListResponse> {
+		return (await this.testService.getTestsInProject(projectId, true, params)).map((testData) => {
 			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
 			const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
 

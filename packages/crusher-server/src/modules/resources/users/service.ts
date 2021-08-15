@@ -168,6 +168,13 @@ class UsersService {
 	async updateMeta(meta: string, userId: number) {
 		return this.dbManager.update("UPDATE users SET meta = ? WHERE id = ?", [meta, userId]);
 	}
+
+	@CamelizeResponse()
+	async getUsersInProject(projectId: number): Promise<Array<KeysToCamelCase<IUserTable>>> {
+		return this.dbManager.fetchAllRows("SELECT users.* FROM users, user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
+			projectId,
+		]);
+	}
 }
 
 export { UsersService };

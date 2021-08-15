@@ -2,12 +2,15 @@ import { Inject, Service } from "typedi";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post } from "routing-controllers";
 import { ProjectsService } from "./service";
 import { ICreateProjectEnvironmentPayload, ICreateProjectPayload } from "@modules/resources/projects/interface";
+import { UsersService } from "../users/service";
 
 @Service()
 @JsonController()
 class ProjectsController {
 	@Inject()
 	private projectsService: ProjectsService;
+	@Inject()
+	private usersService: UsersService;
 
 	@Authorized()
 	@Post("/projects/actions/create")
@@ -68,6 +71,12 @@ class ProjectsController {
 
 		await this.projectsService.updateMeta(JSON.stringify(body.meta), projectId);
 		return "Successful";
+	}
+
+	@Authorized()
+	@Get("/projects/:project_id/users")
+	async getUsersInProject(@Param("project_id") projectId: number) {
+		return this.usersService.getUsersInProject(projectId);
 	}
 }
 

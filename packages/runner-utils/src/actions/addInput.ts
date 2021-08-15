@@ -1,5 +1,5 @@
 import { iAction } from "@crusher-shared/types/action";
-import { Locator, } from "playwright";
+import { Locator } from "playwright";
 import { type } from "../functions/type";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 

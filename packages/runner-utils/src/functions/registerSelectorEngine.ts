@@ -4,20 +4,16 @@ import { isWebpack } from "../utils/helper";
 
 function getCrusherSelectorEngine() {
 	const getElementsByXPath = (selector: string, root: Node | null = null): Node[] => {
-    if (selector.startsWith('/'))
-      selector = '.' + selector;
-    const result: Element[] = [];
-    const document = root instanceof Document ? root : root.ownerDocument;
-    if (!document)
-      return result;
-    const it = document.evaluate(selector, root, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE);
-    for (let node = it.iterateNext(); node; node = it.iterateNext()) {
-      if (node.nodeType === Node.ELEMENT_NODE)
-        result.push(node as Element);
-    }
-    return result;
+		if (selector.startsWith("/")) selector = "." + selector;
+		const result: Element[] = [];
+		const document = root instanceof Document ? root : root.ownerDocument;
+		if (!document) return result;
+		const it = document.evaluate(selector, root, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE);
+		for (let node = it.iterateNext(); node; node = it.iterateNext()) {
+			if (node.nodeType === Node.ELEMENT_NODE) result.push(node as Element);
+		}
+		return result;
 	};
-
 
 	const generateQuerySelector = (el: HTMLElement): string => {
 		if (!el) return null;

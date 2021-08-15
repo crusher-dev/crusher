@@ -21,7 +21,7 @@ import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
-import { getActionLabel, getStatusString, showReviewButton } from '@utils/pages/buildReportUtils';
+import { getActionLabel, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
 import { TTestInfo, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { usePageTitle } from "../../../hooks/seo";
 import { Modal } from "../../../../../dyson/src/components/molecules/Modal";
@@ -86,7 +86,7 @@ function NameNStatusSection() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
-	const title = data.name ||  `#${data?.id}`
+	const title = data.name || `#${data?.id}`;
 	usePageTitle(title);
 	return (
 		<div className={"flex items-center justify-between"}>
@@ -155,7 +155,7 @@ function TestOverviewTab() {
 	const { data } = useBuildReport(query.id);
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 
-	const showReview = showReviewButton(data?.status)
+	const showReview = showReviewButton(data?.status);
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
@@ -172,8 +172,8 @@ function TestOverviewTab() {
 								<Button
 									bgColor={"tertiary-dark"}
 									css={css`
-									width: 148rem;
-								`}
+										width: 148rem;
+									`}
 									onClick={setSelectedTabIndex.bind(this, 1)}
 								>
 									<span className={"font-400"}>Review</span>
@@ -293,61 +293,67 @@ function FilterBar() {
 	);
 }
 
-function RenderImageInfo({data}) {
-	const {meta} = data;
+function RenderImageInfo({ data }) {
+	const { meta } = data;
 	const imageName = meta.outputs[0].name;
 	const firstImage = meta.outputs[0].value;
-	const currentImage = meta.outputs[0].value
-	return <div className={"  pl-44 mt-12"} css={imageTestStep}>
-		<div className={"text-12"}>{imageName}</div>
-		<div className={"mt-20 flex"}>
-			<img src={firstImage}/> <img src={currentImage} css={css`margin-left: 2%`}/>
+	const currentImage = meta.outputs[0].value;
+	return (
+		<div className={"  pl-44 mt-12"} css={imageTestStep}>
+			<div className={"text-12"}>{imageName}</div>
+			<div className={"mt-20 flex"}>
+				<img src={firstImage} />{" "}
+				<img
+					src={currentImage}
+					css={css`
+						margin-left: 2%;
+					`}
+				/>
+			</div>
 		</div>
-	</div>;
+	);
 }
 
 const imageTestStep = css`
-	img{
+	img {
 		max-width: 49%;
-    border-radius: 6rem;
+		border-radius: 6rem;
 	}
-`
+`;
 
-function RenderStep({data}) {
-	const {status, message, actionType} = data
-	const isPassed = status === "COMPLETED"
+function RenderStep({ data }) {
+	const { status, message, actionType } = data;
+	const isPassed = status === "COMPLETED";
 	return (
-	<div className={"relative mb-32"}>
-		<div className={" flex px-44"}>
-			<div css={tick}>
-				<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
-			</div>
-			<div className={"mt-4"}>
-				<span
-					className={"text-13 font-600"}
-					css={css`
-            color: #d0d0d0;
-					`}
-				>
-					{getActionLabel(actionType)}
-				</span>
-				<span
-					className={"text-12 ml-20"}
-					css={css`
-            color: #848484;
-					`}
-				>
-					{message}
-				</span>
+		<div className={"relative mb-32"}>
+			<div className={" flex px-44"}>
+				<div css={tick}>
+					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
+				</div>
+				<div className={"mt-4"}>
+					<span
+						className={"text-13 font-600"}
+						css={css`
+							color: #d0d0d0;
+						`}
+					>
+						{getActionLabel(actionType)}
+					</span>
+					<span
+						className={"text-12 ml-20"}
+						css={css`
+							color: #848484;
+						`}
+					>
+						{message}
+					</span>
+				</div>
 			</div>
 
-
+			<Conditional showIf={actionType === "ELEMENT_SCREENSHOT"}>
+				<RenderImageInfo data={data} />
+			</Conditional>
 		</div>
-
-		<Conditional showIf={actionType==="ELEMENT_SCREENSHOT"}>
-			<RenderImageInfo data={data}/>
-		</Conditional>
-	</div>
 	);
 }
 
@@ -413,13 +419,11 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		setExpand(!expand);
 	};
 
-
-
 	const testIndexByFilteration = 0; // Filter based on testreport and other configuration
 	const videoUrl = testInstances[testIndexByFilteration]?.output?.video;
 	const testInstanceData = testInstances[testIndexByFilteration];
 
-	const {steps} = testInstanceData
+	const { steps } = testInstanceData;
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={openVideoModal}>
@@ -435,9 +439,10 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 					<VideoComponent src={videoUrl} />
 				</Modal>
 			</Conditional>
+
 			<Conditional showIf={expand && sticky}>
 				<div css={stickyCSS} className={" px-0 "}>
-					<div css={[header, stickyContainer]} className={"items-center w-full px-32 w-full"}>
+					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
 						<div className={"flex justify-between items-center"}>
 							<div className={"flex items-center leading-none text-15 font-600 mt-20"}>
 								<TestStatusSVG height={18} className={"mr-16"} />
@@ -445,10 +450,13 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 							</div>
 							<div className={"flex items-center mt-8"}>
 								<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-								<span className={"flex text-13 mr-26"} onClick={(e)=>{
-									e.stopPropagation()
-									setOpenVideoModal.bind(this, true)
-								}}>
+								<span
+									className={"flex text-13 mr-26"}
+									onClick={(e) => {
+										e.stopPropagation();
+										setOpenVideoModal.bind(this, true);
+									}}
+								>
 									<PlaySVG className={"mr-10"} /> Replay recording
 								</span>
 								<span>
@@ -461,8 +469,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				</div>
 			</Conditional>
 			<div>
-				<div className={"px-28 w-full"}>
-					<div css={header} className={"flex justify-between items-center w-full"}>
+				<div className={"px-28 pb-16 w-full test-card-header"}>
+					<div css={header} className={" flex justify-between items-center w-full"}>
 						<div className={"flex items-center leading-none text-15 font-600"}>
 							<PassedSVG height={18} className={"mr-16"} />
 							{name}
@@ -482,10 +490,10 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				</div>
 			</div>
 			<Conditional showIf={expand}>
-				<div className={"px-32 w-full mt-16"} css={stepsContainer}>
+				<div className={"px-32 w-full"} css={stepsContainer}>
 					<div className={"ml-32 py-32"} css={stepsList}>
-						{steps.map((step,index) => (
-							<RenderStep data={step} key={index}/>
+						{steps.map((step, index) => (
+							<RenderStep data={step} key={index} />
 						))}
 					</div>
 				</div>
@@ -538,8 +546,10 @@ const testCard = css`
 	border: 1px solid #171c24;
 
 	:hover {
-		background: rgba(34, 38, 43, 0.5);
-		border: 1px solid rgba(77, 84, 92, 0.5);
+		.test-card-header {
+			background: rgba(34, 38, 43, 0.5);
+			box-sizing: border-box;
+		}
 	}
 
 	box-sizing: border-box;

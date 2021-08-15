@@ -17,4 +17,4 @@ export const Default = Template.bind({});
 Default.parameters = {
 	status: "ready",
 };
-Default.args = { fontSize: 16, weight: 400, color: "#fff", leading: false, className:"mt-2"};
+Default.args = { fontSize: 16, weight: 400, color: "#fff", leading: false, className: "mt-2" };

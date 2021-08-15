@@ -21,34 +21,35 @@ export const RenderColors = () => {
 								display: flex;
 							`}
 						>
-							{Object.entries(values).sort(([color1],[color2])=> color2-color1).map(([color, hexcode]) => (
-								<div
-									css={css`
-										height: 140px;
-										width: 140px;
-										background: ${hexcode};
+							{Object.entries(values)
+								.sort(([color1], [color2]) => color2 - color1)
+								.map(([color, hexcode]) => (
+									<div
+										css={css`
+											height: 140px;
+											width: 140px;
+											background: ${hexcode};
 
-										margin-top: 40px;
-										margin-right: 40px;
-										display: flex;
-										justify-content: center;
-										align-items: center;
-										font-size: 12px;
-										border-radius: 4px;
-										text-align: center;
-									`}
-
-									onClick={()=>{
-										const value = `COLOR.${colorsType}.${color}`;
-										const cb = navigator.clipboard;
-										cb.writeText(value).then(() => alert(`Copied - ${ value}`));
-									}}
-								>
-									 {hexcode}
-									<br />
-									{`COLOR.${colorsType}.${color}`}
-								</div>
-							))}
+											margin-top: 40px;
+											margin-right: 40px;
+											display: flex;
+											justify-content: center;
+											align-items: center;
+											font-size: 12px;
+											border-radius: 4px;
+											text-align: center;
+										`}
+										onClick={() => {
+											const value = `COLOR.${colorsType}.${color}`;
+											const cb = navigator.clipboard;
+											cb.writeText(value).then(() => alert(`Copied - ${value}`));
+										}}
+									>
+										{hexcode}
+										<br />
+										{`COLOR.${colorsType}.${color}`}
+									</div>
+								))}
 						</div>
 					</div>
 				);

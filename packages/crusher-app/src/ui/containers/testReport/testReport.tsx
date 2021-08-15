@@ -21,7 +21,7 @@ import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
-import { getStatusString, showReviewButton } from '@utils/pages/buildReportUtils';
+import { getActionLabel, getStatusString, showReviewButton } from '@utils/pages/buildReportUtils';
 import { TTestInfo, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { usePageTitle } from "../../../hooks/seo";
 import { Modal } from "../../../../../dyson/src/components/molecules/Modal";
@@ -293,20 +293,22 @@ function FilterBar() {
 	);
 }
 
-function NormalStep() {
+function RenderStep({data}) {
+	const {status, message, actionType} = data
+	const isPassed = status === "COMPLETED"
 	return (
 		<div className={" flex px-44 relative mb-32"}>
 			<div css={tick}>
-				<PassedSVG height={20} width={20} />
+				<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
 			</div>
-			<div>
+			<div className={"mt-4"}>
 				<span
 					className={"text-13 font-600"}
 					css={css`
 						color: #d0d0d0;
 					`}
 				>
-					Open URL
+					{getActionLabel(actionType)}
 				</span>
 				<span
 					className={"text-12 ml-20"}
@@ -314,7 +316,7 @@ function NormalStep() {
 						color: #848484;
 					`}
 				>
-					Open URL to check if things are working fine or not
+					{message}
 				</span>
 			</div>
 		</div>
@@ -350,9 +352,10 @@ function TestOverview() {
 
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
-
+	const [openVideoModal, setOpenVideoModal] = useState(false);
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
+
 	useEffect(() => {
 		const testCard = document.querySelector(`#test-card-${id}`);
 		const stickyOverview = document.querySelector("#sticky-overview-bar");
@@ -375,7 +378,6 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 		observer.observe(testCard);
 	}, []);
-
 	const onCardClick = () => {
 		// if(expand===true){
 		// 	window.scrollTo()
@@ -383,9 +385,13 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		setExpand(!expand);
 	};
 
-	const [openVideoModal, setOpenVideoModal] = useState(false);
 
-	const videoUrl = testInstances[0]?.output?.video;
+
+	const testIndexByFilteration = 0; // Filter based on testreport and other configuration
+	const videoUrl = testInstances[testIndexByFilteration]?.output?.video;
+	const testInstanceData = testInstances[testIndexByFilteration];
+
+	const {steps} = testInstanceData
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={openVideoModal}>
@@ -411,7 +417,10 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 							</div>
 							<div className={"flex items-center mt-8"}>
 								<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-								<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
+								<span className={"flex text-13 mr-26"} onClick={(e)=>{
+									e.stopPropagation()
+									setOpenVideoModal.bind(this, true)
+								}}>
 									<PlaySVG className={"mr-10"} /> Replay recording
 								</span>
 								<span>
@@ -447,8 +456,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			<Conditional showIf={expand}>
 				<div className={"px-32 w-full mt-16"} css={stepsContainer}>
 					<div className={"ml-32 py-32"} css={stepsList}>
-						{Array.apply(null, Array(25)).map(() => (
-							<NormalStep />
+						{steps.map((step,index) => (
+							<RenderStep data={step} key={index}/>
 						))}
 					</div>
 				</div>
@@ -710,8 +719,8 @@ const passed = css`
 `;
 
 const review = css`
-	background: #9d6852;
-	border: 1px solid #ebb9a4;
+	background: #44293c;
+	border: 1px solid #77516c;
 	min-width: 172px;
 `;
 

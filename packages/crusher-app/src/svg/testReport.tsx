@@ -98,10 +98,10 @@ export function ReviewRequiredSVG(props) {
 	const { isMonochrome } = props;
 	return (
 		<svg width={22} height={22} viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<rect width={22} height={22} rx={11} fill={isMonochrome ? "#EAAA70" : "#fff"} />
+			<rect width={22} height={22} rx={11} fill={isMonochrome ? "#d9aecc" : "#fff"} />
 			<path
 				d="M12.235 14.75v1.75a.48.48 0 01-.149.352.48.48 0 01-.351.148h-2a.48.48 0 01-.352-.148.48.48 0 01-.148-.352v-1.75a.48.48 0 01.148-.352.48.48 0 01.352-.148h2a.48.48 0 01.351.148.48.48 0 01.149.352zm.234-8.25l-.219 6a.503.503 0 01-.16.352.494.494 0 01-.355.148h-2a.494.494 0 01-.356-.148.503.503 0 01-.16-.352L9 6.5a.46.46 0 01.137-.352A.468.468 0 019.485 6h2.5c.135 0 .251.05.347.148a.46.46 0 01.137.352z"
-				fill="#9d6852"
+				fill="#44293c"
 			/>
 		</svg>
 	);

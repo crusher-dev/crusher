@@ -63,7 +63,7 @@ class BuildsService {
 				buildInfo.buildTrigger,
 				buildInfo.browser,
 				JSON.stringify(buildInfo.config),
-				buildInfo.isDraftJob ? buildInfo.isDraftJob : null,
+				buildInfo.isDraftJob ? buildInfo.isDraftJob : false,
 			],
 		);
 	}

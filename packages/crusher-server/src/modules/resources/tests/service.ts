@@ -71,6 +71,8 @@ class TestService {
 			status: BuildStatusEnum.CREATED,
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: BrowserEnum.ALL,
+			isDraftJob: false,
+			config: { shouldRecordVideo: true, testIds: tests.map((test) => test.id) },
 		});
 	}
 

@@ -9,6 +9,7 @@ import { useCallback, useMemo, useState } from "react";
 import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
 import useSWR from "swr";
 import { RELEASE_API } from "@constants/api";
+import { useEffect } from "react";
 
 export function DownloadButton(props) {
 	const osType = useMemo(getOSType, []);
@@ -85,6 +86,10 @@ export function DownloadButton(props) {
 	@Note - Extract component overlay to dyson
  */
 export function Download({ onClose }: { onClose: Function }) {
+	useEffect(() => {
+		window.location = "crusher://test";
+	}, []);
+
 	return (
 		<OverlayTransparent onClose={onClose}>
 			<CenterLayout>

@@ -17,6 +17,10 @@ builder
       electronDist: path.resolve(__dirname, "../bin/linux"),
       electronVersion: "13.1.6",
       asar: false,
+      protocols: {
+        name: "electron-deep-linking",
+        schemes: ["crusher"],
+      }
 		},
 	})
   .then((a) => {

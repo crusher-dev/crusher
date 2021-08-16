@@ -32,7 +32,7 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 	const { pathname } = router;
 
 	if (isUserLoggedIn) {
-		if (user.onboardingSteps.INITIAL_ONBOARDING === "false") {
+		if (user.meta.INITIAL_ONBOARDING === "false") {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
 			if (isTempTestPending()) {

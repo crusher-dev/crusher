@@ -1,23 +1,23 @@
 export type ITeamAPIData = {
 	id: number;
 	name: string;
-	meta?: any | null;
+	meta: Record<string, any>;
 	plan: "FREE" | "STARTER" | "PRO";
 } | null;
 
 export type TUserAPIData = {
 	name: string;
+	meta: Record<string, any>;
 	avatar: string;
 	lastVisitedURL: string | null;
 	lastProjectSelectedId: number | null;
-	meta?: any | null;
 } | null;
 
 export type TProjectsData = Array<{
 	id: number;
 	name: string;
 	teamId: number;
-	meta?: any | null;
+	meta: Record<string, any>
 }> | null;
 
 export type TSystemInfo = {

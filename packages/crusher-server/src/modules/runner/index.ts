@@ -56,7 +56,7 @@ class TestsRunner {
 		return browsers.filter((browser) => browser !== BrowserEnum.ALL);
 	}
 
-	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload) {
+	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 
 		const testInstancesArr: Array<KeysToCamelCase<ITestInstancesTable> & { testInfo: KeysToCamelCase<ITestTable> }> = [];
@@ -84,8 +84,7 @@ class TestsRunner {
 
 		await Promise.all(testInitPromiseArr);
 
-		// @TODO: Remove dummy reference job from here
-		const referenceBuild = await this.buildsService.getBuild(build.insertId);
+		const referenceBuild = await this.buildsService.getBuild(baselineBuildId ? baselineBuildId : build.insertId);
 
 		const buildReportInsertRecord = await this.buildReportService.createBuildReport(
 			this.getTotalTestsCount(tests.length, buildPayload.browser),

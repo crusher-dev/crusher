@@ -6,10 +6,11 @@ interface IProjectTable extends BaseRowInterface {
 	name: string;
 	team_id: number;
 	meta?: string;
+	baseline_job_id: number;
 }
 
 // Create Project Payload, everything except id
-type ICreateProjectPayload = KeysToCamelCase<Omit<IProjectTable, "id">>;
+type ICreateProjectPayload = KeysToCamelCase<Omit<IProjectTable, "id" | "baseline_job_id">>;
 
 interface IProjectEnvironmentTable extends BaseRowInterface {
 	id: number;

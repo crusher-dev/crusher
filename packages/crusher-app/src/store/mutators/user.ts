@@ -12,29 +12,35 @@ import { projectsAtom } from '../atoms/global/project';
 interface IUpdateUserOnboarding{
 	type: 'user'| 'team' | 'project',
 	key: string,
-	value: string
+	value: any
 };
 
 
-const updateUserMeta = (payload: Record<string, any>)=>{
+const updateUserMeta = (meta: Record<string, any>)=>{
 	return backendRequest(updateUserMetaAPI(), {
 		method: RequestMethod.POST,
-		payload
+		payload: {
+			meta
+		}
 	})
 }
 
 
-const updateProjectMeta = (projectId:number, payload: Record<string, any>)=>{
+const updateProjectMeta = (projectId:number, meta: Record<string, any>)=>{
 	return backendRequest(updateProjectAPI(projectId), {
 		method: RequestMethod.POST,
-		payload
+		payload: {
+			meta
+		}
 	})
 }
 
-const updateTeamMeta = (payload: Record<string, any>)=>{
+const updateTeamMeta = (meta: Record<string, any>)=>{
 	return backendRequest(updateTeamMetaAPI(), {
 		method: RequestMethod.POST,
-		payload
+		payload: {
+			meta
+		}
 	})
 }
 

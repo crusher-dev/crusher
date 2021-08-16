@@ -103,7 +103,7 @@ function BuildSearchableList() {
 
 	const { status, triggeredBy, search, page } = filters;
 	const isFilterEnabled = !!status || !!triggeredBy || !!search || !!page;
-	const currentPage = filters.page || 1;
+	const currentPage = filters.page || 0;
 
 	const isZeroBuild = data && data.list.length === 0;
 

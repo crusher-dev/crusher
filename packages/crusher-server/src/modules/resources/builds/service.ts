@@ -66,8 +66,8 @@ class BuildsService {
 
 		query += " ORDER BY jobs.created_at DESC";
 
-		if (filter.page) {
-			query += " LIMIT ? OFFSET ?";
+		if (filter.page !== -1) {
+			query += " LIMIT ?, ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
 			queryParams.push(`${filter.page * 10}`);

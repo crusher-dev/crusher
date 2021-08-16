@@ -114,7 +114,7 @@ class TestService {
 
 		// -1 means ignore this filter
 		if (filter.page !== -1) {
-			query += " LIMIT ? OFFSET ?";
+			query += " LIMIT ?, ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
 			queryParams.push(`${filter.page * 10}`);

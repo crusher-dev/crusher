@@ -124,8 +124,10 @@ export class UserController {
 	@Post("/users/actions/update.meta")
 	async updateMeta(@CurrentUser({ required: true }) user, @Body() body: { meta: any }) {
 		if (typeof body.meta !== "object") throw new BadRequestError("meta is not JSON compatible");
+		const userRecord = await this.usersService.getUserInfo(user.id);
+		const finalMeta = userRecord.meta ? { ...JSON.parse(userRecord.meta), ...body } : body.meta;
 
-		await this.usersService.updateMeta(JSON.stringify(body.meta), user.user_id);
+		await this.usersService.updateMeta(JSON.stringify(finalMeta), user.user_id);
 		return "Successful";
 	}
 

@@ -3,22 +3,19 @@ import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
 import { userAtom } from "../../../store/atoms/global/user";
 import { useAtom } from "jotai";
 import { teamAtom } from "../../../store/atoms/global/team";
-import { useEffect, useRef, useState } from "react";
-
+import { useState } from "react";
 import { resolvePathToBackendURI } from "@utils/url";
-import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { useRouter } from "next/router";
+import { MenuItem } from "@components/molecules/MenuItem";
+import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
 
-function Dropdown() {
+function DropdownContent() {
 	const router = useRouter();
 	return (
-		<div css={dropdDown} className={"flex flex-col justify-between"}>
+		<div className={"flex flex-col justify-between h-full"}>
 			<div>
 				{[0, 0, 0, 0, 0].map((item) => (
-					<div css={dropDownItem} className={"flex justify-between items-center px-16 py-12"}>
-						<span className={"name font-500 leading-none font-cera"}>New Profile</span>
-						<span className={"text-12 shortcut leading-none"}>Ctrl + A</span>
-					</div>
+					<MenuItem label={"New Profile"} rightLabel={"Ctrl + A"} />
 				))}
 			</div>
 
@@ -28,16 +25,14 @@ function Dropdown() {
 						color: #1a1d26;
 					`}
 				/>
-				<div
-					css={dropDownItem}
-					className={"flex justify-between items-center px-16 py-12"}
+				<MenuItem
+					showHighlighted={true}
 					onClick={() => {
 						router.push(resolvePathToBackendURI("/users/actions/logout"));
 					}}
-				>
-					<span className={"name font-500 leading-none font-cera"}>Logout</span>
-					<span className={"text-12 shortcut leading-none"}>Ctrl + A</span>
-				</div>
+					label={"Logout"}
+					rightLabel={"Ctrl + A"}
+				/>
 			</div>
 		</div>
 	);
@@ -56,7 +51,7 @@ export function UserNTeam() {
 				</div>
 				<div>
 					<div className={"font-cera mb-4 font-600"} css={name}>
-						{team.name.substr(0, 15)}
+						{team.name.substr(0, 11)}
 					</div>
 					<div css={description} className={"font-500 leading-none capitalize"}>
 						{team.plan.toLowerCase()}
@@ -64,49 +59,25 @@ export function UserNTeam() {
 				</div>
 			</div>
 
-			<ShowOnClick component={<Dropdown />} callback={setShow.bind(this)}>
+			{/*<ShowOnClick component={<DropdownContent />} callback={setShow.bind(this)}>*/}
+			{/*	<div className={"flex items-center pr"}>*/}
+			{/*		<UserImage url={user.avatar} />*/}
+			{/*	</div>*/}
+			{/*</ShowOnClick>*/}
+
+			<Dropdown
+				component={<DropdownContent />}
+				dropdownCSS={css`
+					height: 276rem;
+				`}
+			>
 				<div className={"flex items-center pr"}>
 					<UserImage url={user.avatar} />
 				</div>
-			</ShowOnClick>
+			</Dropdown>
 		</div>
 	);
 }
-
-const dropDownItem = css`
-	.name {
-		font-size: 12.5rem;
-		color: #e7e7e8;
-	}
-
-	.shortcut {
-		color: #7b7b7b;
-	}
-
-	:hover {
-		background: rgba(32, 35, 36, 0.62);
-	}
-
-	hr {
-		background: red;
-	}
-`;
-export const dropdDown = css`
-	top: calc(100% + 4rem);
-	left: calc(100% - 54rem);
-	position: absolute;
-
-	width: 206.03rem;
-	height: 276rem;
-
-	background: #0f1112;
-	border: 1px solid rgba(42, 47, 50, 0.8);
-	box-sizing: border-box;
-	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);
-	border-radius: 6px;
-	padding: 8rem 0;
-	z-index: 1;
-`;
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
 	return (

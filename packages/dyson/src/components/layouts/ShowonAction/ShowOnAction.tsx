@@ -1,10 +1,17 @@
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { OnOutsideClick } from "../onOutsideClick/onOutsideClick";
-export function ShowOnClick({ children, component, callback, initialState }) {
+
+type TShowOnClick = {
+	component: ReactElement | string;
+	callback: Function;
+	initialState: boolean;
+} & React.DetailedHTMLProps<any, any>;
+
+export function ShowOnClick({ children, component, callback, initialState }: TShowOnClick) {
 	const [showDropDown, setShow] = useState(initialState || false);
 
 	useEffect(() => {
-		callback();
+		callback && callback();
 	}, [showDropDown]);
 
 	return (

@@ -73,8 +73,10 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 				<ExpandableListItem title="View reports" completed={false}></ExpandableListItem>
 			</ExpandableList>
 			<div className={"flex flex-row mt-30"}>
-				<div css={haveTestStyle} className="text-13">
-					Have tests? Import them over
+				<div css={haveTestStyle} className="migrate-test text-13">
+					<a href={"https://forms.gle/CdpyTa61LSt9nj4G6"} target={"_blank"}>
+						Already have tests? Migrate to Crusher
+					</a>
 				</div>
 				<div className={"ml-auto flex items-center"}>
 					<span css={checkoutProjectStyle} className={"text-13 mr-12"}>
@@ -93,6 +95,12 @@ const listStyle = css`
 `;
 const haveTestStyle = css`
 	color: #fff !important;
+	a {
+		cursor: default;
+	}
+	:hover {
+		text-decoration: underline;
+	}
 `;
 const checkoutProjectStyle = css`
 	color: rgb(208, 208, 208) !important;

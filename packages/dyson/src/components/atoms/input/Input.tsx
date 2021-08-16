@@ -38,7 +38,7 @@ const inputBox = css`
 	box-sizing: border-box;
 	border-radius: 4px;
 	height: 46rem;
-	padding-top: 5rem;
+	padding-top: 3rem;
 	font-size: 14rem;
 	padding-left: 16rem;
 	color: #fff;

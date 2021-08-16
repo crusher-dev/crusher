@@ -35,11 +35,11 @@ export const OnBoardingTutorialVideo = () => {
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
 							</div>
 						</a>
-						<a href={"https://crusher.dev"}>
-							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
-								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>
-							</div>
-						</a>
+						{/*<a href={"https://crusher.dev"}>*/}
+						{/*	<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>*/}
+						{/*		<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>*/}
+						{/*	</div>*/}
+						{/*</a>*/}
 					</div>
 				</div>
 			</div>

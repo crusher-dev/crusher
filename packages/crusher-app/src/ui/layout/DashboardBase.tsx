@@ -24,6 +24,9 @@ import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../types/RequestOptions";
 import { getRunTestApi } from "@constants/api";
 import { sendSnackBarEvent } from "@utils/notify";
+import { MenuItem } from "@components/molecules/MenuItem";
+import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
+import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -141,11 +144,11 @@ function LeftSection() {
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
 							</div>
 						</a>
-						<a href={"https://crusher.dev"}>
-							<div css={navLink} className={"flex items-center text-13 mt-4 mb-12 leading-none"}>
-								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>
-							</div>
-						</a>
+						{/*<a href={"https://crusher.dev"}>*/}
+						{/*	<div css={navLink} className={"flex items-center text-13 mt-4 mb-12 leading-none"}>*/}
+						{/*		<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>*/}
+						{/*	</div>*/}
+						{/*</a>*/}
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
@@ -154,11 +157,20 @@ function LeftSection() {
 						</div>
 					</Conditional>
 
-					<ShowOnClick component={<Dropdown />} callback={() => {}}>
+					<Dropdown
+						component={<DropdownContent />}
+						dropdownCSS={css`
+							bottom: -10px;
+							top: unset;
+							left: calc(100% - 54px) !important;
+							height: fit-content;
+							width: 206.03px;
+						`}
+					>
 						<div css={navLink} className={"flex items-center pr text-13 mt-4"}>
 							<NewTabSVG className={"mr-12 mb-2"} /> Help & Support
 						</div>
-					</ShowOnClick>
+					</Dropdown>
 
 					<div
 						css={navLink}
@@ -209,7 +221,7 @@ export const dropdDown = css`
 	z-index: 1;
 `;
 
-function Dropdown() {
+function DropdownContent() {
 	const router = useRouter();
 	useEffect(() => {
 		loadCrisp(() => {
@@ -217,63 +229,35 @@ function Dropdown() {
 		});
 	}, []);
 	return (
-		<div css={dropdDown} className={"flex flex-col justify-between"}>
+		<div className={"flex flex-col justify-between"}>
 			<div>
-				<div css={dropDownItem} className={"flex justify-between items-center px-16 py-12"} onClick={openChatBox}>
-					<span className={"name font-500 leading-none font-cera"}>Get live support</span>
-				</div>
-
-				<div
-					css={dropDownItem}
-					className={"flex justify-between items-center px-16 py-12"}
+				<MenuItem showHightlighted={true} label={"Get Live support"} onClick={openChatBox}></MenuItem>
+				<MenuItem
+					selected={true}
+					label={"Request a feature"}
 					onClick={() => {
 						router.push("https://github.com/crusherdev/crusher/issues");
 					}}
-				>
-					<span className={"name font-500 leading-none font-cera"}>Request a feature</span>
-				</div>
+				></MenuItem>
 
-				<div
-					css={dropDownItem}
-					className={"flex justify-between items-center px-16 py-12"}
+				<MenuItem
+					label={"Report Issue"}
 					onClick={() => {
 						router.push("https://github.com/crusherdev/crusher/issues");
 					}}
-				>
-					<span className={"name font-500 leading-none font-cera"}>Report issue</span>
-				</div>
+				></MenuItem>
 
-				<div
-					css={dropDownItem}
-					className={"flex justify-between items-center px-16 py-12"}
+				<MenuItem
+					label={"View docs"}
 					onClick={() => {
 						router.push("https://docs.crusher.dev");
 					}}
-				>
-					<span className={"name font-500 leading-none font-cera"}>View docs</span>
-				</div>
+				></MenuItem>
 			</div>
 		</div>
 	);
 }
-const dropDownItem = css`
-	.name {
-		font-size: 12.5rem;
-		color: #e7e7e8;
-	}
 
-	.shortcut {
-		color: #7b7b7b;
-	}
-
-	:hover {
-		background: rgba(32, 35, 36, 0.62);
-	}
-
-	hr {
-		background: red;
-	}
-`;
 const TOP_NAV_LINK = [
 	{
 		name: "overview",
@@ -295,7 +279,7 @@ const TOP_NAV_LINK = [
 	},
 	{
 		name: "Settings",
-		path: "/app/setting",
+		path: "/settings/project",
 	},
 ];
 

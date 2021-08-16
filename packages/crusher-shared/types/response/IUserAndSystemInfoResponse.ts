@@ -11,12 +11,6 @@ export type TUserAPIData = {
 	avatar: string;
 	lastVisitedURL: string | null;
 	lastProjectSelectedId: number | null;
-	onboardingSteps: {
-		INITIAL_ONBOARDING: boolean;
-		CREATED_TEST: boolean;
-		WATCHED_VIDEO: boolean;
-		ADDED_ALERT: boolean;
-	};
 } | null;
 
 export type TProjectsData = Array<{

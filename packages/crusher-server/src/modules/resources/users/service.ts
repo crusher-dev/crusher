@@ -124,12 +124,6 @@ class UsersService {
 				lastVisitedURL: null,
 				meta: userInfo ? JSON.parse(userInfo.meta) : null,
 				lastProjectSelectedId: null,
-				onboardingSteps: {
-					INITIAL_ONBOARDING: true,
-					CREATED_TEST: false,
-					WATCHED_VIDEO: false,
-					ADDED_ALERT: false,
-				},
 			};
 		};
 
@@ -142,12 +136,16 @@ class UsersService {
 			};
 		};
 
+		const projectsDataArr = teamProjects.map((project) => {
+			return { ...project, meta: project.meta ? JSON.parse(project.meta) : null };
+		});
+
 		return {
 			userId: userInfo ? userInfo.id : null,
 			isUserLoggedIn: !!userInfo,
 			userData: userInfo ? getUserData(userInfo) : null,
 			team: teamInfo ? getTeamData(teamInfo) : null,
-			projects: teamProjects,
+			projects: projectsDataArr,
 			system: {
 				REDIS_OPERATION: {
 					working: this.redisManager.isAlive(),

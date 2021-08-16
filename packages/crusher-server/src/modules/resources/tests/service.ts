@@ -64,17 +64,23 @@ class TestService {
 
 	async runTestsInProject(projectId: number, userId: number) {
 		const testsData = await this.getTestsInProject(projectId, true);
+		const projectRecord = await this.projectService.getProject(projectId);
 
-		return this.testsRunner.runTests(testsData.list, {
-			userId: userId,
-			projectId: projectId,
-			host: "null",
-			status: BuildStatusEnum.CREATED,
-			buildTrigger: BuildTriggerEnum.MANUAL,
-			browser: BrowserEnum.ALL,
-			isDraftJob: false,
-			config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
-		});
+		return this.testsRunner.runTests(
+			testsData.list,
+			{
+				userId: userId,
+				projectId: projectId,
+				host: "null",
+				status: BuildStatusEnum.CREATED,
+				buildTrigger: BuildTriggerEnum.MANUAL,
+				browser: BrowserEnum.ALL,
+				isDraftJob: false,
+				config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
+				meta: { isProjectLevelBuild: true },
+			},
+			projectRecord.baselineJobId,
+		);
 	}
 
 	async getCompleteTestInfo(testId: number) {

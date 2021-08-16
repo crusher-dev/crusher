@@ -135,7 +135,6 @@ const GithubDiscordSection = () => {
 							key: USER_META_KEYS.INITIAL_ONBOARDING,
 							value: true
 						})
-						alert("dfs")
 					}}
 				>
 					Open Dashboard

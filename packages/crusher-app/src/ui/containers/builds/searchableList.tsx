@@ -98,7 +98,7 @@ function BuildSearchableList() {
 	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger), { suspense: true });
 
 	const buildItems = useMemo(() => {
-		return data.map((buildInfo: IProjectBuildListItem) => {
+		return data.list.map((buildInfo: IProjectBuildListItem) => {
 			return (
 				<Link href={`/app/build/${buildInfo.id}`}>
 					<BuildItemCard info={buildInfo} />
@@ -113,12 +113,12 @@ function BuildSearchableList() {
 
 	return (
 		<div>
-			<Conditional showIf={data && data.length > 0}>
+			<Conditional showIf={data && data.list.length > 0}>
 				<SearchFilterBar placeholder={"Search builds"} handleInputChange={handleInputChange} value={searchQuery} />
 				<div className={"mt-34"}>{buildItems}</div>
 			</Conditional>
 
-			<Conditional showIf={data && data.length === 0}>
+			<Conditional showIf={data && data.list.length === 0}>
 				<EmptyList title={"You don’t have any build right now."} subTitle={"Once ran, builds will pop here."} />
 			</Conditional>
 		</div>

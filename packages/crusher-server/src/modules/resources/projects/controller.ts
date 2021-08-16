@@ -72,12 +72,6 @@ class ProjectsController {
 		await this.projectsService.updateMeta(JSON.stringify(body.meta), projectId);
 		return "Successful";
 	}
-
-	@Authorized()
-	@Get("/projects/:project_id/users")
-	async getUsersInProject(@Param("project_id") projectId: number) {
-		return this.usersService.getUsersInProject(projectId);
-	}
 }
 
 export { ProjectsController };

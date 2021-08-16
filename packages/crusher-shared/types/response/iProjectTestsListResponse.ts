@@ -10,6 +10,5 @@ export interface IProjectTestItem {
 	firstRunCompleted: boolean;
 }
 
-export type IProjectTestsListResponse = Array<IProjectTestItem>;
+export type IProjectTestsListResponse = { list: Array<IProjectTestItem>; totalPages: number; };
 
-export { IProjectTestItem, IProjectTestsListResponse };

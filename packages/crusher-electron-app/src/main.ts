@@ -1,7 +1,35 @@
 import * as path from "path";
-import { app, BrowserWindow, session, ipcMain, screen, shell, webContents } from "electron";
+import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents } from "electron";
 import userAgents from "../../crusher-shared/constants/userAgents";
+const gotTheLock = app.requestSingleInstanceLock();
 
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+
+if (!gotTheLock) {
+	console.warn("Two app instances running");
+	app.quit();
+} else {
+	app.on("second-instance", (event, argv, workingDirectory) => {
+		let url;
+		const dialogResponse = dialog.showMessageBoxSync({
+			message: "Current saved state would be lost. Do you want to continue?",
+			type: "question",
+			buttons: ["Yes", "Cancel"],
+			defaultId: 1,
+		});
+		if (dialogResponse === 0) {
+			app.relaunch();
+			app.exit();
+		}
+		// Protocol handler for win and linux
+		// argv: An array of the second instance’s (command line / deep linked) arguments
+		if (process.platform == "win32" || process.platform === "linux") {
+			// Keep only command line / deep linked arguments
+			url = argv.slice(1);
+			console.info("Args = " + url);
+		}
+	});
+}
 // To fix twitter webview issue
 app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
 app.userAgentFallback =
@@ -224,6 +252,11 @@ app.whenReady().then(() => {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow();
 	});
 });
+
+if (!app.isDefaultProtocolClient("crusher")) {
+	// Define custom protocol handler. Deep linking works on packaged versions of the application!
+	app.setAsDefaultProtocolClient("crusher");
+}
 
 app.on("window-all-closed", async function () {
 	const cookies = await session.defaultSession.cookies.get({ domain: APP_DOMAIN });

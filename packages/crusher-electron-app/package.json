@@ -14,9 +14,12 @@
 		"dev:extension": "NODE_ENV=development webpack --config webpack/webpack.extension.ts",
 		"build": "webpack --config webpack/webpack.config.ts",
 		"build:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",
-		"release:linux": "yarn build && bash scripts/build-linux.sh",
-		"release:mac": "yarn build && bash scripts/build-darwin.sh",
-		"release:all": "yarn build && bash scripts/build-all.sh"
+		"release:linux": "yarn build && bash scripts/build-linux.sh && yarn pack:linux",
+		"release:mac": "yarn build && bash scripts/build-darwin.sh && yarn pack:mac",
+		"release:all": "yarn build && bash scripts/build-all.sh && yarn pack:all",
+		"pack:linux": "node scripts/pack-linux.js",
+		"pack:mac": "node scripts/pack-max.js",
+		"pack:all": "yarn pack:linux && yarn pack:mac"
 	},
 	"dependencies": {
 		"@medv/finder": "^2.0.0",
@@ -37,6 +40,8 @@
 		"dotenv": "^10.0.0",
 		"ejs": "^3.1.6",
 		"electron": "^12.0.2",
+		"electron-builder": "^22.11.7",
+		"electron-deeplink": "^1.0.7",
 		"html-tags": "^3.1.0",
 		"html2canvas": "^1.0.0-rc.7",
 		"mkdirp": "^1.0.4",

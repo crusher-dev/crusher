@@ -174,7 +174,7 @@ function TestSearchableList() {
 	});
 
 	const testsItems = useMemo(() => {
-		return data.map((test: IProjectTestItem) => {
+		return data.list.map((test: IProjectTestItem) => {
 			const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted } = test;
 
 			return (
@@ -190,7 +190,7 @@ function TestSearchableList() {
 				/>
 			);
 		});
-	}, [data]);
+	}, [data.list]);
 
 	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(event.target.value);
@@ -211,14 +211,14 @@ function TestSearchableList() {
 
 	return (
 		<div>
-			<Conditional showIf={data && data.length > 0}>
+			<Conditional showIf={data && data.list.length > 0}>
 				<SearchFilterBar placeholder={"Search tests"} handleInputChange={handleInputChange} value={searchQuery!} />
 				<div css={testItemsGridContainerStyle} className={"flex mt-44"}>
 					{testsItems}
 				</div>
 			</Conditional>
 
-			<Conditional showIf={data && data.length === 0}>
+			<Conditional showIf={data && data.list.length === 0}>
 				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
 			</Conditional>
 		</div>

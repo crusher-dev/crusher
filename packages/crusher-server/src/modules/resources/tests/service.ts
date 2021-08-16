@@ -117,8 +117,8 @@ class TestService {
 			query += " LIMIT ? OFFSET ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
-			queryParams.push(`10`);
 			queryParams.push(`${filter.page * 10}`);
+			queryParams.push(`10`);
 		}
 
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / 10), list: await this.dbManager.fetchAllRows(query, queryParams) };

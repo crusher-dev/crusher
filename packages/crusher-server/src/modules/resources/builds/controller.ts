@@ -22,7 +22,7 @@ export class BuildsController {
 	@Get("/projects/:project_id/builds")
 	public async getBuildsList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { trigger?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string; page?: number; status?: BuildReportStatusEnum },
+		@QueryParams() params: { trigger?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum },
 	): Promise<IProjectBuildListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
 		if (!params.page) params.page = 0;
 

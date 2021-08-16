@@ -1,6 +1,7 @@
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { resolvePathToBackendURI } from "@utils/url";
-import { identity, pickBy } from "lodash";
+import pickBy from "lodash/pickBy";
+import identity from "lodash/identity";
 
 export const USER_SYSTEM_API = resolvePathToBackendURI("/users/actions/getUserAndSystemInfo");
 export const getTestListAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests`);

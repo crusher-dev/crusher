@@ -1,6 +1,6 @@
 import { atom } from "jotai";
-import { pickBy, identity } from "lodash";
-import { useEffect } from "react";
+import pickBy from "lodash/pickBy";
+import identity from "lodash/identity";
 
 const filterObjectByKeys = (object: Record<string, any>, keys: Array<string>) => {
 	const baseObject: Record<string, any> = {};

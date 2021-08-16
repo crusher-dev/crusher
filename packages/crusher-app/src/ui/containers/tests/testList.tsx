@@ -213,7 +213,7 @@ function TestSearchableList() {
 	return (
 		<div>
 			<Conditional showIf={data && data.list.length > 0}>
-				<div css={testItemsGridContainerStyle} className={"flex mt-44"}>
+				<div css={testItemsGridContainerStyle} className={"flex"}>
 					{testsItems}
 				</div>
 			</Conditional>

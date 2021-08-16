@@ -8,11 +8,11 @@ type TMenuItem = {
 	selected: boolean;
 } & React.DetailedHTMLProps<any, any>;
 
-export function MenuItem({ label, rightLabel, showHighlighted = false, selected = false, ...otherProps }: TMenuItem) {
+export function MenuItem({ label, rightLabel, showHighlighted = false, selected = false, className, ...otherProps }: TMenuItem) {
 	return (
 		<div
 			css={[dropDownItem, showHighlighted && highlightHoverStyle, selected && isSelectedStyle]}
-			className={"flex justify-between items-center px-16 py-12"}
+			className={`flex justify-between items-center px-16 py-12 ${className}`}
 			{...otherProps}
 		>
 			<span className={"name font-500 leading-none font-cera"}>{label}</span>

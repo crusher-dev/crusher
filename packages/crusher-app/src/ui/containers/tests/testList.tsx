@@ -16,7 +16,7 @@ import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
 import { TestStatusSVG } from "@svg/testReport";
-import { PaginationButton } from '../../../../../dyson/src/components/molecules/PaginationButton';
+import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -213,7 +213,6 @@ function TestSearchableList() {
 	return (
 		<div>
 			<Conditional showIf={data && data.list.length > 0}>
-				<SearchFilterBar placeholder={"Search tests"} handleInputChange={handleInputChange} value={searchQuery!} />
 				<div css={testItemsGridContainerStyle} className={"flex mt-44"}>
 					{testsItems}
 				</div>
@@ -222,10 +221,6 @@ function TestSearchableList() {
 			<Conditional showIf={data && data.list.length === 0}>
 				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
 			</Conditional>
-
-			<div className={"flex justify-center mt-40"}>
-				<PaginationButton/>
-			</div>
 		</div>
 	);
 }

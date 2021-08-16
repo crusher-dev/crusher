@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useMemo } from "react";
+import React, { ChangeEvent, useState, useMemo, useCallback } from "react";
 import { Conditional } from "dyson/src/components/layouts";
 import { CompleteStatusIconSVG } from "@svg/dashboard";
 import { ClockIconSVG, CommentIconSVG, DangerIconSVG, DropdownIconSVG } from "@svg/builds";
@@ -14,6 +14,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { TestStatusSVG } from "@svg/testReport";
 import { showReviewButton } from "@utils/pages/buildReportUtils";
+import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
+import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -94,8 +96,15 @@ const noCommentsStyle = css`
 function BuildSearchableList() {
 	const [project] = useAtom(currentProject);
 	const { query } = useRouter();
-	const [searchQuery, setSearchQuery] = useState(null as null | string);
-	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger), { suspense: true });
+	const [filters, setFilters] = useAtom(buildFiltersAtom);
+	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger, filters), { suspense: true });
+	const { totalPages } = data;
+
+	const { status, triggeredBy, search, page } = filters;
+	const isFilterEnabled = !!status || !!triggeredBy || !!search || !!page;
+	const currentPage = filters.page || 1;
+
+	const isZeroBuild = data && data.list.length === 0;
 
 	const buildItems = useMemo(() => {
 		return data.list.map((buildInfo: IProjectBuildListItem) => {
@@ -105,21 +114,41 @@ function BuildSearchableList() {
 				</Link>
 			);
 		});
-	}, [searchQuery, data]);
+	}, [data]);
 
-	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setSearchQuery(event.target.value);
-	};
+	const setPage = useCallback((page) => {
+		setFilters({ ...filters, page });
+	}, []);
+
+	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
 
 	return (
 		<div>
-			<Conditional showIf={data && data.list.length > 0}>
-				<SearchFilterBar placeholder={"Search builds"} handleInputChange={handleInputChange} value={searchQuery} />
+			<Conditional showIf={!hasNoBuildsOverall}>
+				<SearchFilterBar data={data} placeholder={"Search builds"}  />
+			</Conditional>
+
+			<Conditional showIf={!isZeroBuild}>
 				<div className={"mt-34"}>{buildItems}</div>
 			</Conditional>
 
-			<Conditional showIf={data && data.list.length === 0}>
+			<Conditional showIf={hasNoBuildsOverall}>
 				<EmptyList title={"You don’t have any build right now."} subTitle={"Once ran, builds will pop here."} />
+			</Conditional>
+
+			<Conditional showIf={isZeroBuild && isFilterEnabled }>
+				<EmptyList title={"No builds yet."} subTitle={"Your selection doesn't have any results."} />
+			</Conditional>
+
+			<Conditional showIf={!isZeroBuild}>
+				<div className={"flex justify-center mt-64 mb-80"}>
+					<PaginationButton
+						isPreviousActive={currentPage > 1}
+						isNextActive={currentPage < totalPages}
+						onPreviousClick={setPage.bind(this, currentPage - 1)}
+						onNextClick={setPage.bind(this, currentPage + 1)}
+					/>
+				</div>
 			</Conditional>
 		</div>
 	);

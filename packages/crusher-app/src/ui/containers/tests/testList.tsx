@@ -163,7 +163,7 @@ const itemImageStyle = css`
 `;
 
 function TestSearchableList() {
-	const [searchQuery, setSearchQuery] = useState(null as null | string);
+
 	const [project] = useAtom(currentProject);
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
@@ -193,12 +193,9 @@ function TestSearchableList() {
 		});
 	}, [data.list]);
 
-	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setSearchQuery(event.target.value);
-	};
 
 	useEffect(() => {
-		if (!tempTestId) return;
+		if (!tempTestId || tempTestId==="null") return;
 		(async () => {
 			setTempTest(null);
 

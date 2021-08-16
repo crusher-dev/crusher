@@ -16,6 +16,7 @@ import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
 import { TestStatusSVG } from "@svg/testReport";
+import { PaginationButton } from '../../../../../dyson/src/components/molecules/PaginationButton';
 
 interface IBuildItemCardProps {
 	id: number;
@@ -221,6 +222,10 @@ function TestSearchableList() {
 			<Conditional showIf={data && data.list.length === 0}>
 				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
 			</Conditional>
+
+			<div className={"flex justify-center mt-40"}>
+				<PaginationButton/>
+			</div>
 		</div>
 	);
 }

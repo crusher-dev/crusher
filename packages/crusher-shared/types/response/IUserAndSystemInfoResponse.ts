@@ -1,28 +1,23 @@
 export type ITeamAPIData = {
 	id: number;
 	name: string;
-	meta?: any;
+	meta?: any | null;
 	plan: "FREE" | "STARTER" | "PRO";
 } | null;
 
 export type TUserAPIData = {
 	name: string;
-	meta?: any;
 	avatar: string;
 	lastVisitedURL: string | null;
 	lastProjectSelectedId: number | null;
-	onboardingSteps: {
-		INITIAL_ONBOARDING: boolean;
-		CREATED_TEST: boolean;
-		WATCHED_VIDEO: boolean;
-		ADDED_ALERT: boolean;
-	};
+	meta?: any | null;
 } | null;
 
 export type TProjectsData = Array<{
 	id: number;
 	name: string;
 	teamId: number;
+	meta?: any | null;
 }> | null;
 
 export type TSystemInfo = {

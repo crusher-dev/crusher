@@ -122,7 +122,7 @@ class UsersService {
 				avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
 				// @NOTE: Remove hardcoding from the next 3 fields
 				lastVisitedURL: null,
-				meta: userInfo ? JSON.parse(userInfo.meta) : null,
+				meta: userInfo ? JSON.parse(userInfo.meta) : {},
 				lastProjectSelectedId: null,
 			};
 		};
@@ -131,13 +131,13 @@ class UsersService {
 			return {
 				id: teamInfo.id,
 				name: teamInfo.name,
-				meta: teamInfo.meta ? JSON.parse(teamInfo.meta) : null,
+				meta: teamInfo.meta ? JSON.parse(teamInfo.meta) : {},
 				plan: teamInfo.tier,
 			};
 		};
 
 		const projectsDataArr = teamProjects.map((project) => {
-			return { ...project, meta: project.meta ? JSON.parse(project.meta) : null };
+			return { ...project, meta: project.meta ? JSON.parse(project.meta) : {} };
 		});
 
 		return {

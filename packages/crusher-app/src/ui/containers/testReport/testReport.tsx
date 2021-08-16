@@ -232,7 +232,7 @@ function TestOverviewTab() {
 				</div>
 			</div>
 			<div css={rightSection} className={"ml-36 pt-12"}>
-				<div className={"mb-32"}>
+				{/* <div className={"mb-32"}>
 					<div className={"font-600 text-14 mb-16"}>Reviewers</div>
 					<div css={tag} className={"text-13 px-18 py-7 mb-12"}>
 						Himanshu
@@ -240,7 +240,7 @@ function TestOverviewTab() {
 					<div css={tag} className={"text-13 px-18  py-7"}>
 						Himanshu
 					</div>
-				</div>
+				</div> */}
 				<div>
 					<div className={"font-600 text-14 mb-16"}>Environment</div>
 					<div css={tag} className={"text-13 px-18  py-7 mb-12"}>

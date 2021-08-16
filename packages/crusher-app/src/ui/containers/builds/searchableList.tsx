@@ -14,6 +14,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { TestStatusSVG } from "@svg/testReport";
 import { showReviewButton } from "@utils/pages/buildReportUtils";
+import { timeSince } from "@utils/dateTimeUtils";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -55,7 +56,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 				</div>
 
 				<div className={"mt-14 text-13"}>
-					<span className={"text-13"}>{createdAt}</span>
+					<span className={"text-13"}>{timeSince(new Date(createdAt))}</span>
 					<span className={"text-13 ml-23 capitalize"}>{status}</span>
 					<span className={"text-13 ml-28"}>by - {triggeredBy.name}</span>
 				</div>

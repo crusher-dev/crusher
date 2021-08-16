@@ -69,7 +69,7 @@ class ProjectsController {
 	async updateMeta(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number, @Body() body: { meta: any }) {
 		if (typeof body.meta !== "object") throw new BadRequestError("meta is not JSON compatible");
 		const projectRecord = await this.projectsService.getProject(projectId);
-		const finalMeta = projectRecord.meta ? { ...JSON.parse(projectRecord.meta), ...body } : body.meta;
+		const finalMeta = projectRecord.meta ? { ...JSON.parse(projectRecord.meta), ...body.meta } : body.meta;
 
 		await this.projectsService.updateMeta(JSON.stringify(finalMeta), projectId);
 		return "Successful";

@@ -13,7 +13,7 @@ class TeamsController {
 	async updateTeamMeta(@CurrentUser({ required: true }) user, @Body() body: { meta: any }) {
 		if (typeof body.meta !== "object") throw new BadRequestError("meta is not JSON compatible");
 		const teamRecord = await this.teamsService.getTeam(user.team_id);
-		const finalMeta = teamRecord.meta ? { ...JSON.parse(teamRecord.meta), ...body } : body.meta;
+		const finalMeta = teamRecord.meta ? { ...JSON.parse(teamRecord.meta), ...body.meta } : body.meta;
 
 		await this.teamsService.updateMeta(JSON.stringify(finalMeta), user.team_id);
 		return "Successful";

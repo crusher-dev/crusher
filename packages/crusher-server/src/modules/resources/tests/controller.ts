@@ -151,7 +151,7 @@ export class TestController {
 	async updateTestMeta(@Param("test_id") testId: number, @Body() body: { meta: any }) {
 		if (typeof body.meta !== "object") throw new BadRequestError("meta is not JSON compatible");
 		const testRecord = await this.testService.getTest(testId);
-		const finalMeta = testRecord.meta ? { ...JSON.parse(testRecord.meta), ...body } : body.meta;
+		const finalMeta = testRecord.meta ? { ...JSON.parse(testRecord.meta), ...body.meta } : body.meta;
 
 		await this.testService.updateMeta(JSON.stringify(finalMeta), testId);
 		return "Successful";

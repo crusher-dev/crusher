@@ -100,10 +100,8 @@ function Statustag() {
 
 function Authorstag({ data }: { data: any }) {
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
-
 	const { triggeredBy } = filters;
-
-	const selectedAuthor = data.availableAuthors.filter(({ id }) => id === triggeredBy);
+	const selectedAuthor = data.availableAuthors.filter(({ id }) => id == Number(triggeredBy));
 
 	return (
 		<React.Fragment>
@@ -172,7 +170,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 						size="large"
 					/>
 				</div>
-				<div className="flex flex-row ml-auto">
+				<div className="flex flex-row ml-auto items-center">
 					<Statustag />
 					<Authorstag data={data} />
 				</div>

@@ -98,7 +98,7 @@ function BuildSearchableList() {
 	const [project] = useAtom(currentProject);
 	const { query } = useRouter();
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
-	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger, filters), { suspense: true });
+	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger, filters), { suspense: true, refreshInterval: 10000 });
 	const { totalPages } = data;
 
 	const { status, triggeredBy, search, page } = filters;

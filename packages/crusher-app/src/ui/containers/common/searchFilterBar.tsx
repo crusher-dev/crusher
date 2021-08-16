@@ -121,7 +121,7 @@ function Authorstag({ data }: { data: any }) {
 			<Conditional showIf={!!triggeredBy}>
 				<ClickableText
 					onClick={() => {
-						setFilters({ ...filters, author: null });
+						setFilters({ ...filters, triggeredBy: null });
 					}}
 				>
 					<div className="flex flex-row items-center">

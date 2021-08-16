@@ -37,8 +37,7 @@ function StatusList() {
 	);
 }
 
-function Author({  authors }) {
-
+function Author({ authors }) {
 	const [filter, setFilters] = useAtom(buildFiltersAtom);
 	return (
 		<div className={"flex flex-col justify-between h-full"}>
@@ -133,7 +132,7 @@ function Authorstag({ data }: { data: any }) {
 }
 
 function SearchFilterBar(props: ISearchFilterBarProps) {
-	const {  placeholder, data } = props;
+	const { placeholder, data } = props;
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
 
 	const { status, triggeredBy, search } = filters;
@@ -159,8 +158,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 						onBlur={(e) => {
 							setFilters({ ...filters, search: e.target.value });
 						}}
-
-						onReturn={(search)=>{
+						onReturn={(search) => {
 							setFilters({ ...filters, search });
 						}}
 						rightIcon={!!search ? closeSVG : null}

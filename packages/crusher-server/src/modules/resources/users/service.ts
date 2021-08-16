@@ -122,7 +122,7 @@ class UsersService {
 				avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
 				// @NOTE: Remove hardcoding from the next 3 fields
 				lastVisitedURL: null,
-				meta: userInfo ? JSON.parse(userInfo.meta) : {},
+				meta: userInfo.meta ? JSON.parse(userInfo.meta) : {},
 				lastProjectSelectedId: null,
 			};
 		};

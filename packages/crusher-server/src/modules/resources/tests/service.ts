@@ -87,7 +87,7 @@ class TestService {
 	async getTestsInProject(
 		projectId: number,
 		findOnlyActiveTests = false,
-		filter: { searchQuery?: string; page: number; status?: BuildReportStatusEnum } = { page: -1 },
+		filter: { search?: string; page: number; status?: BuildReportStatusEnum } = { page: -1 },
 	) {
 		let query = `SELECT tests.*, tests.featured_video_url featuredVideoUrl, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
 		const queryParams: Array<any> = [projectId];
@@ -102,9 +102,9 @@ class TestService {
 			queryParams.push(filter.status);
 		}
 
-		if (filter.searchQuery) {
+		if (filter.search) {
 			query += ` AND Match(tests.name) AGAINST (?)`;
-			queryParams.push(filter.searchQuery);
+			queryParams.push(filter.search);
 		}
 
 		const totalRecordCountQuery = `SELECT COUNT(*) count FROM (${query}) custom_query`;
@@ -117,8 +117,8 @@ class TestService {
 			query += " LIMIT ? OFFSET ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
-			queryParams.push(`10`);
 			queryParams.push(`${filter.page * 10}`);
+			queryParams.push(`10`);
 		}
 
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / 10), list: await this.dbManager.fetchAllRows(query, queryParams) };

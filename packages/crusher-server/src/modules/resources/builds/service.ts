@@ -35,7 +35,7 @@ class BuildsService {
 	@CamelizeResponse()
 	async getBuildInfoList(
 		projectId: number,
-		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; searchQuery?: string; page?: number; status?: BuildReportStatusEnum },
+		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum },
 	): Promise<{ list: Array<IBuildInfoItem>; totalPages: number }> {
 		let query =
 			"SELECT jobs.id buildId, jobs.commit_name buildName, jobs.build_trigger buildTrigger, TIME_TO_SEC(TIMEDIFF(job_reports.updated_at, job_reports.created_at)) buildDuration, jobs.created_at buildCreatedAt, job_reports.created_at buildReportCreatedAt, job_reports.updated_at buildReportUpdatedAt, jobs.latest_report_id latestReportId, job_reports.status buildStatus, job_reports.total_test_count totalTestCount, job_reports.passed_test_count passedTestCount, job_reports.failed_test_count failedTestCount, job_reports.review_required_test_count reviewRequiredTestCount, comments.count commentCount, users.id triggeredById, users.name triggeredByName FROM users, jobs, job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id WHERE jobs.project_id = ? AND job_reports.id = jobs.latest_report_id AND jobs.user_id = users.id AND jobs.is_draft_job = ?";
@@ -56,9 +56,9 @@ class BuildsService {
 			queryParams.push(filter.status);
 		}
 
-		if (filter.searchQuery) {
+		if (filter.search) {
 			query += ` AND Match(jobs.commit_name, jobs.repo_name, jobs.host) AGAINST (?)`;
-			queryParams.push(filter.searchQuery);
+			queryParams.push(filter.search);
 		}
 
 		const totalRecordCountQuery = `SELECT COUNT(*) count FROM (${query}) custom_query`;
@@ -70,8 +70,8 @@ class BuildsService {
 			query += " LIMIT ? OFFSET ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
-			queryParams.push(`10`);
 			queryParams.push(`${filter.page * 10}`);
+			queryParams.push(`10`);
 		}
 
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / 10), list: await this.dbManager.fetchAllRows(query, queryParams) };

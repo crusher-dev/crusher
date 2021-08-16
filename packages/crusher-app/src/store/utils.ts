@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { pickBy, identity } from "lodash";
+import { useEffect } from 'react';
 
 const filterObjectByKeys = (object: Record<string, any>, keys: Array<string>) => {
 	const baseObject: Record<string, any> = {};
@@ -36,12 +37,21 @@ export const atomWithQuery = (keysToConsider: Array<string>, initialValue: Recor
 		Add listener for url change.
 	 */
 
+
+
+
 	return atom(
 		(get) => get(baseAtom),
 		(_get, set, baseObject) => {
 			const object = filterObjectByKeys(baseObject, keysToConsider);
 			updateURL(object);
 			set(baseAtom, object);
+
+			window.addEventListener('popstate',  () => {
+					const urlSearchObject = Object.fromEntries(new URLSearchParams(location.search));
+					const relevant = filterObjectByKeys(urlSearchObject, keysToConsider);
+				  set(baseAtom, relevant);
+			});
 		},
 	);
 };

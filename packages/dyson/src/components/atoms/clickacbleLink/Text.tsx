@@ -1,39 +1,45 @@
 import React from "react";
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from '@emotion/react';
 
-export type TextProps = {
+export type ClickableProps = {
+
+	paddingX: number;
+	paddingY: number;
 	/**
 	 * Emotion CSS style if any
 	 */
-	fontSize: string;
-	leading: boolean;
-	weight: number;
-	color: string;
+	css?: SerializedStyles;
 } & React.DetailedHTMLProps<any, any>;
 
-const TextDefaultProps = {
-	fontSize: 12,
-	leading: false,
+const ClickableLinkProps = {
+	paddingY: 6,
+	paddingX: 12,
 	weight: 700,
-	color: "#fff",
 };
 /**
- * Crusher Text component.
+ * Crusher Clickable Text component.
  */
-export const Text: React.FC<TextProps> = (props: TextProps) => {
-	const { type, children, fontSize, leading, weight, className, color, ...otherProps } = props;
+export const ClickableText: React.FC<ClickableProps> = (props: ClickableProps) => {
+	const { paddingY, paddingX,children, css, ...otherProps } = props;
 	return (
-		<span
-			className={`font-gilroy font-${weight} ${className}`}
-			css={css`
-				font-size: ${fontSize}rem;
-				color: ${color};
-			`}
+		<div
+			css={[hightlLinkCSS(paddingY,paddingX),css]}
 			{...otherProps}
 		>
 			{children}
-		</span>
+		</div>
 	);
 };
 
-Text.defaultProps = TextDefaultProps;
+ClickableText.defaultProps = ClickableLinkProps;
+
+
+const hightlLinkCSS = (paddingY:number,paddingX:number) => css`
+  padding: ${paddingY}rem ${paddingX}rem;
+
+  :hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  border-radius: 4rem;
+`

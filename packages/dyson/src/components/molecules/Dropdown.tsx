@@ -5,6 +5,8 @@ import { ReactElement } from "react";
 type TDropdown = {
 	dropdownCSS: SerializedStyles;
 	component: ReactElement | string;
+	initialState: boolean;
+	callback: (openStatus: boolean) => void;
 } & React.DetailedHTMLProps<any, any>;
 
 const DropdownBox = ({ component, dropdownCSS }: TDropdown) => (
@@ -23,8 +25,8 @@ const DropdownBox = ({ component, dropdownCSS }: TDropdown) => (
 			</DropdownItems>
 		<Dropwdown>
  */
-export const Dropdown = ({ children, dropdownCSS, component }: TDropdown) => {
-	return <ShowOnClick component={<DropdownBox dropdownCSS={dropdownCSS} component={component} />}>{children}</ShowOnClick>;
+export const Dropdown = ({ initialState, children, dropdownCSS, component,callback }: TDropdown) => {
+	return <ShowOnClick callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS} component={component} />}>{children}</ShowOnClick>;
 };
 
 export const dropdDown = css`

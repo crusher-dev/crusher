@@ -8,11 +8,15 @@ type TShowOnClick = {
 } & React.DetailedHTMLProps<any, any>;
 
 export function ShowOnClick({ children, component, callback, initialState }: TShowOnClick) {
-	const [showDropDown, setShow] = useState(initialState || false);
+	const [showDropDown, setShow] = useState(initialState);
 
 	useEffect(() => {
 		callback && callback();
 	}, [showDropDown]);
+
+	useEffect(()=>{
+		setShow(initialState)
+	},[initialState])
 
 	return (
 		<OnOutsideClick

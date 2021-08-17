@@ -10,10 +10,16 @@ type TPagination = {
 export const PaginationButton = ({ isPreviousActive = true, isNextActive = true, onPreviousClick, onNextClick }: TPagination) => {
 	return (
 		<div className={"flex"} css={pagination}>
-			<div css={[button, !isPreviousActive && disabled]} onClick={isPreviousActive && onPreviousClick && onPreviousClick} id={"left-button"}>
+			<div css={[button, !isPreviousActive && disabled]} onClick={()=>{
+				if(!isPreviousActive) return
+				onPreviousClick()
+			}} id={"left-button"}>
 				Previous
 			</div>
-			<div css={[button, !isNextActive && disabled]} onClick={onNextClick && onNextClick && onNextClick} id={"right-button"}>
+			<div css={[button, !isNextActive && disabled]} onClick={()=>{
+				if(!isNextActive) return
+				onNextClick()
+			}} id={"right-button"}>
 				Next
 			</div>
 		</div>

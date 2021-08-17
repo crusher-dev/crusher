@@ -4,6 +4,10 @@ import { IRegisteredMutationRecord } from "./types/IRegisteredMutationRecord";
 class RelevantHoverDetection {
 	private _mapRecords: Map<Node, Map<Node, IRegisteredMutationRecord>> = new Map();
 
+	constructor() {
+		(window as any).getParentDomMutations = this.getParentDOMMutations.bind(this);
+	}
+
 	registerDOMMutation(record: IEventMutationRecord) {
 		if (!(window as any).mapRecords) {
 			(window as any).mapRecords = this._mapRecords;
@@ -28,6 +32,7 @@ class RelevantHoverDetection {
 	getParentDOMMutations(node: Node): Array<IRegisteredMutationRecord> {
 		let currentNode = node;
 		const list = [];
+		console.log("FIRST RESULT", this._mapRecords.get(currentNode));
 		while (document.body.contains(currentNode)) {
 			if (this._mapRecords.has(currentNode)) {
 				const tmp = this._mapRecords.get(currentNode)!;

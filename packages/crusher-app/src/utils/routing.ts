@@ -4,15 +4,14 @@ import { getEdition } from "@utils/helpers";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { isTempTestPending } from "@utils/user";
-import { getBoolean } from '@utils/common';
+import { getBoolean } from "@utils/common";
 
 export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
 	const { userData: user } = data;
 	const { pathname } = router;
 
 	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
-
-		if (getBoolean(user.meta.INITIAL_ONBOARDING )!== true) {
+		if (getBoolean(user.meta.INITIAL_ONBOARDING) !== true) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
 			if (isTempTestPending()) {

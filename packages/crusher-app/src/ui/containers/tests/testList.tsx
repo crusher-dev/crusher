@@ -163,7 +163,6 @@ const itemImageStyle = css`
 `;
 
 function TestSearchableList() {
-
 	const [project] = useAtom(currentProject);
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
@@ -193,10 +192,8 @@ function TestSearchableList() {
 		});
 	}, [data.list]);
 
-
 	useEffect(() => {
-
-		if (!tempTestId || tempTestId==="null") return;
+		if (!tempTestId || tempTestId === "null") return;
 
 		(async () => {
 			setTempTest(null);

@@ -17,7 +17,7 @@ export type TProjectsData = Array<{
 	id: number;
 	name: string;
 	teamId: number;
-	meta: Record<string, any>
+	meta: Record<string, any>;
 }> | null;
 
 export type TSystemInfo = {

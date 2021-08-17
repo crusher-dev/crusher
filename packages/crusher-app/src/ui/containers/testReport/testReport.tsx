@@ -351,7 +351,7 @@ function RenderStep({ data }) {
 				</div>
 			</div>
 
-			<Conditional showIf={actionType === "ELEMENT_SCREENSHOT" && isPassed }>
+			<Conditional showIf={actionType === "ELEMENT_SCREENSHOT" && isPassed}>
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>

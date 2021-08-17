@@ -22,14 +22,14 @@ import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAct
 import { loadCrisp, openChatBox } from "@utils/scriptUtils";
 import { backendRequest } from "@utils/backendRequest";
 import { RequestMethod } from "../../types/RequestOptions";
-import { getBuildsList, getRunTestApi } from '@constants/api';
+import { getBuildsList, getRunTestApi } from "@constants/api";
 import { sendSnackBarEvent } from "@utils/notify";
 import { MenuItem } from "@components/molecules/MenuItem";
 import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
-import { buildFiltersAtom } from '../../store/atoms/pages/buildPage';
-import useSWR, { mutate } from 'swr';
-import { IProjectBuildListResponse } from '@crusher-shared/types/response/iProjectBuildListResponse';
+import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
+import useSWR, { mutate } from "swr";
+import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -298,31 +298,30 @@ function RunTest() {
 	const { query } = useRouter();
 	const [filters] = useAtom(buildFiltersAtom);
 
-
 	const runProjectTest = useCallback(() => {
 		(async () => {
 			await runTests(selectedProjectId);
 			sendSnackBarEvent({ type: "normal", message: "We have started running test" });
 
-			const buildAPI = getBuildsList(project.id, query.trigger, filters)
-			await mutate(buildAPI)
+			const buildAPI = getBuildsList(project.id, query.trigger, filters);
+			await mutate(buildAPI);
 			await router.push("/app/builds");
-
 		})();
 	}, []);
-	return <Button bgColor={'tertiary-dark'} onClick={runProjectTest}>
-		<div className={'flex items-center'}>
-			<PlaySVG className={'mr-12'} />
-			Run test
-		</div>
-	</Button>;
+	return (
+		<Button bgColor={"tertiary-dark"} onClick={runProjectTest}>
+			<div className={"flex items-center"}>
+				<PlaySVG className={"mr-12"} />
+				Run test
+			</div>
+		</Button>
+	);
 }
 
 function TopNavbar() {
 	const router = useRouter();
 	const { pathname, query, asPath } = router;
 	const [showCreateTest, setShowCreateTest] = useState(false);
-
 
 	return (
 		<div css={[nav]} className={""}>
@@ -355,12 +354,11 @@ function TopNavbar() {
 					</Conditional>
 
 					<div className={"flex items-center"}>
-
-						<RunTest/>
+						<RunTest />
 						<Button
 							className={"ml-20"}
 							css={css`
-                width: 160rem;
+								width: 160rem;
 							`}
 							onClick={setShowCreateTest.bind(this, true)}
 						>

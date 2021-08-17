@@ -14,9 +14,9 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 		callback && callback();
 	}, [showDropDown]);
 
-	useEffect(()=>{
-		setShow(initialState)
-	},[initialState])
+	useEffect(() => {
+		setShow(initialState);
+	}, [initialState]);
 
 	return (
 		<OnOutsideClick

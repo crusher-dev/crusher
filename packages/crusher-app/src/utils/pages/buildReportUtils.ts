@@ -1,3 +1,5 @@
+import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
+
 export const getStatusString = (type) => {
 	switch (type) {
 		case "PASSED":
@@ -31,17 +33,5 @@ export const showReviewButton = (type) => {
 };
 
 export const getActionLabel = (type) => {
-	switch (type) {
-		case "BROWSER_SET_DEVICE":
-			return "Set Browser config";
-			break;
-		case "PAGE_NAVIGATE_URL":
-			return "Open URL";
-			break;
-		case "ELEMENT_SCREENSHOT":
-			return "Take element screenshot";
-			break;
-		default:
-			return false;
-	}
+	return ACTIONS_TO_LABEL_MAP[type] ? ACTIONS_TO_LABEL_MAP[type] : false;
 };

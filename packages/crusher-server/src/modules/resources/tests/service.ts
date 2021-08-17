@@ -136,7 +136,7 @@ class TestService {
 
 	@CamelizeResponse()
 	async getTestsFromIdList(testIds: Array<number>): Promise<Array<KeysToCamelCase<ITestTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds]);
+		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds.join(",")]);
 	}
 }
 

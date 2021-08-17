@@ -7,7 +7,7 @@ import { ACTION_FORM_TYPE } from "../../../constants";
 import { useSelector } from "react-redux";
 import { getActionsRecordingState, getInspectModeState } from "../../../redux/selectors/recorder";
 import { getStore } from "../../../redux/store";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { COLOR_CONSTANTS } from "../../colorConstants";
@@ -68,7 +68,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 		const store = getStore();
 		store.dispatch(
 			recordAction({
-				type: ACTIONS_IN_TEST.NAVIGATE_URL,
+				type: ActionsInTestEnum.NAVIGATE_URL,
 				payload: {
 					selectors: [],
 					meta: {

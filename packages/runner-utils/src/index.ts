@@ -5,7 +5,7 @@ import { Browser, Page } from "playwright";
 import { LogManager } from "./functions/log";
 import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
-import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
 import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
 import { getBrowserActions, getMainActions, isWebpack, toCrusherSelectorsFormat, validActionTypeRegex } from "./utils/helper";
@@ -69,7 +69,7 @@ class CrusherRunnerActions {
 
 	stepHandlerHOC(
 		wrappedHandler: any,
-		action: { name: ACTIONS_IN_TEST; category: IActionCategory; description: string },
+		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
 		return async (step: iAction, browser: Browser, page: Page | null = null): Promise<void> => {
 			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`);
@@ -86,7 +86,7 @@ class CrusherRunnerActions {
 					case ActionCategoryEnum.ELEMENT:
 						const playwrightSelector = step.payload.selectors.shift();
 						const elementLocator = page.locator(toCrusherSelectorsFormat(step.payload.selectors).value);
-						stepResult = await wrappedHandler(elementLocator, null, step, this.globals, this.storageManager);
+						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager);
 						break;
 					default:
 						throw new Error("Invalid action category handler");
@@ -108,7 +108,7 @@ class CrusherRunnerActions {
 		};
 	}
 
-	registerStepHandler(actionType: ACTIONS_IN_TEST, description: string, handler: any) {
+	registerStepHandler(actionType: ActionsInTestEnum, description: string, handler: any) {
 		const validActionRegexMatches = validActionTypeRegex.exec(actionType);
 		if (!validActionRegexMatches) throw new Error("Invalid format for action type");
 

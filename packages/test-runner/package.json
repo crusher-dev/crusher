@@ -35,7 +35,7 @@
 	},
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
-		"start": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
+		"start": "PWDEBUG=1 NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
 		"build": "webpack -c webpack.config.js",
 		"start:build": "node build/index.js",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"

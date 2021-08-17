@@ -1,5 +1,5 @@
 import { iAction } from "../../crusher-shared/types/action";
-import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
+import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
 import { Parser } from "./parser";
 import { BrowserEnum } from "../../crusher-shared/types/browser";
 
@@ -15,7 +15,7 @@ interface iCodeGeneratorOptions {
 export class CodeGenerator {
 	options: iCodeGeneratorOptions;
 	actionsMap: Array<{
-		type: ACTIONS_IN_TEST;
+		type: ActionsInTestEnum;
 		code: Array<string> | string;
 	}>;
 

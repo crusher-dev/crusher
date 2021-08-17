@@ -1,4 +1,4 @@
-import { ACTIONS_IN_TEST } from "../../constants/recordedActions";
+import { ActionsInTestEnum, ACTIONS_IN_TEST } from "../../constants/recordedActions";
 
 export enum ActionStatusEnum {
 	STARTED = "STARTED",
@@ -14,6 +14,6 @@ export interface IRunnerLogStepMeta {
 }
 
 export interface IRunnerLogManagerInterface {
-	logStep: (actionType: ACTIONS_IN_TEST, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta) => Promise<void>;
+	logStep: (actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta) => Promise<void>;
 	logTest: (status: ActionStatusEnum, message: string, meta: any) => Promise<void>;
 }

@@ -1,11 +1,11 @@
 import { EditionTypeEnum, IActionResultItemWithIndex } from "@crusher-shared/types/common/general";
 import { iAction } from "@crusher-shared/types/action";
-import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
 import { KeysToCamelCase, KeysToSnakeCase } from "@modules/common/typescript/interface";
 
 export function getTestHostFromActions(actions: Array<iAction>): string {
-	const navigateAction = actions.find((action) => action.type === ACTIONS_IN_TEST.NAVIGATE_URL);
+	const navigateAction = actions.find((action) => action.type === ActionsInTestEnum.NAVIGATE_URL);
 	if (!navigateAction) throw new Error("Test created without no navigation action");
 
 	return navigateAction.payload.meta.value;

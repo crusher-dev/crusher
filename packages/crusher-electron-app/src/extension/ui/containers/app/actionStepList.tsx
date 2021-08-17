@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
-import { ACTIONS_IN_TEST, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
@@ -17,7 +17,7 @@ interface iActionProps {
 }
 
 function getActionDescription(action: iAction) {
-	if (action.type === ACTIONS_IN_TEST.PAGE_SCROLL || action.type === ACTIONS_IN_TEST.ELEMENT_SCROLL) {
+	if (action.type === ActionsInTestEnum.PAGE_SCROLL || action.type === ActionsInTestEnum.ELEMENT_SCROLL) {
 		return "Performing scroll";
 	}
 
@@ -29,17 +29,17 @@ function getActionDescription(action: iAction) {
 }
 
 const ICONS = {
-	[ACTIONS_IN_TEST.SET_DEVICE as ACTIONS_IN_TEST]: "/icons/actions/set-device.svg",
-	[ACTIONS_IN_TEST.NAVIGATE_URL as ACTIONS_IN_TEST]: "/icons/actions/navigate.svg",
-	[ACTIONS_IN_TEST.CLICK as ACTIONS_IN_TEST]: "/icons/actions/click.svg",
-	[ACTIONS_IN_TEST.HOVER as ACTIONS_IN_TEST]: "/icons/actions/hover.svg",
-	[ACTIONS_IN_TEST.ELEMENT_SCREENSHOT as ACTIONS_IN_TEST]: "/icons/actions/screenshot.svg",
-	[ACTIONS_IN_TEST.PAGE_SCREENSHOT as ACTIONS_IN_TEST]: "/icons/actions/screenshot.svg",
-	[ACTIONS_IN_TEST.VALIDATE_SEO as ACTIONS_IN_TEST]: "/icons/actions/seo.svg",
-	[ACTIONS_IN_TEST.BLACKOUT as ACTIONS_IN_TEST]: "icons/actions/blackout.svg",
-	[ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT as ACTIONS_IN_TEST]: "icons/actions/custom-script.svg",
-	[ACTIONS_IN_TEST.ASSERT_ELEMENT as ACTIONS_IN_TEST]: "icons/actions/assert-modal.svg",
-	[ACTIONS_IN_TEST.ELEMENT_FOCUS as ACTIONS_IN_TEST]: "icons/actions/click.svg",
+	[ActionsInTestEnum.SET_DEVICE as ActionsInTestEnum]: "/icons/actions/set-device.svg",
+	[ActionsInTestEnum.NAVIGATE_URL as ActionsInTestEnum]: "/icons/actions/navigate.svg",
+	[ActionsInTestEnum.CLICK as ActionsInTestEnum]: "/icons/actions/click.svg",
+	[ActionsInTestEnum.HOVER as ActionsInTestEnum]: "/icons/actions/hover.svg",
+	[ActionsInTestEnum.ELEMENT_SCREENSHOT as ActionsInTestEnum]: "/icons/actions/screenshot.svg",
+	[ActionsInTestEnum.PAGE_SCREENSHOT as ActionsInTestEnum]: "/icons/actions/screenshot.svg",
+	[ActionsInTestEnum.VALIDATE_SEO as ActionsInTestEnum]: "/icons/actions/seo.svg",
+	[ActionsInTestEnum.BLACKOUT as ActionsInTestEnum]: "icons/actions/blackout.svg",
+	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT as ActionsInTestEnum]: "icons/actions/custom-script.svg",
+	[ActionsInTestEnum.ASSERT_ELEMENT as ActionsInTestEnum]: "icons/actions/assert-modal.svg",
+	[ActionsInTestEnum.ELEMENT_FOCUS as ActionsInTestEnum]: "icons/actions/click.svg",
 };
 
 const Action = (props: iActionProps) => {

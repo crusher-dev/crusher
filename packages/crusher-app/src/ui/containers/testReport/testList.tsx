@@ -11,6 +11,10 @@ import { PlaySVG } from '@svg/dashboard';
 import { Modal } from 'dyson/src/components/molecules/Modal';
 import { VideoComponent } from 'dyson/src/components/atoms/video/video';
 
+import dynamic from 'next/dynamic';
+
+const CompareImage = dynamic(() => import("./components/compareImages"));
+
 function ReportSection() {
 	const [stickyOverviewSection, setStickOverviewSection] = useState(false);
 
@@ -112,17 +116,23 @@ function RenderImageInfo({ data }) {
 	const firstImage = meta.outputs[0].value;
 	const currentImage = meta.outputs[0].value;
 
+
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
-			<div className={"mt-20 flex"}>
-				<img src={firstImage} />{" "}
-				<img
-					src={currentImage}
-					css={css`
-						margin-left: 2%;
-					`}
-				/>
+			{/*<div className={"mt-20 flex"}>*/}
+			{/*	<img src={firstImage} />{" "}*/}
+			{/*	<img*/}
+			{/*		src={currentImage}*/}
+			{/*		css={css`*/}
+			{/*			margin-left: 2%;*/}
+			{/*		`}*/}
+			{/*	/>*/}
+
+
+			{/*</div>*/}
+			<div>
+				<CompareImage leftImage={firstImage} rightImage={currentImage}/>
 			</div>
 		</div>
 	);

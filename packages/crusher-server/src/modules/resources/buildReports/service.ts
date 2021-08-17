@@ -6,7 +6,7 @@ import { TestInstanceResultSetStatus } from "@core/interfaces/TestInstanceResult
 import { TestInstanceResultSetConclusion } from "@core/interfaces/TestInstanceResultSetConclusion";
 import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
-import { ACTIONS_IN_TEST } from "@crusher-shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BuildTestInstancesService } from "../builds/instances/service";
 import { TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum } from "../builds/instances/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
@@ -192,5 +192,10 @@ export class BuildReportService {
 			projectId,
 			BuildReportStatusEnum.RUNNING,
 		]);
+	}
+
+	@CamelizeResponse()
+	async getBuildReportRecord(reportId: number): Promise<KeysToCamelCase<IBuildReportTable> | null> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM job_reports WHERE id = ?", [reportId]);
 	}
 }

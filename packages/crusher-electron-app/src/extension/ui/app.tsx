@@ -8,7 +8,7 @@ import { recorderMessageListener } from "../messageListener";
 import ReactModal from "react-modal";
 import { ModalManager } from "./containers/app/modals";
 import { AdvancedURL } from "../utils/url";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
 import { submitPostDataWithForm } from "../utils/helpers";
 import { addHttpToURLIfNotThere, resolveToBackendPath } from "@shared/utils/url";
@@ -56,7 +56,7 @@ const App = () => {
 		const userAgent = AdvancedURL.getUserAgentFromUrl(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string);
 		store.dispatch(
 			recordAction({
-				type: ACTIONS_IN_TEST.SET_DEVICE,
+				type: ActionsInTestEnum.SET_DEVICE,
 				payload: {
 					meta: {
 						device: device,

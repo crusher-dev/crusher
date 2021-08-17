@@ -1,4 +1,3 @@
-import { ACTIONS_IN_TEST } from "crusher-shared/constants/recordedActions";
 import { iAction } from "crusher-shared/types/action";
 
 class ParserChecks {

@@ -203,7 +203,7 @@ export const LoginContainer = () => {
 					<EmailBox />
 					<div className={"font-cera text-15 leading-none font-500"}>
 						Don't have an account?
-						<Link href={"/signup"}>
+						<a href={"/signup"}>
 							<span
 								css={css`
 									color: #8a96ff;
@@ -212,7 +212,7 @@ export const LoginContainer = () => {
 							>
 								Signup
 							</span>
-						</Link>
+						</a>
 					</div>
 				</div>
 			</CenterLayout>

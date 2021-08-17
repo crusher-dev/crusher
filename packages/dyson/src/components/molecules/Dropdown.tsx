@@ -25,8 +25,12 @@ const DropdownBox = ({ component, dropdownCSS }: TDropdown) => (
 			</DropdownItems>
 		<Dropwdown>
  */
-export const Dropdown = ({ initialState, children, dropdownCSS, component,callback }: TDropdown) => {
-	return <ShowOnClick callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS} component={component} />}>{children}</ShowOnClick>;
+export const Dropdown = ({ initialState, children, dropdownCSS, component, callback }: TDropdown) => {
+	return (
+		<ShowOnClick callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS} component={component} />}>
+			{children}
+		</ShowOnClick>
+	);
 };
 
 export const dropdDown = css`
@@ -34,6 +38,7 @@ export const dropdDown = css`
 	left: calc(100% - 54rem);
 	position: absolute;
 	width: 206.03rem;
+	overflow: hidden;
 
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);

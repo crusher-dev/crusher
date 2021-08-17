@@ -11,7 +11,7 @@ import { useAtom } from "jotai";
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { Conditional } from "dyson/src/components/layouts";
 import { CloseSVG } from "@svg/dashboard";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface ISearchFilterBarProps {
 	data: any;
@@ -136,7 +136,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
 
 	const { status, triggeredBy, search } = filters;
-	const [inFocus,setFocus] = useState(false)
+	const [inFocus, setFocus] = useState(false);
 	const isFilterEnabled = !!status || !!triggeredBy || !!search;
 
 	const closeSVG = (
@@ -153,25 +153,23 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 
 	const enterToSearch = (
 		<Conditional showIf={inFocus}>
-			<div className={"text-13"}>
-				↵ to search
-			</div>
+			<div className={"text-13"}>↵ to search</div>
 		</Conditional>
-	)
+	);
 	return (
 		<div {...props}>
 			<div className="flex flex-row items-center" css={filterBarStyle}>
 				<div className={"flex-1 mr-26"}>
 					<Input
-						onFocus={()=>{
-							setFocus(true)
+						onFocus={() => {
+							setFocus(true);
 						}}
 						onBlur={(e) => {
-							setFocus(false)
+							setFocus(false);
 							setFilters({ ...filters, search: e.target.value });
 						}}
 						onReturn={(search) => {
-							setFocus(true)
+							setFocus(true);
 							setFilters({ ...filters, search });
 						}}
 						rightIcon={!!search ? closeSVG : enterToSearch}

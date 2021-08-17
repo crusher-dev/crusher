@@ -13,11 +13,11 @@ import { isTempTestPending } from "@utils/user";
 import { sendSnackBarEvent } from "@utils/notify";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
-import { updateOnboardingMutator } from '../../../store/mutators/user';
-import { USER_META_KEYS } from '@constants/USER';
-import { userAtom } from '../../../store/atoms/global/user';
-import { getBoolean } from '@utils/common';
-import { useRouter } from 'next/router';
+import { updateOnboardingMutator } from "../../../store/mutators/user";
+import { USER_META_KEYS } from "@constants/USER";
+import { userAtom } from "../../../store/atoms/global/user";
+import { getBoolean } from "@utils/common";
+import { useRouter } from "next/router";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -102,7 +102,7 @@ const GithubDiscordSection = () => {
 			});
 	});
 
-	const [,updateOnboarding] = useAtom(updateOnboardingMutator)
+	const [, updateOnboarding] = useAtom(updateOnboardingMutator);
 	return (
 		<>
 			<div className="mb-56 text-17 text-center font-400">
@@ -121,20 +121,19 @@ const GithubDiscordSection = () => {
 			{/*	</div>*/}
 			{/*</div>*/}
 
-			<Link href={isTempTestPending() ? "/app/tests" : "/app/dashboard"} >
+			<Link href={isTempTestPending() ? "/app/tests" : "/app/dashboard"}>
 				<Button
 					className="mt-100"
 					css={css`
 						width: 220px;
 						height: 34rem;
 					`}
-
-					onClick={()=>{
+					onClick={() => {
 						updateOnboarding({
-							type: 'user',
+							type: "user",
 							key: USER_META_KEYS.INITIAL_ONBOARDING,
-							value: true
-						})
+							value: true,
+						});
 					}}
 				>
 					Open Dashboard
@@ -159,7 +158,7 @@ const GetViewByStep = () => {
 };
 
 const CrusherOnboarding = () => {
-	const router = useRouter()
+	const router = useRouter();
 	const [{ meta }] = useAtom(userAtom);
 	useEffect(() => {
 		if (isTempTestPending()) {
@@ -167,9 +166,8 @@ const CrusherOnboarding = () => {
 		}
 
 		if (getBoolean(meta.INITIAL_ONBOARDING) === true) {
-			 router.push("/app/dashboard");
+			router.push("/app/dashboard");
 		}
-
 	}, []);
 	return (
 		<CrusherBase>

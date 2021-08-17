@@ -17,16 +17,13 @@ export const Default = Template.bind({});
 Default.parameters = {
 	status: "ready",
 };
-Default.args = { };
+Default.args = {};
 
-
-export const Disabled = Template.bind({
-});
+export const Disabled = Template.bind({});
 Disabled.parameters = {
 	status: "ready",
 };
 Disabled.args = { disabled: true };
-
 
 export const Labels = Template.bind({});
 Labels.parameters = {

@@ -16,7 +16,7 @@ export enum ACTIONS_IN_TEST {
 	PAGE_SCREENSHOT = "PAGE_SCREENSHOT",
 }
 
-export enum ActionsInTestEnum  {
+export enum ActionsInTestEnum {
 	SET_DEVICE = "BROWSER_SET_DEVICE",
 	NAVIGATE_URL = "PAGE_NAVIGATE_URL",
 	VALIDATE_SEO = "PAGE_VALIDATE_SEO",
@@ -33,7 +33,6 @@ export enum ActionsInTestEnum  {
 	BLACKOUT = "ELEMENT_BLACKOUT",
 	PAGE_SCREENSHOT = "PAGE_SCREENSHOT",
 }
-
 
 export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.ELEMENT_SCROLL]: "Eleemnt Scroll",

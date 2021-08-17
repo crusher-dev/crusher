@@ -1,8 +1,7 @@
 import React from "react";
-import { css, SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles } from "@emotion/react";
 
 export type ClickableProps = {
-
 	paddingX: number;
 	paddingY: number;
 	/**
@@ -20,12 +19,9 @@ const ClickableLinkProps = {
  * Crusher Clickable Text component.
  */
 export const ClickableText: React.FC<ClickableProps> = (props: ClickableProps) => {
-	const { paddingY, paddingX,children, css, ...otherProps } = props;
+	const { paddingY, paddingX, children, css, ...otherProps } = props;
 	return (
-		<div
-			css={[hightlLinkCSS(paddingY,paddingX),css]}
-			{...otherProps}
-		>
+		<div css={[hightlLinkCSS(paddingY, paddingX), css]} {...otherProps}>
 			{children}
 		</div>
 	);
@@ -33,13 +29,12 @@ export const ClickableText: React.FC<ClickableProps> = (props: ClickableProps) =
 
 ClickableText.defaultProps = ClickableLinkProps;
 
+const hightlLinkCSS = (paddingY: number, paddingX: number) => css`
+	padding: ${paddingY}rem ${paddingX}rem;
 
-const hightlLinkCSS = (paddingY:number,paddingX:number) => css`
-  padding: ${paddingY}rem ${paddingX}rem;
+	:hover {
+		background: rgba(255, 255, 255, 0.06);
+	}
 
-  :hover {
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  border-radius: 4rem;
-`
+	border-radius: 4rem;
+`;

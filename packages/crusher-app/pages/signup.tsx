@@ -5,6 +5,7 @@ import { usePageTitle } from "../src/hooks/seo";
 function SignupPage() {
 	usePageTitle("Create account");
 
+
 	return (
 		<div>
 			<SignupContainer />

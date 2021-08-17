@@ -105,7 +105,7 @@ function NameNStatusSection() {
 						Rerun
 					</div>
 				</Button>
-				<ThreeEllipsisSVG className={"ml-22"} width={25} />
+				{/*<ThreeEllipsisSVG className={"ml-22"} width={25} />*/}
 			</div>
 
 			<StatusTag type={data.status} isMonochrome={true} />

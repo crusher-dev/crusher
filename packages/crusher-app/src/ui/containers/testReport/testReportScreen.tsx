@@ -1,32 +1,30 @@
-import { Button } from "dyson/src/components/atoms";
+import { Button } from 'dyson/src/components/atoms';
 import {
-	ChevronDown,
 	CalendarSVG,
-	RerunSVG,
-	TestStatusSVG,
-	ThreeEllipsisSVG,
-	ThunderSVG,
-	PassedSVG,
 	FailedSVG,
+	InitiatedSVG,
+	PassedSVG,
+	RerunSVG,
 	ReviewRequiredSVG,
 	RunningSVG,
-	InitiatedSVG,
-} from "@svg/testReport";
-import { css } from "@emotion/react";
-import { LayoutSVG, PlaySVG } from "@svg/dashboard";
-import { Conditional } from "dyson/src/components/layouts";
-import { atom, useAtom } from "jotai";
-import React, { useEffect, useState } from "react";
-import { BackSVG } from "@svg/builds";
-import { useBuildReport } from "../../../store/serverState/buildReports";
-import { useRouter } from "next/router";
-import { timeSince } from "@utils/dateTimeUtils";
-import { getActionLabel, getScreenShotsAndChecks, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
-import { TTestInfo, Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import { usePageTitle } from "../../../hooks/seo";
-import { Modal } from "../../../../../dyson/src/components/molecules/Modal";
-import { VideoComponent } from "../../../../../dyson/src/components/atoms/video/video";
+	TestStatusSVG,
+	ThunderSVG,
+} from '@svg/testReport';
+import { css } from '@emotion/react';
+import { LayoutSVG } from '@svg/dashboard';
+import { Conditional } from 'dyson/src/components/layouts';
+import { atom, useAtom } from 'jotai';
+import React from 'react';
+import { BackSVG } from '@svg/builds';
+import { useBuildReport } from '../../../store/serverState/buildReports';
+import { useRouter } from 'next/router';
+import { timeSince } from '@utils/dateTimeUtils';
+import { getStatusString, showReviewButton } from '@utils/pages/buildReportUtils';
+import { usePageTitle } from '../../../hooks/seo';
 import dynamic from 'next/dynamic';
+import { backendRequest } from '@utils/backendRequest';
+import { RequestMethod } from '../../../types/RequestOptions';
+import { sendSnackBarEvent } from '@utils/notify';
 
 
 const ReportSection = dynamic(() => import("./testList"));
@@ -102,8 +100,10 @@ function NameNStatusSection() {
 					css={css`
 						width: 96rem;
 					`}
+					onClick={rerunBuild.bind(this,query.id)}
+					title="Rerun this build"
 				>
-					<div className={"flex items-center justify-center text-13 font-400"}>
+					<div className={"flex items-center justify-center text-13 font-400"} >
 						<RerunSVG className={"mr-6"} height={14} />
 						Rerun
 					</div>
@@ -134,6 +134,15 @@ const section = [
 ];
 
 const selectedTabAtom = atom(0);
+
+export const rerunBuild = async (buildId)=>{
+
+	await backendRequest(`/builds/${buildId}/actions/rerun`, {
+		method: RequestMethod.POST
+	})
+
+	sendSnackBarEvent({type: 'normal', message: "We've started new build"})
+}
 
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
@@ -188,8 +197,10 @@ function TestOverviewTab() {
 									width: 148rem;
 								`}
 								className={"ml-16"}
+
+								onClick={rerunBuild.bind(this,query.id)}
+								title="Rerun this build"
 							>
-								{" "}
 								<div className={"flex items-center justify-center text-13 font-400"}>
 									<RerunSVG className={"mr-6"} height={14} />
 									Rerun
@@ -280,7 +291,7 @@ const rightSection = css`
 
 
 
-export const TestReport = () => {
+export const TestReportScreen = () => {
 	const [selectedTabIndex] = useAtom(selectedTabAtom);
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);

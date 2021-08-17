@@ -1,5 +1,5 @@
 import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
-
+import filter from "lodash/filter";
 export const getStatusString = (type) => {
 	switch (type) {
 		case "PASSED":
@@ -34,4 +34,9 @@ export const showReviewButton = (type) => {
 
 export const getActionLabel = (type) => {
 	return ACTIONS_TO_LABEL_MAP[type] ? ACTIONS_TO_LABEL_MAP[type] : false;
+};
+
+export const getScreenShotsAndChecks = (steps: Array<any>) => {
+	const screenShotCount = filter(steps, { actionType: "ELEMENT_SCREENSHOT" }).length;
+	return { screenshotCount: screenShotCount, checksCount: steps.length };
 };

@@ -17,8 +17,8 @@ import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
 import { TestStatusSVG } from "@svg/testReport";
 import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
-import { getBoolean } from '@utils/common';
-import { is } from 'immer/dist/utils/common';
+import { getBoolean } from "@utils/common";
+import { is } from "immer/dist/utils/common";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -48,7 +48,13 @@ function TestCard(props: IBuildItemCardProps) {
 	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={16} />
 	) : (
-		<TestStatusSVG css={css`margin-right: -3rem;`} type={firstRunCompleted ? "FAILED" : "RUNNING"} height={16} />
+		<TestStatusSVG
+			css={css`
+				margin-right: -3rem;
+			`}
+			type={firstRunCompleted ? "FAILED" : "RUNNING"}
+			height={16}
+		/>
 	);
 
 	console.log("VIDEO URL IS", videoURL);

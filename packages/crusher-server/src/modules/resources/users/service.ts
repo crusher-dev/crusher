@@ -136,9 +136,11 @@ class UsersService {
 			};
 		};
 
-		const projectsDataArr = teamProjects ? teamProjects.map((project) => {
-			return { ...project, meta: project.meta ? JSON.parse(project.meta) : {} };
-		}) : null;
+		const projectsDataArr = teamProjects
+			? teamProjects.map((project) => {
+					return { ...project, meta: project.meta ? JSON.parse(project.meta) : {} };
+			  })
+			: null;
 
 		return {
 			userId: userInfo ? userInfo.id : null,

@@ -298,6 +298,7 @@ function RenderImageInfo({ data }) {
 	const imageName = meta.outputs[0].name;
 	const firstImage = meta.outputs[0].value;
 	const currentImage = meta.outputs[0].value;
+
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
@@ -350,7 +351,7 @@ function RenderStep({ data }) {
 				</div>
 			</div>
 
-			<Conditional showIf={actionType === "ELEMENT_SCREENSHOT"}>
+			<Conditional showIf={actionType === "ELEMENT_SCREENSHOT" && isPassed }>
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>

@@ -1,6 +1,6 @@
 import { Button } from "dyson/src/components/atoms";
 import {
-	BottomSVG,
+	ChevronDown,
 	CalendarSVG,
 	RerunSVG,
 	TestStatusSVG,
@@ -368,17 +368,17 @@ function TestOverview() {
 						<img src={"/chrome.png"} height={16} className={"mr-8"} />
 						Chrome
 					</div>
-					<BottomSVG width={12} />
+					<ChevronDown width={12} />
 				</div>
 
 				<div className={"flex items-center mr-32"}>
 					<div className={"mr-8 text-13"}>Chrome</div>
-					<BottomSVG width={12} />
+					<ChevronDown width={12} />
 				</div>
 
 				<div className={"flex items-center"}>
 					<div className={"mr-8 text-13"}>Chrome</div>
-					<BottomSVG width={12} />
+					<ChevronDown width={12} />
 				</div>
 			</div>
 		</div>
@@ -461,7 +461,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 									<PlaySVG className={"mr-10"} /> Replay recording
 								</span>
 								<span>
-									<BottomSVG css={expand && close} />
+									<ChevronDown css={expand && close} />
 								</span>
 							</div>
 						</div>
@@ -482,12 +482,12 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 								<PlaySVG className={"mr-10"} /> Replay recording
 							</span>
 							<span>
-								<BottomSVG css={expand && close} />
+								<ChevronDown css={expand && close} />
 							</span>
 						</div>
 					</div>
 
-					<Conditional showIf={expand}>{TestOverview()}</Conditional>
+					<Conditional showIf={true}>{TestOverview()}</Conditional>
 				</div>
 			</div>
 			<Conditional showIf={expand}>

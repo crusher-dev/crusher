@@ -195,7 +195,9 @@ function TestSearchableList() {
 
 
 	useEffect(() => {
+
 		if (!tempTestId || tempTestId==="null") return;
+
 		(async () => {
 			setTempTest(null);
 

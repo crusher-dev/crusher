@@ -12,7 +12,6 @@ export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse,
 
 	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
 
-		console.log(getBoolean(user.meta.INITIAL_ONBOARDING ), user, user.meta.INITIAL_ONBOARDIN)
 		if (getBoolean(user.meta.INITIAL_ONBOARDING )!== true) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {

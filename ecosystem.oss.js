@@ -6,7 +6,7 @@ module.exports = {
 			name: 'crusher-app',
 			cwd: './packages/crusher-app',
 			script: 'npm',
-			args: 'run start',
+			args: 'run dev:open_source',
 			env: CRUSHER_APP_ENV,
 			merge_logs: true,
 			node_args: ['--max_old_space_size=100'],

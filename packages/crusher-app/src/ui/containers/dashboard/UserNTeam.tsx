@@ -59,12 +59,6 @@ export function UserNTeam() {
 				</div>
 			</div>
 
-			{/*<ShowOnClick component={<DropdownContent />} callback={setShow.bind(this)}>*/}
-			{/*	<div className={"flex items-center pr"}>*/}
-			{/*		<UserImage url={user.avatar} />*/}
-			{/*	</div>*/}
-			{/*</ShowOnClick>*/}
-
 			<Dropdown
 				component={<DropdownContent />}
 				dropdownCSS={css`
@@ -72,7 +66,7 @@ export function UserNTeam() {
 				`}
 			>
 				<div className={"flex items-center pr"}>
-					<UserImage url={user.avatar} />
+					<UserImage url={user?.avatar ?? "/assets/img/dashboard/default_user_image.png"} />
 				</div>
 			</Dropdown>
 		</div>

@@ -38,6 +38,7 @@ export const dropdDown = css`
 	left: calc(100% - 54rem);
 	position: absolute;
 	width: 206.03rem;
+	overflow: hidden;
 
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);

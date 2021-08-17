@@ -203,7 +203,7 @@ export const SignupContainer = () => {
 			<CenterLayout className={"pb-120"}>
 				<div className="flex flex-col items-center" css={containerCSS}>
 					<Logo height={"24rem"} className={"mb-24 mt-80"} />
-					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Create your account</div>
+					<div className={"font-cera text-16 leading-none font-700 mb-38"}>Create your account</div>
 
 					<Conditional showIf={!showRegistrationBox}>
 						<a href={resolvePathToBackendURI(googleSignupLink)}>
@@ -219,7 +219,7 @@ export const SignupContainer = () => {
 					<SignupBox />
 					<div className={"font-cera text-15 leading-none font-500"}>
 						Already have an account?
-						<Link href={"/login"}>
+						<a href={"/login"}>
 							<span
 								css={css`
 									color: #8a96ff;
@@ -228,7 +228,7 @@ export const SignupContainer = () => {
 							>
 								Login
 							</span>
-						</Link>
+						</a>
 					</div>
 				</div>
 			</CenterLayout>

@@ -281,12 +281,8 @@ function FilterBar() {
 			<div className={"text-14"}>
 				Filter by <img className={"ml-8"} src={"/browsers.png"} height={16} />
 			</div>
-			<div className={"ml-48"}>
-				<span className={"text-14 font-500"}>Version</span>
-				<span className={"text-14 ml-8 underline"}>All</span>
-			</div>
-			<div className={"ml-48"}>
-				<span className={"text-14 font-500"}>Version</span>
+			<div className={"ml-32"}>
+				<span className={"text-14 font-500"}>Viewport</span>
 				<span className={"text-14 ml-8 underline"}>All</span>
 			</div>
 		</div>
@@ -587,7 +583,8 @@ function ReportSection() {
 			<div className={"flex justify-between items-center"} id={"review-section"}>
 				<div className={"text-14"}>Jump to</div>
 				<div className={"flex items-center"}>
-					<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>
+					{/* Disabled for now*/}
+					{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
 					<Button
 						css={css`
 							width: 144px;
@@ -609,7 +606,8 @@ function ReportSection() {
 									<span className={"text-12"}>Jump to</span>
 								</div>
 								<div className={"flex items-center pt-4"}>
-									<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>
+									{/* Disabled for now*/}
+									{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
 									<Button
 										css={css`
 											width: 144px;

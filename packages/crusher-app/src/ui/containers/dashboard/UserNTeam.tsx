@@ -8,14 +8,45 @@ import { resolvePathToBackendURI } from "@utils/url";
 import { useRouter } from "next/router";
 import { MenuItem } from "@components/molecules/MenuItem";
 import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
+import Link from "next/link"
 
+const userDropdownItems = [
+	{
+		leftLabel: "Settings",
+		rightLabel: "",
+		link: "/settings/project",
+		target: ""
+	},
+	{
+		leftLabel: "Changelog",
+		rightLabel: "",
+		link: "https://github.com/crusherdev/crusher/releases",
+		target: "_blank"
+	},
+	{
+		leftLabel: "Help & Support",
+		rightLabel: "",
+		link: "https://docs.crusher.dev/docs/references/contact-us",
+		target: "_blank"
+	},
+	{
+		leftLabel: "Github",
+		rightLabel: "",
+		link: "https://github.com/crusherdev/crusher",
+		target: "_blank"
+	}
+]
 function DropdownContent() {
 	const router = useRouter();
 	return (
 		<div className={"flex flex-col justify-between h-full"}>
 			<div>
-				{[0, 0, 0, 0, 0].map((item) => (
-					<MenuItem label={"New Profile"} rightLabel={"Ctrl + A"} />
+				{userDropdownItems.map(({leftLabel, rightLabel, link,target}) => (
+					<Link href={link}>
+						<a href={link} target={target}>
+						<MenuItem label={leftLabel} rightLabel={rightLabel} />
+						</a>
+					</Link>
 				))}
 			</div>
 
@@ -31,7 +62,7 @@ function DropdownContent() {
 						router.push(resolvePathToBackendURI("/users/actions/logout"));
 					}}
 					label={"Logout"}
-					rightLabel={"Ctrl + A"}
+					rightLabel={""}
 				/>
 			</div>
 		</div>
@@ -62,7 +93,7 @@ export function UserNTeam() {
 			<Dropdown
 				component={<DropdownContent />}
 				dropdownCSS={css`
-					height: 276rem;
+					height: 206rem;
 				`}
 			>
 				<div className={"flex items-center pr"}>

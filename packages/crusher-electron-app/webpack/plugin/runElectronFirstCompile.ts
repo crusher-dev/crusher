@@ -10,7 +10,7 @@ class RunElectronOnFirstCompile {
 	runElectronApp(platform) {
 		switch (platform) {
 			case "linux":
-				exec(`${path.resolve(__dirname, "../../bin/linux/crusher")} ${path.resolve(__dirname, "../../../../output/crusher-electron-app")}`);
+				exec(`${path.resolve(__dirname, "../../bin/linux/electron")} ${path.resolve(__dirname, "../../../../output/crusher-electron-app")}`);
 				break;
 			case "darwin":
 				exec(

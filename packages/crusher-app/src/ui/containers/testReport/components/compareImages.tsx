@@ -8,7 +8,7 @@ const compareImages = css`
 
 const compareSection = css`
   background: #181B1E;
-  border-radius: 12px;
+  border-radius: 6px;
   overflow: hidden;
   //max-height: 900px;
 	display: flex;

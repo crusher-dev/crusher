@@ -30,7 +30,7 @@ export const OnBoardingTutorialVideo = () => {
 						<div className={"text-14 font-700 leading-none mt-16 mb-16 "} id={"support-tagline"}>
 							Join community 💓
 						</div>
-						<a href={"https://crusher.dev"}>
+						<a target={"_blank"} href={"https://github.com/crusherdev/crusher"}>
 							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
 							</div>

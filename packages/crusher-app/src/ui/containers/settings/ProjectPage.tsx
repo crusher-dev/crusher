@@ -11,7 +11,6 @@ export const ProjectSettings = () => {
 				<Heading type={1} fontSize={24}>
 					sd
 				</Heading>
-
 			</div>
 		</SettingsLayout>
 	);

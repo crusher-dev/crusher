@@ -21,7 +21,7 @@ import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
-import { getActionLabel, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
+import { getActionLabel, getScreenShotsAndChecks, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
 import { TTestInfo, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { usePageTitle } from "../../../hooks/seo";
 import { Modal } from "../../../../../dyson/src/components/molecules/Modal";
@@ -105,7 +105,7 @@ function NameNStatusSection() {
 						Rerun
 					</div>
 				</Button>
-				<ThreeEllipsisSVG className={"ml-22"} width={25} />
+				{/*<ThreeEllipsisSVG className={"ml-22"} width={25} />*/}
 			</div>
 
 			<StatusTag type={data.status} isMonochrome={true} />
@@ -421,6 +421,35 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const testInstanceData = testInstances[testIndexByFilteration];
 
 	const { steps } = testInstanceData;
+
+	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
+
+	const isVideoAvailable = !!videoUrl;
+
+	function TestOverViewHeader() {
+		return (
+			<>
+				<div className={"flex items-center leading-none text-15 font-600"}>
+					<PassedSVG height={18} className={"mr-16"} />
+					{name}
+				</div>
+				<div className={"flex items-center"}>
+					<span className={"text-13 mr-32"}>
+						{screenshotCount} screenshot | {checksCount} check
+					</span>
+					<Conditional showIf={isVideoAvailable}>
+						<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
+							<PlaySVG className={"mr-10"} /> Replay recording
+						</span>
+					</Conditional>
+					<span>
+						<ChevronDown css={expand && close} />
+					</span>
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
 			<Conditional showIf={openVideoModal}>
@@ -440,27 +469,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			<Conditional showIf={expand && sticky}>
 				<div css={stickyCSS} className={" px-0 "}>
 					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
-						<div className={"flex justify-between items-center"}>
-							<div className={"flex items-center leading-none text-15 font-600 mt-20"}>
-								<TestStatusSVG height={18} className={"mr-16"} />
-								{name}
-							</div>
-							<div className={"flex items-center mt-8"}>
-								<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-								<span
-									className={"flex text-13 mr-26"}
-									onClick={(e) => {
-										e.stopPropagation();
-										setOpenVideoModal.bind(this, true);
-									}}
-								>
-									<PlaySVG className={"mr-10"} /> Replay recording
-								</span>
-								<span>
-									<ChevronDown css={expand && close} />
-								</span>
-							</div>
-						</div>
+						<TestOverViewHeader />
 						<div className={"mt-12 mb-16"}>{TestOverview()}</div>
 					</div>
 				</div>
@@ -468,19 +477,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			<div>
 				<div className={"px-28 pb-16 w-full test-card-header"}>
 					<div css={header} className={" flex justify-between items-center w-full"}>
-						<div className={"flex items-center leading-none text-15 font-600"}>
-							<PassedSVG height={18} className={"mr-16"} />
-							{name}
-						</div>
-						<div className={"flex items-center"}>
-							<span className={"text-13 mr-32"}>5 screenshot | 10 check</span>
-							<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
-								<PlaySVG className={"mr-10"} /> Replay recording
-							</span>
-							<span>
-								<ChevronDown css={expand && close} />
-							</span>
-						</div>
+						<TestOverViewHeader />
 					</div>
 
 					<Conditional showIf={true}>{TestOverview()}</Conditional>

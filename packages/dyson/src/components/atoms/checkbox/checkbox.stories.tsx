@@ -3,7 +3,7 @@ import { Story, Meta } from "@storybook/react/types-6-0";
 
 import { ChecboxProps, Checkbox } from "./checkbox";
 export default {
-	title: "Atoms/Forms/Checbox",
+	title: "Atoms/Forms/Checkbox",
 	component: Checkbox,
 } as Meta;
 

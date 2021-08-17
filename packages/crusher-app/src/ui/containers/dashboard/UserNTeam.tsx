@@ -93,7 +93,7 @@ export function UserNTeam() {
 			<Dropdown
 				component={<DropdownContent />}
 				dropdownCSS={css`
-					height: 206rem;
+					height: 256rem;
 				`}
 			>
 				<div className={"flex items-center pr"}>

@@ -110,12 +110,125 @@ export function ReviewRequiredSVG(props) {
 export function RunningSVG(props) {
 	const { isMonochrome } = props;
 	return (
-		<svg width={20} height={20} viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<rect width={21} height={21} rx={10.5} fill={isMonochrome ? "#fff" : "#47484A"} />
-			<path
-				d="M10.375 8.906c-.879 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.879 0 1.594-.715 1.594-1.594 0-.879-.715-1.594-1.594-1.594zM5.188 8.906c-.88 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.878 0 1.593-.715 1.593-1.594 0-.879-.715-1.594-1.593-1.594zM15.563 8.906c-.88 0-1.594.715-1.594 1.594 0 .879.715 1.594 1.594 1.594.878 0 1.593-.715 1.593-1.594 0-.879-.715-1.594-1.593-1.594z"
-				fill="#1e242c"
-			/>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+
+			width={20}
+			height={20}
+			viewBox="0 0 100 100"
+			preserveAspectRatio="xMidYMid"
+			display="block"
+			{...props}
+		>
+			<circle cx={84} cy={50} r={10} fill="#d9d9d9">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="0.6578947368421053s"
+					calcMode="spline"
+					keyTimes="0;1"
+					values="14;0"
+					keySplines="0 0.5 0.5 1"
+					begin="0s"
+				/>
+				<animate
+					attributeName="fill"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="discrete"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="#d9d9d9;#6a6a6a;#828282;#a8a8a8;#d9d9d9"
+					begin="0s"
+				/>
+			</circle>
+			<circle cx={16} cy={50} r={10} fill="#d9d9d9">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="0s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="0s"
+				/>
+			</circle>
+			<circle cx={50} cy={50} r={10} fill="#a8a8a8">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-0.6578947368421053s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-0.6578947368421053s"
+				/>
+			</circle>
+			<circle cx={84} cy={50} r={10} fill="#828282">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.3157894736842106s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.3157894736842106s"
+				/>
+			</circle>
+			<circle cx={16} cy={50} r={10} fill="#6a6a6a">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.9736842105263157s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.9736842105263157s"
+				/>
+			</circle>
 		</svg>
 	);
 }

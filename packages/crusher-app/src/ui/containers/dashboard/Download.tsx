@@ -86,23 +86,52 @@ export function DownloadButton(props) {
 	@Note - Extract component overlay to dyson
  */
 export function Download({ onClose }: { onClose: Function }) {
+
+	const [time, setTime] = useState(2);
+
 	useEffect(() => {
 		window.location = "crusher://test";
+
+		(()=>{
+			let timerValue = time;
+			const timer = setInterval(()=>{
+				setTime(timerValue--)
+			},1000)
+			if(timerValue<1){
+				clearInterval(timer)
+			}
+		})()
 	}, []);
 
+	const launchTimePassed = time<0;
 	return (
 		<OverlayTransparent onClose={onClose}>
 			<CenterLayout>
 				<div css={downloadSection} className={"flex flex-col items-center pb-16"}>
-					<div>
-						<LoadingSVG height={28} />
+					<div css={css`height: 32rem;`}>
+						<Conditional showIf={!launchTimePassed}>
+							<div className={"font-cera text-32 font-700"} css={css`color: #fff;`}>
+								{time}
+							</div>
+						</Conditional>
+						<Conditional showIf={launchTimePassed}>
+							<div>
+								<LoadingSVG height={28} />
+							</div>
+						</Conditional>
 					</div>
 					<div className={"font-cera text-15 font-500 mt-24"}>Opening recorder for you</div>
-					<div className={"mt-68 text-16 font-600"}>Not opening? Install and open recorder</div>
-					<div className={"mt-28"}>
-						<DownloadButton />
+					<div className={"w-full flex flex-col items-center"} css={css`height: 185rem;`}>
+						<Conditional showIf={launchTimePassed}>
+
+							<div className={"mt-68 text-16 font-600"}>Not opening? Install and open recorder</div>
+							<div className={"mt-28"}>
+								<DownloadButton />
+							</div>
+							<div className={"mt-28 underline text-13"}>View downloads for other platform</div>
+						</Conditional>
 					</div>
-					<div className={"mt-28 underline text-13"}>View downloads for other platform</div>
+
 				</div>
 			</CenterLayout>
 		</OverlayTransparent>

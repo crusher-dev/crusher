@@ -1,5 +1,5 @@
 import { UsersService } from "@modules/resources/users/service";
-import { JsonController, Get, Param, QueryParams } from "routing-controllers";
+import { JsonController, Get, Param, QueryParams, Post, Authorized, CurrentUser } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildsService } from "@modules/resources/builds/service";
@@ -8,6 +8,8 @@ import { BuildTriggerEnum } from "./interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { IUserTable } from "../users/interface";
+import { TestsRunner } from "@modules/runner";
+import { BuildsActionService } from "./build.actions.service";
 
 @Service()
 @JsonController("")
@@ -18,6 +20,8 @@ export class BuildsController {
 	private buildsService: BuildsService;
 	@Inject()
 	private commentsService: CommentsServiceV2;
+	@Inject()
+	private buildsActionService: BuildsActionService;
 
 	@Get("/projects/:project_id/builds")
 	public async getBuildsList(
@@ -61,6 +65,16 @@ export class BuildsController {
 			list: buildsList,
 			totalPages: buildsData.totalPages,
 			availableAuthors: availableAuthors,
+		};
+	}
+
+	@Authorized()
+	@Post("/builds/:build_id/actions/rerun")
+	async rerunBuild(@CurrentUser({ required: true }) user, @Param("build_id") buildId: number) {
+		await this.buildsActionService.rerunBuild(buildId, user.user_id);
+
+		return {
+			status: "Successful",
 		};
 	}
 }

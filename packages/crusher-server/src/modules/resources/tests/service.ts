@@ -133,6 +133,11 @@ class TestService {
 	async addFeaturedVideo(featuredVideoUrl: string, testId: number): Promise<{ insertId: number }> {
 		return this.dbManager.update("UPDATE tests SET featured_video_url = ? WHERE id = ?", [featuredVideoUrl, testId]);
 	}
+
+	@CamelizeResponse()
+	async getTestsFromIdList(testIds: Array<number>): Promise<Array<KeysToCamelCase<ITestTable>>> {
+		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds]);
+	}
 }
 
 export { TestService };

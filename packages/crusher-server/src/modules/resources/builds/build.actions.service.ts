@@ -51,6 +51,8 @@ class BuildsActionService {
 		const buildRecordMeta: { testIds: Array<number>; shouldRecordVideo: boolean } = buildRecord.config;
 		const testsList = await this.testService.getTestsFromIdList(buildRecordMeta.testIds);
 
+    console.log("Tests list", testsList);
+
 		return this.testRunner.runTests(
 			testsList,
 			{

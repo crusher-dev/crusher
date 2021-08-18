@@ -7,7 +7,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
 import { getActionLabel, getAllConfigurationForGivenTest, getScreenShotsAndChecks, getTestIndexByConfig } from "@utils/pages/buildReportUtils";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import { PlaySVG } from "@svg/dashboard";
+import { LoadingSVG, PlaySVG } from '@svg/dashboard';
 import { Modal } from "dyson/src/components/molecules/Modal";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
@@ -187,7 +187,7 @@ function RenderStep({ data }) {
 
 function Browsers({ browsers, setConfig }) {
 	return (
-		<div className={"flex flex-col justify-between h-full"}>
+		<div className={"flex flex-col justify-between h-full"} onClick={(e)=>{}}>
 			<div>
 				{browsers.map((name, id) => (
 					<MenuItem
@@ -250,6 +250,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
 
+	const [showLoading, setLoading] = useState(false);
 	const [testCardConfig, setTestTestCardConfig] = useState({});
 	const allCofiguration = getAllConfigurationForGivenTest(testData);
 
@@ -299,6 +300,13 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
 
 	const isVideoAvailable = !!videoUrl;
+
+	useEffect(()=>{
+		setLoading(true);
+		setTimeout(()=>{
+			setLoading(false);
+		},500)
+	},[testCardConfig])
 
 	function TestOverViewHeader() {
 		return (
@@ -361,12 +369,22 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 					</Conditional>
 				</div>
 			</div>
-			<Conditional showIf={expand}>
+			<Conditional showIf={expand && !showLoading}>
 				<div className={"px-32 w-full"} css={stepsContainer}>
 					<div className={"ml-32 py-32"} css={stepsList}>
 						{steps.map((step, index) => (
 							<RenderStep data={step} key={index} />
 						))}
+					</div>
+				</div>
+			</Conditional>
+
+			<Conditional showIf={expand && showLoading}>
+				<div className={"flex flex-col items-center w-full mt-80 mb-80"}>
+					<LoadingSVG height={20}/>
+
+					<div className={"mt-12 text-13"}>
+						Loading
 					</div>
 				</div>
 			</Conditional>

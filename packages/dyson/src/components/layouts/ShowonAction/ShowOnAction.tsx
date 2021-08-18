@@ -27,6 +27,7 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 			<div
 				className={"flex relative"}
 				onClick={(e) => {
+					e.stopPropagation()
 					setShow(true);
 				}}
 			>

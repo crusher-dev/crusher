@@ -104,3 +104,12 @@ export const getTestIndexByConfig = (test: Test, config) => {
 
 	return 0;
 };
+
+export const getBaseConfig = (allConfiguration) => {
+	const baseConfigForTest = {};
+	Object.keys(allConfiguration).forEach((key) => {
+		baseConfigForTest[key] = allConfiguration[key][0];
+	});
+
+	return baseConfigForTest;
+};

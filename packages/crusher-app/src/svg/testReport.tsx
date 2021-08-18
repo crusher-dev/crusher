@@ -225,17 +225,17 @@ export function RunningSVG(props) {
 }
 
 export const TestStatusSVG = ({ type, ...props }) => {
-		if (type === "FAILED") {
-			return <FailedSVG {...props} />;
-		}
-		if (type === "RUNNING") {
-			return <RunningSVG {...props} />;
-		}
-		if (type === "INITIATED") {
-			return <InitiatedSVG {...props} />;
-		}
-		if (type === "REVIEW_REQUIRED") {
-			return <ReviewRequiredSVG {...props} />;
-		}
-		return <PassedSVG {...props} />;
+	if (type === "FAILED") {
+		return <FailedSVG {...props} />;
+	}
+	if (type === "RUNNING") {
+		return <RunningSVG {...props} />;
+	}
+	if (type === "INITIATED") {
+		return <InitiatedSVG {...props} />;
+	}
+	if (type === "REVIEW_REQUIRED") {
+		return <ReviewRequiredSVG {...props} />;
+	}
+	return <PassedSVG {...props} />;
 };

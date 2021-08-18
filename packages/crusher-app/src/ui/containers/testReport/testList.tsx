@@ -5,9 +5,9 @@ import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
 import { Conditional } from "dyson/src/components/layouts";
 import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
-import { getActionLabel, getAllConfigurationForGivenTest, getScreenShotsAndChecks, getTestIndexByConfig } from "@utils/pages/buildReportUtils";
+import { getActionLabel, getAllConfigurationForGivenTest, getBaseConfig, getScreenShotsAndChecks, getTestIndexByConfig } from "@utils/pages/buildReportUtils";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import { LoadingSVG, PlaySVG } from '@svg/dashboard';
+import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { Modal } from "dyson/src/components/molecules/Modal";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
@@ -191,11 +191,12 @@ function RenderStep({ data }) {
 
 function Browsers({ browsers, setConfig }) {
 	return (
-		<div className={"flex flex-col justify-between h-full"} onClick={(e)=>{}}>
+		<div className={"flex flex-col justify-between h-full"} onClick={(e) => {}}>
 			<div>
 				{browsers.map((name, id) => (
 					<MenuItem
 						label={name.toLowerCase()}
+						key={id}
 						className={"close-on-click"}
 						onClick={(e) => {
 							setConfig("browser", name);
@@ -219,13 +220,13 @@ const dropDownSelectionCSS = css`
 	Use Jotai for avoiding props drilling.
 	Make config much more streamline.
  */
-function TestOverview({ allCofiguration, setTestTestCardConfig, testCardConfig }) {
+function TestConfigSection({ allCofiguration, setTestCardConfig, testCardConfig }) {
 	const setConfig = (key, value) => {
 		const config = allCofiguration;
 
 		config[key] = value;
 
-		setTestTestCardConfig(config);
+		setTestCardConfig(config);
 	};
 
 	return (
@@ -236,7 +237,7 @@ function TestOverview({ allCofiguration, setTestTestCardConfig, testCardConfig }
 					<ClickableText paddingY={4} paddingX={12}>
 						<div className={"flex items-center "}>
 							<div className={" flex items-center  mr-8 text-13"}>
-								<img src={"/chrome.png"} height={16} className={"mr-8"} />
+								{/*<img src={"/chrome.png"} height={16} className={"mr-8"} />*/}
 								<span className={"mt-1 capitalize"}>{testCardConfig.browser.toLowerCase()}</span>
 							</div>
 							<ChevronDown width={12} />
@@ -248,27 +249,56 @@ function TestOverview({ allCofiguration, setTestTestCardConfig, testCardConfig }
 	);
 }
 
+function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
+	const [openVideoModal, setOpenVideoModal] = useState(false);
+	const { steps } = testInstanceData;
+	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
+	const videoUrl = testInstanceData?.output?.video;
+	const isVideoAvailable = !!videoUrl;
+
+	return (
+		<>
+			<Conditional showIf={openVideoModal}>
+				<Modal
+					onClose={setOpenVideoModal.bind(this, false)}
+					onOutsideClick={setOpenVideoModal.bind(this, false)}
+					modalStyle={css`
+						padding: 28rem 36rem 36rem;
+					`}
+				>
+					<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
+					<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
+					<VideoComponent src={videoUrl} />
+				</Modal>
+			</Conditional>
+			<div className={"flex items-center leading-none text-15 font-600"}>
+				<PassedSVG height={18} className={"mr-16"} />
+				{name}
+			</div>
+			<div className={"flex items-center"}>
+				<span className={"text-13 mr-32"}>
+					{screenshotCount} screenshot | {checksCount} check
+				</span>
+				<Conditional showIf={isVideoAvailable}>
+					<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
+						<PlaySVG className={"mr-10"} /> Replay recording
+					</span>
+				</Conditional>
+				<span>
+					<ChevronDown css={expand && close} />
+				</span>
+			</div>
+		</>
+	);
+}
+
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
-	const [openVideoModal, setOpenVideoModal] = useState(false);
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
-
 	const [showLoading, setLoading] = useState(false);
-	const [testCardConfig, setTestCardConfig] = useState({});
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
-
-	useState(() => {
-		const baseFilter = {};
-		if (!allConfiguration) return;
-		Object.keys(allConfiguration).forEach((key) => {
-			console.log("sdf",key)
-			baseFilter[key] = allConfiguration[key][0];
-		});
-		console.log(baseFilter, "new")
-		setTestCardConfig(baseFilter);
-	}, [allConfiguration]);
-
+	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
 
 	useEffect(() => {
 		const testCard = document.querySelector(`#test-card-${id}`);
@@ -300,82 +330,41 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	};
 
 	const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
-	const videoUrl = testInstances[testIndexByFilteration]?.output?.video;
+
 	const testInstanceData = testInstances[testIndexByFilteration];
-
 	const { steps } = testInstanceData;
-	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
 
-	const isVideoAvailable = !!videoUrl;
-
-	useEffect(()=>{
+	useEffect(() => {
 		setLoading(true);
-		setTimeout(()=>{
+		setTimeout(() => {
 			setLoading(false);
-		},500)
-	},[testCardConfig])
-
-	function TestOverViewHeader() {
-		return (
-			<>
-				<div className={"flex items-center leading-none text-15 font-600"}>
-					<PassedSVG height={18} className={"mr-16"} />
-					{name}
-				</div>
-				<div className={"flex items-center"}>
-					<span className={"text-13 mr-32"}>
-						{screenshotCount} screenshot | {checksCount} check
-					</span>
-					<Conditional showIf={isVideoAvailable}>
-						<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
-							<PlaySVG className={"mr-10"} /> Replay recording
-						</span>
-					</Conditional>
-					<span>
-						<ChevronDown css={expand && close} />
-					</span>
-				</div>
-			</>
-		);
-	}
+		}, 500);
+	}, [testCardConfig]);
 
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
-			<Conditional showIf={openVideoModal}>
-				<Modal
-					onClose={setOpenVideoModal.bind(this, false)}
-					onOutsideClick={setOpenVideoModal.bind(this, false)}
-					modalStyle={css`
-						padding: 28rem 36rem 36rem;
-					`}
-				>
-					<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
-					<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
-					<VideoComponent src={videoUrl} />
-				</Modal>
-			</Conditional>
-
 			<Conditional showIf={expand && sticky}>
 				<div css={stickyCSS} className={" px-0 "} onClick={onCardClick}>
 					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
-						<TestOverViewHeader />
+						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
+
 						<div className={"mt-12 mb-16"}>
-							<TestOverview allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestTestCardConfig={setTestCardConfig} />
+							<TestConfigSection allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestCardConfig={setTestCardConfig} />
 						</div>
 					</div>
 				</div>
 			</Conditional>
+
 			<div onClick={onCardClick}>
 				<div className={"px-28 pb-16 w-full test-card-header"}>
 					<div css={header} className={" flex justify-between items-center w-full"}>
-						<TestOverViewHeader />
+						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
-					<Conditional showIf={true}>
-						<TestOverview allCofiguration={allConfiguration} setTestTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
-					</Conditional>
+					<TestConfigSection allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
 				</div>
 			</div>
+
 			<Conditional showIf={expand && !showLoading}>
 				<div className={"px-32 w-full"} css={stepsContainer}>
 					<div className={"ml-32 py-32"} css={stepsList}>
@@ -388,11 +377,9 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 			<Conditional showIf={expand && showLoading}>
 				<div className={"flex flex-col items-center w-full mt-80 mb-80"}>
-					<LoadingSVG height={20}/>
+					<LoadingSVG height={20} />
 
-					<div className={"mt-12 text-13"}>
-						Loading
-					</div>
+					<div className={"mt-12 text-13"}>Loading</div>
 				</div>
 			</Conditional>
 		</div>

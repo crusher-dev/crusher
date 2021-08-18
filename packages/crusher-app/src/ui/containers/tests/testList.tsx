@@ -109,9 +109,7 @@ function TestCard(props: IBuildItemCardProps) {
 					<div css={testNameStyle} className={"font-cera"}>
 						{testName}
 					</div>
-					<Conditional showIf={isPassing}>
-						<div className={"ml-auto"}>{statusIcon}</div>
-					</Conditional>
+					<div className={"ml-auto"}>{statusIcon}</div>
 				</div>
 				<div css={createdAtStyle} className={"flex justify-between mt-24 text-13"}>
 					<span>{timeSince(new Date(createdAt))}</span>

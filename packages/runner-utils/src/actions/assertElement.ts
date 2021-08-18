@@ -72,6 +72,7 @@ async function runAssertionOnElement(element: Locator, workingSelector: any, act
 	const actionResult = await assertElementAttributes(element, validationRows);
 
 	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });
+	console.log(element, validationRows);
 
 	return {
 		customLogMessage: "Ran custom assertions on element",

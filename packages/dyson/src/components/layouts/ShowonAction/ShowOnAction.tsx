@@ -24,7 +24,12 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 				setShow(false);
 			}}
 		>
-			<div className={"flex relative"} onClick={setShow.bind(this, true)}>
+			<div
+				className={"flex relative"}
+				onClick={(e) => {
+					setShow(true);
+				}}
+			>
 				{children}
 				{showDropDown && component}
 			</div>

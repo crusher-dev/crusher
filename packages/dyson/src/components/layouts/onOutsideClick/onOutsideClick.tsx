@@ -25,7 +25,7 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 		document.body.addEventListener("click", handleClick, { passive: true });
 
 		return () => {
-			document.body.removeEventListener("click", handleClick);
+			document.body.removeEventListener("click", handleClick, { passive: true });
 		};
 	}, []);
 

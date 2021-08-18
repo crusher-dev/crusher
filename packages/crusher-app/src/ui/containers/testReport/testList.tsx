@@ -5,7 +5,7 @@ import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
 import { Conditional } from "dyson/src/components/layouts";
 import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
-import { getActionLabel, getScreenShotsAndChecks } from "@utils/pages/buildReportUtils";
+import { getActionLabel, getAllConfigurationForGivenTest, getScreenShotsAndChecks, getTestIndexByConfig } from "@utils/pages/buildReportUtils";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { PlaySVG } from "@svg/dashboard";
 import { Modal } from "dyson/src/components/molecules/Modal";
@@ -13,6 +13,11 @@ import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
 import dynamic from "next/dynamic";
 import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
+import { keys } from "lodash";
+import { useAtom } from "jotai";
+import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
+import { MenuItem } from "@components/molecules/MenuItem";
+import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
@@ -180,26 +185,60 @@ function RenderStep({ data }) {
 	);
 }
 
-function TestOverview() {
-	function SelectBrowser() {
-		return (
-			<ClickableText paddingY={4} paddingX={12}>
-				<div className={"flex items-center "}>
-					<div className={" flex items-center  mr-8 text-13"}>
-						<img src={"/chrome.png"} height={16} className={"mr-8"} />
-						<span className={"mt-1"}>Chrome</span>
-					</div>
-					<ChevronDown width={12} />
-				</div>
-			</ClickableText>
-		);
-	}
+function Browsers({ browsers, setConfig }) {
+	return (
+		<div className={"flex flex-col justify-between h-full"}>
+			<div>
+				{browsers.map((name, id) => (
+					<MenuItem
+						label={name.toLowerCase()}
+						className={"close-on-click"}
+						onClick={(e) => {
+							setConfig("browser", name);
+						}}
+					/>
+				))}
+			</div>
+		</div>
+	);
+}
+
+const dropDownSelectionCSS = css`
+	height: fit-content;
+	width: 180rem;
+	top: calc(100% + 4rem) !important;
+	right: 8px !important;
+	left: unset !important;
+`;
+
+/*
+	Use Jotai for avoiding props drilling.
+	Make config much more streamline.
+ */
+function TestOverview({ allCofiguration, setTestTestCardConfig, testCardConfig }) {
+	const setConfig = (key, value) => {
+		const config = allCofiguration;
+
+		config[key] = value;
+
+		setTestTestCardConfig(config);
+	};
 
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
 			<div className={"text-13"}>Switch to</div>
 			<div className={"flex"}>
-				<SelectBrowser />
+				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
+					<ClickableText paddingY={4} paddingX={12}>
+						<div className={"flex items-center "}>
+							<div className={" flex items-center  mr-8 text-13"}>
+								<img src={"/chrome.png"} height={16} className={"mr-8"} />
+								<span className={"mt-1 capitalize"}>{testCardConfig.browser.toLowerCase()}</span>
+							</div>
+							<ChevronDown width={12} />
+						</div>
+					</ClickableText>
+				</Dropdown>
 			</div>
 		</div>
 	);
@@ -210,6 +249,18 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const [openVideoModal, setOpenVideoModal] = useState(false);
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
 	const [sticky, setSticky] = useState(false);
+
+	const [testCardConfig, setTestTestCardConfig] = useState({});
+	const allCofiguration = getAllConfigurationForGivenTest(testData);
+
+	useState(() => {
+		const baseFilter = {};
+		if (!allCofiguration) return;
+		Object.keys(allCofiguration).forEach((key) => {
+			baseFilter[key] = allCofiguration[key][0];
+		});
+		setTestTestCardConfig(baseFilter);
+	}, [allCofiguration]);
 
 	useEffect(() => {
 		const testCard = document.querySelector(`#test-card-${id}`);
@@ -240,12 +291,11 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		setExpand(!expand);
 	};
 
-	const testIndexByFilteration = 0; // Filter based on testreport and other configuration
+	const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
 	const videoUrl = testInstances[testIndexByFilteration]?.output?.video;
 	const testInstanceData = testInstances[testIndexByFilteration];
 
 	const { steps } = testInstanceData;
-
 	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
 
 	const isVideoAvailable = !!videoUrl;
@@ -275,7 +325,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	}
 
 	return (
-		<div css={testCard} className={" flex-col mt-24 "}  id={`test-card-${id}`}>
+		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
 			<Conditional showIf={openVideoModal}>
 				<Modal
 					onClose={setOpenVideoModal.bind(this, false)}
@@ -294,7 +344,9 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				<div css={stickyCSS} className={" px-0 "} onClick={onCardClick}>
 					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
 						<TestOverViewHeader />
-						<div className={"mt-12 mb-16"}>{TestOverview()}</div>
+						<div className={"mt-12 mb-16"}>
+							<TestOverview allCofiguration={allCofiguration} testCardConfig={testCardConfig} setTestTestCardConfig={setTestTestCardConfig} />
+						</div>
 					</div>
 				</div>
 			</Conditional>
@@ -304,7 +356,9 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverViewHeader />
 					</div>
 
-					<Conditional showIf={true}>{TestOverview()}</Conditional>
+					<Conditional showIf={true}>
+						<TestOverview allCofiguration={allCofiguration} setTestTestCardConfig={setTestTestCardConfig} testCardConfig={testCardConfig} />
+					</Conditional>
 				</div>
 			</div>
 			<Conditional showIf={expand}>

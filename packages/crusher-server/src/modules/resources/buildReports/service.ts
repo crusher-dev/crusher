@@ -8,11 +8,12 @@ import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BuildTestInstancesService } from "../builds/instances/service";
-import { TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum } from "../builds/instances/interface";
+import { IBuildTestInstanceResultsTable, TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum } from "../builds/instances/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum, IBuildReportTable } from "./interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
-import { BuildInstanceResults } from "../builds/instances/mongo/buildInstanceResults";
+import { BuildInstanceResults, IBuildInstanceResult } from "../builds/instances/mongo/buildInstanceResults";
+import { BuildTestInstanceScreenshotService } from "../builds/instances/screenshots.service";
 
 interface TestBuildReport {
 	buildId: number;
@@ -38,6 +39,7 @@ interface TestBuildReport {
 	testInstanceHost?: string;
 	testResultStatus?: TestInstanceResultSetStatus;
 	testResultConclusion?: TestInstanceResultSetConclusion;
+	testResultSetId?: number;
 	recordedVideoUrl?: string;
 }
 
@@ -47,10 +49,37 @@ export class BuildReportService {
 	private dbManager: DBManager;
 	@Inject()
 	private buildTestInstanceService: BuildTestInstancesService;
+	@Inject()
+	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
+
+	private getInstanceResultWithDiffComparision(
+		actionResults: Array<any>,
+		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>,
+	) {
+		const instanceScreenshotsRecordsMap: {
+			[key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string };
+		} = instanceScreenshotsRecords.reduce((prev, current) => {
+			return { ...prev, [current.actionIndex]: current };
+		}, {});
+
+		// @TODO: Cleanup tihs logic and use proper typescript types
+		return actionResults.map((actionResult, actionIndex) => {
+			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionResult.actionType)) {
+				const screenshotResultRecord = instanceScreenshotsRecordsMap[actionIndex];
+				if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length) {
+					actionResult.meta.outputs[0].diffImageUrl = screenshotResultRecord.diffImageUrl;
+					actionResult.meta.outputs[0].targetScreenshotUrl = screenshotResultRecord.targetScreenshotUrl;
+					actionResult.meta.outputs[0].diffDelta = screenshotResultRecord.diffDelta;
+				}
+			}
+
+			return actionResult;
+		});
+	}
 
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
 		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
-			"SELECT jobs.id buildId, jobs.meta buildMeta, jobs.project_id buildProjectId, jobs.commit_name buildName, job_reports.id buildReportId, job_reports.reference_job_id buildBaselineId, job_reports.created_at buildReportCreatedAt, jobs.created_at buildCreatedAt, jobs.updated_at buildUpdatedAt, job_reports.updated_at buildReportUpdatedAt, job_reports.status buildReportStatus, buildTests.* FROM jobs, job_reports LEFT JOIN (SELECT test_instances.id testInstanceId, test_instance_result_sets.report_id testBuildReportId, test_instance_result_sets.status testResultStatus, test_instance_result_sets.conclusion testResultConclusion, test_instance_result_sets.target_instance_id testBaselineInstanceId, tests.name testName, test_instances.browser testInstanceBrowser, tests.id testId, tests.events testStepsJSON, test_instances.host testInstanceHost, test_instances.recorded_video_url recordedVideoUrl FROM test_instances, tests, test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) buildTests ON buildTests.testBuildReportId = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
+			"SELECT jobs.id buildId, jobs.meta buildMeta, jobs.project_id buildProjectId, jobs.commit_name buildName, job_reports.id buildReportId, job_reports.reference_job_id buildBaselineId, job_reports.created_at buildReportCreatedAt, jobs.created_at buildCreatedAt, jobs.updated_at buildUpdatedAt, job_reports.updated_at buildReportUpdatedAt, job_reports.status buildReportStatus, buildTests.* FROM jobs, job_reports LEFT JOIN (SELECT test_instances.id testInstanceId, test_instance_result_sets.report_id testBuildReportId, test_instance_result_sets.status testResultStatus, test_instance_result_sets.conclusion testResultConclusion, test_instance_result_sets.id testResultSetId, test_instance_result_sets.target_instance_id testBaselineInstanceId, tests.name testName, test_instances.browser testInstanceBrowser, tests.id testId, tests.events testStepsJSON, test_instances.host testInstanceHost, test_instances.recorded_video_url recordedVideoUrl FROM test_instances, tests, test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) buildTests ON buildTests.testBuildReportId = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
 			[buildId],
 		);
 		if (!testsWithReportData.length) throw new Error(`No information available about build reports with this build id ${buildId}`);
@@ -61,9 +90,15 @@ export class BuildReportService {
 					instanceId: { $eq: reportData.testInstanceId },
 				}).exec();
 
+				const instanceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshotResultWithActionIndex(reportData.testResultSetId);
+
+				const finalInstanceResult = instanceResult
+					? this.getInstanceResultWithDiffComparision(instanceResult.actionsResult, instanceScreenshots)
+					: null;
+
 				return {
 					...reportData,
-					actionsResult: instanceResult ? instanceResult.actionsResult : null,
+					actionsResult: finalInstanceResult,
 				};
 			},
 		);
@@ -84,15 +119,6 @@ export class BuildReportService {
 					// @TODO: Implement logic for this
 					output: {
 						video: current.recordedVideoUrl,
-						images: [
-							{
-								id: 120,
-								url: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-								baselineURL: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-								diffDelta: 0,
-								diffURL: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-							},
-						],
 					},
 					steps: current.actionsResult,
 				};

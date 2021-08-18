@@ -9,7 +9,7 @@ const BuildInstanceResultsSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-interface IBuildInstanceResult {
+export interface IBuildInstanceResult {
 	instanceId: number;
 	actionsResult: Array<any>;
 	hasInstancePassed: boolean;

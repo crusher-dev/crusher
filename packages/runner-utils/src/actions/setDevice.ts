@@ -14,9 +14,9 @@ async function setDevice(browser: Browser, action: iAction, globals: IGlobalMana
 	if (currentBrowserContextOptions && currentBrowserContextOptions.recordVideo) {
 		currentBrowserContextOptions.recordVideo = {
 			...currentBrowserContextOptions.recordVideo,
-			size: { width: device.width, height: device.height }
+			size: { width: device.width, height: device.height },
 		};
-	};
+	}
 
 	console.log("Setting this user agent", userAgent.value);
 

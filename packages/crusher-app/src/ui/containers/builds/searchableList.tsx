@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { TestStatusSVG } from "@svg/testReport";
 import { showReviewButton } from "@utils/pages/buildReportUtils";
-import { timeSince } from "@utils/dateTimeUtils";
+import { getStringFromDuration, timeSince } from '@utils/dateTimeUtils';
 import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { ConditionalLink } from "@components/common/ConditionalLink";
@@ -44,7 +44,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 						<span className={"ml-18 text-14"}>{tests.totalCount} tests</span>
 						<div className={"flex flex-row items-center ml-21"}>
 							<ClockIconSVG />
-							<span className={"ml-9 text-14"}>{duration} mins</span>
+							<span className={"ml-9 text-14"}>{getStringFromDuration(duration)}</span>
 						</div>
 					</div>
 

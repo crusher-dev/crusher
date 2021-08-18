@@ -4,7 +4,7 @@ export const isChildOfOnCloseClass = (target, root) => {
 	let element = target;
 
 	while (element !== root && element && document.body.contains(element)) {
-		if (element.className.includes("close-on-click")) {
+		if (element?.className?.includes("close-on-click")) {
 			return true;
 		}
 
@@ -27,5 +27,5 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 		};
 	}, []);
 
-	return <div ref={ref} >{children}</div>;
+	return <div ref={ref}>{children}</div>;
 };

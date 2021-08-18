@@ -91,7 +91,9 @@ function TestCard(props: IBuildItemCardProps) {
 					<video
 						height={"100%"}
 						css={css`
-							height: 100%;
+							object-fit: cover;
+						    width: 100%;
+    height: 100%;
 						`}
 						onMouseOver={(event) => event.target.play()}
 						onMouseOut={(event) => {
@@ -166,6 +168,9 @@ const itemImageStyle = css`
 	border-top-left-radius: 12rem;
 	border-top-right-radius: 12rem;
 	border-width: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;
 
 function TestSearchableList() {

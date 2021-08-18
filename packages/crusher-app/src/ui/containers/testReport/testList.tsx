@@ -13,14 +13,18 @@ import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
 import dynamic from "next/dynamic";
 import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
-import { keys } from "lodash";
-import { useAtom } from "jotai";
-import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { MenuItem } from "@components/molecules/MenuItem";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
+/*
+	How reports will work
+	1.) Filter test instances by config
+	2.) Save individual state for each test
+			1. Step
+			2.) Current state
+ */
 function ReportSection() {
 	const [stickyOverviewSection, setStickOverviewSection] = useState(false);
 
@@ -251,17 +255,20 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const [sticky, setSticky] = useState(false);
 
 	const [showLoading, setLoading] = useState(false);
-	const [testCardConfig, setTestTestCardConfig] = useState({});
-	const allCofiguration = getAllConfigurationForGivenTest(testData);
+	const [testCardConfig, setTestCardConfig] = useState({});
+	const allConfiguration = getAllConfigurationForGivenTest(testData);
 
 	useState(() => {
 		const baseFilter = {};
-		if (!allCofiguration) return;
-		Object.keys(allCofiguration).forEach((key) => {
-			baseFilter[key] = allCofiguration[key][0];
+		if (!allConfiguration) return;
+		Object.keys(allConfiguration).forEach((key) => {
+			console.log("sdf",key)
+			baseFilter[key] = allConfiguration[key][0];
 		});
-		setTestTestCardConfig(baseFilter);
-	}, [allCofiguration]);
+		console.log(baseFilter, "new")
+		setTestCardConfig(baseFilter);
+	}, [allConfiguration]);
+
 
 	useEffect(() => {
 		const testCard = document.querySelector(`#test-card-${id}`);
@@ -353,7 +360,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
 						<TestOverViewHeader />
 						<div className={"mt-12 mb-16"}>
-							<TestOverview allCofiguration={allCofiguration} testCardConfig={testCardConfig} setTestTestCardConfig={setTestTestCardConfig} />
+							<TestOverview allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestTestCardConfig={setTestCardConfig} />
 						</div>
 					</div>
 				</div>
@@ -365,7 +372,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 					</div>
 
 					<Conditional showIf={true}>
-						<TestOverview allCofiguration={allCofiguration} setTestTestCardConfig={setTestTestCardConfig} testCardConfig={testCardConfig} />
+						<TestOverview allCofiguration={allConfiguration} setTestTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
 					</Conditional>
 				</div>
 			</div>

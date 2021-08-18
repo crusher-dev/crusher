@@ -35,7 +35,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 
 	return (
 		<ConditionalLink href={`/app/build/${id}`} disabled={isRunning}>
-			<div css={itemContainerStyle} className={"relative"}>
+			<div css={itemContainerStyle} className={"relative"} style={{cursor: isRunning ? "not-allowed" : "default"}}>
 				<div className={"flex flex-row items-center"}>
 					<div className={"flex flex-row items-center"}>
 						<span css={itemBuildStyle} className={"font-cera font-600"}>

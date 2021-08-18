@@ -32,6 +32,7 @@ class RelevantHoverDetection {
 	getParentDOMMutations(node: Node): Array<IRegisteredMutationRecord> {
 		let currentNode = node;
 		const list = [];
+		console.log("FIRST RESULT", this._mapRecords.get(currentNode));
 		while (document.body.contains(currentNode) && currentNode != document.body) {
 			if (this._mapRecords.has(currentNode)) {
 				const tmp = this._mapRecords.get(currentNode)!;
@@ -39,7 +40,9 @@ class RelevantHoverDetection {
 			}
 			currentNode = currentNode.parentNode!;
 		}
-		return list.reverse();
+		const out = list.reverse();
+		console.log(out);
+		return out;
 	}
 }
 

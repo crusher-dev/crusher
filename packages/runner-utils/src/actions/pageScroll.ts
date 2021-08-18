@@ -5,7 +5,7 @@ import { scrollPage } from "../functions/scroll";
 
 async function scrollOnPage(page: Page, action: iAction) {
 	const scrollDelta = action.payload.meta.value;
-
+	console.log("Scrolling the page", [scrollDelta]);
 	await scrollPage(scrollDelta, page);
 }
 

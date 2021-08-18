@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useBuildReport } from '../../../store/serverState/buildReports';
-import { Button } from 'dyson/src/components/atoms';
-import { css } from '@emotion/react';
-import { Conditional } from 'dyson/src/components/layouts';
-import { ChevronDown, PassedSVG, TestStatusSVG } from '@svg/testReport';
-import { getActionLabel, getScreenShotsAndChecks } from '@utils/pages/buildReportUtils';
-import { Test } from '@crusher-shared/types/response/iBuildReportResponse';
-import { PlaySVG } from '@svg/dashboard';
-import { Modal } from 'dyson/src/components/molecules/Modal';
-import { VideoComponent } from 'dyson/src/components/atoms/video/video';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useBuildReport } from "../../../store/serverState/buildReports";
+import { Button } from "dyson/src/components/atoms";
+import { css } from "@emotion/react";
+import { Conditional } from "dyson/src/components/layouts";
+import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
+import { getActionLabel, getScreenShotsAndChecks } from "@utils/pages/buildReportUtils";
+import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
+import { PlaySVG } from "@svg/dashboard";
+import { Modal } from "dyson/src/components/molecules/Modal";
+import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
@@ -76,16 +77,16 @@ function ReportSection() {
 								</div>
 							</div>
 						</div>
-						<div className={"mt-6"}>
-							<FilterBar />
-						</div>
+						{/*<div className={"mt-6"}>*/}
+						{/*	<FilterBar />*/}
+						{/*</div>*/}
 					</div>
 				</div>
 			</Conditional>
 
-			<div css={filterSection} className={"flex items-center mt-32  px-24"} id={"filter-section"}>
-				<FilterBar />
-			</div>
+			{/*<div css={filterSection} className={"flex items-center mt-32  px-24"} id={"filter-section"}>*/}
+			{/*	<FilterBar />*/}
+			{/*</div>*/}
 
 			<div className={"mt-40 pb-60"}>
 				{data?.tests.map((testData, i) => (
@@ -116,7 +117,6 @@ function RenderImageInfo({ data }) {
 	const firstImage = meta.outputs[0].value;
 	const currentImage = meta.outputs[0].value;
 
-
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
@@ -129,10 +129,9 @@ function RenderImageInfo({ data }) {
 			{/*		`}*/}
 			{/*	/>*/}
 
-
 			{/*</div>*/}
 			<div>
-				<CompareImage leftImage={firstImage} rightImage={currentImage}/>
+				<CompareImage leftImage={firstImage} rightImage={currentImage} />
 			</div>
 		</div>
 	);
@@ -182,27 +181,25 @@ function RenderStep({ data }) {
 }
 
 function TestOverview() {
-	return (
-		<div className={"flex justify-between mt-8 "}>
-			<div className={"text-13"}>Switch to</div>
-			<div className={"flex"}>
-				<div className={"flex items-center mr-32"}>
-					<div className={"mr-8 text-13"}>
+	function SelectBrowser() {
+		return (
+			<ClickableText paddingY={4} paddingX={12}>
+				<div className={"flex items-center "}>
+					<div className={" flex items-center  mr-8 text-13"}>
 						<img src={"/chrome.png"} height={16} className={"mr-8"} />
-						Chrome
+						<span className={"mt-1"}>Chrome</span>
 					</div>
 					<ChevronDown width={12} />
 				</div>
+			</ClickableText>
+		);
+	}
 
-				<div className={"flex items-center mr-32"}>
-					<div className={"mr-8 text-13"}>Chrome</div>
-					<ChevronDown width={12} />
-				</div>
-
-				<div className={"flex items-center"}>
-					<div className={"mr-8 text-13"}>Chrome</div>
-					<ChevronDown width={12} />
-				</div>
+	return (
+		<div className={"flex justify-between items-center mt-6 "}>
+			<div className={"text-13"}>Switch to</div>
+			<div className={"flex"}>
+				<SelectBrowser />
 			</div>
 		</div>
 	);
@@ -278,7 +275,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	}
 
 	return (
-		<div css={testCard} className={" flex-col mt-24 "} onClick={onCardClick} id={`test-card-${id}`}>
+		<div css={testCard} className={" flex-col mt-24 "}  id={`test-card-${id}`}>
 			<Conditional showIf={openVideoModal}>
 				<Modal
 					onClose={setOpenVideoModal.bind(this, false)}
@@ -294,14 +291,14 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			</Conditional>
 
 			<Conditional showIf={expand && sticky}>
-				<div css={stickyCSS} className={" px-0 "}>
+				<div css={stickyCSS} className={" px-0 "} onClick={onCardClick}>
 					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
 						<TestOverViewHeader />
 						<div className={"mt-12 mb-16"}>{TestOverview()}</div>
 					</div>
 				</div>
 			</Conditional>
-			<div>
+			<div onClick={onCardClick}>
 				<div className={"px-28 pb-16 w-full test-card-header"}>
 					<div css={header} className={" flex justify-between items-center w-full"}>
 						<TestOverViewHeader />
@@ -322,7 +319,6 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		</div>
 	);
 }
-
 
 const header = css`
 	min-height: 52px;
@@ -373,7 +369,7 @@ const testCard = css`
 
 	:hover {
 		.test-card-header {
-			background: rgba(34, 38, 43, 0.5);
+			background: rgb(16, 18, 21);
 			box-sizing: border-box;
 		}
 	}
@@ -381,8 +377,6 @@ const testCard = css`
 	box-sizing: border-box;
 	border-radius: 8px;
 `;
-
-
 
 const containerCSS = css`
 	width: calc(100vw - 250rem);

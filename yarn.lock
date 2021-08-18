@@ -20989,6 +20989,11 @@ react-colorful@^5.1.2:
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.2.3.tgz#579faf42542e32645c5dee66c8530292b2d61646"
   integrity sha512-lAge4syxosZg9SX8fJiwOLd9ZJSW3poPBtypnz1aMiFoHsRnK5G3+INGGx9DGtsrso4h5uFYbiFpjAfWyK3Kag==
 
+react-compare-image@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-compare-image/-/react-compare-image-3.1.0.tgz#effa6dda23fed0700d41f71b5158f75208b61aa7"
+  integrity sha512-47ISXkAx9KXA0rjgbQvaFK5AVbxVwP1XjTQEgsmMDN8bWpONVg/IoYmelRBdMs9gQICQCIw1se/cLENEBwHWlQ==
+
 react-dev-utils@^11.0.3:
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.4.tgz#a7ccb60257a1ca2e0efe7a83e38e6700d17aa37a"

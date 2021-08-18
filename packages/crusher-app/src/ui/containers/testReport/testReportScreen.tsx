@@ -1,31 +1,26 @@
-import { Button } from 'dyson/src/components/atoms';
+import { Button } from "dyson/src/components/atoms";
+import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThunderSVG } from "@svg/testReport";
+import { css } from "@emotion/react";
+import { LayoutSVG } from "@svg/dashboard";
+import { Conditional } from "dyson/src/components/layouts";
+import { atom, useAtom } from "jotai";
+import React, { useState } from "react";
+import { BackSVG } from "@svg/builds";
+import { useBuildReport } from "../../../store/serverState/buildReports";
+import { useRouter } from "next/router";
+import { timeSince } from "@utils/dateTimeUtils";
 import {
-	CalendarSVG,
-	FailedSVG,
-	InitiatedSVG,
-	PassedSVG,
-	RerunSVG,
-	ReviewRequiredSVG,
-	RunningSVG,
-	TestStatusSVG,
-	ThunderSVG,
-} from '@svg/testReport';
-import { css } from '@emotion/react';
-import { LayoutSVG } from '@svg/dashboard';
-import { Conditional } from 'dyson/src/components/layouts';
-import { atom, useAtom } from 'jotai';
-import React from 'react';
-import { BackSVG } from '@svg/builds';
-import { useBuildReport } from '../../../store/serverState/buildReports';
-import { useRouter } from 'next/router';
-import { timeSince } from '@utils/dateTimeUtils';
-import { getStatusString, showReviewButton } from '@utils/pages/buildReportUtils';
-import { usePageTitle } from '../../../hooks/seo';
-import dynamic from 'next/dynamic';
-import { backendRequest } from '@utils/backendRequest';
-import { RequestMethod } from '../../../types/RequestOptions';
-import { sendSnackBarEvent } from '@utils/notify';
-
+	getAllConfiguration,
+	getAllConfigurationForGivenTest,
+	groupTestByStatus,
+	getStatusString,
+	showReviewButton,
+} from "@utils/pages/buildReportUtils";
+import { usePageTitle } from "../../../hooks/seo";
+import dynamic from "next/dynamic";
+import { backendRequest } from "@utils/backendRequest";
+import { RequestMethod } from "../../../types/RequestOptions";
+import { sendSnackBarEvent } from "@utils/notify";
 
 const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
@@ -100,10 +95,10 @@ function NameNStatusSection() {
 					css={css`
 						width: 96rem;
 					`}
-					onClick={rerunBuild.bind(this,query.id)}
+					onClick={rerunBuild.bind(this, query.id)}
 					title="Rerun this build"
 				>
-					<div className={"flex items-center justify-center text-13 font-400"} >
+					<div className={"flex items-center justify-center text-13 font-400"}>
 						<RerunSVG className={"mr-6"} height={14} />
 						Rerun
 					</div>
@@ -135,14 +130,13 @@ const section = [
 
 const selectedTabAtom = atom(0);
 
-export const rerunBuild = async (buildId)=>{
-
+export const rerunBuild = async (buildId) => {
 	await backendRequest(`/builds/${buildId}/actions/rerun`, {
-		method: RequestMethod.POST
-	})
+		method: RequestMethod.POST,
+	});
 
-	sendSnackBarEvent({type: 'normal', message: "We've started new build"})
-}
+	sendSnackBarEvent({ type: "normal", message: "We've started new build" });
+};
 
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
@@ -162,19 +156,36 @@ function TabBar() {
 	);
 }
 
+function ConfigurationMethod({configType, array}) {
+	return <div className={'text-13 mb-16'}>
+		<span className={'text-13 font-600 capitalize'}>{configType}</span>
+		<span
+			className={'capitalize ml-32'}
+			css={css`
+									font-size: 12.8rem;
+								`}
+		>
+								{array.join(', ').toLowerCase()}
+							</span>
+	</div>;
+}
+
 function TestOverviewTab() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 
 	const showReview = showReviewButton(data?.status);
+
+	const failingConfigurationByTest = groupTestByStatus(data?.tests);
+	const allConfigurationForTest = getAllConfigurationForGivenTest(data?.tests[0]);
+	const allConfiguration = getAllConfiguration(data?.tests);
+
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
 				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120 pb-88"}>
 					<div className={"flex flex-col items-center"}>
-						<div></div>
-
 						<div className={"mb-28"}>
 							<TestStatusSVG type={data?.status} height={24} width={28} />
 						</div>
@@ -184,7 +195,7 @@ function TestOverviewTab() {
 								<Button
 									bgColor={"tertiary-dark"}
 									css={css`
-										width: 148rem;
+                    width: 148rem;
 									`}
 									onClick={setSelectedTabIndex.bind(this, 1)}
 								>
@@ -194,11 +205,10 @@ function TestOverviewTab() {
 							<Button
 								bgColor={"tertiary-dark"}
 								css={css`
-									width: 148rem;
+                  width: 148rem;
 								`}
 								className={"ml-16"}
-
-								onClick={rerunBuild.bind(this,query.id)}
+								onClick={rerunBuild.bind(this, query.id)}
 								title="Rerun this build"
 							>
 								<div className={"flex items-center justify-center text-13 font-400"}>
@@ -209,39 +219,10 @@ function TestOverviewTab() {
 						</div>
 						<div className={"mt-60 text-14 font-600 mb-24"}>Your test were run on</div>
 
-						<div className={"text-13 mb-16"}>
-							<span className={"text-13 font-600"}>Browser</span>
-							<span
-								className={" ml-32"}
-								css={css`
-									font-size: 12.8rem;
-								`}
-							>
-								Chrome, Firefox, Safari
-							</span>
-						</div>
-						<div className={"text-13 mb-16"}>
-							<span className={"text-13 font-600"}>Browser</span>
-							<span
-								className={" ml-32"}
-								css={css`
-									font-size: 12.8rem;
-								`}
-							>
-								Chrome, Firefox, Safari
-							</span>
-						</div>
-						<div className={"text-13 "}>
-							<span className={"text-13 font-600"}>Browser</span>
-							<span
-								className={" ml-32"}
-								css={css`
-									font-size: 12.8rem;
-								`}
-							>
-								Chrome, Firefox, Safari
-							</span>
-						</div>
+						{Object.entries(allConfiguration).map(([key, value])=>(
+							<ConfigurationMethod configType={key} array={value}/>
+						))}
+
 					</div>
 				</div>
 			</div>
@@ -288,8 +269,6 @@ const rightSection = css`
 	width: 30%;
 	max-width: 315px;
 `;
-
-
 
 export const TestReportScreen = () => {
 	const [selectedTabIndex] = useAtom(selectedTabAtom);

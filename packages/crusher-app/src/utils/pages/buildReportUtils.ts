@@ -1,5 +1,8 @@
 import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
 import filter from "lodash/filter";
+import { IBuildReportResponse, Test } from "@crusher-shared/types/response/iBuildReportResponse";
+import union from 'lodash/union';
+
 export const getStatusString = (type) => {
 	switch (type) {
 		case "PASSED":
@@ -40,3 +43,52 @@ export const getScreenShotsAndChecks = (steps: Array<any>) => {
 	const screenShotCount = filter(steps, { actionType: "ELEMENT_SCREENSHOT" }).length;
 	return { screenshotCount: screenShotCount, checksCount: steps.length };
 };
+
+export const groupTestByStatus = (tests: Pick<IBuildReportResponse, "tests">) => {
+	const statusTestTestInstanceGroup = {};
+	let i = 0 ;
+
+	for(const test of tests){
+		const { testInstances } = test;
+		for(const testInstance of testInstances){
+			const { status,id } = testInstance
+			if(!statusTestTestInstanceGroup[status]) statusTestTestInstanceGroup[status] = {};
+			if(!statusTestTestInstanceGroup[status][i]) statusTestTestInstanceGroup[status][i] = []
+			statusTestTestInstanceGroup[status][i].push(id)
+		}
+
+		i++;
+	}
+	return statusTestTestInstanceGroup
+};
+
+
+export const getAllConfiguration = (tests: Pick<IBuildReportResponse, "tests">) => {
+	const parsedConfig = tests.map((test)=>getAllConfigurationForGivenTest(test)).reduce((accumulator,item)=>{
+		Object.keys(item).forEach((key)=>{
+			accumulator[key] = union(accumulator[key] , item[key])
+		})
+		return accumulator
+	},{});
+
+	return parsedConfig
+};
+
+export const getAllConfigurationForGivenTest = (test: Test) => {
+	const parsedConfig = {};
+	const { testInstances } = test;
+	for (const testInstance of testInstances) {
+		const { config } = testInstance
+
+		Object.entries(config).forEach(([key, value]) => {
+			const configNotPresent = !parsedConfig[key]?.includes(value)
+			if (configNotPresent) {
+				const configKeyNotPresent = !parsedConfig[key]
+				if(configKeyNotPresent) parsedConfig[key] = []
+
+				parsedConfig[key].push(value)
+			}
+		})
+	}
+	return parsedConfig
+}

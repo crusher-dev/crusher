@@ -234,7 +234,7 @@ export const TestStatusSVG = ({ type, ...props }) => {
 		if (type === "INITIATED") {
 			return <InitiatedSVG {...props} />;
 		}
-		if (type === "REVIEW_REQUIRED") {
+		if (type === "MANUAL_REVIEW_REQUIRED") {
 			return <ReviewRequiredSVG {...props} />;
 		}
 		return <PassedSVG {...props} />;

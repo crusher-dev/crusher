@@ -49,9 +49,11 @@ class BuildTestInstanceScreenshotService {
 	}
 
 	@CamelizeResponse()
-	async getScreenshotResultWithActionIndex(resultSetId: number): Promise<Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number }>> {
+	async getScreenshotResultWithActionIndex(
+		resultSetId: number,
+	): Promise<Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>> {
 		return this.dbManager.fetchAllRows(
-			"SELECT test_instance_results.*, test_instance_screenshots.action_index action_index FROM test_instance_results, test_instance_screenshots WHERE test_instance_results.instance_result_set_id = ? AND test_instance_screenshots.id = test_instance_results.screenshot_id",
+			"SELECT test_instance_results.*, current_screenshot.action_index action_index, target_screenshot.url target_screenshot_url FROM test_instance_results LEFT JOIN (SELECT test_instance_screenshots.action_index, test_instance_screenshots.id FROM test_instance_screenshots) current_screenshot ON current_screenshot.id = test_instance_results.screenshot_id LEFT JOIN (SELECT test_instance_screenshots.id, test_instance_screenshots.url FROM test_instance_screenshots) target_screenshot ON target_screenshot.id = test_instance_results.target_screenshot_id, test_instance_screenshots WHERE test_instance_results.instance_result_set_id = ? AND test_instance_screenshots.id = test_instance_results.screenshot_id",
 			[resultSetId],
 		);
 	}

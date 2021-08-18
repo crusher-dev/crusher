@@ -17,6 +17,7 @@ import { showReviewButton } from "@utils/pages/buildReportUtils";
 import { timeSince } from "@utils/dateTimeUtils";
 import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
+import { ConditionalLink } from "@components/common/ConditionalLink";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -30,9 +31,10 @@ function BuildItemCard(props: IBuildItemCardProps) {
 	const { id, createdAt, tests, status, reviewMessage, commentCount, triggeredBy, duration } = info;
 
 	const statusIcon = <TestStatusSVG type={status} height={16} />;
+	const isRunning = !["FAILED", "PASSED", "MANUAL_REVIEW_REQUIRED"].includes(info.status);
 
 	return (
-		<Link href={`/app/build/${id}`}>
+		<ConditionalLink href={`/app/build/${id}`} disabled={isRunning}>
 			<div css={itemContainerStyle} className={"relative"}>
 				<div className={"flex flex-row items-center"}>
 					<div className={"flex flex-row items-center"}>
@@ -69,7 +71,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 					</div>
 				</Conditional>
 			</div>
-		</Link>
+		</ConditionalLink>
 	);
 }
 
@@ -109,10 +111,9 @@ function BuildSearchableList() {
 
 	const buildItems = useMemo(() => {
 		return data.list.map((buildInfo: IProjectBuildListItem) => {
+
 			return (
-				<Link href={`/app/build/${buildInfo.id}`}>
 					<BuildItemCard info={buildInfo} />
-				</Link>
 			);
 		});
 	}, [data]);

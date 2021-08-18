@@ -114,8 +114,10 @@ function FilterBar() {
 function RenderImageInfo({ data }) {
 	const { meta } = data;
 	const imageName = meta.outputs[0].name;
-	const firstImage = meta.outputs[0].value;
+	const baseLineImage = meta.outputs[0].targetScreenshotUrl;
 	const currentImage = meta.outputs[0].value;
+
+	console.log("Same", baseLineImage == currentImage);
 
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
@@ -131,7 +133,7 @@ function RenderImageInfo({ data }) {
 
 			{/*</div>*/}
 			<div>
-				<CompareImage leftImage={firstImage} rightImage={currentImage} />
+				<CompareImage leftImage={baseLineImage} rightImage={currentImage} />
 			</div>
 		</div>
 	);

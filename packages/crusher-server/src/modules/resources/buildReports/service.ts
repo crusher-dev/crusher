@@ -54,12 +54,13 @@ export class BuildReportService {
 
 	private getInstanceResultWithDiffComparision(
 		actionResults: Array<any>,
-		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number }>,
+		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>,
 	) {
-		const instanceScreenshotsRecordsMap: { [key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number } } =
-			instanceScreenshotsRecords.reduce((prev, current) => {
-				return { ...prev, [current.actionIndex]: current };
-			}, {});
+		const instanceScreenshotsRecordsMap: {
+			[key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string };
+		} = instanceScreenshotsRecords.reduce((prev, current) => {
+			return { ...prev, [current.actionIndex]: current };
+		}, {});
 
 		// @TODO: Cleanup tihs logic and use proper typescript types
 		return actionResults.map((actionResult, actionIndex) => {
@@ -67,6 +68,7 @@ export class BuildReportService {
 				const screenshotResultRecord = instanceScreenshotsRecordsMap[actionIndex];
 				if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length) {
 					actionResult.meta.outputs[0].diffImageUrl = screenshotResultRecord.diffImageUrl;
+					actionResult.meta.outputs[0].targetScreenshotUrl = screenshotResultRecord.targetScreenshotUrl;
 					actionResult.meta.outputs[0].diffDelta = screenshotResultRecord.diffDelta;
 				}
 			}

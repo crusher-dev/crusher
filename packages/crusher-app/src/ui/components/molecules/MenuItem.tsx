@@ -15,7 +15,7 @@ export function MenuItem({ label, rightLabel, showHighlighted = false, selected 
 			className={`flex justify-between items-center px-16 py-12 ${className}`}
 			{...otherProps}
 		>
-			<span className={"name font-500 leading-none font-cera"}>{label}</span>
+			<span className={"name font-500 leading-none font-cera capitalize"}>{label}</span>
 			<span className={"text-12 shortcut leading-none"}>{rightLabel}</span>
 		</div>
 	);

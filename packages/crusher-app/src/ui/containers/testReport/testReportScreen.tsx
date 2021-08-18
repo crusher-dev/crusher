@@ -9,13 +9,7 @@ import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
-import {
-	getAllConfiguration,
-	getAllConfigurationForGivenTest,
-	groupTestByStatus,
-	getStatusString,
-	showReviewButton,
-} from "@utils/pages/buildReportUtils";
+import { getAllConfiguration, getAllConfigurationForGivenTest, groupTestByStatus, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
 import { usePageTitle } from "../../../hooks/seo";
 import dynamic from "next/dynamic";
 import { backendRequest } from "@utils/backendRequest";
@@ -26,6 +20,7 @@ const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+
 	return (
 		<div>
 			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
@@ -156,18 +151,20 @@ function TabBar() {
 	);
 }
 
-function ConfigurationMethod({configType, array}) {
-	return <div className={'text-13 mb-16'}>
-		<span className={'text-13 font-600 capitalize'}>{configType}</span>
-		<span
-			className={'capitalize ml-32'}
-			css={css`
-									font-size: 12.8rem;
-								`}
-		>
-								{array.join(', ').toLowerCase()}
-							</span>
-	</div>;
+function ConfigurationMethod({ configType, array }) {
+	return (
+		<div className={"text-13 mb-16"}>
+			<span className={"text-13 font-600 capitalize"}>{configType}</span>
+			<span
+				className={"capitalize ml-32"}
+				css={css`
+					font-size: 12.8rem;
+				`}
+			>
+				{array.join(", ").toLowerCase()}
+			</span>
+		</div>
+	);
 }
 
 function TestOverviewTab() {
@@ -195,7 +192,7 @@ function TestOverviewTab() {
 								<Button
 									bgColor={"tertiary-dark"}
 									css={css`
-                    width: 148rem;
+										width: 148rem;
 									`}
 									onClick={setSelectedTabIndex.bind(this, 1)}
 								>
@@ -205,7 +202,7 @@ function TestOverviewTab() {
 							<Button
 								bgColor={"tertiary-dark"}
 								css={css`
-                  width: 148rem;
+									width: 148rem;
 								`}
 								className={"ml-16"}
 								onClick={rerunBuild.bind(this, query.id)}
@@ -219,10 +216,9 @@ function TestOverviewTab() {
 						</div>
 						<div className={"mt-60 text-14 font-600 mb-24"}>Your test were run on</div>
 
-						{Object.entries(allConfiguration).map(([key, value])=>(
-							<ConfigurationMethod configType={key} array={value}/>
+						{Object.entries(allConfiguration).map(([key, value]) => (
+							<ConfigurationMethod configType={key} array={value} />
 						))}
-
 					</div>
 				</div>
 			</div>

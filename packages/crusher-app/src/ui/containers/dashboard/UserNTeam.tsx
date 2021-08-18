@@ -43,7 +43,7 @@ function DropdownContent() {
 			<div>
 				{userDropdownItems.map(({ leftLabel, rightLabel, link, target }) => (
 					<Link href={link}>
-						<a href={link} target={target}>
+						<a href={link} target={target} className={"close-on-click"}>
 							<MenuItem label={leftLabel} rightLabel={rightLabel} />
 						</a>
 					</Link>

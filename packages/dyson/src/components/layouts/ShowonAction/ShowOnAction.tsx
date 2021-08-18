@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { OnOutsideClick } from "../onOutsideClick/onOutsideClick";
 
 type TShowOnClick = {
@@ -9,6 +9,7 @@ type TShowOnClick = {
 
 export function ShowOnClick({ children, component, callback, initialState }: TShowOnClick) {
 	const [showDropDown, setShow] = useState(initialState);
+	const customRef = useRef(null);
 
 	useEffect(() => {
 		callback && callback();
@@ -21,10 +22,23 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 	return (
 		<OnOutsideClick
 			onOutsideClick={() => {
-				setShow(false);
+				// This timeout here is workaround to allow children event listeners to get
+				// triggered before dropdown is removed from the DOM.
+				setTimeout(() => {
+					setShow(false);
+				}, 100);
 			}}
 		>
-			<div className={"flex relative"} onClick={setShow.bind(this, true)}>
+			<div
+				ref={customRef}
+				className={"flex relative"}
+				onClick={(e) => {
+					e.stopPropagation();
+					if(!showDropDown) {
+						setShow(true);
+					}
+				}}
+			>
 				{children}
 				{showDropDown && component}
 			</div>

@@ -22,7 +22,8 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 	return (
 		<OnOutsideClick
 			onOutsideClick={() => {
-				console.log("Closing it now");
+				// This timeout here is workaround to allow children event listeners to get
+				// triggered before dropdown is removed from the DOM.
 				setTimeout(() => {
 					setShow(false);
 				}, 100);

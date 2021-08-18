@@ -15,8 +15,8 @@ const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<bo
 		`return new Promise(async function (resolve, reject) {
 				    try{
 				        const scriptFunction = ${script};
-				        console.log(scriptFunction);
-				        resolve(await scriptFunction(elHandle));
+								const result = await elHandle.evaluate(scriptFunction);
+				        resolve(result);
 				    } catch(err){
 				      reject(err);
 				    }

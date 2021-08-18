@@ -1,7 +1,7 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
-import { Locator } from "playwright";
+import { ElementHandle, Locator } from "playwright";
 import { markTestFail } from "../utils/helper";
 
 async function assertElementAttributes(
@@ -13,8 +13,8 @@ async function assertElementAttributes(
 
 	for (let i = 0; i < assertions.length; i++) {
 		const { validation, operation, field } = assertions[i];
-		const elementAttributeValue = await element.getAttribute(field.name);
-		if (operation === "matches") {
+		const elementAttributeValue = field.name === "innerHTML" ? await element.innerHTML() : await element.getAttribute(field.name);
+		if (operation === "MATCHES") {
 			if (elementAttributeValue !== validation) {
 				hasPassed = false;
 				logs.push({
@@ -29,7 +29,7 @@ async function assertElementAttributes(
 					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
 				});
 			}
-		} else if (operation === "contains") {
+		} else if (operation === "CONTAINS") {
 			const doesContain = elementAttributeValue!.includes(validation);
 			if (!doesContain) {
 				hasPassed = false;
@@ -45,7 +45,7 @@ async function assertElementAttributes(
 					meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
 				});
 			}
-		} else if (operation === "regex") {
+		} else if (operation === "REGEX") {
 			const rgx = new RegExp(validation);
 			if (!rgx.test(elementAttributeValue!)) {
 				hasPassed = false;
@@ -70,6 +70,7 @@ async function assertElementAttributes(
 async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction) {
 	const validationRows = action.payload.meta.validations;
 	const actionResult = await assertElementAttributes(element, validationRows);
+	console.log(actionResult.logs);
 
 	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });
 

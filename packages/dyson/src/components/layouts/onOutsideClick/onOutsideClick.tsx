@@ -17,7 +17,8 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 	const ref = useRef();
 	useEffect(() => {
 		const handleClick = (e: SyntheticEvent) => {
-			e.stopPropagation();
+			e.stopImmediatePropagation();
+
 			const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
 
 			if (!insideClick || isChildOfOnCloseClass(e.target, ref.current)) onOutsideClick();

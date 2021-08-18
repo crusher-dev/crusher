@@ -27,5 +27,5 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 		};
 	}, []);
 
-	return <div ref={ref} >{children}</div>;
+	return <div ref={ref}>{children}</div>;
 };

@@ -14,9 +14,9 @@ async function setDevice(browser: Browser, action: iAction, globals: IGlobalMana
 	if (currentBrowserContextOptions && currentBrowserContextOptions.recordVideo) {
 		currentBrowserContextOptions.recordVideo = {
 			...currentBrowserContextOptions.recordVideo,
-			size: { width: device.width, height: device.height }
+			size: { width: device.width, height: device.height },
 		};
-	};
+	}
 
 	globals.set("browserContextOptions", {
 		...currentBrowserContextOptions,

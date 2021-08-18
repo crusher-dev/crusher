@@ -44,7 +44,6 @@ interface Instance {
 
 interface TestInstanceOutput {
 	video: string | null;
-	images: Array<TestInstanceImage>;
 }
 
 interface TestInstanceImage {

@@ -3,12 +3,12 @@ import React, { SyntheticEvent, useEffect, useRef } from "react";
 export const isChildOfOnCloseClass = (target, root) => {
 	let element = target;
 
-	while (element !== root) {
+	while (element !== root && element && document.body.contains(element)) {
 		if (element.className.includes("close-on-click")) {
 			return true;
 		}
 
-		element = element.parentElement;
+		element = element.parentNode;
 	}
 	return false;
 };
@@ -17,18 +17,15 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 	const ref = useRef();
 	useEffect(() => {
 		const handleClick = (e: SyntheticEvent) => {
-			e.stopImmediatePropagation();
-
 			const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
-
 			if (!insideClick || isChildOfOnCloseClass(e.target, ref.current)) onOutsideClick();
 		};
-		document.body.addEventListener("click", handleClick, { passive: true });
+		window.addEventListener("click", handleClick, { capture: true });
 
 		return () => {
-			document.body.removeEventListener("click", handleClick, { passive: true });
+			window.removeEventListener("click", handleClick, { capture: true });
 		};
 	}, []);
 
-	return <div ref={ref}>{children}</div>;
+	return <div ref={ref} >{children}</div>;
 };

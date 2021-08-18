@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { OnOutsideClick } from "../onOutsideClick/onOutsideClick";
 
 type TShowOnClick = {
@@ -9,6 +9,7 @@ type TShowOnClick = {
 
 export function ShowOnClick({ children, component, callback, initialState }: TShowOnClick) {
 	const [showDropDown, setShow] = useState(initialState);
+	const customRef = useRef(null);
 
 	useEffect(() => {
 		callback && callback();
@@ -21,14 +22,20 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 	return (
 		<OnOutsideClick
 			onOutsideClick={() => {
-				setShow(false);
+				console.log("Closing it now");
+				setTimeout(() => {
+					setShow(false);
+				}, 100);
 			}}
 		>
 			<div
+				ref={customRef}
 				className={"flex relative"}
 				onClick={(e) => {
-					e.stopPropagation()
-					setShow(true);
+					e.stopPropagation();
+					if(!showDropDown) {
+						setShow(true);
+					}
 				}}
 			>
 				{children}

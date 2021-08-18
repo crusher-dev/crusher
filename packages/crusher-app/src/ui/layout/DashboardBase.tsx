@@ -308,6 +308,7 @@ function RunTest() {
 			await router.push("/app/builds");
 		})();
 	}, []);
+
 	return (
 		<Button bgColor={"tertiary-dark"} onClick={runProjectTest}>
 			<div className={"flex items-center"}>

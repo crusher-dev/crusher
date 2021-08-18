@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
 import { MenuItem } from "@components/molecules/MenuItem";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
@@ -131,19 +132,18 @@ function RenderImageInfo({ data }) {
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
-			{/*<div className={"mt-20 flex"}>*/}
-			{/*	<img src={firstImage} />{" "}*/}
-			{/*	<img*/}
-			{/*		src={currentImage}*/}
-			{/*		css={css`*/}
-			{/*			margin-left: 2%;*/}
-			{/*		`}*/}
-			{/*	/>*/}
-
-			{/*</div>*/}
-			<div>
-				<CompareImage leftImage={baseLineImage} rightImage={currentImage} />
+			<div className={"mt-20 flex"}>
+				<img src={baseLineImage} />{" "}
+				<img
+					src={currentImage}
+					css={css`
+						margin-left: 2%;
+					`}
+				/>
 			</div>
+			{/* <div>
+				<CompareImage leftImage={baseLineImage} rightImage={currentImage} />
+			</div> */}
 		</div>
 	);
 }
@@ -184,7 +184,7 @@ function RenderStep({ data }) {
 				</div>
 			</div>
 
-			<Conditional showIf={actionType === "ELEMENT_SCREENSHOT" && isPassed}>
+			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>

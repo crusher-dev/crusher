@@ -156,6 +156,20 @@ function TabBar() {
 	);
 }
 
+function ConfigurationMethod({configType, array}) {
+	return <div className={'text-13 mb-16'}>
+		<span className={'text-13 font-600 capitalize'}>{configType}</span>
+		<span
+			className={'capitalize ml-32'}
+			css={css`
+									font-size: 12.8rem;
+								`}
+		>
+								{array.join(', ').toLowerCase()}
+							</span>
+	</div>;
+}
+
 function TestOverviewTab() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
@@ -167,7 +181,6 @@ function TestOverviewTab() {
 	const allConfigurationForTest = getAllConfigurationForGivenTest(data?.tests[0]);
 	const allConfiguration = getAllConfiguration(data?.tests);
 
-	console.log(failingConfigurationByTest, allConfigurationForTest, allConfiguration);
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
@@ -182,7 +195,7 @@ function TestOverviewTab() {
 								<Button
 									bgColor={"tertiary-dark"}
 									css={css`
-										width: 148rem;
+                    width: 148rem;
 									`}
 									onClick={setSelectedTabIndex.bind(this, 1)}
 								>
@@ -192,7 +205,7 @@ function TestOverviewTab() {
 							<Button
 								bgColor={"tertiary-dark"}
 								css={css`
-									width: 148rem;
+                  width: 148rem;
 								`}
 								className={"ml-16"}
 								onClick={rerunBuild.bind(this, query.id)}
@@ -206,39 +219,10 @@ function TestOverviewTab() {
 						</div>
 						<div className={"mt-60 text-14 font-600 mb-24"}>Your test were run on</div>
 
-						<div className={"text-13 mb-16"}>
-							<span className={"text-13 font-600"}>Browser</span>
-							<span
-								className={" ml-32"}
-								css={css`
-									font-size: 12.8rem;
-								`}
-							>
-								Chrome, Firefox, Safari
-							</span>
-						</div>
-						<div className={"text-13 mb-16"}>
-							<span className={"text-13 font-600"}>Browser</span>
-							<span
-								className={" ml-32"}
-								css={css`
-									font-size: 12.8rem;
-								`}
-							>
-								Chrome, Firefox, Safari
-							</span>
-						</div>
-						<div className={"text-13 "}>
-							<span className={"text-13 font-600"}>Browser</span>
-							<span
-								className={" ml-32"}
-								css={css`
-									font-size: 12.8rem;
-								`}
-							>
-								Chrome, Firefox, Safari
-							</span>
-						</div>
+						{Object.entries(allConfiguration).map(([key, value])=>(
+							<ConfigurationMethod configType={key} array={value}/>
+						))}
+
 					</div>
 				</div>
 			</div>

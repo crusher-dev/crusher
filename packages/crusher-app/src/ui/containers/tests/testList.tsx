@@ -57,7 +57,6 @@ function TestCard(props: IBuildItemCardProps) {
 		/>
 	);
 
-	console.log("VIDEO URL IS", videoURL);
 	const shouldPlayVideo = !imageURL && !!videoURL;
 
 	const [showEditBox, setShowEditBox] = useState(false);
@@ -92,8 +91,8 @@ function TestCard(props: IBuildItemCardProps) {
 						height={"100%"}
 						css={css`
 							object-fit: cover;
-						    width: 100%;
-    height: 100%;
+							width: 100%;
+							height: 100%;
 						`}
 						onMouseOver={(event) => event.target.play()}
 						onMouseOut={(event) => {

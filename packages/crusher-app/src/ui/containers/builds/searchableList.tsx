@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { TestStatusSVG } from "@svg/testReport";
 import { showReviewButton } from "@utils/pages/buildReportUtils";
-import { getStringFromDuration, timeSince } from '@utils/dateTimeUtils';
+import { getStringFromDuration, timeSince } from "@utils/dateTimeUtils";
 import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { ConditionalLink } from "@components/common/ConditionalLink";
@@ -35,7 +35,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 
 	return (
 		<ConditionalLink href={`/app/build/${id}`} disabled={isRunning}>
-			<div css={itemContainerStyle} className={"relative"} style={{cursor: isRunning ? "not-allowed" : "default"}}>
+			<div css={itemContainerStyle} className={"relative"} style={{ cursor: isRunning ? "not-allowed" : "default" }}>
 				<div className={"flex flex-row items-center"}>
 					<div className={"flex flex-row items-center"}>
 						<span css={itemBuildStyle} className={"font-cera font-600"}>
@@ -111,10 +111,7 @@ function BuildSearchableList() {
 
 	const buildItems = useMemo(() => {
 		return data.list.map((buildInfo: IProjectBuildListItem) => {
-
-			return (
-					<BuildItemCard info={buildInfo} />
-			);
+			return <BuildItemCard info={buildInfo} />;
 		});
 	}, [data]);
 

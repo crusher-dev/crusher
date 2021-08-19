@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { Button } from "dyson/src/components/atoms";
@@ -7,7 +7,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
 import { getActionLabel, getAllConfigurationForGivenTest, getBaseConfig, getScreenShotsAndChecks, getTestIndexByConfig } from "@utils/pages/buildReportUtils";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import { LoadingSVG, PlaySVG } from "@svg/dashboard";
+import { CloseSVG, LoadingSVG, PlaySVG } from '@svg/dashboard';
 import { Modal } from "dyson/src/components/molecules/Modal";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
@@ -15,8 +15,127 @@ import dynamic from "next/dynamic";
 import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
 import { MenuItem } from "@components/molecules/MenuItem";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
+import Radio from "../../../../../dyson/src/components/atoms/radio/radio";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
+
+export const radioContent = [
+	{ label: "Reject", subLabel: "Reject this build" },
+	{ label: "Leave feedback", subLabel: "Approve without approval" },
+	{ label: "Approve", subLabel: "Approve this build and make it baseMark" },
+];
+
+export const ReviewButtonContent = ({closeModal}) => {
+	const [selected, setSelected] = useState(1);
+	const [feedback, setFeedback] = useState(1);
+	const selectOption = useCallback((index, selectedRadioButton) => {
+		if (selectedRadioButton) {
+			setSelected(index);
+		}
+	}, []);
+	return (
+		<div>
+			<div css={topReview} className={"font-700 py-12 px-16 leading-none mt-2 flex justify-between"}>
+				<div>Submit feedback</div>
+				<CloseSVG height={"12"} onClick={closeModal}/>
+			</div>
+			<div css={middleSection} className={"px-16 pt-16 pb-4"}>
+				<textarea
+					id={"text-area"}
+					className={"w-full"}
+					value={feedback}
+					onChange={(e) => {
+						setFeedback(e.target.value);
+					}}
+				/>
+
+				<div css={radioGroup}>
+					{radioContent.map(({ label, subLabel }, i) => {
+						return (
+							<div className={"flex mb-12"} onClick={selectOption.bind(this, i)}>
+								<Radio
+									isSelected={selected === i}
+									callback={selectOption.bind(this, i)}
+									label={
+										<div className={"ml-12"}>
+											<div className={"text-12 font-700"}>{label}</div>
+											<div>{subLabel}</div>
+										</div>
+									}
+								/>
+							</div>
+						);
+					})}
+				</div>
+			</div>
+			<div className={"px-16 py-12"}>
+				<Button
+					size={"small"}
+					css={css`
+						width: 120rem;
+					`}
+					onClick={closeModal}
+				>
+					Submit
+				</Button>
+			</div>
+		</div>
+	);
+};
+
+const radioGroup = css`
+	color: #d2d2d2;
+	font-size: 12rem;
+`;
+
+const topReview = css`
+	color: #fff;
+	font-size: 13.4rem;
+`;
+
+const middleSection = css`
+	border-top: 1px solid #22262b;
+
+	border-bottom: 1px solid #22262b;
+	background: rgba(0, 0, 0, 0.25);
+
+	#text-area {
+		height: 104rem;
+		background: rgba(0, 0, 0, 0.2);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 4px;
+		font-size: 13rem;
+		margin-bottom: 12rem;
+		padding: 8rem;
+		max-height: 160rem;
+	}
+`;
+
+function ReviewSection() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<Dropdown component={<ReviewButtonContent closeModal={setOpen.bind(this, false)} />} callback={setOpen} initialState={open} dropdownCSS={reviewCss}>
+			<Button
+				css={css`
+					width: 144px;
+				`}
+			>
+				Review
+			</Button>
+		</Dropdown>
+	);
+}
+
+const reviewCss = css`
+	padding: 0;
+	height: fit-content;
+	width: 380rem;
+	top: calc(100% + 9rem) !important;
+	right: 0px !important;
+	background: #1e2126;
+	left: unset !important;
+`;
 
 /*
 	How reports will work
@@ -53,13 +172,7 @@ function ReportSection() {
 				<div className={"flex items-center"}>
 					{/* Disabled for now*/}
 					{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
-					<Button
-						css={css`
-							width: 144px;
-						`}
-					>
-						Review
-					</Button>
+					<ReviewSection />
 				</div>
 			</div>
 
@@ -222,7 +335,7 @@ const dropDownSelectionCSS = css`
 	Use Jotai for avoiding props drilling.
 	Make config much more streamline.
  */
-function TestConfigSection({ allCofiguration, setTestCardConfig, testCardConfig }) {
+function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCardConfig }) {
 	const setConfig = (key, value) => {
 		const config = allCofiguration;
 
@@ -233,7 +346,28 @@ function TestConfigSection({ allCofiguration, setTestCardConfig, testCardConfig 
 
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
-			<div className={"text-13"}>Switch to</div>
+			<div className={"text-13"}>Switch tos</div>
+
+			<Conditional showIf={!expand}>
+				<div className={"flex text-12 items-center"} id={"click-to-open"}>
+					<div
+						className={"text-13 font-500 mr-12 underline"}
+						css={css`
+							color: #eee;
+						`}
+					>
+						Expand
+					</div>
+					<ChevronDown
+						width={15}
+						css={css`
+							path {
+								fill: #eee;
+							}
+						`}
+					/>
+				</div>
+			</Conditional>
 			<div className={"flex"}>
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
 					<ClickableText paddingY={4} paddingX={12}>
@@ -277,6 +411,13 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 				<PassedSVG height={18} className={"mr-16"} />
 				{name}
 			</div>
+
+			{/*<Conditional showIf={!expand}>*/}
+			{/*	<div className={"text-18 font-600"} id={"click-to-open"} css={css`color: #aacb65;`}>*/}
+			{/*		PASSED*/}
+			{/*	</div>*/}
+			{/*</Conditional>*/}
+
 			<div className={"flex items-center"}>
 				<span className={"text-13 mr-32"}>
 					{screenshotCount} screenshot | {checksCount} check
@@ -351,7 +492,12 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 
 						<div className={"mt-12 mb-16"}>
-							<TestConfigSection allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestCardConfig={setTestCardConfig} />
+							<TestConfigSection
+								expand={expand}
+								allCofiguration={allConfiguration}
+								testCardConfig={testCardConfig}
+								setTestCardConfig={setTestCardConfig}
+							/>
 						</div>
 					</div>
 				</div>
@@ -363,7 +509,12 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
-					<TestConfigSection allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
+					<TestConfigSection
+						expand={expand}
+						allCofiguration={allConfiguration}
+						setTestCardConfig={setTestCardConfig}
+						testCardConfig={testCardConfig}
+					/>
 				</div>
 			</div>
 
@@ -434,11 +585,22 @@ const stepsContainer = css`
 const testCard = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
+	overflow: hidden;
 
 	:hover {
 		.test-card-header {
 			background: rgb(16, 18, 21);
 			box-sizing: border-box;
+		}
+	}
+
+	#click-to-open {
+		visibility: hidden;
+	}
+
+	:hover {
+		#click-to-open {
+			visibility: visible;
 		}
 	}
 

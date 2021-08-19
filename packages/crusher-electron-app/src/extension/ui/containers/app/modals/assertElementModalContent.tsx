@@ -146,6 +146,11 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 		}
 	};
 
+	const deleteValidationRow = (rowIndex) => {
+		const newValidationRows = validationRows.filter((a) => a.id !== rowIndex);
+		setValidationRows([...newValidationRows]);
+	};
+
 	return (
 		<div style={containerStyle(validationRows.length)}>
 			<AssertionFormTable
@@ -155,6 +160,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 				onFieldChange={updateFieldOfValidationRow}
 				onOperationChange={updateOperationOfValidationRow}
 				onValidationChange={updateValidationValueOfValidationRow}
+				deleteValidationRow={deleteValidationRow}
 			/>
 			<div style={bottomBarStyle}>
 				<div style={formButtonStyle}>

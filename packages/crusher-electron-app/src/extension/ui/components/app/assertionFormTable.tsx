@@ -13,6 +13,7 @@ interface iAssertionFormTableProps {
 	onFieldChange?: (selectedFieldName: string, rowId: string) => void;
 	onOperationChange?: (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => void;
 	onValidationChange?: (newValidation: string, rowId: string) => void;
+	deleteValidationRow?: (rowIndex: string) => void;
 }
 
 function checkIfValidationPasses(fieldValue: string, validationValue: string, operation: ASSERTION_OPERATION_TYPE) {
@@ -60,7 +61,7 @@ const reactSelectDefaultStyles = {
 };
 
 const AssertionFormTable = (props: iAssertionFormTableProps) => {
-	const { rowItems, fields, operations, onFieldChange, onOperationChange, onValidationChange } = props;
+	const { rowItems, fields, operations, onFieldChange, onOperationChange, onValidationChange, deleteValidationRow } = props;
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 		const getFieldOptions = () => {
@@ -121,12 +122,20 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		return <input placeholder={"Enter value"} value={validationValue} style={inputTableGridOptionValueInputStyle} onChange={handleInputChange} />;
 	};
 
+	const handleDeleteRow = (rowIndex: string) => {
+		deleteValidationRow(rowIndex);
+	};
+
 	const rowOut = rowItems.map((row, index: number) => {
 		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
 			<div key={row.id} className="grid grid-cols-3 gap-4 my-8 mb-20">
 				<div style={inputTableItemFieldContainerStyle}>
-					<DeleteIcon style={{ marginRight: "0.85rem", height: "0.65rem", marginTop: "0.6rem" }} />
+					<DeleteIcon
+						onClick={handleDeleteRow.bind(this, row.id)}
+						style={{ height: "0.65rem", marginTop: "0.6rem" }}
+						containerStyle={{ marginRight: "0.85rem" }}
+					/>
 					{renderFieldInput(row.field.name, row.id)}
 				</div>
 				<div>{renderFieldOperationInput(row.operation as ASSERTION_OPERATION_TYPE, row.id)}</div>
@@ -148,7 +157,6 @@ const containerStyle = {
 	width: "100%",
 	textAlign: TEXT_ALIGN.LEFT,
 	borderSpacing: "0 0.75rem",
-	maxHeight: "47vh",
 };
 
 const inputTableItemFieldContainerStyle = {

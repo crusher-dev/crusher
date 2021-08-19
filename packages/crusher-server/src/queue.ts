@@ -1,19 +1,18 @@
-import { resolveWorkerPath } from "./utils/env";
+import "reflect-metadata";
+import { resolveWorkerPath } from "@utils/env";
 
 require("dotenv").config();
 
 import { Queue, QueueScheduler, Worker } from "bullmq";
-import { isOpenSourceEdition } from "./utils/helper";
+import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@manager/redis";
-import path = require("path");
 
 RedisManager.initialize();
 const redisClient: any = RedisManager.get();
-let testProgressWorker, testCompletedWorker, checkResultWorker, videoProcessedQueueWorker;
+let testCompletedWorker, checkResultWorker, videoProcessedQueueWorker;
 
 if (process.env.NODE_ENV === "development" || isOpenSourceEdition()) {
 	// For ts-node
-	testProgressWorker = require("./core/workers/testProgressWorker.ts");
 	testCompletedWorker = require("./core/workers/testCompletedWorker.ts");
 	checkResultWorker = require("./core/workers/checkResult.ts");
 	videoProcessedQueueWorker = require("./core/workers/videoProcessedQueue.ts");
@@ -21,9 +20,7 @@ if (process.env.NODE_ENV === "development" || isOpenSourceEdition()) {
 
 function initializeQueues() {
 	console.debug("Initializing queues");
-	new Queue("test-progress-queue", {
-		connection: redisClient,
-	});
+
 	new Queue("test-completed-queue", {
 		connection: redisClient,
 	});

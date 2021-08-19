@@ -14,12 +14,12 @@ const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 		icon: chrome.runtime.getURL("icons/actions/screenshot.svg"),
 		desc: "",
 	},
-	{
-		id: TOP_LEVEL_ACTION.SHOW_SEO_MODAL,
-		title: "Add SEO checks",
-		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
-		desc: "",
-	},
+	// {
+	// 	id: TOP_LEVEL_ACTION.SHOW_SEO_MODAL,
+	// 	title: "Add SEO checks",
+	// 	icon: chrome.runtime.getURL("icons/actions/seo.svg"),
+	// 	desc: "",
+	// },
 ];
 
 export { TOP_LEVEL_ACTIONS_LIST };

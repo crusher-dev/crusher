@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { TestType } from "../../core/interfaces/TestType";
+import { TestType } from "@core/interfaces/TestType";
 const TestLogsSchema = new mongoose.Schema(
 	{
 		tag: String,

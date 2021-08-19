@@ -36,7 +36,7 @@ const actualCode = `(${(userAgent: string, appVersion: string, platformVersion: 
 	});
 }})`;
 
-if((window as any).electron) {
+if ((window as any).electron) {
 	(window as any).electron.host.postMessage({
 		type: MESSAGE_TYPES.REQUEST_USER_AGENT,
 		frameId: null,

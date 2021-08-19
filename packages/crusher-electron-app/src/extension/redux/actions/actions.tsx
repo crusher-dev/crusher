@@ -1,7 +1,7 @@
 import { iAction } from "@shared/types/action";
 import { getStore } from "../store";
 import { isRecorderScriptBooted } from "../selectors/recorder";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 export const RECORD_ACTION = "RECORD_ACTION";
 export const UPDATE_LAST_RECORDED_ACTION = "UPDATE_LAST_RECORDED_ACTION";
@@ -12,7 +12,7 @@ export const recordAction = (action: iAction) => {
 	const isPageLoaded = isRecorderScriptBooted(store.getState());
 
 	// @TODO: Figure out if there is a better to prevent redundant hover action record after navigation.
-	if (!isPageLoaded && action.type === ACTIONS_IN_TEST.HOVER) {
+	if (!isPageLoaded && action.type === ActionsInTestEnum.HOVER) {
 		return {
 			type: "INVALID_ACTION_RECORDED",
 			payload: { error: "The recorder script hasn't been loaded" },

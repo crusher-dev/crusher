@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { CreateProjectHostRequest } from "../interfaces/services/projectHosts/CreateProjectHostRequest";
 import { ScreenshotComparisionRequest } from "../interfaces/services/screenshots/ScreenshotComparisionRequest";
 import { ScreenShotComparisionStatus } from "../interfaces/ScreenShotComparisionStatus";
@@ -13,7 +13,7 @@ export default class ScreenshotComparisionsService {
 	}
 
 	async saveComparision(details: ScreenshotComparisionRequest) {
-		return this.dbManager.insertData(`INSERT INTO screenshot_comparisons SET ?`, {
+		return this.dbManager.insert(`INSERT INTO screenshot_comparisons SET ?`, {
 			screenshot_id: details.screenshotId,
 			reference_screenshot_id: details.referenceScreenshotId,
 			status: details.status,
@@ -24,7 +24,7 @@ export default class ScreenshotComparisionsService {
 	}
 
 	async getScreenshotsWithComparision(instanceId, referenceInstanceId) {
-		return this.dbManager.fetchData(
+		return this.dbManager.fetchAllRows(
 			`SELECT screenshot_comparisons.*, test_instance_screenshots.instance_id instance_id  FROM screenshot_comparisons,` +
 				`test_instance_screenshots WHERE test_instance_screenshots.instance_id = ? AND test_instance_screenshots.id` +
 				`= screenshot_comparisons.screenshot_id AND screenshot_comparisons.reference_instance_id = ?`,

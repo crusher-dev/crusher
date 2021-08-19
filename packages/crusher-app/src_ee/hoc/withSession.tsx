@@ -1,7 +1,7 @@
 import React from "react";
 import { redirectToFrontendPath } from "@utils/router";
 import { EMAIL_NOT_VERIFIED, NO_TEAM_JOINED, SIGNED_IN, USER_NOT_REGISTERED } from "@utils/constants";
-import { saveSelectedProjectInRedux } from "@redux/actions/project";
+import { saveSelectedProjectInRedux } from "@redux/actions/currentProject";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
 import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { getUserInfo } from "@redux/stateUtils/user";
@@ -23,7 +23,7 @@ function redirectIfNotThisScope(userStatus: any, componentScope: any, res: NextA
 	if (userStatus === EMAIL_NOT_VERIFIED && componentScope !== userStatus) {
 		return null;
 	} else if (userStatus === NO_TEAM_JOINED && componentScope !== userStatus) {
-		return redirectToFrontendPath("/onboarding", res);
+		return redirectToFrontendPath("/setup", res);
 	} else if (userStatus === USER_NOT_REGISTERED && componentScope !== userStatus) {
 		return redirectToFrontendPath("/", res);
 	}

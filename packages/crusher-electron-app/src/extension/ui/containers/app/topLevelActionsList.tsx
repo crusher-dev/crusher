@@ -3,7 +3,7 @@ import { TOP_LEVEL_ACTIONS_LIST } from "../../../constants/topLevelActions";
 import { List } from "../../components/app/list";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { recordAction } from "../../../redux/actions/actions";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { turnOffInspectModeInFrame, turnOnInspectModeInFrame } from "../../../messageListener";
 import { getStore } from "../../../redux/store";
 import { useSelector } from "react-redux";
@@ -34,7 +34,7 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 			case TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT:
 				store.dispatch(
 					recordAction({
-						type: ACTIONS_IN_TEST.PAGE_SCREENSHOT,
+						type: ActionsInTestEnum.PAGE_SCREENSHOT,
 						payload: {},
 						//@TODO: Get the url of the target site here (Maybe some hack with atom or CEF)
 						url: "",

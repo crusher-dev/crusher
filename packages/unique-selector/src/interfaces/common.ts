@@ -1,3 +1,3 @@
 export interface Map {
-  [key: string]: string | undefined | null
+	[key: string]: string | undefined | null;
 }

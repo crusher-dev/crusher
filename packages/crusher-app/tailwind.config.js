@@ -1,28 +1,10 @@
-const getSpacingSizes = () => {
-	let sizingMap = {};
-	const remBaseUnit = 16;
-	for (let i = 0; i <= 120; i++) sizingMap[i] = `${i / remBaseUnit}rem`;
-	return sizingMap;
-};
-
-// Start constants
-const colors = {
-	grey: "grey",
-};
-
-const background = {
-	grey: "grey",
-};
-
-const border = {
-	grey: "grey",
-};
-
-const spacingSizes = getSpacingSizes();
+const { spacingSize } = require("../dyson/src/constant/layout");
+const { colors, background, border } = require("../dyson/src/constant/color");
+const { FONT_WEIGHT_VALUE } = require("../dyson/src/constant/font");
 
 module.exports = {
 	important: false,
-	darkModeVariant: true,
+	darkModeVariant: false,
 	theme: {
 		fontFamily: {
 			gilroy: ["Gilroy", "sans-serif"],
@@ -30,11 +12,13 @@ module.exports = {
 		},
 		colors: { ...colors },
 		backgroundColor: { ...background },
+		borderRadius: spacingSize,
 		borderColor: { ...border },
-		fontSize: spacingSizes,
+		fontSize: spacingSize,
+		fontWeight: FONT_WEIGHT_VALUE,
 		extend: {
-			margin: spacingSizes,
-			padding: spacingSizes,
+			margin: spacingSize,
+			padding: spacingSize,
 		},
 		objectPosition: {},
 		order: {},

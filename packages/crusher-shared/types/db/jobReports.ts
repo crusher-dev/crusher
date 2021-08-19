@@ -1,5 +1,5 @@
 import { BaseRowInterface } from "./baseRow";
-import { JobReportStatus } from '../jobReportStatus';
+import { JobReportStatus } from "../jobReportStatus";
 
 export interface iJobReports extends BaseRowInterface {
 	id: number;

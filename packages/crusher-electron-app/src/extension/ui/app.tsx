@@ -8,12 +8,13 @@ import { recorderMessageListener } from "../messageListener";
 import ReactModal from "react-modal";
 import { ModalManager } from "./containers/app/modals";
 import { AdvancedURL } from "../utils/url";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
 import { submitPostDataWithForm } from "../utils/helpers";
 import { addHttpToURLIfNotThere, resolveToBackendPath } from "@shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
+import * as _url from "url";
 import "../style/main.css";
 
 const App = () => {
@@ -37,10 +38,16 @@ const App = () => {
 			return;
 		}
 		console.log(AdvancedURL.getBackendURL());
-		submitPostDataWithForm(resolveToBackendPath("test/goToEditor#crusherBackendServer", addHttpToURLIfNotThere(AdvancedURL.getBackendURL())), {
-			events: encodeURIComponent(JSON.stringify(steps)),
-			totalTime: lastActionTime.getTime() - recordingStartTime.getTime(),
-		});
+		fetch(resolveToBackendPath(`/server/tests/actions/save.temp`), {
+			method: "POST",
+			headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
+			body: JSON.stringify({ events: steps }),
+		})
+			.then((res) => res.text())
+			.then((res) => {
+				const result = JSON.parse(res);
+				window.open(resolveToBackendPath(`/?temp_test_id=${result.insertId}#crusherExternalLink`));
+			});
 	};
 
 	useMemo(() => {
@@ -49,7 +56,7 @@ const App = () => {
 		const userAgent = AdvancedURL.getUserAgentFromUrl(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string);
 		store.dispatch(
 			recordAction({
-				type: ACTIONS_IN_TEST.SET_DEVICE,
+				type: ActionsInTestEnum.SET_DEVICE,
 				payload: {
 					meta: {
 						device: device,

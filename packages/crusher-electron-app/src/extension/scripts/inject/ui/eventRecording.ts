@@ -1,5 +1,5 @@
 import { getAllAttributes } from "../../../utils/helpers";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
 import { getSelectors } from "../../../utils/selector";
@@ -261,12 +261,12 @@ export default class EventRecording {
 
 			const isDocumentScrolled = event.target === document;
 			if (isDocumentScrolled) {
-				return _this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, null, window.scrollY);
+				return _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PAGE_SCROLL, null, window.scrollY);
 			}
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				_this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.SCROLL, event.target, event.target.scrollTop);
+				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}
@@ -292,7 +292,7 @@ export default class EventRecording {
 			if (diffInMilliSeconds > 1000 && activeFocusElement.tagName !== "INPUT") {
 				// Only record hover if not in input mode focus.
 				// this.eventsController.saveCapturedEventInBackground(
-				// 	ACTIONS_IN_TEST.HOVER,
+				// 	ActionsInTestEnum.HOVER,
 				// 	this.hoveringState.element,
 				// );
 				this.hoveringState = {
@@ -328,7 +328,7 @@ export default class EventRecording {
 
 	async saveHoverFinalEvents(finalEvents: Array<Node>) {
 		for (let i = 0; i < finalEvents.length; i++) {
-			await this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.HOVER, finalEvents[i], "", null, true);
+			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, finalEvents[i], "", null, true);
 		}
 	}
 
@@ -364,7 +364,7 @@ export default class EventRecording {
 				const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
 				await this.saveHoverFinalEvents(hoverNodes);
 			}
-			await this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.CLICK, event.target);
+			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target);
 		}
 
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
@@ -392,14 +392,14 @@ export default class EventRecording {
 
 		finalKey += event.key;
 
-		this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.ADD_INPUT, targetElement, finalKey);
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, targetElement, finalKey);
 		return true;
 	}
 
 	handleFocus(event: FocusEvent) {
 		const target = event.target as HTMLElement;
 		if ((target as any) != window && ["textarea", "input"].includes(target.tagName.toLowerCase())) {
-			this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.ELEMENT_FOCUS, target, true);
+			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_FOCUS, target, true);
 		}
 	}
 
@@ -467,7 +467,7 @@ export default class EventRecording {
 		if (isFirstTime) {
 			const currentURL = new URL(window.location.href);
 			currentURL.searchParams.delete("__crusherAgent__");
-			this.eventsController.saveCapturedEventInBackground(ACTIONS_IN_TEST.NAVIGATE_URL, document.body, currentURL.toString());
+			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.NAVIGATE_URL, document.body, currentURL.toString());
 		}
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.RECORDER_BOOTED,
@@ -480,7 +480,7 @@ export default class EventRecording {
 		const activeElementHref = (document.activeElement as any).getAttribute("href");
 
 		this.eventsController.saveCapturedEventInBackground(
-			ACTIONS_IN_TEST.NAVIGATE_URL,
+			ActionsInTestEnum.NAVIGATE_URL,
 			document.body,
 			activeElementHref ? activeElementHref : window.location.href.toString(),
 		);

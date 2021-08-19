@@ -1,5 +1,4 @@
-import { EDITION_TYPE } from "@crusher-shared/types/common/general";
-import { getUserCLIToken } from "@services/cli";
+// import { getUserCLIToken } from "@services/cli";
 
 export function getEdition() {
 	return process.env.NEXT_PUBLIC_CRUSHER_MODE;
@@ -10,6 +9,7 @@ export function findArrayItemByProperty(arr: Array<any>, property: string) {
 		return false;
 	}
 	const keyToMatch = Object.keys(property)[0];
+	// @ts-ignore
 	const valueToMatch = property[keyToMatch];
 
 	for (const item of arr) {
@@ -66,14 +66,14 @@ export function extractHostnameFromUrl(url) {
 	return hostname.split(".").slice(-2).join(".");
 }
 
-export async function getCLICode(projectId: number, host: string) {
-	const token = await getUserCLIToken();
-	if (token) {
-		return `crusher-cli run --project_id=${projectId}  --crusher_token=${token}`;
-	} else {
-		return null;
-	}
-}
+// export async function getCLICode(projectId: number, host: string) {
+// 	const token = await getUserCLIToken();
+// 	if (token) {
+// 		return `crusher-cli run --project_id=${projectId}  --crusher_token=${token}`;
+// 	} else {
+// 		return null;
+// 	}
+// }
 
 export function getTime(date: any) {
 	const seconds = Math.floor(((new Date() as any) - date) / 1000);
@@ -197,8 +197,4 @@ export function getShortDate(date: Date) {
 		":" +
 		("0" + date.getUTCSeconds()).slice(-2)
 	);
-}
-
-export function isOpenSourceEdition() {
-	return getEdition() === EDITION_TYPE.OPEN_SOURCE;
 }

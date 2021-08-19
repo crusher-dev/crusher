@@ -9,12 +9,12 @@ const {
 	GITHUB_CONFIG,
 	AWS_CONFIG,
 	FRONTEND_URL,
-	BACKEND_URL
+	BACKEND_URL,
 } = require('../config');
 
 module.exports = {
 	CRUSHER_SERVER_ENV: {
-		NODE_ENV: IS_PRODUCTION ? "production" : "development",
+		NODE_ENV: IS_PRODUCTION ? 'production' : 'development',
 		PORT: 8000,
 		BACKEND_URL: BACKEND_URL,
 		FRONTEND_URL: FRONTEND_URL,

@@ -8,11 +8,7 @@ interface iRegisteredMutationRecord {
 	dependentOn: iRegisteredMutationRecord | null;
 }
 
-export function pushToEventMutationArr(
-	eventStackMapKey: string,
-	targetNode: any,
-	targetChanges: any,
-) {
+export function pushToEventMutationArr(eventStackMapKey: string, targetNode: any, targetChanges: any) {
 	// console.log("gotthislog", eventStackMapKey, targetChanges, targetChanges);
 	const eventNode = (window as any).crusherMap[eventStackMapKey];
 	if (!eventNode) return;
@@ -28,12 +24,7 @@ export function pushToEventMutationArr(
 
 export function getEventNodeInCaseDOMWasMutated(currentActionNode: Node) {
 	const relevantEvents = eventMutationArr.filter((e) => {
-		return (
-			e.targetNode === currentActionNode ||
-			e.targetNode.contains(currentActionNode)
-		);
+		return e.targetNode === currentActionNode || e.targetNode.contains(currentActionNode);
 	});
-	return relevantEvents.length > 0
-		? relevantEvents[relevantEvents.length - 1]
-		: eventMutationArr[0];
+	return relevantEvents.length > 0 ? relevantEvents[relevantEvents.length - 1] : eventMutationArr[0];
 }

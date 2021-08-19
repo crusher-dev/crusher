@@ -1,24 +1,46 @@
 import { iAction } from "@crusher-shared/types/action";
+import { Browser, BrowserContextOptions, Page } from "playwright";
 import { iDevice } from "@crusher-shared/types/extension/device";
-import { iUserAgent } from "@crusher-shared/constants/userAgents";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
+import { getUserAgentFromName, userAgents } from "@crusher-shared/constants/userAgents";
 
-export default async function setDevice(action: iAction) {
-	return new Promise(async (success, error) => {
-		try {
-			const device = action.payload.meta.device as iDevice;
-			const userAgent = action.payload.meta.userAgent as iUserAgent;
+async function setDevice(browser: Browser, action: iAction, globals: IGlobalManager) {
+	const device: { width: number; height: number } = action.payload.meta.device as iDevice;
+	const userAgent = getUserAgentFromName(action.payload.meta.device.userAgent);
 
-			return success({
-				message: "Setup device for testing",
-				meta: {
-					width: device.width,
-					height: device.height,
-					userAgent: userAgent && userAgent.value ? userAgent.value : userAgent,
-				},
-			});
-		} catch (err) {
-			console.error(err);
-			return error("Some issue occurred while setting the device");
-		}
+	const currentBrowserContextOptions = globals.get("browserContextOptions");
+
+	if (currentBrowserContextOptions && currentBrowserContextOptions.recordVideo) {
+		currentBrowserContextOptions.recordVideo = {
+			...currentBrowserContextOptions.recordVideo,
+			size: { width: device.width, height: device.height },
+		};
+	}
+
+	console.log("Setting this user agent", userAgent.value);
+
+	globals.set("browserContextOptions", {
+		...currentBrowserContextOptions,
+		userAgent: userAgent ? userAgent.value : userAgents[0].value,
+		viewport: {
+			width: device.width,
+			height: device.height,
+		},
 	});
+
+	return {
+		customLogMessage: "Finished setting up device",
+		meta: {
+			width: device.width,
+			height: device.height,
+			userAgent: userAgent,
+		},
+	};
 }
+
+module.exports = {
+	name: ActionsInTestEnum.SET_DEVICE,
+	description: "Configuration of device config",
+	handler: setDevice,
+};

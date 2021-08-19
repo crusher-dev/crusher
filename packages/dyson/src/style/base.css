@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+	font-size: 1px;
+}
+
+body {
+	cursor: inherit;
+	font-size: 16rem;
+}
+
+body {
+	cursor: default;
+}
+
+.sb-show-main.sb-main-padded {
+	transform-origin: left top 0px;
+}
+
+.sbdocs-wrapper {
+	background: #181717 !important;
+}

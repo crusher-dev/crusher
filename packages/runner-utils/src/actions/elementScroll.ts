@@ -1,24 +1,16 @@
-import { Page } from "playwright";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { scroll, waitForSelectors } from "../functions";
-import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
+import { Locator, Page } from "playwright";
+import { scrollElement } from "../functions/scroll";
 
-export default function capturePageScreenshot(action: iAction, page: Page) {
-	return new Promise(async (success, error) => {
-		try {
-			const selectors = action.payload.selectors as iSelectorInfo[];
-			const output = await waitForSelectors(page, selectors);
+async function scrollOnElement(elementHandle: Locator, workingSelector: any, action: iAction) {
+	const scrollDelta = action.payload.meta.value;
 
-			const scrollDelta = action.payload.meta.value;
-			const pageUrl = await page.url();
-			await scroll(page, output ? [output] : selectors, scrollDelta, false);
-
-			return success({
-				message: `Scrolled successfully on ${pageUrl}`,
-			});
-		} catch (err) {
-			console.log(err);
-			return error("Some issue occurred while scrolling on element");
-		}
-	});
+	await scrollElement(scrollDelta, await elementHandle.elementHandle());
 }
+
+module.exports = {
+	name: ActionsInTestEnum.ELEMENT_SCROLL,
+	description: "Scroll on element",
+	handler: scrollOnElement,
+};

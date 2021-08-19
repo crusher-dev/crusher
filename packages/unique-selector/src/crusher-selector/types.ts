@@ -2,11 +2,11 @@ export type Evaluator = {
 	querySelector(selector: string, root: Node): HTMLElement;
 };
 
-export type Action = 'click' | 'fill' | 'goBack' | 'goForward' | 'goto' | 'keyboard.press' | 'press' | 'reload' | 'selectOption';
+export type Action = "click" | "fill" | "goBack" | "goForward" | "goto" | "keyboard.press" | "press" | "reload" | "selectOption";
 
 export type Callback<S = void, T = void> = (data?: S) => T;
 
-export type CueType = 'attribute' | 'class' | 'id' | 'modifier' | 'tag' | 'text';
+export type CueType = "attribute" | "class" | "id" | "modifier" | "tag" | "text";
 
 export type Cue = {
 	level: number; // 0 is target, 1 is parent, etc.

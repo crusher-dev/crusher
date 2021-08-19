@@ -10,7 +10,7 @@ import { getActionsRecordingState } from "../../../redux/selectors/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { getActions } from "../../../redux/selectors/actions";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { MyCustomHelper } from "../../components/app/onboarding/tourCustomHelper";
 
@@ -139,7 +139,7 @@ const OnboardingManager = () => {
 		} else if (currentCount > prevCount) {
 			switch (currentOnboardingStep) {
 				case ONBOARDING_STEP_INDEX_MAP.TAKE_PAGE_SCREENSHOT: {
-					if (recordedActions[currentCount - 1].type === ACTIONS_IN_TEST.PAGE_SCREENSHOT) {
+					if (recordedActions[currentCount - 1].type === ActionsInTestEnum.PAGE_SCREENSHOT) {
 						store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SAVE_TEST));
 					}
 					break;

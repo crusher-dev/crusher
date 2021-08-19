@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { USER_CONNECTION_TYPE } from "../../../../crusher-shared/types/userConnectionType";
+import { USER_CONNECTION_TYPE } from "@crusher-shared/types/userConnectionType";
 
 const UserConnectionsSchema = new mongoose.Schema(
 	{

@@ -1,5 +1,3 @@
-import { iGithubIntegration } from '../mongo/githubIntegration';
+import { iGithubIntegration } from "../mongo/githubIntegration";
 
-export interface linkGithubRepoResponse extends iGithubIntegration{
-
-};
+export interface linkGithubRepoResponse extends iGithubIntegration {}

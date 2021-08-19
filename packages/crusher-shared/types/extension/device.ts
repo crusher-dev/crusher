@@ -6,4 +6,4 @@ export interface iDevice {
 	visible: boolean;
 	mobile?: boolean;
 	userAgent: string;
-};
+}

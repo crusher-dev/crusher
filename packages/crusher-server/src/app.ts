@@ -1,4 +1,4 @@
-import { getEdition } from "./utils/helper";
+import "reflect-metadata";
 
 require("dotenv").config();
 require("./utils/logger");
@@ -9,39 +9,20 @@ import * as bodyParser from "body-parser";
 import { useContainer, useExpressServer } from "routing-controllers";
 import * as http from "http";
 import { Container } from "typedi";
-import "reflect-metadata";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
-import { UserController } from "./server/controllers/UserController";
-import { ProjectsController } from "./server/controllers/ProjectsController";
-import { TestController } from "./server/controllers/TestController";
-import { TestInstanceController } from "./server/controllers/TestInstanceController";
-import { DraftController } from "./server/controllers/DraftController";
-import { JobsController } from "./server/controllers/JobsController";
-import { CLIController } from "./server/controllers/CLIController";
-import { AlertingController } from "./server/controllers/AlertingController";
-import { ProjectHostsController } from "./server/controllers/ProjectHostsController";
-import { CommentsController } from "./server/controllers/CommentsController";
-import { TestInstanceResultSetsController } from "./server/controllers/TestInstanceResultSetsController";
-import { TestInstanceResultsController } from "./server/controllers/TestInstanceResultsController";
-import { MonitoringController } from "./server/controllers/MonitoringController";
-import { Slack } from "./server/controllers/integrations/Slack";
-import { JobsControllerV2 } from "./server/controllers/v2/JobsControllerV2";
-import { TestInstanceControllerV2 } from "./server/controllers/v2/TestInstanceControllerV2";
-import { PaymentController } from "./server/controllers/PaymentController";
-import { JobReportsController } from "./server/controllers/v2/JobReportsController";
-import { ProjectsControllerV2 } from "./server/controllers/v2/ProjectsControllerV2";
-import { TeamControllerV2 } from "./server/controllers/v2/TeamControllerV2";
-import { InviteMembersController } from "./server/controllers/v2/InviteMembersController";
-import { UserControllerV2 } from "./server/controllers/v2/UserControllerV2";
-import { DraftControllerV2 } from "./server/controllers/v2/DraftControllerV2";
-import { LoginConnectionsController } from "./server/controllers/v2/LoginConnectionsController";
-import { GitIntegrationsController } from "./server/controllers/integrations/Github";
 import { EmailManager } from "@manager/EmailManager";
-import { EDITION_TYPE } from "@crusher-shared/types/common/general";
-import MongoManager from "@manager/MongoManager";
+import { MongoManager } from "@modules/db/mongo";
 import { RedisManager } from "@manager/redis";
+import { UserController } from "@modules/resources/users/controller";
+import { TestController } from "@modules/resources/tests/controller";
+import { BuildReportController } from "@modules/resources/buildReports/controller";
+import { BuildsController } from "@modules/resources/builds/controller";
+import { BuildTestInstancesController } from "@modules/resources/builds/instances/controller";
+import { ReleaseController } from "@controllers/ReleaseController";
+import { ProjectsController } from "@modules/resources/projects/controller";
+import { TeamsController } from "@modules/resources/teams/controller";
 
 RedisManager.initialize();
 
@@ -49,8 +30,9 @@ RedisManager.initialize();
 // cron, queue and backend servers. (Used in OSS)
 if (process.env.RUN_ALL_TOGETHER) {
 	require("./cron");
-	require("./queue");
 }
+
+require("./queue.new.ts");
 
 const chalk = require("chalk");
 Container.get(MongoManager);
@@ -79,36 +61,20 @@ if (process.env.STORAGE_MODE === "local") {
 
 const controllersArr: any = [
 	UserController,
-	ProjectsController,
 	TestController,
-	TestInstanceController,
-	DraftController,
-	JobsController,
-	CLIController,
-	AlertingController,
-	ProjectHostsController,
-	CommentsController,
-	TestInstanceResultSetsController,
-	TestInstanceResultsController,
-	MonitoringController,
-	JobsControllerV2,
-	TestInstanceControllerV2,
-	Slack,
-	PaymentController,
-	JobReportsController,
-	ProjectsControllerV2,
-	TeamControllerV2,
-	InviteMembersController,
-	UserControllerV2,
-	DraftControllerV2,
-	LoginConnectionsController,
-	GitIntegrationsController,
+	BuildsController,
+	BuildReportController,
+	ReleaseController,
+	ProjectsController,
+	TeamsController,
+	BuildTestInstancesController,
 ];
 
-if (getEdition() === EDITION_TYPE.EE) {
-	const eeControllerArr: any = require("./ee/controllers");
-	controllersArr.push(...Object.values(eeControllerArr));
-}
+// @TODO: Look into this
+// if (getEdition() === EDITION_TYPE.EE) {
+// 	const eeControllerArr: any = require("./ee/controllers");
+// 	controllersArr.push(...Object.values(eeControllerArr));
+// }
 useExpressServer(expressApp, {
 	controllers: controllersArr,
 	middlewares: [CorsMiddleware],

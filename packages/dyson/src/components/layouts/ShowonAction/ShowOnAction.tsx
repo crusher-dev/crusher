@@ -12,7 +12,7 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 	const customRef = useRef(null);
 
 	useEffect(() => {
-		callback && callback();
+		callback && callback(showDropDown);
 	}, [showDropDown]);
 
 	useEffect(() => {

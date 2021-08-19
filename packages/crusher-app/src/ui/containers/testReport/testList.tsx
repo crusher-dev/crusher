@@ -7,7 +7,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
 import { getActionLabel, getAllConfigurationForGivenTest, getBaseConfig, getScreenShotsAndChecks, getTestIndexByConfig } from "@utils/pages/buildReportUtils";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import { CloseSVG, LoadingSVG, PlaySVG } from '@svg/dashboard';
+import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { Modal } from "dyson/src/components/molecules/Modal";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
@@ -15,101 +15,9 @@ import dynamic from "next/dynamic";
 import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
 import { MenuItem } from "@components/molecules/MenuItem";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
-import Radio from "../../../../../dyson/src/components/atoms/radio/radio";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
-
-export const radioContent = [
-	{ label: "Reject", subLabel: "Reject this build" },
-	{ label: "Leave feedback", subLabel: "Approve without approval" },
-	{ label: "Approve", subLabel: "Approve this build and make it baseMark" },
-];
-
-export const ReviewButtonContent = ({closeModal}) => {
-	const [selected, setSelected] = useState(1);
-	const [feedback, setFeedback] = useState(1);
-	const selectOption = useCallback((index, selectedRadioButton) => {
-		if (selectedRadioButton) {
-			setSelected(index);
-		}
-	}, []);
-	return (
-		<div>
-			<div css={topReview} className={"font-700 py-12 px-16 leading-none mt-2 flex justify-between"}>
-				<div>Submit feedback</div>
-				<CloseSVG height={"12"} onClick={closeModal}/>
-			</div>
-			<div css={middleSection} className={"px-16 pt-16 pb-4"}>
-				<textarea
-					id={"text-area"}
-					className={"w-full"}
-					value={feedback}
-					onChange={(e) => {
-						setFeedback(e.target.value);
-					}}
-				/>
-
-				<div css={radioGroup}>
-					{radioContent.map(({ label, subLabel }, i) => {
-						return (
-							<div className={"flex mb-12"} onClick={selectOption.bind(this, i)}>
-								<Radio
-									isSelected={selected === i}
-									callback={selectOption.bind(this, i)}
-									label={
-										<div className={"ml-12"}>
-											<div className={"text-12 font-700"}>{label}</div>
-											<div>{subLabel}</div>
-										</div>
-									}
-								/>
-							</div>
-						);
-					})}
-				</div>
-			</div>
-			<div className={"px-16 py-12"}>
-				<Button
-					size={"small"}
-					css={css`
-						width: 120rem;
-					`}
-					onClick={closeModal}
-				>
-					Submit
-				</Button>
-			</div>
-		</div>
-	);
-};
-
-const radioGroup = css`
-	color: #d2d2d2;
-	font-size: 12rem;
-`;
-
-const topReview = css`
-	color: #fff;
-	font-size: 13.4rem;
-`;
-
-const middleSection = css`
-	border-top: 1px solid #22262b;
-
-	border-bottom: 1px solid #22262b;
-	background: rgba(0, 0, 0, 0.25);
-
-	#text-area {
-		height: 104rem;
-		background: rgba(0, 0, 0, 0.2);
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 4px;
-		font-size: 13rem;
-		margin-bottom: 12rem;
-		padding: 8rem;
-		max-height: 160rem;
-	}
-`;
+const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 
 function ReviewSection() {
 	const [open, setOpen] = useState(false);
@@ -310,7 +218,13 @@ function Browsers({ browsers, setConfig }) {
 			<div>
 				{browsers.map((name, id) => (
 					<MenuItem
-						label={name.toLowerCase()}
+						css={css`padding: 12rem 10rem;`}
+						label={(
+							<div className={"flex items-center"}>
+								<img src={`/assets/img/build/browser/${name.toLowerCase()}.png`} width={12} className={"mr-12"} />
+								<div>{name.toLowerCase()}</div>
+							</div>
+						)}
 						key={id}
 						className={"close-on-click"}
 						onClick={(e) => {
@@ -344,6 +258,8 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 		setTestCardConfig(config);
 	};
 
+	const browserInLowerCase = testCardConfig.browser.toLowerCase();
+
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
 			<div className={"text-13"}>Switch tos</div>
@@ -373,8 +289,8 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 					<ClickableText paddingY={4} paddingX={12}>
 						<div className={"flex items-center "}>
 							<div className={" flex items-center  mr-8 text-13"}>
-								{/*<img src={"/chrome.png"} height={16} className={"mr-8"} />*/}
-								<span className={"mt-1 capitalize"}>{testCardConfig.browser.toLowerCase()}</span>
+								<img src={`/assets/img/build/browser/${browserInLowerCase}.png`} width={16} className={"mr-8"} />
+								<span className={"mt-1 capitalize"}>{browserInLowerCase}</span>
 							</div>
 							<ChevronDown width={12} />
 						</div>

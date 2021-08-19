@@ -8,10 +8,10 @@ type TMenuItem = {
 	selected: boolean;
 } & React.DetailedHTMLProps<any, any>;
 
-export function MenuItem({ label, rightLabel, showHighlighted = false, selected = false, className, ...otherProps }: TMenuItem) {
+export function MenuItem({ label, rightLabel,css, showHighlighted = false, selected = false, className, ...otherProps }: TMenuItem) {
 	return (
 		<div
-			css={[dropDownItem, showHighlighted && highlightHoverStyle, selected && isSelectedStyle]}
+			css={[dropDownItem, showHighlighted && highlightHoverStyle, selected && isSelectedStyle, css]}
 			className={`flex justify-between items-center px-16 py-12 ${className}`}
 			{...otherProps}
 		>

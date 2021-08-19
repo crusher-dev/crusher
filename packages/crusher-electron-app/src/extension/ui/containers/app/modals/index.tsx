@@ -37,7 +37,7 @@ const ModalTopBar = (props: iModalTopBarProps) => {
 				</div>
 			</div>
 			<div id="close-button" onClick={closeModal} style={closeButtonStyle}>
-				<CloseModalIcon />
+				<CloseModalIcon height={14} width={14} />
 			</div>
 		</div>
 	);
@@ -53,18 +53,18 @@ const topLeftSectionStyle = {
 	display: "flex",
 };
 const headingContainerStyle = {
-	marginLeft: 32,
+	marginLeft: 16,
 };
 const headingStyle = {
 	fontStyle: "normal",
 	fontWeight: 800,
 	fontSize: "22",
-	marginBottom: 8,
+	marginBottom: 0,
 	color: "#FFFFFF",
 };
 const subHeadingStyle = {
 	fontStyle: "normal",
-	fontSize: "1.06rem",
+	fontSize: "0.8rem",
 	color: "#FFFFFF",
 };
 const topBarBrowserIcon = {

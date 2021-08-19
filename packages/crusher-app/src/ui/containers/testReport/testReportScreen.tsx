@@ -4,12 +4,12 @@ import { css } from "@emotion/react";
 import { LayoutSVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
 import { atom, useAtom } from "jotai";
-import React, { useState } from "react";
+import React from "react";
 import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
 import { timeSince } from "@utils/dateTimeUtils";
-import { getAllConfiguration, getAllConfigurationForGivenTest, groupTestByStatus, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
+import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
 import { usePageTitle } from "../../../hooks/seo";
 import dynamic from "next/dynamic";
 import { backendRequest } from "@utils/backendRequest";
@@ -170,12 +170,10 @@ function ConfigurationMethod({ configType, array }) {
 function TestOverviewTab() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
-	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
+	const [, setSelectedTabIndex] = useAtom(selectedTabAtom);
 
 	const showReview = showReviewButton(data?.status);
 
-	const failingConfigurationByTest = groupTestByStatus(data?.tests);
-	const allConfigurationForTest = getAllConfigurationForGivenTest(data?.tests[0]);
 	const allConfiguration = getAllConfiguration(data?.tests);
 
 	return (
@@ -289,9 +287,10 @@ export const TestReportScreen = () => {
 						className={"text-13"}
 						css={css`
 							width: 100px;
+							line-height: 19rem;
 						`}
 					>
-						Comparing to
+						Last build
 					</div>
 					<div css={timeLine} className={"ml-40 relative"}>
 						<div className={"absolute flex flex-col items-center"} css={currentSelected}>

@@ -397,7 +397,7 @@ const navLinkSquare = css`
 
 	div {
 		color: #d0d0d0;
-		font-size: 13.5px;
+		font-size: 13.5rem;
 	}
 
 	.selected {

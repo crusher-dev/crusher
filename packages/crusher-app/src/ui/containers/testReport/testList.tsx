@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { Button } from "dyson/src/components/atoms";
@@ -18,6 +18,33 @@ import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
+const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
+
+function ReviewSection() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<Dropdown component={<ReviewButtonContent closeModal={setOpen.bind(this, false)} />} callback={setOpen} initialState={open} dropdownCSS={reviewCss}>
+			<Button
+				css={css`
+					width: 144px;
+				`}
+			>
+				Review
+			</Button>
+		</Dropdown>
+	);
+}
+
+const reviewCss = css`
+	padding: 0;
+	height: fit-content;
+	width: 380rem;
+	top: calc(100% + 9rem) !important;
+	right: 0px !important;
+	background: #1e2126;
+	left: unset !important;
+`;
 
 /*
 	How reports will work
@@ -54,13 +81,7 @@ function ReportSection() {
 				<div className={"flex items-center"}>
 					{/* Disabled for now*/}
 					{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
-					<Button
-						css={css`
-							width: 144px;
-						`}
-					>
-						Review
-					</Button>
+					<ReviewSection />
 				</div>
 			</div>
 
@@ -195,12 +216,18 @@ function Browsers({ browsers, setConfig }) {
 	return (
 		<div className={"flex flex-col justify-between h-full"} onClick={(e) => {}}>
 			<div>
-				{browsers.map((name, id) => (
+				{browsers.map((name: string) => (
 					<MenuItem
-						label={name.toLowerCase()}
-						key={id}
+						css={css`padding: 12rem 10rem;`}
+						label={(
+							<div className={"flex items-center"}>
+								<img src={`/assets/img/build/browser/${name.toLowerCase()}.png`} width={12} className={"mr-12"} />
+								<div>{name.toLowerCase()}</div>
+							</div>
+						)}
+						key={name}
 						className={"close-on-click"}
-						onClick={(e) => {
+						onClick={() => {
 							setConfig("browser", name);
 						}}
 					/>
@@ -222,7 +249,7 @@ const dropDownSelectionCSS = css`
 	Use Jotai for avoiding props drilling.
 	Make config much more streamline.
  */
-function TestConfigSection({ allCofiguration, setTestCardConfig, testCardConfig }) {
+function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCardConfig }) {
 	const setConfig = (key, value) => {
 		const config = allCofiguration;
 
@@ -231,16 +258,39 @@ function TestConfigSection({ allCofiguration, setTestCardConfig, testCardConfig 
 		setTestCardConfig(config);
 	};
 
+	const browserInLowerCase = testCardConfig.browser.toLowerCase();
+
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
 			<div className={"text-13"}>Switch to</div>
+
+			<Conditional showIf={!expand}>
+				<div className={"flex text-12 items-center"} id={"click-to-open"}>
+					<div
+						className={"text-13 font-500 mr-12 underline"}
+						css={css`
+							color: #eee;
+						`}
+					>
+						Expand
+					</div>
+					<ChevronDown
+						width={15}
+						css={css`
+							path {
+								fill: #eee;
+							}
+						`}
+					/>
+				</div>
+			</Conditional>
 			<div className={"flex"}>
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
 					<ClickableText paddingY={4} paddingX={12}>
 						<div className={"flex items-center "}>
 							<div className={" flex items-center  mr-8 text-13"}>
-								{/*<img src={"/chrome.png"} height={16} className={"mr-8"} />*/}
-								<span className={"mt-1 capitalize"}>{testCardConfig.browser.toLowerCase()}</span>
+								<img src={`/assets/img/build/browser/${browserInLowerCase}.png`} width={16} className={"mr-8"} />
+								<span className={"mt-1 capitalize"}>{browserInLowerCase}</span>
 							</div>
 							<ChevronDown width={12} />
 						</div>
@@ -277,6 +327,13 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 				<PassedSVG height={18} className={"mr-16"} />
 				{name}
 			</div>
+
+			{/*<Conditional showIf={!expand}>*/}
+			{/*	<div className={"text-18 font-600"} id={"click-to-open"} css={css`color: #aacb65;`}>*/}
+			{/*		PASSED*/}
+			{/*	</div>*/}
+			{/*</Conditional>*/}
+
 			<div className={"flex items-center"}>
 				<span className={"text-13 mr-32"}>
 					{screenshotCount} screenshot | {checksCount} check
@@ -351,7 +408,12 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 
 						<div className={"mt-12 mb-16"}>
-							<TestConfigSection allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestCardConfig={setTestCardConfig} />
+							<TestConfigSection
+								expand={expand}
+								allCofiguration={allConfiguration}
+								testCardConfig={testCardConfig}
+								setTestCardConfig={setTestCardConfig}
+							/>
 						</div>
 					</div>
 				</div>
@@ -363,7 +425,12 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
-					<TestConfigSection allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
+					<TestConfigSection
+						expand={expand}
+						allCofiguration={allConfiguration}
+						setTestCardConfig={setTestCardConfig}
+						testCardConfig={testCardConfig}
+					/>
 				</div>
 			</div>
 
@@ -434,11 +501,22 @@ const stepsContainer = css`
 const testCard = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
+	overflow: hidden;
 
 	:hover {
 		.test-card-header {
 			background: rgb(16, 18, 21);
 			box-sizing: border-box;
+		}
+	}
+
+	#click-to-open {
+		visibility: hidden;
+	}
+
+	:hover {
+		#click-to-open {
+			visibility: visible;
 		}
 	}
 

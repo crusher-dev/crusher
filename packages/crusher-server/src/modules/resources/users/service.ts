@@ -119,7 +119,7 @@ class UsersService {
 		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => {
 			return {
 				name: userInfo.name,
-				avatar: "https://avatars.githubusercontent.com/u/6849438?v=4",
+				avatar: null,
 				// @NOTE: Remove hardcoding from the next 3 fields
 				lastVisitedURL: null,
 				meta: userInfo.meta ? JSON.parse(userInfo.meta) : {},

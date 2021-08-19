@@ -5,7 +5,7 @@ export interface iUserAgent {
 	platform: string;
 }
 
-const userAgents: Array<iUserAgent> = [
+export const userAgents: Array<iUserAgent> = [
 	{
 		name: "Google Chrome",
 		value: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
@@ -19,5 +19,9 @@ const userAgents: Array<iUserAgent> = [
 		platform: "Android",
 	},
 ];
+
+export function getUserAgentFromName(userAgentName: string) {
+	return userAgents.find(userAgent => userAgent.name === userAgentName);
+}
 
 export default userAgents;

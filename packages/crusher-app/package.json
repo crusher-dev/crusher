@@ -10,6 +10,7 @@
 		"start": "NODE_ENV=production node server.js",
 		"build": "NODE_ENV=production next build",
 		"lint": "eslint --ext=jsx,ts,tsx src",
+		"export": "next export",
 		"prettify": "prettier --write .",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
 		"analyze:browser": "cross-env ANALYZE=true ANALYZE=true next build"

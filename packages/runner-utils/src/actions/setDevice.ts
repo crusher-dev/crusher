@@ -3,11 +3,11 @@ import { Browser, BrowserContextOptions, Page } from "playwright";
 import { iDevice } from "@crusher-shared/types/extension/device";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
+import { getUserAgentFromName, userAgents } from "@crusher-shared/constants/userAgents";
 
 async function setDevice(browser: Browser, action: iAction, globals: IGlobalManager) {
 	const device: { width: number; height: number } = action.payload.meta.device as iDevice;
-	const userAgent =
-		action.payload.meta.userAgent && action.payload.meta.userAgent.value ? action.payload.meta.userAgent.value : action.payload.meta.userAgent;
+	const userAgent = getUserAgentFromName(action.payload.meta.device.userAgent);
 
 	const currentBrowserContextOptions = globals.get("browserContextOptions");
 
@@ -18,9 +18,11 @@ async function setDevice(browser: Browser, action: iAction, globals: IGlobalMana
 		};
 	}
 
+	console.log("Setting this user agent", userAgent.value);
+
 	globals.set("browserContextOptions", {
 		...currentBrowserContextOptions,
-		userAgent: userAgent,
+		userAgent: userAgent ? userAgent.value : userAgents[0].value,
 		viewport: {
 			width: device.width,
 			height: device.height,

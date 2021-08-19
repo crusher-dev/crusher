@@ -13,6 +13,7 @@ import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
+import { BadRequestError } from "routing-controllers";
 
 @Service()
 class TestService {
@@ -64,6 +65,8 @@ class TestService {
 
 	async runTestsInProject(projectId: number, userId: number) {
 		const testsData = await this.getTestsInProject(projectId, true);
+		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
+
 		const projectRecord = await this.projectService.getProject(projectId);
 
 		return this.testsRunner.runTests(

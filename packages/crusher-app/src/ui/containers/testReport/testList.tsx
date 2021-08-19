@@ -262,7 +262,7 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
-			<div className={"text-13"}>Switch tos</div>
+			<div className={"text-13"}>Switch to</div>
 
 			<Conditional showIf={!expand}>
 				<div className={"flex text-12 items-center"} id={"click-to-open"}>

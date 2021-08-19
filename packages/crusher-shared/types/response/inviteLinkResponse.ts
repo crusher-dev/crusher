@@ -1,4 +1,4 @@
-export interface iInviteLinkResponse{
+export interface iInviteLinkResponse {
 	status: string;
 	code: string;
 }

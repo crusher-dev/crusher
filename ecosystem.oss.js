@@ -6,29 +6,25 @@ module.exports = {
 			name: 'crusher-app',
 			cwd: './packages/crusher-app',
 			script: 'npm',
-			args: 'run start',
+			args: 'run dev:open_source',
 			env: CRUSHER_APP_ENV,
 			merge_logs: true,
-			node_args: [
-				"--max_old_space_size=100"
-			]
+			node_args: ['--max_old_space_size=100'],
 		},
 		{
 			name: 'crusher-server',
 			cwd: './packages/crusher-server',
 			script: 'node',
-			args: "app.js",
-			env: { ...CRUSHER_SERVER_ENV, RUN_ALL_TOGETHER: "true" },
+			args: 'app.js',
+			env: { ...CRUSHER_SERVER_ENV, RUN_ALL_TOGETHER: 'true' },
 			merge_logs: true,
-			node_args: [
-				"--max_old_space_size=200"
-			]
+			node_args: ['--max_old_space_size=200'],
 		},
 		{
 			name: 'test-runner',
 			cwd: './packages/test-runner',
 			script: 'node',
-			args: "index.js",
+			args: 'index.js',
 			env: TEST_RUNNER_ENV,
 		},
 	],

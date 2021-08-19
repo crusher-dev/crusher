@@ -1,2 +1,6 @@
 require("dotenv").config();
-require("@manager/QueueManager");
+import VideoProcessorBootstrap from "@bootstrap";
+
+const videoProcessorBootstrap = new VideoProcessorBootstrap();
+
+videoProcessorBootstrap.boot();

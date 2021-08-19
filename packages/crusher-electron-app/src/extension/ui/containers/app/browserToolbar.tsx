@@ -11,8 +11,8 @@ import { OnboardingManager } from "./onboardingManager";
 import { Conditional } from "../../components/conditional";
 import { SettingsModal } from "./modals/settingsModal";
 import { validURL } from "../../../utils/helpers";
-import devices from '@shared/constants/devices';
-import userAgents from '@shared/constants/userAgents';
+import devices from "@shared/constants/devices";
+import userAgents from "@shared/constants/userAgents";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -41,13 +41,12 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 				event.preventDefault();
 				const newUrl = addHttpToURLIfNotThere((event.target as any).value as string);
 				setUrl(newUrl);
-				if (!validURL(newUrl)) alert("URL is not valid!")
+				if (!validURL(newUrl)) alert("URL is not valid!");
 				else loadNewPage(newUrl);
 			}
 		},
 		[url],
 	);
-
 
 	const openSettings = () => {
 		setShouldShowSettingsModal(true);
@@ -59,7 +58,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	const handleDeviceChange = (deviceId: string) => {
 		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href);
 		const device = devices.find((device) => device.id === deviceId);
-		const userAgent = userAgents.find((userAgent) => userAgent.name===device.userAgent);
+		const userAgent = userAgents.find((userAgent) => userAgent.name === device.userAgent);
 
 		(window as any).electron.setUserAgent(userAgent.value);
 		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId, { isDeviceChanged: true });
@@ -106,7 +105,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					height: 1rem;
 				}
 
-				.switch input { 
+				.switch input {
 					opacity: 0;
 					width: 0;
 					height: 0;
@@ -123,7 +122,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					-webkit-transition: .4s;
 					transition: .4s;
 				}
-				
+
 				.slider:before {
 					position: absolute;
 					content: "";
@@ -135,24 +134,24 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 					-webkit-transition: .4s;
 					transition: .4s;
 				}
-				
+
 				input:checked + .slider {
 					background-color: #2196F3;
 				}
-				
+
 				input:focus + .slider {
 					box-shadow: 0 0 1px #2196F3;
 				}
-				
+
 				input:checked + .slider:before {
 					transform: translateX(1.875rem);
 				}
-				
+
 				/* Rounded sliders */
 				.slider.round {
 					border-radius: 34px;
 				}
-				
+
 				.slider.round:before {
 					border-radius: 50%;
 				}

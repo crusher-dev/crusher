@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
 import { CreateTestRequest } from "../interfaces/services/test/CreateTestRequest";
 import { Test } from "../interfaces/db/Test";
@@ -15,7 +15,7 @@ export default class TestService {
 	async createTest(testInfo: CreateTestRequest) {
 		const { testName, events, framework, code, projectId, userId, featured_video_uri, draft_id } = testInfo;
 
-		return this.dbManager.insertData(`INSERT INTO tests SET ?`, {
+		return this.dbManager.insert(`INSERT INTO tests SET ?`, {
 			name: testName,
 			events: events,
 			framework: framework,
@@ -28,14 +28,14 @@ export default class TestService {
 	}
 
 	async findMembersOfProject(projectId: number) {
-		return this.dbManager.fetchData(
+		return this.dbManager.fetchAllRows(
 			"SELECT users.* FROM projects, users, teams WHERE projects.id = ? AND projects.team_id = teams.id AND users.team_id = teams.id",
 			[projectId],
 		);
 	}
 
 	async findProjectMembersOfTest(testId: number) {
-		return this.dbManager.fetchData(
+		return this.dbManager.fetchAllRows(
 			"SELECT users.* FROM tests, projects, users, teams WHERE tests.id = ? AND projects.id = tests.project_id AND projects.team_id = teams.id AND users.team_id = teams.id",
 			[testId],
 		);
@@ -67,7 +67,7 @@ export default class TestService {
 	}
 
 	async getAllTestsInProject(projectId: number, findOnlyActiveTests = false) {
-		return this.dbManager.fetchData(
+		return this.dbManager.fetchAllRows(
 			`SELECT tests.*, users.id userId, users.first_name userFirstName, users.last_name userLastName FROM tests, users WHERE tests.project_id = ? AND users.id = tests.user_id` +
 				(findOnlyActiveTests ? " AND tests.deleted = FALSE " : ""),
 			[projectId],

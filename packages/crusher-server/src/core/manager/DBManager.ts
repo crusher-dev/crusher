@@ -17,13 +17,13 @@ export default class DBManager {
 		const connectionObject = process.env.DB_CONNECTION_STRING
 			? { uri: process.env.DB_CONNECTION_STRING }
 			: {
-				connectionLimit: process.env.DB_CONNECTION_POOL || DEFAULT_DB_CONNECTION_POOL_LIMIT,
-				host: process.env.DB_HOST || "localhost",
-				user: process.env.DB_USERNAME,
-				port: process.env.DB_PORT,
-				password: process.env.DB_PASSWORD,
-				database: process.env.DB_DATABASE,
-				insecureAuth: true,
+					connectionLimit: process.env.DB_CONNECTION_POOL || DEFAULT_DB_CONNECTION_POOL_LIMIT,
+					host: process.env.DB_HOST || "localhost",
+					user: process.env.DB_USERNAME,
+					port: process.env.DB_PORT,
+					password: process.env.DB_PASSWORD,
+					database: process.env.DB_DATABASE,
+					insecureAuth: true,
 			  };
 		this.connPool = mysql.createPool(connectionObject);
 	}
@@ -31,6 +31,7 @@ export default class DBManager {
 	isAlive(): Promise<boolean> {
 		return new Promise((resolve) => {
 			this.connPool.getConnection((err, connection) => {
+				connection.release();
 				if (err) return resolve(false);
 				return resolve(true);
 			});

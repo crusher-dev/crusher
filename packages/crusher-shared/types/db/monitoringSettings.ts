@@ -1,5 +1,5 @@
-import { BaseRowInterface } from './baseRow';
-import { PLATFORM } from '../platform';
+import { BaseRowInterface } from "./baseRow";
+import { PLATFORM } from "../platform";
 
 export interface iMonitoringSettings extends BaseRowInterface {
 	id?: number;

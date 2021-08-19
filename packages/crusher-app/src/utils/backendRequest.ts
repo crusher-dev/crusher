@@ -1,6 +1,6 @@
 import { appendParamsToURI, getAbsoluteURIIfRelative } from "./url";
 import { IncomingHttpHeaders } from "http";
-import { RequestMethod, RequestOptions } from "@interfaces/RequestOptions";
+import { RequestMethod, RequestOptions } from "../types/RequestOptions";
 
 const _fetch = require("node-fetch");
 
@@ -35,15 +35,20 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 export function backendRequest(_uri: string, options?: RequestOptions) {
 	const { payload } = options;
 	const { uri, method, headers } = prepareFetchPayload(_uri, options);
+	const isMockAPI = uri.includes("jsonbin");
 
 	return _fetch(uri, {
 		headers,
 		method,
-		credentials: "include",
+		credentials: !isMockAPI ? "include" : "omit",
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
-	}).then((requestResponse: any) => {
+	}).then(async (requestResponse: any) => {
 		if (requestResponse.status === 500) {
 			throw new Error("Internal server error at " + uri);
+		}
+		if (requestResponse.status === 400) {
+			const { message } = await requestResponse.json();
+			throw new Error(message);
 		}
 		return requestResponse.json();
 	});

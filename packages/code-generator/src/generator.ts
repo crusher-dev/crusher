@@ -1,39 +1,47 @@
 import { iAction } from "../../crusher-shared/types/action";
-import { ACTIONS_IN_TEST } from "../../crusher-shared/constants/recordedActions";
+import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
 import { Parser } from "./parser";
-import { BROWSER } from "../../crusher-shared/types/browser";
+import { BrowserEnum } from "../../crusher-shared/types/browser";
 
 interface iCodeGeneratorOptions {
-	isLiveLogsOn?: boolean;
 	shouldRecordVideo?: boolean;
-	isHeadless?: boolean;
-	browser?: BROWSER;
+	defaultBrowserLaunchOptions?: any;
+	browser?: BrowserEnum;
 	assetsDir?: string;
 	usePlaywrightChromium?: boolean;
+	videoSavePath: string;
 }
 
 export class CodeGenerator {
 	options: iCodeGeneratorOptions;
 	actionsMap: Array<{
-		type: ACTIONS_IN_TEST;
+		type: ActionsInTestEnum;
 		code: Array<string> | string;
 	}>;
 
-	constructor(options: iCodeGeneratorOptions = {}) {
+	constructor(options: iCodeGeneratorOptions) {
 		this.options = options;
 	}
 
-	parse(actions: Array<iAction>) {
+	getConfig(): iCodeGeneratorOptions {
+		return this.options;
+	}
+
+	getCode(actions: Array<iAction>): Promise<string> {
 		const parser = new Parser({
 			actions,
-			isLiveRecording: this.options.shouldRecordVideo,
-			shouldLogSteps: this.options.isLiveLogsOn,
+			shouldRecordVideo: this.options.shouldRecordVideo,
 			browser: this.options.browser,
-			isHeadless: this.options.isHeadless,
 			assetsDir: this.options.assetsDir,
-			usePlaywrightChromium: this.options.usePlaywrightChromium,
+			shouldUsePlaywrightChromium: this.options.usePlaywrightChromium,
+			videoSavePath: this.options.videoSavePath,
+			defaultBrowserLaunchOptions: {
+				headless: true,
+				args: ["--disable-shm-usage", "--disable-gpu"],
+				...this.options.defaultBrowserLaunchOptions,
+			},
 		});
-		parser.parseActions();
+
 		return parser.getCode();
 	}
 }

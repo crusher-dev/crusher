@@ -5,7 +5,7 @@ import TestInstanceResultSetsService from "../services/TestInstanceResultSetsSer
 import TestInstanceResultsService from "../services/TestInstanceResultsService";
 import TestInstanceScreenShotsService from "../services/TestInstanceScreenShotsService";
 import AlertingService from "../services/AlertingService";
-import UserService from "../services/UserService";
+import { UserService } from "@modules/users/service";
 import { InstanceStatus } from "../interfaces/InstanceStatus";
 import { JobStatus } from "../interfaces/JobStatus";
 import { TestInstance } from "../interfaces/db/TestInstance";
@@ -304,6 +304,11 @@ async function handlePostChecksOperations(reportId: number, totalTestCount, jobI
 	}
 
 	await jobsReportService.updateJobReportStatus(jobConclusion, reportId, explanation);
+	await jobsReportService.updateTestStatusCount(reportId, {
+		passed_test_count: state.passedTestsArray.length,
+		failed_test_count: state.failedTestsArray.length,
+		review_required_test_count: state.markedForReviewTestsArray.length,
+	});
 
 	await notifyResultToGithubChecks(jobRecord, jobConclusion, userWhoStartedThisJob);
 	await notifyResultWithEmail(jobRecord, jobConclusion, userWhoStartedThisJob);
@@ -338,7 +343,7 @@ async function runChecks(details, clearJobTempValues) {
 		shouldPerformDiffChecks,
 	);
 
-	await testInstanceResultSetsService.updateResultSetStatus(resultSetId, error);
+	await testInstanceResultSetsService.updateResultSetStatus(resultSetId, reportId, error);
 }
 
 module.exports = async (bullJob: Job) => {

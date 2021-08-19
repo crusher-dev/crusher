@@ -1,38 +1,38 @@
 {
-  "extends": "../../tsconfig.json",
-  "basePath": "../",
-  "compilerOptions": {
-    "baseUrl": "../",
-    "rootDir": "../../",
-    "module": "commonjs",
-    "removeComments": true,
-    "sourceMap": true,
-    "target": "es5",
-    "outDir": "./build",
-    "allowJs": true,
-    "noImplicitAny": false,
-    "noUnusedLocals": false,
-    "strictNullChecks": false,
-    "preserveConstEnums": true,
-    "strict": false,
-    "noImplicitReturns": true,
-    "moduleResolution": "node",
-    "jsx": "react",
-    "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@shared/*": ["crusher-shared/*"]
-    }
-  },
-  "typeRoots": ["node_modules/@types"],
-  "files": [
-    "./src/main.ts",
-    "./src/preload.ts",
-    "./src/webViewPreload.ts",
-    "./src/extension/background.ts",
-    "./src/extension/ui/app.tsx",
-    "../../node_modules/react/index.js"
-  ],
-  "include": ["./src/**/*"],
-  "exclude": ["**/*.spec.ts"],
+	"extends": "../../tsconfig.json",
+	"basePath": "../",
+	"compilerOptions": {
+		"baseUrl": "../",
+		"rootDir": "../../",
+		"module": "commonjs",
+		"removeComments": true,
+		"sourceMap": true,
+		"target": "es5",
+		"outDir": "./build",
+		"allowJs": true,
+		"noImplicitAny": false,
+		"noUnusedLocals": false,
+		"strictNullChecks": false,
+		"preserveConstEnums": true,
+		"strict": false,
+		"noImplicitReturns": true,
+		"moduleResolution": "node",
+		"jsx": "react",
+		"downlevelIteration": true,
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"@shared/*": ["crusher-shared/*"]
+		}
+	},
+	"typeRoots": ["node_modules/@types"],
+	"files": [
+		"./src/main.ts",
+		"./src/preload.ts",
+		"./src/webViewPreload.ts",
+		"./src/extension/background.ts",
+		"./src/extension/ui/app.tsx",
+		"../../node_modules/react/index.js"
+	],
+	"include": ["./src/**/*"],
+	"exclude": ["**/*.spec.ts"]
 }

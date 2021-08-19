@@ -320,7 +320,7 @@
 			}
 		}
 
-		// Combinator utils
+		// Combinator utils.ts
 
 		var cx = { state: null, column: null, marked: null, cc: null };
 		function pass() {

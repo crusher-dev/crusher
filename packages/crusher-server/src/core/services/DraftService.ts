@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { Draft } from "../interfaces/db/Draft";
 
 @Service()
@@ -11,7 +11,7 @@ export default class DraftService {
 	}
 
 	async createDraftTest(details: Draft) {
-		return this.dbManager.insertData(`INSERT INTO drafts SET ?`, details);
+		return this.dbManager.insert(`INSERT INTO drafts SET ?`, details);
 	}
 
 	async updateDraftTest(

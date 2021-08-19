@@ -1,7 +1,7 @@
 import EventRecording from "./ui/eventRecording";
 import { MESSAGE_TYPES } from "../../messageListener";
 import { responseMessageListener } from "./responseMessageListener";
-import { setupContentScriptForElectronReload } from '../../utils/electronReload';
+import { setupContentScriptForElectronReload } from "../../utils/electronReload";
 
 function requestRecordingStatusFromExtension() {
 	(window as any).electron.host.postMessage({
@@ -10,7 +10,7 @@ function requestRecordingStatusFromExtension() {
 }
 
 function boot() {
-	if(process.env.NODE_ENV === "development") {
+	if (process.env.NODE_ENV === "development") {
 		setupContentScriptForElectronReload();
 	}
 

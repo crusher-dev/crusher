@@ -10,7 +10,7 @@ import { BulbIcon } from "../../../../assets/icons";
 import uniqueId from "lodash/uniqueId";
 import { getStore } from "../../../../redux/store";
 import { recordAction } from "../../../../redux/actions/actions";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "../../../components/app/button";
 import { pxToRemValue } from "../../../../utils/helpers";
 
@@ -118,7 +118,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		const store = getStore();
 		store.dispatch(
 			recordAction({
-				type: ACTIONS_IN_TEST.VALIDATE_SEO,
+				type: ActionsInTestEnum.VALIDATE_SEO,
 				payload: {
 					meta: {
 						validations: validationRows,

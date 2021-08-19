@@ -1,5 +1,5 @@
 import { Service, Container, Inject } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { TEAM_CREATED, TEAM_CREATION_FAILED } from "../../constants";
 import { TestInstanceScreenshotStatus } from "../interfaces/TestInstanceScreenshotStatus";
 import TestInstanceService from "./TestInstanceService";
@@ -20,7 +20,7 @@ export default class TestInstanceScreenshotsService {
 	async addScreenshot(details: TestInstanceScreenshot) {
 		const { instance_id, name, url } = details;
 
-		return this.dbManager.insertData("INSERT INTO test_instance_screenshots SET ?", {
+		return this.dbManager.insert("INSERT INTO test_instance_screenshots SET ?", {
 			instance_id: instance_id,
 			name: name,
 			url: url,
@@ -28,7 +28,7 @@ export default class TestInstanceScreenshotsService {
 	}
 
 	async getAllScreenShotsOfInstance(instanceId): Promise<Array<TestInstanceScreenshot>> {
-		return this.dbManager.fetchData(`SELECT * FROM test_instance_screenshots WHERE instance_id = ?`, [instanceId]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM test_instance_screenshots WHERE instance_id = ?`, [instanceId]);
 	}
 
 	async getReferenceInstance(curInstanceId, jobId, platform = Platform.CHROME): Promise<TestInstance> {

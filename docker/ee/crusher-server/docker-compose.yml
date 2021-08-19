@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 services:
   cred-helper:
     build:
@@ -6,7 +6,7 @@ services:
       dockerfile: AWS_CRED_HELPER.Dockerfile
     container_name: aws-cred-helper
     volumes:
-      - "aws-cred-helper:/go/bin:rw"
+      - 'aws-cred-helper:/go/bin:rw'
 
   crusher-server:
     network_mode: host

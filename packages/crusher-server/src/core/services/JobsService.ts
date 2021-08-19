@@ -1,5 +1,5 @@
 import { Container, Service } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { JobBuild } from "../interfaces/db/JobBuild";
 import { JobTrigger } from "../interfaces/JobTrigger";
 import { JobStatus } from "../interfaces/JobStatus";
@@ -21,7 +21,7 @@ export default class JobsService {
 	}
 
 	async createJob(details: JobBuild): Promise<InsertRecordResponse> {
-		return this.dbManager.insertData(`INSERT INTO jobs SET ?`, details);
+		return this.dbManager.insert(`INSERT INTO jobs SET ?`, details);
 	}
 
 	async getJob(jobId: number) {
@@ -29,7 +29,7 @@ export default class JobsService {
 	}
 
 	async getAllJobsOfPr(prId: number) {
-		return this.dbManager.fetchData(`SELECT * FROM jobs WHERE pr_id = ?`, [prId]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM jobs WHERE pr_id = ?`, [prId]);
 	}
 
 	async stopAllJobsRunningForMoreThanAnHour() {
@@ -43,18 +43,15 @@ export default class JobsService {
 
 	async getAllJobsOfProject(projectId: number, trigger: JobTrigger, limit = 5, offset = 0) {
 		if (!trigger) {
-			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
+			return this.dbManager.fetchAllRows(`SELECT * FROM jobs WHERE project_id = ? ORDER BY created_at DESC LIMIT ?,?`, [projectId, offset, limit]);
 		}
 		if (trigger === JobTrigger.MONITORING) {
-			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND (\`trigger\`=? OR \`trigger\`=?) ORDER BY created_at DESC LIMIT ?,?`, [
-				projectId,
-				JobTrigger.CRON,
-				JobTrigger.CLI,
-				offset,
-				limit,
-			]);
+			return this.dbManager.fetchAllRows(
+				`SELECT * FROM jobs WHERE project_id = ? AND (\`trigger\`=? OR \`trigger\`=?) ORDER BY created_at DESC LIMIT ?,?`,
+				[projectId, JobTrigger.CRON, JobTrigger.CLI, offset, limit],
+			);
 		} else {
-			return this.dbManager.fetchData(`SELECT * FROM jobs WHERE project_id = ? AND \`trigger\`=? ORDER BY created_at DESC LIMIT ?,?`, [
+			return this.dbManager.fetchAllRows(`SELECT * FROM jobs WHERE project_id = ? AND \`trigger\`=? ORDER BY created_at DESC LIMIT ?,?`, [
 				projectId,
 				trigger,
 				offset,
@@ -161,7 +158,7 @@ export default class JobsService {
 	}
 
 	async getLastNLogsOfProject(projectId: number, limit = 5) {
-		return this.dbManager.fetchData(
+		return this.dbManager.fetchAllRows(
 			`SELECT test_instances.id, test_instances.created_at, jobs.trigger, test_instances.status FROM jobs, test_instances WHERE jobs.project_id = ? AND test_instances.job_id=jobs.id LIMIT ?`,
 			[projectId, limit],
 		);
@@ -189,6 +186,7 @@ export default class JobsService {
 			conclusion: payload.conclusion,
 			user_id: payload.user_id,
 			check_run_id: payload.check_run_id,
+			latest_report_id: payload.latest_report_id,
 		};
 
 		const valuesToUpdate = Object.keys(payload).reduce((prev, key) => {

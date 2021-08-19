@@ -1,10 +1,9 @@
-import { ElementHandle, Page } from "playwright";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { iSelectorInfo } from "../../../crusher-shared/types/selectorInfo";
-import { toCrusherSelectorsFormat } from "../utils/helper";
-import { waitForSelectors } from "../functions";
+import { Locator, ElementHandle } from "playwright";
+import { markTestFail } from "../utils/helper";
 
-export const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<any> => {
+const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<boolean> => {
 	return new Function(
 		"exports",
 		"require",
@@ -16,8 +15,8 @@ export const runScriptOnElement = (script: string, elHandle: ElementHandle): Pro
 		`return new Promise(async function (resolve, reject) {
 				    try{
 				        const scriptFunction = ${script};
-				        console.log(scriptFunction);
-				        resolve(await scriptFunction(elHandle));
+								const result = await elHandle.evaluate(scriptFunction);
+				        resolve(result);
 				    } catch(err){
 				      reject(err);
 				    }
@@ -25,30 +24,15 @@ export const runScriptOnElement = (script: string, elHandle: ElementHandle): Pro
 	)(exports, require, module, __filename, __dirname, script, elHandle);
 };
 
-export default function elementCustomScript(action: iAction, page: Page) {
-	return new Promise(async (success, error) => {
-		try {
-			const selectors = action.payload.selectors as iSelectorInfo[];
-			const output = await waitForSelectors(page, selectors);
+async function runCustomScriptOnElement(element: Locator, workingSelector: any, action: iAction) {
+	const customScript = action.payload.meta.script;
+	const actionResult = await runScriptOnElement(customScript, await element.elementHandle());
 
-			const elementHandle = await page.$(output ? output.value : toCrusherSelectorsFormat(selectors));
-			if (!elementHandle) {
-				return error(`Attempt to capture screenshot of element with invalid selector: ${selectors[0].value}`);
-			}
-
-			const customScript = action.payload.meta.script;
-
-			const scriptOutput = await runScriptOnElement(customScript, elementHandle);
-			if (!!scriptOutput) {
-				return success({
-					message: `Clicked on the element ${selectors[0].value}`,
-				});
-			} else {
-				return error(`Assertion failed according to the script with output: ${JSON.stringify(scriptOutput)}`);
-			}
-		} catch (err) {
-			console.error(err);
-			return error("Some issue occurred while running script on element");
-		}
-	});
+	if (!actionResult) markTestFail("Failed according to custom script assertions");
 }
+
+module.exports = {
+	name: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
+	description: "Custom script on element",
+	handler: runCustomScriptOnElement,
+};

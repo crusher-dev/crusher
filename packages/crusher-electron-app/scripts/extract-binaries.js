@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const {execSync} = require("child_process");
+const { execSync } = require("child_process");
 
 const BIN_DIR = path.resolve(__dirname, "../bin");
 const celectronRegExp = new RegExp(/^celectron-v([\d.]+)-(linux|darwin)-x64.zip/);
@@ -20,10 +20,6 @@ function extractZipIfNotThere(binaryZipInfoArr) {
 		execSync(`cd ${path.dirname(zipPath)} && unzip ${path.basename(zipPath)} -d ${platform}`);
 
 		fs.unlinkSync(binaryZipInfoArr[platform].path);
-
-		if (platform === "linux") {
-			fs.renameSync(path.resolve(BIN_DIR, "linux/electron"), path.resolve(BIN_DIR, "linux/crusher"));
-		}
 	}
 }
 

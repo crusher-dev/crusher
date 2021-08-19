@@ -1,36 +1,36 @@
 {
-  "version": "1.0.0",
-  "name": "crusher",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "description": "Mono repository for crusher",
-  "scripts": {
-    "setup:oss": "node setup/index.js -m open-source",
-    "setup:ee": "node setup/index.js -m enterprise",
-    "setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
-    "build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
-    "start": "pm2 start",
-    "log:app": "pm2 logs crusher-app",
-    "lint": "lerna run prettify",
-    "postinstall": "patch-package && sh scripts/rebuild-bull-mq.sh && sh scripts/download-binaries.sh && yarn workspace crusher-runner-utils build && cp -rf .env.sample .env",
-    "docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
-    "docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
-    "db:migration": "node setup/dbMigration.js"
-  },
-  "devDependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.0.20",
-    "lerna": "^3.22.1",
-    "pm2": "^4.5.0"
-  },
-  "dependencies": {
-    "dotenv": "^10.0.0",
-    "ejs": "^3.1.6",
-    "enquirer": "^2.3.6",
-    "patch-package": "^6.2.2",
-    "postinstall-postinstall": "^2.1.0",
-    "yargs": "^17.0.1"
-  },
-  "license": "MIT"
+	"version": "1.0.0",
+	"name": "crusher",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
+	"description": "Mono repository for crusher",
+	"scripts": {
+		"setup:oss": "node setup/index.js -m open-source",
+		"setup:ee": "node setup/index.js -m enterprise",
+		"setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
+		"build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
+		"start": "pm2 start",
+		"log:app": "pm2 logs crusher-app",
+		"lint": "lerna run prettify",
+		"postinstall": "patch-package && sh scripts/rebuild-bull-mq.sh && sh scripts/download-binaries.sh && yarn workspace crusher-runner-utils build",
+		"docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
+		"docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
+		"db:migration": "node setup/dbMigration.js"
+	},
+	"devDependencies": {
+		"@ffmpeg-installer/ffmpeg": "^1.0.20",
+		"lerna": "^3.22.1",
+		"pm2": "^4.5.0"
+	},
+	"dependencies": {
+		"dotenv": "^10.0.0",
+		"ejs": "^3.1.6",
+		"enquirer": "^2.3.6",
+		"patch-package": "^6.2.2",
+		"postinstall-postinstall": "^2.1.0",
+		"yargs": "^17.0.1"
+	},
+	"license": "MIT"
 }

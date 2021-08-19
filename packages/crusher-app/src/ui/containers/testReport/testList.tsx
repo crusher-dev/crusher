@@ -216,7 +216,7 @@ function Browsers({ browsers, setConfig }) {
 	return (
 		<div className={"flex flex-col justify-between h-full"} onClick={(e) => {}}>
 			<div>
-				{browsers.map((name, id) => (
+				{browsers.map((name: string) => (
 					<MenuItem
 						css={css`padding: 12rem 10rem;`}
 						label={(
@@ -225,9 +225,9 @@ function Browsers({ browsers, setConfig }) {
 								<div>{name.toLowerCase()}</div>
 							</div>
 						)}
-						key={id}
+						key={name}
 						className={"close-on-click"}
-						onClick={(e) => {
+						onClick={() => {
 							setConfig("browser", name);
 						}}
 					/>

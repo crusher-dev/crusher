@@ -287,9 +287,10 @@ export const TestReportScreen = () => {
 						className={"text-13"}
 						css={css`
 							width: 100px;
+							line-height: 19rem;
 						`}
 					>
-						Comparing to
+						Last build
 					</div>
 					<div css={timeLine} className={"ml-40 relative"}>
 						<div className={"absolute flex flex-col items-center"} css={currentSelected}>

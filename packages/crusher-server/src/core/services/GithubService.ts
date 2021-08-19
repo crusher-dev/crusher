@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 
 import { Octokit } from "@octokit/rest";
 import { OCTOKIT_CONFIG } from "../../../config/github";

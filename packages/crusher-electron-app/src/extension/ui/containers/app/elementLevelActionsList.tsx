@@ -7,7 +7,7 @@ import { getActionsRecordingState } from "../../../redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { getStore } from "../../../redux/store";
 import { recordAction } from "../../../redux/actions/actions";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { updateActionsModalState, updateActionsRecordingState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
@@ -27,7 +27,7 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 		};
 	});
 
-	const recordElementAction = (type: ACTIONS_IN_TEST, meta: any = null) => {
+	const recordElementAction = (type: ActionsInTestEnum, meta: any = null) => {
 		const store = getStore();
 
 		store.dispatch(
@@ -48,18 +48,18 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 
 		switch (id) {
 			case ELEMENT_LEVEL_ACTION.CLICK:
-				recordElementAction(ACTIONS_IN_TEST.CLICK);
+				recordElementAction(ActionsInTestEnum.CLICK);
 				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
 				break;
 			case ELEMENT_LEVEL_ACTION.HOVER:
-				recordElementAction(ACTIONS_IN_TEST.HOVER);
+				recordElementAction(ActionsInTestEnum.HOVER);
 				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
 				break;
 			case ELEMENT_LEVEL_ACTION.SCREENSHOT:
-				recordElementAction(ACTIONS_IN_TEST.ELEMENT_SCREENSHOT);
+				recordElementAction(ActionsInTestEnum.ELEMENT_SCREENSHOT);
 				break;
 			case ELEMENT_LEVEL_ACTION.BLACKOUT:
-				recordElementAction(ACTIONS_IN_TEST.BLACKOUT);
+				recordElementAction(ActionsInTestEnum.BLACKOUT);
 				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
 				break;
 			case ELEMENT_LEVEL_ACTION.SHOW_ASSERT_MODAL:

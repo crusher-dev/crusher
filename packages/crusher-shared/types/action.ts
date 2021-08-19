@@ -1,8 +1,8 @@
-import { ACTIONS_IN_TEST } from '../constants/recordedActions';
-import { iSelectorInfo } from './selectorInfo';
+import { ActionsInTestEnum } from "../constants/recordedActions";
+import { iSelectorInfo } from "./selectorInfo";
 
 export interface iAction {
-	type: ACTIONS_IN_TEST;
+	type: ActionsInTestEnum;
 	payload: {
 		selectors?: Array<iSelectorInfo>;
 		meta?: any;

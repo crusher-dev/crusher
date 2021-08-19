@@ -14,17 +14,22 @@
 		"noUnusedLocals": false,
 		"strictNullChecks": false,
 		"paths": {
-<% if(isEnterprise) { %>
-			"@src/*": ["./src_ee/*", "./src/*"],
-			"@manager/*": ["./src_ee/manager/*", "./src/manager/*"],
-<% } else { %>
-            "@src/*": ["./src/*"],
-            "@manager/*": ["./src/manager/*"],
-<% } %>
-			"@services/*": ["./src/services/*"],
-			"@config/*": ["./config/*"],
-			"@shared/*": ["../crusher-shared/*"],
- 			"@utils/*": ["./utils/*"]
+			<% if(isEnterprise) { %>
+				"@modules/*": ["./ee/modules/*", "./src/modules/*"],
+				"@bootstrap": ["./ee/bootstrap.ts", "./src/bootstrap.ts"],
+				"@worker/*": ["./ee/worker/*", "./src/worker/*"],
+	<% } else {%>
+				"@bootstrap": ["./src/bootstrap.ts"],
+				"@modules/*": ["./src/modules/*"],
+				"@worker/*": ["./src/worker/*"],
+	<% } %>
+				"@src/*": ["./src/*"],
+				"@shared/*": ["../crusher-shared/*"],
+				"@crusher-shared/*": ["../crusher-shared/*"],
+				"@models/*": ["./src/models/*"],
+				"@config/*": ["./config/*"],
+				"@utils/*": ["./src/utils/*"],
+				"@generator/*": ["../code-generator/*"]
 		}
 	},
 	"files": [

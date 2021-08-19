@@ -1,8 +1,5 @@
-import scroll from "./scroll";
-import type from "./type";
-import waitForSelectors from "./waitForSelectors";
-import sleep from "./sleep";
-import assertElement from "./assertElement";
-import getCrusherSelectorEngine from "./registerSelectorEngine";
+import { type } from "./type";
+import { waitForSelectors } from "./waitForSelectors";
+import { sleep } from "./sleep";
 
-export { scroll, type, waitForSelectors, sleep, assertElement, getCrusherSelectorEngine };
+export { type, waitForSelectors, sleep };

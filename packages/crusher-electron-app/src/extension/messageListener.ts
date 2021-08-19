@@ -21,7 +21,7 @@ import {
 } from "./scripts/inject/responseMessageListener";
 import { TOP_LEVEL_ACTION } from "./interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "./interfaces/elementLevelAction";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { getActions } from "./redux/selectors/actions";
 import { iPageSeoMeta } from "./utils/dom";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
@@ -77,31 +77,34 @@ function handleRecordAction(action: iAction): any {
 
 	// We can assume any event coming to this is auto-based
 	const shouldAutoRecord = getAutoRecorderState(store.getState());
-	if (!shouldAutoRecord && ![ACTIONS_IN_TEST.NAVIGATE_URL, ACTIONS_IN_TEST.SCROLL, ACTIONS_IN_TEST.SET_DEVICE].includes(type)) {
+	if (
+		!shouldAutoRecord &&
+		![ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL, ActionsInTestEnum.SET_DEVICE].includes(type)
+	) {
 		return;
 	}
 
 	switch (type) {
-		case ACTIONS_IN_TEST.NAVIGATE_URL: {
+		case ActionsInTestEnum.NAVIGATE_URL: {
 			const hasInitialNavigationActionRegistered =
-				recordedActions.findIndex((recordedAction) => recordedAction.type === ACTIONS_IN_TEST.NAVIGATE_URL) !== -1;
+				recordedActions.findIndex((recordedAction) => recordedAction.type === ActionsInTestEnum.NAVIGATE_URL) !== -1;
 
-			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type !== ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION;
+			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION;
 
 			if (!hasInitialNavigationActionRegistered) {
 				store.dispatch(recordAction(action));
 			} else {
 				if (isLastEventWaitForNavigation) {
-					store.dispatch(recordAction({ ...action, type: ACTIONS_IN_TEST.WAIT_FOR_NAVIGATION }));
+					store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
 				}
 			}
 			store.dispatch(updateIsRecorderScriptBooted(false));
 			break;
 		}
-		case ACTIONS_IN_TEST.ADD_INPUT: {
+		case ActionsInTestEnum.ADD_INPUT: {
 			if (!lastRecordedAction) throw new Error("Add input recorded before navigate url");
 
-			const isLastEventAddInput = lastRecordedAction.type === ACTIONS_IN_TEST.ADD_INPUT;
+			const isLastEventAddInput = lastRecordedAction.type === ActionsInTestEnum.ADD_INPUT;
 			if (!isLastEventAddInput) {
 				action.payload.meta.value = [action.payload.meta.value];
 				store.dispatch(recordAction(action));
@@ -123,11 +126,12 @@ function handleRecordAction(action: iAction): any {
 
 			break;
 		}
-		case ACTIONS_IN_TEST.SCROLL: {
+		case ActionsInTestEnum.PAGE_SCROLL:
+		case ActionsInTestEnum.ELEMENT_SCROLL: {
 			if (!lastRecordedAction) throw new Error("Scroll recorded before navigate url");
 
 			const isScrollingToSameLastElement =
-				lastRecordedAction.type === ACTIONS_IN_TEST.SCROLL &&
+				[ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(lastRecordedAction.type) &&
 				((lastRecordedAction.payload.selectors === null && action.payload.selectors === null) ||
 					(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value);
 
@@ -141,11 +145,11 @@ function handleRecordAction(action: iAction): any {
 			}
 			break;
 		}
-		case ACTIONS_IN_TEST.HOVER: {
+		case ActionsInTestEnum.HOVER: {
 			if (!lastRecordedAction) throw new Error("Hover recorded before navigate url");
 
 			const isTheLastRecordedActionSame =
-				lastRecordedAction.type === ACTIONS_IN_TEST.HOVER &&
+				lastRecordedAction.type === ActionsInTestEnum.HOVER &&
 				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;
 
 			if (!isTheLastRecordedActionSame) {
@@ -153,11 +157,11 @@ function handleRecordAction(action: iAction): any {
 			}
 			break;
 		}
-		case ACTIONS_IN_TEST.CLICK: {
+		case ActionsInTestEnum.CLICK: {
 			if (!lastRecordedAction) throw new Error("Click recorded before navigate url");
 
 			const isTheLastRecordedActionOnSameElementFocus =
-				lastRecordedAction.type === ACTIONS_IN_TEST.ELEMENT_FOCUS &&
+				lastRecordedAction.type === ActionsInTestEnum.ELEMENT_FOCUS &&
 				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;
 			if (!isTheLastRecordedActionOnSameElementFocus) {
 				store.dispatch(recordAction(action));

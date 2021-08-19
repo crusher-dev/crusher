@@ -1,7 +1,7 @@
-import { BaseRowInterface } from './baseRow';
-import { JOB_STATUS } from '../jobStatus';
-import { JOB_TRIGGER } from '../jobTrigger';
-import { PLATFORM } from '../platform';
+import { BaseRowInterface } from "./baseRow";
+import { JOB_STATUS } from "../jobStatus";
+import { JOB_TRIGGER } from "../jobTrigger";
+import { PLATFORM } from "../platform";
 
 export interface iJob extends BaseRowInterface {
 	id: number;

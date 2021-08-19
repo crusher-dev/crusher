@@ -1,4 +1,3 @@
-//webpack.config.ts
 const path = require("path");
 const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -9,7 +8,7 @@ module.exports = {
 	target: "node",
 	entry: {
 		index: "./index.ts",
-		worker: ["src/worker.ts"],
+		worker: ["src/worker/index.ts"],
 		master: "bullmq/dist/classes/master.js",
 	},
 	output: {
@@ -28,7 +27,7 @@ module.exports = {
 			patterns: [
 				{
 					from: path.resolve(__dirname, `../../output/crusher-runner-utils/`),
-					to: "crusher-runner-utils/",
+					to: "crusher-runner-utils.ts/",
 				},
 			],
 		}),

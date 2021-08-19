@@ -104,7 +104,9 @@ const List = (props: iListProps) => {
 					<span style={headingTitleStyle(!!showBackButton)}>{heading}</span>
 				</Conditional>
 			</div>
-			<div className="overflow-y-auto" style={listContainerStyle}>{out}</div>
+			<div className="overflow-y-auto" style={listContainerStyle}>
+				{out}
+			</div>
 		</div>
 	);
 };

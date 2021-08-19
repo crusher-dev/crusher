@@ -1,12 +1,27 @@
-version: "2.2"
+version: '2.2'
 services:
-  oss:
+  oss_container1:
     build:
       context: ../../
       dockerfile: docker/oss/Dockerfile
     network_mode: host
     environment:
-      - LOGDNA=c7bdd500e3cfbfe457a2ec4168b8cfaa
-    container_name: "oss"
+      - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
+      - DB_HOST=db-mysql-nyc3-51235-do-user-9421575-0.b.db.ondigitalocean.com
+      - DB_USERNAME=doadmin
+      - DB_PASSWORD=c1y6sb2379tx2alr
+      - DB_PORT=25060
+      - MONGODB_CONNECTION_STRING=mongodb+srv://crusher:crusher@cluster0.w4kra.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+      - MONGODB_HOST=crusher@cluster0.w4kra.mongodb.net
+      - MONGODB_PORT=
+      - MONGODB_USERNAME=crusher
+      - MONGODB_PASSWORD=crusher
+      - MONGODB_DATABASE=myFirstDatabase
+      - REDIS_CONNECTION_STRING=
+      - REDIS_HOST=redis-12413.c262.us-east-1-3.ec2.cloud.redislabs.com
+      - REDIS_PORT=12413
+      - REDIS_PASSWORD=
+      - BACKEND_SERVER_URL=http://localhost:3000/server
+    container_name: 'oss1'
     stdin_open: true # docker run -i
     tty: true

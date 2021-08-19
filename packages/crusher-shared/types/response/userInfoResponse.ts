@@ -1,7 +1,6 @@
-import { iUser } from '../db/iUser';
+import { iUser } from "../db/iUser";
 
-export interface iUserInfoResponse extends iUser{
+export interface iUserInfoResponse extends iUser {
 	name: string;
 	user_meta: any;
 }
-

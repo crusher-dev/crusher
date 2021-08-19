@@ -1,12 +1,12 @@
 # How to Deploy?
 
-Steps to run this project:
+Steps to run this currentProject:
 
 1. Run `now --prod` command
 
 # How to build?
 
-Steps to run this project:
+Steps to run this currentProject:
 
 1. Setup database settings inside `ormconfig.json` file
 2. Run `yarn devInFastMode` command

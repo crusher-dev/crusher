@@ -1,6 +1,6 @@
 export enum PLATFORM {
-	CHROME = 'CHROME',
-	FIREFOX = 'FIREFOX',
-	SAFARI = 'SAFARI',
-	ALL = 'ALL',
+	CHROME = "CHROME",
+	FIREFOX = "FIREFOX",
+	SAFARI = "SAFARI",
+	ALL = "ALL",
 }

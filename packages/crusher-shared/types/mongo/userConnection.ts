@@ -1,4 +1,4 @@
-import { USER_CONNECTION_TYPE } from '../userConnectionType';
+import { USER_CONNECTION_TYPE } from "../userConnectionType";
 
 export interface iUserConnection {
 	id: string;

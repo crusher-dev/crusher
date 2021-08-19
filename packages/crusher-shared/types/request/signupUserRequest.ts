@@ -1,9 +1,8 @@
-import { iInviteReferral } from '../inviteReferral';
+import { iInviteReferral } from "../inviteReferral";
 
-export interface iSignupUserRequest{
-	firstName: string;
-	lastName: string;
+export interface iSignupUserRequest {
+	name: string;
 	email: string;
 	password: string;
 	inviteReferral?: iInviteReferral;
-};
+}

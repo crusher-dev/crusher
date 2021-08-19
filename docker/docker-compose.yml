@@ -8,12 +8,12 @@ services:
     networks:
       - crusher
     ports:
-      - "3307:3306"
+      - '3307:3306'
     volumes:
-      - "~/.workspace/mysql:/var/lib/mysql:rw"
+      - '~/.workspace/mysql:/var/lib/mysql:rw'
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_USERNAME:  'root'
+      MYSQL_USERNAME: 'root'
       MYSQL_DATABASE: 'crusher'
 
   mongodb:
@@ -23,9 +23,9 @@ services:
     networks:
       - crusher
     ports:
-      - "27000:27017"
+      - '27000:27017'
     volumes:
-      - "~/.workspace/mongodb:/bitnami/mongodb:rw"
+      - '~/.workspace/mongodb:/bitnami/mongodb:rw'
     environment:
       MONGODB_ROOT_PASSWORD: 'password'
       MONGODB_USERNAME: 'root'
@@ -39,9 +39,9 @@ services:
     networks:
       - crusher
     ports:
-      - "6380:6379"
+      - '6380:6379'
     volumes:
-      - "~/.workspace/redis:/data:rw"
+      - '~/.workspace/redis:/data:rw'
 
   server:
     image: crusher/server
@@ -53,9 +53,9 @@ services:
     stdin_open: true
     tty: true
     links:
-      - "mysql:mysql"
-      - "redis:redis"
-      - "mongodb:mongodb"
+      - 'mysql:mysql'
+      - 'redis:redis'
+      - 'mongodb:mongodb'
     environment:
       - CODE_RUNNER_URL=http://test_runner:3000
       - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
@@ -65,7 +65,7 @@ services:
     networks:
       - crusher
     ports:
-      - "8000:80"
+      - '8000:80'
 
   app:
     image: crusher/app
@@ -78,10 +78,10 @@ services:
     tty: true
     networks:
       - crusher
-#    extra_hosts:
-#      - "backend.{{ nginx.root_domain }}:172.12.23.35"
+    #    extra_hosts:
+    #      - "backend.{{ nginx.root_domain }}:172.12.23.35"
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - MONGODB_USERNAME=root
 
@@ -97,9 +97,9 @@ services:
     security_opt:
       - seccomp:"chrome.json"
     links:
-      - "mysql:mysql"
-      - "redis:redis"
-      - "mongodb:mongodb"
+      - 'mysql:mysql'
+      - 'redis:redis'
+      - 'mongodb:mongodb'
     networks:
       - crusher
     environment:

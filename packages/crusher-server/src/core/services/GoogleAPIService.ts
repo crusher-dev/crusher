@@ -14,7 +14,7 @@ export default class GoogleAPIService {
 		this.accessToken = accessToken;
 	}
 
-	getProfileInfo() {
+	getProfileInfo(): Promise<any> {
 		if (!this.accessToken) {
 			throw new Error("Setup access token for the API Service first");
 		}

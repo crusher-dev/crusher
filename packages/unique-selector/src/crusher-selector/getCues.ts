@@ -1,26 +1,26 @@
 // use polyfill since some sites override the CSS.escape
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const cssEscape = require('css.escape');
+const cssEscape = require("css.escape");
 
-import { isDynamic } from './isDynamic';
-import { buildElementText } from './selectorEngine';
-import { Cue, CueType } from './types';
+import { isDynamic } from "./isDynamic";
+import { buildElementText } from "./selectorEngine";
+import { Cue, CueType } from "./types";
 
-const ALLOW_DYNAMIC_ATTRIBUTES = new Set(['href', 'placeholder', 'src', 'value']);
+const ALLOW_DYNAMIC_ATTRIBUTES = new Set(["href", "placeholder", "src", "value"]);
 
 const ALLOW_VALUE_ATTRIBUTE = {
-	input_types: new Set(['button', 'checkbox', 'radio', 'submit']),
-	tags: new Set(['BUTTON', 'OPTION']),
+	input_types: new Set(["button", "checkbox", "radio", "submit"]),
+	tags: new Set(["BUTTON", "OPTION"]),
 };
 
 const PENALTY_MAP = {
 	alt: 10,
-	'aria-label': 5,
+	"aria-label": 5,
 	contenteditable: 10,
 	// prefer test attributes
-	'data-cy': 0,
-	'data-e2e': 0,
-	'data-qa': 0,
+	"data-cy": 0,
+	"data-e2e": 0,
+	"data-qa": 0,
 	for: 5,
 	href: 15,
 	id: 8,
@@ -48,7 +48,7 @@ const PENALTY_MAP = {
 	xmlns: 100,
 };
 
-const SKIP_ATTRIBUTES = new Set(['class', 'data-reactid']);
+const SKIP_ATTRIBUTES = new Set(["class", "data-reactid"]);
 
 /**
  * Get the element's cues in ascending penalty
@@ -58,7 +58,7 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 
 	// For body and html, we never have more than one, so
 	// just 'tag' cue is needed and we can save some time.
-	if (['HTML', 'BODY'].includes(element.tagName)) {
+	if (["HTML", "BODY"].includes(element.tagName)) {
 		if (level === 0) cues[0].penalty = 0;
 		return cues;
 	}
@@ -72,7 +72,7 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 				level,
 				// penalize long text more
 				penalty: Math.max(PENALTY_MAP.text, Math.round(text.length / 2)),
-				type: 'text',
+				type: "text",
 				value: text,
 			});
 		}
@@ -80,8 +80,8 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 		cues.push({
 			level,
 			penalty: PENALTY_MAP.visible,
-			type: 'modifier',
-			value: ':visible',
+			type: "modifier",
+			value: ":visible",
 		});
 	}
 
@@ -89,14 +89,14 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 
 	for (let i = 0; i < attributes.length; i++) {
 		const { name, value } = attributes[i];
-		if (SKIP_ATTRIBUTES.has(name) || (name === 'value' && !allowValueCue(element))) continue;
+		if (SKIP_ATTRIBUTES.has(name) || (name === "value" && !allowValueCue(element))) continue;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		let penalty = PENALTY_MAP[name];
 
 		// rank unknown attributes the same as a class
-		if (typeof penalty === 'undefined') penalty = PENALTY_MAP.class;
+		if (typeof penalty === "undefined") penalty = PENALTY_MAP.class;
 
 		// prefer test attributes
 		if (name.match(/^data-test.*/) || name.match(/^qa-.*/)) penalty = 0;
@@ -111,11 +111,11 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 			continue;
 		}
 
-		const isId = name === 'id';
+		const isId = name === "id";
 		cues.push({
 			level,
 			penalty,
-			type: isId ? 'id' : 'attribute',
+			type: isId ? "id" : "attribute",
 			value: isId
 				? `#${cssEscape(value)}`
 				: // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -134,7 +134,7 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 		cues.push({
 			level,
 			penalty: PENALTY_MAP.class,
-			type: 'class',
+			type: "class",
 			value: `.${cssEscape(className)}`,
 		});
 
@@ -148,7 +148,7 @@ export const getTagCue = (element: HTMLElement, level: number): Cue => {
 	const cue = {
 		level,
 		penalty: PENALTY_MAP.tag,
-		type: 'tag' as CueType,
+		type: "tag" as CueType,
 	};
 
 	const value = element.tagName.toLowerCase();
@@ -179,5 +179,5 @@ export const getTagCue = (element: HTMLElement, level: number): Cue => {
 export const allowValueCue = (element: HTMLElement): boolean => {
 	const tag = element.tagName;
 
-	return ALLOW_VALUE_ATTRIBUTE.tags.has(tag) || (tag === 'INPUT' && ALLOW_VALUE_ATTRIBUTE.input_types.has((element as HTMLInputElement).type));
+	return ALLOW_VALUE_ATTRIBUTE.tags.has(tag) || (tag === "INPUT" && ALLOW_VALUE_ATTRIBUTE.input_types.has((element as HTMLInputElement).type));
 };

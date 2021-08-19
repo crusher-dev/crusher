@@ -1,4 +1,4 @@
 export enum RUNNER_REQUEST_TYPE {
-	DRAFT = 'DRAFT',
-	SAVED = 'SAVED',
+	DRAFT = "DRAFT",
+	SAVED = "SAVED",
 }

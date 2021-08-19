@@ -1,5 +1,5 @@
 import { Container, Inject, Service } from "typedi";
-import DBManager from "../manager/DBManager";
+import { DBManager } from "@modules/db";
 import { TestInstanceResultSet } from "../interfaces/db/TestInstanceResultSet";
 import TestInstanceResultsService from "./TestInstanceResultsService";
 import { TestInstanceResultStatus } from "../interfaces/TestInstanceResultStatus";
@@ -15,7 +15,7 @@ export default class TestInstanceRecordingService {
 	}
 
 	async createTestInstanceRecording(details: TestInstanceRecording) {
-		return this.dbManager.insertData(`INSERT INTO test_instance_recordings SET ?`, {
+		return this.dbManager.insert(`INSERT INTO test_instance_recordings SET ?`, {
 			test_instance_id: details.test_instance_id,
 			video_uri: details.video_uri,
 			test_id: details.test_id,

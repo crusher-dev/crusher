@@ -8,7 +8,7 @@ import { BulbIcon } from "../../../../assets/icons";
 import uniqueId from "lodash/uniqueId";
 import { getStore } from "../../../../redux/store";
 import { recordAction } from "../../../../redux/actions/actions";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { updateActionsRecordingState } from "../../../../redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
 import { turnOffInspectModeInFrame } from "../../../../messageListener";
@@ -128,7 +128,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 		const store = getStore();
 		store.dispatch(
 			recordAction({
-				type: ACTIONS_IN_TEST.ASSERT_ELEMENT,
+				type: ActionsInTestEnum.ASSERT_ELEMENT,
 				payload: {
 					selectors: elementInfo.selectors,
 					meta: {
@@ -146,6 +146,11 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 		}
 	};
 
+	const deleteValidationRow = (rowIndex) => {
+		const newValidationRows = validationRows.filter((a) => a.id !== rowIndex);
+		setValidationRows([...newValidationRows]);
+	};
+
 	return (
 		<div style={containerStyle(validationRows.length)}>
 			<AssertionFormTable
@@ -155,6 +160,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 				onFieldChange={updateFieldOfValidationRow}
 				onOperationChange={updateOperationOfValidationRow}
 				onValidationChange={updateValidationValueOfValidationRow}
+				deleteValidationRow={deleteValidationRow}
 			/>
 			<div style={bottomBarStyle}>
 				<div style={formButtonStyle}>

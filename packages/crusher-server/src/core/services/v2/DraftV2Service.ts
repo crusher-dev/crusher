@@ -1,5 +1,5 @@
 import { Service, Container } from "typedi";
-import DBManager from "../../manager/DBManager";
+import { DBManager } from "@modules/db";
 import DraftInstanceService from "../DraftInstanceService";
 import DraftInstanceResultsService from "../DraftInstanceResultsService";
 import TestInstanceRecordingService from "../TestInstanceRecordingService";

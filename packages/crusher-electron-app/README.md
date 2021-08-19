@@ -4,6 +4,7 @@
 2.) Run yarn `build:release:all`. This will generate binaries for all the platforms.
 
 ## Environment Variables
+
 NODE_ENV: development | production
 
 TARGET: testing | release

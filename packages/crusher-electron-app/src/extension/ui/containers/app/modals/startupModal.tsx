@@ -34,8 +34,7 @@ const StartupModal = (props: iStartupModalProps) => {
 	};
 
 	return (
-		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles}
-			overlayClassName="overlay">
+		<ReactModal isOpen={isOpen} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
 			<div className="flex flex-col">
 				<div className="flex">
 					<input
@@ -51,7 +50,6 @@ const StartupModal = (props: iStartupModalProps) => {
 					</button>
 				</div>
 			</div>
-
 		</ReactModal>
 	);
 };

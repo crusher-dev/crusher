@@ -1,38 +1,38 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import htmlTags from 'html-tags';
+import htmlTags from "html-tags";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const englishWords = require('an-array-of-english-words/index.json');
+const englishWords = require("an-array-of-english-words/index.json");
 
 const SPLIT_REGEXP = /[ \-_:]+/;
 
 const allWords = new Set([
-	'btn',
-	'checkbox',
-	'dropdown',
+	"btn",
+	"checkbox",
+	"dropdown",
 	// favicon
-	'fa',
-	'grid',
-	'inputtext',
-	'lg',
-	'login',
-	'logout',
+	"fa",
+	"grid",
+	"inputtext",
+	"lg",
+	"login",
+	"logout",
 	// medium
-	'md',
+	"md",
 	// material ui
-	'mui',
-	'nav',
-	'signin',
-	'signout',
-	'signup',
-	'sm',
-	'textinput',
-	'todo',
+	"mui",
+	"nav",
+	"signin",
+	"signout",
+	"signup",
+	"sm",
+	"textinput",
+	"todo",
 	// credit card inputs
-	'cvc',
+	"cvc",
 	// companies
-	'paypal',
+	"paypal",
 	...htmlTags,
 	...englishWords,
 ]);
@@ -69,10 +69,10 @@ export const getTokens = (value: string): string[] => {
  *   `value` is not a string.
  */
 export const isDynamic = (value: string): boolean => {
-	if (!value || typeof value !== 'string') return true;
+	if (!value || typeof value !== "string") return true;
 
 	// ignore styled components classes
-	if (value.startsWith('Styled')) return true;
+	if (value.startsWith("Styled")) return true;
 
 	const tokens = getTokens(value);
 

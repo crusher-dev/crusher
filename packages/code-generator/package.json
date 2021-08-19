@@ -9,14 +9,15 @@
 		"prettify": "prettier --write ."
 	},
 	"devDependencies": {
-		"webpack": "5.21.2",
 		"@typescript-eslint/parser": "^4.14.1",
 		"eslint": "^7.18.0",
 		"ts-node": "^9.1.1",
-		"typescript": "^4.1.3"
+		"typescript": "^4.1.3",
+		"webpack": "5.21.2"
 	},
 	"dependencies": {
-		"crusher-shared": "1.0.0"
+		"crusher-shared": "1.0.0",
+		"ejs": "^3.1.6"
 	},
 	"private": true
 }

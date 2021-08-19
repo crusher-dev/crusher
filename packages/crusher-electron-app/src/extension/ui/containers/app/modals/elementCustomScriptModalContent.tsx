@@ -9,7 +9,7 @@ import { getStore } from "../../../../redux/store";
 import { updateActionsRecordingState } from "../../../../redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
 import { recordAction } from "../../../../redux/actions/actions";
-import { ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iElementInfo } from "@shared/types/elementInfo";
 
 interface iElementCustomScriptModalContent {
@@ -44,7 +44,7 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 		const store = getStore();
 		store.dispatch(
 			recordAction({
-				type: ACTIONS_IN_TEST.CUSTOM_ELEMENT_SCRIPT,
+				type: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
 				payload: {
 					selectors: elementInfo.selectors,
 					meta: {

@@ -1,19 +1,44 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
-import { ElementHandle, Locator } from "playwright";
+import { ElementHandle, Locator, Page } from "playwright";
 import { markTestFail } from "../utils/helper";
 
-async function assertElementAttributes(
-	element: Locator,
+async function assertSeoRows(
+	page: Page,
 	assertions: Array<iAssertionRow>,
 ): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
 	let hasPassed = true;
-	const logs = [];
+  const logs = [];
+
+  const pageTitle = await page.title();
+
 
 	for (let i = 0; i < assertions.length; i++) {
 		const { validation, operation, field } = assertions[i];
-		const elementAttributeValue = field.name === "innerHTML" ? await element.innerHTML() : await element.getAttribute(field.name);
+    const elementAttributeValue = field.name === "title" ? pageTitle : await page.evaluate((args: Array<any>) => {
+      const getTagName = (metaTagName) => {
+        const metaElement = document.querySelector(`meta[name='${metaTagName}']`);
+        const metaElementValue = metaElement ? metaElement.getAttribute("content") : null;
+        if (metaElementValue) return metaElementValue;
+
+        return null;
+      };
+
+      return getTagName(args[0]);
+    }, [field.name]);
+
+    if (!elementAttributeValue) {
+      hasPassed = false;
+			logs.push({
+				status: "FAILED",
+				message: "No value found for this seo field: " + field.name,
+				meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
+      });
+
+      continue;
+    }
+
 		if (operation === "MATCHES") {
 			if (elementAttributeValue !== validation) {
 				hasPassed = false;
@@ -67,14 +92,14 @@ async function assertElementAttributes(
 	return { hasPassed, logs };
 }
 
-async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction) {
+async function runSEOAssertionOnPage(page: Page, action: iAction) {
 	const validationRows = action.payload.meta.validations;
-	const actionResult = await assertElementAttributes(element, validationRows);
+	const actionResult = await assertSeoRows(page, validationRows);
 
 	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });
 
 	return {
-		customLogMessage: "Ran custom assertions on element",
+		customLogMessage: "Ran seo assertions",
 		meta: {
 			logs: actionResult.logs,
 		},
@@ -82,7 +107,7 @@ async function runAssertionOnElement(element: Locator, workingSelector: any, act
 }
 
 module.exports = {
-	name: ActionsInTestEnum.ASSERT_ELEMENT,
-	description: "Assertions on element",
-	handler: runAssertionOnElement,
+	name: ActionsInTestEnum.VALIDATE_SEO,
+	description: "SEO Assertions on page",
+	handler: runSEOAssertionOnPage,
 };

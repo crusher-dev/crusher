@@ -82,15 +82,12 @@ export function Radio(props: RadioProps): ReactElement {
 				<div id={"ellipsis"} css={radio(isSelected)}></div>
 			</div>
 			<Conditional showIf={!!label}>
-				<Conditional showIf={typeof(label) === 'string'}>
+				<Conditional showIf={typeof label === "string"}>
 					<div className={"text-13 ml-12 font-500 mt-2"}>{label}</div>
 				</Conditional>
 
-				<Conditional showIf={typeof(label) !== 'string'}>
-					{label}
-				</Conditional>
+				<Conditional showIf={typeof label !== "string"}>{label}</Conditional>
 			</Conditional>
-
 		</div>
 	);
 }

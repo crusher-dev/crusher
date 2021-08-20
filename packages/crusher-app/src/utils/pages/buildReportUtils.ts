@@ -1,6 +1,6 @@
 import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
 import filter from "lodash/filter";
-import { IBuildReportResponse, Test } from "@crusher-shared/types/response/iBuildReportResponse";
+import { IBuildReportResponse, Instance, Test } from '@crusher-shared/types/response/iBuildReportResponse';
 import union from "lodash/union";
 
 export const getStatusString = (type) => {
@@ -113,3 +113,21 @@ export const getBaseConfig = (allConfiguration) => {
 
 	return baseConfigForTest;
 };
+
+const removeAllFailedTest = (testInstanceData: Instance)=>{
+	const {steps} = testInstanceData;
+	let i = 0;
+
+	for(const step of steps){
+		i++;
+		if(step.status === "FAILED") {
+			break;
+		}
+	}
+
+  return steps.slice(0,i)
+}
+
+export const getStepsFromInstanceData = (testInstanceData)=>{
+	return removeAllFailedTest(testInstanceData);
+}

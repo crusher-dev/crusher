@@ -12,7 +12,7 @@ import {
 	getScreenShotsAndChecks,
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
-} from '@utils/pages/buildReportUtils';
+} from "@utils/pages/buildReportUtils";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { Modal } from "dyson/src/components/molecules/Modal";
@@ -155,7 +155,6 @@ function RenderImageInfo({ data }) {
 	const baseLineImage = meta.outputs[0].targetScreenshotUrl;
 	const currentImage = meta.outputs[0].value;
 
-
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
@@ -193,39 +192,32 @@ function RenderStep({ data }) {
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
-				<div className={"mt-4"}>
-					<span
-						className={"text-13 font-600"}
-						css={css`
-							color: #d0d0d0;
-						`}
-					>
-						{getActionLabel(actionType)}
-					</span>
-					<span
-						className={"text-12 ml-20"}
-						css={css`
-							color: #848484;
-						`}
-					>
-						{message}
-					</span>
-				</div>
-
+					<div className={"mt-4"}>
+						<span
+							className={"text-13 font-600"}
+							css={css`
+								color: #d0d0d0;
+							`}
+						>
+							{getActionLabel(actionType)}
+						</span>
+						<span
+							className={"text-12 ml-20"}
+							css={css`
+								color: #848484;
+							`}
+						>
+							{message}
+						</span>
+					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
 					<div className={"  py-16 px-22 mt-8"} css={errorBox}>
-						<div className={"font-cera text-14 font-600 leading-none"}>
-							Error at : 	{getActionLabel(actionType)}
-						</div>
-						<div className={"text-13 mt-8"}>
-							{message}
-						</div>
+						<div className={"font-cera text-14 font-600 leading-none"}>Error at : {getActionLabel(actionType)}</div>
+						<div className={"text-13 mt-8"}>{message}</div>
 						<div className={"flex  mt-24"}>
 							<div className={"text-13 flex items-center"} id={"play-button"}>
-
-								<PlaySVG/> <span className={" ml-12 leading-none"}> Play To See Recording</span>
-
+								<PlaySVG /> <span className={" ml-12 leading-none"}> Play To See Recording</span>
 							</div>
 						</div>
 					</div>
@@ -235,26 +227,23 @@ function RenderStep({ data }) {
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
 				<RenderImageInfo data={data} />
 			</Conditional>
-
-
 		</div>
 	);
 }
 
 const errorBox = css`
-
-  background: rgba(46, 25, 45, 0.5);
-  border: 1px solid #6F3E6C;
-  box-sizing: border-box;
-  border-radius: 6rem;
+	background: rgba(46, 25, 45, 0.5);
+	border: 1px solid #6f3e6c;
+	box-sizing: border-box;
+	border-radius: 6rem;
 	width: 100%;
 
-	#play-button{
-		:hover{
+	#play-button {
+		:hover {
 			text-decoration: underline;
 		}
 	}
-`
+`;
 
 function Browsers({ browsers, setConfig }) {
 	return (
@@ -397,14 +386,16 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	);
 }
 
-function RenderSteps({steps}: {steps:any[]}) {
-	return <div className={'px-32 w-full'} css={stepsContainer}>
-		<div className={'ml-32 py-32'} css={stepsList}>
-			{steps.map((step, index) => (
-				<RenderStep data={step} key={index} />
-			))}
+function RenderSteps({ steps }: { steps: any[] }) {
+	return (
+		<div className={"px-32 w-full"} css={stepsContainer}>
+			<div className={"ml-32 py-32"} css={stepsList}>
+				{steps.map((step, index) => (
+					<RenderStep data={step} key={index} />
+				))}
+			</div>
 		</div>
-	</div>;
+	);
 }
 
 function TestCard({ id, testData }: { id: string; testData: Test }) {
@@ -447,8 +438,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
 
 	const testInstanceData = testInstances[testIndexByFilteration];
-	const  steps  = getStepsFromInstanceData(testInstanceData);
-
+	const steps = getStepsFromInstanceData(testInstanceData);
 
 	useEffect(() => {
 		setLoading(true);
@@ -492,7 +482,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			</div>
 
 			<Conditional showIf={expand && !showLoading}>
-				<RenderSteps steps={steps}/>
+				<RenderSteps steps={steps} />
 			</Conditional>
 
 			<Conditional showIf={expand && showLoading}>

@@ -108,11 +108,11 @@ const blue = css`
 `;
 
 const danger = css`
-  background-color: #AA3E5F;
+	background-color: #aa3e5f;
 
-  :hover {
-    background-color: #c0486d;
-  }
+	:hover {
+		background-color: #c0486d;
+	}
 `;
 
 const tertiaryDark = css`

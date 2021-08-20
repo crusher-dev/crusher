@@ -282,7 +282,7 @@ const TOP_NAV_LINK = [
 	},
 	{
 		name: "Settings",
-		path: "/settings/project",
+		path: "/settings/project/basic",
 	},
 ];
 

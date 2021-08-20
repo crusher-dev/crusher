@@ -66,12 +66,12 @@ const getDefaultFontSize = (type) => {
  * Crusher Text component.
  */
 export const Heading: React.FC<HeadingProps> = (props: HeadingProps) => {
-	const { type, children, fontSize, leading, weight, color, ...otherProps } = props;
+	const { type, children, fontSize, leading, className, weight, color, ...otherProps } = props;
 
 	return (
 		<HeadingElement
 			size={type}
-			className={`font-cera font-${weight}`}
+			className={`font-cera leading-none font-${weight} ${className}`}
 			css={css`
 				font-size: ${fontSize || getDefaultFontSize(type)}rem;
 				color: ${color};

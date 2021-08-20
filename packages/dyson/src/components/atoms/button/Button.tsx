@@ -48,6 +48,7 @@ export const Button: React.FC<ButtonProps> = ({ impactLevel = "high", bgColor = 
 				size === "medium" && mediumButton,
 				size === "large" && largeButton,
 				bgColor === "tertiary-dark" && tertiaryDark,
+				bgColor === "danger" && danger,
 				bgColor === "disabled" && disabledButton,
 			]}
 			disabled={disabled}
@@ -104,6 +105,14 @@ const blue = css`
 	:hover {
 		background-color: #6173d4;
 	}
+`;
+
+const danger = css`
+  background-color: #AA3E5F;
+
+  :hover {
+    background-color: #c0486d;
+  }
 `;
 
 const tertiaryDark = css`

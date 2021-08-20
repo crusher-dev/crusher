@@ -8,7 +8,7 @@ type TMenuItem = {
 	selected: boolean;
 } & React.DetailedHTMLProps<any, any>;
 
-export function MenuItem({ label, rightLabel,css, showHighlighted = false, selected = false, className, ...otherProps }: TMenuItem) {
+export function MenuItem({ label, rightLabel, css, showHighlighted = false, selected = false, className, ...otherProps }: TMenuItem) {
 	return (
 		<div
 			css={[dropDownItem, showHighlighted && highlightHoverStyle, selected && isSelectedStyle, css]}

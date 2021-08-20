@@ -5,7 +5,6 @@ import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
 
 export const radioContent = [
-
 	{ label: "Leave feedback", subLabel: "Approve without approval" },
 	{ label: "Approve & set new baseline", subLabel: "Approve this build and make it baseMark" },
 ];

@@ -5,7 +5,14 @@ import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
 import { Conditional } from "dyson/src/components/layouts";
 import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
-import { getActionLabel, getAllConfigurationForGivenTest, getBaseConfig, getScreenShotsAndChecks, getTestIndexByConfig } from "@utils/pages/buildReportUtils";
+import {
+	getActionLabel,
+	getAllConfigurationForGivenTest,
+	getBaseConfig,
+	getScreenShotsAndChecks,
+	getStepsFromInstanceData,
+	getTestIndexByConfig,
+} from '@utils/pages/buildReportUtils';
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { Modal } from "dyson/src/components/molecules/Modal";
@@ -185,6 +192,8 @@ function RenderStep({ data }) {
 				<div css={tick}>
 					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
 				</div>
+
+				<Conditional showIf={status !== "FAILED"}>
 				<div className={"mt-4"}>
 					<span
 						className={"text-13 font-600"}
@@ -203,14 +212,50 @@ function RenderStep({ data }) {
 						{message}
 					</span>
 				</div>
+
+				</Conditional>
+				<Conditional showIf={status === "FAILED"}>
+					<div className={"  py-16 px-22 mt-8"} css={errorBox}>
+						<div className={"font-cera text-14 font-600 leading-none"}>
+							Element could not be found
+						</div>
+						<div className={"text-13 mt-8"}>
+							Java null pointer exception
+						</div>
+						<div className={"flex  mt-24"}>
+							<div className={"text-13 flex items-center"} id={"play-button"}>
+
+								<PlaySVG/> <span className={" ml-12 leading-none"}> Play To See Recording</span>
+
+							</div>
+						</div>
+					</div>
+				</Conditional>
 			</div>
 
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
 				<RenderImageInfo data={data} />
 			</Conditional>
+
+
 		</div>
 	);
 }
+
+const errorBox = css`
+
+  background: rgba(46, 25, 45, 0.5);
+  border: 1px solid #6F3E6C;
+  box-sizing: border-box;
+  border-radius: 6rem;
+	width: 100%;
+
+	#play-button{
+		:hover{
+			text-decoration: underline;
+		}
+	}
+`
 
 function Browsers({ browsers, setConfig }) {
 	return (
@@ -218,13 +263,15 @@ function Browsers({ browsers, setConfig }) {
 			<div>
 				{browsers.map((name: string) => (
 					<MenuItem
-						css={css`padding: 12rem 10rem;`}
-						label={(
+						css={css`
+							padding: 12rem 10rem;
+						`}
+						label={
 							<div className={"flex items-center"}>
 								<img src={`/assets/img/build/browser/${name.toLowerCase()}.png`} width={12} className={"mr-12"} />
 								<div>{name.toLowerCase()}</div>
 							</div>
-						)}
+						}
 						key={name}
 						className={"close-on-click"}
 						onClick={() => {
@@ -351,6 +398,16 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	);
 }
 
+function RenderSteps({steps}: {steps:any[]}) {
+	return <div className={'px-32 w-full'} css={stepsContainer}>
+		<div className={'ml-32 py-32'} css={stepsList}>
+			{steps.map((step, index) => (
+				<RenderStep data={step} key={index} />
+			))}
+		</div>
+	</div>;
+}
+
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
 	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
@@ -391,7 +448,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
 
 	const testInstanceData = testInstances[testIndexByFilteration];
-	const { steps } = testInstanceData;
+	const  steps  = getStepsFromInstanceData(testInstanceData);
+
 
 	useEffect(() => {
 		setLoading(true);
@@ -435,13 +493,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			</div>
 
 			<Conditional showIf={expand && !showLoading}>
-				<div className={"px-32 w-full"} css={stepsContainer}>
-					<div className={"ml-32 py-32"} css={stepsList}>
-						{steps.map((step, index) => (
-							<RenderStep data={step} key={index} />
-						))}
-					</div>
-				</div>
+				<RenderSteps steps={steps}/>
 			</Conditional>
 
 			<Conditional showIf={expand && showLoading}>

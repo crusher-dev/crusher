@@ -1,6 +1,6 @@
-import React, {useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { css } from "@emotion/react";
-import Link from "next/link"
+import Link from "next/link";
 import useSWR, { mutate } from "swr";
 import { getTestListAPI } from "@constants/api";
 import { useAtom } from "jotai";
@@ -16,7 +16,6 @@ import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
 import { TestStatusSVG } from "@svg/testReport";
 import { getBoolean } from "@utils/common";
-
 
 interface IBuildItemCardProps {
 	id: number;
@@ -43,7 +42,7 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted,draftBuildId } = props;
+	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted, draftBuildId } = props;
 	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={16} />
 	) : (
@@ -60,10 +59,7 @@ function TestCard(props: IBuildItemCardProps) {
 
 	const [showEditBox, setShowEditBox] = useState(false);
 	return (
-		<div
-			css={itemContainerStyle}
-
-		>
+		<div css={itemContainerStyle}>
 			<Conditional showIf={showEditBox}>
 				<EditTest
 					id={id}
@@ -112,17 +108,19 @@ function TestCard(props: IBuildItemCardProps) {
 				<div css={createdAtStyle} className={"flex justify-between mt-24 text-13"}>
 					<span>{timeSince(new Date(createdAt))}</span>
 					<div className={"flex "}>
-						<span className={"edit"} 			onClick={() => {
-							!showEditBox && setShowEditBox(true);
-						}}>Edit</span>
-						<Conditional showIf={(!getBoolean(isPassing) || !firstRunCompleted ) }>
+						<span
+							className={"edit"}
+							onClick={() => {
+								!showEditBox && setShowEditBox(true);
+							}}
+						>
+							Edit
+						</span>
+						<Conditional showIf={!getBoolean(isPassing) || !firstRunCompleted}>
 							<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
 								<span className={"view-build"}>View Build </span>
 							</Link>
 						</Conditional>
-
-
-
 					</div>
 				</div>
 			</div>
@@ -132,8 +130,6 @@ function TestCard(props: IBuildItemCardProps) {
 
 const createdAtStyle = css`
 	color: rgba(255, 255, 255, 0.6);
-	
-
 `;
 
 const testNameStyle = css`
@@ -170,18 +166,16 @@ const itemContainerStyle = css`
 				text-decoration: underline;
 			}
 		}
-
-
 	}
 
-  .view-build{
-    color: #96a7ff;
+	.view-build {
+		color: #96a7ff;
 
 		margin-left: 12rem;
-		:hover{
-      text-decoration: underline;
+		:hover {
+			text-decoration: underline;
 		}
-  }
+	}
 `;
 const itemImageStyle = css`
 	height: 183rem;
@@ -207,7 +201,7 @@ function TestSearchableList() {
 
 	const testsItems = useMemo(() => {
 		return data.list.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted,draftBuildId } = test;
+			const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted, draftBuildId } = test;
 
 			return (
 				<TestCard

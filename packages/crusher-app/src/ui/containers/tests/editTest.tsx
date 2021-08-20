@@ -74,12 +74,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 			}}
 		>
 			<div className={"font-cera text-16 font-600 leading-none"}>Edit info</div>
-			<div
-				className={"text-13 mt-8"}
-				css={css`
-					font-size: 12.5rem;
-				`}
-			></div>
+
 			<div
 				className={"mt-44 text-13 font-600 mb-16"}
 				css={css`

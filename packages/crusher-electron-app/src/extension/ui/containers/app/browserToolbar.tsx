@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { HelpIcon, SettingsIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon } from "../../../assets/icons";
+import { HelpIcon, SettingsIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon, AppResetIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
@@ -64,6 +64,10 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 		window.location.href = generateCrusherExtensionUrl("/", targetUrl!, deviceId, { isDeviceChanged: true });
 	};
 
+	const resetApp = () => {
+		(window as any).electron.resetartApp();
+	};
+
 	return (
 		<div style={browserToolbarStyle}>
 			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
@@ -75,8 +79,8 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<div style={forwardIconContainerStyle} className={"browser_icon"}>
 							<NavigateForwardIcon onClick={goForward} disabled={false} />
 						</div>
-						<div style={refreshIconContainerStyle} className={"browser_icon"}>
-							<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
+						<div style={refreshIconContainerStyle} onClick={resetApp} className={"browser_icon"}>
+							<AppResetIcon width={14} height={14} disabled={false} />
 						</div>
 					</div>
 					<div style={{ width: "48%" }}>

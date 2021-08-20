@@ -66,7 +66,7 @@ export class TestController {
 				// @Note: Hardcoded for now, will be changed later
 				firstRunCompleted: isFirstRunCompleted,
 				deleted: false,
-        draftBuildId: testData.draftJobId,
+				draftBuildId: testData.draftJobId,
 			};
 		});
 

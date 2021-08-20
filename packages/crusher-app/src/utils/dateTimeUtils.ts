@@ -3,8 +3,8 @@ const intervals = [
 	{ label: "month", seconds: 2592000 },
 	{ label: "day", seconds: 60 * 60 * 24 },
 	{ label: "hour", seconds: 60 * 60 },
-	{ label: "minute", seconds: 60 },
-	{ label: "second", seconds: 1 },
+	{ label: "min", seconds: 60 },
+	{ label: "sec", seconds: 1 },
 ];
 
 export function getStringFromDuration(durationInSec: number) {
@@ -12,7 +12,7 @@ export function getStringFromDuration(durationInSec: number) {
 	const count = Math.ceil(durationInSec / interval?.seconds) || 1;
 	const plural = `${count !== 1 ? "s" : ""}`;
 
-	return `${count} ${interval?.label || "second"}${plural}`;
+	return `${count} ${interval?.label || "sec"}${plural}`;
 }
 
 export function timeSince(date: Date): string {

@@ -114,7 +114,15 @@ function TestCard(props: IBuildItemCardProps) {
 				</div>
 				<div css={createdAtStyle} className={"flex justify-between mt-24 text-13"}>
 					<span>{timeSince(new Date(createdAt))}</span>
-					<span className={"edit"}>Edit</span>
+					<div className={"flex "}>
+						<span className={"edit"}>Edit</span>
+						<Conditional showIf={!getBoolean(isPassing) || !firstRunCompleted}>
+							<span className={"view-build"}>View Build </span>
+						</Conditional>
+
+
+
+					</div>
 				</div>
 			</div>
 		</div>
@@ -123,6 +131,8 @@ function TestCard(props: IBuildItemCardProps) {
 
 const createdAtStyle = css`
 	color: rgba(255, 255, 255, 0.6);
+	
+
 `;
 
 const testNameStyle = css`
@@ -159,7 +169,15 @@ const itemContainerStyle = css`
 				text-decoration: underline;
 			}
 		}
+
+
 	}
+
+  .view-build{
+    color: #96a7ff;
+    text-decoration: underline;
+		margin-left: 12rem;
+  }
 `;
 const itemImageStyle = css`
 	height: 183rem;

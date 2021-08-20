@@ -71,8 +71,9 @@ function getIconPath() {
 	}
 }
 
-function reloadApp(mainWindow) {
-	app.relaunch({ args: process.argv.slice(1).concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
+function reloadApp(mainWindow, completeReset = false) {
+	const currentArgs = process.argv.slice(1).filter(a => !a.startsWith("--open-extension-url="));
+	app.relaunch({ args: completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
 	app.exit();
 }
 
@@ -124,6 +125,10 @@ async function createWindow() {
 		url: "https://www.test-headout.com/burj-khalifa-tickets-c-158/",
 		path: "/",
 		expirationDate: 1638209412,
+	});
+
+	ipcMain.on("restart-app", async (e) => {
+		reloadApp(mainWindow, true);
 	});
 
 	ipcMain.on("set-custom-backend-domain", async (e, domain) => {

@@ -7,7 +7,6 @@ import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
-import { registerCrusherSelectorEngine } from "./functions/registerSelectorEngine";
 import { getBrowserActions, getMainActions, isWebpack, toCrusherSelectorsFormat, validActionTypeRegex } from "./utils/helper";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import * as fs from "fs";
@@ -84,8 +83,7 @@ class CrusherRunnerActions {
 						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager);
 						break;
 					case ActionCategoryEnum.ELEMENT:
-						const playwrightSelector = step.payload.selectors.shift();
-						const elementLocator = page.locator(playwrightSelector.value);
+						const elementLocator = page.locator(toCrusherSelectorsFormat(step.payload.selectors).value);
 						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager);
 						break;
 					default:
@@ -128,4 +126,4 @@ class CrusherRunnerActions {
 	}
 }
 
-export { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBrowserActions, getMainActions };
+export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions };

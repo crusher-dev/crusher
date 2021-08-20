@@ -155,7 +155,6 @@ function RenderImageInfo({ data }) {
 	const baseLineImage = meta.outputs[0].targetScreenshotUrl;
 	const currentImage = meta.outputs[0].value;
 
-	console.log("Same", baseLineImage == currentImage);
 
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
@@ -217,10 +216,10 @@ function RenderStep({ data }) {
 				<Conditional showIf={status === "FAILED"}>
 					<div className={"  py-16 px-22 mt-8"} css={errorBox}>
 						<div className={"font-cera text-14 font-600 leading-none"}>
-							Element could not be found
+							Error at : 	{getActionLabel(actionType)}
 						</div>
 						<div className={"text-13 mt-8"}>
-							Java null pointer exception
+							{message}
 						</div>
 						<div className={"flex  mt-24"}>
 							<div className={"text-13 flex items-center"} id={"play-button"}>

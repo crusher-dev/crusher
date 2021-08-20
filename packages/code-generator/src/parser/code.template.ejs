@@ -1,7 +1,7 @@
 const playwright = require("<%= usePlaywrightChromium ? "playwright-chromium" : "playwright" %>");
 const path = require("path");
 
-const { CrusherRunnerActions, handlePopup, registerCrusherSelectorEngine, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
+const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
 
 // @TODO: globalManager, logManager and storageManager are supposed to be injected globally
 const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager);
@@ -25,7 +25,6 @@ browserContext.setDefaultTimeout(browserContextOptions.defaultTimeout);
 
 page = await browserContext.newPage({});
 await handlePopup(page, browserContext);
-await registerCrusherSelectorEngine();
 
 
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);

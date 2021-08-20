@@ -8,9 +8,12 @@ import { Conditional } from "dyson/src/components/layouts";
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { Card } from '../../../../../../dyson/src/components/layouts/Card/Card';
 import { DeleteIcon } from '../../../../../../crusher-electron-app/src/extension/assets/icons';
+import { useAtom } from 'jotai';
+import { projectsAtom } from '../../../../store/atoms/global/project';
 
 export const OrgProjects = () => {
 	const [showModal, setShowModal] = useState(false);
+	const [projects] = useAtom(projectsAtom)
 	return (
 		<SettingsLayout>
 			<Conditional showIf={showModal}>
@@ -40,12 +43,15 @@ export const OrgProjects = () => {
 
 				<hr css={basicHR} />
 
-				<Card css={projectListCard}>
-					<div className={"flex justify-between items-center"}>
-						<div className={"text-15"}>fds</div>
-						<div className={"text-13"} id={"delete"}>Delete</div>
-					</div>
-				</Card>
+				{projects.map((project)=>{
+					const {id} = project
+					return (<Card css={projectListCard} key={id}>
+						<div className={"flex justify-between items-center"}>
+							<div className={"text-15"}>{project.name}</div>
+							<div className={"text-13"} id={"delete"}>Delete</div>
+						</div>
+					</Card>)
+				})}
 			</div>
 		</SettingsLayout>
 	);

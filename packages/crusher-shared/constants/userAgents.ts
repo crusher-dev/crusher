@@ -21,7 +21,7 @@ export const userAgents: Array<iUserAgent> = [
 ];
 
 export function getUserAgentFromName(userAgentName: string) {
-	return userAgents.find(userAgent => userAgent.name === userAgentName);
+	return userAgents.find((userAgent) => userAgent.name === userAgentName);
 }
 
 export default userAgents;

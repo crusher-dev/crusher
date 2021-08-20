@@ -11,7 +11,7 @@ export type TextBlockProps = {
 const TextDefaultProps = {
 	fontSize: 12,
 	leading: false,
-	weight: 700,
+	weight: 400,
 	color: "#fff",
 };
 /**

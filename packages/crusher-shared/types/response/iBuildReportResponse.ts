@@ -32,7 +32,7 @@ export interface Test {
 	testInstances: Instance[];
 }
 
-interface Instance {
+export interface Instance {
 	id: number;
 	title: string;
 	verboseStatus: TestInstanceResultSetStatus;

@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import { LayoutSVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
 import { atom, useAtom } from "jotai";
-import React from "react";
+import React, { useEffect } from 'react';
 import { BackSVG } from "@svg/builds";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { useRouter } from "next/router";
@@ -265,9 +265,13 @@ const rightSection = css`
 `;
 
 export const TestReportScreen = () => {
-	const [selectedTabIndex] = useAtom(selectedTabAtom);
+	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+
+	useEffect(()=>{
+		if(query.view_draft) setSelectedTabIndex(1)
+	},[query.view_draft])
 	return (
 		<div className={"px-16 mt-56"}>
 			<NameNStatusSection />

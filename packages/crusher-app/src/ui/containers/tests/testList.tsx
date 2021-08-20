@@ -1,7 +1,6 @@
-import React, { ChangeEvent, useState, useMemo, useEffect } from "react";
-import { CompleteStatusIconSVG, LoadingSVG } from "@svg/dashboard";
+import React, {useState, useMemo, useEffect } from "react";
 import { css } from "@emotion/react";
-import { SearchFilterBar } from "../common/searchFilterBar";
+import Link from "next/link"
 import useSWR, { mutate } from "swr";
 import { getTestListAPI } from "@constants/api";
 import { useAtom } from "jotai";
@@ -16,9 +15,8 @@ import { RequestMethod } from "../../../types/RequestOptions";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { timeSince } from "@utils/dateTimeUtils";
 import { TestStatusSVG } from "@svg/testReport";
-import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
 import { getBoolean } from "@utils/common";
-import { is } from "immer/dist/utils/common";
+
 
 interface IBuildItemCardProps {
 	id: number;
@@ -26,6 +24,7 @@ interface IBuildItemCardProps {
 	isPassing: boolean;
 	imageURL: string | null;
 	videoURL: null | string;
+	draftBuildId: number;
 	firstRunCompleted: boolean;
 	// In seconds
 	createdAt: number;
@@ -44,7 +43,7 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted } = props;
+	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted,draftBuildId } = props;
 	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={16} />
 	) : (
@@ -63,9 +62,7 @@ function TestCard(props: IBuildItemCardProps) {
 	return (
 		<div
 			css={itemContainerStyle}
-			onClick={() => {
-				!showEditBox && setShowEditBox(true);
-			}}
+
 		>
 			<Conditional showIf={showEditBox}>
 				<EditTest
@@ -115,9 +112,13 @@ function TestCard(props: IBuildItemCardProps) {
 				<div css={createdAtStyle} className={"flex justify-between mt-24 text-13"}>
 					<span>{timeSince(new Date(createdAt))}</span>
 					<div className={"flex "}>
-						<span className={"edit"}>Edit</span>
-						<Conditional showIf={!getBoolean(isPassing) || !firstRunCompleted}>
-							<span className={"view-build"}>View Build </span>
+						<span className={"edit"} 			onClick={() => {
+							!showEditBox && setShowEditBox(true);
+						}}>Edit</span>
+						<Conditional showIf={(!getBoolean(isPassing) || !firstRunCompleted ) }>
+							<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
+								<span className={"view-build"}>View Build </span>
+							</Link>
 						</Conditional>
 
 
@@ -175,8 +176,11 @@ const itemContainerStyle = css`
 
   .view-build{
     color: #96a7ff;
-    text-decoration: underline;
+
 		margin-left: 12rem;
+		:hover{
+      text-decoration: underline;
+		}
   }
 `;
 const itemImageStyle = css`
@@ -203,7 +207,7 @@ function TestSearchableList() {
 
 	const testsItems = useMemo(() => {
 		return data.list.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted } = test;
+			const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted,draftBuildId } = test;
 
 			return (
 				<TestCard
@@ -213,6 +217,7 @@ function TestSearchableList() {
 					testName={testName}
 					isPassing={isPassing}
 					createdAt={createdAt}
+					draftBuildId={draftBuildId}
 					key={id}
 					id={id}
 				/>

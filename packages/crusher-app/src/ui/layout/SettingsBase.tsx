@@ -4,6 +4,9 @@ import { Conditional } from "dyson/src/components/layouts";
 import { ChevronRight } from "@svg/settings";
 import { AddSVG } from "@svg/dashboard";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import AddProjectModal from '@ui/containers/dashboard/AddProject';
+import InviteMember from '@ui/containers/dashboard/InviteMember';
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
 	return (
@@ -53,31 +56,56 @@ export const CompressibleMenu = ({ name, children, initialState = true }) => {
 		</>
 	);
 };
-function ProjectSetting() {
+
+const projectLinks = [
+	{
+		label: "General",
+		link: "/settings/project/basic",
+	},
+	{
+		label: "Environments",
+		link: "/settings/project/environments",
+	},
+	{
+		label: "Monitoring",
+		link: "/settings/project/monitoring",
+	},
+];
+
+const orgLinks = [
+	{
+		label: "Team members",
+		link: "/settings/org/team-members",
+	},
+	{
+		label: "Projects",
+		link: "/settings/org/projects",
+	},
+];
+
+function LinksSection({ links, label }) {
+	const router = useRouter();
+	const { pathname } = router;
 	return (
 		<>
-			<CompressibleMenu name={"Project settings"}>
+			<CompressibleMenu name={label}>
 				<div className={"mt-6 mb-32"}>
-					<MenuItemHorizontal className={"mt-2"}>
-						<span
-							css={css`
-								font-size: 12.5rem;
-							`}
-							className={" font-500 mt-2 leading-none"}
-						>
-							General
-						</span>
-					</MenuItemHorizontal>
-					<MenuItemHorizontal className={"mt-2"}>
-						<span
-							css={css`
-								font-size: 12.5rem;
-							`}
-							className={" font-500 mt-2 leading-none"}
-						>
-							General
-						</span>
-					</MenuItemHorizontal>
+					{links.map(({ link, label }) => {
+						return (
+							<Link href={link}>
+								<MenuItemHorizontal className={"mt-2"} selected={pathname === link}>
+									<span
+										css={css`
+											font-size: 12.5rem;
+										`}
+										className={" font-500 mt-2 leading-none"}
+									>
+										{label}
+									</span>
+								</MenuItemHorizontal>
+							</Link>
+						);
+					})}
 				</div>
 			</CompressibleMenu>
 		</>
@@ -89,28 +117,32 @@ const clickableCSS = css`
 `;
 function LeftSection() {
 	const router = useRouter();
+
+	const [showModal, setShowModal] = useState(false);
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-32"}>
-			<div
-				onClick={() => {
-					router.push("/app/dashboard");
-				}}
-			>
+			<Conditional showIf={showModal}>
+				<InviteMember onClose={setShowModal.bind(this, false)} />
+			</Conditional>
+			<div>
 				<div className={"flex items-center pl-2 mt-10 text-13 mb-32"}>
-					<span css={clickableCSS}>
+					<span
+						css={clickableCSS}
+						onClick={() => {
+							router.push("/app/dashboard");
+						}}
+					>
 						{"<"}
 						<span className={" leading-none mr-8 underline ml-8"}> Go back</span>
 					</span>
 				</div>
-				<ProjectSetting />
+				<LinksSection label={"Project settings"} links={projectLinks} />
 
-				<ProjectSetting />
-
-				<ProjectSetting />
+				<LinksSection label={"Org settings"} links={orgLinks} />
 			</div>
 
 			<div>
-				<div css={navLink} className={"flex items-center text-13 mt-4"}>
+				<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setShowModal.bind(this,true)}>
 					<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 				</div>
 			</div>

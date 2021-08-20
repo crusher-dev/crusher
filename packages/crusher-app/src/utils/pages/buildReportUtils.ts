@@ -2,6 +2,7 @@ import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions"
 import filter from "lodash/filter";
 import { IBuildReportResponse, Instance, Test } from '@crusher-shared/types/response/iBuildReportResponse';
 import union from "lodash/union";
+import { forEach } from 'lodash';
 
 export const getStatusString = (type) => {
 	switch (type) {
@@ -96,11 +97,14 @@ export const getAllConfigurationForGivenTest = (test: Test) => {
 
 export const getTestIndexByConfig = (test: Test, config) => {
 	const { testInstances } = test;
-	testInstances.forEach((testInstance, index) => {
+	let i = 0
+
+	for(const testInstance of testInstances){
 		if (JSON.stringify(testInstance.config) === JSON.stringify(config)) {
-			return index;
+			return i;
 		}
-	});
+		i++;
+	}
 
 	return 0;
 };

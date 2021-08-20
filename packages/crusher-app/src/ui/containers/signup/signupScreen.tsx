@@ -12,7 +12,6 @@ import { Button, Logo } from "dyson/src/components/atoms";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 import { atom } from "jotai";
 import { useAtom } from "jotai";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 

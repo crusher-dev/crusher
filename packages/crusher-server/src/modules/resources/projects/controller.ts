@@ -1,6 +1,7 @@
 import { Inject, Service } from "typedi";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post } from "routing-controllers";
 import { ProjectsService } from "./service";
+import { ProjectWorkspaceService } from "./project.workspace.service";
 import { ICreateProjectEnvironmentPayload, ICreateProjectPayload } from "@modules/resources/projects/interface";
 import { UsersService } from "../users/service";
 
@@ -10,7 +11,7 @@ class ProjectsController {
 	@Inject()
 	private projectsService: ProjectsService;
 	@Inject()
-	private usersService: UsersService;
+	private projectWorkspaceService: ProjectWorkspaceService;
 
 	@Authorized()
 	@Post("/projects/actions/create")
@@ -72,6 +73,28 @@ class ProjectsController {
 		const finalMeta = projectRecord.meta ? { ...JSON.parse(projectRecord.meta), ...body.meta } : body.meta;
 
 		await this.projectsService.updateMeta(JSON.stringify(finalMeta), projectId);
+		return "Successful";
+	}
+
+	@Authorized()
+	@Post("/projects/:project_id/actions/delete")
+	async deleteProject() {
+		return "true";
+	}
+
+	@Authorized()
+	@Post("/projects/:project_id/actions/update.name")
+	async updateProjectName(@Param("project_id") projectId: number, @Body() body: { name: string }) {
+		if (!body.name) throw new BadRequestError("No project name provided");
+
+		await this.projectsService.updateProjectName(body.name, projectId);
+		return "Successful";
+	}
+
+	@Authorized()
+	@Post("/projects/:project_id/actions/delete")
+	async deleteProjectWorkspace(@Param("projectId") projectId: number) {
+		await this.projectWorkspaceService.deleteWorkspace(projectId);
 		return "Successful";
 	}
 }

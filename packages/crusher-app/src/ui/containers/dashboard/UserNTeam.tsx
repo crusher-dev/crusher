@@ -14,7 +14,7 @@ const userDropdownItems = [
 	{
 		leftLabel: "Settings",
 		rightLabel: "",
-		link: "/settings/project",
+		link: "/settings/project/basic",
 		target: "",
 	},
 	{

@@ -29,7 +29,7 @@ class VisualDiffService {
 		return {
 			diffDeltaFactor: diffDeltaFactor,
 			diffDelta: (diffDeltaFactor * 100) / (diffImageWidth * diffImageHeight),
-			diffBuffer: diffPngImage.data,
+			diffBuffer: PNG.sync.write(diffPngImage),
 		};
 	}
 

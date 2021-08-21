@@ -3,6 +3,7 @@ import * as mongoose from "mongoose";
 const BuildInstanceResultsSchema = new mongoose.Schema(
 	{
 		instanceId: { type: mongoose.Schema.Types.Number, required: true },
+		projectId: { type: mongoose.Schema.Types.Number, required: true },
 		actionsResult: [{ type: mongoose.Schema.Types.Mixed }],
 		hasInstancePassed: { type: mongoose.Schema.Types.Boolean, required: true },
 	},
@@ -11,6 +12,7 @@ const BuildInstanceResultsSchema = new mongoose.Schema(
 
 export interface IBuildInstanceResult {
 	instanceId: number;
+	projectId: number;
 	actionsResult: Array<any>;
 	hasInstancePassed: boolean;
 }

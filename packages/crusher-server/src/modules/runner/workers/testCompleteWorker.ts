@@ -45,6 +45,7 @@ export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
 		actionsResultWithIndex,
 		savedScreenshotRecords,
 		bullJob.data.testInstanceId,
+		buildRecord.projectId,
 		bullJob.name,
 		bullJob.data.hasPassed,
 	);

@@ -181,11 +181,36 @@ const imageTestStep = css`
 	}
 `;
 
-function RenderStep({ data }) {
+function ErrorComponent({ testInstanceData, actionType, message }) {
+	const videoUrl = testInstanceData?.output?.video;
+	const isVideoAvailable = !!videoUrl;
+	const [openVideoModal, setOpenVideoModal] = useState(false);
+	return (<div className={'  py-16 px-22 mt-8'} css={errorBox}>
+		<Conditional showIf={isVideoAvailable && openVideoModal}>
+			<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)}/>
+		</Conditional>
+		<div className={'font-cera text-14 font-600 leading-none'}>Error at : {getActionLabel(actionType)}</div>
+		<div className={'text-13 mt-8'}>{message}</div>
+
+		<Conditional showIf={isVideoAvailable}>
+
+			<div className={'flex  mt-24'}>
+				<div className={'text-13 flex items-center'} id={'play-button'} onClick={setOpenVideoModal.bind(this, true)}>
+					<PlaySVG /> <span className={' ml-12 leading-none'}> Play To See Recording</span>
+				</div>
+			</div>
+		</Conditional>
+
+	</div>)
+}
+
+function RenderStep({ data,testInstanceData }) {
+
 	const { status, message, actionType } = data;
 	const isPassed = status === "COMPLETED";
 	return (
 		<div className={"relative mb-32"}>
+
 			<div className={" flex px-44"}>
 				<div css={tick}>
 					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
@@ -195,16 +220,14 @@ function RenderStep({ data }) {
 					<div className={"mt-4"}>
 						<span
 							className={"text-13 font-600"}
-							css={css`
-								color: #d0d0d0;
-							`}
+							css={css`color: #d0d0d0;`}
 						>
 							{getActionLabel(actionType)}
 						</span>
 						<span
 							className={"text-12 ml-20"}
 							css={css`
-								color: #848484;
+                color: #848484;
 							`}
 						>
 							{message}
@@ -212,19 +235,12 @@ function RenderStep({ data }) {
 					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
-					<div className={"  py-16 px-22 mt-8"} css={errorBox}>
-						<div className={"font-cera text-14 font-600 leading-none"}>Error at : {getActionLabel(actionType)}</div>
-						<div className={"text-13 mt-8"}>{message}</div>
-						<div className={"flex  mt-24"}>
-							<div className={"text-13 flex items-center"} id={"play-button"}>
-								<PlaySVG /> <span className={" ml-12 leading-none"}> Play To See Recording</span>
-							</div>
-						</div>
-					</div>
+					<ErrorComponent testInstanceData={testInstanceData} actionType={actionType} message={message}/>
 				</Conditional>
 			</div>
 
-			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
+			<Conditional
+				showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>
@@ -336,6 +352,20 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 	);
 }
 
+function TestVideoUrl({setOpenVideoModal, videoUrl}) {
+	return <Modal
+		onClose={setOpenVideoModal.bind(this, false)}
+		onOutsideClick={setOpenVideoModal.bind(this, false)}
+		modalStyle={css`
+						padding: 28rem 36rem 36rem;
+					`}
+	>
+		<div className={'font-cera text-16 font-600 leading-none'}>Test video by 🦖</div>
+		<div className={'text-13 mt-8 mb-24'}>For better experience, use full screen mode</div>
+		<VideoComponent src={videoUrl} />
+	</Modal>;
+}
+
 function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	const [openVideoModal, setOpenVideoModal] = useState(false);
 	const { steps } = testInstanceData;
@@ -346,20 +376,11 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	return (
 		<>
 			<Conditional showIf={openVideoModal}>
-				<Modal
-					onClose={setOpenVideoModal.bind(this, false)}
-					onOutsideClick={setOpenVideoModal.bind(this, false)}
-					modalStyle={css`
-						padding: 28rem 36rem 36rem;
-					`}
-				>
-					<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
-					<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
-					<VideoComponent src={videoUrl} />
-				</Modal>
+				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl}/>
+
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
-				<PassedSVG height={18} className={"mr-16"} />
+				<TestStatusSVG type={testInstanceData.status} height={18} className={"mr-16"} />
 				{name}
 			</div>
 
@@ -386,12 +407,12 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	);
 }
 
-function RenderSteps({ steps }: { steps: any[] }) {
+function RenderSteps({ steps, testInstanceData }: { steps: any[], testInstanceData: any }) {
 	return (
 		<div className={"px-32 w-full"} css={stepsContainer}>
 			<div className={"ml-32 py-32"} css={stepsList}>
 				{steps.map((step, index) => (
-					<RenderStep data={step} key={index} />
+					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
 				))}
 			</div>
 		</div>
@@ -452,7 +473,9 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			<Conditional showIf={expand && sticky}>
 				<div css={stickyCSS} className={" px-0 "} onClick={onCardClick}>
 					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
-						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
+						<div className={"flex justify-between pt-20"}>
+							<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
+						</div>
 
 						<div className={"mt-12 mb-16"}>
 							<TestConfigSection
@@ -482,7 +505,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			</div>
 
 			<Conditional showIf={expand && !showLoading}>
-				<RenderSteps steps={steps} />
+				<RenderSteps steps={steps} testInstaceData={testInstanceData} />
 			</Conditional>
 
 			<Conditional showIf={expand && showLoading}>

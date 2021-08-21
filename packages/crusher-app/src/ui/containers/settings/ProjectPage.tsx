@@ -1,17 +1,75 @@
-import { SettingsLayout } from "@ui/layout/SettingsBase";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
-import { css } from "@emotion/react";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Button, Input } from "dyson/src/components/atoms";
+import { SettingsLayout } from '@ui/layout/SettingsBase';
+import { Heading } from 'dyson/src/components/atoms/heading/Heading';
+import { css } from '@emotion/react';
+import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
+import { Button, Input } from 'dyson/src/components/atoms';
+import { backendRequest } from '@utils/backendRequest';
+import { RequestMethod } from '../../../types/RequestOptions';
+import { useAtom } from 'jotai';
+import { appStateAtom } from '../../../store/atoms/global/appState';
+import { currentProject, projectsAtom } from '../../../store/atoms/global/project';
+import { useEffect, useState } from 'react';
+import projects from '@pages/settings/org/projects';
+import { sendSnackBarEvent } from '@utils/notify';
+import { useRouter } from 'next/router';
+
+const deleteProject = (projectId)=>{
+	return backendRequest(`/projects/${projectId}/actions/delete`,{
+		method: RequestMethod.POST
+	})
+}
+
+const updateProjectName = (projectId,name)=>{
+	return backendRequest(`/projects/${projectId}/actions/update.name`,{
+		method: RequestMethod.POST,
+		 payload: {name}
+	})
+}
 
 export const ProjectSettings = () => {
+	const router = useRouter()
+	const [{selectedProjectId}] = useAtom(appStateAtom);
+	const [project] = useAtom(currentProject)
+	const [projectsList] = useAtom(projectsAtom)
+	const [projectName, setProjectName] = useState(project?.name)
+	const [saveButtonDisabled,setSavebuttonDisabled] = useState(true)
+	const onlyOneProject = projectsList.length<=1;
+
+	useEffect(()=>{
+		const isNameSame = project?.name === projectName
+		setSavebuttonDisabled(isNameSame)
+	},[projectName])
+
+	const deleteProjectCallback= async ()=>{
+		if(onlyOneProject){
+			sendSnackBarEvent({
+				message: "Unable to delete, Only 1 project in this org",
+				type: "error"
+			})
+			return;
+		}
+		await deleteProject(selectedProjectId);
+
+		router.push("/")
+	}
+
+	const updateProjectNameCallback= async ()=>{
+		await updateProjectName(selectedProjectId,projectName);
+
+		sendSnackBarEvent({
+			message: "We have update project info",
+		})
+
+		setSavebuttonDisabled(true)
+	}
+
 	return (
 		<SettingsLayout>
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<Heading type={1} fontSize={20} className={"mb-8"}>
 					Overview
 				</Heading>
-				<TextBlock fontSize={13}>Make sure you have selected all the configuration you want</TextBlock>
+				<TextBlock fontSize={13}>Basic configuration for your test</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
 
 				<Heading type={2} fontSize={16} className={"mb-24 mt-38"}>
@@ -20,32 +78,38 @@ export const ProjectSettings = () => {
 				<div>
 					<Input
 						placeholder={"Name of the project"}
+						onChange={(e)=>{setProjectName(e.target.value)}}
+						value={projectName}
 						css={css`
 							height: 42rem;
 						`}
 					/>
 					<Button
-						bgColor={"disabled"}
+						bgColor={saveButtonDisabled && "disabled"}
 						css={css`
 							width: 82rem;
 						`}
 						className={"mt-12"}
+						onClick={()=>{
+							!saveButtonDisabled && updateProjectNameCallback()
+						}}
 					>
 						Save
 					</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
 				<Heading type={2} fontSize={16} className={"mb-12 mt-56"}>
-					Delete this workspace
+					Delete this project
 				</Heading>
 				<TextBlock fontSize={13} className={"mb-24"}>
-					Make sure you have selected all the configuration you want
+					This action can't be undone.
 				</TextBlock>
 				<Button
 					bgColor={"danger"}
 					css={css`
 						width: 164rem;
 					`}
+					onClick={deleteProjectCallback}
 				>
 					Delete project
 				</Button>

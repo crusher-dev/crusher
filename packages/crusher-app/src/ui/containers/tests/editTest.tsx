@@ -154,6 +154,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 								width={16}
 							/>
 						</Conditional>
+						Delete
 					</div>
 				</Button>
 			</div>

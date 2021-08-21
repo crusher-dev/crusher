@@ -100,10 +100,11 @@ class BuildTestInstancesService {
 		);
 	}
 
-	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, hasInstancePassed: boolean) {
+	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, projectId: number, hasInstancePassed: boolean) {
 		console.log("Trying to save this", actionsResult);
 		const buildInstanceResult = new BuildInstanceResults({
 			instanceId: instanceId,
+			projectId: projectId,
 			actionsResult: actionsResult,
 			hasInstancePassed: hasInstancePassed,
 		});
@@ -115,6 +116,7 @@ class BuildTestInstancesService {
 		actionsResult: Array<IActionResultItemWithIndex>,
 		savedScreenshotRecords: Array<ISavedActionResultItemWithIndex>,
 		instanceId: number,
+		projectId: number,
 		assetIdentifer: string,
 		wasTestExecutionSuccessful: boolean,
 	) {
@@ -159,7 +161,7 @@ class BuildTestInstancesService {
 		const visualDiffsResult = await Promise.all(visualDiffResultsPromiseArr);
 		const finalTestResult = this.calculateResult(visualDiffsResult, wasTestExecutionSuccessful);
 
-		await this.saveActionsResult(actionsResult, instanceId, finalTestResult.conclusion === TestInstanceResultSetConclusionEnum.PASSED);
+		await this.saveActionsResult(actionsResult, instanceId, projectId, finalTestResult.conclusion === TestInstanceResultSetConclusionEnum.PASSED);
 
 		return this.updateResultSetStatus(
 			TestInstanceResultSetStatusEnum.FINISHED_RUNNING_CHECKS,

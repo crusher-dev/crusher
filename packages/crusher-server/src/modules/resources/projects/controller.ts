@@ -83,7 +83,7 @@ class ProjectsController {
 	}
 
 	@Authorized()
-	@Post("/project/:project_id/actions/update.name")
+	@Post("/projects/:project_id/actions/update.name")
 	async updateProjectName(@Param("project_id") projectId: number, @Body() body: { name: string }) {
 		if (!body.name) throw new BadRequestError("No project name provided");
 
@@ -92,7 +92,7 @@ class ProjectsController {
 	}
 
 	@Authorized()
-	@Post("/project/:project_id/actions/delete")
+	@Post("/projects/:project_id/actions/delete")
 	async deleteProjectWorkspace(@Param("projectId") projectId: number) {
 		await this.projectWorkspaceService.deleteWorkspace(projectId);
 		return "Successful";

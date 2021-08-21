@@ -7,8 +7,11 @@ class ProjectWorkspaceService {
 	private dbManager: DBManager;
 
 	async deleteWorkspace(projectId: number) {
-		// @TODO: Add implementation here
-		await this.dbManager.fetchAllRows("SET FOREIGN_KEY_CHECKS = 0; DELETE FROM projects WHERE id = ?; SET FOREIGN_KEY_CHECKS = 1;", [projectId]);
+		// @TODO: Add implementation here.
+		// This in unsafe implemetatation and dangerious. Remove it asap
+		await this.dbManager.fetchAllRows("SET FOREIGN_KEY_CHECKS = 0;", []);
+		await this.dbManager.delete("DELETE FROM projects WHERE id = ?", [projectId]);
+		await this.dbManager.fetchAllRows("SET FOREIGN_KEY_CHECKS = 1;", []);
 		return true;
 	}
 }

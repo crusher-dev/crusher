@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld("electron", {
 	turnOffInspectMode: () => ipcRenderer.send("turn-off-inspect-mode"),
 	setCustomBackendDomain: (domain) => ipcRenderer.send("set-custom-backend-domain", domain),
 	reloadExtension: () => ipcRenderer.send("reload-extension"),
+	focusOnWebView: () => ipcRenderer.send("focus-webview"),
 	initWebView: (webContentsId) => ipcRenderer.send("init-web-view", webContentsId),
 	getAppPath: () => ipcRenderer.sendSync("get-app-path"),
 	setUserAgent: (userAgent) => ipcRenderer.send("set-user-agent", userAgent),

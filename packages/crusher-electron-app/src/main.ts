@@ -139,6 +139,11 @@ async function createWindow() {
 		reloadApp(mainWindow);
 	});
 
+	ipcMain.on("focus-webview", () => {
+		// @Note: This is a workaround to fix focus lost issue after overlay
+		// on webview
+	});
+
 	ipcMain.on("get-app-path", (event) => {
 		event.returnValue = app.getAppPath();
 	});

@@ -48,6 +48,10 @@ class ProjectsService {
 	async updateBaselineBuild(baseLineBuild: number, projectId: number) {
 		return this.dbManager.update("UPDATE projects SET baseline_job_id = ? WHERE id = ?", [baseLineBuild, projectId]);
 	}
+
+	async updateProjectName(projectName: string, projectId: number) {
+		return this.dbManager.update("UPDATE projects SET name = ? WHERE id = ?", [projectName, projectId]);
+	}
 }
 
 export { ProjectsService };

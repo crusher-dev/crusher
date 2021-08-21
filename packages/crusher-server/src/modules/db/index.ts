@@ -7,7 +7,7 @@ const DEFAULT_DB_CONNECTION_POOL_LIMIT = isOpenSourceEdition() ? 5 : 10;
 // @TODO: Remove this from here, follow dependency inversion principle
 function getConnectionObject(): any {
 	if (process.env.DB_CONNECTION_STRING) {
-		return { uri: process.env.DB_CONNECTION_STRING };
+		return { uri: process.env.DB_CONNECTION_STRING, multipleStatements: true };
 	}
 
 	return {
@@ -18,6 +18,7 @@ function getConnectionObject(): any {
 		password: process.env.DB_PASSWORD,
 		database: process.env.DB_DATABASE,
 		insecureAuth: true,
+		multipleStatements: true,
 	};
 }
 

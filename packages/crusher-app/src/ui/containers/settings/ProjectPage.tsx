@@ -50,7 +50,7 @@ export const ProjectSettings = () => {
 		}
 		await deleteProject(selectedProjectId);
 
-		router.push("/")
+		window.location = "/"
 	}
 
 	const updateProjectNameCallback= async ()=>{

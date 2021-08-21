@@ -48,7 +48,7 @@ export const OrgProjects = () => {
 					return (<Card css={projectListCard} key={id}>
 						<div className={"flex justify-between items-center"}>
 							<div className={"text-15"}>{project.name}</div>
-							<div className={"text-13"} id={"delete"}>Delete</div>
+							<div className={"text-13"} id={"delete"}></div>
 						</div>
 					</Card>)
 				})}

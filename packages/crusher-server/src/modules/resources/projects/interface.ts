@@ -1,7 +1,6 @@
 import { BaseRowInterface } from "@crusher-shared/types/db/baseRow";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
-
-interface IProjectTable extends BaseRowInterface {
+export interface IProjectTable extends BaseRowInterface {
 	id: number;
 	name: string;
 	team_id: number;
@@ -10,9 +9,9 @@ interface IProjectTable extends BaseRowInterface {
 }
 
 // Create Project Payload, everything except id
-type ICreateProjectPayload = KeysToCamelCase<Omit<IProjectTable, "id" | "baseline_job_id">>;
+export type ICreateProjectPayload = KeysToCamelCase<Omit<IProjectTable, "id" | "baseline_job_id">>;
 
-interface IProjectEnvironmentTable extends BaseRowInterface {
+export interface IProjectEnvironmentTable extends BaseRowInterface {
 	id: number;
 	url: string;
 	host_name: string;
@@ -20,6 +19,4 @@ interface IProjectEnvironmentTable extends BaseRowInterface {
 	user_id: number;
 }
 
-type ICreateProjectEnvironmentPayload = KeysToCamelCase<Omit<IProjectEnvironmentTable, "id">>;
-
-export { ICreateProjectPayload, IProjectTable, IProjectEnvironmentTable, ICreateProjectEnvironmentPayload };
+export type ICreateProjectEnvironmentPayload = KeysToCamelCase<Omit<IProjectEnvironmentTable, "id">>;

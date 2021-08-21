@@ -14,13 +14,13 @@ import { sendSnackBarEvent } from '@utils/notify';
 import { useRouter } from 'next/router';
 
 const deleteProject = (projectId)=>{
-	return backendRequest(`/project/${projectId}/actions/delete`,{
+	return backendRequest(`/projects/${projectId}/actions/delete`,{
 		method: RequestMethod.POST
 	})
 }
 
 const updateProjectName = (projectId,name)=>{
-	return backendRequest(`/project/${projectId}/actions/update.name`,{
+	return backendRequest(`/projects/${projectId}/actions/update.name`,{
 		method: RequestMethod.POST,
 		 payload: {name}
 	})
@@ -33,17 +33,17 @@ export const ProjectSettings = () => {
 	const [projectsList] = useAtom(projectsAtom)
 	const [projectName, setProjectName] = useState(project?.name)
 	const [saveButtonDisabled,setSavebuttonDisabled] = useState(true)
-	const onlyOneProject = projectsList.length<22;
+	const onlyOneProject = projectsList.length<=1;
 
 	useEffect(()=>{
 		const isNameSame = project?.name === projectName
 		setSavebuttonDisabled(isNameSame)
 	},[projectName])
 
-	const deleteProject= async ()=>{
+	const deleteProjectCallback= async ()=>{
 		if(onlyOneProject){
 			sendSnackBarEvent({
-				message: "Can't delete, Only one project in this org",
+				message: "Unable to delete, Only 1 project in this org",
 				type: "error"
 			})
 			return;
@@ -57,7 +57,7 @@ export const ProjectSettings = () => {
 		await updateProjectName(selectedProjectId,projectName);
 
 		sendSnackBarEvent({
-			message: "We have update the name of test",
+			message: "We have update project info",
 		})
 
 		setSavebuttonDisabled(true)
@@ -69,7 +69,7 @@ export const ProjectSettings = () => {
 				<Heading type={1} fontSize={20} className={"mb-8"}>
 					Overview
 				</Heading>
-				<TextBlock fontSize={13}>Make sure you have selected all the configuration you want</TextBlock>
+				<TextBlock fontSize={13}>Basic configuration for your test</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
 
 				<Heading type={2} fontSize={16} className={"mb-24 mt-38"}>
@@ -90,7 +90,9 @@ export const ProjectSettings = () => {
 							width: 82rem;
 						`}
 						className={"mt-12"}
-						onClick={updateProjectNameCallback}
+						onClick={()=>{
+							!saveButtonDisabled && updateProjectNameCallback()
+						}}
 					>
 						Save
 					</Button>
@@ -107,7 +109,7 @@ export const ProjectSettings = () => {
 					css={css`
 						width: 164rem;
 					`}
-					onClick={deleteProject}
+					onClick={deleteProjectCallback}
 				>
 					Delete project
 				</Button>

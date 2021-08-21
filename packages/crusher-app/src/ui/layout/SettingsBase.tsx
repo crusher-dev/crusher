@@ -79,7 +79,7 @@ const orgLinks = [
 	},
 	{
 		label: "Projects",
-		link: "/settings/org/projects",
+		link: "/settings/project/basic",
 	},
 ];
 

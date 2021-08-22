@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import { useAtom } from "jotai";
@@ -103,7 +102,7 @@ function Statustag() {
 function Authorstag({ data }: { data: any }) {
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
 	const { triggeredBy } = filters;
-	const selectedAuthor = data.availableAuthors.filter(({ id }) => id == Number(triggeredBy));
+	const selectedAuthor = data.availableAuthors.filter(({ id }) => id === Number(triggeredBy));
 
 	return (
 		<React.Fragment>
@@ -160,7 +159,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 		</Conditional>
 	);
 	return (
-		<div {...props}>
+        <div {...props}>
 			<div className="flex flex-row items-center" css={filterBarStyle}>
 				<div className={"flex-1 mr-26"}>
 					<Input
@@ -175,7 +174,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 							setFocus(true);
 							setFilters({ ...filters, search });
 						}}
-						rightIcon={!!search ? closeSVG : enterToSearch}
+						rightIcon={search ? closeSVG : enterToSearch}
 						css={inputStyle}
 						placeholder={placeholder}
 						isError={false}
@@ -200,7 +199,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 				</div>
 			</Conditional>
 		</div>
-	);
+    );
 }
 
 const closeHover = css`

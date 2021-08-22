@@ -5,19 +5,16 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { useAtom } from "jotai";
-import useSWR, { mutate } from "swr";
+import {mutate} from "swr";
 
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
-import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
 import { Conditional } from "dyson/src/components/layouts";
-import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 
 import { MenuItem } from "@components/molecules/MenuItem";
 import { getBuildsList, getRunTestApi } from "@constants/api";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
-import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
 import { GithubSVG } from "@svg/social";
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
@@ -45,46 +42,47 @@ function ProjectList() {
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
 
 	const [showAddProject, setShowAddProject] = useState(false);
-	return (
-		<>
-			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
-				<div className={"flex items-center"}>
-					<span className={"text-13 leading-none mr-8 font-600"}>Projects</span>
-				</div>
+	return <>
+        <div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
+            <div className={"flex items-center"}>
+                <span className={"text-13 leading-none mr-8 font-600"}>Projects</span>
+            </div>
 
-				<Conditional showIf={showAddProject}>
-					<AddProject onClose={setShowAddProject.bind(this, false)} />
-				</Conditional>
-				<div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
-					<AddSVG />
-					<div className={"text-13 leading-none ml-8 leading-none mt-2"}>Add</div>
-				</div>
-			</div>
+            <Conditional showIf={showAddProject}>
+                <AddProject onClose={setShowAddProject.bind(this, false)} />
+            </Conditional>
+            <div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
+                <AddSVG />
+                <div className={"text-13 leading-none ml-8 leading-none mt-2"}>Add</div>
+            </div>
+        </div>
 
-			{search && (
-				<div>
-					<Input placeholder={"enter name"} css={smallInputBox} />
-				</div>
-			)}
+        {search && (
+            <div>
+                <Input placeholder={"enter name"} css={smallInputBox} />
+            </div>
+        )}
 
-			<div className={"mt-6"}>
-				{projects.map(({ id, name, ICON }) => (
-					<MenuItemHorizontal
-						className={"mt-2"}
-						selected={appState.selectedProjectId == id}
-						onClick={() => {
-							setAppStateItem({ key: "selectedProjectId", value: id });
-							router.push("/app/dashboard");
-						}}
-						key={id}
-					>
-						<LayoutSVG />
-						<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
-					</MenuItemHorizontal>
-				))}
-			</div>
-		</>
-	);
+        <div className={"mt-6"}>
+            {projects.map(({
+                id,
+                name
+            }) => (
+                <MenuItemHorizontal
+                    className={"mt-2"}
+                    selected={appState.selectedProjectId === id}
+                    onClick={() => {
+                        setAppStateItem({ key: "selectedProjectId", value: id });
+                        router.push("/app/dashboard");
+                    }}
+                    key={id}
+                >
+                    <LayoutSVG />
+                    <span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
+                </MenuItemHorizontal>
+            ))}
+        </div>
+    </>;
 }
 
 function BottomSection({ name, description, link, ...props }) {
@@ -228,9 +226,7 @@ export const dropdDown = css`
 function DropdownContent() {
 	const router = useRouter();
 	useEffect(() => {
-		loadCrisp(() => {
-			``;
-		});
+		loadCrisp(() => {});
 	}, []);
 	return (
 		<div className={"flex flex-col justify-between"}>
@@ -296,7 +292,7 @@ const runTests = (projectId: number) => {
 function RunTest() {
 	const router = useRouter();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
-	const { query } = useRouter();
+	const { query } = router;
 	const [filters] = useAtom(buildFiltersAtom);
 
 	const runProjectTest = useCallback(() => {
@@ -321,11 +317,10 @@ function RunTest() {
 }
 
 function TopNavbar() {
-	const router = useRouter();
-	const { pathname, query, asPath } = router;
-	const [showCreateTest, setShowCreateTest] = useState(false);
+    const { pathname, query, asPath } = useRouter();
+    const [showCreateTest, setShowCreateTest] = useState(false);
 
-	return (
+    return (
 		<div css={[nav]} className={""}>
 			<div css={[containerWidth]}>
 				<div className={"w-full flex px-8 pl-0 justify-between"}>

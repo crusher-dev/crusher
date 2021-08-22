@@ -32,7 +32,7 @@ enum ONBOARDING_STEP {
 const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EditionTypeEnum.EE ? ONBOARDING_STEP.TUTORIAL : ONBOARDING_STEP.SETUP);
 
 const SetupCrusher = () => {
-	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [system] = useAtom(systemConfigAtom);
 
 	useEffect(() => {
@@ -68,7 +68,7 @@ const SetupCrusher = () => {
 };
 
 const HowItWorksView = () => {
-	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 
 	usePageTitle("How it works?");
 	return (
@@ -169,7 +169,7 @@ const CrusherOnboarding = () => {
 			sendSnackBarEvent({ message: "Your test will be saved after onboarding" });
 		}
 
-		if (getBoolean(meta.INITIAL_ONBOARDING) === true) {
+		if (getBoolean(meta.INITIAL_ONBOARDING)) {
 			router.push("/app/dashboard");
 		}
 	}, []);

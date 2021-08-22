@@ -39,9 +39,6 @@ class UniqueSelector {
 		let selectors: any[] = [];
 		const playwrightSelectors = getSelectors(element);
 
-		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
-		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
-
 		if (playwrightSelectors && playwrightSelectors[0].length) {
 			selectors.push(
 				...playwrightSelectors.map((selector) => {
@@ -56,6 +53,9 @@ class UniqueSelector {
 				return a.uniquenessScore === 1;
 			});
 		}
+		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
+		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
+
 		// @ts-ignore
 		return {
 			mostUniqueSelector: selectors[0],

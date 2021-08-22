@@ -3,7 +3,7 @@ import { List } from "../../components/app/list";
 import { ELEMENT_LEVEL_ACTIONS_LIST } from "../../../constants/elementLevelActions";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { performActionInFrame, turnOffInspectModeInFrame } from "../../../messageListener";
-import { getActionsRecordingState } from "../../../redux/selectors/recorder";
+import { getActionsRecordingState, getInspectModeState } from "../../../redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { getStore } from "../../../redux/store";
 import { recordAction } from "../../../redux/actions/actions";
@@ -18,6 +18,8 @@ interface iElementLevelActionListProps {
 
 const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 	const recordingState = useSelector(getActionsRecordingState);
+	const inspecteModeState = useSelector(getInspectModeState);
+
 	const items = ELEMENT_LEVEL_ACTIONS_LIST.map((action) => {
 		return {
 			id: action.id,
@@ -27,7 +29,7 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 		};
 	});
 
-	const recordElementAction = (type: ActionsInTestEnum, meta: any = null) => {
+	const recordElementAction = (type: ActionsInTestEnum, meta: any = null, screenshot: string | null = null) => {
 		const store = getStore();
 
 		store.dispatch(
@@ -37,6 +39,7 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 					selectors: recordingState.elementInfo?.selectors,
 					meta: meta,
 				},
+				// screenshot: screenshot,
 				//@TODO: Get the url of the target site here (Maybe some hack with atom or CEF)
 				url: "",
 			}),
@@ -82,7 +85,16 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 	};
 
 	return (
-		<List heading={"Select Element Action"} items={items} showBackButton={true} onBackPressed={handleBackAction} onItemClick={handleActionSelected}></List>
+		<>
+			<List
+				heading={"Select Element Action"}
+				items={items}
+				showBackButton={true}
+				onBackPressed={handleBackAction}
+				onItemClick={handleActionSelected}
+			></List>
+			<div>{recordingState.elementInfo ? recordingState.elementInfo.capturedElementScreenshot : null}</div>
+		</>
 	);
 };
 

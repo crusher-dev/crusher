@@ -9,7 +9,7 @@ import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingSta
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
-
+import html2canvas from "html2canvas";
 export default class EventRecording {
 	defaultState: any = {
 		targetElement: null,
@@ -303,13 +303,15 @@ export default class EventRecording {
 		}
 	}
 
-	turnOnElementModeInParentFrame(element = this.state.targetElement) {
+	async turnOnElementModeInParentFrame(element = this.state.targetElement) {
+		const capturedElementScreenshot = await html2canvas(element, { backgroundColor: "#FF6A00" }).then((canvas: any) => canvas.toDataURL());
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
 			meta: {
 				selectors: getSelectors(element),
 				attributes: getAllAttributes(element),
 				innerHTML: element.innerHTML,
+				// capturedElementScreenshot: capturedElementScreenshot,
 			} as iElementModeMessageMeta,
 		});
 	}

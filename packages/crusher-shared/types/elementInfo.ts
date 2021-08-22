@@ -9,4 +9,5 @@ export interface iElementInfo {
 	selectors: Array<iSelectorInfo>;
 	attributes: Array<iAttribute>;
 	innerHTML: string;
+	capturedElementScreenshot?: string;
 }

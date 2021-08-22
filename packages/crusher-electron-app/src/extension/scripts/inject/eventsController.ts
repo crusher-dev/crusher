@@ -2,6 +2,8 @@ import EventRecording from "./ui/eventRecording";
 import { getSelectors } from "../../utils/selector";
 import { MESSAGE_TYPES } from "../../messageListener";
 import { iAction } from "@shared/types/action";
+import html2canvas from "html2canvas";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -44,14 +46,27 @@ export default class EventsController {
 		});
 	}
 
-	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = false) {
+	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
 
-		if (shouldLogImage) {
+		let capturedElementScreenshot = null;
+
+		if (
+			shouldLogImage &&
+			![
+				ActionsInTestEnum.NAVIGATE_URL,
+				ActionsInTestEnum.PAGE_SCREENSHOT,
+				ActionsInTestEnum.PAGE_SCROLL,
+				ActionsInTestEnum.SET_DEVICE,
+				ActionsInTestEnum.WAIT_FOR_NAVIGATION,
+				ActionsInTestEnum.VALIDATE_SEO,
+			].includes(event_type as any)
+		) {
 			console.log(capturedTarget);
-			// html2canvas(capturedTarget).then((canvas: any) => {
-			// 	console.log(canvas.toDataURL());
-			// });
+			capturedElementScreenshot = await html2canvas(capturedTarget).then((canvas: any) => {
+				return canvas.toDataURL();
+			});
+			console.log("Finsihed");
 		}
 
 		(window as any).electron.host.postMessage({
@@ -60,7 +75,10 @@ export default class EventsController {
 				type: event_type,
 				payload: {
 					selectors: selectors,
-					meta: { value },
+					meta: {
+						value,
+						// capturedElementScreenshot: capturedElementScreenshot,
+					},
 				},
 				url: window.location.href,
 			} as iAction,

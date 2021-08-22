@@ -10,7 +10,7 @@ const intervals = [
 export function getStringFromDuration(durationInSec: number) {
 	const interval = intervals.find((i) => i.seconds < durationInSec);
 	const count = Math.ceil(durationInSec / interval?.seconds) || 1;
-	const plural = `${count !== 1 ? "s" : ""}`;
+	const plural = String(count !== 1 ? "s" : "");
 
 	return `${count} ${interval?.label || "sec"}${plural}`;
 }

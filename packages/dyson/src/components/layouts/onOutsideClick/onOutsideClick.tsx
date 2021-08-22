@@ -1,16 +1,15 @@
 import React, { SyntheticEvent, useEffect, useRef } from "react";
 
-export const isChildOfOnCloseClass = (target, root) => {
-	let element = target;
+export const isChildOfOnCloseClass = (element, root) => {
+    while (element !== root && element && document.body.contains(element)) {
 
-	while (element !== root && element && document.body.contains(element)) {
-		if (element?.className?.includes("close-on-click")) {
+		if (element?.classList?.contains("close-on-click")) {
 			return true;
 		}
 
 		element = element.parentNode;
 	}
-	return false;
+    return false;
 };
 
 export const OnOutsideClick = ({ onOutsideClick, children }) => {

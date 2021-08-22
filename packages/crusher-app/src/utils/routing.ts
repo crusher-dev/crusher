@@ -1,17 +1,18 @@
 import { NextRouter } from "next/router";
+
 import { ROOT_PATH, ROUTES_ACCESSIBLE_WITHOUT_SESSION, ROUTES_TO_REDIRECT_WHEN_SESSION } from "@constants/page";
-import { getEdition } from "@utils/helpers";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
-import { isTempTestPending } from "@utils/user";
 import { getBoolean } from "@utils/common";
+import { getEdition } from "@utils/helpers";
+import { isTempTestPending } from "@utils/user";
 
 export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
 	const { userData: user } = data;
 	const { pathname } = router;
 
 	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
-		if (getBoolean(user.meta.INITIAL_ONBOARDING) !== true) {
+		if (!getBoolean(user.meta.INITIAL_ONBOARDING)) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
 			if (isTempTestPending()) {
@@ -33,7 +34,7 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 	const { pathname } = router;
 
 	if (isUserLoggedIn) {
-		if (getBoolean(user.meta.INITIAL_ONBOARDING) !== true) {
+		if (!getBoolean(user.meta.INITIAL_ONBOARDING)) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
 			if (isTempTestPending()) {

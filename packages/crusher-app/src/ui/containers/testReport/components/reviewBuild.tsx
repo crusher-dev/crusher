@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from "react";
-import { CloseSVG } from "@svg/dashboard";
-import Radio from "dyson/src/components/atoms/radio/radio";
-import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
+import React, { useCallback, useState } from "react";
+
+import { Button } from "dyson/src/components/atoms";
+import Radio from "dyson/src/components/atoms/radio/radio";
+
+import { CloseSVG } from "@svg/dashboard";
 
 export const radioContent = [
 	{ label: "Leave feedback", subLabel: "Approve without approval" },

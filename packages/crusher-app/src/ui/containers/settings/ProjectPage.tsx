@@ -1,69 +1,70 @@
-import { SettingsLayout } from '@ui/layout/SettingsBase';
-import { Heading } from 'dyson/src/components/atoms/heading/Heading';
-import { css } from '@emotion/react';
-import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
-import { Button, Input } from 'dyson/src/components/atoms';
-import { backendRequest } from '@utils/backendRequest';
-import { RequestMethod } from '../../../types/RequestOptions';
-import { useAtom } from 'jotai';
-import { appStateAtom } from '../../../store/atoms/global/appState';
-import { currentProject, projectsAtom } from '../../../store/atoms/global/project';
-import { useEffect, useState } from 'react';
-import projects from '@pages/settings/org/projects';
-import { sendSnackBarEvent } from '@utils/notify';
-import { useRouter } from 'next/router';
+import { css } from "@emotion/react";
+import { useEffect, useState } from "react";
 
-const deleteProject = (projectId)=>{
-	return backendRequest(`/projects/${projectId}/actions/delete`,{
-		method: RequestMethod.POST
-	})
-}
+import { useAtom } from "jotai";
 
-const updateProjectName = (projectId,name)=>{
-	return backendRequest(`/projects/${projectId}/actions/update.name`,{
+import { Button, Input } from "dyson/src/components/atoms";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+
+import { SettingsLayout } from "@ui/layout/SettingsBase";
+import { backendRequest } from "@utils/backendRequest";
+import { sendSnackBarEvent } from "@utils/notify";
+
+import { appStateAtom } from "../../../store/atoms/global/appState";
+import { currentProject, projectsAtom } from "../../../store/atoms/global/project";
+import { RequestMethod } from "../../../types/RequestOptions";
+
+const deleteProject = (projectId) => {
+	return backendRequest(`/projects/${projectId}/actions/delete`, {
 		method: RequestMethod.POST,
-		 payload: {name}
-	})
-}
+	});
+};
+
+const updateProjectName = (projectId, name) => {
+	return backendRequest(`/projects/${projectId}/actions/update.name`, {
+		method: RequestMethod.POST,
+		payload: { name },
+	});
+};
 
 export const ProjectSettings = () => {
-	const router = useRouter()
-	const [{selectedProjectId}] = useAtom(appStateAtom);
-	const [project] = useAtom(currentProject)
-	const [projectsList] = useAtom(projectsAtom)
-	const [projectName, setProjectName] = useState(project?.name)
-	const [saveButtonDisabled,setSavebuttonDisabled] = useState(true)
-	const onlyOneProject = projectsList.length<=1;
+    const [{ selectedProjectId }] = useAtom(appStateAtom);
+    const [project] = useAtom(currentProject);
+    const [projectsList] = useAtom(projectsAtom);
+    const [projectName, setProjectName] = useState(project?.name);
+    const [saveButtonDisabled, setSavebuttonDisabled] = useState(true);
+    const onlyOneProject = projectsList.length <= 1;
 
-	useEffect(()=>{
-		const isNameSame = project?.name === projectName
-		setSavebuttonDisabled(isNameSame)
-	},[projectName])
+    useEffect(() => {
+		const isNameSame = project?.name === projectName;
+		setSavebuttonDisabled(isNameSame);
+	}, [projectName]);
 
-	const deleteProjectCallback= async ()=>{
-		if(onlyOneProject){
+    const deleteProjectCallback = async () => {
+		if (onlyOneProject) {
 			sendSnackBarEvent({
 				message: "Unable to delete, Only 1 project in this org",
-				type: "error"
-			})
+				type: "error",
+			});
 			return;
 		}
 		await deleteProject(selectedProjectId);
 
-		window.location = "/"
-	}
+		window.location = "/";
+	};
 
-	const updateProjectNameCallback= async ()=>{
-		await updateProjectName(selectedProjectId,projectName);
+    const updateProjectNameCallback = async () => {
+		await updateProjectName(selectedProjectId, projectName);
 
 		sendSnackBarEvent({
 			message: "We have update project info",
-		})
+		});
 
-		setSavebuttonDisabled(true)
-	}
+		setSavebuttonDisabled(true);
+	};
 
-	return (
+    return (
 		<SettingsLayout>
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<Heading type={1} fontSize={20} className={"mb-8"}>
@@ -78,7 +79,9 @@ export const ProjectSettings = () => {
 				<div>
 					<Input
 						placeholder={"Name of the project"}
-						onChange={(e)=>{setProjectName(e.target.value)}}
+						onChange={(e) => {
+							setProjectName(e.target.value);
+						}}
 						value={projectName}
 						css={css`
 							height: 42rem;
@@ -90,8 +93,8 @@ export const ProjectSettings = () => {
 							width: 82rem;
 						`}
 						className={"mt-12"}
-						onClick={()=>{
-							!saveButtonDisabled && updateProjectNameCallback()
+						onClick={() => {
+							!saveButtonDisabled && updateProjectNameCallback();
 						}}
 					>
 						Save

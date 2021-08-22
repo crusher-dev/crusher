@@ -1,8 +1,10 @@
 import { css } from "@emotion/react";
-import { CenterLayout } from "dyson/src/components/layouts/";
+
 import { Logo } from "dyson/src/components/atoms";
-import CrusherBase from "../layout/CrusherBase";
+import { CenterLayout } from "dyson/src/components/layouts/";
+
 import { usePageTitle } from "../../hooks/seo";
+import CrusherBase from "../layout/CrusherBase";
 
 const logoStyle = css`
 	box-shadow: 0 0 38px 12px rgb(153 136 255 / 12%);

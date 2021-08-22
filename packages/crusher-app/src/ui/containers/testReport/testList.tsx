@@ -159,9 +159,9 @@ function RenderImageInfo({ data }) {
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
 			<div className={"mt-20 flex"}>
-				<img src={baseLineImage} />{" "}
+				<img src={currentImage} />{" "}
 				<img
-					src={currentImage}
+					src={meta.outputs[0].diffImageUrl}
 					css={css`
 						margin-left: 2%;
 					`}

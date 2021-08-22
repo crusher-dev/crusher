@@ -159,8 +159,6 @@ class BackgroundEventsListener {
 	}
 
 	registerEventListeners() {
-		chrome.browserAction.onClicked.addListener(this.handleBrowserIconClick);
-
 		chrome.tabs.onUpdated.addListener(this.onTabUpdated);
 		chrome.tabs.onRemoved.addListener(this.onTabRemoved);
 

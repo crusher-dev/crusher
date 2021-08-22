@@ -27,11 +27,17 @@ const Device = (props: iDeviceProps) => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (!isDisabled) {
+			(window as any).electron.focusOnWebView();
+		}
+	}, [isDisabled]);
+
 	return (
 		<div style={previewBrowserStyle}>
-			<Conditional If={isDisabled}>
+			{/* <Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
-			</Conditional>
+			</Conditional> */}
 			<Conditional If={!isWebviewLoaded}>
 				<div style={{ background: "rgba(10, 10, 10, 0.925)" }} className="absolute flex h-full w-full justify-center items-center">
 					<div>

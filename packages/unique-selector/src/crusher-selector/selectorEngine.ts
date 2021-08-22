@@ -73,7 +73,6 @@ export const buildSelectorForCues = (cues: Cue[]): string => {
 		});
 
 		const cssSelector = cuesForLevel.map((cue) => (cue.type === "text" ? `:has-text("${cue.value}")` : cue.value)).join("");
-
 		parts.push(cssSelector);
 	});
 
@@ -90,12 +89,17 @@ export const evaluatorQuerySelector = (selector: string, root?: Node): HTMLEleme
 };
 
 export const isSelectorMatch = (selector: string, target: HTMLElement, rectCache: Map<HTMLElement, Rect>): boolean => {
-	const matchedElement = evaluatorQuerySelector(
-		selector,
-		// We must pass `target.ownerDocument` rather than `document`
-		// because sometimes this is called from other frames.
-		target.ownerDocument!,
-	);
+	try {
+		const matchedElement = evaluatorQuerySelector(
+			selector,
+			// We must pass `target.ownerDocument` rather than `document`
+			// because sometimes this is called from other frames.
+			target.ownerDocument!,
+		);
 
-	return !!matchedElement && isElementMatch(matchedElement, target, rectCache);
+		return !!matchedElement && isElementMatch(matchedElement, target, rectCache);
+	} catch (err) {
+		console.error(err);
+		return false;
+	}
 };

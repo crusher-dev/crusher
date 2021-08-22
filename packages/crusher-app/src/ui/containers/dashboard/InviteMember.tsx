@@ -9,7 +9,7 @@ import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
-import { getInviteMemberAPI, getRunTestApi } from "@constants/api";
+import {getInviteMemberAPI} from "@constants/api";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/backendRequest";
 import { sendSnackBarEvent } from "@utils/notify";
@@ -41,7 +41,7 @@ export const InvitePeople = ({ onClose }) => {
 				await inviteTeamMembers(selectedProjectId, emailList);
 				sendSnackBarEvent({ type: "normal", message: "We have sent invitation links to their email" });
 				onClose();
-			} catch (err) {
+			} catch {
 				sendSnackBarEvent({ type: "error", message: "Failed to send invitations" });
 			}
 			setProcessing(false);

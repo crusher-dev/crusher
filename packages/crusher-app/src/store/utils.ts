@@ -2,12 +2,12 @@ import { atom } from "jotai";
 import identity from "lodash/identity";
 import pickBy from "lodash/pickBy";
 
-const filterObjectByKeys = (object: Record<string, any>, keys: Array<string>) => {
-	const baseObject: Record<string, any> = {};
-	keys.forEach((key: string) => {
+const filterObjectByKeys = (object: Record<string, any>, keys: string[]) => {
+    const baseObject: Record<string, any> = {};
+    for (const key of keys) {
 		baseObject[key] = object[key];
-	});
-	return baseObject;
+	}
+    return baseObject;
 };
 
 const updateURL = (object: Record<string, any>) => {
@@ -20,10 +20,10 @@ const updateURL = (object: Record<string, any>) => {
 	history.pushState(null, "", url.toString());
 };
 
-export const atomWithQuery = (keysToConsider: Array<string>, initialValue: Record<string, any> = {}) => {
+export const atomWithQuery = (keysToConsider: string[], initialValue: Record<string, any> = {}) => {
 	const getBaseValue = () => {
 		let baseObject = initialValue;
-		const mergeKey = { ...initialValue };
+		const mergeKey = initialValue;
 
 		setTimeout(() => {
 			updateURL(filterObjectByKeys(mergeKey, keysToConsider));

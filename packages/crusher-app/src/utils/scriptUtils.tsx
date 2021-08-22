@@ -1,9 +1,7 @@
-import React from "react";
-
 export function addScript(id, attribute, text, callback) {
 	const s = document.createElement("script");
 	for (const attr in attribute) {
-		s.setAttribute(attr, attribute[attr] ? attribute[attr] : null);
+		s.setAttribute(attr, attribute[attr] || null);
 	}
 	s.id = id;
 	s.innerHTML = text;

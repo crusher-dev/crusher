@@ -12,7 +12,6 @@ import { Conditional } from "dyson/src/components/layouts";
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
 
-import { DeleteIcon } from "../../../../../../crusher-electron-app/src/extension/assets/icons";
 import { projectsAtom } from "../../../../store/atoms/global/project";
 
 export const OrgProjects = () => {

@@ -60,7 +60,7 @@ const itemIndexStyle = css`
 
 interface IExpandableListProps {
 	currentSelected: number;
-	children: Array<React.ReactElement<IExpandableListItemProps>>;
+	children: React.ReactElement<IExpandableListItemProps>[];
 	changeSelected?: any;
 	css?: any;
 }

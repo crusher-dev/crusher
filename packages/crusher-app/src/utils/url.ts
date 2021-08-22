@@ -4,9 +4,7 @@ export const resolvePathToBackendURI = (endpoint: string) =>
 	getPathWithHost(
 		process.env.NEXT_PUBLIC_BACKEND_SERVER_URL || isBrowser
 			? `${window.location.origin}/server`
-			: process.env.NEXT_INTERNAL_BACKEND_URL
-			? process.env.NEXT_INTERNAL_BACKEND_URL
-			: "",
+			: process.env.NEXT_INTERNAL_BACKEND_URL || "",
 		endpoint,
 	);
 export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(isBrowser ? window.location.origin : "", endpoint);
@@ -19,16 +17,16 @@ const getPathWithHost = (host: string, path: string): string => {
 };
 
 export function appendParamsToURI(url: string, params: { [paramKey: string]: string } = {}) {
-	const currentURL = new URL(url);
-	Object.keys(params).forEach((paramKey) => {
+    const currentURL = new URL(url);
+    for (const paramKey of Object.keys(params)) {
 		currentURL.searchParams.append(paramKey, params[paramKey]);
-	});
+	}
 
-	return currentURL.href;
+    return currentURL.href;
 }
 
 export function addQueryParamToPath(uri: string, params: string) {
-	return params ? `${uri}?${params}` : `${uri}`;
+	return params ? `${uri}?${params}` : String(uri);
 }
 
 export function checkIfAbsoluteURI(uri: string) {

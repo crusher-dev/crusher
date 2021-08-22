@@ -32,24 +32,31 @@ export type ButtonProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<ButtonProps> = ({ size = "medium", rightIcon, isError = false, onReturn, children, className, ...props }) => {
+export const Input: React.FC<ButtonProps> = ({
+    rightIcon,
+    isError = false,
+    onReturn,
+    children,
+    className,
+    ...props
+}) => {
 	const ref = useRef();
 
 	const onKeyUp = useCallback((e) => {
-		if (e.keyCode == 13) {
+		if (e.keyCode === 13) {
 			onReturn && onReturn(ref.current.value);
 		}
 	});
 
 	return (
-		<div className={"relative"}>
-			<input ref={ref} css={[inputBox, isError && errorState]} {...props} className={`${className ? className : ""}`} onKeyUp={onKeyUp} />
+        <div className={"relative"}>
+			<input ref={ref} css={[inputBox, isError && errorState]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />
 
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle}>{rightIcon}</div>
 			</Conditional>
 		</div>
-	);
+    );
 };
 
 const rightIconStyle = css`

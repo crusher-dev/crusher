@@ -45,7 +45,7 @@ const updateTeamMeta = (meta: Record<string, any>) => {
 
 export const updateOnboardingMutator = atom(null, (_get, _set, { type, key, value }: IUpdateUserOnboarding) => {
 	const { selectedProjectId } = _get(appStateAtom);
-	const payload = { [`${key}`]: value };
+	const payload = { [String(key)]: value };
 	switch (type) {
 		case "project":
 			{

@@ -3,7 +3,14 @@ import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
 
 async function clickOnElement(element: Locator) {
-	await element.click({ timeout: 5000 });
+	try {
+		await element.click({ force: true, timeout: 5000 });
+	} catch (e) {
+		if (!e.message.includes("selector resolved to hidden"))
+			throw e;
+
+		await element.dispatchEvent("click");
+	}
 }
 
 module.exports = {

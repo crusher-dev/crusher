@@ -334,7 +334,6 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
-		console.log("WINDOW CLICK");
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		if (isRecorderCover) {
@@ -357,7 +356,9 @@ export default class EventRecording {
 
 		const closestLink: HTMLAnchorElement = target.closest("a");
 
-		if (!event.simulatedEvent) {
+		// If clientX and clientY is 0 it may mean that the event is not triggered
+		// by user. Found during creating tests for ielts search
+		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
 			const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(target);
 			if (needsOtherActions) {
 				const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(target);

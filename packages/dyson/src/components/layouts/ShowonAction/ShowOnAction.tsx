@@ -7,6 +7,9 @@ type TShowOnClick = {
 	initialState: boolean;
 } & React.DetailedHTMLProps<any, any>;
 
+/*
+	Should close on outside click
+ */
 export function ShowOnClick({ children, component, callback, initialState }: TShowOnClick) {
 	const [showDropDown, setShow] = useState(initialState);
 	const customRef = useRef(null);

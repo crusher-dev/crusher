@@ -4,7 +4,7 @@ import { getIDSelectors } from "./selectors/id";
 import { getDataAttribute } from "./selectors/dataAttribute";
 import { getAttribute } from "./selectors/attribute";
 import { getPnC } from "./selectors/pnc";
-import { getSelector } from "./crusher-selector/generateSelectors";
+import { getSelectors } from "./crusher-selector/generateSelectors";
 import { SELECTOR_TYPE } from "./constants";
 
 /**
@@ -36,23 +36,25 @@ class UniqueSelector {
 		const geAttributesSelector = getAttribute(element, this._configuration.root);
 		const classSelectors = getPnC(element, this._configuration.root);
 
-		let selectors = [];
-		const playwrightSelector = getSelector(element);
+		let selectors: any[] = [];
+		const playwrightSelectors = getSelectors(element);
 
 		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
 
-		if (playwrightSelector) {
-			selectors = [
-				{
-					type: SELECTOR_TYPE.PLAYWRIGHT,
-					value: playwrightSelector,
-					uniquenessScore: 1,
-				},
-				...selectors.filter((a) => {
-					return a.uniquenessScore === 1;
+		if (playwrightSelectors && playwrightSelectors[0].length) {
+			selectors.push(
+				...playwrightSelectors.map((selector) => {
+					return {
+						type: SELECTOR_TYPE.PLAYWRIGHT,
+						value: selector,
+						uniquenessScore: 1,
+					};
 				}),
-			];
+			);
+			selectors = selectors.filter((a) => {
+				return a.uniquenessScore === 1;
+			});
 		}
 		// @ts-ignore
 		return {

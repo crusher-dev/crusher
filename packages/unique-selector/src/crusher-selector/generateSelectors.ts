@@ -46,13 +46,23 @@ export function* generateSelectors(
 	if (count < 1) yield { penalty: 1000, selector: getXpath(target) };
 }
 
-export function getSelector(target: HTMLElement, timeout = 1000, selectorCache?: Map<HTMLElement, RankedSelector>): string | undefined {
-	const selectors = generateSelectors(target, timeout, selectorCache);
-
-	for (const selector of selectors) {
-		// take the first one
-		return selector.selector;
+export function getSelectors(target: HTMLElement, timeout = 1000, selectorCache?: Map<HTMLElement, RankedSelector>, limitSelectors = 10): Array<string> {
+	if (["::before", "::after"].includes(target.tagName)) {
+		target = target.parentElement;
 	}
 
-	return null;
+	const selectors = generateSelectors(target, timeout, selectorCache);
+
+	const selectorList = [];
+	let index = 0;
+	for (const selector of selectors) {
+		// take the first one
+		if (index++ >= limitSelectors) {
+			break;
+		}
+
+		selectorList.push(selector.selector);
+	}
+
+	return selectorList;
 }

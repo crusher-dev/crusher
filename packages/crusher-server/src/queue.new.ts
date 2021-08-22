@@ -12,7 +12,7 @@ async function boot() {
 	await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 
 	await queueManager.addWorkerForQueue(TEST_COMPLETE_QUEUE, testCompleteWorker.default as any, {
-		concurrency: 1,
+		concurrency: 3,
 		lockDuration: 120000,
 	});
 }

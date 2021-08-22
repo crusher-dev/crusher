@@ -1,5 +1,5 @@
 import * as path from "path";
-import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents } from "electron";
+import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard } from "electron";
 import userAgents from "../../crusher-shared/constants/userAgents";
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -72,7 +72,7 @@ function getIconPath() {
 }
 
 function reloadApp(mainWindow, completeReset = false) {
-	const currentArgs = process.argv.slice(1).filter(a => !a.startsWith("--open-extension-url="));
+	const currentArgs = process.argv.slice(1).filter((a) => !a.startsWith("--open-extension-url="));
 	app.relaunch({ args: completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
 	app.exit();
 }
@@ -158,6 +158,24 @@ async function createWindow() {
 		webViewContent.send("post-message-to-webview", data);
 	});
 
+	ipcMain.handle("get-node-screenshot", async (event, data: { x: number; y: number; width: number; height: number }) => {
+		const webViewContent = getWebViewContent();
+		// console.log("Web view content is", webViewContent);
+		if (!webViewContent) return null;
+
+		const pageLayoutMetric = await webViewContent.debugger.sendCommand("Page.getLayoutMetrics");
+
+		const page_zoom = pageLayoutMetric.visualViewport.zoom || 1;
+		data.x *= page_zoom;
+		data.y *= page_zoom;
+		data.width *= page_zoom;
+		data.height *= page_zoom;
+
+		const screenshotCaptureInfo = await webViewContent.capturePage(data);
+		// @Note: Doesn't work correctly, returns full page screenshot on elements.
+		return screenshotCaptureInfo.toDataURL();
+	});
+
 	ipcMain.on("init-web-view", async (e, webContentsId) => {
 		const webViewContent = getWebViewContent();
 		// console.log("Web view content is", webViewContent);
@@ -189,7 +207,6 @@ async function createWindow() {
 					},
 				});
 				const nodeObject = await webViewContent.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
-				console.log("Calling node reuqestd", nodeObject);
 
 				await webViewContent.debugger.sendCommand("Runtime.callFunctionOn", {
 					functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",

@@ -7,11 +7,8 @@ import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
 
-import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import InviteMember from "@ui/containers/dashboard/InviteMember";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-
-import { DeleteIcon } from "../../../../../../crusher-electron-app/src/extension/assets/icons";
 
 export const Monitoring = () => {
 	const [showModal, setShowModal] = useState(false);

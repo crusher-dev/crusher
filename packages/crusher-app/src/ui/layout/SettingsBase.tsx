@@ -7,7 +7,6 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { AddSVG } from "@svg/dashboard";
 import { ChevronRight } from "@svg/settings";
-import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import InviteMember from "@ui/containers/dashboard/InviteMember";
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
@@ -86,9 +85,8 @@ const orgLinks = [
 ];
 
 function LinksSection({ links, label }) {
-	const router = useRouter();
-	const { pathname } = router;
-	return (
+    const { pathname } = useRouter();
+    return (
 		<>
 			<CompressibleMenu name={label}>
 				<div className={"mt-6 mb-32"}>

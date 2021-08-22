@@ -1,23 +1,24 @@
-import React, { ChangeEvent, useState, useMemo, useCallback } from "react";
-import { Conditional } from "dyson/src/components/layouts";
-import { CompleteStatusIconSVG } from "@svg/dashboard";
-import { ClockIconSVG, CommentIconSVG, DangerIconSVG, DropdownIconSVG } from "@svg/builds";
 import { css } from "@emotion/react";
-import { SearchFilterBar } from "../common/searchFilterBar";
-import Link from "next/link";
-import useSWR from "swr";
-import { getBuildsList } from "@constants/api";
-import { useAtom } from "jotai";
-import { currentProject } from "../../../store/atoms/global/project";
-import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { TestStatusSVG } from "@svg/testReport";
-import { showReviewButton } from "@utils/pages/buildReportUtils";
-import { getStringFromDuration, timeSince } from "@utils/dateTimeUtils";
+import React, {useMemo, useCallback} from "react";
+
+import { useAtom } from "jotai";
+import useSWR from "swr";
+
 import { PaginationButton } from "../../../../../dyson/src/components/molecules/PaginationButton";
-import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
+import { Conditional } from "dyson/src/components/layouts";
+
 import { ConditionalLink } from "@components/common/ConditionalLink";
+import { getBuildsList } from "@constants/api";
+import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import {ClockIconSVG, CommentIconSVG, DangerIconSVG} from "@svg/builds";
+import { TestStatusSVG } from "@svg/testReport";
+import { getStringFromDuration, timeSince } from "@utils/dateTimeUtils";
+
+import { currentProject } from "../../../store/atoms/global/project";
+import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
+import { SearchFilterBar } from "../common/searchFilterBar";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 

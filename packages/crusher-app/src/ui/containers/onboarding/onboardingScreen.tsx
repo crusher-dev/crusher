@@ -1,23 +1,27 @@
-import React, { useCallback, useEffect, useState } from "react";
 import { css } from "@emotion/react";
-import { CenterLayout } from "dyson/src/components/layouts";
-import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
-import { getEdition } from "../../../utils/helpers";
-import { atom, useAtom } from "jotai";
-import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
-import { usePageTitle } from "../../../hooks/seo";
 import Link from "next/link";
-import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
-import { isTempTestPending } from "@utils/user";
-import { sendSnackBarEvent } from "@utils/notify";
-import { VideoComponent } from "dyson/src/components/atoms/video/video";
-import { EditionTypeEnum } from "@crusher-shared/types/common/general";
-import { updateOnboardingMutator } from "../../../store/mutators/user";
-import { USER_META_KEYS } from "@constants/USER";
-import { userAtom } from "../../../store/atoms/global/user";
-import { getBoolean } from "@utils/common";
 import { useRouter } from "next/router";
+import React, { useCallback, useEffect, useState } from "react";
+
+import { atom, useAtom } from "jotai";
+
+import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
+import { VideoComponent } from "dyson/src/components/atoms/video/video";
+import { CenterLayout } from "dyson/src/components/layouts";
+
+import { USER_META_KEYS } from "@constants/USER";
+import { EditionTypeEnum } from "@crusher-shared/types/common/general";
+import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
+import { getBoolean } from "@utils/common";
+import { sendSnackBarEvent } from "@utils/notify";
+import { isTempTestPending } from "@utils/user";
+import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
+
+import { usePageTitle } from "../../../hooks/seo";
+import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
+import { userAtom } from "../../../store/atoms/global/user";
+import { updateOnboardingMutator } from "../../../store/mutators/user";
+import { getEdition } from "../../../utils/helpers";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -28,7 +32,7 @@ enum ONBOARDING_STEP {
 const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EditionTypeEnum.EE ? ONBOARDING_STEP.TUTORIAL : ONBOARDING_STEP.SETUP);
 
 const SetupCrusher = () => {
-	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [system] = useAtom(systemConfigAtom);
 
 	useEffect(() => {
@@ -64,7 +68,7 @@ const SetupCrusher = () => {
 };
 
 const HowItWorksView = () => {
-	const [_, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 
 	usePageTitle("How it works?");
 	return (
@@ -165,7 +169,7 @@ const CrusherOnboarding = () => {
 			sendSnackBarEvent({ message: "Your test will be saved after onboarding" });
 		}
 
-		if (getBoolean(meta.INITIAL_ONBOARDING) === true) {
+		if (getBoolean(meta.INITIAL_ONBOARDING)) {
 			router.push("/app/dashboard");
 		}
 	}, []);

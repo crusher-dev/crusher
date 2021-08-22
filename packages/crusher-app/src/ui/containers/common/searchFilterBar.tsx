@@ -1,17 +1,19 @@
 import { css } from "@emotion/react";
-import { DropdownIconSVG } from "@svg/builds";
-import { Input } from "dyson/src/components/atoms/input/Input";
+import React, { useState } from "react";
+
+import { useAtom } from "jotai";
+
 import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
 import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
-import { useRouter } from "next/router";
-import { MenuItem } from "@components/molecules/MenuItem";
-
-import { TestType, TestTypeLabel } from "@constants/test";
-import { useAtom } from "jotai";
-import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
+import { Input } from "dyson/src/components/atoms/input/Input";
 import { Conditional } from "dyson/src/components/layouts";
+
+import { MenuItem } from "@components/molecules/MenuItem";
+import { TestType, TestTypeLabel } from "@constants/test";
+import { DropdownIconSVG } from "@svg/builds";
 import { CloseSVG } from "@svg/dashboard";
-import React, { useState } from "react";
+
+import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 
 interface ISearchFilterBarProps {
 	data: any;
@@ -100,7 +102,7 @@ function Statustag() {
 function Authorstag({ data }: { data: any }) {
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
 	const { triggeredBy } = filters;
-	const selectedAuthor = data.availableAuthors.filter(({ id }) => id == Number(triggeredBy));
+	const selectedAuthor = data.availableAuthors.filter(({ id }) => id === Number(triggeredBy));
 
 	return (
 		<React.Fragment>
@@ -157,7 +159,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 		</Conditional>
 	);
 	return (
-		<div {...props}>
+        <div {...props}>
 			<div className="flex flex-row items-center" css={filterBarStyle}>
 				<div className={"flex-1 mr-26"}>
 					<Input
@@ -172,7 +174,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 							setFocus(true);
 							setFilters({ ...filters, search });
 						}}
-						rightIcon={!!search ? closeSVG : enterToSearch}
+						rightIcon={search ? closeSVG : enterToSearch}
 						css={inputStyle}
 						placeholder={placeholder}
 						isError={false}
@@ -197,7 +199,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 				</div>
 			</Conditional>
 		</div>
-	);
+    );
 }
 
 const closeHover = css`

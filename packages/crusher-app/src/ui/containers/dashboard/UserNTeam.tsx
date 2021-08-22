@@ -1,14 +1,17 @@
 import { css } from "@emotion/react";
-import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
-import { userAtom } from "../../../store/atoms/global/user";
-import { useAtom } from "jotai";
-import { teamAtom } from "../../../store/atoms/global/team";
-import { useState } from "react";
-import { resolvePathToBackendURI } from "@utils/url";
-import { useRouter } from "next/router";
-import { MenuItem } from "@components/molecules/MenuItem";
-import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
 import Link from "next/link";
+import { useRouter } from "next/router";
+
+import { useAtom } from "jotai";
+
+import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
+import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
+
+import { MenuItem } from "@components/molecules/MenuItem";
+import { resolvePathToBackendURI } from "@utils/url";
+
+import { teamAtom } from "../../../store/atoms/global/team";
+import { userAtom } from "../../../store/atoms/global/user";
 
 const userDropdownItems = [
 	{
@@ -70,12 +73,11 @@ function DropdownContent() {
 }
 
 export function UserNTeam() {
-	const [user] = useAtom(userAtom);
-	const [team] = useAtom(teamAtom);
+    const [user] = useAtom(userAtom);
+    const [team] = useAtom(teamAtom);
 
-	const [, setShow] = useState(false);
-	return (
-		<div className={"flex justify-between leading-none relative"} css={userCard}>
+    return (
+        <div className={"flex justify-between leading-none relative"} css={userCard}>
 			<div className={"flex"} css={orgName}>
 				<div css={nameInitial} className={"flex items-center justify-center uppercase font-700 pt-2 mr-14"}>
 					{team.name.substr(0, 1)}
@@ -101,7 +103,7 @@ export function UserNTeam() {
 				</div>
 			</Dropdown>
 		</div>
-	);
+    );
 }
 
 export function MenuItemHorizontal({ children, selected, ...props }) {

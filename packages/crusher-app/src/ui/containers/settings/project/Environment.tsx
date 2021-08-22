@@ -1,13 +1,14 @@
-import { SettingsLayout } from "@ui/layout/SettingsBase";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { css } from "@emotion/react";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Button } from "dyson/src/components/atoms";
 import { useState } from "react";
+
+import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
+import { Button } from "dyson/src/components/atoms";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
+
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
-import { Card } from '../../../../../../dyson/src/components/layouts/Card/Card';
-import { DeleteIcon } from '../../../../../../crusher-electron-app/src/extension/assets/icons';
+import { SettingsLayout } from "@ui/layout/SettingsBase";
 
 export const Environment = () => {
 	const [showModal, setShowModal] = useState(false);
@@ -43,7 +44,9 @@ export const Environment = () => {
 				<Card css={projectListCard}>
 					<div className={"flex justify-between items-center"}>
 						<div className={"text-15"}>fds</div>
-						<div className={"text-13"} id={"delete"}>Delete</div>
+						<div className={"text-13"} id={"delete"}>
+							Delete
+						</div>
 					</div>
 				</Card>
 			</div>
@@ -53,16 +56,12 @@ export const Environment = () => {
 
 const projectListCard = css`
 	padding: 12rem 20rem;
-	#delete{
-		:hover{
-		text-decoration: underline;
+	#delete {
+		:hover {
+			text-decoration: underline;
 		}
-		
 	}
-`
-
-
-
+`;
 
 const maxWidthContainer = css`
 	width: 680rem;

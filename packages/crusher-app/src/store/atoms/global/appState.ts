@@ -1,6 +1,6 @@
-import { atomWithImmer } from "jotai/immer";
-import { atom } from "jotai";
 import produce from "immer";
+import { atom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
 
 type TAppState = {
 	currentURL: string;

@@ -1,10 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useBuildReport } from "../../../store/serverState/buildReports";
-import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import React, {useEffect, useState} from "react";
+
+import { Button } from "dyson/src/components/atoms";
+import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
+import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { Conditional } from "dyson/src/components/layouts";
-import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
+import { Dropdown } from "dyson/src/components/molecules/Dropdown";
+import { Modal } from "dyson/src/components/molecules/Modal";
+
+import { MenuItem } from "@components/molecules/MenuItem";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
+import { LoadingSVG, PlaySVG } from "@svg/dashboard";
+import {ChevronDown, TestStatusSVG} from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -13,18 +23,9 @@ import {
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
 } from "@utils/pages/buildReportUtils";
-import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { Modal } from "dyson/src/components/molecules/Modal";
-import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
-import dynamic from "next/dynamic";
-import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
-import { MenuItem } from "@components/molecules/MenuItem";
-import { Dropdown } from "dyson/src/components/molecules/Dropdown";
-import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { useBuildReport } from "../../../store/serverState/buildReports";
 
-const CompareImage = dynamic(() => import("./components/compareImages"));
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 
 function ReviewSection() {
@@ -82,7 +83,7 @@ function ReportSection() {
 	}, []);
 
 	return (
-		<div className={"mt-40"}>
+        <div className={"mt-40"}>
 			<div className={"flex justify-between items-center"} id={"review-section"}>
 				<div className={"text-14"}>Jump to</div>
 				<div className={"flex items-center"}>
@@ -92,7 +93,7 @@ function ReportSection() {
 				</div>
 			</div>
 
-			<Conditional showIf={stickyOverviewSection && stickyOverviewSection}>
+			<Conditional showIf={stickyOverviewSection}>
 				<div className={"fixed"} css={stickyBar} id={"sticky-overview-bar"}>
 					<div css={containerCSS} className={"px-42 pt-10"}>
 						<div>
@@ -132,30 +133,15 @@ function ReportSection() {
 				))}
 			</div>
 		</div>
-	);
-}
-
-function FilterBar() {
-	return (
-		<div className={"flex items-center text-14"}>
-			<div className={"text-14"}>
-				Filter by <img className={"ml-8"} src={"/browsers.png"} height={16} />
-			</div>
-			<div className={"ml-32"}>
-				<span className={"text-14 font-500"}>Viewport</span>
-				<span className={"text-14 ml-8 underline"}>All</span>
-			</div>
-		</div>
-	);
+    );
 }
 
 function RenderImageInfo({ data }) {
-	const { meta } = data;
-	const imageName = meta.outputs[0].name;
-	const baseLineImage = meta.outputs[0].targetScreenshotUrl;
-	const currentImage = meta.outputs[0].value;
+    const { meta } = data;
+    const imageName = meta.outputs[0].name;
+    const currentImage = meta.outputs[0].value;
 
-	return (
+    return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
 			<div className={"mt-20 flex"}>
@@ -185,32 +171,30 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 	const [openVideoModal, setOpenVideoModal] = useState(false);
-	return (<div className={'  py-16 px-22 mt-8'} css={errorBox}>
-		<Conditional showIf={isVideoAvailable && openVideoModal}>
-			<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)}/>
-		</Conditional>
-		<div className={'font-cera text-14 font-600 leading-none'}>Error at : {getActionLabel(actionType)}</div>
-		<div className={'text-13 mt-8'}>{message}</div>
+	return (
+		<div className={"  py-16 px-22 mt-8"} css={errorBox}>
+			<Conditional showIf={isVideoAvailable && openVideoModal}>
+				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)} />
+			</Conditional>
+			<div className={"font-cera text-14 font-600 leading-none"}>Error at : {getActionLabel(actionType)}</div>
+			<div className={"text-13 mt-8"}>{message}</div>
 
-		<Conditional showIf={isVideoAvailable}>
-
-			<div className={'flex  mt-24'}>
-				<div className={'text-13 flex items-center'} id={'play-button'} onClick={setOpenVideoModal.bind(this, true)}>
-					<PlaySVG /> <span className={' ml-12 leading-none'}> Play To See Recording</span>
+			<Conditional showIf={isVideoAvailable}>
+				<div className={"flex  mt-24"}>
+					<div className={"text-13 flex items-center"} id={"play-button"} onClick={setOpenVideoModal.bind(this, true)}>
+						<PlaySVG /> <span className={" ml-12 leading-none"}> Play To See Recording</span>
+					</div>
 				</div>
-			</div>
-		</Conditional>
-
-	</div>)
+			</Conditional>
+		</div>
+	);
 }
 
-function RenderStep({ data,testInstanceData }) {
-
+function RenderStep({ data, testInstanceData }) {
 	const { status, message, actionType } = data;
 	const isPassed = status === "COMPLETED";
 	return (
 		<div className={"relative mb-32"}>
-
 			<div className={" flex px-44"}>
 				<div css={tick}>
 					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
@@ -220,14 +204,16 @@ function RenderStep({ data,testInstanceData }) {
 					<div className={"mt-4"}>
 						<span
 							className={"text-13 font-600"}
-							css={css`color: #d0d0d0;`}
+							css={css`
+								color: #d0d0d0;
+							`}
 						>
 							{getActionLabel(actionType)}
 						</span>
 						<span
 							className={"text-12 ml-20"}
 							css={css`
-                color: #848484;
+								color: #848484;
 							`}
 						>
 							{message}
@@ -235,12 +221,11 @@ function RenderStep({ data,testInstanceData }) {
 					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
-					<ErrorComponent testInstanceData={testInstanceData} actionType={actionType} message={message}/>
+					<ErrorComponent testInstanceData={testInstanceData} actionType={actionType} message={message} />
 				</Conditional>
 			</div>
 
-			<Conditional
-				showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
+			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>
@@ -263,7 +248,7 @@ const errorBox = css`
 
 function Browsers({ browsers, setConfig }) {
 	return (
-		<div className={"flex flex-col justify-between h-full"} onClick={(e) => {}}>
+        <div className={"flex flex-col justify-between h-full"} onClick={() => {}}>
 			<div>
 				{browsers.map((name: string) => (
 					<MenuItem
@@ -285,7 +270,7 @@ function Browsers({ browsers, setConfig }) {
 				))}
 			</div>
 		</div>
-	);
+    );
 }
 
 const dropDownSelectionCSS = css`
@@ -352,18 +337,20 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 	);
 }
 
-function TestVideoUrl({setOpenVideoModal, videoUrl}) {
-	return <Modal
-		onClose={setOpenVideoModal.bind(this, false)}
-		onOutsideClick={setOpenVideoModal.bind(this, false)}
-		modalStyle={css`
-						padding: 28rem 36rem 36rem;
-					`}
-	>
-		<div className={'font-cera text-16 font-600 leading-none'}>Test video by 🦖</div>
-		<div className={'text-13 mt-8 mb-24'}>For better experience, use full screen mode</div>
-		<VideoComponent src={videoUrl} />
-	</Modal>;
+function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
+	return (
+		<Modal
+			onClose={setOpenVideoModal.bind(this, false)}
+			onOutsideClick={setOpenVideoModal.bind(this, false)}
+			modalStyle={css`
+				padding: 28rem 36rem 36rem;
+			`}
+		>
+			<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
+			<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
+			<VideoComponent src={videoUrl} />
+		</Modal>
+	);
 }
 
 function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
@@ -376,8 +363,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	return (
 		<>
 			<Conditional showIf={openVideoModal}>
-				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl}/>
-
+				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl} />
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
 				<TestStatusSVG type={testInstanceData.status} height={18} className={"mr-16"} />
@@ -407,7 +393,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	);
 }
 
-function RenderSteps({ steps, testInstanceData }: { steps: any[], testInstanceData: any }) {
+function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
 	return (
 		<div className={"px-32 w-full"} css={stepsContainer}>
 			<div className={"ml-32 py-32"} css={stepsList}>
@@ -478,12 +464,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						</div>
 
 						<div className={"mt-12 mb-16"}>
-							<TestConfigSection
-								expand={expand}
-								allCofiguration={allConfiguration}
-								testCardConfig={testCardConfig}
-								setTestCardConfig={setTestCardConfig}
-							/>
+							<TestConfigSection expand={expand} allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestCardConfig={setTestCardConfig} />
 						</div>
 					</div>
 				</div>
@@ -495,12 +476,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
-					<TestConfigSection
-						expand={expand}
-						allCofiguration={allConfiguration}
-						setTestCardConfig={setTestCardConfig}
-						testCardConfig={testCardConfig}
-					/>
+					<TestConfigSection expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
 				</div>
 			</div>
 
@@ -606,15 +582,6 @@ const stickyBar = css`
 
 	top: 0;
 	left: 0;
-`;
-
-const filterSection = css`
-	height: 42px;
-
-	background: #0d0e11;
-	border: 1px solid #171c24;
-	box-sizing: border-box;
-	border-radius: 8px;
 `;
 
 export default ReportSection;

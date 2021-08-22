@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+
 import { appStateAtom } from "../atoms/global/appState";
 import { projectsAtom } from "../atoms/global/project";
 

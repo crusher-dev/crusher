@@ -1,6 +1,8 @@
-import React from "react";
 import { css } from "@emotion/react";
+import React from "react";
+
 import { Conditional } from "dyson/src/components/layouts";
+
 import { CompleteStatusIconSVG } from "@svg/dashboard";
 
 interface IExpandableListItemProps {
@@ -58,7 +60,7 @@ const itemIndexStyle = css`
 
 interface IExpandableListProps {
 	currentSelected: number;
-	children: Array<React.ReactElement<IExpandableListItemProps>>;
+	children: React.ReactElement<IExpandableListItemProps>[];
 	changeSelected?: any;
 	css?: any;
 }

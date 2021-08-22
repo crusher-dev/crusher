@@ -1,9 +1,11 @@
-import React from "react";
-import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
-import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
 import { css } from "@emotion/react";
-import { usePageTitle } from "../../src/hooks/seo";
+import React from "react";
+
+import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
 import { OnBoardingTutorialVideo } from "@ui/containers/dashboard/tutorials";
+import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
+
+import { usePageTitle } from "../../src/hooks/seo";
 
 function Dashboard() {
 	usePageTitle("Dashboard");

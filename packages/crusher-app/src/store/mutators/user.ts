@@ -1,12 +1,14 @@
-import { atom } from "jotai";
-import { backendRequest } from "@utils/backendRequest";
-import { RequestMethod } from "../../types/RequestOptions";
-import { updateProjectAPI, updateTeamMetaAPI, updateUserMetaAPI } from "@constants/api";
-import { appStateAtom } from "../atoms/global/appState";
-import { userAtom } from "../atoms/global/user";
 import produce from "immer";
-import { teamAtom } from "../atoms/global/team";
+import { atom } from "jotai";
+
+import { updateProjectAPI, updateTeamMetaAPI, updateUserMetaAPI } from "@constants/api";
+import { backendRequest } from "@utils/backendRequest";
+
+import { RequestMethod } from "../../types/RequestOptions";
+import { appStateAtom } from "../atoms/global/appState";
 import { projectsAtom } from "../atoms/global/project";
+import { teamAtom } from "../atoms/global/team";
+import { userAtom } from "../atoms/global/user";
 
 interface IUpdateUserOnboarding {
 	type: "user" | "team" | "project";
@@ -43,7 +45,7 @@ const updateTeamMeta = (meta: Record<string, any>) => {
 
 export const updateOnboardingMutator = atom(null, (_get, _set, { type, key, value }: IUpdateUserOnboarding) => {
 	const { selectedProjectId } = _get(appStateAtom);
-	const payload = { [`${key}`]: value };
+	const payload = { [String(key)]: value };
 	switch (type) {
 		case "project":
 			{

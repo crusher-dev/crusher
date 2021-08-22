@@ -1,7 +1,9 @@
 import React from "react";
-import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
-import { TestReportScreen } from "@ui/containers/testReport/testReportScreen";
 import { Suspense } from "react";
+
+import { TestReportScreen } from "@ui/containers/testReport/testReportScreen";
+import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
+
 function App() {
 	return (
 		<SidebarTopBarLayout hideSidebar={true}>

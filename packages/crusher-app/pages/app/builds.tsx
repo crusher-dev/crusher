@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
-import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
-import { BuildSearchableList } from "@ui/containers/builds/searchableList";
-import { usePageTitle } from "../../src/hooks/seo";
 import { Suspense } from "react";
+
 import { useAtom } from "jotai";
+
+import { BuildSearchableList } from "@ui/containers/builds/searchableList";
+import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
+
+import { usePageTitle } from "../../src/hooks/seo";
 import { buildFiltersAtom } from "../../src/store/atoms/pages/buildPage";
 
 function Builds() {

@@ -1,6 +1,7 @@
-import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
 import React from "react";
+
+import { Button } from "dyson/src/components/atoms";
 
 export const ModuleCard = () => {
 	return (

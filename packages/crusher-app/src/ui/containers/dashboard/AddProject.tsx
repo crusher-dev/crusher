@@ -1,16 +1,20 @@
-import { appStateItemMutator } from "../../../store/atoms/global/appState";
-import { projectsAtom } from "../../../store/atoms/global/project";
-import { RequestMethod } from "../../../types/RequestOptions";
 import { css } from "@emotion/react";
-import { LoadingSVG } from "@svg/dashboard";
-import { backendRequest } from "@utils/backendRequest";
-import { sendSnackBarEvent } from "@utils/notify";
+import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
+
+import { useAtom } from "jotai";
+
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
-import { useAtom } from "jotai";
-import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+
+import { LoadingSVG } from "@svg/dashboard";
+import { backendRequest } from "@utils/backendRequest";
+import { sendSnackBarEvent } from "@utils/notify";
+
+import { appStateItemMutator } from "../../../store/atoms/global/appState";
+import { projectsAtom } from "../../../store/atoms/global/project";
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {

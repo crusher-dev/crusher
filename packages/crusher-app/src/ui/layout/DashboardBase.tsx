@@ -1,35 +1,36 @@
 import { css } from "@emotion/react";
-import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
-import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
+
+import { useAtom } from "jotai";
+import useSWR, { mutate } from "swr";
 
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
-import { Conditional } from "dyson/src/components/layouts";
-
-import { useAtom } from "jotai";
-
-import { projectsAtom } from "../../store/atoms/global/project";
-import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { addQueryParamToPath } from "@utils/url";
-import dynamic from "next/dynamic";
-import { getEdition } from "@utils/helpers";
-import { EditionTypeEnum } from "@crusher-shared/types/common/general";
-import { GithubSVG } from "@svg/social";
-import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
-import { loadCrisp, openChatBox } from "@utils/scriptUtils";
-import { backendRequest } from "@utils/backendRequest";
-import { RequestMethod } from "../../types/RequestOptions";
-import { getBuildsList, getRunTestApi } from "@constants/api";
-import { sendSnackBarEvent } from "@utils/notify";
-import { MenuItem } from "@components/molecules/MenuItem";
 import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
+import { Conditional } from "dyson/src/components/layouts";
+import { ShowOnClick } from "dyson/src/components/layouts/ShowonAction/ShowOnAction";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
-import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
-import useSWR, { mutate } from "swr";
+
+import { MenuItem } from "@components/molecules/MenuItem";
+import { getBuildsList, getRunTestApi } from "@constants/api";
+import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
+import { GithubSVG } from "@svg/social";
+import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
+import { backendRequest } from "@utils/backendRequest";
+import { getEdition } from "@utils/helpers";
+import { sendSnackBarEvent } from "@utils/notify";
+import { loadCrisp, openChatBox } from "@utils/scriptUtils";
+import { addQueryParamToPath } from "@utils/url";
+
+import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
+import { projectsAtom } from "../../store/atoms/global/project";
+import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
+import { RequestMethod } from "../../types/RequestOptions";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));

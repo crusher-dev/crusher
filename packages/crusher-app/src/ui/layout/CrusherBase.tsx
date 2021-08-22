@@ -1,6 +1,7 @@
-import React from "react";
-import { BlankBase } from "dyson/src/components/layouts";
 import { css } from "@emotion/react";
+import React from "react";
+
+import { BlankBase } from "dyson/src/components/layouts";
 
 const backgroundForBase = css`
 	background: url("/assets/img/background/dark_pattern.png"), linear-gradient(179deg, #12161b 10.44%, #0c0d0e 100%);

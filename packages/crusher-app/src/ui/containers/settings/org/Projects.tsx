@@ -1,19 +1,23 @@
-import { SettingsLayout } from "@ui/layout/SettingsBase";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { css } from "@emotion/react";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Button } from "dyson/src/components/atoms";
 import { useState } from "react";
+
+import { useAtom } from "jotai";
+
+import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
+import { Button } from "dyson/src/components/atoms";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
+
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
-import { Card } from '../../../../../../dyson/src/components/layouts/Card/Card';
-import { DeleteIcon } from '../../../../../../crusher-electron-app/src/extension/assets/icons';
-import { useAtom } from 'jotai';
-import { projectsAtom } from '../../../../store/atoms/global/project';
+import { SettingsLayout } from "@ui/layout/SettingsBase";
+
+import { DeleteIcon } from "../../../../../../crusher-electron-app/src/extension/assets/icons";
+import { projectsAtom } from "../../../../store/atoms/global/project";
 
 export const OrgProjects = () => {
 	const [showModal, setShowModal] = useState(false);
-	const [projects] = useAtom(projectsAtom)
+	const [projects] = useAtom(projectsAtom);
 	return (
 		<SettingsLayout>
 			<Conditional showIf={showModal}>
@@ -43,14 +47,16 @@ export const OrgProjects = () => {
 
 				<hr css={basicHR} />
 
-				{projects.map((project)=>{
-					const {id} = project
-					return (<Card css={projectListCard} key={id}>
-						<div className={"flex justify-between items-center"}>
-							<div className={"text-15"}>{project.name}</div>
-							<div className={"text-13"} id={"delete"}></div>
-						</div>
-					</Card>)
+				{projects.map((project) => {
+					const { id } = project;
+					return (
+						<Card css={projectListCard} key={id}>
+							<div className={"flex justify-between items-center"}>
+								<div className={"text-15"}>{project.name}</div>
+								<div className={"text-13"} id={"delete"}></div>
+							</div>
+						</Card>
+					);
 				})}
 			</div>
 		</SettingsLayout>
@@ -59,16 +65,12 @@ export const OrgProjects = () => {
 
 const projectListCard = css`
 	padding: 12rem 20rem;
-	#delete{
-		:hover{
-		text-decoration: underline;
+	#delete {
+		:hover {
+			text-decoration: underline;
 		}
-		
 	}
-`
-
-
-
+`;
 
 const maxWidthContainer = css`
 	width: 680rem;

@@ -1,7 +1,9 @@
-import { FailedSVG } from "@svg/testReport";
-import { LoadingSVG } from "@svg/dashboard";
 import React from "react";
+
 import { Conditional } from "dyson/src/components/layouts";
+
+import { LoadingSVG } from "@svg/dashboard";
+import { FailedSVG } from "@svg/testReport";
 
 export const FirstTestRunStatus = ({ isRunning = false, isFailed = false }) => {
 	return (

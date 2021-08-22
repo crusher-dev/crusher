@@ -1,19 +1,20 @@
-import React, { useState } from "react";
 import { css } from "@emotion/react";
-import { CenterLayout, Conditional } from "dyson/src/components/layouts";
-import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-import { Button, Logo } from "dyson/src/components/atoms";
-import { GithubSVG, GoogleSVG } from "@svg/social";
-import Link from "next/link";
-import { resolvePathToBackendURI } from "@utils/url";
-import { Input } from "dyson/src/components/atoms";
-import { backendRequest } from "@utils/backendRequest";
-import { RequestMethod } from "../../../types/RequestOptions";
-import { validateEmail, validatePassword } from "@utils/validationUtils";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
+
+import { Button, Logo } from "dyson/src/components/atoms";
+import { Input } from "dyson/src/components/atoms";
+import { CenterLayout, Conditional } from "dyson/src/components/layouts";
+
 import { LoadingSVG } from "@svg/dashboard";
-import { getUserStatus } from "@utils/user";
+import {GoogleSVG} from "@svg/social";
+import { backendRequest } from "@utils/backendRequest";
+import { resolvePathToBackendURI } from "@utils/url";
+import { validateEmail, validatePassword } from "@utils/validationUtils";
+import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
+
 import { loadUserDataAndRedirect } from "../../../hooks/user";
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const emailLogin = (email: string, password: string) => {
 	return backendRequest("/users/actions/login", {
@@ -22,7 +23,9 @@ const emailLogin = (email: string, password: string) => {
 	});
 };
 
-function EmailPasswordBox({ setShowBox, isSignup = false }) {
+function EmailPasswordBox({
+    setShowBox
+}) {
 	const router = useRouter();
 	const [email, setEmail] = useState({ value: "", error: null });
 	const [password, setPassword] = useState({ value: "", error: null });

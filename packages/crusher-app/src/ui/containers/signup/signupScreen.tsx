@@ -1,60 +1,63 @@
-import { loadUserDataAndRedirect } from "../../../hooks/user";
-import { RequestMethod } from "../../../types/RequestOptions";
 import { css } from "@emotion/react";
+import { useRouter } from "next/router";
+import React, { useCallback, useState } from "react";
+
+import { atom } from "jotai";
+import { useAtom } from "jotai";
+
+import { Input } from "dyson/src/components/atoms";
+import { Button, Logo } from "dyson/src/components/atoms";
+import { CenterLayout, Conditional } from "dyson/src/components/layouts";
+
 import { LoadingSVG } from "@svg/dashboard";
-import { GithubSVG, GoogleSVG } from "@svg/social";
+import {GoogleSVG} from "@svg/social";
 import { backendRequest } from "@utils/backendRequest";
 import { resolvePathToBackendURI } from "@utils/url";
 import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-import { Input } from "dyson/src/components/atoms";
-import { Button, Logo } from "dyson/src/components/atoms";
-import { CenterLayout, Conditional } from "dyson/src/components/layouts";
-import { atom } from "jotai";
-import { useAtom } from "jotai";
-import { useRouter } from "next/router";
-import React, { useCallback, useState } from "react";
+
+import { loadUserDataAndRedirect } from "../../../hooks/user";
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const showRegistrationFormAtom = atom(false);
 
 const registerUser = (name: string, email: string, password: string, inviteCode: string | null = null) => {
 	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", inviteCode: inviteCode ? inviteCode : null },
+		payload: { email, password, name: name, lastName: "", inviteCode: inviteCode || null },
 	});
 };
 
 function EmailPasswordBox() {
-	const router = useRouter();
-	const [data, setData] = useState(null);
+    const [data] = useState(null);
 
-	const [_, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
-	const [email, setEmail] = useState({ value: "", error: "" });
-	const [password, setPassword] = useState({ value: "", error: "" });
-	const [name, setName] = useState({ value: "", error: "" });
-	const [processingSignup, setProcessingSignup] = useState(false);
-	const { query } = useRouter;
+    const [, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
+    const [email, setEmail] = useState({ value: "", error: "" });
+    const [password, setPassword] = useState({ value: "", error: "" });
+    const [name, setName] = useState({ value: "", error: "" });
+    const [processingSignup, setProcessingSignup] = useState(false);
+    const { query } = useRouter;
 
-	const emailChange = useCallback(
+    const emailChange = useCallback(
 		(e) => {
 			setEmail({ ...email, value: e.target.value });
 		},
 		[email],
 	);
-	const passwordChange = useCallback(
+    const passwordChange = useCallback(
 		(e) => {
 			setPassword({ ...password, value: e.target.value });
 		},
 		[password],
 	);
-	const nameChange = useCallback(
+    const nameChange = useCallback(
 		(e) => {
 			setName({ ...name, value: e.target.value });
 		},
 		[name],
 	);
 
-	const verifyInfo = (completeVerify = false) => {
+    const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateName = completeVerify || name.value;
@@ -71,31 +74,30 @@ function EmailPasswordBox() {
 		} else setName({ ...name, error: "" });
 	};
 
-	const signupUser = async () => {
+    const signupUser = async () => {
 		verifyInfo(true);
 
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			await registerUser(name.value, email.value, password.value, query && query.inviteCode ? query.inviteCode : null);
+			await registerUser(name.value, email.value, password.value, query?.inviteCode ? query.inviteCode : null);
 			// @TODO: Use router push here
 			window.location.href = "/app/dashboard";
 		} catch (e: any) {
-			console.error(e);
-			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
-		}
+            alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
+        }
 		setProcessingSignup(false);
 	};
 
-	const signupOnEnter = (event: any) => {
+    const signupOnEnter = (event: any) => {
 		if (event.key === "Enter") {
 			signupUser();
 		}
 	};
 
-	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
+    loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
-	return (
+    return (
 		<div css={loginBoxlarge}>
 			<div className={"mb-12"}>
 				<Input
@@ -195,7 +197,7 @@ export const SignupContainer = () => {
 	const [showRegistrationBox] = useAtom(showRegistrationFormAtom);
 	const { query } = useRouter;
 
-	const googleSignupLink = query && query.inviteCode ? `/users/actions/auth.google?inviteCode=${query.inviteCode}` : "/users/actions/auth.google";
+	const googleSignupLink = query?.inviteCode ? `/users/actions/auth.google?inviteCode=${query.inviteCode}` : "/users/actions/auth.google";
 
 	return (
 		<CrusherBase>

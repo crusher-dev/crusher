@@ -1,19 +1,21 @@
-import { RequestMethod } from "../../../types/RequestOptions";
-import { changeTestInfoAPI, deleteTestApi, getInviteMemberAPI, getRunTestApi, getTestListAPI } from "@constants/api";
 import { css } from "@emotion/react";
-import { LoadingSVG } from "@svg/dashboard";
-import { backendRequest } from "@utils/backendRequest";
-import { sendSnackBarEvent } from "@utils/notify";
-import { appStateAtom } from "crusher-app/src/store/atoms/global/appState";
+import { useCallback, useState } from "react";
+import React from "react";
+
+import { useAtom } from "jotai";
+import {mutate} from "swr";
+
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
-import { useAtom } from "jotai";
-import { useCallback, useState } from "react";
-import React from "react";
-import useSWR, { mutate } from "swr";
+
+import {changeTestInfoAPI, deleteTestApi, getTestListAPI} from "@constants/api";
+import { LoadingSVG } from "@svg/dashboard";
+import { backendRequest } from "@utils/backendRequest";
+import { sendSnackBarEvent } from "@utils/notify";
+
 import { currentProject } from "../../../store/atoms/global/project";
-import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const changeTestNameInServer = (testId: number, name: string) => {
 	return backendRequest(changeTestInfoAPI(testId), {
@@ -44,7 +46,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 				sendSnackBarEvent({ type: "normal", message: "Changes have been saved." });
 				await mutate(getTestListAPI(project.id));
 				onClose();
-			} catch (err) {
+			} catch {
 				sendSnackBarEvent({ type: "error", message: "Failed to save changes" });
 			}
 			setProcessing(false);
@@ -59,7 +61,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 				sendSnackBarEvent({ type: "normal", message: "We have deleted this test." });
 				await mutate(getTestListAPI(project.id));
 				onClose();
-			} catch (err) {
+			} catch {
 				sendSnackBarEvent({ type: "error", message: "Failed to delete test." });
 			}
 			setProcessing(false);

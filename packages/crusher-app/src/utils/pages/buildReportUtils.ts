@@ -1,23 +1,19 @@
-import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
 import filter from "lodash/filter";
-import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import union from "lodash/union";
-import { forEach } from "lodash";
+
+import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
+import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 
 export const getStatusString = (type) => {
 	switch (type) {
 		case "PASSED":
-			return "Your build has passes succesfully. No review is required";
-			break;
+            return "Your build has passes succesfully. No review is required";
 		case "FAILED":
-			return "Your build has failed. Please see reports to see what went wrong.";
-			break;
+            return "Your build has failed. Please see reports to see what went wrong.";
 		case "REVIEW_REQUIRED":
-			return "Your build requires some review. Please see reports.";
-			break;
+            return "Your build requires some review. Please see reports.";
 		case "INITIATED":
-			return "Your build has been initiated.";
-			break;
+            return "Your build has been initiated.";
 		default:
 			return "We're running your test";
 	}
@@ -26,21 +22,19 @@ export const getStatusString = (type) => {
 export const showReviewButton = (type) => {
 	switch (type) {
 		case "FAILED":
-			return true;
-			break;
+            return true;
 		case "REVIEW_REQUIRED":
-			return true;
-			break;
+            return true;
 		default:
 			return false;
 	}
 };
 
 export const getActionLabel = (type) => {
-	return ACTIONS_TO_LABEL_MAP[type] ? ACTIONS_TO_LABEL_MAP[type] : false;
+	return ACTIONS_TO_LABEL_MAP[type] || false;
 };
 
-export const getScreenShotsAndChecks = (steps: Array<any>) => {
+export const getScreenShotsAndChecks = (steps: any[]) => {
 	const screenShotCount = filter(steps, { actionType: "ELEMENT_SCREENSHOT" }).length;
 	return { screenshotCount: screenShotCount, checksCount: steps.length };
 };
@@ -49,17 +43,20 @@ export const groupTestByStatus = (tests: Pick<IBuildReportResponse, "tests">) =>
 	const statusTestTestInstanceGroup = {};
 	let i = 0;
 
-	for (const test of tests) {
-		const { testInstances } = test;
-		for (const testInstance of testInstances) {
-			const { status, id } = testInstance;
-			if (!statusTestTestInstanceGroup[status]) statusTestTestInstanceGroup[status] = {};
-			if (!statusTestTestInstanceGroup[status][i]) statusTestTestInstanceGroup[status][i] = [];
-			statusTestTestInstanceGroup[status][i].push(id);
-		}
+	for (const {
+        testInstances
+    } of tests) {
+        for (const {
+            status,
+            id
+        } of testInstances) {
+            if (!statusTestTestInstanceGroup[status]) statusTestTestInstanceGroup[status] = {};
+            if (!statusTestTestInstanceGroup[status][i]) statusTestTestInstanceGroup[status][i] = [];
+            statusTestTestInstanceGroup[status][i].push(id);
+        }
 
-		i++;
-	}
+        i++;
+    }
 	return statusTestTestInstanceGroup;
 };
 
@@ -67,11 +64,11 @@ export const getAllConfiguration = (tests: Pick<IBuildReportResponse, "tests">) 
 	const parsedConfig = tests
 		.map((test) => getAllConfigurationForGivenTest(test))
 		.reduce((accumulator, item) => {
-			Object.keys(item).forEach((key) => {
-				accumulator[key] = union(accumulator[key], item[key]);
-			});
-			return accumulator;
-		}, {});
+        for (const key of Object.keys(item)) {
+            accumulator[key] = union(accumulator[key], item[key]);
+        }
+        return accumulator;
+    }, {});
 
 	return parsedConfig;
 };
@@ -79,10 +76,10 @@ export const getAllConfiguration = (tests: Pick<IBuildReportResponse, "tests">) 
 export const getAllConfigurationForGivenTest = (test: Test) => {
 	const parsedConfig = {};
 	const { testInstances } = test;
-	for (const testInstance of testInstances) {
-		const { config } = testInstance;
-
-		Object.entries(config).forEach(([key, value]) => {
+	for (const {
+        config
+    } of testInstances) {
+        for (const [key, value] of Object.entries(config)) {
 			const configNotPresent = !parsedConfig[key]?.includes(value);
 			if (configNotPresent) {
 				const configKeyNotPresent = !parsedConfig[key];
@@ -90,8 +87,8 @@ export const getAllConfigurationForGivenTest = (test: Test) => {
 
 				parsedConfig[key].push(value);
 			}
-		});
-	}
+		}
+    }
 	return parsedConfig;
 };
 
@@ -110,12 +107,12 @@ export const getTestIndexByConfig = (test: Test, config) => {
 };
 
 export const getBaseConfig = (allConfiguration) => {
-	const baseConfigForTest = {};
-	Object.keys(allConfiguration).forEach((key) => {
-		baseConfigForTest[key] = allConfiguration[key][0];
-	});
+    const baseConfigForTest = {};
+    for (const key of Object.keys(allConfiguration)) {
+		[baseConfigForTest[key]] = allConfiguration[key];
+	}
 
-	return baseConfigForTest;
+    return baseConfigForTest;
 };
 
 const removeAllFailedTest = (testInstanceData: Instance) => {

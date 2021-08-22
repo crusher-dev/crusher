@@ -4,16 +4,16 @@ export function getEdition() {
 	return process.env.NEXT_PUBLIC_CRUSHER_MODE;
 }
 
-export function findArrayItemByProperty(arr: Array<any>, property: string) {
+export function findArrayItemByProperty(arr: any[], property: string) {
 	if (!arr || !arr.length) {
 		return false;
 	}
-	const keyToMatch = Object.keys(property)[0];
+	const [keyToMatch] = Object.keys(property);
 	// @ts-ignore
 	const valueToMatch = property[keyToMatch];
 
 	for (const item of arr) {
-		if (item[keyToMatch] && item[keyToMatch] == valueToMatch) {
+		if (item[keyToMatch] && item[keyToMatch] === valueToMatch) {
 			return item[keyToMatch];
 		}
 	}
@@ -32,7 +32,7 @@ export function toPascalCase(str: string) {
 
 /* Converts your url into html hyperlink.  */
 export function urlify(text: string) {
-	const urlRegex = /(https?:\/\/[^\s]+)/g;
+	const urlRegex = /https?:\/\/\S+/g;
 	return text.replace(urlRegex, function (url) {
 		return '<a href="' + url + '">' + url + "</a>";
 	});
@@ -55,13 +55,13 @@ export function extractHostnameFromUrl(url) {
 	if (url.indexOf("//") > -1) {
 		hostname = url.split("/")[2];
 	} else {
-		hostname = url.split("/")[0];
+		[hostname] = url.split("/");
 	}
 
 	//find & remove port number
-	hostname = hostname.split(":")[0];
+	[hostname] = hostname.split(":");
 	//find & remove "?"
-	hostname = hostname.split("?")[0];
+	[hostname] = hostname.split("?");
 
 	return hostname.split(".").slice(-2).join(".");
 }
@@ -90,7 +90,7 @@ export function getTime(date: any) {
 	interval = seconds / 86400;
 	if (interval > 1) {
 		const daysInterval = Math.floor(interval);
-		if (daysInterval == 1) {
+		if (daysInterval === 1) {
 			return "Yesterday";
 		}
 		return Math.floor(interval) + " days ago";
@@ -123,8 +123,8 @@ export function getDiffInDays(date1: Date, date2: Date) {
 
 export function isWindowCrossOrigin(window: Window) {
 	try {
-		return !(window.location.href && true);
-	} catch (ex) {
+		return !(Boolean(window.location.href));
+	} catch {
 		return true;
 	}
 }
@@ -164,14 +164,16 @@ export function nth(d: number) {
 }
 
 export function formatAMPM(date: Date) {
-	let hours = date.getHours();
-	let minutes: string | number = date.getMinutes();
-	const ampm = hours >= 12 ? "PM" : "AM";
-	hours = hours % 12;
-	hours = hours ? hours : 12; // the hour '0' should be '12'
-	minutes = minutes < 10 ? "0" + minutes : minutes;
-	const strTime = hours + ":" + minutes + " " + ampm;
-	return strTime;
+    let hours = date.getHours();
+    let minutes: string | number = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    if (!hours)
+        hours = 12; // the hour '0' should be '12'
+    if (minutes < 10)
+        minutes = "0" + minutes;
+    const strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
 }
 
 // Mainly for generating default test name

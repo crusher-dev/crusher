@@ -1,11 +1,12 @@
+import { NextApiResponse } from "next";
 import React from "react";
-import { redirectToFrontendPath } from "@utils/router";
-import { EMAIL_NOT_VERIFIED, NO_TEAM_JOINED, SIGNED_IN, USER_NOT_REGISTERED } from "@utils/constants";
+
+import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { saveSelectedProjectInRedux } from "@redux/actions/currentProject";
 import { getProjects, getSelectedProject } from "@redux/stateUtils/projects";
-import { iUserInfoResponse } from "@crusher-shared/types/response/userInfoResponse";
 import { getUserInfo } from "@redux/stateUtils/user";
-import { NextApiResponse } from "next";
+import { EMAIL_NOT_VERIFIED, NO_TEAM_JOINED, SIGNED_IN, USER_NOT_REGISTERED } from "@utils/constants";
+import { redirectToFrontendPath } from "@utils/router";
 
 function getUserStatus(userInfo: iUserInfoResponse | null) {
 	if (!userInfo || userInfo === null) {

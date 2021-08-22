@@ -1,16 +1,20 @@
-import { appStateItemMutator } from "../../../store/atoms/global/appState";
-import { projectsAtom } from "../../../store/atoms/global/project";
-import { RequestMethod } from "../../../types/RequestOptions";
 import { css } from "@emotion/react";
-import { LoadingSVG } from "@svg/dashboard";
-import { backendRequest } from "@utils/backendRequest";
-import { sendSnackBarEvent } from "@utils/notify";
+import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
+
+import { useAtom } from "jotai";
+
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
-import { useAtom } from "jotai";
-import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+
+import { LoadingSVG } from "@svg/dashboard";
+import { backendRequest } from "@utils/backendRequest";
+import { sendSnackBarEvent } from "@utils/notify";
+
+import { appStateItemMutator } from "../../../store/atoms/global/appState";
+import { projectsAtom } from "../../../store/atoms/global/project";
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {
@@ -30,17 +34,16 @@ export const AddProjectModal = ({ onClose }) => {
 
 	const addProjectCallback = useCallback(() => {
 		(async () => {
-			const data = await addProject(projectName);
-			const { id, name, teamID } = data;
-			const projectObject = { id, name, teamID };
-			setProjectsAtom([...projects, projectObject]);
+            const { id, name, teamID } = await addProject(projectName);
+            const projectObject = { id, name, teamID };
+            setProjectsAtom([...projects, projectObject]);
 
-			setAppStateItem({ key: "selectedProjectId", value: id });
-			onClose();
-			await router.push("/app/dashboard");
+            setAppStateItem({ key: "selectedProjectId", value: id });
+            onClose();
+            await router.push("/app/dashboard");
 
-			sendSnackBarEvent({ message: "Created and switched project" });
-		})();
+            sendSnackBarEvent({ message: "Created and switched project" });
+        })();
 
 		setProcessing(true);
 	}, [projectName]);

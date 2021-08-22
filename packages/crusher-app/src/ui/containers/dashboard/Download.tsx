@@ -1,15 +1,18 @@
-import React from "react";
 import { css } from "@emotion/react";
-import { CenterLayout, Conditional } from "dyson/src/components/layouts";
-import { Button } from "dyson/src/components/atoms";
-import { AppleSVG, LoadingSVG } from "@svg/dashboard";
-import { OverlayTransparent } from "dyson/src/components/layouts/OverlayTransparent/OverlayTransparent";
-import { getOSType } from "@utils/common";
+import React from "react";
 import { useCallback, useMemo, useState } from "react";
-import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
-import useSWR from "swr";
-import { RELEASE_API } from "@constants/api";
 import { useEffect } from "react";
+
+import useSWR from "swr";
+
+import { Button } from "dyson/src/components/atoms";
+import { CenterLayout, Conditional } from "dyson/src/components/layouts";
+import { OverlayTransparent } from "dyson/src/components/layouts/OverlayTransparent/OverlayTransparent";
+
+import { RELEASE_API } from "@constants/api";
+import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
+import { AppleSVG, LoadingSVG } from "@svg/dashboard";
+import { getOSType } from "@utils/common";
 
 export function DownloadButton(props) {
 	const osType = useMemo(getOSType, []);

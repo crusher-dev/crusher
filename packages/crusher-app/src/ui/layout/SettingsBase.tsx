@@ -1,12 +1,14 @@
 import { css } from "@emotion/react";
-import React, { useState } from "react";
-import { Conditional } from "dyson/src/components/layouts";
-import { ChevronRight } from "@svg/settings";
-import { AddSVG } from "@svg/dashboard";
-import { useRouter } from "next/router";
 import Link from "next/link";
-import AddProjectModal from '@ui/containers/dashboard/AddProject';
-import InviteMember from '@ui/containers/dashboard/InviteMember';
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+
+import { Conditional } from "dyson/src/components/layouts";
+
+import { AddSVG } from "@svg/dashboard";
+import { ChevronRight } from "@svg/settings";
+import AddProjectModal from "@ui/containers/dashboard/AddProject";
+import InviteMember from "@ui/containers/dashboard/InviteMember";
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
 	return (
@@ -142,7 +144,7 @@ function LeftSection() {
 			</div>
 
 			<div>
-				<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setShowModal.bind(this,true)}>
+				<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setShowModal.bind(this, true)}>
 					<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 				</div>
 			</div>

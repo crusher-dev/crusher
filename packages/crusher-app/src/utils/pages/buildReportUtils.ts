@@ -1,8 +1,9 @@
-import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
-import filter from "lodash/filter";
-import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import union from "lodash/union";
 import { forEach } from "lodash";
+import filter from "lodash/filter";
+import union from "lodash/union";
+
+import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
+import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 
 export const getStatusString = (type) => {
 	switch (type) {

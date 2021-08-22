@@ -1,14 +1,18 @@
 import { css } from "@emotion/react";
-import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
-import { userAtom } from "../../../store/atoms/global/user";
-import { useAtom } from "jotai";
-import { teamAtom } from "../../../store/atoms/global/team";
-import { useState } from "react";
-import { resolvePathToBackendURI } from "@utils/url";
-import { useRouter } from "next/router";
-import { MenuItem } from "@components/molecules/MenuItem";
-import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+
+import { useAtom } from "jotai";
+
+import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
+import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
+
+import { MenuItem } from "@components/molecules/MenuItem";
+import { resolvePathToBackendURI } from "@utils/url";
+
+import { teamAtom } from "../../../store/atoms/global/team";
+import { userAtom } from "../../../store/atoms/global/user";
 
 const userDropdownItems = [
 	{

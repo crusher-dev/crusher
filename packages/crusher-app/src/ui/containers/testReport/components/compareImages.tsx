@@ -1,5 +1,5 @@
-import ReactCompareImage from "react-compare-image";
 import { css } from "@emotion/react";
+import ReactCompareImage from "react-compare-image";
 
 const compareImages = css`
 	width: 520px;

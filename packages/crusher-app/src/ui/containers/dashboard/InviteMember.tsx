@@ -1,17 +1,21 @@
-import { RequestMethod } from "../../../types/RequestOptions";
-import { getInviteMemberAPI, getRunTestApi } from "@constants/api";
 import { css } from "@emotion/react";
+import { useCallback, useState } from "react";
+import React from "react";
+
+import { useAtom } from "jotai";
+import useSWR from "swr";
+
+import { Button, Input } from "dyson/src/components/atoms";
+import { Conditional } from "dyson/src/components/layouts";
+import { Modal } from "dyson/src/components/molecules/Modal";
+
+import { getInviteMemberAPI, getRunTestApi } from "@constants/api";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/backendRequest";
 import { sendSnackBarEvent } from "@utils/notify";
 import { appStateAtom } from "crusher-app/src/store/atoms/global/appState";
-import { Button, Input } from "dyson/src/components/atoms";
-import { Conditional } from "dyson/src/components/layouts";
-import { Modal } from "dyson/src/components/molecules/Modal";
-import { useAtom } from "jotai";
-import { useCallback, useState } from "react";
-import React from "react";
-import useSWR from "swr";
+
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const inviteTeamMembers = (projectId: number, emailList: string) => {
 	return backendRequest("/users/actions/invite.project.members", {

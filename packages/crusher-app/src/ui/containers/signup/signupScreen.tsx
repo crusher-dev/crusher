@@ -1,19 +1,23 @@
-import { loadUserDataAndRedirect } from "../../../hooks/user";
-import { RequestMethod } from "../../../types/RequestOptions";
 import { css } from "@emotion/react";
+import { useRouter } from "next/router";
+import React, { useCallback, useState } from "react";
+
+import { atom } from "jotai";
+import { useAtom } from "jotai";
+
+import { Input } from "dyson/src/components/atoms";
+import { Button, Logo } from "dyson/src/components/atoms";
+import { CenterLayout, Conditional } from "dyson/src/components/layouts";
+
 import { LoadingSVG } from "@svg/dashboard";
 import { GithubSVG, GoogleSVG } from "@svg/social";
 import { backendRequest } from "@utils/backendRequest";
 import { resolvePathToBackendURI } from "@utils/url";
 import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-import { Input } from "dyson/src/components/atoms";
-import { Button, Logo } from "dyson/src/components/atoms";
-import { CenterLayout, Conditional } from "dyson/src/components/layouts";
-import { atom } from "jotai";
-import { useAtom } from "jotai";
-import { useRouter } from "next/router";
-import React, { useCallback, useState } from "react";
+
+import { loadUserDataAndRedirect } from "../../../hooks/user";
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const showRegistrationFormAtom = atom(false);
 

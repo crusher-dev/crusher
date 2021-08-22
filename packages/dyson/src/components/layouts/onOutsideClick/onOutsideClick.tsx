@@ -4,7 +4,8 @@ export const isChildOfOnCloseClass = (target, root) => {
 	let element = target;
 
 	while (element !== root && element && document.body.contains(element)) {
-		if (element?.className?.includes("close-on-click")) {
+
+		if (element?.classList?.contains("close-on-click")) {
 			return true;
 		}
 

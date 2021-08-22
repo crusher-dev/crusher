@@ -1,4 +1,4 @@
-import TestRunnerBootstrap from "@src/boostrap";
+import TestRunnerBootstrap from "../src/bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
 

@@ -1,6 +1,6 @@
+import { RequestMethod, RequestOptions } from "../types/RequestOptions";
 import { appendParamsToURI, getAbsoluteURIIfRelative } from "./url";
 import { IncomingHttpHeaders } from "http";
-import { RequestMethod, RequestOptions } from "../types/RequestOptions";
 
 const _fetch = require("node-fetch");
 

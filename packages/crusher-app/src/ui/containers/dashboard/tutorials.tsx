@@ -1,5 +1,6 @@
-import React from "react";
 import { css } from "@emotion/react";
+import React from "react";
+
 import { GithubSVG } from "@svg/social";
 
 function VideoComponent() {

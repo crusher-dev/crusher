@@ -1,15 +1,18 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
 import { useAtom } from "jotai";
-import { userAtom } from "../store/atoms/global/user";
-import { systemConfigAtom } from "../store/atoms/global/systemConfig";
-import { teamAtom } from "../store/atoms/global/team";
-import { appStateAtom, appStateItemMutator } from "../store/atoms/global/appState";
-import { projectsAtom } from "../store/atoms/global/project";
+
+import { USER_SYSTEM_API } from "@constants/api";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { backendRequest } from "@utils/backendRequest";
-import { USER_SYSTEM_API } from "@constants/api";
 import { redirectUserOnMount } from "@utils/routing";
+
+import { appStateAtom, appStateItemMutator } from "../store/atoms/global/appState";
+import { projectsAtom } from "../store/atoms/global/project";
+import { systemConfigAtom } from "../store/atoms/global/systemConfig";
+import { teamAtom } from "../store/atoms/global/team";
+import { userAtom } from "../store/atoms/global/user";
 
 /*
 	Two scenarios to check for

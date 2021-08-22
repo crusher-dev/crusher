@@ -1,9 +1,19 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useBuildReport } from "../../../store/serverState/buildReports";
-import { Button } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import React, { useCallback, useEffect, useState } from "react";
+
+import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
+import { Button } from "dyson/src/components/atoms";
+import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { Conditional } from "dyson/src/components/layouts";
+import { Dropdown } from "dyson/src/components/molecules/Dropdown";
+import { Modal } from "dyson/src/components/molecules/Modal";
+
+import { MenuItem } from "@components/molecules/MenuItem";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
+import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { ChevronDown, PassedSVG, TestStatusSVG } from "@svg/testReport";
 import {
 	getActionLabel,
@@ -13,16 +23,8 @@ import {
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
 } from "@utils/pages/buildReportUtils";
-import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
-import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { Modal } from "dyson/src/components/molecules/Modal";
-import { VideoComponent } from "dyson/src/components/atoms/video/video";
 
-import dynamic from "next/dynamic";
-import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
-import { MenuItem } from "@components/molecules/MenuItem";
-import { Dropdown } from "dyson/src/components/molecules/Dropdown";
-import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { useBuildReport } from "../../../store/serverState/buildReports";
 
 const CompareImage = dynamic(() => import("./components/compareImages"));
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
@@ -185,32 +187,30 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 	const [openVideoModal, setOpenVideoModal] = useState(false);
-	return (<div className={'  py-16 px-22 mt-8'} css={errorBox}>
-		<Conditional showIf={isVideoAvailable && openVideoModal}>
-			<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)}/>
-		</Conditional>
-		<div className={'font-cera text-14 font-600 leading-none'}>Error at : {getActionLabel(actionType)}</div>
-		<div className={'text-13 mt-8'}>{message}</div>
+	return (
+		<div className={"  py-16 px-22 mt-8"} css={errorBox}>
+			<Conditional showIf={isVideoAvailable && openVideoModal}>
+				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)} />
+			</Conditional>
+			<div className={"font-cera text-14 font-600 leading-none"}>Error at : {getActionLabel(actionType)}</div>
+			<div className={"text-13 mt-8"}>{message}</div>
 
-		<Conditional showIf={isVideoAvailable}>
-
-			<div className={'flex  mt-24'}>
-				<div className={'text-13 flex items-center'} id={'play-button'} onClick={setOpenVideoModal.bind(this, true)}>
-					<PlaySVG /> <span className={' ml-12 leading-none'}> Play To See Recording</span>
+			<Conditional showIf={isVideoAvailable}>
+				<div className={"flex  mt-24"}>
+					<div className={"text-13 flex items-center"} id={"play-button"} onClick={setOpenVideoModal.bind(this, true)}>
+						<PlaySVG /> <span className={" ml-12 leading-none"}> Play To See Recording</span>
+					</div>
 				</div>
-			</div>
-		</Conditional>
-
-	</div>)
+			</Conditional>
+		</div>
+	);
 }
 
-function RenderStep({ data,testInstanceData }) {
-
+function RenderStep({ data, testInstanceData }) {
 	const { status, message, actionType } = data;
 	const isPassed = status === "COMPLETED";
 	return (
 		<div className={"relative mb-32"}>
-
 			<div className={" flex px-44"}>
 				<div css={tick}>
 					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
@@ -220,14 +220,16 @@ function RenderStep({ data,testInstanceData }) {
 					<div className={"mt-4"}>
 						<span
 							className={"text-13 font-600"}
-							css={css`color: #d0d0d0;`}
+							css={css`
+								color: #d0d0d0;
+							`}
 						>
 							{getActionLabel(actionType)}
 						</span>
 						<span
 							className={"text-12 ml-20"}
 							css={css`
-                color: #848484;
+								color: #848484;
 							`}
 						>
 							{message}
@@ -235,12 +237,11 @@ function RenderStep({ data,testInstanceData }) {
 					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
-					<ErrorComponent testInstanceData={testInstanceData} actionType={actionType} message={message}/>
+					<ErrorComponent testInstanceData={testInstanceData} actionType={actionType} message={message} />
 				</Conditional>
 			</div>
 
-			<Conditional
-				showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
+			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>
@@ -352,18 +353,20 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 	);
 }
 
-function TestVideoUrl({setOpenVideoModal, videoUrl}) {
-	return <Modal
-		onClose={setOpenVideoModal.bind(this, false)}
-		onOutsideClick={setOpenVideoModal.bind(this, false)}
-		modalStyle={css`
-						padding: 28rem 36rem 36rem;
-					`}
-	>
-		<div className={'font-cera text-16 font-600 leading-none'}>Test video by 🦖</div>
-		<div className={'text-13 mt-8 mb-24'}>For better experience, use full screen mode</div>
-		<VideoComponent src={videoUrl} />
-	</Modal>;
+function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
+	return (
+		<Modal
+			onClose={setOpenVideoModal.bind(this, false)}
+			onOutsideClick={setOpenVideoModal.bind(this, false)}
+			modalStyle={css`
+				padding: 28rem 36rem 36rem;
+			`}
+		>
+			<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
+			<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
+			<VideoComponent src={videoUrl} />
+		</Modal>
+	);
 }
 
 function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
@@ -376,8 +379,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	return (
 		<>
 			<Conditional showIf={openVideoModal}>
-				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl}/>
-
+				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl} />
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
 				<TestStatusSVG type={testInstanceData.status} height={18} className={"mr-16"} />
@@ -407,7 +409,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 	);
 }
 
-function RenderSteps({ steps, testInstanceData }: { steps: any[], testInstanceData: any }) {
+function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
 	return (
 		<div className={"px-32 w-full"} css={stepsContainer}>
 			<div className={"ml-32 py-32"} css={stepsList}>

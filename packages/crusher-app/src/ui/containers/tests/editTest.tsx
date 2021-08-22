@@ -1,19 +1,23 @@
-import { RequestMethod } from "../../../types/RequestOptions";
-import { changeTestInfoAPI, deleteTestApi, getInviteMemberAPI, getRunTestApi, getTestListAPI } from "@constants/api";
 import { css } from "@emotion/react";
+import { useCallback, useState } from "react";
+import React from "react";
+
+import { useAtom } from "jotai";
+import useSWR, { mutate } from "swr";
+
+import { Button, Input } from "dyson/src/components/atoms";
+import { Conditional } from "dyson/src/components/layouts";
+import { Modal } from "dyson/src/components/molecules/Modal";
+
+import { changeTestInfoAPI, deleteTestApi, getInviteMemberAPI, getRunTestApi, getTestListAPI } from "@constants/api";
+import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/backendRequest";
 import { sendSnackBarEvent } from "@utils/notify";
 import { appStateAtom } from "crusher-app/src/store/atoms/global/appState";
-import { Button, Input } from "dyson/src/components/atoms";
-import { Conditional } from "dyson/src/components/layouts";
-import { Modal } from "dyson/src/components/molecules/Modal";
-import { useAtom } from "jotai";
-import { useCallback, useState } from "react";
-import React from "react";
-import useSWR, { mutate } from "swr";
+
 import { currentProject } from "../../../store/atoms/global/project";
-import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const changeTestNameInServer = (testId: number, name: string) => {
 	return backendRequest(changeTestInfoAPI(testId), {

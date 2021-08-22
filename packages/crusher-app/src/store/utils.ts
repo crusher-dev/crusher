@@ -1,6 +1,6 @@
 import { atom } from "jotai";
-import pickBy from "lodash/pickBy";
 import identity from "lodash/identity";
+import pickBy from "lodash/pickBy";
 
 const filterObjectByKeys = (object: Record<string, any>, keys: Array<string>) => {
 	const baseObject: Record<string, any> = {};

@@ -1,17 +1,20 @@
 import { css } from "@emotion/react";
-import { DropdownIconSVG } from "@svg/builds";
-import { Input } from "dyson/src/components/atoms/input/Input";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+
+import { useAtom } from "jotai";
+
 import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
 import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
-import { useRouter } from "next/router";
-import { MenuItem } from "@components/molecules/MenuItem";
-
-import { TestType, TestTypeLabel } from "@constants/test";
-import { useAtom } from "jotai";
-import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
+import { Input } from "dyson/src/components/atoms/input/Input";
 import { Conditional } from "dyson/src/components/layouts";
+
+import { MenuItem } from "@components/molecules/MenuItem";
+import { TestType, TestTypeLabel } from "@constants/test";
+import { DropdownIconSVG } from "@svg/builds";
 import { CloseSVG } from "@svg/dashboard";
-import React, { useState } from "react";
+
+import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 
 interface ISearchFilterBarProps {
 	data: any;

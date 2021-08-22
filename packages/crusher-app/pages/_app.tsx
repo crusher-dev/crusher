@@ -1,18 +1,22 @@
-import React, { useEffect } from "react";
 import { AppProps } from "next/app";
-import { useAtomDevtools } from "jotai/devtools";
-import { useBasicSEO } from "../src/hooks/seo";
 import Head from "next/head";
-import "../src/tailwind.css";
-import { USER_SYSTEM_API } from "@constants/api";
-import { LoadingScreen } from "@ui/layout/LoadingScreen";
-import { Conditional } from "dyson/src/components/layouts";
-import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
+import React, { useEffect } from "react";
+
+import { useAtomDevtools } from "jotai/devtools";
 import { SWRConfig } from "swr";
-import { loadUserDataAndRedirect } from "../src/hooks/user";
-import { loadCrisp, loadUserLeap } from "@utils/scriptUtils";
+
+import { Conditional } from "dyson/src/components/layouts";
+
+import { USER_SYSTEM_API } from "@constants/api";
 import { Snackbar } from "@ui/containers/common/Snackbar";
+import { LoadingScreen } from "@ui/layout/LoadingScreen";
+import { loadCrisp, loadUserLeap } from "@utils/scriptUtils";
+
+import { useBasicSEO } from "../src/hooks/seo";
 import { useSaveTemp } from "../src/hooks/tempTest";
+import { loadUserDataAndRedirect } from "../src/hooks/user";
+import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
+import "../src/tailwind.css";
 
 function App({ Component, pageProps }: AppProps<any>) {
 	const [userDataLoaded] = loadUserDataAndRedirect({ fetchData: true, userAndSystemData: null });

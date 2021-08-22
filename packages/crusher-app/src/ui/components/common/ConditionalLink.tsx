@@ -1,6 +1,6 @@
 import { LinkProps } from "next/link";
-import React, { PropsWithChildren } from "react";
 import Link from "next/link";
+import React, { PropsWithChildren } from "react";
 
 const ConditionalLink = (props: PropsWithChildren<LinkProps> & { disabled: boolean }) => {
 	if (props.disabled) return <>{props.children}</>;

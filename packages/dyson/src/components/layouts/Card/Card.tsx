@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 
 export const Card= ({css, children,...props})=>{
-
 	return (
 		<div css={[card,css]} {...props}>
 			{children}

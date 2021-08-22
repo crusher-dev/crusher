@@ -86,6 +86,7 @@ async function createWindow() {
 	app.commandLine.appendSwitch("--disable-site-isolation-trials");
 	app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
+	app.userAgentFallback = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
 
 	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
@@ -188,6 +189,8 @@ async function createWindow() {
 					},
 				});
 				const nodeObject = await webViewContent.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
+				console.log("Calling node reuqestd", nodeObject);
+
 				await webViewContent.debugger.sendCommand("Runtime.callFunctionOn", {
 					functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 					objectId: nodeObject.object.objectId,
@@ -198,6 +201,7 @@ async function createWindow() {
 
 	ipcMain.on("set-user-agent", async (e, userAgent) => {
 		USER_AGENT = userAgent;
+		app.userAgentFallback = USER_AGENT.value;
 	});
 
 	ipcMain.on("turn-on-inspect-mode", async (e, msg) => {
@@ -235,7 +239,7 @@ async function createWindow() {
 	});
 
 	mainWindow.webContents.on("did-attach-webview", function (event, webContents) {
-		webContents.setUserAgent(USER_AGENT);
+		webContents.setUserAgent(USER_AGENT.value);
 	});
 
 	mainWindow.webContents.on("new-window", function (event, popupUrl) {

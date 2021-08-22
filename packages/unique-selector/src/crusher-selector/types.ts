@@ -1,5 +1,6 @@
 export type Evaluator = {
 	querySelector(selector: string, root: Node): HTMLElement;
+	querySelectorAll(selector: string, root: Node): HTMLElement[];
 };
 
 export type Action = "click" | "fill" | "goBack" | "goForward" | "goto" | "keyboard.press" | "press" | "reload" | "selectOption";

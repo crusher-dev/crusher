@@ -163,9 +163,7 @@ function handleRecordAction(action: iAction): any {
 			const isTheLastRecordedActionOnSameElementFocus =
 				lastRecordedAction.type === ActionsInTestEnum.ELEMENT_FOCUS &&
 				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;
-			if (!isTheLastRecordedActionOnSameElementFocus) {
 				store.dispatch(recordAction(action));
-			}
 			break;
 		}
 		default:

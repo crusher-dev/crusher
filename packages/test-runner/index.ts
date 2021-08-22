@@ -1,5 +1,5 @@
 require("dotenv").config();
-import TestRunnerBootstrap from "./src/boostrap";
+import TestRunnerBootstrap from "./src/bootstrap";
 
 const runnerBoostrap = new TestRunnerBootstrap();
 

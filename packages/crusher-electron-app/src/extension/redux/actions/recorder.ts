@@ -29,6 +29,7 @@ export const updateActionsRecordingState = (
 	selectedElementInfo?: {
 		selectors: Array<iSelectorInfo>;
 		attributes: Array<{ name: string; value: string }>;
+		screenshot?: string;
 		innerHTML: string;
 	},
 ) => ({

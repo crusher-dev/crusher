@@ -73,14 +73,14 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
 				<div className="h-10 w-full flex">
 					<div className="flex" style={{ width: "14%" }}>
+					<div style={refreshIconContainerStyle} onClick={resetApp} className={"browser_icon"}>
+							<AppResetIcon width={14} height={14} disabled={false} />
+						</div>
 						<div style={goBackIconContainerStyle} className={"browser_icon"}>
 							<NavigateBackIcon onClick={goBack} disabled={false} />
 						</div>
 						<div style={forwardIconContainerStyle} className={"browser_icon"}>
 							<NavigateForwardIcon onClick={goForward} disabled={false} />
-						</div>
-						<div style={refreshIconContainerStyle} onClick={resetApp} className={"browser_icon"}>
-							<AppResetIcon width={14} height={14} disabled={false} />
 						</div>
 					</div>
 					<div style={{ width: "48%" }}>
@@ -196,7 +196,7 @@ const forwardIconContainerStyle = {
 };
 
 const refreshIconContainerStyle = {
-	marginLeft: "0.8rem",
+	marginLeft: "1.1rem",
 	display: "flex",
 	alignItems: "center",
 	cursor: "pointer",

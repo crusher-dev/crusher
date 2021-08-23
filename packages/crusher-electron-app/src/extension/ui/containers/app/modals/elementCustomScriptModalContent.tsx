@@ -51,6 +51,7 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 						script: codeTextAreaRef.current!.value,
 					},
 				},
+				screenshot: elementInfo.screenshot,
 				url: "",
 			}),
 		);

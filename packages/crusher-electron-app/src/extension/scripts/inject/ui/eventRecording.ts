@@ -304,14 +304,15 @@ export default class EventRecording {
 	}
 
 	async turnOnElementModeInParentFrame(element = this.state.targetElement) {
-		const capturedElementScreenshot = await html2canvas(element, { backgroundColor: "#FF6A00" }).then((canvas: any) => canvas.toDataURL());
+		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
+		const capturedElementScreenshot = null;
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
 			meta: {
 				selectors: getSelectors(element),
 				attributes: getAllAttributes(element),
 				innerHTML: element.innerHTML,
-				// capturedElementScreenshot: capturedElementScreenshot,
+				screenshot: capturedElementScreenshot,
 			} as iElementModeMessageMeta,
 		});
 	}
@@ -356,10 +357,11 @@ export default class EventRecording {
 			return;
 		}
 
-		const closestLink: HTMLAnchorElement = target.closest("a");
+		const closestLink: HTMLAnchorElement = target.tagName === "a" ? target : target.closest("a");
 
 		// If clientX and clientY is 0 it may mean that the event is not triggered
 		// by user. Found during creating tests for ielts search
+		console.log("Event now", event.isTrusted, !event.simulatedEvent, event.clientX, event.clientY);
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
 			const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(target);
 			if (needsOtherActions) {
@@ -367,14 +369,13 @@ export default class EventRecording {
 				const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
 				await this.saveHoverFinalEvents(hoverNodes);
 			}
+
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target);
 		}
 
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
 			const href = closestLink.getAttribute("href");
-			const isBlank = closestLink.getAttribute("target") === "_blank";
-			console.log("Going to this link", href);
-			if (href && isBlank) {
+			if (href) {
 				window.location.href = href;
 				return event.preventDefault();
 			}

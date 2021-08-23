@@ -135,6 +135,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 						validations: validationRows,
 					},
 				},
+				screenshot: elementInfo.screenshot,
 				url: "",
 			}),
 		);

@@ -7,7 +7,6 @@ async function goToUrl(page: Page, action: iAction) {
 	await page.goto(urlToGo);
 	await page.waitForLoadState("load");
 	await page.waitForLoadState("domcontentloaded");
-	await page.waitForLoadState("networkidle");
 }
 
 module.exports = {

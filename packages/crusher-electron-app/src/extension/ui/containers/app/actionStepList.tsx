@@ -115,7 +115,8 @@ const ICONS = {
 const Action = (props: iActionProps) => {
 	const { action, index, onDelete, onClick } = props;
 
-	const handleDelete = () => {
+	const handleDelete = (event) => {
+		event.stopPropagation();
 		onDelete(index);
 	};
 

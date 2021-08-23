@@ -71,7 +71,7 @@ class CrusherRunnerActions {
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
 		return async (step: iAction, browser: Browser, page: Page | null = null): Promise<void> => {
-			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`);
+			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`, { actionName: step.name ? step.name : null });
 			let stepResult = null;
 
 			try {
@@ -94,11 +94,17 @@ class CrusherRunnerActions {
 					action.name,
 					ActionStatusEnum.COMPLETED,
 					stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`,
-					stepResult ? stepResult : {},
+					stepResult ? {
+						...stepResult,
+						actionName: step.name ? step.name : null,
+					} : {
+						actionName: step.name ? step.name : null,
+					},
 				);
 			} catch (err) {
 				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
 					failedReason: err.messsage,
+					actionName: step.name ? step.name : null,
 					meta: err.meta ? err.meta : {},
 				});
 				throw err;

@@ -168,7 +168,7 @@ const ActionStepList = () => {
 		const testListContainer: any = document.querySelector("#stepsListContainer");
 		const elementHeight = testListContainer.scrollHeight;
 		testListContainer.scrollBy(0, elementHeight);
-	});
+	}, [actions.length]);
 
 	const handleDeleteAction = (actionIndex: number) => {
 		const store = getStore();

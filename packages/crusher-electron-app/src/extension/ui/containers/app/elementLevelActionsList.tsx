@@ -39,7 +39,7 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 					selectors: recordingState.elementInfo?.selectors,
 					meta: meta,
 				},
-				// screenshot: screenshot,
+				screenshot: screenshot,
 				//@TODO: Get the url of the target site here (Maybe some hack with atom or CEF)
 				url: "",
 			}),
@@ -51,18 +51,18 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 
 		switch (id) {
 			case ELEMENT_LEVEL_ACTION.CLICK:
-				recordElementAction(ActionsInTestEnum.CLICK);
+				recordElementAction(ActionsInTestEnum.CLICK, null, recordingState.elementInfo.screenshot);
 				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
 				break;
 			case ELEMENT_LEVEL_ACTION.HOVER:
-				recordElementAction(ActionsInTestEnum.HOVER);
+				recordElementAction(ActionsInTestEnum.HOVER, null, recordingState.elementInfo.screenshot);
 				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
 				break;
 			case ELEMENT_LEVEL_ACTION.SCREENSHOT:
-				recordElementAction(ActionsInTestEnum.ELEMENT_SCREENSHOT);
+				recordElementAction(ActionsInTestEnum.ELEMENT_SCREENSHOT, null, recordingState.elementInfo.screenshot);
 				break;
 			case ELEMENT_LEVEL_ACTION.BLACKOUT:
-				recordElementAction(ActionsInTestEnum.BLACKOUT);
+				recordElementAction(ActionsInTestEnum.BLACKOUT, null, recordingState.elementInfo.screenshot);
 				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
 				break;
 			case ELEMENT_LEVEL_ACTION.SHOW_ASSERT_MODAL:
@@ -85,16 +85,7 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 	};
 
 	return (
-		<>
-			<List
-				heading={"Select Element Action"}
-				items={items}
-				showBackButton={true}
-				onBackPressed={handleBackAction}
-				onItemClick={handleActionSelected}
-			></List>
-			<div>{recordingState.elementInfo ? recordingState.elementInfo.capturedElementScreenshot : null}</div>
-		</>
+		<List heading={"Select Element Action"} items={items} showBackButton={true} onBackPressed={handleBackAction} onItemClick={handleActionSelected}></List>
 	);
 };
 

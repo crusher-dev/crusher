@@ -14,7 +14,7 @@ async function takeElementScreenshot(element: Locator, workingSelector: any, act
 		customLogMessage: "Took screenshot of element",
 		outputs: [
 			{
-				name: screenshotName,
+				name: action.name ? `${action.name}.png` : screenshotName,
 				value: uploadedScreenshotUrl,
 			},
 		],

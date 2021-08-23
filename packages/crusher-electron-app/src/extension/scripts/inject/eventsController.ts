@@ -63,9 +63,8 @@ export default class EventsController {
 			].includes(event_type as any)
 		) {
 			console.log(capturedTarget);
-			capturedElementScreenshot = await html2canvas(capturedTarget).then((canvas: any) => {
-				return canvas.toDataURL();
-			});
+			console.log("Tryng to take screenshot");
+			capturedElementScreenshot = null;
 			console.log("Finsihed");
 		}
 
@@ -77,9 +76,9 @@ export default class EventsController {
 					selectors: selectors,
 					meta: {
 						value,
-						// capturedElementScreenshot: capturedElementScreenshot,
 					},
 				},
+				screenshot: capturedElementScreenshot,
 				url: window.location.href,
 			} as iAction,
 		});

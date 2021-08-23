@@ -38,10 +38,14 @@ const App = () => {
 			return;
 		}
 		console.log(AdvancedURL.getBackendURL());
-		fetch(resolveToBackendPath(`/server/tests/actions/save.temp`), {
+		fetch(resolveToBackendPath("/server/tests/actions/save.temp"), {
 			method: "POST",
 			headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
-			body: JSON.stringify({ events: steps }),
+			body: JSON.stringify({
+				events: steps.map((step) => {
+					return { ...step, screenshot: null };
+				}),
+			}),
 		})
 			.then((res) => res.text())
 			.then((res) => {

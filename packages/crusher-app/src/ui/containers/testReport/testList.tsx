@@ -193,7 +193,7 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 function RenderStep({ data, testInstanceData }) {
 	const { status, message, actionType, meta } = data;
 
-	const actionName = meta && meta.actionName ? meta.actionName : getActionLabel(actionType);
+	const actionName = getActionLabel(actionType);
 	const isPassed = status === "COMPLETED";
 
 	return (
@@ -219,7 +219,7 @@ function RenderStep({ data, testInstanceData }) {
 								color: #848484;
 							`}
 						>
-							{message}
+							{meta && meta.actionName ? meta.actionName : message}
 						</span>
 					</div>
 				</Conditional>

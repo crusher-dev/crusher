@@ -117,14 +117,7 @@ const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 				  border-b-2
 				  p-24   border-gray-800"
 			>
-				<div className="flex justify-between items-center">
-					<h5
-						className="text-white font-semibold
-						text-md text-17"
-					>
-						Actions
-					</h5>
-				</div>
+				<div className="flex justify-between items-center"></div>
 				<Conditional If={recordingState.type === ACTIONS_RECORDING_STATE.INITIAL_STATE}>
 					<AddCustomCheckView />
 				</Conditional>

@@ -54,8 +54,9 @@ export default class EventRecording {
 		this.handleBeforeNavigation = this.handleBeforeNavigation.bind(this);
 		this.handlePointerEnter = this.handlePointerEnter.bind(this);
 		this.handleCrusherHoverTrace = this.handleCrusherHoverTrace.bind(this);
-		this.saveHoverFinalEvents = this.saveHoverFinalEvents.bind(this);
 		this.handleElementSelected = this.handleElementSelected.bind(this);
+		this.trackAndSaveRelevantHover = this.trackAndSaveRelevantHover.bind(this);
+		this.getHoverDependentNodes = this.getHoverDependentNodes.bind(this);
 
 		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
@@ -303,11 +304,31 @@ export default class EventRecording {
 		}
 	}
 
+	async getHoverDependentNodes(element): Promise<Array<any>> {
+		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element);
+		if (needsOtherActions) {
+			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element);
+			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
+			return hoverNodes;
+		}
+
+		return [];
+	}
+
+	async trackAndSaveRelevantHover(element) {
+		const hoverNodes = await this.getHoverDependentNodes(element);
+		for (let i = 0; i < hoverNodes.length; i++) {
+			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, hoverNodes[i], "", null, true);
+		}
+	}
+
 	async turnOnElementModeInParentFrame(element = this.state.targetElement) {
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
+		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(await this.getHoverDependentNodes(element));
 		const capturedElementScreenshot = null;
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
+			hoverDependentNodesSelectors: hoverDependentNodesSelectors,
 			meta: {
 				selectors: getSelectors(element),
 				attributes: getAllAttributes(element),
@@ -326,12 +347,6 @@ export default class EventRecording {
 			this._overlayCover.style.top = "0px";
 			this._overlayCover.style.width = "0px";
 			this._overlayCover.style.height = "0px";
-		}
-	}
-
-	async saveHoverFinalEvents(finalEvents: Array<Node>) {
-		for (let i = 0; i < finalEvents.length; i++) {
-			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, finalEvents[i], "", null, true);
 		}
 	}
 
@@ -363,12 +378,7 @@ export default class EventRecording {
 		// by user. Found during creating tests for ielts search
 		console.log("Event now", event.isTrusted, !event.simulatedEvent, event.clientX, event.clientY);
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
-			const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(target);
-			if (needsOtherActions) {
-				const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(target);
-				const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
-				await this.saveHoverFinalEvents(hoverNodes);
-			}
+			await this.trackAndSaveRelevantHover(target);
 
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target);
 		}

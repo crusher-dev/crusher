@@ -4,6 +4,7 @@ import { MESSAGE_TYPES } from "../../messageListener";
 import { iAction } from "@shared/types/action";
 import html2canvas from "html2canvas";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { iSelectorInfo } from "@shared/types/selectorInfo";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -43,6 +44,13 @@ export default class EventsController {
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.RECORD_ACTION_META,
 			meta: { finalActions: finalActions },
+		});
+	}
+
+	getSelectorsOfNodes(nodes: Array<HTMLElement>): Array<{ selectors: Array<iSelectorInfo | null> }> {
+		return nodes.map((node) => {
+			const selectors = node ? getSelectors(node) : null;
+			return { selectors };
 		});
 	}
 

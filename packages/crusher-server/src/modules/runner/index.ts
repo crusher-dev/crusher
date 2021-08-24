@@ -97,11 +97,10 @@ class TestsRunner {
 
 		const testsResultsSetsInsertPromiseArr = testInstancesArr.map(async (testInstance) => {
 			const referenceInstance = await this.buildTestInstanceService.getReferenceInstance(testInstance.id);
-
 			return this.buildTestInstanceService.createBuildTestInstanceResultSet({
 				reportId: buildReportInsertRecord.insertId,
 				instanceId: testInstance.id,
-				targetInstanceId: testInstance.id,
+				targetInstanceId: referenceInstance.id,
 			});
 		});
 

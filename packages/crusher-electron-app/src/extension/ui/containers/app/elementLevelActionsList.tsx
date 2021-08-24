@@ -11,6 +11,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { updateActionsModalState, updateActionsRecordingState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
+import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
 
 interface iElementLevelActionListProps {
 	deviceIframeRef: RefObject<HTMLWebViewElement>;
@@ -30,20 +31,16 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 	});
 
 	const recordElementAction = (type: ActionsInTestEnum, meta: any = null, screenshot: string | null = null) => {
-		const store = getStore();
-
-		store.dispatch(
-			recordAction({
-				type: type,
-				payload: {
-					selectors: recordingState.elementInfo?.selectors,
-					meta: meta,
-				},
-				screenshot: screenshot,
-				//@TODO: Get the url of the target site here (Maybe some hack with atom or CEF)
-				url: "",
-			}),
-		);
+		recordActionWithHoverNodes({
+			type: type,
+			payload: {
+				selectors: recordingState.elementInfo?.selectors,
+				meta: meta,
+			},
+			screenshot: screenshot,
+			//@TODO: Get the url of the target site here (Maybe some hack with atom or CEF)
+			url: "",
+		});
 	};
 
 	const handleActionSelected = (id: ELEMENT_LEVEL_ACTION) => {

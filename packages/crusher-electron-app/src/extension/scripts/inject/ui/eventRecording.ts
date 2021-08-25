@@ -57,6 +57,8 @@ export default class EventRecording {
 		this.handleElementSelected = this.handleElementSelected.bind(this);
 		this.trackAndSaveRelevantHover = this.trackAndSaveRelevantHover.bind(this);
 		this.getHoverDependentNodes = this.getHoverDependentNodes.bind(this);
+		this.clickThroughElectron = this.clickThroughElectron.bind(this);
+		this.hoverThroughElectron = this.hoverThroughElectron.bind(this);
 
 		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
@@ -157,7 +159,17 @@ export default class EventRecording {
 		}
 	}
 
-	performSimulatedAction(meta: iPerformActionMeta) {
+	clickThroughElectron(node) {
+		console.log("CRUSHER_CLICK_ELEMENT", node);
+		return true;
+	}
+
+	hoverThroughElectron(node) {
+		console.log("CRUSHER_HOVER_ELEMENT", node);
+		return true;
+	}
+
+	async performSimulatedAction(meta: iPerformActionMeta) {
 		const { type, recordingState } = meta;
 		if (recordingState === ACTIONS_RECORDING_STATE.PAGE) {
 			switch (type) {
@@ -168,10 +180,10 @@ export default class EventRecording {
 		} else if (recordingState === ACTIONS_RECORDING_STATE.ELEMENT) {
 			switch (type) {
 				case ELEMENT_LEVEL_ACTION.CLICK:
-					this.performSimulatedClick();
+					this.clickThroughElectron(this.state.targetElement);
 					break;
 				case ELEMENT_LEVEL_ACTION.HOVER:
-					this.performSimulatedHover();
+					this.hoverThroughElectron(this.state.targetElement);
 					break;
 				case ELEMENT_LEVEL_ACTION.BLACKOUT:
 					this.state.targetElement.style.visibility = "hidden";
@@ -229,7 +241,7 @@ export default class EventRecording {
 		if (!this.state.pinned) {
 			// Remove Highlight from last element hovered
 			this.removeHighLightFromNode(targetElement);
-			this.updateEventTarget(event.target as HTMLElement, event);
+			// this.updateEventTarget(event.target as HTMLElement, event);
 		}
 	}
 
@@ -366,7 +378,7 @@ export default class EventRecording {
 				target = elements[1];
 			}
 			this.state.pinned = true;
-			this.state.targetElement = target ? target : event.target;
+			// this.state.targetElement = target ? target : event.target;
 			this._overlayCover.classList.add("pointerEventsNone");
 			this.turnOnElementModeInParentFrame();
 			return;
@@ -447,6 +459,7 @@ export default class EventRecording {
 	}
 
 	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
+		this.state.targetElement = event.detail.element;
 		this.turnOnElementModeInParentFrame(event.detail.element);
 	}
 

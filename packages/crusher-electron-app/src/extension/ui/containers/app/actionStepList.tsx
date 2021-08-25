@@ -1,19 +1,107 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
 import { ActionsInTestEnum, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
-import { deleteRecordedAction } from "../../../redux/actions/actions";
+import { deleteRecordedAction, updateActionName } from "../../../redux/actions/actions";
 import { Conditional } from "../../components/conditional";
 import { COLOR_CONSTANTS } from "../../colorConstants";
+import { BlueButton } from "../../components/app/BlueButton";
 
 interface iActionProps {
 	action: iAction;
 	onDelete: (actionIndex: number) => void;
+	onClick?: any;
 	index: number;
 	style?: React.CSSProperties;
+}
+interface IStepInfoEditBoxProps {
+	stepIndex: number;
+	step: iAction;
+	closeEditBox: any;
+}
+
+function StepInfoEditBox(props: IStepInfoEditBoxProps) {
+	const ref = useRef(null);
+	const { closeEditBox } = props;
+	const [stepName, setStepName] = useState(props.step.name);
+
+	useEffect(() => {
+		document.body.addEventListener(
+			"click",
+			(event: MouseEvent) => {
+				if (event.target !== ref.current && ref.current && !ref.current.contains(event.target)) {
+					closeEditBox();
+				}
+			},
+			true,
+		);
+	}, [ref]);
+
+	const handleStepNameInputChange = (event) => {
+		setStepName(event.target.value);
+	};
+
+	const saveTest = (event) => {
+		const store = getStore();
+		store.dispatch(updateActionName(stepName, props.stepIndex));
+		closeEditBox();
+	};
+
+	return (
+		<div ref={ref} style={{ display: "flex", flexDirection: "column", color: "#FFFFFF", padding: "25px 22px" }}>
+			<label style={{ fontFamily: "inherit", fontSize: 14, fontWeight: 500 }}>Step name</label>
+			<input
+				style={{
+					marginTop: 5,
+					borderRadius: 4,
+					padding: "7px 10px",
+					fontSize: 12,
+					outline: "none",
+					background: "rgba(196, 196, 196, 0.02)",
+					border: "1px solid rgba(196, 196, 196, 0.2)",
+				}}
+				placeholder={"Enter step name"}
+				value={stepName}
+				onChange={handleStepNameInputChange}
+				type="text"
+			/>
+
+			<Conditional If={props.step.screenshot}>
+				<div style={{ marginTop: 18, background: "#191E1E", borderRadius: 4, height: 130, width: 286 }}>
+					<img src={props.step.screenshot} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+				</div>
+			</Conditional>
+			<div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: 24 }}>
+				<label style={{ fontSize: 13 }}>Timeout (sec)</label>
+				<input
+					type="text"
+					pattern="[0-9]*"
+					style={{
+						marginLeft: "auto",
+						width: 82,
+						height: 27,
+						fontSize: 12,
+						padding: "7px 10px",
+						borderRadius: 4,
+						background: "rgba(196, 196, 196, 0.02)",
+						border: "1px solid rgba(196, 196, 196, 0.2)",
+						outline: "none",
+					}}
+				></input>
+			</div>
+			<div style={{ display: "flex", flexDirection: "row", marginTop: 2, justifyContent: "flex-end" }}>
+				<BlueButton
+					onClick={saveTest}
+					className="mt-24"
+					style={{ fontSize: 15, fontWeight: 500, paddingTop: 4, paddingBottom: 4, borderRadius: 4 }}
+					title="Save"
+				/>
+			</div>
+		</div>
+	);
 }
 
 function getActionDescription(action: iAction) {
@@ -43,22 +131,23 @@ const ICONS = {
 };
 
 const Action = (props: iActionProps) => {
-	const { action, index, onDelete } = props;
+	const { action, index, onDelete, onClick } = props;
 
-	const handleDelete = () => {
+	const handleDelete = (event) => {
+		event.stopPropagation();
 		onDelete(index);
 	};
 
 	const isDefaultAction = index < 2;
 
 	return (
-		<li style={stepStyle} className="mt-20">
+		<li style={stepStyle} className="mt-20" onClick={onClick}>
 			<div style={stepImageStyle}>
 				<img src={chrome.runtime.getURL(ICONS[action.type] ? ICONS[action.type] : "icons/mouse.svg")} />
 			</div>
 			<div style={actionItemTextContainer}>
 				<div className="text-13" style={stepActionStyle}>
-					{ACTIONS_TO_LABEL_MAP[action.type]}
+					{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}
 				</div>
 				<div style={stepSelectorContainerStyle}>
 					<div className="text-12" style={stepSelectorStyle}>
@@ -87,29 +176,52 @@ const deleteIconContainerStyle = {
 	paddingRight: "1rem",
 };
 const deleteIconStyle = {
-	width: 16,
+	width: 13,
 };
 
 const ActionStepList = () => {
 	const actions = useSelector(getActions);
+	const [stepInfoBoxState, setStepInfoBoxState] = useState({ enabled: false, step: null, stepIndex: -1 });
 
 	useEffect(() => {
 		const testListContainer: any = document.querySelector("#stepsListContainer");
 		const elementHeight = testListContainer.scrollHeight;
 		testListContainer.scrollBy(0, elementHeight);
-	});
+	}, [actions.length]);
 
 	const handleDeleteAction = (actionIndex: number) => {
 		const store = getStore();
 		store.dispatch(deleteRecordedAction(actionIndex));
 	};
 
+	const handleActionClick = (step: iAction, stepIndex: number) => {
+		setStepInfoBoxState({ enabled: true, step: step, stepIndex: stepIndex });
+	};
+
 	const stepList = actions.map((step: iAction, index: number) => {
-		return <Action onDelete={handleDeleteAction} style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }} key={index} index={index} action={step} />;
+		return (
+			<Action
+				onClick={handleActionClick.bind(this, step, index)}
+				onDelete={handleDeleteAction}
+				style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }}
+				key={index}
+				index={index}
+				action={step}
+			/>
+		);
 	});
 
+	const handleStepInfoBoxOutsideClick = () => {
+		setStepInfoBoxState({ enabled: false, step: null, stepIndex: -1 });
+	};
+
 	return (
-		<div className="flex flex-col p-24" style={{ height: "45%" }}>
+		<div className="flex flex-col p-24" style={{ height: "45%", position: "relative" }}>
+			<Conditional If={stepInfoBoxState.enabled}>
+				<div style={actionEditInfoContainerStyle(stepInfoBoxState.step && !!(stepInfoBoxState.step as iAction).screenshot)}>
+					<StepInfoEditBox step={stepInfoBoxState.step} stepIndex={stepInfoBoxState.stepIndex} closeEditBox={handleStepInfoBoxOutsideClick} />
+				</div>
+			</Conditional>
 			<div className="flex justify-between text-white">
 				<h5 className="font-semibold text-17">Recorded steps</h5>
 				<div
@@ -131,6 +243,20 @@ const ActionStepList = () => {
 			</div>
 		</div>
 	);
+};
+
+const actionEditInfoContainerStyle = (isScreenshotOn: boolean) => {
+	return {
+		position: POSITION.ABSOLUTE,
+		left: -354,
+		top: isScreenshotOn ? -45 : 0,
+		width: 334,
+		height: isScreenshotOn ? 332 + 40 : 172 + 40,
+		border: "1px solid #272727",
+		borderRadius: 12,
+		background: "#111213",
+		zIndex: 99,
+	};
 };
 
 const lineStyle = {

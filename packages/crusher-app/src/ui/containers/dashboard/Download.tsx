@@ -43,7 +43,7 @@ export function DownloadButton(props) {
 	);
 
 	if (osType === OS.Linux) {
-		const zipLink = data?.assets?.filter(({ name }) => name.includes("linux-x64"))[0].browser_download_url;
+		const zipLink = data?.assets?.filter(({ name }) => name.includes("linux-x64"))[0]?.browser_download_url;
 
 		return (
 			<div className={"flex flex-col items-center"} {...props}>
@@ -60,7 +60,7 @@ export function DownloadButton(props) {
 	}
 
 	if (osType === OS.MAC) {
-		const dmgLink = data?.assets?.filter(({ name }) => name.includes(".dmg"))[0].browser_download_url;
+		const dmgLink = data?.assets?.filter(({ name }) => name.includes(".dmg"))[0]?.browser_download_url;
 
 		return (
 			<div className={"flex flex-col items-center"} {...props}>

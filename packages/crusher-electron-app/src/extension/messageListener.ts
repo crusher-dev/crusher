@@ -239,8 +239,10 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 			break;
 		}
 		case MESSAGE_TYPES.TURN_ON_ELEMENT_MODE: {
+			const isAutoRecorderOn = getAutoRecorderState(store.getState());
 			const meta = event.data.meta as iElementModeMessageMeta;
-			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.ELEMENT, meta));
+			const hoverDependentSelectors = (event.data as any).hoverDependentNodesSelectors as Array<{ selectors: Array<iSelectorInfo> }>;
+			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.ELEMENT, meta, isAutoRecorderOn ? hoverDependentSelectors : []));
 			break;
 		}
 		case MESSAGE_TYPES.RECORDER_BOOTED: {

@@ -11,6 +11,7 @@ import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecording
 import { recordAction } from "../../../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iElementInfo } from "@shared/types/elementInfo";
+import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
 
 interface iElementCustomScriptModalContent {
 	onClose?: any;
@@ -42,20 +43,18 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 
 	const handleClose = () => {
 		const store = getStore();
-		store.dispatch(
-			recordAction({
-				type: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
-				payload: {
-					selectors: elementInfo.selectors,
-					meta: {
-						script: codeTextAreaRef.current!.value,
-					},
+		recordActionWithHoverNodes({
+			type: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
+			payload: {
+				selectors: elementInfo.selectors,
+				meta: {
+					script: codeTextAreaRef.current!.value,
 				},
-				url: "",
-			}),
-		);
-
-		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+			},
+			screenshot: elementInfo.screenshot,
+			url: "",
+		}),
+			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(deviceIframeRef);
 
 		onClose();

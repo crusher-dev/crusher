@@ -191,8 +191,11 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 }
 
 function RenderStep({ data, testInstanceData }) {
-	const { status, message, actionType } = data;
+	const { status, message, actionType, meta } = data;
+
+	const actionName = getActionLabel(actionType);
 	const isPassed = status === "COMPLETED";
+
 	return (
 		<div className={"relative mb-32"}>
 			<div className={" flex px-44"}>
@@ -208,7 +211,7 @@ function RenderStep({ data, testInstanceData }) {
 								color: #d0d0d0;
 							`}
 						>
-							{getActionLabel(actionType)}
+							{actionName}
 						</span>
 						<span
 							className={"text-12 ml-20"}
@@ -216,7 +219,7 @@ function RenderStep({ data, testInstanceData }) {
 								color: #848484;
 							`}
 						>
-							{message}
+							{meta && meta.actionName ? meta.actionName : message}
 						</span>
 					</div>
 				</Conditional>

@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 import { iActionsState } from "../../interfaces/actionsReducer";
-import { DELETE_RECORDED_ACTION, RECORD_ACTION, UPDATE_LAST_RECORDED_ACTION } from "../actions/actions";
+import { DELETE_RECORDED_ACTION, RECORD_ACTION, UPDATE_ACTION_NAME, UPDATE_LAST_RECORDED_ACTION } from "../actions/actions";
 import { iAction } from "@shared/types/action";
 
 const initialState: iActionsState = {
@@ -15,6 +15,18 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 				...state,
 				list: [...state.list, action.payload.action],
 				last_action: new Date(),
+			};
+		case UPDATE_ACTION_NAME:
+			return {
+				...state,
+				list: state.list.map((savedAction, index) => {
+					if (index === action.payload.actionIndex)
+						return {
+							...savedAction,
+							name: action.payload.name,
+						};
+					return savedAction;
+				}),
 			};
 		case UPDATE_LAST_RECORDED_ACTION: {
 			const newList = state.list;

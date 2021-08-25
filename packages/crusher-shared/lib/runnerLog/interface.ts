@@ -7,6 +7,7 @@ export enum ActionStatusEnum {
 }
 
 export interface IRunnerLogStepMeta {
+	actionName?: string;
 	workingSelector?: { type: string; value: string };
 	failedReason?: string;
 	outputs?: [{ name: string; value: string }];

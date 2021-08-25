@@ -4,6 +4,7 @@ import { MESSAGE_TYPES } from "../../messageListener";
 import { iAction } from "@shared/types/action";
 import html2canvas from "html2canvas";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { iSelectorInfo } from "@shared/types/selectorInfo";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -46,6 +47,13 @@ export default class EventsController {
 		});
 	}
 
+	getSelectorsOfNodes(nodes: Array<HTMLElement>): Array<{ selectors: Array<iSelectorInfo | null> }> {
+		return nodes.map((node) => {
+			const selectors = node ? getSelectors(node) : null;
+			return { selectors };
+		});
+	}
+
 	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
 
@@ -63,9 +71,8 @@ export default class EventsController {
 			].includes(event_type as any)
 		) {
 			console.log(capturedTarget);
-			capturedElementScreenshot = await html2canvas(capturedTarget).then((canvas: any) => {
-				return canvas.toDataURL();
-			});
+			console.log("Tryng to take screenshot");
+			capturedElementScreenshot = null;
 			console.log("Finsihed");
 		}
 
@@ -77,9 +84,9 @@ export default class EventsController {
 					selectors: selectors,
 					meta: {
 						value,
-						// capturedElementScreenshot: capturedElementScreenshot,
 					},
 				},
+				screenshot: capturedElementScreenshot,
 				url: window.location.href,
 			} as iAction,
 		});

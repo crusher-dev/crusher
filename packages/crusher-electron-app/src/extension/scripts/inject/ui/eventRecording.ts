@@ -54,8 +54,11 @@ export default class EventRecording {
 		this.handleBeforeNavigation = this.handleBeforeNavigation.bind(this);
 		this.handlePointerEnter = this.handlePointerEnter.bind(this);
 		this.handleCrusherHoverTrace = this.handleCrusherHoverTrace.bind(this);
-		this.saveHoverFinalEvents = this.saveHoverFinalEvents.bind(this);
 		this.handleElementSelected = this.handleElementSelected.bind(this);
+		this.trackAndSaveRelevantHover = this.trackAndSaveRelevantHover.bind(this);
+		this.getHoverDependentNodes = this.getHoverDependentNodes.bind(this);
+		this.clickThroughElectron = this.clickThroughElectron.bind(this);
+		this.hoverThroughElectron = this.hoverThroughElectron.bind(this);
 
 		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
@@ -156,7 +159,17 @@ export default class EventRecording {
 		}
 	}
 
-	performSimulatedAction(meta: iPerformActionMeta) {
+	clickThroughElectron(node) {
+		console.log("CRUSHER_CLICK_ELEMENT", node);
+		return true;
+	}
+
+	hoverThroughElectron(node) {
+		console.log("CRUSHER_HOVER_ELEMENT", node);
+		return true;
+	}
+
+	async performSimulatedAction(meta: iPerformActionMeta) {
 		const { type, recordingState } = meta;
 		if (recordingState === ACTIONS_RECORDING_STATE.PAGE) {
 			switch (type) {
@@ -167,10 +180,10 @@ export default class EventRecording {
 		} else if (recordingState === ACTIONS_RECORDING_STATE.ELEMENT) {
 			switch (type) {
 				case ELEMENT_LEVEL_ACTION.CLICK:
-					this.performSimulatedClick();
+					this.clickThroughElectron(this.state.targetElement);
 					break;
 				case ELEMENT_LEVEL_ACTION.HOVER:
-					this.performSimulatedHover();
+					this.hoverThroughElectron(this.state.targetElement);
 					break;
 				case ELEMENT_LEVEL_ACTION.BLACKOUT:
 					this.state.targetElement.style.visibility = "hidden";
@@ -228,7 +241,7 @@ export default class EventRecording {
 		if (!this.state.pinned) {
 			// Remove Highlight from last element hovered
 			this.removeHighLightFromNode(targetElement);
-			this.updateEventTarget(event.target as HTMLElement, event);
+			// this.updateEventTarget(event.target as HTMLElement, event);
 		}
 	}
 
@@ -303,15 +316,39 @@ export default class EventRecording {
 		}
 	}
 
+	async getHoverDependentNodes(element): Promise<Array<any>> {
+		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element);
+		if (needsOtherActions) {
+			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element);
+			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
+			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
+				hoverNodes.pop();
+			}
+			return hoverNodes;
+		}
+
+		return [];
+	}
+
+	async trackAndSaveRelevantHover(element) {
+		const hoverNodes = await this.getHoverDependentNodes(element);
+		for (let i = 0; i < hoverNodes.length; i++) {
+			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, hoverNodes[i], "", null, true);
+		}
+	}
+
 	async turnOnElementModeInParentFrame(element = this.state.targetElement) {
-		const capturedElementScreenshot = await html2canvas(element, { backgroundColor: "#FF6A00" }).then((canvas: any) => canvas.toDataURL());
+		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
+		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(await this.getHoverDependentNodes(element));
+		const capturedElementScreenshot = null;
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
+			hoverDependentNodesSelectors: hoverDependentNodesSelectors,
 			meta: {
 				selectors: getSelectors(element),
 				attributes: getAllAttributes(element),
 				innerHTML: element.innerHTML,
-				// capturedElementScreenshot: capturedElementScreenshot,
+				screenshot: capturedElementScreenshot,
 			} as iElementModeMessageMeta,
 		});
 	}
@@ -325,12 +362,6 @@ export default class EventRecording {
 			this._overlayCover.style.top = "0px";
 			this._overlayCover.style.width = "0px";
 			this._overlayCover.style.height = "0px";
-		}
-	}
-
-	async saveHoverFinalEvents(finalEvents: Array<Node>) {
-		for (let i = 0; i < finalEvents.length; i++) {
-			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, finalEvents[i], "", null, true);
 		}
 	}
 
@@ -350,31 +381,26 @@ export default class EventRecording {
 				target = elements[1];
 			}
 			this.state.pinned = true;
-			this.state.targetElement = target ? target : event.target;
+			// this.state.targetElement = target ? target : event.target;
 			this._overlayCover.classList.add("pointerEventsNone");
 			this.turnOnElementModeInParentFrame();
 			return;
 		}
 
-		const closestLink: HTMLAnchorElement = target.closest("a");
+		const closestLink: HTMLAnchorElement = target.tagName === "a" ? target : target.closest("a");
 
 		// If clientX and clientY is 0 it may mean that the event is not triggered
 		// by user. Found during creating tests for ielts search
+		console.log("Event now", event.isTrusted, !event.simulatedEvent, event.clientX, event.clientY);
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
-			const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(target);
-			if (needsOtherActions) {
-				const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(target);
-				const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
-				await this.saveHoverFinalEvents(hoverNodes);
-			}
+			await this.trackAndSaveRelevantHover(target);
+
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target);
 		}
 
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
 			const href = closestLink.getAttribute("href");
-			const isBlank = closestLink.getAttribute("target") === "_blank";
-			console.log("Going to this link", href);
-			if (href && isBlank) {
+			if (href) {
 				window.location.href = href;
 				return event.preventDefault();
 			}
@@ -436,6 +462,7 @@ export default class EventRecording {
 	}
 
 	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
+		this.state.targetElement = event.detail.element;
 		this.turnOnElementModeInParentFrame(event.detail.element);
 	}
 

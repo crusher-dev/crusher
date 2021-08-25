@@ -6,6 +6,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 export const RECORD_ACTION = "RECORD_ACTION";
 export const UPDATE_LAST_RECORDED_ACTION = "UPDATE_LAST_RECORDED_ACTION";
 export const DELETE_RECORDED_ACTION = "DELETE_RECORDED_ACTION";
+export const UPDATE_ACTION_NAME = "UPDATE_ACTION_NAME";
 
 export const recordAction = (action: iAction) => {
 	const store = getStore();
@@ -24,6 +25,11 @@ export const recordAction = (action: iAction) => {
 		payload: { action },
 	};
 };
+
+export const updateActionName = (actionName: string, actionIndex: number) => ({
+	type: UPDATE_ACTION_NAME,
+	payload: { name: actionName, actionIndex },
+});
 
 export const updateLastRecordedAction = (actionToBeReplacedWith: iAction) => ({
 	type: UPDATE_LAST_RECORDED_ACTION,

@@ -321,6 +321,9 @@ export default class EventRecording {
 		if (needsOtherActions) {
 			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element);
 			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
+			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
+				hoverNodes.pop();
+			}
 			return hoverNodes;
 		}
 

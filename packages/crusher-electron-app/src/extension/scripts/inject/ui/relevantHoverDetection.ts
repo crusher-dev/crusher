@@ -1,6 +1,15 @@
 import { IEventMutationRecord } from "./types/IEventMutationRecord";
 import { IRegisteredMutationRecord } from "./types/IRegisteredMutationRecord";
 
+function getElementDepth(el) {
+	let depth = 0;
+	while (null !== el.parentElement) {
+		el = el.parentElement;
+		depth++;
+	}
+	return depth;
+}
+
 class RelevantHoverDetection {
 	private _mapRecords: Map<Node, Map<Node, IRegisteredMutationRecord>> = new Map();
 
@@ -32,16 +41,25 @@ class RelevantHoverDetection {
 	getParentDOMMutations(node: Node): Array<IRegisteredMutationRecord> {
 		let currentNode = node;
 		const list = [];
-		console.log("FIRST RESULT", this._mapRecords.get(currentNode));
 		while (document.body.contains(currentNode) && currentNode != document.body) {
-			if (this._mapRecords.has(currentNode)) {
+			if (this._mapRecords.has(currentNode) && !(currentNode instanceof SVGElement)) {
 				const tmp = this._mapRecords.get(currentNode)!;
 				list.push(Array.from(tmp.values()).pop() as IRegisteredMutationRecord);
 			}
 			currentNode = currentNode.parentNode!;
 		}
-		const out = list.reverse();
-		console.log(out);
+		const out = list
+			.reverse()
+			.filter((item, index, array) => {
+				return (
+					array.findIndex((currentItem) => currentItem.eventNode === item.eventNode) === index &&
+					(item.targetNode !== document.body || item.targetNode !== document)
+				);
+			})
+			.sort((a, b) => {
+				return getElementDepth(a.eventNode) - getElementDepth(b.eventNode);
+			});
+
 		return out;
 	}
 }

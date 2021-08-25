@@ -12,6 +12,8 @@ export const recordActionWithHoverNodes = (action: iAction) => {
 
 	if (actionRecordingState.hoverDependentSelectors && actionRecordingState.type === ACTIONS_RECORDING_STATE.ELEMENT) {
 		for (const hoverElementSelector of actionRecordingState.hoverDependentSelectors) {
+			if (hoverElementSelector.selectors === action.payload.selectors) continue;
+
 			store.dispatch(
 				recordAction({
 					type: ActionsInTestEnum.HOVER,

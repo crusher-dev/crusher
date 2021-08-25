@@ -310,28 +310,28 @@ if (!app.isDefaultProtocolClient("crusher")) {
 
 async function cleanupBeforeExit() {
 	console.log("Getting cleared");
-	const cookies = await session.defaultSession.cookies.get({ domain: APP_DOMAIN });
+	// const cookies = await session.defaultSession.cookies.get({ domain: APP_DOMAIN });
 	await session.defaultSession.clearStorageData({
 		storages: ["cookies", "localstorage"],
 	});
 
-	if (cookies && cookies.length) {
-		for (const cookie of cookies) {
-			const nextYearDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+	// if (cookies && cookies.length) {
+	// 	for (const cookie of cookies) {
+	// 		const nextYearDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
 
-			await session.defaultSession.cookies.set({
-				url: `http://${cookie.domain}`,
-				name: cookie.name,
-				value: cookie.value,
-				domain: cookie.domain,
-				path: cookie.path,
-				secure: cookie.secure,
-				httpOnly: cookie.httpOnly,
-				expirationDate: cookie.expirationDate ? cookie.expirationDate : nextYearDate.valueOf(),
-				sameSite: cookie.sameSite,
-			});
-		}
-	}
+	// 		await session.defaultSession.cookies.set({
+	// 			url: `http://${cookie.domain}`,
+	// 			name: cookie.name,
+	// 			value: cookie.value,
+	// 			domain: cookie.domain,
+	// 			path: cookie.path,
+	// 			secure: cookie.secure,
+	// 			httpOnly: cookie.httpOnly,
+	// 			expirationDate: cookie.expirationDate ? cookie.expirationDate : nextYearDate.valueOf(),
+	// 			sameSite: cookie.sameSite,
+	// 		});
+	// 	}
+	// }
 }
 
 app.on("window-all-closed", async function () {

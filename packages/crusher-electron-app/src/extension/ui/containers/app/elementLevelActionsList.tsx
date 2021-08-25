@@ -49,7 +49,6 @@ const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 
 		switch (id) {
 			case ELEMENT_LEVEL_ACTION.CLICK:
-				recordElementAction(ActionsInTestEnum.CLICK, null, recordingState.elementInfo.screenshot);
 				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
 				break;
 			case ELEMENT_LEVEL_ACTION.HOVER:

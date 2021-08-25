@@ -1,6 +1,7 @@
 import * as path from "path";
 import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard } from "electron";
 import userAgents from "../../crusher-shared/constants/userAgents";
+import { BrowserInput } from "./input";
 const gotTheLock = app.requestSingleInstanceLock();
 
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
@@ -71,8 +72,9 @@ function getIconPath() {
 	}
 }
 
-function reloadApp(mainWindow, completeReset = false) {
+async function reloadApp(mainWindow, completeReset = false) {
 	const currentArgs = process.argv.slice(1).filter((a) => !a.startsWith("--open-extension-url="));
+	await cleanupBeforeExit();
 	app.relaunch({ args: completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
 	app.exit();
 }
@@ -129,7 +131,7 @@ async function createWindow() {
 	});
 
 	ipcMain.on("restart-app", async (e) => {
-		reloadApp(mainWindow, true);
+		await reloadApp(mainWindow, true);
 	});
 
 	ipcMain.on("set-custom-backend-domain", async (e, domain) => {
@@ -190,8 +192,25 @@ async function createWindow() {
 		// @TODO: This should not be necessary. Look into this
 		// It's here to enable DOMDebugger, which is not getting enabled by default
 		await webViewContent.debugger.sendCommand("DOMDebugger.setXHRBreakpoint", { url: "http://nonsense.com" });
+		const browserInput = new BrowserInput(webViewContent);
 
 		webViewContent.debugger.on("message", async (event, method, params) => {
+			if (method === "Runtime.consoleAPICalled") {
+				const { args } = params;
+				if (args.length === 2 && args[0].type === "string" && ["CRUSHER_HOVER_ELEMENT", "CRUSHER_CLICK_ELEMENT"].includes(args[0].value)) {
+					switch (args[0].value) {
+						case "CRUSHER_HOVER_ELEMENT":
+							await browserInput.hover(args[1].objectId);
+							break;
+						case "CRUSHER_CLICK_ELEMENT":
+							await browserInput.click(args[1].objectId);
+							break;
+						default:
+							console.error("This simulated action not supported");
+					}
+				}
+			}
+
 			if (method === "Overlay.inspectNodeRequested") {
 				await webViewContent.debugger.sendCommand("Overlay.setInspectMode", {
 					mode: "none",
@@ -289,29 +308,33 @@ if (!app.isDefaultProtocolClient("crusher")) {
 	app.setAsDefaultProtocolClient("crusher");
 }
 
-app.on("window-all-closed", async function () {
-	const cookies = await session.defaultSession.cookies.get({ domain: APP_DOMAIN });
+async function cleanupBeforeExit() {
+	console.log("Getting cleared");
+	// const cookies = await session.defaultSession.cookies.get({ domain: APP_DOMAIN });
 	await session.defaultSession.clearStorageData({
 		storages: ["cookies", "localstorage"],
 	});
 
-	if (cookies && cookies.length) {
-		for (const cookie of cookies) {
-			const nextYearDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+	// if (cookies && cookies.length) {
+	// 	for (const cookie of cookies) {
+	// 		const nextYearDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
 
-			await session.defaultSession.cookies.set({
-				url: `http://${cookie.domain}`,
-				name: cookie.name,
-				value: cookie.value,
-				domain: cookie.domain,
-				path: cookie.path,
-				secure: cookie.secure,
-				httpOnly: cookie.httpOnly,
-				expirationDate: cookie.expirationDate ? cookie.expirationDate : nextYearDate.valueOf(),
-				sameSite: cookie.sameSite,
-			});
-		}
-	}
+	// 		await session.defaultSession.cookies.set({
+	// 			url: `http://${cookie.domain}`,
+	// 			name: cookie.name,
+	// 			value: cookie.value,
+	// 			domain: cookie.domain,
+	// 			path: cookie.path,
+	// 			secure: cookie.secure,
+	// 			httpOnly: cookie.httpOnly,
+	// 			expirationDate: cookie.expirationDate ? cookie.expirationDate : nextYearDate.valueOf(),
+	// 			sameSite: cookie.sameSite,
+	// 		});
+	// 	}
+	// }
+}
 
+app.on("window-all-closed", async function () {
+	await cleanupBeforeExit();
 	if (process.platform !== "darwin") app.quit();
 });

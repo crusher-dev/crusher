@@ -94,6 +94,7 @@ class BuildTestInstancesService {
 	}
 
 	async insertScrenshotResult(payload: ICreateBuildTestInstanceResultPayload) {
+		console.log("SCREENSHOT_INSER_PAYLOAD", payload);
 		return this.dbManager.insert(
 			"INSERT INTO test_instance_results SET screenshot_id = ?, target_screenshot_id = ?, instance_result_set_id = ?, diff_delta = ?, diff_image_url = ?, status = ?",
 			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status],
@@ -229,6 +230,28 @@ class BuildTestInstancesService {
 
 	async addRecordedVideo(videoUrl: string, instanceId: number) {
 		return this.dbManager.fetchSingleRow("UPDATE test_instances SET recorded_video_url = ? WHERE id = ?", [videoUrl, instanceId]);
+	}
+
+	@CamelizeResponse()
+	async getReferenceInstance(testInstanceId: number, referenceType: "PROJECT_LEVEL" | null = "PROJECT_LEVEL"): Promise<KeysToCamelCase<ITestInstancesTable>> {
+		const testRecord = await this.dbManager.fetchSingleRow(
+			"SELECT tests.* FROM test_instances, tests WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
+			[testInstanceId],
+		);
+		const testInstanceRecord = await this.getInstance(testInstanceId);
+		if (!referenceType) {
+			throw new Error("No valid reference type specified");
+		}
+
+		// Currently there is only one reference type
+		const projectRecord = await this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE id = ?", [testRecord.project_id]);
+		if (!projectRecord.baseline_job_id) return testInstanceRecord;
+
+		const projectLevelReferenceInstance = await this.dbManager.fetchSingleRow("SELECT * FROM test_instances WHERE test_id = ? AND job_id = ?", [
+			testRecord.id,
+			projectRecord.baseline_job_id,
+		]);
+		return projectLevelReferenceInstance ? projectLevelReferenceInstance : testInstanceRecord;
 	}
 }
 

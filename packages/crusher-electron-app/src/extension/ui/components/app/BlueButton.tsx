@@ -6,7 +6,7 @@ interface iButtonProps {
 	title: string;
 	style?: React.CSSProperties;
 	className?: string;
-	onClick?: () => void;
+	onClick?: any;
 }
 
 const BlueButton = (props: iButtonProps) => {

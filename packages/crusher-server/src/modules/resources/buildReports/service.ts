@@ -66,7 +66,7 @@ export class BuildReportService {
 		return actionResults.map((actionResult, actionIndex) => {
 			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionResult.actionType)) {
 				const screenshotResultRecord = instanceScreenshotsRecordsMap[actionIndex];
-				if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length) {
+				if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
 					actionResult.meta.outputs[0].diffImageUrl = screenshotResultRecord.diffImageUrl;
 					actionResult.meta.outputs[0].targetScreenshotUrl = screenshotResultRecord.targetScreenshotUrl;
 					actionResult.meta.outputs[0].diffDelta = screenshotResultRecord.diffDelta;

@@ -36,22 +36,24 @@ const actualCode = `(${(userAgent: string, appVersion: string, platformVersion: 
 	});
 }})`;
 
-if ((window as any).electron) {
-	(window as any).electron.host.postMessage({
-		type: MESSAGE_TYPES.REQUEST_USER_AGENT,
-		frameId: null,
-		value: true,
-	});
+setTimeout(() => {
+	if ((window as any).electron) {
+		(window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.REQUEST_USER_AGENT,
+			frameId: null,
+			value: true,
+		});
 
-	(window as any).electron.webview.addEventListener("message", (message: MessageEvent<iMessage>) => {
-		const { type, meta } = message.data;
+		(window as any).electron.webview.addEventListener("message", (message: MessageEvent<iMessage>) => {
+			const { type, meta } = message.data;
 
-		if (type === FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE) {
-			const userAgent: iUserAgent = meta.value;
-			const s = document.createElement("script");
-			s.textContent = `${actualCode}('${userAgent.value}', '${userAgent.appVersion}', '${userAgent.platform}');`;
-			document.documentElement.appendChild(s);
-			s.remove();
-		}
-	});
-}
+			if (type === FRAME_MESSAGE_TYPES.USER_AGENT_REQUEST_RESPONSE) {
+				const userAgent: iUserAgent = meta.value;
+				const s = document.createElement("script");
+				s.textContent = `${actualCode}('${userAgent.value}', '${userAgent.appVersion}', '${userAgent.platform}');`;
+				document.documentElement.appendChild(s);
+				s.remove();
+			}
+		});
+	}
+}, 0);

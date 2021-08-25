@@ -18,7 +18,7 @@ contextBridge.exposeInMainWorld("electron", {
 	initWebView: (webContentsId) => ipcRenderer.send("init-web-view", webContentsId),
 	getAppPath: () => ipcRenderer.sendSync("get-app-path"),
 	setUserAgent: (userAgent) => ipcRenderer.send("set-user-agent", userAgent),
-	resetartApp: () => ipcRenderer.send("restart-app"),
+	restartApp: () => ipcRenderer.send("restart-app"),
 	webview: {
 		postMessage: (data) => {
 			ipcRenderer.send("post-message-to-webview", data);

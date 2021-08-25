@@ -54,12 +54,12 @@ function sendSeoMetaToParentFrame() {
 	});
 }
 
-export function responseMessageListener(eventRecording: EventRecording, event: MessageEvent<iMessage>) {
+export async function responseMessageListener(eventRecording: EventRecording, event: MessageEvent<iMessage>) {
 	const { type } = event.data;
 	switch (type) {
 		case FRAME_MESSAGE_TYPES.PERFORM_ACTION: {
 			const meta = event.data.meta as iPerformActionMeta;
-			eventRecording.performSimulatedAction(meta);
+			await eventRecording.performSimulatedAction(meta);
 			break;
 		}
 		case FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE: {

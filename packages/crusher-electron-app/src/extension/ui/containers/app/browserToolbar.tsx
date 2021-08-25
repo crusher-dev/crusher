@@ -65,7 +65,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	};
 
 	const resetApp = () => {
-		(window as any).electron.resetartApp();
+		(window as any).electron.restartApp();
 	};
 
 	return (

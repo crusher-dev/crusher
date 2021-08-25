@@ -1,4 +1,4 @@
-![enter image description here](https://i.imgur.com/pMMNokt.png)
+![enter image description here](https://i.imgur.com/tw2t8ma.png)
 
 <p align="center">
     <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">

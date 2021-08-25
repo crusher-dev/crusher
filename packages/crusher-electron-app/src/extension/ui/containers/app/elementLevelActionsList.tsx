@@ -12,6 +12,7 @@ import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingSta
 import { updateActionsModalState, updateActionsRecordingState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
+import { inspect } from "util";
 
 interface iElementLevelActionListProps {
 	deviceIframeRef: RefObject<HTMLWebViewElement>;

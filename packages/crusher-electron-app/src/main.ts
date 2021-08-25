@@ -72,8 +72,9 @@ function getIconPath() {
 	}
 }
 
-function reloadApp(mainWindow, completeReset = false) {
+async function reloadApp(mainWindow, completeReset = false) {
 	const currentArgs = process.argv.slice(1).filter((a) => !a.startsWith("--open-extension-url="));
+	await cleanupBeforeExit();
 	app.relaunch({ args: completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
 	app.exit();
 }
@@ -130,7 +131,7 @@ async function createWindow() {
 	});
 
 	ipcMain.on("restart-app", async (e) => {
-		reloadApp(mainWindow, true);
+		await reloadApp(mainWindow, true);
 	});
 
 	ipcMain.on("set-custom-backend-domain", async (e, domain) => {
@@ -307,7 +308,8 @@ if (!app.isDefaultProtocolClient("crusher")) {
 	app.setAsDefaultProtocolClient("crusher");
 }
 
-app.on("window-all-closed", async function () {
+async function cleanupBeforeExit() {
+	console.log("Getting cleared");
 	const cookies = await session.defaultSession.cookies.get({ domain: APP_DOMAIN });
 	await session.defaultSession.clearStorageData({
 		storages: ["cookies", "localstorage"],
@@ -330,6 +332,9 @@ app.on("window-all-closed", async function () {
 			});
 		}
 	}
+}
 
+app.on("window-all-closed", async function () {
+	await cleanupBeforeExit();
 	if (process.platform !== "darwin") app.quit();
 });

@@ -68,6 +68,7 @@
 		"unique-selector": "1.0.0",
 		"url": "^0.11.0",
 		"url-parse": "^1.4.7",
+		"valid-url": "^1.0.9",
 		"webpack": "5.21.2",
 		"worker-dom": "^0.1.0"
 	},

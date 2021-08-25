@@ -94,6 +94,7 @@ class BuildTestInstancesService {
 	}
 
 	async insertScrenshotResult(payload: ICreateBuildTestInstanceResultPayload) {
+		console.log("SCREENSHOT_INSER_PAYLOAD", payload);
 		return this.dbManager.insert(
 			"INSERT INTO test_instance_results SET screenshot_id = ?, target_screenshot_id = ?, instance_result_set_id = ?, diff_delta = ?, diff_image_url = ?, status = ?",
 			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status],

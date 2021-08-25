@@ -16,6 +16,7 @@ import { iElementInfo } from "@shared/types/elementInfo";
 import { Button } from "../../../components/app/button";
 import { TEXT_ALIGN } from "../../../../interfaces/css";
 import { pxToRemValue } from "../../../../utils/helpers";
+import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
 
 interface iAssertElementModalProps {
 	onClose?: any;
@@ -126,19 +127,18 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 
 	const saveElementValidationAction = () => {
 		const store = getStore();
-		store.dispatch(
-			recordAction({
-				type: ActionsInTestEnum.ASSERT_ELEMENT,
-				payload: {
-					selectors: elementInfo.selectors,
-					meta: {
-						validations: validationRows,
-					},
+		recordActionWithHoverNodes({
+			type: ActionsInTestEnum.ASSERT_ELEMENT,
+			payload: {
+				selectors: elementInfo.selectors,
+				meta: {
+					validations: validationRows,
 				},
-				url: "",
-			}),
-		);
-		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+			},
+			screenshot: elementInfo.screenshot,
+			url: "",
+		}),
+			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(deviceIframeRef);
 
 		if (onClose) {

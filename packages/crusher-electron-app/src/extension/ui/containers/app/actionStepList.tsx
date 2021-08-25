@@ -74,7 +74,25 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 					<img src={props.step.screenshot} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
 				</div>
 			</Conditional>
-			<div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
+			<div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: 24 }}>
+				<label style={{ fontSize: 13 }}>Timeout (sec)</label>
+				<input
+					type="text"
+					pattern="[0-9]*"
+					style={{
+						marginLeft: "auto",
+						width: 82,
+						height: 27,
+						fontSize: 12,
+						padding: "7px 10px",
+						borderRadius: 4,
+						background: "rgba(196, 196, 196, 0.02)",
+						border: "1px solid rgba(196, 196, 196, 0.2)",
+						outline: "none",
+					}}
+				></input>
+			</div>
+			<div style={{ display: "flex", flexDirection: "row", marginTop: 2, justifyContent: "flex-end" }}>
 				<BlueButton
 					onClick={saveTest}
 					className="mt-24"
@@ -233,7 +251,7 @@ const actionEditInfoContainerStyle = (isScreenshotOn: boolean) => {
 		left: -354,
 		top: isScreenshotOn ? -45 : 0,
 		width: 334,
-		height: isScreenshotOn ? 332 : 172,
+		height: isScreenshotOn ? 332 + 40 : 172 + 40,
 		border: "1px solid #272727",
 		borderRadius: 12,
 		background: "#111213",

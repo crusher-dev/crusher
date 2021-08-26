@@ -16,9 +16,8 @@ import { getOSType } from "@utils/common";
 
 export function DownloadButton(props) {
 	const osType = useMemo(getOSType, []);
-	const { downloadLink, label } = OS_INFO[osType];
+	const label = OS_INFO[osType]?.label;
 	const [isDownloading, setDownload] = useState(false);
-
 	const { data } = useSWR(RELEASE_API);
 
 	const DownloadButton = useCallback(
@@ -60,8 +59,7 @@ export function DownloadButton(props) {
 	}
 
 	if (osType === OS.MAC) {
-		const dmgLink = data?.assets?.filter(({ name }) => name.includes(".dmg"))[0]?.browser_download_url;
-
+		const dmgLink = data?.assets?.filter(({ name }) => name.includes("darwin"))[0]?.browser_download_url;
 		return (
 			<div className={"flex flex-col items-center"} {...props}>
 				<div className={"flex  items-center"}>

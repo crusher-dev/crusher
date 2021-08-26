@@ -1,13 +1,13 @@
 import { OS } from "@constants/app";
 
 export const getOSType = () => {
-	if (typeof window === "undefined") return OS.OTHER;
+	if (typeof window === "undefined") return OS.MAC;
 	const ua = window.navigator.userAgent;
 	if (ua.includes("Windows")) return OS.Windows;
 	if (ua.includes("Mac")) return OS.MAC;
 	if (ua.includes("Linux")) return OS.Linux;
-	if (ua.includes("X11")) return OS.OTHER;
-	return OS.OTHER;
+	if (ua.includes("X11")) return OS.MAC;
+	return OS.MAC;
 };
 
 export const isBrowser = typeof window !== "undefined";

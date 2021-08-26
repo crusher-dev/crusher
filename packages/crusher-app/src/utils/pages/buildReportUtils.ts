@@ -10,7 +10,7 @@ export const getStatusString = (type) => {
             return "Your build has passes succesfully. No review is required";
 		case "FAILED":
             return "Your build has failed. Please see reports to see what went wrong.";
-		case "REVIEW_REQUIRED":
+		case "MANUAL_REVIEW_REQUIRED":
             return "Your build requires some review. Please see reports.";
 		case "INITIATED":
             return "Your build has been initiated.";
@@ -23,7 +23,7 @@ export const showReviewButton = (type) => {
 	switch (type) {
 		case "FAILED":
             return true;
-		case "REVIEW_REQUIRED":
+		case "MANUAL_REVIEW_REQUIRED":
             return true;
 		default:
 			return false;

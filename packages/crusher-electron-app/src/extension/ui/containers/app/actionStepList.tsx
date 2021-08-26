@@ -160,7 +160,7 @@ const Action = (props: iActionProps) => {
 			</div>
 			<div style={actionItemTextContainer}>
 				<div className="text-13" style={stepActionStyle}>
-					{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}
+					{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}{ action.payload && action.payload.timeout ? ` (${action.payload.timeout}s)` : ""}
 				</div>
 				<div style={stepSelectorContainerStyle}>
 					<div className="text-12" style={stepSelectorStyle}>

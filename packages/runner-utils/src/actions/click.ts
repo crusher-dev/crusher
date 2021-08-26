@@ -4,7 +4,7 @@ import { Locator } from "playwright";
 
 async function clickOnElement(element: Locator, workingSelector: any, action: iAction) {
 	try {
-		await element.click({ force: true, timeout: action.payload.timeout ? action.payload.timeout : undefined });
+		await element.click({ force: true, timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
 	} catch (e) {
 		if (!e.message.includes("selector resolved to hidden"))
 			throw e;

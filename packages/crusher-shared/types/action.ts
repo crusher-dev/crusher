@@ -6,6 +6,7 @@ export interface iAction {
 	name?: string;
 	screenshot?: string;
 	payload: {
+		timeout?: number;
 		selectors?: Array<iSelectorInfo>;
 		meta?: any;
 	};

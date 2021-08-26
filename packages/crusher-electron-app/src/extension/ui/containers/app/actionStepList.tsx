@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
-import { ActionsInTestEnum, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum, ElementActionsInTestArr, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
-import { deleteRecordedAction, updateActionName } from "../../../redux/actions/actions";
+import { deleteRecordedAction, updateActionName, updateActionTimeout } from "../../../redux/actions/actions";
 import { Conditional } from "../../components/conditional";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
@@ -27,6 +27,7 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 	const ref = useRef(null);
 	const { closeEditBox } = props;
 	const [stepName, setStepName] = useState(props.step.name);
+	const [stepTimeout, setStepTimeout] = useState(props.step && props.step.payload && typeof props.step.payload.timeout !== "undefined" ? props.step.payload.timeout.toString() : "15");
 
 	useEffect(() => {
 		document.body.addEventListener(
@@ -44,10 +45,18 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 		setStepName(event.target.value);
 	};
 
-	const saveTest = (event) => {
+	const isElementAction = props.step && ElementActionsInTestArr.includes(props.step.type);
+
+	const saveTest = useCallback((event) => {
 		const store = getStore();
 		store.dispatch(updateActionName(stepName, props.stepIndex));
+		if(isElementAction)
+			store.dispatch(updateActionTimeout(parseInt(stepTimeout), props.stepIndex));
 		closeEditBox();
+	}, [stepName, stepTimeout, isElementAction]);
+
+	const handleTimeoutChange = (event: ChangeEvent) => {
+		setStepTimeout((event.target as any).value);
 	};
 
 	return (
@@ -74,6 +83,7 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 					<img src={props.step.screenshot} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
 				</div>
 			</Conditional>
+			<Conditional If={isElementAction}>
 			<div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: 24 }}>
 				<label style={{ fontSize: 13 }}>Timeout (sec)</label>
 				<input
@@ -90,13 +100,16 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 						border: "1px solid rgba(196, 196, 196, 0.2)",
 						outline: "none",
 					}}
+					onChange={handleTimeoutChange}
+					defaultValue={stepTimeout}
 				></input>
 			</div>
+			</Conditional>
 			<div style={{ display: "flex", flexDirection: "row", marginTop: 2, justifyContent: "flex-end" }}>
 				<BlueButton
 					onClick={saveTest}
 					className="mt-24"
-					style={{ fontSize: 15, fontWeight: 500, paddingTop: 4, paddingBottom: 4, borderRadius: 4 }}
+					style={{ fontSize: 14, fontWeight: 500, paddingTop: 4, paddingBottom: 4, borderRadius: 4 }}
 					title="Save"
 				/>
 			</div>
@@ -215,10 +228,12 @@ const ActionStepList = () => {
 		setStepInfoBoxState({ enabled: false, step: null, stepIndex: -1 });
 	};
 
+	const isCurrentElementAction = stepInfoBoxState.step && ElementActionsInTestArr.includes(stepInfoBoxState.step.type);
+	
 	return (
 		<div className="flex flex-col p-24" style={{ height: "45%", position: "relative" }}>
 			<Conditional If={stepInfoBoxState.enabled}>
-				<div style={actionEditInfoContainerStyle(stepInfoBoxState.step && !!(stepInfoBoxState.step as iAction).screenshot)}>
+				<div style={actionEditInfoContainerStyle(stepInfoBoxState.step && !!(stepInfoBoxState.step as iAction).screenshot, isCurrentElementAction)}>
 					<StepInfoEditBox step={stepInfoBoxState.step} stepIndex={stepInfoBoxState.stepIndex} closeEditBox={handleStepInfoBoxOutsideClick} />
 				</div>
 			</Conditional>
@@ -245,13 +260,17 @@ const ActionStepList = () => {
 	);
 };
 
-const actionEditInfoContainerStyle = (isScreenshotOn: boolean) => {
+const actionEditInfoContainerStyle = (isScreenshotOn: boolean, isElementAction: boolean) => {
+	let offset = 0;
+	if(isElementAction)
+		offset+= 40;
+
 	return {
 		position: POSITION.ABSOLUTE,
 		left: -354,
 		top: isScreenshotOn ? -45 : 0,
 		width: 334,
-		height: isScreenshotOn ? 332 + 40 : 172 + 40,
+		height: isScreenshotOn ? 332 + offset : 172 + offset,
 		border: "1px solid #272727",
 		borderRadius: 12,
 		background: "#111213",

@@ -69,6 +69,7 @@ async function assertElementAttributes(
 
 async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction) {
 	const validationRows = action.payload.meta.validations;
+	await element.elementHandle({timeout: action.payload.timeout ? action.payload.timeout : undefined});
 	const actionResult = await assertElementAttributes(element, validationRows);
 
 	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });

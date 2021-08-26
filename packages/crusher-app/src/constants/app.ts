@@ -5,16 +5,14 @@ export type TOSDownloadInfo = {
 };
 
 export const OS_INFO: Record<string, TOSDownloadInfo> = {
-	Windows: { downloadLink: "https://google.com", icon: null },
-	MAC: { downloadLink: "https://google.com", icon: null },
-
-	Linux: { downloadLink: "https://google.com", icon: null, label: "Download dmg" },
-	OTHER: { downloadLink: "https://google.com", icon: null },
+	Windows: { downloadLink: "",icon: null, label: "Download exe" },
+	MAC: { downloadLink: "",icon: null, label: "Download dmg" },
+	OTHER: { downloadLink: "", icon: null },
 };
 
 export const LINUX_INFO: Record<string, TOSDownloadInfo> = {
-	Linux_ZIP: { downloadLink: "https://google.com", icon: null, label: "Download zip" },
-	Linux_DEB: { downloadLink: "https://google.com", icon: null, label: "Download deb" },
+	Linux_ZIP: { downloadLink: "", icon: null, label: "Download zip" },
+	Linux_DEB: { downloadLink: "", icon: null, label: "Download deb" },
 };
 
 export enum OS {

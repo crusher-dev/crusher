@@ -26,7 +26,7 @@ const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<bo
 
 async function runCustomScriptOnElement(element: Locator, workingSelector: any, action: iAction) {
 	const customScript = action.payload.meta.script;
-	const actionResult = await runScriptOnElement(customScript, await element.elementHandle({timeout: action.payload.timeout ? action.payload.timeout : undefined}));
+	const actionResult = await runScriptOnElement(customScript, await element.elementHandle({timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined}));
 
 	if (!actionResult) markTestFail("Failed according to custom script assertions");
 }

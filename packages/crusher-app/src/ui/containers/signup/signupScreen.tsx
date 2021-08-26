@@ -21,10 +21,10 @@ import { RequestMethod } from "../../../types/RequestOptions";
 
 const showRegistrationFormAtom = atom(false);
 
-const registerUser = (name: string, email: string, password: string, inviteCode: string | null = null) => {
+const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
 	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", inviteCode: inviteCode || null },
+		payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? {code: inviteCode, type: inviteType} : null },
 	});
 };
 
@@ -36,7 +36,7 @@ function EmailPasswordBox() {
     const [password, setPassword] = useState({ value: "", error: "" });
     const [name, setName] = useState({ value: "", error: "" });
     const [processingSignup, setProcessingSignup] = useState(false);
-    const { query } = useRouter;
+    const { query } = useRouter();
 
     const emailChange = useCallback(
 		(e) => {
@@ -74,13 +74,15 @@ function EmailPasswordBox() {
 		} else setName({ ...name, error: "" });
 	};
 
+
+
     const signupUser = async () => {
 		verifyInfo(true);
 
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			await registerUser(name.value, email.value, password.value, query?.inviteCode ? query.inviteCode : null);
+			await registerUser(name.value, email.value, password.value, query?.inviteType ? query.inviteType : null, query?.inviteCode ? query.inviteCode : null);
 			// @TODO: Use router push here
 			window.location.href = "/app/dashboard";
 		} catch (e: any) {

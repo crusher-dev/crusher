@@ -247,9 +247,10 @@ class BuildTestInstancesService {
 		const projectRecord = await this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE id = ?", [testRecord.project_id]);
 		if (!projectRecord.baseline_job_id) return testInstanceRecord;
 
-		const projectLevelReferenceInstance = await this.dbManager.fetchSingleRow("SELECT * FROM test_instances WHERE test_id = ? AND job_id = ?", [
+		const projectLevelReferenceInstance = await this.dbManager.fetchSingleRow("SELECT * FROM test_instances WHERE test_id = ? AND job_id = ? AND browser = ?", [
 			testRecord.id,
 			projectRecord.baseline_job_id,
+			testInstanceRecord.browser,
 		]);
 		return projectLevelReferenceInstance ? projectLevelReferenceInstance : testInstanceRecord;
 	}

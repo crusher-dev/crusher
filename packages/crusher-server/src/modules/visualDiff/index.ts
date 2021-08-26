@@ -22,7 +22,7 @@ class VisualDiffService {
 		const diffPngImage = new PNG({ width: diffImageWidth, height: diffImageHeight });
 
 		const diffDeltaFactor = pixelmatch(basePngImage.data, referenceImage.data, diffPngImage.data, diffImageWidth, diffImageHeight, {
-			threshold: 0.25,
+			threshold: 0.15,
 			alpha: 0.8,
 		});
 

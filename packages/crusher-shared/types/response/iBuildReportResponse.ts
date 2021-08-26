@@ -2,6 +2,8 @@ import { TestInstanceResultSetConclusion } from "crusher-server/crusher-server/s
 import { TestInstanceResultSetStatus } from "crusher-server/crusher-server/src/core/types/TestInstanceResultSetStatus";
 
 export interface IBuildReportResponse {
+	buildId: number;
+	buildReportId: number;
 	id: number;
 	name: string;
 	startedAt: number;

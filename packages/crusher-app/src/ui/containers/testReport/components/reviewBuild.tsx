@@ -5,20 +5,41 @@ import { Button } from "dyson/src/components/atoms";
 import Radio from "dyson/src/components/atoms/radio/radio";
 
 import { CloseSVG } from "@svg/dashboard";
+import { backendRequest } from "@utils/backendRequest";
+import { RequestMethod } from "../../../../types/RequestOptions";
+import { useBuildReport } from "crusher-app/src/store/serverState/buildReports";
+import { useRouter } from "next/router";
 
 export const radioContent = [
 	{ label: "Leave feedback", subLabel: "Approve without approval" },
 	{ label: "Approve & set new baseline", subLabel: "Approve this build and make it baseMark" },
 ];
 
+const approveBuild = (buildId: number, buildReportId: number) => {
+	return backendRequest(`/builds/${buildId}/reports/${buildReportId}/actions/approve`, {
+		method: RequestMethod.POST,
+	});
+};
+
 export const ReviewButtonContent = ({ closeModal }) => {
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
+
 	const [selected, setSelected] = useState(1);
 	const [feedback, setFeedback] = useState(1);
+
 	const selectOption = useCallback((index, selectedRadioButton) => {
 		if (selectedRadioButton) {
 			setSelected(index);
 		}
 	}, []);
+
+	const handleSubmit = useCallback(async () => {
+		console.log("BUILD", data);
+		await approveBuild(data.buildId, data.buildReportId);
+		closeModal();
+	}, [data]);
+
 	return (
 		<div>
 			<div css={topReview} className={"font-700 py-12 px-16 leading-none mt-2 flex justify-between"}>
@@ -60,7 +81,7 @@ export const ReviewButtonContent = ({ closeModal }) => {
 					css={css`
 						width: 120rem;
 					`}
-					onClick={closeModal}
+					onClick={handleSubmit}
 				>
 					Submit
 				</Button>

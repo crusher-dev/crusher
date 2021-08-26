@@ -139,6 +139,8 @@ export class BuildReportService {
 		const testsArray: Array<any> = Object.values(testsMap);
 
 		return {
+			buildId: testsWithReportData[0].buildId,
+			buildReportId: testsWithReportData[0].buildReportId,
 			id: testsWithReportData[0].buildId,
 			name: testsWithReportData[0].buildName,
 			startedAt: new Date(testsWithReportData[0].buildReportCreatedAt).getTime(),
@@ -224,5 +226,9 @@ export class BuildReportService {
 	@CamelizeResponse()
 	async getBuildReportRecord(reportId: number): Promise<KeysToCamelCase<IBuildReportTable> | null> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM job_reports WHERE id = ?", [reportId]);
+	}
+
+	async approveBuildReport(reportId: number) {
+		return this.dbManager.update("UPDATE job_reports SET status = ? WHERE id = ?", [JobReportStatus.PASSED, reportId]);
 	}
 }

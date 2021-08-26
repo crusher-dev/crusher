@@ -3,8 +3,8 @@ import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
 import { markTestFail } from "../utils/helper";
 
-async function hoverOnElement(element: Locator) {
-	await element.hover({ timeout: 5000 });
+async function hoverOnElement(element: Locator, workingSelector: any, action: iAction) {
+	await element.hover({ timeout: action.payload.timeout ? action.payload.timeout : 5000 });
 }
 
 module.exports = {

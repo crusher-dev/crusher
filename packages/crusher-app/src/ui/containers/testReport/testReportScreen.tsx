@@ -42,7 +42,7 @@ function TitleSection() {
 }
 
 function StatusTag({ type }) {
-	if (type === "REVIEW_REQUIRED") {
+	if (type === "MANUAL_REVIEW_REQUIRED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, review]}>
 				<ReviewRequiredSVG height={18} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Review required</span>

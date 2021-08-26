@@ -34,6 +34,11 @@ export enum ActionsInTestEnum {
 	PAGE_SCREENSHOT = "PAGE_SCREENSHOT",
 }
 
+export const ElementActionsInTestArr = Object.values(ActionsInTestEnum).filter((action) => {
+	return action.startsWith("ELEMENT_");
+});
+
+
 export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.ELEMENT_SCROLL]: "Eleemnt Scroll",
 	[ACTIONS_IN_TEST.SET_DEVICE]: "Set a device",

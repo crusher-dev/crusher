@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 import { iActionsState } from "../../interfaces/actionsReducer";
-import { DELETE_RECORDED_ACTION, RECORD_ACTION, UPDATE_ACTION_NAME, UPDATE_LAST_RECORDED_ACTION } from "../actions/actions";
+import { DELETE_RECORDED_ACTION, RECORD_ACTION, UPDATE_ACTION_NAME, UPDATE_ACTION_TIMEOUT, UPDATE_LAST_RECORDED_ACTION } from "../actions/actions";
 import { iAction } from "@shared/types/action";
 
 const initialState: iActionsState = {
@@ -28,6 +28,21 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 					return savedAction;
 				}),
 			};
+		case UPDATE_ACTION_TIMEOUT:
+			return {
+				...state,
+				list: state.list.map((savedAction, index) => {
+					if (index === action.payload.actionIndex)
+						return {
+							...savedAction,
+							payload: {
+								...savedAction.payload,
+								timeout: action.payload.actionTimeout,
+							},
+						};
+					return savedAction;
+				}),
+			}
 		case UPDATE_LAST_RECORDED_ACTION: {
 			const newList = state.list;
 			newList[newList.length - 1] = action.payload.actionToBeReplacedWith;

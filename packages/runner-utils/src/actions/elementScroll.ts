@@ -6,7 +6,7 @@ import { scrollElement } from "../functions/scroll";
 async function scrollOnElement(elementHandle: Locator, workingSelector: any, action: iAction) {
 	const scrollDelta = action.payload.meta.value;
 
-	await scrollElement(scrollDelta, await elementHandle.elementHandle({timeout: action.payload.timeout ? action.payload.timeout : undefined}));
+	await scrollElement(scrollDelta, await elementHandle.elementHandle({timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined}));
 }
 
 module.exports = {

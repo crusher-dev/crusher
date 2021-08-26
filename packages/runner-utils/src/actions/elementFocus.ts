@@ -3,7 +3,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
 
 export async function focusOnElement(element: Locator, workingSelector: any, action: iAction) {
-	await element.focus({timeout: action.payload.timeout ? action.payload.timeout : undefined});
+	await element.focus({timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined});
 }
 
 module.exports = {

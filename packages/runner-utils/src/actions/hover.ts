@@ -4,7 +4,7 @@ import { Locator } from "playwright";
 import { markTestFail } from "../utils/helper";
 
 async function hoverOnElement(element: Locator, workingSelector: any, action: iAction) {
-	await element.hover({ timeout: action.payload.timeout ? action.payload.timeout : 5000 });
+	await element.hover({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : 5000 });
 }
 
 module.exports = {

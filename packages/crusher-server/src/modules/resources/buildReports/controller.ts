@@ -1,22 +1,16 @@
-import { UsersService } from "@modules/resources/users/service";
-import { Authorized, Get, JsonController, Param } from "routing-controllers";
+import { Authorized, Get, JsonController, Param, Post } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
-import { BuildsService } from "@modules/resources/builds/service";
+import { BuildApproveService } from "./build.approve.service";
 
 @Service()
 @JsonController("")
 class BuildReportController {
 	@Inject()
-	private userService: UsersService;
-	@Inject()
 	private buildReportService: BuildReportService;
 	@Inject()
-	private commentsService: CommentsServiceV2;
-	@Inject()
-	private buildsService: BuildsService;
+	private buildApproveService: BuildApproveService;
 
 	@Authorized()
 	@Get("/builds/:build_id/reports/:report_id")
@@ -26,7 +20,15 @@ class BuildReportController {
 	}
 
 	@Authorized()
-	@Get("/builds/:build_id/reports")
+	@Post("/builds/:build_id/reports/:report_id/actions/approve")
+	async approveBuild(@Param("build_id") buildId: number, @Param("report_id") buildReportId: number): Promise<string> {
+		// @TODO: Need to keep a track of who markes the job as passed
+		await this.buildApproveService.approveBuild(buildReportId);
+		return "Successful";
+	}
+
+	@Authorized()
+	@Get("/builds/:build_id/report")
 	public async getReports(@Param("build_id") buildId: number): Promise<IBuildReportResponse> {
 		// @TODO: Use report_id here instead of build_id
 

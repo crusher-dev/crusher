@@ -11,12 +11,14 @@ import { ITestCompleteQueuePayload } from "@crusher-shared/types/queues/";
 import { BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
 import { BuildStatusEnum } from "@modules/resources/builds/interface";
 import { ProjectsService } from "@modules/resources/projects/service";
+import { BuildApproveService } from "@modules/resources/buildReports/build.approve.service";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
 const buildTestInstanceService = Container.get(BuildTestInstancesService);
 const buildTestInstanceScreenshotService = Container.get(BuildTestInstanceScreenshotService);
 const projectsService = Container.get(ProjectsService);
+const buildApproveService = Container.get(BuildApproveService);
 
 const redisManager: RedisManager = Container.get(RedisManager);
 
@@ -63,7 +65,8 @@ export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
 
 		const buildRecordMeta = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
 
-		if (buildRecordMeta?.isProjectLevelBuild) {
+		if (buildRecordMeta?.isProjectLevelBuild && buildReportStatus === BuildReportStatusEnum.PASSED) {
+			// Automatically update the baseline to the latest build
 			await projectsService.updateBaselineBuild(buildRecord.id, buildRecord.projectId);
 		}
 		// @TODO: Add integrations here (Notify slack, etc.)

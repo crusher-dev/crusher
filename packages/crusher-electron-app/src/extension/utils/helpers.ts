@@ -1,7 +1,6 @@
 import { DOM } from "./dom";
 import devices from "@shared/constants/devices";
 import { iDevice } from "@shared/types/extension/device";
-const validUrl = require('valid-url');
 
 export function executeScript(name: string, tabId: number, cb?: any) {
 	return new Promise((resolve, reject) => {

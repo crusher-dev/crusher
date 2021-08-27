@@ -8,7 +8,7 @@ import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUser
 import { backendRequest } from "@utils/backendRequest";
 import { redirectUserOnMount } from "@utils/routing";
 
-import { appStateAtom, appStateItemMutator } from "../store/atoms/global/appState";
+import { appStateItemMutator } from "../store/atoms/global/appState";
 import { projectsAtom } from "../store/atoms/global/project";
 import { systemConfigAtom } from "../store/atoms/global/systemConfig";
 import { teamAtom } from "../store/atoms/global/team";
@@ -26,7 +26,6 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 	const [, setUser] = useAtom(userAtom);
 	const [, setSystem] = useAtom(systemConfigAtom);
 	const [, setTeam] = useAtom(teamAtom);
-	const [appState] = useAtom(appStateAtom);
 	const [, setProjects] = useAtom(projectsAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
 

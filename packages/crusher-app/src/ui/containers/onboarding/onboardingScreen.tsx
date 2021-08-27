@@ -9,18 +9,18 @@ import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { CenterLayout } from "dyson/src/components/layouts";
 
-import { USER_META_KEYS } from "@constants/USER";
+import { TEAM_META_KEYS, USER_META_KEYS } from '@constants/USER';
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
 import { getBoolean } from "@utils/common";
-import { sendSnackBarEvent } from "@utils/notify";
+import { sendSnackBarEvent } from "@utils/common/notify";
 import { isTempTestPending } from "@utils/user";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
 import { usePageTitle } from "../../../hooks/seo";
 import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
 import { userAtom } from "../../../store/atoms/global/user";
-import { updateOnboardingMutator } from "../../../store/mutators/user";
+import { updateMeta } from "../../../store/mutators/metaData";
 import { getEdition } from "../../../utils/helpers";
 
 enum ONBOARDING_STEP {
@@ -106,7 +106,7 @@ const GithubDiscordSection = () => {
 			});
 	});
 
-	const [, updateOnboarding] = useAtom(updateOnboardingMutator);
+	const [, updateOnboarding] = useAtom(updateMeta);
 	return (
 		<>
 			<div className="mb-56 text-17 text-center font-400">
@@ -135,7 +135,7 @@ const GithubDiscordSection = () => {
 					onClick={() => {
 						updateOnboarding({
 							type: "user",
-							key: USER_META_KEYS.INITIAL_ONBOARDING,
+							key: TEAM_META_KEYS.INITIAL_ONBOARDING,
 							value: true,
 						});
 					}}

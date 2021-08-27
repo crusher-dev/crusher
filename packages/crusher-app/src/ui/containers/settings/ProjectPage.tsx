@@ -8,8 +8,8 @@ import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-import { backendRequest } from "@utils/backendRequest";
-import { sendSnackBarEvent } from "@utils/notify";
+import { backendRequest } from "@utils/common/backendRequest";
+import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { currentProject, projectsAtom } from "../../../store/atoms/global/project";

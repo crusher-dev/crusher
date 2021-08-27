@@ -11,10 +11,10 @@ import { Conditional } from "dyson/src/components/layouts";
 import { BackSVG } from "@svg/builds";
 import { LayoutSVG } from "@svg/dashboard";
 import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThunderSVG } from "@svg/testReport";
-import { backendRequest } from "@utils/backendRequest";
-import { timeSince } from "@utils/dateTimeUtils";
-import { sendSnackBarEvent } from "@utils/notify";
-import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
+import { backendRequest } from "@utils/common/backendRequest";
+import { timeSince } from "@utils/common/dateTimeUtils";
+import { sendSnackBarEvent } from "@utils/common/notify";
+import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/core/buildReportUtils";
 
 import { usePageTitle } from "../../../hooks/seo";
 import { useBuildReport } from "../../../store/serverState/buildReports";

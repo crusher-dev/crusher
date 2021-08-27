@@ -121,9 +121,7 @@ class UsersService {
 				name: userInfo.name,
 				avatar: null,
 				// @NOTE: Remove hardcoding from the next 3 fields
-				lastVisitedURL: null,
 				meta: userInfo.meta ? JSON.parse(userInfo.meta) : {},
-				lastProjectSelectedId: null,
 			};
 		};
 

@@ -13,7 +13,7 @@ import { projectsAtom } from "../store/atoms/global/project";
 import { systemConfigAtom } from "../store/atoms/global/systemConfig";
 import { teamAtom } from "../store/atoms/global/team";
 import { userAtom } from "../store/atoms/global/user";
-import { USER_META_KEYS } from '@constants/USER';
+import { USER_META_KEYS } from "@constants/USER";
 
 /*
 	Two scenarios to check for
@@ -47,8 +47,8 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			setSystem(system);
 			setProjects(projects);
 
-			const selectedProjectId = userData?.meta?.[USER_META_KEYS.SELECTED_PROJECT_ID] ?? projects[0].id ;
-			setAppStateItem({ key: "selectedProjectId", value: selectedProjectId  });
+			const selectedProjectId = userData?.meta?.[USER_META_KEYS.SELECTED_PROJECT_ID] ?? projects?.[0].id;
+			setAppStateItem({ key: "selectedProjectId", value: selectedProjectId });
 
 			await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 			setDataLoaded(true);

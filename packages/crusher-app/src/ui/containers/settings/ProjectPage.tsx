@@ -29,19 +29,19 @@ const updateProjectName = (projectId, name) => {
 };
 
 export const ProjectSettings = () => {
-    const [{ selectedProjectId }] = useAtom(appStateAtom);
-    const [project] = useAtom(currentProject);
-    const [projectsList] = useAtom(projectsAtom);
-    const [projectName, setProjectName] = useState(project?.name);
-    const [saveButtonDisabled, setSavebuttonDisabled] = useState(true);
-    const onlyOneProject = projectsList.length <= 1;
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
+	const [project] = useAtom(currentProject);
+	const [projectsList] = useAtom(projectsAtom);
+	const [projectName, setProjectName] = useState(project?.name);
+	const [saveButtonDisabled, setSavebuttonDisabled] = useState(true);
+	const onlyOneProject = projectsList.length <= 1;
 
-    useEffect(() => {
+	useEffect(() => {
 		const isNameSame = project?.name === projectName;
 		setSavebuttonDisabled(isNameSame);
 	}, [projectName]);
 
-    const deleteProjectCallback = async () => {
+	const deleteProjectCallback = async () => {
 		if (onlyOneProject) {
 			sendSnackBarEvent({
 				message: "Unable to delete, Only 1 project in this org",
@@ -54,7 +54,7 @@ export const ProjectSettings = () => {
 		window.location = "/";
 	};
 
-    const updateProjectNameCallback = async () => {
+	const updateProjectNameCallback = async () => {
 		await updateProjectName(selectedProjectId, projectName);
 
 		sendSnackBarEvent({
@@ -64,7 +64,7 @@ export const ProjectSettings = () => {
 		setSavebuttonDisabled(true);
 	};
 
-    return (
+	return (
 		<SettingsLayout>
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<Heading type={1} fontSize={20} className={"mb-8"}>

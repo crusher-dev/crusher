@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
-import React, {useMemo, useState} from 'react';
+import React, { useMemo, useState } from "react";
 
 import { Button } from "dyson/src/components/atoms/button/Button";
 import { Conditional } from "dyson/src/components/layouts";
@@ -10,96 +10,138 @@ import { PlaySVG } from "@svg/dashboard";
 import { DownloadButton } from "@ui/containers/dashboard/Download";
 
 import { ExpandableList, ExpandableListItem } from "./expandableList";
-import { useAtom } from 'jotai';
-import { currentProjectSelector } from '../../../store/selectors/getCurrentProject';
-import { userAtom } from '../../../store/atoms/global/user';
-import { PROJECT_META_KEYS, USER_META_KEYS } from '@constants/USER';
+import { useAtom } from "jotai";
+import { currentProjectSelector } from "../../../store/selectors/getCurrentProject";
+import { userAtom } from "../../../store/atoms/global/user";
+import { getOnboardingStepIndex } from '@utils/core/dashboard/onboardingUtils';
 
 interface TTestIntegrationListProps {
 	className?: string;
 }
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
-export const getCurrentState = (project,user)=> {
-	const testCreatedForProject = !!project?.meta[PROJECT_META_KEYS.TEST_CREATED];
-	const testCreatedByUser = !!user?.meta[USER_META_KEYS.TEST_CREATED];
-	const showTestCreationStep =  testCreatedForProject && testCreatedByUser
+export const DownloadRecorderStepContent = () => {
+	const [showCreateTest, setShowCreateTest] = useState(false);
+	return (
+		<div className="mt-40 pl-32 pb-16">
+			<table css={downloadGridContainerStyle}>
+				<tbody>
+					<tr>
+						<td
+							css={css`
+								vertical-align: baseline;
+							`}
+						>
+							<span className={"label text-14"}>Download</span>
+						</td>
+						<td>
+							<div className={"ml-40 "}>
+								<DownloadButton
+									css={css`
+										align-items: flex-start;
+									`}
+								/>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span className={"label text-14"}>& Then</span>
+						</td>
+						<td>
+							<div className={"ml-40"}>
+								<Button
+									bgColor={"tertiary-dark"}
+									size="medium"
+									css={css`
+										width: 164rem;
+									`}
+									onClick={setShowCreateTest.bind(this, true)}
+								>
+									<div className={"flex items-center justify-center"}>
+										<PlaySVG className={"mr-12"} />
+										<span className={"mt-2"}>Create a test</span>
+									</div>
+								</Button>
 
-	if(!showTestCreationStep){
-		return 0;
+								<Conditional showIf={showCreateTest}>
+									<Download onClose={setShowCreateTest.bind(this, false)} />
+								</Conditional>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	);
+};
+
+export const RunTestDesc = () => {
+	return (
+		<div className="mt-16 pl-36 mb-0">
+			<div className={"text-14"}>Run test by clicking to bar.</div>
+		</div>
+	);
+};
+
+export const ViewReportDesc = () => {
+	return (
+		<div className="mt-16 pl-36 mb-0">
+			<div className={"text-14"}>View report by switching to builds tab.</div>
+		</div>
+	);
+};
+
+export const IntegrateDesc = () => {
+	return (
+		<div className="mt-12 pl-36 mb-0" css={integrateCSS}>
+			<div
+				className={"text-14"}
+				css={css`
+					line-height: 28rem;
+				`}
+			>
+				Add <a href={"google.com"}>monitoring</a> or <a href={"google.com"}>Integrate CI</a>.
+				<br />
+				You can also <a href={"google.com"}>add alerting</a> to slack when test fails.
+			</div>
+		</div>
+	);
+};
+
+const integrateCSS = css`
+	a {
+		color: #98a7ff;
+		text-decoration: underline;
+		cursor: pointer;
 	}
-
-	return 1;
-}
+`;
 
 function OnboardingSteps(props: TTestIntegrationListProps) {
-	const [project] = useAtom(currentProjectSelector)
-	const [user] = useAtom(userAtom)
+	const [project] = useAtom(currentProjectSelector);
+	const [user] = useAtom(userAtom);
 
-	const selected = useMemo(()=>{
-		return getCurrentState(project, user)
-	},[project, user]);
-	const [showCreateTest, setShowCreateTest] = useState(false);
-	const handleChangeItem = () => {
+	const onboardingIndex = useMemo(() => {
+		return getOnboardingStepIndex(project, user);
+	}, [project, user]);
 
-	};
-	//
-	//
-	// useEffect(()=>{
-	// 	setSelected(getCurrentState(project, user))
-	// },[project, user])
+	const handleChangeItem = () => {};
 
 	return (
 		<div {...props}>
-			<ExpandableList css={listStyle} currentSelected={selected} changeSelected={handleChangeItem}>
+			<ExpandableList css={listStyle} currentSelected={onboardingIndex} changeSelected={handleChangeItem}>
 				<ExpandableListItem title="Download recorder & create test" completed={false} isActive={true}>
-					<div className="mt-40 pl-32 pb-16">
-						<table css={downloadGridContainerStyle}>
-							<tbody>
-								<tr>
-									<td
-										css={css`
-											vertical-align: baseline;
-										`}
-									>
-										<span className={"label text-14"}>Download</span>
-									</td>
-									<td>
-										<div className={"ml-40 "}>
-											<DownloadButton
-												css={css`
-													align-items: flex-start;
-												`}
-											/>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<span className={"label text-14"}>& Then</span>
-									</td>
-									<td>
-										<div className={"ml-40"}>
-											<Button bgColor={"tertiary-dark"} size="medium" css={css`width: 164rem;`} onClick={setShowCreateTest.bind(this, true)}>
-												<div className={"flex items-center justify-center"}>
-													<PlaySVG className={"mr-12"} />
-													<span className={"mt-2"}>Create a test</span>
-												</div>
-											</Button>
-
-											<Conditional showIf={showCreateTest}>
-												<Download onClose={setShowCreateTest.bind(this, false)} />
-											</Conditional>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+					<DownloadRecorderStepContent />
 				</ExpandableListItem>
-				<ExpandableListItem title="Integrate in your worflow" completed={false}></ExpandableListItem>
-				<ExpandableListItem title="Run tests" completed={false}></ExpandableListItem>
-				<ExpandableListItem title="View reports" completed={false}></ExpandableListItem>
+				<ExpandableListItem title="Run tests" completed={false}>
+					<RunTestDesc></RunTestDesc>
+				</ExpandableListItem>
+				<ExpandableListItem title="View Report" completed={false}>
+					<ViewReportDesc />
+				</ExpandableListItem>
+				<ExpandableListItem title="Integrate with your worflow" completed={false}>
+					<IntegrateDesc />
+				</ExpandableListItem>
 			</ExpandableList>
 			<div className={"flex flex-row mt-30"}>
 				<div css={haveTestStyle} className="migrate-test text-13">

@@ -19,6 +19,8 @@ import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/c
 import { usePageTitle } from "../../../hooks/seo";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { updateMeta } from "../../../store/mutators/metaData";
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 
 const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
@@ -272,8 +274,21 @@ export const TestReportScreen = () => {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+	const [, updateMetaData] = useAtom(updateMeta);
 
 	useEffect(() => {
+		updateMetaData({
+			type: "user",
+			key: USER_META_KEYS.VIEW_REPORT,
+			value: true,
+		});
+
+		updateMetaData({
+			type: "project",
+			key: PROJECT_META_KEYS.VIEW_REPORT,
+			value: true,
+		});
+
 		if (query.view_draft) setSelectedTabIndex(1);
 	}, [query.view_draft]);
 	return (

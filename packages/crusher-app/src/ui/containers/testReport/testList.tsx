@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from "dyson/src/components/atoms";
 import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
@@ -14,7 +14,7 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import {ChevronDown, TestStatusSVG} from "@svg/testReport";
+import { ChevronDown, TestStatusSVG } from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -83,7 +83,7 @@ function ReportSection() {
 	}, []);
 
 	return (
-        <div className={"mt-40"}>
+		<div className={"mt-40"}>
 			<div className={"flex justify-between items-center"} id={"review-section"}>
 				<div className={"text-14"}>Jump to</div>
 				<div className={"flex items-center"}>
@@ -133,15 +133,15 @@ function ReportSection() {
 				))}
 			</div>
 		</div>
-    );
+	);
 }
 
 function RenderImageInfo({ data }) {
-    const { meta } = data;
-    const imageName = meta.outputs[0].name;
-    const currentImage = meta.outputs[0].value;
+	const { meta } = data;
+	const imageName = meta.outputs[0].name;
+	const currentImage = meta.outputs[0].value;
 
-    return (
+	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>
 			<div className={"mt-20 flex"}>
@@ -197,7 +197,7 @@ function RenderStep({ data, testInstanceData }) {
 	const isPassed = status === "COMPLETED";
 
 	return (
-        <div className={"relative mb-32"}>
+		<div className={"relative mb-32"}>
 			<div className={" flex px-44"}>
 				<div css={tick}>
 					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
@@ -232,7 +232,7 @@ function RenderStep({ data, testInstanceData }) {
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>
-    );
+	);
 }
 
 const errorBox = css`
@@ -251,7 +251,7 @@ const errorBox = css`
 
 function Browsers({ browsers, setConfig }) {
 	return (
-        <div className={"flex flex-col justify-between h-full"} onClick={() => {}}>
+		<div className={"flex flex-col justify-between h-full"} onClick={() => {}}>
 			<div>
 				{browsers.map((name: string) => (
 					<MenuItem
@@ -273,7 +273,7 @@ function Browsers({ browsers, setConfig }) {
 				))}
 			</div>
 		</div>
-    );
+	);
 }
 
 const dropDownSelectionCSS = css`

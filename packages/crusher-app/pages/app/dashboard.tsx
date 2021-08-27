@@ -1,27 +1,43 @@
 import { css } from "@emotion/react";
-import React from "react";
+import React, { useMemo } from 'react';
 
 import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
 import { OnBoardingTutorialVideo } from "@ui/containers/dashboard/tutorials";
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 import { usePageTitle } from "../../src/hooks/seo";
+import { Conditional } from 'dyson/src/components/layouts';
+import { useAtom } from 'jotai';
+import { currentProjectSelector } from '../../src/store/selectors/getCurrentProject';
+import { userAtom } from '../../src/store/atoms/global/user';
+import { getOnboardingStepIndex } from '@utils/core/dashboard/onboardingUtils';
 
 function Dashboard() {
 	usePageTitle("Dashboard");
+
+	const [project] = useAtom(currentProjectSelector);
+	const [user] = useAtom(userAtom);
+
+	const onboardingIndex = useMemo(() => {
+		return getOnboardingStepIndex(project, user);
+	}, [project, user]);
+
 	return (
 		<>
 			<SidebarTopBarLayout>
 				<div css={containerStyle} className=" pt-42 ">
-					<div css={headingStyle} className={"font-cera text-16 font-bold"}>
-						Integrate and start testing
-					</div>
-					<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
-					<OnboardingSteps className={"mt-36"} />
+
+					<Conditional showIf={onboardingIndex!== -1}>
+						<div css={headingStyle} className={"font-cera text-16 font-bold"}>
+							Integrate and start testing
+						</div>
+						<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
+						<OnboardingSteps className={"mt-36 mb-56"} />
+					</Conditional>
 
 					<OnBoardingTutorialVideo />
 
-					<div className={"flex flex-row items-center mt-96 justify-center"} css={footerContainerStyle}>
+					<div className={"flex flex-row items-center justify-center"} css={footerContainerStyle}>
 						<div className={"text-14"} css={footerPlaceholderStyle}>
 							We’ll fill this space when data starts to come in
 						</div>

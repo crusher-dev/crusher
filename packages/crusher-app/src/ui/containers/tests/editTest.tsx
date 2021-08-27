@@ -3,13 +3,13 @@ import { useCallback, useState } from "react";
 import React from "react";
 
 import { useAtom } from "jotai";
-import {mutate} from "swr";
+import { mutate } from "swr";
 
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
-import {changeTestInfoAPI, deleteTestApi, getTestListAPI} from "@constants/api";
+import { changeTestInfoAPI, deleteTestApi, getTestListAPI } from "@constants/api";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";

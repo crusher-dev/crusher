@@ -1,5 +1,5 @@
 import { getBuildsList, getRunTestApi } from '@constants/api';
-import { PROJECT_META_KEYS, TEAM_META_KEYS, USER_META_KEYS } from '@constants/USER';
+import {PROJECT_META_KEYS, USER_META_KEYS} from '@constants/USER';
 import { mutate } from 'swr';
 import { BaseRouter } from 'next/dist/shared/lib/router/router';
 import { sendSnackBarEvent } from '@utils/common/notify';

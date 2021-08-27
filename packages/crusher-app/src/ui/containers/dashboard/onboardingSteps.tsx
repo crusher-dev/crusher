@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {useMemo, useState} from 'react';
 
 import { Button } from "dyson/src/components/atoms/button/Button";
 import { Conditional } from "dyson/src/components/layouts";
@@ -25,7 +25,7 @@ export const getCurrentState = (project,user)=> {
 	const testCreatedByUser = !!user?.meta[USER_META_KEYS.TEST_CREATED];
 	const showTestCreationStep =  testCreatedForProject && testCreatedByUser
 
-	if(showTestCreationStep === false){
+	if(!showTestCreationStep){
 		return 0;
 	}
 
@@ -40,7 +40,7 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 		return getCurrentState(project, user)
 	},[project, user]);
 	const [showCreateTest, setShowCreateTest] = useState(false);
-	const handleChangeItem = (index: number) => {
+	const handleChangeItem = () => {
 
 	};
 	//

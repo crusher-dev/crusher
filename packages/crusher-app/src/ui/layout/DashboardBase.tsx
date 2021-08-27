@@ -28,6 +28,8 @@ import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appS
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { RequestMethod } from "../../types/RequestOptions";
+import { updateOnboardingMutator } from '../../store/mutators/user';
+import { USER_META_KEYS } from '@constants/USER';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -40,8 +42,10 @@ function ProjectList() {
 	const [projects] = useAtom(projectsAtom);
 	const [appState] = useAtom(appStateAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
+	const [, updateOnboarding] = useAtom(updateOnboardingMutator);
 
 	const [showAddProject, setShowAddProject] = useState(false);
+
 	return <>
         <div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
             <div className={"flex items-center"}>
@@ -72,6 +76,11 @@ function ProjectList() {
                     className={"mt-2"}
                     selected={appState.selectedProjectId === id}
                     onClick={() => {
+											  updateOnboarding({
+													type: "user",
+													key: USER_META_KEYS.SELECTED_PROJECT_ID,
+													value: id,
+										  	});
                         setAppStateItem({ key: "selectedProjectId", value: id });
                         router.push("/app/dashboard");
                     }}

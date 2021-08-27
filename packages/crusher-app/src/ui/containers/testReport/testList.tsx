@@ -197,7 +197,7 @@ function RenderStep({ data, testInstanceData }) {
 	const isPassed = status === "COMPLETED";
 
 	return (
-		<div className={"relative mb-32"}>
+        <div className={"relative mb-32"}>
 			<div className={" flex px-44"}>
 				<div css={tick}>
 					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
@@ -219,7 +219,7 @@ function RenderStep({ data, testInstanceData }) {
 								color: #848484;
 							`}
 						>
-							{meta && meta.actionName ? meta.actionName : message}
+							{meta?.actionName ? meta.actionName : message}
 						</span>
 					</div>
 				</Conditional>
@@ -232,7 +232,7 @@ function RenderStep({ data, testInstanceData }) {
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>
-	);
+    );
 }
 
 const errorBox = css`

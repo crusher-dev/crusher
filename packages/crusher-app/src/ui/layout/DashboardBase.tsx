@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { useAtom } from "jotai";
-import {mutate} from "swr";
 
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
@@ -13,25 +12,20 @@ import { Conditional } from "dyson/src/components/layouts";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 
 import { MenuItem } from "@components/molecules/MenuItem";
-import { getBuildsList, getRunTestApi } from "@constants/api";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
 import { GithubSVG } from "@svg/social";
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
-import { backendRequest } from "@utils/common/backendRequest";
 import { getEdition } from "@utils/helpers";
-import { sendSnackBarEvent } from "@utils/common/notify";
 import { loadCrisp, openChatBox } from "@utils/common/scriptUtils";
 import { addQueryParamToPath } from "@utils/common/url";
 
 import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
-import { RequestMethod } from "../../types/RequestOptions";
 import { updateMeta } from '../../store/mutators/metaData';
-import { PROJECT_META_KEYS, TEAM_META_KEYS, USER_META_KEYS } from '@constants/USER';
+import {USER_META_KEYS} from '@constants/USER';
 import { handleTestRun } from '@utils/core/testUtils';
-import { BaseRouter } from 'next/dist/shared/lib/router/router';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));

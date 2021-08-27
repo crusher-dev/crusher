@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { Button } from "dyson/src/components/atoms/button/Button";
 import { Conditional } from "dyson/src/components/layouts";
@@ -10,23 +10,49 @@ import { PlaySVG } from "@svg/dashboard";
 import { DownloadButton } from "@ui/containers/dashboard/Download";
 
 import { ExpandableList, ExpandableListItem } from "./expandableList";
+import { useAtom } from 'jotai';
+import { currentProjectSelector } from '../../../store/selectors/getCurrentProject';
+import { userAtom } from '../../../store/atoms/global/user';
+import { PROJECT_META_KEYS, USER_META_KEYS } from '@constants/USER';
 
 interface TTestIntegrationListProps {
 	className?: string;
 }
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 
+export const getCurrentState = (project,user)=> {
+	const testCreatedForProject = !!project?.meta[PROJECT_META_KEYS.TEST_CREATED];
+	const testCreatedByUser = !!user?.meta[USER_META_KEYS.TEST_CREATED];
+	const showTestCreationStep =  testCreatedForProject && testCreatedByUser
+
+	if(showTestCreationStep === false){
+		return 0;
+	}
+
+	return 1;
+}
+
 function OnboardingSteps(props: TTestIntegrationListProps) {
-	const [selected, setSelected] = useState(0);
+	const [project] = useAtom(currentProjectSelector)
+	const [user] = useAtom(userAtom)
+
+	const selected = useMemo(()=>{
+		return getCurrentState(project, user)
+	},[project, user]);
 	const [showCreateTest, setShowCreateTest] = useState(false);
 	const handleChangeItem = (index: number) => {
-		setSelected(index);
+
 	};
+	//
+	//
+	// useEffect(()=>{
+	// 	setSelected(getCurrentState(project, user))
+	// },[project, user])
 
 	return (
 		<div {...props}>
 			<ExpandableList css={listStyle} currentSelected={selected} changeSelected={handleChangeItem}>
-				<ExpandableListItem title="Download recorder & create test" completed={false}>
+				<ExpandableListItem title="Download recorder & create test" completed={false} isActive={true}>
 					<div className="mt-40 pl-32 pb-16">
 						<table css={downloadGridContainerStyle}>
 							<tbody>
@@ -54,7 +80,7 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 									</td>
 									<td>
 										<div className={"ml-40"}>
-											<Button bgColor={"tertiary-dark"} size="medium" onClick={setShowCreateTest.bind(this, true)}>
+											<Button bgColor={"tertiary-dark"} size="medium" css={css`width: 164rem;`} onClick={setShowCreateTest.bind(this, true)}>
 												<div className={"flex items-center justify-center"}>
 													<PlaySVG className={"mr-12"} />
 													<span className={"mt-2"}>Create a test</span>

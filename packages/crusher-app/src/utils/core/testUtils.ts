@@ -26,12 +26,6 @@ export function handleTestRun(selectedProjectId: number | null, query: any, filt
 			});
 
 			updateMetaData({
-				type: 'team',
-				key: TEAM_META_KEYS.TEST_CREATED,
-				value: true,
-			});
-
-			updateMetaData({
 				type: 'project',
 				key: PROJECT_META_KEYS.TEST_CREATED,
 				value: true,

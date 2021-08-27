@@ -9,8 +9,6 @@ export type TUserAPIData = {
 	name: string;
 	meta: Record<string, any>;
 	avatar: string;
-	lastVisitedURL: string | null;
-	lastProjectSelectedId: number | null;
 } | null;
 
 export type TProjectsData = Array<{

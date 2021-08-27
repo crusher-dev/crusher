@@ -43,6 +43,9 @@ const updateTeamMeta = (meta: Record<string, any>) => {
 	});
 };
 
+/*
+	Add API filteration to not call API when key-value pair is same.
+ */
 export const updateMeta = atom(null, (_get, _set, { type, key, value }: IUpdateUserOnboarding) => {
 	const { selectedProjectId } = _get(appStateAtom);
 	const payload = { [String(key)]: value };

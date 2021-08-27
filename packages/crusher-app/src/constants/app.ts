@@ -5,8 +5,8 @@ export type TOSDownloadInfo = {
 };
 
 export const OS_INFO: Record<string, TOSDownloadInfo> = {
-	Windows: { downloadLink: "",icon: null, label: "Download exe" },
-	MAC: { downloadLink: "",icon: null, label: "Download dmg" },
+	Windows: { downloadLink: "", icon: null, label: "Download exe" },
+	MAC: { downloadLink: "", icon: null, label: "Download dmg" },
 	OTHER: { downloadLink: "", icon: null },
 };
 

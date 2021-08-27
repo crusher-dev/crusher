@@ -35,9 +35,9 @@ export const ReviewButtonContent = ({ closeModal }) => {
 	}, []);
 
 	const handleSubmit = useCallback(async () => {
-        await approveBuild(data.buildId, data.buildReportId);
-        closeModal();
-    }, [data]);
+		await approveBuild(data.buildId, data.buildReportId);
+		closeModal();
+	}, [data]);
 
 	return (
 		<div>

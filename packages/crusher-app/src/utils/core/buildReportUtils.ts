@@ -7,13 +7,13 @@ import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/resp
 export const getStatusString = (type) => {
 	switch (type) {
 		case "PASSED":
-            return "Your build has passes succesfully. No review is required";
+			return "Your build has passes succesfully. No review is required";
 		case "FAILED":
-            return "Your build has failed. Please see reports to see what went wrong.";
+			return "Your build has failed. Please see reports to see what went wrong.";
 		case "MANUAL_REVIEW_REQUIRED":
-            return "Your build requires some review. Please see reports.";
+			return "Your build requires some review. Please see reports.";
 		case "INITIATED":
-            return "Your build has been initiated.";
+			return "Your build has been initiated.";
 		default:
 			return "We're running your test";
 	}
@@ -22,9 +22,9 @@ export const getStatusString = (type) => {
 export const showReviewButton = (type) => {
 	switch (type) {
 		case "FAILED":
-            return true;
+			return true;
 		case "MANUAL_REVIEW_REQUIRED":
-            return true;
+			return true;
 		default:
 			return false;
 	}
@@ -43,20 +43,15 @@ export const groupTestByStatus = (tests: Pick<IBuildReportResponse, "tests">) =>
 	const statusTestTestInstanceGroup = {};
 	let i = 0;
 
-	for (const {
-        testInstances
-    } of tests) {
-        for (const {
-            status,
-            id
-        } of testInstances) {
-            if (!statusTestTestInstanceGroup[status]) statusTestTestInstanceGroup[status] = {};
-            if (!statusTestTestInstanceGroup[status][i]) statusTestTestInstanceGroup[status][i] = [];
-            statusTestTestInstanceGroup[status][i].push(id);
-        }
+	for (const { testInstances } of tests) {
+		for (const { status, id } of testInstances) {
+			if (!statusTestTestInstanceGroup[status]) statusTestTestInstanceGroup[status] = {};
+			if (!statusTestTestInstanceGroup[status][i]) statusTestTestInstanceGroup[status][i] = [];
+			statusTestTestInstanceGroup[status][i].push(id);
+		}
 
-        i++;
-    }
+		i++;
+	}
 	return statusTestTestInstanceGroup;
 };
 
@@ -64,11 +59,11 @@ export const getAllConfiguration = (tests: Pick<IBuildReportResponse, "tests">) 
 	const parsedConfig = tests
 		.map((test) => getAllConfigurationForGivenTest(test))
 		.reduce((accumulator, item) => {
-        for (const key of Object.keys(item)) {
-            accumulator[key] = union(accumulator[key], item[key]);
-        }
-        return accumulator;
-    }, {});
+			for (const key of Object.keys(item)) {
+				accumulator[key] = union(accumulator[key], item[key]);
+			}
+			return accumulator;
+		}, {});
 
 	return parsedConfig;
 };
@@ -76,10 +71,8 @@ export const getAllConfiguration = (tests: Pick<IBuildReportResponse, "tests">) 
 export const getAllConfigurationForGivenTest = (test: Test) => {
 	const parsedConfig = {};
 	const { testInstances } = test;
-	for (const {
-        config
-    } of testInstances) {
-        for (const [key, value] of Object.entries(config)) {
+	for (const { config } of testInstances) {
+		for (const [key, value] of Object.entries(config)) {
 			const configNotPresent = !parsedConfig[key]?.includes(value);
 			if (configNotPresent) {
 				const configKeyNotPresent = !parsedConfig[key];
@@ -88,7 +81,7 @@ export const getAllConfigurationForGivenTest = (test: Test) => {
 				parsedConfig[key].push(value);
 			}
 		}
-    }
+	}
 	return parsedConfig;
 };
 
@@ -107,12 +100,12 @@ export const getTestIndexByConfig = (test: Test, config) => {
 };
 
 export const getBaseConfig = (allConfiguration) => {
-    const baseConfigForTest = {};
-    for (const key of Object.keys(allConfiguration)) {
+	const baseConfigForTest = {};
+	for (const key of Object.keys(allConfiguration)) {
 		[baseConfigForTest[key]] = allConfiguration[key];
 	}
 
-    return baseConfigForTest;
+	return baseConfigForTest;
 };
 
 const removeAllFailedTest = (testInstanceData: Instance) => {

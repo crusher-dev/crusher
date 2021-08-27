@@ -15,6 +15,12 @@ const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 		desc: "",
 	},
 	{
+		id: TOP_LEVEL_ACTION.WAIT,
+		title: "Wait for seconds",
+		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
+		desc: "",
+	},
+	{
 		id: TOP_LEVEL_ACTION.SHOW_SEO_MODAL,
 		title: "Add SEO checks",
 		icon: chrome.runtime.getURL("icons/actions/seo.svg"),

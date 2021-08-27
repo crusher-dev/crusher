@@ -50,6 +50,9 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 					turnOnInspectModeInFrame(props.deviceIframeRef);
 				}
 				break;
+			case TOP_LEVEL_ACTION.WAIT:
+				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.WAIT_SECONDS));
+				break;
 			case TOP_LEVEL_ACTION.SHOW_SEO_MODAL:
 				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.SEO_VALIDATION));
 				break;

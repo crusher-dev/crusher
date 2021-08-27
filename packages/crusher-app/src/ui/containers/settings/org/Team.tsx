@@ -10,8 +10,8 @@ import { Conditional } from "dyson/src/components/layouts";
 import InviteMember from "@ui/containers/dashboard/InviteMember";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
 import useSWR from 'swr';
-import { backendRequest } from '@utils/backendRequest';
-import { resolvePathToBackendURI } from '@utils/url';
+import { backendRequest } from '@utils/common/backendRequest';
+import { resolvePathToBackendURI } from '@utils/common/url';
 
 export const TeamMembers = () => {
 	const [showModal, setShowModal] = useState(false);

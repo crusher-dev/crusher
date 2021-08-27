@@ -11,10 +11,10 @@ import { Conditional } from "dyson/src/components/layouts";
 import { getTestListAPI } from "@constants/api";
 import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { TestStatusSVG } from "@svg/testReport";
-import { backendRequest } from "@utils/backendRequest";
+import { backendRequest } from "@utils/common/backendRequest";
 import { getBoolean } from "@utils/common";
-import { timeSince } from "@utils/dateTimeUtils";
-import { sendSnackBarEvent } from "@utils/notify";
+import { timeSince } from "@utils/common/dateTimeUtils";
+import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { currentProject } from "../../../store/atoms/global/project";

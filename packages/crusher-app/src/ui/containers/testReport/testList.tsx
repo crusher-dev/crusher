@@ -22,7 +22,7 @@ import {
 	getScreenShotsAndChecks,
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
-} from "@utils/pages/buildReportUtils";
+} from "@utils/core/buildReportUtils";
 
 import { useBuildReport } from "../../../store/serverState/buildReports";
 

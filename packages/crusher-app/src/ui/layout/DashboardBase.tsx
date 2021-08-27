@@ -18,18 +18,20 @@ import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
 import { GithubSVG } from "@svg/social";
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
-import { backendRequest } from "@utils/backendRequest";
+import { backendRequest } from "@utils/common/backendRequest";
 import { getEdition } from "@utils/helpers";
-import { sendSnackBarEvent } from "@utils/notify";
-import { loadCrisp, openChatBox } from "@utils/scriptUtils";
-import { addQueryParamToPath } from "@utils/url";
+import { sendSnackBarEvent } from "@utils/common/notify";
+import { loadCrisp, openChatBox } from "@utils/common/scriptUtils";
+import { addQueryParamToPath } from "@utils/common/url";
 
 import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { RequestMethod } from "../../types/RequestOptions";
-import { updateOnboardingMutator } from '../../store/mutators/user';
-import { USER_META_KEYS } from '@constants/USER';
+import { updateMeta } from '../../store/mutators/metaData';
+import { PROJECT_META_KEYS, TEAM_META_KEYS, USER_META_KEYS } from '@constants/USER';
+import { handleTestRun } from '@utils/core/testUtils';
+import { BaseRouter } from 'next/dist/shared/lib/router/router';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -42,7 +44,7 @@ function ProjectList() {
 	const [projects] = useAtom(projectsAtom);
 	const [appState] = useAtom(appStateAtom);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
-	const [, updateOnboarding] = useAtom(updateOnboardingMutator);
+	const [, updateOnboarding] = useAtom(updateMeta);
 
 	const [showAddProject, setShowAddProject] = useState(false);
 
@@ -292,33 +294,21 @@ const TOP_NAV_LINK = [
 	},
 ];
 
-const runTests = (projectId: number) => {
-	return backendRequest(getRunTestApi(projectId), {
-		method: RequestMethod.POST,
-	});
-};
 
 function RunTest() {
 	const router = useRouter();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const { query } = router;
 	const [filters] = useAtom(buildFiltersAtom);
+	const [, updateMetaData] = useAtom(updateMeta);
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
-			try{
-				await runTests(selectedProjectId);
-				sendSnackBarEvent({ type: "normal", message: "We have started running test" });
-				const buildAPI = getBuildsList(project.id, query.trigger, filters);
-				await mutate(buildAPI);
-				await router.push("/app/builds");
-			}
-			catch (e){
-				console.error(e.toString())
-				if(e.toString() === "Error: No tests available to run"){
-					sendSnackBarEvent({ type: "error", message: "You don't have any test to run" });
-				}
-			}
+			await handleTestRun(
+				selectedProjectId,
+				query,
+				filters, router,updateMetaData
+			)
 
 		})();
 	}, []);

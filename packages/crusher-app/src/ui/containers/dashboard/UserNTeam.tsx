@@ -8,7 +8,7 @@ import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown
 import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
 
 import { MenuItem } from "@components/molecules/MenuItem";
-import { resolvePathToBackendURI } from "@utils/url";
+import { resolvePathToBackendURI } from "@utils/common/url";
 
 import { teamAtom } from "../../../store/atoms/global/team";
 import { userAtom } from "../../../store/atoms/global/user";

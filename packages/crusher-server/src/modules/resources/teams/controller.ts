@@ -22,7 +22,14 @@ class TeamsController {
 	@Authorized()
 	@Get("/teams/users/")
 	async getUsersInTeam(@CurrentUser({required: true}) user) {
-		return this.teamsService.getUsersWithRolesInTeam(user.team_id);
+		return (await this.teamsService.getUsersWithRolesInTeam(user.team_id)).map((userRecord) => {
+			return {
+				id: userRecord.id,
+				name: userRecord.name,
+				email: userRecord.email,
+				role: userRecord.role,
+			};
+		});
 	}
 }
 

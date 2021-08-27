@@ -33,13 +33,14 @@ function Dashboard() {
 						</div>
 						<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
 						<OnboardingSteps className={"mt-36 mb-56"} />
+
 					</Conditional>
 
+					{/*Note :- Move to conditional once integrated*/}
 					<OnBoardingTutorialVideo />
-
 					<div className={"flex flex-row items-center justify-center"} css={footerContainerStyle}>
 						<div className={"text-14"} css={footerPlaceholderStyle}>
-							We’ll fill this space when data starts to come in
+							We’ll fill this space soon with widgets.
 						</div>
 					</div>
 				</div>

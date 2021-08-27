@@ -1,4 +1,4 @@
-import { Authorized, BadRequestError, Body, CurrentUser, JsonController, Post } from "routing-controllers";
+import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Post } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { TeamsService } from "./service";
 
@@ -17,6 +17,12 @@ class TeamsController {
 
 		await this.teamsService.updateMeta(JSON.stringify(finalMeta), user.team_id);
 		return "Successful";
+	}
+
+	@Authorized()
+	@Get("/teams/users/")
+	async getUsersInTeam(@CurrentUser({required: true}) user) {
+		return this.teamsService.getUsersWithRolesInTeam(user.team_id);
 	}
 }
 

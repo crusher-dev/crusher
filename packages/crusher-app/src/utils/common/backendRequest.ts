@@ -1,4 +1,4 @@
-import { RequestMethod, RequestOptions } from "../types/RequestOptions";
+import { RequestMethod, RequestOptions } from "../../types/RequestOptions";
 import { appendParamsToURI, getAbsoluteURIIfRelative } from "./url";
 import { IncomingHttpHeaders } from "http";
 

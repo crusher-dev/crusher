@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 
 import { USER_SYSTEM_API } from "@constants/api";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
-import { backendRequest } from "@utils/backendRequest";
+import { backendRequest } from "@utils/common/backendRequest";
 import { redirectUserOnMount } from "@utils/routing";
 
 import { appStateItemMutator } from "../store/atoms/global/appState";

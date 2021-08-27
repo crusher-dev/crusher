@@ -2,7 +2,7 @@ import identity from "lodash/identity";
 import pickBy from "lodash/pickBy";
 
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
-import { resolvePathToBackendURI } from "@utils/url";
+import { resolvePathToBackendURI } from "@utils/common/url";
 
 export const USER_SYSTEM_API = resolvePathToBackendURI("/users/actions/getUserAndSystemInfo");
 export const getTestListAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests`);
@@ -24,4 +24,4 @@ export const changeTestInfoAPI = (testId: number) => resolvePathToBackendURI(`/t
 
 export const updateProjectAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/actions/update.meta`);
 export const updateUserMetaAPI = () => resolvePathToBackendURI(`/users/actions/update.meta`);
-export const updateTeamMetaAPI = () => resolvePathToBackendURI(`teams/actions/update.meta`);
+export const updateTeamMetaAPI = () => resolvePathToBackendURI(`/teams/actions/update.meta`);

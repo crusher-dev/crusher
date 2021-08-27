@@ -4,6 +4,8 @@ import React from "react";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { CompleteStatusIconSVG } from "@svg/dashboard";
+import HighlightPing from "@svg/common/HighlightPing";
+import dynamic from "next/dynamic";
 
 interface IExpandableListItemProps {
 	index?: number;
@@ -14,6 +16,8 @@ interface IExpandableListItemProps {
 	isActive?: boolean;
 }
 
+const HighlightPingSVG = dynamic(() => import("../../../svg/common/HighlightPing"));
+
 const ExpandableListItem = (props: IExpandableListItemProps) => {
 	const { index, title, isActive, children, completed, changeSelected } = props;
 
@@ -22,6 +26,11 @@ const ExpandableListItem = (props: IExpandableListItemProps) => {
 			<div className={"flex flex-row items-center"} css={itemHeadingStyle(!!isActive)}>
 				<span css={itemIndexStyle}>{index! + 1}.)</span>
 				<span className={"font-cera"}>{title}</span>
+				<span className={"ml-16"}>
+					<Conditional showIf={isActive}>
+						<HighlightPingSVG />
+					</Conditional>
+				</span>
 				<div className={"ml-auto"}>
 					<CompleteStatusIconSVG isCompleted={completed} />
 				</div>

@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, {useMemo, useCallback} from "react";
+import React, { useMemo, useCallback } from "react";
 
 import { useAtom } from "jotai";
 import useSWR from "swr";
@@ -12,7 +12,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { ConditionalLink } from "@components/common/ConditionalLink";
 import { getBuildsList } from "@constants/api";
 import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
-import {ClockIconSVG, CommentIconSVG, DangerIconSVG} from "@svg/builds";
+import { ClockIconSVG, CommentIconSVG, DangerIconSVG } from "@svg/builds";
 import { TestStatusSVG } from "@svg/testReport";
 import { getStringFromDuration, timeSince } from "@utils/common/dateTimeUtils";
 

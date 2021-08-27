@@ -7,7 +7,7 @@ import { Input } from "dyson/src/components/atoms";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 
 import { LoadingSVG } from "@svg/dashboard";
-import {GoogleSVG} from "@svg/social";
+import { GoogleSVG } from "@svg/social";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
 import { validateEmail, validatePassword } from "@utils/common/validationUtils";
@@ -23,9 +23,7 @@ const emailLogin = (email: string, password: string) => {
 	});
 };
 
-function EmailPasswordBox({
-    setShowBox
-}) {
+function EmailPasswordBox({ setShowBox }) {
 	const router = useRouter();
 	const [email, setEmail] = useState({ value: "", error: null });
 	const [password, setPassword] = useState({ value: "", error: null });

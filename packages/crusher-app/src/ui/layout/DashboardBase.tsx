@@ -23,9 +23,9 @@ import { addQueryParamToPath } from "@utils/common/url";
 import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
-import { updateMeta } from '../../store/mutators/metaData';
-import {USER_META_KEYS} from '@constants/USER';
-import { handleTestRun } from '@utils/core/testUtils';
+import { updateMeta } from "../../store/mutators/metaData";
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { handleTestRun } from "@utils/core/testUtils";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -42,52 +42,51 @@ function ProjectList() {
 
 	const [showAddProject, setShowAddProject] = useState(false);
 
-	return <>
-        <div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
-            <div className={"flex items-center"}>
-                <span className={"text-13 leading-none mr-8 font-600"}>Projects</span>
-            </div>
+	return (
+		<>
+			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
+				<div className={"flex items-center"}>
+					<span className={"text-13 leading-none mr-8 font-600"}>Projects</span>
+				</div>
 
-            <Conditional showIf={showAddProject}>
-                <AddProject onClose={setShowAddProject.bind(this, false)} />
-            </Conditional>
-            <div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
-                <AddSVG />
-                <div className={"text-13 leading-none ml-8 leading-none mt-2"}>Add</div>
-            </div>
-        </div>
+				<Conditional showIf={showAddProject}>
+					<AddProject onClose={setShowAddProject.bind(this, false)} />
+				</Conditional>
+				<div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
+					<AddSVG />
+					<div className={"text-13 leading-none ml-8 leading-none mt-2"}>Add</div>
+				</div>
+			</div>
 
-        {search && (
-            <div>
-                <Input placeholder={"enter name"} css={smallInputBox} />
-            </div>
-        )}
+			{search && (
+				<div>
+					<Input placeholder={"enter name"} css={smallInputBox} />
+				</div>
+			)}
 
-        <div className={"mt-6"}>
-            {projects.map(({
-                id,
-                name
-            }) => (
-                <MenuItemHorizontal
-                    className={"mt-2"}
-                    selected={appState.selectedProjectId === id}
-                    onClick={() => {
-											  updateOnboarding({
-													type: "user",
-													key: USER_META_KEYS.SELECTED_PROJECT_ID,
-													value: id,
-										  	});
-                        setAppStateItem({ key: "selectedProjectId", value: id });
-                        router.push("/app/dashboard");
-                    }}
-                    key={id}
-                >
-                    <LayoutSVG />
-                    <span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
-                </MenuItemHorizontal>
-            ))}
-        </div>
-    </>;
+			<div className={"mt-6"}>
+				{projects.map(({ id, name }) => (
+					<MenuItemHorizontal
+						className={"mt-2"}
+						selected={appState.selectedProjectId === id}
+						onClick={() => {
+							updateOnboarding({
+								type: "user",
+								key: USER_META_KEYS.SELECTED_PROJECT_ID,
+								value: id,
+							});
+							setAppStateItem({ key: "selectedProjectId", value: id });
+							router.push("/app/dashboard");
+						}}
+						key={id}
+					>
+						<LayoutSVG />
+						<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
+					</MenuItemHorizontal>
+				))}
+			</div>
+		</>
+	);
 }
 
 function BottomSection({ name, description, link, ...props }) {
@@ -288,7 +287,6 @@ const TOP_NAV_LINK = [
 	},
 ];
 
-
 function RunTest() {
 	const router = useRouter();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
@@ -298,12 +296,19 @@ function RunTest() {
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
-			await handleTestRun(
-				selectedProjectId,
-				query,
-				filters, router,updateMetaData
-			)
+			await handleTestRun(selectedProjectId, query, filters, router, updateMetaData);
 
+			updateMetaData({
+				type: "user",
+				key: USER_META_KEYS.RAN_TEST,
+				value: true,
+			});
+
+			updateMetaData({
+				type: "project",
+				key: PROJECT_META_KEYS.RAN_TEST,
+				value: true,
+			});
 		})();
 	}, []);
 
@@ -318,10 +323,10 @@ function RunTest() {
 }
 
 function TopNavbar() {
-    const { pathname, query, asPath } = useRouter();
-    const [showCreateTest, setShowCreateTest] = useState(false);
+	const { pathname, query, asPath } = useRouter();
+	const [showCreateTest, setShowCreateTest] = useState(false);
 
-    return (
+	return (
 		<div css={[nav]} className={""}>
 			<div css={[containerWidth]}>
 				<div className={"w-full flex px-8 pl-0 justify-between"}>
@@ -442,7 +447,7 @@ const containerWidth = css`
 	width: 1488rem;
 	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
-	padding: 0 0rem;
+	padding: 0 0;
 `;
 
 const scrollContainer = css`
@@ -452,7 +457,7 @@ const scrollContainer = css`
 
 const project = css`
 	color: rgba(255, 255, 255, 0.9);
-	font-size: 1;
+	font-size: 12rem;
 `;
 
 const hoverCSS = css`
@@ -517,5 +522,4 @@ const smallInputBox = css`
 	color: #fff;
 	margin: 7px 7px;
 	padding-top: 2rem;
-	padding-left: 12rem;
 `;

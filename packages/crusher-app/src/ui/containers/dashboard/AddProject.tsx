@@ -34,16 +34,16 @@ export const AddProjectModal = ({ onClose }) => {
 
 	const addProjectCallback = useCallback(() => {
 		(async () => {
-            const { id, name, teamID } = await addProject(projectName);
-            const projectObject = { id, name, teamID };
-            setProjectsAtom([...projects, projectObject]);
+			const { id, name, teamID } = await addProject(projectName);
+			const projectObject = { id, name, teamID };
+			setProjectsAtom([...projects, projectObject]);
 
-            setAppStateItem({ key: "selectedProjectId", value: id });
-            onClose();
-            await router.push("/app/dashboard");
+			setAppStateItem({ key: "selectedProjectId", value: id });
+			onClose();
+			await router.push("/app/dashboard");
 
-            sendSnackBarEvent({ message: "Created and switched project" });
-        })();
+			sendSnackBarEvent({ message: "Created and switched project" });
+		})();
 
 		setProcessing(true);
 	}, [projectName]);

@@ -306,12 +306,20 @@ function RunTest() {
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
-			await runTests(selectedProjectId);
-			sendSnackBarEvent({ type: "normal", message: "We have started running test" });
+			try{
+				await runTests(selectedProjectId);
+				sendSnackBarEvent({ type: "normal", message: "We have started running test" });
+				const buildAPI = getBuildsList(project.id, query.trigger, filters);
+				await mutate(buildAPI);
+				await router.push("/app/builds");
+			}
+			catch (e){
+				console.error(e.toString())
+				if(e.toString() === "Error: No tests available to run"){
+					sendSnackBarEvent({ type: "error", message: "You don't have any test to run" });
+				}
+			}
 
-			const buildAPI = getBuildsList(project.id, query.trigger, filters);
-			await mutate(buildAPI);
-			await router.push("/app/builds");
 		})();
 	}, []);
 
@@ -319,7 +327,7 @@ function RunTest() {
 		<Button bgColor={"tertiary-dark"} onClick={runProjectTest}>
 			<div className={"flex items-center"}>
 				<PlaySVG className={"mr-12"} />
-				Run test
+				Run tests
 			</div>
 		</Button>
 	);

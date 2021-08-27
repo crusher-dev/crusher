@@ -77,11 +77,7 @@ const orgLinks = [
 	{
 		label: "Team members",
 		link: "/settings/org/team-members",
-	},
-	{
-		label: "Projects",
-		link: "/settings/project/basic",
-	},
+	}
 ];
 
 function LinksSection({ links, label }) {

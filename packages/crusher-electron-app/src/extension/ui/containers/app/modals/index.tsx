@@ -13,6 +13,7 @@ import { AssertElementModalContent } from "./assertElementModalContent";
 import { ElementCustomScriptModalContent } from "./elementCustomScriptModalContent";
 import { HowToUseVideoModal } from "./howToUseVideoModal";
 import { POSITION } from "../../../../interfaces/css";
+import { WaitModal } from "./waitModal";
 
 interface iModalTopBarProps {
 	title: string;
@@ -127,6 +128,7 @@ const ModalManager = (props: iModalManagerProps) => {
 					<AssertElementModalContent deviceIframeRef={deviceIframeRef} onClose={handleCloseModal} />
 				</>
 			</Conditional>
+			<WaitModal isOpen={modalState === ACTIONS_MODAL_STATE.WAIT_SECONDS}></WaitModal>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.ELEMENT_CUSTOM_SCRIPT}>
 				<>
 					<ModalTopBar

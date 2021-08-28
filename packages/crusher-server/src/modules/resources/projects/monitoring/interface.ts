@@ -1,13 +1,13 @@
 import { BaseRowInterface } from "@crusher-shared/types/db/baseRow";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 
-export interface IProjectMonitoringTable extends BaseRowInterface {
-	project_id: number;
-	created_by: number;
-	last_cron_on: number;
-	target_host_id: number;
-	platform: BrowserEnum;
-	test_interval: number;
-	tags: string;
+export interface IMonitoringTable extends BaseRowInterface {
 	id: number;
+	project_id: number;
+	environment_id: number;
+	test_interval: number;
+	last_cron_run: any;
 }
+
+export type ICreateMonitoringPayload = KeysToCamelCase<Omit<IMonitoringTable, "created_at" | "updated_at" | "id" | "last_cron_run">>;

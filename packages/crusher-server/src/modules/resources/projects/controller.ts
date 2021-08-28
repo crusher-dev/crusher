@@ -43,29 +43,6 @@ class ProjectsController {
 	}
 
 	@Authorized()
-	@Get("/projects/:project_id/environments")
-	async getProjectEnvironments(@Param("project_id") projectId: number) {
-		return this.projectsService.getProjectEnvironments(projectId);
-	}
-
-	@Authorized()
-	@Post("/projects/:project_id/environments/actions/create")
-	async createProjectEnvironment(
-		@CurrentUser({ required: true }) user,
-		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateProjectEnvironmentPayload, "projectId" | "userId">,
-	) {
-		const result = await this.projectsService.createProjectEnvironment({
-			...body,
-			projectId: projectId,
-			userId: user.user_id,
-		});
-		if (!result.insertId) throw new BadRequestError("Could not create project environment");
-
-		return { insertId: result.insertId };
-	}
-
-	@Authorized()
 	@Post("/projects/:project_id/actions/update.meta")
 	async updateMeta(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number, @Body() body: { meta: any }) {
 		if (typeof body.meta !== "object") throw new BadRequestError("meta is not JSON compatible");

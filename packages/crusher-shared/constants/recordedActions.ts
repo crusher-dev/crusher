@@ -40,7 +40,6 @@ export const ElementActionsInTestArr = Object.values(ActionsInTestEnum).filter((
 	return action.startsWith("ELEMENT_");
 });
 
-
 export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.ELEMENT_SCROLL]: "Eleemnt Scroll",
 	[ACTIONS_IN_TEST.SET_DEVICE]: "Set a device",

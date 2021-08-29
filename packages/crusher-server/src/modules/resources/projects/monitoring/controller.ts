@@ -15,4 +15,4 @@ class MonitoringController {
 	}
 }
 
-export { MonitoringController }
+export { MonitoringController };

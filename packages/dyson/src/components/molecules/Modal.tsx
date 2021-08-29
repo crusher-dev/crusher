@@ -17,7 +17,7 @@ type TModalProps = {
 
 export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalProps) => {
 	return (
-        <OverlayTransparent lightOverlay={true}>
+		<OverlayTransparent lightOverlay={true}>
 			<CenterLayout>
 				<OnOutsideClick onOutsideClick={onOutsideClick}>
 					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
@@ -32,7 +32,7 @@ export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalP
 				</OnOutsideClick>
 			</CenterLayout>
 		</OverlayTransparent>
-    );
+	);
 };
 
 const primaryModalStyle = css`

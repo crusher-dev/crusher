@@ -11,7 +11,7 @@ type TransparentOverlayProps = {
 
 export function OverlayTransparent({ children, onClose, lightOverlay }: TransparentOverlayProps) {
 	return (
-        <div className={"flex justify-between leading-none relative"} css={[overlay, lightOverlay && lightOverlayStyle]}>
+		<div className={"flex justify-between leading-none relative"} css={[overlay, lightOverlay && lightOverlayStyle]}>
 			<Conditional showIf={!!onClose}>
 				<div css={closeIcon}>
 					<CloseSVG onClick={onClose} />
@@ -19,7 +19,7 @@ export function OverlayTransparent({ children, onClose, lightOverlay }: Transpar
 			</Conditional>
 			{children}
 		</div>
-    );
+	);
 }
 
 const overlay = css`

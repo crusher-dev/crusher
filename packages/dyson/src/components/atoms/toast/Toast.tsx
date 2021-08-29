@@ -10,11 +10,11 @@ type Toast = {
 
 export const Toast = ({ children, onClose, type = "normal" }: Toast) => {
 	return (
-        <div css={[alertContainer, postionCSS, type === "success" && success, type === "error" && error]} className={"flex items-center justify-between"}>
+		<div css={[alertContainer, postionCSS, type === "success" && success, type === "error" && error]} className={"flex items-center justify-between"}>
 			<div>{children}</div>
 			<CloseSVG height={12} width={12} onClick={onClose}></CloseSVG>
 		</div>
-    );
+	);
 };
 
 const postionCSS = css`

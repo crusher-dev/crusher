@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from "react";
 import ReactModal from "react-modal";
 import { FONT_WEIGHT } from "../../../../interfaces/css";
@@ -19,7 +18,6 @@ const WaitModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
 	const [interval, setInterval] = useState("");
 
-
 	const handleIntervalChange = (event) => {
 		setInterval(event.target.value);
 	};
@@ -31,27 +29,28 @@ const WaitModal = (props: iStartupModalProps) => {
 
 	const handleSubmit = useCallback(() => {
 		const store = getStore();
-		if(!interval.trim().length) {alert("Please enter a valid interval"); return;}
+		if (!interval.trim().length) {
+			alert("Please enter a valid interval");
+			return;
+		}
 
-		store.dispatch(recordAction({
-			type: ActionsInTestEnum.WAIT,
-			payload: {
-				timeout: parseInt(interval),
-				meta: {},
-			},
-			url: "",	
-		}));
+		store.dispatch(
+			recordAction({
+				type: ActionsInTestEnum.WAIT,
+				payload: {
+					timeout: parseInt(interval),
+					meta: {},
+				},
+				url: "",
+			}),
+		);
 		handleClose();
 	}, [interval]);
 
 	return (
 		<ReactModal isOpen={isOpen} contentLabel="Wait Modal" style={customModalStyles} overlayClassName="overlay">
-				<ModalTopBar
-					title={"Wait For Seconds"}
-					desc={"These are used to wait/sleep for the specified interval"}
-					closeModal={handleClose}
-				/>
-				<div className="flex flex-col" style={{marginTop: 40}}>
+			<ModalTopBar title={"Wait For Seconds"} desc={"These are used to wait/sleep for the specified interval"} closeModal={handleClose} />
+			<div className="flex flex-col" style={{ marginTop: 40 }}>
 				<div className="flex">
 					<input
 						style={inputStyle}
@@ -72,7 +71,7 @@ const WaitModal = (props: iStartupModalProps) => {
 
 const buttonStyle = {
 	backgroundColor: COLOR_CONSTANTS.BUTTON_BLUE,
-	padding:7,
+	padding: 7,
 	minWidth: 150,
 	borderRadius: 4,
 	color: "#fff",

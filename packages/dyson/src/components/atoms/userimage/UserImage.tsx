@@ -18,9 +18,7 @@ const UserDefaultProps = {};
 /**
  * Crusher Text component.
  */
-export const UserImage: React.FC<UserImageProps> = ({
-    url
-}) => {
+export const UserImage: React.FC<UserImageProps> = ({ url }) => {
 	return (
 		<div css={userImage}>
 			<div className={"relative"}>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { css } from "@emotion/react";
-import {ReactElement} from "react";
+import { ReactElement } from "react";
 import { Conditional } from "../../layouts";
 
 const radio = (state) => css`
@@ -74,7 +74,7 @@ export function Radio(props: RadioProps): ReactElement {
 	};
 
 	return (
-        <div className={"flex items-center "}>
+		<div className={"flex items-center "}>
 			<div
 				css={[radioContainer(), isSelected && selectedState, !isSelected && notSelectedState, disabled && disabledState(isSelected)]}
 				onClick={handleClick}
@@ -89,7 +89,7 @@ export function Radio(props: RadioProps): ReactElement {
 				<Conditional showIf={typeof label !== "string"}>{label}</Conditional>
 			</Conditional>
 		</div>
-    );
+	);
 }
 
 Radio.defaultProps = RadioDefaultProps;

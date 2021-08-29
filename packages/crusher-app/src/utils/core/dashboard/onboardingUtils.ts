@@ -1,4 +1,4 @@
-import { PROJECT_META_KEYS, USER_META_KEYS } from '@constants/USER';
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 
 export const getOnboardingStepIndex = (project, user) => {
 	const testCreatedForProject = !!project?.meta[PROJECT_META_KEYS.TEST_CREATED];

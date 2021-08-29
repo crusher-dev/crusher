@@ -1,16 +1,16 @@
 import { css } from "@emotion/react";
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 
 import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
 import { OnBoardingTutorialVideo } from "@ui/containers/dashboard/tutorials";
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 import { usePageTitle } from "../../src/hooks/seo";
-import { Conditional } from 'dyson/src/components/layouts';
-import { useAtom } from 'jotai';
-import { currentProjectSelector } from '../../src/store/selectors/getCurrentProject';
-import { userAtom } from '../../src/store/atoms/global/user';
-import { getOnboardingStepIndex } from '@utils/core/dashboard/onboardingUtils';
+import { Conditional } from "dyson/src/components/layouts";
+import { useAtom } from "jotai";
+import { currentProjectSelector } from "../../src/store/selectors/getCurrentProject";
+import { userAtom } from "../../src/store/atoms/global/user";
+import { getOnboardingStepIndex } from "@utils/core/dashboard/onboardingUtils";
 
 function Dashboard() {
 	usePageTitle("Dashboard");
@@ -26,14 +26,12 @@ function Dashboard() {
 		<>
 			<SidebarTopBarLayout>
 				<div css={containerStyle} className=" pt-42 ">
-
-					<Conditional showIf={onboardingIndex!== -1}>
+					<Conditional showIf={onboardingIndex !== -1}>
 						<div css={headingStyle} className={"font-cera text-16 font-bold"}>
 							Integrate and start testing
 						</div>
 						<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
 						<OnboardingSteps className={"mt-36 mb-56"} />
-
 					</Conditional>
 
 					{/*Note :- Move to conditional once integrated*/}

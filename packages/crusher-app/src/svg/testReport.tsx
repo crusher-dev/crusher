@@ -50,7 +50,7 @@ export function ThunderSVG(props) {
 
 export function ChevronDown(props: ReactPropTypes) {
 	return (
-		<svg width={14} height={14} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={9} height={9} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g>
 				<path
 					d="M6.854 10.767a.956.956 0 01-.677-.283L.314 4.579a.958.958 0 111.36-1.35l5.188 5.225 5.224-5.189a.958.958 0 011.35 1.36L7.533 10.49a.956.956 0 01-.678.278z"

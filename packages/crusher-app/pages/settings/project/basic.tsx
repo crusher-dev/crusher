@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
 import { ProjectSettings } from "@ui/containers/settings/ProjectPage";
 
 import { usePageTitle } from "../../../src/hooks/seo";
-import { useAtom } from 'jotai';
-import { updateMeta } from '../../../src/store/mutators/metaData';
-import { PROJECT_META_KEYS } from '@constants/USER';
+import { useAtom } from "jotai";
+import { updateMeta } from "../../../src/store/mutators/metaData";
+import { PROJECT_META_KEYS } from "@constants/USER";
 
 function Dashboard() {
 	usePageTitle("Dashboard");
 	const [, updateMetaData] = useAtom(updateMeta);
 
-	useEffect(()=>{
+	useEffect(() => {
 		updateMetaData({
-			type: 'project',
+			type: "project",
 			key: PROJECT_META_KEYS.INTEGRATE_WITH_CI,
-			value: true
-		})
-	},[])
+			value: true,
+		});
+	}, []);
 	return (
 		<>
 			<ProjectSettings />

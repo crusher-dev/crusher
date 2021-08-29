@@ -42,17 +42,17 @@ const HeadingElement = ({ size, children, ...props }: BaseHeading) => {
 const getDefaultFontSize = (type) => {
 	switch (type) {
 		case 1:
-            return 28;
+			return 28;
 		case 2:
-            return 26;
+			return 26;
 		case 3:
-            return 24;
+			return 24;
 		case 4:
-            return 22;
+			return 22;
 		case 5:
-            return 20;
+			return 20;
 		default:
-            return 18;
+			return 18;
 	}
 };
 
@@ -60,15 +60,7 @@ const getDefaultFontSize = (type) => {
  * Crusher Text component.
  */
 export const Heading: React.FC<HeadingProps> = (props: HeadingProps) => {
-	const {
-        type,
-        children,
-        fontSize,
-        className,
-        weight,
-        color,
-        ...otherProps
-    } = props;
+	const { type, children, fontSize, className, weight, color, ...otherProps } = props;
 
 	return (
 		<HeadingElement

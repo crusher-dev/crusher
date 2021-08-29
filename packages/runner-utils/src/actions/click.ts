@@ -6,8 +6,7 @@ async function clickOnElement(element: Locator, workingSelector: any, action: iA
 	try {
 		await element.click({ force: true, timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
 	} catch (e) {
-		if (!e.message.includes("selector resolved to hidden"))
-			throw e;
+		if (!e.message.includes("selector resolved to hidden")) throw e;
 
 		await element.dispatchEvent("click");
 	}

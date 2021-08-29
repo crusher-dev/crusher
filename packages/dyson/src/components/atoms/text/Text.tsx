@@ -21,14 +21,7 @@ const TextDefaultProps = {
  * Crusher Text component.
  */
 export const Text: React.FC<TextProps> = (props: TextProps) => {
-	const {
-        children,
-        fontSize,
-        weight,
-        className,
-        color,
-        ...otherProps
-    } = props;
+	const { children, fontSize, weight, className, color, ...otherProps } = props;
 	return (
 		<span
 			className={`font-gilroy font-${weight} ${className}`}

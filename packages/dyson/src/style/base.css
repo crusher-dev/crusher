@@ -3,22 +3,22 @@
 @tailwind utilities;
 
 html {
-    font-size: 1px;
+	font-size: 1px;
 }
 
 body {
-    cursor: inherit;
-    font-size: 16rem;
+	cursor: inherit;
+	font-size: 16rem;
 }
 
 body {
-    cursor: default;
+	cursor: default;
 }
 
 .sb-show-main.sb-main-padded {
-    transform-origin: left top 0;
+	transform-origin: left top 0;
 }
 
 .sbdocs-wrapper {
-    background: #181717 !important;
+	background: #181717 !important;
 }

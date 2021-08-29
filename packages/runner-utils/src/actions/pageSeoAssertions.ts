@@ -9,35 +9,40 @@ async function assertSeoRows(
 	assertions: Array<iAssertionRow>,
 ): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
 	let hasPassed = true;
-  const logs = [];
+	const logs = [];
 
-  const pageTitle = await page.title();
-
+	const pageTitle = await page.title();
 
 	for (let i = 0; i < assertions.length; i++) {
 		const { validation, operation, field } = assertions[i];
-    const elementAttributeValue = field.name === "title" ? pageTitle : await page.evaluate((args: Array<any>) => {
-      const getTagName = (metaTagName) => {
-        const metaElement = document.querySelector(`meta[name='${metaTagName}']`);
-        const metaElementValue = metaElement ? metaElement.getAttribute("content") : null;
-        if (metaElementValue) return metaElementValue;
+		const elementAttributeValue =
+			field.name === "title"
+				? pageTitle
+				: await page.evaluate(
+						(args: Array<any>) => {
+							const getTagName = (metaTagName) => {
+								const metaElement = document.querySelector(`meta[name='${metaTagName}']`);
+								const metaElementValue = metaElement ? metaElement.getAttribute("content") : null;
+								if (metaElementValue) return metaElementValue;
 
-        return null;
-      };
+								return null;
+							};
 
-      return getTagName(args[0]);
-    }, [field.name]);
+							return getTagName(args[0]);
+						},
+						[field.name],
+				  );
 
-    if (!elementAttributeValue) {
-      hasPassed = false;
+		if (!elementAttributeValue) {
+			hasPassed = false;
 			logs.push({
 				status: "FAILED",
 				message: "No value found for this seo field: " + field.name,
 				meta: { operation, valueToMatch: validation, field: field.name, elementValue: elementAttributeValue },
-      });
+			});
 
-      continue;
-    }
+			continue;
+		}
 
 		if (operation === "MATCHES") {
 			if (elementAttributeValue !== validation) {

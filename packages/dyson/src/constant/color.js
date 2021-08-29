@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 const COLOR = {
 	BLUE: {
 		600: "#5667BA",

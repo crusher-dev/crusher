@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 /*
 	Not keeping styling strict here, keep it in components if needed
  */

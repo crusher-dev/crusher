@@ -4,7 +4,7 @@ import { Page } from "playwright";
 
 async function waitForSeconds(page: Page, action: iAction) {
 	const timeout = action.payload.timeout;
-    if(!timeout) return;
+	if (!timeout) return;
 	await page.waitForTimeout(timeout * 1000);
 	return;
 }

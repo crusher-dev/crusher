@@ -1,6 +1,6 @@
 import * as React from "react";
 import { css } from "@emotion/react";
-import {ReactElement} from "react";
+import { ReactElement } from "react";
 import { Conditional } from "../../layouts";
 
 function TickSVG(props) {
@@ -94,7 +94,7 @@ export function Checkbox(props: ChecboxProps): ReactElement {
 	};
 
 	return (
-        <div className={"flex items-center "} onClick={handleClick}>
+		<div className={"flex items-center "} onClick={handleClick}>
 			<Conditional showIf={isSelectAllType}>
 				<div css={[checkBox(), selectAll(isSelected), disabled && disabledCSS]}>
 					<div id={"tick"}></div>
@@ -111,7 +111,7 @@ export function Checkbox(props: ChecboxProps): ReactElement {
 				<div className={"text-13 ml-12 font-500 mt-2"}>{label}</div>
 			</Conditional>
 		</div>
-    );
+	);
 }
 
 Checkbox.defaultProps = RadioDefaultProps;

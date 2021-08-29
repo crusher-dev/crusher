@@ -13,7 +13,7 @@ import { ExpandableList, ExpandableListItem } from "./expandableList";
 import { useAtom } from "jotai";
 import { currentProjectSelector } from "../../../store/selectors/getCurrentProject";
 import { userAtom } from "../../../store/atoms/global/user";
-import { getOnboardingStepIndex } from '@utils/core/dashboard/onboardingUtils';
+import { getOnboardingStepIndex } from "@utils/core/dashboard/onboardingUtils";
 
 interface TTestIntegrationListProps {
 	className?: string;

@@ -10,10 +10,10 @@ import { Button, Logo } from "dyson/src/components/atoms";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 
 import { LoadingSVG } from "@svg/dashboard";
-import {GoogleSVG} from "@svg/social";
-import { backendRequest } from "@utils/backendRequest";
-import { resolvePathToBackendURI } from "@utils/url";
-import { validateEmail, validateName, validatePassword } from "@utils/validationUtils";
+import { GoogleSVG } from "@svg/social";
+import { backendRequest } from "@utils/common/backendRequest";
+import { resolvePathToBackendURI } from "@utils/common/url";
+import { validateEmail, validateName, validatePassword } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
 import { loadUserDataAndRedirect } from "../../../hooks/user";
@@ -24,40 +24,40 @@ const showRegistrationFormAtom = atom(false);
 const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
 	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? {code: inviteCode, type: inviteType} : null },
+		payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
 	});
 };
 
 function EmailPasswordBox() {
-    const [data] = useState(null);
+	const [data] = useState(null);
 
-    const [, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
-    const [email, setEmail] = useState({ value: "", error: "" });
-    const [password, setPassword] = useState({ value: "", error: "" });
-    const [name, setName] = useState({ value: "", error: "" });
-    const [processingSignup, setProcessingSignup] = useState(false);
-    const { query } = useRouter();
+	const [, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
+	const [email, setEmail] = useState({ value: "", error: "" });
+	const [password, setPassword] = useState({ value: "", error: "" });
+	const [name, setName] = useState({ value: "", error: "" });
+	const [processingSignup, setProcessingSignup] = useState(false);
+	const { query } = useRouter();
 
-    const emailChange = useCallback(
+	const emailChange = useCallback(
 		(e) => {
 			setEmail({ ...email, value: e.target.value });
 		},
 		[email],
 	);
-    const passwordChange = useCallback(
+	const passwordChange = useCallback(
 		(e) => {
 			setPassword({ ...password, value: e.target.value });
 		},
 		[password],
 	);
-    const nameChange = useCallback(
+	const nameChange = useCallback(
 		(e) => {
 			setName({ ...name, value: e.target.value });
 		},
 		[name],
 	);
 
-    const verifyInfo = (completeVerify = false) => {
+	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateName = completeVerify || name.value;
@@ -74,9 +74,7 @@ function EmailPasswordBox() {
 		} else setName({ ...name, error: "" });
 	};
 
-
-
-    const signupUser = async () => {
+	const signupUser = async () => {
 		verifyInfo(true);
 
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
@@ -86,20 +84,20 @@ function EmailPasswordBox() {
 			// @TODO: Use router push here
 			window.location.href = "/app/dashboard";
 		} catch (e: any) {
-            alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
-        }
+			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
+		}
 		setProcessingSignup(false);
 	};
 
-    const signupOnEnter = (event: any) => {
+	const signupOnEnter = (event: any) => {
 		if (event.key === "Enter") {
 			signupUser();
 		}
 	};
 
-    loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
+	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
-    return (
+	return (
 		<div css={loginBoxlarge}>
 			<div className={"mb-12"}>
 				<Input

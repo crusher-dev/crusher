@@ -1,89 +1,89 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-@import '../../dyson/src/style/base.css';
-@import '../public/assets/css/fonts.css';
-@import '../public/assets/css/base.css';
-@import '../public/assets/css/animations.css';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "../../dyson/src/style/base.css";
+@import "../public/assets/css/fonts.css";
+@import "../public/assets/css/base.css";
+@import "../public/assets/css/animations.css";
 
 html,
 body {
-    padding: 0;
-    margin: 0;
-    font-size: 1px;
-    color: #eee;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+	padding: 0;
+	margin: 0;
+	font-size: 1px;
+	color: #eee;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
 }
 
 a {
-    cursor: default !important;
+	cursor: default !important;
 }
 
 * {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 @media only screen and (max-width: 1581px) {
-    html {
-        font-size: 0.9px;
-    }
+	html {
+		font-size: 0.9px;
+	}
 }
 
 @media only screen and (max-width: 1493px) {
-    html {
-        font-size: 0.85px;
-    }
+	html {
+		font-size: 0.85px;
+	}
 }
 
 @media only screen and (max-width: 1400px) {
-    html {
-        font-size: 0.8px;
-    }
+	html {
+		font-size: 0.8px;
+	}
 }
 
 @media only screen and (max-width: 1317px) {
-    html {
-        font-size: 0.75px;
-    }
+	html {
+		font-size: 0.75px;
+	}
 }
 
 @media only screen and (max-width: 1229px) {
-    html {
-        font-size: 0.75px;
-    }
+	html {
+		font-size: 0.75px;
+	}
 }
 
 @media only screen and (max-width: 1054px) {
-    html {
-        font-size: 0.6px;
-    }
+	html {
+		font-size: 0.6px;
+	}
 }
 
 img {
-    display: unset;
+	display: unset;
 }
 
 .custom-scroll::-webkit-scrollbar {
-    width: 12px;
+	width: 12px;
 }
 
 .custom-scroll::-webkit-scrollbar-track {
-    background-color: #0a0b0e;
-    box-shadow: none;
+	background-color: #0a0b0e;
+	box-shadow: none;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-    background-color: #1b1f23;
-    border-radius: 100px;
+	background-color: #1b1f23;
+	border-radius: 100px;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: #272b31;
-    border-radius: 100px;
+	background-color: #272b31;
+	border-radius: 100px;
 }

@@ -8,7 +8,7 @@ import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown
 import { UserImage } from "dyson/src/components/atoms/userimage/UserImage";
 
 import { MenuItem } from "@components/molecules/MenuItem";
-import { resolvePathToBackendURI } from "@utils/url";
+import { resolvePathToBackendURI } from "@utils/common/url";
 
 import { teamAtom } from "../../../store/atoms/global/team";
 import { userAtom } from "../../../store/atoms/global/user";
@@ -73,11 +73,11 @@ function DropdownContent() {
 }
 
 export function UserNTeam() {
-    const [user] = useAtom(userAtom);
-    const [team] = useAtom(teamAtom);
+	const [user] = useAtom(userAtom);
+	const [team] = useAtom(teamAtom);
 
-    return (
-        <div className={"flex justify-between leading-none relative"} css={userCard}>
+	return (
+		<div className={"flex justify-between leading-none relative"} css={userCard}>
 			<div className={"flex"} css={orgName}>
 				<div css={nameInitial} className={"flex items-center justify-center uppercase font-700 pt-2 mr-14"}>
 					{team.name.substr(0, 1)}
@@ -103,7 +103,7 @@ export function UserNTeam() {
 				</div>
 			</Dropdown>
 		</div>
-    );
+	);
 }
 
 export function MenuItemHorizontal({ children, selected, ...props }) {

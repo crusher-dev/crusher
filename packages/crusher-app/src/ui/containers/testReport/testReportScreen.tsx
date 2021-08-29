@@ -11,14 +11,16 @@ import { Conditional } from "dyson/src/components/layouts";
 import { BackSVG } from "@svg/builds";
 import { LayoutSVG } from "@svg/dashboard";
 import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThunderSVG } from "@svg/testReport";
-import { backendRequest } from "@utils/backendRequest";
-import { timeSince } from "@utils/dateTimeUtils";
-import { sendSnackBarEvent } from "@utils/notify";
-import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/pages/buildReportUtils";
+import { backendRequest } from "@utils/common/backendRequest";
+import { timeSince } from "@utils/common/dateTimeUtils";
+import { sendSnackBarEvent } from "@utils/common/notify";
+import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/core/buildReportUtils";
 
 import { usePageTitle } from "../../../hooks/seo";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { updateMeta } from "../../../store/mutators/metaData";
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 
 const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
@@ -272,8 +274,21 @@ export const TestReportScreen = () => {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+	const [, updateMetaData] = useAtom(updateMeta);
 
 	useEffect(() => {
+		updateMetaData({
+			type: "user",
+			key: USER_META_KEYS.VIEW_REPORT,
+			value: true,
+		});
+
+		updateMetaData({
+			type: "project",
+			key: PROJECT_META_KEYS.VIEW_REPORT,
+			value: true,
+		});
+
 		if (query.view_draft) setSelectedTabIndex(1);
 	}, [query.view_draft]);
 	return (

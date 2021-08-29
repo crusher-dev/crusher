@@ -5,7 +5,7 @@ import { Button } from "dyson/src/components/atoms";
 import Radio from "dyson/src/components/atoms/radio/radio";
 
 import { CloseSVG } from "@svg/dashboard";
-import { backendRequest } from "@utils/backendRequest";
+import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "../../../../types/RequestOptions";
 import { useBuildReport } from "crusher-app/src/store/serverState/buildReports";
 import { useRouter } from "next/router";
@@ -35,7 +35,6 @@ export const ReviewButtonContent = ({ closeModal }) => {
 	}, []);
 
 	const handleSubmit = useCallback(async () => {
-		console.log("BUILD", data);
 		await approveBuild(data.buildId, data.buildReportId);
 		closeModal();
 	}, [data]);

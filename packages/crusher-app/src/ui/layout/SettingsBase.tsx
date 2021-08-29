@@ -77,12 +77,12 @@ const orgLinks = [
 	{
 		label: "Team members",
 		link: "/settings/org/team-members",
-	}
+	},
 ];
 
 function LinksSection({ links, label }) {
-    const { pathname } = useRouter();
-    return (
+	const { pathname } = useRouter();
+	return (
 		<>
 			<CompressibleMenu name={label}>
 				<div className={"mt-6 mb-32"}>

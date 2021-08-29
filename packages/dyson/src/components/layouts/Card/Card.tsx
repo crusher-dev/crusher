@@ -1,12 +1,12 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
-export const Card= ({css, children,...props})=>{
+export const Card = ({ css, children, ...props }) => {
 	return (
-		<div css={[card,css]} {...props}>
+		<div css={[card, css]} {...props}>
 			{children}
 		</div>
-	)
-}
+	);
+};
 const card = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;

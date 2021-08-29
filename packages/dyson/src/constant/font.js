@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 const FONTS = {
 	gilroy: ["Gilroy", "sans-serif"],
 	cera: ["Cera Pro", "sans-serif"],

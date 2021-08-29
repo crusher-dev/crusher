@@ -21,7 +21,7 @@ class TeamsController {
 
 	@Authorized()
 	@Get("/teams/users/")
-	async getUsersInTeam(@CurrentUser({required: true}) user) {
+	async getUsersInTeam(@CurrentUser({ required: true }) user) {
 		return (await this.teamsService.getUsersWithRolesInTeam(user.team_id)).map((userRecord) => {
 			return {
 				id: userRecord.id,

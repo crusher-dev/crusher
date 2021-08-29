@@ -27,7 +27,9 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 	const ref = useRef(null);
 	const { closeEditBox } = props;
 	const [stepName, setStepName] = useState(props.step.name);
-	const [stepTimeout, setStepTimeout] = useState(props.step && props.step.payload && typeof props.step.payload.timeout !== "undefined" ? props.step.payload.timeout.toString() : "15");
+	const [stepTimeout, setStepTimeout] = useState(
+		props.step && props.step.payload && typeof props.step.payload.timeout !== "undefined" ? props.step.payload.timeout.toString() : "15",
+	);
 
 	useEffect(() => {
 		document.body.addEventListener(
@@ -47,13 +49,15 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 
 	const isElementAction = props.step && ElementActionsInTestArr.includes(props.step.type);
 
-	const saveTest = useCallback((event) => {
-		const store = getStore();
-		store.dispatch(updateActionName(stepName, props.stepIndex));
-		if(isElementAction)
-			store.dispatch(updateActionTimeout(parseInt(stepTimeout), props.stepIndex));
-		closeEditBox();
-	}, [stepName, stepTimeout, isElementAction]);
+	const saveTest = useCallback(
+		(event) => {
+			const store = getStore();
+			store.dispatch(updateActionName(stepName, props.stepIndex));
+			if (isElementAction) store.dispatch(updateActionTimeout(parseInt(stepTimeout), props.stepIndex));
+			closeEditBox();
+		},
+		[stepName, stepTimeout, isElementAction],
+	);
 
 	const handleTimeoutChange = (event: ChangeEvent) => {
 		setStepTimeout((event.target as any).value);
@@ -84,26 +88,26 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 				</div>
 			</Conditional>
 			<Conditional If={isElementAction}>
-			<div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: 24 }}>
-				<label style={{ fontSize: 13 }}>Timeout (sec)</label>
-				<input
-					type="text"
-					pattern="[0-9]*"
-					style={{
-						marginLeft: "auto",
-						width: 82,
-						height: 27,
-						fontSize: 12,
-						padding: "7px 10px",
-						borderRadius: 4,
-						background: "rgba(196, 196, 196, 0.02)",
-						border: "1px solid rgba(196, 196, 196, 0.2)",
-						outline: "none",
-					}}
-					onChange={handleTimeoutChange}
-					defaultValue={stepTimeout}
-				></input>
-			</div>
+				<div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: 24 }}>
+					<label style={{ fontSize: 13 }}>Timeout (sec)</label>
+					<input
+						type="text"
+						pattern="[0-9]*"
+						style={{
+							marginLeft: "auto",
+							width: 82,
+							height: 27,
+							fontSize: 12,
+							padding: "7px 10px",
+							borderRadius: 4,
+							background: "rgba(196, 196, 196, 0.02)",
+							border: "1px solid rgba(196, 196, 196, 0.2)",
+							outline: "none",
+						}}
+						onChange={handleTimeoutChange}
+						defaultValue={stepTimeout}
+					></input>
+				</div>
 			</Conditional>
 			<div style={{ display: "flex", flexDirection: "row", marginTop: 2, justifyContent: "flex-end" }}>
 				<BlueButton
@@ -160,7 +164,8 @@ const Action = (props: iActionProps) => {
 			</div>
 			<div style={actionItemTextContainer}>
 				<div className="text-13" style={stepActionStyle}>
-					{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}{ action.payload && action.payload.timeout ? ` (${action.payload.timeout}s)` : ""}
+					{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}
+					{action.payload && action.payload.timeout ? ` (${action.payload.timeout}s)` : ""}
 				</div>
 				<div style={stepSelectorContainerStyle}>
 					<div className="text-12" style={stepSelectorStyle}>
@@ -229,7 +234,7 @@ const ActionStepList = () => {
 	};
 
 	const isCurrentElementAction = stepInfoBoxState.step && ElementActionsInTestArr.includes(stepInfoBoxState.step.type);
-	
+
 	return (
 		<div className="flex flex-col p-24" style={{ height: "45%", position: "relative" }}>
 			<Conditional If={stepInfoBoxState.enabled}>
@@ -262,8 +267,7 @@ const ActionStepList = () => {
 
 const actionEditInfoContainerStyle = (isScreenshotOn: boolean, isElementAction: boolean) => {
 	let offset = 0;
-	if(isElementAction)
-		offset+= 40;
+	if (isElementAction) offset += 40;
 
 	return {
 		position: POSITION.ABSOLUTE,

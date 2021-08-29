@@ -73,7 +73,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 			<div className="h-20 flex items-center ml-5 mr-2" id="top-bar">
 				<div className="h-10 w-full flex">
 					<div className="flex" style={{ width: "14%" }}>
-					<div style={refreshIconContainerStyle} onClick={resetApp} className={"browser_icon"}>
+						<div style={refreshIconContainerStyle} onClick={resetApp} className={"browser_icon"}>
 							<AppResetIcon width={14} height={14} disabled={false} />
 						</div>
 						<div style={goBackIconContainerStyle} className={"browser_icon"}>

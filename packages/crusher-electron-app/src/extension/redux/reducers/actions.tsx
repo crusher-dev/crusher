@@ -42,7 +42,7 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 						};
 					return savedAction;
 				}),
-			}
+			};
 		case UPDATE_LAST_RECORDED_ACTION: {
 			const newList = state.list;
 			newList[newList.length - 1] = action.payload.actionToBeReplacedWith;

@@ -39,14 +39,7 @@ const NavigateRefreshIcon = (props: NavigateIconProps) => {
 
 const AppResetIcon = (props: any) => {
 	return (
-		<svg
-			width={12}
-			height={12}
-			viewBox="0 0 12 12"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={12} height={12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M7.322 6.007l4.486-4.487A.653.653 0 0012 1.056a.651.651 0 00-.192-.464l-.393-.393a.65.65 0 00-.464-.192.65.65 0 00-.464.192L6 4.685 1.513.2A.65.65 0 001.05.007a.65.65 0 00-.464.192L.192.592a.657.657 0 000 .928l4.487 4.487-4.487 4.486a.652.652 0 00-.192.464c0 .176.068.34.192.464l.393.394a.65.65 0 00.464.191.65.65 0 00.464-.191L6 7.328l4.487 4.487a.651.651 0 00.464.191c.176 0 .34-.068.464-.191l.393-.393a.652.652 0 00.192-.465.652.652 0 00-.192-.464L7.322 6.007z"
 				fill="#fff"
@@ -344,5 +337,5 @@ export {
 	TimesIcon,
 	HelpIcon,
 	DeleteIcon,
-	AppResetIcon
+	AppResetIcon,
 };

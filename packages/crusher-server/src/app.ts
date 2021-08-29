@@ -23,7 +23,8 @@ import { BuildTestInstancesController } from "@modules/resources/builds/instance
 import { ReleaseController } from "@controllers/ReleaseController";
 import { ProjectsController } from "@modules/resources/projects/controller";
 import { TeamsController } from "@modules/resources/teams/controller";
-import { MonitoringController } from "@modules/resources/projects/monitoring/controller";
+import { ProjectMonitoringController } from "@modules/resources/projects/monitoring/controller";
+import { ProjectEnvironmentController } from "@modules/resources/projects/environments/controller";
 
 RedisManager.initialize();
 
@@ -69,7 +70,8 @@ const controllersArr: any = [
 	ProjectsController,
 	TeamsController,
 	BuildTestInstancesController,
-	MonitoringController,
+	ProjectMonitoringController,
+	ProjectEnvironmentController,
 ];
 
 // @TODO: Look into this

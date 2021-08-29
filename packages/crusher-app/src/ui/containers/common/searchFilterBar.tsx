@@ -159,7 +159,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 		</Conditional>
 	);
 	return (
-        <div {...props}>
+		<div {...props}>
 			<div className="flex flex-row items-center" css={filterBarStyle}>
 				<div className={"flex-1 mr-26"}>
 					<Input
@@ -199,7 +199,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 				</div>
 			</Conditional>
 		</div>
-    );
+	);
 }
 
 const closeHover = css`

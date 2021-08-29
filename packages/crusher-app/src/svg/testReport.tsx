@@ -108,7 +108,7 @@ export function ReviewRequiredSVG(props) {
 }
 
 export function RunningSVG(props) {
-    return (
+	return (
 		<svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" display="block" {...props}>
 			<circle cx={84} cy={50} r={10} fill="#d9d9d9">
 				<animate

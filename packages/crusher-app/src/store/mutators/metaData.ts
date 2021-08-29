@@ -2,7 +2,7 @@ import produce from "immer";
 import { atom } from "jotai";
 
 import { updateProjectAPI, updateTeamMetaAPI, updateUserMetaAPI } from "@constants/api";
-import { backendRequest } from "@utils/backendRequest";
+import { backendRequest } from "@utils/common/backendRequest";
 
 import { RequestMethod } from "../../types/RequestOptions";
 import { appStateAtom } from "../atoms/global/appState";
@@ -43,7 +43,10 @@ const updateTeamMeta = (meta: Record<string, any>) => {
 	});
 };
 
-export const updateOnboardingMutator = atom(null, (_get, _set, { type, key, value }: IUpdateUserOnboarding) => {
+/*
+	Add API filteration to not call API when key-value pair is same.
+ */
+export const updateMeta = atom(null, (_get, _set, { type, key, value }: IUpdateUserOnboarding) => {
 	const { selectedProjectId } = _get(appStateAtom);
 	const payload = { [String(key)]: value };
 	switch (type) {

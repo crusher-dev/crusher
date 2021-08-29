@@ -3,11 +3,11 @@ import identity from "lodash/identity";
 import pickBy from "lodash/pickBy";
 
 const filterObjectByKeys = (object: Record<string, any>, keys: string[]) => {
-    const baseObject: Record<string, any> = {};
-    for (const key of keys) {
+	const baseObject: Record<string, any> = {};
+	for (const key of keys) {
 		baseObject[key] = object[key];
 	}
-    return baseObject;
+	return baseObject;
 };
 
 const updateURL = (object: Record<string, any>) => {

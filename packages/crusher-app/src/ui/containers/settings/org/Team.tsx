@@ -9,13 +9,12 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import InviteMember from "@ui/containers/dashboard/InviteMember";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR from 'swr';
-import { backendRequest } from '@utils/backendRequest';
-import { resolvePathToBackendURI } from '@utils/url';
+import useSWR from "swr";
+import { resolvePathToBackendURI } from "@utils/common/url";
 
 export const TeamMembers = () => {
 	const [showModal, setShowModal] = useState(false);
-	const {data} = useSWR(resolvePathToBackendURI("/teams/users"))
+	const { data } = useSWR(resolvePathToBackendURI("/teams/users"));
 
 	return (
 		<SettingsLayout>
@@ -45,12 +44,14 @@ export const TeamMembers = () => {
 				</div>
 
 				<hr css={basicHR} />
-				{data && data.map(({name,role,email})=>(
+				{data?.map(({ name, role, email }) => (
 					<Card css={projectListCard}>
 						<div className={"flex justify-between items-start"}>
 							<div className={"text-14"}>
 								<div>{name}</div>
-								<div className={"text-12"}>{email} | {role}</div>
+								<div className={"text-12"}>
+									{email} | {role}
+								</div>
 							</div>
 							<Conditional showIf={false}>
 								<div className={"text-12"} id={"delete"}>
@@ -60,8 +61,6 @@ export const TeamMembers = () => {
 						</div>
 					</Card>
 				))}
-
-
 			</div>
 		</SettingsLayout>
 	);

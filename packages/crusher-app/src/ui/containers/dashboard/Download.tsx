@@ -27,7 +27,7 @@ export function DownloadButton(props) {
 					<Button
 						className={""}
 						css={css`
-							width: 182rem;
+							width: 164rem;
 						`}
 					>
 						<div className={"flex items-center justify-center"}>

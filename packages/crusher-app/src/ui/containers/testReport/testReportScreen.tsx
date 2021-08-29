@@ -237,7 +237,7 @@ function TestOverviewTab() {
 					</div>
 				</div> */}
 				<div>
-					<div className={"font-600 text-14 mb-16"}>Environment</div>
+					<div className={"font-600 text-14 mb-16"}>Environments</div>
 					<div css={tag} className={"text-13 px-18  py-7 mb-12"}>
 						Production
 					</div>

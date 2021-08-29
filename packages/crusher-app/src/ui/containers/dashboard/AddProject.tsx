@@ -35,7 +35,7 @@ export const AddProjectModal = ({ onClose }) => {
 	const addProjectCallback = useCallback(() => {
 		(async () => {
 			const { id, name, teamID } = await addProject(projectName);
-			const projectObject = { id, name, teamID };
+			const projectObject = { id, name, teamID, meta:{} };
 			setProjectsAtom([...projects, projectObject]);
 
 			setAppStateItem({ key: "selectedProjectId", value: id });

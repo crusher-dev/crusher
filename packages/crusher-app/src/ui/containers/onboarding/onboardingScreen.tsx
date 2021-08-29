@@ -9,7 +9,7 @@ import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { CenterLayout } from "dyson/src/components/layouts";
 
-import { TEAM_META_KEYS } from "@constants/USER";
+import { USER_META_KEYS } from "@constants/USER";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { ModuleCard } from "@ui/containers/onboarding/ModuleCard";
 import { getBoolean } from "@utils/common";
@@ -135,7 +135,7 @@ const GithubDiscordSection = () => {
 					onClick={() => {
 						updateOnboarding({
 							type: "user",
-							key: TEAM_META_KEYS.INITIAL_ONBOARDING,
+							key: USER_META_KEYS.INITIAL_ONBOARDING,
 							value: true,
 						});
 					}}

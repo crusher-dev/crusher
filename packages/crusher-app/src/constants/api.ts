@@ -25,3 +25,9 @@ export const changeTestInfoAPI = (testId: number) => resolvePathToBackendURI(`/t
 export const updateProjectAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/actions/update.meta`);
 export const updateUserMetaAPI = () => resolvePathToBackendURI(`/users/actions/update.meta`);
 export const updateTeamMetaAPI = () => resolvePathToBackendURI(`/teams/actions/update.meta`);
+
+
+export const getProjectEnvironments = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments`);
+export const getProjectMonitoring = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/monitorings`);
+export const createProjectMonitoring = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/monitorings/actions/create`);
+export const createProjectEnvironment = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments/actions/create`);

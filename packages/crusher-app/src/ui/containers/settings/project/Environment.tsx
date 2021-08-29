@@ -9,9 +9,27 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
+import useSWR from 'swr';
+import { useAtom } from 'jotai';
+import { currentProject } from '../../../../store/atoms/global/project';
+import { getProjectEnvironments } from '@constants/api';
+
+function EnvironmentCard({environmentData}) {
+	return <Card css={projectListCard}>
+		<div className={'flex justify-between items-center'}>
+			<div className={'text-15'}>fds</div>
+			<div className={'text-13'} id={'delete'}>
+				Delete
+			</div>
+		</div>
+	</Card>;
+}
 
 export const Environment = () => {
 	const [showModal, setShowModal] = useState(false);
+	const [project] = useAtom(currentProject);
+
+	const {data: environments} = useSWR(getProjectEnvironments(project.id))
 	return (
 		<SettingsLayout>
 			<Conditional showIf={showModal}>
@@ -21,7 +39,7 @@ export const Environment = () => {
 				<div className={"flex justify-between items-start mt-16"}>
 					<div>
 						<Heading type={2} fontSize={16} className={"mb-12"}>
-							Environment
+							Environments
 						</Heading>
 						<TextBlock fontSize={13} className={"mb-24"}>
 							Make sure you have selected all the configuration you want
@@ -31,24 +49,26 @@ export const Environment = () => {
 						<Button
 							onClick={setShowModal.bind(this, true)}
 							css={css`
-								width: 164rem;
+                width: 164rem;
 							`}
 						>
-							Add a project
+							Add a environment
 						</Button>
 					</div>
 				</div>
 
 				<hr css={basicHR} />
 
-				<Card css={projectListCard}>
-					<div className={"flex justify-between items-center"}>
-						<div className={"text-15"}>fds</div>
-						<div className={"text-13"} id={"delete"}>
-							Delete
+				<Conditional showIf={environments.length > 0}>
+					{environments.map((environmentData)=>{
+						<EnvironmentCard environmentData={environmentData}/>
+					})}
+				</Conditional>
+				<Conditional showIf={environments.length<1}>
+						<div className={"text-13 mt-40"}>
+							You don't have any environments yet in your project.
 						</div>
-					</div>
-				</Card>
+				</Conditional>
 			</div>
 		</SettingsLayout>
 	);

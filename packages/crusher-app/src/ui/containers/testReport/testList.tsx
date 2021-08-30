@@ -412,7 +412,7 @@ function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceDa
 
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
-	const [expand, setExpand] = useState(testData.status !== "PASSED" || false);
+	const [expand, setExpand] = useState(false);
 	const [sticky, setSticky] = useState(false);
 	const [showLoading, setLoading] = useState(false);
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
@@ -450,10 +450,14 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
 
 	const failedTestsConfiguration = getFailedConfigurationForTest(testData);
-
-
 	const testInstanceData = testInstances[testIndexByFilteration];
 	const steps = getStepsFromInstanceData(testInstanceData);
+
+	useEffect(()=>{
+		if(failedTestsConfiguration.length>=1){
+			setExpand(true)
+		}
+	},[])
 
 	useEffect(() => {
 		setLoading(true);

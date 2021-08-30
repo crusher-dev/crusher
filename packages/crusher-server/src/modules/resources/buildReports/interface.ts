@@ -26,7 +26,6 @@ export enum TestInstanceResultSetStatus {
 	TIMEOUT = "TIMEOUT",
 }
 
-
 export enum TestInstanceResultSetConclusion {
 	PASSED = "PASSED",
 	FAILED = "FAILED",

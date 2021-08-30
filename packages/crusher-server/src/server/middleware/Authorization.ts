@@ -1,6 +1,6 @@
 import { Action } from "routing-controllers";
-import { clearAuthCookies, decodeToken } from "@core/utils/auth";
-const cookie = require("cookie");
+import { clearAuthCookies, decodeToken } from "@utils/auth";
+import * as cookie from "cookie";
 
 export function authorization() {
 	return async (action: Action) => {

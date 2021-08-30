@@ -1,26 +1,27 @@
-import { css } from '@emotion/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import { css } from "@emotion/react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { Card } from '../../../../../../dyson/src/components/layouts/Card/Card';
-import { Button } from 'dyson/src/components/atoms';
-import { Heading } from 'dyson/src/components/atoms/heading/Heading';
-import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
-import { Conditional } from 'dyson/src/components/layouts';
+import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
+import { Button } from "dyson/src/components/atoms";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { Conditional } from "dyson/src/components/layouts";
 
-import { SettingsLayout } from '@ui/layout/SettingsBase';
-import useSWR from 'swr';
-import { useAtom } from 'jotai';
-import { currentProject } from '../../../../store/atoms/global/project';
-import { createProjectEnvironment, getProjectEnvironments } from '@constants/api';
-import { ChevronRight } from '@svg/settings';
-import { atomWithImmer } from 'jotai/immer';
-import { ChevronDown } from '@svg/testReport';
-import { Input } from 'dyson/src/components/atoms/input/Input';
-import { AddSVG, LoadingSVG } from '@svg/dashboard';
-import { CloseSVG } from 'dyson/src/components/icons/CloseSVG';
-import { backendRequest } from '@utils/common/backendRequest';
-import { RequestMethod } from '../../../../types/RequestOptions';
-import { convertEnvToServerSide } from '@utils/core/settings/environmentSettingUtils';
+import { SettingsLayout } from "@ui/layout/SettingsBase";
+import useSWR from "swr";
+import { useAtom } from "jotai";
+import { currentProject } from "../../../../store/atoms/global/project";
+import { createProjectEnvironment, getProjectEnvironments } from "@constants/api";
+import { ChevronRight } from "@svg/settings";
+import { atomWithImmer } from "jotai/immer";
+import { ChevronDown } from "@svg/testReport";
+import { Input } from "dyson/src/components/atoms/input/Input";
+import { AddSVG, LoadingSVG } from "@svg/dashboard";
+import { CloseSVG } from "dyson/src/components/icons/CloseSVG";
+import { backendRequest } from "@utils/common/backendRequest";
+import { RequestMethod } from "../../../../types/RequestOptions";
+import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
+import { sendSnackBarEvent } from "@utils/common/notify";
 
 function VarirableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
@@ -52,7 +53,6 @@ function VarirableSection({ envId }) {
 		});
 	};
 
-
 	return (
 		<React.Fragment>
 			<div className={"text-13 mt-32 mb-28 font-600"}>Variables</div>
@@ -71,6 +71,7 @@ function VarirableSection({ envId }) {
 									className={"ml-20"}
 									placeholder={"Enter some name"}
 									onBlur={changeVarValue.bind(this, i, "variableName")}
+									initialValue={_var.variableName.value}
 								/>
 							</div>
 							<div className={"flex items-center ml-80"}>
@@ -83,6 +84,7 @@ function VarirableSection({ envId }) {
 									className={"ml-20"}
 									placeholder={"Enter some name"}
 									onBlur={changeVarValue.bind(this, i, "variableValue")}
+									initialValue={_var.variableValue.value}
 								/>
 							</div>
 						</div>
@@ -101,32 +103,37 @@ function VarirableSection({ envId }) {
 }
 
 function EnvironmentForm({ id }) {
-	const [project]= useAtom(currentProject)
+	const [project] = useAtom(currentProject);
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
+	const { notSavedInDb, host, name } = environmentsInStore[id];
+
 	const changeName = (e) => {
 		setEnvironment((environemnt) => {
 			environemnt[id].name = e.target.value;
 		});
 	};
 
+	const setHost = (e) => {
+		setEnvironment((environemnt) => {
+			environemnt[id].host = e.target.value;
+		});
+	};
 
-	const {notSavedInDb} = environmentsInStore[id]
-
-	const saveInServer = async ()=>{
-		setSavingEnv(true)
-		const currentEnvData = 	environmentsInStore[id];
-		const payload = convertEnvToServerSide(currentEnvData)
-		await backendRequest(createProjectEnvironment(project.id),{
+	const saveInServer = async () => {
+		setSavingEnv(true);
+		const currentEnvData = environmentsInStore[id];
+		const payload = convertEnvToServerSide(currentEnvData);
+		await backendRequest(createProjectEnvironment(project.id), {
 			method: RequestMethod.POST,
-			payload
-		})
+			payload,
+		});
 
-		setSavingEnv(false)
-	}
+		setSavingEnv(false);
+	};
 
 	return (
-		<div>
+		<div className={"px-24"}>
 			<div className={"mt-30 flex justify-between text-13 items-center"}>
 				<div>Name of the env</div>
 				<div>
@@ -136,6 +143,21 @@ function EnvironmentForm({ id }) {
 						`}
 						placeholder={"Enter some name"}
 						onBlur={changeName}
+						initialValue={name}
+					/>
+				</div>
+			</div>
+
+			<div className={"mt-12 flex justify-between text-13 items-center"}>
+				<div>Host</div>
+				<div>
+					<Input
+						css={css`
+							height: 36rem;
+						`}
+						placeholder={"https://google.com"}
+						onBlur={setHost}
+						initialValue={host}
 					/>
 				</div>
 			</div>
@@ -152,7 +174,7 @@ function EnvironmentForm({ id }) {
 						}
 					`}
 				>
-					{notSavedInDb? "Delete" : ""}
+					{!notSavedInDb ? "Delete" : ""}
 				</TextBlock>
 				<Button
 					bgColor={"tertiary-dark"}
@@ -163,7 +185,7 @@ function EnvironmentForm({ id }) {
 					className={"flex items-center justify-center"}
 				>
 					<Conditional showIf={savingEnv}>
-						<LoadingSVG height={12} className={"mr-8"}/>
+						<LoadingSVG height={12} width={12} className={"mr-8"} />
 					</Conditional>
 					Save
 				</Button>
@@ -173,28 +195,33 @@ function EnvironmentForm({ id }) {
 }
 
 function EnvironmentCard({ environmentData, id }) {
-	const { name, isOpen } = environmentData;
+	const { name, isOpen, id: envId } = environmentData;
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
-	const {notSavedInDB} = environmentsInStore[id]
+	const { notSavedInDB } = environmentsInStore[id];
 
-	const onClick = ()=>{
+	const onClick = () => {
 		setEnvironment((environemnt) => {
-			if(notSavedInDB) return
+			if (notSavedInDB) {
+				sendSnackBarEvent({ type: "normal", message: "Please save new env before closing" });
+				return;
+			}
+
+			for (const env of environemnt) {
+				env.isOpen = false;
+			}
 			environemnt[id].isOpen = !isOpen;
 		});
 	};
 
-
-
-
 	return (
 		<Card css={projectListCard}>
-			<div className={"flex justify-between items-center"} onClick={onClick}>
-				<div className={"text-15"}>
-					{name} {isOpen}
-				</div>
-				<div className={"text-13"} id={"delete"}>
+			<div className={"flex justify-between items-center"} onClick={onClick} id={"top-section"}>
+				<div className={"text-14"}>{name}</div>
+				<div className={"flex text-12 items-center"} id={"delete"}>
+					<Conditional showIf={!!envId}>
+						<span className={"mr-10 mt-2"}>Env id- {envId}</span>
+					</Conditional>
 					{isOpen ? <ChevronDown /> : <ChevronRight />}
 				</div>
 			</div>
@@ -209,9 +236,10 @@ function EnvironmentCard({ environmentData, id }) {
 type TEnvironment = {
 	id?: number;
 	name?: string;
-	browserType: "CHROME" | "FIREFOX" | "SAFARI" | "ALL";
-	vars: Record<string, any>;
-	isOpen: false;
+	host: string;
+	browser: "CHROME" | "FIREFOX" | "SAFARI" | "ALL";
+	vars: Record<string, any>[];
+	isOpen: boolean;
 	notSavedInDB?: boolean;
 };
 
@@ -227,7 +255,8 @@ export const Environment = () => {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
 	useEffect(() => {
-		setEnvironment(environments);
+		if (environments === undefined) return;
+		setEnvironment(converServerToClientSideState(environments));
 	}, [environments]);
 
 	const addEmptyEnvToStore = useCallback(() => {
@@ -235,13 +264,14 @@ export const Environment = () => {
 			...environmentsInStore,
 			{
 				name: "New env",
-				browserType: "ALL",
+				browser: "ALL",
+				host: "",
 				vars: [],
 				isOpen: true,
 				notSavedInDB: true,
 			},
 		]);
-	}, []);
+	}, [environmentsInStore]);
 
 	if (!environmentsInStore) return null;
 	return (
@@ -284,7 +314,10 @@ export const Environment = () => {
 };
 
 const projectListCard = css`
-	padding: 12rem 24rem;
+	padding: 0;
+	#top-section {
+		padding: 12rem 24rem;
+	}
 	#delete {
 		:hover {
 			text-decoration: underline;

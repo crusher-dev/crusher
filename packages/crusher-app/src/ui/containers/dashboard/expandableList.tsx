@@ -4,7 +4,6 @@ import React from "react";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { CompleteStatusIconSVG } from "@svg/dashboard";
-import HighlightPing from "@svg/common/HighlightPing";
 import dynamic from "next/dynamic";
 
 interface IExpandableListItemProps {

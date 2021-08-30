@@ -45,7 +45,7 @@ export const TeamMembers = () => {
 
 				<hr css={basicHR} />
 				{data?.map(({ name, role, email }) => (
-					<Card css={projectListCard}>
+					<Card css={teamMemberListCard}>
 						<div className={"flex justify-between items-start"}>
 							<div className={"text-14"}>
 								<div>{name}</div>
@@ -66,7 +66,7 @@ export const TeamMembers = () => {
 	);
 };
 
-const projectListCard = css`
+const teamMemberListCard = css`
 	padding: 14rem 20rem;
 	#delete {
 		:hover {

@@ -50,6 +50,11 @@ function MonitoringForm({ id }) {
 		});
 
 		setSavingEnv(false);
+
+		sendSnackBarEvent({
+			type: "normal",
+			message: "Monitoring saved"
+		})
 	};
 
 	return (

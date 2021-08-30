@@ -115,7 +115,7 @@ function NameNStatusSection() {
 const section = [
 	{
 		name: "Overview",
-		icon: <LayoutSVG />,
+		icon: <LayoutSVG height={10} width={10}/>,
 		key: "overview",
 	},
 	{
@@ -144,8 +144,8 @@ function TabBar() {
 	return (
 		<div css={Tab} className={"flex mt-48 "}>
 			{section.map(({ name, icon, key }, i) => (
-				<div className={""} onClick={setSelectedTabIndex.bind(this, i)} key={key}>
-					<div css={[TabItem, selectedTabIndex === i && selected]} className={"flex items-center justify-center text-15"}>
+				<div onClick={setSelectedTabIndex.bind(this, i)} key={key}>
+					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-15`}>
 						<Conditional showIf={icon}>
 							<span className={"mr-8"}>{icon}</span>
 						</Conditional>
@@ -299,7 +299,7 @@ export const TestReportScreen = () => {
 				Ran {timeSince(new Date(data.startedAt))}
 			</div>
 			<Conditional showIf={selectedTabIndex !== 1}>
-				<div className={"flex items-center leading-none mt-60 text-13"}>
+				<div className={"flex items-center leading-none mt-65 text-13"}>
 					<ThunderSVG className={"mr-16"} />
 					Wohoo! You saved 20 hours of testing
 				</div>
@@ -401,6 +401,7 @@ const TabItem = css`
 	height: 37px;
 	min-width: 136px;
 	padding: 0 24px;
+	padding-top: 1rem !important;
 
 	:hover {
 		color: #fff;
@@ -420,5 +421,5 @@ const selected = css`
 	min-width: 136px;
 	font-weight: 600;
 
-	padding-top: 2px;
+	padding-top: 1px;
 `;

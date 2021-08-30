@@ -113,5 +113,7 @@ export function validURL(str) {
 			"(\\#[-a-z\\d_]*)?$",
 		"i",
 	); // fragment locator
-	return !!pattern.test(str);
+
+	const localHostRegex = new RegExp("(localhost|127.0.0.1)(:\\d*)?");
+	return !!pattern.test(str) || !!localHostRegex.test(str);
 }

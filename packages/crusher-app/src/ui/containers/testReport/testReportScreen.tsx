@@ -9,7 +9,7 @@ import { Button } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { BackSVG } from "@svg/builds";
-import { LayoutSVG } from "@svg/dashboard";
+import { LayoutSVG, ReportSVG } from '@svg/dashboard';
 import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThunderSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { timeSince } from "@utils/common/dateTimeUtils";
@@ -120,7 +120,7 @@ const section = [
 	},
 	{
 		name: "Test report",
-		icon: null,
+		icon: <ReportSVG height={12} width={12} css={css`margin-right: -2rem;`}/>,
 		key: "reports",
 	},
 	// {
@@ -399,7 +399,7 @@ const TabItem = css`
 	top: 1px;
 	position: relative;
 	height: 37px;
-	min-width: 136px;
+	min-width: 144px;
 	padding: 0 24px;
 	padding-top: 1rem !important;
 

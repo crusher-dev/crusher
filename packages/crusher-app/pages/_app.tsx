@@ -26,8 +26,9 @@ function App({ Component, pageProps }: AppProps<any>) {
 	useBasicSEO({ favicon: "/assets/img/favicon.png" });
 	useSaveTemp();
 	useEffect(() => {
-		loadUserLeap();
+
 		setTimeout(() => {
+			loadUserLeap();
 			loadCrisp();
 		}, 6000);
 	}, []);

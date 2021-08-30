@@ -6,6 +6,7 @@ const ejs = require("ejs");
 require("dotenv").config();
 
 const CRUSHER_MODE = process.env.CRUSHER_MODE ? process.env.CRUSHER_MODE : "open-source";
+const NEXT_PUBLIC_INTERNAL_BACKEND_URL = process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL ? process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL : "/server";
 
 function copyTemplate(templateFilePath, destinationPath, params) {
 	return new Promise((resolve, reject) => {
@@ -24,7 +25,9 @@ async function setup() {
 	await copyTemplate(path.resolve(__dirname, ".tsconfig.json.ejs"), path.resolve(__dirname, "../tsconfig.json"), {
 		isEnterprise: CRUSHER_MODE === "enterprise",
 	});
-	await copyTemplate(path.resolve(__dirname, ".env.ejs"), path.resolve(__dirname, "../.env"), { mode: CRUSHER_MODE });
+	await copyTemplate(path.resolve(__dirname, ".env.ejs"), path.resolve(__dirname, "../.env"), { mode: CRUSHER_MODE,
+		NEXT_PUBLIC_INTERNAL_BACKEND_URL
+	});
 }
 
 setup();

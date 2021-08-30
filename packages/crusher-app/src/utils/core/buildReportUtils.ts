@@ -4,6 +4,7 @@ import union from "lodash/union";
 import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
 import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 
+
 export const getStatusString = (type) => {
 	switch (type) {
 		case "PASSED":
@@ -108,7 +109,7 @@ export const getBaseConfig = (allConfiguration) => {
 	return baseConfigForTest;
 };
 
-const removeAllFailedTest = (testInstanceData: Instance) => {
+const removeAllFailedStep = (testInstanceData: Instance) => {
 	const { steps } = testInstanceData;
 	let i = 0;
 
@@ -123,5 +124,21 @@ const removeAllFailedTest = (testInstanceData: Instance) => {
 };
 
 export const getStepsFromInstanceData = (testInstanceData) => {
-	return removeAllFailedTest(testInstanceData);
+	return removeAllFailedStep(testInstanceData);
 };
+
+export const getFailedConfigurationForTest= (test: Test)=>{
+	const { testInstances } = test;
+
+	return testInstances.filter(({status})=> status === "MANUAL_REVIEW_REQUIRED" || status === "FAILED").map(({config})=>config)
+}
+
+export const getFailedNotifyFromConfig = (failedTestsConfiguration)=>{
+
+	return  failedTestsConfiguration.map((config)=>{
+		return Object.entries(config).map(config => {
+			return config.join(" - ")
+		})
+	}).join(", ")
+
+}

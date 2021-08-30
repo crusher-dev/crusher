@@ -1,7 +1,6 @@
 import { UsersService } from "@modules/resources/users/service";
 import { JsonController, Get, Param, QueryParams, Post, Authorized, CurrentUser } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import CommentsServiceV2 from "@core/services/CommentsService";
 import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { BuildTriggerEnum } from "./interface";
@@ -18,8 +17,6 @@ export class BuildsController {
 	private userService: UsersService;
 	@Inject()
 	private buildsService: BuildsService;
-	@Inject()
-	private commentsService: CommentsServiceV2;
 	@Inject()
 	private buildsActionService: BuildsActionService;
 

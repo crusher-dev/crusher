@@ -18,3 +18,18 @@ export interface IBuildReportTable extends BaseRowInterface {
 	project_id: number;
 	status: BuildReportStatusEnum;
 }
+
+export enum TestInstanceResultSetStatus {
+	RUNNING_CHECKS = "RUNNING_CHECKS",
+	FINISHED_RUNNING_CHECKS = "FINISHED_RUNNING_CHECKS",
+	ERROR_RUNNING_CHECKS = "ERROR_RUNNING_CHECKS",
+	TIMEOUT = "TIMEOUT",
+}
+
+
+export enum TestInstanceResultSetConclusion {
+	PASSED = "PASSED",
+	FAILED = "FAILED",
+	MANUAL_REVIEW_REQUIRED = "MANUAL_REVIEW_REQUIRED",
+	RUNNING_NOW = "RUNNING",
+}

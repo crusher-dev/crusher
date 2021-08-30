@@ -299,7 +299,7 @@ export const TestReportScreen = () => {
 				Ran {timeSince(new Date(data.startedAt))}
 			</div>
 			<Conditional showIf={selectedTabIndex !== 1}>
-				<div className={"flex items-center leading-none mt-65 text-13"}>
+				<div className={"flex items-center leading-none mt-56 mb-57 text-13"}>
 					<ThunderSVG className={"mr-16"} />
 					Wohoo! You saved 20 hours of testing
 				</div>
@@ -399,7 +399,7 @@ const TabItem = css`
 	top: 1px;
 	position: relative;
 	height: 37px;
-	min-width: 144px;
+  min-width: 143px;
 	padding: 0 24px;
 	padding-top: 1rem !important;
 
@@ -407,8 +407,7 @@ const TabItem = css`
 		color: #fff;
 		font-weight: 600;
 	}
-
-	min-width: 136px;
+	
 `;
 
 const selected = css`
@@ -418,7 +417,6 @@ const selected = css`
 	border-radius: 6px 6px 0 0;
 	border-bottom: 1px solid #0a0b0e;
 	color: #fff;
-	min-width: 136px;
 	font-weight: 600;
 
 	padding-top: 1px;

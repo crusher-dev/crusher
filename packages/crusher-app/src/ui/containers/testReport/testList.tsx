@@ -18,13 +18,15 @@ import { ChevronDown, TestStatusSVG } from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
-	getBaseConfig,
+	getBaseConfig, getFailedConfigurationForTest, getFailedNotifyFromConfig,
 	getScreenShotsAndChecks,
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
-} from "@utils/core/buildReportUtils";
+} from '@utils/core/buildReportUtils';
 
 import { useBuildReport } from "../../../store/serverState/buildReports";
+
+import { sentenceCase } from "@utils/common/textUtils"
 
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 
@@ -447,6 +449,9 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 	const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
 
+	const failedTestsConfiguration = getFailedConfigurationForTest(testData);
+
+
 	const testInstanceData = testInstances[testIndexByFilteration];
 	const steps = getStepsFromInstanceData(testInstanceData);
 
@@ -466,6 +471,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 							<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 						</div>
 
+
 						<div className={"mt-12 mb-16"}>
 							<TestConfigSection expand={expand} allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestCardConfig={setTestCardConfig} />
 						</div>
@@ -479,6 +485,11 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
+					<Conditional showIf={failedTestsConfiguration.length>1}>
+							<div css={css`font-size: 12.8rem; color: #DA5FD5;`}>
+								{sentenceCase(`Test failed for ${getFailedNotifyFromConfig(failedTestsConfiguration)}.`)}
+							</div>
+					</Conditional>
 					<TestConfigSection expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
 				</div>
 			</div>

@@ -12,17 +12,14 @@ import {
 	TestInstanceStatusEnum,
 } from "./interface";
 import { IActionResultItemWithIndex, ISavedActionResultItemWithIndex } from "@crusher-shared/types/common/general";
-import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { VisualDiffService } from "@modules/visualDiff";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { BuildTestInstanceScreenshotService } from "./screenshots.service";
 import * as path from "path";
 import { IVisualDiffResult } from "@modules/visualDiff/interface";
-import { TestInstanceResultSetConclusion } from "@core/interfaces/TestInstanceResultSetConclusion";
 import { BrowserEnum } from "@modules/runner/interface";
 import { BuildInstanceResults } from "./mongo/buildInstanceResults";
-import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
 const DIFF_DELTA_PASS_THRESHOLD = 0.05;

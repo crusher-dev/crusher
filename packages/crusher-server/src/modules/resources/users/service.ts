@@ -1,5 +1,5 @@
 import { TeamsService } from "@modules/resources/teams/service";
-import { encryptPassword } from "@core/utils/auth";
+import { encryptPassword } from "@utils/auth";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";

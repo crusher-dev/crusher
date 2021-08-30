@@ -12,29 +12,20 @@ import { Container } from "typedi";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
-import { EmailManager } from "@manager/EmailManager";
 import { MongoManager } from "@modules/db/mongo";
-import { RedisManager } from "@manager/redis";
+import { RedisManager } from "@modules/redis";
 import { UserController } from "@modules/resources/users/controller";
 import { TestController } from "@modules/resources/tests/controller";
 import { BuildReportController } from "@modules/resources/buildReports/controller";
 import { BuildsController } from "@modules/resources/builds/controller";
 import { BuildTestInstancesController } from "@modules/resources/builds/instances/controller";
-import { ReleaseController } from "@controllers/ReleaseController";
+import { ReleaseController } from "./server/controllers/releaseController";
 import { ProjectsController } from "@modules/resources/projects/controller";
 import { TeamsController } from "@modules/resources/teams/controller";
 import { ProjectMonitoringController } from "@modules/resources/projects/monitoring/controller";
 import { ProjectEnvironmentController } from "@modules/resources/projects/environments/controller";
 
-RedisManager.initialize();
-
-// For bundling one standalone server instead of seperate
-// cron, queue and backend servers. (Used in OSS)
-if (process.env.RUN_ALL_TOGETHER) {
-	require("./cron");
-}
-
-require("./queue.new.ts");
+Container.set(RedisManager, new RedisManager());
 
 const chalk = require("chalk");
 Container.get(MongoManager);
@@ -44,8 +35,6 @@ const expressApp = express();
 expressApp.use(ReqLogger);
 expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
-
-EmailManager.sendVerificationMail("test@gmail.com", "");
 
 if (process.env.STORAGE_MODE === "local") {
 	const serveStatic = require("serve-static");

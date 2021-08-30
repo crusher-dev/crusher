@@ -1,79 +1,26 @@
-import "reflect-metadata";
-import { resolveWorkerPath } from "@utils/env";
-
 require("dotenv").config();
 
-import { Queue, QueueScheduler, Worker } from "bullmq";
-import { isOpenSourceEdition } from "@utils/helper";
-import { RedisManager } from "@manager/redis";
+import "reflect-metadata";
+import { QueueManager } from "@modules/queue";
+import Container from "typedi";
+import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@crusher-shared/constants/queues";
+import * as testCompleteWorker from "@modules/runner/workers/testCompleteWorker";
+import { MongoManager } from "@modules/db/mongo";
 
-RedisManager.initialize();
-const redisClient: any = RedisManager.get();
-let testCompletedWorker, checkResultWorker, videoProcessedQueueWorker;
+const queueManager = Container.get(QueueManager);
+const mongoManager = Container.get(MongoManager);
 
-if (process.env.NODE_ENV === "development" || isOpenSourceEdition()) {
-	// For ts-node
-	testCompletedWorker = require("./core/workers/testCompletedWorker.ts");
-	checkResultWorker = require("./core/workers/checkResult.ts");
-	videoProcessedQueueWorker = require("./core/workers/videoProcessedQueue.ts");
-}
+async function boot() {
+	await mongoManager.waitUntilAlive();
 
-function initializeQueues() {
-	console.debug("Initializing queues");
+	await queueManager.setupQueue(TEST_EXECUTION_QUEUE);
+	await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
+	await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 
-	new Queue("test-completed-queue", {
-		connection: redisClient,
-	});
-	new Queue("check-result-queue", {
-		connection: redisClient,
-	});
-
-	new Queue("video-processing-complete-queue", {
-		connection: redisClient,
+	await queueManager.addWorkerForQueue(TEST_COMPLETE_QUEUE, testCompleteWorker.default as any, {
+		concurrency: 3,
+		lockDuration: 120000,
 	});
 }
 
-/*
-	@Returns:
-		worker as function import for open source edition,
-		worker as absolute path for ee edition
-*/
-function getWorkerForCurrentEdition(workerPath: string) {
-	return isOpenSourceEdition() ? require(workerPath) : resolveWorkerPath(workerPath);
-}
-
-function initializeWorkers() {
-	console.debug("Initializing queue workers");
-
-	new Worker("test-progress-queue", testProgressWorker ? testProgressWorker : getWorkerForCurrentEdition("src/core/workers/testProgressWorker.ts"), {
-		connection: redisClient,
-		concurrency: 1,
-	});
-	new Worker("test-completed-queue", testCompletedWorker ? testCompletedWorker : getWorkerForCurrentEdition("src/core/workers/testCompletedWorker.ts"), {
-		connection: redisClient,
-		concurrency: 1,
-	});
-	new Worker("check-result-queue", checkResultWorker ? checkResultWorker : getWorkerForCurrentEdition("src/core/workers/checkResult.ts"), {
-		connection: redisClient,
-		concurrency: 1,
-	});
-
-	new Worker(
-		"video-processing-complete-queue",
-		videoProcessedQueueWorker ? videoProcessedQueueWorker : getWorkerForCurrentEdition("src/core/workers/videoProcessedQueue.ts"),
-		{
-			connection: redisClient,
-		},
-	);
-}
-
-(async () => {
-	const queueScheduler = new QueueScheduler("check-result-queue", {
-		stalledInterval: 120000,
-		maxStalledCount: 1,
-		connection: redisClient,
-	});
-	await queueScheduler.waitUntilReady();
-	initializeQueues();
-	initializeWorkers();
-})();
+boot();

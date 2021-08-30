@@ -31,6 +31,7 @@ class MongoManager {
 	}
 
 	private async init() {
+		console.log(getConnectionString());
 		this.mongoClient = await mongoose.connect(getConnectionString());
 
 		this.mongoClient.connection.on("connected", this.onConnected.bind(this));
@@ -57,7 +58,7 @@ class MongoManager {
 	}
 
 	isAlive(): boolean {
-		return this.status === IMongoStatus.CONNECTED;
+		return this.mongoClient.connection.readyState === 1;
 	}
 
 	waitUntilAlive(): Promise<boolean> {

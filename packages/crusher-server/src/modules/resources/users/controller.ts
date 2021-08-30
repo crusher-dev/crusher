@@ -2,7 +2,7 @@ import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Po
 import { Inject, Service } from "typedi";
 import { UsersService } from "@modules/resources/users/service";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
-import GoogleAPIService from "@core/services/GoogleAPIService";
+import { GoogleAPIService } from "@modules/thirdParty/google/service";
 import { clearUserAuthorizationCookies } from "@utils/cookies";
 import { google } from "googleapis";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";

@@ -1,4 +1,4 @@
-import { encryptPassword, generateToken } from "@core/utils/auth";
+import { encryptPassword, generateToken } from "@utils/auth";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";

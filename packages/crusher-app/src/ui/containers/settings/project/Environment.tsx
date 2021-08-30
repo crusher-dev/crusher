@@ -130,6 +130,11 @@ function EnvironmentForm({ id }) {
 		});
 
 		setSavingEnv(false);
+
+		sendSnackBarEvent({
+			type: "normal",
+			message: "Environment has been saved"
+		})
 	};
 
 	return (

@@ -485,8 +485,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
-					<Conditional showIf={failedTestsConfiguration.length>1}>
-							<div css={css`font-size: 12.8rem; color: #DA5FD5;`}>
+					<Conditional showIf={failedTestsConfiguration.length>=1}>
+							<div css={css`font-size: 12.8rem; color: #ff50c5;`}>
 								{sentenceCase(`Test failed for ${getFailedNotifyFromConfig(failedTestsConfiguration)}.`)}
 							</div>
 					</Conditional>

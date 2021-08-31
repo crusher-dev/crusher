@@ -1,70 +1,69 @@
+
 ![enter image description here](https://i.imgur.com/rCZuyav.png)
 
-<p align="center">
-    <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/badge/license-MIT-%23373737?style=flat-square&color=ff3db6" /></a>
-    <a href="#backers" alt="Backers on Open Collective">
-        <img src="https://img.shields.io/badge/node-%3E=%2014.0.0-brightgreen?style=flat-square" /></a>
-            <a href="#backers" alt="Backers on Open Collective">
-        <img src="https://img.shields.io/github/last-commit/crusherdev/crusher?color=8e3dff&style=flat-square" /></a>
-                    <a href="#backers" alt="Backers on Open Collective">
-                <img src="https://img.shields.io/docker/image-size/7296823551/test?style=flat-square" /></a>
-                                    <a href="#backers" alt="Backers on Open Collective">
-                                <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>
-</p>
+<p align="center">  
+    <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">  
+        <img src="https://img.shields.io/badge/license-MIT-%23373737?style=flat-square&color=ff3db6" /></a>  
+    <a href="#backers" alt="Backers on Open Collective">  
+        <img src="https://img.shields.io/badge/node-%3E=%2014.0.0-brightgreen?style=flat-square" /></a>  
+            <a href="#backers" alt="Backers on Open Collective">  
+        <img src="https://img.shields.io/github/last-commit/crusherdev/crusher?color=8e3dff&style=flat-square" /></a>  
+                    <a href="#backers" alt="Backers on Open Collective">  
+                <img src="https://img.shields.io/docker/image-size/7296823551/test?style=flat-square" /></a>  
+                                    <a href="#backers" alt="Backers on Open Collective">  
+                                <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>  
+</p>  
 
-Crusher is open source **no-code e2e web testing/monitoring**. E2E testing is super hard and frustrating, we try to make it easy thru low-code approach.
 
-You Integrate **user flow and visual regression** without managing infra, creating a framework or managing breaking selectors.
+Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple.
 
-Software development has evolved a lot in last decade, testing is still the same. Devs should be able to ship better software faster.
-We started this because we were genuinely frustrated from testing worflows.
+You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
 
-## 🚀 Start using Crusher
 
-**Start with crusher cloud for free**
-Fastest and most powerful way to try Crusher. Click to get started.
+Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.
 
-<img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>
+## 🚀 Test your website using Crusher
 
-**Deploy it on your own infra (self-host)**
+**Start with crusher cloud for free**  
+Fastest and most powerful way to try Crusher.
 
-<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>
+<img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>  
+
+**Deploy it on your infra (self-host)**
+
+<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>  
 
 ## 🔮 Features
 
-
-- Create **test without nocode/low code**. We track basic action by creating a fork of chromium.
-- **Test UI** and compare pixel perfect with last version
-- Replay user flows within test.
-- All major browsers supported (EE). 
-- Primary user action detection.
-- Scheduled monitoring (EE feature)
-- Github integration and Alerting (EE feature)
-- All browser + different browser version(EE feature).
-- One click deploy using Docker or Heroku.
+-   Create **test without no code/low code**.
+-   **Test UI** and compare **pixel perfect** change with the last build.
+-   Replay tests recording to debug faster.
+-   **Run test on chromium** (Open source) and **all browsers** supported (EE).
+-   Primitive user actions detection.
+-   Production monitoring (EE feature)
+-   **Integrate with Github**/Other services as Build check (EE feature)
+-   **Get alerts when build fails.**
+-  Report accessible by everyone in the team.
+-   Host in your own secure private network.
 
 We're still early. If you face bug/feature request, please file a new issue :D.
 
 ## 💡 Philosophy
 
-Software dev is getting more complex, we have tons of APIs. Things break due to various reason and it's going to increase in future.
 
-Knowing when/where things break is very critical. Hence good worflows are needed to make it simple to deliver HQ software.
+Software dev is getting more complex, with tons of APIs. Things break due to various reasons & it's going to increase in the future.
+Knowing when/where things break is very critical. Hence good workflows are needed to make it simple to deliver HQ software.
 
 ## 😎 What's so cool about this
 
-Testing is not new. There are tons of solution out there. It's like battery, wheels, chasis all were there but no one created tesla for a while.
+
+Testing is not new. There are tons of solutions out there, still testing is an unsolved piece of the puzzle in the dev lifecycle.
 
 We try to reimagine how testing should work. Few things that differentiate us
 
-1.) UI first approach. Web is about how it looks, we try to help you ship pixel perfect UIs.
-As devs, we work hard to build software. Although, in the process some tasks are boring, hard and eat up our energy.
-
-2.) Putting low-code to right use. We use no-code to detect primitive user actions.
-
+1.) UI first approach. The web is about how it looks, and we help you ship pixel-perfect UIs. As devs, we work hard to build software. Although, in the process, some tasks are boring, grueling, & eat up our time.
+2.) No-code/low-code for primitive action. We use no-code to detect primitive user actions.
 3.) Removing noise from dev workflow. We are reimagining how processed, should be.
-
 4.) Making things simple and fast. We take inspiration from Figma, Linear :D.
 
 
@@ -85,26 +84,27 @@ Check about roadmap plan here.
 
 ## 🧱 Self deployment
 
-| **Infra provider** |                                                                                                        **One-click link**                                                                                                        |                                                             **Additional information**                                                             |
-| :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |
-|       Heroku       |                                        [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher)                                        |                             [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |
-|    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |
+| **Infra provider** | **One-click link** | **Additional information** |  
+| :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |  
+|       Heroku       | [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher)                                        | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |  
+|    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |  
 
 Check guide for other deployments.
 
 ### 📝 License
 
-<hr/>
+<hr/>  
+This repo is entirely MIT licensed, except the **/src_ee directory (if applicable).
 
-This repo is entirely MIT licensed, with the exception of the \*\*/src_ee directory (if applicable). This to ensure we get fairely rewarded for work done.
 
-Premium features (contained in the src_ee directory) require a Crusher license. Contact us at sales@crusher.dev for more information.
+
+EE features (contained in the src_ee directory) require a Crusher license. Contact us at [sales@crusher.dev](mailto:sales@crusher.dev) for more information.
 
 ## 🤝 Contributors
 
-<hr/>
-<p float="left">
+<hr/>  
+<p float="left">  
 
-<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>
+<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>  
 
 </p>

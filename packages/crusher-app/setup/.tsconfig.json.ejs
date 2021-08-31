@@ -25,12 +25,19 @@
 		"paths": {
 <% if(isEnterprise) { %>
 			"@components/*": ["crusher-app/src_ee/ui/components/*", "crusher-app/src/ui/components/*"],
+			"@ui/*": ["crusher-app/src_ee/ui/*", "crusher-app/src/ui/*"],
+			"@types/*": ["crusher-app/src_ee/types/*", "crusher-app/src/types/*"],
+			"@store/*": ["crusher-app/src_ee/store/*", "crusher-app/src/store/*"],
+			"@hooks/*": ["crusher-app/src_ee/hooks/*", "crusher-app/src/hooks/*"],
 <% } else { %>
             "@components/*": ["crusher-app/src/ui/components/*"],
+			"@types/*": ["crusher-app/src/types/*"],
+			"@store/*": ["crusher-app/src/store/*"],
+			"@hooks/*": ["crusher-app/src/hooks/*"],
+			"@ui/*": ["crusher-app/src/ui/*"],
 <% }%>
 			"@pages/*": ["crusher-app/pages/*"],
 			"@services/*": ["crusher-app/src/services/*"],
-			"@ui/*": ["crusher-app/src/ui/*"],
 			"@templates/*": ["crusher-app/src/templates/*"],
 			"@utils/*": ["crusher-app/src/utils/*"],
 			"@template/*": ["crusher-app/src/template/*"],

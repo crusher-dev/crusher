@@ -50,22 +50,33 @@ We're still early. If you face bug/feature request, please file a new issue :D.
 
 Software dev is getting more complex, we have tons of APIs. Things break due to various reason and it's going to increase in future.
 
-Knowing when/where things break is very critical.
+Knowing when/where things break is very critical. Hence good worflows are needed to make it simple to deliver HQ software.
 
 ## 😎 What's so cool about this
 
-Testing is not new. There are tons of solution out there. We try to reimagine how testing should work.
+Testing is not new. There are tons of solution out there. It's like battery, wheels, chasis all were there but no one created tesla for a while.
 
-Few things that differenetiate us
+We try to reimagine how testing should work. Few things that differentiate us
 
 1.) UI first approach. Web is about how it looks, we try to help you ship pixel perfect UIs.
 As devs, we work hard to build software. Although, in the process some tasks are boring, hard and eat up our energy.
 
-2.) Putting low-code to right use.
+2.) Putting low-code to right use. We use no-code to detect primitive user actions.
 
-3.) Removing noise from dev workflow. We are reimaging how processed, should be.
+3.) Removing noise from dev workflow. We are reimagining how processed, should be.
 
-4.) Making things simple and fast.
+4.) Making things simple and fast. We take inspiration from Figma, Linear :D.
+
+
+## 🛣️ Use cases
+
+Check about roadmap plan here.
+
+
+## 🛣️ Arhictecture
+
+
+![enter image description here](https://i.imgur.com/QtJQqlP.png)
 
 
 ## 🛣️ Roadmap

@@ -20,6 +20,7 @@ import { loadUserDataAndRedirect } from "@hooks/user";
 import { RequestMethod } from "@types/RequestOptions";
 import { getBoolean } from '@utils/common';
 
+
 const showRegistrationFormAtom = atom(false);
 
 const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
@@ -37,7 +38,8 @@ function EmailPasswordBox() {
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [name, setName] = useState({ value: "", error: "" });
 	const [processingSignup, setProcessingSignup] = useState(false);
-	const { query } = useRouter();
+	const router = useRouter();
+	const { query } = router;
 
 	const emailChange = useCallback(
 		(e) => {
@@ -81,9 +83,8 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			await registerUser(name.value, email.value, password.value, query?.inviteType ? query.inviteType : null, query?.inviteCode ? query.inviteCode : null);
-			// @TODO: Use router push here
-			window.location.href = "/app/dashboard";
+			await registerUser(name.value, email.value, password.value, query.inviteType.toString(), query?.inviteCode?.toString());
+			router.push("/app/dashboard")
 		} catch (e: any) {
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}

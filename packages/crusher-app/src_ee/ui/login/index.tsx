@@ -13,8 +13,8 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 import { validateEmail, validatePassword } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
-import { loadUserDataAndRedirect } from "../../../hooks/user";
-import { RequestMethod } from "../../../types/RequestOptions";
+import { loadUserDataAndRedirect } from "@hooks/user";
+import { RequestMethod } from "@types/RequestOptions";
 
 const emailLogin = (email: string, password: string) => {
 	return backendRequest("/users/actions/login", {

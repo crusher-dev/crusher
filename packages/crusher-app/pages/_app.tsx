@@ -35,12 +35,12 @@ function App({ Component, pageProps }: AppProps<any>) {
 	return (
 		<>
 			<Head>
-				<link rel="prefetch" href={USER_SYSTEM_API} as="fetch" />
+				<meta name="referrer" content="origin"/>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<SWRConfig
 				value={{
-					fetcher: (resource, init) => fetch(resource, { ...init, credentials: "include" }).then((res) => res.json()),
+					fetcher: (resource, init) => fetch(resource, { ...init, credentials: "include", headers: { ...(init && init.headers ? init.headers : { }), "X-CRUSHER-ORIGIN-URL": window.location.host } }).then((res) => res.json()),
 				}}
 			>
 				<Conditional showIf={!userDataLoaded}>

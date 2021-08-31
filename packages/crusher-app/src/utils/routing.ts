@@ -44,10 +44,10 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 			}
 		}
 	} else {
-		// if (!ROUTES_ACCESSIBLE_WITHOUT_SESSION.includes(pathname) || pathname === ROOT_PATH) {
-		// 	await router.push("/login");
-		// 	return;
-		// }
+		if (!ROUTES_ACCESSIBLE_WITHOUT_SESSION.includes(pathname) || pathname === ROOT_PATH) {
+			await router.push("/login");
+			return;
+		}
 	}
 
 	if (loadCallback) {

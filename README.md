@@ -16,10 +16,10 @@
 
 
 Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple.
-
+<br/><br/>
 You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
 
-
+<br/>
 Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.
 
 ## 🚀 Test your website using Crusher
@@ -50,9 +50,12 @@ We're still early. If you face bug/feature request, please file a new issue :D.
 
 ## 💡 Philosophy
 
-
 Software dev is getting more complex, with tons of APIs. Things break due to various reasons & it's going to increase in the future.
-Knowing when/where things break is very critical. Hence good workflows are needed to make it simple to deliver HQ software.
+
+This leads to angry customers, stakeholder and your product/startup becomes chaotic which could be avoided easily.
+
+Knowing when/where things break is very critical. Good workflow are needed to make it simple to deliver HQ software fast.
+
 
 ## 😎 What's so cool about this
 
@@ -62,11 +65,14 @@ Testing is not new. There are tons of solutions out there, still testing is an u
 We try to reimagine how testing should work. Few things that differentiate us
 
 1.) UI first approach. The web is about how it looks, and we help you ship pixel-perfect UIs. As devs, we work hard to build software. Although, in the process, some tasks are boring, grueling, & eat up our time.
+
 2.) No-code/low-code for primitive action. We use no-code to detect primitive user actions.
+
 3.) Removing noise from dev workflow. We are reimagining how processed, should be.
+
 4.) Making things simple and fast. We take inspiration from Figma, Linear :D.
 
-
+We're open source too❤️❤️
 ## 🛣️ Use cases
 
 Check about roadmap plan here.
@@ -90,6 +96,13 @@ Check about roadmap plan here.
 |    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |  
 
 Check guide for other deployments.
+
+### 📝 Developing locally
+
+
+
+### 📝 Contributing
+
 
 ### 📝 License
 

@@ -76,7 +76,7 @@ Check about roadmap plan here.
 ## 🛣️ Arhictecture
 
 
-![enter image description here](https://i.imgur.com/QtJQqlP.png)
+![enter image description here](https://i.imgur.com/wzU5fUO.png)
 
 
 ## 🛣️ Roadmap

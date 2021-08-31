@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: 12.19.1
+          node-version: 14.15.4
 
       - name: Create ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js

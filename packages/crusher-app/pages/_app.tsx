@@ -40,7 +40,7 @@ function App({ Component, pageProps }: AppProps<any>) {
 			</Head>
 			<SWRConfig
 				value={{
-					fetcher: (resource, init) => fetch(resource, { ...init, credentials: "include", headers: { ...(init && init.headers ? init.headers : { }), "X-CRUSHER-ORIGIN-URL": window.location.host } }).then((res) => res.json()),
+					fetcher: (resource, init) => fetch(resource, { ...init, credentials: "include", headers: { ...(init && init.headers ? init.headers : { })} }).then((res) => res.json()),
 				}}
 			>
 				<Conditional showIf={!userDataLoaded}>

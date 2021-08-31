@@ -39,7 +39,8 @@ export function backendRequest(_uri: string, options?: RequestOptions) {
 	return _fetch(uri, {
 		headers,
 		method,
-		credentials: !isMockAPI ? "include" : "omit",
+		credentials: "include",
+		mode: "cors",
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
 	}).then(async (requestResponse: any) => {
 		if (requestResponse.status > 500) {

@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { ActionStatusEnum, IRunnerLogManagerInterface, IRunnerLogStepMeta } from "@shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-
+import * as url from "url";
 export class Notifier implements IRunnerLogManagerInterface {
 	buildId: number;
 	buildTestInstanceId: number;
@@ -11,8 +11,12 @@ export class Notifier implements IRunnerLogManagerInterface {
 		this.buildTestInstanceId = buildTestInstanceId;
 	}
 
+	private getRequestUrl(relativeUrl: string) {
+		return url.resolve(process.env.BACKEND_URL, relativeUrl);
+	}
+
 	async notifyTestStarted(message: string, meta: any) {
-		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`, {
+		await fetch(this.getRequestUrl(`/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
@@ -28,7 +32,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 	}
 
 	async notifyTestFinished(message: string, hasFailed: boolean, meta: any) {
-		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`, {
+		await fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
@@ -60,7 +64,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 	async logStep(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta): Promise<void> {
 		console.debug(message);
 
-		await fetch(`http://localhost:8000/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`, {
+		await fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",

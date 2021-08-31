@@ -1,4 +1,4 @@
-![enter image description here](https://i.imgur.com/pMMNokt.png)
+![enter image description here](https://i.imgur.com/rCZuyav.png)
 
 <p align="center">
     <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
@@ -13,18 +13,19 @@
                                 <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>
 </p>
 
-Crusher is **no-code e2e web testing/monitoring** built for devs a.k.a _selenium on steroids_.
+Crusher is open source **no-code e2e web testing/monitoring**. E2E testing is super hard and frustrating, we try to make it easy thru low-code approach.
 
-Integrate **user flow and visual regression** without managing infra, creating a framework or managing breaking selectors.
+You Integrate **user flow and visual regression** without managing infra, creating a framework or managing breaking selectors.
 
-> Dev has evolved a lot in last decades, testing not so much, our goal is to help dev ship HQ software. We started this because we were genuinely frustrated from current worflows. Read more about philosophy.
+Software development has evolved a lot in last decade, testing is still the same. Devs should be able to ship better software faster.
+We started this because we were genuinely frustrated from testing worflows.
 
 ## 🚀 Start using Crusher
 
 **Start with crusher cloud for free**
 Fastest and most powerful way to try Crusher. Click to get started.
 
-<img src="https://i.imgur.com/BUYY8Jp.png" height="50px"/>
+<img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>
 
 **Deploy it on your own infra (self-host)**
 
@@ -32,37 +33,40 @@ Fastest and most powerful way to try Crusher. Click to get started.
 
 ## 🔮 Features
 
-- Create test without writing code. We track basic action by creating a fork of chromium.
-- Test UI and compare pixel perfect with last version
+
+- Create **test without nocode/low code**. We track basic action by creating a fork of chromium.
+- **Test UI** and compare pixel perfect with last version
 - Replay user flows within test.
-- Latest chromium support.
-- Auto-hover detection functionality.
-- Detailed reports with video and e2e repors (coming soon)
+- All major browsers supported (EE). 
+- Primary user action detection.
 - Scheduled monitoring (EE feature)
 - Github integration and Alerting (EE feature)
 - All browser + different browser version(EE feature).
-- Super easy deploy using Docker or Heroku.
-- Host it on your infra or Crusher cloud.
+- One click deploy using Docker or Heroku.
 
-We're still early and need to do a lot of things to build this as a complete platform. If you require a feature, please file it in the github issues tab.
+We're still early. If you face bug/feature request, please file a new issue :D.
 
 ## 💡 Philosophy
 
-Web is becoming more and more complex everyday, we have dozens of API and infra items.
+Software dev is getting more complex, we have tons of APIs. Things break due to various reason and it's going to increase in future.
 
-Due to nature of complexity it'll be hard to avoid bugs/issues, but we should know where, when and how's it breaking.
+Knowing when/where things break is very critical.
 
 ## 😎 What's so cool about this
 
+Testing is not new. There are tons of solution out there. We try to reimagine how testing should work.
+
+Few things that differenetiate us
+
+1.) UI first approach. Web is about how it looks, we try to help you ship pixel perfect UIs.
 As devs, we work hard to build software. Although, in the process some tasks are boring, hard and eat up our energy.
 
-We call it noise, it can be UX or workflow noise. At first we reimagine existing workflow and then UX . At the end, we're creating better software for people who create software.
+2.) Putting low-code to right use.
 
-We want to be a platform, solving boring dev tasks and hence improving workflow. We take inspiration from Figma, Linear and Loom on software they create.
+3.) Removing noise from dev workflow. We are reimaging how processed, should be.
 
-For us it's both about how it looks and feels, which is often missing in SaaS. Also, We're open source for individual use and source available at large scale.
+4.) Making things simple and fast.
 
-Note :- Major FE revamp is underway for ^.
 
 ## 🛣️ Roadmap
 

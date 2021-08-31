@@ -16,8 +16,9 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 import { validateEmail, validateName, validatePassword } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
-import { loadUserDataAndRedirect } from "../../../hooks/user";
-import { RequestMethod } from "../../../types/RequestOptions";
+import { loadUserDataAndRedirect } from "@hooks/user";
+import { RequestMethod } from "@types/RequestOptions";
+import { getBoolean } from '@utils/common';
 
 const showRegistrationFormAtom = atom(false);
 
@@ -108,7 +109,7 @@ function EmailPasswordBox() {
 					isError={name.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>
-				<Conditional showIf={name.error}>
+				<Conditional showIf={getBoolean(name.error)}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{name.error}
 					</div>
@@ -124,7 +125,7 @@ function EmailPasswordBox() {
 					isError={email.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>
-				<Conditional showIf={email.error}>
+				<Conditional showIf={getBoolean(email.error)}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{email.error}
 					</div>
@@ -141,7 +142,7 @@ function EmailPasswordBox() {
 					isError={password.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>
-				<Conditional showIf={password.error}>
+				<Conditional showIf={getBoolean(password.error)}>
 					<div className={"mt-8 text-12"} css={errorState}>
 						{password.error}
 					</div>
@@ -195,7 +196,7 @@ function SignupBox() {
 
 export const SignupContainer = () => {
 	const [showRegistrationBox] = useAtom(showRegistrationFormAtom);
-	const { query } = useRouter;
+	const { query } = useRouter();
 
 	const googleSignupLink = query?.inviteCode ? `/users/actions/auth.google?inviteCode=${query.inviteCode}` : "/users/actions/auth.google";
 

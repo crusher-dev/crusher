@@ -83,9 +83,10 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			await registerUser(name.value, email.value, password.value, query.inviteType.toString(), query?.inviteCode?.toString());
+			await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
 			router.push("/app/dashboard")
 		} catch (e: any) {
+			console.error(e);
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
 		setProcessingSignup(false);

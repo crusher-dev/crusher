@@ -35,7 +35,6 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 
 		await this.queueManager.addWorkerForQueue(TEST_EXECUTION_QUEUE, workerPath, {
 			concurrency: 3,
-			lockDuration: 120000,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			//@ts-ignore
 			getOffset: this.getBootAfterNJobsOffset.bind(this),

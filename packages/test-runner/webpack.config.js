@@ -6,6 +6,7 @@ const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 module.exports = {
 	mode: "production",
 	target: "node",
+	devtool: "source-map",
 	entry: {
 		index: "./index.ts",
 		worker: ["src/worker/index.ts"],
@@ -17,6 +18,9 @@ module.exports = {
 		filename: "[name].js", // <--- Will be compiled to this single file
 	},
 	plugins: [
+		new CopyPlugin({
+			patterns: [{ from: `../code-generator/src/parser/code.template.ejs` }],
+		}),
 		new webpack.DefinePlugin({
 			"process.env.FLUENTFFMPEG_COV": false,
 		}),

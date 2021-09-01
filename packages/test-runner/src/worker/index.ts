@@ -16,7 +16,7 @@ const storageManager = getStorageManager();
 
 const TEST_RESULT_KEY = "TEST_RESULT";
 
-export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
+export default async function (bullJob: iTestRunnerJob): Promise<any> {
 	try {
 		const identifier = bullJob.name;
 
@@ -67,5 +67,5 @@ export default async function (bullJob: iTestRunnerJob): Promise<boolean> {
 	} catch (err) {
 		console.error(err);
 	}
-	return true;
+	return {};
 }

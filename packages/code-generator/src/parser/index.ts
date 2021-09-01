@@ -3,6 +3,7 @@ import { BrowserEnum } from "crusher-shared/types/browser";
 import { ParserChecks } from "./preChecks";
 import * as ejs from "ejs";
 import * as path from "path";
+import * as fs from "fs";
 interface IParserOptions {
 	shouldRecordVideo?: boolean;
 	shouldUsePlaywrightChromium?: boolean;
@@ -35,9 +36,10 @@ class Parser {
 	}
 
 	getCode(): Promise<string> {
+
 		return ejs.renderFile(path.join(__dirname, "./code.template.ejs"), {
 			shouldRecordVideo: this.shouldRecordVideo,
-			runnerUtilsPackagePath: "crusher-runner-utils",
+			runnerUtilsPackagePath: fs.readFileSync("./crusher-runner-utils.ts/index.js") ? "./crusher-runner-utils.ts/index.js" : "crusher-runner-utils",
 			baseAssetsPath: this.assetsDir,
 			videoSavePath: this.videoSavePath,
 			defaultBrowserLaunchOptions: this.defaultBrowserLaunchOptions,

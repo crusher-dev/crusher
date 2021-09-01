@@ -22,7 +22,6 @@ class TestRunnerBootstrap {
 		});
 		await this.queueManager.addWorkerForQueue(TEST_EXECUTION_QUEUE, worker.default as any, {
 			concurrency: 1,
-			lockDuration: 100,
 		});
 
 		console.log("Test runner booted up");

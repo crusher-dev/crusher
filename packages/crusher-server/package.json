@@ -41,7 +41,7 @@
 		"analytics-node": "^3.4.0-beta.3",
 		"axios": "^0.21.1",
 		"body-parser": "^1.19.0",
-		"bullmq": "1.14.0",
+		"bullmq": "1.44.2",
 		"chalk": "^4.0.0",
 		"cookie": "^0.4.1",
 		"cors": "^2.8.5",

@@ -4,7 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
-	mode: "production",
+	mode: "development",
 	target: "node",
 	devtool: "source-map",
 	entry: {

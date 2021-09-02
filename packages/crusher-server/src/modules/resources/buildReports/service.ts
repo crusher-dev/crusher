@@ -6,12 +6,13 @@ import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BuildTestInstancesService } from "../builds/instances/service";
-import { IBuildTestInstanceResultsTable, TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum } from "../builds/instances/interface";
+import { IBuildTestInstanceResultsTable, TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum, TestInstanceResultStatusEnum } from "../builds/instances/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum, IBuildReportTable, TestInstanceResultSetConclusion, TestInstanceResultSetStatus } from "./interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { BuildInstanceResults, IBuildInstanceResult } from "../builds/instances/mongo/buildInstanceResults";
 import { BuildTestInstanceScreenshotService } from "../builds/instances/screenshots.service";
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
 interface TestBuildReport {
 	buildId: number;
@@ -65,6 +66,11 @@ export class BuildReportService {
 			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionResult.actionType)) {
 				const screenshotResultRecord = instanceScreenshotsRecordsMap[actionIndex];
 				if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
+					if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {
+						actionResult.status = ActionStatusEnum.MANUAL_REVIEW_REQUIRED;
+					} else if (screenshotResultRecord.status === TestInstanceResultStatusEnum.FAILED) {
+						actionResult.status = ActionStatusEnum.FAILED;
+					}
 					actionResult.meta.outputs[0].diffImageUrl = screenshotResultRecord.diffImageUrl;
 					actionResult.meta.outputs[0].targetScreenshotUrl = screenshotResultRecord.targetScreenshotUrl;
 					actionResult.meta.outputs[0].diffDelta = screenshotResultRecord.diffDelta;

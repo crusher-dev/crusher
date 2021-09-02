@@ -27,6 +27,8 @@ import { ProjectEnvironmentController } from "@modules/resources/projects/enviro
 
 Container.set(RedisManager, new RedisManager());
 
+require("./queue");
+
 const chalk = require("chalk");
 Container.get(MongoManager);
 

@@ -52,7 +52,7 @@ class ProjectMonitoringService {
 
 		const payloadKeys = Object.keys(payload);
 		const validKeys = Object.keys(payload).filter((key) => {
-			return ["projectId", "environmentId", "testInterval"].includes(key);
+			return ["environmentId", "testInterval"].includes(key);
 		});
 
 		if (validKeys.length !== payloadKeys.length) throw new BadRequestError("Invalid update payload");

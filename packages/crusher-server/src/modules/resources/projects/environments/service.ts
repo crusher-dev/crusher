@@ -39,7 +39,7 @@ class ProjectEnvironmentService {
 
 		const payloadKeys = Object.keys(payload);
 		const validKeys = Object.keys(payload).filter((key) => {
-			return ["name", "browser", "vars", "projectId"].includes(key);
+			return ["name", "browser", "vars"].includes(key);
 		});
 
 		if (validKeys.length !== payloadKeys.length) throw new BadRequestError("Invalid update payload");

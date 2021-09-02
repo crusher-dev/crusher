@@ -3,6 +3,7 @@ import { ActionsInTestEnum, ACTIONS_IN_TEST } from "../../constants/recordedActi
 export enum ActionStatusEnum {
 	STARTED = "STARTED",
 	COMPLETED = "COMPLETED",
+	MANUAL_REVIEW_REQUIRED = "MANUAL_REVIEW_REQUIRED",
 	FAILED = "FAILED",
 }
 

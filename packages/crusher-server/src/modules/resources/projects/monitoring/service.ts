@@ -14,7 +14,7 @@ class ProjectMonitoringService {
 		return this.dbManager.fetchAllRows("SELECT * FROM monitorings WHERE project_id = ?", [projectId]);
 	}
 
-	async createMonitoring(payload: ICreateMonitoringPayload): Promise<{insertId: number}> {
+	async createMonitoring(payload: ICreateMonitoringPayload): Promise<{ insertId: number }> {
 		return this.dbManager.insert("INSERT INTO monitorings SET project_id = ?, environment_id = ?, test_interval = ?", [
 			payload.projectId,
 			payload.environmentId,

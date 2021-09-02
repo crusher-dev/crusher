@@ -84,9 +84,9 @@ const video = css`
 
 const footerContainerStyle = css`
 	border: 1rem solid #191e25;
-	min-height: 208rem;
+
 	border-radius: 8rem;
-	padding: 12rem 8rem;
+	padding: 32rem 8rem;
 `;
 const footerPlaceholderStyle = css`
 	color: rgba(255, 255, 255, 0.6);

@@ -16,10 +16,14 @@ class ProjectMonitoringController {
 
 	@Authorized()
 	@Post("/projects/:project_id/monitorings/actions/create")
-	async createMonitoring(@CurrentUser({required: true}) userInfo, @Param("project_id") projectId: number, @Body() body: Omit<ICreateMonitoringPayload, "projectId">) {
+	async createMonitoring(
+		@CurrentUser({ required: true }) userInfo,
+		@Param("project_id") projectId: number,
+		@Body() body: Omit<ICreateMonitoringPayload, "projectId">,
+	) {
 		const monitoringInsertRecord = await this.monitoringService.createMonitoring({
 			...body,
-			projectId,	
+			projectId,
 		});
 
 		const monitoringRecord = await this.monitoringService.getMonitoring(monitoringInsertRecord.insertId);
@@ -31,4 +35,4 @@ class ProjectMonitoringController {
 	}
 }
 
-export { ProjectMonitoringController }
+export { ProjectMonitoringController };

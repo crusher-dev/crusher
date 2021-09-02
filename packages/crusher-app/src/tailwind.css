@@ -20,15 +20,14 @@ a {
 	cursor: default !important;
 }
 
-* {
+*:not(input, textarea){
 	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
+	-webkit-user-select: none; // locks fields on Safari
+	-khtml-user-select: none; // locks fields on Safari
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 }
-
 @media only screen and (max-width: 1581px) {
 	html {
 		font-size: 0.9px;

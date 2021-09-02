@@ -3,8 +3,7 @@ import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ICreateEnvironmentPayload, IEnvironmentTable, IUpdateEnvironmentPayload } from "./interface";
-import { getSnakedObject } from "@utils/helper";
-import { is } from "typescript-is";
+import { getInsertOrUpdateQuerySetFromObject, getSnakedObject } from "@utils/helper";
 import { BadRequestError } from "routing-controllers";
 @Service()
 class ProjectEnvironmentService {
@@ -17,11 +16,12 @@ class ProjectEnvironmentService {
 	}
 
 	async createEnvironment(payload: ICreateEnvironmentPayload) {
-		return this.dbManager.insert("INSERT INTO environments SET project_id = ?, name = ?, browser = ?, vars = ?", [
+		return this.dbManager.insert("INSERT INTO environments SET project_id = ?, name = ?, browser = ?, vars = ?, user_id = ?", [
 			payload.projectId,
 			payload.name,
 			payload.browser,
 			JSON.stringify(payload.vars),
+			payload.userId,
 		]);
 	}
 
@@ -34,10 +34,22 @@ class ProjectEnvironmentService {
 		return this.dbManager.delete("DELETE FROM environments WHERE id = ?", [environmentId]);
 	}
 
-	async updateEnvironment(payload: IUpdateEnvironmentPayload, environmentId: number) {
-		if (is<IUpdateEnvironmentPayload>(payload)) throw new BadRequestError("Invalid update payload provided");
+	private validateUpdatePayload(payload: IUpdateEnvironmentPayload) {
+		if (!payload) throw new BadRequestError("Invalid update payload");
 
-		return this.dbManager.update(`UPDATE environments SET ? WHERE id = ?`, [getSnakedObject(payload), environmentId]);
+		const payloadKeys = Object.keys(payload);
+		const validKeys = Object.keys(payload).filter((key) => {
+			return ["name", "browser", "vars", "projectId"].includes(key);
+		});
+
+		if (validKeys.length !== payloadKeys.length) throw new BadRequestError("Invalid update payload");
+	}
+
+	async updateEnvironment(payload: IUpdateEnvironmentPayload, environmentId: number) {
+		this.validateUpdatePayload(payload);
+		const [setQuery, setQueryValues] = getInsertOrUpdateQuerySetFromObject(getSnakedObject(payload));
+
+		return this.dbManager.update(`UPDATE environments SET ${setQuery} WHERE id = ?`, [...setQueryValues, environmentId]);
 	}
 }
 

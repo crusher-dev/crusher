@@ -4,8 +4,7 @@ import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ICreateMonitoringPayload, IMonitoringTable, IQueuedMonitoringsDetails, IUpdateMonitoringPayload } from "./interface";
 import { BadRequestError } from "routing-controllers";
-import { getSnakedObject } from "@utils/helper";
-import { is } from "typescript-is";
+import { getInsertOrUpdateQuerySetFromObject, getSnakedObject } from "@utils/helper";
 @Service()
 class ProjectMonitoringService {
 	@Inject()
@@ -48,10 +47,23 @@ class ProjectMonitoringService {
 		return this.dbManager.delete("DELETE FROM monitorings WHERE environment_id = ?", [environmentId]);
 	}
 
-	async updateMonitoring(payload: IUpdateMonitoringPayload, monitoringId: number) {
-		if (is<IUpdateMonitoringPayload>(payload)) throw new BadRequestError("Invalid update payload provided");
+	private validateUpdatePayload(payload: IUpdateMonitoringPayload) {
+		if (!payload) throw new BadRequestError("Invalid update payload");
 
-		return this.dbManager.update(`UPDATE environments SET ? WHERE id = ?`, [getSnakedObject(payload), monitoringId]);
+		const payloadKeys = Object.keys(payload);
+		const validKeys = Object.keys(payload).filter((key) => {
+			return ["projectId", "environmentId", "testInterval"].includes(key);
+		});
+
+		if (validKeys.length !== payloadKeys.length) throw new BadRequestError("Invalid update payload");
+	}
+
+	async updateMonitoring(payload: IUpdateMonitoringPayload, monitoringId: number) {
+		this.validateUpdatePayload(payload);
+
+		const [setQuery, setQueryValues] = getInsertOrUpdateQuerySetFromObject(getSnakedObject(payload));
+
+		return this.dbManager.update(`UPDATE monitorings SET ${setQuery} WHERE id = ?`, [...setQueryValues, monitoringId]);
 	}
 }
 

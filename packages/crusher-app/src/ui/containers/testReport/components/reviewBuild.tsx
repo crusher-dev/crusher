@@ -9,6 +9,7 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "../../../../types/RequestOptions";
 import { useBuildReport } from "crusher-app/src/store/serverState/buildReports";
 import { useRouter } from "next/router";
+import { sendSnackBarEvent } from '@utils/common/notify';
 
 export const radioContent = [
 	{ label: "Leave feedback", subLabel: "Approve without approval" },
@@ -36,6 +37,10 @@ export const ReviewButtonContent = ({ closeModal }) => {
 
 	const handleSubmit = useCallback(async () => {
 		await approveBuild(data.buildId, data.buildReportId);
+		sendSnackBarEvent({
+			type: "normal",
+			message: "Build has been updated. Please refresh to see new changes."
+		})
 		closeModal();
 	}, [data]);
 

@@ -125,8 +125,31 @@ function getSnakedObject<Type>(object: Type): KeysToSnakeCase<Type> {
 	return snakeCaseObject as any;
 }
 
+function getInsertOrUpdateQuerySetFromObject(payload): [string, Array<any>] {
+	const updateQueryArr = [];
+	const updateQueryArrValues = [];
+
+	for (const key of Object.keys(payload)) {
+		if (Object.prototype.hasOwnProperty.call(payload, key)) {
+			updateQueryArr.push(`${key} = ?`);
+			updateQueryArrValues.push(payload[key]);
+		}
+	}
+
+	return [updateQueryArr.join(", "), updateQueryArrValues];
+}
+
 function getScreenshotActionsResult(actionsResult: Array<IActionResultItemWithIndex>) {
 	return actionsResult.filter((actionResult) => [ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.ELEMENT_SCREENSHOT].includes(actionResult.actionType));
 }
 
-export { getEdition, isOpenSourceEdition, isUsingLocalStorage, getFullName, getCamelizeObject, getSnakedObject, getScreenshotActionsResult };
+export {
+	getEdition,
+	isOpenSourceEdition,
+	getInsertOrUpdateQuerySetFromObject,
+	isUsingLocalStorage,
+	getFullName,
+	getCamelizeObject,
+	getSnakedObject,
+	getScreenshotActionsResult,
+};

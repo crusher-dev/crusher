@@ -7,7 +7,9 @@ export interface IEnvironmentTable extends BaseRowInterface {
 	project_id: number;
 	name: string;
 	browser: BrowserEnum;
+	user_id: number;
 	vars: string;
 }
 
 export type ICreateEnvironmentPayload = KeysToCamelCase<Omit<IEnvironmentTable, "id" | "updated_at" | "created_at">> & { vars: any };
+export type IUpdateEnvironmentPayload = Partial<Omit<ICreateEnvironmentPayload, "userId" | "projectId">>;

@@ -18,8 +18,7 @@ import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
 import { loadUserDataAndRedirect } from "@hooks/user";
 import { RequestMethod } from "@types/RequestOptions";
-import { getBoolean } from '@utils/common';
-
+import { getBoolean } from "@utils/common";
 
 const showRegistrationFormAtom = atom(false);
 
@@ -84,9 +83,9 @@ function EmailPasswordBox() {
 		setProcessingSignup(true);
 		try {
 			await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
-			router.push("/app/dashboard")
+			router.push("/app/dashboard");
 		} catch (e: any) {
-			console.log(e)
+			console.log(e);
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
 		setProcessingSignup(false);

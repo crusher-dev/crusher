@@ -62,7 +62,7 @@ function DropdownContent() {
 				<MenuItem
 					showHighlighted={true}
 					onClick={async () => {
-						await fetch(resolvePathToBackendURI("/users/actions/logout"))
+						await fetch(resolvePathToBackendURI("/users/actions/logout"));
 						router.push("/login");
 					}}
 					label={"Logout"}

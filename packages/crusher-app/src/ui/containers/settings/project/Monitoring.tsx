@@ -53,8 +53,8 @@ function MonitoringForm({ id }) {
 
 		sendSnackBarEvent({
 			type: "normal",
-			message: "Monitoring saved"
-		})
+			message: "Monitoring saved",
+		});
 	};
 
 	return (

@@ -36,7 +36,6 @@ class Parser {
 	}
 
 	getCode(): Promise<string> {
-
 		return ejs.renderFile(path.join(__dirname, "./code.template.ejs"), {
 			shouldRecordVideo: this.shouldRecordVideo,
 			runnerUtilsPackagePath: fs.readFileSync("./crusher-runner-utils.ts/index.js") ? "./crusher-runner-utils.ts/index.js" : "crusher-runner-utils",

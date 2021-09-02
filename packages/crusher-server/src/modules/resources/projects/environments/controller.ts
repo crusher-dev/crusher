@@ -18,18 +18,22 @@ class ProjectEnvironmentController {
 
 	@Authorized()
 	@Post("/projects/:project_id/environments/actions/create")
-	async createMonitoring(@CurrentUser({required: true}) userInfo, @Param("project_id") projectId: number, @Body() body: Omit<ICreateEnvironmentPayload, "projectId"> ) {
+	async createMonitoring(
+		@CurrentUser({ required: true }) userInfo,
+		@Param("project_id") projectId: number,
+		@Body() body: Omit<ICreateEnvironmentPayload, "projectId">,
+	) {
 		const environmentInsertRecord = await this.environmentService.createEnvironment({
-            ...body,
-            projectId,   
-        });
-        const environmentRecord = await this.environmentService.getEnvironment(environmentInsertRecord.insertId);
+			...body,
+			projectId,
+		});
+		const environmentRecord = await this.environmentService.getEnvironment(environmentInsertRecord.insertId);
 
-        return {
-            status: "Successful",
-            ...environmentRecord,
-        }
+		return {
+			status: "Successful",
+			...environmentRecord,
+		};
 	}
 }
 
-export { ProjectEnvironmentController }
+export { ProjectEnvironmentController };

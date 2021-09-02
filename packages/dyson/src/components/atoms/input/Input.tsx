@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useRef } from 'react';
+import React, { ReactElement, useCallback, useEffect, useRef } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { Conditional } from "../../layouts";
 
@@ -33,7 +33,7 @@ export type InputProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<InputProps> = ({ initialValue="", rightIcon, isError = false, onReturn, children, className, ...props }) => {
+export const Input: React.FC<InputProps> = ({ initialValue = "", rightIcon, isError = false, onReturn, children, className, ...props }) => {
 	const ref = useRef();
 
 	const onKeyUp = useCallback((e) => {
@@ -42,9 +42,9 @@ export const Input: React.FC<InputProps> = ({ initialValue="", rightIcon, isErro
 		}
 	});
 
-	useEffect(()=>{
-		ref.current.value = initialValue
-	},[])
+	useEffect(() => {
+		ref.current.value = initialValue;
+	}, []);
 	return (
 		<div className={"relative"}>
 			<input ref={ref} css={[inputBox, isError && errorState]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />

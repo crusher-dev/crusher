@@ -15,18 +15,18 @@ class ProjectEnvironmentService {
 	}
 
 	async createEnvironment(payload: ICreateEnvironmentPayload) {
-        return this.dbManager.insert("INSERT INTO environments SET project_id = ?, name = ?, browser = ?, vars = ?", [ 
-            payload.projectId,
-            payload.name,
-            payload.browser,
-            JSON.stringify(payload.vars)            
-        ]);
+		return this.dbManager.insert("INSERT INTO environments SET project_id = ?, name = ?, browser = ?, vars = ?", [
+			payload.projectId,
+			payload.name,
+			payload.browser,
+			JSON.stringify(payload.vars),
+		]);
 	}
 
-    @CamelizeResponse()
-    async getEnvironment(environmentId: number): Promise<IEnvironmentTable> {
-        return this.dbManager.fetchSingleRow("SELECT * FROM environments WHERE id = ?", [environmentId]);
-    }
+	@CamelizeResponse()
+	async getEnvironment(environmentId: number): Promise<IEnvironmentTable> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM environments WHERE id = ?", [environmentId]);
+	}
 }
 
 export { ProjectEnvironmentService };

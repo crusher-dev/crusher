@@ -49,22 +49,15 @@ export function LayoutSVG(props) {
 
 export function ReportSVG(props) {
 	return (
-		<svg
-			width={32}
-			height={32}
-			viewBox="0 0 32 32"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={32} height={32} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M23 27h4.003C28.106 27 29 26.11 29 25.003V8h-4.994A1.997 1.997 0 0122 6.002V0h-9.991C10.899 0 10 .898 10 2.007V4h7.5l6.5 7.6V27h-1V13h-4.994A1.997 1.997 0 0116 11.002V5H6.009C4.899 5 4 5.898 4 7.007v22.986A2 2 0 005.997 32h15.006C22.106 32 23 31.11 23 30.003V27zm0-27v5.997c0 .554.451 1.003.99 1.003H29l-6-7zm-6 5v5.997c0 .554.451 1.003.99 1.003H23l-6-7z"
 				fill="#BDBDBD"
 				fillRule="evenodd"
 			/>
 		</svg>
-	)
+	);
 }
-
 
 export function HelpSVG(props) {
 	return (

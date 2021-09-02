@@ -39,7 +39,7 @@ class Parser {
 
 		return ejs.renderFile(path.join(__dirname, "./code.template.ejs"), {
 			shouldRecordVideo: this.shouldRecordVideo,
-			runnerUtilsPackagePath: fs.readFileSync("./crusher-runner-utils.ts/index.js") ? "./crusher-runner-utils.ts/index.js" : "crusher-runner-utils",
+			runnerUtilsPackagePath: fs.existsSync("./crusher-runner-utils.ts/index.js") ? "./crusher-runner-utils.ts/index.js" : "crusher-runner-utils",
 			baseAssetsPath: this.assetsDir,
 			videoSavePath: this.videoSavePath,
 			defaultBrowserLaunchOptions: this.defaultBrowserLaunchOptions,

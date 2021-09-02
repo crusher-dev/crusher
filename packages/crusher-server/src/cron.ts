@@ -6,11 +6,15 @@ import { Container } from "typedi";
 import { ProjectMonitoringService } from "@modules/resources/projects/monitoring/service";
 import { TestService } from "@modules/resources/tests/service";
 import { BuildTriggerEnum } from "@modules/resources/builds/interface";
+import { MongoManager } from "@modules/db/mongo";
 
 const projectMonitoringService = Container.get(ProjectMonitoringService);
 const testService = Container.get(TestService);
+const mongoManager = Container.get(MongoManager);
 
 export async function init() {
+	mongoManager.waitUntilAlive();
+
 	const cronBuildJobs = new CronJob(
 		"*/1 * * * *",
 		async function () {

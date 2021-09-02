@@ -3,7 +3,6 @@ import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ICreateMonitoringPayload, IMonitoringTable, IQueuedMonitoringsDetails } from "./interface";
-
 @Service()
 class ProjectMonitoringService {
 	@Inject()
@@ -36,6 +35,14 @@ class ProjectMonitoringService {
 
 	async updateLastCronMarker(monitoringId: number) {
 		return this.dbManager.update(`UPDATE monitorings SET last_cron_run = NOW() WHERE id = ?`, [monitoringId]);
+	}
+
+	async deleteMonitoring(monitoringId: number) {
+		return this.dbManager.delete("DELETE FROM monitorings WHERE id = ?", [monitoringId]);
+	}
+
+	async deleteAllMonitoringsOfEnvironment(environmentId: number) {
+		return this.dbManager.delete("DELETE FROM monitorings WHERE environment_id = ?", [environmentId]);
 	}
 }
 

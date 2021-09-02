@@ -18,6 +18,7 @@ function Builds() {
 			setBuildsFilter({});
 		};
 	}, []);
+
 	return (
 		<SidebarTopBarLayout>
 			<div className="pt-42 pb-24">

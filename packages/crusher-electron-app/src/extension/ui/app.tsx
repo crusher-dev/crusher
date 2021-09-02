@@ -10,7 +10,7 @@ import { ModalManager } from "./containers/app/modals";
 import { AdvancedURL } from "../utils/url";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
-import { submitPostDataWithForm } from "../utils/helpers";
+import { resolveToFrontend, submitPostDataWithForm } from "../utils/helpers";
 import { addHttpToURLIfNotThere, resolveToBackendPath } from "@shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
@@ -50,7 +50,7 @@ const App = () => {
 			.then((res) => res.text())
 			.then((res) => {
 				const result = JSON.parse(res);
-				window.open(resolveToBackendPath(`/?temp_test_id=${result.insertId}#crusherExternalLink`));
+				window.open(resolveToFrontend(`/?temp_test_id=${result.insertId}#crusherExternalLink`));
 			});
 	};
 

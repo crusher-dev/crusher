@@ -11,7 +11,7 @@ export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, 
 	const urlParams = new URLSearchParams(filteredObj);
 	const urlParamString = urlParams.toString();
 
-	return resolvePathToBackendURI(`/projects/${projectId}/builds?${triggerType ? `trigger=${triggerType}` : ""}${urlParamString}`);
+	return resolvePathToBackendURI(`/projects/${projectId}/builds?${triggerType ? `trigger=${triggerType.toLowerCase()}` : ""}${urlParamString}`);
 };
 
 export const getRunTestApi = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests/actions/run`);

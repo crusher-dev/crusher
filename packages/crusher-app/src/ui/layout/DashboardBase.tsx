@@ -274,12 +274,12 @@ const TOP_NAV_LINK = [
 	{
 		name: "Monitoring",
 		path: "/app/builds",
-		queryParam: "monitoring=true",
+		queryParam: "trigger=CRON",
 	},
 	{
 		name: "Builds",
 		path: "/app/builds",
-		keyToCheck: "monitoring",
+		keyToCheck: "trigger",
 	},
 	{
 		name: "Settings",

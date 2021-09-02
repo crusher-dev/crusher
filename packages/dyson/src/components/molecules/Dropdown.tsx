@@ -9,9 +9,9 @@ type TDropdown = {
 	callback: (openStatus: boolean) => void;
 } & React.DetailedHTMLProps<any, any>;
 
-const DropdownBox = ({ component, dropdownCSS }: TDropdown) => (
-	<div css={[dropdDown, dropdownCSS]} className={"flex flex-col justify-between"}>
-		{component}
+const DropdownBox = ({ children, dropdownCSS }: React.DetailedHTMLProps<any, any>) => (
+	<div css={[dropdDown, dropdownCSS]} className={"dropdown-box flex flex-col justify-between"}>
+		{children}
 	</div>
 );
 
@@ -28,7 +28,7 @@ const DropdownBox = ({ component, dropdownCSS }: TDropdown) => (
 
 export const Dropdown = ({ initialState, children, dropdownCSS, component, callback }: TDropdown) => {
 	return (
-		<ShowOnClick callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS} component={component} />}>
+		<ShowOnClick callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS}>{component}</DropdownBox>}>
 			{children}
 		</ShowOnClick>
 	);

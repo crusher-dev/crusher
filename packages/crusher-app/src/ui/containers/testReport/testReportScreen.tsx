@@ -9,7 +9,7 @@ import { Button } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { BackSVG } from "@svg/builds";
-import { LayoutSVG, ReportSVG } from '@svg/dashboard';
+import { LayoutSVG, ReportSVG } from "@svg/dashboard";
 import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThunderSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { timeSince } from "@utils/common/dateTimeUtils";
@@ -115,12 +115,20 @@ function NameNStatusSection() {
 const section = [
 	{
 		name: "Overview",
-		icon: <LayoutSVG height={10} width={10}/>,
+		icon: <LayoutSVG height={10} width={10} />,
 		key: "overview",
 	},
 	{
 		name: "Test report",
-		icon: <ReportSVG height={12} width={12} css={css`margin-right: -2rem;`}/>,
+		icon: (
+			<ReportSVG
+				height={12}
+				width={12}
+				css={css`
+					margin-right: -2rem;
+				`}
+			/>
+		),
 		key: "reports",
 	},
 	// {
@@ -399,7 +407,7 @@ const TabItem = css`
 	top: 1px;
 	position: relative;
 	height: 37px;
-  min-width: 143px;
+	min-width: 143px;
 	padding: 0 24px;
 	padding-top: 1rem !important;
 
@@ -407,7 +415,6 @@ const TabItem = css`
 		color: #fff;
 		font-weight: 600;
 	}
-	
 `;
 
 const selected = css`

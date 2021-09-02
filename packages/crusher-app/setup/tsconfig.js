@@ -25,9 +25,7 @@ async function setup() {
 	await copyTemplate(path.resolve(__dirname, ".tsconfig.json.ejs"), path.resolve(__dirname, "../tsconfig.json"), {
 		isEnterprise: CRUSHER_MODE === "enterprise",
 	});
-	await copyTemplate(path.resolve(__dirname, ".env.ejs"), path.resolve(__dirname, "../.env"), { mode: CRUSHER_MODE,
-		NEXT_PUBLIC_INTERNAL_BACKEND_URL
-	});
+	await copyTemplate(path.resolve(__dirname, ".env.ejs"), path.resolve(__dirname, "../.env"), { mode: CRUSHER_MODE, NEXT_PUBLIC_INTERNAL_BACKEND_URL });
 }
 
 setup();

@@ -14,6 +14,7 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { currentProject, projectsAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
 
 const deleteProject = (projectId) => {
 	return backendRequest(`/projects/${projectId}/actions/delete`, {
@@ -72,6 +73,8 @@ export const ProjectSettings = () => {
 				</Heading>
 				<TextBlock fontSize={13}>Basic configuration for your test</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
+
+				<SelectBox />
 
 				<Heading type={2} fontSize={16} className={"mb-24 mt-38"}>
 					Project name

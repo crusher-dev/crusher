@@ -2,7 +2,7 @@ import { Container, Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
 import { ProjectsService } from "@modules/resources/projects/service";
 import { TestsRunner } from "@modules/runner";
-import { BuildStatusEnum, BuildTriggerEnum } from "@modules/resources/builds/interface";
+import { BuildStatusEnum, BuildTriggerEnum, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { ICreateTestPayload, ITestTable } from "@modules/resources/tests/interface";
 import { getSnakedObject } from "@utils/helper";
@@ -14,7 +14,7 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
 import { BadRequestError } from "routing-controllers";
-
+import { merge } from "lodash";
 @Service()
 class TestService {
 	private dbManager: DBManager;
@@ -63,7 +63,7 @@ class TestService {
 		return this.dbManager.update(`UPDATE tests SET name = ? WHERE id = ?`, [newInfo.name, testId]);
 	}
 
-	async runTestsInProject(projectId: number, userId: number) {
+	async runTestsInProject(projectId: number, userId: number, customTestsConfig: Partial<ICreateBuildRequestPayload> = {}) {
 		const testsData = await this.getTestsInProject(projectId, true);
 		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
 
@@ -71,17 +71,20 @@ class TestService {
 
 		return this.testsRunner.runTests(
 			testsData.list,
-			{
-				userId: userId,
-				projectId: projectId,
-				host: "null",
-				status: BuildStatusEnum.CREATED,
-				buildTrigger: BuildTriggerEnum.MANUAL,
-				browser: BrowserEnum.ALL,
-				isDraftJob: false,
-				config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
-				meta: { isProjectLevelBuild: true },
-			},
+			merge(
+				{
+					userId: userId,
+					projectId: projectId,
+					host: "null",
+					status: BuildStatusEnum.CREATED,
+					buildTrigger: BuildTriggerEnum.MANUAL,
+					browser: BrowserEnum.ALL,
+					isDraftJob: false,
+					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
+					meta: { isProjectLevelBuild: true },
+				},
+				customTestsConfig,
+			),
 			projectRecord.baselineJobId,
 		);
 	}

@@ -2,8 +2,10 @@ import { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
-import { ICreateEnvironmentPayload, IEnvironmentTable } from "./interface";
-
+import { ICreateEnvironmentPayload, IEnvironmentTable, IUpdateEnvironmentPayload } from "./interface";
+import { getSnakedObject } from "@utils/helper";
+import { is } from "typescript-is";
+import { BadRequestError } from "routing-controllers";
 @Service()
 class ProjectEnvironmentService {
 	@Inject()
@@ -30,6 +32,12 @@ class ProjectEnvironmentService {
 
 	async deleteEnvironment(environmentId: number) {
 		return this.dbManager.delete("DELETE FROM environments WHERE id = ?", [environmentId]);
+	}
+
+	async updateEnvironment(payload: IUpdateEnvironmentPayload, environmentId: number) {
+		if (is<IUpdateEnvironmentPayload>(payload)) throw new BadRequestError("Invalid update payload provided");
+
+		return this.dbManager.update(`UPDATE environments SET ? WHERE id = ?`, [getSnakedObject(payload), environmentId]);
 	}
 }
 

@@ -1,9 +1,10 @@
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { userInfo } from "os";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { ProjectMonitoringService } from "../monitoring/service";
-import { ICreateEnvironmentPayload } from "./interface";
+import { ICreateEnvironmentPayload, IUpdateEnvironmentPayload } from "./interface";
 import { ProjectEnvironmentService } from "./service";
 
 @Service()
@@ -24,7 +25,7 @@ class ProjectEnvironmentController {
 	async createEnvironment(
 		@CurrentUser({ required: true }) userInfo,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateEnvironmentPayload, "projectId">,
+		@Body() body: Omit<ICreateEnvironmentPayload, "projectId" | "userId">,
 	) {
 		const environmentInsertRecord = await this.environmentService.createEnvironment({
 			...body,
@@ -48,6 +49,19 @@ class ProjectEnvironmentController {
 
 		return {
 			status: "Successful",
+		};
+	}
+
+	@Authorized()
+	@Post("/projects/:project_id/environments/:environment_id/actions/update")
+	async updateEnvironment(@Param("environment_id") environmentId: number, @Body() payload: IUpdateEnvironmentPayload) {
+		if (!environmentId) throw new BadRequestError("Invalid environment id provided");
+		await this.environmentService.updateEnvironment(payload, environmentId);
+
+		const environmentRecord = await this.environmentService.getEnvironment(environmentId);
+		return {
+			status: "Successful",
+			...environmentRecord,
 		};
 	}
 }

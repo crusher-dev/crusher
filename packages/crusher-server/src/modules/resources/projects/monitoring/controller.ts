@@ -1,6 +1,6 @@
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { ICreateMonitoringPayload } from "./interface";
+import { ICreateMonitoringPayload, IUpdateMonitoringPayload } from "./interface";
 import { ProjectMonitoringService } from "./service";
 
 @Service()
@@ -42,6 +42,19 @@ class ProjectMonitoringController {
 
 		return {
 			status: "Successful",
+		};
+	}
+
+	@Authorized()
+	@Post("/projects/:project_id/monitorings/:monitoring_id/actions/update")
+	async updateMonitoring(@Param("monitoring_id") monitoringId: number, @Body() payload: IUpdateMonitoringPayload) {
+		if (!monitoringId) throw new BadRequestError("Invalid monitoring id provided");
+		await this.monitoringService.updateMonitoring(payload, monitoringId);
+
+		const monitoringRecord = await this.monitoringService.getMonitoring(monitoringId);
+		return {
+			status: "Successful",
+			...monitoringRecord,
 		};
 	}
 }

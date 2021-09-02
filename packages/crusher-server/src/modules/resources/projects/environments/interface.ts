@@ -12,3 +12,4 @@ export interface IEnvironmentTable extends BaseRowInterface {
 }
 
 export type ICreateEnvironmentPayload = KeysToCamelCase<Omit<IEnvironmentTable, "id" | "updated_at" | "created_at">> & { vars: any };
+export type IUpdateEnvironmentPayload = Partial<Omit<ICreateEnvironmentPayload, "userId">>;

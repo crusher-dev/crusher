@@ -2,7 +2,10 @@ import { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
-import { ICreateMonitoringPayload, IMonitoringTable, IQueuedMonitoringsDetails } from "./interface";
+import { ICreateMonitoringPayload, IMonitoringTable, IQueuedMonitoringsDetails, IUpdateMonitoringPayload } from "./interface";
+import { BadRequestError } from "routing-controllers";
+import { getSnakedObject } from "@utils/helper";
+import { is } from "typescript-is";
 @Service()
 class ProjectMonitoringService {
 	@Inject()
@@ -43,6 +46,12 @@ class ProjectMonitoringService {
 
 	async deleteAllMonitoringsOfEnvironment(environmentId: number) {
 		return this.dbManager.delete("DELETE FROM monitorings WHERE environment_id = ?", [environmentId]);
+	}
+
+	async updateMonitoring(payload: IUpdateMonitoringPayload, monitoringId: number) {
+		if (is<IUpdateMonitoringPayload>(payload)) throw new BadRequestError("Invalid update payload provided");
+
+		return this.dbManager.update(`UPDATE environments SET ? WHERE id = ?`, [getSnakedObject(payload), monitoringId]);
 	}
 }
 

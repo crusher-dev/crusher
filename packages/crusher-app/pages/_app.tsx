@@ -26,7 +26,6 @@ function App({ Component, pageProps }: AppProps<any>) {
 	useBasicSEO({ favicon: "/assets/img/favicon.png" });
 	useSaveTemp();
 	useEffect(() => {
-
 		setTimeout(() => {
 			loadUserLeap();
 			loadCrisp();
@@ -35,12 +34,13 @@ function App({ Component, pageProps }: AppProps<any>) {
 	return (
 		<>
 			<Head>
-				<meta name="referrer" content="origin"/>
+				<meta name="referrer" content="origin" />
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<SWRConfig
 				value={{
-					fetcher: (resource, init) => fetch(resource, { ...init, credentials: "include", headers: { ...(init && init.headers ? init.headers : { })} }).then((res) => res.json()),
+					fetcher: (resource, init) =>
+						fetch(resource, { ...init, credentials: "include", headers: { ...(init && init.headers ? init.headers : {}) } }).then((res) => res.json()),
 				}}
 			>
 				<Conditional showIf={!userDataLoaded}>

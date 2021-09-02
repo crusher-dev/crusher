@@ -18,15 +18,17 @@ import { ChevronDown, TestStatusSVG } from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
-	getBaseConfig, getFailedConfigurationForTest, getFailedNotifyFromConfig,
+	getBaseConfig,
+	getFailedConfigurationForTest,
+	getFailedNotifyFromConfig,
 	getScreenShotsAndChecks,
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
-} from '@utils/core/buildReportUtils';
+} from "@utils/core/buildReportUtils";
 
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
-import { sentenceCase } from "@utils/common/textUtils"
+import { sentenceCase } from "@utils/common/textUtils";
 
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 
@@ -196,13 +198,13 @@ function RenderStep({ data, testInstanceData }) {
 	const { status, message, actionType, meta } = data;
 
 	const actionName = getActionLabel(actionType);
-	const isPassed = status === "COMPLETED";
 
+	console.log(status)
 	return (
 		<div className={"relative mb-32"}>
 			<div className={" flex px-44"}>
 				<div css={tick}>
-					<TestStatusSVG type={isPassed ? "PASSED" : "FAILED"} height={20} width={20} />
+					<TestStatusSVG type={status} height={20} width={20} />
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
@@ -230,7 +232,7 @@ function RenderStep({ data, testInstanceData }) {
 				</Conditional>
 			</div>
 
-			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType) && isPassed}>
+			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType)}>
 				<RenderImageInfo data={data} />
 			</Conditional>
 		</div>
@@ -453,11 +455,11 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const testInstanceData = testInstances[testIndexByFilteration];
 	const steps = getStepsFromInstanceData(testInstanceData);
 
-	useEffect(()=>{
-		if(failedTestsConfiguration.length>=1){
-			setExpand(true)
+	useEffect(() => {
+		if (failedTestsConfiguration.length >= 1) {
+			setExpand(true);
 		}
-	},[])
+	}, []);
 
 	useEffect(() => {
 		setLoading(true);
@@ -475,7 +477,6 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 							<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 						</div>
 
-
 						<div className={"mt-12 mb-16"}>
 							<TestConfigSection expand={expand} allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestCardConfig={setTestCardConfig} />
 						</div>
@@ -489,10 +490,15 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
-					<Conditional showIf={failedTestsConfiguration.length>=1}>
-							<div css={css`font-size: 12.8rem; color: #ff50c5;`}>
-								{sentenceCase(`Test failed for ${getFailedNotifyFromConfig(failedTestsConfiguration)}.`)}
-							</div>
+					<Conditional showIf={failedTestsConfiguration.length >= 1}>
+						<div
+							css={css`
+								font-size: 12.8rem;
+								color: #ff50c5;
+							`}
+						>
+							{sentenceCase(`Test failed for ${getFailedNotifyFromConfig(failedTestsConfiguration)}.`)}
+						</div>
 					</Conditional>
 					<TestConfigSection expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
 				</div>

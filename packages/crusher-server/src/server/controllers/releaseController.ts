@@ -11,11 +11,10 @@ class holdReleaseInfo {
 export class ReleaseController {
 	@Get("/info")
 	async getElectronAppReleaseInfo(@Req() req: any, @Res() res: any): Promise<any> {
-
-		if(holdReleaseInfo.data !== null) return holdReleaseInfo.data;
+		if (holdReleaseInfo.data !== null) return holdReleaseInfo.data;
 		const data: any = await fetch("https://api.github.com/repos/crusherdev/electron/releases/latest");
 
-		holdReleaseInfo.data = { assets: data.assets }
+		holdReleaseInfo.data = { assets: data.assets };
 		return holdReleaseInfo.data;
 	}
 }

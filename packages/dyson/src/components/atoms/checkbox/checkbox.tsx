@@ -32,8 +32,8 @@ const RadioDefaultProps = {
 };
 
 const checkBox = () => css`
-	height: 18rem;
-	width: 18rem;
+	height: 16rem;
+	width: 16rem;
 	border: 1rem solid #383a41;
 	border-radius: 4rem;
 	display: flex;
@@ -87,14 +87,14 @@ const disabledCSS = css`
 `;
 
 export function Checkbox(props: ChecboxProps): ReactElement {
-	const { callback, disabled, label, isSelected, isSelectAllType } = props;
+	const { callback, disabled, label, isSelected, isSelectAllType, className } = props;
 
 	const handleClick = () => {
 		callback && callback(!isSelected);
 	};
 
 	return (
-		<div className={"flex items-center "} onClick={handleClick}>
+		<div className={`flex items-center ${className}`} onClick={handleClick}>
 			<Conditional showIf={isSelectAllType}>
 				<div css={[checkBox(), selectAll(isSelected), disabled && disabledCSS]}>
 					<div id={"tick"}></div>

@@ -18,7 +18,7 @@
 		"release:mac": "yarn build && bash scripts/build-darwin.sh && yarn pack:mac",
 		"release:all": "yarn build && bash scripts/build-all.sh && yarn pack:all",
 		"pack:linux": "node scripts/pack-linux.js",
-		"pack:mac": "node scripts/pack-max.js",
+		"pack:mac": "node scripts/pack-mac.js",
 		"pack:all": "yarn pack:linux && yarn pack:mac"
 	},
 	"dependencies": {

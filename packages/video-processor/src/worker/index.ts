@@ -1,4 +1,5 @@
 import * as shell from "shelljs";
+import * as url from "url";
 import { getStorageManager } from "@utils/cache";
 import { ensureFfmpegPath, processRemoteRawVideoAndSave } from "@utils/ffmpeg";
 import { Job } from "bullmq";
@@ -15,6 +16,10 @@ interface iVideoProcessorJob extends Job {
 	data: IVideoProcessorQueuePayload;
 }
 
+function getRequestUrl(relativeUrl: string) {
+	return url.resolve(process.env.BACKEND_URL, relativeUrl);
+}
+
 export default async function (bullJob: iVideoProcessorJob) {
 	const { testInstanceId, buildId, videoRawUrl } = bullJob.data;
 	console.log(`Processing video for ${bullJob.name}`, videoRawUrl);
@@ -28,7 +33,7 @@ export default async function (bullJob: iVideoProcessorJob) {
 		await shell.rm("-rf", savedVideoPath);
 
 		// @TODO: Make an api call and set featured_video_uri of this test instance
-		await fetch(`http://localhost:8000/builds/${buildId}/instances/${testInstanceId}/action.addRecordedVideo`, {
+		await fetch(getRequestUrl(`builds/${buildId}/instances/${testInstanceId}/action.addRecordedVideo`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",

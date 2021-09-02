@@ -1,6 +1,7 @@
 import { DOM } from "./dom";
 import devices from "@shared/constants/devices";
 import { iDevice } from "@shared/types/extension/device";
+import * as url from "url";
 
 export function executeScript(name: string, tabId: number, cb?: any) {
 	return new Promise((resolve, reject) => {
@@ -116,4 +117,8 @@ export function validURL(str) {
 
 	const localHostRegex = new RegExp("(localhost|127.0.0.1)(:\\d*)?");
 	return !!pattern.test(str) || !!localHostRegex.test(str);
+}
+
+export function resolveToFrontend(relativePath: string) {
+	return url.resolve(process.env.FRONTEND_URL, relativePath);
 }

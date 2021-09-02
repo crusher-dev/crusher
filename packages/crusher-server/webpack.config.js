@@ -9,6 +9,7 @@ module.exports = {
 	entry: {
 		app: "./src/app.ts",
 		queue: "./src/queue.ts",
+		cron: "./src/cron.ts",
 		master: "bullmq/dist/classes/master.js",
 		...getAllWorkers(),
 	},

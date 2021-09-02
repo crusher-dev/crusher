@@ -36,6 +36,7 @@ const deleteTestInServer = (testId: number) => {
 export const EditTestModal = ({ name, id, onClose }) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
+	const [processingDelete, setProcessingDelete] = useState(false);
 	const [project] = useAtom(currentProject);
 	const isNameSame = testName === name;
 
@@ -64,9 +65,9 @@ export const EditTestModal = ({ name, id, onClose }) => {
 			} catch {
 				sendSnackBarEvent({ type: "error", message: "Failed to delete test." });
 			}
-			setProcessing(false);
+			setProcessingDelete(false);
 		})();
-		setProcessing(true);
+		setProcessingDelete(true);
 	}, []);
 	return (
 		<Modal
@@ -146,7 +147,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 					onClick={deleteTest}
 				>
 					<div className={"flex justify-center items-center pt-2"}>
-						<Conditional showIf={processing}>
+						<Conditional showIf={processingDelete}>
 							<LoadingSVG
 								css={css`
 									margin-right: 8rem !important;

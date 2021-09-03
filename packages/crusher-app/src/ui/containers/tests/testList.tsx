@@ -149,7 +149,7 @@ const itemMainContainerStyle = css`
 const itemContainerStyle = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
-	border-radius: 8rem;
+	border-radius: 4rem;
 	color: rgba(255, 255, 255, 0.6);
 	width: 252rem;
 	margin-bottom: 40px;

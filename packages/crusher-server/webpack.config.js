@@ -10,8 +10,8 @@ module.exports = {
 		app: "./src/app.ts",
 		queue: "./src/queue.ts",
 		cron: "./src/cron.ts",
+		worker: "./src/modules/runner/workers/testCompleteWorker.ts",
 		master: "bullmq/dist/classes/master.js",
-		...getAllWorkers(),
 	},
 	output: {
 		path: path.resolve(__dirname, "../../output/crusher-server"),
@@ -97,10 +97,4 @@ function resolveTsconfigPathsToAlias({ tsconfigPath = "./tsconfig.json", webpack
 	});
 
 	return aliases;
-}
-
-function getAllWorkers() {
-	return {
-		"./src/modules/runner/workers/testCompleteWorker.ts": "./src/modules/runner/workers/testCompleteWorker.ts",
-	};
 }

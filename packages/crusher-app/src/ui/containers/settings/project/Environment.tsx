@@ -8,13 +8,10 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate } from "swr";
 import { useAtom } from "jotai";
 import { currentProject } from "../../../../store/atoms/global/project";
-import {
-	createProjectEnvironment, deleteProjectEnv,
-	getProjectEnvironments, updateProjectEnv,
-} from '@constants/api';
+import { createProjectEnvironment, deleteProjectEnv, getProjectEnvironments, updateProjectEnv } from "@constants/api";
 import { ChevronRight } from "@svg/settings";
 import { atomWithImmer } from "jotai/immer";
 import { ChevronDown } from "@svg/testReport";
@@ -25,8 +22,8 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "../../../../types/RequestOptions";
 import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
-import { SelectBox } from 'dyson/src/components/molecules/Select/Select';
-import { sentenceCase } from '@utils/common/textUtils';
+import { SelectBox } from "dyson/src/components/molecules/Select/Select";
+import { sentenceCase } from "@utils/common/textUtils";
 
 function VarirableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
@@ -100,8 +97,15 @@ function VarirableSection({ envId }) {
 			})}
 
 			<div className={"flex justify-end mt-12 mb-20"}>
-				<Button bgColor={"tertiary-dark"} className={"flex items-center text-12"} css={css`height: 24rem;`} onClick={addVar}>
-					<AddSVG height={8} width={8}/>
+				<Button
+					bgColor={"tertiary-dark"}
+					className={"flex items-center text-12"}
+					css={css`
+						height: 24rem;
+					`}
+					onClick={addVar}
+				>
+					<AddSVG height={8} width={8} />
 				</Button>
 			</div>
 		</React.Fragment>
@@ -115,7 +119,7 @@ const selectBoxCSS = css`
 `;
 const getBrowserValues = () => {
 	return (
-		['CHROME',"FIREFOX","SAFARI"].map((browserName) => {
+		["CHROME", "FIREFOX", "SAFARI"].map((browserName) => {
 			return { label: sentenceCase(browserName), value: browserName };
 		}) ?? []
 	);
@@ -125,7 +129,7 @@ function EnvironmentForm({ id }) {
 	const [project] = useAtom(currentProject);
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
-	const { notSavedInDB, host, name,browsers } = environmentsInStore[id];
+	const { notSavedInDB, host, name, browsers } = environmentsInStore[id];
 
 	const changeName = (e) => {
 		setEnvironment((environemnt) => {
@@ -144,10 +148,9 @@ function EnvironmentForm({ id }) {
 		const currentEnvData = environmentsInStore[id];
 		const payload = convertEnvToServerSide(currentEnvData);
 
-		console.log(environmentsInStore)
+		console.log(environmentsInStore);
 
-		const backendAPI = notSavedInDB ? createProjectEnvironment(project.id) : updateProjectEnv(project.id,currentEnvData.id);
-
+		const backendAPI = notSavedInDB ? createProjectEnvironment(project.id) : updateProjectEnv(project.id, currentEnvData.id);
 
 		await backendRequest(backendAPI, {
 			method: RequestMethod.POST,
@@ -162,11 +165,11 @@ function EnvironmentForm({ id }) {
 		});
 	};
 
-	const deleteEnvAPI = async ()=>{
+	const deleteEnvAPI = async () => {
 		const currentEnvData = environmentsInStore[id];
-		await backendRequest(deleteProjectEnv(project.id,currentEnvData.id),{method: RequestMethod.POST});
-		await mutate(getProjectEnvironments(project.id))
-	}
+		await backendRequest(deleteProjectEnv(project.id, currentEnvData.id), { method: RequestMethod.POST });
+		await mutate(getProjectEnvironments(project.id));
+	};
 
 	const setBrowsers = (values) => {
 		setEnvironment((monitorings) => {
@@ -192,7 +195,11 @@ function EnvironmentForm({ id }) {
 
 			<div className={"mt-20 flex justify-between text-13 items-center"}>
 				<div>Browsers</div>
-				<div css={css`width: 200rem;`}>
+				<div
+					css={css`
+						width: 200rem;
+					`}
+				>
 					<SelectBox css={selectBoxCSS} isMultiSelect={true} values={getBrowserValues()} selected={browsers} callback={setBrowsers.bind(this)} />
 				</div>
 			</div>
@@ -269,7 +276,6 @@ function EnvironmentCard({ environmentData, id }) {
 			<div className={"flex justify-between items-center"} onClick={onClick} id={"top-section"}>
 				<div className={"text-14"}>{name}</div>
 				<div className={"flex text-12 items-center"} id={"delete"}>
-
 					{isOpen ? <ChevronDown /> : <ChevronRight />}
 				</div>
 			</div>
@@ -364,7 +370,7 @@ export const Environment = () => {
 const projectListCard = css`
 	padding: 0;
 	#top-section {
-		padding: 12rem 24rem;
+		padding: 10rem 24rem;
 	}
 	#delete {
 		:hover {

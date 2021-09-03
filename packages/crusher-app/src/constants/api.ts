@@ -28,5 +28,11 @@ export const updateTeamMetaAPI = () => resolvePathToBackendURI(`/teams/actions/u
 
 export const getProjectEnvironments = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments`);
 export const getProjectMonitoring = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/monitorings`);
+
 export const createProjectMonitoring = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/monitorings/actions/create`);
+export const updateProjectMonitoing = (projectId: number, monitoringId: number) => resolvePathToBackendURI(`/projects/${projectId}/monitorings/${monitoringId}/actions/update`);
+export const deleteProjectMonitoring = (projectId: number, monitoringId: number) => resolvePathToBackendURI(`/projects/${projectId}/monitorings/${monitoringId}/actions/delete`);
+
 export const createProjectEnvironment = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments/actions/create`);
+export const updateProjectEnv = (projectId: number, envId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments/${envId}/actions/update`);
+export const deleteProjectEnv = (projectId: number, envId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments/${envId}/actions/delete`);

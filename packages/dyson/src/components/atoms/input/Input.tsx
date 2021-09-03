@@ -63,16 +63,17 @@ const rightIconStyle = css`
 	transform: translateY(-50%);
 `;
 const inputBox = css`
-	width: 348rem;
 	background: linear-gradient(0deg, #0e1012, #0e1012);
 	border: 1px solid #2a2e38;
 	box-sizing: border-box;
 	border-radius: 4px;
 	height: 46rem;
 	padding-top: 3rem;
-	font-size: 14rem;
+	font-size: 13rem;
 	padding-left: 16rem;
 	color: #fff;
+
+  width: 200rem;
 
 	:focus {
 		border-color: #6893e7;

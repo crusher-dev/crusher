@@ -73,7 +73,8 @@ const inputBox = css`
 	padding-left: 16rem;
 	color: #fff;
 
-	width: 200rem;
+	width: 100%;
+
 
 	:focus {
 		border-color: #6893e7;

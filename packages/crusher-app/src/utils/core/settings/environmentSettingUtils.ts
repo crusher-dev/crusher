@@ -6,7 +6,10 @@ export const convertEnvToServerSide = (data) => {
 			return [variableName.value, variableValue.value];
 		});
 
+
+
 		draft.vars = Object.fromEntries(varEntries);
+		delete draft.id;
 		delete draft.notSavedInDB;
 		delete draft.isOpen;
 	})(data);
@@ -16,7 +19,7 @@ export const convertEnvToServerSide = (data) => {
 
 export const converServerToClientSideState = (data) => {
 	return data.map((dataItem) => {
-		const { id, name, browser, vars } = dataItem;
+		const {  id,name, browser, vars } = dataItem;
 
 		const parsedVars = Object.entries(JSON.parse(vars)).map(([k, v]) => {
 			return {
@@ -55,6 +58,7 @@ export const converServerToClientSideStateMonitoring = (data) => {
 
 export const convertToServerSideMonitoring = (data) => {
 	const newState = produce((draft) => {
+		delete draft.id;
 		delete draft.notSavedInDB;
 		delete draft.isOpen;
 	})(data);

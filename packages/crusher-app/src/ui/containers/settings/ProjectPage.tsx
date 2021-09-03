@@ -74,8 +74,6 @@ export const ProjectSettings = () => {
 				<TextBlock fontSize={13}>Basic configuration for your test</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
 
-				<SelectBox />
-
 				<Heading type={2} fontSize={16} className={"mb-24 mt-38"}>
 					Project name
 				</Heading>
@@ -85,9 +83,10 @@ export const ProjectSettings = () => {
 						onChange={(e) => {
 							setProjectName(e.target.value);
 						}}
-						value={projectName}
+						initialValue={projectName}
 						css={css`
 							height: 42rem;
+							width: 300rem;
 						`}
 					/>
 					<Button

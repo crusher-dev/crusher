@@ -12,7 +12,7 @@ type TSelectBox = {
 	values: { value: any; component: ReactElement; inactive: boolean };
 	isMultiSelect: boolean;
 	selectedValue: any;
-	size: 'small' | 'medium' | 'large'; // 28/32/36/42
+	size: "small" | "medium" | "large"; // 28/32/36/42
 	placeholder: string;
 	callback: (selectedValue: any) => void;
 } & React.DetailedHTMLProps<any, any>;
@@ -20,37 +20,41 @@ type TSelectBox = {
 const SelectDefaultProps = {
 	placeholder: "Select a value",
 	isMultiSelect: false,
-	size: 'medium',
-	values: [
-
-	],
+	size: "medium",
+	values: [],
+	callback: ()=>{}
 };
 
-export const SelectBox: React.FC<TSelectBox> = ({ placeholder, css, values, size,isMultiSelect }) => {
+export const SelectBox: React.FC<TSelectBox> = ({ selected = [],
+																									placeholder, css, values, size, isMultiSelect,callback }) => {
 	const [openSelectBox, setOpenSelectBox] = useState(false);
-	const [selectedValue, setSelectedValue] = useState([]);
+
+
+	const getSelectedComponent = ()=>{
+		return values.filter(({ value })=> selected.includes(value))
+	}
 
 	const selectValue = (value) => {
 		if (isMultiSelect) {
-			if (selectedValue.includes(value)) {
-				const arrayWithoutThisValue = selectedValue.filter((item) => item !== value);
-				setSelectedValue(arrayWithoutThisValue);
+			if (selected.includes(value)) {
+				const arrayWithoutThisValue = selected.filter((item) => item !== value);
+				callback(arrayWithoutThisValue);
 			} else {
-				setSelectedValue([...selectedValue, value]);
+				callback([...selected, value]);
 			}
 		} else {
-			setSelectedValue([value]);
+			callback([value]);
 		}
 		!isMultiSelect && setOpenSelectBox(false);
 	};
 
 	return (
 		<>
-			<div css={[selectBoxContainer(openSelectBox,size)]} className={"relative"}>
+			<div css={[selectBoxContainer(openSelectBox, size), css]} className={"relative"}>
 				<div className={"flex justify-between text-13 px-16 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
-					<Conditional showIf={selectedValue.length === 0}>{placeholder}</Conditional>
-					<Conditional showIf={selectedValue !== null}>
-						<span css={selectedValueCSS}>{selectedValue.join(", ")}</span>
+					<Conditional showIf={selected.length === 0}>{placeholder}</Conditional>
+					<Conditional showIf={selected !== null}>
+						<span css={selectedValueCSS}>{getSelectedComponent().map(({ label })=> label).join(", ")}</span>
 					</Conditional>
 					<Conditional showIf={openSelectBox}>
 						<CloseSVG height={9}></CloseSVG>
@@ -66,7 +70,7 @@ export const SelectBox: React.FC<TSelectBox> = ({ placeholder, css, values, size
 							{values.map(({ value, component, label }) => (
 								<div css={dropdDownItem(isMultiSelect)} className={"flex  items-center px-16 py-8 "} onClick={selectValue.bind(this, value)}>
 									<Conditional showIf={isMultiSelect}>
-										<Checkbox className={"mr-12"} isSelected={selectedValue.includes(value)} />
+										<Checkbox className={"mr-12"} isSelected={selected.includes(value)} />
 									</Conditional>
 									{component || label}
 								</div>
@@ -89,7 +93,7 @@ const DropdownBox = ({ children, dropdownCSS }: TDropdownBox) => (
 
 SelectBox.defaultProps = SelectDefaultProps;
 
-const selectBoxContainer = (isOpen,size) => css`
+const selectBoxContainer = (isOpen, size) => css`
 	.selectBox {
 		width: 100%;
 
@@ -108,7 +112,7 @@ const selectBoxContainer = (isOpen,size) => css`
 		}
 
 		${size === "small" && `height:28rem;`}
-    ${size === "medium" && `height:32rem;`}
+		${size === "medium" && `height:32rem;`}
     ${size === "large" && `height:42rem;`}
 		${isOpen ? `	border-color: #6893e7;` : ""}
 	}

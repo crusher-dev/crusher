@@ -79,7 +79,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 const itemContainerStyle = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
-	border-radius: 8rem;
+	border-radius: 4em;
 	padding: 20rem 24rem;
 	color: rgba(255, 255, 255, 0.6);
 

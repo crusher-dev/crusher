@@ -8,10 +8,10 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { useAtom } from "jotai";
 import { currentProject } from "../../../../store/atoms/global/project";
-import { createProjectEnvironment, getProjectEnvironments } from "@constants/api";
+import { createProjectEnvironment, deleteProjectEnv, getProjectEnvironments, updateProjectEnv } from "@constants/api";
 import { ChevronRight } from "@svg/settings";
 import { atomWithImmer } from "jotai/immer";
 import { ChevronDown } from "@svg/testReport";
@@ -22,6 +22,8 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "../../../../types/RequestOptions";
 import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { SelectBox } from "dyson/src/components/molecules/Select/Select";
+import { sentenceCase } from "@utils/common/textUtils";
 
 function VarirableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
@@ -55,7 +57,7 @@ function VarirableSection({ envId }) {
 
 	return (
 		<React.Fragment>
-			<div className={"text-13 mt-32 mb-28 font-600"}>Variables</div>
+			<div className={"text-13 mt-32 mb-16 font-600"}>Variables</div>
 
 			{vars?.map((_var, i) => {
 				return (
@@ -68,6 +70,7 @@ function VarirableSection({ envId }) {
 										height: 32rem;
 										width: 150rem;
 									`}
+									size={"small"}
 									className={"ml-20"}
 									placeholder={"Enter some name"}
 									onBlur={changeVarValue.bind(this, i, "variableName")}
@@ -94,19 +97,39 @@ function VarirableSection({ envId }) {
 			})}
 
 			<div className={"flex justify-end mt-12 mb-20"}>
-				<Button bgColor={"tertiary-dark"} className={"flex items-center text-12"} size={"small"} onClick={addVar}>
-					<AddSVG className={""} />
+				<Button
+					bgColor={"tertiary-dark"}
+					className={"flex items-center text-12"}
+					css={css`
+						height: 24rem;
+					`}
+					onClick={addVar}
+				>
+					<AddSVG height={8} width={8} />
 				</Button>
 			</div>
 		</React.Fragment>
 	);
 }
 
+const selectBoxCSS = css`
+	.selectBox {
+		width: 200rem;
+	}
+`;
+const getBrowserValues = () => {
+	return (
+		["CHROME", "FIREFOX", "SAFARI"].map((browserName) => {
+			return { label: sentenceCase(browserName), value: browserName };
+		}) ?? []
+	);
+};
+
 function EnvironmentForm({ id }) {
 	const [project] = useAtom(currentProject);
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
-	const { notSavedInDb, host, name } = environmentsInStore[id];
+	const { notSavedInDB, host, name, browsers } = environmentsInStore[id];
 
 	const changeName = (e) => {
 		setEnvironment((environemnt) => {
@@ -124,7 +147,12 @@ function EnvironmentForm({ id }) {
 		setSavingEnv(true);
 		const currentEnvData = environmentsInStore[id];
 		const payload = convertEnvToServerSide(currentEnvData);
-		await backendRequest(createProjectEnvironment(project.id), {
+
+		console.log(environmentsInStore);
+
+		const backendAPI = notSavedInDB ? createProjectEnvironment(project.id) : updateProjectEnv(project.id, currentEnvData.id);
+
+		await backendRequest(backendAPI, {
 			method: RequestMethod.POST,
 			payload,
 		});
@@ -134,6 +162,18 @@ function EnvironmentForm({ id }) {
 		sendSnackBarEvent({
 			type: "normal",
 			message: "Environment has been saved",
+		});
+	};
+
+	const deleteEnvAPI = async () => {
+		const currentEnvData = environmentsInStore[id];
+		await backendRequest(deleteProjectEnv(project.id, currentEnvData.id), { method: RequestMethod.POST });
+		await mutate(getProjectEnvironments(project.id));
+	};
+
+	const setBrowsers = (values) => {
+		setEnvironment((monitorings) => {
+			monitorings[id].browsers = values;
 		});
 	};
 
@@ -153,7 +193,18 @@ function EnvironmentForm({ id }) {
 				</div>
 			</div>
 
-			<div className={"mt-12 flex justify-between text-13 items-center"}>
+			<div className={"mt-20 flex justify-between text-13 items-center"}>
+				<div>Browsers</div>
+				<div
+					css={css`
+						width: 200rem;
+					`}
+				>
+					<SelectBox css={selectBoxCSS} isMultiSelect={true} values={getBrowserValues()} selected={browsers} callback={setBrowsers.bind(this)} />
+				</div>
+			</div>
+
+			<div className={"mt-20 flex justify-between text-13 items-center"}>
 				<div>Host</div>
 				<div>
 					<Input
@@ -173,13 +224,14 @@ function EnvironmentForm({ id }) {
 				<TextBlock
 					fontSize={13}
 					color={"#d7537b"}
+					onClick={deleteEnvAPI.bind(this)}
 					css={css`
 						:hover {
 							text-decoration: underline;
 						}
 					`}
 				>
-					{!notSavedInDb ? "Delete" : ""}
+					{!notSavedInDB ? "Delete" : ""}
 				</TextBlock>
 				<Button
 					bgColor={"tertiary-dark"}
@@ -224,9 +276,6 @@ function EnvironmentCard({ environmentData, id }) {
 			<div className={"flex justify-between items-center"} onClick={onClick} id={"top-section"}>
 				<div className={"text-14"}>{name}</div>
 				<div className={"flex text-12 items-center"} id={"delete"}>
-					<Conditional showIf={!!envId}>
-						<span className={"mr-10 mt-2"}>Env id- {envId}</span>
-					</Conditional>
 					{isOpen ? <ChevronDown /> : <ChevronRight />}
 				</div>
 			</div>
@@ -242,7 +291,7 @@ type TEnvironment = {
 	id?: number;
 	name?: string;
 	host: string;
-	browser: "CHROME" | "FIREFOX" | "SAFARI" | "ALL";
+	browsers: string[];
 	vars: Record<string, any>[];
 	isOpen: boolean;
 	notSavedInDB?: boolean;
@@ -269,7 +318,7 @@ export const Environment = () => {
 			...environmentsInStore,
 			{
 				name: "New env",
-				browser: "ALL",
+				browsers: ["CHROME"],
 				host: "",
 				vars: [],
 				isOpen: true,
@@ -321,7 +370,7 @@ export const Environment = () => {
 const projectListCard = css`
 	padding: 0;
 	#top-section {
-		padding: 12rem 24rem;
+		padding: 10rem 24rem;
 	}
 	#delete {
 		:hover {

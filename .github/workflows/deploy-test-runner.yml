@@ -33,8 +33,8 @@ jobs:
       - name: Upgrade heap size of node
         run: export NODE_OPTIONS=--max_old_space_size=4096
 
-      - name: Build test-runner for deployment
-        run: sh scripts/build/build-test-runner.sh
+      - name: Build test-runner for deployment (prod)
+        run: NODE_ENV=production sh scripts/build/build-test-runner.sh
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 

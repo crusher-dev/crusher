@@ -22,17 +22,15 @@ const SelectDefaultProps = {
 	isMultiSelect: false,
 	size: "medium",
 	values: [],
-	callback: ()=>{}
+	callback: () => {},
 };
 
-export const SelectBox: React.FC<TSelectBox> = ({ selected = [],
-																									placeholder, css, values, size, isMultiSelect,callback }) => {
+export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, css, values, size, isMultiSelect, callback }) => {
 	const [openSelectBox, setOpenSelectBox] = useState(false);
 
-
-	const getSelectedComponent = ()=>{
-		return values.filter(({ value })=> selected.includes(value))
-	}
+	const getSelectedComponent = () => {
+		return values.filter(({ value }) => selected.includes(value));
+	};
 
 	const selectValue = (value) => {
 		if (isMultiSelect) {
@@ -54,7 +52,11 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [],
 				<div className={"flex justify-between text-13 px-16 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
 					<Conditional showIf={selected.length === 0}>{placeholder}</Conditional>
 					<Conditional showIf={selected !== null}>
-						<span css={selectedValueCSS}>{getSelectedComponent().map(({ label })=> label).join(", ")}</span>
+						<span css={selectedValueCSS}>
+							{getSelectedComponent()
+								.map(({ label }) => label)
+								.join(", ")}
+						</span>
 					</Conditional>
 					<Conditional showIf={openSelectBox}>
 						<CloseSVG height={9}></CloseSVG>

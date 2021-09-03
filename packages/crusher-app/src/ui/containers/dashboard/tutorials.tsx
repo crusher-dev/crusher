@@ -85,7 +85,7 @@ const video = css`
 const footerContainerStyle = css`
 	border: 1rem solid #191e25;
 
-	border-radius: 8rem;
+	border-radius: 4rem;
 	padding: 32rem 8rem;
 `;
 const footerPlaceholderStyle = css`

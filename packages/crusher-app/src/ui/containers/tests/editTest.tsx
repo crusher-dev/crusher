@@ -94,7 +94,7 @@ export const EditTestModal = ({ name, id, onClose }) => {
 				onChange={(e: React.FormEvent<HTMLInputElement>) => {
 					changeTestName(e.currentTarget.value);
 				}}
-				value={testName}
+				initialValue={name}
 			/>
 
 			<div className={"flex justify-end mt-12"}>

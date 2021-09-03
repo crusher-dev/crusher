@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useCallback, useState } from "react";
+import { ReactEventHandler, useCallback, useState } from 'react';
 import React from "react";
 
 import { useAtom } from "jotai";
@@ -49,6 +49,7 @@ export const InvitePeople = ({ onClose }) => {
 		setProcessing(true);
 	}, [emailList]);
 
+	console.log("data",data)
 	return (
 		<Modal onOutsideClick={onClose} onClose={onClose}>
 			<div className={"font-cera text-16 font-600 leading-none"}>Invite your teammates</div>
@@ -106,7 +107,7 @@ export const InvitePeople = ({ onClose }) => {
 				</Button>
 			</div>
 
-			<div className={"flex mt-32 items-center"}>
+			<div className={"flex mt-32 items-center justify-between"}>
 				<div
 					className={"mt-12 text-13 font-600 mb-16 mr-24"}
 					css={css`
@@ -116,13 +117,12 @@ export const InvitePeople = ({ onClose }) => {
 					Or share link
 				</div>
 				<Input
-					placeholder={"test@x.ai, new@x.ai"}
 					css={css`
-						flex: 1;
+						width: 400rem;
 						height: 40rem !important;
 					`}
-					value={data || "Loading.."}
-					onFocus={(event) => {
+					value={data ?? "Loading.."}
+					onFocus={(event:ReactEventHandler<MouseEvent>) => {
 						event.target.select();
 						event.target.setSelectionRange(0, 99999);
 						document.execCommand("copy");

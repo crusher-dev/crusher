@@ -49,7 +49,7 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, cs
 	return (
 		<>
 			<div css={[selectBoxContainer(openSelectBox, size), css]} className={"relative"}>
-				<div className={"flex justify-between text-13 px-16 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
+				<div className={"flex justify-between text-13 px-12 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
 					<Conditional showIf={selected.length === 0}>{placeholder}</Conditional>
 					<Conditional showIf={selected !== null}>
 						<span css={selectedValueCSS}>
@@ -70,7 +70,7 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, cs
 					<OnOutsideClick onOutsideClick={setOpenSelectBox.bind(this, false)}>
 						<DropdownBox>
 							{values.map(({ value, component, label }) => (
-								<div css={dropdDownItem(isMultiSelect)} className={"flex  items-center px-16 py-8 "} onClick={selectValue.bind(this, value)}>
+								<div css={dropdDownItem(isMultiSelect)} className={"flex  items-center px-12 py-8 "} onClick={selectValue.bind(this, value)}>
 									<Conditional showIf={isMultiSelect}>
 										<Checkbox className={"mr-12"} isSelected={selected.includes(value)} />
 									</Conditional>

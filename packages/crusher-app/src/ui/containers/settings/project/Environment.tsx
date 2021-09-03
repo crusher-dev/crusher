@@ -25,7 +25,7 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 import { sentenceCase } from "@utils/common/textUtils";
 
-function VarirableSection({ envId }) {
+function VariableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
 	const { vars } = environmentsInStore[envId];
@@ -57,7 +57,7 @@ function VarirableSection({ envId }) {
 
 	return (
 		<React.Fragment>
-			<div className={"text-13 mt-32 mb-16 font-600"}>Variables</div>
+			<div className={"text-13 mt-32 mb-24 font-600"}>Variables</div>
 
 			{vars?.map((_var, i) => {
 				return (
@@ -178,7 +178,7 @@ function EnvironmentForm({ id }) {
 	};
 
 	return (
-		<div className={"px-24"}>
+		<div className={"px-28 pb-40"}>
 			<div className={"mt-30 flex justify-between text-13 items-center"}>
 				<div>Name of the env</div>
 				<div>
@@ -218,7 +218,7 @@ function EnvironmentForm({ id }) {
 				</div>
 			</div>
 
-			<VarirableSection envId={id} />
+			<VariableSection envId={id} />
 
 			<div className={"flex justify-between items-center mt-40 mb-20 text-13"}>
 				<TextBlock

@@ -5,7 +5,7 @@ import { GithubSVG } from "@svg/social";
 
 function VideoComponent() {
 	return (
-		<div className={"ml-20 mr-20"}>
+		<div className={"ml-12 mr-12"}>
 			<div css={video}>
 				<img src={"https://i.imgur.com/iDCQoiL.png"} height={"100%"} />
 			</div>
@@ -20,14 +20,14 @@ export const OnBoardingTutorialVideo = () => {
 			<div className="font-cera text-16 font-bold font-600">Watch videos aimed to help you integrate testing</div>
 			<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
 			<div className={"flex flex-row items-center mt-32 mb-40"} css={footerContainerStyle}>
-				<div className={"flex flex-wrap text-14"} css={footerPlaceholderStyle}>
+				<div className={"flex flex-wrap text-14 px-8"} css={footerPlaceholderStyle}>
 					<VideoComponent />
 					<VideoComponent />
 					<VideoComponent />
 					<VideoComponent />
 					<VideoComponent />
 
-					<div className={"ml-20 mr-20"}>
+					<div className={"ml-40 mr-20"}>
 						<div className={"text-14 font-700 leading-none mt-16 mb-16 "} id={"support-tagline"}>
 							Join community 💓
 						</div>

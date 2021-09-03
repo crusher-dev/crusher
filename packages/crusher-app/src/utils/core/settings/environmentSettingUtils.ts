@@ -7,6 +7,7 @@ export const convertEnvToServerSide = (data) => {
 		});
 
 		draft.vars = Object.fromEntries(varEntries);
+		delete draft.id;
 		delete draft.notSavedInDB;
 		delete draft.isOpen;
 	})(data);
@@ -55,6 +56,7 @@ export const converServerToClientSideStateMonitoring = (data) => {
 
 export const convertToServerSideMonitoring = (data) => {
 	const newState = produce((draft) => {
+		delete draft.id;
 		delete draft.notSavedInDB;
 		delete draft.isOpen;
 	})(data);

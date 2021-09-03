@@ -6,7 +6,12 @@ import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BuildTestInstancesService } from "../builds/instances/service";
-import { IBuildTestInstanceResultsTable, TestInstanceResultSetConclusionEnum, TestInstanceResultSetStatusEnum, TestInstanceResultStatusEnum } from "../builds/instances/interface";
+import {
+	IBuildTestInstanceResultsTable,
+	TestInstanceResultSetConclusionEnum,
+	TestInstanceResultSetStatusEnum,
+	TestInstanceResultStatusEnum,
+} from "../builds/instances/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum, IBuildReportTable, TestInstanceResultSetConclusion, TestInstanceResultSetStatus } from "./interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";

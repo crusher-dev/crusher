@@ -199,7 +199,6 @@ function RenderStep({ data, testInstanceData }) {
 
 	const actionName = getActionLabel(actionType);
 
-	console.log(status)
 	return (
 		<div className={"relative mb-32"}>
 			<div className={" flex px-44"}>

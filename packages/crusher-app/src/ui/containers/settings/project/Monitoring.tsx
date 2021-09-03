@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
 import { Button } from "dyson/src/components/atoms";
@@ -8,10 +8,10 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { useAtom } from "jotai";
 import { currentProject } from "../../../../store/atoms/global/project";
-import { createProjectMonitoring, getProjectMonitoring } from "@constants/api";
+import { createProjectMonitoring, deleteProjectMonitoring, getProjectEnvironments, getProjectMonitoring, updateProjectMonitoing } from "@constants/api";
 import { ChevronRight } from "@svg/settings";
 import { atomWithImmer } from "jotai/immer";
 import { ChevronDown } from "@svg/testReport";
@@ -21,16 +21,40 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "../../../../types/RequestOptions";
 import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring } from "@utils/core/settings/environmentSettingUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { SelectBox } from "../../../../../../dyson/src/components/molecules/Select/Select";
+import { sentenceCase } from "@utils/common/textUtils";
+
+const selectBoxCSS = css`
+	.selectBox {
+		width: 200rem;
+	}
+`;
+const getBrowserValues = () => {
+	return (
+		["CHROME", "FIREFOX", "SAFARI"].map((browserName) => {
+			return { label: sentenceCase(browserName), value: browserName };
+		}) ?? []
+	);
+};
+const getValues = (environments) => {
+	return (
+		environments?.map(({ name, id }) => {
+			return { label: name, value: id };
+		}) ?? []
+	);
+};
 
 function MonitoringForm({ id }) {
 	const [project] = useAtom(currentProject);
 	const [monitoringInStore, setMonitoring] = useAtom(monitoringAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
-	const { notSavedInDb, environmentId, testInterval } = monitoringInStore[id];
+	const { notSavedInDB, environmentId, testInterval } = monitoringInStore[id];
+	const { data: environments } = useSWR(getProjectEnvironments(project.id));
 
-	const setEnv = (e) => {
+	const envValues = getValues(environments);
+	const setEnv = (values) => {
 		setMonitoring((monitoring) => {
-			monitoring[id].environmentId = e.target.value;
+			monitoring[id].environmentId = values[0];
 		});
 	};
 
@@ -40,11 +64,22 @@ function MonitoringForm({ id }) {
 		});
 	};
 
+	const deleteMonitoringAPI = async () => {
+		const currentMonitoringData = monitoringInStore[id];
+		await backendRequest(deleteProjectMonitoring(project.id, currentMonitoringData.id), { method: RequestMethod.POST });
+		await mutate(getProjectEnvironments(project.id));
+	};
+
 	const saveInServer = async () => {
 		setSavingEnv(true);
 		const currentMonitoringData = monitoringInStore[id];
 		const payload = convertToServerSideMonitoring(currentMonitoringData);
-		await backendRequest(createProjectMonitoring(project.id), {
+
+		const { notSavedInDB } = currentMonitoringData;
+
+		const backendAPI = notSavedInDB ? createProjectMonitoring(project.id) : updateProjectMonitoing(project.id, currentMonitoringData.id);
+
+		await backendRequest(backendAPI, {
 			method: RequestMethod.POST,
 			payload,
 		});
@@ -61,26 +96,24 @@ function MonitoringForm({ id }) {
 		<div className={"px-24"}>
 			<div className={"mt-12 flex justify-between text-13 items-center"}>
 				<div>Environment id</div>
-				<div>
-					<Input
-						css={css`
-							height: 36rem;
-						`}
-						placeholder={"https://google.com"}
-						onBlur={setEnv}
-						initialValue={environmentId}
-					/>
+				<div
+					css={css`
+						width: 200rem;
+					`}
+				>
+					<SelectBox css={selectBoxCSS} values={envValues} selected={[environmentId]} callback={setEnv.bind(this)} />
 				</div>
 			</div>
 
 			<div className={"mt-12 flex justify-between text-13 items-center"}>
 				<div>
-					testInterval <span className={"text-12 ml-8"}>In Sec</span>
+					Run every <span className={"text-12 ml-3"}>In Sec</span>
 				</div>
 				<div>
 					<Input
 						css={css`
-							height: 36rem;
+							width: 200rem;
+							height: 32rem;
 						`}
 						placeholder={"https://google.com"}
 						onBlur={setInterval}
@@ -93,13 +126,14 @@ function MonitoringForm({ id }) {
 				<TextBlock
 					fontSize={13}
 					color={"#d7537b"}
+					onClick={deleteMonitoringAPI}
 					css={css`
 						:hover {
 							text-decoration: underline;
 						}
 					`}
 				>
-					{!notSavedInDb ? "Delete" : ""}
+					{!notSavedInDB ? "Delete" : ""}
 				</TextBlock>
 				<Button
 					bgColor={"tertiary-dark"}
@@ -122,28 +156,33 @@ function MonitoringForm({ id }) {
 function MonitoringCard({ monitoringData, id }) {
 	const { isOpen, testInterval, environmentId } = monitoringData;
 	const [environmentsInStore, setEnvironment] = useAtom(monitoringAtom);
-
 	const { notSavedInDB } = environmentsInStore[id];
+	const [project] = useAtom(currentProject);
+	const { data: environments } = useSWR(getProjectEnvironments(project.id));
 
 	const onClick = () => {
-		setEnvironment((environemnt) => {
+		setEnvironment((monitorings) => {
 			if (notSavedInDB) {
 				sendSnackBarEvent({ type: "normal", message: "Please save new env before closing" });
 				return;
 			}
 
-			for (const env of environemnt) {
-				env.isOpen = false;
+			for (const monitoring of monitorings) {
+				monitoring.isOpen = false;
 			}
-			environemnt[id].isOpen = !isOpen;
+			monitorings[id].isOpen = !isOpen;
 		});
 	};
+
+	const envName = useMemo(() => {
+		return environments?.filter(({ id }) => id === environmentId)[0].name;
+	}, [environments]);
 
 	return (
 		<Card css={projectListCard}>
 			<div className={"flex justify-between items-center"} onClick={onClick} id={"top-section"}>
 				<div className={"text-14"}>
-					{environmentId} - {testInterval}
+					{envName} - every {testInterval} secs
 				</div>
 				<div className={"text-13"} id={"delete"}>
 					{isOpen ? <ChevronDown /> : <ChevronRight />}
@@ -174,6 +213,7 @@ export const Monitoring = () => {
 	const [project] = useAtom(currentProject);
 
 	const { data: monitoring } = useSWR(getProjectMonitoring(project.id));
+
 	const [monitoringInStore, setMonitoring] = useAtom(monitoringAtom);
 
 	useEffect(() => {
@@ -186,6 +226,7 @@ export const Monitoring = () => {
 			...monitoringInStore,
 			{
 				environmentId: "",
+				browsers: [],
 				testInterval: 3600,
 				isOpen: true,
 				notSavedInDB: true,
@@ -236,7 +277,7 @@ export const Monitoring = () => {
 const projectListCard = css`
 	padding: 0;
 	#top-section {
-		padding: 12rem 24rem;
+		padding: 10rem 20rem 10rem 24rem;
 	}
 	#delete {
 		:hover {

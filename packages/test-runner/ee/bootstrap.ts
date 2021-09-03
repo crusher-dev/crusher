@@ -1,6 +1,7 @@
 import TestRunnerBootstrap from "../src/bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import * as path from "path";
+import * as fs from "fs";
 
 import Timeout = NodeJS.Timeout;
 import { TEST_EXECUTION_QUEUE } from "@shared/constants/queues";
@@ -31,7 +32,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 			maxStalledCount: 1,
 		});
 
-		const workerPath = process.env.NODE_ENV === "production" ? path.resolve(__dirname, "./worker.js") : path.resolve("src/worker/index.ts");
+		const workerPath = fs.existsSync(path.resolve(__dirname, "./worker.js")) ? path.resolve(__dirname, "./worker.js") : path.resolve("src/worker/index.ts");
 
 		await this.queueManager.addWorkerForQueue(TEST_EXECUTION_QUEUE, workerPath, {
 			concurrency: 3,

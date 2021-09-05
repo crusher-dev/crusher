@@ -5,9 +5,14 @@ const path = require("path");
 // Promise is returned
 builder
 	.build({
-		targets: Platform.LINUX.createTarget(),
+		targets: Platform.LINUX.createTarget(["deb", "appimage"]),
 		config: {
+			productName: "Crusher Recorder",
+			executableName: "Crusher Recorder",
 			appId: "com.crusher.electron",
+			linux: {
+				icon: "icons/app.icns",
+			},
 			mac: {
 				category: "public.app-category.developer-tools",
 			},

@@ -4,6 +4,7 @@
 	"description": "Electron app for crusher",
 	"main": "build/main.js",
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
+	"homepage": "https://crusher.dev",
 	"license": "MIT",
 	"private": true,
 	"scripts": {

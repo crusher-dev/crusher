@@ -7,6 +7,7 @@ builder
 	.build({
 		targets: Platform.MAC.createTarget(),
 		config: {
+			productName: "Crusher Recorder",
 			appId: "com.crusher.electron",
 			mac: {
 				category: "public.app-category.developer-tools",

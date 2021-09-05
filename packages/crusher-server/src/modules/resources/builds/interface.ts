@@ -37,7 +37,7 @@ export interface IBuildTable extends BaseRowInterface {
 	host: string;
 	build_trigger: BuildTriggerEnum;
 	// @TODO: Remove this in the future.
-	browser: BrowserEnum;
+	browser: Array<BrowserEnum>;
 	// @TODO: Should this be JSON. Contains fields l
 	meta: string;
 	user_id: number;
@@ -48,7 +48,8 @@ export interface IBuildTable extends BaseRowInterface {
 }
 
 export type ICreateBuildRequestPayload = KeysToCamelCase<
-	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status" | "is_draft_job"> & {
+	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status" | "is_draft_job" | "browser"> & {
+		browser: Array<BrowserEnum>;
 		config?: IBuildConfig;
 		status?: BuildStatusEnum;
 		latestReportId?: number | null;

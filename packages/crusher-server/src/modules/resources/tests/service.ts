@@ -78,7 +78,7 @@ class TestService {
 					host: "null",
 					status: BuildStatusEnum.CREATED,
 					buildTrigger: BuildTriggerEnum.MANUAL,
-					browser: BrowserEnum.ALL,
+					browser: [BrowserEnum.CHROME, BrowserEnum.FIREFOX, BrowserEnum.SAFARI],
 					isDraftJob: false,
 					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
 					meta: { isProjectLevelBuild: true },

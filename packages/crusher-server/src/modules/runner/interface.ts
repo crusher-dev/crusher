@@ -6,7 +6,6 @@ export enum BrowserEnum {
 	CHROME = "CHROME",
 	FIREFOX = "FIREFOX",
 	SAFARI = "SAFARI",
-	ALL = "ALL",
 }
 
 export interface IBuildTaskPayload extends ICreateBuildRequestPayload {

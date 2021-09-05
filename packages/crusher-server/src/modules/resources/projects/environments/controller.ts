@@ -1,5 +1,6 @@
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
+import { BrowserEnum } from "@modules/runner/interface";
 import { userInfo } from "os";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post } from "routing-controllers";
 import { Inject, Service } from "typedi";
@@ -25,7 +26,7 @@ class ProjectEnvironmentController {
 	async createEnvironment(
 		@CurrentUser({ required: true }) userInfo,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateEnvironmentPayload, "projectId" | "userId">,
+		@Body() body: Omit<ICreateEnvironmentPayload, "projectId" | "userId" | "browser">,
 	) {
 		const environmentInsertRecord = await this.environmentService.createEnvironment({
 			...body,

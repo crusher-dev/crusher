@@ -91,6 +91,8 @@ class CrusherRunnerActions {
 					default:
 						throw new Error("Invalid action category handler");
 				}
+
+				await sleep(500);
 				// Woohoo! Action executed without any errors.
 				await this.handleActionExecutionStatus(
 					action.name,

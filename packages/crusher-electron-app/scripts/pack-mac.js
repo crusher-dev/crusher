@@ -8,11 +8,14 @@ builder
 		targets: Platform.MAC.createTarget(),
 		config: {
 			productName: "Crusher Recorder",
+			executableName: "Crusher Recorder",
 			appId: "com.crusher.electron",
 			mac: {
+				icon: "icons/app.icns",
 				category: "public.app-category.developer-tools",
 			},
 			directories: {
+				buildResources: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				app: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin"),
 			},

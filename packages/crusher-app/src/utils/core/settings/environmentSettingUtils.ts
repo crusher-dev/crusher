@@ -18,7 +18,7 @@ export const convertEnvToServerSide = (data) => {
 
 export const converServerToClientSideState = (data) => {
 	return data.map((dataItem) => {
-		const { id, name, browsers, vars } = dataItem;
+		const { id, name, browser, vars } = dataItem;
 
 		const parsedVars = Object.entries(JSON.parse(vars)).map(([k, v]) => {
 			return {
@@ -33,7 +33,7 @@ export const converServerToClientSideState = (data) => {
 		return {
 			id,
 			name,
-			browsers,
+			browser,
 			host: "",
 			isOpen: false,
 			vars: parsedVars,

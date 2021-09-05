@@ -174,9 +174,7 @@ function MonitoringCard({ monitoringData, id }) {
 		});
 	};
 
-	const envName = useMemo(() => {
-		return environments?.filter(({ id }) => id === environmentId)[0].name;
-	}, [environments]);
+	const envName = environments?.filter(({ id }) => id === environmentId)[0]?.name;
 
 	return (
 		<Card css={projectListCard}>

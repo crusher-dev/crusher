@@ -142,9 +142,10 @@ function ReportSection() {
 
 function RenderImageInfo({ data }) {
 	const { meta } = data;
-	const imageName = meta.outputs[0].name;
-	const currentImage = meta.outputs[0].value;
+	const imageName = meta.outputs?.[0].name;
+	const currentImage = meta.outputs?.[0].value;
 
+	if(!imageName) return null;
 	return (
 		<div className={"  pl-44 mt-12"} css={imageTestStep}>
 			<div className={"text-12"}>{imageName}</div>

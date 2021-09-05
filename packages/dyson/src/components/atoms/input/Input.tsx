@@ -44,7 +44,8 @@ export const Input: React.FC<InputProps> = ({ initialValue = "", rightIcon, isEr
 
 	useEffect(() => {
 		ref.current.value = initialValue;
-	}, []);
+	}, [initialValue]);
+
 	return (
 		<div className={"relative"}>
 			<input ref={ref} css={[inputBox, isError && errorState]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />

@@ -3,6 +3,7 @@ import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContent
 import userAgents from "../../crusher-shared/constants/userAgents";
 import { BrowserInput } from "./input";
 const gotTheLock = app.requestSingleInstanceLock();
+const highlighterStyle = require('./highlighterStyle.json');
 
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 
@@ -214,16 +215,7 @@ async function createWindow() {
 			if (method === "Overlay.inspectNodeRequested") {
 				await webViewContent.debugger.sendCommand("Overlay.setInspectMode", {
 					mode: "none",
-					highlightConfig: {
-						showInfo: true,
-						showStyles: true,
-						contentColor: {
-							r: 233,
-							g: 255,
-							b: 177,
-							a: 0.39,
-						},
-					},
+					highlightConfig: highlighterStyle,
 				});
 				const nodeObject = await webViewContent.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
 
@@ -246,11 +238,7 @@ async function createWindow() {
 		if (webViewContent) {
 			await webViewContent.debugger.sendCommand("Overlay.setInspectMode", {
 				mode: "searchForNode",
-				highlightConfig: {
-					showInfo: true,
-					showStyles: true,
-					contentColor: { r: 233, g: 255, b: 177, a: 0.39 },
-				},
+				highlightConfig: highlighterStyle,
 			});
 		}
 	});
@@ -260,16 +248,7 @@ async function createWindow() {
 		if (webViewContent) {
 			await webViewContent.debugger.sendCommand("Overlay.setInspectMode", {
 				mode: "none",
-				highlightConfig: {
-					showInfo: true,
-					showStyles: true,
-					contentColor: {
-						r: 233,
-						g: 255,
-						b: 177,
-						a: 0.39,
-					},
-				},
+				highlightConfig: highlighterStyle,
 			});
 		}
 	});

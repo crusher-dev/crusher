@@ -91,7 +91,7 @@ class BuildsService {
 				buildInfo.host,
 				buildInfo.status,
 				buildInfo.buildTrigger,
-				buildInfo.browser,
+				JSON.stringify(buildInfo.browser),
 				JSON.stringify(buildInfo.config),
 				buildInfo.meta ? JSON.stringify(buildInfo.meta) : null,
 				buildInfo.isDraftJob ? buildInfo.isDraftJob : false,

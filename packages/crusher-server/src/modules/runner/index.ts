@@ -27,10 +27,6 @@ class TestsRunner {
 		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, payload);
 	}
 
-	private getTotalTestsCount(testsCount: number, browser: BrowserEnum) {
-		return testsCount * (browser === BrowserEnum.ALL ? this.getValidBrowsers(Object.values(BrowserEnum)).length : 1);
-	}
-
 	private async startBuildTask(
 		buildTaskInfo: IBuildTaskPayload & { testInstances: Array<KeysToCamelCase<ITestInstancesTable> & { testInfo: KeysToCamelCase<ITestTable> }> },
 	) {
@@ -52,17 +48,13 @@ class TestsRunner {
 		await Promise.all(addTestInstancePromiseArr);
 	}
 
-	private getValidBrowsers(browsers: Array<BrowserEnum>) {
-		return browsers.filter((browser) => browser !== BrowserEnum.ALL);
-	}
-
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 
 		const testInstancesArr: Array<KeysToCamelCase<ITestInstancesTable> & { testInfo: KeysToCamelCase<ITestTable> }> = [];
 		// Create test instances and store their ids
 		const testInitPromiseArr = tests.map(async (test) => {
-			const browserArr = this.getValidBrowsers(buildPayload.browser === BrowserEnum.ALL ? Object.values(BrowserEnum) : [buildPayload.browser]);
+			const browserArr = buildPayload.browser;
 
 			const testInstanceInitPromiseArr = browserArr.map(async (browser) => {
 				const buildInstanceInsertRecord = await this.buildTestInstanceService.createBuildTestInstance({
@@ -87,7 +79,7 @@ class TestsRunner {
 		const referenceBuild = await this.buildsService.getBuild(baselineBuildId ? baselineBuildId : build.insertId);
 
 		const buildReportInsertRecord = await this.buildReportService.createBuildReport(
-			this.getTotalTestsCount(tests.length, buildPayload.browser),
+			tests.length * buildPayload.browser.length,
 			build.insertId,
 			referenceBuild.id,
 			buildPayload.projectId,

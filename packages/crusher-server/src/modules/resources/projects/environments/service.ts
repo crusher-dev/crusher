@@ -19,7 +19,7 @@ class ProjectEnvironmentService {
 		return this.dbManager.insert("INSERT INTO environments SET project_id = ?, name = ?, browser = ?, vars = ?, user_id = ?", [
 			payload.projectId,
 			payload.name,
-			payload.browser,
+			JSON.stringify(payload.browsers),
 			JSON.stringify(payload.vars),
 			payload.userId,
 		]);
@@ -39,7 +39,7 @@ class ProjectEnvironmentService {
 
 		const payloadKeys = Object.keys(payload);
 		const validKeys = Object.keys(payload).filter((key) => {
-			return ["name", "browser", "vars"].includes(key);
+			return ["name", "host", "browsers", "vars"].includes(key);
 		});
 
 		if (validKeys.length !== payloadKeys.length) throw new BadRequestError("Invalid update payload");
@@ -47,6 +47,11 @@ class ProjectEnvironmentService {
 
 	async updateEnvironment(payload: IUpdateEnvironmentPayload, environmentId: number) {
 		this.validateUpdatePayload(payload);
+		if (payload.browsers) {
+			(payload as any).browser = JSON.stringify(payload.browsers);
+			delete payload.browsers;
+		}
+
 		const [setQuery, setQueryValues] = getInsertOrUpdateQuerySetFromObject(getSnakedObject(payload));
 
 		return this.dbManager.update(`UPDATE environments SET ${setQuery} WHERE id = ?`, [...setQueryValues, environmentId]);

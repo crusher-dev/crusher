@@ -11,8 +11,7 @@ export interface IEnvironmentTable extends BaseRowInterface {
 	vars: string;
 }
 
-export type ICreateEnvironmentPayload = KeysToCamelCase<Omit<IEnvironmentTable, "id" | "updated_at" | "created_at" | "browser">> & {
+export type ICreateEnvironmentPayload = KeysToCamelCase<Omit<IEnvironmentTable, "id" | "updated_at" | "created_at">> & {
 	vars: any;
-	browsers: Array<BrowserEnum>;
 };
 export type IUpdateEnvironmentPayload = Partial<Omit<ICreateEnvironmentPayload, "userId" | "projectId">>;

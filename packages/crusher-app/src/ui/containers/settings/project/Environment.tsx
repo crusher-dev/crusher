@@ -129,7 +129,7 @@ function EnvironmentForm({ id }) {
 	const [project] = useAtom(currentProject);
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
-	const { notSavedInDB, host, name, browsers } = environmentsInStore[id];
+	const { notSavedInDB, host, name, browser } = environmentsInStore[id];
 
 	const changeName = (e) => {
 		setEnvironment((environemnt) => {
@@ -170,9 +170,9 @@ function EnvironmentForm({ id }) {
 		await mutate(getProjectEnvironments(project.id));
 	};
 
-	const setBrowsers = (values) => {
+	const setbrowser = (values) => {
 		setEnvironment((environment) => {
-			environment[id].browsers = values;
+			environment[id].browser = values;
 		});
 	};
 
@@ -199,7 +199,7 @@ function EnvironmentForm({ id }) {
 						width: 200rem;
 					`}
 				>
-					<SelectBox css={selectBoxCSS} isMultiSelect={true} values={getBrowserValues()} selected={browsers} callback={setBrowsers.bind(this)} />
+					<SelectBox css={selectBoxCSS} isMultiSelect={true} values={getBrowserValues()} selected={browser} callback={setbrowser.bind(this)} />
 				</div>
 			</div>
 
@@ -290,7 +290,7 @@ type TEnvironment = {
 	id?: number;
 	name?: string;
 	host: string;
-	browsers: string[];
+	browser: string[];
 	vars: Record<string, any>[];
 	isOpen: boolean;
 	notSavedInDB?: boolean;
@@ -317,7 +317,7 @@ export const Environment = () => {
 			...environmentsInStore,
 			{
 				name: "New env",
-				browsers: ["CHROME","FIREFOX","SAFARI"],
+				browser: ["CHROME","FIREFOX","SAFARI"],
 				host: "",
 				vars: [],
 				isOpen: true,

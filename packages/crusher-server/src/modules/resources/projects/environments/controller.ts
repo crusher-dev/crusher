@@ -26,7 +26,7 @@ class ProjectEnvironmentController {
 	async createEnvironment(
 		@CurrentUser({ required: true }) userInfo,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateEnvironmentPayload, "projectId" | "userId" | "browser">,
+		@Body() body: Omit<ICreateEnvironmentPayload, "projectId" | "userId">,
 	) {
 		const environmentInsertRecord = await this.environmentService.createEnvironment({
 			...body,

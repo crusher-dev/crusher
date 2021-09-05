@@ -117,7 +117,6 @@ export class UserController {
 	@Get("/users/actions/logout")
 	async logout(@Req() req: any, @Res() res: any) {
 		clearUserAuthorizationCookies(res);
-		res.redirect(resolvePathToFrontendURI("/"));
 	}
 
 	@Authorized()

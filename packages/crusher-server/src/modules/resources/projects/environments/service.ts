@@ -49,7 +49,6 @@ class ProjectEnvironmentService {
 		this.validateUpdatePayload(payload);
 		if (payload.browser) {
 			(payload as any).browser = JSON.stringify(payload.browser);
-			delete payload.browser;
 		}
 
 		const [setQuery, setQueryValues] = getInsertOrUpdateQuerySetFromObject(getSnakedObject(payload));

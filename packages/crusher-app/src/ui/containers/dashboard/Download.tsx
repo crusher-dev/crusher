@@ -42,13 +42,13 @@ export function DownloadButton(props) {
 	);
 
 	if (osType === OS.Linux) {
-		const zipLink = data?.assets?.filter(({ name }) => name.includes("linux-x64"))[0]?.browser_download_url;
+		const zipLink = LINUX_INFO.Linux_DEB.downloadLink || data?.assets?.filter(({ name }:any) => name.includes("linux-x64"))[0]?.browser_download_url;
 
 		return (
 			<div className={"flex flex-col items-center"} {...props}>
 				<div className={"flex  items-center"}>
-					<DownloadButton downloadLink={zipLink} label={LINUX_INFO.Linux_ZIP.label} icon={null} />
-					<div className={"ml-20"}>
+					{/*<DownloadButton downloadLink={zipLink} label={LINUX_INFO.Linux_ZIP.label} icon={null} />*/}
+					<div className={"ml-0"}>
 						<DownloadButton downloadLink={zipLink} label={LINUX_INFO.Linux_DEB.label} icon={null} />
 					</div>
 				</div>
@@ -59,7 +59,7 @@ export function DownloadButton(props) {
 	}
 
 	if (osType === OS.MAC) {
-		const dmgLink = data?.assets?.filter(({ name }) => name.includes("darwin"))[0]?.browser_download_url;
+		const dmgLink = OS_INFO.MAC.downloadLink || data?.assets?.filter(({ name }:any) => name.includes("darwin"))[0]?.browser_download_url;
 		return (
 			<div className={"flex flex-col items-center"} {...props}>
 				<div className={"flex  items-center"}>
@@ -75,10 +75,9 @@ export function DownloadButton(props) {
 		<div className={"flex flex-col items-center"} {...props}>
 			<Conditional>
 				<div>
-					<DownloadButton downloadLink={downloadLink} label={label} icon={null} />
+					Recorder is only available in dmg and dev :(
 				</div>
 			</Conditional>
-			{isDownloading && <div className={"mt-32 text-13"}>Initiaing download, if it doesn't download. Open link in new tab.</div>}
 		</div>
 	);
 }

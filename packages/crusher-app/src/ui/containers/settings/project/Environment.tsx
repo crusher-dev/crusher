@@ -148,7 +148,6 @@ function EnvironmentForm({ id }) {
 		const currentEnvData = environmentsInStore[id];
 		const payload = convertEnvToServerSide(currentEnvData);
 
-		console.log(environmentsInStore);
 
 		const backendAPI = notSavedInDB ? createProjectEnvironment(project.id) : updateProjectEnv(project.id, currentEnvData.id);
 
@@ -172,8 +171,8 @@ function EnvironmentForm({ id }) {
 	};
 
 	const setBrowsers = (values) => {
-		setEnvironment((monitorings) => {
-			monitorings[id].browsers = values;
+		setEnvironment((environment) => {
+			environment[id].browsers = values;
 		});
 	};
 
@@ -318,7 +317,7 @@ export const Environment = () => {
 			...environmentsInStore,
 			{
 				name: "New env",
-				browsers: ["CHROME"],
+				browsers: ["CHROME","FIREFOX","SAFARI"],
 				host: "",
 				vars: [],
 				isOpen: true,

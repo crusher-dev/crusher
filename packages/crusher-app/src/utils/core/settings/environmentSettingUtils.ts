@@ -1,6 +1,7 @@
 import produce from "immer";
 
 export const convertEnvToServerSide = (data) => {
+	console.log(data)
 	const newState = produce((draft) => {
 		const varEntries = draft.vars.map(({ variableName, variableValue }) => {
 			return [variableName.value, variableValue.value];
@@ -17,7 +18,7 @@ export const convertEnvToServerSide = (data) => {
 
 export const converServerToClientSideState = (data) => {
 	return data.map((dataItem) => {
-		const { id, name, browser, vars } = dataItem;
+		const { id, name, browsers, vars } = dataItem;
 
 		const parsedVars = Object.entries(JSON.parse(vars)).map(([k, v]) => {
 			return {
@@ -32,8 +33,8 @@ export const converServerToClientSideState = (data) => {
 		return {
 			id,
 			name,
+			browsers,
 			host: "",
-			browser,
 			isOpen: false,
 			vars: parsedVars,
 			notSavedInDB: false,

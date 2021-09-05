@@ -17,6 +17,7 @@ builder
 				category: "public.app-category.developer-tools",
 			},
 			directories: {
+				buildResources: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				app: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/linux"),
 			},

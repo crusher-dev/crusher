@@ -89,8 +89,8 @@ export const AddProjectModal = ({ onClose }) => {
 									margin-right: 8rem !important;
 								`}
 								color={"#fff"}
-								height={16}
-								width={16}
+								height={"16rem"}
+								width={"16rem"}
 							/>
 						</Conditional>
 						Add Project

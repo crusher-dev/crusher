@@ -17,7 +17,7 @@ export const LoadingScreen = () => {
 		<CrusherBase>
 			<CenterLayout className={"pb-100"}>
 				<div className="flex flex-col justify-center items-center">
-					<Logo showOnlyIcon={true} height={40} css={logoStyle} />
+					<Logo showOnlyIcon={true} height={"36rem"} css={logoStyle} />
 					<span className={"mt-30 text-14 font-content font-500"}>Firing up all the boosters</span>
 				</div>
 			</CenterLayout>

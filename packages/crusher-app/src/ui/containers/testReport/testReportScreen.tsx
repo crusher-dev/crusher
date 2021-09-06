@@ -31,7 +31,7 @@ function TitleSection() {
 		<div>
 			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
 				<BackSVG
-					height={22}
+					height={"22rem"}
 					className={"mr-12"}
 					onClick={() => {
 						window.history.back();
@@ -47,34 +47,34 @@ function StatusTag({ type }) {
 	if (type === "MANUAL_REVIEW_REQUIRED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, review]}>
-				<ReviewRequiredSVG height={18} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Review required</span>
+				<ReviewRequiredSVG height={"17rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Review required</span>
 			</div>
 		);
 	}
 	if (type === "FAILED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, failed]}>
-				<FailedSVG height={18} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Failed</span>
+				<FailedSVG height={"17rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Failed</span>
 			</div>
 		);
 	}
 	if (type === "PASSED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-				<PassedSVG height={20} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
+				<PassedSVG height={"20rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
 			</div>
 		);
 	}
 	if (type === "RUNNING") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, running]}>
-				<RunningSVG height={16} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Running</span>
+				<RunningSVG height={"16rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Running</span>
 			</div>
 		);
 	}
 	return (
 		<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, waiting]}>
-			<InitiatedSVG height={16} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Waiting</span>
+			<InitiatedSVG height={"16rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Waiting</span>
 		</div>
 	);
 }
@@ -100,11 +100,11 @@ function NameNStatusSection() {
 					title="Rerun this build"
 				>
 					<div className={"flex items-center justify-center text-13 font-400"}>
-						<RerunSVG className={"mr-6"} height={14} />
+						<RerunSVG className={"mr-6"} height={"14rem"} />
 						Rerun
 					</div>
 				</Button>
-				{/*<ThreeEllipsisSVG className={"ml-22"} width={25} />*/}
+				{/*<ThreeEllipsisSVG className={"ml-22"} width={"25rem"} />*/}
 			</div>
 
 			<StatusTag type={data.status} isMonochrome={true} />
@@ -115,15 +115,15 @@ function NameNStatusSection() {
 const section = [
 	{
 		name: "Overview",
-		icon: <LayoutSVG height={10} width={10} />,
+		icon: <LayoutSVG height={"10rem"} width={"10rem"} />,
 		key: "overview",
 	},
 	{
 		name: "Test report",
 		icon: (
 			<ReportSVG
-				height={12}
-				width={12}
+				height={"12rem"}
+				width={"12rem"}
 				css={css`
 					margin-right: -2rem;
 				`}
@@ -196,7 +196,7 @@ function TestOverviewTab() {
 				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120 pb-88"}>
 					<div className={"flex flex-col items-center"}>
 						<div className={"mb-28"}>
-							<TestStatusSVG type={data?.status} height={24} width={28} />
+							<TestStatusSVG type={data?.status} height={"24rem"} width={"28rem"} />
 						</div>
 						<div className={"font-cera text-15 font-500 mb-24"}>{getStatusString(data?.status)}</div>
 						<div className={"flex items-center"}>
@@ -221,7 +221,7 @@ function TestOverviewTab() {
 								title="Rerun this build"
 							>
 								<div className={"flex items-center justify-center text-13 font-400"}>
-									<RerunSVG className={"mr-6"} height={14} />
+									<RerunSVG className={"mr-6"} height={"14rem"} />
 									Rerun
 								</div>
 							</Button>

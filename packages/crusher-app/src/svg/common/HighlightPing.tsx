@@ -3,13 +3,13 @@ import { ReactPropTypes } from "react";
 
 function svg(props: ReactPropTypes) {
 	return (
-		<svg width={16} height={16} viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" {...props} css={loadingZipCSS}>
+		<svg width={"16rem"} height={"16rem"} viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" {...props} css={loadingZipCSS}>
 			<g filter="url(#prefix__filter0_d)">
-				<rect x={4.5} y={4.5} width={14} height={14} rx={7} fill="#ff81f3" stroke="#ff85f3" />
+				<rect x={4.5} y={4.5} width={"14rem"} height={"14rem"} rx={7} fill="#ff81f3" stroke="#ff85f3" />
 				<rect x={8} y={8} width={7} height={7} rx={3.5} fill="#313843" />
 			</g>
 			<defs>
-				<filter id="prefix__filter0_d" x={0} y={0} width={23} height={23} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+				<filter id="prefix__filter0_d" x={0} y={0} width={"22rem"} height={"22rem"} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
 				</filter>
 			</defs>

@@ -127,7 +127,7 @@ function LeftSection() {
 				{/*<div className={"mt-24"}>*/}
 				{/*	{CURRENT_PROJECT_LIST.map(({ name, ICON }) => (*/}
 				{/*		<MenuItemHorizontal className={"mt-2"}>*/}
-				{/*			<ICON height={12} />*/}
+				{/*			<ICON height={"12rem"} />*/}
 				{/*			<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>*/}
 				{/*		</MenuItemHorizontal>*/}
 				{/*	))}*/}
@@ -142,12 +142,12 @@ function LeftSection() {
 				</Conditional>
 				<div>
 					<Conditional showIf={getEdition() === EditionTypeEnum.OPEN_SOURCE}>
-						<div className={"text-12 font-700 leading-none mt-16 mb-8 ml-8"} id={"support-tagline"}>
+						<div className={"text-12 font-600 leading-none mt-16 mb-8 ml-8"} id={"support-tagline"}>
 							Join community 💓
 						</div>
 						<a target={"_blank"} href={"https://github.com/crusherdev/crusher"}>
 							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
-								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
+								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-12.5"}>Star us on Github</span>
 							</div>
 						</a>
 						{/*<a href={"https://crusher.dev"}>*/}
@@ -158,7 +158,7 @@ function LeftSection() {
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-13 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
+						<div css={navLink} className={"flex items-center text-12.5 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
 							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
@@ -173,19 +173,19 @@ function LeftSection() {
 							width: 206.03px;
 						`}
 					>
-						<div css={navLink} className={"flex items-center pr text-13 mt-4"}>
-							<NewTabSVG className={"mr-12 mb-2"} /> Help & Support
+						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"}>
+							<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
 						</div>
 					</Dropdown>
 
 					<div
 						css={navLink}
-						className={"flex items-center text-13 mt-4"}
+						className={"flex items-center text-12.5 mt-4"}
 						onClick={() => {
 							window.UserLeap("track", "basic-nps");
 						}}
 					>
-						<HelpSVG className={"mr-12 mb-2"} /> Give feedback
+						<HelpSVG className={"mr-16 mb-2"} /> Give feedback
 					</div>
 				</div>
 

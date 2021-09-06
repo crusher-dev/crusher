@@ -18,8 +18,7 @@ export class EmailManager {
 
 	async sendEmail(to: string, subject: string, html: string) {
 		if (!this.emailClient) throw new Error("No email client available to send emails...");
-
-		return this.emailClient.send({
+		await this.emailClient.send({
 			to: to,
 			from: {
 				name: "Crusher",
@@ -28,5 +27,7 @@ export class EmailManager {
 			subject: subject,
 			html: html,
 		});
+
+		return true;
 	}
 }

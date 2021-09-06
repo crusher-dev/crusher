@@ -21,7 +21,7 @@ class UserAuthService {
 	private userInviteService: UserInviteService;
 
 	async setUserAuthCookies(userId: number, teamId: number, res: any): Promise<string> {
-		const USER_DOMAIN = process.env.FRONTEND_URL ? extractHostname(process.env.FRONTEND_URL) : "";
+		const USER_DOMAIN = "";
 		const token = generateToken(userId, teamId);
 
 		setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: USER_DOMAIN }, res);

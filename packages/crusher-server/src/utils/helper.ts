@@ -3,6 +3,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
 import { KeysToCamelCase, KeysToSnakeCase } from "@modules/common/typescript/interface";
+import * as ejs from "ejs";
 
 export function getTestHostFromActions(actions: Array<iAction>): string {
 	const navigateAction = actions.find((action) => action.type === ActionsInTestEnum.NAVIGATE_URL);
@@ -143,6 +144,15 @@ function getScreenshotActionsResult(actionsResult: Array<IActionResultItemWithIn
 	return actionsResult.filter((actionResult) => [ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.ELEMENT_SCREENSHOT].includes(actionResult.actionType));
 }
 
+function getTemplateFileContent(templatePath: string, valuesToInject: any): Promise<string> {
+	return new Promise((resolve, reject) => {
+		ejs.renderFile(templatePath, valuesToInject, function (err, str) {
+			if (err) return reject("Can't load the template");
+			resolve(str);
+		});
+	});
+}
+
 export {
 	getEdition,
 	isOpenSourceEdition,
@@ -152,4 +162,5 @@ export {
 	getCamelizeObject,
 	getSnakedObject,
 	getScreenshotActionsResult,
+	getTemplateFileContent,
 };

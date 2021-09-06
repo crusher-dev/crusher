@@ -31,7 +31,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 
 	const { id, createdAt, tests, status, reviewMessage, commentCount, triggeredBy, duration } = info;
 
-	const statusIcon = <TestStatusSVG type={status} height={16} />;
+	const statusIcon = <TestStatusSVG type={status} height={"16rem"} />;
 	const isRunning = !["FAILED", "PASSED", "MANUAL_REVIEW_REQUIRED"].includes(info.status);
 
 	return (
@@ -67,7 +67,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 				</div>
 				<Conditional showIf={reviewMessage?.message.length > 1}>
 					<div className={"flex flex-row items-center mt-17"}>
-						<DangerIconSVG width={17} height={17} />
+						<DangerIconSVG width={"17rem"} height={"17rem"} />
 						<span className={"pt-1 text-13 ml-13"}>{reviewMessage?.message}</span>
 					</div>
 				</Conditional>

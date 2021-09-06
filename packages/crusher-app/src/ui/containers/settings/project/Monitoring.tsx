@@ -144,7 +144,7 @@ function MonitoringForm({ id }) {
 					className={"flex items-center justify-center"}
 				>
 					<Conditional showIf={savingEnv}>
-						<LoadingSVG height={12} width={12} className={"mr-8"} />
+						<LoadingSVG height={"12rem"} width={"12rem"} className={"mr-8"} />
 					</Conditional>
 					Save
 				</Button>
@@ -238,7 +238,7 @@ export const Monitoring = () => {
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<div className={"flex justify-between items-start mt-16"}>
 					<div>
-						<Heading type={2} fontSize={16} className={"mb-12"}>
+						<Heading type={2} fontSize={"16"} className={"mb-12"}>
 							Monitoring
 						</Heading>
 						<TextBlock fontSize={13} className={"mb-24"}>

@@ -12,6 +12,7 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 
 import { teamAtom } from "../../../store/atoms/global/team";
 import { userAtom } from "../../../store/atoms/global/user";
+import { backendRequest } from "@utils/common/backendRequest";
 
 const userDropdownItems = [
 	{
@@ -62,7 +63,7 @@ function DropdownContent() {
 				<MenuItem
 					showHighlighted={true}
 					onClick={async () => {
-						await fetch(resolvePathToBackendURI("/users/actions/logout"));
+						await backendRequest(resolvePathToBackendURI("/users/actions/logout"));
 						router.push("/login");
 					}}
 					label={"Logout"}

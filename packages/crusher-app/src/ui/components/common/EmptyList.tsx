@@ -3,7 +3,7 @@ import React from "react";
 
 function LayerSVG(props) {
 	return (
-		<svg width={48} height={48} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={"48rem"} height={"48rem"} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g opacity={0.4} fill="#787D85">
 				<path d="M48 14.941L24.001 1.896 0 14.941l24.001 13.047L48 14.941z" />
 				<path d="M24.001 32.194L4.461 21.578 0 24.003l24.001 13.04L48 24.003l-4.462-2.425-19.537 10.616z" />
@@ -21,7 +21,7 @@ export const EmptyList = ({ title, subTitle }) => (
 			padding-bottom: 200rem;
 		`}
 	>
-		<LayerSVG height={40} />
+		<LayerSVG height={"36rem"} />
 		<div className={"mt-8 flex flex-col items-center mt-40"}>
 			<div
 				className={"font-cera text-15 leading-none mb-12 font-600"}

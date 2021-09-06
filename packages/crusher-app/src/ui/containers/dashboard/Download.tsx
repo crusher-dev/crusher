@@ -124,7 +124,7 @@ export function Download({ onClose }: { onClose: Function }) {
 						</Conditional>
 						<Conditional showIf={launchTimePassed}>
 							<div>
-								<LoadingSVG height={28} />
+								<LoadingSVG height={"28rem"} />
 							</div>
 						</Conditional>
 					</div>

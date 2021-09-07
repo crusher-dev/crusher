@@ -5,6 +5,9 @@
 const getSpacingSizes = () => {
 	let sizingMap = {};
 	for (let i = 0; i <= 120; i++) sizingMap[i] = `${i}rem`;
+
+	sizingMap["12.8"] = `12.8rem`;
+	sizingMap["12.5"] = `12.5rem`;
 	return sizingMap;
 };
 

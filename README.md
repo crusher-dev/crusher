@@ -22,8 +22,9 @@ You can integrate **user flow and UI regression** testing without going thru has
 Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.  
 
 ## 🚀 Demo
-<iframe src="https://www.loom.com/embed/ad48954a2da84b0c8895ab520f67ac5f" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen width="100%" height="500px"></iframe>
+Test with ease and power with crusher. Small demo of the process.
 
+<a href="https://ibb.co/kJk1vyR"><img src="https://i.ibb.co/m018gBL/ezgif-4-a95f6de35ec4.gif" alt="ezgif-4-a95f6de35ec4" border="0"></a>
 ## 🚀 Test your website using Crusher
 
 **Start with crusher cloud for free** Fastest and most powerful way to try Crusher.

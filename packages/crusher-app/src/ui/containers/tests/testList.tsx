@@ -48,14 +48,14 @@ const saveTest = (projectId: number, tempTestId: string) => {
 function TestCard(props: IBuildItemCardProps) {
 	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted, draftBuildId } = props;
 	const statusIcon = getBoolean(isPassing) ? (
-		<TestStatusSVG type={"PASSED"} height={16} />
+		<TestStatusSVG type={"PASSED"} height={"16rem"} />
 	) : (
 		<TestStatusSVG
 			css={css`
 				margin-right: -3rem;
 			`}
 			type={firstRunCompleted ? "FAILED" : "RUNNING"}
-			height={16}
+			height={"16rem"}
 		/>
 	);
 

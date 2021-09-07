@@ -158,7 +158,7 @@ function EmailPasswordBox() {
 					<Conditional showIf={processingSignup}>
 						<span>
 							{" "}
-							<LoadingSVG color={"#fff"} height={16} width={16} />
+							<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
 						</span>
 						<span className={"mt-2 ml-8"}>Processing</span>
 					</Conditional>

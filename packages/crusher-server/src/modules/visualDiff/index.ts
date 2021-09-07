@@ -16,6 +16,11 @@ class VisualDiffService {
 	): Promise<{ diffDeltaFactor: number; diffDelta: number; diffBuffer: Buffer }> {
 		const basePngImage = PNG.sync.read(baseImageBuffer);
 		const referenceImage = PNG.sync.read(referenceImageBuffer);
+		console.log("Base Image size", `${basePngImage.width}x${basePngImage.height}`);
+		console.log("Reference Image size", `${referenceImage.width}x${referenceImage.height}`);
+		if (basePngImage.width !== referenceImage.width || basePngImage.height !== referenceImage.height) {
+			throw new Error("Base and reference image sizes don't match");
+		}
 
 		const diffImageWidth = basePngImage.width;
 		const diffImageHeight = basePngImage.height;

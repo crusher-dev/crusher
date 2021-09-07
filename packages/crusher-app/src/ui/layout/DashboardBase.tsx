@@ -46,7 +46,7 @@ function ProjectList() {
 		<>
 			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
 				<div className={"flex items-center"}>
-					<span className={"text-13 leading-none mr-8 font-600"}>Projects</span>
+					<span className={"text-12.5 leading-none mr-8 font-600"}>Projects</span>
 				</div>
 
 				<Conditional showIf={showAddProject}>
@@ -54,7 +54,7 @@ function ProjectList() {
 				</Conditional>
 				<div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
 					<AddSVG />
-					<div className={"text-13 leading-none ml-8 leading-none mt-2"}>Add</div>
+					<div className={"text-12.5 leading-none ml-8 leading-none mt-2"}>Add</div>
 				</div>
 			</div>
 
@@ -146,7 +146,7 @@ function LeftSection() {
 							Join community 💓
 						</div>
 						<a target={"_blank"} href={"https://github.com/crusherdev/crusher"}>
-							<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>
+							<div css={navLink} className={"flex items-center text-12.5 mt-4 leading-none"}>
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-12.5"}>Star us on Github</span>
 							</div>
 						</a>

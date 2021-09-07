@@ -1,7 +1,7 @@
 import { BadRequestError } from "routing-controllers";
 import { Service } from "typedi";
 import { SlackOAuthResponse } from "./interface";
-
+import fetch from "node-fetch";
 @Service()
 class SlackService {
 	slackClientId: string;
@@ -24,9 +24,9 @@ class SlackService {
 		return fetch("https://slack.com/api/oauth.v2.access", {
 			method: "POST",
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
-			body: data,
+			body: data.toString(),
 		}).then((res) => {
-			return res as any;
+			return res.json();
 		});
 	}
 

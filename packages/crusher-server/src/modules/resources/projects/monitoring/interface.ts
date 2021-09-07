@@ -21,6 +21,6 @@ export type IQueuedMonitoringsDetails = Array<{
 	testInterval: number;
 	lastCronRun: number;
 	environmentName: string;
-	environmentBrowser: BrowserEnum;
+	environmentBrowser: Array<BrowserEnum>;
 	environmentVars: string;
 }>;

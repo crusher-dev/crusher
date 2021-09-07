@@ -24,6 +24,7 @@ import { ProjectsController } from "@modules/resources/projects/controller";
 import { TeamsController } from "@modules/resources/teams/controller";
 import { ProjectMonitoringController } from "@modules/resources/projects/monitoring/controller";
 import { ProjectEnvironmentController } from "@modules/resources/projects/environments/controller";
+import { IntegrationsController } from "@modules/resources/integrations/controller";
 
 Container.set(RedisManager, new RedisManager());
 
@@ -63,6 +64,7 @@ const controllersArr: any = [
 	BuildTestInstancesController,
 	ProjectMonitoringController,
 	ProjectEnvironmentController,
+	IntegrationsController,
 ];
 
 // @TODO: Look into this

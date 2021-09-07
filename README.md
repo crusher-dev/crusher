@@ -24,12 +24,12 @@ Software development has evolved a lot in the last decade, but testing is still 
 ## 🚀 Demo
 Test with ease and power with crusher. Small demo of the process.
 
-<a href="https://ibb.co/kJk1vyR"><img src="https://i.ibb.co/m018gBL/ezgif-4-a95f6de35ec4.gif" alt="ezgif-4-a95f6de35ec4" border="0"></a>
+<img src="https://camo.githubusercontent.com/2676911af677a0fda9a26b1d7a06e39805bdb8438b4e338915b9497840eee4e4/68747470733a2f2f73392e67696679752e636f6d2f696d616765732f657a6769662d342d6139356636646533356563342e676966" border="0">
 ## 🚀 Test your website using Crusher
 
 **Start with crusher cloud for free** Fastest and most powerful way to try Crusher.
 
-<img src="https://s9.gifyu.com/images/ezgif-4-a95f6de35ec4.gif" height="40px"/>  
+<img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>  
 
 **Deploy it on your infra (self-host)**
 

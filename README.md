@@ -1,35 +1,38 @@
+
 ![enter image description here](https://i.imgur.com/rCZuyav.png)
 
-<p align="center">  
-    <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">  
-        <img src="https://img.shields.io/badge/license-MIT-%23373737?style=flat-square&color=ff3db6" /></a>  
-    <a href="#backers" alt="Backers on Open Collective">  
-        <img src="https://img.shields.io/badge/node-%3E=%2014.0.0-brightgreen?style=flat-square" /></a>  
-            <a href="#backers" alt="Backers on Open Collective">  
-        <img src="https://img.shields.io/github/last-commit/crusherdev/crusher?color=8e3dff&style=flat-square" /></a>  
-                    <a href="#backers" alt="Backers on Open Collective">  
-                <img src="https://img.shields.io/docker/image-size/7296823551/test?style=flat-square" /></a>  
-                                    <a href="#backers" alt="Backers on Open Collective">  
-                                <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>  
-</p>
+<p align="center">    
+    <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">    
+        <img src="https://img.shields.io/badge/license-MIT-%23373737?style=flat-square&color=ff3db6" /></a>    
+    <a href="#backers" alt="Backers on Open Collective">    
+        <img src="https://img.shields.io/badge/node-%3E=%2014.0.0-brightgreen?style=flat-square" /></a>    
+            <a href="#backers" alt="Backers on Open Collective">    
+        <img src="https://img.shields.io/github/last-commit/crusherdev/crusher?color=8e3dff&style=flat-square" /></a>    
+                    <a href="#backers" alt="Backers on Open Collective">    
+                <img src="https://img.shields.io/docker/image-size/7296823551/test?style=flat-square" /></a>    
+                                    <a href="#backers" alt="Backers on Open Collective">    
+                                <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>    
+</p>  
 
-Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple.
-<br/><br/>
+Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple.  
+<br/><br/>  
 You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
 
-<br/>
-Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.
+<br/>  
+Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.  
+
+## 🚀 Demo
+<iframe src="https://www.loom.com/embed/ad48954a2da84b0c8895ab520f67ac5f" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen width="100%" height="500px"></iframe>
 
 ## 🚀 Test your website using Crusher
 
-**Start with crusher cloud for free**  
-Fastest and most powerful way to try Crusher.
+**Start with crusher cloud for free** Fastest and most powerful way to try Crusher.
 
-<img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>
+<img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>  
 
 **Deploy it on your infra (self-host)**
 
-<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>
+<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>  
 
 ## 🔮 Features
 
@@ -84,10 +87,10 @@ Check about roadmap plan here.
 
 ## 🧱 Self deployment
 
-| **Infra provider** |                                                                                                        **One-click link**                                                                                                        |                                                             **Additional information**                                                             |
-| :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |
-|       Heroku       |                                        [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher)                                        |                             [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |
-|    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |
+| **Infra provider** | **One-click link** | **Additional information** |  
+| :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |  
+|       Heroku       | [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher)                                        | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |  
+|    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |  
 
 Check guide for other deployments.
 
@@ -97,16 +100,16 @@ Check guide for other deployments.
 
 ### 📝 License
 
-<hr/>  
-This repo is entirely MIT licensed, except the **/src_ee directory (if applicable).
+<hr/>    
+This repo is entirely MIT licensed, except the **/src_ee directory (if applicable).  
 
 EE features (contained in the src_ee directory) require a Crusher license. Contact us at [sales@crusher.dev](mailto:sales@crusher.dev) for more information.
 
 ## 🤝 Contributors
 
-<hr/>  
-<p float="left">
+<hr/>    
+<p float="left">  
 
-<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>
+<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>  
 
 </p>

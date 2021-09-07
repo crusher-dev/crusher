@@ -10,6 +10,16 @@ import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
 import html2canvas from "html2canvas";
+import { ChangeEvent } from "react";
+
+const KEYS_TO_TRACK_FOR_INPUT = new Set(["Enter", "Escape", "Tab"]);
+
+const KEYS_TO_TRACK_FOR_TEXTAREA = new Set([
+	// Enter types a line break, shouldn't be a press.
+	"Escape",
+	"Tab",
+]);
+
 export default class EventRecording {
 	defaultState: any = {
 		targetElement: null,
@@ -59,12 +69,14 @@ export default class EventRecording {
 		this.getHoverDependentNodes = this.getHoverDependentNodes.bind(this);
 		this.clickThroughElectron = this.clickThroughElectron.bind(this);
 		this.hoverThroughElectron = this.hoverThroughElectron.bind(this);
+		this.handleElementInput = this.handleElementInput.bind(this);
+		this.handleElementChange = this.handleElementChange.bind(this);
 
 		this.releventHoverDetectionManager = new RelevantHoverDetection();
 
 		this.turnOnElementModeInParentFrame = this.turnOnElementModeInParentFrame.bind(this);
 		this.handleWindowClick = this.handleWindowClick.bind(this);
-		this.handleKeyPress = this.handleKeyPress.bind(this);
+		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.eventsController = new EventsController(this);
 		this.pollInterval = this.pollInterval.bind(this);
 	}
@@ -224,7 +236,6 @@ export default class EventRecording {
 				mouseover: this.handleMouseMove.bind(this),
 				pointerenter: this.handlePointerEnter.bind(this),
 				mouseout: this.handleMouseOut.bind(this),
-				input: this.handleKeyPress.bind(this),
 				click: this.handleWindowClick.bind(this),
 				contextmenu: this.onRightClick.bind(this),
 			};
@@ -407,22 +418,11 @@ export default class EventRecording {
 		}
 	}
 
-	handleKeyPress(event: KeyboardEvent) {
-		const targetElement = event.target;
-		let finalKey = "";
-		// Remove them because keydown also tracks unwanted individual keys
-		if (["Shift", "Control", "Alt", "Meta"].includes(event.key)) {
-			return false;
+	handleKeyDown(event: KeyboardEvent) {
+		const key = event.key;
+		if (KEYS_TO_TRACK_FOR_INPUT.has(key)) {
+			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PRESS, event.target, key);
 		}
-		if (event.ctrlKey) finalKey += "Control+";
-		if (event.metaKey) finalKey += "Meta+";
-		if (event.altKey) finalKey += "Alt+";
-		if (event.shiftKey) finalKey += "Shift+";
-
-		finalKey += event.key;
-
-		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, targetElement, finalKey);
-		return true;
 	}
 
 	handleFocus(event: FocusEvent) {
@@ -466,6 +466,16 @@ export default class EventRecording {
 		this.turnOnElementModeInParentFrame(event.detail.element);
 	}
 
+	handleElementInput(event: InputEvent) {
+		const value = (event.target as HTMLInputElement).value;
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, value);
+	}
+
+	handleElementChange(event: InputEvent) {
+		const value = (event.target as HTMLInputElement).value;
+		// this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, value);
+	}
+
 	registerNodeListeners() {
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);
@@ -474,13 +484,15 @@ export default class EventRecording {
 		window.addEventListener("focus", this.handleFocus, true);
 		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
 		window.addEventListener("elementSelected", this.handleElementSelected);
+		window.addEventListener("input", this.handleElementInput);
+		window.addEventListener("change", this.handleElementChange);
 
 		document.body.addEventListener("pointerenter", this.handlePointerEnter, true);
 
 		window.addEventListener("scroll", this.handleScroll, true);
 
 		window.onbeforeunload = this.handleBeforeNavigation;
-		window.addEventListener("keypress", this.handleKeyPress, true);
+		window.addEventListener("keydown", this.handleKeyDown, true);
 
 		window.addEventListener("click", this.handleWindowClick, true);
 		setInterval(this.pollInterval, 300);

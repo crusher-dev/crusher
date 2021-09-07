@@ -127,7 +127,7 @@ class BuildTestInstancesService {
 			return { ...acc, [refScreenshot.actionIndex]: refScreenshot };
 		}, {});
 
-		const visualDiffResultsPromiseArr = savedScreenshotRecords.map((screenshotResult) => {
+		const visualDiffResultsPromiseArr = savedScreenshotRecords.map(async (screenshotResult) => {
 			const baseImage = screenshotResult.meta.outputs[0];
 			const referenceImageRecord = referenceScreenshotsMap[screenshotResult.actionIndex];
 
@@ -136,24 +136,38 @@ class BuildTestInstancesService {
 				value: referenceImageRecord.url,
 			};
 
-			return this.visualDiffService
-				.getDiffResult(baseImage.value, referenceImage.value, path.join(assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.png`))
-				.then(async (diffResult) => {
-					await this.insertScrenshotResult({
-						screenshotId: screenshotResult.recordId,
-						targetScreenshotId: referenceImageRecord.id,
-						instanceResultSetId: buildTestInstanceResultSet.id,
-						diffDelta: diffResult.diffDelta,
-						diffImageUrl: diffResult.outputDiffImageUrl,
-						status: this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta),
-					});
+			let diffResult: { diffDeltaFactor: number; diffDelta: number; outputDiffImageUrl: string } | null = null;
+			let diffResultStatus: TestInstanceResultStatusEnum | null = null;
+			try {
+				diffResult = await this.visualDiffService.getDiffResult(
+					baseImage.value,
+					referenceImage.value,
+					path.join(assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.png`),
+				);
+			} catch (err) {
+				diffResult = {
+					diffDeltaFactor: 100,
+					diffDelta: 100,
+					outputDiffImageUrl: "https://www.rescuedigitalmedia.com/wp-content/uploads/2018/10/fix-invalid-image-error.png",
+				};
+				diffResultStatus = TestInstanceResultStatusEnum.FAILED;
+				console.error(err);
+			}
 
-					return {
-						...diffResult,
-						resultId: 0,
-						status: this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta),
-					};
-				});
+			await this.insertScrenshotResult({
+				screenshotId: screenshotResult.recordId,
+				targetScreenshotId: referenceImageRecord.id,
+				instanceResultSetId: buildTestInstanceResultSet.id,
+				diffDelta: diffResult.diffDelta,
+				diffImageUrl: diffResult.outputDiffImageUrl,
+				status: this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta),
+			});
+
+			return {
+				...diffResult,
+				resultId: 0,
+				status: diffResultStatus ? diffResultStatus : this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta),
+			};
 		});
 
 		const visualDiffsResult = await Promise.all(visualDiffResultsPromiseArr);

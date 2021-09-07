@@ -15,6 +15,7 @@ export enum ACTIONS_IN_TEST {
 	BLACKOUT = "ELEMENT_BLACKOUT",
 	PAGE_SCREENSHOT = "PAGE_SCREENSHOT",
 	WAIT = "PAGE_WAIT",
+	PRESS = "ELEMENT_PRESS",
 }
 
 export enum ActionsInTestEnum {
@@ -34,6 +35,7 @@ export enum ActionsInTestEnum {
 	ELEMENT_FOCUS = "ELEMENT_FOCUS",
 	BLACKOUT = "ELEMENT_BLACKOUT",
 	PAGE_SCREENSHOT = "PAGE_SCREENSHOT",
+	PRESS = "ELEMENT_PRESS",
 }
 
 export const ElementActionsInTestArr = Object.values(ActionsInTestEnum).filter((action) => {
@@ -58,4 +60,5 @@ export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.PAGE_SCROLL]: "Scroll page",
 	[ACTIONS_IN_TEST.ELEMENT_SCROLL]: "Scroll element",
 	[ACTIONS_IN_TEST.WAIT]: "Wait",
+	[ACTIONS_IN_TEST.PRESS]: "Press key"
 };

@@ -30,7 +30,9 @@ Test with ease and power with crusher. Small demo of the process.
 
 **Start with crusher cloud for free** Fastest and most powerful way to try Crusher.
 
+<a href="https://crusher.dev/#signup">
 <img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>  
+</a>
 
 **Deploy it on your infra (self-host)**
 

@@ -8,27 +8,25 @@ const toggle = (state) => css`
 	background: #0a0b0e;
 `;
 const toggleButton = (state) => css`
-	height: 19rem;
+	height: 20rem;
 	width: 36rem;
 	//background: rgba(255, 255, 255, 0.15);
-	background: ${state ? "#80B05A" : "#E5496E"};
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	background: ${state ? "#80B05A" : "#f7f7f733"};
+	border: 1px solid ${state ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.17)"};
 	border-radius: 100px;
 	display: flex;
 	align-items: center;
 	padding: 0 1rem;
-	cursor: pointer;
-
 	:hover {
-		//background: rgba(255, 255, 255, 0.20);
+    background: ${state ? "#9dd571" : "rgba(247,247,247,0.3)"};
 	}
 	#ellipsis {
-		height: 13rem;
-		width: 13rem;
+		height: 14rem;
+		width: 14rem;
 		margin-left: 16rem;
 		border-radius: 122px;
 
-		transition: all ease 0.35s;
+		transition: all ease 0.1s;
 	}
 `;
 
@@ -39,7 +37,7 @@ const disabledToggle = css`
 
 const isOff = css`
 	#ellipsis {
-		margin-left: 2px;
+		margin-left: 4px;
 		opacity: 1;
 	}
 `;

@@ -5,9 +5,9 @@ export enum IntegrationServiceEnum {
 	SLACK = "SLACK",
 }
 
-export interface IUserIntegrationsTable extends BaseRowInterface {
+export interface IIntegrationsTable extends BaseRowInterface {
 	id: number;
-	user_id: number;
+	project_id: number;
 	integration_name: IntegrationServiceEnum;
 	label?: string;
 	access_token?: string;
@@ -15,4 +15,4 @@ export interface IUserIntegrationsTable extends BaseRowInterface {
 	meta: string;
 }
 
-export type ICreateUserIntegrationPayload = KeysToCamelCase<Omit<IUserIntegrationsTable, "id">>;
+export type ICreateIntegrationPayload = KeysToCamelCase<Omit<IIntegrationsTable, "id">>;

@@ -11,13 +11,7 @@ class IntegrationsService {
 	private dbManager: DBManager;
 
 	async addSlackIntegration(integrationConfig: SlackOAuthResponse, projectId: number) {
-		return this.dbManager.insert(`INSERT INTO integrations SET ?`, {
-			projectId: projectId,
-			label: `${integrationConfig.team.name}___${integrationConfig.incoming_webhook.channel}`,
-			access_token: integrationConfig.access_token,
-			webhook_url: integrationConfig.incoming_webhook.url,
-			meta: JSON.stringify(integrationConfig),
-		});
+		return this.dbManager.insert(`INSERT INTO integrations SET project_id = ?, meta = ?`, [projectId, JSON.stringify(integrationConfig)]);
 	}
 
 	@CamelizeResponse()

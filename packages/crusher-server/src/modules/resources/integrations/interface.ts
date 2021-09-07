@@ -9,10 +9,7 @@ export interface IIntegrationsTable extends BaseRowInterface {
 	id: number;
 	project_id: number;
 	integration_name: IntegrationServiceEnum;
-	label?: string;
-	access_token?: string;
-	webhook_url?: string;
-	meta: string;
+	meta: any;
 }
 
 export type ICreateIntegrationPayload = KeysToCamelCase<Omit<IIntegrationsTable, "id">>;

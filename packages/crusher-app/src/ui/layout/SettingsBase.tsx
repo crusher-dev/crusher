@@ -47,7 +47,7 @@ export const CompressibleMenu = ({ name, children, initialState = true }) => {
 					<span className={"text-14 leading-none mr-8 font-700"}>{name}</span>
 				</div>
 				<Conditional showIf={!show}>
-					<ChevronRight height={10} width={10} className={"mr-8"} />
+					<ChevronRight height={"10rem"} width={"10rem"} className={"mr-8"} />
 				</Conditional>
 			</div>
 

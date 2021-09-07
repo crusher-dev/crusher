@@ -68,13 +68,13 @@ export const ProjectSettings = () => {
 	return (
 		<SettingsLayout>
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
-				<Heading type={1} fontSize={20} className={"mb-8"}>
+				<Heading type={1} fontSize={"20"} className={"mb-8"}>
 					Overview
 				</Heading>
 				<TextBlock fontSize={13}>Basic configuration for your test</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
 
-				<Heading type={2} fontSize={16} className={"mb-24 mt-38"}>
+				<Heading type={2} fontSize={"16"} className={"mb-24 mt-38"}>
 					Project name
 				</Heading>
 				<div>
@@ -103,7 +103,7 @@ export const ProjectSettings = () => {
 					</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
-				<Heading type={2} fontSize={16} className={"mb-12 mt-56"}>
+				<Heading type={2} fontSize={"16"} className={"mb-12 mt-56"}>
 					Delete this project
 				</Heading>
 				<TextBlock fontSize={13} className={"mb-24"}>

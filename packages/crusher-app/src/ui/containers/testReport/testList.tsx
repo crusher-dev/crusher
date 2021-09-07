@@ -204,7 +204,7 @@ function RenderStep({ data, testInstanceData }) {
 		<div className={"relative mb-32"}>
 			<div className={" flex px-44"}>
 				<div css={tick}>
-					<TestStatusSVG type={status} height={20} width={20} />
+					<TestStatusSVG type={status} height={"20rem"} width={"20rem"} />
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
@@ -264,7 +264,7 @@ function Browsers({ browsers, setConfig }) {
 						`}
 						label={
 							<div className={"flex items-center"}>
-								<img src={`/assets/img/build/browser/${name.toLowerCase()}.png`} width={12} className={"mr-12"} />
+								<img src={`/assets/img/build/browser/${name.toLowerCase()}.png`} width={"12rem"} className={"mr-12"} />
 								<div>{name.toLowerCase()}</div>
 							</div>
 						}
@@ -318,7 +318,7 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 						Expand
 					</div>
 					<ChevronDown
-						width={15}
+						width={"15rem"}
 						css={css`
 							path {
 								fill: #eee;
@@ -329,13 +329,13 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 			</Conditional>
 			<div className={"flex"}>
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
-					<ClickableText paddingY={4} paddingX={12}>
+					<ClickableText paddingY={4} paddingX={"12rem"}>
 						<div className={"flex items-center "}>
 							<div className={" flex items-center  mr-8 text-13"}>
-								<img src={`/assets/img/build/browser/${browserInLowerCase}.png`} width={16} className={"mr-8"} />
+								<img src={`/assets/img/build/browser/${browserInLowerCase}.png`} width={"16rem"} className={"mr-8"} />
 								<span className={"mt-1 capitalize"}>{browserInLowerCase}</span>
 							</div>
-							<ChevronDown width={12} />
+							<ChevronDown width={"12rem"} />
 						</div>
 					</ClickableText>
 				</Dropdown>
@@ -373,7 +373,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl} />
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
-				<TestStatusSVG type={testInstanceData.status} height={18} className={"mr-16"} />
+				<TestStatusSVG type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
 				{name}
 			</div>
 
@@ -510,7 +510,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 			<Conditional showIf={expand && showLoading}>
 				<div className={"flex flex-col items-center w-full mt-80 mb-80"}>
-					<LoadingSVG height={20} />
+					<LoadingSVG height={"20rem"} />
 
 					<div className={"mt-12 text-13"}>Loading</div>
 				</div>

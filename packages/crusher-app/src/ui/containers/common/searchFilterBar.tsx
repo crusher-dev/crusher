@@ -91,7 +91,7 @@ function Statustag() {
 				>
 					<div className="flex flex-row items-center">
 						<span className="text-13 mt-2">{TestTypeLabel[status]}</span>
-						<CloseSVG className={"ml-8"} height={10} />
+						<CloseSVG className={"ml-8"} height={"10rem"} />
 					</div>
 				</ClickableText>
 			</Conditional>
@@ -125,7 +125,7 @@ function Authorstag({ data }: { data: any }) {
 				>
 					<div className="flex flex-row items-center">
 						<span className="text-13 mt-2">{selectedAuthor[0]?.name}</span>
-						<CloseSVG className={"ml-8"} height={10} />
+						<CloseSVG className={"ml-8"} height={"10rem"} />
 					</div>
 				</ClickableText>
 			</Conditional>
@@ -149,7 +149,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 				setFilters({ ...filters, search: null });
 			}}
 		>
-			<CloseSVG height={12} width={12} />
+			<CloseSVG height={"12rem"} width={"12rem"} />
 		</ClickableText>
 	);
 
@@ -195,7 +195,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 						setFilters({});
 					}}
 				>
-					<CloseSVG height={10} className={"mr-8"} /> <span className={"mt-2"}>Clear current search query, filters</span>
+					<CloseSVG height={"10rem"} className={"mr-8"} /> <span className={"mt-2"}>Clear current search query, filters</span>
 				</div>
 			</Conditional>
 		</div>

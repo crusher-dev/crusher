@@ -106,23 +106,12 @@ function handleRecordAction(action: iAction): any {
 
 			const isLastEventAddInput = lastRecordedAction.type === ActionsInTestEnum.ADD_INPUT;
 			if (!isLastEventAddInput) {
-				action.payload.meta.value = [action.payload.meta.value];
 				store.dispatch(recordAction(action));
 				return false;
 			}
 
-			const currentXpath = action.payload.selectors!.find((selector) => selector.type === "xpath");
-
-			const lastActionXpath = lastRecordedAction.payload.selectors!.find((selector) => selector.type === "xpath");
-
 			// Store add inputs in an array values
-			if (!(isLastEventAddInput && currentXpath!.value === lastActionXpath!.value)) {
-				action.payload.meta.value = [action.payload.meta.value];
-				store.dispatch(recordAction(action));
-			} else {
-				action.payload.meta.value = [...lastRecordedAction.payload.meta.value, action.payload.meta.value];
-				store.dispatch(updateLastRecordedAction(action));
-			}
+			store.dispatch(updateLastRecordedAction(action));
 
 			break;
 		}

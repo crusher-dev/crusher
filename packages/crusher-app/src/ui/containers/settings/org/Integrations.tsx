@@ -11,6 +11,7 @@ import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
 
 import Toggle from 'dyson/src/components/atoms/toggle/toggle';
+import { GithubSVG } from '@svg/social';
 
 function GitIntegration() {
 	return <div className={'flex flex-col justify-between items-start mt-40 mb-24'}>
@@ -25,23 +26,28 @@ function GitIntegration() {
 			</div>
 			<Toggle></Toggle>
 		</div>
-		<TextBlock className={"mt-20"}>
-			Add from
-		</TextBlock>
-		<div className={"mt-8"}>
-			<Button size={"small"} bgColor={"tertiary-dark"} className={"mr-16"}>
-				<span className={"mt-1"}>
+		<div>
+			<TextBlock fontSize={13} className={"mt-32"}>
+				Add from
+			</TextBlock>
+			<div className={"flex mt-8"}>
+				<Button size={"small"} bgColor={"tertiary-dark"} className={"mr-16"}>
+					<div className={"flex"}>
+						<GithubSVG/>
+						<span className={"mt-2 ml-8"}>
 					Github
 				</span>
-			</Button>
+					</div>
+				</Button>
 
-			<Button size={"small"} bgColor={"tertiary-dark"} >
+				<Button size={"small"} bgColor={"tertiary-dark"} >
 				<span className={"mt-1"}>
 					Gitalb
 				</span>
-			</Button>
+				</Button>
 
 
+			</div>
 		</div>
 	</div>;
 }

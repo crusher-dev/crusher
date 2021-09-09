@@ -429,7 +429,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				const cardStartingOffset = testCard.getBoundingClientRect().top;
 				const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;
 				if (cardStartingOffset < stickyLastPoint) {
-					setSticky(true);
+					// setSticky(true);
 				} else {
 					setSticky(false);
 				}

@@ -1,8 +1,10 @@
-class BrowserInput {
-	webViewContent: Electron.WebContents;
+import { Debugger } from "electron";
 
-	constructor(webViewContent) {
-		this.webViewContent = webViewContent;
+class MouseImpl {
+	cdp: Debugger;
+
+	constructor(webContentsDebugger: Debugger) {
+		this.cdp = webContentsDebugger;
 	}
 
 	compensateHalfIntegerRoundingError(point) {
@@ -36,7 +38,7 @@ class BrowserInput {
 	}
 
 	async getContentQuads(nodeObjectId: string): Promise<Array<{ x: number; y: number }>> {
-		const quadResponse = await this.webViewContent.debugger.sendCommand("DOM.getContentQuads", { objectId: nodeObjectId });
+		const quadResponse = await this.cdp.sendCommand("DOM.getContentQuads", { objectId: nodeObjectId });
 		const position = await this._getBoundingBox();
 
 		return quadResponse.quads.map((quad) => [
@@ -48,7 +50,7 @@ class BrowserInput {
 	}
 
 	async getClickablePoint(nodeObjectId: string) {
-		const metricsResult = await this.webViewContent.debugger.sendCommand("Runtime.callFunctionOn", {
+		const metricsResult = await this.cdp.sendCommand("Runtime.callFunctionOn", {
 			functionDeclaration: "function(){ console.log(this); return JSON.stringify({width: innerWidth, height: innerHeight }) }",
 			objectId: nodeObjectId,
 		});
@@ -72,7 +74,7 @@ class BrowserInput {
 	}
 
 	async mouseUp(point) {
-		await this.webViewContent.debugger.sendCommand("Input.dispatchMouseEvent", {
+		await this.cdp.sendCommand("Input.dispatchMouseEvent", {
 			type: "mouseReleased",
 			x: point.x,
 			y: point.y,
@@ -84,7 +86,7 @@ class BrowserInput {
 	}
 
 	async mouseDown(point) {
-		await this.webViewContent.debugger.sendCommand("Input.dispatchMouseEvent", {
+		await this.cdp.sendCommand("Input.dispatchMouseEvent", {
 			type: "mousePressed",
 			x: point.x,
 			y: point.y,
@@ -96,7 +98,7 @@ class BrowserInput {
 	}
 
 	async mouseOver(point) {
-		await this.webViewContent.debugger.sendCommand("Input.dispatchMouseEvent", {
+		await this.cdp.sendCommand("Input.dispatchMouseEvent", {
 			type: "mouseMoved",
 			x: point.x,
 			y: point.y,
@@ -127,4 +129,4 @@ class BrowserInput {
 	}
 }
 
-export { BrowserInput };
+export { MouseImpl };

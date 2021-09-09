@@ -1,0 +1,5 @@
+class DevToolsSdk {
+  constructor(wsConnection) {
+
+  }
+}

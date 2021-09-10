@@ -41,18 +41,20 @@ const CustomCodeModalContent = (props: iElementCustomScriptModalContent) => {
 
 	const handleClose = async () => {
 		const store = getStore();
-		recordAction({
-			type: ActionsInTestEnum.CUSTOM_CODE,
-			payload: {
-				selectors: null,
-				meta: {
-					script: codeTextAreaRef.current!.value,
+		store.dispatch(
+			recordAction({
+				type: ActionsInTestEnum.CUSTOM_CODE,
+				payload: {
+					selectors: null,
+					meta: {
+						script: codeTextAreaRef.current!.value,
+					},
 				},
-			},
-			screenshot: null,
-			url: "",
-		}),
-			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+				screenshot: null,
+				url: "",
+			}),
+		);
+		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		onClose();
 
 		store.dispatch(turnOffRecorder());

@@ -9,7 +9,7 @@ import {
 } from "./redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "./interfaces/actionsRecordingState";
 import { RefObject } from "react";
-import { getActionsRecordingState, getAutoRecorderState, isRecorderScriptBooted } from "./redux/selectors/recorder";
+import { getActionsRecordingState, getAutoRecorderState, isRecorderOn, isRecorderScriptBooted } from "./redux/selectors/recorder";
 import { AdvancedURL } from "./utils/url";
 import userAgents from "@shared/constants/userAgents";
 import {
@@ -70,6 +70,10 @@ export interface iSeoMetaInformationMeta {
 
 function handleRecordAction(action: iAction): any {
 	const store = getStore();
+	if (!isRecorderOn(store.getState())) {
+		return;
+	}
+
 	const recordedActions = getActions(store.getState());
 	const lastRecordedAction = recordedActions.length ? recordedActions[recordedActions.length - 1] : null;
 

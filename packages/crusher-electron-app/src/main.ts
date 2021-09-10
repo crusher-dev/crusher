@@ -191,6 +191,23 @@ async function createWindow() {
 		await mainWindow.webContents.debugger.sendCommand("Runtime.evaluate", { expression: "document.querySelector('webview').focus();" });
 	};
 
+	ipcMain.handle("execute-custom-code", async (event, scriptFunction: string) => {
+		if (!webviewDebuggerSDK) return undefined;
+		await focusWebview();
+		console.log("Function body", `${scriptFunction} return validate(crusherSdk);`);
+
+		await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${scriptFunction} return validate(crusherSdk);`)(
+			exports,
+			typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+			module,
+			__filename,
+			__dirname,
+			webviewDebuggerSDK,
+		);
+
+		return true;
+	});
+
 	ipcMain.handle("get-node", async (event, data: string) => {
 		if (!webviewDebuggerSDK) return undefined;
 		await focusWebview();
@@ -208,12 +225,13 @@ async function createWindow() {
 		await webViewContent.debugger.sendCommand("Runtime.enable");
 		await webViewContent.debugger.sendCommand("Overlay.enable");
 		await webViewContent.debugger.sendCommand("Page.enable");
+		await webViewContent.debugger.sendCommand("Network.enable");
 		await webViewContent.debugger.sendCommand("Emulation.setFocusEmulationEnabled", { enabled: true });
 		await webViewContent.debugger.sendCommand("Debugger.setAsyncCallStackDepth", { maxDepth: 9999 });
 		// @TODO: This should not be necessary. Look into this
 		// It's here to enable DOMDebugger, which is not getting enabled by default
 		await webViewContent.debugger.sendCommand("DOMDebugger.setXHRBreakpoint", { url: "http://nonsense.com" });
-		webviewDebuggerSDK = new SDK(webViewContent);
+		webviewDebuggerSDK = new SDK(webViewContent, mainWindow.webContents);
 
 		webViewContent.debugger.on("message", async (event, method, params) => {
 			if (method === "Runtime.consoleAPICalled") {
@@ -222,8 +240,7 @@ async function createWindow() {
 					switch (args[0].value) {
 						case "CRUSHER_HOVER_ELEMENT":
 							// @TODO: Fix thi
-							await focusWebview();
-							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).type("You know what? Crusher rockzz.....");
+							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).hover();
 							break;
 						case "CRUSHER_CLICK_ELEMENT":
 							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).click();

@@ -13,6 +13,7 @@ export interface iRecorderState {
 		elementInfo?: iElementInfo | null;
 	};
 	isAutoRecordOn: boolean;
+	isRecorderOn: boolean;
 	isRecorderScriptBooted: boolean;
 	modalState: ACTIONS_MODAL_STATE | null;
 	seoMetaInfo: iSeoMetaInformationMeta | null;

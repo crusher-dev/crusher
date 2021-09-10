@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld("electron", {
 	setUserAgent: (userAgent) => ipcRenderer.send("set-user-agent", userAgent),
 	restartApp: () => ipcRenderer.send("restart-app"),
 	getNode: async (selector) => ipcRenderer.invoke("get-node", selector),
+	executeCustomCodeScript: async (scriptFunction: string) => ipcRenderer.invoke("execute-custom-code", scriptFunction),
 
 	webview: {
 		postMessage: (data) => {

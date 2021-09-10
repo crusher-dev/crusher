@@ -121,6 +121,7 @@ class MouseImpl {
 
 	async hover(nodeObjectId: string) {
 		const clickablePoint = await this.getClickablePoint(nodeObjectId);
+		console.log("Clickable point", clickablePoint);
 		if (clickablePoint === "error:notvisible") return false;
 		if (clickablePoint === "error:notinviewport") return false;
 

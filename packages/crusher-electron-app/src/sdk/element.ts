@@ -23,6 +23,7 @@ class ElementSdk {
 	}
 
 	hover() {
+		console.log("Object id", this.objectId);
 		return this.mouseImpl.hover(this.objectId);
 	}
 
@@ -35,9 +36,9 @@ class ElementSdk {
 		await this.keyboardImpl.sendText(text);
 	}
 
-	async type(text: string) {
+	async type(text: string, options: { delay?: number } = {}) {
 		await this.focus();
-		await this.keyboardImpl.type(text, { delay: 0 });
+		await this.keyboardImpl.type(text, options);
 	}
 }
 

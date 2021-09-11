@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://i.imgur.com/oUSUuoS.png" height="48" style="margin: 0 auto;"/>
 <h3 align="center" >Crusher</h3>
-<h5 align="center">Open source end to end web testing 🔥🔥 </h5>
+<div>Open source end to end web testing 🔥🔥 </div>
 </div>
 
 ![enter image description here](https://i.imgur.com/UIGnU2u.png)

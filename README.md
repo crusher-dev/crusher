@@ -84,11 +84,18 @@ We try to reimagine how testing should work. Few things that differentiate us
 
 We're open source too❤️❤️
 
-## 🛣️ Use cases
+## 🛣️ Some use cases
 
-Check about roadmap plan here.
 
-## 🛣️ Arhictecture
+- Testing your app e2e with each commit or in dev.
+- Testing responsiveness of your UIs.
+- Ensuring your app across different browsers.
+- Alerting system when any component stops working.
+- Debug system that helps you when something breaks.
+- Creating automated tools or scraping data from site.
+- Or maybe keeping an eye on your competitor 👀
+
+## 🛣️ Architecture
 
 ![enter image description here](https://i.imgur.com/wzU5fUO.png)
 
@@ -98,12 +105,14 @@ Check about roadmap plan here.
 
 ## 🧱 Self deployment
 
-| **Infra provider** | **One-click link** | **Additional information** | | :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: | |       Heroku       | [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher)                                        | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             | |    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |   
-Check guide for other deployments.
+| **Infra provider** | **One-click link** | **Additional information** |  
+| :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |  
+|       Heroku       | [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher)                                        | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |  
+|    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |  
 
-### 📝 Developing locally
+### 📝 Developing
+<hr/>
 
-### 📝 Contributing
 
 ### 📝 License
 

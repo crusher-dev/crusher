@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useReducer, useState } from "react";
 import { HelpIcon, SettingsIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon, AppResetIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
@@ -13,6 +13,9 @@ import { SettingsModal } from "./modals/settingsModal";
 import { validURL } from "../../../utils/helpers";
 import devices from "@shared/constants/devices";
 import userAgents from "@shared/constants/userAgents";
+import { getActions } from "crusher-electron-app/src/extension/redux/selectors/actions";
+import { useSelector } from "react-redux";
+import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -25,6 +28,7 @@ interface iBrowserToolbarProps {
 }
 const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	const { initialUrl, goBack, goForward, refreshPage, saveTest, loadNewPage } = props;
+	const actions = useSelector(getActions);
 
 	// const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
 	const showOnboarding = false;
@@ -34,6 +38,14 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	const handleAddressBarUrlChange = (event: ChangeEvent) => {
 		setUrl((event.target as any).value);
 	};
+
+	useEffect(() => {
+		const navigateActions = actions.filter((action) => [ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(action.type));
+		if (navigateActions && navigateActions.length) {
+			const newUrl = navigateActions[navigateActions.length - 1].payload.meta.value;
+			if (url !== newUrl) setUrl(newUrl);
+		}
+	}, [actions]);
 
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
@@ -90,7 +102,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<div className="mx-12" id={"select-device-input"}>
 							<SelectDeviceInput selectedDevice={selectedDevice} selectDevice={handleDeviceChange} />
 						</div>
-						<a target="_blank" href="https://docs.crusher.dev/docs/help#crusherExternalLink" className="mx-12 cursor-pointer">
+						<a target="_blank" href="https://docs.crusher.dev/docs/help#crusherExternalLink" className="mx-12 cursor-pointer" rel="noreferrer">
 							<HelpIcon />
 						</a>
 						<div className="mx-12 cursor-pointer">

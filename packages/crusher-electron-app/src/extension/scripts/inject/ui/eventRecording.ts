@@ -518,14 +518,24 @@ export default class EventRecording {
 		this.registerNodeListeners();
 	}
 
+	private isAbsoluteURL(url: string) {
+		const rgx = new RegExp("^(?:[a-z]+:)?//", "i");
+		return rgx.test(url);
+	}
+
 	handleBeforeNavigation() {
 		const activeElementHref = (document.activeElement as any).getAttribute("href");
-
-		this.eventsController.saveCapturedEventInBackground(
-			ActionsInTestEnum.NAVIGATE_URL,
-			document.body,
-			activeElementHref ? activeElementHref : window.location.href.toString(),
-		);
+		if (activeElementHref) {
+			this.eventsController.saveCapturedEventInBackground(
+				ActionsInTestEnum.NAVIGATE_URL,
+				document.body,
+				activeElementHref
+					? !this.isAbsoluteURL(activeElementHref)
+						? new URL(activeElementHref, document.baseURI).toString()
+						: activeElementHref
+					: window.location.href.toString(),
+			);
+		}
 	}
 
 	turnInspectModeOnInParentFrame() {

@@ -100,6 +100,8 @@ function handleRecordAction(action: iAction): any {
 			} else {
 				if (isLastEventWaitForNavigation) {
 					store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
+				} else {
+					store.dispatch(updateLastRecordedAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
 				}
 			}
 			store.dispatch(updateIsRecorderScriptBooted(false));

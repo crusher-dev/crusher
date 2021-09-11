@@ -56,6 +56,9 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 			case TOP_LEVEL_ACTION.SHOW_SEO_MODAL:
 				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.SEO_VALIDATION));
 				break;
+			case TOP_LEVEL_ACTION.CUSTOM_CODE:
+				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.CUSTOM_CODE));
+				break;
 			default:
 				console.debug("Unknown Top Level Action Called");
 				break;

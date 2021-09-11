@@ -1,9 +1,10 @@
 import * as path from "path";
 import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard } from "electron";
 import userAgents from "../../crusher-shared/constants/userAgents";
-import { BrowserInput } from "./input";
+import { MouseImpl } from "./sdk/mouse";
+import { SDK } from "./sdk/sdk";
 const gotTheLock = app.requestSingleInstanceLock();
-const highlighterStyle = require('./highlighterStyle.json');
+const highlighterStyle = require("./highlighterStyle.json");
 
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 
@@ -135,6 +136,11 @@ async function createWindow() {
 		await reloadApp(mainWindow, true);
 	});
 
+	await mainWindow.webContents.debugger.attach("1.3");
+	await mainWindow.webContents.debugger.sendCommand("Debugger.enable");
+	await mainWindow.webContents.debugger.sendCommand("DOM.enable");
+	await mainWindow.webContents.debugger.sendCommand("Runtime.enable");
+
 	ipcMain.on("set-custom-backend-domain", async (e, domain) => {
 		APP_DOMAIN = domain;
 	});
@@ -179,6 +185,35 @@ async function createWindow() {
 		return screenshotCaptureInfo.toDataURL();
 	});
 
+	let webviewDebuggerSDK: SDK | null = null;
+
+	const focusWebview = async () => {
+		await mainWindow.webContents.debugger.sendCommand("Runtime.evaluate", { expression: "document.querySelector('webview').focus();" });
+	};
+
+	ipcMain.handle("execute-custom-code", async (event, scriptFunction: string) => {
+		if (!webviewDebuggerSDK) return undefined;
+		await focusWebview();
+		console.log("Function body", `${scriptFunction} return validate(crusherSdk);`);
+
+		await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${scriptFunction} return validate(crusherSdk);`)(
+			exports,
+			typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+			module,
+			__filename,
+			__dirname,
+			webviewDebuggerSDK,
+		);
+
+		return true;
+	});
+
+	ipcMain.handle("get-node", async (event, data: string) => {
+		if (!webviewDebuggerSDK) return undefined;
+		await focusWebview();
+		return (await webviewDebuggerSDK.$(data)).fill("You know what? Crusher rockzz...");
+	});
+
 	ipcMain.on("init-web-view", async (e, webContentsId) => {
 		const webViewContent = getWebViewContent();
 		// console.log("Web view content is", webViewContent);
@@ -189,11 +224,14 @@ async function createWindow() {
 		await webViewContent.debugger.sendCommand("DOM.enable");
 		await webViewContent.debugger.sendCommand("Runtime.enable");
 		await webViewContent.debugger.sendCommand("Overlay.enable");
+		await webViewContent.debugger.sendCommand("Page.enable");
+		await webViewContent.debugger.sendCommand("Network.enable");
+		await webViewContent.debugger.sendCommand("Emulation.setFocusEmulationEnabled", { enabled: true });
 		await webViewContent.debugger.sendCommand("Debugger.setAsyncCallStackDepth", { maxDepth: 9999 });
 		// @TODO: This should not be necessary. Look into this
 		// It's here to enable DOMDebugger, which is not getting enabled by default
 		await webViewContent.debugger.sendCommand("DOMDebugger.setXHRBreakpoint", { url: "http://nonsense.com" });
-		const browserInput = new BrowserInput(webViewContent);
+		webviewDebuggerSDK = new SDK(webViewContent, mainWindow.webContents);
 
 		webViewContent.debugger.on("message", async (event, method, params) => {
 			if (method === "Runtime.consoleAPICalled") {
@@ -201,10 +239,11 @@ async function createWindow() {
 				if (args.length === 2 && args[0].type === "string" && ["CRUSHER_HOVER_ELEMENT", "CRUSHER_CLICK_ELEMENT"].includes(args[0].value)) {
 					switch (args[0].value) {
 						case "CRUSHER_HOVER_ELEMENT":
-							await browserInput.hover(args[1].objectId);
+							// @TODO: Fix thi
+							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).hover();
 							break;
 						case "CRUSHER_CLICK_ELEMENT":
-							await browserInput.click(args[1].objectId);
+							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).click();
 							break;
 						default:
 							console.error("This simulated action not supported");
@@ -218,7 +257,6 @@ async function createWindow() {
 					highlightConfig: highlighterStyle,
 				});
 				const nodeObject = await webViewContent.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
-
 				await webViewContent.debugger.sendCommand("Runtime.callFunctionOn", {
 					functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 					objectId: nodeObject.object.objectId,

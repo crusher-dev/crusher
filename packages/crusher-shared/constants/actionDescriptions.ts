@@ -32,6 +32,9 @@ const ACTION_DESCRIPTIONS = {
 	[ACTIONS_IN_TEST.VALIDATE_SEO]: (meta: ActionMeta) => {
 		return `Validating SEO info`;
 	},
+	[ACTIONS_IN_TEST.CUSTOM_CODE]: (meta: ActionMeta) => {
+		return `Executing custom code`;
+	},
 };
 
 export { ACTION_DESCRIPTIONS };

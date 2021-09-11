@@ -1,7 +1,8 @@
 <div align="center">
 <img src="https://i.imgur.com/oUSUuoS.png" height="48" style="margin: 0 auto;"/>
 <h3 align="center" >Crusher</h3>
-<h4 align="center">Open source end to end web testing 🔥🔥 </h3>
+<h4 align="center">Open source end to end web testing 🔥🔥 </h4>
+<h4 align="center">Open source end to end web testing 🔥🔥 </h4>
 </div>
 
 ![enter image description here](https://i.imgur.com/UIGnU2u.png)
@@ -20,9 +21,8 @@
 </p>    
 
 Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple.    
-<br/><br/>    
+   
 You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
-
 <br/>    
 Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.    
 

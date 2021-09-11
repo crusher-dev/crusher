@@ -13,6 +13,8 @@ export const UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT = "UPDATE_LAST_ELEMENT_CUS
 
 export const TURN_ON_AUTO_RECORDER = "TURN_ON_AUTO_RECORDER";
 export const TURN_OFF_AUTO_RECORDER = "TURN_OFF_AUTO_RECORDER";
+export const TURN_OFF_RECORDER = "TURN_OFF_RECORDER";
+export const TURN_ON_RECORDER = "TURN_ON_RECORDER";
 
 export const updateInspectModeState = (isInspectModeOn: boolean) => ({
 	type: UPDATE_INSPECT_MODE_STATE,
@@ -22,6 +24,14 @@ export const updateInspectModeState = (isInspectModeOn: boolean) => ({
 export const updateActionsModalState = (modalState: ACTIONS_MODAL_STATE | null) => ({
 	type: UPDATE_ACTIONS_MODAL_STATE,
 	payload: { state: modalState },
+});
+
+export const turnOnRecorder = () => ({
+	type: TURN_ON_RECORDER,
+});
+
+export const turnOffRecorder = () => ({
+	type: TURN_OFF_RECORDER,
 });
 
 export const updateActionsRecordingState = (

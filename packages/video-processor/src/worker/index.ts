@@ -44,7 +44,8 @@ export default async function (bullJob: iVideoProcessorJob) {
 			}),
 		});
 		console.log("Uploaded video url", uploadedVideoUrl);
+		return true;
 	} catch (err) {
-		console.error(err);
+		return false;
 	}
 }

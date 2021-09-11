@@ -14,6 +14,7 @@ import { ElementCustomScriptModalContent } from "./elementCustomScriptModalConte
 import { HowToUseVideoModal } from "./howToUseVideoModal";
 import { POSITION } from "../../../../interfaces/css";
 import { WaitModal } from "./waitModal";
+import { CustomCodeModalContent } from "./customCodeModalContent";
 
 interface iModalTopBarProps {
 	title: string;
@@ -104,6 +105,11 @@ const ModalManager = (props: iModalManagerProps) => {
 		handleCloseModal();
 	};
 
+	const handleCloseCustomCodeModal = () => {
+		const store = getStore();
+		handleCloseModal();
+	};
+
 	const isHowToUseVideoModal = modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
 
 	return (
@@ -138,6 +144,17 @@ const ModalManager = (props: iModalManagerProps) => {
 					/>
 
 					<ElementCustomScriptModalContent deviceIframeRef={deviceIframeRef} onClose={handleCloseElementCustomScriptModal} />
+				</>
+			</Conditional>
+			<Conditional If={modalState === ACTIONS_MODAL_STATE.CUSTOM_CODE}>
+				<>
+					<ModalTopBar
+						title={"Element custom script"}
+						desc={"Write your own custom script to validate this element"}
+						closeModal={handleCloseElementCustomScriptModal}
+					/>
+
+					<CustomCodeModalContent deviceIframeRef={deviceIframeRef} onClose={handleCloseCustomCodeModal} />
 				</>
 			</Conditional>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO}>

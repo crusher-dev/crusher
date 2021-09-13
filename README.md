@@ -62,7 +62,7 @@ We're still early. If you face bug/feature request, please file a new issue :D.
 
 ## 💡 Philosophy
 
-Software dev is getting more complex, with tons of APIs. Things break due to various reasons & it's going to increase in the future.
+Software dev is getting more complex, with tons of APIs coming in. Things break due to various reasons & it's going to increase in the future.
 
 This leads to angry customers, stakeholder and your product/startup becomes chaotic which could be avoided easily.
 
@@ -117,7 +117,7 @@ Check about roadmap plan here.
 ### 📝 License
 
 <hr/>      
-This repo is entirely MIT licensed, except the **/src_ee directory (if applicable).    
+This repo is entirely MIT licensed, except the **/src_ee directory (if applicable).
 
 EE features (contained in the src_ee directory) require a Crusher license. Contact us at [sales@crusher.dev](mailto:sales@crusher.dev) for more information.
 

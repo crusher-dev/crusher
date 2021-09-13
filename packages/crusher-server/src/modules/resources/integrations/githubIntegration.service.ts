@@ -3,7 +3,7 @@ import { GitIntegrations } from "./mongo/gitIntegrations";
 import { iGithubIntegration } from "./mongo/gitIntegrations";
 
 @Service()
-export class GitIntegrationsService {
+export class GithubIntegrationService {
 	async linkRepo(repoId: number, repoName: string, installationId: string, repoLink: string, projectId: number, userId: number) {
 		console.log(repoId, repoName, repoLink, projectId, userId);
 		return new GitIntegrations({

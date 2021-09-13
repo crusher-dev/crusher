@@ -3,7 +3,7 @@ import { userInfo } from "os";
 import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { AlertingService } from "../alerting/service";
-import { GitIntegrationsService } from "./github.integration.service";
+import { GithubIntegrationService } from "./githubIntegration.service";
 import { IntegrationServiceEnum } from "./interface";
 import { IntegrationsService } from "./service";
 
@@ -13,7 +13,7 @@ class IntegrationsController {
 	@Inject()
 	private slackService: SlackService;
 	@Inject()
-	private githubIntegrationService: GitIntegrationsService;
+	private githubIntegrationService: GithubIntegrationService;
 	@Inject()
 	private integrationsService: IntegrationsService;
 	@Inject()
@@ -48,7 +48,7 @@ class IntegrationsController {
 	@Post("/integrations/:project_id/github/actions/link")
 	async linkGithubRepo(
 		@CurrentUser({ required: true }) user,
-		@Body() body: { projectId: number; repoId: number; repoName: number; repoLink: number; installationId: number },
+		@Body() body: { projectId: number; repoId: number; repoName: string; repoLink: string; installationId: string },
 	) {
 		const { user_id } = user;
 		const { projectId, repoId, repoName, repoLink, installationId } = body;
@@ -62,7 +62,7 @@ class IntegrationsController {
 
 	@Authorized()
 	@Post("/integrations/:project_id/github/actions/unlink")
-	async unlinkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: { id: number }) {
+	async unlinkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: { id: string }) {
 		await this.githubIntegrationService.unlinkRepo(body.id);
 		return "Successful";
 	}
@@ -71,7 +71,7 @@ class IntegrationsController {
 	@Get("/repos/list/:projectId")
 	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
 		return {
-			linkedRepo: this.githubIntegrationService.getLinkedRepos(projectId),
+			linkedRepo: this.githubIntegrationService.getLinkedRepo(projectId),
 		};
 	}
 }

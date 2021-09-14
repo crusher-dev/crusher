@@ -1,7 +1,7 @@
 import { SlackService } from "@modules/slack/service";
 import { GithubService } from "@modules/thirdParty/github/service";
 import { userInfo } from "os";
-import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Res } from "routing-controllers";
+import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { AlertingService } from "../alerting/service";
 import { GithubIntegrationService } from "./githubIntegration.service";
@@ -76,16 +76,16 @@ class IntegrationsController {
 		};
 	}
 
+	// @TODO: Clean "cannot set headers after they are sent" error
 	@Authorized()
 	@Get("/integrations/:project_id/github/actions/callback")
-	async connectGithubAccount(@QueryParams() params, @Res() res) {
-		const { code, redirect_uri } = params;
-
+	async connectGithubAccount(@QueryParams() params, @Res() res: any) {
+		const { code } = params;
 		const githubService = new GithubService();
 		const tokenInfo = await githubService.parseGithubAccessToken(code);
 
-		const redirectUrl = new URL(redirect_uri);
-		redirect_uri.searchParams.append("token", (tokenInfo as any).token);
+		const redirectUrl = new URL("http://localhost:3000/");
+		redirectUrl.searchParams.append("token", (tokenInfo as any).token);
 		res.redirect(redirectUrl.toString());
 	}
 }

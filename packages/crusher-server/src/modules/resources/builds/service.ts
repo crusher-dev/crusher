@@ -10,6 +10,7 @@ import { BuildReportStatusEnum } from "../buildReports/interface";
 import { GithubService } from "@modules/thirdParty/github/service";
 import { GithubIntegrationService } from "../integrations/githubIntegration.service";
 import { BadRequestError } from "routing-controllers";
+import { GithubCheckConclusionEnum } from "@modules/thirdParty/github/interface";
 
 interface IBuildInfoItem {
 	buildId: number;
@@ -105,7 +106,7 @@ class BuildsService {
 	}
 
 	async updateBuildMeta(meta: any, buildId: number) {
-		return this.dbManager.update("UPDATE jobs SET meta = ? WHERE id = ?", [JSON.stringify(meta), buildId])
+		return this.dbManager.update("UPDATE jobs SET meta = ? WHERE id = ?", [JSON.stringify(meta), buildId]);
 	}
 
 	async updateLatestReportId(latestReportId: number, buildId: number) {
@@ -136,8 +137,40 @@ class BuildsService {
 
 		const meta = JSON.parse(buildRecord.meta);
 		meta.githubCheckRunId = checkRunId;
+		meta.repoName = githubMeta.repoName;
+		meta.commitId = githubMeta.commitId;
+		meta.installationId = githubInstallationRecord.installationId;
 
 		await this.updateBuildMeta(meta, buildRecord.id);
+	}
+
+	private getGithubConclusionFromReportStatus(reportStatus: BuildReportStatusEnum): GithubCheckConclusionEnum {
+		switch (reportStatus) {
+			case BuildReportStatusEnum.PASSED:
+				return GithubCheckConclusionEnum.SUCCESS;
+			case BuildReportStatusEnum.FAILED:
+				return GithubCheckConclusionEnum.FAILURE;
+			case BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED:
+				return GithubCheckConclusionEnum.ACTION_REQUIRED;
+			default:
+				throw new Error("Invalid value for report status");
+		}
+	}
+
+	async markGithubCheckFlowFinished(buildStatus: BuildReportStatusEnum, buildId: number) {
+		const githubService = new GithubService();
+		const buildRecord = await this.getBuild(buildId);
+		const meta = JSON.parse(buildRecord.meta);
+
+		if (meta.github) {
+			const { githubCheckRunId, repoName: fullReponame, installationId } = meta.gtihub;
+			const { repoName, ownerName } = githubService.extractRepoAndOwnerName(fullReponame);
+
+			await githubService.authenticateAsApp(installationId);
+
+			const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
+			await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
+		}
 	}
 }
 

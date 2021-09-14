@@ -1,7 +1,7 @@
 import { SlackService } from "@modules/slack/service";
 import { GithubService } from "@modules/thirdParty/github/service";
 import { userInfo } from "os";
-import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Req, Res } from "routing-controllers";
+import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { AlertingService } from "../alerting/service";
 import { GithubIntegrationService } from "./githubIntegration.service";
@@ -68,6 +68,8 @@ class IntegrationsController {
 	@Authorized()
 	@Post("/integrations/:project_id/github/actions/unlink")
 	async unlinkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: { id: string }) {
+		if (!body.id) throw new BadRequestError("Integration id not provided");
+
 		await this.githubIntegrationService.unlinkRepo(body.id);
 		return "Successful";
 	}
@@ -76,7 +78,7 @@ class IntegrationsController {
 	@Get("/integrations/:project_id/github/list/repo")
 	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
 		return {
-			linkedRepo: this.githubIntegrationService.getLinkedRepo(projectId),
+			linkedRepo: await this.githubIntegrationService.getLinkedRepo(projectId),
 		};
 	}
 

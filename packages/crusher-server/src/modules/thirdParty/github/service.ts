@@ -44,7 +44,7 @@ class GithubService {
 		});
 	}
 
-	async createCheckRun(owner: string, repo: string, commitId: string, installation_id: string, external_id: string) {
+	private async _createCheckRun(owner: string, repo: string, commitId: string, installation_id: string, external_id: number) {
 		return this.octokit.checks.create({
 			owner: owner,
 			repo: repo,
@@ -54,30 +54,19 @@ class GithubService {
 		});
 	}
 
-	async createCheckRunFromJob(job) {
-		const { installation_id, repo_name, commit_id, id } = job;
-		if (!installation_id || !repo_name || !commit_id || !id) {
-			Logger.error(`GithubService::createCheckRunFromJob`, "Not enough data fro creating check run");
-			return false;
-		}
+	async createCheckRun(payload: { installationId: string; repoName: string; commitId: string; buildId: number }) {
+		const { installationId, repoName, commitId, buildId } = payload;
 
-		const owner_name = repo_name.split("/")[0];
-		const repo_original_name = repo_name.split("/")[1];
+		const owner_name = repoName.split("/")[0];
+		const repo_original_name = repoName.split("/")[1];
 
-		if (!owner_name || !repo_original_name) {
-			Logger.error(`GithubService::createCheckRunFromJob`, "Not good repo name", {
-				repo_name,
-			});
-			return false;
-		}
-
-		const createCheckRunResponse = await this.createCheckRun(owner_name, repo_original_name, commit_id, installation_id, id);
+		const createCheckRunResponse = await this._createCheckRun(owner_name, repo_original_name, commitId, installationId, buildId);
 
 		const {
 			data: { id: checkRunId },
 		} = createCheckRunResponse;
 
-		return { checkRunId };
+		return checkRunId;
 	}
 }
 

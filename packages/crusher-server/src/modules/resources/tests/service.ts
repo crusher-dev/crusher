@@ -63,11 +63,21 @@ class TestService {
 		return this.dbManager.update(`UPDATE tests SET name = ? WHERE id = ?`, [newInfo.name, testId]);
 	}
 
-	async runTestsInProject(projectId: number, userId: number, customTestsConfig: Partial<ICreateBuildRequestPayload> = {}) {
+	async runTestsInProject(
+		projectId: number,
+		userId: number,
+		customTestsConfig: Partial<ICreateBuildRequestPayload> = {},
+		buildMeta: { github?: { repoName: string; commitId: string } } = {},
+	) {
 		const testsData = await this.getTestsInProject(projectId, true);
 		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
 
 		const projectRecord = await this.projectService.getProject(projectId);
+
+		const meta: { isProjectLevelBuild: boolean; github?: { repoName: string } } = { isProjectLevelBuild: true };
+		if (buildMeta.github) {
+			meta.github = buildMeta.github;
+		}
 
 		return this.testsRunner.runTests(
 			testsData.list,
@@ -81,7 +91,7 @@ class TestService {
 					browser: [BrowserEnum.CHROME, BrowserEnum.FIREFOX, BrowserEnum.SAFARI],
 					isDraftJob: false,
 					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
-					meta: { isProjectLevelBuild: true },
+					meta: meta,
 				},
 				customTestsConfig,
 			),

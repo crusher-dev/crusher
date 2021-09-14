@@ -51,6 +51,10 @@ class TestsRunner {
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 
+		if (buildPayload.meta.github) {
+			await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
+		}
+
 		const testInstancesArr: Array<KeysToCamelCase<ITestInstancesTable> & { testInfo: KeysToCamelCase<ITestTable> }> = [];
 		// Create test instances and store their ids
 		const testInitPromiseArr = tests.map(async (test) => {

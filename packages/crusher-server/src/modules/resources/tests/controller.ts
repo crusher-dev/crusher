@@ -79,8 +79,20 @@ export class TestController {
 
 	@Authorized()
 	@Post("/projects/:project_id/tests/actions/run")
-	async runProjectTests(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
-		return this.testService.runTestsInProject(projectId, user.user_id);
+	async runProjectTests(
+		@CurrentUser({ required: true }) user,
+		@Body() body: { github?: { repoName: string; commitId: string } },
+		@Param("project_id") projectId: number,
+	) {
+		const meta = {};
+		if (body.github) {
+			meta["github"] = {
+				repoName: body.github.repoName,
+				commitId: body.github.commitId,
+			};
+		}
+
+		return this.testService.runTestsInProject(projectId, user.user_id, meta);
 	}
 
 	@Authorized()

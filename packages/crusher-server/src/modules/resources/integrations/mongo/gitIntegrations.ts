@@ -6,7 +6,7 @@ export interface iGithubIntegration {
 	repoId: number,
 	repoName: string,
 	repoLink: string;
-	installationId: number,
+	installationId: string,
 }
 
 const GitIntegrationsSchema = new mongoose.Schema(

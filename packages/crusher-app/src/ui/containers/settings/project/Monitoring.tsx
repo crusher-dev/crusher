@@ -241,7 +241,7 @@ export const Monitoring = () => {
 						<Heading type={2} fontSize={"16"} className={"mb-12"}>
 							Monitoring
 						</Heading>
-						<TextBlock fontSize={13} className={"mb-24"}>
+						<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
 							Make sure you have selected all the configuration you want
 						</TextBlock>
 					</div>
@@ -274,8 +274,8 @@ export const Monitoring = () => {
 
 const projectListCard = css`
 	padding: 0;
-  background: rgb(16 18 21);
-  border: 1px solid #171b20;
+	background: rgb(16 18 21);
+	border: 1px solid #171b20;
 	#top-section {
 		padding: 10rem 20rem 10rem 24rem;
 	}

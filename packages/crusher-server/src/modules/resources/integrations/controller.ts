@@ -53,6 +53,10 @@ class IntegrationsController {
 	) {
 		const { user_id } = user;
 		const { repoId, repoName, repoLink, installationId } = body;
+
+		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
+		if (linkedRepo) throw new Error("Project is already connected to a github repository");
+
 		const doc = await this.githubIntegrationService.linkRepo(repoId, repoName, installationId, repoLink, projectId, user_id);
 
 		return {
@@ -70,7 +74,7 @@ class IntegrationsController {
 
 	@Authorized()
 	@Get("/integrations/:project_id/github/list/repo")
-	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
+	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
 		return {
 			linkedRepo: this.githubIntegrationService.getLinkedRepo(projectId),
 		};

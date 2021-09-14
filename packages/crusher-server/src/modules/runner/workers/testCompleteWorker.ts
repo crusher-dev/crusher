@@ -79,9 +79,15 @@ export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
 		// @TODO: Add integrations here (Notify slack, etc.)
 		console.log("Build status: ", buildReportStatus);
 
+		await handleIntegrations(buildRecord.id, buildReportStatus);
 		await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
 		return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 	}
+}
+
+async function handleIntegrations(buildId: number, reportStatus: BuildReportStatusEnum) {
+	// Github Integration
+	await buildService.markGithubCheckFlowFinished(reportStatus, buildId);
 }
 
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {

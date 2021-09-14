@@ -1,4 +1,5 @@
 import { SlackService } from "@modules/slack/service";
+import { GithubService } from "@modules/thirdParty/github/service";
 import { userInfo } from "os";
 import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
@@ -6,7 +7,6 @@ import { AlertingService } from "../alerting/service";
 import { GithubIntegrationService } from "./githubIntegration.service";
 import { IntegrationServiceEnum } from "./interface";
 import { IntegrationsService } from "./service";
-
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -74,6 +74,19 @@ class IntegrationsController {
 		return {
 			linkedRepo: this.githubIntegrationService.getLinkedRepo(projectId),
 		};
+	}
+
+	@Authorized()
+	@Get("/integrations/:project_id/github/actions/callback")
+	async connectGithubAccount(@QueryParams() params, @Res() res) {
+		const { code, redirect_uri } = params;
+
+		const githubService = new GithubService();
+		const tokenInfo = await githubService.parseGithubAccessToken(code);
+
+		const redirectUrl = new URL(redirect_uri);
+		redirect_uri.searchParams.append("token", (tokenInfo as any).token);
+		res.redirect(redirectUrl.toString());
 	}
 }
 

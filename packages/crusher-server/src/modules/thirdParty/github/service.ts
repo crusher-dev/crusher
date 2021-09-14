@@ -7,6 +7,8 @@ import { Logger } from "@utils/logger";
 import { createAppAuth } from "@octokit/auth/dist-node";
 import { BuildStatusEnum } from "@modules/resources/builds/interface";
 import { GithubCheckConclusionEnum } from "./interface";
+import { Authentication } from "@octokit/auth-oauth-app/dist-types/types";
+import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 
 @Service()
 class GithubService {
@@ -69,6 +71,20 @@ class GithubService {
 		} = createCheckRunResponse;
 
 		return checkRunId;
+	}
+
+	async parseGithubAccessToken(code: string): Promise<Authentication> {
+		const auth = createOAuthAppAuth({
+			clientId: process.env.GITHUB_APP_CLIENT_ID,
+			clientSecret: process.env.GITHUB_APP_CLIENT_SECRET,
+		});
+
+		const tokenAuthentication = await auth({
+			type: "token",
+			code: code,
+		});
+
+		return tokenAuthentication;
 	}
 }
 

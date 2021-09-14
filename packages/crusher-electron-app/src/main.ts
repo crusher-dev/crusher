@@ -3,7 +3,7 @@ import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContent
 import userAgents from "../../crusher-shared/constants/userAgents";
 import { BrowserInput } from "./input";
 const gotTheLock = app.requestSingleInstanceLock();
-const highlighterStyle = require('./highlighterStyle.json');
+const highlighterStyle = require("./highlighterStyle.json");
 
 app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 

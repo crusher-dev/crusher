@@ -31,7 +31,7 @@ function Dashboard() {
 							Integrate and start testing
 						</div>
 						<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
-						<OnboardingSteps className={"mt-36 mb-56"} />
+						<OnboardingSteps className={"mt-24 mb-56"} />
 					</Conditional>
 
 					{/*Note :- Move to conditional once integrated*/}

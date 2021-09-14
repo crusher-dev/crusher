@@ -148,7 +148,6 @@ function EnvironmentForm({ id }) {
 		const currentEnvData = environmentsInStore[id];
 		const payload = convertEnvToServerSide(currentEnvData);
 
-
 		const backendAPI = notSavedInDB ? createProjectEnvironment(project.id) : updateProjectEnv(project.id, currentEnvData.id);
 
 		await backendRequest(backendAPI, {
@@ -317,7 +316,7 @@ export const Environment = () => {
 			...environmentsInStore,
 			{
 				name: "New env",
-				browser: ["CHROME","FIREFOX","SAFARI"],
+				browser: ["CHROME", "FIREFOX", "SAFARI"],
 				host: "",
 				vars: [],
 				isOpen: true,

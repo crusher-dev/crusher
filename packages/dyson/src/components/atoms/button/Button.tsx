@@ -34,6 +34,9 @@ export type ButtonProps = {
 	className?: string;
 } & React.DetailedHTMLProps<any, any>;
 
+/*
+	Note :- Change color and size thru switch statement
+ */
 /**
  * Unified button component for Dyson UI system
  */
@@ -44,10 +47,12 @@ export const Button: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", chi
 			css={[
 				buttonCSS,
 				blue,
+				size == "x-small" && extraSmallButton,
 				size === "small" && smallButton,
 				size === "medium" && mediumButton,
 				size === "large" && largeButton,
 				bgColor === "tertiary-dark" && tertiaryDark,
+				bgColor === "tertiary-outline" && tertiaryOutline,
 				bgColor === "danger" && danger,
 				bgColor === "disabled" && disabledButton,
 			]}
@@ -70,6 +75,13 @@ const buttonCSS = css`
 	div {
 		font-size: 14rem;
 	}
+`;
+
+const extraSmallButton = css`
+	padding: 0 12rem;
+	height: 24rem;
+	font-weight: 600 !important;
+	font-size: 12.5rem;
 `;
 
 const smallButton = css`
@@ -121,6 +133,16 @@ const tertiaryDark = css`
 
 	:hover {
 		background-color: #1b1d1f;
+		border: 1rem solid #2a2e38;
+	}
+`;
+
+const tertiaryOutline = css`
+	border: 1rem solid #2e3744;
+	background: rgba(255, 255, 255, 0);
+
+	:hover {
+		background: rgba(255, 255, 255, 0.05);
 		border: 1rem solid #2a2e38;
 	}
 `;

@@ -28,7 +28,8 @@ a {
 	-ms-user-select: none;
 	user-select: none;
 }
-@media only screen and (max-width: 1581px) {
+
+@media only screen and (max-width: 1520px) {
 	html {
 		font-size: 0.9px;
 	}

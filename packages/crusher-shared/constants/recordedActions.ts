@@ -60,5 +60,5 @@ export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.PAGE_SCROLL]: "Scroll page",
 	[ACTIONS_IN_TEST.ELEMENT_SCROLL]: "Scroll element",
 	[ACTIONS_IN_TEST.WAIT]: "Wait",
-	[ACTIONS_IN_TEST.PRESS]: "Press key"
+	[ACTIONS_IN_TEST.PRESS]: "Press key",
 };

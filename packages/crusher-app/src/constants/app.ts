@@ -11,7 +11,11 @@ export const OS_INFO: Record<string, TOSDownloadInfo> = {
 };
 
 export const LINUX_INFO: Record<string, TOSDownloadInfo> = {
-	Linux_DEB: { downloadLink: "https://github.com/crusherdev/crusher-downloads/blob/master/v1/crusher-recorder.deb?raw=true", icon: null, label: "Download deb" },
+	Linux_DEB: {
+		downloadLink: "https://github.com/crusherdev/crusher-downloads/blob/master/v1/crusher-recorder.deb?raw=true",
+		icon: null,
+		label: "Download deb",
+	},
 };
 
 export enum OS {

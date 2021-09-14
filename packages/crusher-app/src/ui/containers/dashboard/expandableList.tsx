@@ -44,14 +44,16 @@ const ExpandableListItem = (props: IExpandableListItemProps) => {
 const itemContainerStyle = (isActive: boolean) => css`
 	background: ${isActive ? "#101215" : "#0A0B0E"};
 	border-bottom: 1px solid ${isActive ? "inherit" : "#171C24"};
-	padding: 21rem 26rem 20rem;
+	//padding: 21rem 26rem 20rem;
+	padding: 17rem 26rem 17rem;
+	padding: 22rem 32rem 22rem;
 	:first-child {
-		border-top-left-radius: 12rem;
-		border-top-right-radius: 12rem;
+		border-top-left-radius: 8rem;
+		border-top-right-radius: 8rem;
 	}
 	:last-child {
-		border-bottom-left-radius: 12rem;
-		border-bottom-right-radius: 12rem;
+		border-bottom-left-radius: 8rem;
+		border-bottom-right-radius: 8rem;
 		border-bottom-width: 0;
 	}
 `;

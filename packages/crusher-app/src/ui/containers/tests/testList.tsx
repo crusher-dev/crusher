@@ -184,8 +184,8 @@ const itemContainerStyle = css`
 const itemImageStyle = css`
 	height: 183rem;
 	width: 100%;
-	border-top-left-radius: 12rem;
-	border-top-right-radius: 12rem;
+	border-top-left-radius: 8rem;
+	border-top-right-radius: 8rem;
 	border-width: 0;
 	display: flex;
 	align-items: center;

@@ -148,7 +148,6 @@ function EnvironmentForm({ id }) {
 		const currentEnvData = environmentsInStore[id];
 		const payload = convertEnvToServerSide(currentEnvData);
 
-
 		const backendAPI = notSavedInDB ? createProjectEnvironment(project.id) : updateProjectEnv(project.id, currentEnvData.id);
 
 		await backendRequest(backendAPI, {
@@ -317,7 +316,7 @@ export const Environment = () => {
 			...environmentsInStore,
 			{
 				name: "New env",
-				browser: ["CHROME","FIREFOX","SAFARI"],
+				browser: ["CHROME", "FIREFOX", "SAFARI"],
 				host: "",
 				vars: [],
 				isOpen: true,
@@ -335,7 +334,7 @@ export const Environment = () => {
 						<Heading type={2} fontSize={"16"} className={"mb-12"}>
 							Environments
 						</Heading>
-						<TextBlock fontSize={13} className={"mb-24"}>
+						<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
 							Make sure you have selected all the configuration you want
 						</TextBlock>
 					</div>

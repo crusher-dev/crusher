@@ -6,6 +6,7 @@ import * as fs from "fs";
 import Timeout = NodeJS.Timeout;
 import { TEST_EXECUTION_QUEUE } from "@shared/constants/queues";
 
+const TEST_PER_INSTANCE = 5;
 class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	sessionId: string;
 	_heartBeatInterval: Timeout;
@@ -35,7 +36,8 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		const workerPath = fs.existsSync(path.resolve(__dirname, "./worker.js")) ? path.resolve(__dirname, "./worker.js") : path.resolve("src/worker/index.ts");
 
 		await this.queueManager.addWorkerForQueue(TEST_EXECUTION_QUEUE, workerPath, {
-			concurrency: 3,
+			concurrency: TEST_PER_INSTANCE,
+			lockDuration: 120000,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			//@ts-ignore
 			getOffset: this.getBootAfterNJobsOffset.bind(this),
@@ -76,8 +78,6 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	}
 
 	private setOffNodeOffset(instanceIndexKeys: number[]) {
-		const TEST_PER_INSTANCE = 5;
-
 		const orderedInstanceNo = instanceIndexKeys.sort().findIndex((key) => key === this._registeredInstanceNo);
 		this._bootAfterNJobsOffset = orderedInstanceNo * TEST_PER_INSTANCE;
 	}

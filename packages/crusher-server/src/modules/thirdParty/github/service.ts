@@ -5,6 +5,10 @@ import { Octokit } from "@octokit/rest";
 import { OCTOKIT_CONFIG } from "../../../../config/github";
 import { Logger } from "@utils/logger";
 import { createAppAuth } from "@octokit/auth/dist-node";
+import { BuildStatusEnum } from "@modules/resources/builds/interface";
+import { GithubCheckConclusionEnum } from "./interface";
+import { Authentication } from "@octokit/auth-oauth-app/dist-types/types";
+import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 
 @Service()
 class GithubService {
@@ -21,6 +25,11 @@ class GithubService {
 		});
 	}
 
+	extractRepoAndOwnerName(fullRepoName: string): { ownerName: string; repoName: string } {
+		const splitArr = fullRepoName.split("/");
+		return { ownerName: splitArr[0], repoName: splitArr[1] };
+	}
+
 	async authenticateAsApp(installation_id: string) {
 		await this.octokit.auth({ type: "app" });
 		const {
@@ -31,53 +40,51 @@ class GithubService {
 		this.octokit = new Octokit({ auth: token });
 	}
 
-	async updateRunCheckStatus(owner: string, repo: string, runId: string, status: string, conclusion = null) {
-		const values = conclusion ? { conclusion } : {};
-		const _status = status ? { status } : {};
-
+	async updateRunCheckStatus(githubMeta: { owner: string; repo: string; checkRunId: number }, conclusion: GithubCheckConclusionEnum) {
 		await this.octokit.checks.update({
-			owner: owner,
-			repo: repo,
-			check_run_id: parseInt(runId),
-			..._status,
-			...values,
+			owner: githubMeta.owner,
+			repo: githubMeta.repo,
+			check_run_id: githubMeta.checkRunId,
+			conclusion: conclusion,
 		});
 	}
 
-	async createCheckRun(owner: string, repo: string, commitId: string, installation_id: string, external_id: string) {
+	private async _createCheckRun(fullRepoName: string, commitId: string, installation_id: string, external_id: number) {
+		const { ownerName, repoName } = this.extractRepoAndOwnerName(fullRepoName);
+
 		return this.octokit.checks.create({
-			owner: owner,
-			repo: repo,
+			owner: ownerName,
+			repo: repoName,
 			name: "Crusher CI",
 			head_sha: commitId,
 			external_id: external_id.toString(),
 		});
 	}
 
-	async createCheckRunFromJob(job) {
-		const { installation_id, repo_name, commit_id, id } = job;
-		if (!installation_id || !repo_name || !commit_id || !id) {
-			Logger.error(`GithubService::createCheckRunFromJob`, "Not enough data fro creating check run");
-			return false;
-		}
+	async createCheckRun(payload: { installationId: string; repoName: string; commitId: string; buildId: number }) {
+		const { installationId, repoName: fullReponame, commitId, buildId } = payload;
 
-		const owner_name = repo_name.split("/")[0];
-		const repo_original_name = repo_name.split("/")[1];
-
-		if (!owner_name || !repo_original_name) {
-			Logger.error(`GithubService::createCheckRunFromJob`, "Not good repo name", {
-				repo_name,
-			});
-			return false;
-		}
-
-		const createCheckRunResponse = await this.createCheckRun(owner_name, repo_original_name, commit_id, installation_id, id);
+		const createCheckRunResponse = await this._createCheckRun(fullReponame, commitId, installationId, buildId);
 
 		const {
 			data: { id: checkRunId },
 		} = createCheckRunResponse;
 
-		return { checkRunId };
+		return checkRunId;
+	}
+
+	async parseGithubAccessToken(code: string): Promise<Authentication> {
+		const auth = createOAuthAppAuth({
+			clientId: process.env.GITHUB_APP_CLIENT_ID,
+			clientSecret: process.env.GITHUB_APP_CLIENT_SECRET,
+		});
+
+		const tokenAuthentication = await auth({
+			type: "token",
+			code: code,
+		});
+
+		return tokenAuthentication;
 	}
 }
 

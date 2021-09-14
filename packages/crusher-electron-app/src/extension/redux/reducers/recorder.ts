@@ -2,7 +2,9 @@ import { AnyAction } from "redux";
 import {
 	ADD_SEO_META_INFO,
 	TURN_OFF_AUTO_RECORDER,
+	TURN_OFF_RECORDER,
 	TURN_ON_AUTO_RECORDER,
+	TURN_ON_RECORDER,
 	UPDATE_ACTIONS_MODAL_STATE,
 	UPDATE_ACTIONS_RECORDING_STATE,
 	UPDATE_INSPECT_MODE_STATE,
@@ -19,6 +21,7 @@ const initialState: iRecorderState = {
 		hoverDependentSelectors: [],
 		elementInfo: null,
 	},
+	isRecorderOn: true,
 	isAutoRecordOn: true,
 	modalState: null,
 	isRecorderScriptBooted: false,
@@ -71,6 +74,16 @@ export const recorderReducer = (state: iRecorderState = initialState, action: An
 			return {
 				...state,
 				isAutoRecordOn: false,
+			};
+		case TURN_OFF_RECORDER:
+			return {
+				...state,
+				isRecorderOn: false,
+			};
+		case TURN_ON_RECORDER:
+			return {
+				...state,
+				isRecorderOn: true,
 			};
 		default:
 			return state;

@@ -7,6 +7,10 @@ import { getSnakedObject } from "@utils/helper";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
+import { GithubService } from "@modules/thirdParty/github/service";
+import { GithubIntegrationService } from "../integrations/githubIntegration.service";
+import { BadRequestError } from "routing-controllers";
+import { GithubCheckConclusionEnum } from "@modules/thirdParty/github/interface";
 
 interface IBuildInfoItem {
 	buildId: number;
@@ -31,6 +35,8 @@ interface IBuildInfoItem {
 class BuildsService {
 	@Inject()
 	private dbManager: DBManager;
+	@Inject()
+	private githubIntegrationService: GithubIntegrationService;
 
 	@CamelizeResponse()
 	async getBuildInfoList(
@@ -99,12 +105,72 @@ class BuildsService {
 		);
 	}
 
+	async updateBuildMeta(meta: any, buildId: number) {
+		return this.dbManager.update("UPDATE jobs SET meta = ? WHERE id = ?", [JSON.stringify(meta), buildId]);
+	}
+
 	async updateLatestReportId(latestReportId: number, buildId: number) {
 		return this.dbManager.update("UPDATE jobs SET latest_report_id = ? WHERE id = ?", [latestReportId, buildId]);
 	}
 
 	async updateStatus(status: BuildStatusEnum, buildId: number) {
 		return this.dbManager.update("UPDATE jobs SET status = ? WHERE id = ?", [status, buildId]);
+	}
+
+	async initGithubCheckFlow(githubMeta: { repoName: string; commitId: string }, buildId: number) {
+		const githubService = new GithubService();
+		const buildRecord = await this.getBuild(buildId);
+
+		const githubInstallationRecord = await this.githubIntegrationService.getInstallationRepo(githubMeta.repoName, buildRecord.projectId);
+		if (!githubInstallationRecord) {
+			throw new BadRequestError(`${githubMeta.repoName} is not connected to crusher`);
+		}
+
+		await githubService.authenticateAsApp(githubInstallationRecord.installationId);
+
+		const checkRunId = await githubService.createCheckRun({
+			repoName: githubMeta.repoName,
+			commitId: githubMeta.commitId,
+			installationId: githubInstallationRecord.installationId,
+			buildId: buildId,
+		});
+
+		const meta = JSON.parse(buildRecord.meta);
+		meta.githubCheckRunId = checkRunId;
+		meta.repoName = githubMeta.repoName;
+		meta.commitId = githubMeta.commitId;
+		meta.installationId = githubInstallationRecord.installationId;
+
+		await this.updateBuildMeta(meta, buildRecord.id);
+	}
+
+	private getGithubConclusionFromReportStatus(reportStatus: BuildReportStatusEnum): GithubCheckConclusionEnum {
+		switch (reportStatus) {
+			case BuildReportStatusEnum.PASSED:
+				return GithubCheckConclusionEnum.SUCCESS;
+			case BuildReportStatusEnum.FAILED:
+				return GithubCheckConclusionEnum.FAILURE;
+			case BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED:
+				return GithubCheckConclusionEnum.ACTION_REQUIRED;
+			default:
+				throw new Error("Invalid value for report status");
+		}
+	}
+
+	async markGithubCheckFlowFinished(buildStatus: BuildReportStatusEnum, buildId: number) {
+		const githubService = new GithubService();
+		const buildRecord = await this.getBuild(buildId);
+		const meta = JSON.parse(buildRecord.meta);
+
+		if (meta.github) {
+			const { githubCheckRunId, repoName: fullReponame, installationId } = meta.gtihub;
+			const { repoName, ownerName } = githubService.extractRepoAndOwnerName(fullReponame);
+
+			await githubService.authenticateAsApp(installationId);
+
+			const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
+			await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
+		}
 	}
 }
 

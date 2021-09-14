@@ -1,16 +1,19 @@
 import { SlackService } from "@modules/slack/service";
+import { GithubService } from "@modules/thirdParty/github/service";
 import { userInfo } from "os";
-import { Authorized, CurrentUser, Get, JsonController, Param, Post, QueryParams, Res } from "routing-controllers";
+import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { AlertingService } from "../alerting/service";
+import { GithubIntegrationService } from "./githubIntegration.service";
 import { IntegrationServiceEnum } from "./interface";
 import { IntegrationsService } from "./service";
-
 @Service()
 @JsonController("")
 class IntegrationsController {
 	@Inject()
 	private slackService: SlackService;
+	@Inject()
+	private githubIntegrationService: GithubIntegrationService;
 	@Inject()
 	private integrationsService: IntegrationsService;
 	@Inject()
@@ -39,6 +42,51 @@ class IntegrationsController {
 			emailIntegration: true,
 			slackIntegration: slackIntegration,
 		};
+	}
+
+	@Authorized()
+	@Post("/integrations/:project_id/github/actions/link")
+	async linkGithubRepo(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
+		@Body() body: { repoId: number; repoName: string; repoLink: string; installationId: string },
+	) {
+		const { user_id } = user;
+		const { repoId, repoName, repoLink, installationId } = body;
+		const doc = await this.githubIntegrationService.linkRepo(repoId, repoName, installationId, repoLink, projectId, user_id);
+
+		return {
+			status: "Successful",
+			data: { ...(doc.toObject() as any), _id: doc._id.toString() },
+		};
+	}
+
+	@Authorized()
+	@Post("/integrations/:project_id/github/actions/unlink")
+	async unlinkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: { id: string }) {
+		await this.githubIntegrationService.unlinkRepo(body.id);
+		return "Successful";
+	}
+
+	@Authorized()
+	@Get("/integrations/:project_id/github/list/repo")
+	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
+		return {
+			linkedRepo: this.githubIntegrationService.getLinkedRepo(projectId),
+		};
+	}
+
+	@Authorized()
+	@Get("/integrations/:project_id/github/actions/callback")
+	async connectGithubAccount(@QueryParams() params, @Res() res) {
+		const { code, redirect_uri } = params;
+
+		const githubService = new GithubService();
+		const tokenInfo = await githubService.parseGithubAccessToken(code);
+
+		const redirectUrl = new URL(redirect_uri);
+		redirect_uri.searchParams.append("token", (tokenInfo as any).token);
+		res.redirect(redirectUrl.toString());
 	}
 }
 

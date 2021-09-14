@@ -27,6 +27,8 @@ const virtualModules = new VirtualModulesPlugin({
       return injected.querySelector(parsed, root);
     };
   })();
+
+	window.pwQuerySelector = pwQuerySelector;
   module.exports = { querySelector: pwQuerySelector };`,
 });
 

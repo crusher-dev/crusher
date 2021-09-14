@@ -3,25 +3,33 @@ import React from "react";
 
 import { GithubSVG } from "@svg/social";
 
-export const onboardingTutorial = [
-	{ img: "https://i.imgur.com/S7f2pE0.png", link: "https://www.loom.com/share/5064393d6ceb444d8db6735e9b93b240?sharedAppSource=personal_library" },
-	{ img: "https://i.imgur.com/Ma29pAr.png", link: "https://www.loom.com/share/1919d5ee34a4458a8e81e3c7b1dda602" },
-	{ img: "https://i.imgur.com/gmaQQ3H.png", link: "https://www.loom.com/share/83cd48574f8a4919b019895ac37e9469" },
-];
+export  const onboardingTutorial = [
+	{img: "https://i.imgur.com/S7f2pE0.png",
+		link: "https://www.loom.com/share/5064393d6ceb444d8db6735e9b93b240?sharedAppSource=personal_library"
+	},
+	{img: "https://i.imgur.com/Ma29pAr.png",
+		link: "https://www.loom.com/share/1919d5ee34a4458a8e81e3c7b1dda602"
+	},
+	{img: "https://i.imgur.com/gmaQQ3H.png",
+		link: "https://www.loom.com/share/83cd48574f8a4919b019895ac37e9469"
+	}
+]
 function VideoComponent() {
 	return (
-		<>
-			{onboardingTutorial.map(({ img, link }) => (
-				<a href={link} target={"_blank"}>
-					<div className={"ml-12 mr-12"}>
-						<div css={video}>
-							<img src={img} height={"100%"} />
+
+			<>
+				{onboardingTutorial.map(({img,link})=>(
+					<a href={link} target={"_blank"}>
+						<div className={"ml-12 mr-12"}>
+							<div css={video}>
+								<img src={img} height={"100%"} />
+							</div>
+							{/*<div className={'text-15 font-600 leading-none mt-16'}>How to Create test</div>*/}
 						</div>
-						{/*<div className={'text-15 font-600 leading-none mt-16'}>How to Create test</div>*/}
-					</div>
-				</a>
-			))}
-		</>
+					</a>
+				))}
+			</>
+
 	);
 }
 
@@ -33,6 +41,7 @@ export const OnBoardingTutorialVideo = () => {
 			<div className={"flex flex-row items-center mt-32 mb-40"} css={footerContainerStyle}>
 				<div className={"flex flex-wrap text-14 px-8"} css={footerPlaceholderStyle}>
 					<VideoComponent />
+
 
 					<div className={"ml-40 mr-20"}>
 						<div className={"text-14 font-700 leading-none mt-16 mb-16 "} id={"support-tagline"}>

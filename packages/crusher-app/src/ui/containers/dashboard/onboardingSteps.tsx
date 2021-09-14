@@ -162,7 +162,7 @@ function OnboardingSteps(props: TTestIntegrationListProps) {
 
 const listStyle = css`
 	border: 1px solid #171c24;
-	border-radius: 12rem;
+	border-radius: 8rem;
 `;
 const haveTestStyle = css`
 	color: #fff !important;

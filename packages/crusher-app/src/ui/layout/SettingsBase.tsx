@@ -71,6 +71,10 @@ const projectLinks = [
 		label: "Monitoring",
 		link: "/settings/project/monitoring",
 	},
+	{
+		label: "Integrations",
+		link: "/settings/project/integrations",
+	},
 ];
 
 const orgLinks = [

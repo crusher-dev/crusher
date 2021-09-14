@@ -42,7 +42,7 @@ export function DownloadButton(props) {
 	);
 
 	if (osType === OS.Linux) {
-		const zipLink = LINUX_INFO.Linux_DEB.downloadLink || data?.assets?.filter(({ name }:any) => name.includes("linux-x64"))[0]?.browser_download_url;
+		const zipLink = LINUX_INFO.Linux_DEB.downloadLink || data?.assets?.filter(({ name }: any) => name.includes("linux-x64"))[0]?.browser_download_url;
 
 		return (
 			<div className={"flex flex-col items-center"} {...props}>
@@ -59,7 +59,7 @@ export function DownloadButton(props) {
 	}
 
 	if (osType === OS.MAC) {
-		const dmgLink = OS_INFO.MAC.downloadLink || data?.assets?.filter(({ name }:any) => name.includes("darwin"))[0]?.browser_download_url;
+		const dmgLink = OS_INFO.MAC.downloadLink || data?.assets?.filter(({ name }: any) => name.includes("darwin"))[0]?.browser_download_url;
 		return (
 			<div className={"flex flex-col items-center"} {...props}>
 				<div className={"flex  items-center"}>
@@ -74,9 +74,7 @@ export function DownloadButton(props) {
 	return (
 		<div className={"flex flex-col items-center"} {...props}>
 			<Conditional>
-				<div>
-					Recorder is only available in dmg and dev :(
-				</div>
+				<div>Recorder is only available in dmg and dev :(</div>
 			</Conditional>
 		</div>
 	);

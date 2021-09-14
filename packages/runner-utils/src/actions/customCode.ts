@@ -4,18 +4,18 @@ import { Page } from "playwright";
 import { CrusherSdk } from "../sdk/sdk";
 
 async function executeCustomCode(page: Page, action: iAction) {
-  const customScriptFunction = action.payload.meta.script;
+	const customScriptFunction = action.payload.meta.script;
 
-  const crusherSdk = new CrusherSdk(page);
+	const crusherSdk = new CrusherSdk(page);
 
-  await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${customScriptFunction} return validate(crusherSdk);`)(
-    exports,
-    typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
-    module,
-    __filename,
-    __dirname,
-    crusherSdk,
-  );
+	await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${customScriptFunction} return validate(crusherSdk);`)(
+		exports,
+		typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+		module,
+		__filename,
+		__dirname,
+		crusherSdk,
+	);
 }
 
 module.exports = {

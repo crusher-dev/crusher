@@ -2,11 +2,11 @@ import * as mongoose from "mongoose";
 
 export interface iGithubIntegration {
 	_id: string;
-	projectId: number,
-	repoId: number,
-	repoName: string,
+	projectId: number;
+	repoId: number;
+	repoName: string;
 	repoLink: string;
-	installationId: string,
+	installationId: string;
 }
 
 const GitIntegrationsSchema = new mongoose.Schema(

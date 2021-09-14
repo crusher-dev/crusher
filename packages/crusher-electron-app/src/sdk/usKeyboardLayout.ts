@@ -89,7 +89,7 @@ export const USKeyboardLayout: KeyboardLayout = {
 	KeyK: { keyCode: 75, shiftKey: "K", key: "k" },
 	KeyL: { keyCode: 76, shiftKey: "L", key: "l" },
 	Semicolon: { keyCode: 186, shiftKey: ":", key: ";" },
-	Quote: { keyCode: 222, shiftKey: "\"", key: "'" },
+	Quote: { keyCode: 222, shiftKey: '"', key: "'" },
 	Enter: { keyCode: 13, key: "Enter", text: "\r" },
 
 	// Third row

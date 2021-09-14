@@ -76,7 +76,6 @@ const inputBox = css`
 
 	width: 100%;
 
-
 	:focus {
 		border-color: #6893e7;
 		//box-shadow: rgba(104, 147, 231, 0.11) 0px 0px 10px 10px;

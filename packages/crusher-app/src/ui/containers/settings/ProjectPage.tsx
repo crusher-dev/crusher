@@ -71,7 +71,9 @@ export const ProjectSettings = () => {
 				<Heading type={1} fontSize={"20"} className={"mb-8"}>
 					Overview
 				</Heading>
-				<TextBlock fontSize={13}>Basic configuration for your test</TextBlock>
+				<TextBlock fontSize={13} color={"#c1c1c1"}>
+					Basic configuration for your test
+				</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
 
 				<Heading type={2} fontSize={"16"} className={"mb-24 mt-38"}>
@@ -106,7 +108,7 @@ export const ProjectSettings = () => {
 				<Heading type={2} fontSize={"16"} className={"mb-12 mt-56"}>
 					Delete this project
 				</Heading>
-				<TextBlock fontSize={13} className={"mb-24"}>
+				<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
 					This action can't be undone.
 				</TextBlock>
 				<Button

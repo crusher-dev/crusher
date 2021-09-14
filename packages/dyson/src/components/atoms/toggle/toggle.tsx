@@ -18,7 +18,7 @@ const toggleButton = (state) => css`
 	align-items: center;
 	padding: 0 1rem;
 	:hover {
-    background: ${state ? "#9dd571" : "rgba(247,247,247,0.3)"};
+		background: ${state ? "#9dd571" : "rgba(247,247,247,0.3)"};
 	}
 	#ellipsis {
 		height: 14rem;

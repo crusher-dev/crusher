@@ -48,10 +48,11 @@ class IntegrationsController {
 	@Post("/integrations/:project_id/github/actions/link")
 	async linkGithubRepo(
 		@CurrentUser({ required: true }) user,
-		@Body() body: { projectId: number; repoId: number; repoName: string; repoLink: string; installationId: string },
+		@Param("project_id") projectId: number,
+		@Body() body: { repoId: number; repoName: string; repoLink: string; installationId: string },
 	) {
 		const { user_id } = user;
-		const { projectId, repoId, repoName, repoLink, installationId } = body;
+		const { repoId, repoName, repoLink, installationId } = body;
 		const doc = await this.githubIntegrationService.linkRepo(repoId, repoName, installationId, repoLink, projectId, user_id);
 
 		return {
@@ -68,7 +69,7 @@ class IntegrationsController {
 	}
 
 	@Authorized()
-	@Get("/repos/list/:projectId")
+	@Get("/integrations/:project_id/github/list/repo")
 	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
 		return {
 			linkedRepo: this.githubIntegrationService.getLinkedRepo(projectId),

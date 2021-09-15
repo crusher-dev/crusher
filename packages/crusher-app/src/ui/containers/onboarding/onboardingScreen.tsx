@@ -163,13 +163,13 @@ const GetViewByStep = () => {
 
 const CrusherOnboarding = () => {
 	const router = useRouter();
-	const [{ meta }] = useAtom(userAtom);
+	const [user ] = useAtom(userAtom);
 	useEffect(() => {
 		if (isTempTestPending()) {
 			sendSnackBarEvent({ message: "Your test will be saved after onboarding" });
 		}
 
-		if (getBoolean(meta.INITIAL_ONBOARDING)) {
+		if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
 			router.push("/app/dashboard");
 		}
 	}, []);

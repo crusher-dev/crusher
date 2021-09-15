@@ -42,7 +42,8 @@ export class UserController {
 		if (!user.user_id) {
 			await this.userAuthService.authOpenSourceUser(res);
 		}
-		res.redirect(resolvePathToFrontendURI("/"));
+
+		return "Successful";
 	}
 
 	@Get("/users/actions/auth.google")

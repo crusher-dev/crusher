@@ -43,3 +43,5 @@ export const addGithubRepo = (projectId: number) => resolvePathToBackendURI(`/in
 
 export const unlinkGithubRepo = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/actions/unlink/`);
 export const getGitIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/list/repo/`);
+
+export const setupOSS = '/users/actions/oss.init';

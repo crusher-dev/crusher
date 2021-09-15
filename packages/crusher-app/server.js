@@ -22,10 +22,7 @@ const bodyParser = require("body-parser");
 	}
 
 	// This is currently used for server
-	server.use("/", express.static("out"));
-	server.all("*", (req, res) => {
-		return handle(req, res);
-	});
+	server.use("*", express.static("out"));
 
 	server.listen(port, (err) => {
 		if (err) throw err;

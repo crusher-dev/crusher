@@ -30,7 +30,6 @@ server.use(async (req,res,next)=>{
 	}
 
 	try{
-		console.log("out"+getSanitizedPath(req.url))
 		const data  = await fs.readFileSync("out"+getSanitizedPath(req.url)+".html");
 		if(data !== null){
 			res.end(data)

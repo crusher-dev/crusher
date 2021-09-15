@@ -9,6 +9,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 const bodyParser = require("body-parser");
 
+console.log("dsf")
 app.prepare().then(() => {
 	const server = express();
 	server.use(bodyParser({ limit: "50mb" }));

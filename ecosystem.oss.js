@@ -4,7 +4,7 @@ module.exports = {
 	apps: [
 		{
 			name: 'crusher-app',
-			cwd: './packages/crusher-app',
+			cwd: './packages/crusher-app/.next',
 			script: 'npm',
 			args: 'run dev:open_source',
 			env: CRUSHER_APP_ENV,

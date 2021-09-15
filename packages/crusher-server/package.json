@@ -36,6 +36,8 @@
 		"@octokit/oauth-app": "^1.1.2",
 		"@octokit/rest": "^18.0.14",
 		"@sendgrid/mail": "^7.1.1",
+		"@swc/core": "^1.2.87",
+		"@swc/helpers": "^0.2.13",
 		"@typescript-eslint/eslint-plugin": "^4.14.1",
 		"@typescript-eslint/parser": "^4.14.1",
 		"analytics-node": "^3.4.0-beta.3",

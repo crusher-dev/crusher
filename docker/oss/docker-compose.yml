@@ -7,10 +7,10 @@ services:
     network_mode: host
     environment:
       - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
-      - DB_HOST=db-mysql-nyc3-51235-do-user-9421575-0.b.db.ondigitalocean.com
-      - DB_USERNAME=doadmin
-      - DB_PASSWORD=c1y6sb2379tx2alr
-      - DB_PORT=25060
+      - DB_HOST=localhost
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - DB_PORT=3306
       - MONGODB_CONNECTION_STRING=mongodb://localhost:27017/crusher
       - REDIS_HOST=localhost
       - REDIS_PORT=6379

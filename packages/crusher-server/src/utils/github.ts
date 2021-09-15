@@ -17,27 +17,3 @@ export function getGithubToken() {
 
 	return bearer;
 }
-
-export async function updateGithubCheckStatus(status, details, conclusion = null) {
-	const githubService = new GithubService();
-
-	const { githubInstallationId, fullRepoName, githubCheckRunId } = details;
-	if (githubInstallationId) {
-		if (!fullRepoName) {
-			Logger.error("QueueManager::updateGithubCheckStatus", `Didn't receive github repo name`);
-			throw new Error("No github repo name even though it is called from github");
-		}
-
-		const repoInfo = extractOwnerAndRepoName(fullRepoName);
-		if (!repoInfo) {
-			Logger.error("QueueManager::updateGithubCheckStatus", `Invalid Repo name`);
-
-			throw new Error("Invalid repo name");
-		}
-
-		const { ownerName, repoName } = repoInfo;
-
-		await githubService.authenticateAsApp(githubInstallationId);
-		await githubService.updateRunCheckStatus(ownerName, repoName, githubCheckRunId, status, conclusion);
-	}
-}

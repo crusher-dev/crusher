@@ -1,7 +1,7 @@
 import { SlackService } from "@modules/slack/service";
 import { GithubService } from "@modules/thirdParty/github/service";
 import { userInfo } from "os";
-import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Res } from "routing-controllers";
+import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { AlertingService } from "../alerting/service";
 import { GithubIntegrationService } from "./githubIntegration.service";
@@ -53,6 +53,10 @@ class IntegrationsController {
 	) {
 		const { user_id } = user;
 		const { repoId, repoName, repoLink, installationId } = body;
+
+		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
+		if (linkedRepo) throw new Error("Project is already connected to a github repository");
+
 		const doc = await this.githubIntegrationService.linkRepo(repoId, repoName, installationId, repoLink, projectId, user_id);
 
 		return {
@@ -64,28 +68,30 @@ class IntegrationsController {
 	@Authorized()
 	@Post("/integrations/:project_id/github/actions/unlink")
 	async unlinkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: { id: string }) {
+		if (!body.id) throw new BadRequestError("Integration id not provided");
+
 		await this.githubIntegrationService.unlinkRepo(body.id);
 		return "Successful";
 	}
 
 	@Authorized()
 	@Get("/integrations/:project_id/github/list/repo")
-	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("projectId") projectId: number) {
+	async getLinkedReposList(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
 		return {
-			linkedRepo: this.githubIntegrationService.getLinkedRepo(projectId),
+			linkedRepo: await this.githubIntegrationService.getLinkedRepo(projectId),
 		};
 	}
 
+	// @TODO: Clean "cannot set headers after they are sent" error
 	@Authorized()
 	@Get("/integrations/:project_id/github/actions/callback")
-	async connectGithubAccount(@QueryParams() params, @Res() res) {
-		const { code, redirect_uri } = params;
-
+	async connectGithubAccount(@QueryParams() params, @Res() res: any) {
+		const { code } = params;
 		const githubService = new GithubService();
 		const tokenInfo = await githubService.parseGithubAccessToken(code);
 
-		const redirectUrl = new URL(redirect_uri);
-		redirect_uri.searchParams.append("token", (tokenInfo as any).token);
+		const redirectUrl = new URL("http://localhost:3000/");
+		redirectUrl.searchParams.append("token", (tokenInfo as any).token);
 		res.redirect(redirectUrl.toString());
 	}
 }

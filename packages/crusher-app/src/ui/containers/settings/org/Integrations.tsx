@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
@@ -15,8 +15,139 @@ import { Card } from "dyson/src/components/layouts/Card/Card";
 import { openPopup } from "@utils/common/domUtils";
 import { getGithubOAuthURL } from "@utils/core/external";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import { OctokitManager } from "@utils/core/external/ocktokit";
+import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
+import { AddSVG } from "@svg/dashboard";
+import { backendRequest } from "@utils/common/backendRequest";
+import { addGithubRepo, getGitIntegrations, unlinkGithubRepo } from "@constants/api";
+import { RequestMethod } from "@types/RequestOptions";
+import { currentProject } from "@store/atoms/global/project";
+import useSWR, { mutate } from "swr";
+
+const connectedToGitAtom = atomWithImmer<
+	| any
+	| {
+			token: string;
+			type: "github";
+			updateCount: number;
+	  }
+>(null);
+
+const useGithubData = (gitInfo) => {
+	const [selectedOrganisation, setSelectedOrganisation] = useState(null);
+
+	const [repositories, setRepositoriesData] = useState([]);
+
+	const [organisations, setOrganisation] = useState([]);
+
+	useEffect(() => {
+		(async () => {
+			const ocktoKit = new OctokitManager(gitInfo.token);
+
+			const organisation = await ocktoKit.getInstallationsUserCanAccess();
+			const clinetSideOrganisation = convertToOrganisationInfo(organisation);
+
+			setOrganisation(clinetSideOrganisation);
+			const organisationId = clinetSideOrganisation[0].id;
+			setSelectedOrganisation(organisationId);
+		})();
+	}, [gitInfo.token, gitInfo.updateCount]);
+
+	useEffect(() => {
+		(async () => {
+			const ocktoKit = new OctokitManager(gitInfo.token);
+			const repoData = await ocktoKit.getReposForInstallation(selectedOrganisation);
+
+			setRepositoriesData(getRepoData(repoData, selectedOrganisation));
+		})();
+	}, [selectedOrganisation]);
+
+	return {
+		selectedOrganisation,
+		setSelectedOrganisation,
+		organisations,
+		repositories,
+	};
+};
+
+const addGithubProject = (projectId: number, repoData) => {
+	return backendRequest(addGithubRepo(projectId), {
+		method: RequestMethod.POST,
+		payload: repoData,
+	});
+};
+
+function RepoBar({ repo }) {
+	const [project] = useAtom(currentProject);
+
+	const onSelect = useCallback(async () => {
+		await addGithubProject(project.id, repo);
+
+		mutate(getGitIntegrations(project.id));
+	}, []);
+	return (
+		<div className={"flex text-13 justify-between mb-16"}>
+			<div className={"flex items-center"}>
+				<div
+					className="flex items-center justify-center mr-16"
+					css={css`
+						min-width: 28px;
+						min-height: 28px;
+						border-radius: 4rem;
+						background: #323942;
+					`}
+				>
+					<GithubSVG />
+				</div>
+				{repo.repoName}
+			</div>
+
+			<Button
+				size={"x-small"}
+				onClick={onSelect.bind(this)}
+				css={css`
+					min-width: 100rem;
+				`}
+			>
+				<span className={"mt-1"} css={css`font-size: 12.5rem;`}>Connect</span>
+			</Button>
+		</div>
+	);
+}
+
+export const getOrganisatioNSelectBox = (organisations) => {
+	const organisation = organisations.map(({ id, name }) => ({
+		value: id,
+		label: name,
+	}));
+
+	const getAddNew = {
+		value: "add_new",
+		component: (
+			<div className={"flex items-center"}>
+				<AddSVG className={"mr-12"} /> Add new account/organisation
+			</div>
+		),
+	};
+	return [...organisation, getAddNew];
+};
 
 function ProjectBox() {
+	const [gitInfo] = useAtom(connectedToGitAtom);
+	const { selectedOrganisation, organisations, repositories, setSelectedOrganisation } = useGithubData(gitInfo);
+
+	const { onGithubClick } = useGithubAuthorize();
+	const handleOrgSelection = useCallback((selected) => {
+		if (selected === "add_new") {
+			onGithubClick(true);
+			return;
+		}
+
+		setSelectedOrganisation(selected[0]);
+	}, []);
+
 	return (
 		<div
 			css={css`
@@ -50,33 +181,13 @@ function ProjectBox() {
 							max-width: 300rem;
 						`}
 					>
-						<SelectBox></SelectBox>
+						<SelectBox selected={[selectedOrganisation]} values={getOrganisatioNSelectBox(organisations)} callback={handleOrgSelection.bind(this)}></SelectBox>
 					</div>
 				</div>
 
-				<div className={"flex text-13 justify-between mb-15"}>
-					<div className={"flex items-center"}>
-						<div
-							className="mr-12"
-							css={css`
-								min-width: 24px;
-								min-height: 24px;
-								border-radius: 34rem;
-								background: #c4c4c4;
-							`}
-						></div>
-						Personal Website
-					</div>
-
-					<Button
-						size={"x-small"}
-						css={css`
-							min-width: 100rem;
-						`}
-					>
-						Connect
-					</Button>
-				</div>
+				{repositories.map((repo) => (
+					<RepoBar repo={repo} />
+				))}
 			</Card>
 
 			<TextBlock className={"mt-16"} fontSize={"12"} color={"#A7A7A8"}>
@@ -86,10 +197,30 @@ function ProjectBox() {
 	);
 }
 
-function ConnectionGithub() {
-	const onGithubClick = () => {
-		openPopup(getGithubOAuthURL());
+const useGithubAuthorize = () => {
+	const [, setConnectedGit] = useAtom(connectedToGitAtom);
+	const onGithubClick = (addInstallation: boolean = false) => {
+		const windowRef = openPopup(getGithubOAuthURL(addInstallation));
+
+		const interval = setInterval(() => {
+			const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
+			if (isOnFEPage) {
+				const url = windowRef?.location?.href;
+				const token = url.split("token=")[1];
+				windowRef.close();
+				clearInterval(interval);
+				setConnectedGit({
+					type: "github",
+					token,
+				});
+			}
+		}, 50);
 	};
+
+	return { onGithubClick };
+};
+function ConnectionGithub() {
+	const { onGithubClick } = useGithubAuthorize();
 
 	return (
 		<div
@@ -121,7 +252,7 @@ function ConnectionGithub() {
 				<div className={"mt-12"}>
 					<Button
 						bgColor={"tertiary-dark"}
-						onClick={onGithubClick.bind(this)}
+						onClick={onGithubClick.bind(this, false)}
 						css={css`
 							border-width: 0;
 							background: #343a41;
@@ -147,7 +278,105 @@ function ConnectionGithub() {
 	);
 }
 
+const unlinkRepo = (projectId: number, id) => {
+	return backendRequest(unlinkGithubRepo(projectId), {
+		method: RequestMethod.POST,
+		payload: {
+			id,
+		},
+	});
+};
+
+function LinkedRepo() {
+	const [project] = useAtom(currentProject);
+	const { data: linkedRepos } = useSWR(getGitIntegrations(project.id));
+
+	const { repoName, projectId, repoLink, _id: id } = linkedRepos.linkedRepo;
+
+	const unlinkRepoCallback = useCallback(async () => {
+		await unlinkRepo(projectId, id);
+		mutate(getGitIntegrations(project.id));
+	}, [linkedRepos]);
+	return (
+		<div
+			css={css`
+				display: block;
+			`}
+			className={"w-full"}
+		>
+			<Card
+				className={"mt-28"}
+				css={css`
+					padding: 18rem 20rem 18rem;
+					background: #101215;
+				`}
+			>
+				<div
+					className={"font-cera font-700 mb-8 leading-none"}
+					css={css`
+						font-size: 13.5rem;
+						color: white;
+					`}
+				>
+					Connected to
+				</div>
+				<div></div>
+
+				<div className={"flex text-13 justify-between mt-16"}>
+					<div className={"flex items-center"}>
+						<div
+							className="flex items-center justify-center mr-16"
+							css={css`
+								min-width: 28px;
+								min-height: 28px;
+								border-radius: 4rem;
+								background: #323942;
+							`}
+						>
+							<GithubSVG />
+						</div>
+
+						<div>
+							<div
+								className={"font-600"}
+								css={css`
+									color: #fff;
+								`}
+							>
+								{repoName}
+							</div>
+							<a href={repoLink} target={"_blank"}>
+								{repoLink}
+							</a>
+						</div>
+					</div>
+
+					<Button
+						size={"small"}
+						bgColor={"danger"}
+						css={css`
+							min-width: 100rem;
+						`}
+						onClick={unlinkRepoCallback.bind(this)}
+					>
+						<span className={"mt-1"}>Disconnect</span>
+					</Button>
+				</div>
+			</Card>
+
+			<TextBlock className={"mt-16"} fontSize={"12"} color={"#A7A7A8"}>
+				Learn more about login for connection
+			</TextBlock>
+		</div>
+	);
+}
+
 function GitIntegration() {
+	const [connectedToGit, setConnectedGit] = useAtom(connectedToGitAtom);
+	const [project] = useAtom(currentProject);
+	const { data: linkedRepo } = useSWR(getGitIntegrations(project.id));
+
+	const hadLinkedRepo = !!linkedRepo?.linkedRepo;
 	return (
 		<div className={"flex flex-col justify-between items-start mt-40 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
@@ -160,8 +389,18 @@ function GitIntegration() {
 					</TextBlock>
 				</div>
 			</div>
-			<ConnectionGithub />
-			<ProjectBox />
+
+			<Conditional showIf={hadLinkedRepo}>
+				<LinkedRepo />
+			</Conditional>
+			<Conditional showIf={!hadLinkedRepo}>
+				<Conditional showIf={!connectedToGit?.type}>
+					<ConnectionGithub />
+				</Conditional>
+				<Conditional showIf={!!connectedToGit}>
+					<ProjectBox />
+				</Conditional>
+			</Conditional>
 		</div>
 	);
 }

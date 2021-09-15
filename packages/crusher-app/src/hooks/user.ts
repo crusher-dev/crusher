@@ -14,20 +14,19 @@ import { systemConfigAtom } from "../store/atoms/global/systemConfig";
 import { teamAtom } from "../store/atoms/global/team";
 import { userAtom } from "../store/atoms/global/user";
 import { USER_META_KEYS } from "@constants/USER";
+import { selectInitialProject, selectInitialProjectMutator, updateInitialDataMutator } from '@store/mutators/user';
 
 /*
 	Two scenarios to check for
 	- When data is loaded on Mount and passed externally
 	- How redirection is working
+
+	Later :- Can add function to fetchData. Instead of direct use effect
  */
 export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = null }) {
 	const router = useRouter();
-
-	const [, setUser] = useAtom(userAtom);
-	const [, setSystem] = useAtom(systemConfigAtom);
-	const [, setTeam] = useAtom(teamAtom);
-	const [, setProjects] = useAtom(projectsAtom);
-	const [, setAppStateItem] = useAtom(appStateItemMutator);
+	const [,updateInitialData] = useAtom(updateInitialDataMutator);
+	const [,selectInitialProject] = useAtom(selectInitialProjectMutator);
 
 	const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -41,14 +40,8 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 				dataToConsider = userAndSystemData;
 			}
 
-			const { userData, team, system, projects } = dataToConsider;
-			setUser(userData);
-			setTeam(team);
-			setSystem(system);
-			setProjects(projects);
-
-			const selectedProjectId = userData?.meta?.[USER_META_KEYS.SELECTED_PROJECT_ID] ?? projects?.[0].id;
-			setAppStateItem({ key: "selectedProjectId", value: selectedProjectId });
+			updateInitialData(dataToConsider)
+			selectInitialProject(dataToConsider)
 
 			await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 			setDataLoaded(true);

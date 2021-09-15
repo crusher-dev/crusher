@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
-		"dev:open_source": "NEXT_PUBLIC_CRUSHER_MODE=open-source  NODE_ENV=development node server.dev.js",
+		"dev:open_source": "NEXT_PUBLIC_CRUSHER_MODE=open-source  NODE_ENV=development node server.js",
 		"dev": "NODE_ENV=development next dev",
 		"build": "NODE_ENV=production next build",
 		"lint": "eslint --ext=jsx,ts,tsx src",

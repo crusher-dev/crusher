@@ -11,7 +11,7 @@ type TSelectBox = {
 	css?: SerializedStyles;
 	values: { value: any; component: ReactElement; inactive: boolean };
 	isMultiSelect: boolean;
-	selectedValue: any;
+	selected: any;
 	size: "small" | "medium" | "large"; // 28/32/36/42
 	placeholder: string;
 	callback: (selectedValue: any) => void;
@@ -138,6 +138,7 @@ export const dropdDown = css`
 
 const dropdDownItem = (isMultiSelect) => css`
 	font-size: 13rem;
+	color: #fff;
 	:hover {
 		background: ${isMultiSelect ? "#16191D" : "#687ef2"} !important;
 	}

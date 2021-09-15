@@ -83,9 +83,9 @@ const SetupCrusher = () => {
 					margin-bottom: 20rem;
 					height: 34rem;
 				`}
-				onClick={setOnboardingStep.bind(this, ONBOARDING_STEP.TUTORIAL)}
+				onClick={onInitialSetup}
 			>
-				Next
+				Install & Next
 			</Button>
 		</>
 	);

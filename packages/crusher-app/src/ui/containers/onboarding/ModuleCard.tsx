@@ -15,9 +15,9 @@ export const ModuleCard = ({onClick}) => {
 				{/*</div>*/}
 			</div>
 			<div>
-				<Button className="text-13" css={smallButtonStyle} type={"small"} onClick={onClick}>
-					Install
-				</Button>
+				{/*<Button className="text-13" css={smallButtonStyle} type={"small"} onClick={onClick}>*/}
+				{/*	Install*/}
+				{/*</Button>*/}
 			</div>
 		</div>
 	);

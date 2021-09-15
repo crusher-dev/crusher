@@ -15,7 +15,7 @@ import { UserProjectRoleEnum } from "./roles/project/interface";
 import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@modules/redis";
 import { MongoManager } from "@modules/db/mongo";
-import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
+import { IUserAndSystemInfoResponse, TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
 @Service()
 class UsersService {
@@ -140,7 +140,7 @@ class UsersService {
 			  })
 			: null;
 
-		return {
+		const out = {
 			userId: userInfo ? userInfo.id : null,
 			isUserLoggedIn: !!userInfo,
 			userData: userInfo ? getUserData(userInfo) : null,
@@ -161,6 +161,14 @@ class UsersService {
 				},
 			},
 		};
+
+		if (isOpenSourceEdition()) {
+			(out.system as TSystemInfo).OPEN_SOURCE = {
+				initialized: !!userInfo,
+			};
+		}
+
+		return out;
 	}
 
 	async updateMeta(meta: string, userId: number) {

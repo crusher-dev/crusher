@@ -92,7 +92,7 @@ class UserAuthService {
 		return true;
 	}
 
-	async authOpenSourceUser(res: Response) {
+	async authOpenSourceUser(res: Response): Promise<{ userId: number; teamId: number }> {
 		const user = await this.usersService.getOpenSourceUser();
 		if (!user) {
 			return this.signupUser(
@@ -106,7 +106,7 @@ class UserAuthService {
 		}
 
 		await this.setUserAuthCookies(user.id, user.teamId, res);
-		return true;
+		return { userId: user.id, teamId: user.teamId };
 	}
 }
 

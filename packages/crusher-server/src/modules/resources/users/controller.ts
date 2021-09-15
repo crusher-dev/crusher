@@ -39,11 +39,16 @@ export class UserController {
 	// @OSS
 	@Get("/users/actions/oss.init")
 	async initOssUser(@CurrentUser({}) user: { user_id: number; team_id: number }, @Req() req: any, @Res() res: any) {
-		if (!user.user_id) {
-			await this.userAuthService.authOpenSourceUser(res);
+		let userId = user.user_id;
+
+		if (!userId) {
+			const userEntry = await this.userAuthService.authOpenSourceUser(res);
+			userId = userEntry.userId;
 		}
 
-		return "Successful";
+		return {
+			systemInfo: await this.usersService.getUserAndSystemInfo(userId),
+		};
 	}
 
 	@Get("/users/actions/auth.google")

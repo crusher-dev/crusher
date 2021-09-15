@@ -38,3 +38,8 @@ export const deleteProjectMonitoring = (projectId: number, monitoringId: number)
 export const createProjectEnvironment = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments/actions/create`);
 export const updateProjectEnv = (projectId: number, envId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments/${envId}/actions/update`);
 export const deleteProjectEnv = (projectId: number, envId: number) => resolvePathToBackendURI(`/projects/${projectId}/environments/${envId}/actions/delete`);
+
+export const addGithubRepo = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/actions/link/`);
+
+export const unlinkGithubRepo = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/actions/unlink/`);
+export const getGitIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/list/repo/`);

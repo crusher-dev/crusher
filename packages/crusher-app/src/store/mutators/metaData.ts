@@ -70,6 +70,9 @@ export const updateMeta = atom(null, (_get, _set, { type, key, value }: IUpdateU
 			{
 				const team = _get(teamAtom);
 				const newState = produce(team, (newState) => {
+					if(newState === null){
+						newState = {}
+					}
 					// @ts-ignore
 					newState["meta"] = { ...newState["meta"], ...payload };
 				});
@@ -82,6 +85,9 @@ export const updateMeta = atom(null, (_get, _set, { type, key, value }: IUpdateU
 			{
 				const user = _get(userAtom);
 				const newState = produce(user, (newState) => {
+					if(newState === null){
+						newState = {}
+					}
 					// @ts-ignore
 					newState["meta"] = { ...newState["meta"], ...payload };
 				});

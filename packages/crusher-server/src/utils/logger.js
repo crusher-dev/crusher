@@ -123,4 +123,3 @@ console.warn = warn;
 console.info = info;
 console.trace = trace;
 console.debug = debug;
-console.debug("Server boot complete");

@@ -5,7 +5,7 @@ import { TestsRunner } from "@modules/runner";
 import { BuildStatusEnum, BuildTriggerEnum, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { ICreateTestPayload, ITestTable } from "@modules/resources/tests/interface";
-import { getSnakedObject } from "@utils/helper";
+import { getSnakedObject, isOpenSourceEdition } from "@utils/helper";
 import { iAction } from "@crusher-shared/types/action";
 import { RedisManager } from "@modules/redis";
 import { v4 as uuidv4 } from "uuid";
@@ -88,7 +88,7 @@ class TestService {
 					host: "null",
 					status: BuildStatusEnum.CREATED,
 					buildTrigger: BuildTriggerEnum.MANUAL,
-					browser: [BrowserEnum.CHROME, BrowserEnum.FIREFOX, BrowserEnum.SAFARI],
+					browser: isOpenSourceEdition() ? [BrowserEnum.CHROME] : [BrowserEnum.CHROME, BrowserEnum.FIREFOX, BrowserEnum.SAFARI],
 					isDraftJob: false,
 					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
 					meta: meta,

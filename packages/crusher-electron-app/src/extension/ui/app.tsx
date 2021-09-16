@@ -38,7 +38,7 @@ const App = () => {
 			return;
 		}
 		console.log(AdvancedURL.getBackendURL());
-		fetch(resolveToBackendPath("/tests/actions/save.temp"), {
+		fetch(resolveToBackendPath("tests/actions/save.temp"), {
 			method: "POST",
 			headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
 			body: JSON.stringify({

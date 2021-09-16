@@ -29,6 +29,7 @@ import {
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
 import { sentenceCase } from "@utils/common/textUtils";
+import { getAssetPath } from "@utils/helpers";
 
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 
@@ -143,7 +144,7 @@ function ReportSection() {
 function RenderImageInfo({ data }) {
 	const { meta } = data;
 	const imageName = meta.outputs?.[0].name;
-	const currentImage = meta.outputs?.[0].value;
+	const currentImage = getAssetPath(meta.outputs?.[0].value);
 
 	if (!imageName) return null;
 	return (
@@ -152,7 +153,7 @@ function RenderImageInfo({ data }) {
 			<div className={"mt-20 flex"}>
 				<img src={currentImage} />{" "}
 				<img
-					src={meta.outputs[0].diffImageUrl}
+					src={getAssetPath(meta.outputs[0].diffImageUrl)}
 					css={css`
 						margin-left: 2%;
 					`}

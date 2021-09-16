@@ -44,7 +44,11 @@ class Parser {
 			defaultBrowserLaunchOptions: this.defaultBrowserLaunchOptions,
 			usePlaywrightChromium: this.shouldUsePlaywrightChromium,
 			browserName: this.browser,
-			defaultBrowserContextOptions: { defaultNavigationTimeout: 30000, defaultTimeout: 15000, recordVideo: { dir: this.videoSavePath } },
+			defaultBrowserContextOptions: {
+				defaultNavigationTimeout: 30000,
+				defaultTimeout: 15000,
+				recordVideo: this.shouldRecordVideo ? { dir: this.videoSavePath } : undefined,
+			},
 			actions: this.actionsList,
 		});
 	}

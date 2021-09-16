@@ -29,6 +29,7 @@ await handlePopup(page, browserContext);
 
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);
 } catch(ex) {
+  console.error(ex);
   <% if (shouldRecordVideo) { %>
   globalManager.set("recordedVideoPath", await page.video().path());
   <% } %>

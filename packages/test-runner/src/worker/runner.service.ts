@@ -29,7 +29,7 @@ export class CodeRunnerService {
 		identifer: string,
 	) {
 		this.codeGenerator = new CodeGenerator({
-			shouldRecordVideo: runnerConfig.shouldRecordVideo,
+			shouldRecordVideo: isOpenSource() ? false : runnerConfig.shouldRecordVideo,
 			usePlaywrightChromium: isOpenSource(),
 			browser: PlaywrightBrowserMap[runnerConfig.browser] as any,
 			assetsDir: identifer,
@@ -37,6 +37,7 @@ export class CodeRunnerService {
 			defaultBrowserLaunchOptions: {
 				headless: true,
 				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-shm-usage", "--disable-gpu"],
+				executablePath: isOpenSource() ? process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH : undefined,
 			},
 		});
 		this.actions = actions;

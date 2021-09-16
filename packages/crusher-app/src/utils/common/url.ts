@@ -1,10 +1,12 @@
 import { isBrowser } from "@utils/common";
 
-const windowLocation = eval("window.location.origin");
+function getLocationOrigin() {
+	return eval("window.location.origin");
+}
 
 export const resolvePathToBackendURI = (endpoint: string) =>
-	getPathWithHost(process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL || `${windowLocation}/server`, endpoint);
-export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(isBrowser ? window.location.origin : "", endpoint);
+	getPathWithHost(process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL || `${getLocationOrigin()}/server`, endpoint);
+export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(getLocationOrigin(), endpoint);
 
 const getPathWithHost = (host: string, path: string): string => {
 	const isBackslashPresent = host.split("")[host.length - 1] === "/";

@@ -1,5 +1,7 @@
 // import { getUserCLIToken } from "@services/cli";
 
+import { EditionTypeEnum } from "@crusher-shared/types/common/general";
+
 export function getEdition() {
 	return process.env.NEXT_PUBLIC_CRUSHER_MODE;
 }
@@ -60,4 +62,14 @@ export function getShortDate(date: Date) {
 		":" +
 		("0" + date.getUTCSeconds()).slice(-2)
 	);
+}
+
+export function getAssetPath(path: string) {
+	if (!path) return path;
+
+	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
+		return path.includes("localhost:3001/") ? path.replace("localhost:3001/", "output/").replace("http://", "/").replace("https://", "/") : path;
+	}
+
+	return path;
 }

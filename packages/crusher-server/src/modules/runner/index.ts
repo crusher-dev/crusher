@@ -51,7 +51,7 @@ class TestsRunner {
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 
-		if (buildPayload.meta.github) {
+		if (buildPayload.meta && buildPayload.meta.github) {
 			await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
 		}
 

@@ -1,23 +1,68 @@
-version: '2.2'
+version: '3'
+
+networks:
+  crusher-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.12.23.0/24
+
 services:
+  mongodb:
+    image: 'bitnami/mongodb:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MONGODB_DATABASE=crusher
+    networks:
+      - crusher-network
+
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - crusher-network
+
+  mysql:
+    image: 'bitnami/mysql:latest'
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=crusher
+      - MYSQL_AUTHENTICATION_PLUGIN=mysql_native_password
+    networks:
+      - crusher-network
+
   oss_container1:
+    networks:
+      - crusher-network
     build:
       context: ../../
-      dockerfile: docker/oss/Dockerfile
-    network_mode: host
+      dockerfile: docker/oss/Dockerfile.complete
+    depends_on:
+      - mysql
+      - mongodb
+      - redis
     environment:
       - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
-      - DB_HOST=localhost
+      - DB_HOST=mysql
       - DB_USERNAME=root
       - DB_PASSWORD=password
+      - DB_DATABASE=crusher
       - DB_PORT=3306
-      - MONGODB_CONNECTION_STRING=mongodb://localhost:27017/crusher
-      - REDIS_HOST=localhost
+      - MONGODB_CONNECTION_STRING=mongodb://mongodb:27017/crusher
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
       - BACKEND_SERVER_URL=http://localhost:3000/server
       - NEXT_PUBLIC_CRUSHER_MODE=open-source
       - NEXT_PUBLIC_INTERNAL_BACKEND_URL=http://localhost:3000/server
+    ports:
+      - "3000:3000"
+    links:
+      - "mysql:mysql"
+      - "mongodb:mongodb"
+      - "redis:redis"
     container_name: 'oss1'
     stdin_open: true # docker run -i
     tty: true

@@ -36,9 +36,9 @@ class CrusherSdk implements ICrusherSdk {
 	}
 
 	async fetch(url: string, options: any) {
-		await this.page.evaluate(`async ([url, options]) => {
-			await fetch(url, options);
-		}`, [url, options]);
+		await this.page.evaluate(([url, options]) => {
+			return fetch(url, options);
+		}, [url, options]);
 
 		return true;
 	}

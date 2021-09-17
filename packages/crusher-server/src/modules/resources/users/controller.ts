@@ -36,6 +36,14 @@ export class UserController {
 		}
 	}
 
+	@Authorized()
+	@Post("/users/actions/delete")
+	async deleteUser(@CurrentUser({ required: true }) user, @Res() res) {
+		await this.usersService.deleteUserWorkspace(user.user_id);
+		clearUserAuthorizationCookies(res);
+		return "Successful";
+	}
+
 	// @OSS
 	@Get("/users/actions/oss.init")
 	async initOssUser(@CurrentUser({}) user: { user_id: number; team_id: number }, @Req() req: any, @Res() res: any) {

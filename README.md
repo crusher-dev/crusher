@@ -1,3 +1,4 @@
+
 <br/>
 <div align="center">
 <img src="https://i.imgur.com/oUSUuoS.png" height="40" style="margin: 0 auto;"/>
@@ -107,12 +108,10 @@ Check about roadmap plan here.
 
 | **Infra provider** |                                                                                                        **One-click link**                                                                                                        |                                                             **Additional information**                                                             |
 | :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |
-|       Heroku       |                                        [<img src="https://www.herokucdn.com/deploy/button.svg" height="32px"/>](https://heroku.com/deploy?template=https://github.com/crusherdev/crusher)                                        |                             [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |
-|    DigitalOcean    | [![Deploy to DigitalOcean](https://graphql-engine-cdn.hasura.io/img/create_hasura_droplet_200px.png)](https://marketplace.digitalocean.com/apps/hasura?action=deploy&refcode=c4d9092d2c48&utm_source=hasura&utm_campaign=readme) | [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/digital-ocean-one-click.html#hasura-graphql-engine-digitalocean-one-click-app) |
+|      <div style=""> <img src="https://i.imgur.com/x2v2EpM.png" height="24px"/>Docker  </div>     |                                        [Deploy](https://docs.crusher.dev/docs/self-host/how-to-setup-crusher-on-docker)                                       |                             [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |
 
-### 📝 Developing
 
-<hr/>
+
 
 ### 📝 License
 

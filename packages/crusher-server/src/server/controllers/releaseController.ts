@@ -12,7 +12,7 @@ export class ReleaseController {
 	@Get("/info")
 	async getElectronAppReleaseInfo(@Req() req: any, @Res() res: any): Promise<any> {
 		if (holdReleaseInfo.data !== null) return holdReleaseInfo.data;
-		const data: any = await fetch("https://api.github.com/repos/crusherdev/electron/releases/latest");
+		const data: any = await fetch("https://api.github.com/repos/crusherdev/celectron-releases/releases/latest");
 
 		holdReleaseInfo.data = { assets: data.assets };
 		return holdReleaseInfo.data;

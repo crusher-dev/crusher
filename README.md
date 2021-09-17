@@ -108,7 +108,7 @@ Check about roadmap plan here.
 
 | **Infra provider** |                                                                                                        **One-click link**                                                                                                        |                                                             **Additional information**                                                             |
 | :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |
-|      <div style=""> <img src="https://i.imgur.com/x2v2EpM.png" height="24px"/>Docker  </div>     |                                        [Deploy](https://docs.crusher.dev/docs/self-host/how-to-setup-crusher-on-docker)                                       |                             [docs](https://hasura.io/docs/latest/graphql/core/guides/deployment/heroku-one-click.html)                             |
+|      <div style=""> <img src="https://i.imgur.com/x2v2EpM.png" height="24px"/>Docker  </div>     |                                        [Deploy](https://docs.crusher.dev/docs/self-host/how-to-setup-crusher-on-docker)                                       |                                    |
 
 
 

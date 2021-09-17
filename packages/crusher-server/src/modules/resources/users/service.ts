@@ -105,6 +105,16 @@ class UsersService {
 		]);
 	}
 
+	async deleteUserWorkspace(userId: number) {
+		const userRecord = await this.getUserInfo(userId);
+		await this.dbManager.delete("DELETE FROM user_meta WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM user_project_roles WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM projects WHERE team_id = ?", [userRecord.teamId]);
+		await this.dbManager.delete("DELETE FROM user_team_roles WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM users WHERE id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM teams WHERE id = ?", [userRecord.teamId]);
+	}
+
 	@CamelizeResponse()
 	async getUserInfo(userId: number): Promise<KeysToCamelCase<IUserTable>> {
 		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id = ?`, [userId]);

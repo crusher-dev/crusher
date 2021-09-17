@@ -14,5 +14,5 @@ if [ "$(uname)" == "Darwin" ] && ! [ -x "$(command -v wget)" ]; then
 fi
 
 echo 'Downloading latest binaries...'
-curl -s https://api.github.com/repos/crusherdev/electron/releases/latest  | grep "celectron.*.zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - -cP packages/crusher-electron-app/bin --show-progress
+curl -s https://api.github.com/repos/crusherdev/celectron-releases/releases/latest  | grep "celectron.*.zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - -cP packages/crusher-electron-app/bin --show-progress
 yarn workspace crusher-electron-app extract:deps

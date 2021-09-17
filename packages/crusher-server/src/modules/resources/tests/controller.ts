@@ -140,6 +140,7 @@ export class TestController {
 			browser: [BrowserEnum.CHROME],
 			isDraftJob: true,
 			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+			meta: { isDraftJob: true },
 		});
 
 		await this.testService.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);

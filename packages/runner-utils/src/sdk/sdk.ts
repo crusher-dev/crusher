@@ -34,6 +34,14 @@ class CrusherSdk implements ICrusherSdk {
 		await this.page.context().addCookies(finalCookies);
 		return true;
 	}
+
+	async fetch(url: string, options: any) {
+		await this.page.evaluate(async ([url, options]) => {
+			await fetch(url, options);
+		}, [url, options]);
+
+		return true;
+	}
 }
 
 export { CrusherSdk };

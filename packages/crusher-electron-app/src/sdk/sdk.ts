@@ -1,7 +1,7 @@
 import { Debugger, WebContents } from "electron";
 import { ElementSdk } from "./element";
-import { KeyboardImpl } from "./keyboard";
-import { MouseImpl } from "./mouse";
+import { KeyboardImpl } from "./input/keyboard";
+import { MouseImpl } from "./input/mouse";
 import { session } from "electron";
 import { ICrusherSdk } from "@shared/types/sdk/sdk";
 import { CrusherCookieSetPayload } from "@shared/types/sdk/types";
@@ -37,6 +37,10 @@ export class SDK implements ICrusherSdk {
 		const nodeResults = await this._getNode(selector);
 		if (!nodeResults.result || !nodeResults.result.objectId) return undefined;
 		return new ElementSdk(nodeResults.result.objectId, this.mouseImpl, this.keyboardImpl, this.cdp);
+	}
+
+	async evaluate(pageFunction: string) {
+		return true;
 	}
 
 	$nodeWrapper(objectId: string) {

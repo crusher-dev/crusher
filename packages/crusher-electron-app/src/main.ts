@@ -1,7 +1,6 @@
 import * as path from "path";
 import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard } from "electron";
 import userAgents from "../../crusher-shared/constants/userAgents";
-import { MouseImpl } from "./sdk/mouse";
 import { SDK } from "./sdk/sdk";
 const gotTheLock = app.requestSingleInstanceLock();
 const highlighterStyle = require("./highlighterStyle.json");
@@ -240,6 +239,7 @@ async function createWindow() {
 					switch (args[0].value) {
 						case "CRUSHER_HOVER_ELEMENT":
 							// @TODO: Fix thi
+							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).innerHTML();
 							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).hover();
 							break;
 						case "CRUSHER_CLICK_ELEMENT":

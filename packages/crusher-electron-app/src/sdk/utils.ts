@@ -1,5 +1,5 @@
 import * as types from "./types";
-import * as keyboardLayout from "./usKeyboardLayout";
+import * as keyboardLayout from "./input/usKeyboardLayout";
 
 export type KeyDescription = {
 	keyCode: number;

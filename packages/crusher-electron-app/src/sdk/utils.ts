@@ -1,5 +1,6 @@
 import * as types from "./types";
 import * as keyboardLayout from "./input/usKeyboardLayout";
+import { Protocol } from "playwright/types/protocol";
 
 export type KeyDescription = {
 	keyCode: number;
@@ -73,4 +74,17 @@ export function buildLayoutClosure(layout: keyboardLayout.KeyboardLayout): Map<s
 		if (shiftedDescription) result.set(shiftedDescription.key, { ...shiftedDescription, shifted: undefined });
 	}
 	return result;
+}
+
+export function getExceptionMessage(exceptionDetails: Protocol.Runtime.ExceptionDetails): string {
+	if (exceptionDetails.exception) return exceptionDetails.exception.description || String(exceptionDetails.exception.value);
+	let message = exceptionDetails.text;
+	if (exceptionDetails.stackTrace) {
+		for (const callframe of exceptionDetails.stackTrace.callFrames) {
+			const location = callframe.url + ":" + callframe.lineNumber + ":" + callframe.columnNumber;
+			const functionName = callframe.functionName || "<anonymous>";
+			message += `\n    at ${functionName} (${location})`;
+		}
+	}
+	return message;
 }

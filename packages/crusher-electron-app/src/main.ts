@@ -227,6 +227,7 @@ async function createWindow() {
 		await webViewContent.debugger.sendCommand("Network.enable");
 		await webViewContent.debugger.sendCommand("Emulation.setFocusEmulationEnabled", { enabled: true });
 		await webViewContent.debugger.sendCommand("Debugger.setAsyncCallStackDepth", { maxDepth: 9999 });
+		await webViewContent.debugger.sendCommand("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: true, flatten: true });
 		// @TODO: This should not be necessary. Look into this
 		// It's here to enable DOMDebugger, which is not getting enabled by default
 		await webViewContent.debugger.sendCommand("DOMDebugger.setXHRBreakpoint", { url: "http://nonsense.com" });
@@ -239,7 +240,6 @@ async function createWindow() {
 					switch (args[0].value) {
 						case "CRUSHER_HOVER_ELEMENT":
 							// @TODO: Fix thi
-							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).innerHTML();
 							await webviewDebuggerSDK.$nodeWrapper(args[1].objectId).hover();
 							break;
 						case "CRUSHER_CLICK_ELEMENT":

@@ -234,6 +234,9 @@ async function createWindow() {
 		webviewDebuggerSDK = new SDK(webViewContent, mainWindow.webContents);
 
 		webViewContent.debugger.on("message", async (event, method, params) => {
+			if (method === "Target.attachedToTarget") {
+				console.log("Target.attachedToTarget", params);
+			}
 			if (method === "Runtime.consoleAPICalled") {
 				const { args } = params;
 				if (args.length === 2 && args[0].type === "string" && ["CRUSHER_HOVER_ELEMENT", "CRUSHER_CLICK_ELEMENT"].includes(args[0].value)) {

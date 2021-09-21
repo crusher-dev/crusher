@@ -121,4 +121,6 @@ function serialize(value: any, handleSerializer: (value: any) => HandleOrValue, 
 		visited.delete(value);
 		return { o };
 	}
+
+	return undefined;
 }

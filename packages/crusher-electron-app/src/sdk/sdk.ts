@@ -28,13 +28,26 @@ export class SDK implements ICrusherSdk {
 
 		this.webContents.debugger.on("message", async (event, method, params) => {
 			if (method === "Runtime.executionContextsCleared") {
-				console.log("Runtime executionContextsCleared", params);
+				this.handleExecutionContextCleared();
+			}
+
+			switch (method) {
+				case "Runtime.executionContextsCleared":
+					this.handleExecutionContextCleared();
+					break;
+				case "Runtime.executionContextCreated":
+					this.handleExecutionCreated(params.context);
+					break;
 			}
 		});
 	}
 
-	_setExecutionContext(context) {
+	handleExecutionContextCleared() {
 		this.executionContext = null;
+	}
+
+	handleExecutionCreated(context) {
+		this.executionContext = new ExecutionContext(context, this.cdp);
 	}
 
 	private async _getNode(selector: string) {

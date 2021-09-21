@@ -58,11 +58,11 @@ services:
       - NEXT_PUBLIC_CRUSHER_MODE=open-source
       - NEXT_PUBLIC_INTERNAL_BACKEND_URL=http://localhost:3000/server
     ports:
-      - "3000:3000"
+      - '3000:3000'
     links:
-      - "mysql:mysql"
-      - "mongodb:mongodb"
-      - "redis:redis"
+      - 'mysql:mysql'
+      - 'mongodb:mongodb'
+      - 'redis:redis'
     container_name: 'oss1'
     stdin_open: true # docker run -i
     tty: true

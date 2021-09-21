@@ -7,40 +7,35 @@ console.log('Running db migration script now...');
 var IS_HEROKU = process.env.IS_HEROKU;
 var connectionString = IS_HEROKU ? process.env.CLEARDB_DATABASE_URL : process.env.DB_CONNECTION_STRING;
 
-
 function waitAndGetConnection(connection) {
 	return new Promise(function (resolve, reject) {
 		var currentTime = 0;
-		var interval = setInterval(
-			function () {
-				if (currentTime >= 300000) {
-					clearInterval(interval);
-					reject(new Error("Can't connect to mysql in last 5 minutes"));
-				}
+		var interval = setInterval(function () {
+			if (currentTime >= 300000) {
+				clearInterval(interval);
+				reject(new Error("Can't connect to mysql in last 5 minutes"));
+			}
 
-				console.log("Waiting for mysql to completely start...");
-				try {
-					var out = mysql.createConnection(
-						Object.assign(connection, {
-							multipleStatements: true,
-						})
-					);
+			console.log('Waiting for mysql to completely start...');
+			try {
+				var out = mysql.createConnection(
+					Object.assign(connection, {
+						multipleStatements: true,
+					}),
+				);
 
-					out.query('SHOW TABLES', function (err, results) {
-						if (!err) {
-							clearInterval(interval);
-							resolve(out);
-						}
-					});
-
-				} catch (ex) {
-					console.log("Can't connect to mysql...");
-					console.error(ex);
-				}
-				currentTime += 5000;
-			},
-			5000
-		);
+				out.query('SHOW TABLES', function (err, results) {
+					if (!err) {
+						clearInterval(interval);
+						resolve(out);
+					}
+				});
+			} catch (ex) {
+				console.log("Can't connect to mysql...");
+				console.error(ex);
+			}
+			currentTime += 5000;
+		}, 5000);
 	});
 }
 
@@ -80,4 +75,3 @@ waitAndGetConnection(connectionObject).then(function (connection) {
 			});
 	});
 });
-

@@ -3,7 +3,7 @@ import React from "react";
 
 import { Button } from "dyson/src/components/atoms";
 
-export const ModuleCard = ({onClick}) => {
+export const ModuleCard = ({ onClick }) => {
 	return (
 		<div className={"flex px-20 py-12 pt-16 items-start justify-between"} css={cardStyle}>
 			<div>

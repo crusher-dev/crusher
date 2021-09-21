@@ -7,7 +7,6 @@ import { SWRConfig } from "swr";
 
 import { Conditional } from "dyson/src/components/layouts";
 
-
 import { Snackbar } from "@ui/containers/common/Snackbar";
 import { LoadingScreen } from "@ui/layout/LoadingScreen";
 import { loadCrisp, loadUserLeap } from "@utils/common/scriptUtils";

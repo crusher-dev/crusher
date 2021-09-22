@@ -37,9 +37,9 @@ class MainWindow {
 
 	async initialize() {
 		await this.setupListeners();
+		await this.browserWindow.maximize();
 
 		await this.loadExtension();
-		await this.browserWindow.maximize();
 
 		await this.setupDebugger();
 	}

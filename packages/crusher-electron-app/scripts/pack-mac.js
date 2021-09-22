@@ -1,6 +1,9 @@
 const builder = require("electron-builder");
 const Platform = builder.Platform;
 const path = require("path");
+const shell = require("shelljs");
+
+shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
 
 // Promise is returned
 builder
@@ -8,6 +11,7 @@ builder
 		targets: Platform.MAC.createTarget(),
 		config: {
 			productName: "Crusher Recorder",
+			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
 			appId: "com.crusher.electron",
 			mac: {

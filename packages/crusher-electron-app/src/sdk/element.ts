@@ -1,7 +1,7 @@
 import { ICrusherSDKElement } from "@shared/types/sdk/element";
 import { Debugger } from "electron";
-import { KeyboardImpl } from "./keyboard";
-import { MouseImpl } from "./mouse";
+import { KeyboardImpl } from "./input/keyboard";
+import { MouseImpl } from "./input/mouse";
 import * as types from "./types";
 
 class ElementSdk implements ICrusherSDKElement {
@@ -25,6 +25,19 @@ class ElementSdk implements ICrusherSDKElement {
 
 	hover(): Promise<boolean> {
 		return this.mouseImpl.hover(this.objectId);
+	}
+
+	async innerHTML(): Promise<string> {
+		const result = await this.cdp.sendCommand("DOM.getInnerHTML", { objectId: this.objectId });
+		return "done";
+	}
+
+	async evaluate(pageFunc: any, args: any) {
+		await this.cdp.sendCommand("Runtime.evaluate", {
+			expression: pageFunc,
+			objectId: this.objectId,
+			arguments: args
+		});
 	}
 
 	async focus(): Promise<boolean> {

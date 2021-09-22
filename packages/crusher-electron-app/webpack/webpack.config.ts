@@ -48,7 +48,7 @@ const finalConfig = [
 			}),
 		],
 		entry: {
-			main: path.resolve(__dirname, "../src/main.ts"),
+			app: path.resolve(__dirname, "../src/app.ts"),
 		},
 	},
 	{

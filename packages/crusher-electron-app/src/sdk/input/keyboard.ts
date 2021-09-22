@@ -1,7 +1,7 @@
 import { Debugger } from "electron";
-import * as types from "./types";
+import * as types from "../types";
 import { macEditingCommands } from "./macEditingCommands";
-import { buildLayoutClosure, isString, KeyDescription, toModifiersMask } from "./utils";
+import { buildLayoutClosure, isString, KeyDescription, toModifiersMask } from "../utils";
 import * as keyboardLayout from "./usKeyboardLayout";
 
 const usKeyboardLayout = buildLayoutClosure(keyboardLayout.USKeyboardLayout);

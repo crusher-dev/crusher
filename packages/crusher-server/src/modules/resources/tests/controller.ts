@@ -168,4 +168,14 @@ export class TestController {
 		await this.testService.updateMeta(JSON.stringify(finalMeta), testId);
 		return "Successful";
 	}
+
+	@Get("/tests/:test_id")
+	async getTest(@Param("test_id") testId: number) {
+		const testRecord = await this.testService.getTest(testId);
+		if (!testRecord) throw new BadRequestError("No such test");
+		return {
+			...testRecord,
+			events: JSON.parse(testRecord.events),
+		}
+	}
 }

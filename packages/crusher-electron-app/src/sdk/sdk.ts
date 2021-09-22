@@ -1,11 +1,12 @@
 import { Debugger, WebContents } from "electron";
 import { ElementSdk } from "./element";
-import { KeyboardImpl } from "./keyboard";
-import { MouseImpl } from "./mouse";
+import { KeyboardImpl } from "./input/keyboard";
+import { MouseImpl } from "./input/mouse";
 import { session } from "electron";
 import { ICrusherSdk } from "@shared/types/sdk/sdk";
 import { CrusherCookieSetPayload } from "@shared/types/sdk/types";
 import { CookiesSetDetails } from "electron/main";
+import { ExecutionContext } from "./javascript";
 
 type ElectronCompatibleCookiePayload = Omit<CrusherCookieSetPayload, "sameSite"> & {
 	sameSite: Pick<CookiesSetDetails, "sameSite">;
@@ -16,6 +17,7 @@ export class SDK implements ICrusherSdk {
 	private keyboardImpl: KeyboardImpl;
 	private cdp: Debugger;
 	private mainWebContents: WebContents;
+	private executionContext: ExecutionContext | null;
 
 	constructor(webContents: WebContents, mainWebContents: WebContents) {
 		this.webContents = webContents;
@@ -23,6 +25,29 @@ export class SDK implements ICrusherSdk {
 		this.mouseImpl = new MouseImpl(this.cdp);
 		this.keyboardImpl = new KeyboardImpl(this.cdp);
 		this.mainWebContents = mainWebContents;
+
+		this.webContents.debugger.on("message", async (event, method, params) => {
+			if (method === "Runtime.executionContextsCleared") {
+				this.handleExecutionContextCleared();
+			}
+
+			switch (method) {
+				case "Runtime.executionContextsCleared":
+					this.handleExecutionContextCleared();
+					break;
+				case "Runtime.executionContextCreated":
+					this.handleExecutionCreated(params.context);
+					break;
+			}
+		});
+	}
+
+	handleExecutionContextCleared() {
+		this.executionContext = null;
+	}
+
+	handleExecutionCreated(context) {
+		this.executionContext = new ExecutionContext(context, this.cdp);
 	}
 
 	private async _getNode(selector: string) {
@@ -37,6 +62,16 @@ export class SDK implements ICrusherSdk {
 		const nodeResults = await this._getNode(selector);
 		if (!nodeResults.result || !nodeResults.result.objectId) return undefined;
 		return new ElementSdk(nodeResults.result.objectId, this.mouseImpl, this.keyboardImpl, this.cdp);
+	}
+
+	private async _utilityScript() {
+		await this.cdp.sendCommand("Runtime.evaluate", {
+			expression: "",
+		});
+	}
+
+	async evaluate(pageFunction: string) {
+		return true;
 	}
 
 	$nodeWrapper(objectId: string) {

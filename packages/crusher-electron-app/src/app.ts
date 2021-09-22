@@ -44,6 +44,8 @@ class App {
 		app.commandLine.appendSwitch("--disable-site-isolation-trials");
 		app.commandLine.appendSwitch("--disable-web-security");
 		app.commandLine.appendSwitch("--allow-top-navigation");
+		// For replaying actions
+		app.commandLine.appendSwitch("--remote-debugging-port", "9112");
 		app.setAsDefaultProtocolClient("crusher");
 
 		app.userAgentFallback = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";

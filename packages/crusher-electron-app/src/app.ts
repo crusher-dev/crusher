@@ -26,8 +26,7 @@ class App {
 				nativeWindowOpen: true,
 				devTools: true,
 			},
-    });
-
+		});
 
 		this.appWindow.webContents.on("devtools-reload-page", function () {
 			console.log("did-finish-load", true);
@@ -94,6 +93,7 @@ class App {
 	async _reloadApp(mainWindow, completeReset = false) {
 		const currentArgs = process.argv.slice(1).filter((a) => !a.startsWith("--open-extension-url="));
 		await this.cleanupStorageBeforeExit();
+
 		app.relaunch({ args: completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
 		app.exit();
 	}

@@ -5,11 +5,10 @@ import { SDK } from "./sdk/sdk";
 const highlighterStyle = require("./highlighterStyle.json");
 
 export class WebView {
-	webContents: WebContents;
 	debugger: Debugger;
 	sdk: SDK;
 
-	_getWebContents(browserWindow) {
+	webContents() {
 		const allWebContents = webContents.getAllWebContents();
 
 		const webViewWebContents = allWebContents.find((a) => a.getType() === "webview");
@@ -20,9 +19,8 @@ export class WebView {
 
 	constructor(private browserWindow: BrowserWindow) {
 		this.browserWindow = browserWindow;
-		this.webContents = this._getWebContents(browserWindow);
-		this.debugger = this.webContents.debugger;
-		this.sdk = new SDK(this.webContents, this.browserWindow.webContents);
+		this.debugger = this.webContents().debugger;
+		this.sdk = new SDK(this.webContents(), this.browserWindow.webContents);
 	}
 
 	async initialize() {
@@ -60,7 +58,7 @@ export class WebView {
 	}
 
 	async _postMessageToWebView(event, data) {
-		this.webContents.send("post-message-to-webview", data);
+		if (!this.webContents().isDestroyed()) this.webContents().send("post-message-to-webview", data);
 	}
 
 	async _turnOnInspectMode() {

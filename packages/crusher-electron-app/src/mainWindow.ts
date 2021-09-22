@@ -1,3 +1,4 @@
+import { addHttpToURLIfNotThere } from "../../crusher-shared/utils/url";
 import { BrowserWindow, session, WebContents, app, shell, ipcMain } from "electron";
 import * as path from "path";
 import { WebView } from "./webView";
@@ -14,10 +15,17 @@ class MainWindow {
 	}
 
 	async loadExtension() {
-		const { id: extensionId } = await session.defaultSession.loadExtension(path.resolve(__dirname, "./extension"), { allowFileAccess: true });
-		let urlToOpen = app.commandLine.getSwitchValue("open-extension-url") || `chrome-extension://${extensionId}/test_recorder.html`;
+		const targetSite = app.commandLine.getSwitchValue("targetSite");
+		const openExtensionUrl = app.commandLine.getSwitchValue("open-extension-url");
 
-		if (urlToOpen.match(extensionURLRegExp)) {
+		const { id: extensionId } = await session.defaultSession.loadExtension(path.resolve(__dirname, "./extension"), { allowFileAccess: true });
+		let urlToOpen = openExtensionUrl ? openExtensionUrl : `chrome-extension://${extensionId}/test_recorder.html`;
+
+		if (!openExtensionUrl && targetSite) {
+			urlToOpen += `?url=${addHttpToURLIfNotThere(targetSite)}&device=GoogleChromeLargeScreen`;
+		}
+
+		if (openExtensionUrl && urlToOpen.match(extensionURLRegExp)) {
 			// Need to update extension id in the previous url
 			// to latest extension id
 			urlToOpen = urlToOpen.replace(extensionURLRegExp, `$1${extensionId}$3`);
@@ -71,7 +79,9 @@ class MainWindow {
 		}
 	}
 
-	handleWebviewAttached() {
+	async handleWebviewAttached() {
+		this.webView = new WebView(this.browserWindow);
+		await this.webView.initialize();
 		// this.webContents.setUserAgent(USER_AGENT.value);
 	}
 
@@ -93,8 +103,8 @@ class MainWindow {
 	}
 
 	async initWebView(event, webContentsId) {
-		this.webView = new WebView(this.browserWindow);
-		await this.webView.initialize();
+		// this.webView = new WebView(this.browserWindow);
+		// await this.webView.initialize();
 	}
 }
 

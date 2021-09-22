@@ -34,6 +34,7 @@
 		"@types/styled-components": "^5.1.4",
 		"@typescript-eslint/parser": "^4.14.1",
 		"an-array-of-english-words": "^2.0.0",
+		"axios": "^0.21.4",
 		"body-scroll-lock": "^3.1.5",
 		"child_process": "^1.0.2",
 		"copy-webpack-plugin": "6.0.3",

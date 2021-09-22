@@ -1,4 +1,5 @@
-import { BrowserWindow, Debugger, WebContents, ipcMain, webContents } from "electron";
+import { BrowserWindow, Debugger, WebContents, ipcMain, webContents, app } from "electron";
+import { PlaywrightInstance } from "./runner/playwright";
 import { SDK } from "./sdk/sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -7,6 +8,7 @@ const highlighterStyle = require("./highlighterStyle.json");
 export class WebView {
 	debugger: Debugger;
 	sdk: SDK;
+	playwrightInstance: PlaywrightInstance;
 
 	webContents() {
 		const allWebContents = webContents.getAllWebContents();
@@ -44,6 +46,15 @@ export class WebView {
 		this.debugger.on("message", this.handleDebuggerEvents.bind(this));
 
 		this.registerIPCListeners();
+
+		this.playwrightInstance = new PlaywrightInstance();
+		await this.playwrightInstance.connect();
+
+		const replayTestId = app.commandLine.getSwitchValue("replay-test-id");
+		// Add proper logic here
+		if (replayTestId) {
+			await this.playwrightInstance.runTestFromRemote(parseInt(replayTestId));
+		}
 	}
 
 	async _focusWebView() {

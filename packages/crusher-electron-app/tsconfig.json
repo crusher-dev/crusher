@@ -27,6 +27,7 @@
 	"typeRoots": ["node_modules/@types"],
 	"files": [
 		"./src/app.ts",
+		"./src/runner/playwright.ts",
 		"./src/preload.ts",
 		"./src/webViewPreload.ts",
 		"./src/extension/background.ts",

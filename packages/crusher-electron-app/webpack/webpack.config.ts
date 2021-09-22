@@ -41,6 +41,9 @@ const finalConfig = [
 				...dotEnv.parsed,
 			}),
 			new CopyPlugin({
+				patterns: [{ from: path.dirname(require.resolve("playwright/package.json")), to: "playwright" }],
+			}),
+			new CopyPlugin({
 				patterns: [
 					{ from: "package.release.json", to: "package.json" },
 					{ from: "src/icons", to: "icons" },
@@ -50,6 +53,7 @@ const finalConfig = [
 		entry: {
 			app: path.resolve(__dirname, "../src/app.ts"),
 		},
+		externals: ["playwright"],
 	},
 	{
 		...commonConfig,

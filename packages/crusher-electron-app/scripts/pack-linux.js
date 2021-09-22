@@ -1,13 +1,17 @@
 const builder = require("electron-builder");
 const Platform = builder.Platform;
 const path = require("path");
+const shell = require("shelljs");
+
+shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
 
 // Promise is returned
 builder
 	.build({
-		targets: Platform.LINUX.createTarget(["deb", "appimage"]),
+		targets: Platform.LINUX.createTarget(["appimage", "deb"]),
 		config: {
 			productName: "Crusher Recorder",
+			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
 			appId: "com.crusher.electron",
 			linux: {

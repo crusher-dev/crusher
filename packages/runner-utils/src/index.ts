@@ -7,7 +7,7 @@ import { StorageManager } from "./functions/storage";
 import { waitForSelectors } from "./functions/waitForSelectors";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { handlePopup } from "./middlewares/popup";
-import { getBrowserActions, getMainActions, isWebpack, toCrusherSelectorsFormat, validActionTypeRegex } from "./utils/helper";
+import { getBrowserActions, getMainActions, isWebpack, toCrusherSelectorsFormat, uuidv4, validActionTypeRegex } from "./utils/helper";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import * as fs from "fs";
 import * as path from "path";
@@ -66,6 +66,15 @@ class CrusherRunnerActions {
 		}
 	}
 
+	async _getCurrentScreenshot(page: Page): Promise<string | null> {
+		try {
+			const currentScreenshotBuffer = await page.screenshot();
+			const currentScreenshotUrl = await this.storageManager.uploadAsset(`${uuidv4()}.png`, currentScreenshotBuffer);
+			return currentScreenshotUrl;
+		}
+		catch (err) { return null };
+	}
+
 	stepHandlerHOC(
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
@@ -110,6 +119,7 @@ class CrusherRunnerActions {
 			} catch (err) {
 				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
 					failedReason: err.messsage,
+					screenshotDuringError: await this._getCurrentScreenshot(page),
 					actionName: step.name ? step.name : null,
 					meta: err.meta ? err.meta : {},
 				});

@@ -9,6 +9,7 @@ export class WebView {
 	debugger: Debugger;
 	sdk: SDK;
 	playwrightInstance: PlaywrightInstance;
+	appState: { targetSite?: string; replayTestId?: string };
 
 	webContents() {
 		const allWebContents = webContents.getAllWebContents();
@@ -19,7 +20,8 @@ export class WebView {
 		return webViewWebContents;
 	}
 
-	constructor(private browserWindow: BrowserWindow) {
+	constructor(private browserWindow: BrowserWindow, private state: { targetSite?: string; replayTestId?: string }) {
+		this.appState = state;
 		this.browserWindow = browserWindow;
 		this.debugger = this.webContents().debugger;
 		this.sdk = new SDK(this.webContents(), this.browserWindow.webContents);
@@ -50,10 +52,9 @@ export class WebView {
 		this.playwrightInstance = new PlaywrightInstance();
 		await this.playwrightInstance.connect();
 
-		const replayTestId = app.commandLine.getSwitchValue("replay-test-id");
 		// Add proper logic here
-		if (replayTestId) {
-			await this.playwrightInstance.runTestFromRemote(parseInt(replayTestId));
+		if (this.appState.replayTestId) {
+			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.replayTestId));
 		}
 	}
 

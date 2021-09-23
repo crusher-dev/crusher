@@ -74,7 +74,7 @@ function TestCard(props: IBuildItemCardProps) {
 				/>
 			</Conditional>
 
-			<div css={itemImageStyle}>
+			<a css={itemImageStyle} href={`crusher://replay-test?testId=${id}`}>
 				<Conditional showIf={!firstRunCompleted}>
 					<FirstTestRunStatus isRunning={true} />
 				</Conditional>
@@ -101,7 +101,7 @@ function TestCard(props: IBuildItemCardProps) {
 						<source src={videoURL} type="video/mp4" />
 					</video>
 				</Conditional>
-			</div>
+			</a>
 			<div css={itemMainContainerStyle}>
 				<div className={"flex flex-row items-center"}>
 					<div css={testNameStyle} className={"font-cera"}>

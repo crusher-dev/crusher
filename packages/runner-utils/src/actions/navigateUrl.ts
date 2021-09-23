@@ -4,9 +4,11 @@ import { Page } from "playwright";
 
 async function goToUrl(page: Page, action: iAction) {
 	const urlToGo = action.payload.meta.value;
-	await page.goto(urlToGo, { waitUntil: "networkidle", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
-	await page.waitForLoadState("load");
-	await page.waitForLoadState("domcontentloaded");
+	try {
+		await page.goto(urlToGo, { waitUntil: "networkidle", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
+		await page.waitForLoadState("load");
+		await page.waitForLoadState("domcontentloaded");
+	} catch (ex) { }
 }
 
 module.exports = {

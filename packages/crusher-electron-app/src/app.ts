@@ -9,7 +9,6 @@ class App {
 	appWindow: BrowserWindow | null;
 
 	async createAppWindow() {
-		console.log("Creating app window");
 		const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
 		this.appWindow = new BrowserWindow({
@@ -38,7 +37,7 @@ class App {
 		return true;
 	}
 
-	initialize() {
+	async initialize() {
 		app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 		app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
 		app.commandLine.appendSwitch("--disable-site-isolation-trials");

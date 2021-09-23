@@ -9,13 +9,30 @@ class MainWindow {
 	webContents: WebContents;
 	webView: WebView;
 
+	state: { targetSite?: string; replayTestId?: string };
+
+	_getStateFromArgs(): { targetSite?: string; replayTestId?: string } {
+		const [executable, deepLink] = process.argv;
+		if (deepLink && deepLink.startsWith("crusher://replay-test")) {
+			const url = new URL(deepLink);
+			this.webContents.executeJavaScript(`console.log('Getting test id', '${url.searchParams.get("testId")}')`);
+			return { replayTestId: url.searchParams.get("testId"), targetSite: "https://example.com" };
+		}
+
+		return {
+			replayTestId: app.commandLine.getSwitchValue("replay-test-id") || undefined,
+			targetSite: app.commandLine.getSwitchValue("targetSite") || undefined,
+		};
+	}
+
 	constructor(private browserWindow: BrowserWindow) {
 		this.browserWindow = browserWindow;
 		this.webContents = browserWindow.webContents;
+		this.state = this._getStateFromArgs();
 	}
 
 	async loadExtension() {
-		const targetSite = app.commandLine.getSwitchValue("targetSite");
+		const targetSite = this.state.targetSite;
 		const openExtensionUrl = app.commandLine.getSwitchValue("open-extension-url");
 
 		const { id: extensionId } = await session.defaultSession.loadExtension(path.resolve(__dirname, "./extension"), { allowFileAccess: true });
@@ -80,7 +97,7 @@ class MainWindow {
 	}
 
 	async handleWebviewAttached() {
-		this.webView = new WebView(this.browserWindow);
+		this.webView = new WebView(this.browserWindow, this.state);
 		await this.webView.initialize();
 		// this.webContents.setUserAgent(USER_AGENT.value);
 	}

@@ -10,6 +10,7 @@ export enum ActionStatusEnum {
 export interface IRunnerLogStepMeta {
 	actionName?: string;
 	workingSelector?: { type: string; value: string };
+	screenshotDuringError?: string;
 	failedReason?: string;
 	outputs?: [{ name: string; value: string }];
 	meta?: any;

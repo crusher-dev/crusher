@@ -13,6 +13,10 @@ class CrusherSdk implements ICrusherSdk {
 		return new CrusherElementSdk(this.page, elementHandle);
 	}
 
+	async $nodeWrapper() {
+
+	}
+
 	async reloadPage() {
 		await this.page.reload();
 		return true;

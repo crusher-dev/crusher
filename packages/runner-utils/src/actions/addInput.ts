@@ -5,6 +5,7 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 async function addInput(element: Locator, workingSelector: any, action: iAction) {
 	const valueToType = action.payload.meta.value;
+	await element.fill("");
 	await element.type(valueToType);
 }
 

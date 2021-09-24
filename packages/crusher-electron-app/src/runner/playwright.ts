@@ -64,7 +64,6 @@ class PlaywrightInstance {
 			const type = await typeObj.jsonValue();
 			switch (type) {
 				case "CRUSHER_HOVER_ELEMENT":
-					console.log("HELLO WORLD");
 					await valueObj.hover();
 					break;
 				case "CRUSHER_CLICK_ELEMENT":

@@ -331,6 +331,7 @@ export default class EventRecording {
 		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element);
 		if (needsOtherActions) {
 			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element);
+			console.log("Hover nodes records", hoverNodesRecord);
 			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
 			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
 				hoverNodes.pop();
@@ -344,6 +345,7 @@ export default class EventRecording {
 	async trackAndSaveRelevantHover(element) {
 		const hoverNodes = await this.getHoverDependentNodes(element);
 		for (let i = 0; i < hoverNodes.length; i++) {
+			console.log("Hover nodes area", hoverNodes[i]);
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, hoverNodes[i], "", null, true);
 		}
 	}
@@ -495,6 +497,22 @@ export default class EventRecording {
 		window.addEventListener("keydown", this.handleKeyDown, true);
 
 		window.addEventListener("click", this.handleWindowClick, true);
+
+		window.history.pushState = new Proxy(window.history.pushState, {
+			apply: async (target, thisArg, argArray) => {
+				this.releventHoverDetectionManager.reset();
+				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
+				return target.apply(thisArg, argArray);
+			},
+		});
+
+		window.history.replaceState = new Proxy(window.history.pushState, {
+			apply: async (target, thisArg, argArray) => {
+				this.releventHoverDetectionManager.reset();
+				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
+				return target.apply(thisArg, argArray);
+			},
+		});
 		setInterval(this.pollInterval, 300);
 	}
 

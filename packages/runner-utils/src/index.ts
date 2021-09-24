@@ -12,6 +12,7 @@ import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import * as fs from "fs";
 import * as path from "path";
 import { sleep } from "./functions";
+import { CrusherSdk } from "./sdk/sdk";
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -148,4 +149,4 @@ class CrusherRunnerActions {
 	}
 }
 
-export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions };
+export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk };

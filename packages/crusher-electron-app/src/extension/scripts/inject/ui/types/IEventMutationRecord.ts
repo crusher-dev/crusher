@@ -3,4 +3,5 @@ export interface IEventMutationRecord {
 	type: string;
 	key: string;
 	targetNode: Node;
+	meta?: any;
 }

@@ -97,7 +97,7 @@ export class WebView {
 			module,
 			__filename,
 			__dirname,
-			this.sdk,
+			this.playwrightInstance.getSdkManager(),
 		);
 
 		return true;

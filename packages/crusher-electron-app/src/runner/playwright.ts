@@ -1,6 +1,6 @@
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfill";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("../../../../output/crusher-runner-utils/");
+const { CrusherSdk, CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("../../../../output/crusher-runner-utils/");
 import { iAction } from "@shared/types/action";
 import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
@@ -17,11 +17,17 @@ class PlaywrightInstance {
 	private browserContext: any;
 	private page: any;
 
+	private sdkManager: any;
+
 	constructor() {
 		this.logManager = new LogManagerPolyfill();
 		this.storageManager = new StorageManagerPolyfill();
 		this.globalManager = new GlobalManagerPolyfill();
 		this.runnerManager = new CrusherRunnerActions(this.logManager as any, this.storageManager as any, "/tmp/crusher/somedir/", this.globalManager);
+	}
+
+	getSdkManager() {
+		return this.sdkManager;
 	}
 
 	async _getWebViewPage() {
@@ -45,6 +51,7 @@ class PlaywrightInstance {
 		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		this.page = await this._getWebViewPage();
+		this.sdkManager = new CrusherSdk(this.page);
 	}
 
 	async runActions(actions: Array<iAction>): Promise<boolean> {

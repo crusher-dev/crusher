@@ -25,7 +25,6 @@ class CrusherElementSdk implements ICrusherSDKElement {
 	}
 
 	async type(text: string, options: { delay?: number } = {}) {
-		await this.element.focus();
 		await this.element.type(text, options);
 		return true;
 	}

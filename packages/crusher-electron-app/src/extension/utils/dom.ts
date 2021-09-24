@@ -97,3 +97,17 @@ export function getAllSeoMetaInfo() {
 
 	return metaTagsValuesMap;
 }
+
+export function openLinkInNewTab(url: string) {
+	const link = document.createElement("a");
+	link.href = url;
+	link.target = "_blank";
+
+	const event = new window.MouseEvent("click", {
+		view: window,
+		bubbles: true,
+		cancelable: true,
+	});
+
+	link.dispatchEvent(event);
+}

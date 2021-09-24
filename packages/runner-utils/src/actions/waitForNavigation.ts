@@ -4,7 +4,6 @@ import { Page } from "playwright";
 
 async function waitForNavigation(page: Page, action: iAction) {
 	try {
-		await page.waitForURL(action.payload.meta.value);
 		await page.waitForLoadState("networkidle");
 		await page.waitForLoadState("load");
 		await page.waitForLoadState("domcontentloaded");

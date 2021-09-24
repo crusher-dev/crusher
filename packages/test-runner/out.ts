@@ -46,18 +46,15 @@
     // @TODO: globalManager, logManager and storageManager are supposed to be injected globally
     const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "/tmp/crusher/somedir/", globalManager);
 
-    const browser = await playwright["CHROME"].launch({
-        "headless": true,
-        "args": ["--disable-shm-usage", "--disable-gpu"]
+    const browser = await playwright["webkit"].launch({
+        "headless": false,
+        "args": []
     });
     let capturedVideo, browserContext, page;
     try {
         globalManager.set("browserContextOptions", {
             "defaultNavigationTimeout": 30000,
-            "defaultTimeout": 15000,
-            "recordVideo": {
-                "dir": "/tmp/crusher-videos/somedir"
-            }
+            "defaultTimeout": 15000
         });
 
         const actions = [{
@@ -100,91 +97,20 @@
                     "uniquenessScore": 1
                 }],
                 "meta": {
-                    "value": "https://app.crusher.dev/"
+                    "value": "https://www.stage-headout.com/"
                 }
             },
             "screenshot": null,
-            "url": "https://app.crusher.dev/"
+            "url": "https://www.stage-headout.com/"
         }, {
-            "type": "ELEMENT_CLICK",
+            "type": "PAGE_NAVIGATE_URL",
             "payload": {
-                "selectors": [{
-                    "type": "playwright",
-                    "value": "text=Signup",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".underline",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "[href=\"/signup\"] >> span",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "a >> .underline",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-15 >> span",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".font-500 >> span",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div >> .underline",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "span.underline",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "[href=\"/signup\"] >> .underline",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".flex >> .underline",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "PnC",
-                    "value": "a > .underline",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 2,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".font-cera .underline",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 3,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".flex .underline",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 4,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[3]/A[1]/SPAN[1]",
-                    "uniquenessScore": 1
-                }],
+                "selectors": [],
                 "meta": {
-                    "value": ""
-                },
-                "timeout": 15
+                    "value": "http://hub.headout.com"
+                }
             },
-            "screenshot": null,
-            "url": "https://app.crusher.dev/login",
-            "name": "Signup link"
+            "screenshot": null
         }, {
             "type": "PAGE_WAIT_FOR_NAVIGATION",
             "payload": {
@@ -210,148 +136,61 @@
                     "uniquenessScore": 1
                 }],
                 "meta": {
-                    "value": "https://app.crusher.dev/signup"
+                    "value": "https://hub.headout.com/"
                 }
             },
             "screenshot": null,
-            "url": "https://app.crusher.dev/signup"
-        }, {
-            "type": "ELEMENT_ASSERT",
-            "payload": {
-                "selectors": [{
-                    "type": "playwright",
-                    "value": "text=Create your account",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-16",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".font-700",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".leading-none",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div.text-16",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div.font-700",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".flex-col >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div.leading-none",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".flex >> .text-16",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".flex >> .font-700",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "PnC",
-                    "value": ".flex > .text-16",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 2,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".flex .font-cera:nth-child(2)",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 3,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".css-11mjg1v .font-cera:nth-child(2)",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 4,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]",
-                    "uniquenessScore": 1
-                }],
-                "meta": {
-                    "validations": [{
-                        "id": "new-row1",
-                        "field": {
-                            "name": "innerHTML",
-                            "value": "Create your account",
-                            "meta": {
-                                "type": "innerHTML"
-                            }
-                        },
-                        "operation": "MATCHES",
-                        "validation": "Create your account"
-                    }]
-                },
-                "timeout": 15
-            },
-            "screenshot": null,
-            "url": "",
-            "name": "Assert Create your account label"
+            "url": "https://hub.headout.com/"
         }, {
             "type": "ELEMENT_CLICK",
             "payload": {
                 "selectors": [{
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> div",
+                    "value": "text=Login",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> .flex",
+                    "value": "a",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> .items-center",
+                    "value": "[href=\"/app/\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> .justify-center",
+                    "value": "div >> a",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> div.flex",
+                    "value": "a[href=\"/app/\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> div.items-center",
+                    "value": "div >> [href=\"/app/\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> div.justify-center",
+                    "value": ".hOiPIA >> a",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> .flex.items-center",
+                    "value": ".hOiPIA >> [href=\"/app/\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> .flex.justify-center",
+                    "value": "div >> a[href=\"/app/\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div:nth-of-type(2) >> .justify-center.items-center",
+                    "value": "div:nth-of-type(2) >> a",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "a[href=\"/app/\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "PnC",
-                    "value": ".css-16t7bv9 > .flex",
+                    "value": ".Header__Navigation-ga3160-2 > .TypeSystem__StyledLink-u8borm-12",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 2,
@@ -359,7 +198,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".css-1l4gkw8 .flex",
+                    "value": ".Header__NavigationWrapper-ga3160-7 .TypeSystem__StyledLink-u8borm-12",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 3,
@@ -367,7 +206,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".flex > .css-1l4gkw8 .flex",
+                    "value": ".Header__Container-ga3160-1 .TypeSystem__StyledLink-u8borm-12",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 4,
@@ -375,23 +214,55 @@
                     }
                 }, {
                     "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/BUTTON[1]/DIV[1]",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/A[1]",
                     "uniquenessScore": 1
                 }],
                 "meta": {
                     "value": ""
-                },
-                "timeout": 15
+                }
             },
             "screenshot": null,
-            "url": "https://app.crusher.dev/signup",
-            "name": "Continue with email"
+            "url": "https://hub.headout.com/"
         }, {
-            "type": "ELEMENT_ADD_INPUT",
+            "type": "PAGE_WAIT_FOR_NAVIGATION",
             "payload": {
                 "selectors": [{
                     "type": "playwright",
-                    "value": "[placeholder=\"Enter name\"]",
+                    "value": "body",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "html >> body",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": "html > body",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": "https://hub.headout.com/app/"
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/"
+        }, {
+            "type": "ELEMENT_FOCUS",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your email address\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
@@ -399,51 +270,43 @@
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "[autocomplete=\"name\"]",
+                    "value": "[placeholder=\"Enter your email address\"][type=\"email\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div >> [placeholder=\"Enter name\"]",
+                    "value": ".text-15",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "input[placeholder=\"Enter name\"]",
+                    "value": ".font-light",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div >> input",
+                    "value": ".leading-none",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".flex >> [placeholder=\"Enter name\"]",
+                    "value": "div >> [type=\"email\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".relative >> [placeholder=\"Enter name\"]",
+                    "value": "input[type=\"email\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".flex-col >> [placeholder=\"Enter name\"]",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".items-center >> [placeholder=\"Enter name\"]",
+                    "value": "div >> [placeholder=\"Enter your email address\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "attribute",
-                    "value": "input[autocomplete=\"name\"]",
+                    "value": "input[placeholder=\"Enter your email address\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "attribute",
-                    "value": "input[placeholder=\"Enter name\"]",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "attribute",
-                    "value": "input[value=\"Hello world\"]",
+                    "value": "input[type=\"email\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "PnC",
-                    "value": ".mb-12:nth-child(1) .css-g27g6f",
+                    "value": ".css-9ro8cg-inputBox:nth-child(1) > .leading-none",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 2,
@@ -451,7 +314,15 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".css-w9kmsm > .mb-12:nth-child(1) .css-g27g6f",
+                    "value": "div > .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-koucz6-contentContainer .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 4,
@@ -459,26 +330,359 @@
                     }
                 }, {
                     "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/INPUT[1]",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/DIV[1]/INPUT[1]",
                     "uniquenessScore": 1
                 }],
                 "meta": {
-                    "value": "Hello world"
+                    "value": true
                 }
             },
             "screenshot": null,
-            "url": "https://app.crusher.dev/signup"
+            "url": "https://hub.headout.com/app/"
         }, {
-            "type": "PAGE_CUSTOM_CODE",
+            "type": "ELEMENT_CLICK",
             "payload": {
-                "selectors": null,
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your email address\"][type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".font-light",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".leading-none",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": "div > .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-koucz6-contentContainer .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/DIV[1]/INPUT[1]",
+                    "uniquenessScore": 1
+                }],
                 "meta": {
-                    "script": "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n  const emailElement = await crusherSdk.$(\"input[autocomplete=email]\");\n  \n  function uuidv4() {\n    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\n      return v.toString(16);\n    });\n  }\n  await emailElement.type(`${uuidv4().substr(0, 10)}@gmail.com`);\n}"
+                    "value": ""
                 }
             },
             "screenshot": null,
-            "url": "",
-            "name": "Fill random email "
+            "url": "https://hub.headout.com/app/"
+        }, {
+            "type": "ELEMENT_ADD_INPUT",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your email address\"][type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".font-light",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".leading-none",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": "div > .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-koucz6-contentContainer .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/DIV[1]/INPUT[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": "preethi@headout.com"
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/"
+        }, {
+            "type": "ELEMENT_PRESS",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your email address\"][type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".font-light",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".leading-none",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[placeholder=\"Enter your email address\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[type=\"email\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": "div > .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-koucz6-contentContainer .css-9ro8cg-inputBox:nth-child(1) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/DIV[1]/INPUT[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": "Tab"
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/"
+        }, {
+            "type": "ELEMENT_FOCUS",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "[type=\"password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[placeholder=\"Enter your password\"][type=\"password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [type=\"password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input[type=\"password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> [placeholder=\"Enter your password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "input[placeholder=\"Enter your password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[type=\"password\"].text-15",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[type=\"password\"].font-light",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[type=\"password\"].leading-none",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[placeholder=\"Enter your password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "attribute",
+                    "value": "input[type=\"password\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".css-9ro8cg-inputBox:nth-child(2) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": "div > .css-9ro8cg-inputBox:nth-child(2) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-koucz6-contentContainer .css-9ro8cg-inputBox:nth-child(2) > .leading-none",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/DIV[2]/INPUT[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": true
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/"
         }, {
             "type": "ELEMENT_ADD_INPUT",
             "payload": {
@@ -512,15 +716,15 @@
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".flex >> [type=\"password\"]",
+                    "value": "[type=\"password\"].text-15",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".relative >> [type=\"password\"]",
+                    "value": "[type=\"password\"].font-light",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".flex-col >> [type=\"password\"]",
+                    "value": "[type=\"password\"].leading-none",
                     "uniquenessScore": 1
                 }, {
                     "type": "attribute",
@@ -531,12 +735,8 @@
                     "value": "input[type=\"password\"]",
                     "uniquenessScore": 1
                 }, {
-                    "type": "attribute",
-                    "value": "input[value=\"crushertesting\"]",
-                    "uniquenessScore": 1
-                }, {
                     "type": "PnC",
-                    "value": ".mb-20 .css-g27g6f",
+                    "value": ".css-9ro8cg-inputBox:nth-child(2) > .leading-none",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 2,
@@ -544,79 +744,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".css-w9kmsm > .mb-20 .css-g27g6f",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 4,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[3]/DIV[1]/INPUT[1]",
-                    "uniquenessScore": 1
-                }],
-                "meta": {
-                    "value": "crushertesting"
-                },
-                "timeout": 15
-            },
-            "screenshot": null,
-            "url": "https://app.crusher.dev/signup",
-            "name": "Set password as \"crushertesting\""
-        }, {
-            "type": "ELEMENT_CLICK",
-            "payload": {
-                "selectors": [{
-                    "type": "playwright",
-                    "value": "button >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".rem-24 >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "button >> .flex",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-14 >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-white >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".leading-none >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "button >> .items-center",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "button >> .justify-center",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".rem-24 >> .flex",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-14 >> .flex",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "PnC",
-                    "value": ".rem-24 > .flex",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 2,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".css-w9kmsm .flex",
+                    "value": "div > .css-9ro8cg-inputBox:nth-child(2) > .leading-none",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 3,
@@ -624,7 +752,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".flex > .css-w9kmsm .flex",
+                    "value": ".css-koucz6-contentContainer .css-9ro8cg-inputBox:nth-child(2) > .leading-none",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 4,
@@ -632,7 +760,137 @@
                     }
                 }, {
                     "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/BUTTON[1]/DIV[1]",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/DIV[2]/INPUT[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": "headout"
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/"
+        }, {
+            "type": "ELEMENT_SCREENSHOT",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "text=Login in to HubEmail AddressPasswordLog in",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(2) >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(2) >> :visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(2) >> div:visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".css-b1kwtm-contentSection > .css-koucz6-contentContainer",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-1jfze34-bodyPage .css-koucz6-contentContainer",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": "div .css-koucz6-contentContainer",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": null
+            },
+            "screenshot": null,
+            "url": ""
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "text=Log in",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "button",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".undefined",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> button",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> .undefined",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "button.undefined",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "button.text-white",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "button.leading-none",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "button.font-heading",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-white.undefined",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": "div > .bg-purps",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-koucz6-contentContainer .bg-purps",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-b1kwtm-contentSection .bg-purps",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/BUTTON[1]",
                     "uniquenessScore": 1
                 }],
                 "meta": {
@@ -640,57 +898,45 @@
                 }
             },
             "screenshot": null,
-            "url": "https://app.crusher.dev/signup"
-        }, {
-            "type": "ELEMENT_ASSERT",
+            "url": "https://hub.headout.com/app/"
+            },
+            {
+                "type": "PAGE_WAIT_FOR_NAVIGATION",
+                "payload": {
+                    "selectors": [{
+                        "type": "playwright",
+                        "value": "body",
+                        "uniquenessScore": 1
+                    }, {
+                        "type": "playwright",
+                        "value": "html >> body",
+                        "uniquenessScore": 1
+                    }, {
+                        "type": "PnC",
+                        "value": "html > body",
+                        "uniquenessScore": 1,
+                        "meta": {
+                            "seedLength": 2,
+                            "optimized": 2
+                        }
+                    }, {
+                        "type": "xpath",
+                        "value": "BODY",
+                        "uniquenessScore": 1
+                    }],
+                    "meta": {
+                        "value": "https://hub.headout.com/app/experiences/"
+                    }
+                },
+                "screenshot": null,
+                "url": "https://hub.headout.com/app/experiences/"
+            },
+            {
+            "type": "ELEMENT_HOVER",
             "payload": {
                 "selectors": [{
-                    "type": "playwright",
-                    "value": "text=How it works in 60 seconds?",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-18",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".font-700",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".leading-none",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .text-18",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .font-700",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .leading-none",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div.text-18",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div.font-700",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".flex-col >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "attribute",
-                    "value": "div[style=\"outline-style: none; outline-width: 0px;\"]",
-                    "uniquenessScore": 1
-                }, {
                     "type": "PnC",
-                    "value": ".flex > .m-8",
+                    "value": ".mt-36:nth-child(3) > .grid:nth-child(2) > .relative",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 2,
@@ -698,7 +944,69 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".flex .m-8",
+                    "value": ".ml-30 > .mt-36:nth-child(3) > .grid:nth-child(2) > .relative",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }],
+                "meta": {
+                    "value": ""
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/experiences/"
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "text=Manage Inventory & Pricing",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".absolute >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div.absolute >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".absolute.border >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".absolute.rounded >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".absolute >> :visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".absolute >> div:visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".absolute.border >> :visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".absolute.rounded >> :visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".absolute > .css-1ugq6px-menuItemCss",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": "div .css-1ugq6px-menuItemCss",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 3,
@@ -706,7 +1014,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".css-11mjg1v .m-8",
+                    "value": ".relative .css-1ugq6px-menuItemCss",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 4,
@@ -714,74 +1022,139 @@
                     }
                 }, {
                     "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[2]/DIV[3]/DIV[3]/DIV[2]/DIV[2]/DIV[3]/DIV[1]/DIV[1]",
                     "uniquenessScore": 1
                 }],
                 "meta": {
-                    "validations": [{
-                        "id": "new-row2",
-                        "field": {
-                            "name": "innerHTML",
-                            "value": "How it works in 60 seconds?",
-                            "meta": {
-                                "type": "innerHTML"
-                            }
-                        },
-                        "operation": "MATCHES",
-                        "validation": "How it works in 60 seconds?"
-                    }]
-                },
-                "timeout": 15
+                    "value": ""
+                }
             },
             "screenshot": null,
-            "url": "",
-            "name": "Assert how it works onboarding"
+            "url": "https://hub.headout.com/app/experiences/"
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "#date >> svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#date >> [fill=\"none\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-12 >> svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".uppercase >> svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div#date >> svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-12 >> [fill=\"none\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".uppercase >> [fill=\"none\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#date >> svg[fill=\"none\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div#date >> [fill=\"none\"]",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".flex.text-12 >> svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".font-medium > #date svg",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "attribute",
+                    "value": "svg[height=\"16\"]",
+                    "uniquenessScore": 0.038461538461538464
+                }, {
+                    "type": "attribute",
+                    "value": "svg[viewBox=\"0 0 16 16\"]",
+                    "uniquenessScore": 0.038461538461538464
+                }, {
+                    "type": "attribute",
+                    "value": "svg[xmlns=\"http://www.w3.org/2000/svg\"]",
+                    "uniquenessScore": 0.03125
+                }, {
+                    "type": "attribute",
+                    "value": "svg[fill=\"none\"]",
+                    "uniquenessScore": 0.029411764705882353
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/svg[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": ""
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/manage-slots/?option_id=25796&experience_id=13451&start_date=2021-09-22"
         }, {
             "type": "ELEMENT_SCREENSHOT",
             "payload": {
                 "selectors": [{
                     "type": "playwright",
-                    "value": "text=Next",
+                    "value": "text=22/09/202112:00 PMOpen",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "button",
+                    "value": "[currentitem=\"false\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".rem-24",
+                    "value": "[data-for=\"manageSlotsSticky\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".text-14",
+                    "value": "div >> [currentitem=\"false\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".text-white",
+                    "value": "div >> [data-for=\"manageSlotsSticky\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "#__next >> button",
+                    "value": "[currentitem=\"false\"].flex",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "#__next >> .rem-24",
+                    "value": "[currentitem=\"false\"].text-12",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "#__next >> .text-14",
+                    "value": ".relative >> [currentitem=\"false\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "#__next >> .text-white",
+                    "value": "[currentitem=\"false\"].uppercase",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div >> button",
+                    "value": ".flex-grow >> [currentitem=\"false\"]",
                     "uniquenessScore": 1
                 }, {
                     "type": "PnC",
-                    "value": ".flex > .rem-24",
+                    "value": ".mt-72 > .flex:nth-child(3)",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 2,
@@ -789,7 +1162,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".flex .rem-24",
+                    "value": ".mt-72 > .mt-72 > .flex:nth-child(3)",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 3,
@@ -797,15 +1170,27 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".css-11mjg1v .rem-24",
+                    "value": ".mt-92 .mt-72 > .flex:nth-child(3)",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 4,
                         "optimized": 2
                     }
                 }, {
+                    "type": "dataAttribute",
+                    "value": "div[data-tip=\"\"]",
+                    "uniquenessScore": 0.05
+                }, {
+                    "type": "dataAttribute",
+                    "value": "div[data-for=\"manageSlotsSticky\"]",
+                    "uniquenessScore": 0.05
+                }, {
+                    "type": "attribute",
+                    "value": "div[currentitem=\"false\"]",
+                    "uniquenessScore": 0.05
+                }, {
                     "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/BUTTON[1]",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]/DIV[3]",
                     "uniquenessScore": 1
                 }],
                 "meta": null
@@ -817,259 +1202,11 @@
             "payload": {
                 "selectors": [{
                     "type": "playwright",
-                    "value": "text=Next",
+                    "value": ".flex-start",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-14",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-white",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .text-14",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .text-white",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "attribute",
-                    "value": "button[style=\"outline-style: none; outline-width: 0px;\"]",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "PnC",
-                    "value": ".flex > .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 2,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".flex .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 3,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".css-11mjg1v .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 4,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/BUTTON[1]",
-                    "uniquenessScore": 1
-                }],
-                "meta": {
-                    "value": ""
-                },
-                "timeout": 15
-            },
-            "screenshot": null,
-            "url": "https://app.crusher.dev/setup/onboarding",
-            "name": "\"Next\""
-        }, {
-            "type": "ELEMENT_SCREENSHOT",
-            "payload": {
-                "selectors": [{
-                    "type": "playwright",
-                    "value": "text=Open Dashboard",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-white",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .text-white",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div >> .rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".flex >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "PnC",
-                    "value": ".flex > .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 2,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".flex .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 3,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".css-11mjg1v .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 4,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/BUTTON[1]",
-                    "uniquenessScore": 1
-                }],
-                "meta": null
-            },
-            "screenshot": null,
-            "url": ""
-        }, {
-            "type": "ELEMENT_CLICK",
-            "payload": {
-                "selectors": [{
-                    "type": "playwright",
-                    "value": "text=Open Dashboard",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".text-white",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "#__next >> .text-white",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": "div >> .rem-24",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".flex >> button",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "attribute",
-                    "value": "button[style=\"outline-style: none; outline-width: 0px;\"]",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "PnC",
-                    "value": ".flex > .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 2,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".flex .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 3,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "PnC",
-                    "value": ".css-11mjg1v .rem-24",
-                    "uniquenessScore": 1,
-                    "meta": {
-                        "seedLength": 4,
-                        "optimized": 2
-                    }
-                }, {
-                    "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/BUTTON[1]",
-                    "uniquenessScore": 1
-                }],
-                "meta": {
-                    "value": ""
-                },
-                "timeout": 15
-            },
-            "screenshot": null,
-            "url": "https://app.crusher.dev/setup/onboarding",
-            "name": "Open Dashboard"
-        }, {
-            "type": "ELEMENT_SCREENSHOT",
-            "payload": {
-                "selectors": [{
-                    "type": "playwright",
-                    "value": "text=HHello worldfree",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".relative >> div",
-                    "uniquenessScore": 1
-                }, {
-                    "type": "playwright",
-                    "value": ".leading-none >> div",
+                    "value": "div.flex-start",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
@@ -1077,31 +1214,35 @@
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".leading-none >> .flex",
+                    "value": ".flex.flex-start",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div.relative >> div",
+                    "value": ".relative >> .flex-start",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": "div.leading-none >> div",
+                    "value": ".flex-grow >> .flex-start",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".relative >> div.flex",
+                    "value": "div >> div.flex-start",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".leading-none >> div.flex",
+                    "value": "div:nth-of-type(5) >> .flex",
                     "uniquenessScore": 1
                 }, {
                     "type": "playwright",
-                    "value": ".leading-none.relative >> div",
+                    "value": "div:nth-of-type(5) >> .flex-start",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(2) >> .flex-start",
                     "uniquenessScore": 1
                 }, {
                     "type": "PnC",
-                    "value": ".css-0 > .flex",
+                    "value": ".mt-72 > .flex-start",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 2,
@@ -1109,7 +1250,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": "div > .css-0 > .flex",
+                    "value": ".mt-72 .flex-start",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 3,
@@ -1117,7 +1258,7 @@
                     }
                 }, {
                     "type": "PnC",
-                    "value": ".flex > div:nth-child(1) > .flex:nth-child(1) > .flex",
+                    "value": ".mt-92 .flex-start",
                     "uniquenessScore": 1,
                     "meta": {
                         "seedLength": 4,
@@ -1125,30 +1266,713 @@
                     }
                 }, {
                     "type": "xpath",
-                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]/DIV[1]",
                     "uniquenessScore": 1
                 }],
-                "meta": null,
-                "timeout": 15
-            },
-            "screenshot": null,
-            "url": "",
-            "name": "Sidebar user info"
-        }, {
-            "type": "PAGE_CUSTOM_CODE",
-            "payload": {
-                "selectors": null,
                 "meta": {
-                    "script": "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n  await crusherSdk.fetch(\"https://backend.crusher.dev/users/actions/delete\", {\n  \"headers\": {\n    Accept: \"application/json, text/plain, */*\", \"Content-Type\": \"application/json\",\n  },\n  \"method\": \"POST\",\n  \t\tcredentials: \"include\",\n\n  \"body\": JSON.stringify({}),\n  });\n}"
+                    "value": ""
                 }
             },
             "screenshot": null,
-            "url": "",
-            "name": "Cleanup"
+            "url": "https://hub.headout.com/app/manage-slots/?option_id=25796&experience_id=13451&start_date=2021-09-22"
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "div:nth-of-type(5).text-15 >> input",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(5).font-light >> input",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(5).justify-center >> input",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".css-wod4nt-inFocusCSS-InputCell > .css-11ulm40-cellContainer-selectedCSS-infinityCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".relative .css-11ulm40-cellContainer-selectedCSS-infinityCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".border-g7 .css-11ulm40-cellContainer-selectedCSS-infinityCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "attribute",
+                    "value": "input[disabled=\"\"]",
+                    "uniquenessScore": 0.016666666666666666
+                }, {
+                    "type": "attribute",
+                    "value": "input[value=\"∞\"]",
+                    "uniquenessScore": 0.016666666666666666
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]/DIV[3]/DIV[5]/DIV[1]/DIV[1]/INPUT[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": ""
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/manage-slots/?option_id=25796&experience_id=13451&start_date=2021-09-22"
+        }, {
+            "type": "ELEMENT_SCREENSHOT",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "//*[@id='__next']/div[1]/div/section[2]/div[2]/div[5]/div[1]/div[3]/div[5]/div/div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".relative > .css-wod4nt-inFocusCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".border-g7 .css-wod4nt-inFocusCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".flex .css-wod4nt-inFocusCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "attribute",
+                    "value": "div[style=\"outline-style: none; outline-width: 0px;\"]",
+                    "uniquenessScore": 0.5
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]/DIV[3]/DIV[5]/DIV[1]/DIV[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": null
+            },
+            "screenshot": null,
+            "url": ""
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": ".font-light >> #svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[tabindex=\"0\"] >> #svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".font-light >> div#svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[tabindex=\"0\"] >> div#svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15 >> #svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative.font-light >> #svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[tabindex=\"0\"].relative >> #svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[tabindex=\"0\"].font-light >> #svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15 >> div#svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15.relative >> #svg",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".css-ona62u-toggleButtonPlain-ToggleButtonPlain > #svg",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".flex > .css-ona62u-toggleButtonPlain-ToggleButtonPlain > #svg",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-wod4nt-inFocusCSS-InputCell #svg",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "id",
+                    "value": "#svg",
+                    "uniquenessScore": 0.047619047619047616
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]/DIV[3]/DIV[5]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": ""
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/manage-slots/?option_id=25796&experience_id=13451&start_date=2021-09-22"
+        }, {
+            "type": "ELEMENT_SCREENSHOT",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "//*[@id='__next']/div[1]/div/section[2]/div[2]/div[5]/div[1]/div[3]/div[5]/div/div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".relative > .css-wod4nt-inFocusCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".border-g7 .css-wod4nt-inFocusCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".flex .css-wod4nt-inFocusCSS-InputCell",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "attribute",
+                    "value": "div[style=\"outline-style: none; outline-width: 0px;\"]",
+                    "uniquenessScore": 0.5
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]/DIV[3]/DIV[5]/DIV[1]/DIV[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": null
+            },
+            "screenshot": null,
+            "url": ""
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "#button >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#button >> .flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15 >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".leading-none >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-15 >> .flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".leading-none >> .flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#button >> div.flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#button.text-15 >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#button.leading-none >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#button.flex >> .flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": "#button > .flex",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".flex > #button > .flex",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-187q484-multipleActionButton #button > .flex",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[2]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": ""
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/manage-slots/?option_id=25796&experience_id=13451&start_date=2021-09-22"
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "text=Close",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-warning-red",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div >> .text-warning-red",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".flex >> .text-warning-red",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> .text-warning-red",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".menu-item.text-warning-red",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".font-light >> .text-warning-red",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".flex-start >> .text-warning-red",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(3).menu-item",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".font-light >> div:nth-of-type(3)",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".px-8 > .text-warning-red",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".flex .text-warning-red",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".css-187q484-multipleActionButton .text-warning-red",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[2]/DIV[1]/DIV[1]/DIV[1]/DIV[3]/DIV[3]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": ""
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/manage-slots/?option_id=25796&experience_id=13451&start_date=2021-09-22"
+        }, {
+            "type": "ELEMENT_SCREENSHOT",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "#status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".flex >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-12 >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".uppercase >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".items-center >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#status.justify-center",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[currentitem=\"false\"] >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[data-for=\"manageSlotsSticky\"] >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(3)#status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".flex:nth-child(3) > #status",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".mt-72 > .flex:nth-child(3) > #status",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".mt-72 .flex:nth-child(3) > #status",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "id",
+                    "value": "#status",
+                    "uniquenessScore": 0.05
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[2]/DIV[3]/DIV[3]",
+                    "uniquenessScore": 1
+                }],
+                "meta": null
+            },
+            "screenshot": null,
+            "url": ""
+        }, {
+            "type": "ELEMENT_CLICK",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "#status >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".justify-center >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#status.justify-center >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(3)#status >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(3).justify-center >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#status >> :visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".justify-center >> :visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#status >> div:visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#status.justify-center >> :visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".justify-center >> div:visible",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".flex:nth-child(3) .css-1r75cml-toggleButton-unSelectedButton-ToggleButton",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".mt-72 > .flex:nth-child(3) .css-1r75cml-toggleButton-unSelectedButton-ToggleButton",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[2]/DIV[3]/DIV[3]/DIV[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": {
+                    "value": ""
+                }
+            },
+            "screenshot": null,
+            "url": "https://hub.headout.com/app/manage-slots/?option_id=25796&experience_id=13451&start_date=2021-09-22"
+        }, {
+            "type": "ELEMENT_SCREENSHOT",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": "#status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".flex >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".text-12 >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".uppercase >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".items-center >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "#status.justify-center",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[currentitem=\"false\"] >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "[data-for=\"manageSlotsSticky\"] >> #status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(3)#status",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".flex:nth-child(3) > #status",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".mt-72 > .flex:nth-child(3) > #status",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".mt-72 .flex:nth-child(3) > #status",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "attribute",
+                    "value": "div[style=\"outline-style: none; outline-width: 0px;\"]",
+                    "uniquenessScore": 0.3333333333333333
+                }, {
+                    "type": "id",
+                    "value": "#status",
+                    "uniquenessScore": 0.05
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[2]/DIV[3]/DIV[3]",
+                    "uniquenessScore": 1
+                }],
+                "meta": null
+            },
+            "screenshot": null,
+            "url": ""
+        }, {
+            "type": "ELEMENT_SCREENSHOT",
+            "payload": {
+                "selectors": [{
+                    "type": "playwright",
+                    "value": ".relative >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> .flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> .items-center",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> .justify-between",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(5) >> div",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(5) >> .flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(5) >> .items-center",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": "div:nth-of-type(5) >> .justify-between",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> div.flex",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "playwright",
+                    "value": ".relative >> div.items-center",
+                    "uniquenessScore": 1
+                }, {
+                    "type": "PnC",
+                    "value": ".pb-100 > .flex",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 2,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".mt-92 > .mt-72 > .flex",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 3,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "PnC",
+                    "value": ".flex-grow > .mt-92 > .mt-72 > .flex",
+                    "uniquenessScore": 1,
+                    "meta": {
+                        "seedLength": 4,
+                        "optimized": 2
+                    }
+                }, {
+                    "type": "xpath",
+                    "value": "BODY/DIV[1]/DIV[1]/DIV[1]/SECTION[2]/DIV[2]/DIV[5]/DIV[1]",
+                    "uniquenessScore": 1
+                }],
+                "meta": null
+            },
+            "screenshot": null,
+            "url": ""
         }]
         await crusherRunnerActionManager.runActions(getBrowserActions(actions), browser);
 
-        browserContextOptions = globalManager.get("browserContextOptions");
+        let browserContextOptions = globalManager.get("browserContextOptions");
 
         browserContext = await browser.newContext({
             ...browserContextOptions,
@@ -1160,23 +1984,22 @@
         page = await browserContext.newPage({});
         await handlePopup(page, browserContext);
 
-
+        await page.route('https://rec.smartlook.com/recorder.js', async (route, request) => {
+            console.log("Requesting smartlook script, ", request.resourceType());
+            await route.abort();
+        });
         await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);
     } catch (ex) {
         console.error(ex);
 
-        globalManager.set("recordedVideoPath", await page.video().path());
-
-        await page.close();
-        await browserContext.close();
-        await browser.close();
+        // await page.close();
+        // await browserContext.close();
+        // await browser.close();
         throw ex;
     }
 
 
-    globalManager.set("recordedVideoPath", await page.video().path());
-
-    await page.close();
-    await browserContext.close();
-    await browser.close();
+    // await page.close();
+    // await browserContext.close();
+    // await browser.close();
 })()

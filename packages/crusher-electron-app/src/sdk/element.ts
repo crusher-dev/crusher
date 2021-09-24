@@ -36,7 +36,7 @@ class ElementSdk implements ICrusherSDKElement {
 		await this.cdp.sendCommand("Runtime.evaluate", {
 			expression: pageFunc,
 			objectId: this.objectId,
-			arguments: args
+			arguments: args,
 		});
 	}
 

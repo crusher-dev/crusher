@@ -1,7 +1,5 @@
 import * as path from "path";
 import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard } from "electron";
-import userAgents from "../../crusher-shared/constants/userAgents";
-import { SDK } from "./sdk/sdk";
 import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
 

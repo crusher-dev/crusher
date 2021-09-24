@@ -1,13 +1,11 @@
 import { BrowserWindow, Debugger, WebContents, ipcMain, webContents, app } from "electron";
 import { PlaywrightInstance } from "./runner/playwright";
-import { SDK } from "./sdk/sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const highlighterStyle = require("./highlighterStyle.json");
 
 export class WebView {
 	debugger: Debugger;
-	sdk: SDK;
 	playwrightInstance: PlaywrightInstance;
 	appState: { targetSite?: string; replayTestId?: string };
 
@@ -24,7 +22,6 @@ export class WebView {
 		this.appState = state;
 		this.browserWindow = browserWindow;
 		this.debugger = this.webContents().debugger;
-		this.sdk = new SDK(this.webContents(), this.browserWindow.webContents);
 	}
 
 	async initialize() {
@@ -104,23 +101,6 @@ export class WebView {
 	}
 
 	async handleDebuggerEvents(event, method, params) {
-		if (method === "Runtime.consoleAPICalled") {
-			const { args } = params;
-			if (args.length === 2 && args[0].type === "string" && ["CRUSHER_HOVER_ELEMENT", "CRUSHER_CLICK_ELEMENT"].includes(args[0].value)) {
-				switch (args[0].value) {
-					case "CRUSHER_HOVER_ELEMENT":
-						// @TODO: Fix thi
-						await this.sdk.$nodeWrapper(args[1].objectId).hover();
-						break;
-					case "CRUSHER_CLICK_ELEMENT":
-						await this.sdk.$nodeWrapper(args[1].objectId).click();
-						break;
-					default:
-						console.error("This simulated action not supported");
-				}
-			}
-		}
-
 		if (method === "Overlay.inspectNodeRequested") {
 			await this.debugger.sendCommand("Overlay.setInspectMode", {
 				mode: "none",

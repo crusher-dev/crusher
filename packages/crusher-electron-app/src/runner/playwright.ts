@@ -52,6 +52,26 @@ class PlaywrightInstance {
 		this.browserContext = (await this.browser.contexts())[0];
 		this.page = await this._getWebViewPage();
 		this.sdkManager = new CrusherSdk(this.page);
+
+		await this.initialize();
+	}
+
+	async initialize() {
+		this.page.on("console", async (msg) => {
+			const [typeObj, valueObj] = msg.args();
+			if (!typeObj || !valueObj) return;
+
+			const type = await typeObj.jsonValue();
+			switch (type) {
+				case "CRUSHER_HOVER_ELEMENT":
+					console.log("HELLO WORLD");
+					await valueObj.hover();
+					break;
+				case "CRUSHER_CLICK_ELEMENT":
+					await valueObj.click();
+					break;
+			}
+		});
 	}
 
 	async runActions(actions: Array<iAction>): Promise<boolean> {

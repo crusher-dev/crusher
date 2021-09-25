@@ -66,7 +66,7 @@ class App {
 	cleanupStorageBeforeExit(): Promise<void> {
 		this.appWindow = null;
 		return session.defaultSession.clearStorageData({
-			storages: ["cookies", "localstorage"],
+			storages: ["cookies", "localstorage", "indexdb"],
 		});
 	}
 

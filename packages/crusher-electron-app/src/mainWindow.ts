@@ -12,16 +12,17 @@ class MainWindow {
 	state: { targetSite?: string; replayTestId?: string };
 
 	_getStateFromArgs(): { targetSite?: string; replayTestId?: string } {
-		const [executable, deepLink] = process.argv;
+		if (!process.argv.length) return { replayTestId: undefined, targetSite: undefined };
+
+		const deepLink = process.argv[process.argv.length - 1];
 		if (deepLink && deepLink.startsWith("crusher://replay-test")) {
 			const url = new URL(deepLink);
-			this.webContents.executeJavaScript(`console.log('Getting test id', '${url.searchParams.get("testId")}')`);
 			return { replayTestId: url.searchParams.get("testId"), targetSite: "https://example.com" };
 		}
 
 		return {
 			replayTestId: app.commandLine.getSwitchValue("replay-test-id") || undefined,
-			targetSite: app.commandLine.getSwitchValue("targetSite") || undefined,
+			targetSite: app.commandLine.getSwitchValue("target-site") || undefined,
 		};
 	}
 

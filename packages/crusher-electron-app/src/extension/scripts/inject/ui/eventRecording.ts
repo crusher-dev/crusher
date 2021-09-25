@@ -290,7 +290,8 @@ export default class EventRecording {
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
+				// @TODO: Need a proper way to detect real and fake scroll events
+				// _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}
@@ -501,16 +502,18 @@ export default class EventRecording {
 		window.history.pushState = new Proxy(window.history.pushState, {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
+				const out = target.apply(thisArg, argArray);
 				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
-				return target.apply(thisArg, argArray);
+				return out;
 			},
 		});
 
 		window.history.replaceState = new Proxy(window.history.pushState, {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
+				const out = target.apply(thisArg, argArray);
 				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
-				return target.apply(thisArg, argArray);
+				return out;
 			},
 		});
 		setInterval(this.pollInterval, 300);

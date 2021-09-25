@@ -12,6 +12,8 @@ function getElementDepth(el) {
 
 class RelevantHoverDetection {
 	private _mapRecords: Map<Node, Map<Node, IRegisteredMutationRecord>> = new Map();
+	isRunning = true;
+	resetTime = Date.now();
 
 	constructor() {
 		(window as any).getParentDomMutations = this.getParentDOMMutations.bind(this);
@@ -21,6 +23,7 @@ class RelevantHoverDetection {
 		if (!(window as any).mapRecords) {
 			(window as any).mapRecords = this._mapRecords;
 		}
+		if (!this.isRunning) return;
 		if (!document.body.contains(record.targetNode) && !document.body.contains(record.eventNode)) return;
 
 		const { eventNode, targetNode } = record;
@@ -37,12 +40,21 @@ class RelevantHoverDetection {
 		});
 	}
 
+	pause() {
+		this.isRunning = false;
+	}
+
+	start() {
+		this.isRunning = true;
+	}
+
 	isCoDependentNode(node: Node) {
 		return this.getParentDOMMutations(node).length > 0;
 	}
 
 	reset() {
 		this._mapRecords.clear();
+		this.resetTime = Date.now();
 	}
 
 	getParentDOMMutations(node: Node): Array<IRegisteredMutationRecord> {
@@ -59,11 +71,14 @@ class RelevantHoverDetection {
 		const out = list
 			.reverse()
 			.filter((item, index, array) => {
+				const timeOfEventStart = parseInt(item.key.split("__")[2]);
+
 				return (
 					array.findIndex((currentItem) => currentItem.eventNode === item.eventNode) === index &&
 					(item.targetNode !== document.body || item.targetNode !== document) &&
 					document.body.contains(item.targetNode) &&
-					document.body.contains(item.eventNode)
+					document.body.contains(item.eventNode) &&
+					timeOfEventStart > this.resetTime
 				);
 			})
 			.sort((a, b) => {

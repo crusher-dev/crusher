@@ -14,12 +14,14 @@ globalManager.set("browserContextOptions", <%- JSON.stringify(defaultBrowserCont
 const actions = <%- JSON.stringify(actions) %>
 await crusherRunnerActionManager.runActions(getBrowserActions(actions), browser);
 
-browserContextOptions = globalManager.get("browserContextOptions");
+const browserContextOptions = globalManager.get("browserContextOptions");
 
 browserContext = await browser.newContext({
   ...browserContextOptions,
 });
-
+<% if (isTracingOn) { %>
+await browserContext.tracing.start({ screenshots: true, snapshots: true });
+<% } %>
 browserContext.setDefaultNavigationTimeout(browserContextOptions.defaultNavigationTimeout);
 browserContext.setDefaultTimeout(browserContextOptions.defaultTimeout);
 
@@ -30,6 +32,10 @@ await handlePopup(page, browserContext);
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);
 } catch(ex) {
   console.error(ex);
+  <% if (isTracingOn) { %>
+
+  await browserContext.tracing.stop({ path: '<%= tracePath %>' });
+<% } %>
   <% if (shouldRecordVideo) { %>
   globalManager.set("recordedVideoPath", await page.video().path());
   <% } %>

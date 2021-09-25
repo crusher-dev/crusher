@@ -4,3 +4,4 @@ package-lock.json
 logs/
 test.js
 tsconfig.json
+bin/

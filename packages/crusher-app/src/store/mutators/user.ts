@@ -5,6 +5,7 @@ import { systemConfigAtom } from "@store/atoms/global/systemConfig";
 import { projectsAtom } from "@store/atoms/global/project";
 import { USER_META_KEYS } from "@constants/USER";
 import { appStateAtom, appStateItemMutator } from "@store/atoms/global/appState";
+import { Analytics } from "@utils/core/analytics";
 
 interface UserInitialData {
 	userData: any;
@@ -18,6 +19,8 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 	_set(teamAtom, data.team);
 	_set(systemConfigAtom, data.system);
 	_set(projectsAtom, data.projects);
+
+	Analytics.identify(data.userData.name, data.userData.userId, data.team.id, data.team.plan, "false", process.env.NEXT_PUBLIC_CRUSHER_MODE);
 });
 
 export const selectInitialProjectMutator = atom(null, (_get, _set, data: UserInitialData) => {

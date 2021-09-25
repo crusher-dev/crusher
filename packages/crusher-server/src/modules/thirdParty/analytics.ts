@@ -3,7 +3,7 @@ import { Logger } from "@utils/logger";
 
 @Service()
 class SegmentManager {
-	segmentKey: Stripe | undefined;
+	segment: any | undefined;
 
 	constructor() {
 		if (!process.env.EVENT_INGEST_KEY) {
@@ -12,10 +12,7 @@ class SegmentManager {
 		}
 	}
 
-	trackEvent(){
-
-	}
-
+	trackEvent() {}
 }
 
 export { SegmentManager };

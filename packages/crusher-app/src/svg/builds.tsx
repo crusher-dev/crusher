@@ -67,40 +67,24 @@ export function BackSVG(props) {
 
 export function FullImageView(props) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 18 18"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" {...props}>
 			<path
 				d="M15.75 3.375h-5.625V2.25A1.125 1.125 0 009 1.125H2.25A1.125 1.125 0 001.125 2.25V13.5a1.125 1.125 0 001.125 1.125h5.625v1.125A1.125 1.125 0 009 16.875h6.75a1.125 1.125 0 001.125-1.125V4.5a1.125 1.125 0 00-1.125-1.125zM2.25 8.438h3.47L4.27 9.893l.793.793 2.812-2.812-2.813-2.813-.793.794 1.452 1.457H2.25V2.25H9V13.5H2.25V8.437zM9 15.75v-1.125a1.125 1.125 0 001.125-1.125v-9h5.625v5.063h-3.47l1.45-1.457-.793-.793-2.812 2.812 2.813 2.813.793-.794-1.452-1.457h3.471v5.063H9z"
 				fill="#fff"
 			/>
 		</svg>
-	)
+	);
 }
 
 export function ShowSidebySide(props) {
 	return (
-		<svg
-			width={13}
-			height={13}
-			viewBox="0 0 15 15"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={13} height={13} viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M13.066 1.172H11.72V.469a.469.469 0 00-.938 0v.703H4.22V.469a.469.469 0 10-.938 0v.703H1.934A1.936 1.936 0 000 3.105v9.961C0 14.133.867 15 1.934 15h11.132A1.936 1.936 0 0015 13.066v-9.96a1.936 1.936 0 00-1.934-1.934zm.996 11.894c0 .55-.445.996-.996.996H1.934a.996.996 0 01-.996-.996V5.303c0-.081.065-.147.146-.147h12.832c.08 0 .146.066.146.147v7.763z"
 				fill="#F9F9F9"
 			/>
 		</svg>
-	)
+	);
 }
-
-
 
 export { CommentIconSVG, DangerIconSVG, ClockIconSVG, DropdownIconSVG };

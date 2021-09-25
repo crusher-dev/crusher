@@ -5,5 +5,3 @@ export function openPopup(url: string) {
 	}
 	return newwindow;
 }
-
-

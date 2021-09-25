@@ -18,17 +18,17 @@ import { currentProject } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
 import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
-import { IProjectTestsListResponse } from '@crusher-shared/types/response/iProjectTestsListResponse';
-import { sentenceCase } from '@utils/common/textUtils';
+import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { sentenceCase } from "@utils/common/textUtils";
 
 const changeTestData = (testId: number, name: string, testTags?: string, runAfterTest?: number) => {
-	console.log(testTags, runAfterTest)
+	console.log(testTags, runAfterTest);
 	return backendRequest(changeTestInfoAPI(testId), {
 		method: RequestMethod.POST,
 		payload: {
 			name: name,
 			tags: testTags,
-			runAfter: runAfterTest
+			runAfter: runAfterTest,
 		},
 	});
 };
@@ -40,26 +40,25 @@ const deleteTestInServer = (testId: number) => {
 	});
 };
 
-export const getOptions = ({list},id)=>{
-	return list.filter((listItem) => listItem.id !== id).map((listItem)=> ({ label: sentenceCase(listItem.testName), value: listItem.id }));
-}
+export const getOptions = ({ list }, id) => {
+	return list.filter((listItem) => listItem.id !== id).map((listItem) => ({ label: sentenceCase(listItem.testName), value: listItem.id }));
+};
 
-export const EditTestModal = ({ name, id, onClose,runAfter,tags }) => {
+export const EditTestModal = ({ name, id, onClose, runAfter, tags }) => {
 	const [testName, changeTestName] = useState(name);
 	const [runAfterTest, changeRunAfter] = useState([runAfter]);
 	const [testTags, changeTags] = useState(tags);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
 	const [project] = useAtom(currentProject);
-	const isFormChanged = testName !== name || runAfterTest[0] !==runAfter || testTags !== tags ;
+	const isFormChanged = testName !== name || runAfterTest[0] !== runAfter || testTags !== tags;
 
 	const { data: testListData } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id));
-
 
 	const changeTestNameCallback = useCallback(() => {
 		(async () => {
 			try {
-				await changeTestData(id, testName,testTags, runAfterTest[0]);
+				await changeTestData(id, testName, testTags, runAfterTest[0]);
 				sendSnackBarEvent({ type: "normal", message: "Changes have been saved." });
 				await mutate(getTestListAPI(project.id));
 				onClose();
@@ -69,7 +68,7 @@ export const EditTestModal = ({ name, id, onClose,runAfter,tags }) => {
 			setProcessing(false);
 		})();
 		setProcessing(true);
-	}, [testName,testTags,runAfterTest]);
+	}, [testName, testTags, runAfterTest]);
 
 	const deleteTest = useCallback(() => {
 		(async () => {
@@ -127,11 +126,13 @@ export const EditTestModal = ({ name, id, onClose,runAfter,tags }) => {
 						Tag
 					</TextBlock>
 
-					<Input size={"medium"}
-								 onChange={(e: React.FormEvent<HTMLInputElement>) => {
-						changeTags(e.currentTarget.value);
-					}}
-								 initialValue={testTags} />
+					<Input
+						size={"medium"}
+						onChange={(e: React.FormEvent<HTMLInputElement>) => {
+							changeTags(e.currentTarget.value);
+						}}
+						initialValue={testTags}
+					/>
 				</div>
 				<div className={"w-full"}>
 					<TextBlock
@@ -144,7 +145,7 @@ export const EditTestModal = ({ name, id, onClose,runAfter,tags }) => {
 					>
 						Run this test after
 					</TextBlock>
-					<SelectBox size={"medium"} values={getOptions(testListData, id, runAfterTest)} selected={runAfterTest} callback={changeRunAfter.bind(this)}/>
+					<SelectBox size={"medium"} values={getOptions(testListData, id, runAfterTest)} selected={runAfterTest} callback={changeRunAfter.bind(this)} />
 				</div>
 			</div>
 			<div className={"flex justify-end mt-20"}>

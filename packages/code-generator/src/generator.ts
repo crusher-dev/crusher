@@ -10,6 +10,8 @@ interface iCodeGeneratorOptions {
 	assetsDir?: string;
 	usePlaywrightChromium?: boolean;
 	videoSavePath: string;
+	turnOnTracing?: boolean;
+	tracePath?: string;
 }
 
 export class CodeGenerator {
@@ -35,6 +37,8 @@ export class CodeGenerator {
 			assetsDir: this.options.assetsDir,
 			shouldUsePlaywrightChromium: this.options.usePlaywrightChromium,
 			videoSavePath: this.options.videoSavePath,
+			turnOnTracing: this.options.turnOnTracing,
+			tracePath: this.options.tracePath,
 			defaultBrowserLaunchOptions: {
 				headless: true,
 				args: ["--disable-shm-usage", "--disable-gpu"],

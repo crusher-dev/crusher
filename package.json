@@ -28,9 +28,12 @@
 		"dotenv": "^10.0.0",
 		"ejs": "^3.1.6",
 		"enquirer": "^2.3.6",
+		"mysql2": "^2.2.5",
 		"patch-package": "^6.2.2",
 		"postinstall-postinstall": "^2.1.0",
 		"putout": "^18.16.0",
+		"shelljs": "^0.8.4",
+		"ssh2": "^1.4.0",
 		"yargs": "^17.0.1"
 	},
 	"license": "MIT"

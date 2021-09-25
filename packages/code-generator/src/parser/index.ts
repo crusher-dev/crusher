@@ -12,6 +12,8 @@ interface IParserOptions {
 	assetsDir: string;
 	videoSavePath: string;
 	defaultBrowserLaunchOptions: any;
+	turnOnTracing?: boolean;
+	tracePath?: string;
 }
 
 class Parser {
@@ -22,6 +24,8 @@ class Parser {
 	assetsDir: string;
 	defaultBrowserLaunchOptions: any;
 	videoSavePath: string;
+	isTracingOn: boolean;
+	tracePath: string;
 
 	constructor(options: IParserOptions) {
 		this.shouldRecordVideo = !!options.shouldRecordVideo;
@@ -31,6 +35,8 @@ class Parser {
 		this.assetsDir = options.assetsDir;
 		this.defaultBrowserLaunchOptions = options.defaultBrowserLaunchOptions;
 		this.videoSavePath = options.videoSavePath;
+		this.isTracingOn = !!options.turnOnTracing;
+		this.tracePath = options.tracePath ? options.tracePath : "trace.zip";
 
 		ParserChecks.validateActions(this.actionsList);
 	}
@@ -44,6 +50,8 @@ class Parser {
 			defaultBrowserLaunchOptions: this.defaultBrowserLaunchOptions,
 			usePlaywrightChromium: this.shouldUsePlaywrightChromium,
 			browserName: this.browser,
+			isTracingOn: this.isTracingOn,
+			tracePath: this.tracePath,
 			defaultBrowserContextOptions: {
 				defaultNavigationTimeout: 30000,
 				defaultTimeout: 15000,

@@ -30,6 +30,7 @@ import { iAction } from "@shared/types/action";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION_META = "RECORD_ACTION_META",
+	RECORD_REPLAY_ACTION = "RECORD_REPLAY_ACTION",
 	RECORD_ACTION = "RECORD_ACTION",
 	UPDATE_INSPECTOR_MODE_STATE = "UPDATE_INSPECTOR_MODE_STATE",
 	TURN_ON_ELEMENT_MODE = "TURN_ON_ELEMENT_MODE",
@@ -217,6 +218,12 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 	const { type } = event.data;
 
 	switch (type) {
+		case MESSAGE_TYPES.RECORD_REPLAY_ACTION: {
+			const store = getStore();
+
+			store.dispatch(recordAction(event.data.meta));
+			break;
+		}
 		case MESSAGE_TYPES.RECORD_ACTION_META: {
 			const metaArr = event.data.meta.finalActions as Array<iAction>;
 			for (let i = 0; i < metaArr.length; i++) {

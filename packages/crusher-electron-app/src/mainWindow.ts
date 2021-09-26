@@ -2,9 +2,9 @@ import { addHttpToURLIfNotThere } from "../../crusher-shared/utils/url";
 import { BrowserWindow, session, WebContents, app, shell, ipcMain } from "electron";
 import * as path from "path";
 import { WebView } from "./webView";
+import { iAction } from "@shared/types/action";
 
 const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
-
 class MainWindow {
 	webContents: WebContents;
 	webView: WebView;
@@ -97,14 +97,30 @@ class MainWindow {
 		}
 	}
 
+	saveRecordedStep(action: iAction) {
+		this.browserWindow.webContents.send("post-message-to-host", { type: "RECORD_REPLAY_ACTION", meta: action });
+		return true;
+	}
+
 	async handleWebviewAttached() {
-		this.webView = new WebView(this.browserWindow, this.state);
+		this.webView = new WebView(this.browserWindow, this, this.state);
 		await this.webView.initialize();
 		// this.webContents.setUserAgent(USER_AGENT.value);
 	}
 
 	async setupListeners() {
 		this.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, this.allowAllNetworkRequests.bind(this));
+
+		ipcMain.on("post-message-to-host", (event, data) => {
+			if (!this.webView.isInRunningState()) {
+				this.browserWindow.webContents.send("post-message-to-host", data);
+			} else {
+				if (!['RECORD_ACTION'].includes(data.type)) {
+					this.browserWindow.webContents.send("post-message-to-host", data);
+				}
+				console.log(data);
+			}
+		});
 
 		this.webContents.on("new-window", this.handleNewWindow.bind(this));
 		this.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));

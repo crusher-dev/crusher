@@ -4,6 +4,8 @@ const { CrusherSdk, CrusherRunnerActions, handlePopup, getBrowserActions, getMai
 import { iAction } from "@shared/types/action";
 import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
+import { MainWindow } from "../mainWindow";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
@@ -16,10 +18,14 @@ class PlaywrightInstance {
 	private browser: any;
 	private browserContext: any;
 	private page: any;
+	private mainWindow: MainWindow;
 
 	private sdkManager: any;
+	private running = false;
 
-	constructor() {
+	constructor(mainWindow: MainWindow, willRunFromStart: boolean) {
+		this.running = willRunFromStart;
+		this.mainWindow = mainWindow;
 		this.logManager = new LogManagerPolyfill();
 		this.storageManager = new StorageManagerPolyfill();
 		this.globalManager = new GlobalManagerPolyfill();
@@ -28,6 +34,10 @@ class PlaywrightInstance {
 
 	getSdkManager() {
 		return this.sdkManager;
+	}
+
+	isRunning() {
+		return this.running;
 	}
 
 	async _getWebViewPage() {
@@ -74,14 +84,25 @@ class PlaywrightInstance {
 	}
 
 	async runActions(actions: Array<iAction>): Promise<boolean> {
-		await this.runnerManager.runActions(getMainActions(actions), this.browser, this.page);
+		await this.runnerManager.runActions(getMainActions(actions), this.browser, this.page, async (action, result) => {
+			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
+			if (status === "STARTED") {
+				this.mainWindow.saveRecordedStep(action);
+			}
+		});
 		return true;
 	}
 
 	async runTestFromRemote(testId: number) {
 		const testInfo = await axios.get(resolveToBackendPath(`/tests/${testId}`));
-		await this.runnerManager.runActions(getMainActions(testInfo.data.events), this.browser, this.page);
-		console.log("Finished performing test");
+		try {
+			await this.runActions(testInfo.data.events);
+		} catch (err) {
+			console.error(err);
+		}
+
+		this.running = false;
+		console.log("Finished replaying test");
 		return true;
 	}
 }

@@ -5,6 +5,7 @@ import { MainWindow } from "./mainWindow";
 
 class App {
 	appWindow: BrowserWindow | null;
+	mainWindow: MainWindow | null;
 
 	async createAppWindow() {
 		const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -29,8 +30,8 @@ class App {
 			console.log("did-finish-load", true);
 		});
 
-		const mainWindow = new MainWindow(this.appWindow);
-		await mainWindow.initialize();
+		this.mainWindow = new MainWindow(this.appWindow);
+		await this.mainWindow.initialize();
 
 		return true;
 	}
@@ -73,10 +74,6 @@ class App {
 	createIPCListeners() {
 		ipcMain.on("get-app-path", (event) => {
 			event.returnValue = app.getAppPath();
-		});
-
-		ipcMain.on("post-message-to-host", (event, data) => {
-			this.appWindow.webContents.send("post-message-to-host", data);
 		});
 
 		ipcMain.on("set-user-agent", this.setUserAgent.bind(this));

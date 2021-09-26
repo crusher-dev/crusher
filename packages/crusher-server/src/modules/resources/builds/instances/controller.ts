@@ -36,17 +36,21 @@ class BuildTestInstancesController {
 	}
 
 	@Post("/builds/:build_id/instances/:instance_id/action.addRecordedVideo")
-	async addRecordedVideo(@Body() body: { recordedVideoUrl: string }, @Param("build_id") buildId: number, @Param("instance_id") instanceId: number) {
-		const { recordedVideoUrl } = body;
+	async addRecordedVideo(
+		@Body() body: { recordedVideoUrl: string; lastSecondsClipVideoUrl: string },
+		@Param("build_id") buildId: number,
+		@Param("instance_id") instanceId: number,
+	) {
+		const { recordedVideoUrl, lastSecondsClipVideoUrl } = body;
 		if (!recordedVideoUrl) throw new BadRequestError("No video url provided");
 
 		const buildInstanceRecord = await this.buildTestInstancesService.getInstance(instanceId);
 		const buildRecord = await this.buildsService.getBuild(buildId);
-		await this.buildTestInstancesService.addRecordedVideo(recordedVideoUrl, instanceId);
+		await this.buildTestInstancesService.addRecordedVideo(recordedVideoUrl, lastSecondsClipVideoUrl, instanceId);
 
 		if (buildRecord.isDraftJob) {
 			// Only set featured video for draft job
-			await this.testService.addFeaturedVideo(recordedVideoUrl, buildInstanceRecord.testId);
+			await this.testService.addFeaturedVideo(recordedVideoUrl, lastSecondsClipVideoUrl, buildInstanceRecord.testId);
 		}
 		return "Succesful";
 	}

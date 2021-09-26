@@ -98,6 +98,8 @@ async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>,
 		[BuildReportStatusEnum.FAILED]: "/../../email/templates/failedJob.ejs",
 	};
 
+	console.log("Reading email template from: ", __dirname + emailTemplateFilePathMap[buildReportStatus]);
+
 	const emailTemplate = await getTemplateFileContent(__dirname + emailTemplateFilePathMap[buildReportStatus], {
 		buildId: buildRecord.id,
 		branchName: buildRecord.branchName,

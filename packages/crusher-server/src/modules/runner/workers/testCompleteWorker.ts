@@ -93,9 +93,14 @@ async function handleIntegrations(buildId: number, reportStatus: BuildReportStat
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {
 	const usersInProject = await usersService.getUsersInProject(buildRecord.projectId);
 	const emailTemplateFilePathMap = {
-		[BuildReportStatusEnum.PASSED]: "/../../email/templates/passedJob.ejs",
-		[BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED]: "/../../email/templates/manualReviewRequiredJob.ejs",
-		[BuildReportStatusEnum.FAILED]: "/../../email/templates/failedJob.ejs",
+		[BuildReportStatusEnum.PASSED]:
+			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/passedJob.ejs" : "/../../email/templates/passedJob.ejs",
+		[BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED]:
+			typeof __non_webpack_require__ !== "undefined"
+				? "/email/templates/manualReviewRequiredJob.ejs"
+				: "/../../email/templates/manualReviewRequiredJob.ejs",
+		[BuildReportStatusEnum.FAILED]:
+			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/failedJob.ejs" : "/../../email/templates/failedJob.ejs",
 	};
 
 	console.log("Reading email template from: ", __dirname + emailTemplateFilePathMap[buildReportStatus]);

@@ -1,5 +1,5 @@
 import { appendParamsToURI } from "./uri";
-const _fetch = require("node-fetch");
+const _fetch = require("node-fetch").default;
 
 export function prepareFetchPayload(uri: string, info: any = {}) {
 	let method = info.method ? info.method : "GET";

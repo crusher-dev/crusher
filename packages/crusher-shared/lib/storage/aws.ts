@@ -1,5 +1,7 @@
 import * as AWS from "aws-sdk";
 import * as fs from "fs";
+import * as url from "url";
+
 import { StorageManagerInterface } from "./interface";
 
 type ICloudBucketOptions = {
@@ -51,12 +53,7 @@ class AwsCloudStorage implements StorageManagerInterface {
 						return reject(err);
 					}
 
-					const url = this.s3BucketService.getSignedUrl("getObject", {
-						Bucket: this.bucketName,
-						Key: data.Key,
-						Expires: 60 * 60 * 24 * 5,
-					});
-					resolve(url);
+					resolve(url.resolve(`https://${this.bucketName}.s3.amazonaws.com/`, destination));
 				},
 			);
 		});

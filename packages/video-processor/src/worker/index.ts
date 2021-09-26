@@ -1,7 +1,7 @@
 import * as shell from "shelljs";
 import * as url from "url";
 import { getStorageManager } from "@utils/cache";
-import { ensureFfmpegPath, processRemoteRawVideoAndSave } from "@utils/ffmpeg";
+import { ensureFfmpegPath, processAndSaveLastXSecondsClip, processRemoteRawVideoAndSave } from "@utils/ffmpeg";
 import { Job } from "bullmq";
 import * as path from "path";
 import { v4 as uuidv4 } from "uuid";
@@ -26,12 +26,26 @@ export default async function (bullJob: iVideoProcessorJob) {
 	await shell.mkdir("-p", path.join("/tmp/videos"));
 
 	try {
-		const savedVideoPath = await processRemoteRawVideoAndSave(videoRawUrl, path.join("/tmp/videos", testInstanceId + uuidv4()) + ".mp4");
+		const videoName = testInstanceId + uuidv4();
+
+		const savedVideoPath = await processRemoteRawVideoAndSave(videoRawUrl, path.join("/tmp/videos", videoName) + ".mp4");
 
 		const uploadedVideoUrl = await storageManager.upload(savedVideoPath, path.join(bullJob.name, "videos/video.mp4"));
 
-		await shell.rm("-rf", savedVideoPath);
+		const lastSecondsClipName = videoName + "_clipped";
 
+		const lastSecondsClipPath = await processAndSaveLastXSecondsClip(
+			path.join("/tmp/videos", videoName) + ".mp4",
+			path.join("/tmp/videos", lastSecondsClipName + "_clipped") + ".mp4",
+			5,
+		);
+
+		const uploadedLastSecondsClipVideoUrl = await storageManager.upload(lastSecondsClipPath, path.join(bullJob.name, "videos/video_clipped.mp4"));
+
+		await shell.rm("-rf", savedVideoPath);
+		await shell.rm("-rf", lastSecondsClipPath);
+
+		console.log("Sending request to this", getRequestUrl(`builds/${buildId}/instances/${testInstanceId}/action.addRecordedVideo`));
 		// @TODO: Make an api call and set featured_video_uri of this test instance
 		await fetch(getRequestUrl(`builds/${buildId}/instances/${testInstanceId}/action.addRecordedVideo`), {
 			method: "POST",
@@ -41,9 +55,10 @@ export default async function (bullJob: iVideoProcessorJob) {
 			},
 			body: JSON.stringify({
 				recordedVideoUrl: uploadedVideoUrl,
+				lastSecondsClipVideoUrl: uploadedLastSecondsClipVideoUrl,
 			}),
 		});
-		console.log("Uploaded video url", uploadedVideoUrl);
+		console.log("Uploaded video url and clip url", uploadedVideoUrl, uploadedLastSecondsClipVideoUrl);
 		return true;
 	} catch (err) {
 		return false;

@@ -47,7 +47,7 @@ const saveTest = (projectId: number, tempTestId: string) => {
 
 function TestCard(props: IBuildItemCardProps) {
 	const { testData } = props;
-	const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted, draftBuildId, runAfter, tags } = testData;
+	const { testName, isPassing, createdAt, imageURL, clipVideoURL, id, firstRunCompleted, draftBuildId, runAfter, tags } = testData;
 	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={"16rem"} />
 	) : (
@@ -60,7 +60,7 @@ function TestCard(props: IBuildItemCardProps) {
 		/>
 	);
 
-	const shouldPlayVideo = !imageURL && !!videoURL;
+	const shouldPlayVideo = !imageURL && !!clipVideoURL;
 
 	const [showEditBox, setShowEditBox] = useState(false);
 	return (
@@ -101,7 +101,7 @@ function TestCard(props: IBuildItemCardProps) {
 						}}
 						muted={true}
 					>
-						<source src={videoURL} type="video/mp4" />
+						<source src={clipVideoURL} type="video/mp4" />
 					</video>
 				</Conditional>
 			</div>
@@ -187,13 +187,14 @@ const itemContainerStyle = css`
 const itemImageStyle = css`
 	height: 183rem;
 	width: 100%;
-	border-radius: 6rem;
-	border-top-right-radius: 8rem;
+	border-radius:4rem;
+
 	border-width: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background: rgba(255, 255, 255, 0.1);
+	overflow: hidden;
 `;
 
 function TestSearchableList() {

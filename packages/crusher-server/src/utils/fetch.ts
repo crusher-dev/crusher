@@ -38,7 +38,7 @@ export function fetch(_uri, info: any = {}) {
 		})
 			.then(async (res) => {
 				if (noJSON) {
-					return res.text();
+					resolve(res.text());
 				} else {
 					resolve(JSON.parse(await res.text()));
 				}

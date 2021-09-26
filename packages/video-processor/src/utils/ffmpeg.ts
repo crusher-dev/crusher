@@ -49,10 +49,31 @@ export function processRemoteRawVideoAndSave(videoUrl: string, savePath: string)
 			.save(savePath);
 
 		responseStream.on("error", (err) => {
-			if (ffmpegStream.end) {
+			if (ffmpegStream && ffmpegStream.end) {
 				ffmpegStream.end();
 			}
 			reject(err);
 		});
+	});
+}
+
+export async function processAndSaveLastXSecondsClip(sourcePath: string, outputPath: string, duration = 5): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const ffmpegStream = ffmpeg(sourcePath)
+			.setFfmpegPath(getFfmpegPath())
+			.inputOptions(`-sseof -${duration}`)
+			.videoCodec("libx264")
+			.on("end", function (err) {
+				if (!err) {
+					resolve(outputPath);
+				}
+			})
+			.on("error", function (err) {
+				if (ffmpegStream && ffmpegStream.end) {
+					ffmpegStream.end();
+				}
+				reject(err);
+			})
+			.save(outputPath);
 	});
 }

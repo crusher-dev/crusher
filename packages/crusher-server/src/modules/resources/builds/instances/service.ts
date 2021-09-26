@@ -239,8 +239,12 @@ class BuildTestInstancesService {
 		return this.dbManager.fetchSingleRow("SELECT * FROM test_instances WHERE id = ?", [instanceId]);
 	}
 
-	async addRecordedVideo(videoUrl: string, instanceId: number) {
-		return this.dbManager.fetchSingleRow("UPDATE test_instances SET recorded_video_url = ? WHERE id = ?", [videoUrl, instanceId]);
+	async addRecordedVideo(videoUrl: string, lastSecondsClipVideoUrl: string, instanceId: number) {
+		return this.dbManager.fetchSingleRow("UPDATE test_instances SET recorded_video_url = ?, recorded_clip_video_url = ? WHERE id = ?", [
+			videoUrl,
+			lastSecondsClipVideoUrl,
+			instanceId,
+		]);
 	}
 
 	@CamelizeResponse()

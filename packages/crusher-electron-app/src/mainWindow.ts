@@ -10,6 +10,7 @@ class MainWindow {
 	webView: WebView;
 
 	state: { targetSite?: string; replayTestId?: string };
+	appState: { userAgent: string };
 
 	_getStateFromArgs(): { targetSite?: string; replayTestId?: string } {
 		if (!process.argv.length) return { replayTestId: undefined, targetSite: undefined };
@@ -26,10 +27,11 @@ class MainWindow {
 		};
 	}
 
-	constructor(private browserWindow: BrowserWindow) {
+	constructor(private browserWindow: BrowserWindow, appState: { userAgent: string }) {
 		this.browserWindow = browserWindow;
 		this.webContents = browserWindow.webContents;
 		this.state = this._getStateFromArgs();
+		this.appState = appState;
 	}
 
 	async loadExtension() {
@@ -102,7 +104,8 @@ class MainWindow {
 		return true;
 	}
 
-	async handleWebviewAttached() {
+	async handleWebviewAttached(event, webContents) {
+		webContents.setUserAgent(this.appState.userAgent);
 		this.webView = new WebView(this.browserWindow, this, this.state);
 		await this.webView.initialize();
 		// this.webContents.setUserAgent(USER_AGENT.value);

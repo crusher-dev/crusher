@@ -2,7 +2,7 @@ import { appendParamsToURI, checkIfAbsoluteURI } from "./url";
 import { Logger } from "./logger";
 import * as chalk from "chalk";
 
-const _fetch = require("node-fetch");
+const _fetch = require("node-fetch").default;
 
 function prepareFetchPayload(uri, options: any = {}) {
 	let method = options.method ? options.method : "GET";

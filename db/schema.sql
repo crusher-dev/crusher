@@ -186,7 +186,7 @@ CREATE TABLE `job_reports` (
   CONSTRAINT `job_reports_jobs_id_fk` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `job_reports_jobs_id_fk_2` FOREIGN KEY (`reference_job_id`) REFERENCES `jobs` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `job_reports_projects_id_fk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9317 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,7 +225,7 @@ CREATE TABLE `jobs` (
   CONSTRAINT `jobs_job_reports_id_fk` FOREIGN KEY (`latest_report_id`) REFERENCES `job_reports` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `jobs_projects_id_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `jobs_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10490 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10512 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,7 +292,7 @@ CREATE TABLE `projects` (
   KEY `projects_jobs_id_fk` (`baseline_job_id`),
   CONSTRAINT `projects_jobs_id_fk` FOREIGN KEY (`baseline_job_id`) REFERENCES `jobs` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `projects_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=258 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +312,7 @@ CREATE TABLE `teams` (
   `stripe_customer_id` varchar(100) DEFAULT NULL,
   `meta` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=219 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -339,7 +339,7 @@ CREATE TABLE `test_instance_result_sets` (
   CONSTRAINT `test_instance_result_sets_job_reports_id_fk` FOREIGN KEY (`report_id`) REFERENCES `job_reports` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `test_instance_result_sets_test_instances_id_fk` FOREIGN KEY (`instance_id`) REFERENCES `test_instances` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `test_instance_result_sets_test_instances_id_fk_2` FOREIGN KEY (`target_instance_id`) REFERENCES `test_instances` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10382 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10404 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +366,7 @@ CREATE TABLE `test_instance_results` (
   CONSTRAINT `test_instance_results_test_instance_result_sets_id_fk` FOREIGN KEY (`instance_result_set_id`) REFERENCES `test_instance_result_sets` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `test_instance_results_test_instance_screenshots_id_fk` FOREIGN KEY (`screenshot_id`) REFERENCES `test_instance_screenshots` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `test_instance_results_test_instance_screenshots_id_fk_2` FOREIGN KEY (`target_screenshot_id`) REFERENCES `test_instance_screenshots` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12528 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12549 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -387,7 +387,7 @@ CREATE TABLE `test_instance_screenshots` (
   PRIMARY KEY (`id`),
   KEY `test_instance_screenshots_test_instance_id_fk` (`instance_id`),
   CONSTRAINT `test_instance_screenshots_test_instance_id_fk` FOREIGN KEY (`instance_id`) REFERENCES `test_instances` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14923 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14944 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -408,12 +408,13 @@ CREATE TABLE `test_instances` (
   `host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `browser` enum('CHROME','FIREFOX','SAFARI') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CHROME',
   `recorded_video_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `recorded_clip_video_url` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `test_instance_tests_id_fk` (`test_id`),
   KEY `test_instance_jobs_id_fk` (`job_id`),
   CONSTRAINT `test_instance_jobs_id_fk` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `test_instance_tests_id_fk` FOREIGN KEY (`test_id`) REFERENCES `tests` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22436 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22458 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -436,6 +437,7 @@ CREATE TABLE `tests` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `meta` text,
   `draft_job_id` int DEFAULT NULL,
+  `featured_clip_video_url` text,
   PRIMARY KEY (`id`),
   KEY `tests_projects_id_fk` (`project_id`),
   KEY `tests_users_id_fk` (`user_id`),
@@ -444,7 +446,7 @@ CREATE TABLE `tests` (
   CONSTRAINT `tests_jobs_id_fk` FOREIGN KEY (`draft_job_id`) REFERENCES `jobs` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `tests_projects_id_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `tests_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1371 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1393 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -546,7 +548,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `users_email_uindex` (`email`),
   KEY `user___fk_team_id` (`team_id`),
   CONSTRAINT `user___fk_team_id` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -558,4 +560,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-16  6:29:23
+-- Dump completed on 2021-09-26 14:10:23

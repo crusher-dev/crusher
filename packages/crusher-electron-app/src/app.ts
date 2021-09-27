@@ -6,8 +6,38 @@ import { MainWindow } from "./mainWindow";
 class App {
 	appWindow: BrowserWindow | null;
 	mainWindow: MainWindow | null;
+	hasInstanceLock: boolean;
+	state: { userAgent: string };
+
+	async initialize() {
+		console.log("Initializng now...");
+		if (!app.requestSingleInstanceLock()) {
+			// Allow only one instance of crusher app
+			console.warn("Two instances of crusher app running");
+			app.quit();
+			return;
+		}
+
+		app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+		app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
+		app.commandLine.appendSwitch("--disable-site-isolation-trials");
+		app.commandLine.appendSwitch("--disable-web-security");
+		app.commandLine.appendSwitch("--allow-top-navigation");
+		// For replaying actions
+		app.commandLine.appendSwitch("--remote-debugging-port", "9112");
+		app.setAsDefaultProtocolClient("crusher");
+
+		this.state = {
+			userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36",
+		};
+
+		app.userAgentFallback = this.state.userAgent;
+		this.setupListeners();
+	}
 
 	async createAppWindow() {
+		await this.cleanupStorage();
+
 		const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
 		this.appWindow = new BrowserWindow({
@@ -30,24 +60,10 @@ class App {
 			console.log("did-finish-load", true);
 		});
 
-		this.mainWindow = new MainWindow(this.appWindow);
+		this.mainWindow = new MainWindow(this.appWindow, this.state);
 		await this.mainWindow.initialize();
 
 		return true;
-	}
-
-	async initialize() {
-		app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-		app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
-		app.commandLine.appendSwitch("--disable-site-isolation-trials");
-		app.commandLine.appendSwitch("--disable-web-security");
-		app.commandLine.appendSwitch("--allow-top-navigation");
-		// For replaying actions
-		app.commandLine.appendSwitch("--remote-debugging-port", "9112");
-		app.setAsDefaultProtocolClient("crusher");
-
-		app.userAgentFallback = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
-		this.setupListeners();
 	}
 
 	setupListeners() {
@@ -61,14 +77,33 @@ class App {
 			if (process.platform !== "darwin") app.quit();
 		});
 
+		app.on("second-instance", this.handleSecondInstance.bind(this));
+
 		this.createIPCListeners();
+	}
+
+	async handleSecondInstance(event, argv, workingDirectory) {
+		const dialogResponse = dialog.showMessageBoxSync({
+			message: "Current saved state would be lost. Do you want to continue?",
+			type: "question",
+			buttons: ["Yes", "Cancel"],
+			defaultId: 1,
+		});
+
+		if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
+			await this._reloadApp(this.appWindow, true, argv.slice(1));
+		}
+	}
+
+	cleanupStorage() {
+		return session.defaultSession.clearStorageData({
+			storages: ["cookies", "localstorage", "indexdb"],
+		});
 	}
 
 	cleanupStorageBeforeExit(): Promise<void> {
 		this.appWindow = null;
-		return session.defaultSession.clearStorageData({
-			storages: ["cookies", "localstorage", "indexdb"],
-		});
+		return this.cleanupStorage();
 	}
 
 	createIPCListeners() {
@@ -76,21 +111,36 @@ class App {
 			event.returnValue = app.getAppPath();
 		});
 
-		ipcMain.on("set-user-agent", this.setUserAgent.bind(this));
+		ipcMain.handle("set-user-agent", this.setUserAgent.bind(this));
 		ipcMain.on("reload-extension", this.reloadExtension.bind(this));
 		ipcMain.on("restart-app", this.restartApp.bind(this));
 	}
 
-	setUserAgent(event, userAgent) {
-		// USER_AGENT = userAgent;
-		app.userAgentFallback = userAgent.value;
+	async setUserAgent(event, userAgent): Promise<boolean> {
+		const dialogResponse = dialog.showMessageBoxSync({
+			message: "Current saved state would be lost. Do you want to continue?",
+			type: "question",
+			buttons: ["Yes", "Cancel"],
+			defaultId: 1,
+		});
+
+		if (dialogResponse === 0) {
+			await this.cleanupStorage();
+			this.state.userAgent = userAgent;
+			app.userAgentFallback = userAgent;
+			return true;
+		}
+
+		return false;
 	}
 
-	async _reloadApp(mainWindow, completeReset = false) {
+	async _reloadApp(mainWindow, completeReset = false, argv = []) {
 		const currentArgs = process.argv.slice(1).filter((a) => !a.startsWith("--open-extension-url="));
 		await this.cleanupStorageBeforeExit();
 
-		app.relaunch({ args: completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
+		const finalArgs = completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]);
+
+		app.relaunch({ args: finalArgs.concat(argv) });
 		app.exit();
 	}
 

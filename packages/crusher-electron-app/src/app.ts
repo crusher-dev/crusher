@@ -5,6 +5,29 @@ import { MainWindow } from "./mainWindow";
 
 class App {
 	appWindow: BrowserWindow | null;
+	hasInstanceLock: boolean;
+
+	async initialize() {
+		console.log("Initializng now...");
+		if (!app.requestSingleInstanceLock()) {
+			// Allow only one instance of crusher app
+			console.warn("Two instances of crusher app running");
+			app.quit();
+			return;
+		}
+
+		app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+		app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
+		app.commandLine.appendSwitch("--disable-site-isolation-trials");
+		app.commandLine.appendSwitch("--disable-web-security");
+		app.commandLine.appendSwitch("--allow-top-navigation");
+		// For replaying actions
+		app.commandLine.appendSwitch("--remote-debugging-port", "9112");
+		app.setAsDefaultProtocolClient("crusher");
+
+		app.userAgentFallback = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
+		this.setupListeners();
+	}
 
 	async createAppWindow() {
 		const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -35,20 +58,6 @@ class App {
 		return true;
 	}
 
-	async initialize() {
-		app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-		app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
-		app.commandLine.appendSwitch("--disable-site-isolation-trials");
-		app.commandLine.appendSwitch("--disable-web-security");
-		app.commandLine.appendSwitch("--allow-top-navigation");
-		// For replaying actions
-		app.commandLine.appendSwitch("--remote-debugging-port", "9112");
-		app.setAsDefaultProtocolClient("crusher");
-
-		app.userAgentFallback = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
-		this.setupListeners();
-	}
-
 	setupListeners() {
 		app.whenReady().then(this.createAppWindow.bind(this));
 		app.on("activate", () => {
@@ -60,7 +69,29 @@ class App {
 			if (process.platform !== "darwin") app.quit();
 		});
 
+		app.on("second-instance", this.handleSecondInstance.bind(this));
+
 		this.createIPCListeners();
+	}
+
+	async handleSecondInstance(event, argv, workingDirectory) {
+		let url;
+		const dialogResponse = dialog.showMessageBoxSync({
+			message: "Current saved state would be lost. Do you want to continue?",
+			type: "question",
+			buttons: ["Yes", "Cancel"],
+			defaultId: 1,
+		});
+		if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
+			await this.restartApp();
+		}
+		// Protocol handler for win and linux
+		// argv: An array of the second instance’s (command line / deep linked) arguments
+		if (process.platform == "win32" || process.platform === "linux") {
+			// Keep only command line / deep linked arguments
+			url = argv.slice(1);
+			console.info("Args = " + url);
+		}
 	}
 
 	cleanupStorageBeforeExit(): Promise<void> {

@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld("electron", {
 	focusOnWebView: () => ipcRenderer.send("focus-webview"),
 	initWebView: (webContentsId) => ipcRenderer.send("init-web-view", webContentsId),
 	getAppPath: () => ipcRenderer.sendSync("get-app-path"),
-	setUserAgent: (userAgent) => ipcRenderer.send("set-user-agent", userAgent),
+	setUserAgent: async (userAgent) => ipcRenderer.invoke("set-user-agent", userAgent),
 	restartApp: () => ipcRenderer.send("restart-app"),
 	getNode: async (selector) => ipcRenderer.invoke("get-node", selector),
 	executeCustomCodeScript: async (scriptFunction: string) => ipcRenderer.invoke("execute-custom-code", scriptFunction),

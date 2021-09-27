@@ -6,6 +6,7 @@ import { MainWindow } from "./mainWindow";
 class App {
 	appWindow: BrowserWindow | null;
 	hasInstanceLock: boolean;
+	state: { userAgent: string };
 
 	async initialize() {
 		console.log("Initializng now...");
@@ -25,11 +26,17 @@ class App {
 		app.commandLine.appendSwitch("--remote-debugging-port", "9112");
 		app.setAsDefaultProtocolClient("crusher");
 
-		app.userAgentFallback = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
+		this.state = {
+			userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36",
+		};
+
+		app.userAgentFallback = this.state.userAgent;
 		this.setupListeners();
 	}
 
 	async createAppWindow() {
+		await this.cleanupStorage();
+
 		const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
 		this.appWindow = new BrowserWindow({
@@ -52,7 +59,7 @@ class App {
 			console.log("did-finish-load", true);
 		});
 
-		const mainWindow = new MainWindow(this.appWindow);
+		const mainWindow = new MainWindow(this.appWindow, this.state);
 		await mainWindow.initialize();
 
 		return true;
@@ -87,11 +94,15 @@ class App {
 		}
 	}
 
-	cleanupStorageBeforeExit(): Promise<void> {
-		this.appWindow = null;
+	cleanupStorage() {
 		return session.defaultSession.clearStorageData({
 			storages: ["cookies", "localstorage", "indexdb"],
 		});
+	}
+
+	cleanupStorageBeforeExit(): Promise<void> {
+		this.appWindow = null;
+		return this.cleanupStorage();
 	}
 
 	createIPCListeners() {
@@ -103,14 +114,27 @@ class App {
 			this.appWindow.webContents.send("post-message-to-host", data);
 		});
 
-		ipcMain.on("set-user-agent", this.setUserAgent.bind(this));
+		ipcMain.handle("set-user-agent", this.setUserAgent.bind(this));
 		ipcMain.on("reload-extension", this.reloadExtension.bind(this));
 		ipcMain.on("restart-app", this.restartApp.bind(this));
 	}
 
-	setUserAgent(event, userAgent) {
-		// USER_AGENT = userAgent;
-		app.userAgentFallback = userAgent.value;
+	async setUserAgent(event, userAgent): Promise<boolean> {
+		const dialogResponse = dialog.showMessageBoxSync({
+			message: "Current saved state would be lost. Do you want to continue?",
+			type: "question",
+			buttons: ["Yes", "Cancel"],
+			defaultId: 1,
+		});
+
+		if (dialogResponse === 0) {
+			await this.cleanupStorage();
+			this.state.userAgent = userAgent;
+			app.userAgentFallback = userAgent;
+			return true;
+		}
+
+		return false;
 	}
 
 	async _reloadApp(mainWindow, completeReset = false, argv = []) {

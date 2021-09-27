@@ -91,6 +91,8 @@ async function handleIntegrations(buildId: number, reportStatus: BuildReportStat
 }
 
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {
+	if (buildReportStatus === BuildReportStatusEnum.PASSED) return;
+
 	const usersInProject = await usersService.getUsersInProject(buildRecord.projectId);
 	const emailTemplateFilePathMap = {
 		[BuildReportStatusEnum.PASSED]:

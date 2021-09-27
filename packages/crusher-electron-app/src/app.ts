@@ -75,22 +75,15 @@ class App {
 	}
 
 	async handleSecondInstance(event, argv, workingDirectory) {
-		let url;
 		const dialogResponse = dialog.showMessageBoxSync({
 			message: "Current saved state would be lost. Do you want to continue?",
 			type: "question",
 			buttons: ["Yes", "Cancel"],
 			defaultId: 1,
 		});
+
 		if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
-			await this.restartApp();
-		}
-		// Protocol handler for win and linux
-		// argv: An array of the second instance’s (command line / deep linked) arguments
-		if (process.platform == "win32" || process.platform === "linux") {
-			// Keep only command line / deep linked arguments
-			url = argv.slice(1);
-			console.info("Args = " + url);
+			await this._reloadApp(this.appWindow, true, argv.slice(1));
 		}
 	}
 
@@ -120,11 +113,13 @@ class App {
 		app.userAgentFallback = userAgent.value;
 	}
 
-	async _reloadApp(mainWindow, completeReset = false) {
+	async _reloadApp(mainWindow, completeReset = false, argv = []) {
 		const currentArgs = process.argv.slice(1).filter((a) => !a.startsWith("--open-extension-url="));
 		await this.cleanupStorageBeforeExit();
 
-		app.relaunch({ args: completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]) });
+		const finalArgs = completeReset ? currentArgs : currentArgs.concat([`--open-extension-url=${mainWindow.webContents.getURL()}`]);
+
+		app.relaunch({ args: finalArgs.concat(argv) });
 		app.exit();
 	}
 

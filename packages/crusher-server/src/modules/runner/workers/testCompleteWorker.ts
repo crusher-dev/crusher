@@ -80,7 +80,7 @@ export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
 		console.log("Build status: ", buildReportStatus);
 
 		await handleIntegrations(buildRecord.id, buildReportStatus);
-		await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
+		// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
 		return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 	}
 }

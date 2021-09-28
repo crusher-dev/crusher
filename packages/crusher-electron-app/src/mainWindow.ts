@@ -45,7 +45,7 @@ class MainWindow {
 		let urlToOpen = openExtensionUrl ? openExtensionUrl : `chrome-extension://${extensionId}/test_recorder.html`;
 
 		if (!openExtensionUrl && targetSite) {
-			urlToOpen += `?url=${addHttpToURLIfNotThere(targetSite)}&device=GoogleChromeLargeScreen`;
+			urlToOpen += `?url=${addHttpToURLIfNotThere(targetSite)}&device=GoogleChromeMediumScreen`;
 		}
 
 		if (openExtensionUrl && urlToOpen.match(extensionURLRegExp)) {

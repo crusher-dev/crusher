@@ -7,6 +7,7 @@ import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { Job } from "bullmq";
 import { TEST_COMPLETE_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@shared/constants/queues";
 import { ITestExecutionQueuePayload, ITestCompleteQueuePayload, IVideoProcessorQueuePayload } from "@shared/types/queues/";
+import { ExportsManager } from "@shared/lib/exports";
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
@@ -23,6 +24,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		const testCompleteQueue = await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		const globalManager = getGlobalManager(true);
+		const exportsManager = new ExportsManager();
 
 		if (!globalManager.has(TEST_RESULT_KEY)) {
 			globalManager.set(TEST_RESULT_KEY, []);
@@ -33,7 +35,15 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 
 		createTmpAssetsDirectoriesIfNotThere(identifier);
 
-		const codeRunnerService = new CodeRunnerService(bullJob.data.actions, bullJob.data.config, storageManager, notifyManager, globalManager, identifier);
+		const codeRunnerService = new CodeRunnerService(
+			bullJob.data.actions,
+			bullJob.data.config,
+			storageManager,
+			notifyManager,
+			globalManager,
+			exportsManager,
+			identifier,
+		);
 		const { recordedRawVideo, hasPassed, error, actionResults } = await codeRunnerService.runTest();
 		if (recordedRawVideo) {
 			console.log("Adding video in processing queue", recordedRawVideo);
@@ -57,6 +67,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		}
 
 		await testCompleteQueue.add(identifier, {
+			exports: exportsManager.getEntriesArr(),
 			actionResults: actionResults,
 			buildId: bullJob.data.buildId,
 			testInstanceId: bullJob.data.testInstanceId,

@@ -13,6 +13,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { sleep } from "./functions";
 import { CrusherSdk } from "./sdk/sdk";
+import { ExportsManager } from "./functions/exports";
+import { IExportsManager } from "@crusher-shared/lib/exports/interface";
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -27,13 +29,15 @@ class CrusherRunnerActions {
 	logManager: LogManager;
 	storageManager: StorageManager;
 	globals: IGlobalManager;
+	exportsManager: ExportsManager;
 
-	constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager) {
+	constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager, exportsManager: IExportsManager) {
 		this.actionHandlers = {};
 		this.globals = globalManager;
 
 		this.logManager = new LogManager(logManger);
 		this.storageManager = new StorageManager(storageManager, baseAssetPath);
+		this.exportsManager = new ExportsManager(exportsManager);
 
 		if (!this.globals.has(TEST_RESULT_KEY)) {
 			this.globals.set(TEST_RESULT_KEY, []);
@@ -92,14 +96,14 @@ class CrusherRunnerActions {
 			try {
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
-						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager);
+						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager, this.exportsManager);
 						break;
 					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager);
+						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager);
 						break;
 					case ActionCategoryEnum.ELEMENT:
 						const elementLocator = page.locator(toCrusherSelectorsFormat(step.payload.selectors).value);
-						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager);
+						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager);
 						break;
 					default:
 						throw new Error("Invalid action category handler");

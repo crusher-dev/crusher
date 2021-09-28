@@ -2,7 +2,7 @@ import { addHttpToURLIfNotThere } from "../../crusher-shared/utils/url";
 import { BrowserWindow, session, WebContents, app, shell, ipcMain } from "electron";
 import * as path from "path";
 import { WebView } from "./webView";
-import { iAction } from "@shared/types/action";
+import { iAction } from "../../crusher-shared/types/action";
 import { App } from "./app";
 
 const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
@@ -11,21 +11,23 @@ class MainWindow {
 	webView: WebView;
 	app: App;
 
-	state: { targetSite?: string; replayTestId?: string };
+	state: { targetSite?: string; replayTestId?: string; shouldRunAfterTest?: boolean; runAfterTestId?: string; isTestRunning: boolean };
 	appState: { userAgent: string };
 
-	_getStateFromArgs(): { targetSite?: string; replayTestId?: string } {
-		if (!process.argv.length) return { replayTestId: undefined, targetSite: undefined };
+	_getStateFromArgs(): { targetSite?: string; replayTestId?: string; shouldRunAfterTest: boolean; isTestRunning: false } {
+		if (!process.argv.length) return { replayTestId: undefined, targetSite: undefined, shouldRunAfterTest: false, isTestRunning: false };
 
 		const deepLink = process.argv[process.argv.length - 1];
 		if (deepLink && deepLink.startsWith("crusher://replay-test")) {
 			const url = new URL(deepLink);
-			return { replayTestId: url.searchParams.get("testId"), targetSite: "https://example.com" };
+			return { replayTestId: url.searchParams.get("testId"), targetSite: "https://example.com", shouldRunAfterTest: false, isTestRunning: false };
 		}
 
 		return {
 			replayTestId: app.commandLine.getSwitchValue("replay-test-id") || undefined,
 			targetSite: app.commandLine.getSwitchValue("target-site") || undefined,
+			shouldRunAfterTest: false,
+			isTestRunning: false,
 		};
 	}
 
@@ -126,10 +128,27 @@ class MainWindow {
 				}
 			}
 		});
+		ipcMain.handle("run-after-this-test", this.handleRunAfterThisTest.bind(this));
 
 		this.webContents.on("new-window", this.handleNewWindow.bind(this));
 		this.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
 		this.registerIPCListeners();
+	}
+
+	async handleRunAfterThisTest(event, testId) {
+		this.state = {
+			...this.state,
+			replayTestId: null,
+			targetSite: "https://example.com",
+			shouldRunAfterTest: true,
+			runAfterTestId: testId,
+		};
+
+		const currentUrl = new URL(this.browserWindow.webContents.getURL());
+		currentUrl.searchParams.set("url", "https://example.com");
+		this.webView = null;
+
+		return this.browserWindow.loadURL(currentUrl.toString());
 	}
 
 	registerIPCListeners() {

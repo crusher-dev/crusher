@@ -83,7 +83,6 @@ export class WebView {
 
 		// Add proper logic here
 		if (this.appState.shouldRunAfterTest) {
-			console.log("Value is", this.appState);
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
 			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.runAfterTestId), true);
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });

@@ -1,7 +1,7 @@
 import { BrowserWindow, Debugger, WebContents, ipcMain, webContents, app } from "electron";
 import { MainWindow } from "./mainWindow";
 import { PlaywrightInstance } from "./runner/playwright";
-import { ExportsManager } from "@shared/lib/exports/index";
+import { ExportsManager } from "../../crusher-shared/lib/exports/index";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const highlighterStyle = require("./highlighterStyle.json");

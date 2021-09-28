@@ -1,6 +1,7 @@
 import { BrowserWindow, Debugger, WebContents, ipcMain, webContents, app } from "electron";
 import { MainWindow } from "./mainWindow";
 import { PlaywrightInstance } from "./runner/playwright";
+import { ExportsManager } from "@shared/lib/exports/index";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const highlighterStyle = require("./highlighterStyle.json");
@@ -11,6 +12,7 @@ export class WebView {
 	mainWindow: MainWindow;
 	appState: { targetSite?: string; replayTestId?: string };
 	browserWindow: BrowserWindow;
+	exportsManager: ExportsManager;
 
 	webContents() {
 		const allWebContents = webContents.getAllWebContents();
@@ -25,6 +27,7 @@ export class WebView {
 		this.appState = state;
 		this.browserWindow = browserWindow;
 		this.mainWindow = mainWindow;
+		this.exportsManager = new ExportsManager();
 		this.debugger = this.webContents().debugger;
 	}
 

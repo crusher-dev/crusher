@@ -4,6 +4,7 @@ import { IActionResultItem } from "../common/general";
 export type ITestExecutionQueuePayload = IJobRunRequest;
 
 export interface ITestCompleteQueuePayload {
+	exports: Array<[string, any]>;
 	actionResults: Array<IActionResultItem>;
 	buildId: number;
 	testInstanceId: number;

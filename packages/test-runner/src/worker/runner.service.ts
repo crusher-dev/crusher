@@ -9,6 +9,7 @@ import { IGlobalManager } from "@shared/lib/globals/interface";
 import { BrowserEnum, PlaywrightBrowserMap } from "@shared/types/browser";
 import * as fs from "fs";
 import { IActionResultItem } from "@shared/types/common/general";
+import { IExportsManager } from "@shared/lib/exports/interface";
 
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
 export class CodeRunnerService {
@@ -19,6 +20,7 @@ export class CodeRunnerService {
 	logManager: IRunnerLogManagerInterface;
 	storageManager: IStorageManager;
 	globalManager: IGlobalManager;
+	exportsManager: IExportsManager;
 
 	constructor(
 		actions: Array<iAction>,
@@ -26,6 +28,7 @@ export class CodeRunnerService {
 		storageManager: IStorageManager,
 		logManager: IRunnerLogManagerInterface,
 		globalManager: IGlobalManager,
+		exportsManager: IExportsManager,
 		identifer: string,
 	) {
 		this.codeGenerator = new CodeGenerator({
@@ -46,6 +49,7 @@ export class CodeRunnerService {
 		this.storageManager = storageManager;
 		this.logManager = logManager;
 		this.globalManager = globalManager;
+		this.exportsManager = exportsManager;
 	}
 
 	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
@@ -75,6 +79,7 @@ export class CodeRunnerService {
 				"logManager",
 				"storageManager",
 				"globalManager",
+				"exportsManager",
 				`async function f(){ ${code} } return f();`,
 			)(
 				exports,
@@ -85,6 +90,7 @@ export class CodeRunnerService {
 				this.logManager,
 				this.storageManager,
 				this.globalManager,
+				this.exportsManager,
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);
 		} catch (err) {

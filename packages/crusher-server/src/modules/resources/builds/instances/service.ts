@@ -132,8 +132,8 @@ class BuildTestInstancesService {
 			const referenceImageRecord = referenceScreenshotsMap[screenshotResult.actionIndex];
 
 			const referenceImage = {
-				name: referenceImageRecord.name,
-				value: referenceImageRecord.url,
+				name: referenceImageRecord ? referenceImageRecord.name : baseImage.name,
+				value: referenceImageRecord ? referenceImageRecord.url : baseImage.value,
 			};
 
 			let diffResult: { diffDeltaFactor: number; diffDelta: number; outputDiffImageUrl: string } | null = null;

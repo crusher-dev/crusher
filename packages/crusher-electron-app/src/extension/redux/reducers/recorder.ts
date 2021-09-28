@@ -1,6 +1,7 @@
 import { AnyAction } from "redux";
 import {
 	ADD_SEO_META_INFO,
+	SET_IS_REPLAYING,
 	TURN_OFF_AUTO_RECORDER,
 	TURN_OFF_RECORDER,
 	TURN_ON_AUTO_RECORDER,
@@ -27,10 +28,16 @@ const initialState: iRecorderState = {
 	isRecorderScriptBooted: false,
 	seoMetaInfo: null,
 	lastElementExecutionScriptOutput: null,
+	isReplayingTest: false,
 };
 
 export const recorderReducer = (state: iRecorderState = initialState, action: AnyAction) => {
 	switch (action.type) {
+		case SET_IS_REPLAYING:
+			return {
+				...state,
+				isReplayingTest: action.payload.isReplaying,
+			}
 		case UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT:
 			return {
 				...state,

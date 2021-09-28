@@ -59,8 +59,11 @@ class CrusherRunnerActions {
 		}
 	}
 
-	async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}) {
+	async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}, actionCallback: any) {
 		await this.logManager.logStep(actionType, status, message, meta);
+
+		if(actionCallback)
+			await actionCallback({ actionType, status, message, meta });
 
 		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
 			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
@@ -80,10 +83,10 @@ class CrusherRunnerActions {
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
-		return async (step: iAction, browser: Browser, page: Page | null = null): Promise<void> => {
+		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: any = null): Promise<void> => {
 			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`, {
 				actionName: step.name ? step.name : null,
-			});
+			}, actionCallback);
 			let stepResult = null;
 
 			try {
@@ -115,7 +118,8 @@ class CrusherRunnerActions {
 						  }
 						: {
 								actionName: step.name ? step.name : null,
-						  },
+						},
+					actionCallback,
 				);
 			} catch (err) {
 				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
@@ -123,7 +127,7 @@ class CrusherRunnerActions {
 					screenshotDuringError: await this._getCurrentScreenshot(page),
 					actionName: step.name ? step.name : null,
 					meta: err.meta ? err.meta : {},
-				});
+				}, actionCallback);
 				throw err;
 			}
 		};
@@ -137,10 +141,10 @@ class CrusherRunnerActions {
 		this.actionHandlers[actionType] = this.stepHandlerHOC(handler, { name: actionType, description: description, category: actionCategory });
 	}
 
-	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null) {
+	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: any = null) {
 		for (let action of actions) {
 			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
-			await this.actionHandlers[action.type](action, browser, page);
+			await this.actionHandlers[action.type](action, browser, page, actionCallback ? actionCallback.bind(this, action) : null);
 		}
 	}
 

@@ -1,4 +1,5 @@
 import { BrowserWindow, Debugger, WebContents, ipcMain, webContents, app } from "electron";
+import { MainWindow } from "./mainWindow";
 import { PlaywrightInstance } from "./runner/playwright";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -7,7 +8,9 @@ const highlighterStyle = require("./highlighterStyle.json");
 export class WebView {
 	debugger: Debugger;
 	playwrightInstance: PlaywrightInstance;
+	mainWindow: MainWindow;
 	appState: { targetSite?: string; replayTestId?: string };
+	browserWindow: BrowserWindow;
 
 	webContents() {
 		const allWebContents = webContents.getAllWebContents();
@@ -18,9 +21,10 @@ export class WebView {
 		return webViewWebContents;
 	}
 
-	constructor(private browserWindow: BrowserWindow, private state: { targetSite?: string; replayTestId?: string }) {
+	constructor(browserWindow: BrowserWindow, mainWindow: MainWindow, state: { targetSite?: string; replayTestId?: string }) {
 		this.appState = state;
 		this.browserWindow = browserWindow;
+		this.mainWindow = mainWindow;
 		this.debugger = this.webContents().debugger;
 	}
 
@@ -28,6 +32,8 @@ export class WebView {
 		if (this.debugger.isAttached()) return;
 
 		this.destroy();
+
+		this.playwrightInstance = new PlaywrightInstance(this.mainWindow, !!this.appState.replayTestId);
 
 		this.debugger.attach("1.3");
 		await this.debugger.sendCommand("Debugger.enable");
@@ -46,12 +52,13 @@ export class WebView {
 
 		this.registerIPCListeners();
 
-		this.playwrightInstance = new PlaywrightInstance();
 		await this.playwrightInstance.connect();
 
 		// Add proper logic here
 		if (this.appState.replayTestId) {
+			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
 			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.replayTestId));
+			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
 		}
 	}
 
@@ -112,6 +119,10 @@ export class WebView {
 				objectId: nodeObject.object.objectId,
 			});
 		}
+	}
+
+	isInRunningState() {
+		return this.playwrightInstance && this.playwrightInstance.isRunning();
 	}
 
 	destroy() {

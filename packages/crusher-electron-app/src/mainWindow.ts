@@ -2,12 +2,14 @@ import { addHttpToURLIfNotThere } from "../../crusher-shared/utils/url";
 import { BrowserWindow, session, WebContents, app, shell, ipcMain } from "electron";
 import * as path from "path";
 import { WebView } from "./webView";
+import { iAction } from "@shared/types/action";
+import { App } from "./app";
 
 const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
-
 class MainWindow {
 	webContents: WebContents;
 	webView: WebView;
+	app: App;
 
 	state: { targetSite?: string; replayTestId?: string };
 	appState: { userAgent: string };
@@ -27,7 +29,8 @@ class MainWindow {
 		};
 	}
 
-	constructor(private browserWindow: BrowserWindow, appState: { userAgent: string }) {
+	constructor(app: App, private browserWindow: BrowserWindow, appState: { userAgent: string }) {
+		this.app = app;
 		this.browserWindow = browserWindow;
 		this.webContents = browserWindow.webContents;
 		this.state = this._getStateFromArgs();
@@ -42,7 +45,7 @@ class MainWindow {
 		let urlToOpen = openExtensionUrl ? openExtensionUrl : `chrome-extension://${extensionId}/test_recorder.html`;
 
 		if (!openExtensionUrl && targetSite) {
-			urlToOpen += `?url=${addHttpToURLIfNotThere(targetSite)}&device=GoogleChromeLargeScreen`;
+			urlToOpen += `?url=${addHttpToURLIfNotThere(targetSite)}&device=GoogleChromeMediumScreen`;
 		}
 
 		if (openExtensionUrl && urlToOpen.match(extensionURLRegExp)) {
@@ -99,15 +102,30 @@ class MainWindow {
 		}
 	}
 
+	saveRecordedStep(action: iAction) {
+		this.browserWindow.webContents.send("post-message-to-host", { type: "RECORD_REPLAY_ACTION", meta: action });
+		return true;
+	}
+
 	async handleWebviewAttached(event, webContents) {
 		webContents.setUserAgent(this.appState.userAgent);
-		this.webView = new WebView(this.browserWindow, this.state);
+		this.webView = new WebView(this.browserWindow, this, this.state);
 		await this.webView.initialize();
 		// this.webContents.setUserAgent(USER_AGENT.value);
 	}
 
 	async setupListeners() {
 		this.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, this.allowAllNetworkRequests.bind(this));
+
+		ipcMain.on("post-message-to-host", (event, data) => {
+			if (!this.webView.isInRunningState()) {
+				this.browserWindow.webContents.send("post-message-to-host", data);
+			} else {
+				if (!["RECORD_ACTION"].includes(data.type)) {
+					this.browserWindow.webContents.send("post-message-to-host", data);
+				}
+			}
+		});
 
 		this.webContents.on("new-window", this.handleNewWindow.bind(this));
 		this.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
@@ -124,8 +142,11 @@ class MainWindow {
 	}
 
 	async initWebView(event, webContentsId) {
-		// this.webView = new WebView(this.browserWindow);
-		// await this.webView.initialize();
+		// DUmmy method
+	}
+
+	async sendMessage(messageType: string, meta: any) {
+		return this.browserWindow.webContents.send("post-message-to-host", { type: messageType, meta });
 	}
 }
 

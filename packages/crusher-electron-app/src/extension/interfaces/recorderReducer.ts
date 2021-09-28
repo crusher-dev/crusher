@@ -18,4 +18,5 @@ export interface iRecorderState {
 	modalState: ACTIONS_MODAL_STATE | null;
 	seoMetaInfo: iSeoMetaInformationMeta | null;
 	lastElementExecutionScriptOutput: iExecuteScriptOutputResponseMeta | null;
+	isReplayingTest: boolean;
 }

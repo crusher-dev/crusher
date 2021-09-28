@@ -60,7 +60,7 @@ class App {
 			console.log("did-finish-load", true);
 		});
 
-		this.mainWindow = new MainWindow(this.appWindow, this.state);
+		this.mainWindow = new MainWindow(this, this.appWindow, this.state);
 		await this.mainWindow.initialize();
 
 		return true;
@@ -134,6 +134,19 @@ class App {
 		return false;
 	}
 
+	async _setDevice(deviceId: string): Promise<boolean> {
+		await this.cleanupStorage();
+
+		const extensionUrl = new URL(this.mainWindow.webContents.getURL());
+		if (extensionUrl.searchParams.get("device") !== deviceId) {
+			extensionUrl.searchParams.set("device", deviceId);
+			this.mainWindow.webContents.loadURL(extensionUrl.toString());
+			return true;
+		}
+
+		return false;
+	}
+
 	async _reloadApp(mainWindow, completeReset = false, argv = []) {
 		const currentArgs = process.argv.slice(1).filter((a) => !a.startsWith("--open-extension-url="));
 		await this.cleanupStorageBeforeExit();
@@ -152,6 +165,8 @@ class App {
 		await this._reloadApp(this.appWindow);
 	}
 }
+
+export { App };
 
 const appInstance = new App();
 appInstance.initialize();

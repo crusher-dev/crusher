@@ -83,7 +83,7 @@ class PlaywrightInstance {
 		});
 	}
 
-	async runActions(actions: Array<iAction>): Promise<boolean> {
+	async runMainActions(actions: Array<iAction>): Promise<boolean> {
 		await this.runnerManager.runActions(getMainActions(actions), this.browser, this.page, async (action, result) => {
 			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
 			if (status === "STARTED") {
@@ -93,16 +93,27 @@ class PlaywrightInstance {
 		return true;
 	}
 
+	async _changeDeviceIfNotSame(actions: Array<iAction>): Promise<boolean> {
+		const extensionUrl = new URL(this.mainWindow.webContents.getURL());
+		const deviceAction = actions.find((action) => action.type === "BROWSER_SET_DEVICE");
+
+		return this.mainWindow.app._setDevice(deviceAction.payload.meta.device.id);
+	}
+
 	async runTestFromRemote(testId: number) {
 		const testInfo = await axios.get(resolveToBackendPath(`/tests/${testId}`));
-		try {
-			await this.runActions(testInfo.data.events);
-		} catch (err) {
-			console.error(err);
-		}
+		const actions = testInfo.data.events;
+		const isDeviceToBeChanged = await this._changeDeviceIfNotSame(actions);
+		if (!isDeviceToBeChanged) {
+			try {
+				await this.runMainActions(testInfo.data.events);
+			} catch (err) {
+				console.error(err);
+			}
 
-		this.running = false;
-		console.log("Finished replaying test");
+			this.running = false;
+			console.log("Finished replaying test");
+		}
 		return true;
 	}
 }

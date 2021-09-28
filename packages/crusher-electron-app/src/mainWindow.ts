@@ -3,11 +3,13 @@ import { BrowserWindow, session, WebContents, app, shell, ipcMain } from "electr
 import * as path from "path";
 import { WebView } from "./webView";
 import { iAction } from "@shared/types/action";
+import { App } from "./app";
 
 const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
 class MainWindow {
 	webContents: WebContents;
 	webView: WebView;
+	app: App;
 
 	state: { targetSite?: string; replayTestId?: string };
 	appState: { userAgent: string };
@@ -27,7 +29,8 @@ class MainWindow {
 		};
 	}
 
-	constructor(private browserWindow: BrowserWindow, appState: { userAgent: string }) {
+	constructor(app: App, private browserWindow: BrowserWindow, appState: { userAgent: string }) {
+		this.app = app;
 		this.browserWindow = browserWindow;
 		this.webContents = browserWindow.webContents;
 		this.state = this._getStateFromArgs();
@@ -118,10 +121,9 @@ class MainWindow {
 			if (!this.webView.isInRunningState()) {
 				this.browserWindow.webContents.send("post-message-to-host", data);
 			} else {
-				if (!['RECORD_ACTION'].includes(data.type)) {
+				if (!["RECORD_ACTION"].includes(data.type)) {
 					this.browserWindow.webContents.send("post-message-to-host", data);
 				}
-				console.log(data);
 			}
 		});
 
@@ -140,8 +142,11 @@ class MainWindow {
 	}
 
 	async initWebView(event, webContentsId) {
-		// this.webView = new WebView(this.browserWindow);
-		// await this.webView.initialize();
+		// DUmmy method
+	}
+
+	async sendMessage(messageType: string, meta: any) {
+		return this.browserWindow.webContents.send("post-message-to-host", { type: messageType, meta });
 	}
 }
 

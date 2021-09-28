@@ -15,3 +15,5 @@ export const getLastElementCustomScriptOutput = (state: iReduxState) => state.re
 export const getAutoRecorderState = (state: iReduxState) => state.recorder.isAutoRecordOn;
 
 export const isRecorderOn = (state: iReduxState) => state.recorder.isRecorderOn;
+
+export const isReplayingTest = (state: iReduxState) => state.recorder.isReplayingTest;

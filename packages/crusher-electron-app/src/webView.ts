@@ -10,6 +10,7 @@ export class WebView {
 	playwrightInstance: PlaywrightInstance;
 	mainWindow: MainWindow;
 	appState: { targetSite?: string; replayTestId?: string };
+	browserWindow: BrowserWindow;
 
 	webContents() {
 		const allWebContents = webContents.getAllWebContents();
@@ -20,7 +21,7 @@ export class WebView {
 		return webViewWebContents;
 	}
 
-	constructor(private browserWindow: BrowserWindow, mainWindow: MainWindow, private state: { targetSite?: string; replayTestId?: string }) {
+	constructor(browserWindow: BrowserWindow, mainWindow: MainWindow, state: { targetSite?: string; replayTestId?: string }) {
 		this.appState = state;
 		this.browserWindow = browserWindow;
 		this.mainWindow = mainWindow;
@@ -55,7 +56,9 @@ export class WebView {
 
 		// Add proper logic here
 		if (this.appState.replayTestId) {
+			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
 			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.replayTestId));
+			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
 		}
 	}
 
@@ -119,7 +122,7 @@ export class WebView {
 	}
 
 	isInRunningState() {
-		return this.playwrightInstance.isRunning();
+		return this.playwrightInstance && this.playwrightInstance.isRunning();
 	}
 
 	destroy() {

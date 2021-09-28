@@ -15,6 +15,7 @@ export const TURN_ON_AUTO_RECORDER = "TURN_ON_AUTO_RECORDER";
 export const TURN_OFF_AUTO_RECORDER = "TURN_OFF_AUTO_RECORDER";
 export const TURN_OFF_RECORDER = "TURN_OFF_RECORDER";
 export const TURN_ON_RECORDER = "TURN_ON_RECORDER";
+export const SET_IS_REPLAYING = "SET_IS_REPLAYING";
 
 export const updateInspectModeState = (isInspectModeOn: boolean) => ({
 	type: UPDATE_INSPECT_MODE_STATE,
@@ -65,4 +66,9 @@ export const updateLastElementCustomScriptOutput = (info: iExecuteScriptOutputRe
 
 export const updateAutoRecorderSetting = (shouldAutoRecorder: boolean) => ({
 	type: shouldAutoRecorder ? TURN_ON_AUTO_RECORDER : TURN_OFF_AUTO_RECORDER,
+});
+
+export const setIsTestReplaying = (isReplaying: boolean) => ({
+	type: SET_IS_REPLAYING,
+	payload: { isReplaying },
 });

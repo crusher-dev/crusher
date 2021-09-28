@@ -3,8 +3,8 @@ const path = require("path");
 
 const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
 
-// @TODO: globalManager, logManager and storageManager are supposed to be injected globally
-const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager);
+// @TODO: globalManager, logManager, storageManager, exportsManager are supposed to be injected globally
+const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager);
 
 const browser = await playwright["<%= browserName %>"].launch(<%- JSON.stringify(defaultBrowserLaunchOptions) %>);
 let capturedVideo, browserContext, page;
@@ -14,12 +14,14 @@ globalManager.set("browserContextOptions", <%- JSON.stringify(defaultBrowserCont
 const actions = <%- JSON.stringify(actions) %>
 await crusherRunnerActionManager.runActions(getBrowserActions(actions), browser);
 
-browserContextOptions = globalManager.get("browserContextOptions");
+const browserContextOptions = globalManager.get("browserContextOptions");
 
 browserContext = await browser.newContext({
   ...browserContextOptions,
 });
-
+<% if (isTracingOn) { %>
+await browserContext.tracing.start({ screenshots: true, snapshots: true });
+<% } %>
 browserContext.setDefaultNavigationTimeout(browserContextOptions.defaultNavigationTimeout);
 browserContext.setDefaultTimeout(browserContextOptions.defaultTimeout);
 
@@ -30,6 +32,10 @@ await handlePopup(page, browserContext);
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);
 } catch(ex) {
   console.error(ex);
+  <% if (isTracingOn) { %>
+
+  await browserContext.tracing.stop({ path: '<%= tracePath %>' });
+<% } %>
   <% if (shouldRecordVideo) { %>
   globalManager.set("recordedVideoPath", await page.video().path());
   <% } %>

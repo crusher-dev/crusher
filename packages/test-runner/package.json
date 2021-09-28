@@ -18,7 +18,8 @@
 		"playwright-video": "https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704",
 		"shelljs": "^0.8.4",
 		"ts-node": "^9.1.1",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"yargs": "^17.2.0"
 	},
 	"devDependencies": {
 		"@types/bull": "^3.15.0",
@@ -35,7 +36,11 @@
 	},
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
+		"generate:local": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json scripts/runTestInHost.ts",
+		"run:local": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json bin/out.ts",
 		"start": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
+		"test": "ts-node -r tsconfig-paths/register --project tsconfig.json  out.ts",
+		"start:cdp": "ts-node -r tsconfig-paths/register --project tsconfig.json ./test.ts",
 		"build": "webpack -c webpack.config.js",
 		"start:build": "node build/index.js",
 		"lint": "prettier --write **/* && prettier --write **/**/* && prettier --write **/**/**/* && prettier --write *"

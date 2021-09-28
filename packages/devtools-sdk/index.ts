@@ -1,3 +1,0 @@
-class DevToolsSdk {
-	constructor(wsConnection) {}
-}

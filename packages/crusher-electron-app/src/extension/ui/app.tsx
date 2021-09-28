@@ -16,6 +16,7 @@ import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
 import * as _url from "url";
 import "../style/main.css";
+import { openLinkInNewTab } from "../utils/dom";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
@@ -50,7 +51,11 @@ const App = () => {
 			.then((res) => res.text())
 			.then((res) => {
 				const result = JSON.parse(res);
-				window.open(resolveToFrontend(`/?temp_test_id=${result.insertId}#crusherExternalLink`));
+				const urlToOpen = resolveToFrontend(`/?temp_test_id=${result.insertId}#crusherExternalLink`);
+
+				// @Note: window.open() instead of navigation though hyperlinks
+				// hangs the electron app for some reason.
+				openLinkInNewTab(urlToOpen);
 			});
 	};
 

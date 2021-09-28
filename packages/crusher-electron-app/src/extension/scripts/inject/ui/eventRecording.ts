@@ -290,7 +290,8 @@ export default class EventRecording {
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
+				// @TODO: Need a proper way to detect real and fake scroll events
+				// _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}
@@ -331,6 +332,7 @@ export default class EventRecording {
 		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element);
 		if (needsOtherActions) {
 			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element);
+			console.log("Hover nodes records", hoverNodesRecord);
 			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
 			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
 				hoverNodes.pop();
@@ -344,6 +346,7 @@ export default class EventRecording {
 	async trackAndSaveRelevantHover(element) {
 		const hoverNodes = await this.getHoverDependentNodes(element);
 		for (let i = 0; i < hoverNodes.length; i++) {
+			console.log("Hover nodes area", hoverNodes[i]);
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, hoverNodes[i], "", null, true);
 		}
 	}
@@ -495,6 +498,24 @@ export default class EventRecording {
 		window.addEventListener("keydown", this.handleKeyDown, true);
 
 		window.addEventListener("click", this.handleWindowClick, true);
+
+		window.history.pushState = new Proxy(window.history.pushState, {
+			apply: async (target, thisArg, argArray) => {
+				this.releventHoverDetectionManager.reset();
+				const out = target.apply(thisArg, argArray);
+				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
+				return out;
+			},
+		});
+
+		window.history.replaceState = new Proxy(window.history.pushState, {
+			apply: async (target, thisArg, argArray) => {
+				this.releventHoverDetectionManager.reset();
+				const out = target.apply(thisArg, argArray);
+				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
+				return out;
+			},
+		});
 		setInterval(this.pollInterval, 300);
 	}
 

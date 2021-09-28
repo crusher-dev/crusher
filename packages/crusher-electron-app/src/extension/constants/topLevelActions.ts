@@ -32,6 +32,12 @@ const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
 		desc: "",
 	},
+	{
+		id: TOP_LEVEL_ACTION.RUN_AFTER_TEST,
+		title: "Run after test",
+		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
+		desc: "",
+	},
 ];
 
 export { TOP_LEVEL_ACTIONS_LIST };

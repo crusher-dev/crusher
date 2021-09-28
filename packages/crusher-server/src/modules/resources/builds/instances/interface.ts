@@ -19,6 +19,7 @@ export interface ITestInstancesTable extends BaseRowInterface {
 	browser: BrowserEnum;
 	host: string;
 	recorded_video_uri?: string;
+	recorded_clip_video_url?: string;
 }
 
 export interface ITestInstanceScreenshotsTable extends BaseRowInterface {

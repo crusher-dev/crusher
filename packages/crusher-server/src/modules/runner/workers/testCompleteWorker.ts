@@ -80,7 +80,7 @@ export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
 		console.log("Build status: ", buildReportStatus);
 
 		await handleIntegrations(buildRecord.id, buildReportStatus);
-		await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
+		// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
 		return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 	}
 }
@@ -91,12 +91,21 @@ async function handleIntegrations(buildId: number, reportStatus: BuildReportStat
 }
 
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {
+	if (buildReportStatus === BuildReportStatusEnum.PASSED) return;
+
 	const usersInProject = await usersService.getUsersInProject(buildRecord.projectId);
 	const emailTemplateFilePathMap = {
-		[BuildReportStatusEnum.PASSED]: "/../../email/templates/passedJob.ejs",
-		[BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED]: "/../../email/templates/manualReviewRequiredJob.ejs",
-		[BuildReportStatusEnum.FAILED]: "/../../email/templates/failedJob.ejs",
+		[BuildReportStatusEnum.PASSED]:
+			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/passedJob.ejs" : "/../../email/templates/passedJob.ejs",
+		[BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED]:
+			typeof __non_webpack_require__ !== "undefined"
+				? "/email/templates/manualReviewRequiredJob.ejs"
+				: "/../../email/templates/manualReviewRequiredJob.ejs",
+		[BuildReportStatusEnum.FAILED]:
+			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/failedJob.ejs" : "/../../email/templates/failedJob.ejs",
 	};
+
+	console.log("Reading email template from: ", __dirname + emailTemplateFilePathMap[buildReportStatus]);
 
 	const emailTemplate = await getTemplateFileContent(__dirname + emailTemplateFilePathMap[buildReportStatus], {
 		buildId: buildRecord.id,

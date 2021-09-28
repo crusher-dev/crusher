@@ -70,9 +70,7 @@ export function CompareImage({ leftImage, rightImage }) {
 						<div>Before</div>
 						<div>After</div>
 					</div>
-					<Conditional showIf={false}>
 						<Component />
-					</Conditional>
 				</div>
 			</div>
 		</div>

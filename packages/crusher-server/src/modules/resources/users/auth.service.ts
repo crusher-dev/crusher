@@ -85,7 +85,7 @@ class UserAuthService {
 			};
 		}
 
-		if (!user) return this.signupUser(user, res, inviteReferral);
+		if (!user) return this.signupUser(userPayload, res, inviteReferral);
 
 		// Login the user
 		await this.setUserAuthCookies(user.id, user.team_id, res);

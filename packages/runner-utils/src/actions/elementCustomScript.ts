@@ -1,9 +1,12 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { Locator, ElementHandle } from "playwright";
+import { ExportsManager } from "../functions/exports";
+import { StorageManager } from "../functions/storage";
 import { markTestFail } from "../utils/helper";
 
-const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<boolean> => {
+const runScriptOnElement = (script: string, elHandle: ElementHandle, exportsManager: ExportsManager): Promise<boolean> => {
 	return new Function(
 		"exports",
 		"require",
@@ -12,23 +15,25 @@ const runScriptOnElement = (script: string, elHandle: ElementHandle): Promise<bo
 		"__dirname",
 		"script",
 		"elHandle",
+		"exportsManager",
 		`return new Promise(async function (resolve, reject) {
 				    try{
 				        const scriptFunction = ${script};
-								const result = await elHandle.evaluate(scriptFunction);
+								const result = await elHandle.evaluate(scriptFunction, [exportsManager]);
 				        resolve(result);
 				    } catch(err){
 				      reject(err);
 				    }
 				});`,
-	)(exports, require, module, __filename, __dirname, script, elHandle);
+	)(exports, require, module, __filename, __dirname, script, elHandle, exportsManager);
 };
 
-async function runCustomScriptOnElement(element: Locator, workingSelector: any, action: iAction) {
+async function runCustomScriptOnElement(element: Locator, workingSelector: any, action: iAction, globals: IGlobalManager, storageManager: StorageManager, exportsManager: ExportsManager) {
 	const customScript = action.payload.meta.script;
 	const actionResult = await runScriptOnElement(
 		customScript,
 		await element.elementHandle({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined }),
+		exportsManager,
 	);
 
 	if (!actionResult) markTestFail("Failed according to custom script assertions");

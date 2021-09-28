@@ -49,6 +49,8 @@ export class TestController {
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
 		const testsList = testsListData.list.map((testData) => {
 			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
+			const clipVideoUrl = testData.featuredClipVideoUrl ? testData.featuredClipVideoUrl : null;
+
 			const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
 
 			return {
@@ -60,6 +62,7 @@ export class TestController {
 				createdAt: new Date(testData.created_at).getTime(),
 				// @TODO: Remove this line
 				videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
+				clipVideoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? clipVideoUrl : null,
 				// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
 				// @Note: Add support for taking random screenshots in case video is switched off
 				imageURL: null,
@@ -171,5 +174,15 @@ export class TestController {
 
 		await this.testService.updateMeta(JSON.stringify(finalMeta), testId);
 		return "Successful";
+	}
+
+	@Get("/tests/:test_id")
+	async getTest(@Param("test_id") testId: number) {
+		const testRecord = await this.testService.getTest(testId);
+		if (!testRecord) throw new BadRequestError("No such test");
+		return {
+			...testRecord,
+			events: JSON.parse(testRecord.events),
+		}
 	}
 }

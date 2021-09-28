@@ -1,5 +1,5 @@
 import { appendParamsToURI } from "./uri";
-const _fetch = require("node-fetch");
+const _fetch = require("node-fetch").default;
 
 export function prepareFetchPayload(uri: string, info: any = {}) {
 	let method = info.method ? info.method : "GET";
@@ -38,7 +38,7 @@ export function fetch(_uri, info: any = {}) {
 		})
 			.then(async (res) => {
 				if (noJSON) {
-					return res.text();
+					resolve(res.text());
 				} else {
 					resolve(JSON.parse(await res.text()));
 				}

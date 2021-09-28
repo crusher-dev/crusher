@@ -86,6 +86,7 @@ class PlaywrightInstance {
 	async runMainActions(actions: Array<iAction>, isRunAfterTestAction: boolean): Promise<boolean> {
 		const actionsArr = getMainActions(actions);
 
+		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action, result) => {
 			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
 			if (status === "STARTED" && !isRunAfterTestAction) {

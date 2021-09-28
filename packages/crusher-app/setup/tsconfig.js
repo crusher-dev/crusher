@@ -6,7 +6,9 @@ const ejs = require("ejs");
 require("dotenv").config();
 
 const CRUSHER_MODE = process.env.CRUSHER_MODE ? process.env.CRUSHER_MODE : "open-source";
-const NEXT_PUBLIC_INTERNAL_BACKEND_URL = process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL ? process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL : "http://localhost:3000/server";
+const NEXT_PUBLIC_INTERNAL_BACKEND_URL = process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL
+	? process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL
+	: "http://localhost:3000/server";
 
 function copyTemplate(templateFilePath, destinationPath, params) {
 	return new Promise((resolve, reject) => {

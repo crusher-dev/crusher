@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const SECRET = "U#a03NM3_rVQ!z!:st#k}Gg.PzmUy[l)w.kg6QDR:|t(pVYHOMyX8z:xT<%-3";
+const SECRET = process.env.AUTH_SECRET || "U#a03NM3_rVQ!z!:st#k}Gg.PzmUy[l)w.kg6QDR:|t(pVYHOMyX8z:xT<%-3";
 
 const CryptoJS = require("crypto-js");
 // Generate a token for 365 days
@@ -14,6 +14,8 @@ export const decodeToken = (token) => {
 };
 
 export function encryptPassword(password: string) {
+
+	// User secret as salt later on
 	return CryptoJS.MD5(password).toString();
 }
 

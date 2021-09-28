@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Button } from "dyson/src/components/atoms";
 import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
@@ -30,8 +30,12 @@ import { useBuildReport } from "../../../store/serverState/buildReports";
 
 import { sentenceCase } from "@utils/common/textUtils";
 import { getAssetPath } from "@utils/helpers";
+import { atomWithImmer } from "jotai/immer";
+import { useAtom } from "jotai";
+import { FullImageView, ShowSidebySide } from "@svg/builds";
 
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
+const CompareImage = dynamic(() => import("./components/compareImages"));
 
 function ReviewSection() {
 	const [open, setOpen] = useState(false);
@@ -141,36 +145,76 @@ function ReportSection() {
 	);
 }
 
+const imageViewAtom = atomWithImmer<"side" | "compare">("side");
+
+export const imageTabCSS = css`
+	top: -24rem;
+	div {
+		width: 48px;
+		height: 24px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 4px;
+	}
+	div:hover {
+		background: #181b1e;
+	}
+	.selected {
+		background: #181b1e;
+	}
+`;
+
 function RenderImageInfo({ data }) {
 	const { meta } = data;
 	const imageName = meta.outputs?.[0].name;
 	const currentImage = getAssetPath(meta.outputs?.[0].value);
 
+	const [imageViewType, setImageViewType] = useAtom(imageViewAtom);
+
 	if (!imageName) return null;
+
 	return (
-		<div className={"  pl-44 mt-12"} css={imageTestStep}>
-			<div className={"text-12"}>{imageName}</div>
-			<div className={"mt-20 flex"}>
-				<img src={currentImage} />{" "}
-				<img
-					src={getAssetPath(meta.outputs[0].diffImageUrl)}
-					css={css`
-						margin-left: 2%;
-					`}
-				/>
+		<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
+			<div className={"flex justify-between text-12 mb-20 "}>
+				<span>{imageName}</span>
+				<div>
+					<div css={imageTabCSS} className={"flex relative"}>
+						<div onClick={setImageViewType.bind(this, "side")} className={`${imageViewType === "side" && "selected"}`}>
+							<FullImageView />
+						</div>
+						<div onClick={setImageViewType.bind(this, "compare")} className={`ml-2 ${imageViewType === "compare" && "selected"}`}>
+							<ShowSidebySide />
+						</div>
+					</div>
+				</div>
 			</div>
-			{/* <div>
-				<CompareImage leftImage={baseLineImage} rightImage={currentImage} />
-			</div> */}
+
+			<Conditional showIf={imageViewType === "side"}>
+				<div className={"flex"}>
+					<img src={currentImage} />{" "}
+					<img
+						src={getAssetPath(meta.outputs[0].diffImageUrl)}
+						css={css`
+							margin-left: 2%;
+						`}
+					/>
+				</div>
+			</Conditional>
+			<Conditional showIf={imageViewType === "compare"}>
+				<div>
+					<CompareImage leftImage={currentImage} rightImage={currentImage} />
+				</div>
+			</Conditional>
 		</div>
 	);
 }
 
 const imageTestStep = css`
-	img {
-		max-width: 49%;
-		border-radius: 6rem;
-	}
+	//img {
+	//	max-width: 49%;
+	//	border-radius: 6rem;
+	//}
 `;
 
 function ErrorComponent({ testInstanceData, actionType, message }) {
@@ -390,7 +434,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 				</span>
 				<Conditional showIf={isVideoAvailable}>
 					<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
-						<PlaySVG className={"mr-10"} /> Replay recording
+						<PlaySVG className={"mr-10"} /> Recording
 					</span>
 				</Conditional>
 				<span>
@@ -415,8 +459,8 @@ function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceDa
 
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
-	const [expand, setExpand] = useState(false);
-	const [sticky, setSticky] = useState(false);
+	const [expand, setExpand] = useState(true);
+	const [sticky, setSticky] = useState(true);
 	const [showLoading, setLoading] = useState(false);
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
 	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
@@ -430,7 +474,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				const cardStartingOffset = testCard.getBoundingClientRect().top;
 				const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;
 				if (cardStartingOffset < stickyLastPoint) {
-					// setSticky(true);
+					setSticky(true);
 				} else {
 					setSticky(false);
 				}

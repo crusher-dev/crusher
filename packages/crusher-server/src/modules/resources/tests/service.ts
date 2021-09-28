@@ -59,8 +59,9 @@ class TestService {
 		return this.dbManager.update("UPDATE tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}
 
-	async updateTest(testId: number, newInfo: { name: string }) {
-		return this.dbManager.update(`UPDATE tests SET name = ? WHERE id = ?`, [newInfo.name, testId]);
+	async updateTest(testId: number, newInfo: { name: string; tags: string; runAfter: number }) {
+		const { name, tags, runAfter } = newInfo;
+		return this.dbManager.update(`UPDATE tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
 	}
 
 	async runTestsInProject(
@@ -129,7 +130,6 @@ class TestService {
 		const totalRecordCountQueryResult = await this.dbManager.fetchSingleRow(totalRecordCountQuery, queryParams);
 
 		query += " ORDER BY tests.created_at DESC";
-
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / 10), list: await this.dbManager.fetchAllRows(query, queryParams) };
 	}
 

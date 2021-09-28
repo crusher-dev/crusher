@@ -3,7 +3,7 @@ import { OVERFLOW, POSITION, TEXT_ALIGN } from "../../../interfaces/css";
 import { Conditional } from "../conditional";
 import { iDevice } from "@shared/types/extension/device";
 import { useSelector } from "react-redux";
-import { isRecorderScriptBooted } from "../../../redux/selectors/recorder";
+import { isRecorderScriptBooted, isReplayingTest } from "../../../redux/selectors/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { WebviewTag } from "electron";
 import webviewTag = Electron.Renderer.webviewTag;
@@ -18,6 +18,8 @@ interface iDeviceProps {
 
 const Device = (props: iDeviceProps) => {
 	const isWebviewLoaded = useSelector(isRecorderScriptBooted);
+	const isTestGettingReplayed = useSelector(isReplayingTest);
+
 	const { isMobile, device, url, forwardRef, isDisabled } = props;
 
 	useEffect(() => {
@@ -38,6 +40,18 @@ const Device = (props: iDeviceProps) => {
 			{/* <Conditional If={isDisabled}>
 				<div style={blockCoverStyle}></div>
 			</Conditional> */}
+			<Conditional If={isTestGettingReplayed}>
+				<div style={{ background: "rgba(10, 10, 10, 0)" }} className="absolute flex h-full w-full justify-center items-center">
+					<div style={{ background: "rgba(10, 10, 10)", bottom: "0.7rem" }} className="absolute flex justify-center items-center">
+						<div>
+							<div style={{ ...pageLoadingCoverTextStyle, marginTop: 0 }}>
+								{"We're running test for you. You can't perform actions right now"}
+							</div>
+						</div>
+					</div>
+				</div>
+			</Conditional>
+
 			<Conditional If={!isWebviewLoaded}>
 				<div style={{ background: "rgba(10, 10, 10, 0.925)" }} className="absolute flex h-full w-full justify-center items-center">
 					<div>
@@ -46,6 +60,7 @@ const Device = (props: iDeviceProps) => {
 					</div>
 				</div>
 			</Conditional>
+
 			<div
 				className={isMobile ? "smartphone" : ""}
 				style={{

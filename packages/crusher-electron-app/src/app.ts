@@ -3,8 +3,37 @@ import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContent
 import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
 
+// @Note: Remove this from here
+const devices = [
+	{
+		id: "Pixel33XL",
+		name: "Mobile",
+		width: 393,
+		height: 786,
+		visible: true,
+		mobile: true,
+		userAgent: "Mozilla/5.0 (Linux; Android 7.1.1; Pixel Build/NOF27B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.132 Mobile Safari/537.36",
+	},
+	{
+		id: "GoogleChromeMediumScreen",
+		name: "Desktop M",
+		width: 1280,
+		height: 800,
+		visible: true,
+		userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
+	},
+	{
+		id: "GoogleChromeLargeScreenL",
+		name: "Desktop L",
+		width: 1440,
+		height: 800,
+		visible: true,
+		userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
+	},
+];
 class App {
 	appWindow: BrowserWindow | null;
+	mainWindow: MainWindow | null;
 	hasInstanceLock: boolean;
 	state: { userAgent: string };
 
@@ -59,8 +88,8 @@ class App {
 			console.log("did-finish-load", true);
 		});
 
-		const mainWindow = new MainWindow(this.appWindow, this.state);
-		await mainWindow.initialize();
+		this.mainWindow = new MainWindow(this, this.appWindow, this.state);
+		await this.mainWindow.initialize();
 
 		return true;
 	}
@@ -110,10 +139,6 @@ class App {
 			event.returnValue = app.getAppPath();
 		});
 
-		ipcMain.on("post-message-to-host", (event, data) => {
-			this.appWindow.webContents.send("post-message-to-host", data);
-		});
-
 		ipcMain.handle("set-user-agent", this.setUserAgent.bind(this));
 		ipcMain.on("reload-extension", this.reloadExtension.bind(this));
 		ipcMain.on("restart-app", this.restartApp.bind(this));
@@ -131,6 +156,23 @@ class App {
 			await this.cleanupStorage();
 			this.state.userAgent = userAgent;
 			app.userAgentFallback = userAgent;
+			return true;
+		}
+
+		return false;
+	}
+
+	async _setDevice(deviceId: string): Promise<boolean> {
+		await this.cleanupStorage();
+
+		const extensionUrl = new URL(this.mainWindow.webContents.getURL());
+		if (extensionUrl.searchParams.get("device") !== deviceId) {
+			const device = devices.find((device) => device.id === deviceId);
+			this.state.userAgent = device.userAgent;
+			app.userAgentFallback = device.userAgent;
+
+			extensionUrl.searchParams.set("device", device.id);
+			this.mainWindow.webContents.loadURL(extensionUrl.toString());
 			return true;
 		}
 
@@ -155,6 +197,8 @@ class App {
 		await this._reloadApp(this.appWindow);
 	}
 }
+
+export { App };
 
 const appInstance = new App();
 appInstance.initialize();

@@ -139,7 +139,7 @@ class CrusherRunnerActions {
 
 	registerStepHandler(actionType: ActionsInTestEnum, description: string, handler: any) {
 		const validActionRegexMatches = validActionTypeRegex.exec(actionType);
-		if (!validActionRegexMatches) throw new Error("Invalid format for action type");
+		if (!validActionRegexMatches) throw new Error("Invalid format for action type" + actionType);
 
 		const actionCategory: IActionCategory = validActionRegexMatches[1] as any;
 		this.actionHandlers[actionType] = this.stepHandlerHOC(handler, { name: actionType, description: description, category: actionCategory });

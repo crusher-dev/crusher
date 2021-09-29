@@ -42,19 +42,19 @@ const primaryModalStyle = css`
 	background: #101215;
 	border: 1px solid #1a1d26;
 	box-sizing: border-box;
-	border-radius: 6px;
+	border-radius: 10rem;
 	margin-top: -200rem;
 
 	/*
 	Horizontal modal style
 	*/
-	padding: 28rem 40rem 44rem;
+	padding: 28rem 36rem 44rem;
 `;
 
 const closeIcon = css`
 	position: absolute;
 	top: 26rem;
-	right: 30rem;
+	right: 36rem;
 
 	padding: 4px;
 

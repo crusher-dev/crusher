@@ -2,6 +2,9 @@ import { BrowserWindow, Debugger, WebContents, ipcMain, webContents, app } from 
 import { MainWindow } from "./mainWindow";
 import { PlaywrightInstance } from "./runner/playwright";
 import { ExportsManager } from "../../crusher-shared/lib/exports/index";
+import axios from "axios";
+import { resolveToBackendPath } from "../../crusher-shared/utils/url";
+import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const highlighterStyle = require("./highlighterStyle.json");
@@ -10,11 +13,18 @@ export class WebView {
 	debugger: Debugger;
 	playwrightInstance: PlaywrightInstance;
 	mainWindow: MainWindow;
-	appState: { targetSite?: string; replayTestId?: string };
+	appState: {
+		targetSite?: string;
+		replayTestId?: string;
+		replayTestInfo?: any;
+		shouldRunAfterTest?: boolean;
+		runAfterTestId?: string;
+		isTestRunning: boolean;
+	};
 	browserWindow: BrowserWindow;
 	exportsManager: ExportsManager;
 
-	webContents() {
+	webContents(): WebContents {
 		const allWebContents = webContents.getAllWebContents();
 
 		const webViewWebContents = allWebContents.find((a) => a.getType() === "webview");
@@ -23,7 +33,18 @@ export class WebView {
 		return webViewWebContents;
 	}
 
-	constructor(browserWindow: BrowserWindow, mainWindow: MainWindow, state: { targetSite?: string; replayTestId?: string }) {
+	constructor(
+		browserWindow: BrowserWindow,
+		mainWindow: MainWindow,
+		state: {
+			targetSite?: string;
+			replayTestId?: string;
+			replayTestInfo?: any;
+			shouldRunAfterTest?: boolean;
+			runAfterTestId?: string;
+			isTestRunning: boolean;
+		},
+	) {
 		this.appState = state;
 		this.browserWindow = browserWindow;
 		this.mainWindow = mainWindow;
@@ -33,6 +54,9 @@ export class WebView {
 
 	async initialize() {
 		if (this.debugger.isAttached()) return;
+		if (this.appState.shouldRunAfterTest || this.appState.replayTestId) {
+			this.appState.isTestRunning = true;
+		}
 
 		this.destroy();
 
@@ -58,11 +82,22 @@ export class WebView {
 		await this.playwrightInstance.connect();
 
 		// Add proper logic here
-		if (this.appState.replayTestId) {
+		if (this.appState.shouldRunAfterTest) {
+			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
+			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.runAfterTestId), true);
+			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
+			await this.mainWindow.saveRecordedStep({ type: ActionsInTestEnum.RUN_AFTER_TEST, payload: { meta: { value: this.appState.runAfterTestId } } });
+			await this.mainWindow.saveRecordedStep({
+				type: ActionsInTestEnum.NAVIGATE_URL,
+				payload: { meta: { value: await this.webContents().getURL() } },
+			});
+		} else if (this.appState.replayTestId) {
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
 			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.replayTestId));
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
 		}
+
+		this.appState.isTestRunning = false;
 	}
 
 	async _focusWebView() {
@@ -125,7 +160,7 @@ export class WebView {
 	}
 
 	isInRunningState() {
-		return this.playwrightInstance && this.playwrightInstance.isRunning();
+		return this.appState.isTestRunning;
 	}
 
 	destroy() {

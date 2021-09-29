@@ -1,16 +1,4 @@
-.idea/
-.vscode/
-node_modules/
-build/
-other/
-tmp/
-temp/
-.DS_store
+node_modules
+# Keep environment variables out of version control
 .env
-.env.development
-.now
-_next/i
-logs/
-bullmq/
-dist/
 tsconfig.json

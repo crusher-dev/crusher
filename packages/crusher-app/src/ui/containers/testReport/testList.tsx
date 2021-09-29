@@ -77,6 +77,7 @@ function ReportSection() {
 	const { data } = useBuildReport(query.id);
 
 	useEffect(() => {
+
 		const heading = document.querySelector("#review-section");
 		const observer = new IntersectionObserver(
 			() => {
@@ -168,12 +169,14 @@ export const imageTabCSS = css`
 function RenderImageInfo({ data }) {
 	const { meta } = data;
 	const imageName = meta.outputs?.[0].name;
+	const previousImage = getAssetPath(meta.outputs?.[0].targetScreenshotUrl);
 	const currentImage = getAssetPath(meta.outputs?.[0].value);
 
 	const [imageViewType, setImageViewType] = useAtom(imageViewAtom);
 
 	if (!imageName) return null;
 
+	console.log(meta.outputs[0])
 	return (
 		<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
 			<div className={"flex justify-between text-12 mb-20 "}>
@@ -203,7 +206,7 @@ function RenderImageInfo({ data }) {
 			</Conditional>
 			<Conditional showIf={imageViewType === "compare"}>
 				<div>
-					<CompareImage leftImage={currentImage} rightImage={currentImage} />
+					<CompareImage leftImage={previousImage} rightImage={currentImage} />
 				</div>
 			</Conditional>
 		</div>

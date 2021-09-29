@@ -14,6 +14,9 @@ interface UserInitialData {
 	projects: any;
 }
 
+/**
+ * EE
+ */
 export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitialData) => {
 	_set(userAtom, data.userData);
 	_set(teamAtom, data.team);

@@ -8,13 +8,7 @@ import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUser
 import { backendRequest } from "@utils/common/backendRequest";
 import { redirectUserOnMount } from "@utils/routing";
 
-import { appStateItemMutator } from "../store/atoms/global/appState";
-import { projectsAtom } from "../store/atoms/global/project";
-import { systemConfigAtom } from "../store/atoms/global/systemConfig";
-import { teamAtom } from "../store/atoms/global/team";
-import { userAtom } from "../store/atoms/global/user";
-import { USER_META_KEYS } from "@constants/USER";
-import { selectInitialProject, selectInitialProjectMutator, updateInitialDataMutator } from '@store/mutators/user';
+import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
 
 /*
 	Two scenarios to check for
@@ -25,8 +19,8 @@ import { selectInitialProject, selectInitialProjectMutator, updateInitialDataMut
  */
 export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = null }) {
 	const router = useRouter();
-	const [,updateInitialData] = useAtom(updateInitialDataMutator);
-	const [,selectInitialProject] = useAtom(selectInitialProjectMutator);
+	const [, updateInitialData] = useAtom(updateInitialDataMutator);
+	const [, selectInitialProject] = useAtom(selectInitialProjectMutator);
 
 	const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -40,8 +34,8 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 				dataToConsider = userAndSystemData;
 			}
 
-			updateInitialData(dataToConsider)
-			selectInitialProject(dataToConsider)
+			updateInitialData(dataToConsider);
+			selectInitialProject(dataToConsider);
 
 			await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 			setDataLoaded(true);

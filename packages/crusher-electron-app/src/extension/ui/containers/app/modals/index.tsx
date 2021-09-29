@@ -15,6 +15,7 @@ import { HowToUseVideoModal } from "./howToUseVideoModal";
 import { POSITION } from "../../../../interfaces/css";
 import { WaitModal } from "./waitModal";
 import { CustomCodeModalContent } from "./customCodeModalContent";
+import { RunAfterTestModal } from "./runAfterTestModal";
 
 interface iModalTopBarProps {
 	title: string;
@@ -110,6 +111,12 @@ const ModalManager = (props: iModalManagerProps) => {
 		handleCloseModal();
 	};
 
+	const handleCloseRunAfterTestModalCallback = () => {
+		handleCloseModal();
+	};
+
+	const shouldShowRunAfterTestModal = modalState === ACTIONS_MODAL_STATE.RUN_AFTER_TEST;
+
 	const isHowToUseVideoModal = modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
 
 	return (
@@ -160,6 +167,7 @@ const ModalManager = (props: iModalManagerProps) => {
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO}>
 				<HowToUseVideoModal onClose={handleCloseModal} />
 			</Conditional>
+			<RunAfterTestModal isOpen={shouldShowRunAfterTestModal} onClose={handleCloseRunAfterTestModalCallback} />
 		</ReactModal>
 	);
 };

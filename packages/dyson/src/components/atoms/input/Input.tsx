@@ -33,7 +33,7 @@ export type InputProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<InputProps> = ({ initialValue = "", rightIcon, isError = false, onReturn, children, className, ...props }) => {
+export const Input: React.FC<InputProps> = ({ initialValue = "", size = "large", rightIcon, isError = false, onReturn, children, className, ...props }) => {
 	const ref = useRef();
 
 	const onKeyUp = useCallback((e) => {
@@ -46,9 +46,11 @@ export const Input: React.FC<InputProps> = ({ initialValue = "", rightIcon, isEr
 		ref.current.value = initialValue;
 	}, [initialValue]);
 
+	const sizeStyle = getSizePropery(size);
+
 	return (
 		<div className={"relative"}>
-			<input ref={ref} css={[inputBox, isError && errorState]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />
+			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />
 
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle}>{rightIcon}</div>
@@ -63,12 +65,12 @@ const rightIconStyle = css`
 	right: 16px;
 	transform: translateY(-50%);
 `;
-const inputBox = css`
+const inputBox = (sizeStyle) => css`
 	background: linear-gradient(0deg, #0e1012, #0e1012);
 	border: 1px solid #2a2e38;
 	box-sizing: border-box;
 	border-radius: 4px;
-	height: 46rem;
+	height: ${sizeStyle.height}rem;
 	padding-top: 3rem;
 	font-size: 13rem;
 	padding-left: 16rem;
@@ -85,3 +87,17 @@ const inputBox = css`
 const errorState = css`
 	border-color: #ff4583; ;
 `;
+
+function getSizePropery(size) {
+	switch (size) {
+		case "small":
+			return { height: 20 };
+			break;
+		case "large":
+			return { height: 46 };
+			break;
+		default:
+			return { height: 34 };
+			break;
+	}
+}

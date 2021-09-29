@@ -22,9 +22,9 @@ import { systemConfigAtom } from "../../../store/atoms/global/systemConfig";
 import { userAtom } from "../../../store/atoms/global/user";
 import { updateMeta } from "../../../store/mutators/metaData";
 import { getEdition } from "../../../utils/helpers";
-import { backendRequest } from '@utils/common/backendRequest';
-import { setupOSS, USER_SYSTEM_API } from '@constants/api';
-import { selectInitialProjectMutator, updateInitialDataMutator } from '@store/mutators/user';
+import { backendRequest } from "@utils/common/backendRequest";
+import { setupOSS, USER_SYSTEM_API } from "@constants/api";
+import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -34,36 +34,34 @@ enum ONBOARDING_STEP {
 
 const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EditionTypeEnum.EE ? ONBOARDING_STEP.TUTORIAL : ONBOARDING_STEP.SETUP);
 
-
-const setupOSSFn = ()=>{
-	return backendRequest(setupOSS)
-}
+const setupOSSFn = () => {
+	return backendRequest(setupOSS);
+};
 const SetupCrusher = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [system] = useAtom(systemConfigAtom);
 
-	const [,updateInitialData] = useAtom(updateInitialDataMutator);
-	const [,selectInitialProject] = useAtom(selectInitialProjectMutator);
+	const [, updateInitialData] = useAtom(updateInitialDataMutator);
+	const [, selectInitialProject] = useAtom(selectInitialProjectMutator);
 
 	useEffect(() => {
-		const isWorkingFine = system.MONGO_DB_OPERATIONS && system.MYSQL_OPERATION && system.REDIS_OPERATION  && system?.OPEN_SOURCE?.initialized;
+		const isWorkingFine = system.MONGO_DB_OPERATIONS && system.MYSQL_OPERATION && system.REDIS_OPERATION && system?.OPEN_SOURCE?.initialized;
 		if (isWorkingFine) {
 			setOnboardingStep(ONBOARDING_STEP.TUTORIAL);
 		}
 	}, []);
 
-	const onInitialSetup = useCallback(()=>{
-		(async ()=>{
+	const onInitialSetup = useCallback(() => {
+		(async () => {
 			await setupOSSFn();
 
 			const dataToConsider = await backendRequest(USER_SYSTEM_API, {});
-			updateInitialData(dataToConsider)
-			selectInitialProject(dataToConsider)
+			updateInitialData(dataToConsider);
+			selectInitialProject(dataToConsider);
 
 			setOnboardingStep(ONBOARDING_STEP.TUTORIAL);
-		})()
-	},[])
-
+		})();
+	}, []);
 
 	return (
 		<>
@@ -73,7 +71,7 @@ const SetupCrusher = () => {
 			</div>
 
 			<div>
-				<ModuleCard onClick={onInitialSetup.bind(this)}/>
+				<ModuleCard onClick={onInitialSetup.bind(this)} />
 			</div>
 
 			<Button
@@ -174,7 +172,6 @@ const GithubDiscordSection = () => {
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);
 
-
 	switch (step) {
 		case 0:
 			return <SetupCrusher />;
@@ -189,7 +186,7 @@ const GetViewByStep = () => {
 
 const CrusherOnboarding = () => {
 	const router = useRouter();
-	const [user ] = useAtom(userAtom);
+	const [user] = useAtom(userAtom);
 
 	useEffect(() => {
 		if (isTempTestPending()) {

@@ -59,6 +59,9 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 			case TOP_LEVEL_ACTION.CUSTOM_CODE:
 				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.CUSTOM_CODE));
 				break;
+			case TOP_LEVEL_ACTION.RUN_AFTER_TEST:
+				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.RUN_AFTER_TEST));
+				break;
 			default:
 				console.debug("Unknown Top Level Action Called");
 				break;

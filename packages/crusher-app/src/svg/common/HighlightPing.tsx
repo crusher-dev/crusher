@@ -26,7 +26,7 @@ const loadingZipCSS = css`
 			transform: scale(1, 1);
 		}
 		50% {
-			transform: scale(1.3, 1.3);
+			transform: scale(1.25, 1.25);
 		}
 		100% {
 			transform: scale(1, 1);

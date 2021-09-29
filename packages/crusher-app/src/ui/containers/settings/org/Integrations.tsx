@@ -111,7 +111,14 @@ function RepoBar({ repo }) {
 					min-width: 100rem;
 				`}
 			>
-				<span className={"mt-1"} css={css`font-size: 12.5rem;`}>Connect</span>
+				<span
+					className={"mt-1"}
+					css={css`
+						font-size: 12.5rem;
+					`}
+				>
+					Connect
+				</span>
 			</Button>
 		</div>
 	);

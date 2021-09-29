@@ -17,6 +17,9 @@ import { UsersService } from "@modules/resources/users/service";
 import * as ejs from "ejs";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { EmailManager } from "@modules/email";
+import { TestsRunner } from "..";
+import { iAction } from "@crusher-shared/types/action";
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -26,7 +29,7 @@ const projectsService = Container.get(ProjectsService);
 const buildApproveService = Container.get(BuildApproveService);
 const usersService = Container.get(UsersService);
 const emailManager = Container.get(EmailManager);
-
+const testRunner = Container.get(TestsRunner);
 const redisManager: RedisManager = Container.get(RedisManager);
 
 const redisLock = new RedisLock([redisManager.redisClient], {
@@ -40,7 +43,48 @@ interface ITestResultWorkerJob extends Job {
 	data: ITestCompleteQueuePayload;
 }
 
-export default async function (bullJob: ITestResultWorkerJob): Promise<any> {
+async function handleNextTestsForExecution(testCompletePayload: ITestResultWorkerJob["data"]) {
+	for (const testInstance of testCompletePayload.nextTestDependencies) {
+		const testInstanceFullInfoRecord = await buildTestInstanceService.getInstanceAllInformation(testInstance.testInstanceId);
+		const testActions: Array<iAction> = JSON.parse(testInstanceFullInfoRecord.testEvents);
+
+		if (testCompletePayload.hasPassed) {
+			await testRunner.addTestRequestToQueue({
+				...testCompletePayload.buildExecutionPayload,
+				actions: testActions,
+				config: {
+					...testCompletePayload.buildExecutionPayload.config,
+					browser: testInstanceFullInfoRecord.browser,
+				},
+				testInstanceId: testInstance.testInstanceId,
+				testName: testInstanceFullInfoRecord.testName,
+				nextTestDependencies: testInstance.nextTestDependencies,
+			});
+		} else {
+			await processTestAfterExecution({
+				name: `${testCompletePayload.buildId}/${testCompletePayload.testInstanceId}`,
+				data: {
+					...testCompletePayload,
+					exports: [],
+					nextTestDependencies: testInstance.nextTestDependencies,
+					actionResults: testActions.map((action) => ({
+						actionType: action.type,
+						status: ActionStatusEnum.FAILED,
+						message: "Parent test failed",
+					})),
+					testInstanceId: testInstance.testInstanceId,
+					hasPassed: false,
+					failedReason: new Error("Parent test failed"),
+				},
+			} as any);
+		}
+	}
+	return true;
+}
+
+const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob): Promise<any> {
+	await handleNextTestsForExecution(bullJob.data);
+
 	const buildRecord = await buildService.getBuild(bullJob.data.buildId);
 
 	const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
@@ -117,3 +161,5 @@ async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>,
 		return emailManager.sendEmail(user.email, `Build ${buildRecord.id} ${buildReportStatus}`, emailTemplate);
 	});
 }
+
+export default processTestAfterExecution;

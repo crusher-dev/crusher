@@ -20,6 +20,7 @@ export interface ITestInstancesTable extends BaseRowInterface {
 	host: string;
 	recorded_video_uri?: string;
 	recorded_clip_video_url?: string;
+	meta?: string;
 }
 
 export interface ITestInstanceScreenshotsTable extends BaseRowInterface {

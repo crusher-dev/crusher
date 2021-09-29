@@ -68,8 +68,10 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 
 		await testCompleteQueue.add(identifier, {
 			exports: exportsManager.getEntriesArr(),
+			nextTestDependencies: bullJob.data.nextTestDependencies,
 			actionResults: actionResults,
 			buildId: bullJob.data.buildId,
+			buildExecutionPayload: bullJob.data,
 			testInstanceId: bullJob.data.testInstanceId,
 			buildTestCount: bullJob.data.buildTestCount,
 			hasPassed: hasPassed,

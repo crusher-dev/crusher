@@ -1,10 +1,19 @@
 import { IJobRunRequest } from "../runner/jobRunRequest";
 import { IActionResultItem } from "../common/general";
 
-export type ITestExecutionQueuePayload = IJobRunRequest;
+export type INextTestInstancesDependencies = {
+	testInstanceId: number;
+	nextTestDependencies: Array<INextTestInstancesDependencies>;
+};
+
+export type ITestExecutionQueuePayload = IJobRunRequest & {
+	nextTestDependencies: Array<INextTestInstancesDependencies>;
+};
 
 export interface ITestCompleteQueuePayload {
 	exports: Array<[string, any]>;
+	nextTestDependencies: Array<INextTestInstancesDependencies>;
+	buildExecutionPayload: ITestExecutionQueuePayload,
 	actionResults: Array<IActionResultItem>;
 	buildId: number;
 	testInstanceId: number;

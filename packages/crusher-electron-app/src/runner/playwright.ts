@@ -6,6 +6,7 @@ import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { MainWindow } from "../mainWindow";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { WebContents } from "electron";
 
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
@@ -30,6 +31,11 @@ class PlaywrightInstance {
 		this.storageManager = new StorageManagerPolyfill();
 		this.globalManager = new GlobalManagerPolyfill();
 		this.runnerManager = new CrusherRunnerActions(this.logManager as any, this.storageManager as any, "/tmp/crusher/somedir/", this.globalManager);
+
+		CrusherSdk.prototype.reloadPage = async () => {
+			await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').reload();");
+			return true;
+		};
 	}
 
 	getSdkManager() {

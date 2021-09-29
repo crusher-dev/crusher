@@ -223,15 +223,24 @@ class BuildTestInstancesService {
 	}
 
 	async createBuildTestInstance(
-		payload: KeysToCamelCase<Omit<ITestInstancesTable, "id" | "browser" | "status" | "code">> & { browser: Omit<BrowserEnum, "ALL"> },
+		payload: KeysToCamelCase<Omit<ITestInstancesTable, "id" | "browser" | "status" | "code" | "meta">> & { browser: Omit<BrowserEnum, "ALL">; meta: any },
 	): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO test_instances SET job_id = ?, test_id = ?, status = ?, host = ?, browser = ?", [
+		return this.dbManager.insert("INSERT INTO test_instances SET job_id = ?, test_id = ?, status = ?, host = ?, browser = ?, meta = ?", [
 			payload.jobId,
 			payload.testId,
 			TestInstanceStatusEnum.QUEUED,
 			payload.host,
 			payload.browser,
+			payload.meta ? JSON.stringify(payload.meta) : null,
 		]);
+	}
+
+	@CamelizeResponse()
+	async getInstanceAllInformation(instanceId: number): Promise<KeysToCamelCase<ITestInstancesTable & { test_name: string; test_events: string }>> {
+		return this.dbManager.fetchSingleRow(
+			"SELECT test_instances.*, tests.name test_name, tests.events test_events FROM tests, test_instances WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
+			[instanceId],
+		);
 	}
 
 	@CamelizeResponse()

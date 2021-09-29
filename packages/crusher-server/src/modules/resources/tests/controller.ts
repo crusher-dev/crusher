@@ -56,6 +56,8 @@ export class TestController {
 			return {
 				id: testData.id,
 				testName: testData.name,
+				tags: testData.tags,
+				runAfter: testData.run_after,
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
 				createdAt: new Date(testData.created_at).getTime(),
 				// @TODO: Remove this line
@@ -134,7 +136,7 @@ export class TestController {
 
 		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
 
-		const buildRunInfo = await this.testRunnerService.runTests([testRecord], {
+		const buildRunInfo = await this.testRunnerService.runTests(await this.testService.getCompleteTestsArray([testRecord]), {
 			userId: user_id,
 			projectId: projectId,
 			host: "null",
@@ -153,9 +155,11 @@ export class TestController {
 
 	@Authorized()
 	@Post("/tests/:test_id/actions/edit")
-	async editTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { name: string }) {
+	async editTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { name: string; tags: string; runAfter: number }) {
 		const result = await this.testService.updateTest(testId, {
 			name: body.name,
+			tags: body.tags,
+			runAfter: body.runAfter,
 		});
 
 		return result.changedRows ? "Updated" : "No change";

@@ -7,10 +7,9 @@ import { SWRConfig } from "swr";
 
 import { Conditional } from "dyson/src/components/layouts";
 
-
 import { Snackbar } from "@ui/containers/common/Snackbar";
 import { LoadingScreen } from "@ui/layout/LoadingScreen";
-import { loadCrisp, loadUserLeap } from "@utils/common/scriptUtils";
+import { loadCrisp, loadSegment, loadUserLeap } from "@utils/common/scriptUtils";
 
 import { useBasicSEO } from "../src/hooks/seo";
 import { useSaveTemp } from "../src/hooks/tempTest";
@@ -30,6 +29,7 @@ function App({ Component, pageProps }: AppProps<any>) {
 			loadUserLeap();
 			loadCrisp();
 		}, 6000);
+		setTimeout(loadSegment, 4000);
 	}, []);
 	return (
 		<>

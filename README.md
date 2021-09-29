@@ -1,4 +1,3 @@
-
 <br/>
 <div align="center">
 <img src="https://i.imgur.com/oUSUuoS.png" height="40" style="margin: 0 auto;"/>
@@ -106,12 +105,9 @@ Check about roadmap plan here.
 
 ## 🧱 Self deployment
 
-| **Infra provider** |                                                                                                        **One-click link**                                                                                                        |                                                             **Additional information**                                                             |
-| :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------: |
-|      <div style=""> <img src="https://i.imgur.com/x2v2EpM.png" height="24px"/>Docker  </div>     |                                        [Deploy](https://docs.crusher.dev/docs/self-host/how-to-setup-crusher-on-docker)                                       |                                    |
-
-
-
+|                                   **Infra provider**                                   |                                **One-click link**                                | **Additional information** |
+| :------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: | :------------------------: |
+| <div style=""> <img src="https://i.imgur.com/x2v2EpM.png" height="24px"/>Docker </div> | [Deploy](https://docs.crusher.dev/docs/self-host/how-to-setup-crusher-on-docker) |                            |
 
 ### 📝 License
 

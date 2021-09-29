@@ -21,7 +21,7 @@ export type TProjectsData = Array<{
 export type TSystemInfo = {
 	OPEN_SOURCE?: {
 		initialized: boolean;
-	},
+	};
 	REDIS_OPERATION: {
 		working: boolean;
 		message: string | null;

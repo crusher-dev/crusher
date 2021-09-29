@@ -114,7 +114,7 @@ const selectBoxContainer = (isOpen, size) => css`
 		}
 
 		${size === "small" && `height:28rem;`}
-		${size === "medium" && `height:32rem;`}
+		${size === "medium" && `height:34rem;`}
     ${size === "large" && `height:42rem;`}
 		${isOpen ? `	border-color: #6893e7;` : ""}
 	}

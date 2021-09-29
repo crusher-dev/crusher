@@ -46,7 +46,8 @@ const saveTest = (projectId: number, tempTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testName, id, isPassing, createdAt, imageURL, videoURL, firstRunCompleted, draftBuildId } = props;
+	const { testData } = props;
+	const { testName, isPassing, createdAt, imageURL, clipVideoURL, id, firstRunCompleted, draftBuildId, runAfter, tags } = testData;
 	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={"16rem"} />
 	) : (
@@ -59,7 +60,7 @@ function TestCard(props: IBuildItemCardProps) {
 		/>
 	);
 
-	const shouldPlayVideo = !imageURL && !!videoURL;
+	const shouldPlayVideo = !imageURL && !!clipVideoURL;
 
 	const [showEditBox, setShowEditBox] = useState(false);
 	return (
@@ -68,6 +69,8 @@ function TestCard(props: IBuildItemCardProps) {
 				<EditTest
 					id={id}
 					name={testName}
+					runAfter={runAfter}
+					tags={tags}
 					onClose={() => {
 						setShowEditBox(false);
 					}}
@@ -98,7 +101,7 @@ function TestCard(props: IBuildItemCardProps) {
 						}}
 						muted={true}
 					>
-						<source src={videoURL} type="video/mp4" />
+						<source src={clipVideoURL} type="video/mp4" />
 					</video>
 				</Conditional>
 			</a>
@@ -143,12 +146,12 @@ const testNameStyle = css`
 `;
 
 const itemMainContainerStyle = css`
-	background: rgba(16, 18, 21, 0.5);
-	padding: 20rem 16rem;
+	//background: rgba(16, 18, 21, 0.5);
+	padding: 20rem 0rem;
 `;
 const itemContainerStyle = css`
-	background: rgba(16, 18, 21, 0.5);
-	border: 1px solid #171c24;
+	//background: rgba(16, 18, 21, 0.5);
+	//border: 1px solid #171c24;
 	border-radius: 4rem;
 	color: rgba(255, 255, 255, 0.6);
 	width: 252rem;
@@ -156,7 +159,7 @@ const itemContainerStyle = css`
 	overflow: hidden;
 	margin-right: 32px;
 	:hover {
-		background: rgba(16, 18, 21, 1);
+		//background: rgba(16, 18, 21, 1);
 	}
 
 	.edit {
@@ -184,12 +187,14 @@ const itemContainerStyle = css`
 const itemImageStyle = css`
 	height: 183rem;
 	width: 100%;
-	border-top-left-radius: 8rem;
-	border-top-right-radius: 8rem;
+	border-radius:4rem;
+
 	border-width: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background: rgba(255, 255, 255, 0.1);
+	overflow: hidden;
 `;
 
 function TestSearchableList() {
@@ -205,21 +210,9 @@ function TestSearchableList() {
 
 	const testsItems = useMemo(() => {
 		return data.list.map((test: IProjectTestItem) => {
-			const { testName, isPassing, createdAt, imageURL, videoURL, id, firstRunCompleted, draftBuildId } = test;
+			const { id } = test;
 
-			return (
-				<TestCard
-					firstRunCompleted={firstRunCompleted}
-					videoURL={videoURL}
-					imageURL={imageURL}
-					testName={testName}
-					isPassing={isPassing}
-					createdAt={createdAt}
-					draftBuildId={draftBuildId}
-					key={id}
-					id={id}
-				/>
-			);
+			return <TestCard testData={test} key={id} id={id} />;
 		});
 	}, [data.list]);
 

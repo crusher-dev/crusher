@@ -83,10 +83,13 @@ class PlaywrightInstance {
 		});
 	}
 
-	async runMainActions(actions: Array<iAction>): Promise<boolean> {
-		await this.runnerManager.runActions(getMainActions(actions), this.browser, this.page, async (action, result) => {
+	async runMainActions(actions: Array<iAction>, isRunAfterTestAction: boolean): Promise<boolean> {
+		const actionsArr = getMainActions(actions);
+
+		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
+		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action, result) => {
 			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
-			if (status === "STARTED") {
+			if (status === "STARTED" && !isRunAfterTestAction) {
 				this.mainWindow.saveRecordedStep(action);
 			}
 		});
@@ -100,13 +103,11 @@ class PlaywrightInstance {
 		return this.mainWindow.app._setDevice(deviceAction.payload.meta.device.id);
 	}
 
-	async runTestFromRemote(testId: number) {
-		const testInfo = await axios.get(resolveToBackendPath(`/tests/${testId}`));
-		const actions = testInfo.data.events;
-		const isDeviceToBeChanged = await this._changeDeviceIfNotSame(actions);
+	async runActions(actions: any, isRunAfterTestAction = false) {
+		const isDeviceToBeChanged = isRunAfterTestAction ? false : await this._changeDeviceIfNotSame(actions);
 		if (!isDeviceToBeChanged) {
 			try {
-				await this.runMainActions(testInfo.data.events);
+				await this.runMainActions(actions, isRunAfterTestAction);
 			} catch (err) {
 				console.error(err);
 			}
@@ -114,6 +115,12 @@ class PlaywrightInstance {
 			this.running = false;
 			console.log("Finished replaying test");
 		}
+	}
+
+	async runTestFromRemote(testId: number, isRunAfterTestAction = false) {
+		const testInfo = await axios.get(resolveToBackendPath(`/tests/${testId}`));
+		const actions = testInfo.data.events;
+		await this.runActions(actions, isRunAfterTestAction);
 		return true;
 	}
 }

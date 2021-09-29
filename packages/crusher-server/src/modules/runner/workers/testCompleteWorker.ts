@@ -20,6 +20,7 @@ import { EmailManager } from "@modules/email";
 import { TestsRunner } from "..";
 import { iAction } from "@crusher-shared/types/action";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -48,10 +49,18 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 		const testInstanceFullInfoRecord = await buildTestInstanceService.getInstanceAllInformation(testInstance.testInstanceId);
 		const testActions: Array<iAction> = JSON.parse(testInstanceFullInfoRecord.testEvents);
 
-		if (testCompletePayload.hasPassed) {
+		if (testCompletePayload.hasPassed && testCompletePayload.storageState) {
+			const finalTestActions = testActions.map((action) => {
+				if (action.type === ActionsInTestEnum.RUN_AFTER_TEST) {
+					action.payload.meta.storageState = testCompletePayload.storageState;
+				}
+				return action;
+			});
+
 			await testRunner.addTestRequestToQueue({
 				...testCompletePayload.buildExecutionPayload,
-				actions: testActions,
+				startingStorageState: testCompletePayload.storageState,
+				actions: finalTestActions,
 				config: {
 					...testCompletePayload.buildExecutionPayload.config,
 					browser: testInstanceFullInfoRecord.browser,

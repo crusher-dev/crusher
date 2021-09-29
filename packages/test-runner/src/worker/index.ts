@@ -76,6 +76,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 			buildTestCount: bullJob.data.buildTestCount,
 			hasPassed: hasPassed,
 			failedReason: error ? error : null,
+			storageState: globalManager.get("storageState"),
 		} as ITestCompleteQueuePayload);
 	} catch (err) {
 		console.error(err);

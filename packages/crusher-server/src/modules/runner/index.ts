@@ -60,6 +60,7 @@ class TestsRunner {
 					testInstanceId: testInstance.id,
 					testName: testInstance.testInfo.name,
 					buildTestCount: testInstances.length,
+					startingStorageState: null,
 				});
 			}
 		});

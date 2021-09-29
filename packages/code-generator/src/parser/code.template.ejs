@@ -30,8 +30,12 @@ await handlePopup(page, browserContext);
 
 
 await crusherRunnerActionManager.runActions(getMainActions(actions), browser, page);
+
+globalManager.set("storageState", await browserContext.storageState());
 } catch(ex) {
   console.error(ex);
+  globalManager.set("storageState", await browserContext.storageState().then((storage) => storage).catch((err) => {  return null; });
+
   <% if (isTracingOn) { %>
 
   await browserContext.tracing.stop({ path: '<%= tracePath %>' });

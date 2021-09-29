@@ -238,7 +238,7 @@ class BuildTestInstancesService {
 	@CamelizeResponse()
 	async getInstanceAllInformation(instanceId: number): Promise<KeysToCamelCase<ITestInstancesTable & { test_name: string; test_events: string }>> {
 		return this.dbManager.fetchSingleRow(
-			"SELECT test_instances.*, tests.name test_name, tests.events test_events FROM tests, test_instances WHERE test_instances.id = ?",
+			"SELECT test_instances.*, tests.name test_name, tests.events test_events FROM tests, test_instances WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
 			[instanceId],
 		);
 	}

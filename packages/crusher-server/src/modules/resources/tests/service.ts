@@ -15,6 +15,7 @@ import { BrowserEnum } from "@modules/runner/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
 import { BadRequestError } from "routing-controllers";
 import { merge } from "lodash";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 @Service()
 class TestService {
 	private dbManager: DBManager;
@@ -157,6 +158,26 @@ class TestService {
 	@CamelizeResponse()
 	async getTestsFromIdList(testIds: Array<number>): Promise<Array<KeysToCamelCase<ITestTable>>> {
 		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds.join(",")]);
+	}
+
+	// Specifically for run after this text
+	async getCompleteTestsArray(tests: Array<KeysToCamelCase<ITestTable>>): Promise<Array<KeysToCamelCase<ITestTable>>> {
+		const testsMap = tests.reduce((acc, test) => {
+			return { ...acc, [test.id]: test };
+		}, {});
+
+		for (const test of tests) {
+			const events = JSON.parse(test.events);
+			const runAfterTestAction = events.find((event) => event.type === ActionsInTestEnum.RUN_AFTER_TEST);
+			if (runAfterTestAction) {
+				const runAfterTestId = runAfterTestAction.payload.meta.value;
+				if (!testsMap[runAfterTestId]) {
+					testsMap[runAfterTestId] = await this.getTest(parseInt(runAfterTestId));
+				}
+			}
+		}
+
+		return Object.values(testsMap);
 	}
 }
 

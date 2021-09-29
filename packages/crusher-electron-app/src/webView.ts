@@ -24,7 +24,7 @@ export class WebView {
 	browserWindow: BrowserWindow;
 	exportsManager: ExportsManager;
 
-	webContents() {
+	webContents(): WebContents {
 		const allWebContents = webContents.getAllWebContents();
 
 		const webViewWebContents = allWebContents.find((a) => a.getType() === "webview");
@@ -87,6 +87,10 @@ export class WebView {
 			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.runAfterTestId), true);
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
 			await this.mainWindow.saveRecordedStep({ type: ActionsInTestEnum.RUN_AFTER_TEST, payload: { meta: { value: this.appState.runAfterTestId } } });
+			await this.mainWindow.saveRecordedStep({
+				type: ActionsInTestEnum.NAVIGATE_URL,
+				payload: { meta: { value: await this.webContents().getURL() } },
+			});
 		} else if (this.appState.replayTestId) {
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
 			await this.playwrightInstance.runTestFromRemote(parseInt(this.appState.replayTestId));

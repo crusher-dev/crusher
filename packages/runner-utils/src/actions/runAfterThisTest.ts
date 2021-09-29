@@ -7,6 +7,7 @@ import { getUserAgentFromName, userAgents } from "@crusher-shared/constants/user
 
 async function setupRunAfterTest(browser: Browser, action: iAction, globals: IGlobalManager) {
 	const storageState = action.payload.meta.storageState;
+	console.log("Storage state is", storageState);
 	if (!storageState) throw new Error("No storage state specified to start from");
 
 	const currentBrowserContextOptions = globals.get("browserContextOptions");

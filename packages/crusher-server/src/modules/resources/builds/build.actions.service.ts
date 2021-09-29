@@ -52,7 +52,7 @@ class BuildsActionService {
 		const testsList = await this.testService.getTestsFromIdList(buildRecordMeta.testIds);
 
 		return this.testRunner.runTests(
-			testsList,
+			await this.testService.getCompleteTestsArray(testsList),
 			{
 				userId: user_id,
 				projectId: buildRecord.projectId,

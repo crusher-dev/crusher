@@ -12,6 +12,7 @@ import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
 import { ITestInstancesTable } from "@modules/resources/builds/instances/interface";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { BadRequestError } from "routing-controllers";
 @Service()
 class TestsRunner {
 	@Inject()
@@ -86,8 +87,10 @@ class TestsRunner {
 				const parentTest = testsMapById[dependency.payload.meta.value];
 				if (parentTest) {
 					parentTest.postTestList.push(test);
-					test.isNotFirstLevelTest = false;
+					test.isFirstLevelTest = false;
 					test.parentTestId = parentTest.id;
+				} else {
+					throw new BadRequestError("Parent test not in the tests list");
 				}
 			}
 		}
@@ -153,12 +156,13 @@ class TestsRunner {
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 		const testsListWIthDependency = this._getDependenciesTestArr(tests);
-
 		if (buildPayload.meta && buildPayload.meta.github) {
 			await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
 		}
 
 		const testInstancesArr: ITestInstanceDependencyArray = await this.createTestInstances(testsListWIthDependency, buildPayload.browser, build.insertId);
+
+		console.log("Test instances array is", testInstancesArr);
 
 		const referenceBuild = await this.buildsService.getBuild(baselineBuildId ? baselineBuildId : build.insertId);
 

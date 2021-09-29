@@ -136,7 +136,7 @@ export class TestController {
 
 		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
 
-		const buildRunInfo = await this.testRunnerService.runTests([testRecord], {
+		const buildRunInfo = await this.testRunnerService.runTests(await this.testService.getCompleteTestsArray([testRecord]), {
 			userId: user_id,
 			projectId: projectId,
 			host: "null",

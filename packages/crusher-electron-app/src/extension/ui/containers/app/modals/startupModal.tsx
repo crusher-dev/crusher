@@ -22,6 +22,9 @@ const StartupModal = (props: iStartupModalProps) => {
 			alert("URL is not valid");
 			return;
 		}
+		if (targetURL && targetURL !== "") {
+			window.location.href = `/test_recorder.html?url=${addHttpToURLIfNotThere(targetURL)}&device=GoogleChromeMediumScreen`;
+		}
 	};
 
 	const handleKeyPress = (e: any) => {

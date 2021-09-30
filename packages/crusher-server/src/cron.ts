@@ -7,14 +7,14 @@ import { ProjectMonitoringService } from "@modules/resources/projects/monitoring
 import { TestService } from "@modules/resources/tests/service";
 import { BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { MongoManager } from "@modules/db/mongo";
+import { UsersService } from "@modules/resources/users/service";
 
 const projectMonitoringService = Container.get(ProjectMonitoringService);
 const testService = Container.get(TestService);
+const usersService = Container.get(UsersService);
 const mongoManager = Container.get(MongoManager);
 
-export async function init() {
-	mongoManager.waitUntilAlive();
-
+async function setupCronForBuilds() {
 	const cronBuildJobs = new CronJob(
 		"*/1 * * * *",
 		async function () {
@@ -42,6 +42,36 @@ export async function init() {
 	);
 
 	cronBuildJobs.start();
+
+	return cronBuildJobs;
+}
+
+// EE (PROD)
+async function stupCronForTestingAccountsCleanup() {
+	const cron = new CronJob(
+		"*/10 * * * *",
+		async function () {
+			try {
+				await Promise.all(await usersService.deleteAllTestUsers());
+			} catch (ex) {
+				console.error("Error occurred while cleaning up the test users", ex);
+			}
+		},
+		null,
+		true,
+		"America/Los_Angeles",
+	);
+
+	cron.start();
+
+	return cron;
+}
+
+export async function init() {
+	mongoManager.waitUntilAlive();
+
+	await setupCronForBuilds();
+	await stupCronForTestingAccountsCleanup();
 }
 
 init();

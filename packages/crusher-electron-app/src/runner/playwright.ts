@@ -24,6 +24,7 @@ class PlaywrightInstance {
 
 	private sdkManager: any;
 	private running = false;
+	private exportsManager;
 
 	constructor(mainWindow: MainWindow, willRunFromStart: boolean) {
 		this.running = willRunFromStart;
@@ -31,7 +32,15 @@ class PlaywrightInstance {
 		this.logManager = new LogManagerPolyfill();
 		this.storageManager = new StorageManagerPolyfill();
 		this.globalManager = new GlobalManagerPolyfill();
-		this.runnerManager = new CrusherRunnerActions(this.logManager as any, this.storageManager as any, "/tmp/crusher/somedir/", this.globalManager);
+		this.exportsManager = new ExportsManager();
+		this.runnerManager = new CrusherRunnerActions(
+			this.logManager as any,
+			this.storageManager as any,
+			"/tmp/crusher/somedir/",
+			this.globalManager,
+			this.exportsManager,
+			this.sdkManager,
+		);
 
 		CrusherSdk.prototype.reloadPage = async () => {
 			await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').reload();");
@@ -68,8 +77,7 @@ class PlaywrightInstance {
 		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		this.page = await this._getWebViewPage();
-		const exportsManager = new ExportsManager();
-		this.sdkManager = new CrusherSdk(this.page, exportsManager);
+		this.sdkManager = new CrusherSdk(this.page, this.exportsManager);
 
 		await this.initialize();
 	}

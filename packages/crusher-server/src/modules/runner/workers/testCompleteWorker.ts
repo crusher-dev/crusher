@@ -59,6 +59,7 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 
 			await testRunner.addTestRequestToQueue({
 				...testCompletePayload.buildExecutionPayload,
+				exports: testCompletePayload.exports,
 				startingStorageState: testCompletePayload.storageState,
 				actions: finalTestActions,
 				config: {

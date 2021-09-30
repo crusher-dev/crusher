@@ -89,7 +89,7 @@ class CrusherRunnerActions {
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
-		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: any = null): Promise<void> => {
+		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: any = null, shouldSleepAfterComplete = true): Promise<void> => {
 			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`, {
 				actionName: step.name ? step.name : null,
 			}, actionCallback);
@@ -111,7 +111,9 @@ class CrusherRunnerActions {
 						throw new Error("Invalid action category handler");
 				}
 
-				await sleep(500);
+				if (shouldSleepAfterComplete) {
+					await sleep(500);
+				}
 				// Woohoo! Action executed without any errors.
 				await this.handleActionExecutionStatus(
 					action.name,
@@ -148,9 +150,12 @@ class CrusherRunnerActions {
 	}
 
 	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: any = null) {
+		let index = 0;
+
 		for (let action of actions) {
 			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
-			await this.actionHandlers[action.type](action, browser, page, actionCallback ? actionCallback.bind(this, action) : null);
+			await this.actionHandlers[action.type](action, browser, page, actionCallback ? actionCallback.bind(this, action) : null, actions[index+1] ? (actions[index+1].type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION ? true : false) : false);
+			index++;
 		}
 	}
 

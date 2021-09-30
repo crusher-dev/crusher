@@ -6,10 +6,10 @@ import { StorageManager } from "../functions/storage";
 import { CrusherSdk } from "../sdk/sdk";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 
-async function executeCustomCode(page: Page, action: iAction, globals: IGlobalManager, storageManager: StorageManager, exportsManager: ExportsManager) {
+async function executeCustomCode(page: Page, action: iAction, globals: IGlobalManager, storageManager: StorageManager, exportsManager: ExportsManager, sdk: CrusherSdk | null) {
 	const customScriptFunction = action.payload.meta.script;
 
-	const crusherSdk = new CrusherSdk(page, exportsManager);
+	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager);
 
 	await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${customScriptFunction} return validate(crusherSdk);`)(
 		exports,

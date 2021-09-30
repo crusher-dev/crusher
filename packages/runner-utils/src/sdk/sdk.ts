@@ -24,6 +24,10 @@ class CrusherSdk implements ICrusherSdk {
 
 	}
 
+	async goto(url: string) {
+		return this.page.goto(url);
+	}
+
 	async reloadPage() {
 		await this.page.reload();
 		return true;

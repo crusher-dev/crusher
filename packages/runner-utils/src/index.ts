@@ -30,14 +30,16 @@ class CrusherRunnerActions {
 	storageManager: StorageManager;
 	globals: IGlobalManager;
 	exportsManager: ExportsManager;
+	sdk: CrusherSdk | null;
 
-	constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager, exportsManager: IExportsManager) {
+	constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager, exportsManager: IExportsManager, sdk: CrusherSdk | null = null) {
 		this.actionHandlers = {};
 		this.globals = globalManager;
 
 		this.logManager = new LogManager(logManger);
 		this.storageManager = new StorageManager(storageManager, baseAssetPath);
 		this.exportsManager = new ExportsManager(exportsManager);
+		this.sdk = sdk;
 
 		if (!this.globals.has(TEST_RESULT_KEY)) {
 			this.globals.set(TEST_RESULT_KEY, []);
@@ -96,14 +98,14 @@ class CrusherRunnerActions {
 			try {
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
-						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager, this.exportsManager);
+						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
 						break;
 					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager);
+						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
 						break;
 					case ActionCategoryEnum.ELEMENT:
 						const elementLocator = page.locator(toCrusherSelectorsFormat(step.payload.selectors).value);
-						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager);
+						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
 						break;
 					default:
 						throw new Error("Invalid action category handler");

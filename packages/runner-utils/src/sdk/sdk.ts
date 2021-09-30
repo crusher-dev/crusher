@@ -6,7 +6,13 @@ import { ExportsManager } from "../functions/exports";
 import { CrusherElementSdk } from "./element";
 
 class CrusherSdk implements ICrusherSdk {
-	constructor(private page: Page, private exportsManager: ExportsManager) {}
+	page: Page;
+	exportsManager: ExportsManager;
+
+	constructor(page: Page, exportsManager: ExportsManager) {
+		this.page = page;
+		this.exportsManager = exportsManager;
+	}
 
 	async $(selector: string) {
 		const elementHandle = await this.page.$(selector);

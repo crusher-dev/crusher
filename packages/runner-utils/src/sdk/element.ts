@@ -28,6 +28,10 @@ class CrusherElementSdk implements ICrusherSDKElement {
 		await this.element.type(text, options);
 		return true;
 	}
+
+	async value() {
+		return this.element.inputValue();
+	}
 }
 
 export { CrusherElementSdk };

@@ -29,7 +29,7 @@ class CrusherSdk implements ICrusherSdk {
 	}
 
 	async reloadPage() {
-		await this.page.reload();
+		await this.page.reload({waitUntil: "networkidle"});
 		return true;
 	}
 

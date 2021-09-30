@@ -6,10 +6,15 @@ import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { MainWindow } from "../mainWindow";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { WebContents } from "electron";
+import { CookiesSetDetails, session, WebContents } from "electron";
 import { ExportsManager } from "../../../crusher-shared/lib/exports";
+import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
+
+type ElectronCompatibleCookiePayload = Omit<CrusherCookieSetPayload, "sameSite"> & {
+	sameSite: Pick<CookiesSetDetails, "sameSite">;
+};
 
 class PlaywrightInstance {
 	private logManager: LogManagerPolyfill;
@@ -44,6 +49,34 @@ class PlaywrightInstance {
 
 		CrusherSdk.prototype.reloadPage = async () => {
 			await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').reload();");
+			return true;
+		};
+
+		CrusherSdk.prototype.setCookies = async (cookies) => {
+			const getCompatibleElectronSameSiteFormat = (sameSite: string): Pick<CookiesSetDetails, "sameSite"> => {
+				switch (sameSite) {
+					case "Strict":
+						return "strict" as any;
+					case "Lax":
+						return "lax" as any;
+					case "None":
+						return "no_restriction" as any;
+					default:
+						throw new Error("Invalid sameSite type");
+				}
+			};
+
+			const filteredCookies: Array<ElectronCompatibleCookiePayload> = cookies.map((cookie) => {
+				return {
+					...cookie,
+					sameSite: cookie.sameSite ? getCompatibleElectronSameSiteFormat(cookie.sameSite) : undefined,
+				};
+			});
+
+			for (const cookie of filteredCookies) {
+				await session.defaultSession.cookies.set(cookie as any);
+			}
+
 			return true;
 		};
 	}

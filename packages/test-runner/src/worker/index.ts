@@ -24,7 +24,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		const testCompleteQueue = await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		const globalManager = getGlobalManager(true);
-		const exportsManager = new ExportsManager();
+		const exportsManager = new ExportsManager(bullJob.data.exports ? bullJob.data.exports : []);
 
 		if (!globalManager.has(TEST_RESULT_KEY)) {
 			globalManager.set(TEST_RESULT_KEY, []);

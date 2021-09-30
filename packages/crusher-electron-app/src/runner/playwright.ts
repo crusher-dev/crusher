@@ -7,6 +7,7 @@ import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { MainWindow } from "../mainWindow";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { WebContents } from "electron";
+import { ExportsManager } from "../../../crusher-shared/lib/exports";
 
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
@@ -67,7 +68,8 @@ class PlaywrightInstance {
 		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		this.page = await this._getWebViewPage();
-		this.sdkManager = new CrusherSdk(this.page);
+		const exportsManager = new ExportsManager();
+		this.sdkManager = new CrusherSdk(this.page, exportsManager);
 
 		await this.initialize();
 	}

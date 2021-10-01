@@ -337,7 +337,14 @@ export default class EventRecording {
 			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
 				hoverNodes.pop();
 			}
-			return hoverNodes;
+			return hoverNodes.filter((node: HTMLElement) => {
+				const boundingBox = node.getBoundingClientRect();
+				const centerX = boundingBox.x + boundingBox.width / 2;
+				const centerY = boundingBox.y + boundingBox.height / 2;
+				const nodeAtCenter = document.elementFromPoint(centerX, centerY);
+
+				return nodeAtCenter === node;
+			});
 		}
 
 		return [];

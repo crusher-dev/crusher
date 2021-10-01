@@ -96,7 +96,7 @@ const HowItWorksView = () => {
 	return (
 		<>
 			<div className="m-8 text-18 leading-none mb-36 font-700">How it works in 60 seconds?</div>
-			<VideoComponent src={"https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"} autoPlay={true} />
+			<VideoComponent src={"https://crusher-public.s3.amazonaws.com/crusher-demo.mp4"} autoPlay={true} />
 
 			<Button
 				className="mt-42"

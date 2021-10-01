@@ -14,7 +14,7 @@ module.exports = {
 		{
 			name: 'crusher-server',
 			cwd: './packages/crusher-server',
-			script: 'node',
+			script: 'DEBUG=pw:api node',
 			args: 'app.js',
 			env: { ...CRUSHER_SERVER_ENV, RUN_ALL_TOGETHER: 'true' },
 			merge_logs: true,

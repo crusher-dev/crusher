@@ -156,6 +156,8 @@ export class WebView {
 				functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 				objectId: nodeObject.object.objectId,
 			});
+		} else if (method === "Page.navigatedWithinDocument") {
+			console.log("Navigated within the document", params);
 		}
 	}
 

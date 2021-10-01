@@ -36,7 +36,7 @@ class RelevantHoverDetection {
 		targetNodeRecords.set(eventNode, {
 			...record,
 			dependentOn: null,
-			meta: { timeNow: Date.now(), currentUrl: window.location.href },
+			meta: { timeNow: performance.now(), currentUrl: window.location.href },
 		});
 	}
 
@@ -48,8 +48,8 @@ class RelevantHoverDetection {
 		this.isRunning = true;
 	}
 
-	isCoDependentNode(node: Node) {
-		return this.getParentDOMMutations(node).length > 0;
+	isCoDependentNode(node: Node, baseLineTimeStamp: number | null = null) {
+		return this.getParentDOMMutations(node, baseLineTimeStamp).length > 0;
 	}
 
 	reset() {
@@ -57,14 +57,19 @@ class RelevantHoverDetection {
 		this.resetTime = Date.now();
 	}
 
-	getParentDOMMutations(node: Node): Array<IRegisteredMutationRecord> {
+	getParentDOMMutations(node: Node, baseLineTimeStamp: number | null = null): Array<IRegisteredMutationRecord> {
 		let currentNode = node;
 		const list = [];
 
 		while (document.body.contains(currentNode) && currentNode != document.body) {
 			if (this._mapRecords.has(currentNode) && !(currentNode instanceof SVGElement)) {
 				const tmp = this._mapRecords.get(currentNode)!;
-				list.push(Array.from(tmp.values()).pop() as IRegisteredMutationRecord);
+				console.log("Values are", Array.from(tmp.values()));
+				list.push(
+					Array.from(tmp.values())
+						.filter((a) => (baseLineTimeStamp ? a.meta.timeNow < baseLineTimeStamp : true))
+						.pop() as IRegisteredMutationRecord,
+				);
 			}
 			currentNode = currentNode.parentNode!;
 		}
@@ -75,7 +80,7 @@ class RelevantHoverDetection {
 
 				return (
 					array.findIndex((currentItem) => currentItem.eventNode === item.eventNode) === index &&
-					(item.targetNode !== document.body || item.targetNode !== document) &&
+					(item.targetNode !== document.body || item.targetNode !== document.body) &&
 					document.body.contains(item.targetNode) &&
 					document.body.contains(item.eventNode) &&
 					timeOfEventStart > this.resetTime

@@ -90,7 +90,7 @@ class TestService {
 					host: "null",
 					status: BuildStatusEnum.CREATED,
 					buildTrigger: BuildTriggerEnum.MANUAL,
-					browser: isOpenSourceEdition() ? [BrowserEnum.CHROME] : [BrowserEnum.CHROME, BrowserEnum.FIREFOX, BrowserEnum.SAFARI],
+					browser: isOpenSourceEdition() ? [BrowserEnum.CHROME] : [BrowserEnum.CHROME],
 					isDraftJob: false,
 					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
 					meta: meta,

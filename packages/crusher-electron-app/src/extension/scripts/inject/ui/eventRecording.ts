@@ -436,10 +436,10 @@ export default class EventRecording {
 	}
 
 	handleFocus(event: FocusEvent) {
-		const target = event.target as HTMLElement;
-		if ((target as any) != window && ["textarea", "input"].includes(target.tagName.toLowerCase())) {
-			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_FOCUS, target, true);
-		}
+		// const target = event.target as HTMLElement;
+		// if ((target as any) != window && ["textarea", "input"].includes(target.tagName.toLowerCase())) {
+		// 	this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_FOCUS, target, true);
+		// }
 	}
 
 	handlePointerEnter(event: PointerEvent) {

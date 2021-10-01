@@ -95,6 +95,9 @@ class CrusherRunnerActions {
 			}, actionCallback);
 			let stepResult = null;
 
+			let startingScreenshot = null;
+			try { startingScreenshot = await this._getCurrentScreenshot(page); } catch (ex) { }
+
 			try {
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
@@ -130,12 +133,18 @@ class CrusherRunnerActions {
 					actionCallback,
 				);
 			} catch (err) {
+				let endingScreenshot = null;
+				try {
+					endingScreenshot = await this._getCurrentScreenshot(page);
+				} catch (ex) { }
+
 				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
 					failedReason: err.messsage,
-					screenshotDuringError: await this._getCurrentScreenshot(page),
+					screenshotDuringError: JSON.stringify({startingScreenshot, endingScreenshot}),
 					actionName: step.name ? step.name : null,
 					meta: err.meta ? err.meta : {},
 				}, actionCallback);
+
 				throw err;
 			}
 		};

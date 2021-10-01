@@ -49,7 +49,7 @@ function markTestFail(message: string, meta: any = {}): void {
 function getBrowserActions(actions: iAction[]) {
 	return actions.filter((action: iAction) => {
 		const matches = validActionTypeRegex.exec(action.type);
-		return action && matches[1] === "BROWSER";
+		return action && matches.length && matches[1] === "BROWSER";
 	});
 }
 

@@ -328,10 +328,10 @@ export default class EventRecording {
 		}
 	}
 
-	async getHoverDependentNodes(element): Promise<Array<any>> {
-		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element);
+	async getHoverDependentNodes(element, baseLineTimeStamp: number | null = null): Promise<Array<any>> {
+		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element, baseLineTimeStamp);
 		if (needsOtherActions) {
-			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element);
+			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element, baseLineTimeStamp);
 			console.log("Hover nodes records", hoverNodesRecord);
 			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
 			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
@@ -343,15 +343,15 @@ export default class EventRecording {
 				const centerY = boundingBox.y + boundingBox.height / 2;
 				const nodeAtCenter = document.elementFromPoint(centerX, centerY);
 
-				return nodeAtCenter === node;
+				return nodeAtCenter === node || node.contains(nodeAtCenter);
 			});
 		}
 
 		return [];
 	}
 
-	async trackAndSaveRelevantHover(element) {
-		const hoverNodes = await this.getHoverDependentNodes(element);
+	async trackAndSaveRelevantHover(element, baseLineTimeStamp: number | null = null) {
+		const hoverNodes = await this.getHoverDependentNodes(element, baseLineTimeStamp);
 		for (let i = 0; i < hoverNodes.length; i++) {
 			console.log("Hover nodes area", hoverNodes[i]);
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, hoverNodes[i], "", null, true);
@@ -414,7 +414,7 @@ export default class EventRecording {
 		// by user. Found during creating tests for ielts search
 		console.log("Event now", event.isTrusted, !event.simulatedEvent, event.clientX, event.clientY);
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
-			await this.trackAndSaveRelevantHover(target);
+			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target);
 		}

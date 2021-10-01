@@ -158,6 +158,11 @@ function handleRecordAction(action: iAction): any {
 		}
 		case ActionsInTestEnum.HOVER: {
 			if (!lastRecordedAction) throw new Error("Hover recorded before navigate url");
+			const url = new URL(window.location.href);
+			if (url.searchParams.get("device") === "Pixel33XL") {
+				// Disable hover in mobile devices
+				return;
+			}
 
 			const isTheLastRecordedActionSame =
 				lastRecordedAction.type === ActionsInTestEnum.HOVER &&

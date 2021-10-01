@@ -1,7 +1,7 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { Page } from "playwright";
-import { sleep } from "src/functions";
+import { sleep } from "../functions/sleep";
 
 async function waitForNavigation(page: Page, action: iAction) {
 	console.log("Waiting for navigation now...");

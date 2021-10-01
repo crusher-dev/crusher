@@ -526,11 +526,11 @@ export const Integrations = () => {
 					Make sure you have selected all the configuration you want
 				</TextBlock>
 				<hr css={basicHR} />
-				<SlackIntegration />
-				<hr css={basicHR} />
+				{/* <SlackIntegration /> */}
+				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />
-				<CiIntegration />
+				{/* <CiIntegration /> */}
 			</div>
 		</SettingsLayout>
 	);

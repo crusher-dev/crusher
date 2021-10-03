@@ -111,7 +111,14 @@ function RepoBar({ repo }) {
 					min-width: 100rem;
 				`}
 			>
-				<span className={"mt-1"} css={css`font-size: 12.5rem;`}>Connect</span>
+				<span
+					className={"mt-1"}
+					css={css`
+						font-size: 12.5rem;
+					`}
+				>
+					Connect
+				</span>
 			</Button>
 		</div>
 	);
@@ -519,11 +526,11 @@ export const Integrations = () => {
 					Make sure you have selected all the configuration you want
 				</TextBlock>
 				<hr css={basicHR} />
-				<SlackIntegration />
-				<hr css={basicHR} />
+				{/* <SlackIntegration /> */}
+				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />
-				<CiIntegration />
+				{/* <CiIntegration /> */}
 			</div>
 		</SettingsLayout>
 	);

@@ -30,14 +30,16 @@ class CrusherRunnerActions {
 	storageManager: StorageManager;
 	globals: IGlobalManager;
 	exportsManager: ExportsManager;
+	sdk: CrusherSdk | null;
 
-	constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager, exportsManager: IExportsManager) {
+	constructor(logManger: IRunnerLogManagerInterface, storageManager: StorageManagerInterface, baseAssetPath: string, globalManager: IGlobalManager, exportsManager: IExportsManager, sdk: CrusherSdk | null = null) {
 		this.actionHandlers = {};
 		this.globals = globalManager;
 
 		this.logManager = new LogManager(logManger);
 		this.storageManager = new StorageManager(storageManager, baseAssetPath);
 		this.exportsManager = new ExportsManager(exportsManager);
+		this.sdk = sdk;
 
 		if (!this.globals.has(TEST_RESULT_KEY)) {
 			this.globals.set(TEST_RESULT_KEY, []);
@@ -87,29 +89,34 @@ class CrusherRunnerActions {
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
-		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: any = null): Promise<void> => {
+		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: any = null, shouldSleepAfterComplete = true): Promise<void> => {
 			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`, {
 				actionName: step.name ? step.name : null,
 			}, actionCallback);
 			let stepResult = null;
 
+			let startingScreenshot = null;
+			try { startingScreenshot = await this._getCurrentScreenshot(page); } catch (ex) { }
+
 			try {
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
-						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager, this.exportsManager);
+						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
 						break;
 					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager);
+						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
 						break;
 					case ActionCategoryEnum.ELEMENT:
 						const elementLocator = page.locator(toCrusherSelectorsFormat(step.payload.selectors).value);
-						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager);
+						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
 						break;
 					default:
 						throw new Error("Invalid action category handler");
 				}
 
-				await sleep(500);
+				if (shouldSleepAfterComplete) {
+					await sleep(500);
+				}
 				// Woohoo! Action executed without any errors.
 				await this.handleActionExecutionStatus(
 					action.name,
@@ -126,12 +133,18 @@ class CrusherRunnerActions {
 					actionCallback,
 				);
 			} catch (err) {
+				let endingScreenshot = null;
+				try {
+					endingScreenshot = await this._getCurrentScreenshot(page);
+				} catch (ex) { }
+
 				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
 					failedReason: err.messsage,
-					screenshotDuringError: await this._getCurrentScreenshot(page),
+					screenshotDuringError: JSON.stringify({startingScreenshot, endingScreenshot}),
 					actionName: step.name ? step.name : null,
 					meta: err.meta ? err.meta : {},
 				}, actionCallback);
+
 				throw err;
 			}
 		};
@@ -139,16 +152,19 @@ class CrusherRunnerActions {
 
 	registerStepHandler(actionType: ActionsInTestEnum, description: string, handler: any) {
 		const validActionRegexMatches = validActionTypeRegex.exec(actionType);
-		if (!validActionRegexMatches) throw new Error("Invalid format for action type");
+		if (!validActionRegexMatches) throw new Error("Invalid format for action type" + actionType);
 
 		const actionCategory: IActionCategory = validActionRegexMatches[1] as any;
 		this.actionHandlers[actionType] = this.stepHandlerHOC(handler, { name: actionType, description: description, category: actionCategory });
 	}
 
 	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: any = null) {
+		let index = 0;
+
 		for (let action of actions) {
 			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
-			await this.actionHandlers[action.type](action, browser, page, actionCallback ? actionCallback.bind(this, action) : null);
+			await this.actionHandlers[action.type](action, browser, page, actionCallback ? actionCallback.bind(this, action) : null, actions[index+1] ? (actions[index+1].type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION ? true : false) : false);
+			index++;
 		}
 	}
 

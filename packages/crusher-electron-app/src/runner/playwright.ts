@@ -6,8 +6,15 @@ import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { MainWindow } from "../mainWindow";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { CookiesSetDetails, session, WebContents } from "electron";
+import { ExportsManager } from "../../../crusher-shared/lib/exports";
+import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
+
+type ElectronCompatibleCookiePayload = Omit<CrusherCookieSetPayload, "sameSite"> & {
+	sameSite: Pick<CookiesSetDetails, "sameSite">;
+};
 
 class PlaywrightInstance {
 	private logManager: LogManagerPolyfill;
@@ -22,6 +29,7 @@ class PlaywrightInstance {
 
 	private sdkManager: any;
 	private running = false;
+	private exportsManager;
 
 	constructor(mainWindow: MainWindow, willRunFromStart: boolean) {
 		this.running = willRunFromStart;
@@ -29,7 +37,48 @@ class PlaywrightInstance {
 		this.logManager = new LogManagerPolyfill();
 		this.storageManager = new StorageManagerPolyfill();
 		this.globalManager = new GlobalManagerPolyfill();
-		this.runnerManager = new CrusherRunnerActions(this.logManager as any, this.storageManager as any, "/tmp/crusher/somedir/", this.globalManager);
+		this.exportsManager = new ExportsManager();
+		this.runnerManager = new CrusherRunnerActions(
+			this.logManager as any,
+			this.storageManager as any,
+			"/tmp/crusher/somedir/",
+			this.globalManager,
+			this.exportsManager,
+			this.sdkManager,
+		);
+
+		CrusherSdk.prototype.reloadPage = async () => {
+			await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').reload();");
+			return true;
+		};
+
+		CrusherSdk.prototype.setCookies = async (cookies) => {
+			const getCompatibleElectronSameSiteFormat = (sameSite: string): Pick<CookiesSetDetails, "sameSite"> => {
+				switch (sameSite) {
+					case "Strict":
+						return "strict" as any;
+					case "Lax":
+						return "lax" as any;
+					case "None":
+						return "no_restriction" as any;
+					default:
+						throw new Error("Invalid sameSite type");
+				}
+			};
+
+			const filteredCookies: Array<ElectronCompatibleCookiePayload> = cookies.map((cookie) => {
+				return {
+					...cookie,
+					sameSite: cookie.sameSite ? getCompatibleElectronSameSiteFormat(cookie.sameSite) : undefined,
+				};
+			});
+
+			for (const cookie of filteredCookies) {
+				await session.defaultSession.cookies.set(cookie as any);
+			}
+
+			return true;
+		};
 	}
 
 	getSdkManager() {
@@ -61,7 +110,7 @@ class PlaywrightInstance {
 		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		this.page = await this._getWebViewPage();
-		this.sdkManager = new CrusherSdk(this.page);
+		this.sdkManager = new CrusherSdk(this.page, this.exportsManager);
 
 		await this.initialize();
 	}
@@ -83,10 +132,13 @@ class PlaywrightInstance {
 		});
 	}
 
-	async runMainActions(actions: Array<iAction>): Promise<boolean> {
-		await this.runnerManager.runActions(getMainActions(actions), this.browser, this.page, async (action, result) => {
+	async runMainActions(actions: Array<iAction>, isRunAfterTestAction: boolean): Promise<boolean> {
+		const actionsArr = getMainActions(actions);
+
+		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
+		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action, result) => {
 			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
-			if (status === "STARTED") {
+			if (status === "STARTED" && !isRunAfterTestAction) {
 				this.mainWindow.saveRecordedStep(action);
 			}
 		});
@@ -100,13 +152,11 @@ class PlaywrightInstance {
 		return this.mainWindow.app._setDevice(deviceAction.payload.meta.device.id);
 	}
 
-	async runTestFromRemote(testId: number) {
-		const testInfo = await axios.get(resolveToBackendPath(`/tests/${testId}`));
-		const actions = testInfo.data.events;
-		const isDeviceToBeChanged = await this._changeDeviceIfNotSame(actions);
+	async runActions(actions: any, isRunAfterTestAction = false) {
+		const isDeviceToBeChanged = isRunAfterTestAction ? false : await this._changeDeviceIfNotSame(actions);
 		if (!isDeviceToBeChanged) {
 			try {
-				await this.runMainActions(testInfo.data.events);
+				await this.runMainActions(actions, isRunAfterTestAction);
 			} catch (err) {
 				console.error(err);
 			}
@@ -114,6 +164,12 @@ class PlaywrightInstance {
 			this.running = false;
 			console.log("Finished replaying test");
 		}
+	}
+
+	async runTestFromRemote(testId: number, isRunAfterTestAction = false) {
+		const testInfo = await axios.get(resolveToBackendPath(`/tests/${testId}`));
+		const actions = testInfo.data.events;
+		await this.runActions(actions, isRunAfterTestAction);
 		return true;
 	}
 }

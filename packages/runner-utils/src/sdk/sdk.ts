@@ -6,7 +6,13 @@ import { ExportsManager } from "../functions/exports";
 import { CrusherElementSdk } from "./element";
 
 class CrusherSdk implements ICrusherSdk {
-	constructor(private page: Page, private exportsManager: ExportsManager) {}
+	page: Page;
+	exportsManager: ExportsManager;
+
+	constructor(page: Page, exportsManager: ExportsManager) {
+		this.page = page;
+		this.exportsManager = exportsManager;
+	}
 
 	async $(selector: string) {
 		const elementHandle = await this.page.$(selector);
@@ -18,8 +24,12 @@ class CrusherSdk implements ICrusherSdk {
 
 	}
 
+	async goto(url: string) {
+		return this.page.goto(url);
+	}
+
 	async reloadPage() {
-		await this.page.reload();
+		await this.page.reload({waitUntil: "networkidle"});
 		return true;
 	}
 
@@ -41,9 +51,12 @@ class CrusherSdk implements ICrusherSdk {
 	}
 
 	async fetch(url: string, options: any) {
-		await this.page.evaluate(([url, options]) => {
-			return fetch(url, options);
-		}, [url, options]);
+		await this.page.evaluate(
+			([url, options]) => {
+				return fetch(url, options);
+			},
+			[url, options],
+		);
 
 		return true;
 	}

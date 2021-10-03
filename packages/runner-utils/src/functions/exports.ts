@@ -5,16 +5,16 @@ export class ExportsManager {
 		return this;
 	}
 
-  async has(key: string) {
+  has(key: string) {
     return this.exportsManager.has(key);
   }
 
 
-  async get(key: string) {
+  get(key: string) {
     return this.exportsManager.get(key);
   }
 
-  async set(key: string, value: any) {
+  set(key: string, value: any) {
     return this.exportsManager.set(key, value);
   }
 }

@@ -16,7 +16,8 @@ const generateScreenshotName = (selector: string, stepIndex: string): string => 
 
 const toCrusherSelectorsFormat = (selectors: Array<iSelectorInfo>) => {
 	const id = uuidv4();
-	return { value: `crusher=${encodeURIComponent(JSON.stringify({ selectors, uuid: id })).replace(/'/g, "%27")}`, uuid: id };
+	const finalSelectors = selectors.filter(selector => selector.uniquenessScore === 1);
+	return { value: `crusher=${encodeURIComponent(JSON.stringify({ selectors: finalSelectors, uuid: id })).replace(/'/g, "%27")}`, uuid: id };
 };
 
 const promiseTillSuccess = (promises: Array<Promise<any>>) => {
@@ -48,7 +49,7 @@ function markTestFail(message: string, meta: any = {}): void {
 function getBrowserActions(actions: iAction[]) {
 	return actions.filter((action: iAction) => {
 		const matches = validActionTypeRegex.exec(action.type);
-		return action && matches[1] === "BROWSER";
+		return action && matches.length && matches[1] === "BROWSER";
 	});
 }
 

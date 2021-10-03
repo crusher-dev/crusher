@@ -1,5 +1,5 @@
 import { getStore } from "./redux/store";
-import { recordAction, updateLastRecordedAction } from "./redux/actions/actions";
+import { deleteRecordedAction, recordAction, updateLastRecordedAction } from "./redux/actions/actions";
 import {
 	addSEOMetaInfo,
 	setIsTestReplaying,
@@ -123,6 +123,10 @@ function handleRecordAction(action: iAction): any {
 			if (!lastRecordedAction) throw new Error("Add input recorded before navigate url");
 
 			const isLastEventAddInput = lastRecordedAction.type === ActionsInTestEnum.ADD_INPUT;
+			if (lastRecordedAction.type === ActionsInTestEnum.CLICK && lastRecordedAction.payload.selectors === action.payload.selectors) {
+				// Delete click if last action is click on same element
+				store.dispatch(deleteRecordedAction(recordedActions.length - 1));
+			}
 			if (!isLastEventAddInput) {
 				store.dispatch(recordAction(action));
 				return false;
@@ -154,6 +158,11 @@ function handleRecordAction(action: iAction): any {
 		}
 		case ActionsInTestEnum.HOVER: {
 			if (!lastRecordedAction) throw new Error("Hover recorded before navigate url");
+			const url = new URL(window.location.href);
+			if (url.searchParams.get("device") === "Pixel33XL") {
+				// Disable hover in mobile devices
+				return;
+			}
 
 			const isTheLastRecordedActionSame =
 				lastRecordedAction.type === ActionsInTestEnum.HOVER &&

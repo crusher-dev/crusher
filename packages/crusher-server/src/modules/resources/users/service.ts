@@ -115,6 +115,14 @@ class UsersService {
 		await this.dbManager.delete("DELETE FROM teams WHERE id = ?", [userRecord.teamId]);
 	}
 
+	// Prod
+	async deleteAllTestUsers() {
+		const users = await this.dbManager.fetchAllRows(
+			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(users.created_at) >  60 * 60",
+		);
+		return users.map((user) => this.deleteUserWorkspace(user));
+	}
+
 	@CamelizeResponse()
 	async getUserInfo(userId: number): Promise<KeysToCamelCase<IUserTable>> {
 		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id = ?`, [userId]);

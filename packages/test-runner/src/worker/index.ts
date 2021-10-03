@@ -24,7 +24,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		const testCompleteQueue = await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		const globalManager = getGlobalManager(true);
-		const exportsManager = new ExportsManager();
+		const exportsManager = new ExportsManager(bullJob.data.exports ? bullJob.data.exports : []);
 
 		if (!globalManager.has(TEST_RESULT_KEY)) {
 			globalManager.set(TEST_RESULT_KEY, []);
@@ -68,12 +68,15 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 
 		await testCompleteQueue.add(identifier, {
 			exports: exportsManager.getEntriesArr(),
+			nextTestDependencies: bullJob.data.nextTestDependencies,
 			actionResults: actionResults,
 			buildId: bullJob.data.buildId,
+			buildExecutionPayload: bullJob.data,
 			testInstanceId: bullJob.data.testInstanceId,
 			buildTestCount: bullJob.data.buildTestCount,
 			hasPassed: hasPassed,
 			failedReason: error ? error : null,
+			storageState: globalManager.get("storageState"),
 		} as ITestCompleteQueuePayload);
 	} catch (err) {
 		console.error(err);

@@ -3,6 +3,8 @@ export interface IProjectTestItem {
 	testName: string;
 	meta?: any | null;
 	createdAt: number;
+	tags: string | null;
+	runAfter: number | null;
 	videoURL: null | string;
 	imageURL: null | string;
 	isPassing: boolean;

@@ -15,6 +15,7 @@ import { BrowserEnum } from "@modules/runner/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
 import { BadRequestError } from "routing-controllers";
 import { merge } from "lodash";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 @Service()
 class TestService {
 	private dbManager: DBManager;
@@ -59,8 +60,9 @@ class TestService {
 		return this.dbManager.update("UPDATE tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}
 
-	async updateTest(testId: number, newInfo: { name: string }) {
-		return this.dbManager.update(`UPDATE tests SET name = ? WHERE id = ?`, [newInfo.name, testId]);
+	async updateTest(testId: number, newInfo: { name: string; tags: string; runAfter: number }) {
+		const { name, tags, runAfter } = newInfo;
+		return this.dbManager.update(`UPDATE tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
 	}
 
 	async runTestsInProject(
@@ -88,7 +90,7 @@ class TestService {
 					host: "null",
 					status: BuildStatusEnum.CREATED,
 					buildTrigger: BuildTriggerEnum.MANUAL,
-					browser: isOpenSourceEdition() ? [BrowserEnum.CHROME] : [BrowserEnum.CHROME, BrowserEnum.FIREFOX, BrowserEnum.SAFARI],
+					browser: isOpenSourceEdition() ? [BrowserEnum.CHROME] : [BrowserEnum.CHROME],
 					isDraftJob: false,
 					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
 					meta: meta,
@@ -129,7 +131,6 @@ class TestService {
 		const totalRecordCountQueryResult = await this.dbManager.fetchSingleRow(totalRecordCountQuery, queryParams);
 
 		query += " ORDER BY tests.created_at DESC";
-
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / 10), list: await this.dbManager.fetchAllRows(query, queryParams) };
 	}
 
@@ -157,6 +158,26 @@ class TestService {
 	@CamelizeResponse()
 	async getTestsFromIdList(testIds: Array<number>): Promise<Array<KeysToCamelCase<ITestTable>>> {
 		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds.join(",")]);
+	}
+
+	// Specifically for run after this text
+	async getCompleteTestsArray(tests: Array<KeysToCamelCase<ITestTable>>): Promise<Array<KeysToCamelCase<ITestTable>>> {
+		const testsMap = tests.reduce((acc, test) => {
+			return { ...acc, [test.id]: test };
+		}, {});
+
+		for (const test of tests) {
+			const events = JSON.parse(test.events);
+			const runAfterTestAction = events.find((event) => event.type === ActionsInTestEnum.RUN_AFTER_TEST);
+			if (runAfterTestAction) {
+				const runAfterTestId = runAfterTestAction.payload.meta.value;
+				if (!testsMap[runAfterTestId]) {
+					testsMap[runAfterTestId] = await this.getTest(parseInt(runAfterTestId));
+				}
+			}
+		}
+
+		return Object.values(testsMap);
 	}
 }
 

@@ -10,6 +10,21 @@ index 1b1277c..ca7fad6 100644
          sdkLanguage: 'javascript',
          endpointURL,
          headers,
+diff --git a/node_modules/playwright/lib/client/page.js b/node_modules/playwright/lib/client/page.js
+index 7cf16eb..9497ac3 100644
+--- a/node_modules/playwright/lib/client/page.js
++++ b/node_modules/playwright/lib/client/page.js
+@@ -159,7 +159,9 @@ class Page extends _channelOwner.ChannelOwner {
+ 
+     this._channel.on('frameDetached', ({
+       frame
+-    }) => this._onFrameDetached(_frame.Frame.from(frame)));
++    }) => {
++      return frame ? this._onFrameDetached(_frame.Frame.from(frame)) : null;
++    });
+ 
+     this._channel.on('load', () => this.emit(_events.Events.Page.Load, this));
+ 
 diff --git a/node_modules/playwright/lib/generated/injectedScriptSource.js b/node_modules/playwright/lib/generated/injectedScriptSource.js
 index 2baf741..e11effa 100644
 --- a/node_modules/playwright/lib/generated/injectedScriptSource.js

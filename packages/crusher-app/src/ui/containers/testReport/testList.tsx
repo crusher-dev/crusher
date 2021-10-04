@@ -139,7 +139,7 @@ function ReportSection() {
 
 			<div className={"mt-40 pb-60"}>
 				{data?.tests.map((testData, i) => (
-					<TestCard id={i} testData={testData} />
+					<TestCard key={i} id={i} testData={testData} />
 				))}
 			</div>
 		</div>
@@ -462,34 +462,11 @@ function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceDa
 
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
-	const [expand, setExpand] = useState(true);
-	const [sticky, setSticky] = useState(true);
+	const [expand, setExpand] = useState(false);
 	const [showLoading, setLoading] = useState(false);
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
 	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
 
-	useEffect(() => {
-		const testCard = document.querySelector(`#test-card-${id}`);
-		const stickyOverview = document.querySelector("#sticky-overview-bar");
-		const observer = new IntersectionObserver(
-			() => {
-				const stickyLastPoint = 0;
-				const cardStartingOffset = testCard.getBoundingClientRect().top;
-				const cardLastOffset = testCard.getBoundingClientRect().top + testCard.getBoundingClientRect().height;
-				if (cardStartingOffset < stickyLastPoint) {
-					setSticky(true);
-				} else {
-					setSticky(false);
-				}
-				if (cardLastOffset - 50 < stickyLastPoint) {
-					setSticky(false);
-				}
-			},
-			{ root: stickyOverview, threshold: [0, 0.01, 0.1, 0.5, 0.85, 1], rootMargin: "0px" },
-		);
-
-		observer.observe(testCard);
-	}, []);
 	const onCardClick = () => {
 		// if(expand===true){
 		// 	window.scrollTo()
@@ -518,26 +495,13 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
-			<Conditional showIf={expand && sticky}>
-				<div css={stickyCSS} className={" px-0 "} onClick={onCardClick}>
-					<div css={[header, stickyContainer]} className={"test-card-header items-center w-full px-32 w-full"}>
-						<div className={"flex justify-between pt-20"}>
-							<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
-						</div>
-
-						<div className={"mt-12 mb-16"}>
-							<TestConfigSection expand={expand} allCofiguration={allConfiguration} testCardConfig={testCardConfig} setTestCardConfig={setTestCardConfig} />
-						</div>
-					</div>
-				</div>
-			</Conditional>
-
-			<div onClick={onCardClick}>
-				<div className={"px-28 pb-16 w-full test-card-header"}>
-					<div css={header} className={" flex justify-between items-center w-full"}>
+			
+			<div onClick={onCardClick} className='sticky top-0 z-20'>
+				<div css={stickyContainer} className={"px-28 pb-16 w-full test-card-header"}>
+					<div css={header} className={"flex justify-between items-center w-full"}>
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
-
+						
 					<Conditional showIf={failedTestsConfiguration.length >= 1}>
 						<div
 							css={css`
@@ -571,16 +535,6 @@ const header = css`
 	min-height: 52px;
 `;
 
-const stickyCSS = css`
-	position: fixed;
-	width: calc(100vw - 250rem);
-	left: 50%;
-	transform: translateX(-50%);
-	top: 95rem;
-	z-index: 10;
-	max-width: 1456px;
-	margin-left: -6px;
-`;
 
 const stickyContainer = css`
 	background: rgb(13, 14, 17);
@@ -613,7 +567,6 @@ const stepsContainer = css`
 const testCard = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
-	overflow: hidden;
 
 	:hover {
 		.test-card-header {
@@ -648,7 +601,7 @@ const stickyBar = css`
 	background: #0d0e11;
 	border: 1px solid #171c24;
 	box-sizing: border-box;
-	height: 96px;
+	height: 70rem;
 	width: 100%;
 	z-index: 100;
 

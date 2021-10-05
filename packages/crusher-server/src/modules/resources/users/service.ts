@@ -135,7 +135,6 @@ class UsersService {
 		const teamProjects = userInfo && teamInfo ? await this.projectsService.getProjects(teamInfo.id) : null;
 
 		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => {
-			console.log(userInfo)
 			return {
 				userId: userInfo.id,
 				name: userInfo.name,

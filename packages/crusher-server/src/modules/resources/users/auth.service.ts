@@ -48,7 +48,7 @@ class UserAuthService {
 	}
 
 	async signupUser(
-		user: ICreateUserPayload,
+		user: Omit<ICreateUserPayload, "uuid">,
 		res: Response,
 		inviteReferral: IInviteReferral = null,
 	): Promise<{ userId: number; projectId: number; teamId: number }> {
@@ -73,7 +73,7 @@ class UserAuthService {
 	}
 
 	// If the user is registered, login otherwise register the user
-	async authWithGoogle(userPayload: ICreateUserPayload, res: Response, encodedInviteCode: string = null) {
+	async authWithGoogle(userPayload: Omit<ICreateUserPayload, "uuid">, res: Response, encodedInviteCode: string = null) {
 		const user = await this.usersService.getUserByEmail(userPayload.email);
 
 		let inviteReferral: IInviteReferral = null;

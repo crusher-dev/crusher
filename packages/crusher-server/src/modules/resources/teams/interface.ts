@@ -13,6 +13,7 @@ export interface ITeamsTable {
 	tier: PlanTierEnum;
 	stripe_customer_id?: string;
 	meta?: string;
+	uuid: string;
 }
 
 export type ICreateTeamPayload = KeysToCamelCase<Omit<ITeamsTable, "id" | "tier"> & { tier?: PlanTierEnum }>;

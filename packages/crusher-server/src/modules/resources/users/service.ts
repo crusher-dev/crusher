@@ -136,6 +136,7 @@ class UsersService {
 
 		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => {
 			return {
+				userId: userInfo.id,
 				name: userInfo.name,
 				avatar: null,
 				// @NOTE: Remove hardcoding from the next 3 fields

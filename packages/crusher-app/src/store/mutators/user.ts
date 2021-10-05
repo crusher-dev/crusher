@@ -23,9 +23,9 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 	_set(systemConfigAtom, data.system);
 	_set(projectsAtom, data.projects);
 
-	console.log(data)
 	if(!!data.userData){
-		Analytics.identify(data.userData.name, data.userData.userId, data.userData.email, data.team.id, data.team.plan, "false", process.env.NEXT_PUBLIC_CRUSHER_MODE);
+		const uniqueUserID = data.userData.userId || data.userData.uuid;
+		Analytics.identify(data.userData.name, uniqueUserID, data.userData.email, data.team.id, data.team.plan, "false", process.env.NEXT_PUBLIC_CRUSHER_MODE);
 	}
 
 });

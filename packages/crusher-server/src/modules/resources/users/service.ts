@@ -16,7 +16,7 @@ import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@modules/redis";
 import { MongoManager } from "@modules/db/mongo";
 import { IUserAndSystemInfoResponse, TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
-
+import { v4 as uuidv4 } from "uuid";
 @Service()
 class UsersService {
 	@Inject()
@@ -53,7 +53,7 @@ class UsersService {
 	}
 
 	async setupInitialUserWorkspace(
-		user: Omit<ICreateUserPayload, "password"> & { id: number; teamId?: number; projectId?: number },
+		user: Omit<ICreateUserPayload, "password" | "uuid"> & { id: number; teamId?: number; projectId?: number },
 	): Promise<{ userId: number; teamId: number; projectId: number }> {
 		const stripeCustomerId = this.stripeManager.isAvailable() ? await this.stripeManager.createCustomer(`${user.name}`, user.email) : null;
 
@@ -95,13 +95,14 @@ class UsersService {
 		return { userId: user.id, teamId: userTeamId, projectId: userProjectId };
 	}
 
-	async createUserRecord(user: ICreateUserPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO users SET name = ?, email = ?, password = ?, verified = ?, is_oss = ?", [
+	async createUserRecord(user: Omit<ICreateUserPayload, "uuid">): Promise<{ insertId: number }> {
+		return this.dbManager.insert("INSERT INTO users SET name = ?, email = ?, password = ?, verified = ?, is_oss = ?, uuid = ?", [
 			user.name,
 			user.email,
 			encryptPassword(user.password),
 			false,
 			isOpenSourceEdition(),
+			uuidv4() + "_" + Date.now(),
 		]);
 	}
 
@@ -137,6 +138,7 @@ class UsersService {
 		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => {
 			return {
 				name: userInfo.name,
+				uuid: userInfo.uuid,
 				avatar: null,
 				// @NOTE: Remove hardcoding from the next 3 fields
 				meta: userInfo.meta ? JSON.parse(userInfo.meta) : {},
@@ -146,6 +148,7 @@ class UsersService {
 		const getTeamData = (teamInfo: KeysToCamelCase<ITeamsTable>) => {
 			return {
 				id: teamInfo.id,
+				uuid: teamInfo.uuid,
 				name: teamInfo.name,
 				meta: teamInfo.meta ? JSON.parse(teamInfo.meta) : {},
 				plan: teamInfo.tier,

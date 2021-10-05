@@ -5,6 +5,7 @@ import { Inject, Service } from "typedi";
 import { IUserTable } from "../users/interface";
 import { UserTeamRoleEnum } from "../users/roles/team/interface";
 import { ICreateTeamPayload, ITeamsTable } from "./interface";
+import { v4 as uuidv4 } from "uuid";
 @Service()
 class TeamsService {
 	@Inject()
@@ -19,12 +20,13 @@ class TeamsService {
 		return this.dbManager.update("UPDATE teams SET meta = ? WHERE id = ?", [meta, teamId]);
 	}
 
-	async createTeam(payload: ICreateTeamPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO teams SET name = ?, team_email = ?, tier = ?, stripe_customer_id = ?", [
+	async createTeam(payload: Omit<ICreateTeamPayload, "uuid">): Promise<{ insertId: number }> {
+		return this.dbManager.insert("INSERT INTO teams SET name = ?, team_email = ?, tier = ?, stripe_customer_id = ?, uuid = ?", [
 			payload.name,
 			payload.teamEmail,
 			payload.tier,
 			payload.stripeCustomerId,
+			uuidv4() + "_" + Date.now(),
 		]);
 	}
 

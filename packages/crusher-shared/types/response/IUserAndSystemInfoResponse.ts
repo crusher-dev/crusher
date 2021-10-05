@@ -1,6 +1,7 @@
 export type ITeamAPIData = {
 	id: number;
 	name: string;
+	uuid: string;
 	meta: Record<string, any>;
 	plan: "FREE" | "STARTER" | "PRO";
 } | null;
@@ -8,6 +9,7 @@ export type ITeamAPIData = {
 export type TUserAPIData = {
 	name: string;
 	meta: Record<string, any>;
+	uuid: string;
 	avatar: string;
 } | null;
 

@@ -41,12 +41,14 @@ class GithubService {
 	}
 
 	async updateRunCheckStatus(githubMeta: { owner: string; repo: string; checkRunId: number }, conclusion: GithubCheckConclusionEnum) {
-		await this.octokit.checks.update({
+		const response = await this.octokit.checks.update({
 			owner: githubMeta.owner,
 			repo: githubMeta.repo,
 			check_run_id: githubMeta.checkRunId,
 			conclusion: conclusion,
 		});
+
+		return response;
 	}
 
 	private async _createCheckRun(fullRepoName: string, commitId: string, installation_id: string, external_id: number) {
@@ -55,6 +57,7 @@ class GithubService {
 		return this.octokit.checks.create({
 			owner: ownerName,
 			repo: repoName,
+			status: "in_progress",
 			name: "Crusher CI",
 			head_sha: commitId,
 			external_id: external_id.toString(),

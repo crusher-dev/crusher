@@ -1,5 +1,7 @@
 import { SlackService } from "@modules/slack/service";
 import { GithubService } from "@modules/thirdParty/github/service";
+import { generateToken } from "@utils/auth";
+import { resolvePathToBackendURI } from "@utils/uri";
 import { userInfo } from "os";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
@@ -49,15 +51,15 @@ class IntegrationsController {
 	async linkGithubRepo(
 		@CurrentUser({ required: true }) user,
 		@Param("project_id") projectId: number,
-		@Body() body: { repoId: number; repoName: string; repoLink: string; installationId: string },
+		@Body() body: { repoId: number; repoName: string; repoFullName: string; repoLink: string; installationId: string },
 	) {
 		const { user_id } = user;
-		const { repoId, repoName, repoLink, installationId } = body;
+		const { repoId, repoName, repoLink, installationId, repoFullName } = body;
 
 		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
 		if (linkedRepo) throw new Error("Project is already connected to a github repository");
 
-		const doc = await this.githubIntegrationService.linkRepo(repoId, repoName, installationId, repoLink, projectId, user_id);
+		const doc = await this.githubIntegrationService.linkRepo(repoId, repoFullName, installationId, repoLink, projectId, user_id);
 
 		return {
 			status: "Successful",
@@ -93,6 +95,25 @@ class IntegrationsController {
 		const redirectUrl = new URL("http://localhost:3000/");
 		redirectUrl.searchParams.append("token", (tokenInfo as any).token);
 		res.redirect(redirectUrl.toString());
+	}
+
+	@Authorized()
+	@Get("/integrations/:project_id/github/actions/code")
+	async getGithubActionCode(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
+		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
+		if (!linkedRepo) throw new BadRequestError("No repo linked");
+
+		const githubUserToken = generateToken(user.user_id, user.team_id);
+
+		return {
+			code: `- name: Start crusher tests
+  run: |
+    curl --location --request POST '${resolvePathToBackendURI(`projects/${projectId}/tests/actions/run`)}' \\
+    --header 'Content-Type: application/x-www-form-urlencoded' \\
+    --cookie "token=${githubUserToken}" \\
+    --data-urlencode 'githubRepoName=${linkedRepo.repoName}' \\
+    --data-urlencode 'githubCommitId=\${{github.event.pull_request.head.sha}}'`,
+		};
 	}
 }
 

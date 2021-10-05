@@ -29,7 +29,7 @@ export class GithubIntegrationService {
 		});
 	}
 
-	getLinkedRepo(projectId: number): Promise<Array<iGithubIntegration>> {
+	getLinkedRepo(projectId: number): Promise<iGithubIntegration> {
 		return new Promise((resolve, reject) => {
 			GitIntegrations.find({ projectId: { $eq: projectId } })
 				.sort({ createdAt: 1 })

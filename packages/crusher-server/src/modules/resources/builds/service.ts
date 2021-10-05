@@ -162,14 +162,18 @@ class BuildsService {
 		const buildRecord = await this.getBuild(buildId);
 		const meta = JSON.parse(buildRecord.meta);
 
-		if (meta.github) {
-			const { githubCheckRunId, repoName: fullReponame, installationId } = meta.gtihub;
-			const { repoName, ownerName } = githubService.extractRepoAndOwnerName(fullReponame);
+		try {
+			if (meta.github) {
+				const { githubCheckRunId, repoName: fullReponame, installationId } = meta;
+				const { repoName, ownerName } = githubService.extractRepoAndOwnerName(fullReponame);
 
-			await githubService.authenticateAsApp(installationId);
+				await githubService.authenticateAsApp(installationId);
 
-			const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
-			await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
+				const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
+				await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
+			}
+		} catch (ex) {
+			console.error("Failed when updating github check", ex);
 		}
 	}
 }

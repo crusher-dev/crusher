@@ -9,6 +9,7 @@ export const getRepoData = (githubData, installationId) => {
 	return githubData.data.repositories.map((repo) => ({
 		repoId: repo.id,
 		repoName: repo.name,
+		repoFullName: repo.full_name,
 		repoLink: repo.html_url,
 		installationId,
 	}));

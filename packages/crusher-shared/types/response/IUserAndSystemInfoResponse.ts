@@ -1,3 +1,5 @@
+import { EditionTypeEnum, HostingTypeEnum } from "../common/general";
+
 export type ITeamAPIData = {
 	id: number;
 	name: string;
@@ -44,5 +46,7 @@ export type IUserAndSystemInfoResponse = {
 	userData: TUserAPIData;
 	team: ITeamAPIData;
 	projects: TProjectsData;
+	crusherMode: EditionTypeEnum;
+	hostingType: HostingTypeEnum;
 	system: TSystemInfo | null;
 };

@@ -6,6 +6,11 @@ export enum EditionTypeEnum {
 	OPEN_SOURCE = "open-source",
 }
 
+export enum HostingTypeEnum {
+	SELF = "self",
+	CLOUD = "cloud"
+}
+
 export interface IActionResultItem {
 	actionType: ActionsInTestEnum;
 	status: ActionStatusEnum;

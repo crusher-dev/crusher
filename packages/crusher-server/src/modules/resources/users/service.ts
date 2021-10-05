@@ -17,6 +17,7 @@ import { RedisManager } from "@modules/redis";
 import { MongoManager } from "@modules/db/mongo";
 import { IUserAndSystemInfoResponse, TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { v4 as uuidv4 } from "uuid";
+import { EditionTypeEnum, HostingTypeEnum } from "@crusher-shared/types/common/general";
 @Service()
 class UsersService {
 	@Inject()
@@ -167,6 +168,8 @@ class UsersService {
 			userData: userInfo ? getUserData(userInfo) : null,
 			team: teamInfo ? getTeamData(teamInfo) : null,
 			projects: projectsDataArr,
+			crusherMode: process.env.CRUSHER_MODE as EditionTypeEnum,
+			hostingType: process.env.HOST_MODE as HostingTypeEnum,
 			system: {
 				REDIS_OPERATION: {
 					working: this.redisManager.isAlive(),

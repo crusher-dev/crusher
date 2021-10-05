@@ -30,6 +30,7 @@ async function setup() {
 	});
 	await copyTemplate(path.resolve(__dirname, ".env.ejs"), path.resolve(__dirname, "../.env"), {
 		mode: CRUSHER_MODE,
+		host_mode: CRUSHER_MODE === "enterprise" ? "cloud" : "self", // For now only cloud for enterprise
 		storageMode: STORAGE_MODE,
 		storagePort: STORAGE_PORT,
 		baseStorageFolder: BASE_STORAGE_FOLDER,

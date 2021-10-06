@@ -86,7 +86,7 @@ export class TestController {
 	@Post("/projects/:project_id/tests/actions/run")
 	async runProjectTests(
 		@CurrentUser({ required: true }) user,
-		@Body() body: { githubRepoName?: string; githubCommitId?: string },
+		@Body() body: { githubRepoName?: string; githubCommitId?: string; host?: string },
 		@Param("project_id") projectId: number,
 	) {
 		const meta = {};
@@ -97,7 +97,7 @@ export class TestController {
 			};
 		}
 
-		return this.testService.runTestsInProject(projectId, user.user_id, {}, meta);
+		return this.testService.runTestsInProject(projectId, user.user_id, { host: body.host ? body.host : "null" }, meta);
 	}
 
 	@Authorized()
@@ -183,6 +183,6 @@ export class TestController {
 		return {
 			...testRecord,
 			events: JSON.parse(testRecord.events),
-		}
+		};
 	}
 }

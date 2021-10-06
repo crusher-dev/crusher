@@ -13,15 +13,12 @@ jobs:
         id: vercel_preview_url
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Below is merely an example of what you could do with the preview URL.
-      # The preview URL is accessed through ${{ steps.<step_id>.outputs.vercel_preview_url }}
-      - uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'The preview URL is: ${{ steps.vercel_preview_url.outputs.vercel_preview_url }}.'
-            });
+
+      - name: Start crusher tests
+        run: |
+          curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
+          --header 'Content-Type: application/x-www-form-urlencoded' \
+          --cookie "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyODIsInRlYW1faWQiOjIxOSwiaWF0IjoxNjMzNDkyOTc5LCJleHAiOjE2NjUwMjg5Nzl9.fftN81qi0yJEDs9HnqiW4tElDMWp4dTHnAofnABmZuE" \
+          --data-urlencode 'githubRepoName=crusherdev/crusher' \
+          --data-urlencode 'host=${{ steps.vercel_preview_url.outputs.vercel_preview_url }}' \
+          --data-urlencode 'githubCommitId=${{github.event.pull_request.head.sha}}'

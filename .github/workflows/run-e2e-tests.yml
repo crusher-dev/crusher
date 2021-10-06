@@ -13,14 +13,14 @@ jobs:
         id: vercel_preview_url
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Install jq
         run: sudo apt install jq
 
       - name: Get main commit sha
         id: github_api
         run: |
-          echo "::set-output name=MAIN_SHA::$(curl -s 'https://api.github.com/repos/crusherdev/crusher/pulls/168' | jq -r '.head.sha')"
+          echo "::set-output name=MAIN_SHA::$(curl -s '${{ github.event.issue.pull_request.url }}' | jq -r '.head.sha')"
 
       - name: Start crusher tests
         run: |

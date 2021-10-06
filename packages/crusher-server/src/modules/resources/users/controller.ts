@@ -38,9 +38,9 @@ export class UserController {
 
 	@Authorized()
 	@Post("/users/actions/delete")
-	async deleteUser(@CurrentUser({ required: true }) user, @Res() res) {
+	async deleteUser(@CurrentUser({ required: true }) user, @Req() req, @Res() res) {
 		await this.usersService.deleteUserWorkspace(user.user_id);
-		clearUserAuthorizationCookies(res);
+		clearUserAuthorizationCookies(req, res);
 		return "Successful";
 	}
 
@@ -50,7 +50,7 @@ export class UserController {
 		let userId = user.user_id;
 
 		if (!userId) {
-			const userEntry = await this.userAuthService.authOpenSourceUser(res);
+			const userEntry = await this.userAuthService.authOpenSourceUser(req, res);
 			userId = userEntry.userId;
 		}
 
@@ -75,11 +75,11 @@ export class UserController {
 	}
 
 	@Post("/users/actions/signup")
-	async createUser(@Body() userInfo: ICreateUserPayload & { inviteReferral: any }, @Res() res) {
+	async createUser(@Body() userInfo: ICreateUserPayload & { inviteReferral: any }, @Req() req: any, @Res() res) {
 		const userDBRecord = await this.usersService.getUserByEmail(userInfo.email);
 		if (userDBRecord) throw new BadRequestError("USER_EMAIL_NOT_AVAILABLE");
 
-		const userEntries = await this.userAuthService.signupUser(userInfo, res, userInfo.inviteReferral);
+		const userEntries = await this.userAuthService.signupUser(userInfo, req, res, userInfo.inviteReferral);
 		// @TODO: Send verification mail
 		// EmailManager.sendVerificationMail(userInfo.email, generateVerificationCode(userEntries.userId, userInfo.email));
 
@@ -91,7 +91,7 @@ export class UserController {
 	}
 
 	@Get("/users/actions/auth.google/callback")
-	async googleCallback(@QueryParam("code") code: string, @QueryParam("state") encodedState, @Res() res) {
+	async googleCallback(@QueryParam("code") code: string, @QueryParam("state") encodedState, @Req() req: any, @Res() res) {
 		const { tokens } = await this.oauth2Client.getToken(code);
 
 		this.googleAPIService.setAccessToken(tokens.access_token);
@@ -102,6 +102,7 @@ export class UserController {
 				email: profileInfo.email,
 				password: uuidv4(),
 			},
+			req,
 			res,
 			encodedState,
 		);
@@ -110,8 +111,8 @@ export class UserController {
 	}
 
 	@Post("/users/actions/login")
-	async loginUser(@Body() body: { email: string; password: string }, @Res() res: any) {
-		const user = await this.userAuthService.loginWithBasicAuth(body.email, body.password, res);
+	async loginUser(@Body() body: { email: string; password: string }, @Req() req: any, @Res() res: any) {
+		const user = await this.userAuthService.loginWithBasicAuth(body.email, body.password, req, res);
 
 		const systemInfo = await this.usersService.getUserAndSystemInfo(user.id);
 
@@ -130,7 +131,7 @@ export class UserController {
 	@Authorized()
 	@Get("/users/actions/logout")
 	async logout(@Req() req: any, @Res() res: any) {
-		clearUserAuthorizationCookies(res);
+		clearUserAuthorizationCookies(req, res);
 	}
 
 	@Authorized()

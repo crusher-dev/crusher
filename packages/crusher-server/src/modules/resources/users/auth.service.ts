@@ -20,8 +20,8 @@ class UserAuthService {
 	@Inject()
 	private userInviteService: UserInviteService;
 
-	async setUserAuthCookies(userId: number, teamId: number, res: any): Promise<string> {
-		const USER_DOMAIN = "";
+	async setUserAuthCookies(userId: number, teamId: number, req: any, res: any): Promise<string> {
+		const USER_DOMAIN = req.get("host") ? req.get("host") : "";
 		const token = generateToken(userId, teamId);
 
 		setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: USER_DOMAIN }, res);
@@ -35,21 +35,22 @@ class UserAuthService {
 	}
 
 	@CamelizeResponse()
-	async loginWithBasicAuth(email: string, password: string, res: any): Promise<KeysToCamelCase<IUserTable>> {
+	async loginWithBasicAuth(email: string, password: string, req: any, res: any): Promise<KeysToCamelCase<IUserTable>> {
 		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE email = ? AND password= ?`, [email, encryptPassword(password)]);
 
 		if (!user) {
 			throw new BadRequestError("INVALID_CREDENTIALS");
 		}
 
-		await this.setUserAuthCookies(user.id, user.team_id, res);
+		await this.setUserAuthCookies(user.id, user.team_id, req, res);
 
 		return user;
 	}
 
 	async signupUser(
 		user: Omit<ICreateUserPayload, "uuid">,
-		res: Response,
+		req: any,
+		res: any,
 		inviteReferral: IInviteReferral = null,
 	): Promise<{ userId: number; projectId: number; teamId: number }> {
 		const referralObject = inviteReferral ? await this.userInviteService.parseInviteReferral(inviteReferral) : null;
@@ -67,13 +68,13 @@ class UserAuthService {
 			projectId: referralObject ? (referralObject as any).projectId : null,
 		});
 
-		await this.setUserAuthCookies(userRecordEntries.userId, userRecordEntries.teamId, res);
+		await this.setUserAuthCookies(userRecordEntries.userId, userRecordEntries.teamId, req, res);
 
 		return userRecordEntries;
 	}
 
 	// If the user is registered, login otherwise register the user
-	async authWithGoogle(userPayload: Omit<ICreateUserPayload, "uuid">, res: Response, encodedInviteCode: string = null) {
+	async authWithGoogle(userPayload: Omit<ICreateUserPayload, "uuid">, req: any, res: any, encodedInviteCode: string = null) {
 		const user = await this.usersService.getUserByEmail(userPayload.email);
 
 		let inviteReferral: IInviteReferral = null;
@@ -85,14 +86,14 @@ class UserAuthService {
 			};
 		}
 
-		if (!user) return this.signupUser(userPayload, res, inviteReferral);
+		if (!user) return this.signupUser(userPayload, req, res, inviteReferral);
 
 		// Login the user
-		await this.setUserAuthCookies(user.id, user.team_id, res);
+		await this.setUserAuthCookies(user.id, user.team_id, req, res);
 		return true;
 	}
 
-	async authOpenSourceUser(res: Response): Promise<{ userId: number; teamId: number }> {
+	async authOpenSourceUser(req: any, res: Response): Promise<{ userId: number; teamId: number }> {
 		const user = await this.usersService.getOpenSourceUser();
 		if (!user) {
 			return this.signupUser(
@@ -101,11 +102,12 @@ class UserAuthService {
 					email: "open@source.com",
 					password: "opensource",
 				},
+				req,
 				res,
 			);
 		}
 
-		await this.setUserAuthCookies(user.id, user.teamId, res);
+		await this.setUserAuthCookies(user.id, user.teamId, req, res);
 		return { userId: user.id, teamId: user.teamId };
 	}
 }

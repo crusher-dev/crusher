@@ -49,7 +49,8 @@ class TestsRunner {
 		return events.map((event) => {
 			if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
 				const urlToGo = new URL(event.payload.meta.value);
-				urlToGo.host = newHost;
+				const newHostURL = new URL(newHost);
+				urlToGo.host = newHostURL.host;
 				event.payload.meta.value = urlToGo.toString();
 			}
 			return event;

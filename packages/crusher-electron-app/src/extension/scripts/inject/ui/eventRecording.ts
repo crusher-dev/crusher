@@ -275,6 +275,7 @@ export default class EventRecording {
 	}
 
 	handleScroll(event: any) {
+		if (!event.isFromUser) return;
 		const minScrollTime = 100;
 		const now = new Date().getTime();
 		// console.log("Scrolled, ", event.target);
@@ -291,7 +292,7 @@ export default class EventRecording {
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
 				// @TODO: Need a proper way to detect real and fake scroll events
-				// _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
+				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}

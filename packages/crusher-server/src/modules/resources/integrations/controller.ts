@@ -92,7 +92,7 @@ class IntegrationsController {
 		const githubService = new GithubService();
 		const tokenInfo = await githubService.parseGithubAccessToken(code);
 
-		const redirectUrl = new URL("http://localhost:3000/");
+		const redirectUrl = new URL(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "http://localhost:3000/");
 		redirectUrl.searchParams.append("token", (tokenInfo as any).token);
 		res.redirect(redirectUrl.toString());
 	}

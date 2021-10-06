@@ -13,6 +13,7 @@ import { BuildTestInstancesService } from "@modules/resources/builds/instances/s
 import { ITestInstancesTable } from "@modules/resources/builds/instances/interface";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BadRequestError } from "routing-controllers";
+import { iAction } from "@crusher-shared/types/action";
 @Service()
 class TestsRunner {
 	@Inject()
@@ -42,6 +43,20 @@ class TestsRunner {
 		}));
 	}
 
+	_replaceHostInEvents(events: Array<iAction>, newHost: string) {
+		if (!newHost || newHost === "null") return events;
+
+		return events.map((event) => {
+			if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
+				const urlToGo = new URL(event.payload.meta.value);
+				const newHostURL = new URL(newHost);
+				urlToGo.host = newHostURL.host;
+				event.payload.meta.value = urlToGo.toString();
+			}
+			return event;
+		});
+	}
+
 	private async startBuildTask(
 		buildTaskInfo: IBuildTaskPayload & {
 			testInstances: ITestInstanceDependencyArray;
@@ -51,7 +66,7 @@ class TestsRunner {
 		const addTestInstancePromiseArr = testInstances.map((testInstance) => {
 			if (!testInstance.parentTestInstanceId) {
 				return this.addTestRequestToQueue({
-					actions: JSON.parse(testInstance.testInfo.events),
+					actions: this._replaceHostInEvents(JSON.parse(testInstance.testInfo.events), buildTaskInfo.host),
 					nextTestDependencies: this._getNextTestInstancesDependencyArr(testInstance, testInstances),
 					config: {
 						browser: testInstance.browser as any,
@@ -99,7 +114,8 @@ class TestsRunner {
 		return finalTestList;
 	}
 
-	private async createTestInstances(testsList: ITestDependencyArray, browserArr: Array<BrowserEnum>, buildId: number) {
+	private async createTestInstances(testsList: ITestDependencyArray, buildPayload: ICreateBuildRequestPayload, buildId: number) {
+		const browserArr: Array<BrowserEnum> = buildPayload.browser;
 		const testInstancesArr: ITestInstanceDependencyArray = [];
 		// Create test instances and store their ids
 		const createTestInstanceWithBrowser = async (
@@ -112,7 +128,7 @@ class TestsRunner {
 					jobId: buildId,
 					testId: test.id,
 					// @TODO: Need a proper host here
-					host: "null",
+					host: buildPayload.host,
 					browser: browser,
 					meta: {
 						parentTestInstanceId: parentTestInstance ? parentTestInstance.id : null,
@@ -160,9 +176,7 @@ class TestsRunner {
 			await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
 		}
 
-		const testInstancesArr: ITestInstanceDependencyArray = await this.createTestInstances(testsListWIthDependency, buildPayload.browser, build.insertId);
-
-		console.log("Test instances array is", testInstancesArr);
+		const testInstancesArr: ITestInstanceDependencyArray = await this.createTestInstances(testsListWIthDependency, buildPayload, build.insertId);
 
 		const referenceBuild = await this.buildsService.getBuild(baselineBuildId ? baselineBuildId : build.insertId);
 

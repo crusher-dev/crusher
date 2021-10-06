@@ -17,7 +17,7 @@ module.exports = {
 		path: path.resolve(__dirname, "../../output/crusher-server"),
 		chunkFilename: `[name]-[chunkhash:4].js`,
 		sourceMapFilename: `[name]-[chunkhash:4].js.map`,
-		libraryTarget: "umd",
+		libraryTarget: "commonjs2",
 		clean: true,
 	},
 	plugins: [
@@ -42,6 +42,7 @@ module.exports = {
 	],
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"],
+		mainFields: ["main", "module"],
 		alias: resolveTsconfigPathsToAlias({
 			tsconfigPath: "./tsconfig.json", // Using custom path
 			webpackConfigBasePath: "../", // Using custom path

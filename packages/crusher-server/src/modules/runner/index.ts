@@ -44,7 +44,7 @@ class TestsRunner {
 	}
 
 	_replaceHostInEvents(events: Array<iAction>, newHost: string) {
-		if (!newHost) return events;
+		if (!newHost || newHost === "null") return events;
 
 		return events.map((event) => {
 			if (event.type === ActionsInTestEnum.NAVIGATE_URL) {

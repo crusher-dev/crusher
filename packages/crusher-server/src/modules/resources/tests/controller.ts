@@ -97,7 +97,7 @@ export class TestController {
 			};
 		}
 
-		return this.testService.runTestsInProject(projectId, user.user_id, { host: body.host }, meta);
+		return this.testService.runTestsInProject(projectId, user.user_id, { host: body.host ? body.host : "null" }, meta);
 	}
 
 	@Authorized()

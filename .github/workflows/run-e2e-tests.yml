@@ -25,3 +25,12 @@ jobs:
               repo: context.repo.repo,
               body: 'The preview URL is: ${{ steps.vercel_preview_url.outputs.vercel_preview_url }}.'
             });
+
+      - name: Start crusher tests
+        run: |
+          curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
+          --header 'Content-Type: application/x-www-form-urlencoded' \
+          --cookie "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyODIsInRlYW1faWQiOjIxOSwiaWF0IjoxNjMzNDkyOTc5LCJleHAiOjE2NjUwMjg5Nzl9.fftN81qi0yJEDs9HnqiW4tElDMWp4dTHnAofnABmZuE" \
+          --data-urlencode 'githubRepoName=crusherdev/crusher' \
+          --data-urlencode 'host=${{ steps.vercel_preview_url.outputs.vercel_preview_url }}' \
+          --data-urlencode 'githubCommitId=${{github.event.pull_request.head.sha}}'

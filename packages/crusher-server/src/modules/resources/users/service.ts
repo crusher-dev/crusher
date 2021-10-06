@@ -122,7 +122,7 @@ class UsersService {
 		const users = await this.dbManager.fetchAllRows(
 			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(users.created_at) >  60 * 60",
 		);
-		return users.map((user) => this.deleteUserWorkspace(user));
+		return users.map((user) => this.deleteUserWorkspace(user.user_id));
 	}
 
 	@CamelizeResponse()

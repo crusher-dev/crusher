@@ -36,14 +36,8 @@ jobs:
       - name: Setup crusher
         run: yarn setup:ee
 
-      - name: Package crusher-app for deployment
-        env:
-          EXTENSION_ID: gfiagiidgjjnmklhbalcjbmdjbpphdln
-          NEXT_PUBLIC_CRUSHER_MODE: enterprise
-          NEXT_PUBLIC_GITHUB_APP_CLIENT_ID: Iv1.b94bab70cd7aad37
-          NEXT_PUBLIC_BACKEND_URL: https://backend.crusher.dev/
-          NEXT_PUBLIC_FRONTEND_URL: https://app.crusher.dev/
-        run: sh scripts/build/vercel-package.sh
+      - name: Build crusher-app for deployment
+        run: sh packages/crusher-app/ci/generate_cloud_build.sh && yarn workspace crusher-app build
 
       - uses: amondnet/vercel-action@v20
         with:

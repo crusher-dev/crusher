@@ -1,0 +1,31 @@
+#This is an example webapp.io configuration for NodeJS
+FROM vm/ubuntu:18.04
+# To note: Layerfiles create VMs, *not* containers!
+
+RUN apt-get update && \
+    apt-get install apt-transport-https ca-certificates curl software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" && \
+    apt-get update && \
+    apt install docker-ce python3 python3-pip awscli && \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash && \
+    apt install -y nodejs && \
+    rm -f /etc/apt/sources.list.d/nodesource.list
+   
+# install docker compose (easily starts required docker containers)
+RUN curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
+    -o /usr/local/bin/docker-compose
+
+RUN npm install -g yarn
+RUN apt install unzip
+
+COPY . .
+RUN yarn
+RUN yarn setup:ee
+RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="https://$EXPOSE_WEBSITE_HOST/server" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh
+
+RUN sudo chmod +x /usr/local/bin/docker-compose
+
+RUN BACKEND_SERVER_URL="https://$EXPOSE_WEBSITE_HOST/server" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+
+EXPOSE WEBSITE http://localhost:3000

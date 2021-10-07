@@ -26,9 +26,12 @@ RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="https://$GIT_BRANCH.test-app.crusher.dev/s
 
 RUN sudo chmod +x /usr/local/bin/docker-compose
 
-RUN BACKEND_SERVER_URL="https://$EXPOSE_WEBSITE_HOST/server" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+RUN BACKEND_SERVER_URL="https://$GIT_BRANCH.test-app.crusher.dev/server" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
 
 EXPOSE WEBSITE http://localhost:3000
+
+# To wait for server to start
+RUN curl https://$GIT_BRANCH.test-app.crusher.dev/server
 
 RUN curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
     --header 'Content-Type: application/x-www-form-urlencoded' \

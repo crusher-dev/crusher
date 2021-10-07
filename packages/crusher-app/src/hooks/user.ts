@@ -38,7 +38,6 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			selectInitialProject(dataToConsider);
 
 			await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
-			setDataLoaded(true);
 		})();
 	}, [userAndSystemData]);
 

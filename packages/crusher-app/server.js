@@ -18,9 +18,7 @@ server.use("/server", proxy("localhost:8000"));
 
 // Expose storage folder if using local storage
 // (Default Storage Method in OSS)
-if (process.env.NEXT_PUBLIC_CRUSHER_MODE === "open-source") {
-	server.use("/output", proxy("localhost:3001"));
-}
+server.use("/output", proxy("localhost:3001"));
 
 server.use(async (req, res, next) => {
 	if (req.url === "" || req.url === "/") {

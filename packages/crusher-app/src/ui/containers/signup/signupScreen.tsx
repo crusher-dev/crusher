@@ -1,3 +1,1 @@
-const SignupContainer = null;
-
-export default SignupContainer;
+export const SignupContainer = null;

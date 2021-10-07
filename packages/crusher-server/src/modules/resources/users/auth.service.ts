@@ -22,10 +22,12 @@ class UserAuthService {
 
 	async setUserAuthCookies(userId: number, teamId: number, req: any, res: any): Promise<string> {
 		const USER_DOMAIN = req.get("host") ? req.get("host") : "";
+		const IS_LOALHOST = USER_DOMAIN.startsWith("localhost") || USER_DOMAIN.startsWith("127.0.0.1");
+
 		const token = generateToken(userId, teamId);
 
-		setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: USER_DOMAIN }, res);
-		setUserCookie({ key: "isLoggedIn", value: true }, { domain: USER_DOMAIN }, res);
+		setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
+		setUserCookie({ key: "isLoggedIn", value: true }, { domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
 
 		// // @TODO: Move this logic somewhere else (For gitpod)
 		// setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: ".gitpod.io" }, res);

@@ -31,7 +31,7 @@ RUN BACKEND_SERVER_URL="https://$GIT_BRANCH.test-app.crusher.dev/server" docker-
 EXPOSE WEBSITE http://localhost:3000
 
 # To wait for server to start
-RUN curl https://$GIT_BRANCH.test-app.crusher.dev/server
+RUN node scripts/waitTillCrusherLoaded.js --url=https://$GIT_BRANCH.test-app.crusher.dev/server
 
 RUN curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
     --header 'Content-Type: application/x-www-form-urlencoded' \

@@ -22,8 +22,9 @@ export function setUserAuthorizationCookies(token: string, res) {
 
 export function clearUserAuthorizationCookies(req, res) {
 	const USER_DOMAIN = req.get("host") ? req.get("host") : "";
+	const IS_LOALHOST = USER_DOMAIN.startsWith("localhost") || USER_DOMAIN.startsWith("127.0.0.1");
 
-	setUserCookie({ key: "token", value: "" }, { httpOnly: true, domain: USER_DOMAIN }, res);
-	setUserCookie({ key: "selectedProject", value: false }, { domain: USER_DOMAIN }, res);
-	setUserCookie({ key: "isLoggedIn", value: false }, { domain: USER_DOMAIN }, res);
+	setUserCookie({ key: "token", value: "" }, { httpOnly: true, domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
+	setUserCookie({ key: "selectedProject", value: false }, { domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
+	setUserCookie({ key: "isLoggedIn", value: false }, { domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
 }

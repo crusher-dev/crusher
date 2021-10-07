@@ -2,7 +2,7 @@
 <div align="center">
 <img src="https://i.imgur.com/oUSUuoS.png" height="40" style="margin: 0 auto;"/>
 <h3 align="center" >Crusher</h3>
-<div>Open source end to end web testing. 🔥🔥 </div>
+<div>Open source end to end web testing... 🔥🔥 </div>
 </div>
 
 <br>

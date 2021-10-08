@@ -54,9 +54,9 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
-      - BACKEND_SERVER_URL=$BACKEND_SERVER_URL
+      - STANDALONE_APP_URL=$STANDALONE_APP_URL
       - NEXT_PUBLIC_CRUSHER_MODE=enterprise
-      - NEXT_PUBLIC_INTERNAL_BACKEND_URL=http://localhost:3000/server
+      - NEXT_PUBLIC_INTERNAL_BACKEND_URL=$STANDALONE_APP_URL/server
     ports:
       - '3000:3000'
     links:

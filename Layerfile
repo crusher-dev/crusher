@@ -23,6 +23,9 @@ COPY . .
 
 MEMORY 4G
 
+SECRET ENV SCHEMA_OBJ_URL
+RUN mkdir db && curl "$SCHEMA_OBJ_URL" > db/schema.sql
+
 RUN yarn
 RUN yarn setup:ee
 RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="https://$GIT_BRANCH.test-app.crusher.dev/server" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh

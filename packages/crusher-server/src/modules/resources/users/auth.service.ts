@@ -26,8 +26,8 @@ class UserAuthService {
 
 		const token = generateToken(userId, teamId);
 
-		setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
-		setUserCookie({ key: "isLoggedIn", value: true }, { domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
+		setUserCookie({ key: "token", value: token }, { httpOnly: true, maxAge: 365 * 24 * 60 * 60 * 1000, domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);
+		setUserCookie({ key: "isLoggedIn", value: true }, { domain: IS_LOALHOST ? "" : USER_DOMAIN, maxAge: 365 * 24 * 60 * 60 * 1000 }, res);
 
 		// // @TODO: Move this logic somewhere else (For gitpod)
 		// setUserCookie({ key: "token", value: token }, { httpOnly: true, domain: ".gitpod.io" }, res);

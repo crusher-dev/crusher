@@ -44,7 +44,7 @@ interface ITestResultWorkerJob extends Job {
 	data: ITestCompleteQueuePayload;
 }
 
-async function handleNextTestsForExecution(testCompletePayload: ITestResultWorkerJob["data"]) {
+async function handleNextTestsForExecution(testCompletePayload: ITestResultWorkerJob["data"], buildRecord: KeysToCamelCase<IBuildTable>) {
 	for (const testInstance of testCompletePayload.nextTestDependencies) {
 		const testInstanceFullInfoRecord = await buildTestInstanceService.getInstanceAllInformation(testInstance.testInstanceId);
 		const testActions: Array<iAction> = JSON.parse(testInstanceFullInfoRecord.testEvents);
@@ -57,19 +57,22 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 				return action;
 			});
 
-			await testRunner.addTestRequestToQueue({
-				...testCompletePayload.buildExecutionPayload,
-				exports: testCompletePayload.exports,
-				startingStorageState: testCompletePayload.storageState,
-				actions: finalTestActions,
-				config: {
-					...testCompletePayload.buildExecutionPayload.config,
-					browser: testInstanceFullInfoRecord.browser,
+			await testRunner.addTestRequestToQueue(
+				{
+					...testCompletePayload.buildExecutionPayload,
+					exports: testCompletePayload.exports,
+					startingStorageState: testCompletePayload.storageState,
+					actions: finalTestActions,
+					config: {
+						...testCompletePayload.buildExecutionPayload.config,
+						browser: testInstanceFullInfoRecord.browser,
+					},
+					testInstanceId: testInstance.testInstanceId,
+					testName: testInstanceFullInfoRecord.testName,
+					nextTestDependencies: testInstance.nextTestDependencies,
 				},
-				testInstanceId: testInstance.testInstanceId,
-				testName: testInstanceFullInfoRecord.testName,
-				nextTestDependencies: testInstance.nextTestDependencies,
-			});
+				buildRecord.host && buildRecord.host !== "null" ? buildRecord.host : null,
+			);
 		} else {
 			await processTestAfterExecution({
 				name: `${testCompletePayload.buildId}/${testCompletePayload.testInstanceId}`,
@@ -93,9 +96,9 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 }
 
 const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob): Promise<any> {
-	await handleNextTestsForExecution(bullJob.data);
-
 	const buildRecord = await buildService.getBuild(bullJob.data.buildId);
+
+	await handleNextTestsForExecution(bullJob.data, buildRecord);
 
 	const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
 
@@ -137,7 +140,7 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 		// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
 		return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 	}
-}
+};
 
 async function handleIntegrations(buildId: number, reportStatus: BuildReportStatusEnum) {
 	// Github Integration

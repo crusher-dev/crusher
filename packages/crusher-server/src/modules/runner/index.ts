@@ -25,7 +25,10 @@ class TestsRunner {
 	@Inject()
 	private queueManager: QueueManager;
 
-	async addTestRequestToQueue(payload: ITestExecutionQueuePayload) {
+	async addTestRequestToQueue(payload: ITestExecutionQueuePayload, hostToReplace: string | null = null) {
+		if (hostToReplace && hostToReplace !== "null") {
+			payload.actions = this._replaceHostInEvents(payload.actions, hostToReplace);
+		}
 		const testExeuctionQueue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
 		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, payload);
 	}
@@ -65,19 +68,22 @@ class TestsRunner {
 		const { testInstances } = buildTaskInfo;
 		const addTestInstancePromiseArr = testInstances.map((testInstance) => {
 			if (!testInstance.parentTestInstanceId) {
-				return this.addTestRequestToQueue({
-					actions: this._replaceHostInEvents(JSON.parse(testInstance.testInfo.events), buildTaskInfo.host),
-					nextTestDependencies: this._getNextTestInstancesDependencyArr(testInstance, testInstances),
-					config: {
-						browser: testInstance.browser as any,
-						shouldRecordVideo: buildTaskInfo.config.shouldRecordVideo,
+				return this.addTestRequestToQueue(
+					{
+						actions: JSON.parse(testInstance.testInfo.events),
+						nextTestDependencies: this._getNextTestInstancesDependencyArr(testInstance, testInstances),
+						config: {
+							browser: testInstance.browser as any,
+							shouldRecordVideo: buildTaskInfo.config.shouldRecordVideo,
+						},
+						buildId: buildTaskInfo.buildId,
+						testInstanceId: testInstance.id,
+						testName: testInstance.testInfo.name,
+						buildTestCount: testInstances.length,
+						startingStorageState: null,
 					},
-					buildId: buildTaskInfo.buildId,
-					testInstanceId: testInstance.id,
-					testName: testInstance.testInfo.name,
-					buildTestCount: testInstances.length,
-					startingStorageState: null,
-				});
+					buildTaskInfo.host,
+				);
 			}
 		});
 

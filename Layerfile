@@ -20,6 +20,9 @@ RUN npm install -g yarn
 RUN apt install unzip
 
 COPY . .
+
+MEMORY 4G
+
 RUN yarn
 RUN yarn setup:ee
 RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="https://$GIT_BRANCH.test-app.crusher.dev/server" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh

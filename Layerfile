@@ -32,7 +32,7 @@ RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="https://$GIT_BRANCH.test-app.crusher.dev/s
 
 RUN sudo chmod +x /usr/local/bin/docker-compose
 
-RUN STANDALONE_APP_URL="https://$GIT_BRANCH.test-app.crusher.dev" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+RUN REPEATABLE STANDALONE_APP_URL="https://$GIT_BRANCH.test-app.crusher.dev" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
 
 EXPOSE WEBSITE http://localhost:3000
 

@@ -37,7 +37,7 @@ server.use(async (req, res, next) => {
 		next();
 	}
 });
-// This is currently used for server
+// This is currently used for server, next build files
 server.use("/", express.static("out"));
 
 server.listen(port, (err) => {
@@ -53,6 +53,7 @@ function serveFile(filePath, res) {
 }
 
 function getSanitizedPath(path) {
+	path = path.split("?")[0];
 	if (path.charAt(path.length - 1) === "/") {
 		return path.substr(0, path.length - 1);
 	}

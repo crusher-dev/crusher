@@ -11,6 +11,7 @@ import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
 import html2canvas from "html2canvas";
 import { ChangeEvent } from "react";
+import { InputNodeTypeEnum } from "./types/IEvent";
 
 const KEYS_TO_TRACK_FOR_INPUT = new Set(["Enter", "Escape", "Tab"]);
 
@@ -477,12 +478,48 @@ export default class EventRecording {
 		this.turnOnElementModeInParentFrame(event.detail.element);
 	}
 
-	handleElementInput(event: InputEvent) {
-		const value = (event.target as HTMLInputElement).value;
-		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, value);
+	_getInputNode(eventNode: HTMLElement) {
+		const nodeTagName = eventNode.tagName.toLowerCase();
+
+		switch (nodeTagName) {
+			case "input": {
+				const inputElement = eventNode as HTMLInputElement;
+				const inputType = inputElement.type;
+				const inputName = inputElement.name;
+				const parentForm = inputElement.form ? inputElement.form : document.body;
+
+				switch (inputType) {
+					case "radio": {
+						return { type: InputNodeTypeEnum.RADIO, checked: inputElement.checked };
+					}
+					case "select":
+						return null;
+					case "text":
+						return { type: InputNodeTypeEnum.INPUT };
+					default:
+						return null
+				}
+			}
+			case "textarea":
+				return InputNodeTypeEnum.TEXTAREA;
+			default: {
+				if (!eventNode.isContentEditable) return null;
+			}
+		}
 	}
 
-	handleElementChange(event: InputEvent) {
+	handleElementInput(event: InputEvent) {
+		if (!event.isTrusted) return;
+
+		const eventNode = (event.target as HTMLInputElement);
+		const value = (event.target as HTMLInputElement).value;
+
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, {
+			type: "",
+		});
+	}
+
+	 handleElementChange(event: InputEvent) {
 		const value = (event.target as HTMLInputElement).value;
 		// this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, value);
 	}

@@ -9,6 +9,9 @@ module.exports = {
 	entry: {
 		index: "./index.ts",
 	},
+	optimization: {
+		minimize: false,
+	},
 	output: {
 		libraryTarget: "commonjs",
 		path: path.resolve(__dirname, "../../output/video-processor/"),
@@ -29,6 +32,9 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				loader: "ts-loader",
+				options: {
+					transpileOnly: true,
+				},
 			},
 			{
 				test: /node_modules\/bullmq\/dist\/commands\/index\.js$/,

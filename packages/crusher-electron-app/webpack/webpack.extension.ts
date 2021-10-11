@@ -48,6 +48,9 @@ function getHTMLWebpackPluginConfigArrForTemplates() {
 
 let finalConfig: any = {
 	mode: "production",
+	optimization: {
+		minimize: false,
+	},
 	entry: {
 		content_script: [path.resolve(__dirname, "../src/extension/scripts/inject/events_listener.ts")],
 		init_content_script: [path.resolve(__dirname, "../src/extension/scripts/inject/init_event_listener.ts")],
@@ -96,7 +99,7 @@ let finalConfig: any = {
 					plugins: [["@babel/plugin-transform-react-jsx", { pragma: "h" }]],
 				},
 			},
-			{ test: /\.ts(x)?$/, loader: "ts-loader" },
+			{ test: /\.ts(x)?$/, loader: "ts-loader", options: { transpileOnly: true } },
 			{ test: /\.pug$/, use: "pug-loader" },
 			{
 				test: /\.css$/i,

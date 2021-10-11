@@ -13,7 +13,7 @@
 		"start:dev": "DO_NOT_BUILD_EXTENSION=true NODE_ENV=development webpack --config webpack/webpack.config.ts && yarn dev:extension",
 		"build:extension": "webpack --config webpack/webpack.extension.ts",
 		"dev:extension": "NODE_ENV=development webpack --config webpack/webpack.extension.ts",
-		"build": "webpack --config webpack/webpack.config.ts",
+		"build": "NODE_ENV=production webpack --config webpack/webpack.config.ts",
 		"build:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",
 		"release:linux": "yarn build && bash scripts/build-linux.sh && yarn pack:linux",
 		"release:mac": "yarn build && bash scripts/build-darwin.sh && yarn pack:mac",

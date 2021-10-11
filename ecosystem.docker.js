@@ -4,7 +4,7 @@ module.exports = {
 	apps: [
 		{
 			name: 'crusher-app',
-			cwd: './packages/crusher-app/',
+			cwd: './output/crusher-app/',
 			script: 'node',
 			args: 'server.js',
 			env: {
@@ -16,25 +16,25 @@ module.exports = {
 		},
 		{
 			name: 'crusher-server',
-			cwd: './packages/crusher-server',
+			cwd: './output/crusher-server',
 			script: 'node',
-			args: 'app.js',
+			args: '-r source-map-support/register app.js',
 			env: { ...CRUSHER_SERVER_ENV, RUN_ALL_TOGETHER: 'true' },
 			merge_logs: true,
 			node_args: ['--max_old_space_size=200'],
 		},
 		{
 			name: 'test-runner',
-			cwd: './packages/test-runner',
+			cwd: './output/test-runner',
 			script: 'node',
-			args: 'index.js',
+			args: '-r source-map-support/register index.js',
 			env: TEST_RUNNER_ENV,
 		},
 		{
 			name: 'video-processor',
-			cwd: './packages/video-processor',
+			cwd: './output/video-processor',
 			script: 'node',
-			args: 'index.js',
+			args: '-r source-map-support/register index.js',
 			env: {
 				...VIDEO_PROCESSOR_ENV,
 				FFMPEG_PATH: require('@ffmpeg-installer/ffmpeg').path

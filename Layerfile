@@ -16,7 +16,7 @@ RUN apt-get update && \
 RUN curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
     -o /usr/local/bin/docker-compose
 
-RUN npm install -g yarn
+RUN npm install -g yarn pm2
 RUN apt install unzip
 
 COPY . .
@@ -28,19 +28,44 @@ RUN mkdir db && curl "$SCHEMA_OBJ_URL" > db/schema.sql
 
 RUN yarn
 RUN yarn setup:ee
-RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="https://$GIT_BRANCH.test-app.crusher.dev/server" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh
+
+BUILD ENV EXPOSE_WEBSITE_HOST
+
+ENV LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa \
+    DB_HOST=localhost \
+    DB_USERNAME=root \
+    DB_PASSWORD=password \
+    DB_DATABASE=crusher \
+    DB_PORT=3306 \
+    MONGODB_CONNECTION_STRING=mongodb://localhost:27017/crusher \
+    REDIS_HOST=localhost \
+    REDIS_PORT=6379 \
+    REDIS_PASSWORD= \
+    STANDALONE_APP_URL=https://$EXPOSE_WEBSITE_HOST \
+    NEXT_PUBLIC_INTERNAL_BACKEND_URL=https://$EXPOSE_WEBSITE_HOST/server \
+    NEXT_PUBLIC_CRUSHER_MODE=enterprise
+
+RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="$NEXT_PUBLIC_INTERNAL_BACKEND_URL" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh
 
 RUN sudo chmod +x /usr/local/bin/docker-compose
+RUN cp ./.env.oss .env
 
-RUN REPEATABLE STANDALONE_APP_URL="https://$GIT_BRANCH.test-app.crusher.dev" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+# Start mysql, redis and mongo
+RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+
+RUN node setup/dbMigration.js
+RUN cp ./ecosystem.docker.js ecosystem.config.js
+
+
+RUN BACKGROUND pm2 start --only "crusher-app,crusher-server,test-runner,video-processor"
 
 EXPOSE WEBSITE http://localhost:3000
 
-# To wait for server to start
+# To wait for server to starts
 
-RUN node scripts/waitTillCrusherLoaded.js --url=https://$GIT_BRANCH.test-app.crusher.dev/server && curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
+RUN BACKGROUND node scripts/waitTillCrusherLoaded.js --url="https://$EXPOSE_WEBSITE_HOST/server" && curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
     --header 'Content-Type: application/x-www-form-urlencoded' \
     --cookie "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyODIsInRlYW1faWQiOjIxOSwiaWF0IjoxNjMzNDkyOTc5LCJleHAiOjE2NjUwMjg5Nzl9.fftN81qi0yJEDs9HnqiW4tElDMWp4dTHnAofnABmZuE" \
     --data-urlencode 'githubRepoName=crusherdev/crusher' \
-    --data-urlencode "host=https://$GIT_BRANCH.test-app.crusher.dev" \
+    --data-urlencode "host=https://$EXPOSE_WEBSITE_HOST" \
     --data-urlencode "githubCommitId=$GIT_COMMIT"

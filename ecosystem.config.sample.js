@@ -19,7 +19,7 @@ module.exports = {
 			name: 'crusher-server',
 			cwd: './packages/crusher-server',
 			script: IS_PRODUCTION ? 'node' : 'npm',
-			args: IS_PRODUCTION ? 'app.js' : 'run dev',
+			args: IS_PRODUCTION ? '-r source-map-support/register app.js' : 'run dev',
 			watch: ['src', 'config'],
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,

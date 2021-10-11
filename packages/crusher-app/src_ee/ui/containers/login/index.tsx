@@ -126,8 +126,13 @@ function EmailPasswordBox({ setShowBox }) {
 					</Conditional>
 				</div>
 			</Button>
-			<div className="text-13 underline text-center" onClick={setShowBox.bind(this, false)}>
-				Go back
+			<div className={"flex justify-between"}>
+				<div className="text-13 underline" onClick={setShowBox.bind(this, false)}>
+					Go back
+				</div>
+				<div className="text-13 text-blue-800  underline" onClick={React.useCallback(()=>{router.push("/forgot_password")},[])}>
+					Forget Password?
+				</div>
 			</div>
 		</div>
 	);

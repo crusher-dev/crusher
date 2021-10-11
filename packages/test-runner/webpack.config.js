@@ -4,9 +4,12 @@ const CopyPlugin = require("copy-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
-	mode: "development",
+	mode: "production",
 	target: "node",
 	devtool: "source-map",
+	optimization: {
+		minimize: false,
+	},
 	entry: {
 		index: "./index.ts",
 		worker: ["src/worker/index.ts"],
@@ -49,6 +52,9 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				loader: "ts-loader",
+				options: {
+					transpileOnly: true,
+				},
 			},
 			{
 				test: /node_modules\/bullmq\/dist\/commands\/index\.js$/,

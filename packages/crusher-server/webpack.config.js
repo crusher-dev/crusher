@@ -6,6 +6,9 @@ module.exports = {
 	mode: "production",
 	devtool: "source-map",
 	target: "node",
+	optimization: {
+		minimize: false,
+	},
 	entry: {
 		app: "./src/app.ts",
 		queue: "./src/queue.ts",
@@ -53,6 +56,9 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				loader: "ts-loader",
+				options: {
+					transpileOnly: true,
+				},
 			},
 			{
 				test: /node_modules\/bullmq\/dist\/commands\/index\.js$/,

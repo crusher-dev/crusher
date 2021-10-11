@@ -4,9 +4,12 @@ const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
-	mode: "development",
-	devtool: "inline-source-map",
+	mode: "production",
+	devtool: "source-map",
 	target: "node",
+	optimization: {
+		minimize: false
+	},
 	entry: {
 		index: "./src/index.ts",
 	},
@@ -25,6 +28,9 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				loader: "ts-loader",
+				options: {
+					transpileOnly: true,
+				},
 			},
 		],
 	},

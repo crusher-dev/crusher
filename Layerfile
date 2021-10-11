@@ -63,5 +63,5 @@ RUN node scripts/waitTillCrusherLoaded.js --url="https://$EXPOSE_WEBSITE_HOST/se
     --header 'Content-Type: application/x-www-form-urlencoded' \
     --cookie "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyODIsInRlYW1faWQiOjIxOSwiaWF0IjoxNjMzNDkyOTc5LCJleHAiOjE2NjUwMjg5Nzl9.fftN81qi0yJEDs9HnqiW4tElDMWp4dTHnAofnABmZuE" \
     --data-urlencode 'githubRepoName=crusherdev/crusher' \
-    --data-urlencode "host=https://$GIT_BRANCH.test-app.crusher.dev" \
+    --data-urlencode "host=https://$EXPOSE_WEBSITE_HOST" \
     --data-urlencode "githubCommitId=$GIT_COMMIT"

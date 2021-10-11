@@ -62,7 +62,7 @@ EXPOSE WEBSITE http://localhost:3000
 
 # To wait for server to starts
 
-RUN node scripts/waitTillCrusherLoaded.js --url="https://$EXPOSE_WEBSITE_HOST/server" && curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
+RUN BACKGROUND node scripts/waitTillCrusherLoaded.js --url="https://$EXPOSE_WEBSITE_HOST/server" && curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
     --header 'Content-Type: application/x-www-form-urlencoded' \
     --cookie "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyODIsInRlYW1faWQiOjIxOSwiaWF0IjoxNjMzNDkyOTc5LCJleHAiOjE2NjUwMjg5Nzl9.fftN81qi0yJEDs9HnqiW4tElDMWp4dTHnAofnABmZuE" \
     --data-urlencode 'githubRepoName=crusherdev/crusher' \

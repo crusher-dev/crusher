@@ -31,11 +31,11 @@ export function CompareImage({ leftImage, rightImage }) {
 
 	useMemo(() => {
 		setInterval(() => {
-			const selected = document.querySelector(`#compare-${hash} img`);
+			const selected: HTMLImageElement | null = document.querySelector(`#compare-${hash} img`);
 
-			const imageLoadFunction = (e) => {
-				const height = e.target.naturalHeight;
-				const width = e.target.naturalWidth;
+			const imageLoadFunction = () => {
+				const height = selected.naturalHeight;
+				const width = selected.naturalWidth;
 
 				const aspectRatio = width / height;
 
@@ -49,6 +49,9 @@ export function CompareImage({ leftImage, rightImage }) {
 			};
 
 			if (selected) {
+				if(selected.complete){
+					imageLoadFunction()
+				}
 				selected.addEventListener("load", imageLoadFunction);
 			}
 		}, 300);

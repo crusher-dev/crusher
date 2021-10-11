@@ -35,7 +35,6 @@ RUN cp ./.env.oss .env
 
 # Start mysql, redis and mongo
 RUN REPEATABLE STANDALONE_APP_URL="https://$GIT_BRANCH.test-app.crusher.dev" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
-RUN node setup/dbMigration.js
 
 RUN export LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa && \
     export DB_HOST=localhost && \
@@ -50,6 +49,8 @@ RUN export LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa && \
     export STANDALONE_APP_URL=https://$GIT_BRANCH.test-app.crusher.dev && \
     export NEXT_PUBLIC_INTERNAL_BACKEND_URL=https://$GIT_BRANCH.test-app.crusher.dev/server && \
     export NEXT_PUBLIC_CRUSHER_MODE=enterprise
+
+RUN node setup/dbMigration.js
 
 RUN pm2 ecosystem.config.js --only "crusher-app,crusher-server,test-runner,video-processor"
 

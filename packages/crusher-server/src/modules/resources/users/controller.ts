@@ -122,6 +122,22 @@ export class UserController {
 		};
 	}
 
+	@Post("/users/actions/forgot_password")
+	async forgotPassword(@Body() body: { email: string }, @Req() req: any, @Res() res: any) {
+		const status = await this.userAuthService.forgotPassword(body.email);
+		return {
+			status,
+		};
+	}
+
+	@Post("/users/actions/reset_password")
+	async resetPassword(@Body() body: { token: string; password: string }, @Req() req: any, @Res() res: any) {
+		const status = await this.userAuthService.resetPassword(body.token, body.password);
+		return {
+			status,
+		};
+	}
+
 	@Get("/users/actions/getUserAndSystemInfo")
 	async getUserAndSystemInfo(@CurrentUser() user): Promise<IUserAndSystemInfoResponse> {
 		const { user_id } = user;

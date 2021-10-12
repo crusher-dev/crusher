@@ -17,7 +17,10 @@ const commonConfig = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				use: "ts-loader",
+				loader: "ts-loader",
+				options: {
+					transpileOnly: true,
+				},
 			},
 		],
 	},
@@ -27,6 +30,9 @@ const commonConfig = {
 	},
 	resolve: {
 		extensions: [".tsx", ".ts", ".js"],
+	},
+	optimization: {
+		minimize: false,
 	},
 };
 

@@ -27,7 +27,7 @@ function EmailPasswordBox() {
 
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [confirmPassword, setConfirmPassword] = useState({ value: "", error: "" });
-	const [processingResetPassword, setProcessingResetPassword] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const { query, push } = useRouter();
 
 	const confirmPasswordChange = useCallback(
@@ -63,15 +63,15 @@ function EmailPasswordBox() {
 	const submitForm = async () => {
 		verifyInfo(true);
 		if (!validatePassword(password.value) || !validatePassword(confirmPassword.value)) return;
-		setProcessingResetPassword(true);
+		setLoading(true);
 		try {
 			await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
 			push("/app/dashboard");
 		} catch (e: any) {
 			console.log(e);
-			// alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
+			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
-		setProcessingResetPassword(false);
+		setLoading(false);
 	};
 
 	const onEnter = useCallback((event: any) => {
@@ -117,12 +117,12 @@ function EmailPasswordBox() {
 				</Conditional>
 			</div>
 
-			<Button size={"large"} className={"mb-20"} onClick={submitForm} disabled={processingResetPassword}>
+			<Button size={"large"} className={"mb-20"} onClick={submitForm} disabled={loading}>
 				<div className={"flex justify-center items-center"}>
-					<Conditional showIf={!processingResetPassword}>
+					<Conditional showIf={!loading}>
 						<span className={"mt-2"}>Create an account</span>
 					</Conditional>
-					<Conditional showIf={processingResetPassword}>
+					<Conditional showIf={loading}>
 						<span>
 							{" "}
 							<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />

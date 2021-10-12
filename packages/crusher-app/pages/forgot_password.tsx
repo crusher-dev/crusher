@@ -1,6 +1,6 @@
 import React from "react";
 
-import { LoginContainer as ForgotContainer } from "@ui/containers/forgot_password/index";
+import { Container  } from "@ui/containers/forgot_password/index";
 
 import { usePageTitle } from "../src/hooks/seo";
 
@@ -9,7 +9,7 @@ function LoginPage() {
 
 	return (
 		<div>
-			<ForgotContainer />
+			<Container />
 		</div>
 	);
 }

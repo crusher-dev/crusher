@@ -11,6 +11,7 @@ import { IInviteReferral } from "./invite/interface";
 import { UserInviteService } from "./invite/service";
 import { UsersService } from "./service";
 import { EmailManager } from "@modules/email";
+import { resolvePathToFrontendURI } from "@utils/uri";
 
 @Service()
 class UserAuthService {
@@ -64,7 +65,7 @@ class UserAuthService {
 		this.emailManager.sendEmail(
 			email,
 			"Change Crusher Password",
-			`To change password for crusher <a href='https://crusher.dev/forgot_password?token=${token}'>Click here</a>`,
+			`To change password for crusher <a href='${resolvePathToFrontendURI("forgot_password")}?token=${token}'>Click here</a>`,
 		);
 
 		return "Successful";

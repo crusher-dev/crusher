@@ -6,11 +6,11 @@ import { Input } from "dyson/src/components/atoms";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
-import { resolvePathToBackendURI } from "@utils/common/url";
 import { validateEmail } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 import { loadUserDataAndRedirect } from "@hooks/user";
 import { RequestMethod } from "@types/RequestOptions";
+import { useCallback } from "dyson/node_modules/@types/react";
 
 const forgotPassword = (email: string) => {
 	return backendRequest("/users/actions/forgot_password", {
@@ -22,18 +22,18 @@ const forgotPassword = (email: string) => {
 function ForgotPasswordBox() {
 	const router = useRouter();
 	const [email, setEmail] = useState({ value: "", error: null });
-	const [processingSignup, setProcessingSignup] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState(null);
 
 	const emailChange = (event: any) => {
 		setEmail({ ...email, value: event.target.value });
 	};
 
-	const loginOnEnter = (event: any) => {
+	const onEnter = useCallback((event: any) => {
 		if (event.key === "Enter") {
-			return onLogin();
+			return onSubmit();
 		}
-	};
+	}, []);
 
 	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
@@ -42,11 +42,11 @@ function ForgotPasswordBox() {
 		} else setEmail({ ...email, error: "" });
 	};
 
-	const onLogin = async () => {
+	const onSubmit = async () => {
 		verifyInfo(true);
 
 		if (!validateEmail(email.value)) return;
-		setProcessingSignup(true);
+		setLoading(true);
 		try {
 			const { status } = await forgotPassword(email.value);
 			setData(status);
@@ -57,7 +57,7 @@ function ForgotPasswordBox() {
 				alert(e);
 			}
 		}
-		setProcessingSignup(false);
+		setLoading(false);
 	};
 
 	if (data) {
@@ -68,7 +68,7 @@ function ForgotPasswordBox() {
 		<div>
 			<div className={"font-cera text-15 leading-none font-500 mt-20 mb-5"}>Reset Password</div>
 			<div className=" font-cera text-12 font-light mb-20">We'll send you link to reset password</div>
-			<div css={[loginBox]}>
+			<div css={[boxCss]}>
 				<div className={"mb-12"}>
 					<Input
 						autoComplete={"email"}
@@ -77,7 +77,7 @@ function ForgotPasswordBox() {
 						placeholder={"Enter email"}
 						isError={email.error}
 						onBlur={verifyInfo.bind(this, false)}
-						onKeyUp={loginOnEnter}
+						onKeyUp={onEnter}
 					/>
 					<Conditional showIf={email.error}>
 						<div className={"mt-8 text-12"} css={errorState}>
@@ -86,12 +86,12 @@ function ForgotPasswordBox() {
 					</Conditional>
 				</div>
 
-				<Button size={"large"} className={"mb-20"} onClick={onLogin}>
+				<Button size={"large"} className={"mb-20"} onClick={onSubmit}>
 					<div className={"flex justify-center items-center"}>
-						<Conditional showIf={!processingSignup}>
+						<Conditional showIf={!loading}>
 							<span className={"mt-2"}>Send verification Link</span>
 						</Conditional>
-						<Conditional showIf={processingSignup}>
+						<Conditional showIf={loading}>
 							<span>
 								{" "}
 								<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
@@ -108,7 +108,7 @@ function ForgotPasswordBox() {
 	);
 }
 
-export const LoginContainer = () => {
+export const Container = () => {
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-120"}>
@@ -135,7 +135,7 @@ export const LoginContainer = () => {
 	);
 };
 
-const loginBox = css`
+const boxCss = css`
 	height: 272rem;
 `;
 
@@ -147,4 +147,4 @@ const errorState = css`
 	color: #ff4583;
 `;
 
-export default LoginContainer;
+export default Container;

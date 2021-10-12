@@ -43,7 +43,7 @@ function EmailPasswordBox() {
 		[password],
 	);
 
-	const verifyInfo = (completeVerify = false) => {
+	const verifyInfo = useCallback((completeVerify = false) => {
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateConfirmPassword = completeVerify || confirmPassword.value;
 
@@ -58,9 +58,9 @@ function EmailPasswordBox() {
 		if (password.value !== confirmPassword.value && completeVerify) {
 			setConfirmPassword({ ...confirmPassword, error: "Please enter same password" });
 		} else setConfirmPassword({ ...confirmPassword, error: "" });
-	};
+	}, []);
 
-	const submitForm = async () => {
+	const submitForm = useCallback(async () => {
 		verifyInfo(true);
 		if (!validatePassword(password.value) || !validatePassword(confirmPassword.value)) return;
 		setLoading(true);
@@ -72,7 +72,7 @@ function EmailPasswordBox() {
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
 		setLoading(false);
-	};
+	}, []);
 
 	const onEnter = useCallback((event: any) => {
 		if (event.key === "Enter") {

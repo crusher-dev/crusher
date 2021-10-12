@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useRouter } from "next/router";
-import React, { useState,useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Button, Logo } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
@@ -24,9 +24,9 @@ function ForgotPasswordBox() {
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState(null);
 
-	const emailChange = (event: any) => {
+	const emailChange = useCallback((event: any) => {
 		setEmail({ ...email, value: event.target.value });
-	};
+	}, []);
 
 	const onEnter = useCallback((event: any) => {
 		if (event.key === "Enter") {
@@ -34,14 +34,14 @@ function ForgotPasswordBox() {
 		}
 	}, []);
 
-	const verifyInfo = (completeVerify = false) => {
+	const verifyInfo = useCallback((completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
 		if (!validateEmail(email.value) && shouldValidateEmail) {
 			setEmail({ ...email, error: "Please enter valid email" });
 		} else setEmail({ ...email, error: "" });
-	};
+	}, []);
 
-	const onSubmit = async () => {
+	const onSubmit = useCallback(async () => {
 		verifyInfo(true);
 
 		if (!validateEmail(email.value)) return;
@@ -57,7 +57,7 @@ function ForgotPasswordBox() {
 			}
 		}
 		setLoading(false);
-	};
+	}, []);
 
 	if (data) {
 		return <div className="text-16 font-extrabold my-50">Please Check your email</div>;

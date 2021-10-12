@@ -1,32 +1,27 @@
 import { css } from "@emotion/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-
 import { Button, Logo } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
-
 import { LoadingSVG } from "@svg/dashboard";
-import { GoogleSVG } from "@svg/social";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
-import { validateEmail, validatePassword } from "@utils/common/validationUtils";
+import { validateEmail } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-
 import { loadUserDataAndRedirect } from "@hooks/user";
 import { RequestMethod } from "@types/RequestOptions";
 
-const emailLogin = (email: string, password: string) => {
+const forgotPassword = (email: string) => {
 	return backendRequest("/users/actions/forgot_password", {
 		method: RequestMethod.POST,
-		payload: { email, password },
+		payload: { email },
 	});
 };
 
-function EmailPasswordBox() {
+function ForgotPasswordBox() {
 	const router = useRouter();
 	const [email, setEmail] = useState({ value: "", error: null });
-	const [password, setPassword] = useState({ value: "", error: null });
 	const [processingSignup, setProcessingSignup] = useState(false);
 	const [data, setData] = useState(null);
 
@@ -42,14 +37,9 @@ function EmailPasswordBox() {
 
 	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
-		const shouldValidatePassword = completeVerify || password.value;
 		if (!validateEmail(email.value) && shouldValidateEmail) {
 			setEmail({ ...email, error: "Please enter valid email" });
 		} else setEmail({ ...email, error: "" });
-
-		if (!validatePassword(password.value) && shouldValidatePassword) {
-			setPassword({ ...password, error: "Please enter a password with length > 4" });
-		} else setPassword({ ...password, error: "" });
 	};
 
 	const onLogin = async () => {
@@ -58,7 +48,7 @@ function EmailPasswordBox() {
 		if (!validateEmail(email.value)) return;
 		setProcessingSignup(true);
 		try {
-			const { status } = await emailLogin(email.value, password.value);
+			const { status } = await forgotPassword(email.value);
 			setData(status);
 		} catch (e: any) {
 			if (e.message === "USER_NOT_EXISTS") {
@@ -70,21 +60,14 @@ function EmailPasswordBox() {
 		setProcessingSignup(false);
 	};
 
-
 	if (data) {
-		return <div className='text-16 font-extrabold my-50'>
-			Please Check your email
-		</div>
+		return <div className="text-16 font-extrabold my-50">Please Check your email</div>;
 	}
 
 	return (
 		<div>
-			<div className={"font-cera text-15 leading-none font-500 mt-20 mb-5"}>
-				Reset Password
-			</div>
-			<div className=' font-cera text-12 font-light mb-20'>
-				We'll send you link to reset password
-			</div>
+			<div className={"font-cera text-15 leading-none font-500 mt-20 mb-5"}>Reset Password</div>
+			<div className=" font-cera text-12 font-light mb-20">We'll send you link to reset password</div>
 			<div css={[loginBox]}>
 				<div className={"mb-12"}>
 					<Input
@@ -125,7 +108,6 @@ function EmailPasswordBox() {
 	);
 }
 
-
 export const LoginContainer = () => {
 	return (
 		<CrusherBase>
@@ -133,8 +115,7 @@ export const LoginContainer = () => {
 				<div className="flex flex-col items-center" css={containerCSS}>
 					<Logo height={"24rem"} className={"mb-24 mt-80"} />
 
-
-					<EmailPasswordBox />
+					<ForgotPasswordBox />
 					<div className={"font-cera text-15 leading-none font-500"}>
 						Don't have an account?
 						<a href={"/signup"}>
@@ -153,19 +134,6 @@ export const LoginContainer = () => {
 		</CrusherBase>
 	);
 };
-
-const googleButton = css`
-	background-color: #6ea5f9;
-	border-color: #4675bd;
-	font-weight: 600;
-	span {
-		font-size: 14rem;
-	}
-
-	:hover {
-		background-color: #588fe2;
-	}
-`;
 
 const loginBox = css`
 	height: 272rem;

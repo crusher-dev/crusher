@@ -1,17 +1,14 @@
 import React from "react";
-
-import { SignupContainer as ForgotContainer } from "@ui/containers/reset_password";
-
+import { ResetPasswordContainer  } from "@ui/containers/reset_password";
 import { usePageTitle } from "../src/hooks/seo";
 
-function LoginPage() {
-	usePageTitle("Forgot Password");
-
+function ResetPassPage() {
+	usePageTitle("Change your Password");
 	return (
 		<div>
-			<ForgotContainer />
+			<ResetPasswordContainer />
 		</div>
 	);
 }
 
-export default LoginPage;
+export default ResetPassPage;

@@ -132,7 +132,7 @@ export class UserController {
 
 	@Post("/users/actions/reset_password")
 	async resetPassword(@Body() body: { token: string; password: string }, @Req() req: any, @Res() res: any) {
-		const status = await this.userAuthService.resetPassword(body.token, body.password);
+		const status = await this.userAuthService.resetPassword(body.token, body.password, req, res);
 		return {
 			status,
 		};

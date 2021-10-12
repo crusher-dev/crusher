@@ -61,7 +61,6 @@ class UserAuthService {
 
 		const token = generateJWT({ email, id: user.id });
 
-		console.log("token", token);
 		this.emailManager.sendEmail(
 			email,
 			"Change Crusher Password",
@@ -71,13 +70,17 @@ class UserAuthService {
 		return "Successful";
 	}
 
-	async resetPassword(token: string, password: string): Promise<string> {
+	async resetPassword(token: string, password: string, req: any, res: any) {
 		try {
-			const { id } = decodeToken(token) as { email: string; id: string };
-			await this.usersService.updatePassword(id, password);
-			return "Successful";
+			const { id, email } = decodeToken(token) as { email: string; id: string };
+			try {
+				await this.usersService.updatePassword(id, password);
+			} catch {
+				new BadRequestError("USER_NOT_EXISTS");
+			}
+			return this.loginWithBasicAuth(email, password, req, res);
 		} catch (error) {
-			return "Link expired";
+			return error.message || "Link expired";
 		}
 	}
 

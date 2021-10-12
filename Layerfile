@@ -56,7 +56,7 @@ RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker
 RUN node setup/dbMigration.js
 RUN cp ./ecosystem.docker.js ecosystem.config.js
 
-RUN REPEATABLE STANDALONE_APP_URL="https://$GIT_BRANCH.test-app.crusher.dev" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+RUN BACKGROUND pm2 start --only "crusher-app,crusher-server,test-runner,video-processor"
 
 EXPOSE WEBSITE http://localhost:3000
 

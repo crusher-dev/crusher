@@ -12,7 +12,7 @@ RUN apt-get update && \
     apt install -y nodejs && \
     rm -f /etc/apt/sources.list.d/nodesource.list
 
-RUN DEBIAN_FRONTEND=noninteractive npx playwright install-deps
+RUN npx playwright install && DEBIAN_FRONTEND=noninteractive npx playwright install-deps
 
 # install docker compose (easily starts required docker containers)
 RUN curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \

@@ -106,9 +106,19 @@ export class WebView {
 
 	registerIPCListeners() {
 		ipcMain.handle("execute-custom-code", this._executeCustomCode.bind(this));
+		ipcMain.handle("get-node-id", this.getNodeId.bind(this));
 		ipcMain.on("turn-on-inspect-mode", this._turnOnInspectMode.bind(this));
 		ipcMain.on("turn-off-inspect-mode", this._turnOffInspectMode.bind(this));
 		ipcMain.on("post-message-to-webview", this._postMessageToWebView.bind(this));
+	}
+
+	async getNodeId(_, id) {
+		try {
+			const out = await this.playwrightInstance.getSdkManager().page.evaluateHandle((id) => Promise.resolve((window as any)[id]), id);
+			return out.getNodeId();
+		} catch (err) {
+			return -1;
+		}
 	}
 
 	async _postMessageToWebView(event, data) {
@@ -167,6 +177,7 @@ export class WebView {
 
 	destroy() {
 		ipcMain.removeHandler("execute-custom-code");
+		ipcMain.removeHandler("get-node-id");
 		ipcMain.removeAllListeners("turn-on-inspect-mode");
 		ipcMain.removeAllListeners("turn-off-inspect-mode");
 		ipcMain.removeAllListeners("post-message-to-webview");

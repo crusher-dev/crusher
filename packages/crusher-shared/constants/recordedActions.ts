@@ -68,3 +68,16 @@ export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.PRESS]: "Press key",
 	[ACTIONS_IN_TEST.CUSTOM_CODE]: "Custom Code",
 };
+
+
+export enum InputNodeTypeEnum {
+	CONTENT_EDITABLE = "CONTENT_EDITABLE",
+	INPUT = "INPUT",
+	CHECKBOX = "CHECKBOX",
+	RADIO = "RADIO",
+	SELECT = "SELECT",
+	MULTISELECT = "MULTISELECT",
+	TEXTAREA = "TEXTAREA",
+}
+
+export type IInputNodeInfo = { type: InputNodeTypeEnum; value: any; name: string | null; inputType?: string };

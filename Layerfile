@@ -12,6 +12,8 @@ RUN apt-get update && \
     apt install -y nodejs && \
     rm -f /etc/apt/sources.list.d/nodesource.list
 
+RUN mkdir /ms-playwright && mkdir /tmp/pw && cd /tmp/pw && npm init -y && npm i playwright && DEBIAN_FRONTEND=noninteractive npx playwright install-deps && rm -rf /tmp/pw && chmod -R 777 /ms-playwright
+
 # install docker compose (easily starts required docker containers)
 RUN curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
     -o /usr/local/bin/docker-compose
@@ -55,6 +57,7 @@ RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker
 
 RUN node setup/dbMigration.js
 RUN cp ./ecosystem.docker.js ecosystem.config.js
+
 
 RUN BACKGROUND pm2 start --only "crusher-app,crusher-server,test-runner,video-processor"
 

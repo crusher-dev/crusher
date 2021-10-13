@@ -22,7 +22,7 @@ import {
 } from "./scripts/inject/responseMessageListener";
 import { TOP_LEVEL_ACTION } from "./interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "./interfaces/elementLevelAction";
-import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum, InputNodeTypeEnum } from "@shared/constants/recordedActions";
 import { getActions } from "./redux/selectors/actions";
 import { iPageSeoMeta } from "./utils/dom";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
@@ -123,18 +123,44 @@ function handleRecordAction(action: iAction): any {
 			if (!lastRecordedAction) throw new Error("Add input recorded before navigate url");
 
 			const isLastEventAddInput = lastRecordedAction.type === ActionsInTestEnum.ADD_INPUT;
-			if (lastRecordedAction.type === ActionsInTestEnum.CLICK && lastRecordedAction.payload.selectors === action.payload.selectors) {
+			if (lastRecordedAction.type === ActionsInTestEnum.CLICK && lastRecordedAction.payload.meta.uniqueNodeId === action.payload.meta.uniqueNodeId) {
 				// Delete click if last action is click on same element
 				store.dispatch(deleteRecordedAction(recordedActions.length - 1));
 			}
-			if (!isLastEventAddInput) {
+
+			if (
+				isLastEventAddInput &&
+				action.payload.meta.uniqueNodeId === lastRecordedAction.payload.meta.uniqueNodeId &&
+				action.payload.meta.value.value === lastRecordedAction.payload.meta.value.value
+			)
+				return;
+
+			if (
+				isLastEventAddInput &&
+				action.payload.meta.uniqueNodeId === lastRecordedAction.payload.meta.uniqueNodeId &&
+				[InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA, InputNodeTypeEnum.CONTENT_EDITABLE, InputNodeTypeEnum.SELECT].includes(
+					action.payload.meta.value.type,
+				)
+			) {
+				// Store add inputs in an array values
+				store.dispatch(updateLastRecordedAction(action));
+			} else {
+				console.log("Value here", lastRecordedAction.type === ActionsInTestEnum.CLICK, action, lastRecordedAction);
+
+				if (
+					lastRecordedAction.type === ActionsInTestEnum.CLICK &&
+					action.payload.meta.value.labelsUniqId &&
+					action.payload.meta.value.labelsUniqId.includes(lastRecordedAction.payload.meta.uniqueNodeId)
+				) {
+					if (
+						action.payload.meta.value.value !== lastRecordedAction.payload.meta.value.inputInfo.value &&
+						action.payload.meta.value.type !== InputNodeTypeEnum.INPUT
+					)
+						return;
+				}
 				store.dispatch(recordAction(action));
 				return false;
 			}
-
-			// Store add inputs in an array values
-			store.dispatch(updateLastRecordedAction(action));
-
 			break;
 		}
 		case ActionsInTestEnum.PAGE_SCROLL:

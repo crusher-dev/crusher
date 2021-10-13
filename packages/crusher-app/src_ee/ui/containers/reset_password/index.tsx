@@ -43,22 +43,25 @@ function EmailPasswordBox() {
 		[password],
 	);
 
-	const verifyInfo = useCallback((completeVerify = false) => {
-		const shouldValidatePassword = completeVerify || password.value;
-		const shouldValidateConfirmPassword = completeVerify || confirmPassword.value;
+	const verifyInfo = useCallback(
+		(completeVerify = false) => {
+			const shouldValidatePassword = completeVerify || password.value;
+			const shouldValidateConfirmPassword = completeVerify || confirmPassword.value;
 
-		if (!validatePassword(password.value) && shouldValidatePassword) {
-			setPassword({ ...password, error: "Please enter valid password" });
-		} else setPassword({ ...password, error: "" });
+			if (!validatePassword(password.value) && shouldValidatePassword) {
+				setPassword({ ...password, error: "Please enter valid password" });
+			} else setPassword({ ...password, error: "" });
 
-		if (!validatePassword(confirmPassword.value) && shouldValidateConfirmPassword) {
-			setConfirmPassword({ ...confirmPassword, error: "Please enter a password with length > 4" });
-		} else setConfirmPassword({ ...confirmPassword, error: "" });
+			if (!validatePassword(confirmPassword.value) && shouldValidateConfirmPassword) {
+				setConfirmPassword({ ...confirmPassword, error: "Please enter a password with length > 4" });
+			} else setConfirmPassword({ ...confirmPassword, error: "" });
 
-		if (password.value !== confirmPassword.value && completeVerify) {
-			setConfirmPassword({ ...confirmPassword, error: "Please enter same password" });
-		} else setConfirmPassword({ ...confirmPassword, error: "" });
-	}, []);
+			if (password.value !== confirmPassword.value && completeVerify) {
+				setConfirmPassword({ ...confirmPassword, error: "Please enter same password" });
+			} else setConfirmPassword({ ...confirmPassword, error: "" });
+		},
+		[password.value, confirmPassword.value],
+	);
 
 	const submitForm = useCallback(async () => {
 		verifyInfo(true);
@@ -90,7 +93,6 @@ function EmailPasswordBox() {
 					placeholder={"Enter your password"}
 					type={"password"}
 					onChange={passwordChange}
-					onKeyDown={onEnter}
 					isError={password.error}
 					onBlur={verifyInfo.bind(this, false)}
 				/>

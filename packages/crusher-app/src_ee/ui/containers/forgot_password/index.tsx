@@ -24,22 +24,25 @@ function ForgotPasswordBox() {
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState(null);
 
-	const emailChange = useCallback((event: any) => {
-		setEmail({ ...email, value: event.target.value });
-	}, []);
+	const emailChange = (event: any) => {
+		setEmail({ error: null, value: event.target.value });
+	};
 
-	const onEnter = useCallback((event: any) => {
+	const onEnter = (event: any) => {
 		if (event.key === "Enter") {
 			return onSubmit();
 		}
-	}, []);
+	};
 
-	const verifyInfo = useCallback((completeVerify = false) => {
-		const shouldValidateEmail = completeVerify || email.value;
-		if (!validateEmail(email.value) && shouldValidateEmail) {
-			setEmail({ ...email, error: "Please enter valid email" });
-		} else setEmail({ ...email, error: "" });
-	}, []);
+	const verifyInfo = useCallback(
+		(completeVerify = false) => {
+			const shouldValidateEmail = completeVerify || email.value;
+			if (!validateEmail(email.value) && shouldValidateEmail) {
+				setEmail({ ...email, error: "Please enter valid email" });
+			} else setEmail({ ...email, error: "" });
+		},
+		[email.value],
+	);
 
 	const onSubmit = useCallback(async () => {
 		verifyInfo(true);
@@ -53,11 +56,11 @@ function ForgotPasswordBox() {
 			if (e.message === "USER_NOT_EXISTS") {
 				alert("Please add valid email.");
 			} else {
-				alert(e);
+				alert("Something went wrong");
 			}
 		}
 		setLoading(false);
-	}, []);
+	}, [email.value]);
 
 	if (data) {
 		return <div className="text-16 font-extrabold my-50">Please Check your email</div>;

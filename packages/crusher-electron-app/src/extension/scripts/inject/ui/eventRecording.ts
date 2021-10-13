@@ -1,5 +1,5 @@
 import { getAllAttributes } from "../../../utils/helpers";
-import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum, IInputNodeInfo, InputNodeTypeEnum } from "@shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
 import { getSelectors } from "../../../utils/selector";
@@ -11,6 +11,8 @@ import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
 import html2canvas from "html2canvas";
 import { ChangeEvent } from "react";
+import { getInputElementValue } from "unique-selector/src/crusher-selector/element";
+import { v4 as uuidv4 } from "uuid";
 
 const KEYS_TO_TRACK_FOR_INPUT = new Set(["Enter", "Escape", "Tab"]);
 
@@ -391,6 +393,12 @@ export default class EventRecording {
 	async handleWindowClick(event: any) {
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
+		const inputNodeInfo = this._getInputNodeInfo(target);
+		if (inputNodeInfo) return;
+
+		const tagName = target.tagName.toLowerCase();
+		if (["option", "select"].includes(tagName)) return;
+
 		if (isRecorderCover) {
 			// Disable event propagation to stop other event listener to act like outSideClick Detector.
 			event.stopPropagation();
@@ -417,7 +425,9 @@ export default class EventRecording {
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
-			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target);
+			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target, {
+				inputInfo: tagName === "label" ? inputNodeInfo : null,
+			});
 		}
 
 		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
@@ -477,14 +487,79 @@ export default class EventRecording {
 		this.turnOnElementModeInParentFrame(event.detail.element);
 	}
 
-	handleElementInput(event: InputEvent) {
-		const value = (event.target as HTMLInputElement).value;
-		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, value);
+	_getInputNodeInfo(eventNode: HTMLElement): IInputNodeInfo | null {
+		const nodeTagName = eventNode.tagName.toLowerCase();
+
+		switch (nodeTagName) {
+			case "select": {
+				const selectElement = event.target as HTMLSelectElement;
+				const selectedOptions = selectElement.selectedOptions ? Array.from(selectElement.selectedOptions) : [];
+				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map((option, index) => option.index), name: selectElement.name };
+			}
+			case "input": {
+				const inputElement = eventNode as HTMLInputElement;
+				const inputType = inputElement.type;
+				const inputName = inputElement.name;
+				const parentForm = inputElement.form ? inputElement.form : document.body;
+
+				switch (inputType) {
+					case "file":
+						return null;
+					case "checkbox":
+						return { type: InputNodeTypeEnum.CHECKBOX, value: inputElement.checked, name: inputName, inputType: inputType };
+					case "radio":
+						return { type: InputNodeTypeEnum.RADIO, value: inputElement.checked, name: inputName, inputType };
+					default:
+						// color, date, datetime, datetime-local, email, month, number, password, range, search, tel, text, time, url, week
+						return { type: InputNodeTypeEnum.INPUT, value: inputElement.value, name: inputName, inputType: inputType.toLowerCase() };
+				}
+			}
+			case "textarea": {
+				const textAreaElement = eventNode as HTMLTextAreaElement;
+				return { type: InputNodeTypeEnum.TEXTAREA, value: textAreaElement.value, name: textAreaElement.name };
+			}
+			default: {
+				if (!eventNode.isContentEditable) return null;
+
+				const contentEditableElement = eventNode as HTMLElement;
+
+				return { type: InputNodeTypeEnum.CONTENT_EDITABLE, name: contentEditableElement.id, value: contentEditableElement.innerText };
+			}
+		}
 	}
 
-	handleElementChange(event: InputEvent) {
-		const value = (event.target as HTMLInputElement).value;
-		// this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, value);
+	async _getUniqueNodeId(node: Node) {
+		const id = uuidv4();
+		(window as any)[id] = node;
+		return id;
+	}
+
+	async handleElementInput(event: InputEvent) {
+		if (!event.isTrusted) return;
+		const inputNodeInfo = this._getInputNodeInfo(event.target as HTMLElement);
+		if (!inputNodeInfo || ![InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
+
+		const labelsArr = (event.target as HTMLInputElement).labels ? Array.from((event.target as HTMLInputElement).labels) : [];
+		const labelsUniqId = [];
+
+		for (const label of labelsArr) {
+			labelsUniqId.push(await this._getUniqueNodeId(label));
+		}
+
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, { ...inputNodeInfo, labelsUniqId });
+	}
+
+	async handleElementChange(event: InputEvent) {
+		if (!event.isTrusted) return;
+		const inputNodeInfo = await this._getInputNodeInfo(event.target as HTMLElement);
+		if (!inputNodeInfo) return;
+		const labelsArr = (event.target as HTMLInputElement).labels ? Array.from((event.target as HTMLInputElement).labels) : [];
+		const labelsUniqId = [];
+
+		for (const label of labelsArr) {
+			labelsUniqId.push(await this._getUniqueNodeId(label));
+		}
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, { ...inputNodeInfo, labelsUniqId });
 	}
 
 	registerNodeListeners() {

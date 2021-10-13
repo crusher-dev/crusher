@@ -5,6 +5,7 @@ import { iAction } from "@shared/types/action";
 import html2canvas from "html2canvas";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
+import { v4 as uuidv4 } from "uuid";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -54,6 +55,12 @@ export default class EventsController {
 		});
 	}
 
+	async _getUniqueNodeId(node: Node) {
+		const id = uuidv4();
+		(window as any)[id] = node;
+		return id;
+	}
+
 	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
 
@@ -76,6 +83,8 @@ export default class EventsController {
 			console.log("Finsihed");
 		}
 
+		console.log("Captured target", capturedTarget);
+
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.RECORD_ACTION,
 			meta: {
@@ -84,6 +93,8 @@ export default class EventsController {
 					selectors: selectors,
 					meta: {
 						value,
+						uniqueNodeId:
+							capturedTarget && ![document.body, document].includes(capturedTarget) ? await this._getUniqueNodeId(capturedTarget) : null,
 					},
 				},
 				screenshot: capturedElementScreenshot,

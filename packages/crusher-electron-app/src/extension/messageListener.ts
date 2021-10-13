@@ -71,7 +71,23 @@ export interface iSeoMetaInformationMeta {
 	metaTags: iPageSeoMeta;
 }
 
-function handleRecordAction(action: iAction): any {
+async function areTwoNodesSame(firstAction: iAction, secondAction: iAction) {
+	const firstUniqueId = await (window as any).electron.getNodeId(firstAction.payload.meta.uniqueNodeId);
+	const secondUniqueId = await (window as any).electron.getNodeId(secondAction.payload.meta.uniqueNodeId);
+
+	return firstUniqueId !== -1 && secondUniqueId !== -1 && firstUniqueId === secondUniqueId;
+}
+
+async function checkIfLabelIdIncludesCurrent(lastAction: iAction, currentAction: iAction) {
+	const finalArrPromise = currentAction.payload.meta.value.labelsUniqId.map((id) => {
+		return (window as any).electron.getNodeId(id);
+	});
+	const finalArr = await Promise.all(finalArrPromise);
+
+	return finalArr.includes(await (window as any).electron.getNodeId(lastAction.payload.meta.uniqueNodeId));
+}
+
+async function handleRecordAction(action: iAction): any {
 	const store = getStore();
 	if (!isRecorderOn(store.getState())) {
 		return;
@@ -123,21 +139,21 @@ function handleRecordAction(action: iAction): any {
 			if (!lastRecordedAction) throw new Error("Add input recorded before navigate url");
 
 			const isLastEventAddInput = lastRecordedAction.type === ActionsInTestEnum.ADD_INPUT;
-			if (lastRecordedAction.type === ActionsInTestEnum.CLICK && lastRecordedAction.payload.meta.uniqueNodeId === action.payload.meta.uniqueNodeId) {
+			if (lastRecordedAction.type === ActionsInTestEnum.CLICK && (await areTwoNodesSame(action, lastRecordedAction))) {
 				// Delete click if last action is click on same element
 				store.dispatch(deleteRecordedAction(recordedActions.length - 1));
 			}
 
 			if (
 				isLastEventAddInput &&
-				action.payload.meta.uniqueNodeId === lastRecordedAction.payload.meta.uniqueNodeId &&
+				(await areTwoNodesSame(action, lastRecordedAction)) &&
 				action.payload.meta.value.value === lastRecordedAction.payload.meta.value.value
 			)
 				return;
 
 			if (
 				isLastEventAddInput &&
-				action.payload.meta.uniqueNodeId === lastRecordedAction.payload.meta.uniqueNodeId &&
+				(await areTwoNodesSame(action, lastRecordedAction)) &&
 				[InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA, InputNodeTypeEnum.CONTENT_EDITABLE, InputNodeTypeEnum.SELECT].includes(
 					action.payload.meta.value.type,
 				)
@@ -150,7 +166,7 @@ function handleRecordAction(action: iAction): any {
 				if (
 					lastRecordedAction.type === ActionsInTestEnum.CLICK &&
 					action.payload.meta.value.labelsUniqId &&
-					action.payload.meta.value.labelsUniqId.includes(lastRecordedAction.payload.meta.uniqueNodeId)
+					(await checkIfLabelIdIncludesCurrent(lastRecordedAction, action))
 				) {
 					if (
 						action.payload.meta.value.value !== lastRecordedAction.payload.meta.value.inputInfo.value &&

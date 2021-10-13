@@ -112,9 +112,13 @@ export class WebView {
 		ipcMain.on("post-message-to-webview", this._postMessageToWebView.bind(this));
 	}
 
-	async getNodeId() {
-		const out = await this.playwrightInstance.getSdkManager().page.evaluateHandle(() => Promise.resolve((window as any).tempNode));
-		return out.getNodeId();
+	async getNodeId(_, id) {
+		try {
+			const out = await this.playwrightInstance.getSdkManager().page.evaluateHandle((id) => Promise.resolve((window as any)[id]), id);
+			return out.getNodeId();
+		} catch (err) {
+			return -1;
+		}
 	}
 
 	async _postMessageToWebView(event, data) {

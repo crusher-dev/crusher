@@ -12,6 +12,7 @@ import { RelevantHoverDetection } from "./relevantHoverDetection";
 import html2canvas from "html2canvas";
 import { ChangeEvent } from "react";
 import { getInputElementValue } from "unique-selector/src/crusher-selector/element";
+import { v4 as uuidv4 } from "uuid";
 
 const KEYS_TO_TRACK_FOR_INPUT = new Set(["Enter", "Escape", "Tab"]);
 
@@ -528,8 +529,9 @@ export default class EventRecording {
 	}
 
 	async _getUniqueNodeId(node: Node) {
-		(window as any).tempNode = node;
-		return (window as any).electron.getNodeId();
+		const id = uuidv4();
+		(window as any)[id] = node;
+		return id;
 	}
 
 	async handleElementInput(event: InputEvent) {

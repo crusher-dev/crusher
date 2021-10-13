@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld("isCrusherRecorder", true);
 contextBridge.exposeInMainWorld("electron", {
 	reloadExtension: () => ipcRenderer.send("reload-extension"),
 	getNodeScreenshot: async (rectInfo) => ipcRenderer.invoke("get-node-screenshot", rectInfo),
+	getNodeId: async () => ipcRenderer.invoke("get-node-id"),
 	webview: {
 		addEventListener: (type, callback) => {
 			callbacks.push({ type, callback });

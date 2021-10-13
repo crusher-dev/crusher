@@ -54,6 +54,11 @@ export default class EventsController {
 		});
 	}
 
+	async _getUniqueNodeId(node: Node) {
+		(window as any).tempNode = node;
+		return (window as any).electron.getNodeId();
+	}
+
 	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
 		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
 
@@ -76,6 +81,8 @@ export default class EventsController {
 			console.log("Finsihed");
 		}
 
+		console.log("Captured target", capturedTarget);
+
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.RECORD_ACTION,
 			meta: {
@@ -84,6 +91,8 @@ export default class EventsController {
 					selectors: selectors,
 					meta: {
 						value,
+						uniqueNodeId:
+							capturedTarget && ![document.body, document].includes(capturedTarget) ? await this._getUniqueNodeId(capturedTarget) : null,
 					},
 				},
 				screenshot: capturedElementScreenshot,

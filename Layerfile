@@ -26,6 +26,8 @@ COPY . .
 MEMORY 4G
 
 SECRET ENV SCHEMA_OBJ_URL
+SECRET ENV GIT_REPO_FULL
+
 RUN mkdir db && curl "$SCHEMA_OBJ_URL" > db/schema.sql
 
 RUN yarn

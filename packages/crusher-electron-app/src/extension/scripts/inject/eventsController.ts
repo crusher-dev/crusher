@@ -5,6 +5,7 @@ import { iAction } from "@shared/types/action";
 import html2canvas from "html2canvas";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
+import { v4 as uuidv4 } from "uuid";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -55,8 +56,9 @@ export default class EventsController {
 	}
 
 	async _getUniqueNodeId(node: Node) {
-		(window as any).tempNode = node;
-		return (window as any).electron.getNodeId();
+		const id = uuidv4();
+		(window as any)[id] = node;
+		return id;
 	}
 
 	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {

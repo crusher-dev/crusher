@@ -61,17 +61,19 @@ class UserAuthService {
 		}
 
 		const token = generateJWT({ email, id: user.id });
+		console.log({ email, id: user.id }, token);
 
 		this.emailManager.sendEmail(
 			email,
 			"Change Crusher Password",
-			`To change password for crusher <a href='${resolvePathToFrontendURI("forgot_password")}?token=${token}'>Click here</a>`,
+			`To change password for crusher <a href='${resolvePathToFrontendURI("reset_password")}?token=${token}'>Click here</a>`,
 		);
 
 		return "Successful";
 	}
 
 	async resetPassword(token: string, password: string, req: any, res: any) {
+		console.log(token);
 		try {
 			const { id, email } = decodeToken(token) as { email: string; id: string };
 			try {

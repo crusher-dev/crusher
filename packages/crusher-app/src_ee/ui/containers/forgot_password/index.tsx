@@ -52,60 +52,63 @@ function ForgotPasswordBox() {
 		try {
 			const { status } = await forgotPassword(email.value);
 			setData(status);
+			console.log(status);
 		} catch (e: any) {
 			if (e.message === "USER_NOT_EXISTS") {
-				alert("Please add valid email.");
+				alert("Email not registered");
 			} else {
 				alert("Something went wrong");
 			}
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
 	}, [email.value]);
-
-	if (data) {
-		return <div className="text-16 font-extrabold my-50">Please Check your email</div>;
-	}
 
 	return (
 		<div>
-			<div className={"font-cera text-15 leading-none font-500 mt-20 mb-5"}>Reset Password</div>
-			<div className=" font-cera text-12 font-light mb-20">We'll send you link to reset password</div>
-			<div css={[boxCss]}>
-				<div className={"mb-12"}>
-					<Input
-						autoComplete={"email"}
-						value={email.value}
-						onChange={emailChange}
-						placeholder={"Enter email"}
-						isError={email.error}
-						onBlur={verifyInfo.bind(this, false)}
-						onKeyUp={onEnter}
-					/>
-					<Conditional showIf={email.error}>
-						<div className={"mt-8 text-12"} css={errorState}>
-							{email.error}
-						</div>
-					</Conditional>
-				</div>
-
-				<Button size={"large"} className={"mb-20"} onClick={onSubmit}>
-					<div className={"flex justify-center items-center"}>
-						<Conditional showIf={!loading}>
-							<span className={"mt-2"}>Send verification Link</span>
-						</Conditional>
-						<Conditional showIf={loading}>
-							<span>
-								{" "}
-								<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-							</span>
-							<span className={"mt-2 ml-8"}>Processing</span>
+			<Conditional showIf={data && !loading}>
+				<div className="text-32 font-extrabold my-50">Please Check your email</div>;
+			</Conditional>
+			<Conditional showIf={!data}>
+				<div className={"font-cera text-15 leading-none font-500 mt-20 mb-5"}>Reset Password</div>
+				<div className=" font-cera text-12 font-light mb-20">We'll send you link to reset password</div>
+				<div css={[boxCss]}>
+					<div className={"mb-12"}>
+						<Input
+							autoComplete={"email"}
+							value={email.value}
+							onChange={emailChange}
+							placeholder={"Enter email"}
+							isError={email.error}
+							onBlur={verifyInfo.bind(this, false)}
+							onKeyUp={onEnter}
+						/>
+						<Conditional showIf={email.error}>
+							<div className={"mt-8 text-12"} css={errorState}>
+								{email.error}
+							</div>
 						</Conditional>
 					</div>
-				</Button>
-				<div className="text-13 underline text-center" onClick={React.useCallback(() => router.push("/login"), [])}>
-					Go back
+
+					<Button size={"large"} className={"mb-20"} onClick={onSubmit}>
+						<div className={"flex justify-center items-center"}>
+							<Conditional showIf={!loading}>
+								<span className={"mt-2"}>Send verification Link</span>
+							</Conditional>
+							<Conditional showIf={loading}>
+								<span>
+									{" "}
+									<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+								</span>
+								<span className={"mt-2 ml-8"}>Processing</span>
+							</Conditional>
+						</div>
+					</Button>
+					<div className="text-13 underline text-center" onClick={React.useCallback(() => router.push("/login"), [])}>
+						Go back
+					</div>
 				</div>
-			</div>
+			</Conditional>
 		</div>
 	);
 }

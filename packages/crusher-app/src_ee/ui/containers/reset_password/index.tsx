@@ -16,7 +16,7 @@ import { RequestMethod } from "@types/RequestOptions";
 import { getBoolean } from "@utils/common";
 
 const resetPasswordRequest = (token: string, password: string) => {
-	return backendRequest("/users/actions/signup", {
+	return backendRequest("/users/actions/reset_password", {
 		method: RequestMethod.POST,
 		payload: { token, password },
 	});
@@ -34,36 +34,33 @@ function EmailPasswordBox() {
 		(e) => {
 			setConfirmPassword({ ...confirmPassword, value: e.target.value });
 		},
-		[confirmPassword],
+		[confirmPassword.value],
 	);
 	const passwordChange = useCallback(
 		(e) => {
 			setPassword({ ...password, value: e.target.value });
 		},
-		[password],
+		[password.value],
 	);
 
-	const verifyInfo = useCallback(
-		(completeVerify = false) => {
-			const shouldValidatePassword = completeVerify || password.value;
-			const shouldValidateConfirmPassword = completeVerify || confirmPassword.value;
+	const verifyInfo = (completeVerify = false) => {
+		const shouldValidatePassword = completeVerify || password.value;
+		const shouldValidateConfirmPassword = completeVerify || confirmPassword.value;
 
-			if (!validatePassword(password.value) && shouldValidatePassword) {
-				setPassword({ ...password, error: "Please enter valid password" });
-			} else setPassword({ ...password, error: "" });
+		if (!validatePassword(password.value) && shouldValidatePassword) {
+			setPassword({ ...password, error: "Please enter valid password" });
+		} else setPassword({ ...password, error: "" });
 
-			if (!validatePassword(confirmPassword.value) && shouldValidateConfirmPassword) {
-				setConfirmPassword({ ...confirmPassword, error: "Please enter a password with length > 4" });
-			} else setConfirmPassword({ ...confirmPassword, error: "" });
+		if (!validatePassword(confirmPassword.value) && shouldValidateConfirmPassword) {
+			setConfirmPassword({ ...confirmPassword, error: "Please enter a password with length > 4" });
+		} else setConfirmPassword({ ...confirmPassword, error: "" });
 
-			if (password.value !== confirmPassword.value && completeVerify) {
-				setConfirmPassword({ ...confirmPassword, error: "Please enter same password" });
-			} else setConfirmPassword({ ...confirmPassword, error: "" });
-		},
-		[password.value, confirmPassword.value],
-	);
+		if (password.value !== confirmPassword.value && completeVerify) {
+			setConfirmPassword({ ...confirmPassword, error: "Please enter same password" });
+		} else setConfirmPassword({ ...confirmPassword, error: "" });
+	};
 
-	const submitForm = useCallback(async () => {
+	const submitForm = async () => {
 		verifyInfo(true);
 		if (!validatePassword(password.value) || !validatePassword(confirmPassword.value)) return;
 		setLoading(true);
@@ -75,7 +72,7 @@ function EmailPasswordBox() {
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
 		setLoading(false);
-	}, []);
+	};
 
 	const onEnter = useCallback((event: any) => {
 		if (event.key === "Enter") {
@@ -94,7 +91,7 @@ function EmailPasswordBox() {
 					type={"password"}
 					onChange={passwordChange}
 					isError={password.error}
-					onBlur={verifyInfo.bind(this, false)}
+					onBlur={verifyInfo}
 				/>
 				<Conditional showIf={getBoolean(password.error)}>
 					<div className={"mt-8 text-12"} css={errorState}>
@@ -110,7 +107,7 @@ function EmailPasswordBox() {
 					onChange={confirmPasswordChange}
 					onKeyDown={onEnter}
 					isError={confirmPassword.error}
-					onBlur={verifyInfo.bind(this, false)}
+					onBlur={verifyInfo}
 				/>
 				<Conditional showIf={getBoolean(confirmPassword.error)}>
 					<div className={"mt-8 text-12"} css={errorState}>
@@ -146,27 +143,34 @@ function EmailPasswordBox() {
 }
 
 export const ResetPasswordContainer = () => {
+	const { query } = useRouter();
+
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-120"}>
 				<div className="flex flex-col items-center" css={containerCSS}>
 					<Logo height={"24rem"} className={"mb-24 mt-80"} />
-					<div className={"font-cera text-16 leading-none font-700 mb-38"}>Enter your new password</div>
+					<Conditional showIf={!query?.token}>
+						<span className={"mt-2 text-32"}>Invalid Token</span>
+					</Conditional>
+					<Conditional showIf={Boolean(query?.token)}>
+						<div className={"font-cera text-16 leading-none font-700 mb-38"}>Enter your new password</div>
+						<EmailPasswordBox />
 
-					<EmailPasswordBox />
-					<div className={"font-cera text-15 leading-none font-500"}>
-						Already have an account?
-						<a href={"/login"}>
-							<span
-								css={css`
-									color: #8a96ff;
-								`}
-								className={"underline ml-8"}
-							>
-								Login
-							</span>
-						</a>
-					</div>
+						<div className={"font-cera text-15 leading-none font-500"}>
+							Already have an account?
+							<a href={"/login"}>
+								<span
+									css={css`
+										color: #8a96ff;
+									`}
+									className={"underline ml-8"}
+								>
+									Login
+								</span>
+							</a>
+						</div>
+					</Conditional>
 				</div>
 			</CenterLayout>
 		</CrusherBase>

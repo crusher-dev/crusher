@@ -9,8 +9,8 @@ export type INextTestInstancesDependencies = {
 export type ITestExecutionQueuePayload = IJobRunRequest & {
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
 	exports?: Array<[string, any]> | null;
-	startingStorageState: { cookies: Array<any>; origins: Array<any>; } | null,
-	browserContextUrl: string | null,
+	startingStorageState: { cookies: Array<any>; origins: Array<any>; } | null;
+	startingPersistentContext: string | null;
 };
 
 export interface ITestCompleteQueuePayload {
@@ -24,6 +24,7 @@ export interface ITestCompleteQueuePayload {
 	storageState: { cookies: Array<any>; origins: Array<any>; } | null,
 	hasPassed: boolean;
 	failedReason?: Error;
+	persistenContextZipURL: string | null;
 }
 
 export interface IVideoProcessorQueuePayload {

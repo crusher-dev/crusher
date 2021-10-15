@@ -10,6 +10,7 @@ import { BrowserEnum, PlaywrightBrowserMap } from "@shared/types/browser";
 import * as fs from "fs";
 import { IActionResultItem } from "@shared/types/common/general";
 import { IExportsManager } from "@shared/lib/exports/interface";
+import { zipDirectory } from "@src/util/helper";
 
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
 export class CodeRunnerService {
@@ -21,6 +22,7 @@ export class CodeRunnerService {
 	storageManager: IStorageManager;
 	globalManager: IGlobalManager;
 	exportsManager: IExportsManager;
+	persistentContextDir: string | null;
 
 	constructor(
 		actions: Array<iAction>,
@@ -52,6 +54,7 @@ export class CodeRunnerService {
 		this.logManager = logManager;
 		this.globalManager = globalManager;
 		this.exportsManager = exportsManager;
+		this.persistentContextDir = persistentContextDir;
 	}
 
 	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
@@ -68,7 +71,13 @@ export class CodeRunnerService {
 		});
 	}
 
-	async runTest(): Promise<{ recordedRawVideo: string; hasPassed: boolean; error: Error | undefined; actionResults: any }> {
+	async runTest(): Promise<{
+		recordedRawVideo: string;
+		hasPassed: boolean;
+		error: Error | undefined;
+		actionResults: any;
+		persistenContextZipURL: string | null;
+	}> {
 		const code = await this.codeGenerator.getCode(this.actions);
 		let error, recordedRawVideoUrl;
 		try {
@@ -112,6 +121,23 @@ export class CodeRunnerService {
 
 		const testActionResults = this.globalManager.get(TEST_ACTIONS_RESULT_KEY);
 
-		return { recordedRawVideo: recordedRawVideoUrl, hasPassed: !error, error: error, actionResults: this.getCompleteActionsResult(testActionResults) };
+		let persistenContextZipURL = null;
+		if (this.persistentContextDir) {
+			const persistenContextZipBuffer = await zipDirectory(this.persistentContextDir);
+			const persistentContextDirName = path.basename(this.persistentContextDir);
+
+			persistenContextZipURL = await this.storageManager.uploadBuffer(
+				persistenContextZipBuffer,
+				path.join(codeGeneratorConfig.assetsDir, `${persistentContextDirName}.zip`),
+			);
+		}
+
+		return {
+			recordedRawVideo: recordedRawVideoUrl,
+			hasPassed: !error,
+			error: error,
+			actionResults: this.getCompleteActionsResult(testActionResults),
+			persistenContextZipURL,
+		};
 	}
 }

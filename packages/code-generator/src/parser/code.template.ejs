@@ -6,8 +6,13 @@ const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } =
 // @TODO: globalManager, logManager, storageManager, exportsManager are supposed to be injected globally
 const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager);
 
-const browser = await playwright["<%= browserName %>"].launch(<%- JSON.stringify(defaultBrowserLaunchOptions) %>);
-let capturedVideo, browserContext, page;
+let capturedVideo, browserContext, page, browser;
+<% if (!isPersistentContext) { %>
+browser = await playwright["<%= browserName %>"].launch(<%- JSON.stringify(defaultBrowserLaunchOptions) %>);
+<% } else { %>
+browser = null;
+<% } %>
+
 try {
 globalManager.set("browserContextOptions", <%- JSON.stringify(defaultBrowserContextOptions) %>);
 
@@ -15,16 +20,13 @@ const actions = <%- JSON.stringify(actions) %>
 await crusherRunnerActionManager.runActions(getBrowserActions(actions), browser);
 
 const browserContextOptions = globalManager.get("browserContextOptions");
-<% if (isPeristentContext) { %>
-browserContext = await browser.launchPersistentContext("<%= persistentContextDir %>", {
-  ...browserContextOptions,
-});
+<% if (isPersistentContext) { %>
+browserContext = await playwright["<%= browserName %>"].launchPersistentContext("<%= persistentContextDir %>", {...<%- JSON.stringify(defaultBrowserLaunchOptions) %>,  ...browserContextOptions});
 <% } else { %>
 browserContext = await browser.newContext({
     ...browserContextOptions,
 });
 <% } %>
-
 <% if (isTracingOn) { %>
 await browserContext.tracing.start({ screenshots: true, snapshots: true });
 <% } %>
@@ -51,7 +53,9 @@ await crusherRunnerActionManager.runActions(getMainActions(actions), browser, pa
   <% } %>
   await page.close();
   await browserContext.close();
-  await browser.close();
+  if(browser) {
+    await browser.close();
+  }
   throw ex;
 }
 
@@ -60,4 +64,6 @@ globalManager.set("recordedVideoPath", await page.video().path());
 <% } %>
 await page.close();
 await browserContext.close();
-await browser.close();
+if(browser) {
+  await browser.close();
+}

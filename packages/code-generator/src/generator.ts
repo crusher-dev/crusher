@@ -12,6 +12,7 @@ interface iCodeGeneratorOptions {
 	videoSavePath: string;
 	turnOnTracing?: boolean;
 	tracePath?: string;
+	persistentContextDir?: string;
 }
 
 export class CodeGenerator {
@@ -44,6 +45,7 @@ export class CodeGenerator {
 				args: ["--disable-shm-usage", "--disable-gpu"],
 				...this.options.defaultBrowserLaunchOptions,
 			},
+			persistentContextDir: this.options.persistentContextDir,
 		});
 
 		return parser.getCode();

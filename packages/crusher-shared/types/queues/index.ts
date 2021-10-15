@@ -10,6 +10,7 @@ export type ITestExecutionQueuePayload = IJobRunRequest & {
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
 	exports?: Array<[string, any]> | null;
 	startingStorageState: { cookies: Array<any>; origins: Array<any>; } | null,
+	browserContextUrl: string | null,
 };
 
 export interface ITestCompleteQueuePayload {

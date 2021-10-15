@@ -15,10 +15,16 @@ const actions = <%- JSON.stringify(actions) %>
 await crusherRunnerActionManager.runActions(getBrowserActions(actions), browser);
 
 const browserContextOptions = globalManager.get("browserContextOptions");
-
-browserContext = await browser.newContext({
+<% if (isPeristentContext) { %>
+browserContext = await browser.launchPersistentContext("<%= persistentContextDir %>", {
   ...browserContextOptions,
 });
+<% } else { %>
+browserContext = await browser.newContext({
+    ...browserContextOptions,
+});
+<% } %>
+
 <% if (isTracingOn) { %>
 await browserContext.tracing.start({ screenshots: true, snapshots: true });
 <% } %>

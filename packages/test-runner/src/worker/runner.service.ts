@@ -30,6 +30,7 @@ export class CodeRunnerService {
 		globalManager: IGlobalManager,
 		exportsManager: IExportsManager,
 		identifer: string,
+		persistentContextDir: string | null = null,
 	) {
 		this.codeGenerator = new CodeGenerator({
 			shouldRecordVideo: isOpenSource() ? false : runnerConfig.shouldRecordVideo,
@@ -42,6 +43,7 @@ export class CodeRunnerService {
 				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-shm-usage", "--disable-gpu"],
 				executablePath: isOpenSource() ? process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH : undefined,
 			},
+			persistentContextDir: persistentContextDir,
 		});
 		this.actions = actions;
 		this.runnerConfig = runnerConfig;

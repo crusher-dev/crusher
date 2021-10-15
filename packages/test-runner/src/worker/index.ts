@@ -8,6 +8,7 @@ import { Job } from "bullmq";
 import { TEST_COMPLETE_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@shared/constants/queues";
 import { ITestExecutionQueuePayload, ITestCompleteQueuePayload, IVideoProcessorQueuePayload } from "@shared/types/queues/";
 import { ExportsManager } from "@shared/lib/exports";
+import { createTempDir, deleteDirIfThere } from "@src/util/helper";
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
@@ -25,6 +26,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		const globalManager = getGlobalManager(true);
 		const exportsManager = new ExportsManager(bullJob.data.exports ? bullJob.data.exports : []);
+		const persistentContextDir = createTempDir();
 
 		if (!globalManager.has(TEST_RESULT_KEY)) {
 			globalManager.set(TEST_RESULT_KEY, []);
@@ -43,6 +45,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 			globalManager,
 			exportsManager,
 			identifier,
+			persistentContextDir
 		);
 		const { recordedRawVideo, hasPassed, error, actionResults } = await codeRunnerService.runTest();
 		if (recordedRawVideo) {
@@ -65,6 +68,11 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		} else {
 			await notifyManager.logTest(ActionStatusEnum.COMPLETED, `Test ${identifier} executed successfully...`, { actionResults });
 		}
+
+		// Upload persistent context dir to s3
+		await storageManager.uploadDirectory(persistentContextDir, bullJob.data.buildId, bullJob.data.testInstanceId);
+
+		deleteDirIfThere(persistentContextDir);
 
 		await testCompleteQueue.add(identifier, {
 			exports: exportsManager.getEntriesArr(),

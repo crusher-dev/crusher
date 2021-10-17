@@ -1,4 +1,4 @@
-import { encryptPassword, generateToken } from "@utils/auth";
+import { encryptPassword, generateToken, generateJWT, decodeToken } from "@utils/auth";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
@@ -10,6 +10,8 @@ import { ICreateUserPayload, IUserTable } from "./interface";
 import { IInviteReferral } from "./invite/interface";
 import { UserInviteService } from "./invite/service";
 import { UsersService } from "./service";
+import { EmailManager } from "@modules/email";
+import { resolvePathToFrontendURI } from "@utils/uri";
 
 @Service()
 class UserAuthService {
@@ -19,6 +21,8 @@ class UserAuthService {
 	private usersService: UsersService;
 	@Inject()
 	private userInviteService: UserInviteService;
+	@Inject()
+	private emailManager: EmailManager;
 
 	async setUserAuthCookies(userId: number, teamId: number, req: any, res: any): Promise<string> {
 		const USER_DOMAIN = req.get("host") ? req.get("host") : "";
@@ -47,6 +51,40 @@ class UserAuthService {
 		await this.setUserAuthCookies(user.id, user.team_id, req, res);
 
 		return user;
+	}
+
+	async forgotPassword(email: string): Promise<string> {
+		const user = await this.usersService.getUserByEmail(email);
+
+		if (!user) {
+			throw new BadRequestError("USER_NOT_EXISTS");
+		}
+
+		const token = generateJWT({ email, id: user.id });
+		console.log({ email, id: user.id }, token);
+
+		this.emailManager.sendEmail(
+			email,
+			"Change Crusher Password",
+			`To change password for crusher <a href='${resolvePathToFrontendURI("reset_password")}?token=${token}'>Click here</a>`,
+		);
+
+		return "Successful";
+	}
+
+	async resetPassword(token: string, password: string, req: any, res: any) {
+		console.log(token);
+		try {
+			const { id, email } = decodeToken(token) as { email: string; id: string };
+			try {
+				await this.usersService.updatePassword(id, password);
+			} catch {
+				new BadRequestError("USER_NOT_EXISTS");
+			}
+			return this.loginWithBasicAuth(email, password, req, res);
+		} catch (error) {
+			return error.message || "Link expired";
+		}
 	}
 
 	async signupUser(

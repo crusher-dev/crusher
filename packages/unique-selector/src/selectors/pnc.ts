@@ -19,8 +19,8 @@ export const getPnC = (htmlNode: HTMLElement, target: HTMLElement): SelectorData
 	const seed4Selectors = generateNDepthSelector(htmlNode, target, 4);
 	newTime = Date.now();
 	time = newTime;
-	// const seed5Selectors = generateNDepthSelector(htmlNode, target, 5);
-	// console.log(newTime - time);
+	const seed5Selectors = generateNDepthSelector(htmlNode, target, 5);
+	console.log(newTime - time);
 	// time = newTime;
 	// const seed6Selectors = generateNDepthSelector(htmlNode, target, 6);
 	// console.log(newTime - time);

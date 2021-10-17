@@ -1,4 +1,4 @@
-import { getAllAttributes } from "../../../utils/helpers";
+import { findDistanceBetweenNodes, getAllAttributes } from "../../../utils/helpers";
 import { ActionsInTestEnum, IInputNodeInfo, InputNodeTypeEnum } from "@shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
@@ -51,6 +51,7 @@ export default class EventRecording {
 
 	private resetUserEventsToDefaultCallback: any = undefined;
 	private releventHoverDetectionManager: RelevantHoverDetection;
+	private _pageRecordedEventsArr = [];
 
 	constructor(options = {} as any) {
 		this.state = {
@@ -354,16 +355,17 @@ export default class EventRecording {
 	}
 
 	async trackAndSaveRelevantHover(element, baseLineTimeStamp: number | null = null) {
-		const hoverNodes = await this.getHoverDependentNodes(element, baseLineTimeStamp);
+		const hoverNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element, baseLineTimeStamp), element);
 		for (let i = 0; i < hoverNodes.length; i++) {
-			console.log("Hover nodes area", hoverNodes[i]);
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, hoverNodes[i], "", null, true);
 		}
 	}
 
 	async turnOnElementModeInParentFrame(element = this.state.targetElement) {
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
-		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(await this.getHoverDependentNodes(element));
+		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(
+			this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[],
+		);
 		const capturedElementScreenshot = null;
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
@@ -553,6 +555,8 @@ export default class EventRecording {
 		if (!event.isTrusted) return;
 		const inputNodeInfo = await this._getInputNodeInfo(event.target as HTMLElement);
 		if (!inputNodeInfo) return;
+		if ([InputNodeTypeEnum.INPUT, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
+
 		const labelsArr = (event.target as HTMLInputElement).labels ? Array.from((event.target as HTMLInputElement).labels) : [];
 		const labelsUniqId = [];
 

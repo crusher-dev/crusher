@@ -284,7 +284,7 @@ export default class EventRecording {
 		// console.log("Scrolled, ", event.target);
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const _this = this;
-		function processScroll() {
+		const processScroll = () => {
 			const target = event.target;
 
 			const isDocumentScrolled = event.target === document;
@@ -294,12 +294,15 @@ export default class EventRecording {
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
+				const inputNodeInfo = this._getInputNodeInfo(event.target);
+				if (inputNodeInfo && [InputNodeTypeEnum.CONTENT_EDITABLE, InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA].includes(inputNodeInfo.type))
+					return;
 				// @TODO: Need a proper way to detect real and fake scroll events
 				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}
-		}
+		};
 
 		if (!this.scrollTimer) {
 			if (now - this.lastScrollFireTime > 3 * minScrollTime) {

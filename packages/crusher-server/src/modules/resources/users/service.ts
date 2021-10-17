@@ -53,6 +53,10 @@ class UsersService {
 		return this.dbManager.update(`UPDATE users SET team_id = ? WHERE id = ?`, [teamId, userId]);
 	}
 
+	async updatePassword(id: string, password: string) {
+		return this.dbManager.update(`UPDATE users SET password = ? WHERE id = ?`, [encryptPassword(password), id]);
+	}
+
 	async setupInitialUserWorkspace(
 		user: Omit<ICreateUserPayload, "password" | "uuid"> & { id: number; teamId?: number; projectId?: number },
 	): Promise<{ userId: number; teamId: number; projectId: number }> {

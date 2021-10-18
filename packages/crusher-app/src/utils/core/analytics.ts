@@ -3,18 +3,19 @@ export const waitForSegmentToLoad = () => {
 		const timer = setInterval(() => {
 			if (!!window["analytics"]) {
 				res();
+				clearInterval(timer);
 			}
-			clearInterval(timer);
+
 		}, 100);
 	});
 };
 export class Analytics {
-	static async identify(name, userId, teamID, planType, selfHost, mode) {
+	static async identify(name, userId,email, teamID, planType, selfHost, mode) {
 		await waitForSegmentToLoad();
-		window["analytics"].identify({
+		window["analytics"].identify(userId,{
 			name,
-			userId,
 			teamID,
+			email,
 			planType,
 			selfHost,
 			mode,

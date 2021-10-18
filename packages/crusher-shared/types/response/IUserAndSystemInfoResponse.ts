@@ -12,6 +12,8 @@ export type TUserAPIData = {
 	name: string;
 	meta: Record<string, any>;
 	uuid: string;
+	userId:string;
+	email: string;
 	avatar: string;
 } | null;
 
@@ -42,6 +44,7 @@ export type TSystemInfo = {
 
 export type IUserAndSystemInfoResponse = {
 	userId: number | null;
+
 	isUserLoggedIn: boolean;
 	userData: TUserAPIData;
 	team: ITeamAPIData;

@@ -1,8 +1,18 @@
 diff --git a/node_modules/playwright-chromium/lib/client/browserType.js b/node_modules/playwright-chromium/lib/client/browserType.js
-index 1b1277c..ca7fad6 100644
+index 1b1277c..07d3bae 100644
 --- a/node_modules/playwright-chromium/lib/client/browserType.js
 +++ b/node_modules/playwright-chromium/lib/client/browserType.js
-@@ -269,6 +269,7 @@ class BrowserType extends _channelOwner.ChannelOwner {
+@@ -112,7 +112,8 @@ class BrowserType extends _channelOwner.ChannelOwner {
+         ignoreAllDefaultArgs: !!options.ignoreDefaultArgs && !Array.isArray(options.ignoreDefaultArgs),
+         env: options.env ? (0, _clientHelper.envObjectToArray)(options.env) : undefined,
+         channel: options.channel,
+-        userDataDir
++        userDataDir,
++        storageState: contextParams.storageState ? contextParams.storageState : undefined
+       };
+       const result = await channel.launchPersistentContext(persistentParams);
+ 
+@@ -269,6 +270,7 @@ class BrowserType extends _channelOwner.ChannelOwner {
        }, params.headers);
        const headers = paramsHeaders ? (0, _utils.headersObjectToArray)(paramsHeaders) : undefined;
        const result = await channel.connectOverCDP({
@@ -10,6 +20,29 @@ index 1b1277c..ca7fad6 100644
          sdkLanguage: 'javascript',
          endpointURL,
          headers,
+diff --git a/node_modules/playwright-chromium/lib/client/jsHandle.js b/node_modules/playwright-chromium/lib/client/jsHandle.js
+index 425992b..e1ffd89 100644
+--- a/node_modules/playwright-chromium/lib/client/jsHandle.js
++++ b/node_modules/playwright-chromium/lib/client/jsHandle.js
+@@ -96,6 +96,18 @@ class JSHandle extends _channelOwner.ChannelOwner {
+     return null;
+   }
+ 
++  async getObjectId() {
++    return this._wrapApiCall(async channel => {
++      return parseResult((await channel.getObjectId()).value);
++    });
++  }
++
++  async getNodeId() {
++    return this._wrapApiCall(async channel => {
++      return parseResult((await channel.getNodeId()).value);
++    });
++  }
++
+   async dispose() {
+     return this._wrapApiCall(async channel => {
+       return await channel.dispose();
 diff --git a/node_modules/playwright-chromium/lib/client/page.js b/node_modules/playwright-chromium/lib/client/page.js
 index 7cf16eb..9497ac3 100644
 --- a/node_modules/playwright-chromium/lib/client/page.js
@@ -25,6 +58,29 @@ index 7cf16eb..9497ac3 100644
  
      this._channel.on('load', () => this.emit(_events.Events.Page.Load, this));
  
+diff --git a/node_modules/playwright-chromium/lib/dispatchers/jsHandleDispatcher.js b/node_modules/playwright-chromium/lib/dispatchers/jsHandleDispatcher.js
+index c2572e6..8f486e0 100644
+--- a/node_modules/playwright-chromium/lib/dispatchers/jsHandleDispatcher.js
++++ b/node_modules/playwright-chromium/lib/dispatchers/jsHandleDispatcher.js
+@@ -85,6 +85,18 @@ class JSHandleDispatcher extends _dispatcher.Dispatcher {
+     };
+   }
+ 
++  async getObjectId() {
++    return {
++      value: serializeResult(this._object.getObjectId())
++    };
++  }
++
++  async getNodeId() {
++    return {
++      value: serializeResult(await this._object.getNodeId())
++    };
++  }
++
+   async dispose() {
+     await this._object.dispose();
+   }
 diff --git a/node_modules/playwright-chromium/lib/generated/injectedScriptSource.js b/node_modules/playwright-chromium/lib/generated/injectedScriptSource.js
 index 2baf741..e11effa 100644
 --- a/node_modules/playwright-chromium/lib/generated/injectedScriptSource.js
@@ -38,23 +94,28 @@ index 2baf741..e11effa 100644
  exports.source = source;
 \ No newline at end of file
 diff --git a/node_modules/playwright-chromium/lib/protocol/validator.js b/node_modules/playwright-chromium/lib/protocol/validator.js
-index cdfc29f..79c6967 100644
+index cdfc29f..0e53cfe 100644
 --- a/node_modules/playwright-chromium/lib/protocol/validator.js
 +++ b/node_modules/playwright-chromium/lib/protocol/validator.js
-@@ -264,10 +264,12 @@ function createScheme(tChannel) {
+@@ -264,10 +264,16 @@ function createScheme(tChannel) {
        omitContent: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
        path: _validatorPrimitives.tString
      })),
 +    strictSelectors: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
      userDataDir: _validatorPrimitives.tString,
-     slowMo: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tNumber)
+-    slowMo: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tNumber)
++    slowMo: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tNumber),
++    storageState: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({
++      cookies: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tArray)(tType('SetNetworkCookie'))),
++      origins: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tArray)(tType('OriginStorage')))
++    }))
    });
    scheme.BrowserTypeConnectOverCDPParams = (0, _validatorPrimitives.tObject)({
 +    customBrowserName: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString),
      sdkLanguage: _validatorPrimitives.tString,
      endpointURL: _validatorPrimitives.tString,
      headers: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tArray)(tType('NameValue'))),
-@@ -324,6 +326,7 @@ function createScheme(tChannel) {
+@@ -324,6 +330,7 @@ function createScheme(tChannel) {
        omitContent: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
        path: _validatorPrimitives.tString
      })),
@@ -62,7 +123,18 @@ index cdfc29f..79c6967 100644
      proxy: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({
        server: _validatorPrimitives.tString,
        bypass: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString),
-@@ -1102,6 +1105,7 @@ function createScheme(tChannel) {
+@@ -845,6 +852,10 @@ function createScheme(tChannel) {
+   scheme.ElementHandleGetPropertyParams = tType('JSHandleGetPropertyParams');
+   scheme.JSHandleJsonValueParams = (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({}));
+   scheme.ElementHandleJsonValueParams = tType('JSHandleJsonValueParams');
++  scheme.JSHandleGetObjectIdParams = (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({}));
++  scheme.ElementHandleGetObjectIdParams = tType('JSHandleGetObjectIdParams');
++  scheme.JSHandleGetNodeIdParams = (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({}));
++  scheme.ElementHandleGetNodeIdParams = tType('JSHandleGetNodeIdParams');
+   scheme.ElementHandleEvalOnSelectorParams = (0, _validatorPrimitives.tObject)({
+     selector: _validatorPrimitives.tString,
+     strict: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
+@@ -1102,6 +1113,7 @@ function createScheme(tChannel) {
          height: _validatorPrimitives.tNumber
        }))
      })),
@@ -70,7 +142,7 @@ index cdfc29f..79c6967 100644
      timezoneId: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString)
    });
    scheme.ElectronApplicationBrowserWindowParams = (0, _validatorPrimitives.tObject)({
-@@ -1244,6 +1248,7 @@ function createScheme(tChannel) {
+@@ -1244,6 +1256,7 @@ function createScheme(tChannel) {
        omitContent: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
        path: _validatorPrimitives.tString
      })),
@@ -78,6 +150,28 @@ index cdfc29f..79c6967 100644
      proxy: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({
        server: _validatorPrimitives.tString,
        bypass: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString),
+diff --git a/node_modules/playwright-chromium/lib/server/browserType.js b/node_modules/playwright-chromium/lib/server/browserType.js
+index e87add6..cf94b94 100644
+--- a/node_modules/playwright-chromium/lib/server/browserType.js
++++ b/node_modules/playwright-chromium/lib/server/browserType.js
+@@ -39,6 +39,8 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj &&
+ 
+ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+ 
++/* eslint-disable no-console */
++
+ /**
+  * Copyright (c) Microsoft Corporation.
+  *
+@@ -100,6 +102,8 @@ class BrowserType extends _instrumentation.SdkObject {
+         throw this._rewriteStartupError(e);
+       });
+     }, _timeoutSettings.TimeoutSettings.timeout(options));
++    console.log('Persistent config', options);
++    if (options.storageState) await browser._defaultContext.setStorageState(metadata, options.storageState);
+     return browser._defaultContext;
+   }
+ 
 diff --git a/node_modules/playwright-chromium/lib/server/chromium/chromium.js b/node_modules/playwright-chromium/lib/server/chromium/chromium.js
 index 1990f7a..56d105b 100644
 --- a/node_modules/playwright-chromium/lib/server/chromium/chromium.js
@@ -130,6 +224,27 @@ index b7d96c2..694a1f1 100644
        promises.push(this._browser._session.send('Browser.setDownloadBehavior', {
          behavior: this._options.acceptDownloads ? 'allowAndName' : 'deny',
          browserContextId: this._browserContextId,
+diff --git a/node_modules/playwright-chromium/lib/server/chromium/crExecutionContext.js b/node_modules/playwright-chromium/lib/server/chromium/crExecutionContext.js
+index 8aef3f7..877277c 100644
+--- a/node_modules/playwright-chromium/lib/server/chromium/crExecutionContext.js
++++ b/node_modules/playwright-chromium/lib/server/chromium/crExecutionContext.js
+@@ -118,7 +118,15 @@ class CRExecutionContext {
+   }
+ 
+   createHandle(context, remoteObject) {
+-    return new js.JSHandle(context, remoteObject.subtype || remoteObject.type, renderPreview(remoteObject), remoteObject.objectId, potentiallyUnserializableValue(remoteObject));
++    const isNode = remoteObject.type && remoteObject.type === 'object';
++    return new js.JSHandle(context, remoteObject.subtype || remoteObject.type, renderPreview(remoteObject), remoteObject.objectId, potentiallyUnserializableValue(remoteObject), isNode);
++  }
++
++  async getNodeId(context, objectId) {
++    const response = await this._client.send('DOM.describeNode', {
++      objectId
++    });
++    return response && response.node ? response.node.backendNodeId + '' : null;
+   }
+ 
+   async releaseHandle(objectId) {
 diff --git a/node_modules/playwright-chromium/lib/server/chromium/videoRecorder.js b/node_modules/playwright-chromium/lib/server/chromium/videoRecorder.js
 index 3d26ef6..465f614 100644
 --- a/node_modules/playwright-chromium/lib/server/chromium/videoRecorder.js
@@ -282,6 +397,21 @@ index 458179b..d06e748 100644
  
      const task = waitForSelectorTask(info, state, this);
      const controller = new _progress.ProgressController(metadata, this);
+diff --git a/node_modules/playwright-chromium/lib/server/firefox/ffExecutionContext.js b/node_modules/playwright-chromium/lib/server/firefox/ffExecutionContext.js
+index 97834bb..fc3d508 100644
+--- a/node_modules/playwright-chromium/lib/server/firefox/ffExecutionContext.js
++++ b/node_modules/playwright-chromium/lib/server/firefox/ffExecutionContext.js
+@@ -39,6 +39,10 @@ class FFExecutionContext {
+     this._executionContextId = executionContextId;
+   }
+ 
++  getNodeId(context, objectId) {
++    throw new Error('Method not implemented.');
++  }
++
+   async rawEvaluateJSON(expression) {
+     const payload = await this._session.send('Runtime.evaluate', {
+       expression,
 diff --git a/node_modules/playwright-chromium/lib/server/frames.js b/node_modules/playwright-chromium/lib/server/frames.js
 index 22b638c..794ba9e 100644
 --- a/node_modules/playwright-chromium/lib/server/frames.js
@@ -2760,6 +2890,60 @@ index 0000000..dcc0997
 +};
 +exports.XPathEngine = XPathEngine;
 \ No newline at end of file
+diff --git a/node_modules/playwright-chromium/lib/server/javascript.js b/node_modules/playwright-chromium/lib/server/javascript.js
+index bc204cc..308e650 100644
+--- a/node_modules/playwright-chromium/lib/server/javascript.js
++++ b/node_modules/playwright-chromium/lib/server/javascript.js
+@@ -73,6 +73,10 @@ class ExecutionContext extends _instrumentation.SdkObject {
+     return await this._delegate.rawEvaluateJSON(expression);
+   }
+ 
++  async getNodeId(objectId) {
++    return this._delegate.getNodeId(this, objectId);
++  }
++
+   async doSlowMo() {// overridden in FrameExecutionContext
+   }
+ 
+@@ -81,13 +85,14 @@ class ExecutionContext extends _instrumentation.SdkObject {
+ exports.ExecutionContext = ExecutionContext;
+ 
+ class JSHandle extends _instrumentation.SdkObject {
+-  constructor(context, type, preview, objectId, value) {
++  constructor(context, type, preview, objectId, value, isNode = false) {
+     super(context, 'handle');
+     this._context = void 0;
+     this._disposed = false;
+     this._objectId = void 0;
+     this._value = void 0;
+     this._objectType = void 0;
++    this._isNode = void 0;
+     this._preview = void 0;
+     this._previewCallback = void 0;
+     this._context = context;
+@@ -95,6 +100,7 @@ class JSHandle extends _instrumentation.SdkObject {
+     this._value = value;
+     this._objectType = type;
+     this._preview = this._objectId ? preview || `JSHandle@${this._objectType}` : String(value);
++    this._isNode = isNode;
+   }
+ 
+   callFunctionNoReply(func, arg) {
+@@ -153,6 +159,14 @@ class JSHandle extends _instrumentation.SdkObject {
+     return null;
+   }
+ 
++  getObjectId() {
++    return this._objectId;
++  }
++
++  async getNodeId() {
++    return this._context.getNodeId(this._objectId);
++  }
++
+   dispose() {
+     if (this._disposed) return;
+     this._disposed = true;
 diff --git a/node_modules/playwright-chromium/lib/server/page.js b/node_modules/playwright-chromium/lib/server/page.js
 index ffc4ab8..1eb7a75 100644
 --- a/node_modules/playwright-chromium/lib/server/page.js
@@ -4124,6 +4308,21 @@ index 5c42fd5..16effe3 100644
 +    await this._writeChain;
      if (error) throw error;
      return result;
+   }
+diff --git a/node_modules/playwright-chromium/lib/server/webkit/wkExecutionContext.js b/node_modules/playwright-chromium/lib/server/webkit/wkExecutionContext.js
+index e923335..e1798c9 100644
+--- a/node_modules/playwright-chromium/lib/server/webkit/wkExecutionContext.js
++++ b/node_modules/playwright-chromium/lib/server/webkit/wkExecutionContext.js
+@@ -44,6 +44,10 @@ class WKExecutionContext {
+     });
+   }
+ 
++  getNodeId(context, objectId) {
++    throw new Error('Method not implemented.');
++  }
++
+   _dispose() {
+     this._contextDestroyedCallback();
    }
 diff --git a/node_modules/playwright-chromium/lib/test/dispatcher.js b/node_modules/playwright-chromium/lib/test/dispatcher.js
 index 6d52339..d79f91c 100644

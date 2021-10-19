@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { js as beautify } from "js-beautify";
 import { BrowserEnum, PlaywrightBrowserMap } from "../../crusher-shared/types/browser";
 import * as path from "path";
+import { v4 as uuidv4 } from "uuid";
 
 import yargs from "yargs";
 
@@ -59,6 +60,7 @@ function _getBrowser(browser) {
 const browser = _getBrowser(installOptions.browser);
 
 if (!browser) throw new Error("Invalid browser passed");
+const persistentContextDir = createTempContextDir();
 
 const codeGenerator = new CodeGenerator({
 	shouldRecordVideo: true,
@@ -69,6 +71,7 @@ const codeGenerator = new CodeGenerator({
 	usePlaywrightChromium: false,
 	videoSavePath: "/tmp/crusher-videos/somedir",
 	browser: PlaywrightBrowserMap[browser] as any,
+	persistentContextDir: persistentContextDir,
 	turnOnTracing: true,
 	tracePath: path.resolve(__dirname, "../bin/trace.zip"),
 	assetsDir: `/tmp/crusher/somedir/`,
@@ -89,3 +92,24 @@ codeGenerator.getCode(events as any).then((jsCode: string) => {
 
 	console.log("Generated code for recorded actions");
 });
+
+function createTempContextDir(): string {
+	const tempDir = getTempContextDirPath();
+	console.log("path is", tempDir);
+	if (fs.existsSync(tempDir)) {
+		return createTempContextDir();
+	}
+	fs.mkdirSync(tempDir);
+	return tempDir;
+}
+
+function getTempContextDirPath(): string {
+	const TEMP_TEST_PERSISTENT_CONTEXTS_DIR = "/tmp/crusher_browser";
+
+	if (!fs.existsSync(TEMP_TEST_PERSISTENT_CONTEXTS_DIR)) {
+		console.log(TEMP_TEST_PERSISTENT_CONTEXTS_DIR);
+		fs.mkdirSync(TEMP_TEST_PERSISTENT_CONTEXTS_DIR);
+	}
+
+	return path.join(TEMP_TEST_PERSISTENT_CONTEXTS_DIR, uuidv4());
+}

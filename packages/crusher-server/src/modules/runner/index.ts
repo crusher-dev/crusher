@@ -81,6 +81,7 @@ class TestsRunner {
 						testName: testInstance.testInfo.name,
 						buildTestCount: testInstances.length,
 						startingStorageState: null,
+						startingPersistentContext: null,
 					},
 					buildTaskInfo.host,
 				);

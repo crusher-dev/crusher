@@ -11,6 +11,7 @@ async function addInput(element: Locator, workingSelector: any, action: iAction)
 		case InputNodeTypeEnum.CONTENT_EDITABLE:
 			case InputNodeTypeEnum.TEXTAREA:
 				await element.fill("");
+				console.log("Value is this", value);
 				await element.type(value);
 				break;
 		case InputNodeTypeEnum.RADIO:

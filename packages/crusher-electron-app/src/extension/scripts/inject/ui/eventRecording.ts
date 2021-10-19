@@ -1,4 +1,4 @@
-import { getAllAttributes } from "../../../utils/helpers";
+import { findDistanceBetweenNodes, getAllAttributes } from "../../../utils/helpers";
 import { ActionsInTestEnum, IInputNodeInfo, InputNodeTypeEnum } from "@shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
@@ -51,6 +51,7 @@ export default class EventRecording {
 
 	private resetUserEventsToDefaultCallback: any = undefined;
 	private releventHoverDetectionManager: RelevantHoverDetection;
+	private _pageRecordedEventsArr = [];
 
 	constructor(options = {} as any) {
 		this.state = {
@@ -283,7 +284,7 @@ export default class EventRecording {
 		// console.log("Scrolled, ", event.target);
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const _this = this;
-		function processScroll() {
+		const processScroll = () => {
 			const target = event.target;
 
 			const isDocumentScrolled = event.target === document;
@@ -293,12 +294,15 @@ export default class EventRecording {
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
+				const inputNodeInfo = this._getInputNodeInfo(event.target);
+				if (inputNodeInfo && [InputNodeTypeEnum.CONTENT_EDITABLE, InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA].includes(inputNodeInfo.type))
+					return;
 				// @TODO: Need a proper way to detect real and fake scroll events
 				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}
-		}
+		};
 
 		if (!this.scrollTimer) {
 			if (now - this.lastScrollFireTime > 3 * minScrollTime) {
@@ -354,16 +358,17 @@ export default class EventRecording {
 	}
 
 	async trackAndSaveRelevantHover(element, baseLineTimeStamp: number | null = null) {
-		const hoverNodes = await this.getHoverDependentNodes(element, baseLineTimeStamp);
+		const hoverNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element, baseLineTimeStamp), element);
 		for (let i = 0; i < hoverNodes.length; i++) {
-			console.log("Hover nodes area", hoverNodes[i]);
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.HOVER, hoverNodes[i], "", null, true);
 		}
 	}
 
 	async turnOnElementModeInParentFrame(element = this.state.targetElement) {
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
-		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(await this.getHoverDependentNodes(element));
+		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(
+			this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[],
+		);
 		const capturedElementScreenshot = null;
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
@@ -389,12 +394,24 @@ export default class EventRecording {
 		}
 	}
 
+	stopRightClickFocusLoose(event: any) {
+		if (event.which === 3) {
+			event.preventDefault();
+		}
+
+		this.handleWindowClick(event);
+	}
+
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
+		if (event.which === 3) {
+			return this.onRightClick(event);
+		}
+		if (event.which === 2) return;
+
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		const inputNodeInfo = this._getInputNodeInfo(target);
-		if (inputNodeInfo) return;
 
 		const tagName = target.tagName.toLowerCase();
 		if (["option", "select"].includes(tagName)) return;
@@ -553,6 +570,8 @@ export default class EventRecording {
 		if (!event.isTrusted) return;
 		const inputNodeInfo = await this._getInputNodeInfo(event.target as HTMLElement);
 		if (!inputNodeInfo) return;
+		if ([InputNodeTypeEnum.INPUT, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
+
 		const labelsArr = (event.target as HTMLInputElement).labels ? Array.from((event.target as HTMLInputElement).labels) : [];
 		const labelsUniqId = [];
 
@@ -566,7 +585,6 @@ export default class EventRecording {
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);
 		window.addEventListener("mouseout", this.handleMouseOut, true);
-		window.addEventListener("contextmenu", this.onRightClick, true);
 		window.addEventListener("focus", this.handleFocus, true);
 		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
 		window.addEventListener("elementSelected", this.handleElementSelected);
@@ -580,7 +598,7 @@ export default class EventRecording {
 		window.onbeforeunload = this.handleBeforeNavigation;
 		window.addEventListener("keydown", this.handleKeyDown, true);
 
-		window.addEventListener("click", this.handleWindowClick, true);
+		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
 
 		window.history.pushState = new Proxy(window.history.pushState, {
 			apply: async (target, thisArg, argArray) => {

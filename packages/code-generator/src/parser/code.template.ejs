@@ -33,7 +33,7 @@ await browserContext.tracing.start({ screenshots: true, snapshots: true });
 browserContext.setDefaultNavigationTimeout(browserContextOptions.defaultNavigationTimeout);
 browserContext.setDefaultTimeout(browserContextOptions.defaultTimeout);
 
-page = await browserContext.newPage({});
+page = await browserContext.newPage();
 await handlePopup(page, browserContext);
 
 
@@ -65,5 +65,5 @@ globalManager.set("recordedVideoPath", await page.video().path());
 await page.close();
 await browserContext.close();
 if(browser) {
-  await browser.close();
+ await browser.close();
 }

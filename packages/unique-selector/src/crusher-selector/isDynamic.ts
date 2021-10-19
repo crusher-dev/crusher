@@ -6,6 +6,7 @@ import htmlTags from "html-tags";
 const englishWords = require("an-array-of-english-words/index.json");
 
 const SPLIT_REGEXP = /[ \-_:]+/;
+const REG_EXP = /^[a-z]+$/;
 
 const allWords = new Set([
 	"btn",
@@ -60,6 +61,17 @@ export const getTokens = (value: string): string[] => {
 	return tokens.map((token) => token.toLowerCase());
 };
 
+export const isDynamicEpoch = (value: number) => {
+	const dateValue = new Date(value);
+	const currentDate = new Date();
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	//@ts-ignore
+	const diffTime = Math.abs(currentDate - dateValue);
+
+	if (diffTime < 3600000) return true;
+	return false;
+};
+
 /**
  * @summary Given an attribute value, breaks it apart into pieces/words, and
  *   then determines how many pieces are dynamically generated.
@@ -73,11 +85,13 @@ export const isDynamic = (value: string): boolean => {
 
 	// ignore styled components classes
 	if (value.startsWith("Styled")) return true;
-
 	const tokens = getTokens(value);
+
+	// For react `select-input`, using date-time
 
 	let words = 0;
 	let numbers = 0;
+	let penalty = 0;
 
 	for (let i = 0; i < tokens.length; i++) {
 		const token = tokens[i];
@@ -85,7 +99,11 @@ export const isDynamic = (value: string): boolean => {
 		if (allWords.has(token)) {
 			words += 1;
 		} else if (!isNaN(Number(token))) {
-			numbers += 1;
+			if (!isDynamicEpoch(Number(token))) {
+				numbers += 1;
+			} else {
+				penalty += 2;
+			}
 		} else if (/\d/.test(token)) {
 			// mark letter and number combinations as dynamic, ex 123v9c3
 			return true;
@@ -93,5 +111,5 @@ export const isDynamic = (value: string): boolean => {
 	}
 
 	// If known tokens are not more than half the tokens, consider it dynamic
-	return (words + numbers) / tokens.length <= 0.5;
+	return (words + numbers) / (tokens.length + penalty) <= 0.5;
 };

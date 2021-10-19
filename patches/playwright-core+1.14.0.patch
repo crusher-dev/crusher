@@ -1,8 +1,18 @@
 diff --git a/node_modules/playwright-core/lib/client/browserType.js b/node_modules/playwright-core/lib/client/browserType.js
-index 1b1277c..ca7fad6 100644
+index 1b1277c..07d3bae 100644
 --- a/node_modules/playwright-core/lib/client/browserType.js
 +++ b/node_modules/playwright-core/lib/client/browserType.js
-@@ -269,6 +269,7 @@ class BrowserType extends _channelOwner.ChannelOwner {
+@@ -112,7 +112,8 @@ class BrowserType extends _channelOwner.ChannelOwner {
+         ignoreAllDefaultArgs: !!options.ignoreDefaultArgs && !Array.isArray(options.ignoreDefaultArgs),
+         env: options.env ? (0, _clientHelper.envObjectToArray)(options.env) : undefined,
+         channel: options.channel,
+-        userDataDir
++        userDataDir,
++        storageState: contextParams.storageState ? contextParams.storageState : undefined
+       };
+       const result = await channel.launchPersistentContext(persistentParams);
+ 
+@@ -269,6 +270,7 @@ class BrowserType extends _channelOwner.ChannelOwner {
        }, params.headers);
        const headers = paramsHeaders ? (0, _utils.headersObjectToArray)(paramsHeaders) : undefined;
        const result = await channel.connectOverCDP({
@@ -84,23 +94,28 @@ index 2baf741..e11effa 100644
  exports.source = source;
 \ No newline at end of file
 diff --git a/node_modules/playwright-core/lib/protocol/validator.js b/node_modules/playwright-core/lib/protocol/validator.js
-index cdfc29f..a9d8aff 100644
+index cdfc29f..0e53cfe 100644
 --- a/node_modules/playwright-core/lib/protocol/validator.js
 +++ b/node_modules/playwright-core/lib/protocol/validator.js
-@@ -264,10 +264,12 @@ function createScheme(tChannel) {
+@@ -264,10 +264,16 @@ function createScheme(tChannel) {
        omitContent: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
        path: _validatorPrimitives.tString
      })),
 +    strictSelectors: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
      userDataDir: _validatorPrimitives.tString,
-     slowMo: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tNumber)
+-    slowMo: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tNumber)
++    slowMo: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tNumber),
++    storageState: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({
++      cookies: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tArray)(tType('SetNetworkCookie'))),
++      origins: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tArray)(tType('OriginStorage')))
++    }))
    });
    scheme.BrowserTypeConnectOverCDPParams = (0, _validatorPrimitives.tObject)({
 +    customBrowserName: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString),
      sdkLanguage: _validatorPrimitives.tString,
      endpointURL: _validatorPrimitives.tString,
      headers: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tArray)(tType('NameValue'))),
-@@ -324,6 +326,7 @@ function createScheme(tChannel) {
+@@ -324,6 +330,7 @@ function createScheme(tChannel) {
        omitContent: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
        path: _validatorPrimitives.tString
      })),
@@ -108,7 +123,7 @@ index cdfc29f..a9d8aff 100644
      proxy: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({
        server: _validatorPrimitives.tString,
        bypass: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString),
-@@ -845,6 +848,10 @@ function createScheme(tChannel) {
+@@ -845,6 +852,10 @@ function createScheme(tChannel) {
    scheme.ElementHandleGetPropertyParams = tType('JSHandleGetPropertyParams');
    scheme.JSHandleJsonValueParams = (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({}));
    scheme.ElementHandleJsonValueParams = tType('JSHandleJsonValueParams');
@@ -119,7 +134,7 @@ index cdfc29f..a9d8aff 100644
    scheme.ElementHandleEvalOnSelectorParams = (0, _validatorPrimitives.tObject)({
      selector: _validatorPrimitives.tString,
      strict: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
-@@ -1102,6 +1109,7 @@ function createScheme(tChannel) {
+@@ -1102,6 +1113,7 @@ function createScheme(tChannel) {
          height: _validatorPrimitives.tNumber
        }))
      })),
@@ -127,7 +142,7 @@ index cdfc29f..a9d8aff 100644
      timezoneId: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString)
    });
    scheme.ElectronApplicationBrowserWindowParams = (0, _validatorPrimitives.tObject)({
-@@ -1244,6 +1252,7 @@ function createScheme(tChannel) {
+@@ -1244,6 +1256,7 @@ function createScheme(tChannel) {
        omitContent: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tBoolean),
        path: _validatorPrimitives.tString
      })),
@@ -135,6 +150,28 @@ index cdfc29f..a9d8aff 100644
      proxy: (0, _validatorPrimitives.tOptional)((0, _validatorPrimitives.tObject)({
        server: _validatorPrimitives.tString,
        bypass: (0, _validatorPrimitives.tOptional)(_validatorPrimitives.tString),
+diff --git a/node_modules/playwright-core/lib/server/browserType.js b/node_modules/playwright-core/lib/server/browserType.js
+index e87add6..cf94b94 100644
+--- a/node_modules/playwright-core/lib/server/browserType.js
++++ b/node_modules/playwright-core/lib/server/browserType.js
+@@ -39,6 +39,8 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj &&
+ 
+ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+ 
++/* eslint-disable no-console */
++
+ /**
+  * Copyright (c) Microsoft Corporation.
+  *
+@@ -100,6 +102,8 @@ class BrowserType extends _instrumentation.SdkObject {
+         throw this._rewriteStartupError(e);
+       });
+     }, _timeoutSettings.TimeoutSettings.timeout(options));
++    console.log('Persistent config', options);
++    if (options.storageState) await browser._defaultContext.setStorageState(metadata, options.storageState);
+     return browser._defaultContext;
+   }
+ 
 diff --git a/node_modules/playwright-core/lib/server/chromium/chromium.js b/node_modules/playwright-core/lib/server/chromium/chromium.js
 index 1990f7a..56d105b 100644
 --- a/node_modules/playwright-core/lib/server/chromium/chromium.js

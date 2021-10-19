@@ -4,6 +4,12 @@ import { type } from "../functions/type";
 import { ActionsInTestEnum, InputNodeTypeEnum } from "@crusher-shared/constants/recordedActions";
 
 async function addInput(element: Locator, workingSelector: any, action: iAction) {
+	// For legacy addInput type
+	if (typeof action.payload.meta.value === "string") {
+		await element.fill("");
+		await element.type(action.payload.meta.value);
+	};
+
 	const {type, value, name, inputType} = action.payload.meta.value;
 
 	switch (type) {
@@ -11,7 +17,6 @@ async function addInput(element: Locator, workingSelector: any, action: iAction)
 		case InputNodeTypeEnum.CONTENT_EDITABLE:
 			case InputNodeTypeEnum.TEXTAREA:
 				await element.fill("");
-				console.log("Value is this", value);
 				await element.type(value);
 				break;
 		case InputNodeTypeEnum.RADIO:
@@ -19,7 +24,6 @@ async function addInput(element: Locator, workingSelector: any, action: iAction)
 				await element.check();
 			break;
 		case InputNodeTypeEnum.SELECT:
-			console.log("Value is", value, typeof value, value.map((a, index) => { return { index: a }; }));
 			if (value && value.length)
 				await element.selectOption(value.map((a, index) => { return { index: a }; }));
 			break;

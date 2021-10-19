@@ -9,7 +9,7 @@ ARG SSH_PUBLIC_KEY
 RUN mkdir -p /usr/local/nvm
 RUN mkdir -p /var/run/sshd
 RUN apt-get update \
-    && apt-get install -y openssh-server \
+    && apt-get install -y openssh-server unzip \
     && mkdir -p /var/run/sshd
 
 ADD docker/ee/test-runner/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

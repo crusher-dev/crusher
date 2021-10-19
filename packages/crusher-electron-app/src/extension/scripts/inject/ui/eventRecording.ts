@@ -394,12 +394,24 @@ export default class EventRecording {
 		}
 	}
 
+	stopRightClickFocusLoose(event: any) {
+		if (event.which === 3) {
+			event.preventDefault();
+		}
+
+		this.handleWindowClick(event);
+	}
+
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
+		if (event.which === 3) {
+			return this.onRightClick(event);
+		}
+		if (event.which === 2) return;
+
 		let target = event.target;
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		const inputNodeInfo = this._getInputNodeInfo(target);
-		if (inputNodeInfo) return;
 
 		const tagName = target.tagName.toLowerCase();
 		if (["option", "select"].includes(tagName)) return;
@@ -573,7 +585,6 @@ export default class EventRecording {
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);
 		window.addEventListener("mouseout", this.handleMouseOut, true);
-		window.addEventListener("contextmenu", this.onRightClick, true);
 		window.addEventListener("focus", this.handleFocus, true);
 		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
 		window.addEventListener("elementSelected", this.handleElementSelected);
@@ -587,7 +598,7 @@ export default class EventRecording {
 		window.onbeforeunload = this.handleBeforeNavigation;
 		window.addEventListener("keydown", this.handleKeyDown, true);
 
-		window.addEventListener("click", this.handleWindowClick, true);
+		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
 
 		window.history.pushState = new Proxy(window.history.pushState, {
 			apply: async (target, thisArg, argArray) => {

@@ -131,3 +131,4 @@ ecosystem/config/*
 
 #Env
 ./.env
+.vercel

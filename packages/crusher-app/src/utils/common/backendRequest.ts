@@ -2,8 +2,9 @@ import { RequestMethod, RequestOptions } from "../../types/RequestOptions";
 import { appendParamsToURI, getAbsoluteURIIfRelative } from "./url";
 import { IncomingHttpHeaders } from "http";
 
-const _fetch = require("node-fetch");
-
+/*
+	To be used by only backend request
+*/
 function prepareFetchPayload(uri: string, options: RequestOptions) {
 	const method = options.method || RequestMethod.GET;
 	let { headers = {} } = options;
@@ -34,12 +35,11 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 export function backendRequest(_uri: string, options: RequestOptions = {}) {
 	const { payload } = options;
 	const { uri, method, headers } = prepareFetchPayload(_uri, options);
-	const isMockAPI = uri.includes("jsonbin");
 
-	return _fetch(uri, {
+	return fetch(uri, {
 		headers,
 		method,
-		credentials: "include",
+		credentials: options.credentials || "include",
 		mode: "cors",
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
 	}).then(async (requestResponse: any) => {

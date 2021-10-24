@@ -23,7 +23,7 @@ import { BuildInstanceResults } from "./mongo/buildInstanceResults";
 import { ProjectsService } from "@modules/resources/projects/service";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
-const DIFF_DELTA_PASS_THRESHOLD = 0.05;
+const DIFF_DELTA_PASS_THRESHOLD = 0.25;
 // Diff delta percent above 5% means marking it as failed
 const DIFF_DELTA_FAILED_THRESHOLD = 5;
 
@@ -54,8 +54,8 @@ class BuildTestInstancesService {
 	}
 
 	private getScreenshotStatusFromDiffDelta(diffDelta: number, projectVisualBaseline: number): TestInstanceResultStatusEnum {
+		// @TODO: Discuss if tests should fail because of visual diffs
 		if (diffDelta < projectVisualBaseline) return TestInstanceResultStatusEnum.PASSED;
-		else if (diffDelta > projectVisualBaseline) return TestInstanceResultStatusEnum.FAILED;
 		else return TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED;
 	}
 
@@ -151,7 +151,7 @@ class BuildTestInstancesService {
 				);
 			} catch (err) {
 				diffResult = {
-					diffDeltaFactor: 100,
+					diffDeltaFactor: 100, // <- Ignore this
 					diffDelta: 100,
 					outputDiffImageUrl: "https://www.rescuedigitalmedia.com/wp-content/uploads/2018/10/fix-invalid-image-error.png",
 				};

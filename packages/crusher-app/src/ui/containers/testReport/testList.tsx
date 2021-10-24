@@ -77,7 +77,6 @@ function ReportSection() {
 	const { data } = useBuildReport(query.id);
 
 	useEffect(() => {
-
 		const heading = document.querySelector("#review-section");
 		const observer = new IntersectionObserver(
 			() => {
@@ -176,7 +175,7 @@ function RenderImageInfo({ data }) {
 
 	if (!imageName) return null;
 
-	console.log(meta.outputs[0])
+	console.log(meta.outputs[0]);
 	return (
 		<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
 			<div className={"flex justify-between text-12 mb-20 "}>
@@ -495,13 +494,12 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
-			
-			<div onClick={onCardClick} className='sticky top-0 z-20'>
+			<div onClick={onCardClick} className="sticky top-0 z-20">
 				<div css={stickyContainer} className={"px-28 pb-16 w-full test-card-header"}>
 					<div css={header} className={"flex justify-between items-center w-full"}>
 						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
-						
+
 					<Conditional showIf={failedTestsConfiguration.length >= 1}>
 						<div
 							css={css`
@@ -534,7 +532,6 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 const header = css`
 	min-height: 52px;
 `;
-
 
 const stickyContainer = css`
 	background: rgb(13, 14, 17);

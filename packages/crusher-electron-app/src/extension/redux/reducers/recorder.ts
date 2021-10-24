@@ -37,7 +37,7 @@ export const recorderReducer = (state: iRecorderState = initialState, action: An
 			return {
 				...state,
 				isReplayingTest: action.payload.isReplaying,
-			}
+			};
 		case UPDATE_LAST_ELEMENT_CUSTOM_SCRIPT_OUTPUT:
 			return {
 				...state,

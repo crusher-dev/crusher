@@ -9,4 +9,5 @@ export interface RequestOptions {
 	method?: RequestMethod;
 	headers?: any;
 	payload?: any;
+	credentials?: any;
 }

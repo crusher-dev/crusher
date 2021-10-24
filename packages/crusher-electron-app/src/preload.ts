@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld("electron", {
 	getNode: async (selector) => ipcRenderer.invoke("get-node", selector),
 	executeCustomCodeScript: async (scriptFunction: string) => ipcRenderer.invoke("execute-custom-code", scriptFunction),
 	runAfterThisTest: async (testId: string) => ipcRenderer.invoke("run-after-this-test", testId),
+	getNodeId: async (id) => ipcRenderer.invoke("get-node-id", id),
 
 	webview: {
 		postMessage: (data) => {

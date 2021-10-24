@@ -17,7 +17,7 @@ const smp = new SpeedMeasurePlugin();
 
 const virtualModules = new VirtualModulesPlugin({
 	"../node_modules/playwright-evaluator.js": `
-  let pwQuerySelector;
+  let pwQuerySelector, pwQuerySelectorAll;
   (() => {
     ${injectedScriptSource.source}
     const injected = new pwExport(1, false, []);
@@ -26,10 +26,14 @@ const virtualModules = new VirtualModulesPlugin({
       const parsed = injected.parseSelector(selector);
       return injected.querySelector(parsed, root);
     };
+		pwQuerySelectorAll = (selector, root) => {
+      const parsed = injected.parseSelector(selector);
+      return injected.querySelectorAll(parsed, root);
+    };
   })();
 
 	window.pwQuerySelector = pwQuerySelector;
-  module.exports = { querySelector: pwQuerySelector };`,
+  module.exports = { querySelector: pwQuerySelector, querySelectorAll: pwQuerySelectorAll };`,
 });
 
 const TEMPLATES_DIR = path.resolve(__dirname, "../src/extension/ui/templates");

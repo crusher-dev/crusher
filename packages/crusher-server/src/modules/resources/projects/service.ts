@@ -52,6 +52,10 @@ class ProjectsService {
 	async updateProjectName(projectName: string, projectId: number) {
 		return this.dbManager.update("UPDATE projects SET name = ? WHERE id = ?", [projectName, projectId]);
 	}
+
+	async updateVisualBaseline(visualBaseline: number, projectId: number) {
+		return this.dbManager.update("UPDATE projects SET visual_baseline = ? WHERE id = ?", [visualBaseline, projectId]);
+	}
 }
 
 export { ProjectsService };

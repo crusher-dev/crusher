@@ -70,6 +70,7 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 					testInstanceId: testInstance.testInstanceId,
 					testName: testInstanceFullInfoRecord.testName,
 					nextTestDependencies: testInstance.nextTestDependencies,
+					startingPersistentContext: testCompletePayload.persistenContextZipURL,
 				},
 				buildRecord.host && buildRecord.host !== "null" ? buildRecord.host : null,
 			);

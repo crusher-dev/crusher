@@ -22,10 +22,10 @@ const deleteProject = (projectId) => {
 	});
 };
 
-const updateProjectName = (projectId, name) => {
-	return backendRequest(`/projects/${projectId}/actions/update.name`, {
+const updateProjectSettings = (projectId, name, visualBaseline) => {
+	return backendRequest(`/projects/${projectId}/actions/update.settings`, {
 		method: RequestMethod.POST,
-		payload: { name },
+		payload: { name, visualBaseline },
 	});
 };
 
@@ -34,13 +34,15 @@ export const ProjectSettings = () => {
 	const [project] = useAtom(currentProject);
 	const [projectsList] = useAtom(projectsAtom);
 	const [projectName, setProjectName] = useState(project?.name);
+	const [visualBaseline, setVisualBaseline] = useState(project?.visualBaseline);
 	const [saveButtonDisabled, setSavebuttonDisabled] = useState(true);
 	const onlyOneProject = projectsList.length <= 1;
 
 	useEffect(() => {
 		const isNameSame = project?.name === projectName;
-		setSavebuttonDisabled(isNameSame);
-	}, [projectName]);
+		const isBaselineSame = project?.visualBaseline === visualBaseline;
+		setSavebuttonDisabled(isNameSame && isBaselineSame);
+	}, [projectName, visualBaseline]);
 
 	const deleteProjectCallback = async () => {
 		if (onlyOneProject) {
@@ -55,8 +57,8 @@ export const ProjectSettings = () => {
 		window.location = "/";
 	};
 
-	const updateProjectNameCallback = async () => {
-		await updateProjectName(selectedProjectId, projectName);
+	const updateProjectSettingsCallback = async () => {
+		await updateProjectSettings(selectedProjectId, projectName, visualBaseline);
 
 		sendSnackBarEvent({
 			message: "We have update project info",
@@ -91,6 +93,32 @@ export const ProjectSettings = () => {
 							width: 300rem;
 						`}
 					/>
+				</div>
+
+				<Heading type={2} fontSize={"16"} className={"mb-24 mt-38"}>
+					Visual Baseline
+				</Heading>
+				<div>
+					<Input
+						placeholder={"Name of the project"}
+						onChange={(e) => {
+							if (e.target.value > 100) { e.target.value = 100; return setVisualBaseline(100); }
+							if (e.target.value < 0) { e.target.value = 0; return setVisualBaseline(0); }
+
+							setVisualBaseline(e.target.value);
+						}}
+						type={"number"}
+						max={100}
+						min={0}
+						initialValue={visualBaseline}
+						css={css`
+							height: 42rem;
+							width: 300rem;
+						`}
+					/>
+				</div>
+
+				<div>
 					<Button
 						bgColor={saveButtonDisabled && "disabled"}
 						css={css`
@@ -98,11 +126,11 @@ export const ProjectSettings = () => {
 						`}
 						className={"mt-12"}
 						onClick={() => {
-							!saveButtonDisabled && updateProjectNameCallback();
+							!saveButtonDisabled && updateProjectSettingsCallback();
 						}}
-					>
-						Save
-					</Button>
+						>
+							Save
+						</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
 				<Heading type={2} fontSize={"16"} className={"mb-12 mt-56"}>

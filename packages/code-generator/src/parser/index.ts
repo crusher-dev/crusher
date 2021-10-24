@@ -14,6 +14,7 @@ interface IParserOptions {
 	defaultBrowserLaunchOptions: any;
 	turnOnTracing?: boolean;
 	tracePath?: string;
+	persistentContextDir?: string;
 }
 
 class Parser {
@@ -26,6 +27,7 @@ class Parser {
 	videoSavePath: string;
 	isTracingOn: boolean;
 	tracePath: string;
+	persistentContextDir: string | null;
 
 	constructor(options: IParserOptions) {
 		this.shouldRecordVideo = !!options.shouldRecordVideo;
@@ -37,6 +39,7 @@ class Parser {
 		this.videoSavePath = options.videoSavePath;
 		this.isTracingOn = !!options.turnOnTracing;
 		this.tracePath = options.tracePath ? options.tracePath : "trace.zip";
+		this.persistentContextDir = options.persistentContextDir;
 
 		ParserChecks.validateActions(this.actionsList);
 	}
@@ -58,6 +61,8 @@ class Parser {
 				recordVideo: this.shouldRecordVideo ? { dir: this.videoSavePath } : undefined,
 			},
 			actions: this.actionsList,
+			isPersistentContext: !!this.persistentContextDir,
+			persistentContextDir: this.persistentContextDir,
 		});
 	}
 }

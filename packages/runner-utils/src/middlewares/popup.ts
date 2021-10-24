@@ -5,7 +5,7 @@ function handlePopup(page: Page, browserContext: BrowserContext) {
 		const popupUrl = await popup.url();
 		page.evaluate('window.location.href = "' + popupUrl + '"');
 		const pages = await browserContext.pages();
-		for (let i = 1; i < pages.length; i++) {
+		for (let i = 2; i < pages.length; i++) {
 			await pages[i].close();
 		}
 	});

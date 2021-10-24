@@ -12,7 +12,7 @@ export type TUserAPIData = {
 	name: string;
 	meta: Record<string, any>;
 	uuid: string;
-	userId: string;
+	userId: number;
 	email: string;
 	avatar: string;
 } | null;

@@ -122,3 +122,18 @@ export function validURL(str) {
 export function resolveToFrontend(relativePath: string) {
 	return url.resolve(process.env.FRONTEND_URL, relativePath);
 }
+
+export function getNodeLevel(node: Node) {
+	if (!document.body.contains(node) && node !== document.body) return null;
+
+	let depth = 0;
+	while (node != document.body) {
+		node = node.parentNode;
+		depth++;
+	}
+	return depth;
+}
+
+export function findDistanceBetweenNodes(node1: Node, node2: Node) {
+	return Math.abs(getNodeLevel(node1) - getNodeLevel(node2));
+}

@@ -20,6 +20,7 @@ export type TUserAPIData = {
 export type TProjectsData = Array<{
 	id: number;
 	name: string;
+	visualBaseline: number;
 	teamId: number;
 	meta: Record<string, any>;
 }> | null;

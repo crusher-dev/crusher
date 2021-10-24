@@ -4,7 +4,9 @@
 	"description": "Crusher test runner used to execute and save output",
 	"dependencies": {
 		"@types/ioredis": "^4.17.11",
+		"archiver": "^5.3.0",
 		"aws-sdk": "^2.833.0",
+		"axios": "^0.23.0",
 		"bullmq": "1.44.2",
 		"crusher-runner-utils": "0.0.9",
 		"dotenv": "^10.0.0",
@@ -40,6 +42,7 @@
 		"run:local": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json bin/out.ts",
 		"start": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
 		"test": "ts-node -r tsconfig-paths/register --project tsconfig.json  out.ts",
+		"tests": "ts-node -r tsconfig-paths/register --project tsconfig.json  test.ts",
 		"start:cdp": "ts-node -r tsconfig-paths/register --project tsconfig.json ./test.ts",
 		"build": "webpack -c webpack.config.js",
 		"start:build": "node build/index.js",

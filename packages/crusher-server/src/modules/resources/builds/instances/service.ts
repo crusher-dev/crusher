@@ -20,6 +20,7 @@ import * as path from "path";
 import { IVisualDiffResult } from "@modules/visualDiff/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 import { BuildInstanceResults } from "./mongo/buildInstanceResults";
+import { ProjectsService } from "@modules/resources/projects/service";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
 const DIFF_DELTA_PASS_THRESHOLD = 0.05;
@@ -33,6 +34,9 @@ class BuildTestInstancesService {
 	private dbManager: DBManager;
 	@Inject()
 	private visualDiffService: VisualDiffService;
+	@Inject()
+	private projectsService: ProjectsService;
+
 	@Inject()
 	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
 
@@ -49,9 +53,9 @@ class BuildTestInstancesService {
 		return this.dbManager.fetchSingleRow("SELECT * FROM test_instance_result_sets WHERE instance_id = ?", [instanceId]);
 	}
 
-	private getScreenshotStatusFromDiffDelta(diffDelta: number): TestInstanceResultStatusEnum {
-		if (diffDelta < DIFF_DELTA_PASS_THRESHOLD) return TestInstanceResultStatusEnum.PASSED;
-		else if (diffDelta > DIFF_DELTA_FAILED_THRESHOLD) return TestInstanceResultStatusEnum.FAILED;
+	private getScreenshotStatusFromDiffDelta(diffDelta: number, projectVisualBaseline: number): TestInstanceResultStatusEnum {
+		if (diffDelta < projectVisualBaseline) return TestInstanceResultStatusEnum.PASSED;
+		else if (diffDelta > projectVisualBaseline) return TestInstanceResultStatusEnum.FAILED;
 		else return TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED;
 	}
 
@@ -121,6 +125,7 @@ class BuildTestInstancesService {
 		await this.updateResultSetStatus(TestInstanceResultSetStatusEnum.RUNNING_CHECKS, null, instanceId);
 
 		const buildTestInstanceResultSet = await this.getBuildTestInstanceResultSet(instanceId);
+		const project = await this.projectsService.getProject(projectId);
 
 		const referenceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshots(buildTestInstanceResultSet.targetInstanceId);
 		const referenceScreenshotsMap: { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = referenceScreenshots.reduce((acc, refScreenshot) => {
@@ -160,13 +165,13 @@ class BuildTestInstancesService {
 				instanceResultSetId: buildTestInstanceResultSet.id,
 				diffDelta: diffResult.diffDelta,
 				diffImageUrl: diffResult.outputDiffImageUrl,
-				status: this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta),
+				status: this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta, project.visualBaseline),
 			});
 
 			return {
 				...diffResult,
 				resultId: 0,
-				status: diffResultStatus ? diffResultStatus : this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta),
+				status: diffResultStatus ? diffResultStatus : this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta, project.visualBaseline),
 			};
 		});
 

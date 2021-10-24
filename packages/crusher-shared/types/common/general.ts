@@ -8,7 +8,7 @@ export enum EditionTypeEnum {
 
 export enum HostingTypeEnum {
 	SELF = "self",
-	CLOUD = "cloud"
+	CLOUD = "cloud",
 }
 
 export interface IActionResultItem {

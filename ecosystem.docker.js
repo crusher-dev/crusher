@@ -9,7 +9,7 @@ module.exports = {
 			args: 'server.js',
 			env: {
 				...CRUSHER_APP_ENV,
-				NEXT_PUBLIC_CRUSHER_MODE: "enterprise"
+				NEXT_PUBLIC_CRUSHER_MODE: 'enterprise',
 			},
 			merge_logs: true,
 			node_args: ['--max_old_space_size=100'],
@@ -37,7 +37,7 @@ module.exports = {
 			args: '-r source-map-support/register index.js',
 			env: {
 				...VIDEO_PROCESSOR_ENV,
-				FFMPEG_PATH: require('@ffmpeg-installer/ffmpeg').path
+				FFMPEG_PATH: require('@ffmpeg-installer/ffmpeg').path,
 			},
 		},
 	],

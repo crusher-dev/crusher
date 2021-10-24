@@ -1,5 +1,5 @@
 import React from "react";
-import { ResetPasswordContainer  } from "@ui/containers/reset_password";
+import { ResetPasswordContainer } from "@ui/containers/reset_password";
 import { usePageTitle } from "../src/hooks/seo";
 
 function ResetPassPage() {

@@ -33,7 +33,7 @@ const overlay = css`
 `;
 
 const lightOverlayStyle = css`
-	background: rgba(15, 14, 14, 0.75);
+	background: rgba(15, 14, 14, 0.9);
 `;
 
 const closeIcon = css`

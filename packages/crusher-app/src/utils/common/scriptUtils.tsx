@@ -9,7 +9,7 @@ export function addScript(id, attribute, text, callback) {
 	document.body.appendChild(s);
 }
 
-const SEGMENT_KEY = process.env.NEXT_PUBLIC_SEGMENT_KEY || "N37AcGJzsY7gUkuE0kaaoxgJeunzilx1"
+const SEGMENT_KEY = process.env.NEXT_PUBLIC_SEGMENT_KEY || "N37AcGJzsY7gUkuE0kaaoxgJeunzilx1";
 export const loadSegment = () => {
 	addScript(
 		"track",

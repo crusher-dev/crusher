@@ -89,7 +89,7 @@ function ProjectList() {
 	);
 }
 
-function BottomSection({ name, description, link, ...props }) {
+function BottomSection({ name, description, ...props }) {
 	return (
 		<div className={"flex justify-between py-8 px-12 pb-6 mt-20"} css={upgradeCard} {...props}>
 			<div>
@@ -198,11 +198,9 @@ function LeftSection() {
 				<Conditional showIf={getEdition() === EditionTypeEnum.EE}>
 					<BottomSection
 						name={"Free plan"}
-						description={"Get 50% more"}
+						description={"Get started"}
 						onClick={() => {
-							router.push(
-								"https://checkout.stripe.com/pay/cs_live_a150LMbDFNkKrOt9FMdzD16JhGEEQbu51GEBFy2D4MOxa3cIJUMKoI3c8Z#fidkdWxOYHwnPyd1blppbHNgWkFMQ0l%2FYFFXM0hoMUtKM0RSZFRfNWB3aScpJ2hsYXYnP34nYnBsYSc%2FJ0tEJyknaHBsYSc%2FJ2E3M2cwMT1mKGNgPWEoMTQyNCg8YzA1KD0zMTM3Zj09ZzA8Z2MyMWQ2YScpJ3ZsYSc%2FJzIwMTFhY2M1KGM3YDAoMTYyNCg8YWQyKDMxYzQ0NGdgYWYyY2FnPT02Myd4KSdnYHFkdic%2FXlgpJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ3dgY2B3d2B3SndsYmxrJz8nbXFxdXY%2FKippbGtgZHcrZHV1J3gl",
-							);
+							router.push("/settings/org/pricing");
 						}}
 					/>
 				</Conditional>

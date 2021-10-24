@@ -9,18 +9,18 @@ export type INextTestInstancesDependencies = {
 export type ITestExecutionQueuePayload = IJobRunRequest & {
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
 	exports?: Array<[string, any]> | null;
-	startingStorageState: { cookies: Array<any>; origins: Array<any>; } | null,
+	startingStorageState: { cookies: Array<any>; origins: Array<any> } | null;
 };
 
 export interface ITestCompleteQueuePayload {
 	exports: Array<[string, any]>;
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
-	buildExecutionPayload: ITestExecutionQueuePayload,
+	buildExecutionPayload: ITestExecutionQueuePayload;
 	actionResults: Array<IActionResultItem>;
 	buildId: number;
 	testInstanceId: number;
 	buildTestCount: number;
-	storageState: { cookies: Array<any>; origins: Array<any>; } | null,
+	storageState: { cookies: Array<any>; origins: Array<any> } | null;
 	hasPassed: boolean;
 	failedReason?: Error;
 }

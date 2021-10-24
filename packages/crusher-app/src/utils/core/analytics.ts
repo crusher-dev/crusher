@@ -5,14 +5,13 @@ export const waitForSegmentToLoad = () => {
 				res();
 				clearInterval(timer);
 			}
-
 		}, 100);
 	});
 };
 export class Analytics {
-	static async identify(name, userId,email, teamID, planType, selfHost, mode) {
+	static async identify(name, userId, email, teamID, planType, selfHost, mode) {
 		await waitForSegmentToLoad();
-		window["analytics"].identify(userId,{
+		window["analytics"].identify(userId, {
 			name,
 			teamID,
 			email,

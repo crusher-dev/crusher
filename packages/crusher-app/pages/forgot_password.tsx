@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Container  } from "@ui/containers/forgot_password/index";
+import { Container } from "@ui/containers/forgot_password/index";
 
 import { usePageTitle } from "../src/hooks/seo";
 

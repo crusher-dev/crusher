@@ -1,10 +1,10 @@
 import { css } from "@emotion/react";
 import { useCallback, useMemo, useState } from "react";
 import { hashCode } from "@utils/helpers";
-import { Conditional } from 'dyson/src/components/layouts';
-import dynamic from 'next/dynamic';
+import { Conditional } from "dyson/src/components/layouts";
+import dynamic from "next/dynamic";
 
-const ImageSlider = dynamic(() => import("react-image-comparison-slider"),{ssr: false});
+const ImageSlider = dynamic(() => import("react-image-comparison-slider"), { ssr: false });
 
 const compareImages = css`
 	display: flex;
@@ -49,8 +49,8 @@ export function CompareImage({ leftImage, rightImage }) {
 			};
 
 			if (selected) {
-				if(selected.complete){
-					imageLoadFunction()
+				if (selected.complete) {
+					imageLoadFunction();
 				}
 				selected.addEventListener("load", imageLoadFunction);
 			}
@@ -73,7 +73,7 @@ export function CompareImage({ leftImage, rightImage }) {
 						<div>Before</div>
 						<div>After</div>
 					</div>
-						<Component />
+					<Component />
 				</div>
 			</div>
 		</div>

@@ -24,6 +24,7 @@ async function setupCronForBuilds() {
 					testService.runTestsInProject(monitoring.projectId, monitoring.userId, {
 						browser: monitoring.environmentBrowser,
 						buildTrigger: BuildTriggerEnum.CRON,
+						host: monitoring.host ? monitoring.host : "null",
 					});
 					await projectMonitoringService.updateLastCronMarker(monitoring.id);
 				}

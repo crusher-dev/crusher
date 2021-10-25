@@ -31,7 +31,7 @@ class ProjectMonitoringService {
 	@CamelizeResponse()
 	async getQueuedMonitoringDetails(): Promise<IQueuedMonitoringsDetails> {
 		return this.dbManager.fetchAllRows(
-			`SELECT monitorings.id id, e.user_id userId, monitorings.project_id project_id, monitorings.environment_id environment_id, monitorings.test_interval test_interval, monitorings.last_cron_run last_cron_run, e.name environment_name, e.browser environment_browser, e.vars environment_vars FROM monitorings INNER JOIN environments e on monitorings.environment_id = e.id WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(monitorings.last_cron_run) > monitorings.test_interval`,
+			`SELECT monitorings.id id, e.user_id userId, monitorings.host host, monitorings.project_id project_id, monitorings.environment_id environment_id, monitorings.test_interval test_interval, monitorings.last_cron_run last_cron_run, e.name environment_name, e.browser environment_browser, e.vars environment_vars FROM monitorings INNER JOIN environments e on monitorings.environment_id = e.id WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(monitorings.last_cron_run) > monitorings.test_interval`,
 		);
 	}
 

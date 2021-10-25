@@ -23,4 +23,5 @@ export type IQueuedMonitoringsDetails = Array<{
 	environmentName: string;
 	environmentBrowser: Array<BrowserEnum>;
 	environmentVars: string;
+	host: string | null;
 }>;

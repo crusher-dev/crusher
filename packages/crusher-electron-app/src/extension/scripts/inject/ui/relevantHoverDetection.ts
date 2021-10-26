@@ -48,8 +48,8 @@ class RelevantHoverDetection {
 		this.isRunning = true;
 	}
 
-	isCoDependentNode(node: Node, baseLineTimeStamp: number | null = null) {
-		return this.getParentDOMMutations(node, baseLineTimeStamp).length > 0;
+	isCoDependentNode(node: Node, baseLineTimeStamp: number | null = null, clickRecords: Array<MouseEvent>) {
+		return this.getParentDOMMutations(node, baseLineTimeStamp, clickRecords).length > 0;
 	}
 
 	reset() {
@@ -57,7 +57,7 @@ class RelevantHoverDetection {
 		this.resetTime = Date.now();
 	}
 
-	getParentDOMMutations(node: Node, baseLineTimeStamp: number | null = null): Array<IRegisteredMutationRecord> {
+	getParentDOMMutations(node: Node, baseLineTimeStamp: number | null = null, clickRecords: Array<any>): Array<IRegisteredMutationRecord> {
 		let currentNode = node;
 		const list = [];
 
@@ -77,13 +77,20 @@ class RelevantHoverDetection {
 			.reverse()
 			.filter((item, index, array) => {
 				const timeOfEventStart = parseInt(item.key.split("__")[2]);
+				const ls = clickRecords.map((record) => ({
+					out: Math.abs(record.timestamp - timeOfEventStart),
+					recordTimeStamp: record.timestamp,
+					currentTimeStamp: timeOfEventStart,
+					item: item.key,
+				}));
 
 				return (
 					array.findIndex((currentItem) => currentItem.eventNode === item.eventNode) === index &&
 					(item.targetNode !== document.body || item.targetNode !== document.body) &&
 					document.body.contains(item.targetNode) &&
 					document.body.contains(item.eventNode) &&
-					timeOfEventStart > this.resetTime
+					timeOfEventStart > this.resetTime &&
+					clickRecords.findIndex((record) => Math.abs(record.timestamp - timeOfEventStart) < 75) === -1
 				);
 			})
 			.sort((a, b) => {

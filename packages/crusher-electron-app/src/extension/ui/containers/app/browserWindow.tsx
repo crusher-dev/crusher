@@ -15,12 +15,12 @@ import { WebviewTag } from "electron";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;
-	saveTestCallback: () => void;
+	verifyAndSaveTestCallback: () => void;
 	deviceIframeRef: RefObject<any>;
 }
 
 const BrowserWindow = (props: iBrowserWindowProps) => {
-	const { deviceIframeRef, saveTestCallback } = props;
+	const { deviceIframeRef, verifyAndSaveTestCallback } = props;
 	const isInspectModeOn = useSelector(getInspectModeState);
 	const actionsRecordingState = useSelector(getActionsRecordingState);
 	const isElementRecordingStateOn = actionsRecordingState.type === ACTIONS_RECORDING_STATE.ELEMENT;
@@ -88,7 +88,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 				goBack={goBack}
 				goForward={goForward}
 				refreshPage={refreshPage}
-				saveTest={saveTestCallback}
+				verifyTest={verifyAndSaveTestCallback}
 				loadNewPage={loadNewPage}
 			/>
 			{/*<ActionRecordedIndicator />*/}

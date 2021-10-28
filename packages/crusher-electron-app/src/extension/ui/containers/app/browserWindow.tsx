@@ -88,7 +88,7 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 				goBack={goBack}
 				goForward={goForward}
 				refreshPage={refreshPage}
-				verifyTest={verifyAndSaveTestCallback}
+				verifyAndSaveTest={verifyAndSaveTestCallback}
 				loadNewPage={loadNewPage}
 			/>
 			{/*<ActionRecordedIndicator />*/}

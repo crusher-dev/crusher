@@ -23,6 +23,9 @@ contextBridge.exposeInMainWorld("electron", {
 	executeCustomCodeScript: async (scriptFunction: string) => ipcRenderer.invoke("execute-custom-code", scriptFunction),
 	runAfterThisTest: async (testId: string) => ipcRenderer.invoke("run-after-this-test", testId),
 	getNodeId: async (id) => ipcRenderer.invoke("get-node-id", id),
+	isTestVerified: async () => ipcRenderer.invoke("is-test-verified"),
+	verifyTest: async (tempTestId: number) => ipcRenderer.invoke("verify-test", tempTestId),
+	stepsUpdated: async () => ipcRenderer.invoke("steps-updated"),
 
 	webview: {
 		postMessage: (data) => {

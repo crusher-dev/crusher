@@ -139,7 +139,7 @@ class PlaywrightInstance {
 		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result) => {
 			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
-			if (status === "STARTED" && !isRunAfterTestAction) {
+			if (status === "COMPLETED" && !isRunAfterTestAction) {
 				this.mainWindow.saveRecordedStep(action);
 			}
 		});
@@ -162,6 +162,7 @@ class PlaywrightInstance {
 		const isDeviceToBeChanged = isRunAfterTestAction ? false : await this._changeDeviceIfNotSame(actions);
 		const browserActions = getBrowserActions(actions);
 		const runAfterTestAction = this._getRunAfterTestTestAction(actions);
+		let error = null;
 
 		if (!isDeviceToBeChanged) {
 			try {
@@ -177,11 +178,13 @@ class PlaywrightInstance {
 
 				await this.runMainActions(actions, isRunAfterTestAction);
 			} catch (err) {
+				error = err;
 				console.error(err);
 			}
 
 			this.running = false;
 			console.log("Finished replaying test");
+			return { error };
 		}
 	}
 
@@ -190,6 +193,12 @@ class PlaywrightInstance {
 		const actions = testInfo.data.events;
 		await this.runActions(actions, isRunAfterTestAction);
 		return true;
+	}
+
+	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error }> {
+		const testInfo = await axios.get(resolveToBackendPath(`/tests/actions/get.temp?id=${tempTestId}`));
+		const actions = testInfo.data.events;
+		return this.runActions(actions, false);
 	}
 }
 

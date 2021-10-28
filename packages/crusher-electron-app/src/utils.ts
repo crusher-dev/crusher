@@ -29,7 +29,6 @@ export async function getReplayableTestActions(testId: number, isMainTest = true
 	const mainActions: Array<iAction> = getMainActions(testInfo.data.events);
 	if (!isMainTest) {
 		mainActions.map((action) => {
-			action.payload.meta.shouldNotBeRecorded = true;
 			return action;
 		});
 	}

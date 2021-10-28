@@ -90,7 +90,7 @@ class RelevantHoverDetection {
 					document.body.contains(item.targetNode) &&
 					document.body.contains(item.eventNode) &&
 					timeOfEventStart > this.resetTime &&
-					clickRecords.findIndex((record) => Math.abs(record.timestamp - timeOfEventStart) < 75) === -1
+					clickRecords.findIndex((record) => Math.abs(record.timestamp - timeOfEventStart) < 50) === -1
 				);
 			})
 			.sort((a, b) => {

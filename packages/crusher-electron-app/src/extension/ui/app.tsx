@@ -49,13 +49,18 @@ const App = () => {
 			}),
 		})
 			.then((res) => res.text())
-			.then((res) => {
+			.then(async (res) => {
 				const result = JSON.parse(res);
-				const urlToOpen = resolveToFrontend(`/?temp_test_id=${result.insertId}#crusherExternalLink`);
+
+				if (await (window as any).electron.isTestVerified()) {
+					const urlToOpen = resolveToFrontend(`/?temp_test_id=${result.insertId}#crusherExternalLink`);
+					openLinkInNewTab(urlToOpen);
+				} else {
+					(window as any).electron.verifyTest(result.insertId);
+				}
 
 				// @Note: window.open() instead of navigation though hyperlinks
 				// hangs the electron app for some reason.
-				openLinkInNewTab(urlToOpen);
 			});
 	};
 
@@ -80,7 +85,7 @@ const App = () => {
 	return (
 		<div style={containerStyle}>
 			<Conditional If={url}>
-				<BrowserWindow deviceIframeRef={deviceIframeRef} saveTestCallback={saveTest} />
+				<BrowserWindow deviceIframeRef={deviceIframeRef} verifyAndSaveTestCallback={saveTest} />
 				<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 				<ModalManager deviceIframeRef={deviceIframeRef} />
 			</Conditional>

@@ -62,7 +62,8 @@ export default class EventsController {
 				}
 				return node;
 			})
-			.filter((e) => !!e);
+			.filter((e) => !!e)
+			;
 	}
 
 	simulateClickOnElement(element: any) {

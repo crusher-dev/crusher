@@ -52,6 +52,7 @@ export default class EventRecording {
 	private resetUserEventsToDefaultCallback: any = undefined;
 	private releventHoverDetectionManager: RelevantHoverDetection;
 	private _pageRecordedEventsArr = [];
+	private _clickEvents = [];
 
 	constructor(options = {} as any) {
 		this.state = {
@@ -336,9 +337,9 @@ export default class EventRecording {
 	}
 
 	async getHoverDependentNodes(element, baseLineTimeStamp: number | null = null): Promise<Array<any>> {
-		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element, baseLineTimeStamp);
+		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element, baseLineTimeStamp, this._clickEvents);
 		if (needsOtherActions) {
-			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element, baseLineTimeStamp);
+			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element, baseLineTimeStamp, this._clickEvents);
 			console.log("Hover nodes records", hoverNodesRecord);
 			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
 			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
@@ -404,6 +405,8 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
+		event.timestamp = Date.now();
+
 		if (event.which === 3) {
 			return this.onRightClick(event);
 		}
@@ -440,6 +443,7 @@ export default class EventRecording {
 		// by user. Found during creating tests for ielts search
 		console.log("Event now", event.isTrusted, !event.simulatedEvent, event.clientX, event.clientY);
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
+			this._clickEvents.push(event);
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target, {

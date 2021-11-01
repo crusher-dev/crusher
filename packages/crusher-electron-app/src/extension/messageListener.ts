@@ -1,5 +1,5 @@
 import { getStore } from "./redux/store";
-import { deleteRecordedAction, recordAction, updateLastRecordedAction } from "./redux/actions/actions";
+import { deleteRecordedAction, recordAction, resetRecordedActions, updateLastRecordedAction } from "./redux/actions/actions";
 import {
 	addSEOMetaInfo,
 	setIsTestReplaying,
@@ -33,6 +33,8 @@ export enum MESSAGE_TYPES {
 	RECORD_ACTION_META = "RECORD_ACTION_META",
 	RECORD_REPLAY_ACTION = "RECORD_REPLAY_ACTION",
 	RECORD_ACTION = "RECORD_ACTION",
+	CLEAR_RECORDED_ACTIONS = "CLEAR_RECORDED_ACTIONS",
+	SET_IS_VERIFYING_STATE = "SET_IS_VERIFYING_STATE",
 	SET_IS_REPLAYING = "SET_IS_REPLAYING",
 	UPDATE_INSPECTOR_MODE_STATE = "UPDATE_INSPECTOR_MODE_STATE",
 	TURN_ON_ELEMENT_MODE = "TURN_ON_ELEMENT_MODE",
@@ -271,6 +273,16 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 	const { type } = event.data;
 
 	switch (type) {
+		case MESSAGE_TYPES.CLEAR_RECORDED_ACTIONS: {
+			const store = getStore();
+			store.dispatch(resetRecordedActions());
+			break;
+		}
+		case MESSAGE_TYPES.SET_IS_VERIFYING_STATE: {
+			const store = getStore();
+			store.dispatch(setIsTestReplaying(event.data.meta.value));
+			break;
+		}
 		case MESSAGE_TYPES.SET_IS_REPLAYING: {
 			const store = getStore();
 			store.dispatch(setIsTestReplaying(event.data.meta.value));

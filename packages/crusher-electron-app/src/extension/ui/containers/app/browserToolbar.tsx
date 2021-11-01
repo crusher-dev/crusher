@@ -23,11 +23,11 @@ interface iBrowserToolbarProps {
 	goBack: () => void;
 	goForward: () => void;
 	refreshPage: () => void;
-	saveTest: () => void;
+	verifyAndSaveTest: () => void;
 	loadNewPage: (newUrl: string) => void;
 }
 const BrowserToolbar = (props: iBrowserToolbarProps) => {
-	const { initialUrl, goBack, goForward, refreshPage, saveTest, loadNewPage } = props;
+	const { initialUrl, goBack, goForward, refreshPage, verifyAndSaveTest, loadNewPage } = props;
 	const actions = useSelector(getActions);
 
 	// const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
@@ -111,7 +111,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 						<div className="mx-12 cursor-pointer">
 							<SettingsIcon onClick={openSettings} />
 						</div>
-						<Button id={"saveTest"} title={"Save test"} icon={SaveIcon} onClick={saveTest} />
+						<Button id={"saveTest"} title={"Verify & Save"} icon={SaveIcon} onClick={verifyAndSaveTest} />
 					</div>
 				</div>
 			</div>

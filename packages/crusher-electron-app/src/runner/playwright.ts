@@ -5,10 +5,11 @@ import { iAction } from "@shared/types/action";
 import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { MainWindow } from "../mainWindow";
-import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "../../../crusher-shared/constants/recordedActions";
 import { CookiesSetDetails, session, WebContents } from "electron";
 import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
+import { getReplayableTestActions } from "../utils";
 
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
@@ -136,9 +137,9 @@ class PlaywrightInstance {
 		const actionsArr = getMainActions(actions);
 
 		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
-		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action, result) => {
+		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result) => {
 			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
-			if (status === "STARTED" && !isRunAfterTestAction) {
+			if (status === "COMPLETED" && !isRunAfterTestAction) {
 				this.mainWindow.saveRecordedStep(action);
 			}
 		});
@@ -152,17 +153,38 @@ class PlaywrightInstance {
 		return this.mainWindow.app._setDevice(deviceAction.payload.meta.device.id);
 	}
 
+	private _getRunAfterTestTestAction(actions: Array<iAction>): iAction {
+		const runAfterTestAction = actions.find((action) => action.type === ActionsInTestEnum.RUN_AFTER_TEST);
+		return runAfterTestAction;
+	}
+
 	async runActions(actions: any, isRunAfterTestAction = false) {
 		const isDeviceToBeChanged = isRunAfterTestAction ? false : await this._changeDeviceIfNotSame(actions);
+		const browserActions = getBrowserActions(actions);
+		const runAfterTestAction = this._getRunAfterTestTestAction(actions);
+		let error = null;
+
 		if (!isDeviceToBeChanged) {
 			try {
+				if (runAfterTestAction) {
+					try {
+						await this.runMainActions(await getReplayableTestActions(runAfterTestAction.payload.meta.value), true);
+					} finally {
+						if (!isRunAfterTestAction) {
+							await this.mainWindow.saveRecordedStep(runAfterTestAction);
+						}
+					}
+				}
+
 				await this.runMainActions(actions, isRunAfterTestAction);
 			} catch (err) {
+				error = err;
 				console.error(err);
 			}
 
 			this.running = false;
 			console.log("Finished replaying test");
+			return { error };
 		}
 	}
 
@@ -171,6 +193,12 @@ class PlaywrightInstance {
 		const actions = testInfo.data.events;
 		await this.runActions(actions, isRunAfterTestAction);
 		return true;
+	}
+
+	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error }> {
+		const testInfo = await axios.get(resolveToBackendPath(`/tests/actions/get.temp?id=${tempTestId}`));
+		const actions = testInfo.data.events;
+		return this.runActions(actions, false);
 	}
 }
 

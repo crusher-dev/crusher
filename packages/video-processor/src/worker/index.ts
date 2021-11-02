@@ -41,6 +41,7 @@ export default async function (bullJob: iVideoProcessorJob) {
 		);
 
 		const uploadedLastSecondsClipVideoUrl = await storageManager.upload(lastSecondsClipPath, path.join(bullJob.name, "videos/video_clipped.mp4"));
+		await storageManager.remove(`${buildId}/${testInstanceId}/video.mp4.raw`);
 
 		await shell.rm("-rf", savedVideoPath);
 		await shell.rm("-rf", lastSecondsClipPath);

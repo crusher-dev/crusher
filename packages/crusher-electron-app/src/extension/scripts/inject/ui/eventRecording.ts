@@ -336,7 +336,10 @@ export default class EventRecording {
 		}
 	}
 
-	async getHoverDependentNodes(element, baseLineTimeStamp: number | null = null): Promise<Array<any>> {
+	async getHoverDependentNodes(_element: HTMLElement, baseLineTimeStamp: number | null = null): Promise<Array<any>> {
+		// Use parent svg element if element is an svg element
+		const element = _element instanceof SVGElement && _element.tagName.toLocaleLowerCase() !== "svg" ? _element.ownerSVGElement : _element;
+
 		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element, baseLineTimeStamp, this._clickEvents);
 		if (needsOtherActions) {
 			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element, baseLineTimeStamp, this._clickEvents);
@@ -365,7 +368,9 @@ export default class EventRecording {
 		}
 	}
 
-	async turnOnElementModeInParentFrame(element = this.state.targetElement) {
+	async turnOnElementModeInParentFrame(selectedElement = this.state.targetElement) {
+		const element =
+			selectedElement instanceof SVGElement && selectedElement.tagName.toLocaleLowerCase() !== "svg" ? selectedElement.ownerSVGElement : selectedElement;
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
 		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(
 			this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[],

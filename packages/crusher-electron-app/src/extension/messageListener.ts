@@ -1,5 +1,5 @@
 import { getStore } from "./redux/store";
-import { deleteRecordedAction, recordAction, updateLastRecordedAction } from "./redux/actions/actions";
+import { deleteRecordedAction, recordAction, resetRecordedActions, updateLastRecordedAction } from "./redux/actions/actions";
 import {
 	addSEOMetaInfo,
 	setIsTestReplaying,
@@ -28,11 +28,14 @@ import { iPageSeoMeta } from "./utils/dom";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAttribute } from "@shared/types/elementInfo";
 import { iAction } from "@shared/types/action";
+import { saveTest } from "./utils/app";
 
 export enum MESSAGE_TYPES {
 	RECORD_ACTION_META = "RECORD_ACTION_META",
 	RECORD_REPLAY_ACTION = "RECORD_REPLAY_ACTION",
 	RECORD_ACTION = "RECORD_ACTION",
+	CLEAR_RECORDED_ACTIONS = "CLEAR_RECORDED_ACTIONS",
+	SET_IS_VERIFYING_STATE = "SET_IS_VERIFYING_STATE",
 	SET_IS_REPLAYING = "SET_IS_REPLAYING",
 	UPDATE_INSPECTOR_MODE_STATE = "UPDATE_INSPECTOR_MODE_STATE",
 	TURN_ON_ELEMENT_MODE = "TURN_ON_ELEMENT_MODE",
@@ -43,6 +46,7 @@ export enum MESSAGE_TYPES {
 	SEO_META_INFORMATION = "SEO_META_INFORMATION",
 	EXECUTE_CUSTOM_SCRIPT_OUTPUT = "EXECUTE_CUSTOM_SCRIPT_OUTPUT",
 	RELOAD_ELECTRON_EXTENSION = "RELOAD_ELECTRON_EXTENSION",
+	SAVE_RECORDED_TEST = "SAVE_RECORDED_TEST",
 }
 
 export enum RECORDING_STATUS {
@@ -271,6 +275,20 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 	const { type } = event.data;
 
 	switch (type) {
+		case MESSAGE_TYPES.SAVE_RECORDED_TEST: {
+			saveTest();
+			break;
+		}
+		case MESSAGE_TYPES.CLEAR_RECORDED_ACTIONS: {
+			const store = getStore();
+			store.dispatch(resetRecordedActions());
+			break;
+		}
+		case MESSAGE_TYPES.SET_IS_VERIFYING_STATE: {
+			const store = getStore();
+			store.dispatch(setIsTestReplaying(event.data.meta.value));
+			break;
+		}
 		case MESSAGE_TYPES.SET_IS_REPLAYING: {
 			const store = getStore();
 			store.dispatch(setIsTestReplaying(event.data.meta.value));

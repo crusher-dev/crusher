@@ -17,6 +17,7 @@ import { StartupModal } from "./containers/app/modals/startupModal";
 import * as _url from "url";
 import "../style/main.css";
 import { openLinkInNewTab } from "../utils/dom";
+import { saveTest } from "../utils/app";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
@@ -29,35 +30,6 @@ const App = () => {
 			localStorage.setItem("lastVisit", Date.now().toString());
 		}
 	}, []);
-
-	const saveTest = () => {
-		const store = getStore();
-		const steps = store.getState().actions.list;
-		const lastActionTime = store.getState().actions.last_action;
-
-		if (!lastActionTime) {
-			return;
-		}
-		console.log(AdvancedURL.getBackendURL());
-		fetch(resolveToBackendPath("tests/actions/save.temp"), {
-			method: "POST",
-			headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
-			body: JSON.stringify({
-				events: steps.map((step) => {
-					return { ...step, screenshot: null };
-				}),
-			}),
-		})
-			.then((res) => res.text())
-			.then((res) => {
-				const result = JSON.parse(res);
-				const urlToOpen = resolveToFrontend(`/?temp_test_id=${result.insertId}#crusherExternalLink`);
-
-				// @Note: window.open() instead of navigation though hyperlinks
-				// hangs the electron app for some reason.
-				openLinkInNewTab(urlToOpen);
-			});
-	};
 
 	useMemo(() => {
 		const store = getStore();
@@ -80,7 +52,7 @@ const App = () => {
 	return (
 		<div style={containerStyle}>
 			<Conditional If={url}>
-				<BrowserWindow deviceIframeRef={deviceIframeRef} saveTestCallback={saveTest} />
+				<BrowserWindow deviceIframeRef={deviceIframeRef} verifyAndSaveTestCallback={saveTest} />
 				<SidebarActionsBox deviceIframeRef={deviceIframeRef} />
 				<ModalManager deviceIframeRef={deviceIframeRef} />
 			</Conditional>

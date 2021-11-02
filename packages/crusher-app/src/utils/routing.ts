@@ -6,6 +6,7 @@ import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUser
 import { getBoolean } from "@utils/common";
 import { getEdition } from "@utils/helpers";
 import { isTempTestPending } from "@utils/user";
+import { resolvePathToBackendURI } from "./common/url";
 
 export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
 	const { userData: user } = data;
@@ -66,3 +67,16 @@ export const redirectUserOnMount = async (data: IUserAndSystemInfoResponse, rout
 		await handleEERouting(data, router, loadCallback);
 	}
 };
+
+// query: Router Query object
+export const getGoogleAuthUrl = (query: any): string => {
+	const { inviteType, inviteCode } = query;
+	
+	const finalURL = new URL(resolvePathToBackendURI("/users/actions/auth.google"));
+	if(inviteType && inviteCode) {
+		finalURL.searchParams.append("inviteType", inviteType);
+		finalURL.searchParams.append("inviteCode", inviteCode);
+	}
+	
+	return finalURL.toString();
+}

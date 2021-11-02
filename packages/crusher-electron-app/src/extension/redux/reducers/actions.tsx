@@ -1,7 +1,15 @@
 import { AnyAction } from "redux";
 import { iActionsState } from "../../interfaces/actionsReducer";
-import { DELETE_RECORDED_ACTION, RECORD_ACTION, UPDATE_ACTION_NAME, UPDATE_ACTION_TIMEOUT, UPDATE_LAST_RECORDED_ACTION } from "../actions/actions";
+import {
+	DELETE_RECORDED_ACTION,
+	RECORD_ACTION,
+	RESET_RECORDED_ACTIONS,
+	UPDATE_ACTION_NAME,
+	UPDATE_ACTION_TIMEOUT,
+	UPDATE_LAST_RECORDED_ACTION,
+} from "../actions/actions";
 import { iAction } from "@shared/types/action";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const initialState: iActionsState = {
 	list: [],
@@ -9,7 +17,16 @@ const initialState: iActionsState = {
 };
 
 export const actionsReducer = (state: any = initialState, action: AnyAction) => {
+	if ([DELETE_RECORDED_ACTION, RECORD_ACTION, UPDATE_ACTION_NAME].includes(action.type)) {
+		(window as any).electron.stepsUpdated();
+	}
+
 	switch (action.type) {
+		case RESET_RECORDED_ACTIONS:
+			return {
+				...state,
+				list: state.list.filter((action: iAction) => action.type === ActionsInTestEnum.SET_DEVICE),
+			};
 		case RECORD_ACTION:
 			return {
 				...state,

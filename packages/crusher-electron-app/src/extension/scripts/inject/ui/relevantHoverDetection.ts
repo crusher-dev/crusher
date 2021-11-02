@@ -27,6 +27,9 @@ class RelevantHoverDetection {
 		if (!document.body.contains(record.targetNode) && !document.body.contains(record.eventNode)) return;
 
 		const { eventNode, targetNode } = record;
+		// Just in case
+		if (eventNode instanceof SVGElement && eventNode.tagName.toLowerCase() !== "svg") return;
+
 		const alredyHasMap = this._mapRecords.has(targetNode);
 		const targetNodeRecords: Map<Node, IRegisteredMutationRecord> = alredyHasMap ? this._mapRecords.get(targetNode)! : new Map();
 		if (!alredyHasMap) this._mapRecords.set(targetNode, targetNodeRecords);
@@ -84,13 +87,15 @@ class RelevantHoverDetection {
 					item: item.key,
 				}));
 
+				console.log("Here's the record", ls);
+
 				return (
 					array.findIndex((currentItem) => currentItem.eventNode === item.eventNode) === index &&
 					(item.targetNode !== document.body || item.targetNode !== document.body) &&
 					document.body.contains(item.targetNode) &&
 					document.body.contains(item.eventNode) &&
 					timeOfEventStart > this.resetTime &&
-					clickRecords.findIndex((record) => Math.abs(record.timestamp - timeOfEventStart) < 75) === -1
+					clickRecords.findIndex((record) => Math.abs(record.timestamp - timeOfEventStart) < 600) === -1
 				);
 			})
 			.sort((a, b) => {

@@ -11,16 +11,30 @@ class MainWindow {
 	webView: WebView;
 	app: App;
 
-	state: { targetSite?: string; replayTestId?: string; shouldRunAfterTest?: boolean; runAfterTestId?: string; isTestRunning: boolean };
+	state: {
+		targetSite?: string;
+		replayTestId?: string;
+		shouldRunAfterTest?: boolean;
+		runAfterTestId?: string;
+		isTestRunning: boolean;
+		isTestVerified: boolean;
+	};
 	appState: { userAgent: string };
 
-	_getStateFromArgs(): { targetSite?: string; replayTestId?: string; shouldRunAfterTest: boolean; isTestRunning: false } {
-		if (!process.argv.length) return { replayTestId: undefined, targetSite: undefined, shouldRunAfterTest: false, isTestRunning: false };
+	_getStateFromArgs(): { targetSite?: string; replayTestId?: string; shouldRunAfterTest: boolean; isTestRunning: false; isTestVerified: boolean } {
+		if (!process.argv.length)
+			return { replayTestId: undefined, targetSite: undefined, shouldRunAfterTest: false, isTestRunning: false, isTestVerified: false };
 
 		const deepLink = process.argv[process.argv.length - 1];
 		if (deepLink && deepLink.startsWith("crusher://replay-test")) {
 			const url = new URL(deepLink);
-			return { replayTestId: url.searchParams.get("testId"), targetSite: "https://example.com", shouldRunAfterTest: false, isTestRunning: false };
+			return {
+				replayTestId: url.searchParams.get("testId"),
+				targetSite: "https://example.com",
+				shouldRunAfterTest: false,
+				isTestRunning: false,
+				isTestVerified: false,
+			};
 		}
 
 		return {
@@ -28,6 +42,7 @@ class MainWindow {
 			targetSite: app.commandLine.getSwitchValue("target-site") || undefined,
 			shouldRunAfterTest: false,
 			isTestRunning: false,
+			isTestVerified: false,
 		};
 	}
 
@@ -116,11 +131,39 @@ class MainWindow {
 		// this.webContents.setUserAgent(USER_AGENT.value);
 	}
 
+	async isTestVerified(event) {
+		return this.state.isTestVerified;
+	}
+
+	async verifyTest(event, tempTestId) {
+		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: true } });
+
+		await this.webView.webContents().loadURL("https://example.com");
+
+		await this.app.cleanupStorage();
+		this.state.isTestRunning = true;
+		this.browserWindow.webContents.send("post-message-to-host", { type: "CLEAR_RECORDED_ACTIONS" });
+		const { error } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
+		if (error) {
+			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');
+		} else {
+			this.browserWindow.webContents.send("post-message-to-host", { type: "SAVE_RECORDED_TEST" });
+			this.state.isTestVerified = true;
+		}
+		this.state.isTestRunning = false;
+
+		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: false } });
+	}
+
 	async setupListeners() {
 		this.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, this.allowAllNetworkRequests.bind(this));
 
 		ipcMain.on("post-message-to-host", (event, data) => {
 			if (!this.webView.isInRunningState()) {
+				if (["RECORD_ACTION"].includes(data.type)) {
+					this.state.isTestVerified = false;
+				}
+
 				this.browserWindow.webContents.send("post-message-to-host", data);
 			} else {
 				if (!["RECORD_ACTION"].includes(data.type)) {
@@ -128,11 +171,24 @@ class MainWindow {
 				}
 			}
 		});
+		ipcMain.handle("is-test-verified", this.isTestVerified.bind(this));
+		ipcMain.handle("verify-test", this.verifyTest.bind(this));
+		ipcMain.handle("steps-updated", this.handleStepsUpdated.bind(this));
+
 		ipcMain.handle("run-after-this-test", this.handleRunAfterThisTest.bind(this));
 
 		this.webContents.on("new-window", this.handleNewWindow.bind(this));
 		this.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
+		// on reload listener
+		this.webContents.on("did-finish-load", () => {
+			this.app.cleanupStorage();
+		});
 		this.registerIPCListeners();
+	}
+
+	async handleStepsUpdated(event) {
+		// @TODO: Add functionality here
+		return true;
 	}
 
 	async handleRunAfterThisTest(event, testId) {

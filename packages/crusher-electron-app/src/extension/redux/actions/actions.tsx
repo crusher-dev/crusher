@@ -8,6 +8,7 @@ export const UPDATE_LAST_RECORDED_ACTION = "UPDATE_LAST_RECORDED_ACTION";
 export const DELETE_RECORDED_ACTION = "DELETE_RECORDED_ACTION";
 export const UPDATE_ACTION_NAME = "UPDATE_ACTION_NAME";
 export const UPDATE_ACTION_TIMEOUT = "UPDATE_ACTION_TIMEOUT";
+export const RESET_RECORDED_ACTIONS = "RESET_RECORDED_ACTIONS";
 
 export const recordAction = (action: iAction) => {
 	const store = getStore();
@@ -45,4 +46,8 @@ export const updateLastRecordedAction = (actionToBeReplacedWith: iAction) => ({
 export const deleteRecordedAction = (actionIndex: number) => ({
 	type: DELETE_RECORDED_ACTION,
 	payload: { actionIndex: actionIndex },
+});
+
+export const resetRecordedActions = () => ({
+	type: RESET_RECORDED_ACTIONS,
 });

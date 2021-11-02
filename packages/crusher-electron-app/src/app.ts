@@ -90,6 +90,10 @@ class App {
 
 		this.mainWindow = new MainWindow(this, this.appWindow, this.state);
 		await this.mainWindow.initialize();
+		
+		this.appWindow.on("close", () => {
+			if(process.platform === "darwin") app.quit();
+		});
 
 		return true;
 	}
@@ -106,8 +110,27 @@ class App {
 		});
 
 		app.on("second-instance", this.handleSecondInstance.bind(this));
+		app.on("open-url", this.handleDeepLink.bind(this));
 
 		this.createIPCListeners();
+	}
+
+	async handleDeepLink(event, data) {
+		if(process.platform === "darwin") {
+			if(data.startsWith("crusher://")) {
+				const dialogResponse = dialog.showMessageBoxSync({
+					message: "Current saved state would be lost. Do you want to continue?",
+					type: "question",
+					buttons: ["Yes", "Cancel"],
+					defaultId: 1,
+				});
+		
+				if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
+					await this._reloadApp(this.appWindow, true, [data]);
+				} 
+			}
+		}
+		console.log("Link is this", data);
 	}
 
 	async handleSecondInstance(event, argv, workingDirectory) {

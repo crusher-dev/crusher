@@ -116,8 +116,10 @@ export default class EventsController {
 		return this._recordedEvents;
 	}
 
-	async saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
-		const selectors = capturedTarget ? getSelectors(capturedTarget) : null;
+	async saveCapturedEventInBackground(event_type: string, _capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
+		const capturedTarget =
+			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
+		const selectors = capturedTarget ? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget) : null;
 
 		let capturedElementScreenshot = null;
 

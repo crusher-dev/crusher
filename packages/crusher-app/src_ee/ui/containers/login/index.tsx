@@ -15,6 +15,7 @@ import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
 import { loadUserDataAndRedirect } from "@hooks/user";
 import { RequestMethod } from "@types/RequestOptions";
+import { getGoogleAuthUrl } from "@utils/routing";
 
 const emailLogin = (email: string, password: string) => {
 	return backendRequest("/users/actions/login", {
@@ -180,6 +181,8 @@ function EmailBox() {
 }
 
 export const LoginContainer = () => {
+	const { query } = useRouter();
+
 	return (
 		<CrusherBase>
 			<CenterLayout className={"pb-120"}>
@@ -187,7 +190,7 @@ export const LoginContainer = () => {
 					<Logo height={"24rem"} className={"mb-24 mt-80"} />
 					<div className={"font-cera text-15 leading-none font-500 mb-38"}>Login to your account</div>
 
-					<a href={resolvePathToBackendURI("/users/actions/auth.google")}>
+					<a href={getGoogleAuthUrl(query)}>
 						<Button size={"large"} css={googleButton} className={"mb-20"}>
 							<div className={"flex justify-center items-center"}>
 								<GoogleSVG className={"mr-12"} />

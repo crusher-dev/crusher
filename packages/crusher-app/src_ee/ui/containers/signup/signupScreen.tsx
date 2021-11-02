@@ -19,6 +19,7 @@ import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 import { loadUserDataAndRedirect } from "@hooks/user";
 import { RequestMethod } from "@types/RequestOptions";
 import { getBoolean } from "@utils/common";
+import { getGoogleAuthUrl } from "@utils/routing";
 
 const showRegistrationFormAtom = atom(false);
 
@@ -199,7 +200,7 @@ export const SignupContainer = () => {
 	const [showRegistrationBox] = useAtom(showRegistrationFormAtom);
 	const { query } = useRouter();
 
-	const googleSignupLink = query?.inviteCode ? `/users/actions/auth.google?inviteCode=${query.inviteCode}` : "/users/actions/auth.google";
+	const googleSignupLink = getGoogleAuthUrl(query);
 
 	return (
 		<CrusherBase>

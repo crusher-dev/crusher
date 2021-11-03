@@ -23,9 +23,9 @@ class PlaywrightInstance {
 	private globalManager: GlobalManagerPolyfill;
 	private runnerManager: any;
 
-	private browser: any;
+	browser: any;
 	private browserContext: any;
-	private page: any;
+	page: any;
 	private mainWindow: MainWindow;
 
 	private sdkManager: any;

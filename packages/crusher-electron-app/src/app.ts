@@ -146,8 +146,8 @@ class App {
 		}
 	}
 
-	cleanupStorage() {
-		return session.defaultSession.clearStorageData({
+	async cleanupStorage() {
+		session.fromPartition("crusher").clearStorageData({
 			storages: ["cookies", "localstorage", "indexdb"],
 		});
 	}

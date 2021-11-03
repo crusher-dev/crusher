@@ -2,23 +2,36 @@ import EventRecording from "./ui/eventRecording";
 import { MESSAGE_TYPES } from "../../messageListener";
 import { responseMessageListener } from "./responseMessageListener";
 import { setupContentScriptForElectronReload } from "../../utils/electronReload";
+import { getFrameDepth } from "../../utils/helpers";
+const frameDepth = getFrameDepth(window.self);
 
 function requestRecordingStatusFromExtension() {
-	(window as any).electron.host.postMessage({
-		type: MESSAGE_TYPES.REQUEST_RECORDING_STATUS,
-	});
+	if((window as any).electron) {
+	   (window as any).electron.host.postMessage({
+			type: MESSAGE_TYPES.REQUEST_RECORDING_STATUS,
+		});
+	} else {
+		console.log("Current url is", window.location.href);
+	}
 }
 
 function boot() {
-	if (process.env.NODE_ENV === "development") {
-		setupContentScriptForElectronReload();
-	}
+	(window as any).eventRecorderExecuted = true;
 
-	const recordingOverlay = new EventRecording({});
+	window.addEventListener("load", () => {
+		if (process.env.NODE_ENV === "development") {
+			setupContentScriptForElectronReload();
+		}
 
-	requestRecordingStatusFromExtension();
-
-	(window as any).electron.webview.addEventListener("message", responseMessageListener.bind(window, recordingOverlay), false);
+		const recordingOverlay = new EventRecording({});
+		requestRecordingStatusFromExtension();
+		if((window as any).electron) 
+		(window as any).electron.webview.addEventListener("message", responseMessageListener.bind(window, recordingOverlay), false);
+	});
 }
 
-boot();
+if (frameDepth === 0 && !window.location.href.startsWith("chrome-extension://")) {
+	if(!(window as any).eventRecorderExecuted) {
+		boot();
+	}
+}

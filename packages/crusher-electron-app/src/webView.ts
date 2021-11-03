@@ -5,6 +5,9 @@ import { ExportsManager } from "../../crusher-shared/lib/exports/index";
 import axios from "axios";
 import { resolveToBackendPath } from "../../crusher-shared/utils/url";
 import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
+import { Browser, Page } from "playwright";
+import * as path from "path";
+import * as fs from "fs";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const highlighterStyle = require("./highlighterStyle.json");
@@ -80,7 +83,13 @@ export class WebView {
 		this.registerIPCListeners();
 
 		await this.playwrightInstance.connect();
+		await (this.playwrightInstance.browser as Browser).contexts()[0].addInitScript({
+			path: path.join(__dirname, "extension/js/content_script.js"),
+		});
 
+
+		await this.webContents().loadURL(this.mainWindow.state.webViewSrc);
+	
 		// Add proper logic here
 		if (this.appState.shouldRunAfterTest) {
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
@@ -166,8 +175,6 @@ export class WebView {
 				functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 				objectId: nodeObject.object.objectId,
 			});
-		} else if (method === "Page.navigatedWithinDocument") {
-			console.log("Navigated within the document", params);
 		}
 	}
 

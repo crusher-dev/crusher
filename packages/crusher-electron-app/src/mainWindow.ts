@@ -4,6 +4,7 @@ import * as path from "path";
 import { WebView } from "./webView";
 import { iAction } from "../../crusher-shared/types/action";
 import { App } from "./app";
+import * as fs from "fs";
 
 const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
 class MainWindow {
@@ -18,6 +19,7 @@ class MainWindow {
 		runAfterTestId?: string;
 		isTestRunning: boolean;
 		isTestVerified: boolean;
+		webViewSrc?: string;
 	};
 	appState: { userAgent: string };
 
@@ -179,11 +181,27 @@ class MainWindow {
 
 		this.webContents.on("new-window", this.handleNewWindow.bind(this));
 		this.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
+		this.webContents.on("will-attach-webview", this.handleWebviewWillAttach.bind(this));
 		// on reload listener
 		this.webContents.on("did-finish-load", () => {
 			this.app.cleanupStorage();
 		});
 		this.registerIPCListeners();
+	}
+
+	handleGetContentScript(event) {
+		const scriptContent = fs.readFileSync(path.join(__dirname, "extension/js/content_script.js"));
+		return scriptContent;
+	}
+
+	handleWebviewWillAttach(event,
+		webPreferences, params) {
+			if(params.src.startsWith("about:blank")) {
+				const internalURL = new URL(params.src);
+				this.state.webViewSrc = internalURL.searchParams.get("url");
+			} else {
+				this.state.webViewSrc = params.src;
+			}
 	}
 
 	async handleStepsUpdated(event) {

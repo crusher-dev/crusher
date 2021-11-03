@@ -405,6 +405,8 @@ export default class EventRecording {
 			event.preventDefault();
 		}
 
+		console.log("Click is taking place");
+
 		this.handleWindowClick(event);
 	}
 

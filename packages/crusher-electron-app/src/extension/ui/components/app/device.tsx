@@ -78,7 +78,8 @@ const Device = (props: iDeviceProps) => {
 						//@ts-ignore
 						enableremotemodule={"true"}
 						title={device.name}
-						src={url}
+						src={`about:blank?url=${encodeURIComponent(url)}`}
+						partition={"crusher"}
 					/>
 				</div>
 			</div>

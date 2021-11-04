@@ -1,18 +1,31 @@
-import { iAction } from "@shared/types/action";
+import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { getStore } from "../store";
 import { isRecorderScriptBooted } from "../selectors/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 export const RECORD_ACTION = "RECORD_ACTION";
 export const UPDATE_LAST_RECORDED_ACTION = "UPDATE_LAST_RECORDED_ACTION";
+export const UPDATE_LAST_RECORDED_ACTION_STATUS = "UPDATE_LAST_RECORDED_ACTION_STATUS";
 export const DELETE_RECORDED_ACTION = "DELETE_RECORDED_ACTION";
 export const UPDATE_ACTION_NAME = "UPDATE_ACTION_NAME";
 export const UPDATE_ACTION_TIMEOUT = "UPDATE_ACTION_TIMEOUT";
 export const RESET_RECORDED_ACTIONS = "RESET_RECORDED_ACTIONS";
 
+export const updateLastRecordedActionStatus = (actionStatus: ActionStatusEnum) => {
+  return {
+	type: UPDATE_LAST_RECORDED_ACTION_STATUS,
+	payload: {
+		status: actionStatus
+	},
+  };
+};
+
 export const recordAction = (action: iAction) => {
 	const store = getStore();
 	const isPageLoaded = isRecorderScriptBooted(store.getState());
+	if(!action.status) {
+		action.status = ActionStatusEnum.SUCCESS;
+	}
 
 	// @TODO: Figure out if there is a better to prevent redundant hover action record after navigation.
 	if (!isPageLoaded && action.type === ActionsInTestEnum.HOVER) {
@@ -24,7 +37,9 @@ export const recordAction = (action: iAction) => {
 
 	return {
 		type: RECORD_ACTION,
-		payload: { action },
+		payload: {
+			action,
+		},
 	};
 };
 

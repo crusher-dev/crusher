@@ -7,6 +7,7 @@ import {
 	UPDATE_ACTION_NAME,
 	UPDATE_ACTION_TIMEOUT,
 	UPDATE_LAST_RECORDED_ACTION,
+	UPDATE_LAST_RECORDED_ACTION_STATUS,
 } from "../actions/actions";
 import { iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -33,6 +34,16 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 				list: [...state.list, action.payload.action],
 				last_action: new Date(),
 			};
+		case UPDATE_LAST_RECORDED_ACTION_STATUS: {
+			const actionsList = [...state.list];
+			actionsList[actionsList.length - 1].status = action.payload.status;
+
+			return {
+				...state,
+				list: actionsList,
+				last_action: new Date(),
+			};
+		}
 		case UPDATE_ACTION_NAME:
 			return {
 				...state,

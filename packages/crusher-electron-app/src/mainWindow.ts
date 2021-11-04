@@ -2,7 +2,7 @@ import { addHttpToURLIfNotThere } from "../../crusher-shared/utils/url";
 import { BrowserWindow, session, WebContents, app, shell, ipcMain } from "electron";
 import * as path from "path";
 import { WebView } from "./webView";
-import { iAction } from "../../crusher-shared/types/action";
+import { ActionStatusEnum, iAction } from "../../crusher-shared/types/action";
 import { App } from "./app";
 import * as fs from "fs";
 
@@ -123,6 +123,11 @@ class MainWindow {
 
 	saveRecordedStep(action: iAction) {
 		this.browserWindow.webContents.send("post-message-to-host", { type: "RECORD_REPLAY_ACTION", meta: action });
+		return true;
+	}
+
+	updateLastRecordedStepStatus(status: ActionStatusEnum) {
+		this.browserWindow.webContents.send("post-message-to-host", { type: "UPDATE_LAST_RECORDED_ACTION_STATUS", meta: { status } });
 		return true;
 	}
 

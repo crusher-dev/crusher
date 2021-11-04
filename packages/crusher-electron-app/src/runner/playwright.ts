@@ -1,7 +1,7 @@
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfill";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { CrusherSdk, CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("../../../../output/crusher-runner-utils/");
-import { iAction } from "@shared/types/action";
+import { ActionStatusEnum, iAction } from "../../../crusher-shared/types/action";
 import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { MainWindow } from "../mainWindow";
@@ -139,8 +139,12 @@ class PlaywrightInstance {
 		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result) => {
 			const { actionType, status }: { actionType: ActionsInTestEnum; status: any } = result;
-			if (status === "COMPLETED" && !isRunAfterTestAction) {
+			if(status === "STARTED" && !isRunAfterTestAction) {
+				action.status = ActionStatusEnum.STARTED;
 				this.mainWindow.saveRecordedStep(action);
+			}
+			if (status === "COMPLETED" && !isRunAfterTestAction) {
+				this.mainWindow.updateLastRecordedStepStatus(status === "COMPLETED" ? ActionStatusEnum.SUCCESS : ActionStatusEnum.FAILURE);
 			}
 		});
 		return true;
@@ -167,12 +171,15 @@ class PlaywrightInstance {
 		if (!isDeviceToBeChanged) {
 			try {
 				if (runAfterTestAction) {
+					runAfterTestAction.status = ActionStatusEnum.STARTED;
+					this.mainWindow.saveRecordedStep(runAfterTestAction);
+
 					try {
 						await this.runMainActions(await getReplayableTestActions(runAfterTestAction.payload.meta.value), true);
-					} finally {
-						if (!isRunAfterTestAction) {
-							await this.mainWindow.saveRecordedStep(runAfterTestAction);
-						}
+						this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.SUCCESS);
+					} catch(ex) {
+						await this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.FAILURE);
+						throw ex;
 					}
 				}
 

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
 import { ActionsInTestEnum, ElementActionsInTestArr, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
-import { iAction } from "@shared/types/action";
+import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
@@ -9,6 +9,7 @@ import { deleteRecordedAction, updateActionName, updateActionTimeout } from "../
 import { Conditional } from "../../components/conditional";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
+import { FailureIcon, LoadingIcon } from "crusher-electron-app/src/extension/assets/icons";
 
 interface iActionProps {
 	action: iAction;
@@ -173,9 +174,21 @@ const Action = (props: iActionProps) => {
 					</div>
 				</div>
 			</div>
-			<Conditional If={!isDefaultAction}>
+			<Conditional If={action.status && action.status === ActionStatusEnum.STARTED}>
+				<div style={deleteIconContainerStyle}>
+						<LoadingIcon style={{width: 30, height: 30}} />
+				</div>
+			</Conditional>
+
+			<Conditional If={action.status && action.status === ActionStatusEnum.FAILURE}>
+				<div style={deleteIconContainerStyle}>
+						<FailureIcon style={{width: 30, height: 30}} />
+				</div>
+			</Conditional>
+
+			<Conditional If={!isDefaultAction && action.status && action.status === ActionStatusEnum.SUCCESS}>
 				<div style={deleteIconContainerStyle} onClick={handleDelete}>
-					<img src={"/icons/delete.svg"} style={deleteIconStyle} />
+						<img src={"/icons/delete.svg"} style={deleteIconStyle} />
 				</div>
 			</Conditional>
 		</li>

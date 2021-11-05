@@ -9,15 +9,10 @@ import { deleteRecordedAction, updateActionName, updateActionTimeout } from "../
 import { Conditional } from "../../components/conditional";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
-import { FailureIcon, LoadingIcon } from "crusher-electron-app/src/extension/assets/icons";
+import { FailureIcon, LoadingIcon, MoreIcon, PassedIcon } from "crusher-electron-app/src/extension/assets/icons";
+import { Checkbox } from "../../components/app/checkbox";
+import { Action } from "./actionStep";
 
-interface iActionProps {
-	action: iAction;
-	onDelete: (actionIndex: number) => void;
-	onClick?: any;
-	index: number;
-	style?: React.CSSProperties;
-}
 interface IStepInfoEditBoxProps {
 	stepIndex: number;
 	step: iAction;
@@ -122,94 +117,6 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 	);
 }
 
-function getActionDescription(action: iAction) {
-	if (action.type === ActionsInTestEnum.PAGE_SCROLL || action.type === ActionsInTestEnum.ELEMENT_SCROLL) {
-		return "Performing scroll";
-	}
-
-	if (action.payload.selectors && action.payload.selectors[0]) {
-		return action.payload.selectors[0].value;
-	}
-
-	return "Unknown Action";
-}
-
-const ICONS = {
-	[ActionsInTestEnum.SET_DEVICE as ActionsInTestEnum]: "/icons/actions/set-device.svg",
-	[ActionsInTestEnum.NAVIGATE_URL as ActionsInTestEnum]: "/icons/actions/navigate.svg",
-	[ActionsInTestEnum.CLICK as ActionsInTestEnum]: "/icons/actions/click.svg",
-	[ActionsInTestEnum.HOVER as ActionsInTestEnum]: "/icons/actions/hover.svg",
-	[ActionsInTestEnum.ELEMENT_SCREENSHOT as ActionsInTestEnum]: "/icons/actions/screenshot.svg",
-	[ActionsInTestEnum.PAGE_SCREENSHOT as ActionsInTestEnum]: "/icons/actions/screenshot.svg",
-	[ActionsInTestEnum.VALIDATE_SEO as ActionsInTestEnum]: "/icons/actions/seo.svg",
-	[ActionsInTestEnum.BLACKOUT as ActionsInTestEnum]: "icons/actions/blackout.svg",
-	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT as ActionsInTestEnum]: "icons/actions/custom-script.svg",
-	[ActionsInTestEnum.ASSERT_ELEMENT as ActionsInTestEnum]: "icons/actions/assert-modal.svg",
-	[ActionsInTestEnum.ELEMENT_FOCUS as ActionsInTestEnum]: "icons/actions/click.svg",
-};
-
-const Action = (props: iActionProps) => {
-	const { action, index, onDelete, onClick } = props;
-
-	const handleDelete = (event) => {
-		event.stopPropagation();
-		onDelete(index);
-	};
-
-	const isDefaultAction = index < 2;
-
-	return (
-		<li style={stepStyle} className="mt-20" onClick={onClick}>
-			<div style={stepImageStyle}>
-				<img src={chrome.runtime.getURL(ICONS[action.type] ? ICONS[action.type] : "icons/mouse.svg")} />
-			</div>
-			<div style={actionItemTextContainer}>
-				<div className="text-13" style={stepActionStyle}>
-					{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}
-					{action.payload && action.payload.timeout ? ` (${action.payload.timeout}s)` : ""}
-				</div>
-				<div style={stepSelectorContainerStyle}>
-					<div className="text-12" style={stepSelectorStyle}>
-						{getActionDescription(action)}
-					</div>
-				</div>
-			</div>
-			<Conditional If={action.status && action.status === ActionStatusEnum.STARTED}>
-				<div style={deleteIconContainerStyle}>
-						<LoadingIcon style={{width: 30, height: 30}} />
-				</div>
-			</Conditional>
-
-			<Conditional If={action.status && action.status === ActionStatusEnum.FAILURE}>
-				<div style={deleteIconContainerStyle}>
-						<FailureIcon style={{width: 30, height: 30}} />
-				</div>
-			</Conditional>
-
-			<Conditional If={!isDefaultAction && action.status && action.status === ActionStatusEnum.SUCCESS}>
-				<div style={deleteIconContainerStyle} onClick={handleDelete}>
-						<img src={"/icons/delete.svg"} style={deleteIconStyle} />
-				</div>
-			</Conditional>
-		</li>
-	);
-};
-
-const actionItemTextContainer = {
-	flex: 0.8,
-	overflow: "hidden",
-};
-
-const deleteIconContainerStyle = {
-	display: "flex",
-	alignItems: "center",
-	marginLeft: "auto",
-	paddingRight: "1rem",
-};
-const deleteIconStyle = {
-	width: 13,
-};
-
 const ActionStepList = () => {
 	const actions = useSelector(getActions);
 	const [stepInfoBoxState, setStepInfoBoxState] = useState({ enabled: false, step: null, stepIndex: -1 });
@@ -234,7 +141,7 @@ const ActionStepList = () => {
 			<Action
 				onClick={handleActionClick.bind(this, step, index)}
 				onDelete={handleDeleteAction}
-				style={{ marginTop: index === 0 ? 0 : stepStyle.marginTop }}
+				style={{ marginTop: "3rem" }}
 				key={index}
 				index={index}
 				action={step}
@@ -256,20 +163,30 @@ const ActionStepList = () => {
 				</div>
 			</Conditional>
 			<div className="flex justify-between text-white">
-				<h5 className="font-semibold text-17">Recorded steps</h5>
-				<div
-					className="text-13 text-center
+				<div className={"flex"} style={{alignItems: "center"}}>
+					<Checkbox id={"selectedSteps"} labelText={`${stepList.length} steps`}/>
+					<div
+					className="text-15 text-center
 					flex items-center justify-center
-					px-12 py-4 bg-gray-800 rounded-md
+					px-12 py-4
 					cursor-pointer"
+					style={{color: "#FFFFFF", borderRadius: 4, backgroundColor: "rgba(196, 196, 196, 0.02", border: "1px solid rgba(196, 196, 196, 0.2)", padding: "5px 6px", marginLeft: 12}}
 				>
-					{stepList.length} steps
+					<MoreIcon/>
+					</div>
+				</div>
+				<div
+					className="text-15 text-center
+					flex items-center justify-center
+					px-12 py-4
+					cursor-pointer"
+					style={{color: "#FFFFFF"}}
+				>
+					<PassedIcon style={{width: 15, height: 15}}/>
+					<span style={{marginLeft: 12}}>Context</span>
 				</div>
 			</div>
-			<div className="h-full mt-12" style={containerStyle} id="stepsListContainer">
-				<div className="absolute inset-0">
-					<div style={lineStyle}></div>
-				</div>
+			<div className="h-full" style={containerStyle} id="stepsListContainer">
 				<ul style={stepsListContainerStyle} className="margin-list-item">
 					{stepList}
 				</ul>
@@ -312,6 +229,7 @@ const containerStyle = {
 	overflowY: OVERFLOW.SCROLL,
 	marginBottom: "0.4rem",
 	scrollBehavior: SCROLL_BEHAVIOR.SMOOTH,
+	marginTop: 18,
 };
 
 const stepsListContainerStyle = {
@@ -321,37 +239,5 @@ const stepsListContainerStyle = {
 	overflow: OVERFLOW.AUTO,
 };
 
-const stepStyle = {
-	display: "flex",
-	cursor: "pointer",
-	fontFamily: "DM Sans",
-	fontStyle: "normal",
-	borderRadius: "0.25rem",
-	position: POSITION.RELATIVE,
-	marginTop: "1rem",
-	overflow: "hidden",
-};
-
-const stepImageStyle = {
-	flex: 0.1,
-	padding: "0 0.9rem",
-};
-
-const stepActionStyle = {
-	fontWeight: FONT_WEIGHT.BOLD,
-	color: "#8C8C8C",
-};
-
-const stepSelectorContainerStyle = {
-	overflow: OVERFLOW.HIDDEN,
-	position: POSITION.RELATIVE,
-};
-const stepSelectorStyle = {
-	marginTop: "0.25rem",
-	color: "#8C8C8C",
-	whiteSpace: WHITE_SPACE.NOWRAP,
-	width: "70%",
-	overflow: "hidden",
-};
 
 export { ActionStepList };

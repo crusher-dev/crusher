@@ -9,7 +9,7 @@ import {
 	UPDATE_LAST_RECORDED_ACTION,
 	UPDATE_LAST_RECORDED_ACTION_STATUS,
 } from "../actions/actions";
-import { iAction } from "@shared/types/action";
+import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const initialState: iActionsState = {
@@ -74,6 +74,7 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 		case UPDATE_LAST_RECORDED_ACTION: {
 			const newList = state.list;
 			newList[newList.length - 1] = action.payload.actionToBeReplacedWith;
+			newList[newList.length - 1].status = ActionStatusEnum.SUCCESS;
 
 			return {
 				...state,

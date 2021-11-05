@@ -560,10 +560,9 @@ const DeleteIcon = (props: any) => {
 
 const FailureIcon = (props: any) => {
 	return (
-		<svg
-		  width={13}
-		  height={13}
+		<svg 
 		  fill="none"
+		  viewBox="0 0 16 16"
 		  xmlns="http://www.w3.org/2000/svg"
 		  {...props}
 		>
@@ -595,6 +594,36 @@ const FailureIcon = (props: any) => {
 	  )
 };
 
+const PassedIcon =  (props: any) => {
+	const { isMonochrome } = props;
+
+	return (
+		<svg width={"16rem"} height={"16rem"} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm4.471 5.895l-5.113 5.072c-.3.301-.782.321-1.102.02L3.549 8.521a.813.813 0 01-.06-1.123c.3-.32.802-.34 1.123-.04l2.145 1.965 4.571-4.571a.799.799 0 011.143 0c.321.32.321.822 0 1.143z"
+				fill={isMonochrome ? "#fff" : "#aacb65"}
+			/>
+		</svg>
+	);
+};
+
+const MoreIcon = (props: any) => {
+	return (
+		<svg
+		  width={15}
+		  height={4}
+		  fill="none"
+		  xmlns="http://www.w3.org/2000/svg"
+		  {...props}
+		>
+		  <path
+			d="M1.753 0a1.752 1.752 0 100 3.505 1.752 1.752 0 100-3.505zm5.42 0a1.753 1.753 0 10-.001 3.506 1.753 1.753 0 000-3.506zm5.238 0a1.753 1.753 0 10-.002 3.505A1.753 1.753 0 0012.41 0z"
+			fill="#B8B8B8"
+		  />
+		</svg>
+	  )
+};
+
 export {
 	NavigateBackIcon,
 	NavigateForwardIcon,
@@ -614,5 +643,7 @@ export {
 	DeleteIcon,
 	AppResetIcon,
 	LoadingIcon,
-	FailureIcon
+	FailureIcon,
+	PassedIcon,
+	MoreIcon
 };

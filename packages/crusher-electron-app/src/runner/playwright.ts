@@ -143,8 +143,11 @@ class PlaywrightInstance {
 				action.status = ActionStatusEnum.STARTED;
 				this.mainWindow.saveRecordedStep(action);
 			}
+			if (status === "FAILED") {
+				this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.FAILURE);
+			}
 			if (status === "COMPLETED" && !isRunAfterTestAction) {
-				this.mainWindow.updateLastRecordedStepStatus(status === "COMPLETED" ? ActionStatusEnum.SUCCESS : ActionStatusEnum.FAILURE);
+				this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.SUCCESS);
 			}
 		});
 		return true;
@@ -178,7 +181,6 @@ class PlaywrightInstance {
 						await this.runMainActions(await getReplayableTestActions(runAfterTestAction.payload.meta.value), true);
 						this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.SUCCESS);
 					} catch(ex) {
-						await this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.FAILURE);
 						throw ex;
 					}
 				}
@@ -187,6 +189,7 @@ class PlaywrightInstance {
 			} catch (err) {
 				error = err;
 				console.error(err);
+				throw error;
 			}
 
 			this.running = false;

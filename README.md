@@ -1,6 +1,6 @@
 <br/>
 <div align="center">
-<img src="https://i.imgur.com/oUSUuoS.png" height="70" style="margin: 0 auto;"/>
+<img src="https://i.imgur.com/CRYknDh.png" height="46" style="margin: 0 auto;"/>
 <h3 align="center" >Ship the best version of your website</h3>
 <div>A modern web testing tool for developers and testers 🔥🔥 </div><br/>
 
@@ -54,7 +54,7 @@ Here's how testing should be in 21st century
 **On crusher cloud for free** Fastest and most powerful way to try Crusher.
 
 <a href="https://crusher.dev/#signup">
-<img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>
+<img src="https://i.imgur.com/9Sl59uS.png" height="56px"/>
 </a>
 
 **Deploy it on your infra (self-host)**

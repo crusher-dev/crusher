@@ -51,15 +51,21 @@ Here's how testing should be in 21st century
 
 ## 🚀 Start using Crusher
 
-**On crusher cloud for free** Fastest and most powerful way to try Crusher.
+**On crusher cloud for free**
+
+Fastest and most powerful way to try Crusher.
 
 <a href="https://crusher.dev/#signup">
-<img src="https://i.imgur.com/9Sl59uS.png" height="56px"/>
+<img src="https://i.imgur.com/9Sl59uS.png" height="48px"/>
 </a>
+
+<br/>
+
+
 
 **Deploy it on your infra (self-host)**
 
-<img src="https://images.prismic.io/www-static/3c99429b-3cb5-43d6-91e5-c0f686e3e6ab_do-btn-blue+%281%29.png?auto=compress,format" height="32px"/>
+<img src="https://i.imgur.com/czqU7NH.png" height="40px"/>
 
 ## 🔮 Features
 

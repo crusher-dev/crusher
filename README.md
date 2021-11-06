@@ -1,13 +1,9 @@
 <br/>
 <div align="center">
-<img src="https://i.imgur.com/oUSUuoS.png" height="40" style="margin: 0 auto;"/>
-<h3 align="center" >Crusher</h3>
-<div>Open source end to end web testing 🔥🔥 </div>
-</div>
+<img src="https://i.imgur.com/oUSUuoS.png" height="70" style="margin: 0 auto;"/>
+<h3 align="center" >Ship the best version of your website</h3>
+<div>A modern web testing tool for developers and testers 🔥🔥 </div><br/>
 
-<br>
-
-![enter image description here](https://i.imgur.com/UIGnU2u.png)
 
 <p align="center">
     <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
@@ -22,21 +18,40 @@
                                 <img src="https://img.shields.io/npm/types/typescript?style=flat-square" /></a>
 </p>
 
-Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple.
+<p align="center">
+    <a href="https://github.com/k6io/k6/releases">Download</a> ·
+    <a href="#install">Install</a> ·
+    <a href="https://k6.io/docs">Documentation</a> ·
+    <a href="https://community.k6.io/">Community</a>
+</p>
+
+<br/>
+    
+<hr/>
+
+</div>
+
+<br>
+
+Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple and fast.
+
+
+![enter image description here](https://i.imgur.com/UIGnU2u.png)
+
 
 You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
-<br/>
+
 Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.
 
 ## 🚀 Demo
 
-Test with ease and power with crusher. Small demo of the process.
+Here's how testing should be in 21st century
 
 <img src="https://camo.githubusercontent.com/2676911af677a0fda9a26b1d7a06e39805bdb8438b4e338915b9497840eee4e4/68747470733a2f2f73392e67696679752e636f6d2f696d616765732f657a6769662d342d6139356636646533356563342e676966" border="0">
 
-## 🚀 Test your website using Crusher
+## 🚀 Start using Crusher
 
-**Start with crusher cloud for free** Fastest and most powerful way to try Crusher.
+**On crusher cloud for free** Fastest and most powerful way to try Crusher.
 
 <a href="https://crusher.dev/#signup">
 <img src="https://i.imgur.com/BUYY8Jp.png" height="40px"/>
@@ -94,6 +109,16 @@ We're open source too❤️❤️
 - Debug system that helps you when something breaks.
 - Creating automated tools or scraping data from site.
 - Or maybe keeping an eye on your competitor 👀
+
+## Is Crusher the right choice for me?
+
+- Do you want to have complete testing suite?
+- Does your site break in production and staging?
+- Do you want a super simple to use software?
+- Do you care about quality of your web app?
+
+If the answers to the above are YES, then Crusher would be a great fit for your
+application. Dgraph integrates seamlessly into most application in < 5 mins. 
 
 ## 🛣️ Architecture
 

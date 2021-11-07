@@ -1,9 +1,10 @@
 import { ActionsInTestEnum, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
 import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { FailureIcon, LoadingIcon } from "crusher-electron-app/src/extension/assets/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Conditional } from "../../components/conditional";
 import { FLEX_DIRECTION, FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
+import { Dropdown } from "../../components/app/dropdown";
 
 interface iActionProps {
 	action: iAction;
@@ -61,10 +62,18 @@ interface iActionProps {
 
 const Action = (props: iActionProps) => {
     const {onClick, action, index, onDelete} = props;
+    const actionButtonRef = React.useRef<HTMLDivElement>(null);
+
 	const isActionNotSelectable = checkIfNonSelectableAction(action);
     const shouldShowLoadingSign = action.status && action.status === ActionStatusEnum.STARTED;
+    const [shouldShowFailureActionBox, setShouldShowFailureActionBox] = useState(false);
 
     const isActionFail = action.status && action.status === ActionStatusEnum.FAILURE;
+    useEffect(() => {
+        if(!isActionFail) {
+            setShouldShowFailureActionBox(false);
+        }
+    }, [isActionFail]);
 
 	const handleDelete = (event) => {
 		event.stopPropagation();
@@ -115,11 +124,45 @@ const Action = (props: iActionProps) => {
                     <div style={{background: "rgba(143, 143, 255, 0.07)", display: "flex", padding: "15px 12px", alignItems: "center"}}>
                         <FailureIcon width={20} height={20} style={{ position: "relative", top: 3, marginLeft: 2}} />
                         <div style={{color: "#DE3D76", marginLeft: 12, fontSize: 14, fontWeight: 600}}>This step failed</div>
+                        <div ref={actionButtonRef} style={takeActionButtonStyle} onClick={setShouldShowFailureActionBox.bind(this, true)}>Take action</div>
                     </div>
+                    <Conditional If={shouldShowFailureActionBox}>
+                        <div style={dropdownContainerStyle(actionButtonRef)}>
+                            <Dropdown onOutSideClick={setShouldShowFailureActionBox.bind(this, false)} items={[{id: "replace", label: "Replace step"}, {id: "mark_optional", label: "Mark it optional"}, {id: "delete", label: "Delete & Continue"}]} onSelect={(id: string) => {
+                                setShouldShowFailureActionBox(false);
+                            }}/>
+                        </div>
+                    </Conditional>
                 </div>
             </Conditional>
         </li>
     )
+};
+
+const dropdownContainerStyle = (actionButtonRef: React.RefObject<HTMLDivElement>) => {
+    const node = actionButtonRef.current;
+    const boundingRect = node ? node.getBoundingClientRect() : {top: -500, left: -500, width: 0, height: 0};
+
+    return {
+        left: boundingRect.left - 40 + "px",
+        top: boundingRect.top - 124 - boundingRect.height  + "px",
+        position: POSITION.FIXED,
+        width: 138,
+        height: 92,
+        zIndex: 99,
+    };
+};
+
+
+const takeActionButtonStyle = {
+    marginLeft: "auto",
+    background: "#FFFFFF",
+    borderRadius: 3,
+    color: "#40383B",
+    fontSize: 14,
+    padding: "4px 12px",
+    cursor: "pointer",
+    userSelect: "none" as any,
 };
 
 const actionStepNameStyle = {

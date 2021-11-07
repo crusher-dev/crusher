@@ -201,14 +201,22 @@ class PlaywrightInstance {
 	async runTestFromRemote(testId: number, isRunAfterTestAction = false) {
 		const testInfo = await axios.get(resolveToBackendPath(`/tests/${testId}`));
 		const actions = testInfo.data.events;
-		await this.runActions(actions, isRunAfterTestAction);
+		try {
+			await this.runActions(actions, isRunAfterTestAction);
+		} catch(ex) { 
+			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
+		}
 		return true;
 	}
 
 	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error }> {
 		const testInfo = await axios.get(resolveToBackendPath(`/tests/actions/get.temp?id=${tempTestId}`));
 		const actions = testInfo.data.events;
-		return this.runActions(actions, false);
+		try {
+		 await this.runActions(actions, false);
+		} catch(err) {
+			return { error: err };
+		}
 	}
 }
 

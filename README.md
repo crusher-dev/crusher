@@ -38,7 +38,7 @@
 Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple and fast.
 
 
-![enter image description here](https://i.imgur.com/UIGnU2u.png)
+![enter image description here](https://i.imgur.com/WvwLuzk.png)
 
 
 You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.

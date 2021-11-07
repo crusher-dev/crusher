@@ -1,6 +1,6 @@
 <br/>
 <div align="center">
-<img src="https://i.imgur.com/CRYknDh.png" height="46" style="margin: 0 auto;"/>
+<img src="https://i.imgur.com/CRYknDh.png" height="40" style="margin: 0 auto;"/>
 <h3 align="center" >Ship the best version of your website</h3>
 <div>A modern web testing tool for developers and testers 🔥🔥 </div><br/>
 
@@ -24,6 +24,8 @@
     <a href="https://k6.io/docs">Documentation</a> ·
     <a href="https://community.k6.io/">Community</a>
 </p>
+
+<img src="https://i.imgur.com/8DUE0TL.png" height="44"/>
 
 <br/>
     
@@ -56,7 +58,7 @@ Here's how testing should be in 21st century
 Fastest and most powerful way to try Crusher.
 
 <a href="https://crusher.dev/#signup">
-<img src="https://i.imgur.com/9Sl59uS.png" height="48px"/>
+<img src="https://i.imgur.com/kg2eHRN.png" height="48px"/>
 </a>
 
 <br/>
@@ -65,7 +67,7 @@ Fastest and most powerful way to try Crusher.
 
 **Deploy it on your infra (self-host)**
 
-<img src="https://i.imgur.com/czqU7NH.png" height="40px"/>
+<img src="https://i.imgur.com/h6TC4Nt.png" height="40px"/>
 
 ## 🔮 Features
 

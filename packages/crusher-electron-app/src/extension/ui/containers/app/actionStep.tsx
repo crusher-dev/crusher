@@ -5,6 +5,9 @@ import React, { useEffect, useState } from "react";
 import { Conditional } from "../../components/conditional";
 import { FLEX_DIRECTION, FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
 import { Dropdown } from "../../components/app/dropdown";
+import { FailedActionEnum } from "crusher-electron-app/src/extension/interfaces/actions";
+import { markLastRecordedActionAsOptional, updateLastRecordedAction, updateLastRecordedActionStatus } from "crusher-electron-app/src/extension/redux/actions/actions";
+import { getStore } from "crusher-electron-app/src/extension/redux/store";
 
 interface iActionProps {
 	action: iAction;
@@ -68,7 +71,12 @@ const Action = (props: iActionProps) => {
     const shouldShowLoadingSign = action.status && action.status === ActionStatusEnum.STARTED;
     const [shouldShowFailureActionBox, setShouldShowFailureActionBox] = useState(false);
 
-    const isActionFail = action.status && action.status === ActionStatusEnum.FAILURE;
+    const [isActionFail, setIsActionFail] = useState(action.status && action.status === ActionStatusEnum.FAILURE);
+    useEffect(() => {
+        const isFail = action.status && action.status === ActionStatusEnum.FAILURE;
+        setIsActionFail(isFail);
+    }, [action, action.status]);
+
     useEffect(() => {
         if(!isActionFail) {
             setShouldShowFailureActionBox(false);
@@ -79,6 +87,23 @@ const Action = (props: iActionProps) => {
 		event.stopPropagation();
 		onDelete(index);
 	};
+
+    const handleFailedActionSelect = async (id: string) => {
+        const store = getStore();
+
+        if(id === FailedActionEnum.DELETE) {
+            await (window as any).electron.continueRemainingTest();
+            await onDelete(index);
+        } else if(id === FailedActionEnum.MARK_OPTIONAL) {
+            store.dispatch(updateLastRecordedActionStatus(ActionStatusEnum.SUCCESS));
+            store.dispatch(markLastRecordedActionAsOptional(true));
+            await (window as any).electron.continueRemainingTest();
+        } else if(id === FailedActionEnum.REPLACE_STEP) {
+            await onDelete(index);
+        }
+
+        setShouldShowFailureActionBox(false);
+    }
 
     return (
         <li style={{marginTop: 21}}>
@@ -128,9 +153,7 @@ const Action = (props: iActionProps) => {
                     </div>
                     <Conditional If={shouldShowFailureActionBox}>
                         <div style={dropdownContainerStyle(actionButtonRef)}>
-                            <Dropdown onOutSideClick={setShouldShowFailureActionBox.bind(this, false)} items={[{id: "replace", label: "Replace step"}, {id: "mark_optional", label: "Mark it optional"}, {id: "delete", label: "Delete & Continue"}]} onSelect={(id: string) => {
-                                setShouldShowFailureActionBox(false);
-                            }}/>
+                            <Dropdown onOutSideClick={setShouldShowFailureActionBox.bind(this, false)} items={[{id: FailedActionEnum.REPLACE_STEP, label: "Replace step"}, {id: FailedActionEnum.MARK_OPTIONAL, label: "Mark it optional"}, {id: FailedActionEnum.DELETE, label: "Delete & Continue"}]} onSelect={handleFailedActionSelect}/>
                         </div>
                     </Conditional>
                 </div>

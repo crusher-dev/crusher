@@ -10,6 +10,7 @@ export const DELETE_RECORDED_ACTION = "DELETE_RECORDED_ACTION";
 export const UPDATE_ACTION_NAME = "UPDATE_ACTION_NAME";
 export const UPDATE_ACTION_TIMEOUT = "UPDATE_ACTION_TIMEOUT";
 export const RESET_RECORDED_ACTIONS = "RESET_RECORDED_ACTIONS";
+export const UPDATE_LAST_RECORDED_ACTION_OPTINALITY = "UPDATE_LAST_RECORDED_ACTION_OPTINALITY";
 
 export const updateLastRecordedActionStatus = (actionStatus: ActionStatusEnum) => {
   return {
@@ -57,6 +58,11 @@ export const updateLastRecordedAction = (actionToBeReplacedWith: iAction) => ({
 	type: UPDATE_LAST_RECORDED_ACTION,
 	payload: { actionToBeReplacedWith: actionToBeReplacedWith },
 });
+
+export const markLastRecordedActionAsOptional = (isOptional: boolean) => ({
+	type: UPDATE_LAST_RECORDED_ACTION_OPTINALITY,
+	payload: { isOptional: isOptional },
+})
 
 export const deleteRecordedAction = (actionIndex: number) => ({
 	type: DELETE_RECORDED_ACTION,

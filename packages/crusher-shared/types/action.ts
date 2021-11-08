@@ -16,6 +16,7 @@ export interface iAction {
 		timeout?: number;
 		selectors?: Array<iSelectorInfo>;
 		meta?: any;
+		isOptional?: boolean;
 	};
 	url?: string;
 }

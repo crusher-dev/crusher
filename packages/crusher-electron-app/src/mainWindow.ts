@@ -20,6 +20,7 @@ class MainWindow {
 		isTestRunning: boolean;
 		isTestVerified: boolean;
 		webViewSrc?: string;
+		remainingSteps?: Array<iAction>;
 	};
 	appState: { userAgent: string };
 
@@ -125,6 +126,18 @@ class MainWindow {
 		this.browserWindow.webContents.send("post-message-to-host", { type: "RECORD_REPLAY_ACTION", meta: action });
 		return true;
 	}
+	
+	clearReminingSteps() {
+		this.state.remainingSteps = undefined;
+	}
+
+	addToRemainingSteps(actions: Array<iAction>) {
+		if(!this.state.remainingSteps) { 
+			this.state.remainingSteps = [];
+		} 
+
+		this.state.remainingSteps.push(...actions);
+	}
 
 	updateLastRecordedStepStatus(status: ActionStatusEnum) {
 		this.browserWindow.webContents.send("post-message-to-host", { type: "UPDATE_LAST_RECORDED_ACTION_STATUS", meta: { status } });
@@ -181,6 +194,7 @@ class MainWindow {
 		ipcMain.handle("is-test-verified", this.isTestVerified.bind(this));
 		ipcMain.handle("verify-test", this.verifyTest.bind(this));
 		ipcMain.handle("steps-updated", this.handleStepsUpdated.bind(this));
+		ipcMain.handle("continue-remaining-test", this.continueRemainingTest.bind(this));
 
 		ipcMain.handle("run-after-this-test", this.handleRunAfterThisTest.bind(this));
 
@@ -192,6 +206,19 @@ class MainWindow {
 			this.app.cleanupStorage();
 		});
 		this.registerIPCListeners();
+	}
+
+	async continueRemainingTest(event) {
+		if(!this.state.remainingSteps || !this.state.remainingSteps.length) return false;
+		console.log("Reaming steps are", this.state.remainingSteps);
+		await this.sendMessage("SET_IS_REPLAYING", { value: true });
+		this.webView.setRunningState(true);
+		this.webView.playwrightInstance.runActions(this.state.remainingSteps).finally(() => {
+			this.state.remainingSteps = undefined;
+			this.sendMessage("SET_IS_REPLAYING", { value: false });
+			this.webView.setRunningState(false);
+		});
+		return true;
 	}
 
 	handleGetContentScript(event) {

@@ -26,6 +26,7 @@ contextBridge.exposeInMainWorld("electron", {
 	isTestVerified: async () => ipcRenderer.invoke("is-test-verified"),
 	verifyTest: async (tempTestId: number) => ipcRenderer.invoke("verify-test", tempTestId),
 	stepsUpdated: async () => ipcRenderer.invoke("steps-updated"),
+	continueRemainingTest: async () => ipcRenderer.invoke("continue-remaining-test"),
 
 	webview: {
 		postMessage: (data) => {

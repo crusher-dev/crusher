@@ -1,6 +1,6 @@
 <br/>
 <div align="center">
-<img src="https://i.imgur.com/CRYknDh.png" height="40" style="margin: 0 auto;"/>
+<img src="https://i.imgur.com/CRYknDh.png" height="32" style="margin: 0 auto;"/>
 <h3 align="center" >Ship the best version of your website</h3>
 <div>A modern web testing tool for developers and testers 🔥🔥 </div><br/>
 
@@ -19,10 +19,9 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/k6io/k6/releases">Download</a> ·
-    <a href="#install">Install</a> ·
-    <a href="https://k6.io/docs">Documentation</a> ·
-    <a href="https://community.k6.io/">Community</a>
+    <a href="#">Download</a> ·
+    <a href="#-start-using-crusher">Install</a> ·
+    <a href="https://docs.crusher.dev">Documentation</a> ·
 </p>
 
 <img src="https://i.imgur.com/8DUE0TL.png" height="44"/>
@@ -106,7 +105,6 @@ We try to reimagine how testing should work. Few things that differentiate us
 
 4.) Making things simple and fast. We take inspiration from Figma, Linear :D.
 
-We're open source too❤️❤️
 
 ## 🛣️ Some use cases
 
@@ -133,6 +131,10 @@ application. Dgraph integrates seamlessly into most application in < 5 mins.
 ![enter image description here](https://i.imgur.com/wzU5fUO.png)
 
 ## 🛣️ Roadmap
+
+Check about roadmap plan here.
+
+## 🛣️ Download Recorder
 
 Check about roadmap plan here.
 

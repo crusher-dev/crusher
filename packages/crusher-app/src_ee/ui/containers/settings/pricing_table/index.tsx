@@ -24,7 +24,7 @@ export const PricingPage = () => {
 
 	const changePricing = useCallback(
 		async (planName) => {
-			await backendRequest("https://crusherdev.api.stdlib.com/test@dev/webhooks/slack/upgrade_pricing", {
+			backendRequest("https://crusherdev.api.stdlib.com/test@dev/webhooks/slack/upgrade_pricing", {
 				method: RequestMethod.POST,
 				payload: {
 					text: `Plan Upgrade requested :pound::pound:\nUser- ${user.name} (${user?.id || ""})\nTeam- ${team.name}(${team.id})\nCurrent plan- ${

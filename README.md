@@ -1,6 +1,6 @@
 <br/>
 <div align="center">
-<img src="https://i.imgur.com/CRYknDh.png" height="32" style="margin: 0 auto;"/>
+<img src="https://i.imgur.com/Z6wyajH.png" height="32" style="margin: 0 auto;"/>
 <h3 align="center" >Ship the best version of your website</h3>
 <div>A modern web testing tool for developers and testers 🔥🔥 </div><br/>
 
@@ -19,20 +19,20 @@
 </p>
 
 <p align="center">
-    <a href="#">Download</a> ·
+    <a href="https://docs.crusher.dev/docs/download">Download</a> ·
     <a href="#-start-using-crusher">Install & Use</a> ·
     <a href="https://docs.crusher.dev">Documentation</a> ·
 </p>
 
+
 <p align="center">
     <a href="https://docs.crusher.dev/docs/download">
-        <img src="https://i.imgur.com/syIvezv.png" height="44"/>
+        <img src="https://i.imgur.com/3GCa6Kp.png" height="44"/>
     </a>
    <a href="#-start-using-crusher" style="margin-left: 15PX;">
-        <img src="https://i.imgur.com/aPm14Bb.png" height="44"/>
+        <img src="https://i.imgur.com/DrC7M4D.png" height="44"/>
     </a>
 </p>
-
 <br/>
     
 <hr/>
@@ -73,7 +73,9 @@ Fastest and most powerful way to try Crusher.
 
 **Deploy it on your infra (self-host)**
 
-<img src="https://i.imgur.com/h6TC4Nt.png" height="40px"/>
+ <a href="#-self-deploymentr">
+<img src="https://i.imgur.com/kPLG4s7.png" height="40px"/>
+</a>
 
 ## 🔮 Features
 

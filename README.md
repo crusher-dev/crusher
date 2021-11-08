@@ -20,7 +20,7 @@
 
 <p align="center">
     <a href="#">Download</a> ·
-    <a href="#-start-using-crusher">Install</a> ·
+    <a href="#-start-using-crusher">Install & Use</a> ·
     <a href="https://docs.crusher.dev">Documentation</a> ·
 </p>
 
@@ -148,8 +148,7 @@ Check about roadmap plan here.
 
 <hr/>
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable).
-
-EE features (contained in the src_ee directory) require a Crusher license. Contact us at [sales@crusher.dev](mailto:sales@crusher.dev) for more information.
+EE features (contained in the src_ee directory) require a Crusher license. Contact us at [contact@crusher.dev](mailto:sales@crusher.dev) for more information.
 
 ## 🤝 Contributors
 

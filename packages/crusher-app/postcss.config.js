@@ -1,17 +1,13 @@
-const purgecss = require("@fullhuman/postcss-purgecss")({
-	// Specify the paths to all of the template files in your currentProject
-	content: ["./core/**/*.jsx", "./core/**/*.tsx", "./src/**/*.tsx", "./src/**/*.jsx"],
-
-	// make sure css reset isnt removed on html and body
-	whitelist: ["html", "body"],
-
-	// Include any special characters you're using in this regular expression
-	defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
-});
-
 module.exports = {
 	plugins: [
 		"tailwindcss",
-		//  process.env.NODE_ENV === "production" ? purgecss : undefined
+		[
+			'@fullhuman/postcss-purgecss',
+			{
+				content: ["./src/**/*.jsx", "./src/**/*.tsx", "./pages/**/*.tsx", "./pages/**/*.jsx"],
+				defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
+				safelist: ["html", "body"]
+			}
+		],
 	],
 };

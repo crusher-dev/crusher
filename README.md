@@ -24,7 +24,14 @@
     <a href="https://docs.crusher.dev">Documentation</a> ·
 </p>
 
-<img src="https://i.imgur.com/8DUE0TL.png" height="44"/>
+<p align="center">
+    <a href="https://docs.crusher.dev/docs/download">
+        <img src="https://i.imgur.com/syIvezv.png" height="44"/>
+    </a>
+   <a href="#-start-using-crusher" style="margin-left: 15PX;">
+        <img src="https://i.imgur.com/aPm14Bb.png" height="44"/>
+    </a>
+</p>
 
 <br/>
     

@@ -146,14 +146,17 @@ function ProjectBox() {
 	const { selectedOrganisation, organisations, repositories, setSelectedOrganisation } = useGithubData(gitInfo);
 
 	const { onGithubClick } = useGithubAuthorize();
-	const handleOrgSelection = useCallback((selected) => {
+	const handleOrgSelection = useCallback(([selected]) => {
+
+
 		if (selected === "add_new") {
 			onGithubClick(true);
 			return;
 		}
 
-		setSelectedOrganisation(selected[0]);
+		setSelectedOrganisation(selected);
 	}, []);
+
 
 	return (
 		<div
@@ -206,8 +209,8 @@ function ProjectBox() {
 
 const useGithubAuthorize = () => {
 	const [, setConnectedGit] = useAtom(connectedToGitAtom);
-	const onGithubClick = (addInstallation: boolean = false) => {
-		const windowRef = openPopup(getGithubOAuthURL(addInstallation));
+	const onGithubClick = (alreadAuthorized: boolean = false) => {
+		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
 
 		const interval = setInterval(() => {
 			const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);

@@ -7,241 +7,58 @@ interface NavigateIconProps {
 
 const LoadingIcon = (props) => {
 	return (
-	  <svg
-		xmlns="http://www.w3.org/2000/svg"
-		style={{
-		  margin: "auto",
-		  background: "#fff",
-		}}
-		width={200}
-		height={200}
-		viewBox="0 0 100 100"
-		preserveAspectRatio="xMidYMid"
-		display="block"
-		{...props}
-	  >
-		<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d">
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.9166666666666666s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(30 50 50)"
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			style={{
+				margin: "auto",
+				background: "#fff",
+			}}
+			width={200}
+			height={200}
+			viewBox="0 0 100 100"
+			preserveAspectRatio="xMidYMid"
+			display="block"
+			{...props}
 		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.8333333333333334s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(60 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.75s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(90 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.6666666666666666s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(120 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.5833333333333334s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(150 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.5s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(180 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.4166666666666667s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(210 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.3333333333333333s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(240 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.25s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(270 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.16666666666666666s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(300 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="-0.08333333333333333s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-		<rect
-		  x={47}
-		  y={24}
-		  rx={3}
-		  ry={6}
-		  width={6}
-		  height={12}
-		  fill="#fe718d"
-		  transform="rotate(330 50 50)"
-		>
-		  <animate
-			attributeName="opacity"
-			values="1;0"
-			keyTimes="0;1"
-			dur="1s"
-			begin="0s"
-			repeatCount="indefinite"
-		  />
-		</rect>
-	  </svg>
-	)
-  }
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(30 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(60 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(90 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(120 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(150 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(180 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(210 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(240 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(270 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(300 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(330 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite" />
+			</rect>
+		</svg>
+	);
+};
 
 const NavigateBackIcon = (props: NavigateIconProps) => {
 	const { disabled, onClick } = props;
@@ -560,41 +377,27 @@ const DeleteIcon = (props: any) => {
 
 const FailureIcon = (props: any) => {
 	return (
-		<svg 
-		  fill="none"
-		  viewBox="0 0 16 16"
-		  xmlns="http://www.w3.org/2000/svg"
-		  {...props}
-		>
-		  <g clipPath="url(#prefix__clip0_1307:828)">
-			<path
-			  d="M1.424 12.307c-1.269 0-1.788-.9-1.153-1.998l5.075-8.791c.635-1.1 1.673-1.1 2.308 0l5.075 8.79c.635 1.1.116 1.999-1.153 1.999H1.424z"
-			  fill="#FF629A"
-			/>
-			<path
-			  d="M12.73 10.309L7.653 1.518C7.336.968 6.918.694 6.5.694v11.613h5.076c1.269 0 1.788-.9 1.153-1.998z"
-			  fill="#DE3D76"
-			/>
-			<path
-			  d="M6.5 8.128h-.928l-.465-3.714H6.5l.465 1.857L6.5 8.128z"
-			  fill="#fff"
-			/>
-			<path
-			  d="M7.429 8.128H6.5V4.414h1.393l-.464 3.714zM6.5 10.914h-.928V9.057h.929l.464.928-.464.929z"
-			  fill="#fff"
-			/>
-			<path d="M7.429 9.057H6.5v1.857h.929V9.057z" fill="#fff" />
-		  </g>
-		  <defs>
-			<clipPath id="prefix__clip0_1307:828">
-			  <path fill="#fff" d="M0 0h13v13H0z" />
-			</clipPath>
-		  </defs>
+		<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<g clipPath="url(#prefix__clip0_1307:828)">
+				<path
+					d="M1.424 12.307c-1.269 0-1.788-.9-1.153-1.998l5.075-8.791c.635-1.1 1.673-1.1 2.308 0l5.075 8.79c.635 1.1.116 1.999-1.153 1.999H1.424z"
+					fill="#FF629A"
+				/>
+				<path d="M12.73 10.309L7.653 1.518C7.336.968 6.918.694 6.5.694v11.613h5.076c1.269 0 1.788-.9 1.153-1.998z" fill="#DE3D76" />
+				<path d="M6.5 8.128h-.928l-.465-3.714H6.5l.465 1.857L6.5 8.128z" fill="#fff" />
+				<path d="M7.429 8.128H6.5V4.414h1.393l-.464 3.714zM6.5 10.914h-.928V9.057h.929l.464.928-.464.929z" fill="#fff" />
+				<path d="M7.429 9.057H6.5v1.857h.929V9.057z" fill="#fff" />
+			</g>
+			<defs>
+				<clipPath id="prefix__clip0_1307:828">
+					<path fill="#fff" d="M0 0h13v13H0z" />
+				</clipPath>
+			</defs>
 		</svg>
-	  )
+	);
 };
 
-const PassedIcon =  (props: any) => {
+const PassedIcon = (props: any) => {
 	const { isMonochrome } = props;
 
 	return (
@@ -609,19 +412,21 @@ const PassedIcon =  (props: any) => {
 
 const MoreIcon = (props: any) => {
 	return (
-		<svg
-		  width={15}
-		  height={4}
-		  fill="none"
-		  xmlns="http://www.w3.org/2000/svg"
-		  {...props}
-		>
-		  <path
-			d="M1.753 0a1.752 1.752 0 100 3.505 1.752 1.752 0 100-3.505zm5.42 0a1.753 1.753 0 10-.001 3.506 1.753 1.753 0 000-3.506zm5.238 0a1.753 1.753 0 10-.002 3.505A1.753 1.753 0 0012.41 0z"
-			fill="#B8B8B8"
-		  />
+		<svg width={15} height={4} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M1.753 0a1.752 1.752 0 100 3.505 1.752 1.752 0 100-3.505zm5.42 0a1.753 1.753 0 10-.001 3.506 1.753 1.753 0 000-3.506zm5.238 0a1.753 1.753 0 10-.002 3.505A1.753 1.753 0 0012.41 0z"
+				fill="#B8B8B8"
+			/>
 		</svg>
-	  )
+	);
+};
+
+const AddIcon = (props: any) => {
+	return (
+		<svg width={10} height={10} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path d="M9.31 4.16H5.83V.7H4.17v3.46H.71v1.66h3.46V9.3h1.66V5.82h3.48V4.16z" fill="#fff" />
+		</svg>
+	);
 };
 
 export {
@@ -645,5 +450,6 @@ export {
 	LoadingIcon,
 	FailureIcon,
 	PassedIcon,
-	MoreIcon
+	MoreIcon,
+	AddIcon,
 };

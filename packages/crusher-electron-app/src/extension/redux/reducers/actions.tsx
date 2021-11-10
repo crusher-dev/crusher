@@ -9,12 +9,14 @@ import {
 	UPDATE_LAST_RECORDED_ACTION,
 	UPDATE_LAST_RECORDED_ACTION_OPTINALITY,
 	UPDATE_LAST_RECORDED_ACTION_STATUS,
+	UPDATE_SELECTED_ACTIONS,
 } from "../actions/actions";
 import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const initialState: iActionsState = {
 	list: [],
+	selectedActions: [],
 	last_action: null,
 };
 
@@ -24,21 +26,27 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 	}
 
 	switch (action.type) {
+		case UPDATE_SELECTED_ACTIONS: {
+			return {
+				...state,
+				selectedActions: action.payload.selectedActionIds,
+			};
+		}
 		case UPDATE_LAST_RECORDED_ACTION_OPTINALITY:{
-			const newList = [...state.list];;
-			if(newList.length) {
+			const newList = [...state.list];
+			if (newList.length) {
 				newList[newList.length - 1] = {
 					...newList[newList.length - 1],
 					payload: {
 						...newList[newList.length - 1].payload,
 						optional: action.payload.isOptional,
 					}
-				}
+				};
 			}
 			return {
 				...state,
 				list: newList,
-			}
+			};
 		}
 		case RESET_RECORDED_ACTIONS:
 			return {

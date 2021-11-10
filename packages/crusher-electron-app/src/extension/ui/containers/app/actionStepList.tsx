@@ -3,15 +3,16 @@ import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from ".
 import { ActionsInTestEnum, ElementActionsInTestArr, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
 import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
-import { getActions } from "../../../redux/selectors/actions";
+import { getActions, getSelectedActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
-import { deleteRecordedAction, updateActionName, updateActionTimeout } from "../../../redux/actions/actions";
-import { Conditional } from "../../components/conditional";
+import { deleteRecordedAction, updateActionName, updateActionTimeout, updateSelectedActions } from "../../../redux/actions/actions";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
-import { FailureIcon, LoadingIcon, MoreIcon, PassedIcon } from "crusher-electron-app/src/extension/assets/icons";
+import { AddIcon, FailureIcon, LoadingIcon, MoreIcon, PassedIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { Checkbox } from "../../components/app/checkbox";
 import { Action } from "./actionStep";
+import { Conditional } from "../../components/conditional";
+import { CreateTemplatesModal } from "./modals/createTemplateModal";
 
 interface IStepInfoEditBoxProps {
 	stepIndex: number;
@@ -120,6 +121,10 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 const ActionStepList = () => {
 	const actions = useSelector(getActions);
 	const [stepInfoBoxState, setStepInfoBoxState] = useState({ enabled: false, step: null, stepIndex: -1 });
+	const selectedActions = useSelector(getSelectedActions);
+	const [showCreateModal, setShowCreateModal] = useState(false);
+
+	const showTemplateCreateButton = selectedActions.length;
 
 	useEffect(() => {
 		const testListContainer: any = document.querySelector("#stepsListContainer");
@@ -153,6 +158,45 @@ const ActionStepList = () => {
 		setStepInfoBoxState({ enabled: false, step: null, stepIndex: -1 });
 	};
 
+	const handleSelectAllCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const isChecked = event.target.checked;
+		const elements: Array<HTMLInputElement> = Array.from(document.querySelectorAll("#selectedSteps"));
+		const store = getStore();
+
+		elements.forEach((element) => {
+			element.checked = isChecked;
+		});
+
+		if (isChecked) {
+			const selectedActionIds = elements
+				.filter((checkbox: HTMLInputElement) => checkbox.checked)
+				.map((checkbox: HTMLInputElement) => {
+					return { id: checkbox.getAttribute("data-id") };
+				});
+			store.dispatch(updateSelectedActions(selectedActionIds));
+		} else {
+			store.dispatch(updateSelectedActions([]));
+		}
+	};
+
+	const handleAddTemplate = (event: MouseEvent) => {
+		setShowCreateModal(true);
+	};
+
+	const handleTemplateModalSubmit = (name: string) => {
+		console.log("Template name is", name);
+		setShowCreateModal(false);
+		const store = getStore();
+		store.dispatch(updateSelectedActions([]));
+
+		const elements: Array<HTMLInputElement> = Array.from(document.querySelectorAll("#selectedSteps"));
+		elements.forEach((element) => {
+			element.checked = false;
+		});
+
+		(document.querySelector("#selectAllSteps") as HTMLInputElement).checked = false;
+	};
+
 	const isCurrentElementAction = stepInfoBoxState.step && ElementActionsInTestArr.includes(stepInfoBoxState.step.type);
 
 	return (
@@ -163,36 +207,70 @@ const ActionStepList = () => {
 				</div>
 			</Conditional>
 			<div className="flex justify-between text-white">
-				<div className={"flex"} style={{alignItems: "center"}}>
-					<Checkbox id={"selectedSteps"} labelText={`${stepList.length} steps`}/>
+				<div className={"flex"} style={{ alignItems: "center", flex: 1 }}>
+					<Checkbox onChange={handleSelectAllCheckboxChange} id={"selectAllSteps"} labelText={`${stepList.length} steps`} />
 					<div
-					className="text-15 text-center
+						className="text-15 text-center
 					flex items-center justify-center
 					px-12 py-4
 					cursor-pointer"
-					style={{color: "#FFFFFF", borderRadius: 4, backgroundColor: "rgba(196, 196, 196, 0.02", border: "1px solid rgba(196, 196, 196, 0.2)", padding: "5px 6px", marginLeft: 12}}
-				>
-					<MoreIcon/>
+						style={{
+							color: "#FFFFFF",
+							borderRadius: 4,
+							backgroundColor: "rgba(196, 196, 196, 0.02",
+							border: "1px solid rgba(196, 196, 196, 0.2)",
+							padding: "5px 6px",
+							marginLeft: 12,
+						}}
+					>
+						<MoreIcon />
 					</div>
 				</div>
-				<div
-					className="text-15 text-center
+				<Conditional If={!showTemplateCreateButton}>
+					<div
+						className="text-15 text-center
 					flex items-center justify-center
 					px-12 py-4
 					cursor-pointer"
-					style={{color: "#FFFFFF"}}
-				>
-					<PassedIcon style={{width: 15, height: 15}}/>
-					<span style={{marginLeft: 12}}>Context</span>
-				</div>
+						style={{ color: "#FFFFFF" }}
+					>
+						<PassedIcon style={{ width: 15, height: 15 }} />
+						<span style={{ marginLeft: 12 }}>Context</span>
+					</div>
+				</Conditional>
+				<Conditional If={showTemplateCreateButton}>
+					<div
+						className="text-15 text-center
+					flex items-center justify-center
+					px-12 py-4
+					cursor-pointer"
+						style={addTemplateButtonStyle}
+						onClick={handleAddTemplate}
+					>
+						<AddIcon style={{ width: 12, height: 12 }} />
+					</div>
+				</Conditional>
 			</div>
 			<div className="h-full" style={containerStyle} id="stepsListContainer">
 				<ul style={stepsListContainerStyle} className="margin-list-item">
 					{stepList}
 				</ul>
 			</div>
+			<CreateTemplatesModal
+				isOpen={showCreateModal}
+				onClose={handleTemplateModalSubmit}
+			/>
 		</div>
 	);
+};
+
+const addTemplateButtonStyle = {
+	background: "#6370EC",
+	borderRadius: 4,
+	fontWeight: FONT_WEIGHT.BOLD,
+	padding: "7px 16px",
+	fontSize: 19,
+	color: "#FFFFFF",
 };
 
 const actionEditInfoContainerStyle = (isScreenshotOn: boolean, isElementAction: boolean) => {
@@ -238,6 +316,5 @@ const stepsListContainerStyle = {
 	borderTopLeftRadius: "12px",
 	overflow: OVERFLOW.AUTO,
 };
-
 
 export { ActionStepList };

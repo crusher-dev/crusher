@@ -5,7 +5,7 @@ import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions, getSelectedActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
-import { deleteRecordedAction, updateActionName, updateActionTimeout, updateSelectedActions } from "../../../redux/actions/actions";
+import { deleteRecordedAction, setRecordedActions, updateActionName, updateActionTimeout, updateSelectedActions } from "../../../redux/actions/actions";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
 import { AddIcon, FailureIcon, LoadingIcon, MoreIcon, PassedIcon } from "crusher-electron-app/src/extension/assets/icons";
@@ -184,17 +184,59 @@ const ActionStepList = () => {
 	};
 
 	const handleTemplateModalSubmit = (name: string) => {
-		console.log("Template name is", name);
 		setShowCreateModal(false);
+		if (!name) return;
+
 		const store = getStore();
-		store.dispatch(updateSelectedActions([]));
+		let actions = getActions(store.getState());
+		const selectedActionRecords = getSelectedActions(store.getState());
+		if (!selectedActionRecords) return;
 
-		const elements: Array<HTMLInputElement> = Array.from(document.querySelectorAll("#selectedSteps"));
-		elements.forEach((element) => {
-			element.checked = false;
+		const selectedActionsIdArr = selectedActionRecords.map((action) => {
+			return action.id;
 		});
+		const selectedActions = actions
+			.map((action, index) => {
+				return { id: index, action: action };
+			})
+			.filter((_, index) => {
+				return selectedActionsIdArr.includes(index.toString());
+			})
+			.sort((a, b) => {
+				return a.id - b.id;
+			});
 
-		(document.querySelector("#selectAllSteps") as HTMLInputElement).checked = false;
+		if (selectedActions.length) {
+			const templateAction: iAction = {
+				type: ActionsInTestEnum.RUN_TEMPLATE,
+				name: name,
+				payload: {
+					meta: {
+						actions: selectedActions.map((actionData) => actionData.action),
+					},
+				},
+			};
+
+			for (const selectedAction of selectedActions) {
+				delete actions[selectedAction.id];
+			}
+
+			actions[selectedActions[0].id] = templateAction;
+			actions = actions.filter((action) => !!action);
+			store.dispatch(setRecordedActions(actions));
+		}
+
+		const clearSelectedActions = () => {
+			store.dispatch(updateSelectedActions([]));
+			const elements: Array<HTMLInputElement> = Array.from(document.querySelectorAll("#selectedSteps"));
+			elements.forEach((element) => {
+				element.checked = false;
+			});
+
+			(document.querySelector("#selectAllSteps") as HTMLInputElement).checked = false;
+		};
+
+		clearSelectedActions();
 	};
 
 	const isCurrentElementAction = stepInfoBoxState.step && ElementActionsInTestArr.includes(stepInfoBoxState.step.type);
@@ -256,10 +298,7 @@ const ActionStepList = () => {
 					{stepList}
 				</ul>
 			</div>
-			<CreateTemplatesModal
-				isOpen={showCreateModal}
-				onClose={handleTemplateModalSubmit}
-			/>
+			<CreateTemplatesModal isOpen={showCreateModal} onClose={handleTemplateModalSubmit} />
 		</div>
 	);
 };

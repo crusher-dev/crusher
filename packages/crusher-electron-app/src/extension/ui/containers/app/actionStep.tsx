@@ -249,10 +249,11 @@ const ICONS = {
 	[ActionsInTestEnum.ELEMENT_SCREENSHOT as ActionsInTestEnum]: "/icons/actions/screenshot.svg",
 	[ActionsInTestEnum.PAGE_SCREENSHOT as ActionsInTestEnum]: "/icons/actions/screenshot.svg",
 	[ActionsInTestEnum.VALIDATE_SEO as ActionsInTestEnum]: "/icons/actions/seo.svg",
-	[ActionsInTestEnum.BLACKOUT as ActionsInTestEnum]: "icons/actions/blackout.svg",
-	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT as ActionsInTestEnum]: "icons/actions/custom-script.svg",
-	[ActionsInTestEnum.ASSERT_ELEMENT as ActionsInTestEnum]: "icons/actions/assert-modal.svg",
-	[ActionsInTestEnum.ELEMENT_FOCUS as ActionsInTestEnum]: "icons/actions/click.svg",
+	[ActionsInTestEnum.BLACKOUT as ActionsInTestEnum]: "/icons/actions/blackout.svg",
+	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT as ActionsInTestEnum]: "/icons/actions/custom-script.svg",
+	[ActionsInTestEnum.ASSERT_ELEMENT as ActionsInTestEnum]: "/icons/actions/assert-modal.svg",
+	[ActionsInTestEnum.ELEMENT_FOCUS as ActionsInTestEnum]: "/icons/actions/click.svg",
+	[ActionsInTestEnum.RUN_TEMPLATE as ActionsInTestEnum]: "/icons/actions/click.svg",
 };
 
 // If possbile, just return a selector
@@ -263,6 +264,8 @@ function getActionDescription(action: iAction) {
 
 	if (action.payload.selectors && action.payload.selectors[0]) {
 		return action.payload.selectors[0].value;
+	} else if (action.type === ActionsInTestEnum.RUN_TEMPLATE) {
+		return "Run this template";
 	}
 
 	return "Unknown Action";
@@ -271,6 +274,8 @@ function getActionDescription(action: iAction) {
 // If possible selectors
 
 function checkIfNonSelectableAction(action: iAction) {
+	if (!action || action.type === ActionsInTestEnum.RUN_TEMPLATE) return true;
+
 	return action.type.startsWith("BROWSER") && action.type !== ActionsInTestEnum.RUN_AFTER_TEST;
 }
 

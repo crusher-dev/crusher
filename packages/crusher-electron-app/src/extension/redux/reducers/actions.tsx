@@ -4,6 +4,7 @@ import {
 	DELETE_RECORDED_ACTION,
 	RECORD_ACTION,
 	RESET_RECORDED_ACTIONS,
+	SET_RECORDED_ACTION,
 	UPDATE_ACTION_NAME,
 	UPDATE_ACTION_TIMEOUT,
 	UPDATE_LAST_RECORDED_ACTION,
@@ -26,6 +27,14 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 	}
 
 	switch (action.type) {
+		case SET_RECORDED_ACTION: {
+			const actionsArr = action.payload.actions;
+
+			return {
+				...state,
+				list: actionsArr,
+			};
+		}
 		case UPDATE_SELECTED_ACTIONS: {
 			return {
 				...state,

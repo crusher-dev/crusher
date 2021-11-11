@@ -89,19 +89,22 @@ class CrusherRunnerActions {
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
-		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: any = null, shouldSleepAfterComplete = true, remainingActionsArr: Array<iAction> = []): Promise<void> => {
-			await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`, {
-				actionName: step.name ? step.name : null,
-			}, actionCallback);
+		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: any = null, shouldSleepAfterComplete = true, remainingActionsArr: Array<iAction> = [], shouldLog: boolean = true): Promise<void> => {
+			let startingScreenshot = null;
 			let stepResult = null;
 
-			let startingScreenshot = null;
-			try { startingScreenshot = await this._getCurrentScreenshot(page); } catch (ex) { }
+			if (shouldLog) {
+				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.STARTED, `Performing ${action.description} now`, {
+					actionName: step.name ? step.name : null,
+				}, actionCallback);
+
+				try { startingScreenshot = await this._getCurrentScreenshot(page); } catch (ex) { }
+			}
 
 			try {
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
-						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
+						stepResult = await wrappedHandler(page, step, this.globals, this.storageManager, this.exportsManager, this.sdk, browser, this.runActions.bind(this));
 						break;
 					case ActionCategoryEnum.BROWSER:
 						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
@@ -119,36 +122,39 @@ class CrusherRunnerActions {
 					await sleep(500);
 				}
 				// Woohoo! Action executed without any errors.
-				await this.handleActionExecutionStatus(
-					action.name,
-					ActionStatusEnum.COMPLETED,
-					stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`,
-					stepResult
-						? {
+				if (shouldLog) {
+					await this.handleActionExecutionStatus(
+						action.name,
+						ActionStatusEnum.COMPLETED,
+						stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`,
+						stepResult
+							? {
 								...stepResult,
 								actionName: step.name ? step.name : null,
-						  }
-						: {
+							}
+							: {
 								actionName: step.name ? step.name : null,
-						},
-					actionCallback,
-				);
+							},
+						actionCallback,
+					);
+				}
 			} catch (err) {
-				let endingScreenshot = null;
-				try {
-					endingScreenshot = await this._getCurrentScreenshot(page);
-				} catch (ex) { }
+				if (shouldLog) {
+					let endingScreenshot = null;
+					try {
+						endingScreenshot = await this._getCurrentScreenshot(page);
+					} catch (ex) { }
 
-				await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
-					failedReason: err.messsage,
-					screenshotDuringError: JSON.stringify({startingScreenshot, endingScreenshot}),
-					actionName: step.name ? step.name : null,
-					meta: {
-						...err.meta ? err.meta : {},
-						remainingActionsArr: [...remainingActionsArr],
-					}
-				}, actionCallback);
-
+					await this.handleActionExecutionStatus(action.name, ActionStatusEnum.FAILED, `Error performing ${action.description}`, {
+						failedReason: err.messsage,
+						screenshotDuringError: JSON.stringify({ startingScreenshot, endingScreenshot }),
+						actionName: step.name ? step.name : null,
+						meta: {
+							...err.meta ? err.meta : {},
+							remainingActionsArr: [...remainingActionsArr],
+						}
+					}, actionCallback);
+				}
 				throw err;
 			}
 		};
@@ -162,7 +168,7 @@ class CrusherRunnerActions {
 		this.actionHandlers[actionType] = this.stepHandlerHOC(handler, { name: actionType, description: description, category: actionCategory });
 	}
 
-	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: any = null) {
+	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: any = null, shouldLog: boolean = true) {
 		let index = 0;
 
 		const remainingActionsArr = [...actions];
@@ -171,7 +177,7 @@ class CrusherRunnerActions {
 			remainingActionsArr.shift();
 
 			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
-			await this.actionHandlers[action.type](action, browser, page, actionCallback ? actionCallback.bind(this, action) : null, actions[index+1] ? (actions[index+1].type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION ? true : false) : false, remainingActionsArr);
+			await this.actionHandlers[action.type](action, browser, page, actionCallback ? actionCallback.bind(this, action) : null, actions[index+1] ? (actions[index+1].type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION ? true : false) : false, remainingActionsArr, shouldLog);
 			index++;
 		}
 	}

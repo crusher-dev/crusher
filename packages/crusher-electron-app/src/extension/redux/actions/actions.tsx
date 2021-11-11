@@ -12,6 +12,7 @@ export const UPDATE_ACTION_TIMEOUT = "UPDATE_ACTION_TIMEOUT";
 export const RESET_RECORDED_ACTIONS = "RESET_RECORDED_ACTIONS";
 export const UPDATE_LAST_RECORDED_ACTION_OPTINALITY = "UPDATE_LAST_RECORDED_ACTION_OPTINALITY";
 export const UPDATE_SELECTED_ACTIONS = "UPDATE_SELECTED_ACTIONS";
+export const SET_RECORDED_ACTION = "SET_RECORDED_ACTION";
 
 export const updateSelectedActions = (actionIds: Array<{ id: any }>) => {
 	return {
@@ -51,6 +52,13 @@ export const recordAction = (action: iAction) => {
 		payload: {
 			action,
 		},
+	};
+};
+
+export const setRecordedActions = (actions: iAction[]) => {
+	return {
+		type: SET_RECORDED_ACTION,
+		payload: { actions },
 	};
 };
 

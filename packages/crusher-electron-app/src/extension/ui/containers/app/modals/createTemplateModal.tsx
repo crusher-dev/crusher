@@ -13,7 +13,7 @@ interface iStartupModalProps {
 
 const CreateTemplatesModal = (props: iStartupModalProps) => {
 	const { isOpen, onClose } = props;
-	const [templateName, setTemplateName] = useState(AdvancedURL.getBackendURL);
+	const [templateName, setTemplateName] = useState();
 
 	const handleTemplateNameChange = (event: any) => {
 		setTemplateName(event.target.value);
@@ -22,10 +22,10 @@ const CreateTemplatesModal = (props: iStartupModalProps) => {
 	const createTemplate = () => {
 		if (templateName && templateName !== "") {
 			if (!(window as any).electron) {
-				onClose();
+				onClose(templateName);
 				throw new Error("Cannot find exposed electron API");
 			}
-			onClose();
+			onClose(templateName);
 		}
 	};
 
@@ -35,8 +35,12 @@ const CreateTemplatesModal = (props: iStartupModalProps) => {
 		}
 	};
 
+	const handleClose = (e: any) => {
+		onClose(null);
+	};
+
 	return (
-		<ReactModal isOpen={isOpen} onRequestClose={onClose} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
+		<ReactModal isOpen={isOpen} onRequestClose={handleClose} contentLabel="Startup Modal" style={customModalStyles} overlayClassName="overlay">
 			<ModalTopBar title={"Create template"} desc={"For re-using across tests"} closeModal={onClose} />
 			<div style={formContainerStyle}>
 				<div style={inputContainerStyle}>

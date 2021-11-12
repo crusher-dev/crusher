@@ -134,3 +134,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
 	background: #888;
 }
+
+.hoverHighlightEffect:hover {
+	background: linear-gradient(0deg, rgba(51, 50, 55, 0.88), rgba(51, 50, 55, 0.88)), #111213;
+}

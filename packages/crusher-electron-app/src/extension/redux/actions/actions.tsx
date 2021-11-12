@@ -10,20 +10,32 @@ export const DELETE_RECORDED_ACTION = "DELETE_RECORDED_ACTION";
 export const UPDATE_ACTION_NAME = "UPDATE_ACTION_NAME";
 export const UPDATE_ACTION_TIMEOUT = "UPDATE_ACTION_TIMEOUT";
 export const RESET_RECORDED_ACTIONS = "RESET_RECORDED_ACTIONS";
+export const UPDATE_LAST_RECORDED_ACTION_OPTINALITY = "UPDATE_LAST_RECORDED_ACTION_OPTINALITY";
+export const UPDATE_SELECTED_ACTIONS = "UPDATE_SELECTED_ACTIONS";
+export const SET_RECORDED_ACTION = "SET_RECORDED_ACTION";
+
+export const updateSelectedActions = (actionIds: Array<{ id: any }>) => {
+	return {
+		type: UPDATE_SELECTED_ACTIONS,
+		payload: {
+			selectedActionIds: actionIds,
+		},
+	};
+};
 
 export const updateLastRecordedActionStatus = (actionStatus: ActionStatusEnum) => {
-  return {
-	type: UPDATE_LAST_RECORDED_ACTION_STATUS,
-	payload: {
-		status: actionStatus
-	},
-  };
+	return {
+		type: UPDATE_LAST_RECORDED_ACTION_STATUS,
+		payload: {
+			status: actionStatus,
+		},
+	};
 };
 
 export const recordAction = (action: iAction) => {
 	const store = getStore();
 	const isPageLoaded = isRecorderScriptBooted(store.getState());
-	if(!action.status) {
+	if (!action.status) {
 		action.status = ActionStatusEnum.SUCCESS;
 	}
 
@@ -43,6 +55,13 @@ export const recordAction = (action: iAction) => {
 	};
 };
 
+export const setRecordedActions = (actions: iAction[]) => {
+	return {
+		type: SET_RECORDED_ACTION,
+		payload: { actions },
+	};
+};
+
 export const updateActionName = (actionName: string, actionIndex: number) => ({
 	type: UPDATE_ACTION_NAME,
 	payload: { name: actionName, actionIndex },
@@ -56,6 +75,11 @@ export const updateActionTimeout = (actionTimeout: number, actionIndex: number) 
 export const updateLastRecordedAction = (actionToBeReplacedWith: iAction) => ({
 	type: UPDATE_LAST_RECORDED_ACTION,
 	payload: { actionToBeReplacedWith: actionToBeReplacedWith },
+});
+
+export const markLastRecordedActionAsOptional = (isOptional: boolean) => ({
+	type: UPDATE_LAST_RECORDED_ACTION_OPTINALITY,
+	payload: { isOptional: isOptional },
 });
 
 export const deleteRecordedAction = (actionIndex: number) => ({

@@ -95,6 +95,7 @@ class TestService {
 		customTestsConfig: Partial<ICreateBuildRequestPayload> = {},
 		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
 		overideBaseLineBuildId: number | null = null,
+		browsers = [BrowserEnum.CHROME]
 	) {
 		const testsData = await this.getTestsInProject(projectId, true);
 		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
@@ -118,7 +119,7 @@ class TestService {
 					host: "null",
 					status: BuildStatusEnum.CREATED,
 					buildTrigger: BuildTriggerEnum.MANUAL,
-					browser: isOpenSourceEdition() ? [BrowserEnum.CHROME] : [BrowserEnum.CHROME],
+					browser: browsers,
 					isDraftJob: false,
 					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
 					meta: meta,

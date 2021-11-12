@@ -86,10 +86,18 @@ export class TestController {
 	@Post("/projects/:project_id/tests/actions/run")
 	async runProjectTests(
 		@CurrentUser({ required: true }) user,
-		@Body() body: { githubRepoName?: string; githubCommitId?: string; host?: string; disableBaseLineComparisions: boolean; baselineJobId: number | null },
+		@Body()
+		body: {
+			githubRepoName?: string;
+			githubCommitId?: string;
+			host?: string;
+			disableBaseLineComparisions: boolean;
+			baselineJobId: number | null;
+			browsers?: Array<BrowserEnum>;
+		},
 		@Param("project_id") projectId: number,
 	) {
-		console.log("Body of project tests run api", body);
+		console.log("Body of project tests run api, here", body);
 
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
@@ -107,6 +115,7 @@ export class TestController {
 			{ host: body.host ? body.host : "null" },
 			meta,
 			body.baselineJobId ? body.baselineJobId : null,
+			body.browsers ? body.browsers : [BrowserEnum.CHROME],
 		);
 	}
 

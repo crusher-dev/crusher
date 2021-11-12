@@ -90,7 +90,7 @@ export class TestController {
 		@Param("project_id") projectId: number,
 	) {
 		const meta = {
-			disableBaseLineComparisions: body.disableBaseLineComparisions,
+			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};
 		if (body.githubRepoName) {
 			meta["github"] = {

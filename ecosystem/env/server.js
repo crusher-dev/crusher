@@ -10,7 +10,6 @@ const {
 	AWS_CONFIG,
 	FRONTEND_URL,
 	BACKEND_URL,
-	GITHUB_CONFIG
 } = require('../config');
 
 module.exports = {

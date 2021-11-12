@@ -15,6 +15,18 @@ export interface ITestTable extends BaseRowInterface {
 	meta?: string;
 }
 
+export interface ITemplatesTable extends BaseRowInterface {
+	id: number;
+	events: string;
+	name: string;
+	project_id: number;
+	user_id: number;
+}
+
+export type ICreateTemplatePayload = KeysToCamelCase<
+	Omit<ITemplatesTable, "id" | "user_id" | "project_id" | "created_at" | "updated_at"> & Nullable<Pick<ITemplatesTable, "user_id" | "project_id">>
+>;
+
 export type ICreateTestPayload = KeysToCamelCase<
 	Omit<ITestTable, "id" | "deleted" | "featured_screenshot_uri" | "featured_video_url"> &
 		Nullable<Pick<ITestTable, "featured_screenshot_url" | "featured_video_url">>

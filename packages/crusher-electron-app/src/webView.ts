@@ -182,6 +182,10 @@ export class WebView {
 		return this.appState.isTestRunning;
 	}
 
+	setRunningState(value: boolean) {
+		this.appState.isTestRunning = value;
+	}
+
 	destroy() {
 		ipcMain.removeHandler("execute-custom-code");
 		ipcMain.removeHandler("get-node-id");

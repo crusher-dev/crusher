@@ -4,7 +4,7 @@ import { ProjectsService } from "@modules/resources/projects/service";
 import { TestsRunner } from "@modules/runner";
 import { BuildStatusEnum, BuildTriggerEnum, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
-import { ICreateTestPayload, ITestTable } from "@modules/resources/tests/interface";
+import { ICreateTemplatePayload, ICreateTestPayload, ITemplatesTable, ITestTable } from "@modules/resources/tests/interface";
 import { getSnakedObject, isOpenSourceEdition } from "@utils/helper";
 import { iAction } from "@crusher-shared/types/action";
 import { RedisManager } from "@modules/redis";
@@ -42,7 +42,31 @@ class TestService {
 		return { events: JSON.parse(result) };
 	}
 
+	// Modifies the events actions object directly
+	private async handleTemplateActions(templateActions: Array<iAction>, projectId: number, userId: number) {
+		const promiseArr = [];
+		for (const templateAction of templateActions) {
+			if (templateAction.payload.meta && templateAction.payload.meta.id) {
+				// Do nothing
+				continue;
+			}
+
+			promiseArr.push(
+				this.createTemplate({ name: templateAction.name, events: templateAction.payload.meta.actions, projectId, userId }).then((insertRecord) => {
+					templateAction.payload.meta.id = insertRecord.insertId;
+					delete templateAction.payload.meta.actions;
+					return true;
+				}),
+			);
+		}
+
+		return Promise.all(promiseArr);
+	}
+
 	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }): Promise<{ insertId: number }> {
+		const templateActions = testInfo.events.filter((event) => event.type === ActionsInTestEnum.RUN_TEMPLATE);
+		await this.handleTemplateActions(templateActions, testInfo.projectId, testInfo.userId);
+
 		return this.dbManager.insert(
 			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_url = ?, featured_screenshot_url = ?`,
 			[
@@ -69,20 +93,24 @@ class TestService {
 		projectId: number,
 		userId: number,
 		customTestsConfig: Partial<ICreateBuildRequestPayload> = {},
-		buildMeta: { github?: { repoName: string; commitId: string } } = {},
+		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
+		overideBaseLineBuildId: number | null = null,
 	) {
 		const testsData = await this.getTestsInProject(projectId, true);
 		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
 
 		const projectRecord = await this.projectService.getProject(projectId);
 
-		const meta: { isProjectLevelBuild: boolean; github?: { repoName: string } } = { isProjectLevelBuild: true };
+		const meta: { isProjectLevelBuild: boolean; github?: { repoName: string }; disableBaseLineComparisions?: boolean } = {
+			isProjectLevelBuild: true,
+			disableBaseLineComparisions: !!buildMeta.disableBaseLineComparisions,
+		};
 		if (buildMeta.github) {
 			meta.github = buildMeta.github;
 		}
 
 		return this.testsRunner.runTests(
-			testsData.list,
+			await this.getFullTestArr(testsData.list),
 			merge(
 				{
 					userId: userId,
@@ -97,7 +125,7 @@ class TestService {
 				},
 				customTestsConfig,
 			),
-			projectRecord.baselineJobId,
+			overideBaseLineBuildId ? overideBaseLineBuildId : projectRecord.baselineJobId,
 		);
 	}
 
@@ -147,6 +175,28 @@ class TestService {
 		return this.dbManager.fetchSingleRow("SELECT * FROM tests WHERE id = ?", [testId]);
 	}
 
+	// With template actions included
+	@CamelizeResponse()
+	async getFullTest(testRecord: KeysToCamelCase<ITestTable>): Promise<KeysToCamelCase<ITestTable>> {
+		const actions = JSON.parse(testRecord.events);
+		const templateActions = actions.filter((action) => action.type === ActionsInTestEnum.RUN_TEMPLATE);
+		await Promise.all(
+			templateActions.map(async (action) => {
+				if (action.payload.meta.id) {
+					const template = await this.getTemplate(action.payload.meta.id);
+					action.payload.meta.actions = JSON.parse(template.events);
+				}
+			}),
+		);
+
+		testRecord.events = JSON.stringify(actions);
+		return testRecord;
+	}
+
+	async getFullTestArr(testRecords: Array<KeysToCamelCase<ITestTable>>): Promise<Array<KeysToCamelCase<ITestTable>>> {
+		return Promise.all(testRecords.map((testRecord) => this.getFullTest(testRecord)));
+	}
+
 	async addFeaturedVideo(featuredVideoUrl: string, lastSecondsClipVideoUrl: string, testId: number): Promise<{ insertId: number }> {
 		return this.dbManager.update("UPDATE tests SET featured_video_url = ?, featured_clip_video_url = ? WHERE id = ?", [
 			featuredVideoUrl,
@@ -160,7 +210,7 @@ class TestService {
 		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds.join(",")]);
 	}
 
-	// Specifically for run after this text
+	// Specifically for run after this test
 	async getCompleteTestsArray(tests: Array<KeysToCamelCase<ITestTable>>): Promise<Array<KeysToCamelCase<ITestTable>>> {
 		const testsMap = tests.reduce((acc, test) => {
 			return { ...acc, [test.id]: test };
@@ -178,6 +228,25 @@ class TestService {
 		}
 
 		return Object.values(testsMap);
+	}
+
+	async createTemplate(payload: Omit<ICreateTemplatePayload, "events"> & { events: Array<iAction> }) {
+		return this.dbManager.insert("INSERT INTO templates SET name = ?, events = ?, project_id = ?, user_id = ?", [
+			payload.name,
+			JSON.stringify(payload.events),
+			payload.projectId ? payload.projectId : null,
+			payload.userId ? payload.userId : null,
+		]);
+	}
+
+	@CamelizeResponse()
+	async getTemplates(name: string): Promise<Array<KeysToCamelCase<ITemplatesTable>>> {
+		return this.dbManager.fetchAllRows(`SELECT * FROM templates WHERE name LIKE ?`, [name ? `%${name}%` : "%"]);
+	}
+
+	@CamelizeResponse()
+	async getTemplate(id: number): Promise<KeysToCamelCase<ITemplatesTable>> {
+		return this.dbManager.fetchSingleRow(`SELECT * FROM templates WHERE id = ?`, [id]);
 	}
 }
 

@@ -201,7 +201,7 @@ class TestsRunner {
 			return this.buildTestInstanceService.createBuildTestInstanceResultSet({
 				reportId: buildReportInsertRecord.insertId,
 				instanceId: testInstance.id,
-				targetInstanceId: referenceInstance.id,
+				targetInstanceId: buildPayload.meta.disableBaseLineComparisions ? testInstance.id : referenceInstance.id,
 			});
 		});
 

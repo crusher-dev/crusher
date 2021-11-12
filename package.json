@@ -10,6 +10,7 @@
 		"setup:oss": "node setup/index.js -m open-source",
 		"setup:ee": "node setup/index.js -m enterprise",
 		"setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
+		"setup:local": "node setup/index.js -m enterprise --sm local --ah localhost --bd http://localhost:8000/ --fd http://localhost:3000/",
 		"build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
 		"start": "pm2 start",
 		"log:app": "pm2 logs crusher-app",

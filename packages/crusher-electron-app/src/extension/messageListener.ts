@@ -141,8 +141,6 @@ async function handleRecordAction(action: iAction): any {
 			break;
 		}
 		case ActionsInTestEnum.ADD_INPUT: {
-			if (!lastRecordedAction) throw new Error("Add input recorded before navigate url");
-
 			const isLastEventAddInput = lastRecordedAction.type === ActionsInTestEnum.ADD_INPUT;
 			if (lastRecordedAction.type === ActionsInTestEnum.CLICK && (await areTwoNodesSame(action, lastRecordedAction))) {
 				// Delete click if last action is click on same element
@@ -186,8 +184,6 @@ async function handleRecordAction(action: iAction): any {
 		}
 		case ActionsInTestEnum.PAGE_SCROLL:
 		case ActionsInTestEnum.ELEMENT_SCROLL: {
-			if (!lastRecordedAction) throw new Error("Scroll recorded before navigate url");
-
 			const isScrollingToSameLastElement =
 				[ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(lastRecordedAction.type) &&
 				((lastRecordedAction.payload.selectors === null && action.payload.selectors === null) ||
@@ -204,7 +200,6 @@ async function handleRecordAction(action: iAction): any {
 			break;
 		}
 		case ActionsInTestEnum.HOVER: {
-			if (!lastRecordedAction) throw new Error("Hover recorded before navigate url");
 			const url = new URL(window.location.href);
 			if (url.searchParams.get("device") === "Pixel33XL") {
 				// Disable hover in mobile devices
@@ -221,8 +216,6 @@ async function handleRecordAction(action: iAction): any {
 			break;
 		}
 		case ActionsInTestEnum.CLICK: {
-			if (!lastRecordedAction) throw new Error("Click recorded before navigate url");
-
 			const isTheLastRecordedActionOnSameElementFocus =
 				lastRecordedAction.type === ActionsInTestEnum.ELEMENT_FOCUS &&
 				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;

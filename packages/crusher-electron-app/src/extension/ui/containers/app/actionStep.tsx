@@ -75,6 +75,8 @@ const Action = (props: iActionProps) => {
 		store.dispatch(updateSelectedActions(selectedActionIds));
 	};
 
+	const actionDescription = getActionDescription(action);
+
 	return (
 		<li style={{ marginTop: 21 }}>
 			<Conditional If={!isActionFail}>
@@ -89,7 +91,9 @@ const Action = (props: iActionProps) => {
 					</div>
 					<div style={actionStepDescriptionContainerStyle}>
 						<div style={actionStepNameStyle}>{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}</div>
-						<div style={actionStepSelectorStyle}>{getActionDescription(action)}</div>
+						<div style={actionStepSelectorStyle}>
+							{actionDescription && actionDescription.length > 35 ? actionDescription.substring(0, 35) : actionDescription}
+						</div>
 					</div>
 					<div style={{ marginLeft: "auto" }}>
 						<Conditional If={shouldShowLoadingSign}>

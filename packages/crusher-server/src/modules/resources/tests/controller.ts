@@ -89,6 +89,8 @@ export class TestController {
 		@Body() body: { githubRepoName?: string; githubCommitId?: string; host?: string; disableBaseLineComparisions: boolean; baselineJobId: number | null },
 		@Param("project_id") projectId: number,
 	) {
+		console.log("Body of project tests run api", body);
+
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};

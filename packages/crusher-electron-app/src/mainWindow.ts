@@ -164,13 +164,14 @@ class MainWindow {
 		this.state.isTestRunning = true;
 		this.browserWindow.webContents.send("post-message-to-host", { type: "CLEAR_RECORDED_ACTIONS" });
 		const { error } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
+		this.state.isTestRunning = false;
+
 		if (error) {
 			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');
 		} else {
 			this.state.isTestVerified = true;
 			this.browserWindow.webContents.send("post-message-to-host", { type: "SAVE_RECORDED_TEST" });
 		}
-		this.state.isTestRunning = false;
 
 		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: false } });
 	}

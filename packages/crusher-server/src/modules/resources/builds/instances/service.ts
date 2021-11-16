@@ -147,7 +147,7 @@ class BuildTestInstancesService {
 				diffResult = await this.visualDiffService.getDiffResult(
 					baseImage.value,
 					referenceImage.value,
-					path.join(assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.png`),
+					path.join(assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.jpeg`),
 				);
 			} catch (err) {
 				diffResult = {

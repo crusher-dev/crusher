@@ -126,15 +126,15 @@ class MainWindow {
 		this.browserWindow.webContents.send("post-message-to-host", { type: "RECORD_REPLAY_ACTION", meta: action });
 		return true;
 	}
-	
+
 	clearReminingSteps() {
 		this.state.remainingSteps = undefined;
 	}
 
 	addToRemainingSteps(actions: Array<iAction>) {
-		if(!this.state.remainingSteps) { 
+		if(!this.state.remainingSteps) {
 			this.state.remainingSteps = [];
-		} 
+		}
 
 		this.state.remainingSteps.push(...actions);
 	}
@@ -167,8 +167,8 @@ class MainWindow {
 		if (error) {
 			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');
 		} else {
-			this.browserWindow.webContents.send("post-message-to-host", { type: "SAVE_RECORDED_TEST" });
 			this.state.isTestVerified = true;
+			this.browserWindow.webContents.send("post-message-to-host", { type: "SAVE_RECORDED_TEST" });
 		}
 		this.state.isTestRunning = false;
 

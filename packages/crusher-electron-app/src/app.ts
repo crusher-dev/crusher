@@ -90,7 +90,7 @@ class App {
 
 		this.mainWindow = new MainWindow(this, this.appWindow, this.state);
 		await this.mainWindow.initialize();
-		
+
 		this.appWindow.on("close", () => {
 			if(process.platform === "darwin") app.quit();
 		});
@@ -124,10 +124,10 @@ class App {
 					buttons: ["Yes", "Cancel"],
 					defaultId: 1,
 				});
-		
+
 				if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
 					await this._reloadApp(this.appWindow, true, [data]);
-				} 
+				}
 			}
 		}
 		console.log("Link is this", data);

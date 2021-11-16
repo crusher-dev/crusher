@@ -251,7 +251,7 @@ const ActionStepList = () => {
 			<div className="flex justify-between text-white">
 				<div className={"flex"} style={{ alignItems: "center", flex: 1 }}>
 					<Checkbox onChange={handleSelectAllCheckboxChange} id={"selectAllSteps"} labelText={`${stepList.length} steps`} />
-					<div
+					{/* <div
 						className="text-15 text-center
 					flex items-center justify-center
 					px-12 py-4
@@ -266,9 +266,9 @@ const ActionStepList = () => {
 						}}
 					>
 						<MoreIcon />
-					</div>
+					</div> */}
 				</div>
-				<Conditional If={!showTemplateCreateButton}>
+				{/* <Conditional If={!showTemplateCreateButton}>
 					<div
 						className="text-15 text-center
 					flex items-center justify-center
@@ -279,7 +279,7 @@ const ActionStepList = () => {
 						<PassedIcon style={{ width: 15, height: 15 }} />
 						<span style={{ marginLeft: 12 }}>Context</span>
 					</div>
-				</Conditional>
+				</Conditional> */}
 				<Conditional If={showTemplateCreateButton}>
 					<div
 						className="text-15 text-center

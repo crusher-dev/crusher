@@ -101,9 +101,11 @@ export async function responseMessageListener(eventRecording: EventRecording, ev
 			eventRecording
 				.executeCustomElementScript(script)
 				.then((res: any) => {
+					console.log("Output of execution", res);
 					return { type: "output", value: res };
 				})
 				.catch((err: any) => {
+					console.log("Error of execution", err);
 					return { type: "error", value: err };
 				})
 				.then((response: iExecuteScriptOutputResponseMeta) => {

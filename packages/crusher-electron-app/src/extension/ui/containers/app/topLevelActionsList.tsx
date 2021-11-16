@@ -4,7 +4,7 @@ import { List } from "../../components/app/list";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { recordAction } from "../../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { turnOffInspectModeInFrame, turnOnInspectModeInFrame } from "../../../messageListener";
+import { executeScriptInFrame, turnOffInspectModeInFrame, turnOnInspectModeInFrame } from "../../../messageListener";
 import { getStore } from "../../../redux/store";
 import { useSelector } from "react-redux";
 import { getInspectModeState } from "../../../redux/selectors/recorder";
@@ -31,6 +31,38 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 		const store = getStore();
 
 		switch (id) {
+			case TOP_LEVEL_ACTION.SCROLL_AND_TAKE_SCREENSHOT:
+				executeScriptInFrame(`async function validate(element){
+					const saveAction = (actionType, selectors, value) => {
+						window.electron.host.postMessage({
+							type: "RECORD_ACTION",
+							meta: {
+								type: actionType,
+								payload: {
+									selectors: selectors,
+									meta: value ? {
+										value
+									} : undefined
+								},
+								url: window.location.href,
+							}
+						});
+					}
+					saveAction("PAGE_SCREENSHOT", null);
+					
+					const interval = setInterval(() => {
+						const scrollOffset = window.scrollY + window.innerHeight;
+						window.scroll(0, scrollOffset);
+						saveAction("PAGE_SCROLL", "body", scrollOffset);
+						saveAction("PAGE_SCREENSHOT", null);
+						if(document.documentElement.scrollHeight <= scrollOffset) {
+							console.log('scrolled to the end'); clearInterval(interval);
+						}
+					}, 500);
+					
+					return true;
+				}`, "", null)
+				break;
 			case TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT:
 				store.dispatch(
 					recordAction({

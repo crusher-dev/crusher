@@ -9,6 +9,8 @@ import { AlertingService } from "../alerting/service";
 import { GithubIntegrationService } from "./githubIntegration.service";
 import { IntegrationServiceEnum } from "./interface";
 import { IntegrationsService } from "./service";
+import { fetch } from "@utils/fetch";
+
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -28,8 +30,14 @@ class IntegrationsController {
 
 		const { projectId, redirectUrl } = JSON.parse(decodeURIComponent(encodedState));
 		const integrationConfig = await this.slackService.verifySlackIntegrationRequest(slackCode);
-		const slackIntegrationRecord = await this.integrationsService.addSlackIntegration(integrationConfig, projectId);
 
+		const existingSlackIntegration = await this.integrationsService.getSlackIntegration(projectId);
+		if(existingSlackIntegration) {
+			await this.integrationsService.updateSlackIntegration(integrationConfig, existingSlackIntegration.id);
+		} else {
+			await this.integrationsService.addSlackIntegration(integrationConfig, projectId)
+		}
+		
 		await res.redirect(redirectUrl);
 		return res;
 	}
@@ -114,6 +122,23 @@ class IntegrationsController {
     --data-urlencode 'githubRepoName=${linkedRepo.repoName}' \\
     --data-urlencode 'githubCommitId=\${{github.event.pull_request.head.sha}}'`,
 		};
+	}
+
+	@Authorized()
+	@Get("/integrations/:project_id/slack/channels")
+	async getSlackChannels(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params, @Res() res) {
+		const slackIntegration = await this.integrationsService.getSlackIntegration(projectId);
+		if(!slackIntegration) throw new BadRequestError("No slack account connected");
+
+		const slackIntegrationConfig = slackIntegration.meta;
+
+		return fetch("https://slack.com/api/conversations.list?types=public_channel,private_channel", {
+			header: {
+				"Authorization": `Bearer ${slackIntegrationConfig.accessToken}`,
+			}
+		}).then((data: any) => {
+			return {channels: data.channels.map((channel) => ({id: channel.id, name: channel.name}))};
+		});
 	}
 }
 

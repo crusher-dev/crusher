@@ -42,6 +42,7 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 	}, [codeTextAreaRef]);
 
 	const handleClose = () => {
+		const script = codeTextAreaRef.current!.value;
 		const store = getStore();
 		recordActionWithHoverNodes({
 			type: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
@@ -54,8 +55,10 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 			screenshot: elementInfo.screenshot,
 			url: "",
 		}),
-			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+
+		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(deviceIframeRef);
+		executeScriptInFrame(script, "", deviceIframeRef);
 
 		onClose();
 	};
@@ -63,7 +66,6 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 	const handleScriptChange = async (cm: any, change: any) => {
 		const script = cm.getValue();
 		codeTextAreaRef.current!.value = script;
-		executeScriptInFrame(script, "", deviceIframeRef);
 	};
 
 	const isThereScriptOutput = lastElementOutput && lastElementOutput.type === "output" && lastElementOutput.value;

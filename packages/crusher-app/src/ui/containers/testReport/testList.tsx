@@ -108,8 +108,8 @@ function ReportSection() {
 						<div>
 							<div className={"flex justify-between items-center"}>
 								<div className={"text-14"}>
-									<span className={"text-16 font-cera font-600 mr-38"}>feat: integrated test GTM #517</span>
-									<span className={"text-12 mr-16"}>12 june baseline</span>
+									<span className={"text-16 font-cera font-600 mr-38"}>#{query.id}</span>
+									{/* <span className={"text-12 mr-16"}>12 june baseline</span> */}
 									<span className={"text-12"}>Jump to</span>
 								</div>
 								<div className={"flex items-center pt-4"}>
@@ -175,7 +175,7 @@ function RenderImageInfo({ data }) {
 
 	if (!imageName) return null;
 
-	console.log(meta.outputs[0]);
+	// console.log(meta.outputs[0]);
 	return (
 		<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
 			<div className={"flex justify-between text-12 mb-20 "}>
@@ -194,11 +194,12 @@ function RenderImageInfo({ data }) {
 
 			<Conditional showIf={imageViewType === "side"}>
 				<div className={"flex"}>
-					<img src={currentImage} />{" "}
+					<img src={currentImage} css={css`max-width:49%`} />{" "}
 					<img
 						src={getAssetPath(meta.outputs[0].diffImageUrl)}
 						css={css`
 							margin-left: 2%;
+							max-width:49%
 						`}
 					/>
 				</div>

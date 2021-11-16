@@ -48,6 +48,7 @@ export type ToggleProps = {
 	 */
 	isOn: boolean;
 	disabled: boolean;
+	disableInternalState?: boolean;
 	leftSide?: ReactElement;
 	rightSide?: ReactElement;
 	callback?: (state: boolean) => void;
@@ -63,11 +64,11 @@ const TextDefaultProps = {
 export function Toggle(props: ToggleProps): ReactElement {
 	const [state, toggleState] = useState(props.isOn);
 
-	const { callback, disabled, leftSide, rightSide } = props;
+	const { callback, disabled, disableInternalState, leftSide, rightSide } = props;
 
 	const handleClick = () => {
 		if (disabled) return;
-		toggleState(!state);
+		if(!disableInternalState) toggleState(!state);
 		callback && callback(!state);
 	};
 

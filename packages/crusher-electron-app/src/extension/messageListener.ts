@@ -48,6 +48,7 @@ export enum MESSAGE_TYPES {
 	EXECUTE_CUSTOM_SCRIPT_OUTPUT = "EXECUTE_CUSTOM_SCRIPT_OUTPUT",
 	RELOAD_ELECTRON_EXTENSION = "RELOAD_ELECTRON_EXTENSION",
 	SAVE_RECORDED_TEST = "SAVE_RECORDED_TEST",
+	DELETE_LAST_ACTION = "DELETE_LAST_ACTION",
 }
 
 export enum RECORDING_STATUS {
@@ -269,10 +270,15 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 	const { type } = event.data;
 
 	switch (type) {
+		case MESSAGE_TYPES.DELETE_LAST_ACTION: {
+			const recordedActions = getActions(store.getState());
+			store.dispatch(deleteRecordedAction(recordedActions.length - 1));
+			break;
+		}
 		case MESSAGE_TYPES.SAVE_RECORDED_TEST: {
 			saveTest();
 			break;
-		}
+		} 
 		case MESSAGE_TYPES.CLEAR_RECORDED_ACTIONS: {
 			const store = getStore();
 			store.dispatch(resetRecordedActions());
@@ -391,8 +397,6 @@ export function turnOffInspectModeInFrame(webviewRef: RefObject<HTMLWebViewEleme
 }
 
 export function executeScriptInFrame(script: string, selector: string, webviewRef: RefObject<HTMLWebViewElement>) {
-	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
-
 	(window as any).electron.webview.postMessage({
 		type: FRAME_MESSAGE_TYPES.EXECUTE_ELEMENT_CUSTOM_SCRIPT,
 		meta: { script: script, selector: selector } as iExecuteScriptResponseMeta,

@@ -309,7 +309,7 @@ export const TestReportScreen = () => {
 			<Conditional showIf={selectedTabIndex !== 1}>
 				<div className={"flex items-center leading-none mt-56 mb-57 text-13"}>
 					<ThunderSVG className={"mr-16"} />
-					Wohoo! You ran {data.tests.length} test in {'min'} mins
+					Wohoo! You ran this tests
 				</div>
 			</Conditional>
 			{/* <Conditional showIf={selectedTabIndex === 1}>

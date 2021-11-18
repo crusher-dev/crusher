@@ -1,5 +1,5 @@
 import * as path from "path";
-import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard } from "electron";
+import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard, crashReporter } from "electron";
 import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
 
@@ -37,6 +37,15 @@ class App {
 	hasInstanceLock: boolean;
 	state: { userAgent: string };
 
+	initCrashReporter() {
+		crashReporter.start({
+			productName: 'Recorder',
+			companyName: 'crusher',
+			submitURL: 'https://submit.backtrace.io/crusher/45f546d0525cf3de992b62f2a4470306187de0da6d1f1cbd0153fb56a404ae43/minidump',
+			uploadToServer: true,
+		});
+	}
+
 	async initialize() {
 		console.log("Initializng now...");
 		if (!app.requestSingleInstanceLock()) {
@@ -45,6 +54,7 @@ class App {
 			app.quit();
 			return;
 		}
+		this.initCrashReporter();
 
 		app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 		app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");

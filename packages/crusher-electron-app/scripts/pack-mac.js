@@ -2,6 +2,7 @@ const builder = require("electron-builder");
 const Platform = builder.Platform;
 const path = require("path");
 const shell = require("shelljs");
+const { notarize } = require('electron-notarize');
 
 shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
 
@@ -13,10 +14,28 @@ builder
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
+			afterSign: async (context) => {
+				const { electronPlatformName, appOutDir } = context;  
+				if (electronPlatformName !== 'darwin') {
+				  return;
+				}
+			  
+				const appName = context.packager.appInfo.productFilename;
+			  
+				return await notarize({
+				  appBundleId: 'com.crusher.electron',
+				  appPath: `${appOutDir}/${appName}.app`,
+				  appleId: process.env.APPLE_ID,
+				  appleIdPassword: process.env.APPLE_ID_PASSWORD,
+				});
+			},
 			appId: "com.crusher.electron",
 			mac: {
 				icon: "icons/app.icns",
 				category: "public.app-category.developer-tools",
+				hardenedRuntime: true,
+				entitlements: path.resolve(__dirname, "./entitlements.mac.plist"),
+  				entitlementsInherit: path.resolve(__dirname, "./entitlements.mac.plist"),
 			},
 			directories: {
 				buildResources: path.resolve(__dirname, "../../../output/crusher-electron-app/"),

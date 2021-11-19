@@ -6,7 +6,7 @@ import * as fs from "fs";
 import Timeout = NodeJS.Timeout;
 import { TEST_EXECUTION_QUEUE } from "@shared/constants/queues";
 
-const TEST_PER_INSTANCE = 5;
+const TEST_PER_INSTANCE = 3;
 class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	sessionId: string;
 	_heartBeatInterval: Timeout;

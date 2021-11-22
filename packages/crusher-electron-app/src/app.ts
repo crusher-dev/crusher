@@ -2,6 +2,9 @@ import * as path from "path";
 import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard, crashReporter } from "electron";
 import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
+import * as Sentry from "@sentry/electron";
+
+Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
 
 // @Note: Remove this from here
 const devices = [

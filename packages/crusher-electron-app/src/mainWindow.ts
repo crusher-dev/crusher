@@ -196,6 +196,7 @@ class MainWindow {
 		ipcMain.handle("verify-test", this.verifyTest.bind(this));
 		ipcMain.handle("steps-updated", this.handleStepsUpdated.bind(this));
 		ipcMain.handle("continue-remaining-test", this.continueRemainingTest.bind(this));
+		ipcMain.handle("navigate-page", this.handleNavigatePage.bind(this));
 
 		ipcMain.handle("run-after-this-test", this.handleRunAfterThisTest.bind(this));
 
@@ -207,6 +208,14 @@ class MainWindow {
 			this.app.cleanupStorage();
 		});
 		this.registerIPCListeners();
+	}
+
+
+	async handleNavigatePage(event, url) {
+		if(this.webView){
+			this.webView.webContents().loadURL(url);
+		}
+		return true;
 	}
 
 	async continueRemainingTest(event) {

@@ -633,8 +633,10 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ? (!this.isAbsoluteURL(argArray[2])
-				? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				if(argArray[0]) {
+					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ? (!this.isAbsoluteURL(argArray[2])
+						? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				}
 				return out;
 			},
 		});
@@ -643,9 +645,10 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-
-				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ?  (!this.isAbsoluteURL(argArray[2])
-				? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				if(argArray[0]) {
+					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ?  (!this.isAbsoluteURL(argArray[2])
+					? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				}
 				return out;
 			},
 		});

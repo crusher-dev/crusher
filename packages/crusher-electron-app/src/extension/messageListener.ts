@@ -115,11 +115,11 @@ async function handleRecordAction(action: iAction): any {
 
 	switch (type) {
 		case ActionsInTestEnum.WAIT_FOR_NAVIGATION: {
-			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION;
+			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION;
 			if (isLastEventWaitForNavigation) {
-				store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
-			} else {
 				store.dispatch(updateLastRecordedAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
+			} else {
+				store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
 			}
 			break;
 		}
@@ -127,15 +127,15 @@ async function handleRecordAction(action: iAction): any {
 			const hasInitialNavigationActionRegistered =
 				recordedActions.findIndex((recordedAction) => recordedAction.type === ActionsInTestEnum.NAVIGATE_URL) !== -1;
 
-			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION;
+			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION;
 
 			if (!hasInitialNavigationActionRegistered) {
 				store.dispatch(recordAction(action));
 			} else {
 				if (isLastEventWaitForNavigation) {
-					store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
-				} else {
 					store.dispatch(updateLastRecordedAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
+				} else {
+					store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
 				}
 			}
 			store.dispatch(updateIsRecorderScriptBooted(false));

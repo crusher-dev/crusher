@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { OVERFLOW, POSITION, TEXT_ALIGN } from "../../../interfaces/css";
 import { Conditional } from "../conditional";
 import { iDevice } from "@shared/types/extension/device";
@@ -18,10 +18,12 @@ interface iDeviceProps {
 }
 
 const Device = (props: iDeviceProps) => {
+	const [siteUrl, setSiteUrl] = useState(props.url);
+
 	const isWebviewLoaded = useSelector(isRecorderScriptBooted);
 	const isTestGettingReplayed = useSelector(isReplayingTest);
 
-	const { isMobile, device, url, forwardRef, isDisabled } = props;
+	const { isMobile, device, forwardRef, isDisabled } = props;
 
 	useEffect(() => {
 		console.log(isWebviewLoaded, "____ loaded value ");
@@ -80,7 +82,7 @@ const Device = (props: iDeviceProps) => {
 						//@ts-ignore
 						enableremotemodule={"true"}
 						title={device.name}
-						src={`about:blank?url=${encodeURIComponent(url)}`}
+						src={`about:blank?url=${encodeURIComponent(siteUrl)}`}
 						partition={"crusher"}
 					/>
 				</div>

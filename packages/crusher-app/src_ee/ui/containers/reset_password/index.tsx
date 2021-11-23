@@ -119,7 +119,7 @@ function EmailPasswordBox() {
 			<Button size={"large"} className={"mb-20"} onClick={submitForm} disabled={loading}>
 				<div className={"flex justify-center items-center"}>
 					<Conditional showIf={!loading}>
-						<span className={"mt-2"}>Create an account</span>
+						<span className={"mt-2"}>Change Password</span>
 					</Conditional>
 					<Conditional showIf={loading}>
 						<span>

@@ -78,6 +78,8 @@ const BrowserWindow = (props: iBrowserWindowProps) => {
 			}),
 		);
 		setUrl(newUrl);
+
+		(window as any).electron.navigatePage(newUrl);
 	};
 
 	return (

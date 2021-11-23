@@ -4,7 +4,9 @@ import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
 import * as Sentry from "@sentry/electron";
 
-Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
+if(process.env.NODE_ENV === "production") {
+	Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
+}
 
 // @Note: Remove this from here
 const devices = [
@@ -34,20 +36,12 @@ const devices = [
 		userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
 	},
 ];
+
 class App {
 	appWindow: BrowserWindow | null;
 	mainWindow: MainWindow | null;
 	hasInstanceLock: boolean;
 	state: { userAgent: string };
-
-	initCrashReporter() {
-		crashReporter.start({
-			productName: 'Recorder',
-			companyName: 'crusher',
-			submitURL: 'https://submit.backtrace.io/crusher/45f546d0525cf3de992b62f2a4470306187de0da6d1f1cbd0153fb56a404ae43/minidump',
-			uploadToServer: true,
-		});
-	}
 
 	async initialize() {
 		console.log("Initializng now...");
@@ -57,7 +51,6 @@ class App {
 			app.quit();
 			return;
 		}
-		this.initCrashReporter();
 
 		app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 		app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");

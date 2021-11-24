@@ -126,19 +126,40 @@ class IntegrationsController {
 
 	@Authorized()
 	@Get("/integrations/:project_id/slack/channels")
-	async getSlackChannels(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params, @Res() res) {
+	async getSlackChannels(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params: {cursor?: string}, @Res() res) {
 		const slackIntegration = await this.integrationsService.getSlackIntegration(projectId);
 		if(!slackIntegration) throw new BadRequestError("No slack account connected");
 
 		const slackIntegrationConfig = slackIntegration.meta;
 
-		return fetch("https://slack.com/api/conversations.list?types=public_channel,private_channel", {
-			header: {
-				"Authorization": `Bearer ${slackIntegrationConfig.accessToken}`,
-			}
-		}).then((data: any) => {
-			return {channels: data.channels.map((channel) => ({id: channel.id, name: channel.name}))};
-		});
+		const fetchFromSlack = async (cursor?: string) => {
+			const { channels, nextCursor } = await fetch("https://slack.com/api/conversations.list?types=public_channel,private_channel", {
+				header: {
+					"Authorization": `Bearer ${slackIntegrationConfig.accessToken}`,
+				},
+				method: "GET",
+				payload: {
+					cursor: cursor ? cursor : "",
+					limit: 50,
+					exclude_archived: true,
+				}
+			}).then((data: any) => {
+				return {accessToken: slackIntegrationConfig.accessToken, nextCursor: data.response_metadata ? data.response_metadata.next_cursor : "", channels: data.channels.map((channel) => ({id: channel.id, name: channel.name}))};
+			});
+
+			return { channels, nextCursor };
+		};
+
+		// Hit api until channels is not empty and nextCursor is present
+		let channels = [];
+		let nextCursor = params.cursor ? params.cursor : "";
+		do {
+			const { channels: newChannels, nextCursor: newNextCursor } = await fetchFromSlack(nextCursor);
+			channels = channels.concat(newChannels);
+			nextCursor = newNextCursor;
+		} while (channels.length === 0 && nextCursor)
+
+		return {channels, nextCursor};
 	}
 }
 

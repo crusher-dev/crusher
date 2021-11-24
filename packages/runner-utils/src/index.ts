@@ -101,6 +101,8 @@ class CrusherRunnerActions {
 				try { startingScreenshot = await this._getCurrentScreenshot(page); } catch (ex) { }
 			}
 
+			const beforeUrl = page ? await page.url() : null;
+
 			try {
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
@@ -131,9 +133,13 @@ class CrusherRunnerActions {
 							? {
 								...stepResult,
 								actionName: step.name ? step.name : null,
+								beforeUrl: beforeUrl,
+								afterUrl: page ? await page.url() : null,
 							}
 							: {
 								actionName: step.name ? step.name : null,
+								beforeUrl: beforeUrl,
+								afterUrl: page ? await page.url() : null,
 							},
 						actionCallback,
 					);
@@ -149,6 +155,8 @@ class CrusherRunnerActions {
 						failedReason: err.messsage,
 						screenshotDuringError: JSON.stringify({ startingScreenshot, endingScreenshot }),
 						actionName: step.name ? step.name : null,
+						beforeUrl: beforeUrl,
+						afterUrl: page ? await page.url() : null,
 						meta: {
 							...err.meta ? err.meta : {},
 							remainingActionsArr: [...remainingActionsArr],

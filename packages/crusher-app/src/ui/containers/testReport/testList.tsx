@@ -14,7 +14,7 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ChevronDown, TestStatusSVG } from "@svg/testReport";
+import { ChevronDown, InfoSVG, TestStatusSVG } from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -243,9 +243,15 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 }
 
 function RenderStep({ data, testInstanceData }) {
+	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
 
 	const actionName = getActionLabel(actionType);
+	const actionDescription = meta?.actionName ? meta.actionName : message;
+
+	const openStepInfoModal = () => {
+		setShowStepInfoModal(true);
+	};
 
 	return (
 		<div className={"relative mb-32"}>
@@ -255,7 +261,10 @@ function RenderStep({ data, testInstanceData }) {
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
-					<div className={"mt-4"}>
+					<div className={"mt-4 flex"} css={css`
+						align-items: center;
+				
+					`}>
 						<span
 							className={"text-13 font-600"}
 							css={css`
@@ -264,13 +273,22 @@ function RenderStep({ data, testInstanceData }) {
 						>
 							{actionName}
 						</span>
-						<span
-							className={"text-12 ml-20"}
-							css={css`
-								color: #848484;
-							`}
-						>
-							{meta?.actionName ? meta.actionName : message}
+						<Conditional showIf={actionDescription && actionDescription.trim().length}>
+							<span
+								className={"text-12 ml-20"}
+								css={css`
+									color: #848484;
+								`}
+							>
+								{meta?.actionName ? meta.actionName : message}
+							</span>
+						</Conditional>
+						<span className={"ml-12"} css={css`
+							:hover {
+								opacity: 0.9;
+							}
+						`} onClick={openStepInfoModal}>
+							<InfoSVG css={css`width: 12rem; height: 12rem;`}/>
 						</span>
 					</div>
 				</Conditional>
@@ -281,6 +299,9 @@ function RenderStep({ data, testInstanceData }) {
 
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType)}>
 				<RenderImageInfo data={data} />
+			</Conditional>
+			<Conditional showIf={showStepInfoModal}>
+				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />
 			</Conditional>
 		</div>
 	);
@@ -388,6 +409,47 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 				</Dropdown>
 			</div>
 		</div>
+	);
+}
+
+function StepInfoModal({ setOpenStepInfoModal, data }) {
+	const {meta, message} = data;
+
+	const actionName = meta.actionName;
+
+
+	return (
+		<Modal
+			onClose={setOpenStepInfoModal.bind(this, false)}
+			onOutsideClick={setOpenStepInfoModal.bind(this, false)}
+			modalStyle={css`
+				padding: 28rem 36rem 36rem;
+			`}
+		>
+			<div className={"font-cera text-16 font-600 leading-none"}>Step Info 🦖</div>
+			<div className={"text-13 mt-8 mb-24"}>Debug info listed below</div>
+<hr/>
+		<div className={"mt-44"}>
+			<Conditional showIf={actionName}>
+				<div className={"text-13 mt-8 mb-24 flex text-bold"}>
+					<span css={{fontWeight: "bold"}}>Step name</span>
+					<span css={{marginLeft: "auto"}}>{meta.beforeUrl}</span>
+				</div>
+			</Conditional>
+			<Conditional showIf={meta.beforeUrl}>
+				<div className={"text-13 mt-8 mb-24 flex text-bold"}>
+					<span css={{fontWeight: "bold"}}>Page Url (before action)</span>
+					<span css={{marginLeft: "auto"}}>{meta.beforeUrl}</span>
+				</div>
+			</Conditional>
+			<Conditional showIf={meta.afterUrl}>
+				<div className={"text-13 mt-8 mb-24 flex"}>
+					<span css={{fontWeight: "bold"}}>Page Url (after action)</span>
+					<span css={{marginLeft: "auto"}}>{meta.afterUrl}</span>
+				</div>
+			</Conditional>
+			</div>
+		</Modal>
 	);
 }
 

@@ -238,3 +238,21 @@ export const TestStatusSVG = ({ type, ...props }) => {
 	}
 	return <PassedSVG {...props} />;
 };
+
+export const InfoSVG = (props) => {
+	return (
+		<svg
+		  width={11}
+		  height={11}
+		  viewBox={"0 0 11 11"}
+		  fill="none"
+		  xmlns="http://www.w3.org/2000/svg"
+		  {...props}
+		>
+		  <path
+			d="M5.5 0a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm.917 9.024a.376.376 0 01-.376.376h-1.03a.376.376 0 01-.376-.376V4.842c0-.208.168-.376.375-.376h1.031c.207 0 .376.168.376.376v4.182zM5.5 3.754a.933.933 0 110-1.865.933.933 0 010 1.865z"
+			fill="#656565"
+		  />
+		</svg>
+	  )
+}

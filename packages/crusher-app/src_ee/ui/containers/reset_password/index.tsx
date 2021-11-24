@@ -23,7 +23,7 @@ const resetPasswordRequest = (token: string, password: string) => {
 };
 
 function EmailPasswordBox() {
-	const [data] = useState(null);
+	const [data, setData] = useState(null);
 
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [confirmPassword, setConfirmPassword] = useState({ value: "", error: "" });
@@ -65,7 +65,8 @@ function EmailPasswordBox() {
 		if (!validatePassword(password.value) || !validatePassword(confirmPassword.value)) return;
 		setLoading(true);
 		try {
-			await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
+		const { status } = await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
+		setData(status)
 			push("/app/dashboard");
 		} catch (e: any) {
 			console.log(e);

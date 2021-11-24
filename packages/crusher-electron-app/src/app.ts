@@ -8,6 +8,13 @@ if(process.env.NODE_ENV === "production") {
 	Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
 }
 
+app.setAboutPanelOptions({
+	applicationName: "Crusher Recorder",
+	applicationVersion: app.getVersion(),
+	copyright: "Copyright © 2021",
+	credits: "Made with ❤️ by Crusher team",
+});
+
 // @Note: Remove this from here
 const devices = [
 	{

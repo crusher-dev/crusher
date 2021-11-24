@@ -8,6 +8,7 @@ if(process.env.NODE_ENV === "production") {
 	Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
 }
 
+app.setName("Crusher Recorder");
 app.setAboutPanelOptions({
 	applicationName: "Crusher Recorder",
 	applicationVersion: app.getVersion(),

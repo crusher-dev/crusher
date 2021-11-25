@@ -10,10 +10,22 @@ shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} &
 builder
 	.build({
 		targets: Platform.MAC.createTarget(),
+		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
 		config: {
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
+			publish: [
+				{
+					provider: "github",
+					repo: "crusher-downloads",
+					owner: "crusherdev",
+					vPrefixedTagName: true,
+					token: process.env.GITHUB_TOKEN,
+					releaseType: "draft",
+					private: false,
+				}
+			],
 			afterSign: async (context) => {
 				const { electronPlatformName, appOutDir } = context;  
 				if (electronPlatformName !== 'darwin') {

@@ -56,7 +56,7 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 						saveAction("PAGE_SCROLL", "body", scrollOffset);
 						saveAction("PAGE_SCREENSHOT", null);
 						if(document.documentElement.scrollHeight <= scrollOffset) {
-							console.log('scrolled to the end'); clearInterval(interval);
+							clearInterval(interval);
 						}
 					}, 500);
 					

@@ -4,14 +4,19 @@ import { CrusherCookieSetPayload } from "@crusher-shared/types/sdk/types";
 import { Page } from "playwright";
 import { ExportsManager } from "../functions/exports";
 import { CrusherElementSdk } from "./element";
+import { StorageManager } from "../functions/storage";
+
+const pageScreenshotModule = require("../actions/pageScreenshot");
 
 class CrusherSdk implements ICrusherSdk {
 	page: Page;
 	exportsManager: ExportsManager;
+	storageManager: StorageManager;
 
-	constructor(page: Page, exportsManager: ExportsManager) {
+	constructor(page: Page, exportsManager: ExportsManager, storageManager: StorageManager) {
 		this.page = page;
 		this.exportsManager = exportsManager;
+		this.storageManager = storageManager;
 	}
 
 	async $(selector: string) {
@@ -59,6 +64,10 @@ class CrusherSdk implements ICrusherSdk {
 		);
 
 		return true;
+	}
+
+	takePageScreenshot() {
+		return pageScreenshotModule.handler(this.page, null, null, this.storageManager);
 	}
 
 	setExport(key: string, value: any) {

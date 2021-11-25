@@ -61,24 +61,33 @@ export class BuildReportService {
 		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>,
 	) {
 		const instanceScreenshotsRecordsMap: {
-			[key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string };
+			[key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string; currentScreenshotUrl: string };
 		} = instanceScreenshotsRecords.reduce((prev, current) => {
 			return { ...prev, [current.actionIndex]: current };
 		}, {});
 
 		// @TODO: Cleanup tihs logic and use proper typescript types
 		return actionResults.map((actionResult, actionIndex) => {
-			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionResult.actionType)) {
-				const screenshotResultRecord = instanceScreenshotsRecordsMap[actionIndex];
-				if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
-					if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {
-						actionResult.status = ActionStatusEnum.MANUAL_REVIEW_REQUIRED;
-					} else if (screenshotResultRecord.status === TestInstanceResultStatusEnum.FAILED) {
-						actionResult.status = ActionStatusEnum.FAILED;
+			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType)) {
+				if(!actionResult.meta || !actionResult.meta.outputs) return actionResult;
+
+				const images = actionResult.meta.outputs;
+				for(let imageIndex = 0; imageIndex < images.length; imageIndex++) {
+					const screenshotResultRecord = instanceScreenshotsRecordsMap[`${actionIndex}.${imageIndex}`];
+					if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
+						if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {
+							actionResult.status = ActionStatusEnum.MANUAL_REVIEW_REQUIRED;
+						} else if (screenshotResultRecord.status === TestInstanceResultStatusEnum.FAILED) {
+							actionResult.status = ActionStatusEnum.FAILED;
+						}
+						actionResult.meta.outputs[imageIndex].status = screenshotResultRecord.status;
+
+						actionResult.meta.outputs[imageIndex].value = screenshotResultRecord.currentScreenshotUrl;
+						actionResult.meta.outputs[imageIndex].diffImageUrl = screenshotResultRecord.diffImageUrl;
+						actionResult.meta.outputs[imageIndex].targetScreenshotUrl = screenshotResultRecord.targetScreenshotUrl;
+						actionResult.meta.outputs[imageIndex].diffDelta = screenshotResultRecord.diffDelta;
+						actionResult.meta.outputs[imageIndex].index = `${actionIndex}.${imageIndex}`;
 					}
-					actionResult.meta.outputs[0].diffImageUrl = screenshotResultRecord.diffImageUrl;
-					actionResult.meta.outputs[0].targetScreenshotUrl = screenshotResultRecord.targetScreenshotUrl;
-					actionResult.meta.outputs[0].diffDelta = screenshotResultRecord.diffDelta;
 				}
 			}
 

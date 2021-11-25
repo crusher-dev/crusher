@@ -165,17 +165,16 @@ export const imageTabCSS = css`
 	}
 `;
 
-function RenderImageInfo({ data }) {
+function RenderImageInfo({ data, index }) {
 	const { meta } = data;
-	const imageName = meta.outputs?.[0].name;
-	const previousImage = getAssetPath(meta.outputs?.[0].targetScreenshotUrl);
-	const currentImage = getAssetPath(meta.outputs?.[0].value);
+	const imageName = meta.outputs?.[index].name;
+	const previousImage = getAssetPath(meta.outputs?.[index].targetScreenshotUrl);
+	const currentImage = getAssetPath(meta.outputs?.[index].value);
 
 	const [imageViewType, setImageViewType] = useAtom(imageViewAtom);
 
 	if (!imageName) return null;
 
-	console.log(meta.outputs[0]);
 	return (
 		<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
 			<div className={"flex justify-between text-12 mb-20 "}>
@@ -196,7 +195,7 @@ function RenderImageInfo({ data }) {
 				<div className={"flex"}>
 					<img src={currentImage} />{" "}
 					<img
-						src={getAssetPath(meta.outputs[0].diffImageUrl)}
+						src={getAssetPath(meta.outputs[index].diffImageUrl)}
 						css={css`
 							margin-left: 2%;
 						`}
@@ -297,8 +296,12 @@ function RenderStep({ data, testInstanceData }) {
 				</Conditional>
 			</div>
 
-			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType)}>
-				<RenderImageInfo data={data} />
+			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
+				{
+					data.meta && data.meta.outputs && data.meta.outputs.map((_, index) => (
+						<RenderImageInfo data={data} index={index} />
+					))
+				}
 			</Conditional>
 			<Conditional showIf={showStepInfoModal}>
 				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />

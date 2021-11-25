@@ -141,7 +141,19 @@ function getInsertOrUpdateQuerySetFromObject(payload): [string, Array<any>] {
 }
 
 function getScreenshotActionsResult(actionsResult: Array<IActionResultItemWithIndex>) {
-	return actionsResult.filter((actionResult) => [ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.ELEMENT_SCREENSHOT].includes(actionResult.actionType));
+	return actionsResult
+		.filter((actionResult) => [ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType))
+		.filter((actionResult) => {
+			if(actionResult.actionType !== ActionsInTestEnum.CUSTOM_CODE) {
+				return true;
+			}
+
+			if(actionResult.meta.outputs && actionResult.meta.outputs.length) {
+				return true;
+			}
+
+			return false;
+		});
 }
 
 function getTemplateFileContent(templatePath: string, valuesToInject: any): Promise<string> {

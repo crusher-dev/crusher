@@ -21,6 +21,9 @@ export class LogManagerPolyfill {
 }
 
 export class StorageManagerPolyfill {
+	uploadAsset(...args) {
+		return "random.jpg";
+	}
 	uploadBuffer(buffer, destionation) {
 		return "uploadBuffer.jpg";
 	}

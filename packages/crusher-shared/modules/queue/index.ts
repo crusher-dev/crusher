@@ -1,4 +1,4 @@
-import { Worker, Processor, Queue, QueueScheduler, QueueSchedulerOptions, WorkerOptions } from "bullmq";
+import { Worker, Processor, Queue, QueueScheduler, QueueSchedulerOptions, WorkerOptions, QueueOptions } from "bullmq";
 import { RedisManager } from "../redis";
 
 class QueueManager {
@@ -10,7 +10,7 @@ class QueueManager {
 		this.queues = {};
 	}
 
-	async setupQueue(queueName: string): Promise<Queue> {
+	async setupQueue(queueName: string, options : QueueOptions = {}): Promise<Queue> {
 		const queueRecord = Object.prototype.hasOwnProperty.call(this.queues, queueName);
 		if (queueRecord && queueRecord.value) {
 			console.error(`${queueName} already initialized`);
@@ -20,7 +20,7 @@ class QueueManager {
 		this.queues[queueName] = this.queues[queueName] ? this.queues[queueName] : {};
 		this.queues[queueName] = {
 			...this.queues[queueName],
-			value: new Queue(queueName, { connection: this.redisManager.redisClient as any }),
+			value: new Queue(queueName, { ...options, connection: this.redisManager.redisClient as any }),
 		};
 
 		await this.queues[queueName].value.waitUntilReady();

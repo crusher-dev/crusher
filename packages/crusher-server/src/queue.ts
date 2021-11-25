@@ -13,7 +13,11 @@ const mongoManager = Container.get(MongoManager);
 async function boot() {
 	await mongoManager.waitUntilAlive();
 
-	await queueManager.setupQueue(TEST_EXECUTION_QUEUE);
+	await queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
+		limiter: {
+			groupKey: "buildId"
+		}
+	});
 	await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 	await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 

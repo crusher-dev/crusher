@@ -28,6 +28,7 @@ contextBridge.exposeInMainWorld("electron", {
 	stepsUpdated: async () => ipcRenderer.invoke("steps-updated"),
 	continueRemainingTest: async () => ipcRenderer.invoke("continue-remaining-test"),
 	navigatePage: async (url) => ipcRenderer.invoke("navigate-page", url),
+	runAction: async (action) => ipcRenderer.invoke("run-action", action),
 
 	webview: {
 		postMessage: (data) => {

@@ -15,8 +15,10 @@ async function boot() {
 
 	await queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
 		limiter: {
+			max: 2,
+			duration: 1800000,
 			groupKey: "buildId"
-		}
+		} as any
 	});
 	await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 	await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);

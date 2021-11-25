@@ -15,8 +15,10 @@ class TestRunnerBootstrap {
 	async boot() {
 		await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
 			limiter: {
+				max: 2,
+    			duration: 1800000,
 				groupKey: 'buildId'
-			}
+			} as any
 		});
 		await this.queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 		await this.queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);

@@ -36,6 +36,7 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 					{
 						type: ActionsInTestEnum.CUSTOM_CODE,
 						screenshot: null,
+						name: "Scroll and take screenshots",
 						payload: {
 							meta: {
 								script: "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n     const outputs = [];\n\n    try {\n          await crusherSdk.page.exposeFunction(\"takeCrusherScreenshot\", async function () {\n              const result = await crusherSdk.takePageScreenshot();\n              outputs.push(...result.outputs);\n              return true;\n          });\n    } catch(err) {}\n\n\tawait crusherSdk.page.evaluate(function () {\n\t\treturn new Promise(async (resolve, reject) => {\n await window.takeCrusherScreenshot();\n         const interval = setInterval(async () => {\n              const scrollOffset = window.scrollY + window.innerHeight;\n              window.scroll(0, scrollOffset);\n              await window.takeCrusherScreenshot();\n              if(document.documentElement.scrollHeight <= scrollOffset) {\n                  console.log('scrolled to the end'); clearInterval(interval); resolve(true);\n              }\n          }, 1500);\n        });\n\t}, []);\n\n\treturn { outputs };\n}"

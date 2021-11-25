@@ -202,6 +202,7 @@ class MainWindow {
 		ipcMain.handle("steps-updated", this.handleStepsUpdated.bind(this));
 		ipcMain.handle("continue-remaining-test", this.continueRemainingTest.bind(this));
 		ipcMain.handle("navigate-page", this.handleNavigatePage.bind(this));
+		ipcMain.handle("run-action", this.handleRunAction.bind(this));
 
 		ipcMain.handle("run-after-this-test", this.handleRunAfterThisTest.bind(this));
 
@@ -215,6 +216,13 @@ class MainWindow {
 		this.registerIPCListeners();
 	}
 
+	async handleRunAction(event, action) {
+		this.webView.setRunningState(true);
+		this.webView.playwrightInstance.runMainActions(action, false).finally(() => {
+			this.webView.setRunningState(false);
+		});
+		return true;
+	}
 
 	async handleNavigatePage(event, url) {
 		if(this.webView){

@@ -32,36 +32,18 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 
 		switch (id) {
 			case TOP_LEVEL_ACTION.SCROLL_AND_TAKE_SCREENSHOT:
-				executeScriptInFrame(`async function validate(element){
-					const saveAction = (actionType, selectors, value) => {
-						window.electron.host.postMessage({
-							type: "RECORD_ACTION",
+				(window as any).electron.runAction([
+					{
+						type: ActionsInTestEnum.CUSTOM_CODE,
+						screenshot: null,
+						payload: {
 							meta: {
-								type: actionType,
-								payload: {
-									selectors: selectors,
-									meta: value ? {
-										value
-									} : undefined
-								},
-								url: window.location.href,
-							}
-						});
-					}
-					saveAction("PAGE_SCREENSHOT", null);
-					
-					const interval = setInterval(() => {
-						const scrollOffset = window.scrollY + window.innerHeight;
-						window.scroll(0, scrollOffset);
-						saveAction("PAGE_SCROLL", "body", scrollOffset);
-						saveAction("PAGE_SCREENSHOT", null);
-						if(document.documentElement.scrollHeight <= scrollOffset) {
-							clearInterval(interval);
+								script: "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n     const outputs = [];\n\n    try {\n          await crusherSdk.page.exposeFunction(\"takeCrusherScreenshot\", async function () {\n              const result = await crusherSdk.takePageScreenshot();\n              outputs.push(...result.outputs);\n              return true;\n          });\n    } catch(err) {}\n\n\tawait crusherSdk.page.evaluate(function () {\n\t\treturn new Promise(async (resolve, reject) => {\n await window.takeCrusherScreenshot();\n         const interval = setInterval(async () => {\n              const scrollOffset = window.scrollY + window.innerHeight;\n              window.scroll(0, scrollOffset);\n              await window.takeCrusherScreenshot();\n              if(document.documentElement.scrollHeight <= scrollOffset) {\n                  console.log('scrolled to the end'); clearInterval(interval); resolve(true);\n              }\n          }, 1500);\n        });\n\t}, []);\n\n\treturn { outputs };\n}"
+							},
+							selectors: null
 						}
-					}, 500);
-					
-					return true;
-				}`, "", null)
+					}
+				]);
 				break;
 			case TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT:
 				store.dispatch(

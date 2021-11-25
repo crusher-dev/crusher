@@ -213,14 +213,14 @@ class PlaywrightInstance {
 		return true;
 	}
 
-	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error }> {
+	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error, actions: Array<any> }> {
 		const testInfo = await axios.get(resolveToBackendPath(`/tests/actions/get.temp?id=${tempTestId}`));
 		const actions = testInfo.data.events;
 		try {
 		 await this.runActions(actions, false);
-		 return { error: null }
+		 return { error: null, actions }
 		} catch(err) {
-			return { error: err };
+			return { error: err, actions };
 		}
 	}
 }

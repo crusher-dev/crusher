@@ -2,8 +2,9 @@ import { iAction } from "../../crusher-shared/types/action";
 import { WebContents } from "electron";
 import * as path from "path";
 import axios from "axios";
-import { resolveToBackendPath } from "../../crusher-shared/utils/url";
+import { resolveToBackendPath, resolveToFrontEndPath } from "../../crusher-shared/utils/url";
 import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
+import { shell } from "electron";
 
 const { getMainActions, getBrowserActions } = require("../../../output/crusher-runner-utils/");
 
@@ -35,4 +36,22 @@ export async function getReplayableTestActions(testId: number, isMainTest = true
 	out.push(...mainActions);
 
 	return out;
+}
+
+export async function saveTest(events: Array<any>) {
+	fetch(resolveToBackendPath("tests/actions/save.temp"), {
+		method: "POST",
+		headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
+		body: JSON.stringify({
+			events: events
+		}),
+	})
+		.then((res) => res.text())
+		.then(async (res) => {
+			const result = JSON.parse(res);
+			shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.insertId}`));
+
+			// @Note: window.open() instead of navigation though hyperlinks
+			// hangs the electron app for some reason.
+		});
 }

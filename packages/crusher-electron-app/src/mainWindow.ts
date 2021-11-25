@@ -5,6 +5,7 @@ import { WebView } from "./webView";
 import { ActionStatusEnum, iAction } from "../../crusher-shared/types/action";
 import { App } from "./app";
 import * as fs from "fs";
+import { saveTest } from "./utils";
 
 const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
 class MainWindow {
@@ -163,14 +164,18 @@ class MainWindow {
 		await this.app.cleanupStorage();
 		this.state.isTestRunning = true;
 		this.browserWindow.webContents.send("post-message-to-host", { type: "CLEAR_RECORDED_ACTIONS" });
-		const { error } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
+		const { error, actions } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
 		this.state.isTestRunning = false;
 
 		if (error) {
 			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');
 		} else {
 			this.state.isTestVerified = true;
-			this.browserWindow.webContents.send("post-message-to-host", { type: "SAVE_RECORDED_TEST" });
+			try {
+				await saveTest(actions);
+			} catch(err) {
+				this.webContents.executeJavaScript('alert("Cant save the test");');
+			};
 		}
 
 		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: false } });

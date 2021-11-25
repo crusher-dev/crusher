@@ -39,17 +39,13 @@ export async function getReplayableTestActions(testId: number, isMainTest = true
 }
 
 export async function saveTest(events: Array<any>) {
-	fetch(resolveToBackendPath("tests/actions/save.temp"), {
-		method: "POST",
+	axios.post(resolveToBackendPath("tests/actions/save.temp"), {
+		events: events
+	}, {
 		headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
-		body: JSON.stringify({
-			events: events
-		}),
 	})
-		.then((res) => res.text())
-		.then(async (res) => {
-			const result = JSON.parse(res);
-			shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.insertId}`));
+		.then(async (result) => {
+			shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}`));
 
 			// @Note: window.open() instead of navigation though hyperlinks
 			// hangs the electron app for some reason.

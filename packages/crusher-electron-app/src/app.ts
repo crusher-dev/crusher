@@ -2,10 +2,15 @@ import * as path from "path";
 import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard, crashReporter } from "electron";
 import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
-import * as Sentry from "@sentry/electron";
+import * as Sentry from "@sentry/electron"
 
 if(process.env.NODE_ENV === "production") {
 	Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
+	require('update-electron-app')({
+		repo: 'crusherdev/crusher-downloads',
+		updateInterval: '5 minutes',
+		logger: require('electron-log')
+	})
 }
 
 app.setName("Crusher Recorder");
@@ -161,9 +166,11 @@ class App {
 	}
 
 	async cleanupStorage() {
-		session.fromPartition("crusher").clearStorageData({
-			storages: ["cookies", "localstorage", "indexdb"],
-		});
+		try {
+			session.fromPartition("crusher").clearStorageData({
+				storages: ["cookies", "localstorage", "indexdb"],
+			});
+		} catch(err) {}
 	}
 
 	cleanupStorageBeforeExit(): Promise<void> {

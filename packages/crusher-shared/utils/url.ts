@@ -13,6 +13,8 @@ function relativeURLToWindow(relativeURL: string) {
 
 const EXPOSED_FRONTEND_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
+const FRONTEND_URL = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "";
+
 const LOCAL_BACKEND_URL = process.env.BACKEND_URL
 	? process.env.BACKEND_URL
 	: isClient()
@@ -53,6 +55,6 @@ export const resolveToBackendPath = (relativePath: string, customBasePath: strin
 };
 
 export const resolveToFrontEndPath = (relativePath: string, customBasePath: string | null = null) => {
-	const backendURL = new URL(customBasePath ? customBasePath : LOCAL_BACKEND_URL);
+	const backendURL = new URL(customBasePath ? customBasePath : FRONTEND_URL);
 	return url.resolve(backendURL.origin, relativePath);
 };

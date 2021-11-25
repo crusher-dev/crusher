@@ -29,8 +29,10 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 
 		await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
 			limiter: {
+				max: 2,
+    			duration: 1800000,
 				groupKey: "buildId"
-			}
+			} as any
 		});
 		await this.queueManager.setupQueueScheduler(TEST_EXECUTION_QUEUE, {
 			stalledInterval: 180000,

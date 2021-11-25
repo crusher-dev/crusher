@@ -128,13 +128,24 @@ class BuildTestInstancesService {
 		const project = await this.projectsService.getProject(projectId);
 
 		const referenceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshots(buildTestInstanceResultSet.targetInstanceId);
+		const currentScreenshots = await this.buildTestInstanceScreenshotService.getScreenshots(instanceId);
+
+		const instanceScreenshotsMap:  { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = currentScreenshots.reduce((acc, refScreenshot) => {
+			return { ...acc, [refScreenshot.actionIndex]: refScreenshot };
+		}, {});
+
 		const referenceScreenshotsMap: { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = referenceScreenshots.reduce((acc, refScreenshot) => {
 			return { ...acc, [refScreenshot.actionIndex]: refScreenshot };
 		}, {});
 
 		const visualDiffResultsPromiseArr = savedScreenshotRecords.map(async (screenshotResult) => {
-			const baseImage = screenshotResult.meta.outputs[0];
-			const referenceImageRecord = referenceScreenshotsMap[screenshotResult.actionIndex];
+			const baseImageRecord = instanceScreenshotsMap[screenshotResult.screenshotIndex];
+			const referenceImageRecord = referenceScreenshotsMap[screenshotResult.screenshotIndex];
+ 
+			const baseImage = {
+				name: baseImageRecord.name,
+				value: baseImageRecord.url,
+			};
 
 			const referenceImage = {
 				name: referenceImageRecord ? referenceImageRecord.name : baseImage.name,
@@ -161,7 +172,7 @@ class BuildTestInstancesService {
 
 			await this.insertScrenshotResult({
 				screenshotId: screenshotResult.recordId,
-				targetScreenshotId: referenceImageRecord.id,
+				targetScreenshotId: referenceImageRecord ? referenceImageRecord.id : screenshotResult.recordId,
 				instanceResultSetId: buildTestInstanceResultSet.id,
 				diffDelta: diffResult.diffDelta,
 				diffImageUrl: diffResult.outputDiffImageUrl,

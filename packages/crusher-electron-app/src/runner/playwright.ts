@@ -111,7 +111,7 @@ class PlaywrightInstance {
 		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		this.page = await this._getWebViewPage();
-		this.sdkManager = new CrusherSdk(this.page, this.exportsManager);
+		this.sdkManager = new CrusherSdk(this.page, this.exportsManager, this.storageManager);
 
 		await this.initialize();
 	}

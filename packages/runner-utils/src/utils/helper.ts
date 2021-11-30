@@ -64,6 +64,16 @@ function isWebpack() {
 	return typeof __webpack_require__ === "function";
 }
 
+function chunkArray(arr, size) {
+    const chunkedArr = [];
+    let index = 0;
+    while (index < arr.length) {
+        chunkedArr.push(arr.slice(index, index += size));
+    }
+    return chunkedArr;
+}
+
+
 export {
 	uuidv4,
 	generateScreenshotName,
@@ -74,4 +84,5 @@ export {
 	getBrowserActions,
 	getMainActions,
 	validActionTypeRegex,
+	chunkArray
 };

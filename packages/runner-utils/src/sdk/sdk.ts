@@ -5,6 +5,9 @@ import { Page } from "playwright";
 import { ExportsManager } from "../functions/exports";
 import { CrusherElementSdk } from "./element";
 import { StorageManager } from "../functions/storage";
+import { chunkArray, markTestFail } from "../utils/helper";
+import nodeFetch from "node-fetch";
+import https from "https";
 
 const pageScreenshotModule = require("../actions/pageScreenshot");
 
@@ -80,6 +83,52 @@ class CrusherSdk implements ICrusherSdk {
 
 	hasExport(key: string) {
 		return this.exportsManager.has(key);
+	}
+
+	private async urlExist(url: string) {
+		const agent = new https.Agent({
+			rejectUnauthorized: false
+		});
+
+		return nodeFetch(url, {method: "HEAD", redirect: "follow", agent: agent}).then(async (res) => {
+			const allowedMethods = res.headers.get("allow");
+			if(allowedMethods && !allowedMethods.includes("HEAD") && allowedMethods.includes("GET")) {
+				return nodeFetch(url, {method: "GET", redirect: "follow", agent: agent}).then(async (res) => {
+					return !!res.ok;
+				});
+			}
+			return !!res.ok;
+		});
+	}
+
+	async verifyLinks(links: Array<{href: string}>) : Promise<Array<{href: string; exists: boolean}>> {
+		const chunkedArr = chunkArray(links, 5);
+		const promises = chunkedArr.map((chunk) => {
+			return Promise.all(chunk.map(async (link) => {
+				let reason = null, exists = null;
+				try {
+					exists = await this.urlExist(link.href);
+				} catch(ex){
+					exists = false;
+					reason = ex.message;
+				}
+				return {href: link.href, exists, reason};
+			}));
+		});
+	
+		const result = [];
+		for(let promise of promises) {
+			const values = await promise;
+			values.forEach((value: Array<{href: string; exists: boolean}>) => {
+				result.push(value);
+			});
+		}
+	
+		return result;
+	}
+
+	markTestFail(reason: string, data: any) {
+		markTestFail(reason, data);
 	}
 }
 

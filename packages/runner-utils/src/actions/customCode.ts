@@ -12,18 +12,14 @@ async function executeCustomCode(page: Page, action: iAction, globals: IGlobalMa
 	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager, storageManager);
 
 	let result = null;
-	try {
-		result = await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${customScriptFunction} return validate(crusherSdk);`)(
+	result = await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${customScriptFunction} return validate(crusherSdk);`)(
 			exports,
 			typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
 			module,
 			__filename,
 			__dirname,
 			crusherSdk,
-		);
-	} catch(err) {
-		console.error(err);
-	}
+);
 
 
 	return {

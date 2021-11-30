@@ -15,6 +15,9 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { ChevronDown, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import ReactTable, { useTable, useBlockLayout } from "react-table";
+import { FixedSizeList } from 'react-window';
+
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -415,11 +418,121 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 	);
 }
 
+function getAllKeys(obj: Array<any>) {
+	const keys: any = {};
+	obj.map(item => {
+		Object.keys(item).forEach(key => {
+			keys[key] = true;
+		});
+	});
+
+	return Object.keys(sortObjectByPropertyKeyAsc(keys));
+}
+
+function sortObjectByPropertyKeyAsc(obj: any) {
+	return Object.keys(obj).sort().reduce((result: any, key) => {
+		result[key] = obj[key];
+		return result;
+	}, {});
+}
+
+
+const scrollbarWidth = () => {
+    // thanks too https://davidwalsh.name/detect-scrollbar-width
+    const scrollDiv = document.createElement('div')
+    scrollDiv.setAttribute('style', 'width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;')
+    document.body.appendChild(scrollDiv)
+    const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    document.body.removeChild(scrollDiv)
+    return scrollbarWidth
+}
+  
+
+function Table({ columns, data }) {
+	// Use the state and functions returned from useTable to build your UI
+  
+	const defaultColumn = React.useMemo(
+	  () => ({
+		width: 210,
+	  }),
+	  []
+	)
+  
+	const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
+  
+	const {
+	  getTableProps,
+	  getTableBodyProps,
+	  headerGroups,
+	  rows,
+	  totalColumnsWidth,
+	  prepareRow,
+	} = useTable(
+	  {
+		columns,
+		data,
+		defaultColumn,
+	  },
+	  useBlockLayout
+	)
+  
+	const RenderRow = React.useCallback(
+	  ({ index, style }) => {
+		const row = rows[index]
+		prepareRow(row)
+		return (
+		  <div
+			{...row.getRowProps({
+			  style,
+			})}
+			className="tr"
+		  >
+			{row.cells.map(cell => {
+			  return (
+				<div {...cell.getCellProps()} className="td">
+				  {cell.render('Cell')}
+				</div>
+			  )
+			})}
+		  </div>
+		)
+	  },
+	  [prepareRow, rows]
+	)
+  
+	// Render the UI for your table
+	return (
+	  <div {...getTableProps()} className="table" style={{fontSize: "13.5rem"}}>
+		<div style={{fontWeight: "bold"}}>
+		  {headerGroups.map(headerGroup => (
+			<div {...headerGroup.getHeaderGroupProps()} className="tr">
+			  {headerGroup.headers.map(column => (
+				<div {...column.getHeaderProps()} className="th">
+				  {column.render('Header')}
+				</div>
+			  ))}
+			</div>
+		  ))}
+		</div>
+  
+		<div {...getTableBodyProps()} style={{marginTop: "26rem"}}>
+		  <FixedSizeList
+			height={200}
+			itemCount={rows.length}
+			itemSize={50}
+			width={totalColumnsWidth+scrollBarSize}
+		  >
+			{RenderRow}
+		  </FixedSizeList>
+		</div>
+	  </div>
+	)
+  }
+
 function StepInfoModal({ setOpenStepInfoModal, data }) {
 	const {meta, message} = data;
 
 	const actionName = meta.actionName;
-
 
 	return (
 		<Modal
@@ -451,10 +564,56 @@ function StepInfoModal({ setOpenStepInfoModal, data }) {
 					<span css={{marginLeft: "auto"}}>{meta.afterUrl}</span>
 				</div>
 			</Conditional>
+
+			<Conditional showIf={meta && meta.result && meta.result.length}>
+				<div style={{fontWeight: "bold", color: "#fff", fontSize: "13rem"}}>Result (Total {meta && meta.result ? meta.result.length : 0} items): </div>
+				<div css={tableStyle}>
+				<Table
+					data = { meta.result && meta.result.map((t) => ({...t, exists: t.exists.toString()})) }
+					columns = { meta.result && getAllKeys(meta.result).map((key ,id) => ({
+						id: key,
+						Header: key,
+						accessor: key,
+						key: key,
+					})) }
+				/>
+				</div>
+			</Conditional>
 			</div>
 		</Modal>
 	);
 }
+
+const tableStyle = css`
+padding: 1rem;
+margin-top: 24rem;
+
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+	font-size: 14rem;
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`;
 
 function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 	return (

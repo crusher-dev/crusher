@@ -48,7 +48,7 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 					...newList[newList.length - 1],
 					payload: {
 						...newList[newList.length - 1].payload,
-						optional: action.payload.isOptional,
+						isOptional: action.payload.isOptional,
 					}
 				};
 			}

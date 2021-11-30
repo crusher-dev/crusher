@@ -135,6 +135,9 @@ class CrusherRunnerActions {
 								actionName: step.name ? step.name : null,
 								beforeUrl: beforeUrl,
 								afterUrl: page ? await page.url() : null,
+								meta: {
+									...stepResult
+								}
 							}
 							: {
 								actionName: step.name ? step.name : null,
@@ -163,7 +166,9 @@ class CrusherRunnerActions {
 						}
 					}, actionCallback);
 				}
-				throw err;
+				if(!step.payload.isOptional) {
+					throw err;
+				}
 			}
 		};
 	}

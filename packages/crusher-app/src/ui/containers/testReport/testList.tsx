@@ -221,7 +221,7 @@ const imageTestStep = css`
 	//}
 `;
 
-function ErrorComponent({ testInstanceData, actionType, message }) {
+function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 	const [openVideoModal, setOpenVideoModal] = useState(false);
@@ -230,7 +230,7 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 			<Conditional showIf={isVideoAvailable && openVideoModal}>
 				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)} />
 			</Conditional>
-			<div className={"font-cera text-14 font-600 leading-none"}>Error at : {getActionLabel(actionType)}</div>
+			<div className={"font-cera text-14 font-600 leading-none"}>Error at : { actionName ? actionName : getActionLabel(actionType)}</div>
 			<div className={"text-13 mt-8"}>{message}</div>
 
 			<Conditional showIf={isVideoAvailable}>
@@ -295,15 +295,22 @@ function RenderStep({ data, testInstanceData }) {
 					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
-					<ErrorComponent testInstanceData={testInstanceData} actionType={actionType} message={message} />
+					<ErrorComponent actionName={meta?.actionName} testInstanceData={testInstanceData} actionType={actionType} message={message} />
+					<span className={"ml-12"} css={css`
+							:hover {
+								opacity: 0.9;
+							}
+						`} onClick={openStepInfoModal}>
+							<InfoSVG css={css`width: 12rem; height: 12rem;`}/>
+					</span>
 				</Conditional>
 			</div>
 
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
 				{
-					data.meta && data.meta.outputs && data.meta.outputs.map((_, index) => (
+					data.meta && data.meta.outputs  ? data.meta.outputs.map((_, index) => (
 						<RenderImageInfo data={data} index={index} />
-					))
+					)) : null
 				}
 			</Conditional>
 			<Conditional showIf={showStepInfoModal}>
@@ -534,6 +541,8 @@ function StepInfoModal({ setOpenStepInfoModal, data }) {
 
 	const actionName = meta.actionName;
 
+	const metaInfo = meta.meta ? meta.meta : meta;
+
 	return (
 		<Modal
 			onClose={setOpenStepInfoModal.bind(this, false)}
@@ -549,7 +558,7 @@ function StepInfoModal({ setOpenStepInfoModal, data }) {
 			<Conditional showIf={actionName}>
 				<div className={"text-13 mt-8 mb-24 flex text-bold"}>
 					<span css={{fontWeight: "bold"}}>Step name</span>
-					<span css={{marginLeft: "auto"}}>{meta.beforeUrl}</span>
+					<span css={{marginLeft: "auto"}}>{actionName}</span>
 				</div>
 			</Conditional>
 			<Conditional showIf={meta.beforeUrl}>
@@ -565,12 +574,12 @@ function StepInfoModal({ setOpenStepInfoModal, data }) {
 				</div>
 			</Conditional>
 
-			<Conditional showIf={meta && meta.result && meta.result.length}>
-				<div style={{fontWeight: "bold", color: "#fff", fontSize: "13rem"}}>Result (Total {meta && meta.result ? meta.result.length : 0} items): </div>
+			<Conditional showIf={metaInfo && metaInfo.result && metaInfo.result.length}>
+				<div style={{fontWeight: "bold", color: "#fff", fontSize: "13rem"}}>Result (Total {metaInfo && metaInfo.result ? metaInfo.result.length : 0} items): </div>
 				<div css={tableStyle}>
 				<Table
-					data = { meta.result && meta.result.map((t) => ({...t, exists: t.exists.toString()})) }
-					columns = { meta.result && getAllKeys(meta.result).map((key ,id) => ({
+					data = { metaInfo && metaInfo.result && metaInfo.result.map((t) => ({...t, exists: t.exists.toString()})) }
+					columns = { metaInfo && metaInfo.result && getAllKeys(metaInfo.result).map((key ,id) => ({
 						id: key,
 						Header: key,
 						accessor: key,

@@ -31,6 +31,19 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 		const store = getStore();
 
 		switch (id) {
+			case TOP_LEVEL_ACTION.VERIFY_LINK:
+				(window as any).electron.runAction([{
+					type: ActionsInTestEnum.CUSTOM_CODE,
+					screenshot: null,
+					name: "Verify links",
+					payload: {
+						meta: {
+							script: "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n    try {\n  \tawait crusherSdk.page.exposeFunction(\"crusherVerifyLinks\", (links) => {\n\t\treturn crusherSdk.verifyLinks(links);\n  \t});\n  } catch(ex){}\n\n  const {uniqueALinks, verifiedLinks} = await crusherSdk.page.evaluate(async function() {\n\tconst aLinkNodes = document.querySelectorAll(\"a\");\n    const aLinks = Array.from(aLinkNodes).map((node) => ({\n        href: (node.href.indexOf('http://') === 0 || node.href.indexOf('https://') === 0) ? node.href : new URL(node.href, window.location.href).toString()\n    }));\n\n    const uniqueALinks = [...new Set(aLinks)];\n    const verifiedLinks = await window.crusherVerifyLinks(uniqueALinks);\n    return {uniqueALinks, verifiedLinks};\n  });\n\n console.log('FInal result before', verifiedLinks.filter(a => !a.exists));  if(verifiedLinks.filter(a => !!a.exists).length !== uniqueALinks.length) return crusherSdk.markTestFail(\"Not all links are valid\", {result: verifiedLinks});\n console.log('FInal result', verifiedLinks.filter(a => !a.exists));  return verifiedLinks;\n}",
+						},
+						selectors: null
+					}		
+				}]);
+				break;
 			case TOP_LEVEL_ACTION.SCROLL_AND_TAKE_SCREENSHOT:
 				(window as any).electron.runAction([
 					{

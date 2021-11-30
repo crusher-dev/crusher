@@ -44,6 +44,12 @@ const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
 		desc: "",
 	},
+	{
+		id: TOP_LEVEL_ACTION.VERIFY_LINK,
+		title: "Verify links",
+		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
+		desc: "",
+	}
 ];
 
 export { TOP_LEVEL_ACTIONS_LIST };

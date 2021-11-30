@@ -28,7 +28,7 @@ export interface ITestInstanceScreenshotsTable extends BaseRowInterface {
 	instance_id: number;
 	name: string;
 	url: string;
-	action_index: number;
+	action_index: number | string;
 }
 
 export type IAddTestIntanceScreenshotPayload = KeysToCamelCase<Omit<ITestInstanceScreenshotsTable, "id">>;

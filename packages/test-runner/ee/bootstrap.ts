@@ -6,7 +6,7 @@ import * as fs from "fs";
 import Timeout = NodeJS.Timeout;
 import { TEST_EXECUTION_QUEUE } from "@shared/constants/queues";
 
-const TEST_PER_INSTANCE = 5;
+const TEST_PER_INSTANCE = 3;
 class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	sessionId: string;
 	_heartBeatInterval: Timeout;
@@ -27,9 +27,15 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	async boot() {
 		this.setupInstanceHeartbeat();
 
-		await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
+		await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
+			limiter: {
+				max: 2,
+    			duration: 1800000,
+				groupKey: "buildId"
+			} as any
+		});
 		await this.queueManager.setupQueueScheduler(TEST_EXECUTION_QUEUE, {
-			stalledInterval: 120000,
+			stalledInterval: 180000,
 			maxStalledCount: 1,
 		});
 
@@ -41,6 +47,11 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			//@ts-ignore
 			getOffset: this.getBootAfterNJobsOffset.bind(this),
+			limiter: {
+				max: 2,
+    			duration: 1800000,
+				groupKey: 'buildId'
+			}
 		});
 		console.log("Booted up test runner...");
 	}

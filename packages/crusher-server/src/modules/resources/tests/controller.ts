@@ -2,7 +2,7 @@ import { UsersService } from "@modules/resources/users/service";
 import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body, QueryParams, Params } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { TestService } from "@modules/resources/tests/service";
-import { isUsingLocalStorage } from "@utils/helper";
+import { getTemplateFileContent, isUsingLocalStorage } from "@utils/helper";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { ICreateTestPayload } from "@modules/resources/tests/interface";
 import { iAction } from "@crusher-shared/types/action";
@@ -86,10 +86,22 @@ export class TestController {
 	@Post("/projects/:project_id/tests/actions/run")
 	async runProjectTests(
 		@CurrentUser({ required: true }) user,
-		@Body() body: { githubRepoName?: string; githubCommitId?: string; host?: string },
+		@Body()
+		body: {
+			githubRepoName?: string;
+			githubCommitId?: string;
+			host?: string;
+			disableBaseLineComparisions: boolean;
+			baselineJobId: number | null;
+			browsers?: Array<BrowserEnum>;
+		},
 		@Param("project_id") projectId: number,
 	) {
-		const meta = {};
+		console.log("Body of project tests run api, here", body);
+
+		const meta = {
+			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
+		};
 		if (body.githubRepoName) {
 			meta["github"] = {
 				repoName: body.githubRepoName,
@@ -97,7 +109,14 @@ export class TestController {
 			};
 		}
 
-		return this.testService.runTestsInProject(projectId, user.user_id, { host: body.host ? body.host : "null" }, meta);
+		return this.testService.runTestsInProject(
+			projectId,
+			user.user_id,
+			{ host: body.host ? body.host : "null" },
+			meta,
+			body.baselineJobId ? body.baselineJobId : null,
+			body.browsers ? body.browsers : [BrowserEnum.CHROME],
+		);
 	}
 
 	@Authorized()
@@ -136,21 +155,34 @@ export class TestController {
 
 		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
 
-		const buildRunInfo = await this.testRunnerService.runTests(await this.testService.getCompleteTestsArray([testRecord]), {
-			userId: user_id,
-			projectId: projectId,
-			host: "null",
-			status: BuildStatusEnum.CREATED,
-			buildTrigger: BuildTriggerEnum.MANUAL,
-			browser: [BrowserEnum.CHROME],
-			isDraftJob: true,
-			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
-			meta: { isDraftJob: true },
-		});
+		const buildRunInfo = await this.testRunnerService.runTests(
+			await this.testService.getCompleteTestsArray(await this.testService.getFullTestArr([testRecord])),
+			{
+				userId: user_id,
+				projectId: projectId,
+				host: "null",
+				status: BuildStatusEnum.CREATED,
+				buildTrigger: BuildTriggerEnum.MANUAL,
+				browser: [BrowserEnum.CHROME],
+				isDraftJob: true,
+				config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+				meta: { isDraftJob: true },
+			},
+		);
 
 		await this.testService.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
 
 		return testInsertRecord;
+	}
+
+	@Get("/tests/actions/get.template")
+	async getTemplate(@QueryParams() params: { id: string }) {
+		return this.testService.getTemplate(parseInt(params.id));
+	}
+
+	@Get("/tests/actions/get.templates")
+	async getTemplates(@QueryParams() params: { name: string }) {
+		return this.testService.getTemplates(params.name);
 	}
 
 	@Authorized()
@@ -178,7 +210,7 @@ export class TestController {
 
 	@Get("/tests/:test_id")
 	async getTest(@Param("test_id") testId: number) {
-		const testRecord = await this.testService.getTest(testId);
+		const testRecord = await this.testService.getFullTest(await this.testService.getTest(testId));
 		if (!testRecord) throw new BadRequestError("No such test");
 		return {
 			...testRecord,

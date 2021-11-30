@@ -6,7 +6,7 @@ import { StorageManager } from "../functions/storage";
 import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
 async function takePageScreenshot(page: Page, step: iAction, globals: IGlobalManager, storageManager: StorageManager) {
-	const screenshotBuffer = await page.screenshot();
+	const screenshotBuffer = await page.screenshot({type: "jpeg", quality: 70});
 	const screenshotName = `${uuidv4()}.png`;
 	const uploadedScreenshotUrl = await storageManager.uploadAsset(screenshotName, screenshotBuffer);
 

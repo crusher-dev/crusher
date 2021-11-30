@@ -19,6 +19,8 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { currentProject } from "../../../store/atoms/global/project";
 import { tempTestAtom } from "../../../store/atoms/global/tempTestId";
+import { tempTestNameAtom } from "../../../store/atoms/global/tempTestName";
+
 import { RequestMethod } from "../../../types/RequestOptions";
 
 interface IBuildItemCardProps {
@@ -37,8 +39,8 @@ const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 const FirstTestRunStatus = dynamic(() => import("@ui/containers/tests/firstTestStatus"));
 const EditTest = dynamic(() => import("@ui/containers/tests/editTest"));
 
-const saveTest = (projectId: number, tempTestId: string) => {
-	const testName = new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
+const saveTest = (projectId: number, tempTestId: string, customTestName: string | null = null) => {
+	const testName = customTestName ? customTestName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
 	return backendRequest(`/projects/${projectId}/tests/actions/create`, {
 		method: RequestMethod.POST,
 		payload: { tempTestId, name: testName },
@@ -201,6 +203,8 @@ function TestSearchableList() {
 	const [project] = useAtom(currentProject);
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
+	const [tempTestName, setTempTestName] = useAtom(tempTestNameAtom);
+
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
 	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id), {
@@ -221,8 +225,9 @@ function TestSearchableList() {
 
 		(async () => {
 			setTempTest(null);
+			setTempTestName(null);
 
-			await saveTest(selectedProjectId, tempTestId);
+			await saveTest(selectedProjectId, tempTestId, !!tempTestName ? tempTestName : null);
 			sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
 
 			await mutate(getTestListAPI(project.id));

@@ -9,6 +9,8 @@ import { AlertingService } from "../alerting/service";
 import { GithubIntegrationService } from "./githubIntegration.service";
 import { IntegrationServiceEnum } from "./interface";
 import { IntegrationsService } from "./service";
+import { fetch } from "@utils/fetch";
+
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -28,8 +30,14 @@ class IntegrationsController {
 
 		const { projectId, redirectUrl } = JSON.parse(decodeURIComponent(encodedState));
 		const integrationConfig = await this.slackService.verifySlackIntegrationRequest(slackCode);
-		const slackIntegrationRecord = await this.integrationsService.addSlackIntegration(integrationConfig, projectId);
 
+		const existingSlackIntegration = await this.integrationsService.getSlackIntegration(projectId);
+		if(existingSlackIntegration) {
+			await this.integrationsService.updateSlackIntegration(integrationConfig, existingSlackIntegration.id);
+		} else {
+			await this.integrationsService.addSlackIntegration(integrationConfig, projectId)
+		}
+		
 		await res.redirect(redirectUrl);
 		return res;
 	}
@@ -114,6 +122,44 @@ class IntegrationsController {
     --data-urlencode 'githubRepoName=${linkedRepo.repoName}' \\
     --data-urlencode 'githubCommitId=\${{github.event.pull_request.head.sha}}'`,
 		};
+	}
+
+	@Authorized()
+	@Get("/integrations/:project_id/slack/channels")
+	async getSlackChannels(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params: {cursor?: string}, @Res() res) {
+		const slackIntegration = await this.integrationsService.getSlackIntegration(projectId);
+		if(!slackIntegration) throw new BadRequestError("No slack account connected");
+
+		const slackIntegrationConfig = slackIntegration.meta;
+
+		const fetchFromSlack = async (cursor?: string) => {
+			const { channels, nextCursor } = await fetch("https://slack.com/api/conversations.list?types=public_channel,private_channel", {
+				header: {
+					"Authorization": `Bearer ${slackIntegrationConfig.accessToken}`,
+				},
+				method: "GET",
+				payload: {
+					cursor: cursor ? cursor : "",
+					limit: 50,
+					exclude_archived: true,
+				}
+			}).then((data: any) => {
+				return {accessToken: slackIntegrationConfig.accessToken, nextCursor: data.response_metadata ? data.response_metadata.next_cursor : "", channels: data.channels.map((channel) => ({id: channel.id, name: channel.name}))};
+			});
+
+			return { channels, nextCursor };
+		};
+
+		// Hit api until channels is not empty and nextCursor is present
+		let channels = [];
+		let nextCursor = params.cursor ? params.cursor : "";
+		do {
+			const { channels: newChannels, nextCursor: newNextCursor } = await fetchFromSlack(nextCursor);
+			channels = channels.concat(newChannels);
+			nextCursor = newNextCursor;
+		} while (channels.length === 0 && nextCursor)
+
+		return {channels, nextCursor};
 	}
 }
 

@@ -30,7 +30,7 @@ class TestsRunner {
 			payload.actions = this._replaceHostInEvents(payload.actions, hostToReplace);
 		}
 		const testExeuctionQueue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
-		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, payload);
+		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, {...payload, rateLimiterKey: payload.buildId.toString()});
 	}
 
 	private _getNextTestInstancesDependencyArr(
@@ -201,7 +201,7 @@ class TestsRunner {
 			return this.buildTestInstanceService.createBuildTestInstanceResultSet({
 				reportId: buildReportInsertRecord.insertId,
 				instanceId: testInstance.id,
-				targetInstanceId: referenceInstance.id,
+				targetInstanceId: buildPayload.meta.disableBaseLineComparisions ? testInstance.id : referenceInstance.id,
 			});
 		});
 

@@ -1,7 +1,25 @@
 import * as path from "path";
-import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard } from "electron";
+import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard, crashReporter } from "electron";
 import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
+import * as Sentry from "@sentry/electron"
+
+if(process.env.NODE_ENV === "production") {
+	Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
+	require('update-electron-app')({
+		repo: 'crusherdev/crusher-downloads',
+		updateInterval: '5 minutes',
+		logger: require('electron-log')
+	})
+}
+
+app.setName("Crusher Recorder");
+app.setAboutPanelOptions({
+	applicationName: "Crusher Recorder",
+	applicationVersion: app.getVersion(),
+	copyright: "Copyright © 2021",
+	credits: "Made with ❤️ by Crusher team",
+});
 
 // @Note: Remove this from here
 const devices = [
@@ -31,6 +49,7 @@ const devices = [
 		userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
 	},
 ];
+
 class App {
 	appWindow: BrowserWindow | null;
 	mainWindow: MainWindow | null;
@@ -90,7 +109,7 @@ class App {
 
 		this.mainWindow = new MainWindow(this, this.appWindow, this.state);
 		await this.mainWindow.initialize();
-		
+
 		this.appWindow.on("close", () => {
 			if(process.platform === "darwin") app.quit();
 		});
@@ -124,10 +143,10 @@ class App {
 					buttons: ["Yes", "Cancel"],
 					defaultId: 1,
 				});
-		
+
 				if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
 					await this._reloadApp(this.appWindow, true, [data]);
-				} 
+				}
 			}
 		}
 		console.log("Link is this", data);
@@ -147,9 +166,11 @@ class App {
 	}
 
 	async cleanupStorage() {
-		session.fromPartition("crusher").clearStorageData({
-			storages: ["cookies", "localstorage", "indexdb"],
-		});
+		try {
+			session.fromPartition("crusher").clearStorageData({
+				storages: ["cookies", "localstorage", "indexdb"],
+			});
+		} catch(err) {}
 	}
 
 	cleanupStorageBeforeExit(): Promise<void> {

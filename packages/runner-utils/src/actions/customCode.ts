@@ -9,16 +9,24 @@ import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 async function executeCustomCode(page: Page, action: iAction, globals: IGlobalManager, storageManager: StorageManager, exportsManager: ExportsManager, sdk: CrusherSdk | null) {
 	const customScriptFunction = action.payload.meta.script;
 
-	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager);
+	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager, storageManager);
 
-	await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${customScriptFunction} return validate(crusherSdk);`)(
-		exports,
-		typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
-		module,
-		__filename,
-		__dirname,
-		crusherSdk,
-	);
+	let result = null;
+	result = await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${customScriptFunction} return validate(crusherSdk);`)(
+			exports,
+			typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+			module,
+			__filename,
+			__dirname,
+			crusherSdk,
+);
+
+
+	return {
+		customLogMessage: result ? "Executed custom code" : "Error executing custom code",
+		result: result,
+		outputs: result && result.outputs ? result.outputs : [],
+	};
 }
 
 module.exports = {

@@ -48,6 +48,7 @@ export enum MESSAGE_TYPES {
 	EXECUTE_CUSTOM_SCRIPT_OUTPUT = "EXECUTE_CUSTOM_SCRIPT_OUTPUT",
 	RELOAD_ELECTRON_EXTENSION = "RELOAD_ELECTRON_EXTENSION",
 	SAVE_RECORDED_TEST = "SAVE_RECORDED_TEST",
+	DELETE_LAST_ACTION = "DELETE_LAST_ACTION",
 }
 
 export enum RECORDING_STATUS {
@@ -114,11 +115,11 @@ async function handleRecordAction(action: iAction): any {
 
 	switch (type) {
 		case ActionsInTestEnum.WAIT_FOR_NAVIGATION: {
-			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION;
+			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION;
 			if (isLastEventWaitForNavigation) {
-				store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
-			} else {
 				store.dispatch(updateLastRecordedAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
+			} else {
+				store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
 			}
 			break;
 		}
@@ -126,23 +127,21 @@ async function handleRecordAction(action: iAction): any {
 			const hasInitialNavigationActionRegistered =
 				recordedActions.findIndex((recordedAction) => recordedAction.type === ActionsInTestEnum.NAVIGATE_URL) !== -1;
 
-			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION;
+			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION;
 
 			if (!hasInitialNavigationActionRegistered) {
 				store.dispatch(recordAction(action));
 			} else {
 				if (isLastEventWaitForNavigation) {
-					store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
-				} else {
 					store.dispatch(updateLastRecordedAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
+				} else {
+					store.dispatch(recordAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
 				}
 			}
 			store.dispatch(updateIsRecorderScriptBooted(false));
 			break;
 		}
 		case ActionsInTestEnum.ADD_INPUT: {
-			if (!lastRecordedAction) throw new Error("Add input recorded before navigate url");
-
 			const isLastEventAddInput = lastRecordedAction.type === ActionsInTestEnum.ADD_INPUT;
 			if (lastRecordedAction.type === ActionsInTestEnum.CLICK && (await areTwoNodesSame(action, lastRecordedAction))) {
 				// Delete click if last action is click on same element
@@ -186,8 +185,6 @@ async function handleRecordAction(action: iAction): any {
 		}
 		case ActionsInTestEnum.PAGE_SCROLL:
 		case ActionsInTestEnum.ELEMENT_SCROLL: {
-			if (!lastRecordedAction) throw new Error("Scroll recorded before navigate url");
-
 			const isScrollingToSameLastElement =
 				[ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(lastRecordedAction.type) &&
 				((lastRecordedAction.payload.selectors === null && action.payload.selectors === null) ||
@@ -204,7 +201,6 @@ async function handleRecordAction(action: iAction): any {
 			break;
 		}
 		case ActionsInTestEnum.HOVER: {
-			if (!lastRecordedAction) throw new Error("Hover recorded before navigate url");
 			const url = new URL(window.location.href);
 			if (url.searchParams.get("device") === "Pixel33XL") {
 				// Disable hover in mobile devices
@@ -221,8 +217,6 @@ async function handleRecordAction(action: iAction): any {
 			break;
 		}
 		case ActionsInTestEnum.CLICK: {
-			if (!lastRecordedAction) throw new Error("Click recorded before navigate url");
-
 			const isTheLastRecordedActionOnSameElementFocus =
 				lastRecordedAction.type === ActionsInTestEnum.ELEMENT_FOCUS &&
 				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;
@@ -276,10 +270,15 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 	const { type } = event.data;
 
 	switch (type) {
+		case MESSAGE_TYPES.DELETE_LAST_ACTION: {
+			const recordedActions = getActions(store.getState());
+			store.dispatch(deleteRecordedAction(recordedActions.length - 1));
+			break;
+		}
 		case MESSAGE_TYPES.SAVE_RECORDED_TEST: {
 			saveTest();
 			break;
-		}
+		} 
 		case MESSAGE_TYPES.CLEAR_RECORDED_ACTIONS: {
 			const store = getStore();
 			store.dispatch(resetRecordedActions());
@@ -398,8 +397,6 @@ export function turnOffInspectModeInFrame(webviewRef: RefObject<HTMLWebViewEleme
 }
 
 export function executeScriptInFrame(script: string, selector: string, webviewRef: RefObject<HTMLWebViewElement>) {
-	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
-
 	(window as any).electron.webview.postMessage({
 		type: FRAME_MESSAGE_TYPES.EXECUTE_ELEMENT_CUSTOM_SCRIPT,
 		meta: { script: script, selector: selector } as iExecuteScriptResponseMeta,

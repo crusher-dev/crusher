@@ -6,13 +6,13 @@ export type TOSDownloadInfo = {
 
 export const OS_INFO: Record<string, TOSDownloadInfo> = {
 	Windows: { downloadLink: "", icon: null, label: "Download exe" },
-	MAC: { downloadLink: "https://github.com/crusherdev/crusher-downloads/releases/download/0.99/crusher-recorder.dmg", icon: null, label: "Download dmg" },
+	MAC: { downloadLink: "https://github.com/crusherdev/crusher-downloads/releases/latest/download/crusher-recorder.dmg", icon: null, label: "Download dmg" },
 	OTHER: { downloadLink: "", icon: null },
 };
 
 export const LINUX_INFO: Record<string, TOSDownloadInfo> = {
 	Linux_DEB: {
-		downloadLink: "https://github.com/crusherdev/crusher-downloads/releases/download/0.99/crusher-recorder.deb",
+		downloadLink: "https://github.com/crusherdev/crusher-downloads/releases/latest/download/crusher-recorder.deb",
 		icon: null,
 		label: "Download deb",
 	},

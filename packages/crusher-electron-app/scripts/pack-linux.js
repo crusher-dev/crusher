@@ -9,11 +9,22 @@ shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} &
 builder
 	.build({
 		targets: Platform.LINUX.createTarget(["appimage", "deb"]),
+		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
 		config: {
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
 			appId: "com.crusher.electron",
+			publish: [
+				{
+					provider: "github",
+					repo: "crusher-downloads",
+					owner: "crusherdev",
+					vPrefixedTagName: true,
+					token: process.env.GITHUB_TOKEN,
+					releaseType: "draft"
+				}
+			],
 			linux: {
 				icon: "icons/app.icns",
 			},

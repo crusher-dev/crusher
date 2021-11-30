@@ -14,7 +14,10 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ChevronDown, TestStatusSVG } from "@svg/testReport";
+import { ChevronDown, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import ReactTable, { useTable, useBlockLayout } from "react-table";
+import { FixedSizeList } from 'react-window';
+
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -165,17 +168,16 @@ export const imageTabCSS = css`
 	}
 `;
 
-function RenderImageInfo({ data }) {
+function RenderImageInfo({ data, index }) {
 	const { meta } = data;
-	const imageName = meta.outputs?.[0].name;
-	const previousImage = getAssetPath(meta.outputs?.[0].targetScreenshotUrl);
-	const currentImage = getAssetPath(meta.outputs?.[0].value);
+	const imageName = meta.outputs?.[index].name;
+	const previousImage = getAssetPath(meta.outputs?.[index].targetScreenshotUrl);
+	const currentImage = getAssetPath(meta.outputs?.[index].value);
 
 	const [imageViewType, setImageViewType] = useAtom(imageViewAtom);
 
 	if (!imageName) return null;
 
-	console.log(meta.outputs[0]);
 	return (
 		<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
 			<div className={"flex justify-between text-12 mb-20 "}>
@@ -196,7 +198,7 @@ function RenderImageInfo({ data }) {
 				<div className={"flex"}>
 					<img src={currentImage} />{" "}
 					<img
-						src={getAssetPath(meta.outputs[0].diffImageUrl)}
+						src={getAssetPath(meta.outputs[index].diffImageUrl)}
 						css={css`
 							margin-left: 2%;
 						`}
@@ -219,7 +221,7 @@ const imageTestStep = css`
 	//}
 `;
 
-function ErrorComponent({ testInstanceData, actionType, message }) {
+function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 	const [openVideoModal, setOpenVideoModal] = useState(false);
@@ -228,7 +230,7 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 			<Conditional showIf={isVideoAvailable && openVideoModal}>
 				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)} />
 			</Conditional>
-			<div className={"font-cera text-14 font-600 leading-none"}>Error at : {getActionLabel(actionType)}</div>
+			<div className={"font-cera text-14 font-600 leading-none"}>Error at : { actionName ? actionName : getActionLabel(actionType)}</div>
 			<div className={"text-13 mt-8"}>{message}</div>
 
 			<Conditional showIf={isVideoAvailable}>
@@ -243,9 +245,15 @@ function ErrorComponent({ testInstanceData, actionType, message }) {
 }
 
 function RenderStep({ data, testInstanceData }) {
+	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
 
 	const actionName = getActionLabel(actionType);
+	const actionDescription = meta?.actionName ? meta.actionName : message;
+
+	const openStepInfoModal = () => {
+		setShowStepInfoModal(true);
+	};
 
 	return (
 		<div className={"relative mb-32"}>
@@ -255,7 +263,10 @@ function RenderStep({ data, testInstanceData }) {
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
-					<div className={"mt-4"}>
+					<div className={"mt-4 flex"} css={css`
+						align-items: center;
+				
+					`}>
 						<span
 							className={"text-13 font-600"}
 							css={css`
@@ -264,23 +275,46 @@ function RenderStep({ data, testInstanceData }) {
 						>
 							{actionName}
 						</span>
-						<span
-							className={"text-12 ml-20"}
-							css={css`
-								color: #848484;
-							`}
-						>
-							{meta?.actionName ? meta.actionName : message}
+						<Conditional showIf={actionDescription && actionDescription.trim().length}>
+							<span
+								className={"text-12 ml-20"}
+								css={css`
+									color: #848484;
+								`}
+							>
+								{meta?.actionName ? meta.actionName : message}
+							</span>
+						</Conditional>
+						<span className={"ml-12"} css={css`
+							:hover {
+								opacity: 0.9;
+							}
+						`} onClick={openStepInfoModal}>
+							<InfoSVG css={css`width: 12rem; height: 12rem;`}/>
 						</span>
 					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
-					<ErrorComponent testInstanceData={testInstanceData} actionType={actionType} message={message} />
+					<ErrorComponent actionName={meta?.actionName} testInstanceData={testInstanceData} actionType={actionType} message={message} />
+					<span className={"ml-12"} css={css`
+							:hover {
+								opacity: 0.9;
+							}
+						`} onClick={openStepInfoModal}>
+							<InfoSVG css={css`width: 12rem; height: 12rem;`}/>
+					</span>
 				</Conditional>
 			</div>
 
-			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT].includes(actionType)}>
-				<RenderImageInfo data={data} />
+			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
+				{
+					data.meta && data.meta.outputs  ? data.meta.outputs.map((_, index) => (
+						<RenderImageInfo data={data} index={index} />
+					)) : null
+				}
+			</Conditional>
+			<Conditional showIf={showStepInfoModal}>
+				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />
 			</Conditional>
 		</div>
 	);
@@ -390,6 +424,205 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 		</div>
 	);
 }
+
+function getAllKeys(obj: Array<any>) {
+	const keys: any = {};
+	obj.map(item => {
+		Object.keys(item).forEach(key => {
+			keys[key] = true;
+		});
+	});
+
+	return Object.keys(sortObjectByPropertyKeyAsc(keys));
+}
+
+function sortObjectByPropertyKeyAsc(obj: any) {
+	return Object.keys(obj).sort().reduce((result: any, key) => {
+		result[key] = obj[key];
+		return result;
+	}, {});
+}
+
+
+const scrollbarWidth = () => {
+    // thanks too https://davidwalsh.name/detect-scrollbar-width
+    const scrollDiv = document.createElement('div')
+    scrollDiv.setAttribute('style', 'width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;')
+    document.body.appendChild(scrollDiv)
+    const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+    document.body.removeChild(scrollDiv)
+    return scrollbarWidth
+}
+  
+
+function Table({ columns, data }) {
+	// Use the state and functions returned from useTable to build your UI
+  
+	const defaultColumn = React.useMemo(
+	  () => ({
+		width: 210,
+	  }),
+	  []
+	)
+  
+	const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
+  
+	const {
+	  getTableProps,
+	  getTableBodyProps,
+	  headerGroups,
+	  rows,
+	  totalColumnsWidth,
+	  prepareRow,
+	} = useTable(
+	  {
+		columns,
+		data,
+		defaultColumn,
+	  },
+	  useBlockLayout
+	)
+  
+	const RenderRow = React.useCallback(
+	  ({ index, style }) => {
+		const row = rows[index]
+		prepareRow(row)
+		return (
+		  <div
+			{...row.getRowProps({
+			  style,
+			})}
+			className="tr"
+		  >
+			{row.cells.map(cell => {
+			  return (
+				<div {...cell.getCellProps()} className="td">
+				  {cell.render('Cell')}
+				</div>
+			  )
+			})}
+		  </div>
+		)
+	  },
+	  [prepareRow, rows]
+	)
+  
+	// Render the UI for your table
+	return (
+	  <div {...getTableProps()} className="table" style={{fontSize: "13.5rem"}}>
+		<div style={{fontWeight: "bold"}}>
+		  {headerGroups.map(headerGroup => (
+			<div {...headerGroup.getHeaderGroupProps()} className="tr">
+			  {headerGroup.headers.map(column => (
+				<div {...column.getHeaderProps()} className="th">
+				  {column.render('Header')}
+				</div>
+			  ))}
+			</div>
+		  ))}
+		</div>
+  
+		<div {...getTableBodyProps()} style={{marginTop: "26rem"}}>
+		  <FixedSizeList
+			height={200}
+			itemCount={rows.length}
+			itemSize={50}
+			width={totalColumnsWidth+scrollBarSize}
+		  >
+			{RenderRow}
+		  </FixedSizeList>
+		</div>
+	  </div>
+	)
+  }
+
+function StepInfoModal({ setOpenStepInfoModal, data }) {
+	const {meta, message} = data;
+
+	const actionName = meta.actionName;
+
+	const metaInfo = meta.meta ? meta.meta : meta;
+
+	return (
+		<Modal
+			onClose={setOpenStepInfoModal.bind(this, false)}
+			onOutsideClick={setOpenStepInfoModal.bind(this, false)}
+			modalStyle={css`
+				padding: 28rem 36rem 36rem;
+			`}
+		>
+			<div className={"font-cera text-16 font-600 leading-none"}>Step Info 🦖</div>
+			<div className={"text-13 mt-8 mb-24"}>Debug info listed below</div>
+<hr/>
+		<div className={"mt-44"}>
+			<Conditional showIf={actionName}>
+				<div className={"text-13 mt-8 mb-24 flex text-bold"}>
+					<span css={{fontWeight: "bold"}}>Step name</span>
+					<span css={{marginLeft: "auto"}}>{actionName}</span>
+				</div>
+			</Conditional>
+			<Conditional showIf={meta.beforeUrl}>
+				<div className={"text-13 mt-8 mb-24 flex text-bold"}>
+					<span css={{fontWeight: "bold"}}>Page Url (before action)</span>
+					<span css={{marginLeft: "auto"}}>{meta.beforeUrl}</span>
+				</div>
+			</Conditional>
+			<Conditional showIf={meta.afterUrl}>
+				<div className={"text-13 mt-8 mb-24 flex"}>
+					<span css={{fontWeight: "bold"}}>Page Url (after action)</span>
+					<span css={{marginLeft: "auto"}}>{meta.afterUrl}</span>
+				</div>
+			</Conditional>
+
+			<Conditional showIf={metaInfo && metaInfo.result && metaInfo.result.length}>
+				<div style={{fontWeight: "bold", color: "#fff", fontSize: "13rem"}}>Result (Total {metaInfo && metaInfo.result ? metaInfo.result.length : 0} items): </div>
+				<div css={tableStyle}>
+				<Table
+					data = { metaInfo && metaInfo.result && metaInfo.result.map((t) => ({...t, exists: t.exists.toString()})) }
+					columns = { metaInfo && metaInfo.result && getAllKeys(metaInfo.result).map((key ,id) => ({
+						id: key,
+						Header: key,
+						accessor: key,
+						key: key,
+					})) }
+				/>
+				</div>
+			</Conditional>
+			</div>
+		</Modal>
+	);
+}
+
+const tableStyle = css`
+padding: 1rem;
+margin-top: 24rem;
+
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+	font-size: 14rem;
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`;
 
 function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 	return (

@@ -195,7 +195,7 @@ function LeftSection() {
 					</a>
 				</Conditional>
 
-				<Conditional showIf={getEdition() === EditionTypeEnum.EE}>
+				{/* <Conditional showIf={getEdition() === EditionTypeEnum.EE}>
 					<BottomSection
 						name={"Free plan"}
 						description={"Get started"}
@@ -203,7 +203,7 @@ function LeftSection() {
 							router.push("/settings/org/pricing");
 						}}
 					/>
-				</Conditional>
+				</Conditional> */}
 			</div>
 		</div>
 	);

@@ -74,4 +74,10 @@ export class BuildsController {
 			status: "Successful",
 		};
 	}
+
+	@Authorized()
+	@Get("/builds/:build_id/status")
+	async getStatus(@CurrentUser({ required: true }) user, @Param("build_id") buildId) {
+		return this.buildsService.getBuild(buildId);
+	}
 }

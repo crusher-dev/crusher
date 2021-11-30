@@ -16,7 +16,9 @@ function getConnectionObject(): IORedis.RedisOptions {
 
 class RedisManager extends ParentRedisManager {
 	constructor() {
-		super(getConnectionObject());
+		const connectionObject = getConnectionObject();
+		console.log("Connection object is", connectionObject);
+		super(connectionObject);
 	}
 }
 

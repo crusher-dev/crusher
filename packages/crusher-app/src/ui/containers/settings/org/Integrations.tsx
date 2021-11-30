@@ -25,6 +25,7 @@ import { addGithubRepo, getGitIntegrations, unlinkGithubRepo } from "@constants/
 import { RequestMethod } from "@types/RequestOptions";
 import { currentProject } from "@store/atoms/global/project";
 import useSWR, { mutate } from "swr";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -388,7 +389,7 @@ function GitIntegration() {
 
 	const hadLinkedRepo = !!linkedRepo?.linkedRepo;
 	return (
-		<div className={"flex flex-col justify-between items-start mt-40 mb-24"}>
+		<div className={"flex flex-col justify-between items-start mt-44 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div>
 					<Heading type={2} fontSize={"16"} className={"mb-8"}>
@@ -414,9 +415,84 @@ function GitIntegration() {
 		</div>
 	);
 }
-function SlackIntegration() {
+
+const getSlackChannelValues = (channels: Array<{name: string; id: string;}> | null) => {
+	if(!channels) return [];
+
 	return (
-		<div className={"flex justify-between items-start mt-40 mb-24"}>
+		channels.map((channel) => {
+			return { label: channel.name, value: channel.id };
+		}) ?? []
+	);
+};
+
+function SlackIntegration() {
+	const [project] = useAtom(currentProject);
+
+	const [isConnected, setIsConnected] = useState(false);
+	const [slackChannels, setSlackChannels] = useState(null);
+	const [nextCursor, setNextCursor] = useState(null);
+	const [integration, setSlackIntegration] = useState({
+		normalChannel: [],
+		alertChannel: [],
+	});
+
+	const fetchSlackChannels = useCallback(async () => {
+		const {channels, nextCursor} = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`));
+		setSlackChannels(channels);
+		setNextCursor(nextCursor);
+		return channels;
+	}, [slackChannels, nextCursor]);
+
+	const handleSwitch  = useCallback((toggleState: boolean) => {
+		if(toggleState) {
+			console.log("The project atom is", project);
+			const windowRef = openPopup(`https://slack.com/oauth/v2/authorize?scope=chat:write,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}?redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(JSON.stringify({projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations")}))}`);
+			
+			//@ts-ignore
+			const interval = setInterval(() => {
+				if(windowRef.closed) return clearInterval(interval);
+
+				const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
+				if (isOnFEPage) {
+					const url = windowRef?.location?.href;
+					setIsConnected(true);
+					fetchSlackChannels();
+					windowRef.close();
+					clearInterval(interval);
+				}
+			}, 200);
+		} else {
+			setIsConnected(false);
+		}
+	}, []);
+
+	const handleChannelSelect = (type: "normal" | "alert", values) => {
+		const channelTypeName = type === "normal" ? "normalChannel" : "alertChannel";
+
+		setSlackIntegration((previous) => ({
+				...previous,
+				[channelTypeName]: values
+		}));
+	};
+
+	const handleScrollEnd = useCallback(async () => {		
+				if(!nextCursor) return false;
+
+				const {channels, nextCursor: _nextCursor} = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`), {
+					method: RequestMethod.GET,
+					payload: {
+						cursor: nextCursor,
+					}
+				});
+
+				setNextCursor((previous) => (_nextCursor));
+				setSlackChannels((previous) => ([...previous, ...channels]));
+				return true;
+	}, [slackChannels, nextCursor]);
+
+	return (
+		<div className={"justify-between items-start mt-40 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
 					<img src={"/svg/slack-icon.svg"} width={"24rem"} />
@@ -429,11 +505,47 @@ function SlackIntegration() {
 						</TextBlock>
 					</div>
 				</div>
-				<Toggle></Toggle>
+				<Toggle disableInternalState={true} callback={handleSwitch} isOn={isConnected}></Toggle>
 			</div>
+			<Conditional showIf={isConnected}>
+			<div
+			css={css`
+				display: block;
+			`}
+			className={"w-full"}
+		>
+			<Card
+				className={"mt-34"}
+				css={css`
+					padding: 20rem 20rem 20rem;
+					background: #101215;
+				`}
+			>
+				<div className="text-13">
+					<div className="flex" style={{alignItems: "center"}}>
+						<label style={{fontWeight: "bold"}}>Normal channel</label>
+						<div className="ml-auto" css={selectBoxCSS}>
+							<SelectBox onScrollEnd={handleScrollEnd} dropDownHeight={"214rem"} isSearchable={true} values={getSlackChannelValues(slackChannels)} selected={integration.normalChannel ? integration.normalChannel : null} placeholder="Select a channel" va callback={handleChannelSelect.bind(this, "normal")}/>
+						</div>
+					</div>
+
+					<div className="flex mt-20" style={{alignItems: "center"}}>
+						<label style={{fontWeight: "bold"}}>Alert Channel:</label>
+						<div className="ml-auto" css={selectBoxCSS}>
+							<SelectBox onScrollEnd={handleScrollEnd} dropDownHeight={"214rem"} isSearchable={true} values={getSlackChannelValues(slackChannels)} selected={integration.alertChannel ? integration.alertChannel : null} placeholder="Select a channel" callback={handleChannelSelect.bind(this, "alert")} css={selectBoxCSS} />
+						</div>
+					</div>
+				</div>
+				</Card>
+				</div>
+			</Conditional>
 		</div>
 	);
 }
+
+const selectBoxCSS = css`
+	width: 200rem;
+`;
 
 const ciIntegrations = ["Gitlab", "Github"];
 
@@ -529,7 +641,7 @@ export const Integrations = () => {
 					Make sure you have selected all the configuration you want
 				</TextBlock>
 				<hr css={basicHR} />
-				{/* <SlackIntegration /> */}
+				<SlackIntegration />
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />

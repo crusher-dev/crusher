@@ -12,6 +12,8 @@ export interface IRunnerLogStepMeta {
 	workingSelector?: { type: string; value: string };
 	screenshotDuringError?: string;
 	failedReason?: string;
+	beforeUrl?: string;
+	afterUrl?: string;
 	outputs?: [{ name: string; value: string }];
 	meta?: any;
 }

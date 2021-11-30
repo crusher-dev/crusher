@@ -5,6 +5,7 @@ import { WebView } from "./webView";
 import { ActionStatusEnum, iAction } from "../../crusher-shared/types/action";
 import { App } from "./app";
 import * as fs from "fs";
+import { saveTest } from "./utils";
 
 const extensionURLRegExp = new RegExp(/(^chrome-extension:\/\/)([^\/.]*)(\/test_recorder\.html?.*)/);
 class MainWindow {
@@ -20,6 +21,7 @@ class MainWindow {
 		isTestRunning: boolean;
 		isTestVerified: boolean;
 		webViewSrc?: string;
+		remainingSteps?: Array<iAction>;
 	};
 	appState: { userAgent: string };
 
@@ -126,6 +128,18 @@ class MainWindow {
 		return true;
 	}
 
+	clearReminingSteps() {
+		this.state.remainingSteps = undefined;
+	}
+
+	addToRemainingSteps(actions: Array<iAction>) {
+		if(!this.state.remainingSteps) {
+			this.state.remainingSteps = [];
+		}
+
+		this.state.remainingSteps.push(...actions);
+	}
+
 	updateLastRecordedStepStatus(status: ActionStatusEnum) {
 		this.browserWindow.webContents.send("post-message-to-host", { type: "UPDATE_LAST_RECORDED_ACTION_STATUS", meta: { status } });
 		return true;
@@ -150,14 +164,19 @@ class MainWindow {
 		await this.app.cleanupStorage();
 		this.state.isTestRunning = true;
 		this.browserWindow.webContents.send("post-message-to-host", { type: "CLEAR_RECORDED_ACTIONS" });
-		const { error } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
+		const { error, actions } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
+		this.state.isTestRunning = false;
+
 		if (error) {
 			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');
 		} else {
-			this.browserWindow.webContents.send("post-message-to-host", { type: "SAVE_RECORDED_TEST" });
 			this.state.isTestVerified = true;
+			try {
+				await saveTest(actions);
+			} catch(err) {
+				this.webContents.executeJavaScript('alert("Cant save the test");');
+			};
 		}
-		this.state.isTestRunning = false;
 
 		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: false } });
 	}
@@ -181,6 +200,9 @@ class MainWindow {
 		ipcMain.handle("is-test-verified", this.isTestVerified.bind(this));
 		ipcMain.handle("verify-test", this.verifyTest.bind(this));
 		ipcMain.handle("steps-updated", this.handleStepsUpdated.bind(this));
+		ipcMain.handle("continue-remaining-test", this.continueRemainingTest.bind(this));
+		ipcMain.handle("navigate-page", this.handleNavigatePage.bind(this));
+		ipcMain.handle("run-action", this.handleRunAction.bind(this));
 
 		ipcMain.handle("run-after-this-test", this.handleRunAfterThisTest.bind(this));
 
@@ -192,6 +214,34 @@ class MainWindow {
 			this.app.cleanupStorage();
 		});
 		this.registerIPCListeners();
+	}
+
+	async handleRunAction(event, action) {
+		this.webView.setRunningState(true);
+		this.webView.playwrightInstance.runMainActions(action, false).finally(() => {
+			this.webView.setRunningState(false);
+		});
+		return true;
+	}
+
+	async handleNavigatePage(event, url) {
+		if(this.webView){
+			this.webView.webContents().loadURL(url);
+		}
+		return true;
+	}
+
+	async continueRemainingTest(event) {
+		if(!this.state.remainingSteps || !this.state.remainingSteps.length) return false;
+		console.log("Reaming steps are", this.state.remainingSteps);
+		await this.sendMessage("SET_IS_REPLAYING", { value: true });
+		this.webView.setRunningState(true);
+		this.webView.playwrightInstance.runActions(this.state.remainingSteps).finally(() => {
+			this.state.remainingSteps = undefined;
+			this.sendMessage("SET_IS_REPLAYING", { value: false });
+			this.webView.setRunningState(false);
+		});
+		return true;
 	}
 
 	handleGetContentScript(event) {

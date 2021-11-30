@@ -410,6 +410,20 @@ export default class EventRecording {
 		this.handleWindowClick(event);
 	}
 
+	private checkIfElementIsAnchored(target: HTMLElement) {
+		// Check if element has some a tag parent
+		let parent = target.parentElement;
+		if(target.tagName.toLocaleLowerCase() === "a")
+			return target;
+		while (parent) {
+			if (parent.tagName.toLowerCase() === "a") {
+				return parent;
+			}
+			parent = parent.parentElement;
+		}
+		return false;
+	}
+
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
 		event.timestamp = Date.now();
@@ -420,6 +434,10 @@ export default class EventRecording {
 		if (event.which === 2) return;
 
 		let target = event.target;
+		
+		const mainAnchorNode = this.checkIfElementIsAnchored(target);
+		if(mainAnchorNode) target = mainAnchorNode;
+
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		const inputNodeInfo = this._getInputNodeInfo(target);
 
@@ -453,7 +471,7 @@ export default class EventRecording {
 			this._clickEvents.push(event);
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
-			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, event.target, {
+			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, target, {
 				inputInfo: tagName === "label" ? inputNodeInfo : null,
 			});
 		}
@@ -615,7 +633,10 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
+				if(argArray[0]) {
+					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ? (!this.isAbsoluteURL(argArray[2])
+						? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				}
 				return out;
 			},
 		});
@@ -624,7 +645,10 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null);
+				if(argArray[0]) {
+					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ?  (!this.isAbsoluteURL(argArray[2])
+					? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				}
 				return out;
 			},
 		});
@@ -662,7 +686,7 @@ export default class EventRecording {
 			this.eventsController.saveCapturedEventInBackground(
 				ActionsInTestEnum.NAVIGATE_URL,
 				document.body,
-				activeElementHref
+				activeElementHref && activeElementHref.trim() !== ""
 					? !this.isAbsoluteURL(activeElementHref)
 						? new URL(activeElementHref, document.baseURI).toString()
 						: activeElementHref

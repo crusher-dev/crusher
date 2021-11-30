@@ -1,24 +1,27 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 interface ICheckboxProps {
-    labelText: string;
-    id: string;
-};
-
-const Checkbox = (props: ICheckboxProps) => {
-    const {labelText, id} = props;
-
-    return (
-        <div>
-            <input type="checkbox" id={id}/>
-            <label htmlFor={id} style={checkBoxLabelStyle}>{labelText}</label>
-        </div>
-    )
+	labelText: string;
+	id: string;
+	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const checkBoxLabelStyle = {
-    marginLeft: 12,
-    fontSize: 15,
+const Checkbox = (props: ICheckboxProps) => {
+	const { labelText, id, onChange } = props;
+
+	return (
+		<div>
+			<input type="checkbox" onChange={onChange} id={id} />
+			<label htmlFor={id} style={checkBoxLabelStyle}>
+				{labelText}
+			</label>
+		</div>
+	);
 };
 
-export {Checkbox};
+const checkBoxLabelStyle = {
+	marginLeft: 12,
+	fontSize: 15,
+};
+
+export { Checkbox };

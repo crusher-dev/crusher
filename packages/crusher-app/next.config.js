@@ -10,7 +10,10 @@ const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const CopyPlugin = require("copy-webpack-plugin");
 const withPWA = require("next-pwa");
 
-module.exports = withImages(
+// Temp fix, as withPWA is not working in development build.
+const pwaWrapper = IS_PRODUCTION ? withPWA : (data) => {return data} ;
+
+module.exports = pwaWrapper(withImages(
 	withBundleAnalyzer({
 		target: process.env.PACKAGE_VERCEL ? "serverless" : "server",
 		distDir: "../../output/crusher-app/.next",
@@ -72,5 +75,8 @@ module.exports = withImages(
 			// your currentProject has ESLint errors.
 			ignoreDuringBuilds: true,
 		},
+		pwa: {
+			dest: 'public'
+		}
 	}),
-);
+));

@@ -2,6 +2,7 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { SlackOAuthResponse } from "@modules/slack/interface";
+import { SlackService } from "@modules/slack/service";
 import { BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { IIntegrationsTable, IntegrationServiceEnum } from "./interface";
@@ -10,6 +11,8 @@ import { IIntegrationsTable, IntegrationServiceEnum } from "./interface";
 class IntegrationsService {
 	@Inject()
 	private dbManager: DBManager;
+	@Inject()
+	private slackService: SlackService;
 
 	async addIntegration(integrationConfig: SlackOAuthResponse, projectId: number) {
 		return this.dbManager.insert(`INSERT INTO integrations SET project_id = ?, meta = ?`, [projectId, JSON.stringify({oAuthInfo: integrationConfig })]);
@@ -45,6 +48,15 @@ class IntegrationsService {
 		integrationConfig.channel["normal"] = payload.normalChannel ? payload.normalChannel : null;
 
 		return this.updateIntegration(integrationConfig, existingSlackIntegration.id);
+	}
+
+
+	async postSlackMessageIfNeeded(projectId: number, blocks: Array<any>, type: "alert" | "normal") {
+		const integration = await this.getSlackIntegration(projectId);
+		if(!integration) return;
+		const integrationConfig = integration.meta;
+		if(!integrationConfig.channel[type]) return;
+		return this.slackService.postMessage(blocks, integrationConfig.channel[type].value, integrationConfig.oAuthInfo.accessToken);
 	}
 }
 

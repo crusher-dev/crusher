@@ -36,7 +36,7 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, on
 	const [filterText, setFilterText] = useState("");
 
 	const getSelectedComponent = () => {
-		const selectedHasLabel = selected && selected.length > 0 && selected.every((item: any) => !!item.label);
+		const selectedHasLabel = selected && selected.length > 0 && selected.every((item: any) => item && !!item.label);
 
 		return !selectedHasLabel ? values.filter(({ value }) => selected.includes(value)) : (selected ? selected : []);
 	};

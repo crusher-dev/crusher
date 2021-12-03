@@ -36,7 +36,9 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, on
 	const [filterText, setFilterText] = useState("");
 
 	const getSelectedComponent = () => {
-		return values.filter(({ value }) => selected.includes(value));
+		const selectedHasLabel = selected && selected.length > 0 && selected.every((item: any) => !!item.label);
+
+		return !selectedHasLabel ? values.filter(({ value }) => selected.includes(value)) : (selected ? selected : []);
 	};
 
 	const getReadableSelectedValues = () => {
@@ -46,6 +48,7 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, on
 	}
 
 	const selectedText = useMemo(() => {
+		console.log("Selected inside is this", selected);
 		if (!selected || selected.length === 0) return placeholder;
 		return getReadableSelectedValues();
 	}, [selected]);

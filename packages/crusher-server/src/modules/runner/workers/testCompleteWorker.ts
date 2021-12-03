@@ -182,7 +182,7 @@ async function getSlackMessageBlockForBuildReport(buildRecord: KeysToCamelCase<I
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.latestReportId}`)}|#${buildRecord.latestReportId}>*`
+				"text": `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}|#${buildRecord.latestReportId}>*`
 			}
 		},
 		{
@@ -200,7 +200,7 @@ async function getSlackMessageBlockForBuildReport(buildRecord: KeysToCamelCase<I
 						"emoji": true
 					},
 					"value": "click_me_123",
-					"url": resolvePathToFrontendURI(`/app/build/${buildRecord.latestReportId}`),
+					"url": resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
 					"action_id": "button-action"
 				}
 			]

@@ -38,6 +38,20 @@ class SlackService {
 
 		return integrationConfig;
 	}
+
+	async postMessage(blocks: Array<any>, channelId: string, botToken: string) {
+		return fetch("https://slack.com/api/chat.postMessage", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${botToken}`,
+			},
+			body: JSON.stringify({
+				channel: channelId,
+				blocks: blocks,
+			}),
+		});
+	}
 }
 
 export { SlackService };

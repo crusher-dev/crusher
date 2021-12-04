@@ -177,7 +177,7 @@ class MainWindow {
 		const { error, actions } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
 		this.state.isTestRunning = false;
 
-		await this.flushLogsToDisk(!!error, actions);
+		await this.flushLogsToDisk(!!error ? false : true, actions);
 
 		if (error) {
 			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');

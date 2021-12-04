@@ -156,6 +156,16 @@ class MainWindow {
 		return this.state.isTestVerified;
 	}
 
+	private async flushLogsToDisk(hasPassed: boolean, actions: Array<any>) {
+		const logFile = app.commandLine.getSwitchValue("log-file");
+		if(!logFile) return;
+
+		fs.writeFileSync(logFile, JSON.stringify({
+			hasPassed,
+			steps: actions,
+		}));
+	}
+
 	async verifyTest(event, tempTestId) {
 		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: true } });
 
@@ -166,6 +176,8 @@ class MainWindow {
 		this.browserWindow.webContents.send("post-message-to-host", { type: "CLEAR_RECORDED_ACTIONS" });
 		const { error, actions } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
 		this.state.isTestRunning = false;
+
+		await this.flushLogsToDisk(!!error, actions);
 
 		if (error) {
 			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');

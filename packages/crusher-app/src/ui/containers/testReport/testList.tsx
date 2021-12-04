@@ -14,10 +14,9 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ChevronDown, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import { ChevronDown,InfoSVG, TestStatusSVG } from "@svg/testReport";
 import ReactTable, { useTable, useBlockLayout } from "react-table";
 import { FixedSizeList } from 'react-window';
-
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -111,8 +110,8 @@ function ReportSection() {
 						<div>
 							<div className={"flex justify-between items-center"}>
 								<div className={"text-14"}>
-									<span className={"text-16 font-cera font-600 mr-38"}>feat: integrated test GTM #517</span>
-									<span className={"text-12 mr-16"}>12 june baseline</span>
+									<span className={"text-16 font-cera font-600 mr-38"}>#{query.id}</span>
+									{/* <span className={"text-12 mr-16"}>12 june baseline</span> */}
 									<span className={"text-12"}>Jump to</span>
 								</div>
 								<div className={"flex items-center pt-4"}>
@@ -196,11 +195,12 @@ function RenderImageInfo({ data, index }) {
 
 			<Conditional showIf={imageViewType === "side"}>
 				<div className={"flex"}>
-					<img src={currentImage} />{" "}
+					<img src={currentImage} css={css`max-width:49%`} />{" "}
 					<img
 						src={getAssetPath(meta.outputs[index].diffImageUrl)}
 						css={css`
 							margin-left: 2%;
+							max-width:49%
 						`}
 					/>
 				</div>
@@ -453,20 +453,20 @@ const scrollbarWidth = () => {
     document.body.removeChild(scrollDiv)
     return scrollbarWidth
 }
-  
+
 
 function Table({ columns, data }) {
 	// Use the state and functions returned from useTable to build your UI
-  
+
 	const defaultColumn = React.useMemo(
 	  () => ({
 		width: 210,
 	  }),
 	  []
 	)
-  
+
 	const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
-  
+
 	const {
 	  getTableProps,
 	  getTableBodyProps,
@@ -482,7 +482,7 @@ function Table({ columns, data }) {
 	  },
 	  useBlockLayout
 	)
-  
+
 	const RenderRow = React.useCallback(
 	  ({ index, style }) => {
 		const row = rows[index]
@@ -506,7 +506,7 @@ function Table({ columns, data }) {
 	  },
 	  [prepareRow, rows]
 	)
-  
+
 	// Render the UI for your table
 	return (
 	  <div {...getTableProps()} className="table" style={{fontSize: "13.5rem"}}>
@@ -521,7 +521,7 @@ function Table({ columns, data }) {
 			</div>
 		  ))}
 		</div>
-  
+
 		<div {...getTableBodyProps()} style={{marginTop: "26rem"}}>
 		  <FixedSizeList
 			height={200}

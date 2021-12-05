@@ -148,7 +148,7 @@ function getScreenshotActionsResult(actionsResult: Array<IActionResultItemWithIn
 				return true;
 			}
 
-			if(actionResult.meta.outputs && actionResult.meta.outputs.length) {
+			if(actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length) {
 				return true;
 			}
 

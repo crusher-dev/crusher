@@ -12,6 +12,7 @@ import { BrowserEnum } from "@modules/runner/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { IUserTable } from "../users/interface";
+import { BuildsService } from "../builds/service";
 
 @Service()
 @JsonController("")
@@ -22,6 +23,8 @@ export class TestController {
 	private testService: TestService;
 	@Inject()
 	private testRunnerService: TestsRunner;
+	@Inject()
+	private buildsService: BuildsService;
 
 	@Post("/tests/actions/save.temp")
 	async saveTempTest(@Body() body: { events: Array<iAction> }) {
@@ -212,9 +215,13 @@ export class TestController {
 	async getTest(@Param("test_id") testId: number) {
 		const testRecord = await this.testService.getFullTest(await this.testService.getTest(testId));
 		if (!testRecord) throw new BadRequestError("No such test");
+
+		const draftJob = await this.buildsService.getBuild(testRecord.draftJobId);
+
 		return {
 			...testRecord,
 			events: JSON.parse(testRecord.events),
+			hasFirstRunCompleted: draftJob.status === BuildStatusEnum.FINISHED,
 		};
 	}
 }

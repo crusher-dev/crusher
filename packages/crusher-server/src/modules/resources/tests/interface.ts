@@ -10,7 +10,7 @@ export interface ITestTable extends BaseRowInterface {
 	featured_video_url: string;
 	featured_screenshot_url: string;
 	featured_clip_video_url?: string;
-	draft_job_id?: boolean;
+	draft_job_id?: number;
 	deleted: boolean;
 	meta?: string;
 }

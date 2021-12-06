@@ -21,6 +21,7 @@
 <p align="center">
     <a href="https://docs.crusher.dev/docs/download">Download</a> ·
     <a href="#-start-using-crusher">Install & Use</a> ·
+    <a href="#-start-using-crusher">Features</a> ·
     <a href="https://docs.crusher.dev">Documentation</a> ·
 </p>
 
@@ -57,6 +58,17 @@ Here's how testing should be in 21st century
 
 <img src="https://camo.githubusercontent.com/2676911af677a0fda9a26b1d7a06e39805bdb8438b4e338915b9497840eee4e4/68747470733a2f2f73392e67696679752e636f6d2f696d616765732f657a6769662d342d6139356636646533356563342e676966" border="0">
 
+## 🛣️ Some use cases
+<img src="https://i.imgur.com/7pq2nkM.png" height="100%" style="margin: 0 auto;"/>
+
+- Testing your app e2e with each commit or in dev.
+- Testing responsiveness of your UIs.
+- Ensuring your app across different browsers.
+- Alerting system when any component stops working.
+- Debug system that helps you when something breaks.
+- Creating automated tools or scraping data from site.
+- Or maybe keeping an eye on your competitor 👀
+
 ## 🚀 Start using Crusher
 
 **On crusher cloud for free**
@@ -68,7 +80,6 @@ Fastest and most powerful way to try Crusher.
 </a>
 
 <br/>
-
 
 
 **Deploy it on your infra (self-host)**
@@ -114,16 +125,6 @@ We try to reimagine how testing should work. Few things that differentiate us
 
 4.) Making things simple and fast. We take inspiration from Figma, Linear :D.
 
-
-## 🛣️ Some use cases
-
-- Testing your app e2e with each commit or in dev.
-- Testing responsiveness of your UIs.
-- Ensuring your app across different browsers.
-- Alerting system when any component stops working.
-- Debug system that helps you when something breaks.
-- Creating automated tools or scraping data from site.
-- Or maybe keeping an eye on your competitor 👀
 
 ## Is Crusher the right choice for me?
 

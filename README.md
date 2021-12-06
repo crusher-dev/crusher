@@ -48,9 +48,9 @@ Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is gr
 ![enter image description here](https://i.imgur.com/WvwLuzk.png)
 
 
-You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
+Software development has evolved a lot in the last decade, but testing is still the same. You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
 
-Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.
+Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.
 
 ## 🚀 Demo
 
@@ -137,12 +137,8 @@ If the answers to the above are YES, then Crusher would be a great fit for your
 application. Dgraph integrates seamlessly into most application in < 5 mins. 
 
 ## 🛣️ Architecture
-
 ![enter image description here](https://i.imgur.com/wzU5fUO.png)
 
-## 🛣️ Roadmap
-
-Check about roadmap plan here.
 
 ## 🛣️ Download Recorder
 
@@ -157,8 +153,7 @@ Check about roadmap plan here.
 ### 📝 License
 
 <hr/>
-This repo is entirely MIT licensed, except the **/src_ee directory (if applicable).
-EE features (contained in the src_ee directory) require a Crusher license. Contact us at [contact@crusher.dev](mailto:sales@crusher.dev) for more information.
+This repo is entirely MIT licensed, except the **/src_ee and **/ee directory (if applicable).Enterprise features require a license. Contact us at [contact@crusher.dev](mailto:contact@crusher.dev) for more information.
 
 ## 🤝 Contributors
 

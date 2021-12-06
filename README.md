@@ -59,7 +59,7 @@ Here's how testing should be in 21st century
 <img src="https://camo.githubusercontent.com/2676911af677a0fda9a26b1d7a06e39805bdb8438b4e338915b9497840eee4e4/68747470733a2f2f73392e67696679752e636f6d2f696d616765732f657a6769662d342d6139356636646533356563342e676966" border="0">
 
 ## 🛣️ Some use cases
-<img src="https://i.imgur.com/R61QZeU.png" height="100%" style="margin: 0 auto;"/>
+<img src="https://i.imgur.com/WCSxwkV.png" height="100%" style="margin: 0 auto;"/>
 
 - Testing your app e2e with each commit or in dev.
 - Testing responsiveness of your UIs.

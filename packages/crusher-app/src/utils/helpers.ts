@@ -80,3 +80,20 @@ export const hashCode = function (s: string) {
 		return a & a;
 	}, 0);
 };
+
+export const getCollapseList = function (steps:any) {
+	const length = steps.length;
+	if (length < 3)  return {
+		lastStep:1,
+		remainingSteps:-1
+	}
+	const failedStepIndex = steps.findIndex((step:any) => step.status === "FAILED");
+    if (failedStepIndex < 2)  return {
+		lastStep:length-1,
+		remainingSteps:length-2
+	}
+	return {
+		lastStep:failedStepIndex > -1 ? failedStepIndex : length - 1,
+		remainingSteps:length-3
+	}
+}

@@ -12,7 +12,8 @@
 		"export": "next export",
 		"prettify": "prettier --write . --plugin-search-dir=./node_modules/ --plugin=./node_modules/@trivago/prettier-plugin-sort-imports/",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-		"analyze:browser": "cross-env ANALYZE=true ANALYZE=true next build"
+		"analyze:browser": "cross-env ANALYZE=true ANALYZE=true next build",
+		"test": "jest"
 	},
 	"dependencies": {
 		"@emotion/babel-preset-css-prop": "^10.0.27",
@@ -67,6 +68,7 @@
 		"@next/bundle-analyzer": "^10.0.4",
 		"@svgr/webpack": "^5.5.0",
 		"@trivago/prettier-plugin-sort-imports": "^2.0.4",
+		"@types/jest": "^27.0.3",
 		"@types/js-cookie": "^2.2.6",
 		"@types/node": "^14.14.22",
 		"@types/perfect-scrollbar": "^1.3.0",
@@ -84,6 +86,7 @@
 		"eslint-plugin-prettier": "^3.3.1",
 		"eslint-plugin-react": "^7.22.0",
 		"eslint-plugin-react-hooks": "^4.2.0",
+		"jest": "^27.4.3",
 		"next-images": "^1.6.2",
 		"next-purgecss": "^4.0.0",
 		"next-transpile-modules": "^6.0.0",

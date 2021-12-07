@@ -31,7 +31,7 @@ import {
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
 import { sentenceCase } from "@utils/common/textUtils";
-import { getAssetPath } from "@utils/helpers";
+import { getAssetPath, getCollapseList } from "@utils/helpers";
 import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
@@ -681,12 +681,43 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 }
 
 function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
+	const {lastStep,remainingSteps}=React.useMemo(()=>getCollapseList(steps),[steps])
+	console.log({lastStep,remainingSteps})
+	const [expandTest,setExpandTest]=React.useState(false)
+	const expandHandler=React.useCallback(()=>{setExpandTest(true)},[])
 	return (
 		<div className={"px-32 w-full"} css={stepsContainer}>
 			<div className={"ml-32 py-32"} css={stepsList}>
+			<Conditional showIf={!expandTest}>
+				<RenderStep testInstanceData={testInstanceData} data={steps[0]} />
+				<RenderStep testInstanceData={testInstanceData} data={steps[1]} />
+				<Conditional showIf={remainingSteps>0}>
+					<div className={"relative mb-32"}>
+						<div className={" flex px-44"}>
+							<div css={tick}>
+								<TestStatusSVG type={'EXPAND'} height={"20rem"} width={"20rem"} />
+							</div>
+							<div className={"mt-4 flex"} css={css`
+							align-items: center;`}>
+								<span
+								onClick={expandHandler}
+								className={"cursor-pointer text-13  font-600 underline"}
+								css={css`
+								color: rgba(4, 120, 87, var(--tw-text-opacity));`}
+								>
+									Expand {remainingSteps} steps
+								</span>
+							</div>
+						</div>
+					</div>
+				</Conditional>
+				<RenderStep testInstanceData={testInstanceData} data={steps[lastStep]} />
+			</Conditional>
+			<Conditional showIf={expandTest}>
 				{steps.map((step, index) => (
 					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
 				))}
+			</Conditional>
 			</div>
 		</div>
 	);

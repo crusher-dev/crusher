@@ -9,6 +9,7 @@ html {
 body {
 	cursor: inherit;
 	font-size: 16rem;
+	color: #fff;
 }
 
 body {
@@ -19,6 +20,11 @@ body {
 	transform-origin: left top 0;
 }
 
-.sbdocs-wrapper {
-	background: #181717 !important;
+.sbdocs-wrapper{
+	background: #0c0d0f !important;
+	color: #fff;
 }
+#root{
+	padding: 20px 0 0 20px;
+}
+

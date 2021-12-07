@@ -22,6 +22,7 @@
 		"@lottiefiles/react-lottie-player": "^2.1.7",
 		"@octokit/auth-oauth-app": "^3.0.7",
 		"@octokit/rest": "^18.0.14",
+		"@types/jest": "^27.0.3",
 		"@types/react-outside-click-handler": "^1.3.0",
 		"clipboard-copy": "^3.1.0",
 		"commitizen": "^4.2.3",
@@ -94,6 +95,7 @@
 		"prettier-plugin-tailwind": "^2.2.12",
 		"shelljs": "^0.8.4",
 		"tailwindcss": "^1.9.6",
+		"ts-jest": "^27.1.0",
 		"typescript": "^4.1.3",
 		"webpack": "4.46.0"
 	}

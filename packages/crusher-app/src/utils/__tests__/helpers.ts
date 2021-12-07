@@ -1,22 +1,22 @@
-import {getCollapseList} from './helpers'
+import { getCollapseList } from '../helpers'
 
 
 test('should ', () => {
-    expect(getCollapseList([{}])).toBe(undefined);
+    expect(getCollapseList([{}])).toMatchObject({"lastStep": 1, "remainingSteps": -1});
     expect(getCollapseList([
         { status: "COMPLETED" },
         { status: "COMPLETED" },
         { status: "FAILED" },
         { status: "COMPLETED" },
         { status: "COMPLETED" },
-    ])).toBe({ lastStep: 2, remainingSteps: 2 });
+    ])).toMatchObject({ lastStep: 2, remainingSteps: 2 });
     expect(getCollapseList([
         { status: "COMPLETED" },
         { status: "COMPLETED" },
         { status: "COMPLETED" },
         { status: "COMPLETED" },
         { status: "FAILED" },
-    ])).toBe({ lastStep: 4, remainingSteps: 2 });
+    ])).toMatchObject({ lastStep: 4, remainingSteps: 2 });
     expect(getCollapseList([
         { status: "COMPLETED" },
         { status: "COMPLETED" },
@@ -26,12 +26,12 @@ test('should ', () => {
         { status: "COMPLETED" },
         { status: "COMPLETED" },
         { status: "COMPLETED" },
-    ])).toBe({ lastStep: 4, remainingSteps: 5 });
+    ])).toMatchObject({ lastStep: 4, remainingSteps: 5 });
     expect(getCollapseList([
         { status: "FAILED" },
         { status: "COMPLETED" },
         { status: "COMPLETED" },
         { status: "COMPLETED" },
-    ])).toBe({ lastStep: 0, remainingSteps: 1 });
+    ])).toMatchObject({ lastStep: 3, remainingSteps: 2 });
 
 })

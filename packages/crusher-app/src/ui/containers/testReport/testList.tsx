@@ -16,7 +16,6 @@ import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { ChevronDown,InfoSVG, TestStatusSVG } from "@svg/testReport";
 import ReactTable, { useTable, useBlockLayout } from "react-table";
-import { FixedSizeList } from 'react-window';
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,

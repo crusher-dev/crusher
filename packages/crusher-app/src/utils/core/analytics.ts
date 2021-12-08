@@ -10,7 +10,7 @@ export const waitForSegmentToLoad = () => {
 	});
 };
 export class Analytics {
-	static async identify(name, userId, email, teamID, planType, selfHost, mode) {
+	static async identify(name:string, userId, email:string, teamID, planType, selfHost:boolean, mode) {
 		await waitForSegmentToLoad();
 		window["analytics"].identify(userId, {
 			name,
@@ -27,5 +27,10 @@ export class Analytics {
 				email,
 			});
 		}
+	}
+
+	static async trackPage(){
+		await waitForSegmentToLoad();
+		window["analytics"].page()
 	}
 }

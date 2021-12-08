@@ -72,5 +72,6 @@ module.exports = withImages(
 			// your currentProject has ESLint errors.
 			ignoreDuringBuilds: true,
 		},
+		productionBrowserSourceMaps: true,
 	}),
 );

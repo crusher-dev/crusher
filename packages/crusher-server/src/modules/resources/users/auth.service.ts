@@ -119,7 +119,7 @@ class UserAuthService {
 
 		let inviteReferral: IInviteReferral = null;
 		if (encodedInviteCode) {
-			const inviteReferralCode = JSON.parse(Buffer.from(encodedInviteCode, "base64").toString("hex"));
+			const inviteReferralCode = JSON.parse(Buffer.from(encodedInviteCode, "base64").toString("ascii"));
 			inviteReferral = {
 				type: inviteReferralCode.inviteType,
 				code: inviteReferralCode.inviteCode,

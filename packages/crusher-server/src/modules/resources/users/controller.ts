@@ -91,11 +91,13 @@ export class UserController {
 	}
 
 	@Get("/users/actions/auth.google/callback")
-	async googleCallback(@QueryParam("code") code: string, @QueryParam("state") encodedState, @Req() req: any, @Res() res) {
+	async googleCallback(@QueryParam("code") code: string, @QueryParams() params, @Req() req: any, @Res() res) {
+		const { state: encodedState } = params;
 		const { tokens } = await this.oauth2Client.getToken(code);
 
 		this.googleAPIService.setAccessToken(tokens.access_token);
 		const profileInfo = await this.googleAPIService.getProfileInfo();
+
 		await this.userAuthService.authWithGoogle(
 			{
 				name: [profileInfo.given_name, profileInfo.family_name].filter((n) => !!n).join(" "),

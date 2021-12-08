@@ -60,7 +60,7 @@ let finalConfig: any = {
 		init_content_script: [path.resolve(__dirname, "../src/extension/scripts/inject/init_event_listener.ts")],
 		change_navigator: [path.resolve(__dirname, "../src/extension/scripts/inject/change_navigator.ts")],
 		background: [path.resolve(__dirname, "../src/extension/background.ts")],
-		record_test: [path.resolve(__dirname, "../src/extension/ui/app.tsx")],
+		record_test: [path.resolve(__dirname, "../src/extension/v2/ui/app.tsx")],
 	},
 	plugins: [
 		virtualModules,

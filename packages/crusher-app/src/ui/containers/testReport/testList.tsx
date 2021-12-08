@@ -687,17 +687,15 @@ function Expandable({steps,testInstanceData,count,show=false}: { steps: any[]; t
 	<Conditional showIf={!expandTest}>
 				<Conditional showIf={count>0}>
 					<div className={"relative mb-32"}>
-						<div className={" flex px-44"}>
+						<div className={" flex px-44"} onClick={expandHandler}>
 							<div css={tick}>
 								<TestStatusSVG type={'EXPAND'} height={"20rem"} width={"20rem"} />
 							</div>
 							<div className={"mt-4 flex"} css={css`
 							align-items: center;`}>
 								<span
-								onClick={expandHandler}
-								className={"cursor-pointer text-13  font-600 underline"}
-								css={css`
-								color: rgba(4, 120, 87, var(--tw-text-opacity));`}
+								className={"text-13  font-600 underline"}
+								css={css`color: #58E9E0`}
 								>
 									Expand {count} steps
 								</span>

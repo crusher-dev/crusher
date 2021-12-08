@@ -116,6 +116,12 @@ async function handleRecordAction(action: iAction): any {
 	switch (type) {
 		case ActionsInTestEnum.WAIT_FOR_NAVIGATION: {
 			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION;
+			if(action.payload.meta.value && action.payload.meta.value.isBeforeNavigation) {
+			   store.dispatch(updateIsRecorderScriptBooted(false));
+			} else {
+				store.dispatch(updateIsRecorderScriptBooted(true));
+			}
+
 			if (isLastEventWaitForNavigation) {
 				store.dispatch(updateLastRecordedAction({ ...action, type: ActionsInTestEnum.WAIT_FOR_NAVIGATION }));
 			} else {

@@ -692,6 +692,15 @@ export default class EventRecording {
 						: activeElementHref
 					: window.location.href.toString(),
 			);
+		} else {
+			this.eventsController.saveCapturedEventInBackground(
+				ActionsInTestEnum.WAIT_FOR_NAVIGATION,
+				document.body,
+				{ 
+					url : "",
+					isBeforeNavigation: true,
+				}
+			);
 		}
 	}
 

@@ -11,11 +11,12 @@ export const waitForSegmentToLoad = () => {
 };
 export class Analytics {
 	static async identify(name:string, userId, email:string, teamID, planType, selfHost:boolean, mode) {
+		const isBotUser = email.email.includes("testing-") && email.includes("testing-");
 		await waitForSegmentToLoad();
 		window["analytics"].identify(userId, {
 			name,
 			teamID,
-			email,
+			isBotUser ? "bot@crusher.dev" : email,
 			planType,
 			selfHost,
 			mode,

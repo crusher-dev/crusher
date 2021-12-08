@@ -97,3 +97,19 @@ export const getCollapseList = function (steps:any) {
 		remainingSteps:length-3
 	}
 }
+export function groupTestResults(steps :any) {
+	return steps.reduce((step:any, { status }:any, index:number) => {
+		if (index < 2) {
+			return [{ type: "show", from: 0, to: 1 }];
+		}
+		const type = (status === "REVIEW" || status === "FAILED") ? "show" : "hide";
+		const lastIndex = step.length - 1;
+		const last = step[lastIndex];
+		if (last?.type == type) {
+			step[lastIndex] = { ...last, to: index, count: index - last.from + 1 };
+		} else {
+			step.push({ type, from: index, to: index, count: 1 });
+		}
+		return step;
+	}, []);
+}

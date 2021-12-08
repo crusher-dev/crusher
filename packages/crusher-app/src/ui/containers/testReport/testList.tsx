@@ -31,7 +31,7 @@ import {
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
 import { sentenceCase } from "@utils/common/textUtils";
-import { getAssetPath, getCollapseList } from "@utils/helpers";
+import { getAssetPath, getCollapseList ,groupTestResults} from "@utils/helpers";
 import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
@@ -679,19 +679,13 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 		</>
 	);
 }
-
-function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
-	const {lastStep,remainingSteps}=React.useMemo(()=>getCollapseList(steps),[steps])
-	console.log({lastStep,remainingSteps})
-	const [expandTest,setExpandTest]=React.useState(false)
+function Expandable({steps,testInstanceData,count,show=false}: { steps: any[]; testInstanceData: any ;count:number;show?:boolean}){
+	const [expandTest,setExpandTest]=React.useState(show)
 	const expandHandler=React.useCallback(()=>{setExpandTest(true)},[])
-	return (
-		<div className={"px-32 w-full"} css={stepsContainer}>
-			<div className={"ml-32 py-32"} css={stepsList}>
-			<Conditional showIf={!expandTest}>
-				<RenderStep testInstanceData={testInstanceData} data={steps[0]} />
-				<RenderStep testInstanceData={testInstanceData} data={steps[1]} />
-				<Conditional showIf={remainingSteps>0}>
+
+	return <>
+	<Conditional showIf={!expandTest}>
+				<Conditional showIf={count>0}>
 					<div className={"relative mb-32"}>
 						<div className={" flex px-44"}>
 							<div css={tick}>
@@ -705,19 +699,29 @@ function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceDa
 								css={css`
 								color: rgba(4, 120, 87, var(--tw-text-opacity));`}
 								>
-									Expand {remainingSteps} steps
+									Expand {count} steps
 								</span>
 							</div>
 						</div>
 					</div>
 				</Conditional>
-				<RenderStep testInstanceData={testInstanceData} data={steps[lastStep]} />
 			</Conditional>
 			<Conditional showIf={expandTest}>
 				{steps.map((step, index) => (
 					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
 				))}
 			</Conditional>
+	</>
+}
+
+function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
+	const groupSteps=React.useMemo(()=>groupTestResults(steps),[steps])
+	return (
+		<div className={"px-32 w-full"} css={stepsContainer}>
+			<div className={"ml-32 py-32"} css={stepsList}>
+			{groupSteps.map(( { type, from, to, count }:any)=>(
+			<Expandable testInstanceData={testInstanceData} steps={steps.slice(from,from===to?to+1:to)} count={count} show={type==='show'}/>
+			))}
 			</div>
 		</div>
 	);

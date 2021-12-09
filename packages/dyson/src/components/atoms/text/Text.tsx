@@ -25,10 +25,13 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 	return (
 		<span
 			className={`font-gilroy font-${weight} ${className}`}
-			css={css`
-				font-size: ${fontSize}rem;
-				color: ${color};
-			`}
+			css={[
+				css`
+					font-size: ${fontSize}rem;
+					color: ${color};
+				`,
+				props.CSS,
+			]}
 			{...otherProps}
 		>
 			{children}

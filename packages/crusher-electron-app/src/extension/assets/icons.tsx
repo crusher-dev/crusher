@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 interface NavigateIconProps {
 	onClick: () => any;
-	disabled: boolean;
+	disabled?: boolean;
 }
 
 const LoadingIcon = (props) => {

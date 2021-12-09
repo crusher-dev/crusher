@@ -50,8 +50,7 @@ export const Input: React.FC<InputProps> = ({ initialValue = "", size = "large",
 
 	return (
 		<div className={"relative"}>
-			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />
-
+			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState, props.CSS]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle}>{rightIcon}</div>
 			</Conditional>

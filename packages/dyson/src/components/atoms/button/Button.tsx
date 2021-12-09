@@ -45,8 +45,8 @@ export const Button: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", chi
 		<button
 			className={` rem-24 text-14 text-white ${className} leading-none`}
 			css={[
-				buttonCSS,
 				blue,
+				buttonCSS,
 				size == "x-small" && extraSmallButton,
 				size === "small" && smallButton,
 				size === "medium" && mediumButton,
@@ -55,6 +55,7 @@ export const Button: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", chi
 				bgColor === "tertiary-outline" && tertiaryOutline,
 				bgColor === "danger" && danger,
 				bgColor === "disabled" && disabledButton,
+				props.CSS,
 			]}
 			disabled={disabled}
 			{...props}

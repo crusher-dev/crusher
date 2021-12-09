@@ -1,0 +1,34 @@
+* {
+	box-sizing: border-box;
+}
+body {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+.container {
+	display: grid;
+	background: #121212;
+	width: 100vw;
+	height: 100vh;
+	color: white;
+}
+.body {
+	grid-column: 1 / span 3;
+}
+.sidebar {
+	padding: 1rem;
+	grid-column: 4;
+	background-color: #232323;
+}
+.toolbar {
+	background-color: #232323;
+	padding: 1rem;
+	min-height: 3rem;
+}
+.info {
+	position: fixed;
+	display: inline-block;
+	bottom: 4rem;
+	padding: 10px;
+}

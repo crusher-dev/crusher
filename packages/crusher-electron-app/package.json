@@ -24,6 +24,7 @@
 		"pack:all": "yarn pack:linux && yarn pack:mac"
 	},
 	"dependencies": {
+		"@emotion/react": "^11.7.0",
 		"@medv/finder": "^2.0.0",
 		"@popperjs/core": "^2.4.4",
 		"@reduxjs/toolkit": "^1.5.0",

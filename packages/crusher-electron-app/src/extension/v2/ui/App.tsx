@@ -1,12 +1,20 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
 import { render } from "react-dom";
+import {Button} from "@dyson/components/atoms/button/Button";
+import {css} from "@emotion/react";
 
 const App = () => {
-	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
-
 	return (
 		<div style={containerStyle}>
-			<h2>This is react apps</h2>
+			<h2 css={{color: "red", fontSize: "14rem"}}>This is react app</h2>
+			<Button
+				    css={css`font-size: 14rem;`}
+					disabled={false}
+					title={"Please enter project name"}
+					bgColor={"blue"}
+					onClick={() => {}}
+				>
+					Tests
+				</Button>
 		</div>
 	);
 };

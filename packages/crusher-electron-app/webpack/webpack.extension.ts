@@ -99,8 +99,12 @@ let finalConfig: any = {
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				options: {
-					presets: ["@babel/preset-env", "@babel/preset-react"],
-					plugins: [["@babel/plugin-transform-react-jsx", { pragma: "h" }]],
+					presets: [
+						"@babel/preset-env",
+						"@emotion/babel-preset-css-prop",
+						"@babel/preset-react"
+					],
+					plugins: [["@babel/plugin-transform-react-jsx", { pragma: "h" }], "@emotion/babel-plugin"],
 				},
 			},
 			{ test: /\.ts(x)?$/, loader: "ts-loader", options: { transpileOnly: true } },

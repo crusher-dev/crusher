@@ -1866,6 +1866,17 @@
     "@emotion/weak-memoize" "^0.2.5"
     stylis "^4.0.3"
 
+"@emotion/cache@^11.6.0":
+  version "11.6.0"
+  resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.6.0.tgz#65fbdbbe4382f1991d8b20853c38e63ecccec9a1"
+  integrity sha512-ElbsWY1KMwEowkv42vGo0UPuLgtPYfIs9BxxVrmvsaJVvktknsHYYlx5NQ5g6zLDcOTyamlDc7FkRg2TAcQDKQ==
+  dependencies:
+    "@emotion/memoize" "^0.7.4"
+    "@emotion/sheet" "^1.1.0"
+    "@emotion/utils" "^1.0.0"
+    "@emotion/weak-memoize" "^0.2.5"
+    stylis "^4.0.10"
+
 "@emotion/core@^10.0.20", "@emotion/core@^10.0.35", "@emotion/core@^10.0.9", "@emotion/core@^10.1.1":
   version "10.1.1"
   resolved "https://registry.yarnpkg.com/@emotion/core/-/core-10.1.1.tgz#c956c1365f2f2481960064bcb8c4732e5fb612c3"
@@ -1927,6 +1938,19 @@
     "@emotion/weak-memoize" "^0.2.5"
     hoist-non-react-statics "^3.3.1"
 
+"@emotion/react@^11.7.0":
+  version "11.7.0"
+  resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.7.0.tgz#b179da970ac0e8415de3ac165deadf8d9c4bf89f"
+  integrity sha512-WL93hf9+/2s3cA1JVJlz8+Uy6p6QWukqQFOm2OZO5ki51hfucHMOmbSjiyC3t2Y4RI8XUmBoepoc/24ny/VBbA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@emotion/cache" "^11.6.0"
+    "@emotion/serialize" "^1.0.2"
+    "@emotion/sheet" "^1.1.0"
+    "@emotion/utils" "^1.0.0"
+    "@emotion/weak-memoize" "^0.2.5"
+    hoist-non-react-statics "^3.3.1"
+
 "@emotion/serialize@^0.11.15", "@emotion/serialize@^0.11.16":
   version "0.11.16"
   resolved "https://registry.yarnpkg.com/@emotion/serialize/-/serialize-0.11.16.tgz#dee05f9e96ad2fb25a5206b6d759b2d1ed3379ad"
@@ -1958,6 +1982,11 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@emotion/sheet/-/sheet-1.0.1.tgz#245f54abb02dfd82326e28689f34c27aa9b2a698"
   integrity sha512-GbIvVMe4U+Zc+929N1V7nW6YYJtidj31lidSmdYcWozwoBIObXBnaJkKNDjZrLm9Nc0BR+ZyHNaRZxqNZbof5g==
+
+"@emotion/sheet@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@emotion/sheet/-/sheet-1.1.0.tgz#56d99c41f0a1cda2726a05aa6a20afd4c63e58d2"
+  integrity sha512-u0AX4aSo25sMAygCuQTzS+HsImZFuS8llY8O7b9MDRzbJM0kVJlAz6KNDqcG7pOuQZJmj/8X/rAW+66kMnMW+g==
 
 "@emotion/styled-base@^10.0.27":
   version "10.0.31"
@@ -26500,7 +26529,7 @@ stylis@3.5.4:
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.5.4.tgz#f665f25f5e299cf3d64654ab949a57c768b73fbe"
   integrity sha512-8/3pSmthWM7lsPBKv7NXkzn2Uc9W7NotcwGNpJaa3k7WMM1XDCA4MgT5k/8BIexd5ydZdboXtU90XH9Ec4Bv/Q==
 
-stylis@^4.0.3:
+stylis@^4.0.10, stylis@^4.0.3:
   version "4.0.10"
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.0.10.tgz#446512d1097197ab3f02fb3c258358c3f7a14240"
   integrity sha512-m3k+dk7QeJw660eIKRRn3xPF6uuvHs/FFzjX3HQ5ove0qYsiygoAhwn5a3IYKaZPo5LrYD0rfVmtv1gNY1uYwg==

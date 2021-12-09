@@ -8,21 +8,9 @@ const InfoBox = (): JSX.Element => {
 	return (
 		<div css={containerStyle}>
 			<div css={heading}>New to crusher?</div>
-			<TextBlock
-				css={css`
-					margin-bottom: 26rem;
-				`}
-			>
+			<TextBlock css={blockStyle}>
 				<Text CSS={text1Style}>Get a 2 min tutorial on how it works?</Text>
-				<Text
-					css={css`
-						font-family: Cera Pro;
-						font-size: 12rem;
-						color: #ffffff;
-					`}
-				>
-					Know more
-				</Text>
+				<Text css={knowStyle}>Know more</Text>
 			</TextBlock>
 			<TextBlock
 				css={css`
@@ -75,5 +63,13 @@ const text1Style = css`
 	line-height: 18rem;
 	margin-right: 23rem;
 	color: #ffffff;
+`;
+const knowStyle = css`
+	font-family: Cera Pro;
+	font-size: 12rem;
+	color: #ffffff;
+`;
+const blockStyle = css`
+	margin-bottom: 26rem;
 `;
 export default InfoBox;

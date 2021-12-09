@@ -21,11 +21,12 @@ import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
 import { AddSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
-import { addGithubRepo, getGitIntegrations, unlinkGithubRepo } from "@constants/api";
+import { addGithubRepo, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
 import { RequestMethod } from "@types/RequestOptions";
 import { currentProject } from "@store/atoms/global/project";
 import useSWR, { mutate } from "swr";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
+import { sendSnackBarEvent } from "@utils/common/notify";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -308,6 +309,7 @@ function LinkedRepo() {
 		await unlinkRepo(projectId, id);
 		mutate(getGitIntegrations(project.id));
 	}, [linkedRepos]);
+
 	return (
 		<div
 			css={css`
@@ -432,11 +434,33 @@ function SlackIntegration() {
 	const [isConnected, setIsConnected] = useState(false);
 	const [slackChannels, setSlackChannels] = useState(null);
 	const [nextCursor, setNextCursor] = useState(null);
+	const {data: integrations} = useSWR(getSlackIntegrations(project.id));
+
 	const [integration, setSlackIntegration] = useState({
 		normalChannel: [],
 		alertChannel: [],
 	});
 
+	useEffect(() => {
+		if(integrations && integrations.slackIntegration) {
+			console.log("Integrations is", integrations);
+			setIsConnected(true);
+
+			const slackIntegrationMeta = integrations.slackIntegration && integrations.slackIntegration.meta;
+
+			if(slackIntegrationMeta && slackIntegrationMeta.channel) {
+				const normalChannel = slackIntegrationMeta.channel.normal;
+				const alertChannel = slackIntegrationMeta.channel.alert;
+
+				setSlackIntegration({
+					normalChannel: normalChannel ? [{label: normalChannel.name, value: normalChannel.value}] : [],
+					alertChannel: alertChannel ? [{label: alertChannel.name, value: alertChannel.value}] : [],
+				});
+			}
+
+		}
+	}, [integrations]);
+	
 	const fetchSlackChannels = useCallback(async () => {
 		const {channels, nextCursor} = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`));
 		setSlackChannels(channels);
@@ -444,10 +468,15 @@ function SlackIntegration() {
 		return channels;
 	}, [slackChannels, nextCursor]);
 
+	useEffect(() => {
+		if(isConnected) {
+			fetchSlackChannels();
+		}
+	}, [isConnected])
+
 	const handleSwitch  = useCallback((toggleState: boolean) => {
 		if(toggleState) {
-			console.log("The project atom is", project);
-			const windowRef = openPopup(`https://slack.com/oauth/v2/authorize?scope=chat:write,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}?redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(JSON.stringify({projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations")}))}`);
+			const windowRef = openPopup(`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(JSON.stringify({projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations")}))}`);
 			
 			//@ts-ignore
 			const interval = setInterval(() => {
@@ -457,23 +486,68 @@ function SlackIntegration() {
 				if (isOnFEPage) {
 					const url = windowRef?.location?.href;
 					setIsConnected(true);
-					fetchSlackChannels();
 					windowRef.close();
 					clearInterval(interval);
 				}
 			}, 200);
 		} else {
-			setIsConnected(false);
+			backendRequest(`/integrations/${project.id}/slack/actions/remove`).then((res)=> {
+				setIsConnected(false);
+				setSlackIntegration({
+					normalChannel: [],
+					alertChannel: [],
+				});
+				sendSnackBarEvent({
+					message: "Succesfully disabled slack integration",
+					type: "normal",
+				});
+			}).catch((err) => {
+				sendSnackBarEvent({
+					message: "Error disabling slack integration",
+					type: "error",
+				});
+			})
 		}
 	}, []);
 
-	const handleChannelSelect = (type: "normal" | "alert", values) => {
+	const handleChannelSelect = (type: "normal" | "alert", selectedValues) => {
 		const channelTypeName = type === "normal" ? "normalChannel" : "alertChannel";
 
 		setSlackIntegration((previous) => ({
 				...previous,
-				[channelTypeName]: values
+				[channelTypeName]: selectedValues
 		}));
+
+		const alertChannel = channelTypeName === "alertChannel" ? selectedValues : integration.alertChannel;
+		const normalChannel = channelTypeName === "normalChannel" ? selectedValues : integration.normalChannel;
+
+		const alertChannelInfo = alertChannel && alertChannel[0] && alertChannel[0].label ? alertChannel : getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
+		const normalChannelInfo = normalChannel && normalChannel[0] && normalChannel[0].label ? normalChannel : getSlackChannelValues(slackChannels).filter((channel) => normalChannel[0] === channel.value);
+
+		backendRequest(`/integrations/${project.id}/slack/actions/save.settings`, {
+			method: RequestMethod.POST,
+			payload: {
+				alertChannel: alertChannelInfo[0] ? {
+					name: alertChannelInfo[0].label,
+					value: alertChannelInfo[0].value,
+				} : null,
+				normalChannel: normalChannelInfo[0] ? {
+					name: normalChannelInfo[0].label,
+					value: normalChannelInfo[0].value,
+				} : null
+			}
+		}).then((res) => {
+			console.log("Res is", res);
+			sendSnackBarEvent({
+				type: "success",
+				message: "Slack integration saved successfully",
+			});
+		}).catch((err) => {
+			sendSnackBarEvent({
+				type: "error",
+				message: "Slack integration failed to save",
+			});
+		});
 	};
 
 	const handleScrollEnd = useCallback(async () => {		

@@ -284,6 +284,8 @@ export const TestReportScreen = () => {
 	const { data } = useBuildReport(query.id);
 	const [, updateMetaData] = useAtom(updateMeta);
 
+	const testsCount = data.tests.length;
+	
 	useEffect(() => {
 		updateMetaData({
 			type: "user",
@@ -309,11 +311,11 @@ export const TestReportScreen = () => {
 			<Conditional showIf={selectedTabIndex !== 1}>
 				<div className={"flex items-center leading-none mt-56 mb-57 text-13"}>
 					<ThunderSVG className={"mr-16"} />
-					Wohoo! You saved 20 hours of testing
+					Wohoo! You ran {testsCount} tests
 				</div>
 			</Conditional>
 			<Conditional showIf={selectedTabIndex === 1}>
-				<div className={"flex leading-none mt-56 mb-52  items-center"}>
+				<div className={"flex leading-none mt-56 mb-52  items-center invisible"}>
 					<div
 						className={"text-13"}
 						css={css`

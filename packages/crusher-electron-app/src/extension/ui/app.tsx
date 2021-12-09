@@ -10,8 +10,6 @@ import { ModalManager } from "./containers/app/modals";
 import { AdvancedURL } from "../utils/url";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
-import { resolveToFrontend, submitPostDataWithForm } from "../utils/helpers";
-import { addHttpToURLIfNotThere, resolveToBackendPath } from "@shared/utils/url";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
 import * as _url from "url";

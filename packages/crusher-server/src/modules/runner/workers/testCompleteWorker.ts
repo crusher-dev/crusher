@@ -8,7 +8,7 @@ import * as RedisLock from "redlock";
 import { RedisManager } from "@modules/redis";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { ITestCompleteQueuePayload } from "@crusher-shared/types/queues/";
-import { BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
+import { BuildReportStatusEnum, IBuildReportTable } from "@modules/resources/buildReports/interface";
 import { BuildStatusEnum, IBuildTable } from "@modules/resources/builds/interface";
 import { ProjectsService } from "@modules/resources/projects/service";
 import { BuildApproveService } from "@modules/resources/buildReports/build.approve.service";
@@ -21,6 +21,9 @@ import { TestsRunner } from "..";
 import { iAction } from "@crusher-shared/types/action";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { IntegrationsService } from "@modules/resources/integrations/service";
+import { IUserTable } from "@modules/resources/users/interface";
+import { IProjectTable } from "@modules/resources/projects/interface";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -29,6 +32,8 @@ const buildTestInstanceScreenshotService = Container.get(BuildTestInstanceScreen
 const projectsService = Container.get(ProjectsService);
 const buildApproveService = Container.get(BuildApproveService);
 const usersService = Container.get(UsersService);
+const projectIntegrationsService = Container.get(IntegrationsService);
+
 const emailManager = Container.get(EmailManager);
 const testRunner = Container.get(TestsRunner);
 const redisManager: RedisManager = Container.get(RedisManager);
@@ -98,6 +103,7 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 
 const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob): Promise<any> {
 	const buildRecord = await buildService.getBuild(bullJob.data.buildId);
+	const buildReportRecord = await buildReportService.getBuildReportRecord(buildRecord.latestReportId);
 
 	await handleNextTestsForExecution(bullJob.data, buildRecord);
 
@@ -137,15 +143,79 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 		// @TODO: Add integrations here (Notify slack, etc.)
 		console.log("Build status: ", buildReportStatus);
 
-		await handleIntegrations(buildRecord.id, buildReportStatus);
+		await handleIntegrations(buildRecord, buildReportRecord, buildReportStatus);
 		// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
 		return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 	}
 };
 
-async function handleIntegrations(buildId: number, reportStatus: BuildReportStatusEnum) {
+async function getSlackMessageBlockForBuildReport(buildRecord: KeysToCamelCase<IBuildTable>, projectRecord: KeysToCamelCase<IProjectTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>, userInfo: KeysToCamelCase<IUserTable>, reportStatus: BuildReportStatusEnum): Promise<Array<any>> {
+	
+	const  infoFields = [
+		{
+			"type": "mrkdwn",
+			"text": `*Build Id:*\n${buildRecord.id}`
+		},
+		{
+			"type": "mrkdwn",
+			"text": `*Tests Count:*\n${buildReportRecord.totalTestCount}`
+		},
+		{
+			"type": "mrkdwn",
+			"text": `*Triggerred By:*\n${userInfo.name}`
+		},
+		{
+			"type": "mrkdwn",
+			"text": `*Status:*\n${reportStatus}`
+		}
+	];
+
+	if(buildRecord.host && buildRecord.host !== "null") {
+		infoFields.push({
+			"type": "mrkdwn",
+			"text": `*Host*:\n${buildRecord.host}`
+		});
+	}
+	
+	return [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}|#${buildRecord.latestReportId}>*`
+			}
+		},
+		{
+			"type": "section",
+			"fields": infoFields
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "View Reports",
+						"emoji": true
+					},
+					"value": "click_me_123",
+					"url": resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+					"action_id": "button-action"
+				}
+			]
+		}
+	]
+}
+
+async function handleIntegrations(buildRecord: KeysToCamelCase<IBuildTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>, reportStatus: BuildReportStatusEnum) {
+	const userInfo = await usersService.getUserInfo(buildRecord.userId)
+	const projectRecord = await projectsService.getProject(buildRecord.projectId);
+
 	// Github Integration
-	await buildService.markGithubCheckFlowFinished(reportStatus, buildId);
+	await buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
+	// Slack Integration
+	await projectIntegrationsService.postSlackMessageIfNeeded(buildRecord.projectId, await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus), reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert");
 }
 
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {

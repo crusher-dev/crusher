@@ -12,6 +12,7 @@ import { BrowserEnum } from "@modules/runner/interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { IUserTable } from "../users/interface";
+import { BuildsService } from "../builds/service";
 
 @Service()
 @JsonController("")
@@ -22,6 +23,8 @@ export class TestController {
 	private testService: TestService;
 	@Inject()
 	private testRunnerService: TestsRunner;
+	@Inject()
+	private buildsService: BuildsService;
 
 	@Post("/tests/actions/save.temp")
 	async saveTempTest(@Body() body: { events: Array<iAction> }) {
@@ -44,8 +47,10 @@ export class TestController {
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum },
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number; },
 	): Promise<IProjectTestsListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
+		if(!params.page) params.page = 0;
+
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
 		const testsList = testsListData.list.map((testData) => {
 			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
@@ -79,7 +84,7 @@ export class TestController {
 			return { id: user.id, name: user.name, email: user.email };
 		});
 
-		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors };
+		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors, currentPage: params.page };
 	}
 
 	@Authorized()
@@ -212,9 +217,13 @@ export class TestController {
 	async getTest(@Param("test_id") testId: number) {
 		const testRecord = await this.testService.getFullTest(await this.testService.getTest(testId));
 		if (!testRecord) throw new BadRequestError("No such test");
+
+		const draftJob = await this.buildsService.getBuild(testRecord.draftJobId);
+
 		return {
 			...testRecord,
 			events: JSON.parse(testRecord.events),
+			hasFirstRunCompleted: draftJob.status === BuildStatusEnum.FINISHED,
 		};
 	}
 }

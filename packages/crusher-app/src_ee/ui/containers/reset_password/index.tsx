@@ -65,12 +65,12 @@ function EmailPasswordBox() {
 		if (!validatePassword(password.value) || !validatePassword(confirmPassword.value)) return;
 		setLoading(true);
 		try {
-		const { status } = await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
-		setData(status)
+			const { systemInfo } = await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
+			setData(systemInfo)
 			push("/app/dashboard");
 		} catch (e: any) {
 			console.log(e);
-			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
+			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User not found" : "Some error occurred while registering");
 		}
 		setLoading(false);
 	};

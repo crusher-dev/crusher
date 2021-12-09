@@ -77,6 +77,8 @@ module.exports = pwaWrapper(withImages(
 		},
 		pwa: {
 			dest: 'public'
-		}
+		},
+		productionBrowserSourceMaps: true,
+
 	}),
 ));

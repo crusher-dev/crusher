@@ -79,12 +79,13 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		const newValidationRowsData = [];
 		for (let i = 0; i < validationFields.length; i++) {
 			newValidationRowsData.push({
+				id: uniqueId("generate-checks-row"),
 				field: validationFields[i],
 				operation: ASSERTION_OPERATION_TYPE.MATCHES,
 				validation: getSeoFieldValue(validationFields[i]),
 			});
 		}
-		addValidationRows(newValidationRowsData);
+		setValidationRows([...newValidationRowsData]);
 	};
 
 	const updateFieldOfValidationRow = (newFieldName: string, rowId: string) => {

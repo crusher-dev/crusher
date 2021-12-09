@@ -1,12 +1,13 @@
 import React from "react";
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 
 export type TextBlockProps = {
-	fontSize: string;
-	leading: boolean;
-	weight: number;
-	color: string;
-} & React.DetailedHTMLProps<any, any>;
+	fontSize?: number;
+	leading?: boolean;
+	weight?: number;
+	CSS?: SerializedStyles;
+	color?: string;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, any>;
 
 const TextDefaultProps = {
 	fontSize: 12,
@@ -22,10 +23,13 @@ export const TextBlock: React.FC<TextBlockProps> = (props: TextBlockProps) => {
 	return (
 		<div
 			className={`font-gilroy font-${weight} ${className}`}
-			css={css`
-				font-size: ${fontSize}rem;
-				color: ${color};
-			`}
+			css={[
+				css`
+					font-size: ${fontSize}rem;
+					color: ${color};
+				`,
+				otherProps.CSS,
+			]}
 			{...otherProps}
 		>
 			{children}

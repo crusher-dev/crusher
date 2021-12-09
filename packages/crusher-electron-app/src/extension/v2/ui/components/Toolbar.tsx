@@ -7,8 +7,8 @@ import { NavigateBackIcon, NavigateRefreshIcon } from "crusher-electron-app/src/
 const Toolbar = (): JSX.Element => {
 	return (
 		<div css={containerStyle}>
-			<NavigateBackIcon onClick={() => {}} />
-			<NavigateRefreshIcon onClick={() => {}} />
+			<NavigateBackIcon onClick={() => 0} />
+			<NavigateRefreshIcon onClick={() => 0} />
 			<Input placeholder="Enter URL to test" CSS={inputStyle} />
 			<Button bgColor="tertiary-outline" CSS={buttonStyle}>
 				Start

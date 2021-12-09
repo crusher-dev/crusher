@@ -1,14 +1,15 @@
 import React from "react";
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 
 export type TextProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
-	fontSize: string;
-	leading: boolean;
-	weight: number;
-	color: string;
+	fontSize?: string;
+	leading?: boolean;
+	weight?: number;
+	CSS?: SerializedStyles;
+	color?: string;
 } & React.DetailedHTMLProps<any, any>;
 
 const TextDefaultProps = {
@@ -30,7 +31,7 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 					font-size: ${fontSize}rem;
 					color: ${color};
 				`,
-				props.CSS,
+				otherProps.CSS,
 			]}
 			{...otherProps}
 		>

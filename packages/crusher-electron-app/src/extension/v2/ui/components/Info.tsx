@@ -8,12 +8,12 @@ const InfoBox = (): JSX.Element => {
 	return (
 		<div css={containerStyle}>
 			<div css={heading}>New to crusher?</div>
-			<TextBlock css={blockStyle}>
+			<TextBlock CSS={blockStyle}>
 				<Text CSS={text1Style}>Get a 2 min tutorial on how it works?</Text>
 				<Text css={knowStyle}>Know more</Text>
 			</TextBlock>
 			<TextBlock
-				css={css`
+				CSS={css`
 					display: flex;
 					align-items: center;
 				`}

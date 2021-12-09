@@ -73,6 +73,8 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 		const fieldOptions = getFieldOptions();
 
+		const selectedOption = fieldOptions.find((option) => option.value === selectedField);
+
 		const handleOnFieldChange = (option: iReactSelectOption) => {
 			if (onFieldChange) {
 				onFieldChange(option.value, rowId);
@@ -80,7 +82,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<Select className="w-40" styles={reactSelectDefaultStyles} defaultValue={fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />
+			<Select className="w-40" styles={reactSelectDefaultStyles} defaultValue={selectedOption ? selectedOption : fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />
 		);
 	};
 

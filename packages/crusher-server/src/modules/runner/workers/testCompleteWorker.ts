@@ -215,7 +215,7 @@ async function handleIntegrations(buildRecord: KeysToCamelCase<IBuildTable>, bui
 	// Github Integration
 	await buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
 	// Slack Integration
-	await projectIntegrationsService.postSlackMessageIfNeeded(buildRecord.projectId, await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus), BuildReportStatusEnum.PASSED ? "normal" : "alert");
+	await projectIntegrationsService.postSlackMessageIfNeeded(buildRecord.projectId, await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus), reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert");
 }
 
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {

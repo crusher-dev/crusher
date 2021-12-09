@@ -40,7 +40,7 @@ class GithubService {
 		this.octokit = new Octokit({ auth: token });
 	}
 
-	async updateRunCheckStatus(githubMeta: { owner: string; repo: string; checkRunId: number }, conclusion: GithubCheckConclusionEnum) {
+	async updateRunCheckStatus(githubMeta: { owner: string; repo: string; checkRunId: any }, conclusion: GithubCheckConclusionEnum) {
 		const response = await this.octokit.checks.update({
 			owner: githubMeta.owner,
 			repo: githubMeta.repo,

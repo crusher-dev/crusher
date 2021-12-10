@@ -1,31 +1,49 @@
 import React from "react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { Checkbox } from "@dyson/components/atoms/checkbox/checkbox";
+import { Checkbox, CheckboxProps } from "@dyson/components/atoms/checkbox/checkbox";
 import { css } from "@emotion/react";
-import { SearchIcon, MoreIcon } from "crusher-electron-app/src/extension/assets/icons";
+import { MoreIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
+import { Conditional } from "@dyson/components/layouts";
+import { Dropdown } from "@dyson/components/molecules/Dropdown";
 
 export const containerStyle = css`
 	padding: 26rem;
 `;
 
 export function Steps(): JSX.Element {
-	const [s, setS] = React.useState(false);
+	const [s, setS] = React.useState([]);
+	const [selected, setSelected] = React.useState(new Set());
+
+	const toggleStep = React.useCallback(
+		(index) => {
+			const selectedSteps = new Set(selected);
+			console.log(selected);
+			if (selected.has(index)) {
+				selectedSteps.delete(index);
+			} else {
+				selectedSteps.add(index);
+			}
+
+			setSelected(selectedSteps);
+		},
+		[selected],
+	);
+
 	return (
 		<div
 			css={css`
 				border-top: 1rem solid #303235;
-				padding: 18rem 26rem;
 			`}
 		>
 			<div
 				css={css`
 					display: flex;
 					align-items: center;
-					margin-bottom: 5rem;
+					padding: 14rem 26rem;
 				`}
 			>
-				<Checkbox isSelected={s} callback={(a) => setS(a)} />
+				<Checkbox isSelected={!!s.length} callback={(a) => setS([a])} />
 
 				<Text
 					CSS={css`
@@ -37,15 +55,60 @@ export function Steps(): JSX.Element {
 				>
 					11 Steps
 				</Text>
-				<MoreIcon />
+				<Conditional showIf={!!selected.size}>
+					<div
+						css={css`
+							box-sizing: border-box;
+							position: relative;
+							display: block;
+						`}
+					>
+						<Dropdown
+							dropdownCSS={css`
+								width: 160rem;
+								transform: translate(-80%, -40%);
+							`}
+							component={
+								<>
+									<TextBlock
+										css={css`
+											padding: 6rem 16rem;
+										`}
+									>
+										Create template
+									</TextBlock>
+								</>
+							}
+						>
+							<MoreIcon />
+						</Dropdown>
+					</div>
+				</Conditional>
 			</div>
-			<Step s={s} setS={setS} />
-			<Step s={s} setS={setS} />
-			<Step s={s} setS={setS} />
+			<div
+				css={css`
+					overflow-y: auto;
+					padding: 18rem 26rem;
+					padding-top: 0rem;
+					height: 25vh;
+				`}
+			>
+				{[...Array(6)].map((e, i) => (
+					<Step
+						isSelectAllType={false}
+						key={i}
+						isSelected={selected.has(i)}
+						callback={() => toggleStep(i)}
+						title="Click on Element"
+						subtitle="p > a"
+					/>
+				))}
+			</div>
 		</div>
 	);
 }
-function Step(s: boolean, setS: React.Dispatch<React.SetStateAction<boolean>>): JSX.Element {
+
+function Step({ title, subtitle, ...props }: CheckboxProps & { title: string; subtitle: string }): JSX.Element {
 	return (
 		<div
 			css={css`
@@ -53,15 +116,15 @@ function Step(s: boolean, setS: React.Dispatch<React.SetStateAction<boolean>>): 
 				align-items: center;
 			`}
 		>
-			<Checkbox isSelected={s} callback={(a) => setS(a)} />
+			<Checkbox {...props} />
 			<div
 				css={css`
 					margin: 5rem;
 					padding: 4rem;
 				`}
 			>
-				<TextBlock>Click on Element</TextBlock>
-				<TextBlock>{"p > a"}</TextBlock>
+				<TextBlock>{title}</TextBlock>
+				<TextBlock>{subtitle}</TextBlock>
 			</div>
 		</div>
 	);

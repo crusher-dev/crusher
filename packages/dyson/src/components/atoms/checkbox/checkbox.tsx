@@ -14,7 +14,7 @@ function TickSVG(props: React.SVGAttributes<SVGSVGElement>) {
 	);
 }
 
-export type ChecboxProps = {
+export type CheckboxProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
@@ -86,7 +86,7 @@ const disabledCSS = css`
 	cursor: not-allowed;
 `;
 
-export function Checkbox(props: ChecboxProps): ReactElement {
+export function Checkbox(props: CheckboxProps): ReactElement {
 	const { callback, disabled, label, isSelected, isSelectAllType, className } = props;
 
 	const handleClick = () => {

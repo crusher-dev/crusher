@@ -4,17 +4,14 @@ import { css } from "@emotion/react";
 import { SearchIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { ActionList, ActionListItem } from "./ActionList";
 
-const containerStyle = css`
-	padding: 26rem;
-	height: 55vh;
-	overflow-y: auto;
-`;
+const containerStyle = css``;
 
 export const Action = (): JSX.Element => (
 	<div css={containerStyle}>
 		<div
 			css={css`
 				display: flex;
+				padding: 18rem 26rem;
 				justify-content: space-between;
 			`}
 		>
@@ -28,7 +25,14 @@ export const Action = (): JSX.Element => (
 			</Text>
 			<SearchIcon />
 		</div>
-		<div css={css``}>
+		<div
+			css={css`
+				padding: 26rem;
+				padding-top: 0rem;
+				height: 50vh;
+				overflow-y: auto;
+			`}
+		>
 			<ActionList>
 				<div
 					css={css`
@@ -52,6 +56,11 @@ export const Action = (): JSX.Element => (
 					</Text>
 					<Text CSS={css``}>Hover</Text>
 				</div>
+				<ActionListItem>Click on element</ActionListItem>
+				<ActionListItem>Click on element</ActionListItem>
+				<ActionListItem>Click on element</ActionListItem>
+			</ActionList>
+			<ActionList title="Page List">
 				<ActionListItem>Click on element</ActionListItem>
 				<ActionListItem>Click on element</ActionListItem>
 				<ActionListItem>Click on element</ActionListItem>

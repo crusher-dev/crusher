@@ -5,13 +5,58 @@ import { Text } from "@dyson/components/atoms/text/Text";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { css } from "@emotion/react";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-electron-app/src/extension/assets/icons";
+import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 
 const Toolbar = (): JSX.Element => {
 	return (
 		<div css={containerStyle}>
 			<NavigateBackIcon onClick={() => 0} disabled />
 			<NavigateRefreshIcon onClick={() => 0} disabled />
-			<Input placeholder="Enter URL to test" CSS={inputStyle} />
+			<Input
+				placeholder="Enter URL to test"
+				CSS={inputStyle}
+				rightIcon={
+					<div
+						css={css`
+							box-sizing: border-box;
+							position: relative;
+							right: -80rem;
+							transform: translateX(-50%);
+							display: block;
+							height: 34rem;
+							padding: 10rem 0rem;
+							border-left: 1px solid rgba(255, 255, 255, 0.13);
+						`}
+					>
+						<Dropdown
+							dropdownCSS={css`
+								width: 80rem;
+								transform: translateX(-60%);
+							`}
+							component={
+								<>
+									<TextBlock
+										css={css`
+											padding: 6rem 4rem;
+										`}
+									>
+										Desktop
+									</TextBlock>
+									<TextBlock
+										css={css`
+											padding: 6rem 4rem;
+										`}
+									>
+										Tablet
+									</TextBlock>
+								</>
+							}
+						>
+							<TextBlock>Mobile</TextBlock>
+						</Dropdown>
+					</div>
+				}
+			/>
 			<Button bgColor="tertiary-outline" CSS={buttonStyle}>
 				Start
 			</Button>

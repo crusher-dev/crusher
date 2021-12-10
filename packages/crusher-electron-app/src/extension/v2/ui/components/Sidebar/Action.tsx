@@ -1,33 +1,34 @@
 import React from "react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { Checkbox } from "@dyson/components/atoms/checkbox/checkbox";
 import { css } from "@emotion/react";
 import { SearchIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { ActionList, ActionListItem } from "./ActionList";
-import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 
 const containerStyle = css`
 	padding: 26rem;
+	height: 55vh;
+	overflow-y: auto;
 `;
-const Sidebar = (): JSX.Element => {
-	return (
-		<div css={containerStyle}>
-			<div
-				css={css`
-					display: flex;
-					justify-content: space-between;
+
+export const Action = (): JSX.Element => (
+	<div css={containerStyle}>
+		<div
+			css={css`
+				display: flex;
+				justify-content: space-between;
+			`}
+		>
+			<Text
+				CSS={css`
+					font-family: Cera Pro;
+					font-size: 15px;
 				`}
 			>
-				<Text
-					CSS={css`
-						font-family: Cera Pro;
-						font-size: 15px;
-					`}
-				>
-					Actions
-				</Text>
-				<SearchIcon />
-			</div>
+				Actions
+			</Text>
+			<SearchIcon />
+		</div>
+		<div css={css``}>
 			<ActionList>
 				<div
 					css={css`
@@ -57,30 +58,13 @@ const Sidebar = (): JSX.Element => {
 			</ActionList>
 			<ActionList title="Page List">
 				<ActionListItem>Click on element</ActionListItem>
+				<ActionListItem>Click on element</ActionListItem>
+				<ActionListItem>Click on element</ActionListItem>
 			</ActionList>
-			<Step />
+			<ActionList title="Most Used">
+				<ActionListItem>Click on element</ActionListItem>
+				<ActionListItem>Click on element</ActionListItem>
+			</ActionList>
 		</div>
-	);
-};
-
-export default Sidebar;
-
-function Step() {
-	const [s, setS] = React.useState(false);
-	return (
-		<div>
-			<div
-				css={css`
-					display: flex;
-					align-items: center;
-				`}
-			>
-				<Checkbox isSelected={s} callback={(a) => setS(a)} />
-				<div>
-					<TextBlock>Click on Element</TextBlock>
-					<TextBlock>{"p > a"}</TextBlock>
-				</div>
-			</div>
-		</div>
-	);
-}
+	</div>
+);

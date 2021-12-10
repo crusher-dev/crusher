@@ -68,7 +68,7 @@ export function Toggle(props: ToggleProps): ReactElement {
 
 	const handleClick = () => {
 		if (disabled) return;
-		if(!disableInternalState) toggleState(!state);
+		if (!disableInternalState) toggleState(!state);
 		callback && callback(!state);
 	};
 

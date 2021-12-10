@@ -6,9 +6,9 @@ export default create({
 	base: "dark",
 
 	// UI
-	appBg: '#0C0D0F',
-	appContentBg: '#0C0D0F',
-	appBorderColor: '#0C0D0F',
+	appBg: "#0C0D0F",
+	appContentBg: "#0C0D0F",
+	appBorderColor: "#0C0D0F",
 	appBorderRadius: 4,
 
 	// Text colors

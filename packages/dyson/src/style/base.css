@@ -20,11 +20,10 @@ body {
 	transform-origin: left top 0;
 }
 
-.sbdocs-wrapper{
+.sbdocs-wrapper {
 	background: #0c0d0f !important;
 	color: #fff;
 }
-#root{
+#root {
 	padding: 20px 0 0 20px;
 }
-

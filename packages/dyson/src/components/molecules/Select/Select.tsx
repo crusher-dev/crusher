@@ -31,21 +31,32 @@ const SelectDefaultProps = {
 	callback: () => {},
 };
 
-export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, onScrollEnd, css, values, size, isMultiSelect, isSearchable, dropDownHeight, callback }) => {
+export const SelectBox: React.FC<TSelectBox> = ({
+	selected = [],
+	placeholder,
+	onScrollEnd,
+	css,
+	values,
+	size,
+	isMultiSelect,
+	isSearchable,
+	dropDownHeight,
+	callback,
+}) => {
 	const [openSelectBox, setOpenSelectBox] = useState(false);
 	const [filterText, setFilterText] = useState("");
 
 	const getSelectedComponent = () => {
 		const selectedHasLabel = selected && selected.length > 0 && selected.every((item: any) => item && !!item.label);
 
-		return !selectedHasLabel ? values.filter(({ value }) => selected.includes(value)) : (selected ? selected : []);
+		return !selectedHasLabel ? values.filter(({ value }) => selected.includes(value)) : selected ? selected : [];
 	};
 
 	const getReadableSelectedValues = () => {
 		return getSelectedComponent()
-		.map(({ label }) => label)
-		.join(", ");
-	}
+			.map(({ label }) => label)
+			.join(", ");
+	};
 
 	const selectedText = useMemo(() => {
 		console.log("Selected inside is this", selected);
@@ -57,7 +68,7 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, on
 		setFilterText("");
 	}, [selected]);
 
-	const selectValue = (value) => {		
+	const selectValue = (value) => {
 		if (isMultiSelect) {
 			if (selected.includes(value)) {
 				const arrayWithoutThisValue = selected.filter((item) => item !== value);
@@ -72,7 +83,7 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, on
 	};
 
 	const handleFilterTextChange = (e: KeyboardEvent) => {
-		setFilterText((e.target as any).value); 
+		setFilterText((e.target as any).value);
 	};
 
 	const handleOutSideClick = (shouldSetOpenBox: boolean) => {
@@ -86,14 +97,19 @@ export const SelectBox: React.FC<TSelectBox> = ({ selected = [], placeholder, on
 		<>
 			<div css={[selectBoxContainer(openSelectBox, size), css]} className={"relative"}>
 				<div className={"flex justify-between text-13 px-12 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
-					<input onInput={handleFilterTextChange} type={"text"} disabled={!!isSearchable === false} css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]} value={filterText} className={"selectBox__input"} />
+					<input
+						onInput={handleFilterTextChange}
+						type={"text"}
+						disabled={!!isSearchable === false}
+						css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
+						value={filterText}
+						className={"selectBox__input"}
+					/>
 
 					<div>
-					<Conditional showIf={!filterText}>
-						<span css={[selected.length && selected !== null ? selectedValueCSS : null]}>
-							{selectedText}
-						</span>
-					</Conditional>
+						<Conditional showIf={!filterText}>
+							<span css={[selected.length && selected !== null ? selectedValueCSS : null]}>{selectedText}</span>
+						</Conditional>
 					</div>
 
 					<Conditional showIf={openSelectBox}>
@@ -133,13 +149,12 @@ const DropdownBox = ({ children, dropdownCSS, onScrollEnd }: TDropdownBox) => {
 
 	const handleScroll = useCallback(async () => {
 		const element = dropDownRef.current as HTMLElement;
-		if (element.scrollHeight - element.scrollTop === element.clientHeight)
-    	{
+		if (element.scrollHeight - element.scrollTop === element.clientHeight) {
 			setIsLoadingResults(true);
-			if(onScrollEnd) await onScrollEnd();
+			if (onScrollEnd) await onScrollEnd();
 
 			setIsLoadingResults(false);
-    	}
+		}
 	}, [dropDownRef, onScrollEnd]);
 
 	return (
@@ -148,7 +163,7 @@ const DropdownBox = ({ children, dropdownCSS, onScrollEnd }: TDropdownBox) => {
 				{children}
 			</div>
 			<Conditional showIf={isLoadingResults}>
-				<div style={{textAlign: "center", padding: "4rem 0rem" }}>Loading....</div>
+				<div style={{ textAlign: "center", padding: "4rem 0rem" }}>Loading....</div>
 			</Conditional>
 		</div>
 	);
@@ -184,7 +199,6 @@ const selectBoxContainer = (isOpen, size) => css`
 		${isOpen ? `	border-color: #6893e7;` : ""}
 	}
 `;
-
 
 export const dropdDownContainer = css`
 	top: calc(100% + 8rem);

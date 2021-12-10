@@ -1,68 +1,159 @@
-import React from "react";
+import ReactDOM from "react-dom";
 import { css, SerializedStyles } from "@emotion/react";
+import { useFloating, shift, autoPlacement, offset } from "@floating-ui/react-dom";
+import React,{ ReactElement,useState,useEffect, useMemo,useRef, SyntheticEvent,useCallback  } from "react";
 
-export type ButtonProps = {
-	/**
-	 * Is this the principal call to action on the page?
-	 */
-	impactLevel?: "high" | "medium" | "low";
-	/**
-	 * What background color to use
-	 */
-	bgColor?: "blue" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white" | "disabled";
-	/**
-	 * Size of the component
-	 */
-	size?: "small" | "medium" | "large";
 
-	/**
-	 * Disabled;
-	 */
-	disabled?: boolean;
-	/**
-	 * Emotion CSS style if any
-	 */
-	css?: SerializedStyles;
-	/**
-	 * Input contents
-	 */
+export type TooltipWrapperProps = {
+	type?: "click" | "hover";
+	placement: "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end";
+	autoHide?: boolean;
+	callback?: Function;
+	content: ReactElement;
 	children: any;
-	/**
-	 * Optional click handler
-	 */
-	onClick?: () => void;
-	className?: string;
+	padding: number;
+	offset: number;
+	wrapperCSS?: SerializedStyles;
+	css?: SerializedStyles;
 } & React.DetailedHTMLProps<any, any>;
 
-/*
-	Note :- Change color and size thru switch statement
- */
+export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) => {
+	const [container] = React.useState(() => {
+		return document.createElement(el);
+	});
+
+	React.useEffect(() => {
+		container.classList.add(className);
+		document.body.appendChild(container);
+		return () => {
+			document.body.removeChild(container);
+		};
+	}, []);
+
+	return ReactDOM.createPortal(children, container);
+};
+
 /**
- * Unified button component for Dyson UI system
+ * Unified tolltip component for Dyson UI system
  */
-export const Tooltip: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", children, disabled = false, className, ...props }) => {
+export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true", placement, type, content, padding = 0, ...props }) => {
+	const [show, setShow] = useState(false);
+	const [computedStyle, setComputedStyle] = useState(null);
+	const { offset: offsetWrapper = 5 } = props;
+	const { x, y, reference, floating, update, strategy, refs } = useFloating({
+		placement,
+		strategy: "fixed",
+		middleware: [shift(), offset(offsetWrapper)],
+	});
+	const { css, wrapperCSS, callback } = props;
+
+	const ref = useRef();
+
+	const eventListener = () => {
+		if (type === "hover") {
+			return {
+				onMouseOver: () => {
+					setShow(true);
+				},
+				onMouseLeave: (e) => {
+					const isElement = e.relatedTarget instanceof Element;
+					const movedToToolip = (isElement && refs.floating?.current?.contains(e.relatedTarget)) || refs.floating.current === e.relatedTarget;
+					if (movedToToolip) return;
+					console.log(e.relatedTarget);
+					if (autoHide) {
+						setShow(false);
+					}
+				},
+			};
+		}
+
+		return {
+			onClick: () => {
+				setShow(true);
+			},
+		};
+	};
+
+	const ClonedElement = useCallback(() => {
+		return React.cloneElement(children, {
+			ref: reference,
+			...eventListener(),
+		});
+	}, []);
+
+	useEffect(() => {
+		callback && callback(show);
+		update();
+		if (type !== "click" || autoHide === false) return;
+		const handleClick = (e: SyntheticEvent) => {
+			const isChildrenClick = refs.reference?.current?.contains(e.target) || refs.reference.current === e.target;
+			const isTooltipClick = refs.floating?.current?.contains(e.target) || refs.floating.current === e.target;
+			if (!isChildrenClick || !isTooltipClick) setShow(false);
+		};
+		window.addEventListener("click", handleClick, { capture: true });
+
+		return () => {
+			window.removeEventListener("click", handleClick, { capture: true });
+		};
+	}, [show]);
+
 	return (
-		<button
-			className={` rem-24 text-14 text-white ${className} leading-none`}
-			css={[
-				buttonCSS,
-				blue,
-				size == "x-small" && extraSmallButton,
-				size === "small" && smallButton,
-				size === "medium" && mediumButton,
-				size === "large" && largeButton,
-				bgColor === "tertiary-dark" && tertiaryDark,
-				bgColor === "tertiary-outline" && tertiaryOutline,
-				bgColor === "danger" && danger,
-				bgColor === "disabled" && disabledButton,
-			]}
-			disabled={disabled}
-			{...props}
-		>
-			{children}
-		</button>
+		<React.Fragment>
+			<ClonedElement />
+			{show && (
+				<TooltipBox>
+					<div
+						css={[tooltipWrapper(padding), computedStyle, wrapperCSS]}
+						ref={floating}
+						style={{
+							position: strategy,
+							top: y ?? "",
+							left: x ?? "",
+						}}
+						onMouseOver={eventListener().onMouseOver}
+						onMouseLeave={eventListener().onMouseLeave}
+					>
+						<div css={[tooltipBox, css]}>{content}</div>
+					</div>
+				</TooltipBox>
+			)}
+		</React.Fragment>
 	);
 };
+
+const tooltipWrapper = (padding) => css`
+	position: fixed;
+	z-index: 400;
+	padding: 0px;
+	-webkit-animation: fadeIn 1s;
+	animation: fadeIn 0.25s;
+	padding: ${padding}px;
+	@-webkit-keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+`;
+
+const tooltipBox = css`
+	background: #161719;
+	border: 0.5px solid rgba(255, 255, 255, 0.06);
+	box-shadow: 0px 4px 9px -1px rgba(44, 40, 40, 0.12);
+	border-radius: 4px;
+	padding: 4rem 8rem;
+	font-size: 13rem;
+`;
 
 const buttonCSS = css`
 	cursor: default;

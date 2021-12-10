@@ -210,7 +210,7 @@ export const SignupContainer = () => {
 					<div className={"font-cera text-16 leading-none font-700 mb-38"}>Create your account</div>
 
 					<Conditional showIf={!showRegistrationBox}>
-						<a href={resolvePathToBackendURI(googleSignupLink)}>
+						<a href={googleSignupLink}>
 							<Button size={"large"} css={googleButton} className={"mb-20"}>
 								<div className={"flex justify-center items-center"}>
 									<GoogleSVG className={"mr-12"} />

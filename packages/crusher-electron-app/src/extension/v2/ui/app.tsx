@@ -45,6 +45,7 @@ const containerStyle = css`
 `;
 const bodyStyle = css`
 	grid-column: 1 / span 1;
+	min-width: 65vw;
 `;
 const sidebarStyle = css`
 	padding: 1rem;

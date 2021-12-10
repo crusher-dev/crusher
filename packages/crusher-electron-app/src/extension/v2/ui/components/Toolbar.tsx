@@ -6,6 +6,7 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { css } from "@emotion/react";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
+import { Conditional } from "@dyson/components/layouts";
 
 const saveButtonStyle = css`
 	width: 113px;
@@ -36,11 +37,13 @@ const onlineDotStyle = css`
 	border-radius: 50px;
 	margin: 0rem;
 `;
+
 const Toolbar = (): JSX.Element => {
+	const [start, setStart] = React.useState(false);
 	return (
 		<div css={containerStyle}>
-			<NavigateBackIcon onClick={() => 0} disabled />
-			<NavigateRefreshIcon onClick={() => 0} disabled />
+			<NavigateBackIcon onClick={() => 0} disabled={!start} />
+			<NavigateRefreshIcon onClick={() => 0} disabled={!start} />
 			<Input
 				placeholder="Enter URL to test"
 				CSS={inputStyle}
@@ -92,17 +95,19 @@ const Toolbar = (): JSX.Element => {
 					</div>
 				}
 			/>
-
-			<Button bgColor="tertiary-outline" CSS={buttonStyle}>
-				Start
-			</Button>
-			<div css={onlineDotStyle} />
-			<Text CSS={recTextStyle}>Rec.</Text>
-
-			<SettingsIcon />
-			<Button bgColor="tertiary-outline" CSS={saveButtonStyle}>
-				Save test
-			</Button>
+			<Conditional showIf={!start}>
+				<Button onClick={() => setStart(true)} bgColor="tertiary-outline" CSS={buttonStyle}>
+					Start
+				</Button>
+			</Conditional>
+			<Conditional showIf={start}>
+				<div css={onlineDotStyle} />
+				<Text CSS={recTextStyle}>Rec.</Text>
+				<SettingsIcon />
+				<Button onClick={() => setStart(false)} bgColor="tertiary-outline" CSS={saveButtonStyle}>
+					Save test
+				</Button>
+			</Conditional>
 		</div>
 	);
 };
@@ -118,12 +123,8 @@ const containerStyle = css`
 const inputStyle = css`
 	width: 340px;
 	height: 34px;
-	left: 121px;
 	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
 	font-size: 14.6px;
-	line-height: 17px;
 	border: 1px solid #9462ff;
 	outline-color: #9462ff;
 	box-sizing: border-box;

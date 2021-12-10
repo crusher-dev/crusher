@@ -53,7 +53,12 @@ export const Input: React.FC<InputProps> = ({ initialValue = "", size = "large",
 	const sizeStyle = getSizePropery(size);
 
 	return (
-		<div className={"relative"}>
+		<div
+			css={css`
+				position: relative;
+			`}
+			className={"relative"}
+		>
 			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState, props.CSS]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle}>{rightIcon}</div>

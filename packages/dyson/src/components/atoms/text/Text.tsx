@@ -5,12 +5,12 @@ export type TextProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
-	fontSize?: string;
+	fontSize?: number;
 	leading?: boolean;
 	weight?: number;
 	CSS?: SerializedStyles;
 	color?: string;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, any>;
 
 const TextDefaultProps = {
 	fontSize: 12,
@@ -30,6 +30,7 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 				css`
 					font-size: ${fontSize}rem;
 					color: ${color};
+					${otherProps.onClick && `cursor:default`}
 				`,
 				otherProps.CSS,
 			]}

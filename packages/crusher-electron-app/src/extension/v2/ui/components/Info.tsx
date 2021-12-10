@@ -10,18 +10,17 @@ const InfoBox = (): JSX.Element => {
 			<div css={heading}>New to crusher?</div>
 			<TextBlock CSS={blockStyle}>
 				<Text CSS={text1Style}>Get a 2 min tutorial on how it works?</Text>
-				<Text css={knowStyle}>Know more</Text>
+				<Text css={knowStyle} onClick={() => 0}>
+					Know more
+				</Text>
 			</TextBlock>
-			<TextBlock
-				CSS={css`
-					display: flex;
-					align-items: center;
-				`}
-			>
+			<TextBlock CSS={textBlock2}>
 				<Button bgColor="tertiary-outline" CSS={buttonStyle}>
 					Show me around
 				</Button>
-				<Text CSS={text2Style}>{"Don't show again"}</Text>
+				<Text onClick={() => 0} CSS={text2Style}>
+					{"Don't show again"}
+				</Text>
 			</TextBlock>
 		</div>
 	);
@@ -71,5 +70,9 @@ const knowStyle = css`
 `;
 const blockStyle = css`
 	margin-bottom: 26rem;
+`;
+const textBlock2 = css`
+	display: flex;
+	align-items: center;
 `;
 export default InfoBox;

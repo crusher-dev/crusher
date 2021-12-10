@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { render } from "react-dom";
 import Toolbar from "./components/Toolbar";
 import Info from "./components/Info";
+import Sidebar from "./components/Sidebar";
 import { css, Global } from "@emotion/react";
 
 const App = () => {
@@ -28,7 +29,9 @@ const App = () => {
 					<Info />
 				</div>
 			</div>
-			<div css={sidebarStyle}>Action Sidebar</div>
+			<div css={sidebarStyle}>
+				<Sidebar />
+			</div>
 		</div>
 	);
 };
@@ -41,11 +44,11 @@ const containerStyle = css`
 	color: white;
 `;
 const bodyStyle = css`
-	grid-column: 1 / span 2;
+	grid-column: 1 / span 1;
 `;
 const sidebarStyle = css`
 	padding: 1rem;
-	grid-column: 3;
+	grid-column: 2;
 	background-color: #232323;
 `;
 const toolbarStyle = css`
@@ -55,9 +58,8 @@ const toolbarStyle = css`
 const infoStyle = css`
 	position: fixed;
 	display: block;
-	bottom: 160rem;
+	bottom: 140rem;
 	left: 40rem;
-	padding: 10px;
 `;
 
 render(<App />, document.querySelector("#root"));

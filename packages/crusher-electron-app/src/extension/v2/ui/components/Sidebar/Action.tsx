@@ -56,7 +56,7 @@ const selectActionContainer = css`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height: calc(50vh + 80rem);
+	height: calc(40vh + 80rem);
 `;
 const selectActionHeading = css`
 	font-family: Cera Pro;
@@ -94,7 +94,7 @@ const headerText = css`
 const actionListContainer = css`
 	padding: 26rem;
 	padding-top: 0rem;
-	height: 50vh;
+	height: 40vh;
 	overflow-y: auto;
 `;
 const actionTab = css`

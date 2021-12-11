@@ -12,7 +12,7 @@ type TModalProps = {
 	 */
 	css?: SerializedStyles;
 	modalStyle?: SerializedStyles;
-	children: ReactElement;
+	children: ReactElement | ReactElement[];
 	onClick?: () => void;
 	onClose?: () => void;
 	onOutsideClick?: () => void;

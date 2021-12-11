@@ -1,12 +1,12 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { Modal } from "@dyson/components/molecules/Modal";
-import { Text } from "@dyson/components/atoms/text/Text";
+import { Text, TextProps } from "@dyson/components/atoms/text/Text";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { SearchIcon, CloseModalIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 
-const SidebarItem = ({ selected, children, ...props }): JSX.Element => (
+const SidebarItem = ({ selected, children, ...props }: { selected?: boolean } & TextProps) => (
 	<Text CSS={selected && selectedSidebarItem} {...props}>
 		{children}
 	</Text>
@@ -28,47 +28,52 @@ const ActionCard = (): JSX.Element => {
 	);
 };
 
-export const ActionModal = (): JSX.Element => (
-	<Modal modalStyle={modalStyle}>
-		<div css={sidebarStyle}>
-			<SidebarItem onClick={() => 0} selected>
-				All
-			</SidebarItem>
-			<SidebarItem>Saved Action</SidebarItem>
-			<SidebarItem>Automation</SidebarItem>
-			<SidebarItem>Accessibility</SidebarItem>
-			<SidebarItem>Performance</SidebarItem>
-			<SidebarItem>Others</SidebarItem>
-		</div>
-		<div css={bodyStyle}>
-			<div css={flexCenter}>
-				<Input rightIcon={<SearchIcon />} size="medium" placeholder="Find an action" />
-				<TextBlock css={flexCenter}>
-					<span>100+ actions</span>
-					<span css={closeIconStyle} onClick={() => 0}>
-						<CloseModalIcon height={12} width={12} />
-					</span>
-				</TextBlock>
+export const ActionModal = (): JSX.Element => {
+	const [visible, setVisible] = React.useState(true);
+	if (!visible) return null;
+
+	return (
+		<Modal modalStyle={modalStyle}>
+			<div css={sidebarStyle}>
+				<SidebarItem onClick={() => 0} selected>
+					All
+				</SidebarItem>
+				<SidebarItem>Saved Action</SidebarItem>
+				<SidebarItem>Automation</SidebarItem>
+				<SidebarItem>Accessibility</SidebarItem>
+				<SidebarItem>Performance</SidebarItem>
+				<SidebarItem>Others</SidebarItem>
 			</div>
-			<div css={actionGrid}>
-				<ActionCard />
-				<ActionCard />
-				<ActionCard />
-				<ActionCard />
-				<ActionCard />
-				<ActionCard />
-				<ActionCard />
-				<ActionCard />
-				<ActionCard />
+			<div css={bodyStyle}>
+				<div css={flexCenter}>
+					<Input rightIcon={<SearchIcon />} size="medium" placeholder="Find an action" />
+					<TextBlock css={flexCenter}>
+						<span>100+ actions</span>
+						<span css={closeIconStyle} onClick={() => setVisible(false)}>
+							<CloseModalIcon height={12} width={12} />
+						</span>
+					</TextBlock>
+				</div>
+				<div css={actionGrid}>
+					<ActionCard />
+					<ActionCard />
+					<ActionCard />
+					<ActionCard />
+					<ActionCard />
+					<ActionCard />
+					<ActionCard />
+					<ActionCard />
+					<ActionCard />
+				</div>
+				<div css={paginationContainer}>
+					<Text CSS={paginationButtonStyle}>1</Text>
+					<Text CSS={paginationButtonStyle}>2</Text>
+					<Text CSS={paginationButtonStyle}>3</Text>
+				</div>
 			</div>
-			<div css={paginationContainer}>
-				<Text CSS={paginationButtonStyle}>1</Text>
-				<Text CSS={paginationButtonStyle}>2</Text>
-				<Text CSS={paginationButtonStyle}>3</Text>
-			</div>
-		</div>
-	</Modal>
-);
+		</Modal>
+	);
+};
 
 const selectedSidebarItem = css`
 	color: #9462ff;
@@ -169,11 +174,11 @@ const sidebarStyle = css`
 const closeIconStyle = css`
 	margin-left: 12rem;
 	path {
-		fill: rgba(255, 255, 255, 0.1);
+		fill: rgba(255, 255, 255, 0.3);
 	}
 	:hover {
 		path {
-			fill: rgba(255, 255, 255, 0.5);
+			fill: rgba(255, 255, 255, 0.6);
 		}
 	}
 `;

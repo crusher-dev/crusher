@@ -68,6 +68,8 @@ function TestCard(props: IBuildItemCardProps) {
 	const shouldPlayVideo = !imageURL && !!clipVideoURL;
 
 	const [showEditBox, setShowEditBox] = useState(false);
+
+	const testRunInThisHour = ((Date.now() - testData.createdAt)/1000) < 3600
 	return (
 		<div css={itemContainerStyle}>
 			<Conditional showIf={showEditBox}>
@@ -128,9 +130,9 @@ function TestCard(props: IBuildItemCardProps) {
 						>
 							Edit
 						</span>
-						<Conditional showIf={!getBoolean(isPassing) || !firstRunCompleted}>
+						<Conditional showIf={testRunInThisHour}>
 							<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
-								<span className={"view-build"}>View Build </span>
+								<span className={"view-build"}>View test build </span>
 							</Link>
 						</Conditional>
 					</div>

@@ -4,16 +4,18 @@ import { css, SerializedStyles } from "@emotion/react";
 import { OnOutsideClick } from "../layouts/onOutsideClick/onOutsideClick";
 import { CloseSVG } from "../icons/CloseSVG";
 import React, { ReactElement } from "react";
+import { HTMLAttributes } from "react";
 
 type TModalProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
 	css?: SerializedStyles;
+	modalStyle?: SerializedStyles;
 	children: ReactElement;
 	onClick?: () => void;
 	onOutsideClick?: () => void;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<HTMLAttributes<any>, any>;
 
 export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalProps) => {
 	return (

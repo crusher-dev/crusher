@@ -18,6 +18,24 @@ const App = () => {
 						min-height: "100vh";
 						max-width: "100vw";
 					}
+					.custom-scroll::-webkit-scrollbar {
+						width: 12px;
+					}
+
+					.custom-scroll::-webkit-scrollbar-track {
+						background-color: #0a0b0e;
+						box-shadow: none;
+					}
+
+					.custom-scroll::-webkit-scrollbar-thumb {
+						background-color: #1b1f23;
+						border-radius: 100px;
+					}
+
+					.custom-scroll::-webkit-scrollbar-thumb:hover {
+						background-color: #272b31;
+						border-radius: 100px;
+					}
 				`}
 			/>
 			<div css={bodyStyle}>
@@ -38,18 +56,16 @@ const App = () => {
 
 const containerStyle = css`
 	display: grid;
+	grid-template-columns: 1fr auto;
 	background: #121212;
 	width: 100vw;
 	height: 100vh;
 	color: white;
 `;
-const bodyStyle = css`
-	grid-column: 1 / span 1;
-	min-width: 65vw;
-`;
+const bodyStyle = css``;
 const sidebarStyle = css`
 	padding: 1rem;
-	grid-column: 2;
+	width: 28vw;
 	background-color: #232323;
 `;
 const toolbarStyle = css`

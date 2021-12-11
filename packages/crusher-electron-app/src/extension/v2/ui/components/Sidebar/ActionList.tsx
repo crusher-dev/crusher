@@ -7,7 +7,7 @@ export const ActionList = ({ children, title }: { title?: string; children: Reac
 	return (
 		<div
 			css={css`
-				margin: 20rem 0rem;
+				padding: 10rem 0rem;
 			`}
 		>
 			<Conditional showIf={!!title}>
@@ -21,6 +21,20 @@ export const ActionList = ({ children, title }: { title?: string; children: Reac
 					`}
 				>
 					{title}
+				</Text>
+				<Text
+					CSS={css`
+						font-family: Gilroy;
+						font-style: normal;
+						font-weight: normal;
+						font-size: 13px;
+						line-height: 15px;
+						margin-left: 8rem;
+						color: #af71ff;
+					`}
+					onClick={() => 0}
+				>
+					more
 				</Text>
 			</Conditional>
 			<div

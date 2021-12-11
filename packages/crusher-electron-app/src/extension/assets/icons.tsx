@@ -428,8 +428,32 @@ const AddIcon = (props: any) => {
 		</svg>
 	);
 };
+const WarningIcon = () => (
+	<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<g clipPath="url(#clip0_1539_948)">
+			<path
+				d="M1.42434 12.3063C0.155444 12.3063 -0.363674 11.4072 0.270772 10.3083L5.34644 1.51706C5.98088 0.418142 7.01907 0.418142 7.65352 1.51706L12.7292 10.3083C13.3636 11.4072 12.8445 12.3063 11.5756 12.3063H1.42434Z"
+				fill="#FF629A"
+			/>
+			<path
+				d="M12.7292 10.3082L7.65356 1.51697C7.33636 0.967485 6.91814 0.693557 6.5 0.693604V12.3062H11.5757C12.8446 12.3062 13.3637 11.4071 12.7292 10.3082Z"
+				fill="#DE3D76"
+			/>
+			<path d="M6.50028 8.12761H5.57171L5.10742 4.41333H6.50028L6.96456 6.27047L6.50028 8.12761Z" fill="white" />
+			<path d="M7.42857 8.12761H6.5V4.41333H7.89286L7.42857 8.12761Z" fill="white" />
+			<path d="M6.49986 10.9134H5.57129V9.05627H6.49986L6.96415 9.98485L6.49986 10.9134Z" fill="white" />
+			<path d="M7.42857 9.05627H6.5V10.9134H7.42857V9.05627Z" fill="white" />
+		</g>
+		<defs>
+			<clipPath id="clip0_1539_948">
+				<rect width="13" height="13" fill="white" />
+			</clipPath>
+		</defs>
+	</svg>
+);
 
 export {
+	WarningIcon,
 	NavigateBackIcon,
 	NavigateForwardIcon,
 	NavigateRefreshIcon,

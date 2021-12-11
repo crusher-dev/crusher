@@ -8,36 +8,6 @@ import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-ele
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Conditional } from "@dyson/components/layouts";
 
-const saveButtonStyle = css`
-	width: 113px;
-	height: 30px;
-	background: linear-gradient(0deg, #9462ff, #9462ff);
-	border-radius: 6px;
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 14px;
-	line-height: 17px;
-
-	color: #ffffff;
-`;
-const recTextStyle = css`
-	font-family: Cera Pro;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 13px;
-	line-height: 13px;
-	flex-grow: 1;
-`;
-const onlineDotStyle = css`
-	display: block;
-	width: 8px;
-	height: 8px;
-	background: #a8e061;
-	border-radius: 50px;
-	margin: 0rem;
-`;
-
 const Toolbar = (): JSX.Element => {
 	const [start, setStart] = React.useState(false);
 	return (
@@ -48,49 +18,17 @@ const Toolbar = (): JSX.Element => {
 				placeholder="Enter URL to test"
 				CSS={inputStyle}
 				rightIcon={
-					<div
-						css={css`
-							box-sizing: border-box;
-							width: 80rem;
-							position: relative;
-						`}
-					>
+					<div css={dropDownContainer}>
 						<Dropdown
-							dropdownCSS={css`
-								width: 80rem;
-								transform: translateX(-10%);
-							`}
+							dropdownCSS={dropdownCSS}
 							component={
 								<>
-									<TextBlock
-										css={css`
-											padding: 6rem 4rem;
-										`}
-									>
-										Desktop
-									</TextBlock>
-									<TextBlock
-										css={css`
-											padding: 6rem 4rem;
-										`}
-									>
-										Tablet
-									</TextBlock>
+									<TextBlock css={dropdownText}>Desktop</TextBlock>
+									<TextBlock css={dropdownText}>Tablet</TextBlock>
 								</>
 							}
 						>
-							<TextBlock
-								css={css`
-									box-sizing: border-box;
-									text-align: center;
-									height: 34rem;
-									width: 80rem;
-									padding: 10rem 0rem;
-									border-left: 1px solid rgba(255, 255, 255, 0.13);
-								`}
-							>
-								Mobile
-							</TextBlock>
+							<TextBlock css={dropdownChild}>Mobile</TextBlock>
 						</Dropdown>
 					</div>
 				}
@@ -138,5 +76,56 @@ const buttonStyle = css`
 	border-radius: 4px;
 	width: 93px;
 	height: 34px;
+`;
+
+const saveButtonStyle = css`
+	width: 113px;
+	height: 30px;
+	background: linear-gradient(0deg, #9462ff, #9462ff);
+	border-radius: 6px;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 17px;
+
+	color: #ffffff;
+`;
+const recTextStyle = css`
+	font-family: Cera Pro;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 13px;
+	flex-grow: 1;
+`;
+const onlineDotStyle = css`
+	display: block;
+	width: 8px;
+	height: 8px;
+	background: #a8e061;
+	border-radius: 50px;
+	margin: 0rem;
+`;
+
+const dropdownChild = css`
+	box-sizing: border-box;
+	text-align: center;
+	height: 34rem;
+	width: 80rem;
+	padding: 10rem 0rem;
+	border-left: 1px solid rgba(255, 255, 255, 0.13);
+`;
+const dropdownText = css`
+	padding: 6rem 4rem;
+`;
+const dropdownCSS = css`
+	width: 80rem;
+	transform: translateX(-10%);
+`;
+const dropDownContainer = css`
+	box-sizing: border-box;
+	width: 80rem;
+	position: relative;
 `;
 export default Toolbar;

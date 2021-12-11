@@ -29,7 +29,7 @@ export type InputProps = {
 	onReturn?: (value: string) => void;
 
 	className?: string;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, any>;
 
 /**
  * Unified button component for Dyson UI system

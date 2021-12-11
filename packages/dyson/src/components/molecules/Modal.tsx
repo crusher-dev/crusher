@@ -14,6 +14,7 @@ type TModalProps = {
 	modalStyle?: SerializedStyles;
 	children: ReactElement;
 	onClick?: () => void;
+	onClose?: () => void;
 	onOutsideClick?: () => void;
 } & React.DetailedHTMLProps<HTMLAttributes<any>, any>;
 
@@ -25,7 +26,7 @@ export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalP
 					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
 						{children}
 
-						<Conditional showIf={true}>
+						<Conditional showIf={!!onClose}>
 							<div css={closeIcon} onClick={onClose}>
 								<CloseSVG height={13} width={13} />
 							</div>

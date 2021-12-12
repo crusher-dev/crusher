@@ -53,11 +53,11 @@ class QueueManager {
 		queueName: string,
 		processor: string | Processor<any, any, string>,
 		options: Omit<WorkerOptions, "connection"> = {},
-	): Promise<boolean> {
+	): Promise<any> {
 		const queueRecord = Object.prototype.hasOwnProperty.call(this.queues, queueName);
-		if (queueRecord && queueRecord.worker) {
+		if (queueRecord && this.queues[queueName].worker) {
 			console.error(`Scheduler for ${queueName} already initialized`);
-			return false;
+			return this.queues[queueName].worker;
 		}
 
 		this.queues[queueName] = this.queues[queueName] ? this.queues[queueName] : {};
@@ -70,7 +70,7 @@ class QueueManager {
 		};
 
 		await this.queues[queueName].worker.waitUntilReady();
-		return true;
+		return this.queues[queueName].worker;
 	}
 }
 

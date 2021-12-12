@@ -109,7 +109,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 
 				if(process.env.ECS_ENABLE_CONTAINER_METADATA) {
 					// Get the container metadata
-					const containerMetadata = await axios.get<{"TaskARN": string}>(url.resolve(process.env.ECS_CONTAINER_METADATA_URI_V4, "/task"));
+					const containerMetadata = await axios.get<{"TaskARN": string}>(`${process.env.ECS_CONTAINER_METADATA_URI_V4}/task`);
 					const taskId = containerMetadata.data.TaskARN;
 
 					await axios.post<{status: string}>(process.env.CRUSHER_SCALE_LABMDA_URL, {type: "shutDown", taskId}).then((res) => {

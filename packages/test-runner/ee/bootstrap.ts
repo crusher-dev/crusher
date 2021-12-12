@@ -74,6 +74,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	*/
 	async setupInstanceHeartbeat() {
 		this._registeredInstanceNo = await this.redisManager.redisClient.incr("instance_index");
+		this._lastJobPickedUpTime = Date.now();
 
 		const sendHeartbeat = () => {
 			const client = this.redisManager.redisClient;

@@ -61,6 +61,7 @@ const reviewCss = css`
 	top: calc(100% + 9rem) !important;
 	right: 0px !important;
 	background: #1e2126;
+	z-index:110;
 	left: unset !important;
 `;
 

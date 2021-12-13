@@ -17,40 +17,40 @@ const steps = [
 ];
 
 export function Steps(): JSX.Element {
-	const [selected, setSelected] = React.useState(new Set());
+	const [checkedSteps, setCheckedSteps] = React.useState(new Set());
 
 	const toggleAllSteps = React.useCallback(
 		(checked) => {
 			if (checked) {
-				setSelected(new Set([...steps.map((step) => step.id)]));
+				setCheckedSteps(new Set([...steps.map((step) => step.id)]));
 			} else {
-				setSelected(new Set());
+				setCheckedSteps(new Set());
 			}
 		},
-		[selected.size],
+		[checkedSteps.size],
 	);
 
 	const toggleStep = React.useCallback(
 		(index) => {
-			const selectedSteps = new Set(selected);
-			console.log(selected);
-			if (selected.has(index)) {
+			const selectedSteps = new Set(checkedSteps);
+			console.log(checkedSteps);
+			if (checkedSteps.has(index)) {
 				selectedSteps.delete(index);
 			} else {
 				selectedSteps.add(index);
 			}
 
-			setSelected(selectedSteps);
+			setCheckedSteps(selectedSteps);
 		},
-		[selected],
+		[checkedSteps],
 	);
 
 	return (
 		<div css={container}>
 			<div css={stepsHeaderStyle}>
-				<Checkbox isSelected={steps.length === selected.size} callback={toggleAllSteps} />
+				<Checkbox isSelected={steps.length === checkedSteps.size} callback={toggleAllSteps} />
 				<Text CSS={stepsText}>{steps.length} Steps</Text>
-				<Conditional showIf={!!selected.size}>
+				<Conditional showIf={!!checkedSteps.size}>
 					<div css={stepDropdown}>
 						<Dropdown
 							dropdownCSS={dropdownCSS}
@@ -74,7 +74,7 @@ export function Steps(): JSX.Element {
 						key={step.id}
 						isRunning={step.isRunning}
 						isFailed={step.isFailed}
-						isSelected={selected.has(step.id)}
+						isSelected={checkedSteps.has(step.id)}
 						callback={() => toggleStep(step.id)}
 						title={step.title}
 						subtitle="p > a"
@@ -97,13 +97,15 @@ function Step({
 			<div css={[stepStyle, isRunning && runningStepStyle, isFailed && failedStyle]}>
 				<Checkbox {...props} />
 				<div css={stepText}>
-					<TextBlock css={stepTitle}>{title}</TextBlock>
+					<TextBlock css={stepTitle} CSS={isFailed && failedStepTitle}>
+						{title}
+					</TextBlock>
 					<TextBlock css={stepSubtitle}>{subtitle}</TextBlock>
 				</div>
-				<MoreIcon />
 				<Conditional showIf={isFailed}>
+					<MoreIcon />
 					<TextBlock CSS={stepWarning}>
-						<WarningIcon /> This step failed
+						<WarningIcon /> &nbsp; This step failed
 					</TextBlock>
 				</Conditional>
 			</div>
@@ -114,17 +116,22 @@ function Step({
 						<Text CSS={whatTODO}>What to do?</Text>
 						<MoreIcon />
 					</div>
-					<Button CSS={failedButton} bgColor="tertiary-outline">
-						<Text color="#40383b">Mark optional</Text>
-					</Button>
-					<Button CSS={failedButton} bgColor="tertiary-outline">
-						<Text color="#40383b">Delete & continue</Text>
-					</Button>
+					<div css={failedButtons}>
+						<Button size="small" CSS={failedButton} bgColor="tertiary-outline">
+							Mark optional
+						</Button>
+						<Button size="small" CSS={failedButton} bgColor="tertiary-outline">
+							Delete & continue
+						</Button>
+					</div>
 				</div>
 			</Conditional>
 		</div>
 	);
 }
+const failedStepTitle = css`
+	font-weight: 800;
+`;
 const container = css`
 	border-top: 1rem solid #303235;
 `;
@@ -135,7 +142,7 @@ const stepsHeaderStyle = css`
 `;
 const stepsText = css`
 	font-family: Cera Pro;
-	font-size: 15px;
+	font-size: 15rem;
 	flex-grow: 1;
 	margin: 0rem 8rem;
 `;
@@ -155,10 +162,10 @@ const stepsContainer = css`
 	overflow-y: auto;
 	padding: 18rem 22rem;
 	padding-top: 0rem;
-	height: 35vh;
+	height: 32vh;
 `;
 const runningStepStyle = css`
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	border: 1rem solid rgba(255, 255, 255, 0.1);
 	border-bottom: 4rem solid #a6ba86;
 `;
 const stepStyle = css`
@@ -166,13 +173,13 @@ const stepStyle = css`
 	flex-wrap: wrap;
 	align-items: center;
 	box-sizing: border-box;
-	border-radius: 6px;
+	border-radius: 6rem;
 	padding: 3rem 12rem;
 	margin: 10rem 0rem;
 `;
 
 const failedStyle = css`
-	border: 1px solid rgba(255, 255, 255, 0.12);
+	border: 1rem solid rgba(255, 255, 255, 0.12);
 	background: #0f1011;
 `;
 const stepText = css`
@@ -184,52 +191,58 @@ const stepTitle = css`
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	line-height: 13px;
+	font-size: 12rem;
+	line-height: 13rem;
 `;
 const stepSubtitle = css`
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 10px;
-	line-height: 10px;
+	font-size: 10rem;
+	line-height: 10rem;
 `;
 const stepWarning = css`
 	display: block;
 	flex: 0 1 100%;
 	font-family: Gilroy;
 	font-style: normal;
-	font-weight: 400;
-	font-size: 13px;
-	line-height: 13px;
+	font-weight: 600;
+	font-size: 13rem;
+	line-height: 13rem;
 	color: #de3d76;
 	padding: 6rem;
+	padding-bottom: 20rem;
 `;
 const failedToDO = css`
-	padding: 10rem 12rem;
+	padding: 15rem;
 	margin: 6rem 0rem;
 	background: #0f1011;
-	border: 1px solid rgba(255, 255, 255, 0.12);
+	border: 1rem solid rgba(255, 255, 255, 0.12);
 	box-sizing: border-box;
-	border-radius: 4px;
+	border-radius: 4rem;
+`;
+const failedButtons = css`
+	display: flex;
 `;
 const failedToDoHead = css`
 	display: flex;
+	flex: 1 1 100%;
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 8rem;
 `;
 const whatTODO = css`
 	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 12px;
-	line-height: 13px;
-	/* or 108% */
-
-	color: #ffffff;
+	font-weight: 800;
+	font-size: 12rem;
 `;
 const failedButton = css`
-	background: white;
-	margin-right: 8rem;
+	margin-right: 9rem;
+	background: #ffffff;
+	border-radius: 4rem;
+	font-size: 12rem !important;
+	color: #40383b;
+	:hover {
+		background: rgba(255, 255, 255, 0.8);
+	}
 `;

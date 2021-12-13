@@ -7,20 +7,23 @@ import { SearchIcon, CloseModalIcon } from "crusher-electron-app/src/extension/a
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 
 const SidebarItem = ({ selected, children, ...props }: { selected?: boolean } & TextProps) => (
-	<Text CSS={selected && selectedSidebarItem} {...props}>
+	<Text onClick={() => 0} CSS={selected && selectedSidebarItem} {...props}>
 		{children}
 	</Text>
 );
+
 const ActionCard = (): JSX.Element => {
 	return (
-		<div>
+		<div css={actionCardContainer}>
 			<div css={actionCardStyle}>
 				<TextBlock className="element-action-title" css={actionTitle}>
 					Element Selection
 				</TextBlock>
-				<TextBlock CSS={actionText}>Add new way to do things with crusher</TextBlock>
+				<TextBlock className="element-action-sub-title" CSS={actionText}>
+					Add new way to do things with crusher
+				</TextBlock>
 			</div>
-			<div css={actionTextContainer}>
+			<div className="element-action-stat" css={actionTextContainer}>
 				<Text CSS={actionDesc}>By demoUser</Text>
 				<Text CSS={actionDesc}>used 12k+</Text>
 			</div>
@@ -28,6 +31,21 @@ const ActionCard = (): JSX.Element => {
 	);
 };
 
+const Pagination = ({ current, total, onSelect }: { onSelect: (page: number) => void }) => {
+	return (
+		<div css={paginationContainer}>
+			{[...Array(total).keys()].map((pageNumber) => (
+				<Text
+					key={pageNumber.toString()}
+					onClick={onSelect.bind(null, pageNumber + 1)}
+					CSS={[paginationButtonStyle, current === pageNumber + 1 && selectedPage]}
+				>
+					{pageNumber + 1}
+				</Text>
+			))}
+		</div>
+	);
+};
 export const ActionModal = (): JSX.Element => {
 	const [visible, setVisible] = React.useState(true);
 	if (!visible) return null;
@@ -46,7 +64,7 @@ export const ActionModal = (): JSX.Element => {
 			</div>
 			<div css={bodyStyle}>
 				<div css={flexCenter}>
-					<Input rightIcon={<SearchIcon />} size="medium" placeholder="Find an action" />
+					<Input CSS={inputStyle} rightIcon={<SearchIcon />} size="medium" placeholder="Find an action" />
 					<TextBlock css={flexCenter}>
 						<span>100+ actions</span>
 						<span css={closeIconStyle} onClick={() => setVisible(false)}>
@@ -65,37 +83,48 @@ export const ActionModal = (): JSX.Element => {
 					<ActionCard />
 					<ActionCard />
 				</div>
-				<div css={paginationContainer}>
-					<Text CSS={paginationButtonStyle}>1</Text>
-					<Text CSS={paginationButtonStyle}>2</Text>
-					<Text CSS={paginationButtonStyle}>3</Text>
-				</div>
+				<Pagination total={5} current={2} onSelect={alert} />
 			</div>
 		</Modal>
 	);
 };
-
+const actionCardContainer = css`
+	:hover {
+		.element-action-stat {
+			visible: visible;
+			opacity: 1;
+		}
+	}
+`;
 const selectedSidebarItem = css`
 	color: #9462ff;
+	font-weight: 600;
 `;
 const actionCardStyle = css`
 	padding: 8rem 12rem;
 	box-sizing: border-box;
-	border-radius: 4px;
-	border: 1px solid #121213;
+	border-radius: 4rem;
+	border: 1rem solid #121213;
 	background: #121213;
 	:hover {
-		border: 1px solid #9462ff;
+		border: 1rem solid #9462ff;
 		.element-action-title {
 			color: #9462ff;
+		}
+		.element-action-sub-title {
+			color: rgba(255, 255, 255, 0.85);
+		}
+		.element-action-stat {
+			visible: visible;
+			opacity: 1;
 		}
 	}
 `;
 const actionTitle = css`
 	font-family: Gilroy;
 	font-style: normal;
-	font-weight: normal;
-	font-size: 13px;
+	font-weight: 600;
+	font-size: 13rem;
 	color: rgba(255, 255, 255, 0.85);
 	margin-bottom: 4rem;
 	cursor: default;
@@ -104,37 +133,39 @@ const actionText = css`
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12.7px;
-	line-height: 20px;
+	font-size: 11.7rem;
+	line-height: 20rem;
 	cursor: default;
 	color: rgba(255, 255, 255, 0.6);
 `;
 const actionDesc = css`
-	color: #ffffff88;
+	color: rgba(255, 255, 255, 0.85);
 `;
 const actionTextContainer = css`
 	display: flex;
+	visible: none;
+	opacity: 0;
 	justify-content: space-between;
 	align-items: center;
 	margin: 4rem 2rem;
 `;
 
 const paginationButtonStyle = css`
-	width: 26.74px;
-	height: 24px;
+	width: 26.74rem;
+	height: 24rem;
 	box-sizing: border-box;
-	border-radius: 4px;
+	border-radius: 4rem;
 	text-align: center;
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
+	font-size: 12rem;
 	padding: 5rem 0rem;
 	color: rgba(255, 255, 255, 0.85);
 	background: rgba(255, 255, 255, 0.06);
-	border: 1px solid transparent;
+	border: 1rem solid transparent;
 	:hover {
-		border: 1px solid #ffffff;
+		border: 1rem solid #ffffff;
 	}
 `;
 const flexCenter = css`
@@ -152,7 +183,7 @@ const paginationContainer = css`
 	}
 `;
 const modalStyle = css`
-	width: 60vw;
+	width: 70vw;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -166,9 +197,9 @@ const sidebarStyle = css`
 	flex-direction: column;
 	flex: 1 0 10%;
 	border-right: 1rem solid #ffffff22;
-	padding: 20rem 28rem;
+	padding: 36rem 28rem;
 	* {
-		padding: 6rem 0rem;
+		margin-bottom: 20rem;
 	}
 `;
 const closeIconStyle = css`
@@ -186,12 +217,21 @@ const actionGrid = css`
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	column-gap: 50rem;
-	row-gap: 20rem;
-	margin-top: 20rem;
+	row-gap: 35rem;
+	margin-top: 40rem;
 `;
 const bodyStyle = css`
 	display: flex;
 	flex-direction: column;
 	flex: 0 1 85%;
-	padding: 20rem 28rem;
+	padding: 26rem 28rem;
+`;
+
+const inputStyle = css`
+	width: 229px;
+	height: 36px;
+`;
+
+const selectedPage = css`
+	border: 1rem solid #ffffff;
 `;

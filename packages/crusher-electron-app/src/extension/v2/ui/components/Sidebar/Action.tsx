@@ -38,7 +38,7 @@ const actionTab = css`
 	* {
 		padding: 8rem 4rem;
 		font-family: Gilroy;
-		font-size: 13px;
+		font-size: 13rem;
 		text-align: center;
 		flex: 1;
 	}

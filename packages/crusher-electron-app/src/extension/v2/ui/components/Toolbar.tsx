@@ -2,11 +2,9 @@ import React from "react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { css } from "@emotion/react";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-electron-app/src/extension/assets/icons";
-import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Conditional } from "@dyson/components/layouts";
 
 const devices = [
@@ -55,35 +53,35 @@ const containerStyle = css`
 	}
 `;
 const inputStyle = css`
-	width: 340px;
-	height: 34px;
+	width: 340rem;
+	height: 34rem;
 	font-family: Gilroy;
-	font-size: 14.6px;
+	font-size: 14.6rem;
 	border: 1px solid #9462ff;
 	outline-color: #9462ff;
 	box-sizing: border-box;
-	border-radius: 4px;
+	border-radius: 4rem;
 	color: rgba(255, 255, 255, 0.93);
 `;
 const buttonStyle = css`
 	font-size: 14rem;
 	border: 1px solid rgba(255, 255, 255, 0.23);
 	box-sizing: border-box;
-	border-radius: 4px;
-	width: 93px;
-	height: 34px;
+	border-radius: 4rem;
+	width: 93rem;
+	height: 34rem;
 `;
 
 const saveButtonStyle = css`
-	width: 113px;
-	height: 30px;
+	width: 113rem;
+	height: 30rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
-	border-radius: 6px;
+	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 14px;
-	line-height: 17px;
+	font-size: 14rem;
+	line-height: 17rem;
 
 	color: #ffffff;
 `;
@@ -91,23 +89,23 @@ const recTextStyle = css`
 	font-family: Cera Pro;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 13px;
-	line-height: 13px;
+	font-size: 13rem;
+	line-height: 13rem;
 	flex-grow: 1;
 `;
 const onlineDotStyle = css`
 	display: block;
-	width: 8px;
-	height: 8px;
+	width: 8rem;
+	height: 8rem;
 	background: #a8e061;
-	border-radius: 50px;
+	border-radius: 50rem;
 	margin: 0rem;
 `;
 
 const dropdownCSS = css`
 	width: 90rem;
 	border-left: 1px solid rgba(255, 255, 255, 0.13);
-	font-size: 13px;
+	font-size: 13rem;
 	* {
 		cursor: default;
 	}

@@ -32,15 +32,15 @@ const titleStyle = css`
 	font-family: Cera Pro;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 14px;
-	line-height: 18px;
+	font-size: 14rem;
+	line-height: 18rem;
 `;
 const moreStyle = css`
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 13px;
-	line-height: 15px;
+	font-size: 13rem;
+	line-height: 15rem;
 	margin-left: 8rem;
 	color: #af71ff;
 `;
@@ -52,8 +52,8 @@ const actionItemContainer = css`
 const actionItem = css`
 	padding: 8rem 16rem;
 	font-family: Gilroy;
-	font-size: 13px;
-	line-height: 15px;
+	font-size: 13rem;
+	line-height: 15rem;
 	border: 1px solid #323636;
 	cursor: default;
 	:hover {

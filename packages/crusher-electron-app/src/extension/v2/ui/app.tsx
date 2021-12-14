@@ -28,17 +28,17 @@ const App = () => {
 };
 
 const containerStyle = css`
-	display: grid;
-	grid-template-columns: 1fr auto;
+	display: flex;
 	background: #020202;
 	width: 100vw;
 	height: 100vh;
 	color: white;
 `;
-const bodyStyle = css``;
+const bodyStyle = css`
+	flex: 1;
+`;
 const sidebarStyle = css`
 	padding: 1rem;
-	width: 25vw;
 	background-color: #111213;
 `;
 const toolbarStyle = css`
@@ -59,7 +59,7 @@ const globalStyles = css`
 		max-width: "100vw";
 	}
 	.custom-scroll::-webkit-scrollbar {
-		width: 12px;
+		width: 12rem;
 	}
 
 	.custom-scroll::-webkit-scrollbar-track {
@@ -69,12 +69,12 @@ const globalStyles = css`
 
 	.custom-scroll::-webkit-scrollbar-thumb {
 		background-color: #1b1f23;
-		border-radius: 100px;
+		border-radius: 100rem;
 	}
 
 	.custom-scroll::-webkit-scrollbar-thumb:hover {
 		background-color: #272b31;
-		border-radius: 100px;
+		border-radius: 100rem;
 	}
 `;
 

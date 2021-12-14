@@ -35,12 +35,12 @@ const heading = css`
 `;
 
 const buttonStyle = css`
-	width: 154px;
+	width: 154rem;
 	border: 1px solid #303235;
 	box-sizing: border-box;
-	border-radius: 6px;
+	border-radius: 6rem;
 	font-family: Gilroy;
-	font-size: 15px;
+	font-size: 15rem;
 	text-align: center;
 	color: rgba(255, 255, 255, 0.83);
 	margin-right: 20rem;
@@ -49,8 +49,8 @@ const text2Style = css`
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 13px;
-	line-height: 15px;
+	font-size: 13rem;
+	line-height: 15rem;
 
 	color: #ffffff;
 `;

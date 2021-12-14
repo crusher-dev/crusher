@@ -228,8 +228,8 @@ const bodyStyle = css`
 `;
 
 const inputStyle = css`
-	width: 229px;
-	height: 36px;
+	width: 229rem;
+	height: 36rem;
 `;
 
 const selectedPage = css`

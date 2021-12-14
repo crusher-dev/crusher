@@ -137,12 +137,12 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 						disabled={!!isSearchable === false}
 						css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
 						value={filterText}
-						className={"selectBox__input"}
+						className={"selectBox__input selectBox__value"}
 					/>
 
 					<div>
 						<Conditional showIf={!filterText}>
-							<span css={[selected.length && selected !== null ? selectedValueCSS : null]}>{selectedText}</span>
+							<span className={"selectBox__value"} css={[selected.length && selected !== null ? selectedValueCSS : null]}>{selectedText}</span>
 						</Conditional>
 					</div>
 
@@ -214,6 +214,8 @@ const dropboxCSS = (dropDownHeight: string) => css`
 `;
 
 const selectBoxContainer = (isOpen, size) => css`
+	position: relative;
+	
 	.selectBox {
 		width: 100%;
 

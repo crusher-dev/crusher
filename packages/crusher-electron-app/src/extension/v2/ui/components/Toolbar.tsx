@@ -7,11 +7,18 @@ import { css } from "@emotion/react";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { Conditional } from "@dyson/components/layouts";
 
+const DeviceItem = ({label, value}) => {
+	return (
+		<div css={{padding: "7rem 8rem", width: "100%", cursor: "default"}}>{label}</div>
+	)
+};
+
 const devices = [
-	{ value: "Desktop", label: "Desktop" },
-	{ value: "Mobile", label: "Mobile" },
-	{ value: "Tablet", label: "Tablet" },
+	{ value: "Desktop", component: <DeviceItem label={"Desktop" } value={"desktop"} />, label: "Desktop" },
+	{ value: "Mobile", label: "Mobile", component: <DeviceItem label={"Mobile" } value={"mobile"} /> },
 ];
+
+
 const Toolbar = (): JSX.Element => {
 	const [start, setStart] = React.useState(false);
 	return (
@@ -22,11 +29,10 @@ const Toolbar = (): JSX.Element => {
 				placeholder="Enter URL to test"
 				CSS={inputStyle}
 				rightIcon={
-					<div css={dropDownContainer}>
-						<SelectBox CSS={dropdownCSS} selected={["Desktop"]} values={devices} />
-					</div>
+						<SelectBox CSS={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 102rem;`} selected={[{label: "Desktop", value: "desktop"}]} values={devices} />
 				}
 			/>
+			
 			<Conditional showIf={!start}>
 				<Button onClick={() => setStart(true)} bgColor="tertiary-outline" CSS={buttonStyle}>
 					Start
@@ -48,20 +54,30 @@ const containerStyle = css`
 	display: flex;
 	align-items: center;
 	padding: 8rem;
-	* {
+	& > * {
 		margin: 0rem 10rem;
 	}
 `;
 const inputStyle = css`
-	width: 340rem;
 	height: 34rem;
-	font-family: Gilroy;
-	font-size: 14.6rem;
-	border: 1px solid #9462ff;
-	outline-color: #9462ff;
-	box-sizing: border-box;
-	border-radius: 4rem;
-	color: rgba(255, 255, 255, 0.93);
+	& > input {
+		width: 340rem;
+		font-family: Gilroy;
+		font-size: 14.6rem;
+		/* border: 1px solid #9462ff; */
+		outline-color: #9462ff;
+		outline-width: 1px;
+		box-sizing: border-box;
+		border-radius: 4rem;
+		color: rgba(255, 255, 255, 0.93);
+		height: 100%;
+	}
+	.dropdown-box {
+		overflow: hidden;
+	}
+	.input__rightIconContainer {
+		right: 1rem;
+	}
 `;
 const buttonStyle = css`
 	font-size: 14rem;
@@ -102,40 +118,6 @@ const onlineDotStyle = css`
 	margin: 0rem;
 `;
 
-const dropdownCSS = css`
-	width: 90rem;
-	border-left: 1px solid rgba(255, 255, 255, 0.13);
-	font-size: 13rem;
-	* {
-		cursor: default;
-	}
-	.selectBox__input {
-		display: none;
-	}
-	.select-dropDownContainer {
-		left: 6rem;
-	}
-	.dropdown-box {
-		margin: unset;
-	}
-	.dropdown-label {
-		padding: 6rem 4rem !important;
-		text-align: center;
-		:hover {
-			font-weight: 600;
-			background: unset !important;
-		}
-	}
-	.selectBox {
-		transform: translate(-10rem);
-		background: transparent;
-		border: none;
-		:hover {
-			background: transparent;
-			border: none;
-		}
-	}
-`;
 const dropDownContainer = css`
 	box-sizing: border-box;
 	width: 80rem;

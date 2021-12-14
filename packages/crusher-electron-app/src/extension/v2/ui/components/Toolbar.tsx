@@ -3,11 +3,17 @@ import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
+import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { css } from "@emotion/react";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Conditional } from "@dyson/components/layouts";
 
+const devices = [
+	{ value: "Desktop", label: "Desktop" },
+	{ value: "Mobile", label: "Mobile" },
+	{ value: "Tablet", label: "Tablet" },
+];
 const Toolbar = (): JSX.Element => {
 	const [start, setStart] = React.useState(false);
 	return (
@@ -19,17 +25,7 @@ const Toolbar = (): JSX.Element => {
 				CSS={inputStyle}
 				rightIcon={
 					<div css={dropDownContainer}>
-						<Dropdown
-							dropdownCSS={dropdownCSS}
-							component={
-								<>
-									<TextBlock css={dropdownText}>Desktop</TextBlock>
-									<TextBlock css={dropdownText}>Tablet</TextBlock>
-								</>
-							}
-						>
-							<TextBlock css={dropdownChild}>Mobile</TextBlock>
-						</Dropdown>
+						<SelectBox CSS={dropdownCSS} selected={["Desktop"]} values={devices} />
 					</div>
 				}
 			/>
@@ -108,20 +104,39 @@ const onlineDotStyle = css`
 	margin: 0rem;
 `;
 
-const dropdownChild = css`
-	box-sizing: border-box;
-	text-align: center;
-	height: 34rem;
-	width: 80rem;
-	padding: 10rem 0rem;
-	border-left: 1px solid rgba(255, 255, 255, 0.13);
-`;
-const dropdownText = css`
-	padding: 6rem 4rem;
-`;
 const dropdownCSS = css`
-	width: 80rem;
-	transform: translateX(-10%);
+	width: 90rem;
+	border-left: 1px solid rgba(255, 255, 255, 0.13);
+	font-size: 13px;
+	* {
+		cursor: default;
+	}
+	.selectBox__input {
+		display: none;
+	}
+	.select-dropDownContainer {
+		left: 6rem;
+	}
+	.dropdown-box {
+		margin: unset;
+	}
+	.dropdown-label {
+		padding: 6rem 4rem !important;
+		text-align: center;
+		:hover {
+			font-weight: 600;
+			background: unset !important;
+		}
+	}
+	.selectBox {
+		transform: translate(-10rem);
+		background: transparent;
+		border: none;
+		:hover {
+			background: transparent;
+			border: none;
+		}
+	}
 `;
 const dropDownContainer = css`
 	box-sizing: border-box;

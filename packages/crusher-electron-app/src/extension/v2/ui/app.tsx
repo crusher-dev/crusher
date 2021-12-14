@@ -26,7 +26,6 @@ const App = () => {
 		</div>
 	);
 };
-render(<App />, document.querySelector("#root"));
 
 const containerStyle = css`
 	display: grid;
@@ -78,3 +77,5 @@ const globalStyles = css`
 		border-radius: 100px;
 	}
 `;
+
+render(<App />, document.querySelector("#root"));

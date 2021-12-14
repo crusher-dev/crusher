@@ -7,20 +7,26 @@ import { css } from "@emotion/react";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { Conditional } from "@dyson/components/layouts";
 
-const DeviceItem = ({label, value}) => {
+const DeviceItem = ({label}) => {
 	return (
 		<div css={{padding: "7rem 8rem", width: "100%", cursor: "default"}}>{label}</div>
 	)
 };
 
 const devices = [
-	{ value: "Desktop", component: <DeviceItem label={"Desktop" } value={"desktop"} />, label: "Desktop" },
-	{ value: "Mobile", label: "Mobile", component: <DeviceItem label={"Mobile" } value={"mobile"} /> },
+	{ value: "desktop", component: <DeviceItem label={"Desktop" } />, label: "Desktop" },
+	{ value: "mobile", label: "Mobile", component: <DeviceItem label={"Mobile" } /> },
 ];
 
 
 const Toolbar = (): JSX.Element => {
 	const [start, setStart] = React.useState(false);
+	const [selectedDevice, setSelectedDevice] = React.useState(["desktop"]);
+
+	const handleChangeDevice = (selected) => {
+		setSelectedDevice(selected);
+	};
+
 	return (
 		<div css={containerStyle}>
 			<NavigateBackIcon onClick={() => 0} disabled={!start} />
@@ -29,7 +35,7 @@ const Toolbar = (): JSX.Element => {
 				placeholder="Enter URL to test"
 				CSS={inputStyle}
 				rightIcon={
-						<SelectBox CSS={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 102rem;`} selected={[{label: "Desktop", value: "desktop"}]} values={devices} />
+						<SelectBox selected={selectedDevice} callback={handleChangeDevice} CSS={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 102rem;`} values={devices} />
 				}
 			/>
 			
@@ -71,6 +77,9 @@ const inputStyle = css`
 		border-radius: 4rem;
 		color: rgba(255, 255, 255, 0.93);
 		height: 100%;
+	}
+	svg {
+		margin-left: auto;
 	}
 	.dropdown-box {
 		overflow: hidden;

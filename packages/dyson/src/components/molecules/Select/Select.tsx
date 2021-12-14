@@ -4,21 +4,53 @@ import { OnOutsideClick } from "../../layouts/onOutsideClick/onOutsideClick";
 
 import { Conditional } from "../../layouts";
 import { CloseSVG } from "../../icons/CloseSVG";
-import { DropdownIconSVG } from "../../../../../crusher-app/src/svg/builds";
+import { DropdownIconSVG } from "../../../assets/icons";
 import Checkbox from "../../atoms/checkbox/checkbox";
 
-type TSelectBox = {
+
+export type TSelectBoxProps = {
+	/*
+		Emotion style if any
+	*/
 	css?: SerializedStyles;
-	values: { value: any; component: ReactElement; inactive: boolean };
+	/*
+		The options to be displayed in the select dropdown
+	*/
+	values: Array<{ value: any; label: any; component: ReactElement; inactive: boolean }>;
+	/* 
+		Is multi select enabled
+	*/
 	isMultiSelect: boolean;
+	/*
+		Is search enabled
+	*/
 	isSearchable: boolean;
+	/*
+		Event handler when scrolled to bottom of select dropdown
+	*/
 	onScrollEnd: any;
+	/*
+		Height of dropdown
+	*/
 	dropdDownHeight?: string;
-	selected?: any;
-	size: "small" | "medium" | "large"; // 28/32/36/42
+	/*
+		Selected option
+	*/
+	selected?: any | {label: any, value: any};
+	/*
+		Size of select box
+	*/
+	size: "small" | "medium" | "large";
+	/*
+		Placeholder
+	*/
 	placeholder: string;
+	/*
+		Event handler when select box is changed
+	*/
 	callback: (selectedValue: any) => void;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
+
 
 const SelectDefaultProps = {
 	placeholder: "Select a value",
@@ -31,7 +63,7 @@ const SelectDefaultProps = {
 	callback: () => {},
 };
 
-export const SelectBox: React.FC<TSelectBox> = ({
+export const SelectBox: React.FC<TSelectBoxProps> = ({
 	selected = [],
 	placeholder,
 	onScrollEnd,
@@ -67,6 +99,7 @@ export const SelectBox: React.FC<TSelectBox> = ({
 
 	useEffect(() => {
 		setFilterText("");
+		console.log("Selected options", selected);
 	}, [selected]);
 
 	const selectValue = (value) => {

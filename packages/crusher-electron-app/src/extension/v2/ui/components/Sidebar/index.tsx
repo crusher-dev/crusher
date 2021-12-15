@@ -34,7 +34,7 @@ const Sidebar = ({CSS}): JSX.Element => {
 			</div>
 			</div>
 			<Steps />
-		</>
+		</div>
 	);
 };
 
@@ -51,6 +51,7 @@ const headerText = css`
 	font-size: 15rem;
 `;
 const actionScrollContainer = css`
+	height: 100%;
 	padding: 26rem;
 	padding-top: 0rem;
 	overflow-y: auto;

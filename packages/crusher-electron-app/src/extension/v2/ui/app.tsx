@@ -20,8 +20,7 @@ const App = () => {
 			<div css={bodyStyle}>
 
 				<Toolbar CSS={toolbarStyle} />
-
-					<DeviceFrame  CSS={deviceFrameContainerStyle}/>
+				<DeviceFrame  CSS={deviceFrameContainerStyle}/>
 			</div>
 			<Sidebar CSS={sidebarStyle}/>
 		</div>
@@ -39,7 +38,8 @@ const containerStyle = css`
 const bodyStyle = css`
 	flex: 1;
 	max-width: calc(100% - 350rem);
-	display: flex;
+	display: grid;
+	grid-template-rows: 62rem;
 	flex-direction: column;
 `;
 const sidebarStyle = css`

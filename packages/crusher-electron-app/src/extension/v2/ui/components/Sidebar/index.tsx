@@ -13,7 +13,7 @@ const Sidebar = ({CSS}): JSX.Element => {
 	return (
 		<div css={[{display: "flex", flexDirection: "column", height: "100%", width: "100%", overflow: "hidden"}, CSS]}>
 			{/* <ActionModal /> */}
-			<div css={{flex: 1, overflow: "hidden"}}>
+			<div css={{flex: 1, overflow: "hidden",     display: "grid", gridTemplateRows: "62rem"}}>
 			<div css={headerContainer}>
 				<Text CSS={headerText}>Actions</Text>
 				<SearchIcon />

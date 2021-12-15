@@ -4,7 +4,7 @@ import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { css } from "@emotion/react";
 
-const InfoBox = (): JSX.Element => {
+const InfoBox = () => {
 	return (
 		<div css={containerStyle}>
 			<div css={heading}>New to crusher?</div>

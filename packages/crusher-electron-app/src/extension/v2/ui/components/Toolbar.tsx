@@ -86,6 +86,7 @@ const inputStyle = css`
 	}
 	.input__rightIconContainer {
 		right: 1rem;
+		z-index: 9999;
 	}
 `;
 const buttonStyle = css`

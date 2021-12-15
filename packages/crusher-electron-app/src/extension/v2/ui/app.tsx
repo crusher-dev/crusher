@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { render } from "react-dom";
 import Toolbar from "./components/Toolbar";
-import Info from "./components/Info";
 import Sidebar from "./components/Sidebar";
 import { css, Global } from "@emotion/react";
+import { DeviceFrame } from "./components/DeviceFrame";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
@@ -15,9 +15,8 @@ const App = () => {
 				<div css={toolbarStyle}>
 					<Toolbar />
 				</div>
-				{/* <div css={chromeStyle}></div> */}
-				<div css={infoStyle}>
-					<Info />
+				<div css={deviceFrameContainerStyle}>
+					<DeviceFrame/>
 				</div>
 			</div>
 			<div css={sidebarStyle}>
@@ -36,20 +35,20 @@ const containerStyle = css`
 `;
 const bodyStyle = css`
 	flex: 1;
+	display: flex;
+	flex-direction: column;
 `;
 const sidebarStyle = css`
 	padding: 1rem;
+	min-width: 350rem;
 	background-color: #111213;
 `;
 const toolbarStyle = css`
 	background-color: #111213;
 	padding: 5rem;
 `;
-const infoStyle = css`
-	position: fixed;
-	display: block;
-	bottom: 140rem;
-	left: 40rem;
+const deviceFrameContainerStyle = css`
+	flex: 1;
 `;
 const globalStyles = css`
 	body {

@@ -4,6 +4,8 @@ import {css} from "@emotion/react";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
+import { useAtom } from "jotai";
+import {  appStateItemMutator } from "../../../store/atoms/global/appState";
 
 const Overlay = ({children}) => {
     return (
@@ -14,10 +16,11 @@ const Overlay = ({children}) => {
 };
 
 const InfoOverLay = ({hideOverlay}) => {
+	const [, setAppStateItem] = useAtom(appStateItemMutator);
 
     const handleDontShowAgain = () => {
-        localStorage.setItem("showInfoOverlay", "false");
-        hideOverlay();
+        localStorage.setItem("app.showShouldOnboardingOverlay", "false");
+        setAppStateItem({key: "showShouldOnboardingOverlay", value: false});
     }
 
     return (

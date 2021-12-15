@@ -4,9 +4,15 @@ import Toolbar from "./components/Toolbar";
 import Sidebar from "./components/Sidebar";
 import { css, Global } from "@emotion/react";
 import { DeviceFrame } from "./components/DeviceFrame";
+import { useAtom } from "jotai";
+import { appStateItemMutator } from "../store/atoms/global/appState";
+import { hydrateApp } from "../store/utils/hydrate";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
+	const [, setAppStateItem] = useAtom(appStateItemMutator);
+
+	useEffect(hydrateApp.bind(this, setAppStateItem), []);
 
 	return (
 		<div css={containerStyle}>

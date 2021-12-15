@@ -1,12 +1,15 @@
 import { Conditional } from "@dyson/components/layouts";
 import { useEffect } from "dyson/node_modules/@types/react";
+import { useAtom } from "jotai";
 import React from "react";
 import { css } from "styled-components";
+import { appStateAtom } from "../../store/atoms/global/appState";
 import { InfoOverLay } from "./Overlays/index";
 
 const DeviceFrame = () => {
     const webviewRef = React.useRef<any>(null);
     const [showInfoOverlay, setShowInfoOverlay] = React.useState<boolean>(localStorage.getItem("showInfoOverlay") === "false" ? false : true);
+    const [appState, _] = useAtom(appStateAtom);
 
     return (
         <div css={containerStyle}>
@@ -24,7 +27,7 @@ const DeviceFrame = () => {
                                 partition={"crusher"}
                             />
             </div>
-            <Conditional showIf={showInfoOverlay}>
+            <Conditional showIf={appState.showShouldOnboardingOverlay}>
                 <InfoOverLay hideOverlay={setShowInfoOverlay.bind(this, false)} />
             </Conditional>
         </div>

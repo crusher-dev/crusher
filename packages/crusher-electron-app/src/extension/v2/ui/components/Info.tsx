@@ -3,6 +3,7 @@ import { Text } from "@dyson/components/atoms/text/Text";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { css } from "@emotion/react";
+import { useAtom } from "jotai";
 
 const InfoBox = () => {
 	return (

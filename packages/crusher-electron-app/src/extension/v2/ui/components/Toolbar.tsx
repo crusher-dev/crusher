@@ -19,7 +19,7 @@ const devices = [
 ];
 
 
-const Toolbar = (): JSX.Element => {
+const Toolbar = ({CSS}): JSX.Element => {
 	const [start, setStart] = React.useState(false);
 	const [selectedDevice, setSelectedDevice] = React.useState(["desktop"]);
 
@@ -28,7 +28,7 @@ const Toolbar = (): JSX.Element => {
 	};
 
 	return (
-		<div css={containerStyle}>
+		<div css={[containerStyle, CSS]}>
 			<NavigateBackIcon onClick={() => 0} disabled={!start} />
 			<NavigateRefreshIcon onClick={() => 0} disabled={!start} />
 			<Input

@@ -6,14 +6,14 @@ import { css } from "styled-components";
 import { appStateAtom } from "../../store/atoms/global/appState";
 import { InfoOverLay } from "./Overlays/index";
 
-const DeviceFrame = () => {
+const DeviceFrame = ({CSS}) => {
     const webviewRef = React.useRef<any>(null);
     const [showInfoOverlay, setShowInfoOverlay] = React.useState<boolean>(localStorage.getItem("showInfoOverlay") === "false" ? false : true);
     const [appState, _] = useAtom(appStateAtom);
 
     return (
-        <div css={containerStyle}>
-            <div style={{width: 1280, height: 800}}>
+        <div css={[containerStyle, CSS]}>
+            <div style={{width: 1280, height: 800, maxWidth: "100%", maxHeight: "100%"}}>
                 <webview
                     css={{width: "100%", height: "100%"}}
                                 ref={webviewRef}

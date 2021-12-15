@@ -91,8 +91,8 @@ class App {
 			title: "Crusher Test Recorder",
 			show: true,
 			icon: getAppIconPath(),
-			minWidth: width > 1600 ? 1600 : width,
-			minHeight: height > 873 ? 873 : height,
+			minWidth: width > 1630 ? 1630 : width,
+			minHeight: height > 908 ? 908 : height,
 			enableLargerThanScreen: true,
 			webPreferences: {
 				webviewTag: true,

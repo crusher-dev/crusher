@@ -7,12 +7,13 @@ import { Steps } from "./Steps";
 import { ActionModal } from "./Modal";
 import { Conditional } from "@dyson/components/layouts/Conditional/Conditional";
 
-const Sidebar = (): JSX.Element => {
+const Sidebar = ({CSS}): JSX.Element => {
 	const [selected, setSelected] = React.useState(false);
 
 	return (
-		<>
+		<div css={[{display: "flex", flexDirection: "column", height: "100%", width: "100%", overflow: "hidden"}, CSS]}>
 			{/* <ActionModal /> */}
+			<div css={{flex: 1, overflow: "hidden"}}>
 			<div css={headerContainer}>
 				<Text CSS={headerText}>Actions</Text>
 				<SearchIcon />
@@ -31,7 +32,7 @@ const Sidebar = (): JSX.Element => {
 					<Action setSelected={setSelected} />
 				</Conditional>
 			</div>
-
+			</div>
 			<Steps />
 		</>
 	);
@@ -52,7 +53,6 @@ const headerText = css`
 const actionScrollContainer = css`
 	padding: 26rem;
 	padding-top: 0rem;
-	height: 45vh;
 	overflow-y: auto;
 `;
 const selectActionContainer = css`

@@ -18,16 +18,12 @@ const App = () => {
 		<div css={containerStyle}>
 			<Global styles={globalStyles} />
 			<div css={bodyStyle}>
-				<div css={toolbarStyle}>
-					<Toolbar />
-				</div>
-				<div css={deviceFrameContainerStyle}>
-					<DeviceFrame/>
-				</div>
+
+				<Toolbar CSS={toolbarStyle} />
+
+					<DeviceFrame  CSS={deviceFrameContainerStyle}/>
 			</div>
-			<div css={sidebarStyle}>
-				<Sidebar />
-			</div>
+			<Sidebar CSS={sidebarStyle}/>
 		</div>
 	);
 };
@@ -35,26 +31,30 @@ const App = () => {
 const containerStyle = css`
 	display: flex;
 	background: #020202;
-	width: 100vw;
+	width: 100%;
+	overflow-x: hidden;
 	height: 100vh;
 	color: white;
 `;
 const bodyStyle = css`
 	flex: 1;
+	max-width: calc(100% - 350rem);
 	display: flex;
 	flex-direction: column;
 `;
 const sidebarStyle = css`
 	padding: 1rem;
-	min-width: 350rem;
+	width: 350rem;
 	background-color: #111213;
 `;
 const toolbarStyle = css`
 	background-color: #111213;
 	padding: 5rem;
+	min-height: 60rem;
 `;
 const deviceFrameContainerStyle = css`
 	flex: 1;
+	overflow: auto;
 `;
 const globalStyles = css`
 	body {

@@ -9,11 +9,19 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
 
 const steps = [
-	{ id: "test4", title: "Click on element", isRunning: true },
+	{ id: "test1", title: "Click on element", isRunning: true },
 	{ id: "test2", title: "Click on element" },
-	{ id: "test1", title: "Click on element", isFailed: true },
-	{ id: "test3", title: "Click on element" },
+	{ id: "test3", title: "Click on element", isFailed: true },
+	{ id: "test4", title: "Click on element" },
 	{ id: "test5", title: "Click on element" },
+	{ id: "test6", title: "Click on element" },
+	{ id: "test7", title: "Click on element" },
+	{ id: "test8", title: "Click on element" },
+	{ id: "test9", title: "Click on element" },
+	{ id: "test10", title: "Click on element" },
+	{ id: "test11", title: "Click on element" },
+	{ id: "test12", title: "Click on element" },
+	{ id: "test13", title: "Click on element" },
 ];
 
 export function Steps(): JSX.Element {
@@ -134,6 +142,8 @@ const failedStepTitle = css`
 `;
 const container = css`
 	border-top: 1rem solid #303235;
+	max-height: 375rem;
+	padding-bottom: 32rem;
 `;
 const stepsHeaderStyle = css`
 	display: flex;
@@ -159,10 +169,10 @@ const dropdownItemText = css`
 	padding: 6rem 16rem;
 `;
 const stepsContainer = css`
-	overflow-y: auto;
+	overflow-y: scroll;
 	padding: 18rem 22rem;
 	padding-top: 0rem;
-	height: 32vh;
+	height: 100%;
 `;
 const runningStepStyle = css`
 	border: 1rem solid rgba(255, 255, 255, 0.1);

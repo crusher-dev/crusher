@@ -7,7 +7,7 @@ import { SearchIcon, CloseModalIcon } from "crusher-electron-app/src/extension/a
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 
 const SidebarItem = ({ selected, children, ...props }: { selected?: boolean } & TextProps) => (
-	<Text onClick={() => 0} CSS={selected && selectedSidebarItem} {...props}>
+	<Text CSS={selected && selectedSidebarItem} {...props}>
 		{children}
 	</Text>
 );
@@ -183,7 +183,7 @@ const paginationContainer = css`
 	}
 `;
 const modalStyle = css`
-	width: 70vw;
+	width: 950rem;
 	position: absolute;
 	top: 50%;
 	left: 50%;

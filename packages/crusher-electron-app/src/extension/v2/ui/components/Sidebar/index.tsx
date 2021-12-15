@@ -12,7 +12,7 @@ const Sidebar = (): JSX.Element => {
 
 	return (
 		<>
-			{/* <ActionModal /> */}
+			<ActionModal />
 			<div css={headerContainer}>
 				<Text CSS={headerText}>Actions</Text>
 				<SearchIcon />

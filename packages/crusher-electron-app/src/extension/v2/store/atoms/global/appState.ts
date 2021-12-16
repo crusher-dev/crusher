@@ -3,7 +3,8 @@ import { atom } from "jotai";
 import { atomWithImmer } from "jotai/immer";
 
 type TAppState = {
-	showShouldOnboardingOverlay: boolean
+	showShouldOnboardingOverlay: boolean;
+	recorderUrl: string;
 };
 
 // @ts-ignore

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
@@ -6,6 +6,16 @@ import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { css } from "@emotion/react";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { Conditional } from "@dyson/components/layouts";
+import { addHttpToURLIfNotThere } from "@shared/utils/url";
+import { validURL } from "crusher-electron-app/src/extension/utils/helpers";
+import { getStore } from "crusher-electron-app/src/extension/redux/store";
+import { recordAction } from "crusher-electron-app/src/extension/redux/actions/actions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { AdvancedURL } from "crusher-electron-app/src/extension/utils/url";
+import { SETTINGS_ACTIONS } from "crusher-electron-app/src/extension/constants/actionTypes";
+import { generateCrusherExtensionUrl } from "@shared/utils/extension";
+import devicesList from "@shared/constants/devices";
+import userAgentsList from "@shared/constants/userAgents";
 
 const DeviceItem = ({label}) => {
 	return (
@@ -14,26 +24,84 @@ const DeviceItem = ({label}) => {
 };
 
 const devices = [
-	{ value: "desktop", component: <DeviceItem label={"Desktop" } />, label: "Desktop" },
-	{ value: "mobile", label: "Mobile", component: <DeviceItem label={"Mobile" } /> },
+	{ value: "GoogleChromeMediumScreen", component: <DeviceItem label={"Desktop" } />, label: "Desktop" },
+	{ value: "Pixel33XL", label: "Mobile", component: <DeviceItem label={"Mobile" } /> },
 ];
 
 
-const Toolbar = ({CSS}): JSX.Element => {
-	const [start, setStart] = React.useState(false);
-	const [selectedDevice, setSelectedDevice] = React.useState(["desktop"]);
+const Toolbar = ({CSS, initialSelectedDevice, initialUrl}): JSX.Element => {
+	const [start, setStart] = React.useState(true);
+	const [url, setUrl] = React.useState(initialUrl || null);
 
-	const handleChangeDevice = (selected) => {
+	const [selectedDevice, setSelectedDevice] = React.useState([!!initialSelectedDevice ? initialSelectedDevice : "GoogleChromeMediumScreen"]);
+
+	const handleChangeDevice = async (selected) => {
+		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href);
+		if(initialUrl) {
+			const device = devicesList.find((device) => device.id === selected[0]);
+			const userAgent = userAgentsList.find((userAgent) => userAgent.name === device.userAgent);
+
+			const isUserAgentReset = await (window as any).electron.setUserAgent(userAgent.value);
+
+			if (isUserAgentReset) {
+				window.location.href = generateCrusherExtensionUrl("/", targetUrl!, device.id, { isDeviceChanged: true });
+			}
+		}
+
 		setSelectedDevice(selected);
 	};
 
+	const loadNewPage = (newUrl: string) => {
+		const store = getStore();
+		store.dispatch(
+			recordAction({
+				type: ActionsInTestEnum.NAVIGATE_URL,
+				payload: {
+					selectors: [],
+					meta: {
+						value: newUrl,
+					},
+				},
+			}),
+		);
+		setUrl(newUrl);
+
+		(window as any).electron.navigatePage(newUrl);
+	}
+
+	const handleUrlReturn = useCallback((_newUrl: string) => {
+		const newUrl = addHttpToURLIfNotThere(_newUrl);
+		setUrl(newUrl);
+		if (!validURL(newUrl)) alert("URL is not valid!");
+		else {
+			if(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href)) {
+				loadNewPage(newUrl);
+			} else {
+				const currentURL =  new URL(window.location.href);
+				currentURL.searchParams.append("url", newUrl);
+				currentURL.searchParams.append("device", selectedDevice[0]);
+				window.location.href = currentURL.toString();
+			}
+		}
+	}, [selectedDevice]);
+
+	const goBack = () => {
+		(window as any).electron.webview.postMessage({ type: SETTINGS_ACTIONS.GO_BACK_TO_PREVIOUS_URL, value: true });
+	};
+
+	const refreshPage = () => {
+		(window as any).electron.webview.postMessage({ type: SETTINGS_ACTIONS.REFRESH_PAGE, value: true });
+	};
+	
 	return (
 		<div css={[containerStyle, CSS]}>
-			<NavigateBackIcon onClick={() => 0} disabled={!start} />
-			<NavigateRefreshIcon onClick={() => 0} disabled={!start} />
+			<NavigateBackIcon onClick={goBack} disabled={!start} />
+			<NavigateRefreshIcon onClick={refreshPage} disabled={!start} />
 			<Input
 				placeholder="Enter URL to test"
 				CSS={inputStyle}
+				onReturn={handleUrlReturn}
+				initialValue={url}
 				rightIcon={
 						<SelectBox selected={selectedDevice} callback={handleChangeDevice} CSS={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 102rem;`} values={devices} />
 				}

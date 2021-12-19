@@ -4,25 +4,59 @@ import Toolbar from "./components/Toolbar";
 import Sidebar from "./components/Sidebar";
 import { css, Global } from "@emotion/react";
 import { DeviceFrame } from "./components/DeviceFrame";
-import { useAtom } from "jotai";
-import { appStateItemMutator } from "../store/atoms/global/appState";
+import { Provider, useAtom } from "jotai";
+import { appStateAtom, appStateItemMutator } from "../store/atoms/global/appState";
 import { hydrateApp } from "../store/utils/hydrate";
+import configureStore, { getStore } from "../../redux/store";
+
+import { AdvancedURL } from "../../utils/url";
+import { recordAction } from "../../redux/actions/actions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { recorderMessageListener } from "../../messageListener";
+import { Conditional } from "@dyson/components/layouts";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
-	const [, setAppStateItem] = useAtom(appStateItemMutator);
+	const [url] = useState(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href));
+	const selectedDevice = AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href);
+    const [appState, setAppStateItem] = useAtom(appStateAtom);
 
-	useEffect(hydrateApp.bind(this, setAppStateItem), []);
+
+	useMemo(() => {
+		hydrateApp(setAppStateItem);
+
+		const store = getStore();
+		const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(window.location.href);
+		const userAgent = AdvancedURL.getUserAgentFromUrl(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href) as string);
+		store.dispatch(
+			recordAction({
+				type: ActionsInTestEnum.SET_DEVICE,
+				payload: {
+					meta: {
+						device: device,
+						userAgent: userAgent,
+					},
+				},
+			}),
+		);
+		(window as any).electron.host.addEventListener("message", recorderMessageListener.bind(window, deviceIframeRef));
+	}, []);
 
 	return (
 		<div css={containerStyle}>
 			<Global styles={globalStyles} />
 			<div css={bodyStyle}>
 
-				<Toolbar CSS={toolbarStyle} />
-				<DeviceFrame  CSS={deviceFrameContainerStyle}/>
+				<Toolbar initialUrl={url} initialSelectedDevice={selectedDevice ? selectedDevice.id : null} CSS={toolbarStyle} />
+					<DeviceFrame deviceIframeRef={deviceIframeRef} targetUrl={url} selectedDevice={selectedDevice} CSS={deviceFrameContainerStyle}/>
 			</div>
 			<Sidebar CSS={sidebarStyle}/>
+
+			<style>{`
+					.CodeMirror {
+						font-size: 0.9rem;
+					}
+				`}</style>
 		</div>
 	);
 };
@@ -83,4 +117,6 @@ const globalStyles = css`
 	}
 `;
 
-render(<App />, document.querySelector("#root"));
+render(<Provider store={configureStore()}>
+<App />
+</Provider>, document.querySelector("#root"));

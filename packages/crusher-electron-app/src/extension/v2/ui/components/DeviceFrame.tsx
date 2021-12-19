@@ -6,34 +6,51 @@ import { css } from "styled-components";
 import { appStateAtom } from "../../store/atoms/global/appState";
 import { InfoOverLay } from "./Overlays/index";
 
-const DeviceFrame = ({CSS}) => {
-    const webviewRef = React.useRef<any>(null);
-    const [showInfoOverlay, setShowInfoOverlay] = React.useState<boolean>(localStorage.getItem("showInfoOverlay") === "false" ? false : true);
-    const [appState, _] = useAtom(appStateAtom);
+const DeviceFrame = ({CSS, targetUrl, deviceIframeRef, selectedDevice}) => {
+    const [appState, setAppStateItem] = useAtom(appStateAtom);
+	const [siteUrl, setSiteUrl] = React.useState(targetUrl);
 
+    const showInfoOverlay = appState.showShouldOnboardingOverlay && !targetUrl;
+
+    const hideInfoOverlay = () => {
+        setAppStateItem({key: "showShouldOnboardingOverlay", value : false});
+    };
+    
     return (
         <div css={[containerStyle, CSS]}>
-            <div style={{width: 1280, height: 800, maxWidth: "100%", maxHeight: "100%"}}>
-                <webview
-                    css={{width: "100%", height: "100%"}}
-                                ref={webviewRef}
-                                id="device_browser"
-                                nodeintegration={true}
-                                preload={"file://" + (window as any).electron.getAppPath() + "/webViewPreload.js"}
-                                //@ts-ignore
-                                enableremotemodule={"true"}
-                                title={"Device"}
-                                src={`http://google.com`}
-                                partition={"crusher"}
-                            />
+            				<Conditional showIf={siteUrl}>
+
+            <div style={{width: selectedDevice.width, height: selectedDevice.height, maxWidth: "100%", maxHeight: "100%"}}>
+    
+<webview
+                    css={webviewStyle}
+						ref={deviceIframeRef}
+						id="device_browser"
+						nodeintegration={true}
+						preload={"file://" + (window as any).electron.getAppPath() + "/webViewPreload.js"}
+						//@ts-ignore
+						enableremotemodule={"true"}
+						title={selectedDevice ? selectedDevice.name : "undefined"}
+						src={`about:blank?url=${encodeURIComponent(siteUrl)}`}
+						partition={"crusher"}
+					/>
             </div>
-            <Conditional showIf={appState.showShouldOnboardingOverlay}>
-                <InfoOverLay hideOverlay={setShowInfoOverlay.bind(this, false)} />
+            </Conditional>
+            <Conditional showIf={showInfoOverlay}>
+                <InfoOverLay hideOverlay={hideInfoOverlay.bind(this)} />
             </Conditional>
         </div>
     );
 }
 
+const webviewStyle = css`
+    border: none;
+    display: inline-flex;
+    max-width: 100%;
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+`;
 const containerStyle = css`
     width: 100%;
     height: 100%;

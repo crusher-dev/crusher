@@ -154,13 +154,14 @@ const container = css`
 const stepsHeaderStyle = css`
 	display: flex;
 	align-items: center;
-	padding: 14rem 26rem;
+	padding: 14rem 22rem;
+	padding-top: 21rem;
 `;
 const stepsText = css`
 	font-family: Cera Pro;
-	font-size: 15rem;
+	font-size: 14rem;
 	flex-grow: 1;
-	margin: 0rem 8rem;
+	margin: 0rem 12rem;
 `;
 const stepDropdown = css`
 	box-sizing: border-box;
@@ -190,8 +191,18 @@ const stepStyle = css`
 	align-items: center;
 	box-sizing: border-box;
 	border-radius: 6rem;
-	padding: 3rem 12rem;
+	padding: 3rem 13rem;
 	margin: 10rem 0rem;
+	border: 1px solid rgba(255, 255, 255, 0);
+	border-bottom-color: rgba(0,0,0,0);
+	border-bottom-width: 4rem;
+
+	&:hover {
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 6px;
+		border-bottom-color: #4C5141;
+		border-bottom-width: 4rem;
+	}
 `;
 
 const failedStyle = css`
@@ -200,22 +211,27 @@ const failedStyle = css`
 `;
 const stepText = css`
 	margin: 5rem;
-	padding: 4rem;
+	margin-left: 13rem;
 	flex: 1 0 50%;
 `;
 const stepTitle = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 12rem;
-	line-height: 13rem;
+	font-family: Gilroy !important;
+	font-style: 600 !important;
+	font-weight: normal !important;
+	font-size: 12.6rem !important;
+	line-height: 13rem !important;
+	color: rgba(215, 223, 225, 0.6) !important;
+	user-select: none !important;
 `;
 const stepSubtitle = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 10rem;
-	line-height: 10rem;
+	font-family: Gilroy !important;
+	font-style: normal !important;
+	font-weight: normal !important;
+	font-size: 10.5rem !important;
+	line-height: 10rem !important;
+	margin-top: 6.2rem !important;
+	color: #79929A !important;
+	user-select: none !important;
 `;
 const stepWarning = css`
 	display: block;

@@ -5,6 +5,7 @@ import { iAssertionRow, iField } from "@shared/types/assertionRow";
 import Select from "react-select";
 import { iReactSelectOption } from "../../../interfaces/reactSelectOptions";
 import { DeleteIcon } from "crusher-electron-app/src/extension/assets/icons";
+import { css } from "@emotion/react";
 
 interface iAssertionFormTableProps {
 	rowItems: Array<iAssertionRow>;
@@ -57,6 +58,7 @@ const reactSelectDefaultStyles = {
 	valueContainer: (provided) => ({
 		...provided,
 		top: "-0.2rem",
+		width: "70rem"
 	}),
 };
 
@@ -82,7 +84,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<Select className="w-40" styles={reactSelectDefaultStyles} defaultValue={selectedOption ? selectedOption : fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />
+			<Select styles={reactSelectDefaultStyles} defaultValue={selectedOption ? selectedOption : fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />
 		);
 	};
 
@@ -131,7 +133,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 	const rowOut = rowItems.map((row, index: number) => {
 		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
-			<div key={row.id} className="grid grid-cols-3 gap-4 my-8 mb-20">
+			<div key={row.id} css={css`display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin-top: 8px; margin-bottom: 20px;`}>
 				<div style={inputTableItemFieldContainerStyle}>
 					<DeleteIcon
 						onClick={handleDeleteRow.bind(this, row.id)}
@@ -141,7 +143,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 					{renderFieldInput(row.field.name, row.id)}
 				</div>
 				<div>{renderFieldOperationInput(row.operation as ASSERTION_OPERATION_TYPE, row.id)}</div>
-				<div className="flex items-center justify-center">
+				<div css={css`display: flex; align-items: center; justify-content: center;`}>
 					<div>{renderValidationInput(row.validation, row.id)}</div>
 					<img
 						src={chrome.runtime.getURL(isValidationCorrect ? "/icons/correct.svg" : "/icons/cross.svg")}
@@ -159,11 +161,13 @@ const containerStyle = {
 	width: "100%",
 	textAlign: TEXT_ALIGN.LEFT,
 	borderSpacing: "0 0.75rem",
+	marginBottom: "20rem"
 };
 
 const inputTableItemFieldContainerStyle = {
-	fontFamily: "DM Sans",
+	fontFamily: "Gilroy",
 	minWidth: "7rem",
+	color: "#000",
 	fontStyle: "normal",
 	fontSize: "0.82rem",
 	display: "flex",

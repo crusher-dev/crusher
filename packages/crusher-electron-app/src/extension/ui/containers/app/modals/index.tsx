@@ -79,7 +79,6 @@ const topBarBrowserIcon = {
 	marginRight: 20,
 };
 const closeButtonStyle = {
-	cursor: "pointer",
 };
 
 interface iModalManagerProps {
@@ -174,7 +173,8 @@ const ModalManager = (props: iModalManagerProps) => {
 			</Conditional>
 			<RunAfterTestModal isOpen={shouldShowRunAfterTestModal} onClose={handleCloseRunAfterTestModalCallback} />
 		</ReactModal> */}
-		<WaitModal isOpen={modalState === ACTIONS_MODAL_STATE.WAIT_SECONDS}></WaitModal>
+			<WaitModal isOpen={modalState === ACTIONS_MODAL_STATE.WAIT_SECONDS}></WaitModal>
+			<SeoModalContent isOpen={modalState === ACTIONS_MODAL_STATE.SEO_VALIDATION}></SeoModalContent>
 
 		</>
 	);

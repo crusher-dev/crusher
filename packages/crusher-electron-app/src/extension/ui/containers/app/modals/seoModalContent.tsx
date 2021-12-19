@@ -11,11 +11,17 @@ import uniqueId from "lodash/uniqueId";
 import { getStore } from "../../../../redux/store";
 import { recordAction } from "../../../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { Button } from "../../../components/app/button";
 import { pxToRemValue } from "../../../../utils/helpers";
+import { Modal } from "@dyson/components/molecules/Modal";
+import { ModalTopBar } from ".";
+import { css } from "@emotion/react";
+import { updateActionsModalState } from "crusher-electron-app/src/extension/redux/actions/recorder";
+import { Text } from "@dyson/components/atoms/text/Text";
+import { Button } from "@dyson/components/atoms/button/Button";
 
 interface iSEOModalProps {
 	onClose?: any;
+	isOpen: boolean;
 }
 
 const getValidationFields = (seoInfo: iSeoMetaInformationMeta): Array<iField> => {
@@ -34,7 +40,13 @@ const getSeoFieldValue = (fieldInfo: iField) => {
 };
 
 const SeoModalContent = (props: iSEOModalProps) => {
-	const { onClose } = props;
+	const { isOpen } = props;
+
+	const handleClose = () => {
+		const store = getStore();
+		store.dispatch(updateActionsModalState(null));
+	};
+
 	const seoInfo = useSelector(getSeoMetaInfo);
 	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(seoInfo!);
@@ -128,13 +140,18 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				url: "",
 			}),
 		);
-		if (onClose) {
-			onClose();
-		}
+		handleClose();
 	};
 
+	if(!isOpen) return null; 
+
 	return (
-		<div style={containerStyle(validationRows.length)}>
+		<Modal modalStyle={modalStyle}>
+
+		<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />
+
+					
+		<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
 			<AssertionFormTable
 				rowItems={validationRows}
 				fields={validationFields}
@@ -143,26 +160,50 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				onOperationChange={updateOperationOfValidationRow}
 				onValidationChange={updateValidationValueOfValidationRow}
 			/>
-			<div style={bottomBarStyle}>
+			<div style={bottomBarStyle} css={css`margin-bottom: 40rem; margin-top: 20rem;`}>
 				<div style={formButtonStyle}>
-					<div style={advanceLinkContainerStyle} onClick={createNewSeoAssertionRow}>
-						<span>Add a check</span>
-						<span style={{ marginLeft: "0.5rem" }}>
-							<img width={12} src={chrome.extension.getURL("/icons/arrow_down.svg")} />
-						</span>
-					</div>
-					<div style={generateChecksContainerStyle} onClick={generateDefaultChecksForPage}>
-						<BulbIcon style={bulbIconStyle} />
-						<div id={"modal-generate-checks-seo"} style={generateTextStyle}>
-							Generate Checks!
-						</div>
-					</div>
+					<Text css={linkStyle} onClick={createNewSeoAssertionRow}>Add a check</Text>
+					<Text css={[linkStyle, css`margin-left: 24rem;`]} onClick={generateDefaultChecksForPage}>Generate Checks!</Text>
 				</div>
-				<Button title={"Save action"} style={saveButtonStyle} onClick={saveSeoValidationAction}></Button>
+				<Button CSS={buttonStyle} onClick={saveSeoValidationAction}>Save</Button>
 			</div>
 		</div>
+		</Modal>
 	);
 };
+
+const linkStyle = css`
+	color: #fff !important;
+	font-size: 13rem !important;
+	&:hover {
+		opacity: 0.9 !important;
+	}
+`;
+
+
+const buttonStyle = css`
+	font-size: 13rem;
+	border: 1px solid rgba(255, 255, 255, 0.23);
+	box-sizing: border-box;
+	border-radius: 4rem;
+	height: 34rem;
+	padding: 4rem 8rem;
+	min-width: 100rem;
+    border: none;
+`;
+
+const modalStyle = css`
+	width: 800rem;
+	min-height: auto !important;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -20%);
+	display: flex;
+	flex-direction: column;
+	padding: 0rem;
+	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
+`;
 
 const containerStyle = (areRowsPresent) => {
 	return { marginTop: areRowsPresent ? pxToRemValue(36) : pxToRemValue(24) };
@@ -171,16 +212,12 @@ const bottomBarStyle = {
 	display: "flex",
 	justifyContent: "flex-end",
 	alignItems: "center",
-	marginTop: "1.5rem",
 };
 const formButtonStyle = {
 	color: "#5B76F7",
 	marginRight: "auto",
-	fontFamily: "DM Sans",
-	fontSize: "0.9rem",
-	textDecorationLine: "underline",
-	fontWeight: 900,
-	cursor: "pointer",
+	fontFamily: "Gilroy",
+	fontWeight: 700,
 	display: "flex",
 };
 const advanceLinkContainerStyle = {

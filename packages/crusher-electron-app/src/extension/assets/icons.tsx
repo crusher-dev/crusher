@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { css } from "@emotion/react";
 
 interface NavigateIconProps {
 	onClick: () => any;
@@ -166,14 +167,12 @@ const BrowserIcon = (props: any) => {
 
 const CloseModalIcon = (props: any) => {
 	return (
-		<svg width={17} height={17} viewBox="0 0 17 17" fill="none" {...props}>
+		<svg width={17} height={17} viewBox="0 0 17 17" fill="none" {...props} css={css`fill: #ffffff1a; path { fill: inherit; } &:hover {fill: #9F9F9F}`}>
 			<path
 				d="M16.564 13.792L3.241.47a1.487 1.487 0 00-2.103 0l-.702.701a1.487 1.487 0 000 2.104l13.323 13.323a1.487 1.487 0 002.103 0l.701-.701a1.486 1.486 0 00.001-2.104z"
-				fill="#9F9F9F"
 			/>
 			<path
 				d="M13.759.47L.436 13.793a1.487 1.487 0 000 2.103l.7.701a1.487 1.487 0 002.104 0L16.564 3.276a1.486 1.486 0 000-2.103l-.701-.7A1.487 1.487 0 0013.759.47z"
-				fill="#9F9F9F"
 			/>
 		</svg>
 	);

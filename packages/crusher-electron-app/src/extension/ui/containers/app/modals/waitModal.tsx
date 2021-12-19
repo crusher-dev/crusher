@@ -9,6 +9,10 @@ import { recordAction } from "crusher-electron-app/src/extension/redux/actions/a
 import { getStore } from "crusher-electron-app/src/extension/redux/store";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { updateActionsModalState } from "crusher-electron-app/src/extension/redux/actions/recorder";
+import { Modal } from "@dyson/components/molecules/Modal";
+import { css } from "@emotion/react";
+import { Input } from "@dyson/components/atoms/input/Input";
+import { Button } from "@dyson/components/atoms/button/Button";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -47,27 +51,50 @@ const WaitModal = (props: iStartupModalProps) => {
 		handleClose();
 	}, [interval]);
 
+	if(!isOpen) return null;
+
 	return (
-		<ReactModal isOpen={isOpen} contentLabel="Wait Modal" style={customModalStyles} overlayClassName="overlay">
+		<Modal modalStyle={modalStyle}>
 			<ModalTopBar title={"Wait For Seconds"} desc={"These are used to wait/sleep for the specified interval"} closeModal={handleClose} />
-			<div className="flex flex-col" style={{ marginTop: 40 }}>
-				<div className="flex">
-					<input
-						style={inputStyle}
-						autoFocus={true}
+			<div className="flex flex-col" style={{ marginTop: 40 }} css={css`padding: 26rem 34rem;`}>
+				<div className="flex" css={css`display: flex`}>
+					<Input
+						css={inputStyle}
 						placeholder={"Add seconds to wait in seconds"}
 						pattern="[0-9]*"
-						value={interval}
+						initialValue={interval}
 						onChange={handleIntervalChange}
 					/>
-					<button style={buttonStyle} onClick={handleSubmit}>
+
+					<Button onClick={handleSubmit} bgColor="tertiary-outline" CSS={buttonStyle}>
 						{"Save"}
-					</button>
+					</Button>
 				</div>
 			</div>
-		</ReactModal>
+		</Modal>
 	);
 };
+
+const buttonStyle = css`
+	font-size: 13rem;
+	border: 1px solid rgba(255, 255, 255, 0.23);
+	box-sizing: border-box;
+	border-radius: 4rem;
+	width: 93rem;
+	height: 34rem;
+`;
+
+const modalStyle = css`
+	width: 800rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -20%);
+	display: flex;
+	flex-direction: column;
+	padding: 0rem;
+	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
+`;
 
 const buttonStyle = {
 	backgroundColor: COLOR_CONSTANTS.BUTTON_BLUE,
@@ -81,17 +108,18 @@ const buttonStyle = {
 	border: 0,
 	cursor: "pointer",
 };
-const inputStyle = {
-	background: "#1A1A1C",
-	borderRadius: 6,
-	border: "1px solid #43434F",
-	padding: "9px 20px",
-	fontFamily: "DM Sans",
-	fontSize: 15,
-	minWidth: 358,
-	color: "#fff",
-	outline: "none",
-};
+const inputStyle = css`
+	background: #1A1A1C!important;
+	border-radius: 6rem!important;
+	border: 1rem solid #43434F!important;
+	padding: 6rem 18rem!important;
+	font-family: Gilroy!important;
+	font-size: 14rem!important;
+	min-width: 358rem!important;
+	color: #fff!important;
+	outline: none!important;
+	height: 38rem !important;
+`;
 
 const customModalStyles = {
 	content: {
@@ -101,7 +129,7 @@ const customModalStyles = {
 		bottom: "auto",
 		marginRight: "-50%",
 		transform: "translate(-50%, -50%)",
-		maxHeight: "33.75rem",
+		maxHeight: "300rem",
 		margin: 0,
 		borderRadius: 8,
 		borderWidth: 0,

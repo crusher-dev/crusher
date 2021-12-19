@@ -15,6 +15,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recorderMessageListener } from "../../messageListener";
 import { Conditional } from "@dyson/components/layouts";
 import { Provider } from "react-redux";
+import { ModalManager } from "../../ui/containers/app/modals";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
@@ -52,6 +53,7 @@ const App = () => {
 					<DeviceFrame deviceIframeRef={deviceIframeRef} targetUrl={url} selectedDevice={selectedDevice} CSS={deviceFrameContainerStyle}/>
 			</div>
 			<Sidebar CSS={sidebarStyle}/>
+			<ModalManager deviceIframeRef={deviceIframeRef} />
 
 			<style>{`
 					.CodeMirror {

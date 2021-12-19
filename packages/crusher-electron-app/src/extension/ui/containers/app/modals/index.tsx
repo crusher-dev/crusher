@@ -16,6 +16,7 @@ import { POSITION } from "../../../../interfaces/css";
 import { WaitModal } from "./waitModal";
 import { CustomCodeModalContent } from "./customCodeModalContent";
 import { RunAfterTestModal } from "./runAfterTestModal";
+import { css } from "@emotion/react";
 
 interface iModalTopBarProps {
 	title: string;
@@ -27,49 +28,53 @@ const ModalTopBar = (props: iModalTopBarProps) => {
 	const { title, desc, closeModal } = props;
 
 	return (
-		<div id="top-bar" style={topBarStyle}>
+		<div id="top-bar" css={topBarStyle}>
 			<div id="left-section" style={topLeftSectionStyle}>
-				<BrowserIcon height={37} width={37} style={topBarBrowserIcon} />
 				<div className="heading_container" style={headingContainerStyle}>
-					<div className={"heading_title"} style={headingStyle}>
+					<div className={"heading_title"} css={headingStyle}>
 						{title}
 					</div>
-					<div className={"heading_sub_title"} style={subHeadingStyle}>
+					<div className={"heading_sub_title"} css={subHeadingStyle}>
 						{desc}
 					</div>
 				</div>
 			</div>
 			<div id="close-button" onClick={closeModal} style={closeButtonStyle}>
-				<CloseModalIcon height={14} width={14} />
+				<CloseModalIcon color={"#ffffff1a"} height={14} width={14} />
 			</div>
 		</div>
 	);
 };
 
-const topBarStyle = {
-	display: "flex",
-	justifyContent: "space-between",
-	marginBottom: "1rem",
-	background: "rgb(17,18,19)",
-};
+const topBarStyle = css`
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+	padding: 26rem 34rem;
+`;
+
 const topLeftSectionStyle = {
 	display: "flex",
 };
 const headingContainerStyle = {
-	marginLeft: 16,
 };
-const headingStyle = {
-	fontStyle: "normal",
-	fontWeight: 800,
-	fontSize: "22",
+const headingStyle = css`
+	font-family: Cera Pro;
+    font-size: 17rem;
+    font-style: normal;
+    font-weight: 600;
+
 	marginBottom: 0,
-	color: "#FFFFFF",
-};
-const subHeadingStyle = {
-	fontStyle: "normal",
-	fontSize: "0.8rem",
-	color: "#FFFFFF",
-};
+	color: #FFFFFF;
+`;
+const subHeadingStyle = css`
+	font-style: normal;
+	font-size: 14rem;
+	color: #FFFFFF;
+	font-family: Cera Pro;
+	color: rgba(255, 255, 255, 0.4);
+	margin-top: 13rem;
+`;
 const topBarBrowserIcon = {
 	marginRight: 20,
 };
@@ -120,7 +125,8 @@ const ModalManager = (props: iModalManagerProps) => {
 	const isHowToUseVideoModal = modalState === ACTIONS_MODAL_STATE.HOW_TO_USE_VIDEO;
 
 	return (
-		<ReactModal
+		<>
+		{/* <ReactModal
 			isOpen={shouldShowModal}
 			contentLabel="onRequestClose Example"
 			onRequestClose={isHowToUseVideoModal ? undefined : handleCloseModal}
@@ -141,7 +147,6 @@ const ModalManager = (props: iModalManagerProps) => {
 					<AssertElementModalContent deviceIframeRef={deviceIframeRef} onClose={handleCloseModal} />
 				</>
 			</Conditional>
-			<WaitModal isOpen={modalState === ACTIONS_MODAL_STATE.WAIT_SECONDS}></WaitModal>
 			<Conditional If={modalState === ACTIONS_MODAL_STATE.ELEMENT_CUSTOM_SCRIPT}>
 				<>
 					<ModalTopBar
@@ -168,7 +173,10 @@ const ModalManager = (props: iModalManagerProps) => {
 				<HowToUseVideoModal onClose={handleCloseModal} />
 			</Conditional>
 			<RunAfterTestModal isOpen={shouldShowRunAfterTestModal} onClose={handleCloseRunAfterTestModalCallback} />
-		</ReactModal>
+		</ReactModal> */}
+		<WaitModal isOpen={modalState === ACTIONS_MODAL_STATE.WAIT_SECONDS}></WaitModal>
+
+		</>
 	);
 };
 

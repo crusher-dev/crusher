@@ -8,9 +8,6 @@ export const ActionList = ({ children, title }: { title?: string; children: Reac
 		<div css={containerStyle}>
 			<Conditional showIf={!!title}>
 				<Text CSS={titleStyle}>{title}</Text>
-				<Text CSS={moreStyle} onClick={() => 0}>
-					more
-				</Text>
 			</Conditional>
 			<div css={actionItemContainer}>{children}</div>
 		</div>

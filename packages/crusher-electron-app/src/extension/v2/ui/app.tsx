@@ -4,7 +4,7 @@ import Toolbar from "./components/Toolbar";
 import Sidebar from "./components/Sidebar";
 import { css, Global } from "@emotion/react";
 import { DeviceFrame } from "./components/DeviceFrame";
-import { Provider, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { appStateAtom, appStateItemMutator } from "../store/atoms/global/appState";
 import { hydrateApp } from "../store/utils/hydrate";
 import configureStore, { getStore } from "../../redux/store";
@@ -14,6 +14,7 @@ import { recordAction } from "../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recorderMessageListener } from "../../messageListener";
 import { Conditional } from "@dyson/components/layouts";
+import { Provider } from "react-redux";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
@@ -117,6 +118,5 @@ const globalStyles = css`
 	}
 `;
 
-render(<Provider store={configureStore()}>
-<App />
-</Provider>, document.querySelector("#root"));
+render(		<Provider store={configureStore()}>
+<App /></Provider>, document.querySelector("#root"));

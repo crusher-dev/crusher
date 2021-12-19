@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { Checkbox, CheckboxProps } from "@dyson/components/atoms/checkbox/checkbox";
 import { css } from "@emotion/react";
@@ -7,24 +7,30 @@ import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Conditional } from "@dyson/components/layouts";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
-
-const steps = [
-	{ id: "test1", title: "Click on element", isRunning: true },
-	{ id: "test2", title: "Click on element" },
-	{ id: "test3", title: "Click on element", isFailed: true },
-	{ id: "test4", title: "Click on element" },
-	{ id: "test5", title: "Click on element" },
-	{ id: "test6", title: "Click on element" },
-	{ id: "test7", title: "Click on element" },
-	{ id: "test8", title: "Click on element" },
-	{ id: "test9", title: "Click on element" },
-	{ id: "test10", title: "Click on element" },
-	{ id: "test11", title: "Click on element" },
-	{ id: "test12", title: "Click on element" },
-	{ id: "test13", title: "Click on element" },
-];
+import { useSelector } from "react-redux";
+import { getActions } from "crusher-electron-app/src/extension/redux/selectors/actions";
+import { TOP_LEVEL_ACTIONS_LIST } from "crusher-electron-app/src/extension/constants/topLevelActions";
+import { ACTION_DESCRIPTIONS } from "crusher-electron-app/src/extension/constants/actionDescriptions";
 
 export function Steps(): JSX.Element {
+	const recorderSteps = useSelector(getActions);
+	const steps = recorderSteps.map((action, index) => {
+		return {
+			id: index,
+			title: ACTION_DESCRIPTIONS[action.type],
+			selector: action.payload && action.payload.selectors ? action.payload.selectors[0].value : "window",
+			isRunning: false,
+			isFailed: false
+		}
+	});
+
+
+	useEffect(() => {
+		const testListContainer: any = document.querySelector("#stepsListContainer");
+		const elementHeight = testListContainer.scrollHeight;
+		testListContainer.scrollBy(0, elementHeight);
+	}, [recorderSteps.length]);
+
 	const [checkedSteps, setCheckedSteps] = React.useState(new Set());
 
 	const toggleAllSteps = React.useCallback(
@@ -35,7 +41,7 @@ export function Steps(): JSX.Element {
 				setCheckedSteps(new Set());
 			}
 		},
-		[checkedSteps.size],
+		[checkedSteps.size, recorderSteps.length],
 	);
 
 	const toggleStep = React.useCallback(
@@ -50,7 +56,7 @@ export function Steps(): JSX.Element {
 
 			setCheckedSteps(selectedSteps);
 		},
-		[checkedSteps],
+		[checkedSteps, recorderSteps.length],
 	);
 
 	return (
@@ -75,7 +81,7 @@ export function Steps(): JSX.Element {
 					</div>
 				</Conditional>
 			</div>
-			<div className="custom-scroll" css={stepsContainer}>
+			<div className="custom-scroll" id={"stepsListContainer"} css={stepsContainer}>
 				{steps.map((step) => (
 					<Step
 						isSelectAllType={false}
@@ -85,7 +91,7 @@ export function Steps(): JSX.Element {
 						isSelected={checkedSteps.has(step.id)}
 						callback={() => toggleStep(step.id)}
 						title={step.title}
-						subtitle="p > a"
+						subtitle={step.selector}
 					/>
 				))}
 			</div>

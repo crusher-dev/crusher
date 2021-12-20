@@ -7,7 +7,7 @@ import { Steps } from "./Steps";
 import { ActionModal } from "./Modal";
 import { Conditional } from "@dyson/components/layouts/Conditional/Conditional";
 
-const Sidebar = ({CSS}): JSX.Element => {
+const Sidebar = ({CSS, deviceIframeRef}): JSX.Element => {
 	const [selected, setSelected] = React.useState(false);
 
 	return (
@@ -29,7 +29,7 @@ const Sidebar = ({CSS}): JSX.Element => {
 					</div>
 				</Conditional>
 				<Conditional showIf={!selected}>
-					<Action setSelected={setSelected} />
+					<Action deviceIframeRef={deviceIframeRef} setSelected={setSelected} />
 				</Conditional>
 			</div>
 			</div>

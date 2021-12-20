@@ -53,7 +53,7 @@ const App = () => {
 				<Toolbar initialUrl={url} initialSelectedDevice={selectedDevice ? selectedDevice.id : null} CSS={toolbarStyle} />
 					<DeviceFrame deviceIframeRef={deviceIframeRef} targetUrl={url} selectedDevice={selectedDevice} CSS={deviceFrameContainerStyle}/>
 			</div>
-			<Sidebar CSS={sidebarStyle}/>
+			<Sidebar deviceIframeRef={deviceIframeRef} CSS={sidebarStyle}/>
 			<ModalManager deviceIframeRef={deviceIframeRef} />
 
 			<style>{`

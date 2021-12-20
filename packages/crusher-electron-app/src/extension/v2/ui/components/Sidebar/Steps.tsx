@@ -90,7 +90,7 @@ export function Steps(): JSX.Element {
 						isSelected={checkedSteps.has(step.id)}
 						callback={() => toggleStep(step.id)}
 						title={step.title}
-						subtitle={step.selector}
+						subtitle={step.selector.substr(0, 25)}
 					/>
 				))}
 			</div>

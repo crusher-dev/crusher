@@ -8,14 +8,34 @@ import { TOP_LEVEL_ACTIONS_LIST } from "crusher-electron-app/src/extension/const
 import { getStore } from "crusher-electron-app/src/extension/redux/store";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "crusher-electron-app/src/extension/redux/actions/actions";
-import { updateActionsModalState, updateActionsRecordingState } from "crusher-electron-app/src/extension/redux/actions/recorder";
+import { updateActionsModalState, updateActionsRecordingState, updateInspectModeState } from "crusher-electron-app/src/extension/redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "crusher-electron-app/src/extension/interfaces/actionsModalState";
 import { ELEMENT_LEVEL_ACTION } from "crusher-electron-app/src/extension/interfaces/elementLevelAction";
 import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
-import { getActionsRecordingState } from "crusher-electron-app/src/extension/redux/selectors/recorder";
+import { getActionsRecordingState, getInspectModeState } from "crusher-electron-app/src/extension/redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { ACTIONS_RECORDING_STATE } from "crusher-electron-app/src/extension/interfaces/actionsRecordingState";
 import { ELEMENT_LEVEL_ACTIONS_LIST } from "crusher-electron-app/src/extension/constants/elementLevelActions";
+import { Conditional } from "@dyson/components/layouts";
+
+export const InspectElementActionList = (props) => {
+
+	const inspectAction = TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE;
+
+	const turnOnInspectMode = ()=>{
+		const store = getStore();
+
+		store.dispatch(updateInspectModeState(true));
+		(window as any).electron.turnOnInspectMode();
+		turnOnInspectModeInFrame(props.deviceIframeRef);
+	};
+
+	return 	(
+		<ActionList>
+			<ActionListItem onClick={turnOnInspectMode}>Select an element</ActionListItem>
+		</ActionList>
+	);
+};
 
 export const TopLevelActionsList = (props) => {
 	const {isInspectModeOn, deviceIframeRef} = props;
@@ -119,39 +139,32 @@ export const ElementActionsList = (props) => {
 	const handleActionSelected = (id: ELEMENT_LEVEL_ACTION) => {
 		const store = getStore();
 
-		// switch (id) {
-		// 	case ELEMENT_LEVEL_ACTION.CLICK:
-		// 		(window as any).electron.turnOnInspectMode();
-		// 		turnOnInspectModeInFrame(props.deviceIframeRef);
-
-		// 		// performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
-		// 		break;
-		// 	case ELEMENT_LEVEL_ACTION.HOVER:
-		// 		(window as any).electron.turnOnInspectMode();
-		// 		turnOnInspectModeInFrame(props.deviceIframeRef);
-
-		// 		// recordElementAction(ActionsInTestEnum.HOVER, null, recordingState.elementInfo.screenshot);
-		// 		// performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
-		// 		break;
-		// 	case ELEMENT_LEVEL_ACTION.SCREENSHOT:
-		// 		recordElementAction(ActionsInTestEnum.ELEMENT_SCREENSHOT, null, recordingState.elementInfo.screenshot);
-		// 		break;
-		// 	case ELEMENT_LEVEL_ACTION.BLACKOUT:
-		// 		recordElementAction(ActionsInTestEnum.BLACKOUT, null, recordingState.elementInfo.screenshot);
-		// 		performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
-		// 		break;
-		// 	case ELEMENT_LEVEL_ACTION.SHOW_ASSERT_MODAL:
-		// 		store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.ASSERT_ELEMENT));
-		// 		return;
-		// 	case ELEMENT_LEVEL_ACTION.CUSTOM_SCRIPT:
-		// 		store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.ELEMENT_CUSTOM_SCRIPT));
-		// 		return;
-		// 	default:
-		// 		console.debug("Unknown Element Level Action");
-		// }
-
-		(window as any).electron.turnOnInspectMode();
-		turnOnInspectModeInFrame(props.deviceIframeRef);
+		switch (id) {
+			case ELEMENT_LEVEL_ACTION.CLICK:
+				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
+				break;
+			case ELEMENT_LEVEL_ACTION.HOVER:
+				recordElementAction(ActionsInTestEnum.HOVER, null, recordingState.elementInfo.screenshot);
+				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
+				break;
+			case ELEMENT_LEVEL_ACTION.SCREENSHOT:
+				recordElementAction(ActionsInTestEnum.ELEMENT_SCREENSHOT, null, recordingState.elementInfo.screenshot);
+				break;
+			case ELEMENT_LEVEL_ACTION.BLACKOUT:
+				recordElementAction(ActionsInTestEnum.BLACKOUT, null, recordingState.elementInfo.screenshot);
+				performActionInFrame(id, ACTIONS_RECORDING_STATE.ELEMENT, props.deviceIframeRef);
+				break;
+			case ELEMENT_LEVEL_ACTION.SHOW_ASSERT_MODAL:
+				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.ASSERT_ELEMENT));
+				return;
+			case ELEMENT_LEVEL_ACTION.CUSTOM_SCRIPT:
+				store.dispatch(updateActionsModalState(ACTIONS_MODAL_STATE.ELEMENT_CUSTOM_SCRIPT));
+				return;
+			default:
+				console.debug("Unknown Element Level Action");
+		}
+		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+		turnOffInspectModeInFrame(props.deviceIframeRef);
 	};
 
 	const items = ELEMENT_LEVEL_ACTIONS_LIST.filter((a) => (![ELEMENT_LEVEL_ACTION["CLICK"], ELEMENT_LEVEL_ACTION["HOVER"]].includes(a.id as any))).map((action) => {
@@ -172,11 +185,25 @@ export const ElementActionsList = (props) => {
 	</ActionList>);
 };
 
-export const Action = ({ setSelected }): JSX.Element => {
+export const Action = ({ setSelected, deviceIframeRef }): JSX.Element => {
+	const isInspectModeOn = useSelector(getInspectModeState);
+	const actionsRecordingState =  useSelector(getActionsRecordingState);
+
 	return (
-		<div>
-			<ElementActionsList/>
-			<TopLevelActionsList isInspectModeOn={false}/>
+		<div css={css`height: 100%;`}>
+			<Conditional showIf={isInspectModeOn}>
+				<InspectMode deviceIframeRef={deviceIframeRef} />
+			</Conditional>
+			<Conditional showIf={!isInspectModeOn}>
+				<Conditional showIf={actionsRecordingState.type === ACTIONS_RECORDING_STATE.ELEMENT}>
+					<ElementActionsList deviceIframeRef={deviceIframeRef} isInspectModeOn={false}/>
+				</Conditional>
+				<Conditional showIf={actionsRecordingState.type !== ACTIONS_RECORDING_STATE.ELEMENT}>
+					<InspectElementActionList deviceIframeRef={deviceIframeRef} />
+					<TopLevelActionsList deviceIframeRef={deviceIframeRef} isInspectModeOn={false}/>
+				</Conditional>
+			</Conditional>
+
 			{/* <ActionList title="Most Used">
 				<ActionListItem>Click on element</ActionListItem>
 				<ActionListItem>Click on element</ActionListItem>
@@ -184,6 +211,55 @@ export const Action = ({ setSelected }): JSX.Element => {
 		</div>
 	);
 };
+
+const InspectMode = (props: any) => {
+	const handleCancel = () => {
+		const store = getStore();
+		store.dispatch(updateInspectModeState(false));
+		(window as any).electron.turnOffInspectMode();
+		turnOffInspectModeInFrame(props.deviceIframeRef);
+	}
+
+	return (
+		<div css={css`display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative; top: 50%; transform: translateY(-50%);`}>
+			<div css={inspectModeHeading}>Action required element selection</div>
+			<div css={inspectModeSubtitle}>Select an element on left side</div>
+			<div css={inspectModeCancelAction} onClick={handleCancel}>Cancel Action</div>
+		</div>
+	);
+}
+
+const inspectModeHeading = css`
+	font-family: Cera Pro;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 15px;
+	color: #FFFFFF;
+	user-select: none;
+`;
+
+const inspectModeSubtitle = css`
+	margin-top: 9rem;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: normal;
+	color: #FFFFFF;
+	user-select: none;
+`;
+
+const inspectModeCancelAction = css`
+	margin-top: 26rem;
+	font-family: Cera Pro;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	text-decoration-line: underline;
+	color: #FFFFFF;
+	user-select: none;
+	&:hover {
+		opacity: 0.9;
+	}
+`;
 
 const actionTab = css`
 	display: flex;

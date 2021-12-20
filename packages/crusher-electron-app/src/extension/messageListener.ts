@@ -342,6 +342,7 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 			const meta = event.data.meta as iElementModeMessageMeta;
 			const hoverDependentSelectors = (event.data as any).hoverDependentNodesSelectors as Array<{ selectors: Array<iSelectorInfo> }>;
 			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.ELEMENT, meta, isAutoRecorderOn ? hoverDependentSelectors : []));
+			store.dispatch(updateInspectModeState(false));
 			break;
 		}
 		case MESSAGE_TYPES.RECORDER_BOOTED: {

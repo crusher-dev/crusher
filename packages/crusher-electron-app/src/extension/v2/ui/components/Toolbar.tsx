@@ -16,6 +16,7 @@ import { SETTINGS_ACTIONS } from "crusher-electron-app/src/extension/constants/a
 import { generateCrusherExtensionUrl } from "@shared/utils/extension";
 import devicesList from "@shared/constants/devices";
 import userAgentsList from "@shared/constants/userAgents";
+import { saveTest } from "crusher-electron-app/src/extension/utils/app";
 
 const DeviceItem = ({label}) => {
 	return (
@@ -116,8 +117,8 @@ const Toolbar = ({CSS, initialSelectedDevice, initialUrl}): JSX.Element => {
 				<div css={onlineDotStyle} />
 				<Text CSS={recTextStyle}>Rec.</Text>
 				<SettingsIcon />
-				<Button onClick={() => setStart(false)} bgColor="tertiary-outline" CSS={saveButtonStyle}>
-					Save test
+				<Button onClick={saveTest} bgColor="tertiary-outline" CSS={saveButtonStyle}>
+					Verify test
 				</Button>
 			</Conditional>
 		</div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { css } from "@emotion/react";
 import { SearchIcon } from "crusher-electron-app/src/extension/assets/icons";
@@ -6,34 +6,38 @@ import { Action } from "./Action";
 import { Steps } from "./Steps";
 import { ActionModal } from "./Modal";
 import { Conditional } from "@dyson/components/layouts/Conditional/Conditional";
+import { AdvancedURL } from "crusher-electron-app/src/extension/utils/url";
 
 const Sidebar = ({CSS, deviceIframeRef}): JSX.Element => {
 	const [selected, setSelected] = React.useState(false);
+	const [url] = useState(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href));
 
 	return (
 		<div css={[{display: "flex", flexDirection: "column", height: "100%", width: "100%", overflow: "hidden"}, CSS]}>
 			{/* <ActionModal /> */}
-			<div css={{flex: 1, overflow: "hidden",     display: "grid", gridTemplateRows: "62rem"}}>
-			<div css={headerContainer}>
-				<Text CSS={headerText}>Actions</Text>
-				<SearchIcon />
-			</div>
-			<div className="custom-scroll" css={actionScrollContainer}>
-				<Conditional showIf={selected}>
-					<div css={selectActionContainer}>
-						<Text CSS={selectActionHeading}>Action required element selection</Text>
-						<Text CSS={selectActionText}>Select an element on left side</Text>
-						<Text onClick={() => setSelected(false)} CSS={selectActionCancel}>
-							Cancel action
-						</Text>
-					</div>
-				</Conditional>
-				<Conditional showIf={!selected}>
-					<Action deviceIframeRef={deviceIframeRef} setSelected={setSelected} />
-				</Conditional>
-			</div>
-			</div>
-			<Steps />
+			<Conditional showIf={!!url}>
+				<div css={{flex: 1, overflow: "hidden",     display: "grid", gridTemplateRows: "62rem"}}>
+				<div css={headerContainer}>
+					<Text CSS={headerText}>Actions</Text>
+					<SearchIcon />
+				</div>
+				<div className="custom-scroll" css={actionScrollContainer}>
+					<Conditional showIf={selected}>
+						<div css={selectActionContainer}>
+							<Text CSS={selectActionHeading}>Action required element selection</Text>
+							<Text CSS={selectActionText}>Select an element on left side</Text>
+							<Text onClick={() => setSelected(false)} CSS={selectActionCancel}>
+								Cancel action
+							</Text>
+						</div>
+					</Conditional>
+					<Conditional showIf={!selected}>
+						<Action deviceIframeRef={deviceIframeRef} setSelected={setSelected} />
+					</Conditional>
+				</div>
+				</div>
+				<Steps />
+			</Conditional>
 		</div>
 	);
 };

@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { ACTIONS_RECORDING_STATE } from "crusher-electron-app/src/extension/interfaces/actionsRecordingState";
 import { ELEMENT_LEVEL_ACTIONS_LIST } from "crusher-electron-app/src/extension/constants/elementLevelActions";
 import { Conditional } from "@dyson/components/layouts";
+import { MouseIcon } from "crusher-electron-app/src/extension/assets/icons";
 
 export const InspectElementActionList = (props) => {
 
@@ -32,7 +33,12 @@ export const InspectElementActionList = (props) => {
 
 	return 	(
 		<ActionList>
-			<ActionListItem onClick={turnOnInspectMode}>Select an element</ActionListItem>
+			<ActionListItem onClick={turnOnInspectMode}>
+				<div css={css`display: flex; padding: 0rem 4rem; align-items: center; `}>
+					<span>Select an element</span>
+					<MouseIcon css={css`margin-left: auto; width: 12rem;`}/>
+				</div>
+			</ActionListItem>
 		</ActionList>
 	);
 };
@@ -203,11 +209,6 @@ export const Action = ({ setSelected, deviceIframeRef }): JSX.Element => {
 					<TopLevelActionsList deviceIframeRef={deviceIframeRef} isInspectModeOn={false}/>
 				</Conditional>
 			</Conditional>
-
-			{/* <ActionList title="Most Used">
-				<ActionListItem>Click on element</ActionListItem>
-				<ActionListItem>Click on element</ActionListItem>
-			</ActionList> */}
 		</div>
 	);
 };

@@ -192,15 +192,11 @@ const stepStyle = css`
 	border-radius: 6rem;
 	padding: 3rem 13rem;
 	margin: 10rem 0rem;
-	border: 1px solid rgba(255, 255, 255, 0);
-	border-bottom-color: rgba(0,0,0,0);
-	border-bottom-width: 4rem;
+	border: 1.5rem solid rgba(255, 255, 255, 0);
 
 	&:hover {
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 6px;
-		border-bottom-color: #4C5141;
-		border-bottom-width: 4rem;
+		border: 1.5rem solid rgba(255, 255, 255, 0.1);
+		border-radius: 6rem;
 	}
 `;
 

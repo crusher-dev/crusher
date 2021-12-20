@@ -175,6 +175,7 @@ const ModalManager = (props: iModalManagerProps) => {
 		</ReactModal> */}
 			<WaitModal isOpen={modalState === ACTIONS_MODAL_STATE.WAIT_SECONDS}></WaitModal>
 			<SeoModalContent isOpen={modalState === ACTIONS_MODAL_STATE.SEO_VALIDATION}></SeoModalContent>
+			<RunAfterTestModal isOpen={modalState === ACTIONS_MODAL_STATE.RUN_AFTER_TEST}></RunAfterTestModal>
 
 		</>
 	);

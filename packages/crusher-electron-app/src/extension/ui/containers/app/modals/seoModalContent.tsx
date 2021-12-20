@@ -147,27 +147,24 @@ const SeoModalContent = (props: iSEOModalProps) => {
 
 	return (
 		<Modal modalStyle={modalStyle}>
-
-		<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />
-
-					
-		<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
-			<AssertionFormTable
-				rowItems={validationRows}
-				fields={validationFields}
-				operations={validationOperations}
-				onFieldChange={updateFieldOfValidationRow}
-				onOperationChange={updateOperationOfValidationRow}
-				onValidationChange={updateValidationValueOfValidationRow}
-			/>
-			<div style={bottomBarStyle} css={css`margin-bottom: 40rem; margin-top: 20rem;`}>
-				<div style={formButtonStyle}>
-					<Text css={linkStyle} onClick={createNewSeoAssertionRow}>Add a check</Text>
-					<Text css={[linkStyle, css`margin-left: 24rem;`]} onClick={generateDefaultChecksForPage}>Generate Checks!</Text>
+			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />		
+			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
+				<AssertionFormTable
+					rowItems={validationRows}
+					fields={validationFields}
+					operations={validationOperations}
+					onFieldChange={updateFieldOfValidationRow}
+					onOperationChange={updateOperationOfValidationRow}
+					onValidationChange={updateValidationValueOfValidationRow}
+				/>
+				<div style={bottomBarStyle} css={css`margin-bottom: 40rem; margin-top: 20rem;`}>
+					<div style={formButtonStyle}>
+						<Text css={linkStyle} onClick={createNewSeoAssertionRow}>Add a check</Text>
+						<Text css={[linkStyle, css`margin-left: 24rem;`]} onClick={generateDefaultChecksForPage}>Generate Checks!</Text>
+					</div>
+					<Button CSS={buttonStyle} onClick={saveSeoValidationAction}>Save</Button>
 				</div>
-				<Button CSS={buttonStyle} onClick={saveSeoValidationAction}>Save</Button>
 			</div>
-		</div>
 		</Modal>
 	);
 };

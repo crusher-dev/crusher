@@ -16,6 +16,7 @@ import { recorderMessageListener } from "../../messageListener";
 import { Conditional } from "@dyson/components/layouts";
 import { Provider } from "react-redux";
 import { ModalManager } from "../../ui/containers/app/modals";
+import "../../style/main.css";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);

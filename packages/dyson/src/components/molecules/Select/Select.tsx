@@ -147,7 +147,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 					</div>
 
 					<Conditional showIf={openSelectBox}>
-						<CloseSVG height={9}></CloseSVG>
+						<CloseSVG height={9} className={"mr-4"}></CloseSVG>
 					</Conditional>
 					<Conditional showIf={!openSelectBox}>
 						<DropdownIconSVG className={"mr-4"} />
@@ -261,7 +261,7 @@ export const dropdDown = css`
 
 	box-sizing: border-box;
 	z-index: 1;
-	overflow-y: scroll;
+	overflow-y: overlay;
 
 	::-webkit-scrollbar {
 		background: transparent;

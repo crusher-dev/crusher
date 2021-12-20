@@ -9,7 +9,6 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useSelector } from "react-redux";
 import { getActions } from "crusher-electron-app/src/extension/redux/selectors/actions";
-import { TOP_LEVEL_ACTIONS_LIST } from "crusher-electron-app/src/extension/constants/topLevelActions";
 import { ACTION_DESCRIPTIONS } from "crusher-electron-app/src/extension/constants/actionDescriptions";
 
 export function Steps(): JSX.Element {
@@ -18,7 +17,7 @@ export function Steps(): JSX.Element {
 		return {
 			id: index,
 			title: ACTION_DESCRIPTIONS[action.type],
-			selector: action.payload && action.payload.selectors ? action.payload.selectors[0].value : "window",
+			selector: action.payload && action.payload.selectors && action.payload.selectors.length ? action.payload.selectors[0].value : "window",
 			isRunning: false,
 			isFailed: false
 		}

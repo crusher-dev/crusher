@@ -127,6 +127,11 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		setValidationRows([...validationRows]);
 	};
 
+	const deleteValidationRow = (rowIndex) => {
+		const newValidationRows = validationRows.filter((a) => a.id !== rowIndex);
+		setValidationRows([...newValidationRows]);
+	};
+
 	const saveSeoValidationAction = () => {
 		const store = getStore();
 		store.dispatch(
@@ -146,7 +151,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	if(!isOpen) return null; 
 
 	return (
-		<Modal modalStyle={modalStyle}>
+		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
 			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />		
 			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
 				<AssertionFormTable
@@ -155,9 +160,10 @@ const SeoModalContent = (props: iSEOModalProps) => {
 					operations={validationOperations}
 					onFieldChange={updateFieldOfValidationRow}
 					onOperationChange={updateOperationOfValidationRow}
+					deleteValidationRow={deleteValidationRow}
 					onValidationChange={updateValidationValueOfValidationRow}
 				/>
-				<div style={bottomBarStyle} css={css`margin-bottom: 40rem; margin-top: 20rem;`}>
+				<div style={bottomBarStyle} css={css`margin-bottom: 22rem; margin-top: 38rem;`}>
 					<div style={formButtonStyle}>
 						<Text css={linkStyle} onClick={createNewSeoAssertionRow}>Add a check</Text>
 						<Text css={[linkStyle, css`margin-left: 24rem;`]} onClick={generateDefaultChecksForPage}>Generate Checks!</Text>
@@ -190,7 +196,7 @@ const buttonStyle = css`
 `;
 
 const modalStyle = css`
-	width: 800rem;
+	width: 720rem;
 	min-height: auto !important;
 	position: absolute;
 	top: 50%;

@@ -266,7 +266,7 @@ function getActionDescription(action: iAction) {
 		return "Performing scroll";
 	}
 
-	if (action.payload.selectors && action.payload.selectors[0]) {
+	if (action.payload.selectors && action.payload.selectors.length && action.payload.selectors[0]) {
 		return action.payload.selectors[0].value;
 	} else if (action.type === ActionsInTestEnum.RUN_TEMPLATE) {
 		return "Run this template";

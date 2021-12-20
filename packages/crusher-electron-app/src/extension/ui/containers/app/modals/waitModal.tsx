@@ -54,7 +54,7 @@ const WaitModal = (props: iStartupModalProps) => {
 	if(!isOpen) return null;
 
 	return (
-		<Modal modalStyle={modalStyle}>
+		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
 			<ModalTopBar title={"Wait For Seconds"} desc={"These are used to wait/sleep for the specified interval"} closeModal={handleClose} />
 			<div className="flex flex-col" style={{ marginTop: 40 }} css={css`padding: 26rem 34rem;`}>
 				<div className="flex" css={css`display: flex`}>

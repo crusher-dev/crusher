@@ -161,7 +161,7 @@ export const ElementActionsList = (props) => {
 
 	return 	(<ActionList>
 			<div css={actionTab}>
-					<Text css={actionTabSelected} onClick={handleActionSelected.bind(this, ELEMENT_LEVEL_ACTION.CLICK)}>
+					<Text css={css`border-right-style: solid; border-right-color: #323636; border-right-width: 1rem;`} CSS={hoverTextStyle} onClick={handleActionSelected.bind(this, ELEMENT_LEVEL_ACTION.CLICK)}>
 						Click
 					</Text>
 					<Text CSS={hoverTextStyle} onClick={handleActionSelected.bind(this, ELEMENT_LEVEL_ACTION.HOVER)}>
@@ -188,18 +188,17 @@ export const Action = ({ setSelected }): JSX.Element => {
 const actionTab = css`
 	display: flex;
 	justify-content: stretch;
-	* {
-		padding: 8rem 4rem;
-		font-family: Gilroy;
-		font-size: 13rem;
-		text-align: center;
-		flex: 1;
-	}
 `;
 const actionTabSelected = css`
 	background: rgba(148, 98, 255, 0.63);
 `;
 const hoverTextStyle = css`
+	padding: 8rem 4rem;
+	font-family: Gilroy;
+	font-size: 13rem;
+	text-align: center;
+	flex: 1;
+
 	:hover {
 		background-color: #32363678;
 	}

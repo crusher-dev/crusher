@@ -6,6 +6,7 @@ import Select from "react-select";
 import { iReactSelectOption } from "../../../interfaces/reactSelectOptions";
 import { DeleteIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { css } from "@emotion/react";
+import { SelectBox } from "@dyson/components/molecules/Select/Select";
 
 interface iAssertionFormTableProps {
 	rowItems: Array<iAssertionRow>;
@@ -67,9 +68,9 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 		const getFieldOptions = () => {
-			const options: iReactSelectOption[] = [];
+			const options = [];
 			fields.forEach((field) => {
-				options.push({ value: field.name, label: field.name });
+				options.push({ value: field.name, label: field.name, component: <div></div>, inactive: false });
 			});
 			return options;
 		};
@@ -84,8 +85,11 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<Select styles={reactSelectDefaultStyles} defaultValue={selectedOption ? selectedOption : fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />
-		);
+			<SelectBox CSS={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 102rem;`} size={"large"} selected={[selectedOption]} values={fieldOptions} callback={handleOnFieldChange} />
+		)
+		// return (
+		// 	<Select styles={reactSelectDefaultStyles} defaultValue={selectedOption ? selectedOption : fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />
+		// );
 	};
 
 	const renderFieldOperationInput = (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => {

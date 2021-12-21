@@ -166,7 +166,7 @@ class TestService {
 		query += " ORDER BY tests.created_at DESC";
 
 
-		if (filter.page !== -1) {
+		if (filter.page && filter.page !== -1) {
 			query += " LIMIT ?, ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130

@@ -97,13 +97,13 @@ class MainWindow {
 	}
 
 	allowAllNetworkRequests(responseDetails, updateCallback) {
-		Object.keys(responseDetails.responseHeaders).map((headers) => {
-			if (["x-frame-options", "content-security-policy", "frame-options"].includes(headers.toString().toLowerCase())) {
-				delete responseDetails.responseHeaders[headers];
-			}
-		});
+		// Object.keys(responseDetails.responseHeaders).map((headers) => {
+		// 	if (["x-frame-options", "content-security-policy", "frame-options"].includes(headers.toString().toLowerCase())) {
+		// 		delete responseDetails.responseHeaders[headers];
+		// 	}
+		// });
 
-		updateCallback({ cancel: false, responseHeaders: responseDetails.responseHeaders });
+		// updateCallback({ cancel: false, responseHeaders: responseDetails.responseHeaders });
 	}
 
 	handleNewWindow(event, popupUrl) {

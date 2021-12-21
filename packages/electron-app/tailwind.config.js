@@ -1,35 +1,112 @@
-const getSpacingSizes = (remBaseUnit) => {
-	const sizingMap = {};
-	for (let i = 0; i <= 100; i++) {
-		if (i > 8 && i % 4 !== 0) {
-			continue;
-		}
-		sizingMap[i] = `${i / remBaseUnit}rem`;
-	}
-	return sizingMap;
-};
+const { spacingSize } = require("../dyson/src/constant/layout");
+const { colors, background, border } = require("../dyson/src/constant/color");
+const { FONT_WEIGHT_VALUE } = require("../dyson/src/constant/font");
 
 module.exports = {
-	purge: [],
-	darkMode: false, // or 'media' or 'class'
+	important: false,
+	darkModeVariant: false,
 	theme: {
-		padding: {
-			...getSpacingSizes(16),
+		fontFamily: {
+			gilroy: ["Gilroy", "sans-serif"],
+			cera: ["Cera Pro", "sans-serif"],
 		},
-		screens: {},
-		margin: {
-			...getSpacingSizes(16),
+		colors: { ...colors },
+		backgroundColor: { ...background },
+		borderRadius: spacingSize,
+		borderColor: { ...border },
+		fontSize: spacingSize,
+		fontWeight: FONT_WEIGHT_VALUE,
+		extend: {
+			margin: spacingSize,
+			padding: spacingSize,
 		},
-		fontSize: {
-			12: "0.75rem",
-			13: "0.81rem",
-			15: "0.94rem",
-			17: "1.05rem",
-		},
+		objectPosition: {},
+		order: {},
 	},
-
 	variants: {
-		extend: {},
+		accessibility: ["focus"],
+		alignContent: [],
+		alignItems: [],
+		alignSelf: [],
+		appearance: [],
+		backgroundAttachment: [],
+		backgroundColor: ["hover", "focus"],
+		backgroundPosition: [],
+		backgroundRepeat: [],
+		backgroundSize: [],
+		borderCollapse: [],
+		borderColor: ["hover", "focus"],
+		borderRadius: [],
+		borderStyle: [],
+		borderWidth: [],
+		boxShadow: ["hover", "focus"],
+		cursor: [],
+		display: [],
+		fill: [],
+		flex: [],
+		flexDirection: [],
+		flexGrow: [],
+		flexShrink: [],
+		flexWrap: [],
+		float: [],
+		fontFamily: [],
+		fontSize: [],
+		fontSmoothing: [],
+		fontStyle: [],
+		fontWeight: ["hover", "focus"],
+		height: [],
+		inset: [],
+		justifyContent: [],
+		letterSpacing: [],
+		lineHeight: [],
+		listStylePosition: [],
+		listStyleType: [],
+		margin: [],
+		maxHeight: [],
+		maxWidth: [],
+		minHeight: [],
+		minWidth: [],
+		objectFit: [],
+		objectPosition: [],
+		opacity: ["hover", "focus"],
+		order: [],
+		outline: ["focus"],
+		overflow: [],
+		padding: [],
+		placeholderColor: ["focus"],
+		pointerEvents: [],
+		position: [],
+		resize: [],
+		stroke: [],
+		tableLayout: [],
+		textAlign: [],
+		textColor: ["hover", "focus"],
+		textDecoration: ["hover", "focus"],
+		textTransform: [],
+		userSelect: [],
+		verticalAlign: [],
+		visibility: [],
+		whitespace: [],
+		width: [],
+		wordBreak: [],
+		zIndex: [],
+	},
+	corePlugins: {
+		float: false,
+		translate: false,
+		gradientColorStops: false,
+		skew: false,
+		scale: false,
+		gridAutoFlow: false,
+		gridColumn: false,
+		gridColumnEnd: false,
+		gridColumnStart: false,
+		gridRow: false,
+		gridAutoColumns: false,
+		gridRowEnd: false,
+		gridRowStart: false,
+		gridTemplateColumns: false,
+		gridTemplateRows: false,
 	},
 	plugins: [],
 };

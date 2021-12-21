@@ -1,26 +1,24 @@
-import { jsx, css, ClassNames } from '@emotion/react'
-import React, { useMemo, useRef, useState } from "react";
+import React from "react";
+import { css, Global } from '@emotion/react'
 import { render } from "react-dom";
-import { Button } from "@dyson/components/atoms/button/Button";
-import "../assets/styles/main.css";
+import { Toolbar } from './components/toolbar';
+import { DeviceFrame } from './components/device-frame';
+import { Sidebar } from './components/sidebar';
+import "../assets/styles/tailwind.css";
 
 const App = () => {
 	return (
-		<div css={containerStyle}>
-            <Button color={"tertiary-outline"} css={buttonStyle}>
-                <span>Hello world</span>
-            </Button>
-		</div>
+        <div css={containerStyle}>
+            <Global styles={globalStyles} />
+            <div className={"flex text-bold"} css={css`color: #fff; font-size: 40rem;`}>
+                <div>Hello world</div>
+                    <Toolbar css={toolbarStyle} />
+                    <DeviceFrame css={deviceFrameContainerStyle} />
+            </div>
+            <Sidebar />
+        </div>
 	);
 };
-
-const buttonStyle = css`
-    background-color: green;
-    :hover {
-        background-color: green;
-    }
-`;
-
 
 const containerStyle = css`
 	display: flex;
@@ -30,5 +28,53 @@ const containerStyle = css`
 	height: 100vh;
 	color: white;
 `;
+const bodyStyle = css`
+	flex: 1;
+	max-width: calc(100% - 350rem);
+	display: grid;
+	grid-template-rows: 62rem;
+	flex-direction: column;
+`;
+const sidebarStyle = css`
+	padding: 1rem;
+	width: 350rem;
+	background-color: #111213;
+`;
+const toolbarStyle = css`
+	background-color: #111213;
+	padding: 5rem;
+	min-height: 60rem;
+`;
+const deviceFrameContainerStyle = css`
+	flex: 1;
+	overflow: auto;
+`;
+const globalStyles = css`
+	body {
+		margin: 0;
+		padding: 0;
+		min-height: "100vh";
+		max-width: "100vw";
+	}
+	.custom-scroll::-webkit-scrollbar {
+		width: 12rem;
+	}
+
+	.custom-scroll::-webkit-scrollbar-track {
+		background-color: #0a0b0e;
+		box-shadow: none;
+	}
+
+	.custom-scroll::-webkit-scrollbar-thumb {
+		background-color: #1b1f23;
+		border-radius: 100rem;
+	}
+
+	.custom-scroll::-webkit-scrollbar-thumb:hover {
+		background-color: #272b31;
+		border-radius: 100rem;
+	}
+`;
+
 
 render(<App />, document.querySelector("#app-container"));

@@ -2,7 +2,7 @@ import { BrowserWindow, ipcMain, session } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import * as path from "path";
 import { APP_NAME } from '../../config/about';
-import { getAppIconPath } from '../utils';
+import { encodePathAsUrl, getAppIconPath } from '../utils';
 import { Emitter, Disposable } from "event-kit";
 import { now } from './now';
 
@@ -43,6 +43,8 @@ export class AppWindow {
               // See https://developers.google.com/web/updates/2016/10/auxclick
               nodeIntegration: true,
               enableRemoteModule: true,
+              spellcheck: true,
+              worldSafeExecuteJavaScript: false,
 
               webviewTag: true,
               webSecurity: false,
@@ -100,12 +102,7 @@ export class AppWindow {
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
 
-        session.defaultSession.loadExtension(path.resolve(__dirname, "./extension"), { allowFileAccess: true }).then(({id}) => {
-            console.log("Id is", id);
-            let urlToOpen = `chrome-extension://${id}/test_recorder.html`;
-            this.window.loadURL(urlToOpen);
-        }).catch((err)=>{ console.error("Error occured", err); })
-
+        this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'))
     }
 
     /** Send the app launch timing stats to the renderer. */

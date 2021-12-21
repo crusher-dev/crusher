@@ -3,6 +3,7 @@
 	"basePath": "../",
 	"compilerOptions": {
 		"baseUrl": "../",
+		
 		"rootDir": "../../",
 		"module": "commonjs",
 		"removeComments": true,
@@ -24,15 +25,16 @@
 		"paths": {
 			"@shared/*": ["crusher-shared/*"],
 			"@dyson/*": ["dyson/src/*"],
-		}
+		},
 	},
 	"typeRoots": ["node_modules/@types"],
+	"types": ["@emotion/react/types/css-prop"],
 	"files": [
 		"./src/main-process/main.ts",
 		"./src/preload/renderer.ts",
 		"./src/preload/webview.ts",
 		"./src/extension/background.ts",
-		"src/extension/v2/ui/app.tsx",
+		"./src/ui/index.tsx",
 		"../../node_modules/react/index.js"
 	],
 	"include": ["./src/**/*"],

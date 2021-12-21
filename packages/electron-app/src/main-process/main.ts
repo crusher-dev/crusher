@@ -2,11 +2,12 @@ console.log("Ready now...");
 
 import * as Sentry from "@sentry/electron"
 import { isProduction } from "./../utils"
-import { app } from "electron";
+import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
 import { enableSourceMaps } from "../lib/source-map-support";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
+import { installSameOriginFilter } from "./same-origin-filter";
 
 if(isProduction() && process.env.SENTRY_DSN) {
     Sentry.init({ dsn: process.env.SENTRY_DSN });
@@ -47,6 +48,8 @@ app.on("ready", function() {
 	readyTime = now() - launchTime
 
 	createWindow();
+	installSameOriginFilter(session.defaultSession.webRequest)
+
 });
 
 let isDuplicateInstance = false;
@@ -85,11 +88,11 @@ function createWindow() {
   
 	  require('electron-debug')({ showDevTools: true })
   
-	  const extensions = [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS]
+	  const extensions = [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS];
   
 	  for (const extension of extensions) {
 		try {
-		  installExtension(extension)
+		  installExtension(extension, {loadExtensionOptions: { allowFileAccess: true }})
 		} catch (e) {  }
 	  }
 	}

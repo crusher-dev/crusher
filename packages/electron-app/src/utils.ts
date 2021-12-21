@@ -1,4 +1,5 @@
 import * as path from "path";
+import fileUrl from 'file-url'
 
 const isProduction = () => {
     return process.env.NODE_ENV === "production";
@@ -13,4 +14,9 @@ function getAppIconPath() {
 	}
 }
 
-export { isProduction, getAppIconPath };
+ function encodePathAsUrl(...pathSegments: string[]): string {
+	const Path = path.resolve(...pathSegments)
+	return fileUrl(Path)
+  }
+
+export { isProduction, getAppIconPath, encodePathAsUrl };

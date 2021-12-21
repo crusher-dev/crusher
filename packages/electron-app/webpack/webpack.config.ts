@@ -1,10 +1,12 @@
 import * as webpack from "webpack";
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 const fs = require("fs");
 const path = require("path");
 
 const dotEnv = require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const CopyPlugin = require("copy-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 const extensionConfig = process.env.DO_NOT_BUILD_EXTENSION !== "undefined" ? require("./webpack.extension") : null;
 
@@ -18,10 +20,21 @@ const commonConfig = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				loader: "ts-loader",
-				options: {
-					transpileOnly: true,
+				use: [
+					{
+						loader: "babel-loader",
+					},
+					{
+					loader: "ts-loader",
+					options: {
+						transpileOnly: true,
+					},
 				},
+				],
+			},
+			{
+				test: /\.css$/i,
+				use: ["style-loader", "css-loader"],
 			},
 		],
 	},
@@ -31,6 +44,7 @@ const commonConfig = {
 	},
 	resolve: {
 		extensions: [".tsx", ".ts", ".js"],
+		plugins: [new TsconfigPathsPlugin({ configFile: path.resolve(__dirname, "../tsconfig.json") })],
 	},
 	optimization: {
 		minimize: false,
@@ -61,6 +75,18 @@ const finalConfig = [
 			app: path.resolve(__dirname, "../src/main-process/main.ts"),
 		},
 		externals: ["playwright"],
+	},
+	{
+		...commonConfig,
+		entry: { renderer: path.resolve(__dirname, '../src/ui/index') },
+		target: 'electron-renderer',
+		plugins: [
+			new HtmlWebpackPlugin({
+			  template: path.join(__dirname, '../static', 'index.html'),
+			  chunks: ['renderer'],
+			})
+		],
+		
 	},
 	{
 		...commonConfig,

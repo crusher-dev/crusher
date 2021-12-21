@@ -8,6 +8,7 @@ import { enableSourceMaps } from "../lib/source-map-support";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
 import { installSameOriginFilter } from "./same-origin-filter";
+import configureStore from "../store/configureStore";
 
 if(isProduction() && process.env.SENTRY_DSN) {
     Sentry.init({ dsn: process.env.SENTRY_DSN });
@@ -75,8 +76,17 @@ if (isDuplicateInstance) {
     app.quit()
 }
 
+let store;
 function createWindow() {
 	console.log("Creating window now...");
+	const store = configureStore(global.state, 'main');
+
+	store.subscribe(async () => {
+		// persist store changes
+		// TODO: should this be blocking / wait? _.throttle?
+		console.log("Changes occurred in store");
+	});
+
 	const window = new AppWindow()
 
 	if (!isProduction()) {

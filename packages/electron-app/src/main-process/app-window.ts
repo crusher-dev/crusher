@@ -45,10 +45,10 @@ export class AppWindow {
               enableRemoteModule: true,
               spellcheck: true,
               worldSafeExecuteJavaScript: false,
+              contextIsolation: false,
 
               webviewTag: true,
               webSecurity: false,
-              preload: path.join(__dirname, './renderer-preload.js'),
               nativeWindowOpen: true,
               devTools: true,
             },

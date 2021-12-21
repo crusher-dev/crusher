@@ -5,8 +5,19 @@ import { Toolbar } from './components/toolbar';
 import { DeviceFrame } from './components/device-frame';
 import { Sidebar } from './components/sidebar';
 import "../assets/styles/tailwind.css";
+import configureStore from "../store/configureStore";
+import { Provider, useSelector } from "react-redux";
+import { getCurrentOnboardingStep } from "./selectors/onboarding";
+import { updateCurrentOnboardingStep } from "../store/actions/onboarding";
+import { getInitialStateRenderer } from 'electron-redux';
 
-const App = () => {
+const App = ({store}) => {
+    const currentStep = useSelector(getCurrentOnboardingStep);
+
+    const updateState = React.useCallback(() => {
+        store.dispatch(updateCurrentOnboardingStep(currentStep + 1));
+    }, [currentStep]);
+
 	return (
         <div css={containerStyle}>
             <Global styles={globalStyles} />
@@ -14,6 +25,7 @@ const App = () => {
                     <Toolbar css={toolbarStyle} />
                     <DeviceFrame css={deviceFrameContainerStyle} />
             </div>
+                <button css={css`background:red; color:white; font-size: 24rem;`} onClick={updateState}>Click me {currentStep}</button>
             <Sidebar />
         </div>
 	);
@@ -75,5 +87,10 @@ const globalStyles = css`
 	}
 `;
 
-
-render(<App />, document.querySelector("#app-container"));
+console.log("Intial state is", getInitialStateRenderer());
+const store = configureStore(getInitialStateRenderer(), "renderer");
+render(
+<Provider store={store}>
+        <App store={store} />
+</Provider>
+, document.querySelector("#app-container"));

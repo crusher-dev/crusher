@@ -10,8 +10,7 @@ const App = () => {
 	return (
         <div css={containerStyle}>
             <Global styles={globalStyles} />
-            <div className={"flex text-bold"} css={css`color: #fff; font-size: 40rem;`}>
-                <div>Hello world</div>
+            <div css={bodyStyle}>
                     <Toolbar css={toolbarStyle} />
                     <DeviceFrame css={deviceFrameContainerStyle} />
             </div>

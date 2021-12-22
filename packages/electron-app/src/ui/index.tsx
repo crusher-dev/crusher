@@ -26,7 +26,6 @@ const App = () => {
                     <Toolbar css={toolbarStyle} />
                     <DeviceFrame css={deviceFrameContainerStyle} />
             </div>
-                <button css={css`background:red; color:white; font-size: 24rem;`} onClick={updateState}>Click me {currentStep}</button>
             <Sidebar />
         </div>
 	);

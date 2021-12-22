@@ -1,7 +1,12 @@
 import { AnyAction } from "redux";
 import { MARK_ONBOARDING_COMPLETE, SET_CURRENT_ONBOARDING_STEP } from "../actions/onboarding";
 
-const initialState: any = {
+export interface IOnboardingState {
+	isComplete: boolean;
+	currentStep: number;
+};
+
+const initialState: IOnboardingState = {
 	isComplete: false,
 	currentStep: 0,
 };

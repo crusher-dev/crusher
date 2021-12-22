@@ -6,16 +6,17 @@ import { DeviceFrame } from './components/device-frame';
 import { Sidebar } from './components/sidebar';
 import "../assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
-import { Provider, useSelector } from "react-redux";
-import { getCurrentOnboardingStep } from "./selectors/onboarding";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { getCurrentOnboardingStep } from "../store/selectors/onboarding";
 import { updateCurrentOnboardingStep } from "../store/actions/onboarding";
 import { getInitialStateRenderer } from 'electron-redux';
 
-const App = ({store}) => {
+const App = () => {
     const currentStep = useSelector(getCurrentOnboardingStep);
+	const dispatch = useDispatch();
 
     const updateState = React.useCallback(() => {
-        store.dispatch(updateCurrentOnboardingStep(currentStep + 1));
+        dispatch(updateCurrentOnboardingStep(currentStep + 1));
     }, [currentStep]);
 
 	return (

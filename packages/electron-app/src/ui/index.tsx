@@ -12,13 +12,6 @@ import { updateCurrentOnboardingStep } from "../store/actions/onboarding";
 import { getInitialStateRenderer } from 'electron-redux';
 
 const App = () => {
-    const currentStep = useSelector(getCurrentOnboardingStep);
-	const dispatch = useDispatch();
-
-    const updateState = React.useCallback(() => {
-        dispatch(updateCurrentOnboardingStep(currentStep + 1));
-    }, [currentStep]);
-
 	return (
         <div css={containerStyle}>
             <Global styles={globalStyles} />
@@ -86,10 +79,9 @@ const globalStyles = css`
 	}
 `;
 
-console.log("Intial state is", getInitialStateRenderer());
 const store = configureStore(getInitialStateRenderer(), "renderer");
 render(
 <Provider store={store}>
-        <App store={store} />
+        <App />
 </Provider>
 , document.querySelector("#app-container"));

@@ -92,14 +92,12 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	};
 
 	const selectedText = useMemo(() => {
-		console.log("Selected inside is this", selected);
 		if (!selected || selected.length === 0) return placeholder;
 		return getReadableSelectedValues();
 	}, [selected]);
 
 	useEffect(() => {
 		setFilterText("");
-		console.log("Selected options", selected);
 	}, [selected]);
 
 	const selectValue = (value) => {

@@ -22,7 +22,7 @@ module.exports = {
 	},
 	plugins: [
 		new CopyPlugin({
-			patterns: [{ from: `../code-generator/src/parser/code.template.ejs` }],
+			patterns: [{ from: "../code-generator/src/parser/code.template.ejs" }],
 		}),
 		new webpack.DefinePlugin({
 			"process.env.FLUENTFFMPEG_COV": false,
@@ -33,7 +33,7 @@ module.exports = {
 		new CopyPlugin({
 			patterns: [
 				{
-					from: path.resolve(__dirname, `../../output/crusher-runner-utils/`),
+					from: path.resolve(__dirname, "../../output/crusher-runner-utils/"),
 					to: "crusher-runner-utils.ts/",
 				},
 			],
@@ -62,7 +62,7 @@ module.exports = {
 					loader: "string-replace-loader",
 					options: {
 						search: "__dirname",
-						replace: `__dirname + "/commands/"`,
+						replace: '__dirname + "/commands/"',
 					},
 				},
 			},
@@ -72,7 +72,7 @@ module.exports = {
 					loader: "string-replace-loader",
 					options: {
 						search: "require(msg.value)",
-						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(msg.value) : require(msg.value)`,
+						replace: 'typeof __webpack_require__ === "function" ? __non_webpack_require__(msg.value) : require(msg.value)',
 					},
 				},
 			},

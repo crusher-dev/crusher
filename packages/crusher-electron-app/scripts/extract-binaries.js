@@ -10,7 +10,7 @@ function extractZipIfNotThere(binaryZipInfoArr) {
 
 	console.log("Extracting binaries now...");
 
-	for (let platform of platforms) {
+	for (const platform of platforms) {
 		if (fs.existsSync(path.resolve(BIN_DIR, platform))) {
 			console.log(`Binaries already extracted for ${platform}. Skipping...`);
 			break;

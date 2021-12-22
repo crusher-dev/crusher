@@ -37,9 +37,9 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		const queue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
 			limiter: {
 				max: 2,
-    			duration: 1800000,
-				groupKey: "buildId"
-			} as any
+				duration: 1800000,
+				groupKey: "buildId",
+			} as any,
 		});
 
 		await this.queueManager.setupQueueScheduler(TEST_EXECUTION_QUEUE, {
@@ -57,9 +57,9 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 			getOffset: this.getBootAfterNJobsOffset.bind(this),
 			limiter: {
 				max: 2,
-    			duration: 1800000,
-				groupKey: 'buildId'
-			}
+				duration: 1800000,
+				groupKey: "buildId",
+			},
 		});
 
 		// Trigger everytime worker picks up job
@@ -101,29 +101,31 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 
 		this._heartBeatInterval = setInterval(sendHeartbeat, 2000) as any;
 
-
 		const shutDownInterval = setInterval(async () => {
-			if (Date.now() - this._lastJobPickedUpTime > 120000 && !this._worker.isRunning() ) {
+			if (Date.now() - this._lastJobPickedUpTime > 120000 && !this._worker.isRunning()) {
 				console.log("Shutting down...");
 				this._worker.pause();
 
-				if(process.env.ECS_ENABLE_CONTAINER_METADATA) {
+				if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
 					// Get the container metadata
-					const containerMetadata = await axios.get<{"TaskARN": string}>(`${process.env.ECS_CONTAINER_METADATA_URI_V4}/task`);
+					const containerMetadata = await axios.get<{ TaskARN: string }>(`${process.env.ECS_CONTAINER_METADATA_URI_V4}/task`);
 					const taskId = containerMetadata.data.TaskARN;
 
-					await axios.post<{status: string}>(process.env.CRUSHER_SCALE_LABMDA_URL, {type: "shutDown", payload: {taskId}}).then((res) => {
-						const { status } = res.data;
-						if(status === "success") {
-							process.exit(0);
-						} else {
+					await axios
+						.post<{ status: string }>(process.env.CRUSHER_SCALE_LABMDA_URL, { type: "shutDown", payload: { taskId } })
+						.then((res) => {
+							const { status } = res.data;
+							if (status === "success") {
+								process.exit(0);
+							} else {
+								this._worker.resume();
+							}
+							return;
+						})
+						.catch((err) => {
 							this._worker.resume();
-						}
-						return; 
-					}).catch((err) => {
-						this._worker.resume();
-					})
-				}				
+						});
+				}
 			}
 		}, 60000);
 	}

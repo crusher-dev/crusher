@@ -3,11 +3,20 @@ import { iAction } from "@crusher-shared/types/action";
 import { Browser, Page } from "playwright";
 import { CrusherRunnerActions } from "../index";
 
-async function runTemplate(page: Page, action: iAction, _, __, ___, ____, browser: Browser, runActions: (...params: Parameters<CrusherRunnerActions["runActions"]>) => ReturnType<CrusherRunnerActions["runActions"]>) {
-  console.log("Running template");
+async function runTemplate(
+	page: Page,
+	action: iAction,
+	_,
+	__,
+	___,
+	____,
+	browser: Browser,
+	runActions: (...params: Parameters<CrusherRunnerActions["runActions"]>) => ReturnType<CrusherRunnerActions["runActions"]>,
+) {
+	console.log("Running template");
 
-  const actions = action.payload.meta.actions;
-  return runActions(actions, browser, page, null, false);
+	const actions = action.payload.meta.actions;
+	return runActions(actions, browser, page, null, false);
 }
 
 module.exports = {

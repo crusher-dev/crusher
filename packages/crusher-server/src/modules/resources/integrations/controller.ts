@@ -32,34 +32,38 @@ class IntegrationsController {
 		const integrationConfig = await this.slackService.verifySlackIntegrationRequest(slackCode);
 
 		const existingSlackIntegration = await this.integrationsService.getSlackIntegration(projectId);
-		if(existingSlackIntegration) {
+		if (existingSlackIntegration) {
 			await this.integrationsService.updateIntegration(integrationConfig, existingSlackIntegration.id);
 		} else {
-			await this.integrationsService.addIntegration(integrationConfig, projectId)
+			await this.integrationsService.addIntegration(integrationConfig, projectId);
 		}
-		
+
 		await res.redirect(redirectUrl);
 		return res;
 	}
 
 	@Authorized()
 	@Get("/integrations/:project_id/slack/actions/remove")
-	async removeSlackIntegration(@CurrentUser({ required: true }) userInfo,  @Param("project_id") projectId: number, @QueryParams() params, @Res() res) {
+	async removeSlackIntegration(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params, @Res() res) {
 		const existingSlackIntegration = await this.integrationsService.getSlackIntegration(projectId);
-		if(!existingSlackIntegration) {
+		if (!existingSlackIntegration) {
 			throw new BadRequestError("Slack integration not found");
 		}
 
 		await this.integrationsService.deleteIntegration(existingSlackIntegration.id);
-	
-		return {status: "Successful"};
+
+		return { status: "Successful" };
 	}
 
 	@Authorized()
 	@Post("/integrations/:project_id/slack/actions/save.settings")
-	async saveSlackIntegrationSettings(@CurrentUser({required: true}) user, @Param("project_id") projectId: number, @Body() body: {alertChannel: any; normalChannel: any; }) {
-		return this.integrationsService.saveSlackSettings({alertChannel: body.alertChannel, normalChannel: body.normalChannel}, projectId);
-	} 
+	async saveSlackIntegrationSettings(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
+		@Body() body: { alertChannel: any; normalChannel: any },
+	) {
+		return this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
+	}
 
 	@Authorized()
 	@Get("/integrations/:project_id")
@@ -145,25 +149,34 @@ class IntegrationsController {
 
 	@Authorized()
 	@Get("/integrations/:project_id/slack/channels")
-	async getSlackChannels(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params: {cursor?: string}, @Res() res) {
+	async getSlackChannels(
+		@CurrentUser({ required: true }) userInfo,
+		@Param("project_id") projectId: number,
+		@QueryParams() params: { cursor?: string },
+		@Res() res,
+	) {
 		const slackIntegration = await this.integrationsService.getSlackIntegration(projectId);
-		if(!slackIntegration) throw new BadRequestError("No slack account connected");
+		if (!slackIntegration) throw new BadRequestError("No slack account connected");
 
 		const slackIntegrationConfig = slackIntegration.meta;
 
 		const fetchFromSlack = async (cursor?: string) => {
 			const { channels, nextCursor } = await fetch("https://slack.com/api/conversations.list?types=public_channel,private_channel", {
 				header: {
-					"Authorization": `Bearer ${slackIntegrationConfig.oAuthInfo.accessToken}`,
+					Authorization: `Bearer ${slackIntegrationConfig.oAuthInfo.accessToken}`,
 				},
 				method: "GET",
 				payload: {
 					cursor: cursor ? cursor : "",
 					limit: 50,
 					exclude_archived: true,
-				}
+				},
 			}).then((data: any) => {
-				return {accessToken: slackIntegrationConfig.oAuthInfo.accessToken, nextCursor: data.response_metadata ? data.response_metadata.next_cursor : "", channels: data.channels ? data.channels.map((channel) => ({id: channel.id, name: channel.name})) : []};
+				return {
+					accessToken: slackIntegrationConfig.oAuthInfo.accessToken,
+					nextCursor: data.response_metadata ? data.response_metadata.next_cursor : "",
+					channels: data.channels ? data.channels.map((channel) => ({ id: channel.id, name: channel.name })) : [],
+				};
 			});
 
 			return { channels, nextCursor };
@@ -176,9 +189,9 @@ class IntegrationsController {
 			const { channels: newChannels, nextCursor: newNextCursor } = await fetchFromSlack(nextCursor);
 			channels = channels.concat(newChannels);
 			nextCursor = newNextCursor;
-		} while (channels.length === 0 && nextCursor)
+		} while (channels.length === 0 && nextCursor);
 
-		return {channels, nextCursor};
+		return { channels, nextCursor };
 	}
 }
 

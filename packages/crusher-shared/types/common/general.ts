@@ -20,4 +20,4 @@ export interface IActionResultItem {
 
 export type IActionResultItemWithIndex = IActionResultItem & { actionIndex: number };
 
-export type ISavedActionResultItemWithIndex = IActionResultItemWithIndex & { recordId: number; screenshotIndex: string | number; };
+export type ISavedActionResultItemWithIndex = IActionResultItemWithIndex & { recordId: number; screenshotIndex: string | number };

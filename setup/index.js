@@ -54,39 +54,39 @@ function preParseArgv() {
 		.alias('help', 'h').argv;
 
 	if (argv.mode) {
-		installOptions['mode'] = argv.mode;
+		installOptions.mode = argv.mode;
 	}
 	if (argv.ah) {
-		installOptions['ah'] = argv.ah;
+		installOptions.ah = argv.ah;
 	}
 	if (argv.bd) {
-		installOptions['bd'] = argv.bd;
+		installOptions.bd = argv.bd;
 	}
 	if (argv.fd) {
-		installOptions['fd'] = argv.fd;
+		installOptions.fd = argv.fd;
 	}
 	if (argv.sm) {
-		installOptions['storage_mode'] = argv.sm;
+		installOptions.storage_mode = argv.sm;
 	}
 	if (argv.sd) {
-		installOptions['storage_dir'] = argv.sd;
+		installOptions.storage_dir = argv.sd;
 	}
 	if (argv.sp) {
-		installOptions['storage_port'] = argv.sp;
+		installOptions.storage_port = argv.sp;
 	}
 }
 
 async function init() {
 	preParseArgv();
 
-	if (!installOptions['mode']) {
+	if (!installOptions.mode) {
 		const modePrompt = new Select({
 			name: 'mode',
 			message: 'Which version of crusher do you want to use?',
 			choices: modeChoices,
 		});
 
-		installOptions['mode'] = await modePrompt.run();
+		installOptions.mode = await modePrompt.run();
 	}
 
 	process.env.CRUSHER_MODE = installOptions.mode;

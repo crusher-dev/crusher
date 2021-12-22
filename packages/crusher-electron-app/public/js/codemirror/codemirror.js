@@ -18,32 +18,32 @@
 
 	// Kludges for bugs and behavior differences that can't be feature
 	// detected are enabled based on userAgent etc sniffing.
-	var userAgent = navigator.userAgent;
-	var platform = navigator.platform;
+	const userAgent = navigator.userAgent;
+	const platform = navigator.platform;
 
-	var gecko = /gecko\/\d/i.test(userAgent);
-	var ie_upto10 = /MSIE \d/.test(userAgent);
-	var ie_11up = /Trident\/(?:[7-9]|\d{2,})\..*rv:(\d+)/.exec(userAgent);
-	var edge = /Edge\/(\d+)/.exec(userAgent);
-	var ie = ie_upto10 || ie_11up || edge;
-	var ie_version = ie && (ie_upto10 ? document.documentMode || 6 : +(edge || ie_11up)[1]);
-	var webkit = !edge && /WebKit\//.test(userAgent);
-	var qtwebkit = webkit && /Qt\/\d+\.\d+/.test(userAgent);
-	var chrome = !edge && /Chrome\//.test(userAgent);
-	var presto = /Opera\//.test(userAgent);
-	var safari = /Apple Computer/.test(navigator.vendor);
-	var mac_geMountainLion = /Mac OS X 1\d\D([8-9]|\d\d)\D/.test(userAgent);
-	var phantom = /PhantomJS/.test(userAgent);
+	const gecko = /gecko\/\d/i.test(userAgent);
+	const ie_upto10 = /MSIE \d/.test(userAgent);
+	const ie_11up = /Trident\/(?:[7-9]|\d{2,})\..*rv:(\d+)/.exec(userAgent);
+	const edge = /Edge\/(\d+)/.exec(userAgent);
+	const ie = ie_upto10 || ie_11up || edge;
+	const ie_version = ie && (ie_upto10 ? document.documentMode || 6 : +(edge || ie_11up)[1]);
+	let webkit = !edge && /WebKit\//.test(userAgent);
+	const qtwebkit = webkit && /Qt\/\d+\.\d+/.test(userAgent);
+	const chrome = !edge && /Chrome\//.test(userAgent);
+	let presto = /Opera\//.test(userAgent);
+	const safari = /Apple Computer/.test(navigator.vendor);
+	const mac_geMountainLion = /Mac OS X 1\d\D([8-9]|\d\d)\D/.test(userAgent);
+	const phantom = /PhantomJS/.test(userAgent);
 
-	var ios = safari && (/Mobile\/\w+/.test(userAgent) || navigator.maxTouchPoints > 2);
-	var android = /Android/.test(userAgent);
+	const ios = safari && (/Mobile\/\w+/.test(userAgent) || navigator.maxTouchPoints > 2);
+	const android = /Android/.test(userAgent);
 	// This is woefully incomplete. Suggestions for alternative methods welcome.
-	var mobile = ios || android || /webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(userAgent);
-	var mac = ios || /Mac/.test(platform);
-	var chromeOS = /\bCrOS\b/.test(userAgent);
-	var windows = /win/i.test(platform);
+	const mobile = ios || android || /webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(userAgent);
+	const mac = ios || /Mac/.test(platform);
+	const chromeOS = /\bCrOS\b/.test(userAgent);
+	const windows = /win/i.test(platform);
 
-	var presto_version = presto && userAgent.match(/Version\/(\d*\.\d*)/);
+	let presto_version = presto && userAgent.match(/Version\/(\d*\.\d*)/);
 	if (presto_version) {
 		presto_version = Number(presto_version[1]);
 	}
@@ -52,24 +52,24 @@
 		webkit = true;
 	}
 	// Some browsers use the wrong event properties to signal cmd/ctrl on OS X
-	var flipCtrlCmd = mac && (qtwebkit || (presto && (presto_version == null || presto_version < 12.11)));
-	var captureRightClick = gecko || (ie && ie_version >= 9);
+	const flipCtrlCmd = mac && (qtwebkit || (presto && (presto_version == null || presto_version < 12.11)));
+	const captureRightClick = gecko || (ie && ie_version >= 9);
 
 	function classTest(cls) {
 		return new RegExp("(^|\\s)" + cls + "(?:$|\\s)\\s*");
 	}
 
-	var rmClass = function (node, cls) {
-		var current = node.className;
-		var match = classTest(cls).exec(current);
+	const rmClass = function (node, cls) {
+		const current = node.className;
+		const match = classTest(cls).exec(current);
 		if (match) {
-			var after = current.slice(match.index + match[0].length);
+			const after = current.slice(match.index + match[0].length);
 			node.className = current.slice(0, match.index) + (after ? match[1] + after : "");
 		}
 	};
 
 	function removeChildren(e) {
-		for (var count = e.childNodes.length; count > 0; --count) {
+		for (let count = e.childNodes.length; count > 0; --count) {
 			e.removeChild(e.firstChild);
 		}
 		return e;
@@ -80,17 +80,17 @@
 	}
 
 	function elt(tag, content, className, style) {
-		var e = document.createElement(tag);
+		const e = document.createElement(tag);
 		if (className) {
 			e.className = className;
 		}
 		if (style) {
 			e.style.cssText = style;
 		}
-		if (typeof content == "string") {
+		if (typeof content === "string") {
 			e.appendChild(document.createTextNode(content));
 		} else if (content) {
-			for (var i = 0; i < content.length; ++i) {
+			for (let i = 0; i < content.length; ++i) {
 				e.appendChild(content[i]);
 			}
 		}
@@ -98,22 +98,22 @@
 	}
 	// wrapper for elt, which removes the elt from the accessibility tree
 	function eltP(tag, content, className, style) {
-		var e = elt(tag, content, className, style);
+		const e = elt(tag, content, className, style);
 		e.setAttribute("role", "presentation");
 		return e;
 	}
 
-	var range;
+	let range;
 	if (document.createRange) {
 		range = function (node, start, end, endNode) {
-			var r = document.createRange();
+			const r = document.createRange();
 			r.setEnd(endNode || node, end);
 			r.setStart(node, start);
 			return r;
 		};
 	} else {
 		range = function (node, start, end) {
-			var r = document.body.createTextRange();
+			const r = document.body.createTextRange();
 			try {
 				r.moveToElementText(node.parentNode);
 			} catch (e) {
@@ -148,7 +148,7 @@
 		// IE and Edge may throw an "Unspecified Error" when accessing document.activeElement.
 		// IE < 10 will throw when accessed while the page is loading or in an iframe.
 		// IE > 9 and Edge will throw when accessed in an iframe if document.body is unavailable.
-		var activeElement;
+		let activeElement;
 		try {
 			activeElement = document.activeElement;
 		} catch (e) {
@@ -161,14 +161,14 @@
 	}
 
 	function addClass(node, cls) {
-		var current = node.className;
+		const current = node.className;
 		if (!classTest(cls).test(current)) {
 			node.className += (current ? " " : "") + cls;
 		}
 	}
 	function joinClasses(a, b) {
-		var as = a.split(" ");
-		for (var i = 0; i < as.length; i++) {
+		const as = a.split(" ");
+		for (let i = 0; i < as.length; i++) {
 			if (as[i] && !classTest(as[i]).test(b)) {
 				b += " " + as[i];
 			}
@@ -176,7 +176,7 @@
 		return b;
 	}
 
-	var selectInput = function (node) {
+	let selectInput = function (node) {
 		node.select();
 	};
 	if (ios) {
@@ -195,7 +195,7 @@
 	}
 
 	function bind(f) {
-		var args = Array.prototype.slice.call(arguments, 1);
+		const args = Array.prototype.slice.call(arguments, 1);
 		return function () {
 			return f.apply(null, args);
 		};
@@ -205,7 +205,7 @@
 		if (!target) {
 			target = {};
 		}
-		for (var prop in obj) {
+		for (const prop in obj) {
 			if (obj.hasOwnProperty(prop) && (overwrite !== false || !target.hasOwnProperty(prop))) {
 				target[prop] = obj[prop];
 			}
@@ -222,8 +222,8 @@
 				end = string.length;
 			}
 		}
-		for (var i = startIndex || 0, n = startValue || 0; ; ) {
-			var nextTab = string.indexOf("\t", i);
+		for (let i = startIndex || 0, n = startValue || 0; ; ) {
+			const nextTab = string.indexOf("\t", i);
 			if (nextTab < 0 || nextTab >= end) {
 				return n + (end - i);
 			}
@@ -233,7 +233,7 @@
 		}
 	}
 
-	var Delayed = function () {
+	const Delayed = function () {
 		this.id = null;
 		this.f = null;
 		this.time = 0;
@@ -249,7 +249,7 @@
 	};
 	Delayed.prototype.set = function (ms, f) {
 		this.f = f;
-		var time = +new Date() + ms;
+		const time = +new Date() + ms;
 		if (!this.id || time < this.time) {
 			clearTimeout(this.id);
 			this.id = setTimeout(this.handler, ms);
@@ -258,7 +258,7 @@
 	};
 
 	function indexOf(array, elt) {
-		for (var i = 0; i < array.length; ++i) {
+		for (let i = 0; i < array.length; ++i) {
 			if (array[i] == elt) {
 				return i;
 			}
@@ -267,30 +267,30 @@
 	}
 
 	// Number of pixels added to scroller and sizer to hide scrollbar
-	var scrollerGap = 50;
+	const scrollerGap = 50;
 
 	// Returned or thrown by various protocols to signal 'I'm not
 	// handling this'.
-	var Pass = {
+	const Pass = {
 		toString: function () {
 			return "CodeMirror.Pass";
 		},
 	};
 
 	// Reused option objects for setSelection & friends
-	var sel_dontScroll = { scroll: false },
-		sel_mouse = { origin: "*mouse" },
-		sel_move = { origin: "+move" };
+	const sel_dontScroll = { scroll: false };
+	const sel_mouse = { origin: "*mouse" };
+	const sel_move = { origin: "+move" };
 
 	// The inverse of countColumn -- find the offset that corresponds to
 	// a particular column.
 	function findColumn(string, goal, tabSize) {
-		for (var pos = 0, col = 0; ; ) {
-			var nextTab = string.indexOf("\t", pos);
+		for (let pos = 0, col = 0; ; ) {
+			let nextTab = string.indexOf("\t", pos);
 			if (nextTab == -1) {
 				nextTab = string.length;
 			}
-			var skipped = nextTab - pos;
+			const skipped = nextTab - pos;
 			if (nextTab == string.length || col + skipped >= goal) {
 				return pos + Math.min(skipped, goal - col);
 			}
@@ -303,7 +303,7 @@
 		}
 	}
 
-	var spaceStrs = [""];
+	const spaceStrs = [""];
 	function spaceStr(n) {
 		while (spaceStrs.length <= n) {
 			spaceStrs.push(lst(spaceStrs) + " ");
@@ -316,16 +316,16 @@
 	}
 
 	function map(array, f) {
-		var out = [];
-		for (var i = 0; i < array.length; i++) {
+		const out = [];
+		for (let i = 0; i < array.length; i++) {
 			out[i] = f(array[i], i);
 		}
 		return out;
 	}
 
 	function insertSorted(array, value, score) {
-		var pos = 0,
-			priority = score(value);
+		let pos = 0;
+		const priority = score(value);
 		while (pos < array.length && score(array[pos]) <= priority) {
 			pos++;
 		}
@@ -335,7 +335,7 @@
 	function nothing() {}
 
 	function createObj(base, props) {
-		var inst;
+		let inst;
 		if (Object.create) {
 			inst = Object.create(base);
 		} else {
@@ -348,7 +348,7 @@
 		return inst;
 	}
 
-	var nonASCIISingleCaseWordChar = /[\u00df\u0587\u0590-\u05f4\u0600-\u06ff\u3040-\u309f\u30a0-\u30ff\u3400-\u4db5\u4e00-\u9fcc\uac00-\ud7af]/;
+	const nonASCIISingleCaseWordChar = /[\u00df\u0587\u0590-\u05f4\u0600-\u06ff\u3040-\u309f\u30a0-\u30ff\u3400-\u4db5\u4e00-\u9fcc\uac00-\ud7af]/;
 	function isWordCharBasic(ch) {
 		return /\w/.test(ch) || (ch > "\x80" && (ch.toUpperCase() != ch.toLowerCase() || nonASCIISingleCaseWordChar.test(ch)));
 	}
@@ -363,7 +363,7 @@
 	}
 
 	function isEmpty(obj) {
-		for (var n in obj) {
+		for (const n in obj) {
 			if (obj.hasOwnProperty(n) && obj[n]) {
 				return false;
 			}
@@ -376,7 +376,7 @@
 	// as editing and measuring is concerned. This is not fully correct,
 	// since some scripts/fonts/browsers also treat other configurations
 	// of code points as a group.
-	var extendingChars =
+	const extendingChars =
 		/[\u0300-\u036f\u0483-\u0489\u0591-\u05bd\u05bf\u05c1\u05c2\u05c4\u05c5\u05c7\u0610-\u061a\u064b-\u065e\u0670\u06d6-\u06dc\u06de-\u06e4\u06e7\u06e8\u06ea-\u06ed\u0711\u0730-\u074a\u07a6-\u07b0\u07eb-\u07f3\u0816-\u0819\u081b-\u0823\u0825-\u0827\u0829-\u082d\u0900-\u0902\u093c\u0941-\u0948\u094d\u0951-\u0955\u0962\u0963\u0981\u09bc\u09be\u09c1-\u09c4\u09cd\u09d7\u09e2\u09e3\u0a01\u0a02\u0a3c\u0a41\u0a42\u0a47\u0a48\u0a4b-\u0a4d\u0a51\u0a70\u0a71\u0a75\u0a81\u0a82\u0abc\u0ac1-\u0ac5\u0ac7\u0ac8\u0acd\u0ae2\u0ae3\u0b01\u0b3c\u0b3e\u0b3f\u0b41-\u0b44\u0b4d\u0b56\u0b57\u0b62\u0b63\u0b82\u0bbe\u0bc0\u0bcd\u0bd7\u0c3e-\u0c40\u0c46-\u0c48\u0c4a-\u0c4d\u0c55\u0c56\u0c62\u0c63\u0cbc\u0cbf\u0cc2\u0cc6\u0ccc\u0ccd\u0cd5\u0cd6\u0ce2\u0ce3\u0d3e\u0d41-\u0d44\u0d4d\u0d57\u0d62\u0d63\u0dca\u0dcf\u0dd2-\u0dd4\u0dd6\u0ddf\u0e31\u0e34-\u0e3a\u0e47-\u0e4e\u0eb1\u0eb4-\u0eb9\u0ebb\u0ebc\u0ec8-\u0ecd\u0f18\u0f19\u0f35\u0f37\u0f39\u0f71-\u0f7e\u0f80-\u0f84\u0f86\u0f87\u0f90-\u0f97\u0f99-\u0fbc\u0fc6\u102d-\u1030\u1032-\u1037\u1039\u103a\u103d\u103e\u1058\u1059\u105e-\u1060\u1071-\u1074\u1082\u1085\u1086\u108d\u109d\u135f\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17b7-\u17bd\u17c6\u17c9-\u17d3\u17dd\u180b-\u180d\u18a9\u1920-\u1922\u1927\u1928\u1932\u1939-\u193b\u1a17\u1a18\u1a56\u1a58-\u1a5e\u1a60\u1a62\u1a65-\u1a6c\u1a73-\u1a7c\u1a7f\u1b00-\u1b03\u1b34\u1b36-\u1b3a\u1b3c\u1b42\u1b6b-\u1b73\u1b80\u1b81\u1ba2-\u1ba5\u1ba8\u1ba9\u1c2c-\u1c33\u1c36\u1c37\u1cd0-\u1cd2\u1cd4-\u1ce0\u1ce2-\u1ce8\u1ced\u1dc0-\u1de6\u1dfd-\u1dff\u200c\u200d\u20d0-\u20f0\u2cef-\u2cf1\u2de0-\u2dff\u302a-\u302f\u3099\u309a\ua66f-\ua672\ua67c\ua67d\ua6f0\ua6f1\ua802\ua806\ua80b\ua825\ua826\ua8c4\ua8e0-\ua8f1\ua926-\ua92d\ua947-\ua951\ua980-\ua982\ua9b3\ua9b6-\ua9b9\ua9bc\uaa29-\uaa2e\uaa31\uaa32\uaa35\uaa36\uaa43\uaa4c\uaab0\uaab2-\uaab4\uaab7\uaab8\uaabe\uaabf\uaac1\uabe5\uabe8\uabed\udc00-\udfff\ufb1e\ufe00-\ufe0f\ufe20-\ufe26\uff9e\uff9f]/;
 	function isExtendingChar(ch) {
 		return ch.charCodeAt(0) >= 768 && extendingChars.test(ch);
@@ -396,13 +396,13 @@
 	function findFirst(pred, from, to) {
 		// At any point we are certain `to` satisfies `pred`, don't know
 		// whether `from` does.
-		var dir = from > to ? -1 : 1;
+		const dir = from > to ? -1 : 1;
 		for (;;) {
 			if (from == to) {
 				return from;
 			}
-			var midF = (from + to) / 2,
-				mid = dir < 0 ? Math.ceil(midF) : Math.floor(midF);
+			const midF = (from + to) / 2;
+			const mid = dir < 0 ? Math.ceil(midF) : Math.floor(midF);
 			if (mid == from) {
 				return pred(mid) ? from : to;
 			}
@@ -420,9 +420,9 @@
 		if (!order) {
 			return f(from, to, "ltr", 0);
 		}
-		var found = false;
-		for (var i = 0; i < order.length; ++i) {
-			var part = order[i];
+		let found = false;
+		for (let i = 0; i < order.length; ++i) {
+			const part = order[i];
 			if ((part.from < to && part.to > from) || (from == to && part.to == from)) {
 				f(Math.max(part.from, from), Math.min(part.to, to), part.level == 1 ? "rtl" : "ltr", i);
 				found = true;
@@ -433,12 +433,12 @@
 		}
 	}
 
-	var bidiOther = null;
+	let bidiOther = null;
 	function getBidiPartAt(order, ch, sticky) {
-		var found;
+		let found;
 		bidiOther = null;
-		for (var i = 0; i < order.length; ++i) {
-			var cur = order[i];
+		for (let i = 0; i < order.length; ++i) {
+			const cur = order[i];
 			if (cur.from < ch && cur.to > ch) {
 				return i;
 			}
@@ -483,23 +483,23 @@
 	// Returns null if characters are ordered as they appear
 	// (left-to-right), or an array of sections ({from, to, level}
 	// objects) in the order in which they occur visually.
-	var bidiOrdering = (function () {
+	const bidiOrdering = (function () {
 		// Character types for codepoints 0 to 0xff
-		var lowTypes =
+		const lowTypes =
 			"bbbbbbbbbtstwsbbbbbbbbbbbbbbssstwNN%%%NNNNNN,N,N1111111111NNNNNNNLLLLLLLLLLLLLLLLLLLLLLLLLLNNNNNNLLLLLLLLLLLLLLLLLLLLLLLLLLNNNNbbbbbbsbbbbbbbbbbbbbbbbbbbbbbbbbb,N%%%%NNNNLNNNNN%%11NLNNN1LNNNNNLLLLLLLLLLLLLLLLLLLLLLLNLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLN";
 		// Character types for codepoints 0x600 to 0x6f9
-		var arabicTypes =
+		const arabicTypes =
 			"nnnnnnNNr%%r,rNNmmmmmmmmmmmrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnn%nnrrrmrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrmmmmmmmnNmmmmmmrrmmNmmmmrr1111111111";
 		function charType(code) {
 			if (code <= 0xf7) {
 				return lowTypes.charAt(code);
-			} else if (0x590 <= code && code <= 0x5f4) {
+			} else if (code >= 0x590 && code <= 0x5f4) {
 				return "R";
-			} else if (0x600 <= code && code <= 0x6f9) {
+			} else if (code >= 0x600 && code <= 0x6f9) {
 				return arabicTypes.charAt(code - 0x600);
-			} else if (0x6ee <= code && code <= 0x8ac) {
+			} else if (code >= 0x6ee && code <= 0x8ac) {
 				return "r";
-			} else if (0x2000 <= code && code <= 0x200b) {
+			} else if (code >= 0x2000 && code <= 0x200b) {
 				return "w";
 			} else if (code == 0x200c) {
 				return "b";
@@ -508,11 +508,11 @@
 			}
 		}
 
-		var bidiRE = /[\u0590-\u05f4\u0600-\u06ff\u0700-\u08ac]/;
-		var isNeutral = /[stwN]/,
-			isStrong = /[LRr]/,
-			countsAsLeft = /[Lb1n]/,
-			countsAsNum = /[1n]/;
+		const bidiRE = /[\u0590-\u05f4\u0600-\u06ff\u0700-\u08ac]/;
+		const isNeutral = /[stwN]/;
+		const isStrong = /[LRr]/;
+		const countsAsLeft = /[Lb1n]/;
+		const countsAsNum = /[1n]/;
 
 		function BidiSpan(level, from, to) {
 			this.level = level;
@@ -521,14 +521,14 @@
 		}
 
 		return function (str, direction) {
-			var outerType = direction == "ltr" ? "L" : "R";
+			const outerType = direction == "ltr" ? "L" : "R";
 
 			if (str.length == 0 || (direction == "ltr" && !bidiRE.test(str))) {
 				return false;
 			}
-			var len = str.length,
-				types = [];
-			for (var i = 0; i < len; ++i) {
+			const len = str.length;
+			const types = [];
+			for (let i = 0; i < len; ++i) {
 				types.push(charType(str.charCodeAt(i)));
 			}
 
@@ -536,8 +536,8 @@
 			// change the type of the NSM to the type of the previous
 			// character. If the NSM is at the start of the level run, it will
 			// get the type of sor.
-			for (var i$1 = 0, prev = outerType; i$1 < len; ++i$1) {
-				var type = types[i$1];
+			for (let i$1 = 0, prev = outerType; i$1 < len; ++i$1) {
+				const type = types[i$1];
 				if (type == "m") {
 					types[i$1] = prev;
 				} else {
@@ -550,8 +550,8 @@
 			// AL is found, change the type of the European number to Arabic
 			// number.
 			// W3. Change all ALs to R.
-			for (var i$2 = 0, cur = outerType; i$2 < len; ++i$2) {
-				var type$1 = types[i$2];
+			for (let i$2 = 0, cur = outerType; i$2 < len; ++i$2) {
+				const type$1 = types[i$2];
 				if (type$1 == "1" && cur == "r") {
 					types[i$2] = "n";
 				} else if (isStrong.test(type$1)) {
@@ -565,8 +565,8 @@
 			// W4. A single European separator between two European numbers
 			// changes to a European number. A single common separator between
 			// two numbers of the same type changes to that type.
-			for (var i$3 = 1, prev$1 = types[0]; i$3 < len - 1; ++i$3) {
-				var type$2 = types[i$3];
+			for (let i$3 = 1, prev$1 = types[0]; i$3 < len - 1; ++i$3) {
+				const type$2 = types[i$3];
 				if (type$2 == "+" && prev$1 == "1" && types[i$3 + 1] == "1") {
 					types[i$3] = "1";
 				} else if (type$2 == "," && prev$1 == types[i$3 + 1] && (prev$1 == "1" || prev$1 == "n")) {
@@ -579,15 +579,15 @@
 			// numbers changes to all European numbers.
 			// W6. Otherwise, separators and terminators change to Other
 			// Neutral.
-			for (var i$4 = 0; i$4 < len; ++i$4) {
-				var type$3 = types[i$4];
+			for (let i$4 = 0; i$4 < len; ++i$4) {
+				const type$3 = types[i$4];
 				if (type$3 == ",") {
 					types[i$4] = "N";
 				} else if (type$3 == "%") {
-					var end = void 0;
+					let end = void 0;
 					for (end = i$4 + 1; end < len && types[end] == "%"; ++end) {}
-					var replace = (i$4 && types[i$4 - 1] == "!") || (end < len && types[end] == "1") ? "1" : "N";
-					for (var j = i$4; j < end; ++j) {
+					const replace = (i$4 && types[i$4 - 1] == "!") || (end < len && types[end] == "1") ? "1" : "N";
+					for (let j = i$4; j < end; ++j) {
 						types[j] = replace;
 					}
 					i$4 = end - 1;
@@ -597,8 +597,8 @@
 			// W7. Search backwards from each instance of a European number
 			// until the first strong type (R, L, or sor) is found. If an L is
 			// found, then change the type of the European number to L.
-			for (var i$5 = 0, cur$1 = outerType; i$5 < len; ++i$5) {
-				var type$4 = types[i$5];
+			for (let i$5 = 0, cur$1 = outerType; i$5 < len; ++i$5) {
+				const type$4 = types[i$5];
 				if (cur$1 == "L" && type$4 == "1") {
 					types[i$5] = "L";
 				} else if (isStrong.test(type$4)) {
@@ -612,14 +612,14 @@
 			// terms of their influence on neutrals. Start-of-level-run (sor)
 			// and end-of-level-run (eor) are used at level run boundaries.
 			// N2. Any remaining neutrals take the embedding direction.
-			for (var i$6 = 0; i$6 < len; ++i$6) {
+			for (let i$6 = 0; i$6 < len; ++i$6) {
 				if (isNeutral.test(types[i$6])) {
-					var end$1 = void 0;
+					let end$1 = void 0;
 					for (end$1 = i$6 + 1; end$1 < len && isNeutral.test(types[end$1]); ++end$1) {}
-					var before = (i$6 ? types[i$6 - 1] : outerType) == "L";
-					var after = (end$1 < len ? types[end$1] : outerType) == "L";
-					var replace$1 = before == after ? (before ? "L" : "R") : outerType;
-					for (var j$1 = i$6; j$1 < end$1; ++j$1) {
+					const before = (i$6 ? types[i$6 - 1] : outerType) == "L";
+					const after = (end$1 < len ? types[end$1] : outerType) == "L";
+					const replace$1 = before == after ? (before ? "L" : "R") : outerType;
+					for (let j$1 = i$6; j$1 < end$1; ++j$1) {
 						types[j$1] = replace$1;
 					}
 					i$6 = end$1 - 1;
@@ -631,25 +631,25 @@
 			// levels (0, 1, 2) in an implementation that doesn't take
 			// explicit embedding into account, we can build up the order on
 			// the fly, without following the level-based algorithm.
-			var order = [],
-				m;
-			for (var i$7 = 0; i$7 < len; ) {
+			const order = [];
+			let m;
+			for (let i$7 = 0; i$7 < len; ) {
 				if (countsAsLeft.test(types[i$7])) {
-					var start = i$7;
+					const start = i$7;
 					for (++i$7; i$7 < len && countsAsLeft.test(types[i$7]); ++i$7) {}
 					order.push(new BidiSpan(0, start, i$7));
 				} else {
-					var pos = i$7,
-						at = order.length,
-						isRTL = direction == "rtl" ? 1 : 0;
+					let pos = i$7;
+					let at = order.length;
+					const isRTL = direction == "rtl" ? 1 : 0;
 					for (++i$7; i$7 < len && types[i$7] != "L"; ++i$7) {}
-					for (var j$2 = pos; j$2 < i$7; ) {
+					for (let j$2 = pos; j$2 < i$7; ) {
 						if (countsAsNum.test(types[j$2])) {
 							if (pos < j$2) {
 								order.splice(at, 0, new BidiSpan(1, pos, j$2));
 								at += isRTL;
 							}
-							var nstart = j$2;
+							const nstart = j$2;
 							for (++j$2; j$2 < i$7 && countsAsNum.test(types[j$2]); ++j$2) {}
 							order.splice(at, 0, new BidiSpan(2, nstart, j$2));
 							at += isRTL;
@@ -682,7 +682,7 @@
 	// false for lines that are fully left-to-right, and an array of
 	// BidiSpan objects otherwise.
 	function getOrder(line, direction) {
-		var order = line.order;
+		let order = line.order;
 		if (order == null) {
 			order = line.order = bidiOrdering(line.text, direction);
 		}
@@ -694,15 +694,15 @@
 	// Lightweight event framework. on/off also work on DOM nodes,
 	// registering native DOM handlers.
 
-	var noHandlers = [];
+	const noHandlers = [];
 
-	var on = function (emitter, type, f) {
+	const on = function (emitter, type, f) {
 		if (emitter.addEventListener) {
 			emitter.addEventListener(type, f, false);
 		} else if (emitter.attachEvent) {
 			emitter.attachEvent("on" + type, f);
 		} else {
-			var map = emitter._handlers || (emitter._handlers = {});
+			const map = emitter._handlers || (emitter._handlers = {});
 			map[type] = (map[type] || noHandlers).concat(f);
 		}
 	};
@@ -717,10 +717,10 @@
 		} else if (emitter.detachEvent) {
 			emitter.detachEvent("on" + type, f);
 		} else {
-			var map = emitter._handlers,
-				arr = map && map[type];
+			const map = emitter._handlers;
+			const arr = map && map[type];
 			if (arr) {
-				var index = indexOf(arr, f);
+				const index = indexOf(arr, f);
 				if (index > -1) {
 					map[type] = arr.slice(0, index).concat(arr.slice(index + 1));
 				}
@@ -728,13 +728,13 @@
 		}
 	}
 
-	function signal(emitter, type /*, values...*/) {
-		var handlers = getHandlers(emitter, type);
+	function signal(emitter, type /*, values... */) {
+		const handlers = getHandlers(emitter, type);
 		if (!handlers.length) {
 			return;
 		}
-		var args = Array.prototype.slice.call(arguments, 2);
-		for (var i = 0; i < handlers.length; ++i) {
+		const args = Array.prototype.slice.call(arguments, 2);
+		for (let i = 0; i < handlers.length; ++i) {
 			handlers[i].apply(null, args);
 		}
 	}
@@ -743,7 +743,7 @@
 	// registering a (non-DOM) handler on the editor for the event name,
 	// and preventDefault-ing the event in that handler.
 	function signalDOMEvent(cm, e, override) {
-		if (typeof e == "string") {
+		if (typeof e === "string") {
 			e = {
 				type: e,
 				preventDefault: function () {
@@ -756,12 +756,12 @@
 	}
 
 	function signalCursorActivity(cm) {
-		var arr = cm._handlers && cm._handlers.cursorActivity;
+		const arr = cm._handlers && cm._handlers.cursorActivity;
 		if (!arr) {
 			return;
 		}
-		var set = cm.curOp.cursorActivityHandlers || (cm.curOp.cursorActivityHandlers = []);
-		for (var i = 0; i < arr.length; ++i) {
+		const set = cm.curOp.cursorActivityHandlers || (cm.curOp.cursorActivityHandlers = []);
+		for (let i = 0; i < arr.length; ++i) {
 			if (indexOf(set, arr[i]) == -1) {
 				set.push(arr[i]);
 			}
@@ -812,7 +812,7 @@
 		return e.target || e.srcElement;
 	}
 	function e_button(e) {
-		var b = e.which;
+		let b = e.which;
 		if (b == null) {
 			if (e.button & 1) {
 				b = 1;
@@ -829,39 +829,39 @@
 	}
 
 	// Detect drag-and-drop
-	var dragAndDrop = (function () {
+	const dragAndDrop = (function () {
 		// There is *some* kind of drag-and-drop support in IE6-8, but I
 		// couldn't get it to work yet.
 		if (ie && ie_version < 9) {
 			return false;
 		}
-		var div = elt("div");
+		const div = elt("div");
 		return "draggable" in div || "dragDrop" in div;
 	})();
 
-	var zwspSupported;
+	let zwspSupported;
 	function zeroWidthElement(measure) {
 		if (zwspSupported == null) {
-			var test = elt("span", "\u200b");
+			const test = elt("span", "\u200b");
 			removeChildrenAndAdd(measure, elt("span", [test, document.createTextNode("x")]));
 			if (measure.firstChild.offsetHeight != 0) {
 				zwspSupported = test.offsetWidth <= 1 && test.offsetHeight > 2 && !(ie && ie_version < 8);
 			}
 		}
-		var node = zwspSupported ? elt("span", "\u200b") : elt("span", "\u00a0", null, "display: inline-block; width: 1px; margin-right: -1px");
+		const node = zwspSupported ? elt("span", "\u200b") : elt("span", "\u00a0", null, "display: inline-block; width: 1px; margin-right: -1px");
 		node.setAttribute("cm-text", "");
 		return node;
 	}
 
 	// Feature-detect IE's crummy client rect reporting for bidi text
-	var badBidiRects;
+	let badBidiRects;
 	function hasBadBidiRects(measure) {
 		if (badBidiRects != null) {
 			return badBidiRects;
 		}
-		var txt = removeChildrenAndAdd(measure, document.createTextNode("A\u062eA"));
-		var r0 = range(txt, 0, 1).getBoundingClientRect();
-		var r1 = range(txt, 1, 2).getBoundingClientRect();
+		const txt = removeChildrenAndAdd(measure, document.createTextNode("A\u062eA"));
+		const r0 = range(txt, 0, 1).getBoundingClientRect();
+		const r1 = range(txt, 1, 2).getBoundingClientRect();
 		removeChildren(measure);
 		if (!r0 || r0.left == r0.right) {
 			return false;
@@ -871,19 +871,19 @@
 
 	// See if "".split is the broken IE version, if so, provide an
 	// alternative way to split lines.
-	var splitLinesAuto =
+	const splitLinesAuto =
 		"\n\nb".split(/\n/).length != 3
 			? function (string) {
-					var pos = 0,
-						result = [],
-						l = string.length;
+					let pos = 0;
+					const result = [];
+					const l = string.length;
 					while (pos <= l) {
-						var nl = string.indexOf("\n", pos);
+						let nl = string.indexOf("\n", pos);
 						if (nl == -1) {
 							nl = string.length;
 						}
-						var line = string.slice(pos, string.charAt(nl - 1) == "\r" ? nl - 1 : nl);
-						var rt = line.indexOf("\r");
+						const line = string.slice(pos, string.charAt(nl - 1) == "\r" ? nl - 1 : nl);
+						const rt = line.indexOf("\r");
 						if (rt != -1) {
 							result.push(line.slice(0, rt));
 							pos += rt + 1;
@@ -898,7 +898,7 @@
 					return string.split(/\r\n?|\n/);
 			  };
 
-	var hasSelection = window.getSelection
+	const hasSelection = window.getSelection
 		? function (te) {
 				try {
 					return te.selectionStart != te.selectionEnd;
@@ -907,7 +907,7 @@
 				}
 		  }
 		: function (te) {
-				var range;
+				let range;
 				try {
 					range = te.ownerDocument.selection.createRange();
 				} catch (e) {}
@@ -917,29 +917,29 @@
 				return range.compareEndPoints("StartToEnd", range) != 0;
 		  };
 
-	var hasCopyEvent = (function () {
-		var e = elt("div");
+	const hasCopyEvent = (function () {
+		const e = elt("div");
 		if ("oncopy" in e) {
 			return true;
 		}
 		e.setAttribute("oncopy", "return;");
-		return typeof e.oncopy == "function";
+		return typeof e.oncopy === "function";
 	})();
 
-	var badZoomedRects = null;
+	let badZoomedRects = null;
 	function hasBadZoomedRects(measure) {
 		if (badZoomedRects != null) {
 			return badZoomedRects;
 		}
-		var node = removeChildrenAndAdd(measure, elt("span", "x"));
-		var normal = node.getBoundingClientRect();
-		var fromRange = range(node, 0, 1).getBoundingClientRect();
+		const node = removeChildrenAndAdd(measure, elt("span", "x"));
+		const normal = node.getBoundingClientRect();
+		const fromRange = range(node, 0, 1).getBoundingClientRect();
 		return (badZoomedRects = Math.abs(normal.left - fromRange.left) > 1);
 	}
 
 	// Known modes, by name and by MIME
-	var modes = {},
-		mimeModes = {};
+	const modes = {};
+	const mimeModes = {};
 
 	// Extra arguments are stored as the mode's dependencies, which is
 	// used by (legacy) mechanisms like loadmode.js to automatically
@@ -958,21 +958,21 @@
 	// Given a MIME type, a {name, ...options} config object, or a name
 	// string, return a mode config object.
 	function resolveMode(spec) {
-		if (typeof spec == "string" && mimeModes.hasOwnProperty(spec)) {
+		if (typeof spec === "string" && mimeModes.hasOwnProperty(spec)) {
 			spec = mimeModes[spec];
-		} else if (spec && typeof spec.name == "string" && mimeModes.hasOwnProperty(spec.name)) {
-			var found = mimeModes[spec.name];
-			if (typeof found == "string") {
+		} else if (spec && typeof spec.name === "string" && mimeModes.hasOwnProperty(spec.name)) {
+			let found = mimeModes[spec.name];
+			if (typeof found === "string") {
 				found = { name: found };
 			}
 			spec = createObj(found, spec);
 			spec.name = found.name;
-		} else if (typeof spec == "string" && /^[\w\-]+\/[\w\-]+\+xml$/.test(spec)) {
+		} else if (typeof spec === "string" && /^[\w\-]+\/[\w\-]+\+xml$/.test(spec)) {
 			return resolveMode("application/xml");
-		} else if (typeof spec == "string" && /^[\w\-]+\/[\w\-]+\+json$/.test(spec)) {
+		} else if (typeof spec === "string" && /^[\w\-]+\/[\w\-]+\+json$/.test(spec)) {
 			return resolveMode("application/json");
 		}
-		if (typeof spec == "string") {
+		if (typeof spec === "string") {
 			return { name: spec };
 		} else {
 			return spec || { name: "null" };
@@ -983,14 +983,14 @@
 	// initialize an actual mode object.
 	function getMode(options, spec) {
 		spec = resolveMode(spec);
-		var mfactory = modes[spec.name];
+		const mfactory = modes[spec.name];
 		if (!mfactory) {
 			return getMode(options, "text/plain");
 		}
-		var modeObj = mfactory(options, spec);
+		const modeObj = mfactory(options, spec);
 		if (modeExtensions.hasOwnProperty(spec.name)) {
-			var exts = modeExtensions[spec.name];
-			for (var prop in exts) {
+			const exts = modeExtensions[spec.name];
+			for (const prop in exts) {
 				if (!exts.hasOwnProperty(prop)) {
 					continue;
 				}
@@ -1005,7 +1005,7 @@
 			modeObj.helperType = spec.helperType;
 		}
 		if (spec.modeProps) {
-			for (var prop$1 in spec.modeProps) {
+			for (const prop$1 in spec.modeProps) {
 				modeObj[prop$1] = spec.modeProps[prop$1];
 			}
 		}
@@ -1017,7 +1017,7 @@
 	// outside the actual mode definition.
 	var modeExtensions = {};
 	function extendMode(mode, properties) {
-		var exts = modeExtensions.hasOwnProperty(mode) ? modeExtensions[mode] : (modeExtensions[mode] = {});
+		const exts = modeExtensions.hasOwnProperty(mode) ? modeExtensions[mode] : (modeExtensions[mode] = {});
 		copyObj(properties, exts);
 	}
 
@@ -1028,9 +1028,9 @@
 		if (mode.copyState) {
 			return mode.copyState(state);
 		}
-		var nstate = {};
-		for (var n in state) {
-			var val = state[n];
+		const nstate = {};
+		for (const n in state) {
+			let val = state[n];
 			if (val instanceof Array) {
 				val = val.concat([]);
 			}
@@ -1042,7 +1042,7 @@
 	// Given a mode and a state (for that mode), find the inner mode and
 	// state at the position that the state refers to.
 	function innerMode(mode, state) {
-		var info;
+		let info;
 		while (mode.innerMode) {
 			info = mode.innerMode(state);
 			if (!info || info.mode == mode) {
@@ -1063,7 +1063,7 @@
 	// Fed to the mode parsers, provides helper functions to make
 	// parsers more succinct.
 
-	var StringStream = function (string, tabSize, lineOracle) {
+	const StringStream = function (string, tabSize, lineOracle) {
 		this.pos = this.start = 0;
 		this.string = string;
 		this.tabSize = tabSize || 8;
@@ -1087,9 +1087,9 @@
 		}
 	};
 	StringStream.prototype.eat = function (match) {
-		var ch = this.string.charAt(this.pos);
-		var ok;
-		if (typeof match == "string") {
+		const ch = this.string.charAt(this.pos);
+		let ok;
+		if (typeof match === "string") {
 			ok = ch == match;
 		} else {
 			ok = ch && (match.test ? match.test(ch) : match(ch));
@@ -1100,12 +1100,12 @@
 		}
 	};
 	StringStream.prototype.eatWhile = function (match) {
-		var start = this.pos;
+		const start = this.pos;
 		while (this.eat(match)) {}
 		return this.pos > start;
 	};
 	StringStream.prototype.eatSpace = function () {
-		var start = this.pos;
+		const start = this.pos;
 		while (/[\s\u00a0]/.test(this.string.charAt(this.pos))) {
 			++this.pos;
 		}
@@ -1115,7 +1115,7 @@
 		this.pos = this.string.length;
 	};
 	StringStream.prototype.skipTo = function (ch) {
-		var found = this.string.indexOf(ch, this.pos);
+		const found = this.string.indexOf(ch, this.pos);
 		if (found > -1) {
 			this.pos = found;
 			return true;
@@ -1135,11 +1135,11 @@
 		return countColumn(this.string, null, this.tabSize) - (this.lineStart ? countColumn(this.string, this.lineStart, this.tabSize) : 0);
 	};
 	StringStream.prototype.match = function (pattern, consume, caseInsensitive) {
-		if (typeof pattern == "string") {
-			var cased = function (str) {
+		if (typeof pattern === "string") {
+			const cased = function (str) {
 				return caseInsensitive ? str.toLowerCase() : str;
 			};
-			var substr = this.string.substr(this.pos, pattern.length);
+			const substr = this.string.substr(this.pos, pattern.length);
 			if (cased(substr) == cased(pattern)) {
 				if (consume !== false) {
 					this.pos += pattern.length;
@@ -1147,7 +1147,7 @@
 				return true;
 			}
 		} else {
-			var match = this.string.slice(this.pos).match(pattern);
+			const match = this.string.slice(this.pos).match(pattern);
 			if (match && match.index > 0) {
 				return null;
 			}
@@ -1169,11 +1169,11 @@
 		}
 	};
 	StringStream.prototype.lookAhead = function (n) {
-		var oracle = this.lineOracle;
+		const oracle = this.lineOracle;
 		return oracle && oracle.lookAhead(n);
 	};
 	StringStream.prototype.baseToken = function () {
-		var oracle = this.lineOracle;
+		const oracle = this.lineOracle;
 		return oracle && oracle.baseToken(this.pos);
 	};
 
@@ -1183,11 +1183,11 @@
 		if (n < 0 || n >= doc.size) {
 			throw new Error("There is no line " + (n + doc.first) + " in the document.");
 		}
-		var chunk = doc;
+		let chunk = doc;
 		while (!chunk.lines) {
-			for (var i = 0; ; ++i) {
-				var child = chunk.children[i],
-					sz = child.chunkSize();
+			for (let i = 0; ; ++i) {
+				const child = chunk.children[i];
+				const sz = child.chunkSize();
 				if (n < sz) {
 					chunk = child;
 					break;
@@ -1201,10 +1201,10 @@
 	// Get the part of a document between two positions, as an array of
 	// strings.
 	function getBetween(doc, start, end) {
-		var out = [],
-			n = start.line;
+		const out = [];
+		let n = start.line;
 		doc.iter(start.line, end.line + 1, function (line) {
-			var text = line.text;
+			let text = line.text;
 			if (n == end.line) {
 				text = text.slice(0, end.ch);
 			}
@@ -1218,7 +1218,7 @@
 	}
 	// Get the lines between from and to, as array of strings.
 	function getLines(doc, from, to) {
-		var out = [];
+		const out = [];
 		doc.iter(from, to, function (line) {
 			out.push(line.text);
 		}); // iter aborts when callback returns truthy value
@@ -1228,9 +1228,9 @@
 	// Update the height of a line, propagating the height change
 	// upwards to parent nodes.
 	function updateLineHeight(line, height) {
-		var diff = height - line.height;
+		const diff = height - line.height;
 		if (diff) {
-			for (var n = line; n; n = n.parent) {
+			for (let n = line; n; n = n.parent) {
 				n.height += diff;
 			}
 		}
@@ -1242,10 +1242,10 @@
 		if (line.parent == null) {
 			return null;
 		}
-		var cur = line.parent,
-			no = indexOf(cur.lines, line);
-		for (var chunk = cur.parent; chunk; cur = chunk, chunk = chunk.parent) {
-			for (var i = 0; ; ++i) {
+		let cur = line.parent;
+		let no = indexOf(cur.lines, line);
+		for (let chunk = cur.parent; chunk; cur = chunk, chunk = chunk.parent) {
+			for (let i = 0; ; ++i) {
 				if (chunk.children[i] == cur) {
 					break;
 				}
@@ -1258,11 +1258,11 @@
 	// Find the line at the given vertical position, using the height
 	// information in the document tree.
 	function lineAtHeight(chunk, h) {
-		var n = chunk.first;
+		let n = chunk.first;
 		outer: do {
-			for (var i$1 = 0; i$1 < chunk.children.length; ++i$1) {
-				var child = chunk.children[i$1],
-					ch = child.height;
+			for (let i$1 = 0; i$1 < chunk.children.length; ++i$1) {
+				const child = chunk.children[i$1];
+				const ch = child.height;
 				if (h < ch) {
 					chunk = child;
 					continue outer;
@@ -1272,10 +1272,10 @@
 			}
 			return n;
 		} while (!chunk.lines);
-		var i = 0;
+		let i = 0;
 		for (; i < chunk.lines.length; ++i) {
-			var line = chunk.lines[i],
-				lh = line.height;
+			const line = chunk.lines[i];
+			const lh = line.height;
 			if (h < lh) {
 				break;
 			}
@@ -1333,14 +1333,14 @@
 		if (pos.line < doc.first) {
 			return Pos(doc.first, 0);
 		}
-		var last = doc.first + doc.size - 1;
+		const last = doc.first + doc.size - 1;
 		if (pos.line > last) {
 			return Pos(last, getLine(doc, last).text.length);
 		}
 		return clipToLen(pos, getLine(doc, pos.line).text.length);
 	}
 	function clipToLen(pos, linelen) {
-		var ch = pos.ch;
+		const ch = pos.ch;
 		if (ch == null || ch > linelen) {
 			return Pos(pos.line, linelen);
 		} else if (ch < 0) {
@@ -1350,19 +1350,19 @@
 		}
 	}
 	function clipPosArray(doc, array) {
-		var out = [];
-		for (var i = 0; i < array.length; i++) {
+		const out = [];
+		for (let i = 0; i < array.length; i++) {
 			out[i] = clipPos(doc, array[i]);
 		}
 		return out;
 	}
 
-	var SavedContext = function (state, lookAhead) {
+	const SavedContext = function (state, lookAhead) {
 		this.state = state;
 		this.lookAhead = lookAhead;
 	};
 
-	var Context = function (doc, state, line, lookAhead) {
+	const Context = function (doc, state, line, lookAhead) {
 		this.state = state;
 		this.doc = doc;
 		this.line = line;
@@ -1372,7 +1372,7 @@
 	};
 
 	Context.prototype.lookAhead = function (n) {
-		var line = this.doc.getLine(this.line + n);
+		const line = this.doc.getLine(this.line + n);
 		if (line != null && n > this.maxLookAhead) {
 			this.maxLookAhead = n;
 		}
@@ -1386,7 +1386,7 @@
 		while (this.baseTokens[this.baseTokenPos] <= n) {
 			this.baseTokenPos += 2;
 		}
-		var type = this.baseTokens[this.baseTokenPos + 1];
+		const type = this.baseTokens[this.baseTokenPos + 1];
 		return {
 			type: type && type.replace(/( |^)overlay .*/, ""),
 			size: this.baseTokens[this.baseTokenPos] - n,
@@ -1409,7 +1409,7 @@
 	};
 
 	Context.prototype.save = function (copy) {
-		var state = copy !== false ? copyState(this.doc.mode, this.state) : this.state;
+		const state = copy !== false ? copyState(this.doc.mode, this.state) : this.state;
 		return this.maxLookAhead > 0 ? new SavedContext(state, this.maxLookAhead) : state;
 	};
 
@@ -1420,8 +1420,8 @@
 	function highlightLine(cm, line, context, forceToEnd) {
 		// A styles array always starts with a number identifying the
 		// mode/overlays that it is based on (for easy invalidation).
-		var st = [cm.state.modeGen],
-			lineClasses = {};
+		const st = [cm.state.modeGen];
+		const lineClasses = {};
 		// Compute the base array of styles
 		runMode(
 			cm,
@@ -1434,14 +1434,14 @@
 			lineClasses,
 			forceToEnd,
 		);
-		var state = context.state;
+		const state = context.state;
 
 		// Run overlays, adjust style array.
-		var loop = function (o) {
+		const loop = function (o) {
 			context.baseTokens = st;
-			var overlay = cm.state.overlays[o],
-				i = 1,
-				at = 0;
+			const overlay = cm.state.overlays[o];
+			let i = 1;
+			let at = 0;
 			context.state = true;
 			runMode(
 				cm,
@@ -1449,10 +1449,10 @@
 				overlay.mode,
 				context,
 				function (end, style) {
-					var start = i;
+					let start = i;
 					// Ensure there's a token end at the current position, and that i points at it
 					while (at < end) {
-						var i_end = st[i];
+						const i_end = st[i];
 						if (i_end > end) {
 							st.splice(i, 1, end, st[i + 1], i_end);
 						}
@@ -1467,7 +1467,7 @@
 						i = start + 2;
 					} else {
 						for (; start < i; start += 2) {
-							var cur = st[start + 1];
+							const cur = st[start + 1];
 							st[start + 1] = (cur ? cur + " " : "") + "overlay " + style;
 						}
 					}
@@ -1479,7 +1479,7 @@
 			context.baseTokenPos = 1;
 		};
 
-		for (var o = 0; o < cm.state.overlays.length; ++o) loop(o);
+		for (let o = 0; o < cm.state.overlays.length; ++o) loop(o);
 
 		return {
 			styles: st,
@@ -1489,9 +1489,9 @@
 
 	function getLineStyles(cm, line, updateFrontier) {
 		if (!line.styles || line.styles[0] != cm.state.modeGen) {
-			var context = getContextBefore(cm, lineNo(line));
-			var resetState = line.text.length > cm.options.maxHighlightLength && copyState(cm.doc.mode, context.state);
-			var result = highlightLine(cm, line, context);
+			const context = getContextBefore(cm, lineNo(line));
+			const resetState = line.text.length > cm.options.maxHighlightLength && copyState(cm.doc.mode, context.state);
+			const result = highlightLine(cm, line, context);
 			if (resetState) {
 				context.state = resetState;
 			}
@@ -1510,18 +1510,18 @@
 	}
 
 	function getContextBefore(cm, n, precise) {
-		var doc = cm.doc,
-			display = cm.display;
+		const doc = cm.doc;
+		const display = cm.display;
 		if (!doc.mode.startState) {
 			return new Context(doc, true, n);
 		}
-		var start = findStartLine(cm, n, precise);
-		var saved = start > doc.first && getLine(doc, start - 1).stateAfter;
-		var context = saved ? Context.fromSaved(doc, saved, start) : new Context(doc, startState(doc.mode), start);
+		const start = findStartLine(cm, n, precise);
+		const saved = start > doc.first && getLine(doc, start - 1).stateAfter;
+		const context = saved ? Context.fromSaved(doc, saved, start) : new Context(doc, startState(doc.mode), start);
 
 		doc.iter(start, n, function (line) {
 			processLine(cm, line.text, context);
-			var pos = context.line;
+			const pos = context.line;
 			line.stateAfter = pos == n - 1 || pos % 5 == 0 || (pos >= display.viewFrom && pos < display.viewTo) ? context.save() : null;
 			context.nextLine();
 		});
@@ -1535,8 +1535,8 @@
 	// update state, but don't save a style array. Used for lines that
 	// aren't currently visible.
 	function processLine(cm, text, context, startAt) {
-		var mode = cm.doc.mode;
-		var stream = new StringStream(text, cm.options.tabSize, context);
+		const mode = cm.doc.mode;
+		const stream = new StringStream(text, cm.options.tabSize, context);
 		stream.start = stream.pos = startAt || 0;
 		if (text == "") {
 			callBlankLine(mode, context.state);
@@ -1554,18 +1554,18 @@
 		if (!mode.innerMode) {
 			return;
 		}
-		var inner = innerMode(mode, state);
+		const inner = innerMode(mode, state);
 		if (inner.mode.blankLine) {
 			return inner.mode.blankLine(inner.state);
 		}
 	}
 
 	function readToken(mode, stream, state, inner) {
-		for (var i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			if (inner) {
 				inner[0] = innerMode(mode, state).mode;
 			}
-			var style = mode.token(stream, state);
+			const style = mode.token(stream, state);
 			if (stream.pos > stream.start) {
 				return style;
 			}
@@ -1573,7 +1573,7 @@
 		throw new Error("Mode " + mode.name + " failed to advance stream.");
 	}
 
-	var Token = function (stream, type, state) {
+	const Token = function (stream, type, state) {
 		this.start = stream.start;
 		this.end = stream.pos;
 		this.string = stream.current();
@@ -1583,14 +1583,14 @@
 
 	// Utility for getTokenAt and getLineTokens
 	function takeToken(cm, pos, precise, asArray) {
-		var doc = cm.doc,
-			mode = doc.mode,
-			style;
+		const doc = cm.doc;
+		const mode = doc.mode;
+		let style;
 		pos = clipPos(doc, pos);
-		var line = getLine(doc, pos.line),
-			context = getContextBefore(cm, pos.line, precise);
-		var stream = new StringStream(line.text, cm.options.tabSize, context),
-			tokens;
+		const line = getLine(doc, pos.line);
+		const context = getContextBefore(cm, pos.line, precise);
+		const stream = new StringStream(line.text, cm.options.tabSize, context);
+		let tokens;
 		if (asArray) {
 			tokens = [];
 		}
@@ -1607,12 +1607,12 @@
 	function extractLineClasses(type, output) {
 		if (type) {
 			for (;;) {
-				var lineClass = type.match(/(?:^|\s+)line-(background-)?(\S+)/);
+				const lineClass = type.match(/(?:^|\s+)line-(background-)?(\S+)/);
 				if (!lineClass) {
 					break;
 				}
 				type = type.slice(0, lineClass.index) + type.slice(lineClass.index + lineClass[0].length);
-				var prop = lineClass[1] ? "bgClass" : "textClass";
+				const prop = lineClass[1] ? "bgClass" : "textClass";
 				if (output[prop] == null) {
 					output[prop] = lineClass[2];
 				} else if (!new RegExp("(?:^|\\s)" + lineClass[2] + "(?:$|\\s)").test(output[prop])) {
@@ -1625,15 +1625,15 @@
 
 	// Run the given mode's parser over a line, calling f for each token.
 	function runMode(cm, text, mode, context, f, lineClasses, forceToEnd) {
-		var flattenSpans = mode.flattenSpans;
+		let flattenSpans = mode.flattenSpans;
 		if (flattenSpans == null) {
 			flattenSpans = cm.options.flattenSpans;
 		}
-		var curStart = 0,
-			curStyle = null;
-		var stream = new StringStream(text, cm.options.tabSize, context),
-			style;
-		var inner = cm.options.addModeClass && [null];
+		let curStart = 0;
+		let curStyle = null;
+		const stream = new StringStream(text, cm.options.tabSize, context);
+		let style;
+		const inner = cm.options.addModeClass && [null];
 		if (text == "") {
 			extractLineClasses(callBlankLine(mode, context.state), lineClasses);
 		}
@@ -1649,7 +1649,7 @@
 				style = extractLineClasses(readToken(mode, stream, context.state, inner), lineClasses);
 			}
 			if (inner) {
-				var mName = inner[0].name;
+				const mName = inner[0].name;
 				if (mName) {
 					style = "m-" + (style ? mName + " " + style : mName);
 				}
@@ -1667,7 +1667,7 @@
 			// Webkit seems to refuse to render text nodes longer than 57444
 			// characters, and returns inaccurate measurements in nodes
 			// starting around 5000 chars.
-			var pos = Math.min(stream.pos, curStart + 5000);
+			const pos = Math.min(stream.pos, curStart + 5000);
 			f(pos, curStyle);
 			curStart = pos;
 		}
@@ -1679,20 +1679,20 @@
 	// smallest indentation, which tends to need the least context to
 	// parse correctly.
 	function findStartLine(cm, n, precise) {
-		var minindent,
-			minline,
-			doc = cm.doc;
-		var lim = precise ? -1 : n - (cm.doc.mode.innerMode ? 1000 : 100);
-		for (var search = n; search > lim; --search) {
+		let minindent;
+		let minline;
+		const doc = cm.doc;
+		const lim = precise ? -1 : n - (cm.doc.mode.innerMode ? 1000 : 100);
+		for (let search = n; search > lim; --search) {
 			if (search <= doc.first) {
 				return doc.first;
 			}
-			var line = getLine(doc, search - 1),
-				after = line.stateAfter;
+			const line = getLine(doc, search - 1);
+			const after = line.stateAfter;
 			if (after && (!precise || search + (after instanceof SavedContext ? after.lookAhead : 0) <= doc.modeFrontier)) {
 				return search;
 			}
-			var indented = countColumn(line.text, null, cm.options.tabSize);
+			const indented = countColumn(line.text, null, cm.options.tabSize);
 			if (minline == null || minindent > indented) {
 				minline = search - 1;
 				minindent = indented;
@@ -1706,9 +1706,9 @@
 		if (doc.highlightFrontier < n - 10) {
 			return;
 		}
-		var start = doc.first;
-		for (var line = n - 1; line > start; line--) {
-			var saved = getLine(doc, line).stateAfter;
+		let start = doc.first;
+		for (let line = n - 1; line > start; line--) {
+			const saved = getLine(doc, line).stateAfter;
 			// change is on 3
 			// state on line 1 looked ahead 2 -- so saw 3
 			// test 1 + 2 < 3 should cover this
@@ -1721,8 +1721,8 @@
 	}
 
 	// Optimize some code when these features are not used.
-	var sawReadOnlySpans = false,
-		sawCollapsedSpans = false;
+	let sawReadOnlySpans = false;
+	let sawCollapsedSpans = false;
 
 	function seeReadOnlySpans() {
 		sawReadOnlySpans = true;
@@ -1743,8 +1743,8 @@
 	// Search an array of spans for a span matching the given marker.
 	function getMarkedSpanFor(spans, marker) {
 		if (spans) {
-			for (var i = 0; i < spans.length; ++i) {
-				var span = spans[i];
+			for (let i = 0; i < spans.length; ++i) {
+				const span = spans[i];
 				if (span.marker == marker) {
 					return span;
 				}
@@ -1754,8 +1754,8 @@
 	// Remove a span from an array, returning undefined if no spans are
 	// left (we don't store arrays for lines without spans).
 	function removeMarkedSpan(spans, span) {
-		var r;
-		for (var i = 0; i < spans.length; ++i) {
+		let r;
+		for (let i = 0; i < spans.length; ++i) {
 			if (spans[i] != span) {
 				(r || (r = [])).push(spans[i]);
 			}
@@ -1773,14 +1773,14 @@
 	// character position, returning an array of remaining chunks (or
 	// undefined if nothing remains).
 	function markedSpansBefore(old, startCh, isInsert) {
-		var nw;
+		let nw;
 		if (old) {
-			for (var i = 0; i < old.length; ++i) {
-				var span = old[i],
-					marker = span.marker;
-				var startsBefore = span.from == null || (marker.inclusiveLeft ? span.from <= startCh : span.from < startCh);
+			for (let i = 0; i < old.length; ++i) {
+				const span = old[i];
+				const marker = span.marker;
+				const startsBefore = span.from == null || (marker.inclusiveLeft ? span.from <= startCh : span.from < startCh);
 				if (startsBefore || (span.from == startCh && marker.type == "bookmark" && (!isInsert || !span.marker.insertLeft))) {
-					var endsAfter = span.to == null || (marker.inclusiveRight ? span.to >= startCh : span.to > startCh);
+					const endsAfter = span.to == null || (marker.inclusiveRight ? span.to >= startCh : span.to > startCh);
 					(nw || (nw = [])).push(new MarkedSpan(marker, span.from, endsAfter ? null : span.to));
 				}
 			}
@@ -1788,14 +1788,14 @@
 		return nw;
 	}
 	function markedSpansAfter(old, endCh, isInsert) {
-		var nw;
+		let nw;
 		if (old) {
-			for (var i = 0; i < old.length; ++i) {
-				var span = old[i],
-					marker = span.marker;
-				var endsAfter = span.to == null || (marker.inclusiveRight ? span.to >= endCh : span.to > endCh);
+			for (let i = 0; i < old.length; ++i) {
+				const span = old[i];
+				const marker = span.marker;
+				const endsAfter = span.to == null || (marker.inclusiveRight ? span.to >= endCh : span.to > endCh);
 				if (endsAfter || (span.from == endCh && marker.type == "bookmark" && (!isInsert || span.marker.insertLeft))) {
-					var startsBefore = span.from == null || (marker.inclusiveLeft ? span.from <= endCh : span.from < endCh);
+					const startsBefore = span.from == null || (marker.inclusiveLeft ? span.from <= endCh : span.from < endCh);
 					(nw || (nw = [])).push(new MarkedSpan(marker, startsBefore ? null : span.from - endCh, span.to == null ? null : span.to - endCh));
 				}
 			}
@@ -1813,28 +1813,28 @@
 		if (change.full) {
 			return null;
 		}
-		var oldFirst = isLine(doc, change.from.line) && getLine(doc, change.from.line).markedSpans;
-		var oldLast = isLine(doc, change.to.line) && getLine(doc, change.to.line).markedSpans;
+		const oldFirst = isLine(doc, change.from.line) && getLine(doc, change.from.line).markedSpans;
+		const oldLast = isLine(doc, change.to.line) && getLine(doc, change.to.line).markedSpans;
 		if (!oldFirst && !oldLast) {
 			return null;
 		}
 
-		var startCh = change.from.ch,
-			endCh = change.to.ch,
-			isInsert = cmp(change.from, change.to) == 0;
+		const startCh = change.from.ch;
+		const endCh = change.to.ch;
+		const isInsert = cmp(change.from, change.to) == 0;
 		// Get the spans that 'stick out' on both sides
-		var first = markedSpansBefore(oldFirst, startCh, isInsert);
-		var last = markedSpansAfter(oldLast, endCh, isInsert);
+		let first = markedSpansBefore(oldFirst, startCh, isInsert);
+		let last = markedSpansAfter(oldLast, endCh, isInsert);
 
 		// Next, merge those two ends
-		var sameLine = change.text.length == 1,
-			offset = lst(change.text).length + (sameLine ? startCh : 0);
+		const sameLine = change.text.length == 1;
+		const offset = lst(change.text).length + (sameLine ? startCh : 0);
 		if (first) {
 			// Fix up .to properties of first
-			for (var i = 0; i < first.length; ++i) {
-				var span = first[i];
+			for (let i = 0; i < first.length; ++i) {
+				const span = first[i];
 				if (span.to == null) {
-					var found = getMarkedSpanFor(last, span.marker);
+					const found = getMarkedSpanFor(last, span.marker);
 					if (!found) {
 						span.to = startCh;
 					} else if (sameLine) {
@@ -1845,13 +1845,13 @@
 		}
 		if (last) {
 			// Fix up .from in last (or move them into first in case of sameLine)
-			for (var i$1 = 0; i$1 < last.length; ++i$1) {
-				var span$1 = last[i$1];
+			for (let i$1 = 0; i$1 < last.length; ++i$1) {
+				const span$1 = last[i$1];
 				if (span$1.to != null) {
 					span$1.to += offset;
 				}
 				if (span$1.from == null) {
-					var found$1 = getMarkedSpanFor(first, span$1.marker);
+					const found$1 = getMarkedSpanFor(first, span$1.marker);
 					if (!found$1) {
 						span$1.from = offset;
 						if (sameLine) {
@@ -1874,19 +1874,19 @@
 			last = clearEmptySpans(last);
 		}
 
-		var newMarkers = [first];
+		const newMarkers = [first];
 		if (!sameLine) {
 			// Fill gap with whole-line-spans
-			var gap = change.text.length - 2,
-				gapMarkers;
+			const gap = change.text.length - 2;
+			let gapMarkers;
 			if (gap > 0 && first) {
-				for (var i$2 = 0; i$2 < first.length; ++i$2) {
+				for (let i$2 = 0; i$2 < first.length; ++i$2) {
 					if (first[i$2].to == null) {
 						(gapMarkers || (gapMarkers = [])).push(new MarkedSpan(first[i$2].marker, null, null));
 					}
 				}
 			}
-			for (var i$3 = 0; i$3 < gap; ++i$3) {
+			for (let i$3 = 0; i$3 < gap; ++i$3) {
 				newMarkers.push(gapMarkers);
 			}
 			newMarkers.push(last);
@@ -1897,8 +1897,8 @@
 	// Remove spans that are empty and don't have a clearWhenEmpty
 	// option of false.
 	function clearEmptySpans(spans) {
-		for (var i = 0; i < spans.length; ++i) {
-			var span = spans[i];
+		for (let i = 0; i < spans.length; ++i) {
+			const span = spans[i];
 			if (span.from != null && span.from == span.to && span.marker.clearWhenEmpty !== false) {
 				spans.splice(i--, 1);
 			}
@@ -1911,11 +1911,11 @@
 
 	// Used to 'clip' out readOnly ranges when making a change.
 	function removeReadOnlyRanges(doc, from, to) {
-		var markers = null;
+		let markers = null;
 		doc.iter(from.line, to.line + 1, function (line) {
 			if (line.markedSpans) {
-				for (var i = 0; i < line.markedSpans.length; ++i) {
-					var mark = line.markedSpans[i].marker;
+				for (let i = 0; i < line.markedSpans.length; ++i) {
+					const mark = line.markedSpans[i].marker;
 					if (mark.readOnly && (!markers || indexOf(markers, mark) == -1)) {
 						(markers || (markers = [])).push(mark);
 					}
@@ -1925,18 +1925,18 @@
 		if (!markers) {
 			return null;
 		}
-		var parts = [{ from: from, to: to }];
-		for (var i = 0; i < markers.length; ++i) {
-			var mk = markers[i],
-				m = mk.find(0);
-			for (var j = 0; j < parts.length; ++j) {
-				var p = parts[j];
+		const parts = [{ from: from, to: to }];
+		for (let i = 0; i < markers.length; ++i) {
+			const mk = markers[i];
+			const m = mk.find(0);
+			for (let j = 0; j < parts.length; ++j) {
+				const p = parts[j];
 				if (cmp(p.to, m.from) < 0 || cmp(p.from, m.to) > 0) {
 					continue;
 				}
-				var newParts = [j, 1],
-					dfrom = cmp(p.from, m.from),
-					dto = cmp(p.to, m.to);
+				const newParts = [j, 1];
+				const dfrom = cmp(p.from, m.from);
+				const dto = cmp(p.to, m.to);
 				if (dfrom < 0 || (!mk.inclusiveLeft && !dfrom)) {
 					newParts.push({ from: p.from, to: m.from });
 				}
@@ -1952,11 +1952,11 @@
 
 	// Connect or disconnect spans from a line.
 	function detachMarkedSpans(line) {
-		var spans = line.markedSpans;
+		const spans = line.markedSpans;
 		if (!spans) {
 			return;
 		}
-		for (var i = 0; i < spans.length; ++i) {
+		for (let i = 0; i < spans.length; ++i) {
 			spans[i].marker.detachLine(line);
 		}
 		line.markedSpans = null;
@@ -1965,7 +1965,7 @@
 		if (!spans) {
 			return;
 		}
-		for (var i = 0; i < spans.length; ++i) {
+		for (let i = 0; i < spans.length; ++i) {
 			spans[i].marker.attachLine(line);
 		}
 		line.markedSpans = spans;
@@ -1984,17 +1984,17 @@
 	// spans is larger (and thus includes the other). Falls back to
 	// comparing ids when the spans cover exactly the same range.
 	function compareCollapsedMarkers(a, b) {
-		var lenDiff = a.lines.length - b.lines.length;
+		const lenDiff = a.lines.length - b.lines.length;
 		if (lenDiff != 0) {
 			return lenDiff;
 		}
-		var aPos = a.find(),
-			bPos = b.find();
-		var fromCmp = cmp(aPos.from, bPos.from) || extraLeft(a) - extraLeft(b);
+		const aPos = a.find();
+		const bPos = b.find();
+		const fromCmp = cmp(aPos.from, bPos.from) || extraLeft(a) - extraLeft(b);
 		if (fromCmp) {
 			return -fromCmp;
 		}
-		var toCmp = cmp(aPos.to, bPos.to) || extraRight(a) - extraRight(b);
+		const toCmp = cmp(aPos.to, bPos.to) || extraRight(a) - extraRight(b);
 		if (toCmp) {
 			return toCmp;
 		}
@@ -2004,10 +2004,10 @@
 	// Find out whether a line ends or starts in a collapsed span. If
 	// so, return the marker for that span.
 	function collapsedSpanAtSide(line, start) {
-		var sps = sawCollapsedSpans && line.markedSpans,
-			found;
+		const sps = sawCollapsedSpans && line.markedSpans;
+		let found;
 		if (sps) {
-			for (var sp = void 0, i = 0; i < sps.length; ++i) {
+			for (let sp = void 0, i = 0; i < sps.length; ++i) {
 				sp = sps[i];
 				if (sp.marker.collapsed && (start ? sp.from : sp.to) == null && (!found || compareCollapsedMarkers(found, sp.marker) < 0)) {
 					found = sp.marker;
@@ -2024,11 +2024,11 @@
 	}
 
 	function collapsedSpanAround(line, ch) {
-		var sps = sawCollapsedSpans && line.markedSpans,
-			found;
+		const sps = sawCollapsedSpans && line.markedSpans;
+		let found;
 		if (sps) {
-			for (var i = 0; i < sps.length; ++i) {
-				var sp = sps[i];
+			for (let i = 0; i < sps.length; ++i) {
+				const sp = sps[i];
 				if (
 					sp.marker.collapsed &&
 					(sp.from == null || sp.from < ch) &&
@@ -2046,17 +2046,17 @@
 	// overlaps (covers the start or end, but not both) of a new span.
 	// Such overlap is not allowed.
 	function conflictingCollapsedRange(doc, lineNo, from, to, marker) {
-		var line = getLine(doc, lineNo);
-		var sps = sawCollapsedSpans && line.markedSpans;
+		const line = getLine(doc, lineNo);
+		const sps = sawCollapsedSpans && line.markedSpans;
 		if (sps) {
-			for (var i = 0; i < sps.length; ++i) {
-				var sp = sps[i];
+			for (let i = 0; i < sps.length; ++i) {
+				const sp = sps[i];
 				if (!sp.marker.collapsed) {
 					continue;
 				}
-				var found = sp.marker.find(0);
-				var fromCmp = cmp(found.from, from) || extraLeft(sp.marker) - extraLeft(marker);
-				var toCmp = cmp(found.to, to) || extraRight(sp.marker) - extraRight(marker);
+				const found = sp.marker.find(0);
+				const fromCmp = cmp(found.from, from) || extraLeft(sp.marker) - extraLeft(marker);
+				const toCmp = cmp(found.to, to) || extraRight(sp.marker) - extraRight(marker);
 				if ((fromCmp >= 0 && toCmp <= 0) || (fromCmp <= 0 && toCmp >= 0)) {
 					continue;
 				}
@@ -2075,7 +2075,7 @@
 	// visual line. This finds the start of the visual line that the
 	// given line is part of (usually that is the line itself).
 	function visualLine(line) {
-		var merged;
+		let merged;
 		while ((merged = collapsedSpanAtStart(line))) {
 			line = merged.find(-1, true).line;
 		}
@@ -2083,7 +2083,7 @@
 	}
 
 	function visualLineEnd(line) {
-		var merged;
+		let merged;
 		while ((merged = collapsedSpanAtEnd(line))) {
 			line = merged.find(1, true).line;
 		}
@@ -2093,7 +2093,7 @@
 	// Returns an array of logical lines that continue the visual line
 	// started by the argument, or undefined if there are no such lines.
 	function visualLineContinued(line) {
-		var merged, lines;
+		let merged, lines;
 		while ((merged = collapsedSpanAtEnd(line))) {
 			line = merged.find(1, true).line;
 			(lines || (lines = [])).push(line);
@@ -2104,8 +2104,8 @@
 	// Get the line number of the start of the visual line that the
 	// given line number is part of.
 	function visualLineNo(doc, lineN) {
-		var line = getLine(doc, lineN),
-			vis = visualLine(line);
+		const line = getLine(doc, lineN);
+		const vis = visualLine(line);
 		if (line == vis) {
 			return lineN;
 		}
@@ -2118,8 +2118,8 @@
 		if (lineN > doc.lastLine()) {
 			return lineN;
 		}
-		var line = getLine(doc, lineN),
-			merged;
+		let line = getLine(doc, lineN);
+		let merged;
 		if (!lineIsHidden(doc, line)) {
 			return lineN;
 		}
@@ -2133,9 +2133,9 @@
 	// are part of a visual line that starts with another line, or when
 	// they are entirely covered by collapsed, non-widget span.
 	function lineIsHidden(doc, line) {
-		var sps = sawCollapsedSpans && line.markedSpans;
+		const sps = sawCollapsedSpans && line.markedSpans;
 		if (sps) {
-			for (var sp = void 0, i = 0; i < sps.length; ++i) {
+			for (let sp = void 0, i = 0; i < sps.length; ++i) {
 				sp = sps[i];
 				if (!sp.marker.collapsed) {
 					continue;
@@ -2154,13 +2154,13 @@
 	}
 	function lineIsHiddenInner(doc, line, span) {
 		if (span.to == null) {
-			var end = span.marker.find(1, true);
+			const end = span.marker.find(1, true);
 			return lineIsHiddenInner(doc, end.line, getMarkedSpanFor(end.line.markedSpans, span.marker));
 		}
 		if (span.marker.inclusiveRight && span.to == line.text.length) {
 			return true;
 		}
-		for (var sp = void 0, i = 0; i < line.markedSpans.length; ++i) {
+		for (let sp = void 0, i = 0; i < line.markedSpans.length; ++i) {
 			sp = line.markedSpans[i];
 			if (
 				sp.marker.collapsed &&
@@ -2179,19 +2179,19 @@
 	function heightAtLine(lineObj) {
 		lineObj = visualLine(lineObj);
 
-		var h = 0,
-			chunk = lineObj.parent;
-		for (var i = 0; i < chunk.lines.length; ++i) {
-			var line = chunk.lines[i];
+		let h = 0;
+		let chunk = lineObj.parent;
+		for (let i = 0; i < chunk.lines.length; ++i) {
+			const line = chunk.lines[i];
 			if (line == lineObj) {
 				break;
 			} else {
 				h += line.height;
 			}
 		}
-		for (var p = chunk.parent; p; chunk = p, p = chunk.parent) {
-			for (var i$1 = 0; i$1 < p.children.length; ++i$1) {
-				var cur = p.children[i$1];
+		for (let p = chunk.parent; p; chunk = p, p = chunk.parent) {
+			for (let i$1 = 0; i$1 < p.children.length; ++i$1) {
+				const cur = p.children[i$1];
 				if (cur == chunk) {
 					break;
 				} else {
@@ -2209,17 +2209,17 @@
 		if (line.height == 0) {
 			return 0;
 		}
-		var len = line.text.length,
-			merged,
-			cur = line;
+		let len = line.text.length;
+		let merged;
+		let cur = line;
 		while ((merged = collapsedSpanAtStart(cur))) {
-			var found = merged.find(0, true);
+			const found = merged.find(0, true);
 			cur = found.from.line;
 			len += found.from.ch - found.to.ch;
 		}
 		cur = line;
 		while ((merged = collapsedSpanAtEnd(cur))) {
-			var found$1 = merged.find(0, true);
+			const found$1 = merged.find(0, true);
 			len -= cur.text.length - found$1.from.ch;
 			cur = found$1.to.line;
 			len += cur.text.length - found$1.to.ch;
@@ -2229,13 +2229,13 @@
 
 	// Find the longest line in the document.
 	function findMaxLine(cm) {
-		var d = cm.display,
-			doc = cm.doc;
+		const d = cm.display;
+		const doc = cm.doc;
 		d.maxLine = getLine(doc, doc.first);
 		d.maxLineLength = lineLength(d.maxLine);
 		d.maxLineChanged = true;
 		doc.iter(function (line) {
-			var len = lineLength(line);
+			const len = lineLength(line);
 			if (len > d.maxLineLength) {
 				d.maxLineLength = len;
 				d.maxLine = line;
@@ -2247,7 +2247,7 @@
 
 	// Line objects. These hold state related to a line, including
 	// highlighting info (the styles array).
-	var Line = function (text, markedSpans, estimateHeight) {
+	const Line = function (text, markedSpans, estimateHeight) {
 		this.text = text;
 		attachMarkedSpans(this, markedSpans);
 		this.height = estimateHeight ? estimateHeight(this) : 1;
@@ -2274,7 +2274,7 @@
 		}
 		detachMarkedSpans(line);
 		attachMarkedSpans(line, markedSpans);
-		var estHeight = estimateHeight ? estimateHeight(line) : 1;
+		const estHeight = estimateHeight ? estimateHeight(line) : 1;
 		if (estHeight != line.height) {
 			updateLineHeight(line, estHeight);
 		}
@@ -2289,13 +2289,13 @@
 	// Convert a style as returned by a mode (either null, or a string
 	// containing one or more styles) to a CSS style. This is cached,
 	// and also looks for line-wide styles.
-	var styleToClassCache = {},
-		styleToClassCacheWithMode = {};
+	const styleToClassCache = {};
+	const styleToClassCacheWithMode = {};
 	function interpretTokenStyle(style, options) {
 		if (!style || /^\s*$/.test(style)) {
 			return null;
 		}
-		var cache = options.addModeClass ? styleToClassCacheWithMode : styleToClassCache;
+		const cache = options.addModeClass ? styleToClassCacheWithMode : styleToClassCache;
 		return cache[style] || (cache[style] = style.replace(/\S+/g, "cm-$&"));
 	}
 
@@ -2308,8 +2308,8 @@
 		// The padding-right forces the element to have a 'border', which
 		// is needed on Webkit to be able to get line-level bounding
 		// rectangles for it (in measureChar).
-		var content = eltP("span", null, null, webkit ? "padding-right: .1px" : null);
-		var builder = {
+		const content = eltP("span", null, null, webkit ? "padding-right: .1px" : null);
+		const builder = {
 			pre: eltP("pre", [content], "CodeMirror-line"),
 			content: content,
 			col: 0,
@@ -2321,9 +2321,9 @@
 		lineView.measure = {};
 
 		// Iterate over the logical lines that make up this visual line.
-		for (var i = 0; i <= (lineView.rest ? lineView.rest.length : 0); i++) {
-			var line = i ? lineView.rest[i - 1] : lineView.line,
-				order = void 0;
+		for (let i = 0; i <= (lineView.rest ? lineView.rest.length : 0); i++) {
+			const line = i ? lineView.rest[i - 1] : lineView.line;
+			let order = void 0;
 			builder.pos = 0;
 			builder.addToken = buildToken;
 			// Optionally wire in some hacks into the token-rendering
@@ -2332,7 +2332,7 @@
 				builder.addToken = buildTokenBadBidi(builder.addToken, order);
 			}
 			builder.map = [];
-			var allowFrontierUpdate = lineView != cm.display.externalMeasured && lineNo(line);
+			const allowFrontierUpdate = lineView != cm.display.externalMeasured && lineNo(line);
 			insertLineContent(line, builder, getLineStyles(cm, line, allowFrontierUpdate));
 			if (line.styleClasses) {
 				if (line.styleClasses.bgClass) {
@@ -2360,7 +2360,7 @@
 
 		// See issue #2901
 		if (webkit) {
-			var last = builder.content.lastChild;
+			const last = builder.content.lastChild;
 			if (/\bcm-tab\b/.test(last.className) || (last.querySelector && last.querySelector(".cm-tab"))) {
 				builder.content.className = "cm-tab-wrap-hack";
 			}
@@ -2375,7 +2375,7 @@
 	}
 
 	function defaultSpecialCharPlaceholder(ch) {
-		var token = elt("span", "\u2022", "cm-invalidchar");
+		const token = elt("span", "\u2022", "cm-invalidchar");
 		token.title = "\\u" + ch.charCodeAt(0).toString(16);
 		token.setAttribute("aria-label", token.title);
 		return token;
@@ -2387,10 +2387,10 @@
 		if (!text) {
 			return;
 		}
-		var displayText = builder.splitSpaces ? splitSpaces(text, builder.trailingSpace) : text;
-		var special = builder.cm.state.specialChars,
-			mustWrap = false;
-		var content;
+		const displayText = builder.splitSpaces ? splitSpaces(text, builder.trailingSpace) : text;
+		const special = builder.cm.state.specialChars;
+		let mustWrap = false;
+		let content;
 		if (!special.test(text)) {
 			builder.col += text.length;
 			content = document.createTextNode(displayText);
@@ -2401,13 +2401,13 @@
 			builder.pos += text.length;
 		} else {
 			content = document.createDocumentFragment();
-			var pos = 0;
+			let pos = 0;
 			while (true) {
 				special.lastIndex = pos;
-				var m = special.exec(text);
-				var skipped = m ? m.index - pos : text.length - pos;
+				const m = special.exec(text);
+				const skipped = m ? m.index - pos : text.length - pos;
 				if (skipped) {
-					var txt = document.createTextNode(displayText.slice(pos, pos + skipped));
+					const txt = document.createTextNode(displayText.slice(pos, pos + skipped));
 					if (ie && ie_version < 9) {
 						content.appendChild(elt("span", [txt]));
 					} else {
@@ -2421,10 +2421,10 @@
 					break;
 				}
 				pos += skipped + 1;
-				var txt$1 = void 0;
+				let txt$1 = void 0;
 				if (m[0] == "\t") {
-					var tabSize = builder.cm.options.tabSize,
-						tabWidth = tabSize - (builder.col % tabSize);
+					const tabSize = builder.cm.options.tabSize;
+					const tabWidth = tabSize - (builder.col % tabSize);
 					txt$1 = content.appendChild(elt("span", spaceStr(tabWidth), "cm-tab"));
 					txt$1.setAttribute("role", "presentation");
 					txt$1.setAttribute("cm-text", "\t");
@@ -2449,16 +2449,16 @@
 		}
 		builder.trailingSpace = displayText.charCodeAt(text.length - 1) == 32;
 		if (style || startStyle || endStyle || mustWrap || css || attributes) {
-			var fullStyle = style || "";
+			let fullStyle = style || "";
 			if (startStyle) {
 				fullStyle += startStyle;
 			}
 			if (endStyle) {
 				fullStyle += endStyle;
 			}
-			var token = elt("span", [content], fullStyle, css);
+			const token = elt("span", [content], fullStyle, css);
 			if (attributes) {
-				for (var attr in attributes) {
+				for (const attr in attributes) {
 					if (attributes.hasOwnProperty(attr) && attr != "style" && attr != "class") {
 						token.setAttribute(attr, attributes[attr]);
 					}
@@ -2472,13 +2472,13 @@
 	// Change some spaces to NBSP to prevent the browser from collapsing
 	// trailing spaces at the end of a line when rendering text (issue #1362).
 	function splitSpaces(text, trailingBefore) {
-		if (text.length > 1 && !/  /.test(text)) {
+		if (text.length > 1 && !/ {2}/.test(text)) {
 			return text;
 		}
-		var spaceBefore = trailingBefore,
-			result = "";
-		for (var i = 0; i < text.length; i++) {
-			var ch = text.charAt(i);
+		let spaceBefore = trailingBefore;
+		let result = "";
+		for (let i = 0; i < text.length; i++) {
+			let ch = text.charAt(i);
 			if (ch == " " && spaceBefore && (i == text.length - 1 || text.charCodeAt(i + 1) == 32)) {
 				ch = "\u00a0";
 			}
@@ -2493,12 +2493,12 @@
 	function buildTokenBadBidi(inner, order) {
 		return function (builder, text, style, startStyle, endStyle, css, attributes) {
 			style = style ? style + " cm-force-border" : "cm-force-border";
-			var start = builder.pos,
-				end = start + text.length;
+			let start = builder.pos;
+			const end = start + text.length;
 			for (;;) {
 				// Find the part that overlaps with the start of this text
-				var part = void 0;
-				for (var i = 0; i < order.length; i++) {
+				let part = void 0;
+				for (let i = 0; i < order.length; i++) {
 					part = order[i];
 					if (part.to > start && part.from <= start) {
 						break;
@@ -2516,7 +2516,7 @@
 	}
 
 	function buildCollapsedSpan(builder, size, marker, ignoreWidget) {
-		var widget = !ignoreWidget && marker.widgetNode;
+		let widget = !ignoreWidget && marker.widgetNode;
 		if (widget) {
 			builder.map.push(builder.pos, builder.pos + size, widget);
 		}
@@ -2537,28 +2537,28 @@
 	// Outputs a number of spans to make up a line, taking highlighting
 	// and marked text into account.
 	function insertLineContent(line, builder, styles) {
-		var spans = line.markedSpans,
-			allText = line.text,
-			at = 0;
+		const spans = line.markedSpans;
+		const allText = line.text;
+		let at = 0;
 		if (!spans) {
-			for (var i$1 = 1; i$1 < styles.length; i$1 += 2) {
+			for (let i$1 = 1; i$1 < styles.length; i$1 += 2) {
 				builder.addToken(builder, allText.slice(at, (at = styles[i$1])), interpretTokenStyle(styles[i$1 + 1], builder.cm.options));
 			}
 			return;
 		}
 
-		var len = allText.length,
-			pos = 0,
-			i = 1,
-			text = "",
-			style,
-			css;
-		var nextChange = 0,
-			spanStyle,
-			spanEndStyle,
-			spanStartStyle,
-			collapsed,
-			attributes;
+		const len = allText.length;
+		let pos = 0;
+		let i = 1;
+		let text = "";
+		let style;
+		let css;
+		let nextChange = 0;
+		let spanStyle;
+		let spanEndStyle;
+		let spanStartStyle;
+		let collapsed;
+		let attributes;
 		for (;;) {
 			if (nextChange == pos) {
 				// Update current marker set
@@ -2566,11 +2566,11 @@
 				attributes = null;
 				collapsed = null;
 				nextChange = Infinity;
-				var foundBookmarks = [],
-					endStyles = void 0;
-				for (var j = 0; j < spans.length; ++j) {
-					var sp = spans[j],
-						m = sp.marker;
+				const foundBookmarks = [];
+				let endStyles = void 0;
+				for (let j = 0; j < spans.length; ++j) {
+					const sp = spans[j];
+					const m = sp.marker;
 					if (m.type == "bookmark" && sp.from == pos && m.widgetNode) {
 						foundBookmarks.push(m);
 					} else if (sp.from <= pos && (sp.to == null || sp.to > pos || (m.collapsed && sp.to == pos && sp.from == pos))) {
@@ -2596,7 +2596,7 @@
 							(attributes || (attributes = {})).title = m.title;
 						}
 						if (m.attributes) {
-							for (var attr in m.attributes) {
+							for (const attr in m.attributes) {
 								(attributes || (attributes = {}))[attr] = m.attributes[attr];
 							}
 						}
@@ -2608,7 +2608,7 @@
 					}
 				}
 				if (endStyles) {
-					for (var j$1 = 0; j$1 < endStyles.length; j$1 += 2) {
+					for (let j$1 = 0; j$1 < endStyles.length; j$1 += 2) {
 						if (endStyles[j$1 + 1] == nextChange) {
 							spanEndStyle += " " + endStyles[j$1];
 						}
@@ -2616,7 +2616,7 @@
 				}
 
 				if (!collapsed || collapsed.from == pos) {
-					for (var j$2 = 0; j$2 < foundBookmarks.length; ++j$2) {
+					for (let j$2 = 0; j$2 < foundBookmarks.length; ++j$2) {
 						buildCollapsedSpan(builder, 0, foundBookmarks[j$2]);
 					}
 				}
@@ -2634,12 +2634,12 @@
 				break;
 			}
 
-			var upto = Math.min(len, nextChange);
+			const upto = Math.min(len, nextChange);
 			while (true) {
 				if (text) {
-					var end = pos + text.length;
+					const end = pos + text.length;
 					if (!collapsed) {
-						var tokenText = end > upto ? text.slice(0, upto - pos) : text;
+						const tokenText = end > upto ? text.slice(0, upto - pos) : text;
 						builder.addToken(
 							builder,
 							tokenText,
@@ -2680,17 +2680,17 @@
 
 	// Create a range of LineView objects for the given lines.
 	function buildViewArray(cm, from, to) {
-		var array = [],
-			nextPos;
-		for (var pos = from; pos < to; pos = nextPos) {
-			var view = new LineView(cm.doc, getLine(cm.doc, pos), pos);
+		const array = [];
+		let nextPos;
+		for (let pos = from; pos < to; pos = nextPos) {
+			const view = new LineView(cm.doc, getLine(cm.doc, pos), pos);
 			nextPos = pos + view.size;
 			array.push(view);
 		}
 		return array;
 	}
 
-	var operationGroup = null;
+	let operationGroup = null;
 
 	function pushOperation(op) {
 		if (operationGroup) {
@@ -2706,14 +2706,14 @@
 	function fireCallbacksForOps(group) {
 		// Calls delayed callbacks and cursorActivity handlers until no
 		// new ones appear
-		var callbacks = group.delayedCallbacks,
-			i = 0;
+		const callbacks = group.delayedCallbacks;
+		let i = 0;
 		do {
 			for (; i < callbacks.length; i++) {
 				callbacks[i].call(null);
 			}
-			for (var j = 0; j < group.ops.length; j++) {
-				var op = group.ops[j];
+			for (let j = 0; j < group.ops.length; j++) {
+				const op = group.ops[j];
 				if (op.cursorActivityHandlers) {
 					while (op.cursorActivityCalled < op.cursorActivityHandlers.length) {
 						op.cursorActivityHandlers[op.cursorActivityCalled++].call(null, op.cm);
@@ -2724,7 +2724,7 @@
 	}
 
 	function finishOperation(op, endCb) {
-		var group = op.ownsGroup;
+		const group = op.ownsGroup;
 		if (!group) {
 			return;
 		}
@@ -2737,7 +2737,7 @@
 		}
 	}
 
-	var orphanDelayedCallbacks = null;
+	let orphanDelayedCallbacks = null;
 
 	// Often, we want to signal events at a point where we are in the
 	// middle of some work, but don't want the handler to start calling
@@ -2746,13 +2746,13 @@
 	// signalLater looks whether there are any handlers, and schedules
 	// them to be executed when the last operation ends, or, if no
 	// operation is active, when a timeout fires.
-	function signalLater(emitter, type /*, values...*/) {
-		var arr = getHandlers(emitter, type);
+	function signalLater(emitter, type /*, values... */) {
+		const arr = getHandlers(emitter, type);
 		if (!arr.length) {
 			return;
 		}
-		var args = Array.prototype.slice.call(arguments, 2),
-			list;
+		const args = Array.prototype.slice.call(arguments, 2);
+		let list;
 		if (operationGroup) {
 			list = operationGroup.delayedCallbacks;
 		} else if (orphanDelayedCallbacks) {
@@ -2761,19 +2761,19 @@
 			list = orphanDelayedCallbacks = [];
 			setTimeout(fireOrphanDelayed, 0);
 		}
-		var loop = function (i) {
+		const loop = function (i) {
 			list.push(function () {
 				return arr[i].apply(null, args);
 			});
 		};
 
-		for (var i = 0; i < arr.length; ++i) loop(i);
+		for (let i = 0; i < arr.length; ++i) loop(i);
 	}
 
 	function fireOrphanDelayed() {
-		var delayed = orphanDelayedCallbacks;
+		const delayed = orphanDelayedCallbacks;
 		orphanDelayedCallbacks = null;
-		for (var i = 0; i < delayed.length; ++i) {
+		for (let i = 0; i < delayed.length; ++i) {
 			delayed[i]();
 		}
 	}
@@ -2782,8 +2782,8 @@
 	// lineView.changes. This updates the relevant part of the line's
 	// DOM structure.
 	function updateLineForChanges(cm, lineView, lineN, dims) {
-		for (var j = 0; j < lineView.changes.length; j++) {
-			var type = lineView.changes[j];
+		for (let j = 0; j < lineView.changes.length; j++) {
+			const type = lineView.changes[j];
 			if (type == "text") {
 				updateLineText(cm, lineView);
 			} else if (type == "gutter") {
@@ -2814,7 +2814,7 @@
 	}
 
 	function updateLineBackground(cm, lineView) {
-		var cls = lineView.bgClass ? lineView.bgClass + " " + (lineView.line.bgClass || "") : lineView.line.bgClass;
+		let cls = lineView.bgClass ? lineView.bgClass + " " + (lineView.line.bgClass || "") : lineView.line.bgClass;
 		if (cls) {
 			cls += " CodeMirror-linebackground";
 		}
@@ -2826,7 +2826,7 @@
 				lineView.background = null;
 			}
 		} else if (cls) {
-			var wrap = ensureLineWrapped(lineView);
+			const wrap = ensureLineWrapped(lineView);
 			lineView.background = wrap.insertBefore(elt("div", null, cls), wrap.firstChild);
 			cm.display.input.setUneditable(lineView.background);
 		}
@@ -2835,7 +2835,7 @@
 	// Wrapper around buildLineContent which will reuse the structure
 	// in display.externalMeasured when possible.
 	function getLineContent(cm, lineView) {
-		var ext = cm.display.externalMeasured;
+		const ext = cm.display.externalMeasured;
 		if (ext && ext.line == lineView.line) {
 			cm.display.externalMeasured = null;
 			lineView.measure = ext.measure;
@@ -2848,8 +2848,8 @@
 	// classes because the mode may output tokens that influence these
 	// classes.
 	function updateLineText(cm, lineView) {
-		var cls = lineView.text.className;
-		var built = getLineContent(cm, lineView);
+		const cls = lineView.text.className;
+		const built = getLineContent(cm, lineView);
 		if (lineView.text == lineView.node) {
 			lineView.node = built.pre;
 		}
@@ -2871,7 +2871,7 @@
 		} else if (lineView.node != lineView.text) {
 			lineView.node.className = "";
 		}
-		var textClass = lineView.textClass ? lineView.textClass + " " + (lineView.line.textClass || "") : lineView.line.textClass;
+		const textClass = lineView.textClass ? lineView.textClass + " " + (lineView.line.textClass || "") : lineView.line.textClass;
 		lineView.text.className = textClass || "";
 	}
 
@@ -2885,7 +2885,7 @@
 			lineView.gutterBackground = null;
 		}
 		if (lineView.line.gutterClass) {
-			var wrap = ensureLineWrapped(lineView);
+			const wrap = ensureLineWrapped(lineView);
 			lineView.gutterBackground = elt(
 				"div",
 				null,
@@ -2895,10 +2895,10 @@
 			cm.display.input.setUneditable(lineView.gutterBackground);
 			wrap.insertBefore(lineView.gutterBackground, lineView.text);
 		}
-		var markers = lineView.line.gutterMarkers;
+		const markers = lineView.line.gutterMarkers;
 		if (cm.options.lineNumbers || markers) {
-			var wrap$1 = ensureLineWrapped(lineView);
-			var gutterWrap = (lineView.gutter = elt(
+			const wrap$1 = ensureLineWrapped(lineView);
+			const gutterWrap = (lineView.gutter = elt(
 				"div",
 				null,
 				"CodeMirror-gutter-wrapper",
@@ -2920,9 +2920,9 @@
 				);
 			}
 			if (markers) {
-				for (var k = 0; k < cm.display.gutterSpecs.length; ++k) {
-					var id = cm.display.gutterSpecs[k].className,
-						found = markers.hasOwnProperty(id) && markers[id];
+				for (let k = 0; k < cm.display.gutterSpecs.length; ++k) {
+					const id = cm.display.gutterSpecs[k].className;
+					const found = markers.hasOwnProperty(id) && markers[id];
 					if (found) {
 						gutterWrap.appendChild(
 							elt("div", [found], "CodeMirror-gutter-elt", "left: " + dims.gutterLeft[id] + "px; width: " + dims.gutterWidth[id] + "px"),
@@ -2937,8 +2937,8 @@
 		if (lineView.alignable) {
 			lineView.alignable = null;
 		}
-		var isWidget = classTest("CodeMirror-linewidget");
-		for (var node = lineView.node.firstChild, next = void 0; node; node = next) {
+		const isWidget = classTest("CodeMirror-linewidget");
+		for (let node = lineView.node.firstChild, next = void 0; node; node = next) {
 			next = node.nextSibling;
 			if (isWidget.test(node.className)) {
 				lineView.node.removeChild(node);
@@ -2949,7 +2949,7 @@
 
 	// Build a line's DOM representation from scratch
 	function buildLineElement(cm, lineView, lineN, dims) {
-		var built = getLineContent(cm, lineView);
+		const built = getLineContent(cm, lineView);
 		lineView.text = lineView.node = built.pre;
 		if (built.bgClass) {
 			lineView.bgClass = built.bgClass;
@@ -2969,7 +2969,7 @@
 	function insertLineWidgets(cm, lineView, dims) {
 		insertLineWidgetsFor(cm, lineView.line, lineView, dims, true);
 		if (lineView.rest) {
-			for (var i = 0; i < lineView.rest.length; i++) {
+			for (let i = 0; i < lineView.rest.length; i++) {
 				insertLineWidgetsFor(cm, lineView.rest[i], lineView, dims, false);
 			}
 		}
@@ -2979,10 +2979,10 @@
 		if (!line.widgets) {
 			return;
 		}
-		var wrap = ensureLineWrapped(lineView);
-		for (var i = 0, ws = line.widgets; i < ws.length; ++i) {
-			var widget = ws[i],
-				node = elt("div", [widget.node], "CodeMirror-linewidget" + (widget.className ? " " + widget.className : ""));
+		const wrap = ensureLineWrapped(lineView);
+		for (let i = 0, ws = line.widgets; i < ws.length; ++i) {
+			const widget = ws[i];
+			const node = elt("div", [widget.node], "CodeMirror-linewidget" + (widget.className ? " " + widget.className : ""));
 			if (!widget.handleMouseEvents) {
 				node.setAttribute("cm-ignore-events", "true");
 			}
@@ -3000,7 +3000,7 @@
 	function positionLineWidget(widget, node, lineView, dims) {
 		if (widget.noHScroll) {
 			(lineView.alignable || (lineView.alignable = [])).push(node);
-			var width = dims.wrapperWidth;
+			let width = dims.wrapperWidth;
 			node.style.left = dims.fixedPos + "px";
 			if (!widget.coverGutter) {
 				width -= dims.gutterTotalWidth;
@@ -3021,12 +3021,12 @@
 		if (widget.height != null) {
 			return widget.height;
 		}
-		var cm = widget.doc.cm;
+		const cm = widget.doc.cm;
 		if (!cm) {
 			return 0;
 		}
 		if (!contains(document.body, widget.node)) {
-			var parentStyle = "position: relative;";
+			let parentStyle = "position: relative;";
 			if (widget.coverGutter) {
 				parentStyle += "margin-left: -" + cm.display.gutters.offsetWidth + "px;";
 			}
@@ -3040,7 +3040,7 @@
 
 	// Return true when the given mouse event happened in a widget
 	function eventInWidget(display, e) {
-		for (var n = e_target(e); n != display.wrapper; n = n.parentNode) {
+		for (let n = e_target(e); n != display.wrapper; n = n.parentNode) {
 			if (!n || (n.nodeType == 1 && n.getAttribute("cm-ignore-events") == "true") || (n.parentNode == display.sizer && n != display.mover)) {
 				return true;
 			}
@@ -3059,9 +3059,9 @@
 		if (display.cachedPaddingH) {
 			return display.cachedPaddingH;
 		}
-		var e = removeChildrenAndAdd(display.measure, elt("pre", "x", "CodeMirror-line-like"));
-		var style = window.getComputedStyle ? window.getComputedStyle(e) : e.currentStyle;
-		var data = {
+		const e = removeChildrenAndAdd(display.measure, elt("pre", "x", "CodeMirror-line-like"));
+		const style = window.getComputedStyle ? window.getComputedStyle(e) : e.currentStyle;
+		const data = {
 			left: parseInt(style.paddingLeft),
 			right: parseInt(style.paddingRight),
 		};
@@ -3086,16 +3086,16 @@
 	// line. When lineWrapping is on, there might be more than one
 	// height.
 	function ensureLineHeights(cm, lineView, rect) {
-		var wrapping = cm.options.lineWrapping;
-		var curWidth = wrapping && displayWidth(cm);
+		const wrapping = cm.options.lineWrapping;
+		const curWidth = wrapping && displayWidth(cm);
 		if (!lineView.measure.heights || (wrapping && lineView.measure.width != curWidth)) {
-			var heights = (lineView.measure.heights = []);
+			const heights = (lineView.measure.heights = []);
 			if (wrapping) {
 				lineView.measure.width = curWidth;
-				var rects = lineView.text.firstChild.getClientRects();
-				for (var i = 0; i < rects.length - 1; i++) {
-					var cur = rects[i],
-						next = rects[i + 1];
+				const rects = lineView.text.firstChild.getClientRects();
+				for (let i = 0; i < rects.length - 1; i++) {
+					const cur = rects[i];
+					const next = rects[i + 1];
 					if (Math.abs(cur.bottom - next.bottom) > 2) {
 						heights.push((cur.bottom + next.top) / 2 - rect.top);
 					}
@@ -3112,12 +3112,12 @@
 		if (lineView.line == line) {
 			return { map: lineView.measure.map, cache: lineView.measure.cache };
 		}
-		for (var i = 0; i < lineView.rest.length; i++) {
+		for (let i = 0; i < lineView.rest.length; i++) {
 			if (lineView.rest[i] == line) {
 				return { map: lineView.measure.maps[i], cache: lineView.measure.caches[i] };
 			}
 		}
-		for (var i$1 = 0; i$1 < lineView.rest.length; i$1++) {
+		for (let i$1 = 0; i$1 < lineView.rest.length; i$1++) {
 			if (lineNo(lineView.rest[i$1]) > lineN) {
 				return {
 					map: lineView.measure.maps[i$1],
@@ -3132,10 +3132,10 @@
 	// when measurement is needed for a line that's not in the viewport.
 	function updateExternalMeasurement(cm, line) {
 		line = visualLine(line);
-		var lineN = lineNo(line);
-		var view = (cm.display.externalMeasured = new LineView(cm.doc, line, lineN));
+		const lineN = lineNo(line);
+		const view = (cm.display.externalMeasured = new LineView(cm.doc, line, lineN));
 		view.lineN = lineN;
-		var built = (view.built = buildLineContent(cm, view));
+		const built = (view.built = buildLineContent(cm, view));
 		view.text = built.pre;
 		removeChildrenAndAdd(cm.display.lineMeasure, built.pre);
 		return view;
@@ -3152,7 +3152,7 @@
 		if (lineN >= cm.display.viewFrom && lineN < cm.display.viewTo) {
 			return cm.display.view[findViewIndex(cm, lineN)];
 		}
-		var ext = cm.display.externalMeasured;
+		const ext = cm.display.externalMeasured;
 		if (ext && lineN >= ext.lineN && lineN < ext.lineN + ext.size) {
 			return ext;
 		}
@@ -3164,8 +3164,8 @@
 	// measurements in a row, can thus ensure that the set-up work is
 	// only done once.
 	function prepareMeasureForLine(cm, line) {
-		var lineN = lineNo(line);
-		var view = findViewForLine(cm, lineN);
+		const lineN = lineNo(line);
+		let view = findViewForLine(cm, lineN);
 		if (view && !view.text) {
 			view = null;
 		} else if (view && view.changes) {
@@ -3176,7 +3176,7 @@
 			view = updateExternalMeasurement(cm, line);
 		}
 
-		var info = mapFromLineView(view, line, lineN);
+		const info = mapFromLineView(view, line, lineN);
 		return {
 			line: line,
 			view: view,
@@ -3194,8 +3194,8 @@
 		if (prepared.before) {
 			ch = -1;
 		}
-		var key = ch + (bias || ""),
-			found;
+		const key = ch + (bias || "");
+		let found;
 		if (prepared.cache.hasOwnProperty(key)) {
 			found = prepared.cache[key];
 		} else {
@@ -3219,13 +3219,13 @@
 		};
 	}
 
-	var nullRect = { left: 0, right: 0, top: 0, bottom: 0 };
+	const nullRect = { left: 0, right: 0, top: 0, bottom: 0 };
 
 	function nodeAndOffsetInLineMap(map, ch, bias) {
-		var node, start, end, collapse, mStart, mEnd;
+		let node, start, end, collapse, mStart, mEnd;
 		// First, search the line map for the text node corresponding to,
 		// or closest to, the target character.
-		for (var i = 0; i < map.length; i += 3) {
+		for (let i = 0; i < map.length; i += 3) {
 			mStart = map[i];
 			mEnd = map[i + 1];
 			if (ch < mStart) {
@@ -3273,15 +3273,15 @@
 	}
 
 	function getUsefulRect(rects, bias) {
-		var rect = nullRect;
+		let rect = nullRect;
 		if (bias == "left") {
-			for (var i = 0; i < rects.length; i++) {
+			for (let i = 0; i < rects.length; i++) {
 				if ((rect = rects[i]).left != rect.right) {
 					break;
 				}
 			}
 		} else {
-			for (var i$1 = rects.length - 1; i$1 >= 0; i$1--) {
+			for (let i$1 = rects.length - 1; i$1 >= 0; i$1--) {
 				if ((rect = rects[i$1]).left != rect.right) {
 					break;
 				}
@@ -3291,16 +3291,16 @@
 	}
 
 	function measureCharInner(cm, prepared, ch, bias) {
-		var place = nodeAndOffsetInLineMap(prepared.map, ch, bias);
-		var node = place.node,
-			start = place.start,
-			end = place.end,
-			collapse = place.collapse;
+		const place = nodeAndOffsetInLineMap(prepared.map, ch, bias);
+		const node = place.node;
+		let start = place.start;
+		let end = place.end;
+		let collapse = place.collapse;
 
-		var rect;
+		let rect;
 		if (node.nodeType == 3) {
 			// If it is a text node, use a range to retrieve the coordinates.
-			for (var i$1 = 0; i$1 < 4; i$1++) {
+			for (let i$1 = 0; i$1 < 4; i$1++) {
 				// Retry a maximum of 4 times when nonsense rectangles are returned
 				while (start && isExtendingChar(prepared.line.text.charAt(place.coverStart + start))) {
 					--start;
@@ -3328,7 +3328,7 @@
 			if (start > 0) {
 				collapse = bias = "right";
 			}
-			var rects;
+			let rects;
 			if (cm.options.lineWrapping && (rects = node.getClientRects()).length > 1) {
 				rect = rects[bias == "right" ? rects.length - 1 : 0];
 			} else {
@@ -3336,7 +3336,7 @@
 			}
 		}
 		if (ie && ie_version < 9 && !start && (!rect || (!rect.left && !rect.right))) {
-			var rSpan = node.parentNode.getClientRects()[0];
+			const rSpan = node.parentNode.getClientRects()[0];
 			if (rSpan) {
 				rect = {
 					left: rSpan.left,
@@ -3349,19 +3349,19 @@
 			}
 		}
 
-		var rtop = rect.top - prepared.rect.top,
-			rbot = rect.bottom - prepared.rect.top;
-		var mid = (rtop + rbot) / 2;
-		var heights = prepared.view.measure.heights;
-		var i = 0;
+		const rtop = rect.top - prepared.rect.top;
+		const rbot = rect.bottom - prepared.rect.top;
+		const mid = (rtop + rbot) / 2;
+		const heights = prepared.view.measure.heights;
+		let i = 0;
 		for (; i < heights.length - 1; i++) {
 			if (mid < heights[i]) {
 				break;
 			}
 		}
-		var top = i ? heights[i - 1] : 0,
-			bot = heights[i];
-		var result = {
+		const top = i ? heights[i - 1] : 0;
+		const bot = heights[i];
+		const result = {
 			left: (collapse == "right" ? rect.right : rect.left) - prepared.rect.left,
 			right: (collapse == "left" ? rect.left : rect.right) - prepared.rect.left,
 			top: top,
@@ -3384,8 +3384,8 @@
 		if (!window.screen || screen.logicalXDPI == null || screen.logicalXDPI == screen.deviceXDPI || !hasBadZoomedRects(measure)) {
 			return rect;
 		}
-		var scaleX = screen.logicalXDPI / screen.deviceXDPI;
-		var scaleY = screen.logicalYDPI / screen.deviceYDPI;
+		const scaleX = screen.logicalXDPI / screen.deviceXDPI;
+		const scaleY = screen.logicalYDPI / screen.deviceYDPI;
 		return {
 			left: rect.left * scaleX,
 			right: rect.right * scaleX,
@@ -3399,7 +3399,7 @@
 			lineView.measure.cache = {};
 			lineView.measure.heights = null;
 			if (lineView.rest) {
-				for (var i = 0; i < lineView.rest.length; i++) {
+				for (let i = 0; i < lineView.rest.length; i++) {
 					lineView.measure.caches[i] = {};
 				}
 			}
@@ -3409,7 +3409,7 @@
 	function clearLineMeasurementCache(cm) {
 		cm.display.externalMeasure = null;
 		removeChildren(cm.display.lineMeasure);
-		for (var i = 0; i < cm.display.view.length; i++) {
+		for (let i = 0; i < cm.display.view.length; i++) {
 			clearLineMeasurementCacheFor(cm.display.view[i]);
 		}
 	}
@@ -3440,9 +3440,9 @@
 	}
 
 	function widgetTopHeight(lineObj) {
-		var height = 0;
+		let height = 0;
 		if (lineObj.widgets) {
-			for (var i = 0; i < lineObj.widgets.length; ++i) {
+			for (let i = 0; i < lineObj.widgets.length; ++i) {
 				if (lineObj.widgets[i].above) {
 					height += widgetHeight(lineObj.widgets[i]);
 				}
@@ -3457,7 +3457,7 @@
 	// or "page".
 	function intoCoordSystem(cm, lineObj, rect, context, includeWidgets) {
 		if (!includeWidgets) {
-			var height = widgetTopHeight(lineObj);
+			const height = widgetTopHeight(lineObj);
 			rect.top += height;
 			rect.bottom += height;
 		}
@@ -3467,16 +3467,16 @@
 		if (!context) {
 			context = "local";
 		}
-		var yOff = heightAtLine(lineObj);
+		let yOff = heightAtLine(lineObj);
 		if (context == "local") {
 			yOff += paddingTop(cm.display);
 		} else {
 			yOff -= cm.display.viewOffset;
 		}
 		if (context == "page" || context == "window") {
-			var lOff = cm.display.lineSpace.getBoundingClientRect();
+			const lOff = cm.display.lineSpace.getBoundingClientRect();
 			yOff += lOff.top + (context == "window" ? 0 : pageScrollY());
-			var xOff = lOff.left + (context == "window" ? 0 : pageScrollX());
+			const xOff = lOff.left + (context == "window" ? 0 : pageScrollX());
 			rect.left += xOff;
 			rect.right += xOff;
 		}
@@ -3491,19 +3491,19 @@
 		if (context == "div") {
 			return coords;
 		}
-		var left = coords.left,
-			top = coords.top;
+		let left = coords.left;
+		let top = coords.top;
 		// First move into "page" coordinate system
 		if (context == "page") {
 			left -= pageScrollX();
 			top -= pageScrollY();
 		} else if (context == "local" || !context) {
-			var localBox = cm.display.sizer.getBoundingClientRect();
+			const localBox = cm.display.sizer.getBoundingClientRect();
 			left += localBox.left;
 			top += localBox.top;
 		}
 
-		var lineSpaceBox = cm.display.lineSpace.getBoundingClientRect();
+		const lineSpaceBox = cm.display.lineSpace.getBoundingClientRect();
 		return { left: left - lineSpaceBox.left, top: top - lineSpaceBox.top };
 	}
 
@@ -3536,7 +3536,7 @@
 			preparedMeasure = prepareMeasureForLine(cm, lineObj);
 		}
 		function get(ch, right) {
-			var m = measureCharPrepared(cm, preparedMeasure, ch, right ? "right" : "left", varHeight);
+			const m = measureCharPrepared(cm, preparedMeasure, ch, right ? "right" : "left", varHeight);
 			if (right) {
 				m.left = m.right;
 			} else {
@@ -3544,9 +3544,9 @@
 			}
 			return intoCoordSystem(cm, lineObj, m, context);
 		}
-		var order = getOrder(lineObj, cm.doc.direction),
-			ch = pos.ch,
-			sticky = pos.sticky;
+		const order = getOrder(lineObj, cm.doc.direction);
+		let ch = pos.ch;
+		let sticky = pos.sticky;
 		if (ch >= lineObj.text.length) {
 			ch = lineObj.text.length;
 			sticky = "before";
@@ -3559,13 +3559,13 @@
 		}
 
 		function getBidi(ch, partPos, invert) {
-			var part = order[partPos],
-				right = part.level == 1;
+			const part = order[partPos];
+			const right = part.level == 1;
 			return get(invert ? ch - 1 : ch, right != invert);
 		}
-		var partPos = getBidiPartAt(order, ch, sticky);
-		var other = bidiOther;
-		var val = getBidi(ch, partPos, sticky == "before");
+		const partPos = getBidiPartAt(order, ch, sticky);
+		const other = bidiOther;
+		const val = getBidi(ch, partPos, sticky == "before");
 		if (other != null) {
 			val.other = getBidi(ch, other, sticky != "before");
 		}
@@ -3575,13 +3575,13 @@
 	// Used to cheaply estimate the coordinates for a position. Used for
 	// intermediate scroll updates.
 	function estimateCoords(cm, pos) {
-		var left = 0;
+		let left = 0;
 		pos = clipPos(cm.doc, pos);
 		if (!cm.options.lineWrapping) {
 			left = charWidth(cm.display) * pos.ch;
 		}
-		var lineObj = getLine(cm.doc, pos.line);
-		var top = heightAtLine(lineObj) + paddingTop(cm.display);
+		const lineObj = getLine(cm.doc, pos.line);
+		const top = heightAtLine(lineObj) + paddingTop(cm.display);
 		return { left: left, right: left, top: top, bottom: top + lineObj.height };
 	}
 
@@ -3592,7 +3592,7 @@
 	// is true, that means the coordinates lie outside the line's
 	// vertical range.
 	function PosWithInfo(line, ch, sticky, outside, xRel) {
-		var pos = Pos(line, ch, sticky);
+		const pos = Pos(line, ch, sticky);
 		pos.xRel = xRel;
 		if (outside) {
 			pos.outside = outside;
@@ -3603,13 +3603,13 @@
 	// Compute the character position closest to the given coordinates.
 	// Input must be lineSpace-local ("div" coordinate system).
 	function coordsChar(cm, x, y) {
-		var doc = cm.doc;
+		const doc = cm.doc;
 		y += cm.display.viewOffset;
 		if (y < 0) {
 			return PosWithInfo(doc.first, 0, null, -1, -1);
 		}
-		var lineN = lineAtHeight(doc, y),
-			last = doc.first + doc.size - 1;
+		let lineN = lineAtHeight(doc, y);
+		const last = doc.first + doc.size - 1;
 		if (lineN > last) {
 			return PosWithInfo(doc.first + doc.size - 1, getLine(doc, last).text.length, null, 1, 1);
 		}
@@ -3617,14 +3617,14 @@
 			x = 0;
 		}
 
-		var lineObj = getLine(doc, lineN);
+		let lineObj = getLine(doc, lineN);
 		for (;;) {
-			var found = coordsCharInner(cm, lineObj, lineN, x, y);
-			var collapsed = collapsedSpanAround(lineObj, found.ch + (found.xRel > 0 || found.outside > 0 ? 1 : 0));
+			const found = coordsCharInner(cm, lineObj, lineN, x, y);
+			const collapsed = collapsedSpanAround(lineObj, found.ch + (found.xRel > 0 || found.outside > 0 ? 1 : 0));
 			if (!collapsed) {
 				return found;
 			}
-			var rangeEnd = collapsed.find(1);
+			const rangeEnd = collapsed.find(1);
 			if (rangeEnd.line == lineN) {
 				return rangeEnd;
 			}
@@ -3634,8 +3634,8 @@
 
 	function wrappedLineExtent(cm, lineObj, preparedMeasure, y) {
 		y -= widgetTopHeight(lineObj);
-		var end = lineObj.text.length;
-		var begin = findFirst(
+		let end = lineObj.text.length;
+		const begin = findFirst(
 			function (ch) {
 				return measureCharPrepared(cm, preparedMeasure, ch - 1).bottom <= y;
 			},
@@ -3656,7 +3656,7 @@
 		if (!preparedMeasure) {
 			preparedMeasure = prepareMeasureForLine(cm, lineObj);
 		}
-		var targetTop = intoCoordSystem(cm, lineObj, measureCharPrepared(cm, preparedMeasure, target), "line").top;
+		const targetTop = intoCoordSystem(cm, lineObj, measureCharPrepared(cm, preparedMeasure, target), "line").top;
 		return wrappedLineExtent(cm, lineObj, preparedMeasure, targetTop);
 	}
 
@@ -3669,19 +3669,19 @@
 	function coordsCharInner(cm, lineObj, lineNo, x, y) {
 		// Move y into line-local coordinate space
 		y -= heightAtLine(lineObj);
-		var preparedMeasure = prepareMeasureForLine(cm, lineObj);
+		const preparedMeasure = prepareMeasureForLine(cm, lineObj);
 		// When directly calling `measureCharPrepared`, we have to adjust
 		// for the widgets at this line.
-		var widgetHeight = widgetTopHeight(lineObj);
-		var begin = 0,
-			end = lineObj.text.length,
-			ltr = true;
+		const widgetHeight = widgetTopHeight(lineObj);
+		let begin = 0;
+		let end = lineObj.text.length;
+		let ltr = true;
 
-		var order = getOrder(lineObj, cm.doc.direction);
+		const order = getOrder(lineObj, cm.doc.direction);
 		// If the line isn't plain left-to-right text, first figure out
 		// which bidi section the coordinates fall into.
 		if (order) {
-			var part = (cm.options.lineWrapping ? coordsBidiPartWrapped : coordsBidiPart)(cm, lineObj, lineNo, preparedMeasure, order, x, y);
+			const part = (cm.options.lineWrapping ? coordsBidiPartWrapped : coordsBidiPart)(cm, lineObj, lineNo, preparedMeasure, order, x, y);
 			ltr = part.level != 1;
 			// The awkward -1 offsets are needed because findFirst (called
 			// on these below) will treat its first bound as inclusive,
@@ -3694,11 +3694,11 @@
 		// A binary search to find the first character whose bounding box
 		// starts after the coordinates. If we run across any whose box wrap
 		// the coordinates, store that.
-		var chAround = null,
-			boxAround = null;
-		var ch = findFirst(
+		let chAround = null;
+		let boxAround = null;
+		let ch = findFirst(
 			function (ch) {
-				var box = measureCharPrepared(cm, preparedMeasure, ch);
+				const box = measureCharPrepared(cm, preparedMeasure, ch);
 				box.top += widgetHeight;
 				box.bottom += widgetHeight;
 				if (!boxIsAfter(box, x, y, false)) {
@@ -3714,14 +3714,14 @@
 			end,
 		);
 
-		var baseX,
-			sticky,
-			outside = false;
+		let baseX;
+		let sticky;
+		let outside = false;
 		// If a box around the coordinates was found, use that
 		if (boxAround) {
 			// Distinguish coordinates nearer to the left or right side of the box
-			var atLeft = x - boxAround.left < boxAround.right - x,
-				atStart = atLeft == ltr;
+			const atLeft = x - boxAround.left < boxAround.right - x;
+			const atStart = atLeft == ltr;
 			ch = chAround + (atStart ? 0 : 1);
 			sticky = atStart ? "after" : "before";
 			baseX = atLeft ? boxAround.left : boxAround.right;
@@ -3743,7 +3743,7 @@
 					: "before";
 			// Now get accurate coordinates for this place, in order to get a
 			// base X position
-			var coords = cursorCoords(cm, Pos(lineNo, ch, sticky), "line", lineObj, preparedMeasure);
+			const coords = cursorCoords(cm, Pos(lineNo, ch, sticky), "line", lineObj, preparedMeasure);
 			baseX = coords.left;
 			outside = y < coords.top ? -1 : y >= coords.bottom ? 1 : 0;
 		}
@@ -3757,10 +3757,10 @@
 		// situation, we can take this ordering to correspond to the visual
 		// ordering. This finds the first part whose end is after the given
 		// coordinates.
-		var index = findFirst(
+		const index = findFirst(
 			function (i) {
-				var part = order[i],
-					ltr = part.level != 1;
+				const part = order[i];
+				const ltr = part.level != 1;
 				return boxIsAfter(
 					cursorCoords(cm, Pos(lineNo, ltr ? part.to : part.from, ltr ? "before" : "after"), "line", lineObj, preparedMeasure),
 					x,
@@ -3771,13 +3771,13 @@
 			0,
 			order.length - 1,
 		);
-		var part = order[index];
+		let part = order[index];
 		// If this isn't the first part, the part's start is also after
 		// the coordinates, and the coordinates aren't on the same line as
 		// that start, move one part back.
 		if (index > 0) {
-			var ltr = part.level != 1;
-			var start = cursorCoords(cm, Pos(lineNo, ltr ? part.from : part.to, ltr ? "after" : "before"), "line", lineObj, preparedMeasure);
+			const ltr = part.level != 1;
+			const start = cursorCoords(cm, Pos(lineNo, ltr ? part.from : part.to, ltr ? "after" : "before"), "line", lineObj, preparedMeasure);
 			if (boxIsAfter(start, x, y, true) && start.top > y) {
 				part = order[index - 1];
 			}
@@ -3793,24 +3793,24 @@
 		// coordsCharInner is safe. As such, we first find the extent of the
 		// wrapped line, and then do a flat search in which we discard any
 		// spans that aren't on the line.
-		var ref = wrappedLineExtent(cm, lineObj, preparedMeasure, y);
-		var begin = ref.begin;
-		var end = ref.end;
+		const ref = wrappedLineExtent(cm, lineObj, preparedMeasure, y);
+		const begin = ref.begin;
+		let end = ref.end;
 		if (/\s/.test(lineObj.text.charAt(end - 1))) {
 			end--;
 		}
-		var part = null,
-			closestDist = null;
-		for (var i = 0; i < order.length; i++) {
-			var p = order[i];
+		let part = null;
+		let closestDist = null;
+		for (let i = 0; i < order.length; i++) {
+			const p = order[i];
 			if (p.from >= end || p.to <= begin) {
 				continue;
 			}
-			var ltr = p.level != 1;
-			var endX = measureCharPrepared(cm, preparedMeasure, ltr ? Math.min(end, p.to) - 1 : Math.max(begin, p.from)).right;
+			const ltr = p.level != 1;
+			const endX = measureCharPrepared(cm, preparedMeasure, ltr ? Math.min(end, p.to) - 1 : Math.max(begin, p.from)).right;
 			// Weigh against spans ending before this, so that they are only
 			// picked if nothing ends after
-			var dist = endX < x ? x - endX + 1e9 : endX - x;
+			const dist = endX < x ? x - endX + 1e9 : endX - x;
 			if (!part || closestDist > dist) {
 				part = p;
 				closestDist = dist;
@@ -3829,7 +3829,7 @@
 		return part;
 	}
 
-	var measureText;
+	let measureText;
 	// Compute the default text height.
 	function textHeight(display) {
 		if (display.cachedTextHeight != null) {
@@ -3839,14 +3839,14 @@
 			measureText = elt("pre", null, "CodeMirror-line-like");
 			// Measure a bunch of lines, for browsers that compute
 			// fractional heights.
-			for (var i = 0; i < 49; ++i) {
+			for (let i = 0; i < 49; ++i) {
 				measureText.appendChild(document.createTextNode("x"));
 				measureText.appendChild(elt("br"));
 			}
 			measureText.appendChild(document.createTextNode("x"));
 		}
 		removeChildrenAndAdd(display.measure, measureText);
-		var height = measureText.offsetHeight / 50;
+		const height = measureText.offsetHeight / 50;
 		if (height > 3) {
 			display.cachedTextHeight = height;
 		}
@@ -3859,11 +3859,11 @@
 		if (display.cachedCharWidth != null) {
 			return display.cachedCharWidth;
 		}
-		var anchor = elt("span", "xxxxxxxxxx");
-		var pre = elt("pre", [anchor], "CodeMirror-line-like");
+		const anchor = elt("span", "xxxxxxxxxx");
+		const pre = elt("pre", [anchor], "CodeMirror-line-like");
 		removeChildrenAndAdd(display.measure, pre);
-		var rect = anchor.getBoundingClientRect(),
-			width = (rect.right - rect.left) / 10;
+		const rect = anchor.getBoundingClientRect();
+		const width = (rect.right - rect.left) / 10;
 		if (width > 2) {
 			display.cachedCharWidth = width;
 		}
@@ -3873,12 +3873,12 @@
 	// Do a bulk-read of the DOM positions and sizes needed to draw the
 	// view, so that we don't interleave reading and writing to the DOM.
 	function getDimensions(cm) {
-		var d = cm.display,
-			left = {},
-			width = {};
-		var gutterLeft = d.gutters.clientLeft;
-		for (var n = d.gutters.firstChild, i = 0; n; n = n.nextSibling, ++i) {
-			var id = cm.display.gutterSpecs[i].className;
+		const d = cm.display;
+		const left = {};
+		const width = {};
+		const gutterLeft = d.gutters.clientLeft;
+		for (let n = d.gutters.firstChild, i = 0; n; n = n.nextSibling, ++i) {
+			const id = cm.display.gutterSpecs[i].className;
 			left[id] = n.offsetLeft + n.clientLeft + gutterLeft;
 			width[id] = n.clientWidth;
 		}
@@ -3902,17 +3902,17 @@
 	// first approximation until the line becomes visible (and is thus
 	// properly measurable).
 	function estimateHeight(cm) {
-		var th = textHeight(cm.display),
-			wrapping = cm.options.lineWrapping;
-		var perLine = wrapping && Math.max(5, cm.display.scroller.clientWidth / charWidth(cm.display) - 3);
+		const th = textHeight(cm.display);
+		const wrapping = cm.options.lineWrapping;
+		const perLine = wrapping && Math.max(5, cm.display.scroller.clientWidth / charWidth(cm.display) - 3);
 		return function (line) {
 			if (lineIsHidden(cm.doc, line)) {
 				return 0;
 			}
 
-			var widgetsHeight = 0;
+			let widgetsHeight = 0;
 			if (line.widgets) {
-				for (var i = 0; i < line.widgets.length; i++) {
+				for (let i = 0; i < line.widgets.length; i++) {
 					if (line.widgets[i].height) {
 						widgetsHeight += line.widgets[i].height;
 					}
@@ -3928,10 +3928,10 @@
 	}
 
 	function estimateLineHeights(cm) {
-		var doc = cm.doc,
-			est = estimateHeight(cm);
+		const doc = cm.doc;
+		const est = estimateHeight(cm);
 		doc.iter(function (line) {
-			var estHeight = est(line);
+			const estHeight = est(line);
 			if (estHeight != line.height) {
 				updateLineHeight(line, estHeight);
 			}
@@ -3944,14 +3944,14 @@
 	// selections, and tries to estimate a character position even for
 	// coordinates beyond the right of the text.
 	function posFromMouse(cm, e, liberal, forRect) {
-		var display = cm.display;
+		const display = cm.display;
 		if (!liberal && e_target(e).getAttribute("cm-not-content") == "true") {
 			return null;
 		}
 
-		var x,
-			y,
-			space = display.lineSpace.getBoundingClientRect();
+		let x;
+		let y;
+		const space = display.lineSpace.getBoundingClientRect();
 		// Fails unpredictably on IE[67] when mouse is dragged around quickly.
 		try {
 			x = e.clientX - space.left;
@@ -3959,10 +3959,10 @@
 		} catch (e$1) {
 			return null;
 		}
-		var coords = coordsChar(cm, x, y),
-			line;
+		let coords = coordsChar(cm, x, y);
+		let line;
 		if (forRect && coords.xRel > 0 && (line = getLine(cm.doc, coords.line).text).length == coords.ch) {
-			var colDiff = countColumn(line, line.length, cm.options.tabSize) - line.length;
+			const colDiff = countColumn(line, line.length, cm.options.tabSize) - line.length;
 			coords = Pos(coords.line, Math.max(0, Math.round((x - paddingH(cm.display).left) / charWidth(cm.display)) - colDiff));
 		}
 		return coords;
@@ -3978,8 +3978,8 @@
 		if (n < 0) {
 			return null;
 		}
-		var view = cm.display.view;
-		for (var i = 0; i < view.length; i++) {
+		const view = cm.display.view;
+		for (let i = 0; i < view.length; i++) {
 			n -= view[i].size;
 			if (n < 0) {
 				return i;
@@ -4004,7 +4004,7 @@
 			lendiff = 0;
 		}
 
-		var display = cm.display;
+		const display = cm.display;
 		if (lendiff && to < display.viewTo && (display.updateLineNumbers == null || display.updateLineNumbers > from)) {
 			display.updateLineNumbers = from;
 		}
@@ -4029,7 +4029,7 @@
 			resetView(cm);
 		} else if (from <= display.viewFrom) {
 			// Top overlap
-			var cut = viewCuttingPoint(cm, to, to + lendiff, 1);
+			const cut = viewCuttingPoint(cm, to, to + lendiff, 1);
 			if (cut) {
 				display.view = display.view.slice(cut.index);
 				display.viewFrom = cut.lineN;
@@ -4039,7 +4039,7 @@
 			}
 		} else if (to >= display.viewTo) {
 			// Bottom overlap
-			var cut$1 = viewCuttingPoint(cm, from, from, -1);
+			const cut$1 = viewCuttingPoint(cm, from, from, -1);
 			if (cut$1) {
 				display.view = display.view.slice(0, cut$1.index);
 				display.viewTo = cut$1.lineN;
@@ -4048,8 +4048,8 @@
 			}
 		} else {
 			// Gap in the middle
-			var cutTop = viewCuttingPoint(cm, from, from, -1);
-			var cutBot = viewCuttingPoint(cm, to, to + lendiff, 1);
+			const cutTop = viewCuttingPoint(cm, from, from, -1);
+			const cutBot = viewCuttingPoint(cm, to, to + lendiff, 1);
 			if (cutTop && cutBot) {
 				display.view = display.view
 					.slice(0, cutTop.index)
@@ -4061,7 +4061,7 @@
 			}
 		}
 
-		var ext = display.externalMeasured;
+		const ext = display.externalMeasured;
 		if (ext) {
 			if (to < ext.lineN) {
 				ext.lineN += lendiff;
@@ -4075,8 +4075,8 @@
 	// "gutter", "class", "widget"
 	function regLineChange(cm, line, type) {
 		cm.curOp.viewChanged = true;
-		var display = cm.display,
-			ext = cm.display.externalMeasured;
+		const display = cm.display;
+		const ext = cm.display.externalMeasured;
 		if (ext && line >= ext.lineN && line < ext.lineN + ext.size) {
 			display.externalMeasured = null;
 		}
@@ -4084,11 +4084,11 @@
 		if (line < display.viewFrom || line >= display.viewTo) {
 			return;
 		}
-		var lineView = display.view[findViewIndex(cm, line)];
+		const lineView = display.view[findViewIndex(cm, line)];
 		if (lineView.node == null) {
 			return;
 		}
-		var arr = lineView.changes || (lineView.changes = []);
+		const arr = lineView.changes || (lineView.changes = []);
 		if (indexOf(arr, type) == -1) {
 			arr.push(type);
 		}
@@ -4102,14 +4102,14 @@
 	}
 
 	function viewCuttingPoint(cm, oldN, newN, dir) {
-		var index = findViewIndex(cm, oldN),
-			diff,
-			view = cm.display.view;
+		let index = findViewIndex(cm, oldN);
+		let diff;
+		const view = cm.display.view;
 		if (!sawCollapsedSpans || newN == cm.doc.first + cm.doc.size) {
 			return { index: index, lineN: newN };
 		}
-		var n = cm.display.viewFrom;
-		for (var i = 0; i < index; i++) {
+		let n = cm.display.viewFrom;
+		for (let i = 0; i < index; i++) {
 			n += view[i].size;
 		}
 		if (n != oldN) {
@@ -4138,8 +4138,8 @@
 	// Force the view to cover a given range, adding empty view element
 	// or clipping off existing ones as needed.
 	function adjustView(cm, from, to) {
-		var display = cm.display,
-			view = display.view;
+		const display = cm.display;
+		const view = display.view;
 		if (view.length == 0 || from >= display.viewTo || to <= display.viewFrom) {
 			display.view = buildViewArray(cm, from, to);
 			display.viewFrom = from;
@@ -4162,10 +4162,10 @@
 	// Count the number of lines in the view whose DOM representation is
 	// out of date (or nonexistent).
 	function countDirtyView(cm) {
-		var view = cm.display.view,
-			dirty = 0;
-		for (var i = 0; i < view.length; i++) {
-			var lineView = view[i];
+		const view = cm.display.view;
+		let dirty = 0;
+		for (let i = 0; i < view.length; i++) {
+			const lineView = view[i];
 			if (!lineView.hidden && (!lineView.node || lineView.changes)) {
 				++dirty;
 			}
@@ -4180,20 +4180,20 @@
 	function prepareSelection(cm, primary) {
 		if (primary === void 0) primary = true;
 
-		var doc = cm.doc,
-			result = {};
-		var curFragment = (result.cursors = document.createDocumentFragment());
-		var selFragment = (result.selection = document.createDocumentFragment());
+		const doc = cm.doc;
+		const result = {};
+		const curFragment = (result.cursors = document.createDocumentFragment());
+		const selFragment = (result.selection = document.createDocumentFragment());
 
-		for (var i = 0; i < doc.sel.ranges.length; i++) {
+		for (let i = 0; i < doc.sel.ranges.length; i++) {
 			if (!primary && i == doc.sel.primIndex) {
 				continue;
 			}
-			var range = doc.sel.ranges[i];
+			const range = doc.sel.ranges[i];
 			if (range.from().line >= cm.display.viewTo || range.to().line < cm.display.viewFrom) {
 				continue;
 			}
-			var collapsed = range.empty();
+			const collapsed = range.empty();
 			if (collapsed || cm.options.showCursorWhenSelecting) {
 				drawSelectionCursor(cm, range.head, curFragment);
 			}
@@ -4206,16 +4206,16 @@
 
 	// Draws a cursor for the given range
 	function drawSelectionCursor(cm, head, output) {
-		var pos = cursorCoords(cm, head, "div", null, null, !cm.options.singleCursorHeightPerLine);
+		const pos = cursorCoords(cm, head, "div", null, null, !cm.options.singleCursorHeightPerLine);
 
-		var cursor = output.appendChild(elt("div", "\u00a0", "CodeMirror-cursor"));
+		const cursor = output.appendChild(elt("div", "\u00a0", "CodeMirror-cursor"));
 		cursor.style.left = pos.left + "px";
 		cursor.style.top = pos.top + "px";
 		cursor.style.height = Math.max(0, pos.bottom - pos.top) * cm.options.cursorHeight + "px";
 
 		if (pos.other) {
 			// Secondary cursor, shown when on a 'jump' in bi-directional text
-			var otherCursor = output.appendChild(elt("div", "\u00a0", "CodeMirror-cursor CodeMirror-secondarycursor"));
+			const otherCursor = output.appendChild(elt("div", "\u00a0", "CodeMirror-cursor CodeMirror-secondarycursor"));
 			otherCursor.style.display = "";
 			otherCursor.style.left = pos.other.left + "px";
 			otherCursor.style.top = pos.other.top + "px";
@@ -4229,13 +4229,13 @@
 
 	// Draws the given range as a highlighted selection
 	function drawSelectionRange(cm, range, output) {
-		var display = cm.display,
-			doc = cm.doc;
-		var fragment = document.createDocumentFragment();
-		var padding = paddingH(cm.display),
-			leftSide = padding.left;
-		var rightSide = Math.max(display.sizerWidth, displayWidth(cm) - display.sizer.offsetLeft) - padding.right;
-		var docLTR = doc.direction == "ltr";
+		const display = cm.display;
+		const doc = cm.doc;
+		const fragment = document.createDocumentFragment();
+		const padding = paddingH(cm.display);
+		const leftSide = padding.left;
+		const rightSide = Math.max(display.sizerWidth, displayWidth(cm) - display.sizer.offsetLeft) - padding.right;
+		const docLTR = doc.direction == "ltr";
 
 		function add(left, top, width, bottom) {
 			if (top < 0) {
@@ -4262,40 +4262,40 @@
 		}
 
 		function drawForLine(line, fromArg, toArg) {
-			var lineObj = getLine(doc, line);
-			var lineLen = lineObj.text.length;
-			var start, end;
+			const lineObj = getLine(doc, line);
+			const lineLen = lineObj.text.length;
+			let start, end;
 			function coords(ch, bias) {
 				return charCoords(cm, Pos(line, ch), "div", lineObj, bias);
 			}
 
 			function wrapX(pos, dir, side) {
-				var extent = wrappedLineExtentChar(cm, lineObj, null, pos);
-				var prop = (dir == "ltr") == (side == "after") ? "left" : "right";
-				var ch = side == "after" ? extent.begin : extent.end - (/\s/.test(lineObj.text.charAt(extent.end - 1)) ? 2 : 1);
+				const extent = wrappedLineExtentChar(cm, lineObj, null, pos);
+				const prop = (dir == "ltr") == (side == "after") ? "left" : "right";
+				const ch = side == "after" ? extent.begin : extent.end - (/\s/.test(lineObj.text.charAt(extent.end - 1)) ? 2 : 1);
 				return coords(ch, prop)[prop];
 			}
 
-			var order = getOrder(lineObj, doc.direction);
+			const order = getOrder(lineObj, doc.direction);
 			iterateBidiSections(order, fromArg || 0, toArg == null ? lineLen : toArg, function (from, to, dir, i) {
-				var ltr = dir == "ltr";
-				var fromPos = coords(from, ltr ? "left" : "right");
-				var toPos = coords(to - 1, ltr ? "right" : "left");
+				const ltr = dir == "ltr";
+				const fromPos = coords(from, ltr ? "left" : "right");
+				const toPos = coords(to - 1, ltr ? "right" : "left");
 
-				var openStart = fromArg == null && from == 0,
-					openEnd = toArg == null && to == lineLen;
-				var first = i == 0,
-					last = !order || i == order.length - 1;
+				const openStart = fromArg == null && from == 0;
+				const openEnd = toArg == null && to == lineLen;
+				const first = i == 0;
+				const last = !order || i == order.length - 1;
 				if (toPos.top - fromPos.top <= 3) {
 					// Single line
-					var openLeft = (docLTR ? openStart : openEnd) && first;
-					var openRight = (docLTR ? openEnd : openStart) && last;
-					var left = openLeft ? leftSide : (ltr ? fromPos : toPos).left;
-					var right = openRight ? rightSide : (ltr ? toPos : fromPos).right;
+					const openLeft = (docLTR ? openStart : openEnd) && first;
+					const openRight = (docLTR ? openEnd : openStart) && last;
+					const left = openLeft ? leftSide : (ltr ? fromPos : toPos).left;
+					const right = openRight ? rightSide : (ltr ? toPos : fromPos).right;
 					add(left, fromPos.top, right - left, fromPos.bottom);
 				} else {
 					// Multiple lines
-					var topLeft, topRight, botLeft, botRight;
+					let topLeft, topRight, botLeft, botRight;
 					if (ltr) {
 						topLeft = docLTR && openStart && first ? leftSide : fromPos.left;
 						topRight = docLTR ? rightSide : wrapX(from, dir, "before");
@@ -4330,16 +4330,16 @@
 			return { start: start, end: end };
 		}
 
-		var sFrom = range.from(),
-			sTo = range.to();
+		const sFrom = range.from();
+		const sTo = range.to();
 		if (sFrom.line == sTo.line) {
 			drawForLine(sFrom.line, sFrom.ch, sTo.ch);
 		} else {
-			var fromLine = getLine(doc, sFrom.line),
-				toLine = getLine(doc, sTo.line);
-			var singleVLine = visualLine(fromLine) == visualLine(toLine);
-			var leftEnd = drawForLine(sFrom.line, sFrom.ch, singleVLine ? fromLine.text.length + 1 : null).end;
-			var rightStart = drawForLine(sTo.line, singleVLine ? 0 : null, sTo.ch).start;
+			const fromLine = getLine(doc, sFrom.line);
+			const toLine = getLine(doc, sTo.line);
+			const singleVLine = visualLine(fromLine) == visualLine(toLine);
+			const leftEnd = drawForLine(sFrom.line, sFrom.ch, singleVLine ? fromLine.text.length + 1 : null).end;
+			const rightStart = drawForLine(sTo.line, singleVLine ? 0 : null, sTo.ch).start;
 			if (singleVLine) {
 				if (leftEnd.top < rightStart.top - 2) {
 					add(leftEnd.right, leftEnd.top, null, leftEnd.bottom);
@@ -4361,9 +4361,9 @@
 		if (!cm.state.focused) {
 			return;
 		}
-		var display = cm.display;
+		const display = cm.display;
 		clearInterval(display.blinker);
-		var on = true;
+		let on = true;
 		display.cursorDiv.style.visibility = "";
 		if (cm.options.cursorBlinkRate > 0) {
 			display.blinker = setInterval(function () {
@@ -4446,22 +4446,22 @@
 	// Read the actual heights of the rendered lines, and update their
 	// stored heights to match.
 	function updateHeightsInViewport(cm) {
-		var display = cm.display;
-		var prevBottom = display.lineDiv.offsetTop;
-		for (var i = 0; i < display.view.length; i++) {
-			var cur = display.view[i],
-				wrapping = cm.options.lineWrapping;
-			var height = void 0,
-				width = 0;
+		const display = cm.display;
+		let prevBottom = display.lineDiv.offsetTop;
+		for (let i = 0; i < display.view.length; i++) {
+			const cur = display.view[i];
+			const wrapping = cm.options.lineWrapping;
+			let height = void 0;
+			let width = 0;
 			if (cur.hidden) {
 				continue;
 			}
 			if (ie && ie_version < 8) {
-				var bot = cur.node.offsetTop + cur.node.offsetHeight;
+				const bot = cur.node.offsetTop + cur.node.offsetHeight;
 				height = bot - prevBottom;
 				prevBottom = bot;
 			} else {
-				var box = cur.node.getBoundingClientRect();
+				const box = cur.node.getBoundingClientRect();
 				height = box.bottom - box.top;
 				// Check that lines don't extend past the right of the current
 				// editor width
@@ -4469,18 +4469,18 @@
 					width = cur.text.firstChild.getBoundingClientRect().right - box.left - 1;
 				}
 			}
-			var diff = cur.line.height - height;
+			const diff = cur.line.height - height;
 			if (diff > 0.005 || diff < -0.005) {
 				updateLineHeight(cur.line, height);
 				updateWidgetHeight(cur.line);
 				if (cur.rest) {
-					for (var j = 0; j < cur.rest.length; j++) {
+					for (let j = 0; j < cur.rest.length; j++) {
 						updateWidgetHeight(cur.rest[j]);
 					}
 				}
 			}
 			if (width > cm.display.sizerWidth) {
-				var chWidth = Math.ceil(width / charWidth(cm.display));
+				const chWidth = Math.ceil(width / charWidth(cm.display));
 				if (chWidth > cm.display.maxLineLength) {
 					cm.display.maxLineLength = chWidth;
 					cm.display.maxLine = cur.line;
@@ -4494,9 +4494,9 @@
 	// given line.
 	function updateWidgetHeight(line) {
 		if (line.widgets) {
-			for (var i = 0; i < line.widgets.length; ++i) {
-				var w = line.widgets[i],
-					parent = w.node.parentNode;
+			for (let i = 0; i < line.widgets.length; ++i) {
+				const w = line.widgets[i];
+				const parent = w.node.parentNode;
 				if (parent) {
 					w.height = parent.offsetHeight;
 				}
@@ -4508,17 +4508,17 @@
 	// the the current scroll position). viewport may contain top,
 	// height, and ensure (see op.scrollToPos) properties.
 	function visibleLines(display, doc, viewport) {
-		var top = viewport && viewport.top != null ? Math.max(0, viewport.top) : display.scroller.scrollTop;
+		let top = viewport && viewport.top != null ? Math.max(0, viewport.top) : display.scroller.scrollTop;
 		top = Math.floor(top - paddingTop(display));
-		var bottom = viewport && viewport.bottom != null ? viewport.bottom : top + display.wrapper.clientHeight;
+		const bottom = viewport && viewport.bottom != null ? viewport.bottom : top + display.wrapper.clientHeight;
 
-		var from = lineAtHeight(doc, top),
-			to = lineAtHeight(doc, bottom);
+		let from = lineAtHeight(doc, top);
+		let to = lineAtHeight(doc, bottom);
 		// Ensure is a {from: {line, ch}, to: {line, ch}} object, and
 		// forces those lines into the viewport (if possible).
 		if (viewport && viewport.ensure) {
-			var ensureFrom = viewport.ensure.from.line,
-				ensureTo = viewport.ensure.to.line;
+			const ensureFrom = viewport.ensure.from.line;
+			const ensureTo = viewport.ensure.to.line;
 			if (ensureFrom < from) {
 				from = ensureFrom;
 				to = lineAtHeight(doc, heightAtLine(getLine(doc, ensureFrom)) + display.wrapper.clientHeight);
@@ -4539,16 +4539,16 @@
 			return;
 		}
 
-		var display = cm.display,
-			box = display.sizer.getBoundingClientRect(),
-			doScroll = null;
+		const display = cm.display;
+		const box = display.sizer.getBoundingClientRect();
+		let doScroll = null;
 		if (rect.top + box.top < 0) {
 			doScroll = true;
 		} else if (rect.bottom + box.top > (window.innerHeight || document.documentElement.clientHeight)) {
 			doScroll = false;
 		}
 		if (doScroll != null && !phantom) {
-			var scrollNode = elt(
+			const scrollNode = elt(
 				"div",
 				"\u200b",
 				null,
@@ -4575,7 +4575,7 @@
 		if (margin == null) {
 			margin = 0;
 		}
-		var rect;
+		let rect;
 		if (!cm.options.lineWrapping && pos == end) {
 			// Set pos and end to the cursor positions around the character pos sticks to
 			// If pos.sticky == "before", that is around pos.ch - 1, otherwise around pos.ch
@@ -4583,19 +4583,19 @@
 			pos = pos.ch ? Pos(pos.line, pos.sticky == "before" ? pos.ch - 1 : pos.ch, "after") : pos;
 			end = pos.sticky == "before" ? Pos(pos.line, pos.ch + 1, "before") : pos;
 		}
-		for (var limit = 0; limit < 5; limit++) {
-			var changed = false;
-			var coords = cursorCoords(cm, pos);
-			var endCoords = !end || end == pos ? coords : cursorCoords(cm, end);
+		for (let limit = 0; limit < 5; limit++) {
+			let changed = false;
+			const coords = cursorCoords(cm, pos);
+			const endCoords = !end || end == pos ? coords : cursorCoords(cm, end);
 			rect = {
 				left: Math.min(coords.left, endCoords.left),
 				top: Math.min(coords.top, endCoords.top) - margin,
 				right: Math.max(coords.left, endCoords.left),
 				bottom: Math.max(coords.bottom, endCoords.bottom) + margin,
 			};
-			var scrollPos = calculateScrollPos(cm, rect);
-			var startTop = cm.doc.scrollTop,
-				startLeft = cm.doc.scrollLeft;
+			const scrollPos = calculateScrollPos(cm, rect);
+			const startTop = cm.doc.scrollTop;
+			const startLeft = cm.doc.scrollLeft;
 			if (scrollPos.scrollTop != null) {
 				updateScrollTop(cm, scrollPos.scrollTop);
 				if (Math.abs(cm.doc.scrollTop - startTop) > 1) {
@@ -4617,7 +4617,7 @@
 
 	// Scroll a given set of coordinates into view (immediately).
 	function scrollIntoView(cm, rect) {
-		var scrollPos = calculateScrollPos(cm, rect);
+		const scrollPos = calculateScrollPos(cm, rect);
 		if (scrollPos.scrollTop != null) {
 			updateScrollTop(cm, scrollPos.scrollTop);
 		}
@@ -4631,33 +4631,33 @@
 	// scrollLeft properties. When these are undefined, the
 	// vertical/horizontal position does not need to be adjusted.
 	function calculateScrollPos(cm, rect) {
-		var display = cm.display,
-			snapMargin = textHeight(cm.display);
+		const display = cm.display;
+		const snapMargin = textHeight(cm.display);
 		if (rect.top < 0) {
 			rect.top = 0;
 		}
-		var screentop = cm.curOp && cm.curOp.scrollTop != null ? cm.curOp.scrollTop : display.scroller.scrollTop;
-		var screen = displayHeight(cm),
-			result = {};
+		const screentop = cm.curOp && cm.curOp.scrollTop != null ? cm.curOp.scrollTop : display.scroller.scrollTop;
+		const screen = displayHeight(cm);
+		const result = {};
 		if (rect.bottom - rect.top > screen) {
 			rect.bottom = rect.top + screen;
 		}
-		var docBottom = cm.doc.height + paddingVert(display);
-		var atTop = rect.top < snapMargin,
-			atBottom = rect.bottom > docBottom - snapMargin;
+		const docBottom = cm.doc.height + paddingVert(display);
+		const atTop = rect.top < snapMargin;
+		const atBottom = rect.bottom > docBottom - snapMargin;
 		if (rect.top < screentop) {
 			result.scrollTop = atTop ? 0 : rect.top;
 		} else if (rect.bottom > screentop + screen) {
-			var newTop = Math.min(rect.top, (atBottom ? docBottom : rect.bottom) - screen);
+			const newTop = Math.min(rect.top, (atBottom ? docBottom : rect.bottom) - screen);
 			if (newTop != screentop) {
 				result.scrollTop = newTop;
 			}
 		}
 
-		var gutterSpace = cm.options.fixedGutter ? 0 : display.gutters.offsetWidth;
-		var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft - gutterSpace;
-		var screenw = displayWidth(cm) - display.gutters.offsetWidth;
-		var tooWide = rect.right - rect.left > screenw;
+		const gutterSpace = cm.options.fixedGutter ? 0 : display.gutters.offsetWidth;
+		const screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft - gutterSpace;
+		const screenw = displayWidth(cm) - display.gutters.offsetWidth;
+		const tooWide = rect.right - rect.left > screenw;
 		if (tooWide) {
 			rect.right = rect.left + screenw;
 		}
@@ -4685,7 +4685,7 @@
 	// shown.
 	function ensureCursorVisible(cm) {
 		resolveScrollToPos(cm);
-		var cur = cm.getCursor();
+		const cur = cm.getCursor();
 		cm.curOp.scrollToPos = {
 			from: cur,
 			to: cur,
@@ -4715,17 +4715,17 @@
 	// 'simulates' scrolling that position into view in a cheap way, so
 	// that the effect of intermediate scroll commands is not ignored.
 	function resolveScrollToPos(cm) {
-		var range = cm.curOp.scrollToPos;
+		const range = cm.curOp.scrollToPos;
 		if (range) {
 			cm.curOp.scrollToPos = null;
-			var from = estimateCoords(cm, range.from),
-				to = estimateCoords(cm, range.to);
+			const from = estimateCoords(cm, range.from);
+			const to = estimateCoords(cm, range.to);
 			scrollToCoordsRange(cm, from, to, range.margin);
 		}
 	}
 
 	function scrollToCoordsRange(cm, from, to, margin) {
-		var sPos = calculateScrollPos(cm, {
+		const sPos = calculateScrollPos(cm, {
 			left: Math.min(from.left, to.left),
 			top: Math.min(from.top, to.top) - margin,
 			right: Math.max(from.right, to.right),
@@ -4782,9 +4782,9 @@
 	// Prepare DOM reads needed to update the scrollbars. Done in one
 	// shot to minimize update/measure roundtrips.
 	function measureForScrollbars(cm) {
-		var d = cm.display,
-			gutterW = d.gutters.offsetWidth;
-		var docH = Math.round(cm.doc.height + paddingVert(cm.display));
+		const d = cm.display;
+		const gutterW = d.gutters.offsetWidth;
+		const docH = Math.round(cm.doc.height + paddingVert(cm.display));
 		return {
 			clientHeight: d.scroller.clientHeight,
 			viewHeight: d.wrapper.clientHeight,
@@ -4799,10 +4799,10 @@
 		};
 	}
 
-	var NativeScrollbars = function (place, scroll, cm) {
+	const NativeScrollbars = function (place, scroll, cm) {
 		this.cm = cm;
-		var vert = (this.vert = elt("div", [elt("div", null, null, "min-width: 1px")], "CodeMirror-vscrollbar"));
-		var horiz = (this.horiz = elt("div", [elt("div", null, null, "height: 100%; min-height: 1px")], "CodeMirror-hscrollbar"));
+		const vert = (this.vert = elt("div", [elt("div", null, null, "min-width: 1px")], "CodeMirror-vscrollbar"));
+		const horiz = (this.horiz = elt("div", [elt("div", null, null, "height: 100%; min-height: 1px")], "CodeMirror-hscrollbar"));
 		vert.tabIndex = horiz.tabIndex = -1;
 		place(vert);
 		place(horiz);
@@ -4826,14 +4826,14 @@
 	};
 
 	NativeScrollbars.prototype.update = function (measure) {
-		var needsH = measure.scrollWidth > measure.clientWidth + 1;
-		var needsV = measure.scrollHeight > measure.clientHeight + 1;
-		var sWidth = measure.nativeBarWidth;
+		const needsH = measure.scrollWidth > measure.clientWidth + 1;
+		const needsV = measure.scrollHeight > measure.clientHeight + 1;
+		const sWidth = measure.nativeBarWidth;
 
 		if (needsV) {
 			this.vert.style.display = "block";
 			this.vert.style.bottom = needsH ? sWidth + "px" : "0";
-			var totalHeight = measure.viewHeight - (needsH ? sWidth : 0);
+			const totalHeight = measure.viewHeight - (needsH ? sWidth : 0);
 			// A bug in IE8 can cause this value to be negative, so guard it.
 			this.vert.firstChild.style.height = Math.max(0, measure.scrollHeight - measure.clientHeight + totalHeight) + "px";
 		} else {
@@ -4845,7 +4845,7 @@
 			this.horiz.style.display = "block";
 			this.horiz.style.right = needsV ? sWidth + "px" : "0";
 			this.horiz.style.left = measure.barLeft + "px";
-			var totalWidth = measure.viewWidth - measure.barLeft - (needsV ? sWidth : 0);
+			const totalWidth = measure.viewWidth - measure.barLeft - (needsV ? sWidth : 0);
 			this.horiz.firstChild.style.width = Math.max(0, measure.scrollWidth - measure.clientWidth + totalWidth) + "px";
 		} else {
 			this.horiz.style.display = "";
@@ -4881,7 +4881,7 @@
 	};
 
 	NativeScrollbars.prototype.zeroWidthHack = function () {
-		var w = mac && !mac_geMountainLion ? "12px" : "18px";
+		const w = mac && !mac_geMountainLion ? "12px" : "18px";
 		this.horiz.style.height = this.vert.style.width = w;
 		this.horiz.style.pointerEvents = this.vert.style.pointerEvents = "none";
 		this.disableHoriz = new Delayed();
@@ -4897,8 +4897,8 @@
 			// itself (when the bar is still visible) or its filler child
 			// (when the bar is hidden). If it is still visible, we keep
 			// it enabled, if it's hidden, we disable pointer events.
-			var box = bar.getBoundingClientRect();
-			var elt =
+			const box = bar.getBoundingClientRect();
+			const elt =
 				type == "vert"
 					? document.elementFromPoint(box.right - 1, (box.top + box.bottom) / 2)
 					: document.elementFromPoint((box.right + box.left) / 2, box.bottom - 1);
@@ -4912,12 +4912,12 @@
 	};
 
 	NativeScrollbars.prototype.clear = function () {
-		var parent = this.horiz.parentNode;
+		const parent = this.horiz.parentNode;
 		parent.removeChild(this.horiz);
 		parent.removeChild(this.vert);
 	};
 
-	var NullScrollbars = function () {};
+	const NullScrollbars = function () {};
 
 	NullScrollbars.prototype.update = function () {
 		return { bottom: 0, right: 0 };
@@ -4930,10 +4930,10 @@
 		if (!measure) {
 			measure = measureForScrollbars(cm);
 		}
-		var startWidth = cm.display.barWidth,
-			startHeight = cm.display.barHeight;
+		let startWidth = cm.display.barWidth;
+		let startHeight = cm.display.barHeight;
 		updateScrollbarsInner(cm, measure);
-		for (var i = 0; (i < 4 && startWidth != cm.display.barWidth) || startHeight != cm.display.barHeight; i++) {
+		for (let i = 0; (i < 4 && startWidth != cm.display.barWidth) || startHeight != cm.display.barHeight; i++) {
 			if (startWidth != cm.display.barWidth && cm.options.lineWrapping) {
 				updateHeightsInViewport(cm);
 			}
@@ -4946,8 +4946,8 @@
 	// Re-synchronize the fake scrollbars with the actual size of the
 	// content.
 	function updateScrollbarsInner(cm, measure) {
-		var d = cm.display;
-		var sizes = d.scrollbars.update(measure);
+		const d = cm.display;
+		const sizes = d.scrollbars.update(measure);
 
 		d.sizer.style.paddingRight = (d.barWidth = sizes.right) + "px";
 		d.sizer.style.paddingBottom = (d.barHeight = sizes.bottom) + "px";
@@ -4969,7 +4969,7 @@
 		}
 	}
 
-	var scrollbarModel = { native: NativeScrollbars, null: NullScrollbars };
+	const scrollbarModel = { native: NativeScrollbars, null: NullScrollbars };
 
 	function initScrollbars(cm) {
 		if (cm.display.scrollbars) {
@@ -5012,7 +5012,7 @@
 	// error-prone). Instead, display updates are batched and then all
 	// combined and executed at once.
 
-	var nextOpId = 0;
+	let nextOpId = 0;
 	// Start a new operation.
 	function startOperation(cm) {
 		cm.curOp = {
@@ -5038,10 +5038,10 @@
 
 	// Finish an operation, updating the display and signalling delayed events
 	function endOperation(cm) {
-		var op = cm.curOp;
+		const op = cm.curOp;
 		if (op) {
 			finishOperation(op, function (group) {
-				for (var i = 0; i < group.ops.length; i++) {
+				for (let i = 0; i < group.ops.length; i++) {
 					group.ops[i].cm.curOp = null;
 				}
 				endOperations(group);
@@ -5052,37 +5052,37 @@
 	// The DOM updates done when an operation finishes are batched so
 	// that the minimum number of relayouts are required.
 	function endOperations(group) {
-		var ops = group.ops;
+		const ops = group.ops;
 		for (
-			var i = 0;
+			let i = 0;
 			i < ops.length;
 			i++ // Read DOM
 		) {
 			endOperation_R1(ops[i]);
 		}
 		for (
-			var i$1 = 0;
+			let i$1 = 0;
 			i$1 < ops.length;
 			i$1++ // Write DOM (maybe)
 		) {
 			endOperation_W1(ops[i$1]);
 		}
 		for (
-			var i$2 = 0;
+			let i$2 = 0;
 			i$2 < ops.length;
 			i$2++ // Read DOM
 		) {
 			endOperation_R2(ops[i$2]);
 		}
 		for (
-			var i$3 = 0;
+			let i$3 = 0;
 			i$3 < ops.length;
 			i$3++ // Write DOM (maybe)
 		) {
 			endOperation_W2(ops[i$3]);
 		}
 		for (
-			var i$4 = 0;
+			let i$4 = 0;
 			i$4 < ops.length;
 			i$4++ // Read DOM
 		) {
@@ -5091,8 +5091,8 @@
 	}
 
 	function endOperation_R1(op) {
-		var cm = op.cm,
-			display = cm.display;
+		const cm = op.cm;
+		const display = cm.display;
 		maybeClipScrollbars(cm);
 		if (op.updateMaxLine) {
 			findMaxLine(cm);
@@ -5112,8 +5112,8 @@
 	}
 
 	function endOperation_R2(op) {
-		var cm = op.cm,
-			display = cm.display;
+		const cm = op.cm;
+		const display = cm.display;
 		if (op.updatedDisplay) {
 			updateHeightsInViewport(cm);
 		}
@@ -5139,7 +5139,7 @@
 	}
 
 	function endOperation_W2(op) {
-		var cm = op.cm;
+		const cm = op.cm;
 
 		if (op.adjustWidthTo != null) {
 			cm.display.sizer.style.minWidth = op.adjustWidthTo + "px";
@@ -5149,7 +5149,7 @@
 			cm.display.maxLineChanged = false;
 		}
 
-		var takeFocus = op.focus && op.focus == activeElt();
+		const takeFocus = op.focus && op.focus == activeElt();
 		if (op.preparedSelection) {
 			cm.display.input.showSelection(op.preparedSelection, takeFocus);
 		}
@@ -5173,9 +5173,9 @@
 	}
 
 	function endOperation_finish(op) {
-		var cm = op.cm,
-			display = cm.display,
-			doc = cm.doc;
+		const cm = op.cm;
+		const display = cm.display;
+		const doc = cm.doc;
 
 		if (op.updatedDisplay) {
 			postUpdateDisplay(cm, op.update);
@@ -5196,23 +5196,23 @@
 		}
 		// If we need to scroll a specific position into view, do so.
 		if (op.scrollToPos) {
-			var rect = scrollPosIntoView(cm, clipPos(doc, op.scrollToPos.from), clipPos(doc, op.scrollToPos.to), op.scrollToPos.margin);
+			const rect = scrollPosIntoView(cm, clipPos(doc, op.scrollToPos.from), clipPos(doc, op.scrollToPos.to), op.scrollToPos.margin);
 			maybeScrollWindow(cm, rect);
 		}
 
 		// Fire events for markers that are hidden/unidden by editing or
 		// undoing
-		var hidden = op.maybeHiddenMarkers,
-			unhidden = op.maybeUnhiddenMarkers;
+		const hidden = op.maybeHiddenMarkers;
+		const unhidden = op.maybeUnhiddenMarkers;
 		if (hidden) {
-			for (var i = 0; i < hidden.length; ++i) {
+			for (let i = 0; i < hidden.length; ++i) {
 				if (!hidden[i].lines.length) {
 					signal(hidden[i], "hide");
 				}
 			}
 		}
 		if (unhidden) {
-			for (var i$1 = 0; i$1 < unhidden.length; ++i$1) {
+			for (let i$1 = 0; i$1 < unhidden.length; ++i$1) {
 				if (unhidden[i$1].lines.length) {
 					signal(unhidden[i$1], "unhide");
 				}
@@ -5275,7 +5275,7 @@
 	}
 	function docMethodOp(f) {
 		return function () {
-			var cm = this.cm;
+			const cm = this.cm;
 			if (!cm || cm.curOp) {
 				return f.apply(this, arguments);
 			}
@@ -5297,36 +5297,36 @@
 	}
 
 	function highlightWorker(cm) {
-		var doc = cm.doc;
+		const doc = cm.doc;
 		if (doc.highlightFrontier >= cm.display.viewTo) {
 			return;
 		}
-		var end = +new Date() + cm.options.workTime;
-		var context = getContextBefore(cm, doc.highlightFrontier);
-		var changedLines = [];
+		const end = +new Date() + cm.options.workTime;
+		const context = getContextBefore(cm, doc.highlightFrontier);
+		const changedLines = [];
 
 		doc.iter(context.line, Math.min(doc.first + doc.size, cm.display.viewTo + 500), function (line) {
 			if (context.line >= cm.display.viewFrom) {
 				// Visible
-				var oldStyles = line.styles;
-				var resetState = line.text.length > cm.options.maxHighlightLength ? copyState(doc.mode, context.state) : null;
-				var highlighted = highlightLine(cm, line, context, true);
+				const oldStyles = line.styles;
+				const resetState = line.text.length > cm.options.maxHighlightLength ? copyState(doc.mode, context.state) : null;
+				const highlighted = highlightLine(cm, line, context, true);
 				if (resetState) {
 					context.state = resetState;
 				}
 				line.styles = highlighted.styles;
-				var oldCls = line.styleClasses,
-					newCls = highlighted.classes;
+				const oldCls = line.styleClasses;
+				const newCls = highlighted.classes;
 				if (newCls) {
 					line.styleClasses = newCls;
 				} else if (oldCls) {
 					line.styleClasses = null;
 				}
-				var ischange =
+				let ischange =
 					!oldStyles ||
 					oldStyles.length != line.styles.length ||
 					(oldCls != newCls && (!oldCls || !newCls || oldCls.bgClass != newCls.bgClass || oldCls.textClass != newCls.textClass));
-				for (var i = 0; !ischange && i < oldStyles.length; ++i) {
+				for (let i = 0; !ischange && i < oldStyles.length; ++i) {
 					ischange = oldStyles[i] != line.styles[i];
 				}
 				if (ischange) {
@@ -5350,7 +5350,7 @@
 		doc.modeFrontier = Math.max(doc.modeFrontier, context.line);
 		if (changedLines.length) {
 			runInOp(cm, function () {
-				for (var i = 0; i < changedLines.length; i++) {
+				for (let i = 0; i < changedLines.length; i++) {
 					regLineChange(cm, changedLines[i], "text");
 				}
 			});
@@ -5360,7 +5360,7 @@
 	// DISPLAY DRAWING
 
 	var DisplayUpdate = function (cm, viewport, force) {
-		var display = cm.display;
+		const display = cm.display;
 
 		this.viewport = viewport;
 		// Store some values that we'll need later (but don't want to force a relayout for)
@@ -5380,13 +5380,13 @@
 		}
 	};
 	DisplayUpdate.prototype.finish = function () {
-		for (var i = 0; i < this.events.length; i++) {
+		for (let i = 0; i < this.events.length; i++) {
 			signal.apply(null, this.events[i]);
 		}
 	};
 
 	function maybeClipScrollbars(cm) {
-		var display = cm.display;
+		const display = cm.display;
 		if (!display.scrollbarsClipped && display.scroller.offsetWidth) {
 			display.nativeBarWidth = display.scroller.offsetWidth - display.scroller.clientWidth;
 			display.heightForcer.style.height = scrollGap(cm) + "px";
@@ -5400,13 +5400,13 @@
 		if (cm.hasFocus()) {
 			return null;
 		}
-		var active = activeElt();
+		const active = activeElt();
 		if (!active || !contains(cm.display.lineDiv, active)) {
 			return null;
 		}
-		var result = { activeElt: active };
+		const result = { activeElt: active };
 		if (window.getSelection) {
-			var sel = window.getSelection();
+			const sel = window.getSelection();
 			if (sel.anchorNode && sel.extend && contains(cm.display.lineDiv, sel.anchorNode)) {
 				result.anchorNode = sel.anchorNode;
 				result.anchorOffset = sel.anchorOffset;
@@ -5428,8 +5428,8 @@
 			contains(document.body, snapshot.anchorNode) &&
 			contains(document.body, snapshot.focusNode)
 		) {
-			var sel = window.getSelection(),
-				range = document.createRange();
+			const sel = window.getSelection();
+			const range = document.createRange();
 			range.setEnd(snapshot.anchorNode, snapshot.anchorOffset);
 			range.collapse(false);
 			sel.removeAllRanges();
@@ -5442,8 +5442,8 @@
 	// (returning false) when there is nothing to be done and forced is
 	// false.
 	function updateDisplayIfNeeded(cm, update) {
-		var display = cm.display,
-			doc = cm.doc;
+		const display = cm.display;
+		const doc = cm.doc;
 
 		if (update.editorIsHidden) {
 			resetView(cm);
@@ -5468,9 +5468,9 @@
 		}
 
 		// Compute a suitable new viewport (from & to)
-		var end = doc.first + doc.size;
-		var from = Math.max(update.visible.from - cm.options.viewportMargin, doc.first);
-		var to = Math.min(end, update.visible.to + cm.options.viewportMargin);
+		const end = doc.first + doc.size;
+		let from = Math.max(update.visible.from - cm.options.viewportMargin, doc.first);
+		let to = Math.min(end, update.visible.to + cm.options.viewportMargin);
 		if (display.viewFrom < from && from - display.viewFrom < 20) {
 			from = Math.max(doc.first, display.viewFrom);
 		}
@@ -5482,7 +5482,7 @@
 			to = visualLineEndNo(cm.doc, to);
 		}
 
-		var different =
+		const different =
 			from != display.viewFrom || to != display.viewTo || display.lastWrapHeight != update.wrapperHeight || display.lastWrapWidth != update.wrapperWidth;
 		adjustView(cm, from, to);
 
@@ -5490,7 +5490,7 @@
 		// Position the mover div to align with the current scroll position
 		cm.display.mover.style.top = display.viewOffset + "px";
 
-		var toUpdate = countDirtyView(cm);
+		const toUpdate = countDirtyView(cm);
 		if (
 			!different &&
 			toUpdate == 0 &&
@@ -5503,7 +5503,7 @@
 
 		// For big changes, we hide the enclosing element during the
 		// update, since that speeds up the operations on most browsers.
-		var selSnapshot = selectionSnapshot(cm);
+		const selSnapshot = selectionSnapshot(cm);
 		if (toUpdate > 4) {
 			display.lineDiv.style.display = "none";
 		}
@@ -5534,9 +5534,9 @@
 	}
 
 	function postUpdateDisplay(cm, update) {
-		var viewport = update.viewport;
+		let viewport = update.viewport;
 
-		for (var first = true; ; first = false) {
+		for (let first = true; ; first = false) {
 			if (!first || !cm.options.lineWrapping || update.oldDisplayWidth == displayWidth(cm)) {
 				// Clip forced viewport to actual scrollable area.
 				if (viewport && viewport.top != null) {
@@ -5557,7 +5557,7 @@
 				break;
 			}
 			updateHeightsInViewport(cm);
-			var barMeasure = measureForScrollbars(cm);
+			const barMeasure = measureForScrollbars(cm);
 			updateSelection(cm);
 			updateScrollbars(cm, barMeasure);
 			setDocumentHeight(cm, barMeasure);
@@ -5573,11 +5573,11 @@
 	}
 
 	function updateDisplaySimple(cm, viewport) {
-		var update = new DisplayUpdate(cm, viewport);
+		const update = new DisplayUpdate(cm, viewport);
 		if (updateDisplayIfNeeded(cm, update)) {
 			updateHeightsInViewport(cm);
 			postUpdateDisplay(cm, update);
-			var barMeasure = measureForScrollbars(cm);
+			const barMeasure = measureForScrollbars(cm);
 			updateSelection(cm);
 			updateScrollbars(cm, barMeasure);
 			setDocumentHeight(cm, barMeasure);
@@ -5590,13 +5590,13 @@
 	// that are not there yet, and updating the ones that are out of
 	// date.
 	function patchDisplay(cm, updateNumbersFrom, dims) {
-		var display = cm.display,
-			lineNumbers = cm.options.lineNumbers;
-		var container = display.lineDiv,
-			cur = container.firstChild;
+		const display = cm.display;
+		const lineNumbers = cm.options.lineNumbers;
+		const container = display.lineDiv;
+		let cur = container.firstChild;
 
 		function rm(node) {
-			var next = node.nextSibling;
+			const next = node.nextSibling;
 			// Works around a throw-scroll bug in OS X Webkit
 			if (webkit && mac && cm.display.currentWheelTarget == node) {
 				node.style.display = "none";
@@ -5606,23 +5606,23 @@
 			return next;
 		}
 
-		var view = display.view,
-			lineN = display.viewFrom;
+		const view = display.view;
+		let lineN = display.viewFrom;
 		// Loop over the elements in the view, syncing cur (the DOM nodes
 		// in display.lineDiv) with the view as we go.
-		for (var i = 0; i < view.length; i++) {
-			var lineView = view[i];
+		for (let i = 0; i < view.length; i++) {
+			const lineView = view[i];
 			if (lineView.hidden);
 			else if (!lineView.node || lineView.node.parentNode != container) {
 				// Not drawn yet
-				var node = buildLineElement(cm, lineView, lineN, dims);
+				const node = buildLineElement(cm, lineView, lineN, dims);
 				container.insertBefore(node, cur);
 			} else {
 				// Already drawn
 				while (cur != lineView.node) {
 					cur = rm(cur);
 				}
-				var updateNumber = lineNumbers && updateNumbersFrom != null && updateNumbersFrom <= lineN && lineView.lineNumber;
+				let updateNumber = lineNumbers && updateNumbersFrom != null && updateNumbersFrom <= lineN && lineView.lineNumber;
 				if (lineView.changes) {
 					if (indexOf(lineView.changes, "gutter") > -1) {
 						updateNumber = false;
@@ -5643,7 +5643,7 @@
 	}
 
 	function updateGutterSpace(display) {
-		var width = display.gutters.offsetWidth;
+		const width = display.gutters.offsetWidth;
 		display.sizer.style.marginLeft = width + "px";
 	}
 
@@ -5656,15 +5656,15 @@
 	// Re-align line numbers and gutter marks to compensate for
 	// horizontal scrolling.
 	function alignHorizontally(cm) {
-		var display = cm.display,
-			view = display.view;
+		const display = cm.display;
+		const view = display.view;
 		if (!display.alignWidgets && (!display.gutters.firstChild || !cm.options.fixedGutter)) {
 			return;
 		}
-		var comp = compensateForHScroll(display) - display.scroller.scrollLeft + cm.doc.scrollLeft;
-		var gutterW = display.gutters.offsetWidth,
-			left = comp + "px";
-		for (var i = 0; i < view.length; i++) {
+		const comp = compensateForHScroll(display) - display.scroller.scrollLeft + cm.doc.scrollLeft;
+		const gutterW = display.gutters.offsetWidth;
+		const left = comp + "px";
+		for (let i = 0; i < view.length; i++) {
 			if (!view[i].hidden) {
 				if (cm.options.fixedGutter) {
 					if (view[i].gutter) {
@@ -5674,9 +5674,9 @@
 						view[i].gutterBackground.style.left = left;
 					}
 				}
-				var align = view[i].alignable;
+				const align = view[i].alignable;
 				if (align) {
-					for (var j = 0; j < align.length; j++) {
+					for (let j = 0; j < align.length; j++) {
 						align[j].style.left = left;
 					}
 				}
@@ -5694,13 +5694,13 @@
 		if (!cm.options.lineNumbers) {
 			return false;
 		}
-		var doc = cm.doc,
-			last = lineNumberFor(cm.options, doc.first + doc.size - 1),
-			display = cm.display;
+		const doc = cm.doc;
+		const last = lineNumberFor(cm.options, doc.first + doc.size - 1);
+		const display = cm.display;
 		if (last.length != display.lineNumChars) {
-			var test = display.measure.appendChild(elt("div", [elt("div", last)], "CodeMirror-linenumber CodeMirror-gutter-elt"));
-			var innerW = test.firstChild.offsetWidth,
-				padding = test.offsetWidth - innerW;
+			const test = display.measure.appendChild(elt("div", [elt("div", last)], "CodeMirror-linenumber CodeMirror-gutter-elt"));
+			const innerW = test.firstChild.offsetWidth;
+			const padding = test.offsetWidth - innerW;
 			display.lineGutter.style.width = "";
 			display.lineNumInnerWidth = Math.max(innerW, display.lineGutter.offsetWidth - padding) + 1;
 			display.lineNumWidth = display.lineNumInnerWidth + padding;
@@ -5713,12 +5713,12 @@
 	}
 
 	function getGutters(gutters, lineNumbers) {
-		var result = [],
-			sawLineNumbers = false;
-		for (var i = 0; i < gutters.length; i++) {
-			var name = gutters[i],
-				style = null;
-			if (typeof name != "string") {
+		const result = [];
+		let sawLineNumbers = false;
+		for (let i = 0; i < gutters.length; i++) {
+			let name = gutters[i];
+			let style = null;
+			if (typeof name !== "string") {
 				style = name.style;
 				name = name.className;
 			}
@@ -5740,15 +5740,15 @@
 	// Rebuild the gutter elements, ensure the margin to the left of the
 	// code matches their width.
 	function renderGutters(display) {
-		var gutters = display.gutters,
-			specs = display.gutterSpecs;
+		const gutters = display.gutters;
+		const specs = display.gutterSpecs;
 		removeChildren(gutters);
 		display.lineGutter = null;
-		for (var i = 0; i < specs.length; ++i) {
-			var ref = specs[i];
-			var className = ref.className;
-			var style = ref.style;
-			var gElt = gutters.appendChild(elt("div", null, "CodeMirror-gutter " + className));
+		for (let i = 0; i < specs.length; ++i) {
+			const ref = specs[i];
+			const className = ref.className;
+			const style = ref.style;
+			const gElt = gutters.appendChild(elt("div", null, "CodeMirror-gutter " + className));
 			if (style) {
 				gElt.style.cssText = style;
 			}
@@ -5772,7 +5772,7 @@
 	// display-related state.
 
 	function Display(place, doc, input, options) {
-		var d = this;
+		const d = this;
 		this.input = input;
 
 		// Covers bottom-right square when both scrollbars are present.
@@ -5793,7 +5793,7 @@
 		d.lineMeasure = elt("div", null, "CodeMirror-measure");
 		// Wraps everything that needs to exist inside the vertically-padded coordinate system
 		d.lineSpace = eltP("div", [d.measure, d.lineMeasure, d.selectionDiv, d.cursorDiv, d.lineDiv], null, "position: relative; outline: none");
-		var lines = eltP("div", [d.lineSpace], "CodeMirror-lines");
+		const lines = eltP("div", [d.lineSpace], "CodeMirror-lines");
 		// Moved around its parent to cover visible view.
 		d.mover = elt("div", [lines], null, "position: relative");
 		// Set to the height of the document, allowing scrolling.
@@ -5891,8 +5891,8 @@
 	// is that it gives us a chance to update the display before the
 	// actual scrolling happens, reducing flickering.
 
-	var wheelSamples = 0,
-		wheelPixelsPerUnit = null;
+	let wheelSamples = 0;
+	let wheelPixelsPerUnit = null;
 	// Fill in a browser-detected starting value on browsers where we
 	// know one. These don't have to be accurate -- the result of them
 	// being wrong would just be a slight flicker on the first wheel
@@ -5908,8 +5908,8 @@
 	}
 
 	function wheelEventDelta(e) {
-		var dx = e.wheelDeltaX,
-			dy = e.wheelDeltaY;
+		let dx = e.wheelDeltaX;
+		let dy = e.wheelDeltaY;
 		if (dx == null && e.detail && e.axis == e.HORIZONTAL_AXIS) {
 			dx = e.detail;
 		}
@@ -5921,22 +5921,22 @@
 		return { x: dx, y: dy };
 	}
 	function wheelEventPixels(e) {
-		var delta = wheelEventDelta(e);
+		const delta = wheelEventDelta(e);
 		delta.x *= wheelPixelsPerUnit;
 		delta.y *= wheelPixelsPerUnit;
 		return delta;
 	}
 
 	function onScrollWheel(cm, e) {
-		var delta = wheelEventDelta(e),
-			dx = delta.x,
-			dy = delta.y;
+		const delta = wheelEventDelta(e);
+		const dx = delta.x;
+		const dy = delta.y;
 
-		var display = cm.display,
-			scroll = display.scroller;
+		const display = cm.display;
+		const scroll = display.scroller;
 		// Quit if there's nothing to scroll here
-		var canScrollX = scroll.scrollWidth > scroll.clientWidth;
-		var canScrollY = scroll.scrollHeight > scroll.clientHeight;
+		const canScrollX = scroll.scrollWidth > scroll.clientWidth;
+		const canScrollY = scroll.scrollHeight > scroll.clientHeight;
 		if (!((dx && canScrollX) || (dy && canScrollY))) {
 			return;
 		}
@@ -5946,8 +5946,8 @@
 		// This hack (see related code in patchDisplay) makes sure the
 		// element is kept around.
 		if (dy && mac && webkit) {
-			outer: for (var cur = e.target, view = display.view; cur != scroll; cur = cur.parentNode) {
-				for (var i = 0; i < view.length; i++) {
+			outer: for (let cur = e.target, view = display.view; cur != scroll; cur = cur.parentNode) {
+				for (let i = 0; i < view.length; i++) {
 					if (view[i].node == cur) {
 						cm.display.currentWheelTarget = cur;
 						break outer;
@@ -5981,9 +5981,9 @@
 		// 'Project' the visible viewport to cover the area that is being
 		// scrolled into view (if we know enough to estimate it).
 		if (dy && wheelPixelsPerUnit != null) {
-			var pixels = dy * wheelPixelsPerUnit;
-			var top = cm.doc.scrollTop,
-				bot = top + display.wrapper.clientHeight;
+			const pixels = dy * wheelPixelsPerUnit;
+			let top = cm.doc.scrollTop;
+			let bot = top + display.wrapper.clientHeight;
 			if (pixels < 0) {
 				top = Math.max(0, top + pixels - 50);
 			} else {
@@ -6002,9 +6002,9 @@
 					if (display.wheelStartX == null) {
 						return;
 					}
-					var movedX = scroll.scrollLeft - display.wheelStartX;
-					var movedY = scroll.scrollTop - display.wheelStartY;
-					var sample = (movedY && display.wheelDY && movedY / display.wheelDY) || (movedX && display.wheelDX && movedX / display.wheelDX);
+					const movedX = scroll.scrollLeft - display.wheelStartX;
+					const movedY = scroll.scrollTop - display.wheelStartY;
+					const sample = (movedY && display.wheelDY && movedY / display.wheelDY) || (movedX && display.wheelDX && movedX / display.wheelDX);
 					display.wheelStartX = display.wheelStartY = null;
 					if (!sample) {
 						return;
@@ -6024,7 +6024,7 @@
 	// (and non-touching) ranges, sorted, and an integer that indicates
 	// which one is the primary selection (the one that's scrolled into
 	// view, that getCursor returns, etc).
-	var Selection = function (ranges, primIndex) {
+	const Selection = function (ranges, primIndex) {
 		this.ranges = ranges;
 		this.primIndex = primIndex;
 	};
@@ -6040,9 +6040,9 @@
 		if (other.primIndex != this.primIndex || other.ranges.length != this.ranges.length) {
 			return false;
 		}
-		for (var i = 0; i < this.ranges.length; i++) {
-			var here = this.ranges[i],
-				there = other.ranges[i];
+		for (let i = 0; i < this.ranges.length; i++) {
+			const here = this.ranges[i];
+			const there = other.ranges[i];
 			if (!equalCursorPos(here.anchor, there.anchor) || !equalCursorPos(here.head, there.head)) {
 				return false;
 			}
@@ -6051,15 +6051,15 @@
 	};
 
 	Selection.prototype.deepCopy = function () {
-		var out = [];
-		for (var i = 0; i < this.ranges.length; i++) {
+		const out = [];
+		for (let i = 0; i < this.ranges.length; i++) {
 			out[i] = new Range(copyPos(this.ranges[i].anchor), copyPos(this.ranges[i].head));
 		}
 		return new Selection(out, this.primIndex);
 	};
 
 	Selection.prototype.somethingSelected = function () {
-		for (var i = 0; i < this.ranges.length; i++) {
+		for (let i = 0; i < this.ranges.length; i++) {
 			if (!this.ranges[i].empty()) {
 				return true;
 			}
@@ -6071,8 +6071,8 @@
 		if (!end) {
 			end = pos;
 		}
-		for (var i = 0; i < this.ranges.length; i++) {
-			var range = this.ranges[i];
+		for (let i = 0; i < this.ranges.length; i++) {
+			const range = this.ranges[i];
 			if (cmp(end, range.from()) >= 0 && cmp(pos, range.to()) <= 0) {
 				return i;
 			}
@@ -6099,20 +6099,20 @@
 	// build a selection out of it. 'Consumes' ranges array (modifying
 	// it).
 	function normalizeSelection(cm, ranges, primIndex) {
-		var mayTouch = cm && cm.options.selectionsMayTouch;
-		var prim = ranges[primIndex];
+		const mayTouch = cm && cm.options.selectionsMayTouch;
+		const prim = ranges[primIndex];
 		ranges.sort(function (a, b) {
 			return cmp(a.from(), b.from());
 		});
 		primIndex = indexOf(ranges, prim);
-		for (var i = 1; i < ranges.length; i++) {
-			var cur = ranges[i],
-				prev = ranges[i - 1];
-			var diff = cmp(prev.to(), cur.from());
+		for (let i = 1; i < ranges.length; i++) {
+			const cur = ranges[i];
+			const prev = ranges[i - 1];
+			const diff = cmp(prev.to(), cur.from());
 			if (mayTouch && !cur.empty() ? diff > 0 : diff >= 0) {
-				var from = minPos(prev.from(), cur.from()),
-					to = maxPos(prev.to(), cur.to());
-				var inv = prev.empty() ? cur.from() == cur.head : prev.from() == prev.head;
+				const from = minPos(prev.from(), cur.from());
+				const to = maxPos(prev.to(), cur.to());
+				const inv = prev.empty() ? cur.from() == cur.head : prev.from() == prev.head;
 				if (i <= primIndex) {
 					--primIndex;
 				}
@@ -6145,8 +6145,8 @@
 			return changeEnd(change);
 		}
 
-		var line = pos.line + change.text.length - (change.to.line - change.from.line) - 1,
-			ch = pos.ch;
+		const line = pos.line + change.text.length - (change.to.line - change.from.line) - 1;
+		let ch = pos.ch;
 		if (pos.line == change.to.line) {
 			ch += changeEnd(change).ch - change.to.ch;
 		}
@@ -6154,9 +6154,9 @@
 	}
 
 	function computeSelAfterChange(doc, change) {
-		var out = [];
-		for (var i = 0; i < doc.sel.ranges.length; i++) {
-			var range = doc.sel.ranges[i];
+		const out = [];
+		for (let i = 0; i < doc.sel.ranges.length; i++) {
+			const range = doc.sel.ranges[i];
 			out.push(new Range(adjustForChange(range.anchor, change), adjustForChange(range.head, change)));
 		}
 		return normalizeSelection(doc.cm, out, doc.sel.primIndex);
@@ -6173,18 +6173,18 @@
 	// Used by replaceSelections to allow moving the selection to the
 	// start or around the replaced test. Hint may be "start" or "around".
 	function computeReplacedSel(doc, changes, hint) {
-		var out = [];
-		var oldPrev = Pos(doc.first, 0),
-			newPrev = oldPrev;
-		for (var i = 0; i < changes.length; i++) {
-			var change = changes[i];
-			var from = offsetPos(change.from, oldPrev, newPrev);
-			var to = offsetPos(changeEnd(change), oldPrev, newPrev);
+		const out = [];
+		let oldPrev = Pos(doc.first, 0);
+		let newPrev = oldPrev;
+		for (let i = 0; i < changes.length; i++) {
+			const change = changes[i];
+			const from = offsetPos(change.from, oldPrev, newPrev);
+			const to = offsetPos(changeEnd(change), oldPrev, newPrev);
 			oldPrev = change.to;
 			newPrev = to;
 			if (hint == "around") {
-				var range = doc.sel.ranges[i],
-					inv = cmp(range.head, range.anchor) < 0;
+				const range = doc.sel.ranges[i];
+				const inv = cmp(range.head, range.anchor) < 0;
 				out[i] = new Range(inv ? to : from, inv ? from : to);
 			} else {
 				out[i] = new Range(from, from);
@@ -6236,21 +6236,21 @@
 			signalLater(line, "change", line, change);
 		}
 		function linesFor(start, end) {
-			var result = [];
-			for (var i = start; i < end; ++i) {
+			const result = [];
+			for (let i = start; i < end; ++i) {
 				result.push(new Line(text[i], spansFor(i), estimateHeight));
 			}
 			return result;
 		}
 
-		var from = change.from,
-			to = change.to,
-			text = change.text;
-		var firstLine = getLine(doc, from.line),
-			lastLine = getLine(doc, to.line);
-		var lastText = lst(text),
-			lastSpans = spansFor(text.length - 1),
-			nlines = to.line - from.line;
+		const from = change.from;
+		const to = change.to;
+		var text = change.text;
+		const firstLine = getLine(doc, from.line);
+		const lastLine = getLine(doc, to.line);
+		const lastText = lst(text);
+		const lastSpans = spansFor(text.length - 1);
+		const nlines = to.line - from.line;
 
 		// Adjust the line structure
 		if (change.full) {
@@ -6259,7 +6259,7 @@
 		} else if (isWholeLineUpdate(doc, change)) {
 			// This is a whole-line replace. Treated specially to make
 			// sure line objects move the way they are supposed to.
-			var added = linesFor(0, text.length - 1);
+			const added = linesFor(0, text.length - 1);
 			update(lastLine, lastLine.text, lastSpans);
 			if (nlines) {
 				doc.remove(from.line, nlines);
@@ -6271,7 +6271,7 @@
 			if (text.length == 1) {
 				update(firstLine, firstLine.text.slice(0, from.ch) + lastText + firstLine.text.slice(to.ch), lastSpans);
 			} else {
-				var added$1 = linesFor(1, text.length - 1);
+				const added$1 = linesFor(1, text.length - 1);
 				added$1.push(new Line(lastText + firstLine.text.slice(to.ch), lastSpans, estimateHeight));
 				update(firstLine, firstLine.text.slice(0, from.ch) + text[0], spansFor(0));
 				doc.insert(from.line + 1, added$1);
@@ -6282,7 +6282,7 @@
 		} else {
 			update(firstLine, firstLine.text.slice(0, from.ch) + text[0], spansFor(0));
 			update(lastLine, lastText + lastLine.text.slice(to.ch), lastSpans);
-			var added$2 = linesFor(1, text.length - 1);
+			const added$2 = linesFor(1, text.length - 1);
 			if (nlines > 1) {
 				doc.remove(from.line + 1, nlines - 1);
 			}
@@ -6296,12 +6296,12 @@
 	function linkedDocs(doc, f, sharedHistOnly) {
 		function propagate(doc, skip, sharedHist) {
 			if (doc.linked) {
-				for (var i = 0; i < doc.linked.length; ++i) {
-					var rel = doc.linked[i];
+				for (let i = 0; i < doc.linked.length; ++i) {
+					const rel = doc.linked[i];
 					if (rel.doc == skip) {
 						continue;
 					}
-					var shared = sharedHist && rel.sharedHist;
+					const shared = sharedHist && rel.sharedHist;
 					if (sharedHistOnly && !shared) {
 						continue;
 					}
@@ -6360,7 +6360,7 @@
 	// Create a history change event from an updateDoc-style change
 	// object.
 	function historyChangeFromChange(doc, change) {
-		var histChange = {
+		const histChange = {
 			from: copyPos(change.from),
 			to: changeEnd(change),
 			text: getBetween(doc, change.from, change.to),
@@ -6380,7 +6380,7 @@
 	// a change event.
 	function clearSelectionEvents(array) {
 		while (array.length) {
-			var last = lst(array);
+			const last = lst(array);
 			if (last.ranges) {
 				array.pop();
 			} else {
@@ -6407,11 +6407,11 @@
 	// a single operation, or are close together with an origin that
 	// allows merging (starting with "+") into a single event.
 	function addChangeToHistory(doc, change, selAfter, opId) {
-		var hist = doc.history;
+		const hist = doc.history;
 		hist.undone.length = 0;
-		var time = +new Date(),
-			cur;
-		var last;
+		const time = +new Date();
+		let cur;
+		let last;
 
 		if (
 			(hist.lastOp == opId ||
@@ -6433,7 +6433,7 @@
 			}
 		} else {
 			// Can not be merged, start a new event.
-			var before = lst(hist.done);
+			const before = lst(hist.done);
 			if (!before || !before.ranges) {
 				pushSelectionToHistory(doc.sel, hist.done);
 			}
@@ -6461,7 +6461,7 @@
 	}
 
 	function selectionEventCanBeMerged(doc, origin, prev, sel) {
-		var ch = origin.charAt(0);
+		const ch = origin.charAt(0);
 		return (
 			ch == "*" ||
 			(ch == "+" &&
@@ -6476,8 +6476,8 @@
 	// selection into the 'done' array when it was significantly
 	// different (in number of selected ranges, emptiness, or time).
 	function addSelectionToHistory(doc, sel, opId, options) {
-		var hist = doc.history,
-			origin = options && options.origin;
+		const hist = doc.history;
+		const origin = options && options.origin;
 
 		// A new event is started when the previous origin does not match
 		// the current, or the origins don't allow matching. Origins
@@ -6503,7 +6503,7 @@
 	}
 
 	function pushSelectionToHistory(sel, dest) {
-		var top = lst(dest);
+		const top = lst(dest);
 		if (!(top && top.ranges && top.equals(sel))) {
 			dest.push(sel);
 		}
@@ -6511,8 +6511,8 @@
 
 	// Used to store marked span information in the history.
 	function attachLocalSpans(doc, change, from, to) {
-		var existing = change["spans_" + doc.id],
-			n = 0;
+		let existing = change["spans_" + doc.id];
+		let n = 0;
 		doc.iter(Math.max(doc.first, from), Math.min(doc.first + doc.size, to), function (line) {
 			if (line.markedSpans) {
 				(existing || (existing = change["spans_" + doc.id] = {}))[n] = line.markedSpans;
@@ -6527,8 +6527,8 @@
 		if (!spans) {
 			return null;
 		}
-		var out;
-		for (var i = 0; i < spans.length; ++i) {
+		let out;
+		for (let i = 0; i < spans.length; ++i) {
 			if (spans[i].marker.explicitlyCleared) {
 				if (!out) {
 					out = spans.slice(0, i);
@@ -6542,12 +6542,12 @@
 
 	// Retrieve and filter the old marked spans stored in a change event.
 	function getOldSpans(doc, change) {
-		var found = change["spans_" + doc.id];
+		const found = change["spans_" + doc.id];
 		if (!found) {
 			return null;
 		}
-		var nw = [];
-		for (var i = 0; i < change.text.length; ++i) {
+		const nw = [];
+		for (let i = 0; i < change.text.length; ++i) {
 			nw.push(removeClearedSpans(found[i]));
 		}
 		return nw;
@@ -6558,8 +6558,8 @@
 	// existed in the history (so that deleting around a span and then
 	// undoing brings back the span).
 	function mergeOldSpans(doc, change) {
-		var old = getOldSpans(doc, change);
-		var stretched = stretchSpansOverChange(doc, change);
+		const old = getOldSpans(doc, change);
+		const stretched = stretchSpansOverChange(doc, change);
 		if (!old) {
 			return stretched;
 		}
@@ -6567,13 +6567,13 @@
 			return old;
 		}
 
-		for (var i = 0; i < old.length; ++i) {
-			var oldCur = old[i],
-				stretchCur = stretched[i];
+		for (let i = 0; i < old.length; ++i) {
+			const oldCur = old[i];
+			const stretchCur = stretched[i];
 			if (oldCur && stretchCur) {
-				spans: for (var j = 0; j < stretchCur.length; ++j) {
-					var span = stretchCur[j];
-					for (var k = 0; k < oldCur.length; ++k) {
+				spans: for (let j = 0; j < stretchCur.length; ++j) {
+					const span = stretchCur[j];
+					for (let k = 0; k < oldCur.length; ++k) {
 						if (oldCur[k].marker == span.marker) {
 							continue spans;
 						}
@@ -6590,22 +6590,22 @@
 	// Used both to provide a JSON-safe object in .getHistory, and, when
 	// detaching a document, to split the history in two
 	function copyHistoryArray(events, newGroup, instantiateSel) {
-		var copy = [];
-		for (var i = 0; i < events.length; ++i) {
-			var event = events[i];
+		const copy = [];
+		for (let i = 0; i < events.length; ++i) {
+			const event = events[i];
 			if (event.ranges) {
 				copy.push(instantiateSel ? Selection.prototype.deepCopy.call(event) : event);
 				continue;
 			}
-			var changes = event.changes,
-				newChanges = [];
+			const changes = event.changes;
+			const newChanges = [];
 			copy.push({ changes: newChanges });
-			for (var j = 0; j < changes.length; ++j) {
-				var change = changes[j],
-					m = void 0;
+			for (let j = 0; j < changes.length; ++j) {
+				const change = changes[j];
+				let m = void 0;
 				newChanges.push({ from: change.from, to: change.to, text: change.text });
 				if (newGroup) {
-					for (var prop in change) {
+					for (const prop in change) {
 						if ((m = prop.match(/^spans_(\d+)$/))) {
 							if (indexOf(newGroup, Number(m[1])) > -1) {
 								lst(newChanges)[prop] = change[prop];
@@ -6629,9 +6629,9 @@
 	// Used for cursor motion and such.
 	function extendRange(range, head, other, extend) {
 		if (extend) {
-			var anchor = range.anchor;
+			let anchor = range.anchor;
 			if (other) {
-				var posBefore = cmp(head, anchor) < 0;
+				const posBefore = cmp(head, anchor) < 0;
 				if (posBefore != cmp(other, anchor) < 0) {
 					anchor = head;
 					head = other;
@@ -6656,18 +6656,18 @@
 	// Extend all selections (pos is an array of selections with length
 	// equal the number of selections)
 	function extendSelections(doc, heads, options) {
-		var out = [];
-		var extend = doc.cm && (doc.cm.display.shift || doc.extend);
-		for (var i = 0; i < doc.sel.ranges.length; i++) {
+		const out = [];
+		const extend = doc.cm && (doc.cm.display.shift || doc.extend);
+		for (let i = 0; i < doc.sel.ranges.length; i++) {
 			out[i] = extendRange(doc.sel.ranges[i], heads[i], null, extend);
 		}
-		var newSel = normalizeSelection(doc.cm, out, doc.sel.primIndex);
+		const newSel = normalizeSelection(doc.cm, out, doc.sel.primIndex);
 		setSelection(doc, newSel, options);
 	}
 
 	// Updates a single range in the selection.
 	function replaceOneSelection(doc, i, range, options) {
-		var ranges = doc.sel.ranges.slice(0);
+		const ranges = doc.sel.ranges.slice(0);
 		ranges[i] = range;
 		setSelection(doc, normalizeSelection(doc.cm, ranges, doc.sel.primIndex), options);
 	}
@@ -6680,11 +6680,11 @@
 	// Give beforeSelectionChange handlers a change to influence a
 	// selection update.
 	function filterSelectionChange(doc, sel, options) {
-		var obj = {
+		const obj = {
 			ranges: sel.ranges,
 			update: function (ranges) {
 				this.ranges = [];
-				for (var i = 0; i < ranges.length; i++) {
+				for (let i = 0; i < ranges.length; i++) {
 					this.ranges[i] = new Range(clipPos(doc, ranges[i].anchor), clipPos(doc, ranges[i].head));
 				}
 			},
@@ -6702,8 +6702,8 @@
 	}
 
 	function setSelectionReplaceHistory(doc, sel, options) {
-		var done = doc.history.done,
-			last = lst(done);
+		const done = doc.history.done;
+		const last = lst(done);
 		if (last && last.ranges) {
 			done[done.length - 1] = sel;
 			setSelectionNoUndo(doc, sel, options);
@@ -6723,7 +6723,7 @@
 			sel = filterSelectionChange(doc, sel, options);
 		}
 
-		var bias = (options && options.bias) || (cmp(sel.primary().head, doc.sel.primary().head) < 0 ? -1 : 1);
+		const bias = (options && options.bias) || (cmp(sel.primary().head, doc.sel.primary().head) < 0 ? -1 : 1);
 		setSelectionInner(doc, skipAtomicInSelection(doc, sel, bias, true));
 
 		if (!(options && options.scroll === false) && doc.cm && doc.cm.getOption("readOnly") != "nocursor") {
@@ -6755,12 +6755,12 @@
 	// Return a selection that does not partially select any atomic
 	// ranges.
 	function skipAtomicInSelection(doc, sel, bias, mayClear) {
-		var out;
-		for (var i = 0; i < sel.ranges.length; i++) {
-			var range = sel.ranges[i];
-			var old = sel.ranges.length == doc.sel.ranges.length && doc.sel.ranges[i];
-			var newAnchor = skipAtomic(doc, range.anchor, old && old.anchor, bias, mayClear);
-			var newHead = skipAtomic(doc, range.head, old && old.head, bias, mayClear);
+		let out;
+		for (let i = 0; i < sel.ranges.length; i++) {
+			const range = sel.ranges[i];
+			const old = sel.ranges.length == doc.sel.ranges.length && doc.sel.ranges[i];
+			const newAnchor = skipAtomic(doc, range.anchor, old && old.anchor, bias, mayClear);
+			const newHead = skipAtomic(doc, range.head, old && old.head, bias, mayClear);
 			if (out || newAnchor != range.anchor || newHead != range.head) {
 				if (!out) {
 					out = sel.ranges.slice(0, i);
@@ -6772,17 +6772,17 @@
 	}
 
 	function skipAtomicInner(doc, pos, oldPos, dir, mayClear) {
-		var line = getLine(doc, pos.line);
+		const line = getLine(doc, pos.line);
 		if (line.markedSpans) {
-			for (var i = 0; i < line.markedSpans.length; ++i) {
-				var sp = line.markedSpans[i],
-					m = sp.marker;
+			for (let i = 0; i < line.markedSpans.length; ++i) {
+				const sp = line.markedSpans[i];
+				const m = sp.marker;
 
 				// Determine if we should prevent the cursor being placed to the left/right of an atomic marker
 				// Historically this was determined using the inclusiveLeft/Right option, but the new way to control it
 				// is with selectLeft/Right
-				var preventCursorLeft = "selectLeft" in m ? !m.selectLeft : m.inclusiveLeft;
-				var preventCursorRight = "selectRight" in m ? !m.selectRight : m.inclusiveRight;
+				const preventCursorLeft = "selectLeft" in m ? !m.selectLeft : m.inclusiveLeft;
+				const preventCursorRight = "selectRight" in m ? !m.selectRight : m.inclusiveRight;
 
 				if (
 					(sp.from == null || (preventCursorLeft ? sp.from <= pos.ch : sp.from < pos.ch)) &&
@@ -6804,8 +6804,8 @@
 					}
 
 					if (oldPos) {
-						var near = m.find(dir < 0 ? 1 : -1),
-							diff = void 0;
+						let near = m.find(dir < 0 ? 1 : -1);
+						let diff = void 0;
 						if (dir < 0 ? preventCursorRight : preventCursorLeft) {
 							near = movePos(doc, near, -dir, near && near.line == pos.line ? line : null);
 						}
@@ -6814,7 +6814,7 @@
 						}
 					}
 
-					var far = m.find(dir < 0 ? -1 : 1);
+					let far = m.find(dir < 0 ? -1 : 1);
 					if (dir < 0 ? preventCursorLeft : preventCursorRight) {
 						far = movePos(doc, far, dir, far.line == pos.line ? line : null);
 					}
@@ -6827,8 +6827,8 @@
 
 	// Ensure a given position is not inside an atomic range.
 	function skipAtomic(doc, pos, oldPos, bias, mayClear) {
-		var dir = bias || 1;
-		var found =
+		const dir = bias || 1;
+		const found =
 			skipAtomicInner(doc, pos, oldPos, dir, mayClear) ||
 			(!mayClear && skipAtomicInner(doc, pos, oldPos, dir, true)) ||
 			skipAtomicInner(doc, pos, oldPos, -dir, mayClear) ||
@@ -6927,9 +6927,9 @@
 
 		// Possibly split or suppress the update based on the presence
 		// of read-only spans in its range.
-		var split = sawReadOnlySpans && !ignoreReadOnly && removeReadOnlyRanges(doc, change.from, change.to);
+		const split = sawReadOnlySpans && !ignoreReadOnly && removeReadOnlyRanges(doc, change.from, change.to);
 		if (split) {
-			for (var i = split.length - 1; i >= 0; --i) {
+			for (let i = split.length - 1; i >= 0; --i) {
 				makeChangeInner(doc, {
 					from: split[i].from,
 					to: split[i].to,
@@ -6946,11 +6946,11 @@
 		if (change.text.length == 1 && change.text[0] == "" && cmp(change.from, change.to) == 0) {
 			return;
 		}
-		var selAfter = computeSelAfterChange(doc, change);
+		const selAfter = computeSelAfterChange(doc, change);
 		addChangeToHistory(doc, change, selAfter, doc.cm ? doc.cm.curOp.id : NaN);
 
 		makeChangeSingleDoc(doc, change, selAfter, stretchSpansOverChange(doc, change));
-		var rebased = [];
+		const rebased = [];
 
 		linkedDocs(doc, function (doc, sharedHist) {
 			if (!sharedHist && indexOf(rebased, doc.history) == -1) {
@@ -6963,20 +6963,20 @@
 
 	// Revert a change stored in a document's history.
 	function makeChangeFromHistory(doc, type, allowSelectionOnly) {
-		var suppress = doc.cm && doc.cm.state.suppressEdits;
+		const suppress = doc.cm && doc.cm.state.suppressEdits;
 		if (suppress && !allowSelectionOnly) {
 			return;
 		}
 
-		var hist = doc.history,
-			event,
-			selAfter = doc.sel;
-		var source = type == "undo" ? hist.done : hist.undone,
-			dest = type == "undo" ? hist.undone : hist.done;
+		const hist = doc.history;
+		let event;
+		let selAfter = doc.sel;
+		const source = type == "undo" ? hist.done : hist.undone;
+		const dest = type == "undo" ? hist.undone : hist.done;
 
 		// Verify that there is a useable event (so that ctrl-z won't
 		// needlessly clear selection events)
-		var i = 0;
+		let i = 0;
 		for (; i < source.length; i++) {
 			event = source[i];
 			if (allowSelectionOnly ? event.ranges && !event.equals(doc.sel) : !event.ranges) {
@@ -7007,15 +7007,15 @@
 
 		// Build up a reverse change object to add to the opposite history
 		// stack (redo when undoing, and vice versa).
-		var antiChanges = [];
+		const antiChanges = [];
 		pushSelectionToHistory(selAfter, dest);
 		dest.push({ changes: antiChanges, generation: hist.generation });
 		hist.generation = event.generation || ++hist.maxGeneration;
 
-		var filter = hasHandler(doc, "beforeChange") || (doc.cm && hasHandler(doc.cm, "beforeChange"));
+		const filter = hasHandler(doc, "beforeChange") || (doc.cm && hasHandler(doc.cm, "beforeChange"));
 
-		var loop = function (i) {
-			var change = event.changes[i];
+		const loop = function (i) {
+			const change = event.changes[i];
 			change.origin = type;
 			if (filter && !filterChange(doc, change, false)) {
 				source.length = 0;
@@ -7024,12 +7024,12 @@
 
 			antiChanges.push(historyChangeFromChange(doc, change));
 
-			var after = i ? computeSelAfterChange(doc, change) : lst(source);
+			const after = i ? computeSelAfterChange(doc, change) : lst(source);
 			makeChangeSingleDoc(doc, change, after, mergeOldSpans(doc, change));
 			if (!i && doc.cm) {
 				doc.cm.scrollIntoView({ from: change.from, to: changeEnd(change) });
 			}
-			var rebased = [];
+			const rebased = [];
 
 			// Propagate to the linked documents
 			linkedDocs(doc, function (doc, sharedHist) {
@@ -7041,8 +7041,8 @@
 			});
 		};
 
-		for (var i$1 = event.changes.length - 1; i$1 >= 0; --i$1) {
-			var returned = loop(i$1);
+		for (let i$1 = event.changes.length - 1; i$1 >= 0; --i$1) {
+			const returned = loop(i$1);
 
 			if (returned) return returned.v;
 		}
@@ -7063,7 +7063,7 @@
 		);
 		if (doc.cm) {
 			regChange(doc.cm, doc.first, doc.first - distance, distance);
-			for (var d = doc.cm.display, l = d.viewFrom; l < d.viewTo; l++) {
+			for (let d = doc.cm.display, l = d.viewFrom; l < d.viewTo; l++) {
 				regLineChange(doc.cm, l, "gutter");
 			}
 		}
@@ -7086,7 +7086,7 @@
 
 		// Clip the change to the size of this doc
 		if (change.from.line < doc.first) {
-			var shift = change.text.length - 1 - (doc.first - change.from.line);
+			const shift = change.text.length - 1 - (doc.first - change.from.line);
 			shiftDoc(doc, shift);
 			change = {
 				from: Pos(doc.first, 0),
@@ -7095,7 +7095,7 @@
 				origin: change.origin,
 			};
 		}
-		var last = doc.lastLine();
+		const last = doc.lastLine();
 		if (change.to.line > last) {
 			change = {
 				from: change.from,
@@ -7125,13 +7125,13 @@
 	// Handle the interaction of a change to a document with the editor
 	// that this document is part of.
 	function makeChangeSingleDocInEditor(cm, change, spans) {
-		var doc = cm.doc,
-			display = cm.display,
-			from = change.from,
-			to = change.to;
+		const doc = cm.doc;
+		const display = cm.display;
+		const from = change.from;
+		const to = change.to;
 
-		var recomputeMaxLength = false,
-			checkWidthStart = from.line;
+		let recomputeMaxLength = false;
+		let checkWidthStart = from.line;
 		if (!cm.options.lineWrapping) {
 			checkWidthStart = lineNo(visualLine(getLine(doc, from.line)));
 			doc.iter(checkWidthStart, to.line + 1, function (line) {
@@ -7150,7 +7150,7 @@
 
 		if (!cm.options.lineWrapping) {
 			doc.iter(checkWidthStart, from.line + change.text.length, function (line) {
-				var len = lineLength(line);
+				const len = lineLength(line);
 				if (len > display.maxLineLength) {
 					display.maxLine = line;
 					display.maxLineLength = len;
@@ -7166,7 +7166,7 @@
 		retreatFrontier(doc, from.line);
 		startWorker(cm, 400);
 
-		var lendiff = change.text.length - (to.line - from.line) - 1;
+		const lendiff = change.text.length - (to.line - from.line) - 1;
 		// Remember that these lines changed, for updating the display
 		if (change.full) {
 			regChange(cm);
@@ -7176,10 +7176,10 @@
 			regChange(cm, from.line, to.line + 1, lendiff);
 		}
 
-		var changesHandler = hasHandler(cm, "changes"),
-			changeHandler = hasHandler(cm, "change");
+		const changesHandler = hasHandler(cm, "changes");
+		const changeHandler = hasHandler(cm, "change");
 		if (changeHandler || changesHandler) {
-			var obj = {
+			const obj = {
 				from: from,
 				to: to,
 				text: change.text,
@@ -7197,7 +7197,7 @@
 	}
 
 	function replaceRange(doc, code, from, to, origin) {
-		var assign;
+		let assign;
 
 		if (!to) {
 			to = from;
@@ -7205,7 +7205,7 @@
 		if (cmp(to, from) < 0) {
 			(assign = [to, from]), (from = assign[0]), (to = assign[1]);
 		}
-		if (typeof code == "string") {
+		if (typeof code === "string") {
 			code = doc.splitLines(code);
 		}
 		makeChange(doc, { from: from, to: to, text: code, origin: origin });
@@ -7230,22 +7230,22 @@
 	// reallocate them all on every rebase, but also avoid problems with
 	// shared position objects being unsafely updated.
 	function rebaseHistArray(array, from, to, diff) {
-		for (var i = 0; i < array.length; ++i) {
-			var sub = array[i],
-				ok = true;
+		for (let i = 0; i < array.length; ++i) {
+			let sub = array[i];
+			let ok = true;
 			if (sub.ranges) {
 				if (!sub.copied) {
 					sub = array[i] = sub.deepCopy();
 					sub.copied = true;
 				}
-				for (var j = 0; j < sub.ranges.length; j++) {
+				for (let j = 0; j < sub.ranges.length; j++) {
 					rebaseHistSelSingle(sub.ranges[j].anchor, from, to, diff);
 					rebaseHistSelSingle(sub.ranges[j].head, from, to, diff);
 				}
 				continue;
 			}
-			for (var j$1 = 0; j$1 < sub.changes.length; ++j$1) {
-				var cur = sub.changes[j$1];
+			for (let j$1 = 0; j$1 < sub.changes.length; ++j$1) {
+				const cur = sub.changes[j$1];
 				if (to < cur.from.line) {
 					cur.from = Pos(cur.from.line + diff, cur.from.ch);
 					cur.to = Pos(cur.to.line + diff, cur.to.ch);
@@ -7262,9 +7262,9 @@
 	}
 
 	function rebaseHist(hist, change) {
-		var from = change.from.line,
-			to = change.to.line,
-			diff = change.text.length - (to - from) - 1;
+		const from = change.from.line;
+		const to = change.to.line;
+		const diff = change.text.length - (to - from) - 1;
 		rebaseHistArray(hist.done, from, to, diff);
 		rebaseHistArray(hist.undone, from, to, diff);
 	}
@@ -7273,9 +7273,9 @@
 	// returning the number and optionally registering the line as
 	// changed.
 	function changeLine(doc, handle, changeType, op) {
-		var no = handle,
-			line = handle;
-		if (typeof handle == "number") {
+		let no = handle;
+		let line = handle;
+		if (typeof handle === "number") {
 			line = getLine(doc, clipLine(doc, handle));
 		} else {
 			no = lineNo(handle);
@@ -7305,8 +7305,8 @@
 	function LeafChunk(lines) {
 		this.lines = lines;
 		this.parent = null;
-		var height = 0;
-		for (var i = 0; i < lines.length; ++i) {
+		let height = 0;
+		for (let i = 0; i < lines.length; ++i) {
 			lines[i].parent = this;
 			height += lines[i].height;
 		}
@@ -7320,8 +7320,8 @@
 
 		// Remove the n lines at offset 'at'.
 		removeInner: function (at, n) {
-			for (var i = at, e = at + n; i < e; ++i) {
-				var line = this.lines[i];
+			for (let i = at, e = at + n; i < e; ++i) {
+				const line = this.lines[i];
 				this.height -= line.height;
 				cleanUpLine(line);
 				signalLater(line, "delete");
@@ -7339,14 +7339,14 @@
 		insertInner: function (at, lines, height) {
 			this.height += height;
 			this.lines = this.lines.slice(0, at).concat(lines).concat(this.lines.slice(at));
-			for (var i = 0; i < lines.length; ++i) {
+			for (let i = 0; i < lines.length; ++i) {
 				lines[i].parent = this;
 			}
 		},
 
 		// Used to iterate over a part of the tree.
 		iterN: function (at, n, op) {
-			for (var e = at + n; at < e; ++at) {
+			for (let e = at + n; at < e; ++at) {
 				if (op(this.lines[at])) {
 					return true;
 				}
@@ -7356,10 +7356,10 @@
 
 	function BranchChunk(children) {
 		this.children = children;
-		var size = 0,
-			height = 0;
-		for (var i = 0; i < children.length; ++i) {
-			var ch = children[i];
+		let size = 0;
+		let height = 0;
+		for (let i = 0; i < children.length; ++i) {
+			const ch = children[i];
 			size += ch.chunkSize();
 			height += ch.height;
 			ch.parent = this;
@@ -7376,12 +7376,12 @@
 
 		removeInner: function (at, n) {
 			this.size -= n;
-			for (var i = 0; i < this.children.length; ++i) {
-				var child = this.children[i],
-					sz = child.chunkSize();
+			for (let i = 0; i < this.children.length; ++i) {
+				const child = this.children[i];
+				const sz = child.chunkSize();
 				if (at < sz) {
-					var rm = Math.min(n, sz - at),
-						oldHeight = child.height;
+					const rm = Math.min(n, sz - at);
+					const oldHeight = child.height;
 					child.removeInner(at, rm);
 					this.height -= oldHeight - child.height;
 					if (sz == rm) {
@@ -7399,7 +7399,7 @@
 			// If the result is smaller than 25 lines, ensure that it is a
 			// single leaf node.
 			if (this.size - n < 25 && (this.children.length > 1 || !(this.children[0] instanceof LeafChunk))) {
-				var lines = [];
+				const lines = [];
 				this.collapse(lines);
 				this.children = [new LeafChunk(lines)];
 				this.children[0].parent = this;
@@ -7407,7 +7407,7 @@
 		},
 
 		collapse: function (lines) {
-			for (var i = 0; i < this.children.length; ++i) {
+			for (let i = 0; i < this.children.length; ++i) {
 				this.children[i].collapse(lines);
 			}
 		},
@@ -7415,17 +7415,17 @@
 		insertInner: function (at, lines, height) {
 			this.size += lines.length;
 			this.height += height;
-			for (var i = 0; i < this.children.length; ++i) {
-				var child = this.children[i],
-					sz = child.chunkSize();
+			for (let i = 0; i < this.children.length; ++i) {
+				const child = this.children[i];
+				const sz = child.chunkSize();
 				if (at <= sz) {
 					child.insertInner(at, lines, height);
 					if (child.lines && child.lines.length > 50) {
 						// To avoid memory thrashing when child.lines is huge (e.g. first view of a large file), it's never spliced.
 						// Instead, small slices are taken. They're taken in order because sequential memory accesses are fastest.
-						var remaining = (child.lines.length % 25) + 25;
-						for (var pos = remaining; pos < child.lines.length; ) {
-							var leaf = new LeafChunk(child.lines.slice(pos, (pos += 25)));
+						const remaining = (child.lines.length % 25) + 25;
+						for (let pos = remaining; pos < child.lines.length; ) {
+							const leaf = new LeafChunk(child.lines.slice(pos, (pos += 25)));
 							child.height -= leaf.height;
 							this.children.splice(++i, 0, leaf);
 							leaf.parent = this;
@@ -7444,20 +7444,20 @@
 			if (this.children.length <= 10) {
 				return;
 			}
-			var me = this;
+			let me = this;
 			do {
-				var spilled = me.children.splice(me.children.length - 5, 5);
-				var sibling = new BranchChunk(spilled);
+				const spilled = me.children.splice(me.children.length - 5, 5);
+				const sibling = new BranchChunk(spilled);
 				if (!me.parent) {
 					// Become the parent node
-					var copy = new BranchChunk(me.children);
+					const copy = new BranchChunk(me.children);
 					copy.parent = me;
 					me.children = [copy, sibling];
 					me = copy;
 				} else {
 					me.size -= sibling.size;
 					me.height -= sibling.height;
-					var myIndex = indexOf(me.parent.children, me);
+					const myIndex = indexOf(me.parent.children, me);
 					me.parent.children.splice(myIndex + 1, 0, sibling);
 				}
 				sibling.parent = me.parent;
@@ -7466,11 +7466,11 @@
 		},
 
 		iterN: function (at, n, op) {
-			for (var i = 0; i < this.children.length; ++i) {
-				var child = this.children[i],
-					sz = child.chunkSize();
+			for (let i = 0; i < this.children.length; ++i) {
+				const child = this.children[i];
+				const sz = child.chunkSize();
 				if (at < sz) {
-					var used = Math.min(n, sz - at);
+					const used = Math.min(n, sz - at);
 					if (child.iterN(at, used, op)) {
 						return true;
 					}
@@ -7487,9 +7487,9 @@
 
 	// Line widgets are block elements displayed above or below a line.
 
-	var LineWidget = function (doc, node, options) {
+	const LineWidget = function (doc, node, options) {
 		if (options) {
-			for (var opt in options) {
+			for (const opt in options) {
 				if (options.hasOwnProperty(opt)) {
 					this[opt] = options[opt];
 				}
@@ -7500,14 +7500,14 @@
 	};
 
 	LineWidget.prototype.clear = function () {
-		var cm = this.doc.cm,
-			ws = this.line.widgets,
-			line = this.line,
-			no = lineNo(line);
+		const cm = this.doc.cm;
+		const ws = this.line.widgets;
+		const line = this.line;
+		const no = lineNo(line);
 		if (no == null || !ws) {
 			return;
 		}
-		for (var i = 0; i < ws.length; ++i) {
+		for (let i = 0; i < ws.length; ++i) {
 			if (ws[i] == this) {
 				ws.splice(i--, 1);
 			}
@@ -7515,7 +7515,7 @@
 		if (!ws.length) {
 			line.widgets = null;
 		}
-		var height = widgetHeight(this);
+		const height = widgetHeight(this);
 		updateLineHeight(line, Math.max(0, line.height - height));
 		if (cm) {
 			runInOp(cm, function () {
@@ -7527,13 +7527,13 @@
 	};
 
 	LineWidget.prototype.changed = function () {
-		var this$1 = this;
+		const this$1 = this;
 
-		var oldH = this.height,
-			cm = this.doc.cm,
-			line = this.line;
+		const oldH = this.height;
+		const cm = this.doc.cm;
+		const line = this.line;
 		this.height = null;
-		var diff = widgetHeight(this) - oldH;
+		const diff = widgetHeight(this) - oldH;
 		if (!diff) {
 			return;
 		}
@@ -7557,13 +7557,13 @@
 	}
 
 	function addLineWidget(doc, handle, node, options) {
-		var widget = new LineWidget(doc, node, options);
-		var cm = doc.cm;
+		const widget = new LineWidget(doc, node, options);
+		const cm = doc.cm;
 		if (cm && widget.noHScroll) {
 			cm.display.alignWidgets = true;
 		}
 		changeLine(doc, handle, "widget", function (line) {
-			var widgets = line.widgets || (line.widgets = []);
+			const widgets = line.widgets || (line.widgets = []);
 			if (widget.insertAt == null) {
 				widgets.push(widget);
 			} else {
@@ -7571,7 +7571,7 @@
 			}
 			widget.line = line;
 			if (cm && !lineIsHidden(doc, line)) {
-				var aboveVisible = heightAtLine(line) < doc.scrollTop;
+				const aboveVisible = heightAtLine(line) < doc.scrollTop;
 				updateLineHeight(line, line.height + widgetHeight(widget));
 				if (aboveVisible) {
 					addToScrollTop(cm, widget.height);
@@ -7581,7 +7581,7 @@
 			return true;
 		});
 		if (cm) {
-			signalLater(cm, "lineWidgetAdded", cm, widget, typeof handle == "number" ? handle : lineNo(handle));
+			signalLater(cm, "lineWidgetAdded", cm, widget, typeof handle === "number" ? handle : lineNo(handle));
 		}
 		return widget;
 	}
@@ -7601,9 +7601,9 @@
 	// Collapsed markers have unique ids, in order to be able to order
 	// them, which is needed for uniquely determining an outer marker
 	// when they overlap (they may nest, but not partially overlap).
-	var nextMarkerId = 0;
+	let nextMarkerId = 0;
 
-	var TextMarker = function (doc, type) {
+	const TextMarker = function (doc, type) {
 		this.lines = [];
 		this.type = type;
 		this.doc = doc;
@@ -7615,22 +7615,22 @@
 		if (this.explicitlyCleared) {
 			return;
 		}
-		var cm = this.doc.cm,
-			withOp = cm && !cm.curOp;
+		const cm = this.doc.cm;
+		const withOp = cm && !cm.curOp;
 		if (withOp) {
 			startOperation(cm);
 		}
 		if (hasHandler(this, "clear")) {
-			var found = this.find();
+			const found = this.find();
 			if (found) {
 				signalLater(this, "clear", found.from, found.to);
 			}
 		}
-		var min = null,
-			max = null;
-		for (var i = 0; i < this.lines.length; ++i) {
-			var line = this.lines[i];
-			var span = getMarkedSpanFor(line.markedSpans, this);
+		let min = null;
+		let max = null;
+		for (let i = 0; i < this.lines.length; ++i) {
+			const line = this.lines[i];
+			const span = getMarkedSpanFor(line.markedSpans, this);
 			if (cm && !this.collapsed) {
 				regLineChange(cm, lineNo(line), "text");
 			} else if (cm) {
@@ -7647,9 +7647,9 @@
 			}
 		}
 		if (cm && this.collapsed && !cm.options.lineWrapping) {
-			for (var i$1 = 0; i$1 < this.lines.length; ++i$1) {
-				var visual = visualLine(this.lines[i$1]),
-					len = lineLength(visual);
+			for (let i$1 = 0; i$1 < this.lines.length; ++i$1) {
+				const visual = visualLine(this.lines[i$1]);
+				const len = lineLength(visual);
 				if (len > cm.display.maxLineLength) {
 					cm.display.maxLine = visual;
 					cm.display.maxLineLength = len;
@@ -7689,10 +7689,10 @@
 		if (side == null && this.type == "bookmark") {
 			side = 1;
 		}
-		var from, to;
-		for (var i = 0; i < this.lines.length; ++i) {
-			var line = this.lines[i];
-			var span = getMarkedSpanFor(line.markedSpans, this);
+		let from, to;
+		for (let i = 0; i < this.lines.length; ++i) {
+			const line = this.lines[i];
+			const span = getMarkedSpanFor(line.markedSpans, this);
 			if (span.from != null) {
 				from = Pos(lineObj ? line : lineNo(line), span.from);
 				if (side == -1) {
@@ -7712,27 +7712,27 @@
 	// Signals that the marker's widget changed, and surrounding layout
 	// should be recomputed.
 	TextMarker.prototype.changed = function () {
-		var this$1 = this;
+		const this$1 = this;
 
-		var pos = this.find(-1, true),
-			widget = this,
-			cm = this.doc.cm;
+		const pos = this.find(-1, true);
+		const widget = this;
+		const cm = this.doc.cm;
 		if (!pos || !cm) {
 			return;
 		}
 		runInOp(cm, function () {
-			var line = pos.line,
-				lineN = lineNo(pos.line);
-			var view = findViewForLine(cm, lineN);
+			const line = pos.line;
+			const lineN = lineNo(pos.line);
+			const view = findViewForLine(cm, lineN);
 			if (view) {
 				clearLineMeasurementCacheFor(view);
 				cm.curOp.selectionChanged = cm.curOp.forceUpdate = true;
 			}
 			cm.curOp.updateMaxLine = true;
 			if (!lineIsHidden(widget.doc, line) && widget.height != null) {
-				var oldHeight = widget.height;
+				const oldHeight = widget.height;
 				widget.height = null;
-				var dHeight = widgetHeight(widget) - oldHeight;
+				const dHeight = widgetHeight(widget) - oldHeight;
 				if (dHeight) {
 					updateLineHeight(line, line.height + dHeight);
 				}
@@ -7743,7 +7743,7 @@
 
 	TextMarker.prototype.attachLine = function (line) {
 		if (!this.lines.length && this.doc.cm) {
-			var op = this.doc.cm.curOp;
+			const op = this.doc.cm.curOp;
 			if (!op.maybeHiddenMarkers || indexOf(op.maybeHiddenMarkers, this) == -1) {
 				(op.maybeUnhiddenMarkers || (op.maybeUnhiddenMarkers = [])).push(this);
 			}
@@ -7754,7 +7754,7 @@
 	TextMarker.prototype.detachLine = function (line) {
 		this.lines.splice(indexOf(this.lines, line), 1);
 		if (!this.lines.length && this.doc.cm) {
-			var op = this.doc.cm.curOp;
+			const op = this.doc.cm.curOp;
 			(op.maybeHiddenMarkers || (op.maybeHiddenMarkers = [])).push(this);
 		}
 	};
@@ -7773,8 +7773,8 @@
 			return operation(doc.cm, markText)(doc, from, to, options, type);
 		}
 
-		var marker = new TextMarker(doc, type),
-			diff = cmp(from, to);
+		const marker = new TextMarker(doc, type);
+		const diff = cmp(from, to);
 		if (options) {
 			copyObj(options, marker, false);
 		}
@@ -7807,9 +7807,9 @@
 			addChangeToHistory(doc, { from: from, to: to, origin: "markText" }, doc.sel, NaN);
 		}
 
-		var curLine = from.line,
-			cm = doc.cm,
-			updateMaxLine;
+		let curLine = from.line;
+		const cm = doc.cm;
+		let updateMaxLine;
 		doc.iter(curLine, to.line + 1, function (line) {
 			if (cm && marker.collapsed && !cm.options.lineWrapping && visualLine(line) == cm.display.maxLine) {
 				updateMaxLine = true;
@@ -7853,7 +7853,7 @@
 			if (marker.collapsed) {
 				regChange(cm, from.line, to.line + 1);
 			} else if (marker.className || marker.startStyle || marker.endStyle || marker.css || marker.attributes || marker.title) {
-				for (var i = from.line; i <= to.line; i++) {
+				for (let i = from.line; i <= to.line; i++) {
 					regLineChange(cm, i, "text");
 				}
 			}
@@ -7870,10 +7870,10 @@
 	// A shared marker spans multiple linked documents. It is
 	// implemented as a meta-marker-object controlling multiple normal
 	// markers.
-	var SharedTextMarker = function (markers, primary) {
+	const SharedTextMarker = function (markers, primary) {
 		this.markers = markers;
 		this.primary = primary;
-		for (var i = 0; i < markers.length; ++i) {
+		for (let i = 0; i < markers.length; ++i) {
 			markers[i].parent = this;
 		}
 	};
@@ -7883,7 +7883,7 @@
 			return;
 		}
 		this.explicitlyCleared = true;
-		for (var i = 0; i < this.markers.length; ++i) {
+		for (let i = 0; i < this.markers.length; ++i) {
 			this.markers[i].clear();
 		}
 		signalLater(this, "clear");
@@ -7897,15 +7897,15 @@
 	function markTextShared(doc, from, to, options, type) {
 		options = copyObj(options);
 		options.shared = false;
-		var markers = [markText(doc, from, to, options, type)],
-			primary = markers[0];
-		var widget = options.widgetNode;
+		const markers = [markText(doc, from, to, options, type)];
+		let primary = markers[0];
+		const widget = options.widgetNode;
 		linkedDocs(doc, function (doc) {
 			if (widget) {
 				options.widgetNode = widget.cloneNode(true);
 			}
 			markers.push(markText(doc, clipPos(doc, from), clipPos(doc, to), options, type));
-			for (var i = 0; i < doc.linked.length; ++i) {
+			for (let i = 0; i < doc.linked.length; ++i) {
 				if (doc.linked[i].isParent) {
 					return;
 				}
@@ -7922,13 +7922,13 @@
 	}
 
 	function copySharedMarkers(doc, markers) {
-		for (var i = 0; i < markers.length; i++) {
-			var marker = markers[i],
-				pos = marker.find();
-			var mFrom = doc.clipPos(pos.from),
-				mTo = doc.clipPos(pos.to);
+		for (let i = 0; i < markers.length; i++) {
+			const marker = markers[i];
+			const pos = marker.find();
+			const mFrom = doc.clipPos(pos.from);
+			const mTo = doc.clipPos(pos.to);
 			if (cmp(mFrom, mTo)) {
-				var subMark = markText(doc, mFrom, mTo, marker.primary, marker.primary.type);
+				const subMark = markText(doc, mFrom, mTo, marker.primary, marker.primary.type);
 				marker.markers.push(subMark);
 				subMark.parent = marker;
 			}
@@ -7936,14 +7936,14 @@
 	}
 
 	function detachSharedMarkers(markers) {
-		var loop = function (i) {
-			var marker = markers[i],
-				linked = [marker.primary.doc];
+		const loop = function (i) {
+			const marker = markers[i];
+			const linked = [marker.primary.doc];
 			linkedDocs(marker.primary.doc, function (d) {
 				return linked.push(d);
 			});
-			for (var j = 0; j < marker.markers.length; j++) {
-				var subMarker = marker.markers[j];
+			for (let j = 0; j < marker.markers.length; j++) {
+				const subMarker = marker.markers[j];
 				if (indexOf(linked, subMarker.doc) == -1) {
 					subMarker.parent = null;
 					marker.markers.splice(j--, 1);
@@ -7951,10 +7951,10 @@
 			}
 		};
 
-		for (var i = 0; i < markers.length; i++) loop(i);
+		for (let i = 0; i < markers.length; i++) loop(i);
 	}
 
-	var nextDocId = 0;
+	let nextDocId = 0;
 	var Doc = function (text, mode, firstLine, lineSep, direction) {
 		if (!(this instanceof Doc)) {
 			return new Doc(text, mode, firstLine, lineSep, direction);
@@ -7969,7 +7969,7 @@
 		this.cantEdit = false;
 		this.cleanGeneration = 1;
 		this.modeFrontier = this.highlightFrontier = firstLine;
-		var start = Pos(firstLine, 0);
+		const start = Pos(firstLine, 0);
 		this.sel = simpleSelection(start);
 		this.history = new History(null);
 		this.id = ++nextDocId;
@@ -7978,7 +7978,7 @@
 		this.direction = direction == "rtl" ? "rtl" : "ltr";
 		this.extend = false;
 
-		if (typeof text == "string") {
+		if (typeof text === "string") {
 			text = this.splitLines(text);
 		}
 		updateDoc(this, { from: start, to: start, text: text });
@@ -8001,8 +8001,8 @@
 
 		// Non-public interface for adding and removing lines.
 		insert: function (at, lines) {
-			var height = 0;
-			for (var i = 0; i < lines.length; ++i) {
+			let height = 0;
+			for (let i = 0; i < lines.length; ++i) {
 				height += lines[i].height;
 			}
 			this.insertInner(at - this.first, lines, height);
@@ -8015,15 +8015,15 @@
 		// are also available from CodeMirror (editor) instances.
 
 		getValue: function (lineSep) {
-			var lines = getLines(this, this.first, this.first + this.size);
+			const lines = getLines(this, this.first, this.first + this.size);
 			if (lineSep === false) {
 				return lines;
 			}
 			return lines.join(lineSep || this.lineSeparator());
 		},
 		setValue: docMethodOp(function (code) {
-			var top = Pos(this.first, 0),
-				last = this.first + this.size - 1;
+			const top = Pos(this.first, 0);
+			const last = this.first + this.size - 1;
 			makeChange(
 				this,
 				{
@@ -8046,7 +8046,7 @@
 			replaceRange(this, code, from, to, origin);
 		},
 		getRange: function (from, to, lineSep) {
-			var lines = getBetween(this, clipPos(this, from), clipPos(this, to));
+			const lines = getBetween(this, clipPos(this, from), clipPos(this, to));
 			if (lineSep === false) {
 				return lines;
 			}
@@ -8054,7 +8054,7 @@
 		},
 
 		getLine: function (line) {
-			var l = this.getLineHandle(line);
+			const l = this.getLineHandle(line);
 			return l && l.text;
 		},
 
@@ -8068,7 +8068,7 @@
 		},
 
 		getLineHandleVisualStart: function (line) {
-			if (typeof line == "number") {
+			if (typeof line === "number") {
 				line = getLine(this, line);
 			}
 			return visualLine(line);
@@ -8089,8 +8089,8 @@
 		},
 
 		getCursor: function (start) {
-			var range = this.sel.primary(),
-				pos;
+			const range = this.sel.primary();
+			let pos;
 			if (start == null || start == "head") {
 				pos = range.head;
 			} else if (start == "anchor") {
@@ -8110,7 +8110,7 @@
 		},
 
 		setCursor: docMethodOp(function (line, ch, options) {
-			setSimpleSelection(this, clipPos(this, typeof line == "number" ? Pos(line, ch || 0) : line), null, options);
+			setSimpleSelection(this, clipPos(this, typeof line === "number" ? Pos(line, ch || 0) : line), null, options);
 		}),
 		setSelection: docMethodOp(function (anchor, head, options) {
 			setSimpleSelection(this, clipPos(this, anchor), clipPos(this, head || anchor), options);
@@ -8122,15 +8122,15 @@
 			extendSelections(this, clipPosArray(this, heads), options);
 		}),
 		extendSelectionsBy: docMethodOp(function (f, options) {
-			var heads = map(this.sel.ranges, f);
+			const heads = map(this.sel.ranges, f);
 			extendSelections(this, clipPosArray(this, heads), options);
 		}),
 		setSelections: docMethodOp(function (ranges, primary, options) {
 			if (!ranges.length) {
 				return;
 			}
-			var out = [];
-			for (var i = 0; i < ranges.length; i++) {
+			const out = [];
+			for (let i = 0; i < ranges.length; i++) {
 				out[i] = new Range(clipPos(this, ranges[i].anchor), clipPos(this, ranges[i].head));
 			}
 			if (primary == null) {
@@ -8139,16 +8139,16 @@
 			setSelection(this, normalizeSelection(this.cm, out, primary), options);
 		}),
 		addSelection: docMethodOp(function (anchor, head, options) {
-			var ranges = this.sel.ranges.slice(0);
+			const ranges = this.sel.ranges.slice(0);
 			ranges.push(new Range(clipPos(this, anchor), clipPos(this, head || anchor)));
 			setSelection(this, normalizeSelection(this.cm, ranges, ranges.length - 1), options);
 		}),
 
 		getSelection: function (lineSep) {
-			var ranges = this.sel.ranges,
-				lines;
-			for (var i = 0; i < ranges.length; i++) {
-				var sel = getBetween(this, ranges[i].from(), ranges[i].to());
+			const ranges = this.sel.ranges;
+			let lines;
+			for (let i = 0; i < ranges.length; i++) {
+				const sel = getBetween(this, ranges[i].from(), ranges[i].to());
 				lines = lines ? lines.concat(sel) : sel;
 			}
 			if (lineSep === false) {
@@ -8158,10 +8158,10 @@
 			}
 		},
 		getSelections: function (lineSep) {
-			var parts = [],
-				ranges = this.sel.ranges;
-			for (var i = 0; i < ranges.length; i++) {
-				var sel = getBetween(this, ranges[i].from(), ranges[i].to());
+			const parts = [];
+			const ranges = this.sel.ranges;
+			for (let i = 0; i < ranges.length; i++) {
+				let sel = getBetween(this, ranges[i].from(), ranges[i].to());
 				if (lineSep !== false) {
 					sel = sel.join(lineSep || this.lineSeparator());
 				}
@@ -8170,17 +8170,17 @@
 			return parts;
 		},
 		replaceSelection: function (code, collapse, origin) {
-			var dup = [];
-			for (var i = 0; i < this.sel.ranges.length; i++) {
+			const dup = [];
+			for (let i = 0; i < this.sel.ranges.length; i++) {
 				dup[i] = code;
 			}
 			this.replaceSelections(dup, collapse, origin || "+input");
 		},
 		replaceSelections: docMethodOp(function (code, collapse, origin) {
-			var changes = [],
-				sel = this.sel;
-			for (var i = 0; i < sel.ranges.length; i++) {
-				var range = sel.ranges[i];
+			const changes = [];
+			const sel = this.sel;
+			for (let i = 0; i < sel.ranges.length; i++) {
+				const range = sel.ranges[i];
 				changes[i] = {
 					from: range.from(),
 					to: range.to(),
@@ -8188,8 +8188,8 @@
 					origin: origin,
 				};
 			}
-			var newSel = collapse && collapse != "end" && computeReplacedSel(this, changes, collapse);
-			for (var i$1 = changes.length - 1; i$1 >= 0; i$1--) {
+			const newSel = collapse && collapse != "end" && computeReplacedSel(this, changes, collapse);
+			for (let i$1 = changes.length - 1; i$1 >= 0; i$1--) {
 				makeChange(this, changes[i$1]);
 			}
 			if (newSel) {
@@ -8219,15 +8219,15 @@
 		},
 
 		historySize: function () {
-			var hist = this.history,
-				done = 0,
-				undone = 0;
-			for (var i = 0; i < hist.done.length; i++) {
+			const hist = this.history;
+			let done = 0;
+			let undone = 0;
+			for (let i = 0; i < hist.done.length; i++) {
 				if (!hist.done[i].ranges) {
 					++done;
 				}
 			}
-			for (var i$1 = 0; i$1 < hist.undone.length; i$1++) {
+			for (let i$1 = 0; i$1 < hist.undone.length; i$1++) {
 				if (!hist.undone[i$1].ranges) {
 					++undone;
 				}
@@ -8235,7 +8235,7 @@
 			return { undo: done, redo: undone };
 		},
 		clearHistory: function () {
-			var this$1 = this;
+			const this$1 = this;
 
 			this.history = new History(this.history.maxGeneration);
 			linkedDocs(
@@ -8267,14 +8267,14 @@
 			};
 		},
 		setHistory: function (histData) {
-			var hist = (this.history = new History(this.history.maxGeneration));
+			const hist = (this.history = new History(this.history.maxGeneration));
 			hist.done = copyHistoryArray(histData.done.slice(0), null, true);
 			hist.undone = copyHistoryArray(histData.undone.slice(0), null, true);
 		},
 
 		setGutterMarker: docMethodOp(function (line, gutterID, value) {
 			return changeLine(this, line, "gutter", function (line) {
-				var markers = line.gutterMarkers || (line.gutterMarkers = {});
+				const markers = line.gutterMarkers || (line.gutterMarkers = {});
 				markers[gutterID] = value;
 				if (!value && isEmpty(markers)) {
 					line.gutterMarkers = null;
@@ -8284,7 +8284,7 @@
 		}),
 
 		clearGutter: docMethodOp(function (gutterID) {
-			var this$1 = this;
+			const this$1 = this;
 
 			this.iter(function (line) {
 				if (line.gutterMarkers && line.gutterMarkers[gutterID]) {
@@ -8300,8 +8300,8 @@
 		}),
 
 		lineInfo: function (line) {
-			var n;
-			if (typeof line == "number") {
+			let n;
+			if (typeof line === "number") {
 				if (!isLine(this, line)) {
 					return null;
 				}
@@ -8330,7 +8330,7 @@
 
 		addLineClass: docMethodOp(function (handle, where, cls) {
 			return changeLine(this, handle, where == "gutter" ? "gutter" : "class", function (line) {
-				var prop = where == "text" ? "textClass" : where == "background" ? "bgClass" : where == "gutter" ? "gutterClass" : "wrapClass";
+				const prop = where == "text" ? "textClass" : where == "background" ? "bgClass" : where == "gutter" ? "gutterClass" : "wrapClass";
 				if (!line[prop]) {
 					line[prop] = cls;
 				} else if (classTest(cls).test(line[prop])) {
@@ -8343,18 +8343,18 @@
 		}),
 		removeLineClass: docMethodOp(function (handle, where, cls) {
 			return changeLine(this, handle, where == "gutter" ? "gutter" : "class", function (line) {
-				var prop = where == "text" ? "textClass" : where == "background" ? "bgClass" : where == "gutter" ? "gutterClass" : "wrapClass";
-				var cur = line[prop];
+				const prop = where == "text" ? "textClass" : where == "background" ? "bgClass" : where == "gutter" ? "gutterClass" : "wrapClass";
+				const cur = line[prop];
 				if (!cur) {
 					return false;
 				} else if (cls == null) {
 					line[prop] = null;
 				} else {
-					var found = cur.match(classTest(cls));
+					const found = cur.match(classTest(cls));
 					if (!found) {
 						return false;
 					}
-					var end = found.index + found[0].length;
+					const end = found.index + found[0].length;
 					line[prop] = cur.slice(0, found.index) + (!found.index || end == cur.length ? "" : " ") + cur.slice(end) || null;
 				}
 				return true;
@@ -8372,7 +8372,7 @@
 			return markText(this, clipPos(this, from), clipPos(this, to), options, (options && options.type) || "range");
 		},
 		setBookmark: function (pos, options) {
-			var realOpts = {
+			const realOpts = {
 				replacedWith: options && (options.nodeType == null ? options.widget : options),
 				insertLeft: options && options.insertLeft,
 				clearWhenEmpty: false,
@@ -8384,11 +8384,11 @@
 		},
 		findMarksAt: function (pos) {
 			pos = clipPos(this, pos);
-			var markers = [],
-				spans = getLine(this, pos.line).markedSpans;
+			const markers = [];
+			const spans = getLine(this, pos.line).markedSpans;
 			if (spans) {
-				for (var i = 0; i < spans.length; ++i) {
-					var span = spans[i];
+				for (let i = 0; i < spans.length; ++i) {
+					const span = spans[i];
 					if ((span.from == null || span.from <= pos.ch) && (span.to == null || span.to >= pos.ch)) {
 						markers.push(span.marker.parent || span.marker);
 					}
@@ -8399,13 +8399,13 @@
 		findMarks: function (from, to, filter) {
 			from = clipPos(this, from);
 			to = clipPos(this, to);
-			var found = [],
-				lineNo = from.line;
+			const found = [];
+			let lineNo = from.line;
 			this.iter(from.line, to.line + 1, function (line) {
-				var spans = line.markedSpans;
+				const spans = line.markedSpans;
 				if (spans) {
-					for (var i = 0; i < spans.length; i++) {
-						var span = spans[i];
+					for (let i = 0; i < spans.length; i++) {
+						const span = spans[i];
 						if (
 							!(
 								(span.to != null && lineNo == from.line && from.ch >= span.to) ||
@@ -8423,11 +8423,11 @@
 			return found;
 		},
 		getAllMarks: function () {
-			var markers = [];
+			const markers = [];
 			this.iter(function (line) {
-				var sps = line.markedSpans;
+				const sps = line.markedSpans;
 				if (sps) {
-					for (var i = 0; i < sps.length; ++i) {
+					for (let i = 0; i < sps.length; ++i) {
 						if (sps[i].from != null) {
 							markers.push(sps[i].marker);
 						}
@@ -8438,11 +8438,11 @@
 		},
 
 		posFromIndex: function (off) {
-			var ch,
-				lineNo = this.first,
-				sepSize = this.lineSeparator().length;
+			let ch;
+			let lineNo = this.first;
+			const sepSize = this.lineSeparator().length;
 			this.iter(function (line) {
-				var sz = line.text.length + sepSize;
+				const sz = line.text.length + sepSize;
 				if (sz > off) {
 					ch = off;
 					return true;
@@ -8454,11 +8454,11 @@
 		},
 		indexFromPos: function (coords) {
 			coords = clipPos(this, coords);
-			var index = coords.ch;
+			let index = coords.ch;
 			if (coords.line < this.first || coords.ch < 0) {
 				return 0;
 			}
-			var sepSize = this.lineSeparator().length;
+			const sepSize = this.lineSeparator().length;
 			this.iter(this.first, coords.line, function (line) {
 				// iter aborts when callback returns a truthy value
 				index += line.text.length + sepSize;
@@ -8467,7 +8467,7 @@
 		},
 
 		copy: function (copyHistory) {
-			var doc = new Doc(getLines(this, this.first, this.first + this.size), this.modeOption, this.first, this.lineSep, this.direction);
+			const doc = new Doc(getLines(this, this.first, this.first + this.size), this.modeOption, this.first, this.lineSep, this.direction);
 			doc.scrollTop = this.scrollTop;
 			doc.scrollLeft = this.scrollLeft;
 			doc.sel = this.sel;
@@ -8483,15 +8483,15 @@
 			if (!options) {
 				options = {};
 			}
-			var from = this.first,
-				to = this.first + this.size;
+			let from = this.first;
+			let to = this.first + this.size;
 			if (options.from != null && options.from > from) {
 				from = options.from;
 			}
 			if (options.to != null && options.to < to) {
 				to = options.to;
 			}
-			var copy = new Doc(getLines(this, from, to), options.mode || this.modeOption, from, this.lineSep, this.direction);
+			const copy = new Doc(getLines(this, from, to), options.mode || this.modeOption, from, this.lineSep, this.direction);
 			if (options.sharedHist) {
 				copy.history = this.history;
 			}
@@ -8508,8 +8508,8 @@
 				other = other.doc;
 			}
 			if (this.linked) {
-				for (var i = 0; i < this.linked.length; ++i) {
-					var link = this.linked[i];
+				for (let i = 0; i < this.linked.length; ++i) {
+					const link = this.linked[i];
 					if (link.doc != other) {
 						continue;
 					}
@@ -8521,7 +8521,7 @@
 			}
 			// If the histories were shared, split them again
 			if (other.history == this.history) {
-				var splitIds = [other.id];
+				const splitIds = [other.id];
 				linkedDocs(
 					other,
 					function (doc) {
@@ -8577,10 +8577,10 @@
 
 	// Kludge to work around strange IE behavior where it'll sometimes
 	// re-fire a series of drag-related events right after the drop (#1551)
-	var lastDrop = 0;
+	let lastDrop = 0;
 
 	function onDrop(e) {
-		var cm = this;
+		const cm = this;
 		clearDragCursor(cm);
 		if (signalDOMEvent(cm, e) || eventInWidget(cm.display, e)) {
 			return;
@@ -8589,22 +8589,22 @@
 		if (ie) {
 			lastDrop = +new Date();
 		}
-		var pos = posFromMouse(cm, e, true),
-			files = e.dataTransfer.files;
+		let pos = posFromMouse(cm, e, true);
+		const files = e.dataTransfer.files;
 		if (!pos || cm.isReadOnly()) {
 			return;
 		}
 		// Might be a file drop, in which case we simply extract the text
 		// and insert it.
 		if (files && files.length && window.FileReader && window.File) {
-			var n = files.length,
-				text = Array(n),
-				read = 0;
-			var markAsReadAndPasteIfAllFilesAreRead = function () {
+			const n = files.length;
+			const text = Array(n);
+			let read = 0;
+			const markAsReadAndPasteIfAllFilesAreRead = function () {
 				if (++read == n) {
 					operation(cm, function () {
 						pos = clipPos(cm.doc, pos);
-						var change = {
+						const change = {
 							from: pos,
 							to: pos,
 							text: cm.doc.splitLines(
@@ -8621,17 +8621,17 @@
 					})();
 				}
 			};
-			var readTextFromFile = function (file, i) {
+			const readTextFromFile = function (file, i) {
 				if (cm.options.allowDropFileTypes && indexOf(cm.options.allowDropFileTypes, file.type) == -1) {
 					markAsReadAndPasteIfAllFilesAreRead();
 					return;
 				}
-				var reader = new FileReader();
+				const reader = new FileReader();
 				reader.onerror = function () {
 					return markAsReadAndPasteIfAllFilesAreRead();
 				};
 				reader.onload = function () {
-					var content = reader.result;
+					const content = reader.result;
 					if (/[\x00-\x08\x0e-\x1f]{2}/.test(content)) {
 						markAsReadAndPasteIfAllFilesAreRead();
 						return;
@@ -8641,7 +8641,7 @@
 				};
 				reader.readAsText(file);
 			};
-			for (var i = 0; i < files.length; i++) {
+			for (let i = 0; i < files.length; i++) {
 				readTextFromFile(files[i], i);
 			}
 		} else {
@@ -8656,15 +8656,15 @@
 				return;
 			}
 			try {
-				var text$1 = e.dataTransfer.getData("Text");
+				const text$1 = e.dataTransfer.getData("Text");
 				if (text$1) {
-					var selected;
+					let selected;
 					if (cm.state.draggingText && !cm.state.draggingText.copy) {
 						selected = cm.listSelections();
 					}
 					setSelectionNoUndo(cm.doc, simpleSelection(pos, pos));
 					if (selected) {
-						for (var i$1 = 0; i$1 < selected.length; ++i$1) {
+						for (let i$1 = 0; i$1 < selected.length; ++i$1) {
 							replaceRange(cm.doc, "", selected[i$1].anchor, selected[i$1].head, "drag");
 						}
 					}
@@ -8690,7 +8690,7 @@
 		// Use dummy image instead of default browsers image.
 		// Recent Safari (~6.0.2) have a tendency to segfault when this happens, so we don't do it there.
 		if (e.dataTransfer.setDragImage && !safari) {
-			var img = elt("img", null, null, "position: fixed; left: 0; top: 0;");
+			const img = elt("img", null, null, "position: fixed; left: 0; top: 0;");
 			img.src = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 			if (presto) {
 				img.width = img.height = 1;
@@ -8706,11 +8706,11 @@
 	}
 
 	function onDragOver(cm, e) {
-		var pos = posFromMouse(cm, e);
+		const pos = posFromMouse(cm, e);
 		if (!pos) {
 			return;
 		}
-		var frag = document.createDocumentFragment();
+		const frag = document.createDocumentFragment();
 		drawSelectionCursor(cm, pos, frag);
 		if (!cm.display.dragCursor) {
 			cm.display.dragCursor = elt("div", null, "CodeMirror-cursors CodeMirror-dragcursors");
@@ -8734,24 +8734,24 @@
 		if (!document.getElementsByClassName) {
 			return;
 		}
-		var byClass = document.getElementsByClassName("CodeMirror"),
-			editors = [];
-		for (var i = 0; i < byClass.length; i++) {
-			var cm = byClass[i].CodeMirror;
+		const byClass = document.getElementsByClassName("CodeMirror");
+		const editors = [];
+		for (let i = 0; i < byClass.length; i++) {
+			const cm = byClass[i].CodeMirror;
 			if (cm) {
 				editors.push(cm);
 			}
 		}
 		if (editors.length) {
 			editors[0].operation(function () {
-				for (var i = 0; i < editors.length; i++) {
+				for (let i = 0; i < editors.length; i++) {
 					f(editors[i]);
 				}
 			});
 		}
 	}
 
-	var globalsRegistered = false;
+	let globalsRegistered = false;
 	function ensureGlobalHandlers() {
 		if (globalsRegistered) {
 			return;
@@ -8761,7 +8761,7 @@
 	}
 	function registerGlobalHandlers() {
 		// When the window resizes, we need to refresh active editors.
-		var resizeTimer;
+		let resizeTimer;
 		on(window, "resize", function () {
 			if (resizeTimer == null) {
 				resizeTimer = setTimeout(function () {
@@ -8777,14 +8777,14 @@
 	}
 	// Called when the window resizes
 	function onResize(cm) {
-		var d = cm.display;
+		const d = cm.display;
 		// Might be a text scaling operation, clear size caches.
 		d.cachedCharWidth = d.cachedTextHeight = d.cachedPaddingH = null;
 		d.scrollbarsClipped = false;
 		cm.setSize();
 	}
 
-	var keyNames = {
+	const keyNames = {
 		3: "Pause",
 		8: "Backspace",
 		9: "Tab",
@@ -8844,19 +8844,19 @@
 	};
 
 	// Number keys
-	for (var i = 0; i < 10; i++) {
+	for (let i = 0; i < 10; i++) {
 		keyNames[i + 48] = keyNames[i + 96] = String(i);
 	}
 	// Alphabetic keys
-	for (var i$1 = 65; i$1 <= 90; i$1++) {
+	for (let i$1 = 65; i$1 <= 90; i$1++) {
 		keyNames[i$1] = String.fromCharCode(i$1);
 	}
 	// Function keys
-	for (var i$2 = 1; i$2 <= 12; i$2++) {
+	for (let i$2 = 1; i$2 <= 12; i$2++) {
 		keyNames[i$2 + 111] = keyNames[i$2 + 63235] = "F" + i$2;
 	}
 
-	var keyMap = {};
+	const keyMap = {};
 
 	keyMap.basic = {
 		Left: "goCharLeft",
@@ -8961,16 +8961,16 @@
 		"Ctrl-Down": "goDocEnd",
 		fallthrough: ["basic", "emacsy"],
 	};
-	keyMap["default"] = mac ? keyMap.macDefault : keyMap.pcDefault;
+	keyMap.default = mac ? keyMap.macDefault : keyMap.pcDefault;
 
 	// KEYMAP DISPATCH
 
 	function normalizeKeyName(name) {
-		var parts = name.split(/-(?!$)/);
+		const parts = name.split(/-(?!$)/);
 		name = parts[parts.length - 1];
-		var alt, ctrl, shift, cmd;
-		for (var i = 0; i < parts.length - 1; i++) {
-			var mod = parts[i];
+		let alt, ctrl, shift, cmd;
+		for (let i = 0; i < parts.length - 1; i++) {
+			const mod = parts[i];
 			if (/^(cmd|meta|m)$/i.test(mod)) {
 				cmd = true;
 			} else if (/^a(lt)?$/i.test(mod)) {
@@ -9004,10 +9004,10 @@
 	// new normalized keymap, and then updates the old object to reflect
 	// this.
 	function normalizeKeyMap(keymap) {
-		var copy = {};
-		for (var keyname in keymap) {
+		const copy = {};
+		for (const keyname in keymap) {
 			if (keymap.hasOwnProperty(keyname)) {
-				var value = keymap[keyname];
+				const value = keymap[keyname];
 				if (/^(name|fallthrough|(de|at)tach)$/.test(keyname)) {
 					continue;
 				}
@@ -9016,10 +9016,10 @@
 					continue;
 				}
 
-				var keys = map(keyname.split(" "), normalizeKeyName);
-				for (var i = 0; i < keys.length; i++) {
-					var val = void 0,
-						name = void 0;
+				const keys = map(keyname.split(" "), normalizeKeyName);
+				for (let i = 0; i < keys.length; i++) {
+					let val = void 0;
+					let name = void 0;
 					if (i == keys.length - 1) {
 						name = keys.join(" ");
 						val = value;
@@ -9027,7 +9027,7 @@
 						name = keys.slice(0, i + 1).join(" ");
 						val = "...";
 					}
-					var prev = copy[name];
+					const prev = copy[name];
 					if (!prev) {
 						copy[name] = val;
 					} else if (prev != val) {
@@ -9037,7 +9037,7 @@
 				delete keymap[keyname];
 			}
 		}
-		for (var prop in copy) {
+		for (const prop in copy) {
 			keymap[prop] = copy[prop];
 		}
 		return keymap;
@@ -9045,7 +9045,7 @@
 
 	function lookupKey(key, map, handle, context) {
 		map = getKeyMap(map);
-		var found = map.call ? map.call(key, context) : map[key];
+		const found = map.call ? map.call(key, context) : map[key];
 		if (found === false) {
 			return "nothing";
 		}
@@ -9060,8 +9060,8 @@
 			if (Object.prototype.toString.call(map.fallthrough) != "[object Array]") {
 				return lookupKey(key, map.fallthrough, handle, context);
 			}
-			for (var i = 0; i < map.fallthrough.length; i++) {
-				var result = lookupKey(key, map.fallthrough[i], handle, context);
+			for (let i = 0; i < map.fallthrough.length; i++) {
+				const result = lookupKey(key, map.fallthrough[i], handle, context);
 				if (result) {
 					return result;
 				}
@@ -9072,12 +9072,12 @@
 	// Modifier key presses don't count as 'real' key presses for the
 	// purpose of keymap fallthrough.
 	function isModifierKey(value) {
-		var name = typeof value == "string" ? value : keyNames[value.keyCode];
+		const name = typeof value === "string" ? value : keyNames[value.keyCode];
 		return name == "Ctrl" || name == "Alt" || name == "Shift" || name == "Mod";
 	}
 
 	function addModifierNames(name, event, noShift) {
-		var base = name;
+		const base = name;
 		if (event.altKey && base != "Alt") {
 			name = "Alt-" + name;
 		}
@@ -9095,10 +9095,10 @@
 
 	// Look up the name of a key as indicated by an event object.
 	function keyName(event, noShift) {
-		if (presto && event.keyCode == 34 && event["char"]) {
+		if (presto && event.keyCode == 34 && event.char) {
 			return false;
 		}
-		var name = keyNames[event.keyCode];
+		let name = keyNames[event.keyCode];
 		if (name == null || event.altGraphKey) {
 			return false;
 		}
@@ -9111,20 +9111,20 @@
 	}
 
 	function getKeyMap(val) {
-		return typeof val == "string" ? keyMap[val] : val;
+		return typeof val === "string" ? keyMap[val] : val;
 	}
 
 	// Helper for deleting text near the selection(s), used to implement
 	// backspace, delete, and similar functionality.
 	function deleteNearSelection(cm, compute) {
-		var ranges = cm.doc.sel.ranges,
-			kill = [];
+		const ranges = cm.doc.sel.ranges;
+		const kill = [];
 		// Build up a set of ranges to kill first, merging overlapping
 		// ranges.
-		for (var i = 0; i < ranges.length; i++) {
-			var toKill = compute(ranges[i]);
+		for (let i = 0; i < ranges.length; i++) {
+			const toKill = compute(ranges[i]);
 			while (kill.length && cmp(toKill.from, lst(kill).to) <= 0) {
-				var replaced = kill.pop();
+				const replaced = kill.pop();
 				if (cmp(replaced.from, toKill.from) < 0) {
 					toKill.from = replaced.from;
 					break;
@@ -9134,7 +9134,7 @@
 		}
 		// Next, remove those actual ranges.
 		runInOp(cm, function () {
-			for (var i = kill.length - 1; i >= 0; i--) {
+			for (let i = kill.length - 1; i >= 0; i--) {
 				replaceRange(cm.doc, "", kill[i].from, kill[i].to, "+delete");
 			}
 			ensureCursorVisible(cm);
@@ -9142,12 +9142,12 @@
 	}
 
 	function moveCharLogically(line, ch, dir) {
-		var target = skipExtendingChars(line.text, ch + dir, dir);
+		const target = skipExtendingChars(line.text, ch + dir, dir);
 		return target < 0 || target > line.text.length ? null : target;
 	}
 
 	function moveLogically(line, start, dir) {
-		var ch = moveCharLogically(line, start.ch, dir);
+		const ch = moveCharLogically(line, start.ch, dir);
 		return ch == null ? null : new Pos(start.line, ch, dir < 0 ? "after" : "before");
 	}
 
@@ -9156,12 +9156,12 @@
 			if (cm.doc.direction == "rtl") {
 				dir = -dir;
 			}
-			var order = getOrder(lineObj, cm.doc.direction);
+			const order = getOrder(lineObj, cm.doc.direction);
 			if (order) {
-				var part = dir < 0 ? lst(order) : order[0];
-				var moveInStorageOrder = dir < 0 == (part.level == 1);
-				var sticky = moveInStorageOrder ? "after" : "before";
-				var ch;
+				const part = dir < 0 ? lst(order) : order[0];
+				const moveInStorageOrder = dir < 0 == (part.level == 1);
+				const sticky = moveInStorageOrder ? "after" : "before";
+				let ch;
 				// With a wrapped rtl chunk (possibly spanning multiple bidi parts),
 				// it could be that the last bidi part is not on the last visual line,
 				// since visual lines contain content order-consecutive chunks.
@@ -9169,9 +9169,9 @@
 				// in the rtl chunk that is on the last line (that is, the same line
 				// as the last (content-order) character).
 				if (part.level > 0 || cm.doc.direction == "rtl") {
-					var prep = prepareMeasureForLine(cm, lineObj);
+					const prep = prepareMeasureForLine(cm, lineObj);
 					ch = dir < 0 ? lineObj.text.length - 1 : 0;
-					var targetTop = measureCharPrepared(cm, prep, ch).top;
+					const targetTop = measureCharPrepared(cm, prep, ch).top;
 					ch = findFirst(
 						function (ch) {
 							return measureCharPrepared(cm, prep, ch).top == targetTop;
@@ -9192,7 +9192,7 @@
 	}
 
 	function moveVisually(cm, line, start, dir) {
-		var bidi = getOrder(line, cm.doc.direction);
+		const bidi = getOrder(line, cm.doc.direction);
 		if (!bidi) {
 			return moveLogically(line, start, dir);
 		}
@@ -9203,33 +9203,33 @@
 			start.ch = 0;
 			start.sticky = "after";
 		}
-		var partPos = getBidiPartAt(bidi, start.ch, start.sticky),
-			part = bidi[partPos];
+		const partPos = getBidiPartAt(bidi, start.ch, start.sticky);
+		const part = bidi[partPos];
 		if (cm.doc.direction == "ltr" && part.level % 2 == 0 && (dir > 0 ? part.to > start.ch : part.from < start.ch)) {
 			// Case 1: We move within an ltr part in an ltr editor. Even with wrapped lines,
 			// nothing interesting happens.
 			return moveLogically(line, start, dir);
 		}
 
-		var mv = function (pos, dir) {
+		const mv = function (pos, dir) {
 			return moveCharLogically(line, pos instanceof Pos ? pos.ch : pos, dir);
 		};
-		var prep;
-		var getWrappedLineExtent = function (ch) {
+		let prep;
+		const getWrappedLineExtent = function (ch) {
 			if (!cm.options.lineWrapping) {
 				return { begin: 0, end: line.text.length };
 			}
 			prep = prep || prepareMeasureForLine(cm, line);
 			return wrappedLineExtentChar(cm, line, prep, ch);
 		};
-		var wrappedLineExtent = getWrappedLineExtent(start.sticky == "before" ? mv(start, -1) : start.ch);
+		const wrappedLineExtent = getWrappedLineExtent(start.sticky == "before" ? mv(start, -1) : start.ch);
 
 		if (cm.doc.direction == "rtl" || part.level == 1) {
-			var moveInStorageOrder = (part.level == 1) == dir < 0;
-			var ch = mv(start, moveInStorageOrder ? 1 : -1);
+			const moveInStorageOrder = (part.level == 1) == dir < 0;
+			const ch = mv(start, moveInStorageOrder ? 1 : -1);
 			if (ch != null && (!moveInStorageOrder ? ch >= part.from && ch >= wrappedLineExtent.begin : ch <= part.to && ch <= wrappedLineExtent.end)) {
 				// Case 2: We move within an rtl part or in an rtl editor on the same visual line
-				var sticky = moveInStorageOrder ? "before" : "after";
+				const sticky = moveInStorageOrder ? "before" : "after";
 				return new Pos(start.line, ch, sticky);
 			}
 		}
@@ -9237,15 +9237,15 @@
 		// Case 3: Could not move within this bidi part in this visual line, so leave
 		// the current bidi part
 
-		var searchInVisualLine = function (partPos, dir, wrappedLineExtent) {
-			var getRes = function (ch, moveInStorageOrder) {
+		const searchInVisualLine = function (partPos, dir, wrappedLineExtent) {
+			const getRes = function (ch, moveInStorageOrder) {
 				return moveInStorageOrder ? new Pos(start.line, mv(ch, 1), "before") : new Pos(start.line, ch, "after");
 			};
 
 			for (; partPos >= 0 && partPos < bidi.length; partPos += dir) {
-				var part = bidi[partPos];
-				var moveInStorageOrder = dir > 0 == (part.level != 1);
-				var ch = moveInStorageOrder ? wrappedLineExtent.begin : mv(wrappedLineExtent.end, -1);
+				const part = bidi[partPos];
+				const moveInStorageOrder = dir > 0 == (part.level != 1);
+				let ch = moveInStorageOrder ? wrappedLineExtent.begin : mv(wrappedLineExtent.end, -1);
 				if (part.from <= ch && ch < part.to) {
 					return getRes(ch, moveInStorageOrder);
 				}
@@ -9257,13 +9257,13 @@
 		};
 
 		// Case 3a: Look for other bidi parts on the same visual line
-		var res = searchInVisualLine(partPos + dir, dir, wrappedLineExtent);
+		let res = searchInVisualLine(partPos + dir, dir, wrappedLineExtent);
 		if (res) {
 			return res;
 		}
 
 		// Case 3b: Look for other bidi parts on the next visual line
-		var nextCh = dir > 0 ? wrappedLineExtent.end : mv(wrappedLineExtent.begin, -1);
+		const nextCh = dir > 0 ? wrappedLineExtent.end : mv(wrappedLineExtent.begin, -1);
 		if (nextCh != null && !(dir > 0 && nextCh == line.text.length)) {
 			res = searchInVisualLine(dir > 0 ? 0 : bidi.length - 1, dir, getWrappedLineExtent(nextCh));
 			if (res) {
@@ -9277,7 +9277,7 @@
 
 	// Commands are parameter-less actions that can be performed on an
 	// editor, mostly used for keybindings.
-	var commands = {
+	const commands = {
 		selectAll: selectAll,
 		singleSelection: function (cm) {
 			return cm.setSelection(cm.getCursor("anchor"), cm.getCursor("head"), sel_dontScroll);
@@ -9285,7 +9285,7 @@
 		killLine: function (cm) {
 			return deleteNearSelection(cm, function (range) {
 				if (range.empty()) {
-					var len = getLine(cm.doc, range.head.line).text.length;
+					const len = getLine(cm.doc, range.head.line).text.length;
 					if (range.head.ch == len && range.head.line < cm.lastLine()) {
 						return { from: range.head, to: Pos(range.head.line + 1, 0) };
 					} else {
@@ -9314,15 +9314,15 @@
 		},
 		delWrappedLineLeft: function (cm) {
 			return deleteNearSelection(cm, function (range) {
-				var top = cm.charCoords(range.head, "div").top + 5;
-				var leftPos = cm.coordsChar({ left: 0, top: top }, "div");
+				const top = cm.charCoords(range.head, "div").top + 5;
+				const leftPos = cm.coordsChar({ left: 0, top: top }, "div");
 				return { from: leftPos, to: range.from() };
 			});
 		},
 		delWrappedLineRight: function (cm) {
 			return deleteNearSelection(cm, function (range) {
-				var top = cm.charCoords(range.head, "div").top + 5;
-				var rightPos = cm.coordsChar({ left: cm.display.lineDiv.offsetWidth + 100, top: top }, "div");
+				const top = cm.charCoords(range.head, "div").top + 5;
+				const rightPos = cm.coordsChar({ left: cm.display.lineDiv.offsetWidth + 100, top: top }, "div");
 				return { from: range.from(), to: rightPos };
 			});
 		},
@@ -9370,20 +9370,20 @@
 		},
 		goLineRight: function (cm) {
 			return cm.extendSelectionsBy(function (range) {
-				var top = cm.cursorCoords(range.head, "div").top + 5;
+				const top = cm.cursorCoords(range.head, "div").top + 5;
 				return cm.coordsChar({ left: cm.display.lineDiv.offsetWidth + 100, top: top }, "div");
 			}, sel_move);
 		},
 		goLineLeft: function (cm) {
 			return cm.extendSelectionsBy(function (range) {
-				var top = cm.cursorCoords(range.head, "div").top + 5;
+				const top = cm.cursorCoords(range.head, "div").top + 5;
 				return cm.coordsChar({ left: 0, top: top }, "div");
 			}, sel_move);
 		},
 		goLineLeftSmart: function (cm) {
 			return cm.extendSelectionsBy(function (range) {
-				var top = cm.cursorCoords(range.head, "div").top + 5;
-				var pos = cm.coordsChar({ left: 0, top: top }, "div");
+				const top = cm.cursorCoords(range.head, "div").top + 5;
+				const pos = cm.coordsChar({ left: 0, top: top }, "div");
 				if (pos.ch < cm.getLine(pos.line).search(/\S/)) {
 					return lineStartSmart(cm, range.head);
 				}
@@ -9457,12 +9457,12 @@
 			return cm.replaceSelection("\t");
 		},
 		insertSoftTab: function (cm) {
-			var spaces = [],
-				ranges = cm.listSelections(),
-				tabSize = cm.options.tabSize;
-			for (var i = 0; i < ranges.length; i++) {
-				var pos = ranges[i].from();
-				var col = countColumn(cm.getLine(pos.line), pos.ch, tabSize);
+			const spaces = [];
+			const ranges = cm.listSelections();
+			const tabSize = cm.options.tabSize;
+			for (let i = 0; i < ranges.length; i++) {
+				const pos = ranges[i].from();
+				const col = countColumn(cm.getLine(pos.line), pos.ch, tabSize);
 				spaces.push(spaceStr(tabSize - (col % tabSize)));
 			}
 			cm.replaceSelections(spaces);
@@ -9483,14 +9483,14 @@
 		// Doesn't do anything with non-empty selections.
 		transposeChars: function (cm) {
 			return runInOp(cm, function () {
-				var ranges = cm.listSelections(),
-					newSel = [];
-				for (var i = 0; i < ranges.length; i++) {
+				const ranges = cm.listSelections();
+				const newSel = [];
+				for (let i = 0; i < ranges.length; i++) {
 					if (!ranges[i].empty()) {
 						continue;
 					}
-					var cur = ranges[i].head,
-						line = getLine(cm.doc, cur.line).text;
+					let cur = ranges[i].head;
+					const line = getLine(cm.doc, cur.line).text;
 					if (line) {
 						if (cur.ch == line.length) {
 							cur = new Pos(cur.line, cur.ch - 1);
@@ -9499,7 +9499,7 @@
 							cur = new Pos(cur.line, cur.ch + 1);
 							cm.replaceRange(line.charAt(cur.ch - 1) + line.charAt(cur.ch - 2), Pos(cur.line, cur.ch - 2), cur, "+transpose");
 						} else if (cur.line > cm.doc.first) {
-							var prev = getLine(cm.doc, cur.line - 1).text;
+							const prev = getLine(cm.doc, cur.line - 1).text;
 							if (prev) {
 								cur = new Pos(cur.line, 1);
 								cm.replaceRange(
@@ -9518,12 +9518,12 @@
 		},
 		newlineAndIndent: function (cm) {
 			return runInOp(cm, function () {
-				var sels = cm.listSelections();
-				for (var i = sels.length - 1; i >= 0; i--) {
+				let sels = cm.listSelections();
+				for (let i = sels.length - 1; i >= 0; i--) {
 					cm.replaceRange(cm.doc.lineSeparator(), sels[i].anchor, sels[i].head, "+input");
 				}
 				sels = cm.listSelections();
-				for (var i$1 = 0; i$1 < sels.length; i$1++) {
+				for (let i$1 = 0; i$1 < sels.length; i$1++) {
 					cm.indentLine(sels[i$1].from().line, null, true);
 				}
 				ensureCursorVisible(cm);
@@ -9538,28 +9538,28 @@
 	};
 
 	function lineStart(cm, lineN) {
-		var line = getLine(cm.doc, lineN);
-		var visual = visualLine(line);
+		const line = getLine(cm.doc, lineN);
+		const visual = visualLine(line);
 		if (visual != line) {
 			lineN = lineNo(visual);
 		}
 		return endOfLine(true, cm, visual, lineN, 1);
 	}
 	function lineEnd(cm, lineN) {
-		var line = getLine(cm.doc, lineN);
-		var visual = visualLineEnd(line);
+		const line = getLine(cm.doc, lineN);
+		const visual = visualLineEnd(line);
 		if (visual != line) {
 			lineN = lineNo(visual);
 		}
 		return endOfLine(true, cm, line, lineN, -1);
 	}
 	function lineStartSmart(cm, pos) {
-		var start = lineStart(cm, pos.line);
-		var line = getLine(cm.doc, start.line);
-		var order = getOrder(line, cm.doc.direction);
+		const start = lineStart(cm, pos.line);
+		const line = getLine(cm.doc, start.line);
+		const order = getOrder(line, cm.doc.direction);
 		if (!order || order[0].level == 0) {
-			var firstNonWS = Math.max(start.ch, line.text.search(/\S/));
-			var inWS = pos.line == start.line && pos.ch <= firstNonWS && pos.ch;
+			const firstNonWS = Math.max(start.ch, line.text.search(/\S/));
+			const inWS = pos.line == start.line && pos.ch <= firstNonWS && pos.ch;
 			return Pos(start.line, inWS ? 0 : firstNonWS, start.sticky);
 		}
 		return start;
@@ -9567,7 +9567,7 @@
 
 	// Run a handler that was bound to a key.
 	function doHandleBinding(cm, bound, dropShift) {
-		if (typeof bound == "string") {
+		if (typeof bound === "string") {
 			bound = commands[bound];
 			if (!bound) {
 				return false;
@@ -9576,8 +9576,8 @@
 		// Ensure previous input has been read, so that the handler sees a
 		// consistent view of the document
 		cm.display.input.ensurePolled();
-		var prevShift = cm.display.shift,
-			done = false;
+		const prevShift = cm.display.shift;
+		let done = false;
 		try {
 			if (cm.isReadOnly()) {
 				cm.state.suppressEdits = true;
@@ -9594,8 +9594,8 @@
 	}
 
 	function lookupKeyForEditor(cm, name, handle) {
-		for (var i = 0; i < cm.state.keyMaps.length; i++) {
-			var result = lookupKey(name, cm.state.keyMaps[i], handle, cm);
+		for (let i = 0; i < cm.state.keyMaps.length; i++) {
+			const result = lookupKey(name, cm.state.keyMaps[i], handle, cm);
 			if (result) {
 				return result;
 			}
@@ -9606,10 +9606,10 @@
 	// Note that, despite the name, this function is also used to check
 	// for bound mouse clicks.
 
-	var stopSeq = new Delayed();
+	const stopSeq = new Delayed();
 
 	function dispatchKey(cm, name, e, handle) {
-		var seq = cm.state.keySeq;
+		const seq = cm.state.keySeq;
 		if (seq) {
 			if (isModifierKey(name)) {
 				return "handled";
@@ -9632,7 +9632,7 @@
 	}
 
 	function dispatchKeyInner(cm, name, e, handle) {
-		var result = lookupKeyForEditor(cm, name, handle);
+		const result = lookupKeyForEditor(cm, name, handle);
 
 		if (result == "multi") {
 			cm.state.keySeq = name;
@@ -9651,7 +9651,7 @@
 
 	// Handle a key from the keydown event.
 	function handleKeyBinding(cm, e) {
-		var name = keyName(e, true);
+		const name = keyName(e, true);
 		if (!name) {
 			return false;
 		}
@@ -9665,7 +9665,7 @@
 					return doHandleBinding(cm, b, true);
 				}) ||
 				dispatchKey(cm, name, e, function (b) {
-					if (typeof b == "string" ? /^go[A-Z]/.test(b) : b.motion) {
+					if (typeof b === "string" ? /^go[A-Z]/.test(b) : b.motion) {
 						return doHandleBinding(cm, b);
 					}
 				})
@@ -9684,9 +9684,9 @@
 		});
 	}
 
-	var lastStoppedKey = null;
+	let lastStoppedKey = null;
 	function onKeyDown(e) {
-		var cm = this;
+		const cm = this;
 		if (e.target && e.target != cm.display.input.getField()) {
 			return;
 		}
@@ -9698,9 +9698,9 @@
 		if (ie && ie_version < 11 && e.keyCode == 27) {
 			e.returnValue = false;
 		}
-		var code = e.keyCode;
+		const code = e.keyCode;
 		cm.display.shift = code == 16 || e.shiftKey;
-		var handled = handleKeyBinding(cm, e);
+		const handled = handleKeyBinding(cm, e);
 		if (presto) {
 			lastStoppedKey = handled ? code : null;
 			// Opera has no cut event... we try to at least catch the key combo
@@ -9719,7 +9719,7 @@
 	}
 
 	function showCrossHair(cm) {
-		var lineDiv = cm.display.lineDiv;
+		const lineDiv = cm.display.lineDiv;
 		addClass(lineDiv, "CodeMirror-crosshair");
 
 		function up(e) {
@@ -9741,15 +9741,15 @@
 	}
 
 	function onKeyPress(e) {
-		var cm = this;
+		const cm = this;
 		if (e.target && e.target != cm.display.input.getField()) {
 			return;
 		}
 		if (eventInWidget(cm.display, e) || signalDOMEvent(cm, e) || (e.ctrlKey && !e.altKey) || (mac && e.metaKey)) {
 			return;
 		}
-		var keyCode = e.keyCode,
-			charCode = e.charCode;
+		const keyCode = e.keyCode;
+		const charCode = e.charCode;
 		if (presto && keyCode == lastStoppedKey) {
 			lastStoppedKey = null;
 			e_preventDefault(e);
@@ -9758,7 +9758,7 @@
 		if (presto && (!e.which || e.which < 10) && handleKeyBinding(cm, e)) {
 			return;
 		}
-		var ch = String.fromCharCode(charCode == null ? keyCode : charCode);
+		const ch = String.fromCharCode(charCode == null ? keyCode : charCode);
 		// Some browsers fire keypress events for backspace
 		if (ch == "\x08") {
 			return;
@@ -9769,9 +9769,9 @@
 		cm.display.input.onKeyPress(e);
 	}
 
-	var DOUBLECLICK_DELAY = 400;
+	const DOUBLECLICK_DELAY = 400;
 
-	var PastClick = function (time, pos, button) {
+	const PastClick = function (time, pos, button) {
 		this.time = time;
 		this.pos = pos;
 		this.button = button;
@@ -9781,9 +9781,9 @@
 		return this.time + DOUBLECLICK_DELAY > time && cmp(pos, this.pos) == 0 && button == this.button;
 	};
 
-	var lastClick, lastDoubleClick;
+	let lastClick, lastDoubleClick;
 	function clickRepeat(pos, button) {
-		var now = +new Date();
+		const now = +new Date();
 		if (lastDoubleClick && lastDoubleClick.compare(now, pos, button)) {
 			lastClick = lastDoubleClick = null;
 			return "triple";
@@ -9804,8 +9804,8 @@
 	// middle-click-paste. Or it might be a click on something we should
 	// not interfere with, such as a scrollbar or widget.
 	function onMouseDown(e) {
-		var cm = this,
-			display = cm.display;
+		const cm = this;
+		const display = cm.display;
 		if (signalDOMEvent(cm, e) || (display.activeTouch && display.input.supportsTouch())) {
 			return;
 		}
@@ -9826,9 +9826,9 @@
 		if (clickInGutter(cm, e)) {
 			return;
 		}
-		var pos = posFromMouse(cm, e),
-			button = e_button(e),
-			repeat = pos ? clickRepeat(pos, button) : "single";
+		const pos = posFromMouse(cm, e);
+		const button = e_button(e);
+		const repeat = pos ? clickRepeat(pos, button) : "single";
 		window.focus();
 
 		// #3261: make sure, that we're not starting a second selection
@@ -9863,7 +9863,7 @@
 	}
 
 	function handleMappedButton(cm, button, pos, repeat, event) {
-		var name = "Click";
+		let name = "Click";
 		if (repeat == "double") {
 			name = "Double" + name;
 		} else if (repeat == "triple") {
@@ -9872,13 +9872,13 @@
 		name = (button == 1 ? "Left" : button == 2 ? "Middle" : "Right") + name;
 
 		return dispatchKey(cm, addModifierNames(name, event), event, function (bound) {
-			if (typeof bound == "string") {
+			if (typeof bound === "string") {
 				bound = commands[bound];
 			}
 			if (!bound) {
 				return false;
 			}
-			var done = false;
+			let done = false;
 			try {
 				if (cm.isReadOnly()) {
 					cm.state.suppressEdits = true;
@@ -9892,10 +9892,10 @@
 	}
 
 	function configureMouse(cm, repeat, event) {
-		var option = cm.getOption("configureMouse");
-		var value = option ? option(cm, repeat, event) : {};
+		const option = cm.getOption("configureMouse");
+		const value = option ? option(cm, repeat, event) : {};
 		if (value.unit == null) {
-			var rect = chromeOS ? event.shiftKey && event.metaKey : event.altKey;
+			const rect = chromeOS ? event.shiftKey && event.metaKey : event.altKey;
 			value.unit = rect ? "rectangle" : repeat == "single" ? "char" : repeat == "double" ? "word" : "line";
 		}
 		if (value.extend == null || cm.doc.extend) {
@@ -9917,10 +9917,10 @@
 			cm.curOp.focus = activeElt();
 		}
 
-		var behavior = configureMouse(cm, repeat, event);
+		const behavior = configureMouse(cm, repeat, event);
 
-		var sel = cm.doc.sel,
-			contained;
+		const sel = cm.doc.sel;
+		let contained;
 		if (
 			cm.options.dragDrop &&
 			dragAndDrop &&
@@ -9939,8 +9939,8 @@
 	// Start a text drag. When it ends, see if any dragging actually
 	// happen, and treat as a click if it didn't.
 	function leftButtonStartDrag(cm, event, pos, behavior) {
-		var display = cm.display,
-			moved = false;
+		const display = cm.display;
+		let moved = false;
 		var dragEnd = operation(cm, function (e) {
 			if (webkit) {
 				display.scroller.draggable = false;
@@ -10010,7 +10010,7 @@
 		if (unit == "line") {
 			return new Range(Pos(pos.line, 0), clipPos(cm.doc, Pos(pos.line + 1, 0)));
 		}
-		var result = unit(cm, pos);
+		const result = unit(cm, pos);
 		return new Range(result.from, result.to);
 	}
 
@@ -10019,14 +10019,14 @@
 		if (ie) {
 			delayBlurEvent(cm);
 		}
-		var display = cm.display,
-			doc = cm.doc;
+		const display = cm.display;
+		const doc = cm.doc;
 		e_preventDefault(event);
 
-		var ourRange,
-			ourIndex,
-			startSel = doc.sel,
-			ranges = startSel.ranges;
+		let ourRange;
+		let ourIndex;
+		let startSel = doc.sel;
+		const ranges = startSel.ranges;
 		if (behavior.addNew && !behavior.extend) {
 			ourIndex = doc.sel.contains(start);
 			if (ourIndex > -1) {
@@ -10046,7 +10046,7 @@
 			start = posFromMouse(cm, event, true, true);
 			ourIndex = -1;
 		} else {
-			var range = rangeForUnit(cm, start, behavior.unit);
+			const range = rangeForUnit(cm, start, behavior.unit);
 			if (behavior.extend) {
 				ourRange = extendRange(ourRange, range.anchor, range.head, behavior.extend);
 			} else {
@@ -10068,7 +10068,7 @@
 			replaceOneSelection(doc, ourIndex, ourRange, sel_mouse);
 		}
 
-		var lastPos = start;
+		let lastPos = start;
 		function extendTo(pos) {
 			if (cmp(lastPos, pos) == 0) {
 				return;
@@ -10076,15 +10076,15 @@
 			lastPos = pos;
 
 			if (behavior.unit == "rectangle") {
-				var ranges = [],
-					tabSize = cm.options.tabSize;
-				var startCol = countColumn(getLine(doc, start.line).text, start.ch, tabSize);
-				var posCol = countColumn(getLine(doc, pos.line).text, pos.ch, tabSize);
-				var left = Math.min(startCol, posCol),
-					right = Math.max(startCol, posCol);
-				for (var line = Math.min(start.line, pos.line), end = Math.min(cm.lastLine(), Math.max(start.line, pos.line)); line <= end; line++) {
-					var text = getLine(doc, line).text,
-						leftPos = findColumn(text, left, tabSize);
+				const ranges = [];
+				const tabSize = cm.options.tabSize;
+				const startCol = countColumn(getLine(doc, start.line).text, start.ch, tabSize);
+				const posCol = countColumn(getLine(doc, pos.line).text, pos.ch, tabSize);
+				const left = Math.min(startCol, posCol);
+				const right = Math.max(startCol, posCol);
+				for (let line = Math.min(start.line, pos.line), end = Math.min(cm.lastLine(), Math.max(start.line, pos.line)); line <= end; line++) {
+					const text = getLine(doc, line).text;
+					const leftPos = findColumn(text, left, tabSize);
 					if (left == right) {
 						ranges.push(new Range(Pos(line, leftPos), Pos(line, leftPos)));
 					} else if (text.length > leftPos) {
@@ -10097,10 +10097,10 @@
 				setSelection(doc, normalizeSelection(cm, startSel.ranges.slice(0, ourIndex).concat(ranges), ourIndex), { origin: "*mouse", scroll: false });
 				cm.scrollIntoView(pos);
 			} else {
-				var oldRange = ourRange;
-				var range = rangeForUnit(cm, pos, behavior.unit);
-				var anchor = oldRange.anchor,
-					head;
+				const oldRange = ourRange;
+				const range = rangeForUnit(cm, pos, behavior.unit);
+				let anchor = oldRange.anchor;
+				let head;
 				if (cmp(range.anchor, anchor) > 0) {
 					head = range.head;
 					anchor = minPos(oldRange.from(), range.anchor);
@@ -10108,29 +10108,29 @@
 					head = range.anchor;
 					anchor = maxPos(oldRange.to(), range.head);
 				}
-				var ranges$1 = startSel.ranges.slice(0);
+				const ranges$1 = startSel.ranges.slice(0);
 				ranges$1[ourIndex] = bidiSimplify(cm, new Range(clipPos(doc, anchor), head));
 				setSelection(doc, normalizeSelection(cm, ranges$1, ourIndex), sel_mouse);
 			}
 		}
 
-		var editorSize = display.wrapper.getBoundingClientRect();
+		const editorSize = display.wrapper.getBoundingClientRect();
 		// Used to ensure timeout re-tries don't fire when another extend
 		// happened in the meantime (clearTimeout isn't reliable -- at
 		// least on Chrome, the timeouts still happen even when cleared,
 		// if the clear happens after their scheduled firing time).
-		var counter = 0;
+		let counter = 0;
 
 		function extend(e) {
-			var curCount = ++counter;
-			var cur = posFromMouse(cm, e, true, behavior.unit == "rectangle");
+			const curCount = ++counter;
+			const cur = posFromMouse(cm, e, true, behavior.unit == "rectangle");
 			if (!cur) {
 				return;
 			}
 			if (cmp(cur, lastPos) != 0) {
 				cm.curOp.focus = activeElt();
 				extendTo(cur);
-				var visible = visibleLines(display, doc);
+				const visible = visibleLines(display, doc);
 				if (cur.line >= visible.to || cur.line < visible.from) {
 					setTimeout(
 						operation(cm, function () {
@@ -10142,7 +10142,7 @@
 					);
 				}
 			} else {
-				var outside = e.clientY < editorSize.top ? -20 : e.clientY > editorSize.bottom ? 20 : 0;
+				const outside = e.clientY < editorSize.top ? -20 : e.clientY > editorSize.bottom ? 20 : 0;
 				if (outside) {
 					setTimeout(
 						operation(cm, function () {
@@ -10189,34 +10189,34 @@
 	// Used when mouse-selecting to adjust the anchor to the proper side
 	// of a bidi jump depending on the visual position of the head.
 	function bidiSimplify(cm, range) {
-		var anchor = range.anchor;
-		var head = range.head;
-		var anchorLine = getLine(cm.doc, anchor.line);
+		const anchor = range.anchor;
+		const head = range.head;
+		const anchorLine = getLine(cm.doc, anchor.line);
 		if (cmp(anchor, head) == 0 && anchor.sticky == head.sticky) {
 			return range;
 		}
-		var order = getOrder(anchorLine);
+		const order = getOrder(anchorLine);
 		if (!order) {
 			return range;
 		}
-		var index = getBidiPartAt(order, anchor.ch, anchor.sticky),
-			part = order[index];
+		const index = getBidiPartAt(order, anchor.ch, anchor.sticky);
+		const part = order[index];
 		if (part.from != anchor.ch && part.to != anchor.ch) {
 			return range;
 		}
-		var boundary = index + ((part.from == anchor.ch) == (part.level != 1) ? 0 : 1);
+		const boundary = index + ((part.from == anchor.ch) == (part.level != 1) ? 0 : 1);
 		if (boundary == 0 || boundary == order.length) {
 			return range;
 		}
 
 		// Compute the relative visual position of the head compared to the
 		// anchor (<0 is to the left, >0 to the right)
-		var leftSide;
+		let leftSide;
 		if (head.line != anchor.line) {
 			leftSide = (head.line - anchor.line) * (cm.doc.direction == "ltr" ? 1 : -1) > 0;
 		} else {
-			var headIndex = getBidiPartAt(order, head.ch, head.sticky);
-			var dir = headIndex - index || (head.ch - anchor.ch) * (part.level == 1 ? -1 : 1);
+			const headIndex = getBidiPartAt(order, head.ch, head.sticky);
+			const dir = headIndex - index || (head.ch - anchor.ch) * (part.level == 1 ? -1 : 1);
 			if (headIndex == boundary - 1 || headIndex == boundary) {
 				leftSide = dir < 0;
 			} else {
@@ -10224,17 +10224,17 @@
 			}
 		}
 
-		var usePart = order[boundary + (leftSide ? -1 : 0)];
-		var from = leftSide == (usePart.level == 1);
-		var ch = from ? usePart.from : usePart.to,
-			sticky = from ? "after" : "before";
+		const usePart = order[boundary + (leftSide ? -1 : 0)];
+		const from = leftSide == (usePart.level == 1);
+		const ch = from ? usePart.from : usePart.to;
+		const sticky = from ? "after" : "before";
 		return anchor.ch == ch && anchor.sticky == sticky ? range : new Range(new Pos(anchor.line, ch, sticky), head);
 	}
 
 	// Determines whether an event happened in the gutter, and fires the
 	// handlers for the corresponding event.
 	function gutterEvent(cm, e, type, prevent) {
-		var mX, mY;
+		let mX, mY;
 		if (e.touches) {
 			mX = e.touches[0].clientX;
 			mY = e.touches[0].clientY;
@@ -10253,19 +10253,19 @@
 			e_preventDefault(e);
 		}
 
-		var display = cm.display;
-		var lineBox = display.lineDiv.getBoundingClientRect();
+		const display = cm.display;
+		const lineBox = display.lineDiv.getBoundingClientRect();
 
 		if (mY > lineBox.bottom || !hasHandler(cm, type)) {
 			return e_defaultPrevented(e);
 		}
 		mY -= lineBox.top - display.viewOffset;
 
-		for (var i = 0; i < cm.display.gutterSpecs.length; ++i) {
-			var g = display.gutters.childNodes[i];
+		for (let i = 0; i < cm.display.gutterSpecs.length; ++i) {
+			const g = display.gutters.childNodes[i];
 			if (g && g.getBoundingClientRect().right >= mX) {
-				var line = lineAtHeight(cm.doc, mY);
-				var gutter = cm.display.gutterSpecs[i];
+				const line = lineAtHeight(cm.doc, mY);
+				const gutter = cm.display.gutterSpecs[i];
 				signal(cm, type, cm, line, gutter.className, e);
 				return e_defaultPrevented(e);
 			}
@@ -10305,17 +10305,17 @@
 		clearCaches(cm);
 	}
 
-	var Init = {
+	const Init = {
 		toString: function () {
 			return "CodeMirror.Init";
 		},
 	};
 
-	var defaults = {};
-	var optionHandlers = {};
+	const defaults = {};
+	const optionHandlers = {};
 
 	function defineOptions(CodeMirror) {
-		var optionHandlers = CodeMirror.optionHandlers;
+		const optionHandlers = CodeMirror.optionHandlers;
 
 		function option(name, deflt, handle, notOnInit) {
 			CodeMirror.defaults[name] = deflt;
@@ -10374,11 +10374,11 @@
 			if (!val) {
 				return;
 			}
-			var newBreaks = [],
-				lineNo = cm.doc.first;
+			const newBreaks = [];
+			let lineNo = cm.doc.first;
 			cm.doc.iter(function (line) {
-				for (var pos = 0; ; ) {
-					var found = line.text.indexOf(val, pos);
+				for (let pos = 0; ; ) {
+					const found = line.text.indexOf(val, pos);
 					if (found == -1) {
 						break;
 					}
@@ -10387,7 +10387,7 @@
 				}
 				lineNo++;
 			});
-			for (var i = newBreaks.length - 1; i >= 0; i--) {
+			for (let i = newBreaks.length - 1; i >= 0; i--) {
 				replaceRange(cm.doc, val, newBreaks[i], Pos(newBreaks[i].line, newBreaks[i].ch + val.length));
 			}
 		});
@@ -10451,8 +10451,8 @@
 			true,
 		);
 		option("keyMap", "default", function (cm, val, old) {
-			var next = getKeyMap(val);
-			var prev = old != Init && getKeyMap(old);
+			const next = getKeyMap(val);
+			const prev = old != Init && getKeyMap(old);
 			if (prev && prev.detach) {
 				prev.detach(cm, next);
 			}
@@ -10596,10 +10596,10 @@
 	}
 
 	function dragDropChanged(cm, value, old) {
-		var wasOn = old && old != Init;
+		const wasOn = old && old != Init;
 		if (!value != !wasOn) {
-			var funcs = cm.display.dragFunctions;
-			var toggle = value ? on : off;
+			const funcs = cm.display.dragFunctions;
+			const toggle = value ? on : off;
 			toggle(cm.display.scroller, "dragstart", funcs.start);
 			toggle(cm.display.scroller, "dragenter", funcs.enter);
 			toggle(cm.display.scroller, "dragover", funcs.over);
@@ -10629,7 +10629,7 @@
 	// that user code is usually dealing with.
 
 	function CodeMirror(place, options) {
-		var this$1 = this;
+		const this$1 = this;
 
 		if (!(this instanceof CodeMirror)) {
 			return new CodeMirror(place, options);
@@ -10639,16 +10639,16 @@
 		// Determine effective options based on given values and defaults.
 		copyObj(defaults, options, false);
 
-		var doc = options.value;
-		if (typeof doc == "string") {
+		let doc = options.value;
+		if (typeof doc === "string") {
 			doc = new Doc(doc, options.mode, null, options.lineSeparator, options.direction);
 		} else if (options.mode) {
 			doc.modeOption = options.mode;
 		}
 		this.doc = doc;
 
-		var input = new CodeMirror.inputStyles[options.inputStyle](this);
-		var display = (this.display = new Display(place, doc, input, options));
+		const input = new CodeMirror.inputStyles[options.inputStyle](this);
+		const display = (this.display = new Display(place, doc, input, options));
 		display.wrapper.CodeMirror = this;
 		themeChanged(this);
 		if (options.lineWrapping) {
@@ -10702,7 +10702,7 @@
 			onBlur(this);
 		}
 
-		for (var opt in optionHandlers) {
+		for (const opt in optionHandlers) {
 			if (optionHandlers.hasOwnProperty(opt)) {
 				optionHandlers[opt](this, options[opt], Init);
 			}
@@ -10711,7 +10711,7 @@
 		if (options.finishInit) {
 			options.finishInit(this);
 		}
-		for (var i = 0; i < initHooks.length; ++i) {
+		for (let i = 0; i < initHooks.length; ++i) {
 			initHooks[i](this);
 		}
 		endOperation(this);
@@ -10729,7 +10729,7 @@
 
 	// Attach the necessary event handlers when initializing the editor
 	function registerEventHandlers(cm) {
-		var d = cm.display;
+		const d = cm.display;
 		on(d.scroller, "mousedown", operation(cm, onMouseDown));
 		// Older IE's will not fire a second mousedown for a double click
 		if (ie && ie_version < 11) {
@@ -10740,12 +10740,12 @@
 					if (signalDOMEvent(cm, e)) {
 						return;
 					}
-					var pos = posFromMouse(cm, e);
+					const pos = posFromMouse(cm, e);
 					if (!pos || clickInGutter(cm, e) || eventInWidget(cm.display, e)) {
 						return;
 					}
 					e_preventDefault(e);
-					var word = cm.findWordAt(pos);
+					const word = cm.findWordAt(pos);
 					extendSelection(cm.doc, word.anchor, word.head);
 				}),
 			);
@@ -10767,8 +10767,8 @@
 		});
 
 		// Used to suppress mouse event handling when a touch happens
-		var touchFinished,
-			prevTouch = { end: 0 };
+		let touchFinished;
+		let prevTouch = { end: 0 };
 		function finishTouch() {
 			if (d.activeTouch) {
 				touchFinished = setTimeout(function () {
@@ -10782,22 +10782,22 @@
 			if (e.touches.length != 1) {
 				return false;
 			}
-			var touch = e.touches[0];
+			const touch = e.touches[0];
 			return touch.radiusX <= 1 && touch.radiusY <= 1;
 		}
 		function farAway(touch, other) {
 			if (other.left == null) {
 				return true;
 			}
-			var dx = other.left - touch.left,
-				dy = other.top - touch.top;
+			const dx = other.left - touch.left;
+			const dy = other.top - touch.top;
 			return dx * dx + dy * dy > 20 * 20;
 		}
 		on(d.scroller, "touchstart", function (e) {
 			if (!signalDOMEvent(cm, e) && !isMouseLikeTouchEvent(e) && !clickInGutter(cm, e)) {
 				d.input.ensurePolled();
 				clearTimeout(touchFinished);
-				var now = +new Date();
+				const now = +new Date();
 				d.activeTouch = {
 					start: now,
 					moved: false,
@@ -10815,10 +10815,10 @@
 			}
 		});
 		on(d.scroller, "touchend", function (e) {
-			var touch = d.activeTouch;
+			const touch = d.activeTouch;
 			if (touch && !eventInWidget(d, e) && touch.left != null && !touch.moved && new Date() - touch.start < 300) {
-				var pos = cm.coordsChar(d.activeTouch, "page"),
-					range;
+				const pos = cm.coordsChar(d.activeTouch, "page");
+				let range;
 				if (!touch.prev || farAway(touch, touch.prev)) {
 					// Single tap
 					range = new Range(pos, pos);
@@ -10883,7 +10883,7 @@
 			},
 		};
 
-		var inp = d.input.getField();
+		const inp = d.input.getField();
 		on(inp, "keyup", function (e) {
 			return onKeyUp.call(cm, e);
 		});
@@ -10908,8 +10908,8 @@
 	// lines are not indented, and places where the mode returns Pass
 	// are left alone.
 	function indentLine(cm, n, how, aggressive) {
-		var doc = cm.doc,
-			state;
+		const doc = cm.doc;
+		let state;
 		if (how == null) {
 			how = "add";
 		}
@@ -10923,14 +10923,14 @@
 			}
 		}
 
-		var tabSize = cm.options.tabSize;
-		var line = getLine(doc, n),
-			curSpace = countColumn(line.text, null, tabSize);
+		const tabSize = cm.options.tabSize;
+		const line = getLine(doc, n);
+		const curSpace = countColumn(line.text, null, tabSize);
 		if (line.stateAfter) {
 			line.stateAfter = null;
 		}
-		var curSpaceString = line.text.match(/^\s*/)[0],
-			indentation;
+		const curSpaceString = line.text.match(/^\s*/)[0];
+		let indentation;
 		if (!aggressive && !/\S/.test(line.text)) {
 			indentation = 0;
 			how = "not";
@@ -10953,15 +10953,15 @@
 			indentation = curSpace + cm.options.indentUnit;
 		} else if (how == "subtract") {
 			indentation = curSpace - cm.options.indentUnit;
-		} else if (typeof how == "number") {
+		} else if (typeof how === "number") {
 			indentation = curSpace + how;
 		}
 		indentation = Math.max(0, indentation);
 
-		var indentString = "",
-			pos = 0;
+		let indentString = "";
+		let pos = 0;
 		if (cm.options.indentWithTabs) {
-			for (var i = Math.floor(indentation / tabSize); i; --i) {
+			for (let i = Math.floor(indentation / tabSize); i; --i) {
 				pos += tabSize;
 				indentString += "\t";
 			}
@@ -10977,10 +10977,10 @@
 		} else {
 			// Ensure that, if the cursor was in the whitespace at the start
 			// of the line, it is moved to the end of that space.
-			for (var i$1 = 0; i$1 < doc.sel.ranges.length; i$1++) {
-				var range = doc.sel.ranges[i$1];
+			for (let i$1 = 0; i$1 < doc.sel.ranges.length; i$1++) {
+				const range = doc.sel.ranges[i$1];
 				if (range.head.line == n && range.head.ch < curSpaceString.length) {
-					var pos$1 = Pos(n, curSpaceString.length);
+					const pos$1 = Pos(n, curSpaceString.length);
 					replaceOneSelection(doc, i$1, new Range(pos$1, pos$1));
 					break;
 				}
@@ -10991,29 +10991,29 @@
 	// This will be set to a {lineWise: bool, text: [string]} object, so
 	// that, when pasting, we know what kind of selections the copied
 	// text was made out of.
-	var lastCopied = null;
+	let lastCopied = null;
 
 	function setLastCopied(newLastCopied) {
 		lastCopied = newLastCopied;
 	}
 
 	function applyTextInput(cm, inserted, deleted, sel, origin) {
-		var doc = cm.doc;
+		const doc = cm.doc;
 		cm.display.shift = false;
 		if (!sel) {
 			sel = doc.sel;
 		}
 
-		var recent = +new Date() - 200;
-		var paste = origin == "paste" || cm.state.pasteIncoming > recent;
-		var textLines = splitLinesAuto(inserted),
-			multiPaste = null;
+		const recent = +new Date() - 200;
+		const paste = origin == "paste" || cm.state.pasteIncoming > recent;
+		const textLines = splitLinesAuto(inserted);
+		let multiPaste = null;
 		// When pasting N lines into N selections, insert one line per selection
 		if (paste && sel.ranges.length > 1) {
 			if (lastCopied && lastCopied.text.join("\n") == inserted) {
 				if (sel.ranges.length % lastCopied.text.length == 0) {
 					multiPaste = [];
-					for (var i = 0; i < lastCopied.text.length; i++) {
+					for (let i = 0; i < lastCopied.text.length; i++) {
 						multiPaste.push(doc.splitLines(lastCopied.text[i]));
 					}
 				}
@@ -11024,12 +11024,12 @@
 			}
 		}
 
-		var updateInput = cm.curOp.updateInput;
+		const updateInput = cm.curOp.updateInput;
 		// Normal behavior is to insert the new text into every selection
-		for (var i$1 = sel.ranges.length - 1; i$1 >= 0; i$1--) {
-			var range = sel.ranges[i$1];
-			var from = range.from(),
-				to = range.to();
+		for (let i$1 = sel.ranges.length - 1; i$1 >= 0; i$1--) {
+			const range = sel.ranges[i$1];
+			let from = range.from();
+			let to = range.to();
 			if (range.empty()) {
 				if (deleted && deleted > 0) {
 					// Handle deletion
@@ -11041,7 +11041,7 @@
 					from = to = Pos(from.line, 0);
 				}
 			}
-			var changeEvent = {
+			const changeEvent = {
 				from: from,
 				to: to,
 				text: multiPaste ? multiPaste[i$1 % multiPaste.length] : textLines,
@@ -11063,7 +11063,7 @@
 	}
 
 	function handlePaste(e, cm) {
-		var pasted = e.clipboardData && e.clipboardData.getData("Text");
+		const pasted = e.clipboardData && e.clipboardData.getData("Text");
 		if (pasted) {
 			e.preventDefault();
 			if (!cm.isReadOnly() && !cm.options.disableInput) {
@@ -11080,17 +11080,17 @@
 		if (!cm.options.electricChars || !cm.options.smartIndent) {
 			return;
 		}
-		var sel = cm.doc.sel;
+		const sel = cm.doc.sel;
 
-		for (var i = sel.ranges.length - 1; i >= 0; i--) {
-			var range = sel.ranges[i];
+		for (let i = sel.ranges.length - 1; i >= 0; i--) {
+			const range = sel.ranges[i];
 			if (range.head.ch > 100 || (i && sel.ranges[i - 1].head.line == range.head.line)) {
 				continue;
 			}
-			var mode = cm.getModeAt(range.head);
-			var indented = false;
+			const mode = cm.getModeAt(range.head);
+			let indented = false;
 			if (mode.electricChars) {
-				for (var j = 0; j < mode.electricChars.length; j++) {
+				for (let j = 0; j < mode.electricChars.length; j++) {
 					if (inserted.indexOf(mode.electricChars.charAt(j)) > -1) {
 						indented = indentLine(cm, range.head.line, "smart");
 						break;
@@ -11108,11 +11108,11 @@
 	}
 
 	function copyableRanges(cm) {
-		var text = [],
-			ranges = [];
-		for (var i = 0; i < cm.doc.sel.ranges.length; i++) {
-			var line = cm.doc.sel.ranges[i].head.line;
-			var lineRange = { anchor: Pos(line, 0), head: Pos(line + 1, 0) };
+		const text = [];
+		const ranges = [];
+		for (let i = 0; i < cm.doc.sel.ranges.length; i++) {
+			const line = cm.doc.sel.ranges[i].head.line;
+			const lineRange = { anchor: Pos(line, 0), head: Pos(line + 1, 0) };
 			ranges.push(lineRange);
 			text.push(cm.getRange(lineRange.anchor, lineRange.head));
 		}
@@ -11126,8 +11126,8 @@
 	}
 
 	function hiddenTextarea() {
-		var te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; outline: none");
-		var div = elt("div", [te], null, "overflow: hidden; position: relative; width: 3px; height: 0px;");
+		const te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; outline: none");
+		const div = elt("div", [te], null, "overflow: hidden; position: relative; width: 3px; height: 0px;");
 		// The textarea is kept positioned near the cursor to prevent the
 		// fact that it'll be scrolled into view on input from scrolling
 		// our fake cursor out of view. On webkit, when wrap=off, paste is
@@ -11154,9 +11154,9 @@
 	// convenience.
 
 	function addEditorMethods(CodeMirror) {
-		var optionHandlers = CodeMirror.optionHandlers;
+		const optionHandlers = CodeMirror.optionHandlers;
 
-		var helpers = (CodeMirror.helpers = {});
+		const helpers = (CodeMirror.helpers = {});
 
 		CodeMirror.prototype = {
 			constructor: CodeMirror,
@@ -11166,8 +11166,8 @@
 			},
 
 			setOption: function (option, value) {
-				var options = this.options,
-					old = options[option];
+				const options = this.options;
+				const old = options[option];
 				if (options[option] == value && option != "mode") {
 					return;
 				}
@@ -11189,8 +11189,8 @@
 				this.state.keyMaps[bottom ? "push" : "unshift"](getKeyMap(map));
 			},
 			removeKeyMap: function (map) {
-				var maps = this.state.keyMaps;
-				for (var i = 0; i < maps.length; ++i) {
+				const maps = this.state.keyMaps;
+				for (let i = 0; i < maps.length; ++i) {
 					if (maps[i] == map || maps[i].name == map) {
 						maps.splice(i, 1);
 						return true;
@@ -11199,7 +11199,7 @@
 			},
 
 			addOverlay: methodOp(function (spec, options) {
-				var mode = spec.token ? spec : CodeMirror.getMode(this.options, spec);
+				const mode = spec.token ? spec : CodeMirror.getMode(this.options, spec);
 				if (mode.startState) {
 					throw new Error("Overlays may not be stateful.");
 				}
@@ -11219,10 +11219,10 @@
 				regChange(this);
 			}),
 			removeOverlay: methodOp(function (spec) {
-				var overlays = this.state.overlays;
-				for (var i = 0; i < overlays.length; ++i) {
-					var cur = overlays[i].modeSpec;
-					if (cur == spec || (typeof spec == "string" && cur.name == spec)) {
+				const overlays = this.state.overlays;
+				for (let i = 0; i < overlays.length; ++i) {
+					const cur = overlays[i].modeSpec;
+					if (cur == spec || (typeof spec === "string" && cur.name == spec)) {
 						overlays.splice(i, 1);
 						this.state.modeGen++;
 						regChange(this);
@@ -11232,7 +11232,7 @@
 			}),
 
 			indentLine: methodOp(function (n, dir, aggressive) {
-				if (typeof dir != "string" && typeof dir != "number") {
+				if (typeof dir !== "string" && typeof dir !== "number") {
 					if (dir == null) {
 						dir = this.options.smartIndent ? "smart" : "prev";
 					} else {
@@ -11244,19 +11244,19 @@
 				}
 			}),
 			indentSelection: methodOp(function (how) {
-				var ranges = this.doc.sel.ranges,
-					end = -1;
-				for (var i = 0; i < ranges.length; i++) {
-					var range = ranges[i];
+				const ranges = this.doc.sel.ranges;
+				let end = -1;
+				for (let i = 0; i < ranges.length; i++) {
+					const range = ranges[i];
 					if (!range.empty()) {
-						var from = range.from(),
-							to = range.to();
-						var start = Math.max(end, from.line);
+						const from = range.from();
+						const to = range.to();
+						const start = Math.max(end, from.line);
 						end = Math.min(this.lastLine(), to.line - (to.ch ? 0 : 1)) + 1;
-						for (var j = start; j < end; ++j) {
+						for (let j = start; j < end; ++j) {
 							indentLine(this, j, how);
 						}
-						var newRanges = this.doc.sel.ranges;
+						const newRanges = this.doc.sel.ranges;
 						if (from.ch == 0 && ranges.length == newRanges.length && newRanges[i].from().ch > 0) {
 							replaceOneSelection(this.doc, i, new Range(from, newRanges[i].to()), sel_dontScroll);
 						}
@@ -11282,16 +11282,16 @@
 
 			getTokenTypeAt: function (pos) {
 				pos = clipPos(this.doc, pos);
-				var styles = getLineStyles(this, getLine(this.doc, pos.line));
-				var before = 0,
-					after = (styles.length - 1) / 2,
-					ch = pos.ch;
-				var type;
+				const styles = getLineStyles(this, getLine(this.doc, pos.line));
+				let before = 0;
+				let after = (styles.length - 1) / 2;
+				const ch = pos.ch;
+				let type;
 				if (ch == 0) {
 					type = styles[2];
 				} else {
 					for (;;) {
-						var mid = (before + after) >> 1;
+						const mid = (before + after) >> 1;
 						if ((mid ? styles[mid * 2 - 1] : 0) >= ch) {
 							after = mid;
 						} else if (styles[mid * 2 + 1] < ch) {
@@ -11302,12 +11302,12 @@
 						}
 					}
 				}
-				var cut = type ? type.indexOf("overlay ") : -1;
+				const cut = type ? type.indexOf("overlay ") : -1;
 				return cut < 0 ? type : cut == 0 ? null : type.slice(0, cut - 1);
 			},
 
 			getModeAt: function (pos) {
-				var mode = this.doc.mode;
+				const mode = this.doc.mode;
 				if (!mode.innerMode) {
 					return mode;
 				}
@@ -11319,19 +11319,19 @@
 			},
 
 			getHelpers: function (pos, type) {
-				var found = [];
+				const found = [];
 				if (!helpers.hasOwnProperty(type)) {
 					return found;
 				}
-				var help = helpers[type],
-					mode = this.getModeAt(pos);
-				if (typeof mode[type] == "string") {
+				const help = helpers[type];
+				const mode = this.getModeAt(pos);
+				if (typeof mode[type] === "string") {
 					if (help[mode[type]]) {
 						found.push(help[mode[type]]);
 					}
 				} else if (mode[type]) {
-					for (var i = 0; i < mode[type].length; i++) {
-						var val = help[mode[type][i]];
+					for (let i = 0; i < mode[type].length; i++) {
+						const val = help[mode[type][i]];
 						if (val) {
 							found.push(val);
 						}
@@ -11341,8 +11341,8 @@
 				} else if (help[mode.name]) {
 					found.push(help[mode.name]);
 				}
-				for (var i$1 = 0; i$1 < help._global.length; i$1++) {
-					var cur = help._global[i$1];
+				for (let i$1 = 0; i$1 < help._global.length; i$1++) {
+					const cur = help._global[i$1];
 					if (cur.pred(mode, this) && indexOf(found, cur.val) == -1) {
 						found.push(cur.val);
 					}
@@ -11351,17 +11351,17 @@
 			},
 
 			getStateAfter: function (line, precise) {
-				var doc = this.doc;
+				const doc = this.doc;
 				line = clipLine(doc, line == null ? doc.first + doc.size - 1 : line);
 				return getContextBefore(this, line + 1, precise).state;
 			},
 
 			cursorCoords: function (start, mode) {
-				var pos,
-					range = this.doc.sel.primary();
+				let pos;
+				const range = this.doc.sel.primary();
 				if (start == null) {
 					pos = range.head;
-				} else if (typeof start == "object") {
+				} else if (typeof start === "object") {
 					pos = clipPos(this.doc, start);
 				} else {
 					pos = start ? range.from() : range.to();
@@ -11383,10 +11383,10 @@
 				return lineAtHeight(this.doc, height + this.display.viewOffset);
 			},
 			heightAtLine: function (line, mode, includeWidgets) {
-				var end = false,
-					lineObj;
-				if (typeof line == "number") {
-					var last = this.doc.first + this.doc.size - 1;
+				let end = false;
+				let lineObj;
+				if (typeof line === "number") {
+					const last = this.doc.first + this.doc.size - 1;
 					if (line < this.doc.first) {
 						line = this.doc.first;
 					} else if (line > last) {
@@ -11415,10 +11415,10 @@
 			},
 
 			addWidget: function (pos, node, scroll, vert, horiz) {
-				var display = this.display;
+				const display = this.display;
 				pos = cursorCoords(this, clipPos(this.doc, pos));
-				var top = pos.bottom,
-					left = pos.left;
+				let top = pos.bottom;
+				let left = pos.left;
 				node.style.position = "absolute";
 				node.setAttribute("cm-ignore-events", "true");
 				this.display.input.setUneditable(node);
@@ -11426,8 +11426,8 @@
 				if (vert == "over") {
 					top = pos.top;
 				} else if (vert == "above" || vert == "near") {
-					var vspace = Math.max(display.wrapper.clientHeight, this.doc.height),
-						hspace = Math.max(display.sizer.clientWidth, display.lineSpace.clientWidth);
+					const vspace = Math.max(display.wrapper.clientHeight, this.doc.height);
+					const hspace = Math.max(display.sizer.clientWidth, display.lineSpace.clientWidth);
 					// Default to positioning above (if specified and possible); otherwise default to positioning below
 					if ((vert == "above" || pos.bottom + node.offsetHeight > vspace) && pos.top > node.offsetHeight) {
 						top = pos.top - node.offsetHeight;
@@ -11477,13 +11477,13 @@
 			}),
 
 			findPosH: function (from, amount, unit, visually) {
-				var dir = 1;
+				let dir = 1;
 				if (amount < 0) {
 					dir = -1;
 					amount = -amount;
 				}
-				var cur = clipPos(this.doc, from);
-				for (var i = 0; i < amount; ++i) {
+				let cur = clipPos(this.doc, from);
+				for (let i = 0; i < amount; ++i) {
 					cur = findPosH(this.doc, cur, dir, unit, visually);
 					if (cur.hitSide) {
 						break;
@@ -11493,7 +11493,7 @@
 			},
 
 			moveH: methodOp(function (dir, unit) {
-				var this$1 = this;
+				const this$1 = this;
 
 				this.extendSelectionsBy(function (range) {
 					if (this$1.display.shift || this$1.doc.extend || range.empty()) {
@@ -11505,28 +11505,28 @@
 			}),
 
 			deleteH: methodOp(function (dir, unit) {
-				var sel = this.doc.sel,
-					doc = this.doc;
+				const sel = this.doc.sel;
+				const doc = this.doc;
 				if (sel.somethingSelected()) {
 					doc.replaceSelection("", null, "+delete");
 				} else {
 					deleteNearSelection(this, function (range) {
-						var other = findPosH(doc, range.head, dir, unit, false);
+						const other = findPosH(doc, range.head, dir, unit, false);
 						return dir < 0 ? { from: other, to: range.head } : { from: range.head, to: other };
 					});
 				}
 			}),
 
 			findPosV: function (from, amount, unit, goalColumn) {
-				var dir = 1,
-					x = goalColumn;
+				let dir = 1;
+				let x = goalColumn;
 				if (amount < 0) {
 					dir = -1;
 					amount = -amount;
 				}
-				var cur = clipPos(this.doc, from);
-				for (var i = 0; i < amount; ++i) {
-					var coords = cursorCoords(this, cur, "div");
+				let cur = clipPos(this.doc, from);
+				for (let i = 0; i < amount; ++i) {
+					const coords = cursorCoords(this, cur, "div");
 					if (x == null) {
 						x = coords.left;
 					} else {
@@ -11541,28 +11541,28 @@
 			},
 
 			moveV: methodOp(function (dir, unit) {
-				var this$1 = this;
+				const this$1 = this;
 
-				var doc = this.doc,
-					goals = [];
-				var collapse = !this.display.shift && !doc.extend && doc.sel.somethingSelected();
+				const doc = this.doc;
+				const goals = [];
+				const collapse = !this.display.shift && !doc.extend && doc.sel.somethingSelected();
 				doc.extendSelectionsBy(function (range) {
 					if (collapse) {
 						return dir < 0 ? range.from() : range.to();
 					}
-					var headPos = cursorCoords(this$1, range.head, "div");
+					const headPos = cursorCoords(this$1, range.head, "div");
 					if (range.goalColumn != null) {
 						headPos.left = range.goalColumn;
 					}
 					goals.push(headPos.left);
-					var pos = findPosV(this$1, headPos, dir, unit);
+					const pos = findPosV(this$1, headPos, dir, unit);
 					if (unit == "page" && range == doc.sel.primary()) {
 						addToScrollTop(this$1, charCoords(this$1, pos, "div").top - headPos.top);
 					}
 					return pos;
 				}, sel_move);
 				if (goals.length) {
-					for (var i = 0; i < doc.sel.ranges.length; i++) {
+					for (let i = 0; i < doc.sel.ranges.length; i++) {
 						doc.sel.ranges[i].goalColumn = goals[i];
 					}
 				}
@@ -11570,19 +11570,19 @@
 
 			// Find the word at the given position (as returned by coordsChar).
 			findWordAt: function (pos) {
-				var doc = this.doc,
-					line = getLine(doc, pos.line).text;
-				var start = pos.ch,
-					end = pos.ch;
+				const doc = this.doc;
+				const line = getLine(doc, pos.line).text;
+				let start = pos.ch;
+				let end = pos.ch;
 				if (line) {
-					var helper = this.getHelper(pos, "wordChars");
+					const helper = this.getHelper(pos, "wordChars");
 					if ((pos.sticky == "before" || end == line.length) && start) {
 						--start;
 					} else {
 						++end;
 					}
-					var startChar = line.charAt(start);
-					var check = isWordChar(startChar, helper)
+					const startChar = line.charAt(start);
+					const check = isWordChar(startChar, helper)
 						? function (ch) {
 								return isWordChar(ch, helper);
 						  }
@@ -11626,7 +11626,7 @@
 				scrollToCoords(this, x, y);
 			}),
 			getScrollInfo: function () {
-				var scroller = this.display.scroller;
+				const scroller = this.display.scroller;
 				return {
 					left: scroller.scrollLeft,
 					top: scroller.scrollTop,
@@ -11643,7 +11643,7 @@
 					if (margin == null) {
 						margin = this.options.cursorScrollMargin;
 					}
-				} else if (typeof range == "number") {
+				} else if (typeof range === "number") {
 					range = { from: Pos(range, 0), to: null };
 				} else if (range.from == null) {
 					range = { from: range, to: null };
@@ -11661,10 +11661,10 @@
 			}),
 
 			setSize: methodOp(function (width, height) {
-				var this$1 = this;
+				const this$1 = this;
 
-				var interpret = function (val) {
-					return typeof val == "number" || /^\d+$/.test(String(val)) ? val + "px" : val;
+				const interpret = function (val) {
+					return typeof val === "number" || /^\d+$/.test(String(val)) ? val + "px" : val;
 				};
 				if (width != null) {
 					this.display.wrapper.style.width = interpret(width);
@@ -11675,10 +11675,10 @@
 				if (this.options.lineWrapping) {
 					clearLineMeasurementCache(this);
 				}
-				var lineNo = this.display.viewFrom;
+				let lineNo = this.display.viewFrom;
 				this.doc.iter(lineNo, this.display.viewTo, function (line) {
 					if (line.widgets) {
-						for (var i = 0; i < line.widgets.length; i++) {
+						for (let i = 0; i < line.widgets.length; i++) {
 							if (line.widgets[i].noHScroll) {
 								regLineChange(this$1, lineNo, "widget");
 								break;
@@ -11702,7 +11702,7 @@
 			},
 
 			refresh: methodOp(function () {
-				var oldHeight = this.display.cachedTextHeight;
+				const oldHeight = this.display.cachedTextHeight;
 				regChange(this);
 				this.curOp.forceUpdate = true;
 				clearCaches(this);
@@ -11715,7 +11715,7 @@
 			}),
 
 			swapDoc: methodOp(function (doc) {
-				var old = this.doc;
+				const old = this.doc;
 				old.cm = null;
 				// Cancel the current text selection if any (#5821)
 				if (this.state.selectingText) {
@@ -11731,7 +11731,7 @@
 			}),
 
 			phrase: function (phraseText) {
-				var phrases = this.options.phrases;
+				const phrases = this.options.phrases;
 				return phrases && Object.prototype.hasOwnProperty.call(phrases, phraseText) ? phrases[phraseText] : phraseText;
 			},
 
@@ -11772,12 +11772,12 @@
 	// of the current position. The resulting position will have a
 	// hitSide=true property if it reached the end of the document.
 	function findPosH(doc, pos, dir, unit, visually) {
-		var oldPos = pos;
-		var origDir = dir;
-		var lineObj = getLine(doc, pos.line);
-		var lineDir = visually && doc.direction == "rtl" ? -dir : dir;
+		const oldPos = pos;
+		const origDir = dir;
+		let lineObj = getLine(doc, pos.line);
+		const lineDir = visually && doc.direction == "rtl" ? -dir : dir;
 		function findNextLine() {
-			var l = pos.line + lineDir;
+			const l = pos.line + lineDir;
 			if (l < doc.first || l >= doc.first + doc.size) {
 				return false;
 			}
@@ -11785,13 +11785,13 @@
 			return (lineObj = getLine(doc, l));
 		}
 		function moveOnce(boundToLine) {
-			var next;
+			let next;
 			if (unit == "codepoint") {
-				var ch = lineObj.text.charCodeAt(pos.ch + (dir > 0 ? 0 : -1));
+				const ch = lineObj.text.charCodeAt(pos.ch + (dir > 0 ? 0 : -1));
 				if (isNaN(ch)) {
 					next = null;
 				} else {
-					var astral = dir > 0 ? ch >= 0xd800 && ch < 0xdc00 : ch >= 0xdc00 && ch < 0xdfff;
+					const astral = dir > 0 ? ch >= 0xd800 && ch < 0xdc00 : ch >= 0xdc00 && ch < 0xdfff;
 					next = new Pos(pos.line, Math.max(0, Math.min(lineObj.text.length, pos.ch + dir * (astral ? 2 : 1))), -dir);
 				}
 			} else if (visually) {
@@ -11816,15 +11816,15 @@
 		} else if (unit == "column") {
 			moveOnce(true);
 		} else if (unit == "word" || unit == "group") {
-			var sawType = null,
-				group = unit == "group";
-			var helper = doc.cm && doc.cm.getHelper(pos, "wordChars");
-			for (var first = true; ; first = false) {
+			let sawType = null;
+			const group = unit == "group";
+			const helper = doc.cm && doc.cm.getHelper(pos, "wordChars");
+			for (let first = true; ; first = false) {
 				if (dir < 0 && !moveOnce(!first)) {
 					break;
 				}
-				var cur = lineObj.text.charAt(pos.ch) || "\n";
-				var type = isWordChar(cur, helper) ? "w" : group && cur == "\n" ? "n" : !group || /\s/.test(cur) ? null : "p";
+				const cur = lineObj.text.charAt(pos.ch) || "\n";
+				let type = isWordChar(cur, helper) ? "w" : group && cur == "\n" ? "n" : !group || /\s/.test(cur) ? null : "p";
 				if (group && !first && !type) {
 					type = "s";
 				}
@@ -11845,7 +11845,7 @@
 				}
 			}
 		}
-		var result = skipAtomic(doc, pos, oldPos, origDir, true);
+		const result = skipAtomic(doc, pos, oldPos, origDir, true);
 		if (equalCursorPos(oldPos, result)) {
 			result.hitSide = true;
 		}
@@ -11856,17 +11856,17 @@
 	// "page" or "line". The resulting position will have a hitSide=true
 	// property if it reached the end of the document.
 	function findPosV(cm, pos, dir, unit) {
-		var doc = cm.doc,
-			x = pos.left,
-			y;
+		const doc = cm.doc;
+		const x = pos.left;
+		let y;
 		if (unit == "page") {
-			var pageSize = Math.min(cm.display.wrapper.clientHeight, window.innerHeight || document.documentElement.clientHeight);
-			var moveAmount = Math.max(pageSize - 0.5 * textHeight(cm.display), 3);
+			const pageSize = Math.min(cm.display.wrapper.clientHeight, window.innerHeight || document.documentElement.clientHeight);
+			const moveAmount = Math.max(pageSize - 0.5 * textHeight(cm.display), 3);
 			y = (dir > 0 ? pos.bottom : pos.top) + dir * moveAmount;
 		} else if (unit == "line") {
 			y = dir > 0 ? pos.bottom + 3 : pos.top - 3;
 		}
-		var target;
+		let target;
 		for (;;) {
 			target = coordsChar(cm, x, y);
 			if (!target.outside) {
@@ -11883,7 +11883,7 @@
 
 	// CONTENTEDITABLE INPUT STYLE
 
-	var ContentEditableInput = function (cm) {
+	const ContentEditableInput = function (cm) {
 		this.cm = cm;
 		this.lastAnchorNode = this.lastAnchorOffset = this.lastFocusNode = this.lastFocusOffset = null;
 		this.polling = new Delayed();
@@ -11893,15 +11893,15 @@
 	};
 
 	ContentEditableInput.prototype.init = function (display) {
-		var this$1 = this;
+		const this$1 = this;
 
-		var input = this,
-			cm = input.cm;
-		var div = (input.div = display.lineDiv);
+		const input = this;
+		const cm = input.cm;
+		const div = (input.div = display.lineDiv);
 		disableBrowserMagic(div, cm.options.spellcheck, cm.options.autocorrect, cm.options.autocapitalize);
 
 		function belongsToInput(e) {
-			for (var t = e.target; t; t = t.parentNode) {
+			for (let t = e.target; t; t = t.parentNode) {
 				if (t == div) {
 					return true;
 				}
@@ -11966,7 +11966,7 @@
 			} else if (!cm.options.lineWiseCopyCut) {
 				return;
 			} else {
-				var ranges = copyableRanges(cm);
+				const ranges = copyableRanges(cm);
 				setLastCopied({ lineWise: true, text: ranges.text });
 				if (e.type == "cut") {
 					cm.operation(function () {
@@ -11977,7 +11977,7 @@
 			}
 			if (e.clipboardData) {
 				e.clipboardData.clearData();
-				var content = lastCopied.text.join("\n");
+				const content = lastCopied.text.join("\n");
 				// iOS exposes the clipboard API, but seems to discard content inserted into it
 				e.clipboardData.setData("Text", content);
 				if (e.clipboardData.getData("Text") == content) {
@@ -11986,11 +11986,11 @@
 				}
 			}
 			// Old-fashioned briefly-focus-a-textarea hack
-			var kludge = hiddenTextarea(),
-				te = kludge.firstChild;
+			const kludge = hiddenTextarea();
+			const te = kludge.firstChild;
 			cm.display.lineSpace.insertBefore(kludge, cm.display.lineSpace.firstChild);
 			te.value = lastCopied.text.join("\n");
-			var hadFocus = document.activeElement;
+			const hadFocus = document.activeElement;
 			selectInput(te);
 			setTimeout(function () {
 				cm.display.lineSpace.removeChild(kludge);
@@ -12014,7 +12014,7 @@
 	};
 
 	ContentEditableInput.prototype.prepareSelection = function () {
-		var result = prepareSelection(this.cm, false);
+		const result = prepareSelection(this.cm, false);
 		result.focus = document.activeElement == this.div;
 		return result;
 	};
@@ -12034,19 +12034,19 @@
 	};
 
 	ContentEditableInput.prototype.showPrimarySelection = function () {
-		var sel = this.getSelection(),
-			cm = this.cm,
-			prim = cm.doc.sel.primary();
-		var from = prim.from(),
-			to = prim.to();
+		const sel = this.getSelection();
+		const cm = this.cm;
+		const prim = cm.doc.sel.primary();
+		const from = prim.from();
+		const to = prim.to();
 
 		if (cm.display.viewTo == cm.display.viewFrom || from.line >= cm.display.viewTo || to.line < cm.display.viewFrom) {
 			sel.removeAllRanges();
 			return;
 		}
 
-		var curAnchor = domToPos(cm, sel.anchorNode, sel.anchorOffset);
-		var curFocus = domToPos(cm, sel.focusNode, sel.focusOffset);
+		const curAnchor = domToPos(cm, sel.anchorNode, sel.anchorOffset);
+		const curFocus = domToPos(cm, sel.focusNode, sel.focusOffset);
 		if (
 			curAnchor &&
 			!curAnchor.bad &&
@@ -12058,15 +12058,15 @@
 			return;
 		}
 
-		var view = cm.display.view;
-		var start = (from.line >= cm.display.viewFrom && posToDOM(cm, from)) || {
+		const view = cm.display.view;
+		const start = (from.line >= cm.display.viewFrom && posToDOM(cm, from)) || {
 			node: view[0].measure.map[2],
 			offset: 0,
 		};
-		var end = to.line < cm.display.viewTo && posToDOM(cm, to);
+		let end = to.line < cm.display.viewTo && posToDOM(cm, to);
 		if (!end) {
-			var measure = view[view.length - 1].measure;
-			var map = measure.maps ? measure.maps[measure.maps.length - 1] : measure.map;
+			const measure = view[view.length - 1].measure;
+			const map = measure.maps ? measure.maps[measure.maps.length - 1] : measure.map;
 			end = {
 				node: map[map.length - 1],
 				offset: map[map.length - 2] - map[map.length - 3],
@@ -12078,8 +12078,8 @@
 			return;
 		}
 
-		var old = sel.rangeCount && sel.getRangeAt(0),
-			rng;
+		const old = sel.rangeCount && sel.getRangeAt(0);
+		let rng;
 		try {
 			rng = range(start.node, start.offset, end.offset, end.node);
 		} catch (e) {} // Our model of the DOM might be outdated, in which case the range we try to set can be impossible
@@ -12104,7 +12104,7 @@
 	};
 
 	ContentEditableInput.prototype.startGracePeriod = function () {
-		var this$1 = this;
+		const this$1 = this;
 
 		clearTimeout(this.gracePeriod);
 		this.gracePeriod = setTimeout(function () {
@@ -12123,7 +12123,7 @@
 	};
 
 	ContentEditableInput.prototype.rememberSelection = function () {
-		var sel = this.getSelection();
+		const sel = this.getSelection();
 		this.lastAnchorNode = sel.anchorNode;
 		this.lastAnchorOffset = sel.anchorOffset;
 		this.lastFocusNode = sel.focusNode;
@@ -12131,11 +12131,11 @@
 	};
 
 	ContentEditableInput.prototype.selectionInEditor = function () {
-		var sel = this.getSelection();
+		const sel = this.getSelection();
 		if (!sel.rangeCount) {
 			return false;
 		}
-		var node = sel.getRangeAt(0).commonAncestorContainer;
+		const node = sel.getRangeAt(0).commonAncestorContainer;
 		return contains(this.div, node);
 	};
 
@@ -12159,7 +12159,7 @@
 	};
 
 	ContentEditableInput.prototype.receivedFocus = function () {
-		var input = this;
+		const input = this;
 		if (this.selectionInEditor()) {
 			this.pollSelection();
 		} else {
@@ -12178,7 +12178,7 @@
 	};
 
 	ContentEditableInput.prototype.selectionChanged = function () {
-		var sel = this.getSelection();
+		const sel = this.getSelection();
 		return (
 			sel.anchorNode != this.lastAnchorNode ||
 			sel.anchorOffset != this.lastAnchorOffset ||
@@ -12191,8 +12191,8 @@
 		if (this.readDOMTimeout != null || this.gracePeriod || !this.selectionChanged()) {
 			return;
 		}
-		var sel = this.getSelection(),
-			cm = this.cm;
+		const sel = this.getSelection();
+		const cm = this.cm;
 		// On Android Chrome (version 56, at least), backspacing into an
 		// uneditable block element will put the cursor in that element,
 		// and then, because it's not editable, hide the virtual keyboard.
@@ -12213,8 +12213,8 @@
 			return;
 		}
 		this.rememberSelection();
-		var anchor = domToPos(cm, sel.anchorNode, sel.anchorOffset);
-		var head = domToPos(cm, sel.focusNode, sel.focusOffset);
+		const anchor = domToPos(cm, sel.anchorNode, sel.anchorOffset);
+		const head = domToPos(cm, sel.focusNode, sel.focusOffset);
 		if (anchor && head) {
 			runInOp(cm, function () {
 				setSelection(cm.doc, simpleSelection(anchor, head), sel_dontScroll);
@@ -12231,11 +12231,11 @@
 			this.readDOMTimeout = null;
 		}
 
-		var cm = this.cm,
-			display = cm.display,
-			sel = cm.doc.sel.primary();
-		var from = sel.from(),
-			to = sel.to();
+		const cm = this.cm;
+		const display = cm.display;
+		const sel = cm.doc.sel.primary();
+		let from = sel.from();
+		let to = sel.to();
 		if (from.ch == 0 && from.line > cm.firstLine()) {
 			from = Pos(from.line - 1, getLine(cm.doc, from.line - 1).length);
 		}
@@ -12246,7 +12246,7 @@
 			return false;
 		}
 
-		var fromIndex, fromLine, fromNode;
+		let fromIndex, fromLine, fromNode;
 		if (from.line == display.viewFrom || (fromIndex = findViewIndex(cm, from.line)) == 0) {
 			fromLine = lineNo(display.view[0].line);
 			fromNode = display.view[0].node;
@@ -12254,8 +12254,8 @@
 			fromLine = lineNo(display.view[fromIndex].line);
 			fromNode = display.view[fromIndex - 1].node.nextSibling;
 		}
-		var toIndex = findViewIndex(cm, to.line);
-		var toLine, toNode;
+		const toIndex = findViewIndex(cm, to.line);
+		let toLine, toNode;
 		if (toIndex == display.view.length - 1) {
 			toLine = display.viewTo - 1;
 			toNode = display.lineDiv.lastChild;
@@ -12267,8 +12267,8 @@
 		if (!fromNode) {
 			return false;
 		}
-		var newText = cm.doc.splitLines(domTextBetween(cm, fromNode, toNode, fromLine, toLine));
-		var oldText = getBetween(cm.doc, Pos(fromLine, 0), Pos(toLine, getLine(cm.doc, toLine).text.length));
+		const newText = cm.doc.splitLines(domTextBetween(cm, fromNode, toNode, fromLine, toLine));
+		const oldText = getBetween(cm.doc, Pos(fromLine, 0), Pos(toLine, getLine(cm.doc, toLine).text.length));
 		while (newText.length > 1 && oldText.length > 1) {
 			if (lst(newText) == lst(oldText)) {
 				newText.pop();
@@ -12283,17 +12283,17 @@
 			}
 		}
 
-		var cutFront = 0,
-			cutEnd = 0;
-		var newTop = newText[0],
-			oldTop = oldText[0],
-			maxCutFront = Math.min(newTop.length, oldTop.length);
+		let cutFront = 0;
+		let cutEnd = 0;
+		const newTop = newText[0];
+		const oldTop = oldText[0];
+		const maxCutFront = Math.min(newTop.length, oldTop.length);
 		while (cutFront < maxCutFront && newTop.charCodeAt(cutFront) == oldTop.charCodeAt(cutFront)) {
 			++cutFront;
 		}
-		var newBot = lst(newText),
-			oldBot = lst(oldText);
-		var maxCutEnd = Math.min(newBot.length - (newText.length == 1 ? cutFront : 0), oldBot.length - (oldText.length == 1 ? cutFront : 0));
+		const newBot = lst(newText);
+		const oldBot = lst(oldText);
+		const maxCutEnd = Math.min(newBot.length - (newText.length == 1 ? cutFront : 0), oldBot.length - (oldText.length == 1 ? cutFront : 0));
 		while (cutEnd < maxCutEnd && newBot.charCodeAt(newBot.length - cutEnd - 1) == oldBot.charCodeAt(oldBot.length - cutEnd - 1)) {
 			++cutEnd;
 		}
@@ -12308,8 +12308,8 @@
 		newText[newText.length - 1] = newBot.slice(0, newBot.length - cutEnd).replace(/^\u200b+/, "");
 		newText[0] = newText[0].slice(cutFront).replace(/\u200b+$/, "");
 
-		var chFrom = Pos(fromLine, cutFront);
-		var chTo = Pos(toLine, oldText.length ? lst(oldText).length - cutEnd : 0);
+		const chFrom = Pos(fromLine, cutFront);
+		const chTo = Pos(toLine, oldText.length ? lst(oldText).length - cutEnd : 0);
 		if (newText.length > 1 || newText[0] || cmp(chFrom, chTo)) {
 			replaceRange(cm.doc, newText, chFrom, chTo, "+input");
 			return true;
@@ -12333,7 +12333,7 @@
 		this.div.focus();
 	};
 	ContentEditableInput.prototype.readFromDOMSoon = function () {
-		var this$1 = this;
+		const this$1 = this;
 
 		if (this.readDOMTimeout != null) {
 			return;
@@ -12352,7 +12352,7 @@
 	};
 
 	ContentEditableInput.prototype.updateFromDOM = function () {
-		var this$1 = this;
+		const this$1 = this;
 
 		if (this.cm.isReadOnly() || !this.pollContent()) {
 			runInOp(this.cm, function () {
@@ -12385,26 +12385,26 @@
 	ContentEditableInput.prototype.needsContentAttribute = true;
 
 	function posToDOM(cm, pos) {
-		var view = findViewForLine(cm, pos.line);
+		const view = findViewForLine(cm, pos.line);
 		if (!view || view.hidden) {
 			return null;
 		}
-		var line = getLine(cm.doc, pos.line);
-		var info = mapFromLineView(view, line, pos.line);
+		const line = getLine(cm.doc, pos.line);
+		const info = mapFromLineView(view, line, pos.line);
 
-		var order = getOrder(line, cm.doc.direction),
-			side = "left";
+		const order = getOrder(line, cm.doc.direction);
+		let side = "left";
 		if (order) {
-			var partPos = getBidiPartAt(order, pos.ch);
+			const partPos = getBidiPartAt(order, pos.ch);
 			side = partPos % 2 ? "right" : "left";
 		}
-		var result = nodeAndOffsetInLineMap(info.map, pos.ch, side);
+		const result = nodeAndOffsetInLineMap(info.map, pos.ch, side);
 		result.offset = result.collapse == "right" ? result.end : result.start;
 		return result;
 	}
 
 	function isInGutter(node) {
-		for (var scan = node; scan; scan = scan.parentNode) {
+		for (let scan = node; scan; scan = scan.parentNode) {
 			if (/CodeMirror-gutter-wrapper/.test(scan.className)) {
 				return true;
 			}
@@ -12420,10 +12420,10 @@
 	}
 
 	function domTextBetween(cm, from, to, fromLine, toLine) {
-		var text = "",
-			closing = false,
-			lineSep = cm.doc.lineSeparator(),
-			extraLinebreak = false;
+		let text = "";
+		let closing = false;
+		const lineSep = cm.doc.lineSeparator();
+		let extraLinebreak = false;
 		function recognizeMarker(id) {
 			return function (marker) {
 				return marker.id == id;
@@ -12446,15 +12446,15 @@
 		}
 		function walk(node) {
 			if (node.nodeType == 1) {
-				var cmText = node.getAttribute("cm-text");
+				const cmText = node.getAttribute("cm-text");
 				if (cmText) {
 					addText(cmText);
 					return;
 				}
-				var markerID = node.getAttribute("cm-marker"),
-					range;
+				const markerID = node.getAttribute("cm-marker");
+				let range;
 				if (markerID) {
-					var found = cm.findMarks(Pos(fromLine, 0), Pos(toLine + 1, 0), recognizeMarker(+markerID));
+					const found = cm.findMarks(Pos(fromLine, 0), Pos(toLine + 1, 0), recognizeMarker(+markerID));
 					if (found.length && (range = found[0].find(0))) {
 						addText(getBetween(cm.doc, range.from, range.to).join(lineSep));
 					}
@@ -12463,7 +12463,7 @@
 				if (node.getAttribute("contenteditable") == "false") {
 					return;
 				}
-				var isBlock = /^(pre|div|p|li|table|br)$/i.test(node.nodeName);
+				const isBlock = /^(pre|div|p|li|table|br)$/i.test(node.nodeName);
 				if (!/^br$/i.test(node.nodeName) && node.textContent.length == 0) {
 					return;
 				}
@@ -12471,7 +12471,7 @@
 				if (isBlock) {
 					close();
 				}
-				for (var i = 0; i < node.childNodes.length; i++) {
+				for (let i = 0; i < node.childNodes.length; i++) {
 					walk(node.childNodes[i]);
 				}
 
@@ -12497,7 +12497,7 @@
 	}
 
 	function domToPos(cm, node, offset) {
-		var lineNode;
+		let lineNode;
 		if (node == cm.display.lineDiv) {
 			lineNode = cm.display.lineDiv.childNodes[offset];
 			if (!lineNode) {
@@ -12515,8 +12515,8 @@
 				}
 			}
 		}
-		for (var i = 0; i < cm.display.view.length; i++) {
-			var lineView = cm.display.view[i];
+		for (let i = 0; i < cm.display.view.length; i++) {
+			const lineView = cm.display.view[i];
 			if (lineView.node == lineNode) {
 				return locateNodeInLineView(lineView, node, offset);
 			}
@@ -12524,8 +12524,8 @@
 	}
 
 	function locateNodeInLineView(lineView, node, offset) {
-		var wrapper = lineView.text.firstChild,
-			bad = false;
+		const wrapper = lineView.text.firstChild;
+		let bad = false;
 		if (!node || !contains(wrapper, node)) {
 			return badPos(Pos(lineNo(lineView.line), 0), true);
 		}
@@ -12534,13 +12534,13 @@
 			node = wrapper.childNodes[offset];
 			offset = 0;
 			if (!node) {
-				var line = lineView.rest ? lst(lineView.rest) : lineView.line;
+				const line = lineView.rest ? lst(lineView.rest) : lineView.line;
 				return badPos(Pos(lineNo(line), line.text.length), bad);
 			}
 		}
 
-		var textNode = node.nodeType == 3 ? node : null,
-			topNode = node;
+		let textNode = node.nodeType == 3 ? node : null;
+		let topNode = node;
 		if (!textNode && node.childNodes.length == 1 && node.firstChild.nodeType == 3) {
 			textNode = node.firstChild;
 			if (offset) {
@@ -12550,17 +12550,17 @@
 		while (topNode.parentNode != wrapper) {
 			topNode = topNode.parentNode;
 		}
-		var measure = lineView.measure,
-			maps = measure.maps;
+		const measure = lineView.measure;
+		const maps = measure.maps;
 
 		function find(textNode, topNode, offset) {
-			for (var i = -1; i < (maps ? maps.length : 0); i++) {
-				var map = i < 0 ? measure.map : maps[i];
-				for (var j = 0; j < map.length; j += 3) {
-					var curNode = map[j + 2];
+			for (let i = -1; i < (maps ? maps.length : 0); i++) {
+				const map = i < 0 ? measure.map : maps[i];
+				for (let j = 0; j < map.length; j += 3) {
+					const curNode = map[j + 2];
 					if (curNode == textNode || curNode == topNode) {
-						var line = lineNo(i < 0 ? lineView.line : lineView.rest[i]);
-						var ch = map[j] + offset;
+						const line = lineNo(i < 0 ? lineView.line : lineView.rest[i]);
+						let ch = map[j] + offset;
 						if (offset < 0 || curNode != textNode) {
 							ch = map[j + (offset ? 1 : 0)];
 						}
@@ -12569,13 +12569,13 @@
 				}
 			}
 		}
-		var found = find(textNode, topNode, offset);
+		let found = find(textNode, topNode, offset);
 		if (found) {
 			return badPos(found, bad);
 		}
 
 		// FIXME this is all really shaky. might handle the few cases it needs to handle, but likely to cause problems
-		for (var after = topNode.nextSibling, dist = textNode ? textNode.nodeValue.length - offset : 0; after; after = after.nextSibling) {
+		for (let after = topNode.nextSibling, dist = textNode ? textNode.nodeValue.length - offset : 0; after; after = after.nextSibling) {
 			found = find(after, after.firstChild, 0);
 			if (found) {
 				return badPos(Pos(found.line, found.ch - dist), bad);
@@ -12583,7 +12583,7 @@
 				dist += after.textContent.length;
 			}
 		}
-		for (var before = topNode.previousSibling, dist$1 = offset; before; before = before.previousSibling) {
+		for (let before = topNode.previousSibling, dist$1 = offset; before; before = before.previousSibling) {
 			found = find(before, before.firstChild, -1);
 			if (found) {
 				return badPos(Pos(found.line, found.ch + dist$1), bad);
@@ -12595,7 +12595,7 @@
 
 	// TEXTAREA INPUT STYLE
 
-	var TextareaInput = function (cm) {
+	const TextareaInput = function (cm) {
 		this.cm = cm;
 		// See input.poll and input.reset
 		this.prevInput = "";
@@ -12612,12 +12612,12 @@
 	};
 
 	TextareaInput.prototype.init = function (display) {
-		var this$1 = this;
+		const this$1 = this;
 
-		var input = this,
-			cm = this.cm;
+		const input = this;
+		const cm = this.cm;
 		this.createField(display);
-		var te = this.textarea;
+		const te = this.textarea;
 
 		display.wrapper.insertBefore(this.wrapper, display.wrapper.firstChild);
 
@@ -12651,7 +12651,7 @@
 			} else if (!cm.options.lineWiseCopyCut) {
 				return;
 			} else {
-				var ranges = copyableRanges(cm);
+				const ranges = copyableRanges(cm);
 				setLastCopied({ lineWise: true, text: ranges.text });
 				if (e.type == "cut") {
 					cm.setSelections(ranges.ranges, null, sel_dontScroll);
@@ -12679,7 +12679,7 @@
 			}
 
 			// Pass the `paste` event to the textarea so it's handled by its event listener.
-			var event = new Event("paste");
+			const event = new Event("paste");
 			event.clipboardData = e.clipboardData;
 			te.dispatchEvent(event);
 		});
@@ -12692,7 +12692,7 @@
 		});
 
 		on(te, "compositionstart", function () {
-			var start = cm.getCursor("from");
+			const start = cm.getCursor("from");
 			if (input.composing) {
 				input.composing.range.clear();
 			}
@@ -12731,16 +12731,16 @@
 
 	TextareaInput.prototype.prepareSelection = function () {
 		// Redraw the selection and/or cursor
-		var cm = this.cm,
-			display = cm.display,
-			doc = cm.doc;
-		var result = prepareSelection(cm);
+		const cm = this.cm;
+		const display = cm.display;
+		const doc = cm.doc;
+		const result = prepareSelection(cm);
 
 		// Move the hidden textarea near the cursor to prevent scrolling artifacts
 		if (cm.options.moveInputWithCursor) {
-			var headPos = cursorCoords(cm, doc.sel.primary().head, "div");
-			var wrapOff = display.wrapper.getBoundingClientRect(),
-				lineOff = display.lineDiv.getBoundingClientRect();
+			const headPos = cursorCoords(cm, doc.sel.primary().head, "div");
+			const wrapOff = display.wrapper.getBoundingClientRect();
+			const lineOff = display.lineDiv.getBoundingClientRect();
 			result.teTop = Math.max(0, Math.min(display.wrapper.clientHeight - 10, headPos.top + lineOff.top - wrapOff.top));
 			result.teLeft = Math.max(0, Math.min(display.wrapper.clientWidth - 10, headPos.left + lineOff.left - wrapOff.left));
 		}
@@ -12749,8 +12749,8 @@
 	};
 
 	TextareaInput.prototype.showSelection = function (drawn) {
-		var cm = this.cm,
-			display = cm.display;
+		const cm = this.cm;
+		const display = cm.display;
 		removeChildrenAndAdd(display.cursorDiv, drawn.cursors);
 		removeChildrenAndAdd(display.selectionDiv, drawn.selection);
 		if (drawn.teTop != null) {
@@ -12765,10 +12765,10 @@
 		if (this.contextMenuPending || this.composing) {
 			return;
 		}
-		var cm = this.cm;
+		const cm = this.cm;
 		if (cm.somethingSelected()) {
 			this.prevInput = "";
-			var content = cm.getSelection();
+			const content = cm.getSelection();
 			this.textarea.value = content;
 			if (cm.state.focused) {
 				selectInput(this.textarea);
@@ -12815,7 +12815,7 @@
 	// Poll for input changes, using the normal rate of polling. This
 	// runs as long as the editor is focused.
 	TextareaInput.prototype.slowPoll = function () {
-		var this$1 = this;
+		const this$1 = this;
 
 		if (this.pollingFast) {
 			return;
@@ -12832,11 +12832,11 @@
 	// something in the input textarea, we poll faster, to ensure that
 	// the change appears on the screen quickly.
 	TextareaInput.prototype.fastPoll = function () {
-		var missed = false,
-			input = this;
+		let missed = false;
+		const input = this;
 		input.pollingFast = true;
 		function p() {
-			var changed = input.poll();
+			const changed = input.poll();
 			if (!changed && !missed) {
 				missed = true;
 				input.polling.set(60, p);
@@ -12855,11 +12855,11 @@
 	// seen text (can be empty), which is stored in prevInput (we must
 	// not reset the textarea when typing, because that breaks IME).
 	TextareaInput.prototype.poll = function () {
-		var this$1 = this;
+		const this$1 = this;
 
-		var cm = this.cm,
-			input = this.textarea,
-			prevInput = this.prevInput;
+		const cm = this.cm;
+		const input = this.textarea;
+		let prevInput = this.prevInput;
 		// Since this is called a *lot*, try to bail out as cheaply as
 		// possible when it is clear that nothing happened. hasSelection
 		// will be the case when there is a lot of text in the textarea,
@@ -12875,7 +12875,7 @@
 			return false;
 		}
 
-		var text = input.value;
+		const text = input.value;
 		// If nothing changed, bail.
 		if (text == prevInput && !cm.somethingSelected()) {
 			return false;
@@ -12889,7 +12889,7 @@
 		}
 
 		if (cm.doc.sel == cm.display.selForContextMenu) {
-			var first = text.charCodeAt(0);
+			const first = text.charCodeAt(0);
 			if (first == 0x200b && !prevInput) {
 				prevInput = "\u200b";
 			}
@@ -12899,8 +12899,8 @@
 			}
 		}
 		// Find the part of the input that is actually new
-		var same = 0,
-			l = Math.min(prevInput.length, text.length);
+		let same = 0;
+		const l = Math.min(prevInput.length, text.length);
 		while (same < l && prevInput.charCodeAt(same) == text.charCodeAt(same)) {
 			++same;
 		}
@@ -12937,29 +12937,29 @@
 	};
 
 	TextareaInput.prototype.onContextMenu = function (e) {
-		var input = this,
-			cm = input.cm,
-			display = cm.display,
-			te = input.textarea;
+		const input = this;
+		const cm = input.cm;
+		const display = cm.display;
+		const te = input.textarea;
 		if (input.contextMenuPending) {
 			input.contextMenuPending();
 		}
-		var pos = posFromMouse(cm, e),
-			scrollPos = display.scroller.scrollTop;
+		const pos = posFromMouse(cm, e);
+		const scrollPos = display.scroller.scrollTop;
 		if (!pos || presto) {
 			return;
 		} // Opera is difficult.
 
 		// Reset the current text selection only if the click is done outside of the selection
 		// and 'resetSelectionOnContextMenu' option is true.
-		var reset = cm.options.resetSelectionOnContextMenu;
+		const reset = cm.options.resetSelectionOnContextMenu;
 		if (reset && cm.doc.sel.contains(pos) == -1) {
 			operation(cm, setSelection)(cm.doc, simpleSelection(pos), sel_dontScroll);
 		}
 
-		var oldCSS = te.style.cssText,
-			oldWrapperCSS = input.wrapper.style.cssText;
-		var wrapperBox = input.wrapper.offsetParent.getBoundingClientRect();
+		const oldCSS = te.style.cssText;
+		const oldWrapperCSS = input.wrapper.style.cssText;
+		const wrapperBox = input.wrapper.offsetParent.getBoundingClientRect();
 		input.wrapper.style.cssText = "position: static";
 		te.style.cssText =
 			"position: absolute; width: 30px; height: 30px;\n      top: " +
@@ -12969,7 +12969,7 @@
 			"px;\n      z-index: 1000; background: " +
 			(ie ? "rgba(255, 255, 255, .05)" : "transparent") +
 			";\n      outline: none; border-width: 0; outline: none; overflow: hidden; opacity: .05; filter: alpha(opacity=5);";
-		var oldScrollY;
+		let oldScrollY;
 		if (webkit) {
 			oldScrollY = window.scrollY;
 		} // Work around Chrome issue (#2712)
@@ -12991,8 +12991,8 @@
 		// it got selected.
 		function prepareSelectAllHack() {
 			if (te.selectionStart != null) {
-				var selected = cm.somethingSelected();
-				var extval = "\u200b" + (selected ? te.value : "");
+				const selected = cm.somethingSelected();
+				const extval = "\u200b" + (selected ? te.value : "");
 				te.value = "\u21da"; // Used to catch context-menu undo
 				te.value = extval;
 				input.prevInput = selected ? "" : "\u200b";
@@ -13019,17 +13019,17 @@
 				if (!ie || (ie && ie_version < 9)) {
 					prepareSelectAllHack();
 				}
-				var i = 0,
-					poll = function () {
-						if (display.selForContextMenu == cm.doc.sel && te.selectionStart == 0 && te.selectionEnd > 0 && input.prevInput == "\u200b") {
-							operation(cm, selectAll)(cm);
-						} else if (i++ < 10) {
-							display.detectingSelectAll = setTimeout(poll, 500);
-						} else {
-							display.selForContextMenu = null;
-							display.input.reset();
-						}
-					};
+				let i = 0;
+				var poll = function () {
+					if (display.selForContextMenu == cm.doc.sel && te.selectionStart == 0 && te.selectionEnd > 0 && input.prevInput == "\u200b") {
+						operation(cm, selectAll)(cm);
+					} else if (i++ < 10) {
+						display.detectingSelectAll = setTimeout(poll, 500);
+					} else {
+						display.selForContextMenu = null;
+						display.input.reset();
+					}
+				};
 				display.detectingSelectAll = setTimeout(poll, 200);
 			}
 		}
@@ -13073,7 +13073,7 @@
 		// Set autofocus to true if this textarea is focused, or if it has
 		// autofocus and no other element is focused.
 		if (options.autofocus == null) {
-			var hasFocus = activeElt();
+			const hasFocus = activeElt();
 			options.autofocus = hasFocus == textarea || (textarea.getAttribute("autofocus") != null && hasFocus == document.body);
 		}
 
@@ -13081,12 +13081,12 @@
 			textarea.value = cm.getValue();
 		}
 
-		var realSubmit;
+		let realSubmit;
 		if (textarea.form) {
 			on(textarea.form, "submit", save);
 			// Deplorable hack to make the submit method do the right thing.
 			if (!options.leaveSubmitMethodAlone) {
-				var form = textarea.form;
+				const form = textarea.form;
 				realSubmit = form.submit;
 				try {
 					var wrappedSubmit = (form.submit = function () {
@@ -13111,7 +13111,7 @@
 				textarea.style.display = "";
 				if (textarea.form) {
 					off(textarea.form, "submit", save);
-					if (!options.leaveSubmitMethodAlone && typeof textarea.form.submit == "function") {
+					if (!options.leaveSubmitMethodAlone && typeof textarea.form.submit === "function") {
 						textarea.form.submit = realSubmit;
 					}
 				}
@@ -13176,8 +13176,8 @@
 	addEditorMethods(CodeMirror);
 
 	// Set up methods on CodeMirror's prototype to redirect to the editor's document.
-	var dontDelegate = "iter insert remove copy getEditor constructor".split(" ");
-	for (var prop in Doc.prototype) {
+	const dontDelegate = "iter insert remove copy getEditor constructor".split(" ");
+	for (const prop in Doc.prototype) {
 		if (Doc.prototype.hasOwnProperty(prop) && indexOf(dontDelegate, prop) < 0) {
 			CodeMirror.prototype[prop] = (function (method) {
 				return function () {
@@ -13196,7 +13196,7 @@
 	// Extra arguments are stored as the mode's dependencies, which is
 	// used by (legacy) mechanisms like loadmode.js to automatically
 	// load a mode. (Preferred mechanism is the require/define calls.)
-	CodeMirror.defineMode = function (name /*, mode, …*/) {
+	CodeMirror.defineMode = function (name /*, mode, … */) {
 		if (!CodeMirror.defaults.mode && name != "null") {
 			CodeMirror.defaults.mode = name;
 		}

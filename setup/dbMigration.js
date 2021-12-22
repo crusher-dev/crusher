@@ -1,15 +1,15 @@
-var path = require('path');
+const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-var mysql = require('mysql2');
-var fs = require('fs');
+const mysql = require('mysql2');
+const fs = require('fs');
 console.log('Running db migration script now...');
 
-var IS_HEROKU = process.env.IS_HEROKU;
-var connectionString = IS_HEROKU ? process.env.CLEARDB_DATABASE_URL : process.env.DB_CONNECTION_STRING;
+const IS_HEROKU = process.env.IS_HEROKU;
+const connectionString = IS_HEROKU ? process.env.CLEARDB_DATABASE_URL : process.env.DB_CONNECTION_STRING;
 
 function waitAndGetConnection(connection) {
 	return new Promise(function (resolve, reject) {
-		var currentTime = 0;
+		let currentTime = 0;
 		var interval = setInterval(function () {
 			if (currentTime >= 300000) {
 				clearInterval(interval);
@@ -18,7 +18,7 @@ function waitAndGetConnection(connection) {
 
 			console.log('Waiting for mysql to completely start...');
 			try {
-				var out = mysql.createConnection(
+				const out = mysql.createConnection(
 					Object.assign(connection, {
 						multipleStatements: true,
 					}),
@@ -39,7 +39,7 @@ function waitAndGetConnection(connection) {
 	});
 }
 
-var connectionObject = connectionString
+const connectionObject = connectionString
 	? { uri: connectionString }
 	: {
 			host: process.env.DB_HOST || 'localhost',
@@ -51,7 +51,7 @@ var connectionObject = connectionString
 	  };
 
 waitAndGetConnection(connectionObject).then(function (connection) {
-	var schema = fs.readFileSync(path.resolve(__dirname, '../db/schema.sql'));
+	const schema = fs.readFileSync(path.resolve(__dirname, '../db/schema.sql'));
 
 	connection.query('SHOW TABLES', function (err, results) {
 		if (err) throw err;

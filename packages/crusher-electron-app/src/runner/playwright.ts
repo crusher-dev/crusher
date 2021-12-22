@@ -138,8 +138,8 @@ class PlaywrightInstance {
 
 		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result) => {
-			const { actionType, status, meta }: { actionType: ActionsInTestEnum; status: any, meta: any } = result;
-			if(status === "STARTED" && !isRunAfterTestAction) {
+			const { actionType, status, meta }: { actionType: ActionsInTestEnum; status: any; meta: any } = result;
+			if (status === "STARTED" && !isRunAfterTestAction) {
 				action.status = ActionStatusEnum.STARTED;
 				this.mainWindow.saveRecordedStep(action);
 			}
@@ -157,8 +157,8 @@ class PlaywrightInstance {
 	async _changeDeviceIfNotSame(actions: Array<iAction>): Promise<boolean> {
 		const extensionUrl = new URL(this.mainWindow.webContents.getURL());
 		const deviceAction = actions.find((action) => action.type === "BROWSER_SET_DEVICE");
-		if(!deviceAction) return false;
-		
+		if (!deviceAction) return false;
+
 		return this.mainWindow.app._setDevice(deviceAction.payload.meta.device.id);
 	}
 
@@ -183,7 +183,7 @@ class PlaywrightInstance {
 					try {
 						await this.runMainActions(await getReplayableTestActions(runAfterTestAction.payload.meta.value), true);
 						this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.SUCCESS);
-					} catch(ex) {
+					} catch (ex) {
 						this.mainWindow.addToRemainingSteps(actions);
 						throw ex;
 					}
@@ -207,19 +207,19 @@ class PlaywrightInstance {
 		const actions = testInfo.data.events;
 		try {
 			await this.runActions(actions, isRunAfterTestAction);
-		} catch(ex) { 
+		} catch (ex) {
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
 		}
 		return true;
 	}
 
-	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error, actions: Array<any> }> {
+	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error; actions: Array<any> }> {
 		const testInfo = await axios.get(resolveToBackendPath(`/tests/actions/get.temp?id=${tempTestId}`));
 		const actions = testInfo.data.events;
 		try {
-		 await this.runActions(actions, false);
-		 return { error: null, actions }
-		} catch(err) {
+			await this.runActions(actions, false);
+			return { error: null, actions };
+		} catch (err) {
 			return { error: err, actions };
 		}
 	}

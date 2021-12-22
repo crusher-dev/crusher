@@ -95,7 +95,7 @@ class TestService {
 		customTestsConfig: Partial<ICreateBuildRequestPayload> = {},
 		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
 		overideBaseLineBuildId: number | null = null,
-		browsers = [BrowserEnum.CHROME]
+		browsers = [BrowserEnum.CHROME],
 	) {
 		const testsData = await this.getTestsInProject(projectId, true);
 		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
@@ -137,13 +137,13 @@ class TestService {
 		);
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number; } = {}) {
+	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
 		const PER_PAGE_LIMIT = 15;
 
 		let query = `SELECT tests.*, tests.draft_job_id draftJobId, tests.featured_clip_video_url featuredClipVideoUrl, tests.featured_video_url featuredVideoUrl, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
 		const queryParams: Array<any> = [projectId];
 		let page = 0;
-		if(filter.page) page = filter.page;
+		if (filter.page) page = filter.page;
 
 		if (findOnlyActiveTests) {
 			query += " AND tests.deleted = ?";
@@ -164,7 +164,6 @@ class TestService {
 		const totalRecordCountQueryResult = await this.dbManager.fetchSingleRow(totalRecordCountQuery, queryParams);
 
 		query += " ORDER BY tests.created_at DESC";
-
 
 		if (filter.page && filter.page !== -1) {
 			query += " LIMIT ?, ?";

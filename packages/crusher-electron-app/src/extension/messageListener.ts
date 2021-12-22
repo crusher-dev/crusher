@@ -116,8 +116,8 @@ async function handleRecordAction(action: iAction): any {
 	switch (type) {
 		case ActionsInTestEnum.WAIT_FOR_NAVIGATION: {
 			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION;
-			if(action.payload.meta.value && action.payload.meta.value.isBeforeNavigation) {
-			   store.dispatch(updateIsRecorderScriptBooted(false));
+			if (action.payload.meta.value && action.payload.meta.value.isBeforeNavigation) {
+				store.dispatch(updateIsRecorderScriptBooted(false));
 			} else {
 				store.dispatch(updateIsRecorderScriptBooted(true));
 			}
@@ -284,7 +284,7 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 		case MESSAGE_TYPES.SAVE_RECORDED_TEST: {
 			saveTest();
 			break;
-		} 
+		}
 		case MESSAGE_TYPES.CLEAR_RECORDED_ACTIONS: {
 			const store = getStore();
 			store.dispatch(resetRecordedActions());
@@ -314,7 +314,7 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 			break;
 		}
 		case MESSAGE_TYPES.UPDATE_LAST_RECORDED_ACTION_STATUS: {
-			const {status} = event.data.meta;
+			const { status } = event.data.meta;
 			const store = getStore();
 			store.dispatch(updateLastRecordedActionStatus(status));
 			break;

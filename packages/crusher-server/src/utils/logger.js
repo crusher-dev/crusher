@@ -25,7 +25,7 @@ const showMeta = (meta) => {
 		return;
 	}
 	const keys = Object.keys(meta);
-	for (let key of keys) {
+	for (const key of keys) {
 		if (meta[key]) {
 			_info(`> [${key}]: `, meta[key]);
 		}

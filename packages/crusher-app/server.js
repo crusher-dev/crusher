@@ -42,7 +42,7 @@ server.use("/", express.static("out"));
 
 server.listen(port, (err) => {
 	if (err) throw err;
-	//eslint-disable-next-line
+	// eslint-disable-next-line
 	console.log(`> Ready on http://localhost:${port}`);
 });
 

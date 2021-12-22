@@ -36,8 +36,8 @@ const ACTION_DESCRIPTIONS = {
 		return `Executing custom code`;
 	},
 	[ACTIONS_IN_TEST.RUN_TEMPLATE]: (meta: ActionMeta) => {
-		return 'Running a template with series of steps';
-	}
+		return "Running a template with series of steps";
+	},
 };
 
 export { ACTION_DESCRIPTIONS };

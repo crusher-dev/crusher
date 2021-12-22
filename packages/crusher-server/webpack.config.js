@@ -18,8 +18,8 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, "../../output/crusher-server"),
-		chunkFilename: `[name]-[chunkhash:4].js`,
-		sourceMapFilename: `[name]-[chunkhash:4].js.map`,
+		chunkFilename: "[name]-[chunkhash:4].js",
+		sourceMapFilename: "[name]-[chunkhash:4].js.map",
 		libraryTarget: "commonjs2",
 		clean: true,
 	},
@@ -66,7 +66,7 @@ module.exports = {
 					loader: "string-replace-loader",
 					options: {
 						search: "__dirname",
-						replace: `__dirname + "/commands/"`,
+						replace: '__dirname + "/commands/"',
 					},
 				},
 			},
@@ -76,7 +76,7 @@ module.exports = {
 					loader: "string-replace-loader",
 					options: {
 						search: "require(msg.value)",
-						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(msg.value) : require(msg.value)`,
+						replace: 'typeof __webpack_require__ === "function" ? __non_webpack_require__(msg.value) : require(msg.value)',
 					},
 				},
 			},

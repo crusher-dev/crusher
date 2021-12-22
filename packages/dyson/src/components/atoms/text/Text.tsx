@@ -6,7 +6,7 @@ export type TextProps = {
 	 * Emotion CSS style if any
 	 */
 	fontSize?: number;
-	leading?: boolean;
+	leading?: string;
 	weight?: number;
 	CSS?: SerializedStyles;
 	color?: string;
@@ -14,7 +14,7 @@ export type TextProps = {
 
 const TextDefaultProps = {
 	fontSize: 12,
-	leading: false,
+	leading: "false",
 	weight: 700,
 	color: "#fff",
 };

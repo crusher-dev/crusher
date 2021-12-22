@@ -26,7 +26,7 @@ const App = () => {
                     <Toolbar css={toolbarStyle} />
                     <DeviceFrame css={deviceFrameContainerStyle} />
             </div>
-            <Sidebar />
+            <Sidebar css={sidebarStyle} />
         </div>
 	);
 };
@@ -41,7 +41,6 @@ const containerStyle = css`
 `;
 const bodyStyle = css`
 	flex: 1;
-	max-width: calc(100% - 350rem);
 	display: grid;
 	grid-template-rows: 62rem;
 	flex-direction: column;

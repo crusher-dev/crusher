@@ -160,6 +160,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 								<div
 									css={dropdDownItem(isMultiSelect)}
 									className={"flex  items-center px-12 py-8 dropdown-label"}
+									key={value}
 									onClick={selectValue.bind(this, value)}
 								>
 									<Conditional showIf={isMultiSelect}>

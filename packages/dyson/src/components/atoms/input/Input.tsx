@@ -34,7 +34,7 @@ export type InputProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<InputProps> = ({ initialValue = "", size = "large", rightIcon, isError = false, onReturn, children, className, CSS, ...props }) => {
+export const Input: React.FC<InputProps> = ({ initialValue = "", size = "large", className, rightIcon, isError = false, onReturn, children, ...props }) => {
 	const ref = useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
@@ -51,15 +51,15 @@ export const Input: React.FC<InputProps> = ({ initialValue = "", size = "large",
 	}, [initialValue]);
 
 	const sizeStyle = getSizePropery(size);
-
+	
 	return (
 		<div
 			css={[css`
 				position: relative;
-			`, CSS]}
-			className={"relative"}
+			`]}
+			className={`relative ${className}`}
 		>
-			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState, props.CSS]} {...props} className={String(className || "")} onKeyUp={onKeyUp} />
+			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle} className="input__rightIconContainer">{rightIcon}</div>
 			</Conditional>

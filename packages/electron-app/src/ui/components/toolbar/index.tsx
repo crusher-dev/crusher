@@ -6,10 +6,11 @@ import { Conditional } from "@dyson/components/layouts";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
+import { BrowserButton } from "../buttons/browser.button";
 
 const DeviceItem = ({label}) => {
 	return (
-		<div css={{padding: "7rem 8rem", width: "100%", cursor: "default"}}>{label}</div>
+		<div css={{width: "100%"}}>{label}</div>
 	)
 };
 
@@ -32,30 +33,45 @@ const Toolbar = (props: any) => {
     
     return (
 		<div css={containerStyle}>
-			<NavigateBackIcon onClick={goBack} disabled={false} />
-			<NavigateRefreshIcon onClick={refreshPage} disabled={false} />
+			{/* Go Back button */}
+			<BrowserButton className={"ml-24 go-back-button"} onClick={goBack}>
+				<NavigateBackIcon css={css`height: 20rem;`} disabled={false} />
+			</BrowserButton>
+
+			{/* Refresh button */}
+			<BrowserButton className={"ml-12 reload-page-button"} onClick={refreshPage}>
+				<NavigateRefreshIcon css={css`height: 20rem;`} disabled={false} />
+			</BrowserButton>
+
 			<Input
 				placeholder="Enter URL to test"
-				CSS={inputStyle}
+				className={"target-site-input"}
+				css={inputStyle}
 				onReturn={handleUrlReturn}
 				initialValue={url}
 				rightIcon={
-						<SelectBox selected={selectedDevice} callback={handleChangeDevice} CSS={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 102rem;`} values={devices} />
+						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={devices} />
 				}
 			/>
 			
-			<Conditional showIf={true}>
-				<Button onClick={() => {}} bgColor="tertiary-outline" CSS={buttonStyle}>
+			<Conditional showIf={false}>
+				<Button className={"ml-24"} onClick={() => {}} bgColor="tertiary-outline" css={buttonStyle}>
 					Start
 				</Button>
 			</Conditional>
-			<Conditional showIf={false}>
-				<div css={onlineDotStyle} />
-				<Text CSS={recTextStyle}>Rec.</Text>
-				<SettingsIcon />
-				<Button onClick={saveTest} bgColor="tertiary-outline" CSS={saveButtonStyle}>
-					Verify test
-				</Button>
+			<Conditional showIf={true}>
+				<div className={"ml-18 flex items-center"}>
+					<div css={onlineDotStyle} />
+					<Text css={recTextStyle} className={"ml-8"}>Rec.</Text>
+				</div>
+
+				<div className={"ml-auto flex items-center"}>
+					<SettingsIcon css={css`height: 14rem; :hover { opacity: 0.9 }`} className={"ml-12"} />
+
+					<Button onClick={saveTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+						Verify test
+					</Button>
+				</div>
 			</Conditional>
 		</div>
 	);
@@ -65,12 +81,13 @@ const containerStyle = css`
 	display: flex;
 	align-items: center;
 	padding: 8rem;
-	& > * {
-		margin: 0rem 10rem;
-	}
+	background-color: #111213;
+	padding: 5rem;
+	min-height: 60rem;
 `;
 const inputStyle = css`
 	height: 34rem;
+	margin-left: 28rem;
 	& > input {
 		width: 340rem;
 		font-family: Gilroy;
@@ -122,7 +139,6 @@ const recTextStyle = css`
 	font-weight: normal;
 	font-size: 13rem;
 	line-height: 13rem;
-	flex-grow: 1;
 `;
 const onlineDotStyle = css`
 	display: block;

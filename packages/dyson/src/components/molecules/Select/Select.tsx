@@ -7,7 +7,6 @@ import { CloseSVG } from "../../icons/CloseSVG";
 import { DropdownIconSVG } from "../../../assets/icons";
 import Checkbox from "../../atoms/checkbox/checkbox";
 
-
 export type TSelectBoxProps = {
 	/*
 		Emotion style if any
@@ -49,6 +48,8 @@ export type TSelectBoxProps = {
 		Event handler when select box is changed
 	*/
 	callback: (selectedValue: any) => void;
+
+	className?: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
 
 
@@ -67,12 +68,11 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	selected = [],
 	placeholder,
 	onScrollEnd,
-	css,
-	CSS,
 	values,
 	size,
 	isMultiSelect,
 	isSearchable,
+	className,
 	dropDownHeight,
 	callback,
 }) => {
@@ -128,8 +128,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	const options = filterText ? values.filter(({ label }) => label.toLowerCase().includes(filterText.toLowerCase())) : values;
 
 	return (
-		<>
-			<div css={[selectBoxContainer(openSelectBox, size), css, CSS]} className={"relative"}>
+			<div css={[selectBoxContainer(openSelectBox, size)]} className={`relative ${className}`}>
 				<div className={"flex justify-between text-13 px-12 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
 					<input
 						onInput={handleFilterTextChange}
@@ -173,7 +172,6 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 					</OnOutsideClick>
 				</Conditional>
 			</div>
-		</>
 	);
 };
 

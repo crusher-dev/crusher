@@ -41,7 +41,7 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
     };
 
 	const items = elementActionsList.filter(e => ![TElementActionsEnum.CLICK, TElementActionsEnum.HOVER].includes(e.id)).map((action) => {
-		return <ActionsListItem onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
+		return <ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
 	});
 
     return (

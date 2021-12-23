@@ -40,7 +40,7 @@ const PageActions = ({className, ...props}: {className?: any}) => {
     };
 
 	const items = topActionsList.map((action) => {
-		return <ActionsListItem onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
+		return <ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
 	});
 
 

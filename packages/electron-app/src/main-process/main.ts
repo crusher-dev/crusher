@@ -33,6 +33,7 @@ let onDidLoadFns: Array<OnDidLoadFn> | null = []
 function setupElectronApp() {
 	app.setName(APP_NAME);
 	app.setAppLogsPath()
+	app.commandLine.appendSwitch('disable-features', 'CrossOriginOpenerPolicy')
 
 	app.setAboutPanelOptions({
 		applicationName: APP_NAME,

@@ -1,3 +1,4 @@
+import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
 import { iElementInfo, TRecorderState } from "../reducers/recorder";
 
@@ -11,6 +12,7 @@ export const SET_DEVICE = "SET_DEVICE";
 
 export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
 export const RECORD_STEP = "RECORD_STEP";
+export const UPDATE_CURRENT_RUNNING_STEP_STATUS = "UPDATE_CURRENT_RUNNING_STEP_STATUS";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -47,9 +49,16 @@ export const setDevice = (device: any) => {
     }
 }
 
-export const recordStep = (step: iAction) => {
+export const recordStep = (step: iAction, status: ActionStatusEnum = ActionStatusEnum.STARTED) => {
     return {
         type: RECORD_STEP,
-        payload: { step: step, time: Date.now() }
+        payload: { step: step, time: Date.now(), status: status }
+    };
+}
+
+export const updateCurrentRunningStepStatus = (status: ActionStatusEnum) => {
+    return {
+        type: UPDATE_CURRENT_RUNNING_STEP_STATUS,
+        payload: { status }
     };
 }

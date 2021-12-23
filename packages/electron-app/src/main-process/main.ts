@@ -88,7 +88,7 @@ function createWindow() {
 		console.log("Changes occurred in store");
 	});
 
-	const window = new AppWindow()
+	const window = new AppWindow(store)
 
 	if (!isProduction()) {
 	  const {

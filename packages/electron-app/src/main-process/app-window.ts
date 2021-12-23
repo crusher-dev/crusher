@@ -5,9 +5,12 @@ import { APP_NAME } from '../../config/about';
 import { encodePathAsUrl, getAppIconPath } from '../utils';
 import { Emitter, Disposable } from "event-kit";
 import { now } from './now';
+import { AnyAction, Store } from 'redux';
+import { Recorder } from './recorder';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
+    private recorder: Recorder
     private emitter = new Emitter()
 
     private _loadTime: number | null = null
@@ -18,12 +21,13 @@ export class AppWindow {
 
     private shouldMaximizeOnShow = false
 
-    public constructor() {
+    public constructor(store: Store<unknown, AnyAction>) {
         const savedWindowState = windowStateKeeper({
             defaultWidth: this.minWidth,
             defaultHeight: this.minHeight,
             maximize: false,
         });
+        this.recorder = new Recorder(store);
 
         const windowOptions: Electron.BrowserWindowConstructorOptions = {
             title: APP_NAME,
@@ -102,7 +106,16 @@ export class AppWindow {
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
 
+        /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'))
+    }
+
+    public getRecorder() {
+        return this.recorder;
+    }
+
+    public focusWebView(): Promise<void> {
+        return this.window.webContents.executeJavaScript("document.querySelector('webview').focus();");
     }
 
     /** Send the app launch timing stats to the renderer. */

@@ -1,7 +1,8 @@
 import { AnyAction } from "redux";
-import { RECORD_STEP, SET_DEVICE, SET_SITE_URL } from "../actions/recorder";
+import { RECORD_STEP, SET_DEVICE, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
+import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 
 export enum TRecorderState {
 	BOOTING = "BOOTING", // <- Internal state (Initialize recorder script)
@@ -49,7 +50,6 @@ export interface iSettings {
 
 }
 
-
 interface IRecorderReducer {
 	currentUrl: string | null;
 	device: any | null;
@@ -58,7 +58,7 @@ interface IRecorderReducer {
 	isInspectModeOn: boolean;
 
 	selectedElement: iElementInfo | null;
-	savedSteps: Array<iAction>;
+	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; }>;
 };
 
 const initialState: IRecorderReducer = {
@@ -89,8 +89,20 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				...state,
 				savedSteps: [
 					...state.savedSteps,
-					action.payload.step
+					{
+						...action.payload.step,
+						status: action.payload.status,
+						time: action.payload.time,
+					}
 				],
+			}
+		case UPDATE_CURRENT_RUNNING_STEP_STATUS:
+			const savedSteps = [...state.savedSteps];
+			savedSteps[savedSteps.length - 1].status = action.payload.status;
+
+			return {
+				...state,
+				savedSteps: savedSteps
 			}
 		default:
 			return state;

@@ -10,7 +10,7 @@ const DeviceFrame = (props: any) => {
     return (
         <div css={containerStyle}>
             <Conditional showIf={!!recorderInfo.url}>
-                <div style={{width: recorderInfo.device.width, height: recorderInfo.device.height, maxWidth: "100%", maxHeight: "100%"}}>
+                <div style={{width: recorderInfo.device?.width, height: recorderInfo.device?.height, maxWidth: "100%", maxHeight: "100%"}}>
                     <webview
                         css={webviewStyle}
                         id="device_browser"

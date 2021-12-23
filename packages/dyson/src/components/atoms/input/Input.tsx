@@ -29,13 +29,15 @@ export type InputProps = {
 	onReturn?: (value: string) => void;
 
 	className?: string;
+
+	forwardRef?: React.Ref<HTMLInputElement>;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, any>;
 
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<InputProps> = ({ initialValue = "", size = "large", className, rightIcon, isError = false, onReturn, children, ...props }) => {
-	const ref = useRef<HTMLInputElement>(null);
+export const Input: React.FC<InputProps> = ({ initialValue = "", forwardRef, size = "large", className, rightIcon, isError = false, onReturn, children, ...props }) => {
+	const ref = forwardRef ? forwardRef : useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
 		(e) => {

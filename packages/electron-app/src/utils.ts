@@ -14,9 +14,9 @@ function getAppIconPath() {
 	}
 }
 
- function encodePathAsUrl(...pathSegments: string[]): string {
+function encodePathAsUrl(...pathSegments: string[]): string {
 	const Path = path.resolve(...pathSegments)
 	return fileUrl(Path)
-  }
+}
 
 export { isProduction, getAppIconPath, encodePathAsUrl };

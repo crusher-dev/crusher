@@ -1,10 +1,20 @@
 import React from "react";
 import { css } from "@emotion/react";
+import { useSelector } from "react-redux";
+import { getRecorderInfo } from "../../../store/selectors/recorder";
+import { Conditional } from "@dyson/components/layouts";
 
 const Sidebar = ({className, ...props}: any) => {
+    const recorderInfo = useSelector(getRecorderInfo);
+
     return (
         <div css={containerStyle} className={`${className}`}>
-
+            <Conditional showIf={!!recorderInfo.url}>
+                <div>Show actions now</div>
+            </Conditional>
+            <Conditional showIf={!!recorderInfo.url === false}>
+                <div>Show empty</div>
+            </Conditional>
         </div>
     )
 };

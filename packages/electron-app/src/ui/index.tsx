@@ -7,8 +7,6 @@ import { Sidebar } from './components/sidebar';
 import "../assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { getCurrentOnboardingStep } from "../store/selectors/onboarding";
-import { updateCurrentOnboardingStep } from "../store/actions/onboarding";
 import { getInitialStateRenderer } from 'electron-redux';
 
 const App = () => {

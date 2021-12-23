@@ -8,6 +8,7 @@ export enum ActionStatusEnum {
 };
 
 export interface iAction {
+	uniqueId?: string;
 	type: ActionsInTestEnum;
 	status?: ActionStatusEnum;
 	name?: string;

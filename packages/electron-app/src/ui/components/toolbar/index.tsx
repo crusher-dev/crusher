@@ -7,26 +7,45 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
 import { BrowserButton } from "../buttons/browser.button";
+import { useDispatch, batch } from "react-redux";
+import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
+import { devices } from "../../../devices";
 
 const DeviceItem = ({label}) => {
 	return (
-		<div css={{width: "100%"}}>{label}</div>
+		<div css={css`width: 100%;`}>{label}</div>
 	)
 };
 
-const devices = [
-	{ value: "GoogleChromeMediumScreen", component: <DeviceItem label={"Desktop" } />, label: "Desktop" },
-	{ value: "Pixel33XL", label: "Mobile", component: <DeviceItem label={"Mobile" } /> },
-];
+const recorderDevices = devices.filter(device => device.visible).map((device) => ({
+	device: device,
+	value: device.id,
+	label: device.name,
+	component: <DeviceItem label={device.name} />
+}));
+
 
 const Toolbar = (props: any) => {
     const [url, setUrl] = React.useState("" || null);
-	const [selectedDevice, setSelectedDevice] = React.useState(["GoogleChromeMediumScreen"]);
+	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
+
+	const urlInputRef = React.useRef<HTMLInputElement>(null);
+
+	const dispatch = useDispatch();
 
     const handleUrlReturn = () => {
-
+		if(urlInputRef.current?.value) {
+			batch(() => {
+				dispatch(setSiteUrl(urlInputRef.current.value));
+				dispatch(setDevice(selectedDevice[0]));
+			})
+		}
     };
-	const handleChangeDevice = () => {}
+
+	const handleChangeDevice = (selected) => {
+		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
+		setSelectedDevice([selected[0]]);
+	}
 	const saveTest = () => {}
 	const goBack = () => {}
 	const refreshPage = () => {}
@@ -49,8 +68,9 @@ const Toolbar = (props: any) => {
 				css={inputStyle}
 				onReturn={handleUrlReturn}
 				initialValue={url}
+				forwardRef={urlInputRef}
 				rightIcon={
-						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={devices} />
+						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
 				}
 			/>
 			

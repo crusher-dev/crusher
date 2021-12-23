@@ -41,7 +41,7 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 				selectedActions: action.payload.selectedActionIds,
 			};
 		}
-		case UPDATE_LAST_RECORDED_ACTION_OPTINALITY:{
+		case UPDATE_LAST_RECORDED_ACTION_OPTINALITY: {
 			const newList = [...state.list];
 			if (newList.length) {
 				newList[newList.length - 1] = {
@@ -49,7 +49,7 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 					payload: {
 						...newList[newList.length - 1].payload,
 						isOptional: action.payload.isOptional,
-					}
+					},
 				};
 			}
 			return {

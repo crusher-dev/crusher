@@ -6,7 +6,11 @@ import { StorageManager } from "../functions/storage";
 import { generateScreenshotName, uuidv4 } from "../utils/helper";
 
 async function takeElementScreenshot(element: Locator, workingSelector: any, action: iAction, globals: IGlobalManager, storageManager: StorageManager) {
-	const screenshotBuffer = await element.screenshot({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined, type: "jpeg", quality: 70 });
+	const screenshotBuffer = await element.screenshot({
+		timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined,
+		type: "jpeg",
+		quality: 70,
+	});
 	const screenshotName = `${uuidv4()}.jpeg`;
 	const uploadedScreenshotUrl = await storageManager.uploadAsset(screenshotName, screenshotBuffer);
 

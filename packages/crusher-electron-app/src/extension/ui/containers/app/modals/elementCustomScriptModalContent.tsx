@@ -55,8 +55,7 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 			screenshot: elementInfo.screenshot,
 			url: "",
 		}),
-
-		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(deviceIframeRef);
 		executeScriptInFrame(script, "", deviceIframeRef);
 

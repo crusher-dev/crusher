@@ -17,8 +17,8 @@ async function boot() {
 		limiter: {
 			max: 2,
 			duration: 1800000,
-			groupKey: "buildId"
-		} as any
+			groupKey: "buildId",
+		} as any,
 	});
 	await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 	await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);

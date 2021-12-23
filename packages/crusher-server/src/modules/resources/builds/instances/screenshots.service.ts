@@ -27,22 +27,24 @@ class BuildTestInstanceScreenshotService {
 				// For an scresnhot-type action, there will be only one output
 				const outputImages = screenshotActionResult.meta.outputs;
 				const promiseArr = [];
-				
-				for(let outputImageIndex = 0; outputImageIndex < outputImages.length; outputImageIndex++) {
+
+				for (let outputImageIndex = 0; outputImageIndex < outputImages.length; outputImageIndex++) {
 					const outputImage = outputImages[outputImageIndex];
 					const screenshotIndex = `${screenshotActionResult.actionIndex}.${outputImageIndex}`;
-					promiseArr.push(this.insertScreenshot({
-						instanceId: instanceId,
-						name: outputImage.name,
-						url: outputImage.value,
-						actionIndex: screenshotIndex,
-					}).then((insertRecord) => {
-						return {
-							...screenshotActionResult,
-							recordId: insertRecord.insertId,
-							screenshotIndex: screenshotIndex,
-						};
-					}));
+					promiseArr.push(
+						this.insertScreenshot({
+							instanceId: instanceId,
+							name: outputImage.name,
+							url: outputImage.value,
+							actionIndex: screenshotIndex,
+						}).then((insertRecord) => {
+							return {
+								...screenshotActionResult,
+								recordId: insertRecord.insertId,
+								screenshotIndex: screenshotIndex,
+							};
+						}),
+					);
 				}
 
 				return Promise.all(promiseArr);
@@ -50,7 +52,7 @@ class BuildTestInstanceScreenshotService {
 
 		return Promise.all(insertPromises).then((resultsArr) => {
 			const out = [];
-			for(let result of resultsArr) {
+			for (let result of resultsArr) {
 				out.push(...result);
 			}
 			return out;

@@ -69,6 +69,7 @@ export const Heading: React.FC<HeadingProps> = (props: HeadingProps) => {
 			css={css`
 				font-size: ${fontSize || getDefaultFontSize(type)}rem;
 				color: ${color};
+				letter-spacing: -0.003em;
 			`}
 			{...otherProps}
 		>

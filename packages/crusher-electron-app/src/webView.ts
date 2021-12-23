@@ -87,9 +87,8 @@ export class WebView {
 			path: path.join(__dirname, "extension/js/content_script.js"),
 		});
 
-
 		await this.webContents().loadURL(this.mainWindow.state.webViewSrc);
-	
+
 		// Add proper logic here
 		if (this.appState.shouldRunAfterTest) {
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });

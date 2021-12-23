@@ -11,6 +11,6 @@ async function load() {
 
 if (frameDepth === 0 && !window.location.href.startsWith("chrome-extension://")) {
 	window.addEventListener("load", function () {
-			load();
+		load();
 	});
 }

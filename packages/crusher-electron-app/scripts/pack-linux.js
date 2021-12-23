@@ -22,8 +22,8 @@ builder
 					owner: "crusherdev",
 					vPrefixedTagName: true,
 					token: process.env.GITHUB_TOKEN,
-					releaseType: "draft"
-				}
+					releaseType: "draft",
+				},
 			],
 			linux: {
 				icon: "icons/app.icns",

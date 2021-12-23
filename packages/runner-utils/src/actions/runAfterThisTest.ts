@@ -8,14 +8,16 @@ import { getUserAgentFromName, userAgents } from "@crusher-shared/constants/user
 function transformStorageState(storageState: any) {
 	if (!storageState) return storageState;
 
-	const cookies = storageState.cookies ? storageState.cookies.map((cookie) => {
-		return cookie;
-	}) : undefined;
+	const cookies = storageState.cookies
+		? storageState.cookies.map((cookie) => {
+				return cookie;
+		  })
+		: undefined;
 
 	return {
 		...storageState,
-		cookies:	cookies,
-	}
+		cookies: cookies,
+	};
 }
 async function setupRunAfterTest(browser: Browser, action: iAction, globals: IGlobalManager) {
 	const storageState = action.payload.meta ? action.payload.meta.storageState : null;
@@ -32,8 +34,8 @@ async function setupRunAfterTest(browser: Browser, action: iAction, globals: IGl
 
 	return {
 		customLogMessage: "Finished setting up storage state",
-    meta: {
-      storageState: transformStorageState(storageState)
+		meta: {
+			storageState: transformStorageState(storageState),
 		},
 	};
 }

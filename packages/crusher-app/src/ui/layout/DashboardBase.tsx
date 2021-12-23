@@ -311,7 +311,7 @@ function RunTest() {
 	}, []);
 
 	return (
-		<Button bgColor={"tertiary-dark"} onClick={runProjectTest}>
+		<Button bgColor={"tertiary"} onClick={runProjectTest}>
 			<div className={"flex items-center"}>
 				<PlaySVG className={"mr-12"} />
 				Run tests

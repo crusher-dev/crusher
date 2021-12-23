@@ -32,17 +32,19 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 
 		switch (id) {
 			case TOP_LEVEL_ACTION.VERIFY_LINK:
-				(window as any).electron.runAction([{
-					type: ActionsInTestEnum.CUSTOM_CODE,
-					screenshot: null,
-					name: "Verify links",
-					payload: {
-						meta: {
-							script: "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n    try {\n  \tawait crusherSdk.page.exposeFunction(\"crusherVerifyLinks\", (links) => {\n\t\treturn crusherSdk.verifyLinks(links);\n  \t});\n  } catch(ex){}\n\n  const {uniqueALinks, verifiedLinks} = await crusherSdk.page.evaluate(async function() {\n\tconst aLinkNodes = document.querySelectorAll(\"a\");\n    const aLinks = Array.from(aLinkNodes).map((node) => ({\n        href: (node.href.indexOf('http://') === 0 || node.href.indexOf('https://') === 0) ? node.href : new URL(node.href, window.location.href).toString()\n    }));\n\n    const uniqueALinks = [...new Set(aLinks)];\n    const verifiedLinks = await window.crusherVerifyLinks(uniqueALinks);\n    return {uniqueALinks, verifiedLinks};\n  });\n\n console.log('FInal result before', verifiedLinks.filter(a => !a.exists));  if(verifiedLinks.filter(a => !!a.exists).length !== uniqueALinks.length) return crusherSdk.markTestFail(\"Not all links are valid\", {result: verifiedLinks});\n console.log('FInal result', verifiedLinks.filter(a => !a.exists));  return verifiedLinks;\n}",
+				(window as any).electron.runAction([
+					{
+						type: ActionsInTestEnum.CUSTOM_CODE,
+						screenshot: null,
+						name: "Verify links",
+						payload: {
+							meta: {
+								script: "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n    try {\n  \tawait crusherSdk.page.exposeFunction(\"crusherVerifyLinks\", (links) => {\n\t\treturn crusherSdk.verifyLinks(links);\n  \t});\n  } catch(ex){}\n\n  const {uniqueALinks, verifiedLinks} = await crusherSdk.page.evaluate(async function() {\n\tconst aLinkNodes = document.querySelectorAll(\"a\");\n    const aLinks = Array.from(aLinkNodes).map((node) => ({\n        href: (node.href.indexOf('http://') === 0 || node.href.indexOf('https://') === 0) ? node.href : new URL(node.href, window.location.href).toString()\n    }));\n\n    const uniqueALinks = [...new Set(aLinks)];\n    const verifiedLinks = await window.crusherVerifyLinks(uniqueALinks);\n    return {uniqueALinks, verifiedLinks};\n  });\n\n console.log('FInal result before', verifiedLinks.filter(a => !a.exists));  if(verifiedLinks.filter(a => !!a.exists).length !== uniqueALinks.length) return crusherSdk.markTestFail(\"Not all links are valid\", {result: verifiedLinks});\n console.log('FInal result', verifiedLinks.filter(a => !a.exists));  return verifiedLinks;\n}",
+							},
+							selectors: null,
 						},
-						selectors: null
-					}		
-				}]);
+					},
+				]);
 				break;
 			case TOP_LEVEL_ACTION.SCROLL_AND_TAKE_SCREENSHOT:
 				(window as any).electron.runAction([
@@ -52,11 +54,11 @@ const TopLevelActionsList = (props: iTopLevelActionListProps) => {
 						name: "Scroll and take screenshots",
 						payload: {
 							meta: {
-								script: "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n     const outputs = [];\n\n    try {\n          await crusherSdk.page.exposeFunction(\"takeCrusherScreenshot\", async function () {\n              const result = await crusherSdk.takePageScreenshot();\n              outputs.push(...result.outputs);\n              return true;\n          });\n    } catch(err) {}\n\n\tawait crusherSdk.page.evaluate(function () {\n\t\treturn new Promise(async (resolve, reject) => {\n await window.takeCrusherScreenshot();\n         const interval = setInterval(async () => {\n              const scrollOffset = window.scrollY + window.innerHeight;\n              window.scroll(0, scrollOffset);\n              await window.takeCrusherScreenshot();\n              if(document.documentElement.scrollHeight <= scrollOffset) {\n                  console.log('scrolled to the end'); clearInterval(interval); resolve(true);\n              }\n          }, 1500);\n        });\n\t}, []);\n\n\treturn { outputs };\n}"
+								script: "async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n     const outputs = [];\n\n    try {\n          await crusherSdk.page.exposeFunction(\"takeCrusherScreenshot\", async function () {\n              const result = await crusherSdk.takePageScreenshot();\n              outputs.push(...result.outputs);\n              return true;\n          });\n    } catch(err) {}\n\n\tawait crusherSdk.page.evaluate(function () {\n\t\treturn new Promise(async (resolve, reject) => {\n await window.takeCrusherScreenshot();\n         const interval = setInterval(async () => {\n              const scrollOffset = window.scrollY + window.innerHeight;\n              window.scroll(0, scrollOffset);\n              await window.takeCrusherScreenshot();\n              if(document.documentElement.scrollHeight <= scrollOffset) {\n                  console.log('scrolled to the end'); clearInterval(interval); resolve(true);\n              }\n          }, 1500);\n        });\n\t}, []);\n\n\treturn { outputs };\n}",
 							},
-							selectors: null
-						}
-					}
+							selectors: null,
+						},
+					},
 				]);
 				break;
 			case TOP_LEVEL_ACTION.TAKE_PAGE_SCREENSHOT:

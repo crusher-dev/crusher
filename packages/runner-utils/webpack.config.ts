@@ -8,7 +8,7 @@ module.exports = {
 	devtool: "source-map",
 	target: "node",
 	optimization: {
-		minimize: false
+		minimize: false,
 	},
 	entry: {
 		index: "./src/index.ts",

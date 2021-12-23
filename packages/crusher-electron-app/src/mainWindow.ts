@@ -133,7 +133,7 @@ class MainWindow {
 	}
 
 	addToRemainingSteps(actions: Array<iAction>) {
-		if(!this.state.remainingSteps) {
+		if (!this.state.remainingSteps) {
 			this.state.remainingSteps = [];
 		}
 
@@ -158,12 +158,15 @@ class MainWindow {
 
 	private async flushLogsToDisk(hasPassed: boolean, actions: Array<any>) {
 		const logFile = app.commandLine.getSwitchValue("log-file");
-		if(!logFile) return;
+		if (!logFile) return;
 
-		fs.writeFileSync(logFile, JSON.stringify({
-			hasPassed,
-			steps: actions,
-		}));
+		fs.writeFileSync(
+			logFile,
+			JSON.stringify({
+				hasPassed,
+				steps: actions,
+			}),
+		);
 	}
 
 	async verifyTest(event, tempTestId) {
@@ -185,9 +188,9 @@ class MainWindow {
 			this.state.isTestVerified = true;
 			try {
 				await saveTest(actions);
-			} catch(err) {
+			} catch (err) {
 				this.webContents.executeJavaScript('alert("Cant save the test");');
-			};
+			}
 		}
 
 		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: false } });
@@ -237,14 +240,14 @@ class MainWindow {
 	}
 
 	async handleNavigatePage(event, url) {
-		if(this.webView){
+		if (this.webView) {
 			this.webView.webContents().loadURL(url);
 		}
 		return true;
 	}
 
 	async continueRemainingTest(event) {
-		if(!this.state.remainingSteps || !this.state.remainingSteps.length) return false;
+		if (!this.state.remainingSteps || !this.state.remainingSteps.length) return false;
 		console.log("Reaming steps are", this.state.remainingSteps);
 		await this.sendMessage("SET_IS_REPLAYING", { value: true });
 		this.webView.setRunningState(true);
@@ -261,14 +264,13 @@ class MainWindow {
 		return scriptContent;
 	}
 
-	handleWebviewWillAttach(event,
-		webPreferences, params) {
-			if(params.src.startsWith("about:blank")) {
-				const internalURL = new URL(params.src);
-				this.state.webViewSrc = internalURL.searchParams.get("url");
-			} else {
-				this.state.webViewSrc = params.src;
-			}
+	handleWebviewWillAttach(event, webPreferences, params) {
+		if (params.src.startsWith("about:blank")) {
+			const internalURL = new URL(params.src);
+			this.state.webViewSrc = internalURL.searchParams.get("url");
+		} else {
+			this.state.webViewSrc = params.src;
+		}
 	}
 
 	async handleStepsUpdated(event) {

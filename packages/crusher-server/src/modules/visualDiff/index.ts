@@ -4,7 +4,7 @@ import * as pixelmatch from "pixelmatch";
 import axios from "axios";
 import { StorageManager } from "@modules/storage";
 import { result } from "lodash";
-const jpeg = require('jpeg-js');
+const jpeg = require("jpeg-js");
 
 @Service()
 class VisualDiffService {
@@ -32,7 +32,7 @@ class VisualDiffService {
 			alpha: 0.8,
 		});
 
-		const diffJpegData = jpeg.encode({data: diffPngImage.data, width: diffPngImage.width, height: diffPngImage.height}, 70);
+		const diffJpegData = jpeg.encode({ data: diffPngImage.data, width: diffPngImage.width, height: diffPngImage.height }, 70);
 
 		return {
 			diffDeltaFactor: diffDeltaFactor,

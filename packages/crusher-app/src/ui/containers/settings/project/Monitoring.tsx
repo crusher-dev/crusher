@@ -136,7 +136,7 @@ function MonitoringForm({ id }) {
 					{!notSavedInDB ? "Delete" : ""}
 				</TextBlock>
 				<Button
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					css={css`
 						width: 120rem;
 					`}

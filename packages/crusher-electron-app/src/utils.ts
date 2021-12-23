@@ -39,11 +39,16 @@ export async function getReplayableTestActions(testId: number, isMainTest = true
 }
 
 export async function saveTest(events: Array<any>) {
-	axios.post(resolveToBackendPath("tests/actions/save.temp"), {
-		events: events
-	}, {
-		headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
-	})
+	axios
+		.post(
+			resolveToBackendPath("tests/actions/save.temp"),
+			{
+				events: events,
+			},
+			{
+				headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
+			},
+		)
 		.then(async (result) => {
 			shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}`));
 

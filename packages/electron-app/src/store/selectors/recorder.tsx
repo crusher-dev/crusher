@@ -5,3 +5,5 @@ export const getRecorderInfo = (state: iReduxState) => ({url: state.recorder.cur
 
 export const isInspectModeOn = (state: iReduxState) => state.recorder.isInspectModeOn;
 export const getSelectedElement = (state: iReduxState) => state.recorder.selectedElement;
+
+export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;

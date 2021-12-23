@@ -1,3 +1,4 @@
+import { iAction } from "@shared/types/action";
 import { iElementInfo, TRecorderState } from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
@@ -9,6 +10,7 @@ export const SET_SITE_URL = "SET_SITE_URL";
 export const SET_DEVICE = "SET_DEVICE";
 
 export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
+export const RECORD_STEP = "RECORD_STEP";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -43,4 +45,11 @@ export const setDevice = (device: any) => {
         type: SET_DEVICE,
         payload: { device }
     }
+}
+
+export const recordStep = (step: iAction) => {
+    return {
+        type: RECORD_STEP,
+        payload: { step: step, time: Date.now() }
+    };
 }

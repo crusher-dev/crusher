@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { SET_DEVICE, SET_SITE_URL } from "../actions/recorder";
+import { RECORD_STEP, SET_DEVICE, SET_SITE_URL } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 
@@ -58,6 +58,7 @@ interface IRecorderReducer {
 	isInspectModeOn: boolean;
 
 	selectedElement: iElementInfo | null;
+	savedSteps: Array<iAction>;
 };
 
 const initialState: IRecorderReducer = {
@@ -68,6 +69,7 @@ const initialState: IRecorderReducer = {
 	isInspectModeOn: false,
 
 	selectedElement: null,
+	savedSteps: [],
 };
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
@@ -81,6 +83,14 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 			return {
 				...state,
 				currentUrl: action.payload.url
+			}
+		case RECORD_STEP:
+			return {
+				...state,
+				savedSteps: [
+					...state.savedSteps,
+					action.payload.step
+				],
 			}
 		default:
 			return state;

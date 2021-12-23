@@ -12,7 +12,7 @@ import { InspectModeAction } from "./inspectModeAction";
 
 const ActionsPanel = ({className, ...props}: {className?: any}) => {
     const selected = useSelector(isInspectModeOn);
-	const selectedElement = !useSelector(getSelectedElement);
+	const selectedElement = useSelector(getSelectedElement);
 
     return (
         <div className={`${className}`} css={containerStyle}>

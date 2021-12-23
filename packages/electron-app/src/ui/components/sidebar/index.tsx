@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { getRecorderInfo } from "../../../store/selectors/recorder";
 import { Conditional } from "@dyson/components/layouts";
 import { ActionsPanel } from "./actionsPanel";
+import { StepsPanel } from "./steps";
 
 const Sidebar = ({className, ...props}: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
@@ -12,6 +13,7 @@ const Sidebar = ({className, ...props}: any) => {
         <div css={containerStyle} className={`${className}`}>
             <Conditional showIf={true || !!recorderInfo.url}>
                 <ActionsPanel />
+                <StepsPanel />
             </Conditional>
         </div>
     )

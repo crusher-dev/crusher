@@ -186,7 +186,7 @@ function SignupBox() {
 				css={css`
 					font-weight: 500;
 				`}
-				bgColor={"tertiary-dark"}
+				bgColor={"tertiary"}
 			>
 				<div className={"flex justify-center items-center"}>
 					<span>Continue with Email</span>

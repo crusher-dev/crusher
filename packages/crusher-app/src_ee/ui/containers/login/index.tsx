@@ -159,7 +159,7 @@ function EmailBox() {
 				css={css`
 					font-weight: 500;
 				`}
-				bgColor={"tertiary-dark"}
+				bgColor={"tertiary"}
 			>
 				<div className={"flex justify-center items-center"}>
 					<span>Continue with Email</span>
@@ -204,7 +204,7 @@ export const LoginContainer = () => {
 					{/*		css={css`*/}
 					{/*		font-weight: 500;*/}
 					{/*	`}*/}
-					{/*		bgColor={"tertiary-dark"}*/}
+					{/*		bgColor={"tertiary"}*/}
 					{/*		className={"mb-32"}*/}
 					{/*	>*/}
 					{/*		<div className={"flex justify-center items-center"}>*/}

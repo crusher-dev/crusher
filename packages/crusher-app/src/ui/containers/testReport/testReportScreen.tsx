@@ -14,16 +14,14 @@ import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequir
 import { backendRequest } from "@utils/common/backendRequest";
 import { timeSince } from "@utils/common/dateTimeUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
-import { getAllConfiguration, getStatusString, showReviewButton,getCountByTestStatus } from "@utils/core/buildReportUtils";
+import { getAllConfiguration, getStatusString, showReviewButton, getCountByTestStatus } from "@utils/core/buildReportUtils";
 
 import { usePageTitle } from "../../../hooks/seo";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { updateMeta } from "../../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import {
-	useMemo
-} from "react";
+import { useMemo } from "react";
 import { TestTypeLabel } from "@constants/test";
 
 const ReportSection = dynamic(() => import("./testList"));
@@ -95,7 +93,7 @@ function NameNStatusSection() {
 				<TitleSection />
 				<Button
 					size={"small"}
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					className={"ml-20"}
 					css={css`
 						width: 96rem;
@@ -193,11 +191,9 @@ function TestOverviewTab() {
 	const showReview = showReviewButton(data?.status);
 
 	const allConfiguration = getAllConfiguration(data?.tests);
-	const countByTestStatus = useMemo(()=>{
-		return getCountByTestStatus(data?.tests)
-	},[data]);
-
-
+	const countByTestStatus = useMemo(() => {
+		return getCountByTestStatus(data?.tests);
+	}, [data]);
 
 	return (
 		<div className={"flex mt-48 justify-between"}>
@@ -211,7 +207,7 @@ function TestOverviewTab() {
 						<div className={"flex items-center"}>
 							<Conditional showIf={showReview}>
 								<Button
-									bgColor={"tertiary-dark"}
+									bgColor={"tertiary"}
 									css={css`
 										width: 148rem;
 									`}
@@ -221,7 +217,7 @@ function TestOverviewTab() {
 								</Button>
 							</Conditional>
 							<Button
-								bgColor={"tertiary-dark"}
+								bgColor={"tertiary"}
 								css={css`
 									width: 148rem;
 								`}
@@ -242,14 +238,22 @@ function TestOverviewTab() {
 						))}
 					</div>
 
-					<div css={css`
-						background: #0A0B0E;
-						height: 64rem;
-					`} className={"flex text-12.5 font-600 w-full mt-100 justify-center"}>
-						{Object.entries(countByTestStatus).map(([status,count])=>{
-							return (<div className={"flex items-center px-28"}>
-								<TestStatusSVG type={status} height={"18rem"} width={"18rem"} /> <span className={"ml-12 leading-none"}>{count} {TestTypeLabel[status]}</span>
-							</div>)
+					<div
+						css={css`
+							background: #0a0b0e;
+							height: 64rem;
+						`}
+						className={"flex text-12.5 font-600 w-full mt-100 justify-center"}
+					>
+						{Object.entries(countByTestStatus).map(([status, count]) => {
+							return (
+								<div className={"flex items-center px-28"}>
+									<TestStatusSVG type={status} height={"18rem"} width={"18rem"} />{" "}
+									<span className={"ml-12 leading-none"}>
+										{count} {TestTypeLabel[status]}
+									</span>
+								</div>
+							);
 						})}
 					</div>
 				</div>

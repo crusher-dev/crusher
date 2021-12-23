@@ -1,8 +1,7 @@
 import ReactDOM from "react-dom";
 import { css, SerializedStyles } from "@emotion/react";
 import { useFloating, shift, autoPlacement, offset } from "@floating-ui/react-dom";
-import React,{ ReactElement,useState,useEffect, useMemo,useRef, SyntheticEvent,useCallback  } from "react";
-
+import React, { ReactElement, useState, useEffect, useMemo, useRef, SyntheticEvent, useCallback } from "react";
 
 export type TooltipWrapperProps = {
 	type?: "click" | "hover";

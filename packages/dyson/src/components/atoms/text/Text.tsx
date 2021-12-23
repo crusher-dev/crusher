@@ -13,8 +13,8 @@ export type TextProps = {
 
 const TextDefaultProps = {
 	fontSize: 12,
-	leading: false,
-	weight: 700,
+	showLineHeight: false,
+	weight: 400,
 	color: "#fff",
 };
 /**

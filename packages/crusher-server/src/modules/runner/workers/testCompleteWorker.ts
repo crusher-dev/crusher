@@ -149,73 +149,88 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	}
 };
 
-async function getSlackMessageBlockForBuildReport(buildRecord: KeysToCamelCase<IBuildTable>, projectRecord: KeysToCamelCase<IProjectTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>, userInfo: KeysToCamelCase<IUserTable>, reportStatus: BuildReportStatusEnum): Promise<Array<any>> {
-	
-	const  infoFields = [
+async function getSlackMessageBlockForBuildReport(
+	buildRecord: KeysToCamelCase<IBuildTable>,
+	projectRecord: KeysToCamelCase<IProjectTable>,
+	buildReportRecord: KeysToCamelCase<IBuildReportTable>,
+	userInfo: KeysToCamelCase<IUserTable>,
+	reportStatus: BuildReportStatusEnum,
+): Promise<Array<any>> {
+	const infoFields = [
 		{
-			"type": "mrkdwn",
-			"text": `*Build Id:*\n${buildRecord.id}`
+			type: "mrkdwn",
+			text: `*Build Id:*\n${buildRecord.id}`,
 		},
 		{
-			"type": "mrkdwn",
-			"text": `*Tests Count:*\n${buildReportRecord.totalTestCount}`
+			type: "mrkdwn",
+			text: `*Tests Count:*\n${buildReportRecord.totalTestCount}`,
 		},
 		{
-			"type": "mrkdwn",
-			"text": `*Triggerred By:*\n${userInfo.name}`
+			type: "mrkdwn",
+			text: `*Triggerred By:*\n${userInfo.name}`,
 		},
 		{
-			"type": "mrkdwn",
-			"text": `*Status:*\n${reportStatus}`
-		}
+			type: "mrkdwn",
+			text: `*Status:*\n${reportStatus}`,
+		},
 	];
 
-	if(buildRecord.host && buildRecord.host !== "null") {
+	if (buildRecord.host && buildRecord.host !== "null") {
 		infoFields.push({
-			"type": "mrkdwn",
-			"text": `*Host*:\n${buildRecord.host}`
+			type: "mrkdwn",
+			text: `*Host*:\n${buildRecord.host}`,
 		});
 	}
-	
+
 	return [
 		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}|#${buildRecord.latestReportId}>*`
-			}
+			type: "section",
+			text: {
+				type: "mrkdwn",
+				text: `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}|#${
+					buildRecord.latestReportId
+				}>*`,
+			},
 		},
 		{
-			"type": "section",
-			"fields": infoFields
+			type: "section",
+			fields: infoFields,
 		},
 		{
-			"type": "actions",
-			"elements": [
+			type: "actions",
+			elements: [
 				{
-					"type": "button",
-					"text": {
-						"type": "plain_text",
-						"text": "View Reports",
-						"emoji": true
+					type: "button",
+					text: {
+						type: "plain_text",
+						text: "View Reports",
+						emoji: true,
 					},
-					"value": "click_me_123",
-					"url": resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
-					"action_id": "button-action"
-				}
-			]
-		}
-	]
+					value: "click_me_123",
+					url: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+					action_id: "button-action",
+				},
+			],
+		},
+	];
 }
 
-async function handleIntegrations(buildRecord: KeysToCamelCase<IBuildTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>, reportStatus: BuildReportStatusEnum) {
-	const userInfo = await usersService.getUserInfo(buildRecord.userId)
+async function handleIntegrations(
+	buildRecord: KeysToCamelCase<IBuildTable>,
+	buildReportRecord: KeysToCamelCase<IBuildReportTable>,
+	reportStatus: BuildReportStatusEnum,
+) {
+	const userInfo = await usersService.getUserInfo(buildRecord.userId);
 	const projectRecord = await projectsService.getProject(buildRecord.projectId);
 
 	// Github Integration
 	await buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
 	// Slack Integration
-	await projectIntegrationsService.postSlackMessageIfNeeded(buildRecord.projectId, await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus), reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert");
+	await projectIntegrationsService.postSlackMessageIfNeeded(
+		buildRecord.projectId,
+		await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus),
+		reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert",
+	);
 }
 
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {

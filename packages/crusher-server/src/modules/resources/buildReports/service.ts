@@ -69,10 +69,10 @@ export class BuildReportService {
 		// @TODO: Cleanup tihs logic and use proper typescript types
 		return actionResults.map((actionResult, actionIndex) => {
 			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType)) {
-				if(!actionResult.meta || !actionResult.meta.outputs) return actionResult;
+				if (!actionResult.meta || !actionResult.meta.outputs) return actionResult;
 
 				const images = actionResult.meta.outputs;
-				for(let imageIndex = 0; imageIndex < images.length; imageIndex++) {
+				for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
 					const screenshotResultRecord = instanceScreenshotsRecordsMap[`${actionIndex}.${imageIndex}`];
 					if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
 						if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {

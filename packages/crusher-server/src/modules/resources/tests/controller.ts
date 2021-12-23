@@ -47,9 +47,9 @@ export class TestController {
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number; },
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number },
 	): Promise<IProjectTestsListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
-		if(!params.page) params.page = 0;
+		if (!params.page) params.page = 0;
 
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
 		const testsList = testsListData.list.map((testData) => {

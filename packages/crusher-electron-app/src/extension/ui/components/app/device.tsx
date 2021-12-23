@@ -49,7 +49,7 @@ const Device = (props: iDeviceProps) => {
 						<div>
 							<div style={{ ...pageLoadingCoverTextStyle, marginTop: 0, display: "flex", alignItems: "center" }}>
 								<span>{"We're running test for you. You can't perform actions right now"}</span>
-								<LoadingIcon style={{width: 30, height: 30, marginLeft: 4}}/>
+								<LoadingIcon style={{ width: 30, height: 30, marginLeft: 4 }} />
 							</div>
 						</div>
 					</div>
@@ -60,7 +60,7 @@ const Device = (props: iDeviceProps) => {
 				<div style={{ background: "rgba(10, 10, 10, 0.925)" }} className="absolute flex h-full w-full justify-center items-center">
 					<div>
 						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
-						<div style={{...pageLoadingCoverTextStyle, color: "#fff"}}>{"Please wait while we're loading next page"}</div>
+						<div style={{ ...pageLoadingCoverTextStyle, color: "#fff" }}>{"Please wait while we're loading next page"}</div>
 					</div>
 				</div>
 			</Conditional>

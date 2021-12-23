@@ -72,14 +72,14 @@ const inputBox = (sizeStyle) => css`
 	border-radius: 4px;
 	height: ${sizeStyle.height}rem;
 	padding-top: 3rem;
-	font-size: 13rem;
+	font-size: ${sizeStyle.fontSize}rem;
 	padding-left: 16rem;
 	color: #fff;
 
 	width: 100%;
 
 	:focus {
-		border-color: #6893e7;
+		border-color: #8860de;
 		//box-shadow: rgba(104, 147, 231, 0.11) 0px 0px 10px 10px;
 	}
 `;
@@ -91,13 +91,13 @@ const errorState = css`
 function getSizePropery(size) {
 	switch (size) {
 		case "small":
-			return { height: 20 };
+			return { height: 26, fontSize: 12 };
 			break;
 		case "large":
-			return { height: 46 };
+			return { height: 42, fontSize: 14 };
 			break;
 		default:
-			return { height: 34 };
+			return { height: 34, fontSize: 13 };
 			break;
 	}
 }

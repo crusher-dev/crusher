@@ -24,7 +24,6 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 	_set(projectsAtom, data.projects);
 
 	if (!!data.userData) {
-
 		Analytics.identify(
 			data.userData.name,
 			data.userData.userId,

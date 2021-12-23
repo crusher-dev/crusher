@@ -130,7 +130,7 @@ class BuildTestInstancesService {
 		const referenceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshots(buildTestInstanceResultSet.targetInstanceId);
 		const currentScreenshots = await this.buildTestInstanceScreenshotService.getScreenshots(instanceId);
 
-		const instanceScreenshotsMap:  { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = currentScreenshots.reduce((acc, refScreenshot) => {
+		const instanceScreenshotsMap: { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = currentScreenshots.reduce((acc, refScreenshot) => {
 			return { ...acc, [refScreenshot.actionIndex]: refScreenshot };
 		}, {});
 
@@ -141,7 +141,7 @@ class BuildTestInstancesService {
 		const visualDiffResultsPromiseArr = savedScreenshotRecords.map(async (screenshotResult) => {
 			const baseImageRecord = instanceScreenshotsMap[screenshotResult.screenshotIndex];
 			const referenceImageRecord = referenceScreenshotsMap[screenshotResult.screenshotIndex];
- 
+
 			const baseImage = {
 				name: baseImageRecord.name,
 				value: baseImageRecord.url,

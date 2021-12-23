@@ -98,7 +98,7 @@ function VariableSection({ envId }) {
 
 			<div className={"flex justify-end mt-12 mb-20"}>
 				<Button
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					className={"flex items-center text-12"}
 					css={css`
 						height: 24rem;
@@ -232,7 +232,7 @@ function EnvironmentForm({ id }) {
 					{!notSavedInDB ? "Delete" : ""}
 				</TextBlock>
 				<Button
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					css={css`
 						width: 120rem;
 					`}

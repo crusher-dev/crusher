@@ -119,5 +119,6 @@ export class WebView {
 		ipcMain.removeAllListeners("turn-on-inspect-mode");
 		ipcMain.removeAllListeners("turn-off-inspect-mode");
 		ipcMain.removeAllListeners("post-message-to-webview");
+		this.playwrightInstance.dispose();
 	}
 }

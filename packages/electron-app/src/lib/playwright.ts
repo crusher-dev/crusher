@@ -163,6 +163,10 @@ class PlaywrightInstance {
 			path: scriptPath,
 		});
 	}
+
+	public dispose(){
+		this.browser.close();
+	}
 }
 
 export { PlaywrightInstance };

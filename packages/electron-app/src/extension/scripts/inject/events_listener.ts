@@ -25,13 +25,11 @@ function boot() {
 
 		const recordingOverlay = new EventRecording({});
 		requestRecordingStatusFromExtension();
-		if((window as any).electron) 
-		(window as any).electron.webview.addEventListener && (window as any).electron.webview.addEventListener("message", responseMessageListener.bind(window, recordingOverlay), false);
+
+		recordingOverlay.boot();
 	});
 }
 
 if (frameDepth === 0 && !window.location.href.startsWith("chrome-extension://")) {
-	if(!(window as any).eventRecorderExecuted) {
-		boot();
-	}
+	boot();
 }

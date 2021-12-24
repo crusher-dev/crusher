@@ -668,10 +668,10 @@ export default class EventRecording {
 			currentURL.searchParams.delete("__crusherAgent__");
 			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.NAVIGATE_URL, document.body, currentURL.toString());
 		}
-		(window as any).electron.host.postMessage({
-			type: MESSAGE_TYPES.RECORDER_BOOTED,
-			frameId: null,
-		});
+		// (window as any).electron.host.postMessage({
+		// 	type: MESSAGE_TYPES.RECORDER_BOOTED,
+		// 	frameId: null,
+		// });
 		this.registerNodeListeners();
 	}
 

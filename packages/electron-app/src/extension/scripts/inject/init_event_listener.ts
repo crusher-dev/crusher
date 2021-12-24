@@ -1,6 +1,8 @@
 import { getFrameDepth } from "../../utils/helpers";
 const frameDepth = getFrameDepth(window.self);
 
+console.log("Here is here");
+
 async function load() {
 	const contentScript = await (window as any).electron.getContentScript();
 	const script = document.createElement("script");

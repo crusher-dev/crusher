@@ -52,7 +52,9 @@ export class WebView {
         this.registerIPCListeners();
         await this.playwrightInstance.connect();
 
+		console.log("Path is", path.join(__dirname, "extension/js/content_script.js"));
         await this.playwrightInstance.addInitScript(path.join(__dirname, "extension/js/content_script.js"));
+		await this.webContents.openDevTools();
     }
 
 	registerIPCListeners() {

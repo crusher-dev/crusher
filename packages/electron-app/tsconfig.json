@@ -24,6 +24,7 @@
 		"allowSyntheticDefaultImports": true,
 		"paths": {
 			"@shared/*": ["crusher-shared/*"],
+			"@crusher-shared/*": ["crusher-shared/*"],
 			"@dyson/*": ["dyson/src/*"],
 		},
 	},

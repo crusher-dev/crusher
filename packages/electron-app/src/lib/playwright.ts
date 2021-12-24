@@ -157,6 +157,12 @@ class PlaywrightInstance {
             }
         });
 	}
+
+	public addInitScript(scriptPath: string) {
+		return this.browser.contexts()[0].addInitScript({
+			path: scriptPath,
+		});
+	}
 }
 
 export { PlaywrightInstance };

@@ -7,11 +7,15 @@ import { Emitter, Disposable } from "event-kit";
 import { now } from './now';
 import { AnyAction, Store } from 'redux';
 import { Recorder } from './recorder';
+import { WebView } from './webview';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
     private recorder: Recorder
+    private webView: WebView;
     private emitter = new Emitter()
+
+    private store: Store<unknown, AnyAction>;
 
     private _loadTime: number | null = null
     private _rendererReadyTime: number | null = null
@@ -28,6 +32,7 @@ export class AppWindow {
             maximize: false,
         });
         this.recorder = new Recorder(store);
+        this.store = store;
 
         const windowOptions: Electron.BrowserWindowConstructorOptions = {
             title: APP_NAME,
@@ -92,6 +97,7 @@ export class AppWindow {
             this.window.show()
         });
 
+        this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
 
         ipcMain.once(
             'renderer-ready',
@@ -109,6 +115,13 @@ export class AppWindow {
         /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'))
     }
+
+    async handleWebviewAttached(event, webContents) {
+        this.webView = new WebView(this);
+		await this.webView.initialize();
+
+        console.log("Webview initialized");
+	}
 
     public getRecorder() {
         return this.recorder;

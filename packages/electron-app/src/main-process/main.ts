@@ -33,7 +33,11 @@ let onDidLoadFns: Array<OnDidLoadFn> | null = []
 function setupElectronApp() {
 	app.setName(APP_NAME);
 	app.setAppLogsPath()
-	app.commandLine.appendSwitch('disable-features', 'CrossOriginOpenerPolicy')
+
+	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+	app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
+	// For replaying actions
+	app.commandLine.appendSwitch("--remote-debugging-port", "9112");
 
 	app.setAboutPanelOptions({
 		applicationName: APP_NAME,

@@ -3,20 +3,24 @@ import { css } from "@emotion/react";
 import { getRecorderInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
-import { useEffect } from "dyson/node_modules/@types/react";
+import * as url from "url";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
 
+    const getPreloadScriptPath = () => {
+        return url.resolve(window.location.href, "./webview-preload.js");
+    };
+
     return (
         <div css={containerStyle}>
             <Conditional showIf={!!recorderInfo.device}>
-                <div style={{width: recorderInfo.device?.width, height: recorderInfo.device?.height, maxWidth: "100%", maxHeight: "100%"}}>
+                <div style={{width: `${recorderInfo.device?.width}rem`, height: `${recorderInfo.device?.height}rem`, maxWidth: "100%", maxHeight: "100%"}}>
                     <webview
                         css={webviewStyle}
                         id="device_browser"
                         nodeintegration={"true"}
-                                            // preload={"file://" + (window as any).electron.getAppPath() + "/webViewPreload.js"}
+                        preload={getPreloadScriptPath()}
                                             //@ts-ignore
                         enableremotemodule={"true"}
                         title={"crusher-webview"}

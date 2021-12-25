@@ -16,6 +16,8 @@ function requestRecordingStatusFromExtension() {
 }
 
 function boot() {
+	console.log("Global", global.sendMessageToWebView);
+
 	(window as any).eventRecorderExecuted = true;
 
 	window.addEventListener("load", () => {

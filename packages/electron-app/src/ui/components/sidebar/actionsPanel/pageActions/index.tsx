@@ -1,7 +1,9 @@
 import React from "react";
 import {css} from "@emotion/react";
-import { ActionsList, ActionsListItem } from "./actionsList";
+import { ActionsList, ActionsListItem } from "../actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
+import { WaitModal } from "./waitModal";
+import { RunAfterTestModal } from "./runAfterTestModal";
 
 enum TTopLevelActionsEnum {
     VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
@@ -35,11 +37,24 @@ const topActionsList = [
 ];
 
 const PageActions = ({className, ...props}: {className?: any}) => {
+	const [currentModal, setCurrentModal] = React.useState(null);
 
     const handleActionSelected = (id: TTopLevelActionsEnum) => {
         switch(id) {
 			case TTopLevelActionsEnum.VIEWPORT_SCREENSHOT:
 				performTakePageScreenshot();
+				break;
+			case TTopLevelActionsEnum.WAIT:
+				setCurrentModal(TTopLevelActionsEnum.WAIT);
+				break;
+			case TTopLevelActionsEnum.SHOW_SEO_MODAL:
+				setCurrentModal(TTopLevelActionsEnum.SHOW_SEO_MODAL);
+				break;
+			case TTopLevelActionsEnum.CUSTOM_CODE:
+				setCurrentModal(TTopLevelActionsEnum.CUSTOM_CODE);
+				break;
+			case TTopLevelActionsEnum.RUN_AFTER_TEST:
+				setCurrentModal(TTopLevelActionsEnum.RUN_AFTER_TEST);
 				break;
 			default:
 				break;
@@ -50,9 +65,17 @@ const PageActions = ({className, ...props}: {className?: any}) => {
 		return <ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
 	});
 
+	const closeModal = () => {
+		setCurrentModal(null);
+	}
+
 
     return (
-        <ActionsList className={`${className}`} css={containerStyle} title="Page List">{items}</ActionsList>
+		<>
+        	<ActionsList className={`${className}`} css={containerStyle} title="Page List">{items}</ActionsList>
+			<WaitModal isOpen={currentModal === TTopLevelActionsEnum.WAIT} handleClose={closeModal} />
+			<RunAfterTestModal isOpen={currentModal === TTopLevelActionsEnum.RUN_AFTER_TEST} handleClose={closeModal} />
+		</>
     )
 };
 

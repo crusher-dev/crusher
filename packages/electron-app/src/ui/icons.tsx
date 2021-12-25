@@ -1,3 +1,4 @@
+import { css } from "@emotion/react";
 import React from "react";
 
 const SettingsIcon = (props: any) => {
@@ -78,4 +79,109 @@ const WarningIcon = (props) => (
 	</svg>
 );
 
-export { SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon };
+const BrowserIcon = (props: any) => {
+	return (
+		<svg width={37} height={37} viewBox="0 0 37 37" fill="none" {...props}>
+			<g clipPath="url(#prefix__clip0)">
+				<path
+					d="M32.375 1.542H4.625A4.63 4.63 0 000 6.167v24.666a4.63 4.63 0 004.625 4.625h27.75A4.63 4.63 0 0037 30.833V6.167a4.63 4.63 0 00-4.625-4.625z"
+					fill="#607D8B"
+				/>
+				<path d="M32.375 32.375H4.625c-.85 0-1.542-.69-1.542-1.542V9.25h30.833v21.583c0 .851-.692 1.542-1.541 1.542z" fill="#fff" />
+				<path
+					d="M24.209 22.306c.029-.239.072-.476.072-.723 0-.248-.043-.484-.072-.723l1.387-1.051a.772.772 0 00.202-1l-1.247-2.159a.771.771 0 00-.967-.325L21.985 17a5.784 5.784 0 00-1.262-.75l-.213-1.698a.77.77 0 00-.763-.677h-2.493a.77.77 0 00-.765.675l-.212 1.698a5.792 5.792 0 00-1.263.75l-1.599-.675a.775.775 0 00-.968.327L11.2 18.808a.772.772 0 00.202 1l1.388 1.052c-.028.24-.071.475-.071.723s.043.484.072.723l-1.388 1.052a.772.772 0 00-.201 1l1.247 2.159a.771.771 0 00.966.325l1.6-.675c.39.296.804.56 1.262.75l.212 1.698a.77.77 0 00.764.677h2.492a.77.77 0 00.765-.676l.213-1.697a5.783 5.783 0 001.262-.75l1.6.674c.357.152.772.011.966-.325l1.247-2.158a.772.772 0 00-.202-1l-1.387-1.054z"
+					fill="#4CAF50"
+				/>
+				<path d="M18.5 24.667a3.084 3.084 0 110-6.167 3.084 3.084 0 010 6.167z" fill="#fff" />
+				<path
+					d="M18.5 1.542H4.625A4.63 4.63 0 000 6.167v24.666a4.63 4.63 0 004.625 4.625H18.5v-3.083H4.625c-.85 0-1.542-.69-1.542-1.542V9.25H18.5V1.542z"
+					fill="#546D79"
+				/>
+				<path
+					d="M18.5 9.25H3.083v21.583c0 .851.692 1.542 1.542 1.542H18.5v-3.083h-1.247a.77.77 0 01-.765-.676l-.213-1.697a5.786 5.786 0 01-1.263-.75l-1.598.674a.773.773 0 01-.968-.325l-1.248-2.158a.772.772 0 01.202-1l1.388-1.052c-.026-.24-.07-.477-.07-.725s.044-.484.073-.723l-1.388-1.051a.772.772 0 01-.202-1l1.248-2.159a.771.771 0 01.968-.325l1.598.675c.39-.296.805-.56 1.263-.75l.213-1.698a.767.767 0 01.762-.677H18.5V9.25z"
+					fill="#DEDEDE"
+				/>
+				<path
+					d="M18.5 13.875h-1.247a.77.77 0 00-.765.675l-.212 1.698a5.79 5.79 0 00-1.263.75l-1.599-.675a.773.773 0 00-.968.325L11.2 18.807a.772.772 0 00.202 1l1.388 1.052c-.027.24-.07.476-.07.724s.043.484.073.723l-1.388 1.052a.772.772 0 00-.202 1l1.247 2.159a.773.773 0 00.969.325l1.598-.675c.39.296.805.56 1.263.75l.213 1.698a.767.767 0 00.761.677H18.5v-4.625a3.084 3.084 0 010-6.167v-4.625z"
+					fill="#429846"
+				/>
+				<path d="M18.5 18.5a3.083 3.083 0 000 6.167V18.5z" fill="#DEDEDE" />
+			</g>
+			<defs>
+				<clipPath id="prefix__clip0">
+					<path fill="#fff" d="M0 0h37v37H0z" />
+				</clipPath>
+			</defs>
+		</svg>
+	);
+};
+
+const CloseModalIcon = (props: any) => {
+	return (
+		<svg width={17} height={17} viewBox="0 0 17 17" fill="none" css={css`fill: #ffffff1a; path { fill: inherit; } &:hover {fill: #9F9F9F}`} {...props} >
+			<path
+				d="M16.564 13.792L3.241.47a1.487 1.487 0 00-2.103 0l-.702.701a1.487 1.487 0 000 2.104l13.323 13.323a1.487 1.487 0 002.103 0l.701-.701a1.486 1.486 0 00.001-2.104z"
+			/>
+			<path
+				d="M13.759.47L.436 13.793a1.487 1.487 0 000 2.103l.7.701a1.487 1.487 0 002.104 0L16.564 3.276a1.486 1.486 0 000-2.103l-.701-.7A1.487 1.487 0 0013.759.47z"
+			/>
+		</svg>
+	);
+};
+
+const LoadingIcon = (props) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			style={{
+				margin: "auto",
+				background: "#fff",
+			}}
+			width={200}
+			height={200}
+			viewBox="0 0 100 100"
+			preserveAspectRatio="xMidYMid"
+			display="block"
+			{...props}
+		>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(30 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(60 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(90 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(120 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(150 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(180 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(210 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(240 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(270 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(300 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite" />
+			</rect>
+			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(330 50 50)">
+				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite" />
+			</rect>
+		</svg>
+	);
+};
+
+export { SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon };

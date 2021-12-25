@@ -1,6 +1,6 @@
 import React from "react";
 import {css} from "@emotion/react";
-import { ActionsList, ActionsListItem } from "./actionsList";
+import { ActionsList, ActionsListItem } from "../actionsList";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector, useStore } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
@@ -42,6 +42,8 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 	const selectedElement = useSelector(getSelectedElement);
 	const store = useStore();
 
+	const [currentModal, setCurrentModal] = React.useState(null);
+
     const handleActionSelected = (id: TElementActionsEnum) => {
 		switch(id) {
 			case TElementActionsEnum.CLICK:
@@ -55,6 +57,12 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 			case TElementActionsEnum.SCREENSHOT:
 				peformTakeElementScreenshot(selectedElement, store);
 				store.dispatch(setSelectedElement(null));
+				break;
+			case TElementActionsEnum.SHOW_ASSERT_MODAL:
+				setCurrentModal(TElementActionsEnum.SHOW_ASSERT_MODAL);
+				break;
+			case TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL:
+				setCurrentModal(TElementActionsEnum.SHOW_ASSERT_MODAL);
 				break;
 		}
     };

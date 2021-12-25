@@ -9,7 +9,7 @@ import { Conditional } from "@dyson/components/layouts";
 import { useSelector } from "react-redux";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { MoreIcon } from "electron-app/src/extension/assets/icons";
-import { WarningIcon } from "electron-app/src/ui/icons";
+import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ACTION_DESCRIPTIONS } from "electron-app/src/extension/constants/actionDescriptions";
 
@@ -30,6 +30,9 @@ const Step = ({
 					</TextBlock>
 					<TextBlock css={stepSubtitleStyle}>{subtitle}</TextBlock>
 				</div>
+				<Conditional showIf={isRunning}>
+					<LoadingIcon  style={{width: 30, height: 30, marginLeft: 4}} css={css`margin-left: auto;`}/>
+				</Conditional>
 				<Conditional showIf={isFailed}>
 					<MoreIcon />
 					<TextBlock css={stepWarningStyle}>

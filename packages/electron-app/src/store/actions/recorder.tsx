@@ -13,6 +13,7 @@ export const SET_DEVICE = "SET_DEVICE";
 export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
 export const RECORD_STEP = "RECORD_STEP";
 export const UPDATE_CURRENT_RUNNING_STEP_STATUS = "UPDATE_CURRENT_RUNNING_STEP_STATUS";
+export const UPDATE_RECORDED_STEP = "UPDATE_RECORDED_STEP";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -55,6 +56,13 @@ export const recordStep = (step: iAction, status: ActionStatusEnum = ActionStatu
         payload: { step: step, time: Date.now(), status: status }
     };
 }
+
+export const updateRecordedStep = (action: iAction, id: number) => {
+    return {
+        type: UPDATE_RECORDED_STEP,
+        payload: { action, id }
+    }
+};
 
 export const updateCurrentRunningStepStatus = (status: ActionStatusEnum) => {
     return {

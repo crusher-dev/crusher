@@ -127,11 +127,13 @@ export class AppWindow {
     private turnOnInspectMode() {
         this.store.dispatch(setInspectMode(true));
         this.webView._turnOnInspectMode();
+        this.webView.webContents.focus();
     }
 
     private turnOffInspectMode() {
         this.store.dispatch(setInspectMode(false));
         this.webView._turnOffInspectMode();
+        this.webView.webContents.focus();
     }
 
     private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction, shouldNotSave?: boolean }) {

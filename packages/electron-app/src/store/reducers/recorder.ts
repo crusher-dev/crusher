@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { RECORD_STEP, SET_DEVICE, SET_INSPECT_MODE, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS } from "../actions/recorder";
+import { RECORD_STEP, SET_DEVICE, SET_INSPECT_MODE, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -75,6 +75,14 @@ const initialState: IRecorderReducer = {
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
 	switch (action.type) {
+		case UPDATE_RECORDED_STEP: {
+			const newSavedSteps = [...state.savedSteps];
+			newSavedSteps[action.payload.id] = action.payload.action;
+			return {
+				...state,
+				savedSteps: newSavedSteps
+			};
+		}
 		case SET_DEVICE:
 			return {
 				...state,

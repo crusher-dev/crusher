@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { getRecorderInfo } from "electron-app/src/store/selectors/recorder";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
@@ -9,11 +9,12 @@ import { TRecorderMessagesType } from "electron-app/src/extension/scripts/inject
 import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ipcRenderer } from "electron";
+import { saveAutoAction } from "../../commands/saveActions";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
     const ref = React.useRef<HTMLWebViewElement>(null);
-    const dispatch = useDispatch();
+    const store = useStore();
 
     const getPreloadScriptPath = () => {
         return url.resolve(window.location.href, "./webview-preload.js");
@@ -27,7 +28,7 @@ const DeviceFrame = (props: any) => {
                     const { type, payload } = args[0];
                     switch(type) {
                         case TRecorderMessagesType["Commands.recordAction"]:
-                            dispatch(recordStep(payload.action, ActionStatusEnum.COMPLETED));
+                            saveAutoAction(payload.action, store);
                             break;
                         case TRecorderMessagesType["Commands.turnOnInspectMode"]:
                             console.log("Callend to turn on inspect mode");
@@ -40,7 +41,7 @@ const DeviceFrame = (props: any) => {
                         case TRecorderMessagesType["Commands.turnOnElementMode"]:
                             ipcRenderer.invoke("turn-off-recorder-inspect-mode");
                             const { selectedElementInfo } = payload;
-                            dispatch(setSelectedElement(selectedElementInfo));
+                            store.dispatch(setSelectedElement(selectedElementInfo));
                             break;
                     }
                 }

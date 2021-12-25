@@ -1,0 +1,244 @@
+{
+	"parser": "babel",
+	"formatter": [
+		"progress-bar",
+		{
+			"minCount": 10
+		}
+	],
+	"processors": ["javascript", "json", "markdown", "ignore", "yaml", "css"],
+	"match": {
+		"*.{mjs,ts,tsx}": {
+			"strict-mode/remove": "off",
+			"strict-mode/add": "off"
+		},
+		"*.{jsx,js,cjs}": {
+			"strict-mode": "on"
+		},
+		"{.,}putout.json": {
+			"putout-config": "on"
+		},
+		".madrun.{js,cjs,mjs}": {
+			"madrun": "on"
+		},
+		"*.md": {
+			"convert-quotes-to-backticks": "off",
+			"convert-comparison-to-boolean": "off",
+			"remove-unused-expressions": "off",
+			"remove-unused-variables": "off",
+			"remove-useless-escape": "off",
+			"remove-useless-variables": "off",
+			"remove-useless-return": "off",
+			"remove-empty": "off",
+			"remove-unused-for-of-variables": "off",
+			"remove-constant-conditions": "off",
+			"remove-console": "off",
+			"remove-unreachable-code": "off",
+			"declare-undefined-variables": "off"
+		},
+		"{*rc,*.{json,yml}}": {
+			"convert-quotes-to-backticks": "off",
+			"remove-useless-escape": "off",
+			"apply-numeric-separators": "off"
+		},
+		".github/**/*.yml": {
+			"github": "on",
+			"remove-useless-escape": "off"
+		},
+		".gitignore": {
+			"gitignore": "on"
+		},
+		".npmignore": {
+			"npmignore": "on"
+		},
+		"webpack.config.js": {
+			"webpack": "on"
+		},
+		"browserlist": {
+			".browserlistrc": "on"
+		},
+		".eslintrc.json": {
+			"eslint": "on"
+		},
+		"package.json": {
+			"package-json": "on"
+		},
+		"bin": {
+			"remove-process-exit": "off",
+			"remove-console": "off",
+			"convert-top-level-return": "on",
+			"remove-empty/import": "off"
+		},
+		"{test,*.spec.{js,mjs,cjs}}": {
+			"tape": "on"
+		},
+		"*.mjs": {
+			"convert-commonjs-to-esm": "on",
+			"convert-mock-require-to-mock-import": "on"
+		},
+		"*.cjs": {
+			"convert-esm-to-commonjs": "on"
+		},
+		"*.{tsl,tsxl}": {
+			"apply-as-type-assertions": "on",
+			"apply-utility-types": "on",
+			"convert-generic-to-shorthand": "on",
+			"remove-duplicate-interface-keys": "on",
+			"remove-useless-types": "on",
+			"remove-useless-mapped-types": "on",
+			"remove-useless-mapping-modifiers": "on",
+			"remove-useless-types-from-constants": "on",
+			"remove-unused-types": "on"
+		},
+		"*.d.ts": {
+			"declare-undefined-variables": "off"
+		}
+	},
+	"ignore": [
+		"**/node_modules",
+		"**/fixture",
+		"**/.nyc_output",
+		"**/.yarn",
+		"**/.pnp.*",
+		"**/coverage",
+		"**/dist",
+		"**/dist-dev",
+		"**/build",
+		"**/package-lock.json"
+	],
+	"rules": {
+		"apply-array-at": "off",
+		"apply-as-type-assertions": "off",
+		"apply-utility-types": "off",
+		"convert-esm-to-commonjs": "off",
+		"convert-commonjs-to-esm": "off",
+		"convert-top-level-return": "off",
+		"convert-generic-to-shorthand": "off",
+		"remove-useless-types": "off",
+		"remove-useless-mapped-types": "off",
+		"remove-useless-mapping-modifiers": "off",
+		"remove-useless-types-from-constants": "off",
+		"remove-unused-types": "off",
+		"putout": "off",
+		"putout-config": "off",
+		"eslint": "off",
+		"package-json": "off",
+		"madrun": "off",
+		"webpack": "off",
+		"gitignore": "off",
+		"npmignore": "off",
+		"github": "off",
+		"tape": "off",
+		"strict-mode": "off",
+		"regexp/convert-replace-to-replace-all": "off",
+		"convert-mock-require-to-mock-import": "off",
+		"remove-duplicate-interface-keys": "off"
+	},
+	"plugins": [
+		"apply-array-at",
+		"apply-await-import",
+		"apply-is-array",
+		"apply-destructuring",
+		"apply-optional-chaining",
+		"apply-numeric-separators",
+		"apply-as-type-assertions",
+		"apply-utility-types",
+		"apply-if-condition",
+		"extract-object-properties",
+		"extract-sequence-expressions",
+		"madrun",
+		"webpack",
+		"eslint",
+		"package-json",
+		"remove-debugger",
+		"remove-iife",
+		"remove-process-exit",
+		"remove-console",
+		"remove-empty",
+		"remove-unreferenced-variables",
+		"remove-unused-variables",
+		"remove-unused-types",
+		"remove-unused-for-of-variables",
+		"remove-unused-private-fields",
+		"remove-unused-expressions",
+		"remove-useless-variables",
+		"remove-useless-map",
+		"remove-useless-new",
+		"remove-useless-constructor",
+		"remove-useless-mapped-types",
+		"remove-useless-mapping-modifiers",
+		"remove-useless-array-constructor",
+		"remove-useless-continue",
+		"remove-useless-operand",
+		"remove-useless-conditions",
+		"remove-useless-array-from",
+		"remove-useless-arguments",
+		"remove-useless-escape",
+		"remove-useless-spread",
+		"remove-useless-return",
+		"remove-useless-typeof",
+		"remove-useless-types",
+		"remove-useless-types-from-constants",
+		"remove-useless-type-conversion",
+		"remove-useless-functions",
+		"remove-useless-template-expressions",
+		"remove-useless-for-of",
+		"remove-useless-array-entries",
+		"remove-constant-conditions",
+		"remove-boolean-from-assertions",
+		"remove-boolean-from-logical-expressions",
+		"remove-duplicates-from-union",
+		"remove-duplicates-from-logical-expressions",
+		"remove-duplicate-interface-keys",
+		"remove-duplicate-case",
+		"remove-nested-blocks",
+		"remove-unreachable-code",
+		"remove-duplicate-keys",
+		"reuse-duplicate-init",
+		"split-variable-declarations",
+		"split-nested-destructuring",
+		"simplify-assignment",
+		"simplify-logical-expressions",
+		"simplify-ternary",
+		"convert-bitwise-to-logical",
+		"convert-esm-to-commonjs",
+		"convert-commonjs-to-esm",
+		"convert-apply-to-spread",
+		"convert-concat-to-flat",
+		"convert-arguments-to-rest",
+		"convert-object-assign-to-merge-spread",
+		"convert-comparison-to-boolean",
+		"convert-math-pow",
+		"convert-to-arrow-function",
+		"convert-for-to-for-of",
+		"convert-for-each-to-for-of",
+		"convert-for-in-to-for-of",
+		"convert-map-to-for-of",
+		"convert-top-level-return",
+		"convert-typeof-to-is-type",
+		"convert-array-copy-to-slice",
+		"convert-template-to-string",
+		"convert-equal-to-strict-equal",
+		"convert-index-of-to-includes",
+		"convert-generic-to-shorthand",
+		"convert-mock-require-to-mock-import",
+		"convert-assignment-to-arrow-function",
+		"convert-assignment-to-comparison",
+		"convert-quotes-to-backticks",
+		"merge-destructuring-properties",
+		"merge-duplicate-imports",
+		"merge-if-statements",
+		"declare-undefined-variables",
+		"strict-mode",
+		"putout",
+		"putout-config",
+		"promises",
+		"gitignore",
+		"npmignore",
+		"browserlist",
+		"regexp",
+		"github",
+		"tape",
+		"nodejs"
+	]
+}

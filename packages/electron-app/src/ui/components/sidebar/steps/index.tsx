@@ -9,12 +9,71 @@ import { Conditional } from "@dyson/components/layouts";
 import { useSelector } from "react-redux";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { MoreIcon } from "electron-app/src/extension/assets/icons";
+import { WarningIcon } from "electron-app/src/ui/icons";
+import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
+import { ACTION_DESCRIPTIONS } from "electron-app/src/extension/constants/actionDescriptions";
+
+const Step = ({
+	title,
+	subtitle,
+	isRunning,
+	isFailed,
+	...props
+}: CheckboxProps & { title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
+	return (
+		<div>
+			<div css={[stepStyle, isRunning && runningStepStyle, isFailed && failedStyle]}>
+				<Checkbox {...props} />
+				<div css={stepTextStyle}>
+					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null]}>
+						{title}
+					</TextBlock>
+					<TextBlock css={stepSubtitleStyle}>{subtitle}</TextBlock>
+				</div>
+				<Conditional showIf={isFailed}>
+					<MoreIcon />
+					<TextBlock css={stepWarningStyle}>
+						<WarningIcon css={css`height: 13rem`} />
+                        <span>&nbsp; This step failed</span>
+					</TextBlock>
+				</Conditional>
+			</div>
+
+			<Conditional showIf={isFailed}>
+				<div css={failedToDOStyle}>
+					<div css={failedToDoHeadStyle}>
+						<Text CSS={whatTODOStyle}>What to do?</Text>
+						<MoreIcon />
+					</div>
+					<div css={failedButtonsStyle}>
+						<Button size="small" css={failedButtonStyle} bgColor="tertiary-outline">
+							Mark optional
+						</Button>
+						<Button size="small" css={failedButtonStyle} bgColor="tertiary-outline">
+							Delete & continue
+						</Button>
+					</div>
+				</div>
+			</Conditional>
+		</div>
+	);
+}
 
 const StepsPanel = ({className, ...props}: any) => {
     const [checkedSteps, setCheckedSteps] = React.useState(new Set());
     const recordedSteps = useSelector(getSavedSteps);
 
     const toggleAllSteps = () => {};
+    const toggleStep = (index) => {};
+
+    const steps = recordedSteps.map((action, index) => {
+		return {
+			id: index,
+			title: ACTION_DESCRIPTIONS[action.type],
+			selector: action.payload && action.payload.selectors && action.payload.selectors.length ? action.payload.selectors[0].value : "window",
+			status: action.status
+		}
+	});
     
     return (
         <div className={`${className}`} css={containerStyle}>
@@ -37,6 +96,21 @@ const StepsPanel = ({className, ...props}: any) => {
                     </div>
                 </Conditional>
             </div>  
+
+            <div className="custom-scroll" id={"stepsListContainer"} css={stepsContainerStyle}>
+				{steps.map((step, index) => (
+					<Step
+						isSelectAllType={false}
+						key={step.id}
+						isRunning={step.status === ActionStatusEnum.STARTED}
+						isFailed={step.status === ActionStatusEnum.FAILED}
+						isSelected={checkedSteps.has(step.id)}
+						callback={() => toggleStep(step.id)}
+						title={step.title}
+						subtitle={step.selector.substr(0, 25)}
+					/>
+				))}
+			</div>
         </div>
     )
 };
@@ -70,6 +144,111 @@ const dropdownStyle = css`
 const dropdownItemTextStyle = css`
 	padding: 6rem 16rem;
 `;
+
+
+const failedStepTitleStyle = css`
+	font-weight: 800;
+`;
+const stepsContainerStyle = css`
+	overflow-y: scroll;
+	padding: 18rem 22rem;
+	padding-top: 0rem;
+	height: 100%;
+`;
+const runningStepStyle = css`
+	border: 1rem solid rgba(255, 255, 255, 0.1);
+	border-bottom: 4rem solid #a6ba86;
+`;
+const stepStyle = css`
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	box-sizing: border-box;
+	border-radius: 6rem;
+	padding: 3rem 13rem;
+	margin: 10rem 0rem;
+	border: 1.5rem solid rgba(255, 255, 255, 0);
+
+	&:hover {
+		border: 1.5rem solid rgba(255, 255, 255, 0.1);
+		border-radius: 6rem;
+	}
+`;
+
+const failedStyle = css`
+	border: 1rem solid rgba(255, 255, 255, 0.12);
+	background: #0f1011;
+`;
+const stepTextStyle = css`
+	margin: 5rem;
+	margin-left: 13rem;
+	flex: 1 0 50%;
+`;
+const stepTitleStyle = css`
+	font-family: Gilroy !important;
+	font-style: 600 !important;
+	font-weight: normal !important;
+	font-size: 12.6rem !important;
+	line-height: 13rem !important;
+	color: rgba(215, 223, 225, 0.6) !important;
+	user-select: none !important;
+`;
+const stepSubtitleStyle = css`
+	font-family: Gilroy !important;
+	font-style: normal !important;
+	font-weight: normal !important;
+	font-size: 10.5rem !important;
+	line-height: 10rem !important;
+	margin-top: 6.2rem !important;
+	color: #79929A !important;
+	user-select: none !important;
+`;
+const stepWarningStyle = css`
+	display: block;
+	flex: 0 1 100%;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13rem;
+	line-height: 13rem;
+	color: #de3d76;
+	padding: 6rem;
+	padding-bottom: 20rem;
+`;
+const failedToDOStyle = css`
+	padding: 15rem;
+	margin: 6rem 0rem;
+	background: #0f1011;
+	border: 1rem solid rgba(255, 255, 255, 0.12);
+	box-sizing: border-box;
+	border-radius: 4rem;
+`;
+const failedButtonsStyle = css`
+	display: flex;
+`;
+const failedToDoHeadStyle = css`
+	display: flex;
+	flex: 1 1 100%;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8rem;
+`;
+const whatTODOStyle = css`
+	font-family: Gilroy;
+	font-weight: 800;
+	font-size: 12rem;
+`;
+const failedButtonStyle = css`
+	margin-right: 9rem;
+	background: #ffffff;
+	border-radius: 4rem;
+	font-size: 12rem !important;
+	color: #40383b;
+	:hover {
+		background: rgba(255, 255, 255, 0.8);
+	}
+`;
+
 export {StepsPanel};
 
 

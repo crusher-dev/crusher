@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { getRecorderInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
+import { useEffect } from "dyson/node_modules/@types/react";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);

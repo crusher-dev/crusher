@@ -11,7 +11,7 @@ async function load() {
 	(document.head || document.documentElement || document).appendChild(script);
 }
 
-if (frameDepth === 0 && !window.location.href.startsWith("chrome-extension://")) {
+if (frameDepth === 0 && !window.location.href.startsWith("file://")) {
 	window.addEventListener("load", function () {
 			load();
 	});

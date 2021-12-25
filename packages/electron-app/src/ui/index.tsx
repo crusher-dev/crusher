@@ -6,10 +6,27 @@ import { DeviceFrame } from './components/device-frame';
 import { Sidebar } from './components/sidebar';
 import "../assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from 'electron-redux';
+import { ipcRenderer } from "electron";
+import { updateRecorderState } from "../store/actions/recorder";
+import { TRecorderState } from "../store/reducers/recorder";
+import { getRecorderInfo } from "../store/selectors/recorder";
+import { performNavigation } from "./commands/perform";
 
 const App = () => {
+	const dispatch = useDispatch();
+	const store = useStore();
+	
+	React.useEffect(() => {
+		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
+			const recorderInfo = getRecorderInfo(store.getState() as any);
+			console.log("Webview initialized in: " + initializeTime);
+			
+			performNavigation(recorderInfo.url, store);
+		})
+	}, []);
+
 	return (
         <div css={containerStyle}>
             <Global styles={globalStyles} />

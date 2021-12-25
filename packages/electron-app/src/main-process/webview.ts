@@ -2,6 +2,7 @@ import { WebContents, ipcMain, webContents, session } from "electron";
 import * as path from "path";
 import { PlaywrightInstance } from "../lib/playwright";
 import { AppWindow } from "./app-window";
+import { now } from "./now";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const highlighterStyle = require("./highlighterStyle.json");
@@ -10,6 +11,9 @@ export class WebView {
 	playwrightInstance: PlaywrightInstance;
 	appWindow: AppWindow;
     webContents: WebContents;
+
+	private _startTime: number | null = null;
+    private _initializeTime: number | null = null
 
 	getWebContents(): WebContents {
 		const allWebContents = webContents.getAllWebContents();
@@ -23,6 +27,7 @@ export class WebView {
 	constructor(appWindow) {
 		this.appWindow = appWindow;
         this.webContents = this.getWebContents();
+		this._startTime = now();
 	}
 
     async initialize() {
@@ -54,7 +59,10 @@ export class WebView {
 
 		console.log("Path is", path.join(__dirname, "extension/js/content_script.js"));
         await this.playwrightInstance.addInitScript(path.join(__dirname, "extension/js/content_script.js"));
-		await this.webContents.openDevTools();
+		this._initializeTime = now() - this._startTime;
+
+		console.log("Initialized in", this._initializeTime);
+		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });
     }
 
 	registerIPCListeners() {

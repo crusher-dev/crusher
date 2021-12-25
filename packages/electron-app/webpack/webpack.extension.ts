@@ -126,16 +126,6 @@ if (process.env.NODE_ENV === "development") {
 		...finalConfig,
 		plugins: [
 			...finalConfig.plugins,
-			new ExtensionReloader({
-				isElectron: true,
-				port: 2400, // Which port use to create the server
-				reloadPage: true, // Force the reload of the page also
-				entries: {
-					background: "background",
-					extensionPage: ["record_test"],
-					contentScript: ["content_script"],
-				},
-			}),
 			new RunElectronOnFirstCompile(),
 		],
 		mode: "development",

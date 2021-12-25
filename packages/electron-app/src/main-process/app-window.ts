@@ -8,6 +8,8 @@ import { now } from './now';
 import { AnyAction, Store } from 'redux';
 import { Recorder } from './recorder';
 import { WebView } from './webview';
+import { iAction } from '@shared/types/action';
+import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -108,6 +110,7 @@ export class AppWindow {
             }
         )
 
+        ipcMain.handle('perform-action', this.handlePerformAction.bind(this));
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
@@ -116,11 +119,22 @@ export class AppWindow {
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'))
     }
 
+    private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
+        console.log("Payload is", payload);
+        const { action } = payload;
+        switch(action.type) {
+            case ActionsInTestEnum.NAVIGATE_URL: {
+                await this.webView.playwrightInstance.runActions([action]);
+            }
+        }
+    }
+
     async handleWebviewAttached(event, webContents) {
         this.webView = new WebView(this);
-		await this.webView.initialize();
-
-        console.log("Webview initialized");
+        this.webView.webContents.on("dom-ready", () => {
+            this.webView.initialize();
+            console.log("Webview initialized");
+        });
 	}
 
     public getRecorder() {
@@ -129,6 +143,10 @@ export class AppWindow {
 
     public focusWebView(): Promise<void> {
         return this.window.webContents.executeJavaScript("document.querySelector('webview').focus();");
+    }
+
+    public sendMessage(channel: string, ...args: any[]): void {
+        return this.window.webContents.send(channel, ...args);
     }
 
     /** Send the app launch timing stats to the renderer. */

@@ -27,7 +27,7 @@ class PlaywrightInstance {
 	private sdkManager: CrusherSdk;
     private browser: Browser;
     private browserContext: BrowserContext;
-    private page: Page;
+    page: Page;
     
 	private isBusy = false;
 
@@ -103,8 +103,10 @@ class PlaywrightInstance {
 
 		const webViewPage = await pagesMap.findIndex((url: string) => {
 			// Webview url will never start from extension url
-			return !url.startsWith("file://");
+			return url.startsWith("about:blank");
 		});
+
+		console.log("Webview page", webViewPage);
 
 		const page = pages[webViewPage];
 		return page;
@@ -149,10 +151,10 @@ class PlaywrightInstance {
                     this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
                     break;
                 case ActionStatusEnum.FAILED:
-                    this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.FAILED);
+                    this.appWindow.getRecorder().markRunningStepFailed();
                     break;
                 case ActionStatusEnum.COMPLETED:
-                    this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.COMPLETED);
+                    this.appWindow.getRecorder().markRunningStepCompleted();
                     break;
             }
         });

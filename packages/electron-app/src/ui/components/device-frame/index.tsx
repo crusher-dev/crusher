@@ -9,7 +9,7 @@ const DeviceFrame = (props: any) => {
 
     return (
         <div css={containerStyle}>
-            <Conditional showIf={!!recorderInfo.url}>
+            <Conditional showIf={!!recorderInfo.device}>
                 <div style={{width: recorderInfo.device?.width, height: recorderInfo.device?.height, maxWidth: "100%", maxHeight: "100%"}}>
                     <webview
                         css={webviewStyle}
@@ -19,7 +19,7 @@ const DeviceFrame = (props: any) => {
                                             //@ts-ignore
                         enableremotemodule={"true"}
                         title={"crusher-webview"}
-                        src={recorderInfo.url}
+                        src={"about:blank"}
                         partition={"crusher"}
                     />
                 </div>

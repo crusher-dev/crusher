@@ -15,7 +15,7 @@ builder
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
-			publish: [
+			publish: process.env.PUBLISH_RELEASE  ? [
 				{
 					provider: "github",
 					repo: "crusher-downloads",
@@ -25,8 +25,10 @@ builder
 					releaseType: "draft",
 					private: false,
 				}
-			],
+			] : null,
 			afterSign: async (context) => {
+				if(!process.env.PUBLISH_RELEASE ) return;
+				
 				const { electronPlatformName, appOutDir } = context;  
 				if (electronPlatformName !== 'darwin') {
 				  return;

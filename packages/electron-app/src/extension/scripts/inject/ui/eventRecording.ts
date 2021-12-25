@@ -508,6 +508,7 @@ export default class EventRecording {
 	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
 		this.state.targetElement = event.detail.element;
 		this.turnOnElementModeInParentFrame(event.detail.element);
+		this.enableJavascriptEvents();
 	}
 
 	_getInputNodeInfo(eventNode: HTMLElement): IInputNodeInfo | null {

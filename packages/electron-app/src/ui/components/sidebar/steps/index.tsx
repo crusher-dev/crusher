@@ -63,8 +63,31 @@ const StepsPanel = ({className, ...props}: any) => {
     const [checkedSteps, setCheckedSteps] = React.useState(new Set());
     const recordedSteps = useSelector(getSavedSteps);
 
-    const toggleAllSteps = () => {};
-    const toggleStep = (index) => {};
+    const toggleAllSteps = React.useCallback(
+		(checked) => {
+			if (checked) {
+				setCheckedSteps(new Set([...steps.map((step) => step.id)]));
+			} else {
+				setCheckedSteps(new Set());
+			}
+		},
+		[checkedSteps.size, recordedSteps.length],
+	);
+
+    const toggleStep = React.useCallback(
+		(index) => {
+			const selectedSteps = new Set(checkedSteps);
+			console.log(checkedSteps);
+			if (checkedSteps.has(index)) {
+				selectedSteps.delete(index);
+			} else {
+				selectedSteps.add(index);
+			}
+
+			setCheckedSteps(selectedSteps);
+		},
+		[checkedSteps, recordedSteps.length],
+	);
 
     const steps = recordedSteps.map((action, index) => {
 		return {
@@ -123,7 +146,7 @@ const StepsPanel = ({className, ...props}: any) => {
 
 const containerStyle = css`
     border-top: 1rem solid #303235;
-    max-height: 375rem;
+    height: 340rem;
     padding-bottom: 32rem;
 `;
 const stepsHeaderStyle = css`

@@ -14,6 +14,7 @@ export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
 export const RECORD_STEP = "RECORD_STEP";
 export const UPDATE_CURRENT_RUNNING_STEP_STATUS = "UPDATE_CURRENT_RUNNING_STEP_STATUS";
 export const UPDATE_RECORDED_STEP = "UPDATE_RECORDED_STEP";
+export const RESET_RECORDER_STATE = "RESET_RECORDER_STATE";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -68,5 +69,11 @@ export const updateCurrentRunningStepStatus = (status: ActionStatusEnum) => {
     return {
         type: UPDATE_CURRENT_RUNNING_STEP_STATUS,
         payload: { status }
+    };
+}
+
+export const resetRecorderState = () => {
+    return {
+        type: RESET_RECORDER_STATE,
     };
 }

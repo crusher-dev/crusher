@@ -9,13 +9,12 @@ import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from 'electron-redux';
 import { ipcRenderer } from "electron";
-import { updateRecorderState } from "../store/actions/recorder";
+import { resetRecorderState, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
 import { getRecorderInfo } from "../store/selectors/recorder";
 import { performNavigation } from "./commands/perform";
 
 const App = () => {
-	const dispatch = useDispatch();
 	const store = useStore();
 	
 	React.useEffect(() => {
@@ -25,6 +24,10 @@ const App = () => {
 			
 			performNavigation(recorderInfo.url, store);
 		})
+
+		window.onbeforeunload = () => {
+			store.dispatch(resetRecorderState());
+		};
 	}, []);
 
 	return (

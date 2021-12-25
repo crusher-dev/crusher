@@ -9,10 +9,15 @@ import { PageActions } from "./pageActions";
 import { TemplateActions } from "./templatesActions";
 import { ElementActions } from "./elementActions";
 import { InspectModeAction } from "./inspectModeAction";
+import { turnOffInspectMode } from "electron-app/src/ui/commands/perform";
 
 const ActionsPanel = ({className, ...props}: {className?: any}) => {
     const selected = useSelector(isInspectModeOn);
 	const selectedElement = useSelector(getSelectedElement);
+
+	const handleTurnOffInspectMode = () => {
+		turnOffInspectMode();
+	}
 
     return (
         <div className={`${className}`} css={containerStyle}>
@@ -25,7 +30,7 @@ const ActionsPanel = ({className, ...props}: {className?: any}) => {
 						<div css={selectActionContainer}>
 							<Text css={selectActionHeading}>Action required element selection</Text>
 							<Text css={selectActionText}>Select an element on left side</Text>
-							<Text onClick={() => {}} css={[selectActionCancel, hoverEffectStyle]}>
+							<Text onClick={handleTurnOffInspectMode} css={[selectActionCancel, hoverEffectStyle]}>
 								Cancel action
 							</Text>
 						</div>

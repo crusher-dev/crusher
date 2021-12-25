@@ -37,7 +37,6 @@ const elementActionsList = [
 const ElementActions = ({className, ...props}: {className?: any}) => {
 
     const handleActionSelected = (id: TElementActionsEnum) => {
-        alert("Selected this, " + id);
     };
 
 	const items = elementActionsList.filter(e => ![TElementActionsEnum.CLICK, TElementActionsEnum.HOVER].includes(e.id)).map((action) => {

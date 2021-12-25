@@ -1,6 +1,7 @@
 import React from "react";
 import {css} from "@emotion/react";
 import { ActionsList, ActionsListItem } from "./actionsList";
+import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
 
 enum TTopLevelActionsEnum {
     VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
@@ -36,7 +37,13 @@ const topActionsList = [
 const PageActions = ({className, ...props}: {className?: any}) => {
 
     const handleActionSelected = (id: TTopLevelActionsEnum) => {
-        alert("Selected this, " + id);
+        switch(id) {
+			case TTopLevelActionsEnum.VIEWPORT_SCREENSHOT:
+				performTakePageScreenshot();
+				break;
+			default:
+				break;
+		}
     };
 
 	const items = topActionsList.map((action) => {

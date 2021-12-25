@@ -150,7 +150,11 @@ export class AppWindow {
             }
             case ActionsInTestEnum.NAVIGATE_URL: {
                 await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                return;
             }
+            default:
+                await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                break;
         }
     }
 

@@ -36,4 +36,19 @@ const performNavigation = async (url: string, store: Store<unknown, AnyAction>) 
     });
 };
 
-export { performAction, performSetDevice, performNavigation };
+const performTakePageScreenshot = async () => { 
+    await performAction({
+        type: ActionsInTestEnum.PAGE_SCREENSHOT,
+        payload: { },
+    });
+}
+
+const turnOnInspectMode = () => {
+    ipcRenderer.invoke("turn-on-recorder-inspect-mode");
+}
+
+const turnOffInspectMode = () => {
+    ipcRenderer.invoke("turn-off-recorder-inspect-mode");
+}
+
+export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode };

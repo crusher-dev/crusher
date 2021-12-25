@@ -5,11 +5,12 @@ import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
-import { TRecorderMessagesType } from "electron-app/src/extension/scripts/inject/host-proxy";
+import { turnOffInspectMode, turnOnInspectMode } from "../../commands/perform
 import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ipcRenderer } from "electron";
 import { saveAutoAction } from "../../commands/saveActions";
+import { TRecorderMessagesType } from "electron-app/src/extension/scripts/inject/host-proxy";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
@@ -31,15 +32,13 @@ const DeviceFrame = (props: any) => {
                             saveAutoAction(payload.action, store);
                             break;
                         case TRecorderMessagesType["Commands.turnOnInspectMode"]:
-                            console.log("Callend to turn on inspect mode");
-                            ipcRenderer.invoke("turn-on-recorder-inspect-mode");
+                            turnOnInspectMode();
                             break;
                         case TRecorderMessagesType["Commands.turnOffInspectMode"]:
-                            console.log("Callend to turn off inspect mode");
-                            ipcRenderer.invoke("turn-off-recorder-inspect-mode");
+                            turnOffInspectMode();
                             break;
                         case TRecorderMessagesType["Commands.turnOnElementMode"]:
-                            ipcRenderer.invoke("turn-off-recorder-inspect-mode");
+                            turnOffInspectMode();
                             const { selectedElementInfo } = payload;
                             store.dispatch(setSelectedElement(selectedElementInfo));
                             break;

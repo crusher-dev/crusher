@@ -2,6 +2,10 @@ import React from "react";
 import {css} from "@emotion/react";
 import { ActionsList, ActionsListItem } from "./actionsList";
 import { Text } from "@dyson/components/atoms/text/Text";
+import { useSelector, useStore } from "react-redux";
+import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
+import { peformTakeElementScreenshot, performClick, performHover } from "electron-app/src/ui/commands/perform";
+import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 
 enum TElementActionsEnum {
     CLICK = "CLICK",
@@ -35,8 +39,24 @@ const elementActionsList = [
 ];
 
 const ElementActions = ({className, ...props}: {className?: any}) => {
+	const selectedElement = useSelector(getSelectedElement);
+	const store = useStore();
 
     const handleActionSelected = (id: TElementActionsEnum) => {
+		switch(id) {
+			case TElementActionsEnum.CLICK:
+				performClick(selectedElement);
+				store.dispatch(setSelectedElement(null));
+				break;
+			case TElementActionsEnum.HOVER:
+				performHover(selectedElement, store);
+				store.dispatch(setSelectedElement(null));
+				break;
+			case TElementActionsEnum.SCREENSHOT:
+				peformTakeElementScreenshot(selectedElement, store);
+				store.dispatch(setSelectedElement(null));
+				break;
+		}
     };
 
 	const items = elementActionsList.filter(e => ![TElementActionsEnum.CLICK, TElementActionsEnum.HOVER].includes(e.id)).map((action) => {

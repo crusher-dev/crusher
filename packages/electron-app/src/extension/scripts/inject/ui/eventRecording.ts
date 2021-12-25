@@ -225,19 +225,24 @@ export default class EventRecording {
 
 	onRightClick(event: Event) {
 		event.preventDefault();
-		this.turnInspectModeOnInParentFrame();
+		if (this.isInspectorMoving) {
+			this.enableJavascriptEvents();
+			this.turnInspectModeOffInParentFrame();
+			this.unpin();
+		} else {
+			this.turnInspectModeOnInParentFrame();
 			const eventExceptions = {
 				mousemove: this.handleMouseMove.bind(this),
 				mouseover: this.handleMouseMove.bind(this),
 				pointerenter: this.handlePointerEnter.bind(this),
 				mouseout: this.handleMouseOut.bind(this),
 				click: this.handleWindowClick.bind(this),
-				contextmenu: this.onRightClick.bind(this),
 			};
 
 			if (!this.resetUserEventsToDefaultCallback) {
 				this.resetUserEventsToDefaultCallback = DOM.disableAllUserEvents(eventExceptions);
 			}
+		}
 	}
 
 	handleMouseMove(event: MouseEvent) {
@@ -359,6 +364,8 @@ export default class EventRecording {
 	}
 
 	async turnOnElementModeInParentFrame(selectedElement = this.state.targetElement) {
+		this.isInspectorMoving = false;
+
 		const element =
 			selectedElement instanceof SVGElement && selectedElement.tagName.toLocaleLowerCase() !== "svg" ? selectedElement.ownerSVGElement : selectedElement;
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
@@ -417,7 +424,6 @@ export default class EventRecording {
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
 		event.timestamp = Date.now();
-
 		if (event.which === 3) {
 			return this.onRightClick(event);
 		}

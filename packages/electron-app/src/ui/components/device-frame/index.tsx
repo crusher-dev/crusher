@@ -5,7 +5,7 @@ import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
-import { turnOffInspectMode, turnOnInspectMode } from "../../commands/perform
+import { turnOffInspectMode, turnOnInspectMode } from "../../commands/perform";
 import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ipcRenderer } from "electron";
@@ -44,7 +44,7 @@ const DeviceFrame = (props: any) => {
                             break;
                     }
                 }
-            });
+            }); 
         }
     }, [ref.current]);
 

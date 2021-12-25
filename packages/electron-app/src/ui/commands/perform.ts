@@ -1,13 +1,15 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
 import { iDevice } from "@shared/types/extension/device";
+import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { ipcRenderer } from "electron";
-import { updateRecorderState } from "electron-app/src/store/actions/recorder";
-import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { recordStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
+import { iElementInfo, TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { AnyAction, Store } from "redux";
 
-const performAction = async (action: iAction) => {
-   ipcRenderer.invoke("perform-action", { action });
+const performAction = async (action: iAction, shouldNotSave: boolean = false) => {
+   ipcRenderer.invoke("perform-action", { action, shouldNotSave });
 };
 
 const performSetDevice = async (device: iDevice) => {
@@ -43,6 +45,49 @@ const performTakePageScreenshot = async () => {
     });
 }
 
+const recordHoverDependencies =  (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
+    for(let depedentHover of selectedElement.dependentHovers) {
+        store.dispatch(recordStep({
+            type: ActionsInTestEnum.HOVER,
+            payload: {
+                selectors: depedentHover.selectors,
+            }
+        }));
+    }
+};
+
+
+const peformTakeElementScreenshot = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => { 
+    recordHoverDependencies(selectedElement, store);
+
+    await performAction({
+        type: ActionsInTestEnum.ELEMENT_SCREENSHOT,
+        payload: {
+            selectors: selectedElement.selectors,
+        },
+    });
+}
+
+const performClick = async (selectedElement: iElementInfo) => {
+    await performAction({
+        type: ActionsInTestEnum.CLICK,
+        payload: {
+            selectors: selectedElement.selectors,
+        }
+    }, true);
+};
+
+const performHover = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
+    recordHoverDependencies(selectedElement, store);
+
+    await performAction({
+        type: ActionsInTestEnum.HOVER,
+        payload: {
+            selectors: selectedElement.selectors,
+        }
+    });
+};
+
 const turnOnInspectMode = () => {
     ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 }
@@ -51,4 +96,4 @@ const turnOffInspectMode = () => {
     ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 }
 
-export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode };
+export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot };

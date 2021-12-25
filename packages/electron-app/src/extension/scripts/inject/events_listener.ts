@@ -20,11 +20,8 @@ function boot() {
 
 	(window as any).eventRecorderExecuted = true;
 
-	window.addEventListener("load", () => {
-		if (process.env.NODE_ENV === "development") {
-			setupContentScriptForElectronReload();
-		}
-
+	window.addEventListener("DOMContentLoaded", () => {
+		console.log("Recording loaded");
 		const recordingOverlay = new EventRecording({});
 		requestRecordingStatusFromExtension();
 
@@ -32,6 +29,6 @@ function boot() {
 	});
 }
 
-if (frameDepth === 0 && !window.location.href.startsWith("chrome-extension://")) {
+if (frameDepth === 0 && !window.location.href.startsWith("file://")) {
 	boot();
 }

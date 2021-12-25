@@ -74,6 +74,12 @@ const StepsPanel = ({className, ...props}: any) => {
 			status: action.status
 		}
 	});
+
+	React.useEffect(() => {
+		const testListContainer: any = document.querySelector("#stepsListContainer");
+		const elementHeight = testListContainer.scrollHeight;
+		testListContainer.scrollBy(0, elementHeight);
+	}, [recordedSteps.length]);
     
     return (
         <div className={`${className}`} css={containerStyle}>

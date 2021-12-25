@@ -12,7 +12,5 @@ async function load() {
 }
 
 if (frameDepth === 0 && !window.location.href.startsWith("file://")) {
-	window.addEventListener("load", function () {
-			load();
-	});
+	load();
 }

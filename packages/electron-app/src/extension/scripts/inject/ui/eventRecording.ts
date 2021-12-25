@@ -2,17 +2,14 @@ import { findDistanceBetweenNodes, getAllAttributes } from "../../../utils/helpe
 import { ActionsInTestEnum, IInputNodeInfo, InputNodeTypeEnum } from "@shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
-import { getSelectors } from "../../../utils/selector";
-import { iElementModeMessageMeta, MESSAGE_TYPES } from "../../../messageListener";
 import { iPerformActionMeta } from "../responseMessageListener";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
-import html2canvas from "html2canvas";
-import { ChangeEvent } from "react";
-import { getInputElementValue } from "unique-selector/src/crusher-selector/element";
 import { v4 as uuidv4 } from "uuid";
+import { sendRecorderReadySignal, turnOffInspectMode, turnOnElementMode, turnOnInspectMode } from "../host-proxy";
+import { ElementsIdMap } from "../elementsMap";
 
 const KEYS_TO_TRACK_FOR_INPUT = new Set(["Enter", "Escape", "Tab"]);
 
@@ -228,13 +225,7 @@ export default class EventRecording {
 
 	onRightClick(event: Event) {
 		event.preventDefault();
-		if (this.isInspectorMoving) {
-			this.removeHighLightFromNode(event.target as HTMLElement);
-			this.enableJavascriptEvents();
-			this.turnInspectModeOffInParentFrame();
-			this.unpin();
-		} else {
-			this.turnInspectModeOnInParentFrame();
+		this.turnInspectModeOnInParentFrame();
 			const eventExceptions = {
 				mousemove: this.handleMouseMove.bind(this),
 				mouseover: this.handleMouseMove.bind(this),
@@ -247,7 +238,6 @@ export default class EventRecording {
 			if (!this.resetUserEventsToDefaultCallback) {
 				this.resetUserEventsToDefaultCallback = DOM.disableAllUserEvents(eventExceptions);
 			}
-		}
 	}
 
 	handleMouseMove(event: MouseEvent) {
@@ -372,19 +362,19 @@ export default class EventRecording {
 		const element =
 			selectedElement instanceof SVGElement && selectedElement.tagName.toLocaleLowerCase() !== "svg" ? selectedElement.ownerSVGElement : selectedElement;
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
-		const hoverDependentNodesSelectors = await this.eventsController.getSelectorsOfNodes(
-			this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[],
-		);
-		const capturedElementScreenshot = null;
-		(window as any).electron.host.postMessage({
-			type: MESSAGE_TYPES.TURN_ON_ELEMENT_MODE,
-			hoverDependentNodesSelectors: hoverDependentNodesSelectors,
-			meta: {
-				selectors: getSelectors(element),
-				attributes: getAllAttributes(element),
-				innerHTML: element.innerHTML,
-				screenshot: capturedElementScreenshot,
-			} as iElementModeMessageMeta,
+		const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[];
+
+		const dependentHovers = hoverDependedNodes.map((node) => {
+			return {
+				uniqueElementId: ElementsIdMap.getUniqueId(node),
+				selectors: this.eventsController.getSelectors(selectedElement),
+			}
+		});
+
+		turnOnElementMode({
+			uniqueElementId: ElementsIdMap.getUniqueId(selectedElement),
+			selectors: this.eventsController.getSelectors(selectedElement),
+			dependentHovers: dependentHovers,
 		});
 	}
 
@@ -438,29 +428,10 @@ export default class EventRecording {
 		const mainAnchorNode = this.checkIfElementIsAnchored(target);
 		if(mainAnchorNode) target = mainAnchorNode;
 
-		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		const inputNodeInfo = this._getInputNodeInfo(target);
 
 		const tagName = target.tagName.toLowerCase();
 		if (["option", "select"].includes(tagName)) return;
-
-		if (isRecorderCover) {
-			// Disable event propagation to stop other event listener to act like outSideClick Detector.
-			event.stopPropagation();
-			event.preventDefault();
-
-			console.log("Printing elements at this location");
-			const elements = this.elementsAtLocation(event.clientX, event.clientY);
-			target = elements[0];
-			if (elements && elements.length > 1 && elements[0].id === "overlay_cover") {
-				target = elements[1];
-			}
-			this.state.pinned = true;
-			// this.state.targetElement = target ? target : event.target;
-			this._overlayCover.classList.add("pointerEventsNone");
-			this.turnOnElementModeInParentFrame();
-			return;
-		}
 
 		const closestLink: HTMLAnchorElement = target.tagName === "a" ? target : target.closest("a");
 
@@ -668,10 +639,8 @@ export default class EventRecording {
 			currentURL.searchParams.delete("__crusherAgent__");
 			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.NAVIGATE_URL, document.body, currentURL.toString());
 		}
-		// (window as any).electron.host.postMessage({
-		// 	type: MESSAGE_TYPES.RECORDER_BOOTED,
-		// 	frameId: null,
-		// });
+	
+		sendRecorderReadySignal();
 		this.registerNodeListeners();
 	}
 
@@ -705,26 +674,13 @@ export default class EventRecording {
 	}
 
 	turnInspectModeOnInParentFrame() {
-		console.debug("Turning inspect element mode on");
 		this.isInspectorMoving = true;
-		(window as any).electron.host.postMessage({
-			type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
-			meta: {
-				value: true,
-			},
-			frameId: null,
-		});
+		turnOnInspectMode();
 	}
 
 	turnInspectModeOffInParentFrame() {
 		this.isInspectorMoving = false;
-		(window as any).electron.host.postMessage({
-			type: MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE,
-			meta: {
-				value: false,
-			},
-			frameId: null,
-		});
+		turnOffInspectMode();
 	}
 
 	toggleInspectorInParentFrame() {

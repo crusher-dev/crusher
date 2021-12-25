@@ -4,7 +4,7 @@ import { iElementInfo, TRecorderState } from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
 
-export const SET_INSPECT_MODE = "SET_INSPECT_MODE_ON";
+export const SET_INSPECT_MODE = "SET_INSPECT_MODE";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 
 export const SET_SITE_URL = "SET_SITE_URL";

@@ -3,5 +3,5 @@ import { contextBridge, ipcRenderer } from "electron";
 
 
 contextBridge.exposeInMainWorld("recorder", {
-    sendMessage: async(...args) => ipcRenderer.invoke("send-message", ...args),
+    sendMessage: async(...args) => { console.log("Sending data"); ipcRenderer.sendToHost("recorder-message", ...args) },
 });

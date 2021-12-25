@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { RECORD_STEP, SET_DEVICE, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS } from "../actions/recorder";
+import { RECORD_STEP, SET_DEVICE, SET_INSPECT_MODE, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -42,7 +42,8 @@ export interface iElementInfo {
 	uniqueElementId: string;
 	// In case the element is no longer in DOM, we can still use the selector	
 	selectors: Array<iSelectorInfo>;
-	dependentHovers: Array<Array<iElementInfo>>;
+	/* In order (first one should be the origin node) */
+	dependentHovers: Array<Omit<iElementInfo, "dependentHovers">>;
 }
 
 
@@ -83,6 +84,16 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 			return {
 				...state,
 				currentUrl: action.payload.url
+			}
+		case SET_INSPECT_MODE:
+			return {
+				...state,
+				isInspectModeOn: action.payload.isOn
+			}
+		case SET_SELECTED_ELEMENT:
+			return {
+				...state,
+				selectedElement: action.payload.element
 			}
 		case RECORD_STEP:
 			return {

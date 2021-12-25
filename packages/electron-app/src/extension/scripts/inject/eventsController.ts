@@ -7,6 +7,8 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { v4 as uuidv4 } from "uuid";
 import { findDistanceBetweenNodes } from "../../utils/helpers";
+import { ElementsIdMap } from "./elementsMap";
+import { recordAction } from "./host-proxy";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -116,7 +118,14 @@ export default class EventsController {
 		return this._recordedEvents;
 	}
 
-	async saveCapturedEventInBackground(event_type: string, _capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
+	getSelectors(_capturedTarget: any) {
+		const capturedTarget =
+		_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
+
+		return getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget)
+	}
+
+	async saveCapturedEventInBackground(event_type: ActionsInTestEnum, _capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
 		const capturedTarget =
 			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
 		const selectors = capturedTarget ? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget) : null;
@@ -147,21 +156,18 @@ export default class EventsController {
 			eventType: event_type,
 		});
 
-		(window as any).electron.host.postMessage({
-			type: MESSAGE_TYPES.RECORD_ACTION,
-			meta: {
-				type: event_type,
-				payload: {
-					selectors: selectors,
-					meta: {
-						value,
-						uniqueNodeId:
-							capturedTarget && ![document.body, document].includes(capturedTarget) ? await this._getUniqueNodeId(capturedTarget) : null,
-					},
+		recordAction({
+			type: event_type as ActionsInTestEnum,
+			payload: {
+				selectors: selectors,
+				meta: {
+					value,
+					uniqueNodeId:
+							capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null,
 				},
-				screenshot: capturedElementScreenshot,
-				url: window.location.href,
-			} as iAction,
+			},
+			screenshot: capturedElementScreenshot,
+			url: window.location.href,
 		});
 	}
 }

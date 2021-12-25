@@ -27,12 +27,16 @@ class PlaywrightInstance {
 	private sdkManager: CrusherSdk;
     private browser: Browser;
     private browserContext: BrowserContext;
+
+	/* Map to contain element handles from uniqueId saved in renderer */
+	private elementsMap: Map<string, ElementHandle>;
     page: Page;
     
 	private isBusy = false;
 
 	constructor(appWindow: AppWindow) {
 		this.appWindow = appWindow;
+		this.elementsMap = new Map();
 		this._logManager = new LogManagerPolyfill();
 		this._storageManager = new StorageManagerPolyfill();
 		this._globalManager = new GlobalManagerPolyfill();
@@ -124,7 +128,9 @@ class PlaywrightInstance {
 
     /* Serves as an API to click/hover over elements through playwright */
     private _handleConsoleMessage = async (msg: ConsoleMessage) => {
-        const [typeObj, valueObj] = msg.args();
+		const messageArgs = msg.args(); 
+
+        const [typeObj, valueObj] = messageArgs;
         if(!typeObj || !valueObj) return;
 
         const type = await typeObj.jsonValue();
@@ -135,28 +141,36 @@ class PlaywrightInstance {
             case "CRUSHER_CLICK_ELEMENT":
                 await (valueObj as ElementHandle).click()
                 break;
+			case "CRUSHER_SAVE_ELEMENT_HANDLE": {
+				const uniqueElementId = messageArgs[2].toString();
+
+				const elementHandle = valueObj.asElement();
+				if(elementHandle) this.elementsMap.set(uniqueElementId, elementHandle);
+			}
         }
     };
 
-	async runActions(actions: Array<iAction>, callback?): Promise<void> {
+	async runActions(actions: Array<iAction>, shouldNotSave: boolean = false): Promise<void> {
 		const actionsArr = getMainActions(actions);
 
         /* Inputs can get affected if webview looses focus */
         await this.appWindow.focusWebView();
 		
         await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result: iActionResult) => {
-            const { status } = result;
-            switch(status) {
-                case ActionStatusEnum.STARTED:
-                    this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
-                    break;
-                case ActionStatusEnum.FAILED:
-                    this.appWindow.getRecorder().markRunningStepFailed();
-                    break;
-                case ActionStatusEnum.COMPLETED:
-                    this.appWindow.getRecorder().markRunningStepCompleted();
-                    break;
-            }
+			if(!shouldNotSave) {
+				const { status } = result;
+				switch(status) {
+					case ActionStatusEnum.STARTED:
+						this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
+						break;
+					case ActionStatusEnum.FAILED:
+						this.appWindow.getRecorder().markRunningStepFailed();
+						break;
+					case ActionStatusEnum.COMPLETED:
+						this.appWindow.getRecorder().markRunningStepCompleted();
+						break;
+				}
+			}
         });
 	}
 
@@ -167,6 +181,7 @@ class PlaywrightInstance {
 	}
 
 	public dispose(){
+		this.elementsMap.clear();
 		this.browser.close();
 	}
 }

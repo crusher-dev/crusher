@@ -11,7 +11,7 @@ import { WebView } from './webview';
 import { iAction } from '@shared/types/action';
 import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 import { iDevice } from '@shared/types/extension/device';
-import { recordStep } from '../store/actions/recorder';
+import { recordStep, setInspectMode } from '../store/actions/recorder';
 import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
 
 export class AppWindow {
@@ -114,6 +114,8 @@ export class AppWindow {
         )
 
         ipcMain.handle('perform-action', this.handlePerformAction.bind(this));
+        ipcMain.handle('turn-on-recorder-inspect-mode', this.turnOnInspectMode.bind(this))
+        ipcMain.handle('turn-off-recorder-inspect-mode', this.turnOffInspectMode.bind(this))
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
@@ -122,9 +124,18 @@ export class AppWindow {
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'))
     }
 
-    private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
-        console.log("Payload is", payload);
-        const { action } = payload;
+    private turnOnInspectMode() {
+        this.store.dispatch(setInspectMode(true));
+        this.webView._turnOnInspectMode();
+    }
+
+    private turnOffInspectMode() {
+        this.store.dispatch(setInspectMode(false));
+        this.webView._turnOffInspectMode();
+    }
+
+    private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction, shouldNotSave?: boolean }) {
+        const { action, shouldNotSave } = payload;
         switch(action.type) {
             case ActionsInTestEnum.SET_DEVICE: {
                 // Custom implementation here, because we are in the recorder
@@ -133,11 +144,10 @@ export class AppWindow {
                 }
                 app.userAgentFallback = action.payload.meta.userAgent;
                 this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
-                console.log("Dispatched here");
                 return;
             }
             case ActionsInTestEnum.NAVIGATE_URL: {
-                await this.webView.playwrightInstance.runActions([action]);
+                await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
             }
         }
     }

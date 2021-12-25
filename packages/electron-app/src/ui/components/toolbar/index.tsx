@@ -7,9 +7,11 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
 import { BrowserButton } from "../buttons/browser.button";
-import { useDispatch, batch } from "react-redux";
+import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
+import { getRecorderInfo } from "electron-app/src/store/selectors/recorder";
+import { performNavigation, performSetDevice } from "../../commands/perform";
 
 const DeviceItem = ({label}) => {
 	return (
@@ -30,22 +32,40 @@ const Toolbar = (props: any) => {
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
+	const recorderInfo = useSelector(getRecorderInfo);
 
 	const dispatch = useDispatch();
+	const store = useStore();
 
-    const handleUrlReturn = () => {
+    const handleUrlReturn = React.useCallback(() => {
 		if(urlInputRef.current?.value) {
+			const device = recorderDevices.find((device) => device.value === selectedDevice[0])?.device;
+
 			batch(() => {
-				dispatch(setSiteUrl(urlInputRef.current.value));
-				dispatch(setDevice(selectedDevice[0]));
+				if(selectedDevice[0] !== recorderInfo.device?.id) {
+					performSetDevice(device);
+					dispatch(setDevice(selectedDevice[0]));
+				}
+				
+				if(recorderInfo.url) {
+					performNavigation(urlInputRef.current.value, store);
+				} else {
+					dispatch(setSiteUrl(urlInputRef.current.value));
+				}
 			})
 		}
-    };
+    }, [recorderInfo]);
 
 	const handleChangeDevice = (selected) => {
 		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
 		setSelectedDevice([selected[0]]);
+
+		if(recorderInfo.url) {
+			performSetDevice(device);
+			dispatch(setDevice(selected[0]));
+		}
 	}
+
 	const saveTest = () => {}
 	const goBack = () => {}
 	const refreshPage = () => {}

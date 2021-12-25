@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, session } from 'electron';
+import { app, BrowserWindow, ipcMain, session } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import * as path from "path";
 import { APP_NAME } from '../../config/about';
@@ -10,6 +10,9 @@ import { Recorder } from './recorder';
 import { WebView } from './webview';
 import { iAction } from '@shared/types/action';
 import { ActionsInTestEnum } from '@shared/constants/recordedActions';
+import { iDevice } from '@shared/types/extension/device';
+import { recordStep } from '../store/actions/recorder';
+import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -123,6 +126,16 @@ export class AppWindow {
         console.log("Payload is", payload);
         const { action } = payload;
         switch(action.type) {
+            case ActionsInTestEnum.SET_DEVICE: {
+                // Custom implementation here, because we are in the recorder
+                if(this.webView) {
+                    this.webView.webContents.setUserAgent(action.payload.meta.userAgent);
+                }
+                app.userAgentFallback = action.payload.meta.userAgent;
+                this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                console.log("Dispatched here");
+                return;
+            }
             case ActionsInTestEnum.NAVIGATE_URL: {
                 await this.webView.playwrightInstance.runActions([action]);
             }

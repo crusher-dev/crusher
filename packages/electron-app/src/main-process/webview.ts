@@ -62,7 +62,7 @@ export class WebView {
 		this._initializeTime = now() - this._startTime;
 
 		console.log("Initialized in", this._initializeTime);
-		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });
+		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });		
     }
 
 	registerIPCListeners() {

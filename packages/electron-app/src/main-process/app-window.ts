@@ -154,7 +154,7 @@ export class AppWindow {
         await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
 
         /* Change this to back */
-        this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.COMPLETED);
+        this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.COMPLETED));
 
         this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {  }));
     }
@@ -249,6 +249,12 @@ export class AppWindow {
             case ActionsInTestEnum.RUN_AFTER_TEST: {
                 await this.resetRecorder();
                 await this.handleRunAfterTest(action);
+                break;
+            }
+            case ActionsInTestEnum.RELOAD_PAGE: {
+                this.webView.webContents.reload();
+                await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
+                this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
                 break;
             }
             default:

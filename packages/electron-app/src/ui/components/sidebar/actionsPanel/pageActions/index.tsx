@@ -5,6 +5,7 @@ import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform"
 import { WaitModal } from "./waitModal";
 import { RunAfterTestModal } from "./runAfterTestModal";
 import { CustomCodeModal } from "./customCodeModal";
+import { SeoModalContent } from "./seoModal";
 
 enum TTopLevelActionsEnum {
     VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
@@ -77,6 +78,7 @@ const PageActions = ({className, ...props}: {className?: any}) => {
 			<WaitModal isOpen={currentModal === TTopLevelActionsEnum.WAIT} handleClose={closeModal} />
 			<RunAfterTestModal isOpen={currentModal === TTopLevelActionsEnum.RUN_AFTER_TEST} handleClose={closeModal} />
 			<CustomCodeModal isOpen={currentModal === TTopLevelActionsEnum.CUSTOM_CODE} handleClose={closeModal} />
+			<SeoModalContent isOpen={currentModal === TTopLevelActionsEnum.SHOW_SEO_MODAL} handleClose={closeModal} />
 		</>
     )
 };

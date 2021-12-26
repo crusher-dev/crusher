@@ -1,6 +1,4 @@
 import React, { ChangeEvent } from "react";
-import { ASSERTION_OPERATION_TYPE } from "../../../interfaces/assertionOperation";
-import { TEXT_ALIGN } from "../../../interfaces/css";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
 import { DeleteIcon } from "electron-app/src/ui/icons";
 import { css } from "@emotion/react";
@@ -15,6 +13,12 @@ interface iAssertionFormTableProps {
 	onOperationChange?: (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => void;
 	onValidationChange?: (newValidation: string, rowId: string) => void;
 	deleteValidationRow?: (rowIndex: string) => void;
+}
+
+export enum ASSERTION_OPERATION_TYPE {
+	MATCHES = "MATCHES",
+	CONTAINS = "CONTAINS",
+	REGEX = "REGEX",
 }
 
 function checkIfValidationPasses(fieldValue: string, validationValue: string, operation: ASSERTION_OPERATION_TYPE) {
@@ -165,7 +169,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 const containerStyle = {
 	width: "100%",
-	textAlign: TEXT_ALIGN.LEFT,
+	textAlign: "left",
 	borderSpacing: "0 0.75rem",
 	marginBottom: "20rem",
 	maxHeight: "400rem",

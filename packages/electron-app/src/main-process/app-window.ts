@@ -17,6 +17,7 @@ import { getSavedSteps } from '../store/selectors/recorder';
 import { CrusherTests } from '../lib/tests';
 import { getBrowserActions, getMainActions } from 'runner-utils/src';
 import { TRecorderState } from '../store/reducers/recorder';
+import { iSeoMetaInformationMeta } from '../extension/messageListener';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -124,6 +125,7 @@ export class AppWindow {
         ipcMain.handle('save-test', this.handleSaveTest.bind(this));
         ipcMain.handle('go-back-page', this.handleGoBackPage.bind(this));
         ipcMain.handle('reload-page', this.handleReloadPage.bind(this));
+        ipcMain.handle('get-page-seo-info', this.handleGetPageSeoInfo.bind(this));
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
@@ -131,6 +133,26 @@ export class AppWindow {
 
         /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'));
+    }
+
+    async handleGetPageSeoInfo(event: Electron.IpcMainEvent, url: string) {
+        return {
+            title: await this.webView.playwrightInstance.page.title(),
+            metaTags: await this.webView.playwrightInstance.page.evaluate(() => {
+                const metaTags = document.querySelectorAll('meta');
+                return Array.from(metaTags).map(meta => {
+                    return {
+                        name: meta.getAttribute('name'),
+                        value: meta.content
+                    };
+                }).filter(a => !!a.name).reduce((prev, current) => {
+                    if (current.name) {
+                        prev[current.name] = current;
+                    }
+                    return prev;
+                }, {});
+            }) as iSeoMetaInformationMeta
+        }
     }
 
     async handleGoBackPage() {

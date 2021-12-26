@@ -9,3 +9,5 @@ export const getSelectedElement = (state: iReduxState) => state.recorder.selecte
 export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;
 
 export const getRecorderState = (state: iReduxState) => state.recorder.state;
+
+export const isTestVerified = (state: iReduxState) => state.recorder.isVerified;

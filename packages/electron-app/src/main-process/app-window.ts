@@ -11,7 +11,7 @@ import { WebView } from './webview';
 import { iAction } from '@shared/types/action';
 import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 import { iDevice } from '@shared/types/extension/device';
-import { recordStep, resetRecorderState, setInspectMode, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
+import { recordStep, resetRecorderState, setInspectMode, setIsTestVerified, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
 import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
 import { getSavedSteps } from '../store/selectors/recorder';
 import { CrusherTests } from '../lib/tests';
@@ -120,6 +120,8 @@ export class AppWindow {
         ipcMain.handle('perform-action', this.handlePerformAction.bind(this));
         ipcMain.handle('turn-on-recorder-inspect-mode', this.turnOnInspectMode.bind(this))
         ipcMain.handle('turn-off-recorder-inspect-mode', this.turnOffInspectMode.bind(this))
+        ipcMain.handle('verify-test', this.handleVerifyTest.bind(this));
+        ipcMain.handle('save-test', this.handleSaveTest.bind(this));
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
@@ -127,6 +129,47 @@ export class AppWindow {
 
         /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'));
+    }
+
+    async handleSaveTest() {
+        const recordedSteps = getSavedSteps(this.store.getState() as any);
+
+        await CrusherTests.saveTest(recordedSteps as any);     
+    }
+
+    async handleVerifyTest() {
+        await this.handleReplayTest();
+        this.store.dispatch(setIsTestVerified(true));
+    }
+
+    async handleReplayTest() {
+        const stepsToVerify = getSavedSteps(this.store.getState() as any);
+
+        await this.resetRecorder();
+        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {  }));
+    
+        const replayableTestSteps = await CrusherTests.getReplayableTestActions(stepsToVerify as any, true);
+        const browserActions = getBrowserActions(replayableTestSteps);
+        
+        for(let browserAction of browserActions) {
+            if(browserAction.type === ActionsInTestEnum.SET_DEVICE) {
+                await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+            } else {
+                if(browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
+                    // @Todo: Add support for future browser actions
+                    this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
+                } else {
+                    await this.handleRunAfterTest(browserAction);
+                }
+            }
+        }
+    
+
+        for(let savedStep of getMainActions(replayableTestSteps)) {
+            await this.handlePerformAction(null, { action: savedStep });
+        }
+    
+        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
     }
 
     allowAllNetworkRequests(responseDetails, updateCallback) {
@@ -163,7 +206,7 @@ export class AppWindow {
         switch(action.type) {
             case ActionsInTestEnum.SET_DEVICE: {
                 // Custom implementation here, because we are in the recorder
-                const userAgent = !!action.payload.meta?.device && typeof action.payload.meta?.device !== "string" ? action.payload.meta?.device.userAgent : action.payload.meta.userAgent;
+                const userAgent = action.payload.meta?.device.userAgentRaw;
                 if(this.webView) {
                     this.webView.webContents.setUserAgent(userAgent);
                 }
@@ -176,6 +219,7 @@ export class AppWindow {
                 break;
             }
             case ActionsInTestEnum.RUN_AFTER_TEST: {
+                await this.resetRecorder();
                 await this.handleRunAfterTest(action);
                 break;
             }
@@ -186,12 +230,14 @@ export class AppWindow {
         this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
     }
 
-    private async handleRunAfterTest(action: iAction)  {
+    private async resetRecorder() {
         this.store.dispatch(resetRecorderState());
+        await this.clearWebViewStorage();
+    }
+
+    private async handleRunAfterTest(action: iAction)  {
         this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }));
     
-        await this.clearWebViewStorage();
-
         const replayableTestSteps = await CrusherTests.getReplayableTestActions(await CrusherTests.getTest(action.payload.meta.value), true);
         const browserActions = getBrowserActions(replayableTestSteps);
         

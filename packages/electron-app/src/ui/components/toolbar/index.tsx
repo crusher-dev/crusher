@@ -10,8 +10,8 @@ import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
-import { getRecorderInfo, getRecorderState } from "electron-app/src/store/selectors/recorder";
-import { performNavigation, performSetDevice } from "../../commands/perform";
+import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
+import { performNavigation, performSetDevice, performVerifyTest, saveTest } from "../../commands/perform";
 import { addHttpToURLIfNotThere } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
@@ -36,6 +36,7 @@ const Toolbar = (props: any) => {
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
+	const isTestVerificationComplete = useSelector(isTestVerified);
 
 	const dispatch = useDispatch();
 	const store = useStore();
@@ -78,8 +79,15 @@ const Toolbar = (props: any) => {
 	}
 
 	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
+	
+	const verifyTest = () => {
+		performVerifyTest();
+	}
 
-	const saveTest = () => {}
+	const saveTestToCloud = () => {
+		saveTest();
+	}
+
 	const goBack = () => {}
 	const refreshPage = () => {}
     
@@ -123,8 +131,8 @@ const Toolbar = (props: any) => {
 				<div className={"ml-auto flex items-center"}>
 					<SettingsIcon css={css`height: 14rem; :hover { opacity: 0.9 }`} className={"ml-12"} />
 
-					<Button onClick={saveTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
-						Verify test
+					<Button onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+						{isTestVerificationComplete ? "Save test" : "Verify test"}
 					</Button>
 				</div>
 			</Conditional>

@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { RECORD_STEP, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
+import { RECORD_STEP, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -60,6 +60,7 @@ interface IRecorderReducer {
 
 	selectedElement: iElementInfo | null;
 	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; }>;
+	isVerified: boolean;
 };
 
 const initialState: IRecorderReducer = {
@@ -71,6 +72,7 @@ const initialState: IRecorderReducer = {
 
 	selectedElement: null,
 	savedSteps: [],
+	isVerified: false,
 };
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
@@ -80,6 +82,8 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 			newSavedSteps[action.payload.id] = action.payload.action;
 			return {
 				...state,
+				/* Set verified status to false, if a new step is added */
+				isVerified: false,
 				savedSteps: newSavedSteps
 			};
 		}
@@ -106,6 +110,8 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case RECORD_STEP:
 			return {
 				...state,
+				/* Set verified status to false, if a new step is added */
+				isVerified: false,
 				savedSteps: [
 					...state.savedSteps,
 					{
@@ -133,6 +139,11 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 			return {
 				...state,
 				state: { type: action.payload.state, payload: action.payload.payload }
+			}
+		case SET_IS_TEST_VERIFIED:
+			return {
+				...state,
+				isVerified: action.payload.isTestVerified
 			}
 		default:
 			return state;

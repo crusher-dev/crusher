@@ -11,7 +11,9 @@ interface iDevice {
     height: number;
     mobile: boolean;
 	visible: boolean;
-    userAgent: string;
+	/* @Note: Refractor Legacy implementation */
+	userAgent: string;
+    userAgentRaw: string;
 };
 
 const devices: Array<iDevice> = [
@@ -22,7 +24,8 @@ const devices: Array<iDevice> = [
 		height: 800,
         mobile: false,
 		visible: true,
-		userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
+		userAgent: "Google Chrome",
+		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
 	},
 	{
 		id: TDeviceEnum.DESKTOP_L,
@@ -31,7 +34,8 @@ const devices: Array<iDevice> = [
 		height: 800,
         mobile: false,
 		visible: false,
-		userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
+		userAgent: "Google Chrome",
+		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
 	},
 	{
 		id: TDeviceEnum.PIXEL,
@@ -40,7 +44,8 @@ const devices: Array<iDevice> = [
 		height: 786,
 		mobile: true,
 		visible: true,
-		userAgent: "Mozilla/5.0 (Linux; Android 7.1.1; Pixel Build/NOF27B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.132 Mobile Safari/537.36",
+		userAgent: "Google Pixel",
+		userAgentRaw: "Mozilla/5.0 (Linux; Android 7.1.1; Pixel Build/NOF27B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.132 Mobile Safari/537.36",
 	},
 ];
 

@@ -17,8 +17,9 @@ const performSetDevice = async (device: iDevice) => {
         type: ActionsInTestEnum.SET_DEVICE,
         payload: {
             meta: {
-                device: device.id,
-                userAgent: device.userAgent,
+                device: {
+                    ...device,
+                }
             },
         },
     });
@@ -111,6 +112,10 @@ const performCustomCode = async (code: string) => {
     })
 };
 
+const performVerifyTest = async () => {
+    ipcRenderer.invoke("verify-test");
+};
+
 const turnOnInspectMode = () => {
     ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 }
@@ -119,4 +124,8 @@ const turnOffInspectMode = () => {
     ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 }
 
-export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode };
+const saveTest = () => {
+    ipcRenderer.invoke("save-test");
+}
+
+export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest };

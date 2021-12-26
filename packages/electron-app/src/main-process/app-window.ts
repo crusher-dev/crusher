@@ -126,7 +126,7 @@ export class AppWindow {
 		this.window.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, this.allowAllNetworkRequests.bind(this));
 
         /* Loads crusher app */
-        this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'), { userAgent: "Chrome" });
+        this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'));
     }
 
     allowAllNetworkRequests(responseDetails, updateCallback) {

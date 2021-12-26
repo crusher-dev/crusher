@@ -500,6 +500,7 @@ export default class EventRecording {
 			detail: { type: string; key: string; eventNode: Node; targetNode: Node };
 		},
 	) {
+		console.log("Tracing dom mutation");
 		this.releventHoverDetectionManager.registerDOMMutation({
 			...event.detail,
 		});

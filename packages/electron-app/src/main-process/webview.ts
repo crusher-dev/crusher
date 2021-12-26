@@ -48,9 +48,9 @@ export class WebView {
 		await _debugger.sendCommand("Emulation.setFocusEmulationEnabled", { enabled: true });
 		await _debugger.sendCommand("Debugger.setAsyncCallStackDepth", { maxDepth: 9999 });
 		await _debugger.sendCommand("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: true, flatten: true });
-        // @TODO: This should not be necessary. Look into this
-		// It's here to enable DOMDebugger, which is not getting enabled by default
-		await _debugger.sendCommand("DOMDebugger.setXHRBreakpoint", { url: "http://nonsense.com" });
+        // // @TODO: This should not be necessary. Look into this
+		// // It's here to enable DOMDebugger, which is not getting enabled by default
+		// await _debugger.sendCommand("DOMDebugger.setXHRBreakpoint", { url: "http://nonsense.com" });
         await _debugger.on("message", this.handleDebuggerEvents.bind(this));
 
         this.registerIPCListeners();

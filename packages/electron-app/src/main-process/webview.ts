@@ -65,7 +65,6 @@ export class WebView {
     }
 
 	registerIPCListeners() {
-		ipcMain.handle("execute-custom-code", this._executeCustomCode.bind(this));
 		ipcMain.on("turn-on-inspect-mode", this._turnOnInspectMode.bind(this));
 		ipcMain.on("turn-off-inspect-mode", this._turnOffInspectMode.bind(this));
 	}
@@ -82,22 +81,6 @@ export class WebView {
 			mode: "none",
 			highlightConfig: highlighterStyle,
 		});
-	}
-
-	async _executeCustomCode(event, scriptFunction: string) {
-		await this.appWindow.focusWebView();
-		console.log("Function body", `${scriptFunction} return validate(crusherSdk);`);
-
-		await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${scriptFunction} return validate(crusherSdk);`)(
-			exports,
-			typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
-			module,
-			__filename,
-			__dirname,
-			this.playwrightInstance.getSdkManager(),
-		);
-
-		return true;
 	}
 
 	async handleDebuggerEvents(event, method, params) {

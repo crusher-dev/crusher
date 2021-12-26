@@ -183,23 +183,8 @@ export class AppWindow {
                 await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
                 break;
         }
-        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {});
+        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
     }
-
-    async _executeCustomCode(scriptFunction: string) {
-		console.log("Function body", `${scriptFunction} return validate(crusherSdk);`);
-
-		await new Function("exports", "require", "module", "__filename", "__dirname", "crusherSdk", `${scriptFunction} return validate(crusherSdk);`)(
-			exports,
-			typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
-			module,
-			__filename,
-			__dirname,
-			this.webView.playwrightInstance.getSdkManager(),
-		);
-
-		return true;
-	}
 
     private async handleRunAfterTest(action: iAction)  {
         this.store.dispatch(resetRecorderState());

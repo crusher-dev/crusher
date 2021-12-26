@@ -22,4 +22,6 @@ export const ACTION_DESCRIPTIONS = {
     [ActionsInTestEnum.ASSERT_ELEMENT]: "Assert element",
     [ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: "Custom element script",
     [ActionsInTestEnum.CUSTOM_CODE]: "Custom code",
+    [ActionsInTestEnum.RELOAD_PAGE]: "Reload page",
+    [ActionsInTestEnum.BACK_PAGE]: "Go back page",
 }

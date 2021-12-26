@@ -11,7 +11,7 @@ import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
 import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { performNavigation, performSetDevice, performVerifyTest, saveTest } from "../../commands/perform";
+import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, saveTest } from "../../commands/perform";
 import { addHttpToURLIfNotThere } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
@@ -146,8 +146,12 @@ const Toolbar = (props: any) => {
 
 	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
 
-	const goBack = () => {}
-	const refreshPage = () => {}
+	const goBack = () => {
+		preformGoBackPage();
+	}
+	const refreshPage = () => {
+		performReloadPage();
+	}
     
     return (
 		<div css={containerStyle}>

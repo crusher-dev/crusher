@@ -128,4 +128,12 @@ const saveTest = () => {
     ipcRenderer.invoke("save-test");
 }
 
-export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest };
+const preformGoBackPage = () => {
+    ipcRenderer.invoke("go-back-page");
+}
+
+const performReloadPage = () => {
+    ipcRenderer.invoke("reload-page");
+}
+
+export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage };

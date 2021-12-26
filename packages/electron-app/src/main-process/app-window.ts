@@ -11,7 +11,7 @@ import { WebView } from './webview';
 import { iAction } from '@shared/types/action';
 import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 import { iDevice } from '@shared/types/extension/device';
-import { recordStep, resetRecorderState, setInspectMode, setIsTestVerified, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
+import { recordStep, resetRecorderState, setInspectMode, setIsTestVerified, updateCurrentRunningStepStatus, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
 import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
 import { getSavedSteps } from '../store/selectors/recorder';
 import { CrusherTests } from '../lib/tests';
@@ -122,6 +122,8 @@ export class AppWindow {
         ipcMain.handle('turn-off-recorder-inspect-mode', this.turnOffInspectMode.bind(this))
         ipcMain.handle('verify-test', this.handleVerifyTest.bind(this));
         ipcMain.handle('save-test', this.handleSaveTest.bind(this));
+        ipcMain.handle('go-back-page', this.handleGoBackPage.bind(this));
+        ipcMain.handle('reload-page', this.handleReloadPage.bind(this));
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
@@ -129,6 +131,32 @@ export class AppWindow {
 
         /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'));
+    }
+
+    async handleGoBackPage() {
+        /* Todo: Add wait for this, and keep track of the back page */
+        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {  }));
+        this.webView.webContents.goBack();
+        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {  }));
+    }
+
+    async handleReloadPage() {
+        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {  }));
+        const savedSteps = getSavedSteps(this.store.getState() as any);
+
+        this.store.dispatch(recordStep({
+            type: ActionsInTestEnum.RELOAD_PAGE,
+            payload: {}
+        }));
+
+        this.webView.webContents.reload();
+
+        await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
+
+        /* Change this to back */
+        this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.COMPLETED);
+
+        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {  }));
     }
 
     async handleSaveTest() {

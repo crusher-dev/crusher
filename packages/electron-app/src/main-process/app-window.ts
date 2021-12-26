@@ -239,7 +239,9 @@ export class AppWindow {
                     this.webView.webContents.setUserAgent(userAgent);
                 }
                 app.userAgentFallback = userAgent;
-                this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                if(!payload.shouldNotSave) {
+                    this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                }
                 break;
             }
             case ActionsInTestEnum.NAVIGATE_URL: {
@@ -254,7 +256,9 @@ export class AppWindow {
             case ActionsInTestEnum.RELOAD_PAGE: {
                 this.webView.webContents.reload();
                 await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
-                this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                if(!payload.shouldNotSave) {
+                    this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                }
                 break;
             }
             default:

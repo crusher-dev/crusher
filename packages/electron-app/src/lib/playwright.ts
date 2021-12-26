@@ -110,7 +110,7 @@ class PlaywrightInstance {
 			return url.startsWith("about:blank");
 		});
 
-		console.log("Webview page", webViewPage);
+		console.log("Webview page", pagesMap[webViewPage]);
 
 		const page = pages[webViewPage];
 		return page;

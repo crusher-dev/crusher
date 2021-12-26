@@ -66,7 +66,7 @@ const PageActions = ({className, ...props}: {className?: any}) => {
 		return <ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
 	});
 
-	const closeModal = () => {
+	const closeModal = (completed?: boolean) => {
 		setCurrentModal(null);
 	}
 

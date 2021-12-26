@@ -4,6 +4,7 @@ import { Conditional } from "@dyson/components/layouts";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../../../modals/topBar";
 import { Button } from "@dyson/components/atoms/button/Button";
+import { performCustomCode } from "electron-app/src/ui/commands/perform";
 
 interface iElementCustomScriptModalContent {
 	isOpen: boolean;
@@ -13,7 +14,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
     const { isOpen } = props;
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 
-	useEffect(() => {
+	const handleLoad = React.useCallback(() => {
 		if (codeTextAreaRef.current) {
 			console.log("writing hte value");
 			codeTextAreaRef.current!.value =
@@ -32,12 +33,19 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		}
 	}, [codeTextAreaRef.current]);
 
-	const handleClose = () => {}
-
+	React.useEffect(() => {
+		handleLoad();
+	}, [isOpen]);
+	
 	const handleScriptChange = async (cm: any, change: any) => {
 		const script = cm.getValue();
 		codeTextAreaRef.current!.value = script;
 	};
+
+	const runCustomCode = React.useCallback(() => {
+		performCustomCode(codeTextAreaRef?.current.value);
+		props.handleClose();
+	}, [codeTextAreaRef]);
 
 	const isThereScriptOutput = true;
 
@@ -53,7 +61,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
                 <textarea id={"custom_script"} css={css`width: 100%; height: 400rem; color: #000; font-size: 14rem;`} ref={codeTextAreaRef}></textarea>
 
                 <div css={bottomBarStyle}>
-                    <Button css={saveButtonStyle} onClick={handleClose}>Save</Button>
+                    <Button css={saveButtonStyle} onClick={runCustomCode}>Save</Button>
                 </div>
             </div>
 

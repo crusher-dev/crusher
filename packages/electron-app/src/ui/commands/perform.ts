@@ -99,6 +99,18 @@ const performRunAfterTest = async (testId: string) => {
     }, true);
 };
 
+const performCustomCode = async (code: string) => {
+    await performAction({
+        type: ActionsInTestEnum.CUSTOM_CODE,
+        payload: {
+            selectors: null,
+            meta: {
+                script: code
+            }
+        }
+    })
+};
+
 const turnOnInspectMode = () => {
     ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 }
@@ -107,4 +119,4 @@ const turnOffInspectMode = () => {
     ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 }
 
-export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest };
+export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode };

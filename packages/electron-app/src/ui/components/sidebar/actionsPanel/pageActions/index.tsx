@@ -4,6 +4,7 @@ import { ActionsList, ActionsListItem } from "../actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
 import { WaitModal } from "./waitModal";
 import { RunAfterTestModal } from "./runAfterTestModal";
+import { CustomCodeModal } from "./customCodeModal";
 
 enum TTopLevelActionsEnum {
     VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
@@ -75,6 +76,7 @@ const PageActions = ({className, ...props}: {className?: any}) => {
         	<ActionsList className={`${className}`} css={containerStyle} title="Page List">{items}</ActionsList>
 			<WaitModal isOpen={currentModal === TTopLevelActionsEnum.WAIT} handleClose={closeModal} />
 			<RunAfterTestModal isOpen={currentModal === TTopLevelActionsEnum.RUN_AFTER_TEST} handleClose={closeModal} />
+			<CustomCodeModal isOpen={currentModal === TTopLevelActionsEnum.CUSTOM_CODE} handleClose={closeModal} />
 		</>
     )
 };

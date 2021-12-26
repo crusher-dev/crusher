@@ -19,4 +19,11 @@ function encodePathAsUrl(...pathSegments: string[]): string {
 	return fileUrl(Path)
 }
 
-export { isProduction, getAppIconPath, encodePathAsUrl };
+const addHttpToURLIfNotThere = (uri: string) => {
+	if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
+		return `http://${uri}`;
+	}
+	return uri;
+};
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere };

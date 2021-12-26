@@ -32,10 +32,10 @@ const elementActionsList = [
 		id: TElementActionsEnum.SHOW_ASSERT_MODAL,
 		title: "Add Checks",
 	},
-	{
-		id: TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL,
-		title: "Code",
-	},
+	// {
+	// 	id: TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL,
+	// 	title: "Code",
+	// },
 ];
 
 const ElementActions = ({className, ...props}: {className?: any}) => {

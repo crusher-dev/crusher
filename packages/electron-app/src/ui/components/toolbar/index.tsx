@@ -10,8 +10,10 @@ import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
-import { getRecorderInfo } from "electron-app/src/store/selectors/recorder";
+import { getRecorderInfo, getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { performNavigation, performSetDevice } from "../../commands/perform";
+import { addHttpToURLIfNotThere } from "../../../utils";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 const DeviceItem = ({label}) => {
 	return (
@@ -33,14 +35,22 @@ const Toolbar = (props: any) => {
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfo = useSelector(getRecorderInfo);
+	const recorderState = useSelector(getRecorderState);
 
 	const dispatch = useDispatch();
 	const store = useStore();
 
+	React.useEffect(() => {
+		if (recorderInfo.url !== url){
+			setUrl(recorderInfo.url);
+		}
+	}, [recorderInfo.url]);
+
     const handleUrlReturn = React.useCallback(() => {
 		if(urlInputRef.current?.value) {
 			const device = recorderDevices.find((device) => device.value === selectedDevice[0])?.device;
-
+			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
+			
 			batch(() => {
 				if(selectedDevice[0] !== recorderInfo.device?.id) {
 					performSetDevice(device);
@@ -48,9 +58,10 @@ const Toolbar = (props: any) => {
 				}
 				
 				if(recorderInfo.url) {
-					performNavigation(urlInputRef.current.value, store);
+					dispatch(setSiteUrl(validUrl.toString()));
+					performNavigation(validUrl.toString(), store);
 				} else {
-					dispatch(setSiteUrl(urlInputRef.current.value));
+					dispatch(setSiteUrl(validUrl.toString()));
 				}
 			})
 		}
@@ -65,6 +76,8 @@ const Toolbar = (props: any) => {
 			dispatch(setDevice(selected[0]));
 		}
 	}
+
+	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
 
 	const saveTest = () => {}
 	const goBack = () => {}
@@ -94,15 +107,17 @@ const Toolbar = (props: any) => {
 				}
 			/>
 			
-			<Conditional showIf={false}>
-				<Button className={"ml-24"} onClick={() => {}} bgColor="tertiary-outline" css={buttonStyle}>
+			<Conditional showIf={isRecorderInInitialState}>
+				<Button className={"ml-24"} onClick={handleUrlReturn} bgColor="tertiary-outline" css={buttonStyle}>
 					Start
 				</Button>
 			</Conditional>
-			<Conditional showIf={true}>
+			<Conditional showIf={!isRecorderInInitialState}>
 				<div className={"ml-18 flex items-center"}>
-					<div css={onlineDotStyle} />
-					<Text css={recTextStyle} className={"ml-8"}>Rec.</Text>
+					<div css={[onlineDotStyle, recorderState.type === TRecorderState.PERFORMING_ACTIONS ? css`background: yellow` : undefined]} />
+					<Text css={recTextStyle} className={"ml-8"}>
+						{recorderState.type !== TRecorderState.PERFORMING_ACTIONS ? "Rec." : "Waiting"}
+					</Text>
 				</div>
 
 				<div className={"ml-auto flex items-center"}>

@@ -28,6 +28,64 @@ const recorderDevices = devices.filter(device => device.visible).map((device) =>
 	component: <DeviceItem label={device.name} />
 }));
 
+const SaveVerifyButton = ({isTestVerificationComplete}) => {
+	const [secondsCounter, setSecondsCounter] = React.useState(0);
+	const intervalRef = React.useRef(null);
+	const totalSecondsToWaitBeforeSave = 5;
+
+	let counter =  0;
+	React.useEffect(() => {
+		if(isTestVerificationComplete) {
+			setSecondsCounter(0);
+			intervalRef.current = setInterval(() => {
+				counter++;
+
+				if(counter >= totalSecondsToWaitBeforeSave) {
+					saveTestToCloud();
+				}
+				setSecondsCounter(counter);
+			}, 1000);
+
+			return () => {
+				if(intervalRef.current)
+					clearInterval(intervalRef.current);
+				intervalRef.current = null;
+			};
+		}
+	}, [isTestVerificationComplete]);
+
+		
+	const verifyTest = () => {
+		performVerifyTest();
+	}
+
+	const saveTestToCloud = () => {
+		if(intervalRef.current) {
+			clearInterval(intervalRef.current);
+		}
+		intervalRef.current = null;
+		saveTest();
+	}
+
+	return (
+		<Button onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+			<Conditional showIf={isTestVerificationComplete}>
+				<span>
+					<Conditional showIf={totalSecondsToWaitBeforeSave - secondsCounter > 0}>
+						<span>Saving in  {totalSecondsToWaitBeforeSave - secondsCounter}s</span>
+					</Conditional>
+					<Conditional showIf={totalSecondsToWaitBeforeSave - secondsCounter <= 0}>
+						<span>Save test</span>
+					</Conditional>
+				</span>
+			</Conditional>
+			<Conditional showIf={!isTestVerificationComplete}>
+				<span>Verify test</span>
+			</Conditional>
+		</Button>
+	);
+}
+
 
 const Toolbar = (props: any) => {
     const [url, setUrl] = React.useState("" || null);
@@ -46,6 +104,14 @@ const Toolbar = (props: any) => {
 			setUrl(recorderInfo.url);
 		}
 	}, [recorderInfo.url]);
+
+	React.useEffect(() => {
+		if(isTestVerificationComplete) {
+
+		} else {
+
+		}
+	}, [isTestVerificationComplete]);
 
     const handleUrlReturn = React.useCallback(() => {
 		if(urlInputRef.current?.value) {
@@ -79,14 +145,6 @@ const Toolbar = (props: any) => {
 	}
 
 	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
-	
-	const verifyTest = () => {
-		performVerifyTest();
-	}
-
-	const saveTestToCloud = () => {
-		saveTest();
-	}
 
 	const goBack = () => {}
 	const refreshPage = () => {}
@@ -131,9 +189,7 @@ const Toolbar = (props: any) => {
 				<div className={"ml-auto flex items-center"}>
 					<SettingsIcon css={css`height: 14rem; :hover { opacity: 0.9 }`} className={"ml-12"} />
 
-					<Button onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
-						{isTestVerificationComplete ? "Save test" : "Verify test"}
-					</Button>
+					<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
 				</div>
 			</Conditional>
 		</div>

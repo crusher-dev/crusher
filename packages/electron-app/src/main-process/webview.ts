@@ -31,7 +31,6 @@ export class WebView {
 	}
 
     async initialize() {
-        this.cleanStorage();
 		this.webContents.on("destroyed", this.dispose.bind(this));
         if(this.webContents.debugger.isAttached()) return;
 
@@ -114,14 +113,6 @@ export class WebView {
 			});
 		}
 	}
-
-    cleanStorage() {
-        try {
-            session.fromPartition("crusher").clearStorageData({
-                    storages: ["cookies", "localstorage", "indexdb"],
-                });
-        } catch(err) {}   
-    }
 
 	dispose() {
 		ipcMain.removeHandler("execute-custom-code");

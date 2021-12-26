@@ -5,6 +5,7 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch } from "react-redux";
+import { performRunAfterTest } from "electron-app/src/ui/commands/perform";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -23,17 +24,10 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 
 	const saveAction = async () => {
 		if (testId && testId !== "") {
-			if (!(window as any).electron) {
-				props.handleClose();
-				throw new Error("Cannot find exposed electron API");
-			}
-
-			await (window as any).electron.runAfterThisTest(testId);
+			performRunAfterTest(testId);
 			props.handleClose();
 		}
 	};
-
-
 
 	if(!isOpen) return null;
 	

@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { getRecorderInfo } from "electron-app/src/store/selectors/recorder";
+import { getRecorderInfo, getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
@@ -11,6 +11,7 @@ import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ipcRenderer } from "electron";
 import { saveAutoAction } from "../../commands/saveActions";
 import { TRecorderMessagesType } from "electron-app/src/extension/scripts/inject/host-proxy";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
@@ -24,6 +25,9 @@ const DeviceFrame = (props: any) => {
     React.useEffect(() => {
         if (ref.current) {
             ref.current.addEventListener("ipc-message", (event: IpcMessageEvent) => {
+                const recorderState = getRecorderState(store.getState());
+                if(recorderState.type === TRecorderState.PERFORMING_ACTIONS) return;
+    
                 const { channel, args } = event;
                 if(channel === "recorder-message") {
                     const { type, payload } = args[0];
@@ -56,13 +60,10 @@ const DeviceFrame = (props: any) => {
                         ref={ref}
                         css={webviewStyle}
                         id="device_browser"
-                        nodeintegration={"true"}
                         preload={getPreloadScriptPath()}
-                                            //@ts-ignore
-                        enableremotemodule={"true"}
                         title={"crusher-webview"}
                         src={"about:blank"}
-                        partition={"crusher"}
+                        partition={"crusherwebview"}
                     />
                 </div>
             </Conditional>

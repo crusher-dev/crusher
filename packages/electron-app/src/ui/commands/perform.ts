@@ -88,6 +88,17 @@ const performHover = async (selectedElement: iElementInfo, store: Store<unknown,
     });
 };
 
+const performRunAfterTest = async (testId: string) => {
+    await performAction({
+        type: ActionsInTestEnum.RUN_AFTER_TEST,
+        payload: {
+            meta: {
+                value: testId,
+            }
+        }
+    }, true);
+};
+
 const turnOnInspectMode = () => {
     ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 }
@@ -96,4 +107,4 @@ const turnOffInspectMode = () => {
     ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 }
 
-export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot };
+export { performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest };

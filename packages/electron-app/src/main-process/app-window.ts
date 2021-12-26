@@ -11,8 +11,12 @@ import { WebView } from './webview';
 import { iAction } from '@shared/types/action';
 import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 import { iDevice } from '@shared/types/extension/device';
-import { recordStep, setInspectMode } from '../store/actions/recorder';
+import { recordStep, resetRecorderState, setInspectMode, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
 import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
+import { getSavedSteps } from '../store/selectors/recorder';
+import { CrusherTests } from '../lib/tests';
+import { getBrowserActions, getMainActions } from 'runner-utils/src';
+import { TRecorderState } from '../store/reducers/recorder';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -119,10 +123,21 @@ export class AppWindow {
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
+		this.window.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, this.allowAllNetworkRequests.bind(this));
 
         /* Loads crusher app */
-        this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'))
+        this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'), { userAgent: "Chrome" });
     }
+
+    allowAllNetworkRequests(responseDetails, updateCallback) {
+		Object.keys(responseDetails.responseHeaders).map((headers) => {
+			if (["x-frame-options", "content-security-policy", "frame-options"].includes(headers.toString().toLowerCase())) {
+				delete responseDetails.responseHeaders[headers];
+			}
+		});
+
+		updateCallback({ cancel: false, responseHeaders: responseDetails.responseHeaders });
+	}
 
     private turnOnInspectMode() {
         this.store.dispatch(setInspectMode(true));
@@ -136,20 +151,31 @@ export class AppWindow {
         this.webView.webContents.focus();
     }
 
+    private async clearWebViewStorage() {
+       return session.fromPartition("crusherwebview").clearStorageData({
+            storages: ["cookies", "localstorage", "indexdb"],
+        });
+    }
+
     private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction, shouldNotSave?: boolean }) {
         const { action, shouldNotSave } = payload;
         switch(action.type) {
             case ActionsInTestEnum.SET_DEVICE: {
                 // Custom implementation here, because we are in the recorder
+                const userAgent = !!action.payload.meta?.device && typeof action.payload.meta?.device !== "string" ? action.payload.meta?.device.userAgent : action.payload.meta.userAgent;
                 if(this.webView) {
-                    this.webView.webContents.setUserAgent(action.payload.meta.userAgent);
+                    this.webView.webContents.setUserAgent(userAgent);
                 }
-                app.userAgentFallback = action.payload.meta.userAgent;
+                app.userAgentFallback = userAgent;
                 this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
                 return;
             }
             case ActionsInTestEnum.NAVIGATE_URL: {
                 await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                return;
+            }
+            case ActionsInTestEnum.RUN_AFTER_TEST: {
+                await this.handleRunAfterTest(action);
                 return;
             }
             default:
@@ -158,9 +184,39 @@ export class AppWindow {
         }
     }
 
+    private async handleRunAfterTest(action: iAction)  {
+        this.store.dispatch(resetRecorderState());
+        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }));
+    
+        await this.clearWebViewStorage();
+
+        const replayableTestSteps = await CrusherTests.getReplayableTestActions(await CrusherTests.getTest(action.payload.meta.value), true);
+        const browserActions = getBrowserActions(replayableTestSteps);
+        
+        for(let browserAction of browserActions) {
+            if(browserAction.type === ActionsInTestEnum.SET_DEVICE) {
+                await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+            } else {
+                if(browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
+                    this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
+                }
+            }
+        }
+    
+        this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
+
+        for(let savedStep of getMainActions(replayableTestSteps)) {
+            await this.handlePerformAction(null, { action: savedStep, shouldNotSave: true });
+        }
+
+        const savedSteps = getSavedSteps(this.store.getState() as any);
+        this.store.dispatch(updateRecordedStep(action, savedSteps.length - 1));
+        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+    }
+
     async handleWebviewAttached(event, webContents) {
         this.webView = new WebView(this);
-        this.webView.webContents.on("dom-ready", () => {
+        this.webView.webContents.once("dom-ready", () => {
             this.webView.initialize();
             console.log("Webview initialized");
         });

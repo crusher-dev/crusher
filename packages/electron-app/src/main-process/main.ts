@@ -89,12 +89,6 @@ function createWindow() {
 	console.log("Creating window now...");
 	const store = configureStore(global.state, 'main');
 
-	store.subscribe(async () => {
-		// persist store changes
-		// TODO: should this be blocking / wait? _.throttle?
-		console.log("Changes occurred in store");
-	});
-
 	const window = new AppWindow(store)
 
 	if (!isProduction()) {

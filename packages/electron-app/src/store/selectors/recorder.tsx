@@ -7,3 +7,5 @@ export const isInspectModeOn = (state: iReduxState) => state.recorder.isInspectM
 export const getSelectedElement = (state: iReduxState) => state.recorder.selectedElement;
 
 export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;
+
+export const getRecorderState = (state: iReduxState) => state.recorder.state;

@@ -14,6 +14,7 @@ import { TRecorderState } from "../store/reducers/recorder";
 import { getRecorderInfo } from "../store/selectors/recorder";
 import { performNavigation, saveSetDeviceIfNotThere } from "./commands/perform";
 import {devices} from "../devices";
+import { iReduxState } from "../store/reducers/index";
 
 const App = () => {
 	const store = useStore();
@@ -99,7 +100,10 @@ const globalStyles = css`
 	}
 `;
 
-const store = configureStore(getInitialStateRenderer(), "renderer");
+const initialReduxState: iReduxState = getInitialStateRenderer();
+initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
+
+const store = configureStore(initialReduxState, "renderer");
 render(
 <Provider store={store}>
         <App />

@@ -12,6 +12,7 @@ import { ipcRenderer } from "electron";
 import { saveAutoAction } from "../../commands/saveActions";
 import { TRecorderMessagesType } from "electron-app/src/extension/scripts/inject/host-proxy";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { InfoOverLay } from "../overlays/infoOverlay";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
@@ -67,6 +68,7 @@ const DeviceFrame = (props: any) => {
                     />
                 </div>
             </Conditional>
+            <InfoOverLay />
         </div>
     )
 };

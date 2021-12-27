@@ -11,6 +11,7 @@ class ElementsIdMap {
         if(node instanceof HTMLElement) {
             console.log("CRUSHER_SAVE_ELEMENT_HANDLE", node, id);
         }
+        return id;
     }
 }
 

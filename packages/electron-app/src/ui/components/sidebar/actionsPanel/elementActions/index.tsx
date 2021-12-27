@@ -6,6 +6,7 @@ import { useSelector, useStore } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { peformTakeElementScreenshot, performClick, performHover } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
+import { AssertElementModal } from "./assertElementModal";
 
 enum TElementActionsEnum {
     CLICK = "CLICK",
@@ -71,6 +72,10 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 		return <ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
 	});
 
+	const closeModal = (completed?: boolean) => {
+		setCurrentModal(null);
+	}
+
     return (
         <ActionsList className={`${className}`} css={containerStyle}>
             <div css={actionTabStyle}>
@@ -84,6 +89,9 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
             <>
                 {items}
             </>
+
+			<AssertElementModal isOpen={currentModal === TElementActionsEnum.SHOW_ASSERT_MODAL} handleClose={closeModal}  />
+
         </ActionsList>
     )
 };

@@ -1,58 +1,62 @@
-import React, { useState } from "react";
+import React, { RefObject, useState } from "react";
 import { useSelector, useStore } from "react-redux";
+import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../../forms/assertionForm";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
 import uniqueId from "lodash/uniqueId";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { Button } from "@dyson/components/atoms/button/Button";
+import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
+import { recordHoverDependencies } from "electron-app/src/ui/commands/perform";
+import { recordStep } from "electron-app/src/store/actions/recorder";
+import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
+import { BulbIcon } from "electron-app/src/ui/icons";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../../../modals/topBar";
 import { css } from "@emotion/react";
-import { updateActionsModalState } from "crusher-electron-app/src/extension/redux/actions/recorder";
-import { Text } from "@dyson/components/atoms/text/Text";
-import { Button } from "@dyson/components/atoms/button/Button";
-import { recordStep } from "electron-app/src/store/actions/recorder";
-import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../../forms/assertionForm";
-import { iSeoMetaInformationMeta } from "electron-app/src/extension/messageListener";
-import { Conditional } from "@dyson/components/layouts";
 import { ipcRenderer } from "electron";
-import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
+import { Text } from "@dyson/components/atoms/text/Text";
 
-interface iSEOModalProps {
-	handleClose?: () => void;
+interface iAssertElementModalProps {
 	isOpen: boolean;
+	handleClose?: () => void;
 }
 
-const getValidationFields = (seoInfo: iSeoMetaInformationMeta): Array<iField> => {
-	if (!seoInfo) return [];
-	const title = seoInfo.title;
-	const metaTags = Object.values(seoInfo.metaTags);
+const getValidationFields = (elementInfo: any): Array<iField> => {
+	if (!elementInfo) return [];
+	const innerHTML = elementInfo.innerHTML;
+	const attributes = elementInfo.attributes;
 
-	const MetaTagsFields = metaTags.map((metaTag) => {
-		return { name: metaTag.name, value: metaTag.value, meta: { type: "META" } };
+	const MetaTagsFields = attributes.map((attribute) => {
+		return {
+			name: attribute.name,
+			value: attribute.value,
+			meta: { type: "ATTRIBUTE" },
+		};
 	});
-	return [{ name: "title", value: title, meta: { type: "TITLE" } }, ...MetaTagsFields];
+	return [{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } }, ...MetaTagsFields];
 };
 
-const getSeoFieldValue = (fieldInfo: iField) => {
+const getElementFieldValue = (fieldInfo: iField) => {
 	return fieldInfo.value;
 };
 
-const SeoModalContent = (props: iSEOModalProps) => {
-	const { isOpen, handleClose } = props;
-    const [seoInfo, setSeoInfo] = React.useState(null);
-
-    const store = useStore();
+const AssertElementModal = (props: iAssertElementModalProps) => {
+	const { handleClose, isOpen } = props;
+	const [elementInfo, setElementInfo] = useState(null);
+	const store = useStore();
+	const selectedElement = useSelector(getSelectedElement);
 
 	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
-	const validationFields = getValidationFields(seoInfo!);
-	console.log("Validation fields are", validationFields);
+	const validationFields = getValidationFields(elementInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
 
 	React.useEffect(() => {
 		if(isOpen) {
-			ipcRenderer.invoke("get-page-seo-info").then((res) => {
+			console.log("Sending this async", selectedElement);
+			ipcRenderer.invoke("get-element-assert-info", selectedElement).then((res) => {
 				console.log("Response is this", res);
-				setSeoInfo(res);
+				setElementInfo(res);
 			});
 		}
 	}, [isOpen]);
@@ -88,21 +92,20 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		setValidationRows([...newValidationRows]);
 	};
 
-	const createNewSeoAssertionRow = () => {
-		addValidationRow(validationFields[0], validationOperations[0], getSeoFieldValue(validationFields[0]));
+	const createNewElementAssertionRow = () => {
+		addValidationRow(validationFields[0], validationOperations[0], getElementFieldValue(validationFields[0]));
 	};
 
 	const generateDefaultChecksForPage = () => {
 		const newValidationRowsData = [];
 		for (let i = 0; i < validationFields.length; i++) {
 			newValidationRowsData.push({
-				id: uniqueId("generate-checks-row"),
 				field: validationFields[i],
 				operation: ASSERTION_OPERATION_TYPE.MATCHES,
-				validation: getSeoFieldValue(validationFields[i]),
+				validation: getElementFieldValue(validationFields[i]),
 			});
 		}
-		setValidationRows([...newValidationRowsData]);
+		addValidationRows(newValidationRowsData);
 	};
 
 	const updateFieldOfValidationRow = (newFieldName: string, rowId: string) => {
@@ -112,7 +115,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		if (!newField) throw new Error("Invalid field provided for validation row");
 
 		validationRows[rowIndex].field = newField;
-		validationRows[rowIndex].validation = getSeoFieldValue(newField);
+		validationRows[rowIndex].validation = getElementFieldValue(newField);
 		setValidationRows([...validationRows]);
 	};
 
@@ -132,54 +135,51 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		setValidationRows([...validationRows]);
 	};
 
+	const saveElementValidationAction = () => {
+		recordHoverDependencies(selectedElement, store);
+
+		store.dispatch(recordStep({
+			type: ActionsInTestEnum.ASSERT_ELEMENT,
+			payload: {
+				selectors: elementInfo.selectors,
+				meta: {
+					validations: validationRows,
+				},
+			},
+		}, ActionStatusEnum.COMPLETED));
+		if (handleClose) {
+			handleClose();
+		}
+	};
+
 	const deleteValidationRow = (rowIndex) => {
 		const newValidationRows = validationRows.filter((a) => a.id !== rowIndex);
 		setValidationRows([...newValidationRows]);
 	};
 
-	const saveSeoValidationAction = () => {
-		store.dispatch(
-			recordStep({
-				type: ActionsInTestEnum.VALIDATE_SEO,
-				payload: {
-					meta: {
-						validations: validationRows,
-					},
-				},
-				url: "",
-			}, ActionStatusEnum.COMPLETED),
-		);
-		handleClose();
-	};
-
-	if(!isOpen) return null; 
+	if(!isOpen) return null;
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
 			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />		
 			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
-				<Conditional showIf={seoInfo === null}>
-					<span css={css`font-size: 14rem; color: #fff`}>Loading...</span>
-				</Conditional>
-				<Conditional showIf={seoInfo !== null}>
-					<AssertionFormTable
-						rowItems={validationRows}
-						fields={validationFields}
-						operations={validationOperations}
-						onFieldChange={updateFieldOfValidationRow}
-						onOperationChange={updateOperationOfValidationRow}
-						deleteValidationRow={deleteValidationRow}
-						onValidationChange={updateValidationValueOfValidationRow}
-					/>
-				</Conditional>
-				<div style={bottomBarStyle} css={css`margin-bottom: 22rem; margin-top: 38rem;`}>
+			<AssertionFormTable
+				rowItems={validationRows}
+				fields={validationFields}
+				operations={validationOperations}
+				onFieldChange={updateFieldOfValidationRow}
+				onOperationChange={updateOperationOfValidationRow}
+				onValidationChange={updateValidationValueOfValidationRow}
+				deleteValidationRow={deleteValidationRow}
+			/>
+			<div style={bottomBarStyle} css={css`margin-bottom: 22rem; margin-top: 38rem;`}>
 					<div style={formButtonStyle}>
-						<Text css={linkStyle} onClick={createNewSeoAssertionRow}>Add a check</Text>
+						<Text css={linkStyle} onClick={createNewElementAssertionRow}>Add a check</Text>
 						<Text css={[linkStyle, css`margin-left: 24rem;`]} onClick={generateDefaultChecksForPage}>Generate Checks!</Text>
 					</div>
-					<Button css={buttonStyle} onClick={saveSeoValidationAction}>Save</Button>
-				</div>
+					<Button css={buttonStyle} onClick={saveElementValidationAction}>Save</Button>
 			</div>
+		</div>
 		</Modal>
 	);
 };
@@ -203,17 +203,16 @@ const buttonStyle = css`
 	min-width: 100rem;
     border: none;
 `;
-
 const modalStyle = css`
-	width: 720rem;
-	min-height: auto !important;
+	width: 700rem;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -20%);
 	display: flex;
 	flex-direction: column;
-	padding: 0rem;
+	padding: 0rem !important;
+	min-height: 214rem;
 	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
 `;
 
@@ -224,12 +223,16 @@ const bottomBarStyle = {
 	display: "flex",
 	justifyContent: "flex-end",
 	alignItems: "center",
+	marginTop: "1.5rem",
 };
 const formButtonStyle = {
 	color: "#5B76F7",
 	marginRight: "auto",
-	fontFamily: "Gilroy",
-	fontWeight: 700,
+	fontFamily: "DM Sans",
+	fontSize: "0.9rem",
+	textDecorationLine: "underline",
+	fontWeight: 900,
+	cursor: "pointer",
 	display: "flex",
 };
 const advanceLinkContainerStyle = {
@@ -254,11 +257,11 @@ const generateTextStyle = {
 	cursor: "pointer",
 };
 const saveButtonStyle = {
-	padding: "10px 32px",
 	fontSize: "0.9rem",
+	padding: "10px 32px",
 	textAlign: "center",
 	color: "#fff",
 	marginLeft: 24,
 };
 
-export { SeoModalContent };
+export { AssertElementModal };

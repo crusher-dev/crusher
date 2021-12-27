@@ -20,11 +20,13 @@ const Step = ({
 	isFailed,
 	...props
 }: CheckboxProps & { title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
+	const [isHover, setIsHover] = React.useState(false);
+
 	return (
-		<div>
-			<div css={[stepStyle, isRunning && runningStepStyle, isFailed && failedStyle]}>
+		<div onMouseOver={setIsHover.bind(this, true)} onMouseLeave={setIsHover.bind(this, false)}>
+			<div css={[stepStyle, isRunning && runningStepStyle, (isFailed) && failedStyle]}>
 				<Checkbox {...props} />
-				<div css={stepTextStyle}>
+ 				<div css={stepTextStyle}>
 					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null]}>
 						{title}
 					</TextBlock>
@@ -33,11 +35,14 @@ const Step = ({
 				<Conditional showIf={isRunning}>
 					<LoadingIcon  style={{width: 30, height: 30, marginLeft: 4}} css={css`margin-left: auto;`}/>
 				</Conditional>
+				<Conditional showIf={isHover && (!isRunning && !isFailed)}>
+					<MoreIcon css={css`:hover{ opacity: 0.7; }`} />
+				</Conditional>
 				<Conditional showIf={isFailed}>
-					<MoreIcon />
+					<MoreIcon css={css`:hover{ opacity: 0.7; }`} />
 					<TextBlock css={stepWarningStyle}>
 						<WarningIcon css={css`height: 13rem`} />
-                        <span>&nbsp; This step failed</span>
+                        <span css={css`margin-left: 4rem;padding-top:2rem;`}>&nbsp; This step failed</span>
 					</TextBlock>
 				</Conditional>
 			</div>
@@ -46,7 +51,7 @@ const Step = ({
 				<div css={failedToDOStyle}>
 					<div css={failedToDoHeadStyle}>
 						<Text CSS={whatTODOStyle}>What to do?</Text>
-						<MoreIcon />
+						{/* <MoreIcon /> */}
 					</div>
 					<div css={failedButtonsStyle}>
 						<Button size="small" css={failedButtonStyle} bgColor="tertiary-outline">
@@ -208,7 +213,7 @@ const stepStyle = css`
 `;
 
 const failedStyle = css`
-	border: 1rem solid rgba(255, 255, 255, 0.12);
+	border: 1.5rem solid rgba(255, 255, 255, 0.12);
 	background: #0f1011;
 `;
 const stepTextStyle = css`
@@ -236,7 +241,8 @@ const stepSubtitleStyle = css`
 	user-select: none !important;
 `;
 const stepWarningStyle = css`
-	display: block;
+	display: flex;
+	align-items: center;
 	flex: 0 1 100%;
 	font-family: Gilroy;
 	font-style: normal;
@@ -245,7 +251,8 @@ const stepWarningStyle = css`
 	line-height: 13rem;
 	color: #de3d76;
 	padding: 6rem;
-	padding-bottom: 20rem;
+	margin-top: 8rem;
+	margin-bottom: 10rem;
 `;
 const failedToDOStyle = css`
 	padding: 15rem;

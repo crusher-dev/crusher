@@ -29,7 +29,7 @@ class PlaywrightInstance {
     private browserContext: BrowserContext;
 
 	/* Map to contain element handles from uniqueId saved in renderer */
-	private elementsMap: Map<string, ElementHandle>;
+	elementsMap: Map<string, ElementHandle>;
     page: Page;
     
 	private isBusy = false;
@@ -52,6 +52,10 @@ class PlaywrightInstance {
 		);
 
         this._overrideSdkActions();
+	}
+
+	public getElementHandleFromUniqueId(uniqueId: string) {
+		return this.elementsMap.get(uniqueId);
 	}
 
     private _overrideSdkActions() {
@@ -143,6 +147,7 @@ class PlaywrightInstance {
                 break;
 			case "CRUSHER_SAVE_ELEMENT_HANDLE": {
 				const uniqueElementId = messageArgs[2].toString();
+				console.log("Setting element handle", uniqueElementId);
 
 				const elementHandle = valueObj.asElement();
 				if(elementHandle) this.elementsMap.set(uniqueElementId, elementHandle);

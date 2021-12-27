@@ -16,8 +16,9 @@ import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
 import { getSavedSteps } from '../store/selectors/recorder';
 import { CrusherTests } from '../lib/tests';
 import { getBrowserActions, getMainActions } from 'runner-utils/src';
-import { TRecorderState } from '../store/reducers/recorder';
+import { iElementInfo, TRecorderState } from '../store/reducers/recorder';
 import { iSeoMetaInformationMeta } from '../extension/messageListener';
+import { getUserAgentFromName } from '@shared/constants/userAgents';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -126,6 +127,7 @@ export class AppWindow {
         ipcMain.handle('go-back-page', this.handleGoBackPage.bind(this));
         ipcMain.handle('reload-page', this.handleReloadPage.bind(this));
         ipcMain.handle('get-page-seo-info', this.handleGetPageSeoInfo.bind(this));
+        ipcMain.handle('get-element-assert-info', this.handleGetElementAssertInfo.bind(this));
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
@@ -133,6 +135,27 @@ export class AppWindow {
 
         /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'));
+    }
+
+    async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
+        const elementHandle = this.webView.playwrightInstance.getElementHandleFromUniqueId(elementInfo.uniqueElementId);
+        if(!elementHandle) {
+            return null;
+        }
+        const attributes = await elementHandle.evaluate((element, args) => {
+            const attributeNamesArr: Array<string> = (element as HTMLElement).getAttributeNames();
+            return attributeNamesArr.map(attributeName => {
+                return {
+                    name: attributeName,
+                    value: (element as HTMLElement).getAttribute(attributeName),
+                };
+            });
+        });
+    
+        return {
+            innerHTML: await elementHandle.innerHTML(),
+            attributes: attributes,
+        }
     }
 
     async handleGetPageSeoInfo(event: Electron.IpcMainEvent, url: string) {
@@ -256,12 +279,13 @@ export class AppWindow {
         switch(action.type) {
             case ActionsInTestEnum.SET_DEVICE: {
                 // Custom implementation here, because we are in the recorder
-                const userAgent = action.payload.meta?.device.userAgentRaw;
+                const userAgent = action.payload.meta?.device.userAgentRaw ? action.payload.meta?.device.userAgentRaw : getUserAgentFromName(action.payload.meta?.device.userAgent).value;
                 if(this.webView) {
                     this.webView.webContents.setUserAgent(userAgent);
                 }
                 app.userAgentFallback = userAgent;
-                if(!payload.shouldNotSave) {
+
+                if(!shouldNotSave) {
                     this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
                 }
                 break;
@@ -278,7 +302,7 @@ export class AppWindow {
             case ActionsInTestEnum.RELOAD_PAGE: {
                 this.webView.webContents.reload();
                 await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
-                if(!payload.shouldNotSave) {
+                if(!shouldNotSave) {
                     this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
                 }
                 break;
@@ -310,7 +334,7 @@ export class AppWindow {
                 }
             }
         }
-    
+
         this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
 
         for(let savedStep of getMainActions(replayableTestSteps)) {

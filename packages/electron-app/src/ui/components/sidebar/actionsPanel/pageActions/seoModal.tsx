@@ -44,14 +44,12 @@ const SeoModalContent = (props: iSEOModalProps) => {
 
 	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(seoInfo!);
-	console.log("Validation fields are", validationFields);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
 
 	React.useEffect(() => {
 		if(isOpen) {
 			ipcRenderer.invoke("get-page-seo-info").then((res) => {
-				console.log("Response is this", res);
 				setSeoInfo(res);
 			});
 		}

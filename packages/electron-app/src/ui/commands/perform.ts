@@ -4,8 +4,9 @@ import { iAction } from "@shared/types/action";
 import { iDevice } from "@shared/types/extension/device";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { ipcRenderer } from "electron";
-import { recordStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps, recordStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { iElementInfo, TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
 
 const performAction = async (action: iAction, shouldNotSave: boolean = false) => {
@@ -54,6 +55,25 @@ const recordHoverDependencies =  (selectedElement: iElementInfo, store: Store<un
                 selectors: depedentHover.selectors,
             }
         }));
+    }
+};
+
+// @TODO: Find a better way for thios
+const saveSetDeviceIfNotThere = (device: any, store: Store<unknown, AnyAction>) => {
+    const savedSteps = getSavedSteps(store.getState() as any);
+    const setDeviceAction = savedSteps.find(step => step.type === ActionsInTestEnum.SET_DEVICE);
+
+    if(!setDeviceAction) {
+        store.dispatch(recordStep({
+            type: ActionsInTestEnum.SET_DEVICE,
+            payload: {
+                meta: {
+                    device: {
+                        ...device,
+                    }
+                },
+            },
+        }, ActionStatusEnum.COMPLETED));
     }
 };
 
@@ -136,4 +156,4 @@ const performReloadPage = () => {
     ipcRenderer.invoke("reload-page");
 }
 
-export { recordHoverDependencies, performAction, performSetDevice, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage };
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage };

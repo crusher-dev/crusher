@@ -6,12 +6,13 @@ import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { MoreIcon } from "electron-app/src/extension/assets/icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ACTION_DESCRIPTIONS } from "electron-app/src/extension/constants/actionDescriptions";
+import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 
 const Step = ({
 	title,
@@ -73,7 +74,7 @@ enum GroupActionsEnum {
 	DELETE = "DELETE",
 };
 
-const GroupActionsMenu = ({showDropDownCallback}) => {
+const GroupActionsMenu = ({showDropDownCallback, callback}) => {
 	const ActionItem = ({title, id, callback}) => {
 		return (
 			<div css={css`:hover { background:#687ef2; }`}  onClick={callback.bind(this, id)}>
@@ -82,28 +83,10 @@ const GroupActionsMenu = ({showDropDownCallback}) => {
 		);
 	};
 
-	const handleActionSelected = (id) => {
-		showDropDownCallback(false);
-	
-		switch(id) {
-			case GroupActionsEnum.MAKE_OPTIONAL:
-				alert("Marking selected steps as optional");
-				break;
-			case GroupActionsEnum.CREATE_TEMPLATE:
-				alert("Showing create template modal");
-				break;
-			case GroupActionsEnum.DELETE:
-				alert("Deleting selected steps");
-				break;
-			default:
-				break;
-		}
-	}
-
 	return (<>
-		<ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={handleActionSelected}/>
-		<ActionItem title={"Make optional"} id={GroupActionsEnum.MAKE_OPTIONAL} callback={handleActionSelected}/>
-		<ActionItem title={"Delete"} id={GroupActionsEnum.DELETE} callback={handleActionSelected}/>
+		<ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/>
+		<ActionItem title={"Make optional"} id={GroupActionsEnum.MAKE_OPTIONAL} callback={callback}/>
+		<ActionItem title={"Delete"} id={GroupActionsEnum.DELETE} callback={callback}/>
 	</>);
 }
 
@@ -112,7 +95,8 @@ const StepsPanel = ({className, ...props}: any) => {
     const recordedSteps = useSelector(getSavedSteps);
 
 	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
-
+	const dispatch = useDispatch();
+	
     const toggleAllSteps = React.useCallback(
 		(checked) => {
 			if (checked) {
@@ -153,6 +137,26 @@ const StepsPanel = ({className, ...props}: any) => {
 		const elementHeight = testListContainer.scrollHeight;
 		testListContainer.scrollBy(0, elementHeight);
 	}, [recordedSteps.length]);
+
+	const handleGrouActionSelected = React.useCallback((id) => {
+		setShowGroupActionsDropDown(false);
+		setCheckedSteps(new Set());
+
+		switch(id) {
+			case GroupActionsEnum.MAKE_OPTIONAL:
+				alert("Marking selected steps as optional");
+				break;
+			case GroupActionsEnum.CREATE_TEMPLATE:
+				alert("Showing create template modal");
+				break;
+			case GroupActionsEnum.DELETE:
+				const checkedStepIndexArr = Array.from(checkedSteps);
+				dispatch(deleteRecordedSteps(checkedStepIndexArr));
+				break;
+			default:
+				break;
+		}
+	}, [checkedSteps]);
     
     return (
         <div className={`${className}`} css={containerStyle}>
@@ -164,7 +168,7 @@ const StepsPanel = ({className, ...props}: any) => {
                         <Dropdown
 							initialState={showGroupActionsDropdown}
                             dropdownCSS={dropdownStyle}
-                            component={<GroupActionsMenu showDropDownCallback={setShowGroupActionsDropDown.bind(this)}/>}
+                            component={<GroupActionsMenu callback={handleGrouActionSelected} showDropDownCallback={setShowGroupActionsDropDown.bind(this)}/>}
 							callback={setShowGroupActionsDropDown.bind(this)}
 						>
                             <MoreIcon onClick={setShowGroupActionsDropDown.bind(this, true)} />

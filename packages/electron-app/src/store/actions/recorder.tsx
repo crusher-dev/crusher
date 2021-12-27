@@ -16,6 +16,7 @@ export const UPDATE_CURRENT_RUNNING_STEP_STATUS = "UPDATE_CURRENT_RUNNING_STEP_S
 export const UPDATE_RECORDED_STEP = "UPDATE_RECORDED_STEP";
 export const RESET_RECORDER_STATE = "RESET_RECORDER_STATE";
 export const SET_IS_TEST_VERIFIED = "SET_IS_TEST_VERIFIED";
+export const DELETE_RECORDED_STEPS = "DELETE_RECORDED_STEPS";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -79,8 +80,14 @@ export const resetRecorderState = () => {
     };
 }
 
+export const deleteRecordedSteps = (indexArr) => {
+    return {
+        type: DELETE_RECORDED_STEPS,
+        payload: { indexArr }
+    }
+}
+
 export const setIsTestVerified = (isVerified: boolean) => {
-    console.log("DISPATCHING THE ACTION NOW", isVerified);
     return {
         type: SET_IS_TEST_VERIFIED,
         payload: { isTestVerified: isVerified }

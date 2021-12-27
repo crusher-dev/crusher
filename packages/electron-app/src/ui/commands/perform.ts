@@ -54,7 +54,7 @@ const recordHoverDependencies =  (selectedElement: iElementInfo, store: Store<un
             payload: {
                 selectors: depedentHover.selectors,
             }
-        }));
+        }, ActionStatusEnum.COMPLETED));
     }
 };
 

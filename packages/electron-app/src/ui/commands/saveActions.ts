@@ -33,12 +33,12 @@ function handleInputElement(action: iAction, store: Store<unknown, AnyAction>) {
 
 function handlePageElementScroll(action: iAction, store: Store<unknown, AnyAction>) {
     const lastRecordedStep = getLastRecordedStep(store);
-    if ([ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(action.type) && action.uniqueId !== lastRecordedStep.step.uniqueId) {
-        action.payload.meta.value = [action.payload.meta.value];
-        store.dispatch(recordStep(action));
-    } else {
+    if ([ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(lastRecordedStep.step.type) && action.uniqueId === lastRecordedStep.step.uniqueId) {
         action.payload.meta.value = [...lastRecordedStep.step.payload.meta.value, action.payload.meta.value];
         store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
+    } else {
+        action.payload.meta.value = [action.payload.meta.value];
+        store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED)); 
     }
 }
 

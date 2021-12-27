@@ -67,9 +67,51 @@ const Step = ({
 	);
 }
 
+enum GroupActionsEnum {
+	CREATE_TEMPLATE = "CREATE_TEMPLATE",
+	MAKE_OPTIONAL = "MAKE_OPTIONAL",
+	DELETE = "DELETE",
+};
+
+const GroupActionsMenu = ({showDropDownCallback}) => {
+	const ActionItem = ({title, id, callback}) => {
+		return (
+			<div css={css`:hover { background:#687ef2; }`}  onClick={callback.bind(this, id)}>
+				<TextBlock css={dropdownItemTextStyle}>{title}</TextBlock>
+			</div>
+		);
+	};
+
+	const handleActionSelected = (id) => {
+		showDropDownCallback(false);
+	
+		switch(id) {
+			case GroupActionsEnum.MAKE_OPTIONAL:
+				alert("Marking selected steps as optional");
+				break;
+			case GroupActionsEnum.CREATE_TEMPLATE:
+				alert("Showing create template modal");
+				break;
+			case GroupActionsEnum.DELETE:
+				alert("Deleting selected steps");
+				break;
+			default:
+				break;
+		}
+	}
+
+	return (<>
+		<ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={handleActionSelected}/>
+		<ActionItem title={"Make optional"} id={GroupActionsEnum.MAKE_OPTIONAL} callback={handleActionSelected}/>
+		<ActionItem title={"Delete"} id={GroupActionsEnum.DELETE} callback={handleActionSelected}/>
+	</>);
+}
+
 const StepsPanel = ({className, ...props}: any) => {
     const [checkedSteps, setCheckedSteps] = React.useState(new Set());
     const recordedSteps = useSelector(getSavedSteps);
+
+	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
 
     const toggleAllSteps = React.useCallback(
 		(checked) => {
@@ -120,15 +162,12 @@ const StepsPanel = ({className, ...props}: any) => {
                 <Conditional showIf={!!checkedSteps.size}>
                     <div css={stepDropdownStyle}>
                         <Dropdown
+							initialState={showGroupActionsDropdown}
                             dropdownCSS={dropdownStyle}
-                            component={
-                                <>
-                                    <TextBlock css={dropdownItemTextStyle}>Create template</TextBlock>
-                                    <TextBlock css={dropdownItemTextStyle}>Create template</TextBlock>
-                                    <TextBlock css={dropdownItemTextStyle}>Create template</TextBlock>
-                                </>
-                            }>
-                            <MoreIcon />
+                            component={<GroupActionsMenu showDropDownCallback={setShowGroupActionsDropDown.bind(this)}/>}
+							callback={setShowGroupActionsDropDown.bind(this)}
+						>
+                            <MoreIcon onClick={setShowGroupActionsDropDown.bind(this, true)} />
                         </Dropdown>
                     </div>
                 </Conditional>

@@ -36,21 +36,28 @@ const StepActionMenu = ({showDropDownCallback, callback}) => {
 }
 
 const Step = ({
+	stepIndex,
 	title,
 	subtitle,
 	isRunning,
 	isFailed,
 	...props
-}: CheckboxProps & { title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
+}: CheckboxProps & { stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
 	const [isHover, setIsHover] = React.useState(false);
 	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		setShowStepActionDropdown(false);
 	}, [isHover]);
 
-	const handleStepActionDropdown = () => {
-
+	const handleStepActionDropdown = (id) => {
+		setShowStepActionDropdown(false);
+		switch(id) {
+			case StepActionsEnum.DELETE:
+				dispatch(deleteRecordedSteps([stepIndex]));
+				break;
+		}
 	};
 
 	return (
@@ -218,6 +225,7 @@ const StepsPanel = ({className, ...props}: any) => {
 					<Step
 						isSelectAllType={false}
 						key={step.id}
+						stepIndex={step.id}
 						isRunning={step.status === ActionStatusEnum.STARTED}
 						isFailed={step.status === ActionStatusEnum.FAILED}
 						isSelected={checkedSteps.has(step.id)}

@@ -26,7 +26,7 @@ builder
 				}
 			],
 			linux: {
-				icon: "icons/app.icns",
+				icon: "assets/icons/app.icns",
 			},
 			mac: {
 				category: "public.app-category.developer-tools",

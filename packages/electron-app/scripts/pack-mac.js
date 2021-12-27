@@ -45,7 +45,7 @@ builder
 			},
 			appId: "com.crusher.electron",
 			mac: {
-				icon: "icons/app.icns",
+				icon: "assets/icons/app.icns",
 				category: "public.app-category.developer-tools",
 				hardenedRuntime: true,
 				entitlements: path.resolve(__dirname, "./entitlements.mac.plist"),

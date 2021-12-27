@@ -14,6 +14,27 @@ import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ACTION_DESCRIPTIONS } from "electron-app/src/extension/constants/actionDescriptions";
 import { deleteRecordedSteps, markRecordedStepsOptional } from "electron-app/src/store/actions/recorder";
 
+enum StepActionsEnum {
+	EDIT = "EDIT",
+	DELETE = "DELETE",
+};
+
+const StepActionMenu = ({showDropDownCallback, callback}) => {
+	const ActionItem = ({title, id, callback}) => {
+		return (
+			<div css={css`:hover { background:#687ef2; }`}  onClick={callback.bind(this, id)}>
+				<TextBlock css={dropdownItemTextStyle}>{title}</TextBlock>
+			</div>
+		);
+	};
+
+	return (<>
+		{/* <ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/> */}
+		<ActionItem title={"Edit"} id={StepActionsEnum.EDIT} callback={callback}/>
+		<ActionItem title={"Delete"} id={StepActionsEnum.DELETE} callback={callback}/>
+	</>);
+}
+
 const Step = ({
 	title,
 	subtitle,
@@ -22,6 +43,15 @@ const Step = ({
 	...props
 }: CheckboxProps & { title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
 	const [isHover, setIsHover] = React.useState(false);
+	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
+
+	React.useEffect(() => {
+		setShowStepActionDropdown(false);
+	}, [isHover]);
+
+	const handleStepActionDropdown = () => {
+
+	};
 
 	return (
 		<div onMouseOver={setIsHover.bind(this, true)} onMouseLeave={setIsHover.bind(this, false)}>
@@ -37,7 +67,14 @@ const Step = ({
 					<LoadingIcon  style={{width: 30, height: 30, marginLeft: 4}} css={css`margin-left: auto;`}/>
 				</Conditional>
 				<Conditional showIf={isHover && (!isRunning && !isFailed)}>
-					<MoreIcon css={css`:hover{ opacity: 0.7; }`} />
+					<Dropdown
+							initialState={showStepActionDropdown}
+                            dropdownCSS={dropdownStyle}
+                            component={<StepActionMenu callback={handleStepActionDropdown} showDropDownCallback={setShowStepActionDropdown.bind(this)}/>}
+							callback={setShowStepActionDropdown.bind(this)}
+						>
+							<MoreIcon onClick={setShowStepActionDropdown.bind(this, true)} css={css`:hover{ opacity: 0.7; }`} />
+                    </Dropdown>
 				</Conditional>
 				<Conditional showIf={isFailed}>
 					<MoreIcon css={css`:hover{ opacity: 0.7; }`} />
@@ -84,7 +121,7 @@ const GroupActionsMenu = ({showDropDownCallback, callback}) => {
 	};
 
 	return (<>
-		<ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/>
+		{/* <ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/> */}
 		<ActionItem title={"Make optional"} id={GroupActionsEnum.MAKE_OPTIONAL} callback={callback}/>
 		<ActionItem title={"Delete"} id={GroupActionsEnum.DELETE} callback={callback}/>
 	</>);

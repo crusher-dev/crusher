@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { DELETE_RECORDED_STEPS, RECORD_STEP, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
+import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -148,6 +148,19 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 			}
 		case DELETE_RECORDED_STEPS: {
 			let savedSteps = state.savedSteps.filter((step, index) => !action.payload.indexArr.includes(index));
+			return {
+				...state,
+				savedSteps: savedSteps,
+				isVerified: false,
+			};
+		}
+		case MARK_RECORDED_STEPS_OPTIONAL: {
+			let savedSteps = state.savedSteps.map((step, index) => {
+				if(action.payload.indexArr.includes(index)) {
+					step.payload.isOptional = true;
+				}
+				return step;
+			});
 			return {
 				...state,
 				savedSteps: savedSteps,

@@ -12,7 +12,7 @@ import { MoreIcon } from "electron-app/src/extension/assets/icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ACTION_DESCRIPTIONS } from "electron-app/src/extension/constants/actionDescriptions";
-import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps, markRecordedStepsOptional } from "electron-app/src/store/actions/recorder";
 
 const Step = ({
 	title,
@@ -141,16 +141,15 @@ const StepsPanel = ({className, ...props}: any) => {
 	const handleGrouActionSelected = React.useCallback((id) => {
 		setShowGroupActionsDropDown(false);
 		setCheckedSteps(new Set());
+		const checkedStepIndexArr = Array.from(checkedSteps);
 
 		switch(id) {
 			case GroupActionsEnum.MAKE_OPTIONAL:
-				alert("Marking selected steps as optional");
+				dispatch(markRecordedStepsOptional(checkedStepIndexArr));
 				break;
 			case GroupActionsEnum.CREATE_TEMPLATE:
-				alert("Showing create template modal");
 				break;
 			case GroupActionsEnum.DELETE:
-				const checkedStepIndexArr = Array.from(checkedSteps);
 				dispatch(deleteRecordedSteps(checkedStepIndexArr));
 				break;
 			default:

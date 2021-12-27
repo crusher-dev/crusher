@@ -6,7 +6,7 @@ export type TextProps = {
 	 * Emotion CSS style if any
 	 */
 	fontSize?: number;
-	leading?: boolean;
+	leading?: string;
 	weight?: number;
 	CSS?: SerializedStyles;
 	color?: string;
@@ -14,7 +14,7 @@ export type TextProps = {
 
 const TextDefaultProps = {
 	fontSize: 12,
-	leading: false,
+	leading: "false",
 	weight: 700,
 	color: "#fff",
 };
@@ -26,14 +26,11 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 	return (
 		<span
 			className={`font-gilroy font-${weight} ${className}`}
-			css={[
-				css`
+			css={css`
 					font-size: ${fontSize}rem;
 					color: ${color};
 					${otherProps.onClick && `cursor:default`}
-				`,
-				otherProps.CSS,
-			]}
+			`}
 			{...otherProps}
 		>
 			{children}

@@ -164,6 +164,6 @@ EE features (contained in the src_ee directory) require a Crusher license. Conta
 <hr/>
 <p float="left">
 
-<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>
+<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>&nbsp;<img src="https://avatars.githubusercontent.com/u/55053424?v=4" height="56" style="margin: 4px;"/>
 
 </p>

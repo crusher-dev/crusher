@@ -150,7 +150,8 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 			let savedSteps = state.savedSteps.filter((step, index) => !action.payload.indexArr.includes(index));
 			return {
 				...state,
-				savedSteps: savedSteps
+				savedSteps: savedSteps,
+				isVerified: false,
 			};
 		}
 		default:

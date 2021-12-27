@@ -12,7 +12,8 @@ import { ipcRenderer } from "electron";
 import { resetRecorderState, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
 import { getRecorderInfo } from "../store/selectors/recorder";
-import { performNavigation } from "./commands/perform";
+import { performNavigation, saveSetDeviceIfNotThere } from "./commands/perform";
+import {devices} from "../devices";
 
 const App = () => {
 	const store = useStore();
@@ -21,7 +22,8 @@ const App = () => {
 		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			const recorderInfo = getRecorderInfo(store.getState() as any);
 			console.log("Webview initialized in: " + initializeTime);
-			
+			const device = devices.find(device => device.id === recorderInfo.device as any);
+			saveSetDeviceIfNotThere(device, store);
 			performNavigation(recorderInfo.url, store);
 		})
 

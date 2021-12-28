@@ -236,4 +236,15 @@ const BulbIcon = (props: any) => {
 	);
 };
 
-export { BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon };
+const MoreIcon = (props: any) => {
+	return (
+		<svg width={15} height={4} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M1.753 0a1.752 1.752 0 100 3.505 1.752 1.752 0 100-3.505zm5.42 0a1.753 1.753 0 10-.001 3.506 1.753 1.753 0 000-3.506zm5.238 0a1.753 1.753 0 10-.002 3.505A1.753 1.753 0 0012.41 0z"
+				fill="#B8B8B8"
+			/>
+		</svg>
+	);
+};
+
+export { BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon };

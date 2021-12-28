@@ -7,7 +7,7 @@ import { RunAfterTestModal } from "./runAfterTestModal";
 import { CustomCodeModal } from "./customCodeModal";
 import { SeoModalContent } from "./seoModal";
 
-enum TTopLevelActionsEnum {
+export enum TTopLevelActionsEnum {
     VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
     WAIT = "WAIT",
     SHOW_SEO_MODAL = "SHOW_SEO_MODAL",

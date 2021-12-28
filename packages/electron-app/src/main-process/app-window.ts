@@ -17,7 +17,7 @@ import { getSavedSteps } from '../store/selectors/recorder';
 import { CrusherTests } from '../lib/tests';
 import { getBrowserActions, getMainActions } from 'runner-utils/src';
 import { iElementInfo, TRecorderState } from '../store/reducers/recorder';
-import { iSeoMetaInformationMeta } from '../extension/messageListener';
+import { iSeoMetaInformationMeta } from '../types';
 import { getUserAgentFromName } from '@shared/constants/userAgents';
 
 export class AppWindow {

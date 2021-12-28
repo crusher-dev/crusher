@@ -7,10 +7,8 @@ import * as url from "url";
 import { IpcMessageEvent } from "electron";
 import { turnOffInspectMode, turnOnInspectMode } from "../../commands/perform";
 import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
-import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { ipcRenderer } from "electron";
 import { saveAutoAction } from "../../commands/saveActions";
-import { TRecorderMessagesType } from "electron-app/src/extension/scripts/inject/host-proxy";
+import { TRecorderMessagesType } from "../../../lib/recorder/host-proxy";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { InfoOverLay } from "../overlays/infoOverlay";
 

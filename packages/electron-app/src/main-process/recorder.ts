@@ -3,7 +3,6 @@ import { Store } from "redux";
 import { iReduxState } from "../store/reducers";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { recordStep, updateCurrentRunningStepStatus } from "../store/actions/recorder";
-import { updateLastRecordedActionStatus } from "../extension/redux/actions/actions";
 
 class Recorder {
     private store: Store<iReduxState>;

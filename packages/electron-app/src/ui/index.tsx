@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import { Toolbar } from './components/toolbar';
 import { DeviceFrame } from './components/device-frame';
 import { Sidebar } from './components/sidebar';
-import "../assets/styles/tailwind.css";
+import "../../static/assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from 'electron-redux';

@@ -3,7 +3,7 @@ import * as webpack from "webpack";
 import * as fs from "fs";
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
-const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/extension/js");
+const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyPlugin = require("copy-webpack-plugin");
@@ -36,41 +36,16 @@ const virtualModules = new VirtualModulesPlugin({
   module.exports = { querySelector: pwQuerySelector, querySelectorAll: pwQuerySelectorAll };`,
 });
 
-const TEMPLATES_DIR = path.resolve(__dirname, "../src/extension/ui/templates");
-
-function getHTMLWebpackPluginConfigArrForTemplates() {
-	const files = fs.readdirSync(TEMPLATES_DIR);
-	return files.map((templateFileName) => {
-		return new HtmlWebpackPlugin({
-			template: path.resolve(TEMPLATES_DIR, templateFileName),
-			templateParameters: { env: "prod" },
-			inject: false,
-			filename: `../${templateFileName.replace(".pug", ".html")}`,
-		});
-	});
-}
-
 let finalConfig: any = {
 	mode: "production",
 	optimization: {
 		minimize: false,
 	},
 	entry: {
-		content_script: [path.resolve(__dirname, "../src/extension/scripts/inject/events_listener.ts")],
-		init_content_script: [path.resolve(__dirname, "../src/extension/scripts/inject/init_event_listener.ts")],
-		change_navigator: [path.resolve(__dirname, "../src/extension/scripts/inject/change_navigator.ts")],
-		background: [path.resolve(__dirname, "../src/extension/background.ts")],
-		record_test: [path.resolve(__dirname, "../src/extension/v2/ui/app.tsx")],
+		recorder: [path.resolve(__dirname, "../src/lib/recorder/events_listener.ts")],
 	},
 	plugins: [
 		virtualModules,
-		...getHTMLWebpackPluginConfigArrForTemplates(),
-		new CopyPlugin({
-			patterns: [{ from: "public/", to: "../" }],
-			options: {
-				concurrency: 50,
-			},
-		}),
 		new webpack.DefinePlugin({
 			NODE_ENV: process.env.NODE_ENV === "development" ? "development" : "production",
 			"process.env": {

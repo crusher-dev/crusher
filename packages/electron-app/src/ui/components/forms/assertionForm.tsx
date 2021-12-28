@@ -156,7 +156,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 				<div css={css`display: flex; align-items: center; justify-content: center;`}>
 					<div>{renderValidationInput(row.validation, row.id)}</div>
 					<img
-						src={isValidationCorrect ? "./assets/icons/correct.svg" : "./assets/icons/cross.svg"}
+						src={isValidationCorrect ? "./statc/assets/icons/correct.svg" : "./static/assets/icons/cross.svg"}
 						style={{ marginLeft: "18rem", height: "15rem" }}
 					/>
 				</div>

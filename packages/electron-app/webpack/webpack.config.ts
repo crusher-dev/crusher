@@ -77,7 +77,7 @@ const finalConfig = [
 			new CopyPlugin({
 				patterns: [
 					{ from: "package.release.json", to: "package.json" },
-					{ from: "src/assets", to: "assets" },
+					{ from: "static", to: "static" },
 				],
 			}),
 		],

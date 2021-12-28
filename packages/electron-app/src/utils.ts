@@ -8,9 +8,9 @@ const isProduction = () => {
 function getAppIconPath() {
 	switch (process.platform) {
 		case "win32":
-			return path.join(__dirname, "assets/icons/app.ico");
+			return path.join(__dirname, "static/assets/icons/app.ico");
 		default:
-			return path.join(__dirname, "assets/icons/app.png");
+			return path.join(__dirname, "static/assets/icons/app.png");
 	}
 }
 

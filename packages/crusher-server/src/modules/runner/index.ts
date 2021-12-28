@@ -166,7 +166,7 @@ class TestsRunner {
 			if (test.postTestList.length) {
 				await Promise.all(
 					testInstances.map((testInstance) =>
-						test.postTestList.map((postTest) => createTestInstancesRecrusivelyAccordingToPostTestList(postTest, testInstance)),
+						Promise.all(test.postTestList.map((postTest) => createTestInstancesRecrusivelyAccordingToPostTestList(postTest, testInstance))),
 					),
 				);
 			}

@@ -1,0 +1,45 @@
+name: Build and fix put out
+on:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    branches:
+      - "master"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build dist
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+      - name: Setup Node.js Env
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - name: Cache Dependencies
+        uses: actions/cache@v2
+        id: build
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+      - name: Install
+        if: steps.build.outputs.cache-hit != 'true' # Over here!
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Put Out
+        run: npx putout . --fix
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Fix"
+          git push
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

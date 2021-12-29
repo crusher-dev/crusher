@@ -131,7 +131,6 @@ export class AppWindow {
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
-		this.window.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, this.allowAllNetworkRequests.bind(this));
 
         /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'));
@@ -245,16 +244,6 @@ export class AppWindow {
         this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
     }
 
-    allowAllNetworkRequests(responseDetails, updateCallback) {
-		Object.keys(responseDetails.responseHeaders).map((headers) => {
-			if (["x-frame-options", "content-security-policy", "frame-options"].includes(headers.toString().toLowerCase())) {
-				delete responseDetails.responseHeaders[headers];
-			}
-		});
-
-		updateCallback({ cancel: false, responseHeaders: responseDetails.responseHeaders });
-	}
-
     private turnOnInspectMode() {
         this.store.dispatch(setInspectMode(true));
         this.webView._turnOnInspectMode();
@@ -308,6 +297,7 @@ export class AppWindow {
                 break;
             }
             default:
+                console.log("Running this action", action);
                 await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
                 break;
         }

@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Build dist
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
@@ -29,8 +29,6 @@ jobs:
       - name: Install
         if: steps.build.outputs.cache-hit != 'true' # Over here!
         run: yarn
-      - name: Build
-        run: yarn build
       - name: Put Out
         run: npx putout . --fix
       - run: |

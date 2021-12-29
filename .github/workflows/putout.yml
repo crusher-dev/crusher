@@ -30,7 +30,7 @@ jobs:
         if: steps.build.outputs.cache-hit != 'true' # Over here!
         run: yarn
       - name: Put Out
-        run: npx putout . --fix
+        run: npx putout --fix .
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com

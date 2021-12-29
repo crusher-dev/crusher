@@ -106,6 +106,12 @@ const Toolbar = (props: any) => {
 	}, [recorderInfo.url]);
 
 	React.useEffect(() => {
+		if(!url) {
+			urlInputRef.current.focus();
+		}
+	}, []);
+
+	React.useEffect(() => {
 		if(isTestVerificationComplete) {
 
 		} else {

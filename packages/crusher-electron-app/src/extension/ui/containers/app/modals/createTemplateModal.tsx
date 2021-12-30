@@ -4,7 +4,6 @@ import { FONT_WEIGHT, POSITION } from "../../../../interfaces/css";
 import { COLOR_CONSTANTS } from "../../../colorConstants";
 import { pxToRemValue } from "../../../../utils/helpers";
 import { ModalTopBar } from "./index";
-import { AdvancedURL } from "../../../../utils/url";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -23,7 +22,7 @@ const CreateTemplatesModal = (props: iStartupModalProps) => {
 		if (templateName && templateName !== "") {
 			if (!(window as any).electron) {
 				onClose(templateName);
-				throw new Error("Cannot find exposed electron API");
+				throw Error("Cannot find exposed electron API");
 			}
 			onClose(templateName);
 		}
@@ -35,7 +34,7 @@ const CreateTemplatesModal = (props: iStartupModalProps) => {
 		}
 	};
 
-	const handleClose = (e: any) => {
+	const handleClose = () => {
 		onClose(null);
 	};
 

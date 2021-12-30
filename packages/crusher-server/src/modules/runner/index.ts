@@ -1,16 +1,14 @@
-import Container, { Inject, Service } from "typedi";
+import { Inject, Service } from "typedi";
 import { BuildsService } from "@modules/resources/builds/service";
 import { ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { BrowserEnum, IBuildTaskPayload, ITestDependencyArray, ITestInstanceDependencyArray } from "./interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ITestTable } from "@modules/resources/tests/interface";
-import { PLATFORM } from "@crusher-shared/types/platform";
 import { QueueManager } from "@modules/queue";
 import { TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
 import { INextTestInstancesDependencies, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
-import { ITestInstancesTable } from "@modules/resources/builds/instances/interface";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BadRequestError } from "routing-controllers";
 import { iAction } from "@crusher-shared/types/action";
@@ -30,13 +28,13 @@ class TestsRunner {
 			payload.actions = this._replaceHostInEvents(payload.actions, hostToReplace);
 		}
 		const testExeuctionQueue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
-		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, {...payload, rateLimiterKey: payload.buildId.toString()});
+		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, { ...payload, rateLimiterKey: payload.buildId.toString() });
 	}
 
 	private _getNextTestInstancesDependencyArr(
 		testInstance: ITestInstanceDependencyArray[0],
 		testInstances: ITestInstanceDependencyArray,
-	): Array<INextTestInstancesDependencies> {
+	): INextTestInstancesDependencies[] {
 		const nextTestInstances = testInstances.filter((test) => test.parentTestInstanceId === testInstance.id);
 		if (!nextTestInstances.length) return [];
 
@@ -46,7 +44,7 @@ class TestsRunner {
 		}));
 	}
 
-	_replaceHostInEvents(events: Array<iAction>, newHost: string) {
+	_replaceHostInEvents(events: iAction[], newHost: string) {
 		if (!newHost || newHost === "null") return events;
 
 		return events.map((event) => {
@@ -96,13 +94,17 @@ class TestsRunner {
 		return events.find((action) => action.type === ActionsInTestEnum.RUN_AFTER_TEST);
 	}
 
-	private _getDependenciesTestArr(tests: Array<KeysToCamelCase<ITestTable>>): ITestDependencyArray {
-		const testsMapById: { [id: number]: ITestDependencyArray[0] } = tests.reduce((prev, test) => {
-			return { ...prev, [test.id]: { ...test, isFirstLevelTest: true, postTestList: [], parentTestId: null } };
-		}, {});
+	private _getDependenciesTestArr(tests: KeysToCamelCase<ITestTable>[]): ITestDependencyArray {
+		const testsMapById: { [id: number]: ITestDependencyArray[0] } = tests.reduce(
+			(prev, test) => ({
+				...prev,
+				[test.id]: { ...test, isFirstLevelTest: true, postTestList: [], parentTestId: null },
+			}),
+			{},
+		);
 
 		for (const entry of Object.entries(testsMapById)) {
-			const [_, test] = entry as any;
+			const [, test] = entry as any;
 			const dependency = this._getTestDependency(test);
 
 			if (dependency) {
@@ -122,12 +124,12 @@ class TestsRunner {
 	}
 
 	private async createTestInstances(testsList: ITestDependencyArray, buildPayload: ICreateBuildRequestPayload, buildId: number) {
-		const browserArr: Array<BrowserEnum> = buildPayload.browser;
+		const browserArr: BrowserEnum[] = buildPayload.browser;
 		const testInstancesArr: ITestInstanceDependencyArray = [];
 		// Create test instances and store their ids
 		const createTestInstanceWithBrowser = async (
 			test: ITestDependencyArray[0],
-			browserArr: Array<BrowserEnum>,
+			browserArr: BrowserEnum[],
 			parentTestInstance: typeof testInstancesArr[0] | null = null,
 		) => {
 			const insertRecordPromiseArr = browserArr.map(async (browser) => {
@@ -176,16 +178,16 @@ class TestsRunner {
 		return testInstancesArr;
 	}
 
-	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
+	async runTests(tests: KeysToCamelCase<ITestTable>[], buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 		const testsListWIthDependency = this._getDependenciesTestArr(tests);
-		if (buildPayload.meta && buildPayload.meta.github) {
+		if (buildPayload.meta?.github) {
 			await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
 		}
 
 		const testInstancesArr: ITestInstanceDependencyArray = await this.createTestInstances(testsListWIthDependency, buildPayload, build.insertId);
 
-		const referenceBuild = await this.buildsService.getBuild(baselineBuildId ? baselineBuildId : build.insertId);
+		const referenceBuild = await this.buildsService.getBuild(baselineBuildId || build.insertId);
 
 		const buildReportInsertRecord = await this.buildReportService.createBuildReport(
 			tests.length * buildPayload.browser.length,

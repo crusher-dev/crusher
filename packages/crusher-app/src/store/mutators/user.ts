@@ -4,7 +4,7 @@ import { teamAtom } from "@store/atoms/global/team";
 import { systemConfigAtom } from "@store/atoms/global/systemConfig";
 import { projectsAtom } from "@store/atoms/global/project";
 import { USER_META_KEYS } from "@constants/USER";
-import { appStateAtom, appStateItemMutator } from "@store/atoms/global/appState";
+import { appStateItemMutator } from "@store/atoms/global/appState";
 import { Analytics } from "@utils/core/analytics";
 
 interface UserInitialData {
@@ -23,8 +23,7 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 	_set(systemConfigAtom, data.system);
 	_set(projectsAtom, data.projects);
 
-	if (!!data.userData) {
-
+	if (data.userData) {
 		Analytics.identify(
 			data.userData.name,
 			data.userData.userId,

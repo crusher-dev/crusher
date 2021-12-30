@@ -13,4 +13,4 @@ export interface IUserTable extends BaseRowInterface {
 	uuid: string;
 }
 
-export type ICreateUserPayload = KeysToCamelCase<Omit<IUserTable, "id" | "team_id" | "verified" | "is_oss" | "meta" | "verified">> & { meta?: string | null };
+export type ICreateUserPayload = KeysToCamelCase<Omit<IUserTable, "id" | "team_id" | "verified" | "is_oss" | "meta">> & { meta?: string | null };

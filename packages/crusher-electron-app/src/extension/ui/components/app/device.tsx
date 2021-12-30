@@ -5,7 +5,6 @@ import { iDevice } from "@shared/types/extension/device";
 import { useSelector } from "react-redux";
 import { isRecorderScriptBooted, isReplayingTest } from "../../../redux/selectors/recorder";
 import { COLOR_CONSTANTS } from "../../colorConstants";
-import { WebviewTag } from "electron";
 import webviewTag = Electron.Renderer.webviewTag;
 import { LoadingIcon } from "crusher-electron-app/src/extension/assets/icons";
 
@@ -18,7 +17,7 @@ interface iDeviceProps {
 }
 
 const Device = (props: iDeviceProps) => {
-	const [siteUrl, setSiteUrl] = useState(props.url);
+	const [siteUrl] = useState(props.url);
 
 	const isWebviewLoaded = useSelector(isRecorderScriptBooted);
 	const isTestGettingReplayed = useSelector(isReplayingTest);
@@ -27,9 +26,7 @@ const Device = (props: iDeviceProps) => {
 
 	useEffect(() => {
 		console.log(isWebviewLoaded, "____ loaded value ");
-		window.onload = function () {
-			return forwardRef.current.click();
-		};
+		window.onload = () => forwardRef.current.click();
 	}, []);
 
 	useEffect(() => {
@@ -49,7 +46,7 @@ const Device = (props: iDeviceProps) => {
 						<div>
 							<div style={{ ...pageLoadingCoverTextStyle, marginTop: 0, display: "flex", alignItems: "center" }}>
 								<span>{"We're running test for you. You can't perform actions right now"}</span>
-								<LoadingIcon style={{width: 30, height: 30, marginLeft: 4}}/>
+								<LoadingIcon style={{ width: 30, height: 30, marginLeft: 4 }} />
 							</div>
 						</div>
 					</div>
@@ -60,7 +57,7 @@ const Device = (props: iDeviceProps) => {
 				<div style={{ background: "rgba(10, 10, 10, 0.925)" }} className="absolute flex h-full w-full justify-center items-center">
 					<div>
 						<img style={pageLoadingCoverIconStyle} src={chrome.runtime.getURL("/assets/loading_frame_illustration.svg")} />
-						<div style={{...pageLoadingCoverTextStyle, color: "#fff"}}>{"Please wait while we're loading next page"}</div>
+						<div style={{ ...pageLoadingCoverTextStyle, color: "#fff" }}>{"Please wait while we're loading next page"}</div>
 					</div>
 				</div>
 			</Conditional>
@@ -103,16 +100,6 @@ const pageLoadingCoverTextStyle = {
 	textAlign: TEXT_ALIGN.CENTER,
 	color: "#000",
 	padding: "0.2rem",
-};
-
-const blockCoverStyle = {
-	position: POSITION.ABSOLUTE,
-	left: 0,
-	top: 0,
-	width: "100%",
-	height: "100%",
-	background: "transparent",
-	zIndex: 99999,
 };
 
 const previewBrowserStyle = {

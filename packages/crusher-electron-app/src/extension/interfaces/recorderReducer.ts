@@ -9,7 +9,7 @@ export interface iRecorderState {
 	isInspectModeOn: boolean;
 	actionsRecordingState: {
 		type: ACTIONS_RECORDING_STATE;
-		hoverDependentSelectors?: Array<{ selectors: iSelectorInfo[] }>;
+		hoverDependentSelectors?: { selectors: iSelectorInfo[] }[];
 		elementInfo?: iElementInfo | null;
 	};
 	isAutoRecordOn: boolean;

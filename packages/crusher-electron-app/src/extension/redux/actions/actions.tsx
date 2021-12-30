@@ -14,23 +14,21 @@ export const UPDATE_LAST_RECORDED_ACTION_OPTINALITY = "UPDATE_LAST_RECORDED_ACTI
 export const UPDATE_SELECTED_ACTIONS = "UPDATE_SELECTED_ACTIONS";
 export const SET_RECORDED_ACTION = "SET_RECORDED_ACTION";
 
-export const updateSelectedActions = (actionIds: Array<{ id: any }>) => {
-	return {
-		type: UPDATE_SELECTED_ACTIONS,
-		payload: {
-			selectedActionIds: actionIds,
-		},
-	};
-};
+export const updateSelectedActions = (actionIds: { id: any }[]) => ({
+	type: UPDATE_SELECTED_ACTIONS,
 
-export const updateLastRecordedActionStatus = (actionStatus: ActionStatusEnum) => {
-	return {
-		type: UPDATE_LAST_RECORDED_ACTION_STATUS,
-		payload: {
-			status: actionStatus,
-		},
-	};
-};
+	payload: {
+		selectedActionIds: actionIds,
+	},
+});
+
+export const updateLastRecordedActionStatus = (actionStatus: ActionStatusEnum) => ({
+	type: UPDATE_LAST_RECORDED_ACTION_STATUS,
+
+	payload: {
+		status: actionStatus,
+	},
+});
 
 export const recordAction = (action: iAction) => {
 	const store = getStore();
@@ -55,12 +53,10 @@ export const recordAction = (action: iAction) => {
 	};
 };
 
-export const setRecordedActions = (actions: iAction[]) => {
-	return {
-		type: SET_RECORDED_ACTION,
-		payload: { actions },
-	};
-};
+export const setRecordedActions = (actions: iAction[]) => ({
+	type: SET_RECORDED_ACTION,
+	payload: { actions },
+});
 
 export const updateActionName = (actionName: string, actionIndex: number) => ({
 	type: UPDATE_ACTION_NAME,

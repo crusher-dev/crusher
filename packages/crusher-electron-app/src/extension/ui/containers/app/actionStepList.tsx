@@ -1,14 +1,13 @@
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
-import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
-import { ActionsInTestEnum, ElementActionsInTestArr, ACTIONS_TO_LABEL_MAP } from "@shared/constants/recordedActions";
-import { ActionStatusEnum, iAction } from "@shared/types/action";
+import { FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR } from "../../../interfaces/css";
+import { ActionsInTestEnum, ElementActionsInTestArr } from "@shared/constants/recordedActions";
+import { iAction } from "@shared/types/action";
 import { useSelector } from "react-redux";
 import { getActions, getSelectedActions } from "../../../redux/selectors/actions";
 import { getStore } from "../../../redux/store";
 import { deleteRecordedAction, setRecordedActions, updateActionName, updateActionTimeout, updateSelectedActions } from "../../../redux/actions/actions";
-import { COLOR_CONSTANTS } from "../../colorConstants";
 import { BlueButton } from "../../components/app/BlueButton";
-import { AddIcon, FailureIcon, LoadingIcon, MoreIcon, PassedIcon } from "crusher-electron-app/src/extension/assets/icons";
+import { AddIcon } from "crusher-electron-app/src/extension/assets/icons";
 import { Checkbox } from "../../components/app/checkbox";
 import { Action } from "./actionStep";
 import { Conditional } from "../../components/conditional";
@@ -25,7 +24,7 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 	const { closeEditBox } = props;
 	const [stepName, setStepName] = useState(props.step.name);
 	const [stepTimeout, setStepTimeout] = useState(
-		props.step && props.step.payload && typeof props.step.payload.timeout !== "undefined" ? props.step.payload.timeout.toString() : "15",
+		props.step?.payload && typeof props.step.payload.timeout !== "undefined" ? props.step.payload.timeout.toString() : "15",
 	);
 
 	useEffect(() => {
@@ -46,15 +45,12 @@ function StepInfoEditBox(props: IStepInfoEditBoxProps) {
 
 	const isElementAction = props.step && ElementActionsInTestArr.includes(props.step.type);
 
-	const saveTest = useCallback(
-		(event) => {
-			const store = getStore();
-			store.dispatch(updateActionName(stepName, props.stepIndex));
-			if (isElementAction) store.dispatch(updateActionTimeout(parseInt(stepTimeout), props.stepIndex));
-			closeEditBox();
-		},
-		[stepName, stepTimeout, isElementAction],
-	);
+	const saveTest = useCallback(() => {
+		const store = getStore();
+		store.dispatch(updateActionName(stepName, props.stepIndex));
+		if (isElementAction) store.dispatch(updateActionTimeout(parseInt(stepTimeout), props.stepIndex));
+		closeEditBox();
+	}, [stepName, stepTimeout, isElementAction]);
 
 	const handleTimeoutChange = (event: ChangeEvent) => {
 		setStepTimeout((event.target as any).value);
@@ -141,18 +137,16 @@ const ActionStepList = () => {
 		setStepInfoBoxState({ enabled: true, step: step, stepIndex: stepIndex });
 	};
 
-	const stepList = actions.map((step: iAction, index: number) => {
-		return (
-			<Action
-				onClick={handleActionClick.bind(this, step, index)}
-				onDelete={handleDeleteAction}
-				style={{ marginTop: "3rem" }}
-				key={index}
-				index={index}
-				action={step}
-			/>
-		);
-	});
+	const stepList = actions.map((step: iAction, index: number) => (
+		<Action
+			onClick={handleActionClick.bind(this, step, index)}
+			onDelete={handleDeleteAction}
+			style={{ marginTop: "3rem" }}
+			key={index}
+			index={index}
+			action={step}
+		/>
+	));
 
 	const handleStepInfoBoxOutsideClick = () => {
 		setStepInfoBoxState({ enabled: false, step: null, stepIndex: -1 });
@@ -160,26 +154,26 @@ const ActionStepList = () => {
 
 	const handleSelectAllCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const isChecked = event.target.checked;
-		const elements: Array<HTMLInputElement> = Array.from(document.querySelectorAll("#selectedSteps"));
+		const elements: HTMLInputElement[] = Array.from(document.querySelectorAll("#selectedSteps"));
 		const store = getStore();
 
-		elements.forEach((element) => {
+		for (const element of elements) {
 			element.checked = isChecked;
-		});
+		}
 
 		if (isChecked) {
 			const selectedActionIds = elements
 				.filter((checkbox: HTMLInputElement) => checkbox.checked)
-				.map((checkbox: HTMLInputElement) => {
-					return { id: checkbox.getAttribute("data-id") };
-				});
+				.map((checkbox: HTMLInputElement) => ({
+					id: checkbox.getAttribute("data-id"),
+				}));
 			store.dispatch(updateSelectedActions(selectedActionIds));
 		} else {
 			store.dispatch(updateSelectedActions([]));
 		}
 	};
 
-	const handleAddTemplate = (event: MouseEvent) => {
+	const handleAddTemplate = () => {
 		setShowCreateModal(true);
 	};
 
@@ -192,19 +186,16 @@ const ActionStepList = () => {
 		const selectedActionRecords = getSelectedActions(store.getState());
 		if (!selectedActionRecords) return;
 
-		const selectedActionsIdArr = selectedActionRecords.map((action) => {
-			return action.id;
-		});
+		const selectedActionsIdArr = selectedActionRecords.map((action) => action.id);
 		const selectedActions = actions
-			.map((action, index) => {
-				return { id: index, action: action };
-			})
+			.map((action, index) => ({
+				id: index,
+				action: action,
+			}))
 			.filter((_, index) => {
 				return selectedActionsIdArr.includes(index.toString());
 			})
-			.sort((a, b) => {
-				return a.id - b.id;
-			});
+			.sort((a, b) => a.id - b.id);
 
 		if (selectedActions.length) {
 			const templateAction: iAction = {
@@ -228,10 +219,10 @@ const ActionStepList = () => {
 
 		const clearSelectedActions = () => {
 			store.dispatch(updateSelectedActions([]));
-			const elements: Array<HTMLInputElement> = Array.from(document.querySelectorAll("#selectedSteps"));
-			elements.forEach((element) => {
+			const elements: HTMLInputElement[] = Array.from(document.querySelectorAll("#selectedSteps"));
+			for (const element of elements) {
 				element.checked = false;
-			});
+			}
 
 			(document.querySelector("#selectAllSteps") as HTMLInputElement).checked = false;
 		};
@@ -327,15 +318,6 @@ const actionEditInfoContainerStyle = (isScreenshotOn: boolean, isElementAction: 
 		background: "#111213",
 		zIndex: 99,
 	};
-};
-
-const lineStyle = {
-	position: POSITION.FIXED,
-	width: "2px",
-	backgroundColor: COLOR_CONSTANTS.BORDER,
-	height: "30%",
-	marginTop: "1rem",
-	marginLeft: "1.44rem",
 };
 
 const containerStyle = {

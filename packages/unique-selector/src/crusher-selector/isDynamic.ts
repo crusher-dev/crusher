@@ -6,7 +6,6 @@ import htmlTags from "html-tags";
 const englishWords = require("an-array-of-english-words/index.json");
 
 const SPLIT_REGEXP = /[ \-_:]+/;
-const REG_EXP = /^[a-z]+$/;
 
 const allWords = new Set([
 	"btn",
@@ -49,14 +48,14 @@ export const getTokens = (value: string): string[] => {
 	const tokens: any[] = [];
 
 	// split by space, dash, underscore, colon
-	value.split(SPLIT_REGEXP).forEach((token) => {
+	for (const token of value.split(SPLIT_REGEXP)) {
 		if (token.match(/\d/)) {
 			tokens.push(token);
 		} else {
 			// split by camel case when there are no numbers
 			tokens.push(...splitCamelCaseWithAbbreviations(token));
 		}
-	});
+	}
 
 	return tokens.map((token) => token.toLowerCase());
 };
@@ -93,14 +92,12 @@ export const isDynamic = (value: string): boolean => {
 	let numbers = 0;
 	let penalty = 0;
 
-	for (let i = 0; i < tokens.length; i++) {
-		const token = tokens[i];
-
+	for (const token of tokens) {
 		if (allWords.has(token)) {
-			words += 1;
+			++words;
 		} else if (!isNaN(Number(token))) {
 			if (!isDynamicEpoch(Number(token))) {
-				numbers += 1;
+				++numbers;
 			} else {
 				penalty += 2;
 			}

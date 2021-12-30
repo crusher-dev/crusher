@@ -7,6 +7,6 @@ type CenterLayoutProps = {
 /**
  * Just a Layout which centers its children
  */
-export const CenterLayout: React.FC<CenterLayoutProps> = ({ children, ...props }) => {
-	return <div className={`flex justify-center items-center h-full w-full ${props.className}`}>{children}</div>;
-};
+export const CenterLayout: React.FC<CenterLayoutProps> = ({ children, ...props }) => (
+	<div className={`flex justify-center items-center h-full w-full ${props.className}`}>{children}</div>
+);

@@ -1,25 +1,24 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
-import { ElementHandle, Locator, Page } from "playwright";
+import { Page } from "playwright";
 import { markTestFail } from "../utils/helper";
 
 async function assertSeoRows(
 	page: Page,
-	assertions: Array<iAssertionRow>,
-): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
+	assertions: iAssertionRow[],
+): Promise<{ hasPassed: boolean; logs: { status: "FAILED" | "DONE"; message: string; meta: any }[] }> {
 	let hasPassed = true;
 	const logs = [];
 
 	const pageTitle = await page.title();
 
-	for (let i = 0; i < assertions.length; i++) {
-		const { validation, operation, field } = assertions[i];
+	for (const { validation, operation, field } of assertions) {
 		const elementAttributeValue =
 			field.name === "title"
 				? pageTitle
 				: await page.evaluate(
-						(args: Array<any>) => {
+						(args: any[]) => {
 							const getTagName = (metaTagName) => {
 								const metaElement = document.querySelector(`meta[name='${metaTagName}']`);
 								const metaElementValue = metaElement ? metaElement.getAttribute("content") : null;

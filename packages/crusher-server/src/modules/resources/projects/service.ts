@@ -10,7 +10,7 @@ class ProjectsService {
 	private dbManager: DBManager;
 
 	@CamelizeResponse()
-	async getProjectEnvironments(projectId: number): Promise<Array<KeysToCamelCase<IProjectEnvironmentTable>>> {
+	async getProjectEnvironments(projectId: number): Promise<KeysToCamelCase<IProjectEnvironmentTable>[]> {
 		return this.dbManager.fetchAllRows("SELECT * FROM project_hosts WHERE project_id = ?", [projectId]);
 	}
 
@@ -29,7 +29,7 @@ class ProjectsService {
 	}
 
 	@CamelizeResponse()
-	async getProjects(teamId: number): Promise<Array<KeysToCamelCase<IProjectTable>>> {
+	async getProjects(teamId: number): Promise<KeysToCamelCase<IProjectTable>[]> {
 		return this.dbManager.fetchAllRows("SELECT * FROM projects WHERE team_id = ?", [teamId]);
 	}
 

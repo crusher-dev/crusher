@@ -10,14 +10,14 @@ class QueueManager {
 		this.queues = {};
 	}
 
-	async setupQueue(queueName: string, options : QueueOptions = {}): Promise<Queue> {
+	async setupQueue(queueName: string, options: QueueOptions = {}): Promise<Queue> {
 		const queueRecord = Object.prototype.hasOwnProperty.call(this.queues, queueName);
-		if (queueRecord && queueRecord.value) {
+		if (queueRecord?.value) {
 			console.error(`${queueName} already initialized`);
 			return queueRecord.value;
 		}
 
-		this.queues[queueName] = this.queues[queueName] ? this.queues[queueName] : {};
+		if (!this.queues[queueName]) this.queues[queueName] = {};
 		this.queues[queueName] = {
 			...this.queues[queueName],
 			value: new Queue(queueName, { ...options, connection: this.redisManager.redisClient as any }),
@@ -30,12 +30,12 @@ class QueueManager {
 
 	async setupQueueScheduler(queueName: string, options: Omit<QueueSchedulerOptions, "connection">): Promise<boolean> {
 		const queueRecord = Object.prototype.hasOwnProperty.call(this.queues, queueName);
-		if (queueRecord && queueRecord.scheduler) {
+		if (queueRecord?.scheduler) {
 			console.error(`Scheduler for ${queueName} already initialized`);
 			return false;
 		}
 
-		this.queues[queueName] = this.queues[queueName] ? this.queues[queueName] : {};
+		if (!this.queues[queueName]) this.queues[queueName] = {};
 		this.queues[queueName] = {
 			...this.queues[queueName],
 			scheduler: new QueueScheduler(queueName, {
@@ -49,18 +49,14 @@ class QueueManager {
 		return true;
 	}
 
-	async addWorkerForQueue(
-		queueName: string,
-		processor: string | Processor<any, any, string>,
-		options: Omit<WorkerOptions, "connection"> = {},
-	): Promise<any> {
+	async addWorkerForQueue(queueName: string, processor: string | Processor<any, any, string>, options: Omit<WorkerOptions, "connection"> = {}): Promise<any> {
 		const queueRecord = Object.prototype.hasOwnProperty.call(this.queues, queueName);
 		if (queueRecord && this.queues[queueName].worker) {
 			console.error(`Scheduler for ${queueName} already initialized`);
 			return this.queues[queueName].worker;
 		}
 
-		this.queues[queueName] = this.queues[queueName] ? this.queues[queueName] : {};
+		if (!this.queues[queueName]) this.queues[queueName] = {};
 		this.queues[queueName] = {
 			...this.queues[queueName],
 			worker: new Worker(queueName, processor, {

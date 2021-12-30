@@ -5,19 +5,17 @@ type SocialBtnBaseProps = {
 	children: React.ReactNode;
 } & Record<any, any>;
 
-export const SocialButtonBase = ({ children, className, ...props }: SocialBtnBaseProps) => {
-	return (
-		<div
-			className={`flex items-center justify-between
-    rounded-md text-14 py-12 px-15 space-x-20 ${className}`}
-			style={SocialBtnCSS}
-			css={buttonCSS}
-			{...props}
-		>
-			{children}
-		</div>
-	);
-};
+export const SocialButtonBase = ({ children, className, ...props }: SocialBtnBaseProps) => (
+	<div
+		className={`flex items-center justify-between
+rounded-md text-14 py-12 px-15 space-x-20 ${className}`}
+		style={SocialBtnCSS}
+		css={buttonCSS}
+		{...props}
+	>
+		{children}
+	</div>
+);
 
 const SocialBtnCSS: React.CSSProperties = {
 	backgroundColor: "#0F1214",

@@ -1,5 +1,4 @@
 import { BaseRowInterface } from "@crusher-shared/types/db/baseRow";
-import { PLATFORM } from "@crusher-shared/types/platform";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 
@@ -21,7 +20,7 @@ export enum BuildTriggerEnum {
 export interface IBuildConfig {
 	browser?: BrowserEnum;
 	shouldRecordVideo: boolean;
-	testIds: Array<number>;
+	testIds: number[];
 }
 
 export interface IBuildTable extends BaseRowInterface {
@@ -37,7 +36,7 @@ export interface IBuildTable extends BaseRowInterface {
 	host: string;
 	build_trigger: BuildTriggerEnum;
 	// @TODO: Remove this in the future.
-	browser: Array<BrowserEnum>;
+	browser: BrowserEnum[];
 	// @TODO: Should this be JSON. Contains fields l
 	meta: string;
 	user_id: number;
@@ -49,7 +48,7 @@ export interface IBuildTable extends BaseRowInterface {
 
 export type ICreateBuildRequestPayload = KeysToCamelCase<
 	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status" | "is_draft_job" | "browser"> & {
-		browser: Array<BrowserEnum>;
+		browser: BrowserEnum[];
 		config?: IBuildConfig;
 		status?: BuildStatusEnum;
 		latestReportId?: number | null;

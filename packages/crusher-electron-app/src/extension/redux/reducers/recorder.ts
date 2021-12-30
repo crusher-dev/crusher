@@ -54,7 +54,7 @@ export const recorderReducer = (state: iRecorderState = initialState, action: An
 				actionsRecordingState: {
 					type: action.payload.state,
 					elementInfo: action.payload.elementInfo,
-					hoverDependentSelectors: action.payload.hoverDependentSelectors ? action.payload.hoverDependentSelectors : [],
+					hoverDependentSelectors: action.payload.hoverDependentSelectors || [],
 				},
 			};
 		case UPDATE_RECORDER_SCRIPT_BOOTED:

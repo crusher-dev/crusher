@@ -1,13 +1,11 @@
-import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
+import { resolvePathToFrontendURI } from "@utils/uri";
 import { emailType } from "@constants";
 import { Logger } from "@utils/logger";
 import * as sgMail from "@sendgrid/mail";
 import * as ejs from "ejs";
 import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
 
-const getWelcomEmailContent = (...args) => {
-	return "Nothing";
-};
+const getWelcomEmailContent = () => "Nothing";
 
 if (!process.env.SENDGRID_API_KEY) {
 	console.error("PLEASE PROVIDE SEND_GRID_API Key, otherwise the email verification functionality won't work");
@@ -22,11 +20,11 @@ const serverEmailInfo = {
 
 export class EmailManager {
 	public static sendEmailToUsers(users, subject, html) {
-		users.map((user) => {
+		for (const user of users) {
 			if (user.email) {
 				this.sendEmail(user.email, serverEmailInfo, subject, html);
 			}
-		});
+		}
 	}
 
 	public static sendEmail(to, from: emailType, subject, html) {
@@ -45,14 +43,13 @@ export class EmailManager {
 		Logger.info("EmailManager::sendEmail", `Email Sent... [Verification] - to ${to}`);
 	}
 
-	public static sendVerificationMail(to, code) {
-		const link = resolvePathToBackendURI(`/user/verify?code=${code}`);
-		const emailHTML = getWelcomEmailContent(link);
+	public static sendVerificationMail(to) {
+		const emailHTML = getWelcomEmailContent();
 		EmailManager.sendEmail(to, serverEmailInfo, "[Crusher.dev] Verify your account", emailHTML);
 	}
 
-	public static sendInvitations(members: Array<string>, inviteReferral: iInviteReferral, metaInfo: { orgName: string; adminName: string }) {
-		const { orgName, adminName } = metaInfo;
+	public static sendInvitations(members: string[], inviteReferral: iInviteReferral, metaInfo: { orgName: string; adminName: string }) {
+		const { adminName } = metaInfo;
 		return new Promise((resolve, reject) => {
 			const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/get-started`));
 			inviteLinkUrl.searchParams.append("inviteType", inviteReferral.type);

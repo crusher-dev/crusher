@@ -11,7 +11,7 @@ class ProjectMonitoringService {
 	private dbManager: DBManager;
 
 	@CamelizeResponse()
-	async getMonitoringList(projectId: number): Promise<Array<KeysToCamelCase<IMonitoringTable>>> {
+	async getMonitoringList(projectId: number): Promise<KeysToCamelCase<IMonitoringTable>[]> {
 		return this.dbManager.fetchAllRows("SELECT * FROM monitorings WHERE project_id = ?", [projectId]);
 	}
 

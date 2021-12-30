@@ -1,10 +1,9 @@
+// HTTP Logging
 import { appendParamsToURI } from "./uri";
 const _fetch = require("node-fetch").default;
 
 export function prepareFetchPayload(uri: string, info: any = {}) {
-	let method = info.method ? info.method : "GET";
-	let header = info.header ? info.header : {};
-	let payload = info.payload ? info.payload : {};
+	let { method = "GET", header = {}, payload = {} } = info;
 
 	switch (method.toUpperCase()) {
 		case "GET":
@@ -18,8 +17,7 @@ export function prepareFetchPayload(uri: string, info: any = {}) {
 			};
 			break;
 		default:
-			throw new Error("Invalid post-method passed, only GET and POST supported");
-			break;
+			throw Error("Invalid post-method passed, only GET and POST supported");
 	}
 	return { uri, method, header };
 }
@@ -29,12 +27,10 @@ export function fetch(_uri, info: any = {}) {
 	let { uri, method, header } = prepareFetchPayload(_uri, info);
 
 	return new Promise(async (resolve, reject) => {
-		// HTTP Logging
-		const startHrTime = process.hrtime();
 		_fetch(uri, {
 			headers: header,
 			method: method,
-			body: body ? body : payload && method !== "GET" ? JSON.stringify(payload) : null,
+			body: body || (payload && method !== "GET" ? JSON.stringify(payload) : null),
 		})
 			.then(async (res) => {
 				if (noJSON) {

@@ -1,6 +1,5 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
-import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { ACTIONS_RECORDING_STATE } from "../../interfaces/actionsRecordingState";
 import { recordAction } from "../actions/actions";
 import { getActionsRecordingState } from "../selectors/recorder";

@@ -35,21 +35,20 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 				list: actionsArr,
 			};
 		}
-		case UPDATE_SELECTED_ACTIONS: {
+		case UPDATE_SELECTED_ACTIONS:
 			return {
 				...state,
 				selectedActions: action.payload.selectedActionIds,
 			};
-		}
-		case UPDATE_LAST_RECORDED_ACTION_OPTINALITY:{
-			const newList = [...state.list];
+		case UPDATE_LAST_RECORDED_ACTION_OPTINALITY: {
+			const newList = state.list.slice();
 			if (newList.length) {
 				newList[newList.length - 1] = {
 					...newList[newList.length - 1],
 					payload: {
 						...newList[newList.length - 1].payload,
 						isOptional: action.payload.isOptional,
-					}
+					},
 				};
 			}
 			return {
@@ -69,7 +68,7 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 				last_action: new Date(),
 			};
 		case UPDATE_LAST_RECORDED_ACTION_STATUS: {
-			const actionsList = [...state.list];
+			const actionsList = state.list.slice();
 			actionsList[actionsList.length - 1].status = action.payload.status;
 
 			return {
@@ -112,14 +111,12 @@ export const actionsReducer = (state: any = initialState, action: AnyAction) => 
 
 			return {
 				...state,
-				list: [...newList],
+				list: newList.slice(),
 				last_action: new Date(),
 			};
 		}
 		case DELETE_RECORDED_ACTION: {
-			const newList = state.list.filter((_: iAction, index: number) => {
-				return index !== action.payload.actionIndex;
-			});
+			const newList = state.list.filter((_: iAction, index: number) => index !== action.payload.actionIndex);
 
 			return {
 				...state,

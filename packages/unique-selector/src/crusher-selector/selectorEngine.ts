@@ -6,14 +6,14 @@ try {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	evaluator = require("playwright-evaluator");
 	console.log(evaluator);
-} catch (e) {
+} catch {
 	// this will only error on server side tests that
 	// do not require the evaluator but depend on this file
 }
 
 // -- copied from playwright to match their text engine --
 function shouldSkipForTextMatching(element: Element | ShadowRoot): boolean {
-	return element.nodeName === "SCRIPT" || element.nodeName === "STYLE" || (document.head && document.head.contains(element));
+	return element.nodeName === "SCRIPT" || element.nodeName === "STYLE" || document.head?.contains(element);
 }
 
 export function elementText(root: Element | ShadowRoot): string {
@@ -50,14 +50,14 @@ export const buildSelectorForCues = (cues: Cue[]): string => {
 
 	let useMultipleEngines = true;
 
-	levels.forEach((level) => {
+	for (const level of levels) {
 		const cuesForLevel = cues.filter((cue) => cue.level === level);
 
 		const textCues = cuesForLevel.filter((cue) => cue.type === "text");
 		if (textCues.length === 1) {
 			parts.push(`text=${textCues[0].value}`);
 			useMultipleEngines = true;
-			return;
+			continue;
 		}
 
 		cuesForLevel.sort((a, b) => {
@@ -74,7 +74,7 @@ export const buildSelectorForCues = (cues: Cue[]): string => {
 
 		const cssSelector = cuesForLevel.map((cue) => (cue.type === "text" ? `:has-text("${cue.value}")` : cue.value)).join("");
 		parts.push(cssSelector);
-	});
+	}
 
 	return useMultipleEngines ? parts.join(" >> ") : parts.join(" ");
 };
@@ -97,7 +97,7 @@ export const isSelectorMatch = (selector: string, target: HTMLElement, rectCache
 			target.ownerDocument!,
 		);
 
-		return !!matchedElement && isElementMatch(matchedElement, target, rectCache);
+		return matchedElement && isElementMatch(matchedElement, target, rectCache);
 	} catch (err) {
 		console.error(err);
 		return false;

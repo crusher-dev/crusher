@@ -111,7 +111,6 @@ function BottomSection({ name, description, ...props }) {
 }
 
 function LeftSection() {
-	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
@@ -375,22 +374,19 @@ function TopNavbar() {
 	);
 }
 
-export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
-	return (
-		<div className={"flex"} css={background}>
-			<Conditional showIf={!hideSidebar}>
-				<LeftSection />
-			</Conditional>
-
-			<div className={"w-full"}>
-				<TopNavbar />
-				<div css={scrollContainer} className={"custom-scroll relative"}>
-					<div css={[containerWidth]}>{children}</div>
-				</div>
+export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => (
+	<div className={"flex"} css={background}>
+		<Conditional showIf={!hideSidebar}>
+			<LeftSection />
+		</Conditional>
+		<div className={"w-full"}>
+			<TopNavbar />
+			<div css={scrollContainer} className={"custom-scroll relative"}>
+				<div css={[containerWidth]}>{children}</div>
 			</div>
 		</div>
-	);
-};
+	</div>
+);
 
 const navLinkSquare = css`
 	height: 68rem;

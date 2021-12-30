@@ -14,28 +14,28 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { MyCustomHelper } from "../../components/app/onboarding/tourCustomHelper";
 
-const createOnboardingStep = (selector: string, heading: string, desc: any) => {
-	return {
-		selector,
-		content: (
-			<div style={{ paddingBottom: "0.1rem" }}>
-				<div
-					style={{
-						fontWeight: "bold",
-						fontSize: "1rem",
-					}}
-				>
-					{heading}
-				</div>
-				<p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.925rem" }}>{desc}</p>
+const createOnboardingStep = (selector: string, heading: string, desc: any) => ({
+	selector,
+
+	content: (
+		<div style={{ paddingBottom: "0.1rem" }}>
+			<div
+				style={{
+					fontWeight: "bold",
+					fontSize: "1rem",
+				}}
+			>
+				{heading}
 			</div>
-		),
-		style: {
-			background: "#1A1D23",
-			color: "#fff",
-		},
-	};
-};
+			<p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.925rem" }}>{desc}</p>
+		</div>
+	),
+
+	style: {
+		background: "#1A1D23",
+		color: "#fff",
+	},
+});
 
 const ONBOARDING_STEPS: any = [
 	createOnboardingStep("#address-bar", "Enter URL you want to test", "Hey lets get familiar to testing"),
@@ -98,35 +98,30 @@ const OnboardingManager = () => {
 	useEffect(() => {
 		const store = getStore();
 		switch (currentOnboardingStep) {
-			case ONBOARDING_STEP_INDEX_MAP.DEVICE_BROWSER_INTRODUCTION: {
+			case ONBOARDING_STEP_INDEX_MAP.DEVICE_BROWSER_INTRODUCTION:
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.ELEMENT) break;
 				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.TAKE_SCREENSHOT_ONBOARDING));
 				break;
-			}
-			case ONBOARDING_STEP_INDEX_MAP.TAKE_SCREENSHOT_ONBOARDING: {
+			case ONBOARDING_STEP_INDEX_MAP.TAKE_SCREENSHOT_ONBOARDING:
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.PAGE) break;
 				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.TOGGLE_INSPECT_BUTTON_INTRODUCTION));
 				break;
-			}
-			case ONBOARDING_STEP_INDEX_MAP.TOGGLE_INSPECT_BUTTON_INTRODUCTION: {
+			case ONBOARDING_STEP_INDEX_MAP.TOGGLE_INSPECT_BUTTON_INTRODUCTION:
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.SELECT_ELEMENT) break;
 				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SELECT_ELEMENT_USING_BUTTON));
 				break;
-			}
-			case ONBOARDING_STEP_INDEX_MAP.SELECT_ELEMENT_USING_BUTTON: {
+			case ONBOARDING_STEP_INDEX_MAP.SELECT_ELEMENT_USING_BUTTON:
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.ELEMENT) {
 					break;
 				}
 				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.RECORD_CLICK_ELEMENT));
 				break;
-			}
-			case ONBOARDING_STEP_INDEX_MAP.RECORD_CLICK_ELEMENT: {
+			case ONBOARDING_STEP_INDEX_MAP.RECORD_CLICK_ELEMENT:
 				if (actionsRecordingState.type !== ACTIONS_RECORDING_STATE.PAGE) {
 					break;
 				}
 				store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.ACTIONS_STEP_LIST_INTRODUCTION));
 				break;
-			}
 		}
 	}, [actionsRecordingState]);
 
@@ -138,12 +133,11 @@ const OnboardingManager = () => {
 			store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.TAKE_PAGE_SCREENSHOT));
 		} else if (currentCount > prevCount) {
 			switch (currentOnboardingStep) {
-				case ONBOARDING_STEP_INDEX_MAP.TAKE_PAGE_SCREENSHOT: {
+				case ONBOARDING_STEP_INDEX_MAP.TAKE_PAGE_SCREENSHOT:
 					if (recordedActions[currentCount - 1].type === ActionsInTestEnum.PAGE_SCREENSHOT) {
 						store.dispatch(updateCurrentOnboardingStep(ONBOARDING_STEP_INDEX_MAP.SAVE_TEST));
 					}
 					break;
-				}
 			}
 		}
 		lastRecordedActionsCount.current = recordedActions.length;

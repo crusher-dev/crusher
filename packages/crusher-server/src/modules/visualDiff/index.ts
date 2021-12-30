@@ -3,8 +3,7 @@ import { PNG } from "pngjs";
 import * as pixelmatch from "pixelmatch";
 import axios from "axios";
 import { StorageManager } from "@modules/storage";
-import { result } from "lodash";
-const jpeg = require('jpeg-js');
+const jpeg = require("jpeg-js");
 
 @Service()
 class VisualDiffService {
@@ -20,7 +19,7 @@ class VisualDiffService {
 		console.log("Base Image size", `${baseJpegImage.width}x${baseJpegImage.height}`);
 		console.log("Reference Image size", `${referenceJpegImage.width}x${referenceJpegImage.height}`);
 		if (baseJpegImage.width !== referenceJpegImage.width || baseJpegImage.height !== referenceJpegImage.height) {
-			throw new Error("Base and reference image sizes don't match");
+			throw Error("Base and reference image sizes don't match");
 		}
 
 		const diffImageWidth = baseJpegImage.width;
@@ -32,7 +31,7 @@ class VisualDiffService {
 			alpha: 0.8,
 		});
 
-		const diffJpegData = jpeg.encode({data: diffPngImage.data, width: diffPngImage.width, height: diffPngImage.height}, 70);
+		const diffJpegData = jpeg.encode({ data: diffPngImage.data, width: diffPngImage.width, height: diffPngImage.height }, 70);
 
 		return {
 			diffDeltaFactor: diffDeltaFactor,
@@ -46,9 +45,7 @@ class VisualDiffService {
 			method: "get",
 			url: imageUrl,
 			responseType: "arraybuffer",
-		}).then((result: any) => {
-			return result.data;
-		});
+		}).then((result: any) => result.data);
 	}
 
 	async getDiffResult(

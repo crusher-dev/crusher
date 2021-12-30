@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-import "reflect-metadata";
 import { CronJob } from "cron";
 import { Container } from "typedi";
 import { ProjectMonitoringService } from "@modules/resources/projects/monitoring/service";
@@ -24,7 +23,7 @@ async function setupCronForBuilds() {
 					testService.runTestsInProject(monitoring.projectId, monitoring.userId, {
 						browser: monitoring.environmentBrowser,
 						buildTrigger: BuildTriggerEnum.CRON,
-						host: monitoring.host ? monitoring.host : "null",
+						host: monitoring.host || "null",
 					});
 					await projectMonitoringService.updateLastCronMarker(monitoring.id);
 				}
@@ -33,8 +32,6 @@ async function setupCronForBuilds() {
 				console.error("queuedMonitoringsCron", "Error occurred when starting the tests", ex);
 
 				this.stop();
-				// Restart the process to avoid cron loop in-case of unhandled errors like service connection failure.
-				process.exit();
 			}
 		},
 		null,

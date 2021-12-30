@@ -6,7 +6,7 @@ export interface IEnvironmentTable extends BaseRowInterface {
 	id: number;
 	project_id: number;
 	name: string;
-	browser: Array<BrowserEnum>;
+	browser: BrowserEnum[];
 	user_id: number;
 	vars: string;
 	host?: string;

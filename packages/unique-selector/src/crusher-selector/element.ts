@@ -1,3 +1,4 @@
+const isString = (a) => typeof a === "string";
 export type ElementDescriptor = {
 	isContentEditable: boolean;
 	inputType?: string;
@@ -43,7 +44,7 @@ export const getInputElementValue = (element: HTMLInputElement): string | null =
 		inputValue = element.value;
 	}
 
-	return typeof inputValue === "string" ? inputValue : null;
+	return isString(inputValue) ? inputValue : null;
 };
 
 /**
@@ -82,9 +83,7 @@ const buildXpath = (node: Node | null): string => {
 	}
 
 	const children: any = element.parentNode ? element.parentNode.children : [];
-	const sames = [].filter.call(children, (x: Element) => {
-		return x.tagName === element.tagName;
-	});
+	const sames = [].filter.call(children, (x: Element) => x.tagName === element.tagName);
 
 	const result =
 		buildXpath(element.parentNode) +

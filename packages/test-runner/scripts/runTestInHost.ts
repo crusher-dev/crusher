@@ -15,7 +15,7 @@ function preParseArgv() {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 
-	const argv = yargs
+	const { argv } = yargs
 		.options({
 			file: {
 				describe: "Path to temp address file",
@@ -28,7 +28,7 @@ function preParseArgv() {
 			},
 		})
 		.help()
-		.alias("help", "h").argv;
+		.alias("help", "h");
 
 	console.log("Argv are", argv);
 
@@ -42,7 +42,7 @@ function preParseArgv() {
 
 preParseArgv();
 
-if (!fs.existsSync(installOptions.file)) throw new Error("Test action file doesn't exist, " + installOptions.file);
+if (!fs.existsSync(installOptions.file)) throw Error(`Test action file doesn't exist, ` + installOptions.file);
 
 function _getBrowser(browser) {
 	if (browser === "safari") {
@@ -59,7 +59,7 @@ function _getBrowser(browser) {
 
 const browser = _getBrowser(installOptions.browser);
 
-if (!browser) throw new Error("Invalid browser passed");
+if (!browser) throw Error("Invalid browser passed");
 const persistentContextDir = createTempContextDir();
 
 const codeGenerator = new CodeGenerator({

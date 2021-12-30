@@ -1,17 +1,17 @@
 import { iAction } from "@crusher-shared/types/action";
-import { Browser, BrowserContextOptions, Page } from "playwright";
+import { Browser } from "playwright";
 import { iDevice } from "@crusher-shared/types/extension/device";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { getUserAgentFromName, userAgents } from "@crusher-shared/constants/userAgents";
 
-async function setDevice(browser: Browser, action: iAction, globals: IGlobalManager) {
+function setDevice(browser: Browser, action: iAction, globals: IGlobalManager) {
 	const device: { width: number; height: number } = action.payload.meta.device as iDevice;
 	const userAgent = getUserAgentFromName(action.payload.meta.device.userAgent);
 
 	const currentBrowserContextOptions = globals.get("browserContextOptions");
 
-	if (currentBrowserContextOptions && currentBrowserContextOptions.recordVideo) {
+	if (currentBrowserContextOptions?.recordVideo) {
 		currentBrowserContextOptions.recordVideo = {
 			...currentBrowserContextOptions.recordVideo,
 			size: { width: device.width, height: device.height },

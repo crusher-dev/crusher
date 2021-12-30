@@ -23,7 +23,7 @@ const SettingsModal = (props: iStartupModalProps) => {
 		if (backendURL && backendURL !== "") {
 			if (!(window as any).electron) {
 				onClose();
-				throw new Error("Cannot find exposed electron API");
+				throw Error("Cannot find exposed electron API");
 			}
 			if (!AdvancedURL.validateURL(backendURL)) {
 				alert("Invalid URL");

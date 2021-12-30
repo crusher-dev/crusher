@@ -47,7 +47,8 @@
 			"remove-useless-mapping-modifiers": "on",
 			"remove-useless-types-from-constants": "on",
 			"remove-unused-types": "on",
-			"remove-iife": "off"
+			"remove-iife": "off",
+			"promises/apply-top-level-await": "off"
 		},
 		"*.d.ts": {
 			"declare-undefined-variables": "off"
@@ -65,7 +66,9 @@
 		"**/build",
 		"**/package-lock.json",
 		"**/yarn.lock",
-		"**/output"
+		"**/output",
+		"packages/unique-selector/src/selectors/pnc.ts",
+		"packages/crusher-electron-app/public/js/codemirror/codemirror.js"
 	],
 	"rules": {
 		"apply-array-at": "off",
@@ -113,7 +116,6 @@
 		"eslint",
 		"package-json",
 		"remove-debugger",
-		"remove-iife",
 		"remove-empty",
 		"remove-unreferenced-variables",
 		"remove-unused-variables",

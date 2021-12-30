@@ -13,7 +13,7 @@ const BuildInstanceResultsSchema = new mongoose.Schema(
 export interface IBuildInstanceResult {
 	instanceId: number;
 	projectId: number;
-	actionsResult: Array<any>;
+	actionsResult: any[];
 	hasInstancePassed: boolean;
 }
 

@@ -8,7 +8,7 @@ export const getFfmpegFromModule = (): string | null => {
 		if (ffmpeg.path) {
 			return ffmpeg.path;
 		}
-	} catch (e) {} // eslint-disable-line no-empty
+	} catch {} // eslint-disable-line no-empty
 
 	return null;
 };
@@ -24,7 +24,7 @@ export const getFfmpegPath = (): string | null => {
 export const ensureFfmpegPath = (): void => {
 	const ffmpegPath = getFfmpegPath();
 	if (!ffmpegPath) {
-		throw new Error("pw-video: FFmpeg path not set. Set the FFMPEG_PATH env variable or install @ffmpeg-installer/ffmpeg as a dependency.");
+		throw Error("pw-video: FFmpeg path not set. Set the FFMPEG_PATH env variable or install @ffmpeg-installer/ffmpeg as a dependency.");
 	}
 
 	setFluentFfmpegPath(ffmpegPath);
@@ -49,15 +49,13 @@ export function processRemoteRawVideoAndSave(videoUrl: string, savePath: string)
 			.save(savePath);
 
 		responseStream.on("error", (err) => {
-			if (ffmpegStream && ffmpegStream.end) {
-				ffmpegStream.end();
-			}
+			ffmpegStream?.end();
 			reject(err);
 		});
 	});
 }
 
-export async function processAndSaveLastXSecondsClip(sourcePath: string, outputPath: string, duration = 5): Promise<string> {
+export function processAndSaveLastXSecondsClip(sourcePath: string, outputPath: string, duration = 5): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const ffmpegStream = ffmpeg(sourcePath)
 			.setFfmpegPath(getFfmpegPath())
@@ -69,9 +67,7 @@ export async function processAndSaveLastXSecondsClip(sourcePath: string, outputP
 				}
 			})
 			.on("error", function (err) {
-				if (ffmpegStream && ffmpegStream.end) {
-					ffmpegStream.end();
-				}
+				ffmpegStream?.end();
 				reject(err);
 			})
 			.save(outputPath);

@@ -1,7 +1,7 @@
 import { TOP_LEVEL_ACTION } from "../interfaces/topLevelAction";
 import { iActionDescription } from "../interfaces/actionDescription";
 
-const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
+const TOP_LEVEL_ACTIONS_LIST: iActionDescription[] = [
 	{
 		id: TOP_LEVEL_ACTION.TOGGLE_INSPECT_MODE,
 		title: "Select & add element check",
@@ -49,7 +49,7 @@ const TOP_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 		title: "Verify links",
 		icon: chrome.runtime.getURL("icons/actions/seo.svg"),
 		desc: "",
-	}
+	},
 ];
 
 export { TOP_LEVEL_ACTIONS_LIST };

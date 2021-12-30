@@ -1,5 +1,5 @@
 const builder = require("electron-builder");
-const Platform = builder.Platform;
+const { Platform } = builder;
 const path = require("path");
 const shell = require("shelljs");
 
@@ -9,7 +9,7 @@ shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} &
 builder
 	.build({
 		targets: Platform.LINUX.createTarget(["appimage", "deb"]),
-		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
+		publish: process.env.PUBLISH_RELEASE || "never",
 		config: {
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
@@ -22,8 +22,8 @@ builder
 					owner: "crusherdev",
 					vPrefixedTagName: true,
 					token: process.env.GITHUB_TOKEN,
-					releaseType: "draft"
-				}
+					releaseType: "draft",
+				},
 			],
 			linux: {
 				icon: "icons/app.icns",

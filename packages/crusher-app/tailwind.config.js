@@ -10,10 +10,10 @@ module.exports = {
 			gilroy: ["Gilroy", "sans-serif"],
 			cera: ["Cera Pro", "sans-serif"],
 		},
-		colors: { ...colors },
-		backgroundColor: { ...background },
+		colors: colors,
+		backgroundColor: background,
 		borderRadius: spacingSize,
-		borderColor: { ...border },
+		borderColor: border,
 		fontSize: spacingSize,
 		fontWeight: FONT_WEIGHT_VALUE,
 		extend: {

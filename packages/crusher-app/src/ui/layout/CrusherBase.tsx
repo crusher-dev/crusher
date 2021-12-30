@@ -15,7 +15,5 @@ interface CrusherBaseProps {
 	children: React.ReactNode;
 }
 
-const CrusherBase = (props: CrusherBaseProps) => {
-	return <BlankBase css={backgroundForBase}>{props.children}</BlankBase>;
-};
+const CrusherBase = (props: CrusherBaseProps) => <BlankBase css={backgroundForBase}>{props.children}</BlankBase>;
 export default CrusherBase;

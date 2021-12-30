@@ -1,11 +1,9 @@
 import React from "react";
 import "../../../style/base.css";
-// @ts-ignore
-import markdown from "../info.stories.md";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
-import { Story, Meta } from "@storybook/react/types-6-0";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { css, SerializedStyles } from "@emotion/react";
+import { Meta } from "@storybook/react/types-6-0";
+import { ComponentStory } from "@storybook/react";
+import { css } from "@emotion/react";
 
 import { Tooltip, TooltipWrapperProps } from "./Tooltip";
 export default {
@@ -33,23 +31,20 @@ export default {
 	},
 } as Meta;
 
-const ClickTemplate: ComponentStory<TooltipWrapperProps> = (args) => {
-	return (
-		<div style={{ marginTop: 60, marginLeft: 200 }}>
-			{/*Component starts*/}
-			<Tooltip
-				{...args}
-				css={css`
-					padding: 8rem;
-				`}
-			>
-				<span className={"underline"}>Click over me</span>
-			</Tooltip>
-
-			{/*Component ends*/}
-		</div>
-	);
-};
+const ClickTemplate: ComponentStory<TooltipWrapperProps> = (args) => (
+	<div style={{ marginTop: 60, marginLeft: 200 }}>
+		{/*Component starts*/}
+		<Tooltip
+			{...args}
+			css={css`
+				padding: 8rem;
+			`}
+		>
+			<span className={"underline"}>Click over me</span>
+		</Tooltip>
+		{/*Component ends*/}
+	</div>
+);
 
 ClickTemplate.parameters = {
 	status: "beta",
@@ -101,35 +96,32 @@ Sticky.args = {
 	autoHide: true,
 };
 
-const TooltipTemplate2: ComponentStory<TooltipWrapperProps> = (args) => {
-	return (
-		<div style={{ marginTop: 60, marginLeft: 200 }}>
-			{/*Component starts*/}
-			<Tooltip
-				{...args}
-				content={
-					<div
-						css={css`
-							min-width: 300px;
-						`}
-						className={"p-12"}
-					>
-						<div className={"font-600 text-15 mb-8"}>This is how you need to do</div>
-						<div>Crusher makes it super easy tp create test</div>
-					</div>
-				}
-				type={"hover"}
-				css={css`
-					padding: 8rem;
-				`}
-			>
-				<span>Hover over me</span>
-			</Tooltip>
-
-			{/*Component ends*/}
-		</div>
-	);
-};
+const TooltipTemplate2: ComponentStory<TooltipWrapperProps> = (args) => (
+	<div style={{ marginTop: 60, marginLeft: 200 }}>
+		{/*Component starts*/}
+		<Tooltip
+			{...args}
+			content={
+				<div
+					css={css`
+						min-width: 300px;
+					`}
+					className={"p-12"}
+				>
+					<div className={"font-600 text-15 mb-8"}>This is how you need to do</div>
+					<div>Crusher makes it super easy tp create test</div>
+				</div>
+			}
+			type={"hover"}
+			css={css`
+				padding: 8rem;
+			`}
+		>
+			<span>Hover over me</span>
+		</Tooltip>
+		{/*Component ends*/}
+	</div>
+);
 
 TooltipTemplate2.parameters = {
 	status: "beta",

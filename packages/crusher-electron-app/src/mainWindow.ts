@@ -21,7 +21,7 @@ class MainWindow {
 		isTestRunning: boolean;
 		isTestVerified: boolean;
 		webViewSrc?: string;
-		remainingSteps?: Array<iAction>;
+		remainingSteps?: iAction[];
 	};
 	appState: { userAgent: string };
 
@@ -30,7 +30,7 @@ class MainWindow {
 			return { replayTestId: undefined, targetSite: undefined, shouldRunAfterTest: false, isTestRunning: false, isTestVerified: false };
 
 		const deepLink = process.argv[process.argv.length - 1];
-		if (deepLink && deepLink.startsWith("crusher://replay-test")) {
+		if (deepLink?.startsWith("crusher://replay-test")) {
 			const url = new URL(deepLink);
 			return {
 				replayTestId: url.searchParams.get("testId"),
@@ -59,11 +59,11 @@ class MainWindow {
 	}
 
 	async loadExtension() {
-		const targetSite = this.state.targetSite;
+		const { targetSite } = this.state;
 		const openExtensionUrl = app.commandLine.getSwitchValue("open-extension-url");
 
 		const { id: extensionId } = await session.defaultSession.loadExtension(path.resolve(__dirname, "./extension"), { allowFileAccess: true });
-		let urlToOpen = openExtensionUrl ? openExtensionUrl : `chrome-extension://${extensionId}/test_recorder.html`;
+		let urlToOpen = openExtensionUrl || `chrome-extension://${extensionId}/test_recorder.html`;
 
 		if (!openExtensionUrl && targetSite) {
 			urlToOpen += `?url=${addHttpToURLIfNotThere(targetSite)}&device=GoogleChromeMediumScreen`;
@@ -97,11 +97,11 @@ class MainWindow {
 	}
 
 	allowAllNetworkRequests(responseDetails, updateCallback) {
-		Object.keys(responseDetails.responseHeaders).map((headers) => {
+		for (const headers of Object.keys(responseDetails.responseHeaders)) {
 			if (["x-frame-options", "content-security-policy", "frame-options"].includes(headers.toString().toLowerCase())) {
 				delete responseDetails.responseHeaders[headers];
 			}
-		});
+		}
 
 		updateCallback({ cancel: false, responseHeaders: responseDetails.responseHeaders });
 	}
@@ -132,8 +132,8 @@ class MainWindow {
 		this.state.remainingSteps = undefined;
 	}
 
-	addToRemainingSteps(actions: Array<iAction>) {
-		if(!this.state.remainingSteps) {
+	addToRemainingSteps(actions: iAction[]) {
+		if (!this.state.remainingSteps) {
 			this.state.remainingSteps = [];
 		}
 
@@ -152,18 +152,21 @@ class MainWindow {
 		// this.webContents.setUserAgent(USER_AGENT.value);
 	}
 
-	async isTestVerified(event) {
+	async isTestVerified() {
 		return this.state.isTestVerified;
 	}
 
-	private async flushLogsToDisk(hasPassed: boolean, actions: Array<any>) {
+	private async flushLogsToDisk(hasPassed: boolean, actions: any[]) {
 		const logFile = app.commandLine.getSwitchValue("log-file");
-		if(!logFile) return;
+		if (!logFile) return;
 
-		fs.writeFileSync(logFile, JSON.stringify({
-			hasPassed,
-			steps: actions,
-		}));
+		fs.writeFileSync(
+			logFile,
+			JSON.stringify({
+				hasPassed,
+				steps: actions,
+			}),
+		);
 	}
 
 	async verifyTest(event, tempTestId) {
@@ -177,7 +180,7 @@ class MainWindow {
 		const { error, actions } = await this.webView.playwrightInstance.runTempTestForVerification(tempTestId);
 		this.state.isTestRunning = false;
 
-		await this.flushLogsToDisk(!!error ? false : true, actions);
+		await this.flushLogsToDisk(!error, actions);
 
 		if (error) {
 			this.webContents.executeJavaScript('alert("Test steps cannot pe perfomed successfully");');
@@ -185,9 +188,9 @@ class MainWindow {
 			this.state.isTestVerified = true;
 			try {
 				await saveTest(actions);
-			} catch(err) {
+			} catch {
 				this.webContents.executeJavaScript('alert("Cant save the test");');
-			};
+			}
 		}
 
 		await this.browserWindow.webContents.send("post-message-to-host", { type: "SET_IS_VERIFYING_STATE", meta: { value: false } });
@@ -237,14 +240,14 @@ class MainWindow {
 	}
 
 	async handleNavigatePage(event, url) {
-		if(this.webView){
+		if (this.webView) {
 			this.webView.webContents().loadURL(url);
 		}
 		return true;
 	}
 
-	async continueRemainingTest(event) {
-		if(!this.state.remainingSteps || !this.state.remainingSteps.length) return false;
+	async continueRemainingTest() {
+		if (!this.state.remainingSteps || !this.state.remainingSteps.length) return false;
 		console.log("Reaming steps are", this.state.remainingSteps);
 		await this.sendMessage("SET_IS_REPLAYING", { value: true });
 		this.webView.setRunningState(true);
@@ -256,22 +259,21 @@ class MainWindow {
 		return true;
 	}
 
-	handleGetContentScript(event) {
+	handleGetContentScript() {
 		const scriptContent = fs.readFileSync(path.join(__dirname, "extension/js/content_script.js"));
 		return scriptContent;
 	}
 
-	handleWebviewWillAttach(event,
-		webPreferences, params) {
-			if(params.src.startsWith("about:blank")) {
-				const internalURL = new URL(params.src);
-				this.state.webViewSrc = internalURL.searchParams.get("url");
-			} else {
-				this.state.webViewSrc = params.src;
-			}
+	handleWebviewWillAttach(event, webPreferences, params) {
+		if (params.src.startsWith("about:blank")) {
+			const internalURL = new URL(params.src);
+			this.state.webViewSrc = internalURL.searchParams.get("url");
+		} else {
+			this.state.webViewSrc = params.src;
+		}
 	}
 
-	async handleStepsUpdated(event) {
+	async handleStepsUpdated() {
 		// @TODO: Add functionality here
 		return true;
 	}
@@ -301,7 +303,7 @@ class MainWindow {
 		this.webContents.removeAllListeners();
 	}
 
-	async initWebView(event, webContentsId) {
+	async initWebView() {
 		// DUmmy method
 	}
 

@@ -6,8 +6,8 @@ export interface iAttribute {
 }
 
 export interface iElementInfo {
-	selectors: Array<iSelectorInfo>;
-	attributes: Array<iAttribute>;
+	selectors: iSelectorInfo[];
+	attributes: iAttribute[];
 	innerHTML: string;
 	screenshot?: string;
 }

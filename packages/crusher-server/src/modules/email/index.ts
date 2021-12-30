@@ -17,7 +17,7 @@ export class EmailManager {
 	}
 
 	async sendEmail(to: string, subject: string, html: string) {
-		if (!this.emailClient) throw new Error("No email client available to send emails...");
+		if (!this.emailClient) throw Error("No email client available to send emails...");
 		await this.emailClient.send({
 			to: to,
 			from: {

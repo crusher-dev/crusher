@@ -1,6 +1,6 @@
 import { QueueManager as BaseQueueManager } from "@crusher-shared/modules/queue";
 import { RedisManager } from "@modules/redis";
-import Container, { Inject, Service } from "typedi";
+import Container, { Service } from "typedi";
 
 @Service()
 class QueueManager extends BaseQueueManager {

@@ -5,9 +5,9 @@ import { camelCase, forEach, isArray, isPlainObject, snakeCase } from "lodash";
 import { KeysToCamelCase, KeysToSnakeCase } from "@modules/common/typescript/interface";
 import * as ejs from "ejs";
 
-export function getTestHostFromActions(actions: Array<iAction>): string {
+export function getTestHostFromActions(actions: iAction[]): string {
 	const navigateAction = actions.find((action) => action.type === ActionsInTestEnum.NAVIGATE_URL);
-	if (!navigateAction) throw new Error("Test created without no navigation action");
+	if (!navigateAction) throw Error("Test created without no navigation action");
 
 	return navigateAction.payload.meta.value;
 }
@@ -15,7 +15,7 @@ export function getTestHostFromActions(actions: Array<iAction>): string {
 export function getDefaultHostFromCode(code: string) {
 	const rgx = new RegExp(/goto\((["'])([^\1]+?)\1\)/m);
 	const match = code.match(rgx);
-	return match && match.length == 3 ? match[2] : false;
+	return match && match.length === 3 ? match[2] : false;
 }
 
 export function replaceHostInCode(host: string, code: string) {
@@ -51,11 +51,9 @@ export function convertSecondsToLabel(seconds) {
 }
 
 export function convertLabelToSeconds(labelToFind) {
-	const label = labelOptions.find((l) => {
-		return l.label === labelToFind;
-	});
+	const label = labelOptions.find((l) => l.label === labelToFind);
 	if (!label) {
-		throw new Error("Invalid time interval");
+		throw Error("Invalid time interval");
 	}
 	return label.value;
 }
@@ -89,7 +87,7 @@ function getFullName(firstName: string | null, lastName: string | null) {
 // @TODO: Make this compatible with typescript array and objects
 function getCamelizeObject<Type>(object: Type): KeysToCamelCase<Type> {
 	const camelCaseObject = {};
-	if (object instanceof Array) {
+	if (isArray(object)) {
 		return object.map((obj) => {
 			return getCamelizeObject(obj);
 		}) as any;
@@ -108,7 +106,7 @@ function getCamelizeObject<Type>(object: Type): KeysToCamelCase<Type> {
 
 // @TODO: Make this compatible with typescript array and objects
 function getSnakedObject<Type>(object: Type): KeysToSnakeCase<Type> {
-	if (object instanceof Array) {
+	if (isArray(object)) {
 		return object.map((obj) => {
 			return getSnakedObject(obj);
 		}) as any;
@@ -126,7 +124,7 @@ function getSnakedObject<Type>(object: Type): KeysToSnakeCase<Type> {
 	return snakeCaseObject as any;
 }
 
-function getInsertOrUpdateQuerySetFromObject(payload): [string, Array<any>] {
+function getInsertOrUpdateQuerySetFromObject(payload): [string, any[]] {
 	const updateQueryArr = [];
 	const updateQueryArrValues = [];
 
@@ -140,15 +138,17 @@ function getInsertOrUpdateQuerySetFromObject(payload): [string, Array<any>] {
 	return [updateQueryArr.join(", "), updateQueryArrValues];
 }
 
-function getScreenshotActionsResult(actionsResult: Array<IActionResultItemWithIndex>) {
+function getScreenshotActionsResult(actionsResult: IActionResultItemWithIndex[]) {
 	return actionsResult
-		.filter((actionResult) => [ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType))
+		.filter((actionResult) =>
+			[ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType),
+		)
 		.filter((actionResult) => {
-			if(actionResult.actionType !== ActionsInTestEnum.CUSTOM_CODE) {
+			if (actionResult.actionType !== ActionsInTestEnum.CUSTOM_CODE) {
 				return true;
 			}
 
-			if(actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length) {
+			if (actionResult.meta?.outputs?.length) {
 				return true;
 			}
 

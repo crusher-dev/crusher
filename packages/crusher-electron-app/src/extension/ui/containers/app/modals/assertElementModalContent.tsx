@@ -7,7 +7,6 @@ import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperat
 import { BulbIcon } from "../../../../assets/icons";
 import uniqueId from "lodash/uniqueId";
 import { getStore } from "../../../../redux/store";
-import { recordAction } from "../../../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { updateActionsRecordingState } from "../../../../redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
@@ -23,31 +22,26 @@ interface iAssertElementModalProps {
 	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 
-const getValidationFields = (elementInfo: iElementInfo): Array<iField> => {
+const getValidationFields = (elementInfo: iElementInfo): iField[] => {
 	if (!elementInfo) return [];
-	const innerHTML = elementInfo.innerHTML;
-	const attributes = elementInfo.attributes;
+	const { innerHTML, attributes } = elementInfo;
 
-	const MetaTagsFields = attributes.map((attribute) => {
-		return {
-			name: attribute.name,
-			value: attribute.value,
-			meta: { type: "ATTRIBUTE" },
-		};
-	});
+	const MetaTagsFields = attributes.map((attribute) => ({
+		name: attribute.name,
+		value: attribute.value,
+		meta: { type: "ATTRIBUTE" },
+	}));
 	return [{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } }, ...MetaTagsFields];
 };
 
-const getElementFieldValue = (fieldInfo: iField) => {
-	return fieldInfo.value;
-};
+const getElementFieldValue = (fieldInfo: iField) => fieldInfo.value;
 
 const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	const { onClose, deviceIframeRef } = props;
 	const recordingState = useSelector(getActionsRecordingState);
 	const elementInfo: iElementInfo = recordingState.elementInfo as iElementInfo;
 
-	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
+	const [validationRows, setValidationRows] = useState([] as iAssertionRow[]);
 	const validationFields = getValidationFields(elementInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
@@ -64,13 +58,13 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	};
 
 	const addValidationRows = (
-		rows: Array<{
+		rows: {
 			field: iField;
 			operation: ASSERTION_OPERATION_TYPE;
 			validation: string;
-		}>,
+		}[],
 	) => {
-		const newValidationRows = [...validationRows];
+		const newValidationRows = validationRows.slice();
 		for (let i = 0; i < rows.length; i++) {
 			newValidationRows.push({
 				id: uniqueId("generate-checks-row"),
@@ -79,7 +73,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 				validation: rows[i].validation,
 			});
 		}
-		setValidationRows([...newValidationRows]);
+		setValidationRows(newValidationRows.slice());
 	};
 
 	const createNewElementAssertionRow = () => {
@@ -100,33 +94,34 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 
 	const updateFieldOfValidationRow = (newFieldName: string, rowId: string) => {
 		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
-		if (rowIndex === -1) throw new Error("Invalid id for validation row");
+		if (rowIndex === -1) throw Error("Invalid id for validation row");
 		const newField = validationFields.find((validationField) => validationField.name === newFieldName);
-		if (!newField) throw new Error("Invalid field provided for validation row");
+		if (!newField) throw Error("Invalid field provided for validation row");
 
 		validationRows[rowIndex].field = newField;
 		validationRows[rowIndex].validation = getElementFieldValue(newField);
-		setValidationRows([...validationRows]);
+		setValidationRows(validationRows.slice());
 	};
 
 	const updateOperationOfValidationRow = (newFieldName: string, rowId: string) => {
 		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
-		if (rowIndex === -1) throw new Error("Invalid id for validation row");
+		if (rowIndex === -1) throw Error("Invalid id for validation row");
 
 		validationRows[rowIndex].operation = newFieldName;
-		setValidationRows([...validationRows]);
+		setValidationRows(validationRows.slice());
 	};
 
 	const updateValidationValueOfValidationRow = (newValidationValue: string, rowId: string) => {
 		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
-		if (rowIndex === -1) throw new Error("Invalid id for validation row");
+		if (rowIndex === -1) throw Error("Invalid id for validation row");
 
 		validationRows[rowIndex].validation = newValidationValue;
-		setValidationRows([...validationRows]);
+		setValidationRows(validationRows.slice());
 	};
 
 	const saveElementValidationAction = () => {
 		const store = getStore();
+
 		recordActionWithHoverNodes({
 			type: ActionsInTestEnum.ASSERT_ELEMENT,
 			payload: {
@@ -137,8 +132,9 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 			},
 			screenshot: elementInfo.screenshot,
 			url: "",
-		}),
-			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
+		});
+
+		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(deviceIframeRef);
 
 		if (onClose) {
@@ -148,7 +144,7 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 
 	const deleteValidationRow = (rowIndex) => {
 		const newValidationRows = validationRows.filter((a) => a.id !== rowIndex);
-		setValidationRows([...newValidationRows]);
+		setValidationRows(newValidationRows.slice());
 	};
 
 	return (
@@ -183,9 +179,9 @@ const AssertElementModalContent = (props: iAssertElementModalProps) => {
 	);
 };
 
-const containerStyle = (areRowsPresent) => {
-	return { marginTop: areRowsPresent ? pxToRemValue(36) : pxToRemValue(24) };
-};
+const containerStyle = (areRowsPresent) => ({
+	marginTop: areRowsPresent ? pxToRemValue(36) : pxToRemValue(24),
+});
 const bottomBarStyle = {
 	display: "flex",
 	justifyContent: "flex-end",

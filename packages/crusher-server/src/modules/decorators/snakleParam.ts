@@ -1,5 +1,4 @@
 import { getSnakedObject } from "@utils/helper";
-import "reflect-metadata";
 
 function SnakleParam() {
 	return function (object, methodName, index) {

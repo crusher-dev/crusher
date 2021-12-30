@@ -8,7 +8,6 @@ import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { validateEmail } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-import { loadUserDataAndRedirect } from "@hooks/user";
 import { RequestMethod } from "@types/RequestOptions";
 
 const forgotPassword = (email: string) => {
@@ -113,32 +112,30 @@ function ForgotPasswordBox() {
 	);
 }
 
-export const Container = () => {
-	return (
-		<CrusherBase>
-			<CenterLayout className={"pb-120"}>
-				<div className="flex flex-col items-center" css={containerCSS}>
-					<Logo height={"24rem"} className={"mb-24 mt-80"} />
+export const Container = () => (
+	<CrusherBase>
+		<CenterLayout className={"pb-120"}>
+			<div className="flex flex-col items-center" css={containerCSS}>
+				<Logo height={"24rem"} className={"mb-24 mt-80"} />
 
-					<ForgotPasswordBox />
-					<div className={"font-cera text-15 leading-none font-500"}>
-						Don't have an account?
-						<a href={"/signup"}>
-							<span
-								css={css`
-									color: #8a96ff;
-								`}
-								className={"underline ml-8"}
-							>
-								Signup
-							</span>
-						</a>
-					</div>
+				<ForgotPasswordBox />
+				<div className={"font-cera text-15 leading-none font-500"}>
+					Don't have an account?
+					<a href={"/signup"}>
+						<span
+							css={css`
+								color: #8a96ff;
+							`}
+							className={"underline ml-8"}
+						>
+							Signup
+						</span>
+					</a>
 				</div>
-			</CenterLayout>
-		</CrusherBase>
-	);
-};
+			</div>
+		</CenterLayout>
+	</CrusherBase>
+);
 
 const boxCss = css`
 	height: 272rem;

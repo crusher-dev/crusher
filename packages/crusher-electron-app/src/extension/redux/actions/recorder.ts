@@ -38,12 +38,12 @@ export const turnOffRecorder = () => ({
 export const updateActionsRecordingState = (
 	actionState: ACTIONS_RECORDING_STATE,
 	selectedElementInfo?: {
-		selectors: Array<iSelectorInfo>;
-		attributes: Array<{ name: string; value: string }>;
+		selectors: iSelectorInfo[];
+		attributes: { name: string; value: string }[];
 		screenshot?: string;
 		innerHTML: string;
 	},
-	hoverDependentSelectors: Array<{ selectors: Array<iSelectorInfo> }> = [],
+	hoverDependentSelectors: { selectors: iSelectorInfo[] }[] = [],
 ) => ({
 	type: UPDATE_ACTIONS_RECORDING_STATE,
 	payload: { state: actionState, elementInfo: selectedElementInfo, hoverDependentSelectors: hoverDependentSelectors },

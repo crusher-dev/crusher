@@ -12,14 +12,11 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "../redux/actions/actions";
 import { Conditional } from "./components/conditional";
 import { StartupModal } from "./containers/app/modals/startupModal";
-import * as _url from "url";
 import "../style/main.css";
-import { openLinkInNewTab } from "../utils/dom";
 import { saveTest } from "../utils/app";
 
 const App = () => {
 	const deviceIframeRef = useRef<HTMLWebViewElement>(null);
-	const [recordingStartTime] = useState(new Date());
 	const [url] = useState(AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href));
 
 	useEffect(() => {

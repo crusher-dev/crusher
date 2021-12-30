@@ -29,6 +29,6 @@ export interface IProjectBuildListItem {
 }
 
 export type IProjectBuildListResponse = {
-	list: Array<IProjectBuildListItem>;
+	list: IProjectBuildListItem[];
 	totalPages: number;
 };

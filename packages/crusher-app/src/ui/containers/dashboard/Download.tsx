@@ -16,28 +16,25 @@ import { getOSType } from "@utils/common";
 
 export function DownloadButton(props) {
 	const osType = useMemo(getOSType, []);
-	const label = OS_INFO[osType]?.label;
 	const [isDownloading, setDownload] = useState(false);
 	const { data } = useSWR(RELEASE_API);
 
 	const DownloadButton = useCallback(
-		({ downloadLink, label }) => {
-			return (
-				<a href={downloadLink} onClick={setDownload.bind(this, true)}>
-					<Button
-						className={""}
-						css={css`
-							width: 164rem;
-						`}
-					>
-						<div className={"flex items-center justify-center"}>
-							<AppleSVG className={"mr-12"} />
-							<span className={"mt-2"}>{label}</span>
-						</div>
-					</Button>
-				</a>
-			);
-		},
+		({ downloadLink, label }) => (
+			<a href={downloadLink} onClick={setDownload.bind(this, true)}>
+				<Button
+					className={""}
+					css={css`
+						width: 164rem;
+					`}
+				>
+					<div className={"flex items-center justify-center"}>
+						<AppleSVG className={"mr-12"} />
+						<span className={"mt-2"}>{label}</span>
+					</div>
+				</Button>
+			</a>
+		),
 		[data],
 	);
 

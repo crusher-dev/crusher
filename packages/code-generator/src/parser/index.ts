@@ -8,7 +8,7 @@ interface IParserOptions {
 	shouldRecordVideo?: boolean;
 	shouldUsePlaywrightChromium?: boolean;
 	browser: BrowserEnum;
-	actions: Array<iAction>;
+	actions: iAction[];
 	assetsDir: string;
 	videoSavePath: string;
 	defaultBrowserLaunchOptions: any;
@@ -38,7 +38,7 @@ class Parser {
 		this.defaultBrowserLaunchOptions = options.defaultBrowserLaunchOptions;
 		this.videoSavePath = options.videoSavePath;
 		this.isTracingOn = !!options.turnOnTracing;
-		this.tracePath = options.tracePath ? options.tracePath : "trace.zip";
+		this.tracePath = options.tracePath || "trace.zip";
 		this.persistentContextDir = options.persistentContextDir;
 
 		ParserChecks.validateActions(this.actionsList);

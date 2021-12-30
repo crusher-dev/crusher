@@ -13,7 +13,7 @@ export interface IMonitoringTable extends BaseRowInterface {
 export type ICreateMonitoringPayload = KeysToCamelCase<Omit<IMonitoringTable, "created_at" | "updated_at" | "id" | "last_cron_run">>;
 export type IUpdateMonitoringPayload = Omit<ICreateMonitoringPayload, "projectId">;
 
-export type IQueuedMonitoringsDetails = Array<{
+export type IQueuedMonitoringsDetails = {
 	id: number;
 	userId: number;
 	projectId: number;
@@ -21,7 +21,7 @@ export type IQueuedMonitoringsDetails = Array<{
 	testInterval: number;
 	lastCronRun: number;
 	environmentName: string;
-	environmentBrowser: Array<BrowserEnum>;
+	environmentBrowser: BrowserEnum[];
 	environmentVars: string;
 	host: string | null;
-}>;
+}[];

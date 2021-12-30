@@ -4,6 +4,8 @@ import { Conditional } from "../conditional";
 import { BackIcon } from "../../../assets/icons";
 import { COLOR_CONSTANTS } from "../../colorConstants";
 
+const id = (a) => a;
+
 interface iItem {
 	id: string;
 	icon: string;
@@ -81,7 +83,7 @@ const actionDescStyle = {
 
 interface iListProps {
 	heading: string;
-	items: Array<iItem>;
+	items: iItem[];
 	onItemClick: (id: string) => void;
 	onBackPressed?: () => void;
 	showBackButton?: boolean;

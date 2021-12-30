@@ -19,7 +19,7 @@ export interface IBuildReportResponse {
 }
 
 export interface Configuration {
-	environment: Array<Environment>;
+	environment: Environment[];
 }
 
 interface Environment {
@@ -45,14 +45,6 @@ export interface Instance {
 
 interface TestInstanceOutput {
 	video: string | null;
-}
-
-interface TestInstanceImage {
-	id: number;
-	url: string;
-	baselineURL: string;
-	diffDelta: number;
-	diffURL: string;
 }
 
 interface TestInstanceConfig {

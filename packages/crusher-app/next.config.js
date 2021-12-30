@@ -8,7 +8,6 @@ const path = require("path");
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const CopyPlugin = require("copy-webpack-plugin");
-const withPWA = require("next-pwa");
 
 module.exports = withImages(
 	withBundleAnalyzer({

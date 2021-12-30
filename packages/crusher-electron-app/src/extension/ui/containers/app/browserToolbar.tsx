@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useCallback, useEffect, useReducer, useState } from "react";
-import { HelpIcon, SettingsIcon, NavigateBackIcon, NavigateForwardIcon, NavigateRefreshIcon, SaveIcon, AppResetIcon } from "../../../assets/icons";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { HelpIcon, SettingsIcon, NavigateBackIcon, NavigateForwardIcon, SaveIcon, AppResetIcon } from "../../../assets/icons";
 import { FLEX_DIRECTION } from "../../../interfaces/css";
 import { AddressBar } from "../../components/app/addressBar";
 import { addHttpToURLIfNotThere } from "@shared/utils/url";
@@ -15,7 +15,7 @@ import devices from "@shared/constants/devices";
 import userAgents from "@shared/constants/userAgents";
 import { getActions } from "crusher-electron-app/src/extension/redux/selectors/actions";
 import { useSelector } from "react-redux";
-import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 interface iBrowserToolbarProps {
 	initialUrl?: string;
@@ -27,7 +27,7 @@ interface iBrowserToolbarProps {
 	loadNewPage: (newUrl: string) => void;
 }
 const BrowserToolbar = (props: iBrowserToolbarProps) => {
-	const { initialUrl, goBack, goForward, refreshPage, verifyAndSaveTest, loadNewPage } = props;
+	const { initialUrl, goBack, goForward, verifyAndSaveTest, loadNewPage } = props;
 	const actions = useSelector(getActions);
 
 	// const showOnboarding = localStorage.getItem("isOnboardingComplete") !== "true";
@@ -41,7 +41,7 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 
 	useEffect(() => {
 		const navigateActions = actions.filter((action) => [ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(action.type));
-		if (navigateActions && navigateActions.length) {
+		if (navigateActions?.length) {
 			const newUrl = navigateActions[navigateActions.length - 1].payload.meta.value;
 			if (url !== newUrl) setUrl(newUrl);
 		}
@@ -68,7 +68,6 @@ const BrowserToolbar = (props: iBrowserToolbarProps) => {
 	};
 
 	const handleDeviceChange = async (deviceId: string) => {
-		const targetUrl = AdvancedURL.getUrlFromCrusherExtensionUrl(window.location.href);
 		const device = devices.find((device) => device.id === deviceId);
 		const userAgent = userAgents.find((userAgent) => userAgent.name === device.userAgent);
 

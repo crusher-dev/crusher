@@ -76,38 +76,32 @@ export const DownloadRecorderStepContent = () => {
 	);
 };
 
-export const RunTestDesc = () => {
-	return (
-		<div className="mt-16 pl-36 mb-0">
-			<div className={"text-14"}>Run test by clicking to bar.</div>
-		</div>
-	);
-};
+export const RunTestDesc = () => (
+	<div className="mt-16 pl-36 mb-0">
+		<div className={"text-14"}>Run test by clicking to bar.</div>
+	</div>
+);
 
-export const ViewReportDesc = () => {
-	return (
-		<div className="mt-16 pl-36 mb-0">
-			<div className={"text-14"}>View report by switching to builds tab.</div>
-		</div>
-	);
-};
+export const ViewReportDesc = () => (
+	<div className="mt-16 pl-36 mb-0">
+		<div className={"text-14"}>View report by switching to builds tab.</div>
+	</div>
+);
 
-export const IntegrateDesc = () => {
-	return (
-		<div className="mt-12 pl-36 mb-0" css={integrateCSS}>
-			<div
-				className={"text-14"}
-				css={css`
-					line-height: 28rem;
-				`}
-			>
-				Add <a href={"google.com"}>monitoring</a> or <a href={"google.com"}>Integrate CI</a>.
-				<br />
-				You can also <a href={"google.com"}>add alerting</a> to slack when test fails.
-			</div>
+export const IntegrateDesc = () => (
+	<div className="mt-12 pl-36 mb-0" css={integrateCSS}>
+		<div
+			className={"text-14"}
+			css={css`
+				line-height: 28rem;
+			`}
+		>
+			Add <a href={"google.com"}>monitoring</a> or <a href={"google.com"}>Integrate CI</a>.
+			<br />
+			You can also <a href={"google.com"}>add alerting</a> to slack when test fails.
 		</div>
-	);
-};
+	</div>
+);
 
 const integrateCSS = css`
 	a {

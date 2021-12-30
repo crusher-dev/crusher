@@ -19,9 +19,7 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 		}));
 	}, [devices]);
 
-	const selectedDeviceOption = deviceOptions.find((device) => {
-		return device.value === selectedDevice;
-	});
+	const selectedDeviceOption = deviceOptions.find((device) => device.value === selectedDevice);
 
 	const handleDeviceSelected = (selectedOption: any) => {
 		if (selectedDevice !== selectedOption.value) {
@@ -45,7 +43,7 @@ const SelectDeviceInput = (props: iRenderDeviceInputProps) => {
 const dropdownStyle = {
 	menu: (provided: any) => ({
 		...provided,
-		backgroundColor: `${COLOR_CONSTANTS.SECONDARY}`,
+		backgroundColor: String(COLOR_CONSTANTS.SECONDARY),
 		zIndex: 20000,
 	}),
 	control: (provided: any) => ({
@@ -61,15 +59,13 @@ const dropdownStyle = {
 		position: "relative",
 		width: "100%",
 	}),
-	singleValue: (provided: any) => {
-		return {
-			...provided,
-			color: COLOR_CONSTANTS.TEXT_LIGHT,
-			fontSize: pxToRemValue(13),
-		};
-	},
+	singleValue: (provided: any) => ({
+		...provided,
+		color: COLOR_CONSTANTS.TEXT_LIGHT,
+		fontSize: pxToRemValue(13),
+	}),
 	option: (provided: any, state: any) => {
-		const value = state.data.value;
+		const { value } = state.data;
 		let additionalStyle = {};
 
 		if (value === "add_project") {

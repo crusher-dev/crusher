@@ -13,7 +13,7 @@ export class CorsMiddleware implements ExpressMiddlewareInterface {
 	public use(req: Request, res: Response, next?: NextFunction): any {
 		if (req.get("origin")) {
 			this.logger(`Setting Access-Control-Allow-Origin headers to ${req.get("origin")}`);
-			res.header("Access-Control-Allow-Origin", `${req.get("origin")}`);
+			res.header("Access-Control-Allow-Origin", String(req.get("origin")));
 		}
 		res.header("Access-Control-Allow-Credentials", `true`);
 		res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");

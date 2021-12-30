@@ -1,8 +1,8 @@
 const builder = require("electron-builder");
-const Platform = builder.Platform;
+const { Platform } = builder;
 const path = require("path");
 const shell = require("shelljs");
-const { notarize } = require('electron-notarize');
+const { notarize } = require("electron-notarize");
 
 shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
 
@@ -10,7 +10,7 @@ shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} &
 builder
 	.build({
 		targets: Platform.MAC.createTarget(),
-		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
+		publish: process.env.PUBLISH_RELEASE || "never",
 		config: {
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
@@ -24,21 +24,21 @@ builder
 					token: process.env.GITHUB_TOKEN,
 					releaseType: "draft",
 					private: false,
-				}
+				},
 			],
 			afterSign: async (context) => {
-				const { electronPlatformName, appOutDir } = context;  
-				if (electronPlatformName !== 'darwin') {
-				  return;
+				const { electronPlatformName, appOutDir } = context;
+				if (electronPlatformName !== "darwin") {
+					return;
 				}
-			  
+
 				const appName = context.packager.appInfo.productFilename;
-			  
+
 				return await notarize({
-				  appBundleId: 'com.crusher.electron',
-				  appPath: `${appOutDir}/${appName}.app`,
-				  appleId: process.env.APPLE_ID,
-				  appleIdPassword: process.env.APPLE_ID_PASSWORD,
+					appBundleId: "com.crusher.electron",
+					appPath: `${appOutDir}/${appName}.app`,
+					appleId: process.env.APPLE_ID,
+					appleIdPassword: process.env.APPLE_ID_PASSWORD,
 				});
 			},
 			appId: "com.crusher.electron",
@@ -47,7 +47,7 @@ builder
 				category: "public.app-category.developer-tools",
 				hardenedRuntime: true,
 				entitlements: path.resolve(__dirname, "./entitlements.mac.plist"),
-  				entitlementsInherit: path.resolve(__dirname, "./entitlements.mac.plist"),
+				entitlementsInherit: path.resolve(__dirname, "./entitlements.mac.plist"),
 			},
 			directories: {
 				buildResources: path.resolve(__dirname, "../../../output/crusher-electron-app/"),

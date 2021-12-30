@@ -23,7 +23,7 @@ export const PricingPage = () => {
 	const [team] = useAtom(teamAtom);
 
 	const changePricing = useCallback(
-		async (planName) => {
+		(planName) => {
 			backendRequest("https://crusherdev.api.stdlib.com/test@dev/webhooks/slack/upgrade_pricing", {
 				method: RequestMethod.POST,
 				payload: {

@@ -11,7 +11,6 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { recordAction } from "../../../redux/actions/actions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { COLOR_CONSTANTS } from "../../colorConstants";
-import { WebviewTag } from "electron";
 
 interface iBrowserWindowProps {
 	isDisabled?: boolean;

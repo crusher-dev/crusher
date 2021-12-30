@@ -80,6 +80,7 @@
 	animation: blink 1.06s steps(1) infinite;
 	background-color: #7e7;
 }
+
 @-moz-keyframes blink {
 	0% {
 	}
@@ -89,6 +90,7 @@
 	100% {
 	}
 }
+
 @-webkit-keyframes blink {
 	0% {
 	}
@@ -98,6 +100,7 @@
 	100% {
 	}
 }
+
 @keyframes blink {
 	0% {
 	}
@@ -478,7 +481,7 @@ div.CodeMirror-dragcursors {
 }
 
 /* See issue #2901 */
-.cm-tab-wrap-hack:after {
+.cm-tab-wrap-hack::after {
 	content: "";
 }
 

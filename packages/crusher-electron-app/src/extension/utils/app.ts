@@ -17,9 +17,10 @@ export const saveTest = () => {
 		method: "POST",
 		headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
 		body: JSON.stringify({
-			events: steps.map((step) => {
-				return { ...step, screenshot: null };
-			}),
+			events: steps.map((step) => ({
+				...step,
+				screenshot: null,
+			})),
 		}),
 	})
 		.then((res) => res.text())

@@ -50,6 +50,8 @@ const PENALTY_MAP = {
 
 const SKIP_ATTRIBUTES = new Set(["class", "data-reactid"]);
 
+const isUndefined = (a) => typeof a === "undefined";
+
 /**
  * Get the element's cues in ascending penalty
  */
@@ -85,10 +87,9 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 		});
 	}
 
-	const attributes = element.attributes;
+	const { attributes } = element;
 
-	for (let i = 0; i < attributes.length; i++) {
-		const { name, value } = attributes[i];
+	for (const { name, value } of attributes) {
 		if (SKIP_ATTRIBUTES.has(name) || (name === "value" && !allowValueCue(element))) continue;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -96,7 +97,7 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 		let penalty = PENALTY_MAP[name];
 
 		// rank unknown attributes the same as a class
-		if (typeof penalty === "undefined") penalty = PENALTY_MAP.class;
+		if (isUndefined(penalty)) penalty = PENALTY_MAP.class;
 
 		// prefer test attributes
 		if (name.match(/^data-test.*/) || name.match(/^qa-.*/)) penalty = 0;
@@ -138,7 +139,7 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 			value: `.${cssEscape(className)}`,
 		});
 
-		includedClasses += 1;
+		++includedClasses;
 	}
 
 	return cues;

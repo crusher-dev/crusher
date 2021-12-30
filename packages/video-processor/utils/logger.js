@@ -15,14 +15,14 @@ if (IS_PRODUCTION) {
 
 	const logger = Logger.setupDefaultLogger(process.env.LOGDNA_API_KEY, options);
 
-	const log = function () {
-		logger.log([...arguments].join(" "));
-		_log.apply(console, arguments);
+	const log = function (...args) {
+		logger.log(args.slice().join(" "));
+		_log.apply(console, args);
 	};
 
-	const error = function () {
-		logger.error([...arguments].join(" "));
-		_error.apply(console, arguments);
+	const error = function (...args) {
+		logger.error(args.slice().join(" "));
+		_error.apply(console, args);
 	};
 
 	console.log = log;

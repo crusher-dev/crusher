@@ -9,7 +9,7 @@ module.exports = {
 		"storybook-addon-designs",
 		"@storybook/addon-notes/register",
 	],
-	webpackFinal: async (config) => {
+	webpackFinal: (config) => {
 		config.module.rules.push({
 			test: /\.css$/,
 			use: [

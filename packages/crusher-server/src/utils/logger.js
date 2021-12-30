@@ -87,34 +87,34 @@ module.exports = {
 	},
 };
 
-const log = function () {
-	logger.log([...arguments].join(" "));
-	_log.apply(console, arguments);
+const log = function (...args) {
+	logger.log(args.slice().join(" "));
+	_log.apply(console, args);
 };
 
-const info = function () {
-	logger.info([...arguments].join(" "));
-	_info.apply(console, arguments);
+const info = function (...args) {
+	logger.info(args.slice().join(" "));
+	_info.apply(console, args);
 };
 
-const debug = function () {
-	logger.debug([...arguments].join(" "));
-	_debug.apply(console, arguments);
+const debug = function (...args) {
+	logger.debug(args.slice().join(" "));
+	_debug.apply(console, args);
 };
 
-const trace = function () {
-	logger.debug([...arguments].join(" "));
-	_trace.apply(console, arguments);
+const trace = function (...args) {
+	logger.debug(args.slice().join(" "));
+	_trace.apply(console, args);
 };
 
-const warn = function () {
-	logger.warn([...arguments].join(" "));
-	_warn.apply(console, arguments);
+const warn = function (...args) {
+	logger.warn(args.slice().join(" "));
+	_warn.apply(console, args);
 };
 
-const error = function () {
-	logger.error([...arguments].join(" "));
-	_error.apply(console, arguments);
+const error = function (...args) {
+	logger.error(args.slice().join(" "));
+	_error.apply(console, args);
 };
 
 console.log = log;

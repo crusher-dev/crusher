@@ -1,24 +1,19 @@
 import React, { RefObject, useEffect, useRef } from "react";
 import { Button } from "../../../components/app/button";
 import { POSITION, TEXT_ALIGN } from "../../../../interfaces/css";
-import { executeScriptInFrame, turnOffInspectModeInFrame } from "../../../../messageListener";
-import { getActionsRecordingState, getLastElementCustomScriptOutput } from "../../../../redux/selectors/recorder";
-import { useSelector } from "react-redux";
 import { Conditional } from "../../../components/conditional";
 import { getStore } from "../../../../redux/store";
-import { turnOffRecorder, turnOnRecorder, updateActionsRecordingState, updateAutoRecorderSetting } from "../../../../redux/actions/recorder";
+import { turnOffRecorder, turnOnRecorder, updateActionsRecordingState } from "../../../../redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
 import { recordAction } from "../../../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { iElementInfo } from "@shared/types/elementInfo";
-import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
 
 interface iElementCustomScriptModalContent {
 	onClose?: any;
 	deviceIframeRef: RefObject<HTMLWebViewElement>;
 }
 const CustomCodeModalContent = (props: iElementCustomScriptModalContent) => {
-	const { onClose, deviceIframeRef } = props;
+	const { onClose } = props;
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 
 	useEffect(() => {
@@ -60,11 +55,11 @@ const CustomCodeModalContent = (props: iElementCustomScriptModalContent) => {
 		store.dispatch(turnOffRecorder());
 		try {
 			await (window as any).electron.executeCustomCodeScript(codeTextAreaRef.current!.value);
-		} catch (e) {}
+		} catch {}
 		store.dispatch(turnOnRecorder());
 	};
 
-	const handleScriptChange = async (cm: any, change: any) => {
+	const handleScriptChange = (cm: any) => {
 		const script = cm.getValue();
 		codeTextAreaRef.current!.value = script;
 	};

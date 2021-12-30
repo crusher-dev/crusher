@@ -15,7 +15,7 @@ import { zipDirectory } from "@src/util/helper";
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
 export class CodeRunnerService {
 	codeGenerator: CodeGenerator;
-	actions: Array<iAction>;
+	actions: iAction[];
 	runnerConfig: ITestRunConfig;
 
 	logManager: IRunnerLogManagerInterface;
@@ -25,7 +25,7 @@ export class CodeRunnerService {
 	persistentContextDir: string | null;
 
 	constructor(
-		actions: Array<iAction>,
+		actions: iAction[],
 		runnerConfig: ITestRunConfig,
 		storageManager: IStorageManager,
 		logManager: IRunnerLogManagerInterface,
@@ -57,7 +57,7 @@ export class CodeRunnerService {
 		this.persistentContextDir = persistentContextDir;
 	}
 
-	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
+	getCompleteActionsResult(runnerActionResults: IActionResultItem[]): IActionResultItem[] {
 		return this.actions.map((action, index) => {
 			if (!runnerActionResults[index]) {
 				return {
@@ -79,7 +79,8 @@ export class CodeRunnerService {
 		persistenContextZipURL: string | null;
 	}> {
 		const code = await this.codeGenerator.getCode(this.actions);
-		let error, recordedRawVideoUrl;
+		let error;
+		let recordedRawVideoUrl;
 		try {
 			await new Function(
 				"exports",
@@ -111,12 +112,15 @@ export class CodeRunnerService {
 
 		const codeGeneratorConfig = this.codeGenerator.getConfig();
 		const recordedVideoRawPath = this.globalManager.get("recordedVideoPath");
-		if (codeGeneratorConfig.shouldRecordVideo && this.runnerConfig.browser === BrowserEnum.CHROME && recordedVideoRawPath) {
-			if (fs.existsSync(recordedVideoRawPath)) {
-				const videoBuffer = fs.readFileSync(recordedVideoRawPath);
-				fs.unlinkSync(recordedVideoRawPath);
-				recordedRawVideoUrl = await this.storageManager.uploadBuffer(videoBuffer, path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw"));
-			}
+		if (
+			codeGeneratorConfig.shouldRecordVideo &&
+			this.runnerConfig.browser === BrowserEnum.CHROME &&
+			recordedVideoRawPath &&
+			fs.existsSync(recordedVideoRawPath)
+		) {
+			const videoBuffer = fs.readFileSync(recordedVideoRawPath);
+			fs.unlinkSync(recordedVideoRawPath);
+			recordedRawVideoUrl = await this.storageManager.uploadBuffer(videoBuffer, path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw"));
 		}
 
 		const testActionResults = this.globalManager.get(TEST_ACTIONS_RESULT_KEY);

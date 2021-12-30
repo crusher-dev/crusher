@@ -3,25 +3,25 @@ import { IActionResultItem } from "../common/general";
 
 export type INextTestInstancesDependencies = {
 	testInstanceId: number;
-	nextTestDependencies: Array<INextTestInstancesDependencies>;
+	nextTestDependencies: INextTestInstancesDependencies[];
 };
 
 export type ITestExecutionQueuePayload = IJobRunRequest & {
-	nextTestDependencies: Array<INextTestInstancesDependencies>;
-	exports?: Array<[string, any]> | null;
-	startingStorageState: { cookies: Array<any>; origins: Array<any>; } | null;
+	nextTestDependencies: INextTestInstancesDependencies[];
+	exports?: [string, any][] | null;
+	startingStorageState: { cookies: any[]; origins: any[] } | null;
 	startingPersistentContext: string | null;
 };
 
 export interface ITestCompleteQueuePayload {
-	exports: Array<[string, any]>;
-	nextTestDependencies: Array<INextTestInstancesDependencies>;
-	buildExecutionPayload: ITestExecutionQueuePayload,
-	actionResults: Array<IActionResultItem>;
+	exports: [string, any][];
+	nextTestDependencies: INextTestInstancesDependencies[];
+	buildExecutionPayload: ITestExecutionQueuePayload;
+	actionResults: IActionResultItem[];
 	buildId: number;
 	testInstanceId: number;
 	buildTestCount: number;
-	storageState: { cookies: Array<any>; origins: Array<any>; } | null,
+	storageState: { cookies: any[]; origins: any[] } | null;
 	hasPassed: boolean;
 	failedReason?: Error;
 	persistenContextZipURL: string | null;

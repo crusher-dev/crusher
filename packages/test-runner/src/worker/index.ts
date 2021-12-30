@@ -1,5 +1,5 @@
 import { CodeRunnerService } from "./runner.service";
-import { getGlobalManager, getQueueManager, getRedisManager, getStorageManager } from "../util/cache";
+import { getGlobalManager, getQueueManager, getStorageManager } from "../util/cache";
 import { Notifier } from "@modules/notifier/index";
 import { createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere } from "@shared/utils/helper";
 
@@ -8,15 +8,7 @@ import { Job } from "bullmq";
 import { TEST_COMPLETE_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@shared/constants/queues";
 import { ITestExecutionQueuePayload, ITestCompleteQueuePayload, IVideoProcessorQueuePayload } from "@shared/types/queues/";
 import { ExportsManager } from "@shared/lib/exports";
-import {
-	createTempContextDir,
-	deleteDirIfThere,
-	downloadUsingAxiosAndUnzip,
-	getTempContextDirPath,
-	TEMP_PERSISTENT_CONTEXTS_DIR,
-	zipDirectory,
-} from "@src/util/helper";
-import * as path from "path";
+import { createTempContextDir, deleteDirIfThere, downloadUsingAxiosAndUnzip, getTempContextDirPath } from "@src/util/helper";
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
@@ -33,7 +25,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		const testCompleteQueue = await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		const globalManager = getGlobalManager(true);
-		const exportsManager = new ExportsManager(bullJob.data.exports ? bullJob.data.exports : []);
+		const exportsManager = new ExportsManager(bullJob.data.exports || []);
 		const persistentContextDir = bullJob.data.startingPersistentContext ? getTempContextDirPath() : createTempContextDir();
 
 		if (!globalManager.has(TEST_RESULT_KEY)) {
@@ -92,7 +84,7 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 			testInstanceId: bullJob.data.testInstanceId,
 			buildTestCount: bullJob.data.buildTestCount,
 			hasPassed: hasPassed,
-			failedReason: error ? error : null,
+			failedReason: error || null,
 			storageState: globalManager.get("storageState"),
 			persistenContextZipURL: persistenContextZipURL,
 		} as ITestCompleteQueuePayload);

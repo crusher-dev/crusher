@@ -1,6 +1,5 @@
-import { iAction } from "@crusher-shared/types/action";
 import { TestService } from "@modules/resources/tests/service";
-import { Authorized, BadRequestError, Body, JsonController, Param, Post } from "routing-controllers";
+import { BadRequestError, Body, JsonController, Param, Post } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { BuildsService } from "../service";
 import { ILogProgressRequestPayload } from "./interface";
@@ -19,13 +18,13 @@ class BuildTestInstancesController {
 	private testService: TestService;
 
 	@Post("/builds/:build_id/instances/:instance_id/actions/mark.running")
-	async handleTestRunning(@Param("instance_id") instanceId: number, @Body() body: { githubCheckRunId?: string | null }) {
+	async handleTestRunning(@Param("instance_id") instanceId: number) {
 		await this.buildTestInstancesService.markRunning(instanceId);
 		return "Successful";
 	}
 
 	@Post("/builds/:build_id/instances/:instance_id/actions/log.finished")
-	async handleTestFinished(@Param("instance_id") instanceId: number, @Body() body: { githubCheckRunId?: string | null; hasFailed: boolean }) {
+	async handleTestFinished() {
 		return "Successful";
 	}
 

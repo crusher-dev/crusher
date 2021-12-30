@@ -1,4 +1,4 @@
-import { findDistanceBetweenNodes, getAllAttributes } from "../../../utils/helpers";
+import { getAllAttributes } from "../../../utils/helpers";
 import { ActionsInTestEnum, IInputNodeInfo, InputNodeTypeEnum } from "@shared/constants/recordedActions";
 import { DOM } from "../../../utils/dom";
 import EventsController from "../eventsController";
@@ -9,18 +9,9 @@ import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingSta
 import { TOP_LEVEL_ACTION } from "../../../interfaces/topLevelAction";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
-import html2canvas from "html2canvas";
-import { ChangeEvent } from "react";
-import { getInputElementValue } from "unique-selector/src/crusher-selector/element";
 import { v4 as uuidv4 } from "uuid";
 
 const KEYS_TO_TRACK_FOR_INPUT = new Set(["Enter", "Escape", "Tab"]);
-
-const KEYS_TO_TRACK_FOR_TEXTAREA = new Set([
-	// Enter types a line break, shouldn't be a press.
-	"Escape",
-	"Tab",
-]);
 
 export default class EventRecording {
 	defaultState: any = {
@@ -38,8 +29,8 @@ export default class EventRecording {
 
 	private isInspectorMoving = false;
 
-	private pointerEventsMap: Array<{ data: PointerEvent }> = [];
-	private recordedHoverArr: Array<any> = [];
+	private pointerEventsMap: { data: PointerEvent }[] = [];
+	private recordedHoverArr: any[] = [];
 
 	private hoveringState: any = {
 		element: null,
@@ -54,10 +45,8 @@ export default class EventRecording {
 	private _pageRecordedEventsArr = [];
 	private _clickEvents = [];
 
-	constructor(options = {} as any) {
-		this.state = {
-			...this.defaultState,
-		};
+	constructor() {
+		this.state = this.defaultState;
 
 		this.onRightClick = this.onRightClick.bind(this);
 		this.handleFocus = this.handleFocus.bind(this);
@@ -94,7 +83,7 @@ export default class EventRecording {
 		this._overlayCover = document.querySelector("#overlay_cover");
 	}
 
-	updateEventTarget(target: HTMLElement, event: any) {
+	updateEventTarget(target: HTMLElement) {
 		this.state = {
 			...this.state,
 			targetElement: target,
@@ -117,7 +106,7 @@ export default class EventRecording {
 		} while (el?.tagName !== "HTML");
 
 		// clean up
-		for (let i = 0; i < stack.length; i += 1) stack[i]?.classList.remove("pointerEventsNone");
+		for (let i = 0; i < stack.length; ++i) stack[i]?.classList.remove("pointerEventsNone");
 
 		return stack;
 	}
@@ -153,7 +142,7 @@ export default class EventRecording {
 		if (event) {
 			const elements = this.elementsAtLocation(event.clientX, event.clientY);
 			if (elements && elements.length > 1 && elements[0].id === "overlay_cover") {
-				target = elements[1];
+				[, target] = elements;
 			}
 		}
 		this._overlayCover.style.top = window.scrollY + target.getBoundingClientRect().y + "px";
@@ -250,7 +239,7 @@ export default class EventRecording {
 		}
 	}
 
-	handleMouseMove(event: MouseEvent) {
+	handleMouseMove() {
 		const { targetElement } = this.state;
 
 		if (!this.state.pinned) {
@@ -286,7 +275,7 @@ export default class EventRecording {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const _this = this;
 		const processScroll = () => {
-			const target = event.target;
+			const { target } = event;
 
 			const isDocumentScrolled = event.target === document;
 			if (isDocumentScrolled) {
@@ -336,7 +325,7 @@ export default class EventRecording {
 		}
 	}
 
-	async getHoverDependentNodes(_element: HTMLElement, baseLineTimeStamp: number | null = null): Promise<Array<any>> {
+	async getHoverDependentNodes(_element: HTMLElement, baseLineTimeStamp: number | null = null): Promise<any[]> {
 		// Use parent svg element if element is an svg element
 		const element = _element instanceof SVGElement && _element.tagName.toLocaleLowerCase() !== "svg" ? _element.ownerSVGElement : _element;
 
@@ -413,8 +402,7 @@ export default class EventRecording {
 	private checkIfElementIsAnchored(target: HTMLElement) {
 		// Check if element has some a tag parent
 		let parent = target.parentElement;
-		if(target.tagName.toLocaleLowerCase() === "a")
-			return target;
+		if (target.tagName.toLocaleLowerCase() === "a") return target;
 		while (parent) {
 			if (parent.tagName.toLowerCase() === "a") {
 				return parent;
@@ -433,10 +421,10 @@ export default class EventRecording {
 		}
 		if (event.which === 2) return;
 
-		let target = event.target;
-		
+		let { target } = event;
+
 		const mainAnchorNode = this.checkIfElementIsAnchored(target);
-		if(mainAnchorNode) target = mainAnchorNode;
+		if (mainAnchorNode) target = mainAnchorNode;
 
 		const isRecorderCover = target.getAttribute("data-recorder-cover");
 		const inputNodeInfo = this._getInputNodeInfo(target);
@@ -451,9 +439,9 @@ export default class EventRecording {
 
 			console.log("Printing elements at this location");
 			const elements = this.elementsAtLocation(event.clientX, event.clientY);
-			target = elements[0];
+			[target] = elements;
 			if (elements && elements.length > 1 && elements[0].id === "overlay_cover") {
-				target = elements[1];
+				[, target] = elements;
 			}
 			this.state.pinned = true;
 			// this.state.targetElement = target ? target : event.target;
@@ -486,13 +474,13 @@ export default class EventRecording {
 	}
 
 	handleKeyDown(event: KeyboardEvent) {
-		const key = event.key;
+		const { key } = event;
 		if (KEYS_TO_TRACK_FOR_INPUT.has(key)) {
 			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PRESS, event.target, key);
 		}
 	}
 
-	handleFocus(event: FocusEvent) {
+	handleFocus() {
 		// const target = event.target as HTMLElement;
 		// if ((target as any) != window && ["textarea", "input"].includes(target.tagName.toLowerCase())) {
 		// 	this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_FOCUS, target, true);
@@ -523,9 +511,7 @@ export default class EventRecording {
 			detail: { type: string; key: string; eventNode: Node; targetNode: Node };
 		},
 	) {
-		this.releventHoverDetectionManager.registerDOMMutation({
-			...event.detail,
-		});
+		this.releventHoverDetectionManager.registerDOMMutation(event.detail);
 	}
 
 	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
@@ -540,13 +526,12 @@ export default class EventRecording {
 			case "select": {
 				const selectElement = event.target as HTMLSelectElement;
 				const selectedOptions = selectElement.selectedOptions ? Array.from(selectElement.selectedOptions) : [];
-				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map((option, index) => option.index), name: selectElement.name };
+				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map((option) => option.index), name: selectElement.name };
 			}
 			case "input": {
 				const inputElement = eventNode as HTMLInputElement;
 				const inputType = inputElement.type;
 				const inputName = inputElement.name;
-				const parentForm = inputElement.form ? inputElement.form : document.body;
 
 				switch (inputType) {
 					case "file":
@@ -630,24 +615,38 @@ export default class EventRecording {
 		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
 
 		window.history.pushState = new Proxy(window.history.pushState, {
-			apply: async (target, thisArg, argArray) => {
+			apply: (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if(argArray[0]) {
-					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ? (!this.isAbsoluteURL(argArray[2])
-						? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				if (argArray[0]) {
+					this.eventsController.saveCapturedEventInBackground(
+						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
+						null,
+						argArray[2]
+							? !this.isAbsoluteURL(argArray[2])
+								? new URL(argArray[2], document.baseURI).toString()
+								: argArray[2]
+							: window.location.href,
+					);
 				}
 				return out;
 			},
 		});
 
 		window.history.replaceState = new Proxy(window.history.pushState, {
-			apply: async (target, thisArg, argArray) => {
+			apply: (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if(argArray[0]) {
-					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ?  (!this.isAbsoluteURL(argArray[2])
-					? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				if (argArray[0]) {
+					this.eventsController.saveCapturedEventInBackground(
+						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
+						null,
+						argArray[2]
+							? !this.isAbsoluteURL(argArray[2])
+								? new URL(argArray[2], document.baseURI).toString()
+								: argArray[2]
+							: window.location.href,
+					);
 				}
 				return out;
 			},
@@ -676,7 +675,7 @@ export default class EventRecording {
 	}
 
 	private isAbsoluteURL(url: string) {
-		const rgx = new RegExp("^(?:[a-z]+:)?//", "i");
+		const rgx = /^(?:[a-z]+:)?\/\//i;
 		return rgx.test(url);
 	}
 
@@ -693,14 +692,10 @@ export default class EventRecording {
 					: window.location.href.toString(),
 			);
 		} else {
-			this.eventsController.saveCapturedEventInBackground(
-				ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-				document.body,
-				{ 
-					url : "",
-					isBeforeNavigation: true,
-				}
-			);
+			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, document.body, {
+				url: "",
+				isBeforeNavigation: true,
+			});
 		}
 	}
 

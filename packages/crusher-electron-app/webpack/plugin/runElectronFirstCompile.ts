@@ -21,12 +21,12 @@ class RunElectronOnFirstCompile {
 				);
 				break;
 			default:
-				throw new Error("This OS is not supported. Only linux and darwin are supported...");
+				throw Error("This OS is not supported. Only linux and darwin are supported...");
 		}
 	}
 
 	apply(compiler) {
-		compiler.hooks.done.tap(pluginName, (compilation) => {
+		compiler.hooks.done.tap(pluginName, () => {
 			if (this.alreadyCompiled) return;
 
 			const interval = setInterval(() => {

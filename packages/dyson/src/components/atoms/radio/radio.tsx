@@ -51,6 +51,8 @@ const disabledState = (state) => css`
 	}
 `;
 
+const isString = (a) => typeof a === "string";
+
 export type RadioProps = {
 	/**
 	 * Emotion CSS style if any
@@ -82,7 +84,7 @@ export function Radio(props: RadioProps): ReactElement {
 				<div id={"ellipsis"} css={radio(isSelected)}></div>
 			</div>
 			<Conditional showIf={!!label}>
-				<Conditional showIf={typeof label === "string"}>
+				<Conditional showIf={isString(label)}>
 					<div className={"text-13 ml-12 font-500 mt-2"}>{label}</div>
 				</Conditional>
 

@@ -12,7 +12,7 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 	async boot() {
 		await this.queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		await this.queueManager.setupQueueScheduler(VIDEO_PROCESSOR_QUEUE, {
-			stalledInterval: 120000,
+			stalledInterval: 120_000,
 			maxStalledCount: 1,
 		});
 		await this.queueManager.addWorkerForQueue(VIDEO_PROCESSOR_QUEUE, worker.default as any, {

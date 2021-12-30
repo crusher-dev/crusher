@@ -11,7 +11,7 @@ const hotModule = module.hot;
 let store: Store<iReduxState> | null = null;
 
 export function getStore(): Store<iReduxState> {
-	if (!store) throw new Error("Redux store not initialized");
+	if (!store) throw Error("Redux store not initialized");
 	return store;
 }
 
@@ -23,7 +23,7 @@ const composeEnhancers =
 export default function configureStore(): Store<unknown> {
 	if (store) return getStore();
 
-	const middlewares: Array<any> = [thunkMiddleware];
+	const middlewares: any[] = [thunkMiddleware];
 
 	if ((process as any).env.NODE_ENV.toUpperCase() === "DEVELOPMENT") {
 		middlewares.push(loggerMiddleware);

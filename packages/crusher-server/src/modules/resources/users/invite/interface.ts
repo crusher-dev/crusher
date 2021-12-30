@@ -27,7 +27,7 @@ export interface iTeamInviteReferral {
 export type ICreateTeamInviteCode = {
 	teamId: number;
 	expiresOn: Date | null;
-	emails?: Array<string>;
+	emails?: string[];
 	meta?: any;
 };
 
@@ -36,6 +36,6 @@ export type ICreateProjectInviteCode = {
 	projectId: number;
 	expiresOn: Date | null;
 	isPublic?: boolean;
-	emails?: Array<string>;
+	emails?: string[];
 	meta?: any;
 };

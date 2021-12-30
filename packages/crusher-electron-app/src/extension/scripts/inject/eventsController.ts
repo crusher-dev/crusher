@@ -2,7 +2,6 @@ import EventRecording from "./ui/eventRecording";
 import { getSelectors } from "../../utils/selector";
 import { MESSAGE_TYPES } from "../../messageListener";
 import { iAction } from "@shared/types/action";
-import html2canvas from "html2canvas";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { v4 as uuidv4 } from "uuid";
@@ -10,21 +9,21 @@ import { findDistanceBetweenNodes } from "../../utils/helpers";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
-	_recordedEvents: Array<{ eventType: string; element: Node }> = [];
+	_recordedEvents: { eventType: string; element: Node }[] = [];
 
 	constructor(recordingOverlay: EventRecording) {
 		this.recordingOverlay = recordingOverlay;
 	}
 
-	getRelevantHoverRecordsFromSavedEvents(nodes: Array<Node>, rootElement: HTMLElement): Array<Node> {
-		console.log("Recorded events", [...this._recordedEvents], nodes);
+	getRelevantHoverRecordsFromSavedEvents(nodes: Node[], rootElement: HTMLElement): Node[] {
+		console.log("Recorded events", this._recordedEvents.slice(), nodes);
 		if (!this._recordedEvents.length) return nodes;
 
 		const reverseRecordedEvents = this._recordedEvents.reverse().filter((a) => {
 			return [ActionsInTestEnum.CLICK, ActionsInTestEnum.HOVER].includes(a.eventType as ActionsInTestEnum);
 		});
 
-		function getListTillNoMatching(list: Array<{ eventType: string; element: Node }>) {
+		function getListTillNoMatching(list: { eventType: string; element: Node }[]) {
 			const out = [];
 			for (const item of list) {
 				const result = nodes.some((node) => {
@@ -92,14 +91,14 @@ export default class EventsController {
 		}
 	}
 
-	saveRelevantCapturedEventInBackground(finalActions: Array<any>) {
+	saveRelevantCapturedEventInBackground(finalActions: any[]) {
 		(window as any).electron.host.postMessage({
 			type: MESSAGE_TYPES.RECORD_ACTION_META,
 			meta: { finalActions: finalActions },
 		});
 	}
 
-	getSelectorsOfNodes(nodes: Array<HTMLElement>): Array<{ selectors: Array<iSelectorInfo | null> }> {
+	getSelectorsOfNodes(nodes: HTMLElement[]): { selectors: Array<iSelectorInfo | null> }[] {
 		return nodes.map((node) => {
 			const selectors = node ? getSelectors(node) : null;
 			return { selectors };

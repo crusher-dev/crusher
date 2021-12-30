@@ -21,16 +21,16 @@ export class LogManagerPolyfill {
 }
 
 export class StorageManagerPolyfill {
-	uploadAsset(...args) {
+	uploadAsset() {
 		return "random.jpg";
 	}
-	uploadBuffer(buffer, destionation) {
+	uploadBuffer() {
 		return "uploadBuffer.jpg";
 	}
-	upload(filePath, destination) {
+	upload() {
 		return "upload.jpg";
 	}
-	remove(filePath) {
+	remove() {
 		return "remove.jpg";
 	}
 }

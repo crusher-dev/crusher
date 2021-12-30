@@ -7,7 +7,6 @@ import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
-import { resolvePathToBackendURI } from "@utils/common/url";
 import { validatePassword } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
@@ -66,7 +65,7 @@ function EmailPasswordBox() {
 		setLoading(true);
 		try {
 			const { systemInfo } = await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
-			setData(systemInfo)
+			setData(systemInfo);
 			push("/app/dashboard");
 		} catch (e: any) {
 			console.log(e);

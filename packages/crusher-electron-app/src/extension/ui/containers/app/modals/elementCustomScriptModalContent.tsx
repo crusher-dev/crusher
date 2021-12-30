@@ -8,7 +8,6 @@ import { Conditional } from "../../../components/conditional";
 import { getStore } from "../../../../redux/store";
 import { updateActionsRecordingState } from "../../../../redux/actions/recorder";
 import { ACTIONS_RECORDING_STATE } from "../../../../interfaces/actionsRecordingState";
-import { recordAction } from "../../../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iElementInfo } from "@shared/types/elementInfo";
 import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
@@ -44,6 +43,7 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 	const handleClose = () => {
 		const script = codeTextAreaRef.current!.value;
 		const store = getStore();
+
 		recordActionWithHoverNodes({
 			type: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
 			payload: {
@@ -54,7 +54,7 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 			},
 			screenshot: elementInfo.screenshot,
 			url: "",
-		}),
+		});
 
 		store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.PAGE));
 		turnOffInspectModeInFrame(deviceIframeRef);
@@ -63,7 +63,7 @@ const ElementCustomScriptModalContent = (props: iElementCustomScriptModalContent
 		onClose();
 	};
 
-	const handleScriptChange = async (cm: any, change: any) => {
+	const handleScriptChange = (cm: any) => {
 		const script = cm.getValue();
 		codeTextAreaRef.current!.value = script;
 	};

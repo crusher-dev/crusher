@@ -111,9 +111,7 @@ function BuildSearchableList() {
 	const isZeroBuild = data && data.list.length === 0;
 
 	const buildItems = useMemo(() => {
-		return data.list.map((buildInfo: IProjectBuildListItem) => {
-			return <BuildItemCard info={buildInfo} />;
-		});
+		return data.list.map((buildInfo: IProjectBuildListItem) => <BuildItemCard info={buildInfo} />);
 	}, [data]);
 
 	const setPage = useCallback((page) => {

@@ -22,7 +22,6 @@ import { tempTestAtom } from "../../../store/atoms/global/tempTestId";
 import { tempTestNameAtom } from "../../../store/atoms/global/tempTestName";
 
 import { RequestMethod } from "../../../types/RequestOptions";
-import { useRouter } from "next/router";
 import { PaginationButton } from "dyson/src/components/molecules/PaginationButton";
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
 
@@ -43,7 +42,7 @@ const FirstTestRunStatus = dynamic(() => import("@ui/containers/tests/firstTestS
 const EditTest = dynamic(() => import("@ui/containers/tests/editTest"));
 
 const saveTest = (projectId: number, tempTestId: string, customTestName: string | null = null) => {
-	const testName = customTestName ? customTestName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
+	const testName = customTestName || new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
 	return backendRequest(`/projects/${projectId}/tests/actions/create`, {
 		method: RequestMethod.POST,
 		payload: { tempTestId, name: testName },
@@ -69,7 +68,7 @@ function TestCard(props: IBuildItemCardProps) {
 
 	const [showEditBox, setShowEditBox] = useState(false);
 
-	const testRunInThisHour = ((Date.now() - testData.createdAt)/1000) < 3600
+	const testRunInThisHour = (Date.now() - testData.createdAt) / 1000 < 3600;
 	return (
 		<div css={itemContainerStyle}>
 			<Conditional showIf={showEditBox}>
@@ -210,12 +209,11 @@ function TestSearchableList() {
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [tempTestName, setTempTestName] = useAtom(tempTestNameAtom);
 	const [filters, setFilters] = useAtom(testFiltersAtom);
-	const { query } = useRouter();
 
 	const setPage = useCallback((page) => {
 		setFilters({ ...filters, page });
 	}, []);
-	
+
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
 	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {
@@ -223,7 +221,7 @@ function TestSearchableList() {
 		refreshInterval: newTestCreated ? 4000 : 200000,
 	});
 
-	const totalPages = data.totalPages || 1;
+	const { totalPages = 1 } = data;
 
 	const testsItems = useMemo(() => {
 		return data.list.map((test: IProjectTestItem) => {
@@ -243,7 +241,7 @@ function TestSearchableList() {
 			setTempTest(null);
 			setTempTestName(null);
 
-			await saveTest(selectedProjectId, tempTestId, !!tempTestName ? tempTestName : null);
+			await saveTest(selectedProjectId, tempTestId, tempTestName || null);
 			sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
 
 			await mutate(getTestListAPI(project.id));

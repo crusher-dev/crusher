@@ -2,7 +2,7 @@ export const getUniqueScore = (querySelector: string, target: Element): Number =
 	try {
 		const totalNodes = target.querySelectorAll(querySelector).length;
 		return Number((1 / totalNodes).toPrecision());
-	} catch (err) {
+	} catch {
 		return 0;
 	}
 };

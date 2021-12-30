@@ -2,6 +2,6 @@ import { iJobRunRequest } from "./jobRunRequest";
 
 export interface iTestRunnerJobOutput {
 	runnerJobRequestInfo: iJobRunRequest;
-	output: { signedImageUrls: Array<string> } | null;
+	output: { signedImageUrls: string[] } | null;
 	error: Error | null | undefined;
 }

@@ -18,7 +18,7 @@ class UserProjectRolesService {
 		return this.dbManager.insert(`INSERT INTO user_project_roles SET user_id = ?, project_id = ?, role = ?`, [
 			payload.userId,
 			payload.projectId,
-			payload.role ? payload.role : UserProjectRoleEnum.MEMBER,
+			payload.role || UserProjectRoleEnum.MEMBER,
 		]);
 	}
 }

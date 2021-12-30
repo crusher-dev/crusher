@@ -11,8 +11,7 @@ import HttpHeader = chrome.webRequest.HttpHeader;
 import MessageSender = chrome.runtime.MessageSender;
 
 import { AdvancedURL } from "./utils/url";
-import { generateCrusherExtensionUrl, getDefaultDeviceFromDeviceType } from "@shared/utils/extension";
-import { DEVICE_TYPES } from "@shared/types/deviceTypes";
+import { generateCrusherExtensionUrl } from "@shared/utils/extension";
 import { setupBackgroundScriptForExtensionReload } from "./utils/electronReload";
 
 class BackgroundEventsListener {
@@ -75,7 +74,7 @@ class BackgroundEventsListener {
 
 	onHeadersReceived(details: WebResponseHeadersDetails) {
 		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(details.tabId);
-		const headers: Array<HttpHeader> | undefined = details.responseHeaders;
+		const headers: HttpHeader[] | undefined = details.responseHeaders;
 
 		if (!headers || !isRegisteredAsCrusherWindow || details.parentFrameId !== 0) {
 			return { responseHeaders: headers };
@@ -83,7 +82,7 @@ class BackgroundEventsListener {
 
 		const responseHeaders = headers.filter((header) => {
 			const name = header.name.toLowerCase();
-			return ["x-frame-options", "content-security-policy", "frame-options"].indexOf(name) === -1;
+			return !["x-frame-options", "content-security-policy", "frame-options"].includes(name);
 		});
 
 		const redirectUrl = headers.find((header) => header.name.toLowerCase() === "location");
@@ -104,7 +103,7 @@ class BackgroundEventsListener {
 
 	onBeforeSendHeaders(details: WebRequestFullDetails) {
 		const isRegisteredAsCrusherWindow = this.isRegisteredAsCrusherWindow(details.tabId);
-		const headers: Array<HttpHeader> | undefined = details.requestHeaders;
+		const headers: HttpHeader[] | undefined = details.requestHeaders;
 
 		if (!isRegisteredAsCrusherWindow || details.parentFrameId !== 0) {
 			return { requestHeaders: headers };
@@ -141,19 +140,14 @@ class BackgroundEventsListener {
 
 	onExternalMessage(request: { message: string }, sender: MessageSender, sendResponse: any) {
 		console.log("Got this message", request);
-		if (request) {
-			if (request.message) {
-				if (request.message == "version") {
-					// @TODO: Replace this with the real extension version
-					sendResponse({ version: 1.0 });
-				}
-			}
+		if (request?.message && request.message === "version") {
+			// @TODO: Replace this with the real extension version
+			sendResponse({ version: 1.0 });
 		}
 		return true;
 	}
 
 	handleBrowserIconClick(activeTab: Tab) {
-		const defaultDevice = getDefaultDeviceFromDeviceType(DEVICE_TYPES.DESKTOP);
 		const newURL = generateCrusherExtensionUrl(chrome.extension.getURL("/"), activeTab.url as string, defaultDevice!.id);
 		chrome.tabs.create({ url: newURL });
 	}

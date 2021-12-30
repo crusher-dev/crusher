@@ -2,7 +2,7 @@ const url = require("url");
 
 export function resolvePathToBackendURI(path: string) {
 	if (!process.env.BACKEND_URL) {
-		throw new Error("No absolute url provided for backend");
+		throw Error("No absolute url provided for backend");
 	}
 
 	return url.resolve(process.env.BACKEND_URL, path);
@@ -10,9 +10,9 @@ export function resolvePathToBackendURI(path: string) {
 
 export function appendParamsToURI(uri: string, params) {
 	const currentURL = new URL(uri);
-	Object.keys(params).forEach((paramKey) => {
+	for (const paramKey of Object.keys(params)) {
 		currentURL.searchParams.append(paramKey, params[paramKey]);
-	});
+	}
 
 	return currentURL.href;
 }

@@ -67,8 +67,8 @@ interface iUpdateInspectorMessageMeta {
 }
 
 export interface iElementModeMessageMeta {
-	selectors: Array<iSelectorInfo>;
-	attributes: Array<iAttribute>;
+	selectors: iSelectorInfo[];
+	attributes: iAttribute[];
 	innerHTML: string;
 }
 
@@ -116,8 +116,8 @@ async function handleRecordAction(action: iAction): any {
 	switch (type) {
 		case ActionsInTestEnum.WAIT_FOR_NAVIGATION: {
 			const isLastEventWaitForNavigation = lastRecordedAction && lastRecordedAction!.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION;
-			if(action.payload.meta.value && action.payload.meta.value.isBeforeNavigation) {
-			   store.dispatch(updateIsRecorderScriptBooted(false));
+			if (action.payload.meta.value?.isBeforeNavigation) {
+				store.dispatch(updateIsRecorderScriptBooted(false));
 			} else {
 				store.dispatch(updateIsRecorderScriptBooted(true));
 			}
@@ -176,14 +176,11 @@ async function handleRecordAction(action: iAction): any {
 				if (
 					lastRecordedAction.type === ActionsInTestEnum.CLICK &&
 					action.payload.meta.value.labelsUniqId &&
-					(await checkIfLabelIdIncludesCurrent(lastRecordedAction, action))
-				) {
-					if (
-						action.payload.meta.value.value !== lastRecordedAction.payload.meta.value.inputInfo.value &&
-						action.payload.meta.value.type !== InputNodeTypeEnum.INPUT
-					)
-						return;
-				}
+					(await checkIfLabelIdIncludesCurrent(lastRecordedAction, action)) &&
+					action.payload.meta.value.value !== lastRecordedAction.payload.meta.value.inputInfo.value &&
+					action.payload.meta.value.type !== InputNodeTypeEnum.INPUT
+				)
+					return;
 				store.dispatch(recordAction(action));
 				return false;
 			}
@@ -222,13 +219,9 @@ async function handleRecordAction(action: iAction): any {
 			}
 			break;
 		}
-		case ActionsInTestEnum.CLICK: {
-			const isTheLastRecordedActionOnSameElementFocus =
-				lastRecordedAction.type === ActionsInTestEnum.ELEMENT_FOCUS &&
-				(lastRecordedAction.payload.selectors as iSelectorInfo[])[0].value === (action.payload.selectors as iSelectorInfo[])[0].value;
+		case ActionsInTestEnum.CLICK:
 			store.dispatch(recordAction(action));
 			break;
-		}
 		default:
 			store.dispatch(recordAction(action));
 			break;
@@ -240,7 +233,7 @@ async function handleRecordAction(action: iAction): any {
 function sendTestRecorderStatusToFrame(webviewRef: RefObject<HTMLWebViewElement>) {
 	const store = getStore();
 
-	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
+	if (!webviewRef.current) throw Error("Webview not available yet from ref context");
 
 	const inUsingInspectorMode = getActionsRecordingState(store.getState()).type === ACTIONS_RECORDING_STATE.ELEMENT;
 
@@ -259,7 +252,7 @@ function sendTestRecorderStatusToFrame(webviewRef: RefObject<HTMLWebViewElement>
 }
 
 function sendUserAgentToFrame(webviewRef: RefObject<HTMLWebViewElement>) {
-	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
+	if (!webviewRef.current) throw Error("Webview not available yet from ref context");
 
 	// Extension url contains selected device
 	const device = AdvancedURL.getDeviceFromCrusherExtensionUrl(window?.location.href);
@@ -270,7 +263,7 @@ function sendUserAgentToFrame(webviewRef: RefObject<HTMLWebViewElement>) {
 	});
 }
 
-export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement>, event: MessageEvent<iMessage>) {
+export async function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement>, event: MessageEvent<iMessage>) {
 	const store = getStore();
 
 	const { type } = event.data;
@@ -281,10 +274,9 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 			store.dispatch(deleteRecordedAction(recordedActions.length - 1));
 			break;
 		}
-		case MESSAGE_TYPES.SAVE_RECORDED_TEST: {
+		case MESSAGE_TYPES.SAVE_RECORDED_TEST:
 			saveTest();
 			break;
-		} 
 		case MESSAGE_TYPES.CLEAR_RECORDED_ACTIONS: {
 			const store = getStore();
 			store.dispatch(resetRecordedActions());
@@ -307,21 +299,21 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 			break;
 		}
 		case MESSAGE_TYPES.RECORD_ACTION_META: {
-			const metaArr = event.data.meta.finalActions as Array<iAction>;
+			const metaArr = event.data.meta.finalActions as iAction[];
 			for (let i = 0; i < metaArr.length; i++) {
-				handleRecordAction(metaArr[i]);
+				await handleRecordAction(metaArr[i]);
 			}
 			break;
 		}
 		case MESSAGE_TYPES.UPDATE_LAST_RECORDED_ACTION_STATUS: {
-			const {status} = event.data.meta;
+			const { status } = event.data.meta;
 			const store = getStore();
 			store.dispatch(updateLastRecordedActionStatus(status));
 			break;
 		}
 		case MESSAGE_TYPES.RECORD_ACTION: {
 			const meta = event.data.meta as iAction;
-			handleRecordAction(meta);
+			await handleRecordAction(meta);
 			break;
 		}
 		case MESSAGE_TYPES.UPDATE_INSPECTOR_MODE_STATE: {
@@ -340,30 +332,26 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 		case MESSAGE_TYPES.TURN_ON_ELEMENT_MODE: {
 			const isAutoRecorderOn = getAutoRecorderState(store.getState());
 			const meta = event.data.meta as iElementModeMessageMeta;
-			const hoverDependentSelectors = (event.data as any).hoverDependentNodesSelectors as Array<{ selectors: Array<iSelectorInfo> }>;
+			const hoverDependentSelectors = (event.data as any).hoverDependentNodesSelectors as { selectors: iSelectorInfo[] }[];
 			store.dispatch(updateActionsRecordingState(ACTIONS_RECORDING_STATE.ELEMENT, meta, isAutoRecorderOn ? hoverDependentSelectors : []));
 			break;
 		}
-		case MESSAGE_TYPES.RECORDER_BOOTED: {
+		case MESSAGE_TYPES.RECORDER_BOOTED:
 			store.dispatch(updateIsRecorderScriptBooted(true));
 			break;
-		}
-		case MESSAGE_TYPES.REQUEST_RECORDING_STATUS: {
+		case MESSAGE_TYPES.REQUEST_RECORDING_STATUS:
 			sendTestRecorderStatusToFrame(webviewRef);
 			break;
-		}
-		case MESSAGE_TYPES.REQUEST_USER_AGENT: {
+		case MESSAGE_TYPES.REQUEST_USER_AGENT:
 			sendUserAgentToFrame(webviewRef);
 			break;
-		}
-		case MESSAGE_TYPES.RELOAD_ELECTRON_EXTENSION: {
+		case MESSAGE_TYPES.RELOAD_ELECTRON_EXTENSION:
 			if (!(window as any).electron) {
-				throw new Error("This should be only hit from inside the electron");
+				throw Error("This should be only hit from inside the electron");
 			}
 
 			(window as any).electron.reloadExtension();
 			break;
-		}
 		case MESSAGE_TYPES.SEO_META_INFORMATION: {
 			const meta = event.data.meta as iSeoMetaInformationMeta;
 			store.dispatch(addSEOMetaInfo(meta));
@@ -383,7 +371,7 @@ export function recorderMessageListener(webviewRef: RefObject<HTMLWebViewElement
 }
 
 export function turnOnInspectModeInFrame(webviewRef: RefObject<HTMLWebViewElement>) {
-	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
+	if (!webviewRef.current) throw Error("Webview not available yet from ref context");
 
 	(window as any).electron.webview.postMessage({
 		type: FRAME_MESSAGE_TYPES.UPDATE_INSPECT_MODE_STATE,
@@ -392,7 +380,7 @@ export function turnOnInspectModeInFrame(webviewRef: RefObject<HTMLWebViewElemen
 }
 
 export function turnOffInspectModeInFrame(webviewRef: RefObject<HTMLWebViewElement>) {
-	if (!webviewRef.current) throw new Error("Webview not available yet from ref context");
+	if (!webviewRef.current) throw Error("Webview not available yet from ref context");
 
 	(window as any).electron.turnOffInspectMode();
 
@@ -402,7 +390,7 @@ export function turnOffInspectModeInFrame(webviewRef: RefObject<HTMLWebViewEleme
 	});
 }
 
-export function executeScriptInFrame(script: string, selector: string, webviewRef: RefObject<HTMLWebViewElement>) {
+export function executeScriptInFrame(script: string, selector: string) {
 	(window as any).electron.webview.postMessage({
 		type: FRAME_MESSAGE_TYPES.EXECUTE_ELEMENT_CUSTOM_SCRIPT,
 		meta: { script: script, selector: selector } as iExecuteScriptResponseMeta,
@@ -414,7 +402,7 @@ export function performActionInFrame(
 	recordingState: ACTIONS_RECORDING_STATE,
 	webViewRef: RefObject<HTMLWebViewElement>,
 ) {
-	if (!webViewRef.current) throw new Error("Webview not available yet from ref context");
+	if (!webViewRef.current) throw Error("Webview not available yet from ref context");
 
 	(window as any).electron.webview.postMessage({
 		type: FRAME_MESSAGE_TYPES.PERFORM_ACTION,

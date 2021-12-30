@@ -5,7 +5,7 @@ export enum ActionStatusEnum {
 	STARTED = "STARTED",
 	SUCCESS = "SUCCESS",
 	FAILURE = "FAILURE",
-};
+}
 
 export interface iAction {
 	type: ActionsInTestEnum;
@@ -14,7 +14,7 @@ export interface iAction {
 	screenshot?: string;
 	payload: {
 		timeout?: number;
-		selectors?: Array<iSelectorInfo>;
+		selectors?: iSelectorInfo[];
 		meta?: any;
 		isOptional?: boolean;
 	};

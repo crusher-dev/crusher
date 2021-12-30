@@ -145,7 +145,7 @@ export const EditTestModal = ({ name, id, onClose, runAfter, tags }) => {
 					>
 						Run this test after
 					</TextBlock>
-					<SelectBox size={"medium"} values={getOptions(testListData, id, runAfterTest)} selected={runAfterTest} callback={changeRunAfter.bind(this)} />
+					<SelectBox size={"medium"} values={getOptions(testListData, id)} selected={runAfterTest} callback={changeRunAfter.bind(this)} />
 				</div>
 			</div>
 			<div className={"flex justify-end mt-20"}>

@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
 import { Button } from "dyson/src/components/atoms";
@@ -22,25 +22,18 @@ import { RequestMethod } from "../../../../types/RequestOptions";
 import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring } from "@utils/core/settings/environmentSettingUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { SelectBox } from "../../../../../../dyson/src/components/molecules/Select/Select";
-import { sentenceCase } from "@utils/common/textUtils";
 
 const selectBoxCSS = css`
 	.selectBox {
 		width: 200rem;
 	}
 `;
-const getBrowserValues = () => {
-	return (
-		["CHROME", "FIREFOX", "SAFARI"].map((browserName) => {
-			return { label: sentenceCase(browserName), value: browserName };
-		}) ?? []
-	);
-};
 const getValues = (environments) => {
 	return (
-		environments?.map(({ name, id }) => {
-			return { label: name, value: id };
-		}) ?? []
+		environments?.map(({ name, id }) => ({
+			label: name,
+			value: id,
+		})) ?? []
 	);
 };
 
@@ -54,7 +47,7 @@ function MonitoringForm({ id }) {
 	const envValues = getValues(environments);
 	const setEnv = (values) => {
 		setMonitoring((monitoring) => {
-			monitoring[id].environmentId = values[0];
+			[monitoring[id].environmentId] = values;
 		});
 	};
 
@@ -260,9 +253,9 @@ export const Monitoring = () => {
 				<hr css={basicHR} />
 
 				<Conditional showIf={monitoringInStore.length > 0}>
-					{monitoringInStore.map((monitoringData, i) => {
-						return <MonitoringCard monitoringData={monitoringData} key={i} id={i} />;
-					})}
+					{monitoringInStore.map((monitoringData, i) => (
+						<MonitoringCard monitoringData={monitoringData} key={i} id={i} />
+					))}
 				</Conditional>
 				<Conditional showIf={monitoringInStore.length < 1}>
 					<div className={"text-13 mt-40"}>You don't have any monitoring yet in your project.</div>

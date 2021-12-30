@@ -3,12 +3,11 @@ import { ActionStatusEnum, iAction } from "@shared/types/action";
 import { FailureIcon, LoadingIcon } from "crusher-electron-app/src/extension/assets/icons";
 import React, { useEffect, useState } from "react";
 import { Conditional } from "../../components/conditional";
-import { FLEX_DIRECTION, FONT_WEIGHT, OVERFLOW, POSITION, SCROLL_BEHAVIOR, WHITE_SPACE } from "../../../interfaces/css";
+import { FLEX_DIRECTION, POSITION } from "../../../interfaces/css";
 import { Dropdown } from "../../components/app/dropdown";
 import { FailedActionEnum } from "crusher-electron-app/src/extension/interfaces/actions";
 import {
 	markLastRecordedActionAsOptional,
-	updateLastRecordedAction,
 	updateLastRecordedActionStatus,
 	updateSelectedActions,
 } from "crusher-electron-app/src/extension/redux/actions/actions";
@@ -69,9 +68,9 @@ const Action = (props: iActionProps) => {
 		const store = getStore();
 		const selectedActionIds = selectedActionCheckboxArr
 			.filter((checkbox: HTMLInputElement) => checkbox.checked)
-			.map((checkbox: HTMLInputElement) => {
-				return { id: checkbox.getAttribute("data-id") };
-			});
+			.map((checkbox: HTMLInputElement) => ({
+				id: checkbox.getAttribute("data-id"),
+			}));
 		store.dispatch(updateSelectedActions(selectedActionIds));
 	};
 
@@ -86,11 +85,11 @@ const Action = (props: iActionProps) => {
 							<input onChange={handleCheckboxChange} data-id={index} type="checkbox" id="selectedSteps" onClick={(e) => e.stopPropagation()} />
 						</Conditional>
 						<Conditional If={isActionNotSelectable}>
-							<img src={chrome.runtime.getURL(ICONS[action.type] ? ICONS[action.type] : "icons/mouse.svg")} />
+							<img src={chrome.runtime.getURL(ICONS[action.type] || "icons/mouse.svg")} />
 						</Conditional>
 					</div>
 					<div style={actionStepDescriptionContainerStyle}>
-						<div style={actionStepNameStyle}>{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}</div>
+						<div style={actionStepNameStyle}>{action.name || ACTIONS_TO_LABEL_MAP[action.type]}</div>
 						<div style={actionStepSelectorStyle}>
 							{actionDescription && actionDescription.length > 35 ? actionDescription.substring(0, 35) : actionDescription}
 						</div>
@@ -113,10 +112,10 @@ const Action = (props: iActionProps) => {
 				<div style={{ background: "#0F1011", border: "1px solid rgba(255, 255, 255, 0.12)", borderRadius: 5 }}>
 					<div style={{ ...actionStepContainerStyle, padding: "12px 10px" }}>
 						<div style={inputCheckboxStyle}>
-							<img src={chrome.runtime.getURL(ICONS[action.type] ? ICONS[action.type] : "icons/mouse.svg")} />
+							<img src={chrome.runtime.getURL(ICONS[action.type] || "icons/mouse.svg")} />
 						</div>
 						<div style={actionStepDescriptionContainerStyle}>
-							<div style={actionStepNameStyle}>{action.name ? action.name : ACTIONS_TO_LABEL_MAP[action.type]}</div>
+							<div style={actionStepNameStyle}>{action.name || ACTIONS_TO_LABEL_MAP[action.type]}</div>
 							<div style={actionStepSelectorStyle}>{getActionDescription(action)}</div>
 						</div>
 					</div>
@@ -197,11 +196,6 @@ const actionStepContainerStyle = {
 	alignItems: "center",
 };
 
-const actionItemTextContainer = {
-	flex: 0.8,
-	overflow: "hidden",
-};
-
 const deleteIconContainerStyle = {
 	display: "flex",
 	alignItems: "center",
@@ -211,38 +205,6 @@ const deleteIconContainerStyle = {
 
 const deleteIconStyle = {
 	width: 13,
-};
-
-const stepStyle = {
-	display: "flex",
-	cursor: "pointer",
-	fontFamily: "DM Sans",
-	fontStyle: "normal",
-	borderRadius: "0.25rem",
-	position: POSITION.RELATIVE,
-	marginTop: "1rem",
-	overflow: "hidden",
-};
-
-const stepImageStyle = {
-	flex: 0.1,
-};
-
-const stepActionStyle = {
-	fontWeight: FONT_WEIGHT.BOLD,
-	color: "#8C8C8C",
-};
-
-const stepSelectorContainerStyle = {
-	overflow: OVERFLOW.HIDDEN,
-	position: POSITION.RELATIVE,
-};
-const stepSelectorStyle = {
-	marginTop: "0.25rem",
-	color: "#8C8C8C",
-	whiteSpace: WHITE_SPACE.NOWRAP,
-	width: "70%",
-	overflow: "hidden",
 };
 
 const ICONS = {
@@ -266,7 +228,7 @@ function getActionDescription(action: iAction) {
 		return "Performing scroll";
 	}
 
-	if (action.payload.selectors && action.payload.selectors[0]) {
+	if (action.payload.selectors?.[0]) {
 		return action.payload.selectors[0].value;
 	} else if (action.type === ActionsInTestEnum.RUN_TEMPLATE) {
 		return "Run this template";

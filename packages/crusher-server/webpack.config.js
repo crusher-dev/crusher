@@ -1,5 +1,4 @@
 const path = require("path");
-const glob = require("glob");
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
@@ -96,7 +95,7 @@ function resolveTsconfigPathsToAlias({ tsconfigPath = "./tsconfig.json", webpack
 	const aliases = {};
 
 	const getItemName = (alias) => path.resolve(webpackConfigBasePath, alias.replace("/*", "").replace("*", ""));
-	Object.keys(paths).forEach((item) => {
+	for (const item of Object.keys(paths)) {
 		const modifiedKey = item.replace("/*", "");
 
 		const aliasItems = paths[item];
@@ -104,7 +103,7 @@ function resolveTsconfigPathsToAlias({ tsconfigPath = "./tsconfig.json", webpack
 		const processedAliases = Array.isArray(aliasItems) ? aliasItems.map((alias) => getItemName(alias)) : getItemName(aliasItems);
 
 		aliases[modifiedKey] = processedAliases;
-	});
+	}
 
 	return aliases;
 }

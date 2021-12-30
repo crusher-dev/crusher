@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 require("dotenv").config();
 require("./utils/logger");
 

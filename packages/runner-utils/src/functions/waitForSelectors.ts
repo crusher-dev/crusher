@@ -3,13 +3,14 @@ import { Page } from "playwright";
 import { toCrusherSelectorsFormat } from "../utils/helper";
 import { IFoundSelectorInfo, SelectorTypeEnum } from "../interfaces";
 
-async function findSelectorFromPlaywright(page: Page, selectors: Array<iSelectorInfo>): Promise<IFoundSelectorInfo | boolean> {
-	let playwrightOut, elementHandle;
-	if (selectors[0].type == SelectorTypeEnum.PLAYWRIGHT) {
+async function findSelectorFromPlaywright(page: Page, selectors: iSelectorInfo[]): Promise<IFoundSelectorInfo | boolean> {
+	let playwrightOut;
+	let elementHandle;
+	if (selectors[0].type === SelectorTypeEnum.PLAYWRIGHT) {
 		try {
 			elementHandle = await page.waitForSelector(selectors[0].value, { state: "visible" });
 			playwrightOut = selectors[0].value;
-		} catch (ex) {
+		} catch {
 			return false;
 		}
 		selectors.shift();
@@ -20,7 +21,7 @@ async function findSelectorFromPlaywright(page: Page, selectors: Array<iSelector
 	return { elementHandle, workingSelector: { value: playwrightOut, type: SelectorTypeEnum.PLAYWRIGHT } };
 }
 
-export async function waitForSelectors(page: Page, selectors: Array<iSelectorInfo>): Promise<IFoundSelectorInfo | undefined> {
+export async function waitForSelectors(page: Page, selectors: iSelectorInfo[]): Promise<IFoundSelectorInfo | undefined> {
 	const elementFromPlaywrightSelector = await findSelectorFromPlaywright(page, selectors);
 	if (elementFromPlaywrightSelector) {
 		return elementFromPlaywrightSelector as IFoundSelectorInfo;

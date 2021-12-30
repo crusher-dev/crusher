@@ -9,9 +9,8 @@ import { getQuerySelector, getUniqueScore } from "../utils";
  * @return Array of SelectorData|null
  */
 export const getAttribute = (htmlNode: HTMLElement, target: HTMLElement): SelectorData[] => {
-	const nodeName = htmlNode.nodeName;
-	const attributes = htmlNode.attributes;
-	const length = attributes.length;
+	const { nodeName, attributes } = htmlNode;
+	const { length } = attributes;
 	const attributeList: Map = {};
 
 	for (let i = 0; i < length; i++) {
@@ -20,7 +19,7 @@ export const getAttribute = (htmlNode: HTMLElement, target: HTMLElement): Select
 		const attributeValue = attribute.nodeValue;
 
 		// Skip id, class and data-* attributes
-		if (attributeName.indexOf("data-") !== -1 || attributeName.indexOf("id") !== -1 || attributeName.indexOf("class") !== -1) continue;
+		if (attributeName.includes("data-") || attributeName.includes("id") || attributeName.includes("class")) continue;
 
 		attributeList[attributeName] = attributeValue;
 	}

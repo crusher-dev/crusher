@@ -2,33 +2,30 @@ import { Controls, CustomHelperProps, Navigation } from "reactour";
 import React from "react";
 import { POSITION } from "../../../../interfaces/css";
 
-const MyCustomHelper = ({ current, content, totalSteps, gotoStep, close }: CustomHelperProps) => {
-	return (
-		<>
-			<main className="CustomHelper__wrapper" style={wrapperStyle}>
-				<div className="CustomHelper__content">
-					{content}
-					<Controls data-tour-elem="controls" className="CustomHelper__controls" style={controlsStyle}>
-						<Navigation data-tour-elem="navigation">
-							{Array.from(Array(totalSteps).keys()).map((li, i) => (
-								<div key={li} style={dotStyle(current, i)}></div>
-							))}
-						</Navigation>
-					</Controls>
-				</div>
-			</main>
-			<div style={progressBarContainerStyle}>
-				<div style={progressBarStyle(current, totalSteps)}></div>
+const MyCustomHelper = ({ current, content, totalSteps }: CustomHelperProps) => (
+	<>
+		<main className="CustomHelper__wrapper" style={wrapperStyle}>
+			<div className="CustomHelper__content">
+				{content}
+				<Controls data-tour-elem="controls" className="CustomHelper__controls" style={controlsStyle}>
+					<Navigation data-tour-elem="navigation">
+						{Array.from(Array(totalSteps).keys()).map((li, i) => (
+							<div key={li} style={dotStyle(current, i)}></div>
+						))}
+					</Navigation>
+				</Controls>
 			</div>
-
-			<style>{`
-				.reactour__helper{
-					border-radius: 0.325rem;	
-				}
-		`}</style>
-		</>
-	);
-};
+		</main>
+		<div style={progressBarContainerStyle}>
+			<div style={progressBarStyle(current, totalSteps)}></div>
+		</div>
+		<style>{`
+        .reactour__helper{
+            border-radius: 0.325rem;	
+        }
+`}</style>
+	</>
+);
 
 const wrapperStyle = {
 	width: "22rem",

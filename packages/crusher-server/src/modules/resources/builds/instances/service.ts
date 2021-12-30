@@ -2,7 +2,6 @@ import { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
 import {
 	ICreateBuildTestInstanceResultPayload,
-	ILogProgressRequestPayload,
 	ITestInstanceResultSetsTable,
 	ITestInstanceScreenshotsTable,
 	ITestInstancesTable,
@@ -22,11 +21,6 @@ import { BrowserEnum } from "@modules/runner/interface";
 import { BuildInstanceResults } from "./mongo/buildInstanceResults";
 import { ProjectsService } from "@modules/resources/projects/service";
 
-// Diff delta percent should be lower than 0.05 to be considered as pass
-const DIFF_DELTA_PASS_THRESHOLD = 0.25;
-// Diff delta percent above 5% means marking it as failed
-const DIFF_DELTA_FAILED_THRESHOLD = 5;
-
 export type IVisualDiffResultWithConclusion = IVisualDiffResult & { status: TestInstanceResultStatusEnum };
 @Service()
 class BuildTestInstancesService {
@@ -44,7 +38,7 @@ class BuildTestInstancesService {
 		return this.dbManager.update(`UPDATE test_instances SET status = ? WHERE id = ?`, [TestInstanceStatusEnum.RUNNING, instanceId]);
 	}
 
-	logProgress(instanceId: number, logRequestPayload: ILogProgressRequestPayload) {
+	logProgress() {
 		// Something
 	}
 
@@ -67,7 +61,7 @@ class BuildTestInstancesService {
 			return "One of the visual diff failed";
 		}
 		if (isAllVisualDiffPassing && !wasTestExecutionSuccessful) {
-			return failedReason ? failedReason : "Some issue occurred during test execution";
+			return failedReason || "Some issue occurred during test execution";
 		}
 
 		// @Note: Should never reach here
@@ -75,7 +69,7 @@ class BuildTestInstancesService {
 	}
 
 	private calculateResult(
-		visualDiffsResult: Array<IVisualDiffResultWithConclusion>,
+		visualDiffsResult: IVisualDiffResultWithConclusion[],
 		wasTestExecutionSuccessful: boolean,
 		failedReason: string | null = null,
 	): { conclusion: TestInstanceResultSetConclusionEnum; failedReason?: string } {
@@ -102,7 +96,7 @@ class BuildTestInstancesService {
 		);
 	}
 
-	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, projectId: number, hasInstancePassed: boolean) {
+	private async saveActionsResult(actionsResult: IActionResultItemWithIndex[], instanceId: number, projectId: number, hasInstancePassed: boolean) {
 		console.log("Trying to save this", actionsResult);
 		const buildInstanceResult = new BuildInstanceResults({
 			instanceId: instanceId,
@@ -115,8 +109,8 @@ class BuildTestInstancesService {
 	}
 
 	async saveResult(
-		actionsResult: Array<IActionResultItemWithIndex>,
-		savedScreenshotRecords: Array<ISavedActionResultItemWithIndex>,
+		actionsResult: IActionResultItemWithIndex[],
+		savedScreenshotRecords: ISavedActionResultItemWithIndex[],
 		instanceId: number,
 		projectId: number,
 		assetIdentifer: string,
@@ -130,18 +124,26 @@ class BuildTestInstancesService {
 		const referenceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshots(buildTestInstanceResultSet.targetInstanceId);
 		const currentScreenshots = await this.buildTestInstanceScreenshotService.getScreenshots(instanceId);
 
-		const instanceScreenshotsMap:  { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = currentScreenshots.reduce((acc, refScreenshot) => {
-			return { ...acc, [refScreenshot.actionIndex]: refScreenshot };
-		}, {});
+		const instanceScreenshotsMap: { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = currentScreenshots.reduce(
+			(acc, refScreenshot) => ({
+				...acc,
+				[refScreenshot.actionIndex]: refScreenshot,
+			}),
+			{},
+		);
 
-		const referenceScreenshotsMap: { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = referenceScreenshots.reduce((acc, refScreenshot) => {
-			return { ...acc, [refScreenshot.actionIndex]: refScreenshot };
-		}, {});
+		const referenceScreenshotsMap: { [key: string]: KeysToCamelCase<ITestInstanceScreenshotsTable> } = referenceScreenshots.reduce(
+			(acc, refScreenshot) => ({
+				...acc,
+				[refScreenshot.actionIndex]: refScreenshot,
+			}),
+			{},
+		);
 
 		const visualDiffResultsPromiseArr = savedScreenshotRecords.map(async (screenshotResult) => {
 			const baseImageRecord = instanceScreenshotsMap[screenshotResult.screenshotIndex];
 			const referenceImageRecord = referenceScreenshotsMap[screenshotResult.screenshotIndex];
- 
+
 			const baseImage = {
 				name: baseImageRecord.name,
 				value: baseImageRecord.url,
@@ -182,7 +184,7 @@ class BuildTestInstancesService {
 			return {
 				...diffResult,
 				resultId: 0,
-				status: diffResultStatus ? diffResultStatus : this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta, project.visualBaseline),
+				status: diffResultStatus || this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta, project.visualBaseline),
 			};
 		});
 
@@ -223,7 +225,7 @@ class BuildTestInstancesService {
 	}
 
 	@CamelizeResponse()
-	getResultSets(reportId: number): Promise<Array<KeysToCamelCase<ITestInstanceResultSetsTable>>> {
+	getResultSets(reportId: number): Promise<KeysToCamelCase<ITestInstanceResultSetsTable>[]> {
 		return this.dbManager.fetchAllRows("SELECT * FROM test_instance_result_sets WHERE report_id = ?", [reportId]);
 	}
 
@@ -280,7 +282,7 @@ class BuildTestInstancesService {
 		);
 		const testInstanceRecord = await this.getInstance(testInstanceId);
 		if (!referenceType) {
-			throw new Error("No valid reference type specified");
+			throw Error("No valid reference type specified");
 		}
 
 		// Currently there is only one reference type
@@ -291,7 +293,7 @@ class BuildTestInstancesService {
 			"SELECT * FROM test_instances WHERE test_id = ? AND job_id = ? AND browser = ?",
 			[testRecord.id, projectRecord.baseline_job_id, testInstanceRecord.browser],
 		);
-		return projectLevelReferenceInstance ? projectLevelReferenceInstance : testInstanceRecord;
+		return projectLevelReferenceInstance || testInstanceRecord;
 	}
 }
 

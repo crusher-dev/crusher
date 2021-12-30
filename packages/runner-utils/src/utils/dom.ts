@@ -5,7 +5,7 @@ interface iValidSelectorElement {
 	selector: string;
 }
 
-const getValidSelectorFromArr = (selectors: Array<iSelectorInfo>, root: Element | Document = document): iValidSelectorElement | null => {
+const getValidSelectorFromArr = (selectors: iSelectorInfo[], root: Element | Document = document): iValidSelectorElement | null => {
 	for (const selector of selectors) {
 		try {
 			if (selector.type === "xpath") {
@@ -40,9 +40,9 @@ const getElementsByXPath = (xpath: string, parent: Node | null = null): Node[] =
 };
 
 const generateQuerySelector = (el: HTMLElement): string => {
-	if (el.tagName.toLowerCase() == "html") return "HTML";
+	if (el.tagName.toLowerCase() === "html") return "HTML";
 	let str = el.tagName;
-	str += el.id != "" ? "#" + el.id : "";
+	str += el.id !== "" ? "#" + el.id : "";
 	if (el.className) {
 		const classes = el.className.split(/\s/);
 		for (let i = 0; i < classes.length; i++) {

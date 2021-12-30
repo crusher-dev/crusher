@@ -17,13 +17,15 @@ export type TUserAPIData = {
 	avatar: string;
 } | null;
 
-export type TProjectsData = Array<{
-	id: number;
-	name: string;
-	visualBaseline: number;
-	teamId: number;
-	meta: Record<string, any>;
-}> | null;
+export type TProjectsData =
+	| {
+			id: number;
+			name: string;
+			visualBaseline: number;
+			teamId: number;
+			meta: Record<string, any>;
+	  }[]
+	| null;
 
 export type TSystemInfo = {
 	OPEN_SOURCE?: {

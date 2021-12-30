@@ -14,7 +14,7 @@ class RedisManager {
 			case "ms":
 				return "px";
 			default:
-				throw new Error("Invalid expiry type");
+				throw Error("Invalid expiry type");
 		}
 	}
 

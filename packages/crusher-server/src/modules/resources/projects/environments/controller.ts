@@ -1,7 +1,3 @@
-import { KeysToCamelCase } from "@modules/common/typescript/interface";
-import { DBManager } from "@modules/db";
-import { BrowserEnum } from "@modules/runner/interface";
-import { userInfo } from "os";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { ProjectMonitoringService } from "../monitoring/service";

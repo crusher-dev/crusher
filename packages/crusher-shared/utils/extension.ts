@@ -6,10 +6,9 @@ import { iDevice } from "../types/extension/device";
 const generateCrusherExtensionUrl = (baseUrl: string, targetSiteUrl: string, selectedDevice: string, queries: any = {}): string => {
 	const url = new URL(targetSiteUrl);
 
-	const crusherAgent = devices.find((device) => device.id === selectedDevice);
 	url.searchParams.set("__crusherAgent__", encodeURI(crusherAgent!.userAgent));
 
-	const queryString: string = Object.keys(queries).reduce((prev: string, queryParam: string, index: number) => {
+	const queryString: string = Object.keys(queries).reduce((prev: string, queryParam: string) => {
 		return `&${queryParam}=${queries[queryParam]}`;
 	}, "");
 

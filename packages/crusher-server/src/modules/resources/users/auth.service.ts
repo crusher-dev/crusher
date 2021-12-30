@@ -3,8 +3,7 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { setUserCookie } from "@utils/cookies";
-import { extractHostname } from "@utils/url";
-import { BadRequestError, State } from "routing-controllers";
+import { BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { ICreateUserPayload, IUserTable } from "./interface";
 import { IInviteReferral } from "./invite/interface";
@@ -25,7 +24,7 @@ class UserAuthService {
 	private emailManager: EmailManager;
 
 	async setUserAuthCookies(userId: number, teamId: number, req: any, res: any): Promise<string> {
-		const USER_DOMAIN = req.get("host") ? req.get("host") : "";
+		const USER_DOMAIN = req.get("host") || "";
 		const IS_LOALHOST = USER_DOMAIN.startsWith("localhost") || USER_DOMAIN.startsWith("127.0.0.1");
 
 		const token = generateToken(userId, teamId);
@@ -117,7 +116,7 @@ class UserAuthService {
 	async authWithGoogle(userPayload: Omit<ICreateUserPayload, "uuid">, req: any, res: any, encodedInviteCode: string = null) {
 		const user = await this.usersService.getUserByEmail(userPayload.email);
 
-		let inviteReferral: IInviteReferral = null;
+		let inviteReferral = null;
 		if (encodedInviteCode) {
 			const inviteReferralCode = JSON.parse(Buffer.from(encodedInviteCode, "base64").toString("ascii"));
 			inviteReferral = {

@@ -13,13 +13,9 @@ function relativeURLToWindow(relativeURL: string) {
 
 const EXPOSED_FRONTEND_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-const FRONTEND_URL = process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "";
+const { FRONTEND_URL = "" } = process.env;
 
-const LOCAL_BACKEND_URL = process.env.BACKEND_URL
-	? process.env.BACKEND_URL
-	: isClient()
-	? relativeURLToWindow("/server/")
-	: `http://localhost:${EXPOSED_FRONTEND_PORT}/server/`;
+const LOCAL_BACKEND_URL = process.env.BACKEND_URL || (isClient() ? relativeURLToWindow("/server/") : `http://localhost:${EXPOSED_FRONTEND_PORT}/server/`);
 
 const clean = (url: string) => String(url).replace(/^\/|\/$/g, "");
 
@@ -50,11 +46,11 @@ export const getQueryStringParams = function getParameterByName(name: string, ur
 };
 
 export const resolveToBackendPath = (relativePath: string, customBasePath: string | null = null) => {
-	const basePath = customBasePath ? customBasePath : LOCAL_BACKEND_URL;
+	const basePath = customBasePath || LOCAL_BACKEND_URL;
 	return url.resolve(basePath, relativePath);
 };
 
 export const resolveToFrontEndPath = (relativePath: string, customBasePath: string | null = null) => {
-	const backendURL = new URL(customBasePath ? customBasePath : FRONTEND_URL);
+	const backendURL = new URL(customBasePath || FRONTEND_URL);
 	return url.resolve(backendURL.origin, relativePath);
 };

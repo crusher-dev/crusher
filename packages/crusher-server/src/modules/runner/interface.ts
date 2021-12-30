@@ -10,16 +10,14 @@ export enum BrowserEnum {
 }
 
 export interface IBuildTaskPayload extends ICreateBuildRequestPayload {
-	tests: Array<KeysToCamelCase<ITestTable>>;
+	tests: KeysToCamelCase<ITestTable>[];
 	isInitialTest: boolean;
 	buildId: number;
 	isVideoOn: boolean;
 }
 
-export type ITestDependencyArray = Array<
-	KeysToCamelCase<ITestTable> & { isFirstLevelTest: boolean; postTestList: ITestDependencyArray; parentTestId: number | null }
->;
+export type ITestDependencyArray = KeysToCamelCase<ITestTable> &
+	{ isFirstLevelTest: boolean; postTestList: ITestDependencyArray; parentTestId: number | null }[];
 
-export type ITestInstanceDependencyArray = Array<
-	KeysToCamelCase<ITestInstancesTable> & { testInfo: KeysToCamelCase<ITestDependencyArray[0]>; parentTestInstanceId: number }
->;
+export type ITestInstanceDependencyArray = KeysToCamelCase<ITestInstancesTable> &
+	{ testInfo: KeysToCamelCase<ITestDependencyArray[0]>; parentTestInstanceId: number }[];

@@ -6,7 +6,7 @@
 			"minCount": 10
 		}
 	],
-	"processors": ["javascript", "json", "markdown", "ignore", "yaml", "css"],
+	"processors": ["javascript", "json", "markdown", "ignore", "yaml", "css", "typescript"],
 	"match": {
 		"*.{mjs,ts,tsx}": {
 			"strict-mode/remove": "off",
@@ -61,7 +61,7 @@
 			"eslint": "on"
 		},
 		"package.json": {
-			"package-json": "on"
+			"package-json": "off"
 		},
 		"bin": {
 			"remove-process-exit": "off",
@@ -79,7 +79,7 @@
 		"*.cjs": {
 			"convert-esm-to-commonjs": "on"
 		},
-		"*.{tsl,tsxl}": {
+		"*.{ts,tsx}": {
 			"apply-as-type-assertions": "on",
 			"apply-utility-types": "on",
 			"convert-generic-to-shorthand": "on",
@@ -104,14 +104,14 @@
 		"**/dist",
 		"**/dist-dev",
 		"**/build",
-		"**/package-lock.json"
+		"**/package-lock.json",
+		"**/yarn.lock"
 	],
 	"rules": {
 		"apply-array-at": "off",
 		"apply-as-type-assertions": "off",
 		"apply-utility-types": "off",
 		"convert-esm-to-commonjs": "off",
-		"convert-commonjs-to-esm": "off",
 		"convert-top-level-return": "off",
 		"convert-generic-to-shorthand": "off",
 		"remove-useless-types": "off",
@@ -153,7 +153,6 @@
 		"remove-debugger",
 		"remove-iife",
 		"remove-process-exit",
-		"remove-console",
 		"remove-empty",
 		"remove-unreferenced-variables",
 		"remove-unused-variables",

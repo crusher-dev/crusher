@@ -111,14 +111,6 @@ const Toolbar = (props: any) => {
 		}
 	}, []);
 
-	React.useEffect(() => {
-		if(isTestVerificationComplete) {
-
-		} else {
-
-		}
-	}, [isTestVerificationComplete]);
-
     const handleUrlReturn = React.useCallback(() => {
 		if(urlInputRef.current?.value) {
 			const device = recorderDevices.find((device) => device.value === selectedDevice[0])?.device;

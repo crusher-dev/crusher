@@ -26,9 +26,11 @@ const App = () => {
 			const device = devices.find(device => device.id === recorderInfo.device as any);
 			saveSetDeviceIfNotThere(device, store);
 			performNavigation(recorderInfo.url, store);
-		})
+		});
 
-		window.onbeforeunload = () => {
+		ipcRenderer.send("renderer-ready", /* @TODO Add correct rendering time */ 1500);
+
+		window.onbeforeunload = () => { 
 			store.dispatch(resetRecorderState());
 		};
 	}, []);

@@ -67,6 +67,7 @@ const gotSingleInstanceLock = app.requestSingleInstanceLock()
 isDuplicateInstance = !gotSingleInstanceLock;
 
 app.on("second-instance", (event, args, workingDirectory) => {
+	console.log("Second instance args", args);
 	if (mainWindow) {
 		if (mainWindow.isMinimized()) {
 		  mainWindow.restore()
@@ -83,6 +84,21 @@ app.on("second-instance", (event, args, workingDirectory) => {
 if (isDuplicateInstance) {
     app.quit()
 }
+
+function handleAppURL(url: string) {
+	console.log('Processing protocol url', url)
+	onDidLoad(window => {
+	  // This manual focus call _shouldn't_ be necessary, but is for Chrome on
+	  // macOS. See https://github.com/desktop/desktop/issues/973.
+	  window.focus()
+	  console.log("App url is", url);
+	})
+}
+
+  app.on('open-url', (event, url) => {
+	event.preventDefault()
+	handleAppURL(url)
+  })
 
 let store;
 function createWindow() {
@@ -123,6 +139,7 @@ function createWindow() {
   
 	  const fns = onDidLoadFns!
 	  onDidLoadFns = null
+
 	  for (const fn of fns) {
 		fn(window)
 	  }
@@ -131,4 +148,14 @@ function createWindow() {
 	window.load()
   
 	mainWindow = window
+}
+
+function onDidLoad(fn: OnDidLoadFn) {
+  if (onDidLoadFns) {
+    onDidLoadFns.push(fn)
+  } else {
+    if (mainWindow) {
+      fn(mainWindow)
+    }
+  }
 }

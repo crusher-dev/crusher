@@ -1,7 +1,7 @@
 console.log("Ready now...");
 
 import * as Sentry from "@sentry/electron"
-import { isProduction } from "./../utils"
+import { isProduction, parseDeepLinkUrlAction } from "./../utils"
 import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
 import { enableSourceMaps } from "../lib/source-map-support";
@@ -86,19 +86,20 @@ if (isDuplicateInstance) {
 }
 
 function handleAppURL(url: string) {
-	console.log('Processing protocol url', url)
+	const action = parseDeepLinkUrlAction(url);
 	onDidLoad(window => {
 	  // This manual focus call _shouldn't_ be necessary, but is for Chrome on
 	  // macOS. See https://github.com/desktop/desktop/issues/973.
-	  window.focus()
-	  console.log("App url is", url);
+	  window.focus();
+	  if(action)
+	  	window.sendMessage("url-action", { action });
 	})
 }
 
-  app.on('open-url', (event, url) => {
+app.on('open-url', (event, url) => {
 	event.preventDefault()
 	handleAppURL(url)
-  })
+})
 
 let store;
 function createWindow() {

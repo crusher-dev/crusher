@@ -5,3 +5,8 @@ export interface iSeoMetaInformationMeta {
 	title: string;
 	metaTags: iPageSeoMeta;
 }
+
+export interface IDeepLinkAction {
+	commandName: string;
+	args: any;
+}

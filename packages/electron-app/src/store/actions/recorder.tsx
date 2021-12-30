@@ -3,6 +3,7 @@ import { iAction } from "@shared/types/action";
 import { iElementInfo, TRecorderState } from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
+export const SET_IS_WEBVIEW_INITIALIZED = "SET_IS_WEBVIEW_INITIALIZED";
 
 export const SET_INSPECT_MODE = "SET_INSPECT_MODE";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
@@ -99,5 +100,12 @@ export const setIsTestVerified = (isVerified: boolean) => {
     return {
         type: SET_IS_TEST_VERIFIED,
         payload: { isTestVerified: isVerified }
+    }
+}
+
+export const setIsWebViewInitialized = (isInitialized: boolean) => {
+    return {
+        type: SET_IS_WEBVIEW_INITIALIZED,
+        payload: { isInitialized }
     }
 }

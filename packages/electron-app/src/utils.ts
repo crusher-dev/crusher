@@ -1,5 +1,6 @@
 import * as path from "path";
 import fileUrl from 'file-url'
+import { IDeepLinkAction } from "./types";
 
 const isProduction = () => {
     return process.env.NODE_ENV === "production";
@@ -26,4 +27,16 @@ const addHttpToURLIfNotThere = (uri: string) => {
 	return uri;
 };
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere };
+const parseDeepLinkUrlAction = (url: string): IDeepLinkAction | null => {
+	const urlObject = new URL(url);
+	if(urlObject.protocol === "crusher:") {
+		const commandName = urlObject.host;
+		const args = Object.fromEntries(urlObject.searchParams as any);
+
+		return { commandName: commandName, args: args };
+	}
+	
+	return null;
+};
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction };

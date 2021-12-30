@@ -9,26 +9,53 @@ import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from 'electron-redux';
 import { ipcRenderer } from "electron";
-import { resetRecorderState, updateRecorderState } from "../store/actions/recorder";
+import { resetRecorderState, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
-import { getRecorderInfo } from "../store/selectors/recorder";
-import { performNavigation, saveSetDeviceIfNotThere } from "./commands/perform";
+import { getRecorderInfo, isWebViewInitialized } from "../store/selectors/recorder";
+import { performNavigation, performReplayTest, saveSetDeviceIfNotThere } from "./commands/perform";
 import {devices} from "../devices";
 import { iReduxState } from "../store/reducers/index";
+import { IDeepLinkAction } from "../types";
+import { CrusherTests } from "../lib/tests";
+import { Emitter } from "event-kit";
+
+const emitter = new Emitter();
 
 const App = () => {
 	const store = useStore();
 	
 	React.useEffect(() => {
+		console.log("HELLO FROM RENDERER");
 		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
-			const recorderInfo = getRecorderInfo(store.getState() as any);
 			console.log("Webview initialized in: " + initializeTime);
+			store.dispatch(setIsWebViewInitialized(true));
+			const recorderInfo = getRecorderInfo(store.getState() as any);
 			const device = devices.find(device => device.id === recorderInfo.device as any);
 			saveSetDeviceIfNotThere(device, store);
-			performNavigation(recorderInfo.url, store);
+			if(!recorderInfo.url) {
+				emitter.emit("renderer-webview-initialized");
+				console.log("Sending message for initialzie");
+			} else {
+				performNavigation(recorderInfo.url, store);
+			}
 		});
 
 		ipcRenderer.send("renderer-ready", /* @TODO Add correct rendering time */ 1500);
+
+		ipcRenderer.on("url-action",   (event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+			if(action.commandName === "replay-test") {
+				const isWebViewPresent = isWebViewInitialized(store.getState() as any);
+				if(isWebViewPresent) {
+					performReplayTest(action.args.testId);
+				} else {
+					saveSetDeviceIfNotThere(devices[0], store);
+					emitter.once("renderer-webview-initialized", () => {
+						console.log("Render webview initialized listener called");
+						performReplayTest(action.args.testId)
+					})
+				}
+			}
+		});
 
 		window.onbeforeunload = () => { 
 			store.dispatch(resetRecorderState());

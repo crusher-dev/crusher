@@ -136,6 +136,10 @@ const performVerifyTest = async () => {
     ipcRenderer.invoke("verify-test");
 };
 
+const performReplayTest = async (testId) => {
+    ipcRenderer.invoke("replay-test", {testId});
+}
+
 const turnOnInspectMode = () => {
     ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 }
@@ -156,4 +160,4 @@ const performReloadPage = () => {
     ipcRenderer.invoke("reload-page");
 }
 
-export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage };
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest };

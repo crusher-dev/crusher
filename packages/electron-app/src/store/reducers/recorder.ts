@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
+import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_IS_WEBVIEW_INITIALIZED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -54,6 +54,7 @@ export interface iSettings {
 interface IRecorderReducer {
 	currentUrl: string | null;
 	device: any | null;
+	isWebViewInitialized: boolean;
 
 	state: {type: TRecorderState, payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null };
 	isInspectModeOn: boolean;
@@ -66,6 +67,7 @@ interface IRecorderReducer {
 const initialState: IRecorderReducer = {
 	currentUrl: null,
 	device: null,
+	isWebViewInitialized: false,
 
 	state: { type: TRecorderState.BOOTING, payload: null },
 	isInspectModeOn: false,
@@ -166,6 +168,12 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				savedSteps: savedSteps,
 				isVerified: false,
 			};
+		}
+		case SET_IS_WEBVIEW_INITIALIZED: {
+			return {
+				...state,
+				isWebViewInitialized: action.payload.isInitialized
+			}
 		}
 		default:
 			return state;

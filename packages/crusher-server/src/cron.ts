@@ -7,9 +7,12 @@ import { TestService } from "@modules/resources/tests/service";
 import { BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { MongoManager } from "@modules/db/mongo";
 import { UsersService } from "@modules/resources/users/service";
+import { ProjectEnvironmentService } from "@modules/resources/projects/environments/service";
 
 const projectMonitoringService = Container.get(ProjectMonitoringService);
 const testService = Container.get(TestService);
+const projectEnvironmentsService = Container.get(ProjectEnvironmentService);
+
 const usersService = Container.get(UsersService);
 const mongoManager = Container.get(MongoManager);
 
@@ -20,8 +23,10 @@ async function setupCronForBuilds() {
 			const queuedMonitorings = await projectMonitoringService.getQueuedMonitoringDetails();
 			try {
 				for (const monitoring of queuedMonitorings) {
-					testService.runTestsInProject(monitoring.projectId, monitoring.userId, {
-						browser: monitoring.environmentBrowser,
+					if(!monitoring.environmentId) return;
+					const environment = await projectEnvironmentsService.getEnvironment(monitoring.environmentId);
+					testService.runTestsInProject(monitoring.projectId, environment.userId, {
+						browser: environment.browser,
 						buildTrigger: BuildTriggerEnum.CRON,
 						host: monitoring.host || "null",
 					});

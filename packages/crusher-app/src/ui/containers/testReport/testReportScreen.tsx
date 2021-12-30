@@ -26,7 +26,8 @@ import { TestTypeLabel } from "@constants/test";
 
 const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
-	const { query } = useRouter();
+	const router = useRouter();
+	const { query } = router;
 	const { data } = useBuildReport(query.id);
 
 	return (
@@ -36,7 +37,7 @@ function TitleSection() {
 					height={"22rem"}
 					className={"mr-12"}
 					onClick={() => {
-						window.history.back();
+						router.push("/app/builds")
 					}}
 				/>{" "}
 				{data?.name} #{data?.id}

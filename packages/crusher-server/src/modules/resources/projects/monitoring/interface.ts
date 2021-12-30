@@ -15,7 +15,6 @@ export type IUpdateMonitoringPayload = Omit<ICreateMonitoringPayload, "projectId
 
 export type IQueuedMonitoringsDetails = {
 	id: number;
-	userId: number;
 	projectId: number;
 	environmentId: number;
 	testInterval: number;

@@ -103,8 +103,6 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
-		console.log("Body of project tests run api, here", body);
-
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};

@@ -26,7 +26,7 @@ class ProjectEnvironmentService {
 	}
 
 	@CamelizeResponse()
-	async getEnvironment(environmentId: number): Promise<IEnvironmentTable> {
+	async getEnvironment(environmentId: number): Promise<KeysToCamelCase<IEnvironmentTable>> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM environments WHERE id = ?", [environmentId]);
 	}
 

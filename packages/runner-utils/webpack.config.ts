@@ -1,13 +1,14 @@
 //webpack.config.js
 const path = require("path");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
 	mode: "production",
 	devtool: "source-map",
 	target: "node",
 	optimization: {
-		minimize: false,
+		minimize: false
 	},
 	entry: {
 		index: "./src/index.ts",

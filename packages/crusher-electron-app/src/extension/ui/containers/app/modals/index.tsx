@@ -92,7 +92,7 @@ const ModalManager = (props: iModalManagerProps) => {
 
 	useMemo(() => {
 		if (modalState === ACTIONS_MODAL_STATE.SEO_VALIDATION) {
-			if (!deviceIframeRef.current) throw Error("Iframe not available yet from ref context");
+			if (!deviceIframeRef.current) throw new Error("Iframe not available yet from ref context");
 
 			(window as any).electron.webview.postMessage({
 				type: FRAME_MESSAGE_TYPES.REQUEST_SEO_META,
@@ -107,6 +107,7 @@ const ModalManager = (props: iModalManagerProps) => {
 	};
 
 	const handleCloseCustomCodeModal = () => {
+		const store = getStore();
 		handleCloseModal();
 	};
 

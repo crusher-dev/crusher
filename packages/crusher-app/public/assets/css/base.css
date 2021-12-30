@@ -12,38 +12,38 @@ a:visited {
 	text-decoration: none !important;
 }
 
-/* For Mobile and small device */
+/* For Mobile and small device*/
 html {
 	font-size: 1px;
 	font-family: "Gilroy" !important;
 }
 
-/* !* For 150% MBP zoom*! */
-/* @media (min-width: 900px) { */
-/*	html { */
-/*		font-size: 12.5px; */
-/*	} */
-/* } */
+/*!* For 150% MBP zoom*!*/
+/*@media (min-width: 900px) {*/
+/*	html {*/
+/*		font-size: 12.5px;*/
+/*	}*/
+/*}*/
 
-/* !* For 125% MBP zoom*! */
-/* @media (min-width: 1200px) { */
-/*	html { */
-/*		font-size: 13px; */
-/*	} */
-/* } */
+/*!* For 125% MBP zoom*!*/
+/*@media (min-width: 1200px) {*/
+/*	html {*/
+/*		font-size: 13px;*/
+/*	}*/
+/*}*/
 
-/* !* For 110% MBP zoom*! */
-/* @media (min-width: 1400px) { */
-/*	html { */
-/*		font-size: 15px; */
-/*	} */
-/* } */
+/*!* For 110% MBP zoom*!*/
+/*@media (min-width: 1400px) {*/
+/*	html {*/
+/*		font-size: 15px;*/
+/*	}*/
+/*}*/
 
 *:focus {
 	outline: none !important;
 }
 
-/* NProgess Start */
+/*NProgess Start*/
 
 /* Make clicks pass-through */
 #nprogress {
@@ -52,10 +52,12 @@ html {
 
 #nprogress .bar {
 	background: #5b76f7;
+
 	position: fixed;
 	z-index: 1031;
 	top: 0;
 	left: 0;
+
 	width: 100%;
 	height: 3px;
 }
@@ -64,14 +66,15 @@ html {
 #nprogress .peg {
 	display: block;
 	position: absolute;
-	right: 0;
+	right: 0px;
 	width: 100px;
 	height: 100%;
 	box-shadow: 0 0 10px #5b76f7, 0 0 5px #5b76f7;
 	opacity: 1;
-	-webkit-transform: rotate(3deg) translate(0, -4px);
-	-ms-transform: rotate(3deg) translate(0, -4px);
-	transform: rotate(3deg) translate(0, -4px);
+
+	-webkit-transform: rotate(3deg) translate(0px, -4px);
+	-ms-transform: rotate(3deg) translate(0px, -4px);
+	transform: rotate(3deg) translate(0px, -4px);
 }
 
 /* Remove these to get rid of the spinner */
@@ -87,10 +90,12 @@ html {
 	width: 26px;
 	height: 26px;
 	box-sizing: border-box;
+
 	border: solid 3px transparent;
 	border-top-color: #5b76f7;
 	border-left-color: #5b76f7;
 	border-radius: 50%;
+
 	-webkit-animation: nprogress-spinner 400ms linear infinite;
 	animation: nprogress-spinner 400ms linear infinite;
 }
@@ -113,7 +118,6 @@ html {
 		-webkit-transform: rotate(360deg);
 	}
 }
-
 @keyframes nprogress-spinner {
 	0% {
 		transform: rotate(0deg);
@@ -123,7 +127,7 @@ html {
 	}
 }
 
-/* NProgress Ends */
+/*NProgress Ends*/
 
 *,
 *::before,

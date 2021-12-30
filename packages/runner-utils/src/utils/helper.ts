@@ -1,24 +1,26 @@
 import { iAction } from "@crusher-shared/types/action";
 import { iSelectorInfo } from "@crusher-shared/types/selectorInfo";
-const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[01A-Z_]*$/);
+const validActionTypeRegex = new RegExp(/(PAGE|ELEMENT|BROWSER)\_[A-Z0-1_]*$/);
 
 function uuidv4() {
 	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-		var r = (Math.random() * 16) | 0;
-		var v = c === "x" ? r : (r & 0x3) | 0x8;
+		var r = (Math.random() * 16) | 0,
+			v = c == "x" ? r : (r & 0x3) | 0x8;
 		return v.toString(16);
 	});
 }
 
-const generateScreenshotName = (selector: string, stepIndex: string): string => selector.replace(/[^\w\s]/gi, "").replace(/ /g, "_") + `_${stepIndex}.png`;
+const generateScreenshotName = (selector: string, stepIndex: string): string => {
+	return selector.replace(/[^\w\s]/gi, "").replace(/ /g, "_") + `_${stepIndex}.png`;
+};
 
-const toCrusherSelectorsFormat = (selectors: iSelectorInfo[]) => {
+const toCrusherSelectorsFormat = (selectors: Array<iSelectorInfo>) => {
 	const id = uuidv4();
-	const finalSelectors = selectors.filter((selector) => selector.uniquenessScore === 1);
+	const finalSelectors = selectors.filter(selector => selector.uniquenessScore === 1);
 	return { value: `crusher=${encodeURIComponent(JSON.stringify({ selectors: finalSelectors, uuid: id })).replace(/'/g, "%27")}`, uuid: id };
 };
 
-const promiseTillSuccess = (promises: Promise<any>[]) => {
+const promiseTillSuccess = (promises: Array<Promise<any>>) => {
 	return Promise.all(
 		promises.map((p) => {
 			// If a request fails, count that as a resolution so it will keep
@@ -38,7 +40,7 @@ const promiseTillSuccess = (promises: Promise<any>[]) => {
 };
 
 function markTestFail(message: string, meta: any = {}): void {
-	const customError = Error(message);
+	const customError = new Error(message);
 	(customError as any).meta = meta;
 
 	throw customError;
@@ -63,13 +65,14 @@ function isWebpack() {
 }
 
 function chunkArray(arr, size) {
-	const chunkedArr = [];
-	let index = 0;
-	while (index < arr.length) {
-		chunkedArr.push(arr.slice(index, (index += size)));
-	}
-	return chunkedArr;
+    const chunkedArr = [];
+    let index = 0;
+    while (index < arr.length) {
+        chunkedArr.push(arr.slice(index, index += size));
+    }
+    return chunkedArr;
 }
+
 
 export {
 	uuidv4,
@@ -81,5 +84,5 @@ export {
 	getBrowserActions,
 	getMainActions,
 	validActionTypeRegex,
-	chunkArray,
+	chunkArray
 };

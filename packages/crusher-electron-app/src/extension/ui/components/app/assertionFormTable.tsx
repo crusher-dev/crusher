@@ -7,9 +7,9 @@ import { iReactSelectOption } from "../../../interfaces/reactSelectOptions";
 import { DeleteIcon } from "crusher-electron-app/src/extension/assets/icons";
 
 interface iAssertionFormTableProps {
-	rowItems: iAssertionRow[];
-	fields: iField[];
-	operations: ASSERTION_OPERATION_TYPE[];
+	rowItems: Array<iAssertionRow>;
+	fields: Array<iField>;
+	operations: Array<ASSERTION_OPERATION_TYPE>;
 	onFieldChange?: (selectedFieldName: string, rowId: string) => void;
 	onOperationChange?: (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => void;
 	onValidationChange?: (newValidation: string, rowId: string) => void;
@@ -22,28 +22,29 @@ function checkIfValidationPasses(fieldValue: string, validationValue: string, op
 			return fieldValue === validationValue;
 		case ASSERTION_OPERATION_TYPE.CONTAINS:
 			return fieldValue.includes(validationValue);
-		case ASSERTION_OPERATION_TYPE.REGEX:
+		case ASSERTION_OPERATION_TYPE.REGEX: {
 			try {
 				const rgx = new RegExp(validationValue);
 				if (rgx.test(fieldValue)) {
 					return true;
 				} else {
-					throw Error("Regex didn't match");
+					throw new Error("Regex didn't match");
 				}
-			} catch {
+			} catch (err) {
 				return false;
 			}
+		}
 		default:
-			throw Error("Unknown Validation Operation");
+			throw new Error("Unknown Validation Operation");
 	}
 }
 
 const reactSelectDefaultStyles = {
-	option: (provided) => ({
+	option: (provided, state) => ({
 		...provided,
 		fontSize: 14,
 	}),
-	control: (provided) => ({
+	control: (provided, state) => ({
 		...provided,
 		minHeight: 32,
 		maxHeight: 32,
@@ -65,9 +66,9 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 		const getFieldOptions = () => {
 			const options: iReactSelectOption[] = [];
-			for (const field of fields) {
+			fields.forEach((field) => {
 				options.push({ value: field.name, label: field.name });
-			}
+			});
 			return options;
 		};
 		const fieldOptions = getFieldOptions();
@@ -81,22 +82,16 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<Select
-				className="w-40"
-				styles={reactSelectDefaultStyles}
-				defaultValue={selectedOption || fieldOptions[0]}
-				options={fieldOptions}
-				onChange={handleOnFieldChange}
-			/>
+			<Select className="w-40" styles={reactSelectDefaultStyles} defaultValue={selectedOption ? selectedOption : fieldOptions[0]} options={fieldOptions} onChange={handleOnFieldChange} />
 		);
 	};
 
 	const renderFieldOperationInput = (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => {
 		const getOperationOptions = () => {
 			const options: iReactSelectOption[] = [];
-			for (const operation of operations) {
+			operations.forEach((operation) => {
 				options.push({ value: operation, label: operation });
-			}
+			});
 			return options;
 		};
 
@@ -133,7 +128,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		deleteValidationRow(rowIndex);
 	};
 
-	const rowOut = rowItems.map((row) => {
+	const rowOut = rowItems.map((row, index: number) => {
 		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
 			<div key={row.id} className="grid grid-cols-3 gap-4 my-8 mb-20">

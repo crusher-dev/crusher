@@ -8,9 +8,7 @@ async function goToUrl(page: Page, action: iAction) {
 		await page.goto(urlToGo, { waitUntil: "networkidle", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
 		await page.waitForLoadState("load");
 		await page.waitForLoadState("domcontentloaded");
-	} catch (ex) {
-		console.log("Got error during navigation", ex);
-	}
+	} catch (ex) { console.log("Got error during navigation", ex); }
 }
 
 module.exports = {

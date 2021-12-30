@@ -26,7 +26,7 @@
 .marvel-device .middle-bar {
 	width: 3px;
 	height: 4px;
-	top: 0;
+	top: 0px;
 	left: 90px;
 	background: black;
 	position: absolute;
@@ -40,7 +40,7 @@
 	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.2);
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
-.marvel-device.iphone8::before {
+.marvel-device.iphone8:before {
 	width: calc(100% - 12px);
 	height: calc(100% - 12px);
 	position: absolute;
@@ -51,7 +51,7 @@
 	background: #f8f8f8;
 	z-index: 1;
 }
-.marvel-device.iphone8::after {
+.marvel-device.iphone8:after {
 	width: calc(100% - 16px);
 	height: calc(100% - 16px);
 	position: absolute;
@@ -75,7 +75,7 @@
 	background: #303233;
 	background: linear-gradient(135deg, #303233 0%, #b5b7b9 50%, #f0f2f2 69%, #303233 100%);
 }
-.marvel-device.iphone8 .home::before {
+.marvel-device.iphone8 .home:before {
 	background: #f8f8f8;
 	position: absolute;
 	content: "";
@@ -105,7 +105,7 @@
 	right: -4px;
 	width: 4px;
 	height: 66px;
-	border-radius: 0 2px 2px 0;
+	border-radius: 0px 2px 2px 0px;
 	background: #d9dbdc;
 }
 .marvel-device.iphone8 .volume {
@@ -115,27 +115,27 @@
 	z-index: 0;
 	height: 66px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: #d9dbdc;
 }
-.marvel-device.iphone8 .volume::before {
+.marvel-device.iphone8 .volume:before {
 	position: absolute;
 	left: 2px;
 	top: -78px;
 	height: 40px;
 	width: 2px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
 }
-.marvel-device.iphone8 .volume::after {
+.marvel-device.iphone8 .volume:after {
 	position: absolute;
-	left: 0;
+	left: 0px;
 	top: 82px;
 	height: 66px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
@@ -192,10 +192,10 @@
 	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.7);
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.7);
 }
-.marvel-device.iphone8.black::before {
+.marvel-device.iphone8.black:before {
 	background: #080808;
 }
-.marvel-device.iphone8.black::after {
+.marvel-device.iphone8.black:after {
 	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
 }
@@ -214,7 +214,7 @@
 	background: #080808;
 	background: linear-gradient(135deg, #080808 0%, #464646 50%, #080808 100%);
 }
-.marvel-device.iphone8.black .home::before {
+.marvel-device.iphone8.black .home:before {
 	background: #080808;
 }
 .marvel-device.iphone8.landscape {
@@ -224,7 +224,7 @@
 }
 .marvel-device.iphone8.landscape .sleep {
 	top: 100%;
-	border-radius: 0 0 2px 2px;
+	border-radius: 0px 0px 2px 2px;
 	right: 190px;
 	height: 4px;
 	width: 66px;
@@ -234,22 +234,22 @@
 	height: 4px;
 	top: -4px;
 	left: calc(100% - 188px - 66px);
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone8.landscape .volume::before {
+.marvel-device.iphone8.landscape .volume:before {
 	width: 40px;
 	height: 2px;
 	top: 2px;
 	right: -78px;
 	left: auto;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone8.landscape .volume::after {
+.marvel-device.iphone8.landscape .volume:after {
 	left: -82px;
 	width: 66px;
 	height: 4px;
 	top: 0;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
 .marvel-device.iphone8.landscape .top-bar {
 	width: 14px;
@@ -278,13 +278,13 @@
 	width: 6px;
 	left: calc(100% - 54px - 6px);
 	top: 50%;
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -35px;
 }
 .marvel-device.iphone8.landscape .camera {
 	left: calc(100% - 32px);
 	top: 50%;
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -5px;
 }
 .marvel-device.iphone8plus {
@@ -296,7 +296,7 @@
 	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.2);
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
-.marvel-device.iphone8plus::before {
+.marvel-device.iphone8plus:before {
 	width: calc(100% - 12px);
 	height: calc(100% - 12px);
 	position: absolute;
@@ -307,7 +307,7 @@
 	background: #f8f8f8;
 	z-index: 1;
 }
-.marvel-device.iphone8plus::after {
+.marvel-device.iphone8plus:after {
 	width: calc(100% - 16px);
 	height: calc(100% - 16px);
 	position: absolute;
@@ -331,7 +331,7 @@
 	background: #303233;
 	background: linear-gradient(135deg, #303233 0%, #b5b7b9 50%, #f0f2f2 69%, #303233 100%);
 }
-.marvel-device.iphone8plus .home::before {
+.marvel-device.iphone8plus .home:before {
 	background: #f8f8f8;
 	position: absolute;
 	content: "";
@@ -361,7 +361,7 @@
 	right: -4px;
 	width: 4px;
 	height: 66px;
-	border-radius: 0 2px 2px 0;
+	border-radius: 0px 2px 2px 0px;
 	background: #d9dbdc;
 }
 .marvel-device.iphone8plus .volume {
@@ -371,27 +371,27 @@
 	z-index: 0;
 	height: 66px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: #d9dbdc;
 }
-.marvel-device.iphone8plus .volume::before {
+.marvel-device.iphone8plus .volume:before {
 	position: absolute;
 	left: 2px;
 	top: -78px;
 	height: 40px;
 	width: 2px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
 }
-.marvel-device.iphone8plus .volume::after {
+.marvel-device.iphone8plus .volume:after {
 	position: absolute;
-	left: 0;
+	left: 0px;
 	top: 82px;
 	height: 66px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
@@ -448,10 +448,10 @@
 	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.7);
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.7);
 }
-.marvel-device.iphone8plus.black::before {
+.marvel-device.iphone8plus.black:before {
 	background: #080808;
 }
-.marvel-device.iphone8plus.black::after {
+.marvel-device.iphone8plus.black:after {
 	-webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.1), inset 0 0 6px 3px #212121;
 }
@@ -470,7 +470,7 @@
 	background: #080808;
 	background: linear-gradient(135deg, #080808 0%, #464646 50%, #080808 100%);
 }
-.marvel-device.iphone8plus.black .home::before {
+.marvel-device.iphone8plus.black .home:before {
 	background: #080808;
 }
 .marvel-device.iphone8plus.landscape {
@@ -480,7 +480,7 @@
 }
 .marvel-device.iphone8plus.landscape .sleep {
 	top: 100%;
-	border-radius: 0 0 2px 2px;
+	border-radius: 0px 0px 2px 2px;
 	right: 190px;
 	height: 4px;
 	width: 66px;
@@ -490,22 +490,22 @@
 	height: 4px;
 	top: -4px;
 	left: calc(100% - 188px - 66px);
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone8plus.landscape .volume::before {
+.marvel-device.iphone8plus.landscape .volume:before {
 	width: 40px;
 	height: 2px;
 	top: 2px;
 	right: -78px;
 	left: auto;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone8plus.landscape .volume::after {
+.marvel-device.iphone8plus.landscape .volume:after {
 	left: -82px;
 	width: 66px;
 	height: 4px;
 	top: 0;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
 .marvel-device.iphone8plus.landscape .top-bar {
 	width: 14px;
@@ -534,13 +534,13 @@
 	width: 6px;
 	left: calc(100% - 59px - 6px);
 	top: 50%;
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -35px;
 }
 .marvel-device.iphone8plus.landscape .camera {
 	left: calc(100% - 29px);
 	top: 50%;
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -5px;
 }
 .marvel-device.iphone5s,
@@ -551,8 +551,8 @@
 	height: 568px;
 	border-radius: 50px;
 }
-.marvel-device.iphone5s::before,
-.marvel-device.iphone5c::before {
+.marvel-device.iphone5s:before,
+.marvel-device.iphone5c:before {
 	width: calc(100% - 8px);
 	height: calc(100% - 8px);
 	position: absolute;
@@ -570,7 +570,7 @@
 	right: 60px;
 	width: 60px;
 	height: 4px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 	background: #282727;
 }
 .marvel-device.iphone5s .volume,
@@ -581,29 +581,29 @@
 	z-index: 0;
 	height: 27px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: #282727;
 }
-.marvel-device.iphone5s .volume::before,
-.marvel-device.iphone5c .volume::before {
+.marvel-device.iphone5s .volume:before,
+.marvel-device.iphone5c .volume:before {
 	position: absolute;
-	left: 0;
+	left: 0px;
 	top: -75px;
 	height: 35px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
 }
-.marvel-device.iphone5s .volume::after,
-.marvel-device.iphone5c .volume::after {
+.marvel-device.iphone5s .volume:after,
+.marvel-device.iphone5c .volume:after {
 	position: absolute;
-	left: 0;
+	left: 0px;
 	bottom: -64px;
 	height: 27px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
@@ -656,7 +656,7 @@
 	top: calc(100% - 120px);
 	height: 60px;
 	width: 4px;
-	border-radius: 0 2px 2px 0;
+	border-radius: 0px 2px 2px 0px;
 }
 .marvel-device.iphone5s.landscape .volume,
 .marvel-device.iphone5c.landscape .volume {
@@ -664,31 +664,31 @@
 	height: 4px;
 	top: -4px;
 	left: calc(100% - 180px);
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone5s.landscape .volume::before,
-.marvel-device.iphone5c.landscape .volume::before {
+.marvel-device.iphone5s.landscape .volume:before,
+.marvel-device.iphone5c.landscape .volume:before {
 	width: 35px;
 	height: 4px;
-	top: 0;
+	top: 0px;
 	right: -75px;
 	left: auto;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone5s.landscape .volume::after,
-.marvel-device.iphone5c.landscape .volume::after {
-	bottom: 0;
+.marvel-device.iphone5s.landscape .volume:after,
+.marvel-device.iphone5c.landscape .volume:after {
+	bottom: 0px;
 	left: -64px;
 	z-index: 999;
 	height: 4px;
 	width: 27px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
 .marvel-device.iphone5s.landscape .sensor,
 .marvel-device.iphone5c.landscape .sensor {
 	top: 160px;
 	left: calc(100% - 60px);
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -32px;
 }
 .marvel-device.iphone5s.landscape .speaker,
@@ -697,14 +697,14 @@
 	width: 10px;
 	left: calc(100% - 60px);
 	top: 50%;
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -32px;
 }
 .marvel-device.iphone5s.landscape .camera,
 .marvel-device.iphone5c.landscape .camera {
 	left: calc(100% - 32px);
 	top: 50%;
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -5px;
 }
 .marvel-device.iphone5s .home {
@@ -733,25 +733,25 @@
 	left: 19px;
 	bottom: 50%;
 	margin-bottom: -34px;
-	margin-left: 0;
+	margin-left: 0px;
 }
 .marvel-device.iphone5s.landscape .top-bar {
 	left: 70px;
-	top: 0;
+	top: 0px;
 	width: 3px;
 	height: 100%;
 }
 .marvel-device.iphone5s.landscape .bottom-bar {
 	right: 70px;
 	left: auto;
-	bottom: 0;
+	bottom: 0px;
 	width: 3px;
 	height: 100%;
 }
 .marvel-device.iphone5s.silver {
 	background: #bcbcbc;
 }
-.marvel-device.iphone5s.silver::before {
+.marvel-device.iphone5s.silver:before {
 	background: #fcfcfc;
 }
 .marvel-device.iphone5s.silver .volume,
@@ -769,7 +769,7 @@
 .marvel-device.iphone5s.gold {
 	background: #f9e7d3;
 }
-.marvel-device.iphone5s.gold::before {
+.marvel-device.iphone5s.gold:before {
 	background: #fcfcfc;
 }
 .marvel-device.iphone5s.gold .volume,
@@ -804,7 +804,7 @@
 	margin-left: -34px;
 	bottom: 19px;
 }
-.marvel-device.iphone5c .home::after {
+.marvel-device.iphone5c .home:after {
 	width: 20px;
 	height: 20px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
@@ -821,11 +821,11 @@
 	left: 19px;
 	bottom: 50%;
 	margin-bottom: -34px;
-	margin-left: 0;
+	margin-left: 0px;
 }
 .marvel-device.iphone5c .volume,
 .marvel-device.iphone5c .sleep {
-	background: #ddd;
+	background: #dddddd;
 }
 .marvel-device.iphone5c.red {
 	background: #f96b6c;
@@ -862,7 +862,7 @@
 	background: #686868;
 	border-radius: 54px;
 }
-.marvel-device.iphone4s::before {
+.marvel-device.iphone4s:before {
 	content: "";
 	width: calc(100% - 8px);
 	height: calc(100% - 8px);
@@ -927,7 +927,7 @@
 	margin-left: -36px;
 	bottom: 30px;
 }
-.marvel-device.iphone4s .home::after {
+.marvel-device.iphone4s .home:after {
 	width: 20px;
 	height: 20px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
@@ -946,7 +946,7 @@
 	right: 60px;
 	width: 60px;
 	height: 4px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 	background: #4d4d4d;
 }
 .marvel-device.iphone4s .volume {
@@ -955,27 +955,27 @@
 	top: 160px;
 	height: 27px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: #4d4d4d;
 }
-.marvel-device.iphone4s .volume::before {
+.marvel-device.iphone4s .volume:before {
 	position: absolute;
-	left: 0;
+	left: 0px;
 	top: -70px;
 	height: 35px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
 }
-.marvel-device.iphone4s .volume::after {
+.marvel-device.iphone4s .volume:after {
 	position: absolute;
-	left: 0;
+	left: 0px;
 	bottom: -64px;
 	height: 27px;
 	width: 4px;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 	background: inherit;
 	content: "";
 	display: block;
@@ -987,13 +987,13 @@
 }
 .marvel-device.iphone4s.landscape .bottom-bar {
 	left: 90px;
-	bottom: 0;
+	bottom: 0px;
 	height: 100%;
 	width: 3px;
 }
 .marvel-device.iphone4s.landscape .top-bar {
 	left: calc(100% - 60px);
-	top: 0;
+	top: 0px;
 	height: 100%;
 	width: 3px;
 }
@@ -1029,34 +1029,34 @@
 	width: 4px;
 	right: -4px;
 	top: calc(100% - 120px);
-	border-radius: 0 2px 2px 0;
+	border-radius: 0px 2px 2px 0px;
 }
 .marvel-device.iphone4s.landscape .volume {
 	top: -4px;
 	left: calc(100% - 187px);
 	height: 4px;
 	width: 27px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone4s.landscape .volume::before {
+.marvel-device.iphone4s.landscape .volume:before {
 	right: -70px;
 	left: auto;
-	top: 0;
+	top: 0px;
 	width: 35px;
 	height: 4px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
-.marvel-device.iphone4s.landscape .volume::after {
+.marvel-device.iphone4s.landscape .volume:after {
 	width: 27px;
 	height: 4px;
-	bottom: 0;
+	bottom: 0px;
 	left: -64px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
 .marvel-device.iphone4s.silver {
 	background: #bcbcbc;
 }
-.marvel-device.iphone4s.silver::before {
+.marvel-device.iphone4s.silver:before {
 	background: #fcfcfc;
 }
 .marvel-device.iphone4s.silver .home {
@@ -1064,7 +1064,7 @@
 	-webkit-box-shadow: inset 0 0 0 1px #bcbcbc;
 	box-shadow: inset 0 0 0 1px #bcbcbc;
 }
-.marvel-device.iphone4s.silver .home::after {
+.marvel-device.iphone4s.silver .home:after {
 	border: 1px solid rgba(0, 0, 0, 0.2);
 }
 .marvel-device.iphone4s.silver .volume,
@@ -1078,7 +1078,7 @@
 	background: #1e1e1e;
 	border-radius: 20px;
 }
-.marvel-device.nexus5::before {
+.marvel-device.nexus5:before {
 	border-radius: 600px / 50px;
 	background: inherit;
 	content: "";
@@ -1100,7 +1100,7 @@
 	border-radius: 20px;
 	background: #181818;
 }
-.marvel-device.nexus5 .top-bar::before {
+.marvel-device.nexus5 .top-bar:before {
 	border-radius: 600px / 50px;
 	background: inherit;
 	content: "";
@@ -1123,7 +1123,7 @@
 	top: 110px;
 	height: 100px;
 	background: inherit;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 }
 .marvel-device.nexus5 .volume {
 	width: 3px;
@@ -1132,7 +1132,7 @@
 	top: 70px;
 	height: 45px;
 	background: inherit;
-	border-radius: 0 2px 2px 0;
+	border-radius: 0px 2px 2px 0px;
 }
 .marvel-device.nexus5 .camera {
 	background: #3c3d3d;
@@ -1145,7 +1145,7 @@
 	margin-left: -5px;
 	border-radius: 100%;
 }
-.marvel-device.nexus5 .camera::before {
+.marvel-device.nexus5 .camera:before {
 	background: #3c3d3d;
 	width: 6px;
 	height: 6px;
@@ -1162,7 +1162,7 @@
 	height: 320px;
 	width: 568px;
 }
-.marvel-device.nexus5.landscape::before {
+.marvel-device.nexus5.landscape:before {
 	width: 103.1%;
 	height: calc(100% - 26px);
 	border-radius: 50px / 600px;
@@ -1173,7 +1173,7 @@
 	height: calc(100% - 8px);
 	width: calc(100% - 6px);
 }
-.marvel-device.nexus5.landscape .top-bar::before {
+.marvel-device.nexus5.landscape .top-bar:before {
 	width: 103%;
 	height: calc(100% - 26px);
 	border-radius: 50px / 600px;
@@ -1183,14 +1183,14 @@
 	width: 100px;
 	left: calc(100% - 210px);
 	top: -3px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
 .marvel-device.nexus5.landscape .volume {
 	height: 3px;
 	width: 45px;
 	right: 70px;
 	top: 100%;
-	border-radius: 0 0 2px 2px;
+	border-radius: 0px 0px 2px 2px;
 }
 .marvel-device.nexus5.landscape .camera {
 	top: 50%;
@@ -1198,7 +1198,7 @@
 	margin-left: 0;
 	margin-top: -5px;
 }
-.marvel-device.nexus5.landscape .camera::before {
+.marvel-device.nexus5.landscape .camera:before {
 	top: -100px;
 	left: 2px;
 }
@@ -1209,8 +1209,8 @@
 	height: 568px;
 	background: #bcbcbc;
 }
-.marvel-device.s5::before,
-.marvel-device.s5::after {
+.marvel-device.s5:before,
+.marvel-device.s5:after {
 	width: calc(100% - 52px);
 	content: "";
 	display: block;
@@ -1222,10 +1222,10 @@
 	-webkit-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
-.marvel-device.s5::before {
+.marvel-device.s5:before {
 	top: -7px;
 }
-.marvel-device.s5::after {
+.marvel-device.s5:after {
 	bottom: -7px;
 }
 .marvel-device.s5 .bottom-bar {
@@ -1244,8 +1244,8 @@
 	z-index: 2;
 	position: absolute;
 }
-.marvel-device.s5 .top-bar::before,
-.marvel-device.s5 .top-bar::after {
+.marvel-device.s5 .top-bar:before,
+.marvel-device.s5 .top-bar:after {
 	width: calc(100% - 48px);
 	content: "";
 	display: block;
@@ -1257,10 +1257,10 @@
 	-webkit-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
-.marvel-device.s5 .top-bar::before {
+.marvel-device.s5 .top-bar:before {
 	top: -7px;
 }
-.marvel-device.s5 .top-bar::after {
+.marvel-device.s5 .top-bar:after {
 	bottom: -7px;
 }
 .marvel-device.s5 .sleep {
@@ -1270,7 +1270,7 @@
 	top: 100px;
 	height: 100px;
 	background: #cecece;
-	border-radius: 2px 0 0 2px;
+	border-radius: 2px 0px 0px 2px;
 }
 .marvel-device.s5 .speaker {
 	width: 68px;
@@ -1296,11 +1296,11 @@
 	height: 8px;
 	z-index: 3;
 }
-.marvel-device.s5 .sensor::after {
+.marvel-device.s5 .sensor:after {
 	display: block;
 	content: "";
 	position: absolute;
-	top: 0;
+	top: 0px;
 	right: 12px;
 	background: #3c3d3d;
 	border-radius: 100%;
@@ -1319,7 +1319,7 @@
 	height: 10px;
 	z-index: 3;
 }
-.marvel-device.s5 .camera::before {
+.marvel-device.s5 .camera:before {
 	width: 4px;
 	height: 4px;
 	background: #3c3d3d;
@@ -1349,37 +1349,37 @@
 	height: 320px;
 	width: 568px;
 }
-.marvel-device.s5.landscape::before,
-.marvel-device.s5.landscape::after {
+.marvel-device.s5.landscape:before,
+.marvel-device.s5.landscape:after {
 	height: calc(100% - 52px);
 	width: 26px;
 	border-radius: 40px / 500px;
 	-webkit-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
-.marvel-device.s5.landscape::before {
+.marvel-device.s5.landscape:before {
 	top: 50%;
 	left: -7px;
 }
-.marvel-device.s5.landscape::after {
+.marvel-device.s5.landscape:after {
 	top: 50%;
 	left: auto;
 	right: -7px;
 }
-.marvel-device.s5.landscape .top-bar::before,
-.marvel-device.s5.landscape .top-bar::after {
+.marvel-device.s5.landscape .top-bar:before,
+.marvel-device.s5.landscape .top-bar:after {
 	width: 26px;
 	height: calc(100% - 48px);
 	border-radius: 40px / 500px;
 	-webkit-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
-.marvel-device.s5.landscape .top-bar::before {
+.marvel-device.s5.landscape .top-bar:before {
 	right: -7px;
 	top: 50%;
 	left: auto;
 }
-.marvel-device.s5.landscape .top-bar::after {
+.marvel-device.s5.landscape .top-bar:after {
 	left: -7px;
 	top: 50%;
 	right: auto;
@@ -1389,7 +1389,7 @@
 	width: 100px;
 	left: calc(100% - 200px);
 	top: -3px;
-	border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0px 0px;
 }
 .marvel-device.s5.landscape .speaker {
 	height: 68px;
@@ -1403,9 +1403,9 @@
 	right: 20px;
 	top: calc(100% - 110px);
 }
-.marvel-device.s5.landscape .sensor::after {
+.marvel-device.s5.landscape .sensor:after {
 	left: -12px;
-	right: 0;
+	right: 0px;
 }
 .marvel-device.s5.landscape .camera {
 	top: calc(100% - 42px);
@@ -1438,7 +1438,7 @@
 }
 .marvel-device.lumia920 {
 	padding: 80px 35px 125px 35px;
-	background: #fd0;
+	background: #ffdd00;
 	width: 320px;
 	height: 533px;
 	border-radius: 40px / 3px;
@@ -1456,7 +1456,7 @@
 	background: black;
 	z-index: 1;
 }
-.marvel-device.lumia920 .top-bar::before {
+.marvel-device.lumia920 .top-bar:before {
 	background: #1e1e1e;
 	display: block;
 	content: "";
@@ -1474,9 +1474,9 @@
 	height: 100px;
 	background: #1e1e1e;
 	right: -3px;
-	border-radius: 0 2px 2px 0;
+	border-radius: 0px 2px 2px 0px;
 }
-.marvel-device.lumia920 .volume::before {
+.marvel-device.lumia920 .volume:before {
 	width: 3px;
 	position: absolute;
 	top: 190px;
@@ -1484,10 +1484,10 @@
 	display: block;
 	height: 50px;
 	background: inherit;
-	right: 0;
-	border-radius: 0 2px 2px 0;
+	right: 0px;
+	border-radius: 0px 2px 2px 0px;
 }
-.marvel-device.lumia920 .volume::after {
+.marvel-device.lumia920 .volume:after {
 	width: 3px;
 	position: absolute;
 	top: 460px;
@@ -1495,8 +1495,8 @@
 	display: block;
 	height: 50px;
 	background: inherit;
-	right: 0;
-	border-radius: 0 2px 2px 0;
+	right: 0px;
+	border-radius: 0px 2px 2px 0px;
 }
 .marvel-device.lumia920 .camera {
 	background: #3c3d3d;
@@ -1536,21 +1536,21 @@
 	right: 130px;
 	width: 100px;
 	top: 100%;
-	border-radius: 0 0 2px 2px;
+	border-radius: 0px 0px 2px 2px;
 }
-.marvel-device.lumia920.landscape .volume::before {
+.marvel-device.lumia920.landscape .volume:before {
 	height: 3px;
 	right: 190px;
-	top: 0;
+	top: 0px;
 	width: 50px;
-	border-radius: 0 0 2px 2px;
+	border-radius: 0px 0px 2px 2px;
 }
-.marvel-device.lumia920.landscape .volume::after {
+.marvel-device.lumia920.landscape .volume:after {
 	height: 3px;
 	right: 430px;
-	top: 0;
+	top: 0px;
 	width: 50px;
-	border-radius: 0 0 2px 2px;
+	border-radius: 0px 0px 2px 2px;
 }
 .marvel-device.lumia920.landscape .camera {
 	right: 30px;
@@ -1585,7 +1585,7 @@
 	background: #bebebe;
 	border-radius: 34px;
 }
-.marvel-device.htc-one::before {
+.marvel-device.htc-one:before {
 	content: "";
 	display: block;
 	width: calc(100% - 4px);
@@ -1596,7 +1596,7 @@
 	background: #adadad;
 	border-radius: 32px;
 }
-.marvel-device.htc-one::after {
+.marvel-device.htc-one:after {
 	content: "";
 	display: block;
 	width: calc(100% - 8px);
@@ -1604,7 +1604,7 @@
 	position: absolute;
 	top: 4px;
 	left: 4px;
-	background: #eee;
+	background: #eeeeee;
 	border-radius: 30px;
 }
 .marvel-device.htc-one .top-bar {
@@ -1616,14 +1616,14 @@
 	z-index: 1;
 	left: 2px;
 }
-.marvel-device.htc-one .top-bar::before {
+.marvel-device.htc-one .top-bar:before {
 	content: "";
 	position: absolute;
 	width: calc(100% - 4px);
 	height: 100%;
 	position: absolute;
 	background: black;
-	top: 0;
+	top: 0px;
 	z-index: 1;
 	left: 2px;
 }
@@ -1643,7 +1643,7 @@
 	background-size: 4px 4px;
 	background-position: top left;
 }
-.marvel-device.htc-one .speaker::after {
+.marvel-device.htc-one .speaker:after {
 	content: "";
 	height: 16px;
 	width: 216px;
@@ -1666,7 +1666,7 @@
 	height: 24px;
 	z-index: 3;
 }
-.marvel-device.htc-one .camera::before {
+.marvel-device.htc-one .camera:before {
 	width: 8px;
 	height: 8px;
 	background: black;
@@ -1689,11 +1689,11 @@
 	height: 8px;
 	z-index: 3;
 }
-.marvel-device.htc-one .sensor::after {
+.marvel-device.htc-one .sensor:after {
 	display: block;
 	content: "";
 	position: absolute;
-	top: 0;
+	top: 0px;
 	right: 12px;
 	background: #3c3d3d;
 	border-radius: 100%;
@@ -1717,10 +1717,10 @@
 	height: 216px;
 	left: calc(100% - 38px);
 	top: 50%;
-	margin-left: 0;
+	margin-left: 0px;
 	margin-top: -108px;
 }
-.marvel-device.htc-one.landscape .speaker::after {
+.marvel-device.htc-one.landscape .speaker:after {
 	width: 16px;
 	height: 216px;
 	left: calc(100% - 692px);
@@ -1736,7 +1736,7 @@
 	left: calc(100% - 29px);
 	top: 60px;
 }
-.marvel-device.htc-one.landscape .sensor ::after {
+.marvel-device.htc-one.landscape .sensor :after {
 	right: 0;
 	top: -12px;
 }
@@ -1747,7 +1747,7 @@
 	background: #242324;
 	border-radius: 44px;
 }
-.marvel-device.ipad::before {
+.marvel-device.ipad:before {
 	width: calc(100% - 8px);
 	height: calc(100% - 8px);
 	position: absolute;
@@ -1782,7 +1782,7 @@
 	margin-left: -25px;
 	bottom: 22px;
 }
-.marvel-device.ipad .home::after {
+.marvel-device.ipad .home:after {
 	width: 15px;
 	height: 15px;
 	margin-top: -8px;
@@ -1815,7 +1815,7 @@
 .marvel-device.ipad.silver {
 	background: #bcbcbc;
 }
-.marvel-device.ipad.silver::before {
+.marvel-device.ipad.silver:before {
 	background: #fcfcfc;
 }
 .marvel-device.ipad.silver .home {
@@ -1823,7 +1823,7 @@
 	-webkit-box-shadow: inset 0 0 0 1px #bcbcbc;
 	box-shadow: inset 0 0 0 1px #bcbcbc;
 }
-.marvel-device.ipad.silver .home::after {
+.marvel-device.ipad.silver .home:after {
 	border: 1px solid rgba(0, 0, 0, 0.2);
 }
 .marvel-device.macbook {
@@ -1834,7 +1834,7 @@
 	background: #bebebe;
 	border-radius: 34px;
 }
-.marvel-device.macbook::before {
+.marvel-device.macbook:before {
 	width: calc(100% - 8px);
 	height: calc(100% - 8px);
 	position: absolute;
@@ -1856,10 +1856,10 @@
 	border-bottom-left-radius: 90px 18px;
 	border-bottom-right-radius: 90px 18px;
 	background: #bebebe;
-	-webkit-box-shadow: inset 0 -4px 13px 3px rgba(34, 34, 34, 0.6);
-	box-shadow: inset 0 -4px 13px 3px rgba(34, 34, 34, 0.6);
+	-webkit-box-shadow: inset 0px -4px 13px 3px rgba(34, 34, 34, 0.6);
+	box-shadow: inset 0px -4px 13px 3px rgba(34, 34, 34, 0.6);
 }
-.marvel-device.macbook .top-bar::before {
+.marvel-device.macbook .top-bar:before {
 	width: 100%;
 	height: 24px;
 	content: "";
@@ -1871,7 +1871,7 @@
 	border-radius: 5px;
 	position: relative;
 }
-.marvel-device.macbook .top-bar::after {
+.marvel-device.macbook .top-bar:after {
 	width: 16%;
 	height: 14px;
 	content: "";
@@ -1884,8 +1884,8 @@
 	left: 0;
 	right: 0;
 	border-radius: 0 0 20px 20px;
-	-webkit-box-shadow: inset 0 -3px 10px #999;
-	box-shadow: inset 0 -3px 10px #999;
+	-webkit-box-shadow: inset 0px -3px 10px #999;
+	box-shadow: inset 0px -3px 10px #999;
 }
 .marvel-device.macbook .bottom-bar {
 	background: transparent;
@@ -1897,8 +1897,8 @@
 	top: 680px;
 	left: -70px;
 }
-.marvel-device.macbook .bottom-bar::before,
-.marvel-device.macbook .bottom-bar::after {
+.marvel-device.macbook .bottom-bar:before,
+.marvel-device.macbook .bottom-bar:after {
 	height: calc(100% - 2px);
 	width: 80px;
 	content: "";
@@ -1906,7 +1906,7 @@
 	top: 0;
 	position: absolute;
 }
-.marvel-device.macbook .bottom-bar::before {
+.marvel-device.macbook .bottom-bar:before {
 	left: 0;
 	background: #f0f0f0;
 	background: -webkit-gradient(
@@ -1923,7 +1923,7 @@
 	);
 	background: linear-gradient(to right, #747474 0%, #c3c3c3 5%, #ebebeb 14%, #979797 41%, #f0f0f0 80%, #f0f0f0 100%, #f0f0f0 100%);
 }
-.marvel-device.macbook .bottom-bar::after {
+.marvel-device.macbook .bottom-bar:after {
 	right: 0;
 	background: #f0f0f0;
 	background: -webkit-gradient(
@@ -1994,7 +1994,7 @@
 	bottom: -20px;
 	right: -20px;
 }
-.marvel-device.iphone-x::before {
+.marvel-device.iphone-x:before {
 	width: calc(100% - 10px);
 	height: calc(100% - 10px);
 	position: absolute;
@@ -2017,9 +2017,9 @@
 	box-shadow: inset 0 0 15px 0 rgba(255, 255, 255, 0.66);
 	z-index: 1;
 }
-.marvel-device.iphone-x .inner-shadow::before {
-	-webkit-box-shadow: inset 0 0 20px 0 #fff;
-	box-shadow: inset 0 0 20px 0 #fff;
+.marvel-device.iphone-x .inner-shadow:before {
+	-webkit-box-shadow: inset 0 0 20px 0 #ffffff;
+	box-shadow: inset 0 0 20px 0 #ffffff;
 	width: 100%;
 	height: 116%;
 	position: absolute;
@@ -2049,8 +2049,8 @@
 	bottom: 80px;
 }
 .marvel-device.iphone-x .volume,
-.marvel-device.iphone-x .volume::before,
-.marvel-device.iphone-x .volume::after,
+.marvel-device.iphone-x .volume:before,
+.marvel-device.iphone-x .volume:after,
 .marvel-device.iphone-x .sleep {
 	width: 3px;
 	background: #b5b5b5;
@@ -2061,13 +2061,13 @@
 	top: 116px;
 	height: 32px;
 }
-.marvel-device.iphone-x .volume::before {
+.marvel-device.iphone-x .volume:before {
 	height: 62px;
 	top: 62px;
 	content: "";
 	left: 0;
 }
-.marvel-device.iphone-x .volume::after {
+.marvel-device.iphone-x .volume:after {
 	height: 62px;
 	top: 140px;
 	content: "";
@@ -2108,19 +2108,19 @@
 	border-bottom-left-radius: 24px;
 	border-bottom-right-radius: 24px;
 }
-.marvel-device.iphone-x .notch::before,
-.marvel-device.iphone-x .notch::after {
+.marvel-device.iphone-x .notch:before,
+.marvel-device.iphone-x .notch:after {
 	content: "";
 	height: 8px;
 	position: absolute;
 	top: 0;
 	width: 8px;
 }
-.marvel-device.iphone-x .notch::after {
+.marvel-device.iphone-x .notch:after {
 	background: radial-gradient(circle at bottom left, transparent 0, transparent 70%, black 70%, black 100%);
 	left: -8px;
 }
-.marvel-device.iphone-x .notch::before {
+.marvel-device.iphone-x .notch:before {
 	background: radial-gradient(circle at bottom right, transparent 0, transparent 70%, black 70%, black 100%);
 	right: -8px;
 }
@@ -2143,12 +2143,12 @@
 	left: auto;
 }
 .marvel-device.iphone-x.landscape .volume,
-.marvel-device.iphone-x.landscape .volume::before,
-.marvel-device.iphone-x.landscape .volume::after,
+.marvel-device.iphone-x.landscape .volume:before,
+.marvel-device.iphone-x.landscape .volume:after,
 .marvel-device.iphone-x.landscape .sleep {
 	height: 3px;
 }
-.marvel-device.iphone-x.landscape .inner-shadow::before {
+.marvel-device.iphone-x.landscape .inner-shadow:before {
 	height: 100%;
 	width: 116%;
 	left: -8%;
@@ -2161,12 +2161,12 @@
 	left: 116px;
 	width: 32px;
 }
-.marvel-device.iphone-x.landscape .volume::before {
+.marvel-device.iphone-x.landscape .volume:before {
 	width: 62px;
 	left: 62px;
 	top: 0;
 }
-.marvel-device.iphone-x.landscape .volume::after {
+.marvel-device.iphone-x.landscape .volume:after {
 	width: 62px;
 	left: 140px;
 	top: 0;
@@ -2200,16 +2200,16 @@
 	border-bottom-right-radius: 24px;
 	border-bottom-left-radius: 0;
 }
-.marvel-device.iphone-x.landscape .notch::before,
-.marvel-device.iphone-x.landscape .notch::after {
+.marvel-device.iphone-x.landscape .notch:before,
+.marvel-device.iphone-x.landscape .notch:after {
 	left: 0;
 }
-.marvel-device.iphone-x.landscape .notch::after {
+.marvel-device.iphone-x.landscape .notch:after {
 	background: radial-gradient(circle at bottom right, transparent 0, transparent 70%, black 70%, black 100%);
 	bottom: -8px;
 	top: auto;
 }
-.marvel-device.iphone-x.landscape .notch::before {
+.marvel-device.iphone-x.landscape .notch:before {
 	background: radial-gradient(circle at top right, transparent 0, transparent 70%, black 70%, black 100%);
 	top: -8px;
 }
@@ -2250,7 +2250,7 @@
 	z-index: 1;
 	border-radius: 100%;
 }
-.marvel-device.note8 .camera::before {
+.marvel-device.note8 .camera:before {
 	content: "";
 	height: 8px;
 	width: 8px;
@@ -2271,7 +2271,7 @@
 	z-index: 1;
 	border-radius: 100%;
 }
-.marvel-device.note8 .sensors::before {
+.marvel-device.note8 .sensors:before {
 	content: "";
 	height: 10px;
 	width: 10px;
@@ -2294,7 +2294,7 @@
 	z-index: 1;
 	border-radius: 100%;
 }
-.marvel-device.note8 .more-sensors::before {
+.marvel-device.note8 .more-sensors:before {
 	content: "";
 	height: 11px;
 	width: 11px;
@@ -2321,7 +2321,7 @@
 	top: 168px;
 	left: -2px;
 }
-.marvel-device.note8 .volume::before {
+.marvel-device.note8 .volume:before {
 	content: "";
 	top: 168px;
 	width: 2px;
@@ -2336,7 +2336,7 @@
 	position: absolute;
 	top: 2px;
 	content: "";
-	left: 0;
+	left: 0px;
 	border-radius: 34px;
 	border-top: 2px solid #9fa0a2;
 	border-bottom: 2px solid #9fa0a2;
@@ -2382,7 +2382,7 @@
 	right: 18px;
 	left: auto;
 }
-.marvel-device.note8.landscape .camera::before {
+.marvel-device.note8.landscape .camera:before {
 	top: -22px;
 	left: 5px;
 }
@@ -2391,7 +2391,7 @@
 	right: 22px;
 	left: auto;
 }
-.marvel-device.note8.landscape .sensors::before {
+.marvel-device.note8.landscape .sensors:before {
 	top: 18px;
 	left: 0;
 }
@@ -2400,7 +2400,7 @@
 	right: 18px;
 	left: auto;
 }
-.marvel-device.note8.landscape .more-sensors::before {
+.marvel-device.note8.landscape .more-sensors:before {
 	top: 40px;
 	left: 4px;
 }
@@ -2418,7 +2418,7 @@
 	right: 168px;
 	left: auto;
 }
-.marvel-device.note8.landscape .volume::before {
+.marvel-device.note8.landscape .volume:before {
 	right: 168px;
 	left: auto;
 	top: 0;

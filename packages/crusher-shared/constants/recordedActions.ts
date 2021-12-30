@@ -72,6 +72,7 @@ export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.RUN_TEMPLATE]: "Run template",
 };
 
+
 export enum InputNodeTypeEnum {
 	CONTENT_EDITABLE = "CONTENT_EDITABLE",
 	INPUT = "INPUT",

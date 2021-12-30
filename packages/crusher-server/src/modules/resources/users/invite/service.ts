@@ -7,6 +7,7 @@ import { ICreateProjectInviteCode, ICreateTeamInviteCode, IInviteReferral, Invit
 import { EmailManager } from "@modules/email";
 import * as ejs from "ejs";
 import * as path from "path";
+import { MyDecorator } from "@modules/decorators/camelizeResponse";
 
 @Service()
 class UserInviteService {
@@ -58,7 +59,7 @@ class UserInviteService {
 				teamId: payload.teamId,
 				projectId: payload.projectId,
 				expiresOn: payload.expiresOn,
-				isPublic: payload.isPublic || false,
+				isPublic: payload.isPublic ? payload.isPublic : false,
 				meta: {
 					...payload.meta,
 					emails: payload.emails,
@@ -77,7 +78,7 @@ class UserInviteService {
 				expiresOn: payload.expiresOn,
 				meta: {
 					...payload.meta,
-					emails: payload.emails || null,
+					emails: payload.emails ? payload.emails : null,
 				},
 			}).save((err, referral) => {
 				if (err) return reject(err);
@@ -95,7 +96,7 @@ class UserInviteService {
 				});
 
 				// @TODO: Look into this. May cause timezone issue
-				if (referralObject.expiresOn > new Date()) reject(Error("The invite code has expired"));
+				if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
 				resolve(referralObject);
 			});
 		});
@@ -110,7 +111,7 @@ class UserInviteService {
 				});
 
 				// @TODO: Look into this. May cause timezone issue
-				if (referralObject.expiresOn > new Date()) reject(Error("The invite code has expired"));
+				if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
 				resolve(referralObject);
 			});
 		});
@@ -124,7 +125,7 @@ class UserInviteService {
 		}
 	}
 
-	async sendInvitationsToEmails(emails: string[], inviteReferral: { code: string; type: InviteReferralEnum }, adminName: string) {
+	async sendInvitationsToEmails(emails: Array<string>, inviteReferral: { code: string; type: InviteReferralEnum }, adminName: string) {
 		return new Promise((resolve, reject) => {
 			ejs.renderFile(
 				path.resolve(__dirname, "./templates/inviteMember.ejs"),

@@ -1,16 +1,16 @@
 import * as path from "path";
-import { app, BrowserWindow, dialog, session, ipcMain, screen } from "electron";
+import { app, BrowserWindow, dialog, session, ipcMain, screen, shell, webContents, clipboard, crashReporter } from "electron";
 import { getAppIconPath } from "./utils";
 import { MainWindow } from "./mainWindow";
-import * as Sentry from "@sentry/electron";
+import * as Sentry from "@sentry/electron"
 
-if (process.env.NODE_ENV === "production") {
+if(process.env.NODE_ENV === "production") {
 	Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
-	require("update-electron-app")({
-		repo: "crusherdev/crusher-downloads",
-		updateInterval: "5 minutes",
-		logger: require("electron-log"),
-	});
+	require('update-electron-app')({
+		repo: 'crusherdev/crusher-downloads',
+		updateInterval: '5 minutes',
+		logger: require('electron-log')
+	})
 }
 
 app.setName("Crusher Recorder");
@@ -111,7 +111,7 @@ class App {
 		await this.mainWindow.initialize();
 
 		this.appWindow.on("close", () => {
-			if (process.platform === "darwin") app.quit();
+			if(process.platform === "darwin") app.quit();
 		});
 
 		return true;
@@ -135,22 +135,24 @@ class App {
 	}
 
 	async handleDeepLink(event, data) {
-		if (process.platform === "darwin" && data.startsWith("crusher://")) {
-			const dialogResponse = dialog.showMessageBoxSync({
-				message: "Current saved state would be lost. Do you want to continue?",
-				type: "question",
-				buttons: ["Yes", "Cancel"],
-				defaultId: 1,
-			});
+		if(process.platform === "darwin") {
+			if(data.startsWith("crusher://")) {
+				const dialogResponse = dialog.showMessageBoxSync({
+					message: "Current saved state would be lost. Do you want to continue?",
+					type: "question",
+					buttons: ["Yes", "Cancel"],
+					defaultId: 1,
+				});
 
-			if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
-				await this._reloadApp(this.appWindow, true, [data]);
+				if (dialogResponse === 0 && app.hasSingleInstanceLock()) {
+					await this._reloadApp(this.appWindow, true, [data]);
+				}
 			}
 		}
 		console.log("Link is this", data);
 	}
 
-	async handleSecondInstance(event, argv) {
+	async handleSecondInstance(event, argv, workingDirectory) {
 		const dialogResponse = dialog.showMessageBoxSync({
 			message: "Current saved state would be lost. Do you want to continue?",
 			type: "question",
@@ -168,7 +170,7 @@ class App {
 			session.fromPartition("crusher").clearStorageData({
 				storages: ["cookies", "localstorage", "indexdb"],
 			});
-		} catch {}
+		} catch(err) {}
 	}
 
 	cleanupStorageBeforeExit(): Promise<void> {

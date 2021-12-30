@@ -92,9 +92,12 @@ function getSizePropery(size) {
 	switch (size) {
 		case "small":
 			return { height: 20 };
+			break;
 		case "large":
 			return { height: 46 };
+			break;
 		default:
 			return { height: 34 };
+			break;
 	}
 }

@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from "react";
 import ReactModal from "react-modal";
 import { FONT_WEIGHT } from "../../../../interfaces/css";
+import { addHttpToURLIfNotThere } from "@shared/utils/url";
 import { COLOR_CONSTANTS } from "../../../colorConstants";
+import { validURL } from "../../../../utils/helpers";
 import { ModalTopBar } from ".";
 import { recordAction } from "crusher-electron-app/src/extension/redux/actions/actions";
 import { getStore } from "crusher-electron-app/src/extension/redux/store";
@@ -115,6 +117,37 @@ const customModalStyles = {
 		height: "100%",
 		zIndex: 100000,
 	},
+};
+
+const topBarStyle = {
+	display: "flex",
+	justifyContent: "space-between",
+	marginBottom: "1rem",
+	background: "rgb(17,18,19)",
+};
+const topLeftSectionStyle = {
+	display: "flex",
+};
+const headingContainerStyle = {
+	marginLeft: 16,
+};
+const headingStyle = {
+	fontStyle: "normal",
+	fontWeight: 800,
+	fontSize: "22",
+	marginBottom: 0,
+	color: "#FFFFFF",
+};
+const subHeadingStyle = {
+	fontStyle: "normal",
+	fontSize: "0.8rem",
+	color: "#FFFFFF",
+};
+const topBarBrowserIcon = {
+	marginRight: 20,
+};
+const closeButtonStyle = {
+	cursor: "pointer",
 };
 
 export { WaitModal };

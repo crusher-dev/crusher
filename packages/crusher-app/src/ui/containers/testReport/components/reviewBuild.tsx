@@ -61,20 +61,22 @@ export const ReviewButtonContent = ({ closeModal }) => {
 				/>
 
 				<div css={radioGroup}>
-					{radioContent.map(({ label, subLabel }, i) => (
-						<div className={"flex mb-12"} onClick={selectOption.bind(this, i)}>
-							<Radio
-								isSelected={selected === i}
-								callback={selectOption.bind(this, i)}
-								label={
-									<div className={"ml-12"}>
-										<div className={"text-12 font-700"}>{label}</div>
-										<div>{subLabel}</div>
-									</div>
-								}
-							/>
-						</div>
-					))}
+					{radioContent.map(({ label, subLabel }, i) => {
+						return (
+							<div className={"flex mb-12"} onClick={selectOption.bind(this, i)}>
+								<Radio
+									isSelected={selected === i}
+									callback={selectOption.bind(this, i)}
+									label={
+										<div className={"ml-12"}>
+											<div className={"text-12 font-700"}>{label}</div>
+											<div>{subLabel}</div>
+										</div>
+									}
+								/>
+							</div>
+						);
+					})}
 				</div>
 			</div>
 			<div className={"px-16 py-12"}>

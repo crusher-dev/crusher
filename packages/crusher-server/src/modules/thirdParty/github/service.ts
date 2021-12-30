@@ -3,7 +3,9 @@ import { DBManager } from "@modules/db";
 
 import { Octokit } from "@octokit/rest";
 import { OCTOKIT_CONFIG } from "../../../../config/github";
+import { Logger } from "@utils/logger";
 import { createAppAuth } from "@octokit/auth/dist-node";
+import { BuildStatusEnum } from "@modules/resources/builds/interface";
 import { GithubCheckConclusionEnum } from "./interface";
 import { Authentication } from "@octokit/auth-oauth-app/dist-types/types";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
@@ -30,13 +32,11 @@ class GithubService {
 
 	async authenticateAsApp(installation_id: string) {
 		await this.octokit.auth({ type: "app" });
-
-		const { data } = await this.octokit.apps.createInstallationAccessToken({
+		const {
+			data: { token },
+		} = await this.octokit.apps.createInstallationAccessToken({
 			installation_id: parseInt(installation_id),
 		});
-
-		const { token } = data;
-
 		this.octokit = new Octokit({ auth: token });
 	}
 
@@ -67,9 +67,11 @@ class GithubService {
 	async createCheckRun(payload: { installationId: string; repoName: string; commitId: string; buildId: number }) {
 		const { installationId, repoName: fullReponame, commitId, buildId } = payload;
 
+		const createCheckRunResponse = await this._createCheckRun(fullReponame, commitId, installationId, buildId);
+
 		const {
 			data: { id: checkRunId },
-		} = await this._createCheckRun(fullReponame, commitId, installationId, buildId);
+		} = createCheckRunResponse;
 
 		return checkRunId;
 	}

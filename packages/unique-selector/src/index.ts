@@ -40,7 +40,7 @@ class UniqueSelector {
 	 */
 	getUniqueSelector(element: HTMLElement): UniqueSelectorResult {
 		if (element.nodeType !== Node.ELEMENT_NODE) {
-			throw Error(`Can't generate CSS selector for non-element node type.`);
+			throw new Error(`Can't generate CSS selector for non-element node type.`);
 		}
 
 		const idSelector = getIDSelectors(element, this._configuration.root);
@@ -63,7 +63,9 @@ class UniqueSelector {
 					};
 				}),
 			);
-			selectors = selectors.filter((a) => a.uniquenessScore === 1);
+			selectors = selectors.filter((a) => {
+				return a.uniquenessScore === 1;
+			});
 		}
 
 		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
@@ -83,7 +85,7 @@ class UniqueSelector {
 			const elementsLength = elements.length;
 			if (currentElement !== elements[0] || !elementsLength) return 0;
 			return 1 / elementsLength;
-		} catch {
+		} catch (err) {
 			return 0;
 		}
 	}

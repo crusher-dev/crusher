@@ -5,7 +5,11 @@ const ejs = require("ejs");
 
 require("dotenv").config();
 
-const { CRUSHER_MODE = "open-source", STORAGE_MODE = "local", STORAGE_PORT = 3001, BASE_STORAGE_FOLDER = "/tmp", OVERRIDE_STORAGE_URL = null } = process.env;
+const CRUSHER_MODE = process.env.CRUSHER_MODE ? process.env.CRUSHER_MODE : "open-source";
+const STORAGE_MODE = process.env.STORAGE_MODE || "local";
+const STORAGE_PORT = process.env.STORAGE_PORT || 3001;
+const BASE_STORAGE_FOLDER = process.env.BASE_STORAGE_FOLDER || "/tmp";
+const OVERRIDE_STORAGE_URL = process.env.OVERRIDE_STORAGE_URL || null;
 
 function copyTemplate(templateFilePath, destinationPath, params) {
 	return new Promise((resolve, reject) => {

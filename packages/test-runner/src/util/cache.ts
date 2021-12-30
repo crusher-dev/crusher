@@ -23,7 +23,9 @@ function getQueueManager(): QueueManager {
 
 let storageManager: IStorageManager | null = null;
 
+const STORAGE_MODE = process.env.STORAGE_MODE;
 const STORAGE_PORT = parseInt(process.env.STORAGE_PORT, 10);
+const BASE_STORAGE_FOLDER = process.env.BASE_STORAGE_FOLDER;
 
 function getStorageManager(): IStorageManager {
 	if (!storageManager) storageManager = setupStorage(process.env.STORAGE_MODE as any, STORAGE_PORT, process.env.BASE_STORAGE_FOLDER);

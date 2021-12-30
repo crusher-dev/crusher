@@ -15,7 +15,7 @@ class GoogleAPIService {
 
 	getProfileInfo(): Promise<any> {
 		if (!this.accessToken) {
-			throw Error("Setup access token for the API Service first");
+			throw new Error("Setup access token for the API Service first");
 		}
 		return fetch("https://www.googleapis.com/oauth2/v1/userinfo", {
 			method: "GET",

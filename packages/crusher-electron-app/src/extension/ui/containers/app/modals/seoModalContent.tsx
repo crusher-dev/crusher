@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { getSeoMetaInfo } from "../../../../redux/selectors/recorder";
 import { AssertionFormTable } from "../../../components/app/assertionFormTable";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
 import { ASSERTION_OPERATION_TYPE } from "../../../../interfaces/assertionOperation";
@@ -16,24 +18,25 @@ interface iSEOModalProps {
 	onClose?: any;
 }
 
-const getValidationFields = (seoInfo: iSeoMetaInformationMeta): iField[] => {
+const getValidationFields = (seoInfo: iSeoMetaInformationMeta): Array<iField> => {
 	if (!seoInfo) return [];
-	const { title } = seoInfo;
+	const title = seoInfo.title;
 	const metaTags = Object.values(seoInfo.metaTags);
 
-	const MetaTagsFields = metaTags.map((metaTag) => ({
-		name: metaTag.name,
-		value: metaTag.value,
-		meta: { type: "META" },
-	}));
+	const MetaTagsFields = metaTags.map((metaTag) => {
+		return { name: metaTag.name, value: metaTag.value, meta: { type: "META" } };
+	});
 	return [{ name: "title", value: title, meta: { type: "TITLE" } }, ...MetaTagsFields];
 };
 
-const getSeoFieldValue = (fieldInfo: iField) => fieldInfo.value;
+const getSeoFieldValue = (fieldInfo: iField) => {
+	return fieldInfo.value;
+};
 
 const SeoModalContent = (props: iSEOModalProps) => {
 	const { onClose } = props;
-	const [validationRows, setValidationRows] = useState([] as iAssertionRow[]);
+	const seoInfo = useSelector(getSeoMetaInfo);
+	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(seoInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
@@ -47,6 +50,25 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				validation: rowValidation,
 			},
 		]);
+	};
+
+	const addValidationRows = (
+		rows: Array<{
+			field: iField;
+			operation: ASSERTION_OPERATION_TYPE;
+			validation: string;
+		}>,
+	) => {
+		const newValidationRows = [...validationRows];
+		for (let i = 0; i < rows.length; i++) {
+			newValidationRows.push({
+				id: uniqueId("generate-checks-row"),
+				field: rows[i].field,
+				operation: rows[i].operation,
+				validation: rows[i].validation,
+			});
+		}
+		setValidationRows([...newValidationRows]);
 	};
 
 	const createNewSeoAssertionRow = () => {
@@ -63,34 +85,34 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				validation: getSeoFieldValue(validationFields[i]),
 			});
 		}
-		setValidationRows(newValidationRowsData.slice());
+		setValidationRows([...newValidationRowsData]);
 	};
 
 	const updateFieldOfValidationRow = (newFieldName: string, rowId: string) => {
 		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
-		if (rowIndex === -1) throw Error("Invalid id for validation row");
+		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 		const newField = validationFields.find((validationField) => validationField.name === newFieldName);
-		if (!newField) throw Error("Invalid field provided for validation row");
+		if (!newField) throw new Error("Invalid field provided for validation row");
 
 		validationRows[rowIndex].field = newField;
 		validationRows[rowIndex].validation = getSeoFieldValue(newField);
-		setValidationRows(validationRows.slice());
+		setValidationRows([...validationRows]);
 	};
 
 	const updateOperationOfValidationRow = (newFieldName: string, rowId: string) => {
 		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
-		if (rowIndex === -1) throw Error("Invalid id for validation row");
+		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].operation = newFieldName;
-		setValidationRows(validationRows.slice());
+		setValidationRows([...validationRows]);
 	};
 
 	const updateValidationValueOfValidationRow = (newValidationValue: string, rowId: string) => {
 		const rowIndex = validationRows.findIndex((validationRow) => validationRow.id === rowId);
-		if (rowIndex === -1) throw Error("Invalid id for validation row");
+		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].validation = newValidationValue;
-		setValidationRows(validationRows.slice());
+		setValidationRows([...validationRows]);
 	};
 
 	const saveSeoValidationAction = () => {
@@ -142,9 +164,9 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	);
 };
 
-const containerStyle = (areRowsPresent) => ({
-	marginTop: areRowsPresent ? pxToRemValue(36) : pxToRemValue(24),
-});
+const containerStyle = (areRowsPresent) => {
+	return { marginTop: areRowsPresent ? pxToRemValue(36) : pxToRemValue(24) };
+};
 const bottomBarStyle = {
 	display: "flex",
 	justifyContent: "flex-end",

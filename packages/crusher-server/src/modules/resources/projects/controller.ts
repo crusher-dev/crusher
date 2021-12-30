@@ -2,7 +2,8 @@ import { Inject, Service } from "typedi";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post } from "routing-controllers";
 import { ProjectsService } from "./service";
 import { ProjectWorkspaceService } from "./project.workspace.service";
-import { ICreateProjectPayload } from "@modules/resources/projects/interface";
+import { ICreateProjectEnvironmentPayload, ICreateProjectPayload } from "@modules/resources/projects/interface";
+import { UsersService } from "../users/service";
 
 @Service()
 @JsonController()

@@ -5,15 +5,16 @@ export class ExportsManager {
 		return this;
 	}
 
-	has(key: string) {
-		return this.exportsManager.has(key);
-	}
+  has(key: string) {
+    return this.exportsManager.has(key);
+  }
 
-	get(key: string) {
-		return this.exportsManager.get(key);
-	}
 
-	set(key: string, value: any) {
-		return this.exportsManager.set(key, value);
-	}
+  get(key: string) {
+    return this.exportsManager.get(key);
+  }
+
+  set(key: string, value: any) {
+    return this.exportsManager.set(key, value);
+  }
 }

@@ -1,11 +1,11 @@
 (function (h, o, t, j, a, r) {
 	h.hj =
 		h.hj ||
-		function (...args) {
-			(h.hj.q = h.hj.q || []).push(args);
+		function () {
+			(h.hj.q = h.hj.q || []).push(arguments);
 		};
 	h._hjSettings = { hjid: 1, hjsv: 5 };
-	[a] = o.getElementsByTagName("head");
+	a = o.getElementsByTagName("head")[0];
 	r = o.createElement("script");
 	r.async = 1;
 	r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;

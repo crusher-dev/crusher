@@ -71,12 +71,12 @@ export const redirectUserOnMount = async (data: IUserAndSystemInfoResponse, rout
 // query: Router Query object
 export const getGoogleAuthUrl = (query: any): string => {
 	const { inviteType, inviteCode } = query;
-
+	
 	const finalURL = new URL(resolvePathToBackendURI("/users/actions/auth.google"));
-	if (inviteType && inviteCode) {
+	if(inviteType && inviteCode) {
 		finalURL.searchParams.append("inviteType", inviteType);
 		finalURL.searchParams.append("inviteCode", inviteCode);
 	}
-
+	
 	return finalURL.toString();
-};
+}

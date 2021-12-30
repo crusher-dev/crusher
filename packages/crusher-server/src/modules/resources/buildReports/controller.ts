@@ -14,7 +14,7 @@ class BuildReportController {
 
 	@Authorized()
 	@Get("/builds/:build_id/reports/:report_id")
-	public async getReport(@Param("build_id") buildId: number): Promise<IBuildReportResponse> {
+	public async getReport(@Param("build_id") buildId: number, @Param("report_id") reportId: number): Promise<IBuildReportResponse> {
 		// @TODO: Use report_id here instead of build_id
 		return this.buildReportService.getBuildReport(buildId);
 	}

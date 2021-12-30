@@ -11,7 +11,7 @@ export const getTestListAPI = (projectId: number, otherFilters = {}) => {
 	const urlParamString = urlParams.toString();
 
 	return resolvePathToBackendURI(`/projects/${projectId}/tests?${urlParamString}`);
-};
+}
 export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, otherFilters = {}) => {
 	const filteredObj = pickBy(otherFilters, identity);
 	const urlParams = new URLSearchParams(filteredObj);

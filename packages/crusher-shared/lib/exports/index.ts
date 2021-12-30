@@ -1,7 +1,7 @@
 class ExportsManager {
 	store: Map<string, any>;
 
-	constructor(initialStore: [string, any][] = []) {
+	constructor(initialStore: Array<[string, any]> = []) {
 		this.store = new Map(initialStore);
 	}
 
@@ -18,7 +18,7 @@ class ExportsManager {
 		return true;
 	}
 
-	getEntriesArr(): [string, any][] {
+	getEntriesArr(): Array<[string, any]> {
 		return Array.from(this.store.entries());
 	}
 }

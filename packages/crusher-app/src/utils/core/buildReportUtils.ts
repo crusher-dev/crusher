@@ -59,16 +59,16 @@ export const groupTestByStatus = (tests: Pick<IBuildReportResponse, "tests">) =>
 	return statusTestTestInstanceGroup;
 };
 
-export const getCountByTestStatus = (tests: Pick<IBuildReportResponse, "tests">) => {
-	const testsGroupByStatus = groupTestByStatus(tests);
+export const getCountByTestStatus = (tests: Pick<IBuildReportResponse, "tests">)=>{
+	const testsGroupByStatus= groupTestByStatus(tests);
 
 	const statusObj = {};
-	for (const status of Object.keys(testsGroupByStatus)) {
-		statusObj[status] = flatten(Object.values(testsGroupByStatus[status])).length;
-	}
+	 Object.keys(testsGroupByStatus).map((status)=>{
+		statusObj[status] = flatten(Object.values(testsGroupByStatus[status])).length
+	})
 
 	return statusObj;
-};
+}
 
 export const getAllConfiguration = (tests: Pick<IBuildReportResponse, "tests">) => {
 	const parsedConfig = tests

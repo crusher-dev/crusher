@@ -8,4 +8,6 @@ export const getLastAction = (state: iReduxState): iAction | null => {
 	return actions ? actions[0] : null;
 };
 
-export const getSelectedActions = (state: iReduxState): { id: any }[] | null => state.actions.selectedActions;
+export const getSelectedActions = (state: iReduxState): Array<{ id: any }> | null => {
+	return state.actions.selectedActions;
+};

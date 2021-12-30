@@ -17,14 +17,16 @@ const VideoComponentSource = {
 /**
  * Crusher Video component.
  */
-export const VideoComponent: React.FC<VideoProps> = ({ src, autoPlay, css, ...props }) => (
-	<div className="rounded-10" css={[videoStyle, css]}>
-		<video controls height={"100%"} autoPlay={autoPlay} {...props}>
-			<source src={src} type="video/mp4" />
-			Your browser does not support HTML video.
-		</video>
-	</div>
-);
+export const VideoComponent: React.FC<VideoProps> = ({ src, autoPlay, css, ...props }) => {
+	return (
+		<div className="rounded-10" css={[videoStyle, css]}>
+			<video controls height={"100%"} autoPlay={autoPlay} {...props}>
+				<source src={src} type="video/mp4" />
+				Your browser does not support HTML video.
+			</video>
+		</div>
+	);
+};
 
 const videoStyle = css`
 	background-color: #191e22;

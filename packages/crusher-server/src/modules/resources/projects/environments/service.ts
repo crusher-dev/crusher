@@ -11,7 +11,7 @@ class ProjectEnvironmentService {
 	private dbManager: DBManager;
 
 	@CamelizeResponse()
-	async getEnvironmentsList(projectId: number): Promise<KeysToCamelCase<IEnvironmentTable>[]> {
+	async getEnvironmentsList(projectId: number): Promise<Array<KeysToCamelCase<IEnvironmentTable>>> {
 		return this.dbManager.fetchAllRows("SELECT * FROM environments WHERE project_id = ?", [projectId]);
 	}
 

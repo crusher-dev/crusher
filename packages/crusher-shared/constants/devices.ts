@@ -1,6 +1,6 @@
 import { iDevice } from "../types/extension/device";
 
-const devices: iDevice[] = [
+const devices: Array<iDevice> = [
 	{
 		id: "Pixel33XL",
 		name: "Mobile",

@@ -1,4 +1,3 @@
-const isFn = a => typeof a === 'function';
 export class DOM {
 	static isElement(element: any) {
 		return element instanceof Element || element instanceof HTMLDocument;
@@ -10,7 +9,7 @@ export class DOM {
 		let length;
 
 		for (i = 0, length = links.length; i < length; i++) {
-			links[i].target === "_blank" && links[i].removeAttribute("target");
+			links[i].target == "_blank" && links[i].removeAttribute("target");
 		}
 	}
 
@@ -87,9 +86,9 @@ export interface iPageSeoMeta {
 }
 
 export function getAllSeoMetaInfo() {
-	const metaElements: HTMLMetaElement[] = document.querySelectorAll("meta") as any.slice();
+	const metaElements: Array<HTMLMetaElement> = [...(document.querySelectorAll("meta") as any)];
 	const metaTagsValuesMap: iPageSeoMeta = metaElements.reduce((prev: any, current: HTMLMetaElement) => {
-		const name = current && isFn(current.getAttribute) ? current.getAttribute("name") : null;
+		const name = current && typeof current.getAttribute === "function" ? current.getAttribute("name") : null;
 		if (!name) {
 			return prev;
 		}

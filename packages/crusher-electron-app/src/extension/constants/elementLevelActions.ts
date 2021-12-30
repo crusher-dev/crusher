@@ -1,7 +1,7 @@
 import { ELEMENT_LEVEL_ACTION } from "../interfaces/elementLevelAction";
 import { iActionDescription } from "../interfaces/actionDescription";
 
-const ELEMENT_LEVEL_ACTIONS_LIST: iActionDescription[] = [
+const ELEMENT_LEVEL_ACTIONS_LIST: Array<iActionDescription> = [
 	{
 		id: ELEMENT_LEVEL_ACTION.CLICK,
 		title: "Click",

@@ -1,11 +1,13 @@
-import { appendParamsToURI } from "./url";
+import { appendParamsToURI, checkIfAbsoluteURI } from "./url";
 import { Logger } from "./logger";
 import * as chalk from "chalk";
 
 const _fetch = require("node-fetch").default;
 
 function prepareFetchPayload(uri, options: any = {}) {
-	let { method = "GET", headers = {}, payload = {} } = options;
+	let method = options.method ? options.method : "GET";
+	let headers = options.headers ? options.headers : {};
+	let payload = options.payload ? options.payload : {};
 
 	delete headers["host"];
 
@@ -21,7 +23,8 @@ function prepareFetchPayload(uri, options: any = {}) {
 			};
 			break;
 		default:
-			throw Error("Invalid post-method passed, only GET and POST supported");
+			throw new Error("Invalid post-method passed, only GET and POST supported");
+			break;
 	}
 	return { uri, method, headers: headers };
 }
@@ -49,7 +52,9 @@ export function request(_uri, options: any = {}) {
 					const parsedJSON = JSON.parse(txt);
 					return parsedJSON;
 				})
-				.catch(() => txt);
+				.catch((err) => {
+					return txt;
+				});
 		} catch (err) {
 			const elapsedHrTime = process.hrtime(startHrTime);
 			const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;

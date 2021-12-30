@@ -6,11 +6,11 @@ import { UserAgent } from "@shared/types/userAgent";
 import UserAgents from "@shared/constants/userAgents";
 
 const embeddedUrlRegExp = new RegExp(/^(['"])(.*)\1$/);
-let { BACKEND_URL } = process.env;
+let BACKEND_URL = process.env.BACKEND_URL;
 
 export class AdvancedURL {
 	static validateURL(url: string) {
-		return /(?:^|\s)(https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?/.test(url);
+		return /(?:^|\s)((https?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)/.test(url);
 	}
 
 	static getScheme(url: string) {
@@ -74,7 +74,7 @@ export class AdvancedURL {
 		const defaultDevice = devices[1];
 		if (deviceId) {
 			const device = getDevice(deviceId);
-			return device || defaultDevice;
+			return device ? device : defaultDevice;
 		}
 		return defaultDevice;
 	}

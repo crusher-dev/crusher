@@ -1,8 +1,8 @@
 export function appendParamsToURI(uri, params) {
 	const currentURL = new URL(uri);
-	for (const paramKey of Object.keys(params)) {
+	Object.keys(params).forEach((paramKey) => {
 		currentURL.searchParams.append(paramKey, params[paramKey]);
-	}
+	});
 
 	return currentURL.href;
 }
@@ -19,13 +19,13 @@ export function extractHostname(url) {
 	if (url.indexOf("//") > -1) {
 		hostname = url.split("/")[2];
 	} else {
-		[hostname] = url.split("/");
+		hostname = url.split("/")[0];
 	}
 
 	//find & remove port number
-	[hostname] = hostname.split(":");
+	hostname = hostname.split(":")[0];
 	//find & remove "?"
-	[hostname] = hostname.split("?");
+	hostname = hostname.split("?")[0];
 
 	return hostname.split(".").join(".");
 }

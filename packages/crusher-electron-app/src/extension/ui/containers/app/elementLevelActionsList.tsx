@@ -3,14 +3,16 @@ import { List } from "../../components/app/list";
 import { ELEMENT_LEVEL_ACTIONS_LIST } from "../../../constants/elementLevelActions";
 import { ELEMENT_LEVEL_ACTION } from "../../../interfaces/elementLevelAction";
 import { performActionInFrame, turnOffInspectModeInFrame } from "../../../messageListener";
-import { getActionsRecordingState } from "../../../redux/selectors/recorder";
+import { getActionsRecordingState, getInspectModeState } from "../../../redux/selectors/recorder";
 import { useSelector } from "react-redux";
 import { getStore } from "../../../redux/store";
+import { recordAction } from "../../../redux/actions/actions";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ACTIONS_RECORDING_STATE } from "../../../interfaces/actionsRecordingState";
 import { updateActionsModalState, updateActionsRecordingState } from "../../../redux/actions/recorder";
 import { ACTIONS_MODAL_STATE } from "../../../interfaces/actionsModalState";
 import { recordActionWithHoverNodes } from "crusher-electron-app/src/extension/redux/utils/actions";
+import { inspect } from "util";
 
 interface iElementLevelActionListProps {
 	deviceIframeRef: RefObject<HTMLWebViewElement>;
@@ -18,13 +20,16 @@ interface iElementLevelActionListProps {
 
 const ElementLevelActionsList = (props: iElementLevelActionListProps) => {
 	const recordingState = useSelector(getActionsRecordingState);
+	const inspecteModeState = useSelector(getInspectModeState);
 
-	const items = ELEMENT_LEVEL_ACTIONS_LIST.map((action) => ({
-		id: action.id,
-		icon: action.icon,
-		title: action.title,
-		desc: action.desc,
-	}));
+	const items = ELEMENT_LEVEL_ACTIONS_LIST.map((action) => {
+		return {
+			id: action.id,
+			icon: action.icon,
+			title: action.title,
+			desc: action.desc,
+		};
+	});
 
 	const recordElementAction = (type: ActionsInTestEnum, meta: any = null, screenshot: string | null = null) => {
 		recordActionWithHoverNodes({

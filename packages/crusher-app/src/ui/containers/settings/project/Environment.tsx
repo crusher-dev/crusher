@@ -59,40 +59,42 @@ function VariableSection({ envId }) {
 		<React.Fragment>
 			<div className={"text-13 mt-32 mb-24 font-600"}>Variables</div>
 
-			{vars?.map((_var, i) => (
-				<div className={"mb-20 flex justify-between text-13 items-center"}>
-					<div className={"flex"}>
-						<div className={"flex items-center"}>
-							Name
-							<Input
-								css={css`
-									height: 32rem;
-									width: 150rem;
-								`}
-								size={"small"}
-								className={"ml-20"}
-								placeholder={"Enter some name"}
-								onBlur={changeVarValue.bind(this, i, "variableName")}
-								initialValue={_var.variableName.value}
-							/>
+			{vars?.map((_var, i) => {
+				return (
+					<div className={"mb-20 flex justify-between text-13 items-center"}>
+						<div className={"flex"}>
+							<div className={"flex items-center"}>
+								Name
+								<Input
+									css={css`
+										height: 32rem;
+										width: 150rem;
+									`}
+									size={"small"}
+									className={"ml-20"}
+									placeholder={"Enter some name"}
+									onBlur={changeVarValue.bind(this, i, "variableName")}
+									initialValue={_var.variableName.value}
+								/>
+							</div>
+							<div className={"flex items-center ml-80"}>
+								Value
+								<Input
+									css={css`
+										height: 32rem;
+										width: 150rem;
+									`}
+									className={"ml-20"}
+									placeholder={"Enter some name"}
+									onBlur={changeVarValue.bind(this, i, "variableValue")}
+									initialValue={_var.variableValue.value}
+								/>
+							</div>
 						</div>
-						<div className={"flex items-center ml-80"}>
-							Value
-							<Input
-								css={css`
-									height: 32rem;
-									width: 150rem;
-								`}
-								className={"ml-20"}
-								placeholder={"Enter some name"}
-								onBlur={changeVarValue.bind(this, i, "variableValue")}
-								initialValue={_var.variableValue.value}
-							/>
-						</div>
+						<CloseSVG height={"10rem"} width={"10rem"} onClick={deleteVar.bind(this, i)} />
 					</div>
-					<CloseSVG height={"10rem"} width={"10rem"} onClick={deleteVar.bind(this, i)} />
-				</div>
-			))}
+				);
+			})}
 
 			<div className={"flex justify-end mt-12 mb-20"}>
 				<Button
@@ -117,10 +119,9 @@ const selectBoxCSS = css`
 `;
 const getBrowserValues = () => {
 	return (
-		["CHROME", "FIREFOX", "SAFARI"].map((browserName) => ({
-			label: sentenceCase(browserName),
-			value: browserName,
-		})) ?? []
+		["CHROME", "FIREFOX", "SAFARI"].map((browserName) => {
+			return { label: sentenceCase(browserName), value: browserName };
+		}) ?? []
 	);
 };
 
@@ -249,7 +250,7 @@ function EnvironmentForm({ id }) {
 }
 
 function EnvironmentCard({ environmentData, id }) {
-	const { name, isOpen } = environmentData;
+	const { name, isOpen, id: envId } = environmentData;
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
 	const { notSavedInDB } = environmentsInStore[id];
@@ -352,9 +353,9 @@ export const Environment = () => {
 				<hr css={basicHR} />
 
 				<Conditional showIf={environmentsInStore.length > 0}>
-					{environmentsInStore.map((environmentData, i) => (
-						<EnvironmentCard environmentData={environmentData} key={i} id={i} />
-					))}
+					{environmentsInStore.map((environmentData, i) => {
+						return <EnvironmentCard environmentData={environmentData} key={i} id={i} />;
+					})}
 				</Conditional>
 				<Conditional showIf={environmentsInStore.length < 1}>
 					<div className={"text-13 mt-40"}>You don't have any environments yet in your project.</div>

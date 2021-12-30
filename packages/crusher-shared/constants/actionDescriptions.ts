@@ -29,13 +29,15 @@ const ACTION_DESCRIPTIONS = {
 	[ACTIONS_IN_TEST.ASSERT_ELEMENT]: (meta: ActionMeta) => {
 		return `Assert element info from ${meta.selector}`;
 	},
-	[ACTIONS_IN_TEST.VALIDATE_SEO]: () => {
+	[ACTIONS_IN_TEST.VALIDATE_SEO]: (meta: ActionMeta) => {
 		return `Validating SEO info`;
 	},
-	[ACTIONS_IN_TEST.CUSTOM_CODE]: () => {
+	[ACTIONS_IN_TEST.CUSTOM_CODE]: (meta: ActionMeta) => {
 		return `Executing custom code`;
 	},
-	[ACTIONS_IN_TEST.RUN_TEMPLATE]: () => "Running a template with series of steps",
+	[ACTIONS_IN_TEST.RUN_TEMPLATE]: (meta: ActionMeta) => {
+		return 'Running a template with series of steps';
+	}
 };
 
 export { ACTION_DESCRIPTIONS };

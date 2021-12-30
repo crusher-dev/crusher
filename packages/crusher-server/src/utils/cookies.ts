@@ -1,10 +1,12 @@
+import { extractHostname } from "./url";
+
 // Setting an empty user domain in cookie, sets the current opened
 // domain by default.
 const USER_DOMAIN = "";
 
 export function setUserCookie(cookie, options = {}, res) {
 	if (!res) {
-		throw Error("Response object is null.");
+		throw new Error("Response object is null.");
 	}
 	res.cookie(cookie.key, cookie.value, { ...options, sameSite: "none", secure: true });
 }
@@ -19,7 +21,7 @@ export function setUserAuthorizationCookies(token: string, res) {
 }
 
 export function clearUserAuthorizationCookies(req, res) {
-	const USER_DOMAIN = req.get("host") || "";
+	const USER_DOMAIN = req.get("host") ? req.get("host") : "";
 	const IS_LOALHOST = USER_DOMAIN.startsWith("localhost") || USER_DOMAIN.startsWith("127.0.0.1");
 
 	setUserCookie({ key: "token", value: "" }, { httpOnly: true, domain: IS_LOALHOST ? "" : USER_DOMAIN }, res);

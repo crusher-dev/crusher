@@ -12,7 +12,7 @@ import { LoadingScreen } from "@ui/layout/LoadingScreen";
 import { loadCrisp, loadSegment, loadUserLeap } from "@utils/common/scriptUtils";
 
 import { useBasicSEO } from "../src/hooks/seo";
-import { usePageSegmentAnalytics } from "../src/hooks/analytics";
+import {usePageSegmentAnalytics} from "../src/hooks/analytics";
 import { useSaveTemp } from "../src/hooks/tempTest";
 import { loadUserDataAndRedirect } from "../src/hooks/user";
 import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
@@ -25,7 +25,7 @@ function App({ Component, pageProps }: AppProps<any>) {
 	useAtomDevtools(rootGlobalAtom);
 	useBasicSEO({ favicon: "/assets/img/favicon.png" });
 	useSaveTemp();
-	usePageSegmentAnalytics();
+	usePageSegmentAnalytics()
 	useEffect(() => {
 		setTimeout(() => {
 			loadUserLeap();
@@ -42,7 +42,7 @@ function App({ Component, pageProps }: AppProps<any>) {
 			<SWRConfig
 				value={{
 					fetcher: (resource, init) =>
-						fetch(resource, { ...init, credentials: "include", headers: init?.headers ? init.headers : {} }).then((res) => res.json()),
+						fetch(resource, { ...init, credentials: "include", headers: { ...(init && init.headers ? init.headers : {}) } }).then((res) => res.json()),
 				}}
 			>
 				<Conditional showIf={!userDataLoaded}>

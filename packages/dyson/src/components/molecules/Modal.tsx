@@ -15,23 +15,25 @@ type TModalProps = {
 	onOutsideClick?: () => void;
 } & React.DetailedHTMLProps<any, any>;
 
-export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalProps) => (
-	<OverlayTransparent lightOverlay={true}>
-		<CenterLayout>
-			<OnOutsideClick onOutsideClick={onOutsideClick}>
-				<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
-					{children}
+export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalProps) => {
+	return (
+		<OverlayTransparent lightOverlay={true}>
+			<CenterLayout>
+				<OnOutsideClick onOutsideClick={onOutsideClick}>
+					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
+						{children}
 
-					<Conditional showIf={true}>
-						<div css={closeIcon} onClick={onClose}>
-							<CloseSVG height={13} width={13} />
-						</div>
-					</Conditional>
-				</div>
-			</OnOutsideClick>
-		</CenterLayout>
-	</OverlayTransparent>
-);
+						<Conditional showIf={true}>
+							<div css={closeIcon} onClick={onClose}>
+								<CloseSVG height={13} width={13} />
+							</div>
+						</Conditional>
+					</div>
+				</OnOutsideClick>
+			</CenterLayout>
+		</OverlayTransparent>
+	);
+};
 
 const primaryModalStyle = css`
 	min-width: 612rem;

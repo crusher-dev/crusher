@@ -13,9 +13,13 @@ module.exports = {
 	purge: [],
 	darkMode: false, // or 'media' or 'class'
 	theme: {
-		padding: getSpacingSizes(16),
+		padding: {
+			...getSpacingSizes(16),
+		},
 		screens: {},
-		margin: getSpacingSizes(16),
+		margin: {
+			...getSpacingSizes(16),
+		},
 		fontSize: {
 			12: "0.75rem",
 			13: "0.81rem",

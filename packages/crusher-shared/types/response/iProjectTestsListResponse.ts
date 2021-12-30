@@ -12,4 +12,4 @@ export interface IProjectTestItem {
 	firstRunCompleted: boolean;
 }
 
-export type IProjectTestsListResponse = { list: IProjectTestItem[]; totalPages: number; currentPage: number };
+export type IProjectTestsListResponse = { list: Array<IProjectTestItem>; totalPages: number; currentPage: number; };

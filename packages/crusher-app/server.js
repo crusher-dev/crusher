@@ -5,7 +5,7 @@ require("dotenv").config();
 // Created this for proxy. Not be used in other cases
 const express = require("express");
 const proxy = require("express-http-proxy");
-const { port = 3000 } = process.env;
+const port = process.env.port || 3000;
 const server = express();
 const fs = require("fs");
 
@@ -33,7 +33,7 @@ server.use(async (req, res, next) => {
 			res.end(data);
 		}
 		next();
-	} catch {
+	} catch (e) {
 		next();
 	}
 });
@@ -53,7 +53,7 @@ function serveFile(filePath, res) {
 }
 
 function getSanitizedPath(path) {
-	[path] = path.split("?");
+	path = path.split("?")[0];
 	if (path.charAt(path.length - 1) === "/") {
 		return path.substr(0, path.length - 1);
 	}

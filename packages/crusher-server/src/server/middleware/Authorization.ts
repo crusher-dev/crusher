@@ -3,7 +3,7 @@ import { clearAuthCookies, decodeToken } from "@utils/auth";
 import * as cookie from "cookie";
 
 export function authorization() {
-	return (action: Action) => {
+	return async (action: Action) => {
 		if (action.request.headers.method === "OPTIONS") {
 			action.response.status(200);
 			action.response.end();
@@ -16,7 +16,7 @@ export function authorization() {
 				return false;
 			}
 			return user;
-		} catch {
+		} catch (error) {
 			clearAuthCookies(action.response);
 			return false;
 		}
@@ -24,7 +24,7 @@ export function authorization() {
 }
 
 export function getCurrentUserChecker() {
-	return (action: Action) => {
+	return async (action: Action) => {
 		if (action.request.headers.method === "OPTIONS") {
 			action.response.status(200);
 			action.response.end();

@@ -62,7 +62,7 @@ export class UserController {
 	@Get("/users/actions/auth.google")
 	async authenticateWithGoogle(@Res() res: any, @QueryParams() params) {
 		if (!this.oauth2Client) {
-			throw Error("This functionality is not supported");
+			throw new Error("This functionality is not supported");
 		}
 
 		const { inviteCode, inviteType } = params;
@@ -125,7 +125,7 @@ export class UserController {
 	}
 
 	@Post("/users/actions/forgot_password")
-	async forgotPassword(@Body() body: { email: string }) {
+	async forgotPassword(@Body() body: { email: string }, @Req() req: any, @Res() res: any) {
 		const status = await this.userAuthService.forgotPassword(body.email);
 		return {
 			status,
@@ -134,7 +134,7 @@ export class UserController {
 
 	@Post("/users/actions/reset_password")
 	async resetPassword(@Body() body: { token: string; password: string }, @Req() req: any, @Res() res: any) {
-		const user = await this.userAuthService.resetPassword(body.token, body.password, req, res);
+		const user =await this.userAuthService.resetPassword(body.token, body.password, req, res);
 		const systemInfo = await this.usersService.getUserAndSystemInfo(user.id);
 
 		return {
@@ -170,7 +170,7 @@ export class UserController {
 	@Get("/users/invite.link")
 	async getUserProjectInviteLink(@CurrentUser({ required: true }) user, @QueryParams() params: { projectId: number }) {
 		const { projectId } = params;
-		if (!projectId) throw Error("Invite link to team is not supported yet. Need project_id to work");
+		if (!projectId) throw new Error("Invite link to team is not supported yet. Need project_id to work");
 
 		const { team_id } = user;
 		return this.userInviteService.fetchPublicProjectInviteCode(projectId, team_id, null);
@@ -178,7 +178,7 @@ export class UserController {
 
 	@Authorized()
 	@Post("/users/actions/invite.project.members")
-	async inviteMembersToProject(@CurrentUser({ required: true }) user, @Body() body: { projectId: number; emails: string[] }) {
+	async inviteMembersToProject(@CurrentUser({ required: true }) user, @Body() body: { projectId: number; emails: Array<string> }) {
 		const userRecord = await this.usersService.getUserInfo(user.user_id);
 
 		const referralCode = await this.userInviteService.createProjectInviteCode({

@@ -11,7 +11,7 @@ class MysqlDatabase implements IDatabaseManager {
 	}
 
 	isConnectionAlive(): Promise<boolean> {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			this.mysqlClient
 				.getConnection()
 				.then((connection) => {
@@ -28,30 +28,32 @@ class MysqlDatabase implements IDatabaseManager {
 	insert(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		console.log("[INSERT SQL QUERY]", query, valuesToEscape);
 
-		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => ({
-			insertId: result.insertId,
-		}));
+		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => {
+			return { insertId: result.insertId };
+		});
 	}
 
 	update(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		console.log("[UPDATE SQL QUERY]", query, valuesToEscape);
-		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => ({
-			changedRows: result.changedRows,
-		}));
+		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => {
+			return { changedRows: result.changedRows };
+		});
 	}
 
 	delete(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		console.log("[DELETE SQL QUERY]", query, valuesToEscape);
 
-		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => ({
-			deletedRows: result.changedRows,
-		}));
+		return this.mysqlClient.execute(query, valuesToEscape).then(([result]) => {
+			return { deletedRows: result.changedRows };
+		});
 	}
 
 	fetchSingleRow(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		console.log("[SQL QUERY]", query, valuesToEscape);
 
-		return this.mysqlClient.execute(query, valuesToEscape).then(([rows]) => rows[0]);
+		return this.mysqlClient.execute(query, valuesToEscape).then(([rows]) => {
+			return rows[0];
+		});
 	}
 
 	format(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
@@ -61,7 +63,9 @@ class MysqlDatabase implements IDatabaseManager {
 	fetchAllRows(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
 		console.log("[SQL QUERY]", query, valuesToEscape);
 
-		return this.mysqlClient.execute(query, valuesToEscape).then(([rows]) => rows);
+		return this.mysqlClient.execute(query, valuesToEscape).then(([rows]) => {
+			return rows;
+		});
 	}
 }
 

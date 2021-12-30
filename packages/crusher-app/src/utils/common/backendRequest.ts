@@ -26,7 +26,7 @@ function prepareFetchPayload(uri: string, options: RequestOptions) {
 			};
 			break;
 		default:
-			throw Error("Invalid post-method passed, only GET and POST supported");
+			throw new Error("Invalid post-method passed, only GET and POST supported");
 	}
 
 	return { uri, method, headers: headers };
@@ -44,11 +44,11 @@ export function backendRequest(_uri: string, options: RequestOptions = {}) {
 		body: method !== RequestMethod.GET ? JSON.stringify(payload) : null,
 	}).then(async (requestResponse: any) => {
 		if (requestResponse.status > 500) {
-			throw Error(`Server error ${requestResponse.status} at ${uri}`);
+			throw new Error(`Server error ${requestResponse.status} at ${uri}`);
 		}
 		if (requestResponse.status === 400) {
 			const { message } = await requestResponse.json();
-			throw Error(message);
+			throw new Error(message);
 		}
 		return requestResponse.json();
 	});

@@ -60,7 +60,7 @@ class UsersService {
 	async setupInitialUserWorkspace(
 		user: Omit<ICreateUserPayload, "password" | "uuid"> & { id: number; teamId?: number; projectId?: number },
 	): Promise<{ userId: number; teamId: number; projectId: number }> {
-		const stripeCustomerId = this.stripeManager.isAvailable() ? await this.stripeManager.createCustomer(String(user.name), user.email) : null;
+		const stripeCustomerId = this.stripeManager.isAvailable() ? await this.stripeManager.createCustomer(`${user.name}`, user.email) : null;
 
 		let userTeamId = user.teamId;
 		// Create and setup team
@@ -140,31 +140,32 @@ class UsersService {
 		const teamInfo = userInfo ? await this.teamsService.getTeam(userInfo.teamId) : null;
 		const teamProjects = userInfo && teamInfo ? await this.projectsService.getProjects(teamInfo.id) : null;
 
-		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => ({
-			userId: userInfo.id,
-			name: userInfo.name,
-			email: userInfo.email,
-			uuid: userInfo.uuid,
-			avatar: null,
+		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => {
+			return {
+				userId: userInfo.id,
+				name: userInfo.name,
+				email: userInfo.email,
+				uuid: userInfo.uuid,
+				avatar: null,
+				// @NOTE: Remove hardcoding from the next 3 fields
+				meta: userInfo.meta ? JSON.parse(userInfo.meta) : {},
+			};
+		};
 
-			// @NOTE: Remove hardcoding from the next 3 fields
-			meta: userInfo.meta ? JSON.parse(userInfo.meta) : {},
-		});
-
-		const getTeamData = (teamInfo: KeysToCamelCase<ITeamsTable>) => ({
-			id: teamInfo.id,
-			uuid: teamInfo.uuid,
-			name: teamInfo.name,
-			meta: teamInfo.meta ? JSON.parse(teamInfo.meta) : {},
-			plan: teamInfo.tier,
-		});
+		const getTeamData = (teamInfo: KeysToCamelCase<ITeamsTable>) => {
+			return {
+				id: teamInfo.id,
+				uuid: teamInfo.uuid,
+				name: teamInfo.name,
+				meta: teamInfo.meta ? JSON.parse(teamInfo.meta) : {},
+				plan: teamInfo.tier,
+			};
+		};
 
 		const projectsDataArr = teamProjects
-			? teamProjects.map((project) => ({
-					...project,
-					meta: project.meta ? JSON.parse(project.meta) : {},
-					visualBaseline: project.visualBaseline,
-			  }))
+			? teamProjects.map((project) => {
+					return { ...project, meta: project.meta ? JSON.parse(project.meta) : {}, visualBaseline: project.visualBaseline };
+			  })
 			: null;
 
 		const out = {
@@ -205,7 +206,7 @@ class UsersService {
 	}
 
 	@CamelizeResponse()
-	async getUsersInProject(projectId: number): Promise<KeysToCamelCase<IUserTable>[]> {
+	async getUsersInProject(projectId: number): Promise<Array<KeysToCamelCase<IUserTable>>> {
 		return this.dbManager.fetchAllRows("SELECT users.* FROM users, user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
 			projectId,
 		]);

@@ -1,5 +1,6 @@
 import { Service } from "typedi";
-import { GitIntegrations, iGithubIntegration } from "./mongo/gitIntegrations";
+import { GitIntegrations } from "./mongo/gitIntegrations";
+import { iGithubIntegration } from "./mongo/gitIntegrations";
 
 @Service()
 export class GithubIntegrationService {
@@ -18,7 +19,7 @@ export class GithubIntegrationService {
 
 	async getInstallationRepo(repoName: string, projectId: number): Promise<iGithubIntegration | null> {
 		console.log("REPO NAME IS", repoName, projectId);
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			GitIntegrations.findOne({ projectId: { $eq: projectId }, repoName: { $eq: repoName } }, (err, doc) => {
 				if (err || !doc) return resolve(null);
 

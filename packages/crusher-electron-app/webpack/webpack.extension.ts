@@ -74,8 +74,8 @@ let finalConfig: any = {
 		new webpack.DefinePlugin({
 			NODE_ENV: process.env.NODE_ENV === "development" ? "development" : "production",
 			"process.env": {
-				BACKEND_URL: JSON.stringify(process.env.BACKEND_URL || "https://backend.crusher.dev/"),
-				FRONTEND_URL: JSON.stringify(process.env.FRONTEND_URL || "https://app.crusher.dev/"),
+				BACKEND_URL: JSON.stringify(process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://backend.crusher.dev/"),
+				FRONTEND_URL: JSON.stringify(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "https://app.crusher.dev/"),
 			},
 		}),
 	],

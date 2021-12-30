@@ -1,4 +1,4 @@
-import { Get, JsonController } from "routing-controllers";
+import { Get, JsonController, Req, Res } from "routing-controllers";
 import { Service } from "typedi";
 import { fetch } from "@utils/fetch";
 
@@ -10,7 +10,7 @@ class holdReleaseInfo {
 @JsonController("/release")
 export class ReleaseController {
 	@Get("/info")
-	async getElectronAppReleaseInfo(): Promise<any> {
+	async getElectronAppReleaseInfo(@Req() req: any, @Res() res: any): Promise<any> {
 		if (holdReleaseInfo.data !== null) return holdReleaseInfo.data;
 		const data: any = await fetch("https://api.github.com/repos/crusherdev/celectron-releases/releases/latest");
 

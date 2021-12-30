@@ -73,15 +73,16 @@ function resolveTsconfigPathsToAlias({ tsconfigPath = "./tsconfig.json", webpack
 	const aliases = {};
 
 	const getItemName = (alias) => path.resolve(webpackConfigBasePath, alias.replace("/*", "").replace("*", ""));
-	for (const item of Object.keys(paths)) {
-		const modifiedKey = item.replace("/*", "");
+	paths &&
+		Object.keys(paths).forEach((item) => {
+			const modifiedKey = item.replace("/*", "");
 
-		const aliasItems = paths[item];
+			const aliasItems = paths[item];
 
-		const processedAliases = Array.isArray(aliasItems) ? aliasItems.map((alias) => getItemName(alias)) : getItemName(aliasItems);
+			const processedAliases = Array.isArray(aliasItems) ? aliasItems.map((alias) => getItemName(alias)) : getItemName(aliasItems);
 
-		aliases[modifiedKey] = processedAliases;
-	}
+			aliases[modifiedKey] = processedAliases;
+		});
 
 	return aliases;
 }

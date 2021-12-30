@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import { useCallback, useMemo, useState } from "react";
 import { hashCode } from "@utils/helpers";
+import { Conditional } from "dyson/src/components/layouts";
 import dynamic from "next/dynamic";
 
 const ImageSlider = dynamic(() => import("react-image-comparison-slider"), { ssr: false });
@@ -56,14 +57,13 @@ export function CompareImage({ leftImage, rightImage }) {
 		}, 300);
 	}, []);
 
-	const Component = useCallback(
-		() => (
+	const Component = useCallback(() => {
+		return (
 			<div style={{ width: resolution.width, height: resolution.height, maxWidth: "100%" }}>
 				<ImageSlider image1={leftImage} image2={rightImage} sliderWidth={3} sliderColor="#7068f2" handleColor="#7068f2" handleBackgroundColor="white" />
 			</div>
-		),
-		[resolution.height],
-	);
+		);
+	}, [resolution.height]);
 
 	return (
 		<div>

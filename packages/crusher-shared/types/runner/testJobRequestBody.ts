@@ -4,5 +4,5 @@ export interface iTestJobRequestBody {
 	id?: number;
 	testType: "DRAFT" | "SAVED";
 	name?: string;
-	events: iAction[];
+	events: Array<iAction>;
 }

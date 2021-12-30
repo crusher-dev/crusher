@@ -89,7 +89,7 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 		}
 
 		if (ancestor) ancestor = ancestor.parentElement;
-		++level;
+		level += 1;
 	}
 }
 
@@ -104,7 +104,9 @@ export function* generateRelativeCueSets({
 	if (!relativeCues.length) return;
 
 	// combine relative with target cues
-	for (const relativeCue of relativeCues) {
+	for (let i = 0; i < relativeCues.length; i++) {
+		const relativeCue = relativeCues[i];
+
 		// yield 1 relative cue
 		yield buildCueSet([relativeCue]);
 
@@ -158,23 +160,24 @@ export function* generateSortedCueSets(
 	function prepareBatch(): CueSet[] {
 		const prepared: CueSet[] = [];
 
-		for (const cueSet of batch
+		batch
 			// sort so we take the lower penalty duplicates first
-			.sort(compareCueSet)) {
-			// include the test attribute
-			if (testAttributeCue && !cueSet.cues.some((c) => c.penalty === 0)) {
-				cueSet.cues.unshift(testAttributeCue);
-			}
+			.sort(compareCueSet)
+			.forEach((cueSet) => {
+				// include the test attribute
+				if (testAttributeCue && !cueSet.cues.some((c) => c.penalty === 0)) {
+					cueSet.cues.unshift(testAttributeCue);
+				}
 
-			const hash = cueSet.cues
-				.map((c) => c.value)
-				.sort()
-				.join(",");
-			if (yieldedHashes.has(hash)) continue;
+				const hash = cueSet.cues
+					.map((c) => c.value)
+					.sort()
+					.join(",");
+				if (yieldedHashes.has(hash)) return;
 
-			yieldedHashes.add(hash);
-			prepared.push(cueSet);
-		}
+				yieldedHashes.add(hash);
+				prepared.push(cueSet);
+			});
 
 		batch = [];
 

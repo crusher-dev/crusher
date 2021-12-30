@@ -6,7 +6,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 	buildId: number;
 	buildTestInstanceId: number;
 
-	constructor(buildId: number, buildTestInstanceId: number) {
+	constructor(buildId: number, buildTestInstanceId: number, githubCheckRunId: string | null = null) {
 		this.buildId = buildId;
 		this.buildTestInstanceId = buildTestInstanceId;
 	}
@@ -15,7 +15,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 		return url.resolve(process.env.BACKEND_URL, relativeUrl);
 	}
 
-	async notifyTestStarted(message: string) {
+	async notifyTestStarted(message: string, meta: any) {
 		await fetch(this.getRequestUrl(`/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`), {
 			method: "POST",
 			headers: {
@@ -58,7 +58,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 			return this.notifyTestFinished(message, true, meta);
 		}
 
-		throw Error("Invalid format to log test state");
+		throw new Error("Invalid format to log test state");
 	}
 
 	async logStep(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta): Promise<void> {

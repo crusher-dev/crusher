@@ -2,6 +2,7 @@ import { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
 import { JobReportStatus } from "@crusher-shared/types/jobReportStatus";
 import { PLATFORM } from "@crusher-shared/types/platform";
+import { iAction } from "@crusher-shared/types/action";
 import { IBuildReportResponse } from "@crusher-shared/types/response/iBuildReportResponse";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BuildTestInstancesService } from "../builds/instances/service";
@@ -14,7 +15,7 @@ import {
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum, IBuildReportTable, TestInstanceResultSetConclusion, TestInstanceResultSetStatus } from "./interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
-import { BuildInstanceResults } from "../builds/instances/mongo/buildInstanceResults";
+import { BuildInstanceResults, IBuildInstanceResult } from "../builds/instances/mongo/buildInstanceResults";
 import { BuildTestInstanceScreenshotService } from "../builds/instances/screenshots.service";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
@@ -56,28 +57,24 @@ export class BuildReportService {
 	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
 
 	private getInstanceResultWithDiffComparision(
-		actionResults: any[],
-		instanceScreenshotsRecords: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }[],
+		actionResults: Array<any>,
+		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>,
 	) {
 		const instanceScreenshotsRecordsMap: {
 			[key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string; currentScreenshotUrl: string };
-		} = instanceScreenshotsRecords.reduce(
-			(prev, current) => ({
-				...prev,
-				[current.actionIndex]: current,
-			}),
-			{},
-		);
+		} = instanceScreenshotsRecords.reduce((prev, current) => {
+			return { ...prev, [current.actionIndex]: current };
+		}, {});
 
 		// @TODO: Cleanup tihs logic and use proper typescript types
 		return actionResults.map((actionResult, actionIndex) => {
 			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType)) {
-				if (!actionResult.meta || !actionResult.meta.outputs) return actionResult;
+				if(!actionResult.meta || !actionResult.meta.outputs) return actionResult;
 
 				const images = actionResult.meta.outputs;
-				for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
+				for(let imageIndex = 0; imageIndex < images.length; imageIndex++) {
 					const screenshotResultRecord = instanceScreenshotsRecordsMap[`${actionIndex}.${imageIndex}`];
-					if (actionResult.meta?.outputs?.length && screenshotResultRecord) {
+					if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
 						if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {
 							actionResult.status = ActionStatusEnum.MANUAL_REVIEW_REQUIRED;
 						} else if (screenshotResultRecord.status === TestInstanceResultStatusEnum.FAILED) {
@@ -99,13 +96,13 @@ export class BuildReportService {
 	}
 
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
-		const testsWithReportData: TestBuildReport[] = await this.dbManager.fetchAllRows(
+		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
 			"SELECT jobs.id buildId, jobs.meta buildMeta, jobs.project_id buildProjectId, jobs.commit_name buildName, job_reports.id buildReportId, job_reports.reference_job_id buildBaselineId, job_reports.created_at buildReportCreatedAt, jobs.created_at buildCreatedAt, jobs.updated_at buildUpdatedAt, job_reports.updated_at buildReportUpdatedAt, job_reports.status buildReportStatus, buildTests.* FROM jobs, job_reports LEFT JOIN (SELECT test_instances.id testInstanceId, test_instance_result_sets.report_id testBuildReportId, test_instance_result_sets.status testResultStatus, test_instance_result_sets.conclusion testResultConclusion, test_instance_result_sets.id testResultSetId, test_instance_result_sets.target_instance_id testBaselineInstanceId, tests.name testName, test_instances.browser testInstanceBrowser, tests.id testId, tests.events testStepsJSON, test_instances.host testInstanceHost, test_instances.recorded_video_url recordedVideoUrl FROM test_instances, tests, test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) buildTests ON buildTests.testBuildReportId = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
 			[buildId],
 		);
-		if (!testsWithReportData.length) throw Error(`No information available about build reports with this build id ${buildId}`);
+		if (!testsWithReportData.length) throw new Error(`No information available about build reports with this build id ${buildId}`);
 
-		const testsWithReportDataAndActionResultsPromises: Promise<TestBuildReport & { actionsResult: any[] }>[] = testsWithReportData.map(
+		const testsWithReportDataAndActionResultsPromises: Array<Promise<TestBuildReport & { actionsResult: Array<any> }>> = testsWithReportData.map(
 			async (reportData) => {
 				const instanceResult = await BuildInstanceResults.findOne({
 					instanceId: { $eq: reportData.testInstanceId },
@@ -157,7 +154,7 @@ export class BuildReportService {
 				return prev;
 			}, {});
 
-		const testsArray: any[] = Object.values(testsMap);
+		const testsArray: Array<any> = Object.values(testsMap);
 
 		return {
 			buildId: testsWithReportData[0].buildId,
@@ -218,7 +215,7 @@ export class BuildReportService {
 		const haveAllTestInstanceCompletedChecks = testInstancesResultsInReport.every(
 			(result) => result.status === TestInstanceResultSetStatusEnum.FINISHED_RUNNING_CHECKS,
 		);
-		if (!haveAllTestInstanceCompletedChecks) throw Error("Not every test have finished performing checks");
+		if (!haveAllTestInstanceCompletedChecks) throw new Error("Not every test have finished performing checks");
 
 		const passedTestCount = testInstancesResultsInReport.filter((result) => result.conclusion === TestInstanceResultSetConclusionEnum.PASSED).length;
 		const failedTestCount = testInstancesResultsInReport.filter((result) => result.conclusion === TestInstanceResultSetConclusionEnum.FAILED).length;

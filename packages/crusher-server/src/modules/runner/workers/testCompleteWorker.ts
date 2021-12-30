@@ -2,7 +2,7 @@ import { BuildsService } from "@modules/resources/builds/service";
 import { Job } from "bullmq";
 import Container from "typedi";
 import { BuildTestInstanceScreenshotService } from "@modules/resources/builds/instances/screenshots.service";
-import { getScreenshotActionsResult } from "@utils/helper";
+import { getScreenshotActionsResult, getTemplateFileContent } from "@utils/helper";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
 import * as RedisLock from "redlock";
 import { RedisManager } from "@modules/redis";
@@ -11,9 +11,12 @@ import { ITestCompleteQueuePayload } from "@crusher-shared/types/queues/";
 import { BuildReportStatusEnum, IBuildReportTable } from "@modules/resources/buildReports/interface";
 import { BuildStatusEnum, IBuildTable } from "@modules/resources/builds/interface";
 import { ProjectsService } from "@modules/resources/projects/service";
+import { BuildApproveService } from "@modules/resources/buildReports/build.approve.service";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { UsersService } from "@modules/resources/users/service";
+import * as ejs from "ejs";
 import { resolvePathToFrontendURI } from "@utils/uri";
+import { EmailManager } from "@modules/email";
 import { TestsRunner } from "..";
 import { iAction } from "@crusher-shared/types/action";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
@@ -27,9 +30,11 @@ const buildReportService: BuildReportService = Container.get(BuildReportService)
 const buildTestInstanceService = Container.get(BuildTestInstancesService);
 const buildTestInstanceScreenshotService = Container.get(BuildTestInstanceScreenshotService);
 const projectsService = Container.get(ProjectsService);
+const buildApproveService = Container.get(BuildApproveService);
 const usersService = Container.get(UsersService);
 const projectIntegrationsService = Container.get(IntegrationsService);
 
+const emailManager = Container.get(EmailManager);
 const testRunner = Container.get(TestsRunner);
 const redisManager: RedisManager = Container.get(RedisManager);
 
@@ -47,7 +52,7 @@ interface ITestResultWorkerJob extends Job {
 async function handleNextTestsForExecution(testCompletePayload: ITestResultWorkerJob["data"], buildRecord: KeysToCamelCase<IBuildTable>) {
 	for (const testInstance of testCompletePayload.nextTestDependencies) {
 		const testInstanceFullInfoRecord = await buildTestInstanceService.getInstanceAllInformation(testInstance.testInstanceId);
-		const testActions: iAction[] = JSON.parse(testInstanceFullInfoRecord.testEvents);
+		const testActions: Array<iAction> = JSON.parse(testInstanceFullInfoRecord.testEvents);
 
 		if (testCompletePayload.hasPassed && testCompletePayload.storageState) {
 			const finalTestActions = testActions.map((action) => {
@@ -88,7 +93,7 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 					})),
 					testInstanceId: testInstance.testInstanceId,
 					hasPassed: false,
-					failedReason: Error("Parent test failed"),
+					failedReason: new Error("Parent test failed"),
 				},
 			} as any);
 		}
@@ -119,7 +124,7 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	);
 
 	// Wait for the final test in the list here
-	const completedTestCount = await redisLock.lock(`${bullJob.data.buildId}:completed:lock`, 5000).then(async function () {
+	const completedTestCount = await redisLock.lock(`${bullJob.data.buildId}:completed:lock`, 5000).then(async function (lock) {
 		return redisManager.incr(`${bullJob.data.buildId}:completed`);
 	});
 
@@ -144,88 +149,101 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	}
 };
 
-function getSlackMessageBlockForBuildReport(
-	buildRecord: KeysToCamelCase<IBuildTable>,
-	projectRecord: KeysToCamelCase<IProjectTable>,
-	buildReportRecord: KeysToCamelCase<IBuildReportTable>,
-	userInfo: KeysToCamelCase<IUserTable>,
-	reportStatus: BuildReportStatusEnum,
-): Promise<any[]> {
-	const infoFields = [
+async function getSlackMessageBlockForBuildReport(buildRecord: KeysToCamelCase<IBuildTable>, projectRecord: KeysToCamelCase<IProjectTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>, userInfo: KeysToCamelCase<IUserTable>, reportStatus: BuildReportStatusEnum): Promise<Array<any>> {
+	
+	const  infoFields = [
 		{
-			type: "mrkdwn",
-			text: `*Build Id:*\n${buildRecord.id}`,
+			"type": "mrkdwn",
+			"text": `*Build Id:*\n${buildRecord.id}`
 		},
 		{
-			type: "mrkdwn",
-			text: `*Tests Count:*\n${buildReportRecord.totalTestCount}`,
+			"type": "mrkdwn",
+			"text": `*Tests Count:*\n${buildReportRecord.totalTestCount}`
 		},
 		{
-			type: "mrkdwn",
-			text: `*Triggerred By:*\n${userInfo.name}`,
+			"type": "mrkdwn",
+			"text": `*Triggerred By:*\n${userInfo.name}`
 		},
 		{
-			type: "mrkdwn",
-			text: `*Status:*\n${reportStatus}`,
-		},
+			"type": "mrkdwn",
+			"text": `*Status:*\n${reportStatus}`
+		}
 	];
 
-	if (buildRecord.host && buildRecord.host !== "null") {
+	if(buildRecord.host && buildRecord.host !== "null") {
 		infoFields.push({
-			type: "mrkdwn",
-			text: `*Host*:\n${buildRecord.host}`,
+			"type": "mrkdwn",
+			"text": `*Host*:\n${buildRecord.host}`
 		});
 	}
-
+	
 	return [
 		{
-			type: "section",
-			text: {
-				type: "mrkdwn",
-				text: `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}|#${
-					buildRecord.latestReportId
-				}>*`,
-			},
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}|#${buildRecord.latestReportId}>*`
+			}
 		},
 		{
-			type: "section",
-			fields: infoFields,
+			"type": "section",
+			"fields": infoFields
 		},
 		{
-			type: "actions",
-			elements: [
+			"type": "actions",
+			"elements": [
 				{
-					type: "button",
-					text: {
-						type: "plain_text",
-						text: "View Reports",
-						emoji: true,
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "View Reports",
+						"emoji": true
 					},
-					value: "click_me_123",
-					url: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
-					action_id: "button-action",
-				},
-			],
-		},
-	];
+					"value": "click_me_123",
+					"url": resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+					"action_id": "button-action"
+				}
+			]
+		}
+	]
 }
 
-async function handleIntegrations(
-	buildRecord: KeysToCamelCase<IBuildTable>,
-	buildReportRecord: KeysToCamelCase<IBuildReportTable>,
-	reportStatus: BuildReportStatusEnum,
-) {
-	const userInfo = await usersService.getUserInfo(buildRecord.userId);
+async function handleIntegrations(buildRecord: KeysToCamelCase<IBuildTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>, reportStatus: BuildReportStatusEnum) {
+	const userInfo = await usersService.getUserInfo(buildRecord.userId)
 	const projectRecord = await projectsService.getProject(buildRecord.projectId);
 
 	// Github Integration
 	await buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
 	// Slack Integration
-	await projectIntegrationsService.postSlackMessageIfNeeded(
-		buildRecord.projectId,
-		await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus),
-		reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert",
-	);
+	await projectIntegrationsService.postSlackMessageIfNeeded(buildRecord.projectId, await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus), reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert");
+}
+
+async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {
+	if (buildReportStatus === BuildReportStatusEnum.PASSED) return;
+
+	const usersInProject = await usersService.getUsersInProject(buildRecord.projectId);
+	const emailTemplateFilePathMap = {
+		[BuildReportStatusEnum.PASSED]:
+			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/passedJob.ejs" : "/../../email/templates/passedJob.ejs",
+		[BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED]:
+			typeof __non_webpack_require__ !== "undefined"
+				? "/email/templates/manualReviewRequiredJob.ejs"
+				: "/../../email/templates/manualReviewRequiredJob.ejs",
+		[BuildReportStatusEnum.FAILED]:
+			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/failedJob.ejs" : "/../../email/templates/failedJob.ejs",
+	};
+
+	console.log("Reading email template from: ", __dirname + emailTemplateFilePathMap[buildReportStatus]);
+
+	const emailTemplate = await getTemplateFileContent(__dirname + emailTemplateFilePathMap[buildReportStatus], {
+		buildId: buildRecord.id,
+		branchName: buildRecord.branchName,
+		buildReviewUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+	});
+
+	return usersInProject.map((user) => {
+		return emailManager.sendEmail(user.email, `Build ${buildRecord.id} ${buildReportStatus}`, emailTemplate);
+	});
 }
 
 export default processTestAfterExecution;

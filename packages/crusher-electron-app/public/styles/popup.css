@@ -18,7 +18,7 @@ body {
 .content {
 	display: flex;
 	flex-direction: column;
-	padding: 0 18px;
+	padding: 0px 18px;
 }
 .center-aligned {
 	align-self: center;
@@ -29,7 +29,7 @@ body {
 	background-size: contain !important;
 	background-repeat: no-repeat !important;
 	margin-top: 16px;
-	margin-bottom: 0;
+	margin-bottom: 0px;
 }
 .small_heading {
 	font-weight: bold;
@@ -48,7 +48,7 @@ body {
 	margin: 0;
 	font-size: 14px;
 	line-height: 25px;
-	padding-left: 0;
+	padding-left: 0em;
 }
 #footer {
 	background: #f6f6f6;
@@ -63,7 +63,7 @@ body {
 	background: #ff3c79;
 	border-radius: 4px;
 	border: 1px solid #ec2e6a;
-	color: #fff;
+	color: #ffffff;
 	font-size: 12px;
 	font-weight: bold;
 	text-align: center;
@@ -77,7 +77,7 @@ ol {
 li {
 	display: flex;
 }
-li::before {
+li:before {
 	content: counter(item) ") ";
 	counter-increment: item;
 	margin-right: 3px;
@@ -99,7 +99,7 @@ li::before {
 	padding-left: 10px;
 }
 
-#events_list li::before {
+#events_list li:before {
 	content: counters(item, ".", decimal-leading-zero);
 	counter-increment: item;
 	display: flex;
@@ -116,7 +116,7 @@ li::before {
 }
 
 .event_action {
-	color: #000;
+	color: #000000;
 	font-size: 12px;
 	font-weight: bold;
 }

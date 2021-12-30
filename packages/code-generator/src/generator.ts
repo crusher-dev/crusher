@@ -17,10 +17,10 @@ interface iCodeGeneratorOptions {
 
 export class CodeGenerator {
 	options: iCodeGeneratorOptions;
-	actionsMap: {
+	actionsMap: Array<{
 		type: ActionsInTestEnum;
-		code: string[] | string;
-	}[];
+		code: Array<string> | string;
+	}>;
 
 	constructor(options: iCodeGeneratorOptions) {
 		this.options = options;
@@ -30,7 +30,7 @@ export class CodeGenerator {
 		return this.options;
 	}
 
-	getCode(actions: iAction[]): Promise<string> {
+	getCode(actions: Array<iAction>): Promise<string> {
 		const parser = new Parser({
 			actions,
 			shouldRecordVideo: this.options.shouldRecordVideo,

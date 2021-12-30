@@ -1,12 +1,12 @@
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfill";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { CrusherSdk, CrusherRunnerActions, getMainActions } = require("../../../../output/crusher-runner-utils/");
+const { CrusherSdk, CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("../../../../output/crusher-runner-utils/");
 import { ActionStatusEnum, iAction } from "../../../crusher-shared/types/action";
 import axios from "axios";
 import { resolveToBackendPath } from "../../../crusher-shared/utils/url";
 import { MainWindow } from "../mainWindow";
 import { ActionsInTestEnum } from "../../../crusher-shared/constants/recordedActions";
-import { CookiesSetDetails, session } from "electron";
+import { CookiesSetDetails, session, WebContents } from "electron";
 import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { getReplayableTestActions } from "../utils";
@@ -63,14 +63,16 @@ class PlaywrightInstance {
 					case "None":
 						return "no_restriction" as any;
 					default:
-						throw Error("Invalid sameSite type");
+						throw new Error("Invalid sameSite type");
 				}
 			};
 
-			const filteredCookies: ElectronCompatibleCookiePayload[] = cookies.map((cookie) => ({
-				...cookie,
-				sameSite: cookie.sameSite ? getCompatibleElectronSameSiteFormat(cookie.sameSite) : undefined,
-			}));
+			const filteredCookies: Array<ElectronCompatibleCookiePayload> = cookies.map((cookie) => {
+				return {
+					...cookie,
+					sameSite: cookie.sameSite ? getCompatibleElectronSameSiteFormat(cookie.sameSite) : undefined,
+				};
+			});
 
 			for (const cookie of filteredCookies) {
 				await session.defaultSession.cookies.set(cookie as any);
@@ -90,7 +92,11 @@ class PlaywrightInstance {
 
 	async _getWebViewPage() {
 		const pages = await this.browserContext.pages();
-		const pagesMap = await Promise.all(pages.map((page) => page.url()));
+		const pagesMap = await Promise.all(
+			pages.map((page) => {
+				return page.url();
+			}),
+		);
 
 		const webViewPage = await pagesMap.findIndex((url: string) => {
 			// Webview url will never start from extension url
@@ -103,7 +109,7 @@ class PlaywrightInstance {
 
 	async connect() {
 		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
-		[this.browserContext] = await this.browser.contexts();
+		this.browserContext = (await this.browser.contexts())[0];
 		this.page = await this._getWebViewPage();
 		this.sdkManager = new CrusherSdk(this.page, this.exportsManager, this.storageManager);
 
@@ -127,13 +133,13 @@ class PlaywrightInstance {
 		});
 	}
 
-	async runMainActions(actions: iAction[], isRunAfterTestAction: boolean): Promise<boolean> {
+	async runMainActions(actions: Array<iAction>, isRunAfterTestAction: boolean): Promise<boolean> {
 		const actionsArr = getMainActions(actions);
 
 		await this.mainWindow.webContents.executeJavaScript("document.querySelector('webview').focus();");
-		await this.runnerManager.runActions(actionsArr, this.browser, this.page, (action: iAction, result) => {
-			const { status, meta }: { actionType: ActionsInTestEnum; status: any; meta: any } = result;
-			if (status === "STARTED" && !isRunAfterTestAction) {
+		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result) => {
+			const { actionType, status, meta }: { actionType: ActionsInTestEnum; status: any, meta: any } = result;
+			if(status === "STARTED" && !isRunAfterTestAction) {
 				action.status = ActionStatusEnum.STARTED;
 				this.mainWindow.saveRecordedStep(action);
 			}
@@ -148,14 +154,15 @@ class PlaywrightInstance {
 		return true;
 	}
 
-	async _changeDeviceIfNotSame(actions: iAction[]): Promise<boolean> {
+	async _changeDeviceIfNotSame(actions: Array<iAction>): Promise<boolean> {
+		const extensionUrl = new URL(this.mainWindow.webContents.getURL());
 		const deviceAction = actions.find((action) => action.type === "BROWSER_SET_DEVICE");
-		if (!deviceAction) return false;
-
+		if(!deviceAction) return false;
+		
 		return this.mainWindow.app._setDevice(deviceAction.payload.meta.device.id);
 	}
 
-	private _getRunAfterTestTestAction(actions: iAction[]): iAction {
+	private _getRunAfterTestTestAction(actions: Array<iAction>): iAction {
 		const runAfterTestAction = actions.find((action) => action.type === ActionsInTestEnum.RUN_AFTER_TEST);
 		return runAfterTestAction;
 	}
@@ -163,6 +170,7 @@ class PlaywrightInstance {
 	async runActions(actions: any, isRunAfterTestAction = false) {
 		this.mainWindow.clearReminingSteps();
 		const isDeviceToBeChanged = isRunAfterTestAction ? false : await this._changeDeviceIfNotSame(actions);
+		const browserActions = getBrowserActions(actions);
 		const runAfterTestAction = this._getRunAfterTestTestAction(actions);
 		let error = null;
 
@@ -175,7 +183,7 @@ class PlaywrightInstance {
 					try {
 						await this.runMainActions(await getReplayableTestActions(runAfterTestAction.payload.meta.value), true);
 						this.mainWindow.updateLastRecordedStepStatus(ActionStatusEnum.SUCCESS);
-					} catch (ex) {
+					} catch(ex) {
 						this.mainWindow.addToRemainingSteps(actions);
 						throw ex;
 					}
@@ -199,19 +207,19 @@ class PlaywrightInstance {
 		const actions = testInfo.data.events;
 		try {
 			await this.runActions(actions, isRunAfterTestAction);
-		} catch {
+		} catch(ex) { 
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: false });
 		}
 		return true;
 	}
 
-	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error; actions: any[] }> {
+	async runTempTestForVerification(tempTestId: number): Promise<{ error: null | Error, actions: Array<any> }> {
 		const testInfo = await axios.get(resolveToBackendPath(`/tests/actions/get.temp?id=${tempTestId}`));
 		const actions = testInfo.data.events;
 		try {
-			await this.runActions(actions, false);
-			return { error: null, actions };
-		} catch (err) {
+		 await this.runActions(actions, false);
+		 return { error: null, actions }
+		} catch(err) {
 			return { error: err, actions };
 		}
 	}

@@ -14,6 +14,7 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { currentProject, projectsAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
 
 const deleteProject = (projectId) => {
 	return backendRequest(`/projects/${projectId}/actions/delete`, {
@@ -101,14 +102,8 @@ export const ProjectSettings = () => {
 					<Input
 						placeholder={"Name of the project"}
 						onChange={(e) => {
-							if (e.target.value > 100) {
-								e.target.value = 100;
-								return setVisualBaseline(100);
-							}
-							if (e.target.value < 0) {
-								e.target.value = 0;
-								return setVisualBaseline(0);
-							}
+							if (e.target.value > 100) { e.target.value = 100; return setVisualBaseline(100); }
+							if (e.target.value < 0) { e.target.value = 0; return setVisualBaseline(0); }
 
 							setVisualBaseline(e.target.value);
 						}}
@@ -133,9 +128,9 @@ export const ProjectSettings = () => {
 						onClick={() => {
 							!saveButtonDisabled && updateProjectSettingsCallback();
 						}}
-					>
-						Save
-					</Button>
+						>
+							Save
+						</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
 				<Heading type={2} fontSize={"16"} className={"mb-12 mt-56"}>

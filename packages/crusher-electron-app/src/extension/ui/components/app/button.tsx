@@ -12,7 +12,7 @@ interface iButtonProps {
 }
 
 const Button = (props: iButtonProps) => {
-	const [, setIsHovered] = useState(false);
+	const [isHovered, setIsHovered] = useState(false);
 	const { id, title, icon: Icon, onClick, style } = props;
 
 	const handleMouseOver = () => {
@@ -27,7 +27,7 @@ const Button = (props: iButtonProps) => {
 		<div
 			id={id}
 			className="text-15"
-			style={{ ...buttonStyle(), ...(style || {}) }}
+			style={{ ...buttonStyle(isHovered), ...(style ? style : {}) }}
 			onClick={onClick}
 			onMouseOver={handleMouseOver}
 			onMouseOut={handleMouseOut}
@@ -40,7 +40,7 @@ const Button = (props: iButtonProps) => {
 	);
 };
 
-const buttonStyle = () => ({
+const buttonStyle = (isHovered: boolean) => ({
 	borderRadius: 6,
 	width: "max-content",
 	fontWeight: 500,

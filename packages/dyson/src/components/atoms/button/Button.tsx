@@ -40,27 +40,29 @@ export type ButtonProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Button: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", children, disabled = false, className, ...props }) => (
-	<button
-		className={` rem-24 text-14 text-white ${className} leading-none`}
-		css={[
-			buttonCSS,
-			blue,
-			size === "x-small" && extraSmallButton,
-			size === "small" && smallButton,
-			size === "medium" && mediumButton,
-			size === "large" && largeButton,
-			bgColor === "tertiary-dark" && tertiaryDark,
-			bgColor === "tertiary-outline" && tertiaryOutline,
-			bgColor === "danger" && danger,
-			bgColor === "disabled" && disabledButton,
-		]}
-		disabled={disabled}
-		{...props}
-	>
-		{children}
-	</button>
-);
+export const Button: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", children, disabled = false, className, ...props }) => {
+	return (
+		<button
+			className={` rem-24 text-14 text-white ${className} leading-none`}
+			css={[
+				buttonCSS,
+				blue,
+				size == "x-small" && extraSmallButton,
+				size === "small" && smallButton,
+				size === "medium" && mediumButton,
+				size === "large" && largeButton,
+				bgColor === "tertiary-dark" && tertiaryDark,
+				bgColor === "tertiary-outline" && tertiaryOutline,
+				bgColor === "danger" && danger,
+				bgColor === "disabled" && disabledButton,
+			]}
+			disabled={disabled}
+			{...props}
+		>
+			{children}
+		</button>
+	);
+};
 
 const buttonCSS = css`
 	cursor: default;

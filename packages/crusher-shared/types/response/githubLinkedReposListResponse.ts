@@ -1,3 +1,3 @@
 import { iGithubIntegration } from "../mongo/githubIntegration";
 
-export type iGithubLinkedReposListResponse = iGithubIntegration[];
+export type iGithubLinkedReposListResponse = Array<iGithubIntegration>;

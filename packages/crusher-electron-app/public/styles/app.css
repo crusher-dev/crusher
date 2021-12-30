@@ -24,7 +24,7 @@ body {
 }
 
 /* The horizontal line on the top of the device */
-.smartphone::before {
+.smartphone:before {
 	content: "";
 	display: block;
 	width: 60px;
@@ -38,7 +38,7 @@ body {
 }
 
 /* The circle on the bottom of the device */
-.smartphone::after {
+.smartphone:after {
 	content: "";
 	display: block;
 	width: 35px;
@@ -80,7 +80,7 @@ body {
 	padding: 0.1rem 0;
 }
 
-.toggle-switch .toggle-track::before {
+.toggle-switch .toggle-track:before {
 	content: "";
 	display: inline-block;
 	height: 0.525rem;
@@ -94,7 +94,7 @@ body {
 	transition: all 0.2s ease-in;
 }
 
-.toggle-switch input[type="checkbox"]:checked + label .toggle-track::before {
+.toggle-switch input[type="checkbox"]:checked + label .toggle-track:before {
 	background: #5b76f7;
 	right: 0.2rem;
 }

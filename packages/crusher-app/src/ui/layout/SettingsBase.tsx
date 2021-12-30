@@ -90,20 +90,22 @@ function LinksSection({ links, label }) {
 		<>
 			<CompressibleMenu name={label}>
 				<div className={"mt-6 mb-32"}>
-					{links.map(({ link, label }) => (
-						<Link href={link}>
-							<MenuItemHorizontal className={"mt-2"} selected={pathname === link}>
-								<span
-									css={css`
-										font-size: 12.5rem;
-									`}
-									className={" font-500 mt-2 leading-none"}
-								>
-									{label}
-								</span>
-							</MenuItemHorizontal>
-						</Link>
-					))}
+					{links.map(({ link, label }) => {
+						return (
+							<Link href={link}>
+								<MenuItemHorizontal className={"mt-2"} selected={pathname === link}>
+									<span
+										css={css`
+											font-size: 12.5rem;
+										`}
+										className={" font-500 mt-2 leading-none"}
+									>
+										{label}
+									</span>
+								</MenuItemHorizontal>
+							</Link>
+						);
+					})}
 				</div>
 			</CompressibleMenu>
 		</>
@@ -148,18 +150,21 @@ function LeftSection() {
 	);
 }
 
-export const SettingsLayout = ({ children, hideSidebar = false }) => (
-	<div className={"flex"} css={background}>
-		<Conditional showIf={!hideSidebar}>
-			<LeftSection />
-		</Conditional>
-		<div className={"w-full"}>
-			<div css={scrollContainer} className={"custom-scroll relative"}>
-				<div css={[containerWidth]}>{children}</div>
+export const SettingsLayout = ({ children, hideSidebar = false }) => {
+	return (
+		<div className={"flex"} css={background}>
+			<Conditional showIf={!hideSidebar}>
+				<LeftSection />
+			</Conditional>
+
+			<div className={"w-full"}>
+				<div css={scrollContainer} className={"custom-scroll relative"}>
+					<div css={[containerWidth]}>{children}</div>
+				</div>
 			</div>
 		</div>
-	</div>
-);
+	);
+};
 
 const background = css`
 	background: #0a0b0e;

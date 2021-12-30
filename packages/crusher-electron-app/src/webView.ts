@@ -1,10 +1,13 @@
-import { BrowserWindow, Debugger, WebContents, ipcMain, webContents } from "electron";
+import { BrowserWindow, Debugger, WebContents, ipcMain, webContents, app } from "electron";
 import { MainWindow } from "./mainWindow";
 import { PlaywrightInstance } from "./runner/playwright";
 import { ExportsManager } from "../../crusher-shared/lib/exports/index";
+import axios from "axios";
+import { resolveToBackendPath } from "../../crusher-shared/utils/url";
 import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
-import { Browser } from "playwright";
+import { Browser, Page } from "playwright";
 import * as path from "path";
+import * as fs from "fs";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const highlighterStyle = require("./highlighterStyle.json");
@@ -28,7 +31,7 @@ export class WebView {
 		const allWebContents = webContents.getAllWebContents();
 
 		const webViewWebContents = allWebContents.find((a) => a.getType() === "webview");
-		if (!webViewWebContents) throw Error("No webview initialized");
+		if (!webViewWebContents) throw new Error("No webview initialized");
 
 		return webViewWebContents;
 	}
@@ -84,8 +87,9 @@ export class WebView {
 			path: path.join(__dirname, "extension/js/content_script.js"),
 		});
 
-		await this.webContents().loadURL(this.mainWindow.state.webViewSrc);
 
+		await this.webContents().loadURL(this.mainWindow.state.webViewSrc);
+	
 		// Add proper logic here
 		if (this.appState.shouldRunAfterTest) {
 			await this.mainWindow.sendMessage("SET_IS_REPLAYING", { value: true });
@@ -121,7 +125,7 @@ export class WebView {
 		try {
 			const out = await this.playwrightInstance.getSdkManager().page.evaluateHandle((id) => Promise.resolve((window as any)[id]), id);
 			return out.getNodeId();
-		} catch {
+		} catch (err) {
 			return -1;
 		}
 	}

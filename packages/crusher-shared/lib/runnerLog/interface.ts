@@ -1,4 +1,4 @@
-import { ActionsInTestEnum } from "../../constants/recordedActions";
+import { ActionsInTestEnum, ACTIONS_IN_TEST } from "../../constants/recordedActions";
 
 export enum ActionStatusEnum {
 	STARTED = "STARTED",

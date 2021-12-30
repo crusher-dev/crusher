@@ -32,7 +32,7 @@ function redirectIfNotThisScope(userStatus: any, componentScope: any, res: NextA
 	return null;
 }
 
-function handleUserStatus(userInfo: iUserInfoResponse, res: any, componentScope: string | null = null) {
+async function handleUserStatus(userInfo: iUserInfoResponse, res: any, componentScope: string | null = null) {
 	const userStatus = getUserStatus(userInfo);
 
 	return [redirectIfNotThisScope(userStatus, componentScope, res), userStatus];
@@ -52,7 +52,7 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 
 		const userInfo = getUserInfo(store.getState());
 
-		const [redirectResponse, userStatus] = handleUserStatus(userInfo, res, componentScope || null);
+		const [redirectResponse, userStatus] = await handleUserStatus(userInfo, res, componentScope ? componentScope : null);
 
 		if (!redirectResponse) {
 			const pageProps = WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps(ctx));
@@ -61,14 +61,14 @@ function withSession(WrappedComponent: any, componentScope?: string) {
 				return { status: userStatus };
 			}
 			const projectsList = getProjects(store.getState());
-			const { cookies } = metaInfo;
+			const cookies = metaInfo.cookies;
 
 			let selectedProject = getSelectedProject(store.getState());
 			if (!selectedProject) {
 				if (cookies.selectedProject) {
 					selectedProject = cookies.selectedProject;
 				} else {
-					selectedProject = projectsList?.length ? projectsList[0].id : null;
+					selectedProject = projectsList && projectsList.length ? projectsList[0].id : null;
 				}
 			}
 

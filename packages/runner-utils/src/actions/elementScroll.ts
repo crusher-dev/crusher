@@ -1,6 +1,6 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { Locator } from "playwright";
+import { Locator, Page } from "playwright";
 import { scrollElement } from "../functions/scroll";
 
 async function scrollOnElement(elementHandle: Locator, workingSelector: any, action: iAction) {

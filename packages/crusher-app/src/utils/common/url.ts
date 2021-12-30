@@ -1,3 +1,5 @@
+import { isBrowser } from "@utils/common";
+
 function getLocationOrigin() {
 	return eval("window.location.origin");
 }

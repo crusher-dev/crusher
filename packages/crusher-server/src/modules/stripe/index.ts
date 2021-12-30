@@ -27,7 +27,9 @@ class StripeManager {
 				name,
 				email,
 			})
-			.then((customer) => customer.id);
+			.then((customer) => {
+				return customer.id;
+			});
 	}
 
 	getCustomerCards(stripeCustomerId: string): Stripe.ApiListPromise<Stripe.CustomerSource> {
@@ -70,7 +72,7 @@ class StripeManager {
 			.then((subscription) => ({ subscriptionData: subscription }));
 	}
 
-	async addProductToSubscription(subscriptionId: string, pricesList: string[]): Promise<Stripe.Response<Stripe.SubscriptionItem>[]> {
+	async addProductToSubscription(subscriptionId: string, pricesList: Array<string>): Promise<Array<Stripe.Response<Stripe.SubscriptionItem>>> {
 		const subscriptionItemsPromise = pricesList.map((priceId) =>
 			this.stripeClient.subscriptionItems.create({
 				subscription: subscriptionId,

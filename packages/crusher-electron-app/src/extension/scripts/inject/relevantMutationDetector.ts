@@ -1,4 +1,4 @@
-const eventMutationArr: iRegisteredMutationRecord[] = [];
+const eventMutationArr: Array<iRegisteredMutationRecord> = [];
 
 interface iRegisteredMutationRecord {
 	eventNode: Node;

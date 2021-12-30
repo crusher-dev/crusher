@@ -1,5 +1,5 @@
 // Preload (Isolated World)
-import { contextBridge, ipcRenderer } from "electron";
+import { app, contextBridge, ipcRenderer } from "electron";
 
 const callbacks = [];
 

@@ -1,4 +1,5 @@
-import React, { useEffect, Suspense } from "react";
+import React, { useEffect } from "react";
+import { Suspense } from "react";
 
 import { useAtom } from "jotai";
 
@@ -12,12 +13,11 @@ function Builds() {
 	usePageTitle("Builds");
 	const [, setBuildsFilter] = useAtom(buildFiltersAtom);
 
-	useEffect(
-		() => () => {
+	useEffect(() => {
+		return () => {
 			setBuildsFilter({});
-		},
-		[],
-	);
+		};
+	}, []);
 
 	return (
 		<SidebarTopBarLayout>

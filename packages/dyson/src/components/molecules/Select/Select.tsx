@@ -49,7 +49,7 @@ export const SelectBox: React.FC<TSelectBox> = ({
 	const getSelectedComponent = () => {
 		const selectedHasLabel = selected && selected.length > 0 && selected.every((item: any) => item && !!item.label);
 
-		return !selectedHasLabel ? values.filter(({ value }) => selected.includes(value)) : selected || [];
+		return !selectedHasLabel ? values.filter(({ value }) => selected.includes(value)) : selected ? selected : [];
 	};
 
 	const getReadableSelectedValues = () => {
@@ -100,7 +100,7 @@ export const SelectBox: React.FC<TSelectBox> = ({
 					<input
 						onInput={handleFilterTextChange}
 						type={"text"}
-						disabled={!!!isSearchable}
+						disabled={!!isSearchable === false}
 						css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
 						value={filterText}
 						className={"selectBox__input"}

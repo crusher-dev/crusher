@@ -1,4 +1,4 @@
-import React, { RefObject, ChangeEvent, useRef, useState } from "react";
+import React, { RefObject, ChangeEvent, useRef, useEffect, useState } from "react";
 import { ActionStepList } from "./actionStepList";
 import { useDispatch, useSelector } from "react-redux";
 import { getActionsRecordingState, getAutoRecorderState } from "../../../redux/selectors/recorder";
@@ -21,6 +21,7 @@ interface iSidebarActionBoxProps {
 
 const SidebarActionsBox = (props: iSidebarActionBoxProps) => {
 	const [isTooltipHovered, setIsTooltipHovered] = useState(true);
+	const popperArrowRef = useRef(null as HTMLDivElement);
 	const autoActionsTagRef = useRef(null as HTMLDivElement);
 	const autoActionsTooltipRef = useRef(null as HTMLDivElement);
 	const recordingState = useSelector(getActionsRecordingState);

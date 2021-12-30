@@ -1,7 +1,8 @@
 import { UsersService } from "@modules/resources/users/service";
-import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body, QueryParams } from "routing-controllers";
+import { JsonController, Get, Authorized, BadRequestError, Post, Param, CurrentUser, Body, QueryParams, Params } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { TestService } from "@modules/resources/tests/service";
+import { getTemplateFileContent, isUsingLocalStorage } from "@utils/helper";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { ICreateTestPayload } from "@modules/resources/tests/interface";
 import { iAction } from "@crusher-shared/types/action";
@@ -26,7 +27,7 @@ export class TestController {
 	private buildsService: BuildsService;
 
 	@Post("/tests/actions/save.temp")
-	async saveTempTest(@Body() body: { events: iAction[] }) {
+	async saveTempTest(@Body() body: { events: Array<iAction> }) {
 		if (!body.events) throw new BadRequestError("No events provided");
 
 		const result = await this.testService.saveTempTest(body.events);
@@ -46,14 +47,14 @@ export class TestController {
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number },
-	): Promise<IProjectTestsListResponse & { availableAuthors: Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">[] }> {
-		if (!params.page) params.page = 0;
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number; },
+	): Promise<IProjectTestsListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
+		if(!params.page) params.page = 0;
 
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
 		const testsList = testsListData.list.map((testData) => {
-			const videoUrl = testData.featuredVideoUrl || null;
-			const clipVideoUrl = testData.featuredClipVideoUrl || null;
+			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
+			const clipVideoUrl = testData.featuredClipVideoUrl ? testData.featuredClipVideoUrl : null;
 
 			const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
 
@@ -79,11 +80,9 @@ export class TestController {
 			};
 		});
 
-		const availableAuthors = (await this.userService.getUsersInProject(projectId)).map((user) => ({
-			id: user.id,
-			name: user.name,
-			email: user.email,
-		}));
+		const availableAuthors = (await this.userService.getUsersInProject(projectId)).map((user) => {
+			return { id: user.id, name: user.name, email: user.email };
+		});
 
 		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors, currentPage: params.page };
 	}
@@ -99,7 +98,7 @@ export class TestController {
 			host?: string;
 			disableBaseLineComparisions: boolean;
 			baselineJobId: number | null;
-			browsers?: BrowserEnum[];
+			browsers?: Array<BrowserEnum>;
 		},
 		@Param("project_id") projectId: number,
 	) {
@@ -116,10 +115,10 @@ export class TestController {
 		return this.testService.runTestsInProject(
 			projectId,
 			user.user_id,
-			{ host: body.host || "null" },
+			{ host: body.host ? body.host : "null" },
 			meta,
-			body.baselineJobId || null,
-			body.browsers || [BrowserEnum.CHROME],
+			body.baselineJobId ? body.baselineJobId : null,
+			body.browsers ? body.browsers : [BrowserEnum.CHROME],
 		);
 	}
 
@@ -137,18 +136,18 @@ export class TestController {
 	async createTest(
 		@CurrentUser({ required: true }) user,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: iAction[]; tempTestId?: string },
+		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; tempTestId?: string },
 	) {
 		const { user_id } = user;
 
-		let { events } = body;
+		let events = body.events;
 		if (body.tempTestId) {
 			const tempTest = await this.testService.getTempTest(body.tempTestId);
 			events = tempTest.events;
 		}
 
-		if (!events) throw Error("No events passed");
-		if (!body.name) throw Error("No name passed for the test");
+		if (!events) throw new Error("No events passed");
+		if (!body.name) throw new Error("No name passed for the test");
 
 		const testInsertRecord = await this.testService.createTest({
 			...body,

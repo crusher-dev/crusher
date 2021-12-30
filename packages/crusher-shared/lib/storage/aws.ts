@@ -29,9 +29,9 @@ class AwsCloudStorage implements StorageManagerInterface {
 	}
 
 	verifyConnection() {
-		this.s3BucketService.listBuckets(function (err) {
+		this.s3BucketService.listBuckets(function (err, data) {
 			if (err) {
-				console.log(`Couldn't connect to crusher S3`, err);
+				console.log("Couldn't connect to crusher S3", err);
 			} else {
 				console.log("Successfully connected to crusher S3");
 			}
@@ -46,7 +46,7 @@ class AwsCloudStorage implements StorageManagerInterface {
 					Key: destination,
 					Body: buffer,
 				},
-				(err) => {
+				(err, data) => {
 					if (err) {
 						console.error("Encountered error while uploading to aws bucket");
 						console.error(err);

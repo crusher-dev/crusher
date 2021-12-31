@@ -87,6 +87,7 @@ if (isDuplicateInstance) {
 
 function handleAppURL(url: string) {
 	const action = parseDeepLinkUrlAction(url);
+	console.log("Got this deep link", action);
 	onDidLoad(window => {
 	  // This manual focus call _shouldn't_ be necessary, but is for Chrome on
 	  // macOS. See https://github.com/desktop/desktop/issues/973.

@@ -15,6 +15,7 @@ class CrusherTests {
     }
 
     public static async getReplayableTestActions(actions: Array<iAction>, isMainTest: boolean): Promise<Array<iAction>> {
+        console.log("Actions are", actions);
         const out = [];
         const browserActions: Array<iAction> = getBrowserActions(actions);
         if (isMainTest) {

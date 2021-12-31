@@ -9,15 +9,23 @@ export interface iSettings {
     backendEndPoint: string;
 }
 
+export interface ISessionMeta {
+	editing: { testId: string } | false;
+};
 
 interface IAppReducer {
 	settings: iSettings;
 	shouldShowOnboardingOverlay: boolean;
+
+	sessionMeta: {
+		editing?: ISessionMeta;
+	 },
 };
 
 const initialState: IAppReducer = {
 	settings: { autoDetectActions: true, backendEndPoint: "https://backend.crusher.dev" },
-	shouldShowOnboardingOverlay: true
+	shouldShowOnboardingOverlay: true, 
+	sessionMeta: {}
 };
 
 const appReducer = (state: IAppReducer = initialState, action: AnyAction) => {

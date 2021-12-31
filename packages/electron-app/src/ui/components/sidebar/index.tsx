@@ -11,7 +11,7 @@ const Sidebar = ({className, ...props}: any) => {
 
     return (
         <div css={containerStyle} className={`${className}`}>
-            <Conditional showIf={!!recorderInfo.url}>
+            <Conditional showIf={!!recorderInfo.device}>
                 <ActionsPanel />
                 <StepsPanel />
             </Conditional>

@@ -9,7 +9,7 @@ import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from 'electron-redux';
 import { ipcRenderer } from "electron";
-import { resetRecorderState, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
+import { resetRecorderState, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
 import { getRecorderInfo, isWebViewInitialized } from "../store/selectors/recorder";
 import { performNavigation, performReplayTest, saveSetDeviceIfNotThere } from "./commands/perform";
@@ -18,11 +18,14 @@ import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
 import { CrusherTests } from "../lib/tests";
 import { Emitter } from "event-kit";
+import { setSessionInfoMeta } from "../store/actions/app";
+import { getAppSessionMeta } from "../store/selectors/app";
 
 const emitter = new Emitter();
 
 const App = () => {
 	const store = useStore();
+	const recorderInfo = useSelector(getRecorderInfo);
 	
 	React.useEffect(() => {
 		console.log("HELLO FROM RENDERER");
@@ -45,10 +48,18 @@ const App = () => {
 		ipcRenderer.on("url-action",   (event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 			if(action.commandName === "replay-test") {
 				const isWebViewPresent = isWebViewInitialized(store.getState() as any);
+				const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
+				store.dispatch(setSessionInfoMeta({
+					...sessionInfoMeta,
+					editing: {
+						testId: action.args.testId,
+					}
+				}));
+
 				if(isWebViewPresent) {
 					performReplayTest(action.args.testId);
 				} else {
-					saveSetDeviceIfNotThere(devices[0], store);
+					store.dispatch(setDevice(devices[0].id));
 					emitter.once("renderer-webview-initialized", () => {
 						console.log("Render webview initialized listener called");
 						performReplayTest(action.args.testId)

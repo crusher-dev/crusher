@@ -123,7 +123,7 @@ export class AppWindow {
         ipcMain.handle('turn-on-recorder-inspect-mode', this.turnOnInspectMode.bind(this))
         ipcMain.handle('turn-off-recorder-inspect-mode', this.turnOffInspectMode.bind(this))
         ipcMain.handle('verify-test', this.handleVerifyTest.bind(this));
-        ipcMain.handle('replay-test', this.handleReplayTest.bind(this));
+        ipcMain.handle('replay-test', this.hanldeRemoteReplayTest.bind(this));
         ipcMain.handle('save-test', this.handleSaveTest.bind(this));
         ipcMain.handle('go-back-page', this.handleGoBackPage.bind(this));
         ipcMain.handle('reload-page', this.handleReloadPage.bind(this));
@@ -215,9 +215,9 @@ export class AppWindow {
         this.store.dispatch(setIsTestVerified(true));
     }
 
-    async hanldeRemoteReplayTest(testId: number) {
+    async hanldeRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: {testId: number}) {
         this.resetRecorder();
-        const testSteps = await CrusherTests.getTest(`${testId}`);
+        const testSteps = await CrusherTests.getTest(`${payload.testId}`);
         const replayableTestSteps = await CrusherTests.getReplayableTestActions(testSteps, true);
 
         this.handleReplayTest(replayableTestSteps);

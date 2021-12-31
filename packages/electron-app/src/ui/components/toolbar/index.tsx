@@ -14,6 +14,7 @@ import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/
 import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, saveTest } from "../../commands/perform";
 import { addHttpToURLIfNotThere } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
 
 const DeviceItem = ({label}) => {
 	return (
@@ -32,6 +33,7 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 	const [secondsCounter, setSecondsCounter] = React.useState(0);
 	const intervalRef = React.useRef(null);
 	const totalSecondsToWaitBeforeSave = 5;
+	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
 
 	let counter =  0;
 	React.useEffect(() => {
@@ -67,15 +69,21 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 		saveTest();
 	}
 
+	const editTestInCloud = () => {
+		alert("Editing test now");
+	}
+
+	const buttonAction = isTestVerificationComplete ? ( editingSessionMeta ? editTestInCloud : saveTestToCloud) : verifyTest;
+
 	return (
-		<Button onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+		<Button onClick={buttonAction} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
 			<Conditional showIf={isTestVerificationComplete}>
 				<span>
 					<Conditional showIf={totalSecondsToWaitBeforeSave - secondsCounter > 0}>
-						<span>Saving in  {totalSecondsToWaitBeforeSave - secondsCounter}s</span>
+						<span>{editingSessionMeta ? "Updating" : "Saving"} in  {totalSecondsToWaitBeforeSave - secondsCounter}s</span>
 					</Conditional>
 					<Conditional showIf={totalSecondsToWaitBeforeSave - secondsCounter <= 0}>
-						<span>Save test</span>
+						<span>{editingSessionMeta ? "Update" : "Save"} test</span>
 					</Conditional>
 				</span>
 			</Conditional>

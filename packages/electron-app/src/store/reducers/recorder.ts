@@ -61,6 +61,7 @@ interface IRecorderReducer {
 
 	selectedElement: iElementInfo | null;
 	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; }>;
+
 	isVerified: boolean;
 };
 

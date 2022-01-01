@@ -164,4 +164,8 @@ const performReloadPage = () => {
     ipcRenderer.invoke("reload-page");
 }
 
-export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest };
+const resetStorage = () => {
+    ipcRenderer.invoke("reset-storage");
+}
+
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage };

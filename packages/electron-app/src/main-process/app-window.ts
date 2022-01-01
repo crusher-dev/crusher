@@ -132,6 +132,8 @@ export class AppWindow {
         ipcMain.handle('get-page-seo-info', this.handleGetPageSeoInfo.bind(this));
         ipcMain.handle('get-element-assert-info', this.handleGetElementAssertInfo.bind(this));
 
+        ipcMain.handle('reset-storage', this.handleResetStorage.bind(this));
+
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
 
@@ -277,6 +279,10 @@ export class AppWindow {
        return session.fromPartition("crusherwebview").clearStorageData({
             storages: ["cookies", "localstorage", "indexdb"],
         });
+    }
+
+    private async handleResetStorage() {
+        await this.clearWebViewStorage();
     }
 
     private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction, shouldNotSave?: boolean }) {

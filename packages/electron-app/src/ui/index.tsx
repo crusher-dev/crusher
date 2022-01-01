@@ -12,7 +12,7 @@ import { ipcRenderer } from "electron";
 import { resetRecorder, resetRecorderState, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
 import { getRecorderInfo, isWebViewInitialized } from "../store/selectors/recorder";
-import { performNavigation, performReplayTest, saveSetDeviceIfNotThere } from "./commands/perform";
+import { performNavigation, performReplayTest, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import {devices} from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
@@ -68,6 +68,7 @@ const App = () => {
 		window.onbeforeunload = () => {
 			store.dispatch(resetRecorder());
 			store.dispatch(setSessionInfoMeta({}));
+			resetStorage();
 		};
 	}, []);
 

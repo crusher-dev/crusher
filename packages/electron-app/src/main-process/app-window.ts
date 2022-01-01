@@ -19,6 +19,7 @@ import { getBrowserActions, getMainActions } from 'runner-utils/src';
 import { iElementInfo, TRecorderState } from '../store/reducers/recorder';
 import { iSeoMetaInformationMeta } from '../types';
 import { getUserAgentFromName } from '@shared/constants/userAgents';
+import { getAppEditingSessionMeta } from '../store/selectors/app';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -124,6 +125,7 @@ export class AppWindow {
         ipcMain.handle('turn-off-recorder-inspect-mode', this.turnOffInspectMode.bind(this))
         ipcMain.handle('verify-test', this.handleVerifyTest.bind(this));
         ipcMain.handle('replay-test', this.hanldeRemoteReplayTest.bind(this));
+        ipcMain.handle('update-test', this.handleUpdateTest.bind(this));
         ipcMain.handle('save-test', this.handleSaveTest.bind(this));
         ipcMain.handle('go-back-page', this.handleGoBackPage.bind(this));
         ipcMain.handle('reload-page', this.handleReloadPage.bind(this));
@@ -202,6 +204,12 @@ export class AppWindow {
         this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.COMPLETED));
 
         this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {  }));
+    }
+
+    async handleUpdateTest(event: Electron.IpcMainEvent) {
+        const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
+        const recordedSteps = getSavedSteps(this.store.getState() as any);
+        await CrusherTests.updateTest(recordedSteps as any, editingSessionMeta.testId);
     }
 
     async handleSaveTest() {
@@ -384,7 +392,6 @@ export class AppWindow {
     }
 
     private get rendererLoaded(): boolean {
-        console.log("Checked renderer loaded", this.loadTime, this.rendererReadyTime);
         return !!this.loadTime && !!this.rendererReadyTime
     }
 

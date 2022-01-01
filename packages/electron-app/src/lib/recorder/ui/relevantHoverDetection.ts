@@ -67,7 +67,6 @@ class RelevantHoverDetection {
 		while (document.body.contains(currentNode) && currentNode != document.body) {
 			if (this._mapRecords.has(currentNode) && !(currentNode instanceof SVGElement)) {
 				const tmp = this._mapRecords.get(currentNode)!;
-				console.log("Values are", Array.from(tmp.values()));
 				list.push(
 					Array.from(tmp.values())
 						.filter((a) => (baseLineTimeStamp ? a.meta.timeNow < baseLineTimeStamp : true))
@@ -86,8 +85,6 @@ class RelevantHoverDetection {
 					currentTimeStamp: timeOfEventStart,
 					item: item.key,
 				}));
-
-				console.log("Here's the record", ls);
 
 				return (
 					array.findIndex((currentItem) => currentItem.eventNode === item.eventNode) === index &&

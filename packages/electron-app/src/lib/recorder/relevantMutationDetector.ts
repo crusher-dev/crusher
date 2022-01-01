@@ -9,7 +9,6 @@ interface iRegisteredMutationRecord {
 }
 
 export function pushToEventMutationArr(eventStackMapKey: string, targetNode: any, targetChanges: any) {
-	// console.log("gotthislog", eventStackMapKey, targetChanges, targetChanges);
 	const eventNode = (window as any).crusherMap[eventStackMapKey];
 	if (!eventNode) return;
 	const dependentOn = getEventNodeInCaseDOMWasMutated(eventNode);

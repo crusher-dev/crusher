@@ -30,14 +30,12 @@ const App = () => {
 	React.useEffect(() => {
 		console.log("HELLO FROM RENDERER");
 		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
-			console.log("Webview initialized in: " + initializeTime);
 			store.dispatch(setIsWebViewInitialized(true));
 			const recorderInfo = getRecorderInfo(store.getState() as any);
 			const device = devices.find(device => device.id === recorderInfo.device as any);
 			saveSetDeviceIfNotThere(device, store);
 			if(!recorderInfo.url) {
 				emitter.emit("renderer-webview-initialized");
-				console.log("Sending message for initialzie");
 			} else {
 				performNavigation(recorderInfo.url, store);
 			}

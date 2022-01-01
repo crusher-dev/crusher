@@ -11,7 +11,7 @@ import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
 import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, saveTest } from "../../commands/perform";
+import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, saveTest, updateTest } from "../../commands/perform";
 import { addHttpToURLIfNotThere } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
@@ -30,29 +30,15 @@ const recorderDevices = devices.filter(device => device.visible).map((device) =>
 }));
 
 const SaveVerifyButton = ({isTestVerificationComplete}) => {
-	const [secondsCounter, setSecondsCounter] = React.useState(0);
 	const intervalRef = React.useRef(null);
 	const totalSecondsToWaitBeforeSave = 5;
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
 
-	let counter =  0;
 	React.useEffect(() => {
 		if(isTestVerificationComplete) {
-			setSecondsCounter(0);
-			intervalRef.current = setInterval(() => {
-				counter++;
-
-				if(counter >= totalSecondsToWaitBeforeSave) {
-					saveTestToCloud();
-				}
-				setSecondsCounter(counter);
-			}, 1000);
-
-			return () => {
-				if(intervalRef.current)
-					clearInterval(intervalRef.current);
-				intervalRef.current = null;
-			};
+			if(!editingSessionMeta) {
+				saveTestToCloud();
+			}
 		}
 	}, [isTestVerificationComplete]);
 
@@ -70,27 +56,37 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 	}
 
 	const editTestInCloud = () => {
-		alert("Editing test now");
+		updateTest();
 	}
 
-	const buttonAction = isTestVerificationComplete ? ( editingSessionMeta ? editTestInCloud : saveTestToCloud) : verifyTest;
-
 	return (
-		<Button onClick={buttonAction} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
-			<Conditional showIf={isTestVerificationComplete}>
-				<span>
-					<Conditional showIf={totalSecondsToWaitBeforeSave - secondsCounter > 0}>
-						<span>{editingSessionMeta ? "Updating" : "Saving"} in  {totalSecondsToWaitBeforeSave - secondsCounter}s</span>
+		<>
+			<Conditional showIf={!editingSessionMeta}>
+				<Button onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+					<Conditional showIf={isTestVerificationComplete}>
+						<span>
+							<span>Save test</span>
+						</span>
 					</Conditional>
-					<Conditional showIf={totalSecondsToWaitBeforeSave - secondsCounter <= 0}>
-						<span>{editingSessionMeta ? "Update" : "Save"} test</span>
+					<Conditional showIf={!isTestVerificationComplete}>
+						<span>Verify & Save</span>
 					</Conditional>
-				</span>
+				</Button>
 			</Conditional>
-			<Conditional showIf={!isTestVerificationComplete}>
-				<span>Verify test</span>
+
+			<Conditional showIf={!!editingSessionMeta}>
+				<Button onClick={isTestVerificationComplete ? editTestInCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+					<Conditional showIf={isTestVerificationComplete}>
+						<span>
+							<span>Update test</span>
+						</span>
+					</Conditional>
+					<Conditional showIf={!isTestVerificationComplete}>
+						<span>Verify & Update</span>
+					</Conditional>
+				</Button>
 			</Conditional>
-		</Button>
+		</>
 	);
 }
 
@@ -250,7 +246,7 @@ const buttonStyle = css`
 `;
 
 const saveButtonStyle = css`
-	width: 113rem;
+	width: 126rem;
 	height: 30rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
 	border-radius: 6rem;

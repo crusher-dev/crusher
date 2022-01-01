@@ -152,6 +152,10 @@ const saveTest = () => {
     ipcRenderer.invoke("save-test");
 }
 
+const updateTest = () => {
+    ipcRenderer.invoke("update-test");
+}
+
 const preformGoBackPage = () => {
     ipcRenderer.invoke("go-back-page");
 }
@@ -160,4 +164,4 @@ const performReloadPage = () => {
     ipcRenderer.invoke("reload-page");
 }
 
-export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest };
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest };

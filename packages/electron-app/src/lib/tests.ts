@@ -8,14 +8,13 @@ import * as url from "url";
 
 class CrusherTests {
     public static async getTest(testId: string): Promise<Array<iAction>> {
-        const testInfoResponse = await axios.get<{events: Array<iAction>}>(resolveToBackendPath(`/tests/${testId}`, "https://backend.crusher.dev"));
+        const testInfoResponse = await axios.get<{events: Array<iAction>}>(resolveToBackendPath(`/tests/${testId}`));
         const testSteps = testInfoResponse.data.events;
 
         return testSteps;
     }
 
     public static async getReplayableTestActions(actions: Array<iAction>, isMainTest: boolean): Promise<Array<iAction>> {
-        console.log("Actions are", actions);
         const out = [];
         const browserActions: Array<iAction> = getBrowserActions(actions);
         if (isMainTest) {
@@ -36,17 +35,28 @@ class CrusherTests {
     }
     
     public static async saveTest(events: Array<iAction>) {
-       return axios.post(resolveToBackendPath("tests/actions/save.temp", `https://backend.crusher.dev/`), {
+       return axios.post(resolveToBackendPath("tests/actions/save.temp"), {
             events: events
         }, {
             headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
         })
             .then(async (result) => {
-                shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}`, `https://app.crusher.dev/`));
+                shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`));
     
                 // @Note: window.open() instead of navigation though hyperlinks
                 // hangs the electron app for some reason.
             });
+    }
+
+    public static async updateTest(events: Array<iAction>, testId: string) {
+        return axios.post(resolveToBackendPath("tests/actions/save.temp"), { events: events }, {
+            headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json" },
+        }).then(async (result) => {
+          shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=update&update_test_id=${testId}`));
+    
+          // @Note: window.open() instead of navigation though hyperlinks
+          // hangs the electron app for some reason.
+        });
     }
 }
 

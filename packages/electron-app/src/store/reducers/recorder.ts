@@ -135,9 +135,14 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		}
 		case RESET_RECORDER_STATE:
 			return {
-				...initialState,
-				currentUrl: state.currentUrl,
-				device: state.device,
+				...state,
+				state: initialState.state,
+				isInspectModeOn: initialState.isInspectModeOn,
+			
+				selectedElement: initialState.isInspectModeOn,
+				savedSteps: initialState.savedSteps,
+			
+				isVerified: initialState.isVerified,
 			}
 		case UPDATE_RECORDER_STATE:
 			return {

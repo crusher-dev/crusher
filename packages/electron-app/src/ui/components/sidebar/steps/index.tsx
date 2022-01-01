@@ -180,7 +180,6 @@ const StepsPanel = ({className, ...props}: any) => {
     const toggleStep = React.useCallback(
 		(index) => {
 			const selectedSteps = new Set(checkedSteps);
-			console.log(checkedSteps);
 			if (checkedSteps.has(index)) {
 				selectedSteps.delete(index);
 			} else {

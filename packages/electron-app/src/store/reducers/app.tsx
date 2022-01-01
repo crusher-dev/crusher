@@ -2,7 +2,7 @@ import { AnyAction } from "redux";
 import {} from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
-import { SET_SHOW_SHOULD_ONBOARDING_OVERLAY } from "../actions/app";
+import { SET_SESSION_META, SET_SHOW_SHOULD_ONBOARDING_OVERLAY } from "../actions/app";
 
 export interface iSettings { 
     autoDetectActions: boolean;
@@ -10,16 +10,14 @@ export interface iSettings {
 }
 
 export interface ISessionMeta {
-	editing: { testId: string } | false;
+	editing?: { testId: string } | undefined;
 };
 
 interface IAppReducer {
 	settings: iSettings;
 	shouldShowOnboardingOverlay: boolean;
 
-	sessionMeta: {
-		editing?: ISessionMeta;
-	 },
+	sessionMeta: ISessionMeta;
 };
 
 const initialState: IAppReducer = {
@@ -34,6 +32,11 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction) => {
 			return {
 				...state,
 				shouldShowOnboardingOverlay: action.payload.shouldShow,
+			}
+		case SET_SESSION_META:
+			return {
+				...state,
+				sessionMeta: action.payload.sessionMeta
 			}
 		default:
 			return state;

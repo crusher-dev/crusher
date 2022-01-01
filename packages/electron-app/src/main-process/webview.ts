@@ -56,7 +56,6 @@ export class WebView {
         this.registerIPCListeners();
         await this.playwrightInstance.connect();
 
-		console.log("Path is", path.join(__dirname, "recorder.js"));
         await this.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
 		this._initializeTime = now() - this._startTime;
 

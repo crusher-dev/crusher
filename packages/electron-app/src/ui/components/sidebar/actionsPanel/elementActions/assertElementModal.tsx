@@ -53,7 +53,6 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	React.useEffect(() => {
 		if(isOpen) {
-			console.log("Sending this async", selectedElement);
 			ipcRenderer.invoke("get-element-assert-info", selectedElement).then((res) => {
 				setElementInfo(res);
 			});

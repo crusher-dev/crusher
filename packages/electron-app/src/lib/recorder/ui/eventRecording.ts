@@ -309,7 +309,6 @@ export default class EventRecording {
 		const needsOtherActions = await this.releventHoverDetectionManager.isCoDependentNode(element, baseLineTimeStamp, this._clickEvents);
 		if (needsOtherActions) {
 			const hoverNodesRecord = this.releventHoverDetectionManager.getParentDOMMutations(element, baseLineTimeStamp, this._clickEvents);
-			console.log("Hover nodes records", hoverNodesRecord);
 			const hoverNodes = hoverNodesRecord.map((record) => record.eventNode);
 			if (hoverNodes.length && hoverNodes[hoverNodes.length - 1] === element) {
 				hoverNodes.pop();
@@ -357,7 +356,6 @@ export default class EventRecording {
 	}
 
 	unpin() {
-		console.log("Unpinning");
 		this.state.pinned = false;
 		if (this._overlayCover) {
 			this._overlayCover.classList.remove("pointerEventsNone");
@@ -372,8 +370,6 @@ export default class EventRecording {
 		if (event.which === 3) {
 			event.preventDefault();
 		}
-
-		console.log("Click is taking place");
 
 		this.handleWindowClick(event);
 	}
@@ -414,7 +410,6 @@ export default class EventRecording {
 
 		// If clientX and clientY is 0 it may mean that the event is not triggered
 		// by user. Found during creating tests for ielts search
-		console.log("Event now", event.isTrusted, !event.simulatedEvent, event.clientX, event.clientY);
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
 			this._clickEvents.push(event);
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
@@ -471,7 +466,6 @@ export default class EventRecording {
 			detail: { type: string; key: string; eventNode: Node; targetNode: Node };
 		},
 	) {
-		console.log("Tracing dom mutation");
 		this.releventHoverDetectionManager.registerDOMMutation({
 			...event.detail,
 		});
@@ -632,7 +626,7 @@ export default class EventRecording {
 		const activeElementHref = (document.activeElement as any).getAttribute("href");
 		if (activeElementHref) {
 			this.eventsController.saveCapturedEventInBackground(
-				ActionsInTestEnum.NAVIGATE_URL,
+				ActionsInTestEnum.WAIT_FOR_NAVIGATION,
 				document.body,
 				activeElementHref && activeElementHref.trim() !== ""
 					? !this.isAbsoluteURL(activeElementHref)

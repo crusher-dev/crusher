@@ -114,8 +114,6 @@ class PlaywrightInstance {
 			return url.startsWith("about:blank");
 		});
 
-		console.log("Webview page", pagesMap[webViewPage]);
-
 		const page = pages[webViewPage];
 		return page;
 	}
@@ -147,7 +145,6 @@ class PlaywrightInstance {
                 break;
 			case "CRUSHER_SAVE_ELEMENT_HANDLE": {
 				const uniqueElementId = messageArgs[2].toString();
-				console.log("Setting element handle", uniqueElementId);
 
 				const elementHandle = valueObj.asElement();
 				if(elementHandle) this.elementsMap.set(uniqueElementId, elementHandle);

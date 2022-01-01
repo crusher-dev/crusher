@@ -284,6 +284,7 @@ export class AppWindow {
         this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {action: action}));
         switch(action.type) {
             case ActionsInTestEnum.SET_DEVICE: {
+                console.log("Action is", action);
                 // Custom implementation here, because we are in the recorder
                 const userAgent = action.payload.meta?.device.userAgentRaw ? action.payload.meta?.device.userAgentRaw : getUserAgentFromName(action.payload.meta?.device.userAgent).value;
                 if(this.webView) {

@@ -117,30 +117,30 @@ const Toolbar = (props: any) => {
 
     const handleUrlReturn = React.useCallback(() => {
 		if(urlInputRef.current?.value) {
-			const device = recorderDevices.find((device) => device.value === selectedDevice[0])?.device;
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
 			
 			batch(() => {
 				if(selectedDevice[0] !== recorderInfo.device?.id) {
-					performSetDevice(device);
 					dispatch(setDevice(selectedDevice[0]));
 				}
 				
 				if(recorderInfo.url) {
 					dispatch(setSiteUrl(validUrl.toString()));
+					// Perform navigation if already recording
 					performNavigation(validUrl.toString(), store);
 				} else {
 					dispatch(setSiteUrl(validUrl.toString()));
 				}
 			})
 		}
-    }, [recorderInfo]);
+    }, [selectedDevice, recorderInfo]);
 
 	const handleChangeDevice = (selected) => {
 		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
 		setSelectedDevice([selected[0]]);
 
 		if(recorderInfo.url) {
+			// Only perform and set if already recording
 			performSetDevice(device);
 			dispatch(setDevice(selected[0]));
 		}

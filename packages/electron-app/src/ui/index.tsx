@@ -9,7 +9,7 @@ import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from 'electron-redux';
 import { ipcRenderer } from "electron";
-import { resetRecorderState, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
+import { resetRecorder, resetRecorderState, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
 import { getRecorderInfo, isWebViewInitialized } from "../store/selectors/recorder";
 import { performNavigation, performReplayTest, saveSetDeviceIfNotThere } from "./commands/perform";
@@ -32,9 +32,10 @@ const App = () => {
 			store.dispatch(setIsWebViewInitialized(true));
 			const recorderInfo = getRecorderInfo(store.getState() as any);
 			saveSetDeviceIfNotThere(recorderInfo.device, store);
-			if(!recorderInfo.url) {
-				emitter.emit("renderer-webview-initialized");
-			} else {
+
+			emitter.emit("renderer-webview-initialized");
+			if(recorderInfo.url) {
+				// Perform navigation to the url that was set before the webview was initialized
 				performNavigation(recorderInfo.url, store);
 			}
 		});
@@ -64,8 +65,9 @@ const App = () => {
 			}
 		});
 
-		window.onbeforeunload = () => { 
-			store.dispatch(resetRecorderState());
+		window.onbeforeunload = () => {
+			store.dispatch(resetRecorder());
+			store.dispatch(setSessionInfoMeta({}));
 		};
 	}, []);
 

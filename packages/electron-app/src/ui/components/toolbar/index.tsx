@@ -121,16 +121,16 @@ const Toolbar = (props: any) => {
 			
 			batch(() => {
 				if(selectedDevice[0] !== recorderInfo.device?.id) {
+					// Setting the device will add webview in DOM tree
+					// navigation will be run after 'webview-initialized' event
 					dispatch(setDevice(selectedDevice[0]));
 				}
-				
+
+				dispatch(setSiteUrl(validUrl.toString()));
 				if(recorderInfo.url) {
-					dispatch(setSiteUrl(validUrl.toString()));
 					// Perform navigation if already recording
 					performNavigation(validUrl.toString(), store);
-				} else {
-					dispatch(setSiteUrl(validUrl.toString()));
-				}
+				} 
 			})
 		}
     }, [selectedDevice, recorderInfo]);
@@ -246,7 +246,7 @@ const buttonStyle = css`
 `;
 
 const saveButtonStyle = css`
-	width: 126rem;
+	width: 128rem;
 	height: 30rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
 	border-radius: 6rem;

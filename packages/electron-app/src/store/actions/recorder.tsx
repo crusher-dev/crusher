@@ -19,6 +19,7 @@ export const RESET_RECORDER_STATE = "RESET_RECORDER_STATE";
 export const SET_IS_TEST_VERIFIED = "SET_IS_TEST_VERIFIED";
 export const DELETE_RECORDED_STEPS = "DELETE_RECORDED_STEPS";
 export const MARK_RECORDED_STEPS_OPTIONAL = "MARK_RECORDED_STEPS_OPTIONAL";
+export const RESET_RECORDER = "RESET_RECORDER";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -79,6 +80,12 @@ export const updateCurrentRunningStepStatus = (status: ActionStatusEnum) => {
 export const resetRecorderState = () => {
     return {
         type: RESET_RECORDER_STATE,
+    };
+}
+
+export const resetRecorder = () => {
+    return {
+        type: RESET_RECORDER,
     };
 }
 

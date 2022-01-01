@@ -11,7 +11,7 @@ import { WebView } from './webview';
 import { iAction } from '@shared/types/action';
 import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 import { iDevice } from '@shared/types/extension/device';
-import { recordStep, resetRecorderState, setInspectMode, setIsTestVerified, updateCurrentRunningStepStatus, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
+import { recordStep, resetRecorderState, setInspectMode, setIsTestVerified, setSiteUrl, updateCurrentRunningStepStatus, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
 import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
 import { getSavedSteps } from '../store/selectors/recorder';
 import { CrusherTests } from '../lib/tests';
@@ -298,6 +298,7 @@ export class AppWindow {
                 break;
             }
             case ActionsInTestEnum.NAVIGATE_URL: {
+                this.store.dispatch(setSiteUrl(action.payload.meta.value));
                 await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
                 break;
             }

@@ -219,8 +219,6 @@ export class AppWindow {
         const recordedSteps = getSavedSteps(this.store.getState() as any);
         const appSettings = getAppSettings(this.store.getState() as any);
 
-        console.log("App settings are", appSettings);
-
         await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);     
     }
 

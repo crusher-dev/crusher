@@ -35,9 +35,6 @@ class CrusherTests {
     }
     
     public static async saveTest(events: Array<iAction>, customBackendPath: string | undefined = undefined, customFrontEndPath: string | undefined = undefined) {
-        console.log("Custom backend path: ", customBackendPath);
-        console.log("Custom front end path: ", customFrontEndPath);
-        console.log("p", resolveToBackendPath("tests/actions/save.temp", customBackendPath));
        return axios.post(resolveToBackendPath("tests/actions/save.temp", customBackendPath), {
             events: events
         }, {

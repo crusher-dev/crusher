@@ -12,7 +12,7 @@ import { ipcRenderer } from "electron";
 import { resetRecorder, resetRecorderState, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
 import { getRecorderInfo, isWebViewInitialized } from "../store/selectors/recorder";
-import { performNavigation, performReplayTest, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
+import { performNavigation, performReplayTest, performSetDevice, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import {devices} from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
@@ -32,7 +32,7 @@ const App = () => {
 		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
 			const recorderInfo = getRecorderInfo(store.getState() as any);
-			saveSetDeviceIfNotThere(recorderInfo.device, store);
+			performSetDevice(recorderInfo.device);
 
 			emitter.emit("renderer-webview-initialized");
 			if(recorderInfo.url) {

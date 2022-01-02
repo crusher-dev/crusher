@@ -25,7 +25,7 @@ const DeviceFrame = (props: any) => {
         if (ref.current) {
             ref.current.addEventListener("ipc-message", (event: IpcMessageEvent) => {
                 const recorderState = getRecorderState(store.getState());
-                if(recorderState.type === TRecorderState.PERFORMING_ACTIONS) return;
+                if(recorderState.type !== TRecorderState.RECORDING_ACTIONS) return;
     
                 const { channel, args } = event;
                 if(channel === "recorder-message") {

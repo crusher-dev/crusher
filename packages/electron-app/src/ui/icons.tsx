@@ -247,4 +247,19 @@ const MoreIcon = (props: any) => {
 	);
 };
 
-export { BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon };
+const CrossIcon = (props) => (
+	<svg
+	  width={12}
+	  height={12}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  css={css`fill: #ffffff1a; path { fill: inherit; } &:hover {fill: #9F9F9F}`} 
+	  {...props}
+	>
+	  <path
+		d="m7.98 6 3.712-3.712a1.05 1.05 0 0 0 0-1.485l-.495-.495a1.05 1.05 0 0 0-1.484 0L6 4.021 2.288.308a1.05 1.05 0 0 0-1.485 0L.308.803a1.05 1.05 0 0 0 0 1.484L4.02 6 .308 9.713a1.05 1.05 0 0 0 0 1.485l.495.494c.41.41 1.075.41 1.485 0L6 7.98l3.713 3.712c.41.41 1.075.41 1.485 0l.494-.495a1.05 1.05 0 0 0 0-1.484L7.98 6Z"
+	  />
+	</svg>
+  )
+
+export { CrossIcon, BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon };

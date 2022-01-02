@@ -15,6 +15,7 @@ import { performNavigation, performReloadPage, performSetDevice, performVerifyTe
 import { addHttpToURLIfNotThere } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
+import { SettingsModal } from "./settingsModal";
 
 const DeviceItem = ({label}) => {
 	return (
@@ -94,6 +95,7 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 const Toolbar = (props: any) => {
     const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
+	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfo = useSelector(getRecorderInfo);
@@ -154,6 +156,10 @@ const Toolbar = (props: any) => {
 	const refreshPage = () => {
 		performReloadPage();
 	}
+
+	const handleCloseSettingsModal = () => {
+		setShowSettingsModal(false);
+	};
     
     return (
 		<div css={containerStyle}>
@@ -193,11 +199,12 @@ const Toolbar = (props: any) => {
 				</div>
 
 				<div className={"ml-auto flex items-center"}>
-					<SettingsIcon css={css`height: 14rem; :hover { opacity: 0.9 }`} className={"ml-12"} />
+					<SettingsIcon onClick={setShowSettingsModal.bind(this, true)} css={css`height: 14rem; :hover { opacity: 0.9 }`} className={"ml-12"} />
 
 					<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
 				</div>
 			</Conditional>
+			<SettingsModal isOpen={showSettingsModal} handleClose={handleCloseSettingsModal} />
 		</div>
 	);
 };

@@ -7,12 +7,13 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { MoreIcon } from "../../../icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { deleteRecordedSteps, markRecordedStepsOptional } from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps, markRecordedStepsOptional, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 export const ACTION_DESCRIPTIONS = {
     [ActionsInTestEnum.CLICK]: "Click on element",
@@ -71,19 +72,52 @@ const Step = ({
 	const [isHover, setIsHover] = React.useState(false);
 	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
 	const dispatch = useDispatch();
+	const store = useStore();
 
 	React.useEffect(() => {
 		setShowStepActionDropdown(false);
 	}, [isHover]);
 
 	const handleStepActionDropdown = (id) => {
+		const recorderState = getRecorderState(store.getState());
 		setShowStepActionDropdown(false);
 		switch(id) {
-			case StepActionsEnum.DELETE:
+			case StepActionsEnum.DELETE: {
+				if (recorderState.type===TRecorderState.ACTION_REQUIRED) {
+					dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+				}
 				dispatch(deleteRecordedSteps([stepIndex]));
 				break;
+			}
 		}
 	};
+
+	const handleDeleteAndContinue = () => {
+		const recorderState = getRecorderState(store.getState());
+		if (recorderState.type===TRecorderState.ACTION_REQUIRED) {
+			dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+		}
+
+		dispatch(deleteRecordedSteps([stepIndex]));
+	}
+
+	const markStepOptionalAndContinue = () => {
+		const recorderState = getRecorderState(store.getState());
+		const savedSteps = getSavedSteps(store.getState());
+		if (recorderState.type===TRecorderState.ACTION_REQUIRED) {
+			dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+		}
+		
+		const step = savedSteps[stepIndex];
+		dispatch(updateRecordedStep({
+			...step,
+			payload: {
+				...step.payload,
+				isOptional: true,
+			},
+			status: ActionStatusEnum.MANUAL_REVIEW_REQUIRED,
+		}, stepIndex as any));
+	}
 
 	return (
 		<div onMouseOver={setIsHover.bind(this, true)} onMouseLeave={setIsHover.bind(this, false)}>
@@ -98,7 +132,7 @@ const Step = ({
 				<Conditional showIf={isRunning}>
 					<LoadingIcon  style={{width: 30, height: 30, marginLeft: 4}} css={css`margin-left: auto;`}/>
 				</Conditional>
-				<Conditional showIf={isHover && (!isRunning && !isFailed)}>
+				<Conditional showIf={isHover && (!isRunning)}>
 					<Dropdown
 							initialState={showStepActionDropdown}
                             dropdownCSS={dropdownStyle}
@@ -108,11 +142,11 @@ const Step = ({
 							<MoreIcon onClick={setShowStepActionDropdown.bind(this, true)} css={css`:hover{ opacity: 0.7; }`} />
                     </Dropdown>
 				</Conditional>
+
 				<Conditional showIf={isFailed}>
-					<MoreIcon css={css`:hover{ opacity: 0.7; }`} />
 					<TextBlock css={stepWarningStyle}>
 						<WarningIcon css={css`height: 13rem`} />
-                        <span css={css`margin-left: 4rem;padding-top:2rem;`}>&nbsp; This step failed</span>
+						<span css={css`margin-left: 4rem;padding-top:2rem;`}>&nbsp; This step failed</span>
 					</TextBlock>
 				</Conditional>
 			</div>
@@ -124,10 +158,10 @@ const Step = ({
 						{/* <MoreIcon /> */}
 					</div>
 					<div css={failedButtonsStyle}>
-						<Button size="small" css={failedButtonStyle} bgColor="tertiary-outline">
+						<Button size="small" onClick={markStepOptionalAndContinue} css={failedButtonStyle} bgColor="tertiary-outline">
 							Mark optional
 						</Button>
-						<Button size="small" css={failedButtonStyle} bgColor="tertiary-outline">
+						<Button size="small" css={failedButtonStyle} onClick={handleDeleteAndContinue} bgColor="tertiary-outline">
 							Delete & continue
 						</Button>
 					</div>

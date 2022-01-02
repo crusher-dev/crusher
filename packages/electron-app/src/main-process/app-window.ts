@@ -288,45 +288,51 @@ export class AppWindow {
     private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction, shouldNotSave?: boolean }) {
         const { action, shouldNotSave } = payload;
         this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {action: action}));
-        switch(action.type) {
-            case ActionsInTestEnum.SET_DEVICE: {
-                console.log("Action is", action);
-                // Custom implementation here, because we are in the recorder
-                const userAgent = action.payload.meta?.device.userAgentRaw ? action.payload.meta?.device.userAgentRaw : getUserAgentFromName(action.payload.meta?.device.userAgent).value;
-                if(this.webView) {
-                    this.webView.webContents.setUserAgent(userAgent);
-                }
-                app.userAgentFallback = userAgent;
 
-                if(!shouldNotSave) {
-                    this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+        try {
+            switch(action.type) {
+                case ActionsInTestEnum.SET_DEVICE: {
+                    // Custom implementation here, because we are in the recorder
+                    const userAgent = action.payload.meta?.device.userAgentRaw ? action.payload.meta?.device.userAgentRaw : getUserAgentFromName(action.payload.meta?.device.userAgent).value;
+                    if(this.webView) {
+                        this.webView.webContents.setUserAgent(userAgent);
+                    }
+                    app.userAgentFallback = userAgent;
+
+                    if(!shouldNotSave) {
+                        this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                    }
+                    break;
                 }
-                break;
-            }
-            case ActionsInTestEnum.NAVIGATE_URL: {
-                this.store.dispatch(setSiteUrl(action.payload.meta.value));
-                await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
-                break;
-            }
-            case ActionsInTestEnum.RUN_AFTER_TEST: {
-                await this.resetRecorder();
-                await this.handleRunAfterTest(action);
-                break;
-            }
-            case ActionsInTestEnum.RELOAD_PAGE: {
-                this.webView.webContents.reload();
-                await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
-                if(!shouldNotSave) {
-                    this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                case ActionsInTestEnum.NAVIGATE_URL: {
+                    this.store.dispatch(setSiteUrl(action.payload.meta.value));
+                    await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                    break;
                 }
-                break;
+                case ActionsInTestEnum.RUN_AFTER_TEST: {
+                    await this.resetRecorder();
+                    await this.handleRunAfterTest(action);
+                    break;
+                }
+                case ActionsInTestEnum.RELOAD_PAGE: {
+                    this.webView.webContents.reload();
+                    await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
+                    if(!shouldNotSave) {
+                        this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                    }
+                    break;
+                }
+                default:
+                    console.log("Running this action", action);
+                    await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                    break;
             }
-            default:
-                console.log("Running this action", action);
-                await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
-                break;
+            this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+        } catch(e) {
+            console.log(e);
+            this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
+            throw e;
         }
-        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
     }
 
     private async resetRecorder() {

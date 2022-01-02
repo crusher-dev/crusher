@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { BrowserIcon, CloseModalIcon } from "../../icons";
+import { BrowserIcon, CloseModalIcon, CrossIcon } from "../../icons";
 
 interface iModalTopBarProps {
 	title: string;
@@ -23,7 +23,7 @@ const ModalTopBar = (props: iModalTopBarProps) => {
 				</div>
 			</div>
 			<div id="close-button" onClick={closeModal} style={closeButtonStyle}>
-				<CloseModalIcon color={"#ffffff1a"} height={14} width={14} />
+				<CrossIcon color={"#ffffff1a"} />
 			</div>
 		</div>
 	);
@@ -33,7 +33,7 @@ const topBarStyle = css`
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 1rem;
-	padding: 20rem 34rem;
+	padding: 26rem 34rem;
 `;
 
 const topLeftSectionStyle = {
@@ -56,7 +56,7 @@ const subHeadingStyle = css`
 	color: #FFFFFF;
 	font-family: Cera Pro;
 	color: rgba(255, 255, 255, 0.4);
-	margin-top: 13rem;
+	margin-top: 15rem;
 `;
 const closeButtonStyle = {
 };

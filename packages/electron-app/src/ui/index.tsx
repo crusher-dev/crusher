@@ -7,20 +7,19 @@ import { Sidebar } from './components/sidebar';
 import "../../static/assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
-import { getInitialStateRenderer, replayActionMain, replayActionRenderer } from 'electron-redux';
+import { getInitialStateRenderer } from 'electron-redux';
 import { ipcRenderer } from "electron";
-import { resetRecorder, resetRecorderState, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
-import { TRecorderState } from "../store/reducers/recorder";
+import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { getRecorderInfo, isWebViewInitialized } from "../store/selectors/recorder";
 import { performNavigation, performReplayTest, performSetDevice, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import {devices} from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
-import { CrusherTests } from "../lib/tests";
 import { Emitter } from "event-kit";
 import { setSessionInfoMeta, setSettngs, setShowShouldOnboardingOverlay } from "../store/actions/app";
 import { getAppSessionMeta } from "../store/selectors/app";
 import { ToastSnackbar } from "./components/toast";
+import { TRecorderState } from "../store/reducers/recorder";
 
 const emitter = new Emitter();
 
@@ -31,6 +30,7 @@ const App = () => {
 	React.useEffect(() => {
 		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
+			store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			const recorderInfo = getRecorderInfo(store.getState() as any);
 			performSetDevice(recorderInfo.device);
 

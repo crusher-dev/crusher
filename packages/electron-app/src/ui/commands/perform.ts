@@ -27,8 +27,6 @@ const performSetDevice = async (device: iDevice) => {
 }
 
 const performNavigation = async (url: string, store: Store<unknown, AnyAction>) => {
-    store.dispatch(updateRecorderState(TRecorderState.NAVIGATING, { url } ));
-
     await performAction({
         type: ActionsInTestEnum.NAVIGATE_URL,
         payload: {
@@ -168,4 +166,8 @@ const resetStorage = () => {
     ipcRenderer.invoke("reset-storage");
 }
 
-export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage };
+const continueRemainingSteps = () => {
+    ipcRenderer.invoke("continue-remaining-steps");
+};
+
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage, continueRemainingSteps };

@@ -14,6 +14,8 @@ import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { deleteRecordedSteps, markRecordedStepsOptional, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { continueRemainingSteps } from "electron-app/src/ui/commands/perform";
+import { getAppSessionMeta, getRemainingSteps } from "electron-app/src/store/selectors/app";
 
 export const ACTION_DESCRIPTIONS = {
     [ActionsInTestEnum.CLICK]: "Click on element",
@@ -99,6 +101,7 @@ const Step = ({
 		}
 
 		dispatch(deleteRecordedSteps([stepIndex]));
+		continueRemainingSteps();
 	}
 
 	const markStepOptionalAndContinue = () => {
@@ -196,6 +199,7 @@ const GroupActionsMenu = ({showDropDownCallback, callback}) => {
 const StepsPanel = ({className, ...props}: any) => {
     const [checkedSteps, setCheckedSteps] = React.useState(new Set());
     const recordedSteps = useSelector(getSavedSteps);
+	const remainingSteps = useSelector(getRemainingSteps);
 
 	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
 	const dispatch = useDispatch();
@@ -258,6 +262,10 @@ const StepsPanel = ({className, ...props}: any) => {
 				break;
 		}
 	}, [checkedSteps]);
+
+	const handleContinueTest = () =>{
+		continueRemainingSteps();
+	}
     
     return (
         <div className={`${className}`} css={containerStyle}>
@@ -292,6 +300,12 @@ const StepsPanel = ({className, ...props}: any) => {
 						subtitle={step.selector.substr(0, 25)}
 					/>
 				))}
+
+				<Conditional showIf={remainingSteps && remainingSteps.length > 0}>
+					<div css={css`margin-top: 12rem; display: flex; justify-content: center;`}>
+						<span onClick={handleContinueTest} css={css`color: #fff; font-size: 13rem; text-decoration: underline; text-underline-offset: 2rem; :hover { opacity: 0.9 }`}>Continue to test</span>
+					</div>
+				</Conditional>
 			</div>
         </div>
     )

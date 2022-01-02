@@ -13,6 +13,7 @@ export interface iSettings {
 
 export interface ISessionMeta {
 	editing?: { testId: string } | undefined;
+	remainingSteps?: Array<iAction> | undefined;
 };
 
 interface IAppReducer {

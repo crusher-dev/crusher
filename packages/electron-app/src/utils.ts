@@ -39,4 +39,13 @@ const parseDeepLinkUrlAction = (url: string): IDeepLinkAction | null => {
 	return null;
 };
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction };
+function sleep(time: number) {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(true);
+		}, time);
+	});
+}
+
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep };

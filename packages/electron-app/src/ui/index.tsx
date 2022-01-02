@@ -7,7 +7,7 @@ import { Sidebar } from './components/sidebar';
 import "../../static/assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
-import { getInitialStateRenderer } from 'electron-redux';
+import { getInitialStateRenderer, replayActionMain, replayActionRenderer } from 'electron-redux';
 import { ipcRenderer } from "electron";
 import { resetRecorder, resetRecorderState, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
@@ -18,8 +18,9 @@ import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
 import { CrusherTests } from "../lib/tests";
 import { Emitter } from "event-kit";
-import { setSessionInfoMeta } from "../store/actions/app";
+import { setSessionInfoMeta, setSettngs, setShowShouldOnboardingOverlay } from "../store/actions/app";
 import { getAppSessionMeta } from "../store/selectors/app";
+import { ToastSnackbar } from "./components/toast";
 
 const emitter = new Emitter();
 
@@ -80,6 +81,8 @@ const App = () => {
                     <DeviceFrame css={deviceFrameContainerStyle} />
             </div>
             <Sidebar css={sidebarStyle} />
+
+			<ToastSnackbar />
         </div>
 	);
 };
@@ -141,8 +144,19 @@ const globalStyles = css`
 
 const initialReduxState: iReduxState = getInitialStateRenderer();
 initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
+if(!localStorage.getItem("app.settings")) {
+	initialReduxState.app.settings.backendEndPoint = process.env.BACKEND_URL;
+	initialReduxState.app.settings.frontendEndPoint = process.env.FRONTEND_URL;
+}
+
+initialReduxState.app.settings = localStorage.getItem("app.settings") ? JSON.parse(localStorage.getItem("app.settings")) : initialReduxState.app.settings;
 
 const store = configureStore(initialReduxState, "renderer");
+
+// Weirdly main process store doesn't get updated, this will fix it
+store.dispatch(setSettngs(initialReduxState.app.settings));
+store.dispatch(setShowShouldOnboardingOverlay(initialReduxState.app.shouldShowOnboardingOverlay));
+
 render(
 <Provider store={store}>
         <App />

@@ -19,7 +19,7 @@ import { getBrowserActions, getMainActions } from 'runner-utils/src';
 import { iElementInfo, TRecorderState } from '../store/reducers/recorder';
 import { iSeoMetaInformationMeta } from '../types';
 import { getUserAgentFromName } from '@shared/constants/userAgents';
-import { getAppEditingSessionMeta } from '../store/selectors/app';
+import { getAppEditingSessionMeta, getAppSettings } from '../store/selectors/app';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -211,13 +211,17 @@ export class AppWindow {
     async handleUpdateTest(event: Electron.IpcMainEvent) {
         const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
         const recordedSteps = getSavedSteps(this.store.getState() as any);
-        await CrusherTests.updateTest(recordedSteps as any, editingSessionMeta.testId);
+        const appSettings = getAppSettings(this.store.getState() as any);
+        await CrusherTests.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
     }
 
     async handleSaveTest() {
         const recordedSteps = getSavedSteps(this.store.getState() as any);
+        const appSettings = getAppSettings(this.store.getState() as any);
 
-        await CrusherTests.saveTest(recordedSteps as any);     
+        console.log("App settings are", appSettings);
+
+        await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);     
     }
 
     async handleVerifyTest() {
@@ -227,8 +231,9 @@ export class AppWindow {
 
     async hanldeRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: {testId: number}) {
         this.resetRecorder();
-        const testSteps = await CrusherTests.getTest(`${payload.testId}`);
-        const replayableTestSteps = await CrusherTests.getReplayableTestActions(testSteps, true);
+        const appSettings = getAppSettings(this.store.getState() as any);
+        const testSteps = await CrusherTests.getTest(`${payload.testId}`, appSettings.backendEndPoint);
+        const replayableTestSteps = await CrusherTests.getReplayableTestActions(testSteps, true, appSettings.backendEndPoint);
 
         this.handleReplayTest(replayableTestSteps);
     }
@@ -238,8 +243,9 @@ export class AppWindow {
 
         await this.resetRecorder();
         this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {  }));
-    
-        const replayableTestSteps = await CrusherTests.getReplayableTestActions(stepsToVerify as any, true);
+        const appSettings = getAppSettings(this.store.getState() as any);
+
+        const replayableTestSteps = await CrusherTests.getReplayableTestActions(stepsToVerify as any, true, appSettings.backendEndPoint);
         const browserActions = getBrowserActions(replayableTestSteps);
         
         for(let browserAction of browserActions) {
@@ -342,8 +348,9 @@ export class AppWindow {
 
     private async handleRunAfterTest(action: iAction)  {
         this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }));
-    
-        const replayableTestSteps = await CrusherTests.getReplayableTestActions(await CrusherTests.getTest(action.payload.meta.value), true);
+        const appSettings = getAppSettings(this.store.getState() as any);
+
+        const replayableTestSteps = await CrusherTests.getReplayableTestActions(await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint), true, appSettings.backendEndPoint);
         const browserActions = getBrowserActions(replayableTestSteps);
         
         for(let browserAction of browserActions) {

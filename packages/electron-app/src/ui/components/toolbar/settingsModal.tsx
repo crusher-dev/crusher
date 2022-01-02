@@ -4,9 +4,13 @@ import { Modal } from "@dyson/components/molecules/Modal";
 import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { performRunAfterTest } from "electron-app/src/ui/commands/perform";
 import { Toggle } from "@dyson/components/atoms/toggle/toggle";
+import { getAppSettings } from "electron-app/src/store/selectors/app";
+import { setSettngs } from "electron-app/src/store/actions/app";
+import { iReduxState } from "electron-app/src/store/reducers";
+import { sendSnackBarEvent } from "../toast";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -15,19 +19,43 @@ interface iStartupModalProps {
 
 const SettingsModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
-	const [testId, setTestId] = React.useState("");
+	const appSettings = useSelector(getAppSettings);
+
+	const [backendEndPoint, setBackendEndPoint] = React.useState(appSettings.backendEndPoint || "");
+	const [frontendEndPoint, setFrontendEndPoint] = React.useState(appSettings.frontendEndPoint || "");
+	const [autoDetectActions, setAutoDetctActions] = React.useState(appSettings.autoDetectActions || false);
+	const [enableMouseTracker, setEnableMouseTracker] = React.useState(appSettings.enableMouseTracker || false);
 
     const dispatch = useDispatch();
 
-	const handleTestIdChange = (event: any) => {
-		setTestId(event.target.value);
+	const handleBackendEndPointChange = (event: any) => {
+		setBackendEndPoint(event.target.value);
 	};
 
+	const handleFrontEndPointChange = (event: any) => {
+		setFrontendEndPoint(event.target.value);
+	};
+
+	const handleEnableMouseTrackerCallback = (toggleValue) => {
+		setEnableMouseTracker(toggleValue);
+	}
+
+	const handleAutoDetectActionsCallback = (toggleValue) => {
+		setAutoDetctActions(toggleValue);
+	}
+
 	const saveAction = async () => {
-		if (testId && testId !== "") {
-			performRunAfterTest(testId);
-			props.handleClose();
-		}
+		const settings: iReduxState["app"]["settings"] = {
+			backendEndPoint,
+			frontendEndPoint,
+			autoDetectActions,
+			enableMouseTracker
+		};
+		localStorage.setItem("app.settings", JSON.stringify(settings));
+		dispatch(setSettngs(settings));
+		
+		sendSnackBarEvent({type: "success", message: "Settings saved"});
+		props.handleClose();
 	};
 
 	if(!isOpen) return null;
@@ -46,10 +74,10 @@ const SettingsModal = (props: iStartupModalProps) => {
 							placeholder={"Enter backend endpoint"}
 							pattern="[0-9]*"
 							size={"medium"}
-							initialValue={testId}
+							initialValue={backendEndPoint}
 							autoFocus={true}
 							onReturn={saveAction}
-							onChange={handleTestIdChange}
+							onChange={handleBackendEndPointChange}
 						/>
 					</div>
 					<div css={[inputContainerStyle, css`margin-top: 18rem;`]}>
@@ -59,10 +87,10 @@ const SettingsModal = (props: iStartupModalProps) => {
 							placeholder={"Enter frontend endpoint"}
 							pattern="[0-9]*"
 							size={"medium"}
-							initialValue={testId}
+							initialValue={frontendEndPoint}
 							autoFocus={true}
 							onReturn={saveAction}
-							onChange={handleTestIdChange}
+							onChange={handleFrontEndPointChange}
 						/>
 					</div>
 				</div>
@@ -74,12 +102,12 @@ const SettingsModal = (props: iStartupModalProps) => {
 					<div css={inputContainerStyle}>
 						<div css={css`font-size: 13rem; color: rgb(255, 255, 255, 0.7); font-weight: 600;`}>Auto-detect actions</div>
 
-						<Toggle css={css`margin-left: auto`}/>
+						<Toggle isOn={autoDetectActions} callback={handleAutoDetectActionsCallback} css={css`margin-left: auto`}/>
 					</div>
 					<div css={[inputContainerStyle, css`margin-top: 18rem;`]}>
 						<div css={css`font-size: 13rem; color: rgb(255, 255, 255, 0.7); font-weight: 600;`}>Enable mouse tracker</div>
 					
-						<Toggle css={css`margin-left: auto`}/>
+						<Toggle isOn={enableMouseTracker} callback={handleEnableMouseTrackerCallback} css={css`margin-left: auto`}/>
 					</div>
 				</div>
 

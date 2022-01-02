@@ -2,11 +2,13 @@ import { AnyAction } from "redux";
 import {} from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
-import { SET_SESSION_META, SET_SHOW_SHOULD_ONBOARDING_OVERLAY } from "../actions/app";
+import { SET_SESSION_META, SET_SETTINGS, SET_SHOW_SHOULD_ONBOARDING_OVERLAY } from "../actions/app";
 
 export interface iSettings { 
-    autoDetectActions: boolean;
     backendEndPoint: string;
+	frontendEndPoint: string;
+	autoDetectActions: boolean;
+	enableMouseTracker: boolean;
 }
 
 export interface ISessionMeta {
@@ -21,7 +23,7 @@ interface IAppReducer {
 };
 
 const initialState: IAppReducer = {
-	settings: { autoDetectActions: true, backendEndPoint: "https://backend.crusher.dev" },
+	settings: { autoDetectActions: true, backendEndPoint: "", frontendEndPoint: "", enableMouseTracker: false },
 	shouldShowOnboardingOverlay: true, 
 	sessionMeta: {}
 };
@@ -37,6 +39,11 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction) => {
 			return {
 				...state,
 				sessionMeta: action.payload.sessionMeta
+			}
+		case SET_SETTINGS:
+			return {
+				...state,
+				settings: action.payload.settings
 			}
 		default:
 			return state;

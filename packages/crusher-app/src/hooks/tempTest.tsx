@@ -25,11 +25,6 @@ export const useSaveTemp = () => {
 		const tempTestType = urlQuery.get("temp_test_type");
 		const testId = urlQuery.get("update_test_id");
 
-		console.log(`Temp Test ID: ${tempTestId}`);
-		console.log(`Temp Test Name: ${tempTestName}`);
-		console.log(`Temp Test Type: ${tempTestType}`);
-		console.log(`Update Test ID: ${testId}`);
-
 		setTempTestName(tempTestName);
 		setTempTest(tempTestId);
 		setTempTestType(tempTestType || "save");

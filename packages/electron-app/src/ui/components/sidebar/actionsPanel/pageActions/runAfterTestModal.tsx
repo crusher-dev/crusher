@@ -30,7 +30,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 	};
 
 	if(!isOpen) return null;
-	
+
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Run after test"} desc={"Runs test in the same browser context as specified"} closeModal={props.handleClose} />
@@ -48,7 +48,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 					/>
 				</div>
 				<div css={submitFormContainerStyle}>
-					<Button onClick={saveAction} CSS={buttonStyle}>Save</Button>
+					<Button onClick={saveAction} css={buttonStyle}>Save</Button>
 				</div>
 			</div>
 		</Modal>

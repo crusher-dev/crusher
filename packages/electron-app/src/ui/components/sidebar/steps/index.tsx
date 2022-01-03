@@ -111,7 +111,7 @@ const Step = ({
 		if (recorderState.type===TRecorderState.ACTION_REQUIRED) {
 			dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 		}
-		
+
 		const step = savedSteps[stepIndex];
 		dispatch(updateRecordedStep({
 			...step,
@@ -158,7 +158,7 @@ const Step = ({
 			<Conditional showIf={isFailed}>
 				<div css={failedToDOStyle}>
 					<div css={failedToDoHeadStyle}>
-						<Text CSS={whatTODOStyle}>What to do?</Text>
+						<Text css={whatTODOStyle}>What to do?</Text>
 						{/* <MoreIcon /> */}
 					</div>
 					<div css={failedButtonsStyle}>
@@ -204,7 +204,7 @@ const StepsPanel = ({className, ...props}: any) => {
 
 	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
 	const dispatch = useDispatch();
-	
+
     const toggleAllSteps = React.useCallback(
 		(checked) => {
 			if (checked) {
@@ -267,7 +267,7 @@ const StepsPanel = ({className, ...props}: any) => {
 	const handleContinueTest = () =>{
 		continueRemainingSteps();
 	}
-    
+
     return (
         <div className={`${className}`} css={containerStyle}>
             <div css={stepsHeaderStyle}>
@@ -285,7 +285,7 @@ const StepsPanel = ({className, ...props}: any) => {
                         </Dropdown>
                     </div>
                 </Conditional>
-            </div>  
+            </div>
 
             <div className="custom-scroll" id={"stepsListContainer"} css={stepsContainerStyle}>
 				{steps.map((step, index) => (

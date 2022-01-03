@@ -15,7 +15,6 @@ import {
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum, IBuildReportTable, TestInstanceResultSetConclusion, TestInstanceResultSetStatus } from "./interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
-import { BuildInstanceResults, IBuildInstanceResult } from "../builds/instances/mongo/buildInstanceResults";
 import { BuildTestInstanceScreenshotService } from "../builds/instances/screenshots.service";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
@@ -104,9 +103,7 @@ export class BuildReportService {
 
 		const testsWithReportDataAndActionResultsPromises: Array<Promise<TestBuildReport & { actionsResult: Array<any> }>> = testsWithReportData.map(
 			async (reportData) => {
-				const instanceResult = await BuildInstanceResults.findOne({
-					instanceId: { $eq: reportData.testInstanceId },
-				}).exec();
+				const instanceResult = await this.buildTestInstanceService.getActionsResult(reportData.testInstanceId);
 
 				const instanceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshotResultWithActionIndex(reportData.testResultSetId);
 

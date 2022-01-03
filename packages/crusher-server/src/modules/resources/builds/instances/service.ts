@@ -1,6 +1,7 @@
 import { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
 import {
+	IBuildInstanceActionResults,
 	ICreateBuildTestInstanceResultPayload,
 	ILogProgressRequestPayload,
 	ITestInstanceResultSetsTable,
@@ -19,7 +20,6 @@ import { BuildTestInstanceScreenshotService } from "./screenshots.service";
 import * as path from "path";
 import { IVisualDiffResult } from "@modules/visualDiff/interface";
 import { BrowserEnum } from "@modules/runner/interface";
-import { BuildInstanceResults } from "./mongo/buildInstanceResults";
 import { ProjectsService } from "@modules/resources/projects/service";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
@@ -103,15 +103,15 @@ class BuildTestInstancesService {
 	}
 
 	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, projectId: number, hasInstancePassed: boolean) {
-		console.log("Trying to save this", actionsResult);
-		const buildInstanceResult = new BuildInstanceResults({
-			instanceId: instanceId,
-			projectId: projectId,
-			actionsResult: actionsResult,
-			hasInstancePassed: hasInstancePassed,
-		});
+		return this.dbManager.insert(
+			"INSERT INTO build_instance_actions_results SET instance_id = ?, project_id = ?, actions_results = ?, has_instance_passed = ?",
+			[instanceId, projectId, JSON.stringify(actionsResult), hasInstancePassed],
+		);
+	}
 
-		return buildInstanceResult.save();
+	@CamelizeResponse()
+	async getActionsResult(instanceId: number): Promise<KeysToCamelCase<IBuildInstanceActionResults> & { actionsResult: any }> {
+		return this.dbManager.fetchAllRows("SELECT * FROM build_instance_actions_results WHERE instance_id = ?", [instanceId]);
 	}
 
 	async saveResult(
@@ -141,7 +141,7 @@ class BuildTestInstancesService {
 		const visualDiffResultsPromiseArr = savedScreenshotRecords.map(async (screenshotResult) => {
 			const baseImageRecord = instanceScreenshotsMap[screenshotResult.screenshotIndex];
 			const referenceImageRecord = referenceScreenshotsMap[screenshotResult.screenshotIndex];
- 
+
 			const baseImage = {
 				name: baseImageRecord.name,
 				value: baseImageRecord.url,

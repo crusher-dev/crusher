@@ -4,16 +4,19 @@ import { css, SerializedStyles } from "@emotion/react";
 import { OnOutsideClick } from "../layouts/onOutsideClick/onOutsideClick";
 import { CloseSVG } from "../icons/CloseSVG";
 import React, { ReactElement } from "react";
+import { HTMLAttributes } from "react";
 
 type TModalProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
 	css?: SerializedStyles;
-	children: ReactElement;
+	modalStyle?: SerializedStyles;
+	children: ReactElement | ReactElement[];
 	onClick?: () => void;
+	onClose?: () => void;
 	onOutsideClick?: () => void;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<HTMLAttributes<any>, any>;
 
 export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalProps) => {
 	return (
@@ -23,7 +26,7 @@ export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalP
 					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
 						{children}
 
-						<Conditional showIf={true}>
+						<Conditional showIf={!!onClose}>
 							<div css={closeIcon} onClick={onClose}>
 								<CloseSVG height={13} width={13} />
 							</div>

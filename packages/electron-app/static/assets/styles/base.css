@@ -1,0 +1,65 @@
+a {
+	text-decoration: none !important;
+}
+
+a:link {
+	text-decoration: none !important;
+}
+
+.noDecoration:hover,
+a:link,
+a:visited {
+	text-decoration: none !important;
+}
+
+/* For Mobile and small device*/
+html {
+	font-size: 1px;
+	font-family: "Gilroy" !important;
+}
+
+*:focus {
+	outline: none !important;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: sans-serif;
+	line-height: 1.15;
+	-webkit-text-size-adjust: 100%;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+article,
+aside,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+	display: block;
+}
+
+button {
+	cursor: pointer;
+}
+
+.button:hover {
+	-webkit-filter: brightness(90%);
+	-webkit-transition: all 0.1s ease;
+	-moz-transition: all 0.1s ease;
+	-o-transition: all 0.1s ease;
+	-ms-transition: all 0.1s ease;
+	transition: all 0.1s ease;
+}
+a:hover {
+	cursor: pointer;
+}

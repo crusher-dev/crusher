@@ -80,6 +80,10 @@ class TestService {
 		);
 	}
 
+	async updateTestSteps(testId: number, steps: Array<iAction>) {
+		return this.dbManager.update(`UPDATE tests SET events = ? WHERE id = ?`, [JSON.stringify(steps), testId]);
+	}
+
 	async linkToDraftBuild(buildId: number, testId: number) {
 		return this.dbManager.update("UPDATE tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}

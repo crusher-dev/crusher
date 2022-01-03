@@ -66,20 +66,35 @@ let isDuplicateInstance = false;
 const gotSingleInstanceLock = app.requestSingleInstanceLock()
 isDuplicateInstance = !gotSingleInstanceLock;
 
+if (process.platform === "linux" && !isDuplicateInstance) {
+	onDidLoad(() => {
+		handlePossibleProtocolLauncherArgs(process.argv);
+	});
+}
+
 app.on("second-instance", (event, args, workingDirectory) => {
-	console.log("Second instance args", args);
 	if (mainWindow) {
 		if (mainWindow.isMinimized()) {
 		  mainWindow.restore()
 		}
-  
+
 		if (!mainWindow.isVisible()) {
 		  mainWindow.show()
 		}
-  
+
 		mainWindow.focus()
-	  }
+	}
+	handlePossibleProtocolLauncherArgs(args);
 });
+
+function handlePossibleProtocolLauncherArgs(args: string[]) {
+	if (args.length > 1) {
+		const lastArg = args[args.length - 1];
+		if (lastArg.startsWith("crusher://")) {
+			handleAppURL(args[1]);
+		}
+	}
+}
 
 if (isDuplicateInstance) {
     app.quit()
@@ -115,22 +130,22 @@ function createWindow() {
 		REACT_DEVELOPER_TOOLS,
 		REDUX_DEVTOOLS
 	  } = require('electron-devtools-installer')
-  
+
 	  require('electron-debug')({ showDevTools: true })
-  
+
 	  const extensions = [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS];
-  
+
 	  for (const extension of extensions) {
 		try {
 		  installExtension(extension, {loadExtensionOptions: { allowFileAccess: true }})
 		} catch (e) {  }
 	  }
 	}
-  
+
 	window.onClose(() => {
 	  mainWindow = null;
 	})
-  
+
 	window.onDidLoad(() => {
 	  window.show()
 	  window.sendLaunchTimingStats({
@@ -138,7 +153,7 @@ function createWindow() {
 		loadTime: window.loadTime!,
 		rendererReadyTime: window.rendererReadyTime!,
 	  })
-  
+
 	  const fns = onDidLoadFns!
 	  onDidLoadFns = null
 
@@ -146,9 +161,9 @@ function createWindow() {
 		fn(window)
 	  }
 	})
-  
+
 	window.load()
-  
+
 	mainWindow = window
 }
 

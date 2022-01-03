@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { DELETE_RECORDED_STEPS, RECORD_STEP, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
+import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_IS_WEBVIEW_INITIALIZED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -54,18 +54,21 @@ export interface iSettings {
 interface IRecorderReducer {
 	currentUrl: string | null;
 	device: any | null;
+	isWebViewInitialized: boolean;
 
 	state: {type: TRecorderState, payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null };
 	isInspectModeOn: boolean;
 
 	selectedElement: iElementInfo | null;
 	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; }>;
+
 	isVerified: boolean;
 };
 
 const initialState: IRecorderReducer = {
 	currentUrl: null,
 	device: null,
+	isWebViewInitialized: false,
 
 	state: { type: TRecorderState.BOOTING, payload: null },
 	isInspectModeOn: false,
@@ -132,9 +135,14 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		}
 		case RESET_RECORDER_STATE:
 			return {
-				...initialState,
-				currentUrl: state.currentUrl,
-				device: state.device,
+				...state,
+				state: initialState.state,
+				isInspectModeOn: initialState.isInspectModeOn,
+			
+				selectedElement: initialState.isInspectModeOn,
+				savedSteps: initialState.savedSteps,
+			
+				isVerified: initialState.isVerified,
 			}
 		case UPDATE_RECORDER_STATE:
 			return {
@@ -153,6 +161,28 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				savedSteps: savedSteps,
 				isVerified: false,
 			};
+		}
+		case MARK_RECORDED_STEPS_OPTIONAL: {
+			let savedSteps = state.savedSteps.map((step, index) => {
+				if(action.payload.indexArr.includes(index)) {
+					step.payload.isOptional = true;
+				}
+				return step;
+			});
+			return {
+				...state,
+				savedSteps: savedSteps,
+				isVerified: false,
+			};
+		}
+		case SET_IS_WEBVIEW_INITIALIZED: {
+			return {
+				...state,
+				isWebViewInitialized: action.payload.isInitialized
+			}
+		}
+		case RESET_RECORDER: {
+			return initialState;
 		}
 		default:
 			return state;

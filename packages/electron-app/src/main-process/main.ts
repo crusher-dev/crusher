@@ -1,7 +1,7 @@
 console.log("Ready now...");
 
 import * as Sentry from "@sentry/electron"
-import { isProduction } from "./../utils"
+import { isProduction, parseDeepLinkUrlAction } from "./../utils"
 import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
 import { enableSourceMaps } from "../lib/source-map-support";
@@ -36,8 +36,8 @@ function setupElectronApp() {
 
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 	app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
-	app.commandLine.appendSwitch("--disable-site-isolation-trials");
-	app.commandLine.appendSwitch("--disable-web-security");
+	// app.commandLine.appendSwitch("--disable-site-isolation-trials");
+	// app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	// For replaying actions
 	app.commandLine.appendSwitch("--remote-debugging-port", "9112");
@@ -67,6 +67,7 @@ const gotSingleInstanceLock = app.requestSingleInstanceLock()
 isDuplicateInstance = !gotSingleInstanceLock;
 
 app.on("second-instance", (event, args, workingDirectory) => {
+	console.log("Second instance args", args);
 	if (mainWindow) {
 		if (mainWindow.isMinimized()) {
 		  mainWindow.restore()
@@ -83,6 +84,23 @@ app.on("second-instance", (event, args, workingDirectory) => {
 if (isDuplicateInstance) {
     app.quit()
 }
+
+function handleAppURL(url: string) {
+	const action = parseDeepLinkUrlAction(url);
+	console.log("Got this deep link", action);
+	onDidLoad(window => {
+	  // This manual focus call _shouldn't_ be necessary, but is for Chrome on
+	  // macOS. See https://github.com/desktop/desktop/issues/973.
+	  window.focus();
+	  if(action)
+	  	window.sendMessage("url-action", { action });
+	})
+}
+
+app.on('open-url', (event, url) => {
+	event.preventDefault()
+	handleAppURL(url)
+})
 
 let store;
 function createWindow() {
@@ -123,6 +141,7 @@ function createWindow() {
   
 	  const fns = onDidLoadFns!
 	  onDidLoadFns = null
+
 	  for (const fn of fns) {
 		fn(window)
 	  }
@@ -131,4 +150,14 @@ function createWindow() {
 	window.load()
   
 	mainWindow = window
+}
+
+function onDidLoad(fn: OnDidLoadFn) {
+  if (onDidLoadFns) {
+    onDidLoadFns.push(fn)
+  } else {
+    if (mainWindow) {
+      fn(mainWindow)
+    }
+  }
 }

@@ -51,6 +51,7 @@ export type ToggleProps = {
 	disableInternalState?: boolean;
 	leftSide?: ReactElement;
 	rightSide?: ReactElement;
+	className?: any;
 	callback?: (state: boolean) => void;
 } & React.DetailedHTMLProps<any, any>;
 
@@ -61,7 +62,7 @@ const TextDefaultProps = {
 	color: "#fff",
 };
 
-export function Toggle(props: ToggleProps): ReactElement {
+export function Toggle({className, ...props}: ToggleProps): ReactElement {
 	const [state, toggleState] = useState(props.isOn);
 
 	const { callback, disabled, disableInternalState, leftSide, rightSide } = props;
@@ -77,7 +78,7 @@ export function Toggle(props: ToggleProps): ReactElement {
 	}, [props.isOn]);
 
 	return (
-		<div className={"flex items-center "}>
+		<div className={`flex items-center ${className}`}>
 			<Conditional showIf={!!leftSide}>
 				<div className={"text-13 mr-12 font-500 mt-2"}>{leftSide}</div>
 			</Conditional>

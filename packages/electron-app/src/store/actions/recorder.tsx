@@ -3,6 +3,7 @@ import { iAction } from "@shared/types/action";
 import { iElementInfo, TRecorderState } from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
+export const SET_IS_WEBVIEW_INITIALIZED = "SET_IS_WEBVIEW_INITIALIZED";
 
 export const SET_INSPECT_MODE = "SET_INSPECT_MODE";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
@@ -17,6 +18,8 @@ export const UPDATE_RECORDED_STEP = "UPDATE_RECORDED_STEP";
 export const RESET_RECORDER_STATE = "RESET_RECORDER_STATE";
 export const SET_IS_TEST_VERIFIED = "SET_IS_TEST_VERIFIED";
 export const DELETE_RECORDED_STEPS = "DELETE_RECORDED_STEPS";
+export const MARK_RECORDED_STEPS_OPTIONAL = "MARK_RECORDED_STEPS_OPTIONAL";
+export const RESET_RECORDER = "RESET_RECORDER";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -80,6 +83,12 @@ export const resetRecorderState = () => {
     };
 }
 
+export const resetRecorder = () => {
+    return {
+        type: RESET_RECORDER,
+    };
+}
+
 export const deleteRecordedSteps = (indexArr) => {
     return {
         type: DELETE_RECORDED_STEPS,
@@ -87,9 +96,23 @@ export const deleteRecordedSteps = (indexArr) => {
     }
 }
 
+export const markRecordedStepsOptional = (indexArr) => {
+    return {
+        type: MARK_RECORDED_STEPS_OPTIONAL,
+        payload: { indexArr }
+    }
+};
+
 export const setIsTestVerified = (isVerified: boolean) => {
     return {
         type: SET_IS_TEST_VERIFIED,
         payload: { isTestVerified: isVerified }
+    }
+}
+
+export const setIsWebViewInitialized = (isInitialized: boolean) => {
+    return {
+        type: SET_IS_WEBVIEW_INITIALIZED,
+        payload: { isInitialized }
     }
 }

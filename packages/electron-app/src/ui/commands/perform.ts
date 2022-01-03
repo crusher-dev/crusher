@@ -27,8 +27,6 @@ const performSetDevice = async (device: iDevice) => {
 }
 
 const performNavigation = async (url: string, store: Store<unknown, AnyAction>) => {
-    store.dispatch(updateRecorderState(TRecorderState.NAVIGATING, { url } ));
-
     await performAction({
         type: ActionsInTestEnum.NAVIGATE_URL,
         payload: {
@@ -54,7 +52,7 @@ const recordHoverDependencies =  (selectedElement: iElementInfo, store: Store<un
             payload: {
                 selectors: depedentHover.selectors,
             }
-        }));
+        }, ActionStatusEnum.COMPLETED));
     }
 };
 
@@ -136,6 +134,10 @@ const performVerifyTest = async () => {
     ipcRenderer.invoke("verify-test");
 };
 
+const performReplayTest = async (testId) => {
+    ipcRenderer.invoke("replay-test", {testId});
+}
+
 const turnOnInspectMode = () => {
     ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 }
@@ -148,6 +150,10 @@ const saveTest = () => {
     ipcRenderer.invoke("save-test");
 }
 
+const updateTest = () => {
+    ipcRenderer.invoke("update-test");
+}
+
 const preformGoBackPage = () => {
     ipcRenderer.invoke("go-back-page");
 }
@@ -156,4 +162,12 @@ const performReloadPage = () => {
     ipcRenderer.invoke("reload-page");
 }
 
-export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage };
+const resetStorage = () => {
+    ipcRenderer.invoke("reset-storage");
+}
+
+const continueRemainingSteps = () => {
+    ipcRenderer.invoke("continue-remaining-steps");
+};
+
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage, continueRemainingSteps };

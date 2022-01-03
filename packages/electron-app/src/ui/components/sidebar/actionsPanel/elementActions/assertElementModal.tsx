@@ -53,9 +53,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	React.useEffect(() => {
 		if(isOpen) {
-			console.log("Sending this async", selectedElement);
 			ipcRenderer.invoke("get-element-assert-info", selectedElement).then((res) => {
-				console.log("Response is this", res);
 				setElementInfo(res);
 			});
 		}
@@ -137,11 +135,10 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	const saveElementValidationAction = () => {
 		recordHoverDependencies(selectedElement, store);
-
 		store.dispatch(recordStep({
 			type: ActionsInTestEnum.ASSERT_ELEMENT,
 			payload: {
-				selectors: elementInfo.selectors,
+				selectors: selectedElement.selectors,
 				meta: {
 					validations: validationRows,
 				},

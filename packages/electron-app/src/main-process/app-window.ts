@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, session } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import * as path from "path";
 import { APP_NAME } from '../../config/about';
-import { encodePathAsUrl, getAppIconPath } from '../utils';
+import { encodePathAsUrl, getAppIconPath, sleep } from '../utils';
 import { Emitter, Disposable } from "event-kit";
 import { now } from './now';
 import { AnyAction, Store } from 'redux';
@@ -11,14 +11,16 @@ import { WebView } from './webview';
 import { iAction } from '@shared/types/action';
 import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 import { iDevice } from '@shared/types/extension/device';
-import { recordStep, resetRecorderState, setInspectMode, setIsTestVerified, updateCurrentRunningStepStatus, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
+import { recordStep, resetRecorderState, setDevice, setInspectMode, setIsTestVerified, setSiteUrl, updateCurrentRunningStepStatus, updateRecordedStep, updateRecorderState } from '../store/actions/recorder';
 import { ActionStatusEnum } from '@shared/lib/runnerLog/interface';
 import { getSavedSteps } from '../store/selectors/recorder';
 import { CrusherTests } from '../lib/tests';
 import { getBrowserActions, getMainActions } from 'runner-utils/src';
 import { iElementInfo, TRecorderState } from '../store/reducers/recorder';
-import { iSeoMetaInformationMeta } from '../extension/messageListener';
+import { iSeoMetaInformationMeta } from '../types';
 import { getUserAgentFromName } from '@shared/constants/userAgents';
+import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps } from '../store/selectors/app';
+import { setSessionInfoMeta } from '../store/actions/app';
 
 export class AppWindow {
     private window: Electron.BrowserWindow;
@@ -123,18 +125,31 @@ export class AppWindow {
         ipcMain.handle('turn-on-recorder-inspect-mode', this.turnOnInspectMode.bind(this))
         ipcMain.handle('turn-off-recorder-inspect-mode', this.turnOffInspectMode.bind(this))
         ipcMain.handle('verify-test', this.handleVerifyTest.bind(this));
+        ipcMain.handle('replay-test', this.handleRemoteReplayTest.bind(this));
+        ipcMain.handle('update-test', this.handleUpdateTest.bind(this));
         ipcMain.handle('save-test', this.handleSaveTest.bind(this));
         ipcMain.handle('go-back-page', this.handleGoBackPage.bind(this));
         ipcMain.handle('reload-page', this.handleReloadPage.bind(this));
         ipcMain.handle('get-page-seo-info', this.handleGetPageSeoInfo.bind(this));
         ipcMain.handle('get-element-assert-info', this.handleGetElementAssertInfo.bind(this));
+        ipcMain.handle('continue-remaining-steps', this.continueRemainingSteps.bind(this));
+
+        ipcMain.handle('reset-storage', this.handleResetStorage.bind(this));
 
         this.window.on('focus', () => this.window.webContents.send('focus'))
         this.window.on('blur', () => this.window.webContents.send('blur'))
-		this.window.webContents.session.webRequest.onHeadersReceived({ urls: ["*://*/*"] }, this.allowAllNetworkRequests.bind(this));
 
         /* Loads crusher app */
         this.window.loadURL(encodePathAsUrl(__dirname, 'index.html'));
+    }
+
+    async continueRemainingSteps() {
+        const remainingSteps = getRemainingSteps(this.store.getState() as any);
+        if(remainingSteps) {
+            await this.handleReplayTestSteps(remainingSteps);
+        }
+
+        await this.setRemainingSteps(null);
     }
 
     async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
@@ -204,56 +219,84 @@ export class AppWindow {
         this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {  }));
     }
 
+    async handleUpdateTest(event: Electron.IpcMainEvent) {
+        const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
+        const recordedSteps = getSavedSteps(this.store.getState() as any);
+        const appSettings = getAppSettings(this.store.getState() as any);
+        await CrusherTests.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+    }
+
     async handleSaveTest() {
         const recordedSteps = getSavedSteps(this.store.getState() as any);
+        const appSettings = getAppSettings(this.store.getState() as any);
 
-        await CrusherTests.saveTest(recordedSteps as any);     
+        await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);     
     }
 
     async handleVerifyTest() {
-        await this.handleReplayTest();
+        const recordedSteps = getSavedSteps(this.store.getState() as any);
+        await this.resetRecorder();
+        await this.handleReplayTestSteps(recordedSteps as any);
         this.store.dispatch(setIsTestVerified(true));
     }
 
-    async handleReplayTest() {
-        const stepsToVerify = getSavedSteps(this.store.getState() as any);
+    async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: {testId: number}) {
+        this.resetRecorder();
+        const appSettings = getAppSettings(this.store.getState() as any);
+        const testSteps = await CrusherTests.getTest(`${payload.testId}`, appSettings.backendEndPoint);
 
         await this.resetRecorder();
-        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {  }));
-    
-        const replayableTestSteps = await CrusherTests.getReplayableTestActions(stepsToVerify as any, true);
-        const browserActions = getBrowserActions(replayableTestSteps);
-        
-        for(let browserAction of browserActions) {
-            if(browserAction.type === ActionsInTestEnum.SET_DEVICE) {
-                await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
-            } else {
-                if(browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
-                    // @Todo: Add support for future browser actions
-                    this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
-                } else {
-                    await this.handleRunAfterTest(browserAction);
-                }
-            }
-        }
-    
-
-        for(let savedStep of getMainActions(replayableTestSteps)) {
-            await this.handlePerformAction(null, { action: savedStep });
-        }
-    
-        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+        this.handleReplayTestSteps(testSteps);
     }
 
-    allowAllNetworkRequests(responseDetails, updateCallback) {
-		Object.keys(responseDetails.responseHeaders).map((headers) => {
-			if (["x-frame-options", "content-security-policy", "frame-options"].includes(headers.toString().toLowerCase())) {
-				delete responseDetails.responseHeaders[headers];
-			}
-		});
+    private setRemainingSteps(steps: Array<iAction>) {
+        const sessionInfoMeta = getAppSessionMeta(this.store.getState() as any);
+        this.store.dispatch(setSessionInfoMeta({
+            ...sessionInfoMeta,
+            remainingSteps: steps,
+        }))
+    }
 
-		updateCallback({ cancel: false, responseHeaders: responseDetails.responseHeaders });
-	}
+    async handleReplayTestSteps(steps: Array<iAction> | null = null) {
+        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {  }));
+        const appSettings = getAppSettings(this.store.getState() as any);
+
+        const browserActions = getBrowserActions(steps);
+        const mainActions = getMainActions(steps);
+        
+        const reaminingSteps = [...browserActions, ...mainActions];
+
+        try {
+            for(let browserAction of browserActions) {
+                reaminingSteps.shift();
+
+                if(browserAction.type === ActionsInTestEnum.SET_DEVICE) {
+                    await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
+                    await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+                } else {
+                    if(browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
+                        // @Todo: Add support for future browser actions
+                        this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
+                    } else {
+                        await this.handleRunAfterTest(browserAction);
+                    }
+                }
+            }
+        
+
+            for(let savedStep of mainActions) {
+                reaminingSteps.shift();
+
+                await this.handlePerformAction(null, { action: savedStep });
+            }
+            this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+        } catch(ex) {
+            this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
+            console.log("Remaining steps are", reaminingSteps);
+            this.setRemainingSteps(reaminingSteps);
+            throw ex;
+        }
+    }
 
     private turnOnInspectMode() {
         this.store.dispatch(setInspectMode(true));
@@ -273,45 +316,56 @@ export class AppWindow {
         });
     }
 
+    private async handleResetStorage() {
+        await this.clearWebViewStorage();
+    }
+
     private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction, shouldNotSave?: boolean }) {
         const { action, shouldNotSave } = payload;
-        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {action: action}));
-        switch(action.type) {
-            case ActionsInTestEnum.SET_DEVICE: {
-                // Custom implementation here, because we are in the recorder
-                const userAgent = action.payload.meta?.device.userAgentRaw ? action.payload.meta?.device.userAgentRaw : getUserAgentFromName(action.payload.meta?.device.userAgent).value;
-                if(this.webView) {
-                    this.webView.webContents.setUserAgent(userAgent);
-                }
-                app.userAgentFallback = userAgent;
+        try {
+            switch(action.type) {
+                case ActionsInTestEnum.SET_DEVICE: {
+                    this.store.dispatch(setDevice(action.payload.meta.device.id));
+                    // Custom implementation here, because we are in the recorder
+                    const userAgent = action.payload.meta?.device.userAgentRaw ? action.payload.meta?.device.userAgentRaw : getUserAgentFromName(action.payload.meta?.device.userAgent).value;
+                    if(this.webView) {
+                        this.webView.webContents.setUserAgent(userAgent);
+                    }
+                    app.userAgentFallback = userAgent;
 
-                if(!shouldNotSave) {
-                    this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                    if(!shouldNotSave) {
+                        this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                    }
+                    break;
                 }
-                break;
-            }
-            case ActionsInTestEnum.NAVIGATE_URL: {
-                await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
-                break;
-            }
-            case ActionsInTestEnum.RUN_AFTER_TEST: {
-                await this.resetRecorder();
-                await this.handleRunAfterTest(action);
-                break;
-            }
-            case ActionsInTestEnum.RELOAD_PAGE: {
-                this.webView.webContents.reload();
-                await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
-                if(!shouldNotSave) {
-                    this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                case ActionsInTestEnum.NAVIGATE_URL: {
+                    this.store.dispatch(setSiteUrl(action.payload.meta.value));
+                    await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                    break;
                 }
-                break;
+                case ActionsInTestEnum.RUN_AFTER_TEST: {
+                    await this.resetRecorder();
+                    await this.handleRunAfterTest(action);
+                    break;
+                }
+                case ActionsInTestEnum.RELOAD_PAGE: {
+                    this.webView.webContents.reload();
+                    await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: 'networkidle' });
+                    if(!shouldNotSave) {
+                        this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+                    }
+                    break;
+                }
+                default:
+                    console.log("Running this action", action);
+                    await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                    break;
             }
-            default:
-                await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
-                break;
+            await sleep(1000);
+        } catch(e) {
+            this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
+            throw e;
         }
-        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
     }
 
     private async resetRecorder() {
@@ -321,29 +375,41 @@ export class AppWindow {
 
     private async handleRunAfterTest(action: iAction)  {
         this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }));
-    
-        const replayableTestSteps = await CrusherTests.getReplayableTestActions(await CrusherTests.getTest(action.payload.meta.value), true);
-        const browserActions = getBrowserActions(replayableTestSteps);
-        
-        for(let browserAction of browserActions) {
-            if(browserAction.type === ActionsInTestEnum.SET_DEVICE) {
-                await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
-            } else {
-                if(browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
-                    this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
+        const appSettings = getAppSettings(this.store.getState() as any);
+
+        try {
+            const replayableTestSteps = await CrusherTests.getReplayableTestActions(await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint), true, appSettings.backendEndPoint);
+            const browserActions = getBrowserActions(replayableTestSteps);
+            
+            for(let browserAction of browserActions) {
+                if(browserAction.type === ActionsInTestEnum.SET_DEVICE) {
+                    await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+                } else {
+                    if(browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
+                        this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
+                    }
                 }
             }
+
+            this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
+
+            for(let savedStep of getMainActions(replayableTestSteps)) {
+                await this.handlePerformAction(null, { action: savedStep, shouldNotSave: true });
+            }
+
+            action.status = ActionStatusEnum.COMPLETED as any;
+            const savedSteps = getSavedSteps(this.store.getState() as any);
+            this.store.dispatch(updateRecordedStep(action, savedSteps.length - 1));
+            this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+        } catch(e) {
+            action.status = ActionStatusEnum.FAILED as any;
+    
+            const savedSteps = getSavedSteps(this.store.getState() as any);
+            this.store.dispatch(updateRecordedStep(action, savedSteps.length - 1));
+            this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
+
+            throw e;
         }
-
-        this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
-
-        for(let savedStep of getMainActions(replayableTestSteps)) {
-            await this.handlePerformAction(null, { action: savedStep, shouldNotSave: true });
-        }
-
-        const savedSteps = getSavedSteps(this.store.getState() as any);
-        this.store.dispatch(updateRecordedStep(action, savedSteps.length - 1));
-        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
     }
 
     async handleWebviewAttached(event, webContents) {

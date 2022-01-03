@@ -236,4 +236,58 @@ const BulbIcon = (props: any) => {
 	);
 };
 
-export { BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon };
+const MoreIcon = (props: any) => {
+	return (
+		<svg width={15} height={4} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M1.753 0a1.752 1.752 0 100 3.505 1.752 1.752 0 100-3.505zm5.42 0a1.753 1.753 0 10-.001 3.506 1.753 1.753 0 000-3.506zm5.238 0a1.753 1.753 0 10-.002 3.505A1.753 1.753 0 0012.41 0z"
+				fill="#B8B8B8"
+			/>
+		</svg>
+	);
+};
+
+const CrossIcon = (props) => (
+	<svg
+	  width={12}
+	  height={12}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  css={css`fill: #ffffff1a; path { fill: inherit; } &:hover {fill: #9F9F9F}`} 
+	  {...props}
+	>
+	  <path
+		d="m7.98 6 3.712-3.712a1.05 1.05 0 0 0 0-1.485l-.495-.495a1.05 1.05 0 0 0-1.484 0L6 4.021 2.288.308a1.05 1.05 0 0 0-1.485 0L.308.803a1.05 1.05 0 0 0 0 1.484L4.02 6 .308 9.713a1.05 1.05 0 0 0 0 1.485l.495.494c.41.41 1.075.41 1.485 0L6 7.98l3.713 3.712c.41.41 1.075.41 1.485 0l.494-.495a1.05 1.05 0 0 0 0-1.484L7.98 6Z"
+	  />
+	</svg>
+);
+
+const DownIcon = (props: any) => {
+	return (
+		<svg width={14} height={14} viewBox={`0 0 24 24`} fill={"#fff"} xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path
+		  fill="none"
+		  stroke="#fff"
+		  strokeWidth={2}
+		  d="m2 8.35 10.173 9.823L21.997 8"
+		/>
+	  </svg>
+	)
+};
+
+const UpIcon = (props: any) => {
+	return (
+		<svg
+		width={15}
+		height={15}
+		viewBox="0 -6 524 524"
+		fill="#fff"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path d="m460 321-34 34-164-163L98 355l-34-34 198-196 198 196Z" />
+	  </svg>
+	);
+}
+
+export { CrossIcon, BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon, DownIcon, UpIcon };

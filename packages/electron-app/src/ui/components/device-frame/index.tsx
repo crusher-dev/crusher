@@ -7,11 +7,10 @@ import * as url from "url";
 import { IpcMessageEvent } from "electron";
 import { turnOffInspectMode, turnOnInspectMode } from "../../commands/perform";
 import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
-import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { ipcRenderer } from "electron";
 import { saveAutoAction } from "../../commands/saveActions";
-import { TRecorderMessagesType } from "electron-app/src/extension/scripts/inject/host-proxy";
+import { TRecorderMessagesType } from "../../../lib/recorder/host-proxy";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { InfoOverLay } from "../overlays/infoOverlay";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
@@ -26,7 +25,7 @@ const DeviceFrame = (props: any) => {
         if (ref.current) {
             ref.current.addEventListener("ipc-message", (event: IpcMessageEvent) => {
                 const recorderState = getRecorderState(store.getState());
-                if(recorderState.type === TRecorderState.PERFORMING_ACTIONS) return;
+                if(recorderState.type !== TRecorderState.RECORDING_ACTIONS) return;
     
                 const { channel, args } = event;
                 if(channel === "recorder-message") {
@@ -67,6 +66,7 @@ const DeviceFrame = (props: any) => {
                     />
                 </div>
             </Conditional>
+            <InfoOverLay />
         </div>
     )
 };

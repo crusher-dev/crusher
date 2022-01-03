@@ -2,7 +2,7 @@ import { Conditional } from "@dyson/components/layouts";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { css } from "@emotion/react";
 import React from "react";
-import { SearchIcon } from "electron-app/src/extension/assets/icons";
+import { SearchIcon } from "../../../icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getSelectedElement, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { PageActions } from "./pageActions";
@@ -23,7 +23,7 @@ const ActionsPanel = ({className, ...props}: {className?: any}) => {
         <div className={`${className}`} css={containerStyle}>
 				<div css={headerContainerStyle}>
 					<Text css={headerText}>Actions</Text>
-					<SearchIcon css={hoverEffectStyle} />
+					<SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} />
 				</div>
 				<div className="custom-scroll" css={actionScrollContainer}>
 					<Conditional showIf={selected}>

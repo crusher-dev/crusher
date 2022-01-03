@@ -1,5 +1,6 @@
 import * as path from "path";
 import fileUrl from 'file-url'
+import { IDeepLinkAction } from "./types";
 
 const isProduction = () => {
     return process.env.NODE_ENV === "production";
@@ -8,9 +9,9 @@ const isProduction = () => {
 function getAppIconPath() {
 	switch (process.platform) {
 		case "win32":
-			return path.join(__dirname, "assets/icons/app.ico");
+			return path.join(__dirname, "static/assets/icons/app.ico");
 		default:
-			return path.join(__dirname, "assets/icons/app.png");
+			return path.join(__dirname, "static/assets/icons/app.png");
 	}
 }
 
@@ -26,4 +27,25 @@ const addHttpToURLIfNotThere = (uri: string) => {
 	return uri;
 };
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere };
+const parseDeepLinkUrlAction = (url: string): IDeepLinkAction | null => {
+	const urlObject = new URL(url);
+	if(urlObject.protocol === "crusher:") {
+		const commandName = urlObject.host;
+		const args = Object.fromEntries(urlObject.searchParams as any);
+
+		return { commandName: commandName, args: args };
+	}
+	
+	return null;
+};
+
+function sleep(time: number) {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(true);
+		}, time);
+	});
+}
+
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep };

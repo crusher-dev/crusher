@@ -11,3 +11,5 @@ export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;
 export const getRecorderState = (state: iReduxState) => state.recorder.state;
 
 export const isTestVerified = (state: iReduxState) => state.recorder.isVerified;
+
+export const isWebViewInitialized = (state: iReduxState) => state.recorder.isWebViewInitialized;

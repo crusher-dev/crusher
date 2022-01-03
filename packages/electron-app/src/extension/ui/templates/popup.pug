@@ -1,6 +1,0 @@
-html
-    head
-        meta(http-equiv='Content-Security-Policy', content="script-src http://localhost:2400 https://localhost:2400  'self'; default-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:2400 https://fonts.gstatic.com;")
-    body
-        #root
-        script(src=env === 'prod' ? './js/popup.js': 'http://localhost:2400/popup.js')

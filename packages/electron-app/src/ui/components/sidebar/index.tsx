@@ -5,16 +5,18 @@ import { getRecorderInfo } from "../../../store/selectors/recorder";
 import { Conditional } from "@dyson/components/layouts";
 import { ActionsPanel } from "./actionsPanel";
 import { StepsPanel } from "./steps";
+import { TemplatesModal } from "./steps/templatesModal";
 
 const Sidebar = ({className, ...props}: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
 
     return (
         <div css={containerStyle} className={`${className}`}>
-            <Conditional showIf={!!recorderInfo.url}>
+            <Conditional showIf={!!recorderInfo.device}>
                 <ActionsPanel />
                 <StepsPanel />
             </Conditional>
+            <TemplatesModal isOpen={false} handleClose={() => {}} />
         </div>
     )
 };

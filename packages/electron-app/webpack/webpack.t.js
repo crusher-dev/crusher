@@ -1,15 +1,12 @@
-import * as webpack from "webpack";
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import * as path from "path";
-
-require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const fs = require("fs");
+const path = require("path");
+
 const dotEnv = require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const CopyPlugin = require("copy-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-
-const extensionConfig = process.env.DO_NOT_BUILD_EXTENSION !== "undefined" ? require("./webpack.extension") : null;
 
 // Remove output directory
 const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/");
@@ -62,8 +59,10 @@ const commonConfig = {
 	},
 };
 
+const webpackHotModuleReloadUrl = `webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr`;
+const publicPath = `http://localhost:3000/`
+
 const finalConfig = [
-	extensionConfig,
 	{
 		...commonConfig,
 		target: "electron-main",
@@ -89,20 +88,15 @@ const finalConfig = [
 	},
 	{
 		...commonConfig,
-		entry: { renderer: path.resolve(__dirname, '../src/ui/index') },
+		entry: { renderer: [webpackHotModuleReloadUrl, path.resolve(__dirname, '../src/ui/index') ]},
+		output: {...commonConfig.output, publicPath},
 		target: 'electron-renderer',
 		plugins: [
+            new webpack.HotModuleReplacementPlugin(),
 			new HtmlWebpackPlugin({
 			  template: path.join(__dirname, '../static', 'index.html'),
 			  chunks: ['renderer'],
 			}),
-			new webpack.DefinePlugin({
-				NODE_ENV: process.env.NODE_ENV === "development" ? "development" : "production",
-				"process.env": {
-					BACKEND_URL: JSON.stringify(process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://backend.crusher.dev/"),
-					FRONTEND_URL: JSON.stringify(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "https://app.crusher.dev/"),
-				},
-			})
 		],
 		
 	},

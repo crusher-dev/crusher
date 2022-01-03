@@ -8,7 +8,7 @@ import { peformTakeElementScreenshot, performClick, performHover } from "electro
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { AssertElementModal } from "./assertElementModal";
 
-enum TElementActionsEnum {
+export enum TElementActionsEnum {
     CLICK = "CLICK",
     HOVER = "HOVER",
     SCREENSHOT = "SCREENSHOT",

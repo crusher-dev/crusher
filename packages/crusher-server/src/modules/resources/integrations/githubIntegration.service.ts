@@ -32,9 +32,9 @@ export class GithubIntegrationService {
 				"SELECT * FROM git_integrations WHERE project_id = ? ORDER BY created_at DESC LIMIT 1",
 				[projectId],
 			);
-			if (!gitIntegrationRecord) resolve(undefined);
+			if (!gitIntegrationRecord) return resolve(undefined);
 
-			resolve({
+			return resolve({
 				...gitIntegrationRecord,
 				_id: gitIntegrationRecord.id,
 			});

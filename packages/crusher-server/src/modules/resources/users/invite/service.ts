@@ -6,7 +6,7 @@ import { EmailManager } from "@modules/email";
 import * as ejs from "ejs";
 import * as path from "path";
 import { MyDecorator } from "@modules/decorators/camelizeResponse";
-import { RedisManager } from "@crusher-shared/modules/redis";
+import { RedisManager } from "@modules/redis";
 import { v4 as uuidv4 } from "uuid";
 
 @Service()
@@ -27,7 +27,7 @@ class UserInviteService {
 	}
 
 	async createProjectInviteCode(payload: ICreateProjectInviteCode): Promise<string> {
-		const inviteCode = `${payload.teamId}_${payload.projectId}_${uuidv4()}`;
+		const inviteCode = `${payload.teamId}${payload.projectId}${uuidv4()}`;
 		await this.redisManager.set(
 			inviteCode,
 			JSON.stringify({
@@ -40,14 +40,14 @@ class UserInviteService {
 					emails: payload.emails,
 				},
 			}),
-			{ expiry: { type: "m", value: 48 * 60 } },
+			{ expiry: { type: "s", value: 48 * 60 * 60 } },
 		);
 
 		return inviteCode;
 	}
 
 	async createTeamInviteCode(payload: ICreateTeamInviteCode): Promise<string> {
-		const inviteCode = `${payload.teamId}_${uuidv4()}`;
+		const inviteCode = `${payload.teamId}${uuidv4()}`;
 
 		await this.redisManager.set(
 			inviteCode,
@@ -59,7 +59,7 @@ class UserInviteService {
 					emails: payload.emails ? payload.emails : null,
 				},
 			}),
-			{ expiry: { type: "m", value: 48 * 60 } },
+			{ expiry: { type: "s", value: 48 * 60 * 60 } },
 		);
 
 		return inviteCode;

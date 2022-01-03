@@ -104,14 +104,14 @@ class BuildTestInstancesService {
 
 	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, projectId: number, hasInstancePassed: boolean) {
 		return this.dbManager.insert(
-			"INSERT INTO build_instance_actions_results SET instance_id = ?, project_id = ?, actions_results = ?, has_instance_passed = ?",
+			"INSERT INTO test_instance_action_results SET instance_id = ?, project_id = ?, actions_result = ?, has_instance_passed = ?",
 			[instanceId, projectId, JSON.stringify(actionsResult), hasInstancePassed],
 		);
 	}
 
 	@CamelizeResponse()
 	async getActionsResult(instanceId: number): Promise<KeysToCamelCase<IBuildInstanceActionResults> & { actionsResult: any }> {
-		return this.dbManager.fetchAllRows("SELECT * FROM build_instance_actions_results WHERE instance_id = ?", [instanceId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM test_instance_action_results WHERE instance_id = ?", [instanceId]);
 	}
 
 	async saveResult(

@@ -40,6 +40,7 @@ class UserInviteService {
 					emails: payload.emails,
 				},
 			}),
+			{ expiry: { type: "m", value: 48 * 60 } },
 		);
 
 		return inviteCode;
@@ -58,6 +59,7 @@ class UserInviteService {
 					emails: payload.emails ? payload.emails : null,
 				},
 			}),
+			{ expiry: { type: "m", value: 48 * 60 } },
 		);
 
 		return inviteCode;

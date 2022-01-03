@@ -14,7 +14,6 @@ import { ProjectsService } from "../projects/service";
 import { UserProjectRoleEnum } from "./roles/project/interface";
 import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@modules/redis";
-import { MongoManager } from "@modules/db/mongo";
 import { IUserAndSystemInfoResponse, TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { v4 as uuidv4 } from "uuid";
 import { EditionTypeEnum, HostingTypeEnum } from "@crusher-shared/types/common/general";
@@ -37,8 +36,6 @@ class UsersService {
 	@Inject()
 	private redisManager: RedisManager;
 	// @TODO: Shift this to a new module
-	@Inject()
-	private mongoManager: MongoManager;
 
 	@CamelizeResponse()
 	async getOpenSourceUser(): Promise<KeysToCamelCase<IUserTable> | null> {
@@ -183,10 +180,6 @@ class UsersService {
 				},
 				MYSQL_OPERATION: {
 					working: await this.dbManager.isConnectionAlive(),
-					message: null,
-				},
-				MONGO_DB_OPERATIONS: {
-					working: this.mongoManager.isAlive(),
 					message: null,
 				},
 			},

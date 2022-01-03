@@ -260,6 +260,34 @@ const CrossIcon = (props) => (
 		d="m7.98 6 3.712-3.712a1.05 1.05 0 0 0 0-1.485l-.495-.495a1.05 1.05 0 0 0-1.484 0L6 4.021 2.288.308a1.05 1.05 0 0 0-1.485 0L.308.803a1.05 1.05 0 0 0 0 1.484L4.02 6 .308 9.713a1.05 1.05 0 0 0 0 1.485l.495.494c.41.41 1.075.41 1.485 0L6 7.98l3.713 3.712c.41.41 1.075.41 1.485 0l.494-.495a1.05 1.05 0 0 0 0-1.484L7.98 6Z"
 	  />
 	</svg>
-  )
+);
 
-export { CrossIcon, BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon };
+const DownIcon = (props: any) => {
+	return (
+		<svg width={14} height={14} viewBox={`0 0 24 24`} fill={"#fff"} xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path
+		  fill="none"
+		  stroke="#fff"
+		  strokeWidth={2}
+		  d="m2 8.35 10.173 9.823L21.997 8"
+		/>
+	  </svg>
+	)
+};
+
+const UpIcon = (props: any) => {
+	return (
+		<svg
+		width={15}
+		height={15}
+		viewBox="0 -6 524 524"
+		fill="#fff"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path d="m460 321-34 34-164-163L98 355l-34-34 198-196 198 196Z" />
+	  </svg>
+	);
+}
+
+export { CrossIcon, BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon, DownIcon, UpIcon };

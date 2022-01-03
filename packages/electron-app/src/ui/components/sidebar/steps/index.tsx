@@ -16,6 +16,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { continueRemainingSteps } from "electron-app/src/ui/commands/perform";
 import { getAppSessionMeta, getRemainingSteps } from "electron-app/src/store/selectors/app";
+import { TemplatesModal } from "./templatesModal";
 
 export const ACTION_DESCRIPTIONS = {
     [ActionsInTestEnum.CLICK]: "Click on element",

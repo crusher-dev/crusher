@@ -130,6 +130,19 @@ export class TestController {
 		return "Success";
 	}
 
+	@Authorized()
+	@Post("/tests/:test_id/actions/update.steps")
+	async updateTestActions(
+		@CurrentUser({ required: true }) user,
+		@Param("test_id") testId: number,
+		@Body() body: {tempTestId: string},
+	) {
+		const tempTest = await this.testService.getTempTest(body.tempTestId);
+		const result = await this.testService.updateTestSteps(testId, tempTest.events);
+
+		return result.changedRows ? "Updated" : "No change";
+	}
+
 	// @TODO: Need strict type checks here. (Security Issue)
 	@Authorized()
 	@Post("/projects/:project_id/tests/actions/create")

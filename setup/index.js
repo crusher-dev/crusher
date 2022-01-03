@@ -104,7 +104,7 @@ async function init() {
 	require('../packages/crusher-server/setup/tsconfig');
 	require('../packages/test-runner/setup/tsconfig');
 	require('../packages/video-processor/setup/tsconfig');
-	require('../packages/crusher-electron-app/setup/');
+	require('../packages/electron-app/setup/');
 }
 
 init();

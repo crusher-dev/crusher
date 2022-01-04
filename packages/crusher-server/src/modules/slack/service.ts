@@ -8,9 +8,6 @@ class SlackService {
 	slackClientSecret: string;
 
 	constructor() {
-		if (!process.env.SLACK_CLIENT_ID || !process.env.SLACK_CLIENT_SECRET) {
-			throw new Error("Slack client id and Slack client secret not set");
-		}
 		this.slackClientId = process.env.SLACK_CLIENT_ID;
 		this.slackClientSecret = process.env.SLACK_CLIENT_SECRET;
 	}

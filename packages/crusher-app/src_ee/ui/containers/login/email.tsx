@@ -36,7 +36,7 @@ export const GithubSVG = function (props) {
     );
 };
 
-export default function Login() {
+export default function Custom404() {
     return (
         <div
             css={css(`
@@ -56,58 +56,40 @@ export default function Login() {
 
                     <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32 pb-60"}>
                         <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
-                            Continue with
+                            Continue with Email
                         </TextBlock>
 
                         <div className={" mb-72"}>
+                            <div className="mt-20">
+                                <Input className='md-20 bg' placeholder='Enter Email' />
+                            </div>
+                            <div className="mt-20">
+                                <Input type='password' placeholder='Enter Password' />
+                            </div>
                             <Button
-                                bgColor={"tertiary-dark"}
-                                className={"flex items-center justify-center"}
+                                // bgColor={"tertiary-dark"}
+                                className={"flex items-center justify-center mt-30"}
                                 css={css(`
 									width: 100%;
 									height: 38px;
 									font-weight: 400;
-                                    background:#905CFF
-								`)}
-                            >
-                                <GithubSVG />{" "}
-                                <Text className={"ml-10"} fontSize={14} weight={500}>
-                                    Github
-                                </Text>
-                            </Button>
+                                    background:#905CFF;
 
-                            <Button
-                                bgColor={"tertiary-dark"}
-                                className={"flex items-center justify-center mt-30"}
-                                css={css(`
-									width: 100%;
-									height: 38px;
-									font-weight: 400;
 								`)}
                             >
-                                <GitlabSVG />{" "}
-                                <Text className={"ml-10"} fontSize={14} weight={500}>
-                                    Gitlab
-                                </Text>
-                            </Button>
-                            <Button
-                                bgColor={"tertiary-dark"}
-                                className={"flex items-center justify-center mt-30"}
-                                css={css(`
-									width: 100%;
-									height: 38px;
-									font-weight: 400;
-								`)}
-                            >
-                                <Text className={"ml-10"} fontSize={14} weight={500}>
-                                    Login with Email
+                                <Text className={"ml-10"} fontSize={14} weight={900}>
+                                    Login
                                 </Text>
                             </Button>
                         </div>
-
-                        <Text className={"w-full flex bg-red-300 text-center"} fontSize={14}>
-                            or use SSO
-                        </Text>
+                        <div className="flex items-center justify-between">
+                            <Text className={""} fontSize={14}>
+                                or go back
+                            </Text>
+                            <Text className={""} fontSize={14}>
+                                Forgot Password
+                            </Text>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -119,6 +101,6 @@ const overlayContainer = css(`
 	background: #0a0b0c;
 	border: 1px solid #21252f;
 	border-radius: 10px;
-	width: 440rem;
+	width: 400rem;
 	min-height: 200px;
 `);

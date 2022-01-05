@@ -73,7 +73,7 @@ export default function Login({ loginWithEmailHandler }) {
 								`)}
                             >
                                 <GithubSVG />{" "}
-                                <Text fontSize={14} weight={800}>
+                                <Text className={"ml-10"} fontSize={14} weight={800}>
                                     Github
                                 </Text>
                             </Button>
@@ -87,7 +87,7 @@ export default function Login({ loginWithEmailHandler }) {
 								`)}
                             >
                                 <GitlabSVG />{" "}
-                                <Text fontSize={14} weight={500}>
+                                <Text className={"ml-10"} fontSize={14} weight={500}>
                                     Gitlab
                                 </Text>
                             </Button>

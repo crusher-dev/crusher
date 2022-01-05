@@ -4,6 +4,7 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
+import { useRouter } from "next/router";
 
 const RocketImage = (props) => (
     <img
@@ -13,30 +14,10 @@ const RocketImage = (props) => (
         }
     />
 );
-const GitlabSVG = (props) => (
-    <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-        <path fillRule="evenodd" clipRule="evenodd" d="m8.001 15.37 2.946-9.07H5.055l2.946 9.07Z" fill="#E24329" />
-        <path fillRule="evenodd" clipRule="evenodd" d="M8 15.37 5.056 6.3H.925l7.076 9.07Z" fill="#FC6D26" />
-        <path fillRule="evenodd" clipRule="evenodd" d="M.926 6.3.03 9.058a.61.61 0 0 0 .221.682l7.749 5.63L.926 6.3Z" fill="#FCA326" />
-        <path fillRule="evenodd" clipRule="evenodd" d="M.926 6.3h4.129L3.28.842a.305.305 0 0 0-.58 0L.926 6.3Z" fill="#E24329" />
-        <path fillRule="evenodd" clipRule="evenodd" d="m8 15.37 2.946-9.07h4.129L8 15.37Z" fill="#FC6D26" />
-        <path fillRule="evenodd" clipRule="evenodd" d="m15.075 6.3.895 2.755a.61.61 0 0 1-.222.682L8 15.37 15.075 6.3Z" fill="#FCA326" />
-        <path fillRule="evenodd" clipRule="evenodd" d="M15.074 6.3h-4.13L12.72.839a.305.305 0 0 1 .58 0L15.074 6.3Z" fill="#E24329" />
-    </svg>
-);
 
-export const GithubSVG = function (props) {
-    return (
-        <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-            <path
-                d="M8 0a8 8 0 0 0-2.529 15.591c.4.074.529-.174.529-.384v-1.49c-2.225.484-2.689-.944-2.689-.944-.364-.924-.888-1.17-.888-1.17-.726-.497.055-.486.055-.486.803.056 1.226.824 1.226.824.713 1.223 1.871.87 2.328.665.071-.517.279-.87.508-1.07-1.777-.203-3.645-.889-3.645-3.953 0-.874.313-1.588.824-2.148-.082-.202-.356-1.016.078-2.117 0 0 .672-.215 2.201.82A7.673 7.673 0 0 1 8 3.868c.68.004 1.365.093 2.004.27 1.527-1.035 2.198-.82 2.198-.82.435 1.102.161 1.916.079 2.117.513.56.823 1.274.823 2.148 0 3.072-1.871 3.749-3.653 3.947.287.248.549.735.549 1.481v2.196c0 .212.128.462.534.384A8.002 8.002 0 0 0 8 0Z"
-                fill="#fff"
-            />
-        </svg>
-    );
-};
 
-export default function Custom404() {
+export default function Signup() {
+    const router = useRouter()
     return (
         <div
             css={css(`
@@ -48,18 +29,21 @@ export default function Custom404() {
             <div className={"flex justify-center"}>
                 <div className={"mt-84 flex flex-col items-center"}>
                     <Heading type={1} fontSize={18}>
-                        Ready to ship faster & better <RocketImage className={"ml-8"} />
+                        Try crusher for free <RocketImage className={"ml-8"} />
                     </Heading>
                     <TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
                         Million of devs empower their workflow with crusher
                     </TextBlock>
 
-                    <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32 pb-60"}>
+                    <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32"}>
                         <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
-                            Continue with Email
+                            Create a new account
                         </TextBlock>
 
                         <div className={" mb-72"}>
+                            <div className="mt-20">
+                                <Input className='md-20 bg' placeholder='Enter Name' />
+                            </div>
                             <div className="mt-20">
                                 <Input className='md-20 bg' placeholder='Enter Email' />
                             </div>
@@ -78,18 +62,15 @@ export default function Custom404() {
 								`)}
                             >
                                 <Text className={"ml-10"} fontSize={14} weight={900}>
-                                    Login
+                                    Create an account
                                 </Text>
                             </Button>
                         </div>
-                        <div className="flex items-center justify-between">
-                            <Text className={""} fontSize={14}>
-                                or go back
-                            </Text>
-                            <Text className={""} fontSize={14}>
-                                Forgot Password
-                            </Text>
-                        </div>
+                    </div>
+                    <div onClick={() => router.push("/login")} className="mt-40">
+                        <Text color='#905CFF' weight='800' className={""} fontSize={14}>
+                            or go to login
+                        </Text>
                     </div>
                 </div>
             </div>

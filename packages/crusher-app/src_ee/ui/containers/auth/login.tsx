@@ -4,6 +4,7 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
+import { useRouter } from "next/router";
 
 const RocketImage = (props) => (
     <img
@@ -36,7 +37,10 @@ export const GithubSVG = function (props) {
     );
 };
 
-export default function Login() {
+export default function Login({ loginWithEmailHandler }) {
+    const router = useRouter();
+
+
     return (
         <div
             css={css(`
@@ -61,7 +65,6 @@ export default function Login() {
 
                         <div className={" mb-72"}>
                             <Button
-                                bgColor={"tertiary-dark"}
                                 className={"flex items-center justify-center"}
                                 css={css(`
 									width: 100%;
@@ -71,18 +74,17 @@ export default function Login() {
 								`)}
                             >
                                 <GithubSVG />{" "}
-                                <Text className={"ml-10"} fontSize={14} weight={500}>
+                                <Text className={"ml-10"} fontSize={14} weight={800}>
                                     Github
                                 </Text>
                             </Button>
 
                             <Button
                                 bgColor={"tertiary-dark"}
-                                className={"flex items-center justify-center mt-30"}
+                                className={"flex items-center justify-center mt-20"}
                                 css={css(`
 									width: 100%;
 									height: 38px;
-									font-weight: 400;
 								`)}
                             >
                                 <GitlabSVG />{" "}
@@ -91,12 +93,12 @@ export default function Login() {
                                 </Text>
                             </Button>
                             <Button
+                                onClick={loginWithEmailHandler}
                                 bgColor={"tertiary-dark"}
-                                className={"flex items-center justify-center mt-30"}
+                                className={"flex items-center justify-center mt-20"}
                                 css={css(`
 									width: 100%;
 									height: 38px;
-									font-weight: 400;
 								`)}
                             >
                                 <Text className={"ml-10"} fontSize={14} weight={500}>
@@ -104,14 +106,20 @@ export default function Login() {
                                 </Text>
                             </Button>
                         </div>
-
-                        <Text className={"w-full flex bg-red-300 text-center"} fontSize={14}>
-                            or use SSO
+                        <div className="flex w-full justify-center">
+                            <Text className={""} fontSize={14}>
+                                or use SSO
+                            </Text>
+                        </div>
+                    </div>
+                    <div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
+                        <Text color={"#9692FF"} fontSize={14}>
+                            or create an account
                         </Text>
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

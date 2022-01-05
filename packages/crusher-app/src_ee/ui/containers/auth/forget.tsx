@@ -5,6 +5,12 @@ import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
+import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
+import { LoadingSVG } from "@svg/dashboard";
+import { useCallback, useState } from "react";
+import { validateEmail } from "@utils/common/validationUtils";
+import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
 
 const RocketImage = (props) => (
     <img
@@ -15,9 +21,57 @@ const RocketImage = (props) => (
     />
 );
 
-
+const forgotPassword = (email: string) => {
+    return backendRequest("/users/actions/forgot_password", {
+        method: RequestMethod.POST,
+        payload: { email },
+    });
+};
 export default function Signup() {
-    const router = useRouter()
+    const router = useRouter();
+    const [email, setEmail] = useState({ value: "", error: null });
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState(null);
+
+    const emailChange = (event: any) => {
+        setEmail({ error: null, value: event.target.value });
+    };
+
+    const onEnter = (event: any) => {
+        if (event.key === "Enter") {
+            return onSubmit();
+        }
+    };
+
+    const verifyInfo = useCallback(
+        (completeVerify = false) => {
+            const shouldValidateEmail = completeVerify || email.value;
+            if (!validateEmail(email.value) && shouldValidateEmail) {
+                setEmail({ ...email, error: "Please enter valid email" });
+            } else setEmail({ ...email, error: "" });
+        },
+        [email.value],
+    );
+
+    const onSubmit = useCallback(async () => {
+        verifyInfo(true);
+
+        if (!validateEmail(email.value)) return;
+        setLoading(true);
+        try {
+            const { status } = await forgotPassword(email.value);
+            setData(status);
+            console.log(status);
+        } catch (e: any) {
+            if (e.message === "USER_NOT_EXISTS") {
+                alert("Email not registered");
+            } else {
+                alert("Something went wrong");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }, [email.value]);
     return (
         <div
             css={css(`
@@ -34,32 +88,63 @@ export default function Signup() {
                     <TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
                         Million of devs empower their workflow with crusher
                     </TextBlock>
+                    <Conditional showIf={data && !loading}>
+                        <div className="text-32 font-extrabold my-50">Please Check your email</div>;
+                    </Conditional>
+                    <Conditional showIf={!data}>
+                        <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32"}>
+                            <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
+                                Reset your password
+                            </TextBlock>
 
-                    <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32"}>
-                        <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
-                            Reset your password
-                        </TextBlock>
-
-                        <div className={" mb-72"}>
-                            <div className="mt-20">
-                                <Input className='md-20 bg' placeholder='Enter Name' />
-                            </div>
-                            <Button
-                                className={"flex items-center justify-center mt-30"}
-                                css={css(`
+                            <div className={" mb-72"}>
+                                <div className="mt-20">
+                                    <Input
+                                        className='md-20 bg'
+                                        autoComplete={"email"}
+                                        value={email.value}
+                                        onChange={emailChange}
+                                        placeholder={"Enter email"}
+                                        isError={email.error}
+                                        onBlur={verifyInfo.bind(this, false)}
+                                        onKeyUp={onEnter}
+                                    />
+                                    <Conditional showIf={email.error}>
+                                        <div className={"mt-8 text-12"} css={errorState}>
+                                            {email.error}
+                                        </div>
+                                    </Conditional>
+                                </div>
+                                <Button
+                                    className={"flex items-center justify-center mt-30"}
+                                    css={css(`
 									width: 100%;
 									height: 38px;
 									font-weight: 400;
                                     background:#905CFF;
-
 								`)}
-                            >
-                                <Text className={"ml-10"} fontSize={14} weight={900}>
-                                    Send reset password link
-                                </Text>
-                            </Button>
+                                    onClick={onSubmit}
+                                >
+                                    <div className={"flex justify-center items-center"}>
+                                        <Conditional showIf={!loading}>
+                                            <Text fontSize={14} weight={900}>
+                                                Send reset password link
+                                            </Text>
+                                        </Conditional>
+                                        <Conditional showIf={loading}>
+                                            <span>
+                                                {" "}
+                                                <LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+                                            </span>
+                                            <span className={"mt-2 ml-8"}>Processing</span>
+                                        </Conditional>
+                                    </div>
+
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    </Conditional>
+
                     <div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
                         <Text color={"#9692FF"} fontSize={14}>
                             or go back
@@ -78,3 +163,6 @@ const overlayContainer = css(`
 	width: 400rem;
 	min-height: 200px;
 `);
+const errorState = css`
+	color: #ff4583;
+`;

@@ -5,6 +5,15 @@ import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
+import { loadUserDataAndRedirect } from "@hooks/user";
+import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
+import { validateEmail, validatePassword, validateName } from "@utils/common/validationUtils";
+import { atom, useAtom } from "jotai";
+import { Conditional } from "dyson/src/components/layouts";
+import { getBoolean } from "@utils/common";
+import { LoadingSVG } from "@svg/dashboard";
 
 const RocketImage = (props) => (
     <img
@@ -15,9 +24,84 @@ const RocketImage = (props) => (
     />
 );
 
+const showRegistrationFormAtom = atom(false);
 
-export default function Signup() {
-    const router = useRouter()
+const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
+    return backendRequest("/users/actions/signup", {
+        method: RequestMethod.POST,
+        payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
+    });
+};
+
+export default function Signup({ nextStepHandler }) {
+    const [data] = useState(null);
+    const router = useRouter();
+    const { query } = router;
+
+    const [, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
+    const [email, setEmail] = useState({ value: "", error: "" });
+    const [password, setPassword] = useState({ value: "", error: "" });
+    const [name, setName] = useState({ value: "", error: "" });
+    const [loading, setLoading] = useState(false);
+
+    const emailChange = useCallback(
+        (e) => {
+            setEmail({ ...email, value: e.target.value });
+        },
+        [email],
+    );
+    const passwordChange = useCallback(
+        (e) => {
+            setPassword({ ...password, value: e.target.value });
+        },
+        [password],
+    );
+    const nameChange = useCallback(
+        (e) => {
+            setName({ ...name, value: e.target.value });
+        },
+        [name],
+    );
+
+    const verifyInfo = (completeVerify = false) => {
+        const shouldValidateEmail = completeVerify || email.value;
+        const shouldValidatePassword = completeVerify || password.value;
+        const shouldValidateName = completeVerify || name.value;
+        if (!validateEmail(email.value) && shouldValidateEmail) {
+            setEmail({ ...email, error: "Please enter valid email" });
+        } else setEmail({ ...email, error: "" });
+
+        if (!validatePassword(password.value) && shouldValidatePassword) {
+            setPassword({ ...password, error: "Please enter a password with length > 4" });
+        } else setPassword({ ...password, error: "" });
+
+        if (!validateName(name.value) && shouldValidateName) {
+            setName({ ...name, error: "Please enter a valid name" });
+        } else setName({ ...name, error: "" });
+    };
+
+    const signupUser = async () => {
+        verifyInfo(true);
+
+        if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
+        setLoading(true);
+        try {
+            await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
+            nextStepHandler()
+        } catch (e: any) {
+            console.log(e);
+            alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
+        }
+        setLoading(false);
+    };
+
+    const signupOnEnter = (event: any) => {
+        if (event.key === "Enter") {
+            signupUser();
+        }
+    };
+
+    loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
     return (
         <div
             css={css(`
@@ -42,17 +126,56 @@ export default function Signup() {
 
                         <div className={" mb-72"}>
                             <div className="mt-20">
-                                <Input className='md-20 bg' placeholder='Enter Name' />
+                                <Input className='md-20 bg'
+                                    autoComplete="name"
+                                    value={name.value}
+                                    placeholder={"Enter name"}
+                                    onChange={nameChange}
+                                    isError={name.error}
+                                    onBlur={verifyInfo.bind(this, false)}
+                                />
+                                <Conditional showIf={getBoolean(name.error)}>
+                                    <div className={"mt-8 text-12"} css={errorState}>
+                                        {name.error}
+                                    </div>
+                                </Conditional>
                             </div>
                             <div className="mt-20">
-                                <Input className='md-20 bg' placeholder='Enter Email' />
+                                <Input
+                                    className='md-20 bg'
+                                    autoComplete="email"
+                                    value={email.value}
+                                    placeholder={"Enter email"}
+                                    onChange={emailChange}
+                                    isError={email.error}
+                                    onBlur={verifyInfo.bind(this, false)}
+                                />
+                                <Conditional showIf={getBoolean(email.error)}>
+                                    <div className={"mt-8 text-12"} css={errorState}>
+                                        {email.error}
+                                    </div>
+                                </Conditional> />
                             </div>
                             <div className="mt-20">
-                                <Input type='password' placeholder='Enter Password' />
+                                <Input type='password'
+                                    value={password.value}
+                                    placeholder={"Enter your password"}
+                                    type={"password"}
+                                    onChange={passwordChange}
+                                    onKeyDown={signupOnEnter}
+                                    isError={password.error}
+                                    onBlur={verifyInfo.bind(this, false)}
+                                />
+                                <Conditional showIf={getBoolean(password.error)}>
+                                    <div className={"mt-8 text-12"} css={errorState}>
+                                        {password.error}
+                                    </div>
+                                </Conditional>
                             </div>
                             <Button
-                                // bgColor={"tertiary-dark"}
+                                onClick={signupUser}
                                 className={"flex items-center justify-center mt-30"}
+                                disabled={loading}
                                 css={css(`
 									width: 100%;
 									height: 38px;
@@ -61,9 +184,21 @@ export default function Signup() {
 
 								`)}
                             >
-                                <Text className={"ml-10"} fontSize={14} weight={900}>
-                                    Create an account
-                                </Text>
+                                <div className={"flex justify-center items-center"}>
+                                    <Conditional showIf={!loading}>
+                                        <Text fontSize={14} weight={900}>
+                                            Create an account
+                                        </Text>
+                                    </Conditional>
+                                    <Conditional showIf={loading}>
+                                        <span>
+                                            {" "}
+                                            <LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+                                        </span>
+                                        <span className={"mt-2 ml-8"}>Processing</span>
+                                    </Conditional>
+                                </div>
+
                             </Button>
                         </div>
                     </div>
@@ -85,3 +220,7 @@ const overlayContainer = css(`
 	width: 400rem;
 	min-height: 200px;
 `);
+
+const errorState = css`
+	color: #ff4583;
+`;

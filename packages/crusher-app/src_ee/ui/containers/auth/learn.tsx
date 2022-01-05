@@ -6,7 +6,7 @@ import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 
 
-export default function Learn() {
+export default function Learn({ nextStepHandler }) {
     return (
         <div
             css={css(`
@@ -29,7 +29,7 @@ export default function Learn() {
                     </div>
                     <div className="mt-40">
                         <Button
-                            // bgColor={"tertiary-dark"}
+                            onClick={nextStepHandler}
                             className={"flex items-center justify-center mt-30"}
                             css={css(`
 									width: 180rem;
@@ -38,7 +38,7 @@ export default function Learn() {
                                     background:#905CFF;
 								`)}
                         >
-                            <Text className={"ml-10"} fontSize={14} weight={900}>
+                            <Text fontSize={14} weight={900}>
                                 Next
                             </Text>
                         </Button>

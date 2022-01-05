@@ -1,6 +1,6 @@
 import React from "react";
 
-import LoginContainer from "@ui/containers/login/opendash";
+import LoginContainer from "@ui/containers/login/forget";
 import { usePageTitle } from "../src/hooks/seo";
 
 function LoginPage() {

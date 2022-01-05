@@ -3,7 +3,6 @@ import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
-import { Input } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
 
 const RocketImage = (props) => (
@@ -74,7 +73,7 @@ export default function Login({ loginWithEmailHandler }) {
 								`)}
                             >
                                 <GithubSVG />{" "}
-                                <Text className={"ml-10"} fontSize={14} weight={800}>
+                                <Text fontSize={14} weight={800}>
                                     Github
                                 </Text>
                             </Button>
@@ -88,7 +87,7 @@ export default function Login({ loginWithEmailHandler }) {
 								`)}
                             >
                                 <GitlabSVG />{" "}
-                                <Text className={"ml-10"} fontSize={14} weight={500}>
+                                <Text fontSize={14} weight={500}>
                                     Gitlab
                                 </Text>
                             </Button>
@@ -101,7 +100,7 @@ export default function Login({ loginWithEmailHandler }) {
 									height: 38px;
 								`)}
                             >
-                                <Text className={"ml-10"} fontSize={14} weight={500}>
+                                <Text fontSize={14} weight={500}>
                                     Login with Email
                                 </Text>
                             </Button>
@@ -127,6 +126,6 @@ const overlayContainer = css(`
 	background: #0a0b0c;
 	border: 1px solid #21252f;
 	border-radius: 10px;
-	width: 440rem;
+	width: 400rem;
 	min-height: 200px;
 `);

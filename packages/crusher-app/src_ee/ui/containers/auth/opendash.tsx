@@ -3,6 +3,7 @@ import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
+import router from "next/router";
 
 
 const Github = () => <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -69,7 +70,7 @@ export default function Learn() {
                     </div>
                     <div className="mt-40">
                         <Button
-                            // bgColor={"tertiary-dark"}
+                            onClick={() => router.push("/app/dashboard")}
                             className={"flex items-center justify-center mt-30"}
                             css={css(`
 									width: 180rem;
@@ -78,7 +79,7 @@ export default function Learn() {
                                     background:#905CFF;
 								`)}
                         >
-                            <Text className={"ml-10"} fontSize={14} weight={900}>
+                            <Text fontSize={14} weight={900}>
                                 Open dashboard
                             </Text>
                         </Button>

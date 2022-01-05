@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { css } from "@emotion/react";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
@@ -5,6 +6,12 @@ import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
+import { validateEmail, validatePassword } from '@utils/common/validationUtils';
+import { loadUserDataAndRedirect } from '@hooks/user';
+import { backendRequest } from '@utils/common/backendRequest';
+import { RequestMethod } from '@types/RequestOptions';
+import { Conditional } from 'dyson/src/components/layouts/Conditional/Conditional';
+import { LoadingSVG } from '@svg/dashboard';
 
 const RocketImage = (props) => (
     <img
@@ -14,9 +21,65 @@ const RocketImage = (props) => (
         }
     />
 );
+const emailLogin = (email: string, password: string) => {
+    return backendRequest("/users/actions/login", {
+        method: RequestMethod.POST,
+        payload: { email, password },
+    });
+};
+
 export default function EmailLogin({ goBackHandler }) {
     const router = useRouter();
+    const [email, setEmail] = useState({ value: "", error: null });
+    const [password, setPassword] = useState({ value: "", error: null });
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState(null);
 
+    const emailChange = (event: any) => {
+        setEmail({ ...email, value: event.target.value });
+    };
+    const passwordChange = (event: any) => {
+        setPassword({ ...password, value: event.target.value });
+    };
+
+    const loginOnEnter = (event: any) => {
+        if (event.key === "Enter") {
+            return onLogin();
+        }
+    };
+
+    const verifyInfo = (completeVerify = false) => {
+        const shouldValidateEmail = completeVerify || email.value;
+        const shouldValidatePassword = completeVerify || password.value;
+        if (!validateEmail(email.value) && shouldValidateEmail) {
+            setEmail({ ...email, error: "Please enter valid email" });
+        } else setEmail({ ...email, error: "" });
+
+        if (!validatePassword(password.value) && shouldValidatePassword) {
+            setPassword({ ...password, error: "Please enter a password with length > 4" });
+        } else setPassword({ ...password, error: "" });
+    };
+
+    const onLogin = async () => {
+        verifyInfo(true);
+
+        if (!validateEmail(email.value) || !validatePassword(password.value)) return;
+        setLoading(true);
+        try {
+            const { systemInfo } = await emailLogin(email.value, password.value);
+            setData(systemInfo);
+            router.push("/app/dashboard");
+        } catch (e: any) {
+            if (e.message === "INVALID_CREDENTIALS") {
+                alert("Please add valid ceredentials.");
+            } else {
+                alert(e);
+            }
+        }
+        setLoading(false);
+    };
+
+    loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
     return (
         <div
@@ -42,13 +105,39 @@ export default function EmailLogin({ goBackHandler }) {
 
                         <div className={" mb-72"}>
                             <div className="mt-20">
-                                <Input className='md-20 bg' placeholder='Enter Email' />
+                                <Input
+                                    className='md-20 bg'
+                                    autoComplete={"email"}
+                                    value={email.value}
+                                    onChange={emailChange}
+                                    placeholder={"Enter email"}
+                                    isError={email.error}
+                                    onBlur={verifyInfo.bind(this, false)} />
+                                <Conditional showIf={email.error}>
+                                    <div className={"mt-8 text-12"} css={errorState}>
+                                        {email.error}
+                                    </div>
+                                </Conditional>
                             </div>
                             <div className="mt-20">
-                                <Input type='password' placeholder='Enter Password' />
+                                <Input
+                                    autoComplete={"password"}
+                                    value={password.value}
+                                    placeholder={"Enter your password"}
+                                    type={"password"}
+                                    onChange={passwordChange}
+                                    onKeyUp={loginOnEnter}
+                                    isError={password.error}
+                                    onBlur={verifyInfo.bind(this, false)}
+                                />
+                                <Conditional showIf={password.error}>
+                                    <div className={"mt-8 text-12"} css={errorState}>
+                                        {password.error}
+                                    </div>
+                                </Conditional>
                             </div>
                             <Button
-                                // bgColor={"tertiary-dark"}
+                                disabled={loading}
                                 className={"flex items-center justify-center mt-30"}
                                 css={css(`
 									width: 100%;
@@ -57,10 +146,22 @@ export default function EmailLogin({ goBackHandler }) {
                                     background:#905CFF;
 
 								`)}
-                            >
-                                <Text className={"ml-10"} fontSize={14} weight={900}>
-                                    Login
-                                </Text>
+                                size={"large"}
+                                onClick={onLogin}>
+                                <div className={"flex justify-center items-center"}>
+                                    <Conditional showIf={!loading}>
+                                        <Text fontSize={14} weight={900}>
+                                            Login
+                                        </Text>
+                                    </Conditional>
+                                    <Conditional showIf={loading}>
+                                        <span>
+                                            {" "}
+                                            <LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+                                        </span>
+                                        <span className={"mt-2 ml-8"}>Processing</span>
+                                    </Conditional>
+                                </div>
                             </Button>
                         </div>
                         <div className="flex items-center justify-between">
@@ -85,3 +186,8 @@ const overlayContainer = css(`
 	width: 400rem;
 	min-height: 200px;
 `);
+
+
+const errorState = css`
+	color: #ff4583;
+`;

@@ -203,7 +203,7 @@ export default function Signup({ nextStepHandler }) {
                         </div>
                     </div>
                     <div onClick={() => router.push("/login")} className="mt-40">
-                        <Text color='#905CFF' weight='800' className={""} fontSize={14}>
+                        <Text color='#9692FF' className={""} fontSize={14}>
                             or go to login
                         </Text>
                     </div>

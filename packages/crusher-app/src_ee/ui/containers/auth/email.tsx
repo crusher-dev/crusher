@@ -173,6 +173,11 @@ export default function EmailLogin({ goBackHandler }) {
                             </Text>
                         </div>
                     </div>
+                    <div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
+                        <Text color={"#9692FF"} fontSize={14}>
+                            or create an account
+                        </Text>
+                    </div>
                 </div>
             </div>
         </div>

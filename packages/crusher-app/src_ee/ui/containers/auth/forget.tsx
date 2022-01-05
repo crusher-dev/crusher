@@ -4,6 +4,7 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
+import { useRouter } from "next/router";
 
 const RocketImage = (props) => (
     <img
@@ -16,6 +17,7 @@ const RocketImage = (props) => (
 
 
 export default function Signup() {
+    const router = useRouter()
     return (
         <div
             css={css(`
@@ -27,7 +29,7 @@ export default function Signup() {
             <div className={"flex justify-center"}>
                 <div className={"mt-84 flex flex-col items-center"}>
                     <Heading type={1} fontSize={18}>
-                        Try crusher for free <RocketImage className={"ml-8"} />
+                        Ready to ship faster & better  <RocketImage className={"ml-8"} />
                     </Heading>
                     <TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
                         Million of devs empower their workflow with crusher
@@ -35,21 +37,14 @@ export default function Signup() {
 
                     <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32"}>
                         <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
-                            Create a new account
+                            Reset your password
                         </TextBlock>
 
                         <div className={" mb-72"}>
                             <div className="mt-20">
                                 <Input className='md-20 bg' placeholder='Enter Name' />
                             </div>
-                            <div className="mt-20">
-                                <Input className='md-20 bg' placeholder='Enter Email' />
-                            </div>
-                            <div className="mt-20">
-                                <Input type='password' placeholder='Enter Password' />
-                            </div>
                             <Button
-                                // bgColor={"tertiary-dark"}
                                 className={"flex items-center justify-center mt-30"}
                                 css={css(`
 									width: 100%;
@@ -60,14 +55,14 @@ export default function Signup() {
 								`)}
                             >
                                 <Text className={"ml-10"} fontSize={14} weight={900}>
-                                    Create an account
+                                    Send reset password link
                                 </Text>
                             </Button>
                         </div>
                     </div>
-                    <div className="mt-40">
-                        <Text color='#905CFF' weight='800' className={""} fontSize={14}>
-                            or go to login
+                    <div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
+                        <Text color={"#9692FF"} fontSize={14}>
+                            or go back
                         </Text>
                     </div>
                 </div>

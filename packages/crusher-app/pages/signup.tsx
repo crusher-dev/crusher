@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SignupContainer } from "@ui/containers/signup/signupScreen";
+import SignupContainer from "@ui/containers/auth/signup";
 
 import { usePageTitle } from "../src/hooks/seo";
 

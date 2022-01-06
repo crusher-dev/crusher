@@ -4,6 +4,8 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { getGithubLoginURL } from '@utils/core/external';
 
 const RocketImage = (props) => (
     <img
@@ -63,13 +65,16 @@ export default function Login({ loginWithEmailHandler }) {
                         </TextBlock>
 
                         <div className={" mb-72"}>
+
+                            <Link href={getGithubLoginURL()}>
                             <Button
                                 className={"flex items-center justify-center"}
                                 css={css(`
 									width: 100%;
 									height: 38px;
 									font-weight: 400;
-                                    background:#905CFF
+                               
+                                    background: linear-gradient(180deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
 								`)}
                             >
                                 <GithubSVG />{" "}
@@ -77,6 +82,7 @@ export default function Login({ loginWithEmailHandler }) {
                                     Github
                                 </Text>
                             </Button>
+                            </Link>
 
                 {/*            <Button*/}
                 {/*                bgColor={"tertiary-dark"}*/}

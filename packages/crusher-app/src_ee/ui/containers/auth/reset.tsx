@@ -8,11 +8,10 @@ import { useRouter } from "next/router";
 import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
 import { LoadingSVG } from "@svg/dashboard";
 import { useCallback, useState } from "react";
-import { validateEmail, validatePassword } from "@utils/common/validationUtils";
+import {  validatePassword } from "@utils/common/validationUtils";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { loadUserDataAndRedirect } from "@hooks/user";
-import email from "./email";
 import { getBoolean } from "@utils/common";
 
 const RocketImage = (props) => (
@@ -120,8 +119,8 @@ export default function Signup() {
                         <div className="text-32 font-extrabold my-50">Invalid Token</div>;
                     </Conditional>
                     <Conditional showIf={Boolean(query?.token)}>
-                        <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32"}>
-                            <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
+                        <div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28"}>
+                            <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
                                 Reset your password
                             </TextBlock>
 

@@ -460,7 +460,7 @@ function SlackIntegration() {
 
 		}
 	}, [integrations]);
-	
+
 	const fetchSlackChannels = useCallback(async () => {
 		const {channels, nextCursor} = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`));
 		setSlackChannels(channels);
@@ -477,7 +477,7 @@ function SlackIntegration() {
 	const handleSwitch  = useCallback((toggleState: boolean) => {
 		if(toggleState) {
 			const windowRef = openPopup(`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(JSON.stringify({projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations")}))}`);
-			
+
 			//@ts-ignore
 			const interval = setInterval(() => {
 				if(windowRef.closed) return clearInterval(interval);
@@ -550,7 +550,7 @@ function SlackIntegration() {
 		});
 	};
 
-	const handleScrollEnd = useCallback(async () => {		
+	const handleScrollEnd = useCallback(async () => {
 				if(!nextCursor) return false;
 
 				const {channels, nextCursor: _nextCursor} = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`), {

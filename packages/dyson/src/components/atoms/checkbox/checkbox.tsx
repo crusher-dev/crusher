@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { ReactElement } from "react";
 import { Conditional } from "../../layouts";
 
-function TickSVG(props) {
+function TickSVG(props: React.SVGAttributes<SVGSVGElement>) {
 	return (
 		<svg width={12} height={9} viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -14,16 +14,16 @@ function TickSVG(props) {
 	);
 }
 
-export type ChecboxProps = {
+export type CheckboxProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
 	isSelected: boolean;
 	isSelectAllType: boolean;
 	disabled?: boolean;
-	label: ReactElement;
+	label?: ReactElement;
 	callback?: (state: boolean) => void;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<React.HTMLAttributes<any>, any>;
 
 const RadioDefaultProps = {
 	isSelected: true,
@@ -86,7 +86,7 @@ const disabledCSS = css`
 	cursor: not-allowed;
 `;
 
-export function Checkbox(props: ChecboxProps): ReactElement {
+export function Checkbox(props: CheckboxProps): ReactElement {
 	const { callback, disabled, label, isSelected, isSelectAllType, className } = props;
 
 	const handleClick = () => {

@@ -102,8 +102,6 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
-		console.log("Body of project tests run api, here", body);
-
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};
@@ -130,6 +128,19 @@ export class TestController {
 		await this.testService.deleteTest(testId);
 
 		return "Success";
+	}
+
+	@Authorized()
+	@Post("/tests/:test_id/actions/update.steps")
+	async updateTestActions(
+		@CurrentUser({ required: true }) user,
+		@Param("test_id") testId: number,
+		@Body() body: {tempTestId: string},
+	) {
+		const tempTest = await this.testService.getTempTest(body.tempTestId);
+		const result = await this.testService.updateTestSteps(testId, tempTest.events);
+
+		return result.changedRows ? "Updated" : "No change";
 	}
 
 	// @TODO: Need strict type checks here. (Security Issue)

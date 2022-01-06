@@ -479,7 +479,6 @@ function SlackIntegration() {
 					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
 				)}`,
 			);
-
 			//@ts-ignore
 			const interval = setInterval(() => {
 				if (windowRef.closed) return clearInterval(interval);
@@ -568,7 +567,6 @@ function SlackIntegration() {
 
 	const handleScrollEnd = useCallback(async () => {
 		if (!nextCursor) return false;
-
 		const { channels, nextCursor: _nextCursor } = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`), {
 			method: RequestMethod.GET,
 			payload: {

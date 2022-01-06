@@ -229,7 +229,7 @@ export class BuildReportService {
 	}
 
 	async createBuildReport(totalTestCount: number, buildId: number, referenceBuildId: number, projectId: number): Promise<{ insertId: number }> {
-		return this.dbManager.insert(`INSERT INTO job_reports SET job_id = ?, reference_job_id = ?, total_test_count = ?, project_id = ?, status = ?`, [
+		return this.dbManager.insert(`INSERT INTO job_reports (job_id, reference_job_id, total_test_count, project_id, status) VALUES (?, ?, ?, ?, ?)`, [
 			buildId,
 			referenceBuildId,
 			totalTestCount,

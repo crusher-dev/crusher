@@ -68,7 +68,7 @@ class TestService {
 		await this.handleTemplateActions(templateActions, testInfo.projectId, testInfo.userId);
 
 		return this.dbManager.insert(
-			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_url = ?, featured_screenshot_url = ?`,
+			`INSERT INTO tests (project_id, name, events, user_id, featured_video_url, featured_screenshot_url) VALUES (?, ?, ?, ?, ?, ?)`,
 			[
 				testInfo.projectId,
 				testInfo.name,
@@ -136,15 +136,20 @@ class TestService {
 
 	async getCompleteTestInfo(testId: number) {
 		return this.dbManager.fetchSingleRow(
-			`SELECT tests.*, projects.id projectId, projects.name projectName, users.id userId, users.name userName FROM tests, projects, users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
+			`SELECT tests.*, projects.id as projectId, projects.name as projectName, users.id as userId, users.name as userName FROM tests, projects, users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
 			[testId],
 		);
+	}
+
+	@CamelizeResponse()
+	private _runCamelizeFetchAllQuery(query, values) {
+		return this.dbManager.fetchAllRows(query, values);
 	}
 
 	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number; } = {}) {
 		const PER_PAGE_LIMIT = 15;
 
-		let query = `SELECT tests.*, tests.draft_job_id draftJobId, tests.featured_clip_video_url featuredClipVideoUrl, tests.featured_video_url featuredVideoUrl, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		let query = `SELECT tests.*, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
 		const queryParams: Array<any> = [projectId];
 		let page = 0;
 		if(filter.page) page = filter.page;
@@ -178,7 +183,7 @@ class TestService {
 			queryParams.push(`${PER_PAGE_LIMIT}`);
 		}
 
-		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this.dbManager.fetchAllRows(query, queryParams) };
+		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
 	}
 
 	async deleteTest(testId: number) {
@@ -250,7 +255,7 @@ class TestService {
 	}
 
 	async createTemplate(payload: Omit<ICreateTemplatePayload, "events"> & { events: Array<iAction> }) {
-		return this.dbManager.insert("INSERT INTO templates SET name = ?, events = ?, project_id = ?, user_id = ?", [
+		return this.dbManager.insert("INSERT INTO templates (name, events, project_id, user_id) VALUES (?, ?, ?, ?)", [
 			payload.name,
 			JSON.stringify(payload.events),
 			payload.projectId ? payload.projectId : null,

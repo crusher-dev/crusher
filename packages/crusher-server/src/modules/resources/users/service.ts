@@ -98,7 +98,7 @@ class UsersService {
 	}
 
 	async createUserRecord(user: Omit<ICreateUserPayload, "uuid">): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO users SET name = ?, email = ?, password = ?, verified = ?, is_oss = ?, uuid = ?", [
+		return this.dbManager.insert("INSERT INTO users (name, email, password, verified, is_oss, uuid) VALUES (?, ?, ?, ?, ?, ?)", [
 			user.name,
 			user.email,
 			encryptPassword(user.password),

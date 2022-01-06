@@ -37,7 +37,7 @@ class IntegrationsController {
 		} else {
 			await this.integrationsService.addIntegration(integrationConfig, projectId)
 		}
-		
+
 		await res.redirect(redirectUrl);
 		return res;
 	}
@@ -51,7 +51,7 @@ class IntegrationsController {
 		}
 
 		await this.integrationsService.deleteIntegration(existingSlackIntegration.id);
-	
+
 		return {status: "Successful"};
 	}
 
@@ -59,7 +59,7 @@ class IntegrationsController {
 	@Post("/integrations/:project_id/slack/actions/save.settings")
 	async saveSlackIntegrationSettings(@CurrentUser({required: true}) user, @Param("project_id") projectId: number, @Body() body: {alertChannel: any; normalChannel: any; }) {
 		return this.integrationsService.saveSlackSettings({alertChannel: body.alertChannel, normalChannel: body.normalChannel}, projectId);
-	} 
+	}
 
 	@Authorized()
 	@Get("/integrations/:project_id")
@@ -90,7 +90,9 @@ class IntegrationsController {
 
 		return {
 			status: "Successful",
-			data: { ...(doc.toObject() as any), _id: doc._id.toString() },
+			data: {
+				...doc,
+			},
 		};
 	}
 

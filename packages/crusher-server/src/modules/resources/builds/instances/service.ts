@@ -95,16 +95,15 @@ class BuildTestInstancesService {
 	}
 
 	async insertScrenshotResult(payload: ICreateBuildTestInstanceResultPayload) {
-		console.log("SCREENSHOT_INSER_PAYLOAD", payload);
 		return this.dbManager.insert(
-			"INSERT INTO test_instance_results SET screenshot_id = ?, target_screenshot_id = ?, instance_result_set_id = ?, diff_delta = ?, diff_image_url = ?, status = ?",
+			"INSERT INTO test_instance_results (screenshot_id, target_screenshot_id, instance_result_set_id, diff_delta, diff_image_url, status) VALUES (?, ?, ?, ?, ?, ?)",
 			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status],
 		);
 	}
 
 	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, projectId: number, hasInstancePassed: boolean) {
 		return this.dbManager.insert(
-			"INSERT INTO test_instance_action_results SET instance_id = ?, project_id = ?, actions_result = ?, has_instance_passed = ?",
+			"INSERT INTO test_instance_action_results (instance_id, project_id, actions_result, has_instance_passed) VALUES (?, ?, ?, ?)",
 			[instanceId, projectId, JSON.stringify(actionsResult), hasInstancePassed],
 		);
 	}
@@ -230,7 +229,7 @@ class BuildTestInstancesService {
 	async createBuildTestInstanceResultSet(
 		payload: KeysToCamelCase<Omit<ITestInstanceResultSetsTable, "id" | "status" | "conclusion" | "failed_reason">>,
 	): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO test_instance_result_sets SET report_id = ?, instance_id = ?, target_instance_id = ?, status = ?", [
+		return this.dbManager.insert("INSERT INTO test_instance_result_sets (report_id, instance_id, target_instance_id, status) VALUES (?, ?, ?, ?)", [
 			payload.reportId,
 			payload.instanceId,
 			payload.targetInstanceId,
@@ -241,7 +240,7 @@ class BuildTestInstancesService {
 	async createBuildTestInstance(
 		payload: KeysToCamelCase<Omit<ITestInstancesTable, "id" | "browser" | "status" | "code" | "meta">> & { browser: Omit<BrowserEnum, "ALL">; meta: any },
 	): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO test_instances SET job_id = ?, test_id = ?, status = ?, host = ?, browser = ?, meta = ?", [
+		return this.dbManager.insert("INSERT INTO test_instances (job_id, test_id, status, host, browser, meta) VALUES (?, ?, ?, ?, ?, ?)", [
 			payload.jobId,
 			payload.testId,
 			TestInstanceStatusEnum.QUEUED,

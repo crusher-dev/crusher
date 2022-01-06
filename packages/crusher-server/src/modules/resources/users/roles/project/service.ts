@@ -15,7 +15,7 @@ class UserProjectRolesService {
 	}
 
 	async create(payload: ICreateUserProjectRole): Promise<{ insertId: number }> {
-		return this.dbManager.insert(`INSERT INTO user_project_roles SET user_id = ?, project_id = ?, role = ?`, [
+		return this.dbManager.insert(`INSERT INTO user_project_roles (user_id, project_id, role) VALUES (?, ?, ?)`, [
 			payload.userId,
 			payload.projectId,
 			payload.role ? payload.role : UserProjectRoleEnum.MEMBER,

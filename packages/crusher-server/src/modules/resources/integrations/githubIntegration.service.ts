@@ -9,9 +9,10 @@ export class GithubIntegrationService {
 	@Inject()
 	private dbManager: DBManager;
 
+	@CamelizeResponse()
 	async linkRepo(repoId: number, repoName: string, installationId: string, repoLink: string, projectId: number, userId: number) {
 		return this.dbManager.insert(
-			"INSERT INTO git_integrations SET repo_id = ?, repo_name = ?, repo_link = ?, installation_id = ?, project_id = ?, user_id = ?",
+			"INSERT INTO git_integrations (repo_id, repo_name, repo_link, installation_id, project_id, user_id) VALUES (?, ?, ?, ?, ?, ?)",
 			[repoId, repoName, repoLink, installationId, projectId, userId],
 		);
 	}

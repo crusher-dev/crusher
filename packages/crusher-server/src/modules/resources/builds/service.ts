@@ -90,7 +90,7 @@ class BuildsService {
 
 	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
-			`INSERT INTO jobs SET user_id = ?, project_id = ?, host = ?, status = ?, build_trigger = ?, browser = ?, config = ?, meta = ?, is_draft_job = ?`,
+			`INSERT INTO jobs (user_id, project_id, host, status, build_trigger, browser, config, meta, is_draft_job) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			[
 				buildInfo.userId,
 				buildInfo.projectId,

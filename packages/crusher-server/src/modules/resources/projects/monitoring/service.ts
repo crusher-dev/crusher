@@ -16,7 +16,7 @@ class ProjectMonitoringService {
 	}
 
 	async createMonitoring(payload: ICreateMonitoringPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO monitorings SET project_id = ?, environment_id = ?, test_interval = ?", [
+		return this.dbManager.insert("INSERT INTO monitorings (project_id, environment_id, test_interval) VALUES (?, ?, ?)", [
 			payload.projectId,
 			payload.environmentId,
 			payload.testInterval,

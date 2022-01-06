@@ -16,12 +16,12 @@ services:
     networks:
       - crusher-network
 
-  mysql:
-    image: 'bitnami/mysql:latest'
+  postgres:
+    image: 'bitnami/postgresql:latest'
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=crusher
-      - MYSQL_AUTHENTICATION_PLUGIN=mysql_native_password
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_DATABASE=crusher
+      - POSTGRESQL_AUTHENTICATION_PLUGIN=mysql_native_password
     networks:
       - crusher-network
 
@@ -32,7 +32,7 @@ services:
       context: ../../
       dockerfile: docker/ee/Dockerfile.complete
     depends_on:
-      - mysql
+      - postgres
       - redis
     environment:
       - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
@@ -40,7 +40,7 @@ services:
       - DB_USERNAME=root
       - DB_PASSWORD=password
       - DB_DATABASE=crusher
-      - DB_PORT=3306
+      - DB_PORT=5432
       - MONGODB_CONNECTION_STRING=mongodb://mongodb:27017/crusher
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -51,7 +51,7 @@ services:
     ports:
       - '3000:3000'
     links:
-      - 'mysql:mysql'
+      - 'postgres:mysql'
       - 'redis:redis'
     container_name: 'crusher'
     stdin_open: true # docker run -i

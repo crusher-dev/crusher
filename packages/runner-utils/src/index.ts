@@ -76,17 +76,8 @@ class CrusherRunnerActions {
 		}
 	}
 
-<<<<<<< HEAD
-	async handleActionExecutionStatus(
-		actionType: ActionsInTestEnum,
-		status: ActionStatusEnum,
-		message: string = "",
-		meta: IRunnerLogStepMeta = {},
-		actionCallback: any,
-	) {
-=======
+
 	async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}, actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null) {
->>>>>>> 0e2229f98256b3ebad8c80efcda464d2fb16bd9f
 		await this.logManager.logStep(actionType, status, message, meta);
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
@@ -110,19 +101,7 @@ class CrusherRunnerActions {
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
-<<<<<<< HEAD
-		return async (
-			step: iAction,
-			browser: Browser,
-			page: Page | null = null,
-			actionCallback: any = null,
-			shouldSleepAfterComplete = true,
-			remainingActionsArr: Array<iAction> = [],
-			shouldLog: boolean = true,
-		): Promise<void> => {
-=======
 		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null, shouldSleepAfterComplete = true, remainingActionsArr: Array<iAction> = [], shouldLog: boolean = true): Promise<void> => {
->>>>>>> 0e2229f98256b3ebad8c80efcda464d2fb16bd9f
 			let startingScreenshot = null;
 			let stepResult = null;
 

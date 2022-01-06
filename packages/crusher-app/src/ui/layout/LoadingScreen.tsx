@@ -7,8 +7,8 @@ import { usePageTitle } from "../../hooks/seo";
 import CrusherBase from "../layout/CrusherBase";
 
 const logoStyle = css`
-	box-shadow: 0 0 38px 12px rgb(153 136 255 / 12%);
-	animation: logo-animation 0.8s alternate infinite cubic-bezier(0, 0, 1, 0.32);
+	//box-shadow: 0 0 22px 12px rgb(153 136 255 / 6%);
+	animation: logo-animation 0.6s alternate infinite cubic-bezier(0, 0, 1, 0.32);
 `;
 
 export const LoadingScreen = () => {

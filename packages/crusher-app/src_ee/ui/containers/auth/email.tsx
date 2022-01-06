@@ -165,17 +165,17 @@ export default function EmailLogin({ goBackHandler }) {
                             </Button>
                         </div>
                         <div className="flex items-center justify-between">
-                            <Text onClick={goBackHandler} className={""} fontSize={14}>
-                                or go back
+                            <Text onClick={goBackHandler} className={""} fontSize={12}>
+                                Go back
                             </Text>
-                            <Text onClick={() => router.push('/forgot_password')} className={""} fontSize={14}>
+                            <Text onClick={() => router.push('/forgot_password')} className={""} fontSize={12}>
                                 Forgot Password
                             </Text>
                         </div>
                     </div>
                     <div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
                         <Text color={"#9692FF"} fontSize={14}>
-                            or create an account
+                            Create an account
                         </Text>
                     </div>
                 </div>

@@ -27,7 +27,7 @@ const forgotPassword = (email: string) => {
         payload: { email },
     });
 };
-export default function Signup() {
+export default function ForgotPassword() {
     const router = useRouter();
     const [email, setEmail] = useState({ value: "", error: null });
     const [loading, setLoading] = useState(false);

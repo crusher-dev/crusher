@@ -187,7 +187,7 @@ export default function Signup({ nextStepHandler }) {
                                 <div className={"flex justify-center items-center"}>
                                     <Conditional showIf={!loading}>
                                         <Text fontSize={14} weight={600}>
-                                            create an account
+                                            Create an account
                                         </Text>
                                     </Conditional>
                                     <Conditional showIf={loading}>

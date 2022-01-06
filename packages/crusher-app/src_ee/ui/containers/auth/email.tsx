@@ -98,8 +98,8 @@ export default function EmailLogin({ goBackHandler }) {
                         Million of devs empower their workflow with crusher
                     </TextBlock>
 
-                    <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32 pb-60"}>
-                        <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
+                    <div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28 pb-60"}>
+                        <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
                             Continue with Email
                         </TextBlock>
 
@@ -150,7 +150,7 @@ export default function EmailLogin({ goBackHandler }) {
                                 onClick={onLogin}>
                                 <div className={"flex justify-center items-center"}>
                                     <Conditional showIf={!loading}>
-                                        <Text fontSize={14} weight={900}>
+                                        <Text fontSize={14} weight={600}>
                                             Login
                                         </Text>
                                     </Conditional>
@@ -188,8 +188,8 @@ const overlayContainer = css(`
 	background: #0a0b0c;
 	border: 1px solid #21252f;
 	border-radius: 10px;
-	width: 400rem;
-	min-height: 200px;
+	width: 372rem;
+	min-height: 440px;
 `);
 
 

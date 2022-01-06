@@ -92,7 +92,7 @@ export default function Signup() {
                         <div className="text-32 font-extrabold my-50">Please Check your email</div>;
                     </Conditional>
                     <Conditional showIf={!data}>
-                        <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32"}>
+                        <div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28"}>
                             <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
                                 Reset your password
                             </TextBlock>
@@ -127,8 +127,8 @@ export default function Signup() {
                                 >
                                     <div className={"flex justify-center items-center"}>
                                         <Conditional showIf={!loading}>
-                                            <Text fontSize={14} weight={900}>
-                                                Send reset password link
+                                            <Text fontSize={14} weight={600}>
+                                                send reset link
                                             </Text>
                                         </Conditional>
                                         <Conditional showIf={loading}>
@@ -160,8 +160,8 @@ const overlayContainer = css(`
 	background: #0a0b0c;
 	border: 1px solid #21252f;
 	border-radius: 10px;
-	width: 400rem;
-	min-height: 200px;
+	width: 372rem;
+	min-height: 440px;
 `);
 const errorState = css`
 	color: #ff4583;

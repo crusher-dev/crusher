@@ -57,8 +57,8 @@ export default function Login({ loginWithEmailHandler }) {
                         Million of devs empower their workflow with crusher
                     </TextBlock>
 
-                    <div css={overlayContainer} className={"mt-36 pt-36 pl-32 pr-32 pb-60"}>
-                        <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
+                    <div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28 pb-60"}>
+                        <TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
                             Continue with
                         </TextBlock>
 
@@ -73,24 +73,24 @@ export default function Login({ loginWithEmailHandler }) {
 								`)}
                             >
                                 <GithubSVG />{" "}
-                                <Text className={"ml-10"} fontSize={14} weight={800}>
+                                <Text className={"ml-10"} fontSize={14} weight={700}>
                                     Github
                                 </Text>
                             </Button>
 
-                            <Button
-                                bgColor={"tertiary-dark"}
-                                className={"flex items-center justify-center mt-20"}
-                                css={css(`
-									width: 100%;
-									height: 38px;
-								`)}
-                            >
-                                <GitlabSVG />{" "}
-                                <Text className={"ml-10"} fontSize={14} weight={500}>
-                                    Gitlab
-                                </Text>
-                            </Button>
+                {/*            <Button*/}
+                {/*                bgColor={"tertiary-dark"}*/}
+                {/*                className={"flex items-center justify-center mt-20"}*/}
+                {/*                css={css(`*/}
+								{/*	width: 100%;*/}
+								{/*	height: 38px;*/}
+								{/*`)}*/}
+                {/*            >*/}
+                {/*                <GitlabSVG />{" "}*/}
+                {/*                <Text className={"ml-10"} fontSize={14} weight={500}>*/}
+                {/*                    Gitlab*/}
+                {/*                </Text>*/}
+                {/*            </Button>*/}
                             <Button
                                 onClick={loginWithEmailHandler}
                                 bgColor={"tertiary-dark"}
@@ -107,12 +107,17 @@ export default function Login({ loginWithEmailHandler }) {
                         </div>
                         <div className="flex w-full justify-center">
                             <Text className={""} fontSize={14}>
-                                or use SSO
+                                Need help?
                             </Text>
                         </div>
                     </div>
                     <div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
-                        <Text color={"#9692FF"} fontSize={14}>
+                        <Text color={"#9692FF"} fontSize={14} css={css`
+                            :hover {
+                                color: #b9b6ff;
+                                text-decoration: underline;
+                            }
+                        `                       }>
                             or create an account
                         </Text>
                     </div>
@@ -126,6 +131,6 @@ const overlayContainer = css(`
 	background: #0a0b0c;
 	border: 1px solid #21252f;
 	border-radius: 10px;
-	width: 400rem;
-	min-height: 200px;
+	width: 372rem;
+	min-height: 440px;
 `);

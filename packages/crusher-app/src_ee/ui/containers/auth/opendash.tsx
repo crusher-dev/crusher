@@ -43,7 +43,7 @@ export default function Learn() {
                     <div css={overlayContainer} className={"flex mt-36"}>
                         <div className="pl-30 pt-20 pr-30 flex-1 pb-30">
                             <div className="flex justify-between items-center">
-                                <TextBlock fontSize={'16'} weight={800}>
+                                <TextBlock fontSize={'16'} weight={500}>
                                     <span css={css(`color:#C5EC72`)}>
                                         Star Crusher
                                     </span>{' '}
@@ -58,7 +58,7 @@ export default function Learn() {
                         </div>
                         <div css={css(`border-left:1px solid #21252f`)} className="pl-30 pt-20 pr-30 flex-1">Hey
                             <div className="flex justify-between items-center">
-                                <TextBlock color='#71DDFF' fontSize={'16'} weight={800}>
+                                <TextBlock color='#71DDFF' fontSize={'16'} weight={500}>
                                     Join discord
                                 </TextBlock>
                                 <Discord />

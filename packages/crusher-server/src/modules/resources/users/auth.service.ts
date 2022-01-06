@@ -114,7 +114,7 @@ class UserAuthService {
 	}
 
 	// If the user is registered, login otherwise register the user
-	async authWithGoogle(userPayload: Omit<ICreateUserPayload, "uuid">, req: any, res: any, encodedInviteCode: string = null) {
+	async authUser(userPayload: Omit<ICreateUserPayload, "uuid">, req: any, res: any, encodedInviteCode: string = null) {
 		const user = await this.usersService.getUserByEmail(userPayload.email);
 
 		let inviteReferral: IInviteReferral = null;
@@ -130,7 +130,7 @@ class UserAuthService {
 
 		// Login the user
 		await this.setUserAuthCookies(user.id, user.team_id, req, res);
-		return true;
+		return { userId: user.id, teamId: user.team_id};
 	}
 
 	async authOpenSourceUser(req: any, res: Response): Promise<{ userId: number; teamId: number }> {

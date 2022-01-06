@@ -79,3 +79,10 @@ export type ILogProgressRequestPayload = {
 	payload?: any;
 	githubCheckRunId?: string | null;
 };
+
+export interface IBuildInstanceActionResults extends BaseRowInterface {
+	instance_id: number;
+	project_id: number;
+	actions_result: string;
+	has_instance_passed: boolean;
+}

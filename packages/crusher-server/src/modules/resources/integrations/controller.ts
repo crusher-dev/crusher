@@ -1,7 +1,7 @@
 import { SlackService } from "@modules/slack/service";
 import { GithubService } from "@modules/thirdParty/github/service";
 import { generateToken } from "@utils/auth";
-import { resolvePathToBackendURI } from "@utils/uri";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import { userInfo } from "os";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
@@ -10,7 +10,9 @@ import { GithubIntegrationService } from "./githubIntegration.service";
 import { IntegrationServiceEnum } from "./interface";
 import { IntegrationsService } from "./service";
 import { fetch } from "@utils/fetch";
-
+import { UserAuthService } from "../users/auth.service";
+import { v4 as uuidv4 } from "uuid";
+import { UsersService } from "../users/service";
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -22,6 +24,10 @@ class IntegrationsController {
 	private integrationsService: IntegrationsService;
 	@Inject()
 	private projectAlertingService: AlertingService;
+	@Inject()
+	private userAuthService: UserAuthService;
+	@Inject()
+	private userService: UsersService;
 
 	@Authorized()
 	@Get("/integrations/slack/actions/add")
@@ -116,12 +122,35 @@ class IntegrationsController {
 	}
 
 	// @TODO: Clean "cannot set headers after they are sent" error
-	@Authorized()
 	@Get("/integrations/:project_id/github/actions/callback")
-	async connectGithubAccount(@QueryParams() params, @Res() res: any) {
-		const { code } = params;
+	async connectGithubAccount(@QueryParams() params, @Req() req: any, @Res() res: any) {
+		const { code, state: encodedState } = params;
 		const githubService = new GithubService();
 		const tokenInfo = await githubService.parseGithubAccessToken(code);
+
+		const state = JSON.parse(Buffer.from(encodedState, "base64").toString("ascii"));
+		if (state.type === "auth") {
+			const userInfo = await githubService.getUserInfo((tokenInfo as any).token);
+			const githubRegisteredUser = await this.userService.getUserByGithubUserId(`${userInfo.id}`);
+
+			if (!githubRegisteredUser) {
+				const userRecord = await this.userAuthService.authUser(
+					{
+						name: userInfo.name,
+						email: userInfo.email,
+						password: uuidv4(),
+					},
+					req,
+					res,
+					state.inviteType ? encodedState : null,
+				);
+
+				await this.userService.setGithubUserId(`${userInfo.id}`, userRecord.userId);
+			} else {
+				await this.userAuthService.setUserAuthCookies(githubRegisteredUser.id, githubRegisteredUser.teamId, req, res);
+			}
+			return res.redirect(resolvePathToFrontendURI("/"));
+		}
 
 		const redirectUrl = new URL(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "http://localhost:3000/");
 		redirectUrl.searchParams.append("token", (tokenInfo as any).token);

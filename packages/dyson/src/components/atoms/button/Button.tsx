@@ -118,7 +118,7 @@ export type ButtonProps = {
 	/**
 	 * What background color to use
 	 */
-	bgColor?: "primary" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white";
+	bgColor?: "blue" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white" | "disabled" | "tertiary-outline" | "danger";
 	/**
 	 * Size of the component
 	 */
@@ -130,8 +130,10 @@ export type ButtonProps = {
 	disabled?: boolean;
 	/**
 	 * Emotion CSS style if any
+	 * @deprecated
 	 */
 	css?: SerializedStyles;
+	CSS?: SerializedStyles;
 	/**
 	 * Input contents
 	 */
@@ -141,7 +143,7 @@ export type ButtonProps = {
 	 */
 	onClick?: () => void;
 	className?: string;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
 
 /*
 	Note :- Change color and size thru switch statement
@@ -166,7 +168,7 @@ export const Button: React.FC<ButtonProps> = ({
 				// blue,
 				getSize(size),
 				disabled ? disabledButton : getColorCSS(bgColor, impactLevel, disabled),
-				bgColor === "disabled" && disabledButton,
+				props.CSS,
 			]}
 			disabled={disabled}
 			{...props}

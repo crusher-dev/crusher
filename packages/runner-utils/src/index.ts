@@ -1,6 +1,6 @@
 import { StorageManagerInterface } from "@crusher-shared/lib/storage/interface";
 import { ActionStatusEnum, IRunnerLogManagerInterface, IRunnerLogStepMeta } from "@crusher-shared/lib/runnerLog/interface";
-import { iAction } from "@crusher-shared/types/action";
+import { iAction, iActionResult } from "@crusher-shared/types/action";
 import { Browser, Page } from "playwright";
 import { LogManager } from "./functions/log";
 import { StorageManager } from "./functions/storage";
@@ -24,6 +24,10 @@ export enum ActionCategoryEnum {
 }
 
 const TEST_RESULT_KEY = "TEST_RESULT";
+
+type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
+export type ActionStatusCallbackFn = (action: iAction, result: iActionResult) => Promise<number | void | boolean>;
+
 class CrusherRunnerActions {
 	actionHandlers: { [type: string]: any };
 	logManager: LogManager;
@@ -72,6 +76,7 @@ class CrusherRunnerActions {
 		}
 	}
 
+<<<<<<< HEAD
 	async handleActionExecutionStatus(
 		actionType: ActionsInTestEnum,
 		status: ActionStatusEnum,
@@ -79,6 +84,9 @@ class CrusherRunnerActions {
 		meta: IRunnerLogStepMeta = {},
 		actionCallback: any,
 	) {
+=======
+	async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}, actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null) {
+>>>>>>> 0e2229f98256b3ebad8c80efcda464d2fb16bd9f
 		await this.logManager.logStep(actionType, status, message, meta);
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
@@ -102,6 +110,7 @@ class CrusherRunnerActions {
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
+<<<<<<< HEAD
 		return async (
 			step: iAction,
 			browser: Browser,
@@ -111,6 +120,9 @@ class CrusherRunnerActions {
 			remainingActionsArr: Array<iAction> = [],
 			shouldLog: boolean = true,
 		): Promise<void> => {
+=======
+		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null, shouldSleepAfterComplete = true, remainingActionsArr: Array<iAction> = [], shouldLog: boolean = true): Promise<void> => {
+>>>>>>> 0e2229f98256b3ebad8c80efcda464d2fb16bd9f
 			let startingScreenshot = null;
 			let stepResult = null;
 
@@ -225,7 +237,7 @@ class CrusherRunnerActions {
 		this.actionHandlers[actionType] = this.stepHandlerHOC(handler, { name: actionType, description: description, category: actionCategory });
 	}
 
-	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: any = null, shouldLog: boolean = true) {
+	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: ActionStatusCallbackFn | null = null, shouldLog: boolean = true) {
 		let index = 0;
 
 		const remainingActionsArr = [...actions];

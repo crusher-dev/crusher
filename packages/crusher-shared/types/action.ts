@@ -1,5 +1,6 @@
 import { ActionsInTestEnum } from "../constants/recordedActions";
 import { iSelectorInfo } from "./selectorInfo";
+import { ActionStatusEnum as ActionLogStatusEnum } from "../lib/runnerLog/interface";
 
 export enum ActionStatusEnum {
 	STARTED = "STARTED",
@@ -8,6 +9,7 @@ export enum ActionStatusEnum {
 }
 
 export interface iAction {
+	uniqueId?: string;
 	type: ActionsInTestEnum;
 	status?: ActionStatusEnum;
 	name?: string;
@@ -19,4 +21,11 @@ export interface iAction {
 		isOptional?: boolean;
 	};
 	url?: string;
+}
+
+export interface iActionResult {
+	actionType: ActionsInTestEnum;
+	status: ActionLogStatusEnum;
+	message: string;
+	meta: any;
 }

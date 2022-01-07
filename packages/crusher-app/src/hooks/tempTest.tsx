@@ -28,7 +28,7 @@ export const useSaveTemp = () => {
 		setTempTestName(tempTestName);
 		setTempTest(tempTestId);
 		setTempTestType(tempTestType || "save");
-		if(!!testId) {
+		if (!!testId) {
 			setTempTestUpdateId(testId);
 		}
 	}, []);

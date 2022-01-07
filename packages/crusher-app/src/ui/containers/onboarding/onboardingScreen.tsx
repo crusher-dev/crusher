@@ -5,9 +5,9 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { atom, useAtom } from "jotai";
 
-import { Button, GithubSocialBtn } from "dyson/src/components/atoms";
+import { Button, GithubSocialBtn, Input } from "dyson/src/components/atoms";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
-import { CenterLayout } from "dyson/src/components/layouts";
+import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 
 import { USER_META_KEYS } from "@constants/USER";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
@@ -25,6 +25,7 @@ import { getEdition } from "../../../utils/helpers";
 import { backendRequest } from "@utils/common/backendRequest";
 import { setupOSS, USER_SYSTEM_API } from "@constants/api";
 import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
+import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -89,28 +90,105 @@ const SetupCrusher = () => {
 	);
 };
 
-const HowItWorksView = () => {
+const GitSVG = (props) => (
+	<svg width={22} height={22} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path
+			d="M10.83 2c-.299 0-.554.106-.767.32L8.51 3.871l1.957 1.958a1.29 1.29 0 0 1 1.351.309c.178.177.291.386.341.627.05.241.039.482-.032.723L14 9.362c.242-.071.483-.082.724-.032s.454.166.638.35c.255.256.383.565.383.926 0 .362-.128.667-.383.915a1.28 1.28 0 0 1-.925.373 1.3 1.3 0 0 1-.926-.362 1.369 1.369 0 0 1-.351-.68 1.275 1.275 0 0 1 .074-.746L11.467 8.34v4.639a1.26 1.26 0 0 1 .723 1.16c0 .361-.127.67-.382.925a1.26 1.26 0 0 1-.926.383c-.361 0-.666-.128-.915-.383a1.28 1.28 0 0 1-.372-.926c0-.361.128-.67.383-.925a1.3 1.3 0 0 1 .426-.277v-4.68a.967.967 0 0 1-.426-.277 1.197 1.197 0 0 1-.372-.67 1.306 1.306 0 0 1 .074-.756L7.765 4.617 2.66 9.723c-.213.213-.32.472-.32.777 0 .305.107.564.32.777l7.426 7.425c.212.213.471.32.776.32.305 0 .564-.107.777-.32l7.404-7.404c.213-.213.32-.472.32-.777 0-.305-.107-.564-.32-.776l-7.426-7.426A1.07 1.07 0 0 0 10.83 2Z"
+			fill="#fff"
+		/>
+	</svg>
+);
+
+const projects = ["Github", "Crusher", "Test", "Github", "Crusher", "Test", "Github", "Crusher", "Test"];
+const SelectProject = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 
-	usePageTitle("How it works?");
+	usePageTitle("Select Project");
 	return (
 		<>
-			<div className="m-8 text-18 leading-none mb-36 font-700">How it works in 60 seconds?</div>
-			<VideoComponent src={"https://crusher-public.s3.amazonaws.com/crusher-demo.mp4"} autoPlay={true} />
-
-			<Button
-				className="mt-42"
+			<div
 				css={css`
-					width: 220px;
-					height: 34rem;
+					width: 632rem;
 				`}
-				onClick={setOnboardingStep.bind(this, ONBOARDING_STEP.SUPPORT)}
 			>
-				Next
-			</Button>
+				<div className={"flex justify-between item-center"}>
+					<div>
+						<div className="text-18 leading-none mb-16 font-700 font-cera">Select repo</div>
+						<div className={"text-14"}>You can create project for testing, deploy and logging.</div>
+					</div>
+					<Button bgColor={"tertiary-dark"}>Create Project</Button>
+				</div>
+
+				<div className={"flex justify-between item-center"} className={"mt-64"}>
+					<div className={"text-14 leading-none mb-16 font-500 font-cera"}>Select repo to use</div>
+				</div>
+
+				<div css={selectProjectBox}>
+					<div className={"flex justify-between items-center"}>
+						<div>
+							<Input
+								placeholder={"search here"}
+								css={css`
+									input {
+										background: transparent;
+										border-width: 0 !important;
+									}
+									width: 500rem;
+								`}
+							/>
+						</div>
+						<SelectBox
+							values={[{ value: "github", label: "value" }]}
+							placeholder={"Select"}
+							css={css`
+								width: 220rem;
+								margin-right: 16rem;
+
+								.selectBox {
+									border-width: 0;
+									background: transparent;
+
+									:hover {
+										border-width: 0;
+										background: rgba(255, 255, 255, 0.13);
+									}
+								}
+							`}
+						/>
+					</div>
+					<div
+						className={"py-4"}
+						css={css`
+							border-top: 1px solid #21252f;
+							height: 400rem;
+							overflow-y: scroll;
+						`}
+					>
+						{projects.map((project) => (
+							<div
+								className={"flex px-16 py-12 items-center"}
+								css={css`
+									:hover {
+										background: rgba(0, 0, 0, 0.46);
+									}
+								`}
+							>
+								<GitSVG /> <span className={"text-14 ml-16 font-600 leading-none"}>{project}</span>
+							</div>
+						))}
+					</div>
+				</div>
+			</div>
 		</>
 	);
 };
+
+const selectProjectBox = css`
+	background: #0c0d0f;
+	border: 1px solid #21252f;
+	border-radius: 6px;
+	overflow: hidden;
+`;
 
 const GithubDiscordSection = () => {
 	const [githubStars, setGithubStars] = useState(0);
@@ -170,7 +248,7 @@ const GetViewByStep = () => {
 		case 0:
 			return <SetupCrusher />;
 		case 1:
-			return <HowItWorksView />;
+			return <SelectProject />;
 		case 2:
 			return <GithubDiscordSection />;
 		default:
@@ -191,17 +269,41 @@ const CrusherOnboarding = () => {
 		// 	router.push("/app/dashboard");
 		// }
 	}, []);
+
+	const steps = ["Choose", "Create and run test", "Last step"];
 	return (
 		<CrusherBase>
-			<CenterLayout className={"pb-120"}>
-				<div className="flex flex-col items-center" css={containerCSS}>
+			<div css={contentContainer}>
+				<div className={"flex items-center"}>
+					{steps.map((name, i) => (
+						<div className={"flex items-center"}>
+							<div className={"text-13 leading-none "}>{name}</div>
+							<Conditional showIf={i < steps.length - 1}>
+								<div
+									css={css`
+										min-height: 2px;
+										min-width: 40px;
+										background: #515151;
+									`}
+									className={"mr-20 ml-20"}
+								></div>
+							</Conditional>
+						</div>
+					))}
+				</div>
+				<div className="flex mt-100">
 					<GetViewByStep />
 				</div>
-			</CenterLayout>
+			</div>
 		</CrusherBase>
 	);
 };
 
+const contentContainer = css`
+	width: 890rem;
+	margin: 0 auto;
+	padding-top: 48rem;
+`;
 const containerCSS = css`
 	max-width: 473rem;
 `;

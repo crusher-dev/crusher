@@ -37,7 +37,7 @@ function TitleSection() {
 					height={"22rem"}
 					className={"mr-12"}
 					onClick={() => {
-						router.push("/app/builds")
+						router.push("/app/builds");
 					}}
 				/>{" "}
 				{data?.name} #{data?.id}

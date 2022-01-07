@@ -7,7 +7,6 @@ const getGithubOAuthURL = (alreadyAuthorized = false) => {
 	// 	throw new Error("No github app client id provided");
 	// }
 
-
 	const url = new URL(alreadyAuthorized ? "https://github.com/apps/crusher-ci/installations/new" : "https://github.com/login/oauth/authorize");
 	url.searchParams.append("client_id", CLIENT_ID);
 	url.searchParams.append("redirect_uri", resolvePathToBackendURI("/integrations/blabla/github/actions/callback"));
@@ -16,12 +15,11 @@ const getGithubOAuthURL = (alreadyAuthorized = false) => {
 };
 
 export const getGithubLoginURL = () => {
-	const url = new URL(	"https://github.com/login/oauth/authorize");
+	const url = new URL("https://github.com/login/oauth/authorize");
 	url.searchParams.append("client_id", CLIENT_ID);
 	url.searchParams.append("state", `${btoa(JSON.stringify({ type: "auth" }))}`);
 
 	return url.toString();
 };
-
 
 export { getGithubOAuthURL };

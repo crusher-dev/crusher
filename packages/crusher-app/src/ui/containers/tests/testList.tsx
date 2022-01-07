@@ -255,7 +255,7 @@ function TestSearchableList() {
 			setTempTest(null);
 			setTempTestName(null);
 
-			if(tempTestType === "update") {
+			if (tempTestType === "update") {
 				await updateTest(tempTestId, tempTestUpdateId);
 				sendSnackBarEvent({ message: "Updated the test", type: "success" });
 			} else {

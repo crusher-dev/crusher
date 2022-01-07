@@ -6,12 +6,11 @@ import { usePageTitle } from "../src/hooks/seo";
 
 function LoginPage() {
 	usePageTitle("Login");
-	const [isLoginWithEmail, setLoginWithEmail] = React.useState(false)
+	const [isLoginWithEmail, setLoginWithEmail] = React.useState(false);
 	if (isLoginWithEmail) {
-		return <LoginWithEmailContainer goBackHandler={() => setLoginWithEmail(false)} />
-	}
-	else {
-		return <LoginContainer loginWithEmailHandler={() => setLoginWithEmail(true)} />
+		return <LoginWithEmailContainer goBackHandler={() => setLoginWithEmail(false)} />;
+	} else {
+		return <LoginContainer loginWithEmailHandler={() => setLoginWithEmail(true)} />;
 	}
 }
 

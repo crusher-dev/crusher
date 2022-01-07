@@ -64,7 +64,7 @@ export class TestController {
 				tags: testData.tags,
 				runAfter: testData.run_after,
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
-				createdAt: new Date(testData.created_at).getTime(),
+				createdAt: new Date(testData.createdAt).getTime(),
 				// @TODO: Remove this line
 				videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
 				clipVideoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? clipVideoUrl : null,

@@ -99,7 +99,7 @@ class TestService {
 		customTestsConfig: Partial<ICreateBuildRequestPayload> = {},
 		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
 		overideBaseLineBuildId: number | null = null,
-		browsers = [BrowserEnum.CHROME]
+		browsers = [BrowserEnum.CHROME],
 	) {
 		const testsData = await this.getTestsInProject(projectId, true);
 		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
@@ -134,9 +134,10 @@ class TestService {
 		);
 	}
 
+	@CamelizeResponse()
 	async getCompleteTestInfo(testId: number) {
 		return this.dbManager.fetchSingleRow(
-			`SELECT tests.*, projects.id as projectId, projects.name as projectName, users.id as userId, users.name as userName FROM tests, projects, users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
+			`SELECT tests.*, projects.id as project_id, projects.name as project_name, users.id as user_id, users.name as user_name FROM tests, projects, users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
 			[testId],
 		);
 	}
@@ -146,13 +147,27 @@ class TestService {
 		return this.dbManager.fetchAllRows(query, values);
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number; } = {}) {
+	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
 		const PER_PAGE_LIMIT = 15;
 
-		let query = `SELECT tests.*, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
-		const queryParams: Array<any> = [projectId];
+		let additionalSelectColumns = "";
+		let additionalFromSource = "";
+		const queryParams: Array<any> = [];
+		if (filter.search) {
+			additionalSelectColumns += "ts_rank_cd(to_tsvector(COALESCE(commit_name, '')), query) as rank";
+			additionalFromSource += `to_tsquery(?) query`;
+			queryParams.push(filter.search);
+		}
+
+		let query = `SELECT tests.*, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
+			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
+		} FROM tests, users, jobs, job_reports ${
+			additionalFromSource ? `, ${additionalFromSource}` : ""
+		} WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		queryParams.push(projectId);
+
 		let page = 0;
-		if(filter.page) page = filter.page;
+		if (filter.page) page = filter.page;
 
 		if (findOnlyActiveTests) {
 			query += " AND tests.deleted = ?";
@@ -165,15 +180,17 @@ class TestService {
 		}
 
 		if (filter.search) {
-			query += ` AND Match(tests.name) AGAINST (?)`;
-			queryParams.push(filter.search);
+			query += ` AND to_tsvector(COALESCE(test.name, '')) @@ query`;
 		}
 
 		const totalRecordCountQuery = `SELECT COUNT(*) count FROM (${query}) custom_query`;
 		const totalRecordCountQueryResult = await this.dbManager.fetchSingleRow(totalRecordCountQuery, queryParams);
 
-		query += " ORDER BY tests.created_at DESC";
-
+		if (filter.search) {
+			query += " ORDER BY tests.created_at DESC, rank DESC";
+		} else {
+			query += " ORDER BY tests.created_at DESC";
+		}
 
 		if (filter.page && filter.page !== -1) {
 			query += " LIMIT ? OFFSET ?";

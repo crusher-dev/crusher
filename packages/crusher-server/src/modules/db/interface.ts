@@ -6,4 +6,6 @@ export interface IDatabaseManager {
 	fetchSingleRow: (query: string, valuesToEscape?: Array<string | number | boolean> | any) => Promise<any>;
 	fetchAllRows: (query: string, valuesToEscape?: Array<string | number | boolean> | any) => Promise<Array<any>>;
 	format: (query: string, valuesToEscape?: Array<string | number | boolean> | any) => Promise<string>;
+
+	runCamelizeQuery?: (query: string, valuesToEscape?: Array<string | number | boolean>) => Promise<any>;
 }

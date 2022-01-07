@@ -72,8 +72,6 @@ async function stupCronForTestingAccountsCleanup() {
 }
 
 export async function init() {
-	mongoManager.waitUntilAlive();
-
 	await setupCronForBuilds();
 	await stupCronForTestingAccountsCleanup();
 }

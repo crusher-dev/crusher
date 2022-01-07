@@ -121,7 +121,7 @@ class UsersService {
 	// Prod
 	async deleteAllTestUsers() {
 		const users = await this.dbManager.fetchAllRows(
-			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(users.created_at) >  60 * 60",
+			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND EXTRACT(EPOCH FROM (NOW() - users.created_at)) >  60 * 60",
 		);
 		return users.map((user) => this.deleteUserWorkspace(user.id));
 	}

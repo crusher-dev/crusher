@@ -176,11 +176,11 @@ class TestService {
 
 
 		if (filter.page && filter.page !== -1) {
-			query += " LIMIT ?, ?";
+			query += " LIMIT ? OFFSET ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
-			queryParams.push(`${filter.page * PER_PAGE_LIMIT}`);
 			queryParams.push(`${PER_PAGE_LIMIT}`);
+			queryParams.push(`${filter.page * PER_PAGE_LIMIT}`);
 		}
 
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
@@ -231,7 +231,7 @@ class TestService {
 
 	@CamelizeResponse()
 	async getTestsFromIdList(testIds: Array<number>): Promise<Array<KeysToCamelCase<ITestTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds.join(",")]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM tests WHERE id IN (${new Array(testIds.length).fill("?").join(", ")})`, [...testIds]);
 	}
 
 	// Specifically for run after this test

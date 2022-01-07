@@ -98,7 +98,7 @@ export class UserController {
 		this.googleAPIService.setAccessToken(tokens.access_token);
 		const profileInfo = await this.googleAPIService.getProfileInfo();
 
-		await this.userAuthService.authWithGoogle(
+		await this.userAuthService.authUser(
 			{
 				name: [profileInfo.given_name, profileInfo.family_name].filter((n) => !!n).join(" "),
 				email: profileInfo.email,

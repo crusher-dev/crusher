@@ -204,6 +204,15 @@ class UsersService {
 			projectId,
 		]);
 	}
+
+	async setGithubUserId(githubUserId: string, userId: number) {
+		return this.dbManager.update("UPDATE users SET github_user_id = ? WHERE id = ?", [githubUserId, userId]);
+	}
+
+	@CamelizeResponse()
+	async getUserByGithubUserId(githubUserId: string): Promise<KeysToCamelCase<IUserTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM users WHERE github_user_id = ?", [githubUserId]);
+	}
 }
 
 export { UsersService };

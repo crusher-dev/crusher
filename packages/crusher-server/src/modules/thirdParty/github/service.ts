@@ -1,7 +1,7 @@
 import { Service, Container } from "typedi";
 import { DBManager } from "@modules/db";
 
-import { Octokit } from "@octokit/rest";
+import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
 import { OCTOKIT_CONFIG } from "../../../../config/github";
 import { Logger } from "@utils/logger";
 import { createAppAuth } from "@octokit/auth/dist-node";
@@ -9,6 +9,8 @@ import { BuildStatusEnum } from "@modules/resources/builds/interface";
 import { GithubCheckConclusionEnum } from "./interface";
 import { Authentication } from "@octokit/auth-oauth-app/dist-types/types";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
+import axios from "axios";
+import { BadRequestError } from "routing-controllers";
 
 @Service()
 class GithubService {
@@ -88,6 +90,17 @@ class GithubService {
 		});
 
 		return tokenAuthentication;
+	}
+
+	async getUserInfo(accessToken: string): Promise<{ name: string; email: string; id: number; userName: string }> {
+		const octokit = new Octokit({ auth: accessToken });
+		const userInfo: any = await octokit.users.getAuthenticated();
+		const userEmails: any = await octokit.users.listEmailsForAuthenticated();
+
+		const primaryEmail = userEmails.data.find((email: any) => email.primary);
+		if (!primaryEmail) throw new BadRequestError("No primary email address found");
+
+		return { name: userInfo.data.name, email: primaryEmail.email, id: userInfo.data.id, userName: userInfo.data.login };
 	}
 }
 

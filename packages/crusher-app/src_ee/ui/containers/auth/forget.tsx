@@ -37,7 +37,7 @@ export default function ForgotPassword() {
         setEmail({ error: null, value: event.target.value });
     };
 
-    const onEnter = (event: any) => {
+    const onEnter = (event: any): void|Promise => {
         if (event.key === "Enter") {
             return onSubmit();
         }

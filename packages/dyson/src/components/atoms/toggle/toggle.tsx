@@ -62,7 +62,7 @@ const TextDefaultProps = {
 	color: "#fff",
 };
 
-export function Toggle({className, ...props}: ToggleProps): ReactElement {
+export function Toggle({ className, ...props }: ToggleProps): ReactElement {
 	const [state, toggleState] = useState(props.isOn);
 
 	const { callback, disabled, disableInternalState, leftSide, rightSide } = props;

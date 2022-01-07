@@ -18,6 +18,7 @@
 		"postcss": "^8.2.9",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
+		"react-joyride": "^2.3.2",
 		"react-scripts": "4.0.3",
 		"storybook-addon-designs": "^5.4.5",
 		"tailwindcss": "^2.1.1",

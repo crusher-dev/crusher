@@ -27,9 +27,9 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 		<span
 			className={`font-gilroy font-${weight} ${className}`}
 			css={css`
-					font-size: ${fontSize}rem;
-					color: ${color};
-					${otherProps.onClick && `cursor:default`}
+				font-size: ${fontSize}rem;
+				color: ${color};
+				${otherProps.onClick && `cursor:default`}
 			`}
 			{...otherProps}
 		>

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { ReactElement, useCallback, useEffect, useRef } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { Conditional } from "../../layouts";
@@ -36,7 +37,18 @@ export type InputProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<InputProps> = ({ initialValue = "", forwardRef, size = "large", className, rightIcon, isError = false, onReturn, children, ...props }) => {
+export const Input: React.FC<InputProps> = ({
+	initialValue = "",
+	forwardRef,
+	size = "large",
+	className,
+	rightIcon,
+	isError = false,
+	onReturn,
+	children,
+	...props
+}) => {
+	// tslint:disable-next-line: no-empty
 	const ref = forwardRef ? forwardRef : useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
@@ -56,14 +68,18 @@ export const Input: React.FC<InputProps> = ({ initialValue = "", forwardRef, siz
 
 	return (
 		<div
-			css={[css`
-				position: relative;
-			`]}
+			css={[
+				css`
+					position: relative;
+				`,
+			]}
 			className={`relative ${className}`}
 		>
 			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
-				<div css={rightIconStyle} className="input__rightIconContainer">{rightIcon}</div>
+				<div css={rightIconStyle} className="input__rightIconContainer">
+					{rightIcon}
+				</div>
 			</Conditional>
 		</div>
 	);

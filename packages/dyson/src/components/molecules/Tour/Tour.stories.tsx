@@ -3,13 +3,14 @@ import "../../../style/base.css";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
 
-import { SelectBox, TSelectBoxProps } from "./Select";
+import { Tour, TGuideProps } from "./Tour";
+import Grid from "./grid";
 export default {
-	title: "Molecules/SelectBox",
-	component: SelectBox,
+	title: "Molecules/Tour",
+	component: Tour,
 } as Meta;
 
-const Template: Story<TSelectBoxProps> = (args) => {
+const Template: Story<TGuideProps> = (args) => {
 	const [selected, setSelected] = React.useState<string>(args.selected);
 
 	const handleCallback = (selected: any) => {
@@ -20,7 +21,12 @@ const Template: Story<TSelectBoxProps> = (args) => {
 		}
 	};
 
-	return <SelectBox {...args} selected={selected} callback={handleCallback} />;
+	return (
+		<div>
+			<Tour />
+			<Grid />
+		</div>
+	);
 };
 
 Template.parameters = {

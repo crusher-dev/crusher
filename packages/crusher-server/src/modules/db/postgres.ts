@@ -1,4 +1,5 @@
 import { IDatabaseManager } from "@modules/db/interface";
+import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { Logger } from "@utils/logger";
 import { Pool, PoolConfig } from "pg";
 import * as sqlstring from "sqlstring";
@@ -44,8 +45,8 @@ class PostgresDatabase implements IDatabaseManager {
 		});
 	}
 
-	fetchSingleRow(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
-		return this.query(query, valuesToEscape).then(({ rows }) => {
+	fetchSingleRow(query: string, valuesToEscape: Array<string | number | boolean> | any = [], shouldCamelizeResponse = false) {
+		return this.query(query, valuesToEscape, false, shouldCamelizeResponse).then(({ rows }) => {
 			return rows[0];
 		});
 	}
@@ -59,11 +60,12 @@ class PostgresDatabase implements IDatabaseManager {
 	}
 
 	// query method that supports mysql prepared statements, i.e ?
-	private query(query: string, valuesToEscape, isInsertQuery = false) {
+	private query(query: string, valuesToEscape, isInsertQuery = false, shouldCamelizeResponse = false) {
 		let postgresQuery = this.convertToPostgresQuery(query, valuesToEscape);
 		console.log("[SQL QUERY]", postgresQuery, valuesToEscape);
 		if (isInsertQuery) postgresQuery += ` RETURNING * `;
-		return this.postgresPool.query(postgresQuery, valuesToEscape);
+
+		return shouldCamelizeResponse ? this.runCamelizeQuery(postgresQuery, valuesToEscape) : this.postgresPool.query(postgresQuery, valuesToEscape);
 	}
 
 	// Does nothing
@@ -71,8 +73,14 @@ class PostgresDatabase implements IDatabaseManager {
 		return "";
 	}
 
-	fetchAllRows(query: string, valuesToEscape: Array<string | number | boolean> | any = []) {
-		return this.query(query, valuesToEscape).then((res) => {
+	@CamelizeResponse()
+	async runCamelizeQuery(query, values) {
+		console.log("Query", query, values);
+		return this.postgresPool.query(query, values);
+	}
+
+	fetchAllRows(query: string, valuesToEscape: Array<string | number | boolean> | any = [], shouldCamelizeResponse = false) {
+		return this.query(query, valuesToEscape, false, shouldCamelizeResponse).then((res) => {
 			return res.rows;
 		});
 	}

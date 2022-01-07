@@ -173,7 +173,15 @@ export class UserController {
 		if (!projectId) throw new Error("Invite link to team is not supported yet. Need project_id to work");
 
 		const { team_id } = user;
-		return this.userInviteService.fetchPublicProjectInviteCode(projectId, team_id, null);
+		const inviteCode = await this.userInviteService.createProjectInviteCode({
+			teamId: team_id,
+			projectId: projectId,
+			expiresOn: null,
+			meta: {},
+			isPublic: true,
+		});
+
+		return this.userInviteService.getInviteLink(inviteCode, InviteReferralEnum.PROJECT);
 	}
 
 	@Authorized()

@@ -11,6 +11,7 @@ export interface IUserTable extends BaseRowInterface {
 	is_oss: boolean;
 	meta: string | null;
 	uuid: string;
+	github_user_id?: string;
 }
 
 export type ICreateUserPayload = KeysToCamelCase<Omit<IUserTable, "id" | "team_id" | "verified" | "is_oss" | "meta" | "verified">> & { meta?: string | null };

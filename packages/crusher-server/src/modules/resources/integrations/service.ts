@@ -15,7 +15,10 @@ class IntegrationsService {
 	private slackService: SlackService;
 
 	async addIntegration(integrationConfig: SlackOAuthResponse, projectId: number) {
-		return this.dbManager.insert(`INSERT INTO integrations SET project_id = ?, meta = ?`, [projectId, JSON.stringify({ oAuthInfo: integrationConfig })]);
+		return this.dbManager.insert(`INSERT INTO integrations (project_id, meta) VALUES (?, ?)`, [
+			projectId,
+			JSON.stringify({ oAuthInfo: integrationConfig }),
+		]);
 	}
 
 	async updateIntegration(integrationConfig: SlackOAuthResponse, id: number) {

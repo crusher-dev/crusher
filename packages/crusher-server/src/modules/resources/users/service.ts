@@ -14,7 +14,6 @@ import { ProjectsService } from "../projects/service";
 import { UserProjectRoleEnum } from "./roles/project/interface";
 import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@modules/redis";
-import { MongoManager } from "@modules/db/mongo";
 import { IUserAndSystemInfoResponse, TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { v4 as uuidv4 } from "uuid";
 import { EditionTypeEnum, HostingTypeEnum } from "@crusher-shared/types/common/general";
@@ -37,8 +36,6 @@ class UsersService {
 	@Inject()
 	private redisManager: RedisManager;
 	// @TODO: Shift this to a new module
-	@Inject()
-	private mongoManager: MongoManager;
 
 	@CamelizeResponse()
 	async getOpenSourceUser(): Promise<KeysToCamelCase<IUserTable> | null> {
@@ -101,7 +98,7 @@ class UsersService {
 	}
 
 	async createUserRecord(user: Omit<ICreateUserPayload, "uuid">): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO users SET name = ?, email = ?, password = ?, verified = ?, is_oss = ?, uuid = ?", [
+		return this.dbManager.insert("INSERT INTO users (name, email, password, verified, is_oss, uuid) VALUES (?, ?, ?, ?, ?, ?)", [
 			user.name,
 			user.email,
 			encryptPassword(user.password),
@@ -124,7 +121,7 @@ class UsersService {
 	// Prod
 	async deleteAllTestUsers() {
 		const users = await this.dbManager.fetchAllRows(
-			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(users.created_at) >  60 * 60",
+			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND EXTRACT(EPOCH FROM (NOW() - users.created_at)) >  60 * 60",
 		);
 		return users.map((user) => this.deleteUserWorkspace(user.id));
 	}
@@ -183,10 +180,6 @@ class UsersService {
 				},
 				MYSQL_OPERATION: {
 					working: await this.dbManager.isConnectionAlive(),
-					message: null,
-				},
-				MONGO_DB_OPERATIONS: {
-					working: this.mongoManager.isAlive(),
 					message: null,
 				},
 			},

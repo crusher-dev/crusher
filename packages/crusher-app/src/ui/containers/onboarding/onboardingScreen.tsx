@@ -26,6 +26,10 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { setupOSS, USER_SYSTEM_API } from "@constants/api";
 import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
+import { Text } from "dyson/src/components/atoms/text/Text";
+import { GithubSVG } from "@svg/social";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { addScript } from "@utils/common/scriptUtils";
 
 enum ONBOARDING_STEP {
 	SETUP,
@@ -38,6 +42,23 @@ const onboardingStepAtom = atom<ONBOARDING_STEP>(getEdition() === EditionTypeEnu
 const setupOSSFn = () => {
 	return backendRequest(setupOSS);
 };
+
+const DiscordSVG = (props) => (
+	<svg width={26} height={27} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<g clipPath="url(#a)">
+			<path
+				d="M22.01 5.776a21.697 21.697 0 0 0-5.292-1.615.08.08 0 0 0-.085.04c-.229.4-.482.92-.66 1.331a20.114 20.114 0 0 0-5.943 0A13.38 13.38 0 0 0 9.36 4.2a.084.084 0 0 0-.084-.04 21.636 21.636 0 0 0-5.293 1.616.075.075 0 0 0-.034.03C.578 10.76-.346 15.592.107 20.365a.087.087 0 0 0 .034.06 21.698 21.698 0 0 0 6.493 3.23c.033.01.07-.002.09-.03.5-.672.947-1.38 1.329-2.126a.08.08 0 0 0-.045-.112 14.302 14.302 0 0 1-2.028-.951.081.081 0 0 1-.008-.137c.136-.1.272-.204.402-.31a.082.082 0 0 1 .084-.011c4.255 1.911 8.862 1.911 13.067 0a.082.082 0 0 1 .085.01c.13.105.267.211.404.311a.081.081 0 0 1-.007.137c-.648.372-1.321.687-2.03.95a.081.081 0 0 0-.044.113c.39.745.837 1.453 1.328 2.125.02.029.057.04.09.03a21.627 21.627 0 0 0 6.503-3.229.082.082 0 0 0 .034-.058c.542-5.519-.908-10.312-3.844-14.562a.066.066 0 0 0-.034-.03ZM8.688 17.46c-1.28 0-2.336-1.157-2.336-2.578 0-1.422 1.035-2.579 2.336-2.579 1.312 0 2.357 1.167 2.337 2.579 0 1.42-1.035 2.578-2.337 2.578Zm8.64 0c-1.281 0-2.337-1.157-2.337-2.578 0-1.422 1.035-2.579 2.337-2.579 1.311 0 2.357 1.167 2.336 2.579 0 1.42-1.025 2.578-2.336 2.578Z"
+				fill="#2D2E30"
+			/>
+		</g>
+		<defs>
+			<clipPath id="a">
+				<path fill="#fff" transform="translate(0 .91)" d="M0 0h26v26H0z" />
+			</clipPath>
+		</defs>
+	</svg>
+);
+
 const SetupCrusher = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [system] = useAtom(systemConfigAtom);
@@ -150,7 +171,7 @@ const SelectProject = () => {
 
 									:hover {
 										border-width: 0;
-										background: rgba(255, 255, 255, 0.13);
+										background: rgba(255, 255, 255, 0.06);
 									}
 								}
 							`}
@@ -182,6 +203,217 @@ const SelectProject = () => {
 		</>
 	);
 };
+
+const Integration = () => {
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
+
+	usePageTitle("Select Project");
+	return (
+		<>
+			<div
+				css={css`
+					width: 632rem;
+				`}
+			>
+				<div className={"flex justify-between item-center"}>
+					<div>
+						<div className="text-18 leading-none mb-16 font-700 font-cera">Add crusher in your project in 2 mins</div>
+						<div className={"text-13"}>Get ready to feel the change</div>
+					</div>
+				</div>
+
+				<div css={focusCard} className={"mt-56 py-24 pb-40"}>
+					<div className={"pb-8 px-16 "}>
+						<span
+							className={"text-11 font-700"}
+							css={css`
+								color: rgba(255, 255, 255, 0.23);
+							`}
+						>
+							1.)
+						</span>
+						<span className={"text-16 font-cera font-700 ml-16"}>Create and run your first test</span>
+					</div>
+
+					<div className={"pl-44 pr-32 text-14 mb-32"}>We’ll also add handy script to run test with each commit.</div>
+
+					<div className={"pl-44 pr-32"}>
+						<div className={"flex mt-16"}>
+							<Input value={"Google"} disabled={true} />
+						</div>
+						<div className={"flex items-center justify-between mt-16"}>
+							<Input value={"Google"} disabled={true} />{" "}
+							<span
+								className={"text-13"}
+								css={css`
+									color: #af7eff;
+								`}
+							>
+								Do it later on
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<div css={normalCard} className={"mt-32 py-16"}>
+					<div className={" px-16 flex items-center justify-between"}>
+						<div>
+							<span
+								className={"text-11 font-700"}
+								css={css`
+									color: rgba(255, 255, 255, 0.23);
+								`}
+							>
+								2.)
+							</span>
+							<span className={"text-16 font-cera font-700 ml-16"}>Push changes to origin</span>
+						</div>
+						<Button
+							size={"small"}
+							css={css`
+								width: 120rem;
+							`}
+						>
+							Next
+						</Button>
+					</div>
+				</div>
+
+				<div className={"flex justify-end mt-28"}>
+					<Text fontSize={13}>Skip setup and show me the dashboard</Text>
+				</div>
+			</div>
+		</>
+	);
+};
+
+const Support = () => {
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
+
+	usePageTitle("Select Project");
+
+	useEffect(() => {
+		addScript("github-start", {
+			src: "https://buttons.github.io/buttons.js",
+		});
+	}, []);
+	return (
+		<>
+			<div className={"w-full"}>
+				<div className={"flex justify-between item-center"}>
+					<div>
+						<div className="text-18 leading-none mb-16 font-700 font-cera">Crusher is open for all</div>
+						<div className={"text-13"}>Join community to learn from devs on how to use crusher.</div>
+					</div>
+				</div>
+
+				<div className={"flex mt-80"}>
+					<div className={"px-32 py-24"} css={githubCSS}>
+						<div className={"flex justify-between "}>
+							<Text fontSize={16} weight={700} color={"#C5EC72"}>
+								Star Crusher on Github
+							</Text>
+							<GithubSVG />
+						</div>
+
+						<TextBlock className={"mt-20 mb-64"} fontSize={13}>
+							We need love and support to make testing next-gen.
+						</TextBlock>
+
+						<a
+							class="github-button"
+							href="https://github.com/crusherdev/crusher"
+							data-size="large"
+							data-show-count="true"
+							aria-label="Star crusherdev/crusher on GitHub"
+						>
+							Star
+						</a>
+					</div>
+					<div className={"px-32 py-24"} css={discordCSS}>
+						<div className={"flex justify-between"}>
+							<Text fontSize={16} weight={700} color={"#71DDFF"}>
+								Join discord
+							</Text>
+							<DiscordSVG />
+						</div>
+
+						<div className={"mt-14"}>
+							<div
+								css={css`
+									background: #1b1d20;
+									border-radius: 6px;
+									min-height: 28rem;
+									width: 28rem;
+								`}
+							></div>
+						</div>
+						<TextBlock showLineHeight={true} className={"mt-12"} fontSize={13}>
+							Join community of builders who ship everyday
+						</TextBlock>
+
+						<Button
+							className={"mt-20"}
+							css={css`
+								border-width: 0;
+								background: #4fbadc;
+								color: #242933;
+								:hover {
+									color: #242933;
+									background: #4fbadc;
+									border-width: 0;
+								}
+							`}
+						>
+							Join Channel
+						</Button>
+					</div>
+				</div>
+
+				<div className={"flex justify-center mt-40"}>
+					<Button
+						size={"medium"}
+						css={css`
+							width: 160rem;
+						`}
+					>
+						Open app
+					</Button>
+				</div>
+			</div>
+		</>
+	);
+};
+
+const githubCSS = css`
+	background: #0c0d0f;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+	border: 1px solid #21252f;
+	width: 50%;
+	height: 220px;
+`;
+
+const discordCSS = css`
+	background: #0c0d0f;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border: 1px solid #21252f;
+	border-left-width: 0;
+	width: 50%;
+	height: 220px;
+`;
+
+const normalCard = css`
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: 2px;
+`;
+
+const focusCard = css`
+	border: 1px solid rgba(104, 164, 255, 0.93);
+	border-radius: 2px;
+	background: #0a0b0c;
+`;
 
 const selectProjectBox = css`
 	background: #0c0d0f;
@@ -248,7 +480,7 @@ const GetViewByStep = () => {
 		case 0:
 			return <SetupCrusher />;
 		case 1:
-			return <SelectProject />;
+			return <Support />;
 		case 2:
 			return <GithubDiscordSection />;
 		default:

@@ -16,7 +16,7 @@ class ProjectMonitoringService {
 	}
 
 	async createMonitoring(payload: ICreateMonitoringPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO monitorings SET project_id = ?, environment_id = ?, test_interval = ?", [
+		return this.dbManager.insert("INSERT INTO monitorings (project_id, environment_id, test_interval) VALUES (?, ?, ?)", [
 			payload.projectId,
 			payload.environmentId,
 			payload.testInterval,
@@ -31,7 +31,7 @@ class ProjectMonitoringService {
 	@CamelizeResponse()
 	async getQueuedMonitoringDetails(): Promise<IQueuedMonitoringsDetails> {
 		return this.dbManager.fetchAllRows(
-			`SELECT monitorings.id id, e.user_id userId, monitorings.project_id project_id, monitorings.environment_id environment_id, monitorings.test_interval test_interval, monitorings.last_cron_run last_cron_run, e.name environment_name, e.browser environment_browser, e.vars environment_vars FROM monitorings INNER JOIN environments e on monitorings.environment_id = e.id WHERE UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(monitorings.last_cron_run) > monitorings.test_interval`,
+			`SELECT monitorings.id id, e.user_id user_id, monitorings.project_id project_id, monitorings.environment_id environment_id, monitorings.test_interval test_interval, monitorings.last_cron_run last_cron_run, e.name environment_name, e.browser environment_browser, e.vars environment_vars FROM monitorings INNER JOIN environments e on monitorings.environment_id = e.id WHERE EXTRACT(EPOCH FROM (NOW() - monitorings.last_cron_run)) > monitorings.test_interval`,
 		);
 	}
 

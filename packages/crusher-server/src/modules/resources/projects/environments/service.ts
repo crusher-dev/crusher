@@ -16,7 +16,7 @@ class ProjectEnvironmentService {
 	}
 
 	async createEnvironment(payload: ICreateEnvironmentPayload) {
-		return this.dbManager.insert("INSERT INTO environments SET project_id = ?, name = ?, browser = ?, vars = ?, user_id = ?", [
+		return this.dbManager.insert("INSERT INTO environments (project_id, name, browser, vars, user_id) VALUES (?, ?, ?, ?, ?)", [
 			payload.projectId,
 			payload.name,
 			JSON.stringify(payload.browser),

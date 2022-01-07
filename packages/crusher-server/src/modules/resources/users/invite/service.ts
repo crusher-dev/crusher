@@ -1,13 +1,13 @@
 import { DBManager } from "@modules/db";
 import { Inject, Service } from "typedi";
-import { ProjectInviteReferrals } from "@modules/resources/users/invite/mongo/userProjectInviteReferrals";
-import { TeamInviteReferrals } from "@modules/resources/users/invite/mongo/userTeamInviteReferrals";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { ICreateProjectInviteCode, ICreateTeamInviteCode, IInviteReferral, InviteReferralEnum, iProjectInviteReferral, iTeamInviteReferral } from "./interface";
 import { EmailManager } from "@modules/email";
 import * as ejs from "ejs";
 import * as path from "path";
 import { MyDecorator } from "@modules/decorators/camelizeResponse";
+import { RedisManager } from "@modules/redis";
+import { v4 as uuidv4 } from "uuid";
 
 @Service()
 class UserInviteService {
@@ -15,6 +15,8 @@ class UserInviteService {
 	private dbManager: DBManager;
 	@Inject()
 	private emailManager: EmailManager;
+	@Inject()
+	private redisManager: RedisManager;
 
 	getInviteLink(inviteCode: string, inviteType: InviteReferralEnum): string {
 		const inviteLinkUrl = new URL(resolvePathToFrontendURI(`/signup`));
@@ -24,38 +26,11 @@ class UserInviteService {
 		return inviteLinkUrl.toString();
 	}
 
-	fetchPublicProjectInviteCode(projectId: number, teamId: number, expiresOn: Date | null) {
-		return new Promise((resolve, reject) => {
-			ProjectInviteReferrals.findOne(
-				{
-					projectId: { $eq: projectId },
-					isPublic: { $eq: true },
-					$or: [{ expiresOn: { $eq: null } }, { expiresOn: { $gt: new Date() } }],
-				},
-				async (err, referral: iProjectInviteReferral & { id: string }) => {
-					if (err) return reject(err);
-
-					let refferalCode = referral?.id;
-
-					if (!refferalCode) {
-						refferalCode = await this.createProjectInviteCode({
-							teamId: teamId,
-							projectId: projectId,
-							expiresOn: expiresOn,
-							meta: {},
-							isPublic: true,
-						});
-					}
-
-					resolve(this.getInviteLink(refferalCode, InviteReferralEnum.PROJECT));
-				},
-			);
-		});
-	}
-
-	createProjectInviteCode(payload: ICreateProjectInviteCode): Promise<string> {
-		return new Promise((resolve, reject) => {
-			new ProjectInviteReferrals({
+	async createProjectInviteCode(payload: ICreateProjectInviteCode): Promise<string> {
+		const inviteCode = `${payload.teamId}${payload.projectId}${uuidv4()}`;
+		await this.redisManager.set(
+			inviteCode,
+			JSON.stringify({
 				teamId: payload.teamId,
 				projectId: payload.projectId,
 				expiresOn: payload.expiresOn,
@@ -64,56 +39,57 @@ class UserInviteService {
 					...payload.meta,
 					emails: payload.emails,
 				},
-			}).save((err, referral) => {
-				if (err) return reject(err);
-				resolve(referral.id);
-			});
-		});
+			}),
+			{ expiry: { type: "s", value: 48 * 60 * 60 } },
+		);
+
+		return inviteCode;
 	}
 
-	createTeamInviteCode(payload: ICreateTeamInviteCode): Promise<string> {
-		return new Promise((resolve, reject) => {
-			new TeamInviteReferrals({
+	async createTeamInviteCode(payload: ICreateTeamInviteCode): Promise<string> {
+		const inviteCode = `${payload.teamId}${uuidv4()}`;
+
+		await this.redisManager.set(
+			inviteCode,
+			JSON.stringify({
 				teamId: payload.teamId,
 				expiresOn: payload.expiresOn,
 				meta: {
 					...payload.meta,
 					emails: payload.emails ? payload.emails : null,
 				},
-			}).save((err, referral) => {
-				if (err) return reject(err);
-				resolve(referral.id);
-			});
-		});
+			}),
+			{ expiry: { type: "s", value: 48 * 60 * 60 } },
+		);
+
+		return inviteCode;
 	}
 
 	getTeamInviteCode(code: string): Promise<iTeamInviteReferral> {
 		return new Promise((resolve, reject) => {
-			TeamInviteReferrals.findById(code, (err, referral) => {
-				if (err) return reject(err);
-				const referralObject: iTeamInviteReferral = referral.toObject({
-					getters: true,
-				});
-
-				// @TODO: Look into this. May cause timezone issue
-				if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
-				resolve(referralObject);
-			});
+			this.redisManager
+				.get(code)
+				.then((res) => {
+					const referralObject: iTeamInviteReferral = JSON.parse(res);
+					// @TODO: Look into this. May cause timezone issue
+					if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
+					resolve(referralObject);
+				})
+				.catch((err) => reject(err));
 		});
 	}
 
 	getProjectInviteCode(code: string): Promise<iProjectInviteReferral> {
 		return new Promise((resolve, reject) => {
-			ProjectInviteReferrals.findById(code, (err, referral) => {
-				if (err) return reject(err);
-				const referralObject: iProjectInviteReferral = referral.toObject({
-					getters: true,
-				});
-
-				// @TODO: Look into this. May cause timezone issue
-				if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
-				resolve(referralObject);
-			});
+			this.redisManager
+				.get(code)
+				.then((res) => {
+					const referralObject: iProjectInviteReferral = JSON.parse(res);
+					// @TODO: Look into this. May cause timezone issue
+					if (referralObject.expiresOn > new Date()) reject(new Error("The invite code has expired"));
+					resolve(referralObject);
+				})
+				.catch((err) => reject(err));
 		});
 	}
 

@@ -100,7 +100,9 @@ class IntegrationsController {
 
 		return {
 			status: "Successful",
-			data: { ...(doc.toObject() as any), _id: doc._id.toString() },
+			data: {
+				...doc,
+			},
 		};
 	}
 

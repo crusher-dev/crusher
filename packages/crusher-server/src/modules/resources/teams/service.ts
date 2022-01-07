@@ -21,7 +21,7 @@ class TeamsService {
 	}
 
 	async createTeam(payload: Omit<ICreateTeamPayload, "uuid">): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO teams SET name = ?, team_email = ?, tier = ?, stripe_customer_id = ?, uuid = ?", [
+		return this.dbManager.insert("INSERT INTO teams(name, team_email, tier, stripe_customer_id, uuid) VALUES (?, ?, ?, ?, ?)", [
 			payload.name,
 			payload.teamEmail,
 			payload.tier,
@@ -33,7 +33,7 @@ class TeamsService {
 	@CamelizeResponse()
 	async getUsersWithRolesInTeam(teamId: number): Promise<Array<KeysToCamelCase<IUserTable> & { role: UserTeamRoleEnum }>> {
 		return this.dbManager.fetchAllRows(
-			"SELECT users.*, user_team_roles.role role FROM users, user_team_roles WHERE users.team_id = ? AND users.id = user_team_roles.user_id",
+			"SELECT users.*, user_team_roles.role as role FROM users, user_team_roles WHERE users.team_id = ? AND users.id = user_team_roles.user_id",
 			[teamId],
 		);
 	}

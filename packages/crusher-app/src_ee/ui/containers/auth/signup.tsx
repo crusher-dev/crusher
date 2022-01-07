@@ -3,7 +3,6 @@ import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
-import { Input } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { loadUserDataAndRedirect } from "@hooks/user";
@@ -11,9 +10,9 @@ import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { validateEmail, validatePassword, validateName } from "@utils/common/validationUtils";
 import { atom, useAtom } from "jotai";
-import { Conditional } from "dyson/src/components/layouts";
-import { getBoolean } from "@utils/common";
 import { LoadingSVG } from "@svg/dashboard";
+import { SubmitButton } from "./SubmitButton";
+import { TextBox } from "./components/TextBox";
 
 const RocketImage = (props) => (
     <img
@@ -125,82 +124,28 @@ export default function Signup({ nextStepHandler }) {
                         </TextBlock>
 
                         <div className={" mb-72"}>
-                            <div className="mt-20">
-                                <Input className='md-20 bg'
-                                    autoComplete="name"
-                                    value={name.value}
-                                    placeholder={"Enter name"}
-                                    onChange={nameChange}
-                                    isError={name.error}
-                                    onBlur={verifyInfo.bind(this, false)}
-                                />
-                                <Conditional showIf={getBoolean(name.error)}>
-                                    <div className={"mt-8 text-12"} css={errorState}>
-                                        {name.error}
-                                    </div>
-                                </Conditional>
-                            </div>
-                            <div className="mt-20">
-                                <Input
-                                    className='md-20 bg'
-                                    autoComplete="email"
-                                    value={email.value}
-                                    placeholder={"Enter email"}
-                                    onChange={emailChange}
-                                    isError={email.error}
-                                    onBlur={verifyInfo.bind(this, false)}
-                                />
-                                <Conditional showIf={getBoolean(email.error)}>
-                                    <div className={"mt-8 text-12"} css={errorState}>
-                                        {email.error}
-                                    </div>
-                                </Conditional> />
-                            </div>
-                            <div className="mt-20">
-                                <Input type='password'
-                                    value={password.value}
-                                    placeholder={"Enter your password"}
-                                    type={"password"}
-                                    onChange={passwordChange}
-                                    onKeyDown={signupOnEnter}
-                                    isError={password.error}
-                                    onBlur={verifyInfo.bind(this, false)}
-                                />
-                                <Conditional showIf={getBoolean(password.error)}>
-                                    <div className={"mt-8 text-12"} css={errorState}>
-                                        {password.error}
-                                    </div>
-                                </Conditional>
-                            </div>
-                            <Button
-                                onClick={signupUser}
-                                className={"flex items-center justify-center mt-30"}
-                                disabled={loading}
-                                css={css(`
-									width: 100%;
-									height: 38px;
-									font-weight: 400;
-                                    background:#905CFF;
-
-								`)}
-                            >
-                                <div className={"flex justify-center items-center"}>
-                                    <Conditional showIf={!loading}>
-                                        <Text fontSize={14} weight={600}>
-                                            Create an account
-                                        </Text>
-                                    </Conditional>
-                                    <Conditional showIf={loading}>
-                                        <span>
-                                            {" "}
-                                            <LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-                                        </span>
-                                        <span className={"mt-2 ml-8"}>Processing</span>
-                                    </Conditional>
-                                </div>
-
-                            </Button>
+                            <TextBox
+                                data={name}
+                                onChange={nameChange}
+                                autoComplete={'name'}
+                                placeholder={"Enter name"}
+                                onBlur={verifyInfo.bind(this, false)} />
+                            <TextBox
+                                data={email}
+                                onChange={emailChange}
+                                autoComplete={'email'}
+                                placeholder={"Enter email"}
+                                onBlur={verifyInfo.bind(this, false)} />
+                            <TextBox
+                                data={password}
+                                onChange={passwordChange}
+                                onEnter={signupOnEnter}
+                                autoComplete={'new-password'}
+                                placeholder={"Enter password"}
+                                onBlur={verifyInfo.bind(this, false)} />
                         </div>
+
+                        <SubmitButton text='Create an account' onSubmit={signupUser} loading={loading} />
                     </div>
                     <div onClick={() => router.push("/login")} className="mt-40">
                         <Text color='#9692FF' className={""} fontSize={14}>
@@ -221,6 +166,8 @@ const overlayContainer = css(`
 	min-height: 440px;
 `);
 
-const errorState = css`
+export const errorState = css(`
 	color: #ff4583;
-`;
+`);
+
+

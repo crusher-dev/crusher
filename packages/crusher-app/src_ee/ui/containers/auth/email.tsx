@@ -3,7 +3,6 @@ import { css } from "@emotion/react";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
-import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
 import { validateEmail, validatePassword } from '@utils/common/validationUtils';
@@ -11,7 +10,8 @@ import { loadUserDataAndRedirect } from '@hooks/user';
 import { backendRequest } from '@utils/common/backendRequest';
 import { RequestMethod } from '@types/RequestOptions';
 import { Conditional } from 'dyson/src/components/layouts/Conditional/Conditional';
-import { LoadingSVG } from '@svg/dashboard';
+import { SubmitButton } from './SubmitButton';
+import { TextBox } from './components/TextBox';
 
 const RocketImage = (props) => (
     <img
@@ -104,65 +104,20 @@ export default function EmailLogin({ goBackHandler }) {
                         </TextBlock>
 
                         <div className={" mb-72"}>
-                            <div className="mt-20">
-                                <Input
-                                    className='md-20 bg'
-                                    autoComplete={"email"}
-                                    value={email.value}
-                                    onChange={emailChange}
-                                    placeholder={"Enter email"}
-                                    isError={email.error}
-                                    onBlur={verifyInfo.bind(this, false)} />
-                                <Conditional showIf={email.error}>
-                                    <div className={"mt-8 text-12"} css={errorState}>
-                                        {email.error}
-                                    </div>
-                                </Conditional>
-                            </div>
-                            <div className="mt-20">
-                                <Input
-                                    autoComplete={"password"}
-                                    value={password.value}
-                                    placeholder={"Enter your password"}
-                                    type={"password"}
-                                    onChange={passwordChange}
-                                    onKeyUp={loginOnEnter}
-                                    isError={password.error}
-                                    onBlur={verifyInfo.bind(this, false)}
-                                />
-                                <Conditional showIf={password.error}>
-                                    <div className={"mt-8 text-12"} css={errorState}>
-                                        {password.error}
-                                    </div>
-                                </Conditional>
-                            </div>
-                            <Button
-                                disabled={loading}
-                                className={"flex items-center justify-center mt-30"}
-                                css={css(`
-									width: 100%;
-									height: 38px;
-									font-weight: 400;
-                                    background:#905CFF;
-
-								`)}
-                                size={"large"}
-                                onClick={onLogin}>
-                                <div className={"flex justify-center items-center"}>
-                                    <Conditional showIf={!loading}>
-                                        <Text fontSize={14} weight={600}>
-                                            Login
-                                        </Text>
-                                    </Conditional>
-                                    <Conditional showIf={loading}>
-                                        <span>
-                                            {" "}
-                                            <LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-                                        </span>
-                                        <span className={"mt-2 ml-8"}>Processing</span>
-                                    </Conditional>
-                                </div>
-                            </Button>
+                            <TextBox
+                                data={email}
+                                onChange={emailChange}
+                                autoComplete={'email'}
+                                placeholder={"Enter email"}
+                                onBlur={verifyInfo.bind(this, false)} />
+                            <TextBox
+                                data={password}
+                                onChange={passwordChange}
+                                autoComplete={'password'}
+                                placeholder={"Enter password"}
+                                onBlur={verifyInfo.bind(this, false)}
+                                onKeyDown={loginOnEnter} />
+                            <SubmitButton text='Login' loading={loading} onSubmit={onLogin} />
                         </div>
                         <div className="flex items-center justify-between">
                             <Text onClick={goBackHandler} className={""} fontSize={12}>
@@ -193,6 +148,8 @@ const overlayContainer = css(`
 `);
 
 
-const errorState = css`
+const errorState = css(`
 	color: #ff4583;
-`;
+`);
+
+

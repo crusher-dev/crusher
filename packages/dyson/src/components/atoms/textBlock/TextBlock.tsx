@@ -25,7 +25,7 @@ export const TextBlock: React.FC<TextBlockProps> = (props: TextBlockProps) => {
 			css={css`
 				font-size: ${fontSize}rem;
 				color: ${color};
-				${showLineHeight === false ? "line-height: 1;" : ""}
+				${showLineHeight === false ? "line-height: 1;" : "line-height: 1.6;"}
 			`}
 			{...otherProps}
 		>

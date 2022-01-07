@@ -12,7 +12,7 @@ class BuildTestInstanceScreenshotService {
 	private dbManager: DBManager;
 
 	private async insertScreenshot(payload: IAddTestIntanceScreenshotPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO test_instance_screenshots SET instance_id = ?, name = ?, url = ?, action_index = ?", [
+		return this.dbManager.insert("INSERT INTO test_instance_screenshots (instance_id, name, url, action_index) VALUES (?, ?, ?, ?)", [
 			payload.instanceId,
 			payload.name,
 			payload.url,

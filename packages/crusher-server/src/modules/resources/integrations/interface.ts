@@ -12,4 +12,13 @@ export interface IIntegrationsTable extends BaseRowInterface {
 	meta: any;
 }
 
+export interface IGitIntegrations extends BaseRowInterface {
+	id: number;
+	project_id: number;
+	repo_id: string;
+	repo_name: string;
+	repo_link: string;
+	installation_id: string;
+}
+
 export type ICreateIntegrationPayload = KeysToCamelCase<Omit<IIntegrationsTable, "id">>;

@@ -15,7 +15,7 @@ class ProjectsService {
 	}
 
 	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO project_hosts SET url = ?, host_name = ?, project_id = ?, user_id = ?", [
+		return this.dbManager.insert("INSERT INTO project_hosts (url, host_name, project_id, user_id) VALUES (?, ?, ?, ?)", [
 			environmentInfo.url,
 			environmentInfo.hostName,
 			environmentInfo.projectId,
@@ -34,7 +34,7 @@ class ProjectsService {
 	}
 
 	async createProject(payload: ICreateProjectPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO projects SET name = ?, team_id = ?, meta = ?", [
+		return this.dbManager.insert("INSERT INTO projects (name, team_id, meta) VALUES (?, ?, ?)", [
 			payload.name,
 			payload.teamId,
 			payload.meta ? JSON.stringify(payload.meta) : "",

@@ -8,11 +8,12 @@ import { useRouter } from "next/router";
 import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
 import { LoadingSVG } from "@svg/dashboard";
 import { useCallback, useState } from "react";
-import {  validatePassword } from "@utils/common/validationUtils";
+import { validatePassword } from "@utils/common/validationUtils";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { loadUserDataAndRedirect } from "@hooks/user";
 import { getBoolean } from "@utils/common";
+import { SubmitButton } from "./SubmitButton";
 
 const RocketImage = (props) => (
     <img
@@ -158,31 +159,7 @@ export default function Signup() {
                                         </div>
                                     </Conditional>
                                 </div>
-                                <Button
-                                    className={"flex items-center justify-center mt-30"}
-                                    css={css(`
-									width: 100%;
-									height: 38px;
-									font-weight: 400;
-                                    background:#905CFF;
-								`)}
-                                    onClick={submitForm}
-                                >
-                                    <div className={"flex justify-center items-center"}>
-                                        <Conditional showIf={!loading}>
-                                            <Text fontSize={14} weight={900}>
-                                                Change Password
-                                            </Text>
-                                        </Conditional>
-                                        <Conditional showIf={loading}>
-                                            <span>
-                                                {" "}
-                                                <LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-                                            </span>
-                                            <span className={"mt-2 ml-8"}>Processing</span>
-                                        </Conditional>
-                                    </div>
-                                </Button>
+                                <SubmitButton onSubmit={submitForm} loading={loading} text="Change Password" />
                             </div>
                         </div>
                     </Conditional>

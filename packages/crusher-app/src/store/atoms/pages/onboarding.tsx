@@ -4,10 +4,10 @@ import { atom } from "jotai";
 
 
 export enum OnboardingStepEnum {
-	CHOOSE = "CHOOSE",
+	GIT_INTEGRATION = "GIT_INTEGRATION",
 	SETUP = "SETUP",
-	SUPPORT = "SUPPORT",
-	INTEGRATION = "INTEGRATION",
+	SUPPORT_CRUSHER = "SUPPORT_CRUSHER",
+	CLI_INTEGRATION = "CLI_INTEGRATION",
 }
 
-export const onboardingStepAtom = atom<OnboardingStepEnum>(getEdition() === EditionTypeEnum.EE ? OnboardingStepEnum.CHOOSE : OnboardingStepEnum.SETUP);
+export const onboardingStepAtom = atom<OnboardingStepEnum>(getEdition() === EditionTypeEnum.EE ? OnboardingStepEnum.GIT_INTEGRATION : OnboardingStepEnum.SETUP);

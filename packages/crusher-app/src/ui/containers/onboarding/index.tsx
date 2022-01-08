@@ -19,11 +19,11 @@ const GetViewByStep = () => {
 	switch (step) {
 		case OnboardingStepEnum.SETUP:
 			return <SetupCrusher />;
-		case OnboardingStepEnum.SUPPORT:
+		case OnboardingStepEnum.SUPPORT_CRUSHER:
 			return <SupportCrusher />;
-		case OnboardingStepEnum.CHOOSE:
+		case OnboardingStepEnum.GIT_INTEGRATION:
 			return <GitRepoIntegration />
-		case OnboardingStepEnum.INTEGRATION:
+		case OnboardingStepEnum.CLI_INTEGRATION:
 			return <CliRepoIntegration />
 		default:
 			return null;
@@ -31,9 +31,9 @@ const GetViewByStep = () => {
 };
 
 const steps = [
-	{ id: OnboardingStepEnum.CHOOSE, text: "Choose" },
-	{ id: OnboardingStepEnum.INTEGRATION, text: "Create and run test" },
-	{ id: OnboardingStepEnum.SUPPORT, text: "Support" }
+	{ id: OnboardingStepEnum.GIT_INTEGRATION, text: "Choose" },
+	{ id: OnboardingStepEnum.CLI_INTEGRATION, text: "Create and run test" },
+	{ id: OnboardingStepEnum.SUPPORT_CRUSHER, text: "Support" }
 ];
 
 const CrusherOnboarding = () => {

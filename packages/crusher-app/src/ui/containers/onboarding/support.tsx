@@ -8,9 +8,13 @@ import { GithubSVG } from "@svg/social";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { DiscordSVG } from "@svg/onboarding";
 import { css } from "@emotion/react";
+import { updateMeta } from "@store/mutators/metaData";
+import { USER_META_KEYS } from "@constants/USER";
+import Link from "next/link";
 
 const SupportCrusher = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [, updateOnboarding] = useAtom(updateMeta);
 
 	usePageTitle("Support crusher");
 
@@ -18,7 +22,15 @@ const SupportCrusher = () => {
 		addScript("github-start", {
 			src: "https://buttons.github.io/buttons.js",
 		});
-  }, []);
+	}, []);
+
+	const handleOpenApp = () => {
+		updateOnboarding({
+			type: "user",
+			key: USER_META_KEYS.INITIAL_ONBOARDING,
+			value: true,
+		});
+	};
 
 	return (
 		<>
@@ -94,14 +106,17 @@ const SupportCrusher = () => {
 				</div>
 
 				<div className={"flex justify-center mt-40"}>
+				<Link href={"/app/tests"}>
 					<Button
 						size={"medium"}
 						css={css`
 							width: 160rem;
 						`}
+						onClick={handleOpenApp.bind(this)}
 					>
 						Open app
-					</Button>
+						</Button>
+					</Link>
 				</div>
 			</div>
 		</>

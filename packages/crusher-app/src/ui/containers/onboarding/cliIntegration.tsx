@@ -1,32 +1,61 @@
 import { Card } from "@components/common/card";
+import { getTestListAPI } from "@constants/api";
 import { css } from "@emotion/react";
 import { usePageTitle } from "@hooks/seo";
-import { onboardingStepAtom } from "@store/atoms/pages/onboarding";
+import { currentProject } from "@store/atoms/global/project";
+import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
+import { LoadingSVG } from "@svg/dashboard";
 import { CopyIconSVG } from "@svg/onboarding";
+import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { resolvePathToBackendURI } from "@utils/common/url";
 import { Button, Input, Text } from "dyson/src/components/atoms";
 import { useAtom } from "jotai";
 import React from "react";
 
-const CopyCommandInput = ({ command }: {command: string}) => {
+const CopyCommandInput = ({ command }: { command: string }) => {
+	const inputRef = React.useRef<HTMLInputElement>(null);
+	const copyToClipbaord = React.useCallback(() => {
+			inputRef.current.select();
+			document.execCommand("copy");
+			sendSnackBarEvent({ type: "normal", message: "Copied to clipboard!" });
+	}, []);
 	return (
 		<Input
 			css={css`width: 240rem; user-select: none; height: 40rem; input { cursor: default; background: rgba(0, 0, 0, 0.49); height: 40rem; user-select: none; } :hover { input { background: rgba(255, 255, 255, 0.03); } svg { opacity: 1; } }`}
       initialValue={command}
       //@ts-ignore
 			readOnly={true}
-			rightIcon={<CopyIconSVG css={css`opacity: 0.42`} />}
-			onClick={(event) => {
-				(event.target as HTMLInputElement).select();
-				document.execCommand("copy");
-				sendSnackBarEvent({ type: "normal", message: "Copied to clipboard!" });
-			}}
+			rightIcon={<CopyIconSVG onClick={copyToClipbaord} css={css`opacity: 0.42`} />}
+			forwardRef={inputRef}
+			onClick={copyToClipbaord}
 		/>
 	);
 };
 
 const CliRepoIntegration = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [project] = useAtom(currentProject)
+	const [commands, setCommnads] = React.useState(["", ""]);
+
+	React.useEffect(() => {
+		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
+			method: RequestMethod.GET
+		}).then((res) => {
+			if (res) {
+				setCommnads(res);
+			}
+		});
+
+		const testCreatedPoll = setInterval(async () => {
+			const res = await backendRequest(getTestListAPI(project.id), {method: RequestMethod.GET});
+			if (res.list.length) {
+				setOnboardingStep(OnboardingStepEnum.SUPPORT_CRUSHER);
+				clearInterval(testCreatedPoll);
+			}
+		}, 1000);
+	}, []);
 
 	usePageTitle("Create & Run your first test");
 
@@ -61,10 +90,10 @@ const CliRepoIntegration = () => {
 
 					<div className={"pl-44 pr-32"}>
 						<div className={"flex mt-16"}>
-							<CopyCommandInput command={"npx crusher create:test"}/>
+							<CopyCommandInput command={commands[0]}/>
 						</div>
 						<div className={"flex items-center justify-between mt-16"}>
-							<CopyCommandInput command={"npx crusher run:test"}/>
+							<CopyCommandInput command={commands[1]}/>
 							<span
 								className={"text-13"}
 								css={css`
@@ -77,7 +106,7 @@ const CliRepoIntegration = () => {
         </Card>
         <Card type={"normal"} className={"mt-32 py-16"}>
 					<div className={" px-16 flex items-center justify-between"}>
-						<div>
+						<div className={"flex"} css={ css`align-items: center;`}>
 							<span
 								className={"text-11 font-700"}
 								css={css`
@@ -87,6 +116,7 @@ const CliRepoIntegration = () => {
 								2.)
 							</span>
 							<span className={"text-16 font-cera font-700 ml-16"}>Push changes to origin</span>
+							<LoadingSVG className={"ml-8"} css={ css`width: 16rem; height: 16rem;`}/>
 						</div>
 						<Button
 							size={"small"}

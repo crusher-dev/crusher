@@ -26,7 +26,7 @@ const SetupCrusher = () => {
 	React.useEffect(() => {
 		const isWorkingFine = system.MONGO_DB_OPERATIONS && system.MYSQL_OPERATION && system.REDIS_OPERATION && system?.OPEN_SOURCE?.initialized;
 		if (isWorkingFine) {
-			setOnboardingStep(OnboardingStepEnum.CHOOSE);
+			setOnboardingStep(OnboardingStepEnum.GIT_INTEGRATION);
 		}
 	}, []);
 
@@ -38,7 +38,7 @@ const SetupCrusher = () => {
 			updateInitialData(dataToConsider);
 			selectInitialProject(dataToConsider);
 
-			setOnboardingStep(OnboardingStepEnum.CHOOSE);
+			setOnboardingStep(OnboardingStepEnum.GIT_INTEGRATION);
 		})();
 	}, []);
 

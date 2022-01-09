@@ -12,6 +12,7 @@ import { CliRepoIntegration } from "./cliIntegration";
 import { SetupCrusher } from "./setup";
 import { SupportCrusher } from "./support";
 import { GitRepoIntegration } from "./gitRepoIntegration";
+import { getBoolean } from "@utils/common";
 
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);
@@ -40,6 +41,13 @@ const CrusherOnboarding = () => {
 	const router = useRouter();
 	const [user] = useAtom(userAtom);
 	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
+
+
+	useEffect(() => {
+		if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
+			router.push("/app/dashboard");
+		}
+	}, []);
 
 	return (
 		<CrusherBase>

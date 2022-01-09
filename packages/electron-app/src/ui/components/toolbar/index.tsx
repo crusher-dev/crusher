@@ -164,12 +164,12 @@ const Toolbar = (props: any) => {
     return (
 		<div css={containerStyle}>
 			{/* Go Back button */}
-			<BrowserButton className={"ml-24 go-back-button"} onClick={goBack}>
+			<BrowserButton className={"ml-24 go-back-button"} css={css`background: transparent;`} onClick={goBack}>
 				<NavigateBackIcon css={css`height: 20rem;`} disabled={false} />
 			</BrowserButton>
 
 			{/* Refresh button */}
-			<BrowserButton className={"ml-12 reload-page-button"} onClick={refreshPage}>
+			<BrowserButton className={"ml-12 reload-page-button"} css={css`background: transparent;`} onClick={refreshPage}>
 				<NavigateRefreshIcon css={css`height: 20rem;`} disabled={false} />
 			</BrowserButton>
 

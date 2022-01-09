@@ -43,6 +43,26 @@ export const loadUserLeap = () => {
 	);
 };
 
+export const GA_ID = process.env.GA_ID || "UA-51192281-1";
+
+// Hate to use GA, but other user activity tool aren't reliable.
+// Might switch to plausible soon. Anyways, if you're not comfortable you can switch off tracking completely.
+export const loadGA = () => {
+	addScript(
+		"ga",
+		{},
+		`
+	(function(e,t,n,i,s,a,c){e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)}
+	;a=t.createElement(i);c=t.getElementsByTagName(i)[0];a.async=true;a.src=s
+	;c.parentNode.insertBefore(a,c)
+	})(window,document,"galite","script","https://cdn.jsdelivr.net/npm/ga-lite@2/dist/ga-lite.min.js");
+	
+	galite('create', '${GA_ID}', 'auto');
+	galite('send', 'pageview');
+		`,
+	);
+};
+
 export const loadCrisp = (callback = () => {}) => {
 	addScript(
 		"crisp",

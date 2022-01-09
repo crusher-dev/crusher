@@ -11,11 +11,11 @@ class ProjectsService {
 
 	@CamelizeResponse()
 	async getProjectEnvironments(projectId: number): Promise<Array<KeysToCamelCase<IProjectEnvironmentTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM project_hosts WHERE project_id = ?", [projectId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM crusher.project_hosts WHERE project_id = ?", [projectId]);
 	}
 
 	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO project_hosts (url, host_name, project_id, user_id) VALUES (?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO crusher.project_hosts (url, host_name, project_id, user_id) VALUES (?, ?, ?, ?)", [
 			environmentInfo.url,
 			environmentInfo.hostName,
 			environmentInfo.projectId,
@@ -25,16 +25,16 @@ class ProjectsService {
 
 	@CamelizeResponse()
 	async getProject(projectId: number): Promise<KeysToCamelCase<IProjectTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE id = ?", [projectId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM crusher.projects WHERE id = ?", [projectId]);
 	}
 
 	@CamelizeResponse()
 	async getProjects(teamId: number): Promise<Array<KeysToCamelCase<IProjectTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM projects WHERE team_id = ?", [teamId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM crusher.projects WHERE team_id = ?", [teamId]);
 	}
 
 	async createProject(payload: ICreateProjectPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO projects (name, team_id, meta) VALUES (?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO crusher.projects (name, team_id, meta) VALUES (?, ?, ?)", [
 			payload.name,
 			payload.teamId,
 			payload.meta ? JSON.stringify(payload.meta) : "",
@@ -42,19 +42,19 @@ class ProjectsService {
 	}
 
 	async updateMeta(meta: string, projectId: number) {
-		return this.dbManager.update("UPDATE projects SET meta = ? WHERE id = ?", [meta, projectId]);
+		return this.dbManager.update("UPDATE crusher.projects SET meta = ? WHERE id = ?", [meta, projectId]);
 	}
 
 	async updateBaselineBuild(baseLineBuild: number, projectId: number) {
-		return this.dbManager.update("UPDATE projects SET baseline_job_id = ? WHERE id = ?", [baseLineBuild, projectId]);
+		return this.dbManager.update("UPDATE crusher.projects SET baseline_job_id = ? WHERE id = ?", [baseLineBuild, projectId]);
 	}
 
 	async updateProjectName(projectName: string, projectId: number) {
-		return this.dbManager.update("UPDATE projects SET name = ? WHERE id = ?", [projectName, projectId]);
+		return this.dbManager.update("UPDATE crusher.projects SET name = ? WHERE id = ?", [projectName, projectId]);
 	}
 
 	async updateVisualBaseline(visualBaseline: number, projectId: number) {
-		return this.dbManager.update("UPDATE projects SET visual_baseline = ? WHERE id = ?", [visualBaseline, projectId]);
+		return this.dbManager.update("UPDATE crusher.projects SET visual_baseline = ? WHERE id = ?", [visualBaseline, projectId]);
 	}
 }
 

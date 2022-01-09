@@ -11,11 +11,11 @@ class UserProjectRolesService {
 
 	@CamelizeResponse()
 	async get(userId: number, projectId: number): Promise<KeysToCamelCase<IUserProjectRoleTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM user_project_roles WHERE user_id = ? AND project_id = ?`, [userId, projectId]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM crusher.user_project_roles WHERE user_id = ? AND project_id = ?`, [userId, projectId]);
 	}
 
 	async create(payload: ICreateUserProjectRole): Promise<{ insertId: number }> {
-		return this.dbManager.insert(`INSERT INTO user_project_roles (user_id, project_id, role) VALUES (?, ?, ?)`, [
+		return this.dbManager.insert(`INSERT INTO crusher.user_project_roles (user_id, project_id, role) VALUES (?, ?, ?)`, [
 			payload.userId,
 			payload.projectId,
 			payload.role ? payload.role : UserProjectRoleEnum.MEMBER,

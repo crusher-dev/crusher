@@ -224,6 +224,13 @@ class IntegrationsController {
 
 		return { channels, nextCursor };
 	}
+
+	@Authorized()
+	@Get("/integrations/cli/commands")
+	async getCliCommands(@CurrentUser({ required: true }) user) {
+		const { user_id, team_id } = user;
+		return ["./bin/run create:test --token=" + generateToken(user_id, team_id), "./bin/run crusher run:test"];
+	}
 }
 
 export { IntegrationsController };

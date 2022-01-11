@@ -39,19 +39,19 @@ class UsersService {
 
 	@CamelizeResponse()
 	async getOpenSourceUser(): Promise<KeysToCamelCase<IUserTable> | null> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE is_oss = ?`, [true]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM crusher.users WHERE is_oss = ?`, [true]);
 	}
 
 	async getUserByEmail(email: string): Promise<IUserTable | null> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM users WHERE email = ?", [email]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM crusher.users WHERE email = ?", [email]);
 	}
 
 	async addUserToTeam(userId: number, teamId: number) {
-		return this.dbManager.update(`UPDATE users SET team_id = ? WHERE id = ?`, [teamId, userId]);
+		return this.dbManager.update(`UPDATE crusher.users SET team_id = ? WHERE id = ?`, [teamId, userId]);
 	}
 
 	async updatePassword(id: string, password: string) {
-		return this.dbManager.update(`UPDATE users SET password = ? WHERE id = ?`, [encryptPassword(password), id]);
+		return this.dbManager.update(`UPDATE crusher.users SET password = ? WHERE id = ?`, [encryptPassword(password), id]);
 	}
 
 	async setupInitialUserWorkspace(
@@ -98,7 +98,7 @@ class UsersService {
 	}
 
 	async createUserRecord(user: Omit<ICreateUserPayload, "uuid">): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO users (name, email, password, verified, is_oss, uuid) VALUES (?, ?, ?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO crusher.users (name, email, password, verified, is_oss, uuid) VALUES (?, ?, ?, ?, ?, ?)", [
 			user.name,
 			user.email,
 			encryptPassword(user.password),
@@ -110,25 +110,25 @@ class UsersService {
 
 	async deleteUserWorkspace(userId: number) {
 		const userRecord = await this.getUserInfo(userId);
-		await this.dbManager.delete("DELETE FROM user_meta WHERE user_id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM user_project_roles WHERE user_id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM projects WHERE team_id = ?", [userRecord.teamId]);
-		await this.dbManager.delete("DELETE FROM user_team_roles WHERE user_id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM users WHERE id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM teams WHERE id = ?", [userRecord.teamId]);
+		await this.dbManager.delete("DELETE FROM crusher.user_meta WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM crusher.user_project_roles WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM crusher.projects WHERE team_id = ?", [userRecord.teamId]);
+		await this.dbManager.delete("DELETE FROM crusher.user_team_roles WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM crusher.users WHERE id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM crusher.teams WHERE id = ?", [userRecord.teamId]);
 	}
 
 	// Prod
 	async deleteAllTestUsers() {
 		const users = await this.dbManager.fetchAllRows(
-			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND EXTRACT(EPOCH FROM (NOW() - users.created_at)) >  60 * 60",
+			"SELECT * FROM crusher.users WHERE email LIKE 'testing-%@crusher.dev' AND EXTRACT(EPOCH FROM (NOW() - users.created_at)) >  60 * 60",
 		);
 		return users.map((user) => this.deleteUserWorkspace(user.id));
 	}
 
 	@CamelizeResponse()
 	async getUserInfo(userId: number): Promise<KeysToCamelCase<IUserTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id = ?`, [userId]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM crusher.users WHERE id = ?`, [userId]);
 	}
 
 	async getUserAndSystemInfo(userId: number): Promise<IUserAndSystemInfoResponse> {
@@ -195,23 +195,23 @@ class UsersService {
 	}
 
 	async updateMeta(meta: string, userId: number) {
-		return this.dbManager.update("UPDATE users SET meta = ? WHERE id = ?", [meta, userId]);
+		return this.dbManager.update("UPDATE crusher.users SET meta = ? WHERE id = ?", [meta, userId]);
 	}
 
 	@CamelizeResponse()
 	async getUsersInProject(projectId: number): Promise<Array<KeysToCamelCase<IUserTable>>> {
-		return this.dbManager.fetchAllRows("SELECT users.* FROM users, user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
+		return this.dbManager.fetchAllRows("SELECT users.* FROM crusher.users, crusher.user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
 			projectId,
 		]);
 	}
 
 	async setGithubUserId(githubUserId: string, userId: number) {
-		return this.dbManager.update("UPDATE users SET github_user_id = ? WHERE id = ?", [githubUserId, userId]);
+		return this.dbManager.update("UPDATE crusher.users SET github_user_id = ? WHERE id = ?", [githubUserId, userId]);
 	}
 
 	@CamelizeResponse()
 	async getUserByGithubUserId(githubUserId: string): Promise<KeysToCamelCase<IUserTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM users WHERE github_user_id = ?", [githubUserId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM crusher.users WHERE github_user_id = ?", [githubUserId]);
 	}
 }
 

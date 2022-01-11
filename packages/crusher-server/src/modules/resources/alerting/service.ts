@@ -8,7 +8,7 @@ class AlertingService {
 	private dbManager: DBManager;
 
 	async addAlertIntegrationToProject(payload: ICreateProjectAlertingPayload) {
-		return this.dbManager.insert("INSERT INTO integration_alerting (project_id, integration_id, user_id, config) VALUES (?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO crusher.integration_alerting (project_id, integration_id, user_id, config) VALUES (?, ?, ?, ?)", [
 			payload.projectId,
 			payload.integrationId,
 			payload.userId,

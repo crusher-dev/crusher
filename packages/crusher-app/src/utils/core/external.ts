@@ -10,6 +10,7 @@ const getGithubOAuthURL = (alreadyAuthorized = false) => {
 	const url = new URL(alreadyAuthorized ? "https://github.com/apps/crusher-ci/installations/new" : "https://github.com/login/oauth/authorize");
 	url.searchParams.append("client_id", CLIENT_ID);
 	url.searchParams.append("redirect_uri", resolvePathToBackendURI("/integrations/blabla/github/actions/callback"));
+	url.searchParams.append("state", `${btoa(JSON.stringify({ type: "integration" }))}`);
 
 	return url.toString();
 };

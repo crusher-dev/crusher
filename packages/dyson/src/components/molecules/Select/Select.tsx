@@ -16,7 +16,7 @@ export type TSelectBoxProps = {
 		The options to be displayed in the select dropdown
 	*/
 	values: Array<{ value: any; label: any; component: ReactElement; inactive: boolean }>;
-	/* 
+	/*
 		Is multi select enabled
 	*/
 	isMultiSelect: boolean;

@@ -1,0 +1,1 @@
+{"backend":"http://localhost:8000/","userInfo":{"id":"317","name":"Utkarsh Dixit","email":"utkarshdix02@gmail.com","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzE3IiwidGVhbV9pZCI6OSwiaWF0IjoxNjQxODIxNTkzLCJleHAiOjE2NzMzNTc1OTN9.UKYiQNySqW5j0y7te6TK_MJXBvE0GUJaqeHhwXPjqYQ"},"project":8,"hostEnvironment":"local","port":"3000"}

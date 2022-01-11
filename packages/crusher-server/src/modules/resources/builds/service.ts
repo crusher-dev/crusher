@@ -41,13 +41,14 @@ class BuildsService {
 	@CamelizeResponse()
 	async getBuildInfoList(
 		projectId: number,
-		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum },
+		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number },
 	): Promise<{ list: Array<IBuildInfoItem>; totalPages: number }> {
 		let additionalSelectColumns = "";
 		let additionalFromSource = "";
 		const queryParams: Array<any> = [];
 		if (filter.search) {
-			additionalSelectColumns += "ts_rank_cd(to_tsvector(COALESCE(commit_name, '')) || to_tsvector(COALESCE(jobs.repo_name, '')) || to_tsvector(COALESCE(jobs.host, '')), query) as rank";
+			additionalSelectColumns +=
+				"ts_rank_cd(to_tsvector(COALESCE(commit_name, '')) || to_tsvector(COALESCE(jobs.repo_name, '')) || to_tsvector(COALESCE(jobs.host, '')), query) as rank";
 			additionalFromSource += `to_tsquery(?) query`;
 			queryParams.push(filter.search);
 		}
@@ -57,7 +58,7 @@ class BuildsService {
 		} FROM crusher.users, crusher.jobs, crusher.job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM crusher.comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id ${
 			additionalFromSource.length ? `, ${additionalFromSource}` : ""
 		} WHERE jobs.project_id = ? AND job_reports.id = jobs.latest_report_id AND jobs.user_id = users.id AND jobs.is_draft_job = ?`;
-	  queryParams.push(projectId, false);
+		queryParams.push(projectId, false);
 
 		if (filter.triggerType) {
 			query += " AND jobs.build_trigger = ?";
@@ -72,6 +73,11 @@ class BuildsService {
 		if (filter.status) {
 			query += " AND job_reports.status = ?";
 			queryParams.push(filter.status);
+		}
+
+		if (filter.buildId) {
+			query += " AND jobs.id = ?";
+			queryParams.push(filter.buildId);
 		}
 
 		if (filter.search) {

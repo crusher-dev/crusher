@@ -9,6 +9,9 @@ import { AppWindow } from "./app-window";
 import { now } from "./now";
 import { installSameOriginFilter } from "./same-origin-filter";
 import configureStore from "../store/configureStore";
+import * as path from "path";
+
+const os = require('os');
 
 if(isProduction() && process.env.SENTRY_DSN) {
     Sentry.init({ dsn: process.env.SENTRY_DSN });
@@ -36,8 +39,8 @@ function setupElectronApp() {
 
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 	app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
-	// app.commandLine.appendSwitch("--disable-site-isolation-trials");
-	app.commandLine.appendSwitch("--disable-web-security");
+	app.commandLine.appendSwitch("--disable-site-isolation-trials");
+	// app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	// For replaying actions
 	app.commandLine.appendSwitch("--remote-debugging-port", "9112");

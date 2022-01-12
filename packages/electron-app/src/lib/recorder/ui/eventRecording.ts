@@ -623,7 +623,7 @@ export default class EventRecording {
 		if (isFirstTime) {
 			const currentURL = new URL(window.location.href);
 			currentURL.searchParams.delete("__crusherAgent__");
-			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.NAVIGATE_URL, document.body, currentURL.toString());
+			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, document.body, currentURL.toString());
 		}
 	
 		sendRecorderReadySignal();

@@ -320,7 +320,7 @@ const containerStyle = css`
 const stepsHeaderStyle = css`
 	display: flex;
 	align-items: center;
-	padding: 14rem 22rem;
+	padding: 14rem 16rem;
 	padding-top: 21rem;
 `;
 const stepsTextStyle = css`
@@ -348,27 +348,28 @@ const failedStepTitleStyle = css`
 `;
 const stepsContainerStyle = css`
 	overflow-y: scroll;
-	padding: 18rem 22rem;
 	padding-top: 0rem;
 	height: 100%;
+	padding-bottom: 20rem;
 `;
 const runningStepStyle = css`
-	border: 1rem solid rgba(255, 255, 255, 0.1);
-	border-bottom: 4rem solid #a6ba86;
+	border-left: 3rem solid #9462ff;
+	&:hover {
+		border: 1.5rem solid rgba(255, 255, 255, 0.1) !important;
+		border-left: 3rem solid #9462ff !important;
+	}
 `;
 const stepStyle = css`
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	box-sizing: border-box;
-	border-radius: 6rem;
+	border: 1.5rem solid rgba(255, 255, 255, 0);
 	padding: 3rem 13rem;
 	margin: 10rem 0rem;
-	border: 1.5rem solid rgba(255, 255, 255, 0);
 
 	&:hover {
 		border: 1.5rem solid rgba(255, 255, 255, 0.1);
-		border-radius: 6rem;
 	}
 `;
 

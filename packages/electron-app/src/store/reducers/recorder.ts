@@ -3,6 +3,7 @@ import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 export enum TRecorderState {
 	BOOTING = "BOOTING", // <- Internal state (Initialize recorder script)
@@ -111,6 +112,9 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				selectedElement: action.payload.element
 			}
 		case RECORD_STEP:
+			const lastStep = state.savedSteps.length > 1 ? state.savedSteps[state.savedSteps.length - 1] : null;
+			if(action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) { return state;
+			}
 			return {
 				...state,
 				/* Set verified status to false, if a new step is added */

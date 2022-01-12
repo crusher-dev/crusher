@@ -572,11 +572,13 @@ export default class EventRecording {
 
 		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
 
+		let lastPush = Date.now();
 		window.history.pushState = new Proxy(window.history.pushState, {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if (argArray[0]) {
+				if (argArray[0] && (Date.now() - lastPush) > 1000) {
+					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
 						null,
@@ -595,7 +597,8 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if (argArray[0]) {
+				if (argArray[0] & (Date.now() - lastPush) > 1000) {
+					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
 						null,
@@ -623,7 +626,6 @@ export default class EventRecording {
 		if (isFirstTime) {
 			const currentURL = new URL(window.location.href);
 			currentURL.searchParams.delete("__crusherAgent__");
-			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, document.body, currentURL.toString());
 		}
 	
 		sendRecorderReadySignal();

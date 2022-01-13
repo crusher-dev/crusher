@@ -147,7 +147,10 @@ class PlaywrightInstance {
 				const uniqueElementId = messageArgs[2].toString();
 
 				const elementHandle = valueObj.asElement();
-				if(elementHandle) this.elementsMap.set(uniqueElementId, elementHandle);
+				if(elementHandle) {
+					const screenshot = await elementHandle.screenshot();
+					this.elementsMap.set(uniqueElementId, elementHandle);
+				}
 			}
         }
     };

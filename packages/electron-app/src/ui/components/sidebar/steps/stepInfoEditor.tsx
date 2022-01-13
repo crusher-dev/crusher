@@ -117,7 +117,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
         </div>
         <div css={css`font-family: Gilroy; font-size: 13.75rem`} className={"p-12"}>
             <Conditional showIf={action.type === ActionsInTestEnum.ADD_INPUT}>
-                <div className={"flex mt-8"} css={css`align-items: center;`}>
+                <div className={"flex mt-8 mb-16"} css={css`align-items: center;`}>
                     <span>Input Text</span>
                     <Input
                                 css={[inputStyle, css`min-width: 207rem;`]}
@@ -129,7 +129,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
                     />
                 </div>
             </Conditional>
-            <div className={"flex mt-28"}>
+            <div className={"flex mt-8"}>
                 <span css={css`margin-top: 4rem;`}>Selectors</span>
                 <div css={css`flex: 1; margin-left: 34rem; position: relative;`}>
                     <textarea

@@ -8,6 +8,7 @@ import { useAtom } from "jotai";
 import { useDispatch, useSelector } from "react-redux";
 import { shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
+import { useTour } from '@reactour/tour'
 
 const Overlay = ({children}) => {
     return (
@@ -20,6 +21,7 @@ const Overlay = ({children}) => {
 const InfoOverLay = () => {
     const showOnboardingOverlay = useSelector(shouldShowOnboardingOverlay);
     const dispatch = useDispatch();
+    const { setIsOpen } = useTour()
 
     const handleDontShowAgain = () => {
         localStorage.setItem("app.showShouldOnboardingOverlay", "false");
@@ -40,7 +42,7 @@ const InfoOverLay = () => {
                         </Text>
                     </TextBlock>
                     <TextBlock css={textBlock2}>
-                        <Button bgColor="tertiary-outline" css={buttonStyle}>
+                        <Button bgColor="tertiary-outline" onClick={() => {(document.querySelector("#target-site-input") as any).focus();setIsOpen(true);}} css={buttonStyle}>
                             Show me around
                         </Button>
                         <Text onClick={handleDontShowAgain} css={text2Style}>

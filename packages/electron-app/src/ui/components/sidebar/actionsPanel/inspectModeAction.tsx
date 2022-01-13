@@ -3,15 +3,21 @@ import { MouseIcon } from "electron-app/src/ui/icons";
 import React from "react";
 import { ActionsList, ActionsListItem } from "./actionsList";
 import { turnOnInspectMode } from "../../../commands/perform";
+import { useTour } from "@reactour/tour";
 
 const InspectModeAction = ({className, ...prosp} : any) => {
+    const { isOpen, setCurrentStep } = useTour();
+    
 	const handleTurnOnInspectMode = ()=>{
+        if(isOpen) {
+            setCurrentStep(2);
+        }
         turnOnInspectMode();
     };
 
     return (
         <ActionsList className={`${className}`}>
-            <ActionsListItem onClick={handleTurnOnInspectMode}>
+            <ActionsListItem  id={"select-element-action"} onClick={handleTurnOnInspectMode}>
                 <div css={actionItemContainerStyle}>
                     <span>Select an element</span>
                     <MouseIcon css={mouseIconStyle}/>

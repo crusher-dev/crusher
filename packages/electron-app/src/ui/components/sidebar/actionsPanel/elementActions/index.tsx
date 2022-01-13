@@ -7,6 +7,7 @@ import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { peformTakeElementScreenshot, performClick, performHover } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { AssertElementModal } from "./assertElementModal";
+import { useTour } from "@reactour/tour";
 
 export enum TElementActionsEnum {
     CLICK = "CLICK",
@@ -44,8 +45,14 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 	const store = useStore();
 
 	const [currentModal, setCurrentModal] = React.useState(null);
+	const { isOpen, setCurrentStep } = useTour();
 
     const handleActionSelected = (id: TElementActionsEnum) => {
+		if([TElementActionsEnum.CLICK, TElementActionsEnum.HOVER, TElementActionsEnum.SCREENSHOT].includes(id)) {
+			if(isOpen) {
+				setCurrentStep(4);
+			}
+		}
 		switch(id) {
 			case TElementActionsEnum.CLICK:
 				performClick(selectedElement);
@@ -77,7 +84,7 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 	}
 
     return (
-        <ActionsList className={`${className}`} css={containerStyle}>
+        <ActionsList id={"element-actions-list"} className={`${className}`} css={containerStyle}>
             <div css={actionTabStyle}>
                 <Text css={[clickActionStyle, hoverTextStyle]} onClick={handleActionSelected.bind(this, TElementActionsEnum.CLICK)}>
                     Click

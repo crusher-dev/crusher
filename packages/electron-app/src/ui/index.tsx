@@ -10,7 +10,7 @@ import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from 'electron-redux';
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
-import { getRecorderInfo, isWebViewInitialized } from "../store/selectors/recorder";
+import { getRecorderInfo, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
 import { performNavigation, performReplayTest, performSetDevice, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import {devices} from "../devices";
 import { iReduxState } from "../store/reducers/index";
@@ -21,6 +21,7 @@ import { getAppSessionMeta } from "../store/selectors/app";
 import { ToastSnackbar } from "./components/toast";
 import { TRecorderState } from "../store/reducers/recorder";
 import {webFrame} from "electron";
+import { TourProvider, useTour } from '@reactour/tour'
 
 webFrame.setVisualZoomLevelLimits(1, 3)
 
@@ -108,7 +109,7 @@ const App = () => {
                     <DeviceFrame css={deviceFrameContainerStyle} />
             </div>
             <Sidebar css={sidebarStyle} />
-
+				
 			<ToastSnackbar />
         </div>
 	);
@@ -184,8 +185,135 @@ const store = configureStore(initialReduxState, "renderer");
 store.dispatch(setSettngs(initialReduxState.app.settings));
 store.dispatch(setShowShouldOnboardingOverlay(initialReduxState.app.shouldShowOnboardingOverlay));
 
+const MoreStepsOnboarding = () => {
+	const store = useStore();
+	const [startingOffset, setStartingOffset] = React.useState(getSavedSteps(store.getState() as any).length);
+	const savedSteps = useSelector(getSavedSteps);
+	const {setCurrentStep} = useTour();
+
+	React.useEffect(() => {
+		if(savedSteps.length - startingOffset === 5) {
+			setCurrentStep(5);
+		}
+	}, [savedSteps]);
+
+	return (
+			<div>
+				<div>We automatically detect your actions</div>
+				<p className={"mt-8"}>Let's record few more steps and finally save our test</p>
+				<div>{savedSteps.length - startingOffset}/5</div>
+			</div>
+	)
+}
+const steps = [
+	{
+		selector: `#target-site-input`,
+		content: (
+			<div>
+				<div css={css`font-family: Cera Pro; font-size: 15rem; font-weight: 600;`}>Enter URL of website you want to test</div>
+				<p className={"mt-8"} css={css`font-family: Gilroy; font-size: 14rem;`}>You can open crusher-recorder from apps or CLI.</p>
+			</div>
+		),
+	},
+	{
+		selector: `#select-element-action`,
+		content: (
+			<div>
+				<div>Select an element</div>
+				<p className={"mt-8"}>Right click over the element or click here</p>
+			</div>
+		),
+},
+{
+	selector: `#device_browser`,
+	content: (
+		<div>
+			<div>Select an element</div>
+			<p className={"mt-8"}>Right click over the element or click here</p>
+		</div>
+	),
+},
+{
+	selector: `#element-actions-list`,
+	content: (
+		<div>
+			<div>Select an element</div>
+			<p className={"mt-8"}>Right click over the element or click here</p>
+		</div>
+	),
+},
+{
+	selector: `#device_browser`,
+	content: <MoreStepsOnboarding/>,
+},
+{
+	selector: `#verify-save-test`,
+	content: (
+		<div>
+			<div>Select an element</div>
+			<p className={"mt-8"}>Right click over the element or click here</p>
+		</div>
+	),
+},
+];
+
+const opositeSide = {
+	top: "bottom",
+	bottom: "top",
+	right: "left",
+	left: "right"
+  };
+const popoverPadding = 10;
+
+function doArrow(position, verticalAlign, horizontalAlign) {
+	if (!position || position === "custom") {
+	  return {};
+	}
+  
+	const width = 16;
+	const height = 12;
+	const color = "#111213";
+	const isVertical = position === "top" || position === "bottom";
+	const spaceFromSide = popoverPadding;
+	const obj = {
+	  [isVertical ? "borderLeft" : "borderTop"]: `${
+		width / 2
+	  }px solid transparent`, // CSS Triangle width
+	  [isVertical ? "borderRight" : "borderBottom"]: `${
+		width / 2
+	  }px solid transparent`, // CSS Triangle width
+	  [`border${position[0].toUpperCase()}${position.substring(
+		1
+	  )}`]: `${height}px solid ${color}`, // CSS Triangle height
+	  [isVertical ? opositeSide[horizontalAlign] : verticalAlign]:
+		height + spaceFromSide, // space from side
+	  [opositeSide[position]]: -height + 2
+	};
+  
+	return {
+	  "&::after": {
+		content: "''",
+		width: 0,
+		height: 0,
+		position: "absolute",
+		...obj
+	  }
+	};
+  }
+  
 render(
 <Provider store={store}>
+	<TourProvider disableDotsNavigation={true} disableKeyboardNavigation={true} showPrevNextButtons={false} disableFocusLock={true} showBadge={false} styles={{popover: (base, state) => ({
+		...base,
+		background: 'linear-gradient(0deg, #111213, #111213), rgba(10, 11, 14, 0.4)',
+		border: '0.5px solid rgba(255, 255, 255, 0.1)',
+		borderRadius: '8rem',
+		color: '#fff',
+		fontSize: '14rem',
+		minWidth: '400rem',
+		...doArrow(state.position, state.verticalAlign, state.horizontalAlign)
+	})}} steps={steps}>
         <App />
+	</TourProvider>
 </Provider>
 , document.querySelector("#app-container"));

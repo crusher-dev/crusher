@@ -16,6 +16,8 @@ import { addHttpToURLIfNotThere } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
+import { useTour } from "@reactour/tour";
+import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 
 const DeviceItem = ({label}) => {
 	return (
@@ -63,7 +65,7 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 	return (
 		<>
 			<Conditional showIf={!editingSessionMeta}>
-				<Button onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+				<Button id={"verify-save-test"} onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
 					<Conditional showIf={isTestVerificationComplete}>
 						<span>
 							<span>Save test</span>
@@ -104,6 +106,7 @@ const Toolbar = (props: any) => {
 
 	const dispatch = useDispatch();
 	const store = useStore();
+	const { isOpen, currentStep, setCurrentStep } = useTour();
 
 	React.useEffect(() => {
 		if (recorderInfo.url !== url){
@@ -133,9 +136,17 @@ const Toolbar = (props: any) => {
 					// Perform navigation if already recording
 					performNavigation(validUrl.toString(), store);
 				} 
+				// Just in case onboarding overlay info is still visible
+				dispatch(setShowShouldOnboardingOverlay(false));
+
+				if(isOpen && currentStep === 0) {
+					setTimeout(()=> {
+						setCurrentStep(1);
+					}, 50);
+				}
 			})
 		}
-    }, [selectedDevice, recorderInfo]);
+    }, [selectedDevice, recorderInfo, currentStep, isOpen]);
 
 	const handleChangeDevice = (selected) => {
 		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
@@ -175,6 +186,7 @@ const Toolbar = (props: any) => {
 
 			<Input
 				placeholder="Enter URL to test"
+				id={"target-site-input"}
 				className={"target-site-input"}
 				css={inputStyle}
 				onReturn={handleUrlReturn}

@@ -11,7 +11,7 @@ interface IActionsListProps {
 
 const ActionsList = ({ children, title, className, ...props }: { title?: string; children: React.ReactChild | React.ReactChild[]; className?: any }): JSX.Element => {
     return (
-		<div css={containerStyle} className={`${className}`}>
+		<div css={containerStyle} className={`${className}`} {...props}>
 			<Conditional showIf={!!title}>
 				<Text css={titleStyle}>{title}</Text>
 			</Conditional>

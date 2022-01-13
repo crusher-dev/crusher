@@ -16,7 +16,7 @@ function getSelectors(action: iAction) {
 
     return action.payload.selectors.map((selector, index) => {
         return selector.value;
-    }).join(", ");
+    }).join("\n");
 }
 const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actionIndex: number;}) =>  {
     const [isOptional, setIsOptional] = React.useState(!!action.payload.isOptional);
@@ -40,7 +40,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
             ...action,
             payload: {
                 ...action.payload,
-                selectors: e.target.value.split(",").map((a) => {
+                selectors: e.target.value.split("\n").map((a) => {
                     return {type: SELECTOR_TYPE.PLAYWRIGHT, value: a.trim(), uniquenessScore: 1};
                 })
             }
@@ -98,7 +98,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
             }}>
             <input
                 ref={stepNameRef}
-                css={[css`font-size: 13.75rem; padding: 4rem 4rem; border: none; background: transparent; font-weight: 600; border: 1px solid transparent; :hover {opacity: 0.9} `, isStepNameEditable && css`border: 1px solid rgba(196, 196, 196, 0.2);`]}
+                css={[css`font-size: 13.75rem; padding: 4rem 4rem; border: none; background: transparent; font-weight: 400; border: 1px solid transparent; :hover {opacity: 0.9} `, isStepNameEditable && css`border: 1px solid rgba(196, 196, 196, 0.2);`]}
                 value={stepName}
                 onChange={(e) => setStepName(e.target.value)}
                 onBlur={handleInputBlur}
@@ -112,10 +112,8 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
             </div>
             <CrossIcon width={10} height={10} css={css`margin-left: auto; margin-top: 4rem; `} />
         </div>
-        <div className={"mt-8"} css={css`width: 100%; height: 2rem; background: rgba(0, 0, 0, 0.4);`}>
 
-        </div>
-        <div css={css`font-family: Gilroy; font-size: 13.75rem`} className={"p-12"}>
+        <div css={css`font-family: Gilroy; font-size: 12.8rem`} className={"p-12"}>
             <Conditional showIf={action.type === ActionsInTestEnum.ADD_INPUT}>
                 <div className={"flex mt-8 mb-16"} css={css`align-items: center;`}>
                     <span>Input Text</span>
@@ -129,10 +127,11 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
                     />
                 </div>
             </Conditional>
-            <div className={"flex mt-8"}>
-                <span css={css`margin-top: 4rem;`}>Selectors</span>
-                <div css={css`flex: 1; margin-left: 34rem; position: relative;`}>
+            <div className={"mt-8"}>
+                <span>Selectors</span>
+                <div css={css`flex: 1; margin-top: 8rem; position: relative;`}>
                     <textarea
+                    css={css`font-size: 12rem`}
                         placeholder={"Selector come here"}
                         onChange={(e) => setStepSelectors(e.target.value)}
                         onKeyDown={(e) => { if(e.keyCode === 13) { handleSelectorsSave(e) } }}
@@ -144,12 +143,8 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
             </div>
 
             <div className={"flex mt-28"} css={css`align-items: center;`}>
-                <span>Optional</span>
-                <Toggle isOn={isOptional} callback={handleOptionalToggle} css={css`margin-left: auto;`}/>
-            </div>
-
-            <div className={"mt-44 flex"}>
-                <span css={css`font-size: 13.25rem; margin-left: auto; :hover { opacity: 0.9 }`}>+ More Config</span>
+                <span>Mark as optional</span>
+                <Toggle css={css`zoom: 0.8; margin-left: auto;`} isOn={isOptional} callback={handleOptionalToggle} />
             </div>
         </div>
     </div>
@@ -159,12 +154,14 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
 
 const textAreaStyle = css`
     width: 100%;
-    height: 64rem;
+    height: 100rem;
     background: rgba(0, 0, 0, 0.34);
     border: 1px solid rgba(196, 196, 196, 0.2);
     border-radius: 4rem;
     resize: none;
     padding: 8rem;
+    line-height: 20rem;
+    font-size: 12rem;
 `;
 
 const scrollBarStyle = css`

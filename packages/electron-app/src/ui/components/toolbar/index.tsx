@@ -269,7 +269,6 @@ const inputStyle = css`
 `;
 const buttonStyle = css`
 	font-size: 14rem;
-	border: 1px solid rgba(255, 255, 255, 0.23);
 	box-sizing: border-box;
 	border-radius: 4rem;
 	width: 93rem;

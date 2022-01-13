@@ -15,6 +15,7 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { appStateItemMutator } from "../../../store/atoms/global/appState";
 import { projectsAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { userAtom } from '@store/atoms/global/user';
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {
@@ -27,6 +28,8 @@ export const AddProjectModal = ({ onClose }) => {
 	const [projectName, changeProjectName] = useState("");
 	const [processing, setProcessing] = useState(false);
 	const [projects, setProjectsAtom] = useAtom(projectsAtom);
+	const [user] = useAtom(userAtom);
+
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
 	const router = useRouter();
 
@@ -61,7 +64,7 @@ export const AddProjectModal = ({ onClose }) => {
 				Enter Project name
 			</div>
 			<Input
-				placeholder={"Himanshu's killer app"}
+				placeholder={`${user.name.split(" ")[0]}'s killer app`}
 				css={css`
 					width: 100%;
 				`}

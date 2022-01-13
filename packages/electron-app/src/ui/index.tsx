@@ -77,29 +77,29 @@ const App = () => {
 		};
 	}, []);
 
-	// React.useEffect(() => {
-	// 	var currentzoom = 1;
-	// 	document.body.addEventListener('mousewheel', (e: any) => {
-	// 	  if(e.ctrlKey){ 
-	// 	  const delta = e.wheelDelta / 1500
-	// 	  zoom(delta, e)
-	// 	  }
-	// 	})
+	React.useEffect(() => {
+		var currentzoom = 1;
+		document.body.addEventListener('mousewheel', (e: any) => {
+		  if(e.ctrlKey){ 
+		  const delta = e.wheelDelta / 1500
+		  zoom(delta, e)
+		  }
+		})
 		
-	// 	function zoom(delta, event: any) {
-	// 	var img = document.body;
-	// 	var width = img.offsetWidth;
-	// 	var height = img.offsetHeight;
-	// 	var x = event.offsetX; 
-	// 	var y = event.offsetY; 
-	// 	var xpercent = x*100/width;
-	// 	var ypercent = y*100/height;
-	// 		img.style.transform = "scale("+currentzoom+")";
-	// 		if(currentzoom + delta < 1 || currentzoom + delta > 3 ) return;
-	// 	  currentzoom += delta;
-	// 	  img.style.transformOrigin = (xpercent<0 ? 0 : xpercent) + "% "+ (ypercent < 0 ? 0 : ypercent) +"%";
-	// 	}
-	// }, []);
+		function zoom(delta, event: any) {
+		var img = document.body;
+		var width = img.offsetWidth;
+		var height = img.offsetHeight;
+		var x = event.pageX; 
+		var y = event.pageY; 
+		var xpercent = x*100/width;
+		var ypercent = y*100/height;
+			img.style.transform = "scale("+currentzoom+")";
+			if(currentzoom + delta < 1 || currentzoom + delta > 5 ) return;
+		  currentzoom += delta;
+		  img.style.transformOrigin = (xpercent<0 ? 0 : xpercent) + "% "+ (ypercent < 0 ? 0 : ypercent) +"%";
+		}
+	}, []);
 
 	return (
         <div css={containerStyle}>
@@ -199,48 +199,49 @@ const MoreStepsOnboarding = () => {
 
 	return (
 			<div>
-				<div>We automatically detect your actions</div>
-				<p className={"mt-8"}>Let's record few more steps and finally save our test</p>
-				<div>{savedSteps.length - startingOffset}/5</div>
+				<div css={css`font-family: Cera Pro; font-size: 15rem; font-weight: 600;`}>We automatically detect your actions</div>
+				<p className={"mt-8"} css={css`font-family: Gilroy; font-size: 14rem;`}>Let's record few more steps in our test and finally save it</p>
+				<div className={"mt-4"} css={css`position: absolute; font-size: 12rem;`}>{savedSteps.length - startingOffset}/5</div>
 			</div>
 	)
+}
+
+const OnboardingItem = ({title, description}) => {
+	return (
+		<div>
+			<div css={css`font-family: Cera Pro; font-size: 15rem; font-weight: 600;`}>{title}</div>
+			<p className={"mt-8"} css={css`font-family: Gilroy; font-size: 14rem;`}>{description}</p>
+		</div>
+	);
 }
 const steps = [
 	{
 		selector: `#target-site-input`,
-		content: (
-			<div>
-				<div css={css`font-family: Cera Pro; font-size: 15rem; font-weight: 600;`}>Enter URL of website you want to test</div>
-				<p className={"mt-8"} css={css`font-family: Gilroy; font-size: 14rem;`}>You can open crusher-recorder from apps or CLI.</p>
-			</div>
-		),
+		content: (<OnboardingItem
+			title={"Enter URL of website you want to test"}
+			description={"You can open crusher-recorder from apps or CLI."}
+		/>),
 	},
 	{
 		selector: `#select-element-action`,
-		content: (
-			<div>
-				<div>Select an element</div>
-				<p className={"mt-8"}>Right click over the element or click here</p>
-			</div>
-		),
+		content: (<OnboardingItem
+			title={"Turn on element mode"}
+			description={"Right click over the element or click here"}
+		/>),
 },
 {
 	selector: `#device_browser`,
-	content: (
-		<div>
-			<div>Select an element</div>
-			<p className={"mt-8"}>Right click over the element or click here</p>
-		</div>
-	),
+	content: (<OnboardingItem
+		title={"Select an element"}
+		description={"Move your mouse over the element and click on it"}
+	/>),
 },
 {
 	selector: `#element-actions-list`,
-	content: (
-		<div>
-			<div>Select an element</div>
-			<p className={"mt-8"}>Right click over the element or click here</p>
-		</div>
-	),
+	content: (<OnboardingItem
+		title={"Select a element action"}
+		description={"You can click, hover, take screenshot or add assertions"}
+	/>),
 },
 {
 	selector: `#device_browser`,
@@ -249,10 +250,10 @@ const steps = [
 {
 	selector: `#verify-save-test`,
 	content: (
-		<div>
-			<div>Select an element</div>
-			<p className={"mt-8"}>Right click over the element or click here</p>
-		</div>
+		<OnboardingItem
+			title={"Verify and Save"}
+			description={"Time to save your first test"}
+		/>
 	),
 },
 ];
@@ -303,7 +304,7 @@ function doArrow(position, verticalAlign, horizontalAlign) {
   
 render(
 <Provider store={store}>
-	<TourProvider disableDotsNavigation={true} disableKeyboardNavigation={true} showPrevNextButtons={false} disableFocusLock={true} showBadge={false} styles={{popover: (base, state) => ({
+	<TourProvider onClickMask={() => {}} disableDotsNavigation={true} disableKeyboardNavigation={true} showPrevNextButtons={false} disableFocusLock={true} showBadge={false} styles={{popover: (base, state) => ({
 		...base,
 		background: 'linear-gradient(0deg, #111213, #111213), rgba(10, 11, 14, 0.4)',
 		border: '0.5px solid rgba(255, 255, 255, 0.1)',

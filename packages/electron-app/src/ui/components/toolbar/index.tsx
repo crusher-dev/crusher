@@ -36,6 +36,7 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 	const intervalRef = React.useRef(null);
 	const totalSecondsToWaitBeforeSave = 5;
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
+	const {isOpen, setCurrentStep, setIsOpen} = useTour();
 
 	React.useEffect(() => {
 		if(isTestVerificationComplete) {
@@ -47,10 +48,17 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 
 		
 	const verifyTest = () => {
+		if(isOpen) {
+			setIsOpen(false);
+		}
 		performVerifyTest();
 	}
 
 	const saveTestToCloud = () => {
+		if(isOpen) {
+			setIsOpen(false);
+		}
+	
 		if(intervalRef.current) {
 			clearInterval(intervalRef.current);
 		}
@@ -59,6 +67,10 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 	}
 
 	const editTestInCloud = () => {
+		if(isOpen) {
+			setIsOpen(false);
+		}
+		
 		updateTest();
 	}
 

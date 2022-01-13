@@ -181,7 +181,7 @@ const Toolbar = (props: any) => {
 				initialValue={url}
 				forwardRef={urlInputRef}
 				rightIcon={
-						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { padding: 14rem; height: 30rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
+						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { padding: 14rem; height: 30rem; border: none; background: none; border-left-width: 1rem; border-left-style: solid; border-left-color: #181c23; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
 				}
 			/>
 			

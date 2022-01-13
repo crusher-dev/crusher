@@ -147,6 +147,7 @@ export class AppWindow {
 		this.window.on("blur", () => this.window.webContents.send("blur"));
 
 		/* Loads crusher app */
+		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
 

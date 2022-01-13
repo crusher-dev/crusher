@@ -7,7 +7,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { recordHoverDependencies } from "electron-app/src/ui/commands/perform";
-import { recordStep } from "electron-app/src/store/actions/recorder";
+import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { BulbIcon } from "electron-app/src/ui/icons";
 import { Modal } from "@dyson/components/molecules/Modal";
@@ -144,6 +144,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 				},
 			},
 		}, ActionStatusEnum.COMPLETED));
+		store.dispatch(setSelectedElement(null));
 		if (handleClose) {
 			handleClose();
 		}
@@ -158,7 +159,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
-			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />		
+			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleClose} />		
 			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
 			<AssertionFormTable
 				rowItems={validationRows}

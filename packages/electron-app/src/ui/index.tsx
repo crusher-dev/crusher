@@ -20,6 +20,9 @@ import { setSessionInfoMeta, setSettngs, setShowShouldOnboardingOverlay } from "
 import { getAppSessionMeta } from "../store/selectors/app";
 import { ToastSnackbar } from "./components/toast";
 import { TRecorderState } from "../store/reducers/recorder";
+import {webFrame} from "electron";
+
+webFrame.setVisualZoomLevelLimits(1, 3)
 
 const emitter = new Emitter();
 
@@ -72,6 +75,30 @@ const App = () => {
 			resetStorage();
 		};
 	}, []);
+
+	// React.useEffect(() => {
+	// 	var currentzoom = 1;
+	// 	document.body.addEventListener('mousewheel', (e: any) => {
+	// 	  if(e.ctrlKey){ 
+	// 	  const delta = e.wheelDelta / 1500
+	// 	  zoom(delta, e)
+	// 	  }
+	// 	})
+		
+	// 	function zoom(delta, event: any) {
+	// 	var img = document.body;
+	// 	var width = img.offsetWidth;
+	// 	var height = img.offsetHeight;
+	// 	var x = event.offsetX; 
+	// 	var y = event.offsetY; 
+	// 	var xpercent = x*100/width;
+	// 	var ypercent = y*100/height;
+	// 		img.style.transform = "scale("+currentzoom+")";
+	// 		if(currentzoom + delta < 1 || currentzoom + delta > 3 ) return;
+	// 	  currentzoom += delta;
+	// 	  img.style.transformOrigin = (xpercent<0 ? 0 : xpercent) + "% "+ (ypercent < 0 ? 0 : ypercent) +"%";
+	// 	}
+	// }, []);
 
 	return (
         <div css={containerStyle}>

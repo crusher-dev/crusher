@@ -87,7 +87,7 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
                 </Text>
 			</div>
             <>
-                {items}
+                {items.map((child, index) => (React.cloneElement(child, {style: {...child.props.style, borderBottom: index < (items as any).length - 1 ? "1rem solid #323636" : "none"}})))}
             </>
 
 			<AssertElementModal isOpen={currentModal === TElementActionsEnum.SHOW_ASSERT_MODAL} handleClose={closeModal}  />

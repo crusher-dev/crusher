@@ -148,7 +148,6 @@ class PlaywrightInstance {
 
 				const elementHandle = valueObj.asElement();
 				if(elementHandle) {
-					const screenshot = await elementHandle.screenshot();
 					this.elementsMap.set(uniqueElementId, elementHandle);
 				}
 			}

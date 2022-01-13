@@ -14,6 +14,7 @@ import { InfoOverLay } from "../overlays/infoOverlay";
 
 const DeviceFrame = (props: any) => {
     const recorderInfo = useSelector(getRecorderInfo);
+    const recorderState = useSelector(getRecorderState);
     const ref = React.useRef<HTMLWebViewElement>(null);
     const store = useStore();
 
@@ -67,9 +68,28 @@ const DeviceFrame = (props: any) => {
                 </div>
             </Conditional>
             <InfoOverLay />
+            <Conditional showIf={recorderState.type === TRecorderState.PERFORMING_ACTIONS}>
+                <div css={runningStatusStyle}>We’re running test for you. You can’t perform actions right now.</div>
+            </Conditional>
         </div>
     )
 };
+
+const runningStatusStyle = css`
+    position: fixed;
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    bottom: 0%;
+    height: 29rem;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: Gilroy;
+    color: #fff;
+    font-size: 14rem;
+    background: #141212;
+`;
 
 const webviewStyle = css`
     border: none;

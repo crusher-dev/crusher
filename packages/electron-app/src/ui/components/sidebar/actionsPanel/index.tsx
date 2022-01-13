@@ -23,7 +23,7 @@ const ActionsPanel = ({className, ...props}: {className?: any}) => {
         <div className={`${className}`} css={containerStyle}>
 				<div css={headerContainerStyle}>
 					<Text css={headerText}>Actions</Text>
-					<SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} />
+					{/* <SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} /> */}
 				</div>
 				<div className="custom-scroll" css={actionScrollContainer}>
 					<Conditional showIf={selected}>

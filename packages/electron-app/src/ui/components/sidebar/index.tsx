@@ -27,6 +27,8 @@ const containerStyle = css`
     height: 100%;
     width: 100%;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 `;
 
 export { Sidebar }

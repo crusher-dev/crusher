@@ -21,7 +21,7 @@ export default {
 			control: { type: "radio" },
 		},
 		placement: {
-			options: ["top-start", "top-end", "right-start", "right-end", "bottom-start", "bottom-end", "left-start", "left-end"],
+			options: ["top-start", "top-end", "right-start", "right-end", "bottom-start", "bottom-end", "left-start", "left-end", "left", "right", "top", "bottom"],
 			control: { type: "select" },
 		},
 		padding: {
@@ -94,7 +94,7 @@ Hover.args = {
 export const Sticky = Template.bind({});
 Sticky.args = {
 	content: "More info appears here",
-	placement: "right",
+	placement: "left",
 	type: "hover",
 	padding: 8,
 	offset: -2,

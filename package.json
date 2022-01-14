@@ -32,6 +32,7 @@
 		"enquirer": "^2.3.6",
 		"mysql2": "^2.2.5",
 		"patch-package": "^6.2.2",
+		"pg": "^8.7.1",
 		"postinstall-postinstall": "^2.1.0",
 		"putout": "^18.16.0",
 		"shelljs": "^0.8.4",

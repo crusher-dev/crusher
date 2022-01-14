@@ -17,6 +17,8 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { continueRemainingSteps } from "electron-app/src/ui/commands/perform";
 import { getAppSessionMeta, getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { TemplatesModal } from "./templatesModal";
+import { StepInfoEditor } from "./stepInfoEditor";
+import { iAction } from "@shared/types/action";
 
 export const ACTION_DESCRIPTIONS = {
     [ActionsInTestEnum.CLICK]: "Click on element",
@@ -66,12 +68,13 @@ const StepActionMenu = ({showDropDownCallback, callback}) => {
 
 const Step = ({
 	stepIndex,
+	action,
 	title,
 	subtitle,
 	isRunning,
 	isFailed,
 	...props
-}: CheckboxProps & { stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
+}: CheckboxProps & { action: iAction; stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
 	const [isHover, setIsHover] = React.useState(false);
 	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
 	const dispatch = useDispatch();
@@ -124,8 +127,10 @@ const Step = ({
 	}
 
 	return (
-		<div onMouseOver={setIsHover.bind(this, true)} onMouseLeave={setIsHover.bind(this, false)}>
-			<div css={[stepStyle, isRunning && runningStepStyle, (isFailed) && failedStyle]}>
+		<div onMouseOver={()=>{
+			setIsHover(true)
+		}} onMouseLeave={setIsHover.bind(this, false)}>
+			<div css={[stepStyle, isHover && hoverStepStyle, isRunning && runningStepStyle, (isFailed) && failedStyle]}>
 				<Checkbox {...props} />
  				<div css={stepTextStyle}>
 					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null]}>
@@ -171,6 +176,10 @@ const Step = ({
 					</div>
 				</div>
 			</Conditional>
+			<Conditional showIf={isHover}>
+				<StepInfoEditor action={action} actionIndex={stepIndex} />
+			</Conditional>
+
 		</div>
 	);
 }
@@ -232,8 +241,9 @@ const StepsPanel = ({className, ...props}: any) => {
 
     const steps = recordedSteps.map((action, index) => {
 		return {
+			action: action,
 			id: index,
-			title: ACTION_DESCRIPTIONS[action.type],
+			title: action.name ? action.name : ACTION_DESCRIPTIONS[action.type],
 			selector: action.payload && action.payload.selectors && action.payload.selectors.length ? action.payload.selectors[0].value : "window",
 			status: action.status
 		}
@@ -292,6 +302,7 @@ const StepsPanel = ({className, ...props}: any) => {
 					<Step
 						isSelectAllType={false}
 						key={step.id}
+						action={step.action}
 						stepIndex={step.id}
 						isRunning={step.status === ActionStatusEnum.STARTED}
 						isFailed={step.status === ActionStatusEnum.FAILED}
@@ -367,11 +378,8 @@ const stepStyle = css`
 	border: 1.5rem solid rgba(255, 255, 255, 0);
 	padding: 3rem 13rem;
 	margin: 10rem 0rem;
-
-	&:hover {
-		border: 1.5rem solid rgba(255, 255, 255, 0.1);
-	}
 `;
+const hoverStepStyle = css`border: 1.5rem solid rgba(255, 255, 255, 0.1);`;
 
 const failedStyle = css`
 	border: 1.5rem solid rgba(255, 255, 255, 0.12);

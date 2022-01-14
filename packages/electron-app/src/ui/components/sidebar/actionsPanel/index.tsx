@@ -10,20 +10,28 @@ import { TemplateActions } from "./templatesActions";
 import { ElementActions } from "./elementActions";
 import { InspectModeAction } from "./inspectModeAction";
 import { turnOffInspectMode } from "electron-app/src/ui/commands/perform";
+import { useTour } from "@reactour/tour";
 
 const ActionsPanel = ({className, ...props}: {className?: any}) => {
     const selected = useSelector(isInspectModeOn);
 	const selectedElement = useSelector(getSelectedElement);
-
+	const {isOpen, setCurrentStep} = useTour();
+	
 	const handleTurnOffInspectMode = () => {
 		turnOffInspectMode();
 	}
+
+	React.useEffect(() => {
+		if(selectedElement && isOpen) {
+			setCurrentStep(3);
+		}
+	}, [selectedElement]);
 
     return (
         <div className={`${className}`} css={containerStyle}>
 				<div css={headerContainerStyle}>
 					<Text css={headerText}>Actions</Text>
-					<SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} />
+					{/* <SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} /> */}
 				</div>
 				<div className="custom-scroll" css={actionScrollContainer}>
 					<Conditional showIf={selected}>

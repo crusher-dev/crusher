@@ -5,7 +5,7 @@ import React, { ReactElement, useState, useEffect, useMemo, useRef, SyntheticEve
 
 export type TooltipWrapperProps = {
 	type?: "click" | "hover";
-	placement: "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end";
+	placement: "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | "left" | "bottom" | "top" | "right";
 	autoHide?: boolean;
 	callback?: Function;
 	content: ReactElement;

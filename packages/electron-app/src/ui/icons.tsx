@@ -254,6 +254,7 @@ const CrossIcon = (props) => (
 	  fill="none"
 	  xmlns="http://www.w3.org/2000/svg"
 	  css={css`fill: #ffffff1a; path { fill: inherit; } &:hover {fill: #9F9F9F}`} 
+	  viewBox={"0 0 12 12"}
 	  {...props}
 	>
 	  <path
@@ -290,4 +291,20 @@ const UpIcon = (props: any) => {
 	);
 }
 
-export { CrossIcon, BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon, DownIcon, UpIcon };
+const InspectElementIcon = (props: any) => {
+	return (
+		<svg
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 12 12"
+			{...props}
+	  	>
+			<path
+			d="m5.598 5.073.042.037 3.75 3.75a.375.375 0 0 1-.288.64l-.054-.008-2.13-.449-1.234 1.795a.375.375 0 0 1-.68-.16L5 10.626v-5.25a.375.375 0 0 1 .598-.302ZM9.75 2a1.25 1.25 0 0 1 1.247 1.168L11 3.25v4.5a1.25 1.25 0 0 1-1.012 1.227.875.875 0 0 0-.278-.503l-.068-.055-3.75-3.75a.875.875 0 0 0-1.389.63l-.003.076V9H2.25a1.25 1.25 0 0 1-1.247-1.168L1 7.75v-4.5a1.25 1.25 0 0 1 1.168-1.247L2.25 2h7.5Z"
+			fill="#504E57"
+			/>
+	  </svg>
+	)
+}
+
+export { CrossIcon, BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon, DownIcon, UpIcon, InspectElementIcon };

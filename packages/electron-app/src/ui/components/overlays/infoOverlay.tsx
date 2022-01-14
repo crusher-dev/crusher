@@ -8,6 +8,7 @@ import { useAtom } from "jotai";
 import { useDispatch, useSelector } from "react-redux";
 import { shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
+import { useTour } from '@reactour/tour'
 
 const Overlay = ({children}) => {
     return (
@@ -20,31 +21,37 @@ const Overlay = ({children}) => {
 const InfoOverLay = () => {
     const showOnboardingOverlay = useSelector(shouldShowOnboardingOverlay);
     const dispatch = useDispatch();
+    const { isOpen, setIsOpen } = useTour()
 
     const handleDontShowAgain = () => {
+        if(isOpen) {
+            setIsOpen(false)
+        }
         localStorage.setItem("app.showShouldOnboardingOverlay", "false");
         dispatch(setShowShouldOnboardingOverlay(false));
     }
+
+    React.useEffect(() => {
+        if(showOnboardingOverlay) {
+            (document.querySelector("#target-site-input") as any).focus();
+            setIsOpen(true);
+        }
+    }, []);
 
     if(!showOnboardingOverlay) return null; 
 
     return (
         <Overlay>
-            <div css={{display: "flex", flexDirection: "column", height: "100%", justifyItems: "flex-end"}}>
+            <div css={{display: "flex", flexDirection: "column", height: "100%", justifyItems: "flex-end", position: "relative", zIndex: 999999}}>
                 <div css={{marginTop: "auto", marginBottom: "150rem", marginLeft: "30rem"}}>
-                    <div css={heading}>New to crusher?</div>
+                    <div css={heading}>Let's create your first test with crusher</div>
                     <TextBlock css={blockStyle}>
-                        <Text css={text1Style}>Get a 2 min tutorial on how it works?</Text>
-                        <Text css={knowStyle} onClick={() => 0}>
-                            Know more
-                        </Text>
+                        <Text css={text1Style}>2 min onboarding to get you familiar with crusher</Text>
+    
                     </TextBlock>
                     <TextBlock css={textBlock2}>
-                        <Button bgColor="tertiary-outline" css={buttonStyle}>
-                            Show me around
-                        </Button>
                         <Text onClick={handleDontShowAgain} css={text2Style}>
-                            {"Don't show again"}
+                            {"Skip onboarding"}
                         </Text>
                     </TextBlock>
                 </div>
@@ -55,6 +62,7 @@ const InfoOverLay = () => {
 
 const heading = css`
 	font-size: 17rem;
+    font-weight: bold;
 	font-family: Cera Pro;
 	padding-bottom: 9rem;
 `;
@@ -78,6 +86,10 @@ const text2Style = css`
 	line-height: 15rem;
 
 	color: #ffffff;
+
+    :hover {
+        opacity: 0.9
+    }
 `;
 const text1Style = css`
 	font-family: Cera Pro;

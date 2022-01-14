@@ -102,12 +102,12 @@ const SettingsModal = (props: iStartupModalProps) => {
 					<div css={inputContainerStyle}>
 						<div css={css`font-size: 13rem; color: rgb(255, 255, 255, 0.7); font-weight: 600;`}>Auto-detect actions</div>
 
-						<Toggle isOn={autoDetectActions} callback={handleAutoDetectActionsCallback} css={css`margin-left: auto`}/>
+						<Toggle isOn={autoDetectActions} callback={handleAutoDetectActionsCallback} css={css`margin-left: auto; zoom: 0.8;`}/>
 					</div>
 					<div css={[inputContainerStyle, css`margin-top: 18rem;`]}>
 						<div css={css`font-size: 13rem; color: rgb(255, 255, 255, 0.7); font-weight: 600;`}>Enable mouse tracker</div>
 					
-						<Toggle isOn={enableMouseTracker} callback={handleEnableMouseTrackerCallback} css={css`margin-left: auto`}/>
+						<Toggle isOn={enableMouseTracker} callback={handleEnableMouseTrackerCallback} css={css`margin-left: auto; zoom: 0.8;`}/>
 					</div>
 				</div>
 

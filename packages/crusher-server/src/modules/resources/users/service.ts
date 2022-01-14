@@ -134,6 +134,7 @@ class UsersService {
 	async getUserAndSystemInfo(userId: number): Promise<IUserAndSystemInfoResponse> {
 		// @Note: Remove the next line after development of this API
 		const userInfo = userId ? await this.getUserInfo(userId) : null;
+
 		const teamInfo = userInfo ? await this.teamsService.getTeam(userInfo.teamId) : null;
 		const teamProjects = userInfo && teamInfo ? await this.projectsService.getProjects(teamInfo.id) : null;
 

@@ -9,7 +9,7 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { Snackbar } from "@ui/containers/common/Snackbar";
 import { LoadingScreen } from "@ui/layout/LoadingScreen";
-import { loadCrisp, loadSegment, loadUserLeap } from "@utils/common/scriptUtils";
+import { loadCrisp, loadGA, loadSegment, loadUserLeap } from '@utils/common/scriptUtils';
 
 import { useBasicSEO } from "../src/hooks/seo";
 import { usePageSegmentAnalytics } from "../src/hooks/analytics";
@@ -28,10 +28,15 @@ function App({ Component, pageProps }: AppProps<any>) {
 	usePageSegmentAnalytics();
 	useEffect(() => {
 		setTimeout(() => {
+
+			loadGA();
+			loadSegment()
+		}, 4000);
+
+		setTimeout(()=>{
 			loadUserLeap();
 			loadCrisp();
-		}, 6000);
-		setTimeout(loadSegment, 4000);
+		},8000)
 	}, []);
 	return (
 		<>

@@ -1,5 +1,5 @@
 export const OCTOKIT_CONFIG = {
-	id: process.env.GITHUB_APP_ID,
+	appId: process.env.GITHUB_APP_ID,
 	clientId: process.env.GITHUB_APP_CLIENT_ID,
 	clientSecret: process.env.GITHUB_APP_CLIENT_SECRET,
 	privateKey: process.env.GITHUB_APP_PRIVATE_KEY,

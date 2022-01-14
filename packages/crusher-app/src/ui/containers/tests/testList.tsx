@@ -25,6 +25,8 @@ import { RequestMethod } from "../../../types/RequestOptions";
 import { useRouter } from "next/router";
 import { PaginationButton } from "dyson/src/components/molecules/PaginationButton";
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
+import { tempTestTypeAtom } from "@store/atoms/global/tempTestType";
+import { tempTestUpdateIdAtom } from "@store/atoms/global/tempTestUpdateId";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -47,6 +49,13 @@ const saveTest = (projectId: number, tempTestId: string, customTestName: string 
 	return backendRequest(`/projects/${projectId}/tests/actions/create`, {
 		method: RequestMethod.POST,
 		payload: { tempTestId, name: testName },
+	});
+};
+
+const updateTest = (tempTestId: string, mainTestId: string) => {
+	return backendRequest(`/tests/${mainTestId}/actions/update.steps`, {
+		method: RequestMethod.POST,
+		payload: { tempTestId },
 	});
 };
 
@@ -209,6 +218,9 @@ function TestSearchableList() {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [tempTestName, setTempTestName] = useAtom(tempTestNameAtom);
+	const [tempTestType, setTempTestType] = useAtom(tempTestTypeAtom);
+	const [tempTestUpdateId, setTempTestUpdateId] = useAtom(tempTestUpdateIdAtom);
+
 	const [filters, setFilters] = useAtom(testFiltersAtom);
 	const { query } = useRouter();
 
@@ -243,8 +255,16 @@ function TestSearchableList() {
 			setTempTest(null);
 			setTempTestName(null);
 
-			await saveTest(selectedProjectId, tempTestId, !!tempTestName ? tempTestName : null);
-			sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
+			if(tempTestType === "update") {
+				await updateTest(tempTestId, tempTestUpdateId);
+				sendSnackBarEvent({ message: "Updated the test", type: "success" });
+			} else {
+				await saveTest(selectedProjectId, tempTestId, !!tempTestName ? tempTestName : null);
+				sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
+			}
+
+			setTempTestType(null);
+			setTempTestUpdateId(null);
 
 			await mutate(getTestListAPI(project.id));
 			setNewTestCreated(true);

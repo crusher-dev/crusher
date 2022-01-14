@@ -9,7 +9,7 @@ export type ButtonProps = {
 	/**
 	 * What background color to use
 	 */
-	bgColor?: "blue" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white" | "disabled";
+	bgColor?: "blue" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white" | "disabled" | "tertiary-outline" | "danger";
 	/**
 	 * Size of the component
 	 */
@@ -21,8 +21,10 @@ export type ButtonProps = {
 	disabled?: boolean;
 	/**
 	 * Emotion CSS style if any
+	 * @deprecated
 	 */
 	css?: SerializedStyles;
+	CSS?: SerializedStyles;
 	/**
 	 * Input contents
 	 */
@@ -32,7 +34,7 @@ export type ButtonProps = {
 	 */
 	onClick?: () => void;
 	className?: string;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
 
 /*
 	Note :- Change color and size thru switch statement
@@ -45,9 +47,9 @@ export const Button: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", chi
 		<button
 			className={` rem-24 text-14 text-white ${className} leading-none`}
 			css={[
-				buttonCSS,
 				blue,
-				size == "x-small" && extraSmallButton,
+				buttonCSS,
+				size === "x-small" && extraSmallButton,
 				size === "small" && smallButton,
 				size === "medium" && mediumButton,
 				size === "large" && largeButton,
@@ -55,6 +57,7 @@ export const Button: React.FC<ButtonProps> = ({ bgColor = "blue", size = "", chi
 				bgColor === "tertiary-outline" && tertiaryOutline,
 				bgColor === "danger" && danger,
 				bgColor === "disabled" && disabledButton,
+				props.CSS,
 			]}
 			disabled={disabled}
 			{...props}

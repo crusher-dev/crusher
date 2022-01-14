@@ -37,10 +37,6 @@ export type TSystemInfo = {
 		working: boolean;
 		message: string | null;
 	};
-	MONGO_DB_OPERATIONS: {
-		working: boolean;
-		message: string | null;
-	};
 } | null;
 
 export type IUserAndSystemInfoResponse = {

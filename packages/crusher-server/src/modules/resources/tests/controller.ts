@@ -64,7 +64,7 @@ export class TestController {
 				tags: testData.tags,
 				runAfter: testData.run_after,
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
-				createdAt: new Date(testData.created_at).getTime(),
+				createdAt: new Date(testData.createdAt).getTime(),
 				// @TODO: Remove this line
 				videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
 				clipVideoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? clipVideoUrl : null,
@@ -128,6 +128,19 @@ export class TestController {
 		await this.testService.deleteTest(testId);
 
 		return "Success";
+	}
+
+	@Authorized()
+	@Post("/tests/:test_id/actions/update.steps")
+	async updateTestActions(
+		@CurrentUser({ required: true }) user,
+		@Param("test_id") testId: number,
+		@Body() body: {tempTestId: string},
+	) {
+		const tempTest = await this.testService.getTempTest(body.tempTestId);
+		const result = await this.testService.updateTestSteps(testId, tempTest.events);
+
+		return result.changedRows ? "Updated" : "No change";
 	}
 
 	// @TODO: Need strict type checks here. (Security Issue)

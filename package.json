@@ -11,6 +11,7 @@
 		"setup:ee": "node setup/index.js -m enterprise",
 		"setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
 		"setup:local": "node setup/index.js -m enterprise --sm local --ah localhost --bd http://localhost:8000/ --fd http://localhost:3000/",
+		"setup:docker": "node setup/index.js -m enterprise --sm local --ah localhost --bd http://localhost:3000/server/ --fd http://localhost:3000/",
 		"build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
 		"start": "pm2 start",
 		"log:app": "pm2 logs crusher-app",
@@ -23,7 +24,7 @@
 	"devDependencies": {
 		"@ffmpeg-installer/ffmpeg": "^1.0.20",
 		"lerna": "^3.22.1",
-		"pm2": "^4.5.0"
+		"pm2": "^5.1.2"
 	},
 	"dependencies": {
 		"dotenv": "^10.0.0",

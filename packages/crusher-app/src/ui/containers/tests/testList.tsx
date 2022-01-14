@@ -69,7 +69,7 @@ function TestCard(props: IBuildItemCardProps) {
 
 	const [showEditBox, setShowEditBox] = useState(false);
 
-	const testRunInThisHour = ((Date.now() - testData.createdAt)/1000) < 3600
+	const testRunInThisHour = (Date.now() - testData.createdAt) / 1000 < 3600;
 	return (
 		<div css={itemContainerStyle}>
 			<Conditional showIf={showEditBox}>
@@ -215,7 +215,7 @@ function TestSearchableList() {
 	const setPage = useCallback((page) => {
 		setFilters({ ...filters, page });
 	}, []);
-	
+
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
 	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {

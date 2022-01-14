@@ -66,7 +66,7 @@ function EmailPasswordBox() {
 		setLoading(true);
 		try {
 			const { systemInfo } = await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
-			setData(systemInfo)
+			setData(systemInfo);
 			push("/app/dashboard");
 		} catch (e: any) {
 			console.log(e);

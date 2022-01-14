@@ -81,30 +81,22 @@ export const hashCode = function (s: string) {
 	}, 0);
 };
 
-export const getCollapseList = function (steps:any) {
-	const length = steps.length;
-	if (length < 3)  return {
-		lastStep:1,
-		remainingSteps:-1
-	}
-	const failedStepIndex = steps.findIndex((step:any) => step.status === "FAILED");
-    if (failedStepIndex < 2)  return {
-		lastStep:length-1,
-		remainingSteps:length-2
-	}
-	return {
-		lastStep:failedStepIndex > -1 ? failedStepIndex : length - 1,
-		remainingSteps:length-3
-	}
-}
-export function groupTestResults(steps :any) {
-	return steps.reduce((step:any, { status }:any, index:number) => {
+export function getCollapsedTestSteps(steps: any) {
+	return steps.reduce((step: any, { status }: any, index: number) => {
 		if (index < 2) {
 			return [{ type: "show", from: 0, to: 1 }];
 		}
-		const type = (status === "REVIEW" || status === "FAILED") ? "show" : "hide";
+		if (index + 1 === steps.length) {
+			step.push({ type: "show", from: index, to: index, count: 1 });
+
+			return step;
+		}
+		const showStep = status === "REVIEW" || status === "FAILED";
+		const type = showStep ? "show" : "hide";
 		const lastIndex = step.length - 1;
 		const last = step[lastIndex];
+
+		// if last and current step same type then expand syntax
 		if (last?.type == type) {
 			step[lastIndex] = { ...last, to: index, count: index - last.from + 1 };
 		} else {

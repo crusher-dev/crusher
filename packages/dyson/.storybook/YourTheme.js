@@ -5,23 +5,20 @@ import { create } from "@storybook/theming";
 export default create({
 	base: "dark",
 
-	colorPrimary: "hotpink",
-	colorSecondary: "deepskyblue",
-
 	// UI
-	appBg: "#181717",
-	appContentBg: "#181717",
-	appBorderColor: "#181717",
-	appBorderRadius: 0,
+	appBg: "#0C0D0F",
+	appContentBg: "#0C0D0F",
+	appBorderColor: "#0C0D0F",
+	appBorderRadius: 4,
 
 	// Text colors
 	textColor: "#fff",
 	textInverseColor: "rgba(255,255,255,0.9)",
 
 	// Toolbar default and active colors
-	barTextColor: "silver",
+	barTextColor: "#ffffff",
 	barSelectedColor: "#fff",
-	barBg: "#100f0f",
+	barBg: "#202226",
 
 	// Form colors
 	inputBg: "#100f0f",

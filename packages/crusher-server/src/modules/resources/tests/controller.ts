@@ -47,8 +47,10 @@ export class TestController {
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum },
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number; },
 	): Promise<IProjectTestsListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
+		if(!params.page) params.page = 0;
+
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
 		const testsList = testsListData.list.map((testData) => {
 			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
@@ -82,7 +84,7 @@ export class TestController {
 			return { id: user.id, name: user.name, email: user.email };
 		});
 
-		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors };
+		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors, currentPage: params.page };
 	}
 
 	@Authorized()
@@ -100,8 +102,6 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
-		console.log("Body of project tests run api, here", body);
-
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};

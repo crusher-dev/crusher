@@ -1,27 +1,25 @@
-const { spacingSizes } = require("./src/constant/layout");
-const { colors, background, border } = require("./src/constant/color");
-const { FONTS, FONT_WEIGHT_VALUE, LINE_HEIGHT_VALUE, FONT_SIZES } = require("./src/constant/font");
+// Dyson and crusher-app should have same copy
+const { spacingSize } = require("../dyson/src/constant/layout");
+const { colors, background, border } = require("../dyson/src/constant/color");
+const { FONT_WEIGHT_VALUE } = require("../dyson/src/constant/font");
 
 module.exports = {
 	important: false,
 	darkModeVariant: false,
 	theme: {
-		fontFamily: FONTS,
+		fontFamily: {
+			gilroy: ["Gilroy", "sans-serif"],
+			cera: ["Cera Pro", "sans-serif"],
+		},
 		colors: { ...colors },
 		backgroundColor: { ...background },
+		borderRadius: spacingSize,
 		borderColor: { ...border },
-		fontSize: spacingSizes,
-		fontSize: FONT_SIZES,
+		fontSize: spacingSize,
 		fontWeight: FONT_WEIGHT_VALUE,
 		extend: {
-			margin: spacingSizes,
-			padding: spacingSizes,
-			height: spacingSizes,
-			width: spacingSizes,
-			lineHeight: LINE_HEIGHT_VALUE,
-		},
-		borderRadius: {
-			full: "50%",
+			margin: spacingSize,
+			padding: spacingSize,
 		},
 		objectPosition: {},
 		order: {},

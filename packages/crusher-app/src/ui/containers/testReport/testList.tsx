@@ -16,7 +16,6 @@ import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { ChevronDown,InfoSVG, TestStatusSVG } from "@svg/testReport";
 import ReactTable, { useTable, useBlockLayout } from "react-table";
-import { FixedSizeList } from 'react-window';
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -62,6 +61,7 @@ const reviewCss = css`
 	top: calc(100% + 9rem) !important;
 	right: 0px !important;
 	background: #1e2126;
+	z-index:110;
 	left: unset !important;
 `;
 

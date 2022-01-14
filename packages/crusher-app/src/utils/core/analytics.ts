@@ -10,12 +10,15 @@ export const waitForSegmentToLoad = () => {
 	});
 };
 export class Analytics {
-	static async identify(name, userId, email, teamID, planType, selfHost, mode) {
+	static async identify(name:string, userId, email:string, teamID, planType, selfHost:boolean, mode) {
+		const isBotUser = email.includes("testing-") && email.includes("crusher.dev");
+		const emailToTrack = isBotUser ? "bot@crusher.dev" : email;
+		const userIdToTrack = isBotUser ? "9999999999999" : userId;
 		await waitForSegmentToLoad();
-		window["analytics"].identify(userId, {
+		window["analytics"].identify(userIdToTrack, {
 			name,
 			teamID,
-			email,
+			email: emailToTrack,
 			planType,
 			selfHost,
 			mode,
@@ -27,5 +30,10 @@ export class Analytics {
 				email,
 			});
 		}
+	}
+
+	static async trackPage(){
+		await waitForSegmentToLoad();
+		window["analytics"].page()
 	}
 }

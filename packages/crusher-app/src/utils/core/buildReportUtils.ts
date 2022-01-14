@@ -1,6 +1,6 @@
 import filter from "lodash/filter";
 import union from "lodash/union";
-
+import flatten from "lodash/flatten";
 import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
 import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 
@@ -39,6 +39,9 @@ export const getScreenShotsAndChecks = (steps: any[]) => {
 	return { screenshotCount: screenShotCount, checksCount: steps.length };
 };
 
+/*
+	Check if required
+ */
 export const groupTestByStatus = (tests: Pick<IBuildReportResponse, "tests">) => {
 	const statusTestTestInstanceGroup = {};
 	let i = 0;
@@ -46,6 +49,7 @@ export const groupTestByStatus = (tests: Pick<IBuildReportResponse, "tests">) =>
 	for (const { testInstances } of tests) {
 		for (const { status, id } of testInstances) {
 			if (!statusTestTestInstanceGroup[status]) statusTestTestInstanceGroup[status] = {};
+			// change i to testGroupKey
 			if (!statusTestTestInstanceGroup[status][i]) statusTestTestInstanceGroup[status][i] = [];
 			statusTestTestInstanceGroup[status][i].push(id);
 		}
@@ -54,6 +58,17 @@ export const groupTestByStatus = (tests: Pick<IBuildReportResponse, "tests">) =>
 	}
 	return statusTestTestInstanceGroup;
 };
+
+export const getCountByTestStatus = (tests: Pick<IBuildReportResponse, "tests">)=>{
+	const testsGroupByStatus= groupTestByStatus(tests);
+
+	const statusObj = {};
+	 Object.keys(testsGroupByStatus).map((status)=>{
+		statusObj[status] = flatten(Object.values(testsGroupByStatus[status])).length
+	})
+
+	return statusObj;
+}
 
 export const getAllConfiguration = (tests: Pick<IBuildReportResponse, "tests">) => {
 	const parsedConfig = tests

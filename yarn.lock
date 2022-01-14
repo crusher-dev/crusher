@@ -2153,6 +2153,26 @@
   resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-x64/-/win32-x64-4.1.0.tgz#17e8699b5798d4c60e36e2d6326a8ebe5e95a2c5"
   integrity sha512-Drt5u2vzDnIONf4ZEkKtFlbvwj6rI3kxw1Ck9fpudmtgaZIHD4ucsWB2lCZBXRxJgXR+2IMSti+4rtM4C4rXgg==
 
+"@floating-ui/core@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.2.0.tgz#d4d50ccb8afd276b0cfb6e52938cf0834406dbce"
+  integrity sha512-GVja5m6llsWlD+SrZcX4u7GRrymVyyujnBU7vpNJqD/NzwIbqLP6RRpNASGANtTV2Aj7Zw7MISqk8wmELE6zUQ==
+
+"@floating-ui/dom@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.1.6.tgz#6dc2b4d6c863782e4a9d8124692601a8beff1fed"
+  integrity sha512-JeZJ2XniuP3m9Y0F9bt3WpJDJPF5vrvtLXwHgfLd+TftBokReTs4e4RqrmWFYKeGbfjwxltB2XAD4YJPLNir1w==
+  dependencies:
+    "@floating-ui/core" "^0.2.0"
+
+"@floating-ui/react-dom@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-0.3.2.tgz#d4041b655a16b3c6d08e0d34d468cc53dd15641d"
+  integrity sha512-ggYLaBszX4C7NF6XasPZcSNuUJFUS/qAJevy3l6DZwkLsiNM/qnvTmtbWOk0iWFvEDporxYqQu+TZdJPPLAj/Q==
+  dependencies:
+    "@floating-ui/dom" "^0.1.6"
+    use-isomorphic-layout-effect "^1.1.1"
+
 "@fullhuman/postcss-purgecss@2.3.0", "@fullhuman/postcss-purgecss@^2.1.2":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@fullhuman/postcss-purgecss/-/postcss-purgecss-2.3.0.tgz#50a954757ec78696615d3e118e3fee2d9291882e"
@@ -28858,7 +28878,7 @@ use-composed-ref@^1.0.0:
   dependencies:
     ts-essentials "^2.0.3"
 
-use-isomorphic-layout-effect@^1.0.0:
+use-isomorphic-layout-effect@^1.0.0, use-isomorphic-layout-effect@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.1.tgz#7bb6589170cd2987a152042f9084f9effb75c225"
   integrity sha512-L7Evj8FGcwo/wpbv/qvSfrkHFtOpCzvM5yl2KVyDJoylVuSvzphiiasmjgQPttIGBAy2WKiBNR98q8w7PiNgKQ==

@@ -14,17 +14,22 @@ import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequir
 import { backendRequest } from "@utils/common/backendRequest";
 import { timeSince } from "@utils/common/dateTimeUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
-import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/core/buildReportUtils";
+import { getAllConfiguration, getStatusString, showReviewButton,getCountByTestStatus } from "@utils/core/buildReportUtils";
 
 import { usePageTitle } from "../../../hooks/seo";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { updateMeta } from "../../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import {
+	useMemo
+} from "react";
+import { TestTypeLabel } from "@constants/test";
 
 const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
-	const { query } = useRouter();
+	const router = useRouter();
+	const { query } = router;
 	const { data } = useBuildReport(query.id);
 
 	return (
@@ -34,7 +39,7 @@ function TitleSection() {
 					height={"22rem"}
 					className={"mr-12"}
 					onClick={() => {
-						window.history.back();
+						router.push("/app/builds")
 					}}
 				/>{" "}
 				{data?.name} #{data?.id}
@@ -189,11 +194,16 @@ function TestOverviewTab() {
 	const showReview = showReviewButton(data?.status);
 
 	const allConfiguration = getAllConfiguration(data?.tests);
+	const countByTestStatus = useMemo(()=>{
+		return getCountByTestStatus(data?.tests)
+	},[data]);
+
+
 
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
-				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120 pb-88"}>
+				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120"}>
 					<div className={"flex flex-col items-center"}>
 						<div className={"mb-28"}>
 							<TestStatusSVG type={data?.status} height={"24rem"} width={"28rem"} />
@@ -231,6 +241,17 @@ function TestOverviewTab() {
 						{Object.entries(allConfiguration).map(([key, value]) => (
 							<ConfigurationMethod configType={key} array={value} />
 						))}
+					</div>
+
+					<div css={css`
+						background: #0A0B0E;
+						height: 64rem;
+					`} className={"flex text-12.5 font-600 w-full mt-100 justify-center"}>
+						{Object.entries(countByTestStatus).map(([status,count])=>{
+							return (<div className={"flex items-center px-28"}>
+								<TestStatusSVG type={status} height={"18rem"} width={"18rem"} /> <span className={"ml-12 leading-none"}>{count} {TestTypeLabel[status]}</span>
+							</div>)
+						})}
 					</div>
 				</div>
 			</div>
@@ -285,7 +306,7 @@ export const TestReportScreen = () => {
 	const [, updateMetaData] = useAtom(updateMeta);
 
 	const testsCount = data.tests.length;
-	
+
 	useEffect(() => {
 		updateMetaData({
 			type: "user",
@@ -427,6 +448,5 @@ const selected = css`
 	border-bottom: 1px solid #0a0b0e;
 	color: #fff;
 	font-weight: 600;
-
 	padding-top: 1px;
 `;

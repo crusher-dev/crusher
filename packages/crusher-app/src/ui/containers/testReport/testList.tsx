@@ -811,7 +811,6 @@ const stepsContainer = css`
 
 const testCard = css`
 	background: rgba(16, 18, 21, 0.5);
-	border: 1px solid #171c24;
 
 	:hover {
 		.test-card-header {

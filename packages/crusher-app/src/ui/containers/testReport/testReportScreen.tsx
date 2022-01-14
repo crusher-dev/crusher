@@ -293,7 +293,8 @@ const overviewCard = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
 	box-sizing: border-box;
-	border-radius: 8px;
+	border-radius: 4px;
+	overflow: hidden;
 `;
 const leftSection = css`
 	width: 70%;

@@ -14,7 +14,7 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ChevronDown,InfoSVG, TestStatusSVG } from "@svg/testReport";
+import { ChevronDown, ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
 import ReactTable, { useTable, useBlockLayout } from "react-table";
 import {
 	getActionLabel,
@@ -30,7 +30,7 @@ import {
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
 import { sentenceCase } from "@utils/common/textUtils";
-import { getAssetPath } from "@utils/helpers";
+import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
@@ -61,7 +61,7 @@ const reviewCss = css`
 	top: calc(100% + 9rem) !important;
 	right: 0px !important;
 	background: #1e2126;
-	z-index:110;
+	z-index: 110;
 	left: unset !important;
 `;
 
@@ -195,12 +195,17 @@ function RenderImageInfo({ data, index }) {
 
 			<Conditional showIf={imageViewType === "side"}>
 				<div className={"flex"}>
-					<img src={currentImage} css={css`max-width:49%`} />{" "}
+					<img
+						src={currentImage}
+						css={css`
+							max-width: 49%;
+						`}
+					/>{" "}
 					<img
 						src={getAssetPath(meta.outputs[index].diffImageUrl)}
 						css={css`
 							margin-left: 2%;
-							max-width:49%
+							max-width: 49%;
 						`}
 					/>
 				</div>
@@ -230,7 +235,7 @@ function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 			<Conditional showIf={isVideoAvailable && openVideoModal}>
 				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)} />
 			</Conditional>
-			<div className={"font-cera text-14 font-600 leading-none"}>Error at : { actionName ? actionName : getActionLabel(actionType)}</div>
+			<div className={"font-cera text-14 font-600 leading-none"}>Error at : {actionName ? actionName : getActionLabel(actionType)}</div>
 			<div className={"text-13 mt-8"}>{message}</div>
 
 			<Conditional showIf={isVideoAvailable}>
@@ -263,10 +268,12 @@ function RenderStep({ data, testInstanceData }) {
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
-					<div className={"mt-4 flex"} css={css`
-						align-items: center;
-				
-					`}>
+					<div
+						className={"mt-4 flex"}
+						css={css`
+							align-items: center;
+						`}
+					>
 						<span
 							className={"text-13 font-600"}
 							css={css`
@@ -285,33 +292,47 @@ function RenderStep({ data, testInstanceData }) {
 								{meta?.actionName ? meta.actionName : message}
 							</span>
 						</Conditional>
-						<span className={"ml-12"} css={css`
-							:hover {
-								opacity: 0.9;
-							}
-						`} onClick={openStepInfoModal}>
-							<InfoSVG css={css`width: 12rem; height: 12rem;`}/>
+						<span
+							className={"ml-12"}
+							css={css`
+								:hover {
+									opacity: 0.9;
+								}
+							`}
+							onClick={openStepInfoModal}
+						>
+							<InfoSVG
+								css={css`
+									width: 12rem;
+									height: 12rem;
+								`}
+							/>
 						</span>
 					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
 					<ErrorComponent actionName={meta?.actionName} testInstanceData={testInstanceData} actionType={actionType} message={message} />
-					<span className={"ml-12"} css={css`
+					<span
+						className={"ml-12"}
+						css={css`
 							:hover {
 								opacity: 0.9;
 							}
-						`} onClick={openStepInfoModal}>
-							<InfoSVG css={css`width: 12rem; height: 12rem;`}/>
+						`}
+						onClick={openStepInfoModal}
+					>
+						<InfoSVG
+							css={css`
+								width: 12rem;
+								height: 12rem;
+							`}
+						/>
 					</span>
 				</Conditional>
 			</div>
 
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
-				{
-					data.meta && data.meta.outputs  ? data.meta.outputs.map((_, index) => (
-						<RenderImageInfo data={data} index={index} />
-					)) : null
-				}
+				{data.meta && data.meta.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
 			</Conditional>
 			<Conditional showIf={showStepInfoModal}>
 				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />
@@ -427,8 +448,8 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 
 function getAllKeys(obj: Array<any>) {
 	const keys: any = {};
-	obj.map(item => {
-		Object.keys(item).forEach(key => {
+	obj.map((item) => {
+		Object.keys(item).forEach((key) => {
 			keys[key] = true;
 		});
 	});
@@ -437,107 +458,95 @@ function getAllKeys(obj: Array<any>) {
 }
 
 function sortObjectByPropertyKeyAsc(obj: any) {
-	return Object.keys(obj).sort().reduce((result: any, key) => {
-		result[key] = obj[key];
-		return result;
-	}, {});
+	return Object.keys(obj)
+		.sort()
+		.reduce((result: any, key) => {
+			result[key] = obj[key];
+			return result;
+		}, {});
 }
-
 
 const scrollbarWidth = () => {
-    // thanks too https://davidwalsh.name/detect-scrollbar-width
-    const scrollDiv = document.createElement('div')
-    scrollDiv.setAttribute('style', 'width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;')
-    document.body.appendChild(scrollDiv)
-    const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
-    document.body.removeChild(scrollDiv)
-    return scrollbarWidth
-}
-
+	// thanks too https://davidwalsh.name/detect-scrollbar-width
+	const scrollDiv = document.createElement("div");
+	scrollDiv.setAttribute("style", "width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;");
+	document.body.appendChild(scrollDiv);
+	const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+	document.body.removeChild(scrollDiv);
+	return scrollbarWidth;
+};
 
 function Table({ columns, data }) {
 	// Use the state and functions returned from useTable to build your UI
 
 	const defaultColumn = React.useMemo(
-	  () => ({
-		width: 210,
-	  }),
-	  []
-	)
+		() => ({
+			width: 210,
+		}),
+		[],
+	);
 
-	const scrollBarSize = React.useMemo(() => scrollbarWidth(), [])
+	const scrollBarSize = React.useMemo(() => scrollbarWidth(), []);
 
-	const {
-	  getTableProps,
-	  getTableBodyProps,
-	  headerGroups,
-	  rows,
-	  totalColumnsWidth,
-	  prepareRow,
-	} = useTable(
-	  {
-		columns,
-		data,
-		defaultColumn,
-	  },
-	  useBlockLayout
-	)
+	const { getTableProps, getTableBodyProps, headerGroups, rows, totalColumnsWidth, prepareRow } = useTable(
+		{
+			columns,
+			data,
+			defaultColumn,
+		},
+		useBlockLayout,
+	);
 
 	const RenderRow = React.useCallback(
-	  ({ index, style }) => {
-		const row = rows[index]
-		prepareRow(row)
-		return (
-		  <div
-			{...row.getRowProps({
-			  style,
-			})}
-			className="tr"
-		  >
-			{row.cells.map(cell => {
-			  return (
-				<div {...cell.getCellProps()} className="td">
-				  {cell.render('Cell')}
+		({ index, style }) => {
+			const row = rows[index];
+			prepareRow(row);
+			return (
+				<div
+					{...row.getRowProps({
+						style,
+					})}
+					className="tr"
+				>
+					{row.cells.map((cell) => {
+						return (
+							<div {...cell.getCellProps()} className="td">
+								{cell.render("Cell")}
+							</div>
+						);
+					})}
 				</div>
-			  )
-			})}
-		  </div>
-		)
-	  },
-	  [prepareRow, rows]
-	)
+			);
+		},
+		[prepareRow, rows],
+	);
 
 	// Render the UI for your table
 	return (
-	  <div {...getTableProps()} className="table" style={{fontSize: "13.5rem"}}>
-		<div style={{fontWeight: "bold"}}>
-		  {headerGroups.map(headerGroup => (
-			<div {...headerGroup.getHeaderGroupProps()} className="tr">
-			  {headerGroup.headers.map(column => (
-				<div {...column.getHeaderProps()} className="th">
-				  {column.render('Header')}
-				</div>
-			  ))}
+		<div {...getTableProps()} className="table" style={{ fontSize: "13.5rem" }}>
+			<div style={{ fontWeight: "bold" }}>
+				{headerGroups.map((headerGroup) => (
+					<div {...headerGroup.getHeaderGroupProps()} className="tr">
+						{headerGroup.headers.map((column) => (
+							<div {...column.getHeaderProps()} className="th">
+								{column.render("Header")}
+							</div>
+						))}
+					</div>
+				))}
 			</div>
-		  ))}
-		</div>
 
-		<div {...getTableBodyProps()} style={{marginTop: "26rem"}}>
-		  <FixedSizeList
-			height={200}
-			itemCount={rows.length}
-			itemSize={50}
-			width={totalColumnsWidth+scrollBarSize}
-		  >
-			{RenderRow}
-		  </FixedSizeList>
+			<div {...getTableBodyProps()} style={{ marginTop: "26rem" }}>
+				<FixedSizeList height={200} itemCount={rows.length} itemSize={50} width={totalColumnsWidth + scrollBarSize}>
+					{RenderRow}
+				</FixedSizeList>
+			</div>
 		</div>
-	  </div>
-	)
-  }
+	);
+}
 
 function StepInfoModal({ setOpenStepInfoModal, data }) {
-	const {meta, message} = data;
+	const { meta, message } = data;
 
 	const actionName = meta.actionName;
 
@@ -553,75 +562,81 @@ function StepInfoModal({ setOpenStepInfoModal, data }) {
 		>
 			<div className={"font-cera text-16 font-600 leading-none"}>Step Info 🦖</div>
 			<div className={"text-13 mt-8 mb-24"}>Debug info listed below</div>
-<hr/>
-		<div className={"mt-44"}>
-			<Conditional showIf={actionName}>
-				<div className={"text-13 mt-8 mb-24 flex text-bold"}>
-					<span css={{fontWeight: "bold"}}>Step name</span>
-					<span css={{marginLeft: "auto"}}>{actionName}</span>
-				</div>
-			</Conditional>
-			<Conditional showIf={meta.beforeUrl}>
-				<div className={"text-13 mt-8 mb-24 flex text-bold"}>
-					<span css={{fontWeight: "bold"}}>Page Url (before action)</span>
-					<span css={{marginLeft: "auto"}}>{meta.beforeUrl}</span>
-				</div>
-			</Conditional>
-			<Conditional showIf={meta.afterUrl}>
-				<div className={"text-13 mt-8 mb-24 flex"}>
-					<span css={{fontWeight: "bold"}}>Page Url (after action)</span>
-					<span css={{marginLeft: "auto"}}>{meta.afterUrl}</span>
-				</div>
-			</Conditional>
+			<hr />
+			<div className={"mt-44"}>
+				<Conditional showIf={actionName}>
+					<div className={"text-13 mt-8 mb-24 flex text-bold"}>
+						<span css={{ fontWeight: "bold" }}>Step name</span>
+						<span css={{ marginLeft: "auto" }}>{actionName}</span>
+					</div>
+				</Conditional>
+				<Conditional showIf={meta.beforeUrl}>
+					<div className={"text-13 mt-8 mb-24 flex text-bold"}>
+						<span css={{ fontWeight: "bold" }}>Page Url (before action)</span>
+						<span css={{ marginLeft: "auto" }}>{meta.beforeUrl}</span>
+					</div>
+				</Conditional>
+				<Conditional showIf={meta.afterUrl}>
+					<div className={"text-13 mt-8 mb-24 flex"}>
+						<span css={{ fontWeight: "bold" }}>Page Url (after action)</span>
+						<span css={{ marginLeft: "auto" }}>{meta.afterUrl}</span>
+					</div>
+				</Conditional>
 
-			<Conditional showIf={metaInfo && metaInfo.result && metaInfo.result.length}>
-				<div style={{fontWeight: "bold", color: "#fff", fontSize: "13rem"}}>Result (Total {metaInfo && metaInfo.result ? metaInfo.result.length : 0} items): </div>
-				<div css={tableStyle}>
-				<Table
-					data = { metaInfo && metaInfo.result && metaInfo.result.map((t) => ({...t, exists: t.exists.toString()})) }
-					columns = { metaInfo && metaInfo.result && getAllKeys(metaInfo.result).map((key ,id) => ({
-						id: key,
-						Header: key,
-						accessor: key,
-						key: key,
-					})) }
-				/>
-				</div>
-			</Conditional>
+				<Conditional showIf={metaInfo && metaInfo.result && metaInfo.result.length}>
+					<div style={{ fontWeight: "bold", color: "#fff", fontSize: "13rem" }}>
+						Result (Total {metaInfo && metaInfo.result ? metaInfo.result.length : 0} items):{" "}
+					</div>
+					<div css={tableStyle}>
+						<Table
+							data={metaInfo && metaInfo.result && metaInfo.result.map((t) => ({ ...t, exists: t.exists.toString() }))}
+							columns={
+								metaInfo &&
+								metaInfo.result &&
+								getAllKeys(metaInfo.result).map((key, id) => ({
+									id: key,
+									Header: key,
+									accessor: key,
+									key: key,
+								}))
+							}
+						/>
+					</div>
+				</Conditional>
 			</div>
 		</Modal>
 	);
 }
 
 const tableStyle = css`
-padding: 1rem;
-margin-top: 24rem;
+	padding: 1rem;
+	margin-top: 24rem;
 
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
-	font-size: 14rem;
+	table {
+		border-spacing: 0;
+		border: 1px solid black;
+		font-size: 14rem;
 
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
+		tr {
+			:last-child {
+				td {
+					border-bottom: 0;
+				}
+			}
+		}
 
-    th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
+		th,
+		td {
+			margin: 0;
+			padding: 0.5rem;
+			border-bottom: 1px solid black;
+			border-right: 1px solid black;
 
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
+			:last-child {
+				border-right: 0;
+			}
+		}
+	}
 `;
 
 function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
@@ -679,13 +694,69 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 		</>
 	);
 }
+function ExpandableStepGroup({ steps, testInstanceData, count, show = false }: { steps: any[]; testInstanceData: any; count: number; show?: boolean }) {
+	const [expandTestStep, setExpandTestStepSteps] = React.useState(show);
+	const expandHandler = React.useCallback(() => {
+		setExpandTestStepSteps(true);
+	}, []);
+
+	return (
+		<>
+			<Conditional showIf={!expandTestStep}>
+				<Conditional showIf={count > 0}>
+					<div className={"relative mb-32"}>
+						<div className={" flex px-44"} onClick={expandHandler} css={expandDIVCSS}>
+							<div css={tick} className={"expand-svg"}>
+								<ExpandSVG height={"20rem"} width={"20rem"} />
+							</div>
+							<div
+								className={"mt-4 flex"}
+								css={css`
+									align-items: center;
+								`}
+							>
+								<span className={"text-13 font-600 leading-none expand-highlight pt-4"}>Expand {count} steps</span>
+							</div>
+						</div>
+					</div>
+				</Conditional>
+			</Conditional>
+			<Conditional showIf={expandTestStep}>
+				{steps.map((step, index) => (
+					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
+				))}
+			</Conditional>
+		</>
+	);
+}
+
+const expandDIVCSS = css`
+	:hover {
+		.expand-highlight {
+			color: #2ae7db;
+			text-decoration: underline;
+		}
+
+		svg rect {
+			fill: #242b36;
+		}
+	}
+
+	.expand-highlight {
+		color: #58e9e0;
+	}
+
+	.expand-svg {
+	}
+`;
 
 function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
+	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
 		<div className={"px-32 w-full"} css={stepsContainer}>
 			<div className={"ml-32 py-32"} css={stepsList}>
-				{steps.map((step, index) => (
-					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
+				{groupSteps.map(({ type, from, to, count }: any) => (
+					<ExpandableStepGroup testInstanceData={testInstanceData} steps={steps.slice(from, from === to ? to + 1 : to)} count={count} show={type === "show"} />
 				))}
 			</div>
 		</div>

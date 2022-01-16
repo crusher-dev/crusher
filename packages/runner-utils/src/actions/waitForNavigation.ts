@@ -7,11 +7,11 @@ async function waitForNavigation(page: Page, action: iAction) {
 	console.log("Waiting for navigation now...");
 	try {
 		await sleep(5); // @TODO: Add a magic number here
-		await page.waitForLoadState("networkidle");
 		await page.waitForLoadState("load");
 		await page.waitForLoadState("domcontentloaded");
 	} catch (ex) {
-		console.error("Gt error here", ex); await sleep(2); // Magic number
+		console.error("Gt error here", ex);
+		await sleep(2); // Magic number
 	}
 	console.log("Finsihed navigation");
 }

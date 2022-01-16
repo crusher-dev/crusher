@@ -94,7 +94,7 @@ function NameNStatusSection() {
 				<TitleSection />
 				<Button
 					size={"small"}
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					className={"ml-20"}
 					css={css`
 						width: 96rem;
@@ -208,7 +208,7 @@ function TestOverviewTab() {
 						<div className={"flex items-center"}>
 							<Conditional showIf={showReview}>
 								<Button
-									bgColor={"tertiary-dark"}
+									bgColor={"tertiary"}
 									css={css`
 										width: 148rem;
 									`}
@@ -218,7 +218,7 @@ function TestOverviewTab() {
 								</Button>
 							</Conditional>
 							<Button
-								bgColor={"tertiary-dark"}
+								bgColor={"tertiary"}
 								css={css`
 									width: 148rem;
 								`}
@@ -293,7 +293,8 @@ const overviewCard = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
 	box-sizing: border-box;
-	border-radius: 8px;
+	border-radius: 4px;
+	overflow: hidden;
 `;
 const leftSection = css`
 	width: 70%;

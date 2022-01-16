@@ -7,7 +7,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { recordHoverDependencies } from "electron-app/src/ui/commands/perform";
-import { recordStep } from "electron-app/src/store/actions/recorder";
+import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { BulbIcon } from "electron-app/src/ui/icons";
 import { Modal } from "@dyson/components/molecules/Modal";
@@ -15,6 +15,7 @@ import { ModalTopBar } from "../../../modals/topBar";
 import { css } from "@emotion/react";
 import { ipcRenderer } from "electron";
 import { Text } from "@dyson/components/atoms/text/Text";
+import { useTour } from "@reactour/tour";
 
 interface iAssertElementModalProps {
 	isOpen: boolean;
@@ -45,6 +46,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	const [elementInfo, setElementInfo] = useState(null);
 	const store = useStore();
 	const selectedElement = useSelector(getSelectedElement);
+	const { isOpen: isOnboardingOpen, setCurrentStep } = useTour();
 
 	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(elementInfo!);
@@ -144,9 +146,8 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 				},
 			},
 		}, ActionStatusEnum.COMPLETED));
-		if (handleClose) {
-			handleClose();
-		}
+		store.dispatch(setSelectedElement(null));
+		handleCloseWrapper()
 	};
 
 	const deleteValidationRow = (rowIndex) => {
@@ -154,11 +155,20 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		setValidationRows([...newValidationRows]);
 	};
 
+	const handleCloseWrapper = () => {
+		if(isOnboardingOpen) {
+			setCurrentStep(4);
+		}
+		if(handleClose) {
+			handleClose();
+		}
+	}
+
 	if(!isOpen) return null;
 
 	return (
-		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
-			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />		
+		<Modal modalStyle={modalStyle} onOutsideClick={handleCloseWrapper}>
+			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleCloseWrapper} />		
 			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
 			<AssertionFormTable
 				rowItems={validationRows}

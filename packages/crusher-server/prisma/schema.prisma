@@ -3,88 +3,117 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = "postgres://postgres:crusher@localhost:5432/crusher?schema=crusher"
 }
 
 model alerting {
-  user_id      Int       @id @unique @db.UnsignedInt
-  github_code  String?   @db.VarChar(255)
-  created_at   DateTime? @default(now()) @db.DateTime(0)
-  updated_at   DateTime? @default(now()) @db.DateTime(0)
-  new_column_2 Int?
-  users        users     @relation(fields: [user_id], references: [id])
+  user_id     BigInt    @id @unique
+  github_code String?   @db.VarChar(255)
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+  users       users     @relation(fields: [user_id], references: [id])
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model cli_status {
-  id         Int                @id @default(autoincrement())
   status     cli_status_status? @default(Started)
   user_id    Int?
   team_id    Int?
-  created_at DateTime?          @default(now()) @db.DateTime(0)
-  updated_at DateTime?          @default(now()) @db.DateTime(0)
+  created_at DateTime?          @default(now()) @db.Timestamptz(6)
+  updated_at DateTime?          @default(now()) @db.Timestamptz(6)
   token      String?            @db.VarChar(255)
+
+  @@ignore
 }
 
 model comments {
-  id                    Int                   @id @default(autoincrement())
-  user_id               Int                   @db.UnsignedInt
+  id                    Int                   @id
+  user_id               BigInt
   result_id             Int
   report_id             Int
-  message               String                @db.Text
+  message               String
   replied_to            Int?
-  created_at            DateTime              @default(now()) @db.DateTime(0)
-  updated_at            DateTime              @default(now()) @db.DateTime(0)
+  created_at            DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime              @default(now()) @db.Timestamptz(6)
   comments              comments?             @relation("commentsTocomments_replied_to", fields: [replied_to], references: [id])
   job_reports           job_reports           @relation(fields: [report_id], references: [id])
   test_instance_results test_instance_results @relation(fields: [result_id], references: [id])
   users                 users                 @relation(fields: [user_id], references: [id])
   other_comments        comments[]            @relation("commentsTocomments_replied_to")
 
-  @@index([replied_to], name: "comments_comments_id_fk")
-  @@index([report_id], name: "comments_job_reports_id_fk")
-  @@index([result_id], name: "comments_test_instance_results_id_fk")
-  @@index([user_id], name: "comments_users_id_fk")
+  @@index([replied_to], name: "idx_24704_comments_comments_id_fk")
+  @@index([report_id], name: "idx_24704_comments_job_reports_id_fk")
+  @@index([result_id], name: "idx_24704_comments_test_instance_results_id_fk")
+  @@index([user_id], name: "idx_24704_comments_users_id_fk")
 }
 
 model environments {
-  id         Int                  @id @default(autoincrement())
+  id         Int       @id
   project_id Int
-  name       String               @db.VarChar(100)
-  browser    environments_browser @default(CHROME)
-  vars       String               @db.LongText
-  created_at DateTime?            @default(now()) @db.DateTime(0)
-  updated_at DateTime?            @db.DateTime(0)
-  projects   projects             @relation(fields: [project_id], references: [id])
+  name       String    @db.VarChar(100)
+  browser    Json      @db.Json
+  vars       String
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  user_id    BigInt
+  host       String?   @db.VarChar(255)
+  projects   projects  @relation(fields: [project_id], references: [id])
+  users      users     @relation(fields: [user_id], references: [id])
 
-  @@index([project_id], name: "environments_projects_id_fk")
+  @@index([project_id], name: "idx_24712_environments_projects_id_fk")
+  @@index([user_id], name: "idx_24712_environments_users_id_fk")
+}
+
+model git_integrations {
+  id              Int      @id
+  project_id      Int
+  user_id         Int
+  repo_name       String?  @db.VarChar(200)
+  repo_link       String?  @db.VarChar(200)
+  installation_id String?  @db.VarChar(200)
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+  repo_id         String?  @db.VarChar(200)
+  projects        projects @relation(fields: [project_id], references: [id])
+
+  @@index([project_id], name: "idx_24719_git_integrations_projects_id_fk")
 }
 
 model github_app_installations {
   owner_name      String   @db.VarChar(255)
   repo_name       String   @db.VarChar(255)
   installation_id String   @db.VarChar(255)
-  created_at      DateTime @default(now()) @db.DateTime(0)
-  updated_at      DateTime @default(now()) @db.DateTime(0)
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
 
-  @@unique([owner_name, repo_name], name: "github_app_installations_ownerName_repoName_index")
+  @@unique([owner_name, repo_name], name: "idx_24727_github_app_installations_ownername_reponame_index")
 }
 
 model integration_alerting {
-  id             Int       @id @default(autoincrement())
-  project_id     Int?
+  id             Int       @id
+  project_id     Int
   integration_id Int?
-  user_id        Int?
-  config         String?   @db.VarChar(600)
-  created_at     DateTime  @default(now()) @db.DateTime(0)
-  updated_at     DateTime? @default(now()) @db.DateTime(0)
-  projects       projects? @relation(fields: [project_id], references: [id])
+  user_id        Int
+  config         String?
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+  projects       projects  @relation(fields: [project_id], references: [id])
 
-  @@index([project_id], name: "integration_alerting_projects_id_fk")
+  @@index([project_id], name: "idx_24735_integration_alerting_projects_id_fk")
+}
+
+model integrations {
+  id               Int                           @id
+  project_id       Int
+  integration_name integrations_integration_name
+  meta             Json                          @db.Json
+  created_at       DateTime?                     @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime                      @default(now()) @db.Timestamptz(6)
 }
 
 model job_reports {
-  id                                      Int                         @id @default(autoincrement())
+  id                                      Int                         @id
   job_id                                  Int
   reference_job_id                        Int?
   total_test_count                        Int?
@@ -93,9 +122,10 @@ model job_reports {
   review_required_test_count              Int?
   project_id                              Int
   status                                  job_reports_status          @default(RUNNING)
-  created_at                              DateTime                    @default(now()) @db.DateTime(0)
-  updated_at                              DateTime?                   @default(now()) @db.DateTime(0)
-  status_explanation                      String?                     @db.LongText
+  created_at                              DateTime                    @default(now()) @db.Timestamptz(6)
+  updated_at                              DateTime?                   @default(now()) @db.Timestamptz(6)
+  status_explanation                      String?
+  meta                                    Json?                       @db.Json
   jobs_job_reports_job_idTojobs           jobs                        @relation("job_reports_job_idTojobs", fields: [job_id], references: [id])
   projects                                projects                    @relation(fields: [project_id], references: [id])
   jobs_job_reports_reference_job_idTojobs jobs?                       @relation("job_reports_reference_job_idTojobs", fields: [reference_job_id], references: [id])
@@ -103,297 +133,327 @@ model job_reports {
   jobs_job_reportsTojobs_latest_report_id jobs[]                      @relation("job_reportsTojobs_latest_report_id")
   test_instance_result_sets               test_instance_result_sets[]
 
-  @@index([reference_job_id], name: "job_reports_jobs_id_fk_2")
-  @@index([job_id], name: "job_reports_projects_id_fk")
-  @@index([project_id], name: "job_reports_projects_id_fk_1")
+  @@index([reference_job_id], name: "idx_24751_job_reports_jobs_id_fk_2")
+  @@index([job_id], name: "idx_24751_job_reports_projects_id_fk")
+  @@index([project_id], name: "idx_24751_job_reports_projects_id_fk_1")
 }
 
 model jobs {
-  id                                             Int                @id @default(autoincrement())
+  id                                             Int                @id
   latest_report_id                               Int?
   pr_id                                          String?            @db.VarChar(255)
   commit_id                                      String?            @db.VarChar(50)
   repo_name                                      String?            @db.VarChar(255)
   branch_name                                    String?            @db.VarChar(200)
-  commit_name                                    String?            @db.Text
+  commit_name                                    String?
   status                                         jobs_status        @default(CREATED)
   host                                           String             @db.VarChar(255)
   build_trigger                                  jobs_build_trigger @default(MANUAL)
-  meta                                           String?            @db.LongText
-  created_at                                     DateTime           @default(now()) @db.DateTime(0)
-  updated_at                                     DateTime?          @default(now()) @db.DateTime(0)
+  meta                                           String?
+  created_at                                     DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at                                     DateTime?          @default(now()) @db.Timestamptz(6)
   check_run_id                                   String?            @db.VarChar(100)
-  browser                                        jobs_browser?      @default(CHROME)
+  browser                                        Json               @db.Json
   installation_id                                String?            @db.VarChar(255)
-  user_id                                        Int                @db.UnsignedInt
+  user_id                                        BigInt?
   project_id                                     Int?
-  config                                         Json
+  config                                         Json               @db.Json
   is_draft_job                                   Boolean            @default(false)
   job_reports_job_reportsTojobs_latest_report_id job_reports?       @relation("job_reportsTojobs_latest_report_id", fields: [latest_report_id], references: [id])
   projects_jobs_project_idToprojects             projects?          @relation("jobs_project_idToprojects", fields: [project_id], references: [id])
-  users                                          users              @relation(fields: [user_id], references: [id])
+  users                                          users?             @relation(fields: [user_id], references: [id])
   job_reports_job_reports_job_idTojobs           job_reports[]      @relation("job_reports_job_idTojobs")
   job_reports_job_reports_reference_job_idTojobs job_reports[]      @relation("job_reports_reference_job_idTojobs")
   projects_jobsToprojects_baseline_job_id        projects[]         @relation("jobsToprojects_baseline_job_id")
   test_instances                                 test_instances[]
   tests                                          tests[]
 
-  @@index([latest_report_id], name: "jobs_job_reports_id_fk")
-  @@index([project_id], name: "jobs_projects_id_fk")
-  @@index([user_id], name: "jobs_users_id_fk")
+  @@index([commit_name, repo_name, host], name: "idx_24760_build_search_index")
+  @@index([latest_report_id], name: "idx_24760_jobs_job_reports_id_fk")
+  @@index([project_id], name: "idx_24760_jobs_projects_id_fk")
+  @@index([user_id], name: "idx_24760_jobs_users_id_fk")
 }
 
 model monitorings {
-  id             Int       @id @default(autoincrement())
+  id             Int       @id
   project_id     Int
   environment_id Int
-  last_cron_run  DateTime? @default(dbgenerated("1970-01-02 12:59:40")) @db.DateTime(0)
+  last_cron_run  DateTime? @default(dbgenerated("'1970-01-02 07:29:40+00'::timestamp with time zone")) @db.Timestamptz(6)
   test_interval  Int?      @default(86400)
-  created_at     DateTime  @default(now()) @db.DateTime(0)
-  updated_at     DateTime? @default(now()) @db.DateTime(0)
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
   projects       projects  @relation(fields: [project_id], references: [id])
 
-  @@index([project_id], name: "monitoring_settings_projects_id_fk")
+  @@index([project_id], name: "idx_24771_monitoring_settings_projects_id_fk")
 }
 
 model project_hosts {
-  id         Int       @id @default(autoincrement())
-  url        String    @db.Text
+  id         Int       @id
+  url        String
   host_name  String    @db.VarChar(255)
-  created_at DateTime  @default(now()) @db.DateTime(0)
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
   project_id Int
-  user_id    Int       @db.UnsignedInt
-  updated_at DateTime? @default(now()) @db.DateTime(0)
+  user_id    BigInt
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
   projects   projects  @relation(fields: [project_id], references: [id])
   users      users     @relation(fields: [user_id], references: [id])
 
-  @@index([project_id], name: "project_hosts_projects_id_fk")
-  @@index([user_id], name: "project_hosts_user_id_fk")
+  @@index([project_id], name: "idx_24778_project_hosts_projects_id_fk")
+  @@index([user_id], name: "idx_24778_project_hosts_user_id_fk")
 }
 
 model projects {
-  id                                  Int                    @id @default(autoincrement())
+  id                                  Int                    @id
   name                                String                 @db.VarChar(200)
   team_id                             Int
-  created_at                          DateTime               @default(now()) @db.DateTime(0)
-  updated_at                          DateTime?              @default(now()) @db.DateTime(0)
+  created_at                          DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at                          DateTime?              @default(now()) @db.Timestamptz(6)
   baseline_job_id                     Int?
-  meta                                String?                @db.Text
+  meta                                String?
+  visual_baseline                     Int                    @default(5)
   jobs_jobsToprojects_baseline_job_id jobs?                  @relation("jobsToprojects_baseline_job_id", fields: [baseline_job_id], references: [id])
   teams                               teams                  @relation(fields: [team_id], references: [id])
   environments                        environments[]
+  git_integrations                    git_integrations[]
   integration_alerting                integration_alerting[]
   job_reports                         job_reports[]
   jobs_jobs_project_idToprojects      jobs[]                 @relation("jobs_project_idToprojects")
   monitorings                         monitorings[]
   project_hosts                       project_hosts[]
+  templates                           templates[]
   tests                               tests[]
-  user_project_roles                  user_project_roles[]
+  user_project_roles                  user_project_roles[]   @ignore
 
-  @@index([baseline_job_id], name: "projects_jobs_id_fk")
-  @@index([team_id], name: "projects_team_id_fk")
+  @@index([baseline_job_id], name: "idx_24786_projects_jobs_id_fk")
+  @@index([team_id], name: "idx_24786_projects_team_id_fk")
 }
 
 model teams {
-  id                 Int               @id @default(autoincrement())
+  id                 Int               @id
   name               String            @db.VarChar(255)
   team_email         String?           @db.VarChar(255)
   tier               teams_tier        @default(FREE)
-  created_at         DateTime          @default(now()) @db.Timestamp(0)
-  updated_at         DateTime          @default(now()) @db.Timestamp(0)
+  created_at         DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime          @default(now()) @db.Timestamptz(6)
   stripe_customer_id String?           @db.VarChar(100)
-  meta               String?           @db.Text
+  meta               String?
+  uuid               String?           @db.VarChar(50)
   projects           projects[]
-  user_team_roles    user_team_roles[]
+  user_team_roles    user_team_roles[] @ignore
   users              users[]
 }
 
+model templates {
+  id         Int       @id
+  events     String?
+  user_id    BigInt?
+  project_id Int?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  name       String    @db.VarChar(200)
+  projects   projects? @relation(fields: [project_id], references: [id])
+  users      users?    @relation(fields: [user_id], references: [id])
+
+  @@index([project_id], name: "idx_24804_templates_projects_id_fk")
+  @@index([user_id], name: "idx_24804_templates_users_id_fk")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model test_instance_action_results {
+  instance_id         Int
+  project_id          Int
+  actions_result      Json     @db.Json
+  has_instance_passed Boolean
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime @default(now()) @db.Timestamptz(6)
+
+  @@ignore
+}
+
 model test_instance_result_sets {
-  id                                                                          Int                                   @id @default(autoincrement())
+  id                                                                          Int                                   @id
   report_id                                                                   Int
   instance_id                                                                 Int
   target_instance_id                                                          Int
   status                                                                      test_instance_result_sets_status      @default(WAITING_FOR_TEST_EXECUTION)
   conclusion                                                                  test_instance_result_sets_conclusion?
-  failed_reason                                                               String?                               @db.Text
-  updated_at                                                                  DateTime                              @default(now()) @db.DateTime(0)
-  created_at                                                                  DateTime                              @default(now()) @db.DateTime(0)
+  failed_reason                                                               String?
+  updated_at                                                                  DateTime                              @default(now()) @db.Timestamptz(6)
+  created_at                                                                  DateTime                              @default(now()) @db.Timestamptz(6)
   test_instances_test_instance_result_sets_instance_idTotest_instances        test_instances                        @relation("test_instance_result_sets_instance_idTotest_instances", fields: [instance_id], references: [id])
   job_reports                                                                 job_reports                           @relation(fields: [report_id], references: [id])
   test_instances_test_instance_result_sets_target_instance_idTotest_instances test_instances                        @relation("test_instance_result_sets_target_instance_idTotest_instances", fields: [target_instance_id], references: [id])
   test_instance_results                                                       test_instance_results[]
 
-  @@index([report_id], name: "test_instance_result_sets_job_reports_id_fk")
-  @@index([instance_id], name: "test_instance_result_sets_test_instances_id_fk")
-  @@index([target_instance_id], name: "test_instance_result_sets_test_instances_id_fk_2")
+  @@index([report_id], name: "idx_24820_test_instance_result_sets_job_reports_id_fk")
+  @@index([instance_id], name: "idx_24820_test_instance_result_sets_test_instances_id_fk")
+  @@index([target_instance_id], name: "idx_24820_test_instance_result_sets_test_instances_id_fk_2")
 }
 
 model test_instance_results {
-  id                                                                                              Int                          @id @default(autoincrement())
+  id                                                                                              Int                          @id
   screenshot_id                                                                                   Int
   target_screenshot_id                                                                            Int
   instance_result_set_id                                                                          Int
-  diff_delta                                                                                      Float                        @default(0) @db.Float
-  diff_image_url                                                                                  String?                      @db.Text
+  diff_delta                                                                                      Float                        @default(0)
+  diff_image_url                                                                                  String?
   status                                                                                          test_instance_results_status
-  created_at                                                                                      DateTime                     @default(now()) @db.DateTime(0)
-  updated_at                                                                                      DateTime                     @default(now()) @db.DateTime(0)
+  created_at                                                                                      DateTime                     @default(now()) @db.Timestamptz(6)
+  updated_at                                                                                      DateTime                     @default(now()) @db.Timestamptz(6)
   test_instance_result_sets                                                                       test_instance_result_sets    @relation(fields: [instance_result_set_id], references: [id])
   test_instance_screenshots_test_instance_results_screenshot_idTotest_instance_screenshots        test_instance_screenshots    @relation("test_instance_results_screenshot_idTotest_instance_screenshots", fields: [screenshot_id], references: [id])
   test_instance_screenshots_test_instance_results_target_screenshot_idTotest_instance_screenshots test_instance_screenshots    @relation("test_instance_results_target_screenshot_idTotest_instance_screenshots", fields: [target_screenshot_id], references: [id])
   comments                                                                                        comments[]
 
-  @@index([instance_result_set_id], name: "test_instance_results_test_instance_result_sets_id_fk")
-  @@index([screenshot_id], name: "test_instance_results_test_instance_screenshots_id_fk")
-  @@index([target_screenshot_id], name: "test_instance_results_test_instance_screenshots_id_fk_2")
+  @@index([instance_result_set_id], name: "idx_24829_test_instance_results_test_instance_result_sets_id_fk")
+  @@index([target_screenshot_id], name: "idx_24829_test_instance_results_test_instance_screenshots_id_fk")
 }
 
 model test_instance_screenshots {
-  id                                                                                          Int                     @id @default(autoincrement())
+  id                                                                                          Int                     @id
   instance_id                                                                                 Int
   name                                                                                        String                  @db.VarChar(255)
-  url                                                                                         String                  @db.Text
-  created_at                                                                                  DateTime                @default(now()) @db.DateTime(0)
-  updated_at                                                                                  DateTime                @default(now()) @db.DateTime(0)
-  action_index                                                                                Int                     @default(0)
+  url                                                                                         String
+  created_at                                                                                  DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at                                                                                  DateTime                @default(now()) @db.Timestamptz(6)
+  action_index                                                                                String                  @default("0") @db.VarChar(50)
   test_instances                                                                              test_instances          @relation(fields: [instance_id], references: [id])
   test_instance_results_test_instance_results_screenshot_idTotest_instance_screenshots        test_instance_results[] @relation("test_instance_results_screenshot_idTotest_instance_screenshots")
   test_instance_results_test_instance_results_target_screenshot_idTotest_instance_screenshots test_instance_results[] @relation("test_instance_results_target_screenshot_idTotest_instance_screenshots")
 
-  @@index([instance_id], name: "test_instance_screenshots_test_instance_id_fk")
+  @@index([instance_id], name: "idx_24838_test_instance_screenshots_test_instance_id_fk")
 }
 
 model test_instances {
-  id                                                                                     Int                         @id @default(autoincrement())
+  id                                                                                     Int                         @id
   job_id                                                                                 Int
   test_id                                                                                Int
   status                                                                                 test_instances_status       @default(QUEUED)
-  code                                                                                   String?                     @db.LongText
-  created_at                                                                             DateTime                    @default(now())
-  updated_at                                                                             DateTime?                   @default(now())
+  code                                                                                   String?
+  created_at                                                                             DateTime                    @default(now()) @db.Timestamptz(6)
+  updated_at                                                                             DateTime?                   @default(now()) @db.Timestamptz(6)
   host                                                                                   String?                     @db.VarChar(255)
   browser                                                                                test_instances_browser      @default(CHROME)
-  recorded_video_url                                                                     String?                     @db.VarChar(200)
+  recorded_video_url                                                                     String?
+  recorded_clip_video_url                                                                String?
+  meta                                                                                   String?
   jobs                                                                                   jobs                        @relation(fields: [job_id], references: [id])
   tests                                                                                  tests                       @relation(fields: [test_id], references: [id])
   test_instance_result_sets_test_instance_result_sets_instance_idTotest_instances        test_instance_result_sets[] @relation("test_instance_result_sets_instance_idTotest_instances")
   test_instance_result_sets_test_instance_result_sets_target_instance_idTotest_instances test_instance_result_sets[] @relation("test_instance_result_sets_target_instance_idTotest_instances")
   test_instance_screenshots                                                              test_instance_screenshots[]
 
-  @@index([job_id], name: "test_instance_jobs_id_fk")
-  @@index([test_id], name: "test_instance_tests_id_fk")
+  @@index([job_id], name: "idx_24847_test_instance_jobs_id_fk")
+  @@index([test_id], name: "idx_24847_test_instance_tests_id_fk")
 }
 
 model tests {
-  id                      Int              @id @default(autoincrement())
+  id                      Int              @id
   project_id              Int
   name                    String           @db.VarChar(200)
-  events                  String           @db.LongText
-  created_at              DateTime         @default(now()) @db.DateTime(0)
-  updated_at              DateTime         @default(now()) @db.DateTime(0)
-  user_id                 Int              @db.UnsignedInt
-  featured_video_url      String?          @db.MediumText
-  featured_screenshot_url String?          @db.MediumText
+  events                  String?
+  created_at              DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime         @default(now()) @db.Timestamptz(6)
+  user_id                 BigInt
+  featured_video_url      String?
+  featured_screenshot_url String?
   deleted                 Boolean          @default(false)
-  meta                    String?          @db.Text
+  meta                    String?
   draft_job_id            Int?
+  featured_clip_video_url String?
+  tags                    String?          @db.VarChar(20)
+  run_after               Int?
   jobs                    jobs?            @relation(fields: [draft_job_id], references: [id])
   projects                projects         @relation(fields: [project_id], references: [id])
   users                   users            @relation(fields: [user_id], references: [id])
   test_instances          test_instances[]
 
-  @@index([name], name: "test_search_index")
-  @@index([draft_job_id], name: "tests_jobs_id_fk")
-  @@index([project_id], name: "tests_projects_id_fk")
-  @@index([user_id], name: "tests_users_id_fk")
+  @@index([draft_job_id], name: "idx_24857_tests_jobs_id_fk")
+  @@index([project_id], name: "idx_24857_tests_projects_id_fk")
+  @@index([user_id], name: "idx_24857_tests_users_id_fk")
 }
 
-model user_integrations {
-  id               Int                                 @id @default(autoincrement())
-  user_id          Int?
-  integration_name user_integrations_integration_name?
-  label            String?                             @db.Char(40)
-  access_token     String?                             @db.VarChar(500)
-  webhook_url      String?                             @db.VarChar(500)
-  meta_info        String                              @db.Text
-  created_at       DateTime?                           @default(now()) @db.DateTime(0)
-  updated_at       DateTime                            @default(now()) @db.DateTime(0)
-}
-
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model user_meta {
-  id      Int    @id @default(autoincrement())
-  user_id Int    @db.UnsignedInt
+  user_id BigInt
   key     String @db.VarChar(255)
   value   String @db.VarChar(400)
   users   users  @relation(fields: [user_id], references: [id])
 
-  @@index([user_id], name: "user_meta___fk__user")
+  @@index([user_id], name: "idx_24866_user_meta___fk__user")
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model user_project_roles {
-  id         Int                     @id @default(autoincrement())
-  user_id    Int                     @db.UnsignedInt
+  user_id    BigInt
   project_id Int
   role       user_project_roles_role @default(VIEWER)
-  created_at DateTime                @default(now()) @db.DateTime(0)
-  updated_at DateTime                @default(now()) @db.DateTime(0)
+  created_at DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at DateTime                @default(now()) @db.Timestamptz(6)
   projects   projects                @relation(fields: [project_id], references: [id])
   users      users                   @relation(fields: [user_id], references: [id])
 
-  @@index([project_id], name: "user_project_roles_projects_id_fk")
-  @@index([user_id], name: "user_project_roles_users_id_fk")
+  @@index([project_id], name: "idx_24872_user_project_roles_projects_id_fk")
+  @@index([user_id], name: "idx_24872_user_project_roles_users_id_fk")
+  @@ignore
 }
 
 model user_provider_connections {
-  id               Int                                @id @default(autoincrement())
-  user_id          Int                                @db.UnsignedInt
+  id               Int                                @id
+  user_id          BigInt
   provider         user_provider_connections_provider
   access_token     String                             @db.VarChar(255)
   provider_user_id String?                            @db.VarChar(255)
-  created_at       DateTime                           @default(now()) @db.DateTime(0)
-  updated_at       DateTime                           @default(now()) @db.DateTime(0)
+  created_at       DateTime                           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime                           @default(now()) @db.Timestamptz(6)
   users            users                              @relation(fields: [user_id], references: [id])
 
-  @@index([user_id], name: "user_provider_connections_users_id_fk")
+  @@index([user_id], name: "idx_24878_user_provider_connections_users_id_fk")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model user_team_roles {
-  id         Int                  @id @default(autoincrement())
-  user_id    Int                  @db.UnsignedInt
+  user_id    BigInt
   team_id    Int
   role       user_team_roles_role @default(MEMBER)
-  created_at DateTime             @default(now()) @db.DateTime(0)
-  updated_at DateTime             @default(now()) @db.DateTime(0)
+  created_at DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at DateTime             @default(now()) @db.Timestamptz(6)
   teams      teams                @relation(fields: [team_id], references: [id])
   users      users                @relation(fields: [user_id], references: [id])
 
-  @@index([team_id], name: "user_team_roles_teams_id_fk")
-  @@index([user_id], name: "user_team_roles_users_id_fk")
+  @@index([team_id], name: "idx_24886_user_team_roles_teams_id_fk")
+  @@index([user_id], name: "idx_24886_user_team_roles_users_id_fk")
+  @@ignore
 }
 
 model users {
-  id                        Int                         @id @default(autoincrement()) @db.UnsignedInt
+  id                        BigInt                      @id @default(autoincrement())
   team_id                   Int?
   email                     String                      @unique @db.VarChar(50)
-  meta                      String?                     @db.Text
+  meta                      String?
   is_oss                    Boolean                     @default(false)
-  updated_at                DateTime                    @default(now()) @db.Timestamp(0)
-  created_at                DateTime?                   @default(now()) @db.Timestamp(0)
+  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  created_at                DateTime?                   @default(now()) @db.Timestamptz(6)
   verified                  Boolean                     @default(false)
-  password                  String?                     @db.Text
+  password                  String?
   name                      String                      @db.VarChar(30)
+  uuid                      String?                     @db.VarChar(50)
+  github_user_id            String?
   teams                     teams?                      @relation(fields: [team_id], references: [id])
   alerting                  alerting?
   comments                  comments[]
+  environments              environments[]
   jobs                      jobs[]
   project_hosts             project_hosts[]
+  templates                 templates[]
   tests                     tests[]
-  user_meta                 user_meta[]
-  user_project_roles        user_project_roles[]
+  user_meta                 user_meta[]                 @ignore
+  user_project_roles        user_project_roles[]        @ignore
   user_provider_connections user_provider_connections[]
-  user_team_roles           user_team_roles[]
+  user_team_roles           user_team_roles[]           @ignore
 
-  @@index([team_id], name: "user___fk_team_id")
+  @@index([team_id], name: "idx_24894_user___fk_team_id")
 }
 
 enum cli_status_status {
@@ -401,11 +461,8 @@ enum cli_status_status {
   Completed
 }
 
-enum environments_browser {
-  ALL
-  SAFARI
-  CHROME
-  FIREFOX
+enum integrations_integration_name {
+  SLACK
 }
 
 enum job_reports_status {
@@ -413,6 +470,12 @@ enum job_reports_status {
   FAILED
   MANUAL_REVIEW_REQUIRED
   RUNNING
+}
+
+enum jobs_build_trigger {
+  MANUAL
+  CLI
+  CRON
 }
 
 enum jobs_status {
@@ -424,29 +487,10 @@ enum jobs_status {
   ABORTED
 }
 
-enum jobs_build_trigger {
-  MANUAL
-  CLI
-  CRON
-}
-
-enum jobs_browser {
-  CHROME
-  FIREFOX
-  SAFARI
-  ALL
-}
-
 enum teams_tier {
   FREE
   STARTER
   PRO
-}
-
-enum test_instance_result_sets_status {
-  WAITING_FOR_TEST_EXECUTION
-  RUNNING_CHECKS
-  FINISHED_RUNNING_CHECKS
 }
 
 enum test_instance_result_sets_conclusion {
@@ -455,18 +499,16 @@ enum test_instance_result_sets_conclusion {
   MANUAL_REVIEW_REQUIRED
 }
 
+enum test_instance_result_sets_status {
+  WAITING_FOR_TEST_EXECUTION
+  RUNNING_CHECKS
+  FINISHED_RUNNING_CHECKS
+}
+
 enum test_instance_results_status {
   PASSED
   FAILED
   MANUAL_REVIEW_REQUIRED
-}
-
-enum test_instances_status {
-  QUEUED
-  RUNNING
-  FINISHED
-  TIMEOUT
-  ABORTED
 }
 
 enum test_instances_browser {
@@ -475,8 +517,12 @@ enum test_instances_browser {
   SAFARI
 }
 
-enum user_integrations_integration_name {
-  SLACK
+enum test_instances_status {
+  QUEUED
+  RUNNING
+  FINISHED
+  TIMEOUT
+  ABORTED
 }
 
 enum user_project_roles_role {

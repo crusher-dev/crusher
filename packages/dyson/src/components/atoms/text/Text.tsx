@@ -14,8 +14,8 @@ export type TextProps = {
 
 const TextDefaultProps = {
 	fontSize: 12,
-	leading: "false",
-	weight: 700,
+	showLineHeight: false,
+	weight: 400,
 	color: "#fff",
 };
 /**
@@ -27,9 +27,9 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 		<span
 			className={`font-gilroy font-${weight} ${className}`}
 			css={css`
-					font-size: ${fontSize}rem;
-					color: ${color};
-					${otherProps.onClick && `cursor:default`}
+				font-size: ${fontSize}rem;
+				color: ${color};
+				${otherProps.onClick && `cursor:default`}
 			`}
 			{...otherProps}
 		>

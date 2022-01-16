@@ -377,8 +377,7 @@ export default class EventRecording {
 	private checkIfElementIsAnchored(target: HTMLElement) {
 		// Check if element has some a tag parent
 		let parent = target.parentElement;
-		if(target.tagName.toLocaleLowerCase() === "a")
-			return target;
+		if (target.tagName.toLocaleLowerCase() === "a") return target;
 		while (parent) {
 			if (parent.tagName.toLowerCase() === "a") {
 				return parent;
@@ -397,9 +396,9 @@ export default class EventRecording {
 		if (event.which === 2) return;
 
 		let target = event.target;
-		
+
 		const mainAnchorNode = this.checkIfElementIsAnchored(target);
-		if(mainAnchorNode) target = mainAnchorNode;
+		if (mainAnchorNode) target = mainAnchorNode;
 
 		const inputNodeInfo = this._getInputNodeInfo(target);
 
@@ -573,13 +572,22 @@ export default class EventRecording {
 
 		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
 
+		let lastPush = Date.now();
 		window.history.pushState = new Proxy(window.history.pushState, {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if(argArray[0]) {
-					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ? (!this.isAbsoluteURL(argArray[2])
-						? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				if (argArray[0] && (Date.now() - lastPush) > 1000) {
+					lastPush = Date.now();
+					this.eventsController.saveCapturedEventInBackground(
+						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
+						null,
+						argArray[2]
+							? !this.isAbsoluteURL(argArray[2])
+								? new URL(argArray[2], document.baseURI).toString()
+								: argArray[2]
+							: window.location.href,
+					);
 				}
 				return out;
 			},
@@ -589,9 +597,17 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if(argArray[0]) {
-					this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, null, argArray[2] ?  (!this.isAbsoluteURL(argArray[2])
-					? new URL(argArray[2], document.baseURI).toString() : argArray[2]) : window.location.href);
+				if (argArray[0] & (Date.now() - lastPush) > 1000) {
+					lastPush = Date.now();
+					this.eventsController.saveCapturedEventInBackground(
+						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
+						null,
+						argArray[2]
+							? !this.isAbsoluteURL(argArray[2])
+								? new URL(argArray[2], document.baseURI).toString()
+								: argArray[2]
+							: window.location.href,
+					);
 				}
 				return out;
 			},
@@ -610,7 +626,6 @@ export default class EventRecording {
 		if (isFirstTime) {
 			const currentURL = new URL(window.location.href);
 			currentURL.searchParams.delete("__crusherAgent__");
-			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.NAVIGATE_URL, document.body, currentURL.toString());
 		}
 	
 		sendRecorderReadySignal();
@@ -635,14 +650,10 @@ export default class EventRecording {
 					: window.location.href.toString(),
 			);
 		} else {
-			this.eventsController.saveCapturedEventInBackground(
-				ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-				document.body,
-				{ 
-					url : "",
-					isBeforeNavigation: true,
-				}
-			);
+			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, document.body, {
+				url: "",
+				isBeforeNavigation: true,
+			});
 		}
 	}
 

@@ -1,4 +1,3 @@
-// This is used by pm2
 // Centralize this config file
 const { CRUSHER_APP_ENV, CRUSHER_SERVER_ENV, TEST_RUNNER_ENV, VIDEO_PROCESSOR_ENV, CRUSHER_EXTENSION_ENV } = require('./ecosystem/env');
 const { IS_PRODUCTION } = require('./ecosystem/config');

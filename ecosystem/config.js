@@ -40,6 +40,7 @@ module.exports = {
 		CONNECTION_STRING: IS_HEROKU ? process.env.REDIS_URL : process.env.REDIS_CONNECTION_STRING,
 		HOST: process.env.REDIS_HOST,
 		PORT: parseInt(process.env.REDIS_PORT, 10),
+		USERNAME: process.env.REDIS_USER,
 		PASSWORD: process.env.REDIS_PASSWORD,
 	},
 	SLACK_CONFIG: {

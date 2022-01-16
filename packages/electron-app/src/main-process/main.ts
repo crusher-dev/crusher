@@ -9,6 +9,9 @@ import { AppWindow } from "./app-window";
 import { now } from "./now";
 import { installSameOriginFilter } from "./same-origin-filter";
 import configureStore from "../store/configureStore";
+import * as path from "path";
+
+const os = require('os');
 
 if(isProduction() && process.env.SENTRY_DSN) {
     Sentry.init({ dsn: process.env.SENTRY_DSN });

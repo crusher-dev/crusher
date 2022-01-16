@@ -11,11 +11,15 @@ interface IActionsListProps {
 
 const ActionsList = ({ children, title, className, ...props }: { title?: string; children: React.ReactChild | React.ReactChild[]; className?: any }): JSX.Element => {
     return (
-		<div css={containerStyle} className={`${className}`}>
+		<div css={containerStyle} className={`${className}`} {...props}>
 			<Conditional showIf={!!title}>
 				<Text css={titleStyle}>{title}</Text>
 			</Conditional>
-			<div css={actionItemContainer}>{children}</div>
+			<div css={actionItemContainer}>
+				{
+					children && React.Children.map(children, ((child: any, index) => React.cloneElement(child, {style: {...child.props.style, borderBottom: index < (children as any).length - 1 ? "1rem solid #323636" : "none"}})))
+				}
+			</div>
 		</div>
 	);
 };
@@ -48,16 +52,16 @@ const moreStyle = css`
 	color: #af71ff;
 `;
 const actionItemContainer = css`
-	border: 1px solid #323636;
+	border: 1rem solid #323636;
 	margin: 8rem 0rem;
 	border-radius: 8rem;
+	background: #00000045;
 `;
 const actionItem = css`
 	padding: 8rem 16rem;
 	font-family: Gilroy;
 	font-size: 13rem;
 	line-height: 15rem;
-	border: 1px solid #323636;
 	cursor: default;
 	:hover {
 		background-color: #32363678;

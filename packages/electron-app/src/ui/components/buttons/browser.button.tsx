@@ -4,7 +4,7 @@ import React from "react";
 
 const BrowserButton = ({children, className, ...props}) => {
     return (
-        <Button bgColor={"tertiary-outline"} css={css`border-color:transparent; padding: 0 6rem;`} className={`${className}`} {...props}>
+        <Button bgColor={"tertiary-dark"} css={css`border-color:transparent; padding: 0 6rem;`} className={`${className}`} {...props}>
             {children}
         </Button>
     )

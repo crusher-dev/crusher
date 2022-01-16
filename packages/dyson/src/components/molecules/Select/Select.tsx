@@ -16,7 +16,7 @@ export type TSelectBoxProps = {
 		The options to be displayed in the select dropdown
 	*/
 	values: Array<{ value: any; label: any; component: ReactElement; inactive: boolean }>;
-	/* 
+	/*
 		Is multi select enabled
 	*/
 	isMultiSelect: boolean;
@@ -35,7 +35,7 @@ export type TSelectBoxProps = {
 	/*
 		Selected option
 	*/
-	selected?: any | {label: any, value: any};
+	selected?: any | { label: any; value: any };
 	/*
 		Size of select box
 	*/
@@ -51,7 +51,6 @@ export type TSelectBoxProps = {
 
 	className?: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
-
 
 const SelectDefaultProps = {
 	placeholder: "Select a value",
@@ -126,51 +125,53 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	const options = filterText ? values.filter(({ label }) => label.toLowerCase().includes(filterText.toLowerCase())) : values;
 
 	return (
-			<div css={[selectBoxContainer(openSelectBox, size)]} className={`relative ${className}`}>
-				<div className={"flex justify-between text-13 px-12 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
-					<input
-						onInput={handleFilterTextChange}
-						type={"text"}
-						disabled={!!isSearchable === false}
-						css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
-						value={filterText}
-						className={"selectBox__input selectBox__value"}
-					/>
+		<div css={[selectBoxContainer(openSelectBox, size)]} className={`relative ${className}`}>
+			<div className={"flex justify-between text-13 px-12 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
+				<input
+					onInput={handleFilterTextChange}
+					type={"text"}
+					disabled={!!isSearchable === false}
+					css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
+					value={filterText}
+					className={"selectBox__input selectBox__value"}
+				/>
 
-					<div>
-						<Conditional showIf={!filterText}>
-							<span className={"selectBox__value"} css={[selected.length && selected !== null ? selectedValueCSS : null]}>{selectedText}</span>
-						</Conditional>
-					</div>
-
-					<Conditional showIf={openSelectBox}>
-						<CloseSVG height={9} className={"mr-4"}></CloseSVG>
-					</Conditional>
-					<Conditional showIf={!openSelectBox}>
-						<DropdownIconSVG className={"mr-4"} />
+				<div>
+					<Conditional showIf={!filterText}>
+						<span className={"selectBox__value"} css={[selected.length && selected !== null ? selectedValueCSS : null]}>
+							{selectedText}
+						</span>
 					</Conditional>
 				</div>
 
 				<Conditional showIf={openSelectBox}>
-					<OnOutsideClick onOutsideClick={handleOutSideClick.bind(this, false)}>
-						<DropdownBox dropdownCSS={dropboxCSS(dropDownHeight)} onScrollEnd={onScrollEnd}>
-							{options.map(({ value, component, label }) => (
-								<div
-									css={dropdDownItem(isMultiSelect)}
-									className={"flex  items-center px-12 py-8 dropdown-label"}
-									key={value}
-									onClick={selectValue.bind(this, value)}
-								>
-									<Conditional showIf={isMultiSelect}>
-										<Checkbox className={"mr-12"} isSelected={selected.includes(value)} />
-									</Conditional>
-									{component || label}
-								</div>
-							))}
-						</DropdownBox>
-					</OnOutsideClick>
+					<CloseSVG height={9} className={"mr-4"}></CloseSVG>
+				</Conditional>
+				<Conditional showIf={!openSelectBox}>
+					<DropdownIconSVG className={"mr-4"} />
 				</Conditional>
 			</div>
+
+			<Conditional showIf={openSelectBox}>
+				<OnOutsideClick onOutsideClick={handleOutSideClick.bind(this, false)}>
+					<DropdownBox dropdownCSS={dropboxCSS(dropDownHeight)} onScrollEnd={onScrollEnd}>
+						{options.map(({ value, component, label }) => (
+							<div
+								css={dropdDownItem(isMultiSelect)}
+								className={"flex  items-center px-12 py-8 dropdown-label"}
+								key={value}
+								onClick={selectValue.bind(this, value)}
+							>
+								<Conditional showIf={isMultiSelect}>
+									<Checkbox className={"mr-12"} isSelected={selected.includes(value)} />
+								</Conditional>
+								{component || label}
+							</div>
+						))}
+					</DropdownBox>
+				</OnOutsideClick>
+			</Conditional>
+		</div>
 	);
 };
 
@@ -212,7 +213,7 @@ const dropboxCSS = (dropDownHeight: string) => css`
 
 const selectBoxContainer = (isOpen, size) => css`
 	position: relative;
-	
+
 	.selectBox {
 		width: 100%;
 

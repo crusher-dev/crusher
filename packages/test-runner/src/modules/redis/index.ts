@@ -9,6 +9,7 @@ function getConnectionObject(): IORedis.RedisOptions {
 
 	return {
 		host: process.env.REDIS_HOST,
+		username: process.env.REDIS_USER ? process.env.REDIS_USER : undefined,
 		port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : null,
 		password: process.env.REDIS_PASSWORD,
 	};

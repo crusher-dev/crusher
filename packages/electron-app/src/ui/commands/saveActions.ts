@@ -13,7 +13,7 @@ function getLastRecordedStep(store: Store<unknown, AnyAction>) {
 function handleWaitForNavigation(action: iAction, store: Store<unknown, AnyAction>) {
     const lastRecordedStep = getLastRecordedStep(store);
     if(lastRecordedStep.step.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
-        store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
+        // store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
     } else {
         if(lastRecordedStep.step.type !== ActionsInTestEnum.NAVIGATE_URL) {
             store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));

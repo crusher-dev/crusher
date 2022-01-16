@@ -11,11 +11,11 @@ class UserTeamRolesService {
 
 	@CamelizeResponse()
 	async get(userId: number, teamId: number): Promise<KeysToCamelCase<IUserTeamRoleTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM user_team_roles WHERE user_id = ? AND team_id = ?`, [userId, teamId]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM public.user_team_roles WHERE user_id = ? AND team_id = ?`, [userId, teamId]);
 	}
 
 	async create(payload: ICreateUserTeamRole): Promise<{ insertId: number }> {
-		return this.dbManager.insert(`INSERT INTO user_team_roles (user_id, team_id, role) VALUES (?, ?, ?)`, [
+		return this.dbManager.insert(`INSERT INTO public.user_team_roles (user_id, team_id, role) VALUES (?, ?, ?)`, [
 			payload.userId,
 			payload.teamId,
 			payload.role ? payload.role : UserTeamRoleEnum.MEMBER,

@@ -41,23 +41,24 @@ class BuildsService {
 	@CamelizeResponse()
 	async getBuildInfoList(
 		projectId: number,
-		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum },
+		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number },
 	): Promise<{ list: Array<IBuildInfoItem>; totalPages: number }> {
 		let additionalSelectColumns = "";
 		let additionalFromSource = "";
 		const queryParams: Array<any> = [];
 		if (filter.search) {
-			additionalSelectColumns += "ts_rank_cd(to_tsvector(COALESCE(commit_name, '')) || to_tsvector(COALESCE(jobs.repo_name, '')) || to_tsvector(COALESCE(jobs.host, '')), query) as rank";
+			additionalSelectColumns +=
+				"ts_rank_cd(to_tsvector(COALESCE(commit_name, '')) || to_tsvector(COALESCE(jobs.repo_name, '')) || to_tsvector(COALESCE(jobs.host, '')), query) as rank";
 			additionalFromSource += `to_tsquery(?) query`;
 			queryParams.push(filter.search);
 		}
 
 		let query = `SELECT jobs.id build_id, jobs.commit_name build_name, jobs.build_trigger build_trigger, EXTRACT(EPOCH FROM (job_reports.updated_at - job_reports.created_at)) build_duration, jobs.created_at build_created_at, job_reports.created_at build_report_created_at, job_reports.updated_at build_report_updated_at, jobs.latest_report_id latest_report_id, job_reports.status build_status, job_reports.total_test_count total_test_count, job_reports.passed_test_count passed_test_count, job_reports.failed_test_count failed_test_count, job_reports.review_required_test_count review_required_test_count, comments.count comment_count, users.id triggered_by_id, users.name triggered_by_name ${
 			additionalSelectColumns.length ? `, ${additionalSelectColumns}` : ""
-		} FROM users, jobs, job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id ${
+		} FROM public.users, public.jobs, public.job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM public.comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id ${
 			additionalFromSource.length ? `, ${additionalFromSource}` : ""
 		} WHERE jobs.project_id = ? AND job_reports.id = jobs.latest_report_id AND jobs.user_id = users.id AND jobs.is_draft_job = ?`;
-	  queryParams.push(projectId, false);
+		queryParams.push(projectId, false);
 
 		if (filter.triggerType) {
 			query += " AND jobs.build_trigger = ?";
@@ -72,6 +73,11 @@ class BuildsService {
 		if (filter.status) {
 			query += " AND job_reports.status = ?";
 			queryParams.push(filter.status);
+		}
+
+		if (filter.buildId) {
+			query += " AND jobs.id = ?";
+			queryParams.push(filter.buildId);
 		}
 
 		if (filter.search) {
@@ -105,12 +111,12 @@ class BuildsService {
 
 	@CamelizeResponse()
 	async getBuild(buildId: number): Promise<KeysToCamelCase<IBuildTable> | null> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM jobs WHERE id = ?", [buildId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.jobs WHERE id = ?", [buildId]);
 	}
 
 	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
-			`INSERT INTO jobs (user_id, project_id, host, status, build_trigger, browser, config, meta, is_draft_job) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			`INSERT INTO public.jobs (user_id, project_id, host, status, build_trigger, browser, config, meta, is_draft_job) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			[
 				buildInfo.userId,
 				buildInfo.projectId,
@@ -126,15 +132,15 @@ class BuildsService {
 	}
 
 	async updateBuildMeta(meta: any, buildId: number) {
-		return this.dbManager.update("UPDATE jobs SET meta = ? WHERE id = ?", [JSON.stringify(meta), buildId]);
+		return this.dbManager.update("UPDATE public.jobs SET meta = ? WHERE id = ?", [JSON.stringify(meta), buildId]);
 	}
 
 	async updateLatestReportId(latestReportId: number, buildId: number) {
-		return this.dbManager.update("UPDATE jobs SET latest_report_id = ? WHERE id = ?", [latestReportId, buildId]);
+		return this.dbManager.update("UPDATE public.jobs SET latest_report_id = ? WHERE id = ?", [latestReportId, buildId]);
 	}
 
 	async updateStatus(status: BuildStatusEnum, buildId: number) {
-		return this.dbManager.update("UPDATE jobs SET status = ? WHERE id = ?", [status, buildId]);
+		return this.dbManager.update("UPDATE public.jobs SET status = ? WHERE id = ?", [status, buildId]);
 	}
 
 	async initGithubCheckFlow(githubMeta: { repoName: string; commitId: string }, buildId: number) {

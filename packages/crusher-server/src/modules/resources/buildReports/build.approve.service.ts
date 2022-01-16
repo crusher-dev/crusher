@@ -35,10 +35,13 @@ export class BuildApproveService {
 			await this.projectsService.updateBaselineBuild(buildRecord.id, buildRecord.projectId);
 		}
 
-		if(buildRecord.checkRunId) {
+		if (buildRecord.checkRunId) {
 			const { repoName, ownerName } = this.githubService.extractRepoAndOwnerName(buildRecord.repoName);
 
-			await this.githubService.updateRunCheckStatus({ repo: buildRecord.repoName, owner: ownerName, checkRunId: buildRecord.checkRunId }, GithubCheckConclusionEnum.SUCCESS);
+			await this.githubService.updateRunCheckStatus(
+				{ repo: buildRecord.repoName, owner: ownerName, checkRunId: buildRecord.checkRunId },
+				GithubCheckConclusionEnum.SUCCESS,
+			);
 		}
 		return true;
 	}

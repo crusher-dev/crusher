@@ -126,7 +126,7 @@ export const ProjectSettings = () => {
 
 				<div>
 					<Button
-						bgColor={saveButtonDisabled && "disabled"}
+						disabled={saveButtonDisabled}
 						css={css`
 							width: 82rem;
 						`}

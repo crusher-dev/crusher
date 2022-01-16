@@ -78,7 +78,6 @@ export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
 	[ACTIONS_IN_TEST.BACK_PAGE]: "Back page",
 };
 
-
 export enum InputNodeTypeEnum {
 	CONTENT_EDITABLE = "CONTENT_EDITABLE",
 	INPUT = "INPUT",

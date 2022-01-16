@@ -6,7 +6,7 @@ export enum ActionStatusEnum {
 	STARTED = "STARTED",
 	SUCCESS = "SUCCESS",
 	FAILURE = "FAILURE",
-};
+}
 
 export interface iAction {
 	uniqueId?: string;

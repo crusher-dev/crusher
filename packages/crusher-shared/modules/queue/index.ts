@@ -10,7 +10,7 @@ class QueueManager {
 		this.queues = {};
 	}
 
-	async setupQueue(queueName: string, options : QueueOptions = {}): Promise<Queue> {
+	async setupQueue(queueName: string, options: QueueOptions = {}): Promise<Queue> {
 		const queueRecord = Object.prototype.hasOwnProperty.call(this.queues, queueName);
 		if (queueRecord && queueRecord.value) {
 			console.error(`${queueName} already initialized`);
@@ -49,11 +49,7 @@ class QueueManager {
 		return true;
 	}
 
-	async addWorkerForQueue(
-		queueName: string,
-		processor: string | Processor<any, any, string>,
-		options: Omit<WorkerOptions, "connection"> = {},
-	): Promise<any> {
+	async addWorkerForQueue(queueName: string, processor: string | Processor<any, any, string>, options: Omit<WorkerOptions, "connection"> = {}): Promise<any> {
 		const queueRecord = Object.prototype.hasOwnProperty.call(this.queues, queueName);
 		if (queueRecord && this.queues[queueName].worker) {
 			console.error(`Scheduler for ${queueName} already initialized`);

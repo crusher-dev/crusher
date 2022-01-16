@@ -16,7 +16,7 @@ const generateScreenshotName = (selector: string, stepIndex: string): string => 
 
 const toCrusherSelectorsFormat = (selectors: Array<iSelectorInfo>) => {
 	const id = uuidv4();
-	const finalSelectors = selectors.filter(selector => selector.uniquenessScore === 1);
+	const finalSelectors = selectors.filter((selector) => selector.uniquenessScore === 1);
 	return { value: `crusher=${encodeURIComponent(JSON.stringify({ selectors: finalSelectors, uuid: id })).replace(/'/g, "%27")}`, uuid: id };
 };
 
@@ -65,14 +65,13 @@ function isWebpack() {
 }
 
 function chunkArray(arr, size) {
-    const chunkedArr = [];
-    let index = 0;
-    while (index < arr.length) {
-        chunkedArr.push(arr.slice(index, index += size));
-    }
-    return chunkedArr;
+	const chunkedArr = [];
+	let index = 0;
+	while (index < arr.length) {
+		chunkedArr.push(arr.slice(index, (index += size)));
+	}
+	return chunkedArr;
 }
-
 
 export {
 	uuidv4,
@@ -84,5 +83,5 @@ export {
 	getBrowserActions,
 	getMainActions,
 	validActionTypeRegex,
-	chunkArray
+	chunkArray,
 };

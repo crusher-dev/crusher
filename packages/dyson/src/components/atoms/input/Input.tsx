@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { ReactElement, useCallback, useEffect, useRef } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { Conditional } from "../../layouts";
@@ -36,7 +37,18 @@ export type InputProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<InputProps> = ({ initialValue = "", forwardRef, size = "large", className, rightIcon, isError = false, onReturn, children, ...props }) => {
+export const Input: React.FC<InputProps> = ({
+	initialValue = "",
+	forwardRef,
+	size = "large",
+	className,
+	rightIcon,
+	isError = false,
+	onReturn,
+	children,
+	...props
+}) => {
+	// tslint:disable-next-line: no-empty
 	const ref = forwardRef ? forwardRef : useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
@@ -53,17 +65,21 @@ export const Input: React.FC<InputProps> = ({ initialValue = "", forwardRef, siz
 	}, [initialValue]);
 
 	const sizeStyle = getSizePropery(size);
-	
+
 	return (
 		<div
-			css={[css`
-				position: relative;
-			`]}
+			css={[
+				css`
+					position: relative;
+				`,
+			]}
 			className={`relative ${className}`}
 		>
 			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
-				<div css={rightIconStyle} className="input__rightIconContainer">{rightIcon}</div>
+				<div css={rightIconStyle} className="input__rightIconContainer">
+					{rightIcon}
+				</div>
 			</Conditional>
 		</div>
 	);
@@ -82,14 +98,14 @@ const inputBox = (sizeStyle: { height: number }) => css`
 	border-radius: 4px;
 	height: ${sizeStyle.height}rem;
 	padding-top: 3rem;
-	font-size: 13rem;
+	font-size: ${sizeStyle.fontSize}rem;
 	padding-left: 16rem;
 	color: #fff;
 
 	width: 100%;
 
 	:focus {
-		border-color: #6893e7;
+		border-color: #8860de;
 		//box-shadow: rgba(104, 147, 231, 0.11) 0px 0px 10px 10px;
 	}
 `;
@@ -101,10 +117,13 @@ const errorState = css`
 function getSizePropery(size: InputProps["size"]) {
 	switch (size) {
 		case "small":
-			return { height: 20 };
+			return { height: 26, fontSize: 12 };
+			break;
 		case "large":
-			return { height: 46 };
+			return { height: 42, fontSize: 14 };
+			break;
 		default:
-			return { height: 34 };
+			return { height: 34, fontSize: 13 };
+			break;
 	}
 }

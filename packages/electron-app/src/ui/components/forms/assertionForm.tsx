@@ -159,7 +159,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 						src={isValidationCorrect ? "./static/assets/icons/correct.svg" : "./static/assets/icons/cross.svg"}
 						style={{ marginLeft: "18rem", height: "15rem" }}
 					/>
-				</div> 
+				</div>
 			</div>
 		);
 	});

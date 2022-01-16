@@ -54,7 +54,7 @@ export const Logo: React.FC<LogoProps> = ({ showOnlyIcon, isMonochrome, height, 
 			<defs>
 				<linearGradient id="prefix__paint0_linear" x1={47.384} y1={0.769} x2={47.384} y2={99.615} gradientUnits="userSpaceOnUse">
 					<stop stopColor={isMonochrome ? "#FFF" : "#7C50FF"} />
-					<stop offset={1} stopColor={isMonochrome ? "#FFF" : "#4FB2FF"} />
+					<stop offset={1} stopColor={isMonochrome ? "#FFF" : "#7C50FF"} />
 				</linearGradient>
 			</defs>
 		</svg>

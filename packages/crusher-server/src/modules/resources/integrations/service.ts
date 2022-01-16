@@ -15,23 +15,23 @@ class IntegrationsService {
 	private slackService: SlackService;
 
 	async addIntegration(integrationConfig: SlackOAuthResponse, projectId: number) {
-		return this.dbManager.insert(`INSERT INTO integrations (project_id, meta) VALUES (?, ?)`, [
+		return this.dbManager.insert(`INSERT INTO public.integrations (project_id, meta) VALUES (?, ?)`, [
 			projectId,
 			JSON.stringify({ oAuthInfo: integrationConfig }),
 		]);
 	}
 
 	async updateIntegration(integrationConfig: SlackOAuthResponse, id: number) {
-		return this.dbManager.update(`UPDATE integrations SET meta = ? WHERE id = ?`, [JSON.stringify(integrationConfig), id]);
+		return this.dbManager.update(`UPDATE public.integrations SET meta = ? WHERE id = ?`, [JSON.stringify(integrationConfig), id]);
 	}
 
 	async deleteIntegration(id: number) {
-		return this.dbManager.delete(`DELETE FROM integrations WHERE id = ?`, [id]);
+		return this.dbManager.delete(`DELETE FROM public.integrations WHERE id = ?`, [id]);
 	}
 
 	@CamelizeResponse()
 	async getSlackIntegration(projectId: number): Promise<KeysToCamelCase<IIntegrationsTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM integrations WHERE project_id = ? AND integration_name = ?", [
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.integrations WHERE project_id = ? AND integration_name = ?", [
 			projectId,
 			IntegrationServiceEnum.SLACK,
 		]);
@@ -39,7 +39,7 @@ class IntegrationsService {
 
 	@CamelizeResponse()
 	async getListOfIntegrations(projectId: number): Promise<Array<KeysToCamelCase<IIntegrationsTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM integrations WHERE project_id = ?", [projectId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM public.integrations WHERE project_id = ?", [projectId]);
 	}
 
 	async saveSlackSettings(payload: { alertChannel: any; normalChannel: any }, projectId: number) {

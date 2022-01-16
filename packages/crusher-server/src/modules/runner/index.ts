@@ -30,7 +30,7 @@ class TestsRunner {
 			payload.actions = this._replaceHostInEvents(payload.actions, hostToReplace);
 		}
 		const testExeuctionQueue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
-		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, {...payload, rateLimiterKey: payload.buildId.toString()});
+		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, { ...payload, rateLimiterKey: payload.buildId.toString() });
 	}
 
 	private _getNextTestInstancesDependencyArr(

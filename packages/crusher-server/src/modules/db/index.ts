@@ -21,6 +21,7 @@ function getConnectionObject() {
 		database: process.env.DB_DATABASE,
 		insecureAuth: true,
 		multipleStatements: true,
+		ssl: { rejectUnauthorized: typeof process.env.DATABASE_SSL !== "undefined" ? true : false },
 	};
 }
 

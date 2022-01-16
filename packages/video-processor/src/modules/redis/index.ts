@@ -7,14 +7,20 @@ function getConnectionObject(): IORedis.RedisOptions {
 		return { path: process.env.REDIS_CONNECTION_STRING };
 	}
 
-	return {
-		host: process.env.REDIS_HOST,
+	let connectionObject: IORedis.RedisOptions = {
 		username: process.env.REDIS_USER ? process.env.REDIS_USER : undefined,
-		port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : null,
 		password: process.env.REDIS_PASSWORD,
 	};
-}
+	const server = {
+		host: process.env.REDIS_HOST,
+		port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : null,
+	};
 
+	if (process.env.REDIS_SECURE) connectionObject.tls = server;
+	else connectionObject = { ...connectionObject, ...server };
+
+	return connectionObject;
+}
 class RedisManager extends ParentRedisManager {
 	constructor() {
 		super(getConnectionObject());

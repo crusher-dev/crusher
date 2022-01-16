@@ -42,6 +42,7 @@ module.exports = {
 		PORT: parseInt(process.env.REDIS_PORT, 10),
 		USERNAME: process.env.REDIS_USER,
 		PASSWORD: process.env.REDIS_PASSWORD,
+		SECURE: process.env.REDIS_SECURE,
 	},
 	SLACK_CONFIG: {
 		CLIENT_ID: process.env.SLACK_CLIENT_ID,

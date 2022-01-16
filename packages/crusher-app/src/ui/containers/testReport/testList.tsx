@@ -14,7 +14,7 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ChevronDown, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import { ChevronDown, ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
 import ReactTable, { useTable, useBlockLayout } from "react-table";
 import {
 	getActionLabel,
@@ -30,7 +30,7 @@ import {
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
 import { sentenceCase } from "@utils/common/textUtils";
-import { getAssetPath } from "@utils/helpers";
+import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
@@ -694,13 +694,69 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 		</>
 	);
 }
+function ExpandableStepGroup({ steps, testInstanceData, count, show = false }: { steps: any[]; testInstanceData: any; count: number; show?: boolean }) {
+	const [expandTestStep, setExpandTestStepSteps] = React.useState(show);
+	const expandHandler = React.useCallback(() => {
+		setExpandTestStepSteps(true);
+	}, []);
+
+	return (
+		<>
+			<Conditional showIf={!expandTestStep}>
+				<Conditional showIf={count > 0}>
+					<div className={"relative mb-32"}>
+						<div className={" flex px-44"} onClick={expandHandler} css={expandDIVCSS}>
+							<div css={tick} className={"expand-svg"}>
+								<ExpandSVG height={"20rem"} width={"20rem"} />
+							</div>
+							<div
+								className={"mt-4 flex"}
+								css={css`
+									align-items: center;
+								`}
+							>
+								<span className={"text-13 font-600 leading-none expand-highlight pt-4"}>Expand {count} steps</span>
+							</div>
+						</div>
+					</div>
+				</Conditional>
+			</Conditional>
+			<Conditional showIf={expandTestStep}>
+				{steps.map((step, index) => (
+					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
+				))}
+			</Conditional>
+		</>
+	);
+}
+
+const expandDIVCSS = css`
+	:hover {
+		.expand-highlight {
+			color: #2ae7db;
+			text-decoration: underline;
+		}
+
+		svg rect {
+			fill: #242b36;
+		}
+	}
+
+	.expand-highlight {
+		color: #58e9e0;
+	}
+
+	.expand-svg {
+	}
+`;
 
 function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
+	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
 		<div className={"px-32 w-full"} css={stepsContainer}>
 			<div className={"ml-32 py-32"} css={stepsList}>
-				{steps.map((step, index) => (
-					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
+				{groupSteps.map(({ type, from, to, count }: any) => (
+					<ExpandableStepGroup testInstanceData={testInstanceData} steps={steps.slice(from, from === to ? to + 1 : to)} count={count} show={type === "show"} />
 				))}
 			</div>
 		</div>

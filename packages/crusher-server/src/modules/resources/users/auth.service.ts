@@ -42,7 +42,7 @@ class UserAuthService {
 
 	@CamelizeResponse()
 	async loginWithBasicAuth(email: string, password: string, req: any, res: any): Promise<KeysToCamelCase<IUserTable>> {
-		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM crusher.users WHERE email = ? AND password= ?`, [email, encryptPassword(password)]);
+		const user = await this.dbManager.fetchSingleRow(`SELECT * FROM public.users WHERE email = ? AND password= ?`, [email, encryptPassword(password)]);
 
 		if (!user) {
 			throw new BadRequestError("INVALID_CREDENTIALS");

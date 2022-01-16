@@ -12,7 +12,7 @@ class BuildTestInstanceScreenshotService {
 	private dbManager: DBManager;
 
 	private async insertScreenshot(payload: IAddTestIntanceScreenshotPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO crusher.test_instance_screenshots (instance_id, name, url, action_index) VALUES (?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO public.test_instance_screenshots (instance_id, name, url, action_index) VALUES (?, ?, ?, ?)", [
 			payload.instanceId,
 			payload.name,
 			payload.url,
@@ -61,7 +61,7 @@ class BuildTestInstanceScreenshotService {
 
 	@CamelizeResponse()
 	async getScreenshots(instanceId: number): Promise<Array<KeysToCamelCase<ITestInstanceScreenshotsTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM crusher.test_instance_screenshots WHERE instance_id = ?", [instanceId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM public.test_instance_screenshots WHERE instance_id = ?", [instanceId]);
 	}
 
 	@CamelizeResponse()
@@ -69,7 +69,7 @@ class BuildTestInstanceScreenshotService {
 		resultSetId: number,
 	): Promise<Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>> {
 		return this.dbManager.fetchAllRows(
-			"SELECT test_instance_results.*, current_screenshot.url current_screenshot_url, current_screenshot.action_index action_index, target_screenshot.url target_screenshot_url FROM crusher.test_instance_results LEFT JOIN (SELECT test_instance_screenshots.action_index, test_instance_screenshots.id, test_instance_screenshots.url url FROM crusher.test_instance_screenshots) current_screenshot ON current_screenshot.id = test_instance_results.screenshot_id LEFT JOIN (SELECT test_instance_screenshots.id, test_instance_screenshots.url FROM crusher.test_instance_screenshots) target_screenshot ON target_screenshot.id = test_instance_results.target_screenshot_id, crusher.test_instance_screenshots WHERE test_instance_results.instance_result_set_id = ? AND test_instance_screenshots.id = test_instance_results.screenshot_id",
+			"SELECT test_instance_results.*, current_screenshot.url current_screenshot_url, current_screenshot.action_index action_index, target_screenshot.url target_screenshot_url FROM public.test_instance_results LEFT JOIN (SELECT test_instance_screenshots.action_index, test_instance_screenshots.id, test_instance_screenshots.url url FROM public.test_instance_screenshots) current_screenshot ON current_screenshot.id = test_instance_results.screenshot_id LEFT JOIN (SELECT test_instance_screenshots.id, test_instance_screenshots.url FROM public.test_instance_screenshots) target_screenshot ON target_screenshot.id = test_instance_results.target_screenshot_id, public.test_instance_screenshots WHERE test_instance_results.instance_result_set_id = ? AND test_instance_screenshots.id = test_instance_results.screenshot_id",
 			[resultSetId],
 		);
 	}

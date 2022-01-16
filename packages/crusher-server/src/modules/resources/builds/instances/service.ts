@@ -41,7 +41,7 @@ class BuildTestInstancesService {
 	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
 
 	async markRunning(instanceId: number) {
-		return this.dbManager.update(`UPDATE crusher.test_instances SET status = ? WHERE id = ?`, [TestInstanceStatusEnum.RUNNING, instanceId]);
+		return this.dbManager.update(`UPDATE public.test_instances SET status = ? WHERE id = ?`, [TestInstanceStatusEnum.RUNNING, instanceId]);
 	}
 
 	logProgress(instanceId: number, logRequestPayload: ILogProgressRequestPayload) {
@@ -50,7 +50,7 @@ class BuildTestInstancesService {
 
 	@CamelizeResponse()
 	private async getBuildTestInstanceResultSet(instanceId: number): Promise<KeysToCamelCase<ITestInstanceResultSetsTable> | null> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM crusher.test_instance_result_sets WHERE instance_id = ?", [instanceId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.test_instance_result_sets WHERE instance_id = ?", [instanceId]);
 	}
 
 	private getScreenshotStatusFromDiffDelta(diffDelta: number, projectVisualBaseline: number): TestInstanceResultStatusEnum {
@@ -96,21 +96,21 @@ class BuildTestInstancesService {
 
 	async insertScrenshotResult(payload: ICreateBuildTestInstanceResultPayload) {
 		return this.dbManager.insert(
-			"INSERT INTO crusher.test_instance_results (screenshot_id, target_screenshot_id, instance_result_set_id, diff_delta, diff_image_url, status) VALUES (?, ?, ?, ?, ?, ?)",
+			"INSERT INTO public.test_instance_results (screenshot_id, target_screenshot_id, instance_result_set_id, diff_delta, diff_image_url, status) VALUES (?, ?, ?, ?, ?, ?)",
 			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status],
 		);
 	}
 
 	private async saveActionsResult(actionsResult: Array<IActionResultItemWithIndex>, instanceId: number, projectId: number, hasInstancePassed: boolean) {
 		return this.dbManager.insert(
-			"INSERT INTO crusher.test_instance_action_results (instance_id, project_id, actions_result, has_instance_passed) VALUES (?, ?, ?, ?)",
+			"INSERT INTO public.test_instance_action_results (instance_id, project_id, actions_result, has_instance_passed) VALUES (?, ?, ?, ?)",
 			[instanceId, projectId, JSON.stringify(actionsResult), hasInstancePassed],
 		);
 	}
 
 	@CamelizeResponse()
 	async getActionsResult(instanceId: number): Promise<KeysToCamelCase<IBuildInstanceActionResults> & { actionsResult: any }> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM crusher.test_instance_action_results WHERE instance_id = ?", [instanceId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.test_instance_action_results WHERE instance_id = ?", [instanceId]);
 	}
 
 	async saveResult(
@@ -204,7 +204,7 @@ class BuildTestInstancesService {
 		instanceId: number,
 		failedReason: string | null = null,
 	) {
-		return this.dbManager.update("UPDATE crusher.test_instance_result_sets SET status = ?, conclusion = ?, failed_reason = ? WHERE instance_id = ?", [
+		return this.dbManager.update("UPDATE public.test_instance_result_sets SET status = ?, conclusion = ?, failed_reason = ? WHERE instance_id = ?", [
 			status,
 			conclusion,
 			failedReason,
@@ -223,13 +223,13 @@ class BuildTestInstancesService {
 
 	@CamelizeResponse()
 	getResultSets(reportId: number): Promise<Array<KeysToCamelCase<ITestInstanceResultSetsTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM crusher.test_instance_result_sets WHERE report_id = ?", [reportId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM public.test_instance_result_sets WHERE report_id = ?", [reportId]);
 	}
 
 	async createBuildTestInstanceResultSet(
 		payload: KeysToCamelCase<Omit<ITestInstanceResultSetsTable, "id" | "status" | "conclusion" | "failed_reason">>,
 	): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO crusher.test_instance_result_sets (report_id, instance_id, target_instance_id, status) VALUES (?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO public.test_instance_result_sets (report_id, instance_id, target_instance_id, status) VALUES (?, ?, ?, ?)", [
 			payload.reportId,
 			payload.instanceId,
 			payload.targetInstanceId,
@@ -240,7 +240,7 @@ class BuildTestInstancesService {
 	async createBuildTestInstance(
 		payload: KeysToCamelCase<Omit<ITestInstancesTable, "id" | "browser" | "status" | "code" | "meta">> & { browser: Omit<BrowserEnum, "ALL">; meta: any },
 	): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO crusher.test_instances (job_id, test_id, status, host, browser, meta) VALUES (?, ?, ?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO public.test_instances (job_id, test_id, status, host, browser, meta) VALUES (?, ?, ?, ?, ?, ?)", [
 			payload.jobId,
 			payload.testId,
 			TestInstanceStatusEnum.QUEUED,
@@ -253,18 +253,18 @@ class BuildTestInstancesService {
 	@CamelizeResponse()
 	async getInstanceAllInformation(instanceId: number): Promise<KeysToCamelCase<ITestInstancesTable & { test_name: string; test_events: string }>> {
 		return this.dbManager.fetchSingleRow(
-			"SELECT test_instances.*, tests.name test_name, tests.events test_events FROM crusher.tests, crusher.test_instances WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
+			"SELECT test_instances.*, tests.name test_name, tests.events test_events FROM public.tests, public.test_instances WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
 			[instanceId],
 		);
 	}
 
 	@CamelizeResponse()
 	async getInstance(instanceId: number): Promise<KeysToCamelCase<ITestInstancesTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM crusher.test_instances WHERE id = ?", [instanceId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.test_instances WHERE id = ?", [instanceId]);
 	}
 
 	async addRecordedVideo(videoUrl: string, lastSecondsClipVideoUrl: string, instanceId: number) {
-		return this.dbManager.fetchSingleRow("UPDATE crusher.test_instances SET recorded_video_url = ?, recorded_clip_video_url = ? WHERE id = ?", [
+		return this.dbManager.fetchSingleRow("UPDATE public.test_instances SET recorded_video_url = ?, recorded_clip_video_url = ? WHERE id = ?", [
 			videoUrl,
 			lastSecondsClipVideoUrl,
 			instanceId,
@@ -274,7 +274,7 @@ class BuildTestInstancesService {
 	@CamelizeResponse()
 	async getReferenceInstance(testInstanceId: number, referenceType: "PROJECT_LEVEL" | null = "PROJECT_LEVEL"): Promise<KeysToCamelCase<ITestInstancesTable>> {
 		const testRecord = await this.dbManager.fetchSingleRow(
-			"SELECT tests.* FROM crusher.test_instances, crusher.tests WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
+			"SELECT tests.* FROM public.test_instances, public.tests WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
 			[testInstanceId],
 		);
 		const testInstanceRecord = await this.getInstance(testInstanceId);
@@ -283,11 +283,11 @@ class BuildTestInstancesService {
 		}
 
 		// Currently there is only one reference type
-		const projectRecord = await this.dbManager.fetchSingleRow("SELECT * FROM crusher.projects WHERE id = ?", [testRecord.project_id]);
+		const projectRecord = await this.dbManager.fetchSingleRow("SELECT * FROM public.projects WHERE id = ?", [testRecord.project_id]);
 		if (!projectRecord.baseline_job_id) return testInstanceRecord;
 
 		const projectLevelReferenceInstance = await this.dbManager.fetchSingleRow(
-			"SELECT * FROM crusher.test_instances WHERE test_id = ? AND job_id = ? AND browser = ?",
+			"SELECT * FROM public.test_instances WHERE test_id = ? AND job_id = ? AND browser = ?",
 			[testRecord.id, projectRecord.baseline_job_id, testInstanceRecord.browser],
 		);
 		return projectLevelReferenceInstance ? projectLevelReferenceInstance : testInstanceRecord;

@@ -8,7 +8,7 @@ shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} &
 // Promise is returned
 builder
 	.build({
-		targets: Platform.LINUX.createTarget(["appimage", "deb"]),
+		targets: Platform.LINUX.createTarget(["appimage", "deb", "zip"]),
 		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
 		config: {
 			productName: "Crusher Recorder",

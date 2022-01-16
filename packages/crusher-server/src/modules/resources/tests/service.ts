@@ -68,7 +68,7 @@ class TestService {
 		await this.handleTemplateActions(templateActions, testInfo.projectId, testInfo.userId);
 
 		return this.dbManager.insert(
-			`INSERT INTO crusher.tests (project_id, name, events, user_id, featured_video_url, featured_screenshot_url) VALUES (?, ?, ?, ?, ?, ?)`,
+			`INSERT INTO public.tests (project_id, name, events, user_id, featured_video_url, featured_screenshot_url) VALUES (?, ?, ?, ?, ?, ?)`,
 			[
 				testInfo.projectId,
 				testInfo.name,
@@ -81,16 +81,16 @@ class TestService {
 	}
 
 	async updateTestSteps(testId: number, steps: Array<iAction>) {
-		return this.dbManager.update(`UPDATE crusher.tests SET events = ? WHERE id = ?`, [JSON.stringify(steps), testId]);
+		return this.dbManager.update(`UPDATE public.tests SET events = ? WHERE id = ?`, [JSON.stringify(steps), testId]);
 	}
 
 	async linkToDraftBuild(buildId: number, testId: number) {
-		return this.dbManager.update("UPDATE crusher.tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
+		return this.dbManager.update("UPDATE public.tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}
 
 	async updateTest(testId: number, newInfo: { name: string; tags: string; runAfter: number }) {
 		const { name, tags, runAfter } = newInfo;
-		return this.dbManager.update(`UPDATE crusher.tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
+		return this.dbManager.update(`UPDATE public.tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
 	}
 
 	async runTestsInProject(
@@ -137,7 +137,7 @@ class TestService {
 	@CamelizeResponse()
 	async getCompleteTestInfo(testId: number) {
 		return this.dbManager.fetchSingleRow(
-			`SELECT tests.*, projects.id as project_id, projects.name as project_name, users.id as user_id, users.name as user_name FROM crusher.tests, crusher.projects, crusher.users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
+			`SELECT tests.*, projects.id as project_id, projects.name as project_name, users.id as user_id, users.name as user_name FROM public.tests, public.projects, public.users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
 			[testId],
 		);
 	}
@@ -161,7 +161,7 @@ class TestService {
 
 		let query = `SELECT tests.*, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
 			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
-		} FROM crusher.tests, crusher.users, crusher.jobs, crusher.job_reports ${
+		} FROM public.tests, public.users, public.jobs, public.job_reports ${
 			additionalFromSource ? `, ${additionalFromSource}` : ""
 		} WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
 		queryParams.push(projectId);
@@ -204,16 +204,16 @@ class TestService {
 	}
 
 	async deleteTest(testId: number) {
-		return this.dbManager.update(`UPDATE crusher.tests SET deleted = ? WHERE id = ?`, [true, testId]);
+		return this.dbManager.update(`UPDATE public.tests SET deleted = ? WHERE id = ?`, [true, testId]);
 	}
 
 	async updateMeta(meta: string, testId: number) {
-		return this.dbManager.update("UPDATE crusher.tests SET meta = ? WHERE id = ?", [meta, testId]);
+		return this.dbManager.update("UPDATE public.tests SET meta = ? WHERE id = ?", [meta, testId]);
 	}
 
 	@CamelizeResponse()
 	async getTest(testId: number): Promise<KeysToCamelCase<ITestTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM crusher.tests WHERE id = ?", [testId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.tests WHERE id = ?", [testId]);
 	}
 
 	// With template actions included
@@ -239,7 +239,7 @@ class TestService {
 	}
 
 	async addFeaturedVideo(featuredVideoUrl: string, lastSecondsClipVideoUrl: string, testId: number): Promise<{ insertId: number }> {
-		return this.dbManager.update("UPDATE crusher.tests SET featured_video_url = ?, featured_clip_video_url = ? WHERE id = ?", [
+		return this.dbManager.update("UPDATE public.tests SET featured_video_url = ?, featured_clip_video_url = ? WHERE id = ?", [
 			featuredVideoUrl,
 			lastSecondsClipVideoUrl,
 			testId,
@@ -248,7 +248,7 @@ class TestService {
 
 	@CamelizeResponse()
 	async getTestsFromIdList(testIds: Array<number>): Promise<Array<KeysToCamelCase<ITestTable>>> {
-		return this.dbManager.fetchAllRows(`SELECT * FROM crusher.tests WHERE id IN (${new Array(testIds.length).fill("?").join(", ")})`, [...testIds]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM public.tests WHERE id IN (${new Array(testIds.length).fill("?").join(", ")})`, [...testIds]);
 	}
 
 	// Specifically for run after this test
@@ -272,7 +272,7 @@ class TestService {
 	}
 
 	async createTemplate(payload: Omit<ICreateTemplatePayload, "events"> & { events: Array<iAction> }) {
-		return this.dbManager.insert("INSERT INTO crusher.templates (name, events, project_id, user_id) VALUES (?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO public.templates (name, events, project_id, user_id) VALUES (?, ?, ?, ?)", [
 			payload.name,
 			JSON.stringify(payload.events),
 			payload.projectId ? payload.projectId : null,
@@ -282,12 +282,12 @@ class TestService {
 
 	@CamelizeResponse()
 	async getTemplates(name: string): Promise<Array<KeysToCamelCase<ITemplatesTable>>> {
-		return this.dbManager.fetchAllRows(`SELECT * FROM crusher.templates WHERE name LIKE ?`, [name ? `%${name}%` : "%"]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM public.templates WHERE name LIKE ?`, [name ? `%${name}%` : "%"]);
 	}
 
 	@CamelizeResponse()
 	async getTemplate(id: number): Promise<KeysToCamelCase<ITemplatesTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM crusher.templates WHERE id = ?`, [id]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM public.templates WHERE id = ?`, [id]);
 	}
 }
 

@@ -5,37 +5,37 @@ import { ActionsList, ActionsListItem } from "./actionsList";
 import { turnOnInspectMode } from "../../../commands/perform";
 import { useTour } from "@reactour/tour";
 
-const InspectModeAction = ({className, ...prosp} : any) => {
-    const { isOpen, setCurrentStep } = useTour();
-    
-	const handleTurnOnInspectMode = ()=>{
-        if(isOpen) {
-            setCurrentStep(2);
-        }
-        turnOnInspectMode();
-    };
+const InspectModeAction = ({ className, ...prosp }: any) => {
+	const { isOpen, setCurrentStep } = useTour();
 
-    return (
-        <ActionsList className={`${className}`}>
-            <ActionsListItem  id={"select-element-action"} onClick={handleTurnOnInspectMode}>
-                <div css={actionItemContainerStyle}>
-                    <span>Select an element</span>
-                    <MouseIcon css={mouseIconStyle}/>
-                </div>
-            </ActionsListItem>
-        </ActionsList>
-    )
+	const handleTurnOnInspectMode = () => {
+		if (isOpen) {
+			setCurrentStep(2);
+		}
+		turnOnInspectMode();
+	};
+
+	return (
+		<ActionsList className={`${className}`}>
+			<ActionsListItem id={"select-element-action"} onClick={handleTurnOnInspectMode}>
+				<div id={"select-an-element-action"} css={actionItemContainerStyle}>
+					<span>Select an element</span>
+					<MouseIcon css={mouseIconStyle} />
+				</div>
+			</ActionsListItem>
+		</ActionsList>
+	);
 };
 
 const actionItemContainerStyle = css`
-    display: flex;
-    padding: 0rem 4rem;
-    align-items: center;
+	display: flex;
+	padding: 0rem 4rem;
+	align-items: center;
 `;
 
 const mouseIconStyle = css`
-    margin-left: auto;
-    width: 12rem;
+	margin-left: auto;
+	width: 12rem;
 `;
 
 export { InspectModeAction };

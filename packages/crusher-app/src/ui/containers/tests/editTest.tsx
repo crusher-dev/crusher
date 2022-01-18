@@ -22,13 +22,11 @@ import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProje
 import { sentenceCase } from "@utils/common/textUtils";
 
 const changeTestData = (testId: number, name: string, testTags?: string, runAfterTest?: number) => {
-	console.log(testTags, runAfterTest);
 	return backendRequest(changeTestInfoAPI(testId), {
 		method: RequestMethod.POST,
 		payload: {
 			name: name,
 			tags: testTags,
-			runAfter: runAfterTest,
 		},
 	});
 };
@@ -44,21 +42,19 @@ export const getOptions = ({ list }, id) => {
 	return list.filter((listItem) => listItem.id !== id).map((listItem) => ({ label: sentenceCase(listItem.testName), value: listItem.id }));
 };
 
-export const EditTestModal = ({ name, id, onClose, runAfter, tags }) => {
+export const EditTestModal = ({ name, id, onClose, tags }) => {
 	const [testName, changeTestName] = useState(name);
-	const [runAfterTest, changeRunAfter] = useState([runAfter]);
 	const [testTags, changeTags] = useState(tags);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
 	const [project] = useAtom(currentProject);
-	const isFormChanged = testName !== name || runAfterTest[0] !== runAfter || testTags !== tags;
+	const isFormChanged = testName !== name  || testTags !== tags;
 
-	const { data: testListData } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id));
 
 	const changeTestNameCallback = useCallback(() => {
 		(async () => {
 			try {
-				await changeTestData(id, testName, testTags, runAfterTest[0]);
+				await changeTestData(id, testName, testTags);
 				sendSnackBarEvent({ type: "normal", message: "Changes have been saved." });
 				await mutate(getTestListAPI(project.id));
 				onClose();
@@ -68,7 +64,7 @@ export const EditTestModal = ({ name, id, onClose, runAfter, tags }) => {
 			setProcessing(false);
 		})();
 		setProcessing(true);
-	}, [testName, testTags, runAfterTest]);
+	}, [testName, testTags]);
 
 	const deleteTest = useCallback(() => {
 		(async () => {
@@ -131,21 +127,9 @@ export const EditTestModal = ({ name, id, onClose, runAfter, tags }) => {
 						onChange={(e: React.FormEvent<HTMLInputElement>) => {
 							changeTags(e.currentTarget.value);
 						}}
+						css={css`max-width: 40%`}
 						initialValue={testTags}
 					/>
-				</div>
-				<div className={"w-full"}>
-					<TextBlock
-						css={css`
-							color: #d8d8d8;
-						`}
-						className={"mb-12"}
-						fontSize={"12.4"}
-						weight={600}
-					>
-						Run this test after
-					</TextBlock>
-					<SelectBox size={"medium"} values={getOptions(testListData, id, runAfterTest)} selected={runAfterTest} callback={changeRunAfter.bind(this)} />
 				</div>
 			</div>
 			<div className={"flex justify-end mt-20"}>

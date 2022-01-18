@@ -92,7 +92,7 @@ export default function ForgotPassword() {
 						<div className="text-32 font-extrabold my-50">Please Check your email</div>;
 					</Conditional>
 					<Conditional showIf={!data}>
-						<div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28"}>
+						<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28"}>
 							<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
 								Reset your password
 							</TextBlock>

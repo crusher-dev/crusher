@@ -1,6 +1,6 @@
 import { resolvePathToBackendURI } from "@utils/common/url";
 
-const CLIENT_ID = "Iv1.512a5f008eb53d2d";
+const CLIENT_ID = process.env.GITHUB_APP_CLIENT_ID;
 // Github new installation is
 const getGithubOAuthURL = (alreadyAuthorized = false) => {
 	// if (!process.env.GITHUB_APP_CLIENT_ID) {

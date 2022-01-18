@@ -21,8 +21,7 @@ import { mutate } from "swr";
 import { addGithubRepo, getGitIntegrations } from "@constants/api";
 import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "@types/RequestOptions";
-
-const projects = ["Github", "Crusher", "Test", "Github", "Crusher", "Test", "Github", "Crusher", "Test"];
+import { githubTokenAtom } from "@store/atoms/global/githubToken";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -89,7 +88,8 @@ const useGithubData = (gitInfo) => {
 };
 
 const useGithubAuthorize = () => {
-	const [, setConnectedGit] = useAtom(connectedToGitAtom);
+	const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
+
 	const onGithubClick = (alreadAuthorized: boolean = false) => {
 		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
 
@@ -215,6 +215,7 @@ const addGithubProject = (projectId: number, repoData) => {
 const GitRepoIntegration = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
+	const [githubToken, setGithubToken] = useAtom(githubTokenAtom);
 
 	const onGithubConnectClick = (alreadAuthorized: boolean = false) => {
 		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
@@ -233,6 +234,16 @@ const GitRepoIntegration = () => {
 			}
 		}, 50);
 	};
+
+	React.useEffect(() => {
+		if(githubToken && githubToken !== "null" && githubToken.length) {
+			setConnectedGit({
+					...connectedGit,
+		 			token: githubToken,
+					type: "github",
+			});
+		}
+	}, [githubToken]);
 
   usePageTitle("Select github repo");
 

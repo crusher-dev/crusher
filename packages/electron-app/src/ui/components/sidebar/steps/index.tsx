@@ -127,9 +127,9 @@ const Step = ({
 	}
 
 	return (
-		<div onMouseOver={()=>{
+		<div onMouseOver={() => {
 			setIsHover(true)
-		}} onMouseLeave={setIsHover.bind(this, false)}>
+		}} onMouseLeave={setIsHover.bind(this, false)} className="recorded-step" data-step-id={stepIndex} data-type={action.type} data-status={ action.status }>
 			<div css={[stepStyle, isHover && hoverStepStyle, isRunning && runningStepStyle, (isFailed) && failedStyle]}>
 				<Checkbox {...props} />
  				<div css={stepTextStyle}>
@@ -250,7 +250,7 @@ const StepsPanel = ({className, ...props}: any) => {
 	});
 
 	React.useEffect(() => {
-		const testListContainer: any = document.querySelector("#stepsListContainer");
+		const testListContainer: any = document.querySelector("#steps-list-container");
 		const elementHeight = testListContainer.scrollHeight;
 		testListContainer.scrollBy(0, elementHeight);
 	}, [recordedSteps.length]);
@@ -279,7 +279,7 @@ const StepsPanel = ({className, ...props}: any) => {
 	}
 
     return (
-        <div className={`${className}`} css={containerStyle}>
+        <div className={`${className}`} id="steps-pane" css={containerStyle}>
             <div css={stepsHeaderStyle}>
                 <Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} />
                 <Text css={stepsTextStyle}>{recordedSteps.length} Steps</Text>
@@ -297,7 +297,7 @@ const StepsPanel = ({className, ...props}: any) => {
                 </Conditional>
             </div>
 
-            <div className="custom-scroll" id={"stepsListContainer"} css={stepsContainerStyle}>
+            <div className="custom-scroll" id={"steps-list-container"} css={stepsContainerStyle}>
 				{steps.map((step, index) => (
 					<Step
 						isSelectAllType={false}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Basic form</title>
+    <style>
+      #container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h2>Basic form</h2>
+
+      <!-- Create HTML table form with text input, select, textarea. -->
+      <form onsubmit="return false">
+        <table>
+          <tr>
+            <td>Text input:</td>
+            <td><input type="text" name="text-input" value="" style="width: 100%"></td>
+          </tr>
+          <tr>
+            <td>Select:</td>
+            <td>
+              <select name="select" style="width: 100%">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Textarea:</td>
+            <td><textarea style="height: 60px; width: 100%;" name="textarea"></textarea></td>
+          </tr>
+        </table>
+        <input type="submit" value="Submit">
+    </div>
+  </body>
+</html>

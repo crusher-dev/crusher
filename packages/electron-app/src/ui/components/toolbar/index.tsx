@@ -46,7 +46,7 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 		}
 	}, [isTestVerificationComplete]);
 
-		
+
 	const verifyTest = () => {
 		if(isOpen) {
 			setIsOpen(false);
@@ -58,7 +58,7 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 		if(isOpen) {
 			setIsOpen(false);
 		}
-	
+
 		if(intervalRef.current) {
 			clearInterval(intervalRef.current);
 		}
@@ -70,7 +70,7 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 		if(isOpen) {
 			setIsOpen(false);
 		}
-		
+
 		updateTest();
 	}
 
@@ -135,7 +135,7 @@ const Toolbar = (props: any) => {
     const handleUrlReturn = React.useCallback(() => {
 		if(urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
-			
+
 			batch(() => {
 				if(selectedDevice[0] !== recorderInfo.device?.id) {
 					// Setting the device will add webview in DOM tree
@@ -147,7 +147,7 @@ const Toolbar = (props: any) => {
 				if(recorderInfo.url) {
 					// Perform navigation if already recording
 					performNavigation(validUrl.toString(), store);
-				} 
+				}
 				// Just in case onboarding overlay info is still visible
 				dispatch(setShowShouldOnboardingOverlay(false));
 
@@ -183,7 +183,7 @@ const Toolbar = (props: any) => {
 	const handleCloseSettingsModal = () => {
 		setShowSettingsModal(false);
 	};
-    
+
     return (
 		<div css={containerStyle}>
 			{/* Go Back button */}
@@ -208,7 +208,7 @@ const Toolbar = (props: any) => {
 						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { padding: 14rem; height: 30rem !important; border: none; background: none; border-left-width: 1rem; border-left-style: solid; border-left-color: #181c23; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
 				}
 			/>
-			
+
 			<Conditional showIf={isRecorderInInitialState}>
 				<Button className={"ml-24"} onClick={handleUrlReturn} bgColor="tertiary-outline" css={buttonStyle}>
 					Start
@@ -217,7 +217,7 @@ const Toolbar = (props: any) => {
 			<Conditional showIf={!isRecorderInInitialState}>
 				<div className={"ml-18 flex items-center"}>
 					<div css={[onlineDotStyle, recorderState.type === TRecorderState.PERFORMING_ACTIONS ? css`background: yellow` : undefined]} />
-					<Text css={recTextStyle} className={"ml-8"}>
+					<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
 						{recorderState.type !== TRecorderState.PERFORMING_ACTIONS ? "Rec." : "Waiting"}
 					</Text>
 				</div>

@@ -50,34 +50,34 @@ function StatusTag({ type }) {
 	if (type === "MANUAL_REVIEW_REQUIRED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, review]}>
-				<ReviewRequiredSVG height={"17rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Review required</span>
+				<ReviewRequiredSVG height={"17rem"} isMonochrome={true} /> <span className={" text-14 font-600 ml-8 leading-none"}>Review required</span>
 			</div>
 		);
 	}
 	if (type === "FAILED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, failed]}>
-				<FailedSVG height={"17rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Failed</span>
+				<FailedSVG height={"16rem"} width={"16rem"} isMonochrome={true} /> <span className={" text-14 font-600 ml-8 leading-none"}>Failed</span>
 			</div>
 		);
 	}
 	if (type === "PASSED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-				<PassedSVG height={"20rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
+				<PassedSVG height={"20rem"} isMonochrome={true} /> <span className={"text-14 mt-1 font-600 ml-8 leading-none"}>Passed</span>
 			</div>
 		);
 	}
 	if (type === "RUNNING") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, running]}>
-				<RunningSVG height={"16rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Running</span>
+				<RunningSVG height={"16rem"} isMonochrome={true} /> <span className={" text-14 font-600 ml-8 leading-none"}>Running</span>
 			</div>
 		);
 	}
 	return (
 		<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, waiting]}>
-			<InitiatedSVG height={"16rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Waiting</span>
+			<InitiatedSVG height={"16rem"} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Waiting</span>
 		</div>
 	);
 }
@@ -396,10 +396,10 @@ const timelineItem = css`
 `;
 
 const statusTag = css`
-	min-width: 140px;
-	height: 30px;
+	min-width: 132rem;
+	height: 30rem;
 	box-sizing: border-box;
-	border-radius: 15.5px;
+	border-radius: 15.5rem;
 `;
 
 const failed = css`

@@ -118,7 +118,7 @@ export default function Signup() {
 						<div className="text-32 font-extrabold my-50">Invalid Token</div>;
 					</Conditional>
 					<Conditional showIf={Boolean(query?.token)}>
-						<div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28"}>
+						<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28"}>
 							<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
 								Reset your password
 							</TextBlock>

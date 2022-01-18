@@ -23,7 +23,7 @@ export default function Learn({ nextStepHandler }) {
 						Don't worry, this usually takes 2-3 mins
 					</TextBlock>
 
-					<div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28"}></div>
+					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28"}></div>
 					<div className="mt-40">
 						<Button
 							onClick={nextStepHandler}

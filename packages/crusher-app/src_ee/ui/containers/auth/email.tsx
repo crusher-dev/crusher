@@ -98,7 +98,7 @@ export default function EmailLogin({ goBackHandler }) {
 						Million of devs empower their workflow with crusher
 					</TextBlock>
 
-					<div css={overlayContainer} className={"mt-36 pt-36 pl-28 pr-28 pb-60"}>
+					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28 pb-60"}>
 						<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
 							Continue with Email
 						</TextBlock>

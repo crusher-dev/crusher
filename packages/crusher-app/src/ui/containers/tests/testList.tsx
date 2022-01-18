@@ -61,7 +61,7 @@ const updateTest = (tempTestId: string, mainTestId: string) => {
 
 function TestCard(props: IBuildItemCardProps) {
 	const { testData } = props;
-	const { testName, isPassing, createdAt, imageURL, clipVideoURL, id, firstRunCompleted, draftBuildId, runAfter, tags } = testData;
+	const { testName, isPassing, createdAt, imageURL, clipVideoURL, id, firstRunCompleted, draftBuildId, tags } = testData;
 	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={"16rem"} />
 	) : (
@@ -85,7 +85,6 @@ function TestCard(props: IBuildItemCardProps) {
 				<EditTest
 					id={id}
 					name={testName}
-					runAfter={runAfter}
 					tags={tags}
 					onClose={() => {
 						setShowEditBox(false);

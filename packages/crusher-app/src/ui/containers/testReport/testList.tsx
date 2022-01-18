@@ -269,7 +269,7 @@ function RenderStep({ data, testInstanceData }) {
 
 				<Conditional showIf={status !== "FAILED"}>
 					<div
-						className={"mt-4 flex"}
+						className={"mt-8 flex"}
 						css={css`
 							align-items: center;
 						`}
@@ -753,7 +753,7 @@ const expandDIVCSS = css`
 function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
 	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
-		<div className={"px-32 w-full"} css={stepsContainer}>
+		<div className={"px-32 w-full"}>
 			<div className={"ml-32 py-32"} css={stepsList}>
 				{groupSteps.map(({ type, from, to, count }: any) => (
 					<ExpandableStepGroup testInstanceData={testInstanceData} steps={steps.slice(from, from === to ? to + 1 : to)} count={count} show={type === "show"} />
@@ -859,10 +859,6 @@ const close = css`
 
 const stepsList = css`
 	border-left: 1px solid #171c24;
-`;
-
-const stepsContainer = css`
-	border-top: 1px solid #171c24;
 `;
 
 const testCard = css`

@@ -139,7 +139,7 @@ const Step = ({
 					<TextBlock css={stepSubtitleStyle}>{subtitle}</TextBlock>
 				</div>
 				<Conditional showIf={isRunning}>
-					<LoadingIcon  style={{width: 30, height: 30, marginLeft: 4}} css={css`margin-left: auto;`}/>
+					<LoadingIcon style={{width: "16rem", height: "16rem", marginLeft: "4rem"}} css={css`margin-left: auto;`}/>
 				</Conditional>
 				<Conditional showIf={isHover && (!isRunning)}>
 					<Dropdown

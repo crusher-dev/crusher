@@ -48,10 +48,19 @@ const SearchIcon = (props: any) => {
 const MouseIcon = (props) => {
 	return (
 		<svg width={12} height={19} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path d="M6.02 6.039c.371 0 .672-.47.672-1.049s-.301-1.048-.673-1.048c-.372 0-.673.47-.673 1.048 0 .58.301 1.049.673 1.049ZM0 9.98v2.728c.004 1.645.59 3.17 1.65 4.295a5.49 5.49 0 0 0 4.035 1.741h.653a5.5 5.5 0 0 0 4.04-1.749c1.05-1.122 1.626-2.646 1.622-4.29V9.98H0Z" fill="#595268" />
-			<path d="M10.933.888A3.522 3.522 0 0 0 8.566 0H6.614v2.805c.736.308 1.267 1.17 1.267 2.185 0 1.015-.531 1.877-1.267 2.185v1.547H12v-5.41A3.228 3.228 0 0 0 10.933.887Z" fill="#7E42FF" />
-			<path d="M4.158 4.99c0-1.014.532-1.877 1.268-2.185V0H3.483C1.525.006-.005 1.462 0 3.313v5.409h5.426V7.175c-.736-.308-1.268-1.17-1.268-2.185Z" fill="#595268" />
-	  	</svg>
+			<path
+				d="M6.02 6.039c.371 0 .672-.47.672-1.049s-.301-1.048-.673-1.048c-.372 0-.673.47-.673 1.048 0 .58.301 1.049.673 1.049ZM0 9.98v2.728c.004 1.645.59 3.17 1.65 4.295a5.49 5.49 0 0 0 4.035 1.741h.653a5.5 5.5 0 0 0 4.04-1.749c1.05-1.122 1.626-2.646 1.622-4.29V9.98H0Z"
+				fill="#595268"
+			/>
+			<path
+				d="M10.933.888A3.522 3.522 0 0 0 8.566 0H6.614v2.805c.736.308 1.267 1.17 1.267 2.185 0 1.015-.531 1.877-1.267 2.185v1.547H12v-5.41A3.228 3.228 0 0 0 10.933.887Z"
+				fill="#7E42FF"
+			/>
+			<path
+				d="M4.158 4.99c0-1.014.532-1.877 1.268-2.185V0H3.483C1.525.006-.005 1.462 0 3.313v5.409h5.426V7.175c-.736-.308-1.268-1.17-1.268-2.185Z"
+				fill="#595268"
+			/>
+		</svg>
 	);
 };
 
@@ -118,13 +127,24 @@ const BrowserIcon = (props: any) => {
 
 const CloseModalIcon = (props: any) => {
 	return (
-		<svg width={17} height={17} viewBox="0 0 17 17" fill="none" css={css`fill: #ffffff1a; path { fill: inherit; } &:hover {fill: #9F9F9F}`} {...props} >
-			<path
-				d="M16.564 13.792L3.241.47a1.487 1.487 0 00-2.103 0l-.702.701a1.487 1.487 0 000 2.104l13.323 13.323a1.487 1.487 0 002.103 0l.701-.701a1.486 1.486 0 00.001-2.104z"
-			/>
-			<path
-				d="M13.759.47L.436 13.793a1.487 1.487 0 000 2.103l.7.701a1.487 1.487 0 002.104 0L16.564 3.276a1.486 1.486 0 000-2.103l-.701-.7A1.487 1.487 0 0013.759.47z"
-			/>
+		<svg
+			width={17}
+			height={17}
+			viewBox="0 0 17 17"
+			fill="none"
+			css={css`
+				fill: #ffffff1a;
+				path {
+					fill: inherit;
+				}
+				&:hover {
+					fill: #9f9f9f;
+				}
+			`}
+			{...props}
+		>
+			<path d="M16.564 13.792L3.241.47a1.487 1.487 0 00-2.103 0l-.702.701a1.487 1.487 0 000 2.104l13.323 13.323a1.487 1.487 0 002.103 0l.701-.701a1.486 1.486 0 00.001-2.104z" />
+			<path d="M13.759.47L.436 13.793a1.487 1.487 0 000 2.103l.7.701a1.487 1.487 0 002.104 0L16.564 3.276a1.486 1.486 0 000-2.103l-.701-.7A1.487 1.487 0 0013.759.47z" />
 		</svg>
 	);
 };
@@ -136,50 +156,18 @@ const LoadingIcon = (props) => {
 			style={{
 				margin: "auto",
 				background: "#fff",
+				display: "block",
+				shapeRendering: "auto",
 			}}
 			width={200}
 			height={200}
 			viewBox="0 0 100 100"
 			preserveAspectRatio="xMidYMid"
-			display="block"
 			{...props}
 		>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(30 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(60 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(90 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(120 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(150 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(180 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(210 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(240 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(270 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(300 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite" />
-			</rect>
-			<rect x={47} y={24} rx={3} ry={6} width={6} height={12} fill="#fe718d" transform="rotate(330 50 50)">
-				<animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite" />
-			</rect>
+			<circle cx={50} cy={50} fill="none" stroke="#fff" strokeWidth={10} r={35} strokeDasharray="164.93361431346415 56.97787143782138">
+				<animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1" />
+			</circle>
 		</svg>
 	);
 };
@@ -249,62 +237,68 @@ const MoreIcon = (props: any) => {
 
 const CrossIcon = (props) => (
 	<svg
-	  width={12}
-	  height={12}
-	  fill="none"
-	  xmlns="http://www.w3.org/2000/svg"
-	  css={css`fill: #ffffff1a; path { fill: inherit; } &:hover {fill: #9F9F9F}`} 
-	  viewBox={"0 0 12 12"}
-	  {...props}
+		width={12}
+		height={12}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		css={css`
+			fill: #ffffff1a;
+			path {
+				fill: inherit;
+			}
+			&:hover {
+				fill: #9f9f9f;
+			}
+		`}
+		viewBox={"0 0 12 12"}
+		{...props}
 	>
-	  <path
-		d="m7.98 6 3.712-3.712a1.05 1.05 0 0 0 0-1.485l-.495-.495a1.05 1.05 0 0 0-1.484 0L6 4.021 2.288.308a1.05 1.05 0 0 0-1.485 0L.308.803a1.05 1.05 0 0 0 0 1.484L4.02 6 .308 9.713a1.05 1.05 0 0 0 0 1.485l.495.494c.41.41 1.075.41 1.485 0L6 7.98l3.713 3.712c.41.41 1.075.41 1.485 0l.494-.495a1.05 1.05 0 0 0 0-1.484L7.98 6Z"
-	  />
+		<path d="m7.98 6 3.712-3.712a1.05 1.05 0 0 0 0-1.485l-.495-.495a1.05 1.05 0 0 0-1.484 0L6 4.021 2.288.308a1.05 1.05 0 0 0-1.485 0L.308.803a1.05 1.05 0 0 0 0 1.484L4.02 6 .308 9.713a1.05 1.05 0 0 0 0 1.485l.495.494c.41.41 1.075.41 1.485 0L6 7.98l3.713 3.712c.41.41 1.075.41 1.485 0l.494-.495a1.05 1.05 0 0 0 0-1.484L7.98 6Z" />
 	</svg>
 );
 
 const DownIcon = (props: any) => {
 	return (
-		<svg width={14} height={14} viewBox={`0 0 24 24`} fill={"#fff"} xmlns="http://www.w3.org/2000/svg" {...props}>
-		<path
-		  fill="none"
-		  stroke="#fff"
-		  strokeWidth={2}
-		  d="m2 8.35 10.173 9.823L21.997 8"
-		/>
-	  </svg>
-	)
+		<svg width={14} height={14} viewBox={"0 0 24 24"} fill={"#fff"} xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path fill="none" stroke="#fff" strokeWidth={2} d="m2 8.35 10.173 9.823L21.997 8" />
+		</svg>
+	);
 };
 
 const UpIcon = (props: any) => {
 	return (
-		<svg
-		width={15}
-		height={15}
-		viewBox="0 -6 524 524"
-		fill="#fff"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	  >
-		<path d="m460 321-34 34-164-163L98 355l-34-34 198-196 198 196Z" />
-	  </svg>
+		<svg width={15} height={15} viewBox="0 -6 524 524" fill="#fff" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path d="m460 321-34 34-164-163L98 355l-34-34 198-196 198 196Z" />
+		</svg>
 	);
-}
+};
 
 const InspectElementIcon = (props: any) => {
 	return (
-		<svg
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 12 12"
-			{...props}
-	  	>
+		<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" {...props}>
 			<path
-			d="m5.598 5.073.042.037 3.75 3.75a.375.375 0 0 1-.288.64l-.054-.008-2.13-.449-1.234 1.795a.375.375 0 0 1-.68-.16L5 10.626v-5.25a.375.375 0 0 1 .598-.302ZM9.75 2a1.25 1.25 0 0 1 1.247 1.168L11 3.25v4.5a1.25 1.25 0 0 1-1.012 1.227.875.875 0 0 0-.278-.503l-.068-.055-3.75-3.75a.875.875 0 0 0-1.389.63l-.003.076V9H2.25a1.25 1.25 0 0 1-1.247-1.168L1 7.75v-4.5a1.25 1.25 0 0 1 1.168-1.247L2.25 2h7.5Z"
-			fill="#504E57"
+				d="m5.598 5.073.042.037 3.75 3.75a.375.375 0 0 1-.288.64l-.054-.008-2.13-.449-1.234 1.795a.375.375 0 0 1-.68-.16L5 10.626v-5.25a.375.375 0 0 1 .598-.302ZM9.75 2a1.25 1.25 0 0 1 1.247 1.168L11 3.25v4.5a1.25 1.25 0 0 1-1.012 1.227.875.875 0 0 0-.278-.503l-.068-.055-3.75-3.75a.875.875 0 0 0-1.389.63l-.003.076V9H2.25a1.25 1.25 0 0 1-1.247-1.168L1 7.75v-4.5a1.25 1.25 0 0 1 1.168-1.247L2.25 2h7.5Z"
+				fill="#504E57"
 			/>
-	  </svg>
-	)
-}
+		</svg>
+	);
+};
 
-export { CrossIcon, BulbIcon, DeleteIcon, SettingsIcon, NavigateBackIcon, NavigateRefreshIcon, SearchIcon, MouseIcon, WarningIcon, BrowserIcon, CloseModalIcon, LoadingIcon, MoreIcon, DownIcon, UpIcon, InspectElementIcon };
+export {
+	CrossIcon,
+	BulbIcon,
+	DeleteIcon,
+	SettingsIcon,
+	NavigateBackIcon,
+	NavigateRefreshIcon,
+	SearchIcon,
+	MouseIcon,
+	WarningIcon,
+	BrowserIcon,
+	CloseModalIcon,
+	LoadingIcon,
+	MoreIcon,
+	DownIcon,
+	UpIcon,
+	InspectElementIcon,
+};

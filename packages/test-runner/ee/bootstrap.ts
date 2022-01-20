@@ -102,7 +102,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		this._heartBeatInterval = setInterval(sendHeartbeat, 2000) as any;
 
 		const shutDownInterval = setInterval(async () => {
-			if (Date.now() - this._lastJobPickedUpTime > 120000 && !this._worker.isRunning()) {
+			if (Date.now() - this._lastJobPickedUpTime > 7200000 && !this._worker.isRunning()) {
 				console.log("Shutting down...");
 				this._worker.pause();
 

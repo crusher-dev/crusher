@@ -5,15 +5,19 @@ import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildLi
 import { resolvePathToBackendURI } from "@utils/common/url";
 
 export const USER_SYSTEM_API = resolvePathToBackendURI("/users/actions/getUserAndSystemInfo");
-export const getTestListAPI = (projectId: number, otherFilters = {}) => {
-	const filteredObj = pickBy(otherFilters, identity);
+export const getTestListAPI = (projectId: number, otherFilters: any = {}) => {
+	if (!otherFilters.page) {
+		otherFilters.page = 0;
+	}
+
+	const filteredObj = pickBy(otherFilters,  v => v !== null && v !== undefined);
 	const urlParams = new URLSearchParams(filteredObj);
 	const urlParamString = urlParams.toString();
 
 	return resolvePathToBackendURI(`/projects/${projectId}/tests?${urlParamString}`);
 };
 export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, otherFilters = {}) => {
-	const filteredObj = pickBy(otherFilters, identity);
+	const filteredObj = pickBy(otherFilters,  v => v !== null && v !== undefined);
 	const urlParams = new URLSearchParams(filteredObj);
 	const urlParamString = urlParams.toString();
 

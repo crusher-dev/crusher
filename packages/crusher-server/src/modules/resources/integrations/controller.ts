@@ -41,7 +41,7 @@ class IntegrationsController {
 		if (existingSlackIntegration) {
 			await this.integrationsService.updateIntegration(integrationConfig, existingSlackIntegration.id);
 		} else {
-			await this.integrationsService.addIntegration(integrationConfig, projectId);
+			await this.integrationsService.addIntegration(integrationConfig, IntegrationServiceEnum.SLACK, projectId);
 		}
 
 		await res.redirect(redirectUrl);
@@ -151,7 +151,7 @@ class IntegrationsController {
 			} else {
 				await this.userAuthService.setUserAuthCookies(githubRegisteredUser.id, githubRegisteredUser.teamId, req, res);
 			}
-			return res.redirect(resolvePathToFrontendURI("/"));
+			return res.redirect(resolvePathToFrontendURI("/?github_token=" + (tokenInfo as any).token));
 		}
 
 		const redirectUrl = new URL(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "http://localhost:3000/");

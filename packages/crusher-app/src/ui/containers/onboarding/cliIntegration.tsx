@@ -17,17 +17,42 @@ import React from "react";
 const CopyCommandInput = ({ command }: { command: string }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	const copyToClipbaord = React.useCallback(() => {
-			inputRef.current.select();
-			document.execCommand("copy");
-			sendSnackBarEvent({ type: "normal", message: "Copied to clipboard!" });
+		inputRef.current.select();
+		document.execCommand("copy");
+		sendSnackBarEvent({ type: "normal", message: "Copied to clipboard!" });
 	}, []);
 	return (
 		<Input
-			css={css`width: 240rem; user-select: none; height: 40rem; input { cursor: default; background: rgba(0, 0, 0, 0.49); height: 40rem; user-select: none; } :hover { input { background: rgba(255, 255, 255, 0.03); } svg { opacity: 1; } }`}
-      initialValue={command}
-      //@ts-ignore
+			css={css`
+				width: 240rem;
+				user-select: none;
+				height: 40rem;
+				input {
+					cursor: default;
+					background: rgba(0, 0, 0, 0.49);
+					height: 40rem;
+					user-select: none;
+				}
+				:hover {
+					input {
+						background: rgba(255, 255, 255, 0.03);
+					}
+					svg {
+						opacity: 1;
+					}
+				}
+			`}
+			initialValue={command}
+			//@ts-ignore
 			readOnly={true}
-			rightIcon={<CopyIconSVG onClick={copyToClipbaord} css={css`opacity: 0.42`} />}
+			rightIcon={
+				<CopyIconSVG
+					onClick={copyToClipbaord}
+					css={css`
+						opacity: 0.42;
+					`}
+				/>
+			}
 			forwardRef={inputRef}
 			onClick={copyToClipbaord}
 		/>
@@ -36,12 +61,12 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 
 const CliRepoIntegration = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-	const [project] = useAtom(currentProject)
+	const [project] = useAtom(currentProject);
 	const [commands, setCommnads] = React.useState(["", ""]);
 
 	React.useEffect(() => {
 		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
-			method: RequestMethod.GET
+			method: RequestMethod.GET,
 		}).then((res) => {
 			if (res) {
 				setCommnads(res);
@@ -49,7 +74,7 @@ const CliRepoIntegration = () => {
 		});
 
 		const testCreatedPoll = setInterval(async () => {
-			const res = await backendRequest(getTestListAPI(project.id), {method: RequestMethod.GET});
+			const res = await backendRequest(getTestListAPI(project.id), { method: RequestMethod.GET });
 			if (res.list.length) {
 				setOnboardingStep(OnboardingStepEnum.SUPPORT_CRUSHER);
 				clearInterval(testCreatedPoll);
@@ -73,7 +98,7 @@ const CliRepoIntegration = () => {
 					</div>
 				</div>
 
-        <Card type="focus" className={"mt-56 py-24 pb-40"}>
+				<Card type="focus" className={"mt-56 py-24 pb-40"}>
 					<div className={"pb-8 px-16 "}>
 						<span
 							className={"text-11 font-700"}
@@ -90,23 +115,27 @@ const CliRepoIntegration = () => {
 
 					<div className={"pl-44 pr-32"}>
 						<div className={"flex mt-16"}>
-							<CopyCommandInput command={commands[0]}/>
+							<CopyCommandInput command={commands[0]} />
 						</div>
 						<div className={"flex items-center justify-between mt-16"}>
-							<CopyCommandInput command={commands[1]}/>
+							<CopyCommandInput command={commands[1]} />
 							<span
 								className={"text-13"}
 								css={css`
 									color: #af7eff;
 								`}
-							>
-							</span>
+							></span>
 						</div>
 					</div>
-        </Card>
-        <Card type={"normal"} className={"mt-32 py-16"}>
+				</Card>
+				<Card type={"normal"} className={"mt-32 py-16"}>
 					<div className={" px-16 flex items-center justify-between"}>
-						<div className={"flex"} css={ css`align-items: center;`}>
+						<div
+							className={"flex"}
+							css={css`
+								align-items: center;
+							`}
+						>
 							<span
 								className={"text-11 font-700"}
 								css={css`
@@ -116,7 +145,13 @@ const CliRepoIntegration = () => {
 								2.)
 							</span>
 							<span className={"text-16 font-cera font-700 ml-16"}>Push changes to origin</span>
-							<LoadingSVG className={"ml-8"} css={ css`width: 16rem; height: 16rem;`}/>
+							<LoadingSVG
+								className={"ml-8"}
+								css={css`
+									width: 16rem;
+									height: 16rem;
+								`}
+							/>
 						</div>
 						<Button
 							size={"small"}
@@ -127,7 +162,7 @@ const CliRepoIntegration = () => {
 							Next
 						</Button>
 					</div>
-        </Card>
+				</Card>
 				<div className={"flex justify-end mt-28"}>
 					<Text fontSize={13}>Skip setup and show me the dashboard</Text>
 				</div>
@@ -136,5 +171,4 @@ const CliRepoIntegration = () => {
 	);
 };
 
-
-export { CliRepoIntegration }
+export { CliRepoIntegration };

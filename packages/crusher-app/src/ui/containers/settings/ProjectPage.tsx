@@ -12,9 +12,10 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { currentProject, projectsAtom } from "../../../store/atoms/global/project";
+import { currentProject, projectsAtom, updateCurrentProjectAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
+import produce from "immer";
 
 const deleteProject = (projectId) => {
 	return backendRequest(`/projects/${projectId}/actions/delete`, {
@@ -31,7 +32,8 @@ const updateProjectSettings = (projectId, name, visualBaseline) => {
 
 export const ProjectSettings = () => {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
-	const [project] = useAtom(currentProject);
+	const [project, setProject] = useAtom(currentProject);
+	const [, updateCurrentProject] = useAtom(updateCurrentProjectAtom);
 	const [projectsList] = useAtom(projectsAtom);
 	const [projectName, setProjectName] = useState(project?.name);
 	const [visualBaseline, setVisualBaseline] = useState(project?.visualBaseline);
@@ -59,6 +61,11 @@ export const ProjectSettings = () => {
 
 	const updateProjectSettingsCallback = async () => {
 		await updateProjectSettings(selectedProjectId, projectName, visualBaseline);
+
+		updateCurrentProject({
+			...project,
+			name: projectName,
+		});
 
 		sendSnackBarEvent({
 			message: "We have update project info",

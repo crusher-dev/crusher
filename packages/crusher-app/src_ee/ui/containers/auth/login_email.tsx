@@ -52,11 +52,11 @@ export default function EmailLogin({ goBackHandler }) {
 		const shouldValidateEmail = completeVerify || email.value;
 		const shouldValidatePassword = completeVerify || password.value;
 		if (!validateEmail(email.value) && shouldValidateEmail) {
-			setEmail({ ...email, error: "Please enter valid email" });
+			setEmail({ ...email, error: "Please enter a valid email" });
 		} else setEmail({ ...email, error: "" });
 
 		if (!validatePassword(password.value) && shouldValidatePassword) {
-			setPassword({ ...password, error: "Please enter a password with length > 4" });
+			setPassword({ ...password, error: "Please enter min 5 char password" });
 		} else setPassword({ ...password, error: "" });
 	};
 
@@ -71,7 +71,7 @@ export default function EmailLogin({ goBackHandler }) {
 			router.push("/app/dashboard");
 		} catch (e: any) {
 			if (e.message === "INVALID_CREDENTIALS") {
-				alert("Please add valid ceredentials.");
+				alert("Invalid email and password.");
 			} else {
 				alert(e);
 			}
@@ -100,27 +100,26 @@ export default function EmailLogin({ goBackHandler }) {
 
 					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28 pb-60"}>
 						<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
-							Continue with Email
+							Continue with email
 						</TextBlock>
 
 						<div className={" mb-72"}>
-							<div className="mt-20">
+							<div>
 								<Input
-									className="md-20 bg"
+									className="bg"
 									autoComplete={"email"}
 									value={email.value}
 									onChange={emailChange}
 									placeholder={"Enter email"}
 									isError={email.error}
+									onReturn={onLogin.bind(this)}
 									onBlur={verifyInfo.bind(this, false)}
 								/>
-								<Conditional showIf={email.error}>
-									<div className={"mt-8 text-12"} css={errorState}>
-										{email.error}
-									</div>
-								</Conditional>
+								<div className={"mt-4 mb-5 text-11"} css={errorState}>
+									{email.error}
+								</div>
 							</div>
-							<div className="mt-20">
+							<div className="">
 								<Input
 									autoComplete={"password"}
 									value={password.value}
@@ -130,12 +129,11 @@ export default function EmailLogin({ goBackHandler }) {
 									onKeyUp={loginOnEnter}
 									isError={password.error}
 									onBlur={verifyInfo.bind(this, false)}
+									onReturn={onLogin.bind(this)}
 								/>
-								<Conditional showIf={password.error}>
-									<div className={"mt-8 text-12"} css={errorState}>
-										{password.error}
-									</div>
-								</Conditional>
+								<div className={"mt-4 mb-5 text-11"} css={errorState}>
+									{password.error}
+								</div>
 							</div>
 							<Button
 								disabled={loading}
@@ -161,22 +159,24 @@ export default function EmailLogin({ goBackHandler }) {
 											{" "}
 											<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
 										</span>
-										<span className={"mt-2 ml-8"}>Processing</span>
+										<Text fontSize={14} weight={600} className={"ml-8"}>
+											Loading
+										</Text>
 									</Conditional>
 								</div>
 							</Button>
 						</div>
 						<div className="flex items-center justify-between">
-							<Text onClick={goBackHandler} className={""} fontSize={12}>
+							<Text onClick={goBackHandler} css={underLineonHover} fontSize={12}>
 								Go back
 							</Text>
-							<Text onClick={() => router.push("/forgot_password")} className={""} fontSize={12}>
+							<Text onClick={() => router.push("/forgot_password")} css={underLineonHover} fontSize={12}>
 								Forgot Password
 							</Text>
 						</div>
 					</div>
 					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
-						<Text color={"#9692FF"} fontSize={14}>
+						<Text color={"#9692FF"} fontSize={14} css={underLineonHover}>
 							Create an account
 						</Text>
 					</div>
@@ -196,4 +196,12 @@ const overlayContainer = css(`
 
 const errorState = css`
 	color: #ff4583;
+	height: 12rem;
+	width: 100%;
+`;
+
+const underLineonHover = css`
+	:hover {
+		text-decoration: underline;
+	}
 `;

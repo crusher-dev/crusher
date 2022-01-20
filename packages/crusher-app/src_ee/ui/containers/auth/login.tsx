@@ -105,12 +105,12 @@ export default function Login({ loginWithEmailHandler }) {
 								`)}
 							>
 								<Text fontSize={14} weight={500}>
-									Login with Email
+									Login with email
 								</Text>
 							</Button>
 						</div>
 						<div className="flex w-full justify-center">
-							<Text className={""} fontSize={14}>
+							<Text css={underLineonHover} fontSize={14}>
 								Need help?
 							</Text>
 						</div>
@@ -142,3 +142,9 @@ const overlayContainer = css(`
 	width: 372rem;
 	min-height: 440px;
 `);
+
+const underLineonHover = css`
+	:hover {
+		text-decoration: underline;
+	}
+`;

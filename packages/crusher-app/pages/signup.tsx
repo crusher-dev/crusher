@@ -1,28 +1,21 @@
 import React from "react";
 
-import SignupContainer from "@ui/containers/auth/signup";
-import LearnMoreContainer from "@ui/containers/auth/learn";
-import StarContainer from "@ui/containers/auth/opendash";
+import SignupContainer from "@ui/containers/auth/signup_email";
 
 import { usePageTitle } from "../src/hooks/seo";
 import { Conditional } from "dyson/src/components/layouts";
+import SignupInitial from "@ui/containers/auth/signup";
 
 function SignupPage() {
 	usePageTitle("Create account");
-	const [step, setStep] = React.useState(0);
-	const nextStep = React.useCallback(() => {
-		setStep((prev) => prev + 1);
-	}, []);
+	const [signupWithEmail, setSignupWithEmail] = React.useState(false);
 	return (
 		<React.Fragment>
-			<Conditional showIf={step == 0}>
-				<SignupContainer nextStepHandler={nextStep} />
+			<Conditional showIf={!signupWithEmail}>
+				<SignupInitial loginWithEmailHandler={setSignupWithEmail} />
 			</Conditional>
-			<Conditional showIf={step == 1}>
-				<LearnMoreContainer nextStepHandler={nextStep} />
-			</Conditional>
-			<Conditional showIf={step == 2}>
-				<StarContainer />
+			<Conditional showIf={signupWithEmail}>
+				<SignupContainer loginWithEmailHandler={setSignupWithEmail} />
 			</Conditional>
 		</React.Fragment>
 	);

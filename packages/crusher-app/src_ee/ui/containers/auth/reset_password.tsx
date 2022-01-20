@@ -30,12 +30,6 @@ const resetPasswordRequest = (token: string, password: string) => {
 	});
 };
 
-const forgotPassword = (email: string) => {
-	return backendRequest("/users/actions/forgot_password", {
-		method: RequestMethod.POST,
-		payload: { email },
-	});
-};
 export default function Signup() {
 	const router = useRouter();
 	const [data, setData] = useState(null);

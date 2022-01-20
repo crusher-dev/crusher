@@ -106,15 +106,15 @@ const SupportCrusher = () => {
 				</div>
 
 				<div className={"flex justify-center mt-40"}>
-				<Link href={"/app/tests"}>
-					<Button
-						size={"medium"}
-						css={css`
-							width: 160rem;
-						`}
-						onClick={handleOpenApp.bind(this)}
-					>
-						Open app
+					<Link href={"/app/tests"}>
+						<Button
+							size={"medium"}
+							css={css`
+								width: 160rem;
+							`}
+							onClick={handleOpenApp.bind(this)}
+						>
+							Open app
 						</Button>
 					</Link>
 				</div>
@@ -122,7 +122,6 @@ const SupportCrusher = () => {
 		</>
 	);
 };
-
 
 const githubCSS = css`
 	background: #0c0d0f;

@@ -34,6 +34,7 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 				dataToConsider = userAndSystemData;
 			}
 
+			console.log(dataToConsider);
 			updateInitialData(dataToConsider);
 			selectInitialProject(dataToConsider);
 

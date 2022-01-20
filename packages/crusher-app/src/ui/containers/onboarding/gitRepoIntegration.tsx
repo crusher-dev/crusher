@@ -31,61 +31,60 @@ const connectedToGitAtom = atomWithImmer<
 			type: "github";
 			updateCount: number;
 	  }
-	>(null);
+>(null);
 
 const selectedRepoAtom = atom<string | number>(null);
 
-	export const getOrganisatioNSelectBox = (organisations) => {
-
-		const getAddNew = {
-			value: "add_new",
-			component: (
-				<div className={"flex items-center"}>
-					<AddSVG className={"mr-12"} /> Add new org
-				</div>
-			),
-		};
-		return [...organisations, getAddNew];
+export const getOrganisatioNSelectBox = (organisations) => {
+	const getAddNew = {
+		value: "add_new",
+		component: (
+			<div className={"flex items-center"}>
+				<AddSVG className={"mr-12"} /> Add new org
+			</div>
+		),
 	};
+	return [...organisations, getAddNew];
+};
 
 const useGithubData = (gitInfo) => {
-		const [selectedOrganisation, setSelectedOrganisation] = React.useState(null);
+	const [selectedOrganisation, setSelectedOrganisation] = React.useState(null);
 
-		const [repositories, setRepositoriesData] = React.useState([]);
+	const [repositories, setRepositoriesData] = React.useState([]);
 
-		const [organisations, setOrganisation] = React.useState([]);
+	const [organisations, setOrganisation] = React.useState([]);
 
-		React.useEffect(() => {
-			(async () => {
+	React.useEffect(() => {
+		(async () => {
+			const ocktoKit = new OctokitManager(gitInfo.token);
+
+			const organisation = await ocktoKit.getInstallationsUserCanAccess();
+			const clinetSideOrganisation = convertToOrganisationInfo(organisation);
+
+			console.log("organisations", clinetSideOrganisation);
+			setOrganisation(clinetSideOrganisation);
+			const organisationId = clinetSideOrganisation[0].id;
+			setSelectedOrganisation(organisationId);
+		})();
+	}, [gitInfo.token, gitInfo.updateCount]);
+
+	React.useEffect(() => {
+		(async () => {
+			if (selectedOrganisation) {
 				const ocktoKit = new OctokitManager(gitInfo.token);
+				const repoData = await ocktoKit.getReposForInstallation(selectedOrganisation);
+				console.log("Repo data", getRepoData(repoData, selectedOrganisation));
+				setRepositoriesData(getRepoData(repoData, selectedOrganisation));
+			}
+		})();
+	}, [selectedOrganisation]);
 
-				const organisation = await ocktoKit.getInstallationsUserCanAccess();
-				const clinetSideOrganisation = convertToOrganisationInfo(organisation);
-
-				console.log("organisations", clinetSideOrganisation);
-				setOrganisation(clinetSideOrganisation);
-				const organisationId = clinetSideOrganisation[0].id;
-				setSelectedOrganisation(organisationId);
-			})();
-		}, [gitInfo.token, gitInfo.updateCount]);
-
-		React.useEffect(() => {
-			(async () => {
-				if (selectedOrganisation) {
-					const ocktoKit = new OctokitManager(gitInfo.token);
-					const repoData = await ocktoKit.getReposForInstallation(selectedOrganisation);
-					console.log("Repo data", getRepoData(repoData, selectedOrganisation));
-					setRepositoriesData(getRepoData(repoData, selectedOrganisation));
-				}
-			})();
-		}, [selectedOrganisation]);
-
-		return {
-			selectedOrganisation,
-			setSelectedOrganisation,
-			organisations,
-			repositories,
-		};
+	return {
+		selectedOrganisation,
+		setSelectedOrganisation,
+		organisations,
+		repositories,
+	};
 };
 
 const useGithubAuthorize = () => {
@@ -117,13 +116,12 @@ const GithubRepoBox = () => {
 	const [searchFilter, setSearchFilter] = React.useState("");
 	const { onGithubClick } = useGithubAuthorize();
 
-	const RepoItem = ({repository}) => {
+	const RepoItem = ({ repository }) => {
 		const [connectedRepo, setConnectdRepo] = useAtom(selectedRepoAtom);
 		const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
 		const [project] = useAtom(currentProject);
 
 		const handleRepoClick = async () => {
-
 			await addGithubProject(project.id, repository);
 
 			setConnectdRepo(repository.repoId);
@@ -138,10 +136,10 @@ const GithubRepoBox = () => {
 				key={repository.repoId}
 				className={"flex px-16 py-12 items-center"}
 				css={css`
-				:hover {
-					background: rgba(0, 0, 0, 0.46);
-				}
-			`}
+					:hover {
+						background: rgba(0, 0, 0, 0.46);
+					}
+				`}
 				onClick={handleRepoClick}
 			>
 				<GitSVG /> <span className={"text-14 ml-16 font-600 leading-none"}>{repository.repoFullName}</span>
@@ -150,60 +148,75 @@ const GithubRepoBox = () => {
 				</Conditional>
 			</div>
 		);
-	}
+	};
 
 	return (
 		<>
-		<div className={"flex justify-between items-center"}>
-		<div>
-			<Input
+			<div className={"flex justify-between items-center"}>
+				<div>
+					<Input
 						placeholder={"Search here"}
-						onChange={(e) => { setSearchFilter(e.target.value)}}
-				css={css`
-					input {
-						background: transparent;
-						border-width: 0 !important;
-					}
-				`}
-			/>
+						onChange={(e) => {
+							setSearchFilter(e.target.value);
+						}}
+						css={css`
+							input {
+								background: transparent;
+								border-width: 0 !important;
+							}
+						`}
+					/>
 				</div>
-		<SelectBox
-					values={getOrganisatioNSelectBox(organisations ? organisations.map(org => ({ label: org.name, value: org.id })) : [])}
+				<SelectBox
+					values={getOrganisatioNSelectBox(organisations ? organisations.map((org) => ({ label: org.name, value: org.id })) : [])}
 					selected={[selectedOrganisation]}
-					callback={(selected) => { if (selected[0] === "add_new") { return onGithubClick(true); } setSelectedOrganisation(selected[0]); }}
-			placeholder={"Select"}
-			css={css`
-				width: 180rem;
-				.select-dropDownContainer {
-					top: calc(100% + 2rem);
-				}
-				.selectBox {
-					border-width: 0;
-					background: transparent;
+					callback={(selected) => {
+						if (selected[0] === "add_new") {
+							return onGithubClick(true);
+						}
+						setSelectedOrganisation(selected[0]);
+					}}
+					placeholder={"Select"}
+					css={css`
+						width: 180rem;
+						.select-dropDownContainer {
+							top: calc(100% + 2rem);
+						}
+						.selectBox {
+							border-width: 0;
+							background: transparent;
 
-					:hover {
-						border-width: 0;
-						background: rgba(255, 255, 255, 0.06);
-					}
-				}
-			`}
-		/>
-	</div>
-	<div
-		className={"py-4 custom-scroll"}
-		css={css`
-			border-top: 1px solid #21252f;
-			height: 400rem;
-			overflow-y: auto;
-		`}
-	>
-		{repositories.filter(repo => { if (searchFilter.length && repo) { return repo.repoFullName.includes(searchFilter) } else { return true;  } }).map((repository) => (
-			<RepoItem key={repository.repoId} repository={repository} />
-		))}
-		</div>
+							:hover {
+								border-width: 0;
+								background: rgba(255, 255, 255, 0.06);
+							}
+						}
+					`}
+				/>
+			</div>
+			<div
+				className={"py-4 custom-scroll"}
+				css={css`
+					border-top: 1px solid #21252f;
+					height: 400rem;
+					overflow-y: auto;
+				`}
+			>
+				{repositories
+					.filter((repo) => {
+						if (searchFilter.length && repo) {
+							return repo.repoFullName.includes(searchFilter);
+						} else {
+							return true;
+						}
+					})
+					.map((repository) => (
+						<RepoItem key={repository.repoId} repository={repository} />
+					))}
+			</div>
 		</>
-	)
-}
+	);
+};
 
 const addGithubProject = (projectId: number, repoData) => {
 	return backendRequest(addGithubRepo(projectId), {
@@ -234,7 +247,7 @@ const GitRepoIntegration = () => {
 		}, 50);
 	};
 
-  usePageTitle("Select github repo");
+	usePageTitle("Select github repo");
 
 	return (
 		<>
@@ -257,41 +270,49 @@ const GitRepoIntegration = () => {
 
 				<div css={selectProjectBox}>
 					<Conditional showIf={!connectedGit}>
-						<div css={css`padding: 20rem; display: flex; justify-content: center; align-items: center; font-size: 14rem;`}>
-					<div
-						className={"font-cera font-700 leading-none"}
-						css={css`
-							font-size: 13.5rem;
-							color: white;
-						`}
-					>
-						Connect a git repository
-					</div>
-
-					<div className={"ml-20"}>
-						<Button
-							bgColor={"tertiary"}
-							onClick={onGithubConnectClick.bind(this, false)}
+						<div
 							css={css`
-								border-width: 0;
-								background: #343a41;
-								//
-								:hover {
-									border-width: 0;
-									background: #424850;
-								}
+								padding: 20rem;
+								display: flex;
+								justify-content: center;
+								align-items: center;
+								font-size: 14rem;
 							`}
 						>
-							<div className={"flex items-center"}>
-								<GithubSVG height={"12rem"} width={"12rem"} className={"mt-1"} />
-								<span className={"mt-2 ml-8"}>Github</span>
+							<div
+								className={"font-cera font-700 leading-none"}
+								css={css`
+									font-size: 13.5rem;
+									color: white;
+								`}
+							>
+								Connect a git repository
 							</div>
-						</Button>
-					</div>
+
+							<div className={"ml-20"}>
+								<Button
+									bgColor={"tertiary"}
+									onClick={onGithubConnectClick.bind(this, false)}
+									css={css`
+										border-width: 0;
+										background: #343a41;
+										//
+										:hover {
+											border-width: 0;
+											background: #424850;
+										}
+									`}
+								>
+									<div className={"flex items-center"}>
+										<GithubSVG height={"12rem"} width={"12rem"} className={"mt-1"} />
+										<span className={"mt-2 ml-8"}>Github</span>
+									</div>
+								</Button>
+							</div>
 						</div>
 					</Conditional>
 					<Conditional showIf={connectedGit}>
-							<GithubRepoBox/>
+						<GithubRepoBox />
 					</Conditional>
 				</div>
 			</div>

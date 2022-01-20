@@ -48,8 +48,7 @@ export const EditTestModal = ({ name, id, onClose, tags }) => {
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
 	const [project] = useAtom(currentProject);
-	const isFormChanged = testName !== name  || testTags !== tags;
-
+	const isFormChanged = testName !== name || testTags !== tags;
 
 	const changeTestNameCallback = useCallback(() => {
 		(async () => {
@@ -127,7 +126,9 @@ export const EditTestModal = ({ name, id, onClose, tags }) => {
 						onChange={(e: React.FormEvent<HTMLInputElement>) => {
 							changeTags(e.currentTarget.value);
 						}}
-						css={css`max-width: 40%`}
+						css={css`
+							max-width: 40%;
+						`}
 						initialValue={testTags}
 					/>
 				</div>

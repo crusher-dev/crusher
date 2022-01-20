@@ -32,6 +32,10 @@ const SupportCrusher = () => {
 		});
 	};
 
+	const openDiscord = () => {
+		window.open("https://discord.gg/QWZqZWq", "_blank");
+	};
+
 	return (
 		<>
 			<div className={"w-full"}>
@@ -45,7 +49,7 @@ const SupportCrusher = () => {
 				<div className={"flex mt-80"}>
 					<div className={"px-32 py-24"} css={githubCSS}>
 						<div className={"flex justify-between "}>
-							<Text fontSize={16} weight={700} color={"#C5EC72"}>
+							<Text fontSize={16} weight={700} color={"#ff6ef4"}>
 								Star Crusher on Github
 							</Text>
 							<GithubSVG />
@@ -67,45 +71,48 @@ const SupportCrusher = () => {
 					</div>
 					<div className={"px-32 py-24"} css={discordCSS}>
 						<div className={"flex justify-between"}>
-							<Text fontSize={16} weight={700} color={"#71DDFF"}>
+							<Text fontSize={16} weight={700} color={"#5865F2"}>
 								Join discord
 							</Text>
 							<DiscordSVG />
 						</div>
 
-						<div className={"mt-14"}>
-							<div
-								css={css`
-									background: #1b1d20;
-									border-radius: 6px;
-									min-height: 28rem;
-									width: 28rem;
-								`}
-							></div>
-						</div>
-						<TextBlock showLineHeight={true} className={"mt-12"} fontSize={13}>
+						{/*<div className={"mt-14"}>*/}
+						{/*	<div*/}
+						{/*		css={css`*/}
+						{/*			background: #1b1d20;*/}
+						{/*			border-radius: 6px;*/}
+						{/*			min-height: 28rem;*/}
+						{/*			width: 28rem;*/}
+						{/*		`}*/}
+						{/*	></div>*/}
+						{/*</div>*/}
+						<TextBlock showLineHeight={true} className={"mt-8 mb-40"} fontSize={13}>
 							Join community of builders who ship everyday
 						</TextBlock>
 
 						<Button
-							className={"mt-20"}
+							className={"mt-20 px-26"}
 							css={css`
 								border-width: 0;
-								background: #4fbadc;
-								color: #242933;
+								background: #5865f2;
+								color: #fff;
+
+								padding-left: 20rem;
+								padding-right: 20rem;
 								:hover {
-									color: #242933;
-									background: #4fbadc;
+									background: #4c59dc;
 									border-width: 0;
 								}
 							`}
+							onClick={openDiscord}
 						>
-							Join Channel
+							Join discord
 						</Button>
 					</div>
 				</div>
 
-				<div className={"flex justify-center mt-40"}>
+				<div className={"flex justify-center mt-52"}>
 					<Link href={"/app/tests"}>
 						<Button
 							size={"medium"}

@@ -226,7 +226,6 @@ const addGithubProject = (projectId: number, repoData) => {
 };
 
 const GitRepoIntegration = () => {
-	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
 
 	const onGithubConnectClick = (alreadAuthorized: boolean = false) => {

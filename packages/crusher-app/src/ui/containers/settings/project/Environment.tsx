@@ -187,6 +187,7 @@ function EnvironmentForm({ id }) {
 						placeholder={"Enter some name"}
 						onBlur={changeName}
 						initialValue={name}
+						size={"medium"}
 					/>
 				</div>
 			</div>
@@ -209,14 +210,15 @@ function EnvironmentForm({ id }) {
 						css={css`
 							height: 36rem;
 						`}
-						placeholder={"https://google.com"}
+						placeholder={"Your website URL"}
 						onBlur={setHost}
 						initialValue={host}
+						size={"medium"}
 					/>
 				</div>
 			</div>
 
-			<VariableSection envId={id} />
+			{/*<VariableSection envId={id} />*/}
 
 			<div className={"flex justify-between items-center mt-40 mb-20 text-13"}>
 				<TextBlock

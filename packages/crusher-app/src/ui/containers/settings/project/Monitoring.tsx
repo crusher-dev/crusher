@@ -52,6 +52,13 @@ function MonitoringForm({ id }) {
 	const { data: environments } = useSWR(getProjectEnvironments(project.id));
 
 	const envValues = getValues(environments);
+
+	useEffect(() => {
+		if (envValues.length > 0) {
+			setEnv([envValues[0].value]);
+		}
+	}, [envValues]);
+
 	const setEnv = (values) => {
 		setMonitoring((monitoring) => {
 			monitoring[id].environmentId = values[0];

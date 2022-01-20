@@ -105,7 +105,7 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 								`)}
 							>
 								<Text fontSize={14} weight={500}>
-								 Use email
+									Use email
 								</Text>
 							</Button>
 						</div>

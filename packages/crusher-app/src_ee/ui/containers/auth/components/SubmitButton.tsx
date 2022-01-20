@@ -31,10 +31,10 @@ export function SubmitButton({ loading, onSubmit, text }: { loading: boolean; on
 					</Text>
 				</Conditional>
 				<Conditional showIf={loading}>
-										<span>
-											{" "}
-											<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-										</span>
+					<span>
+						{" "}
+						<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+					</span>
 					<Text fontSize={14} weight={600} className={"ml-8"}>
 						Loading
 					</Text>

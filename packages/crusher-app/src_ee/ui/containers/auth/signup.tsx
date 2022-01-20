@@ -4,15 +4,8 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { Button } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
-import { loadUserDataAndRedirect } from "@hooks/user";
-import { RequestMethod } from "@types/RequestOptions";
-import { backendRequest } from "@utils/common/backendRequest";
-import { validateEmail, validatePassword, validateName } from "@utils/common/validationUtils";
-import { atom, useAtom } from "jotai";
-import { LoadingSVG } from "@svg/dashboard";
-import { SubmitButton } from "./SubmitButton";
-import { TextBox } from "./components/TextBox";
+import Link from "next/link";
+import { getGithubLoginURL } from "@utils/core/external";
 
 const RocketImage = (props) => (
 	<img
@@ -22,85 +15,32 @@ const RocketImage = (props) => (
 		}
 	/>
 );
+const GitlabSVG = (props) => (
+	<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path fillRule="evenodd" clipRule="evenodd" d="m8.001 15.37 2.946-9.07H5.055l2.946 9.07Z" fill="#E24329" />
+		<path fillRule="evenodd" clipRule="evenodd" d="M8 15.37 5.056 6.3H.925l7.076 9.07Z" fill="#FC6D26" />
+		<path fillRule="evenodd" clipRule="evenodd" d="M.926 6.3.03 9.058a.61.61 0 0 0 .221.682l7.749 5.63L.926 6.3Z" fill="#FCA326" />
+		<path fillRule="evenodd" clipRule="evenodd" d="M.926 6.3h4.129L3.28.842a.305.305 0 0 0-.58 0L.926 6.3Z" fill="#E24329" />
+		<path fillRule="evenodd" clipRule="evenodd" d="m8 15.37 2.946-9.07h4.129L8 15.37Z" fill="#FC6D26" />
+		<path fillRule="evenodd" clipRule="evenodd" d="m15.075 6.3.895 2.755a.61.61 0 0 1-.222.682L8 15.37 15.075 6.3Z" fill="#FCA326" />
+		<path fillRule="evenodd" clipRule="evenodd" d="M15.074 6.3h-4.13L12.72.839a.305.305 0 0 1 .58 0L15.074 6.3Z" fill="#E24329" />
+	</svg>
+);
 
-const showRegistrationFormAtom = atom(false);
-
-const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
-	return backendRequest("/users/actions/signup", {
-		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
-	});
+export const GithubSVG = function (props) {
+	return (
+		<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M8 0a8 8 0 0 0-2.529 15.591c.4.074.529-.174.529-.384v-1.49c-2.225.484-2.689-.944-2.689-.944-.364-.924-.888-1.17-.888-1.17-.726-.497.055-.486.055-.486.803.056 1.226.824 1.226.824.713 1.223 1.871.87 2.328.665.071-.517.279-.87.508-1.07-1.777-.203-3.645-.889-3.645-3.953 0-.874.313-1.588.824-2.148-.082-.202-.356-1.016.078-2.117 0 0 .672-.215 2.201.82A7.673 7.673 0 0 1 8 3.868c.68.004 1.365.093 2.004.27 1.527-1.035 2.198-.82 2.198-.82.435 1.102.161 1.916.079 2.117.513.56.823 1.274.823 2.148 0 3.072-1.871 3.749-3.653 3.947.287.248.549.735.549 1.481v2.196c0 .212.128.462.534.384A8.002 8.002 0 0 0 8 0Z"
+				fill="#fff"
+			/>
+		</svg>
+	);
 };
 
-export default function Signup({ nextStepHandler }) {
-	const [data] = useState(null);
+export default function SignupInitial({ loginWithEmailHandler }) {
 	const router = useRouter();
-	const { query } = router;
 
-	const [, setShowRegistrationBox] = useAtom(showRegistrationFormAtom);
-	const [email, setEmail] = useState({ value: "", error: "" });
-	const [password, setPassword] = useState({ value: "", error: "" });
-	const [name, setName] = useState({ value: "", error: "" });
-	const [loading, setLoading] = useState(false);
-
-	const emailChange = useCallback(
-		(e) => {
-			setEmail({ ...email, value: e.target.value });
-		},
-		[email],
-	);
-	const passwordChange = useCallback(
-		(e) => {
-			setPassword({ ...password, value: e.target.value });
-		},
-		[password],
-	);
-	const nameChange = useCallback(
-		(e) => {
-			setName({ ...name, value: e.target.value });
-		},
-		[name],
-	);
-
-	const verifyInfo = (completeVerify = false) => {
-		const shouldValidateEmail = completeVerify || email.value;
-		const shouldValidatePassword = completeVerify || password.value;
-		const shouldValidateName = completeVerify || name.value;
-		if (!validateEmail(email.value) && shouldValidateEmail) {
-			setEmail({ ...email, error: "Please enter valid email" });
-		} else setEmail({ ...email, error: "" });
-
-		if (!validatePassword(password.value) && shouldValidatePassword) {
-			setPassword({ ...password, error: "Please enter a password with length > 4" });
-		} else setPassword({ ...password, error: "" });
-
-		if (!validateName(name.value) && shouldValidateName) {
-			setName({ ...name, error: "Please enter a valid name" });
-		} else setName({ ...name, error: "" });
-	};
-
-	const signupUser = async () => {
-		verifyInfo(true);
-
-		if (!validateEmail(email.value) || !validatePassword(name.value) || !validateName(email.value)) return;
-		setLoading(true);
-		try {
-			await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
-			nextStepHandler();
-		} catch (e: any) {
-			console.log(e);
-			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
-		}
-		setLoading(false);
-	};
-
-	const signupOnEnter = (event: any) => {
-		if (event.key === "Enter") {
-			signupUser();
-		}
-	};
-
-	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 	return (
 		<div
 			css={css(`
@@ -118,28 +58,74 @@ export default function Signup({ nextStepHandler }) {
 						Million of devs empower their workflow with crusher
 					</TextBlock>
 
-					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28"}>
-						<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={"600"}>
-							Create a new account
+					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28 pb-60"}>
+						<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
+							Create an account
 						</TextBlock>
 
 						<div className={" mb-72"}>
-							<TextBox data={name} onChange={nameChange} autoComplete={"name"} placeholder={"Enter name"} onBlur={verifyInfo.bind(this, false)} />
-							<TextBox data={email} onChange={emailChange} autoComplete={"email"} placeholder={"Enter email"} onBlur={verifyInfo.bind(this, false)} />
-							<TextBox
-								data={password}
-								onChange={passwordChange}
-								onEnter={signupOnEnter}
-								autoComplete={"new-password"}
-								placeholder={"Enter password"}
-								onBlur={verifyInfo.bind(this, false)}
-							/>
-						</div>
+							<Link href={getGithubLoginURL()}>
+								<Button
+									className={"flex items-center justify-center"}
+									css={css(`
+									width: 100%;
+									height: 38px;
+									font-weight: 400;
+                               
+                                    background: linear-gradient(180deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
+								`)}
+								>
+									<GithubSVG />{" "}
+									<Text className={"ml-10"} fontSize={14} weight={700}>
+										Github
+									</Text>
+								</Button>
+							</Link>
 
-						<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />
+							{/*            <Button*/}
+							{/*                bgColor={"tertiary-dark"}*/}
+							{/*                className={"flex items-center justify-center mt-20"}*/}
+							{/*                css={css(`*/}
+							{/*	width: 100%;*/}
+							{/*	height: 38px;*/}
+							{/*`)}*/}
+							{/*            >*/}
+							{/*                <GitlabSVG />{" "}*/}
+							{/*                <Text className={"ml-10"} fontSize={14} weight={500}>*/}
+							{/*                    Gitlab*/}
+							{/*                </Text>*/}
+							{/*            </Button>*/}
+							<Button
+								onClick={loginWithEmailHandler}
+								bgColor={"tertiary-dark"}
+								className={"flex items-center justify-center mt-20"}
+								css={css(`
+									width: 100%;
+									height: 38px;
+								`)}
+							>
+								<Text fontSize={14} weight={500}>
+									Use email
+								</Text>
+							</Button>
+						</div>
+						<div className="flex w-full justify-center">
+							<Text className={"underline-on-hover"} fontSize={14}>
+								Need help?
+							</Text>
+						</div>
 					</div>
-					<div onClick={() => router.push("/login")} className="mt-40">
-						<Text color="#9692FF" className={""} fontSize={14}>
+					<div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
+						<Text
+							color={"#9692FF"}
+							fontSize={14}
+							css={css`
+								:hover {
+									color: #b9b6ff;
+									text-decoration: underline;
+								}
+							`}
+						>
 							or go to login
 						</Text>
 					</div>
@@ -155,8 +141,4 @@ const overlayContainer = css(`
 	border-radius: 10px;
 	width: 372rem;
 	min-height: 440px;
-`);
-
-export const errorState = css(`
-	color: #ff4583;
 `);

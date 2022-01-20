@@ -21,7 +21,7 @@ const SetupCrusher = () => {
 	const [, updateInitialData] = useAtom(updateInitialDataMutator);
 	const [, selectInitialProject] = useAtom(selectInitialProjectMutator);
 
-	usePageTitle("Setup crusher")
+	usePageTitle("Setup crusher");
 
 	React.useEffect(() => {
 		const isWorkingFine = system.MONGO_DB_OPERATIONS && system.MYSQL_OPERATION && system.REDIS_OPERATION && system?.OPEN_SOURCE?.initialized;

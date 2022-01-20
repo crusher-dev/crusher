@@ -5,6 +5,10 @@ import { Button } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
 import { LoadingSVG } from "@svg/dashboard";
 
+/*
+	@Note - Wrong implementation of the loading state.
+						It should be implemented in the parent component.
+ */
 export function SubmitButton({ loading, onSubmit, text }: { loading: boolean; onSubmit: () => void; text: string }) {
 	return (
 		<Button
@@ -28,9 +32,12 @@ export function SubmitButton({ loading, onSubmit, text }: { loading: boolean; on
 				</Conditional>
 				<Conditional showIf={loading}>
 					<span>
+						{" "}
 						<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
 					</span>
-					<span className={"mt-2 ml-8"}>Processing</span>
+					<Text fontSize={14} weight={600} className={"ml-8"}>
+						Loading
+					</Text>
 				</Conditional>
 			</div>
 		</Button>

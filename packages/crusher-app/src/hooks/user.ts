@@ -33,7 +33,6 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 				if (userAndSystemData === null) return;
 				dataToConsider = userAndSystemData;
 			}
-
 			updateInitialData(dataToConsider);
 			selectInitialProject(dataToConsider);
 

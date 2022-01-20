@@ -129,6 +129,7 @@ function EnvironmentForm({ id }) {
 	const [project] = useAtom(currentProject);
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
+	const [deleting, setDeleting] = useState(false);
 	const { notSavedInDB, host, name, browser } = environmentsInStore[id];
 
 	const changeName = (e) => {
@@ -231,7 +232,23 @@ function EnvironmentForm({ id }) {
 						}
 					`}
 				>
-					{!notSavedInDB ? "Delete" : ""}
+					<Conditional showIf={!notSavedInDB}>
+
+						<Conditional showIf={deleting}>
+							<div className={"flex items-center"}>
+								<LoadingSVG height={12} width={12} className={"mr-8"}/>	Deleting
+							</div>
+  					</Conditional>
+						<Conditional showIf={!deleting}>
+							<span onClick={()=>{
+								deleteEnvAPI()
+								setDeleting(true)
+								}
+							}>
+								Delete
+							</span>
+						</Conditional>
+					</Conditional>
 				</TextBlock>
 				<Button
 					bgColor={"tertiary"}
@@ -252,7 +269,7 @@ function EnvironmentForm({ id }) {
 }
 
 function EnvironmentCard({ environmentData, id }) {
-	const { name, isOpen, id: envId } = environmentData;
+	const { name, isOpen } = environmentData;
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
 	const { notSavedInDB } = environmentsInStore[id];
@@ -370,7 +387,7 @@ export const Environment = () => {
 const projectListCard = css`
 	padding: 0;
 	#top-section {
-		padding: 10rem 24rem;
+		padding: 14rem 20rem;
 	}
 	#delete {
 		:hover {

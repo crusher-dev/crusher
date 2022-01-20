@@ -41,7 +41,7 @@ class IntegrationsController {
 		if (existingSlackIntegration) {
 			await this.integrationsService.updateIntegration(integrationConfig, existingSlackIntegration.id);
 		} else {
-			await this.integrationsService.addIntegration(integrationConfig, projectId);
+			await this.integrationsService.addIntegration(integrationConfig, IntegrationServiceEnum.SLACK, projectId);
 		}
 
 		await res.redirect(redirectUrl);

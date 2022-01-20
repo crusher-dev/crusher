@@ -59,12 +59,16 @@ const useGithubData = (gitInfo) => {
 				const ocktoKit = new OctokitManager(gitInfo.token);
 
 				const organisation = await ocktoKit.getInstallationsUserCanAccess();
-				const clinetSideOrganisation = convertToOrganisationInfo(organisation);
+				const clientSideOrganisation = convertToOrganisationInfo(organisation);
 
-				console.log("organisations", clinetSideOrganisation);
-				setOrganisation(clinetSideOrganisation);
-				const organisationId = clinetSideOrganisation[0].id;
-				setSelectedOrganisation(organisationId);
+				console.log("organisations", clientSideOrganisation);
+				setOrganisation(clientSideOrganisation);
+
+				if (clientSideOrganisation.length > 0) {
+					// For new accounts, there might be no organisations
+					const organisationId = clientSideOrganisation[0].id;
+					setSelectedOrganisation(organisationId);
+				}
 			})();
 		}, [gitInfo.token, gitInfo.updateCount]);
 

@@ -138,7 +138,7 @@ class IntegrationsController {
 			if (!githubRegisteredUser) {
 				const userRecord = await this.userAuthService.authUser(
 					{
-						name: userInfo.name,
+						name: userInfo.name || userInfo.userName,
 						email: userInfo.email,
 						password: uuidv4(),
 					},

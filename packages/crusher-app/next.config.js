@@ -63,6 +63,7 @@ module.exports = withImages(
 		},
 		env: {
 			GITHUB_APP_CLIENT_ID: process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID,
+			GITHUB_APP_PUBLIC_LINK: process.env.NEXT_PUBLIC_GITHUB_APP_PUBLIC_LINK,
 			NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000/server",
 			FRONTEND_SERVER_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
 			IS_DEVELOPMENT: process.env.NEXT_PUBLIC_IS_DEVELOPMENT,

@@ -128,7 +128,7 @@ export default function ForgotPassword() {
 									<div className={"flex justify-center items-center"}>
 										<Conditional showIf={!loading}>
 											<Text fontSize={14} weight={600}>
-												send reset link
+												Send reset link
 											</Text>
 										</Conditional>
 										<Conditional showIf={loading}>

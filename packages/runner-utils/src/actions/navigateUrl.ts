@@ -5,10 +5,10 @@ import { Page } from "playwright";
 async function goToUrl(page: Page, action: iAction) {
 	const urlToGo = action.payload.meta.value;
 	try {
-		await page.goto(urlToGo, { timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
-	} catch (ex) {
-		console.log("Got error during navigation", ex);
-	}
+		await page.goto(urlToGo, { waitUntil: "networkidle", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
+		await page.waitForLoadState("load");
+		await page.waitForLoadState("domcontentloaded");
+	} catch (ex) { console.log("Got error during navigation", ex); }
 }
 
 module.exports = {

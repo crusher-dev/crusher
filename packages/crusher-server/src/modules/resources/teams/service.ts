@@ -13,15 +13,15 @@ class TeamsService {
 
 	@CamelizeResponse()
 	async getTeam(teamId: number): Promise<KeysToCamelCase<ITeamsTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM teams WHERE id = ?", [teamId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.teams WHERE id = ?", [teamId]);
 	}
 
 	async updateMeta(meta: string, teamId: number): Promise<{ insertId: number }> {
-		return this.dbManager.update("UPDATE teams SET meta = ? WHERE id = ?", [meta, teamId]);
+		return this.dbManager.update("UPDATE public.teams SET meta = ? WHERE id = ?", [meta, teamId]);
 	}
 
 	async createTeam(payload: Omit<ICreateTeamPayload, "uuid">): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO teams SET name = ?, team_email = ?, tier = ?, stripe_customer_id = ?, uuid = ?", [
+		return this.dbManager.insert("INSERT INTO public.teams(name, team_email, tier, stripe_customer_id, uuid) VALUES (?, ?, ?, ?, ?)", [
 			payload.name,
 			payload.teamEmail,
 			payload.tier,
@@ -33,7 +33,7 @@ class TeamsService {
 	@CamelizeResponse()
 	async getUsersWithRolesInTeam(teamId: number): Promise<Array<KeysToCamelCase<IUserTable> & { role: UserTeamRoleEnum }>> {
 		return this.dbManager.fetchAllRows(
-			"SELECT users.*, user_team_roles.role role FROM users, user_team_roles WHERE users.team_id = ? AND users.id = user_team_roles.user_id",
+			"SELECT users.*, user_team_roles.role as role FROM public.users, public.user_team_roles WHERE users.team_id = ? AND users.id = user_team_roles.user_id",
 			[teamId],
 		);
 	}

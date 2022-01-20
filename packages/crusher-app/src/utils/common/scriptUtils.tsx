@@ -9,7 +9,7 @@ export function addScript(id, attribute, text, callback) {
 	document.body.appendChild(s);
 }
 
-const DEV_SEGMENT_KEY = "N37AcGJzsY7gUkuE0kaaoxgJeunzilx1"
+const DEV_SEGMENT_KEY = "N37AcGJzsY7gUkuE0kaaoxgJeunzilx1";
 const SEGMENT_KEY = process.env.NEXT_PUBLIC_SEGMENT_KEY || DEV_SEGMENT_KEY;
 export const loadSegment = () => {
 	addScript(
@@ -39,6 +39,26 @@ export const loadUserLeap = () => {
     p=l.getElementsByTagName('script')[0];
     p.parentNode.insertBefore(a, p);
   })(document, 'https://cdn.userleap.com/shim.js', 'msgT5Gz9W');
+		`,
+	);
+};
+
+export const GA_ID = process.env.GA_ID || "UA-51192281-1";
+
+// Hate to use GA, but other user activity tool aren't reliable.
+// Might switch to plausible soon. Anyways, if you're not comfortable you can switch off tracking completely.
+export const loadGA = () => {
+	addScript(
+		"ga",
+		{},
+		`
+	(function(e,t,n,i,s,a,c){e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)}
+	;a=t.createElement(i);c=t.getElementsByTagName(i)[0];a.async=true;a.src=s
+	;c.parentNode.insertBefore(a,c)
+	})(window,document,"galite","script","https://cdn.jsdelivr.net/npm/ga-lite@2/dist/ga-lite.min.js");
+	
+	galite('create', '${GA_ID}', 'auto');
+	galite('send', 'pageview');
 		`,
 	);
 };

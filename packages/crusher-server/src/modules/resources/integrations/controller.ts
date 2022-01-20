@@ -1,7 +1,7 @@
 import { SlackService } from "@modules/slack/service";
 import { GithubService } from "@modules/thirdParty/github/service";
 import { generateToken } from "@utils/auth";
-import { resolvePathToBackendURI } from "@utils/uri";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import { userInfo } from "os";
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Req, Res } from "routing-controllers";
 import { Inject, Service } from "typedi";
@@ -10,7 +10,9 @@ import { GithubIntegrationService } from "./githubIntegration.service";
 import { IntegrationServiceEnum } from "./interface";
 import { IntegrationsService } from "./service";
 import { fetch } from "@utils/fetch";
-
+import { UserAuthService } from "../users/auth.service";
+import { v4 as uuidv4 } from "uuid";
+import { UsersService } from "../users/service";
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -22,6 +24,10 @@ class IntegrationsController {
 	private integrationsService: IntegrationsService;
 	@Inject()
 	private projectAlertingService: AlertingService;
+	@Inject()
+	private userAuthService: UserAuthService;
+	@Inject()
+	private userService: UsersService;
 
 	@Authorized()
 	@Get("/integrations/slack/actions/add")
@@ -32,34 +38,38 @@ class IntegrationsController {
 		const integrationConfig = await this.slackService.verifySlackIntegrationRequest(slackCode);
 
 		const existingSlackIntegration = await this.integrationsService.getSlackIntegration(projectId);
-		if(existingSlackIntegration) {
+		if (existingSlackIntegration) {
 			await this.integrationsService.updateIntegration(integrationConfig, existingSlackIntegration.id);
 		} else {
-			await this.integrationsService.addIntegration(integrationConfig, projectId)
+			await this.integrationsService.addIntegration(integrationConfig, IntegrationServiceEnum.SLACK, projectId);
 		}
-		
+
 		await res.redirect(redirectUrl);
 		return res;
 	}
 
 	@Authorized()
 	@Get("/integrations/:project_id/slack/actions/remove")
-	async removeSlackIntegration(@CurrentUser({ required: true }) userInfo,  @Param("project_id") projectId: number, @QueryParams() params, @Res() res) {
+	async removeSlackIntegration(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params, @Res() res) {
 		const existingSlackIntegration = await this.integrationsService.getSlackIntegration(projectId);
-		if(!existingSlackIntegration) {
+		if (!existingSlackIntegration) {
 			throw new BadRequestError("Slack integration not found");
 		}
 
 		await this.integrationsService.deleteIntegration(existingSlackIntegration.id);
-	
-		return {status: "Successful"};
+
+		return { status: "Successful" };
 	}
 
 	@Authorized()
 	@Post("/integrations/:project_id/slack/actions/save.settings")
-	async saveSlackIntegrationSettings(@CurrentUser({required: true}) user, @Param("project_id") projectId: number, @Body() body: {alertChannel: any; normalChannel: any; }) {
-		return this.integrationsService.saveSlackSettings({alertChannel: body.alertChannel, normalChannel: body.normalChannel}, projectId);
-	} 
+	async saveSlackIntegrationSettings(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
+		@Body() body: { alertChannel: any; normalChannel: any },
+	) {
+		return this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
+	}
 
 	@Authorized()
 	@Get("/integrations/:project_id")
@@ -90,7 +100,9 @@ class IntegrationsController {
 
 		return {
 			status: "Successful",
-			data: { ...(doc.toObject() as any), _id: doc._id.toString() },
+			data: {
+				...doc,
+			},
 		};
 	}
 
@@ -112,12 +124,35 @@ class IntegrationsController {
 	}
 
 	// @TODO: Clean "cannot set headers after they are sent" error
-	@Authorized()
 	@Get("/integrations/:project_id/github/actions/callback")
-	async connectGithubAccount(@QueryParams() params, @Res() res: any) {
-		const { code } = params;
+	async connectGithubAccount(@QueryParams() params, @Req() req: any, @Res() res: any) {
+		const { code, state: encodedState } = params;
 		const githubService = new GithubService();
 		const tokenInfo = await githubService.parseGithubAccessToken(code);
+
+		const state = JSON.parse(Buffer.from(encodedState, "base64").toString("ascii"));
+		if (state.type === "auth") {
+			const userInfo = await githubService.getUserInfo((tokenInfo as any).token);
+			const githubRegisteredUser = await this.userService.getUserByGithubUserId(`${userInfo.id}`);
+
+			if (!githubRegisteredUser) {
+				const userRecord = await this.userAuthService.authUser(
+					{
+						name: userInfo.name || userInfo.userName,
+						email: userInfo.email,
+						password: uuidv4(),
+					},
+					req,
+					res,
+					state.inviteType ? encodedState : null,
+				);
+
+				await this.userService.setGithubUserId(`${userInfo.id}`, userRecord.userId);
+			} else {
+				await this.userAuthService.setUserAuthCookies(githubRegisteredUser.id, githubRegisteredUser.teamId, req, res);
+			}
+			return res.redirect(resolvePathToFrontendURI("/?github_token=" + (tokenInfo as any).token));
+		}
 
 		const redirectUrl = new URL(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "http://localhost:3000/");
 		redirectUrl.searchParams.append("token", (tokenInfo as any).token);
@@ -145,25 +180,34 @@ class IntegrationsController {
 
 	@Authorized()
 	@Get("/integrations/:project_id/slack/channels")
-	async getSlackChannels(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number, @QueryParams() params: {cursor?: string}, @Res() res) {
+	async getSlackChannels(
+		@CurrentUser({ required: true }) userInfo,
+		@Param("project_id") projectId: number,
+		@QueryParams() params: { cursor?: string },
+		@Res() res,
+	) {
 		const slackIntegration = await this.integrationsService.getSlackIntegration(projectId);
-		if(!slackIntegration) throw new BadRequestError("No slack account connected");
+		if (!slackIntegration) throw new BadRequestError("No slack account connected");
 
 		const slackIntegrationConfig = slackIntegration.meta;
 
 		const fetchFromSlack = async (cursor?: string) => {
 			const { channels, nextCursor } = await fetch("https://slack.com/api/conversations.list?types=public_channel,private_channel", {
 				header: {
-					"Authorization": `Bearer ${slackIntegrationConfig.oAuthInfo.accessToken}`,
+					Authorization: `Bearer ${slackIntegrationConfig.oAuthInfo.accessToken}`,
 				},
 				method: "GET",
 				payload: {
 					cursor: cursor ? cursor : "",
 					limit: 50,
 					exclude_archived: true,
-				}
+				},
 			}).then((data: any) => {
-				return {accessToken: slackIntegrationConfig.oAuthInfo.accessToken, nextCursor: data.response_metadata ? data.response_metadata.next_cursor : "", channels: data.channels ? data.channels.map((channel) => ({id: channel.id, name: channel.name})) : []};
+				return {
+					accessToken: slackIntegrationConfig.oAuthInfo.accessToken,
+					nextCursor: data.response_metadata ? data.response_metadata.next_cursor : "",
+					channels: data.channels ? data.channels.map((channel) => ({ id: channel.id, name: channel.name })) : [],
+				};
 			});
 
 			return { channels, nextCursor };
@@ -176,9 +220,16 @@ class IntegrationsController {
 			const { channels: newChannels, nextCursor: newNextCursor } = await fetchFromSlack(nextCursor);
 			channels = channels.concat(newChannels);
 			nextCursor = newNextCursor;
-		} while (channels.length === 0 && nextCursor)
+		} while (channels.length === 0 && nextCursor);
 
-		return {channels, nextCursor};
+		return { channels, nextCursor };
+	}
+
+	@Authorized()
+	@Get("/integrations/cli/commands")
+	async getCliCommands(@CurrentUser({ required: true }) user) {
+		const { user_id, team_id } = user;
+		return ["npx crusher-cli create:test --token=" + generateToken(user_id, team_id), "npx crusher-cli crusher run:test"];
 	}
 }
 

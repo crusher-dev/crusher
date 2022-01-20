@@ -16,9 +16,9 @@ class TestRunnerBootstrap {
 		await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
 			limiter: {
 				max: 2,
-    			duration: 1800000,
-				groupKey: 'buildId'
-			} as any
+				duration: 1800000,
+				groupKey: "buildId",
+			} as any,
 		});
 		await this.queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 		await this.queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
@@ -30,9 +30,9 @@ class TestRunnerBootstrap {
 			concurrency: 1,
 			limiter: {
 				max: 2,
-    			duration: 1800000,
-				groupKey: 'buildId'
-			}
+				duration: 1800000,
+				groupKey: "buildId",
+			},
 		});
 
 		console.log("Test runner booted up");

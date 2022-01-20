@@ -12,11 +12,11 @@ class ProjectEnvironmentService {
 
 	@CamelizeResponse()
 	async getEnvironmentsList(projectId: number): Promise<Array<KeysToCamelCase<IEnvironmentTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM environments WHERE project_id = ?", [projectId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM public.environments WHERE project_id = ?", [projectId]);
 	}
 
 	async createEnvironment(payload: ICreateEnvironmentPayload) {
-		return this.dbManager.insert("INSERT INTO environments SET project_id = ?, name = ?, browser = ?, vars = ?, user_id = ?", [
+		return this.dbManager.insert("INSERT INTO public.environments (project_id, name, browser, vars, user_id) VALUES (?, ?, ?, ?, ?)", [
 			payload.projectId,
 			payload.name,
 			JSON.stringify(payload.browser),
@@ -26,12 +26,12 @@ class ProjectEnvironmentService {
 	}
 
 	@CamelizeResponse()
-	async getEnvironment(environmentId: number): Promise<IEnvironmentTable> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM environments WHERE id = ?", [environmentId]);
+	async getEnvironment(environmentId: number): Promise<KeysToCamelCase<IEnvironmentTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.environments WHERE id = ?", [environmentId]);
 	}
 
 	async deleteEnvironment(environmentId: number) {
-		return this.dbManager.delete("DELETE FROM environments WHERE id = ?", [environmentId]);
+		return this.dbManager.delete("DELETE FROM public.environments WHERE id = ?", [environmentId]);
 	}
 
 	private validateUpdatePayload(payload: IUpdateEnvironmentPayload) {
@@ -53,7 +53,7 @@ class ProjectEnvironmentService {
 
 		const [setQuery, setQueryValues] = getInsertOrUpdateQuerySetFromObject(getSnakedObject(payload));
 
-		return this.dbManager.update(`UPDATE environments SET ${setQuery} WHERE id = ?`, [...setQueryValues, environmentId]);
+		return this.dbManager.update(`UPDATE public.environments SET ${setQuery} WHERE id = ?`, [...setQueryValues, environmentId]);
 	}
 }
 

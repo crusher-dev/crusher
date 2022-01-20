@@ -14,17 +14,20 @@ import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequir
 import { backendRequest } from "@utils/common/backendRequest";
 import { timeSince } from "@utils/common/dateTimeUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
-import { getAllConfiguration, getStatusString, showReviewButton } from "@utils/core/buildReportUtils";
+import { getAllConfiguration, getStatusString, showReviewButton, getCountByTestStatus } from "@utils/core/buildReportUtils";
 
 import { usePageTitle } from "../../../hooks/seo";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { updateMeta } from "../../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { useMemo } from "react";
+import { TestTypeLabel } from "@constants/test";
 
 const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
-	const { query } = useRouter();
+	const router = useRouter();
+	const { query } = router;
 	const { data } = useBuildReport(query.id);
 
 	return (
@@ -34,7 +37,7 @@ function TitleSection() {
 					height={"22rem"}
 					className={"mr-12"}
 					onClick={() => {
-						window.history.back();
+						router.push("/app/builds");
 					}}
 				/>{" "}
 				{data?.name} #{data?.id}
@@ -47,34 +50,34 @@ function StatusTag({ type }) {
 	if (type === "MANUAL_REVIEW_REQUIRED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, review]}>
-				<ReviewRequiredSVG height={"17rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Review required</span>
+				<ReviewRequiredSVG height={"17rem"} isMonochrome={true} /> <span className={" text-14 font-600 ml-8 leading-none"}>Review required</span>
 			</div>
 		);
 	}
 	if (type === "FAILED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, failed]}>
-				<FailedSVG height={"17rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Failed</span>
+				<FailedSVG height={"16rem"} width={"16rem"} isMonochrome={true} /> <span className={" text-14 font-600 ml-8 leading-none"}>Failed</span>
 			</div>
 		);
 	}
 	if (type === "PASSED") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, passed]}>
-				<PassedSVG height={"20rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Passed</span>
+				<PassedSVG height={"20rem"} isMonochrome={true} /> <span className={"text-14 mt-1 font-600 ml-8 leading-none"}>Passed</span>
 			</div>
 		);
 	}
 	if (type === "RUNNING") {
 		return (
 			<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, running]}>
-				<RunningSVG height={"16rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Running</span>
+				<RunningSVG height={"16rem"} isMonochrome={true} /> <span className={" text-14 font-600 ml-8 leading-none"}>Running</span>
 			</div>
 		);
 	}
 	return (
 		<div className={"flex items-center px-12 justify-center mr-8"} css={[statusTag, waiting]}>
-			<InitiatedSVG height={"16rem"} isMonochrome={true} /> <span className={"ml-16 text-14 font-600 ml-8 leading-none"}>Waiting</span>
+			<InitiatedSVG height={"16rem"} isMonochrome={true} /> <span className={"text-14 font-600 ml-8 leading-none"}>Waiting</span>
 		</div>
 	);
 }
@@ -91,7 +94,7 @@ function NameNStatusSection() {
 				<TitleSection />
 				<Button
 					size={"small"}
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					className={"ml-20"}
 					css={css`
 						width: 96rem;
@@ -189,11 +192,14 @@ function TestOverviewTab() {
 	const showReview = showReviewButton(data?.status);
 
 	const allConfiguration = getAllConfiguration(data?.tests);
+	const countByTestStatus = useMemo(() => {
+		return getCountByTestStatus(data?.tests);
+	}, [data]);
 
 	return (
 		<div className={"flex mt-48 justify-between"}>
 			<div css={leftSection}>
-				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120 pb-88"}>
+				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120"}>
 					<div className={"flex flex-col items-center"}>
 						<div className={"mb-28"}>
 							<TestStatusSVG type={data?.status} height={"24rem"} width={"28rem"} />
@@ -202,7 +208,7 @@ function TestOverviewTab() {
 						<div className={"flex items-center"}>
 							<Conditional showIf={showReview}>
 								<Button
-									bgColor={"tertiary-dark"}
+									bgColor={"tertiary"}
 									css={css`
 										width: 148rem;
 									`}
@@ -212,7 +218,7 @@ function TestOverviewTab() {
 								</Button>
 							</Conditional>
 							<Button
-								bgColor={"tertiary-dark"}
+								bgColor={"tertiary"}
 								css={css`
 									width: 148rem;
 								`}
@@ -231,6 +237,25 @@ function TestOverviewTab() {
 						{Object.entries(allConfiguration).map(([key, value]) => (
 							<ConfigurationMethod configType={key} array={value} />
 						))}
+					</div>
+
+					<div
+						css={css`
+							background: #0a0b0e;
+							height: 64rem;
+						`}
+						className={"flex text-12.5 font-600 w-full mt-100 justify-center"}
+					>
+						{Object.entries(countByTestStatus).map(([status, count]) => {
+							return (
+								<div className={"flex items-center px-28"}>
+									<TestStatusSVG type={status} height={"18rem"} width={"18rem"} />{" "}
+									<span className={"ml-12 leading-none"}>
+										{count} {TestTypeLabel[status]}
+									</span>
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			</div>
@@ -268,7 +293,8 @@ const overviewCard = css`
 	background: rgba(16, 18, 21, 0.5);
 	border: 1px solid #171c24;
 	box-sizing: border-box;
-	border-radius: 8px;
+	border-radius: 4px;
+	overflow: hidden;
 `;
 const leftSection = css`
 	width: 70%;
@@ -285,7 +311,7 @@ export const TestReportScreen = () => {
 	const [, updateMetaData] = useAtom(updateMeta);
 
 	const testsCount = data.tests.length;
-	
+
 	useEffect(() => {
 		updateMetaData({
 			type: "user",
@@ -370,10 +396,10 @@ const timelineItem = css`
 `;
 
 const statusTag = css`
-	min-width: 140px;
-	height: 30px;
+	min-width: 132rem;
+	height: 30rem;
 	box-sizing: border-box;
-	border-radius: 15.5px;
+	border-radius: 15.5rem;
 `;
 
 const failed = css`
@@ -427,6 +453,5 @@ const selected = css`
 	border-bottom: 1px solid #0a0b0e;
 	color: #fff;
 	font-weight: 600;
-
 	padding-top: 1px;
 `;

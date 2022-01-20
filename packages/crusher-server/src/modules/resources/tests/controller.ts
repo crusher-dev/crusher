@@ -47,8 +47,10 @@ export class TestController {
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum },
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number },
 	): Promise<IProjectTestsListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
+		if (!params.page) params.page = 0;
+
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
 		const testsList = testsListData.list.map((testData) => {
 			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
@@ -62,7 +64,7 @@ export class TestController {
 				tags: testData.tags,
 				runAfter: testData.run_after,
 				meta: testData.meta ? JSON.parse(testData.meta) : null,
-				createdAt: new Date(testData.created_at).getTime(),
+				createdAt: new Date(testData.createdAt).getTime(),
 				// @TODO: Remove this line
 				videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
 				clipVideoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? clipVideoUrl : null,
@@ -82,7 +84,7 @@ export class TestController {
 			return { id: user.id, name: user.name, email: user.email };
 		});
 
-		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors };
+		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors, currentPage: params.page };
 	}
 
 	@Authorized()
@@ -100,8 +102,6 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
-		console.log("Body of project tests run api, here", body);
-
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};
@@ -128,6 +128,19 @@ export class TestController {
 		await this.testService.deleteTest(testId);
 
 		return "Success";
+	}
+
+	@Authorized()
+	@Post("/tests/:test_id/actions/update.steps")
+	async updateTestActions(
+		@CurrentUser({ required: true }) user,
+		@Param("test_id") testId: number,
+		@Body() body: {tempTestId: string},
+	) {
+		const tempTest = await this.testService.getTempTest(body.tempTestId);
+		const result = await this.testService.updateTestSteps(testId, tempTest.events);
+
+		return result.changedRows ? "Updated" : "No change";
 	}
 
 	// @TODO: Need strict type checks here. (Security Issue)

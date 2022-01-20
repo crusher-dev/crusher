@@ -12,9 +12,10 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { currentProject, projectsAtom } from "../../../store/atoms/global/project";
+import { currentProject, projectsAtom, updateCurrentProjectAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
+import produce from "immer";
 
 const deleteProject = (projectId) => {
 	return backendRequest(`/projects/${projectId}/actions/delete`, {
@@ -31,7 +32,8 @@ const updateProjectSettings = (projectId, name, visualBaseline) => {
 
 export const ProjectSettings = () => {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
-	const [project] = useAtom(currentProject);
+	const [project, setProject] = useAtom(currentProject);
+	const [, updateCurrentProject] = useAtom(updateCurrentProjectAtom);
 	const [projectsList] = useAtom(projectsAtom);
 	const [projectName, setProjectName] = useState(project?.name);
 	const [visualBaseline, setVisualBaseline] = useState(project?.visualBaseline);
@@ -59,6 +61,11 @@ export const ProjectSettings = () => {
 
 	const updateProjectSettingsCallback = async () => {
 		await updateProjectSettings(selectedProjectId, projectName, visualBaseline);
+
+		updateCurrentProject({
+			...project,
+			name: projectName,
+		});
 
 		sendSnackBarEvent({
 			message: "We have update project info",
@@ -102,8 +109,14 @@ export const ProjectSettings = () => {
 					<Input
 						placeholder={"Name of the project"}
 						onChange={(e) => {
-							if (e.target.value > 100) { e.target.value = 100; return setVisualBaseline(100); }
-							if (e.target.value < 0) { e.target.value = 0; return setVisualBaseline(0); }
+							if (e.target.value > 100) {
+								e.target.value = 100;
+								return setVisualBaseline(100);
+							}
+							if (e.target.value < 0) {
+								e.target.value = 0;
+								return setVisualBaseline(0);
+							}
 
 							setVisualBaseline(e.target.value);
 						}}
@@ -120,7 +133,7 @@ export const ProjectSettings = () => {
 
 				<div>
 					<Button
-						bgColor={saveButtonDisabled && "disabled"}
+						disabled={saveButtonDisabled}
 						css={css`
 							width: 82rem;
 						`}
@@ -128,9 +141,9 @@ export const ProjectSettings = () => {
 						onClick={() => {
 							!saveButtonDisabled && updateProjectSettingsCallback();
 						}}
-						>
-							Save
-						</Button>
+					>
+						Save
+					</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
 				<Heading type={2} fontSize={"16"} className={"mb-12 mt-56"}>

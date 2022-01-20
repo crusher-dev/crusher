@@ -37,6 +37,12 @@ const ACTION_DESCRIPTIONS = {
 	},
 	[ACTIONS_IN_TEST.RUN_TEMPLATE]: (meta: ActionMeta) => {
 		return 'Running a template with series of steps';
+	},
+	[ACTIONS_IN_TEST.RELOAD_PAGE]: () => {
+		return 'Reloading page';
+	},
+	[ACTIONS_IN_TEST.BACK_PAGE]: () => {
+		return 'Going back in history';
 	}
 };
 

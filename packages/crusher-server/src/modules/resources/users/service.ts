@@ -14,7 +14,6 @@ import { ProjectsService } from "../projects/service";
 import { UserProjectRoleEnum } from "./roles/project/interface";
 import { isOpenSourceEdition } from "@utils/helper";
 import { RedisManager } from "@modules/redis";
-import { MongoManager } from "@modules/db/mongo";
 import { IUserAndSystemInfoResponse, TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { v4 as uuidv4 } from "uuid";
 import { EditionTypeEnum, HostingTypeEnum } from "@crusher-shared/types/common/general";
@@ -37,24 +36,22 @@ class UsersService {
 	@Inject()
 	private redisManager: RedisManager;
 	// @TODO: Shift this to a new module
-	@Inject()
-	private mongoManager: MongoManager;
 
 	@CamelizeResponse()
 	async getOpenSourceUser(): Promise<KeysToCamelCase<IUserTable> | null> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE is_oss = ?`, [true]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM public.users WHERE is_oss = ?`, [true]);
 	}
 
 	async getUserByEmail(email: string): Promise<IUserTable | null> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM users WHERE email = ?", [email]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.users WHERE email = ?", [email]);
 	}
 
 	async addUserToTeam(userId: number, teamId: number) {
-		return this.dbManager.update(`UPDATE users SET team_id = ? WHERE id = ?`, [teamId, userId]);
+		return this.dbManager.update(`UPDATE public.users SET team_id = ? WHERE id = ?`, [teamId, userId]);
 	}
 
 	async updatePassword(id: string, password: string) {
-		return this.dbManager.update(`UPDATE users SET password = ? WHERE id = ?`, [encryptPassword(password), id]);
+		return this.dbManager.update(`UPDATE public.users SET password = ? WHERE id = ?`, [encryptPassword(password), id]);
 	}
 
 	async setupInitialUserWorkspace(
@@ -101,7 +98,7 @@ class UsersService {
 	}
 
 	async createUserRecord(user: Omit<ICreateUserPayload, "uuid">): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO users SET name = ?, email = ?, password = ?, verified = ?, is_oss = ?, uuid = ?", [
+		return this.dbManager.insert("INSERT INTO public.users (name, email, password, verified, is_oss, uuid) VALUES (?, ?, ?, ?, ?, ?)", [
 			user.name,
 			user.email,
 			encryptPassword(user.password),
@@ -113,30 +110,31 @@ class UsersService {
 
 	async deleteUserWorkspace(userId: number) {
 		const userRecord = await this.getUserInfo(userId);
-		await this.dbManager.delete("DELETE FROM user_meta WHERE user_id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM user_project_roles WHERE user_id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM projects WHERE team_id = ?", [userRecord.teamId]);
-		await this.dbManager.delete("DELETE FROM user_team_roles WHERE user_id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM users WHERE id = ?", [userRecord.id]);
-		await this.dbManager.delete("DELETE FROM teams WHERE id = ?", [userRecord.teamId]);
+		await this.dbManager.delete("DELETE FROM public.user_meta WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM public.user_project_roles WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM public.projects WHERE team_id = ?", [userRecord.teamId]);
+		await this.dbManager.delete("DELETE FROM public.user_team_roles WHERE user_id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM public.users WHERE id = ?", [userRecord.id]);
+		await this.dbManager.delete("DELETE FROM public.teams WHERE id = ?", [userRecord.teamId]);
 	}
 
 	// Prod
 	async deleteAllTestUsers() {
 		const users = await this.dbManager.fetchAllRows(
-			"SELECT * FROM users WHERE email LIKE 'testing-%@crusher.dev' AND UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(users.created_at) >  60 * 60",
+			"SELECT * FROM public.users WHERE email LIKE 'testing-%@public.dev' AND EXTRACT(EPOCH FROM (NOW() - users.created_at)) >  60 * 60",
 		);
 		return users.map((user) => this.deleteUserWorkspace(user.id));
 	}
 
 	@CamelizeResponse()
 	async getUserInfo(userId: number): Promise<KeysToCamelCase<IUserTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM users WHERE id = ?`, [userId]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM public.users WHERE id = ?`, [userId]);
 	}
 
 	async getUserAndSystemInfo(userId: number): Promise<IUserAndSystemInfoResponse> {
 		// @Note: Remove the next line after development of this API
 		const userInfo = userId ? await this.getUserInfo(userId) : null;
+
 		const teamInfo = userInfo ? await this.teamsService.getTeam(userInfo.teamId) : null;
 		const teamProjects = userInfo && teamInfo ? await this.projectsService.getProjects(teamInfo.id) : null;
 
@@ -185,10 +183,6 @@ class UsersService {
 					working: await this.dbManager.isConnectionAlive(),
 					message: null,
 				},
-				MONGO_DB_OPERATIONS: {
-					working: this.mongoManager.isAlive(),
-					message: null,
-				},
 			},
 		};
 
@@ -202,14 +196,23 @@ class UsersService {
 	}
 
 	async updateMeta(meta: string, userId: number) {
-		return this.dbManager.update("UPDATE users SET meta = ? WHERE id = ?", [meta, userId]);
+		return this.dbManager.update("UPDATE public.users SET meta = ? WHERE id = ?", [meta, userId]);
 	}
 
 	@CamelizeResponse()
 	async getUsersInProject(projectId: number): Promise<Array<KeysToCamelCase<IUserTable>>> {
-		return this.dbManager.fetchAllRows("SELECT users.* FROM users, user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
+		return this.dbManager.fetchAllRows("SELECT users.* FROM public.users, public.user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
 			projectId,
 		]);
+	}
+
+	async setGithubUserId(githubUserId: string, userId: number) {
+		return this.dbManager.update("UPDATE public.users SET github_user_id = ? WHERE id = ?", [githubUserId, userId]);
+	}
+
+	@CamelizeResponse()
+	async getUserByGithubUserId(githubUserId: string): Promise<KeysToCamelCase<IUserTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.users WHERE github_user_id = ?", [githubUserId]);
 	}
 }
 

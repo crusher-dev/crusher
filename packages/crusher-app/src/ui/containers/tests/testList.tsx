@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 
 import { useAtom } from "jotai";
 import useSWR, { mutate } from "swr";
@@ -22,6 +22,11 @@ import { tempTestAtom } from "../../../store/atoms/global/tempTestId";
 import { tempTestNameAtom } from "../../../store/atoms/global/tempTestName";
 
 import { RequestMethod } from "../../../types/RequestOptions";
+import { useRouter } from "next/router";
+import { PaginationButton } from "dyson/src/components/molecules/PaginationButton";
+import { testFiltersAtom } from "@store/atoms/pages/testPage";
+import { tempTestTypeAtom } from "@store/atoms/global/tempTestType";
+import { tempTestUpdateIdAtom } from "@store/atoms/global/tempTestUpdateId";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -47,9 +52,16 @@ const saveTest = (projectId: number, tempTestId: string, customTestName: string 
 	});
 };
 
+const updateTest = (tempTestId: string, mainTestId: string) => {
+	return backendRequest(`/tests/${mainTestId}/actions/update.steps`, {
+		method: RequestMethod.POST,
+		payload: { tempTestId },
+	});
+};
+
 function TestCard(props: IBuildItemCardProps) {
 	const { testData } = props;
-	const { testName, isPassing, createdAt, imageURL, clipVideoURL, id, firstRunCompleted, draftBuildId, runAfter, tags } = testData;
+	const { testName, isPassing, createdAt, imageURL, clipVideoURL, id, firstRunCompleted, draftBuildId, tags } = testData;
 	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={"16rem"} />
 	) : (
@@ -65,13 +77,14 @@ function TestCard(props: IBuildItemCardProps) {
 	const shouldPlayVideo = !imageURL && !!clipVideoURL;
 
 	const [showEditBox, setShowEditBox] = useState(false);
+
+	const testRunInThisHour = (Date.now() - testData.createdAt) / 1000 < 3600;
 	return (
 		<div css={itemContainerStyle}>
 			<Conditional showIf={showEditBox}>
 				<EditTest
 					id={id}
 					name={testName}
-					runAfter={runAfter}
 					tags={tags}
 					onClose={() => {
 						setShowEditBox(false);
@@ -125,9 +138,9 @@ function TestCard(props: IBuildItemCardProps) {
 						>
 							Edit
 						</span>
-						<Conditional showIf={!getBoolean(isPassing) || !firstRunCompleted}>
+						<Conditional showIf={testRunInThisHour}>
 							<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
-								<span className={"view-build"}>View Build </span>
+								<span className={"view-build"}>View test build </span>
 							</Link>
 						</Conditional>
 					</div>
@@ -204,13 +217,24 @@ function TestSearchableList() {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [tempTestName, setTempTestName] = useAtom(tempTestNameAtom);
+	const [tempTestType, setTempTestType] = useAtom(tempTestTypeAtom);
+	const [tempTestUpdateId, setTempTestUpdateId] = useAtom(tempTestUpdateIdAtom);
+
+	const [filters, setFilters] = useAtom(testFiltersAtom);
+	const { query } = useRouter();
+
+	const setPage = useCallback((page) => {
+		setFilters({ ...filters, page });
+	}, []);
 
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id), {
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {
 		suspense: true,
 		refreshInterval: newTestCreated ? 4000 : 200000,
 	});
+
+	const totalPages = data.totalPages || 1;
 
 	const testsItems = useMemo(() => {
 		return data.list.map((test: IProjectTestItem) => {
@@ -220,6 +244,9 @@ function TestSearchableList() {
 		});
 	}, [data.list]);
 
+	const isZeroBuild = data && data.list.length === 0;
+	const currentPage = filters.page || 0;
+
 	useEffect(() => {
 		if (!tempTestId || tempTestId === "null") return;
 
@@ -227,8 +254,16 @@ function TestSearchableList() {
 			setTempTest(null);
 			setTempTestName(null);
 
-			await saveTest(selectedProjectId, tempTestId, !!tempTestName ? tempTestName : null);
-			sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
+			if (tempTestType === "update") {
+				await updateTest(tempTestId, tempTestUpdateId);
+				sendSnackBarEvent({ message: "Updated the test", type: "success" });
+			} else {
+				await saveTest(selectedProjectId, tempTestId, !!tempTestName ? tempTestName : null);
+				sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
+			}
+
+			setTempTestType(null);
+			setTempTestUpdateId(null);
 
 			await mutate(getTestListAPI(project.id));
 			setNewTestCreated(true);
@@ -245,6 +280,17 @@ function TestSearchableList() {
 
 			<Conditional showIf={data && data.list.length === 0}>
 				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
+			</Conditional>
+
+			<Conditional showIf={!isZeroBuild}>
+				<div className={"flex justify-center mt-64 mb-80"}>
+					<PaginationButton
+						isPreviousActive={currentPage > 0}
+						isNextActive={currentPage < totalPages - 1}
+						onPreviousClick={setPage.bind(this, currentPage - 1)}
+						onNextClick={setPage.bind(this, currentPage + 1)}
+					/>
+				</div>
 			</Conditional>
 		</div>
 	);

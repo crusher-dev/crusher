@@ -1,51 +1,48 @@
-import { Service } from "typedi";
-import { GitIntegrations } from "./mongo/gitIntegrations";
-import { iGithubIntegration } from "./mongo/gitIntegrations";
+import { KeysToCamelCase } from "@modules/common/typescript/interface";
+import { DBManager } from "@modules/db";
+import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { Inject, Service } from "typedi";
+import { IGitIntegrations } from "./interface";
 
 @Service()
 export class GithubIntegrationService {
-	async linkRepo(repoId: number, repoName: string, installationId: string, repoLink: string, projectId: number, userId: number) {
-		console.log(repoId, repoName, repoLink, projectId, userId);
+	@Inject()
+	private dbManager: DBManager;
 
-		return new GitIntegrations({
-			repoId: repoId,
-			repoName: repoName,
-			repoLink: repoLink,
-			projectId: projectId,
-			userId: userId,
-			installationId: installationId,
-		}).save();
+	@CamelizeResponse()
+	async linkRepo(repoId: number, repoName: string, installationId: string, repoLink: string, projectId: number, userId: number) {
+		return this.dbManager.insert(
+			"INSERT INTO public.git_integrations (repo_id, repo_name, repo_link, installation_id, project_id, user_id) VALUES (?, ?, ?, ?, ?, ?)",
+			[repoId, repoName, repoLink, installationId, projectId, userId],
+		);
 	}
 
-	async getInstallationRepo(repoName: string, projectId: number): Promise<iGithubIntegration | null> {
-		console.log("REPO NAME IS", repoName, projectId);
-		return new Promise((resolve, reject) => {
-			GitIntegrations.findOne({ projectId: { $eq: projectId }, repoName: { $eq: repoName } }, (err, doc) => {
-				if (err || !doc) return resolve(null);
+	@CamelizeResponse()
+	async getInstallationRepo(repoName: string, projectId: number): Promise<KeysToCamelCase<IGitIntegrations & { _id: string }> | null> {
+		const gitIntegrationRecord = await this.dbManager.fetchSingleRow("SELECT * FROM public.git_integrations WHERE repo_name = ? AND project_id = ?", [
+			repoName,
+			projectId,
+		]);
+		return { ...gitIntegrationRecord, _id: gitIntegrationRecord.id };
+	}
 
-				const docsObject = { ...(doc.toObject() as any), _id: doc._id.toString() };
-				resolve(docsObject);
+	@CamelizeResponse()
+	getLinkedRepo(projectId: number): Promise<KeysToCamelCase<IGitIntegrations & { _id: string }> | undefined> {
+		return new Promise(async (resolve, reject) => {
+			const gitIntegrationRecord = await this.dbManager.fetchSingleRow(
+				"SELECT * FROM public.git_integrations WHERE project_id = ? ORDER BY created_at DESC LIMIT 1",
+				[projectId],
+			);
+			if (!gitIntegrationRecord) return resolve(undefined);
+
+			return resolve({
+				...gitIntegrationRecord,
+				_id: gitIntegrationRecord.id,
 			});
 		});
 	}
 
-	getLinkedRepo(projectId: number): Promise<iGithubIntegration> {
-		return new Promise((resolve, reject) => {
-			GitIntegrations.find({ projectId: { $eq: projectId } })
-				.sort({ createdAt: 1 })
-				.exec((err, docs) => {
-					if (err) return reject(err);
-					const docsObjectArr = docs.map((doc) => ({
-						...(doc.toObject() as any),
-						_id: doc._id.toString(),
-					}));
-					if (!docsObjectArr.length) resolve(undefined);
-					resolve(docsObjectArr[0]);
-				});
-		});
-	}
-
 	unlinkRepo(integrationId: string) {
-		return GitIntegrations.findByIdAndRemove(integrationId);
+		return this.dbManager.delete("DELETE FROM public.git_integrations WHERE id = ?", [integrationId]);
 	}
 }

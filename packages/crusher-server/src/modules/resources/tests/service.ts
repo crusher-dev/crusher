@@ -68,7 +68,7 @@ class TestService {
 		await this.handleTemplateActions(templateActions, testInfo.projectId, testInfo.userId);
 
 		return this.dbManager.insert(
-			`INSERT INTO tests SET project_id = ?, name = ?, events = ?, user_id = ?, featured_video_url = ?, featured_screenshot_url = ?`,
+			`INSERT INTO public.tests (project_id, name, events, user_id, featured_video_url, featured_screenshot_url) VALUES (?, ?, ?, ?, ?, ?)`,
 			[
 				testInfo.projectId,
 				testInfo.name,
@@ -80,13 +80,17 @@ class TestService {
 		);
 	}
 
+	async updateTestSteps(testId: number, steps: Array<iAction>) {
+		return this.dbManager.update(`UPDATE public.tests SET events = ? WHERE id = ?`, [JSON.stringify(steps), testId]);
+	}
+
 	async linkToDraftBuild(buildId: number, testId: number) {
-		return this.dbManager.update("UPDATE tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
+		return this.dbManager.update("UPDATE public.tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}
 
 	async updateTest(testId: number, newInfo: { name: string; tags: string; runAfter: number }) {
 		const { name, tags, runAfter } = newInfo;
-		return this.dbManager.update(`UPDATE tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
+		return this.dbManager.update(`UPDATE public.tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
 	}
 
 	async runTestsInProject(
@@ -95,7 +99,7 @@ class TestService {
 		customTestsConfig: Partial<ICreateBuildRequestPayload> = {},
 		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
 		overideBaseLineBuildId: number | null = null,
-		browsers = [BrowserEnum.CHROME]
+		browsers = [BrowserEnum.CHROME],
 	) {
 		const testsData = await this.getTestsInProject(projectId, true);
 		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
@@ -130,16 +134,40 @@ class TestService {
 		);
 	}
 
+	@CamelizeResponse()
 	async getCompleteTestInfo(testId: number) {
 		return this.dbManager.fetchSingleRow(
-			`SELECT tests.*, projects.id projectId, projects.name projectName, users.id userId, users.name userName FROM tests, projects, users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
+			`SELECT tests.*, projects.id as project_id, projects.name as project_name, users.id as user_id, users.name as user_name FROM public.tests, public.projects, public.users WHERE tests.id = ? AND tests.project_id = projects.id AND users.id=tests.user_id`,
 			[testId],
 		);
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum } = {}) {
-		let query = `SELECT tests.*, tests.draft_job_id draftJobId, tests.featured_clip_video_url featuredClipVideoUrl, tests.featured_video_url featuredVideoUrl, users.id userId, users.name userName, jobs.status draftBuildStatus, job_reports.status draftBuildReportStatus FROM tests, users, jobs, job_reports WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
-		const queryParams: Array<any> = [projectId];
+	@CamelizeResponse()
+	private _runCamelizeFetchAllQuery(query, values) {
+		return this.dbManager.fetchAllRows(query, values);
+	}
+
+	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+		const PER_PAGE_LIMIT = 15;
+
+		let additionalSelectColumns = "";
+		let additionalFromSource = "";
+		const queryParams: Array<any> = [];
+		if (filter.search) {
+			additionalSelectColumns += "ts_rank_cd(to_tsvector(COALESCE(commit_name, '')), query) as rank";
+			additionalFromSource += `to_tsquery(?) query`;
+			queryParams.push(filter.search);
+		}
+
+		let query = `SELECT tests.*, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
+			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
+		} FROM public.tests, public.users, public.jobs, public.job_reports ${
+			additionalFromSource ? `, ${additionalFromSource}` : ""
+		} WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		queryParams.push(projectId);
+
+		let page = 0;
+		if (filter.page) page = filter.page;
 
 		if (findOnlyActiveTests) {
 			query += " AND tests.deleted = ?";
@@ -152,28 +180,40 @@ class TestService {
 		}
 
 		if (filter.search) {
-			query += ` AND Match(tests.name) AGAINST (?)`;
-			queryParams.push(filter.search);
+			query += ` AND to_tsvector(COALESCE(test.name, '')) @@ query`;
 		}
 
 		const totalRecordCountQuery = `SELECT COUNT(*) count FROM (${query}) custom_query`;
 		const totalRecordCountQueryResult = await this.dbManager.fetchSingleRow(totalRecordCountQuery, queryParams);
 
-		query += " ORDER BY tests.created_at DESC";
-		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / 10), list: await this.dbManager.fetchAllRows(query, queryParams) };
+		if (filter.search) {
+			query += " ORDER BY tests.created_at DESC, rank DESC";
+		} else {
+			query += " ORDER BY tests.created_at DESC";
+		}
+
+		if (filter.page && filter.page !== -1) {
+			query += " LIMIT ? OFFSET ?";
+			// Weird bug in node-mysql2
+			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
+			queryParams.push(`${PER_PAGE_LIMIT}`);
+			queryParams.push(`${filter.page * PER_PAGE_LIMIT}`);
+		}
+
+		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
 	}
 
 	async deleteTest(testId: number) {
-		return this.dbManager.update(`UPDATE tests SET deleted = ? WHERE id = ?`, [true, testId]);
+		return this.dbManager.update(`UPDATE public.tests SET deleted = ? WHERE id = ?`, [true, testId]);
 	}
 
 	async updateMeta(meta: string, testId: number) {
-		return this.dbManager.update("UPDATE tests SET meta = ? WHERE id = ?", [meta, testId]);
+		return this.dbManager.update("UPDATE public.tests SET meta = ? WHERE id = ?", [meta, testId]);
 	}
 
 	@CamelizeResponse()
 	async getTest(testId: number): Promise<KeysToCamelCase<ITestTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM tests WHERE id = ?", [testId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.tests WHERE id = ?", [testId]);
 	}
 
 	// With template actions included
@@ -199,7 +239,7 @@ class TestService {
 	}
 
 	async addFeaturedVideo(featuredVideoUrl: string, lastSecondsClipVideoUrl: string, testId: number): Promise<{ insertId: number }> {
-		return this.dbManager.update("UPDATE tests SET featured_video_url = ?, featured_clip_video_url = ? WHERE id = ?", [
+		return this.dbManager.update("UPDATE public.tests SET featured_video_url = ?, featured_clip_video_url = ? WHERE id = ?", [
 			featuredVideoUrl,
 			lastSecondsClipVideoUrl,
 			testId,
@@ -208,7 +248,7 @@ class TestService {
 
 	@CamelizeResponse()
 	async getTestsFromIdList(testIds: Array<number>): Promise<Array<KeysToCamelCase<ITestTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM tests WHERE id IN (?)", [testIds.join(",")]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM public.tests WHERE id IN (${new Array(testIds.length).fill("?").join(", ")})`, [...testIds]);
 	}
 
 	// Specifically for run after this test
@@ -232,7 +272,7 @@ class TestService {
 	}
 
 	async createTemplate(payload: Omit<ICreateTemplatePayload, "events"> & { events: Array<iAction> }) {
-		return this.dbManager.insert("INSERT INTO templates SET name = ?, events = ?, project_id = ?, user_id = ?", [
+		return this.dbManager.insert("INSERT INTO public.templates (name, events, project_id, user_id) VALUES (?, ?, ?, ?)", [
 			payload.name,
 			JSON.stringify(payload.events),
 			payload.projectId ? payload.projectId : null,
@@ -242,12 +282,12 @@ class TestService {
 
 	@CamelizeResponse()
 	async getTemplates(name: string): Promise<Array<KeysToCamelCase<ITemplatesTable>>> {
-		return this.dbManager.fetchAllRows(`SELECT * FROM templates WHERE name LIKE ?`, [name ? `%${name}%` : "%"]);
+		return this.dbManager.fetchAllRows(`SELECT * FROM public.templates WHERE name LIKE ?`, [name ? `%${name}%` : "%"]);
 	}
 
 	@CamelizeResponse()
 	async getTemplate(id: number): Promise<KeysToCamelCase<ITemplatesTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM templates WHERE id = ?`, [id]);
+		return this.dbManager.fetchSingleRow(`SELECT * FROM public.templates WHERE id = ?`, [id]);
 	}
 }
 

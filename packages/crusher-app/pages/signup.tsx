@@ -1,16 +1,23 @@
 import React from "react";
 
-import { SignupContainer } from "@ui/containers/signup/signupScreen";
+import SignupContainer from "@ui/containers/auth/signup_email";
 
 import { usePageTitle } from "../src/hooks/seo";
+import { Conditional } from "dyson/src/components/layouts";
+import SignupInitial from "@ui/containers/auth/signup";
 
 function SignupPage() {
 	usePageTitle("Create account");
-
+	const [signupWithEmail, setSignupWithEmail] = React.useState(false);
 	return (
-		<div>
-			<SignupContainer />
-		</div>
+		<React.Fragment>
+			<Conditional showIf={!signupWithEmail}>
+				<SignupInitial loginWithEmailHandler={setSignupWithEmail} />
+			</Conditional>
+			<Conditional showIf={signupWithEmail}>
+				<SignupContainer loginWithEmailHandler={setSignupWithEmail} />
+			</Conditional>
+		</React.Fragment>
 	);
 }
 

@@ -4,9 +4,9 @@ module.exports = {
 	apps: [
 		{
 			name: 'crusher-app',
-			cwd: './output/crusher-app/',
-			script: 'node',
-			args: 'server.js',
+			cwd: './packages/crusher-app/',
+			script: 'server.js',
+			exec_mode: 'cluster',
 			env: {
 				...CRUSHER_APP_ENV,
 				NEXT_PUBLIC_CRUSHER_MODE: 'enterprise',
@@ -16,25 +16,25 @@ module.exports = {
 		},
 		{
 			name: 'crusher-server',
-			cwd: './output/crusher-server',
-			script: 'node',
-			args: '-r source-map-support/register app.js',
+			cwd: './packages/crusher-server',
+			script: 'app.js',
+			exec_mode: 'cluster',
 			env: { ...CRUSHER_SERVER_ENV, RUN_ALL_TOGETHER: 'true' },
 			merge_logs: true,
 			node_args: ['--max_old_space_size=200'],
 		},
 		{
 			name: 'test-runner',
-			cwd: './output/test-runner',
-			script: 'node',
-			args: '-r source-map-support/register index.js',
-			env: TEST_RUNNER_ENV,
+			cwd: './packages/test-runner',
+			exec_mode: 'cluster',
+			script: 'index.js',
+			env: {...TEST_RUNNER_ENV, PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH},
 		},
 		{
 			name: 'video-processor',
-			cwd: './output/video-processor',
-			script: 'node',
-			args: '-r source-map-support/register index.js',
+			cwd: './packages/video-processor',
+			exec_mode: 'cluster',
+			script: 'index.js',
 			env: {
 				...VIDEO_PROCESSOR_ENV,
 				FFMPEG_PATH: require('@ffmpeg-installer/ffmpeg').path,

@@ -4,7 +4,6 @@
 <h3 align="center" >Ship the best version of your website</h3>
 <div>A modern web testing tool for developers and testers 🔥🔥 </div><br/>
 
-
 <p align="center">
     <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
         <img src="https://img.shields.io/badge/license-MIT-%23373737?style=flat-square&color=ff3db6" /></a>
@@ -24,7 +23,6 @@
     <a href="https://docs.crusher.dev">Documentation</a> ·
 </p>
 
-
 <p align="center">
     <a href="https://docs.crusher.dev/docs/download">
         <img src="https://i.imgur.com/3GCa6Kp.png" height="44"/>
@@ -43,9 +41,7 @@
 
 Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple and fast.
 
-
 ![enter image description here](https://i.imgur.com/WvwLuzk.png)
-
 
 You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
 
@@ -68,8 +64,6 @@ Fastest and most powerful way to try Crusher.
 </a>
 
 <br/>
-
-
 
 **Deploy it on your infra (self-host)**
 
@@ -114,7 +108,6 @@ We try to reimagine how testing should work. Few things that differentiate us
 
 4.) Making things simple and fast. We take inspiration from Figma, Linear :D.
 
-
 ## 🛣️ Some use cases
 
 - Testing your app e2e with each commit or in dev.
@@ -133,7 +126,7 @@ We try to reimagine how testing should work. Few things that differentiate us
 - Do you care about quality of your web app?
 
 If the answers to the above are YES, then Crusher would be a great fit for your
-application. Dgraph integrates seamlessly into most application in < 5 mins. 
+application. Dgraph integrates seamlessly into most application in < 5 mins.
 
 ## 🛣️ Architecture
 
@@ -164,6 +157,6 @@ EE features (contained in the src_ee directory) require a Crusher license. Conta
 <hr/>
 <p float="left">
 
-<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>
+<img src="https://avatars.githubusercontent.com/u/6849438?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/16796008?v=4" height="56" style="margin: 4px;"/> &nbsp;<img src="https://avatars.githubusercontent.com/u/51117080?v=4" height="56" style="margin: 4px;"/>&nbsp;<img src="https://avatars.githubusercontent.com/u/55053424?v=4" height="56" style="margin: 4px;"/>
 
 </p>

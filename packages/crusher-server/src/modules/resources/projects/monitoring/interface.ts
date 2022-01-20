@@ -15,13 +15,8 @@ export type IUpdateMonitoringPayload = Omit<ICreateMonitoringPayload, "projectId
 
 export type IQueuedMonitoringsDetails = Array<{
 	id: number;
-	userId: number;
 	projectId: number;
 	environmentId: number;
 	testInterval: number;
 	lastCronRun: number;
-	environmentName: string;
-	environmentBrowser: Array<BrowserEnum>;
-	environmentVars: string;
-	host: string | null;
 }>;

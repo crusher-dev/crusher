@@ -12,7 +12,6 @@ import { Container } from "typedi";
 import { CorsMiddleware } from "./server/middleware/CorsMiddleware";
 import { ReqLogger } from "./server/middleware/ResponseTime";
 import * as express from "express";
-import { MongoManager } from "@modules/db/mongo";
 import { RedisManager } from "@modules/redis";
 import { UserController } from "@modules/resources/users/controller";
 import { TestController } from "@modules/resources/tests/controller";
@@ -31,7 +30,6 @@ Container.set(RedisManager, new RedisManager());
 require("./queue");
 
 const chalk = require("chalk");
-Container.get(MongoManager);
 
 useContainer(Container);
 const expressApp = express();

@@ -28,16 +28,14 @@ class CrusherSdk implements ICrusherSdk {
 		return new CrusherElementSdk(this.page, elementHandle);
 	}
 
-	async $nodeWrapper() {
-
-	}
+	async $nodeWrapper() {}
 
 	async goto(url: string) {
 		return this.page.goto(url);
 	}
 
 	async reloadPage() {
-		await this.page.reload({waitUntil: "networkidle"});
+		await this.page.reload({ waitUntil: "networkidle" });
 		return true;
 	}
 
@@ -87,13 +85,13 @@ class CrusherSdk implements ICrusherSdk {
 
 	private async urlExist(url: string) {
 		const agent = new https.Agent({
-			rejectUnauthorized: false
+			rejectUnauthorized: false,
 		});
 
-		return nodeFetch(url, {method: "HEAD", redirect: "follow", agent: agent}).then(async (res) => {
+		return nodeFetch(url, { method: "HEAD", redirect: "follow", agent: agent }).then(async (res) => {
 			const allowedMethods = res.headers.get("allow");
-			if(allowedMethods && !allowedMethods.includes("HEAD") && allowedMethods.includes("GET")) {
-				return nodeFetch(url, {method: "GET", redirect: "follow", agent: agent}).then(async (res) => {
+			if (allowedMethods && !allowedMethods.includes("HEAD") && allowedMethods.includes("GET")) {
+				return nodeFetch(url, { method: "GET", redirect: "follow", agent: agent }).then(async (res) => {
 					return !!res.ok;
 				});
 			}
@@ -101,29 +99,32 @@ class CrusherSdk implements ICrusherSdk {
 		});
 	}
 
-	async verifyLinks(links: Array<{href: string}>) : Promise<Array<{href: string; exists: boolean}>> {
+	async verifyLinks(links: Array<{ href: string }>): Promise<Array<{ href: string; exists: boolean }>> {
 		const chunkedArr = chunkArray(links, 5);
 		const promises = chunkedArr.map((chunk) => {
-			return Promise.all(chunk.map(async (link) => {
-				let reason = null, exists = null;
-				try {
-					exists = await this.urlExist(link.href);
-				} catch(ex){
-					exists = false;
-					reason = ex.message;
-				}
-				return {href: link.href, exists, reason};
-			}));
+			return Promise.all(
+				chunk.map(async (link) => {
+					let reason = null,
+						exists = null;
+					try {
+						exists = await this.urlExist(link.href);
+					} catch (ex) {
+						exists = false;
+						reason = ex.message;
+					}
+					return { href: link.href, exists, reason };
+				}),
+			);
 		});
-	
+
 		const result = [];
-		for(let promise of promises) {
+		for (let promise of promises) {
 			const values = await promise;
-			values.forEach((value: Array<{href: string; exists: boolean}>) => {
+			values.forEach((value: Array<{ href: string; exists: boolean }>) => {
 				result.push(value);
 			});
 		}
-	
+
 		return result;
 	}
 

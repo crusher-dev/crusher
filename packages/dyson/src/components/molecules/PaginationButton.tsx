@@ -21,7 +21,7 @@ export const PaginationButton = ({ isPreviousActive = true, isNextActive = true,
 				Previous
 			</div>
 			<div
-				css={[button, !isNextActive && disabled]}
+				css={[button,rightButton, !isNextActive && disabled]}
 				onClick={() => {
 					if (!isNextActive) return;
 					onNextClick();
@@ -56,6 +56,7 @@ const button = css`
 	color: #7086ff;
 	font-weight: 600;
 	align-items: center;
+	padding-top: 2rem;
 	justify-content: center;
 	:hover {
 		background-color: #1b1d1f;
@@ -68,3 +69,7 @@ const disabled = css`
 	border: 1rem solid #2e3744 !important;
 	cursor: not-allowed;
 `;
+
+const rightButton = css`
+	border-left-width: 0 !important;
+`

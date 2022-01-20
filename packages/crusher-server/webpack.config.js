@@ -1,6 +1,7 @@
 const path = require("path");
 const glob = require("glob");
 const CopyPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
 	mode: "production",
@@ -46,10 +47,13 @@ module.exports = {
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"],
 		mainFields: ["main", "module"],
-		alias: resolveTsconfigPathsToAlias({
-			tsconfigPath: "./tsconfig.json", // Using custom path
-			webpackConfigBasePath: "../", // Using custom path
-		}),
+		alias: {
+			...resolveTsconfigPathsToAlias({
+				tsconfigPath: "./tsconfig.json", // Using custom path
+				webpackConfigBasePath: "../", // Using custom path
+			}),
+			"pg-native": path.resolve(__dirname, "./dummy-pg-native.js"),
+		},
 	},
 	module: {
 		rules: [

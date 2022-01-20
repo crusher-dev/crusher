@@ -17,6 +17,7 @@ module.exports = {
 	GITHUB_CONFIG: {
 		APP_CLIENT_ID: process.env.GITHUB_APP_CLIENT_ID,
 		APP_CLIENT_SECRET: process.env.GITHUB_APP_CLIENT_SECRET,
+		APP_PUBLIC_LINK: process.env.GITHUB_APP_PUBLIC_LINK,
 		APP_PRIVATE_KEY: process.env.GITHUB_APP_PRIVATE_KEY,
 		APP_ID: process.env.GITHUB_APP_ID,
 	},
@@ -40,7 +41,9 @@ module.exports = {
 		CONNECTION_STRING: IS_HEROKU ? process.env.REDIS_URL : process.env.REDIS_CONNECTION_STRING,
 		HOST: process.env.REDIS_HOST,
 		PORT: parseInt(process.env.REDIS_PORT, 10),
+		USERNAME: process.env.REDIS_USER,
 		PASSWORD: process.env.REDIS_PASSWORD,
+		SECURE: process.env.REDIS_SECURE,
 	},
 	SLACK_CONFIG: {
 		CLIENT_ID: process.env.SLACK_CLIENT_ID,

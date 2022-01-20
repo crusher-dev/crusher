@@ -1,31 +1,34 @@
 import { MysqlDatabase } from "@modules/db/mysql";
 import { Service } from "typedi";
 import { isOpenSourceEdition } from "@utils/helper";
+import { PostgresDatabase } from "./postgres";
+import { PoolConfig } from "pg";
 
 const DEFAULT_DB_CONNECTION_POOL_LIMIT = isOpenSourceEdition() ? 5 : 10;
 
 // @TODO: Remove this from here, follow dependency inversion principle
-function getConnectionObject(): any {
+function getConnectionObject() {
 	if (process.env.DB_CONNECTION_STRING) {
 		return { uri: process.env.DB_CONNECTION_STRING, multipleStatements: true };
 	}
 
 	return {
-		connectionLimit: process.env.DB_CONNECTION_POOL || DEFAULT_DB_CONNECTION_POOL_LIMIT,
+		poolSize: process.env.DB_CONNECTION_POOL || DEFAULT_DB_CONNECTION_POOL_LIMIT,
 		host: process.env.DB_HOST || "localhost",
 		user: process.env.DB_USERNAME,
-		port: process.env.DB_PORT,
+		port: process.env.DB_PORT as any,
 		password: process.env.DB_PASSWORD,
 		database: process.env.DB_DATABASE,
 		insecureAuth: true,
 		multipleStatements: true,
+		ssl: { rejectUnauthorized: typeof process.env.DATABASE_SSL !== "undefined" ? true : false },
 	};
 }
 
-const CONNECTION_OBJECT = getConnectionObject();
+const CONNECTION_OBJECT: PoolConfig = getConnectionObject();
 
 @Service()
-class DBManager extends MysqlDatabase {
+class DBManager extends PostgresDatabase {
 	constructor() {
 		super(CONNECTION_OBJECT);
 	}

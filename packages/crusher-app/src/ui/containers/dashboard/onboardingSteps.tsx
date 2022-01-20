@@ -51,7 +51,7 @@ export const DownloadRecorderStepContent = () => {
 						<td>
 							<div className={"ml-40"}>
 								<Button
-									bgColor={"tertiary-dark"}
+									bgColor={"tertiary"}
 									size="medium"
 									css={css`
 										width: 164rem;

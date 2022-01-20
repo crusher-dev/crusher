@@ -98,7 +98,7 @@ function VariableSection({ envId }) {
 
 			<div className={"flex justify-end mt-12 mb-20"}>
 				<Button
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					className={"flex items-center text-12"}
 					css={css`
 						height: 24rem;
@@ -129,6 +129,7 @@ function EnvironmentForm({ id }) {
 	const [project] = useAtom(currentProject);
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
+	const [deleting, setDeleting] = useState(false);
 	const { notSavedInDB, host, name, browser } = environmentsInStore[id];
 
 	const changeName = (e) => {
@@ -187,6 +188,7 @@ function EnvironmentForm({ id }) {
 						placeholder={"Enter some name"}
 						onBlur={changeName}
 						initialValue={name}
+						size={"medium"}
 					/>
 				</div>
 			</div>
@@ -209,14 +211,15 @@ function EnvironmentForm({ id }) {
 						css={css`
 							height: 36rem;
 						`}
-						placeholder={"https://google.com"}
+						placeholder={"Your website URL"}
 						onBlur={setHost}
 						initialValue={host}
+						size={"medium"}
 					/>
 				</div>
 			</div>
 
-			<VariableSection envId={id} />
+			{/*<VariableSection envId={id} />*/}
 
 			<div className={"flex justify-between items-center mt-40 mb-20 text-13"}>
 				<TextBlock
@@ -229,10 +232,26 @@ function EnvironmentForm({ id }) {
 						}
 					`}
 				>
-					{!notSavedInDB ? "Delete" : ""}
+					<Conditional showIf={!notSavedInDB}>
+
+						<Conditional showIf={deleting}>
+							<div className={"flex items-center"}>
+								<LoadingSVG height={12} width={12} className={"mr-8"}/>	Deleting
+							</div>
+  					</Conditional>
+						<Conditional showIf={!deleting}>
+							<span onClick={()=>{
+								deleteEnvAPI()
+								setDeleting(true)
+								}
+							}>
+								Delete
+							</span>
+						</Conditional>
+					</Conditional>
 				</TextBlock>
 				<Button
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					css={css`
 						width: 120rem;
 					`}
@@ -250,7 +269,7 @@ function EnvironmentForm({ id }) {
 }
 
 function EnvironmentCard({ environmentData, id }) {
-	const { name, isOpen, id: envId } = environmentData;
+	const { name, isOpen } = environmentData;
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
 	const { notSavedInDB } = environmentsInStore[id];
@@ -368,7 +387,7 @@ export const Environment = () => {
 const projectListCard = css`
 	padding: 0;
 	#top-section {
-		padding: 10rem 24rem;
+		padding: 14rem 20rem;
 	}
 	#delete {
 		:hover {

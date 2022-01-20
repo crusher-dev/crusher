@@ -14,34 +14,41 @@ class IntegrationsService {
 	@Inject()
 	private slackService: SlackService;
 
-	async addIntegration(integrationConfig: SlackOAuthResponse, projectId: number) {
-		return this.dbManager.insert(`INSERT INTO integrations SET project_id = ?, meta = ?`, [projectId, JSON.stringify({oAuthInfo: integrationConfig })]);
+	async addIntegration(integrationConfig: SlackOAuthResponse, integrationName: IntegrationServiceEnum, projectId: number) {
+		return this.dbManager.insert(`INSERT INTO public.integrations (project_id, integration_name, meta) VALUES (?, ?, ?)`, [
+			projectId,
+			integrationName,
+			JSON.stringify({ oAuthInfo: integrationConfig }),
+		]);
 	}
 
 	async updateIntegration(integrationConfig: SlackOAuthResponse, id: number) {
-		return this.dbManager.update(`UPDATE integrations SET meta = ? WHERE id = ?`, [JSON.stringify(integrationConfig), id]);
+		return this.dbManager.update(`UPDATE public.integrations SET meta = ? WHERE id = ?`, [JSON.stringify(integrationConfig), id]);
 	}
 
 	async deleteIntegration(id: number) {
-		return this.dbManager.delete(`DELETE FROM integrations WHERE id = ?`, [id]);
+		return this.dbManager.delete(`DELETE FROM public.integrations WHERE id = ?`, [id]);
 	}
 
 	@CamelizeResponse()
 	async getSlackIntegration(projectId: number): Promise<KeysToCamelCase<IIntegrationsTable>> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM integrations WHERE project_id = ? AND integration_name = ?", [projectId, IntegrationServiceEnum.SLACK]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.integrations WHERE project_id = ? AND integration_name = ?", [
+			projectId,
+			IntegrationServiceEnum.SLACK,
+		]);
 	}
 
 	@CamelizeResponse()
 	async getListOfIntegrations(projectId: number): Promise<Array<KeysToCamelCase<IIntegrationsTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM integrations WHERE project_id = ?", [projectId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM public.integrations WHERE project_id = ?", [projectId]);
 	}
 
-	async saveSlackSettings(payload: {alertChannel: any, normalChannel: any}, projectId: number) {
+	async saveSlackSettings(payload: { alertChannel: any; normalChannel: any }, projectId: number) {
 		const existingSlackIntegration = await this.getSlackIntegration(projectId);
-		if(!existingSlackIntegration) throw new BadRequestError("No slack integration found");
+		if (!existingSlackIntegration) throw new BadRequestError("No slack integration found");
 		const integrationConfig = existingSlackIntegration.meta;
 
-		if(!integrationConfig.channel) {
+		if (!integrationConfig.channel) {
 			integrationConfig.channel = {};
 		}
 		integrationConfig.channel["alert"] = payload.alertChannel ? payload.alertChannel : null;
@@ -50,12 +57,11 @@ class IntegrationsService {
 		return this.updateIntegration(integrationConfig, existingSlackIntegration.id);
 	}
 
-
 	async postSlackMessageIfNeeded(projectId: number, blocks: Array<any>, type: "alert" | "normal") {
 		const integration = await this.getSlackIntegration(projectId);
-		if(!integration) return;
+		if (!integration) return;
 		const integrationConfig = integration.meta;
-		if(!integrationConfig.channel[type]) return;
+		if (!integrationConfig.channel[type]) return;
 		return this.slackService.postMessage(blocks, integrationConfig.channel[type].value, integrationConfig.oAuthInfo.accessToken);
 	}
 }

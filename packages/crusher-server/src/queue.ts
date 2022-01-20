@@ -5,20 +5,17 @@ import { QueueManager } from "@modules/queue";
 import Container from "typedi";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@crusher-shared/constants/queues";
 import * as testCompleteWorker from "@modules/runner/workers/testCompleteWorker";
-import { MongoManager } from "@modules/db/mongo";
 
 const queueManager = Container.get(QueueManager);
-const mongoManager = Container.get(MongoManager);
 
 async function boot() {
-	await mongoManager.waitUntilAlive();
 
 	await queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
 		limiter: {
 			max: 2,
 			duration: 1800000,
-			groupKey: "buildId"
-		} as any
+			groupKey: "buildId",
+		} as any,
 	});
 	await queueManager.setupQueue(TEST_COMPLETE_QUEUE);
 	await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);

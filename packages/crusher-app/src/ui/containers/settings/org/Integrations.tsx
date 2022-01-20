@@ -149,8 +149,6 @@ function ProjectBox() {
 
 	const { onGithubClick } = useGithubAuthorize();
 	const handleOrgSelection = useCallback(([selected]) => {
-
-
 		if (selected === "add_new") {
 			onGithubClick(true);
 			return;
@@ -158,7 +156,6 @@ function ProjectBox() {
 
 		setSelectedOrganisation(selected);
 	}, []);
-
 
 	return (
 		<div
@@ -263,7 +260,7 @@ function ConnectionGithub() {
 
 				<div className={"mt-12"}>
 					<Button
-						bgColor={"tertiary-dark"}
+						bgColor={"tertiary"}
 						onClick={onGithubClick.bind(this, false)}
 						css={css`
 							border-width: 0;
@@ -418,8 +415,8 @@ function GitIntegration() {
 	);
 }
 
-const getSlackChannelValues = (channels: Array<{name: string; id: string;}> | null) => {
-	if(!channels) return [];
+const getSlackChannelValues = (channels: Array<{ name: string; id: string }> | null) => {
+	if (!channels) return [];
 
 	return (
 		channels.map((channel) => {
@@ -434,7 +431,7 @@ function SlackIntegration() {
 	const [isConnected, setIsConnected] = useState(false);
 	const [slackChannels, setSlackChannels] = useState(null);
 	const [nextCursor, setNextCursor] = useState(null);
-	const {data: integrations} = useSWR(getSlackIntegrations(project.id));
+	const { data: integrations } = useSWR(getSlackIntegrations(project.id));
 
 	const [integration, setSlackIntegration] = useState({
 		normalChannel: [],
@@ -442,45 +439,49 @@ function SlackIntegration() {
 	});
 
 	useEffect(() => {
-		if(integrations && integrations.slackIntegration) {
+		if (integrations && integrations.slackIntegration) {
 			console.log("Integrations is", integrations);
 			setIsConnected(true);
 
 			const slackIntegrationMeta = integrations.slackIntegration && integrations.slackIntegration.meta;
 
-			if(slackIntegrationMeta && slackIntegrationMeta.channel) {
+			if (slackIntegrationMeta && slackIntegrationMeta.channel) {
 				const normalChannel = slackIntegrationMeta.channel.normal;
 				const alertChannel = slackIntegrationMeta.channel.alert;
 
 				setSlackIntegration({
-					normalChannel: normalChannel ? [{label: normalChannel.name, value: normalChannel.value}] : [],
-					alertChannel: alertChannel ? [{label: alertChannel.name, value: alertChannel.value}] : [],
+					normalChannel: normalChannel ? [{ label: normalChannel.name, value: normalChannel.value }] : [],
+					alertChannel: alertChannel ? [{ label: alertChannel.name, value: alertChannel.value }] : [],
 				});
 			}
-
 		}
 	}, [integrations]);
-	
+
 	const fetchSlackChannels = useCallback(async () => {
-		const {channels, nextCursor} = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`));
+		const { channels, nextCursor } = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`));
 		setSlackChannels(channels);
 		setNextCursor(nextCursor);
 		return channels;
 	}, [slackChannels, nextCursor]);
 
 	useEffect(() => {
-		if(isConnected) {
+		if (isConnected) {
 			fetchSlackChannels();
 		}
-	}, [isConnected])
+	}, [isConnected]);
 
-	const handleSwitch  = useCallback((toggleState: boolean) => {
-		if(toggleState) {
-			const windowRef = openPopup(`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}?redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(JSON.stringify({projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations")}))}`);
-			
+	const handleSwitch = useCallback((toggleState: boolean) => {
+		if (toggleState) {
+			const windowRef = openPopup(
+				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${
+					process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+				}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(
+					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
+				)}`,
+			);
 			//@ts-ignore
 			const interval = setInterval(() => {
-				if(windowRef.closed) return clearInterval(interval);
+				if (windowRef.closed) return clearInterval(interval);
 
 				const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
 				if (isOnFEPage) {
@@ -491,22 +492,24 @@ function SlackIntegration() {
 				}
 			}, 200);
 		} else {
-			backendRequest(`/integrations/${project.id}/slack/actions/remove`).then((res)=> {
-				setIsConnected(false);
-				setSlackIntegration({
-					normalChannel: [],
-					alertChannel: [],
+			backendRequest(`/integrations/${project.id}/slack/actions/remove`)
+				.then((res) => {
+					setIsConnected(false);
+					setSlackIntegration({
+						normalChannel: [],
+						alertChannel: [],
+					});
+					sendSnackBarEvent({
+						message: "Succesfully disabled slack integration",
+						type: "normal",
+					});
+				})
+				.catch((err) => {
+					sendSnackBarEvent({
+						message: "Error disabling slack integration",
+						type: "error",
+					});
 				});
-				sendSnackBarEvent({
-					message: "Succesfully disabled slack integration",
-					type: "normal",
-				});
-			}).catch((err) => {
-				sendSnackBarEvent({
-					message: "Error disabling slack integration",
-					type: "error",
-				});
-			})
 		}
 	}, []);
 
@@ -514,55 +517,66 @@ function SlackIntegration() {
 		const channelTypeName = type === "normal" ? "normalChannel" : "alertChannel";
 
 		setSlackIntegration((previous) => ({
-				...previous,
-				[channelTypeName]: selectedValues
+			...previous,
+			[channelTypeName]: selectedValues,
 		}));
 
 		const alertChannel = channelTypeName === "alertChannel" ? selectedValues : integration.alertChannel;
 		const normalChannel = channelTypeName === "normalChannel" ? selectedValues : integration.normalChannel;
 
-		const alertChannelInfo = alertChannel && alertChannel[0] && alertChannel[0].label ? alertChannel : getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
-		const normalChannelInfo = normalChannel && normalChannel[0] && normalChannel[0].label ? normalChannel : getSlackChannelValues(slackChannels).filter((channel) => normalChannel[0] === channel.value);
+		const alertChannelInfo =
+			alertChannel && alertChannel[0] && alertChannel[0].label
+				? alertChannel
+				: getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
+		const normalChannelInfo =
+			normalChannel && normalChannel[0] && normalChannel[0].label
+				? normalChannel
+				: getSlackChannelValues(slackChannels).filter((channel) => normalChannel[0] === channel.value);
 
 		backendRequest(`/integrations/${project.id}/slack/actions/save.settings`, {
 			method: RequestMethod.POST,
 			payload: {
-				alertChannel: alertChannelInfo[0] ? {
-					name: alertChannelInfo[0].label,
-					value: alertChannelInfo[0].value,
-				} : null,
-				normalChannel: normalChannelInfo[0] ? {
-					name: normalChannelInfo[0].label,
-					value: normalChannelInfo[0].value,
-				} : null
-			}
-		}).then((res) => {
-			console.log("Res is", res);
-			sendSnackBarEvent({
-				type: "success",
-				message: "Slack integration saved successfully",
+				alertChannel: alertChannelInfo[0]
+					? {
+							name: alertChannelInfo[0].label,
+							value: alertChannelInfo[0].value,
+					  }
+					: null,
+				normalChannel: normalChannelInfo[0]
+					? {
+							name: normalChannelInfo[0].label,
+							value: normalChannelInfo[0].value,
+					  }
+					: null,
+			},
+		})
+			.then((res) => {
+				console.log("Res is", res);
+				sendSnackBarEvent({
+					type: "success",
+					message: "Slack integration saved successfully",
+				});
+			})
+			.catch((err) => {
+				sendSnackBarEvent({
+					type: "error",
+					message: "Slack integration failed to save",
+				});
 			});
-		}).catch((err) => {
-			sendSnackBarEvent({
-				type: "error",
-				message: "Slack integration failed to save",
-			});
-		});
 	};
 
-	const handleScrollEnd = useCallback(async () => {		
-				if(!nextCursor) return false;
+	const handleScrollEnd = useCallback(async () => {
+		if (!nextCursor) return false;
+		const { channels, nextCursor: _nextCursor } = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`), {
+			method: RequestMethod.GET,
+			payload: {
+				cursor: nextCursor,
+			},
+		});
 
-				const {channels, nextCursor: _nextCursor} = await backendRequest(resolvePathToBackendURI(`/integrations/${project.id}/slack/channels`), {
-					method: RequestMethod.GET,
-					payload: {
-						cursor: nextCursor,
-					}
-				});
-
-				setNextCursor((previous) => (_nextCursor));
-				setSlackChannels((previous) => ([...previous, ...channels]));
-				return true;
+		setNextCursor((previous) => _nextCursor);
+		setSlackChannels((previous) => [...previous, ...channels]);
+		return true;
 	}, [slackChannels, nextCursor]);
 
 	return (
@@ -582,35 +596,53 @@ function SlackIntegration() {
 				<Toggle disableInternalState={true} callback={handleSwitch} isOn={isConnected}></Toggle>
 			</div>
 			<Conditional showIf={isConnected}>
-			<div
-			css={css`
-				display: block;
-			`}
-			className={"w-full"}
-		>
-			<Card
-				className={"mt-34"}
-				css={css`
-					padding: 20rem 20rem 20rem;
-					background: #101215;
-				`}
-			>
-				<div className="text-13">
-					<div className="flex" style={{alignItems: "center"}}>
-						<label style={{fontWeight: "bold"}}>Normal channel</label>
-						<div className="ml-auto" css={selectBoxCSS}>
-							<SelectBox onScrollEnd={handleScrollEnd} dropDownHeight={"214rem"} isSearchable={true} values={getSlackChannelValues(slackChannels)} selected={integration.normalChannel ? integration.normalChannel : null} placeholder="Select a channel" va callback={handleChannelSelect.bind(this, "normal")}/>
-						</div>
-					</div>
+				<div
+					css={css`
+						display: block;
+					`}
+					className={"w-full"}
+				>
+					<Card
+						className={"mt-34"}
+						css={css`
+							padding: 20rem 20rem 20rem;
+							background: #101215;
+						`}
+					>
+						<div className="text-13">
+							<div className="flex" style={{ alignItems: "center" }}>
+								<label style={{ fontWeight: "bold" }}>Normal channel</label>
+								<div className="ml-auto" css={selectBoxCSS}>
+									<SelectBox
+										onScrollEnd={handleScrollEnd}
+										dropDownHeight={"214rem"}
+										isSearchable={true}
+										values={getSlackChannelValues(slackChannels)}
+										selected={integration.normalChannel ? integration.normalChannel : null}
+										placeholder="Select a channel"
+										va
+										callback={handleChannelSelect.bind(this, "normal")}
+									/>
+								</div>
+							</div>
 
-					<div className="flex mt-20" style={{alignItems: "center"}}>
-						<label style={{fontWeight: "bold"}}>Alert Channel:</label>
-						<div className="ml-auto" css={selectBoxCSS}>
-							<SelectBox onScrollEnd={handleScrollEnd} dropDownHeight={"214rem"} isSearchable={true} values={getSlackChannelValues(slackChannels)} selected={integration.alertChannel ? integration.alertChannel : null} placeholder="Select a channel" callback={handleChannelSelect.bind(this, "alert")} css={selectBoxCSS} />
+							<div className="flex mt-20" style={{ alignItems: "center" }}>
+								<label style={{ fontWeight: "bold" }}>Alert Channel:</label>
+								<div className="ml-auto" css={selectBoxCSS}>
+									<SelectBox
+										onScrollEnd={handleScrollEnd}
+										dropDownHeight={"214rem"}
+										isSearchable={true}
+										values={getSlackChannelValues(slackChannels)}
+										selected={integration.alertChannel ? integration.alertChannel : null}
+										placeholder="Select a channel"
+										callback={handleChannelSelect.bind(this, "alert")}
+										css={selectBoxCSS}
+									/>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-				</Card>
+					</Card>
 				</div>
 			</Conditional>
 		</div>

@@ -91,12 +91,14 @@ export class UserController {
 	}
 
 	@Get("/users/actions/auth.google/callback")
-	async googleCallback(@QueryParam("code") code: string, @QueryParam("state") encodedState, @Req() req: any, @Res() res) {
+	async googleCallback(@QueryParam("code") code: string, @QueryParams() params, @Req() req: any, @Res() res) {
+		const { state: encodedState } = params;
 		const { tokens } = await this.oauth2Client.getToken(code);
 
 		this.googleAPIService.setAccessToken(tokens.access_token);
 		const profileInfo = await this.googleAPIService.getProfileInfo();
-		await this.userAuthService.authWithGoogle(
+
+		await this.userAuthService.authUser(
 			{
 				name: [profileInfo.given_name, profileInfo.family_name].filter((n) => !!n).join(" "),
 				email: profileInfo.email,
@@ -132,9 +134,12 @@ export class UserController {
 
 	@Post("/users/actions/reset_password")
 	async resetPassword(@Body() body: { token: string; password: string }, @Req() req: any, @Res() res: any) {
-		const status = await this.userAuthService.resetPassword(body.token, body.password, req, res);
+		const user = await this.userAuthService.resetPassword(body.token, body.password, req, res);
+		const systemInfo = await this.usersService.getUserAndSystemInfo(user.id);
+
 		return {
-			status,
+			status: "Successful",
+			systemInfo: systemInfo,
 		};
 	}
 
@@ -168,7 +173,15 @@ export class UserController {
 		if (!projectId) throw new Error("Invite link to team is not supported yet. Need project_id to work");
 
 		const { team_id } = user;
-		return this.userInviteService.fetchPublicProjectInviteCode(projectId, team_id, null);
+		const inviteCode = await this.userInviteService.createProjectInviteCode({
+			teamId: team_id,
+			projectId: projectId,
+			expiresOn: null,
+			meta: {},
+			isPublic: true,
+		});
+
+		return this.userInviteService.getInviteLink(inviteCode, InviteReferralEnum.PROJECT);
 	}
 
 	@Authorized()

@@ -12,7 +12,8 @@
 		"export": "next export",
 		"prettify": "prettier --write . --plugin-search-dir=./node_modules/ --plugin=./node_modules/@trivago/prettier-plugin-sort-imports/",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-		"analyze:browser": "cross-env ANALYZE=true ANALYZE=true next build"
+		"analyze:browser": "cross-env ANALYZE=true ANALYZE=true next build",
+		"test": "jest"
 	},
 	"dependencies": {
 		"@emotion/babel-preset-css-prop": "^10.0.27",
@@ -21,6 +22,7 @@
 		"@lottiefiles/react-lottie-player": "^2.1.7",
 		"@octokit/auth-oauth-app": "^3.0.7",
 		"@octokit/rest": "^18.0.14",
+		"@types/jest": "^27.0.3",
 		"@types/react-outside-click-handler": "^1.3.0",
 		"clipboard-copy": "^3.1.0",
 		"commitizen": "^4.2.3",
@@ -67,6 +69,7 @@
 		"@next/bundle-analyzer": "^10.0.4",
 		"@svgr/webpack": "^5.5.0",
 		"@trivago/prettier-plugin-sort-imports": "^2.0.4",
+		"@types/jest": "^27.0.3",
 		"@types/js-cookie": "^2.2.6",
 		"@types/node": "^14.14.22",
 		"@types/perfect-scrollbar": "^1.3.0",
@@ -84,6 +87,7 @@
 		"eslint-plugin-prettier": "^3.3.1",
 		"eslint-plugin-react": "^7.22.0",
 		"eslint-plugin-react-hooks": "^4.2.0",
+		"jest": "^27.4.3",
 		"next-images": "^1.6.2",
 		"next-purgecss": "^4.0.0",
 		"next-transpile-modules": "^6.0.0",
@@ -91,6 +95,7 @@
 		"prettier-plugin-tailwind": "^2.2.12",
 		"shelljs": "^0.8.4",
 		"tailwindcss": "^1.9.6",
+		"ts-jest": "^27.1.0",
 		"typescript": "^4.1.3",
 		"webpack": "4.46.0"
 	}

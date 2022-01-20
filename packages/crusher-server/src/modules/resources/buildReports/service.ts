@@ -15,7 +15,6 @@ import {
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { BuildReportStatusEnum, IBuildReportTable, TestInstanceResultSetConclusion, TestInstanceResultSetStatus } from "./interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
-import { BuildInstanceResults, IBuildInstanceResult } from "../builds/instances/mongo/buildInstanceResults";
 import { BuildTestInstanceScreenshotService } from "../builds/instances/screenshots.service";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
@@ -38,7 +37,7 @@ interface TestBuildReport {
 	testInstanceId?: number;
 	testBaselineInstanceId?: number;
 	testName?: string;
-	testStepsJSON?: string;
+	testStepsJson?: string;
 	testInstanceBrowser?: PLATFORM;
 	testInstanceHost?: string;
 	testResultStatus?: TestInstanceResultSetStatus;
@@ -69,10 +68,10 @@ export class BuildReportService {
 		// @TODO: Cleanup tihs logic and use proper typescript types
 		return actionResults.map((actionResult, actionIndex) => {
 			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType)) {
-				if(!actionResult.meta || !actionResult.meta.outputs) return actionResult;
+				if (!actionResult.meta || !actionResult.meta.outputs) return actionResult;
 
 				const images = actionResult.meta.outputs;
-				for(let imageIndex = 0; imageIndex < images.length; imageIndex++) {
+				for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
 					const screenshotResultRecord = instanceScreenshotsRecordsMap[`${actionIndex}.${imageIndex}`];
 					if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
 						if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {
@@ -95,18 +94,18 @@ export class BuildReportService {
 		});
 	}
 
+
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
 		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
-			"SELECT jobs.id buildId, jobs.meta buildMeta, jobs.project_id buildProjectId, jobs.commit_name buildName, job_reports.id buildReportId, job_reports.reference_job_id buildBaselineId, job_reports.created_at buildReportCreatedAt, jobs.created_at buildCreatedAt, jobs.updated_at buildUpdatedAt, job_reports.updated_at buildReportUpdatedAt, job_reports.status buildReportStatus, buildTests.* FROM jobs, job_reports LEFT JOIN (SELECT test_instances.id testInstanceId, test_instance_result_sets.report_id testBuildReportId, test_instance_result_sets.status testResultStatus, test_instance_result_sets.conclusion testResultConclusion, test_instance_result_sets.id testResultSetId, test_instance_result_sets.target_instance_id testBaselineInstanceId, tests.name testName, test_instances.browser testInstanceBrowser, tests.id testId, tests.events testStepsJSON, test_instances.host testInstanceHost, test_instances.recorded_video_url recordedVideoUrl FROM test_instances, tests, test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) buildTests ON buildTests.testBuildReportId = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
+			"SELECT jobs.id build_id, jobs.meta build_meta, jobs.project_id build_project_id, jobs.commit_name build_name, job_reports.id build_report_id, job_reports.reference_job_id build_baseline_id, job_reports.created_at build_report_created_at, jobs.created_at build_created_at, jobs.updated_at build_updated_at, job_reports.updated_at build_report_updated_at, job_reports.status build_report_status, build_tests.* FROM public.jobs, public.job_reports LEFT JOIN (SELECT test_instances.id test_instance_id, test_instance_result_sets.report_id test_build_report_id, test_instance_result_sets.status test_result_status, test_instance_result_sets.conclusion test_Result_conclusion, test_instance_result_sets.id test_result_set_id, test_instance_result_sets.target_instance_id test_baseline_instance_id, tests.name test_name, test_instances.browser test_instance_browser, tests.id test_id, tests.events test_steps_json, test_instances.host test_instance_host, test_instances.recorded_video_url recorded_video_url FROM public.test_instances, public.tests, public.test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) build_tests ON build_tests.test_build_report_id = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
 			[buildId],
+			true,
 		);
 		if (!testsWithReportData.length) throw new Error(`No information available about build reports with this build id ${buildId}`);
 
 		const testsWithReportDataAndActionResultsPromises: Array<Promise<TestBuildReport & { actionsResult: Array<any> }>> = testsWithReportData.map(
 			async (reportData) => {
-				const instanceResult = await BuildInstanceResults.findOne({
-					instanceId: { $eq: reportData.testInstanceId },
-				}).exec();
+				const instanceResult = await this.buildTestInstanceService.getActionsResult(reportData.testInstanceId);
 
 				const instanceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshotResultWithActionIndex(reportData.testResultSetId);
 
@@ -205,7 +204,7 @@ export class BuildReportService {
 		statusExplanation = "",
 	) {
 		return this.dbManager.update(
-			"UPDATE job_reports SET passed_test_count = ?, failed_test_count = ?, review_required_test_count = ?, status = ?, status_explanation = ? WHERE id = ?",
+			"UPDATE public.job_reports SET passed_test_count = ?, failed_test_count = ?, review_required_test_count = ?, status = ?, status_explanation = ? WHERE id = ?",
 			[passedTestCount, failedTestCount, reviewRequiredTestCount, status, statusExplanation, reportId],
 		);
 	}
@@ -232,7 +231,7 @@ export class BuildReportService {
 	}
 
 	async createBuildReport(totalTestCount: number, buildId: number, referenceBuildId: number, projectId: number): Promise<{ insertId: number }> {
-		return this.dbManager.insert(`INSERT INTO job_reports SET job_id = ?, reference_job_id = ?, total_test_count = ?, project_id = ?, status = ?`, [
+		return this.dbManager.insert(`INSERT INTO public.job_reports (job_id, reference_job_id, total_test_count, project_id, status) VALUES (?, ?, ?, ?, ?)`, [
 			buildId,
 			referenceBuildId,
 			totalTestCount,
@@ -243,10 +242,10 @@ export class BuildReportService {
 
 	@CamelizeResponse()
 	async getBuildReportRecord(reportId: number): Promise<KeysToCamelCase<IBuildReportTable> | null> {
-		return this.dbManager.fetchSingleRow("SELECT * FROM job_reports WHERE id = ?", [reportId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.job_reports WHERE id = ?", [reportId]);
 	}
 
 	async approveBuildReport(reportId: number) {
-		return this.dbManager.update("UPDATE job_reports SET status = ? WHERE id = ?", [JobReportStatus.PASSED, reportId]);
+		return this.dbManager.update("UPDATE public.job_reports SET status = ? WHERE id = ?", [JobReportStatus.PASSED, reportId]);
 	}
 }

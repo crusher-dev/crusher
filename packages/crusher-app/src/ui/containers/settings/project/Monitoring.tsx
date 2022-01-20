@@ -52,6 +52,13 @@ function MonitoringForm({ id }) {
 	const { data: environments } = useSWR(getProjectEnvironments(project.id));
 
 	const envValues = getValues(environments);
+
+	useEffect(() => {
+		if (envValues.length > 0) {
+			setEnv([envValues[0].value]);
+		}
+	}, [envValues]);
+
 	const setEnv = (values) => {
 		setMonitoring((monitoring) => {
 			monitoring[id].environmentId = values[0];
@@ -136,7 +143,7 @@ function MonitoringForm({ id }) {
 					{!notSavedInDB ? "Delete" : ""}
 				</TextBlock>
 				<Button
-					bgColor={"tertiary-dark"}
+					bgColor={"tertiary"}
 					css={css`
 						width: 120rem;
 					`}
@@ -277,7 +284,7 @@ const projectListCard = css`
 	background: rgb(16 18 21);
 	border: 1px solid #171b20;
 	#top-section {
-		padding: 10rem 20rem 10rem 24rem;
+    padding: 14rem 20rem;
 	}
 	#delete {
 		:hover {

@@ -159,7 +159,7 @@ function LeftSection() {
 
 					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
 						<div css={navLink} className={"flex items-center text-12.5 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
-							<AddSVG className={"mr-12 mb-2"} /> Invite teammates
+							<AddSVG className={"mr-18 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
 
@@ -311,7 +311,7 @@ function RunTest() {
 	}, []);
 
 	return (
-		<Button bgColor={"tertiary-dark"} onClick={runProjectTest}>
+		<Button bgColor={"tertiary"} onClick={runProjectTest}>
 			<div className={"flex items-center"}>
 				<PlaySVG className={"mr-12"} />
 				Run tests

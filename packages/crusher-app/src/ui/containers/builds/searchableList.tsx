@@ -106,7 +106,7 @@ function BuildSearchableList() {
 
 	const { status, triggeredBy, search, page } = filters;
 	const isFilterEnabled = !!status || !!triggeredBy || !!search || !!page;
-	const currentPage = filters.page || 1;
+	const currentPage = filters.page || 0;
 
 	const isZeroBuild = data && data.list.length === 0;
 
@@ -118,10 +118,9 @@ function BuildSearchableList() {
 
 	const setPage = useCallback((page) => {
 		setFilters({ ...filters, page });
-	}, []);
+	}, [filters]);
 
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
-
 	return (
 		<div>
 			<Conditional showIf={!hasNoBuildsOverall}>
@@ -143,7 +142,7 @@ function BuildSearchableList() {
 			<Conditional showIf={!isZeroBuild}>
 				<div className={"flex justify-center mt-64 mb-80"}>
 					<PaginationButton
-						isPreviousActive={currentPage > 1}
+						isPreviousActive={currentPage > 0}
 						isNextActive={currentPage < totalPages - 1}
 						onPreviousClick={setPage.bind(this, currentPage - 1)}
 						onNextClick={setPage.bind(this, currentPage + 1)}

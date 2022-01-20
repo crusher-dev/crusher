@@ -93,6 +93,35 @@ export function FailedSVG(props) {
 		</svg>
 	);
 }
+export function ExpandSVG(props) {
+	return (
+		<svg width="22rem" height="22rem" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<rect width="20" height="20" rx="3" fill="#171C24" />
+			<g clip-path="url(#clip0_2735_255)">
+				<path
+					d="M10.5 15.4951C10.3745 15.4951 10.2491 15.4472 10.1534 15.3516L7.1436 12.3417C6.95213 12.1502 6.95213 11.8398 7.1436 11.6484C7.33499 11.457 7.64535 11.457 7.83683 11.6484L10.5 14.3117L13.1631 11.6485C13.3546 11.4571 13.6649 11.4571 13.8563 11.6485C14.0479 11.8399 14.0479 12.1503 13.8563 12.3418L10.8465 15.3517C10.7508 15.4473 10.6254 15.4951 10.5 15.4951Z"
+					fill="white"
+					fill-opacity="0.83"
+				/>
+			</g>
+			<g clip-path="url(#clip1_2735_255)">
+				<path
+					d="M10.5 4.50492C10.6255 4.50492 10.7509 4.55282 10.8466 4.64842L13.8564 7.6583C14.0479 7.84976 14.0479 8.16019 13.8564 8.35158C13.665 8.54296 13.3546 8.54296 13.1632 8.35158L10.5 5.68827L7.83686 8.35148C7.64539 8.54287 7.33506 8.54287 7.14368 8.35148C6.95213 8.1601 6.95213 7.84967 7.14368 7.6582L10.1535 4.64833C10.2492 4.55271 10.3746 4.50492 10.5 4.50492Z"
+					fill="white"
+					fill-opacity="0.83"
+				/>
+			</g>
+			<defs>
+				<clipPath id="clip0_2735_255">
+					<rect width="7" height="7" fill="white" transform="translate(7 10)" />
+				</clipPath>
+				<clipPath id="clip1_2735_255">
+					<rect width="7" height="7" fill="white" transform="translate(14 10) rotate(-180)" />
+				</clipPath>
+			</defs>
+		</svg>
+	);
+}
 
 export function ReviewRequiredSVG(props) {
 	const { isMonochrome } = props;
@@ -241,18 +270,11 @@ export const TestStatusSVG = ({ type, ...props }) => {
 
 export const InfoSVG = (props) => {
 	return (
-		<svg
-		  width={11}
-		  height={11}
-		  viewBox={"0 0 11 11"}
-		  fill="none"
-		  xmlns="http://www.w3.org/2000/svg"
-		  {...props}
-		>
-		  <path
-			d="M5.5 0a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm.917 9.024a.376.376 0 01-.376.376h-1.03a.376.376 0 01-.376-.376V4.842c0-.208.168-.376.375-.376h1.031c.207 0 .376.168.376.376v4.182zM5.5 3.754a.933.933 0 110-1.865.933.933 0 010 1.865z"
-			fill="#656565"
-		  />
+		<svg width={11} height={11} viewBox={"0 0 11 11"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M5.5 0a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm.917 9.024a.376.376 0 01-.376.376h-1.03a.376.376 0 01-.376-.376V4.842c0-.208.168-.376.375-.376h1.031c.207 0 .376.168.376.376v4.182zM5.5 3.754a.933.933 0 110-1.865.933.933 0 010 1.865z"
+				fill="#656565"
+			/>
 		</svg>
-	  )
-}
+	);
+};

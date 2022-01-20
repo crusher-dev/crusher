@@ -28,7 +28,14 @@ const runScriptOnElement = (script: string, elHandle: ElementHandle, exportsMana
 	)(exports, require, module, __filename, __dirname, script, elHandle, exportsManager);
 };
 
-async function runCustomScriptOnElement(element: Locator, workingSelector: any, action: iAction, globals: IGlobalManager, storageManager: StorageManager, exportsManager: ExportsManager) {
+async function runCustomScriptOnElement(
+	element: Locator,
+	workingSelector: any,
+	action: iAction,
+	globals: IGlobalManager,
+	storageManager: StorageManager,
+	exportsManager: ExportsManager,
+) {
 	const customScript = action.payload.meta.script;
 	const actionResult = await runScriptOnElement(
 		customScript,

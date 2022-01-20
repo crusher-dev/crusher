@@ -6,9 +6,6 @@ const PUBLIC_LINK = process.env.NEXT_PUBLIC_GITHUB_APP_PUBLIC_LINK;
 
 // Github new installation is
 const getGithubOAuthURL = (alreadyAuthorized = false) => {
-	// if (!process.env.GITHUB_APP_CLIENT_ID) {
-	// 	throw new Error("No github app client id provided");
-	// }
 
 	const githubUrl = new URL(path.join(PUBLIC_LINK, "/installations/new"));
 	githubUrl.searchParams.append("client_id", CLIENT_ID);

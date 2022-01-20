@@ -118,10 +118,9 @@ function BuildSearchableList() {
 
 	const setPage = useCallback((page) => {
 		setFilters({ ...filters, page });
-	}, []);
+	}, [filters]);
 
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
-
 	return (
 		<div>
 			<Conditional showIf={!hasNoBuildsOverall}>

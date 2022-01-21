@@ -7,7 +7,7 @@ import { openPopup } from "@utils/common/domUtils";
 import { getGithubOAuthURL } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
 import { Button, Input } from "dyson/src/components/atoms";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { Text } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 import { atom, useAtom } from "jotai";
@@ -22,6 +22,9 @@ import { addGithubRepo, getGitIntegrations } from "@constants/api";
 import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "@types/RequestOptions";
 import { githubTokenAtom } from "@store/atoms/global/githubToken";
+import { updateMeta } from "@store/mutators/metaData";
+import { USER_META_KEYS } from "@constants/USER";
+import Link from "next/link";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -220,6 +223,7 @@ const GitRepoIntegration = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
 	const [githubToken, setGithubToken] = useAtom(githubTokenAtom);
+	const [, updateOnboarding] = useAtom(updateMeta);
 
 	const onGithubConnectClick = (alreadAuthorized: boolean = false) => {
 		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
@@ -237,6 +241,14 @@ const GitRepoIntegration = () => {
 				});
 			}
 		}, 50);
+	};
+
+	const handleSkipOnboarding = () => {
+		updateOnboarding({
+				type: "user",
+				key: USER_META_KEYS.INITIAL_ONBOARDING,
+				value: true,
+		});
 	};
 
 	React.useEffect(() => {
@@ -308,6 +320,9 @@ const GitRepoIntegration = () => {
 					<Conditional showIf={connectedGit}>
 							<GithubRepoBox/>
 					</Conditional>
+				</div>
+				<div className={"flex justify-end mt-28"}>
+					<Link href={"/app/dashboard"}><Text css={css`:hover{ opacity: 0.9; }`} onClick={ handleSkipOnboarding } fontSize={13}>Skip setup and show me the dashboard</Text></Link>
 				</div>
 			</div>
 		</>

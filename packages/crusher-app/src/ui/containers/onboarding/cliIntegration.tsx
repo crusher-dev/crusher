@@ -1,5 +1,6 @@
 import { Card } from "@components/common/card";
 import { getTestListAPI } from "@constants/api";
+import { USER_META_KEYS } from "@constants/USER";
 import { css } from "@emotion/react";
 import { usePageTitle } from "@hooks/seo";
 import { currentProject } from "@store/atoms/global/project";
@@ -63,6 +64,7 @@ const CliRepoIntegration = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [project] = useAtom(currentProject);
 	const [commands, setCommnads] = React.useState(["", ""]);
+	const [, updateOnboarding] = useAtom(updateMeta);
 
 	React.useEffect(() => {
 		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
@@ -83,6 +85,14 @@ const CliRepoIntegration = () => {
 	}, []);
 
 	usePageTitle("Create & Run your first test");
+
+	const handleSkipOnboarding = () => {
+		updateOnboarding({
+				type: "user",
+				key: USER_META_KEYS.INITIAL_ONBOARDING,
+				value: true,
+		});
+	};
 
 	return (
 		<>
@@ -164,7 +174,7 @@ const CliRepoIntegration = () => {
 					</div>
 				</Card>
 				<div className={"flex justify-end mt-28"}>
-					<Text fontSize={13}>Skip setup and show me the dashboard</Text>
+					<Link href={"/app/dashboard"}><Text onClick={ handleSkipOnboarding } css={ css`:hover { opacity: 0.9 }`} fontSize={13}>Skip setup and show me the dashboard</Text></Link>
 				</div>
 			</div>
 		</>

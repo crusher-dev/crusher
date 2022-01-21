@@ -16,6 +16,7 @@ module.exports = {
 		cron: "./src/cron.ts",
 		worker: "./src/modules/runner/workers/testCompleteWorker.ts",
 		master: "bullmq/dist/classes/master.js",
+		...getAllWorkers(),
 	},
 	output: {
 		path: path.resolve(__dirname, "../../output/crusher-server"),
@@ -35,7 +36,7 @@ module.exports = {
 			patterns: [
 				{
 					from: `${path.dirname(require.resolve("bullmq"))}/commands/`,
-					to: "src/core/workers/commands/",
+					to: "src/modules/runner/workers/commands/",
 					globOptions: { ignore: ["**/*.js", "**/*.ts"] },
 				},
 			],
@@ -111,4 +112,10 @@ function resolveTsconfigPathsToAlias({ tsconfigPath = "./tsconfig.json", webpack
 	});
 
 	return aliases;
+}
+
+function getAllWorkers() {
+	return {
+		"./src/modules/runner/workers/testCompleteWorker.ts": "./src/modules/runner/workers/testCompleteWorker.ts",
+	};
 }

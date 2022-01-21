@@ -27,8 +27,6 @@ import { IntegrationsController } from "@modules/resources/integrations/controll
 
 Container.set(RedisManager, new RedisManager());
 
-require("./queue");
-
 const chalk = require("chalk");
 
 useContainer(Container);

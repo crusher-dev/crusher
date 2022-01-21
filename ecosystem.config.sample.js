@@ -33,10 +33,11 @@ module.exports = {
 			merge_logs: true,
 		},
 		{
+			merge_logs: true,
 			name: 'crusher-server-queue',
 			cwd: './packages/crusher-server',
 			script: IS_PRODUCTION ? 'node' : 'npm',
-			args: IS_PRODUCTION ? 'queue.js' : 'run dev:queue',
+			args: IS_PRODUCTION ? '-r source-map-support/register queue.js' : 'run dev:queue',
 			watch: ['src', 'config'],
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,

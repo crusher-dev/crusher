@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { BuildsService } from "@modules/resources/builds/service";
 import { Job } from "bullmq";
 import Container from "typedi";

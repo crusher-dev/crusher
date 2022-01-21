@@ -30,7 +30,7 @@
     }
   },
   "typeRoots": ["node_modules/@types"],
-  "files": ["src/app.ts"],
+  "files": ["src/app.ts", "src/queue.ts"],
   "include": ["./src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"],
   "skipLibCheck": true

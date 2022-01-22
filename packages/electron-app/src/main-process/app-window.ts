@@ -135,6 +135,7 @@ export class AppWindow {
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
+		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
 		ipcMain.handle("go-back-page", this.handleGoBackPage.bind(this));
 		ipcMain.handle("reload-page", this.handleReloadPage.bind(this));
 		ipcMain.handle("get-page-seo-info", this.handleGetPageSeoInfo.bind(this));
@@ -149,6 +150,33 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private getLastRecordedStep(store: Store<unknown, AnyAction>) {
+		const steps = getSavedSteps(store.getState() as any);
+		for (let i = steps.length - 1; i >= 0; i--) {
+			// Scrolls might happen during internal navigation, so ignore them
+			if (![ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(steps[i].type)) {
+				return { step: steps[i], index: i };
+			}
+		}
+
+		return null;
+	}
+
+	private async handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
+		const { action } = payload;
+		if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
+			const lastRecordedStep = this.getLastRecordedStep(this.store);
+			if (!lastRecordedStep) return;
+			if (lastRecordedStep.step.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
+				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
+			} else {
+				if (lastRecordedStep.step.type !== ActionsInTestEnum.NAVIGATE_URL) {
+					this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+				}
+			}
+		}
 	}
 
 	async continueRemainingSteps() {

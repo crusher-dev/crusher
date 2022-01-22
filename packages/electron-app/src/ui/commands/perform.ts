@@ -170,4 +170,8 @@ const continueRemainingSteps = () => {
     ipcRenderer.invoke("continue-remaining-steps");
 };
 
-export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage, continueRemainingSteps };
+const registerActionAsSavedStep = (action) => {
+    ipcRenderer.invoke("save-step", {action});
+}
+
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage, continueRemainingSteps, registerActionAsSavedStep };

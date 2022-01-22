@@ -6,7 +6,7 @@ import { sleep } from "../functions/sleep";
 async function waitForNavigation(page: Page, action: iAction) {
 	console.log("Waiting for navigation now...");
 	try {
-		await page.waitForNavigation();
+		await page.waitForLoadState("networkidle");
 		await page.waitForLoadState("load");
 		await page.waitForLoadState("domcontentloaded");
 	} catch (ex) {

@@ -375,7 +375,7 @@ export class AppWindow {
 					this.store.dispatch(
 						updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }),
 					);
-					await this.handleRunAfterTest(action);
+					await this.handleRunAfterTest(action, true);
 					this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 					break;
 				}
@@ -404,7 +404,7 @@ export class AppWindow {
 		await this.clearWebViewStorage();
 	}
 
-	private async handleRunAfterTest(action: iAction) {
+	private async handleRunAfterTest(action: iAction, shouldRecordSetDevice = false) {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		try {
@@ -417,7 +417,7 @@ export class AppWindow {
 
 			for (const browserAction of browserActions) {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
-					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: true });
+					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: shouldRecordSetDevice ? false : true });
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));

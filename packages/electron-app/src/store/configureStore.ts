@@ -22,7 +22,7 @@ const composeEnhancers =
 
 export default function configureStore(intialState: any, scope = 'main'): Store<unknown> {
 
-	let middlewares: Array<any> = [thunkMiddleware];
+	let middlewares: Array<any> = [];
 
 	// if (!isProduction()) {
 		middlewares.push(loggerMiddleware);
@@ -34,7 +34,7 @@ export default function configureStore(intialState: any, scope = 'main'): Store<
           ...middlewares,
         ];
       }
-    
+
       if (scope === 'main') {
         middlewares = [
           triggerAlias,
@@ -49,6 +49,7 @@ export default function configureStore(intialState: any, scope = 'main'): Store<
 	const composedEnhancers: StoreEnhancer<unknown, any> = composeEnhancers(...enhancers);
 
     const store = createStore(rootReducer, intialState, composedEnhancers);
+
 
 	if (hotModule) {
 		hotModule.accept("./reducers", () => store?.replaceReducer(rootReducer));

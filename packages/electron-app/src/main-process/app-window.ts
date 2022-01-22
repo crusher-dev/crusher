@@ -153,21 +153,28 @@ export class AppWindow {
 	}
 
 	private getLastRecordedStep(store: Store<unknown, AnyAction>) {
-    const steps = getSavedSteps(store.getState() as any);
-    return { step: steps[steps.length - 1], index: steps.length - 1 };
+		const steps = getSavedSteps(store.getState() as any);
+		for (let i = steps.length - 1; i >= 0; i--) {
+			// Scrolls might happen during internal navigation, so ignore them
+			if (![ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(steps[i].type)) {
+				return { step: steps[i], index: i };
+			}
+		}
+
+		return null;
 	}
 
-
-	private async handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; }) {
+	private async handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
 		if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
 			const lastRecordedStep = this.getLastRecordedStep(this.store);
-			if(lastRecordedStep.step.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
-					this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
+			if (!lastRecordedStep) return;
+			if (lastRecordedStep.step.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
+				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
 			} else {
-					if(lastRecordedStep.step.type !== ActionsInTestEnum.NAVIGATE_URL) {
-							this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
-					}
+				if (lastRecordedStep.step.type !== ActionsInTestEnum.NAVIGATE_URL) {
+					this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+				}
 			}
 		}
 	}

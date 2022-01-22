@@ -265,11 +265,10 @@ export class AppWindow {
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
-		this.resetRecorder();
+		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testSteps = await CrusherTests.getTest(`${payload.testId}`, appSettings.backendEndPoint);
 
-		await this.resetRecorder();
 		this.handleReplayTestSteps(testSteps);
 	}
 
@@ -347,6 +346,7 @@ export class AppWindow {
 
 	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean }) {
 		const { action, shouldNotSave } = payload;
+		console.log("Handle perform action called", payload);
 		try {
 			switch (action.type) {
 				case ActionsInTestEnum.SET_DEVICE: {
@@ -372,7 +372,11 @@ export class AppWindow {
 				}
 				case ActionsInTestEnum.RUN_AFTER_TEST: {
 					await this.resetRecorder();
+					this.store.dispatch(
+						updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }),
+					);
 					await this.handleRunAfterTest(action);
+					this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 					break;
 				}
 				case ActionsInTestEnum.RELOAD_PAGE: {
@@ -401,9 +405,6 @@ export class AppWindow {
 	}
 
 	private async handleRunAfterTest(action: iAction) {
-		this.store.dispatch(
-			updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }),
-		);
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		try {
@@ -416,7 +417,7 @@ export class AppWindow {
 
 			for (const browserAction of browserActions) {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
-					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: true });
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
@@ -433,7 +434,6 @@ export class AppWindow {
 			action.status = ActionStatusEnum.COMPLETED as any;
 			const savedSteps = getSavedSteps(this.store.getState() as any);
 			this.store.dispatch(updateRecordedStep(action, savedSteps.length - 1));
-			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 		} catch (e) {
 			action.status = ActionStatusEnum.FAILED as any;
 

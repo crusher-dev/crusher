@@ -38,7 +38,7 @@ const performNavigation = async (url: string, store: Store<unknown, AnyAction>) 
     });
 };
 
-const performTakePageScreenshot = async () => { 
+const performTakePageScreenshot = async () => {
     await performAction({
         type: ActionsInTestEnum.PAGE_SCREENSHOT,
         payload: { },
@@ -76,7 +76,7 @@ const saveSetDeviceIfNotThere = (device: any, store: Store<unknown, AnyAction>) 
 };
 
 
-const peformTakeElementScreenshot = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => { 
+const peformTakeElementScreenshot = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
     recordHoverDependencies(selectedElement, store);
 
     await performAction({

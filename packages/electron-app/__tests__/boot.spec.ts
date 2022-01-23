@@ -45,6 +45,10 @@ describe("Recorder boot", () => {
 		expect(await appWindow.waitForSelector("#select-an-element-action")).not.toBe(null);
 	}
 
+	function getParentElement(element: ElementHandle) {
+		return element.evaluateHandle(element => element.parentElement);
+	}
+
 	/**
 	 * Create the browser and page context
 	 */
@@ -108,17 +112,17 @@ describe("Recorder boot", () => {
 		});
 
 		test("device input is visible", async () => {
-			deviceDropdown = (await appWindow.$(".target-device-dropdown")) as any;
+			deviceDropdown = (await appWindow.$(".target-device-dropdown input")) as any;
 			expect(deviceDropdown).not.toBe(null);
 			expect(await deviceDropdown.isVisible()).toBe(true);
 		});
 
 		test("Default device is Desktop", async () => {
-			expect(await deviceDropdown.innerText()).toBe("Desktop");
+			expect(await deviceDropdown.getAttribute("placeholder")).toBe("Desktop");
 		});
 
 		test("device dropdown opens", async () => {
-			await deviceDropdown.click();
+			await (await getParentElement(deviceDropdown)).click();
 
 			deviceDropDownBox = await appWindow.waitForSelector(".target-device-dropdown .dropdown-box");
 			expect(await deviceDropDownBox.isVisible()).toBe(true);
@@ -130,7 +134,7 @@ describe("Recorder boot", () => {
 		test("selecting device option works", async () => {
 			await deviceMobileOption.click();
 			expect(await deviceDropDownBox.isVisible()).toBe(false);
-			expect(await deviceDropdown.innerText()).toBe("Mobile");
+			expect(await deviceDropdown.getAttribute("placeholder")).toBe("Mobile");
 		});
 
 		test("recorder device frame follows device input", async () => {
@@ -148,11 +152,11 @@ describe("Recorder boot", () => {
 		});
 
 		test("changing device between recording session", async () => {
-			await deviceDropdown.click();
+			await (await getParentElement(deviceDropdown)).click();
 			deviceDropDownBox = await appWindow.waitForSelector(".target-device-dropdown .dropdown-box");
 
 			await (await deviceDropDownBox.$("text=Desktop")).click();
-			expect(await deviceDropdown.innerText()).toBe("Desktop");
+			expect(await deviceDropdown.getAttribute("placeholder")).toBe("Desktop");
 
 			const webView = await appWindow.$("webview");
 			const webViewContainerSize = await webView.evaluate((element) => {
@@ -188,11 +192,4 @@ describe("Recorder boot", () => {
 		expect(recordedSteps[0].type).toBe(ActionsInTestEnum.SET_DEVICE);
 		expect(recordedSteps[1].type).toBe(ActionsInTestEnum.NAVIGATE_URL);
 	});
-
-  test("Google mobile is working", async () => {
-    await resetApp();
-    await fillInput("https://google.com");
-
-
-  });
 });

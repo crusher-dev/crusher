@@ -8,7 +8,7 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import { MoreIcon } from "../../../icons";
+import { MoreIcon, MuteIcon } from "../../../icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { deleteRecordedSteps, markRecordedStepsOptional, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
@@ -131,7 +131,12 @@ const Step = ({
 			setIsHover(true)
 		}} onMouseLeave={setIsHover.bind(this, false)} className="recorded-step" data-step-id={stepIndex} data-type={action.type} data-status={ action.status }>
 			<div css={[stepStyle, isHover && hoverStepStyle, isRunning && runningStepStyle, (isFailed) && failedStyle]}>
-				<Checkbox {...props} />
+				<div className="flex flex-col">
+					<Checkbox {...props} />
+					<Conditional showIf={ action.payload.isOptional }>
+						<MuteIcon css={css`height: 9rem; margin-top: 6rem;`} />
+					</Conditional>
+				</div>
  				<div css={stepTextStyle}>
 					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null]}>
 						{title}

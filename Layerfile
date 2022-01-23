@@ -31,7 +31,7 @@ SECRET ENV SLACK_CLIENT_ID
 SECRET ENV SLACK_CLIENT_SECRET
 
 
-RUN mkdir db && curl "$SCHEMA_OBJ_URL" > db/schema.sql
+# RUN mkdir db && curl "$SCHEMA_OBJ_URL" > db/schema.sql
 
 RUN yarn
 RUN yarn setup:ee

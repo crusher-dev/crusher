@@ -134,6 +134,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 								onBlur={verifyInfo.bind(this, false)}
 							/>
 							<FormInput
+								type={"password"}
 								data={password}
 								onReturn={signupUser.bind(this)}
 								onChange={passwordChange}

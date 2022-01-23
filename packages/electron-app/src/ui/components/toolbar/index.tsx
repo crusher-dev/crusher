@@ -12,7 +12,7 @@ import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
 import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, saveTest, updateTest } from "../../commands/perform";
-import { addHttpToURLIfNotThere } from "../../../utils";
+import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
@@ -110,6 +110,7 @@ const Toolbar = (props: any) => {
     const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
+	const [isInvalidUrl, setIsInvalidUrl] = React.useState(false);
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfo = useSelector(getRecorderInfo);
@@ -135,7 +136,12 @@ const Toolbar = (props: any) => {
     const handleUrlReturn = React.useCallback(() => {
 		if(urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
-
+			if (!isValidHttpUrl(validUrl)) {
+				setIsInvalidUrl(true);
+				urlInputRef.current.blur();
+				return;
+			}
+			setIsInvalidUrl(false);
 			batch(() => {
 				if(selectedDevice[0] !== recorderInfo.device?.id) {
 					// Setting the device will add webview in DOM tree
@@ -196,19 +202,24 @@ const Toolbar = (props: any) => {
 				<NavigateRefreshIcon css={css`height: 20rem;`} disabled={false} />
 			</BrowserButton>
 
+				<div css={ css`position: relative; display: flex; flex-direction: column; margin-left: 28rem`}>
 			<Input
 				placeholder="Enter URL to test"
 				id={"target-site-input"}
 				className={"target-site-input"}
 				css={inputStyle}
-				onReturn={handleUrlReturn}
+					onReturn={handleUrlReturn}
+					isError={isInvalidUrl}
 				initialValue={url}
 				forwardRef={urlInputRef}
 				rightIcon={
 						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { padding: 14rem; height: 30rem !important; border: none; background: none; border-left-width: 1rem; border-left-style: solid; border-left-color: #181c23; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
 				}
-			/>
-
+				/>
+				<Conditional showIf={isInvalidUrl}>
+					<span css={ css`position: absolute; bottom: -14rem; font-size: 10.5rem; color: #ff4583;`}>Please enter a valid url</span>
+				</Conditional>
+</div>
 			<Conditional showIf={isRecorderInInitialState}>
 				<Button className={"ml-24"} onClick={handleUrlReturn} bgColor="tertiary-outline" css={buttonStyle}>
 					Start
@@ -243,7 +254,6 @@ const containerStyle = css`
 `;
 const inputStyle = css`
 	height: 34rem;
-	margin-left: 28rem;
 	& > input {
 		width: 340rem;
 		font-family: Gilroy;

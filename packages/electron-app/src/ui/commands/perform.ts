@@ -38,7 +38,7 @@ const performNavigation = async (url: string, store: Store<unknown, AnyAction>) 
     });
 };
 
-const performTakePageScreenshot = async () => { 
+const performTakePageScreenshot = async () => {
     await performAction({
         type: ActionsInTestEnum.PAGE_SCREENSHOT,
         payload: { },
@@ -76,7 +76,7 @@ const saveSetDeviceIfNotThere = (device: any, store: Store<unknown, AnyAction>) 
 };
 
 
-const peformTakeElementScreenshot = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => { 
+const peformTakeElementScreenshot = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
     recordHoverDependencies(selectedElement, store);
 
     await performAction({
@@ -170,4 +170,8 @@ const continueRemainingSteps = () => {
     ipcRenderer.invoke("continue-remaining-steps");
 };
 
-export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage, continueRemainingSteps };
+const registerActionAsSavedStep = (action) => {
+    ipcRenderer.invoke("save-step", {action});
+}
+
+export { recordHoverDependencies, performAction, performSetDevice, saveSetDeviceIfNotThere, performNavigation, performTakePageScreenshot, turnOnInspectMode, turnOffInspectMode, performClick, performHover, peformTakeElementScreenshot, performRunAfterTest, performCustomCode, performVerifyTest, saveTest, preformGoBackPage, performReloadPage, performReplayTest, updateTest, resetStorage, continueRemainingSteps, registerActionAsSavedStep };

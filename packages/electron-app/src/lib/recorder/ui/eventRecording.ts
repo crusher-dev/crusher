@@ -577,7 +577,7 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if (argArray[0] && (Date.now() - lastPush) > 1000) {
+				if (argArray[0]) {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
@@ -597,7 +597,7 @@ export default class EventRecording {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
-				if (argArray[0] & (Date.now() - lastPush) > 1000) {
+				if (argArray[0]) {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
@@ -627,7 +627,7 @@ export default class EventRecording {
 			const currentURL = new URL(window.location.href);
 			currentURL.searchParams.delete("__crusherAgent__");
 		}
-	
+
 		sendRecorderReadySignal();
 		this.registerNodeListeners();
 	}
@@ -649,11 +649,6 @@ export default class EventRecording {
 						: activeElementHref
 					: window.location.href.toString(),
 			);
-		} else {
-			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.WAIT_FOR_NAVIGATION, document.body, {
-				url: "",
-				isBeforeNavigation: true,
-			});
 		}
 	}
 

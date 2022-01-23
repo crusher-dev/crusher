@@ -55,7 +55,6 @@ export default function Signup() {
 	const verifyInfo = (completeVerify = false) => {
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateConfirmPassword = completeVerify || confirmPassword.value;
-
 		if (!validatePassword(password.value) && shouldValidatePassword) {
 			setPassword({ ...password, error: "Please enter valid password" });
 		} else setPassword({ ...password, error: "" });
@@ -84,11 +83,11 @@ export default function Signup() {
 		setLoading(false);
 	};
 
-	const onEnter = useCallback((event: any) => {
+	const onEnter = (event: any) => {
 		if (event.key === "Enter") {
 			submitForm();
 		}
-	}, []);
+	};
 
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 

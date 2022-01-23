@@ -5,13 +5,23 @@ import { sleep } from "../functions/sleep";
 
 async function waitForNavigation(page: Page, action: iAction) {
 	console.log("Waiting for navigation now...");
-	try {
-		await page.waitForNavigation();
-		await page.waitForLoadState("load");
-		await page.waitForLoadState("domcontentloaded");
-	} catch (ex) {
-		console.error("Gt error here", ex);
-		await sleep(2); // Magic number
+	if (action.payload.meta?.value) {
+		await new Promise((resolve, reject) => {
+			let time = 0;
+
+			const interval = setInterval(async () => {
+				if (time >= 30 * 1000) {
+					clearInterval();
+					reject(new Error("Timeout"));
+				}
+				if (await page.url() === action.payload.meta.value) {
+					resolve(true);
+				}
+				time += 500;
+			}, 500);
+		})
+	} else {
+		await sleep(2000);
 	}
 	console.log("Finsihed navigation");
 }

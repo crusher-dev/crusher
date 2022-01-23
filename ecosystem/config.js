@@ -36,6 +36,7 @@ module.exports = {
 		PASSWORD: process.env.DB_PASSWORD,
 		DATABASE: process.env.DB_DATABASE || 'crusher',
 		PORT: parseInt(process.env.DB_PORT, 10) || 3306,
+		DISABLE_POSTGRES_SSL: process.env.DISABLE_POSTGRES_SSL,
 	},
 	REDIS_CONFIG: {
 		CONNECTION_STRING: IS_HEROKU ? process.env.REDIS_URL : process.env.REDIS_CONNECTION_STRING,

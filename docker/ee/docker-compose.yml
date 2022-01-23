@@ -21,7 +21,6 @@ services:
     environment:
       - POSTGRESQL_PASSWORD=password
       - POSTGRESQL_DATABASE=crusher
-      - POSTGRESQL_AUTHENTICATION_PLUGIN=mysql_native_password
     networks:
       - crusher-network
 
@@ -36,8 +35,8 @@ services:
       - redis
     environment:
       - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
-      - DB_HOST=mysql
-      - DB_USERNAME=root
+      - DB_HOST=postgres
+      - DB_USERNAME=postgres
       - DB_PASSWORD=password
       - DB_DATABASE=crusher
       - DB_PORT=5432
@@ -50,6 +49,7 @@ services:
       - NEXT_PUBLIC_INTERNAL_BACKEND_URL=$STANDALONE_APP_URL/server
     ports:
       - '3000:3000'
+      - '3001:3001'
     links:
       - 'postgres:mysql'
       - 'redis:redis'

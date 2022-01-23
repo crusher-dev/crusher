@@ -404,6 +404,18 @@ export class AppWindow {
 						updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }),
 					);
 					await this.handleRunAfterTest(action, true);
+					await this.handlePerformAction(null, {
+						action: {
+							type: ActionsInTestEnum.NAVIGATE_URL,
+							payload: {
+								selectors: [],
+								meta: {
+									value: this.webView.webContents.getURL(),
+								},
+							},
+						},
+						shouldNotSave: false,
+					});
 					this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 					break;
 				}
@@ -436,8 +448,10 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		try {
+			const testSteps = await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint);
+
 			const replayableTestSteps = await CrusherTests.getReplayableTestActions(
-				await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint),
+				testSteps,
 				true,
 				appSettings.backendEndPoint,
 			);
@@ -462,6 +476,8 @@ export class AppWindow {
 			action.status = ActionStatusEnum.COMPLETED as any;
 			const savedSteps = getSavedSteps(this.store.getState() as any);
 			this.store.dispatch(updateRecordedStep(action, savedSteps.length - 1));
+
+			return testSteps;
 		} catch (e) {
 			action.status = ActionStatusEnum.FAILED as any;
 

@@ -14,7 +14,12 @@ async function waitForNavigation(page: Page, action: iAction) {
 					clearInterval();
 					reject(new Error("Timeout"));
 				}
-				if (await page.url() === action.payload.meta.value) {
+				const pageUrl = await page.url();
+				// Trim the slash at the end if any
+				const pageUrlTrimmed = pageUrl.replace(/\/$/, "");
+				const metaValue = action.payload.meta.value.replace(/\/$/, "");
+
+				if (pageUrlTrimmed === metaValue) {
 					resolve(true);
 				}
 				time += 500;

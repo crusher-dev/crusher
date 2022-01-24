@@ -104,9 +104,9 @@ class UserInviteService {
 	async sendInvitationsToEmails(emails: Array<string>, inviteReferral: { code: string; type: InviteReferralEnum }, adminName: string) {
 		return new Promise((resolve, reject) => {
 			ejs.renderFile(
-				path.resolve(
+				path.join(
 					__dirname,
-					typeof __non_webpack_require__ !== "undefined" ? "/email/templates/inviteMember.ejs" : "/../../email/templates/inviteMember.ejs",
+					typeof __non_webpack_require__ !== "undefined" ? "email/templates/inviteMember.ejs" : "/../../email/templates/inviteMember.ejs",
 				),
 				{
 					invite_link: this.getInviteLink(inviteReferral.code, inviteReferral.type),

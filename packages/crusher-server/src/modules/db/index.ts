@@ -21,7 +21,10 @@ function getConnectionObject() {
 		database: process.env.DB_DATABASE,
 		insecureAuth: true,
 		multipleStatements: true,
-		ssl: process.env.DISABLE_POSTGRES_SSL ? false : { rejectUnauthorized: typeof process.env.DATABASE_SSL !== "undefined" ? true : false },
+		ssl:
+			process.env.DISABLE_POSTGRES_SSL && process.env.DISABLE_POSTGRES_SSL === "true"
+				? false
+				: { rejectUnauthorized: typeof process.env.DATABASE_SSL !== "undefined" ? true : false },
 	};
 }
 

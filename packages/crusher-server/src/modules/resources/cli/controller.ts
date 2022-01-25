@@ -13,7 +13,7 @@ class CLIController {
 	@Get("/cli/get.key")
 	async getUniqueLoginKey() {
 		const key = uuidv4() + Date.now();
-		await this.redisManager.set(key, JSON.stringify({ userId: null, teamId: null }));
+		await this.redisManager.set(key, JSON.stringify({ userId: null, teamId: null }), { expiry: { type: "s", value: 5 * 60 } });
 		return { loginKey: key };
 	}
 
@@ -24,7 +24,7 @@ class CLIController {
 		const loginKeyRecord = await this.redisManager.get(loginKey);
 
 		if (!loginKeyRecord) throw new BadRequestError("Invalid login key");
-		await this.redisManager.set(loginKey, JSON.stringify({ userId: user.user_id, teamId: user.team_id }));
+		await this.redisManager.set(loginKey, JSON.stringify({ userId: user.user_id, teamId: user.team_id }), { expiry: { type: "s", value: 5 * 60 } });
 
 		return { status: "Successful" };
 	}

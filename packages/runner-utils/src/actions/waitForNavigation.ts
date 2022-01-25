@@ -11,7 +11,7 @@ async function waitForNavigation(page: Page, action: iAction) {
 
 			const interval = setInterval(async () => {
 				if (time >= 30 * 1000) {
-					clearInterval();
+					clearInterval(interval);
 					reject(new Error("Timeout"));
 				}
 				const pageUrl = await page.url();
@@ -20,7 +20,8 @@ async function waitForNavigation(page: Page, action: iAction) {
 				const metaValue = action.payload.meta.value.replace(/\/$/, "");
 
 				if (pageUrlTrimmed === metaValue) {
-					resolve(true);
+					clearInterval(interval);
+					return resolve(true);
 				}
 				time += 500;
 			}, 500);

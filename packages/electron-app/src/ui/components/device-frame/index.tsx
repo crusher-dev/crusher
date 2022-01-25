@@ -27,7 +27,7 @@ const DeviceFrame = (props: any) => {
             ref.current.addEventListener("ipc-message", (event: IpcMessageEvent) => {
                 const recorderState = getRecorderState(store.getState());
                 if(recorderState.type !== TRecorderState.RECORDING_ACTIONS) return;
-    
+
                 const { channel, args } = event;
                 if(channel === "recorder-message") {
                     const { type, payload } = args[0];
@@ -48,7 +48,7 @@ const DeviceFrame = (props: any) => {
                             break;
                     }
                 }
-            }); 
+            });
         }
     }, [ref.current]);
 
@@ -95,7 +95,6 @@ const webviewStyle = css`
     border: none;
     display: inline-flex;
     max-width: 100%;
-    background-color: #fff;
     width: 100%;
     height: 100%;
 `;

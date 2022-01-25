@@ -43,8 +43,8 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 1600;
-	private minHeight = 900;
+	private minWidth = 1000;
+	private minHeight = 600;
 
 	private shouldMaximizeOnShow = false;
 

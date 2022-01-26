@@ -61,7 +61,6 @@ app.on("ready", function() {
 
 	createWindow();
 	installSameOriginFilter(session.defaultSession.webRequest)
-
 });
 
 let isDuplicateInstance = false;

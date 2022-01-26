@@ -21,10 +21,11 @@ await crusherRunnerActionManager.runActions(getBrowserActions(actions), browser)
 
 const browserContextOptions = globalManager.get("browserContextOptions");
 <% if (isPersistentContext) { %>
-browserContext = await playwright["<%= browserName %>"].launchPersistentContext("<%= persistentContextDir %>", {...<%- JSON.stringify(defaultBrowserLaunchOptions) %>,  ...browserContextOptions});
+browserContext = await playwright["<%= browserName %>"].launchPersistentContext("<%= persistentContextDir %>", {...<%- JSON.stringify(defaultBrowserLaunchOptions) %>, extraHTTPHeaders: { "Bypass-Tunnel-Reminder": "true" },  ...browserContextOptions});
 <% } else { %>
 browserContext = await browser.newContext({
     ...browserContextOptions,
+    extraHTTPHeaders: { "Bypass-Tunnel-Reminder": "true" }
 });
 <% } %>
 <% if (isTracingOn) { %>

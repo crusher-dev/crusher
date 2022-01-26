@@ -21,6 +21,11 @@ export class WebView {
 		const webViewWebContents = allWebContents.find((a) => a.getType() === "webview");
 		if (!webViewWebContents) throw new Error("No webview initialized");
 
+		webViewWebContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+			details.requestHeaders['Bypass-Tunnel-Reminder'] = 'true'
+			callback({ requestHeaders: details.requestHeaders });
+		});
+
 		return webViewWebContents;
 	}
 
@@ -35,7 +40,7 @@ export class WebView {
         if(this.webContents.debugger.isAttached()) return;
 
         const _debugger = this.webContents.debugger;
-        
+
         this.playwrightInstance = new PlaywrightInstance(this.appWindow);
 
         _debugger.attach("1.3");
@@ -60,7 +65,7 @@ export class WebView {
 		this._initializeTime = now() - this._startTime;
 
 		console.log("Initialized in", this._initializeTime);
-		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });		
+		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });
     }
 
 	registerIPCListeners() {

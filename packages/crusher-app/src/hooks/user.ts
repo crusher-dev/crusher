@@ -41,7 +41,7 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			selectInitialProject(dataToConsider);
 
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
-				await backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } });
+				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => { });
 				setLoginKey(null);
 			}
 			await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));

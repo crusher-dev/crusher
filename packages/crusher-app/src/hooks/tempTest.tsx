@@ -8,6 +8,10 @@ import { tempTestNameAtom } from "../store/atoms/global/tempTestName";
 import { tempTestTypeAtom } from "@store/atoms/global/tempTestType";
 import { tempTestUpdateIdAtom } from "@store/atoms/global/tempTestUpdateId";
 import { githubTokenAtom } from "@store/atoms/global/githubToken";
+import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
+import { backendRequest } from "@utils/common/backendRequest";
+import { resolvePathToBackendURI } from "@utils/common/url";
+import { RequestMethod } from "@types/RequestOptions";
 
 export const useSaveTemp = () => {
 	const [, setTempTest] = useAtom(tempTestAtom);
@@ -15,6 +19,7 @@ export const useSaveTemp = () => {
 	const [, setTempTestType] = useAtom(tempTestTypeAtom);
 	const [, setTempTestUpdateId] = useAtom(tempTestUpdateIdAtom);
 	const [, setGithubToken] = useAtom(githubTokenAtom);
+	const [, setLoginKey] = useAtom(cliLoginUserKeyAtom);
 
 	const { asPath } = useRouter();
 
@@ -28,11 +33,16 @@ export const useSaveTemp = () => {
 		const testId = urlQuery.get("update_test_id");
 
 		const githubToken = urlQuery.get("github_token");
+		const loginKey = urlQuery.get("loginKey");
 
 		setTempTestName(tempTestName);
 		setTempTest(tempTestId);
 		setTempTestType(tempTestType || "save");
 
+		if (!!loginKey) {
+			setLoginKey(loginKey);
+			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } });
+		}
 		if(githubToken) {
 			setGithubToken(githubToken);
 		}

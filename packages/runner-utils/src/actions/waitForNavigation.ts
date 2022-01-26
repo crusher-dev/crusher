@@ -12,7 +12,7 @@ async function waitForNavigation(page: Page, action: iAction) {
 			const interval = setInterval(async () => {
 				if (time >= 30 * 1000) {
 					clearInterval(interval);
-					reject(new Error("Timeout"));
+					return resolve(true);
 				}
 				const pageUrl = await page.url();
 				// Trim the slash at the end if any

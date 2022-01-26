@@ -173,6 +173,7 @@ const containerStyle = {
 	borderSpacing: "0 0.75rem",
 	marginBottom: "20rem",
 	maxHeight: "400rem",
+	overflow: "overlay",
 };
 
 const inputTableItemFieldContainerStyle = {

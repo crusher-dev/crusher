@@ -54,6 +54,8 @@ class TestsRunner {
 				const urlToGo = new URL(event.payload.meta.value);
 				const newHostURL = new URL(newHost);
 				urlToGo.host = newHostURL.host;
+				urlToGo.port = newHostURL.port;
+				urlToGo.protocol = newHostURL.protocol;
 				event.payload.meta.value = urlToGo.toString();
 			}
 			return event;

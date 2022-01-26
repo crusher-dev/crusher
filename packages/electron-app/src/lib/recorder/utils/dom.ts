@@ -8,9 +8,9 @@ export class DOM {
 		let i;
 		let length;
 
-		for (i = 0, length = links.length; i < length; i++) {
-			links[i].target == "_blank" && links[i].removeAttribute("target");
-		}
+		// for (i = 0, length = links.length; i < length; i++) {
+		// 	links[i].target == "_blank" && links[i].removeAttribute("target");
+		// }
 	}
 
 	static disableAllUserEvents(eventExceptions: { [eventName: string]: any }): () => void {

@@ -418,13 +418,13 @@ export default class EventRecording {
 			});
 		}
 
-		if (closestLink && closestLink.tagName.toLowerCase() === "a") {
-			const href = closestLink.getAttribute("href");
-			if (href) {
-				window.location.href = href;
-				return event.preventDefault();
-			}
-		}
+		// if (closestLink && closestLink.tagName.toLowerCase() === "a") {
+		// 	const href = closestLink.getAttribute("href");
+		// 	if (href) {
+		// 		window.location.href = href;
+		// 		return event.preventDefault();
+		// 	}
+		// }
 	}
 
 	handleKeyDown(event: KeyboardEvent) {
@@ -639,7 +639,7 @@ export default class EventRecording {
 
 	handleBeforeNavigation() {
 		const activeElementHref = (document.activeElement as any).getAttribute("href");
-		if (activeElementHref) {
+		if (activeElementHref && (document.activeElement as any).getAttribute("target") !== "_blank") {
 			this.eventsController.saveCapturedEventInBackground(
 				ActionsInTestEnum.WAIT_FOR_NAVIGATION,
 				document.body,

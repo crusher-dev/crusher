@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session } from "electron";
+import { app, BrowserWindow, ipcMain, session, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import * as path from "path";
 import { APP_NAME } from "../../config/about";
@@ -23,7 +23,7 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getSavedSteps } from "../store/selectors/recorder";
+import { getRecorderState, getSavedSteps } from "../store/selectors/recorder";
 import { CrusherTests } from "../lib/tests";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
@@ -47,6 +47,10 @@ export class AppWindow {
 	private minHeight = 600;
 
 	private shouldMaximizeOnShow = false;
+
+	public getWebContents() {
+		return this.window.webContents;
+	}
 
 	public constructor(store: Store<unknown, AnyAction>) {
 		const savedWindowState = windowStateKeeper({
@@ -121,6 +125,11 @@ export class AppWindow {
 		});
 
 		this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
+		this.window.webContents.on("will-attach-webview", (event, webContents) => {
+			(webContents as any).disablePopups = false;
+			console.log("Web contents of webview", webContents);
+			return webContents;
+		});
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
 			this._rendererReadyTime = readyTime;
@@ -164,7 +173,7 @@ export class AppWindow {
 		return null;
 	}
 
-	private async handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
+	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
 		if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
 			const lastRecordedStep = this.getLastRecordedStep(this.store);
@@ -230,6 +239,10 @@ export class AppWindow {
 					}, {});
 			})) as iSeoMetaInformationMeta,
 		};
+	}
+
+	getRecorderState() {
+		return getRecorderState(this.store.getState() as any);
 	}
 
 	async handleGoBackPage() {

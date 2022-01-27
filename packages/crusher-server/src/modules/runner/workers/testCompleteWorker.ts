@@ -125,11 +125,13 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	);
 
 	// Wait for the final test in the list here
-	const completedTestCount = await redisLock.lock(`${bullJob.data.buildId}:completed:lock`, 50).then(function (lock) {
-		return redisManager.incr(`${bullJob.data.buildId}:completed`);
+	await redisManager.incr(`${bullJob.data.buildId}:completed`);
+
+	const completedTestCount = await redisLock.lock(`${bullJob.data.buildId}:completed:lock`, 100).then(function (lock) {
+		return redisManager.get(`${bullJob.data.buildId}:completed`);
 	});
 
-	if (completedTestCount === bullJob.data.buildTestCount) {
+	if (parseInt(completedTestCount) === bullJob.data.buildTestCount) {
 		// This is the last test result to finish
 		const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
 

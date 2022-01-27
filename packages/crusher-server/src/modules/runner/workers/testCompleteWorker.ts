@@ -125,7 +125,7 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	);
 
 	// Wait for the final test in the list here
-	const completedTestCount = await redisLock.lock(`${bullJob.data.buildId}:completed:lock`, 50).then(async function (lock) {
+	const completedTestCount = await redisLock.lock(`${bullJob.data.buildId}:completed:lock`, 50).then(function (lock) {
 		return redisManager.incr(`${bullJob.data.buildId}:completed`);
 	});
 

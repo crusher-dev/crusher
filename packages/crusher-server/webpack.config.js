@@ -15,7 +15,7 @@ module.exports = {
 		queue: "./src/queue.ts",
 		cron: "./src/cron.ts",
 		worker: "./src/modules/runner/workers/testCompleteWorker.ts",
-		master: "bullmq/dist/classes/master.js",
+		master: "bullmq/dist/cjs/classes/master.js",
 		...getAllWorkers(),
 	},
 	output: {
@@ -27,19 +27,10 @@ module.exports = {
 	},
 	plugins: [
 		new CopyPlugin({
-			patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
+			patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "cjs/commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
 		}),
 		new CopyPlugin({
 			patterns: [{ from: path.resolve(__dirname, "src/modules/email/templates"), to: "email/templates" }],
-		}),
-		new CopyPlugin({
-			patterns: [
-				{
-					from: `${path.dirname(require.resolve("bullmq"))}/commands/`,
-					to: "src/modules/runner/workers/commands/",
-					globOptions: { ignore: ["**/*.js", "**/*.ts"] },
-				},
-			],
 		}),
 		new CopyPlugin({
 			patterns: [{ from: path.resolve(__dirname, ".env") }],
@@ -66,7 +57,7 @@ module.exports = {
 				},
 			},
 			{
-				test: /node_modules\/bullmq\/dist\/commands\/index\.js$/,
+				test: /node_modules\/bullmq\/dist\/cjs\/commands\/index\.js$/,
 				use: {
 					loader: "string-replace-loader",
 					options: {

@@ -29,7 +29,7 @@ CREATE TYPE public.cli_status_status AS ENUM (
 );
 
 
-ALTER TYPE public.cli_status_status OWNER TO utkarsh;
+ALTER TYPE public.cli_status_status OWNER TO postgres;
 
 --
 -- TOC entry 871 (class 1247 OID 16424)
@@ -41,7 +41,7 @@ CREATE TYPE public.integrations_integration_name AS ENUM (
 );
 
 
-ALTER TYPE public.integrations_integration_name OWNER TO utkarsh;
+ALTER TYPE public.integrations_integration_name OWNER TO postgres;
 
 --
 -- TOC entry 874 (class 1247 OID 16428)
@@ -56,7 +56,7 @@ CREATE TYPE public.job_reports_status AS ENUM (
 );
 
 
-ALTER TYPE public.job_reports_status OWNER TO utkarsh;
+ALTER TYPE public.job_reports_status OWNER TO postgres;
 
 --
 -- TOC entry 877 (class 1247 OID 16438)
@@ -70,7 +70,7 @@ CREATE TYPE public.jobs_build_trigger AS ENUM (
 );
 
 
-ALTER TYPE public.jobs_build_trigger OWNER TO utkarsh;
+ALTER TYPE public.jobs_build_trigger OWNER TO postgres;
 
 --
 -- TOC entry 880 (class 1247 OID 16446)
@@ -87,7 +87,7 @@ CREATE TYPE public.jobs_status AS ENUM (
 );
 
 
-ALTER TYPE public.jobs_status OWNER TO utkarsh;
+ALTER TYPE public.jobs_status OWNER TO postgres;
 
 --
 -- TOC entry 883 (class 1247 OID 16460)
@@ -101,7 +101,7 @@ CREATE TYPE public.teams_tier AS ENUM (
 );
 
 
-ALTER TYPE public.teams_tier OWNER TO utkarsh;
+ALTER TYPE public.teams_tier OWNER TO postgres;
 
 --
 -- TOC entry 886 (class 1247 OID 16468)
@@ -115,7 +115,7 @@ CREATE TYPE public.test_instance_result_sets_conclusion AS ENUM (
 );
 
 
-ALTER TYPE public.test_instance_result_sets_conclusion OWNER TO utkarsh;
+ALTER TYPE public.test_instance_result_sets_conclusion OWNER TO postgres;
 
 --
 -- TOC entry 889 (class 1247 OID 16476)
@@ -129,7 +129,7 @@ CREATE TYPE public.test_instance_result_sets_status AS ENUM (
 );
 
 
-ALTER TYPE public.test_instance_result_sets_status OWNER TO utkarsh;
+ALTER TYPE public.test_instance_result_sets_status OWNER TO postgres;
 
 --
 -- TOC entry 892 (class 1247 OID 16484)
@@ -143,7 +143,7 @@ CREATE TYPE public.test_instance_results_status AS ENUM (
 );
 
 
-ALTER TYPE public.test_instance_results_status OWNER TO utkarsh;
+ALTER TYPE public.test_instance_results_status OWNER TO postgres;
 
 --
 -- TOC entry 895 (class 1247 OID 16492)
@@ -157,7 +157,7 @@ CREATE TYPE public.test_instances_browser AS ENUM (
 );
 
 
-ALTER TYPE public.test_instances_browser OWNER TO utkarsh;
+ALTER TYPE public.test_instances_browser OWNER TO postgres;
 
 --
 -- TOC entry 898 (class 1247 OID 16500)
@@ -173,7 +173,7 @@ CREATE TYPE public.test_instances_status AS ENUM (
 );
 
 
-ALTER TYPE public.test_instances_status OWNER TO utkarsh;
+ALTER TYPE public.test_instances_status OWNER TO postgres;
 
 --
 -- TOC entry 901 (class 1247 OID 16512)
@@ -188,7 +188,7 @@ CREATE TYPE public.user_project_roles_role AS ENUM (
 );
 
 
-ALTER TYPE public.user_project_roles_role OWNER TO utkarsh;
+ALTER TYPE public.user_project_roles_role OWNER TO postgres;
 
 --
 -- TOC entry 904 (class 1247 OID 16522)
@@ -201,7 +201,7 @@ CREATE TYPE public.user_provider_connections_provider AS ENUM (
 );
 
 
-ALTER TYPE public.user_provider_connections_provider OWNER TO utkarsh;
+ALTER TYPE public.user_provider_connections_provider OWNER TO postgres;
 
 --
 -- TOC entry 907 (class 1247 OID 16528)
@@ -214,7 +214,7 @@ CREATE TYPE public.user_team_roles_role AS ENUM (
 );
 
 
-ALTER TYPE public.user_team_roles_role OWNER TO utkarsh;
+ALTER TYPE public.user_team_roles_role OWNER TO postgres;
 
 --
 -- TOC entry 266 (class 1255 OID 16533)
@@ -231,7 +231,7 @@ END;
 $$;
 
 
-ALTER FUNCTION public.on_update_current_timestamp_environments() OWNER TO utkarsh;
+ALTER FUNCTION public.on_update_current_timestamp_environments() OWNER TO postgres;
 
 --
 -- TOC entry 265 (class 1255 OID 16416)
@@ -248,11 +248,11 @@ END;
 $$;
 
 
-ALTER FUNCTION public.updated_timestamp_func() OWNER TO utkarsh;
+ALTER FUNCTION public.updated_timestamp_func() OWNER TO postgres;
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+-- SET default_table_access_method = heap;
 
 --
 -- TOC entry 209 (class 1259 OID 16534)
@@ -267,7 +267,7 @@ CREATE TABLE public.alerting (
 );
 
 
-ALTER TABLE public.alerting OWNER TO utkarsh;
+ALTER TABLE public.alerting OWNER TO postgres;
 
 --
 -- TOC entry 210 (class 1259 OID 16539)
@@ -284,7 +284,7 @@ CREATE TABLE public.cli_status (
 );
 
 
-ALTER TABLE public.cli_status OWNER TO utkarsh;
+ALTER TABLE public.cli_status OWNER TO postgres;
 
 --
 -- TOC entry 211 (class 1259 OID 16545)
@@ -303,7 +303,7 @@ CREATE TABLE public.comments (
 );
 
 
-ALTER TABLE public.comments OWNER TO utkarsh;
+ALTER TABLE public.comments OWNER TO postgres;
 
 --
 -- TOC entry 212 (class 1259 OID 16552)
@@ -338,7 +338,7 @@ CREATE TABLE public.environments (
 );
 
 
-ALTER TABLE public.environments OWNER TO utkarsh;
+ALTER TABLE public.environments OWNER TO postgres;
 
 --
 -- TOC entry 214 (class 1259 OID 16559)
@@ -373,7 +373,7 @@ CREATE TABLE public.git_integrations (
 );
 
 
-ALTER TABLE public.git_integrations OWNER TO utkarsh;
+ALTER TABLE public.git_integrations OWNER TO postgres;
 
 --
 -- TOC entry 216 (class 1259 OID 16567)
@@ -404,7 +404,7 @@ CREATE TABLE public.github_app_installations (
 );
 
 
-ALTER TABLE public.github_app_installations OWNER TO utkarsh;
+ALTER TABLE public.github_app_installations OWNER TO postgres;
 
 --
 -- TOC entry 218 (class 1259 OID 16575)
@@ -422,7 +422,7 @@ CREATE TABLE public.integration_alerting (
 );
 
 
-ALTER TABLE public.integration_alerting OWNER TO utkarsh;
+ALTER TABLE public.integration_alerting OWNER TO postgres;
 
 --
 -- TOC entry 219 (class 1259 OID 16582)
@@ -454,7 +454,7 @@ CREATE TABLE public.integrations (
 );
 
 
-ALTER TABLE public.integrations OWNER TO utkarsh;
+ALTER TABLE public.integrations OWNER TO postgres;
 
 --
 -- TOC entry 4686 (class 0 OID 0)
@@ -502,7 +502,7 @@ CREATE TABLE public.job_reports (
 );
 
 
-ALTER TABLE public.job_reports OWNER TO utkarsh;
+ALTER TABLE public.job_reports OWNER TO postgres;
 
 --
 -- TOC entry 223 (class 1259 OID 16599)
@@ -548,7 +548,7 @@ CREATE TABLE public.jobs (
 );
 
 
-ALTER TABLE public.jobs OWNER TO utkarsh;
+ALTER TABLE public.jobs OWNER TO postgres;
 
 --
 -- TOC entry 225 (class 1259 OID 16610)
@@ -581,7 +581,7 @@ CREATE TABLE public.monitorings (
 );
 
 
-ALTER TABLE public.monitorings OWNER TO utkarsh;
+ALTER TABLE public.monitorings OWNER TO postgres;
 
 --
 -- TOC entry 227 (class 1259 OID 16618)
@@ -614,7 +614,7 @@ CREATE TABLE public.project_hosts (
 );
 
 
-ALTER TABLE public.project_hosts OWNER TO utkarsh;
+ALTER TABLE public.project_hosts OWNER TO postgres;
 
 --
 -- TOC entry 229 (class 1259 OID 16626)
@@ -648,7 +648,7 @@ CREATE TABLE public.projects (
 );
 
 
-ALTER TABLE public.projects OWNER TO utkarsh;
+ALTER TABLE public.projects OWNER TO postgres;
 
 --
 -- TOC entry 231 (class 1259 OID 16635)
@@ -683,7 +683,7 @@ CREATE TABLE public.teams (
 );
 
 
-ALTER TABLE public.teams OWNER TO utkarsh;
+ALTER TABLE public.teams OWNER TO postgres;
 
 --
 -- TOC entry 233 (class 1259 OID 16644)
@@ -716,7 +716,7 @@ CREATE TABLE public.templates (
 );
 
 
-ALTER TABLE public.templates OWNER TO utkarsh;
+ALTER TABLE public.templates OWNER TO postgres;
 
 --
 -- TOC entry 235 (class 1259 OID 16652)
@@ -748,7 +748,7 @@ CREATE TABLE public.test_instance_action_results (
 );
 
 
-ALTER TABLE public.test_instance_action_results OWNER TO utkarsh;
+ALTER TABLE public.test_instance_action_results OWNER TO postgres;
 
 --
 -- TOC entry 237 (class 1259 OID 16660)
@@ -768,7 +768,7 @@ CREATE TABLE public.test_instance_result_sets (
 );
 
 
-ALTER TABLE public.test_instance_result_sets OWNER TO utkarsh;
+ALTER TABLE public.test_instance_result_sets OWNER TO postgres;
 
 --
 -- TOC entry 238 (class 1259 OID 16668)
@@ -803,7 +803,7 @@ CREATE TABLE public.test_instance_results (
 );
 
 
-ALTER TABLE public.test_instance_results OWNER TO utkarsh;
+ALTER TABLE public.test_instance_results OWNER TO postgres;
 
 --
 -- TOC entry 240 (class 1259 OID 16677)
@@ -836,7 +836,7 @@ CREATE TABLE public.test_instance_screenshots (
 );
 
 
-ALTER TABLE public.test_instance_screenshots OWNER TO utkarsh;
+ALTER TABLE public.test_instance_screenshots OWNER TO postgres;
 
 --
 -- TOC entry 242 (class 1259 OID 16686)
@@ -874,7 +874,7 @@ CREATE TABLE public.test_instances (
 );
 
 
-ALTER TABLE public.test_instances OWNER TO utkarsh;
+ALTER TABLE public.test_instances OWNER TO postgres;
 
 --
 -- TOC entry 244 (class 1259 OID 16696)
@@ -915,7 +915,7 @@ CREATE TABLE public.tests (
 );
 
 
-ALTER TABLE public.tests OWNER TO utkarsh;
+ALTER TABLE public.tests OWNER TO postgres;
 
 --
 -- TOC entry 246 (class 1259 OID 16705)
@@ -944,7 +944,7 @@ CREATE TABLE public.user_meta (
 );
 
 
-ALTER TABLE public.user_meta OWNER TO utkarsh;
+ALTER TABLE public.user_meta OWNER TO postgres;
 
 --
 -- TOC entry 4687 (class 0 OID 0)
@@ -969,7 +969,7 @@ CREATE TABLE public.user_project_roles (
 );
 
 
-ALTER TABLE public.user_project_roles OWNER TO utkarsh;
+ALTER TABLE public.user_project_roles OWNER TO postgres;
 
 --
 -- TOC entry 249 (class 1259 OID 16717)
@@ -987,7 +987,7 @@ CREATE TABLE public.user_provider_connections (
 );
 
 
-ALTER TABLE public.user_provider_connections OWNER TO utkarsh;
+ALTER TABLE public.user_provider_connections OWNER TO postgres;
 
 --
 -- TOC entry 250 (class 1259 OID 16724)
@@ -1018,7 +1018,7 @@ CREATE TABLE public.user_team_roles (
 );
 
 
-ALTER TABLE public.user_team_roles OWNER TO utkarsh;
+ALTER TABLE public.user_team_roles OWNER TO postgres;
 
 --
 -- TOC entry 252 (class 1259 OID 16731)
@@ -1041,7 +1041,7 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO utkarsh;
+ALTER TABLE public.users OWNER TO postgres;
 
 --
 -- TOC entry 253 (class 1259 OID 16740)

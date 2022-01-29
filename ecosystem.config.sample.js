@@ -57,5 +57,14 @@ module.exports = {
 			args: 'run start',
 			env: VIDEO_PROCESSOR_ENV,
 		},
+		{
+			name: 'local-storage',
+			cwd: './packages/crusher-server',
+			script: IS_PRODUCTION ? 'node' : 'npm',
+			args: IS_PRODUCTION ? '-r source-map-support/register storage.js' : 'run dev:storage',
+			watch: ['src', 'config'],
+			env: CRUSHER_SERVER_ENV,
+			merge_logs: true,
+		},
 	],
 };

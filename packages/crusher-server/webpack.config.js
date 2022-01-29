@@ -16,6 +16,7 @@ module.exports = {
 		cron: "./src/cron.ts",
 		worker: "./src/modules/runner/workers/testCompleteWorker.ts",
 		master: "bullmq/dist/cjs/classes/master.js",
+		storage: "./src/localFileStorageServer.ts",
 		...getAllWorkers(),
 	},
 	output: {

@@ -2,35 +2,26 @@ import * as path from "path";
 import * as fs from "fs";
 import * as url from "url";
 import { StorageManagerInterface } from "./interface";
+import axios from "axios";
 
+const FormData = require("form-data");
 type IStorageOptions = {
-	baseFolder: string;
-	bucketName: string;
-	port: number;
+	endpoint: string;
 };
 
 class LocalFileStorage implements StorageManagerInterface {
-	baseFolder: string;
-	bucketName: string;
-	basePath: string;
-	port: number;
+	endpoint: string;
 
 	constructor(options: IStorageOptions) {
-		this.baseFolder = options.baseFolder;
-		this.bucketName = options.bucketName;
-		this.basePath = path.join(this.baseFolder, this.bucketName);
-		this.port = options.port;
-
-		fs.mkdirSync(this.basePath, { recursive: true });
+		this.endpoint = options.endpoint;
 	}
 
 	uploadBuffer(buffer: Buffer, destination: string): Promise<string> {
 		return new Promise((resolve, reject) => {
 			try {
-				const destinationPath = path.join(this.basePath, destination);
-				fs.mkdirSync(path.parse(destinationPath).dir, { recursive: true });
-				fs.writeFileSync(destinationPath, buffer);
-				resolve(url.resolve(`http://localhost:${this.port}`, path.join(this.bucketName, destination)));
+				const formData = new FormData();
+				formData.append(destination, buffer);
+				resolve(axios.post(url.resolve(this.endpoint, "/upload"), formData, { headers: formData.getHeaders() }).then((res) => res.data));
 			} catch (err) {
 				reject(err);
 			}
@@ -44,13 +35,14 @@ class LocalFileStorage implements StorageManagerInterface {
 	}
 
 	remove(filePath: string): Promise<boolean> {
-		return new Promise((resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
-				const absoluteFilePath = path.resolve(this.basePath, filePath);
-				if (fs.existsSync(absoluteFilePath)) {
-					fs.unlinkSync(absoluteFilePath);
+				const res = await axios.post(url.resolve(this.endpoint, "/remove"), { name: filePath }).then((res) => res.data);
+				if (res === "Ok") {
+					resolve(true);
+				} else {
+					resolve(false);
 				}
-				resolve(true);
 			} catch (err) {
 				reject(err);
 			}

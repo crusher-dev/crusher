@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "Crusher test runner used to execute and save output",
 	"dependencies": {
+		"@types/archiver": "^5.3.1",
 		"@types/ioredis": "^4.17.11",
 		"archiver": "^5.3.0",
 		"aws-sdk": "^2.833.0",

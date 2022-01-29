@@ -57,13 +57,5 @@ module.exports = {
 			args: 'run start',
 			env: VIDEO_PROCESSOR_ENV,
 		},
-		{
-			name: 'crusher-extension',
-			cwd: './packages/crusher-extension',
-			script: 'npm',
-			args: 'run build',
-			watch: ['src', 'public'],
-			env: CRUSHER_EXTENSION_ENV,
-		},
 	],
 };

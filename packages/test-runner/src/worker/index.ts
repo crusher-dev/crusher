@@ -26,7 +26,7 @@ const storageManager = getStorageManager();
 
 const TEST_RESULT_KEY = "TEST_RESULT";
 
-export default async function (bullJob: iTestRunnerJob): Promise<any> {
+module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 	try {
 		const identifier = bullJob.name;
 

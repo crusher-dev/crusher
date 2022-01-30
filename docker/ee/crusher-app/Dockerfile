@@ -1,4 +1,4 @@
-FROM node:14.15.5-alpine3.11
+FROM node:16.13.2-alpine3.15
 
 MAINTAINER Utkarsh Dixit "utkarsh@crusher.dev"
 
@@ -6,6 +6,6 @@ ADD ./output/crusher-app ./app
 
 WORKDIR /app
 
-RUN yarn && yarn build
+RUN yarn
 
-CMD ["yarn", "start"]
+CMD ["node", "server.js"]

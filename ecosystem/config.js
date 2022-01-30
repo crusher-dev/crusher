@@ -8,6 +8,7 @@ module.exports = {
 	IS_PRODUCTION: process.env.CRUSHER_ENV === 'production',
 	BACKEND_URL: process.env.STANDALONE_APP_URL ? url.resolve(process.env.STANDALONE_APP_URL, '/server/') : process.env.BACKEND_URL,
 	FRONTEND_URL: process.env.STANDALONE_APP_URL ? process.env.STANDALONE_APP_URL : process.env.FRONTEND_URL,
+	LOCAL_STORAGE_ENDPOINT: process.env.LOCAL_STORAGE_ENDPOINT,
 	AWS_CONFIG: {
 		AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
 		AWS_S3_REGION: process.env.AWS_S3_REGION,

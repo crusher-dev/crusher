@@ -3,10 +3,15 @@ import { setFfmpegPath as setFluentFfmpegPath } from "fluent-ffmpeg";
 export const getFfmpegFromModule = (): string | null => {
 	try {
 		const ffmpeg = require("@ffmpeg-installer/ffmpeg"); // eslint-disable-line @typescript-eslint/no-var-requires
+		console.log("FFMPEG vars", ffmpeg);
 		if (ffmpeg.path) {
 			return ffmpeg.path;
 		}
-	} catch (e) {} // eslint-disable-line no-empty
+	} catch (e) {
+
+		console.log("Error", e);
+
+	} // eslint-disable-line no-empty
 
 	return null;
 };

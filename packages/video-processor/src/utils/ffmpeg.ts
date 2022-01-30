@@ -8,7 +8,8 @@ export const getFfmpegFromModule = (): string | null => {
 		if (ffmpeg.path) {
 			return ffmpeg.path;
 		}
-	} catch (e) {} // eslint-disable-line no-empty
+	} catch (e) {
+	} // eslint-disable-line no-empty
 
 	return null;
 };
@@ -32,28 +33,33 @@ export const ensureFfmpegPath = (): void => {
 
 export function processRemoteRawVideoAndSave(videoUrl: string, savePath: string): Promise<string> {
 	return new Promise((resolve, reject) => {
-		const responseStream = got.stream(videoUrl);
+		try {
+			const responseStream = got.stream(videoUrl);
 
-		const ffmpegStream = ffmpeg({ source: responseStream, priority: 20 })
-			.videoCodec("libx264")
-			.inputFormat("image2pipe")
-			.inputFPS(25)
-			.outputOptions("-preset ultrafast")
-			.outputOptions("-pix_fmt yuv420p")
-			.on("error", function (err) {
+			const ffmpegStream = ffmpeg({ source: responseStream, priority: 20 })
+				.videoCodec("libx264")
+				.inputFormat("image2pipe")
+				.inputFPS(25)
+				.outputOptions("-preset ultrafast")
+				.outputOptions("-pix_fmt yuv420p")
+				.on("error", function (err) {
+					reject(err);
+				})
+				.on("end", function () {
+					resolve(savePath);
+				})
+				.save(savePath);
+
+			responseStream.on("error", (err) => {
+				if (ffmpegStream && ffmpegStream.end) {
+					ffmpegStream.end();
+				}
+				console.error("Error processing ffmpeg", err);
 				reject(err);
-			})
-			.on("end", function () {
-				resolve(savePath);
-			})
-			.save(savePath);
-
-		responseStream.on("error", (err) => {
-			if (ffmpegStream && ffmpegStream.end) {
-				ffmpegStream.end();
-			}
-			reject(err);
-		});
+			});
+		} catch (err) {
+			console.error("Error processing ffmpeg", err);
+		}
 	});
 }
 

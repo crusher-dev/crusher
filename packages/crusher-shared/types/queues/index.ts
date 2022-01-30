@@ -14,6 +14,7 @@ export type ITestExecutionQueuePayload = IJobRunRequest & {
 };
 
 export interface ITestCompleteQueuePayload {
+	type?: "complete-build" | "process";
 	exports: Array<[string, any]>;
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
 	buildExecutionPayload: ITestExecutionQueuePayload;

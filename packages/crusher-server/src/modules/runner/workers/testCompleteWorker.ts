@@ -106,32 +106,29 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	const buildRecord = await buildService.getBuild(bullJob.data.buildId);
 	const buildReportRecord = await buildReportService.getBuildReportRecord(buildRecord.latestReportId);
 
-	await handleNextTestsForExecution(bullJob.data, buildRecord);
+	// await handleNextTestsForExecution(bullJob.data, buildRecord);
 
-	const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
+	if (bullJob.data.type === "process") {
+		const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
 
-	const screenshotActionsResultWithIndex = getScreenshotActionsResult(actionsResultWithIndex);
+		const screenshotActionsResultWithIndex = getScreenshotActionsResult(actionsResultWithIndex);
 
-	const savedScreenshotRecords = await buildTestInstanceScreenshotService.saveScreenshots(screenshotActionsResultWithIndex, bullJob.data.testInstanceId);
+		const savedScreenshotRecords = await buildTestInstanceScreenshotService.saveScreenshots(screenshotActionsResultWithIndex, bullJob.data.testInstanceId);
 
-	// Compare visual diffs and save the final result
-	await buildTestInstanceService.saveResult(
-		actionsResultWithIndex,
-		savedScreenshotRecords,
-		bullJob.data.testInstanceId,
-		buildRecord.projectId,
-		bullJob.name,
-		bullJob.data.hasPassed,
-	);
+		// Compare visual diffs and save the final result
+		await buildTestInstanceService.saveResult(
+			actionsResultWithIndex,
+			savedScreenshotRecords,
+			bullJob.data.testInstanceId,
+			buildRecord.projectId,
+			bullJob.name,
+			bullJob.data.hasPassed,
+		);
 
-	// Wait for the final test in the list here
-	await redisManager.incr(`${bullJob.data.buildId}:completed`);
-
-	const completedTestCount = await redisLock.lock(`${bullJob.data.buildId}:completed:lock`, 100).then(function (lock) {
-		return redisManager.get(`${bullJob.data.buildId}:completed`);
-	});
-
-	if (parseInt(completedTestCount) === bullJob.data.buildTestCount) {
+		// Wait for the final test in the list here
+		await redisManager.incr(`${bullJob.data.buildId}:completed`);
+		return "PROCESSED";
+	} else {
 		// This is the last test result to finish
 		const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
 

@@ -6,7 +6,7 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ITestTable } from "@modules/resources/tests/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { QueueManager } from "@modules/queue";
-import { TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
+import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
 import { INextTestInstancesDependencies, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
@@ -62,16 +62,39 @@ class TestsRunner {
 		});
 	}
 
+	private createExecutionTaskFlow(data: any, host: string | null = null) {
+		if (host && host !== "null") {
+			data.actions = this._replaceHostInEvents(data.actions, host);
+		}
+
+		return {
+			name: `${data.buildId}/${data.testInstanceId}`,
+			queueName: TEST_COMPLETE_QUEUE,
+			data: {
+				type: "process",
+			},
+			children: [
+				{
+					name: `${data.buildId}/${data.testInstanceId}`,
+					queueName: TEST_EXECUTION_QUEUE,
+					data,
+					children: [],
+				},
+			],
+		};
+	}
+
 	private async startBuildTask(
 		buildTaskInfo: IBuildTaskPayload & {
 			testInstances: ITestInstanceDependencyArray;
 		},
 	) {
 		const { testInstances } = buildTaskInfo;
+		const flowChildrens = [];
 		const addTestInstancePromiseArr = testInstances.map((testInstance) => {
 			if (!testInstance.parentTestInstanceId) {
-				return this.addTestRequestToQueue(
-					{
+				flowChildrens.push(
+					this.createExecutionTaskFlow({
 						actions: JSON.parse(testInstance.testInfo.events),
 						nextTestDependencies: this._getNextTestInstancesDependencyArr(testInstance, testInstances),
 						config: {
@@ -84,10 +107,22 @@ class TestsRunner {
 						buildTestCount: testInstances.length,
 						startingStorageState: null,
 						startingPersistentContext: null,
-					},
+					}),
 					buildTaskInfo.host,
 				);
 			}
+		});
+
+		await this.queueManager.getFlowProducer().add({
+			name: `${buildTaskInfo.buildId}/complete`,
+			queueName: TEST_COMPLETE_QUEUE,
+			data: {
+				type: "complete-build",
+				buildId: null,
+				latestReportId: null,
+				buildTestCount: null,
+			},
+			children: [],
 		});
 
 		await Promise.all(addTestInstancePromiseArr);

@@ -25,6 +25,8 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IntegrationsService } from "@modules/resources/integrations/service";
 import { IUserTable } from "@modules/resources/users/interface";
 import { IProjectTable } from "@modules/resources/projects/interface";
+import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
+import { TestInstanceResultSetStatusEnum } from "@modules/resources/builds/instances/interface";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -50,7 +52,32 @@ interface ITestResultWorkerJob extends Job {
 	data: ITestCompleteQueuePayload;
 }
 
-async function handleNextTestsForExecution(testCompletePayload: ITestResultWorkerJob["data"], buildRecord: KeysToCamelCase<IBuildTable>) {
+function createExecutionTaskFlow(data: any, host: string | null = null) {
+	if (host && host !== "null") {
+		data.actions = this._replaceHostInEvents(data.actions, host);
+	}
+
+	return {
+		name: `${data.buildId}/${data.testInstanceId}`,
+		queueName: TEST_COMPLETE_QUEUE,
+		data: {
+			type: "process",
+		},
+		children: [
+			{
+				name: `${data.buildId}/${data.testInstanceId}`,
+				queueName: TEST_EXECUTION_QUEUE,
+				data,
+				children: [],
+			},
+		],
+	};
+}
+
+async function handleNextTestsForExecution(job: ITestResultWorkerJob, buildRecord: KeysToCamelCase<IBuildTable>) {
+	const testCompletePayload = job.data;
+	const siblings = [];
+
 	for (const testInstance of testCompletePayload.nextTestDependencies) {
 		const testInstanceFullInfoRecord = await buildTestInstanceService.getInstanceAllInformation(testInstance.testInstanceId);
 		const testActions: Array<iAction> = JSON.parse(testInstanceFullInfoRecord.testEvents);
@@ -63,25 +90,28 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 				return action;
 			});
 
-			await testRunner.addTestRequestToQueue(
-				{
-					...testCompletePayload.buildExecutionPayload,
-					exports: testCompletePayload.exports,
-					startingStorageState: testCompletePayload.storageState,
-					actions: finalTestActions,
-					config: {
-						...testCompletePayload.buildExecutionPayload.config,
-						browser: testInstanceFullInfoRecord.browser,
+			siblings.push(
+				createExecutionTaskFlow(
+					{
+						...testCompletePayload.buildExecutionPayload,
+						exports: testCompletePayload.exports,
+						startingStorageState: testCompletePayload.storageState,
+						actions: finalTestActions,
+						config: {
+							...testCompletePayload.buildExecutionPayload.config,
+							browser: testInstanceFullInfoRecord.browser,
+						},
+						testInstanceId: testInstance.testInstanceId,
+						testName: testInstanceFullInfoRecord.testName,
+						nextTestDependencies: testInstance.nextTestDependencies,
+						startingPersistentContext: testCompletePayload.persistenContextZipURL,
 					},
-					testInstanceId: testInstance.testInstanceId,
-					testName: testInstanceFullInfoRecord.testName,
-					nextTestDependencies: testInstance.nextTestDependencies,
-					startingPersistentContext: testCompletePayload.persistenContextZipURL,
-				},
-				buildRecord.host && buildRecord.host !== "null" ? buildRecord.host : null,
+					buildRecord.host && buildRecord.host !== "null" ? buildRecord.host : null,
+				),
 			);
 		} else {
 			await processTestAfterExecution({
+				type: `process`,
 				name: `${testCompletePayload.buildId}/${testCompletePayload.testInstanceId}`,
 				data: {
 					...testCompletePayload,
@@ -99,6 +129,12 @@ async function handleNextTestsForExecution(testCompletePayload: ITestResultWorke
 			} as any);
 		}
 	}
+
+	if (siblings.length) {
+		for (const sibling of siblings) {
+			await testRunner.addTestRequestToQueue(sibling, job.opts.parent);
+		}
+	}
 	return true;
 }
 
@@ -106,9 +142,8 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	const buildRecord = await buildService.getBuild(bullJob.data.buildId);
 	const buildReportRecord = await buildReportService.getBuildReportRecord(buildRecord.latestReportId);
 
-	// await handleNextTestsForExecution(bullJob.data, buildRecord);
-
 	if (bullJob.data.type === "process") {
+		await handleNextTestsForExecution(bullJob, buildRecord);
 		const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
 
 		const screenshotActionsResultWithIndex = getScreenshotActionsResult(actionsResultWithIndex);
@@ -129,23 +164,30 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 		await redisManager.incr(`${bullJob.data.buildId}:completed`);
 		return "PROCESSED";
 	} else {
-		// This is the last test result to finish
-		const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
+		const testInstancesResultsInReport = await buildTestInstanceService.getResultSets(buildRecord.latestReportId);
+		const haveAllTestInstanceCompletedChecks = testInstancesResultsInReport.every(
+			(result) => result.status === TestInstanceResultSetStatusEnum.FINISHED_RUNNING_CHECKS,
+		);
+		if (haveAllTestInstanceCompletedChecks) {
 
-		await buildService.updateStatus(BuildStatusEnum.FINISHED, buildRecord.id);
+			// This is the last test result to finish
+			const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
 
-		const buildRecordMeta = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
+			await buildService.updateStatus(BuildStatusEnum.FINISHED, buildRecord.id);
 
-		if (buildRecordMeta?.isProjectLevelBuild && buildReportStatus === BuildReportStatusEnum.PASSED) {
-			// Automatically update the baseline to the latest build
-			await projectsService.updateBaselineBuild(buildRecord.id, buildRecord.projectId);
+			const buildRecordMeta = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
+
+			if (buildRecordMeta?.isProjectLevelBuild && buildReportStatus === BuildReportStatusEnum.PASSED) {
+				// Automatically update the baseline to the latest build
+				await projectsService.updateBaselineBuild(buildRecord.id, buildRecord.projectId);
+			}
+			// @TODO: Add integrations here (Notify slack, etc.)
+			console.log("Build status: ", buildReportStatus);
+
+			await handleIntegrations(buildRecord, buildReportRecord, buildReportStatus);
+			// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
+			return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 		}
-		// @TODO: Add integrations here (Notify slack, etc.)
-		console.log("Build status: ", buildReportStatus);
-
-		await handleIntegrations(buildRecord, buildReportRecord, buildReportStatus);
-		// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
-		return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
 	}
 };
 

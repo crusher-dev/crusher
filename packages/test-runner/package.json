@@ -43,7 +43,7 @@
 		"run:local": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json bin/out.ts",
 		"start": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
 		"test": "ts-node -r tsconfig-paths/register --project tsconfig.json  out.ts",
-		"tests": "ts-node -r tsconfig-paths/register --project tsconfig.json  test.ts",
+		"tests": "ts-node -r tsconfig-paths/register --project tsconfig.json  code.ts",
 		"start:cdp": "ts-node -r tsconfig-paths/register --project tsconfig.json ./test.ts",
 		"build": "webpack -c webpack.config.js",
 		"start:build": "node build/index.js",

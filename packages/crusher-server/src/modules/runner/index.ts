@@ -25,12 +25,17 @@ class TestsRunner {
 	@Inject()
 	private queueManager: QueueManager;
 
-	async addTestRequestToQueue(payload: ITestExecutionQueuePayload, hostToReplace: string | null = null) {
-		if (hostToReplace && hostToReplace !== "null") {
-			payload.actions = this._replaceHostInEvents(payload.actions, hostToReplace);
-		}
-		const testExeuctionQueue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
-		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, { ...payload, rateLimiterKey: payload.buildId.toString() });
+	async addTestRequestToQueue(payload: any, parent: any) {
+		const flowTree = await this.queueManager.getFlowProducer().add({
+			...payload,
+			opts: {
+				parent: parent,
+			},
+		});
+
+		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parentKey", parent.queue + ":" + parent.id);
+
+		await this.queueManager.redisManager.redisClient.sadd(parent.queue + ":" + parent.id + ":dependencies", parent.queue + ":" + flowTree.job.id);
 	}
 
 	private _getNextTestInstancesDependencyArr(
@@ -78,7 +83,6 @@ class TestsRunner {
 					name: `${data.buildId}/${data.testInstanceId}`,
 					queueName: TEST_EXECUTION_QUEUE,
 					data,
-					children: [],
 				},
 			],
 		};
@@ -118,11 +122,10 @@ class TestsRunner {
 			queueName: TEST_COMPLETE_QUEUE,
 			data: {
 				type: "complete-build",
-				buildId: null,
-				latestReportId: null,
-				buildTestCount: null,
+				buildId: buildTaskInfo.buildId,
+				buildTestCount: testInstances.length,
 			},
-			children: [],
+			children: flowChildrens,
 		});
 
 		await Promise.all(addTestInstancePromiseArr);

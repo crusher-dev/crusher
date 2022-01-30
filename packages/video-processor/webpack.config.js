@@ -37,12 +37,42 @@ module.exports = {
 				},
 			},
 			{
-				test: /node_modules\/bullmq\/dist\/commands\/index\.js$/,
+				test: /node_modules\/bullmq\/dist\/esm\/classes\/redis-connection\.js$/,
 				use: {
 					loader: "string-replace-loader",
 					options: {
-						search: "__dirname",
-						replace: `"./commands"`,
+						search: "__dirname, '../commands'",
+						replace: `__dirname, './commands'`,
+					},
+				},
+			},
+			{
+				test: /node_modules\/bullmq\/dist\/esm\/classes\/child-processor\.js$/,
+				use: {
+					loader: "string-replace-loader",
+					options: {
+						search: "require(processorFile)",
+						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(processorFile) : require(processorFile)`,
+					},
+				},
+			},
+			{
+				test: /node_modules\/bullmq\/dist\/cjs\/classes\/redis-connection\.js$/,
+				use: {
+					loader: "string-replace-loader",
+					options: {
+						search: "__dirname, '../commands'",
+						replace: `__dirname, './commands'`,
+					},
+				},
+			},
+			{
+				test: /node_modules\/bullmq\/dist\/cjs\/classes\/child-processor\.js$/,
+				use: {
+					loader: "string-replace-loader",
+					options: {
+						search: "require(processorFile)",
+						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(processorFile) : require(processorFile)`,
 					},
 				},
 			},

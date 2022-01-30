@@ -1,0 +1,30 @@
+FROM node:16.13.2-alpine3.15
+
+MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
+
+WORKDIR /crusher
+
+RUN apk add --no-cache bash
+
+RUN apk add git
+
+RUN npm install -g npm pm2 webpack
+RUN npm init -y
+
+RUN npm install dotenv source-map-support pg
+
+ADD ./ecosystem.config.sample.js ecosystem.config.js
+ADD ./.env.sample .env
+ADD ./ecosystem ecosystem
+ADD ./output/crusher-server/ packages/crusher-server
+ADD ./setup/dbMigration.js setup/dbMigration.js
+ADD ./db/schema.sql db/schema.sql
+
+ENV CRUSHER_ENV production
+
+ARG PORT=8000
+
+EXPOSE $PORT
+
+ADD ./docker/ee/crusher-server/entrypoint.sh entrypoint.sh
+ENTRYPOINT ["sh", "entrypoint.sh"]

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 networks:
   crusher-network:
@@ -10,11 +10,16 @@ networks:
 
 services:
   redis:
+    networks:
+      - crusher-network
     image: 'bitnami/redis:latest'
+    ports:
+      - '6379:6379'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - crusher-network
+    container_name: 'redis'
 
   postgres:
     image: 'bitnami/postgresql:latest'
@@ -23,16 +28,52 @@ services:
       - POSTGRESQL_DATABASE=crusher
     networks:
       - crusher-network
+    container_name: 'postgresql'
 
-  crusher:
+  local-storage:
+    networks:
+      crusher-network:
+        ipv4_address: 172.12.23.35
+    build:
+      context: ../../
+      dockerfile: docker/ee/local-storage/Dockerfile
+    environment:
+      - FILE_SERVER_PROXY=http://172.12.23.35:3001
+    ports:
+      - '3001:3001'
+    container_name: 'local-storage'
+    stdin_open: true # docker run -i
+    tty: true
+
+  crusher-app:
+    depends_on:
+      - local-storage
+    links:
+      - 'local-storage:local-storage'
     networks:
       - crusher-network
     build:
       context: ../../
-      dockerfile: docker/ee/Dockerfile.complete
+      dockerfile: docker/ee/crusher-app/Dockerfile
+    environment:
+      - NEXT_PUBLIC_INTERNAL_BACKEND_URL=http://localhost:8000
+      - STORAGE_PROXY=http://172.12.23.35:3001
+    ports:
+      - '3000:3000'
+    container_name: 'crusher-app'
+    stdin_open: true # docker run -i
+    tty: true
+
+  crusher-server:
+    networks:
+      - crusher-network
+    build:
+      context: ../../
+      dockerfile: docker/ee/crusher-server/Dockerfile.image
     depends_on:
       - postgres
       - redis
+      - local-storage
     environment:
       - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
       - DB_HOST=postgres
@@ -40,19 +81,63 @@ services:
       - DB_PASSWORD=password
       - DB_DATABASE=crusher
       - DB_PORT=5432
-      - MONGODB_CONNECTION_STRING=mongodb://mongodb:27017/crusher
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
-      - STANDALONE_APP_URL=$STANDALONE_APP_URL
-      - NEXT_PUBLIC_CRUSHER_MODE=enterprise
-      - NEXT_PUBLIC_INTERNAL_BACKEND_URL=$STANDALONE_APP_URL/server
+      - LOCAL_STORAGE_ENDPOINT=http://local-storage:3001
     ports:
-      - '3000:3000'
-      - '3001:3001'
+      - '8000:8000'
     links:
       - 'postgres:mysql'
       - 'redis:redis'
-    container_name: 'crusher'
+      - 'local-storage:local-storage'
+    container_name: 'crusher-server'
+    stdin_open: true # docker run -i
+    tty: true
+
+  crusher-test-runner:
+    networks:
+      - crusher-network
+    build:
+      context: ../../
+      dockerfile: docker/ee/test-runner/Dockerfile
+    depends_on:
+      - redis
+    environment:
+      - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - BACKEND_URL=http://crusher-server:8000
+      - LOCAL_STORAGE_ENDPOINT=http://local-storage:3001
+    links:
+      - 'redis:redis'
+      - 'crusher-server:crusher-server'
+      - 'local-storage:local-storage'
+    container_name: 'crusher-test-runner'
+    stdin_open: true # docker run -i
+    tty: true
+
+  crusher-video-processor:
+    networks:
+      - crusher-network
+    build:
+      context: ../../
+      dockerfile: docker/ee/video-processor/Dockerfile
+    depends_on:
+      - redis
+      - local-storage
+    environment:
+      - LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - BACKEND_URL=http://crusher-server:8000
+      - LOCAL_STORAGE_ENDPOINT=http://local-storage:3001
+    links:
+      - 'redis:redis'
+      - 'crusher-server:crusher-server'
+      - 'local-storage:local-storage'
+    container_name: 'crusher-video-processor'
     stdin_open: true # docker run -i
     tty: true

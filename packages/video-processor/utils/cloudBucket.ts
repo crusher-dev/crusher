@@ -10,14 +10,14 @@ export function getEdition() {
 	return process.env.CRUSHER_MODE;
 }
 
+const LOCAL_STORAGE_ENDPOINT = process.env.LOCAL_STORAGE_ENDPOINT || "http://localhost:3001";
+
 export const setupBucketManager = () => {
 	if (process.env.STORAGE_MODE === "local") {
 		const storagePort = parseInt(process.env.STORAGE_PORT, 10);
 
 		return new LocalFileStorage({
-			port: storagePort,
-			bucketName: "crusher-videos",
-			baseFolder: process.env.BASE_STORAGE_FOLDER,
+			endpoint: LOCAL_STORAGE_ENDPOINT,
 		});
 	}
 

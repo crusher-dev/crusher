@@ -1,13 +1,22 @@
-import { Worker, Processor, Queue, QueueScheduler, QueueSchedulerOptions, WorkerOptions, QueueOptions } from "bullmq";
+import { Worker, Processor, Queue, QueueScheduler, QueueSchedulerOptions, WorkerOptions, QueueOptions, FlowProducer } from "bullmq";
 import { RedisManager } from "../redis";
 
 class QueueManager {
 	redisManager: RedisManager;
 	queues: { [name: string]: { scheduler?: QueueScheduler | null; worker?: Worker | null; value?: Queue | null } };
+	flowProducer: FlowProducer;
 
 	constructor(redisManager: RedisManager) {
 		this.redisManager = redisManager;
 		this.queues = {};
+	}
+
+	getFlowProducer() {
+		if (!this.flowProducer) {
+			this.flowProducer = new FlowProducer({ connection: this.redisManager.redisClient as any } );
+		}
+
+		return this.flowProducer;
 	}
 
 	async setupQueue(queueName: string, options: QueueOptions = {}): Promise<Queue> {

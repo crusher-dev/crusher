@@ -16,6 +16,7 @@ module.exports = {
 		cron: "./src/cron.ts",
 		worker: "./src/modules/runner/workers/testCompleteWorker.ts",
 		master: "bullmq/dist/cjs/classes/master.js",
+		storage: "./src/localFileStorageServer.ts",
 		...getAllWorkers(),
 	},
 	output: {
@@ -27,7 +28,7 @@ module.exports = {
 	},
 	plugins: [
 		new CopyPlugin({
-			patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "cjs/commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
+			patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
 		}),
 		new CopyPlugin({
 			patterns: [{ from: path.resolve(__dirname, "src/modules/email/templates"), to: "email/templates" }],
@@ -57,22 +58,42 @@ module.exports = {
 				},
 			},
 			{
-				test: /node_modules\/bullmq\/dist\/cjs\/commands\/index\.js$/,
+				test: /node_modules\/bullmq\/dist\/esm\/classes\/redis-connection\.js$/,
 				use: {
 					loader: "string-replace-loader",
 					options: {
-						search: "__dirname",
-						replace: `__dirname + "/commands/"`,
+						search: "__dirname, '../commands'",
+						replace: `__dirname, './commands'`,
 					},
 				},
 			},
 			{
-				test: /node_modules\/bullmq\/dist\/classes\/master\.js$/,
+				test: /node_modules\/bullmq\/dist\/esm\/classes\/child-processor\.js$/,
 				use: {
 					loader: "string-replace-loader",
 					options: {
-						search: "require(msg.value)",
-						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(msg.value) : require(msg.value)`,
+						search: "require(processorFile)",
+						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(processorFile) : require(processorFile)`,
+					},
+				},
+			},
+			{
+				test: /node_modules\/bullmq\/dist\/cjs\/classes\/redis-connection\.js$/,
+				use: {
+					loader: "string-replace-loader",
+					options: {
+						search: "__dirname, '../commands'",
+						replace: `__dirname, './commands'`,
+					},
+				},
+			},
+			{
+				test: /node_modules\/bullmq\/dist\/cjs\/classes\/child-processor\.js$/,
+				use: {
+					loader: "string-replace-loader",
+					options: {
+						search: "require(processorFile)",
+						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(processorFile) : require(processorFile)`,
 					},
 				},
 			},

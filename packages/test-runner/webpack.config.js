@@ -12,11 +12,11 @@ module.exports = {
 	},
 	entry: {
 		index: "./index.ts",
-		worker: ["src/worker/index.ts"],
-		master: "bullmq/dist/classes/master.js",
+		worker: ["./src/worker/index.ts"],
+		master: "bullmq/dist/esm/classes/master.js",
 	},
 	output: {
-		libraryTarget: "commonjs",
+		libraryTarget: "commonjs2",
 		path: path.resolve(__dirname, "../../output/test-runner/"),
 		filename: "[name].js", // <--- Will be compiled to this single file
 	},
@@ -46,6 +46,7 @@ module.exports = {
 	resolve: {
 		plugins: [new TsconfigPathsPlugin({ configFile: path.resolve("./tsconfig.json") })],
 		extensions: [".ts", ".tsx", ".js"],
+		mainFields: ["main", "module"],
 	},
 	module: {
 		rules: [
@@ -57,22 +58,42 @@ module.exports = {
 				},
 			},
 			{
-				test: /node_modules\/bullmq\/dist\/commands\/index\.js$/,
+				test: /node_modules\/bullmq\/dist\/esm\/classes\/redis-connection\.js$/,
 				use: {
 					loader: "string-replace-loader",
 					options: {
-						search: "__dirname",
-						replace: `__dirname + "/commands/"`,
+						search: "__dirname, '../commands'",
+						replace: `__dirname, './commands'`,
 					},
 				},
 			},
 			{
-				test: /node_modules\/bullmq\/dist\/classes\/master\.js$/,
+				test: /node_modules\/bullmq\/dist\/esm\/classes\/child-processor\.js$/,
 				use: {
 					loader: "string-replace-loader",
 					options: {
-						search: "require(msg.value)",
-						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(msg.value) : require(msg.value)`,
+						search: "require(processorFile)",
+						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(processorFile) : require(processorFile)`,
+					},
+				},
+			},
+			{
+				test: /node_modules\/bullmq\/dist\/cjs\/classes\/redis-connection\.js$/,
+				use: {
+					loader: "string-replace-loader",
+					options: {
+						search: "__dirname, '../commands'",
+						replace: `__dirname, './commands'`,
+					},
+				},
+			},
+			{
+				test: /node_modules\/bullmq\/dist\/cjs\/classes\/child-processor\.js$/,
+				use: {
+					loader: "string-replace-loader",
+					options: {
+						search: "require(processorFile)",
+						replace: `typeof __webpack_require__ === "function" ? __non_webpack_require__(processorFile) : require(processorFile)`,
 					},
 				},
 			},

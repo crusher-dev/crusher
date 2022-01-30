@@ -19,6 +19,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - crusher-network
+    container_name: 'redis'
 
   postgres:
     image: 'bitnami/postgresql:latest'
@@ -27,6 +28,7 @@ services:
       - POSTGRESQL_DATABASE=crusher
     networks:
       - crusher-network
+    container_name: 'postgresql'
 
   local-storage:
     networks:

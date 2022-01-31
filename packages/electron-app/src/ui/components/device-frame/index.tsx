@@ -63,6 +63,7 @@ const DeviceFrame = (props: any) => {
 						preload={getPreloadScriptPath()}
 						title={"crusher-webview"}
 						src={"about:blank"}
+						partition={"crusherwebview"}
 						webpreferences="nativeWindowOpen=yes"
 						allowpopups
 					/>

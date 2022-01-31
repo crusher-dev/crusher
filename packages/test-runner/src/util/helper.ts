@@ -68,8 +68,6 @@ export function downloadUsingAxiosAndUnzip(url: string, zipPath: string): Promis
 		const file = fs.createWriteStream(zipPath);
 		const request = axios.get<Stream>(url, { responseType: "stream" });
 
-		console.log("ZIp path", zipPath);
-
 		request.then(
 			(response) => {
 				response.data.pipe(file);

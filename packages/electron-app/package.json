@@ -22,8 +22,7 @@
 		"pack:linux": "node scripts/pack-linux.js",
 		"pack:mac": "node scripts/pack-mac.js",
 		"pack:all": "yarn pack:linux && yarn pack:mac",
-		"test:init": "jest init",
-		"test": "jest"
+		"test": "jest --runInBand --detectOpenHandles --verbose"
 	},
 	"dependencies": {
 		"@babel/preset-react": "^7.16.5",

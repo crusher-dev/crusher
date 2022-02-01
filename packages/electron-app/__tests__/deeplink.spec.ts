@@ -65,6 +65,7 @@ describe("Recorder boot", () => {
 		const recordedStepListContainer = await appWindow.waitForSelector("#steps-list-container");
 		expect(await recordedStepListContainer.isVisible()).toBe(true);
 
+		await new Promise(resolve => setTimeout(resolve, 5000));
 		const recordedSteps = await recordedStepListContainer.evaluate((element) => {
 			return Array.from(element.querySelectorAll(".recorded-step")).map((node: any) => {
 				return {

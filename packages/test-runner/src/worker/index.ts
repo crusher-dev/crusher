@@ -82,7 +82,6 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 
 		// Cleanup persistent context dir after test execution
 		deleteDirIfThere(persistentContextDir);
-		console.log("Bull job is", bullJob);
 
 		const parentJob = await Job.fromId(queueManager.queues[TEST_COMPLETE_QUEUE].value, bullJob.opts.parent.id);
 		await parentJob.update({

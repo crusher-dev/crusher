@@ -88,7 +88,7 @@ function RepoBar({ repo }) {
 		await addGithubProject(project.id, repo);
 
 		mutate(getGitIntegrations(project.id));
-	}, []);
+	}, [repo]);
 	return (
 		<div className={"flex text-13 justify-between mb-16"}>
 			<div className={"flex items-center"}>
@@ -300,9 +300,10 @@ function LinkedRepo() {
 	const [project] = useAtom(currentProject);
 	const { data: linkedRepos } = useSWR(getGitIntegrations(project.id));
 
-	const { repoName, projectId, repoLink, _id: id } = linkedRepos.linkedRepo;
+	const { repoName, projectId, repoLink, id: id } = linkedRepos.linkedRepo;
 
 	const unlinkRepoCallback = useCallback(async () => {
+		console.log("LInked repos are", linkedRepos);
 		await unlinkRepo(projectId, id);
 		mutate(getGitIntegrations(project.id));
 	}, [linkedRepos]);

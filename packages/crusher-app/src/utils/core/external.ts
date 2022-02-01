@@ -17,6 +17,7 @@ const getGithubOAuthURL = (alreadyAuthorized = false) => {
 
 const getGithubOAuthURLLegacy = (alreadyAuthorized = false) => {
 
+	console.log("Public link", );
 	const githubUrl = new URL(alreadyAuthorized ? path.join(PUBLIC_LINK, "/installations/new") : "https://github.com/login/oauth/authorize");
 	githubUrl.searchParams.append("client_id", CLIENT_ID);
 	githubUrl.searchParams.append("redirect_uri", resolvePathToBackendURI("/integrations/blabla/github/actions/callback"));

@@ -79,6 +79,7 @@ const Step = ({
 	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
 	const dispatch = useDispatch();
 	const store = useStore();
+	const recorderState = useSelector(getRecorderState);
 
 	React.useEffect(() => {
 		setShowStepActionDropdown(false);
@@ -126,11 +127,13 @@ const Step = ({
 		}, stepIndex as any));
 	}
 
+	const finalIsRunning = recorderState.type === TRecorderState.PERFORMING_ACTIONS && isRunning;
+
 	return (
 		<div onMouseOver={() => {
 			setIsHover(true)
 		}} onMouseLeave={setIsHover.bind(this, false)} className="recorded-step" data-step-id={stepIndex} data-type={action.type} data-status={ action.status }>
-			<div css={[stepStyle, isHover && hoverStepStyle, isRunning && runningStepStyle, (isFailed) && failedStyle]}>
+			<div css={[stepStyle, isHover && hoverStepStyle, finalIsRunning && runningStepStyle, (isFailed) && failedStyle]}>
 				<div className="flex flex-col">
 					<Checkbox {...props} />
 					<Conditional showIf={ action.payload.isOptional }>
@@ -143,10 +146,10 @@ const Step = ({
 					</TextBlock>
 					<TextBlock css={stepSubtitleStyle}>{subtitle}</TextBlock>
 				</div>
-				<Conditional showIf={isRunning}>
+				<Conditional showIf={finalIsRunning}>
 					<LoadingIcon style={{width: "16rem", height: "16rem", marginLeft: "4rem"}} css={css`margin-left: auto;`}/>
 				</Conditional>
-				<Conditional showIf={isHover && (!isRunning)}>
+				<Conditional showIf={isHover && (!finalIsRunning)}>
 					<Dropdown
 							initialState={showStepActionDropdown}
                             dropdownCSS={dropdownStyle}

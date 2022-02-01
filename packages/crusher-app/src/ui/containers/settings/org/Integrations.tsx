@@ -13,7 +13,7 @@ import Toggle from "dyson/src/components/atoms/toggle/toggle";
 import { GithubSVG } from "@svg/social";
 import { Card } from "dyson/src/components/layouts/Card/Card";
 import { openPopup } from "@utils/common/domUtils";
-import { getGithubOAuthURL } from "@utils/core/external";
+import { getGithubOAuthURL, getGithubOAuthURLLegacy } from "@utils/core/external";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 import { useAtom } from "jotai";
 import { atomWithImmer } from "jotai/immer";
@@ -209,7 +209,7 @@ function ProjectBox() {
 const useGithubAuthorize = () => {
 	const [, setConnectedGit] = useAtom(connectedToGitAtom);
 	const onGithubClick = (alreadAuthorized: boolean = false) => {
-		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
+		const windowRef = openPopup(getGithubOAuthURLLegacy(alreadAuthorized));
 
 		const interval = setInterval(() => {
 			const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);

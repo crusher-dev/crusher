@@ -1,13 +1,12 @@
 import { LocalFileStorage } from "../lib/storage";
 import { AwsCloudStorage } from "../lib/storage/aws";
 import { IStorageManager } from "../lib/storage/interface";
+const LOCAL_STORAGE_ENDPOINT = process.env.LOCAL_STORAGE_ENDPOINT || "http://localhost:3001";
 
 function setupStorage(storageMode: "local" | "aws", storagePort: number, baseStorageFolder: string): IStorageManager {
 	if (storageMode === "local") {
 		return new LocalFileStorage({
-			port: storagePort,
-			bucketName: "crusher-videos",
-			baseFolder: baseStorageFolder,
+			endpoint: LOCAL_STORAGE_ENDPOINT
 		});
 	}
 

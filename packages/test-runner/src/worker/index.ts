@@ -26,7 +26,7 @@ const storageManager = getStorageManager();
 
 const TEST_RESULT_KEY = "TEST_RESULT";
 
-export default async function (bullJob: iTestRunnerJob): Promise<any> {
+module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 	try {
 		const identifier = bullJob.name;
 
@@ -83,7 +83,9 @@ export default async function (bullJob: iTestRunnerJob): Promise<any> {
 		// Cleanup persistent context dir after test execution
 		deleteDirIfThere(persistentContextDir);
 
-		await testCompleteQueue.add(identifier, {
+		const parentJob = await Job.fromId(queueManager.queues[TEST_COMPLETE_QUEUE].value, bullJob.opts.parent.id);
+		await parentJob.update({
+			...parentJob.data,
 			exports: exportsManager.getEntriesArr(),
 			nextTestDependencies: bullJob.data.nextTestDependencies,
 			actionResults: actionResults,

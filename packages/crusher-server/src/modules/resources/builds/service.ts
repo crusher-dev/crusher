@@ -188,7 +188,6 @@ class BuildsService {
 		const buildRecord = await this.getBuild(buildId);
 		const meta = JSON.parse(buildRecord.meta);
 
-		try {
 			if (meta.github) {
 				const { githubCheckRunId, repoName: fullReponame, installationId } = meta;
 				const { repoName, ownerName } = githubService.extractRepoAndOwnerName(fullReponame);
@@ -198,9 +197,6 @@ class BuildsService {
 				const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
 				await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
 			}
-		} catch (ex) {
-			console.error("Failed when updating github check", ex);
-		}
 	}
 }
 

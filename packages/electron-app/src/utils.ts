@@ -1,10 +1,10 @@
 import * as path from "path";
-import fileUrl from 'file-url'
+import fileUrl from "file-url";
 import { IDeepLinkAction } from "./types";
 
 const isProduction = () => {
-    return process.env.NODE_ENV === "production";
-}
+	return process.env.NODE_ENV === "production";
+};
 
 function getAppIconPath() {
 	switch (process.platform) {
@@ -16,8 +16,8 @@ function getAppIconPath() {
 }
 
 function encodePathAsUrl(...pathSegments: string[]): string {
-	const Path = path.resolve(...pathSegments)
-	return fileUrl(Path)
+	const Path = path.resolve(...pathSegments);
+	return fileUrl(Path);
 }
 
 const addHttpToURLIfNotThere = (uri: string) => {
@@ -29,13 +29,13 @@ const addHttpToURLIfNotThere = (uri: string) => {
 
 const parseDeepLinkUrlAction = (url: string): IDeepLinkAction | null => {
 	const urlObject = new URL(url);
-	if(urlObject.protocol === "crusher:") {
+	if (urlObject.protocol === "crusher:") {
 		const commandName = urlObject.host;
 		const args = Object.fromEntries(urlObject.searchParams as any);
 
 		return { commandName: commandName, args: args };
 	}
-	
+
 	return null;
 };
 
@@ -47,5 +47,20 @@ function sleep(time: number) {
 	});
 }
 
+function isValidHttpUrl(str: string) {
+	// For local mock server when running tests
+	if (str.startsWith("http://localhost") || str.startsWith("https://localhost")) return true;
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep };
+	const pattern = new RegExp(
+		"^(https?:\\/\\/)?" + // protocol
+			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+			"(\\#[-a-z\\d_]*)?$",
+		"i",
+	); // fragment locator
+	return !!pattern.test(str);
+}
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl };

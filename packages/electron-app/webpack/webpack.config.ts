@@ -13,7 +13,9 @@ const extensionConfig = process.env.DO_NOT_BUILD_EXTENSION !== "undefined" ? req
 
 // Remove output directory
 const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/");
-fs.rmdirSync(OUTPUT_DIR, { force: true, recursive: true });
+if (fs.existsSync(OUTPUT_DIR)) {
+	fs.rmdirSync(OUTPUT_DIR, { force: true, recursive: true });
+}
 
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
@@ -104,7 +106,7 @@ const finalConfig = [
 				},
 			})
 		],
-		
+
 	},
 	{
 		...commonConfig,

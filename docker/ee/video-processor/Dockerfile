@@ -1,17 +1,28 @@
-FROM node:lts-alpine3.12
+FROM node:16.13.2-alpine3.15
 
 MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 
+WORKDIR /crusher
+
 RUN apk add --no-cache bash
+
 RUN apk add git
 
-ADD ./ ./video-processor
+RUN npm install -g pm2 webpack @ffmpeg-installer/ffmpeg
 
-WORKDIR /video-processor
+RUN npm install dotenv source-map-support
 
-RUN yarn install
+ADD ./ecosystem.config.sample.js ecosystem.config.js
+ADD ./.env.sample .env
+ADD ./ecosystem ecosystem
+ADD ./output/video-processor/ packages/video-processor
 
-EXPOSE 80
+ENV CRUSHER_ENV production
 
-ENTRYPOINT ["npm"]
-CMD ["run", "-s", "start"]
+ARG PORT=8000
+
+EXPOSE $PORT
+
+ENV FFMPEG_PATH /usr/local/lib/node_modules/@ffmpeg-installer/ffmpeg/node_modules/@ffmpeg-installer/linux-x64/ffmpeg
+
+CMD ["pm2-runtime", "ecosystem.config.js", "--only", "video-processor"]

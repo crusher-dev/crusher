@@ -13,7 +13,7 @@ import Toggle from "dyson/src/components/atoms/toggle/toggle";
 import { GithubSVG } from "@svg/social";
 import { Card } from "dyson/src/components/layouts/Card/Card";
 import { openPopup } from "@utils/common/domUtils";
-import { getGithubOAuthURL } from "@utils/core/external";
+import { getGithubOAuthURL, getGithubOAuthURLLegacy } from "@utils/core/external";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 import { useAtom } from "jotai";
 import { atomWithImmer } from "jotai/immer";
@@ -88,7 +88,7 @@ function RepoBar({ repo }) {
 		await addGithubProject(project.id, repo);
 
 		mutate(getGitIntegrations(project.id));
-	}, []);
+	}, [repo]);
 	return (
 		<div className={"flex text-13 justify-between mb-16"}>
 			<div className={"flex items-center"}>
@@ -209,7 +209,7 @@ function ProjectBox() {
 const useGithubAuthorize = () => {
 	const [, setConnectedGit] = useAtom(connectedToGitAtom);
 	const onGithubClick = (alreadAuthorized: boolean = false) => {
-		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
+		const windowRef = openPopup(getGithubOAuthURLLegacy(alreadAuthorized));
 
 		const interval = setInterval(() => {
 			const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
@@ -241,12 +241,12 @@ function ConnectionGithub() {
 			<Card
 				className={"mt-28"}
 				css={css`
-					padding: 18rem 20rem 18rem;
+					padding: 16rem 20rem 18rem;
 					background: #101215;
 				`}
 			>
 				<div
-					className={"font-cera font-700 mb-8 leading-none"}
+					className={"font-cera font-700 mb-10 leading-none"}
 					css={css`
 						font-size: 13.5rem;
 						color: white;
@@ -254,13 +254,13 @@ function ConnectionGithub() {
 				>
 					Connect a git repository
 				</div>
-				<TextBlock fontSize={12} color={"#E4E4E4"}>
-					Seamlessly create Deployments for any commits pushed to your Git repository.
+				<TextBlock fontSize={12.4} color={"#E4E4E4"}>
+					Seamless test builds for commits pushed to your repository.
 				</TextBlock>
 
-				<div className={"mt-12"}>
+				<div className={"mt-16"}>
 					<Button
-						bgColor={"tertiary"}
+						bgColor={"tertiary-white"}
 						onClick={onGithubClick.bind(this, false)}
 						css={css`
 							border-width: 0;
@@ -300,9 +300,10 @@ function LinkedRepo() {
 	const [project] = useAtom(currentProject);
 	const { data: linkedRepos } = useSWR(getGitIntegrations(project.id));
 
-	const { repoName, projectId, repoLink, _id: id } = linkedRepos.linkedRepo;
+	const { repoName, projectId, repoLink, id: id } = linkedRepos.linkedRepo;
 
 	const unlinkRepoCallback = useCallback(async () => {
+		console.log("LInked repos are", linkedRepos);
 		await unlinkRepo(projectId, id);
 		mutate(getGitIntegrations(project.id));
 	}, [linkedRepos]);
@@ -381,8 +382,23 @@ function LinkedRepo() {
 	);
 }
 
+
+const GitSVG = (props) => (
+	<svg
+		width={1034}
+		height={1034}
+		viewBox="-10 -5 1034 1034"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			fill="#ffffff4ag"
+			d="M499 228q-21 0-36 15l-73 73 92 92q17-6 34-2t29.5 16.5 16 29.5-1.5 34l88 88q17-5 34-1.5t30 16.5q18 18 18 43.5t-18 43-43.5 17.5-43.5-17q-13-14-16.5-32t3.5-35l-83-83v218q9 4 16 11 18 18 18 43.5T545 842t-43.5 18-43-18-17.5-43.5 18-43.5q8-8 20-13V522q-12-4-20-13-14-13-17.5-31.5T445 442l-90-91-240 240q-15 15-15 36.5t15 36.5l349 349q15 15 36.5 15t36.5-15l348-348q15-15 15-36.5T885 592L536 243q-15-15-37-15z"
+		/>
+	</svg>
+)
 function GitIntegration() {
-	const [connectedToGit, setConnectedGit] = useAtom(connectedToGitAtom);
+	const [connectedToGit] = useAtom(connectedToGitAtom);
 	const [project] = useAtom(currentProject);
 	const { data: linkedRepo } = useSWR(getGitIntegrations(project.id));
 
@@ -390,13 +406,16 @@ function GitIntegration() {
 	return (
 		<div className={"flex flex-col justify-between items-start mt-44 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
-				<div>
-					<Heading type={2} fontSize={"16"} className={"mb-8"}>
-						Git Integration
-					</Heading>
-					<TextBlock fontSize={12} className={""} color={"#c1c1c1"}>
-						Make sure you have selected all the configuration you want
-					</TextBlock>
+				<div className={"flex"}>
+				<GitSVG height={28} width={28}/>
+					<div className={"ml-16"}>
+						<Heading type={2} fontSize={"14"} className={"mb-8"}>
+							Git Integration
+						</Heading>
+						<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+							Integrate with Github, Gitlab to get checks with each commit
+						</TextBlock>
+					</div>
 				</div>
 			</div>
 
@@ -588,8 +607,8 @@ function SlackIntegration() {
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Slack Integration
 						</Heading>
-						<TextBlock fontSize={12.2} className={""} color={"#c1c1c1"}>
-							Make sure you have selected all the configuration you want
+						<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+							We post notifications to Slack on event trigger.
 						</TextBlock>
 					</div>
 				</div>
@@ -610,8 +629,8 @@ function SlackIntegration() {
 						`}
 					>
 						<div className="text-13">
-							<div className="flex" style={{ alignItems: "center" }}>
-								<label style={{ fontWeight: "bold" }}>Normal channel</label>
+							<div className="flex items-center">
+								<label className={"font-600"}>Post notifications to</label>
 								<div className="ml-auto" css={selectBoxCSS}>
 									<SelectBox
 										onScrollEnd={handleScrollEnd}
@@ -620,14 +639,13 @@ function SlackIntegration() {
 										values={getSlackChannelValues(slackChannels)}
 										selected={integration.normalChannel ? integration.normalChannel : null}
 										placeholder="Select a channel"
-										va
 										callback={handleChannelSelect.bind(this, "normal")}
 									/>
 								</div>
 							</div>
 
-							<div className="flex mt-20" style={{ alignItems: "center" }}>
-								<label style={{ fontWeight: "bold" }}>Alert Channel:</label>
+							<div className="flex mt-20 items-center">
+								<label className={"font-600"}>Alerts to</label>
 								<div className="ml-auto" css={selectBoxCSS}>
 									<SelectBox
 										onScrollEnd={handleScrollEnd}

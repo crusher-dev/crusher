@@ -6,7 +6,7 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ITestTable } from "@modules/resources/tests/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { QueueManager } from "@modules/queue";
-import { TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
+import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
 import { INextTestInstancesDependencies, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
@@ -25,12 +25,17 @@ class TestsRunner {
 	@Inject()
 	private queueManager: QueueManager;
 
-	async addTestRequestToQueue(payload: ITestExecutionQueuePayload, hostToReplace: string | null = null) {
-		if (hostToReplace && hostToReplace !== "null") {
-			payload.actions = this._replaceHostInEvents(payload.actions, hostToReplace);
-		}
-		const testExeuctionQueue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE);
-		return testExeuctionQueue.add(`${payload.buildId}/${payload.testInstanceId}`, { ...payload, rateLimiterKey: payload.buildId.toString() });
+	async addTestRequestToQueue(payload: any, parent: any) {
+		const flowTree = await this.queueManager.getFlowProducer().add({
+			...payload,
+			opts: {
+				parent: parent,
+			},
+		});
+
+		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parentKey", parent.queue + ":" + parent.id);
+
+		await this.queueManager.redisManager.redisClient.sadd(parent.queue + ":" + parent.id + ":dependencies", parent.queue + ":" + flowTree.job.id);
 	}
 
 	private _getNextTestInstancesDependencyArr(
@@ -54,10 +59,33 @@ class TestsRunner {
 				const urlToGo = new URL(event.payload.meta.value);
 				const newHostURL = new URL(newHost);
 				urlToGo.host = newHostURL.host;
+				urlToGo.port = newHostURL.port;
+				urlToGo.protocol = newHostURL.protocol;
 				event.payload.meta.value = urlToGo.toString();
 			}
 			return event;
 		});
+	}
+
+	private createExecutionTaskFlow(data: any, host: string | null = null) {
+		if (host && host !== "null") {
+			data.actions = this._replaceHostInEvents(data.actions, host);
+		}
+
+		return {
+			name: `${data.buildId}/${data.testInstanceId}`,
+			queueName: TEST_COMPLETE_QUEUE,
+			data: {
+				type: "process",
+			},
+			children: [
+				{
+					name: `${data.buildId}/${data.testInstanceId}`,
+					queueName: TEST_EXECUTION_QUEUE,
+					data,
+				},
+			],
+		};
 	}
 
 	private async startBuildTask(
@@ -66,10 +94,11 @@ class TestsRunner {
 		},
 	) {
 		const { testInstances } = buildTaskInfo;
+		const flowChildrens = [];
 		const addTestInstancePromiseArr = testInstances.map((testInstance) => {
 			if (!testInstance.parentTestInstanceId) {
-				return this.addTestRequestToQueue(
-					{
+				flowChildrens.push(
+					this.createExecutionTaskFlow({
 						actions: JSON.parse(testInstance.testInfo.events),
 						nextTestDependencies: this._getNextTestInstancesDependencyArr(testInstance, testInstances),
 						config: {
@@ -82,10 +111,21 @@ class TestsRunner {
 						buildTestCount: testInstances.length,
 						startingStorageState: null,
 						startingPersistentContext: null,
-					},
+					}),
 					buildTaskInfo.host,
 				);
 			}
+		});
+
+		await this.queueManager.getFlowProducer().add({
+			name: `${buildTaskInfo.buildId}/complete`,
+			queueName: TEST_COMPLETE_QUEUE,
+			data: {
+				type: "complete-build",
+				buildId: buildTaskInfo.buildId,
+				buildTestCount: testInstances.length,
+			},
+			children: flowChildrens,
 		});
 
 		await Promise.all(addTestInstancePromiseArr);

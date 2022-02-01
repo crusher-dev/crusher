@@ -24,6 +24,15 @@ module.exports = {
 			node_args: ['--max_old_space_size=200'],
 		},
 		{
+			merge_logs: true,
+			name: 'crusher-server-queue',
+			cwd: './packages/crusher-server',
+			script: 'queue.js',
+			exec_mode: 'cluster',
+			env: CRUSHER_SERVER_ENV,
+			merge_logs: true,
+		},
+		{
 			name: 'test-runner',
 			cwd: './packages/test-runner',
 			exec_mode: 'cluster',

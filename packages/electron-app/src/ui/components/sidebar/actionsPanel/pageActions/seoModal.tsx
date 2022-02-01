@@ -149,11 +149,11 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		handleClose();
 	};
 
-	if(!isOpen) return null; 
+	if(!isOpen) return null;
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
-			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />		
+			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />
 			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
 				<Conditional showIf={seoInfo === null}>
 					<span css={css`font-size: 14rem; color: #fff`}>Loading...</span>

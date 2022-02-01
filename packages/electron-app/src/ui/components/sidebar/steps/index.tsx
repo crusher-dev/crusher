@@ -8,7 +8,7 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import { MoreIcon } from "../../../icons";
+import { MoreIcon, MuteIcon } from "../../../icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { deleteRecordedSteps, markRecordedStepsOptional, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
@@ -79,6 +79,7 @@ const Step = ({
 	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
 	const dispatch = useDispatch();
 	const store = useStore();
+	const recorderState = useSelector(getRecorderState);
 
 	React.useEffect(() => {
 		setShowStepActionDropdown(false);
@@ -126,22 +127,29 @@ const Step = ({
 		}, stepIndex as any));
 	}
 
+	const finalIsRunning = recorderState.type === TRecorderState.PERFORMING_ACTIONS && isRunning;
+
 	return (
 		<div onMouseOver={() => {
 			setIsHover(true)
 		}} onMouseLeave={setIsHover.bind(this, false)} className="recorded-step" data-step-id={stepIndex} data-type={action.type} data-status={ action.status }>
-			<div css={[stepStyle, isHover && hoverStepStyle, isRunning && runningStepStyle, (isFailed) && failedStyle]}>
-				<Checkbox {...props} />
+			<div css={[stepStyle, isHover && hoverStepStyle, finalIsRunning && runningStepStyle, (isFailed) && failedStyle]}>
+				<div className="flex flex-col">
+					<Checkbox {...props} />
+					<Conditional showIf={ action.payload.isOptional }>
+						<MuteIcon css={css`height: 9rem; margin-top: 6rem;`} />
+					</Conditional>
+				</div>
  				<div css={stepTextStyle}>
 					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null]}>
 						{title}
 					</TextBlock>
 					<TextBlock css={stepSubtitleStyle}>{subtitle}</TextBlock>
 				</div>
-				<Conditional showIf={isRunning}>
+				<Conditional showIf={finalIsRunning}>
 					<LoadingIcon style={{width: "16rem", height: "16rem", marginLeft: "4rem"}} css={css`margin-left: auto;`}/>
 				</Conditional>
-				<Conditional showIf={isHover && (!isRunning)}>
+				<Conditional showIf={isHover && (!finalIsRunning)}>
 					<Dropdown
 							initialState={showStepActionDropdown}
                             dropdownCSS={dropdownStyle}

@@ -4,6 +4,7 @@ import { iAction } from "@shared/types/action";
 import { recordStep, setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
+import { registerActionAsSavedStep } from "./perform";
 
 function getLastRecordedStep(store: Store<unknown, AnyAction>) {
     const steps = getSavedSteps(store.getState() as any);
@@ -11,14 +12,7 @@ function getLastRecordedStep(store: Store<unknown, AnyAction>) {
 };
 
 function handleWaitForNavigation(action: iAction, store: Store<unknown, AnyAction>) {
-    const lastRecordedStep = getLastRecordedStep(store);
-    if(lastRecordedStep.step.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
-        // store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
-    } else {
-        if(lastRecordedStep.step.type !== ActionsInTestEnum.NAVIGATE_URL) {
-            store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
-        }
-    }
+    registerActionAsSavedStep(action);
 }
 
 function handleInputElement(action: iAction, store: Store<unknown, AnyAction>) {
@@ -38,7 +32,7 @@ function handlePageElementScroll(action: iAction, store: Store<unknown, AnyActio
         store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
     } else {
         action.payload.meta.value = [action.payload.meta.value];
-        store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED)); 
+        store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
     }
 }
 

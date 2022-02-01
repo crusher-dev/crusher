@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session } from "electron";
+import { app, BrowserWindow, ipcMain, session, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import * as path from "path";
 import { APP_NAME } from "../../config/about";
@@ -23,7 +23,7 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getSavedSteps } from "../store/selectors/recorder";
+import { getRecorderState, getSavedSteps } from "../store/selectors/recorder";
 import { CrusherTests } from "../lib/tests";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
@@ -43,10 +43,14 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 1600;
-	private minHeight = 900;
+	private minWidth = 1000;
+	private minHeight = 600;
 
 	private shouldMaximizeOnShow = false;
+
+	public getWebContents() {
+		return this.window.webContents;
+	}
 
 	public constructor(store: Store<unknown, AnyAction>) {
 		const savedWindowState = windowStateKeeper({
@@ -121,6 +125,11 @@ export class AppWindow {
 		});
 
 		this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
+		this.window.webContents.on("will-attach-webview", (event, webContents) => {
+			(webContents as any).disablePopups = false;
+			console.log("Web contents of webview", webContents);
+			return webContents;
+		});
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
 			this._rendererReadyTime = readyTime;
@@ -135,6 +144,7 @@ export class AppWindow {
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
+		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
 		ipcMain.handle("go-back-page", this.handleGoBackPage.bind(this));
 		ipcMain.handle("reload-page", this.handleReloadPage.bind(this));
 		ipcMain.handle("get-page-seo-info", this.handleGetPageSeoInfo.bind(this));
@@ -149,6 +159,33 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private getLastRecordedStep(store: Store<unknown, AnyAction>) {
+		const steps = getSavedSteps(store.getState() as any);
+		for (let i = steps.length - 1; i >= 0; i--) {
+			// Scrolls might happen during internal navigation, so ignore them
+			if (![ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(steps[i].type)) {
+				return { step: steps[i], index: i };
+			}
+		}
+
+		return null;
+	}
+
+	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
+		const { action } = payload;
+		if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
+			const lastRecordedStep = this.getLastRecordedStep(this.store);
+			if (!lastRecordedStep) return;
+			if (lastRecordedStep.step.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
+				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
+			} else {
+				if (lastRecordedStep.step.type !== ActionsInTestEnum.NAVIGATE_URL) {
+					this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+				}
+			}
+		}
 	}
 
 	async continueRemainingSteps() {
@@ -202,6 +239,10 @@ export class AppWindow {
 					}, {});
 			})) as iSeoMetaInformationMeta,
 		};
+	}
+
+	getRecorderState() {
+		return getRecorderState(this.store.getState() as any);
 	}
 
 	async handleGoBackPage() {
@@ -265,11 +306,10 @@ export class AppWindow {
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
-		this.resetRecorder();
+		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testSteps = await CrusherTests.getTest(`${payload.testId}`, appSettings.backendEndPoint);
 
-		await this.resetRecorder();
 		this.handleReplayTestSteps(testSteps);
 	}
 
@@ -347,6 +387,7 @@ export class AppWindow {
 
 	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean }) {
 		const { action, shouldNotSave } = payload;
+		console.log("Handle perform action called", payload);
 		try {
 			switch (action.type) {
 				case ActionsInTestEnum.SET_DEVICE: {
@@ -372,7 +413,23 @@ export class AppWindow {
 				}
 				case ActionsInTestEnum.RUN_AFTER_TEST: {
 					await this.resetRecorder();
-					await this.handleRunAfterTest(action);
+					this.store.dispatch(
+						updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }),
+					);
+					await this.handleRunAfterTest(action, true);
+					await this.handlePerformAction(null, {
+						action: {
+							type: ActionsInTestEnum.NAVIGATE_URL,
+							payload: {
+								selectors: [],
+								meta: {
+									value: this.webView.webContents.getURL(),
+								},
+							},
+						},
+						shouldNotSave: false,
+					});
+					this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 					break;
 				}
 				case ActionsInTestEnum.RELOAD_PAGE: {
@@ -400,15 +457,14 @@ export class AppWindow {
 		await this.clearWebViewStorage();
 	}
 
-	private async handleRunAfterTest(action: iAction) {
-		this.store.dispatch(
-			updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }),
-		);
+	private async handleRunAfterTest(action: iAction, shouldRecordSetDevice = false) {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		try {
+			const testSteps = await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint);
+
 			const replayableTestSteps = await CrusherTests.getReplayableTestActions(
-				await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint),
+				testSteps,
 				true,
 				appSettings.backendEndPoint,
 			);
@@ -416,7 +472,7 @@ export class AppWindow {
 
 			for (const browserAction of browserActions) {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
-					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: shouldRecordSetDevice ? false : true });
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
@@ -433,7 +489,8 @@ export class AppWindow {
 			action.status = ActionStatusEnum.COMPLETED as any;
 			const savedSteps = getSavedSteps(this.store.getState() as any);
 			this.store.dispatch(updateRecordedStep(action, savedSteps.length - 1));
-			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+
+			return testSteps;
 		} catch (e) {
 			action.status = ActionStatusEnum.FAILED as any;
 

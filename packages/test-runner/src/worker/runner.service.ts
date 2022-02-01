@@ -42,7 +42,7 @@ export class CodeRunnerService {
 			videoSavePath: `/tmp/crusher/${identifer}`,
 			defaultBrowserLaunchOptions: {
 				headless: true,
-				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-shm-usage", "--disable-gpu"],
+				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-dev-shm-usage", "--disable-gpu"],
 				executablePath: isOpenSource() ? process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH : undefined,
 			},
 			persistentContextDir: persistentContextDir,

@@ -92,7 +92,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<SelectBox isSearchable={true} css={css`input {outline: none;} .selectBox { padding: 14rem; height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 160rem;`} size={"large"} selected={[selectedOption]} values={fieldOptions} callback={handleOnFieldChange} />
+			<SelectBox isSearchable={true} css={css`input {outline: none; width: 80%; } .selectBox { height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 160rem;`} size={"large"} selected={[selectedOption]} values={fieldOptions} callback={handleOnFieldChange} />
 		)
 	};
 
@@ -115,7 +115,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<SelectBox isSearchable={true} css={css`input{ outline: none } .selectBox { padding: 14rem; height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 100%;`} size={"large"} selected={[selectedOption]} values={operationOptions} callback={handleOnOperationChange} />
+			<SelectBox isSearchable={true} css={css`input{ outline: none; width: 80%; } .selectBox {height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 100%;`} size={"large"} selected={[selectedOption]} values={operationOptions} callback={handleOnOperationChange} />
 		)
 	};
 
@@ -173,7 +173,7 @@ const containerStyle = {
 	borderSpacing: "0 0.75rem",
 	marginBottom: "20rem",
 	maxHeight: "400rem",
-	overflowY: "overlay",
+	overflow: "overlay",
 };
 
 const inputTableItemFieldContainerStyle = {

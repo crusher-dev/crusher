@@ -9,6 +9,9 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { redirectUserOnMount } from "@utils/routing";
 
 import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
+import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
+import { resolvePathToBackendURI } from "@utils/common/url";
+import { RequestMethod } from "@types/RequestOptions";
 
 /*
 	Two scenarios to check for
@@ -23,6 +26,7 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 	const [, selectInitialProject] = useAtom(selectInitialProjectMutator);
 
 	const [dataLoaded, setDataLoaded] = useState(false);
+	const [loginKey, setLoginKey] = useAtom(cliLoginUserKeyAtom);
 
 	useEffect(() => {
 		(async () => {
@@ -36,6 +40,10 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			updateInitialData(dataToConsider);
 			selectInitialProject(dataToConsider);
 
+			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
+				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => { });
+				setLoginKey(null);
+			}
 			await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 		})();
 	}, [userAndSystemData]);

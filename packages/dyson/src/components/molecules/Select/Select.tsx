@@ -134,18 +134,11 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 					css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
 					value={filterText}
 					className={"selectBox__input selectBox__value"}
+					placeholder={selectedText}
 				/>
 
-				<div>
-					<Conditional showIf={!filterText}>
-						<span className={"selectBox__value"} css={[selected.length && selected !== null ? selectedValueCSS : null]}>
-							{selectedText}
-						</span>
-					</Conditional>
-				</div>
-
 				<Conditional showIf={openSelectBox}>
-					<CloseSVG height={9} className={"mr-4"}></CloseSVG>
+					<CloseSVG height={9} className={"mr-1"}></CloseSVG>
 				</Conditional>
 				<Conditional showIf={!openSelectBox}>
 					<DropdownIconSVG className={"mr-4"} />
@@ -284,7 +277,7 @@ const selectedValueCSS = css`
 `;
 
 const inputBoxCSS = css`
-	position: absolute;
+	height: 100%;
 	background: transparent;
 	color: white;
 	color: #797979;

@@ -24,10 +24,9 @@ import { TeamsController } from "@modules/resources/teams/controller";
 import { ProjectMonitoringController } from "@modules/resources/projects/monitoring/controller";
 import { ProjectEnvironmentController } from "@modules/resources/projects/environments/controller";
 import { IntegrationsController } from "@modules/resources/integrations/controller";
+import { CLIController } from "@modules/resources/cli/controller";
 
 Container.set(RedisManager, new RedisManager());
-
-require("./queue");
 
 const chalk = require("chalk");
 
@@ -36,20 +35,6 @@ const expressApp = express();
 expressApp.use(ReqLogger);
 expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
-
-if (process.env.STORAGE_MODE === "local") {
-	const serveStatic = require("serve-static");
-	const finalhandler = require("finalhandler");
-	const serve = serveStatic(process.env.BASE_STORAGE_FOLDER);
-
-	const storagePort = parseInt(process.env.STORAGE_PORT, 10);
-	const server = http.createServer(function (req: any, res: any) {
-		const done = finalhandler(req, res);
-		serve(req, res, done);
-	});
-
-	server.listen(storagePort);
-}
 
 const controllersArr: any = [
 	UserController,
@@ -63,6 +48,7 @@ const controllersArr: any = [
 	ProjectMonitoringController,
 	ProjectEnvironmentController,
 	IntegrationsController,
+	CLIController,
 ];
 
 // @TODO: Look into this

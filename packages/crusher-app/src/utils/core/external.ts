@@ -15,6 +15,17 @@ const getGithubOAuthURL = (alreadyAuthorized = false) => {
 	return githubUrl.toString();
 };
 
+const getGithubOAuthURLLegacy = (alreadyAuthorized = false) => {
+
+	console.log("Public link", );
+	const githubUrl = new URL(alreadyAuthorized ? path.join(PUBLIC_LINK, "/installations/new") : "https://github.com/login/oauth/authorize");
+	githubUrl.searchParams.append("client_id", CLIENT_ID);
+	githubUrl.searchParams.append("redirect_uri", resolvePathToBackendURI("/integrations/blabla/github/actions/callback"));
+	githubUrl.searchParams.append("state", `${btoa(JSON.stringify({ type: "integration" }))}`);
+
+	return githubUrl.toString();
+};
+
 export const getGithubLoginURL = () => {
 	const url = new URL("https://github.com/login/oauth/authorize");
 	url.searchParams.append("client_id", CLIENT_ID);
@@ -23,4 +34,4 @@ export const getGithubLoginURL = () => {
 	return url.toString();
 };
 
-export { getGithubOAuthURL };
+export { getGithubOAuthURL, getGithubOAuthURLLegacy };

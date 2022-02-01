@@ -30,7 +30,7 @@ const emitter = new Emitter();
 const App = () => {
 	const store = useStore();
 	const recorderInfo = useSelector(getRecorderInfo);
-	
+
 	React.useEffect(() => {
 		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
@@ -80,18 +80,18 @@ const App = () => {
 	React.useEffect(() => {
 		var currentzoom = 1;
 		document.body.addEventListener('mousewheel', (e: any) => {
-		  if(e.ctrlKey){ 
+		  if(e.ctrlKey){
 		  const delta = e.wheelDelta / 1500
 		  zoom(delta, e)
 		  }
 		})
-		
+
 		function zoom(delta, event: any) {
 		var img = document.body;
 		var width = img.offsetWidth;
 		var height = img.offsetHeight;
-		var x = event.pageX; 
-		var y = event.pageY; 
+		var x = event.pageX;
+		var y = event.pageY;
 		var xpercent = x*100/width;
 		var ypercent = y*100/height;
 			img.style.transform = "scale("+currentzoom+")";
@@ -109,7 +109,7 @@ const App = () => {
                     <DeviceFrame css={deviceFrameContainerStyle} />
             </div>
             <Sidebar css={sidebarStyle} />
-				
+
 			<ToastSnackbar />
         </div>
 	);
@@ -270,7 +270,7 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 	if (!position || position === "custom") {
 	  return {};
 	}
-  
+
 	const width = 16;
 	const height = 12;
 	const color = "#111213";
@@ -290,7 +290,7 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 		height + spaceFromSide, // space from side
 	  [opositeSide[position]]: -height + 2
 	};
-  
+
 	return {
 	  "&::after": {
 		content: "''",
@@ -301,7 +301,7 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 	  }
 	};
   }
-  
+
 render(
 <Provider store={store}>
 	<TourProvider onClickMask={() => {}} disableDotsNavigation={true} disableKeyboardNavigation={true} showPrevNextButtons={false} disableFocusLock={true} showBadge={false} styles={{popover: (base, state) => ({

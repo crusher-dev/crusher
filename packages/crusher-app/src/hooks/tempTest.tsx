@@ -33,7 +33,7 @@ export const useSaveTemp = () => {
 		const testId = urlQuery.get("update_test_id");
 
 		const githubToken = urlQuery.get("github_token");
-		const loginKey = urlQuery.get("loginKey");
+		const loginKey = urlQuery.get("lK");
 
 		setTempTestName(tempTestName);
 		setTempTest(tempTestId);

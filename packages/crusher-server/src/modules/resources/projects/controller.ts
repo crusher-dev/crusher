@@ -16,6 +16,8 @@ class ProjectsController {
 	@Authorized()
 	@Post("/projects/actions/create")
 	async createProject(@CurrentUser({ required: true }) user, @Body() body: ICreateProjectPayload) {
+		const projectRecord = await this.projectsService.getTeamProjectByName(body.name, user.team_id);
+		if (projectRecord) return { ...projectRecord, meta: projectRecord.meta ? JSON.parse(projectRecord.meta) : null };
 		const result = await this.projectsService.createProject({
 			name: body.name,
 			teamId: user.team_id,

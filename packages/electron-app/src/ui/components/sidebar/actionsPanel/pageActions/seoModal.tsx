@@ -186,6 +186,8 @@ const linkStyle = css`
 	font-size: 13rem !important;
 	&:hover {
 		opacity: 0.9 !important;
+		text-decoration: underline;
+		text-underline-offset: 2rem;
 	}
 `;
 

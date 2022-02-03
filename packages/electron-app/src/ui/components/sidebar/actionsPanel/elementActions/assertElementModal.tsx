@@ -168,7 +168,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={handleCloseWrapper}>
-			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleCloseWrapper} />		
+			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleCloseWrapper} />
 			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
 			<AssertionFormTable
 				rowItems={validationRows}
@@ -196,6 +196,8 @@ const linkStyle = css`
 	font-size: 13rem !important;
 	&:hover {
 		opacity: 0.9 !important;
+		text-decoration: underline;
+		text-underline-offset: 2rem;
 	}
 `;
 

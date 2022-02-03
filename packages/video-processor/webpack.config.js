@@ -8,12 +8,14 @@ module.exports = {
 	target: "node",
 	entry: {
 		index: "./index.ts",
+		worker: ["./src/worker/index.ts"],
+		master: "bullmq/dist/esm/classes/master.js",
 	},
 	optimization: {
 		minimize: false,
 	},
 	output: {
-		libraryTarget: "commonjs",
+		libraryTarget: "commonjs2",
 		path: path.resolve(__dirname, "../../output/video-processor/"),
 		filename: "[name].js", // <--- Will be compiled to this single file
 	},

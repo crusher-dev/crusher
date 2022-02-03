@@ -8,6 +8,12 @@ import SignupInitial from "@ui/containers/auth/signup";
 
 function SignupPage() {
 	usePageTitle("Create account");
+	React.useEffect(() => {
+		if ((window as any).localStorage.getItem("githubToken") !== null) {
+			(window as any).localStorage.removeItem("githubToken")
+		}
+	}, []);
+
 	const [signupWithEmail, setSignupWithEmail] = React.useState(false);
 	return (
 		<React.Fragment>

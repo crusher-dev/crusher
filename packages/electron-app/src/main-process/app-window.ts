@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session, webContents } from "electron";
+import { app, BrowserWindow, ipcMain, session, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
 import * as path from "path";
 import { APP_NAME } from "../../config/about";
@@ -31,6 +31,7 @@ import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps } from "../store/selectors/app";
 import { setSessionInfoMeta } from "../store/actions/app";
+import { resolveToFrontEndPath } from "@shared/utils/url";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -292,6 +293,7 @@ export class AppWindow {
 				appSettings.backendEndPoint,
 				appSettings.frontendEndPoint,
 			);
+			await shell.openExternal(resolveToFrontEndPath("/app/tests/", appSettings.frontendEndPoint));
 			process.exit(0);
 		} else {
 			await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);
@@ -463,11 +465,7 @@ export class AppWindow {
 		try {
 			const testSteps = await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint);
 
-			const replayableTestSteps = await CrusherTests.getReplayableTestActions(
-				testSteps,
-				true,
-				appSettings.backendEndPoint,
-			);
+			const replayableTestSteps = await CrusherTests.getReplayableTestActions(testSteps, true, appSettings.backendEndPoint);
 			const browserActions = getBrowserActions(replayableTestSteps);
 
 			for (const browserAction of browserActions) {

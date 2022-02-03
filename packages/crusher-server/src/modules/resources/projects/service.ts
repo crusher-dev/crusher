@@ -33,6 +33,11 @@ class ProjectsService {
 		return this.dbManager.fetchAllRows("SELECT * FROM public.projects WHERE team_id = ?", [teamId]);
 	}
 
+	@CamelizeResponse()
+	async getTeamProjectByName(name: string, teamId: number) {
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.projects WHERE name = ? AND team_id = ?", [name, teamId]);
+	}
+
 	async createProject(payload: ICreateProjectPayload): Promise<{ insertId: number }> {
 		return this.dbManager.insert("INSERT INTO public.projects (name, team_id, meta) VALUES (?, ?, ?)", [
 			payload.name,

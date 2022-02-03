@@ -25,7 +25,7 @@ export default function configureStore(intialState: any, scope = 'main'): Store<
 	let middlewares: Array<any> = [];
 
 	// if (!isProduction()) {
-		middlewares.push(loggerMiddleware);
+		// middlewares.push(loggerMiddleware);
 	// }
 
     if (scope === 'renderer') {

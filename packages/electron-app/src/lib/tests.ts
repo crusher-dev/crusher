@@ -87,7 +87,7 @@ class CrusherTests {
 				},
 			)
 			.then(async (result) => {
-				shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`, customFrontEndPath));
+				await shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`, customFrontEndPath));
 
 				// @Note: window.open() instead of navigation though hyperlinks
 				// hangs the electron app for some reason.

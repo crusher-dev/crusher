@@ -16,7 +16,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 	}
 
 	async notifyTestStarted(message: string, meta: any) {
-		await fetch(this.getRequestUrl(`/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`), {
+		fetch(this.getRequestUrl(`/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
@@ -28,11 +28,14 @@ export class Notifier implements IRunnerLogManagerInterface {
 			.then((res) => {
 				if (res === "Successful") return true;
 				return false;
+			})
+			.catch((err) => {
+				console.error("Error", err);
 			});
 	}
 
 	async notifyTestFinished(message: string, hasFailed: boolean, meta: any) {
-		await fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`), {
+		fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
@@ -44,6 +47,9 @@ export class Notifier implements IRunnerLogManagerInterface {
 			.then((res) => {
 				if (res === "Successful") return true;
 				return false;
+			})
+			.catch((err) => {
+				console.error("Error", err);
 			});
 	}
 
@@ -64,7 +70,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 	async logStep(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta): Promise<void> {
 		console.debug(message);
 
-		await fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`), {
+		fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
@@ -76,6 +82,9 @@ export class Notifier implements IRunnerLogManagerInterface {
 			.then((res) => {
 				if (res === "Successful") return true;
 				return false;
+			})
+			.catch((err) => {
+				console.error("Error", err);
 			});
 	}
 }

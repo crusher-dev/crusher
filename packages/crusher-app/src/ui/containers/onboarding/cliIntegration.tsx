@@ -5,6 +5,7 @@ import { css } from "@emotion/react";
 import { usePageTitle } from "@hooks/seo";
 import { currentProject } from "@store/atoms/global/project";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
+import { updateMeta } from "@store/mutators/metaData";
 import { LoadingSVG } from "@svg/dashboard";
 import { CopyIconSVG } from "@svg/onboarding";
 import { RequestMethod } from "@types/RequestOptions";
@@ -13,6 +14,7 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { resolvePathToBackendURI } from "@utils/common/url";
 import { Button, Input, Text } from "dyson/src/components/atoms";
 import { useAtom } from "jotai";
+import Link from "next/link";
 import React from "react";
 
 const CopyCommandInput = ({ command }: { command: string }) => {

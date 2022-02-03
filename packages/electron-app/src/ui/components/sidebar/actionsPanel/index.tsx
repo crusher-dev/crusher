@@ -2,8 +2,8 @@ import { Conditional } from "@dyson/components/layouts";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { css } from "@emotion/react";
 import React from "react";
-import { SearchIcon } from "../../../icons";
-import { useDispatch, useSelector } from "react-redux";
+import { NavigateBackIcon, SearchIcon } from "../../../icons";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { getSelectedElement, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { PageActions } from "./pageActions";
 import { TemplateActions } from "./templatesActions";
@@ -11,69 +11,94 @@ import { ElementActions } from "./elementActions";
 import { InspectModeAction } from "./inspectModeAction";
 import { turnOffInspectMode } from "electron-app/src/ui/commands/perform";
 import { useTour } from "@reactour/tour";
+import { BrowserButton } from "../../buttons/browser.button";
+import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 
-const ActionsPanel = ({className, ...props}: {className?: any}) => {
-    const selected = useSelector(isInspectModeOn);
+const ActionsPanel = ({ className, ...props }: { className?: any }) => {
+	const selected = useSelector(isInspectModeOn);
 	const selectedElement = useSelector(getSelectedElement);
-	const {isOpen, setCurrentStep} = useTour();
-	
+	const { isOpen, setCurrentStep } = useTour();
+	const store = useStore();
+
 	const handleTurnOffInspectMode = () => {
 		turnOffInspectMode();
-	}
+	};
 
 	React.useEffect(() => {
-		if(selectedElement && isOpen) {
+		if (selectedElement && isOpen) {
 			setCurrentStep(3);
 		}
 	}, [selectedElement]);
 
-    return (
-        <div className={`${className}`} css={containerStyle}>
-				<div css={headerContainerStyle}>
-					<Text css={headerText}>Actions</Text>
-					{/* <SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} /> */}
-				</div>
-				<div className="custom-scroll" css={actionScrollContainer}>
-					<Conditional showIf={selected}>
-						<div css={selectActionContainer}>
-							<Text css={selectActionHeading}>Action required element selection</Text>
-							<Text css={selectActionText}>Select an element on left side</Text>
-							<Text onClick={handleTurnOffInspectMode} css={[selectActionCancel, hoverEffectStyle]}>
-								Cancel action
-							</Text>
-						</div>
-					</Conditional>
+	const goBack = () => {
+		store.dispatch(setSelectedElement(null));
+	};
 
-					<Conditional showIf={!selected}>
-						<Conditional showIf={!selectedElement}>
-							{/* Non-Element Actions */}
-                            <InspectModeAction/>
-                            <PageActions/>
-                            <TemplateActions/>
-						</Conditional>
-						<Conditional showIf={!!selectedElement}>
-							{/* Element Actions */}
-                            <ElementActions/>
-						</Conditional>
-					</Conditional>
-				</div>
+	return (
+		<div className={`${className}`} css={containerStyle}>
+			<div css={headerContainerStyle}>
+				<Conditional showIf={!selected && !!selectedElement}>
+					<BrowserButton
+						className={"mr-12 go-back-button"}
+						css={css`
+							background: transparent;
+						`}
+						onClick={goBack}
+					>
+						<NavigateBackIcon
+							css={css`
+								height: 18rem;
+							`}
+							disabled={false}
+						/>
+					</BrowserButton>
+				</Conditional>
+				<Text css={headerText}>Actions</Text>
+				{/* <SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} /> */}
+			</div>
+			<div className="custom-scroll" css={actionScrollContainer}>
+				<Conditional showIf={selected}>
+					<div css={selectActionContainer}>
+						<Text css={selectActionHeading}>Action required element selection</Text>
+						<Text css={selectActionText}>Select an element on left side</Text>
+						<Text onClick={handleTurnOffInspectMode} css={[selectActionCancel, hoverEffectStyle]}>
+							Cancel action
+						</Text>
+					</div>
+				</Conditional>
 
-        </div>
-    )
-}
+				<Conditional showIf={!selected}>
+					<Conditional showIf={!selectedElement}>
+						{/* Non-Element Actions */}
+						<InspectModeAction />
+						<PageActions />
+						<TemplateActions />
+					</Conditional>
+					<Conditional showIf={!!selectedElement}>
+						{/* Element Actions */}
+						<ElementActions />
+					</Conditional>
+				</Conditional>
+			</div>
+		</div>
+	);
+};
 
 const hoverEffectStyle = css`
-	:hover { opacity: 0.8 }
+	:hover {
+		opacity: 0.8;
+	}
 `;
 const containerStyle = css`
-    flex: 1;
-    display: grid;
-    overflow: hidden;
-    grid-template-rows: 62rem;
+	flex: 1;
+	display: grid;
+	overflow: hidden;
+	grid-template-rows: 62rem;
 `;
 
 const headerContainerStyle = css`
 	display: flex;
+	align-items: center;
 	padding: 18rem 26rem;
 	justify-content: space-between;
 `;
@@ -81,6 +106,7 @@ const headerContainerStyle = css`
 const headerText = css`
 	font-family: Cera Pro;
 	font-size: 15rem;
+	flex: 1;
 `;
 const actionScrollContainer = css`
 	height: 100%;
@@ -119,7 +145,5 @@ const selectActionCancel = css`
 	line-height: 16rem;
 	text-decoration-line: underline;
 `;
-
-
 
 export { ActionsPanel };

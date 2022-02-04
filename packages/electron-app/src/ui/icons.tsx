@@ -47,7 +47,7 @@ const SearchIcon = (props: any) => {
 
 const MouseIcon = (props) => {
 	return (
-		<svg width={12} height={19} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={12} height={19} viewBox={ "0 0 12 19"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M6.02 6.039c.371 0 .672-.47.672-1.049s-.301-1.048-.673-1.048c-.372 0-.673.47-.673 1.048 0 .58.301 1.049.673 1.049ZM0 9.98v2.728c.004 1.645.59 3.17 1.65 4.295a5.49 5.49 0 0 0 4.035 1.741h.653a5.5 5.5 0 0 0 4.04-1.749c1.05-1.122 1.626-2.646 1.622-4.29V9.98H0Z"
 				fill="#595268"
@@ -226,7 +226,7 @@ const BulbIcon = (props: any) => {
 
 const MoreIcon = (props: any) => {
 	return (
-		<svg width={15} height={4} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={15} height={4} viewBox={"0 0 15 4"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M1.753 0a1.752 1.752 0 100 3.505 1.752 1.752 0 100-3.505zm5.42 0a1.753 1.753 0 10-.001 3.506 1.753 1.753 0 000-3.506zm5.238 0a1.753 1.753 0 10-.002 3.505A1.753 1.753 0 0012.41 0z"
 				fill="#B8B8B8"
@@ -241,6 +241,7 @@ const CrossIcon = (props) => (
 		height={12}
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
+		viewBox={"0 0 12 12"}
 		css={css`
 			fill: #ffffff1a;
 			path {

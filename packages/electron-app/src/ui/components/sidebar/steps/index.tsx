@@ -156,7 +156,7 @@ const Step = ({
                             component={<StepActionMenu callback={handleStepActionDropdown} showDropDownCallback={setShowStepActionDropdown.bind(this)}/>}
 							callback={setShowStepActionDropdown.bind(this)}
 						>
-							<MoreIcon onClick={setShowStepActionDropdown.bind(this, true)} css={css`:hover{ opacity: 0.7; }`} />
+							<MoreIcon onClick={setShowStepActionDropdown.bind(this, true)} css={css`width: 15rem; :hover{ opacity: 0.7; }`} />
                     </Dropdown>
 				</Conditional>
 
@@ -299,7 +299,7 @@ const StepsPanel = ({className, ...props}: any) => {
                             component={<GroupActionsMenu callback={handleGrouActionSelected} showDropDownCallback={setShowGroupActionsDropDown.bind(this)}/>}
 							callback={setShowGroupActionsDropDown.bind(this)}
 						>
-                            <MoreIcon onClick={setShowGroupActionsDropDown.bind(this, true)} />
+								<MoreIcon css={css`width: 15rem;`} onClick={setShowGroupActionsDropDown.bind(this, true)} />
                         </Dropdown>
                     </div>
                 </Conditional>

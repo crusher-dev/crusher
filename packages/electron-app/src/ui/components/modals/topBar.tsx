@@ -23,7 +23,7 @@ const ModalTopBar = (props: iModalTopBarProps) => {
 				</div>
 			</div>
 			<div id="close-button" onClick={closeModal} style={closeButtonStyle}>
-				<CrossIcon color={"#ffffff1a"} />
+				<CrossIcon css={ css`width: 10rem;`} color={"#ffffff1a"} />
 			</div>
 		</div>
 	);

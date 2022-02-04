@@ -34,7 +34,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
             name: stepNameRef.current.value
         }, actionIndex));
     };
-    
+
     const handleSelectorsSave = (e) => {
         dispatch(updateRecordedStep({
             ...action,
@@ -110,7 +110,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
                 disabled={!isStepNameEditable}
             />
             </div>
-            <CrossIcon width={10} height={10} css={css`margin-left: auto; margin-top: 4rem; `} />
+            <CrossIcon css={css`width: 10rem; margin-left: auto; margin-top: 4rem; `} />
         </div>
 
         <div css={css`font-family: Gilroy; font-size: 12.8rem`} className={"p-12"}>

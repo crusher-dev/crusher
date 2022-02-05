@@ -101,33 +101,34 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 
 		this._heartBeatInterval = setInterval(sendHeartbeat, 2000) as any;
 
-		// const shutDownInterval = setInterval(async () => {
-		// 	if (Date.now() - this._lastJobPickedUpTime > 7200000 && !this._worker.isRunning()) {
-		// 		console.log("Shutting down...");
-		// 		this._worker.pause();
+		const shutDownInterval = setInterval(async () => {
+			if (Date.now() - this._lastJobPickedUpTime > 600000 && !this._worker.isRunning()) {
+				console.log("Shutting down...");
+				this._worker.pause();
 
-		// 		if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
-		// 			// Get the container metadata
-		// 			const containerMetadata = await axios.get<{ TaskARN: string }>(`${process.env.ECS_CONTAINER_METADATA_URI_V4}/task`);
-		// 			const taskId = containerMetadata.data.TaskARN;
+				if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
+					// Get the container metadata
+					const containerMetadata = await axios.get<{ TaskARN: string }>(`${process.env.ECS_CONTAINER_METADATA_URI_V4}/task`);
+					const taskId = containerMetadata.data.TaskARN;
 
-		// 			await axios
-		// 				.post<{ status: string }>(process.env.CRUSHER_SCALE_LABMDA_URL, { type: "shutDown", payload: { taskId } })
-		// 				.then((res) => {
-		// 					const { status } = res.data;
-		// 					if (status === "success") {
-		// 						process.exit(0);
-		// 					} else {
-		// 						this._worker.resume();
-		// 					}
-		// 					return;
-		// 				})
-		// 				.catch((err) => {
-		// 					this._worker.resume();
-		// 				});
-		// 		}
-		// 	}
-		// }, 60000);
+					await axios
+						.post<{ status: string }>(process.env.CRUSHER_SCALE_LABMDA_URL, { type: "shutDown", payload: { taskId } })
+						.then((res) => {
+							const { status } = res.data;
+							if (status === "success") {
+								clearInterval(shutDownInterval);
+								process.exit(0);
+							} else {
+								this._worker.resume();
+							}
+							return;
+						})
+						.catch((err) => {
+							this._worker.resume();
+						});
+				}
+			}
+		}, 60000);
 	}
 
 	private setOffNodeOffset(instanceIndexKeys: number[]) {

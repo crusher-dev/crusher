@@ -6,6 +6,7 @@ import Container from "typedi";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@crusher-shared/constants/queues";
 import * as path from "path";
 import * as fs from "fs";
+import axios from "axios";
 
 const queueManager = Container.get(QueueManager);
 
@@ -43,7 +44,39 @@ async function boot() {
 		lockDuration: 120000,
 	});
 
-	console.log("Test complete work", testCompleteWorker);
+	let _lastJobPickedUpTime = Date.now();
+	worker.on("active", (job) => {
+		_lastJobPickedUpTime = Date.now();
+	});
+
+	const shutDownInterval = setInterval(async () => {
+		if (Date.now() - _lastJobPickedUpTime > 600000 && !worker.isRunning()) {
+			console.log("Shutting down...");
+			worker.pause();
+
+			if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
+				// Get the container metadata
+				const containerMetadata = await axios.get<{ TaskARN: string }>(`${process.env.ECS_CONTAINER_METADATA_URI_V4}/task`);
+				const taskId = containerMetadata.data.TaskARN;
+
+				await axios
+					.post<{ status: string }>(process.env.CRUSHER_SCALE_LABMDA_URL, { type: "shutDown.resultProcessor", payload: { taskId } })
+					.then((res) => {
+						const { status } = res.data;
+						if (status === "success") {
+							clearInterval(shutDownInterval);
+							process.exit(0);
+						} else {
+							worker.resume();
+						}
+						return;
+					})
+					.catch((err) => {
+						worker.resume();
+					});
+			}
+		}
+	}, 60000);
 
 	worker.on("error", (err) => {
 		// log the error

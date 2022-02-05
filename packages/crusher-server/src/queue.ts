@@ -50,7 +50,7 @@ async function boot() {
 	});
 
 	const shutDownInterval = setInterval(async () => {
-		if (Date.now() - _lastJobPickedUpTime > 600000 && !worker.isRunning()) {
+		if (Date.now() - _lastJobPickedUpTime > 120000 && !worker.isRunning()) {
 			console.log("Shutting down...");
 			worker.pause();
 

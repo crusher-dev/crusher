@@ -152,3 +152,5 @@ const setupMetricsWatcher = async () => {
 		await callback();
 	}, 10000);
 };
+
+export { setupMetricsWatcher };

@@ -73,7 +73,7 @@ async function boot() {
 }
 
 async function setupInstanceHeartbeat(worker, redisClient) {
-	const _registeredInstanceNo = await this.redisManager.redisClient.incr("result_processor_instance_index");
+	const _registeredInstanceNo = await redisClient.incr("result_processor_instance_index");
 	_lastJobPickedUpTime = Date.now();
 
 	const sendHeartbeat = () => {

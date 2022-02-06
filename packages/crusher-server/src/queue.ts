@@ -29,16 +29,18 @@ function getTestCompleteWoker() {
 	}
 }
 
-const _bootAfterNJobsOffset = Number.MAX_SAFE_INTEGER;
+let _bootAfterNJobsOffset = Number.MAX_SAFE_INTEGER;
 const TEST_PER_INSTANCE = 10;
 let _lastJobPickedUpTime = Date.now();
+let _registeredInstanceNo = undefined;
+
 function getBootAfterNJobsOffset() {
 	return _bootAfterNJobsOffset;
 }
 
 function setOffNodeOffset(instanceIndexKeys: number[]) {
-	const orderedInstanceNo = instanceIndexKeys.sort().findIndex((key) => key === this._registeredInstanceNo);
-	this._bootAfterNJobsOffset = orderedInstanceNo * TEST_PER_INSTANCE;
+	const orderedInstanceNo = instanceIndexKeys.sort().findIndex((key) => key === _registeredInstanceNo);
+	_bootAfterNJobsOffset = orderedInstanceNo * TEST_PER_INSTANCE;
 }
 async function boot() {
 	await queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
@@ -73,7 +75,7 @@ async function boot() {
 }
 
 async function setupInstanceHeartbeat(worker, redisClient) {
-	const _registeredInstanceNo = await redisClient.incr("result_processor_instance_index");
+	 _registeredInstanceNo = await redisClient.incr("result_processor_instance_index");
 	_lastJobPickedUpTime = Date.now();
 
 	const sendHeartbeat = () => {
@@ -100,7 +102,7 @@ async function setupInstanceHeartbeat(worker, redisClient) {
 	};
 
 	sendHeartbeat();
-	this._heartBeatInterval = setInterval(sendHeartbeat, 10000) as any;
+	const _heartBeatInterval = setInterval(sendHeartbeat, 10000) as any;
 
 	const shutDownInterval = setInterval(async () => {
 		if (Date.now() - _lastJobPickedUpTime > 120000 && !worker.isRunning()) {

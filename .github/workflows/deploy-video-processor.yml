@@ -82,4 +82,4 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: crusher-testing
           cluster: crusher-video-processor
-          wait-for-service-stability: true
+          wait-for-service-stability: false

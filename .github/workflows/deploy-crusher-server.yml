@@ -79,3 +79,23 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --file docker/ee/crusher-server/Dockerfile --build-arg PORT=80 --build-arg REDIS_HOST=$REDIS_HOST --build-arg REDIS_PASSWORD=$REDIS_PASSWORD --build-arg REDIS_PORT=$REDIS_PORT
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition TestCompleteProcessorV1 --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: TaskResultProcessor
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: crusher-test-result-processor
+          cluster: crusher-test-runner
+          wait-for-service-stability: false

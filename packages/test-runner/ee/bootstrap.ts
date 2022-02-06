@@ -32,8 +32,6 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 	}
 
 	async boot() {
-		this.setupInstanceHeartbeat();
-
 		const queue = await this.queueManager.setupQueue(TEST_EXECUTION_QUEUE, {
 			limiter: {
 				max: 2,
@@ -66,6 +64,8 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		this._worker.on("active", (job) => {
 			this._lastJobPickedUpTime = Date.now();
 		});
+
+		await this.setupInstanceHeartbeat();
 		console.log("Booted up test runner...");
 	}
 

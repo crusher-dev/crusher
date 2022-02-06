@@ -79,12 +79,12 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		const sendHeartbeat = () => {
 			const client = this.redisManager.redisClient;
 			return client
-				.set(`instance:${this._registeredInstanceNo}`, this._registeredInstanceNo, "ex", 60)
+				.set(`test_runner_instance:${this._registeredInstanceNo}`, this._registeredInstanceNo, "ex", 60)
 				.catch((err) => {
 					console.error(`Failed to set heartbeat key for ${this._registeredInstanceNo}`);
 					console.error(err);
 				})
-				.then(() => client.keys("instance:*"))
+				.then(() => client.keys("test_runner_instance:*"))
 				.catch((err) => {
 					console.error(`Failed to get all instance keys`);
 					console.error(err);
@@ -104,7 +104,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		const shutDownInterval = setInterval(async () => {
 			if (Date.now() - this._lastJobPickedUpTime > 120000 && !this._worker.isRunning()) {
 				console.log("Shutting down...");
-				this._worker.pause();
+				await this._worker.pause();
 
 				if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
 					// Get the container metadata
@@ -125,6 +125,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 						})
 						.catch((err) => {
 							this._worker.resume();
+							console.error("Recieved error while shutting down", err);
 						});
 				}
 			}

@@ -14,6 +14,10 @@ class StorageManager implements IStorageManager {
 		this.client = setupStorage(STORAGE_MODE as any, STORAGE_PORT, BASE_STORAGE_FOLDER);
 	}
 
+	async getUrl(destination: string) {
+		return this.client.getUrl(destination);
+	}
+
 	uploadBuffer(buffer: Buffer, destionation: string): Promise<string> {
 		return this.client.uploadBuffer(buffer, destionation);
 	}

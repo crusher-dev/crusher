@@ -43,8 +43,15 @@ class LocalServer {
 		});
 
 		this.server.route("/upload").post((req, res) => this.uploadFile(req, res));
+		this.server.route("/get.url").post((req, res) => this.getUrl(req, res));
+
 		this.server.route("/remove").post((req, res) => this.removeFile(req, res));
 		this.server.use(serve);
+	}
+
+	getUrl(req, res) {
+		const { destination } = req.body;
+		res.send(url.resolve(SERVER_PROXY.toString(), `${this.bucketName}/${destination}`));
 	}
 
 	removeFile(req, res) {

@@ -45,7 +45,10 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 
 		createTmpAssetsDirectoriesIfNotThere(identifier);
 		if (bullJob.data.startingPersistentContext) {
-			console.log(await downloadUsingAxiosAndUnzip(bullJob.data.startingPersistentContext, persistentContextDir + ".zip"), persistentContextDir);
+			console.log(
+				await downloadUsingAxiosAndUnzip(await storageManager.getUrl(bullJob.data.startingPersistentContext), persistentContextDir + ".zip"),
+				persistentContextDir,
+			);
 		}
 
 		const codeRunnerService = new CodeRunnerService(
@@ -102,4 +105,4 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		console.error(err);
 	}
 	return {};
-}
+};

@@ -21,6 +21,7 @@ import * as path from "path";
 import { IVisualDiffResult } from "@modules/visualDiff/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 import { ProjectsService } from "@modules/resources/projects/service";
+import { StorageManager } from "@modules/storage";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
 const DIFF_DELTA_PASS_THRESHOLD = 0.25;
@@ -39,6 +40,9 @@ class BuildTestInstancesService {
 
 	@Inject()
 	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
+
+	@Inject()
+	private storageManager: StorageManager;
 
 	async markRunning(instanceId: number) {
 		return this.dbManager.update(`UPDATE public.test_instances SET status = ? WHERE id = ?`, [TestInstanceStatusEnum.RUNNING, instanceId]);
@@ -155,9 +159,9 @@ class BuildTestInstancesService {
 			let diffResultStatus: TestInstanceResultStatusEnum | null = null;
 			try {
 				diffResult = await this.visualDiffService.getDiffResult(
-					baseImage.value,
-					referenceImage.value,
-					path.join(assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.jpeg`),
+					await this.storageManager.getUrl(baseImage.value),
+					await this.storageManager.getUrl(referenceImage.value),
+					path.join("00_folder_7_day_expiration/", assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.jpeg`),
 				);
 			} catch (err) {
 				diffResult = {

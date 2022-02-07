@@ -13,6 +13,6 @@ export class StorageManager {
 	}
 
 	async uploadAsset(name: string, buffer: Buffer): Promise<string> {
-		return this.storageManager.uploadBuffer(buffer, path.join(this.baseAssetPath, name));
+		return this.storageManager.uploadBuffer(buffer, path.join("00_folder_7_day_expiration/", this.baseAssetPath, name));
 	}
 }

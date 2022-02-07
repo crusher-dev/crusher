@@ -28,9 +28,9 @@ export default async function (bullJob: iVideoProcessorJob) {
 	try {
 		const videoName = testInstanceId + uuidv4();
 
-		const savedVideoPath = await processRemoteRawVideoAndSave(videoRawUrl, path.join("/tmp/videos", videoName) + ".mp4");
+		const savedVideoPath = await processRemoteRawVideoAndSave(await storageManager.getUrl(videoRawUrl), path.join("/tmp/videos", videoName) + ".mp4");
 
-		const uploadedVideoUrl = await storageManager.upload(savedVideoPath, path.join(bullJob.name, "videos/video.mp4"));
+		const uploadedVideoUrl = await storageManager.upload(savedVideoPath, path.join("00_folder_7_day_expiration/", bullJob.name, "videos/video.mp4"));
 
 		const lastSecondsClipName = videoName + "_clipped";
 
@@ -40,8 +40,11 @@ export default async function (bullJob: iVideoProcessorJob) {
 			5,
 		);
 
-		const uploadedLastSecondsClipVideoUrl = await storageManager.upload(lastSecondsClipPath, path.join(bullJob.name, "videos/video_clipped.mp4"));
-		await storageManager.remove(`${buildId}/${testInstanceId}/video.mp4.raw`);
+		const uploadedLastSecondsClipVideoUrl = await storageManager.upload(
+			lastSecondsClipPath,
+			path.join("00_folder_7_day_expiration/", bullJob.name, "videos/video_clipped.mp4"),
+		);
+		await storageManager.remove(`00_temp_folder/${buildId}/${testInstanceId}/video.mp4.raw`);
 
 		await shell.rm("-rf", savedVideoPath);
 		await shell.rm("-rf", lastSecondsClipPath);

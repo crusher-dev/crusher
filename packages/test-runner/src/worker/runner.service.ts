@@ -115,7 +115,10 @@ export class CodeRunnerService {
 			if (fs.existsSync(recordedVideoRawPath)) {
 				const videoBuffer = fs.readFileSync(recordedVideoRawPath);
 				fs.unlinkSync(recordedVideoRawPath);
-				recordedRawVideoUrl = await this.storageManager.uploadBuffer(videoBuffer, path.join(codeGeneratorConfig.assetsDir, "video.mp4.raw"));
+				recordedRawVideoUrl = await this.storageManager.uploadBuffer(
+					videoBuffer,
+					path.join("00_temp_folder/", codeGeneratorConfig.assetsDir, "video.mp4.raw"),
+				);
 			}
 		}
 
@@ -128,7 +131,7 @@ export class CodeRunnerService {
 
 			persistenContextZipURL = await this.storageManager.uploadBuffer(
 				persistenContextZipBuffer,
-				path.join(codeGeneratorConfig.assetsDir, `${persistentContextDirName}.zip`),
+				path.join("00_temp_folder/", codeGeneratorConfig.assetsDir, `${persistentContextDirName}.zip`),
 			);
 		}
 

@@ -53,7 +53,7 @@ class AwsCloudStorage implements StorageManagerInterface {
 						return reject(err);
 					}
 
-					resolve(url.resolve(`https://${this.bucketName}.s3.amazonaws.com/`, destination));
+					resolve(destination);
 				},
 			);
 		});
@@ -77,6 +77,10 @@ class AwsCloudStorage implements StorageManagerInterface {
 				},
 			);
 		});
+	}
+
+	async getUrl(destionation: string) {
+		return url.resolve(`https://${this.bucketName}.s3.amazonaws.com/`, destionation);
 	}
 }
 

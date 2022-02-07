@@ -21,11 +21,15 @@ class LocalFileStorage implements StorageManagerInterface {
 			try {
 				const formData = new FormData();
 				formData.append(destination, buffer);
-				resolve(axios.post(url.resolve(this.endpoint, "/upload"), formData, { maxBodyLength: 100000000, maxContentLength: 100000000, headers: formData.getHeaders() }).then((res) => res.data));
+				resolve(axios.post(url.resolve(this.endpoint, "/upload"), formData, { maxBodyLength: 100000000, maxContentLength: 100000000, headers: formData.getHeaders() }).then((res) => destination));
 			} catch (err) {
 				reject(err);
 			}
 		});
+	}
+
+	getUrl(destination: string) {
+		return axios.post(url.resolve(this.endpoint, "/get.url"), { destination: destination }).then((res) => res.data);
 	}
 
 	upload(filePath: string, destination: string): Promise<string> {

@@ -164,6 +164,7 @@ class BuildTestInstancesService {
 					path.join("00_folder_7_day_expiration/", assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.jpeg`),
 				);
 			} catch (err) {
+				console.error("Error is", err);
 				diffResult = {
 					diffDeltaFactor: 100, // <- Ignore this
 					diffDelta: 100,

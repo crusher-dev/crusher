@@ -17,7 +17,7 @@ import { BuildReportStatusEnum, IBuildReportTable, TestInstanceResultSetConclusi
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { BuildTestInstanceScreenshotService } from "../builds/instances/screenshots.service";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-
+import { StorageManager } from "@modules/storage";
 interface TestBuildReport {
 	buildId: number;
 	buildMeta: string;
@@ -54,8 +54,15 @@ export class BuildReportService {
 	private buildTestInstanceService: BuildTestInstancesService;
 	@Inject()
 	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
+	@Inject()
+	private storageManager: StorageManager;
 
-	private getInstanceResultWithDiffComparision(
+	private async getPublicUrl(url: string) {
+		if (!url) return null;
+		return url.startsWith("http") ? url : await this.storageManager.getUrl(url);
+	}
+
+	private async getInstanceResultWithDiffComparision(
 		actionResults: Array<any>,
 		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>,
 	) {
@@ -66,34 +73,37 @@ export class BuildReportService {
 		}, {});
 
 		// @TODO: Cleanup tihs logic and use proper typescript types
-		return actionResults.map((actionResult, actionIndex) => {
-			if ([ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType)) {
-				if (!actionResult.meta || !actionResult.meta.outputs) return actionResult;
+		return await Promise.all(
+			actionResults.map(async (actionResult, actionIndex) => {
+				if (
+					[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionResult.actionType)
+				) {
+					if (!actionResult.meta || !actionResult.meta.outputs) return actionResult;
 
-				const images = actionResult.meta.outputs;
-				for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
-					const screenshotResultRecord = instanceScreenshotsRecordsMap[`${actionIndex}.${imageIndex}`];
-					if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
-						if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {
-							actionResult.status = ActionStatusEnum.MANUAL_REVIEW_REQUIRED;
-						} else if (screenshotResultRecord.status === TestInstanceResultStatusEnum.FAILED) {
-							actionResult.status = ActionStatusEnum.FAILED;
+					const images = actionResult.meta.outputs;
+					for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
+						const screenshotResultRecord = instanceScreenshotsRecordsMap[`${actionIndex}.${imageIndex}`];
+						if (actionResult.meta && actionResult.meta.outputs && actionResult.meta.outputs.length && screenshotResultRecord) {
+							if (screenshotResultRecord.status === TestInstanceResultStatusEnum.MANUAL_REVIEW_REQUIRED) {
+								actionResult.status = ActionStatusEnum.MANUAL_REVIEW_REQUIRED;
+							} else if (screenshotResultRecord.status === TestInstanceResultStatusEnum.FAILED) {
+								actionResult.status = ActionStatusEnum.FAILED;
+							}
+							actionResult.meta.outputs[imageIndex].status = screenshotResultRecord.status;
+
+							actionResult.meta.outputs[imageIndex].value = await this.getPublicUrl(screenshotResultRecord.currentScreenshotUrl);
+							actionResult.meta.outputs[imageIndex].diffImageUrl = await this.getPublicUrl(screenshotResultRecord.diffImageUrl);
+							actionResult.meta.outputs[imageIndex].targetScreenshotUrl = await this.getPublicUrl(screenshotResultRecord.targetScreenshotUrl);
+							actionResult.meta.outputs[imageIndex].diffDelta = screenshotResultRecord.diffDelta;
+							actionResult.meta.outputs[imageIndex].index = `${actionIndex}.${imageIndex}`;
 						}
-						actionResult.meta.outputs[imageIndex].status = screenshotResultRecord.status;
-
-						actionResult.meta.outputs[imageIndex].value = screenshotResultRecord.currentScreenshotUrl;
-						actionResult.meta.outputs[imageIndex].diffImageUrl = screenshotResultRecord.diffImageUrl;
-						actionResult.meta.outputs[imageIndex].targetScreenshotUrl = screenshotResultRecord.targetScreenshotUrl;
-						actionResult.meta.outputs[imageIndex].diffDelta = screenshotResultRecord.diffDelta;
-						actionResult.meta.outputs[imageIndex].index = `${actionIndex}.${imageIndex}`;
 					}
 				}
-			}
 
-			return actionResult;
-		});
+				return actionResult;
+			}),
+		);
 	}
-
 
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
 		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
@@ -110,7 +120,7 @@ export class BuildReportService {
 				const instanceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshotResultWithActionIndex(reportData.testResultSetId);
 
 				const finalInstanceResult = instanceResult
-					? this.getInstanceResultWithDiffComparision(instanceResult.actionsResult, instanceScreenshots)
+					? await this.getInstanceResultWithDiffComparision(instanceResult.actionsResult, instanceScreenshots)
 					: null;
 
 				return {
@@ -123,35 +133,41 @@ export class BuildReportService {
 		const testsWithReportDataAndActionResults = await Promise.all(testsWithReportDataAndActionResultsPromises);
 
 		// If no test data is available, testBuildReportId would be null as per the LEFT JOIN
-		const testsMap = testsWithReportDataAndActionResults
-			.filter((testReportData) => !!testReportData.testId)
-			.reduce((prev: any, current) => {
-				const testInstance = {
-					id: current.testInstanceId,
-					verboseStatus: current.testResultStatus,
-					status: current.testResultConclusion,
-					config: {
-						browser: current.testInstanceBrowser,
-					},
-					// @TODO: Implement logic for this
-					output: {
-						video: current.recordedVideoUrl,
-					},
-					steps: current.actionsResult,
-				};
+		const testMapArr = await Promise.all(
+			testsWithReportDataAndActionResults
+				.filter((testReportData) => !!testReportData.testId)
+				.map(async (instance) => ({
+					...instance,
+					recordedVideoUrl: await this.getPublicUrl(instance.recordedVideoUrl),
+				})),
+		);
+		const testsMap = testMapArr.reduce((prev: any, current) => {
+			const testInstance = {
+				id: current.testInstanceId,
+				verboseStatus: current.testResultStatus,
+				status: current.testResultConclusion,
+				config: {
+					browser: current.testInstanceBrowser,
+				},
+				// @TODO: Implement logic for this
+				output: {
+					video: current.recordedVideoUrl,
+				},
+				steps: current.actionsResult,
+			};
 
-				if (prev[current.testId]) {
-					prev[current.testId].testInstances.push(testInstance);
-				} else {
-					prev[current.testId] = {
-						name: current.testName,
-						// @TODO: Add this in tests table
-						meta: {},
-						testInstances: [testInstance],
-					};
-				}
-				return prev;
-			}, {});
+			if (prev[current.testId]) {
+				prev[current.testId].testInstances.push(testInstance);
+			} else {
+				prev[current.testId] = {
+					name: current.testName,
+					// @TODO: Add this in tests table
+					meta: {},
+					testInstances: [testInstance],
+				};
+			}
+			return prev;
+		}, {});
 
 		const testsArray: Array<any> = Object.values(testsMap);
 

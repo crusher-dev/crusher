@@ -13,6 +13,7 @@ import { BuildReportStatusEnum } from "../buildReports/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { IUserTable } from "../users/interface";
 import { BuildsService } from "../builds/service";
+import { StorageManager } from "@modules/storage";
 
 @Service()
 @JsonController("")
@@ -25,6 +26,8 @@ export class TestController {
 	private testRunnerService: TestsRunner;
 	@Inject()
 	private buildsService: BuildsService;
+	@Inject()
+	private storageManager: StorageManager;
 
 	@Post("/tests/actions/save.temp")
 	async saveTempTest(@Body() body: { events: Array<iAction> }) {
@@ -44,6 +47,11 @@ export class TestController {
 		return { events: result.events };
 	}
 
+	private async getPublicUrl(url: string) {
+		if (!url) return null;
+		return url.startsWith("http") ? url : await this.storageManager.getUrl(url);
+	}
+
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
@@ -52,33 +60,35 @@ export class TestController {
 		if (!params.page) params.page = 0;
 
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
-		const testsList = testsListData.list.map((testData) => {
-			const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
-			const clipVideoUrl = testData.featuredClipVideoUrl ? testData.featuredClipVideoUrl : null;
+		const testsList = await Promise.all(
+			testsListData.list.map(async (testData) => {
+				const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
+				const clipVideoUrl = testData.featuredClipVideoUrl ? testData.featuredClipVideoUrl : null;
 
-			const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
+				const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
 
-			return {
-				id: testData.id,
-				testName: testData.name,
-				tags: testData.tags,
-				runAfter: testData.run_after,
-				meta: testData.meta ? JSON.parse(testData.meta) : null,
-				createdAt: new Date(testData.createdAt).getTime(),
-				// @TODO: Remove this line
-				videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? videoUrl : null,
-				clipVideoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? clipVideoUrl : null,
-				// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
-				// @Note: Add support for taking random screenshots in case video is switched off
-				imageURL: null,
-				// @Note: Hardcoded for now, will be changed later
-				isPassing: isFirstRunCompleted ? testData.draftBuildReportStatus === BuildReportStatusEnum.PASSED : null,
-				// @Note: Hardcoded for now, will be changed later
-				firstRunCompleted: isFirstRunCompleted,
-				deleted: false,
-				draftBuildId: testData.draftJobId,
-			};
-		});
+				return {
+					id: testData.id,
+					testName: testData.name,
+					tags: testData.tags,
+					runAfter: testData.run_after,
+					meta: testData.meta ? JSON.parse(testData.meta) : null,
+					createdAt: new Date(testData.createdAt).getTime(),
+					// @TODO: Remove this line
+					videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? await this.getPublicUrl(videoUrl) : null,
+					clipVideoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? await this.getPublicUrl(clipVideoUrl) : null,
+					// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
+					// @Note: Add support for taking random screenshots in case video is switched off
+					imageURL: null,
+					// @Note: Hardcoded for now, will be changed later
+					isPassing: isFirstRunCompleted ? testData.draftBuildReportStatus === BuildReportStatusEnum.PASSED : null,
+					// @Note: Hardcoded for now, will be changed later
+					firstRunCompleted: isFirstRunCompleted,
+					deleted: false,
+					draftBuildId: testData.draftJobId,
+				};
+			}),
+		);
 
 		const availableAuthors = (await this.userService.getUsersInProject(projectId)).map((user) => {
 			return { id: user.id, name: user.name, email: user.email };
@@ -132,11 +142,7 @@ export class TestController {
 
 	@Authorized()
 	@Post("/tests/:test_id/actions/update.steps")
-	async updateTestActions(
-		@CurrentUser({ required: true }) user,
-		@Param("test_id") testId: number,
-		@Body() body: {tempTestId: string},
-	) {
+	async updateTestActions(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { tempTestId: string }) {
 		const tempTest = await this.testService.getTempTest(body.tempTestId);
 		const result = await this.testService.updateTestSteps(testId, tempTest.events);
 

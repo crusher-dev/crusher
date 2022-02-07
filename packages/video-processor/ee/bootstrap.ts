@@ -31,6 +31,8 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 	}
 
 	async boot() {
+		const workerPath = fs.existsSync(path.resolve(__dirname, "./worker.js")) ? path.resolve(__dirname, "./worker.js") : path.resolve("src/worker/index.ts");
+
 		this._worker = await this.queueManager.addWorkerForQueue(VIDEO_PROCESSOR_QUEUE, workerPath, {
 			concurrency: 4,
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -43,7 +45,6 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 
 		this.setupInstanceHeartbeat();
 
-		const workerPath = fs.existsSync(path.resolve(__dirname, "./worker.js")) ? path.resolve(__dirname, "./worker.js") : path.resolve("src/worker/index.ts");
 
 		await this.queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		await this.queueManager.setupQueueScheduler(VIDEO_PROCESSOR_QUEUE, {

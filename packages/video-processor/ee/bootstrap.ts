@@ -88,9 +88,9 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 		this._heartBeatInterval = setInterval(sendHeartbeat, 10000) as any;
 
 		const shutDownInterval = setInterval(async () => {
-			if (Date.now() - this._lastJobPickedUpTime > 120000 && (this._worker as any).processing.size === 0) {
+			if (Date.now() - this._lastJobPickedUpTime > 120000) {
 				console.log("Shutting down...");
-				await this._worker.pause();
+				await this._worker.close();
 
 				if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
 					// Get the container metadata
@@ -104,14 +104,8 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 							if (status === "success") {
 								clearInterval(shutDownInterval);
 								process.exit(0);
-							} else {
-								this._worker.resume();
 							}
 							return;
-						})
-						.catch((err) => {
-							this._worker.resume();
-							console.error("Recieved error while shutting down", err);
 						});
 				}
 			} else {

@@ -105,9 +105,9 @@ async function setupInstanceHeartbeat(worker, redisClient) {
 	const _heartBeatInterval = setInterval(sendHeartbeat, 10000) as any;
 
 	const shutDownInterval = setInterval(async () => {
-		if (Date.now() - _lastJobPickedUpTime > 120000 && (worker as any).processing.size === 0) {
+		if (Date.now() - _lastJobPickedUpTime > 120000) {
 			console.log("Shutting down...");
-			await worker.pause();
+			await worker.close();
 
 			if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
 				// Get the container metadata
@@ -120,14 +120,8 @@ async function setupInstanceHeartbeat(worker, redisClient) {
 						if (status === "success") {
 							clearInterval(shutDownInterval);
 							process.exit(0);
-						} else {
-							worker.resume();
 						}
 						return;
-					})
-					.catch((err) => {
-						worker.resume();
-						console.error("Recieved error while shutting down", err);
 					});
 			}
 		} else {

@@ -79,6 +79,12 @@ class AwsCloudStorage implements StorageManagerInterface {
 		});
 	}
 
+	async getBuffer(destination: string): Promise<Buffer> {
+		const data = await this.s3BucketService.getObject({ Bucket: this.bucketName, Key: destination }).promise();
+
+		return Buffer.from(data.Body.toString());
+	}
+
 	async getUrl(destionation: string) {
 		return url.resolve(`https://${this.bucketName}.s3.amazonaws.com/`, destionation);
 	}

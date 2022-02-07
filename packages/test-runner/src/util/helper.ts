@@ -63,15 +63,26 @@ export function zipDirectory(dir: string): Promise<Buffer> {
 	});
 }
 
-export function downloadUsingAxiosAndUnzip(buffer: Buffer, zipPath: string): Promise<boolean> {
+export function downloadUsingAxiosAndUnzip(url: string, zipPath: string): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		try {
-			fs.writeFileSync(zipPath, buffer);
-			execSync(`cd ${path.dirname(zipPath)} && unzip ${path.basename(zipPath)} -d ${path.basename(zipPath, ".zip")}`);
-			deleteFileIfThere(zipPath);
-			resolve(true);
-		} catch (err) {
-			reject(err);
-		}
+		const file = fs.createWriteStream(zipPath);
+		const request = axios.get<Stream>(url, { responseType: "stream" });
+
+		request.then(
+			(response) => {
+				response.data.pipe(file);
+				// Unzip stream
+
+				file.on("finish", () => {
+					file.close();
+					execSync(`cd ${path.dirname(zipPath)} && unzip ${path.basename(zipPath)} -d ${path.basename(zipPath, ".zip")}`);
+					deleteFileIfThere(zipPath);
+					resolve(true);
+				});
+			},
+			(error) => {
+				reject(error);
+			},
+		);
 	});
 }

@@ -46,7 +46,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		createTmpAssetsDirectoriesIfNotThere(identifier);
 		if (bullJob.data.startingPersistentContext) {
 			console.log(
-				await downloadUsingAxiosAndUnzip(await storageManager.getBuffer(bullJob.data.startingPersistentContext), persistentContextDir + ".zip"),
+				await downloadUsingAxiosAndUnzip(await storageManager.getUrl(bullJob.data.startingPersistentContext), persistentContextDir + ".zip"),
 				persistentContextDir,
 			);
 		}

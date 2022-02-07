@@ -88,7 +88,7 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 		this._heartBeatInterval = setInterval(sendHeartbeat, 10000) as any;
 
 		const shutDownInterval = setInterval(async () => {
-			if (Date.now() - this._lastJobPickedUpTime > 120000 && this._bootAfterNJobsOffset === 0) {
+			if (Date.now() - this._lastJobPickedUpTime > 120000 && this._bootAfterNJobsOffset != 0) {
 				console.log("Shutting down...");
 				await this._worker.close();
 

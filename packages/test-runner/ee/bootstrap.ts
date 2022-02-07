@@ -128,6 +128,11 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 							console.error("Recieved error while shutting down", err);
 						});
 				}
+			} else {
+				 console.log("Processing size:", (this._worker as any).processing.size);
+				 console.log("Processing map:", (this._worker as any).processing);
+				 console.log("Time gap:", Date.now() - this._lastJobPickedUpTime, this._lastJobPickedUpTime);
+				 console.log("Worker offset:", this._bootAfterNJobsOffset);
 			}
 		}, 60000);
 	}

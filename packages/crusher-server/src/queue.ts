@@ -130,6 +130,11 @@ async function setupInstanceHeartbeat(worker, redisClient) {
 						console.error("Recieved error while shutting down", err);
 					});
 			}
+		} else {
+			console.log("Processing size:", (worker as any).processing.size);
+			console.log("Processing map:", (worker as any).processing);
+			console.log("Time gap:", Date.now() - _lastJobPickedUpTime, _lastJobPickedUpTime);
+			console.log("Worker offset:", _bootAfterNJobsOffset);
 		}
 	}, 60000);
 }

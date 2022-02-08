@@ -42,7 +42,8 @@ export const ACTION_DESCRIPTIONS = {
     [ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: "Custom element script",
     [ActionsInTestEnum.CUSTOM_CODE]: "Custom code",
     [ActionsInTestEnum.RELOAD_PAGE]: "Reload page",
-    [ActionsInTestEnum.BACK_PAGE]: "Go back page",
+		[ActionsInTestEnum.BACK_PAGE]: "Go back page",
+		[ActionsInTestEnum.ASSERT_ELEMENT_VISIBILITY]: "Assert element visibility",
 }
 
 enum StepActionsEnum {

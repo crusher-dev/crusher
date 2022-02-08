@@ -4,7 +4,7 @@ import { ActionsList, ActionsListItem } from "../actionsList";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector, useStore } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
-import { peformTakeElementScreenshot, performClick, performHover } from "electron-app/src/ui/commands/perform";
+import { peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { AssertElementModal } from "./assertElementModal";
 import { useTour } from "@reactour/tour";
@@ -14,7 +14,8 @@ export enum TElementActionsEnum {
     HOVER = "HOVER",
     SCREENSHOT = "SCREENSHOT",
     SHOW_ASSERT_MODAL = "SHOW_ASSERT_MODAL",
-    SHOW_CUSTOM_SCRIPT_MODAL = "SHOW_CUSTOM_SCRIPT_MODAL"
+		SHOW_CUSTOM_SCRIPT_MODAL = "SHOW_CUSTOM_SCRIPT_MODAL",
+		ASSERT_VISIBILITY = "ASSERT_VISIBILITY",
 };
 
 const elementActionsList = [
@@ -33,6 +34,10 @@ const elementActionsList = [
 	{
 		id: TElementActionsEnum.SHOW_ASSERT_MODAL,
 		title: "Add Checks",
+	},
+	{
+		id: TElementActionsEnum.ASSERT_VISIBILITY,
+		title: "Assert visibility",
 	},
 	// {
 	// 	id: TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL,
@@ -71,6 +76,10 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 				break;
 			case TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL:
 				setCurrentModal(TElementActionsEnum.SHOW_ASSERT_MODAL);
+				break;
+			case TElementActionsEnum.ASSERT_VISIBILITY:
+				performAssertElementVisibility(selectedElement, store);
+				store.dispatch(setSelectedElement(null));
 				break;
 		}
     };

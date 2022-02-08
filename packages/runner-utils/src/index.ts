@@ -145,7 +145,6 @@ class CrusherRunnerActions {
 						let elementLocator = page.locator(crusherSelector.value);
 						let parentFrame = null;
 						if (step.payload.meta?.parentFrameSelectors) {
-							console.log("Have parent frame selectors", step.payload.meta.parentFrameSelectors);
 							const crusherParentFrameSelector = toCrusherSelectorsFormat(step.payload.meta.parentFrameSelectors);
 
 							const parentFrameElement = await page.waitForSelector(crusherParentFrameSelector.value);

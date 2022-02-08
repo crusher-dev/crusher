@@ -70,6 +70,7 @@ export class AppWindow {
 			height: savedWindowState.height,
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
+			autoHideMenuBar: true,
 			show: true,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows

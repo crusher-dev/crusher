@@ -389,6 +389,7 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
+		console.log("Click called from recorder script", event);
 		event.timestamp = Date.now();
 		if (event.which === 3) {
 			return this.onRightClick(event);
@@ -554,6 +555,8 @@ export default class EventRecording {
 	}
 
 	registerNodeListeners() {
+		console.log("Registering node listeners", window.location.href);
+
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);
 		window.addEventListener("mouseout", this.handleMouseOut, true);
@@ -563,7 +566,7 @@ export default class EventRecording {
 		window.addEventListener("input", this.handleElementInput);
 		window.addEventListener("change", this.handleElementChange);
 
-		document.body.addEventListener("pointerenter", this.handlePointerEnter, true);
+		window.addEventListener("pointerenter", this.handlePointerEnter, true);
 
 		window.addEventListener("scroll", this.handleScroll, true);
 

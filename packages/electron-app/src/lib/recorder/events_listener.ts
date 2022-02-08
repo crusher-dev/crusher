@@ -14,7 +14,8 @@ function boot() {
 		recordingOverlay.boot();
 	});
 }
+console.log("Script called", window.location.href);
 
-if (frameDepth === 0 && !window.location.href.startsWith("file://")) {
+if (!window.location.href.startsWith("file://")) {
 	boot();
 }

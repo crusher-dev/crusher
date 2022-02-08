@@ -142,7 +142,16 @@ class CrusherRunnerActions {
 						break;
 					case ActionCategoryEnum.ELEMENT:
 						const crusherSelector = toCrusherSelectorsFormat(step.payload.selectors);
-						const elementLocator = page.locator(crusherSelector.value);
+						let elementLocator = page.locator(crusherSelector.value);
+						let parentFrame = null;
+						if (step.payload.meta?.parentFrameSelectors) {
+							console.log("Have parent frame selectors", step.payload.meta.parentFrameSelectors);
+							const crusherParentFrameSelector = toCrusherSelectorsFormat(step.payload.meta.parentFrameSelectors);
+
+							const parentFrameElement = await page.waitForSelector(crusherParentFrameSelector.value);
+							parentFrame = await parentFrameElement.contentFrame();
+							elementLocator = parentFrame.locator(crusherSelector.value);
+						}
 						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
 						break;
 					default:

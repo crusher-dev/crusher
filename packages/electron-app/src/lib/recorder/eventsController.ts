@@ -13,10 +13,10 @@ export default class EventsController {
 
 	constructor(recordingOverlay: EventRecording) {
 		this.recordingOverlay = recordingOverlay;
+		(window as any).getSelectors = getSelectors;
 	}
 
 	getRelevantHoverRecordsFromSavedEvents(nodes: Array<Node>, rootElement: HTMLElement): Array<Node> {
-		console.log("Recorded events", [...this._recordedEvents], nodes);
 		if (!this._recordedEvents.length) return nodes;
 
 		const reverseRecordedEvents = this._recordedEvents.reverse().filter((a) => {
@@ -36,7 +36,6 @@ export default class EventsController {
 		}
 
 		const listTillNomatching = getListTillNoMatching(reverseRecordedEvents).reverse();
-		console.log("LIst till no mathcinbg", listTillNomatching);
 
 		const finalOut: Map<Node, Node> = new Map<Node, Node>();
 		for (const item of listTillNomatching) {

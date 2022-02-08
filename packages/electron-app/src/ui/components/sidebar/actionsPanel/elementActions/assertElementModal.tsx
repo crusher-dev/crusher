@@ -6,7 +6,7 @@ import uniqueId from "lodash/uniqueId";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
-import { recordHoverDependencies } from "electron-app/src/ui/commands/perform";
+import { recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/ui/commands/perform";
 import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { BulbIcon } from "electron-app/src/ui/icons";
@@ -52,9 +52,8 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	const validationFields = getValidationFields(elementInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
-
 	React.useEffect(() => {
-		if(isOpen) {
+		if (isOpen) {
 			ipcRenderer.invoke("get-element-assert-info", selectedElement).then((res) => {
 				setElementInfo(res);
 			});
@@ -135,19 +134,22 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		setValidationRows([...validationRows]);
 	};
 
-	const saveElementValidationAction = () => {
-		recordHoverDependencies(selectedElement, store);
-		store.dispatch(recordStep({
+	const saveElementValidationAction = async () => {
+		await recordHoverDependencies(selectedElement);
+
+		await registerActionAsSavedStep({
 			type: ActionsInTestEnum.ASSERT_ELEMENT,
 			payload: {
 				selectors: selectedElement.selectors,
 				meta: {
+					uniqueNodeId: selectedElement.uniqueElementId,
 					validations: validationRows,
 				},
 			},
-		}, ActionStatusEnum.COMPLETED));
+		});
+
 		store.dispatch(setSelectedElement(null));
-		handleCloseWrapper()
+		handleCloseWrapper();
 	};
 
 	const deleteValidationRow = (rowIndex) => {
@@ -156,37 +158,62 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	};
 
 	const handleCloseWrapper = () => {
-		if(isOnboardingOpen) {
+		if (isOnboardingOpen) {
 			setCurrentStep(4);
 		}
-		if(handleClose) {
+		if (handleClose) {
 			handleClose();
 		}
-	}
+	};
 
-	if(!isOpen) return null;
+	if (!isOpen) return null;
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={handleCloseWrapper}>
 			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleCloseWrapper} />
-			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
-			<AssertionFormTable
-				rowItems={validationRows}
-				fields={validationFields}
-				operations={validationOperations}
-				onFieldChange={updateFieldOfValidationRow}
-				onOperationChange={updateOperationOfValidationRow}
-				onValidationChange={updateValidationValueOfValidationRow}
-				deleteValidationRow={deleteValidationRow}
-			/>
-			<div style={bottomBarStyle} css={css`margin-bottom: 22rem; margin-top: 38rem;`}>
+			<div
+				css={css`
+					padding: 0rem 34rem;
+					margin-top: 8rem;
+				`}
+			>
+				<AssertionFormTable
+					rowItems={validationRows}
+					fields={validationFields}
+					operations={validationOperations}
+					onFieldChange={updateFieldOfValidationRow}
+					onOperationChange={updateOperationOfValidationRow}
+					onValidationChange={updateValidationValueOfValidationRow}
+					deleteValidationRow={deleteValidationRow}
+				/>
+				<div
+					style={bottomBarStyle}
+					css={css`
+						margin-bottom: 22rem;
+						margin-top: 38rem;
+					`}
+				>
 					<div style={formButtonStyle}>
-						<Text css={linkStyle} onClick={createNewElementAssertionRow}>Add a check</Text>
-						<Text css={[linkStyle, css`margin-left: 24rem;`]} onClick={generateDefaultChecksForPage}>Generate Checks!</Text>
+						<Text css={linkStyle} onClick={createNewElementAssertionRow}>
+							Add a check
+						</Text>
+						<Text
+							css={[
+								linkStyle,
+								css`
+									margin-left: 24rem;
+								`,
+							]}
+							onClick={generateDefaultChecksForPage}
+						>
+							Generate Checks!
+						</Text>
 					</div>
-					<Button css={buttonStyle} onClick={saveElementValidationAction}>Save</Button>
+					<Button css={buttonStyle} onClick={saveElementValidationAction}>
+						Save
+					</Button>
+				</div>
 			</div>
-		</div>
 		</Modal>
 	);
 };
@@ -201,7 +228,6 @@ const linkStyle = css`
 	}
 `;
 
-
 const buttonStyle = css`
 	font-size: 13rem;
 	border: 1px solid rgba(255, 255, 255, 0.23);
@@ -210,7 +236,7 @@ const buttonStyle = css`
 	height: 34rem;
 	padding: 4rem 8rem;
 	min-width: 100rem;
-    border: none;
+	border: none;
 `;
 const modalStyle = css`
 	width: 700rem;

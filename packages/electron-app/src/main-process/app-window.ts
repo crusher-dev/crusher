@@ -9,7 +9,7 @@ import { AnyAction, Store } from "redux";
 import { Recorder } from "./recorder";
 import { WebView } from "./webview";
 import { iAction } from "@shared/types/action";
-import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@shared/constants/recordedActions";
 import { iDevice } from "@shared/types/extension/device";
 import {
 	recordStep,
@@ -85,6 +85,7 @@ export class AppWindow {
 				contextIsolation: false,
 
 				webviewTag: true,
+				nodeIntegrationInSubFrames: true,
 				webSecurity: false,
 				nativeWindowOpen: true,
 				devTools: true,
@@ -127,6 +128,7 @@ export class AppWindow {
 
 		this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
 		this.window.webContents.on("will-attach-webview", (event, webContents) => {
+			webContents.nodeIntegrationInSubFrames = true;
 			(webContents as any).disablePopups = false;
 			console.log("Web contents of webview", webContents);
 			return webContents;
@@ -162,8 +164,12 @@ export class AppWindow {
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
 
-	private getLastRecordedStep(store: Store<unknown, AnyAction>) {
+	private getLastRecordedStep(store: Store<unknown, AnyAction>, shouldNotIgnoreScroll = false) {
 		const steps = getSavedSteps(store.getState() as any);
+		if (shouldNotIgnoreScroll) {
+			return { step: steps[steps.length - 1], index: steps.length - 1 };
+		}
+
 		for (let i = steps.length - 1; i >= 0; i--) {
 			// Scrolls might happen during internal navigation, so ignore them
 			if (![ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(steps[i].type)) {
@@ -176,6 +182,14 @@ export class AppWindow {
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
+		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
+		if (elementInfo && elementInfo.parentFrameSelectors) {
+			action.payload.meta = {
+				...(action.payload.meta || {}),
+				parentFrameSelectors: elementInfo.parentFrameSelectors,
+			};
+		}
+
 		if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
 			const lastRecordedStep = this.getLastRecordedStep(this.store);
 			if (!lastRecordedStep) return;
@@ -186,7 +200,57 @@ export class AppWindow {
 					this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 				}
 			}
+		} else if (action.type === ActionsInTestEnum.ADD_INPUT) {
+			const lastRecordedStep = this.getLastRecordedStep(this.store);
+			if (
+				lastRecordedStep.step.type === ActionsInTestEnum.ADD_INPUT &&
+				lastRecordedStep.step.payload.meta?.uniqueNodeId === action.payload.meta?.uniqueNodeId
+			) {
+				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
+			} else {
+				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			}
+		} else if ([ActionsInTestEnum.PAGE_SCROLL, ACTIONS_IN_TEST.ELEMENT_SCROLL].includes(action.type)) {
+			const lastRecordedStep = this.getLastRecordedStep(this.store, true);
+			console.log(
+				"Scroll values",
+				action.payload.meta?.uniqueNodeId,
+				lastRecordedStep.step.payload.meta?.uniqueNodeId,
+				lastRecordedStep.step.type,
+				action.type,
+			);
+			if (
+				[ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(lastRecordedStep.step.type) &&
+				action.payload.meta?.uniqueNodeId === lastRecordedStep.step.payload.meta?.uniqueNodeId
+			) {
+				action.payload.meta.value = [...lastRecordedStep.step.payload.meta.value, action.payload.meta.value];
+				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
+			} else {
+				action.payload.meta.value = [action.payload.meta.value];
+				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			}
+		} else {
+			this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 		}
+	}
+
+	reinstateElementSteps(uniqueElementId, elementInfo) {
+		const recordedSteps = getSavedSteps(this.store.getState() as any);
+		const stepsToReinstate = recordedSteps
+			.map((step, index) => ({ step, index }))
+			.filter((step) => {
+				return step.step.payload.meta?.uniqueNodeId === uniqueElementId;
+			});
+
+		stepsToReinstate.map((a) => {
+			a.step.payload.meta = {
+				...(a.step.payload.meta || {}),
+				parentFrameSelectors: elementInfo.parentFrameSelectors,
+			};
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			this.store.dispatch(updateRecordedStep(a.step, a.index));
+		});
 	}
 
 	async continueRemainingSteps() {
@@ -199,7 +263,7 @@ export class AppWindow {
 	}
 
 	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
-		const elementHandle = this.webView.playwrightInstance.getElementHandleFromUniqueId(elementInfo.uniqueElementId);
+		const elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
 			return null;
 		}
@@ -387,7 +451,7 @@ export class AppWindow {
 		await this.clearWebViewStorage();
 	}
 
-	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean }) {
+	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean }) {
 		const { action, shouldNotSave } = payload;
 		console.log("Handle perform action called", payload);
 		try {
@@ -444,6 +508,15 @@ export class AppWindow {
 				}
 				default:
 					console.log("Running this action", action);
+					if (payload.isRecording && action.payload.meta?.uniqueNodeId) {
+						const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
+						if (elementInfo && elementInfo.parentFrameSelectors) {
+							action.payload.meta = {
+								...(action.payload.meta || {}),
+								parentFrameSelectors: elementInfo.parentFrameSelectors,
+							};
+						}
+					}
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 			}

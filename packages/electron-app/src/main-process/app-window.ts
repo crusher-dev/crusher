@@ -47,7 +47,7 @@ export class AppWindow {
 	private minWidth = 1000;
 	private minHeight = 600;
 
-	private shouldMaximizeOnShow = false;
+	private shouldMaximizeOnShow = true;
 
 	public getWebContents() {
 		return this.window.webContents;

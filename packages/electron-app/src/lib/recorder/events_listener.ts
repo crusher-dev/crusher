@@ -9,6 +9,13 @@ function boot() {
 
 	(window as any).eventRecorderExecuted = true;
 
+	function clickListener(event) {
+		console.log("Shadow clicked", event.target);
+		const customEvent = new CustomEvent("shadowMouseDown", { detail: { event, element: event.target, clientX: event.clientX, clientY: event.clientY } });
+		window.dispatchEvent(customEvent);
+	}
+
+	const elementsListenerMap = {};
 	(Element.prototype as any)._attachShadow = Element.prototype.attachShadow;
 	Element.prototype.attachShadow = function (...argumentsa) {
 		const customEvent = new CustomEvent("attachShadow", { detail: { arguments: argumentsa, element: this } });
@@ -16,28 +23,12 @@ function boot() {
 		document.body.dispatchEvent(customEvent);
 		//@ts-ignore
 		const element = this;
-		console.log("Element attached to shadow", element);
-		element.shadowRoot.addEventListener(
-			"click",
-			(event) => {
-				console.log("Shadow root clicked", event.target);
-			},
-			true,
-		);
-		element.shadowRoot.addEventListener(
-			"mousedown",
-			(event) => {
-				console.log("Shadow root mousedown", event.target);
-			},
-			true,
-		);
-		element.shadowRoot.addEventListener(
-			"input",
-			() => {
-				console.log("Key pressed on this element", element);
-			},
-			true,
-		);
+		// console.log("Element attached to shadow", element);
+		if (elementsListenerMap[element]) {
+			element.shadowRoot.removeEventListener("mousedown", clickListener.bind(null), true);
+		}
+		element.shadowRoot.addEventListener("mousedown", clickListener.bind(null), true);
+		elementsListenerMap[element] = true;
 		return out;
 	};
 

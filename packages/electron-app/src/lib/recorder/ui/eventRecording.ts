@@ -418,6 +418,7 @@ export default class EventRecording {
 		// If clientX and clientY is 0 it may mean that the event is not triggered
 		// by user. Found during creating tests for ielts search
 		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
+			console.log("Saving event", event);
 			this._clickEvents.push(event);
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
@@ -581,6 +582,10 @@ export default class EventRecording {
 		window.addEventListener("keydown", this.handleKeyDown, true);
 
 		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
+		window.addEventListener("shadowMouseDown", (eventA: any) => {
+			const { event, element, clientX, clientY } = eventA.detail;
+			this.stopRightClickFocusLoose({ ...event, target: element, simulatedEvent: false, isTrusted: true, clientX, clientY });
+		});
 
 		let lastPush = Date.now();
 

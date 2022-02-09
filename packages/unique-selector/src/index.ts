@@ -43,10 +43,10 @@ class UniqueSelector {
 			throw new Error(`Can't generate CSS selector for non-element node type.`);
 		}
 
-		const idSelector = getIDSelectors(element, this._configuration.root);
-		const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
-		const geAttributesSelector = getAttribute(element, this._configuration.root);
-		const classSelectors = getPnC(element, this._configuration.root);
+		// const idSelector = getIDSelectors(element, this._configuration.root);
+		// const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
+		// const geAttributesSelector = getAttribute(element, this._configuration.root);
+		// const classSelectors = getPnC(element, this._configuration.root);
 
 		let selectors: any[] = [];
 		const playwrightSelectors = getSelectors(element);
@@ -68,7 +68,7 @@ class UniqueSelector {
 			});
 		}
 
-		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
+		// selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
 
 		// @ts-ignore

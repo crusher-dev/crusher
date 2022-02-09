@@ -339,13 +339,16 @@ export default class EventRecording {
 		const element =
 			selectedElement instanceof SVGElement && selectedElement.tagName.toLocaleLowerCase() !== "svg" ? selectedElement.ownerSVGElement : selectedElement;
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
-		const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[];
+		const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(
+			await this.getHoverDependentNodes(element),
+			element,
+		) as HTMLElement[];
 
 		const dependentHovers = hoverDependedNodes.map((node) => {
 			return {
 				uniqueElementId: ElementsIdMap.getUniqueId(node),
 				selectors: this.eventsController.getSelectors(selectedElement),
-			}
+			};
 		});
 
 		turnOnElementMode({
@@ -395,6 +398,10 @@ export default class EventRecording {
 			return this.onRightClick(event);
 		}
 		if (event.which === 2) return;
+
+		if (event.target.shadowRoot) {
+			return;
+		}
 
 		let target = event.target;
 
@@ -576,6 +583,7 @@ export default class EventRecording {
 		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
 
 		let lastPush = Date.now();
+
 		window.history.pushState = new Proxy(window.history.pushState, {
 			apply: async (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();

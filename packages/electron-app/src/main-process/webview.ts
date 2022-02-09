@@ -87,6 +87,8 @@ export class WebView {
 
 		console.log("Initialized in", this._initializeTime);
 		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });
+
+		// await _debugger.addListener()
 	}
 
 	registerIPCListeners() {
@@ -120,6 +122,8 @@ export class WebView {
 				objectId: nodeObject.object.objectId,
 			});
 		}
+
+		// console.log("Params for shadow root pushed:", method);
 	}
 
 	dispose() {

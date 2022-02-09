@@ -190,7 +190,7 @@ function bottomUpSearch(input: Element, limit: Limit, fallback?: () => Path | nu
 			}
 		}
 
-		current = current.parentElement;
+		current = current.parentElement || (current.getRootNode() ? current.getRootNode() : null);
 		i++;
 	}
 

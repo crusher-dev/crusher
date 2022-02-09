@@ -30,6 +30,7 @@ const DeviceFrame = (props: any) => {
 
 				const { channel, args } = event;
 				if (channel === "recorder-message") {
+					console.log("Event of message recieved", event);
 					const { type, payload } = args[0];
 					switch (type) {
 						case TRecorderMessagesType["Commands.recordAction"]:
@@ -66,6 +67,7 @@ const DeviceFrame = (props: any) => {
 						partition={"crusherwebview"}
 						webpreferences="nativeWindowOpen=yes"
 						allowpopups
+						nodeintegration={true}
 					/>
 				</div>
 			</Conditional>

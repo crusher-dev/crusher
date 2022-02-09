@@ -6,8 +6,10 @@ import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
 import { CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
-import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle } from "playwright";
+import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame } from "playwright";
 import { AppWindow } from "../main-process/app-window";
+import * as fs from "fs";
+import * as path from "path";
 
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
@@ -19,19 +21,19 @@ class PlaywrightInstance {
 	private _logManager: LogManagerPolyfill;
 	private _storageManager: StorageManagerPolyfill;
 	private _globalManager: GlobalManagerPolyfill;
-    private _exportsManager: ExportsManager;
+	private _exportsManager: ExportsManager;
 
-    private appWindow: AppWindow;
-    
+	private appWindow: AppWindow;
+
 	private runnerManager: CrusherRunnerActions;
 	private sdkManager: CrusherSdk;
-    private browser: Browser;
-    private browserContext: BrowserContext;
+	private browser: Browser;
+	private browserContext: BrowserContext;
 
 	/* Map to contain element handles from uniqueId saved in renderer */
-	elementsMap: Map<string, ElementHandle>;
-    page: Page;
-    
+	elementsMap: Map<string, { handle: ElementHandle; parentFrameSelectors?: Array<any> }>;
+	page: Page;
+
 	private isBusy = false;
 
 	constructor(appWindow: AppWindow) {
@@ -41,8 +43,8 @@ class PlaywrightInstance {
 		this._storageManager = new StorageManagerPolyfill();
 		this._globalManager = new GlobalManagerPolyfill();
 		this._exportsManager = new ExportsManager();
-		
-        this.runnerManager = new CrusherRunnerActions(
+
+		this.runnerManager = new CrusherRunnerActions(
 			this._logManager as any,
 			this._storageManager as any,
 			"/tmp/crusher/somedir/",
@@ -51,18 +53,18 @@ class PlaywrightInstance {
 			this.sdkManager,
 		);
 
-        this._overrideSdkActions();
+		this._overrideSdkActions();
 	}
 
-	public getElementHandleFromUniqueId(uniqueId: string) {
+	public getElementInfoFromUniqueId(uniqueId: string) {
 		return this.elementsMap.get(uniqueId);
 	}
 
-    private _overrideSdkActions() {
+	private _overrideSdkActions() {
 		CrusherSdk.prototype.reloadPage = async () => {
 			await this.page.evaluate(() => {
-                window.location.reload();
-            }, []);
+				window.location.reload();
+			}, []);
 
 			return true;
 		};
@@ -94,7 +96,7 @@ class PlaywrightInstance {
 
 			return true;
 		};
-    }
+	}
 
 	getSdkManager() {
 		return this.sdkManager;
@@ -102,8 +104,8 @@ class PlaywrightInstance {
 
 	async _getWebViewPage() {
 		const pages = await this.browserContext.pages();
-		
-        const pagesMap = await Promise.all(
+
+		const pagesMap = await Promise.all(
 			pages.map((page) => {
 				return page.url();
 			}),
@@ -121,49 +123,66 @@ class PlaywrightInstance {
 	async connect() {
 		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
-        // @TODO: Look into this
+		// @TODO: Look into this
 		this.page = await this._getWebViewPage();
 		this.sdkManager = new CrusherSdk(this.page, this._exportsManager as any, this._storageManager as any);
 
 		this.page.on("console", this._handleConsoleMessage);
 	}
 
-    /* Serves as an API to click/hover over elements through playwright */
-    private _handleConsoleMessage = async (msg: ConsoleMessage) => {
-		const messageArgs = msg.args(); 
+	/* Serves as an API to click/hover over elements through playwright */
+	private _handleConsoleMessage = async (msg: ConsoleMessage) => {
+		const messageArgs = msg.args();
 
-        const [typeObj, valueObj] = messageArgs;
-        if(!typeObj || !valueObj) return;
+		const [typeObj, valueObj] = messageArgs;
+		if (!typeObj || !valueObj) return;
 
-        const type = await typeObj.jsonValue();
-        switch(type) {
-            case "CRUSHER_HOVER_ELEMENT":
-                await (valueObj as ElementHandle).hover()
-                break;
-            case "CRUSHER_CLICK_ELEMENT":
-                await (valueObj as ElementHandle).click()
-                break;
+		const type = await typeObj.jsonValue();
+		switch (type) {
+			case "CRUSHER_HOVER_ELEMENT":
+				await (valueObj as ElementHandle).hover();
+				break;
+			case "CRUSHER_CLICK_ELEMENT":
+				await (valueObj as ElementHandle).click();
+				break;
 			case "CRUSHER_SAVE_ELEMENT_HANDLE": {
 				const uniqueElementId = messageArgs[2].toString();
 
 				const elementHandle = valueObj.asElement();
-				if(elementHandle) {
-					this.elementsMap.set(uniqueElementId, elementHandle);
+				const ownerFrame = await elementHandle.ownerFrame();
+				const parentFrame = await ownerFrame.parentFrame();
+
+				let parentFrameSelectors = null;
+				if (parentFrame) {
+					if (!(await ownerFrame.isDetached())) {
+						const ownerFrameElement = await ownerFrame.frameElement();
+						parentFrameSelectors = await parentFrame.evaluate(
+							(element) => {
+								return (window as any).getSelectors(element[0]);
+							},
+							[ownerFrameElement],
+						);
+					}
+				}
+
+				if (elementHandle) {
+					this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
+					this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
 				}
 			}
-        }
-    };
+		}
+	};
 
-	async runActions(actions: Array<iAction>, shouldNotSave: boolean = false): Promise<void> {
+	async runActions(actions: Array<iAction>, shouldNotSave = false): Promise<void> {
 		const actionsArr = getMainActions(actions);
 
-        /* Inputs can get affected if webview looses focus */
-        await this.appWindow.focusWebView();
-		
-        await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result: iActionResult) => {
-			if(!shouldNotSave) {
+		/* Inputs can get affected if webview looses focus */
+		await this.appWindow.focusWebView();
+
+		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result: iActionResult) => {
+			if (!shouldNotSave) {
 				const { status } = result;
-				switch(status) {
+				switch (status) {
 					case ActionStatusEnum.STARTED:
 						this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
 						break;
@@ -175,7 +194,7 @@ class PlaywrightInstance {
 						break;
 				}
 			}
-        });
+		});
 	}
 
 	public addInitScript(scriptPath: string) {
@@ -184,7 +203,7 @@ class PlaywrightInstance {
 		});
 	}
 
-	public dispose(){
+	public dispose() {
 		this.elementsMap.clear();
 		this.browser.close();
 	}

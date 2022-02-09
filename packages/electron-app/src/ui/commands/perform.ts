@@ -9,8 +9,8 @@ import { iElementInfo, TRecorderState } from "electron-app/src/store/reducers/re
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
 
-const performAction = async (action: iAction, shouldNotSave = false) => {
-	ipcRenderer.invoke("perform-action", { action, shouldNotSave });
+const performAction = async (action: iAction, shouldNotSave = false, isRecording = true) => {
+	ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
 const performSetDevice = async (device: iDevice) => {
@@ -45,19 +45,17 @@ const performTakePageScreenshot = async () => {
 	});
 };
 
-const recordHoverDependencies = (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
+const recordHoverDependencies = async (selectedElement: iElementInfo) => {
 	for (const depedentHover of selectedElement.dependentHovers) {
-		store.dispatch(
-			recordStep(
-				{
-					type: ActionsInTestEnum.HOVER,
-					payload: {
-						selectors: depedentHover.selectors,
-					},
+		await registerActionAsSavedStep({
+			type: ActionsInTestEnum.HOVER,
+			payload: {
+				selectors: depedentHover.selectors,
+				meta: {
+					uniqueNodeId: selectedElement.uniqueElementId,
 				},
-				ActionStatusEnum.COMPLETED,
-			),
-		);
+			},
+		});
 	}
 };
 
@@ -86,22 +84,30 @@ const saveSetDeviceIfNotThere = (device: any, store: Store<unknown, AnyAction>) 
 };
 
 const peformTakeElementScreenshot = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
-	recordHoverDependencies(selectedElement, store);
+	await recordHoverDependencies(selectedElement);
 
 	await performAction({
 		type: ActionsInTestEnum.ELEMENT_SCREENSHOT,
 		payload: {
 			selectors: selectedElement.selectors,
+			meta: {
+				uniqueNodeId: selectedElement.uniqueElementId,
+			},
 		},
 	});
 };
 
 const performClick = async (selectedElement: iElementInfo) => {
+	await recordHoverDependencies(selectedElement);
+
 	await performAction(
 		{
 			type: ActionsInTestEnum.CLICK,
 			payload: {
 				selectors: selectedElement.selectors,
+				meta: {
+					uniqueNodeId: selectedElement.uniqueElementId,
+				},
 			},
 		},
 		true,
@@ -109,12 +115,15 @@ const performClick = async (selectedElement: iElementInfo) => {
 };
 
 const performHover = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
-	recordHoverDependencies(selectedElement, store);
+	await recordHoverDependencies(selectedElement);
 
 	await performAction({
 		type: ActionsInTestEnum.HOVER,
 		payload: {
 			selectors: selectedElement.selectors,
+			meta: {
+				uniqueNodeId: selectedElement.uniqueElementId,
+			},
 		},
 	});
 };
@@ -146,17 +155,15 @@ const performCustomCode = async (code: string) => {
 };
 
 export const performAssertElementVisibility = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
-	store.dispatch(
-		recordStep(
-			{
-				type: ActionsInTestEnum.ASSERT_ELEMENT_VISIBILITY,
-				payload: {
-					selectors: selectedElement.selectors,
-				},
+	await registerActionAsSavedStep({
+		type: ActionsInTestEnum.ASSERT_ELEMENT_VISIBILITY,
+		payload: {
+			selectors: selectedElement.selectors,
+			meta: {
+				uniqueNodeId: selectedElement.uniqueElementId,
 			},
-			ActionStatusEnum.COMPLETED,
-		),
-	);
+		},
+	});
 };
 
 const performVerifyTest = async () => {

@@ -89,15 +89,12 @@ export class AppWindow {
 				webSecurity: false,
 				nativeWindowOpen: true,
 				devTools: true,
+				enablePreferredSizeMode: true,
 			},
 			acceptFirstMouse: true,
 		};
 
 		this.window = new BrowserWindow(windowOptions);
-
-		setInterval(async () => {
-			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
-		}, 100);
 	}
 
 	public load() {
@@ -115,6 +112,8 @@ export class AppWindow {
 				// this.window.webContents.openDevTools();
 			}
 
+			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
+
 			this._loadTime = now() - startLoad;
 
 			this.maybeEmitDidLoad();
@@ -131,6 +130,9 @@ export class AppWindow {
 		});
 
 		this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
+		this.window.webContents.on("preferred-size-changed", () => {
+			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
+		});
 		this.window.webContents.on("will-attach-webview", (event, webContents) => {
 			webContents.nodeIntegrationInSubFrames = true;
 			(webContents as any).disablePopups = false;
@@ -164,7 +166,7 @@ export class AppWindow {
 		this.window.on("blur", () => this.window.webContents.send("blur"));
 
 		/* Loads crusher app */
-		// this.window.webContents.setVisualZoomLevelLimits(1, 3);
+		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
 

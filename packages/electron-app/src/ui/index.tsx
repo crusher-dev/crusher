@@ -23,7 +23,7 @@ import { TRecorderState } from "../store/reducers/recorder";
 import { webFrame } from "electron";
 import { TourProvider, useTour } from "@reactour/tour";
 
-// webFrame.setVisualZoomLevelLimits(1, 3);
+webFrame.setVisualZoomLevelLimits(1, 3);
 
 const emitter = new Emitter();
 

@@ -70,7 +70,6 @@ export class AppWindow {
 			height: savedWindowState.height,
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
-			autoHideMenuBar: true,
 			show: true,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
@@ -95,6 +94,10 @@ export class AppWindow {
 		};
 
 		this.window = new BrowserWindow(windowOptions);
+
+		setInterval(async () => {
+			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
+		}, 100);
 	}
 
 	public load() {
@@ -161,7 +164,7 @@ export class AppWindow {
 		this.window.on("blur", () => this.window.webContents.send("blur"));
 
 		/* Loads crusher app */
-		this.window.webContents.setVisualZoomLevelLimits(1, 3);
+		// this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
 

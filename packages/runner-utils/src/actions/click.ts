@@ -12,7 +12,7 @@ async function clickOnElement(element: Locator, workingSelector: any, action: iA
 		await element.click({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
 	} catch (e) {
 		if (!e.message.includes("selector resolved to hidden")) throw e;
-
+		console.error("Error while clicking", e);
 		await element.dispatchEvent("click");
 	}
 }

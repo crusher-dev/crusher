@@ -7,6 +7,7 @@ import { getPnC } from "./selectors/pnc";
 import { getSelectors } from "./crusher-selector/generateSelectors";
 import { SELECTOR_TYPE } from "./constants";
 import { Evaluator } from "./crusher-selector/types";
+import { isSelectorMatch } from "./crusher-selector/selectorEngine";
 
 let evaluator: Evaluator;
 try {
@@ -68,7 +69,36 @@ class UniqueSelector {
 			});
 		}
 
-		// selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
+		// if (element.getRootNode() && element.getRootNode().host) {
+		// 	const ps = getSelectors(element.getRootNode().host);
+		// 	const parentSelectors = [
+		// 		...ps.map((selector) => {
+		// 			const uniquenessScore = this.getUniquenessScore(selector, element);
+
+		// 			return {
+		// 				type: SELECTOR_TYPE.PLAYWRIGHT,
+		// 				value: selector,
+		// 				uniquenessScore: uniquenessScore,
+		// 			};
+		// 		}),
+		// 	];
+		// 	const finalSelectors = [];
+		// 	for (const parent of parentSelectors) {
+		// 		for (const selector of selectors) {
+		// 			finalSelectors.push({
+		// 				type: SELECTOR_TYPE.PLAYWRIGHT,
+		// 				value: `${parent.value} ${selector.value}`,
+		// 				uniquenessScore: 1,
+		// 			});
+		// 		}
+		// 	}
+
+		// 	selectors = finalSelectors.filter((selector) => {
+		// 		return isSelectorMatch(selector.value, element, document.ownerDocument);
+		// 	});
+		// }
+
+		// selectors.push(...classSelectors);
 		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
 
 		// @ts-ignore

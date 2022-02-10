@@ -31,8 +31,8 @@ export function* generateSelectors(
 		const selector = buildSelectorForCues(cueSet.cues);
 
 		const isMatch = isSelectorMatch(selector, target, rectCache);
-		if (isMatch) {
-			const rankedSelector = { penalty: cueSet.penalty, selector };
+		if (isMatch && isMatch.index < 5) {
+			const rankedSelector = { penalty: cueSet.penalty, selector: isMatch.index !== 1 ? `:nth-match(${selector}, ${isMatch.index})` : selector };
 			if (selectorCache) {
 				selectorCache.set(target, rankedSelector);
 			}
@@ -46,7 +46,7 @@ export function* generateSelectors(
 	if (count < 1) yield { penalty: 1000, selector: getXpath(target) };
 }
 
-export function getSelectors(target: HTMLElement, timeout = 1000, selectorCache?: Map<HTMLElement, RankedSelector>, limitSelectors = 10): Array<string> {
+export function getSelectors(target: HTMLElement, timeout = 1000, selectorCache?: Map<HTMLElement, RankedSelector>, limitSelectors = 10000): Array<string> {
 	if (["::before", "::after"].includes(target.tagName)) {
 		target = target.parentElement;
 	}

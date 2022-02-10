@@ -148,6 +148,15 @@ function findRootDocument(rootNode: Element | Document, defaults: Options) {
 	return rootNode;
 }
 
+
+function getParentElement(target: Element) {
+	if (target.parentElement) return target.parentElement;
+
+	if (target.getRootNode() instanceof ShadowRoot) return (target.getRootNode() as ShadowRoot).host;
+
+	return null;
+}
+
 function bottomUpSearch(input: Element, limit: Limit, fallback?: () => Path | null): Path | null {
 	let path: Path | null = null;
 	const stack: Node[][] = [];
@@ -190,7 +199,7 @@ function bottomUpSearch(input: Element, limit: Limit, fallback?: () => Path | nu
 			}
 		}
 
-		current = current.parentElement;
+		current = getParentElement(current);
 		i++;
 	}
 
@@ -238,9 +247,19 @@ function penalty(path: Path): number {
 	return path.map((node) => node.penalty).reduce((acc, i) => acc + i, 0);
 }
 
+let evaluator: Evaluator;
+try {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	evaluator = require("playwright-evaluator");
+	console.log(evaluator);
+} catch (e) {
+	// this will only error on server side tests that
+	// do not require the evaluator but depend on this file
+}
+
 function unique(path: Path) {
 	try {
-		switch (rootDocument.querySelectorAll(selector(path)).length) {
+		switch (evaluator.querySelectorAll(selector(path)).length) {
 			case 0:
 				throw new Error(`Can't select any node with this selector: ${selector(path)}`);
 			case 1:

@@ -39,6 +39,14 @@ export function compareCueSet(a: CueSet, b: CueSet): number {
 	return a.valueLength - b.valueLength;
 }
 
+function getParentElement(target: Element) {
+	if (target.parentElement) return target.parentElement;
+
+	if (target.getRootNode() instanceof ShadowRoot) return (target.getRootNode() as ShadowRoot).host;
+
+	return null;
+}
+
 export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, unknown> {
 	// yield 1 target cue sets
 	let targetCues = getCues(target, 0);
@@ -58,9 +66,12 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 
 	const exactMatchOnly = requireExactMatch(target);
 
-	const descendants = target.querySelectorAll("*");
+	const descendants: Array<HTMLElement> = Array.from(target.querySelectorAll("*"));
+	if (target.shadowRoot) {
+		descendants.push(...target.shadowRoot.querySelectorAll("*"));
+	}
 	let level = 1;
-	let ancestor = target.parentElement;
+	let ancestor = getParentElement(target);
 	while (level - 1 < descendants.length || ancestor) {
 		// yield ancestor + target cue sets
 		if (ancestor) {
@@ -68,7 +79,7 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 			yield* generateRelativeCueSets({
 				exactMatchOnly,
 				// negative so it is sorted higher when combined into a selector
-				level: level * -1,
+				level: level,
 				relative: ancestor,
 				targetCues,
 				twoTargetCueSets,
@@ -88,7 +99,7 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 			});
 		}
 
-		if (ancestor) ancestor = ancestor.parentElement;
+		if (ancestor) ancestor = getParentElement(ancestor);
 		level += 1;
 	}
 }
@@ -107,12 +118,14 @@ export function* generateRelativeCueSets({
 	for (let i = 0; i < relativeCues.length; i++) {
 		const relativeCue = relativeCues[i];
 
+		const relativeCuea = buildCueSet([relativeCue]);
 		// yield 1 relative cue
-		yield buildCueSet([relativeCue]);
+		yield relativeCuea;
 
 		// yield 1 relative and 1 target cue
 		for (let j = 0; j < targetCues.length; j++) {
-			yield buildCueSet([relativeCue, targetCues[j]]);
+			const relativeCuea = buildCueSet([relativeCue, targetCues[j]]);
+			yield relativeCuea;
 		}
 
 		// yield 1 relative and 2 target cues
@@ -134,12 +147,10 @@ export function* generateRelativeCueSets({
 		}
 	}
 
-	if (!exactMatchOnly) {
-		// yield 3 relative cues
-		const threeRelativeCues = combine(relativeCues, 3);
-		for (let i = 0; i < threeRelativeCues.length; i++) {
-			yield buildCueSet(threeRelativeCues[i]);
-		}
+	// yield 3 relative cues
+	const threeRelativeCues = combine(relativeCues, 3);
+	for (let i = 0; i < threeRelativeCues.length; i++) {
+		yield buildCueSet(threeRelativeCues[i]);
 	}
 }
 

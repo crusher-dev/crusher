@@ -399,11 +399,9 @@ export default class EventRecording {
 		}
 		if (event.which === 2) return;
 
-		if (event.target.shadowRoot) {
-			return;
-		}
-
-		let target = event.target;
+		let target = event.composedPath()[0];
+		target = target instanceof HTMLSlotElement ? target.assignedNodes()[0] : target;
+		target = target.nodeType === target.TEXT_NODE ? target.parentElement : target;
 
 		const mainAnchorNode = this.checkIfElementIsAnchored(target);
 		if (mainAnchorNode) target = mainAnchorNode;
@@ -534,17 +532,18 @@ export default class EventRecording {
 
 	async handleElementInput(event: InputEvent) {
 		if (!event.isTrusted) return;
-		const inputNodeInfo = this._getInputNodeInfo(event.target as HTMLElement);
+		const target = event.composedPath()[0];
+		const inputNodeInfo = this._getInputNodeInfo(target as HTMLElement);
 		if (!inputNodeInfo || ![InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
 
-		const labelsArr = (event.target as HTMLInputElement).labels ? Array.from((event.target as HTMLInputElement).labels) : [];
+		const labelsArr = (target as HTMLInputElement).labels ? Array.from((target as HTMLInputElement).labels) : [];
 		const labelsUniqId = [];
 
 		for (const label of labelsArr) {
 			labelsUniqId.push(await this._getUniqueNodeId(label));
 		}
 
-		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, { ...inputNodeInfo, labelsUniqId });
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, target, { ...inputNodeInfo, labelsUniqId });
 	}
 
 	async handleElementChange(event: InputEvent) {
@@ -572,6 +571,7 @@ export default class EventRecording {
 		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
 		window.addEventListener("elementSelected", this.handleElementSelected);
 		window.addEventListener("input", this.handleElementInput);
+
 		window.addEventListener("change", this.handleElementChange);
 
 		window.addEventListener("pointerenter", this.handlePointerEnter, true);
@@ -582,10 +582,7 @@ export default class EventRecording {
 		window.addEventListener("keydown", this.handleKeyDown, true);
 
 		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
-		window.addEventListener("shadowMouseDown", (eventA: any) => {
-			const { event, element, clientX, clientY } = eventA.detail;
-			this.stopRightClickFocusLoose({ ...event, target: element, simulatedEvent: false, isTrusted: true, clientX, clientY });
-		});
+
 
 		let lastPush = Date.now();
 

@@ -15,12 +15,9 @@ const ALLOW_VALUE_ATTRIBUTE = {
 
 const PENALTY_MAP = {
 	alt: 10,
-	"aria-label": 5,
+	"aria-label": 0,
 	contenteditable: 10,
 	// prefer test attributes
-	"data-cy": 0,
-	"data-e2e": 0,
-	"data-qa": 0,
 	for: 5,
 	href: 15,
 	id: 8,
@@ -55,7 +52,7 @@ const SKIP_ATTRIBUTES = new Set(["class", "data-reactid"]);
  */
 export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cue[] {
 	const cues: Cue[] = [getTagCue(element, level)];
-
+	if (level >= 5) return [];
 	// For body and html, we never have more than one, so
 	// just 'tag' cue is needed and we can save some time.
 	if (["HTML", "BODY"].includes(element.tagName)) {
@@ -117,7 +114,7 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 			penalty,
 			type: isId ? "id" : "attribute",
 			value: isId
-				? `#${cssEscape(value)}`
+				? isNaN(value) ? `#${cssEscape(value)}` : `[id="${value}"]`
 				: // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				  //@ts-ignore
 				  `[${name}="${value.replaceAll('"', `\\"`)}"]`,
@@ -167,7 +164,6 @@ export const getTagCue = (element: HTMLElement, level: number): Cue => {
 	if (sameTagSiblings.length < 2) return { ...cue, value };
 
 	const nthIndex = sameTagSiblings.indexOf(element) + 1;
-	if (nthIndex === 1) return { ...cue, value };
 
 	return {
 		...cue,

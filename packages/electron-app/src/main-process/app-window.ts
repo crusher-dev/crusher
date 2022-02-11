@@ -90,6 +90,7 @@ export class AppWindow {
 				webSecurity: false,
 				nativeWindowOpen: true,
 				devTools: true,
+				enablePreferredSizeMode: true,
 			},
 			acceptFirstMouse: true,
 		};
@@ -112,6 +113,8 @@ export class AppWindow {
 				// this.window.webContents.openDevTools();
 			}
 
+			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
+
 			this._loadTime = now() - startLoad;
 
 			this.maybeEmitDidLoad();
@@ -128,6 +131,9 @@ export class AppWindow {
 		});
 
 		this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
+		this.window.webContents.on("preferred-size-changed", () => {
+			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
+		});
 		this.window.webContents.on("will-attach-webview", (event, webContents) => {
 			webContents.nodeIntegrationInSubFrames = true;
 			(webContents as any).disablePopups = false;

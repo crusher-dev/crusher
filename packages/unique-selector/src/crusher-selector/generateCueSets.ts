@@ -39,6 +39,14 @@ export function compareCueSet(a: CueSet, b: CueSet): number {
 	return a.valueLength - b.valueLength;
 }
 
+export function getParentElement(target: Element) {
+	if (target.parentElement) return target.parentElement;
+
+	if (target.getRootNode() instanceof ShadowRoot) return (target.getRootNode() as ShadowRoot).host;
+
+	return null;
+}
+
 export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, unknown> {
 	// yield 1 target cue sets
 	let targetCues = getCues(target, 0);
@@ -58,9 +66,12 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 
 	const exactMatchOnly = requireExactMatch(target);
 
-	const descendants = target.querySelectorAll("*");
+	const descendants = Array.from(target.querySelectorAll("*"));
+	if (target.shadowRoot) {
+		descendants.push(...target.shadowRoot.querySelectorAll("*"));
+	}
 	let level = 1;
-	let ancestor = target.parentElement;
+	let ancestor = getParentElement(target);
 	while (level - 1 < descendants.length || ancestor) {
 		// yield ancestor + target cue sets
 		if (ancestor) {
@@ -88,7 +99,7 @@ export function* generateCueSets(target: HTMLElement): Generator<CueSet, void, u
 			});
 		}
 
-		if (ancestor) ancestor = ancestor.parentElement;
+		if (ancestor) ancestor = getParentElement(ancestor);
 		level += 1;
 	}
 }

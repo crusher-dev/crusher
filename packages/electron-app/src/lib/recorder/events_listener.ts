@@ -9,19 +9,6 @@ function boot() {
 
 	(window as any).eventRecorderExecuted = true;
 
-	const elementsListenerMap = {};
-	(Element.prototype as any)._attachShadow = Element.prototype.attachShadow;
-	Element.prototype.attachShadow = function (...argumentsa) {
-		const customEvent = new CustomEvent("attachShadow", { detail: { arguments: argumentsa, element: this } });
-		const out = this._attachShadow(...argumentsa);
-		document.body.dispatchEvent(customEvent);
-		//@ts-ignore
-		const element = this;
-		// console.log("Element attached to shadow", element);
-		elementsListenerMap[element] = true;
-		return out;
-	};
-
 	window.addEventListener("DOMContentLoaded", () => {
 		console.log("Recording loaded");
 		const recordingOverlay = new EventRecording({});

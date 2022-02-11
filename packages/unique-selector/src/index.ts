@@ -6,7 +6,7 @@ import { getAttribute } from "./selectors/attribute";
 import { getPnC } from "./selectors/pnc";
 import { getSelectors } from "./crusher-selector/generateSelectors";
 import { SELECTOR_TYPE } from "./constants";
-import { Evaluator } from "./crusher-selector/types";
+import { Evaluator, RankedSelector } from "./crusher-selector/types";
 import { isSelectorMatch } from "./crusher-selector/selectorEngine";
 
 let evaluator: Evaluator;
@@ -25,6 +25,7 @@ try {
  */
 class UniqueSelector {
 	private _configuration: Configuration;
+	selectorCache: Map<HTMLElement, RankedSelector>;
 
 	/**
 	 * Constructor for function. Take Config
@@ -32,6 +33,7 @@ class UniqueSelector {
 	 */
 	constructor(config: UserConfiguration) {
 		this._configuration = { ...DefaultConfiguration, ...config };
+		this.selectorCache = new Map();
 	}
 
 	/**
@@ -50,7 +52,7 @@ class UniqueSelector {
 		// const classSelectors = getPnC(element, this._configuration.root);
 
 		let selectors: any[] = [];
-		const playwrightSelectors = getSelectors(element);
+		const playwrightSelectors = getSelectors(element, 500, this.selectorCache);
 
 		if (playwrightSelectors && playwrightSelectors[0].length) {
 			selectors.push(

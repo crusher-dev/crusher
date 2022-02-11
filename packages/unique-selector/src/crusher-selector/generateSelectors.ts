@@ -56,12 +56,8 @@ export function getSelectors(target: HTMLElement, timeout = 1000, selectorCache?
 	const selectors = generateSelectors(target, timeout, selectorCache);
 
 	const selectorList = [];
-	let index = 0;
 	for (const selector of selectors) {
 		// take the first one
-		if (index++ >= limitSelectors) {
-			break;
-		}
 
 		selectorList.push(selector.selector);
 	}

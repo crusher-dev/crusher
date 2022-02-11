@@ -29,6 +29,7 @@ export enum SelectorsModeEnum {
  */
 class UniqueSelector {
 	private _configuration: Configuration;
+	private selectorCache: Map<any, any>;
 
 	/**
 	 * Constructor for function. Take Config
@@ -36,6 +37,7 @@ class UniqueSelector {
 	 */
 	constructor(config: UserConfiguration) {
 		this._configuration = { ...DefaultConfiguration, ...config };
+		this.selectorCache = new Map();
 	}
 
 	/**
@@ -49,7 +51,7 @@ class UniqueSelector {
 		}
 
 		// This element is inside a shadow DOM, switch to shadow DOM mode
-		const selectorMode = !!element.getRootNode() ? SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL : SelectorsModeEnum.NORMAL;
+		const selectorMode = !!element.getRootNode() && element.getRootNode().nodeType !== element.DOCUMENT_NODE ? SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL : SelectorsModeEnum.NORMAL;
 
 		let selectors: any[] = [];
 
@@ -60,8 +62,8 @@ class UniqueSelector {
 			const classSelectors = getPnC(element, this._configuration.root);
 			selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 		}
-	
-		const playwrightSelectors = getSelectors(element);
+
+		const playwrightSelectors = getSelectors(element, 1000, selectorMode, this.selectorCache);
 
 		if (playwrightSelectors && playwrightSelectors[0].length) {
 			selectors.push(

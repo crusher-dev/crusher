@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session, shell, webContents } from "electron";
+import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, webFrameMain } from "electron";
 import windowStateKeeper from "electron-window-state";
 import * as path from "path";
 import { APP_NAME } from "../../config/about";
@@ -23,7 +23,7 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderState, getSavedSteps } from "../store/selectors/recorder";
+import { getRecorderInfo, getRecorderState, getSavedSteps } from "../store/selectors/recorder";
 import { CrusherTests } from "../lib/tests";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
@@ -32,6 +32,7 @@ import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps } from "../store/selectors/app";
 import { setSessionInfoMeta } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
+import { devices } from "../devices";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -131,12 +132,26 @@ export class AppWindow {
 		});
 
 		this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
-		this.window.webContents.on("preferred-size-changed", () => {
-			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
-		});
+
+		// @TODO: Remove this asap, this is only here as a workaround to not
+		// having proper events for webview scrolling
+		setInterval(async () => {
+			try {
+				const recorderInfo = getRecorderInfo(this.store.getState() as any);
+
+				if (recorderInfo && recorderInfo.device && recorderInfo.device.width) {
+					await this.window.webContents.executeJavaScript(
+						`if(document.querySelector('webview')){ document.querySelector('webview').setZoomFactor(document.querySelector('webview').offsetWidth / ${recorderInfo.device.width}); }`,
+					);
+				}
+				process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor * (this.webView ? this.webView.webContents.zoomFactor : 1) + "";
+			} catch (err) { }
+		}, 500);
+
 		this.window.webContents.on("will-attach-webview", (event, webContents) => {
 			webContents.nodeIntegrationInSubFrames = true;
 			(webContents as any).disablePopups = false;
+			webContents.enablePreferredSizeMode = true;
 			console.log("Web contents of webview", webContents);
 			return webContents;
 		});

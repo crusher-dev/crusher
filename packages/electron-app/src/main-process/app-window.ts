@@ -399,7 +399,8 @@ export class AppWindow {
 
 	async handleVerifyTest() {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
-		await this.resetRecorder();
+		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
+
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 	}
@@ -560,8 +561,8 @@ export class AppWindow {
 		}
 	}
 
-	private async resetRecorder() {
-		this.store.dispatch(resetRecorderState());
+	private async resetRecorder(state: TRecorderState = null) {
+		this.store.dispatch(resetRecorderState(state));
 		if (this.webView) {
 			await this.webView.webContents.loadURL("about:blank");
 		}

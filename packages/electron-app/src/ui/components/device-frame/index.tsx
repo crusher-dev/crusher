@@ -72,9 +72,6 @@ const DeviceFrame = (props: any) => {
 				</div>
 			</Conditional>
 			<InfoOverLay />
-			<Conditional showIf={recorderState.type === TRecorderState.PERFORMING_ACTIONS}>
-				<div css={runningStatusStyle}>We’re running test for you. You can’t perform actions right now.</div>
-			</Conditional>
 		</div>
 	);
 };

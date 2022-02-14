@@ -110,7 +110,7 @@ const Toolbar = (props: any) => {
     const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
-	const [isInvalidUrl, setIsInvalidUrl] = React.useState(false);
+	const [urlInputError, setUrlInputError] = React.useState({value: false, message: ""});
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfo = useSelector(getRecorderInfo);
@@ -137,11 +137,11 @@ const Toolbar = (props: any) => {
 		if(urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
 			if (!isValidHttpUrl(validUrl)) {
-				setIsInvalidUrl(true);
+				setUrlInputError({value: true, message: "Please enter a valid URL"});
 				urlInputRef.current.blur();
 				return;
 			}
-			setIsInvalidUrl(false);
+			setUrlInputError({value: false, message: ""});
 			batch(() => {
 				if(selectedDevice[0] !== recorderInfo.device?.id) {
 					// Setting the device will add webview in DOM tree
@@ -163,6 +163,9 @@ const Toolbar = (props: any) => {
 					}, 50);
 				}
 			})
+		} else {
+			setUrlInputError({ value: true, message: "" });
+			urlInputRef.current.focus();
 		}
     }, [selectedDevice, recorderInfo, currentStep, isOpen]);
 
@@ -209,15 +212,15 @@ const Toolbar = (props: any) => {
 				className={"target-site-input"}
 				css={inputStyle}
 					onReturn={handleUrlReturn}
-					isError={isInvalidUrl}
+					isError={urlInputError.value}
 				initialValue={url}
 				forwardRef={urlInputRef}
 				rightIcon={
 						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { input { width: 50rem; height: 30rem; } padding: 14rem; height: 30rem !important; border: none; background: none; border-left-width: 1rem; border-left-style: solid; border-left-color: #181c23; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
 				}
 				/>
-				<Conditional showIf={isInvalidUrl}>
-					<span css={ css`position: absolute; bottom: -14rem; font-size: 10.5rem; color: #ff4583;`}>Please enter a valid url</span>
+				<Conditional showIf={urlInputError.value}>
+						<span css={css`position: absolute; bottom: -14rem; font-size: 10.5rem; color: #ff4583;`}>{ urlInputError.message }</span>
 				</Conditional>
 </div>
 			<Conditional showIf={isRecorderInInitialState}>

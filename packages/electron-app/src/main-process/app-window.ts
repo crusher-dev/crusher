@@ -203,30 +203,14 @@ export class AppWindow {
 	}
 
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
+		await this.webView.dispose();
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const navigationStep = recordedSteps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
 		await this.resetRecorder();
 
-		await this.handlePerformAction(null, {action: {
-				type: ActionsInTestEnum.SET_DEVICE,
-				payload: {
-					meta: {
-						device: payload.device,
-					},
-				},
-			},
-		});
-		this.store.dispatch(setDevice(payload.device.id));
-		await this.handlePerformAction(null, {
-			action: {
-				type: ActionsInTestEnum.NAVIGATE_URL,
-				payload: {
-					meta: {
-						value: navigationStep.payload.meta.value,
-					},
-				},
-			},
-		});
+		await this.store.dispatch(setDevice(payload.device.id));
+		await this.store.dispatch(setSiteUrl(navigationStep.payload.meta.value));
+		// Playwright context has issues when set to about:blank
 	}
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
@@ -627,9 +611,11 @@ export class AppWindow {
 
 	async handleWebviewAttached(event, webContents) {
 		this.webView = new WebView(this);
-		this.webView.webContents.once("dom-ready", () => {
-			this.webView.initialize();
-			console.log("Webview initialized");
+		this.webView.webContents.on("dom-ready", () => {
+			if (!this.webView.webContents.debugger.isAttached()) {
+				this.webView.initialize();
+				console.log("Webview initialized");
+			}
 		});
 	}
 

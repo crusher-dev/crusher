@@ -47,7 +47,7 @@ const SearchIcon = (props: any) => {
 
 const MouseIcon = (props) => {
 	return (
-		<svg width={12} height={19} viewBox={ "0 0 12 19"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={12} height={19} viewBox={"0 0 12 19"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M6.02 6.039c.371 0 .672-.47.672-1.049s-.301-1.048-.673-1.048c-.372 0-.673.47-.673 1.048 0 .58.301 1.049.673 1.049ZM0 9.98v2.728c.004 1.645.59 3.17 1.65 4.295a5.49 5.49 0 0 0 4.035 1.741h.653a5.5 5.5 0 0 0 4.04-1.749c1.05-1.122 1.626-2.646 1.622-4.29V9.98H0Z"
 				fill="#595268"
@@ -306,6 +306,39 @@ const MuteIcon = (props: any) => {
 	);
 };
 
+const LoadingIconV2 = (props: any) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			style={{
+				display: "block",
+			}}
+			viewBox="0 0 100 100"
+			preserveAspectRatio="xMidYMid"
+			{...props}
+		>
+			<circle cx={50} cy={50} r={30} stroke="#8746f0" strokeWidth={10} fill="none" />
+			<circle cx={50} cy={50} r={30} stroke="#fff" strokeWidth={8} strokeLinecap="round" fill="none">
+				<animateTransform
+					attributeName="transform"
+					type="rotate"
+					repeatCount="indefinite"
+					dur="1s"
+					values="0 50 50;180 50 50;720 50 50"
+					keyTimes="0;0.5;1"
+				/>
+				<animate
+					attributeName="stroke-dasharray"
+					repeatCount="indefinite"
+					dur="1s"
+					values="18.84955592153876 169.64600329384882;94.2477796076938 94.24777960769377;18.84955592153876 169.64600329384882"
+					keyTimes="0;0.5;1"
+				/>
+			</circle>
+		</svg>
+	);
+};
+
 export {
 	CrossIcon,
 	BulbIcon,
@@ -324,4 +357,5 @@ export {
 	UpIcon,
 	InspectElementIcon,
 	MuteIcon,
+	LoadingIconV2,
 };

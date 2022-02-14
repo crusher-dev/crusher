@@ -310,10 +310,29 @@ export class AppWindow {
 			});
 		});
 
-		return {
+		const assertElementInfo = {
 			innerHTML: await elementHandle.innerHTML(),
 			attributes: attributes,
 		};
+
+		const elementTagName = await (
+			await elementHandle.evaluateHandle((element: HTMLElement) => {
+				return element.tagName.toUpperCase();
+			}, [])
+		).jsonValue();
+
+		if (elementTagName === "INPUT") {
+			const valueAttribute = attributes.find((attribute) => attribute.name.toLowerCase() === "value");
+			if (valueAttribute) {
+				valueAttribute.value = await elementHandle.inputValue();
+			} else {
+				assertElementInfo.attributes.push({
+					name: "value",
+					value: await elementHandle.inputValue(),
+				});
+			}
+		}
+		return assertElementInfo;
 	}
 
 	async handleGetPageSeoInfo(event: Electron.IpcMainEvent, url: string) {

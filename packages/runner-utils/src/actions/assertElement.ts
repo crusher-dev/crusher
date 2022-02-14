@@ -19,9 +19,17 @@ async function assertElementAttributes(
 
 	for (let i = 0; i < assertions.length; i++) {
 		const { validation, operation, field } = assertions[i];
-		let elementAttributeValue = field.name === "innerHTML" ? await element.innerHTML() : await element.getAttribute(field.name);
-		if (field.name.toLowerCase() === "value" && elementInfo.tagName === "INPUT") {
-			elementAttributeValue = elementInfo.inputValue;
+		let elementAttributeValue = null;
+		if (field.name === "innerHTML") {
+			elementAttributeValue = await element.innerHTML();
+		} else if (field.name === "innerText") {
+			elementAttributeValue = await element.innerText();
+		} else {
+			if (field.name.toLowerCase() === "value" && elementInfo.tagName === "INPUT") {
+				elementAttributeValue = elementInfo.inputValue;
+			} else {
+				elementAttributeValue = await element.getAttribute(field.name);
+			}
 		}
 		if (operation === "MATCHES") {
 			if (elementAttributeValue !== validation) {

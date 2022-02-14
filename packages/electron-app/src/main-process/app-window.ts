@@ -312,6 +312,7 @@ export class AppWindow {
 
 		const assertElementInfo = {
 			innerHTML: await elementHandle.innerHTML(),
+			innerText: await elementHandle.innerText(),
 			attributes: attributes,
 		};
 

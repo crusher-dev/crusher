@@ -19,7 +19,7 @@ export function* generateSelectors(
 		for (const rankedSelector of rankedSelectors) {
 			const isMatch = isSelectorMatch(rankedSelector!.selector, target, rectCache);
 			if (isMatch) {
-				if (mode === SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL && isMatch.index < 15) {
+				if (mode === SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL) {
 					yield rankedSelector!;
 				} else if (mode === SelectorsModeEnum.NORMAL && isMatch.index < 2) {
 					yield rankedSelector!;
@@ -44,7 +44,7 @@ export function* generateSelectors(
 			let returnSelector = false;
 			if (mode === SelectorsModeEnum.NORMAL && isMatch.index < 2) {
 				returnSelector = true;
-			} else if (mode === SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL && isMatch.index < 15) {
+			} else if (mode === SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL) {
 				returnSelector = true;
 			}
 

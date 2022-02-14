@@ -32,7 +32,6 @@ import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps } from "../store/selectors/app";
 import { setSessionInfoMeta } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
-import { devices } from "../devices";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -145,7 +144,7 @@ export class AppWindow {
 					);
 				}
 				process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor * (this.webView ? this.webView.webContents.zoomFactor : 1) + "";
-			} catch (err) { }
+			} catch (err) {}
 		}, 500);
 
 		this.window.webContents.on("will-attach-webview", (event, webContents) => {
@@ -175,6 +174,7 @@ export class AppWindow {
 		ipcMain.handle("get-page-seo-info", this.handleGetPageSeoInfo.bind(this));
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
+		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
@@ -200,6 +200,33 @@ export class AppWindow {
 		}
 
 		return null;
+	}
+
+	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
+		const recordedSteps = getSavedSteps(this.store.getState() as any);
+		const navigationStep = recordedSteps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
+		await this.resetRecorder();
+
+		await this.handlePerformAction(null, {action: {
+				type: ActionsInTestEnum.SET_DEVICE,
+				payload: {
+					meta: {
+						device: payload.device,
+					},
+				},
+			},
+		});
+		this.store.dispatch(setDevice(payload.device.id));
+		await this.handlePerformAction(null, {
+			action: {
+				type: ActionsInTestEnum.NAVIGATE_URL,
+				payload: {
+					meta: {
+						value: navigationStep.payload.meta.value,
+					},
+				},
+			},
+		});
 	}
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
@@ -551,6 +578,9 @@ export class AppWindow {
 
 	private async resetRecorder() {
 		this.store.dispatch(resetRecorderState());
+		if (this.webView) {
+			await this.webView.webContents.loadURL("about:blank");
+		}
 		await this.clearWebViewStorage();
 	}
 

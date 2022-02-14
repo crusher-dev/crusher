@@ -210,6 +210,9 @@ const registerActionAsSavedStep = (action) => {
 	ipcRenderer.invoke("save-step", { action });
 };
 
+const resetTest = (device: iDevice) => {
+	ipcRenderer.invoke("reset-test", { device });
+};
 export {
 	recordHoverDependencies,
 	performAction,
@@ -233,4 +236,5 @@ export {
 	resetStorage,
 	continueRemainingSteps,
 	registerActionAsSavedStep,
+	resetTest
 };

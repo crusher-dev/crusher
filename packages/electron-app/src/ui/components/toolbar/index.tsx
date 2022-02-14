@@ -11,7 +11,7 @@ import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
 import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, saveTest, updateTest } from "../../commands/perform";
+import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, resetTest, saveTest, updateTest } from "../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
@@ -173,10 +173,9 @@ const Toolbar = (props: any) => {
 		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
 		setSelectedDevice([selected[0]]);
 
-		if(recorderInfo.url) {
+		if (recorderInfo.url) {
 			// Only perform and set if already recording
-			performSetDevice(device);
-			dispatch(setDevice(selected[0]));
+			resetTest(device);
 		}
 	}
 
@@ -216,7 +215,7 @@ const Toolbar = (props: any) => {
 				initialValue={url}
 				forwardRef={urlInputRef}
 				rightIcon={
-						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { input { width: 50rem; height: 30rem; } padding: 14rem; height: 30rem !important; border: none; background: none; border-left-width: 1rem; border-left-style: solid; border-left-color: #181c23; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
+						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { :hover { border: none; border-left-width: 1rem; border-left-style: solid;	border-left-color: #181c23; } input { width: 50rem; height: 30rem; } padding: 14rem; height: 30rem !important; border: none; background: none; border-left-width: 1rem; border-left-style: solid; border-left-color: #181c23; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
 				}
 				/>
 				<Conditional showIf={urlInputError.value}>

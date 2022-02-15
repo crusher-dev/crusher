@@ -22,6 +22,7 @@ import { ToastSnackbar } from "./components/toast";
 import { TRecorderState } from "../store/reducers/recorder";
 import { webFrame } from "electron";
 import { TourProvider, useTour } from "@reactour/tour";
+import { getGlobalAppConfig } from "../lib/global-config";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -180,9 +181,12 @@ if (!localStorage.getItem("app.settings")) {
 	initialReduxState.app.settings.backendEndPoint = process.env.BACKEND_URL;
 	initialReduxState.app.settings.frontendEndPoint = process.env.FRONTEND_URL;
 }
+const globalAppConfig = getGlobalAppConfig();
 
 initialReduxState.app.settings = localStorage.getItem("app.settings") ? JSON.parse(localStorage.getItem("app.settings")) : initialReduxState.app.settings;
-
+if (globalAppConfig && globalAppConfig.userInfo) {
+	initialReduxState.app.accountInfo = globalAppConfig.userInfo;
+}
 const store = configureStore(initialReduxState, "renderer");
 
 // Weirdly main process store doesn't get updated, this will fix it

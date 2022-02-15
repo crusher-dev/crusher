@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, web
 import windowStateKeeper from "electron-window-state";
 import * as path from "path";
 import { APP_NAME } from "../../config/about";
-import { encodePathAsUrl, getAppIconPath, sleep } from "../utils";
+import { encodePathAsUrl, getAppIconPath, getUserInfoFromToken, sleep } from "../utils";
 import { Emitter, Disposable } from "event-kit";
 import { now } from "./now";
 import { AnyAction, Store } from "redux";
@@ -30,8 +30,9 @@ import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps } from "../store/selectors/app";
-import { setSessionInfoMeta } from "../store/actions/app";
+import { setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
+import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -175,6 +176,8 @@ export class AppWindow {
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
 		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
+		ipcMain.handle("focus-window", this.focusWindow.bind(this));
+		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
@@ -184,6 +187,24 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private async setGlobalCrusherAccountInfo(info: any) {
+		const globalAppConfig = getGlobalAppConfig();
+		writeGlobalAppConfig({ ...globalAppConfig, userInfo: info });
+	}
+	// Workaround to limitation of setting Cookie through XHR in renderer process
+	private async handleSaveNGetUserInfo(event, payload: { token: string }) {
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const userInfo = await getUserInfoFromToken(payload.token, appSettings.backendEndPoint);
+		this.store.dispatch(setUserAccountInfo(userInfo));
+
+		this.setGlobalCrusherAccountInfo(userInfo);
+		return userInfo;
+	}
+	// Set focus to our recorder window
+	private focusWindow() {
+		this.window.focus();
 	}
 
 	private getLastRecordedStep(store: Store<unknown, AnyAction>, shouldNotIgnoreScroll = false) {

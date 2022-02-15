@@ -83,4 +83,25 @@ const waitForUserLogin = async (callback?, customBackendPath: string | undefined
 	return { loginKey: loginKey };
 };
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin };
+const getUserInfoFromToken = async (token: string, customBackendPath: string | undefined = undefined) => {
+	// call axios request with token as cookie header
+	const infoResponse = await axios.get(resolveToBackendPath("/users/actions/getUserAndSystemInfo", customBackendPath), {
+		headers: {
+			Cookie: `isLoggedIn=true; token=${token}`,
+		},
+		withCredentials: true,
+	});
+
+	const info = infoResponse.data;
+	if (!info.isUserLoggedIn) throw new Error("Invalid user authentication.");
+
+	return {
+		id: info.userData.userId,
+		teamName: info.team.name,
+		name: info.userData.name,
+		email: info.userData.email,
+		token: token,
+	};
+};
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin, getUserInfoFromToken };

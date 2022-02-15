@@ -11,11 +11,22 @@ import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { setSettngs } from "electron-app/src/store/actions/app";
 import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../toast";
+import { Conditional } from "@dyson/components/layouts";
+import { LoadingIcon, LoadingIconV2 } from "../../icons";
+import { shell } from "electron";
+import { waitForUserLogin } from "electron-app/src/utils";
+import { resolveToFrontEndPath } from "@shared/utils/url";
 
 interface iStartupModalProps {
 	isOpen: boolean;
     handleClose: () => void;
 }
+
+enum ConnectToCloudStatusEnum {
+	NOT_CONNECTED = "NOT_CONNECTED",
+	WAITING = "WAITING",
+	CONNECTED = "CONNECTED"
+};
 
 const SettingsModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;
@@ -25,7 +36,7 @@ const SettingsModal = (props: iStartupModalProps) => {
 	const [frontendEndPoint, setFrontendEndPoint] = React.useState(appSettings.frontendEndPoint || "");
 	const [autoDetectActions, setAutoDetctActions] = React.useState(appSettings.autoDetectActions || false);
 	const [enableMouseTracker, setEnableMouseTracker] = React.useState(appSettings.enableMouseTracker || false);
-
+	const [connectToCloudStatus, setConnectToCloudStatus] = React.useState(ConnectToCloudStatusEnum.NOT_CONNECTED);
     const dispatch = useDispatch();
 
 	const handleBackendEndPointChange = (event: any) => {
@@ -53,13 +64,27 @@ const SettingsModal = (props: iStartupModalProps) => {
 		};
 		localStorage.setItem("app.settings", JSON.stringify(settings));
 		dispatch(setSettngs(settings));
-		
+
 		sendSnackBarEvent({type: "success", message: "Settings saved"});
 		props.handleClose();
 	};
 
+	const connectToCloud = React.useCallback(async () => {
+		setConnectToCloudStatus(ConnectToCloudStatusEnum.WAITING);
+		const { loginKey } = await waitForUserLogin(() => {
+			setConnectToCloudStatus(ConnectToCloudStatusEnum.CONNECTED);
+		}, backendEndPoint);
+		await shell.openExternal(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
+	}, [backendEndPoint, frontendEndPoint]);
+
 	if(!isOpen) return null;
-	
+
+	const connectWordMap = {
+		[ConnectToCloudStatusEnum.CONNECTED]: "Connected",
+		[ConnectToCloudStatusEnum.WAITING]: "Connecting",
+		[ConnectToCloudStatusEnum.NOT_CONNECTED]: "Connect"
+	};
+
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Settings"} desc={"Configure app settings for more customization"} closeModal={props.handleClose} />
@@ -106,13 +131,24 @@ const SettingsModal = (props: iStartupModalProps) => {
 					</div>
 					<div css={[inputContainerStyle, css`margin-top: 18rem;`]}>
 						<div css={css`font-size: 13rem; color: rgb(255, 255, 255, 0.7); font-weight: 600;`}>Enable mouse tracker</div>
-					
+
 						<Toggle isOn={enableMouseTracker} callback={handleEnableMouseTrackerCallback} css={css`margin-left: auto; zoom: 0.8;`}/>
 					</div>
 				</div>
 
 				<div css={submitFormContainerStyle}>
-					<div css={css`color: #fff; font-size: 13rem; text-decoration: underline; text-underline-offset: 2rem; :hover { opacity: 0.9 }`}>Connect to cloud</div>
+					<div onClick={connectToCloud} css={css`display: flex; align-items: center; color: #fff; font-size: 13rem; :hover { opacity: 0.9 }`}>
+						<span>{connectWordMap[connectToCloudStatus]} to cloud</span>
+						<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.WAITING}>
+							<LoadingIconV2 css={ css`height: 20rem; margin-left: 6rem;`} />
+						</Conditional>
+						<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED}>
+								<img
+								src={"./static/assets/icons/correct.svg"}
+								style={{ marginLeft: "6rem", height: "14rem", marginTop: "-2rem" }}
+							/>
+						</Conditional>
+					</div>
 					<Button onClick={saveAction} css={buttonStyle}>Save</Button>
 				</div>
 			</div>
@@ -122,7 +158,7 @@ const SettingsModal = (props: iStartupModalProps) => {
 
 const formContainerStyle = css`
     margin-top: 3.375rem;
-	padding: 26rem 34rem;	
+	padding: 26rem 34rem;
 `;
 const submitFormContainerStyle = css`
     display: flex;

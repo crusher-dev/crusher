@@ -54,10 +54,6 @@ export default class EventRecording {
 		};
 
 		this.onRightClick = this.onRightClick.bind(this);
-		this.handleFocus = this.handleFocus.bind(this);
-		this.handleMouseMove = this.handleMouseMove.bind(this);
-		this.handleMouseOver = this.handleMouseOver.bind(this);
-		this.handleMouseOut = this.handleMouseOut.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 		this.handleBeforeNavigation = this.handleBeforeNavigation.bind(this);
 		this.handlePointerEnter = this.handlePointerEnter.bind(this);
@@ -203,10 +199,7 @@ export default class EventRecording {
 		} else {
 			this.turnInspectModeOnInParentFrame();
 			const eventExceptions = {
-				mousemove: this.handleMouseMove.bind(this),
-				mouseover: this.handleMouseMove.bind(this),
 				pointerenter: this.handlePointerEnter.bind(this),
-				mouseout: this.handleMouseOut.bind(this),
 				click: this.handleWindowClick.bind(this),
 			};
 
@@ -216,33 +209,6 @@ export default class EventRecording {
 		}
 	}
 
-	handleMouseMove(event: MouseEvent) {
-		const { targetElement } = this.state;
-
-		if (!this.state.pinned) {
-			// Remove Highlight from last element hovered
-			this.removeHighLightFromNode(targetElement);
-			// this.updateEventTarget(event.target as HTMLElement, event);
-		}
-	}
-
-	handleMouseOver(event: MouseEvent) {
-		if (this.hoveringState !== event.target && (event.target as any).id !== "overlay_cover") {
-			this.hoveringState = {
-				element: event.target,
-				time: Date.now(),
-			};
-		}
-	}
-
-	handleMouseOut(event: MouseEvent) {
-		if (this.hoveringState.element === event.target) {
-			this.hoveringState = {
-				element: null,
-				time: Date.now(),
-			};
-		}
-	}
 
 	handleScroll(event: any) {
 		if (!event.isFromUser) return;
@@ -252,20 +218,20 @@ export default class EventRecording {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const _this = this;
 		const processScroll = () => {
-			const target = event.target;
+			const target = event.composedPath()[0];
 
-			const isDocumentScrolled = event.target === document;
+			const isDocumentScrolled = target === document;
 			if (isDocumentScrolled) {
 				return _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PAGE_SCROLL, null, window.scrollY);
 			}
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
-				const inputNodeInfo = this._getInputNodeInfo(event.target);
+				const inputNodeInfo = this._getInputNodeInfo(target);
 				if (inputNodeInfo && [InputNodeTypeEnum.CONTENT_EDITABLE, InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA].includes(inputNodeInfo.type))
 					return;
 				// @TODO: Need a proper way to detect real and fake scroll events
-				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, event.target, event.target.scrollTop);
+				_this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_SCROLL, target, target.scrollTop);
 			} else {
 				return event.preventDefault();
 			}
@@ -396,7 +362,9 @@ export default class EventRecording {
 		}
 		if (event.which === 2) return;
 
-		let target = event.target;
+		let target = event.composedPath()[0];
+		target = target instanceof HTMLSlotElement ? target.assignedNodes()[0] : target;
+		target = target.nodeType === target.TEXT_NODE ? target.parentElement : target;
 
 		const mainAnchorNode = this.checkIfElementIsAnchored(target);
 		if (mainAnchorNode) target = mainAnchorNode;
@@ -431,15 +399,8 @@ export default class EventRecording {
 	handleKeyDown(event: KeyboardEvent) {
 		const key = event.key;
 		if (KEYS_TO_TRACK_FOR_INPUT.has(key)) {
-			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PRESS, event.target, key);
+			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PRESS, event.composedPath()[0], key);
 		}
-	}
-
-	handleFocus(event: FocusEvent) {
-		// const target = event.target as HTMLElement;
-		// if ((target as any) != window && ["textarea", "input"].includes(target.tagName.toLowerCase())) {
-		// 	this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ELEMENT_FOCUS, target, true);
-		// }
 	}
 
 	handlePointerEnter(event: PointerEvent) {
@@ -482,7 +443,7 @@ export default class EventRecording {
 
 		switch (nodeTagName) {
 			case "select": {
-				const selectElement = event.target as HTMLSelectElement;
+				const selectElement = eventNode as HTMLSelectElement;
 				const selectedOptions = selectElement.selectedOptions ? Array.from(selectElement.selectedOptions) : [];
 				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map((option, index) => option.index), name: selectElement.name };
 			}
@@ -526,36 +487,40 @@ export default class EventRecording {
 
 	async handleElementInput(event: InputEvent) {
 		if (!event.isTrusted) return;
-		const inputNodeInfo = this._getInputNodeInfo(event.target as HTMLElement);
+		const target = event.composedPath()[0];
+
+		const inputNodeInfo = this._getInputNodeInfo(target as HTMLElement);
 		if (!inputNodeInfo || ![InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
 
-		const labelsArr = (event.target as HTMLInputElement).labels ? Array.from((event.target as HTMLInputElement).labels) : [];
+		const labelsArr = (target as HTMLInputElement).labels ? Array.from((target as HTMLInputElement).labels) : [];
 		const labelsUniqId = [];
 
 		for (const label of labelsArr) {
 			labelsUniqId.push(await this._getUniqueNodeId(label));
 		}
 
-		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, { ...inputNodeInfo, labelsUniqId });
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, target, { ...inputNodeInfo, labelsUniqId });
 	}
 
 	async handleElementChange(event: InputEvent) {
 		if (!event.isTrusted) return;
-		const inputNodeInfo = await this._getInputNodeInfo(event.target as HTMLElement);
+		const target = event.composedPath()[0];
+		const inputNodeInfo = await this._getInputNodeInfo(target as HTMLElement);
 		if (!inputNodeInfo) return;
 		if ([InputNodeTypeEnum.INPUT, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
 
-		const labelsArr = (event.target as HTMLInputElement).labels ? Array.from((event.target as HTMLInputElement).labels) : [];
+		const labelsArr = (target as HTMLInputElement).labels ? Array.from((target as HTMLInputElement).labels) : [];
 		const labelsUniqId = [];
 
 		for (const label of labelsArr) {
 			labelsUniqId.push(await this._getUniqueNodeId(label));
 		}
-		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, event.target, { ...inputNodeInfo, labelsUniqId });
+		this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.ADD_INPUT, target, { ...inputNodeInfo, labelsUniqId });
 	}
 
 	registerNodeListeners() {
 		console.log("Registering node listeners", window.location.href);
+
 
 		window.addEventListener("mousemove", this.handleMouseMove, true);
 		window.addEventListener("mouseover", this.handleMouseOver, true);

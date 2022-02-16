@@ -49,7 +49,7 @@ class BuildsService {
 		if (filter.search) {
 			additionalSelectColumns +=
 				"ts_rank_cd(to_tsvector(COALESCE(commit_name, '')) || to_tsvector(COALESCE(jobs.repo_name, '')) || to_tsvector(COALESCE(jobs.host, '')), query) as rank";
-			additionalFromSource += `to_tsquery(?) query`;
+			additionalFromSource += `plainto_tsquery(?) query`;
 			queryParams.push(filter.search);
 		}
 

@@ -210,6 +210,22 @@ const registerActionAsSavedStep = (action) => {
 	ipcRenderer.invoke("save-step", { action });
 };
 
+const resetTest = (device: iDevice) => {
+	ipcRenderer.invoke("reset-test", { device });
+};
+
+const focusOnWindow = () => {
+	ipcRenderer.invoke("focus-window");
+};
+
+const saveAndGetUserInfo = (token: string) => {
+	return ipcRenderer.invoke("save-n-get-user-info", { token });
+};
+
+const getUserTests = () => {
+	return ipcRenderer.invoke("get-user-tests");
+};
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -233,4 +249,8 @@ export {
 	resetStorage,
 	continueRemainingSteps,
 	registerActionAsSavedStep,
+	resetTest,
+	focusOnWindow,
+	saveAndGetUserInfo,
+	getUserTests,
 };

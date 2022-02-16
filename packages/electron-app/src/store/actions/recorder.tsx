@@ -77,9 +77,10 @@ export const updateCurrentRunningStepStatus = (status: ActionStatusEnum) => {
     };
 }
 
-export const resetRecorderState = () => {
+export const resetRecorderState = (state: TRecorderState) => {
     return {
         type: RESET_RECORDER_STATE,
+        payload: {state: state}
     };
 }
 

@@ -1,6 +1,8 @@
 import * as path from "path";
 import fileUrl from "file-url";
 import { IDeepLinkAction } from "./types";
+import axios from "axios";
+import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 
 const isProduction = () => {
 	return process.env.NODE_ENV === "production";
@@ -63,4 +65,55 @@ function isValidHttpUrl(str: string) {
 	return !!pattern.test(str);
 }
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl };
+const waitForUserLogin = async (callback?, customBackendPath: string | undefined = undefined): Promise<{ loginKey: string }> => {
+	const loginKey = await axios.get(resolveToBackendPath("/cli/get.key", customBackendPath)).then((res) => {
+		return res.data.loginKey;
+	});
+
+	const interval = setInterval(async () => {
+		const loginKeyStatus = await axios.get(resolveToBackendPath(`/cli/status.key?loginKey=${loginKey}`, customBackendPath)).then((res) => res.data);
+		if (loginKeyStatus.status === "Validated") {
+			clearInterval(interval);
+			if (callback) {
+				callback(loginKeyStatus.userToken);
+			}
+		}
+	}, 5000);
+
+	return { loginKey: loginKey };
+};
+
+const getUserInfoFromToken = async (token: string, customBackendPath: string | undefined = undefined) => {
+	// call axios request with token as cookie header
+	const infoResponse = await axios.get(resolveToBackendPath("/users/actions/getUserAndSystemInfo", customBackendPath), {
+		headers: {
+			Cookie: `isLoggedIn=true; token=${token}`,
+		},
+		withCredentials: true,
+	});
+
+	const info = infoResponse.data;
+	if (!info.isUserLoggedIn) throw new Error("Invalid user authentication.");
+
+	return {
+		id: info.userData.userId,
+		teamName: info.team.name,
+		name: info.userData.name,
+		email: info.userData.email,
+		token: token,
+	};
+};
+
+const getUserAccountTests = async (token: string, customBackendPath: string | undefined = undefined) => {
+	// call axios request with token as cookie header
+	const infoResponse = await axios.get(resolveToBackendPath("/tests?page=-1", customBackendPath), {
+		headers: {
+			Cookie: `isLoggedIn=true; token=${token}`,
+		},
+		withCredentials: true,
+	});
+
+	return infoResponse.data;
+};
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin, getUserInfoFromToken, getUserAccountTests };

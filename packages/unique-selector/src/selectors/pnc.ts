@@ -185,9 +185,7 @@ function bottomUpSearch(input: Element, limit: Limit, fallback?: () => Path | nu
 
 		if (stack.length >= config.seedMinLength) {
 			path = findUniquePath(stack, fallback);
-			if (path) {
-				break;
-			}
+			break;
 		}
 
 		current = current.parentElement;

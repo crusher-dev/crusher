@@ -112,6 +112,9 @@ const inputBox = (sizeStyle: { height: number }) => css`
 
 const errorState = css`
 	border-color: #ff4583;
+	:focus {
+		border-color: #ff4583;
+	}
 `;
 
 function getSizePropery(size: InputProps["size"]) {

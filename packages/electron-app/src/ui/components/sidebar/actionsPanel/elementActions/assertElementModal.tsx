@@ -25,6 +25,7 @@ interface iAssertElementModalProps {
 const getValidationFields = (elementInfo: any): Array<iField> => {
 	if (!elementInfo) return [];
 	const innerHTML = elementInfo.innerHTML;
+	const innerText = elementInfo.innerText;
 	const attributes = elementInfo.attributes;
 
 	const MetaTagsFields = attributes.map((attribute) => {
@@ -34,7 +35,10 @@ const getValidationFields = (elementInfo: any): Array<iField> => {
 			meta: { type: "ATTRIBUTE" },
 		};
 	});
-	return [{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } }, ...MetaTagsFields];
+	return [
+		{ name: "innerText", value: innerText, meta: { type: "innerText" } },
+		{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } },
+	...MetaTagsFields];
 };
 
 const getElementFieldValue = (fieldInfo: iField) => {

@@ -52,12 +52,56 @@ export class TestController {
 		return url.startsWith("http") ? url : await this.storageManager.getUrl(url);
 	}
 
+	@Get("/tests/")
+	async getUserTestsList(
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: any },
+	): Promise<IProjectTestsListResponse> {
+		if (!params.page) params.page = 0;
+
+		if (params.page) params.page = parseInt(params.page!);
+
+		const testsListData = await this.testService.getTests(true, params);
+		const testsList = await Promise.all(
+			testsListData.list.map(async (testData) => {
+				const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
+				const clipVideoUrl = testData.featuredClipVideoUrl ? testData.featuredClipVideoUrl : null;
+
+				const isFirstRunCompleted = testData.draftBuildStatus === BuildStatusEnum.FINISHED;
+
+				return {
+					id: testData.id,
+					projectId: testData.projectId,
+					testName: testData.name,
+					tags: testData.tags,
+					runAfter: testData.run_after,
+					meta: testData.meta ? JSON.parse(testData.meta) : null,
+					createdAt: new Date(testData.createdAt).getTime(),
+					// @TODO: Remove this line
+					videoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? await this.getPublicUrl(videoUrl) : null,
+					clipVideoURL: testData.draftBuildStatus === BuildStatusEnum.FINISHED ? await this.getPublicUrl(clipVideoUrl) : null,
+					// videoUrl: isUsingLocalStorage() && videoUrl ? videoUrl.replace("http://localhost:3001/", "/output/") : videoUrl,
+					// @Note: Add support for taking random screenshots in case video is switched off
+					imageURL: null,
+					// @Note: Hardcoded for now, will be changed later
+					isPassing: isFirstRunCompleted ? testData.draftBuildReportStatus === BuildReportStatusEnum.PASSED : null,
+					// @Note: Hardcoded for now, will be changed later
+					firstRunCompleted: isFirstRunCompleted,
+					deleted: false,
+					draftBuildId: testData.draftJobId,
+				};
+			}),
+		);
+
+		return { totalPages: testsListData.totalPages, list: testsList, currentPage: params.page };
+	}
+
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: number },
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: any },
 	): Promise<IProjectTestsListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
 		if (!params.page) params.page = 0;
+		if (params.page) params.page = parseInt(params.page!);
 
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
 		const testsList = await Promise.all(

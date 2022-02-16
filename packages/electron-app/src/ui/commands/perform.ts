@@ -222,6 +222,10 @@ const saveAndGetUserInfo = (token: string) => {
 	return ipcRenderer.invoke("save-n-get-user-info", { token });
 };
 
+const getUserTests = () => {
+	return ipcRenderer.invoke("get-user-tests");
+};
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -248,4 +252,5 @@ export {
 	resetTest,
 	focusOnWindow,
 	saveAndGetUserInfo,
+	getUserTests,
 };

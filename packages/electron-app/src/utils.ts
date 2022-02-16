@@ -104,4 +104,16 @@ const getUserInfoFromToken = async (token: string, customBackendPath: string | u
 	};
 };
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin, getUserInfoFromToken };
+const getUserAccountTests = async (token: string, customBackendPath: string | undefined = undefined) => {
+	// call axios request with token as cookie header
+	const infoResponse = await axios.get(resolveToBackendPath("/tests?page=-1", customBackendPath), {
+		headers: {
+			Cookie: `isLoggedIn=true; token=${token}`,
+		},
+		withCredentials: true,
+	});
+
+	return infoResponse.data;
+};
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin, getUserInfoFromToken, getUserAccountTests };

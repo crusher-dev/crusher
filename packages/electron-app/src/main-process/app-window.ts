@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, web
 import windowStateKeeper from "electron-window-state";
 import * as path from "path";
 import { APP_NAME } from "../../config/about";
-import { encodePathAsUrl, getAppIconPath, getUserInfoFromToken, sleep } from "../utils";
+import { encodePathAsUrl, getAppIconPath, getUserAccountTests, getUserInfoFromToken, sleep } from "../utils";
 import { Emitter, Disposable } from "event-kit";
 import { now } from "./now";
 import { AnyAction, Store } from "redux";
@@ -29,7 +29,7 @@ import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
-import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps } from "../store/selectors/app";
+import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
 import { setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
@@ -178,6 +178,7 @@ export class AppWindow {
 		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
+		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
@@ -187,6 +188,14 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private async handleGetUserTests() {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		const userTests = await getUserAccountTests(accountInfo.token, appSettings.backendEndPoint);
+		return userTests;
 	}
 
 	private async setGlobalCrusherAccountInfo(info: any) {

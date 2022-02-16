@@ -16,7 +16,7 @@ import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
 import { Emitter } from "event-kit";
-import { setSessionInfoMeta, setSettngs, setShowShouldOnboardingOverlay } from "../store/actions/app";
+import { setSessionInfoMeta, setSettngs, setShowShouldOnboardingOverlay, setUserAccountInfo } from "../store/actions/app";
 import { getAppSessionMeta } from "../store/selectors/app";
 import { ToastSnackbar } from "./components/toast";
 import { TRecorderState } from "../store/reducers/recorder";
@@ -184,11 +184,11 @@ if (!localStorage.getItem("app.settings")) {
 const globalAppConfig = getGlobalAppConfig();
 
 initialReduxState.app.settings = localStorage.getItem("app.settings") ? JSON.parse(localStorage.getItem("app.settings")) : initialReduxState.app.settings;
-if (globalAppConfig && globalAppConfig.userInfo) {
-	initialReduxState.app.accountInfo = globalAppConfig.userInfo;
-}
-const store = configureStore(initialReduxState, "renderer");
 
+const store = configureStore(initialReduxState, "renderer");
+if (globalAppConfig && globalAppConfig.userInfo) {
+	store.dispatch(setUserAccountInfo(globalAppConfig.userInfo));
+}
 // Weirdly main process store doesn't get updated, this will fix it
 store.dispatch(setSettngs(initialReduxState.app.settings));
 store.dispatch(setShowShouldOnboardingOverlay(initialReduxState.app.shouldShowOnboardingOverlay));

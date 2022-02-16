@@ -147,7 +147,7 @@ class TestService {
 		return this.dbManager.fetchAllRows(query, values);
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+	async getTests(findOnlyActiveTests = false, filter: { projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
 		const PER_PAGE_LIMIT = 15;
 
 		let additionalSelectColumns = "";
@@ -155,17 +155,18 @@ class TestService {
 		const queryParams: Array<any> = [];
 		if (filter.search) {
 			additionalSelectColumns += "ts_rank_cd(to_tsvector(COALESCE(commit_name, '')), query) as rank";
-			additionalFromSource += `to_tsquery(?) query`;
+			additionalFromSource += `plainto_tsquery(?) query`;
 			queryParams.push(filter.search);
 		}
 
-		let query = `SELECT tests.*, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
+		let query = `SELECT tests.*, tests.project_id project_id, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
 			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
 		} FROM public.tests, public.users, public.jobs, public.job_reports ${
 			additionalFromSource ? `, ${additionalFromSource}` : ""
-		} WHERE tests.project_id = ? AND users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
-		queryParams.push(projectId);
-
+		} WHERE ${filter.projectId ? `tests.project_id = ? AND` : ''} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		if (filter.projectId) {
+			queryParams.push(filter.projectId);
+		}
 		let page = 0;
 		if (filter.page) page = filter.page;
 
@@ -180,7 +181,7 @@ class TestService {
 		}
 
 		if (filter.search) {
-			query += ` AND to_tsvector(COALESCE(test.name, '')) @@ query`;
+			query += ` AND to_tsvector(COALESCE(tests.name, '')) @@ query`;
 		}
 
 		const totalRecordCountQuery = `SELECT COUNT(*) count FROM (${query}) custom_query`;
@@ -192,7 +193,7 @@ class TestService {
 			query += " ORDER BY tests.created_at DESC";
 		}
 
-		if (filter.page && filter.page !== -1) {
+		if (filter.page !== null && filter.page !== undefined && filter.page !== -1) {
 			query += " LIMIT ? OFFSET ?";
 			// Weird bug in node-mysql2
 			// https://github.com/sidorares/node-mysql2/issues/1239#issuecomment-760086130
@@ -201,6 +202,10 @@ class TestService {
 		}
 
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
+	}
+
+	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+		return this.getTests(findOnlyActiveTests, { ...filter, projectId });
 	}
 
 	async deleteTest(testId: number) {

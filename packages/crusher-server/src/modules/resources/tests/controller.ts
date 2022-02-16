@@ -52,15 +52,17 @@ export class TestController {
 		return url.startsWith("http") ? url : await this.storageManager.getUrl(url);
 	}
 
+	@Authorized()
 	@Get("/tests/")
 	async getUserTestsList(
+		@CurrentUser({ required: true }) user,
 		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: any },
 	): Promise<IProjectTestsListResponse> {
 		if (!params.page) params.page = 0;
 
 		if (params.page) params.page = parseInt(params.page!);
 
-		const testsListData = await this.testService.getTests(true, params);
+		const testsListData = await this.testService.getTests(true, { ...params, userId: user.user_id });
 		const testsList = await Promise.all(
 			testsListData.list.map(async (testData) => {
 				const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;

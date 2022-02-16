@@ -147,7 +147,7 @@ class TestService {
 		return this.dbManager.fetchAllRows(query, values);
 	}
 
-	async getTests(findOnlyActiveTests = false, filter: { projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+	async getTests(findOnlyActiveTests = false, filter: { userId?: number;  projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
 		const PER_PAGE_LIMIT = 15;
 
 		let additionalSelectColumns = "";
@@ -163,9 +163,12 @@ class TestService {
 			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
 		} FROM public.tests, public.users, public.jobs, public.job_reports ${
 			additionalFromSource ? `, ${additionalFromSource}` : ""
-		} WHERE ${filter.projectId ? `tests.project_id = ? AND` : ''} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		} WHERE ${filter.projectId ? `tests.project_id = ? AND` : ''} ${filter.userId ? `users.id = ? AND` : ''} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
 		if (filter.projectId) {
 			queryParams.push(filter.projectId);
+		}
+		if (filter.userId) {
+			queryParams.push(filter.userId);
 		}
 		let page = 0;
 		if (filter.page) page = filter.page;

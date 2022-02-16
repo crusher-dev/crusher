@@ -19,11 +19,17 @@ try {
 	// do not require the evaluator but depend on this file
 }
 
+export enum SelectorsModeEnum {
+	NORMAL = "NORMAL",
+	SHADOW_DOM_EXPERIMENTAL = "SHADOW_DOM_EXPERIMENTAL",
+};
+
 /**
  * Entry File.
  */
 class UniqueSelector {
 	private _configuration: Configuration;
+	private selectorCache: Map<any, any>;
 
 	/**
 	 * Constructor for function. Take Config
@@ -31,6 +37,7 @@ class UniqueSelector {
 	 */
 	constructor(config: UserConfiguration) {
 		this._configuration = { ...DefaultConfiguration, ...config };
+		this.selectorCache = new Map();
 	}
 
 	/**
@@ -43,13 +50,20 @@ class UniqueSelector {
 			throw new Error(`Can't generate CSS selector for non-element node type.`);
 		}
 
-		const idSelector = getIDSelectors(element, this._configuration.root);
-		const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
-		const geAttributesSelector = getAttribute(element, this._configuration.root);
-		const classSelectors = getPnC(element, this._configuration.root);
+		// This element is inside a shadow DOM, switch to shadow DOM mode
+		const selectorMode = !!element.getRootNode() && element.getRootNode().nodeType !== element.DOCUMENT_NODE ? SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL : SelectorsModeEnum.NORMAL;
 
 		let selectors: any[] = [];
-		const playwrightSelectors = getSelectors(element);
+
+		if(selectorMode === SelectorsModeEnum.NORMAL) {
+			const idSelector = getIDSelectors(element, this._configuration.root);
+			const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
+			const geAttributesSelector = getAttribute(element, this._configuration.root);
+			const classSelectors = getPnC(element, this._configuration.root);
+			selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
+		}
+
+		const playwrightSelectors = getSelectors(element, 1000, selectorMode, this.selectorCache);
 
 		if (playwrightSelectors && playwrightSelectors[0].length) {
 			selectors.push(
@@ -68,7 +82,6 @@ class UniqueSelector {
 			});
 		}
 
-		selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
 
 		// @ts-ignore

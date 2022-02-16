@@ -2,9 +2,9 @@ import { AnyAction } from "redux";
 import {} from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
-import { SET_SESSION_META, SET_SETTINGS, SET_SHOW_SHOULD_ONBOARDING_OVERLAY } from "../actions/app";
+import { SET_SESSION_META, SET_SETTINGS, SET_SHOW_SHOULD_ONBOARDING_OVERLAY, SET_USER_ACCOUNT_INFO } from "../actions/app";
 
-export interface iSettings { 
+export interface iSettings {
     backendEndPoint: string;
 	frontendEndPoint: string;
 	autoDetectActions: boolean;
@@ -21,12 +21,14 @@ interface IAppReducer {
 	shouldShowOnboardingOverlay: boolean;
 
 	sessionMeta: ISessionMeta;
+	accountInfo: any;
 };
 
 const initialState: IAppReducer = {
 	settings: { autoDetectActions: true, backendEndPoint: "", frontendEndPoint: "", enableMouseTracker: false },
-	shouldShowOnboardingOverlay: true, 
-	sessionMeta: {}
+	shouldShowOnboardingOverlay: true,
+	sessionMeta: {},
+	accountInfo: null,
 };
 
 const appReducer = (state: IAppReducer = initialState, action: AnyAction) => {
@@ -35,6 +37,11 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction) => {
 			return {
 				...state,
 				shouldShowOnboardingOverlay: action.payload.shouldShow,
+			}
+		case SET_USER_ACCOUNT_INFO:
+			return {
+				...state,
+				accountInfo: action.payload.info,
 			}
 		case SET_SESSION_META:
 			return {

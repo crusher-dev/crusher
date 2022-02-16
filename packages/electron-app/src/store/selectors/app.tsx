@@ -9,3 +9,5 @@ export const getAppEditingSessionMeta = (state: iReduxState) => state.app.sessio
 export const getAppSettings = (state: iReduxState) => state.app.settings;
 
 export const getRemainingSteps = (state: iReduxState) => state.app.sessionMeta.remainingSteps;
+
+export const getUserAccountInfo = (state: iReduxState) => state.app.accountInfo;

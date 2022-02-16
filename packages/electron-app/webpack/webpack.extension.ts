@@ -33,6 +33,7 @@ const virtualModules = new VirtualModulesPlugin({
   })();
 
 	window.pwQuerySelector = pwQuerySelector;
+	window.pwQuerySelectorAll = pwQuerySelectorAll;
   module.exports = { querySelector: pwQuerySelector, querySelectorAll: pwQuerySelectorAll };`,
 });
 

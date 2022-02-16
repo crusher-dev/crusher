@@ -5,13 +5,22 @@ import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Conditional } from "@dyson/components/layouts";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
+import { LoadingIconV2, NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
 import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
 import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { performNavigation, performReloadPage, performSetDevice, performVerifyTest, preformGoBackPage, saveTest, updateTest } from "../../commands/perform";
+import {
+	performNavigation,
+	performReloadPage,
+	performSetDevice,
+	performVerifyTest,
+	preformGoBackPage,
+	resetTest,
+	saveTest,
+	updateTest,
+} from "../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
@@ -19,65 +28,78 @@ import { SettingsModal } from "./settingsModal";
 import { useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 
-const DeviceItem = ({label}) => {
+const DeviceItem = ({ label }) => {
 	return (
-		<div css={css`width: 100%;`}>{label}</div>
-	)
+		<div
+			css={css`
+				width: 100%;
+			`}
+		>
+			{label}
+		</div>
+	);
 };
 
-const recorderDevices = devices.filter(device => device.visible).map((device) => ({
-	device: device,
-	value: device.id,
-	label: device.name,
-	component: <DeviceItem label={device.name} />
-}));
+const recorderDevices = devices
+	.filter((device) => device.visible)
+	.map((device) => ({
+		device: device,
+		value: device.id,
+		label: device.name,
+		component: <DeviceItem label={device.name} />,
+	}));
 
-const SaveVerifyButton = ({isTestVerificationComplete}) => {
+const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const intervalRef = React.useRef(null);
 	const totalSecondsToWaitBeforeSave = 5;
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
-	const {isOpen, setCurrentStep, setIsOpen} = useTour();
+	const { isOpen, setCurrentStep, setIsOpen } = useTour();
 
 	React.useEffect(() => {
-		if(isTestVerificationComplete) {
-			if(!editingSessionMeta) {
+		if (isTestVerificationComplete) {
+			if (!editingSessionMeta) {
 				saveTestToCloud();
 			}
 		}
 	}, [isTestVerificationComplete]);
 
-
 	const verifyTest = () => {
-		if(isOpen) {
+		if (isOpen) {
 			setIsOpen(false);
 		}
 		performVerifyTest();
-	}
+	};
 
 	const saveTestToCloud = () => {
-		if(isOpen) {
+		if (isOpen) {
 			setIsOpen(false);
 		}
 
-		if(intervalRef.current) {
+		if (intervalRef.current) {
 			clearInterval(intervalRef.current);
 		}
 		intervalRef.current = null;
 		saveTest();
-	}
+	};
 
 	const editTestInCloud = () => {
-		if(isOpen) {
+		if (isOpen) {
 			setIsOpen(false);
 		}
 
 		updateTest();
-	}
+	};
 
 	return (
 		<>
 			<Conditional showIf={!editingSessionMeta}>
-				<Button id={"verify-save-test"} onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+				<Button
+					id={"verify-save-test"}
+					onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest}
+					bgColor="tertiary-outline"
+					css={saveButtonStyle}
+					className={"ml-36"}
+				>
 					<Conditional showIf={isTestVerificationComplete}>
 						<span>
 							<span>Save test</span>
@@ -90,7 +112,12 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 			</Conditional>
 
 			<Conditional showIf={!!editingSessionMeta}>
-				<Button onClick={isTestVerificationComplete ? editTestInCloud : verifyTest} bgColor="tertiary-outline" css={saveButtonStyle} className={"ml-36"}>
+				<Button
+					onClick={isTestVerificationComplete ? editTestInCloud : verifyTest}
+					bgColor="tertiary-outline"
+					css={saveButtonStyle}
+					className={"ml-36"}
+				>
 					<Conditional showIf={isTestVerificationComplete}>
 						<span>
 							<span>Update test</span>
@@ -103,14 +130,13 @@ const SaveVerifyButton = ({isTestVerificationComplete}) => {
 			</Conditional>
 		</>
 	);
-}
-
+};
 
 const Toolbar = (props: any) => {
-    const [url, setUrl] = React.useState("" || null);
+	const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
-	const [isInvalidUrl, setIsInvalidUrl] = React.useState(false);
+	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfo = useSelector(getRecorderInfo);
@@ -122,122 +148,222 @@ const Toolbar = (props: any) => {
 	const { isOpen, currentStep, setCurrentStep } = useTour();
 
 	React.useEffect(() => {
-		if (recorderInfo.url !== url){
+		if (recorderInfo.url !== url) {
 			setUrl(recorderInfo.url);
 		}
 	}, [recorderInfo.url]);
 
 	React.useEffect(() => {
-		if(!url) {
+		if (!url && urlInputRef.current) {
 			urlInputRef.current.focus();
 		}
 	}, []);
 
-    const handleUrlReturn = React.useCallback(() => {
-		if(urlInputRef.current?.value) {
+	const handleUrlReturn = React.useCallback(() => {
+		if (urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
 			if (!isValidHttpUrl(validUrl)) {
-				setIsInvalidUrl(true);
+				setUrlInputError({ value: true, message: "Please enter a valid URL" });
 				urlInputRef.current.blur();
 				return;
 			}
-			setIsInvalidUrl(false);
+			setUrlInputError({ value: false, message: "" });
 			batch(() => {
-				if(selectedDevice[0] !== recorderInfo.device?.id) {
+				if (selectedDevice[0] !== recorderInfo.device?.id) {
 					// Setting the device will add webview in DOM tree
 					// navigation will be run after 'webview-initialized' event
 					dispatch(setDevice(selectedDevice[0]));
 				}
 
 				dispatch(setSiteUrl(validUrl.toString()));
-				if(recorderInfo.url) {
+				if (recorderInfo.url) {
 					// Perform navigation if already recording
 					performNavigation(validUrl.toString(), store);
 				}
 				// Just in case onboarding overlay info is still visible
 				dispatch(setShowShouldOnboardingOverlay(false));
 
-				if(isOpen && currentStep === 0) {
-					setTimeout(()=> {
+				if (isOpen && currentStep === 0) {
+					setTimeout(() => {
 						setCurrentStep(1);
 					}, 50);
 				}
-			})
+			});
+		} else {
+			setUrlInputError({ value: true, message: "" });
+			urlInputRef.current.focus();
 		}
-    }, [selectedDevice, recorderInfo, currentStep, isOpen]);
+	}, [selectedDevice, recorderInfo, currentStep, isOpen]);
 
 	const handleChangeDevice = (selected) => {
 		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
 		setSelectedDevice([selected[0]]);
 
-		if(recorderInfo.url) {
+		if (recorderInfo.url) {
 			// Only perform and set if already recording
-			performSetDevice(device);
-			dispatch(setDevice(selected[0]));
+			resetTest(device);
 		}
-	}
+	};
 
 	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
 
 	const goBack = () => {
 		preformGoBackPage();
-	}
+	};
 	const refreshPage = () => {
 		performReloadPage();
-	}
+	};
 
 	const handleCloseSettingsModal = () => {
 		setShowSettingsModal(false);
 	};
 
-    return (
+	const isTestBeingVerified = recorderState.type === TRecorderState.PERFORMING_ACTIONS;
+
+	return (
 		<div css={containerStyle}>
-			{/* Go Back button */}
-			<BrowserButton className={"ml-24 go-back-button"} css={css`background: transparent;`} onClick={goBack}>
-				<NavigateBackIcon css={css`height: 20rem;`} disabled={false} />
-			</BrowserButton>
-
-			{/* Refresh button */}
-			<BrowserButton className={"ml-12 reload-page-button"} css={css`background: transparent;`} onClick={refreshPage}>
-				<NavigateRefreshIcon css={css`height: 20rem;`} disabled={false} />
-			</BrowserButton>
-
-				<div css={ css`position: relative; display: flex; flex-direction: column; margin-left: 28rem`}>
-			<Input
-				placeholder="Enter URL to test"
-				id={"target-site-input"}
-				className={"target-site-input"}
-				css={inputStyle}
-					onReturn={handleUrlReturn}
-					isError={isInvalidUrl}
-				initialValue={url}
-				forwardRef={urlInputRef}
-				rightIcon={
-						<SelectBox selected={selectedDevice} callback={handleChangeDevice} className={"target-device-dropdown"} css={css`.selectBox { input { width: 50rem; height: 30rem; } padding: 14rem; height: 30rem !important; border: none; background: none; border-left-width: 1rem; border-left-style: solid; border-left-color: #181c23; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 104rem;`} values={recorderDevices} />
-				}
-				/>
-				<Conditional showIf={isInvalidUrl}>
-					<span css={ css`position: absolute; bottom: -14rem; font-size: 10.5rem; color: #ff4583;`}>Please enter a valid url</span>
-				</Conditional>
-</div>
-			<Conditional showIf={isRecorderInInitialState}>
-				<Button className={"ml-24"} onClick={handleUrlReturn} bgColor="tertiary-outline" css={buttonStyle}>
-					Start
-				</Button>
+			<Conditional showIf={isTestBeingVerified}>
+				<div css={ css`display: flex; align-items: center; width: 100%;`}>
+					<LoadingIconV2 css={css`width: 32rem; margin-left: 18rem;`} />
+					<span css={css`font-weight: bold; font-size: 14rem; margin-left: 12rem;`}>Our bot is verifying your test.</span>
+					<span css={ css`font-size: 14rem; margin: auto`}>Drink a cup of coffee meanwhile</span>
+				</div>
 			</Conditional>
-			<Conditional showIf={!isRecorderInInitialState}>
-				<div className={"ml-18 flex items-center"}>
-					<div css={[onlineDotStyle, recorderState.type === TRecorderState.PERFORMING_ACTIONS ? css`background: yellow` : undefined]} />
-					<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
-						{recorderState.type !== TRecorderState.PERFORMING_ACTIONS ? "Rec." : "Waiting"}
-					</Text>
-				</div>
+			{/* Go Back button */}
+			<Conditional showIf={!isTestBeingVerified}>
+				<BrowserButton
+					className={"ml-24 go-back-button"}
+					css={css`
+						background: transparent;
+					`}
+					onClick={goBack}
+				>
+					<NavigateBackIcon
+						css={css`
+							height: 20rem;
+						`}
+						disabled={false}
+					/>
+				</BrowserButton>
 
-				<div className={"ml-auto flex items-center"}>
-					<SettingsIcon onClick={setShowSettingsModal.bind(this, true)} css={css`height: 14rem; :hover { opacity: 0.9 }`} className={"ml-12"} />
+				{/* Refresh button */}
+				<BrowserButton
+					className={"ml-12 reload-page-button"}
+					css={css`
+						background: transparent;
+					`}
+					onClick={refreshPage}
+				>
+					<NavigateRefreshIcon
+						css={css`
+							height: 20rem;
+						`}
+						disabled={false}
+					/>
+				</BrowserButton>
 
-					<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
+				<div
+					css={css`
+						position: relative;
+						display: flex;
+						flex-direction: column;
+						margin-left: 28rem;
+					`}
+				>
+					<Input
+						placeholder="Enter URL to test"
+						id={"target-site-input"}
+						className={"target-site-input"}
+						css={inputStyle}
+						onReturn={handleUrlReturn}
+						isError={urlInputError.value}
+						initialValue={url}
+						forwardRef={urlInputRef}
+						rightIcon={
+							<SelectBox
+								selected={selectedDevice}
+								callback={handleChangeDevice}
+								className={"target-device-dropdown"}
+								css={css`
+									.selectBox {
+										:hover {
+											border: none;
+											border-left-width: 1rem;
+											border-left-style: solid;
+											border-left-color: #181c23;
+										}
+										input {
+											width: 50rem;
+											height: 30rem;
+										}
+										padding: 14rem;
+										height: 30rem !important;
+										border: none;
+										background: none;
+										border-left-width: 1rem;
+										border-left-style: solid;
+										border-left-color: #181c23;
+									}
+									.selectBox__value {
+										margin-right: 10rem;
+										font-size: 13rem;
+									}
+									width: 104rem;
+								`}
+								values={recorderDevices}
+							/>
+						}
+					/>
+					<Conditional showIf={urlInputError.value}>
+						<span
+							css={css`
+								position: absolute;
+								bottom: -14rem;
+								font-size: 10.5rem;
+								color: #ff4583;
+							`}
+						>
+							{urlInputError.message}
+						</span>
+					</Conditional>
 				</div>
+				<Conditional showIf={isRecorderInInitialState}>
+					<Button className={"ml-24"} onClick={handleUrlReturn} bgColor="tertiary-outline" css={buttonStyle}>
+						Start
+					</Button>
+				</Conditional>
+				<Conditional showIf={!isRecorderInInitialState}>
+					<div className={"ml-18 flex items-center"}>
+						<div
+							css={[
+								onlineDotStyle,
+								recorderState.type === TRecorderState.PERFORMING_ACTIONS
+									? css`
+											background: yellow;
+									  `
+									: undefined,
+							]}
+						/>
+						<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
+							{recorderState.type !== TRecorderState.PERFORMING_ACTIONS ? "Rec." : "Waiting"}
+						</Text>
+					</div>
+
+					<div className={"ml-auto flex items-center"}>
+						<SettingsIcon
+							onClick={setShowSettingsModal.bind(this, true)}
+							css={css`
+								height: 14rem;
+								:hover {
+									opacity: 0.9;
+								}
+							`}
+							className={"ml-12"}
+						/>
+
+						<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
+					</div>
+				</Conditional>
 			</Conditional>
 			<SettingsModal isOpen={showSettingsModal} handleClose={handleCloseSettingsModal} />
 		</div>
@@ -320,4 +446,4 @@ const dropDownContainer = css`
 	position: relative;
 `;
 
-export { Toolbar }
+export { Toolbar };

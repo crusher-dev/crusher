@@ -117,7 +117,7 @@ export function getCues(element: HTMLElement, level: number, maxClasses = 5): Cu
 			penalty,
 			type: isId ? "id" : "attribute",
 			value: isId
-				? `#${cssEscape(value)}`
+				? (isNaN(value) ? `#${cssEscape(value)}` : `[id="${value}"]`)
 				: // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				  //@ts-ignore
 				  `[${name}="${value.replaceAll('"', `\\"`)}"]`,

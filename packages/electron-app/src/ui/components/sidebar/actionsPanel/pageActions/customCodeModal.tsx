@@ -21,7 +21,9 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				"async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n}";
 			const editor = (window as any).CodeMirror.fromTextArea(codeTextAreaRef.current!, {
 				mode: "javascript",
-				theme: "mdn-like",
+				lineNumbers: true,
+				extraKeys: { 'Ctrl-Space': 'autocomplete' },
+				theme: "material",
 			});
 
 			editor.on("change", handleScriptChange);
@@ -36,7 +38,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	React.useEffect(() => {
 		handleLoad();
 	}, [isOpen]);
-	
+
 	const handleScriptChange = async (cm: any, change: any) => {
 		const script = cm.getValue();
 		codeTextAreaRef.current!.value = script;
@@ -56,7 +58,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	return (
         <Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
             <ModalTopBar title={"Custom code"} desc={"Write your own code for custom functionality"} closeModal={props.handleClose} />
-            
+
             <div css={css`padding: 26rem 34rem;`}>
                 <textarea id={"custom_script"} css={css`width: 100%; height: 400rem; color: #000; font-size: 14rem;`} ref={codeTextAreaRef}></textarea>
 
@@ -69,7 +71,22 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			<style>{`
 					.CodeMirror {
 						font-size: 14rem;
+						background-color: #050505 !important;
 					}
+
+			.CodeMirror-gutters {
+				background: #0a0d0e !important;
+				margin-right: 20rem;
+			}
+
+			.CodeMirror-line {
+				padding-left: 12rem !important;
+			}
+
+			.CodeMirror-scroll {
+				padding-top: 8rem;
+			}
+
 			`}</style>
         </Modal>
 	);

@@ -72,9 +72,6 @@ const DeviceFrame = (props: any) => {
 				</div>
 			</Conditional>
 			<InfoOverLay />
-			<Conditional showIf={recorderState.type === TRecorderState.PERFORMING_ACTIONS}>
-				<div css={runningStatusStyle}>We’re running test for you. You can’t perform actions right now.</div>
-			</Conditional>
 		</div>
 	);
 };
@@ -101,6 +98,7 @@ const webviewStyle = css`
 	max-width: 100%;
 	width: 100%;
 	height: 100%;
+	background: #fff;
 `;
 const containerStyle = css`
 	width: 100%;

@@ -521,6 +521,11 @@ export default class EventRecording {
 	registerNodeListeners() {
 		console.log("Registering node listeners", window.location.href);
 
+
+		window.addEventListener("mousemove", this.handleMouseMove, true);
+		window.addEventListener("mouseover", this.handleMouseOver, true);
+		window.addEventListener("mouseout", this.handleMouseOut, true);
+		window.addEventListener("focus", this.handleFocus, true);
 		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
 		window.addEventListener("elementSelected", this.handleElementSelected);
 		window.addEventListener("input", this.handleElementInput);

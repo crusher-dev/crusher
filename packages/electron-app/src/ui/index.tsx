@@ -137,7 +137,6 @@ const bodyStyle = css`
 const sidebarStyle = css`
 	padding: 1rem;
 	width: 350rem;
-	background-color: #111213;
 `;
 const toolbarStyle = css`
 	background-color: #111213;

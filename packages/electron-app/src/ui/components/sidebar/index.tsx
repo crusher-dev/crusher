@@ -16,159 +16,203 @@ const TEMPlATES = [
 	{ text: "Measure performance of a page", id: 4 },
 	{ text: "Verify SEO of a page", id: 5 },
 ];
-const Sidebar = ({ className, ...props }: any) => {
-	const recorderInfo = useSelector(getRecorderInfo);
-	const IS_GETTING_STARTED = true;
 
+const GettingStartedSidebar = () => {
 	return (
-		<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={`${className}`}>
+		<div
+			css={css`
+				height: 100%;
+				width: 100%;
+				padding: 28rem;
+				display: flex;
+				flex-direction: column;
+			`}
+		>
 			<div
 				css={css`
-					height: 100%;
-					width: 100%;
-					padding: 28rem;
-					display: flex;
-					flex-direction: column;
+					font-size: 16rem;
+					font-family: Cera Pro;
+					font-weight: 600;
+				`}
+			>
+				Getting Started
+			</div>
+			<div
+				css={css`
+					margin-top: 40rem;
 				`}
 			>
 				<div
 					css={css`
-						font-size: 16rem;
+						font-size: 15rem;
 						font-family: Cera Pro;
 						font-weight: 600;
 					`}
 				>
-					Getting Started
+					Import your tests
 				</div>
 				<div
 					css={css`
-						margin-top: 40rem;
+						margin-top: 10rem;
+						font-family: Cera Pro;
+						font-size: 12.8rem;
+						color: rgba(255, 255, 255, 0.48);
+						line-height: 18rem;
 					`}
 				>
-					<div
-						css={css`
-							font-size: 15rem;
-							font-family: Cera Pro;
-							font-weight: 600;
-						`}
-					>
-						Import your tests
-					</div>
-					<div
-						css={css`
-							margin-top: 10rem;
-							font-family: Cera Pro;
-							font-size: 12.8rem;
-							color: rgba(255, 255, 255, 0.48);
-							line-height: 18rem;
-						`}
-					>
-						Schedule a short demo call to migrate your test {"\n"} in few hours
-					</div>
-					<div
-						css={css`
-							margin-top: 17rem;
-							display: flex;
-						`}
-					>
-						<SeleniumIcon
-							css={css`
-								width: 18rem;
-								:hover {
-									opacity: 0.9;
-								}
-							`}
-						/>
-						<CypressIcon
-							css={css`
-								width: 18rem;
-								margin-left: 18rem;
-								:hover {
-									opacity: 0.9;
-								}
-							`}
-						/>
-						<PuppeteerIcon
-							css={css`
-								width: 18rem;
-								margin-left: 18rem;
-								:hover {
-									opacity: 0.9;
-								}
-							`}
-						/>
-					</div>
-					<div
-						css={css`
-							margin-top: 30rem;
-						`}
-					>
-						<Button css={buttonStyle} onClick={() => {}}>
-							Setup meet with our engineer
-						</Button>
-					</div>
+					Schedule a short demo call to migrate your test {"\n"} in few hours
 				</div>
 				<div
 					css={css`
-						margin-top: 70rem;
+						margin-top: 17rem;
+						display: flex;
 					`}
 				>
-					<div
+					<SeleniumIcon
 						css={css`
-							font-size: 15rem;
-							font-family: Cera Pro;
-							font-weight: 600;
+							width: 18rem;
+							:hover {
+								opacity: 0.9;
+							}
 						`}
-					>
-						Create quick test with template
-					</div>
-					<div
+					/>
+					<CypressIcon
 						css={css`
-							margin-top: 10rem;
-							font-family: Cera Pro;
-							font-size: 12.8rem;
-							color: rgba(255, 255, 255, 0.48);
-							line-height: 18rem;
+							width: 18rem;
+							margin-left: 18rem;
+							:hover {
+								opacity: 0.9;
+							}
 						`}
-					>
-						Looking for head start? Our recommend quick{"\n"} test will help integrate few tests
-					</div>
-					<div css={ css`margin-top: 17rem;`}>
-						<Input css={inputStyle} placeholder={"Search for templates"} size={"medium"} onChange={() => {}} />
-					</div>
-					<div css={ css`margin-top: 50rem;`}>
-						{TEMPlATES.map((item: any, index: number) => {
-							return (
-								<div css={[css`display: flex; align-items: center; :hover {opacity: 0.9}`, index!==0 ? css`margin-top: 24rem` : null]}>
-									<LinkIcon css={css`width: 12rem;`} />
-									<span css={ css`margin-left: 18rem; color: rgba(255, 255, 255, 0.53); font-family: Gilroy; font-size: 13.5rem;`}>{ item.text}</span>
-								</div>
-							)
-						})}
-					</div>
+					/>
+					<PuppeteerIcon
+						css={css`
+							width: 18rem;
+							margin-left: 18rem;
+							:hover {
+								opacity: 0.9;
+							}
+						`}
+					/>
 				</div>
 				<div
-						css={css`
-							margin-top: auto;
-						`}
-					>
-						<Button css={[buttonStyle, skipButtonStyle]} onClick={() => {}}>
-							Skip, I’m already familiar
-						</Button>
-					</div>
+					css={css`
+						margin-top: 30rem;
+					`}
+				>
+					<Button css={buttonStyle} onClick={() => {}}>
+						Setup meet with our engineer
+					</Button>
+				</div>
 			</div>
-			{/* <Conditional showIf={!!recorderInfo.device}>
-                <ActionsPanel />
-                <StepsPanel />
-            </Conditional>
-            <TemplatesModal isOpen={false} handleClose={() => {}} /> */}
+			<div
+				css={css`
+					margin-top: 70rem;
+				`}
+			>
+				<div
+					css={css`
+						font-size: 15rem;
+						font-family: Cera Pro;
+						font-weight: 600;
+					`}
+				>
+					Create quick test with template
+				</div>
+				<div
+					css={css`
+						margin-top: 10rem;
+						font-family: Cera Pro;
+						font-size: 12.8rem;
+						color: rgba(255, 255, 255, 0.48);
+						line-height: 18rem;
+					`}
+				>
+					Looking for head start? Our recommend quick{"\n"} test will help integrate few tests
+				</div>
+				<div
+					css={css`
+						margin-top: 17rem;
+					`}
+				>
+					<Input css={inputStyle} placeholder={"Search for templates"} size={"medium"} onChange={() => {}} />
+				</div>
+				<div
+					css={css`
+						margin-top: 50rem;
+					`}
+				>
+					{TEMPlATES.map((item: any, index: number) => {
+						return (
+							<div
+								key={index}
+								css={[
+									css`
+										display: flex;
+										align-items: center;
+										:hover {
+											opacity: 0.9;
+										}
+									`,
+									index !== 0
+										? css`
+												margin-top: 24rem;
+										  `
+										: null,
+								]}
+							>
+								<LinkIcon
+									css={css`
+										width: 12rem;
+									`}
+								/>
+								<span
+									css={css`
+										margin-left: 18rem;
+										color: rgba(255, 255, 255, 0.53);
+										font-family: Gilroy;
+										font-size: 13.5rem;
+									`}
+								>
+									{item.text}
+								</span>
+							</div>
+						);
+					})}
+				</div>
+			</div>
+			<div
+				css={css`
+					margin-top: auto;
+				`}
+			>
+				<Button css={[buttonStyle, skipButtonStyle]} onClick={() => {}}>
+					Skip, I’m already familiar
+				</Button>
+			</div>
+		</div>
+	);
+};
+
+const Sidebar = ({ className, ...props }: any) => {
+	const recorderInfo = useSelector(getRecorderInfo);
+	const IS_GETTING_STARTED = false;
+
+	return (
+		<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={`${className}`}>
+			{/* <GettingStartedSidebar /> */}
+			<Conditional showIf={!!recorderInfo.device}>
+				<ActionsPanel />
+				<StepsPanel />
+			</Conditional>
+			<TemplatesModal isOpen={false} handleClose={() => {}} />
 		</div>
 	);
 };
 const inputStyle = css`
 	outline: none;
 	input {
-	background: none;
+		background: none;
 	}
 `;
 const buttonStyle = css`

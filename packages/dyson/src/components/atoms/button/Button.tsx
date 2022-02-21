@@ -151,7 +151,7 @@ export type ButtonProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = React.forwardRef(({
 	bgColor = "primary",
 	impactLevel = "high",
 	size = "small",
@@ -159,7 +159,7 @@ export const Button: React.FC<ButtonProps> = ({
 	disabled = false,
 	className,
 	...props
-}) => {
+}, ref) => {
 	return (
 		<button
 			className={` rem-24 text-14 text-white ${className} leading-none`}
@@ -170,13 +170,14 @@ export const Button: React.FC<ButtonProps> = ({
 				disabled ? disabledButton : getColorCSS(bgColor, impactLevel, disabled),
 				props.CSS,
 			]}
+			ref={ref}
 			disabled={disabled}
 			{...props}
 		>
 			{children}
 		</button>
 	);
-};
+});
 
 const buttonCSS = css`
 	cursor: default;

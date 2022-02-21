@@ -54,6 +54,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const totalSecondsToWaitBeforeSave = 5;
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
 	const { isOpen, setCurrentStep, setIsOpen } = useTour();
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		if (isTestVerificationComplete) {
@@ -64,6 +65,9 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	}, [isTestVerificationComplete]);
 
 	const verifyTest = () => {
+		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
+		dispatch(setShowShouldOnboardingOverlay(false));
+
 		if (isOpen) {
 			setIsOpen(false);
 		}

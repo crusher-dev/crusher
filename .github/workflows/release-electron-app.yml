@@ -17,11 +17,8 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: 12.19.1
+          node-version: 16.13.2
           cache: 'yarn'
-
-      - name: Install yarn
-        run: npm install -g yarn
 
       - name: Create ecosystem.config.js and Copy .env.sample file
         run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env

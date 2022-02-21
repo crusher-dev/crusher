@@ -179,6 +179,7 @@ export class AppWindow {
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
+		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
@@ -188,6 +189,11 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
+		const recorderState = getRecorderState(this.store.getState() as any);
+		event.returnValue = recorderState.type !== TRecorderState.PERFORMING_ACTIONS;
 	}
 
 	private async handleGetUserTests() {

@@ -115,6 +115,7 @@ export default class EventsController {
 	}
 
 	async saveCapturedEventInBackground(event_type: ActionsInTestEnum, _capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
+		if (!(window as any).recorder.canRecordEvents()) return false;
 		const capturedTarget =
 			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
 		const selectors = capturedTarget ? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget) : null;

@@ -229,7 +229,7 @@ class IntegrationsController {
 	@Get("/integrations/cli/commands")
 	async getCliCommands(@CurrentUser({ required: true }) user) {
 		const { user_id, team_id } = user;
-		return ["npx crusher-cli test:create --token=" + generateToken(user_id, team_id), "npx crusher-cli crusher test:run"];
+		return ["npx crusher-cli test:create", "npx crusher-cli crusher test:run"];
 	}
 }
 

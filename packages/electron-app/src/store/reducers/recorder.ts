@@ -14,6 +14,7 @@ export enum TRecorderState {
 	REPLAYING = "REPLAYING", // <- Internal State (Replay all test actions in a test)
 
 	PERFORMING_ACTIONS = "PERFORMING_ACTIONS",
+	PERFORMING_RECORDER_ACTIONS = "PERFORMING_RECORDER_ACTIONS",
 
 	ACTION_REQUIRED = "ACTION_REQURED",
 };

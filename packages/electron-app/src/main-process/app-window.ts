@@ -162,7 +162,13 @@ export class AppWindow {
 			this.maybeEmitDidLoad();
 		});
 
-		ipcMain.handle("perform-action", this.handlePerformAction.bind(this));
+		ipcMain.handle("perform-action", async (event, payload) => {
+			this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_RECORDER_ACTIONS, {}));
+			try {
+				await this.handlePerformAction(event, payload);
+				this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+			} catch (ex) { }
+		});
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
 		ipcMain.handle("turn-off-recorder-inspect-mode", this.turnOffInspectMode.bind(this));
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
@@ -238,6 +244,10 @@ export class AppWindow {
 		return null;
 	}
 
+	updateRecorderState(state) {
+		this.store.dispatch(updateRecorderState(state, {}));
+	}
+
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
 		await this.webView.dispose();
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
@@ -299,7 +309,12 @@ export class AppWindow {
 				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 			}
 		} else {
-			this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			if (action.type === ActionsInTestEnum.NAVIGATE_URL) {
+				this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
+
+			} else {
+				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			}
 		}
 	}
 

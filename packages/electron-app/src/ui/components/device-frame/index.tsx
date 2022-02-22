@@ -69,6 +69,19 @@ const DeviceFrame = (props: any) => {
 						allowpopups
 						nodeintegration={true}
 					/>
+					<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
+						<div
+							css={css`
+								width: 100%;
+								height: 100%;
+								background: transparent;
+								position: absolute;
+								left: 0;
+								top: 0;
+								z-index: 999;
+							`}
+						></div>
+					</Conditional>
 				</div>
 			</Conditional>
 			<InfoOverLay />

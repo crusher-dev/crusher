@@ -143,7 +143,7 @@ const Step = ({
 		);
 	};
 
-	const finalIsRunning = recorderState.type === TRecorderState.PERFORMING_ACTIONS && isRunning;
+	const finalIsRunning = isRunning;
 
 	return (
 		<div

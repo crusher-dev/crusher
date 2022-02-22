@@ -33,16 +33,16 @@ const App = () => {
 	const recorderInfo = useSelector(getRecorderInfo);
 
 	React.useEffect(() => {
-		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
+		ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
 			store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			const recorderInfo = getRecorderInfo(store.getState() as any);
-			performSetDevice(recorderInfo.device);
+			await performSetDevice(recorderInfo.device);
 
 			emitter.emit("renderer-webview-initialized");
 			if (recorderInfo.url) {
 				// Perform navigation to the url that was set before the webview was initialized
-				performNavigation(recorderInfo.url, store);
+				await performNavigation(recorderInfo.url, store);
 			}
 		});
 

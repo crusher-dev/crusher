@@ -353,14 +353,18 @@ export default class EventRecording {
 		return false;
 	}
 
+	lastClick = performance.now();
+
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
-		console.log("Click called from recorder script", event);
+		const originalTimestamp = event.timeStamp;
 		event.timestamp = Date.now();
 		if (event.which === 3) {
 			return this.onRightClick(event);
 		}
 		if (event.which === 2) return;
+		if (originalTimestamp - this.lastClick < 500) return;
+		this.lastClick = originalTimestamp;
 
 		let target = event.composedPath()[0];
 		target = target instanceof HTMLSlotElement ? target.assignedNodes()[0] : target;

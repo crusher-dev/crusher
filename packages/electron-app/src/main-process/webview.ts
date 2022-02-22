@@ -123,11 +123,20 @@ export class WebView {
 	}
 
 	dispose() {
-		ipcMain.removeHandler("execute-custom-code");
-		ipcMain.removeHandler("get-node-id");
-		ipcMain.removeAllListeners("turn-on-inspect-mode");
-		ipcMain.removeAllListeners("turn-off-inspect-mode");
-		ipcMain.removeAllListeners("post-message-to-webview");
-		this.playwrightInstance.dispose();
+		try {
+			if (this.webContents) {
+				this.webContents.debugger.detach();
+			}
+			if (ipcMain) {
+				ipcMain.removeHandler("execute-custom-code");
+				ipcMain.removeHandler("get-node-id");
+				ipcMain.removeAllListeners("turn-on-inspect-mode");
+				ipcMain.removeAllListeners("turn-off-inspect-mode");
+				ipcMain.removeAllListeners("post-message-to-webview");
+			}
+			if (this.playwrightInstance) {
+				this.playwrightInstance.dispose();
+			}
+		} catch (e) { }
 	}
 }

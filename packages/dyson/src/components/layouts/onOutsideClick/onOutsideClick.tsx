@@ -14,16 +14,16 @@ export const isChildOfOnCloseClass = (element, root) => {
 export const OnOutsideClick = ({ onOutsideClick, children }) => {
 	const ref = useRef();
 	useEffect(() => {
-		const handleClick = (e: SyntheticEvent) => {
+		const handleMouseDown = (e: SyntheticEvent) => {
 			const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
 			if (!insideClick || isChildOfOnCloseClass(e.target, ref.current)) onOutsideClick();
 		};
-		window.addEventListener("click", handleClick, { capture: true });
+		window.addEventListener("mousedown", handleMouseDown, { capture: true });
 
 		return () => {
-			window.removeEventListener("click", handleClick, { capture: true });
+			window.removeEventListener("mousedown", handleMouseDown, { capture: true });
 		};
 	}, []);
 
-	return <div ref={ref}>{children}</div>;
+	return <div className={"outsideDiv"} ref={ref}>{children}</div>;
 };

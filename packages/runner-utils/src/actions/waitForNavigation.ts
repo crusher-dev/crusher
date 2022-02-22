@@ -10,7 +10,7 @@ async function waitForNavigation(page: Page, action: iAction) {
 			let time = 0;
 
 			const interval = setInterval(async () => {
-				if (time >= 30 * 1000) {
+				if (time >= 5 * 1000) {
 					clearInterval(interval);
 					return resolve(true);
 				}

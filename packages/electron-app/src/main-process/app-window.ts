@@ -1,8 +1,8 @@
-import { app, BrowserWindow, ipcMain, session, shell, webContents } from "electron";
+import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, webFrameMain } from "electron";
 import windowStateKeeper from "electron-window-state";
 import * as path from "path";
 import { APP_NAME } from "../../config/about";
-import { encodePathAsUrl, getAppIconPath, sleep } from "../utils";
+import { encodePathAsUrl, getAppIconPath, getUserAccountTests, getUserInfoFromToken, sleep } from "../utils";
 import { Emitter, Disposable } from "event-kit";
 import { now } from "./now";
 import { AnyAction, Store } from "redux";
@@ -23,15 +23,16 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderState, getSavedSteps } from "../store/selectors/recorder";
+import { getRecorderInfo, getRecorderState, getSavedSteps } from "../store/selectors/recorder";
 import { CrusherTests } from "../lib/tests";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
-import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps } from "../store/selectors/app";
-import { setSessionInfoMeta } from "../store/actions/app";
+import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
+import { setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
+import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -90,6 +91,7 @@ export class AppWindow {
 				webSecurity: false,
 				nativeWindowOpen: true,
 				devTools: true,
+				enablePreferredSizeMode: true,
 			},
 			acceptFirstMouse: true,
 		};
@@ -112,6 +114,8 @@ export class AppWindow {
 				// this.window.webContents.openDevTools();
 			}
 
+			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
+
 			this._loadTime = now() - startLoad;
 
 			this.maybeEmitDidLoad();
@@ -128,9 +132,26 @@ export class AppWindow {
 		});
 
 		this.window.webContents.on("did-attach-webview", this.handleWebviewAttached.bind(this));
+
+		// @TODO: Remove this asap, this is only here as a workaround to not
+		// having proper events for webview scrolling
+		setInterval(async () => {
+			try {
+				const recorderInfo = getRecorderInfo(this.store.getState() as any);
+
+				if (recorderInfo && recorderInfo.device && recorderInfo.device.width) {
+					await this.window.webContents.executeJavaScript(
+						`if(document.querySelector('webview')){ document.querySelector('webview').setZoomFactor(document.querySelector('webview').offsetWidth / ${recorderInfo.device.width}); }`,
+					);
+				}
+				process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor * (this.webView ? this.webView.webContents.zoomFactor : 1) + "";
+			} catch (err) {}
+		}, 500);
+
 		this.window.webContents.on("will-attach-webview", (event, webContents) => {
 			webContents.nodeIntegrationInSubFrames = true;
 			(webContents as any).disablePopups = false;
+			webContents.enablePreferredSizeMode = true;
 			console.log("Web contents of webview", webContents);
 			return webContents;
 		});
@@ -141,7 +162,13 @@ export class AppWindow {
 			this.maybeEmitDidLoad();
 		});
 
-		ipcMain.handle("perform-action", this.handlePerformAction.bind(this));
+		ipcMain.handle("perform-action", async (event, payload) => {
+			this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_RECORDER_ACTIONS, {}));
+			try {
+				await this.handlePerformAction(event, payload);
+				this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+			} catch (ex) { }
+		});
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
 		ipcMain.handle("turn-off-recorder-inspect-mode", this.turnOffInspectMode.bind(this));
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
@@ -154,6 +181,11 @@ export class AppWindow {
 		ipcMain.handle("get-page-seo-info", this.handleGetPageSeoInfo.bind(this));
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
+		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
+		ipcMain.handle("focus-window", this.focusWindow.bind(this));
+		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
+		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
+		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
@@ -163,6 +195,38 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+
+	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
+		const recorderState = getRecorderState(this.store.getState() as any);
+		event.returnValue = recorderState.type !== TRecorderState.PERFORMING_ACTIONS;
+	}
+
+	private async handleGetUserTests() {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		const userTests = await getUserAccountTests(accountInfo.token, appSettings.backendEndPoint);
+		return userTests;
+	}
+
+	private async setGlobalCrusherAccountInfo(info: any) {
+		const globalAppConfig = getGlobalAppConfig();
+		writeGlobalAppConfig({ ...globalAppConfig, userInfo: info });
+	}
+	// Workaround to limitation of setting Cookie through XHR in renderer process
+	private async handleSaveNGetUserInfo(event, payload: { token: string }) {
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const userInfo = await getUserInfoFromToken(payload.token, appSettings.backendEndPoint);
+		this.store.dispatch(setUserAccountInfo(userInfo));
+
+		this.setGlobalCrusherAccountInfo(userInfo);
+		return userInfo;
+	}
+	// Set focus to our recorder window
+	private focusWindow() {
+		this.window.focus();
 	}
 
 	private getLastRecordedStep(store: Store<unknown, AnyAction>, shouldNotIgnoreScroll = false) {
@@ -179,6 +243,21 @@ export class AppWindow {
 		}
 
 		return null;
+	}
+
+	updateRecorderState(state) {
+		this.store.dispatch(updateRecorderState(state, {}));
+	}
+
+	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
+		await this.webView.dispose();
+		const recordedSteps = getSavedSteps(this.store.getState() as any);
+		const navigationStep = recordedSteps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
+		await this.resetRecorder();
+
+		await this.store.dispatch(setDevice(payload.device.id));
+		await this.store.dispatch(setSiteUrl(navigationStep.payload.meta.value));
+		// Playwright context has issues when set to about:blank
 	}
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
@@ -231,7 +310,12 @@ export class AppWindow {
 				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 			}
 		} else {
-			this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			if (action.type === ActionsInTestEnum.NAVIGATE_URL) {
+				this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
+
+			} else {
+				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			}
 		}
 	}
 
@@ -278,10 +362,30 @@ export class AppWindow {
 			});
 		});
 
-		return {
+		const assertElementInfo = {
 			innerHTML: await elementHandle.innerHTML(),
+			innerText: await elementHandle.innerText(),
 			attributes: attributes,
 		};
+
+		const elementTagName = await (
+			await elementHandle.evaluateHandle((element: HTMLElement) => {
+				return element.tagName.toUpperCase();
+			}, [])
+		).jsonValue();
+
+		if (elementTagName === "INPUT") {
+			const valueAttribute = attributes.find((attribute) => attribute.name.toLowerCase() === "value");
+			if (valueAttribute) {
+				valueAttribute.value = await elementHandle.inputValue();
+			} else {
+				assertElementInfo.attributes.push({
+					name: "value",
+					value: await elementHandle.inputValue(),
+				});
+			}
+		}
+		return assertElementInfo;
 	}
 
 	async handleGetPageSeoInfo(event: Electron.IpcMainEvent, url: string) {
@@ -367,7 +471,8 @@ export class AppWindow {
 
 	async handleVerifyTest() {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
-		await this.resetRecorder();
+		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
+
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 	}
@@ -528,8 +633,11 @@ export class AppWindow {
 		}
 	}
 
-	private async resetRecorder() {
-		this.store.dispatch(resetRecorderState());
+	private async resetRecorder(state: TRecorderState = null) {
+		this.store.dispatch(resetRecorderState(state));
+		if (this.webView) {
+			await this.webView.webContents.loadURL("about:blank");
+		}
 		await this.clearWebViewStorage();
 	}
 
@@ -576,9 +684,11 @@ export class AppWindow {
 
 	async handleWebviewAttached(event, webContents) {
 		this.webView = new WebView(this);
-		this.webView.webContents.once("dom-ready", () => {
-			this.webView.initialize();
-			console.log("Webview initialized");
+		this.webView.webContents.on("dom-ready", () => {
+			if (!this.webView.webContents.debugger.isAttached()) {
+				this.webView.initialize();
+				console.log("Webview initialized");
+			}
 		});
 	}
 

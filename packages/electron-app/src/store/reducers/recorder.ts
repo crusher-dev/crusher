@@ -13,7 +13,8 @@ export enum TRecorderState {
 
 	REPLAYING = "REPLAYING", // <- Internal State (Replay all test actions in a test)
 
-	PERFORMING_ACTIONS = "PERFORMING_ACTIONS", 
+	PERFORMING_ACTIONS = "PERFORMING_ACTIONS",
+	PERFORMING_RECORDER_ACTIONS = "PERFORMING_RECORDER_ACTIONS",
 
 	ACTION_REQUIRED = "ACTION_REQURED",
 };
@@ -41,14 +42,14 @@ interface iActionRequiredStatePayload {
 export interface iElementInfo {
 	// Unique id assigned by devtools
 	uniqueElementId: string;
-	// In case the element is no longer in DOM, we can still use the selector	
+	// In case the element is no longer in DOM, we can still use the selector
 	selectors: Array<iSelectorInfo>;
 	/* In order (first one should be the origin node) */
 	dependentHovers: Array<Omit<iElementInfo, "dependentHovers">>;
 }
 
 
-export interface iSettings { 
+export interface iSettings {
 
 }
 
@@ -140,12 +141,12 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case RESET_RECORDER_STATE:
 			return {
 				...state,
-				state: initialState.state,
+				state: action.payload.state ||  initialState.state,
 				isInspectModeOn: initialState.isInspectModeOn,
-			
+
 				selectedElement: initialState.isInspectModeOn,
 				savedSteps: initialState.savedSteps,
-			
+
 				isVerified: initialState.isVerified,
 			}
 		case UPDATE_RECORDER_STATE:

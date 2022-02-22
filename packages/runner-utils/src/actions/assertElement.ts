@@ -11,9 +11,26 @@ async function assertElementAttributes(
 	let hasPassed = true;
 	const logs = [];
 
+	const elementInfo = await (
+		await element.evaluateHandle((element: HTMLInputElement | HTMLElement) => {
+			return { tagName: element.tagName.toUpperCase(), inputValue: (element as HTMLInputElement).value };
+		}, [])
+	).jsonValue();
+
 	for (let i = 0; i < assertions.length; i++) {
 		const { validation, operation, field } = assertions[i];
-		const elementAttributeValue = field.name === "innerHTML" ? await element.innerHTML() : await element.getAttribute(field.name);
+		let elementAttributeValue = null;
+		if (field.name === "innerHTML") {
+			elementAttributeValue = await element.innerHTML();
+		} else if (field.name === "innerText") {
+			elementAttributeValue = await element.innerText();
+		} else {
+			if (field.name.toLowerCase() === "value" && elementInfo.tagName === "INPUT") {
+				elementAttributeValue = elementInfo.inputValue;
+			} else {
+				elementAttributeValue = await element.getAttribute(field.name);
+			}
+		}
 		if (operation === "MATCHES") {
 			if (elementAttributeValue !== validation) {
 				hasPassed = false;

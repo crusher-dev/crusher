@@ -1,0 +1,54 @@
+name: Build/release electron-app
+
+on: push
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 16.13.2
+          cache: 'yarn'
+
+      - name: Create ecosystem.config.js and Copy .env.sample file
+        run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
+
+      - name: Install crusher modules
+        run: yarn
+
+      - name: Setup crusher for prod
+        run: yarn setup:prod
+
+      - if: matrix.os == 'ubuntu-latest'
+        name: Build release for electron app
+        run: yarn workspace electron-app release:linux
+
+      - if: matrix.os == 'macos-latest'
+        name: Build release for electron app
+        run: yarn workspace electron-app release:mac
+
+      - if:  matrix.os == 'macos-latest'
+        name: 'Store crusher-darwin as artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: crusher-darwin
+          path: output/crusher-electron-app-release/crusher-darwin.zip
+          retention-days: 5
+
+      - if: matrix.os == 'ubuntu-latest'
+        name: 'Store crusher-linux as artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: crusher-linux
+          path: output/crusher-electron-app-release/crusher-linux.zip
+          retention-days: 5

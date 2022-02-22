@@ -10,11 +10,11 @@ import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
 
 const performAction = async (action: iAction, shouldNotSave = false, isRecording = true) => {
-	ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
+	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
 const performSetDevice = async (device: iDevice) => {
-	await performAction({
+	return performAction({
 		type: ActionsInTestEnum.SET_DEVICE,
 		payload: {
 			meta: {
@@ -27,7 +27,7 @@ const performSetDevice = async (device: iDevice) => {
 };
 
 const performNavigation = async (url: string, store: Store<unknown, AnyAction>) => {
-	await performAction({
+	return performAction({
 		type: ActionsInTestEnum.NAVIGATE_URL,
 		payload: {
 			selectors: [],
@@ -110,7 +110,7 @@ const performClick = async (selectedElement: iElementInfo) => {
 				},
 			},
 		},
-		true,
+		false,
 	);
 };
 
@@ -210,6 +210,22 @@ const registerActionAsSavedStep = (action) => {
 	ipcRenderer.invoke("save-step", { action });
 };
 
+const resetTest = (device: iDevice) => {
+	ipcRenderer.invoke("reset-test", { device });
+};
+
+const focusOnWindow = () => {
+	ipcRenderer.invoke("focus-window");
+};
+
+const saveAndGetUserInfo = (token: string) => {
+	return ipcRenderer.invoke("save-n-get-user-info", { token });
+};
+
+const getUserTests = () => {
+	return ipcRenderer.invoke("get-user-tests");
+};
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -233,4 +249,8 @@ export {
 	resetStorage,
 	continueRemainingSteps,
 	registerActionAsSavedStep,
+	resetTest,
+	focusOnWindow,
+	saveAndGetUserInfo,
+	getUserTests,
 };

@@ -55,7 +55,7 @@ export const buildSelectorForCues = (cues: Cue[]): string => {
 
 		const textCues = cuesForLevel.filter((cue) => cue.type === "text");
 		if (textCues.length === 1) {
-			parts.push(`text=${textCues[0].value}`);
+			parts.push(`text=${textCues[0].value} >> visible=true`);
 			useMultipleEngines = true;
 			return;
 		}
@@ -88,18 +88,42 @@ export const evaluatorQuerySelector = (selector: string, root?: Node): HTMLEleme
 	return evaluator.querySelector(selector, root || document);
 };
 
-export const isSelectorMatch = (selector: string, target: HTMLElement, rectCache: Map<HTMLElement, Rect>): boolean => {
+export const evaluatorQuerySelectorAll = (selector: string, root?: Node): Array<HTMLElement> => {
+	return evaluator.querySelectorAll(selector, root || document);
+};
+
+
+export const isSelectorMatch = (
+	selector: string,
+	target: HTMLElement,
+	rectCache: Map<HTMLElement, Rect>,
+	root: any = null,
+): { index: number; selector: string } | null => {
 	try {
-		const matchedElement = evaluatorQuerySelector(
+		const matchedElements = evaluatorQuerySelectorAll(
 			selector,
 			// We must pass `target.ownerDocument` rather than `document`
 			// because sometimes this is called from other frames.
 			target.ownerDocument!,
 		);
 
-		return !!matchedElement && isElementMatch(matchedElement, target, rectCache);
+		if (matchedElements.length) {
+			if (isElementMatch(matchedElements[0], target, rectCache)) {
+				return { index: 1, selector: selector };
+			} else {
+				let indexCountdown = 1;
+				for (const matchedElement of matchedElements) {
+					if (isElementMatch(matchedElement, target, rectCache)) {
+						return { index: indexCountdown, selector: selector };
+					}
+					indexCountdown++;
+				}
+			}
+		}
+
+		return null;	
 	} catch (err) {
 		console.error(err);
-		return false;
+		return null;
 	}
 };

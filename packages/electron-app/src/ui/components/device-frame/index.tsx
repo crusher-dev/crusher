@@ -69,12 +69,22 @@ const DeviceFrame = (props: any) => {
 						allowpopups
 						nodeintegration={true}
 					/>
+					<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
+						<div
+							css={css`
+								width: 100%;
+								height: 100%;
+								background: transparent;
+								position: absolute;
+								left: 0;
+								top: 0;
+								z-index: 999;
+							`}
+						></div>
+					</Conditional>
 				</div>
 			</Conditional>
 			<InfoOverLay />
-			<Conditional showIf={recorderState.type === TRecorderState.PERFORMING_ACTIONS}>
-				<div css={runningStatusStyle}>We’re running test for you. You can’t perform actions right now.</div>
-			</Conditional>
 		</div>
 	);
 };
@@ -101,6 +111,7 @@ const webviewStyle = css`
 	max-width: 100%;
 	width: 100%;
 	height: 100%;
+	background: #fff;
 `;
 const containerStyle = css`
 	width: 100%;

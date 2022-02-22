@@ -15,6 +15,7 @@ import {
 	recordStep,
 	resetRecorderState,
 	setDevice,
+	setInspectElementSelectorMode,
 	setInspectMode,
 	setIsTestVerified,
 	setSiteUrl,
@@ -170,6 +171,8 @@ export class AppWindow {
 			} catch (ex) { }
 		});
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
+		ipcMain.handle("turn-on-element-selector-inspect-mode", this.turnOnElementSelectorInspectMode.bind(this));
+		ipcMain.handle("turn-off-element-selector-inspect-mode", this.turnOffElementSelectorInspectMode.bind(this));
 		ipcMain.handle("turn-off-recorder-inspect-mode", this.turnOffInspectMode.bind(this));
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
@@ -537,6 +540,18 @@ export class AppWindow {
 	private turnOnInspectMode() {
 		this.store.dispatch(setInspectMode(true));
 		this.webView._turnOnInspectMode();
+		this.webView.webContents.focus();
+	}
+
+	private turnOnElementSelectorInspectMode() {
+		this.store.dispatch(setInspectElementSelectorMode(true));
+		this.webView._turnOnInspectMode();
+		this.webView.webContents.focus();
+	}
+
+	private turnOffElementSelectorInspectMode() {
+		this.store.dispatch(setInspectElementSelectorMode(false));
+		this.webView._turnOffInspectMode();
 		this.webView.webContents.focus();
 	}
 

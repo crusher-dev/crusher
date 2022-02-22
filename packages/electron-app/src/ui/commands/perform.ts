@@ -178,9 +178,17 @@ const turnOnInspectMode = () => {
 	ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 };
 
+const turnOnElementSelectorInspectMode = () => {
+	return ipcRenderer.invoke("turn-on-element-selector-inspect-mode");
+}
+
 const turnOffInspectMode = () => {
 	ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 };
+
+const turnOffElementSelectorInspectMode = () => {
+	return ipcRenderer.invoke("turn-off-element-selector-inspect-mode");
+}
 
 const saveTest = () => {
 	ipcRenderer.invoke("save-test");
@@ -253,4 +261,6 @@ export {
 	focusOnWindow,
 	saveAndGetUserInfo,
 	getUserTests,
+	turnOnElementSelectorInspectMode,
+	turnOffElementSelectorInspectMode,
 };

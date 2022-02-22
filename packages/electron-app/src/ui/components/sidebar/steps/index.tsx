@@ -88,6 +88,7 @@ const Step = ({
 }: CheckboxProps & { action: iAction; stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
 	const [isHover, setIsHover] = React.useState(false);
 	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
+	const [isPinned, setIsPinned] = React.useState(false);
 	const dispatch = useDispatch();
 	const store = useStore();
 	const recorderState = useSelector(getRecorderState);
@@ -145,6 +146,13 @@ const Step = ({
 
 	const finalIsRunning = isRunning;
 
+	const handleSetIsPinned = (value) => {
+		setIsPinned(value);
+		if (!value) {
+			setIsHover(false);
+		}
+	};
+
 	return (
 		<div
 			onMouseOver={() => {
@@ -181,7 +189,15 @@ const Step = ({
 					/>
 				</Conditional>
 				<Conditional showIf={isHover && !finalIsRunning}>
-					<div css={css`align-self: stretch; .outsideDiv, .showOnClick { height: 100%; }`}>
+					<div
+						css={css`
+							align-self: stretch;
+							.outsideDiv,
+							.showOnClick {
+								height: 100%;
+							}
+						`}
+					>
 						<Dropdown
 							initialState={showStepActionDropdown}
 							dropdownCSS={dropdownStyle}
@@ -191,12 +207,12 @@ const Step = ({
 							<MoreIcon
 								onClick={setShowStepActionDropdown.bind(this, true)}
 								css={css`
-								width: 15rem;
-								height: 100%;
-								:hover {
-									opacity: 0.7;
-								}
-							`}
+									width: 15rem;
+									height: 100%;
+									:hover {
+										opacity: 0.7;
+									}
+								`}
 							/>
 						</Dropdown>
 					</div>
@@ -271,8 +287,8 @@ const Step = ({
 					</div>
 				</div>
 			</Conditional>
-			<Conditional showIf={isHover}>
-				<StepInfoEditor action={action} actionIndex={stepIndex} />
+			<Conditional showIf={isHover || isPinned}>
+				<StepInfoEditor action={action} isPinned={isPinned} setIsPinned={handleSetIsPinned.bind(this)} actionIndex={stepIndex} />
 			</Conditional>
 		</div>
 	);
@@ -484,7 +500,10 @@ const stepDropdownStyle = css`
 	display: block;
 
 	align-self: stretch;
-	.outsideDiv, .showOnClick { height: 100%; }
+	.outsideDiv,
+	.showOnClick {
+		height: 100%;
+	}
 `;
 const dropdownStyle = css`
 	width: 160rem;

@@ -4,13 +4,15 @@ import { Conditional } from "@dyson/components/layouts";
 import { css } from "@emotion/react";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
+import { turnOnElementMode } from "electron-app/src/lib/recorder/host-proxy";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
-import { turnOnInspectMode } from "electron-app/src/ui/commands/perform";
+import { turnOnElementSelectorInspectMode, turnOnInspectMode } from "electron-app/src/ui/commands/perform";
 import { CrossIcon, InspectElementIcon } from "electron-app/src/ui/icons";
 import { selectors } from "playwright";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
+import { sendSnackBarEvent } from "../../toast";
 
 function getSelectors(action: iAction) {
     if(!action.payload.selectors) return "";
@@ -19,7 +21,7 @@ function getSelectors(action: iAction) {
         return selector.value;
     }).join("\n");
 }
-const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actionIndex: number;}) =>  {
+const StepInfoEditor = ({action, isPinned, setIsPinned, actionIndex, ...props}: {action: iAction; actionIndex: number;}) =>  {
     const [isOptional, setIsOptional] = React.useState(!!action.payload.isOptional);
     const [isStepNameEditable, setIsStepNameEditable] = React.useState(false);
     const [stepName, setStepName] = React.useState(action.name ? action.name : "Enter step name");
@@ -76,9 +78,40 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
         }, actionIndex));
     }
 
+    const handleSelectElementForSelectors = () => {
+        setIsPinned(true);
+        turnOnElementSelectorInspectMode();
+    };
+
+    React.useEffect(() => {
+        const handleMessage = (event) => {
+            try {
+                const { type, selectedElementInfo } = JSON.parse(event.data);
+                if (type === "selected-element-for-selectors") {
+                    setStepSelectors(selectedElementInfo.selectors.map((selector) => { return selector.value; }).join("\n"));
+
+                    dispatch(updateRecordedStep({
+                        ...action,
+                        payload: {
+                            ...action.payload,
+                            selectors: selectedElementInfo.selectors,
+                        }
+                    }, actionIndex));
+                    sendSnackBarEvent({type: "success", message: "Selectors updated"});
+                }
+            } catch (ex) { }
+        }
+        window.addEventListener("message", handleMessage);
+
+        return () => {
+            window.removeEventListener("message", handleMessage);
+        }
+    }, []);
+
     return (
         <div
-        css={css`
+            className={"step-info-editor"}
+        css={[css`
             min-width: 325rem;
             padding-bottom: 8rem;
             position: fixed;
@@ -88,7 +121,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
             transform: translateX(calc(-100% - 1rem));
             font-family: Cera Pro;
             bottom: 0%;
-        `}
+        `, isPinned ? css`z-index: 100;`: null]}
     >
         <div className={"font-600 text-15 flex p-12 pt-8 pb-8 pl-8 mt-6"}>
             <div onDoubleClick={() => {
@@ -111,7 +144,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
                 disabled={!isStepNameEditable}
             />
             </div>
-            <CrossIcon css={css`width: 10rem; margin-left: auto; margin-top: 4rem; `} />
+                <CrossIcon onClick={() => { setIsPinned(false);  }} css={css`width: 10rem; margin-left: auto; margin-top: 4rem; `} />
         </div>
 
         <div css={css`font-family: Gilroy; font-size: 12.8rem`} className={"p-12"}>
@@ -139,7 +172,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
                         css={[textAreaStyle, scrollBarStyle]}
                         value={stepSelectors}
                     />
-                        <InspectElementIcon onClick={ turnOnInspectMode } css={css`width: 16rem; height: 16rem; position: absolute; right: 7rem; bottom: 9rem; :hover { opacity: 0.8 }`} />
+                        <InspectElementIcon onClick={ handleSelectElementForSelectors } css={css`width: 16rem; height: 16rem; position: absolute; right: 7rem; bottom: 9rem; :hover { opacity: 0.8 }`} />
                 </div>
             </div>
 

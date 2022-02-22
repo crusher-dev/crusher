@@ -6,6 +6,7 @@ export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
 export const SET_IS_WEBVIEW_INITIALIZED = "SET_IS_WEBVIEW_INITIALIZED";
 
 export const SET_INSPECT_MODE = "SET_INSPECT_MODE";
+export const SET_INSPECT_ELEMENT_SELECTOR_MODE = "SET_INSPECT_ELEMENT_SELECTOR_MODE";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 
 export const SET_SITE_URL = "SET_SITE_URL";
@@ -34,6 +35,13 @@ export const setInspectMode = (isOn: boolean) => {
         payload: { isOn },
     };
 }
+
+export const setInspectElementSelectorMode = (isOn: boolean) => {
+    return {
+        type: SET_INSPECT_ELEMENT_SELECTOR_MODE,
+        payload: { isOn },
+    };
+};
 
 export const setSelectedElement = (element: iElementInfo) => {
     return {

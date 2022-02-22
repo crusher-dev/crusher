@@ -34,7 +34,7 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 		>
 			<div
 				ref={customRef}
-				className={"flex relative"}
+				className={"showOnClick flex relative"}
 				onClick={(e) => {
 					e.stopPropagation();
 					if (!showDropDown) {

@@ -181,22 +181,25 @@ const Step = ({
 					/>
 				</Conditional>
 				<Conditional showIf={isHover && !finalIsRunning}>
-					<Dropdown
-						initialState={showStepActionDropdown}
-						dropdownCSS={dropdownStyle}
-						component={<StepActionMenu callback={handleStepActionDropdown} showDropDownCallback={setShowStepActionDropdown.bind(this)} />}
-						callback={setShowStepActionDropdown.bind(this)}
-					>
-						<MoreIcon
-							onClick={setShowStepActionDropdown.bind(this, true)}
-							css={css`
+					<div css={css`align-self: stretch; .outsideDiv, .showOnClick { height: 100%; }`}>
+						<Dropdown
+							initialState={showStepActionDropdown}
+							dropdownCSS={dropdownStyle}
+							component={<StepActionMenu callback={handleStepActionDropdown} showDropDownCallback={setShowStepActionDropdown.bind(this)} />}
+							callback={setShowStepActionDropdown.bind(this)}
+						>
+							<MoreIcon
+								onClick={setShowStepActionDropdown.bind(this, true)}
+								css={css`
 								width: 15rem;
+								height: 100%;
 								:hover {
 									opacity: 0.7;
 								}
 							`}
-						/>
-					</Dropdown>
+							/>
+						</Dropdown>
+					</div>
 				</Conditional>
 
 				<Conditional showIf={isFailed}>
@@ -479,6 +482,9 @@ const stepDropdownStyle = css`
 	box-sizing: border-box;
 	position: relative;
 	display: block;
+
+	align-self: stretch;
+	.outsideDiv, .showOnClick { height: 100%; }
 `;
 const dropdownStyle = css`
 	width: 160rem;

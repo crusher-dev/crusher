@@ -228,9 +228,11 @@ const Toolbar = (props: any) => {
 		<div css={containerStyle}>
 			<Conditional showIf={isTestBeingVerified}>
 				<div css={ css`display: flex; align-items: center; width: 100%;`}>
-					<LoadingIconV2 css={css`width: 32rem; margin-left: 18rem;`} />
-					<span css={css`font-weight: bold; font-size: 14rem; margin-left: 12rem;`}>Our bot is verifying your test.</span>
-					<span css={ css`font-size: 14rem; margin: auto`}>Drink a cup of coffee meanwhile</span>
+					<span css={css`font-size: 14rem; margin-left: 18rem;`}>Drink a cup of coffee meanwhile</span>
+					<div  css={ css`display: flex; font-weight: bold; align-items: center; font-size: 14rem; margin: auto`}>
+						<LoadingIconV2 css={css`width: 24rem;`} />
+						<span css={ css`margin-left: 12rem;`}>Our bot is verifying your test. </span>
+					</div>
 				</div>
 			</Conditional>
 			{/* Go Back button */}

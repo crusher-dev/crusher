@@ -5,6 +5,7 @@ import { css } from "@emotion/react";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
+import { turnOnInspectMode } from "electron-app/src/ui/commands/perform";
 import { CrossIcon, InspectElementIcon } from "electron-app/src/ui/icons";
 import { selectors } from "playwright";
 import React from "react";
@@ -138,7 +139,7 @@ const StepInfoEditor = ({action, actionIndex, ...props}: {action: iAction; actio
                         css={[textAreaStyle, scrollBarStyle]}
                         value={stepSelectors}
                     />
-                    <InspectElementIcon css={css`width: 16rem; height: 16rem; position: absolute; right: 7rem; bottom: 9rem; :hover { opacity: 0.8 }`} />
+                        <InspectElementIcon onClick={ turnOnInspectMode } css={css`width: 16rem; height: 16rem; position: absolute; right: 7rem; bottom: 9rem; :hover { opacity: 0.8 }`} />
                 </div>
             </div>
 

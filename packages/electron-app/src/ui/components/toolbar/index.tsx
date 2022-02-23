@@ -27,6 +27,7 @@ import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
 import { useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
+import { sendSnackBarEvent } from "../toast";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -55,6 +56,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
 	const { isOpen, setCurrentStep, setIsOpen } = useTour();
 	const dispatch = useDispatch();
+	const store = useStore();
 
 	React.useEffect(() => {
 		if (isTestVerificationComplete) {
@@ -67,11 +69,15 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const verifyTest = () => {
 		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
-
+		const recorderState = getRecorderState(store.getState());
 		if (isOpen) {
 			setIsOpen(false);
 		}
-		performVerifyTest();
+		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
+			performVerifyTest();
+		} else {
+			sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
+		}
 	};
 
 	const saveTestToCloud = () => {
@@ -351,7 +357,7 @@ const Toolbar = (props: any) => {
 							]}
 						/>
 						<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
-							{recorderState.type !== TRecorderState.PERFORMING_ACTIONS ? "Rec." : "Waiting"}
+							{![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type) ? "Rec." : "Waiting"}
 						</Text>
 					</div>
 

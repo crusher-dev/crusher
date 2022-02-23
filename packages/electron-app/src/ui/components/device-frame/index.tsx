@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { getRecorderInfo, getRecorderState, isInspectElementSelectorModeOn, isInspectModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
+import { getRecorderInfo, getRecorderState, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
@@ -27,6 +27,22 @@ const DeviceFrame = (props: any) => {
 			ref.current.addEventListener("ipc-message", (event: IpcMessageEvent) => {
 				const recorderState = getRecorderState(store.getState());
 				const { channel, args } = event;
+				if (channel === "recorder-message" && args[0].type === TRecorderMessagesType["Commands.turnOnElementMode"]) {
+					const isInspectMode = isInspectModeOn(store.getState() as any);
+					const isInspectElementSelectorMode = isInspectElementSelectorModeOn(store.getState() as any);
+
+					if (isInspectMode) {
+						turnOffInspectMode();
+						const { selectedElementInfo } = args[0].payload;
+						store.dispatch(setSelectedElement(selectedElementInfo));
+					} else if (isInspectElementSelectorMode) {
+						turnOffElementSelectorInspectMode();
+						const { selectedElementInfo } = args[0].payload;
+						window.postMessage(JSON.stringify({ type: "selected-element-for-selectors", selectedElementInfo }));
+					}
+				}
+				if (recorderState.type !== TRecorderState.RECORDING_ACTIONS) return;
+
 				if (channel === "recorder-message") {
 					console.log("Event of message recieved", event);
 					const { type, payload } = args[0];
@@ -40,21 +56,6 @@ const DeviceFrame = (props: any) => {
 						case TRecorderMessagesType["Commands.turnOffInspectMode"]:
 							turnOffInspectMode();
 							break;
-						case TRecorderMessagesType["Commands.turnOnElementMode"]: {
-							const isInspectMode = isInspectModeOn(store.getState() as any);
-							const isInspectElementSelectorMode = isInspectElementSelectorModeOn(store.getState() as any);
-
-							if (isInspectMode) {
-								turnOffInspectMode();
-								const { selectedElementInfo } = payload;
-								store.dispatch(setSelectedElement(selectedElementInfo));
-							} else if (isInspectElementSelectorModeOn) {
-								turnOffElementSelectorInspectMode();
-								const { selectedElementInfo } = payload;
-								window.postMessage(JSON.stringify({ type: "selected-element-for-selectors", selectedElementInfo }));
-							}
-							break;
-						}
 					}
 				}
 			});

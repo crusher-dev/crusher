@@ -340,13 +340,18 @@ export class AppWindow {
 		});
 	}
 
-	async continueRemainingSteps() {
-		const remainingSteps = getRemainingSteps(this.store.getState() as any);
+	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: Array<iAction> | null }) {
+		const { extraSteps } = payload;
+		let remainingSteps = getRemainingSteps(this.store.getState() as any);
+		await this.setRemainingSteps(null);
+
+		if (extraSteps) {
+			remainingSteps = remainingSteps ? [...extraSteps, ...remainingSteps] : [...extraSteps];
+		}
 		if (remainingSteps) {
 			await this.handleReplayTestSteps(remainingSteps);
 		}
-
-		await this.setRemainingSteps(null);
+		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 	}
 
 	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {

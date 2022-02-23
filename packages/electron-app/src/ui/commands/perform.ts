@@ -210,8 +210,8 @@ const resetStorage = () => {
 	ipcRenderer.invoke("reset-storage");
 };
 
-const continueRemainingSteps = () => {
-	ipcRenderer.invoke("continue-remaining-steps");
+const continueRemainingSteps = (extraSteps?: Array<iAction>) => {
+	ipcRenderer.invoke("continue-remaining-steps", { extraSteps });
 };
 
 const registerActionAsSavedStep = (action) => {

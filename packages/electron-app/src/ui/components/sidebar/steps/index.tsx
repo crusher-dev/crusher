@@ -113,35 +113,21 @@ const Step = ({
 
 	const handleDeleteAndContinue = () => {
 		const recorderState = getRecorderState(store.getState());
-		if (recorderState.type === TRecorderState.ACTION_REQUIRED) {
-			dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-		}
 
 		dispatch(deleteRecordedSteps([stepIndex]));
 		continueRemainingSteps();
 	};
 
-	const markStepOptionalAndContinue = () => {
-		const recorderState = getRecorderState(store.getState());
+	const updateAndReRunStep = () => {
 		const savedSteps = getSavedSteps(store.getState());
-		if (recorderState.type === TRecorderState.ACTION_REQUIRED) {
-			dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-		}
 
 		const step = savedSteps[stepIndex];
-		dispatch(
-			updateRecordedStep(
-				{
-					...step,
-					payload: {
-						...step.payload,
-						isOptional: true,
-					},
-					status: ActionStatusEnum.MANUAL_REVIEW_REQUIRED,
-				},
-				stepIndex as any,
-			),
-		);
+		dispatch(deleteRecordedSteps([stepIndex]));
+
+		continueRemainingSteps([{
+			...step,
+			status: ActionStatusEnum.STARTED,
+		}]);
 	};
 
 	const finalIsRunning = isRunning;
@@ -254,14 +240,14 @@ const Step = ({
 										padding: 4rem;
 									`}
 								>
-									Mark this step as optional,
+									Runs this step again,
 									<br />
-									which will not break the test anymore.
+									usually after modifying it.
 								</div>
 							}
 						>
-							<Button size="small" onClick={markStepOptionalAndContinue} css={failedButtonStyle} bgColor="tertiary-outline">
-								Mark optional
+							<Button size="small" onClick={updateAndReRunStep} css={failedButtonStyle} bgColor="tertiary-outline">
+								Update step
 							</Button>
 						</Tooltip>
 						<Tooltip

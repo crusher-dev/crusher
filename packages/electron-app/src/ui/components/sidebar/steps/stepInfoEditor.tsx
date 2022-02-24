@@ -1,4 +1,4 @@
-import { Input } from "@dyson/components/atoms";
+import { Button, Input } from "@dyson/components/atoms";
 import { Toggle } from "@dyson/components/atoms/toggle/toggle";
 import { Conditional } from "@dyson/components/layouts";
 import { css } from "@emotion/react";
@@ -13,6 +13,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
 import { sendSnackBarEvent } from "../../toast";
+import { RunAfterTestModal } from "../actionsPanel/pageActions/runAfterTestModal";
 
 function getSelectors(action: iAction) {
 	if (!action.payload.selectors) return "";
@@ -23,61 +24,10 @@ function getSelectors(action: iAction) {
 		})
 		.join("\n");
 }
-const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }: { action: iAction; actionIndex: number }) => {
-	const [isOptional, setIsOptional] = React.useState(!!action.payload.isOptional);
-	const [isStepNameEditable, setIsStepNameEditable] = React.useState(false);
-	const [stepName, setStepName] = React.useState(action.name ? action.name : "Enter step name");
+
+const ActionSpecificInfo = ({ action, actionIndex, setIsPinned, ...props }: { action: iAction; actionIndex: number }) => {
 	const [stepSelectors, setStepSelectors] = React.useState(getSelectors(action));
-	const stepNameRef: React.Ref<HTMLInputElement> = React.useRef(null);
-
 	const dispatch = useDispatch();
-
-	const handleInputBlur = () => {
-		setIsStepNameEditable(false);
-		dispatch(
-			updateRecordedStep(
-				{
-					...action,
-					name: stepNameRef.current.value,
-				},
-				actionIndex,
-			),
-		);
-	};
-
-	const handleSelectorsSave = (e) => {
-		dispatch(
-			updateRecordedStep(
-				{
-					...action,
-					payload: {
-						...action.payload,
-						selectors: e.target.value.split("\n").map((a) => {
-							return { type: SELECTOR_TYPE.PLAYWRIGHT, value: a.trim(), uniquenessScore: 1 };
-						}),
-					},
-				},
-				actionIndex,
-			),
-		);
-	};
-
-	const handleOptionalToggle = (state) => {
-		setIsOptional.bind(this, state);
-
-		dispatch(
-			updateRecordedStep(
-				{
-					...action,
-					payload: {
-						...action.payload,
-						isOptional: state,
-					},
-				},
-				actionIndex,
-			),
-		);
-	};
 
 	const handleUpdateInputText = (newText) => {
 		dispatch(
@@ -100,9 +50,44 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 		);
 	};
 
+	const handleUpdateNavigateUrl = (newURL) => {
+		dispatch(
+			updateRecordedStep(
+				{
+					...action,
+					payload: {
+						...action.payload,
+						meta: {
+							...action.payload.meta,
+							value: newURL,
+						},
+					},
+				},
+				actionIndex,
+			),
+		);
+	};
+
 	const handleSelectElementForSelectors = () => {
 		setIsPinned(true);
 		turnOnElementSelectorInspectMode();
+	};
+
+	const handleSelectorsSave = (e) => {
+		dispatch(
+			updateRecordedStep(
+				{
+					...action,
+					payload: {
+						...action.payload,
+						selectors: e.target.value.split("\n").map((a) => {
+							return { type: SELECTOR_TYPE.PLAYWRIGHT, value: a.trim(), uniquenessScore: 1 };
+						}),
+					},
+				},
+				actionIndex,
+			),
+		);
 	};
 
 	React.useEffect(() => {
@@ -142,6 +127,165 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 	}, []);
 
 	return (
+		<>
+			<Conditional showIf={action.type === ActionsInTestEnum.ADD_INPUT}>
+				<div
+					className={"flex mt-8 mb-16"}
+					css={css`
+						align-items: center;
+					`}
+				>
+					<span>Input Text</span>
+					<Input
+						css={[
+							inputStyle,
+							css`
+								min-width: 207rem;
+							`,
+						]}
+						placeholder={"Enter frontend endpoint"}
+						size={"medium"}
+						initialValue={action.payload.meta?.value?.value}
+						onReturn={handleUpdateInputText.bind(this)}
+						onBlur={(e) => {
+							handleUpdateInputText(e.target.value);
+						}}
+					/>
+				</div>
+			</Conditional>
+			<Conditional showIf={action.type === ActionsInTestEnum.NAVIGATE_URL}>
+				<div
+					className={"flex mt-8 mb-16"}
+					css={css`
+						align-items: center;
+					`}
+				>
+					<span>URL</span>
+					<Input
+						css={[
+							inputStyle,
+							css`
+								min-width: 207rem;
+							`,
+						]}
+						placeholder={"Enter frontend endpoint"}
+						size={"medium"}
+						initialValue={action.payload.meta?.value}
+						onReturn={handleUpdateNavigateUrl.bind(this)}
+						onBlur={(e) => {
+							handleUpdateNavigateUrl(e.target.value);
+						}}
+					/>
+				</div>
+			</Conditional>
+			<Conditional showIf={action.type.startsWith("ELEMENT")}>
+				<div className={"mt-8"}>
+					<span>Selectors</span>
+					<div
+						css={css`
+							flex: 1;
+							margin-top: 8rem;
+							position: relative;
+						`}
+					>
+						<textarea
+							css={css`
+								font-size: 12rem;
+							`}
+							placeholder={"Selector come here"}
+							onChange={(e) => setStepSelectors(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.keyCode === 13) {
+									handleSelectorsSave(e);
+								}
+							}}
+							css={[textAreaStyle, scrollBarStyle]}
+							value={stepSelectors}
+						/>
+						<InspectElementIcon
+							onClick={handleSelectElementForSelectors}
+							css={css`
+								width: 16rem;
+								height: 16rem;
+								position: absolute;
+								right: 7rem;
+								bottom: 9rem;
+								:hover {
+									opacity: 0.8;
+								}
+							`}
+						/>
+					</div>
+				</div>
+			</Conditional>
+			<Conditional showIf={action.type === ActionsInTestEnum.RUN_AFTER_TEST}>
+				<div className={"mt-8"}>
+					<span>Edit mode</span>
+					<div
+						css={css`
+							flex: 1;
+							margin-top: 24rem;
+							position: relative;
+							display: flex;
+							justify-content: center;
+						`}
+					>
+						<Button>
+							<span
+								css={css`
+									font-size: 12.25rem;
+                                    padding: 0 14rem;
+								`}
+							>
+								Open Edit Modal
+							</span>
+						</Button>
+					</div>
+                </div>
+            </Conditional>
+		</>
+	);
+};
+
+const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }: { action: iAction; actionIndex: number }) => {
+	const [isOptional, setIsOptional] = React.useState(!!action.payload.isOptional);
+	const [isStepNameEditable, setIsStepNameEditable] = React.useState(false);
+	const [stepName, setStepName] = React.useState(action.name ? action.name : "Enter step name");
+	const stepNameRef: React.Ref<HTMLInputElement> = React.useRef(null);
+
+	const dispatch = useDispatch();
+
+	const handleInputBlur = () => {
+		setIsStepNameEditable(false);
+		dispatch(
+			updateRecordedStep(
+				{
+					...action,
+					name: stepNameRef.current.value,
+				},
+				actionIndex,
+			),
+		);
+	};
+
+	const handleOptionalToggle = (state) => {
+		setIsOptional.bind(this, state);
+
+		dispatch(
+			updateRecordedStep(
+				{
+					...action,
+					payload: {
+						...action.payload,
+						isOptional: state,
+					},
+				},
+				actionIndex,
+			),
+		);
+	};
+
+	return (
 		<div
 			className={"step-info-editor"}
 			css={[
@@ -155,6 +299,9 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 					transform: translateX(calc(-100% - 1rem));
 					font-family: Cera Pro;
 					bottom: 0%;
+					min-height: 260rem;
+					display: flex;
+					flex-direction: column;
 				`,
 				isPinned
 					? css`
@@ -218,88 +365,59 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 				css={css`
 					font-family: Gilroy;
 					font-size: 12.8rem;
+					display: flex;
+					flex-direction: column;
+					flex: 1;
 				`}
 				className={"p-12"}
 			>
-				<Conditional showIf={action.type === ActionsInTestEnum.ADD_INPUT}>
+				<ActionSpecificInfo setIsPinned={setIsPinned.bind(this)} action={action} actionIndex={actionIndex}></ActionSpecificInfo>
+
+				<div
+					css={css`
+						margin-top: auto;
+					`}
+				>
 					<div
-						className={"flex mt-8 mb-16"}
+						className={"flex mt-28"}
 						css={css`
 							align-items: center;
 						`}
 					>
-						<span>Input Text</span>
+						<span>Timeout(s)</span>
 						<Input
 							css={[
 								inputStyle,
-								css`
-									min-width: 207rem;
+                                css`
+                                    min-width: auto;
+									max-width: 125rem;
 								`,
 							]}
-							placeholder={"Enter frontend endpoint"}
-							size={"medium"}
-							initialValue={action.payload.meta?.value?.value}
-							onReturn={handleUpdateInputText.bind(this)}
+							placeholder={"Enter Timeout in (ms)"}
+							size={"small"}
+							initialValue={"30000"}
+                            onReturn={() => { }}
 							onBlur={(e) => {
-								handleUpdateInputText(e.target.value);
+
 							}}
 						/>
 					</div>
-				</Conditional>
-				<div className={"mt-8"}>
-					<span>Selectors</span>
 					<div
+						className={"flex mt-12"}
 						css={css`
-							flex: 1;
-							margin-top: 8rem;
-							position: relative;
+							align-items: center;
 						`}
 					>
-						<textarea
+						<span>Mark as optional</span>
+						<Toggle
 							css={css`
-								font-size: 12rem;
+								zoom: 0.8;
+								margin-left: auto;
 							`}
-							placeholder={"Selector come here"}
-							onChange={(e) => setStepSelectors(e.target.value)}
-							onKeyDown={(e) => {
-								if (e.keyCode === 13) {
-									handleSelectorsSave(e);
-								}
-							}}
-							css={[textAreaStyle, scrollBarStyle]}
-							value={stepSelectors}
-						/>
-						<InspectElementIcon
-							onClick={handleSelectElementForSelectors}
-							css={css`
-								width: 16rem;
-								height: 16rem;
-								position: absolute;
-								right: 7rem;
-								bottom: 9rem;
-								:hover {
-									opacity: 0.8;
-								}
-							`}
+							isOn={isOptional}
+							callback={handleOptionalToggle}
 						/>
 					</div>
-				</div>
-
-				<div
-					className={"flex mt-28"}
-					css={css`
-						align-items: center;
-					`}
-				>
-					<span>Mark as optional</span>
-					<Toggle
-						css={css`
-							zoom: 0.8;
-							margin-left: auto;
-						`}
-						isOn={isOptional}
-						callback={handleOptionalToggle}
-					/>
 				</div>
 			</div>
 		</div>

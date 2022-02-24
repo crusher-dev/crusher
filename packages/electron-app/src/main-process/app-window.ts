@@ -470,14 +470,15 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		if (app.commandLine.hasSwitch("exit-on-save")) {
+			const projectId = app.commandLine.getSwitchValue("projectId");
 			await CrusherTests.saveTestDirectly(
 				recordedSteps as any,
-				app.commandLine.getSwitchValue("projectId"),
+				projectId,
 				app.commandLine.getSwitchValue("token"),
 				appSettings.backendEndPoint,
 				appSettings.frontendEndPoint,
 			);
-			await shell.openExternal(resolveToFrontEndPath("/app/tests/", appSettings.frontendEndPoint));
+			await shell.openExternal(resolveToFrontEndPath(`/app/tests/?project_id=${projectId}`, appSettings.frontendEndPoint));
 			process.exit(0);
 		} else {
 			await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);

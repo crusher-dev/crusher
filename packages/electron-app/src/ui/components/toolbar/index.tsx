@@ -5,7 +5,7 @@ import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Conditional } from "@dyson/components/layouts";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { LoadingIconV2, NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
+import { CrusherHammerIcon, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
 import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
@@ -28,6 +28,8 @@ import { SettingsModal } from "./settingsModal";
 import { useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 import { sendSnackBarEvent } from "../toast";
+import { Dropdown } from "@dyson/components/molecules/Dropdown";
+import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -57,14 +59,6 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const { isOpen, setCurrentStep, setIsOpen } = useTour();
 	const dispatch = useDispatch();
 	const store = useStore();
-
-	React.useEffect(() => {
-		if (isTestVerificationComplete) {
-			if (!editingSessionMeta) {
-				saveTestToCloud();
-			}
-		}
-	}, [isTestVerificationComplete]);
 
 	const verifyTest = () => {
 		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
@@ -142,11 +136,41 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	);
 };
 
+const StepActionMenu = ({ showDropDownCallback, callback }) => {
+	const ActionItem = ({ title, id, callback }) => {
+		return (
+			<div
+				css={css`
+					:hover {
+						background: #687ef2;
+					}
+				`}
+				onClick={callback.bind(this, id)}
+			>
+				<TextBlock css={dropdownItemTextStyle}>{title}</TextBlock>
+			</div>
+		);
+	};
+
+	return (
+		<>
+			{/* <ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/> */}
+			<ActionItem title={"Re-verify"} id={"REVERIFY"} callback={callback} />
+			<ActionItem title={"Reset"} id={"RESET"} callback={callback} />
+		</>
+	);
+};
+
+const dropdownItemTextStyle = css`
+	padding: 6rem 16rem;
+`;
+
 const Toolbar = (props: any) => {
 	const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
 	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
+	const [showMenu, setShowMenu] = React.useState(false);
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfo = useSelector(getRecorderInfo);
@@ -233,17 +257,48 @@ const Toolbar = (props: any) => {
 	return (
 		<div css={containerStyle}>
 			<Conditional showIf={isTestBeingVerified}>
-				<div css={ css`display: flex; align-items: center; width: 100%;`}>
-					<span css={css`font-size: 14rem; margin-left: 18rem;`}>Drink a cup of coffee meanwhile</span>
-					<div  css={ css`display: flex; font-weight: bold; align-items: center; font-size: 14rem; margin: auto`}>
-						<LoadingIconV2 css={css`width: 24rem;`} />
-						<span css={ css`margin-left: 12rem;`}>Our bot is verifying your test. </span>
+				<div
+					css={css`
+						display: flex;
+						align-items: center;
+						width: 100%;
+					`}
+				>
+					<span
+						css={css`
+							font-size: 14rem;
+							margin-left: 18rem;
+						`}
+					>
+						Drink a cup of coffee meanwhile
+					</span>
+					<div
+						css={css`
+							display: flex;
+							font-weight: bold;
+							align-items: center;
+							font-size: 14rem;
+							margin: auto;
+						`}
+					>
+						<LoadingIconV2
+							css={css`
+								width: 24rem;
+							`}
+						/>
+						<span
+							css={css`
+								margin-left: 12rem;
+							`}
+						>
+							Our bot is verifying your test.{" "}
+						</span>
 					</div>
 				</div>
 			</Conditional>
 			{/* Go Back button */}
 			<Conditional showIf={!isTestBeingVerified}>
-				<BrowserButton
+				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
 						background: transparent;
@@ -256,10 +311,29 @@ const Toolbar = (props: any) => {
 						`}
 						disabled={false}
 					/>
-				</BrowserButton>
+				</BrowserButton> */}
 
+				<CrusherHammerIcon
+					className={"ml-24"}
+					css={css`
+						width: 19rem;
+					`}
+				/>
+				{/* <BrowserButton
+					className={"ml-24 go-back-button"}
+					css={css`
+						background: transparent;
+					`}
+				>
+					<MoreIcon
+						css={css`
+							height: 20rem;
+						`}
+						disabled={false}
+					/>
+				</BrowserButton> */}
 				{/* Refresh button */}
-				<BrowserButton
+				{/* <BrowserButton
 					className={"ml-12 reload-page-button"}
 					css={css`
 						background: transparent;
@@ -272,8 +346,8 @@ const Toolbar = (props: any) => {
 						`}
 						disabled={false}
 					/>
-				</BrowserButton>
-
+				</BrowserButton> */}
+				<div css={css`font-size: 14rem; color:#fff`}>{  showMenu }</div>
 				<div
 					css={css`
 						position: relative;
@@ -291,6 +365,31 @@ const Toolbar = (props: any) => {
 						isError={urlInputError.value}
 						initialValue={url}
 						forwardRef={urlInputRef}
+						leftIcon={
+							<Dropdown
+								initialState={showMenu}
+								// dropdownCSS={dropdownStyle}
+								component={<StepActionMenu callback={(id) => { if (id === "REVERIFY") { performVerifyTest(false);  }  setShowMenu(false); }} showDropDownCallback={() => { setShowMenu(false); }} />}
+								callback={setShowMenu.bind(this)}
+							>
+								<div
+									css={css`
+										height: 100%;
+										display: flex;
+										align-items: center;
+										background: #0d1010;
+										padding: 0rem 10rem;
+										border-right: 0.35px solid rgba(255, 255, 255, 0.17);
+									`}
+								>
+									<MoreIcon
+										css={css`
+											width: 18rem;
+										`}
+									/>
+								</div>
+							</Dropdown>
+						}
 						rightIcon={
 							<SelectBox
 								selected={selectedDevice}
@@ -389,9 +488,30 @@ const containerStyle = css`
 	background-color: #111213;
 	padding: 5rem;
 	min-height: 60rem;
+	position: relative;
+	z-index: 99999999;
 `;
 const inputStyle = css`
 	height: 34rem;
+	.input__leftIconContainer {
+		border-radius: 8rem 0px 0px 8rem;
+		height: 85%;
+		left: 1rem;
+		.outsideDiv, .showOnClick {
+			height: 100%;
+		}
+		/* To stop border collision */
+		margin-left: 0.5rem;
+		margin-top: 0.5rem;
+		margin-bottom: 0.5rem;
+
+		.dropdown-box {
+			overflow: hidden;
+			width: 104rem;
+			margin-left: 12rem;
+			z-index: 99999;
+		}
+	}
 	& > input {
 		width: 340rem;
 		font-family: Gilroy;
@@ -400,9 +520,11 @@ const inputStyle = css`
 		outline-color: #9462ff;
 		outline-width: 1px;
 		box-sizing: border-box;
-		border-radius: 4rem;
+		border-radius: 8rem 0px 0px 8rem;
 		color: rgba(255, 255, 255, 0.93);
 		height: 100%;
+		padding-left: 50rem;
+		padding-right: 110rem;
 	}
 	svg {
 		margin-left: auto;

@@ -476,12 +476,16 @@ export class AppWindow {
 		}
 	}
 
-	async handleVerifyTest() {
+	async handleVerifyTest(event, payload) {
+		const { shouldAlsoSave } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
+		if (shouldAlsoSave) {
+			this.handleSaveTest();
+		}
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {

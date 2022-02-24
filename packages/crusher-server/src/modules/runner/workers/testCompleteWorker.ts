@@ -138,6 +138,27 @@ async function handleNextTestsForExecution(job: ITestResultWorkerJob, buildRecor
 	return true;
 }
 
+function setupGracefulShutdown() {
+	process.on("SIGTERM", async () => {
+		console.error("Got SIGTERM in worker");
+		setTimeout(() => {
+			console.warn(`Couldn't pause all queues within 30s, sorry! Exiting.`);
+		}, 30000);
+	});
+	process.on("unhandledRejection", (reason, p) => {
+		p.catch((error) => {
+			console.error("unhandledRejection" + `Caught exception: ${reason}\n` + `Exception origin: ${p}`);
+			console.error(error);
+		});
+	});
+
+	process.on("uncaughtException", (err: Error) => {
+		console.error("uncaughtException" + `Caught exception: ${err.message}\n` + `Exception origin: ${err.stack}`);
+		console.error(err);
+	});
+}
+
+setupGracefulShutdown();
 const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob): Promise<any> {
 	const buildRecord = await buildService.getBuild(bullJob.data.buildId);
 	const buildReportRecord = await buildReportService.getBuildReportRecord(buildRecord.latestReportId);
@@ -169,7 +190,6 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 			(result) => result.status === TestInstanceResultSetStatusEnum.FINISHED_RUNNING_CHECKS,
 		);
 		if (haveAllTestInstanceCompletedChecks) {
-
 			// This is the last test result to finish
 			const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
 

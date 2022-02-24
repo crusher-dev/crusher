@@ -255,8 +255,8 @@ export class AppWindow {
 
 	async handleResetAppSession() {
 		await this.webView.dispose();
-		await this.resetRecorder();
 		await this.store.dispatch(resetAppSession());
+		await this.resetRecorder();
 	}
 
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {

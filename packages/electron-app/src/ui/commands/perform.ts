@@ -170,6 +170,10 @@ const performVerifyTest = async (shouldAlsoSave = true) => {
 	ipcRenderer.invoke("verify-test", { shouldAlsoSave });
 };
 
+const performResetAppSession = async () => {
+	ipcRenderer.invoke("reset-app-session");
+}
+
 const performReplayTest = async (testId) => {
 	ipcRenderer.invoke("replay-test", { testId });
 };
@@ -263,4 +267,5 @@ export {
 	getUserTests,
 	turnOnElementSelectorInspectMode,
 	turnOffElementSelectorInspectMode,
+	performResetAppSession,
 };

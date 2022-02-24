@@ -31,7 +31,7 @@ import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
-import { setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
+import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 
@@ -185,6 +185,7 @@ export class AppWindow {
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
 		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
+		ipcMain.handle("reset-app-session", this.handleResetAppSession.bind(this));
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
@@ -249,6 +250,12 @@ export class AppWindow {
 
 	updateRecorderState(state) {
 		this.store.dispatch(updateRecorderState(state, {}));
+	}
+
+	async handleResetAppSession() {
+		await this.webView.dispose();
+		await this.resetRecorder();
+		await this.store.dispatch(resetAppSession());
 	}
 
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {

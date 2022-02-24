@@ -4,6 +4,7 @@ import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { RESET_APP_SESSION } from "../actions/app";
 
 export enum TRecorderState {
 	BOOTING = "BOOTING", // <- Internal state (Initialize recorder script)
@@ -91,7 +92,7 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				...state,
 				/* Set verified status to false, if a new step is added */
 				isVerified: false,
-				savedSteps: newSavedSteps
+				savedSteps: newSavedSteps,
 			};
 		}
 		case SET_DEVICE:
@@ -196,10 +197,14 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case RESET_RECORDER: {
 			return initialState;
 		}
+		case RESET_APP_SESSION:
+			return {
+				...initialState,
+			};
 		default:
 			return state;
 	}
 };
 
-export {IRecorderReducer, recorderReducer};
+export { IRecorderReducer, recorderReducer};
 

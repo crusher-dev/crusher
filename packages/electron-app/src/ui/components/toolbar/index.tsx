@@ -14,6 +14,7 @@ import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/
 import {
 	performNavigation,
 	performReloadPage,
+	performResetAppSession,
 	performSetDevice,
 	performVerifyTest,
 	preformGoBackPage,
@@ -369,7 +370,7 @@ const Toolbar = (props: any) => {
 							<Dropdown
 								initialState={showMenu}
 								// dropdownCSS={dropdownStyle}
-								component={<StepActionMenu callback={(id) => { if (id === "REVERIFY") { performVerifyTest(false);  }  setShowMenu(false); }} showDropDownCallback={() => { setShowMenu(false); }} />}
+								component={<StepActionMenu callback={(id) => { if (id === "REVERIFY") { performVerifyTest(false); } else if (id === "RESET") { performResetAppSession();  }  setShowMenu(false); }} showDropDownCallback={() => { setShowMenu(false); }} />}
 								callback={setShowMenu.bind(this)}
 							>
 								<div

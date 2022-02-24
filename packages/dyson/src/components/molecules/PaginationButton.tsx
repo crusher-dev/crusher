@@ -66,7 +66,7 @@ const button = css`
 const disabled = css`
 	color: #424c86;
 	background-color: #0a0b0e !important;
-	border: 1rem solid #2e3744 !important;
+	border: 1rem solid #2e3744;
 	cursor: not-allowed;
 `;
 

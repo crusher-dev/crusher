@@ -6,6 +6,7 @@ import { projectsAtom } from "@store/atoms/global/project";
 import { USER_META_KEYS } from "@constants/USER";
 import { appStateAtom, appStateItemMutator } from "@store/atoms/global/appState";
 import { Analytics } from "@utils/core/analytics";
+import { tempProjectAtom } from '@store/atoms/global/temp/tempTestId';
 
 interface UserInitialData {
 	userData: any;
@@ -38,6 +39,9 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 
 export const selectInitialProjectMutator = atom(null, (_get, _set, data: UserInitialData) => {
 	const { userData, projects } = data;
-	const selectedProjectId = userData?.meta?.[USER_META_KEYS.SELECTED_PROJECT_ID] ?? projects?.[0].id;
+	const tempProjectToRedirect = _get(tempProjectAtom)
+	const selectedProjectId = !!tempProjectToRedirect ? tempProjectToRedirect : userData?.meta?.[USER_META_KEYS.SELECTED_PROJECT_ID] ?? projects?.[0].id;
+
+	_set(tempProjectAtom, "");
 	_set(appStateItemMutator, { key: "selectedProjectId", value: selectedProjectId });
 });

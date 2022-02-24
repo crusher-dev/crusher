@@ -201,6 +201,7 @@ export class AppWindow {
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
 
+
 	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
 		const recorderState = getRecorderState(this.store.getState() as any);
 		event.returnValue = recorderState.type !== TRecorderState.PERFORMING_ACTIONS;

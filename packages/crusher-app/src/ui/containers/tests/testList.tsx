@@ -18,15 +18,15 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { currentProject } from "../../../store/atoms/global/project";
-import { tempTestAtom } from "../../../store/atoms/global/tempTestId";
-import { tempTestNameAtom } from "../../../store/atoms/global/tempTestName";
+import { tempTestAtom } from "../../../store/atoms/global/temp/tempTestId";
+import { tempTestNameAtom } from "../../../store/atoms/global/temp/tempTestName";
 
 import { RequestMethod } from "../../../types/RequestOptions";
 import { useRouter } from "next/router";
 import { PaginationButton } from "dyson/src/components/molecules/PaginationButton";
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
-import { tempTestTypeAtom } from "@store/atoms/global/tempTestType";
-import { tempTestUpdateIdAtom } from "@store/atoms/global/tempTestUpdateId";
+import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
+import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
 
 interface IBuildItemCardProps {
 	id: number;

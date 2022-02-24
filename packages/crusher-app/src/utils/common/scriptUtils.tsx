@@ -25,23 +25,7 @@ export const loadSegment = () => {
 	);
 };
 
-export const loadUserLeap = () => {
-	addScript(
-		"userLeap",
-		{},
-		`
-  (function(l,e,a,p) {
-    if (window.UserLeap) return;
-    window.UserLeap = function(){U._queue.push(arguments)}
-    var U = window.UserLeap;U.appId = a;U._queue = [];
-    a=l.createElement('script');
-    a.async=1;a.src=e+'?id='+U.appId;
-    p=l.getElementsByTagName('script')[0];
-    p.parentNode.insertBefore(a, p);
-  })(document, 'https://cdn.userleap.com/shim.js', 'msgT5Gz9W');
-		`,
-	);
-};
+
 
 export const GA_ID = process.env.GA_ID || "UA-51192281-1";
 
@@ -63,16 +47,21 @@ export const loadGA = () => {
 	);
 };
 
-export const loadCrisp = (callback = () => {}) => {
+
+
+export const loadGTM = ()=>{
 	addScript(
-		"crisp",
+		"gtm",
 		{},
 		`
-	window.$crisp=[];window.CRISP_WEBSITE_ID="5461094b-aec0-4aef-a7dc-d92a0a9dc236";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
-	`,
-		callback,
-	);
-};
+		   (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TCM8227');`
+	)
+}
+
 
 export const openChatBox = () => {
 	window["$crisp"].push(["do", "chat:open"]);

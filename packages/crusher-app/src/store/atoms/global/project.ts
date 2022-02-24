@@ -18,7 +18,11 @@ export const currentProject = atom((get) => {
 	return projects?.filter(({ id }) => selectedProjectId === id)[0];
 });
 
-export const updateCurrentProjectAtom = atom(null, (get, set, update) => {
+
+/*
+	Use to add project instantly.
+ */
+export const updateCurrentProjectInfoAtom = atom(null, (get, set, update) => {
 	const { selectedProjectId } = get(appStateAtom);
 	const projectList = get(projectsAtom);
 	const projects = produce(projectList, (draftProjects) => {

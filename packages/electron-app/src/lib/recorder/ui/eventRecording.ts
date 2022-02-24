@@ -357,6 +357,7 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
+
 		const originalTimestamp = event.timeStamp;
 		event.timestamp = Date.now();
 		if (event.which === 3) {

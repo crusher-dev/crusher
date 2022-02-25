@@ -640,10 +640,15 @@ const tableStyle = css`
 `;
 
 function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
+	const handleClose = (e) => {
+		setOpenVideoModal(false);
+	};
 	return (
-		<Modal
-			onClose={setOpenVideoModal.bind(this, false)}
-			onOutsideClick={setOpenVideoModal.bind(this, false)}
+		<div onClick={(e) => { e.preventDefault();  e.stopPropagation(); }}>
+			<Modal
+				lightOverlay={false}
+			onClose={handleClose.bind(this)}
+			onOutsideClick={handleClose.bind(this)}
 			modalStyle={css`
 				padding: 28rem 36rem 36rem;
 			`}
@@ -652,20 +657,26 @@ function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 			<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
 			<VideoComponent src={videoUrl} />
 		</Modal>
+		</div>
 	);
 }
 
-function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
-	const [openVideoModal, setOpenVideoModal] = useState(false);
+function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVideo, setIsShowingVideo }) {
 	const { steps } = testInstanceData;
 	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 
+	const handleOpenVideoModal = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setIsShowingVideo(true);
+	}
+
 	return (
 		<>
-			<Conditional showIf={openVideoModal}>
-				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl} />
+			<Conditional showIf={isShowingVideo}>
+				<TestVideoUrl setOpenVideoModal={setIsShowingVideo} videoUrl={videoUrl} />
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
 				<TestStatusSVG type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
@@ -683,7 +694,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 					{screenshotCount} screenshot | {checksCount} check
 				</span>
 				<Conditional showIf={isVideoAvailable}>
-					<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
+					<span className={"flex text-13 mr-26"} onClick={handleOpenVideoModal.bind(this)}>
 						<PlaySVG className={"mr-10"} /> Recording
 					</span>
 				</Conditional>
@@ -769,6 +780,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const [showLoading, setLoading] = useState(false);
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
 	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
+	const [isShowingVideo, setIsShowingVideo] = React.useState(false);
 
 	const onCardClick = () => {
 		// if(expand===true){
@@ -798,10 +810,10 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
-			<div onClick={onCardClick} className="sticky top-0 z-20">
+			<div onClick={onCardClick} css={ [isShowingVideo ? css`z-index: 21` : null ]} className="sticky top-0 z-20">
 				<div css={stickyContainer} className={"px-28 pb-16 w-full test-card-header"}>
 					<div css={header} className={"flex justify-between items-center w-full"}>
-						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
+						<TestOverviewTabTopSection isShowingVideo={ isShowingVideo } setIsShowingVideo={setIsShowingVideo} name={name} testInstanceData={testInstanceData} expand={expand} />
 					</div>
 
 					<Conditional showIf={failedTestsConfiguration.length >= 1}>

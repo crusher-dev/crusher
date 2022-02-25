@@ -16,11 +16,12 @@ type TModalProps = {
 	onClick?: () => void;
 	onClose?: () => void;
 	onOutsideClick?: () => void;
+	lightOverlay?: boolean;
 } & React.DetailedHTMLProps<HTMLAttributes<any>, any>;
 
-export const Modal = ({ modalStyle, children, onClose, onOutsideClick }: TModalProps) => {
+export const Modal = ({ modalStyle, children, onClose, lightOverlay, onOutsideClick }: TModalProps) => {
 	return (
-		<OverlayTransparent lightOverlay={true}>
+		<OverlayTransparent lightOverlay={typeof lightOverlay !== "undefined" && lightOverlay !== null ? lightOverlay : true}>
 			<CenterLayout>
 				<OnOutsideClick onOutsideClick={onOutsideClick}>
 					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>

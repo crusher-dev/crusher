@@ -5,7 +5,7 @@ import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Conditional } from "@dyson/components/layouts";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { CrusherHammerIcon, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
+import { CrusherHammerIcon, DownIcon, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
 import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
@@ -53,11 +53,60 @@ const recorderDevices = devices
 		component: <DeviceItem label={device.name} />,
 	}));
 
+function ActionButtonDropdown({ setShowActionMenu, ...props }) {
+	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
+
+	const MenuItem = ({ label, onClick, ...props }) => {
+		return (
+			<div
+				css={css`
+					padding: 8rem 12rem;
+					:hover {
+						background: #687ef2 !important;
+					}
+				`}
+				onClick={onClick}
+			>
+				{label}
+			</div>
+		);
+	};
+
+	const handleSave = () => {
+		setShowActionMenu(false);
+		saveTest();
+		sendSnackBarEvent({ type: "success", message: "Saving test..." });
+	};
+	const handleUpdate = () => {
+		setShowActionMenu(false);
+		updateTest();
+		sendSnackBarEvent({ type: "success", message: "Updating test" });
+	};
+	return (
+		<div
+			className={"flex flex-col justify-between h-full"}
+			css={css`
+				font-size: 13rem;
+				color: #fff;
+			`}
+		>
+			<div>
+				<MenuItem onClick={handleSave} label={"Save"} className={"close-on-click"} />
+				<Conditional showIf={editingSessionMeta && !!editingSessionMeta.testId}>
+					<MenuItem onClick={handleUpdate} label={"Update"} className={"close-on-click"} />
+				</Conditional>
+			</div>
+		</div>
+	);
+}
+
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const intervalRef = React.useRef(null);
 	const totalSecondsToWaitBeforeSave = 5;
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
 	const { isOpen, setCurrentStep, setIsOpen } = useTour();
+	const [showActionMenu, setShowActionMenu] = React.useState(false);
+
 	const dispatch = useDispatch();
 	const store = useStore();
 
@@ -97,42 +146,91 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 	return (
 		<>
-			<Conditional showIf={!editingSessionMeta}>
-				<Button
-					id={"verify-save-test"}
-					onClick={isTestVerificationComplete ? saveTestToCloud : verifyTest}
-					bgColor="tertiary-outline"
-					css={saveButtonStyle}
-					className={"ml-36"}
-				>
-					<Conditional showIf={isTestVerificationComplete}>
-						<span>
-							<span>Save test</span>
-						</span>
-					</Conditional>
-					<Conditional showIf={!isTestVerificationComplete}>
-						<span>Verify & Save</span>
-					</Conditional>
-				</Button>
-			</Conditional>
+			<Dropdown
+				initialState={showActionMenu}
+				component={<ActionButtonDropdown setShowActionMenu={setShowActionMenu.bind(this)} />}
+				callback={setShowActionMenu.bind(this)}
+				dropdownCSS={css`
+					left: 32rem;
+					width: 162rem;
+				`}
+			>
+				<Conditional showIf={!editingSessionMeta}>
+					<Button
+						id={"verify-save-test"}
+						onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							if (isTestVerificationComplete) {
+								saveTestToCloud();
+							} else {
+								verifyTest();
+							}
+						}}
+						bgColor="tertiary-outline"
+						css={saveButtonStyle}
+						className={"ml-36"}
+					>
+						<Conditional showIf={isTestVerificationComplete}>
+							<span>
+								<span>Save test</span>
+							</span>
+						</Conditional>
+						<Conditional showIf={!isTestVerificationComplete}>
+							<span>Verify & Save</span>
+						</Conditional>
+					</Button>
+				</Conditional>
 
-			<Conditional showIf={!!editingSessionMeta}>
-				<Button
-					onClick={isTestVerificationComplete ? editTestInCloud : verifyTest}
-					bgColor="tertiary-outline"
-					css={saveButtonStyle}
-					className={"ml-36"}
+				<Conditional showIf={!!editingSessionMeta}>
+					<Button
+						onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							if (isTestVerificationComplete) {
+								editTestInCloud();
+							} else {
+								verifyTest();
+							}
+						}}
+						bgColor="tertiary-outline"
+						css={saveButtonStyle}
+						className={"ml-36"}
+					>
+						<Conditional showIf={isTestVerificationComplete}>
+							<span>
+								<span>Update test</span>
+							</span>
+						</Conditional>
+						<Conditional showIf={!isTestVerificationComplete}>
+							<span>Verify & Update</span>
+						</Conditional>
+					</Button>
+				</Conditional>
+				<div
+					css={css`
+						background: #9461ff;
+						display: flex;
+						align-items: center;
+						padding: 0rem 9rem;
+						border-top-right-radius: 6rem;
+						border-bottom-right-radius: 6rem;
+						border-left-color: #00000036;
+						border-left-width: 2.5rem;
+						border-left-style: solid;
+						:hover {
+							opacity: 0.8;
+						}
+					`}
 				>
-					<Conditional showIf={isTestVerificationComplete}>
-						<span>
-							<span>Update test</span>
-						</span>
-					</Conditional>
-					<Conditional showIf={!isTestVerificationComplete}>
-						<span>Verify & Update</span>
-					</Conditional>
-				</Button>
-			</Conditional>
+					<DownIcon
+						fill={"#fff"}
+						css={css`
+							width: 9rem;
+						`}
+					/>
+				</div>
+			</Dropdown>
 		</>
 	);
 };
@@ -348,7 +446,14 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<div css={css`font-size: 14rem; color:#fff`}>{  showMenu }</div>
+				<div
+					css={css`
+						font-size: 14rem;
+						color: #fff;
+					`}
+				>
+					{showMenu}
+				</div>
 				<div
 					css={css`
 						position: relative;
@@ -370,7 +475,21 @@ const Toolbar = (props: any) => {
 							<Dropdown
 								initialState={showMenu}
 								// dropdownCSS={dropdownStyle}
-								component={<StepActionMenu callback={(id) => { if (id === "REVERIFY") { performVerifyTest(false); } else if (id === "RESET") { performResetAppSession();  }  setShowMenu(false); }} showDropDownCallback={() => { setShowMenu(false); }} />}
+								component={
+									<StepActionMenu
+										callback={(id) => {
+											if (id === "REVERIFY") {
+												performVerifyTest(false);
+											} else if (id === "RESET") {
+												performResetAppSession();
+											}
+											setShowMenu(false);
+										}}
+										showDropDownCallback={() => {
+											setShowMenu(false);
+										}}
+									/>
+								}
 								callback={setShowMenu.bind(this)}
 							>
 								<div
@@ -498,7 +617,8 @@ const inputStyle = css`
 		border-radius: 8rem 0px 0px 8rem;
 		height: 85%;
 		left: 1rem;
-		.outsideDiv, .showOnClick {
+		.outsideDiv,
+		.showOnClick {
 			height: 100%;
 		}
 		/* To stop border collision */
@@ -556,8 +676,17 @@ const saveButtonStyle = css`
 	font-weight: normal;
 	font-size: 14rem;
 	line-height: 17rem;
-
+	border: 0.5px solid transparent;
+	border-right-width: 0rem;
+	border-top-right-radius: 0rem;
+	border-bottom-right-radius: 0rem;
 	color: #ffffff;
+	:hover {
+		border: 0.5px solid #8860de;
+		border-right-width: 0rem;
+		border-top-right-radius: 0rem;
+		border-bottom-right-radius: 0rem;
+	}
 `;
 const recTextStyle = css`
 	font-family: Cera Pro;

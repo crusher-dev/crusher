@@ -430,7 +430,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 						isSelected={checkedSteps.has(step.id)}
 						callback={() => toggleStep(step.id)}
 						title={step.title}
-						subtitle={step.selector.substr(0, 25)}
+						subtitle={step.selector ? step.selector.substr(0, 25) : ""}
 					/>
 				))}
 

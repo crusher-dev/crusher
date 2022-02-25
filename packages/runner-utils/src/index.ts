@@ -190,7 +190,7 @@ class CrusherRunnerActions {
 					try {
 						endingScreenshot = await this._getCurrentScreenshot(page);
 					} catch (ex) {}
-
+					console.error(err);
 					await this.handleActionExecutionStatus(
 						action.name,
 						ActionStatusEnum.FAILED,

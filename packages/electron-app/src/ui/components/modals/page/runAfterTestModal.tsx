@@ -7,10 +7,16 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch } from "react-redux";
 import { getUserTests, performRunAfterTest } from "electron-app/src/ui/commands/perform";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
+import { iAction } from "@shared/types/action";
+import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
+import { sendSnackBarEvent } from "../../toast";
 
 interface iStartupModalProps {
 	isOpen: boolean;
 	handleClose: () => void;
+
+	stepIndex?: number;
+	stepAction?: iAction;
 }
 const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
@@ -22,6 +28,12 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 
 	const dispatch = useDispatch();
 
+	React.useEffect(() => {
+		if (props.stepAction && isOpen) {
+			setTestId(props.stepAction.payload.meta.value);
+		}
+	}, [isOpen, props.stepAction]);
+
 	const handleTestIdChange = (event: any) => {
 		setTestId(event.target.value);
 	};
@@ -29,6 +41,15 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 	const saveAction = async () => {
 		if (testId && testId !== "") {
 			performRunAfterTest(testId);
+			props.handleClose();
+		}
+	};
+
+	const updateAction = async () => {
+		if (testId && testId !== "") {
+			props.stepAction.payload.meta.value = testId;
+			dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
+			sendSnackBarEvent({ type: "success", message: "Action updated" });
 			props.handleClose();
 		}
 	};
@@ -72,9 +93,9 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 				<div style={inputContainerStyle}>
 					<SelectBox
 						isSearchable={true}
-						dropDownHeight={ "auto"}
+						dropDownHeight={"auto"}
 						css={css`
-						  font-family: Gilroy;
+							font-family: Gilroy;
 							input {
 								outline: none;
 								width: 80%;
@@ -112,8 +133,8 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 					/>
 				</div>
 				<div css={submitFormContainerStyle}>
-					<Button onClick={saveAction} css={buttonStyle}>
-						Run
+					<Button onClick={props.stepAction ? updateAction : saveAction} css={buttonStyle}>
+						{props.stepAction ? "Update" : "Run"}
 					</Button>
 				</div>
 			</div>

@@ -153,7 +153,7 @@ export const ProjectSettings = () => {
 				<Button
 					bgColor={"danger"}
 					css={css`
-						width: 164rem;
+						width: 124rem;
 					`}
 					onClick={deleteProjectCallback}
 				>

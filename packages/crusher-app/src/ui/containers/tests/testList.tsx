@@ -112,7 +112,7 @@ function TestCard(props: IBuildItemCardProps) {
 			</Conditional>
 			<div css={[folderStyle, testItem]} className={`flex ${!isRoot && "pl-32"}`}>
 				<div css={[containerWidth, testItemWidth(isRoot)]} className={"flex"}>
-					<div className={"flex pt-12 w-full justify-between"}>
+					<div className={"flex pt-16 w-full justify-between"}>
 						<div className={"flex"}>
 							<TestIcon height={18} className={`mr-16 ${isRoot && "invisible"}`} />
 							<div>
@@ -298,7 +298,7 @@ function FolderItem(props: { folder: any; id: number }) {
 						<div className={"flex"}>
 							<Folder height={18} className={"mr-16"} />
 							<div>
-								<div className={"font-cera text-14 font-500 mb-16 leading-none"}>{props.folder.name}</div>
+								<div className={"font-cera text-14 font-500 mb-12 leading-none"}>{props.folder.name}</div>
 								<div className={"flex items-center"}>
 									<span>{testList.length} tests</span>
 									<Conditional showIf={testList.length>0}>

@@ -49,7 +49,12 @@ const ModalManager = () => {
 				isOpen={currentModal.type === TElementActionsEnum.SHOW_ASSERT_MODAL}
 				handleClose={closeModal}
 			/>
-			<WaitModal stepIndex={currentModal.stepIndex} isOpen={currentModal.type === TTopLevelActionsEnum.WAIT} handleClose={closeModal} />
+			<WaitModal
+				stepIndex={currentModal.stepIndex}
+				stepAction={stepAction as any}
+				isOpen={currentModal.type === TTopLevelActionsEnum.WAIT}
+				handleClose={closeModal}
+			/>
 			<RunAfterTestModal
 				stepAction={stepAction as any}
 				stepIndex={currentModal.stepIndex}

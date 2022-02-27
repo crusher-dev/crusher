@@ -4,6 +4,7 @@ import { Modal } from "@dyson/components/molecules/Modal";
 import { css } from "@emotion/react";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
+import { iAction } from "@shared/types/action";
 import { recordStep, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import React from "react";
@@ -13,7 +14,8 @@ import { ModalTopBar } from "../topBar";
 
 interface iStartupModalProps {
 	isOpen: boolean;
-	stepIndex: number | null;
+	stepIndex?: number | null;
+	stepAction?: iAction | null;
 	handleClose: () => void;
 }
 

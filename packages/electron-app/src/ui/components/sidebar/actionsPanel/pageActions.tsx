@@ -1,12 +1,8 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ActionsList, ActionsListItem } from "../actionsList";
+import { ActionsList, ActionsListItem } from "./actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
-import { WaitModal } from "./waitModal";
-import { RunAfterTestModal } from "./runAfterTestModal";
-import { CustomCodeModal } from "../../../modals/page/customCodeModal";
-import { SeoModalContent } from "./seoModal";
-import { emitShowModal, modalEmitter } from "../../modalManager";
+import { emitShowModal } from "../modalManager";
 
 export enum TTopLevelActionsEnum {
 	VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",

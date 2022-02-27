@@ -1,14 +1,13 @@
 import React from "react";
 import {css} from "@emotion/react";
-import { ActionsList, ActionsListItem } from "../actionsList";
+import { ActionsList, ActionsListItem } from "./actionsList";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector, useStore } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
-import { AssertElementModal } from "../../../modals/element/assertElementModal";
 import { useTour } from "@reactour/tour";
-import { emitShowModal } from "../../modalManager";
+import { emitShowModal } from "../modalManager";
 
 export enum TElementActionsEnum {
     CLICK = "CLICK",

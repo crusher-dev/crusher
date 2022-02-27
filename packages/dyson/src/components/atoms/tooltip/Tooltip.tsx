@@ -12,6 +12,7 @@ export type TooltipWrapperProps = {
 	children: any;
 	padding: number;
 	offset: number;
+	timer?: any;
 	wrapperCSS?: SerializedStyles;
 	css?: SerializedStyles;
 } & React.DetailedHTMLProps<any, any>;
@@ -35,9 +36,9 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
 /**
  * Unified tolltip component for Dyson UI system
  */
-export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true", placement, type, content, padding = 0, ...props }) => {
+export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true",timer=0, placement, type, content, padding = 0, ...props }) => {
 	const [show, setShow] = useState(false);
-	const [computedStyle, setComputedStyle] = useState(null);
+	const [computedStyle] = useState(null);
 	const { offset: offsetWrapper = 5 } = props;
 	const { x, y, reference, floating, update, strategy, refs } = useFloating({
 		placement,
@@ -45,9 +46,6 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 		middleware: [shift(), offset(offsetWrapper)],
 	});
 	const { css, wrapperCSS, callback } = props;
-
-	const ref = useRef();
-
 	const eventListener = () => {
 		if (type === "hover") {
 			return {
@@ -58,7 +56,6 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 					const isElement = e.relatedTarget instanceof Element;
 					const movedToToolip = (isElement && refs.floating?.current?.contains(e.relatedTarget)) || refs.floating.current === e.relatedTarget;
 					if (movedToToolip) return;
-					console.log(e.relatedTarget);
 					if (autoHide) {
 						setShow(false);
 					}
@@ -152,92 +149,4 @@ const tooltipBox = css`
 	border-radius: 4px;
 	padding: 4rem 8rem;
 	font-size: 13rem;
-`;
-
-const buttonCSS = css`
-	cursor: default;
-	border-radius: 4rem;
-	color: white;
-	font-weight: 700;
-	height: 32rem;
-	padding: 0 12rem;
-	span,
-	div {
-		font-size: 14rem;
-	}
-`;
-
-const extraSmallButton = css`
-	padding: 0 12rem;
-	height: 24rem;
-	font-weight: 600 !important;
-	font-size: 12.5rem;
-`;
-
-const smallButton = css`
-	padding: 0 12rem;
-	height: 28rem;
-	font-weight: 600 !important;
-	font-size: 13rem;
-`;
-
-const largeButton = css`
-	box-sizing: border-box;
-	border: 1rem solid #4675bd;
-	height: 44rem;
-
-	font-weight: 600;
-	font-size: 14rem;
-	width: 348rem;
-`;
-
-const mediumButton = css`
-	box-sizing: border-box;
-	border: 1rem solid #4675bd;
-	height: 32rem;
-
-	font-weight: 600;
-	font-size: 14rem;
-	width: 182rem;
-`;
-
-const blue = css`
-	background-color: #687ef2;
-
-	:hover {
-		background-color: #6173d4;
-	}
-`;
-
-const danger = css`
-	background-color: #aa3e5f;
-
-	:hover {
-		background-color: #c0486d;
-	}
-`;
-
-const tertiaryDark = css`
-	background-color: #1e242c;
-	border: 1rem solid #2e3744;
-
-	:hover {
-		background-color: #1b1d1f;
-		border: 1rem solid #2a2e38;
-	}
-`;
-
-const tertiaryOutline = css`
-	border: 1rem solid #2e3744;
-	background: rgba(255, 255, 255, 0);
-
-	:hover {
-		background: rgba(255, 255, 255, 0.05);
-		border: 1rem solid #2a2e38;
-	}
-`;
-
-const disabledButton = css`
-	background-color: #1e242c !important;
-	border: 1rem solid #2e3744 !important;
 `;

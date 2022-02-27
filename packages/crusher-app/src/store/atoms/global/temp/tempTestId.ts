@@ -10,8 +10,6 @@ export const tempTestAtom = atom(
 	},
 );
 
-
-
 const baseTempProjectAtom = atom<string | null>(typeof window !== "undefined" ? localStorage.getItem("tempProjectId") ?? null : null);
 
 export const tempProjectAtom = atom(

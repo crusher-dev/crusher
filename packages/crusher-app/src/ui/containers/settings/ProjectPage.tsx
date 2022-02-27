@@ -30,7 +30,7 @@ const updateProjectSettings = (projectId, name, visualBaseline) => {
 
 export const ProjectSettings = () => {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
-	const [project,] = useAtom(currentProject);
+	const [project] = useAtom(currentProject);
 	const [, updateCurrentProject] = useAtom(updateCurrentProjectInfoAtom);
 	const [projectsList] = useAtom(projectsAtom);
 	const [projectName, setProjectName] = useState(project?.name);

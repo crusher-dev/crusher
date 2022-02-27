@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 import { useAtom } from "jotai";
 
-import { tempProjectAtom, tempTestAtom } from '../store/atoms/global/temp/tempTestId';
+import { tempProjectAtom, tempTestAtom } from "../store/atoms/global/temp/tempTestId";
 import { tempTestNameAtom } from "../store/atoms/global/temp/tempTestName";
 import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
 import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
@@ -40,7 +40,7 @@ export const useLoadTempData = () => {
 		setTempTest(tempTestId);
 		setTempTestType(tempTestType || "save");
 
-		if(!!urlQuery.get("project_id")){
+		if (!!urlQuery.get("project_id")) {
 			setProjectToRedirect(parseInt(urlQuery.get("project_id")));
 		}
 
@@ -48,7 +48,7 @@ export const useLoadTempData = () => {
 			setLoginKey(loginKey);
 			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } });
 		}
-		if(githubToken) {
+		if (githubToken) {
 			setGithubToken(githubToken);
 		}
 

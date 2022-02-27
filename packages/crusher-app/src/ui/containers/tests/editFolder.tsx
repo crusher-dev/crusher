@@ -9,7 +9,7 @@ import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
-import { changeTestInfoAPI, deleteTestApi, getTestListAPI } from "@constants/api";
+import { changeTestInfoAPI, deleteFolderAPI, deleteTestApi, getTestListAPI, updateFolderAPI } from "@constants/api";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
@@ -20,22 +20,21 @@ import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/
 import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { sentenceCase } from "@utils/common/textUtils";
-import { testFiltersAtom } from "@store/atoms/pages/testPage";
 
-const changeTestData = (testId: number, name: string, selectedFolder: string | null) => {
-	return backendRequest(changeTestInfoAPI(testId), {
+const changeFolderData = (projectId: number, folderId: number, name: string) => {
+	return backendRequest(updateFolderAPI(projectId), {
 		method: RequestMethod.POST,
 		payload: {
 			name: name,
-			testFolder: selectedFolder,
+			folderId: folderId,
 		},
 	});
 };
 
-const deleteTestInServer = (testId: number) => {
-	return backendRequest(deleteTestApi(testId), {
+const deleteFolderInServer = (projectId: number, folderId: number) => {
+	return backendRequest(deleteFolderAPI(projectId), {
 		method: RequestMethod.POST,
-		payload: {},
+		payload: { folderId },
 	});
 };
 
@@ -43,58 +42,43 @@ export const getOptions = ({ list }, id) => {
 	return list.filter((listItem) => listItem.id !== id).map((listItem) => ({ label: sentenceCase(listItem.testName), value: listItem.id }));
 };
 
-export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
-	const [testName, changeTestName] = useState(name);
+export const EditFolderModal = ({ name, id, onClose }) => {
+	const [folderName, changeFolderName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
 	const [project] = useAtom(currentProject);
-	const [selectedFolder, setSelectedFolder] = useState(!!folderId ? [folderId] : []);
 
-	const selectedFolderId = selectedFolder.length > 0 && selectedFolder[0];
-	const isFormChanged = testName !== name || folderId !== selectedFolderId;
-
-	const [filters] = useAtom(testFiltersAtom);
-	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {
-		suspense: true,
-		refreshInterval: 200000,
-	});
-
+	const isFormChanged = name !== folderName;
 	const changeTestNameCallback = useCallback(() => {
 		(async () => {
 			try {
-				await changeTestData(id, testName, selectedFolder.length > 0 ? selectedFolder[0] : null);
+				await changeFolderData(project.id, id, folderName);
 				sendSnackBarEvent({ type: "normal", message: "Changes have been saved." });
 				await mutate(getTestListAPI(project.id));
 				onClose();
-			} catch {
+			} catch (e) {
+				console.error(e);
 				sendSnackBarEvent({ type: "error", message: "Failed to save changes" });
 			}
 			setProcessing(false);
 		})();
 		setProcessing(true);
-	}, [testName, selectedFolder]);
+	}, [folderName]);
 
-	const deleteTest = useCallback(() => {
+	const deleteFolder = useCallback(() => {
 		(async () => {
 			try {
-				await deleteTestInServer(id);
-				sendSnackBarEvent({ type: "normal", message: "We have deleted this test." });
+				await deleteFolderInServer(project.id, id);
+				sendSnackBarEvent({ type: "normal", message: "We have deleted the folder." });
 				await mutate(getTestListAPI(project.id));
 				onClose();
 			} catch {
-				sendSnackBarEvent({ type: "error", message: "Failed to delete test." });
+				sendSnackBarEvent({ type: "error", message: "Failed to delete folder." });
 			}
 			setProcessingDelete(false);
 		})();
 		setProcessingDelete(true);
 	}, []);
-
-	let folders = data.folders.map((folder) => ({ label: folder.name, value: folder.id }));
-
-	if (folderId) {
-		folders = [{ label: "No folder", value: null }, ...folders];
-	}
-
 	return (
 		<Modal
 			onOutsideClick={onClose}
@@ -114,7 +98,7 @@ export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 					color: #d8d8d8;
 				`}
 			>
-				Test name
+				Folder name
 			</div>
 			<Input
 				placeholder={"User login flow?"}
@@ -122,45 +106,16 @@ export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 					width: 100%;
 				`}
 				onChange={(e: React.FormEvent<HTMLInputElement>) => {
-					changeTestName(e.currentTarget.value);
+					changeFolderName(e.currentTarget.value);
 				}}
 				initialValue={name}
 				size={"medium"}
 			/>
 
-			<div className={"flex mt-24 "}>
-				<div className={"w-full mr-32"}>
-					<TextBlock
-						css={css`
-							color: #d8d8d8;
-						`}
-						className={"mb-12"}
-						fontSize={"12.4"}
-						weight={600}
-					>
-						Folder
-					</TextBlock>
-
-					<SelectBox
-						selected={selectedFolder}
-						css={css`
-							width: 50%;
-						`}
-						values={folders}
-						isMultiSelect={false}
-						isSearchable={true}
-						size={"medium"}
-						placeholder={"Select folder"}
-						callback={(e) => {
-							setSelectedFolder(e);
-						}}
-					/>
-				</div>
-			</div>
 			<div className={"flex justify-end mt-20"}>
 				<Button
 					css={css`
-						min-width: 104rem;
+						min-width: 112rem;
 					`}
 					disabled={!isFormChanged || processing}
 					bgColor={!isFormChanged ? "disabled" : ""}
@@ -197,7 +152,7 @@ export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 					bgColor={"danger"}
 					impactLevel={"low"}
 					size={"x-small"}
-					onClick={deleteTest}
+					onClick={deleteFolder}
 				>
 					<div className={"flex justify-center items-center pt-2"}>
 						<Conditional showIf={processingDelete}>
@@ -218,4 +173,4 @@ export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 	);
 };
 
-export default EditTestModal;
+export default EditFolderModal;

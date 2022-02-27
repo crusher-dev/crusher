@@ -8,6 +8,7 @@ import { peformTakeElementScreenshot, performAssertElementVisibility, performCli
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { AssertElementModal } from "../../../modals/element/assertElementModal";
 import { useTour } from "@reactour/tour";
+import { emitShowModal } from "../../modalManager";
 
 export enum TElementActionsEnum {
     CLICK = "CLICK",
@@ -49,7 +50,6 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 	const selectedElement = useSelector(getSelectedElement);
 	const store = useStore();
 
-	const [currentModal, setCurrentModal] = React.useState(null);
 	const { isOpen, setCurrentStep } = useTour();
 
     const handleActionSelected = (id: TElementActionsEnum) => {
@@ -72,10 +72,10 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 				store.dispatch(setSelectedElement(null));
 				break;
 			case TElementActionsEnum.SHOW_ASSERT_MODAL:
-				setCurrentModal(TElementActionsEnum.SHOW_ASSERT_MODAL);
+				emitShowModal({ type: TElementActionsEnum.SHOW_ASSERT_MODAL });
 				break;
 			case TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL:
-				setCurrentModal(TElementActionsEnum.SHOW_ASSERT_MODAL);
+				emitShowModal({ type: TElementActionsEnum.SHOW_ASSERT_MODAL });
 				break;
 			case TElementActionsEnum.ASSERT_VISIBILITY:
 				performAssertElementVisibility(selectedElement, store);

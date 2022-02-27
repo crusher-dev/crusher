@@ -6,12 +6,14 @@ import { css } from "@emotion/react";
 import { InspectElementIcon } from "../../../icons";
 import { turnOnElementSelectorInspectMode } from "electron-app/src/ui/commands/perform";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
+import { Button, ButtonProps } from "@dyson/components/atoms/button/Button";
 
 type IFieldInputProps = InputProps & {
 	label: string;
 
 	// Applies to the component's container
 	className?: string;
+	inputStyleCSS?: any;
 };
 
 const FieldInput = (props: IFieldInputProps) => {
@@ -35,6 +37,7 @@ const FieldInput = (props: IFieldInputProps) => {
 							min-width: auto;
 							max-width: 125rem;
 						`,
+						props.inputStyleCSS,
 					] as any
 				}
 				{...inputProps}
@@ -117,6 +120,49 @@ const FieldSelectorPicker = (props: IFieldSelectorPickerProps) => {
 		</div>
 	);
 };
+
+type IFieldEditModeButtonProps = Omit<ButtonProps, "children"> & {
+	label: string;
+
+	// Applies to the component's container
+	className?: string;
+};
+
+const FieldEditModeButton = (props: IFieldEditModeButtonProps) => {
+	const { className } = props;
+
+	const buttonProps = React.useMemo(() => {
+		const clonedProps = { ...props };
+		delete clonedProps.label;
+		delete clonedProps.className;
+
+		return clonedProps;
+	}, [props]);
+
+	return (
+		<div className={`${className}`}>
+			<span>{props.label}</span>
+			<div className={"mt-24"} css={buttonContainerStyle}>
+				<Button {...buttonProps}>
+					<span css={buttonTextStyle}>Open Edit Modal</span>
+				</Button>
+			</div>
+		</div>
+	);
+};
+
+const buttonTextStyle = css`
+	font-size: 12.25rem;
+	padding: 0 14rem;
+`;
+const buttonContainerStyle = css`
+	flex: 1;
+	margin-top: 24rem;
+	position: relative;
+	display: flex;
+	justify-content: center;
+`;
+
 const textAreaStyle = css`
 	width: 100%;
 	height: 100rem;
@@ -186,4 +232,4 @@ const inspectElementIconStyle = css`
 	}
 `;
 
-export { FieldInput, FieldToggle, FieldSelectorPicker };
+export { FieldInput, FieldToggle, FieldSelectorPicker, FieldEditModeButton };

@@ -1,19 +1,33 @@
 import React, { ReactText } from "react";
 import { iAction } from "@shared/types/action";
 import { css } from "@emotion/react";
-import { FieldInput, FieldSelectorPicker, FieldToggle } from "./fields";
+import { FieldEditModeButton, FieldInput, FieldSelectorPicker, FieldToggle } from "./fields";
 import { useDispatch } from "react-redux";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { Conditional } from "@dyson/components/layouts";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "../../toast";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { emitShowModal } from "../modalManager";
+import { TTopLevelActionsEnum } from "../actionsPanel/pageActions";
+import { TElementActionsEnum } from "../actionsPanel/elementActions";
 
 interface IActionSpecificInfoProps {
 	action: iAction;
 	actionIndex: number;
 	setIsPinned: any;
 }
+
+// Actions map with modal types
+const EDIT_MODE_MAP = {
+	[ActionsInTestEnum.WAIT]: TTopLevelActionsEnum.WAIT,
+	[ActionsInTestEnum.VALIDATE_SEO]: TTopLevelActionsEnum.SHOW_SEO_MODAL,
+	[ActionsInTestEnum.CUSTOM_CODE]: TTopLevelActionsEnum.CUSTOM_CODE,
+	[ActionsInTestEnum.RUN_AFTER_TEST]: TTopLevelActionsEnum.RUN_AFTER_TEST,
+	[ActionsInTestEnum.ASSERT_ELEMENT]: TElementActionsEnum.SHOW_ASSERT_MODAL,
+	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL,
+};
 
 const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 	const { action, actionIndex } = props;
@@ -47,22 +61,92 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 			sendSnackBarEvent({ type: "success", message: "Selectors updated" });
 		}
 	};
-	const saveSelectorsOnUserInput = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.keyCode === 13) {
-			handleOnSelectorsPicked(transformStringSelectorsToArray((e.target as any).value), false);
+	const saveSelectorsOnUserInput = (e) => {
+		handleOnSelectorsPicked(transformStringSelectorsToArray(e.target.value), false);
+	};
+
+	// <--- Edit mode (For opening advanced modals) --->
+	const handleEditModeClick = () => {
+		if (!EDIT_MODE_MAP[action.type]) {
+			return sendSnackBarEvent({
+				type: "error",
+				message: "This action doesn't have edit mode",
+			});
 		}
+
+		emitShowModal({
+			type: EDIT_MODE_MAP[action.type],
+			stepIndex: actionIndex,
+		});
+	};
+
+	// <-- Input -->
+	const inputValue = action.payload.meta?.value?.value || "";
+	const updateInputActionValue = (value: string) => {
+		if (action.payload.meta.value.value !== value) {
+			action.payload.meta.value.value = value;
+			dispatch(updateRecordedStep({ ...action }, actionIndex));
+			sendSnackBarEvent({ type: "success", message: "Value updated" });
+		}
+	};
+	const handleInputActionBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+		updateInputActionValue((e.target as HTMLInputElement).value);
+	};
+
+	// <-- Both Navigate Url and Wait for navigation -->
+	const navigationUrlValue = action.payload.meta?.value || "";
+	const updateNavigationUrlValue = (value: string) => {
+		if (action.payload.meta.value.value !== value) {
+			action.payload.meta.value.value = value;
+			dispatch(updateRecordedStep({ ...action }, actionIndex));
+			sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
+		}
+	};
+	const handleNavigationInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+		updateInputActionValue((e.target as HTMLInputElement).value);
 	};
 
 	return (
 		<div css={containerStyle}>
-			<Conditional showIf={isElementStep}>
-				<FieldSelectorPicker
-					onChange={saveSelectorsOnUserInput.bind(this)}
-					onSelectorsPicked={handleOnSelectorsPicked.bind(this)}
-					className={"mt-8"}
-					label={"Selectors"}
-					value={readableSelectors}
-				/>
+			<div className="mt-4">
+				<Conditional showIf={action.type === ActionsInTestEnum.ADD_INPUT}>
+					<FieldInput
+						label={"Input value"}
+						placeholder={"Enter input value"}
+						size={"small"}
+						initialValue={inputValue}
+						onBlur={handleInputActionBlur}
+						onReturn={updateInputActionValue}
+						inputStyleCSS={bigInputStyle}
+					/>
+				</Conditional>
+				<Conditional showIf={[ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(action.type)}>
+					<FieldInput
+						label={"URL"}
+						placeholder={"Enter url"}
+						size={"small"}
+						initialValue={navigationUrlValue}
+						onBlur={handleNavigationInputBlur}
+						onReturn={updateNavigationUrlValue}
+						inputStyleCSS={bigInputStyle}
+					/>
+				</Conditional>
+				<Conditional showIf={isElementStep}>
+					<FieldSelectorPicker
+						onChange={saveSelectorsOnUserInput.bind(this)}
+						onSelectorsPicked={handleOnSelectorsPicked.bind(this)}
+						className={
+							[ActionsInTestEnum.ADD_INPUT, ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(action.type)
+								? "mt-8"
+								: ""
+						}
+						label={"Selectors"}
+						value={readableSelectors}
+					/>
+				</Conditional>
+			</div>
+			<Conditional showIf={Object.keys(EDIT_MODE_MAP).includes(action.type)}>
+				<FieldEditModeButton size={"small"} label={"Edit mode"} className={"mt-8"} onClick={handleEditModeClick.bind(this)} />
 			</Conditional>
 			<div css={commonFieldsContainer}>
 				<FieldInput
@@ -108,4 +192,10 @@ const commonFieldsContainer = css`
 	margin-top: auto;
 `;
 
+const bigInputStyle = css`
+	max-width: 200rem;
+	input {
+		padding: 14rem 6rem;
+	}
+`;
 export { ActionSpecificInfo };

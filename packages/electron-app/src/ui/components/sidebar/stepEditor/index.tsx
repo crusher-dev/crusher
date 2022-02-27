@@ -311,7 +311,11 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 	};
 
 	return (
-		<div className={"step-info-editor"} onClick={setIsPinned!.bind(this, true)} css={[containerStyle, isPinned ? pinnedContainerStyle : null]}>
+		<div
+			className={"step-info-editor"}
+			onClick={setIsPinned!.bind(this, true)}
+			css={[containerStyle, scrollBarStyle, isPinned ? pinnedContainerStyle : null]}
+		>
 			<div className={"font-600 text-15 flex p-12 pt-8 pb-8 pl-8 mt-6"}>
 				<div onDoubleClick={handleNameDoubleClick.bind(this)}>
 					<input
@@ -349,7 +353,9 @@ const containerStyle = css`
 	transform: translateX(calc(-100% - 1rem));
 	font-family: Cera Pro;
 	bottom: 0%;
-	min-height: 260rem;
+	min-height: 274rem;
+	max-height: 274rem;
+	overflow-y: scroll;
 	display: flex;
 	flex-direction: column;
 `;
@@ -384,18 +390,6 @@ const actionInfoContainerStyle = css`
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-`;
-
-const textAreaStyle = css`
-	width: 100%;
-	height: 100rem;
-	background: rgba(0, 0, 0, 0.34);
-	border: 1px solid rgba(196, 196, 196, 0.2);
-	border-radius: 4rem;
-	resize: none;
-	padding: 8rem;
-	line-height: 20rem;
-	font-size: 12rem;
 `;
 
 const scrollBarStyle = css`

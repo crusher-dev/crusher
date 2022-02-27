@@ -43,9 +43,9 @@ const CrusherOnboarding = () => {
 	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
 
 	useEffect(() => {
-		// if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
-		// 	router.push("/app/dashboard");
-		// }
+		if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
+			router.push("/app/dashboard");
+		}
 	}, []);
 
 	return (

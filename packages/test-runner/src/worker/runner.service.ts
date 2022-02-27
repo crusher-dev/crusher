@@ -91,6 +91,7 @@ export class CodeRunnerService {
 				"storageManager",
 				"globalManager",
 				"exportsManager",
+				"context",
 				`async function f(){ ${code} } return f();`,
 			)(
 				exports,
@@ -102,6 +103,7 @@ export class CodeRunnerService {
 				this.storageManager,
 				this.globalManager,
 				this.exportsManager,
+				{},
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);
 		} catch (err) {

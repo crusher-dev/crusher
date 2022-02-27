@@ -34,7 +34,7 @@ import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemaini
 import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
-
+import template from "@crusher-shared/utils/templateString";
 export class AppWindow {
 	private window: Electron.BrowserWindow;
 	private recorder: Recorder;
@@ -168,7 +168,7 @@ export class AppWindow {
 			try {
 				await this.handlePerformAction(event, payload);
 				this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-			} catch (ex) { }
+			} catch (ex) {}
 		});
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
 		ipcMain.handle("turn-on-element-selector-inspect-mode", this.turnOnElementSelectorInspectMode.bind(this));
@@ -206,11 +206,10 @@ export class AppWindow {
 		const recorderSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
-		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex+1) as any);
+		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
 		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
 		return true;
 	}
-
 
 	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
 		const recorderState = getRecorderState(this.store.getState() as any);
@@ -276,7 +275,7 @@ export class AppWindow {
 		await this.resetRecorder();
 
 		await this.store.dispatch(setDevice(payload.device.id));
-		await this.store.dispatch(setSiteUrl(navigationStep.payload.meta.value));
+		await this.store.dispatch(setSiteUrl(template(navigationStep.payload.meta.value, { ctx: {} })));
 		// Playwright context has issues when set to about:blank
 	}
 
@@ -332,7 +331,6 @@ export class AppWindow {
 		} else {
 			if (action.type === ActionsInTestEnum.NAVIGATE_URL) {
 				this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
-
 			} else {
 				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 			}
@@ -621,7 +619,7 @@ export class AppWindow {
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL: {
-					this.store.dispatch(setSiteUrl(action.payload.meta.value));
+					this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: {} })));
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 				}

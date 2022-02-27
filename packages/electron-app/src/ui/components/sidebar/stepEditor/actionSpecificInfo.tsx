@@ -12,7 +12,6 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { emitShowModal } from "../../modals";
 import { TTopLevelActionsEnum } from "../actionsPanel/pageActions";
 import { TElementActionsEnum } from "../actionsPanel/elementActions";
-
 interface IActionSpecificInfoProps {
 	action: iAction;
 	actionIndex: number;

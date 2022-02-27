@@ -1,12 +1,14 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
+import template from "@crusher-shared/utils/templateString";
 import { ElementHandle, Locator } from "playwright";
 import { markTestFail } from "../utils/helper";
 
 async function assertElementAttributes(
 	element: Locator,
 	assertions: Array<iAssertionRow>,
+	context: any
 ): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
 	let hasPassed = true;
 	const logs = [];
@@ -18,7 +20,8 @@ async function assertElementAttributes(
 	).jsonValue();
 
 	for (let i = 0; i < assertions.length; i++) {
-		const { validation, operation, field } = assertions[i];
+		let { validation, operation, field } = assertions[i];
+		validation = template(validation, { ctx: context });
 		let elementAttributeValue = null;
 		if (field.name === "innerHTML") {
 			elementAttributeValue = await element.innerHTML();
@@ -84,10 +87,10 @@ async function assertElementAttributes(
 	return { hasPassed, logs };
 }
 
-async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction) {
+async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, _, context) {
 	const validationRows = action.payload.meta.validations;
 	await (await element.elementHandle()).waitForElementState("visible");
-	const actionResult = await assertElementAttributes(element, validationRows);
+	const actionResult = await assertElementAttributes(element, validationRows, context);
 
 	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });
 

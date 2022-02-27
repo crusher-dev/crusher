@@ -5,6 +5,7 @@ import { ExportsManager } from "../functions/exports";
 import { StorageManager } from "../functions/storage";
 import { CrusherSdk } from "../sdk/sdk";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
+import template from "@crusher-shared/utils/templateString";
 
 async function executeCustomCode(
 	page: Page,
@@ -13,8 +14,9 @@ async function executeCustomCode(
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
 	sdk: CrusherSdk | null,
+	context: any
 ) {
-	const customScriptFunction = action.payload.meta.script;
+	const customScriptFunction = template(action.payload.meta.script, {ctx: context});
 
 	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager, storageManager);
 

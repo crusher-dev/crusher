@@ -1,13 +1,14 @@
 import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
-import { type } from "../functions/type";
 import { ActionsInTestEnum, InputNodeTypeEnum } from "@crusher-shared/constants/recordedActions";
+import template from "@crusher-shared/utils/templateString";
 
-async function addInput(element: Locator, workingSelector: any, action: iAction) {
+// elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk, this.context
+async function addInput(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, _, context) {
 	// For legacy addInput type
 	if (typeof action.payload.meta.value === "string") {
 		await element.fill("");
-		await element.type(action.payload.meta.value);
+		await element.type(template(action.payload.meta.value, { ctx: context }));
 	}
 
 	const { type, value, name, inputType } = action.payload.meta.value;
@@ -17,7 +18,7 @@ async function addInput(element: Locator, workingSelector: any, action: iAction)
 		case InputNodeTypeEnum.CONTENT_EDITABLE:
 		case InputNodeTypeEnum.TEXTAREA:
 			await element.fill("");
-			await element.type(value);
+			await element.type(template(value, { ctx: context } ));
 			break;
 		case InputNodeTypeEnum.RADIO:
 			if (value) await element.check();

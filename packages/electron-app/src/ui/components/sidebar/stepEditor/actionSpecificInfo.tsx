@@ -96,14 +96,14 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 	// <-- Both Navigate Url and Wait for navigation -->
 	const navigationUrlValue = action.payload.meta?.value || "";
 	const updateNavigationUrlValue = (value: string) => {
-		if (action.payload.meta.value.value !== value) {
-			action.payload.meta.value.value = value;
+		if (action.payload.meta.value !== value) {
+			action.payload.meta.value = value;
 			dispatch(updateRecordedStep({ ...action }, actionIndex));
 			sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
 		}
 	};
 	const handleNavigationInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-		updateInputActionValue((e.target as HTMLInputElement).value);
+		updateNavigationUrlValue((e.target as HTMLInputElement).value);
 	};
 
 	return (

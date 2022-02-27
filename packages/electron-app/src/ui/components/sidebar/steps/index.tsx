@@ -17,7 +17,7 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { continueRemainingSteps, performJumpTo } from "electron-app/src/ui/commands/perform";
 import { getAppSessionMeta, getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { TemplatesModal } from "./templatesModal";
-import { StepInfoEditor } from "./stepInfoEditor";
+import { StepInfoEditor } from "../stepEditor";
 import { iAction } from "@shared/types/action";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 

@@ -5,24 +5,37 @@ import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { performCustomCode } from "electron-app/src/ui/commands/perform";
+import { iAction } from "@shared/types/action";
+import { useStore } from "react-redux";
+import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
+import { sendSnackBarEvent } from "../../toast";
 
 interface iElementCustomScriptModalContent {
 	isOpen: boolean;
-    handleClose: () => void;
+	handleClose: () => void;
+
+	// For editing
+	stepIndex?: number;
+	stepAction?: iAction;
 }
 const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
-    const { isOpen } = props;
-	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
+	const { isOpen } = props;
+	const store = useStore();
 
+	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 	const handleLoad = React.useCallback(() => {
 		if (codeTextAreaRef.current) {
 			console.log("writing hte value");
 			codeTextAreaRef.current!.value =
 				"async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n}";
+
+			if (props.stepAction) {
+				codeTextAreaRef.current!.value = props.stepAction.payload.meta.script;
+			}
 			const editor = (window as any).CodeMirror.fromTextArea(codeTextAreaRef.current!, {
 				mode: "javascript",
 				lineNumbers: true,
-				extraKeys: { 'Ctrl-Space': 'autocomplete' },
+				extraKeys: { "Ctrl-Space": "autocomplete" },
 				theme: "material",
 			});
 
@@ -33,7 +46,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 			editor.getDoc().markText({ line: 3, ch: 0 }, { line: 3, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
 		}
-	}, [codeTextAreaRef.current]);
+	}, [props.stepAction, codeTextAreaRef.current]);
 
 	React.useEffect(() => {
 		handleLoad();
@@ -49,24 +62,47 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		props.handleClose();
 	}, [codeTextAreaRef]);
 
+	const updateCustomCode = React.useCallback(() => {
+		if (props.stepAction) {
+			props.stepAction.payload.meta.script = codeTextAreaRef?.current.value;
+			store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
+			sendSnackBarEvent({ type: "success", message: "Custom code updated" });
+			props.handleClose();
+		}
+	}, [props.stepAction, codeTextAreaRef]);
+
 	const isThereScriptOutput = true;
 
 	const isThereScriptError = false;
 
-    if(!isOpen) return null;
+	if (!isOpen) return null;
 
 	return (
-        <Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
-            <ModalTopBar title={"Custom code"} desc={"Write your own code for custom functionality"} closeModal={props.handleClose} />
+		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
+			<ModalTopBar title={"Custom code"} desc={"Write your own code for custom functionality"} closeModal={props.handleClose} />
 
-            <div css={css`padding: 26rem 34rem;`}>
-                <textarea id={"custom_script"} css={css`width: 100%; height: 400rem; color: #000; font-size: 14rem;`} ref={codeTextAreaRef}></textarea>
+			<div
+				css={css`
+					padding: 26rem 34rem;
+				`}
+			>
+				<textarea
+					id={"custom_script"}
+					css={css`
+						width: 100%;
+						height: 400rem;
+						color: #000;
+						font-size: 14rem;
+					`}
+					ref={codeTextAreaRef}
+				></textarea>
 
-                <div css={bottomBarStyle}>
-                    <Button css={saveButtonStyle} onClick={runCustomCode}>Save</Button>
-                </div>
-            </div>
-
+				<div css={bottomBarStyle}>
+					<Button css={saveButtonStyle} onClick={props.stepAction ? updateCustomCode : runCustomCode}>
+						{props.stepAction ? "Update" : "Save"}
+					</Button>
+				</div>
+			</div>
 
 			<style>{`
 					.CodeMirror {
@@ -88,7 +124,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			}
 
 			`}</style>
-        </Modal>
+		</Modal>
 	);
 };
 
@@ -104,10 +140,9 @@ const modalStyle = css`
 	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
 `;
 
-
 const containerCSS = css`
 	padding-top: 1rem;
-    position: relative;
+	position: relative;
 `;
 const validationStatusContainerCSS = css`
 	position: absolute;

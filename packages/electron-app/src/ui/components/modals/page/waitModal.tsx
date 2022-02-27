@@ -8,6 +8,7 @@ import { recordStep, updateRecordedStep } from "electron-app/src/store/actions/r
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import React from "react";
 import { useDispatch, useStore } from "react-redux";
+import { sendSnackBarEvent } from "../../toast";
 import { ModalTopBar } from "../topBar";
 
 interface iStartupModalProps {
@@ -70,6 +71,7 @@ const WaitModal = (props: iStartupModalProps) => {
 					ActionStatusEnum.COMPLETED,
 				),
 			);
+			sendSnackBarEvent({ type: "success", message: "Wait action updated" });
 		}
 
 		props.handleClose();

@@ -43,10 +43,20 @@ const ModalManager = () => {
 
 	return (
 		<>
-			<AssertElementModal isOpen={currentModal.type === TElementActionsEnum.SHOW_ASSERT_MODAL} handleClose={closeModal} />
+			<AssertElementModal
+				stepAction={stepAction as any}
+				stepIndex={currentModal.stepIndex}
+				isOpen={currentModal.type === TElementActionsEnum.SHOW_ASSERT_MODAL}
+				handleClose={closeModal}
+			/>
 			<WaitModal stepIndex={currentModal.stepIndex} isOpen={currentModal.type === TTopLevelActionsEnum.WAIT} handleClose={closeModal} />
 			<RunAfterTestModal isOpen={currentModal.type === TTopLevelActionsEnum.RUN_AFTER_TEST} handleClose={closeModal} />
-			<CustomCodeModal isOpen={currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE} handleClose={closeModal} />
+			<CustomCodeModal
+				stepAction={stepAction as any}
+				stepIndex={currentModal.stepIndex}
+				isOpen={currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE}
+				handleClose={closeModal}
+			/>
 			<SeoModalContent
 				stepAction={stepAction as any}
 				stepIndex={currentModal.stepIndex}

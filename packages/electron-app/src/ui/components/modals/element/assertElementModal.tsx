@@ -7,7 +7,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/ui/commands/perform";
-import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
+import { recordStep, setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { BulbIcon } from "electron-app/src/ui/icons";
 import { Modal } from "@dyson/components/molecules/Modal";
@@ -16,8 +16,13 @@ import { css } from "@emotion/react";
 import { ipcRenderer } from "electron";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useTour } from "@reactour/tour";
+import { iAction } from "@shared/types/action";
+import { sendSnackBarEvent } from "../../toast";
 
 interface iAssertElementModalProps {
+	stepIndex?: number;
+	stepAction?: iAction;
+
 	isOpen: boolean;
 	handleClose?: () => void;
 }
@@ -38,7 +43,8 @@ const getValidationFields = (elementInfo: any): Array<iField> => {
 	return [
 		{ name: "innerText", value: innerText, meta: { type: "innerText" } },
 		{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } },
-	...MetaTagsFields];
+		...MetaTagsFields,
+	];
 };
 
 const getElementFieldValue = (fieldInfo: iField) => {
@@ -57,12 +63,35 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
 	React.useEffect(() => {
-		if (isOpen) {
+		if (isOpen && !props.stepAction) {
 			ipcRenderer.invoke("get-element-assert-info", selectedElement).then((res) => {
 				setElementInfo(res);
 			});
 		}
-	}, [isOpen]);
+		if (isOpen && props.stepAction) {
+			const elementInfoFromActions = (props.stepAction.payload.meta.validations as iAssertionRow[]).reduce(
+				(prev, validation) => {
+					if (validation.field.name === "innerHTML") {
+						return { ...prev, innerHTML: validation.field.value };
+					} else if (validation.field.name === "innerText") {
+						return { ...prev, innerText: validation.field.value };
+					}
+					return {
+						...prev,
+						attributes: { ...prev.attributes, [validation.field.name]: { name: validation.field.name, value: validation.field.value } },
+					};
+				},
+				{ innerHTML: null, innerText: null, attributes: {} },
+			);
+			const attributesArray = Object.keys(elementInfoFromActions.attributes).map((key) => {
+				return { name: key, value: elementInfoFromActions.attributes[key].value };
+			});
+			elementInfoFromActions.attributes = attributesArray;
+
+			setElementInfo(elementInfoFromActions);
+			setValidationRows(props.stepAction.payload.meta.validations);
+		}
+	}, [props.stepAction, isOpen]);
 
 	const addValidationRow = (rowField: iField, rowOperation: ASSERTION_OPERATION_TYPE, rowValidation: string) => {
 		setValidationRows([
@@ -156,6 +185,18 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		handleCloseWrapper();
 	};
 
+	const updateSeoValidationAction = () => {
+		if (!props.stepAction) {
+			sendSnackBarEvent({ type: "error", message: "No action to update" });
+			return;
+		}
+
+		props.stepAction.payload.meta.validations = validationRows;
+		store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
+		sendSnackBarEvent({ type: "success", message: "Updated Element assertions" });
+		handleCloseWrapper();
+	};
+
 	const deleteValidationRow = (rowIndex) => {
 		const newValidationRows = validationRows.filter((a) => a.id !== rowIndex);
 		setValidationRows([...newValidationRows]);
@@ -213,8 +254,8 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 							Generate Checks!
 						</Text>
 					</div>
-					<Button css={buttonStyle} onClick={saveElementValidationAction}>
-						Save
+					<Button css={buttonStyle} onClick={props.stepAction ? updateSeoValidationAction : saveElementValidationAction}>
+						{props.stepAction ? "Update" : "Save"}
 					</Button>
 				</div>
 			</div>

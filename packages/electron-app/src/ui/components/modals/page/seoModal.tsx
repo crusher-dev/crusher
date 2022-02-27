@@ -48,8 +48,6 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(seoInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
-	console.log("SEO INFO is", seoInfo);
-	console.log("Validation rows are", validationRows);
 	React.useEffect(() => {
 		if (isOpen && !props.stepIndex) {
 			ipcRenderer.invoke("get-page-seo-info").then((res) => {
@@ -57,7 +55,6 @@ const SeoModalContent = (props: iSEOModalProps) => {
 			});
 		}
 		if (isOpen && props.stepAction) {
-			console.log("Validation is", props.stepAction.payload.meta.validations);
 			const seoInfoFromActions = (props.stepAction.payload.meta.validations as iAssertionRow[]).reduce(
 				(prev, validation) => {
 					if (validation.field.name === "title") {
@@ -67,7 +64,6 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				},
 				{ title: null, metaTags: {} },
 			);
-			console.log("SEo infom", seoInfoFromActions);
 			setSeoInfo(seoInfoFromActions);
 			setValidationRows(props.stepAction.payload.meta.validations);
 		}

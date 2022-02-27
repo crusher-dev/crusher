@@ -189,6 +189,7 @@ export class AppWindow {
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
+		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
 		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
@@ -199,6 +200,15 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {
+		const recorderSteps = getSavedSteps(this.store.getState() as any);
+		await this.resetRecorder();
+		const appSettings = getAppSettings(this.store.getState() as any);
+		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex+1) as any);
+		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
+		return true;
 	}
 
 

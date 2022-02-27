@@ -14,7 +14,7 @@ import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { deleteRecordedSteps, markRecordedStepsOptional, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { continueRemainingSteps } from "electron-app/src/ui/commands/perform";
+import { continueRemainingSteps, performJumpTo } from "electron-app/src/ui/commands/perform";
 import { getAppSessionMeta, getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { TemplatesModal } from "./templatesModal";
 import { StepInfoEditor } from "./stepInfoEditor";
@@ -50,6 +50,7 @@ export const ACTION_DESCRIPTIONS = {
 enum StepActionsEnum {
 	EDIT = "EDIT",
 	DELETE = "DELETE",
+	JUMP_TO = "JUMP_TO",
 }
 
 const StepActionMenu = ({ showDropDownCallback, callback }) => {
@@ -72,6 +73,7 @@ const StepActionMenu = ({ showDropDownCallback, callback }) => {
 		<>
 			{/* <ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/> */}
 			<ActionItem title={"Edit"} id={StepActionsEnum.EDIT} callback={callback} />
+			<ActionItem title={"Jump to"} id={StepActionsEnum.JUMP_TO} callback={callback} />
 			<ActionItem title={"Delete"} id={StepActionsEnum.DELETE} callback={callback} />
 		</>
 	);
@@ -106,6 +108,10 @@ const Step = ({
 					dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 				}
 				dispatch(deleteRecordedSteps([stepIndex]));
+				break;
+			}
+			case StepActionsEnum.JUMP_TO: {
+				performJumpTo(stepIndex);
 				break;
 			}
 		}

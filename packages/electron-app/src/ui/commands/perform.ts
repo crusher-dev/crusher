@@ -238,6 +238,10 @@ const getUserTests = () => {
 	return ipcRenderer.invoke("get-user-tests");
 };
 
+const performJumpTo = (stepIndex) => {
+	return ipcRenderer.invoke("jump-to-step", {stepIndex});
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -268,4 +272,5 @@ export {
 	turnOnElementSelectorInspectMode,
 	turnOffElementSelectorInspectMode,
 	performResetAppSession,
+	performJumpTo,
 };

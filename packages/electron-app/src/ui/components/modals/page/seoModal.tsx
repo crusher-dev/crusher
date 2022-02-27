@@ -8,14 +8,18 @@ import { ModalTopBar } from "../topBar";
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { Button } from "@dyson/components/atoms/button/Button";
-import { recordStep } from "electron-app/src/store/actions/recorder";
+import { recordStep, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../forms/assertionForm";
-import { iSeoMetaInformationMeta } from "../../../icons";
+import { iSeoMetaInformationMeta } from "../../../../types";
 import { Conditional } from "@dyson/components/layouts";
 import { ipcRenderer } from "electron";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
+import { iAction } from "@shared/types/action";
+import { sendSnackBarEvent } from "../../toast";
 
 interface iSEOModalProps {
+	stepIndex?: number;
+	stepAction?: iAction;
 	handleClose?: () => void;
 	isOpen: boolean;
 }
@@ -44,14 +48,30 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(seoInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
-
+	console.log("SEO INFO is", seoInfo);
+	console.log("Validation rows are", validationRows);
 	React.useEffect(() => {
-		if (isOpen) {
+		if (isOpen && !props.stepIndex) {
 			ipcRenderer.invoke("get-page-seo-info").then((res) => {
 				setSeoInfo(res);
 			});
 		}
-	}, [isOpen]);
+		if (isOpen && props.stepAction) {
+			console.log("Validation is", props.stepAction.payload.meta.validations);
+			const seoInfoFromActions = (props.stepAction.payload.meta.validations as iAssertionRow[]).reduce(
+				(prev, validation) => {
+					if (validation.field.name === "title") {
+						return { ...prev, title: validation.field.value };
+					}
+					return { ...prev, metaTags: { ...prev.metaTags, [validation.field.name]: { name: validation.field.name, value: validation.field.value } } };
+				},
+				{ title: null, metaTags: {} },
+			);
+			console.log("SEo infom", seoInfoFromActions);
+			setSeoInfo(seoInfoFromActions);
+			setValidationRows(props.stepAction.payload.meta.validations);
+		}
+	}, [props.stepAction, isOpen]);
 
 	const addValidationRow = (rowField: iField, rowOperation: ASSERTION_OPERATION_TYPE, rowValidation: string) => {
 		setValidationRows([
@@ -151,6 +171,18 @@ const SeoModalContent = (props: iSEOModalProps) => {
 		handleClose();
 	};
 
+	const updateSeoValidationAction = () => {
+		if (!props.stepAction) {
+			sendSnackBarEvent({ type: "error", message: "No action to update" });
+			return;
+		}
+
+		props.stepAction.payload.meta.validations = validationRows;
+		store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
+		sendSnackBarEvent({ type: "success", message: "Updated seo validations" });
+		handleClose();
+	};
+
 	if (!isOpen) return null;
 
 	return (
@@ -206,8 +238,8 @@ const SeoModalContent = (props: iSEOModalProps) => {
 							Generate Checks!
 						</Text>
 					</div>
-					<Button css={buttonStyle} onClick={saveSeoValidationAction}>
-						Save
+					<Button css={buttonStyle} onClick={props.stepAction ? updateSeoValidationAction : saveSeoValidationAction}>
+						{props.stepAction ? "Update" : "Save"}
 					</Button>
 				</div>
 			</div>

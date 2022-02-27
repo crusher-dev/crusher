@@ -9,7 +9,7 @@ import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "../../toast";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { emitShowModal } from "../modalManager";
+import { emitShowModal } from "../../modals";
 import { TTopLevelActionsEnum } from "../actionsPanel/pageActions";
 import { TElementActionsEnum } from "../actionsPanel/elementActions";
 

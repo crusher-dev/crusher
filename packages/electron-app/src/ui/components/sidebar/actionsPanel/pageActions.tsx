@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { ActionsList, ActionsListItem } from "./actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
-import { emitShowModal } from "../modalManager";
+import { emitShowModal } from "../../modals";
 
 export enum TTopLevelActionsEnum {
 	VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",

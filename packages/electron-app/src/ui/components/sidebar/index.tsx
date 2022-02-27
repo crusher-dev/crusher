@@ -8,7 +8,7 @@ import { StepsPanel } from "./steps";
 import { TemplatesModal } from "./steps/templatesModal";
 import { CypressIcon, LinkIcon, PuppeteerIcon, SeleniumIcon } from "../../icons";
 import { Button, Input } from "@dyson/components/atoms";
-import { ModalManager } from "./modalManager";
+import { ModalManager } from "../modals/";
 
 const TEMPlATES = [
 	{ text: "Check for broken links in the page", id: 1 },

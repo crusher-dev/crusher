@@ -13,7 +13,9 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
 import { sendSnackBarEvent } from "../../toast";
+import { TTopLevelActionsEnum } from "../actionsPanel/pageActions";
 import { RunAfterTestModal } from "../actionsPanel/pageActions/runAfterTestModal";
+import { emitShowModal } from "../modalManager";
 
 function getSelectors(action: iAction) {
 	if (!action.payload.selectors) return "";
@@ -218,7 +220,7 @@ const ActionSpecificInfo = ({ action, actionIndex, setIsPinned, ...props }: { ac
 					</div>
 				</div>
 			</Conditional>
-			<Conditional showIf={action.type === ActionsInTestEnum.RUN_AFTER_TEST}>
+			<Conditional showIf={[ActionsInTestEnum.WAIT, ActionsInTestEnum.RUN_AFTER_TEST].includes(action.type)}>
 				<div className={"mt-8"}>
 					<span>Edit mode</span>
 					<div
@@ -230,19 +232,28 @@ const ActionSpecificInfo = ({ action, actionIndex, setIsPinned, ...props }: { ac
 							justify-content: center;
 						`}
 					>
-						<Button>
+						<Button
+							onClick={() => {
+								setIsPinned(true);
+
+								emitShowModal({
+									type: action.type === ActionsInTestEnum.WAIT ? TTopLevelActionsEnum.WAIT : TTopLevelActionsEnum.RUN_AFTER_TEST,
+									stepIndex: actionIndex,
+								});
+							}}
+						>
 							<span
 								css={css`
 									font-size: 12.25rem;
-                                    padding: 0 14rem;
+									padding: 0 14rem;
 								`}
 							>
 								Open Edit Modal
 							</span>
 						</Button>
 					</div>
-                </div>
-            </Conditional>
+				</div>
+			</Conditional>
 		</>
 	);
 };
@@ -388,18 +399,16 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 						<Input
 							css={[
 								inputStyle,
-                                css`
-                                    min-width: auto;
+								css`
+									min-width: auto;
 									max-width: 125rem;
 								`,
 							]}
 							placeholder={"Enter Timeout in (ms)"}
 							size={"small"}
 							initialValue={"30000"}
-                            onReturn={() => { }}
-							onBlur={(e) => {
-
-							}}
+							onReturn={() => {}}
+							onBlur={(e) => {}}
 						/>
 					</div>
 					<div

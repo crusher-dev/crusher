@@ -1,28 +1,29 @@
 import React from "react";
-import {css} from "@emotion/react";
+import { css } from "@emotion/react";
 import { ActionsList, ActionsListItem } from "../actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
 import { WaitModal } from "./waitModal";
 import { RunAfterTestModal } from "./runAfterTestModal";
 import { CustomCodeModal } from "./customCodeModal";
 import { SeoModalContent } from "./seoModal";
+import { emitShowModal, modalEmitter } from "../../modalManager";
 
 export enum TTopLevelActionsEnum {
-    VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
-    WAIT = "WAIT",
-    SHOW_SEO_MODAL = "SHOW_SEO_MODAL",
-    CUSTOM_CODE = "CUSTOM_CODE",
-    RUN_AFTER_TEST = "RUN_AFTER_TEST"
-};
+	VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
+	WAIT = "WAIT",
+	SHOW_SEO_MODAL = "SHOW_SEO_MODAL",
+	CUSTOM_CODE = "CUSTOM_CODE",
+	RUN_AFTER_TEST = "RUN_AFTER_TEST",
+}
 
 const topActionsList = [
 	{
 		id: TTopLevelActionsEnum.VIEWPORT_SCREENSHOT,
-		title: "Take viewport screenshot"
+		title: "Take viewport screenshot",
 	},
 	{
 		id: TTopLevelActionsEnum.WAIT,
-		title: "Wait for seconds"
+		title: "Wait for seconds",
 	},
 	{
 		id: TTopLevelActionsEnum.SHOW_SEO_MODAL,
@@ -38,47 +39,51 @@ const topActionsList = [
 	},
 ];
 
-const PageActions = ({className, ...props}: {className?: any}) => {
+const PageActions = ({ className, ...props }: { className?: any }) => {
 	const [currentModal, setCurrentModal] = React.useState(null);
 
-    const handleActionSelected = (id: TTopLevelActionsEnum) => {
-        switch(id) {
+	const handleActionSelected = (id: TTopLevelActionsEnum) => {
+		switch (id) {
 			case TTopLevelActionsEnum.VIEWPORT_SCREENSHOT:
 				performTakePageScreenshot();
 				break;
 			case TTopLevelActionsEnum.WAIT:
-				setCurrentModal(TTopLevelActionsEnum.WAIT);
+				emitShowModal({ type: TTopLevelActionsEnum.WAIT });
 				break;
 			case TTopLevelActionsEnum.SHOW_SEO_MODAL:
-				setCurrentModal(TTopLevelActionsEnum.SHOW_SEO_MODAL);
+				emitShowModal({ type: TTopLevelActionsEnum.SHOW_SEO_MODAL });
 				break;
 			case TTopLevelActionsEnum.CUSTOM_CODE:
-				setCurrentModal(TTopLevelActionsEnum.CUSTOM_CODE);
+				emitShowModal({ type: TTopLevelActionsEnum.CUSTOM_CODE });
 				break;
 			case TTopLevelActionsEnum.RUN_AFTER_TEST:
-				setCurrentModal(TTopLevelActionsEnum.RUN_AFTER_TEST);
+				emitShowModal({ type: TTopLevelActionsEnum.RUN_AFTER_TEST });
 				break;
 			default:
 				break;
 		}
-    };
+	};
 
 	const items = topActionsList.map((action) => {
-		return <ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>{action.title}</ActionsListItem>;
+		return (
+			<ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>
+				{action.title}
+			</ActionsListItem>
+		);
 	});
 
 	const closeModal = (completed?: boolean) => {
 		setCurrentModal(null);
-	}
+	};
 
-
-    return (
+	return (
 		<>
-        	<ActionsList className={`${className}`} css={containerStyle} title="Page List">{items}</ActionsList>
+			<ActionsList className={`${className}`} css={containerStyle} title="Page List">
+				{items}
+			</ActionsList>
 		</>
-    )
+	);
 };
 
-const containerStyle = css``
-;
+const containerStyle = css``;
 export { PageActions };

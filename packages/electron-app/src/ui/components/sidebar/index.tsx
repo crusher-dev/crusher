@@ -8,6 +8,7 @@ import { StepsPanel } from "./steps";
 import { TemplatesModal } from "./steps/templatesModal";
 import { CypressIcon, LinkIcon, PuppeteerIcon, SeleniumIcon } from "../../icons";
 import { Button, Input } from "@dyson/components/atoms";
+import { ModalManager } from "./modalManager";
 
 const TEMPlATES = [
 	{ text: "Check for broken links in the page", id: 1 },
@@ -205,6 +206,7 @@ const Sidebar = ({ className, ...props }: any) => {
 				<ActionsPanel />
 				<StepsPanel />
 			</Conditional>
+			<ModalManager />
 			<TemplatesModal isOpen={false} handleClose={() => {}} />
 		</div>
 	);

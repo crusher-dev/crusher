@@ -1,11 +1,11 @@
 import React from "react";
 import { TElementActionsEnum } from "./actionsPanel/elementActions";
-import { AssertElementModal } from "./actionsPanel/elementActions/assertElementModal";
+import { AssertElementModal } from "../modals/element/assertElementModal";
 import { TTopLevelActionsEnum } from "./actionsPanel/pageActions";
-import { CustomCodeModal } from "./actionsPanel/pageActions/customCodeModal";
-import { RunAfterTestModal } from "./actionsPanel/pageActions/runAfterTestModal";
-import { SeoModalContent } from "./actionsPanel/pageActions/seoModal";
-import { WaitModal } from "./actionsPanel/pageActions/waitModal";
+import { CustomCodeModal } from "../modals/page/customCodeModal";
+import { RunAfterTestModal } from "../modals/page/runAfterTestModal";
+import { SeoModalContent } from "../modals/page/seoModal";
+import { WaitModal } from "../modals/page/waitModal";
 import mitt from "mitt";
 
 const modalEmitter = mitt();

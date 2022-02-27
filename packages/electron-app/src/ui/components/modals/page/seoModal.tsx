@@ -4,13 +4,13 @@ import { iAssertionRow, iField } from "@shared/types/assertionRow";
 import uniqueId from "lodash/uniqueId";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Modal } from "@dyson/components/molecules/Modal";
-import { ModalTopBar } from "../../../modals/topBar";
+import { ModalTopBar } from "../topBar";
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { recordStep } from "electron-app/src/store/actions/recorder";
-import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../../forms/assertionForm";
-import { iSeoMetaInformationMeta } from "../../../../icons";
+import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../forms/assertionForm";
+import { iSeoMetaInformationMeta } from "../../../icons";
 import { Conditional } from "@dyson/components/layouts";
 import { ipcRenderer } from "electron";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -37,17 +37,16 @@ const getSeoFieldValue = (fieldInfo: iField) => {
 
 const SeoModalContent = (props: iSEOModalProps) => {
 	const { isOpen, handleClose } = props;
-    const [seoInfo, setSeoInfo] = React.useState(null);
+	const [seoInfo, setSeoInfo] = React.useState(null);
 
-    const store = useStore();
+	const store = useStore();
 
 	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
 	const validationFields = getValidationFields(seoInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
-
 	React.useEffect(() => {
-		if(isOpen) {
+		if (isOpen) {
 			ipcRenderer.invoke("get-page-seo-info").then((res) => {
 				setSeoInfo(res);
 			});
@@ -136,27 +135,42 @@ const SeoModalContent = (props: iSEOModalProps) => {
 
 	const saveSeoValidationAction = () => {
 		store.dispatch(
-			recordStep({
-				type: ActionsInTestEnum.VALIDATE_SEO,
-				payload: {
-					meta: {
-						validations: validationRows,
+			recordStep(
+				{
+					type: ActionsInTestEnum.VALIDATE_SEO,
+					payload: {
+						meta: {
+							validations: validationRows,
+						},
 					},
+					url: "",
 				},
-				url: "",
-			}, ActionStatusEnum.COMPLETED),
+				ActionStatusEnum.COMPLETED,
+			),
 		);
 		handleClose();
 	};
 
-	if(!isOpen) return null;
+	if (!isOpen) return null;
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
 			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />
-			<div css={css`padding: 0rem 34rem; margin-top: 8rem;`}>
+			<div
+				css={css`
+					padding: 0rem 34rem;
+					margin-top: 8rem;
+				`}
+			>
 				<Conditional showIf={seoInfo === null}>
-					<span css={css`font-size: 14rem; color: #fff`}>Loading...</span>
+					<span
+						css={css`
+							font-size: 14rem;
+							color: #fff;
+						`}
+					>
+						Loading...
+					</span>
 				</Conditional>
 				<Conditional showIf={seoInfo !== null}>
 					<AssertionFormTable
@@ -169,12 +183,32 @@ const SeoModalContent = (props: iSEOModalProps) => {
 						onValidationChange={updateValidationValueOfValidationRow}
 					/>
 				</Conditional>
-				<div style={bottomBarStyle} css={css`margin-bottom: 22rem; margin-top: 38rem;`}>
+				<div
+					style={bottomBarStyle}
+					css={css`
+						margin-bottom: 22rem;
+						margin-top: 38rem;
+					`}
+				>
 					<div style={formButtonStyle}>
-						<Text css={linkStyle} onClick={createNewSeoAssertionRow}>Add a check</Text>
-						<Text css={[linkStyle, css`margin-left: 24rem;`]} onClick={generateDefaultChecksForPage}>Generate Checks!</Text>
+						<Text css={linkStyle} onClick={createNewSeoAssertionRow}>
+							Add a check
+						</Text>
+						<Text
+							css={[
+								linkStyle,
+								css`
+									margin-left: 24rem;
+								`,
+							]}
+							onClick={generateDefaultChecksForPage}
+						>
+							Generate Checks!
+						</Text>
 					</div>
-					<Button css={buttonStyle} onClick={saveSeoValidationAction}>Save</Button>
+					<Button css={buttonStyle} onClick={saveSeoValidationAction}>
+						Save
+					</Button>
 				</div>
 			</div>
 		</Modal>
@@ -191,7 +225,6 @@ const linkStyle = css`
 	}
 `;
 
-
 const buttonStyle = css`
 	font-size: 13rem;
 	border: 1px solid rgba(255, 255, 255, 0.23);
@@ -200,7 +233,7 @@ const buttonStyle = css`
 	height: 34rem;
 	padding: 4rem 8rem;
 	min-width: 100rem;
-    border: none;
+	border: none;
 `;
 
 const modalStyle = css`

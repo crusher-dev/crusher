@@ -2,7 +2,7 @@ import React, { RefObject, useEffect, useRef } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { Modal } from "@dyson/components/molecules/Modal";
-import { ModalTopBar } from "../../../modals/topBar";
+import { ModalTopBar } from "../topBar";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { performCustomCode } from "electron-app/src/ui/commands/perform";
 

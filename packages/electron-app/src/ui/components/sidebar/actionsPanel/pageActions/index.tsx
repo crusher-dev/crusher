@@ -4,7 +4,7 @@ import { ActionsList, ActionsListItem } from "../actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
 import { WaitModal } from "./waitModal";
 import { RunAfterTestModal } from "./runAfterTestModal";
-import { CustomCodeModal } from "./customCodeModal";
+import { CustomCodeModal } from "../../../modals/page/customCodeModal";
 import { SeoModalContent } from "./seoModal";
 import { emitShowModal, modalEmitter } from "../../modalManager";
 

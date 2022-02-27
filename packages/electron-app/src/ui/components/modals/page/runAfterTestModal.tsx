@@ -1,5 +1,5 @@
 import React from "react";
-import { ModalTopBar } from "../../../modals/topBar";
+import { ModalTopBar } from "../topBar";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";

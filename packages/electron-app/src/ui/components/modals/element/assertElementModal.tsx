@@ -1,6 +1,6 @@
 import React, { RefObject, useState } from "react";
 import { useSelector, useStore } from "react-redux";
-import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../../forms/assertionForm";
+import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../forms/assertionForm";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
 import uniqueId from "lodash/uniqueId";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -11,7 +11,7 @@ import { recordStep, setSelectedElement } from "electron-app/src/store/actions/r
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { BulbIcon } from "electron-app/src/ui/icons";
 import { Modal } from "@dyson/components/molecules/Modal";
-import { ModalTopBar } from "../../../modals/topBar";
+import { ModalTopBar } from "../topBar";
 import { css } from "@emotion/react";
 import { ipcRenderer } from "electron";
 import { Text } from "@dyson/components/atoms/text/Text";

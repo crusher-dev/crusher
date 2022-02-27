@@ -75,10 +75,6 @@ const PageActions = ({className, ...props}: {className?: any}) => {
     return (
 		<>
         	<ActionsList className={`${className}`} css={containerStyle} title="Page List">{items}</ActionsList>
-			<WaitModal isOpen={currentModal === TTopLevelActionsEnum.WAIT} handleClose={closeModal} />
-			<RunAfterTestModal isOpen={currentModal === TTopLevelActionsEnum.RUN_AFTER_TEST} handleClose={closeModal} />
-			<CustomCodeModal isOpen={currentModal === TTopLevelActionsEnum.CUSTOM_CODE} handleClose={closeModal} />
-			<SeoModalContent isOpen={currentModal === TTopLevelActionsEnum.SHOW_SEO_MODAL} handleClose={closeModal} />
 		</>
     )
 };

@@ -219,7 +219,7 @@ function EnvironmentForm({ id }) {
 				</div>
 			</div>
 
-			{/*<VariableSection envId={id} />*/}
+			<VariableSection envId={id} />
 
 			<div className={"flex justify-between items-center mt-40 mb-20 text-13"}>
 				<TextBlock

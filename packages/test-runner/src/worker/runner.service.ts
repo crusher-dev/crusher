@@ -23,6 +23,7 @@ export class CodeRunnerService {
 	globalManager: IGlobalManager;
 	exportsManager: IExportsManager;
 	persistentContextDir: string | null;
+	context: any;
 
 	constructor(
 		actions: Array<iAction>,
@@ -33,6 +34,7 @@ export class CodeRunnerService {
 		exportsManager: IExportsManager,
 		identifer: string,
 		persistentContextDir: string | null = null,
+		context: any = {},
 	) {
 		this.codeGenerator = new CodeGenerator({
 			shouldRecordVideo: isOpenSource() ? false : runnerConfig.shouldRecordVideo,
@@ -55,6 +57,7 @@ export class CodeRunnerService {
 		this.globalManager = globalManager;
 		this.exportsManager = exportsManager;
 		this.persistentContextDir = persistentContextDir;
+		this.context = context;
 	}
 
 	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
@@ -103,7 +106,7 @@ export class CodeRunnerService {
 				this.storageManager,
 				this.globalManager,
 				this.exportsManager,
-				{},
+				this.context,
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);
 		} catch (err) {

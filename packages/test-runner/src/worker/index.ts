@@ -60,6 +60,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			exportsManager,
 			identifier,
 			persistentContextDir,
+			bullJob.data.context,
 		);
 		const { recordedRawVideo, hasPassed, error, actionResults, persistenContextZipURL } = await codeRunnerService.runTest();
 		if (recordedRawVideo) {

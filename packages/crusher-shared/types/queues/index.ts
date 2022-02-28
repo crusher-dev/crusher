@@ -9,6 +9,7 @@ export type INextTestInstancesDependencies = {
 export type ITestExecutionQueuePayload = IJobRunRequest & {
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
 	exports?: Array<[string, any]> | null;
+	context?: any;
 	startingStorageState: { cookies: Array<any>; origins: Array<any> } | null;
 	startingPersistentContext: string | null;
 };

@@ -31,7 +31,7 @@ async function setupCronForBuilds() {
 							vars = JSON.parse(environment.vars);
 						} catch (e) {}
 					}
-					await testService.runTestsInProject(monitoring.projectId, environment.userId, {
+					testService.runTestsInProject(monitoring.projectId, environment.userId, {
 						browser: environment.browser,
 						buildTrigger: BuildTriggerEnum.CRON,
 						host: environment.host ? environment.host : "null",

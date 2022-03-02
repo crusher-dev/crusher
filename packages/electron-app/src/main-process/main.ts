@@ -13,14 +13,12 @@ import * as path from "path";
 
 const os = require('os');
 
-if(isProduction() && process.env.SENTRY_DSN) {
-    Sentry.init({ dsn: process.env.SENTRY_DSN });
+    Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
     require('update-electron-app')({
 		repo: 'crusherdev/crusher-downloads',
 		updateInterval: '5 minutes',
 		logger: require('electron-log')
 	});
-}
 
 app.setAppLogsPath();
 enableSourceMaps();

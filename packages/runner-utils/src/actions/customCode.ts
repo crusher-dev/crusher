@@ -28,7 +28,7 @@ async function executeCustomCode(
 		"__filename",
 		"__dirname",
 		"crusherSdk",
-		`${customScriptFunction} return validate(crusherSdk);`,
+		`${customScriptFunction} return validate(crusherSdk, context);`,
 	)(exports, typeof __webpack_require__ === "function" ? __non_webpack_require__ : require, module, __filename, __dirname, crusherSdk);
 
 	return {

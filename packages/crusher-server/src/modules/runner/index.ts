@@ -111,6 +111,8 @@ class TestsRunner {
 						buildTestCount: testInstances.length,
 						startingStorageState: null,
 						startingPersistentContext: null,
+						// Crusher-context tree
+						context: buildTaskInfo.context,
 					}),
 					buildTaskInfo.host,
 				);
@@ -180,6 +182,7 @@ class TestsRunner {
 					meta: {
 						parentTestInstanceId: parentTestInstance ? parentTestInstance.id : null,
 						isFirstLevel: test.isFirstLevelTest,
+						context: buildPayload.context ? buildPayload.context : null,
 					},
 				});
 

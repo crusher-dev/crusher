@@ -5,14 +5,20 @@ function template(str, locals) {
 template.compile = function(str) {
   var es6TemplateRegex = /(\\)?\$\{([^\{\}\\]+)\}/g;
 
-  if (typeof str !== 'string') {
-    throw new Error('The argument must be a string type');
+  if (!str || typeof str !== 'string') {
+    return function (locals) {
+      return str;
+    };
   }
 
-  return function(locals) {
-    return str.replace(es6TemplateRegex, function(matched) {
-      return parse(matched).call(locals || {});
-    });
+  return function (locals) {
+    if (locals && locals.constructor === Object) {
+      return str.replace(es6TemplateRegex, function (matched) {
+        return parse(matched).call(locals || {});
+      });
+    } else {
+      return str;
+    }
   };
 }
 

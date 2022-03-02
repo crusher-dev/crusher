@@ -8,7 +8,7 @@ import { TestService } from "@modules/resources/tests/service";
 import { BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { UsersService } from "@modules/resources/users/service";
 import { ProjectEnvironmentService } from "@modules/resources/projects/environments/service";
-import { setupMetricsWatcher } from "./ee/metrics-watcher";
+// import { setupMetricsWatcher } from "./ee/metrics-watcher";
 
 const projectMonitoringService = Container.get(ProjectMonitoringService);
 const testService = Container.get(TestService);
@@ -23,12 +23,19 @@ async function setupCronForBuilds() {
 			const queuedMonitorings = await projectMonitoringService.getQueuedMonitoringDetails();
 			try {
 				for (const monitoring of queuedMonitorings) {
-					if(!monitoring.environmentId) return;
+					if (!monitoring.environmentId) return;
 					const environment = await projectEnvironmentsService.getEnvironment(monitoring.environmentId);
-					testService.runTestsInProject(monitoring.projectId, environment.userId, {
+					let vars = {};
+					if (environment.vars) {
+						try {
+							vars = JSON.parse(environment.vars);
+						} catch (e) {}
+					}
+					await testService.runTestsInProject(monitoring.projectId, environment.userId, {
 						browser: environment.browser,
 						buildTrigger: BuildTriggerEnum.CRON,
 						host: environment.host ? environment.host : "null",
+						context: vars,
 					});
 					await projectMonitoringService.updateLastCronMarker(monitoring.id);
 				}
@@ -75,7 +82,7 @@ async function stupCronForTestingAccountsCleanup() {
 export async function init() {
 	await setupCronForBuilds();
 	await stupCronForTestingAccountsCleanup();
-	await setupMetricsWatcher();
+	// await setupMetricsWatcher();
 }
 
 init();

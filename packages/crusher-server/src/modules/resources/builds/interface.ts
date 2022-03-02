@@ -55,5 +55,6 @@ export type ICreateBuildRequestPayload = KeysToCamelCase<
 		latestReportId?: number | null;
 		isDraftJob?: boolean;
 		meta?: any;
+		context?: any;
 	}
 >;

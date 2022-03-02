@@ -102,7 +102,7 @@ class TestService {
 		browsers = [BrowserEnum.CHROME],
 	) {
 		const testsData = await this.getTestsInProject(projectId, true);
-		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
+		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
 

@@ -67,10 +67,8 @@ function VariableSection({ envId }) {
 								Name
 								<Input
 									css={css`
-										height: 32rem;
 										width: 150rem;
 									`}
-									size={"small"}
 									className={"ml-20"}
 									placeholder={"Enter some name"}
 									onBlur={changeVarValue.bind(this, i, "variableName")}
@@ -81,7 +79,6 @@ function VariableSection({ envId }) {
 								Value
 								<Input
 									css={css`
-										height: 32rem;
 										width: 150rem;
 									`}
 									className={"ml-20"}

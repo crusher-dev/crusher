@@ -8,7 +8,7 @@ import { TestService } from "@modules/resources/tests/service";
 import { BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { UsersService } from "@modules/resources/users/service";
 import { ProjectEnvironmentService } from "@modules/resources/projects/environments/service";
-// import { setupMetricsWatcher } from "./ee/metrics-watcher";
+import { setupMetricsWatcher } from "./ee/metrics-watcher";
 
 const projectMonitoringService = Container.get(ProjectMonitoringService);
 const testService = Container.get(TestService);
@@ -82,7 +82,7 @@ async function stupCronForTestingAccountsCleanup() {
 export async function init() {
 	await setupCronForBuilds();
 	await stupCronForTestingAccountsCleanup();
-	// await setupMetricsWatcher();
+	await setupMetricsWatcher();
 }
 
 init();

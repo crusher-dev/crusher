@@ -37,7 +37,7 @@ module.exports = {
 			cwd: './packages/test-runner',
 			exec_mode: 'cluster',
 			script: 'index.js',
-			env: {...TEST_RUNNER_ENV, PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH},
+			env: { ...TEST_RUNNER_ENV, PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH },
 		},
 		{
 			name: 'video-processor',

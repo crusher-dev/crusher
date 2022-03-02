@@ -10,14 +10,14 @@ export const getTestListAPI = (projectId: number, otherFilters: any = {}) => {
 		otherFilters.page = 0;
 	}
 
-	const filteredObj = pickBy(otherFilters,  v => v !== null && v !== undefined);
+	const filteredObj = pickBy(otherFilters, (v) => v !== null && v !== undefined);
 	const urlParams = new URLSearchParams(filteredObj);
 	const urlParamString = urlParams.toString();
 
 	return resolvePathToBackendURI(`/projects/${projectId}/tests?${urlParamString}`);
 };
 export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, otherFilters = {}) => {
-	const filteredObj = pickBy(otherFilters,  v => v !== null && v !== undefined);
+	const filteredObj = pickBy(otherFilters, (v) => v !== null && v !== undefined);
 	const urlParams = new URLSearchParams(filteredObj);
 	const urlParamString = urlParams.toString();
 
@@ -55,5 +55,13 @@ export const unlinkGithubRepo = (projectId: number) => resolvePathToBackendURI(`
 export const getGitIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/list/repo/`);
 
 export const getSlackIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}`);
+
+export const createFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/create`);
+export const deleteFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/delete`);
+export const updateFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/rename`);
+
+// export const updateUserMetaAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests/actions/folder_create`);
+
+// export const updateUserMetaAPI = () => resolvePathToBackendURI(`/users/actions/update.meta`);
 
 export const setupOSS = "/users/actions/oss.init";

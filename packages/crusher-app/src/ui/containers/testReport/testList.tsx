@@ -644,19 +644,24 @@ function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 		setOpenVideoModal(false);
 	};
 	return (
-		<div onClick={(e) => { e.preventDefault();  e.stopPropagation(); }}>
+		<div
+			onClick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+			}}
+		>
 			<Modal
 				lightOverlay={false}
-			onClose={handleClose.bind(this)}
-			onOutsideClick={handleClose.bind(this)}
-			modalStyle={css`
-				padding: 28rem 36rem 36rem;
-			`}
-		>
-			<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
-			<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
-			<VideoComponent src={videoUrl} />
-		</Modal>
+				onClose={handleClose.bind(this)}
+				onOutsideClick={handleClose.bind(this)}
+				modalStyle={css`
+					padding: 28rem 36rem 36rem;
+				`}
+			>
+				<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
+				<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
+				<VideoComponent src={videoUrl} />
+			</Modal>
 		</div>
 	);
 }
@@ -671,7 +676,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 		e.preventDefault();
 		e.stopPropagation();
 		setIsShowingVideo(true);
-	}
+	};
 
 	return (
 		<>
@@ -810,10 +815,26 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
-			<div onClick={onCardClick} css={ [isShowingVideo ? css`z-index: 21` : null ]} className="sticky top-0 z-20">
+			<div
+				onClick={onCardClick}
+				css={[
+					isShowingVideo
+						? css`
+								z-index: 21;
+						  `
+						: null,
+				]}
+				className="sticky top-0 z-20"
+			>
 				<div css={stickyContainer} className={"px-28 pb-16 w-full test-card-header"}>
 					<div css={header} className={"flex justify-between items-center w-full"}>
-						<TestOverviewTabTopSection isShowingVideo={ isShowingVideo } setIsShowingVideo={setIsShowingVideo} name={name} testInstanceData={testInstanceData} expand={expand} />
+						<TestOverviewTabTopSection
+							isShowingVideo={isShowingVideo}
+							setIsShowingVideo={setIsShowingVideo}
+							name={name}
+							testInstanceData={testInstanceData}
+							expand={expand}
+						/>
 					</div>
 
 					<Conditional showIf={failedTestsConfiguration.length >= 1}>

@@ -10,7 +10,7 @@ const {
 	AWS_CONFIG,
 	FRONTEND_URL,
 	BACKEND_URL,
-	LOCAL_STORAGE_ENDPOINT
+	LOCAL_STORAGE_ENDPOINT,
 } = require('../config');
 
 module.exports = {

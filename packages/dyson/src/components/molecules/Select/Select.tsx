@@ -27,7 +27,7 @@ export type TSelectBoxProps = {
 	/*
 		Event handler when scrolled to bottom of select dropdown
 	*/
-	onScrollEnd: any;
+	onScrollEnd?: any;
 	/*
 		Height of dropdown
 	*/

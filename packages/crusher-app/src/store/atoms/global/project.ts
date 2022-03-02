@@ -18,7 +18,6 @@ export const currentProject = atom((get) => {
 	return projects?.filter(({ id }) => selectedProjectId === id)[0];
 });
 
-
 /*
 	Use to add project instantly.
  */

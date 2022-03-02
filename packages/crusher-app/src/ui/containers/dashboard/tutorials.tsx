@@ -29,7 +29,7 @@ export const OnBoardingTutorialVideo = () => {
 	return (
 		<>
 			<div className="font-cera text-16 font-bold font-600">Watch videos aimed to help you integrate testing</div>
-			<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
+			<div className="mt-8 text-12.5">It’ll hardly take 5 seconds</div>
 			<div className={"flex flex-row items-center mt-32 mb-40"} css={footerContainerStyle}>
 				<div className={"flex flex-wrap text-14 px-8"} css={footerPlaceholderStyle}>
 					<VideoComponent />
@@ -43,11 +43,6 @@ export const OnBoardingTutorialVideo = () => {
 								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Star us on Github</span>
 							</div>
 						</a>
-						{/*<a href={"https://crusher.dev"}>*/}
-						{/*	<div css={navLink} className={"flex items-center text-13 mt-4 leading-none"}>*/}
-						{/*		<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>*/}
-						{/*	</div>*/}
-						{/*</a>*/}
 					</div>
 				</div>
 			</div>

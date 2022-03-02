@@ -1,7 +1,6 @@
 import produce from "immer";
 
 export const convertEnvToServerSide = (data) => {
-	console.log(data);
 	const newState = produce((draft) => {
 		const varEntries = draft.vars.map(({ variableName, variableValue }) => {
 			return [variableName.value, variableValue.value];

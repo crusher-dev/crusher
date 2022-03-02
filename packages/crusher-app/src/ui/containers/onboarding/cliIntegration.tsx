@@ -90,9 +90,9 @@ const CliRepoIntegration = () => {
 
 	const handleSkipOnboarding = () => {
 		updateOnboarding({
-				type: "user",
-				key: USER_META_KEYS.INITIAL_ONBOARDING,
-				value: true,
+			type: "user",
+			key: USER_META_KEYS.INITIAL_ONBOARDING,
+			value: true,
 		});
 	};
 
@@ -176,7 +176,19 @@ const CliRepoIntegration = () => {
 					</div>
 				</Card>
 				<div className={"flex justify-end mt-28"}>
-					<Link href={"/app/dashboard"}><Text onClick={ handleSkipOnboarding } css={ css`:hover { opacity: 0.9 }`} fontSize={13}>Skip setup and show me the dashboard</Text></Link>
+					<Link href={"/app/dashboard"}>
+						<Text
+							onClick={handleSkipOnboarding}
+							css={css`
+								:hover {
+									opacity: 0.9;
+								}
+							`}
+							fontSize={13}
+						>
+							Skip setup and show me the dashboard
+						</Text>
+					</Link>
 				</div>
 			</div>
 		</>

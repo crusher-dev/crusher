@@ -6,7 +6,6 @@ const PUBLIC_LINK = process.env.NEXT_PUBLIC_GITHUB_APP_PUBLIC_LINK;
 
 // Github new installation is
 const getGithubOAuthURL = (alreadyAuthorized = false) => {
-
 	const githubUrl = new URL(path.join(PUBLIC_LINK, "/installations/new"));
 	githubUrl.searchParams.append("client_id", CLIENT_ID);
 	githubUrl.searchParams.append("redirect_uri", resolvePathToBackendURI("/integrations/blabla/github/actions/callback"));
@@ -16,8 +15,7 @@ const getGithubOAuthURL = (alreadyAuthorized = false) => {
 };
 
 const getGithubOAuthURLLegacy = (alreadyAuthorized = false) => {
-
-	console.log("Public link", );
+	console.log("Public link");
 	const githubUrl = new URL(alreadyAuthorized ? path.join(PUBLIC_LINK, "/installations/new") : "https://github.com/login/oauth/authorize");
 	githubUrl.searchParams.append("client_id", CLIENT_ID);
 	githubUrl.searchParams.append("redirect_uri", resolvePathToBackendURI("/integrations/blabla/github/actions/callback"));

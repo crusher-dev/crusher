@@ -88,9 +88,9 @@ class TestService {
 		return this.dbManager.update("UPDATE public.tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}
 
-	async updateTest(testId: number, newInfo: { name: string; tags: string; runAfter: number }) {
-		const { name, tags, runAfter } = newInfo;
-		return this.dbManager.update(`UPDATE public.tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
+	async updateTest(testId: number, newInfo: { name: string; testFolder: number;}) {
+		const { name,testFolder } = newInfo;
+		return this.dbManager.update(`UPDATE public.tests SET name = ?, test_folder = ? WHERE id = ?`, [name, testFolder, testId]);
 	}
 
 	async runTestsInProject(
@@ -164,6 +164,7 @@ class TestService {
 		} FROM public.tests, public.users, public.jobs, public.job_reports ${
 			additionalFromSource ? `, ${additionalFromSource}` : ""
 		} WHERE ${filter.projectId ? `tests.project_id = ? AND` : ''} ${filter.userId ? `users.id = ? AND` : ''} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+
 		if (filter.projectId) {
 			queryParams.push(filter.projectId);
 		}
@@ -205,6 +206,35 @@ class TestService {
 		}
 
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
+	}
+
+	@CamelizeResponse()
+	async getFolder(projectId: number) {
+		return this.dbManager.fetchAllRows(
+			`SELECT id,name FROM public.tests_folder WHERE project_id = ?`,
+			[projectId],
+		);
+	}
+
+	@CamelizeResponse()
+	async createFolder(projectId: number, name:string) {
+		return this.dbManager.insert(
+			`INSERT INTO public.tests_folder (project_id, name) VALUES (?, ?)`,
+			[
+				projectId,
+				name,
+			],
+		);
+	}
+
+	@CamelizeResponse()
+	async renameFolder(folderId: number, name: string) {
+		return this.dbManager.update(`UPDATE public.tests_folder SET name = ? WHERE id = ?`, [name, folderId]);
+	}
+
+	@CamelizeResponse()
+	async deleteFolder(folderId: number) {
+		return this.dbManager.delete(`DELETE FROM public.tests_folder WHERE id = ?`, [ folderId]);
 	}
 
 	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {

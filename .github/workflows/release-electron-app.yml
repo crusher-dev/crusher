@@ -37,7 +37,7 @@ jobs:
         name: Build release for electron app
         run: yarn workspace electron-app release:mac
 
-      - if:  matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-latest'
         name: 'Store crusher-darwin as artifact'
         uses: actions/upload-artifact@v2
         with:

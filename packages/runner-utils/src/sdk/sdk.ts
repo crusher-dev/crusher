@@ -22,6 +22,8 @@ class CrusherSdk implements ICrusherSdk {
 		this.storageManager = storageManager;
 	}
 
+	// Legacy methods
+	// @TODO: Remove them after migration
 	async $(selector: string) {
 		const elementHandle = await this.page.$(selector);
 

@@ -442,7 +442,7 @@ const containerWidth = css`
 	//width: calc(100vw - 250rem);
 	//max-width: 1500rem;
 
-	width: 1488rem;
+	width: 1468rem;
 	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
 	padding: 0 0;

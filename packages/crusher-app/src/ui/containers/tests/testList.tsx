@@ -23,14 +23,12 @@ import { tempTestNameAtom } from "../../../store/atoms/global/temp/tempTestName"
 
 import { RequestMethod } from "../../../types/RequestOptions";
 import { useRouter } from "next/router";
-import { PaginationButton } from "dyson/src/components/molecules/PaginationButton";
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
 import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
 import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
-import { Folder, TestIcon } from "@svg/tests";
+import { EditIcon, Folder, TestIcon } from '@svg/tests';
 import { PlaySVG } from "@svg/dashboard";
-import Checkbox from "dyson/src/components/atoms/checkbox/checkbox";
-import { is } from "@babel/types";
+
 import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
 import { updateMeta } from "@store/mutators/metaData";
 import { handleTestRun } from "@utils/core/testUtils";
@@ -83,7 +81,7 @@ function TestCard(props: IBuildItemCardProps) {
 				margin-right: -3rem;
 			`}
 			type={firstRunCompleted ? "FAILED" : "RUNNING"}
-			height={"16rem"}
+			height={"14rem"}
 		/>
 	);
 
@@ -94,6 +92,7 @@ function TestCard(props: IBuildItemCardProps) {
 	const testRunInThisHour = (Date.now() - testData.createdAt) / 1000 < 3600;
 
 	return (
+		<a href={`crusher://replay-test?testId=${id}`}>
 		<div
 			css={css`
 				margin-top: -1rem;border-top: 1px solid #171b20;
@@ -112,13 +111,13 @@ function TestCard(props: IBuildItemCardProps) {
 			</Conditional>
 			<div css={[folderStyle, testItem]} className={`flex ${!isRoot && "pl-32"}`}>
 				<div css={[containerWidth, testItemWidth(isRoot)]} className={"flex"}>
-					<div className={"flex pt-16 w-full justify-between"}>
+					<div className={"flex w-full justify-between"}>
 						<div className={"flex"}>
 							<TestIcon height={18} className={`mr-16 ${isRoot && "invisible"}`} />
 							<div>
-								<div className={"font-cera text-14 font-500 mb-12 leading-none"}>{testName}</div>
+								<div className={"font-cera text-14 font-500 mb-8 leading-none"}>{testName}</div>
 								<div
-									className={"font-cera text-13 mb-16 leading-none font-500"}
+									className={"font-cera text-13 leading-none font-500"}
 									css={css`
 										color: #4a494b;
 									`}
@@ -129,19 +128,33 @@ function TestCard(props: IBuildItemCardProps) {
 						</div>
 
 						<div>
-							<span
-								className={"edit hidden"}
-								onClick={() => {
+							<div
+								className={"edit flex justify-end"}
+								onClick={(e) => {
+									e.preventDefault();e.stopPropagation()
 									!showEditBox && setShowEditBox(true);
 								}}
 							>
-								Edit
+										<span className={"flex items-center"} css={editBlockCSS}>
+								<EditIcon className={"mr-6"}/> <span className={"mt-4"}>Edit</span>
 							</span>
+							</div>
+							<div className={"flex justify-end mt-8 items-center"}>
+								<Conditional showIf={firstRunCompleted}>
+									<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
+										<span className={"view-build leading-none mt-1"}>View build </span>
+									</Link>
+								</Conditional>
+								<span className={"ml-16"}>{statusIcon}</span>
+							</div>
+
+
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		</a>
 	);
 	return (
 		<div css={itemContainerStyle}>
@@ -189,7 +202,9 @@ function TestCard(props: IBuildItemCardProps) {
 								!showEditBox && setShowEditBox(true);
 							}}
 						>
-							Edit
+								<span className={"flex items-center"} css={editBlockCSS}>
+								<EditIcon className={"mr-6"}/> <span className={"mt-4"}>Edit</span>
+							</span>
 						</span>
 						<Conditional showIf={testRunInThisHour}>
 							<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
@@ -226,17 +241,14 @@ const itemContainerStyle = css`
 	margin-bottom: 40px;
 	overflow: hidden;
 	margin-right: 32px;
-	:hover {
-		//background: rgba(16, 18, 21, 1);
-	}
 
 	.edit {
-		display: none;
+		visibility: hidden;
 	}
 
 	:hover {
 		.edit {
-			display: block !important;
+      visibility: visible !important;
 			:hover {
 				text-decoration: underline;
 			}
@@ -294,7 +306,7 @@ function FolderItem(props: { folder: any; id: number }) {
 					<EditFolderModal id={props.id} name={props.folder.name} onClose={setShowEditBox.bind(this, false)} />
 				</Conditional>
 				<div css={containerWidth} className={"flex"}>
-					<div css={folderBlock} className={"flex pt-18 justify-between w-full"}>
+					<div css={folderBlock} className={"flex justify-between w-full"}>
 						<div className={"flex"}>
 							<Folder height={18} className={"mr-16"} />
 							<div>
@@ -313,9 +325,11 @@ function FolderItem(props: { folder: any; id: number }) {
 								e.stopPropagation();
 								setShowEditBox(true);
 							}}
-							className={"hidden edit"}
+							className={" edit"}
 						>
-							Edit
+							<span className={"flex items-center"} css={editBlockCSS}>
+								<EditIcon className={"mr-6"}/> <span className={"mt-4"}>Edit</span>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -331,10 +345,27 @@ function FolderItem(props: { folder: any; id: number }) {
 	);
 }
 
+const editBlockCSS = css`
+  margin-top: -6rem;
+
+  :hover {
+    path {
+      fill: #6953be;
+    }
+
+    color: #6953be;
+  }
+`
+
 const folderBlock = css`
+  .edit {
+    visibility: hidden;
+  }
+
+
 	:hover {
 		.edit {
-			display: block;
+      visibility: visible;
 		}
 		.open-folder{
 			display: block;
@@ -353,7 +384,7 @@ function FolderList() {
 	const { folders } = data;
 
 	return (
-		<div className={"mt-32"} css={css`border-top: 1px solid #171b20;`}>
+		<div className={"mt-24"} css={css`border-top: 1px solid #171b20;`}>
 			{folders.map((folder) => {
 				return <FolderItem id={folder.id} key={folder.id} folder={folder} />;
 			})}
@@ -368,7 +399,7 @@ const createFolder = (projectId: number) => {
 	});
 };
 
-function TestTopBar(props: { rootTest: any; onClick: () => Promise<void> }) {
+function TestTopBar(props: { totalTests: any; onClick: () => Promise<void> }) {
 	const router = useRouter();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [, updateMetaData] = useAtom(updateMeta);
@@ -395,7 +426,7 @@ function TestTopBar(props: { rootTest: any; onClick: () => Promise<void> }) {
 		<div css={containerWidth} className={"flex justify-between items-start"}>
 			<div>
 				<div className={"text-15 font-600 font-cera mb-8"}>Your tests</div>
-				<div className={"text-12"}>{props.rootTest.length} tests total</div>
+				<div className={"text-12"}>{props.totalTests} tests total</div>
 			</div>
 
 			<div className={"text-12 flex items-center"}>
@@ -405,7 +436,8 @@ function TestTopBar(props: { rootTest: any; onClick: () => Promise<void> }) {
 						content="Create folder"
 						placement="bottom"
 						type="hover"
-						timer={500}
+						wrapperCSS={wrapperCSS}
+						timer={2000}
 						css={css`
 							padding-top: 8rem;
 						`}
@@ -434,6 +466,34 @@ function TestTopBar(props: { rootTest: any; onClick: () => Promise<void> }) {
 	);
 }
 
+const wrapperCSS=css`
+
+  animation: fadeIn 1300ms;
+
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    55% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+   55% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+`
+
 function TestSearchableList() {
 	const [project] = useAtom(currentProject);
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
@@ -442,7 +502,7 @@ function TestSearchableList() {
 	const [tempTestType, setTempTestType] = useAtom(tempTestTypeAtom);
 	const [tempTestUpdateId, setTempTestUpdateId] = useAtom(tempTestUpdateIdAtom);
 
-	const [filters, setFilters] = useAtom(testFiltersAtom);
+	const [filters] = useAtom(testFiltersAtom);
 
 	const [newTestCreated, setNewTestCreated] = useState(false);
 
@@ -490,7 +550,7 @@ function TestSearchableList() {
 		<div>
 			<Conditional showIf={data && data.list.length > 0}>
 				<TestTopBar
-					rootTest={rootTest}
+					totalTests={data.list.length}
 					onClick={async () => {
 						await createFolder(project.id);
 						await mutate(getTestListAPI(project.id));
@@ -510,7 +570,8 @@ function TestSearchableList() {
 
 const folderStyle = css`
 	min-width: 100%;
-	min-height: 80px;
+
+	padding: 20px 0;
 
 	font-size: 12px;
 	
@@ -522,10 +583,23 @@ const folderStyle = css`
 `;
 
 const testItem = css`
-	min-height: 66px;
+  padding: 20px 0;
+
+  .view-build {
+
+
+    margin-left: 12rem;
+    :hover {    color: #96a7ff;
+      text-decoration: underline;
+    }
+  }
+	
+  .edit {
+    visibility: hidden;
+  }
 	:hover {
 		.edit {
-			display: block;
+      visibility: visible;
 		}
 	}
 `;

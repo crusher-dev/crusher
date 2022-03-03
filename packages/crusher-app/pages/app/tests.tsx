@@ -10,7 +10,7 @@ function Tests() {
 	usePageTitle("Tests");
 	return (
 		<SidebarTopBarLayout setContainerWidth={false}>
-			<div className="pt-42 pb-24">
+			<div className="pt-32 pb-24">
 				<Suspense fallback={<div>loading...</div>}>
 					<TestSearchableList />
 				</Suspense>

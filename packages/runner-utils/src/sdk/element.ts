@@ -8,7 +8,7 @@ class CrusherElementSdk implements ICrusherSDKElement {
 		return this._element.evaluate(fun, arg);
 	}
 
-	async scrollIntoView({ timeout }: { timeout?: number }) {
+	async scrollIntoView({ timeout }: { timeout?: number } = {}) {
 		await this._element.scrollIntoViewIfNeeded({ timeout });
 		return true;
 	}

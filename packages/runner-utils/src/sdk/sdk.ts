@@ -15,11 +15,11 @@ class CrusherSdkPage {
 	constructor(private _page: Page) {
 
 	}
-	async screenshot({ timeout }: { timeout: number; }) {
+	async screenshot({ timeout }: { timeout?: number; } = {}) {
 		return this._page.screenshot({ timeout: timeout });
 	}
 
-	async querySelector(selector: string, { waitUntil, timeout }: { waitUntil?: "visible" | "in-dom" | null; timeout?: number }) {
+	async querySelector(selector: string, { waitUntil, timeout }: { waitUntil?: "visible" | "in-dom" | null; timeout?: number } = {waitUntil: "visible"}) {
 		let elementHandle;
 		if (waitUntil) {
 			elementHandle = await this._page.waitForSelector(selector, { state: waitUntil === "in-dom" ? "attached" : "visible", timeout });
@@ -35,11 +35,11 @@ class CrusherSdkPage {
 		return this._page.url();
 	}
 
-	async waitForNavigation(url: string, { timeout }: {timeout?: number}) {
+	async waitForNavigation(url: string, { timeout }: { timeout?: number } = {}) {
 		return this._page.waitForNavigation({ timeout: timeout, url: url });
 	}
 
-	async navigate(url: string, { timeout }: { timeout: number }) {
+	async navigate(url: string, { timeout }: { timeout?: number } = {}) {
 		return this._page.goto(url, { timeout: timeout });
 	}
 

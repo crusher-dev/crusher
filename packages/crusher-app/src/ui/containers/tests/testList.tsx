@@ -142,7 +142,7 @@ function TestCard(props: IBuildItemCardProps) {
 							<div className={"flex justify-end mt-8 items-center"}>
 								<Conditional showIf={firstRunCompleted}>
 									<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
-										<span className={"view-build"}>View build </span>
+										<span className={"view-build leading-none mt-1"}>View build </span>
 									</Link>
 								</Conditional>
 								<span className={"ml-16"}>{statusIcon}</span>

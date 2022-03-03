@@ -6,6 +6,7 @@ import { StorageManager } from "../functions/storage";
 import { CrusherSdk } from "../sdk/sdk";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import template from "@crusher-shared/utils/templateString";
+import expect from "expect";
 
 async function executeCustomCode(
 	page: Page,
@@ -28,8 +29,10 @@ async function executeCustomCode(
 		"__filename",
 		"__dirname",
 		"crusherSdk",
+		"context",
+		"expect",
 		`${customScriptFunction} return validate(crusherSdk, context);`,
-	)(exports, typeof __webpack_require__ === "function" ? __non_webpack_require__ : require, module, __filename, __dirname, crusherSdk);
+	)(exports, typeof __webpack_require__ === "function" ? __non_webpack_require__ : require, module, __filename, __dirname, crusherSdk, context, expect);
 
 	return {
 		customLogMessage: result ? "Executed custom code" : "Error executing custom code",

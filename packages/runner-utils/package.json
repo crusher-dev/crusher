@@ -34,6 +34,7 @@
 	},
 	"dependencies": {
 		"browserify-zlib": "^0.2.0",
+		"expect": "^27.5.1",
 		"playwright": "^1.14.0"
 	}
 }

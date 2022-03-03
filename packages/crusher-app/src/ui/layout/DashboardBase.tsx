@@ -173,7 +173,7 @@ function LeftSection() {
 							width: 206.03px;
 						`}
 					>
-						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"}>
+						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"} >
 							<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
 						</div>
 					</Dropdown>
@@ -226,33 +226,28 @@ export const dropdDown = css`
 `;
 
 function DropdownContent() {
-	const router = useRouter();
-	useEffect(() => {
-		loadCrisp(() => {});
-	}, []);
 	return (
 		<div className={"flex flex-col justify-between"}>
 			<div>
-				<MenuItem showHightlighted={true} label={"Get Live support"} onClick={openChatBox}></MenuItem>
 				<MenuItem
 					selected={true}
 					label={"Request a feature"}
 					onClick={() => {
-						router.push("https://github.com/crusherdev/crusher/issues");
+						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"Report Issue"}
 					onClick={() => {
-						router.push("https://github.com/crusherdev/crusher/issues");
+						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"View docs"}
 					onClick={() => {
-						router.push("https://docs.crusher.dev");
+						window.open("https://docs.crusher.dev","_blank").focus();
 					}}
 				></MenuItem>
 			</div>

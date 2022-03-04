@@ -49,6 +49,7 @@
 		"child_process": "^1.0.2",
 		"copy-webpack-plugin": "6.0.3",
 		"css-selector-tools": "^1.0.9",
+		"debug": "^4.3.3",
 		"dotenv": "^10.0.0",
 		"ejs": "^3.1.6",
 		"electron": "^12.0.2",

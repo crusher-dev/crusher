@@ -35,6 +35,8 @@ import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../stor
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
+
+const debug = require("debug")("crusher:main");
 export class AppWindow {
 	private window: Electron.BrowserWindow;
 	private recorder: Recorder;
@@ -56,6 +58,7 @@ export class AppWindow {
 	}
 
 	public constructor(store: Store<unknown, AnyAction>) {
+		debug("Constructor called");
 		const savedWindowState = windowStateKeeper({
 			defaultWidth: this.minWidth,
 			defaultHeight: this.minHeight,
@@ -153,7 +156,6 @@ export class AppWindow {
 			webContents.nodeIntegrationInSubFrames = true;
 			(webContents as any).disablePopups = false;
 			webContents.enablePreferredSizeMode = true;
-			console.log("Web contents of webview", webContents);
 			return webContents;
 		});
 

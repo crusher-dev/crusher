@@ -17,7 +17,7 @@ async function executeCustomCode(
 	sdk: CrusherSdk | null,
 	context: any
 ) {
-	const customScriptFunction = template(action.payload.meta.script, {ctx: context});
+	const customScriptFunction = action.payload.meta.script;
 
 	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager, storageManager);
 

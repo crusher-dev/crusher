@@ -67,7 +67,7 @@ Fastest and most powerful way to try Crusher.
 
 **Deploy it on your infra (self-host)**
 
- <a href="#-self-deploymentr">
+ <a href="#-self-deployment">
 <img src="https://i.imgur.com/kPLG4s7.png" height="40px"/>
 </a>
 

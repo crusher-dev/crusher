@@ -57,7 +57,7 @@ class CrusherSdkPage {
 }
 class CrusherSdk implements ICrusherSdk {
 	_page: Page; // Playwright page reference
-	page: CrusherSdkPage;
+	page: Page;
 	exportsManager: ExportsManager;
 	storageManager: StorageManager;
 
@@ -65,7 +65,7 @@ class CrusherSdk implements ICrusherSdk {
 		this._page = page;
 		this.exportsManager = exportsManager;
 		this.storageManager = storageManager;
-		this.page = new CrusherSdkPage(this._page);
+		this.page = page;
 	}
 
 	// Legacy methods

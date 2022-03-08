@@ -25,9 +25,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 	const handleLoad = React.useCallback(() => {
 		if (codeTextAreaRef.current) {
-			console.log("writing hte value");
 			codeTextAreaRef.current!.value =
-				"async function validate(){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n}";
+				"async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n}";
 
 			if (props.stepAction) {
 				codeTextAreaRef.current!.value = props.stepAction.payload.meta.script;

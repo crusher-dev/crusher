@@ -160,6 +160,7 @@ export class TestController {
 			disableBaseLineComparisions: boolean;
 			baselineJobId: number | null;
 			browsers?: Array<BrowserEnum>;
+			context?: any;
 		},
 		@Param("project_id") projectId: number,
 	) {
@@ -176,7 +177,7 @@ export class TestController {
 		return this.testService.runTestsInProject(
 			projectId,
 			user.user_id,
-			{ host: body.host ? body.host : "null" },
+			{ host: body.host ? body.host : "null", context: body.context ? body.context : null },
 			meta,
 			body.baselineJobId ? body.baselineJobId : null,
 			body.browsers ? body.browsers : [BrowserEnum.CHROME],

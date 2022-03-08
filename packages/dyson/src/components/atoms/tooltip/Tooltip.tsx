@@ -45,7 +45,8 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 		strategy: "fixed",
 		middleware: [shift(), offset(offsetWrapper)],
 	});
-	const { css, wrapperCSS, callback } = props;
+
+	const { wrapperCSS, callback } = props;
 	const eventListener = () => {
 		if (type === "hover") {
 			return {
@@ -93,6 +94,7 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 		};
 	}, [show]);
 
+	console.log(props)
 	return (
 		<React.Fragment>
 			<ClonedElement />
@@ -109,7 +111,7 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 						onMouseOver={eventListener().onMouseOver}
 						onMouseLeave={eventListener().onMouseLeave}
 					>
-						<div css={[tooltipBox, css]}>{content}</div>
+						<div css={[tooltipBox, props.css]} className={props.className}>{content}</div>
 					</div>
 				</TooltipBox>
 			)}

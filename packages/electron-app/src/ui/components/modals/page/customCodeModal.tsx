@@ -26,7 +26,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const handleLoad = React.useCallback(() => {
 		if (codeTextAreaRef.current) {
 			codeTextAreaRef.current!.value =
-				"async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n}";
+				"async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n\n\n}";
 
 			if (props.stepAction) {
 				codeTextAreaRef.current!.value = props.stepAction.payload.meta.script;
@@ -43,7 +43,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			editor.getDoc().markText({ line: 0, ch: 0 }, { line: 1 }, { readOnly: true, inclusiveLeft: true });
 			editor.getDoc().markText({ line: 0, ch: 0 }, { line: 2 }, { readOnly: true, inclusiveLeft: true });
 
-			editor.getDoc().markText({ line: 3, ch: 0 }, { line: 3, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
+			editor.getDoc().markText({ line: 5, ch: 0 }, { line: 5, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
 		}
 	}, [props.stepAction, codeTextAreaRef.current]);
 

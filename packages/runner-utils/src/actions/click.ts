@@ -9,7 +9,12 @@ async function clickOnElement(element: Locator, workingSelector: any, action: iA
 	storageManager: StorageManager,
 	exportsManager: ExportsManager) {
 	try {
-		await element.click({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
+		let pos = undefined;
+		if(action.payload.meta.value.mousePos) {
+			pos = action.payload.meta.value.mousePos;
+		}
+		await element.click({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined, position: pos });
+
 	} catch (e) {
 		if (!e.message.includes("selector resolved to hidden")) throw e;
 		console.error("Error while clicking", e);

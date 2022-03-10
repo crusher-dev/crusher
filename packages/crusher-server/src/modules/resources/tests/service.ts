@@ -100,8 +100,9 @@ class TestService {
 		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
 		overideBaseLineBuildId: number | null = null,
 		browsers = [BrowserEnum.CHROME],
+		folder = null,
 	) {
-		const testsData = await this.getTestsInProject(projectId, true);
+		const testsData = await this.getTestsInProject(projectId, true, { folder: folder ? folder : null });
 		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
@@ -147,7 +148,7 @@ class TestService {
 		return this.dbManager.fetchAllRows(query, values);
 	}
 
-	async getTests(findOnlyActiveTests = false, filter: { userId?: number;  projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+	async getTests(findOnlyActiveTests = false, filter: { userId?: number; projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number; folder?: string; } = {}) {
 		const PER_PAGE_LIMIT = 15;
 
 		let additionalSelectColumns = "";
@@ -164,6 +165,7 @@ class TestService {
 		} FROM public.tests, public.users, public.jobs, public.job_reports ${
 			additionalFromSource ? `, ${additionalFromSource}` : ""
 		} WHERE ${filter.projectId ? `tests.project_id = ? AND` : ''} ${filter.userId ? `users.id = ? AND` : ''} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+
 
 		if (filter.projectId) {
 			queryParams.push(filter.projectId);
@@ -191,6 +193,16 @@ class TestService {
 		const totalRecordCountQuery = `SELECT COUNT(*) count FROM (${query}) custom_query`;
 		const totalRecordCountQueryResult = await this.dbManager.fetchSingleRow(totalRecordCountQuery, queryParams);
 
+		if (filter.folder) {
+			const folders = await this.getFolder(filter.projectId, { name: filter.folder });
+			if (folders.length) {
+				// Filter tests belong to one of the folders array
+				const folderIdArr = folders.map((folder) => `${folder.id}`);
+				query += ` AND test_folder IN (${new Array(folderIdArr.length).fill("?").join(",")})`;
+				queryParams.push(...folderIdArr);
+			}
+		}
+
 		if (filter.search) {
 			query += " ORDER BY tests.created_at DESC, rank DESC";
 		} else {
@@ -209,11 +221,15 @@ class TestService {
 	}
 
 	@CamelizeResponse()
-	async getFolder(projectId: number) {
-		return this.dbManager.fetchAllRows(
-			`SELECT id,name FROM public.tests_folder WHERE project_id = ?`,
-			[projectId],
-		);
+	async getFolder(projectId: number, filter: { name?: string } = {}) {
+		let query = `SELECT id, name FROM public.tests_folder WHERE project_id = ?`;
+		const queryParams: Array<any> = [projectId];
+		if (filter.name) {
+			const namesArray = filter.name.split(",");
+			query += ` AND name IN (${new Array(namesArray.length).fill("?").join(",")})`;
+			queryParams.push(...namesArray);
+		}
+		return this.dbManager.fetchAllRows(query, queryParams);
 	}
 
 	@CamelizeResponse()
@@ -237,7 +253,7 @@ class TestService {
 		return this.dbManager.delete(`DELETE FROM public.tests_folder WHERE id = ?`, [ folderId]);
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number; folder?: string } = {}) {
 		return this.getTests(findOnlyActiveTests, { ...filter, projectId });
 	}
 

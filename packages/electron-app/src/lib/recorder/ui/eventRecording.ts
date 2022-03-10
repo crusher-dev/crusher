@@ -388,7 +388,7 @@ export default class EventRecording {
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
 			let rect = target.getBoundingClientRect();
-			const mousePos = {x: event.clientX - rect.left, y: event.clientY - rect.top};
+			const mousePos = {x: (event.clientX - rect.left)/rect.width, y: (event.clientY - rect.top)/rect.height};
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, target, {
 				inputInfo: tagName === "label" ? inputNodeInfo : null,
 				mousePos: mousePos,

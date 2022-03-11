@@ -4,7 +4,6 @@ import * as Sentry from "@sentry/electron"
 import { isProduction, parseDeepLinkUrlAction } from "./../utils"
 import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
-import { enableSourceMaps } from "../lib/source-map-support";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
 import { installSameOriginFilter } from "./same-origin-filter";
@@ -21,7 +20,6 @@ const os = require('os');
 	});
 
 app.setAppLogsPath();
-enableSourceMaps();
 
 let mainWindow: AppWindow | null = null
 

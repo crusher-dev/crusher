@@ -2,7 +2,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { WebContents, ipcMain, webContents, session } from "electron";
 import * as path from "path";
 import { PlaywrightInstance } from "../lib/playwright";
-import { TRecorderState } from "../store/reducers/recorder";
+import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
 
@@ -30,7 +30,13 @@ export class WebView {
 
 		webViewWebContents.on("crashed", (event, any) => {
 			console.log("Webview crashed", any);
-			this.appWindow.updateRecorderState(TRecorderState.CRASHED);
+			this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.CRASHED });
+		});
+
+		webViewWebContents.on("did-fail-load", (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+			if(isMainFrame) {
+				this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.PAGE_LOAD_FAILED});
+			}
 		});
 
 		webViewWebContents.on("context-menu", (event, any) => {

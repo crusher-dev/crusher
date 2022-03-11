@@ -21,6 +21,7 @@ import {
 	setSiteUrl,
 	updateCurrentRunningStepStatus,
 	updateRecordedStep,
+	updateRecorderCrashState,
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -280,6 +281,11 @@ export class AppWindow {
 
 	updateRecorderState(state) {
 		this.store.dispatch(updateRecorderState(state, {}));
+	}
+
+	updateRecorderCrashState(stateMeta) {
+		console.log("Update crash recorder");
+		this.store.dispatch(updateRecorderCrashState(stateMeta));
 	}
 
 	async handleResetAppSession() {

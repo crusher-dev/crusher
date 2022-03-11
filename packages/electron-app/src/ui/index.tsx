@@ -106,6 +106,49 @@ const App = () => {
 
 	return (
 		<>
+			<div
+				css={css`
+					height: 32px;
+					width: 100%;
+					background: #111213;
+					border-bottom: 1px solid #2c2c2c;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				`}
+				className={"drag"}
+			>
+				<div
+					css={css`
+						color: #fff;
+						font-size: 13.5px;
+						font-weight: bold;
+						display: flex;
+						flex: 1;
+						justify-content: center;
+					`}
+				>
+					Crusher Recorder
+				</div>
+				<div
+					css={css`
+						margin-left: auto;
+						font-size: 14px;
+						margin-right: 8px;
+					`}
+					className={"no-drag"}
+				>
+					<div
+						css={css`
+							padding: 4px;
+							:hover {
+								opacity: 0.5;
+							}
+						`}
+					>
+					</div>
+				</div>
+			</div>
 			<div css={containerStyle}>
 				<Global styles={globalStyles} />
 				<div css={bodyStyle}>
@@ -116,6 +159,16 @@ const App = () => {
 
 				<ToastSnackbar />
 			</div>
+			<style>
+				{`
+				.drag {
+					-webkit-app-region: drag;
+				}
+				.no-drag {
+					-webkit-app-region: no-drag;
+				}
+			`}
+			</style>
 		</>
 	);
 };

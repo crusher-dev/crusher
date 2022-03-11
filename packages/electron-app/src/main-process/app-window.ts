@@ -77,6 +77,7 @@ export class AppWindow {
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
 			show: true,
+			frame: false,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
 			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972

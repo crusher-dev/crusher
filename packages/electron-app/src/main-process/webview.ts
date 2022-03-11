@@ -28,6 +28,15 @@ export class WebView {
 			callback({ requestHeaders: details.requestHeaders });
 		});
 
+		webViewWebContents.on("crashed", (event, any) => {
+			console.log("Webview crashed", any);
+			this.appWindow.updateRecorderState(TRecorderState.CRASHED);
+		});
+
+		webViewWebContents.on("context-menu", (event, any) => {
+			console.log("Webview context menu", any);
+		});
+
 		webViewWebContents.on("-will-add-new-contents" as any, (event, url) => {
 			event.preventDefault();
 			console.log("New url is this", url);

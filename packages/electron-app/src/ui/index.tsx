@@ -11,7 +11,7 @@ import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { getRecorderInfo, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
-import { performNavigation, performReplayTest, performSetDevice, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
+import { performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
@@ -23,6 +23,8 @@ import { TRecorderState } from "../store/reducers/recorder";
 import { webFrame } from "electron";
 import { TourProvider, useTour } from "@reactour/tour";
 import { getGlobalAppConfig } from "../lib/global-config";
+import { iAction } from "@shared/types/action";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -68,6 +70,16 @@ const App = () => {
 					emitter.once("renderer-webview-initialized", () => {
 						console.log("Render webview initialized listener called");
 						performReplayTest(action.args.testId);
+					});
+				}
+			} else if(action.commandName === "restore") {
+				if(window.localStorage.getItem("saved-steps")){
+					const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps") || "[]");
+					const setDeviceStep = savedSteps.find((step: iAction) => step.type === ActionsInTestEnum.SET_DEVICE);
+					store.dispatch(setDevice(setDeviceStep.payload.meta.device.id));
+					emitter.once("renderer-webview-initialized", () => {
+						performSteps(savedSteps);
+						window.localStorage.removeItem("saved-steps");
 					});
 				}
 			}

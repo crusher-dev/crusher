@@ -19,6 +19,7 @@ export enum TRecorderState {
 	PERFORMING_RECORDER_ACTIONS = "PERFORMING_RECORDER_ACTIONS",
 
 	ACTION_REQUIRED = "ACTION_REQURED",
+	CRASHED = "CRASHED",
 };
 
 interface INavigatingStatePayload {

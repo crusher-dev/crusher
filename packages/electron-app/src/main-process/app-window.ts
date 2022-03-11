@@ -35,6 +35,7 @@ import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../stor
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
+import * as fs from "fs";
 
 const debug = require("debug")("crusher:main");
 export class AppWindow {
@@ -165,6 +166,7 @@ export class AppWindow {
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
 			this._rendererReadyTime = readyTime;
+			this.sendMessage("url-action", {action: {commandName: "restore" }});
 
 			this.maybeEmitDidLoad();
 		});
@@ -197,6 +199,8 @@ export class AppWindow {
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
 		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
 		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
+		ipcMain.handle("quit-and-restore", this.handleQuitAndRestore.bind(this));
+		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
@@ -206,6 +210,16 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private async handlePerformSteps(event, payload: {steps: any}) {
+		await this.resetRecorder();
+		await this.handleReplayTestSteps(payload.steps);
+	}
+
+	private async handleQuitAndRestore() {
+		app.relaunch();
+		app.quit();
 	}
 
 	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {

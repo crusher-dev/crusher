@@ -448,6 +448,20 @@ const DownIcon = (props: any) => {
 	);
 };
 
+const StopIcon = (props: any) => {
+	return (<svg
+	viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0ZM3 12a9 9 0 0 1 9-9c1.973 0 3.797.642 5.278 1.72L4.72 17.278A8.942 8.942 0 0 1 3 12Zm9 9a8.942 8.942 0 0 1-5.278-1.72L19.28 6.722A8.953 8.953 0 0 1 21 12a9 9 0 0 1-9 9Z"
+      fill="#FA618F"
+    />
+  </svg>);
+};
+
 export {
 	CrossIcon,
 	BulbIcon,
@@ -473,4 +487,5 @@ export {
 	LinkIcon,
 	CrusherHammerIcon,
 	DownIcon,
+	StopIcon,
 };

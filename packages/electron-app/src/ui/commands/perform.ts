@@ -242,6 +242,15 @@ const performJumpTo = (stepIndex) => {
 	return ipcRenderer.invoke("jump-to-step", {stepIndex});
 }
 
+const performQuitAndRestore = (store) => {
+	const savedSteps = getSavedSteps(store.getState());
+	window.localStorage.setItem("saved-steps", JSON.stringify(savedSteps));
+	return ipcRenderer.invoke("quit-and-restore");
+}
+
+const performSteps = (steps) => {
+	return ipcRenderer.invoke("perform-steps", { steps });
+}
 export {
 	recordHoverDependencies,
 	performAction,
@@ -273,4 +282,6 @@ export {
 	turnOffElementSelectorInspectMode,
 	performResetAppSession,
 	performJumpTo,
+	performQuitAndRestore,
+	performSteps
 };

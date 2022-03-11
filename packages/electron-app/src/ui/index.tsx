@@ -128,7 +128,6 @@ const App = () => {
 						justify-content: center;
 					`}
 				>
-					Crusher Recorder
 				</div>
 				<div
 					css={css`

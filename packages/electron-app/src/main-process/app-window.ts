@@ -50,6 +50,7 @@ export class AppWindow {
 
 	private minWidth = 1000;
 	private minHeight = 600;
+	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
 
@@ -59,7 +60,7 @@ export class AppWindow {
 
 	public constructor(store: Store<unknown, AnyAction>) {
 		debug("Constructor called");
-		const savedWindowState = windowStateKeeper({
+		this.savedWindowState = windowStateKeeper({
 			defaultWidth: this.minWidth,
 			defaultHeight: this.minHeight,
 			maximize: false,
@@ -69,10 +70,12 @@ export class AppWindow {
 
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
-			x: savedWindowState.x,
-			y: savedWindowState.y,
-			width: savedWindowState.width,
-			height: savedWindowState.height,
+			x: this.savedWindowState.x,
+			y: this.savedWindowState.y,
+			width: this.savedWindowState.width,
+			titleBarStyle: 'hidden',
+			trafficLightPosition: { x: 10, y: 8 },
+			height: this.savedWindowState.height,
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,

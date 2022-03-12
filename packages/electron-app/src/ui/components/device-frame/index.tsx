@@ -13,6 +13,8 @@ import { TRecorderCrashState, TRecorderState } from "electron-app/src/store/redu
 import { InfoOverLay } from "../overlays/infoOverlay";
 import { MiniCrossIcon, StopIcon } from "../../icons";
 import { Button } from "@dyson/components/atoms";
+import { getLogs } from "electron-app/src/store/selectors/logger";
+import { ILoggerReducer } from "electron-app/src/store/reducers/logger";
 
 const CrashScreen = (props: any) => {
 	const store = useStore();
@@ -96,16 +98,30 @@ const PageLoadFailedScreen = (props: any) => {
 
 const StatusBar = (props: any) => {
 	const [clicked, setClicked] = React.useState(false);
+	const logsScrollRef: React.Ref<HTMLDivElement> = React.useRef(null);
+	const logs = useSelector(getLogs);
 
-	const LogItem = (props: any) => {
+	React.useEffect(() => {
+		if(logs && logs.length) {
+			const listContainer: any = document.querySelector("#logs-list");
+			if(listContainer) {
+				const elementHeight = listContainer.scrollHeight;
+				listContainer.scrollBy(0, elementHeight);
+			}
+		}
+	}, [logs]);
+
+	const LogItem = (props: {log: ILoggerReducer["logs"][0], diff: string}) => {
+		const {log} = props;
+
 		return (
 			<div css={css`padding-top: 16rem; display: flex;`}>
 			<div>
-				<span css={css`font-size: 14rem; color: #9FC370; font-family: Gilroy;`}>info</span>
-				<span css={css`font-size: 14rem; color: #717171; font-family: Gilroy;`} className={"ml-20"}>Loading env to work with different stuff</span>
+				<span css={css`font-size: 14rem; color: ${log.type === "error" ? "#C2607D":  "#9FC370"}; font-family: Gilroy;`}>{log.type}</span>
+				<span css={css`font-size: 14rem; color: #717171; font-family: Gilroy;`} className={"ml-20"}>{log.message}</span>
 			</div>
 			<div css={css`margin-left: auto;`}>
-				<span css={css`color: #525252; font-size: 12.5rem; font-family: Gilroy;`}>0.5 sec</span>
+				<span css={css`color: #525252; font-size: 12.5rem; font-family: Gilroy;`}>+{props.diff} ms</span>
 			</div>
 		</div>
 		)
@@ -115,10 +131,10 @@ const StatusBar = (props: any) => {
 	<>
 		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={statusBarContainerStyle}>
 			<div css={css`display: flex; align-items: center; height: 100%; max-height: 32rem; 	padding: 0rem 14rem;     border-bottom: 1px solid #2c2c2c;`}>
-				<div onClick={setClicked.bind(this, !clicked)} css={statusBarTabStyle}>Logs <span className="ml-4" css={logsCountStyle}>12</span></div>
+				<div onClick={setClicked.bind(this, !clicked)} css={statusBarTabStyle}>Logs <span className="ml-4" css={logsCountStyle}>{logs && logs.length ? logs.length : 0}</span></div>
 
 				<Conditional showIf={!clicked}>
-					<div css={logTextStyle} className={"ml-20"}>Peforming: Navigating to https://google.com</div>
+					<div css={logTextStyle} className={"ml-20"}>{logs && logs.length ? logs[logs.length - 1].message : ""}</div>
 				</Conditional>
 
 				<Conditional showIf={clicked}>
@@ -131,22 +147,13 @@ const StatusBar = (props: any) => {
 			</div>
 
 			<Conditional showIf={clicked}>
-				<div css={css`color: #fff; font-size: 14rem; padding: 0rem 14rem; padding-bottom: 8rem; height: 100%; overflow-y: auto;`} className={"custom-scroll"}>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
-					<LogItem/>
+				<div id={"logs-list"} css={css`color: #fff; font-size: 14rem; padding: 0rem 14rem; padding-bottom: 8rem; height: 100%; overflow-y: auto;`} className={"custom-scroll"}>
+					{logs && logs.map((log: ILoggerReducer["logs"][0], index: number) => {
+						return <LogItem diff={index == 0 ? "0" : (log.time - logs[index - 1].time).toFixed(2)} log={log} key={index}/>	
+					})}
 				</div>
 			</Conditional>
-		</div>
+		</div> 
 
 		<style>{`
 			.expandBar {
@@ -169,7 +176,7 @@ const logsCountStyle = css`
 	font-size: 12rem;
 	font-family: Cera Pro;
 	color: rgba(255,255,255,0.7);
-	padding: 4rem;
+	padding: 4rem 6rem;
 `;
 
 const statusBarTabStyle = css`

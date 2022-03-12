@@ -10,7 +10,11 @@ import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame } f
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
 import * as path from "path";
-
+import { now } from "../main-process/now";
+import { ACTION_DESCRIPTIONS } from "../ui/components/sidebar/steps";
+const {
+	performance
+  } = require('perf_hooks');
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
 type ElectronCompatibleCookiePayload = Omit<CrusherCookieSetPayload, "sameSite"> & {
@@ -180,20 +184,25 @@ class PlaywrightInstance {
 		await this.appWindow.focusWebView();
 
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result: iActionResult) => {
-			if (!shouldNotSave) {
 				const { status } = result;
 				switch (status) {
 					case ActionStatusEnum.STARTED:
+						this.appWindow.recordLog({message: `Performing ${ACTION_DESCRIPTIONS[action.type]}`, type: "info", args: [], time: performance.now()});
+						if(!shouldNotSave)
 						this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
 						break;
 					case ActionStatusEnum.FAILED:
+						this.appWindow.recordLog({message: `Error performing ${ACTION_DESCRIPTIONS[action.type]} `, type: "error", args: [], time: performance.now()});
+						if(!shouldNotSave)
 						this.appWindow.getRecorder().markRunningStepFailed();
 						break;
 					case ActionStatusEnum.COMPLETED:
+						this.appWindow.recordLog({message: `Performed ${ACTION_DESCRIPTIONS[action.type]}`, type: "info", args: [], time: performance.now()});
+						if(!shouldNotSave)
 						this.appWindow.getRecorder().markRunningStepCompleted();
 						break;
 				}
-			}
+
 		});
 	}
 

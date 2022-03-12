@@ -37,6 +37,8 @@ import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
 import * as fs from "fs";
+import { ILoggerReducer } from "../store/reducers/logger";
+import { clearLogs, recordLog } from "../store/actions/logger";
 
 const debug = require("debug")("crusher:main");
 export class AppWindow {
@@ -279,6 +281,10 @@ export class AppWindow {
 		return null;
 	}
 
+	recordLog(log: ILoggerReducer["logs"][0]){
+		this.store.dispatch(recordLog(log));
+	}
+	
 	updateRecorderState(state) {
 		this.store.dispatch(updateRecorderState(state, {}));
 	}
@@ -701,6 +707,7 @@ export class AppWindow {
 
 	private async resetRecorder(state: TRecorderState = null) {
 		this.store.dispatch(resetRecorderState(state));
+		this.store.dispatch(clearLogs());
 		if (this.webView) {
 			await this.webView.webContents.loadURL("about:blank");
 		}

@@ -191,6 +191,7 @@ const containerStyle = css`
 	overflow-x: hidden;
 	height: 100vh;
 	color: white;
+	height: calc(100vh - 32px);
 `;
 const bodyStyle = css`
 	flex: 1;

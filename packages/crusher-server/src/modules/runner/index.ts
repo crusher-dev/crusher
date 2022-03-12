@@ -113,8 +113,7 @@ class TestsRunner {
 						startingPersistentContext: null,
 						// Crusher-context tree
 						context: buildTaskInfo.context,
-					}),
-					buildTaskInfo.host,
+					}, buildTaskInfo.host),
 				);
 			}
 		});

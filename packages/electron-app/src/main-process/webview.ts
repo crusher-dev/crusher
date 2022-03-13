@@ -123,6 +123,18 @@ export class WebView {
 		});
 	}
 
+	async _resumeExecution() {
+		try {
+			await this.webContents.debugger.sendCommand("Debugger.resume");
+		} catch(ex){}
+	}
+
+	async _disableExecution() {
+		try {
+			await this.webContents.debugger.sendCommand("Debugger.pause");
+		} catch(ex) {}
+	}
+
 	async handleDebuggerEvents(event, method, params) {
 		if (method === "Overlay.inspectNodeRequested") {
 			const nodeObject = await this.webContents.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
@@ -130,7 +142,10 @@ export class WebView {
 				functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 				objectId: nodeObject.object.objectId,
 			});
-			await this._turnOffInspectMode();
+			await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
+				mode: "none",
+				highlightConfig: highlighterStyle,
+			});
 		}
 	}
 

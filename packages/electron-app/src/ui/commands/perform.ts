@@ -190,6 +190,14 @@ const turnOffInspectMode = () => {
 	ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 };
 
+const enableJavascriptInDebugger = () => {
+	return ipcRenderer.invoke("enable-javascript-in-debugger");
+}
+
+const disableJavascriptInDebugger = () => {
+	return ipcRenderer.invoke("disable-javascript-in-debugger");
+}
+
 const turnOffElementSelectorInspectMode = () => {
 	return ipcRenderer.invoke("turn-off-element-selector-inspect-mode");
 }
@@ -283,5 +291,7 @@ export {
 	performResetAppSession,
 	performJumpTo,
 	performQuitAndRestore,
-	performSteps
+	performSteps,
+	enableJavascriptInDebugger,
+	disableJavascriptInDebugger
 };

@@ -10,7 +10,7 @@ async function clickOnElement(element: Locator, workingSelector: any, action: iA
 	exportsManager: ExportsManager) {
 	try {
 		let pos = undefined;
-		if(action.payload.meta.value.mousePos) {
+		if(action.payload.meta.value?.mousePos) {
 			const posObj = action.payload.meta.value.mousePos;
 			if(posObj.x >= 0 && posObj.y >= 0) {
 				const boundingBox = await element.boundingBox();

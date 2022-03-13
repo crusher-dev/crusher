@@ -1,11 +1,11 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { getRecorderCrashState, getRecorderInfo, getRecorderState, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
+import { getRecorderCrashState, getRecorderInfo, getRecorderState, getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
-import { performQuitAndRestore, turnOffElementSelectorInspectMode, turnOffInspectMode, turnOnInspectMode } from "../../commands/perform";
+import { disableJavascriptInDebugger, performQuitAndRestore, turnOffElementSelectorInspectMode, turnOffInspectMode, turnOnInspectMode } from "../../commands/perform";
 import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { saveAutoAction } from "../../commands/saveActions";
 import { TRecorderMessagesType } from "../../../lib/recorder/host-proxy";
@@ -236,13 +236,18 @@ const DeviceFrame = (props: any) => {
 				if (channel === "recorder-message" && args[0].type === TRecorderMessagesType["Commands.turnOnElementMode"]) {
 					const isInspectMode = isInspectModeOn(store.getState() as any);
 					const isInspectElementSelectorMode = isInspectElementSelectorModeOn(store.getState() as any);
-
+					const selectedElement = getSelectedElement(store.getState() as any);
+					
 					if (isInspectMode) {
+						disableJavascriptInDebugger();
 						turnOffInspectMode();
 						const { selectedElementInfo } = args[0].payload;
 						store.dispatch(setSelectedElement(selectedElementInfo));
 					} else if (isInspectElementSelectorMode) {
 						turnOffElementSelectorInspectMode();
+						if (selectedElement) {
+							disableJavascriptInDebugger();
+						}
 						const { selectedElementInfo } = args[0].payload;
 						window.postMessage(JSON.stringify({ type: "selected-element-for-selectors", selectedElementInfo }));
 					}

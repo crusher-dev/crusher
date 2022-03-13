@@ -204,6 +204,8 @@ export class AppWindow {
 		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 		ipcMain.handle("quit-and-restore", this.handleQuitAndRestore.bind(this));
 		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
+		ipcMain.handle("enable-javascript-in-debugger", this.handleEnableJavascriptInDebugger.bind(this));
+		ipcMain.handle("disable-javascript-in-debugger", this.disableJavascriptInDebugger.bind(this));
 
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
@@ -213,6 +215,17 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private async disableJavascriptInDebugger() {
+		if (this.window) {
+			return this.webView._disableExecution();
+		}
+	}
+	private async handleEnableJavascriptInDebugger() {
+		if(this.webView) {
+			return this.webView._resumeExecution();
+		}
 	}
 
 	private async handlePerformSteps(event, payload: {steps: any}) {
@@ -604,6 +617,7 @@ export class AppWindow {
 	private turnOnElementSelectorInspectMode() {
 		this.store.dispatch(setInspectElementSelectorMode(true));
 		this.webView._turnOnInspectMode();
+		this.webView._resumeExecution();
 		this.webView.webContents.focus();
 	}
 

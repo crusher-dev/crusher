@@ -127,7 +127,7 @@ const StatusBar = (props: any) => {
 		<div css={css`padding-top: 16rem; display: flex;`}>
 			<div>
 				<span css={css`font-size: 14rem; color: ${log.type === "error" ? "#C2607D":  "#9FC370"}; font-family: Gilroy;`}>{log.type}</span>
-				<span css={css`font-size: 14rem; color: #717171; font-family: Gilroy;`} className={"ml-20"}>{log.message}</span>
+				<span css={css`font-size: 14rem; color: #717171; font-family: Gilroy; word-break: break-all;`} className={"ml-20"}>{log.message}</span>
 			</div>
 			<div css={css`margin-left: auto;`}>
 				<span css={css`color: #525252; font-size: 12.5rem; font-family: Gilroy;`}>+{props.diff} ms</span>
@@ -143,7 +143,7 @@ const StatusBar = (props: any) => {
 	};
 	console.log("Formatted logs are",  formatLogs(logs));
 
-	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message ? "";
+	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message : "";
 	return (
 	<>
 		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={statusBarContainerStyle}>

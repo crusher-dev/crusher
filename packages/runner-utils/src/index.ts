@@ -201,7 +201,7 @@ class CrusherRunnerActions {
 						ActionStatusEnum.FAILED,
 						`Error performing ${action.description}`,
 						{
-							failedReason: err.messsage,
+							failedReason: err.matcherResult ? err.matcherResult.message : err.message,
 							screenshotDuringError: JSON.stringify({ startingScreenshot, endingScreenshot }),
 							actionName: step.name ? step.name : null,
 							beforeUrl: beforeUrl,

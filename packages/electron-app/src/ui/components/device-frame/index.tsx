@@ -96,6 +96,14 @@ const PageLoadFailedScreen = (props: any) => {
 	);
 };
 
+function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
+	logs = logs.map((log, index) => { return {...log, diff: index == 0 ? "0" : (log.time - logs[index - 1].time).toFixed(2)}});
+	const noParentLogs = logs.filter((log: ILoggerReducer["logs"][0]) => !log.parent);
+	return noParentLogs.map((log) => {
+		return {...log, children: logs.filter((_log: ILoggerReducer["logs"][0]) => _log.parent === log.id)};
+	})
+}
+
 const StatusBar = (props: any) => {
 	const [clicked, setClicked] = React.useState(false);
 	const logsScrollRef: React.Ref<HTMLDivElement> = React.useRef(null);
@@ -111,11 +119,12 @@ const StatusBar = (props: any) => {
 		}
 	}, [logs]);
 
-	const LogItem = (props: {log: ILoggerReducer["logs"][0], diff: string}) => {
+	const LogItem = (props: {log: ILoggerReducer["logs"][0] & {children: Array<ILoggerReducer["logs"][0]>; diff: string; }, diff: string; className?: string; }) => {
 		const {log} = props;
 
 		return (
-			<div css={css`padding-top: 16rem; display: flex;`}>
+			<div className={`${props.className}`}>
+		<div css={css`padding-top: 16rem; display: flex;`}>
 			<div>
 				<span css={css`font-size: 14rem; color: ${log.type === "error" ? "#C2607D":  "#9FC370"}; font-family: Gilroy;`}>{log.type}</span>
 				<span css={css`font-size: 14rem; color: #717171; font-family: Gilroy;`} className={"ml-20"}>{log.message}</span>
@@ -124,9 +133,17 @@ const StatusBar = (props: any) => {
 				<span css={css`color: #525252; font-size: 12.5rem; font-family: Gilroy;`}>+{props.diff} ms</span>
 			</div>
 		</div>
+			<Conditional showIf={log.children && log.children.length}>
+				{log.children && log.children.map((child: ILoggerReducer["logs"][0] & {children: Array<ILoggerReducer["logs"][0]>; diff: string; }) => {
+					return <LogItem css={css`padding-left: 20rem;`} key={child.id} log={child} diff={child.diff}/>
+				})}
+			</Conditional>
+		</div>
 		)
 	};
+	console.log("Formatted logs are",  formatLogs(logs));
 
+	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message ? "";
 	return (
 	<>
 		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={statusBarContainerStyle}>
@@ -134,7 +151,7 @@ const StatusBar = (props: any) => {
 				<div onClick={setClicked.bind(this, !clicked)} css={statusBarTabStyle}>Logs <span className="ml-4" css={logsCountStyle}>{logs && logs.length ? logs.length : 0}</span></div>
 
 				<Conditional showIf={!clicked}>
-					<div css={logTextStyle} className={"ml-20"}>{logs && logs.length ? logs[logs.length - 1].message : ""}</div>
+					<div css={logTextStyle} className={"ml-20"}>{lastLogMessage.length > 100 ? lastLogMessage.substr(0, 100) + "..." : lastLogMessage}</div>
 				</Conditional>
 
 				<Conditional showIf={clicked}>
@@ -147,9 +164,9 @@ const StatusBar = (props: any) => {
 			</div>
 
 			<Conditional showIf={clicked}>
-				<div id={"logs-list"} css={css`color: #fff; font-size: 14rem; padding: 0rem 14rem; padding-bottom: 8rem; height: 100%; overflow-y: auto;`} className={"custom-scroll"}>
-					{logs && logs.map((log: ILoggerReducer["logs"][0], index: number) => {
-						return <LogItem diff={index == 0 ? "0" : (log.time - logs[index - 1].time).toFixed(2)} log={log} key={index}/>	
+				<div id={"logs-list"} css={css`color: #fff; font-size: 14rem; padding: 0rem 14rem; padding-bottom: 8rem; height: calc(100% - 32rem); overflow-y: auto;`} className={"custom-scroll"}>
+					{logs && formatLogs(logs).map((log: ILoggerReducer["logs"][0], index: number) => {
+						return <LogItem diff={log.diff} log={log} key={log.id}/>	
 					})}
 				</div>
 			</Conditional>
@@ -197,6 +214,7 @@ const statusBarContainerStyle = css`
 	position: absolute;
 	bottom: 0rem;
 	transition: max-height 0.1s;  
+	z-index: 999;
 `;
 
 const DeviceFrame = (props: any) => {

@@ -4,7 +4,7 @@ import { RESET_RECORDER } from "../actions/recorder";
 
 
 interface ILoggerReducer {
-	logs: Array<{type: "log" | "info" | "error"; message: string; args: Array<any>; time: number; }>
+	logs: Array<{id: string; type: "log" | "info" | "error"; parent?: string | null; message: string; args: Array<any>; time: number; }>
 }
 
 const initialState: ILoggerReducer = {

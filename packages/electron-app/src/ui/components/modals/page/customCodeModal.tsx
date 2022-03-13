@@ -9,7 +9,29 @@ import { iAction } from "@shared/types/action";
 import { useStore } from "react-redux";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { sendSnackBarEvent } from "../../toast";
+import Editor, { Monaco } from "@monaco-editor/react";
+import { loader } from "@monaco-editor/react";
+import * as path from "path";
 
+// you can change the source of the monaco files
+function ensureFirstBackSlash(str) {
+    return str.length > 0 && str.charAt(0) !== '/'
+        ? '/' + str
+        : str;
+}
+
+function uriFromPath(_path) {
+    const pathName = path.resolve(_path).replace(/\\/g, '/');
+    return encodeURI('file://' + ensureFirstBackSlash(pathName));
+}
+
+loader.config({
+  paths: {
+    vs: uriFromPath(
+      path.join(__dirname, '../../node_modules/monaco-editor/min/vs')
+    )
+  }
+});
 interface iElementCustomScriptModalContent {
 	isOpen: boolean;
 	handleClose: () => void;
@@ -24,27 +46,27 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 	const handleLoad = React.useCallback(() => {
-		if (codeTextAreaRef.current) {
-			codeTextAreaRef.current!.value =
-				"async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n\n\n}";
+		// if (codeTextAreaRef.current) {
+		// 	codeTextAreaRef.current!.value =
+		// 		"async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n\n\n}";
 
-			if (props.stepAction) {
-				codeTextAreaRef.current!.value = props.stepAction.payload.meta.script;
-			}
-			const editor = (window as any).CodeMirror.fromTextArea(codeTextAreaRef.current!, {
-				mode: "javascript",
-				lineNumbers: true,
-				extraKeys: { "Ctrl-Space": "autocomplete" },
-				theme: "material",
-			});
+		// 	if (props.stepAction) {
+		// 		codeTextAreaRef.current!.value = props.stepAction.payload.meta.script;
+		// 	}
+		// 	const editor = (window as any).CodeMirror.fromTextArea(codeTextAreaRef.current!, {
+		// 		mode: "javascript",
+		// 		lineNumbers: true,
+		// 		extraKeys: { "Ctrl-Space": "autocomplete" },
+		// 		theme: "material",
+		// 	});
 
-			editor.on("change", handleScriptChange);
+		// 	editor.on("change", handleScriptChange);
 
-			editor.getDoc().markText({ line: 0, ch: 0 }, { line: 1 }, { readOnly: true, inclusiveLeft: true });
-			editor.getDoc().markText({ line: 0, ch: 0 }, { line: 2 }, { readOnly: true, inclusiveLeft: true });
+		// 	editor.getDoc().markText({ line: 0, ch: 0 }, { line: 1 }, { readOnly: true, inclusiveLeft: true });
+		// 	editor.getDoc().markText({ line: 0, ch: 0 }, { line: 2 }, { readOnly: true, inclusiveLeft: true });
 
-			editor.getDoc().markText({ line: 5, ch: 0 }, { line: 5, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
-		}
+		// 	editor.getDoc().markText({ line: 5, ch: 0 }, { line: 5, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
+		// }
 	}, [props.stepAction, codeTextAreaRef.current]);
 
 	React.useEffect(() => {
@@ -74,6 +96,16 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 	const isThereScriptError = false;
 
+	const handleEditorWillMount = (monaco: Monaco) => {
+		monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+			target: monaco.languages.typescript.ScriptTarget.ES6,
+			allowNonTsExtensions: true
+		});
+		// monaco.languages.typescript.javascriptDefaults.addExtraLib("declare");
+		
+
+	};
+
 	if (!isOpen) return null;
 
 	return (
@@ -85,16 +117,17 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					padding: 26rem 34rem;
 				`}
 			>
-				<textarea
-					id={"custom_script"}
-					css={css`
-						width: 100%;
-						height: 400rem;
-						color: #000;
-						font-size: 14rem;
-					`}
-					ref={codeTextAreaRef}
-				></textarea>
+		   <Editor
+     height="300rem"
+     defaultLanguage="javascript"
+	 beforeMount={handleEditorWillMount}
+	 theme={"vs-dark"}
+     defaultValue={`async function validate(crusherSdk, ctx){
+  /* Write your custom code here. For more infromation
+     checkout SDK docs here at, https://docs.crusher.dev/sdk */
+
+}`}
+   />
 
 				<div css={bottomBarStyle}>
 					<Button css={saveButtonStyle} onClick={props.stepAction ? updateCustomCode : runCustomCode}>

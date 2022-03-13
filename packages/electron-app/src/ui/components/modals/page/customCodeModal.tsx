@@ -97,13 +97,12 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const isThereScriptError = false;
 
 	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-			target: monaco.languages.typescript.ScriptTarget.ES6,
-			allowNonTsExtensions: true
-		});
-		// monaco.languages.typescript.javascriptDefaults.addExtraLib("declare");
-		
-
+		console.log("Path is", window.location.href);
+		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+			target: monaco.languages.typescript.ScriptTarget.ES2016,
+			allowSyntheticDefaultImports: true,
+			allowNonTsExtensions: true,
+		});	
 	};
 
 	if (!isOpen) return null;
@@ -119,7 +118,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			>
 		   <Editor
      height="300rem"
-     defaultLanguage="javascript"
+     defaultLanguage="typescript"
 	 beforeMount={handleEditorWillMount}
 	 theme={"vs-dark"}
      defaultValue={`async function validate(crusherSdk, ctx){

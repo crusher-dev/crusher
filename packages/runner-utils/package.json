@@ -33,6 +33,7 @@
 		"access": "public"
 	},
 	"dependencies": {
+		"@zerollup/ts-transform-paths": "^1.7.18",
 		"browserify-zlib": "^0.2.0",
 		"expect": "^27.5.1",
 		"playwright": "^1.14.0"

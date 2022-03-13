@@ -22,6 +22,7 @@ export class CodeRunnerService {
 	storageManager: IStorageManager;
 	globalManager: IGlobalManager;
 	exportsManager: IExportsManager;
+	communicationChannel: CommunicationChannel;
 	persistentContextDir: string | null;
 	context: any;
 
@@ -32,6 +33,7 @@ export class CodeRunnerService {
 		logManager: IRunnerLogManagerInterface,
 		globalManager: IGlobalManager,
 		exportsManager: IExportsManager,
+		communicationChannel: CommunicationChannel,
 		identifer: string,
 		persistentContextDir: string | null = null,
 		context: any = {},
@@ -56,6 +58,7 @@ export class CodeRunnerService {
 		this.logManager = logManager;
 		this.globalManager = globalManager;
 		this.exportsManager = exportsManager;
+		this.communicationChannel = communicationChannel;
 		this.persistentContextDir = persistentContextDir;
 		this.context = context;
 	}
@@ -94,6 +97,7 @@ export class CodeRunnerService {
 				"storageManager",
 				"globalManager",
 				"exportsManager",
+				"communicationChannel",
 				"context",
 				`async function f(){ ${code} } return f();`,
 			)(
@@ -106,6 +110,7 @@ export class CodeRunnerService {
 				this.storageManager,
 				this.globalManager,
 				this.exportsManager,
+				this.communicationChannel,
 				this.context,
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);

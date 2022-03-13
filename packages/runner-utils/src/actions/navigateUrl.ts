@@ -5,10 +5,12 @@ import { Page } from "playwright";
 import { CrusherSdk } from "../sdk/sdk";
 import { ExportsManager } from "../functions/exports";
 import template from "@crusher-shared/utils/templateString";
+import { CommunicationChannel } from "../functions/communicationChannel";
 
 async function goToUrl(page: Page, action: iAction, globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
+	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any) {
 	console.log("Context is this", context);

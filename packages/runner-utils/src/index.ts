@@ -15,6 +15,7 @@ import { sleep } from "./functions";
 import { CrusherSdk } from "./sdk/sdk";
 import { ExportsManager } from "./functions/exports";
 import { IExportsManager } from "@crusher-shared/lib/exports/interface";
+import { CommunicationChannel } from "./functions/communicationChannel";
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -34,6 +35,7 @@ class CrusherRunnerActions {
 	storageManager: StorageManager;
 	globals: IGlobalManager;
 	exportsManager: ExportsManager;
+	communicationChannel: CommunicationChannel;
 	sdk: CrusherSdk | null;
 	context: any;
 
@@ -43,6 +45,7 @@ class CrusherRunnerActions {
 		baseAssetPath: string,
 		globalManager: IGlobalManager,
 		exportsManager: IExportsManager,
+		communicationChannel: CommunicationChannel,
 		sdk: CrusherSdk | null = null,
 		context: any = {}
 	) {
@@ -52,6 +55,7 @@ class CrusherRunnerActions {
 		this.logManager = new LogManager(logManger);
 		this.storageManager = new StorageManager(storageManager, baseAssetPath);
 		this.exportsManager = new ExportsManager(exportsManager);
+		this.communicationChannel = communicationChannel;
 		this.sdk = sdk;
 		this.context = context;
 
@@ -136,6 +140,7 @@ class CrusherRunnerActions {
 							this.globals,
 							this.storageManager,
 							this.exportsManager,
+							this.communicationChannel,
 							this.sdk,
 							this.context,
 							browser,
@@ -143,7 +148,7 @@ class CrusherRunnerActions {
 						);
 						break;
 					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.sdk, this.context);
+						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.communicationChannel, this.sdk, this.context);
 						break;
 					case ActionCategoryEnum.ELEMENT:
 						const crusherSelector = toCrusherSelectorsFormat(step.payload.selectors);
@@ -156,7 +161,7 @@ class CrusherRunnerActions {
 							parentFrame = await parentFrameElement.contentFrame();
 							elementLocator = parentFrame.locator(crusherSelector.value);
 						}
-						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk, this.context);
+						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.communicationChannel, this.sdk, this.context);
 						break;
 					default:
 						throw new Error("Invalid action category handler");

@@ -4,6 +4,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import template from "@crusher-shared/utils/templateString";
 import { ElementHandle, Locator, Page } from "playwright";
+import { CommunicationChannel } from "../functions/communicationChannel";
 import { ExportsManager } from "../functions/exports";
 import { CrusherSdk } from "../sdk/sdk";
 import { markTestFail } from "../utils/helper";
@@ -106,6 +107,7 @@ async function assertSeoRows(
 async function runSEOAssertionOnPage(page: Page, action: iAction,	globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
+	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any) {
 	const validationRows = action.payload.meta.validations;

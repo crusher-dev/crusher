@@ -10,6 +10,7 @@ async function runTemplate(
 	__,
 	___,
 	____,
+	_____,
 	context: any,
 	browser: Browser,
 	runActions: (...params: Parameters<CrusherRunnerActions["runActions"]>) => ReturnType<CrusherRunnerActions["runActions"]>,

@@ -87,7 +87,7 @@ async function assertElementAttributes(
 	return { hasPassed, logs };
 }
 
-async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, _, context) {
+async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, communicationChannel, _, context) {
 	const validationRows = action.payload.meta.validations;
 	await (await element.elementHandle()).waitForElementState("visible");
 	const actionResult = await assertElementAttributes(element, validationRows, context);

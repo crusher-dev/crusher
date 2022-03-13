@@ -5,10 +5,12 @@ import template from "@crusher-shared/utils/templateString";
 import { Page } from "playwright";
 import { ExportsManager } from "../functions/exports";
 import { CrusherSdk } from "../sdk/sdk";
+import { CommunicationChannel } from "../functions/communicationChannel";
 
 async function waitForSeconds(page: Page, action: iAction, globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
+	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any) {
 	const timeout = template(action.payload.timeout, {ctx: context});

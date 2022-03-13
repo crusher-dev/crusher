@@ -7,17 +7,20 @@ import { ITestTable } from "@modules/resources/tests/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { QueueManager } from "@modules/queue";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
-import { INextTestInstancesDependencies, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
+import { INextTestInstancesDependencies, ITestCompleteQueuePayload, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
 import { ITestInstancesTable } from "@modules/resources/builds/instances/interface";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BadRequestError } from "routing-controllers";
 import { iAction } from "@crusher-shared/types/action";
+import { TestService } from "@modules/resources/tests/service";
 @Service()
 class TestsRunner {
 	@Inject()
 	private buildsService: BuildsService;
+	@Inject()
+	private testService: TestService;
 	@Inject()
 	private buildTestInstanceService: BuildTestInstancesService;
 	@Inject()
@@ -216,6 +219,32 @@ class TestsRunner {
 
 		await Promise.all(testsList.map((test) => createTestInstancesRecrusivelyAccordingToPostTestList(test)));
 		return testInstancesArr;
+	}
+
+	private async _getTestMapFromArr(testIdArr: Array<number>): Promise<{ [id: number]: KeysToCamelCase<ITestTable> }> {
+		const filtered =  testIdArr.reduce((prev, testId) => {
+			return { ...prev, [testId]: testId };
+		}, {});
+
+		const testsArr = await Promise.all(Object.values(filtered).map((testId: number) => {
+			return this.testService.getTest(testId);
+		}));
+
+		return testsArr.reduce((prev, test) => {
+			return { ...prev, [test.id]: test };
+		});
+	}
+
+	async runParameterizedTestsInsideBuild(tests: ITestCompleteQueuePayload["parameterizedTests"], buildId: number ) {
+		// @Note: Consider how this will be achieved for RUN_AFTER_TEST scenerios
+		const build = await this.buildsService.getBuild(buildId);
+		const testsMap = await this._getTestMapFromArr(tests.map((test) => test.testId));
+
+		const testsArr = tests.map((test) => {
+			return  { ...testsMap[test.testId], isFirstLevelTest: true, postTestList: [], parentTestId: null, context: test.testContext }
+		});
+
+		// <--- Continue from here ---->
 	}
 
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {

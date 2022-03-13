@@ -8,6 +8,7 @@ import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import template from "@crusher-shared/utils/templateString";
 import expect from "expect";
 import * as modules from "../utils/modules";
+import { CommunicationChannel } from "../functions/communicationChannel";
 
 async function executeCustomCode(
 	page: Page,
@@ -15,12 +16,13 @@ async function executeCustomCode(
 	globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
+	communcationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any
 ) {
 	const customScriptFunction = action.payload.meta.script;
 
-	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager, storageManager);
+	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager, storageManager, communcationChannel);
 
 	let result = null;
 	result = await new Function(

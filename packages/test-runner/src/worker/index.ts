@@ -17,6 +17,7 @@ import {
 	zipDirectory,
 } from "@src/util/helper";
 import * as path from "path";
+import { CommunicationChannel } from "../../../runner-utils/src/functions/communicationChannel";
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
@@ -34,8 +35,15 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		const globalManager = getGlobalManager(true);
 		const exportsManager = new ExportsManager(bullJob.data.exports ? bullJob.data.exports : []);
+		const communcationChannel = new CommunicationChannel();
 		const persistentContextDir = bullJob.data.startingPersistentContext ? getTempContextDirPath() : createTempContextDir();
 
+		const parameterizedTests = [];
+
+		communcationChannel.addListener("run-parameterized-tests", (data: {testId: number, title: string, testContext: any}) => {
+			parameterizedTests.push(data);
+			// @TODO: Add impl here
+		});
 		if (!globalManager.has(TEST_RESULT_KEY)) {
 			globalManager.set(TEST_RESULT_KEY, []);
 		}
@@ -58,6 +66,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			notifyManager,
 			globalManager,
 			exportsManager,
+			communcationChannel,
 			identifier,
 			persistentContextDir,
 			bullJob.data.context,
@@ -94,6 +103,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			nextTestDependencies: bullJob.data.nextTestDependencies,
 			actionResults: actionResults,
 			buildId: bullJob.data.buildId,
+			parameterizedTests: parameterizedTests,
 			buildExecutionPayload: bullJob.data,
 			testInstanceId: bullJob.data.testInstanceId,
 			buildTestCount: bullJob.data.buildTestCount,

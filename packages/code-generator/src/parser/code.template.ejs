@@ -3,8 +3,8 @@ const path = require("path");
 
 const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
 
-// @TODO: globalManager, logManager, storageManager, exportsManager are supposed to be injected globally
-const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager, null, context);
+// @TODO: globalManager, logManager, storageManager, exportsManager, communicationChannel are supposed to be injected globally
+const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager, communicationChannel, null, context);
 
 let capturedVideo, browserContext, page, browser;
 <% if (!isPersistentContext) { %>

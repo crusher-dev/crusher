@@ -6,10 +6,12 @@ import { CrusherSdk } from "../sdk/sdk";
 import { sleep } from "../functions/sleep";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import template from "@crusher-shared/utils/templateString";
+import { CommunicationChannel } from "../functions/communicationChannel";
 
 async function waitForNavigation(page: Page, action: iAction, globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
+	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any) {
 	console.log("Waiting for navigation now...");

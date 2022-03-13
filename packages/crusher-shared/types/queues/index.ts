@@ -18,6 +18,7 @@ export interface ITestCompleteQueuePayload {
 	type?: "complete-build" | "process";
 	exports: Array<[string, any]>;
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
+	parameterizedTests: Array<{testId: number, title: string, testContext: any}>;
 	buildExecutionPayload: ITestExecutionQueuePayload;
 	actionResults: Array<IActionResultItem>;
 	buildId: number;

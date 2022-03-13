@@ -8,6 +8,7 @@ import { StorageManager } from "../functions/storage";
 import { chunkArray, markTestFail } from "../utils/helper";
 import nodeFetch from "node-fetch";
 import https from "https";
+import { CommunicationChannel } from "src/functions/communicationChannel";
 
 const pageScreenshotModule = require("../actions/pageScreenshot");
 
@@ -60,12 +61,14 @@ class CrusherSdk implements ICrusherSdk {
 	page: Page;
 	exportsManager: ExportsManager;
 	storageManager: StorageManager;
+	communicationChannel: CommunicationChannel;
 
-	constructor(page: Page, exportsManager: ExportsManager, storageManager: StorageManager) {
+	constructor(page: Page, exportsManager: ExportsManager, storageManager: StorageManager, communicationChannel: CommunicationChannel) {
 		this._page = page;
 		this.exportsManager = exportsManager;
 		this.storageManager = storageManager;
 		this.page = page;
+		this.communicationChannel = communicationChannel;
 	}
 
 	// Legacy methods
@@ -174,6 +177,10 @@ class CrusherSdk implements ICrusherSdk {
 		}
 
 		return result;
+	}
+
+	async runParameterizedTests(payload: Array<{testId: number, title: string, testContext: any}>) {
+		this.communicationChannel.emit("run-parameterized-tests", payload);
 	}
 
 	markTestFail(reason: string, data: any) {

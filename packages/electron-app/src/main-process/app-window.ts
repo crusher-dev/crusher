@@ -33,12 +33,13 @@ import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
 import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
-import { resolveToFrontEndPath } from "@shared/utils/url";
+import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
 import * as fs from "fs";
 import { ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
+import axios from "axios";
 
 const debug = require("debug")("crusher:main");
 export class AppWindow {
@@ -77,7 +78,7 @@ export class AppWindow {
 			x: this.savedWindowState.x,
 			y: this.savedWindowState.y,
 			width: this.savedWindowState.width,
-			titleBarStyle: 'hidden',
+			titleBarStyle: "hidden",
 			trafficLightPosition: { x: 10, y: 8 },
 			height: this.savedWindowState.height,
 			minWidth: this.minWidth,
@@ -169,7 +170,7 @@ export class AppWindow {
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
 			this._rendererReadyTime = readyTime;
-			this.sendMessage("url-action", {action: {commandName: "restore" }});
+			this.sendMessage("url-action", { action: { commandName: "restore" } });
 
 			this.maybeEmitDidLoad();
 		});
@@ -206,7 +207,10 @@ export class AppWindow {
 		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
 		ipcMain.handle("enable-javascript-in-debugger", this.handleEnableJavascriptInDebugger.bind(this));
 		ipcMain.handle("disable-javascript-in-debugger", this.disableJavascriptInDebugger.bind(this));
-
+		ipcMain.handle("save-code-template", this.handleSaveCodeTemplate.bind(this));
+		ipcMain.handle("get-code-templates", this.handleGetCodeTemplates.bind(this));
+		ipcMain.handle("update-code-template", this.handleUpdateCodeTemplate.bind(this));
+		ipcMain.handle("delete-code-template", this.handleDeleteCodeTemplate.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
@@ -217,18 +221,109 @@ export class AppWindow {
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
 
+	private async handleUpdateCodeTemplate(event: Electron.IpcMainEvent, payload: { id: number; name: string; code: string }) {
+		// await this.store.dispatch(updateCodeTemplate(payload.id, payload.codeTemplate));
+		// pdate.codeTemplate
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.post(
+				resolveToBackendPath("teams/actions/update.codeTemplate", appSettings.backendEndPoint),
+				{ id: payload.id, name: payload.name, code: payload.code },
+				{
+					headers: {
+						Accept: "application/json, text/plain, */*",
+						"Content-Type": "application/json",
+						Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+					},
+				},
+			)
+			.then((res) => {
+				return res.data;
+			});
+	}
+
+	private async handleDeleteCodeTemplate(event: Electron.IpcMainEvent, payload: { id: string }) {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.post(
+				resolveToBackendPath("teams/actions/delete.codeTemplate", appSettings.backendEndPoint),
+				{ id: payload.id },
+				{
+					headers: {
+						Accept: "application/json, text/plain, */*",
+						"Content-Type": "application/json",
+						Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+					},
+				},
+			)
+			.then((res) => {
+				return res.data;
+			});
+	}
+
+	private async handleSaveCodeTemplate(event, payload: { createPayload: any }) {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.post(resolveToBackendPath("teams/actions/save.code", appSettings.backendEndPoint), payload.createPayload, {
+				headers: {
+					Accept: "application/json, text/plain, */*",
+					"Content-Type": "application/json",
+					Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+				},
+			})
+			.then((res) => {
+				return res.data;
+			});
+	}
+
+	private async handleGetCodeTemplates(event) {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			console.log("Account info is", accountInfo);
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.get(resolveToBackendPath("teams/actions/get.codeTemplates", appSettings.backendEndPoint), {
+				headers: {
+					Accept: "application/json, text/plain, */*",
+					"Content-Type": "application/json",
+					Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+				},
+			})
+			.then((res) => {
+				return res.data;
+			});
+	}
+
 	private async disableJavascriptInDebugger() {
 		if (this.window) {
 			return this.webView._disableExecution();
 		}
 	}
 	private async handleEnableJavascriptInDebugger() {
-		if(this.webView) {
+		if (this.webView) {
 			return this.webView._resumeExecution();
 		}
 	}
 
-	private async handlePerformSteps(event, payload: {steps: any}) {
+	private async handlePerformSteps(event, payload: { steps: any }) {
 		await this.resetRecorder();
 		await this.handleReplayTestSteps(payload.steps);
 	}
@@ -294,10 +389,10 @@ export class AppWindow {
 		return null;
 	}
 
-	recordLog(log: ILoggerReducer["logs"][0]){
+	recordLog(log: ILoggerReducer["logs"][0]) {
 		this.store.dispatch(recordLog(log));
 	}
-	
+
 	updateRecorderState(state) {
 		this.store.dispatch(updateRecorderState(state, {}));
 	}

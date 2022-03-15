@@ -141,7 +141,6 @@ const StatusBar = (props: any) => {
 		</div>
 		)
 	};
-	console.log("Formatted logs are",  formatLogs(logs));
 
 	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message : "";
 	return (
@@ -165,7 +164,7 @@ const StatusBar = (props: any) => {
 
 			<Conditional showIf={clicked}>
 				<div id={"logs-list"} css={css`color: #fff; font-size: 14rem; padding: 0rem 14rem; padding-bottom: 8rem; height: calc(100% - 32rem); overflow-y: auto;`} className={"custom-scroll"}>
-					{logs && formatLogs(logs).map((log: ILoggerReducer["logs"][0], index: number) => {
+					{logs && logs.length && formatLogs(logs).map((log: ILoggerReducer["logs"][0], index: number) => {
 						return <LogItem diff={log.diff} log={log} key={log.id}/>	
 					})}
 				</div>

@@ -1,6 +1,6 @@
 {
 	"name": "electron-app",
-	"version": "1.0.17",
+	"version": "1.0.18",
 	"description": "Electron app for crusher",
 	"main": "app.js",
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",

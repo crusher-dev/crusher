@@ -98,7 +98,6 @@ export class AppWindow {
 				spellcheck: true,
 				worldSafeExecuteJavaScript: false,
 				contextIsolation: false,
-
 				webviewTag: true,
 				nodeIntegrationInSubFrames: true,
 				webSecurity: false,
@@ -212,6 +211,7 @@ export class AppWindow {
 		ipcMain.handle("update-code-template", this.handleUpdateCodeTemplate.bind(this));
 		ipcMain.handle("delete-code-template", this.handleDeleteCodeTemplate.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
+		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -219,6 +219,15 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private handleGetVarContext(event: Electron.IpcMainEvent, payload: any) {
+		const context = this.webView.playwrightInstance.getContext();
+		event.returnValue = Object.keys(context).reduce((prev, current) => {
+			// Get typescript type of current, CustomClass | string | number | boolean | undefined | null
+			const type = typeof context[current];
+			return { ...prev, [current]: type };
+		}, {});
 	}
 
 	private async handleUpdateCodeTemplate(event: Electron.IpcMainEvent, payload: { id: number; name: string; code: string }) {

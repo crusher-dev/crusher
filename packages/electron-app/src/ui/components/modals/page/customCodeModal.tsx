@@ -13,9 +13,10 @@ import { Checkbox } from "@dyson/components/atoms/checkbox/checkbox";
 import { Input } from "@dyson/components/atoms";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { typeMIne } from './type';
 import { loader } from "@monaco-editor/react";
 import * as path from "path";
+import * as fs from "fs";
+import { ipcRenderer } from "electron";
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -40,7 +41,6 @@ interface iElementCustomScriptModalContent {
 	stepIndex?: number;
 	stepAction?: iAction;
 }
-
 
 const theme = {
 	colors: {
@@ -768,32 +768,20 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const [selectedTemplate, setSelectedTemplate] = React.useState(null);
 	const [savingTemplateState, setSavingTemplateState] = React.useState({ state: "input" });
 	const [needName, setNeedName] = React.useState(false);
+	const [modalName, setModalName] = React.useState("ts:modal.ts");
+
+	const monacoRef: React.Ref<Monaco> = React.useRef(null);
 	const editorRef = React.useRef(null);
 
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 	const handleLoad = React.useCallback(() => {
 		if (codeTextAreaRef.current) {
-			codeTextAreaRef.current!.value =
-				"async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n\n\n}";
+			monacoRef.current.editor.getModel(modalName).setValue(`/* Write your custom code here. For more infromation
+  checkout SDK docs here at, https://docs.crusher.dev/sdk */`);
 
 			if (props.stepAction) {
-				codeTextAreaRef.current!.value = props.stepAction.payload.meta.script;
+				monacoRef.current.editor.getModel(modalName).setValue(props.stepAction.payload.meta.script);
 			}
-			const editor = (window as any).CodeMirror.fromTextArea(codeTextAreaRef.current!, {
-				mode: "javascript",
-				lineNumbers: true,
-				extraKeys: { "Ctrl-Space": "autocomplete" },
-				theme: "material",
-			});
-
-			editorRef.current = editor;
-
-			editor.on("change", handleScriptChange);
-
-			editor.getDoc().markText({ line: 0, ch: 0 }, { line: 1 }, { readOnly: true, inclusiveLeft: true });
-			editor.getDoc().markText({ line: 0, ch: 0 }, { line: 2 }, { readOnly: true, inclusiveLeft: true });
-
-			editor.getDoc().markText({ line: 5, ch: 0 }, { line: 5, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
 		}
 	}, [props.stepAction, codeTextAreaRef.current]);
 
@@ -810,19 +798,14 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		}
 	}, [isOpen]);
 
-	const handleScriptChange = async (cm: any, change: any) => {
-		const script = cm.getValue();
-		codeTextAreaRef.current!.value = script;
-	};
-
 	const runCustomCode = React.useCallback(() => {
-		performCustomCode(codeTextAreaRef?.current.value);
+		performCustomCode(monacoRef.current.editor.getModel(modalName).getValue());
 		props.handleClose();
 	}, [codeTextAreaRef]);
 
 	const updateCustomCode = React.useCallback(() => {
 		if (props.stepAction) {
-			props.stepAction.payload.meta.script = codeTextAreaRef?.current.value;
+			props.stepAction.payload.meta.script = monacoRef.current.editor.getModel(modalName).getValue();
 			store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
 			sendSnackBarEvent({ type: "success", message: "Custom code updated" });
 			props.handleClose();
@@ -840,8 +823,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const handleUpdateTemplate = async () => {
 		if (selectedTemplate) {
 			const templateRecord = codeTemplates.find((a) => a.id === selectedTemplate);
-			await updateCodeTemplate(selectedTemplate, templateRecord.name, codeTextAreaRef?.current.value);
-			templateRecord.code = codeTextAreaRef?.current.value;
+			await updateCodeTemplate(selectedTemplate, templateRecord.name, monacoRef.current.editor.getModel(modalName).getValue());
+			templateRecord.code = monacoRef.current.editor.getModel(modalName).getValue();
 			setCodeTemplates([...codeTemplates]);
 			sendSnackBarEvent({ type: "success", message: "Custom code template updated" });
 		}
@@ -854,7 +837,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			setSelectedTemplate(null);
 			sendSnackBarEvent({ type: "success", message: "Custom code template deleted" });
 		}
-	}
+	};
 
 	const transformListToSelectBoxValues = (codeTemplates) => {
 		return codeTemplates.map((test) => ({
@@ -870,51 +853,29 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		return arr.find((a) => a.value === id);
 	};
 
-
 	const handleEditorWillMount = (monaco: Monaco) => {
-		console.log("Path is", window.location.href);
+		monacoRef.current = monaco;
 
 		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-			target: monaco.languages.typescript.ScriptTarget.ES2020,
+			target: monaco.languages.typescript.ScriptTarget.ESNext,
+			module: monaco.languages.typescript.ModuleKind.ESNext,
 			allowSyntheticDefaultImports: true,
 			allowNonTsExtensions: true,
-			typeRoots: ["node_modules/@types"],
 		});
 
-	// extra libraries
-		monaco.languages.typescript.typescriptDefaults.addExtraLib([
-			'declare class Rectangle1 {',
-			'    /**',
-			'     * optional documentation for top function',
-			'     */',
-			'    static top: ValidationState;',
-			'    static left()',
-			'    static right()',
-			'}' +
-			' ' +
-			'declare class CrusherRunnerActions {',
-			'    static left()',
-			'    static right()',
-			'}'
-			+
-			`export type ValidationState = 'valid' | 'invalid';
-export interface Validation {
-  /** Whether the input should display its "valid" or "invalid" visual styling. */
-  validationState?: ValidationState,
-  /**
-   * Whether user input is required on the input before form submission.
-   * Often paired with the \`necessityIndicator\` prop to add a visual indicator to the input.
-   */
-  isRequired?: boolean
-}`
-		].join('\n'));
-		 var libUri = 'ts:filename/facts.d.ts';
-		// monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
-		//
-		//  monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
-		monaco.languages.typescript.typescriptDefaults.addExtraLib(typeMIne, libUri);
+		const libUri = "ts:filename/sdk.d.ts";
+		let types = fs.readFileSync(path.resolve(__dirname, "static/types.txt"), "utf8");
+		const ctx = ipcRenderer.sendSync("get-var-context");
+		types += `\n declare const ctx: { ${Object.keys(ctx)
+			.map((a) => {
+				return `${a}: ${ctx[a]};`;
+			})
+			.join("")}; };`;
+		monaco.languages.typescript.typescriptDefaults.addExtraLib(types, libUri);
 
-
+		monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+			diagnosticCodesToIgnore: [1375],
+		});
 		monaco.editor.defineTheme("my-theme", {
 			base: "vs-dark",
 			inherit: true,
@@ -922,58 +883,83 @@ export interface Validation {
 			colors: {
 				...theme.colors,
 				"editor.background": "#0a0a0b",
-
 			},
-
 		});
 	};
 
+	const handleCreateTemplate = (name) => {
+		if (!name) {
+			name = (document.querySelector("#template-name-input") as HTMLInputElement).value;
+		}
+		if (!name || !name.length) {
+			sendSnackBarEvent({ type: "error", message: "Error: Enter some name for the template" });
+			return;
+		}
+		const currentCode = monacoRef.current.editor.getModel(modalName).getValue();
+		saveCodeTemplate({ name: name, code: currentCode })
+			.then((res) => {
+				setCodeTemplates([...codeTemplates, { id: res.id, code: res.code, name: res.name }]);
+				setNeedName(false);
+				setSavingTemplateState({ state: "saved" });
+				sendSnackBarEvent({ type: "success", message: "Template saved" });
+			})
+			.catch((err) => {
+				sendSnackBarEvent({ type: "error", message: "Error template saved" });
+			});
+	};
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Custom code"} desc={"Write your own code for custom functionality"} closeModal={props.handleClose} />
 
 			<Conditional showIf={needName}>
-				<div
-					css={css`
-						display: flex;
-						padding: 0rem 34rem;
-						align-items: center;
-					`}
-				>
-					<span
+				<>
+					{" "}
+					<div
 						css={css`
-							font-size: 14rem;
-							color: #fff;
+							display: flex;
+							padding: 0rem 34rem;
+							align-items: center;
 						`}
 					>
-						Name of template
-					</span>
-					<Input
+						<span
+							css={css`
+								font-size: 14rem;
+								color: #fff;
+							`}
+						>
+							Name of template
+						</span>
+						<Input
+							id="template-name-input"
+							css={[
+								inputStyle,
+								css`
+									margin-left: auto;
+								`,
+							]}
+							placeholder={"Enter template name"}
+							pattern="[0-9]*"
+							size={"medium"}
+							onReturn={handleCreateTemplate}
+						/>
+					</div>
+					<Button
 						css={[
-							inputStyle,
+							saveButtonStyle,
 							css`
+								width: 118rem;
 								margin-left: auto;
+								margin-top: 9rem;
+								margin-bottom: 15rem;
+								margin-right: 36rem;
 							`,
 						]}
-						placeholder={"Enter template name"}
-						pattern="[0-9]*"
-						size={"medium"}
-						onReturn={(name) => {
-							const currentCode = codeTextAreaRef.current!.value;
-							saveCodeTemplate({ name: name, code: currentCode })
-								.then((res) => {
-									setCodeTemplates([...codeTemplates, { id: res.id, code: res.code, name: res.name }]);
-									setNeedName(false);
-									setSavingTemplateState({ state: "saved" });
-									sendSnackBarEvent({ type: "success", message: "Template saved" });
-								})
-								.catch((err) => {
-									sendSnackBarEvent({ type: "error", message: "Error template saved" });
-								});
-						}}
-					/>
-				</div>
+						onClick={handleCreateTemplate.bind(this)}
+					>
+						{"Create"}
+					</Button>
+				</>
 			</Conditional>
 
 			<div
@@ -1025,13 +1011,7 @@ export interface Validation {
 						const value = selectedValue[0];
 						setSelectedTemplate(selectedValue[0]);
 						const codeTemplate = codeTemplates.find((item) => item.id === value);
-						editorRef.current.getDoc().setValue(codeTemplate.code);
-						editorRef.current.getDoc().markText({ line: 0, ch: 0 }, { line: 1 }, { readOnly: true, inclusiveLeft: true });
-						editorRef.current.getDoc().markText({ line: 0, ch: 0 }, { line: 2 }, { readOnly: true, inclusiveLeft: true });
-
-						editorRef.current
-							.getDoc()
-							.markText({ line: 5, ch: 0 }, { line: 5, ch: 1 }, { readOnly: true, inclusiveLeft: true, inclusiveRight: true });
+						monacoRef.current.editor.getModel(modalName).setValue(codeTemplate.code);
 					}}
 				/>
 				<Conditional showIf={selectedTemplate}>
@@ -1057,15 +1037,14 @@ export interface Validation {
 				`}
 			>
 				<Editor
+					path={"ts:modal.ts"}
 					height="300rem"
 					defaultLanguage="typescript"
 					beforeMount={handleEditorWillMount}
 					theme={"my-theme"}
 					options={{ minimap: { enabled: false } }}
-					defaultValue={`async function validate(crusherSdk, ctx){
-  /* Write your custom code here. For more infromation
-     checkout SDK docs here at, https://docs.crusher.dev/sdk */
-}`}
+					defaultValue={`/* Write your custom code here. For more infromation
+  checkout SDK docs here at, https://docs.crusher.dev/sdk */`}
 				/>
 
 				<div css={bottomBarStyle}>

@@ -63,6 +63,10 @@ class PlaywrightInstance {
 		this._overrideSdkActions();
 	}
 
+	getContext() {
+		return this.runnerManager.context;
+	}
+
 	public getElementInfoFromUniqueId(uniqueId: string) {
 		return this.elementsMap.get(uniqueId);
 	}

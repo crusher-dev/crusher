@@ -743,24 +743,11 @@ const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
 };
 
-const sampleCodeList = [
-	{
-		id: 1,
-		name: "Sample 1",
-		code: "async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n console.log('test1')\n\n}",
-	},
-	{
-		id: 2,
-		name: "Sample 2",
-		code: "async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n console.log('test2')\n\n}",
-	},
-	{
-		id: 3,
-		name: "Sample 3",
-		code: "async function validate(crusherSdk, ctx){\n  /* Write your custom code here. For more infromation \n     checkout SDK docs here at, https://docs.crusher.dev/sdk */\n console.log('test3')\n\n}",
-	},
-];
+const initialCodeTemplate = `/* Write your custom code here. For more infromation
+checkout SDK docs here at, https://docs.crusher.dev/sdk */
+async function validate() {
 
+}`;
 const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const { isOpen } = props;
 	const store = useStore();
@@ -774,19 +761,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const editorRef = React.useRef(null);
 
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
-	const handleLoad = React.useCallback(() => {
-		if (codeTextAreaRef.current) {
-			monacoRef.current.editor.getModel(modalName).setValue(`/* Write your custom code here. For more infromation
-  checkout SDK docs here at, https://docs.crusher.dev/sdk */`);
-
-			if (props.stepAction) {
-				monacoRef.current.editor.getModel(modalName).setValue(props.stepAction.payload.meta.script);
-			}
-		}
-	}, [props.stepAction, codeTextAreaRef.current]);
 
 	React.useEffect(() => {
-		handleLoad();
 		if (isOpen) {
 			setCodeTemplates([]);
 			setSelectedTemplate(null);
@@ -853,10 +829,15 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		return arr.find((a) => a.value === id);
 	};
 
+	const handleOnMount = (editor: any, monaco: Monaco) => {
+		if (props.stepAction) {
+			editor.getModel(modalName).setValue(props.stepAction.payload.meta.script);
+		}
+	};
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monacoRef.current = monaco;
 
-		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+		monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
 			target: monaco.languages.typescript.ScriptTarget.ESNext,
 			module: monaco.languages.typescript.ModuleKind.ESNext,
 			allowSyntheticDefaultImports: true,
@@ -870,10 +851,10 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			.map((a) => {
 				return `${a}: ${ctx[a]};`;
 			})
-			.join("")}; };`;
-		monaco.languages.typescript.typescriptDefaults.addExtraLib(types, libUri);
+			.join("")} | any };`;
+		monaco.languages.typescript.javascriptDefaults.addExtraLib(types, libUri);
 
-		monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+		monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
 			diagnosticCodesToIgnore: [1375],
 		});
 		monaco.editor.defineTheme("my-theme", {
@@ -1039,12 +1020,12 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				<Editor
 					path={"ts:modal.ts"}
 					height="300rem"
-					defaultLanguage="typescript"
+					defaultLanguage="javascript"
 					beforeMount={handleEditorWillMount}
+					onMount={handleOnMount}
 					theme={"my-theme"}
 					options={{ minimap: { enabled: false } }}
-					defaultValue={`/* Write your custom code here. For more infromation
-  checkout SDK docs here at, https://docs.crusher.dev/sdk */`}
+					defaultValue={initialCodeTemplate}
 				/>
 
 				<div css={bottomBarStyle}>

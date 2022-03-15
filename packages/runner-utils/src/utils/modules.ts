@@ -1,3 +1,3 @@
-const nodeFetch = require("node-fetch");
+const nodeFetch = require("node-fetch").default;
 
 export { nodeFetch };

@@ -794,6 +794,9 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 	const handleSaveAsTemplate = async () => {
 		setNeedName(true);
+		setTimeout(() => {
+			document.querySelector("#template-name-input")?.focus();
+		}, 5);
 	};
 
 	const handleUpdateTemplate = async () => {
@@ -869,9 +872,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	};
 
 	const handleCreateTemplate = (name) => {
-		if (!name) {
-			name = (document.querySelector("#template-name-input") as HTMLInputElement).value;
-		}
 		if (!name || !name.length) {
 			sendSnackBarEvent({ type: "error", message: "Error: Enter some name for the template" });
 			return;
@@ -880,6 +880,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		saveCodeTemplate({ name: name, code: currentCode })
 			.then((res) => {
 				setCodeTemplates([...codeTemplates, { id: res.id, code: res.code, name: res.name }]);
+				setSelectedTemplate(res.id);
 				setNeedName(false);
 				setSavingTemplateState({ state: "saved" });
 				sendSnackBarEvent({ type: "success", message: "Template saved" });
@@ -936,7 +937,10 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 								margin-right: 36rem;
 							`,
 						]}
-						onClick={handleCreateTemplate.bind(this)}
+						onClick={() => {
+							const name = (document.querySelector("#template-name-input") as HTMLInputElement).value;
+							handleCreateTemplate(name);
+						}}
 					>
 						{"Create"}
 					</Button>

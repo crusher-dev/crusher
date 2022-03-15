@@ -32435,6 +32435,7 @@ declare module 'crusherSdk' {
   import { Page } from "playwright";
   declare class CrusherSdk {
     page: Page;
+    sleep(time: number): Promise<unknown>;
   }
 
   export {CrusherSdk};

@@ -253,7 +253,7 @@ const Step = ({
 							}
 						>
 							<Button size="small" onClick={updateAndReRunStep} css={failedButtonStyle} bgColor="tertiary-outline">
-								Update step
+								Retry step
 							</Button>
 						</Tooltip>
 						<Tooltip

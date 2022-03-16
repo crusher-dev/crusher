@@ -50,6 +50,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 	React.useEffect(() => {
 		if (isOpen && !props.stepIndex) {
+			setValidationRows([]);
 			ipcRenderer.invoke("get-page-seo-info").then((res) => {
 				setSeoInfo(res);
 			});

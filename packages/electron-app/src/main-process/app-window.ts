@@ -520,6 +520,8 @@ export class AppWindow {
 	}
 
 	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
+		try { await this.webView._resumeExecution(); } catch (e) { console.error("Enabling exection failed", e); }
+		await new Promise((resolve) => setTimeout(resolve, 500));
 		const elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
 			return null;
@@ -557,6 +559,7 @@ export class AppWindow {
 				});
 			}
 		}
+		try { await this.webView._disableExecution(); } catch(ex) { console.error("Disabling execution failed", ex); }
 		return assertElementInfo;
 	}
 

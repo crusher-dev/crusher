@@ -1,9 +1,0 @@
-spec:
-  name: crusher
-  services:
-    - http_port: 3000
-      dockerfile_path: Dockerfile
-      github:
-        repo: crusherdev/crusher
-        branch: master
-        deploy_on_push: true

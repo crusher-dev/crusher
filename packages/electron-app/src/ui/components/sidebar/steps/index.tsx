@@ -253,7 +253,7 @@ const Step = ({
 							}
 						>
 							<Button size="small" onClick={updateAndReRunStep} css={failedButtonStyle} bgColor="tertiary-outline">
-								Update step
+								Retry step
 							</Button>
 						</Tooltip>
 						<Tooltip
@@ -512,7 +512,7 @@ const stepsContainerStyle = css`
 	overflow-y: scroll;
 	padding-top: 0rem;
 	height: 100%;
-	padding-bottom: 20rem;
+	padding-bottom: 100rem;
 `;
 const runningStepStyle = css`
 	border-left: 3rem solid #9462ff;

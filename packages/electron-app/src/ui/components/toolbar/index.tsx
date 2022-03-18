@@ -255,6 +255,7 @@ const StepActionMenu = ({ showDropDownCallback, callback }) => {
 		<>
 			{/* <ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/> */}
 			<ActionItem title={"Re-verify"} id={"REVERIFY"} callback={callback} />
+			<ActionItem title={"Back"} id={"BACK"} callback={callback} />
 			<ActionItem title={"Reset"} id={"RESET"} callback={callback} />
 		</>
 	);
@@ -482,6 +483,8 @@ const Toolbar = (props: any) => {
 												performVerifyTest(false);
 											} else if (id === "RESET") {
 												performResetAppSession();
+											} else if (id === "BACK") {
+												goBack();
 											}
 											setShowMenu(false);
 										}}

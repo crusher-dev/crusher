@@ -190,6 +190,14 @@ const turnOffInspectMode = () => {
 	ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 };
 
+const enableJavascriptInDebugger = () => {
+	return ipcRenderer.invoke("enable-javascript-in-debugger");
+}
+
+const disableJavascriptInDebugger = () => {
+	return ipcRenderer.invoke("disable-javascript-in-debugger");
+}
+
 const turnOffElementSelectorInspectMode = () => {
 	return ipcRenderer.invoke("turn-off-element-selector-inspect-mode");
 }
@@ -242,6 +250,30 @@ const performJumpTo = (stepIndex) => {
 	return ipcRenderer.invoke("jump-to-step", {stepIndex});
 }
 
+const performQuitAndRestore = (store) => {
+	const savedSteps = getSavedSteps(store.getState());
+	window.localStorage.setItem("saved-steps", JSON.stringify(savedSteps));
+	return ipcRenderer.invoke("quit-and-restore");
+}
+
+const performSteps = (steps) => {
+	return ipcRenderer.invoke("perform-steps", { steps });
+};
+
+const getCodeTemplates = () => {
+	return ipcRenderer.invoke("get-code-templates", {});
+};
+
+const saveCodeTemplate = (payload) => {
+	return ipcRenderer.invoke("save-code-template", { createPayload: payload });
+};
+
+const updateCodeTemplate = (id, name, code) => {
+	return ipcRenderer.invoke("update-code-template", { id, name, code });
+};
+const deleteCodeTemplate = (id) => {
+	return ipcRenderer.invoke("delete-code-template", { id });
+};
 export {
 	recordHoverDependencies,
 	performAction,
@@ -273,4 +305,12 @@ export {
 	turnOffElementSelectorInspectMode,
 	performResetAppSession,
 	performJumpTo,
+	performQuitAndRestore,
+	performSteps,
+	enableJavascriptInDebugger,
+	disableJavascriptInDebugger,
+	getCodeTemplates,
+	saveCodeTemplate,
+	updateCodeTemplate,
+	deleteCodeTemplate,
 };

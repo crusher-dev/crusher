@@ -237,7 +237,7 @@ export const dropdDownContainer = css`
 	position: absolute;
 	width: 100%;
 	overflow: hidden;
-	z-index: 1;
+	z-index: 5;
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);
 	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);

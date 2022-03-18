@@ -6,7 +6,7 @@ import uniqueId from "lodash/uniqueId";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
-import { recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/ui/commands/perform";
 import { recordStep, setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { BulbIcon } from "electron-app/src/ui/icons";
@@ -64,8 +64,12 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	React.useEffect(() => {
 		if (isOpen && !props.stepAction) {
+			setValidationRows([]);
 			ipcRenderer.invoke("get-element-assert-info", selectedElement).then((res) => {
+				console.log("Element info is", res);
 				setElementInfo(res);
+			}).catch((err) => {
+				console.error("Error is", err);
 			});
 		}
 		if (isOpen && props.stepAction) {
@@ -180,6 +184,8 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 				},
 			},
 		});
+
+		await enableJavascriptInDebugger();
 
 		store.dispatch(setSelectedElement(null));
 		handleCloseWrapper();

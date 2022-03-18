@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_ELEMENT_SELECTOR_MODE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_IS_WEBVIEW_INITIALIZED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
+import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_ELEMENT_SELECTOR_MODE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_IS_WEBVIEW_INITIALIZED, SET_RECORDER_CRASH_STATE, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -20,6 +20,11 @@ export enum TRecorderState {
 
 	ACTION_REQUIRED = "ACTION_REQURED",
 };
+
+export enum TRecorderCrashState {
+	CRASHED = "CRASHED",
+	PAGE_LOAD_FAILED = "PAGE_LOAD_FAILED",
+}
 
 interface INavigatingStatePayload {
 	url: string;
@@ -61,6 +66,7 @@ interface IRecorderReducer {
 	isWebViewInitialized: boolean;
 
 	state: {type: TRecorderState, payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null };
+	crashState: {type: TRecorderCrashState, payload: any} | null;
 	isInspectModeOn: boolean;
 	isInspectElementSelectorModeOn: boolean;
 
@@ -82,6 +88,7 @@ const initialState: IRecorderReducer = {
 	selectedElement: null,
 	savedSteps: [],
 	isVerified: false,
+	crashState: null,
 };
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
@@ -147,6 +154,11 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				savedSteps: savedSteps
 			}
 		}
+		case SET_RECORDER_CRASH_STATE:
+			return {
+				...state,
+				crashState: action.payload
+			}
 		case RESET_RECORDER_STATE:
 			return {
 				...state,

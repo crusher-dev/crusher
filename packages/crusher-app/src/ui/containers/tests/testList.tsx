@@ -242,12 +242,12 @@ const itemContainerStyle = css`
 	overflow: hidden;
 	margin-right: 32px;
 
-	.edit {
+	.showOnHover {
 		visibility: hidden;
 	}
 
 	:hover {
-		.edit {
+		.showOnHover {
       visibility: visible !important;
 			:hover {
 				text-decoration: underline;
@@ -281,6 +281,9 @@ function FolderItem(props: { folder: any; id: number }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showEditBox, setShowEditBox] = useState(false);
 	const [project] = useAtom(currentProject);
+	const router = useRouter();
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
+	const [, updateMetaData] = useAtom(updateMeta);
 
 	const [filters] = useAtom(testFiltersAtom);
 	const [newTestCreated] = useState(false);
@@ -292,6 +295,25 @@ function FolderItem(props: { folder: any; id: number }) {
 	const testList = useMemo(() => {
 		return data.list.filter(({ folderId }) => props.id === folderId);
 	}, [data.list]);
+
+
+	const runTestsForThisFolder = useCallback(() => {
+		(async () => {
+			await handleTestRun(selectedProjectId, BuildTriggerEnum.MANUAL, { folder: props.folder.name}, router, updateMetaData);
+
+			updateMetaData({
+				type: "user",
+				key: USER_META_KEYS.RAN_TEST,
+				value: true,
+			});
+
+			updateMetaData({
+				type: "project",
+				key: PROJECT_META_KEYS.RAN_TEST,
+				value: true,
+			});
+		})();
+	}, [props.folder]);
 
 	return (
 		<div>
@@ -320,16 +342,32 @@ function FolderItem(props: { folder: any; id: number }) {
 							</div>
 						</div>
 
+						<div className={"showOnHover"} css={css`display: flex;`}>
+							<div
+									onClick={(e) => {
+										e.stopPropagation();
+										runTestsForThisFolder(props.id);
+									}}
+							>
+								<span css={[editBlockCSS, css`display: flex; align-items: center; margin-top: -3rem;`]}>
+							<PlaySVG className={"mr-6"} height={10} width={10} />
+								<span className={"flex items-center"}>
+									Run tests
+									</span>
+									</span>
+							</div>
 						<div
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowEditBox(true);
-							}}
-							className={" edit"}
+								onClick={(e) => {
+									e.stopPropagation();
+									setShowEditBox(true);
+								}}
+								className={" edit"}
+								css={ css`margin-left: 24rem`}
 						>
 							<span className={"flex items-center"} css={editBlockCSS}>
 								<EditIcon className={"mr-6"}/> <span className={"mt-4"}>Edit</span>
 							</span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -358,13 +396,13 @@ const editBlockCSS = css`
 `
 
 const folderBlock = css`
-  .edit {
+  .showOnHover {
     visibility: hidden;
   }
 
 
 	:hover {
-		.edit {
+		.showOnHover {
       visibility: visible;
 		}
 		.open-folder{
@@ -574,7 +612,7 @@ const folderStyle = css`
 	padding: 20px 0;
 
 	font-size: 12px;
-	
+
 	border-bottom: 1px solid #171b20;
 
 	:hover {
@@ -593,12 +631,12 @@ const testItem = css`
       text-decoration: underline;
     }
   }
-	
-  .edit {
+
+  .showOnHover {
     visibility: hidden;
   }
 	:hover {
-		.edit {
+		.showOnHover {
       visibility: visible;
 		}
 	}

@@ -23,7 +23,7 @@ RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use
 
 # Install node dependenices
 # RUN npm install -g npm pm2 concurrently @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
-RUN npm install -g concurrently pm2
+RUN npm install -g concurrently pm2 node-fetch
 RUN npm init -y && npm install pm2 dotenv playwright@1.14.0 patch-package source-map-support
 
 # Add and copy necessary files

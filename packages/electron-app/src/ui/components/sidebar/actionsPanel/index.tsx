@@ -9,7 +9,7 @@ import { PageActions } from "./pageActions";
 import { TemplateActions } from "./templatesActions";
 import { ElementActions } from "./elementActions";
 import { InspectModeAction } from "./inspectModeAction";
-import { turnOffElementSelectorInspectMode, turnOffInspectMode } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, turnOffElementSelectorInspectMode, turnOffInspectMode } from "electron-app/src/ui/commands/perform";
 import { useTour } from "@reactour/tour";
 import { BrowserButton } from "../../buttons/browser.button";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
@@ -35,7 +35,8 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 		}
 	}, [selectedElement]);
 
-	const goBack = () => {
+	const goBack = async () => {
+		await enableJavascriptInDebugger();
 		store.dispatch(setSelectedElement(null));
 	};
 

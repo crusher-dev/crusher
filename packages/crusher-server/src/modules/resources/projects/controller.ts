@@ -12,7 +12,6 @@ class ProjectsController {
 	private projectsService: ProjectsService;
 	@Inject()
 	private projectWorkspaceService: ProjectWorkspaceService;
-
 	@Authorized()
 	@Post("/projects/actions/create")
 	async createProject(@CurrentUser({ required: true }) user, @Body() body: ICreateProjectPayload) {

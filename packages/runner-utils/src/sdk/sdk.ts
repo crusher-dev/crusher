@@ -11,10 +11,20 @@ import https from "https";
 
 const pageScreenshotModule = require("../actions/pageScreenshot");
 
-class CrusherSdkPage {
-	constructor(private _page: Page) {
+class CrusherSdk implements ICrusherSdk {
+	_page: Page; // Playwright page reference
+	page: Page;
+	exportsManager: ExportsManager;
+	storageManager: StorageManager;
 
+	constructor(page: Page, exportsManager: ExportsManager, storageManager: StorageManager) {
+		this._page = page;
+		this.exportsManager = exportsManager;
+		this.storageManager = storageManager;
+		this.page = page;
 	}
+
+	// <----- New sdk begins here ---->
 	async screenshot({ timeout }: { timeout?: number; } = {}) {
 		return this._page.screenshot({ timeout: timeout });
 	}
@@ -54,19 +64,9 @@ class CrusherSdkPage {
 	async waitForFunction(fun: any, arg, options) {
 		return this._page.waitForFunction(fun, arg, options);
 	}
-}
-class CrusherSdk implements ICrusherSdk {
-	_page: Page; // Playwright page reference
-	page: CrusherSdkPage;
-	exportsManager: ExportsManager;
-	storageManager: StorageManager;
 
-	constructor(page: Page, exportsManager: ExportsManager, storageManager: StorageManager) {
-		this._page = page;
-		this.exportsManager = exportsManager;
-		this.storageManager = storageManager;
-		this.page = new CrusherSdkPage(this._page);
-	}
+
+	// <----- New sdk ends here ---->
 
 	// Legacy methods
 	// @TODO: Remove them after migration

@@ -4,7 +4,7 @@ import { ActionsList, ActionsListItem } from "./actionsList";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector, useStore } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
-import { peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, turnOffInspectMode } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { useTour } from "@reactour/tour";
 import { emitShowModal } from "../../modals";
@@ -51,7 +51,7 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 
 	const { isOpen, setCurrentStep } = useTour();
 
-    const handleActionSelected = (id: TElementActionsEnum) => {
+    const handleActionSelected = async (id: TElementActionsEnum) => {
 		if([TElementActionsEnum.CLICK, TElementActionsEnum.HOVER, TElementActionsEnum.SCREENSHOT].includes(id)) {
 			if(isOpen) {
 				setCurrentStep(4);
@@ -59,14 +59,17 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 		}
 		switch(id) {
 			case TElementActionsEnum.CLICK:
+				await enableJavascriptInDebugger();
 				performClick(selectedElement);
 				store.dispatch(setSelectedElement(null));
 				break;
 			case TElementActionsEnum.HOVER:
+				await enableJavascriptInDebugger();
 				performHover(selectedElement, store);
 				store.dispatch(setSelectedElement(null));
 				break;
 			case TElementActionsEnum.SCREENSHOT:
+				await enableJavascriptInDebugger();
 				peformTakeElementScreenshot(selectedElement, store);
 				store.dispatch(setSelectedElement(null));
 				break;
@@ -77,6 +80,7 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 				emitShowModal({ type: TElementActionsEnum.SHOW_ASSERT_MODAL });
 				break;
 			case TElementActionsEnum.ASSERT_VISIBILITY:
+				await enableJavascriptInDebugger();
 				performAssertElementVisibility(selectedElement, store);
 				store.dispatch(setSelectedElement(null));
 				break;

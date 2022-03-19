@@ -53,8 +53,8 @@ module.exports = {
 		{
 			name: 'video-processor',
 			cwd: './packages/video-processor',
-			script: 'node',
-			args: 'index.js',
+			script: IS_PRODUCTION ? 'node' : 'npm',
+			args: IS_PRODUCTION ? 'index.js' : 'run start',
 			env: VIDEO_PROCESSOR_ENV,
 		},
 		{

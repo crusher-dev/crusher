@@ -21,7 +21,7 @@ async function assertElementAttributes(
 
 	for (let i = 0; i < assertions.length; i++) {
 		let { validation, operation, field } = assertions[i];
-		validation = template(validation, { ctx: context });
+		validation = template(validation, { ctx: context || {} });
 		let elementAttributeValue = null;
 		if (field.name === "innerHTML") {
 			elementAttributeValue = await element.innerHTML();

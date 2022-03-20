@@ -16,7 +16,7 @@ async function waitForNavigation(page: Page, action: iAction, globals: IGlobalMa
 	context: any) {
 	console.log("Waiting for navigation now...");
 	if (action.payload.meta?.value) {
-		let url = template(action.payload.meta?.value, {ctx: context});
+		let url = template(action.payload.meta?.value, {ctx: context || {}});
 		await new Promise((resolve, reject) => {
 			let time = 0;
 

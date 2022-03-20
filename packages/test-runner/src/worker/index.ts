@@ -17,7 +17,9 @@ import {
 	zipDirectory,
 } from "@src/util/helper";
 import * as path from "path";
-import { CommunicationChannel } from "../../../runner-utils/src/functions/communicationChannel";
+import * as fs from "fs";
+
+const { CommunicationChannel } = require (fs.existsSync("./crusher-runner-utils.ts/index.js") ? "./crusher-runner-utils.ts/index.js" : "crusher-runner-utils");
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
@@ -40,8 +42,8 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 
 		const parameterizedTests = [];
 
-		communcationChannel.addListener("run-parameterized-tests", (data: {testId: number, title: string, testContext: any}) => {
-			parameterizedTests.push(data);
+		communcationChannel.addListener("run-parameterized-tests", (data: Array<{testId: number, groupId: string, context: any}>) => {
+			parameterizedTests.push(...data);
 			// @TODO: Add impl here
 		});
 		if (!globalManager.has(TEST_RESULT_KEY)) {
@@ -99,6 +101,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		const parentJob = await Job.fromId(queueManager.queues[TEST_COMPLETE_QUEUE].value, bullJob.opts.parent.id);
 		await parentJob.update({
 			...parentJob.data,
+			context: bullJob.data.context,
 			exports: exportsManager.getEntriesArr(),
 			nextTestDependencies: bullJob.data.nextTestDependencies,
 			actionResults: actionResults,

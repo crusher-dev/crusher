@@ -11,6 +11,7 @@ import * as fs from "fs";
 import { IActionResultItem } from "@shared/types/common/general";
 import { IExportsManager } from "@shared/lib/exports/interface";
 import { zipDirectory } from "@src/util/helper";
+const { CommunicationChannel } = require (fs.existsSync("./crusher-runner-utils.ts/index.js") ? "./crusher-runner-utils.ts/index.js" : "crusher-runner-utils");
 
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
 export class CodeRunnerService {
@@ -22,7 +23,7 @@ export class CodeRunnerService {
 	storageManager: IStorageManager;
 	globalManager: IGlobalManager;
 	exportsManager: IExportsManager;
-	communicationChannel: CommunicationChannel;
+	communicationChannel: typeof CommunicationChannel;
 	persistentContextDir: string | null;
 	context: any;
 
@@ -33,7 +34,7 @@ export class CodeRunnerService {
 		logManager: IRunnerLogManagerInterface,
 		globalManager: IGlobalManager,
 		exportsManager: IExportsManager,
-		communicationChannel: CommunicationChannel,
+		communicationChannel: typeof CommunicationChannel,
 		identifer: string,
 		persistentContextDir: string | null = null,
 		context: any = {},

@@ -110,6 +110,11 @@ class BuildsService {
 	}
 
 	@CamelizeResponse()
+	async getBuildFromReportId(reportId: number): Promise<KeysToCamelCase<IBuildTable>> {
+		return this.dbManager.fetchSingleRow(`SELECT jobs.* FROM public.jobs, public.job_reports WHERE job_reports.id = ? AND jobs.latest_report_id = job_reports.id`, [reportId]);
+	}
+	
+	@CamelizeResponse()
 	async getBuild(buildId: number): Promise<KeysToCamelCase<IBuildTable> | null> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.jobs WHERE id = ?", [buildId]);
 	}

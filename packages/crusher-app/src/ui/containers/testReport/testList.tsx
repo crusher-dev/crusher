@@ -672,6 +672,8 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 
+	const testInstanceMeta = testInstanceData.meta || {};
+
 	const handleOpenVideoModal = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -686,6 +688,9 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 			<div className={"flex items-center leading-none text-15 font-600"}>
 				<TestStatusSVG type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
 				{name}
+				<Conditional showIf={testInstanceMeta.isSpawned}>
+					<span className={"ml-8"}>(Spawned)</span>
+				</Conditional>
 			</div>
 
 			{/*<Conditional showIf={!expand}>*/}

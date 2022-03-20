@@ -243,15 +243,18 @@ class BuildTestInstancesService {
 	}
 
 	async createBuildTestInstance(
-		payload: KeysToCamelCase<Omit<ITestInstancesTable, "id" | "browser" | "status" | "code" | "meta">> & { browser: Omit<BrowserEnum, "ALL">; meta: any },
+		payload: KeysToCamelCase<Omit<ITestInstancesTable, "id" | "browser" | "status" | "code" | "meta" | "context">> & { browser: Omit<BrowserEnum, "ALL">; meta: any },
+		context: any = {}
 	): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO public.test_instances (job_id, test_id, status, host, browser, meta) VALUES (?, ?, ?, ?, ?, ?)", [
+		return this.dbManager.insert("INSERT INTO public.test_instances (job_id, test_id, status, host, browser, meta, context, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [
 			payload.jobId,
 			payload.testId,
 			TestInstanceStatusEnum.QUEUED,
 			payload.host,
 			payload.browser,
 			payload.meta ? JSON.stringify(payload.meta) : null,
+			context ? JSON.stringify(context) : null,
+			payload.groupId || null,
 		]);
 	}
 

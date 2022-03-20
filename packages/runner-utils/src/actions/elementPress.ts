@@ -13,7 +13,7 @@ async function pressKey(element: Locator, workingSelector: any, action: iAction,
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any) {
-	const keyToBePressed = template(action.payload.meta.value, {ctx: context});
+	const keyToBePressed = template(action.payload.meta.value, {ctx: context || {}});
 	await element.press(keyToBePressed);
 }
 

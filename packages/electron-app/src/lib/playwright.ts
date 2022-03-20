@@ -68,6 +68,10 @@ class PlaywrightInstance {
 	}
 
 	private _overrideSdkActions() {
+		CrusherSdk.prototype.spawnTests = async () => {
+			return;
+		};
+
 		CrusherSdk.prototype.reloadPage = async () => {
 			await this.page.evaluate(() => {
 				window.location.reload();

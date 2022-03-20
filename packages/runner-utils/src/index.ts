@@ -261,4 +261,4 @@ class CrusherRunnerActions {
 	}
 }
 
-export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk };
+export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk, CommunicationChannel };

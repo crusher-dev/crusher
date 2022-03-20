@@ -17,8 +17,9 @@ export type ITestExecutionQueuePayload = IJobRunRequest & {
 export interface ITestCompleteQueuePayload {
 	type?: "complete-build" | "process";
 	exports: Array<[string, any]>;
+	context?: { [k: string]: any } | null;
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
-	parameterizedTests: Array<{testId: number, title: string, testContext: any}>;
+	parameterizedTests: Array<{testId: number; groupId: string; context: any}>;
 	buildExecutionPayload: ITestExecutionQueuePayload;
 	actionResults: Array<IActionResultItem>;
 	buildId: number;

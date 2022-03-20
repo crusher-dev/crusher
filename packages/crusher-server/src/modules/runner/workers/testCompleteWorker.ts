@@ -26,7 +26,8 @@ import { IntegrationsService } from "@modules/resources/integrations/service";
 import { IUserTable } from "@modules/resources/users/interface";
 import { IProjectTable } from "@modules/resources/projects/interface";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
-import { TestInstanceResultSetStatusEnum } from "@modules/resources/builds/instances/interface";
+import { ITestInstancesTable, TestInstanceResultSetStatusEnum } from "@modules/resources/builds/instances/interface";
+import { BrowserEnum } from "../interface";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -36,6 +37,7 @@ const projectsService = Container.get(ProjectsService);
 const buildApproveService = Container.get(BuildApproveService);
 const usersService = Container.get(UsersService);
 const projectIntegrationsService = Container.get(IntegrationsService);
+const testRunnerService = Container.get(TestsRunner);
 
 const emailManager = Container.get(EmailManager);
 const testRunner = Container.get(TestsRunner);
@@ -53,7 +55,7 @@ interface ITestResultWorkerJob extends Job {
 }
 
 function createExecutionTaskFlow(data: any, host: string | null = null) {
-	if (host && host !== "null") {
+	if (host && host !== "null" && host.trim() !== "") {
 		data.actions = this._replaceHostInEvents(data.actions, host);
 	}
 
@@ -72,6 +74,54 @@ function createExecutionTaskFlow(data: any, host: string | null = null) {
 			},
 		],
 	};
+}
+
+async function handleParameterisedTestInstancesForExecution(job: ITestResultWorkerJob, testInstances: Array<KeysToCamelCase<ITestInstancesTable>>, buildInfo: any) {
+	console.log("Test instances are", testInstances);
+
+	const siblings = [];
+	const testCompletePayload = job.data;
+
+	for(let testInstance of testInstances) {
+		const testInstanceFullInfoRecord = await buildTestInstanceService.getInstanceAllInformation(testInstance.id);
+		const testActions = JSON.parse(testInstanceFullInfoRecord.testEvents);
+
+		const finalTestActions = testActions.map((action) => {
+			if (action.type === ActionsInTestEnum.RUN_AFTER_TEST) {
+				action.payload.meta.storageState = testCompletePayload.storageState;
+			}
+			return action;
+		});
+
+		siblings.push(
+			createExecutionTaskFlow(
+				{
+					...testCompletePayload.buildExecutionPayload,
+					exports: testCompletePayload.exports,
+					startingStorageState: testCompletePayload.storageState,
+					actions: finalTestActions,
+					config: {
+						...testCompletePayload.buildExecutionPayload.config,
+						browser: testInstanceFullInfoRecord.browser,
+					},
+					testInstanceId: testInstance.id,
+					testName: testInstanceFullInfoRecord.testName,
+					nextTestDependencies: [],
+					startingPersistentContext: testCompletePayload.persistenContextZipURL,
+
+					// Crusher-context tree
+					context: testInstance.context ? testInstance.context : (job.data.context ? job.data.context : {}),
+				},
+				buildInfo.host && buildInfo.host !== "null" ? buildInfo.host : null,
+			),
+		);
+	}
+
+	if (siblings.length) {
+		for (const sibling of siblings) {
+			await testRunner.addTestRequestToQueue(sibling, job.opts.parent);
+		}
+	}
 }
 
 async function handleNextTestsForExecution(job: ITestResultWorkerJob, buildRecord: KeysToCamelCase<IBuildTable>) {
@@ -164,6 +214,10 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 	const buildReportRecord = await buildReportService.getBuildReportRecord(buildRecord.latestReportId);
 
 	if (bullJob.data.type === "process") {
+		if(bullJob.data.parameterizedTests && bullJob.data.parameterizedTests.length) {
+			const siblingTestInstances = await testRunnerService.spawnTestInstances(bullJob.data.parameterizedTests, bullJob.data.buildExecutionPayload.config.browser || BrowserEnum.CHROME, buildReportRecord.id);
+			await handleParameterisedTestInstancesForExecution(bullJob, siblingTestInstances.testInstances, siblingTestInstances.buildInfo);
+		}
 		await handleNextTestsForExecution(bullJob, buildRecord);
 		const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
 
@@ -191,7 +245,7 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 		);
 		if (haveAllTestInstanceCompletedChecks) {
 			// This is the last test result to finish
-			const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, bullJob.data.buildTestCount);
+			const buildReportStatus = await buildReportService.calculateResultAndSave(buildRecord.latestReportId, buildReportRecord.totalTestCount);
 
 			await buildService.updateStatus(BuildStatusEnum.FINISHED, buildRecord.id);
 

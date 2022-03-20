@@ -13,7 +13,7 @@ async function waitForSeconds(page: Page, action: iAction, globals: IGlobalManag
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any) {
-	const timeout = template(action.payload.timeout, {ctx: context});
+	const timeout = template(action.payload.timeout, {ctx: context || {}});
 	if (!timeout) return;
 	await page.waitForTimeout(parseInt(timeout + "", 10) * 1000);
 	return;

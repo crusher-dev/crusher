@@ -8,7 +8,7 @@ import { StorageManager } from "../functions/storage";
 import { chunkArray, markTestFail } from "../utils/helper";
 import nodeFetch from "node-fetch";
 import https from "https";
-import { CommunicationChannel } from "src/functions/communicationChannel";
+import { CommunicationChannel } from "../functions/communicationChannel";
 
 const pageScreenshotModule = require("../actions/pageScreenshot");
 
@@ -179,7 +179,7 @@ class CrusherSdk implements ICrusherSdk {
 		return result;
 	}
 
-	async runParameterizedTests(payload: Array<{testId: number, title: string, testContext: any}>) {
+	async spawnTests(payload: Array<{testId: number, groupId: string, context: any}>) {
 		this.communicationChannel.emit("run-parameterized-tests", payload);
 	}
 

@@ -21,7 +21,7 @@ async function assertSeoRows(
 
 	for (let i = 0; i < assertions.length; i++) {
 		let { validation, operation, field } = assertions[i];
-		validation = template(validation, { ctx: context })
+		validation = template(validation, { ctx: context || {} })
 		const elementAttributeValue =
 			field.name === "title"
 				? pageTitle

@@ -43,6 +43,9 @@ interface TestBuildReport {
 	testResultStatus?: TestInstanceResultSetStatus;
 	testResultConclusion?: TestInstanceResultSetConclusion;
 	testResultSetId?: number;
+	testInstanceGroupId?: number | null;
+	testInstanceContext?: any;
+	testInstanceMeta?: string;
 	recordedVideoUrl?: string;
 }
 
@@ -107,7 +110,7 @@ export class BuildReportService {
 
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
 		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
-			"SELECT jobs.id build_id, jobs.meta build_meta, jobs.project_id build_project_id, jobs.commit_name build_name, job_reports.id build_report_id, job_reports.reference_job_id build_baseline_id, job_reports.created_at build_report_created_at, jobs.created_at build_created_at, jobs.updated_at build_updated_at, job_reports.updated_at build_report_updated_at, job_reports.status build_report_status, build_tests.* FROM public.jobs, public.job_reports LEFT JOIN (SELECT test_instances.id test_instance_id, test_instance_result_sets.report_id test_build_report_id, test_instance_result_sets.status test_result_status, test_instance_result_sets.conclusion test_Result_conclusion, test_instance_result_sets.id test_result_set_id, test_instance_result_sets.target_instance_id test_baseline_instance_id, tests.name test_name, test_instances.browser test_instance_browser, tests.id test_id, tests.events test_steps_json, test_instances.host test_instance_host, test_instances.recorded_video_url recorded_video_url FROM public.test_instances, public.tests, public.test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) build_tests ON build_tests.test_build_report_id = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
+			"SELECT jobs.id build_id, jobs.meta build_meta, jobs.project_id build_project_id, jobs.commit_name build_name, job_reports.id build_report_id, job_reports.reference_job_id build_baseline_id, job_reports.created_at build_report_created_at, jobs.created_at build_created_at, jobs.updated_at build_updated_at, job_reports.updated_at build_report_updated_at, job_reports.status build_report_status, build_tests.* FROM public.jobs, public.job_reports LEFT JOIN (SELECT test_instances.id test_instance_id, test_instances.meta test_instance_meta, test_instances.group_id test_instance_group_id, test_instances.context test_instance_context, test_instance_result_sets.report_id test_build_report_id, test_instance_result_sets.status test_result_status, test_instance_result_sets.conclusion test_Result_conclusion, test_instance_result_sets.id test_result_set_id, test_instance_result_sets.target_instance_id test_baseline_instance_id, tests.name test_name, test_instances.browser test_instance_browser, tests.id test_id, tests.events test_steps_json, test_instances.host test_instance_host, test_instances.recorded_video_url recorded_video_url FROM public.test_instances, public.tests, public.test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) build_tests ON build_tests.test_build_report_id = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
 			[buildId],
 			true,
 		);
@@ -146,6 +149,9 @@ export class BuildReportService {
 				id: current.testInstanceId,
 				verboseStatus: current.testResultStatus,
 				status: current.testResultConclusion,
+				groupId: current.testInstanceGroupId,
+				context: current.testInstanceContext || {},
+				meta: current.testInstanceMeta && current.testInstanceMeta.length ? JSON.parse(current.testInstanceMeta) : {},
 				config: {
 					browser: current.testInstanceBrowser,
 				},
@@ -156,10 +162,12 @@ export class BuildReportService {
 				steps: current.actionsResult,
 			};
 
-			if (prev[current.testId]) {
-				prev[current.testId].testInstances.push(testInstance);
+			const uniqueId = current.testInstanceGroupId ? `${current.testInstanceGroupId}/${current.testInstanceId}` : `${current.testInstanceId}`;
+			if (prev[uniqueId]) {
+				prev[uniqueId].testInstances.push(testInstance);
 			} else {
-				prev[current.testId] = {
+				prev[uniqueId] = {
+					testId: current.testId,
 					name: current.testName,
 					// @TODO: Add this in tests table
 					meta: {},
@@ -246,6 +254,13 @@ export class BuildReportService {
 		return finalBuildReportResult;
 	}
 
+	async incrementBuildReportTotalCount(incrementOffset: number, reportId: number) {
+		return this.dbManager.update(
+			"UPDATE public.job_reports SET total_test_count = total_test_count + ? WHERE id = ?",
+			[incrementOffset, reportId],
+		);
+	}
+	
 	async createBuildReport(totalTestCount: number, buildId: number, referenceBuildId: number, projectId: number): Promise<{ insertId: number }> {
 		return this.dbManager.insert(`INSERT INTO public.job_reports (job_id, reference_job_id, total_test_count, project_id, status) VALUES (?, ?, ?, ?, ?)`, [
 			buildId,

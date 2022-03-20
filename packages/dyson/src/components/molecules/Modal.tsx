@@ -23,7 +23,7 @@ export const Modal = ({ modalStyle, children, onClose, lightOverlay, onOutsideCl
 	return (
 		<OverlayTransparent lightOverlay={typeof lightOverlay !== "undefined" && lightOverlay !== null ? lightOverlay : true}>
 			<CenterLayout>
-				<OnOutsideClick onOutsideClick={onOutsideClick}>
+				<OnOutsideClick blackListClassNames={["select-dropDownContainer"]} onOutsideClick={onOutsideClick}>
 					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
 						{children}
 

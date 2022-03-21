@@ -140,7 +140,7 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 								: ""
 						}
 						label={"Selectors"}
-						value={readableSelectors}
+						initialValue={readableSelectors}
 					/>
 				</Conditional>
 			</div>

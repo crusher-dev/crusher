@@ -46,6 +46,7 @@ declare module 'crusherSdk' {
     page: Page;
     sleep(time: number): Promise<unknown>;
     stallTest(message: string): void;
+    spawnTests(testsArr: Array<{testId: number | string; groupId: string; context: any}>): void;
   }
 
   export {CrusherSdk};

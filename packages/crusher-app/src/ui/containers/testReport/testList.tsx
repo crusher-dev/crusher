@@ -687,7 +687,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
 				<TestStatusSVG type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
-				{name}
+				{name}{testInstanceMeta.groupId ? `/${testInstanceMeta.groupId}` : ""}
 				<Conditional showIf={testInstanceMeta.isSpawned}>
 					<span className={"ml-8"}>(Spawned)</span>
 				</Conditional>

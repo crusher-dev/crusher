@@ -16,7 +16,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 	}
 
 	async notifyTestStarted(message: string, meta: any) {
-		fetch(this.getRequestUrl(`/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`), {
+		return fetch(this.getRequestUrl(`/builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/mark.running`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
@@ -35,7 +35,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 	}
 
 	async notifyTestFinished(message: string, hasFailed: boolean, meta: any) {
-		fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`), {
+		return fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log.finished`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",
@@ -53,7 +53,7 @@ export class Notifier implements IRunnerLogManagerInterface {
 			});
 	}
 
-	async logTest(status: ActionStatusEnum, message: string, meta: any = {}): Promise<void> {
+	async logTest(status: ActionStatusEnum, message: string, meta: any = {}): Promise<any> {
 		console.debug(message);
 
 		if (status === ActionStatusEnum.STARTED) {
@@ -67,10 +67,10 @@ export class Notifier implements IRunnerLogManagerInterface {
 		throw new Error("Invalid format to log test state");
 	}
 
-	async logStep(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta): Promise<void> {
+	async logStep(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string, meta: IRunnerLogStepMeta): Promise<any> {
 		console.debug(message);
 
-		fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`), {
+		return fetch(this.getRequestUrl(`builds/${this.buildId}/instances/${this.buildTestInstanceId}/actions/log`), {
 			method: "POST",
 			headers: {
 				Accept: "application/json, text/plain, */*",

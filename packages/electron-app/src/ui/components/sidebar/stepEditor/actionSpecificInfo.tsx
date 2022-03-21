@@ -30,6 +30,7 @@ const EDIT_MODE_MAP = {
 
 const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 	const { action, actionIndex } = props;
+	const textAreaRef: React.Ref<HTMLTextAreaElement> = React.useRef(null);
 	const dispatch = useDispatch();
 
 	const isElementStep = action.type.startsWith("ELEMENT");
@@ -55,6 +56,9 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 	const readableSelectors = getReadbleSelectors(action.payload.selectors!);
 	const handleOnSelectorsPicked = (selectors: Array<iSelectorInfo>, shouldNotify = true) => {
 		action.payload.selectors = selectors;
+		const readableSelectors = getReadbleSelectors(action.payload.selectors!);
+		console.log("Text area is", textAreaRef.current, readableSelectors);
+		textAreaRef.current.value = readableSelectors;
 		dispatch(updateRecordedStep({ ...action }, actionIndex));
 		if (shouldNotify) {
 			sendSnackBarEvent({ type: "success", message: "Selectors updated" });
@@ -132,6 +136,7 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 				</Conditional>
 				<Conditional showIf={isElementStep}>
 					<FieldSelectorPicker
+						ref={textAreaRef}
 						onChange={saveSelectorsOnUserInput.bind(this)}
 						onSelectorsPicked={handleOnSelectorsPicked.bind(this)}
 						className={

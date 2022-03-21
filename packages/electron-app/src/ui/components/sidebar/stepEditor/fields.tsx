@@ -79,7 +79,7 @@ type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElemen
 	className?: string;
 	onSelectorsPicked: (selectors: Array<iSelectorInfo>) => any;
 };
-const FieldSelectorPicker = (props: IFieldSelectorPickerProps) => {
+const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps, ref: React.Ref<HTMLTextAreaElement>) => {
 	const { className } = props;
 
 	const selectorsInputProps = React.useMemo(() => {
@@ -115,12 +115,12 @@ const FieldSelectorPicker = (props: IFieldSelectorPickerProps) => {
 				{props.label}
 			</span>
 			<div css={selectorPickerContainerStyle}>
-				<textarea {...selectorsInputProps} css={[textAreaStyle, scrollBarStyle]}>{props.initialValue}</textarea>
+				<textarea ref={ref} {...selectorsInputProps} css={[textAreaStyle, scrollBarStyle]}>{props.initialValue}</textarea>
 				<InspectElementIcon onClick={handleElementSelectorClick} css={inspectElementIconStyle} />
 			</div>
 		</div>
 	);
-};
+});
 
 type IFieldEditModeButtonProps = Omit<ButtonProps, "children"> & {
 	label: string;

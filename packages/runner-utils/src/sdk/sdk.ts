@@ -131,6 +131,13 @@ class CrusherSdk implements ICrusherSdk {
 		return this.exportsManager.has(key);
 	}
 
+	stallTest(errorMessage: string) {
+		const error =  new Error(errorMessage);
+		(error as any).isStalled = true;
+
+		throw error;
+	}
+
 	private async urlExist(url: string) {
 		const agent = new https.Agent({
 			rejectUnauthorized: false,

@@ -198,7 +198,7 @@ class CrusherRunnerActions {
 					console.error(err);
 					await this.handleActionExecutionStatus(
 						action.name,
-						ActionStatusEnum.FAILED,
+						err.isStalled ? ActionStatusEnum.STALLED : ActionStatusEnum.FAILED,
 						`Error performing ${action.description}`,
 						{
 							failedReason: err.matcherResult ? err.matcherResult.message : err.message,
@@ -214,7 +214,7 @@ class CrusherRunnerActions {
 						actionCallback,
 					);
 				}
-				if (!step.payload.isOptional) {
+				if (!step.payload.isOptional || err.isStalled) {
 					throw err;
 				}
 			}

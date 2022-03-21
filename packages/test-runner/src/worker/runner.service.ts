@@ -77,7 +77,7 @@ export class CodeRunnerService {
 	async runTest(): Promise<{
 		recordedRawVideo: string;
 		hasPassed: boolean;
-		error: Error | undefined;
+		error: Error & { isStalled?: boolean; } | undefined;
 		actionResults: any;
 		persistenContextZipURL: string | null;
 	}> {

@@ -5,6 +5,7 @@ export enum ActionStatusEnum {
 	COMPLETED = "COMPLETED",
 	MANUAL_REVIEW_REQUIRED = "MANUAL_REVIEW_REQUIRED",
 	FAILED = "FAILED",
+	STALLED = "STALLED",
 }
 
 export interface IRunnerLogStepMeta {

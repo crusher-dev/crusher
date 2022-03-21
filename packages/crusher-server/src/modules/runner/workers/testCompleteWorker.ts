@@ -125,7 +125,7 @@ async function handleNextTestsForExecution(job: ITestResultWorkerJob, buildRecor
 						})),
 						testInstanceId: testInstance.testInstanceId,
 						hasPassed: true,
-						hasStalled: true,
+						isStalled: true,
 						failedReason: new Error("Parent test stalled"),
 					},
 				} as any);

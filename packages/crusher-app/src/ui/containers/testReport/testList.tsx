@@ -34,6 +34,7 @@ import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 const CompareImage = dynamic(() => import("./components/compareImages"));
@@ -264,7 +265,7 @@ function RenderStep({ data, testInstanceData }) {
 		<div className={"relative mb-32"}>
 			<div className={" flex px-44"}>
 				<div css={tick}>
-					<TestStatusSVG type={status} height={"20rem"} width={"20rem"} />
+					<TestStatusSVG css={status === ActionStatusEnum.STALLED ? css`path { fill: #E1C973; }`: css``} type={status} height={"20rem"} width={"20rem"} />
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
@@ -280,7 +281,7 @@ function RenderStep({ data, testInstanceData }) {
 								color: #d0d0d0;
 							`}
 						>
-							{actionName}
+							{actionName} {status === ActionStatusEnum.STALLED ? "(Stalled)" : ""}
 						</span>
 						<Conditional showIf={actionDescription && actionDescription.trim().length}>
 							<span
@@ -672,6 +673,8 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 
+	const isStalled = steps.some((step: any) => step.status === ActionStatusEnum.STALLED);
+
 	const handleOpenVideoModal = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -684,9 +687,10 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 				<TestVideoUrl setOpenVideoModal={setIsShowingVideo} videoUrl={videoUrl} />
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
-				<TestStatusSVG type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
-				{name}
+				<TestStatusSVG css={isStalled ? css`path{ fill: #E1C973; }` : css``} type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
+				{name}{isStalled ? ` (Stalled)` : ""}
 			</div>
+
 
 			{/*<Conditional showIf={!expand}>*/}
 			{/*	<div className={"text-18 font-600"} id={"click-to-open"} css={css`color: #aacb65;`}>*/}

@@ -85,7 +85,7 @@ class CrusherRunnerActions {
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
 
-		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
+		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED || status === ActionStatusEnum.STALLED) {
 			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
 		}
 	}

@@ -134,6 +134,10 @@ class CrusherSdk implements ICrusherSdk {
 	stallTest(errorMessage: string) {
 		const error =  new Error(errorMessage);
 		(error as any).isStalled = true;
+		(error as any).meta = {
+			failedReason: errorMessage,
+			isStalled: true,
+		};
 
 		throw error;
 	}

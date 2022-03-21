@@ -142,7 +142,7 @@ export class CodeRunnerService {
 
 		return {
 			recordedRawVideo: recordedRawVideoUrl,
-			hasPassed: !error,
+			hasPassed: !error ? true : (error.isStalled ? true : false),
 			error: error,
 			actionResults: this.getCompleteActionsResult(testActionResults),
 			persistenContextZipURL,

@@ -45,6 +45,7 @@ declare module 'crusherSdk' {
   declare class CrusherSdk {
     page: Page;
     sleep(time: number): Promise<unknown>;
+    stallTest(message: string): void;
   }
 
   export {CrusherSdk};

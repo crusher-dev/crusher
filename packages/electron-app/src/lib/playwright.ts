@@ -208,15 +208,23 @@ class PlaywrightInstance {
 						this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
 						break;
 					case ActionStatusEnum.FAILED:
-						this.lastAction = null;
-						const failedReason = result.meta.failedReason;
+						case ActionStatusEnum.STALLED:
+							this.lastAction = null;
+							const failedReason = result.meta.failedReason;
+							const isStalled = status === ActionStatusEnum.STALLED;
 
-						const uniqueId = uuidv4();
-						this.appWindow.recordLog({id: uniqueId, message: `Error performing ${ACTION_DESCRIPTIONS[action.type]} `, type: "error", args: [], time: performance.now()});
-						this.appWindow.recordLog({id: uuidv4(), message: `<= ${failedReason.replace(
-							/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}`, type: "error", args: [], time: performance.now(), parent: uniqueId});
-						if(!shouldNotSave)
-						this.appWindow.getRecorder().markRunningStepFailed();
+							const uniqueId = uuidv4();
+							this.appWindow.recordLog({id: uniqueId, message: `Error performing ${ACTION_DESCRIPTIONS[action.type]} `, type: "error", args: [], time: performance.now()});
+							this.appWindow.recordLog({id: uuidv4(), message: `<= ${failedReason.replace(
+								/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}`, type: "error", args: [], time: performance.now(), parent: uniqueId});
+							if(!shouldNotSave) {
+								if(isStalled) {
+									// @TODO: Update it ActionStatusEnum.STALLED
+									this.appWindow.getRecorder().markRunningStepCompleted();
+								}  else {
+									this.appWindow.getRecorder().markRunningStepFailed();
+								}
+							}
 						break;
 					case ActionStatusEnum.COMPLETED:
 						this.lastAction = null;

@@ -110,23 +110,45 @@ async function handleNextTestsForExecution(job: ITestResultWorkerJob, buildRecor
 				),
 			);
 		} else {
-			await processTestAfterExecution({
-				type: `process`,
-				name: `${testCompletePayload.buildId}/${testCompletePayload.testInstanceId}`,
-				data: {
-					...testCompletePayload,
-					exports: [],
-					nextTestDependencies: testInstance.nextTestDependencies,
-					actionResults: testActions.map((action) => ({
-						actionType: action.type,
-						status: ActionStatusEnum.FAILED,
-						message: "Parent test failed",
-					})),
-					testInstanceId: testInstance.testInstanceId,
-					hasPassed: false,
-					failedReason: new Error("Parent test failed"),
-				},
-			} as any);
+			if(job.data.isStalled) {
+				await processTestAfterExecution({
+					type: `process`,
+					name: `${testCompletePayload.buildId}/${testCompletePayload.testInstanceId}`,
+					data: {
+						...testCompletePayload,
+						exports: [],
+						nextTestDependencies: testInstance.nextTestDependencies,
+						actionResults: testActions.map((action) => ({
+							actionType: action.type,
+							status: ActionStatusEnum.STALLED,
+							message: "Parent test stalled",
+						})),
+						testInstanceId: testInstance.testInstanceId,
+						hasPassed: true,
+						isStalled: true,
+						failedReason: new Error("Parent test stalled"),
+					},
+				} as any);
+			} else {
+				await processTestAfterExecution({
+					type: `process`,
+					name: `${testCompletePayload.buildId}/${testCompletePayload.testInstanceId}`,
+					data: {
+						...testCompletePayload,
+						exports: [],
+						nextTestDependencies: testInstance.nextTestDependencies,
+						actionResults: testActions.map((action) => ({
+							actionType: action.type,
+							status: ActionStatusEnum.FAILED,
+							message: "Parent test failed",
+						})),
+						testInstanceId: testInstance.testInstanceId,
+						hasPassed: false,
+						failedReason: new Error("Parent test failed"),
+					},
+				} as any);
+			}
+	
 		}
 	}
 
@@ -179,6 +201,7 @@ const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob)
 			buildRecord.projectId,
 			bullJob.name,
 			bullJob.data.hasPassed,
+			bullJob.data.isStalled,
 		);
 
 		// Wait for the final test in the list here

@@ -85,7 +85,7 @@ class CrusherRunnerActions {
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
 
-		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
+		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED || status === ActionStatusEnum.STALLED) {
 			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
 		}
 	}
@@ -198,7 +198,7 @@ class CrusherRunnerActions {
 					console.error(err);
 					await this.handleActionExecutionStatus(
 						action.name,
-						ActionStatusEnum.FAILED,
+						err.isStalled ? ActionStatusEnum.STALLED : ActionStatusEnum.FAILED,
 						`Error performing ${action.description}`,
 						{
 							failedReason: err.matcherResult ? err.matcherResult.message : err.message,
@@ -214,7 +214,7 @@ class CrusherRunnerActions {
 						actionCallback,
 					);
 				}
-				if (!step.payload.isOptional) {
+				if (!step.payload.isOptional || err.isStalled) {
 					throw err;
 				}
 			}

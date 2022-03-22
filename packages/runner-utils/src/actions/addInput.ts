@@ -4,7 +4,7 @@ import { ActionsInTestEnum, InputNodeTypeEnum } from "@crusher-shared/constants/
 import template from "@crusher-shared/utils/templateString";
 
 // elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk, this.context
-async function addInput(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, _, context) {
+async function addInput(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, _, __, context) {
 	// For legacy addInput type
 	if (typeof action.payload.meta.value === "string") {
 		await element.fill("");

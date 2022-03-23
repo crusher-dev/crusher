@@ -92,7 +92,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<SelectBox isSearchable={true} css={css`input {outline: none; width: 80%; } .selectBox { height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 160rem; .dropdown-box .dropdown-label { padding-top: 4rem !important; padding-bottom: 4rem !important;}`} size={"large"} selected={[selectedOption]} values={fieldOptions} callback={handleOnFieldChange} />
+			<SelectBox dropDownHeight={"200rem"} isSearchable={true} css={css`input {outline: none; width: 80%; } .selectBox { height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 160rem; .dropdown-box .dropdown-label { padding-top: 4rem !important; padding-bottom: 4rem !important;}`} size={"large"} selected={[selectedOption]} values={fieldOptions} callback={handleOnFieldChange} />
 		)
 	};
 

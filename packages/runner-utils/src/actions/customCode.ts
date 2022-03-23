@@ -32,12 +32,14 @@ async function executeCustomCode(
 		"__filename",
 		"__dirname",
 		"crusherSdk",
-		"context",
+		"ctx",
 		"expect",
 		"modules",
-		`${customScriptFunction} return validate(crusherSdk, context);`,
+		`${customScriptFunction} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
 	)(exports, typeof __webpack_require__ === "function" ? __non_webpack_require__ : require, module, __filename, __dirname, crusherSdk, context, expect, modules);
 
+	console.log("Result is", result);
+	
 	return {
 		customLogMessage: result ? "Executed custom code" : "Error executing custom code",
 		result: result,

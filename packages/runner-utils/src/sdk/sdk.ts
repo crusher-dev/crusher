@@ -12,10 +12,22 @@ import { CommunicationChannel } from "../functions/communicationChannel";
 
 const pageScreenshotModule = require("../actions/pageScreenshot");
 
-class CrusherSdkPage {
-	constructor(private _page: Page) {
+class CrusherSdk implements ICrusherSdk {
+	_page: Page; // Playwright page reference
+	page: Page;
+	exportsManager: ExportsManager;
+	storageManager: StorageManager;
+	communicationChannel: CommunicationChannel;
 
+	constructor(page: Page, exportsManager: ExportsManager, storageManager: StorageManager, communicationChannel: CommunicationChannel) {
+		this._page = page;
+		this.exportsManager = exportsManager;
+		this.storageManager = storageManager;
+		this.page = page;
+		this.communicationChannel = communicationChannel;
 	}
+
+	// <----- New sdk begins here ---->
 	async screenshot({ timeout }: { timeout?: number; } = {}) {
 		return this._page.screenshot({ timeout: timeout });
 	}
@@ -54,21 +66,6 @@ class CrusherSdkPage {
 
 	async waitForFunction(fun: any, arg, options) {
 		return this._page.waitForFunction(fun, arg, options);
-	}
-}
-class CrusherSdk implements ICrusherSdk {
-	_page: Page; // Playwright page reference
-	page: Page;
-	exportsManager: ExportsManager;
-	storageManager: StorageManager;
-	communicationChannel: CommunicationChannel;
-
-	constructor(page: Page, exportsManager: ExportsManager, storageManager: StorageManager, communicationChannel: CommunicationChannel) {
-		this._page = page;
-		this.exportsManager = exportsManager;
-		this.storageManager = storageManager;
-		this.page = page;
-		this.communicationChannel = communicationChannel;
 	}
 
 	// Legacy methods
@@ -132,6 +129,17 @@ class CrusherSdk implements ICrusherSdk {
 
 	hasExport(key: string) {
 		return this.exportsManager.has(key);
+	}
+
+	stallTest(errorMessage: string) {
+		const error =  new Error(errorMessage);
+		(error as any).isStalled = true;
+		(error as any).meta = {
+			failedReason: errorMessage,
+			isStalled: true,
+		};
+
+		throw error;
 	}
 
 	private async urlExist(url: string) {

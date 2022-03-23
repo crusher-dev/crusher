@@ -27,7 +27,8 @@ export interface ITestCompleteQueuePayload {
 	buildTestCount: number;
 	storageState: { cookies: Array<any>; origins: Array<any> } | null;
 	hasPassed: boolean;
-	failedReason?: Error;
+	failedReason?: Error & { isStalled: boolean; };
+	isStalled?: boolean;
 	persistenContextZipURL: string | null;
 }
 

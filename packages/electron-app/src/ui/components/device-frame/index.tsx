@@ -6,7 +6,7 @@ import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
 import { disableJavascriptInDebugger, performQuitAndRestore, turnOffElementSelectorInspectMode, turnOffInspectMode, turnOnInspectMode } from "../../commands/perform";
-import { recordStep, setSelectedElement } from "electron-app/src/store/actions/recorder";
+import { recordStep, setSelectedElement, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
 import { saveAutoAction } from "../../commands/saveActions";
 import { TRecorderMessagesType } from "../../../lib/recorder/host-proxy";
 import { TRecorderCrashState, TRecorderState } from "electron-app/src/store/reducers/recorder";
@@ -44,12 +44,9 @@ const CrashScreen = (props: any) => {
 			<div className="mt-16">ERROR_CODE: RESPONSE_504_ERROR</div>
 
 			<div className="mt-44" css={css`display: flex; align-items: center;`}>
-				<Button onClick={()=>{}} bgColor="tertiary-outline" css={buttonStyle}>
-					Retry step
-				</Button>
-				<div onClick={ performQuitAndRestore.bind(this, store) } css={css`:hover { opacity: 0.7; }`} className="ml-18">
+				<Button onClick={ performQuitAndRestore.bind(this, store)} bgColor="tertiary-outline" css={[buttonStyle, css`width: 190rem; height: 32rem`]}>
 					Quit & Restore Session
-				</div>
+				</Button>
 			</div>
 		</div>
 	</div>
@@ -58,6 +55,9 @@ const CrashScreen = (props: any) => {
 
 const PageLoadFailedScreen = (props: any) => {
 	const store = useStore();
+	const handleCloseDialog = () => {
+		store.dispatch(updateRecorderCrashState(null));
+	};
 	
 	return (
 		<div
@@ -84,11 +84,11 @@ const PageLoadFailedScreen = (props: any) => {
 			<div className="mt-16">ERROR_CODE: URL_NOT_REACHABLE</div>
 
 			<div className="mt-44" css={css`display: flex; align-items: center;`}>
-				<Button onClick={()=>{}} bgColor="tertiary-outline" css={buttonStyle}>
-					Retry step
-				</Button>
-				<div onClick={ performQuitAndRestore.bind(this, store) } css={css`:hover { opacity: 0.7; }`} className="ml-18">
+				<Button onClick={ performQuitAndRestore.bind(this, store)} bgColor="tertiary-outline" css={[buttonStyle, css`width: 190rem; height: 32rem;`]}>
 					Quit & Restore Session
+				</Button>
+				<div onClick={ handleCloseDialog } css={css`:hover { opacity: 0.7; }`} className="ml-18">
+					Close
 				</div>
 			</div>
 		</div>
@@ -141,7 +141,6 @@ const StatusBar = (props: any) => {
 		</div>
 		)
 	};
-	console.log("Formatted logs are",  formatLogs(logs));
 
 	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message : "";
 	return (
@@ -165,7 +164,7 @@ const StatusBar = (props: any) => {
 
 			<Conditional showIf={clicked}>
 				<div id={"logs-list"} css={css`color: #fff; font-size: 14rem; padding: 0rem 14rem; padding-bottom: 8rem; height: calc(100% - 32rem); overflow-y: auto;`} className={"custom-scroll"}>
-					{logs && formatLogs(logs).map((log: ILoggerReducer["logs"][0], index: number) => {
+					{logs && logs.length && formatLogs(logs).map((log: ILoggerReducer["logs"][0], index: number) => {
 						return <LogItem diff={log.diff} log={log} key={log.id}/>	
 					})}
 				</div>

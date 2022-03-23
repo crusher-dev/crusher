@@ -81,7 +81,7 @@ export class CodeRunnerService {
 	async runTest(): Promise<{
 		recordedRawVideo: string;
 		hasPassed: boolean;
-		error: Error | undefined;
+		error: Error & { isStalled?: boolean; } | undefined;
 		actionResults: any;
 		persistenContextZipURL: string | null;
 	}> {
@@ -148,7 +148,7 @@ export class CodeRunnerService {
 
 		return {
 			recordedRawVideo: recordedRawVideoUrl,
-			hasPassed: !error,
+			hasPassed: !error ? true : (error.isStalled ? true : false),
 			error: error,
 			actionResults: this.getCompleteActionsResult(testActionResults),
 			persistenContextZipURL,

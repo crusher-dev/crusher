@@ -112,6 +112,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			buildTestCount: bullJob.data.buildTestCount,
 			hasPassed: hasPassed,
 			failedReason: error ? error : null,
+			isStalled: error.isStalled ? error.isStalled : false,
 			storageState: globalManager.get("storageState"),
 			persistenContextZipURL: persistenContextZipURL,
 		} as ITestCompleteQueuePayload);

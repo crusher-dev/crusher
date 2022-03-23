@@ -258,7 +258,22 @@ const performQuitAndRestore = (store) => {
 
 const performSteps = (steps) => {
 	return ipcRenderer.invoke("perform-steps", { steps });
-}
+};
+
+const getCodeTemplates = () => {
+	return ipcRenderer.invoke("get-code-templates", {});
+};
+
+const saveCodeTemplate = (payload) => {
+	return ipcRenderer.invoke("save-code-template", { createPayload: payload });
+};
+
+const updateCodeTemplate = (id, name, code) => {
+	return ipcRenderer.invoke("update-code-template", { id, name, code });
+};
+const deleteCodeTemplate = (id) => {
+	return ipcRenderer.invoke("delete-code-template", { id });
+};
 export {
 	recordHoverDependencies,
 	performAction,
@@ -293,5 +308,9 @@ export {
 	performQuitAndRestore,
 	performSteps,
 	enableJavascriptInDebugger,
-	disableJavascriptInDebugger
+	disableJavascriptInDebugger,
+	getCodeTemplates,
+	saveCodeTemplate,
+	updateCodeTemplate,
+	deleteCodeTemplate,
 };

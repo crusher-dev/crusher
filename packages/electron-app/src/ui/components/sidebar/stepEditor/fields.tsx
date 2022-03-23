@@ -74,18 +74,19 @@ const FieldToggle = (props: IToggleProps) => {
 
 type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	label: string;
-
+	initialValue?: string;
 	// Applies to the component's container
 	className?: string;
 	onSelectorsPicked: (selectors: Array<iSelectorInfo>) => any;
 };
-const FieldSelectorPicker = (props: IFieldSelectorPickerProps) => {
+const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps, ref: React.Ref<HTMLTextAreaElement>) => {
 	const { className } = props;
 
 	const selectorsInputProps = React.useMemo(() => {
 		const clonedProps = { ...props };
 		delete clonedProps.label;
 		delete clonedProps.className;
+		delete clonedProps.initialValue;
 
 		return clonedProps;
 	}, [props]);
@@ -114,12 +115,12 @@ const FieldSelectorPicker = (props: IFieldSelectorPickerProps) => {
 				{props.label}
 			</span>
 			<div css={selectorPickerContainerStyle}>
-				<textarea {...selectorsInputProps} css={[textAreaStyle, scrollBarStyle]} />
+				<textarea ref={ref} {...selectorsInputProps} css={[textAreaStyle, scrollBarStyle]}>{props.initialValue}</textarea>
 				<InspectElementIcon onClick={handleElementSelectorClick} css={inspectElementIconStyle} />
 			</div>
 		</div>
 	);
-};
+});
 
 type IFieldEditModeButtonProps = Omit<ButtonProps, "children"> & {
 	label: string;

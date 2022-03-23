@@ -22,6 +22,7 @@ import { IVisualDiffResult } from "@modules/visualDiff/interface";
 import { BrowserEnum } from "@modules/runner/interface";
 import { ProjectsService } from "@modules/resources/projects/service";
 import { StorageManager } from "@modules/storage";
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
 const DIFF_DELTA_PASS_THRESHOLD = 0.25;
@@ -124,6 +125,7 @@ class BuildTestInstancesService {
 		projectId: number,
 		assetIdentifer: string,
 		wasTestExecutionSuccessful: boolean,
+		isStalled: boolean = false,
 	) {
 		await this.updateResultSetStatus(TestInstanceResultSetStatusEnum.RUNNING_CHECKS, null, instanceId);
 
@@ -192,12 +194,14 @@ class BuildTestInstancesService {
 
 		const visualDiffsResult = await Promise.all(visualDiffResultsPromiseArr);
 		const finalTestResult = this.calculateResult(visualDiffsResult, wasTestExecutionSuccessful);
-
+		const isThereStalledAction = actionsResult.some((actionResult) => {
+			return actionResult.status === ActionStatusEnum.STALLED;
+		});
 		await this.saveActionsResult(actionsResult, instanceId, projectId, finalTestResult.conclusion === TestInstanceResultSetConclusionEnum.PASSED);
 
 		return this.updateResultSetStatus(
 			TestInstanceResultSetStatusEnum.FINISHED_RUNNING_CHECKS,
-			finalTestResult.conclusion,
+			isThereStalledAction ? (finalTestResult.conclusion === TestInstanceResultSetConclusionEnum.PASSED ? TestInstanceResultSetConclusionEnum.PASSED : finalTestResult.conclusion) : finalTestResult.conclusion,
 			instanceId,
 			finalTestResult.failedReason,
 		);

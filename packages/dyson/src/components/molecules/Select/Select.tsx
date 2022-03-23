@@ -56,6 +56,7 @@ export type TSelectBoxProps = {
 const SelectDefaultProps = {
 	placeholder: "Select a value",
 	isMultiSelect: false,
+	isCreateable: false,
 	onScrollEnd: () => {},
 	isSearchable: false,
 	size: "medium",
@@ -74,6 +75,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	isSearchable,
 	className,
 	dropDownHeight,
+	isCreatable,
 	callback,
 }) => {
 	const [openSelectBox, setOpenSelectBox] = useState(false);
@@ -97,9 +99,9 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 		return getReadableSelectedValues();
 	}, [selected]);
 
-	useEffect(() => {
-		setFilterText("");
-	}, [selected]);
+	// useEffect(() => {
+	// 	setFilterText("");
+	// }, [selected]);
 
 	const selectValue = (value) => {
 		if (isMultiSelect) {

@@ -142,12 +142,13 @@ const performRunAfterTest = async (testId: string) => {
 	);
 };
 
-const performCustomCode = async (code: string) => {
+const performCustomCode = async (code: string, templateId: string | null) => {
 	await performAction({
 		type: ActionsInTestEnum.CUSTOM_CODE,
 		payload: {
 			selectors: null,
 			meta: {
+				templateId,
 				script: code,
 			},
 		},

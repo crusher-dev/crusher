@@ -1,3 +1,4 @@
+import { Conditional } from "@dyson/components/layouts";
 import { css } from "@emotion/react";
 import { BrowserIcon, CloseModalIcon, CrossIcon } from "../../icons";
 
@@ -5,21 +6,24 @@ interface iModalTopBarProps {
 	title: string;
 	desc: string;
 	closeModal: () => void;
+	className?: string;
 }
 
 const ModalTopBar = (props: iModalTopBarProps) => {
-	const { title, desc, closeModal } = props;
+	const { title, desc, className, closeModal } = props;
 
 	return (
-		<div id="top-bar" css={topBarStyle}>
+		<div id="top-bar" className={className} css={topBarStyle}>
 			<div id="left-section" style={topLeftSectionStyle}>
 				<div className="heading_container" style={headingContainerStyle}>
 					<div className={"heading_title"} css={headingStyle}>
 						{title}
 					</div>
-					<div className={"heading_sub_title"} css={subHeadingStyle}>
-						{desc}
-					</div>
+					<Conditional showIf={!!desc}> 
+						<div className={"heading_sub_title"} css={subHeadingStyle}>
+							{desc}
+						</div>
+					</Conditional>
 				</div>
 			</div>
 			<div id="close-button" onClick={closeModal} style={closeButtonStyle}>
@@ -42,6 +46,7 @@ const topLeftSectionStyle = {
 const headingContainerStyle = {
 };
 const headingStyle = css`
+    display: flex;
 	font-family: Cera Pro;
     font-size: 17rem;
     font-style: normal;

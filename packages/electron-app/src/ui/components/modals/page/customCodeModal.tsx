@@ -1,12 +1,12 @@
 import React, { RefObject, useEffect, useRef } from "react";
-import { css } from "@emotion/react";
+import { css, Global } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { deleteCodeTemplate, getCodeTemplates, performCustomCode, saveCodeTemplate, updateCodeTemplate } from "electron-app/src/ui/commands/perform";
 import { iAction } from "@shared/types/action";
-import { useStore } from "react-redux";
+import { useSelector, useStore } from "react-redux";
 import { setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { sendSnackBarEvent } from "../../toast";
 import { Checkbox } from "@dyson/components/atoms/checkbox/checkbox";
@@ -17,6 +17,8 @@ import { loader } from "@monaco-editor/react";
 import * as path from "path";
 import * as fs from "fs";
 import { ipcRenderer } from "electron";
+import { Dropdown } from "@dyson/components/molecules/Dropdown";
+import { DownIcon } from "electron-app/src/ui/icons";
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -743,6 +745,58 @@ const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
 };
 
+function ActionButtonDropdown({ setShowActionMenu callback, selectedTemplate, ...props }) {
+	const MenuItem = ({ label, onClick, ...props }) => {
+		return (
+			<div
+				css={css`
+					padding: 8rem 12rem;
+					:hover {
+						background: #687ef2 !important;
+					}
+				`}
+				onClick={onClick}
+			>
+				{label}
+			</div>
+		);
+	};
+
+	const handleDeteach = () => {
+		setShowActionMenu(false);
+		callback("detach");
+		sendSnackBarEvent({ type: "success", message: "Detached from template" });
+	};
+	const handleSaveNewTemplate = () => {
+		setShowActionMenu(false);
+		callback("save-new-template");
+	};
+
+	const handleUpdateTemplate = () => {
+		setShowActionMenu(false);
+		callback("update-template");
+		sendSnackBarEvent({ type: "success", message: "Updated template" });
+	};
+
+	return (
+		<div
+			className={"flex flex-col justify-between h-full"}
+			css={css`
+				font-size: 13rem;
+				color: #fff;
+			`}
+		>
+			<div>
+				<Conditional showIf={selectedTemplate}> 
+					<MenuItem onClick={handleDeteach} label={"Detach template"} className={"close-on-click"} />
+					<MenuItem onClick={handleUpdateTemplate} label={"Update template"} className={"close-on-click"} />
+				</Conditional>
+				<MenuItem onClick={handleSaveNewTemplate} label={"Save new template"} className={"close-on-click"} />
+			</div>
+		</div>
+	);
+}
+
 const initialCodeTemplate = `/* Write your custom code here. For more infromation
 checkout SDK docs here at, https://docs.crusher.dev/sdk */
 async function validate() {
@@ -756,6 +810,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const [savingTemplateState, setSavingTemplateState] = React.useState({ state: "input" });
 	const [needName, setNeedName] = React.useState(false);
 	const [modalName, setModalName] = React.useState("ts:modal.ts");
+	const [showActionMenu, setShowActionMenu] = React.useState(false);
 
 	const monacoRef: React.Ref<Monaco> = React.useRef(null);
 	const editorRef = React.useRef(null);
@@ -766,27 +821,32 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		if (isOpen) {
 			setCodeTemplates([]);
 			setSelectedTemplate(null);
+			const action = props.stepAction;
 			setSavingTemplateState({ state: "input" });
 			setNeedName(false);
 			getCodeTemplates().then((res) => {
-				setCodeTemplates(res.map((a) => ({ id: a.id, code: a.code, name: a.name })));
+				const templatesArr = res.map((a) => ({ id: a.id, code: a.code, name: a.name }));
+				setCodeTemplates(templatesArr);
+
+		
 			});
 		}
 	}, [isOpen]);
 
 	const runCustomCode = React.useCallback(() => {
-		performCustomCode(monacoRef.current.editor.getModel(modalName).getValue());
+		performCustomCode(monacoRef.current.editor.getModel(modalName).getValue(), selectedTemplate);
 		props.handleClose();
-	}, [codeTextAreaRef]);
+	}, [selectedTemplate, codeTextAreaRef]);
 
 	const updateCustomCode = React.useCallback(() => {
 		if (props.stepAction) {
 			props.stepAction.payload.meta.script = monacoRef.current.editor.getModel(modalName).getValue();
+			props.stepAction.payload.meta.templateId = selectedTemplate;
 			store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
 			sendSnackBarEvent({ type: "success", message: "Custom code updated" });
 			props.handleClose();
 		}
-	}, [props.stepAction, codeTextAreaRef]);
+	}, [props.stepAction, selectedTemplate, codeTextAreaRef]);
 
 	const isThereScriptOutput = true;
 
@@ -808,6 +868,13 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			sendSnackBarEvent({ type: "success", message: "Custom code template updated" });
 		}
 	};
+
+	const handleDetach = async () => {
+		if(selectedTemplate) {
+			setSelectedTemplate(null);
+			sendSnackBarEvent({ type: "success", message: "Detached from template. Just click on Save to continue..." });
+		}
+	}
 
 	const handleDeleteTemplate = async () => {
 		if (selectedTemplate) {
@@ -835,6 +902,16 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const handleOnMount = (editor: any, monaco: Monaco) => {
 		if (props.stepAction) {
 			editor.getModel(modalName).setValue(props.stepAction.payload.meta.script);
+
+			getCodeTemplates().then((res) => {
+				const templatesArr = res.map((a) => ({ id: a.id, code: a.code, name: a.name }));
+				setCodeTemplates(templatesArr);
+				console.log("Step action is", props.stepAction);
+				const template = props.stepAction && props.stepAction.payload.meta.templateId ? templatesArr.find((a) => props.stepAction && a.id === props.stepAction.payload.meta.templateId) : null;
+				if(template) {
+					setSelectedTemplate(template.id);
+				}
+			});
 		}
 	};
 	const handleEditorWillMount = (monaco: Monaco) => {
@@ -892,65 +969,19 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
-			<ModalTopBar title={"Custom code"} desc={"Write your own code for custom functionality"} closeModal={props.handleClose} />
-
-			<Conditional showIf={needName}>
-				<>
-					{" "}
-					<div
-						css={css`
-							display: flex;
-							padding: 0rem 34rem;
-							align-items: center;
-						`}
-					>
-						<span
-							css={css`
-								font-size: 14rem;
-								color: #fff;
-							`}
-						>
-							Name of template
-						</span>
-						<Input
-							id="template-name-input"
-							css={[
-								inputStyle,
-								css`
-									margin-left: auto;
-								`,
-							]}
-							placeholder={"Enter template name"}
-							pattern="[0-9]*"
-							size={"medium"}
-							onReturn={handleCreateTemplate}
-						/>
-					</div>
-					<Button
-						css={[
-							saveButtonStyle,
-							css`
-								width: 118rem;
-								margin-left: auto;
-								margin-top: 9rem;
-								margin-bottom: 15rem;
-								margin-right: 36rem;
-							`,
-						]}
-						onClick={() => {
-							const name = (document.querySelector("#template-name-input") as HTMLInputElement).value;
-							handleCreateTemplate(name);
-						}}
-					>
-						{"Create"}
-					</Button>
-				</>
-			</Conditional>
-
+			<ModalTopBar css={css`padding-bottom: 12rem;`} title={<><span>Custom code</span><div css={css`font-size: 13rem;
+    font-family: 'Cera Pro';
+    display: flex;
+    color: rgba(255, 255, 255, 0.4);
+    align-items: center;
+    padding-top: 1rem;
+    margin-left: 14rem;`}>Read docs</div></>} closeModal={props.handleClose} />
 			<div
 				css={css`
 					padding: 8rem 34rem;
 					display: flex;
+					border-bottom: 0.25px solid rgb(255,255,255,0.08);
+					padding-bottom: 17rem;
 				`}
 			>
 				<SelectBox
@@ -965,28 +996,12 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						.selectBox {
 							height: 34rem;
 						}
-						.select-dropDownContainer {
-							max-height: 200rem;
-							overflow-y: scroll;
-							::-webkit-scrollbar {
-								background: transparent;
-								width: 8rem;
-							}
-							::-webkit-scrollbar-thumb {
-								background: white;
-								border-radius: 14rem;
-							}
-						}
+
 						.selectBox__value {
 							margin-right: 10rem;
 							font-size: 13rem;
 						}
 						width: 250rem;
-						.dropdown-box .dropdown-label {
-							padding-top: 4rem !important;
-							padding-bottom: 4rem !important;
-						}
-						.dropdown
 					`}
 					placeholder={"Select a template"}
 					size={"large"}
@@ -999,6 +1014,28 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						monacoRef.current.editor.getModel(modalName).setValue(codeTemplate.code);
 					}}
 				/>
+
+<Global
+      styles={css`
+	  .select-dropDownContainer {
+		max-height: 200rem;
+		overflow-y: scroll;
+		::-webkit-scrollbar {
+			background: transparent;
+			width: 8rem;
+		}
+		::-webkit-scrollbar-thumb {
+			background: white;
+			border-radius: 14rem;
+		}
+	}
+
+	.dropdown-box .dropdown-label {
+		padding-top: 2rem !important;
+		padding-bottom: 2rem !important;
+	}
+      `}
+    />
 				<Conditional showIf={selectedTemplate}>
 					<div
 						onClick={handleDeleteTemplate}
@@ -1032,44 +1069,110 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					defaultValue={initialCodeTemplate}
 				/>
 
-				<div css={bottomBarStyle}>
-					<Conditional showIf={selectedTemplate}>
-						<div
-							onClick={handleUpdateTemplate}
-							css={css`
-								position: relative;
-								top: 50%;
-								transform: translateY(55%);
-								margin-right: 26rem;
-								font-size: 14rem;
-								color: #fff;
-								:hover {
-									opacity: 0.8;
-								}
-							`}
-						>
-							{"Update template"}
-						</div>
-					</Conditional>
+<Conditional showIf={needName}>
+				<div css={css`
+				    display: flex;
+					align-items: center;
+					margin-top: 10rem;
+					margin-bottom: 12rem;
+				`}>
 					<div
-						onClick={handleSaveAsTemplate}
 						css={css`
-							position: relative;
-							top: 50%;
-							transform: translateY(55%);
-							margin-right: 26rem;
-							font-size: 14rem;
-							color: #fff;
-							:hover {
-								opacity: 0.8;
-							}
+							display: flex;
+							align-items: center;
 						`}
 					>
-						{savingTemplateState.state === "input" ? "Save as template" : savingTemplateState.state === "saved" ? "Save as new template" : ""}
-					</div>
-					<Button css={saveButtonStyle} onClick={props.stepAction ? updateCustomCode : runCustomCode}>
-						{props.stepAction ? "Update" : "Save"}
+						<Input
+							id="template-name-input"
+							css={[
+								inputStyle,
+								css`
+									margin-left: auto;
+									min-width: 118rem;
+								`,
+							]}
+							placeholder={"Enter template name"}
+							pattern="[0-9]*"
+							size={"medium"}
+							onReturn={handleCreateTemplate}
+						/>
+							<Button
+						css={[
+							saveButtonStyle,
+							css`
+								width: 118rem;
+								border-right-width: 6rem;
+								border-top-right-radius: 6rem;
+								border-bottom-right-radius: 6rem;
+								margin-left: 18rem;
+								height: 34rem;
+							`,
+						]}
+						onClick={() => {
+							const name = (document.querySelector("#template-name-input") as HTMLInputElement).value;
+							handleCreateTemplate(name);
+						}}
+					>
+						{"Create"}
 					</Button>
+					</div>
+				
+				</div>
+			</Conditional>
+				<div css={bottomBarStyle}>
+					<Dropdown
+				initialState={showActionMenu}
+				component={<ActionButtonDropdown callback={(method) => {
+					if(method === "save-new-template") {
+						handleSaveAsTemplate();
+					} else if(method === "detach") {
+						handleDetach();
+					} else if(method === "update-template") {
+						handleUpdateTemplate();
+					}
+				}} selectedTemplate={selectedTemplate} setShowActionMenu={setShowActionMenu.bind(this)} />}
+				callback={setShowActionMenu.bind(this)}
+				css={css`margin-top: 16rem;`}
+				dropdownCSS={css`
+					left: 0rem !important;
+					width: 162rem;
+				`}
+			>
+					<Button css={saveButtonStyle} onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							if(props.stepAction) {
+								updateCustomCode();
+							} else {
+								runCustomCode();
+							}
+						}}>
+						{props.stepAction ? (selectedTemplate ? "Update & Save" : "Save") : "Add step"}
+					</Button>
+					<div
+					css={css`
+						background: #9461ff;
+						display: flex;
+						align-items: center;
+						padding: 0rem 9rem;
+						border-top-right-radius: 6rem;
+						border-bottom-right-radius: 6rem;
+						border-left-color: #00000036;
+						border-left-width: 2.5rem;
+						border-left-style: solid;
+						:hover {
+							opacity: 0.8;
+						}
+					`}
+				>
+					<DownIcon
+						fill={"#fff"}
+						css={css`
+							width: 9rem;
+						`}
+					/>
+				</div>
+					</Dropdown>
 				</div>
 			</div>
 
@@ -1136,11 +1239,26 @@ const bottomBarStyle = css`
 	margin-top: 1.5rem;
 `;
 const saveButtonStyle = css`
+	width: 128rem;
+	height: 30rem;
+	background: linear-gradient(0deg, #9462ff, #9462ff);
+	border-radius: 6rem;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: normal;
 	font-size: 14rem;
-	margin-top: 16rem;
-	padding: 10rem 32rem;
-	text-align: center;
-	color: #fff;
+	line-height: 17rem;
+	border: 0.5px solid transparent;
+	border-right-width: 0rem;
+	border-top-right-radius: 0rem;
+	border-bottom-right-radius: 0rem;
+	color: #ffffff;
+	:hover {
+		border: 0.5px solid #8860de;
+		border-right-width: 0rem;
+		border-top-right-radius: 0rem;
+		border-bottom-right-radius: 0rem;
+	}
 `;
 
 export { CustomCodeModal };

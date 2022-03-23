@@ -16,6 +16,7 @@ import { BuildReportStatusEnum } from "../buildReports/interface";
 import { BadRequestError } from "routing-controllers";
 import { merge } from "lodash";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { CodeTemplateService } from "../teams/codeTemplate/service";
 @Service()
 class TestService {
 	private dbManager: DBManager;
@@ -25,6 +26,8 @@ class TestService {
 	private projectService: ProjectsService;
 	@Inject()
 	private testsRunner: TestsRunner;
+	@Inject()
+	private codeTemplateService: CodeTemplateService;
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
@@ -275,6 +278,7 @@ class TestService {
 	async getFullTest(testRecord: KeysToCamelCase<ITestTable>): Promise<KeysToCamelCase<ITestTable>> {
 		const actions = JSON.parse(testRecord.events);
 		const templateActions = actions.filter((action) => action.type === ActionsInTestEnum.RUN_TEMPLATE);
+		const customCodeActions = actions.filter((action) => action.type === ActionsInTestEnum.CUSTOM_CODE);
 		await Promise.all(
 			templateActions.map(async (action) => {
 				if (action.payload.meta.id) {
@@ -283,6 +287,13 @@ class TestService {
 				}
 			}),
 		);
+
+		await Promise.all(customCodeActions.map(async (customCode) => {
+			if (customCode.payload.meta.templateId) {
+				const template = await this.codeTemplateService.get(customCode.payload.meta.templateId);
+				customCode.payload.meta.script = template.code;
+			}		
+		}));
 
 		testRecord.events = JSON.stringify(actions);
 		return testRecord;

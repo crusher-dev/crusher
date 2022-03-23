@@ -5,12 +5,15 @@ type TShowOnClick = {
 	component: ReactElement | string;
 	callback: Function;
 	initialState: boolean;
+
+	// For emotion
+	className?: string;
 } & React.DetailedHTMLProps<any, any>;
 
 /*
 	Should close on outside click
  */
-export function ShowOnClick({ children, component, callback, initialState }: TShowOnClick) {
+export function ShowOnClick({ children, component, className, callback, initialState }: TShowOnClick) {
 	const [showDropDown, setShow] = useState(initialState);
 	const customRef = useRef(null);
 
@@ -24,6 +27,7 @@ export function ShowOnClick({ children, component, callback, initialState }: TSh
 
 	return (
 		<OnOutsideClick
+			className={className}
 			onOutsideClick={() => {
 				// This timeout here is workaround to allow children event listeners to get
 				// triggered before dropdown is removed from the DOM.

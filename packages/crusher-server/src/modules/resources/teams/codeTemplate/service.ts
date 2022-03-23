@@ -14,7 +14,8 @@ class CodeTemplateService {
 		return this.dbManager.fetchAllRows("SELECT * FROM public.custom_codes WHERE team_id = ?", [teamId]);
 	}
 
-	async get(id: number) {
+	@CamelizeResponse()
+	async get(id: number): Promise<KeysToCamelCase<ICodeTemplateTable> | null> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.custom_codes WHERE id = ?", [id]);
 	}
 

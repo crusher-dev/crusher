@@ -23,5 +23,8 @@ async function goToUrl(page: Page, action: iAction, globals: IGlobalManager,
 module.exports = {
 	name: ActionsInTestEnum.NAVIGATE_URL,
 	description: "Navigation to url",
+	actionDescriber: (action: iAction) => {
+		return `Navigate to [${action.payload.meta.value}]`;
+	},
 	handler: goToUrl,
 };

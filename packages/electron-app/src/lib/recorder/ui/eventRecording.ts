@@ -1,5 +1,5 @@
 import { ActionsInTestEnum, IInputNodeInfo, InputNodeTypeEnum } from "@shared/constants/recordedActions";
-import { DOM } from "../utils/dom";
+import { DOM, getElementDescription } from "../utils/dom";
 import EventsController from "../eventsController";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
 import { v4 as uuidv4 } from "uuid";
@@ -317,6 +317,7 @@ export default class EventRecording {
 		turnOnElementMode({
 			uniqueElementId: ElementsIdMap.getUniqueId(selectedElement),
 			selectors: this.eventsController.getSelectors(selectedElement),
+			elementDescription: getElementDescription(selectedElement),
 			dependentHovers: dependentHovers,
 		});
 	}

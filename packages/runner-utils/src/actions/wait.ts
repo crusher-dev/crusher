@@ -22,5 +22,8 @@ async function waitForSeconds(page: Page, action: iAction, globals: IGlobalManag
 module.exports = {
 	name: ActionsInTestEnum.WAIT,
 	description: "Wait for seconds",
+	actionDescriber: (action: iAction) => {
+		return `Wait for ${action.payload.timeout} seconds`;
+	},
 	handler: waitForSeconds,
 };

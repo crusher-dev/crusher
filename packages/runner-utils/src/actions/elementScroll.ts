@@ -12,5 +12,8 @@ async function scrollOnElement(elementHandle: Locator, workingSelector: any, act
 module.exports = {
 	name: ActionsInTestEnum.ELEMENT_SCROLL,
 	description: "Scroll on element",
+	actionDescriber: (action: iAction) => {
+		return `Scroll on [${action.payload.meta.elementDescription}] by ${action.payload.meta.value}`;
+	},
 	handler: scrollOnElement,
 };

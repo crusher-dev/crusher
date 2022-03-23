@@ -40,5 +40,10 @@ async function addInput(element: Locator, workingSelector: any, action: iAction,
 module.exports = {
 	name: ActionsInTestEnum.ADD_INPUT,
 	description: "Adding input to element",
+	actionDescriber: (action: iAction) => {
+		const inputValue = typeof action.payload.meta.value === "string" ? action.payload.meta.value : action.payload.meta.value.value;
+
+		return `Type [${inputValue}] to [${action.payload.meta.elementDescription}]`;
+	},
 	handler: addInput,
 };

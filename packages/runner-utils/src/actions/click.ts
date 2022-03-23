@@ -31,5 +31,8 @@ async function clickOnElement(element: Locator, workingSelector: any, action: iA
 module.exports = {
 	name: ActionsInTestEnum.CLICK,
 	description: "Click on element",
+	actionDescriber: (action: iAction) => {
+		return `Click on [${action.payload.meta.elementDescription}]`;
+	},
 	handler: clickOnElement,
 };

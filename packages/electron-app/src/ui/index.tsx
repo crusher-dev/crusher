@@ -219,6 +219,15 @@ const globalStyles = css`
 		min-height: "100vh";
 		max-width: "100vw";
 	}
+	.highlight-box {
+		background: rgba(58, 56, 54, 0.4);
+		padding: 4rem 6rem;
+		margin: 0rem 2rem;
+		border-radius: 2rem;
+		:hover {
+			background: rgba(0, 0, 0, 0.7) !important;
+		}
+	}
 	.custom-scroll::-webkit-scrollbar {
 		width: 12rem;
 	}

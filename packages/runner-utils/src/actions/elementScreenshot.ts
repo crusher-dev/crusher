@@ -28,5 +28,8 @@ async function takeElementScreenshot(element: Locator, workingSelector: any, act
 module.exports = {
 	name: ActionsInTestEnum.ELEMENT_SCREENSHOT,
 	description: "Take element screenshot",
+	actionDescriber: (action: iAction) => {
+		return `Take screenshot of [${action.payload.meta.elementDescription}]`;
+	},
 	handler: takeElementScreenshot,
 };

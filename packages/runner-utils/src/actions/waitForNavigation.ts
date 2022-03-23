@@ -46,5 +46,8 @@ async function waitForNavigation(page: Page, action: iAction, globals: IGlobalMa
 module.exports = {
 	name: ActionsInTestEnum.WAIT_FOR_NAVIGATION,
 	description: "Wait for navigation",
+	actionDescriber: (action: iAction) => {
+		return `Wait for navigation to [${action.payload.meta?.value}]`;
+	},
 	handler: waitForNavigation,
 };

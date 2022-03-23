@@ -9,5 +9,8 @@ async function assertElementVisibility(element: Locator, workingSelector: any, a
 module.exports = {
 	name: ActionsInTestEnum.ASSERT_ELEMENT_VISIBILITY,
 	description: "Asserting element visibility",
+	actionDescriber: (action: iAction) => {
+		return `Assert [${action.payload.meta.elementDescription}] visibility`;
+	},
 	handler: assertElementVisibility,
 };

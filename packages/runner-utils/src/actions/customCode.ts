@@ -50,5 +50,8 @@ async function executeCustomCode(
 module.exports = {
 	name: ActionsInTestEnum.CUSTOM_CODE,
 	description: "Executing custom code",
+	actionDescriber: (action: iAction) => {
+		return `Run custom code`;
+	},
 	handler: executeCustomCode,
 };

@@ -43,5 +43,8 @@ async function setupRunAfterTest(browser: Browser, action: iAction, globals: IGl
 module.exports = {
 	name: ActionsInTestEnum.RUN_AFTER_TEST,
 	description: "Start test from specified storage state",
+	actionDescriber: (action: iAction) => {
+		return `Run after test`;
+	},
 	handler: setupRunAfterTest,
 };

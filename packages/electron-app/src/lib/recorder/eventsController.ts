@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { findDistanceBetweenNodes } from "./utils/helper";
 import { ElementsIdMap } from "./elementsMap";
 import { recordAction } from "./host-proxy";
+import { getElementDescription } from "./utils/dom";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -152,6 +153,7 @@ export default class EventsController {
 				selectors: selectors,
 				meta: {
 					value,
+					elementDescription: getElementDescription(capturedTarget),
 					uniqueNodeId:
 							capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null,
 				},

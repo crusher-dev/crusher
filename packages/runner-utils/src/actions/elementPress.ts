@@ -20,5 +20,8 @@ async function pressKey(element: Locator, workingSelector: any, action: iAction,
 module.exports = {
 	name: ActionsInTestEnum.PRESS,
 	description: "Press key to element",
+	actionDescriber: (action: iAction) => {
+		return `Press ${action.payload.meta.value}`;
+	},
 	handler: pressKey,
 };

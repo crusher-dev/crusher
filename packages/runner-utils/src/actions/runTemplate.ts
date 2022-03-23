@@ -24,5 +24,8 @@ async function runTemplate(
 module.exports = {
 	name: ActionsInTestEnum.RUN_TEMPLATE,
 	description: "Run a template",
+	actionDescriber: (action: iAction) => {
+		return `Run a template`;
+	},
 	handler: runTemplate,
 };

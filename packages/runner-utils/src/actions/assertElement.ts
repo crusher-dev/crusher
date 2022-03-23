@@ -105,5 +105,8 @@ async function runAssertionOnElement(element: Locator, workingSelector: any, act
 module.exports = {
 	name: ActionsInTestEnum.ASSERT_ELEMENT,
 	description: "Assertions on element",
+	actionDescriber: (action: iAction) => {
+		return `Assert [${action.payload.meta.elementDescription}]`;
+	},
 	handler: runAssertionOnElement,
 };

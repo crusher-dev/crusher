@@ -16,6 +16,8 @@ import { CrusherSdk } from "./sdk/sdk";
 import { ExportsManager } from "./functions/exports";
 import { IExportsManager } from "@crusher-shared/lib/exports/interface";
 import { CommunicationChannel } from "./functions/communicationChannel";
+import { ActionDescriptor } from "./functions/actionDescriptor";
+
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -261,4 +263,4 @@ class CrusherRunnerActions {
 	}
 }
 
-export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk, CommunicationChannel };
+export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk, CommunicationChannel, ActionDescriptor };

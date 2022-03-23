@@ -51,6 +51,8 @@ export interface iElementInfo {
 	uniqueElementId: string;
 	// In case the element is no longer in DOM, we can still use the selector
 	selectors: Array<iSelectorInfo>;
+	// Element Description to set default name for the actin
+	elementDescription: string;
 	/* In order (first one should be the origin node) */
 	dependentHovers: Array<Omit<iElementInfo, "dependentHovers">>;
 }

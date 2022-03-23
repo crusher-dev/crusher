@@ -126,5 +126,8 @@ async function runSEOAssertionOnPage(page: Page, action: iAction,	globals: IGlob
 module.exports = {
 	name: ActionsInTestEnum.VALIDATE_SEO,
 	description: "SEO Assertions on page",
+	actionDescriber: (action: iAction) => {
+		return `Validate SEO assertions on page`;
+	},
 	handler: runSEOAssertionOnPage,
 };

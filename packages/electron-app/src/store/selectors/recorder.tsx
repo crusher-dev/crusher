@@ -17,3 +17,5 @@ export const isTestVerified = (state: iReduxState) => state.recorder.isVerified;
 export const isWebViewInitialized = (state: iReduxState) => state.recorder.isWebViewInitialized;
 
 export const getRecorderCrashState = (state: iReduxState) => state.recorder.crashState;
+
+export const getIsStatusBarVisible = (state: iReduxState) => state.recorder.showStatusBar;

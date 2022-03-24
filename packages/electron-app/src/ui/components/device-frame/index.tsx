@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { getRecorderCrashState, getRecorderInfo, getRecorderState, getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
+import { getIsStatusBarVisible, getRecorderCrashState, getRecorderInfo, getRecorderState, getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
@@ -100,6 +100,8 @@ const DeviceFrame = (props: any) => {
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
 	const recorderCrashState = useSelector(getRecorderCrashState);
+	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+
 	const ref = React.useRef<HTMLWebViewElement>(null);
 	const store = useStore();
 
@@ -183,7 +185,9 @@ const DeviceFrame = (props: any) => {
 				</Conditional>
 				<InfoOverLay />
 			</div>
-			<StatusBar />
+			<Conditional showIf={isStatusBarVisible}>
+				<StatusBar />
+			</Conditional>
 		</div>
 	);
 };

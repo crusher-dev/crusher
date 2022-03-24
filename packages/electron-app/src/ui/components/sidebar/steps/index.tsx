@@ -7,11 +7,11 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import { MoreIcon, MuteIcon } from "../../../icons";
+import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { ConsoleIcon, MoreIcon, MuteIcon } from "../../../icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { deleteRecordedSteps, markRecordedStepsOptional, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps, markRecordedStepsOptional, setStatusBarVisibility, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { continueRemainingSteps, performJumpTo } from "electron-app/src/ui/commands/perform";
@@ -376,6 +376,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 	const recordedSteps = useSelector(getSavedSteps);
 	const remainingSteps = useSelector(getRemainingSteps);
 	const recorderState = useSelector(getRecorderState);
+	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
 	const dispatch = useDispatch();
 
@@ -454,14 +455,20 @@ const StepsPanel = ({ className, ...props }: any) => {
 		continueRemainingSteps();
 	};
 
+	const handleConsoleIconClick = React.useCallback(() => {
+		dispatch(setStatusBarVisibility(!isStatusBarVisible));
+	}, [isStatusBarVisible]);
+
 	return (
 		<div className={`${className}`} id="steps-pane" css={containerStyle}>
 			<div css={stepsHeaderStyle}>
 				<Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} />
 				<Text css={stepsTextStyle}>{recordedSteps.length} Steps</Text>
+				<ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 14rem; height: 14rem; :hover { opacity: 0.7 }`, isStatusBarVisible ? css`path {fill: rgba(94, 94, 199, 0.8);}` : null]} />
 				<Conditional showIf={!!checkedSteps.size}>
 					<div css={stepDropdownStyle}>
 						<Dropdown
+							css={css`margin-left: 14rem;`}
 							initialState={showGroupActionsDropdown}
 							dropdownCSS={dropdownStyle}
 							component={<GroupActionsMenu callback={handleGrouActionSelected} showDropDownCallback={setShowGroupActionsDropDown.bind(this)} />}
@@ -470,6 +477,9 @@ const StepsPanel = ({ className, ...props }: any) => {
 							<MoreIcon
 								css={css`
 									width: 15rem;
+									position: relative;
+									top: 50%;
+									transform: translateY(-50%);
 								`}
 								onClick={setShowGroupActionsDropDown.bind(this, true)}
 							/>

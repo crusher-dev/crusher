@@ -478,6 +478,53 @@ const MiniCrossIcon = (props: any) => {
 	)
 }
 
+const ConsoleIcon = (props: any) => {
+	return (
+		<svg
+		viewBox="0 0 12 12"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  d="M11.52 0H.48A.48.48 0 0 0 0 .48v11.04c0 .266.214.48.48.48h11.04a.48.48 0 0 0 .48-.48V.48a.48.48 0 0 0-.48-.48ZM6.017 6.091l-2.88 2.416a.12.12 0 0 1-.197-.092v-.94c0-.035.017-.07.043-.092L4.63 6 2.983 4.617a.115.115 0 0 1-.043-.091v-.941a.12.12 0 0 1 .196-.091l2.88 2.413a.119.119 0 0 1 0 .184ZM9.06 8.415c0 .066-.051.12-.113.12H6.173c-.062 0-.113-.054-.113-.12v-.72c0-.066.051-.12.113-.12h2.774c.062 0 .113.054.113.12v.72Z"
+		  fill="#485264"
+		/>
+	  </svg>
+	)
+};
+
+const UpMaximiseIcon = (props: any) => {
+	return (<svg
+    viewBox="0 0 10 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M5 4c.552 0 1 .225 1 .502v6.996c0 .277-.448.502-1 .502s-1-.225-1-.502V4.502C4 4.225 4.448 4 5 4Z"
+      fill="#797979"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M4.596 3.146a.63.63 0 0 1 .808 0l3.429 3a.457.457 0 0 1 0 .708.63.63 0 0 1-.808 0L5 4.207 1.975 6.854a.63.63 0 0 1-.808 0 .457.457 0 0 1 0-.708l3.429-3Z"
+      fill="#797979"
+      stroke="#797979"
+      strokeWidth={0.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M1 .65c0-.359.256-.65.571-.65H8.43C8.744 0 9 .291 9 .65c0 .359-.256.65-.571.65H1.57C1.256 1.3 1 1.009 1 .65Z"
+      fill="#797979"
+    />
+  </svg>);
+}
 export {
 	CrossIcon,
 	BulbIcon,
@@ -504,5 +551,7 @@ export {
 	CrusherHammerIcon,
 	DownIcon,
 	StopIcon,
-	MiniCrossIcon
+	MiniCrossIcon,
+	ConsoleIcon,
+	UpMaximiseIcon
 };

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
-import { MiniCrossIcon } from "../../icons";
+import { MiniCrossIcon, UpMaximiseIcon } from "../../icons";
 import { callbackify } from "util";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
@@ -84,11 +84,15 @@ const StatusBar = (props: any) => {
 		setSelectedTab(tabType);
 	}
 
+	const handleMaximiseClick = () => {
+		setClicked(true);
+	};
+
 	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message : "";
 	return (
 	<>
 		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={statusBarContainerStyle}>
-			<div css={css`display: flex; align-items: center; height: 100%; max-height: 32rem; 	padding: 0rem 14rem;     border-bottom: 1px solid #2c2c2c;`}>
+			<div css={css`display: flex; align-items: center; height: 100%; max-height: 32rem; 	padding: 0rem 14rem;`}>
 				<TabButton selected={selectedTab === TabsEnum.LOGS} title="Logs" count={logs && logs.length} callback={() => {setClicked(true); handleTabSelection(TabsEnum.LOGS); }}/>
 				<Conditional showIf={clicked}>
 					<TabButton selected={selectedTab === TabsEnum.CONTEXT} className={"ml-21"} title="Context" callback={handleTabSelection.bind(this, TabsEnum.CONTEXT)}/>
@@ -98,6 +102,7 @@ const StatusBar = (props: any) => {
 
 				<Conditional showIf={!clicked}>
 					<div css={logTextStyle} className={"ml-20"}>{lastLogMessage.length > 100 ? lastLogMessage.substr(0, 100) + "..." : lastLogMessage}</div>
+					<UpMaximiseIcon onClick={handleMaximiseClick} css={css`width: 10rem; height: 12rem; margin-left: auto; :hover { opacity: 0.7 }`}/>
 				</Conditional>
 
 				<Conditional showIf={clicked}>

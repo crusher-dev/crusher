@@ -79,6 +79,7 @@
 		"pug-cli": "^1.0.0-alpha6",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
+		"react-inspector": "^5.1.1",
 		"react-is": "^17.0.1",
 		"react-modal": "^3.12.1",
 		"react-redux": "^7.2.0",

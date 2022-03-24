@@ -23,6 +23,8 @@ export const MARK_RECORDED_STEPS_OPTIONAL = "MARK_RECORDED_STEPS_OPTIONAL";
 export const RESET_RECORDER = "RESET_RECORDER";
 export const SET_RECORDER_CRASH_STATE = "SET_RECORDER_CRASH_STATE";
 
+export const SET_STATUS_BAR_VISIBILITY = "SET_STATUS_BAR_VISIBILITY";
+
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
         type: UPDATE_RECORDER_STATE,
@@ -131,5 +133,12 @@ export const setIsWebViewInitialized = (isInitialized: boolean) => {
     return {
         type: SET_IS_WEBVIEW_INITIALIZED,
         payload: { isInitialized }
+    }
+}
+
+export const setStatusBarVisibility = (isVisible: boolean) => {
+    return {
+        type: SET_STATUS_BAR_VISIBILITY,
+        payload: { isVisible }
     }
 }

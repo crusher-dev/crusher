@@ -32,6 +32,9 @@ module.exports = {
 	name: ActionsInTestEnum.CLICK,
 	description: "Click on element",
 	actionDescriber: (action: iAction) => {
+		if(!action.payload.meta.elementDescription) {
+			return `Click on element`;
+		}
 		return `Click on [${action.payload.meta.elementDescription}]`;
 	},
 	handler: clickOnElement,

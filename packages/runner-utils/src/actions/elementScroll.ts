@@ -13,7 +13,11 @@ module.exports = {
 	name: ActionsInTestEnum.ELEMENT_SCROLL,
 	description: "Scroll on element",
 	actionDescriber: (action: iAction) => {
-		return `Scroll on [${action.payload.meta.elementDescription}] by ${action.payload.meta.value}`;
+		if(!action.payload.meta.elementDescription) {
+			return `Scroll on element`;
+		}
+
+		return `Scroll on element ${action.payload.meta.elementDescription}`;
 	},
 	handler: scrollOnElement,
 };

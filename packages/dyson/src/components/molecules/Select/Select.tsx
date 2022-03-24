@@ -99,9 +99,11 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 		return getReadableSelectedValues();
 	}, [selected]);
 
-	// useEffect(() => {
-	// 	setFilterText("");
-	// }, [selected]);
+	useEffect(() => {
+		if(selected && selected.length) {
+			setFilterText("");
+		}
+	}, [selected]);
 
 	const selectValue = (value) => {
 		if (isMultiSelect) {

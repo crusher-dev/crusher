@@ -1019,7 +1019,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
       styles={css`
 	  .select-dropDownContainer {
 		max-height: 200rem;
-		overflow-y: scroll;
+		overflow-y: scroll !important;
 		::-webkit-scrollbar {
 			background: transparent;
 			width: 8rem;
@@ -1147,7 +1147,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 								runCustomCode();
 							}
 						}}>
-						{props.stepAction ? (selectedTemplate ? "Update & Save" : "Save") : "Add step"}
+						{props.stepAction ? (selectedTemplate ? "Save step" : "Save step") : "Add step"}
 					</Button>
 					<div
 					css={css`

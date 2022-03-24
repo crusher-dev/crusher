@@ -29,6 +29,9 @@ module.exports = {
 	name: ActionsInTestEnum.ELEMENT_SCREENSHOT,
 	description: "Take element screenshot",
 	actionDescriber: (action: iAction) => {
+		if(!action.payload.meta.elementDescription) {
+			return `Take element screenshot`;
+		}
 		return `Take screenshot of [${action.payload.meta.elementDescription}]`;
 	},
 	handler: takeElementScreenshot,

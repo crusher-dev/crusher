@@ -193,9 +193,9 @@ const Step = ({
 
 	const titleTag = title && title.length ? parseText(title).map((a) => {
 		if(a.type === "highlight") {
-			return (<span className="highlight-box">{a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}</span>);
+			return (<span className="highlight-box" title={a.value}>{a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}</span>);
 		} else {
-			return (<span>{a.value}</span>);
+			return (<span title={a.value}>{a.value}</span>);
 		}
 	}) : null;
 
@@ -598,6 +598,7 @@ const stepTextStyle = css`
 	margin: 5rem;
 	margin-left: 13rem;
 	flex: 1 0 50%;
+	word-break: break-all;
 `;
 const stepTitleStyle = css`
 	font-family: Gilroy !important;

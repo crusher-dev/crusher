@@ -745,7 +745,7 @@ const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
 };
 
-function ActionButtonDropdown({ setShowActionMenu callback, selectedTemplate, ...props }) {
+function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, ...props }) {
 	const MenuItem = ({ label, onClick, ...props }) => {
 		return (
 			<div

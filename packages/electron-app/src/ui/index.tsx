@@ -178,6 +178,9 @@ const App = () => {
 				.no-drag {
 					-webkit-app-region: no-drag;
 				}
+				.tree-height-line:hover {
+					background: rgba(255,255,255, 0.2) !important;
+				}
 			`}
 			</style>
 		</>

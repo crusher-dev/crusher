@@ -5,7 +5,8 @@ import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
 import { MiniCrossIcon, UpMaximiseIcon } from "../../icons";
-import { callbackify } from "util";
+import {ObjectInspector, TableInspector, chromeDark, ObjectRootLabel, ObjectLabel} from 'react-inspector';
+import { BrowserButton } from "../buttons/browser.button";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
 	logs = logs.map((log, index) => { return {...log, diff: index == 0 ? "0" : (log.time - logs[index - 1].time).toFixed(2)}});
@@ -41,6 +42,38 @@ enum TabsEnum {
 	HOOKS = "HOOKS",
 };
 
+const SAMPLE_CONTEXT = {
+	testId: 71,
+	testName: "Booking flow",
+	query: "Skip the line guided",
+	parentTest: {
+		id: 69,
+		name: "Login",
+	},
+	userName: "Itisha Jain",
+	userEmail: "itisha.mail@headout.com",
+	userPhone: "9876543210",
+};
+
+const FIGMA_SAMPLE_CONTEXT = {
+	"string": "this is a test ...",
+	"integer": 42,
+	"array": [1, 2, 3, "test", null],
+	"float": 3.141592653589793,
+	"undefined": undefined,
+	"object": {
+		"first-child": true,
+		"second-child": false,
+		"last-child": null,
+	},
+	"string_number": "1234",
+};
+
+const defaultNodeRenderer = ({ depth, name, data, isNonenumerable, expanded }) =>
+  depth === 0
+    ? <ObjectRootLabel name={name} data={data} />
+    : <ObjectLabel name={name} data={data} isNonenumerable={isNonenumerable} />;
+	
 const StatusBar = (props: any) => {
 	const [clicked, setClicked] = React.useState(false);
 	const [selectedTab, setSelectedTab] = React.useState(TabsEnum.LOGS);
@@ -122,12 +155,43 @@ const StatusBar = (props: any) => {
 						}) : ""}
 					</div>
 				</Conditional>
+				<Conditional showIf={selectedTab === TabsEnum.CONTEXT}>
+					<div css={css`display: flex; flex-direction: column;`}>
+					<div css={css`color: #fff; font-size: 14rem; padding: 0rem 16rem; padding-top: 12rem; padding-bottom: 8rem; height: calc(100% - 32rem); overflow-y: auto;`} className={"custom-scroll"}>
+						<ObjectInspector
+						expandLevel={99}
+						// nodeRenderer={defaultNodeRenderer}
+							theme={{
+								...chromeDark,
+								...({
+									// OBJECT_VALUE_NUMBER_COLOR: "#47ad43",
+									OBJECT_VALUE_STRING_COLOR: "rgb(227, 110, 236)",
+									OBJECT_NAME_COLOR: "white",
+									// OBJECT_VALUE_BOOLEAN_COLOR: "#f5be18",
+									// OBJECT_VALUE_NULL_STYLE: {
+									// 	background: "#303030",
+									// 	color: "#f5be18",
+									// 	textTransform: "uppercase",
+									// 	fontWeight: "bold",
+									// 	padding: "0.5rem 2rem",
+									// },
+									// ARROW_COLOR: '#499ffa',
+									TREENODE_FONT_SIZE: "13.25rem",
+									TREENODE_LINE_HEIGHT: "18rem",
+									BASE_BACKGROUND_COLOR: 'linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02)), #0F1010'
+								})
+							}}
+							data={SAMPLE_CONTEXT} />
+					</div>
+					<BrowserButton size={"x-small"} css={css`background: #8860DE; margin-right: 18rem; padding: 0rem 16rem; border: .5px solid #8860DE; margin-left: auto;`}>Re-Run with custom context</BrowserButton>
+					</div>
+				</Conditional>
 			</Conditional>
 		</div> 
 
 		<style>{`
 			.expandBar {
-				max-height: 312rem;
+				max-height: 341rem;
 			}
 		`}
 		</style>

@@ -38,6 +38,7 @@
 		"@reduxjs/toolkit": "^1.5.0",
 		"@sentry/electron": "^2.5.4",
 		"@types/node": "^17.0.2",
+		"@types/react-inspector": "^4.0.2",
 		"@types/react-modal": "^3.10.6",
 		"@types/react-select": "^3.0.19",
 		"@types/reactour": "^1.18.1",

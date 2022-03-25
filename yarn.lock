@@ -7511,6 +7511,14 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-inspector@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-inspector/-/react-inspector-4.0.2.tgz#cf6b4b305f33d7aa5df7d4fb5db2e437b01daf23"
+  integrity sha512-qU+yzQzsq5ywoLq+6ZGpGpNXDr376YPHz6jp/4nvahqtomk81rNZYkOfVx19JzxUQCoVHU1veFvygZhRfEFQOw==
+  dependencies:
+    "@types/react" "*"
+    csstype "^3.0.2"
+
 "@types/react-modal@^3.10.6":
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-3.12.0.tgz#91fa86a76fd7fc57e36d2cf9b76efe5735a855a1"

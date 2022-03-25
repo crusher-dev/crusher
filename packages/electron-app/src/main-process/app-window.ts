@@ -58,6 +58,7 @@ export class AppWindow {
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
+	private useAdvancedSelectorPicker = false;
 
 	public getWebContents() {
 		return this.window.webContents;
@@ -212,6 +213,7 @@ export class AppWindow {
 		ipcMain.handle("delete-code-template", this.handleDeleteCodeTemplate.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
+		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -221,6 +223,9 @@ export class AppWindow {
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
 
+	private handleGetAdvancedSelector(event: Electron.IpcMainEvent, payload: any) {
+		event.returnValue = this.useAdvancedSelectorPicker;
+	}
 	private handleGetVarContext(event: Electron.IpcMainEvent, payload: any) {
 		const context = this.webView.playwrightInstance.getContext();
 		event.returnValue = Object.keys(context).reduce((prev, current) => {
@@ -723,6 +728,8 @@ export class AppWindow {
 
 	private turnOnElementSelectorInspectMode() {
 		this.store.dispatch(setInspectElementSelectorMode(true));
+		this.useAdvancedSelectorPicker = true;
+
 		this.webView._turnOnInspectMode();
 		this.webView._resumeExecution();
 		this.webView.webContents.focus();
@@ -730,6 +737,7 @@ export class AppWindow {
 
 	private turnOffElementSelectorInspectMode() {
 		this.store.dispatch(setInspectElementSelectorMode(false));
+		this.useAdvancedSelectorPicker = false;
 		this.webView._turnOffInspectMode();
 		this.webView.webContents.focus();
 	}

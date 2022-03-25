@@ -23,8 +23,8 @@ export function getXpathTo(element: HTMLElement): string | null {
 	return null;
 }
 
-export function getSelectors(elementNode: HTMLElement): Array<iSelectorInfo> {
-	const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
+export function getSelectors(elementNode: HTMLElement, useAdvancedSelector: boolean = false): Array<iSelectorInfo> {
+	const selectors = _uniqueSelector2.getUniqueSelector(elementNode, useAdvancedSelector);
 	const xPathSelector = getXpathTo(elementNode);
 
 	const out: Array<any> = [];

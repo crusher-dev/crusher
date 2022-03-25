@@ -299,24 +299,28 @@ export default class EventRecording {
 		}
 	}
 
-	async turnOnElementModeInParentFrame(selectedElement = this.state.targetElement) {
+	async turnOnElementModeInParentFrame(selectedElement = this.state.targetElement, shouldUseAdvancedSelector: boolean) {
 		this.isInspectorMoving = false;
 
 		const element =
 			selectedElement instanceof SVGElement && selectedElement.tagName.toLocaleLowerCase() !== "svg" ? selectedElement.ownerSVGElement : selectedElement;
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
-		const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[];
 
-		const dependentHovers = hoverDependedNodes.map((node) => {
-			return {
-				uniqueElementId: ElementsIdMap.getUniqueId(node),
-				selectors: this.eventsController.getSelectors(selectedElement),
-			}
-		});
+		let dependentHovers = [];
+		if(!shouldUseAdvancedSelector) {
+			const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[];
+
+			dependentHovers = hoverDependedNodes.map((node) => {
+				return {
+					uniqueElementId: ElementsIdMap.getUniqueId(node),
+					selectors: this.eventsController.getSelectors(selectedElement),
+				}
+			});
+		}
 
 		turnOnElementMode({
 			uniqueElementId: ElementsIdMap.getUniqueId(selectedElement),
-			selectors: this.eventsController.getSelectors(selectedElement),
+			selectors: this.eventsController.getSelectors(selectedElement, shouldUseAdvancedSelector),
 			elementDescription: getElementDescription(selectedElement),
 			dependentHovers: dependentHovers,
 		});
@@ -443,7 +447,8 @@ export default class EventRecording {
 
 	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
 		this.state.targetElement = event.detail.element;
-		this.turnOnElementModeInParentFrame(event.detail.element);
+		const shouldUseAdvancedSelector = (window as any).recorder.shouldUseAdvancedSelector();
+		this.turnOnElementModeInParentFrame(event.detail.element, shouldUseAdvancedSelector);
 		this.enableJavascriptEvents();
 	}
 

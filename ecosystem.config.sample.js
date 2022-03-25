@@ -9,8 +9,8 @@ module.exports = {
 		{
 			name: 'crusher-app',
 			cwd: './packages/crusher-app',
-			script: 'npm',
-			args: 'run dev',
+			script: 'node',
+			args: 'server.dev.js',
 			env: CRUSHER_APP_ENV,
 			merge_logs: true,
 		},
@@ -53,8 +53,8 @@ module.exports = {
 		{
 			name: 'video-processor',
 			cwd: './packages/video-processor',
-			script: 'node',
-			args: 'index.js',
+			script: IS_PRODUCTION ? 'node' : 'npm',
+			args: IS_PRODUCTION ? 'index.js' : 'run start',
 			env: VIDEO_PROCESSOR_ENV,
 		},
 		{

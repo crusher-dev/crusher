@@ -29,7 +29,7 @@ RUN npm init -y && npm install pm2 dotenv playwright@1.14.0 patch-package source
 # Add and copy necessary files
 ADD docker/ee/test-runner/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ADD ./patches/playwright+1.14.0.patch ./patches/playwright+1.14.0.patch
-ADD ./ecosystem.sample.js ecosystem.config.js
+ADD ./ecosystem.config.sample.js ecosystem.config.js
 ADD ./.env.sample .env
 ADD ./ecosystem ecosystem
 ADD ./output/test-runner/ packages/test-runner

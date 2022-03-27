@@ -18,8 +18,7 @@ import {
 } from "@src/util/helper";
 import * as path from "path";
 import * as fs from "fs";
-
-const { CommunicationChannel } = require (fs.existsSync("./crusher-runner-utils.ts/index.js") ? "./crusher-runner-utils.ts/index.js" : "crusher-runner-utils");
+import { CommunicationChannel } from "crusher-runner-utils";
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
@@ -68,7 +67,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			notifyManager,
 			globalManager,
 			exportsManager,
-			communcationChannel,
+			communcationChannel as any,
 			identifier,
 			persistentContextDir,
 			bullJob.data.context,
@@ -98,6 +97,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		// Cleanup persistent context dir after test execution
 		deleteDirIfThere(persistentContextDir);
 
+		console.log("options are", bullJob);
 		const parentJob = await Job.fromId(queueManager.queues[TEST_COMPLETE_QUEUE].value, bullJob.opts.parent.id);
 		await parentJob.update({
 			...parentJob.data,

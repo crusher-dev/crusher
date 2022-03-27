@@ -9,9 +9,7 @@ ports:
 tasks:
   - name: 'Start redis-server'
     command: 'redis-server'
-  - name: 'Start mongodb'
-    command: 'mongod --dbpath /data/db --logpath ~/mongod.log --fork'
   - name: 'Start crusher app'
-    init: yarn install && yarn setup:ee && cp ecosystem.config.sample.js ecosystem.config.js && rm .env && cp .env.sample .env
+    init: yarn install && yarn setup:ee && cp ecosystem.config.sample.js ecosystem.config.js && rm -f .env && cp .env.sample .env
     command: "echo 'Hello world'"
     openMode: tab-after

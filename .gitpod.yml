@@ -1,0 +1,17 @@
+image:
+  file: docker/gitpod/Dockerfile
+
+ports:
+  - port: 3000
+    onOpen: 'open-browser'
+    visibility: 'public'
+
+tasks:
+  - name: 'Start redis-server'
+    command: 'redis-server'
+  - name: 'Start mongodb'
+    command: 'mongod --dbpath /data/db --logpath ~/mongod.log --fork'
+  - name: 'Start crusher app'
+    init: yarn install && yarn setup:ee && cp ecosystem.config.sample.js ecosystem.config.js && rm .env && cp .env.sample .env
+    command: "echo 'Hello world'"
+    openMode: tab-after

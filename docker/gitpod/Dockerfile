@@ -1,7 +1,7 @@
 FROM gitpod/workspace-full-vnc:latest
 
 # Dazzle does not rebuild a layer until one of its lines are changed. Increase this counter to rebuild this layer.
-ENV TRIGGER_REBUILD=3
+ENV TRIGGER_REBUILD=4
 ENV PGWORKSPACE="/workspace/.pgsql"
 ENV PGDATA="$PGWORKSPACE/data"
 

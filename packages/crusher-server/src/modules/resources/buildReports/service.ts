@@ -162,7 +162,7 @@ export class BuildReportService {
 				steps: current.actionsResult,
 			};
 
-			const uniqueId = current.testInstanceGroupId ? `${current.testInstanceGroupId}/${current.testInstanceId}` : `${current.testInstanceId}`;
+			const uniqueId = current.testInstanceGroupId ? `${current.testId}/${current.testInstanceGroupId}` : `${current.testId}`;
 			if (prev[uniqueId]) {
 				prev[uniqueId].testInstances.push(testInstance);
 			} else {

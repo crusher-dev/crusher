@@ -127,11 +127,7 @@ const StatusBar = (props: any) => {
 		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={statusBarContainerStyle}>
 			<div css={css`display: flex; align-items: center; height: 100%; max-height: 32rem; 	padding: 0rem 14rem;`}>
 				<TabButton selected={selectedTab === TabsEnum.LOGS} title="Logs" count={logs && logs.length} callback={() => {setClicked(true); handleTabSelection(TabsEnum.LOGS); }}/>
-				<Conditional showIf={clicked}>
-					{/* <TabButton selected={selectedTab === TabsEnum.CONTEXT} className={"ml-21"} title="Context" callback={handleTabSelection.bind(this, TabsEnum.CONTEXT)}/>
-					<TabButton selected={selectedTab === TabsEnum.HOOKS} className={"ml-21"} title="Hooks" callback={handleTabSelection.bind(this, TabsEnum.HOOKS)}/> */}
-
-				</Conditional>
+	
 
 				<Conditional showIf={!clicked}>
 					<div css={logTextStyle} className={"ml-20"}>{lastLogMessage.length > 100 ? lastLogMessage.substr(0, 100) + "..." : lastLogMessage}</div>

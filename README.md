@@ -38,7 +38,7 @@
 </div>
 
 <br>
-<a href="#-start-using-crusher" style="margin-left: 15PX;">
+<a href="https://gitpod.io/from-referrer/" style="margin-left: 15PX;">
     <img src="https://gitpod.io/button/open-in-gitpod.svg" height="44"/>
 </a>
 

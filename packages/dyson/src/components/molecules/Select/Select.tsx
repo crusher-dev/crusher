@@ -129,6 +129,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	};
 
 	const options = filterText ? values.filter(({ label }) => label.toLowerCase().includes(filterText.toLowerCase())) : values;
+	const isInputDisabled = !!isSearchable === false;
 
 	return (
 		<div ref={selectContainerRef} css={[selectBoxContainer(openSelectBox, size)]} className={`relative ${className}`}>
@@ -136,8 +137,8 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 				<input
 					onInput={handleFilterTextChange}
 					type={"text"}
-					disabled={!!isSearchable === false}
-					css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
+					disabled={isInputDisabled}
+					css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null, isInputDisabled ? css`pointer-events: none;` : null]}
 					value={filterText}
 					className={"selectBox__input selectBox__value"}
 					placeholder={selectedText}

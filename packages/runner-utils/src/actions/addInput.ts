@@ -41,7 +41,7 @@ module.exports = {
 	name: ActionsInTestEnum.ADD_INPUT,
 	description: "Adding input to element",
 	actionDescriber: (action: iAction) => {
-		if(action.payload.meta.elementDescription) {
+		if(action.payload.meta && action.payload.meta.elementDescription) {
 			const inputValue = typeof action.payload.meta.value === "string" ? action.payload.meta.value : action.payload.meta.value.value;
 
 			return `Type [${inputValue}] in [${action.payload.meta.elementDescription}]`;

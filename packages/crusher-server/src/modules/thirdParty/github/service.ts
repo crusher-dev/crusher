@@ -11,6 +11,7 @@ import { Authentication } from "@octokit/auth-oauth-app/dist-types/types";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import axios from "axios";
 import { BadRequestError } from "routing-controllers";
+import { resolvePathToFrontendURI } from "@utils/uri";
 
 @Service()
 class GithubService {
@@ -51,6 +52,30 @@ class GithubService {
 		});
 
 		return response;
+	}
+
+	async createOrUpdateIssueComment(githubMeta: {fullRepoName: string; commit: string; }, buildId: number, projectId: number) {
+		const {fullRepoName, commit} = githubMeta;
+		const { ownerName: owner, repoName: repo} = this.extractRepoAndOwnerName(fullRepoName);
+
+		const pullRequests: {data: Array<any>} = await this.octokit.repos.listPullRequestsAssociatedWithCommit({
+			owner: owner,
+			repo: repo,
+			commit_sha: commit,
+		});
+		const issuesArr = pullRequests.data.map((pullRequest: any) => pullRequest.number);
+		return Promise.all(issuesArr.map((issueNumber) => { 
+			return this.octokit.rest.issues.createComment({
+				owner: owner,
+				repo: repo,
+				issue_number: issueNumber,
+				body: `This pull request is being automatically tested with Crusher ([learn more](https://vercel.link/github-learn-more)).
+To see the status of your build, click below or on the icon next to each commit.
+
+🔍  View builds: ${resolvePathToFrontendURI(`/app/build/${buildId}`)}
+✅  Add a new test: ${resolvePathToFrontendURI(`/project/${projectId}/create`)}`
+			});
+		}))
 	}
 
 	private async _createCheckRun(fullRepoName: string, commitId: string, installation_id: string, external_id: number) {

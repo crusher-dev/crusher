@@ -64,17 +64,34 @@ class GithubService {
 			commit_sha: commit,
 		});
 		const issuesArr = pullRequests.data.map((pullRequest: any) => pullRequest.number);
-		return Promise.all(issuesArr.map((issueNumber) => { 
+		return Promise.all(issuesArr.map(async (issueNumber) => { 
+			const comments = await this.octokit.rest.issues.listComments({
+				owner: owner,
+				repo: repo,
+				issue_number: issueNumber,
+			});
+			const crusherBotComment = (comments as any).data.find((comment: any) => comment.user.html_url === process.env.GITHUB_APP_URL);
+			const githubMessage = `This pull request is being automatically tested with Crusher ([learn more](https://vercel.link/github-learn-more)).
+To see the status of your build, click below or on the icon next to each commit.
+
+🔍  View builds: ${resolvePathToFrontendURI(`/app/build/${buildId}`)}
+✅  Add a new test: ${resolvePathToFrontendURI(`/project/${projectId}/create`)}`;
+
+			if(!crusherBotComment) {
 			return this.octokit.rest.issues.createComment({
 				owner: owner,
 				repo: repo,
 				issue_number: issueNumber,
-				body: `This pull request is being automatically tested with Crusher ([learn more](https://vercel.link/github-learn-more)).
-To see the status of your build, click below or on the icon next to each commit.
-
-🔍  View builds: ${resolvePathToFrontendURI(`/app/build/${buildId}`)}
-✅  Add a new test: ${resolvePathToFrontendURI(`/project/${projectId}/create`)}`
+				body: githubMessage,
 			});
+		} else {
+			return this.octokit.rest.issues.updateComment({
+				comment_id: crusherBotComment.id,
+				owner: owner,
+				repo: repo,
+				body: githubMessage,
+			})
+		}
 		}))
 	}
 

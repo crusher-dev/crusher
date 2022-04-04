@@ -39,11 +39,11 @@
 
 <br>
 
-Crusher is open-source **no-code e2e web testing/monitoring**. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple and fast.
+Crusher is an open-source **no-code e2e web testing/monitoring** tool. E2E testing is grueling and frustrating. We're reimagining the whole workflow to make it blazingly simple and fast.
 
 ![enter image description here](https://i.imgur.com/WvwLuzk.png)
 
-You can integrate **user flow and UI regression** testing without going thru hassle. All without managing infra, creating a framework or managing breaking selectors.
+You can integrate **user flow and UI regression** testing without going through hassle. All without managing infra, creating a framework or managing breaking selectors.
 
 Software development has evolved a lot in the last decade, but testing is still the same. Devs should be able to ship better software faster. We started this because we were genuinely frustrated with testing workflows.
 
@@ -65,7 +65,7 @@ Fastest and most powerful way to try Crusher.
 
 <br/>
 
-**Deploy it on your infra (self-host)**
+**Deploy on your infra (self-host)**
 
  <a href="#-self-deployment">
 <img src="https://i.imgur.com/kPLG4s7.png" height="40px"/>
@@ -73,14 +73,14 @@ Fastest and most powerful way to try Crusher.
 
 ## 🔮 Features
 
-- Create **test without no code/low code**.
+- Create **test with no/low code**.
 - **Test UI** and compare **pixel perfect** change with the last build.
 - Replay tests recording to debug faster.
 - **Run test on chromium** (Open source) and **all browsers** supported (EE).
 - Primitive user actions detection.
 - Production monitoring (EE feature)
 - **Integrate with Github**/Other services as Build check (EE feature)
-- **Get alerts when build fails.**
+- **Get alerts on build fails.**
 - Report accessible by everyone in the team.
 - Host in your own secure private network.
 
@@ -92,7 +92,7 @@ Software dev is getting more complex, with tons of APIs coming in. Things break 
 
 This leads to angry customers, stakeholder and your product/startup becomes chaotic which could be avoided easily.
 
-Knowing when/where things break is very critical. Good workflow are needed to make it simple to deliver HQ software fast.
+Knowing when/where things break is very critical. Good workflow is needed to make it simple to deliver HQ software fast.
 
 ## 😎 What's so cool about this
 
@@ -102,7 +102,7 @@ We try to reimagine how testing should work. Few things that differentiate us
 
 1.) UI first approach. The web is about how it looks, and we help you ship pixel-perfect UIs. As devs, we work hard to build software. Although, in the process, some tasks are boring, grueling, & eat up our time.
 
-2.) No-code/low-code for primitive action. We use no-code to detect primitive user actions.
+2.) No/low-code for primitive action. We use no-code to detect primitive user actions.
 
 3.) Removing noise from dev workflow. We are reimagining how processed, should be.
 
@@ -113,10 +113,10 @@ We try to reimagine how testing should work. Few things that differentiate us
 - Testing your app e2e with each commit or in dev.
 - Testing responsiveness of your UIs.
 - Ensuring your app across different browsers.
-- Alerting system when any component stops working.
+- Alert system when any component stops working.
 - Debug system that helps you when something breaks.
 - Creating automated tools or scraping data from site.
-- Or maybe keeping an eye on your competitor 👀
+- Or maybe keeping an eye on your competitor 👀.
 
 ## Is Crusher the right choice for me?
 

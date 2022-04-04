@@ -104,8 +104,10 @@ class TestService {
 		overideBaseLineBuildId: number | null = null,
 		browsers = [BrowserEnum.CHROME],
 		folder = null,
+		folderIds = null,
+		testIds = null,
 	) {
-		const testsData = await this.getTestsInProject(projectId, true, { folder: folder ? folder : null });
+		const testsData = await this.getTestsInProject(projectId, true, { folder: folder, folderIds: folderIds, testIds: testIds });
 		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
@@ -151,7 +153,7 @@ class TestService {
 		return this.dbManager.fetchAllRows(query, values);
 	}
 
-	async getTests(findOnlyActiveTests = false, filter: { userId?: number; projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number; folder?: string; } = {}) {
+	async getTests(findOnlyActiveTests = false, filter: { userId?: number; projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number; folder?: string; folderIds?: string; testIds?: string; } = {}) {
 		const PER_PAGE_LIMIT = 15;
 
 		let additionalSelectColumns = "";
@@ -203,6 +205,23 @@ class TestService {
 				const folderIdArr = folders.map((folder) => `${folder.id}`);
 				query += ` AND test_folder IN (${new Array(folderIdArr.length).fill("?").join(",")})`;
 				queryParams.push(...folderIdArr);
+			}
+		} else if(filter.folderIds){
+			const folders =  filter.folderIds.split(",").map((folderId) => parseInt(folderId));
+			if (folders.length) {
+				// Filter tests belong to one of the folders array
+				const folderIdArr = folders.map((folder) => `${folder}`);
+				query += ` AND test_folder IN (${new Array(folderIdArr.length).fill("?").join(",")})`;
+				queryParams.push(...folderIdArr);
+			}
+		}
+		if(filter.testIds) {
+			const testIdArr = filter.testIds.split(",").map((testId) => parseInt(testId));
+			if (testIdArr.length) {
+				// Filter tests belong to one of the folders array
+				const testIdArrStr = testIdArr.map((testId) => `${testId}`);
+				query += ` AND tests.id IN (${new Array(testIdArrStr.length).fill("?").join(",")})`;
+				queryParams.push(...testIdArrStr);
 			}
 		}
 
@@ -256,7 +275,7 @@ class TestService {
 		return this.dbManager.delete(`DELETE FROM public.tests_folder WHERE id = ?`, [ folderId]);
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number; folder?: string } = {}) {
+	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number; folder?: string; folderIds?: string; testIds?: string } = {}) {
 		return this.getTests(findOnlyActiveTests, { ...filter, projectId });
 	}
 

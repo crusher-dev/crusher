@@ -160,6 +160,8 @@ export class TestController {
 			disableBaseLineComparisions: boolean;
 			baselineJobId: number | null;
 			folder?: string;
+			folderIds?: string;
+			testIds?: string;
 			browsers?: Array<BrowserEnum>;
 			context?: any;
 		},
@@ -183,6 +185,8 @@ export class TestController {
 			body.baselineJobId ? body.baselineJobId : null,
 			body.browsers ? body.browsers : [BrowserEnum.CHROME],
 			body.folder ? body.folder : null,
+			body.folderIds ? body.folderIds : null,
+			body.testIds ? body.testIds : null,
 		);
 	}
 

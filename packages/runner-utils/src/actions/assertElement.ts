@@ -106,7 +106,7 @@ module.exports = {
 	name: ActionsInTestEnum.ASSERT_ELEMENT,
 	description: "Assertions on element",
 	actionDescriber: (action: iAction) => {
-		if(!action.payload.meta.elementDescription) return "Assert element";
+		if(!action.payload.meta || !action.payload.meta.elementDescription) return "Assert element";
 		
 		return `Assert [${action.payload.meta.elementDescription}]`;
 	},

@@ -16,6 +16,7 @@ import { BadRequestError } from "routing-controllers";
 import { iAction } from "@crusher-shared/types/action";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { DBManager } from "@modules/db";
+import { GithubService } from "@modules/thirdParty/github/service";
 @Service()
 class TestsRunner {
 	@Inject()
@@ -28,6 +29,8 @@ class TestsRunner {
 	private buildReportService: BuildReportService;
 	@Inject()
 	private queueManager: QueueManager;
+	@Inject()
+	private githubService: GithubService;
 
 	async addTestRequestToQueue(payload: any, parent: any) {
 		const flowTree = await this.queueManager.getFlowProducer().add({
@@ -309,8 +312,9 @@ class TestsRunner {
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 		const testsListWIthDependency = this._getDependenciesTestArr(tests);
+		let githubMeta = null;
 		if (buildPayload.meta && buildPayload.meta.github) {
-			await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
+			githubMeta = await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
 		}
 
 		const testInstancesArr: ITestInstanceDependencyArray = await this.createTestInstances(testsListWIthDependency, buildPayload, build.insertId);
@@ -347,6 +351,13 @@ class TestsRunner {
 
 		// @TODO: Add implementation to queue the job
 		await this.startBuildTask({ ...buildInfo, testInstances: testInstancesArr });
+
+		if(githubMeta && githubMeta.installationId) {
+			const githubService = new GithubService();
+			await githubService.authenticateAsApp(githubMeta.installationId);
+
+			await githubService.createOrUpdateIssueComment({fullRepoName: githubMeta.repoName, commit: githubMeta.commitId}, build.insertId, buildPayload.projectId);
+		}
 
 		return { buildId: build.insertId, buildInfo: buildInfo };
 	}

@@ -310,7 +310,9 @@ class TestService {
 		await Promise.all(customCodeActions.map(async (customCode) => {
 			if (customCode.payload.meta.templateId) {
 				const template = await this.codeTemplateService.get(customCode.payload.meta.templateId);
-				customCode.payload.meta.script = template.code;
+				if(template) {
+					customCode.payload.meta.script = template.code;
+				}
 			}		
 		}));
 

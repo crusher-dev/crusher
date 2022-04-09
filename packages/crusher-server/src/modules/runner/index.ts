@@ -32,6 +32,7 @@ class TestsRunner {
 	@Inject()
 	private githubService: GithubService;
 
+	// @Caution: Make sure to prevent race condition here
 	async addTestRequestToQueue(payload: any, parent: any) {
 		const flowTree = await this.queueManager.getFlowProducer().add({
 			...payload,
@@ -41,7 +42,13 @@ class TestsRunner {
 		});
 
 		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parentKey", parent.queue + ":" + parent.id);
+		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parent", JSON.stringify({ id: parent.id, queueKey: parent.queue }));
 
+		const opts = await this.queueManager.redisManager.redisClient.hget(parent.queue + ":" + flowTree.job.id, "opts");
+		let optsObject: any = (opts && opts.length ? JSON.parse(opts) : null) || {} as any;
+		optsObject.parent = {id: parent.id, queue: parent.queue};
+
+		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "opts", JSON.stringify(optsObject));
 		await this.queueManager.redisManager.redisClient.sadd(parent.queue + ":" + parent.id + ":dependencies", parent.queue + ":" + flowTree.job.id);
 	}
 

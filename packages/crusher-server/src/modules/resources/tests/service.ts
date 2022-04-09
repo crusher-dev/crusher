@@ -337,6 +337,22 @@ class TestService {
 		return this.dbManager.fetchAllRows(`SELECT * FROM public.tests WHERE id IN (${new Array(testIds.length).fill("?").join(", ")})`, [...testIds]);
 	}
 
+	private async _fillMapWithTestDependencies(testsMap: any, test: KeysToCamelCase<ITestTable>) {
+		const actions = test.events;
+		const actionsArray = JSON.parse(actions);
+
+		const runAfterTestAction = actionsArray.find((event) => event.type === ActionsInTestEnum.RUN_AFTER_TEST);
+		if (runAfterTestAction) {
+			const runAfterTestId = runAfterTestAction.payload.meta.value;
+			if (runAfterTestId) {
+				const runAfterTest = testsMap[runAfterTestId];
+				if (!runAfterTest) {
+					testsMap[runAfterTestId]=  await this.getTest(runAfterTestId);
+					await this._fillMapWithTestDependencies(testsMap, await this.getTest(runAfterTestId));
+				}
+			}
+		}
+	};
 	// Specifically for run after this test
 	async getCompleteTestsArray(tests: Array<KeysToCamelCase<ITestTable>>): Promise<Array<KeysToCamelCase<ITestTable>>> {
 		const testsMap = tests.reduce((acc, test) => {
@@ -344,14 +360,7 @@ class TestService {
 		}, {});
 
 		for (const test of tests) {
-			const events = JSON.parse(test.events);
-			const runAfterTestAction = events.find((event) => event.type === ActionsInTestEnum.RUN_AFTER_TEST);
-			if (runAfterTestAction) {
-				const runAfterTestId = runAfterTestAction.payload.meta.value;
-				if (!testsMap[runAfterTestId]) {
-					testsMap[runAfterTestId] = await this.getTest(parseInt(runAfterTestId));
-				}
-			}
+			await this._fillMapWithTestDependencies(testsMap, test);
 		}
 
 		return Object.values(testsMap);

@@ -13,7 +13,6 @@ import { USER_META_KEYS } from "@constants/USER";
 import Link from "next/link";
 
 const SupportCrusher = () => {
-
 	const [, updateOnboarding] = useAtom(updateMeta);
 
 	usePageTitle("Support crusher");
@@ -49,7 +48,7 @@ const SupportCrusher = () => {
 				<div className={"flex mt-56"}>
 					<div className={"px-32 py-24"} css={githubCSS}>
 						<div className={"flex justify-between "}>
-							<Text fontSize={16} weight={700} color={"#ff6ef4"}>
+							<Text fontSize={16} weight={700} color={"#ce79ea"}>
 								Star Crusher on Github
 							</Text>
 							<GithubSVG />
@@ -71,7 +70,7 @@ const SupportCrusher = () => {
 					</div>
 					<div className={"px-32 py-24"} css={discordCSS}>
 						<div className={"flex justify-between"}>
-							<Text fontSize={16} weight={700} color={"#5865F2"}>
+							<Text fontSize={16} weight={700} color={"#9a58f2"}>
 								Join discord
 							</Text>
 							<DiscordSVG />
@@ -95,13 +94,14 @@ const SupportCrusher = () => {
 							className={"mt-20 px-26"}
 							css={css`
 								border-width: 0;
-								background: #5865f2;
+								background: #9a58f2;
 								color: #fff;
 
 								padding-left: 20rem;
 								padding-right: 20rem;
+
 								:hover {
-									background: #4c59dc;
+									background: #884adc;
 									border-width: 0;
 								}
 							`}

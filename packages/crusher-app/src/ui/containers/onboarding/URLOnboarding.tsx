@@ -101,30 +101,72 @@ const URLOnboarding = () => {
 			<div
 				css={css`
 					width: 632rem;
-					color: #DCDCDC; margin-top: 60rem;
+					color: #dcdcdc;
+					margin-top: 60rem;
 				`}
 			>
 				<div>
-						<div className="text-14 leading-none mb-36 font-400 font-cera" css={css`letter-spacing: 0.2px;`}>Create a test</div>
+					<div
+						className="text-14 leading-none mb-36 font-400 font-cera"
+						css={css`
+							letter-spacing: 0.2px;
+						`}
+					>
+						Create a test
+					</div>
 				</div>
 
-				<div  className="text-20 font-700" css={css`color: #fff;`} >
+				<div
+					className="text-20 font-700"
+					css={css`
+						color: #fff;
+					`}
+				>
 					Enter the URL of the website
 				</div>
 
-				<div className={"text-13 mt-12"} css={css`letter-spacing: 0.4px;`}>
+				<div
+					className={"text-13 mt-12"}
+					css={css`
+						letter-spacing: 0.4px;
+					`}
+				>
 					We'll create a test to checks page is loading perfectly
 				</div>
 
 				<div className={"flex mt-32 items-center"}>
-
-					<Input  size={"large"} placeholder={"Enter the URL of the website"} css={css`width: 360rem; background: transparent;`}/>
-					<Button className={"ml-16"} size={"large"} css={css`min-width: 152rem;`}> Go </Button>
+					<Input
+						size={"large"}
+						placeholder={"Enter the URL of the website"}
+						css={css`
+							width: 360rem;
+							background: transparent;
+						`}
+					/>
+					<Button
+						className={"ml-16"}
+						size={"large"}
+						css={css`
+							min-width: 152rem;
+						`}
+					>
+						{" "}
+						Go{" "}
+					</Button>
 				</div>
 
 				<div className={"text-16 mt-108"}>
 					<div className={"font-700 mb-16"}>Or run</div>
-					<div><span css={css`color:#AFD97B;`}>npx crusher-cli test:create</span> in your repo</div>
+					<div>
+						<span
+							css={css`
+								color: #afd97b;
+							`}
+						>
+							npx crusher-cli test:create
+						</span>{" "}
+						in your repo
+					</div>
 				</div>
 			</div>
 		</>

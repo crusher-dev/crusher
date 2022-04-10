@@ -26,6 +26,8 @@ import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { handleTestRun } from "@utils/core/testUtils";
+import { Tooltip } from 'dyson/src/components/atoms/tooltip/Tooltip';
+import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -110,6 +112,62 @@ function BottomSection({ name, description, ...props }) {
 	);
 }
 
+function HelpContent() {
+	return <div>
+			<div className={"px-20 py-16 pt-14"}>
+				<TextBlock fontSize={16} weight={600} color={"#CFCFD0"}>Need help with your project?</TextBlock>
+				<TextBlock fontSize={13} color={"#8F8F8F"} className={"mt-8"}>For issues with crusher, other enquiries.</TextBlock>
+				<div className={"flex mt-20 mb-12"}>
+					<a href={"https://docs.crusher.dev"} target={"_blank"}>
+					<Button size={"x-small"} css={css`width: 148rem;`}>Setup call</Button>
+					</a>
+						<a href={"https://docs.crusher.dev"} target={"_blank"}>
+							<Button size={"x-small"} className={"ml-12"} css={css`width: 120rem;`} bgColor={"tertiary-white-outline"}>Read docs</Button>
+						</a>
+				</div>
+				<TextBlock className={"mt-24"} fontSize={13} color={"#8F8F8F"} showLineHeight={true} >		A dev will pair to help you adopt crusher.</TextBlock>
+
+			</div>
+		<hr css={css`height: 1px; background: #1C1F22;  border: none;`} className={"mt-8 mb-8"}/>
+
+		<div className={"px-20 py-16"}>
+			<TextBlock fontSize={16} weight={600}  color={"#CFCFD0"}>Discuss with community</TextBlock>
+			<TextBlock className={"mt-8 mb-16 "} fontSize={13} color={"#8F8F8F"}>For feature request, question or discussion</TextBlock>
+
+			<a href={"https://github.com/crusherdev/crusher"} target={"_blank"}>
+			<img src={"/github_support.png"} className={"mb-16 "} css={banner}/>
+			</a>
+			{/*<img src={"/github_support.png"} css={banner}/>*/}
+		</div>
+	</div>;
+}
+
+const banner=css`
+	:hover{
+    filter: sepia(100%) hue-rotate(
+            203deg
+    ) saturate(1500%);
+	}
+`
+
+function HelpNSupport() {
+	return <Dropdown
+		component={<HelpContent/>}
+		dropdownCSS={css`
+							    bottom: -54rem;
+							    top: unset !important;
+							left: 4rem !important;
+							height: fit-content;
+							border-radius: 6px 6px 0 0;
+							width: 388px;
+						`}
+	>
+		<div css={navLink} className={'flex items-center pr text-12.5 mt-4'}>
+			<NewTabSVG className={'mr-14 mb-2'} /> Help & Support
+		</div>
+	</Dropdown>;
+}
+
 function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
@@ -158,26 +216,14 @@ function LeftSection() {
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-12.5 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
+						<div css={navLink} className={"flex items-center text-12.5 mt-4"}
+								 onClick={setInviteTeamMates.bind(this, true)}>
 							<AddSVG className={"mr-18 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
 
-					<Dropdown
-						component={<DropdownContent />}
-						dropdownCSS={css`
-							bottom: -10px;
-							top: unset;
-							left: calc(100% - 54px) !important;
-							height: fit-content;
-							width: 206.03px;
-						`}
-					>
-						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"}>
-							<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
-						</div>
-					</Dropdown>
 
+					<HelpNSupport/>
 					<div
 						css={navLink}
 						className={"flex items-center text-12.5 mt-4"}
@@ -472,6 +518,7 @@ const navLink = css`
 	height: 31rem;
 	color: rgba(189, 189, 189, 0.8);
 	font-weight: 500;
+  letter-spacing: .3px;
 
 	margin-left: 6px;
 	margin-right: 6px;

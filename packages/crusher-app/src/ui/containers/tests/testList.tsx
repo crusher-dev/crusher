@@ -27,6 +27,7 @@ import { PaginationButton } from "dyson/src/components/molecules/PaginationButto
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
 import { tempTestTypeAtom } from "@store/atoms/global/tempTestType";
 import { tempTestUpdateIdAtom } from "@store/atoms/global/tempTestUpdateId";
+import CreateTestPrompt from "@ui/containers/tests/CreateTestPrompt";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -278,9 +279,11 @@ function TestSearchableList() {
 				</div>
 			</Conditional>
 
-			<Conditional showIf={data && data.list.length === 0}>
+			<Conditional showIf={false && data && data.list.length === 0}>
 				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
 			</Conditional>
+
+			<CreateTestPrompt />
 
 			<Conditional showIf={!isZeroBuild}>
 				<div className={"flex justify-center mt-64 mb-80"}>

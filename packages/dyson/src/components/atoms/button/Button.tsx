@@ -76,8 +76,14 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 			break;
 		case "tertiary-white-outline":
 			return {
-				main: { background: "rgba(0,0,0,0)", border: "#rgba(255, 255, 255, 0.66)", color: "#fff" },
-				hover: { background: "rgba(0,0,0,0)", border: "#rgba(255, 255, 255, 0.66)", color: "#fff" },
+				main: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
+				hover: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
+			};
+			break;
+		case "tertiary-white":
+			return {
+				main: { background: "#fff", border: "#fff", color: "#0B0B0D" },
+				hover: { background: "#fff", border: "#fff", color: "#0B0B0D" },
 			};
 			break;
 		case "tertiary-dark":

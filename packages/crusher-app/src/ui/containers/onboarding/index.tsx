@@ -12,8 +12,8 @@ import { CliRepoIntegration } from "./cliIntegration";
 import { SetupCrusher } from "./setup";
 import { SupportCrusher } from "./support";
 import { GitRepoIntegration } from "./gitRepoIntegration";
-import { URLOnboarding } from '@ui/containers/onboarding/URLOnboarding';
-import { InitialInfo } from '@ui/containers/onboarding/InitialInfo';
+import { URLOnboarding } from "@ui/containers/onboarding/URLOnboarding";
+import { InitialInfo } from "@ui/containers/onboarding/InitialInfo";
 
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);

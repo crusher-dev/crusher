@@ -15,7 +15,8 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 import { Button, Input, Text } from "dyson/src/components/atoms";
 import { useAtom } from "jotai";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from 'react';
+import { Conditional } from 'dyson/src/components/layouts';
 
 const CopyCommandInput = ({ command }: { command: string }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -62,11 +63,14 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 	);
 };
 
-const CliRepoIntegration = () => {
+const InitialInfo = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [project] = useAtom(currentProject);
 	const [commands, setCommnads] = React.useState(["", ""]);
 	const [, updateOnboarding] = useAtom(updateMeta);
+
+	const [profileType, setProfileType] = useState(null)
+	const [otherProfile, setOtherProfile] = useState(false)
 
 	React.useEffect(() => {
 		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
@@ -101,98 +105,84 @@ const CliRepoIntegration = () => {
 			<div
 				css={css`
 					width: 632rem;
+					color: #DCDCDC; margin-top: 60rem;
 				`}
 			>
-				<div className={"flex justify-between item-center"}>
-					<div>
-						<div className="text-18 leading-none mb-16 font-700 font-cera">Add crusher in your project in 2 mins</div>
-						<div className={"text-13"}>Get ready to feel the change</div>
-					</div>
+				<div  className="text-20 mt-28 font-700" css={css`color: #fff;`} >
+					What's your role?
 				</div>
 
-				<Card type="focus" className={"mt-56 py-24 pb-40"}>
-					<div className={"pb-8 px-16 "}>
-						<span
-							className={"text-11 font-700"}
-							css={css`
-								color: rgba(255, 255, 255, 0.23);
-							`}
-						>
-							1.)
-						</span>
-						<span className={"text-16 font-cera font-700 ml-16"}>Create and run your first test</span>
-					</div>
-
-					<div className={"pl-44 pr-32 text-14 mb-32"}>We’ll also add handy script to run test with each commit.</div>
-
-					<div className={"pl-44 pr-32"}>
-						<div className={"flex mt-16"}>
-							<CopyCommandInput command={commands[0]} />
-						</div>
-						<div className={"flex items-center justify-between mt-16"}>
-							<CopyCommandInput command={commands[1]} />
-							<span
-								className={"text-13"}
-								css={css`
-									color: #af7eff;
-								`}
-							></span>
-						</div>
-					</div>
-				</Card>
-				<Card type={"normal"} className={"mt-32 py-16"}>
-					<div className={" px-16 flex items-center justify-between"}>
-						<div
-							className={"flex"}
-							css={css`
-								align-items: center;
-							`}
-						>
-							<span
-								className={"text-11 font-700"}
-								css={css`
-									color: rgba(255, 255, 255, 0.23);
-								`}
-							>
-								2.)
-							</span>
-							<span className={"text-16 font-cera font-700 ml-16"}>Push changes to origin</span>
-							<LoadingSVG
-								className={"ml-8"}
-								css={css`
-									width: 16rem;
-									height: 16rem;
-								`}
-							/>
-						</div>
-						<Button
-							size={"small"}
-							css={css`
-								width: 120rem;
-							`}
-						>
-							Next
-						</Button>
-					</div>
-				</Card>
-				<div className={"flex justify-end mt-28"}>
-					<Link href={"/app/dashboard"}>
-						<Text
-							onClick={handleSkipOnboarding}
-							css={css`
-								:hover {
-									opacity: 0.9;
-								}
-							`}
-							fontSize={13}
-						>
-							Skip setup and show me the dashboard
-						</Text>
-					</Link>
+				<div className={"text-13 mt-12"} css={css`letter-spacing: 0.45px;`}>
+					We'll curate experience based on this
 				</div>
+
+
+
+				{/*<div className={"flex mt-32 items-center"}>*/}
+
+				{/*	<Input  size={"large"} placeholder={"Enter the URL of the website"} css={css`width: 360rem; background: transparent;`}/>*/}
+				{/*	<Button className={"ml-16"} size={"large"} css={css`min-width: 152rem;`}> Go </Button>*/}
+				{/*</div>*/}
+
+
+
+				<Conditional showIf={!otherProfile}>
+					<div className={"flex mt-28"}>
+
+						{	['Developer','Product','QA'].map((profile)=>{
+							return (<div css={[buttonCSS,profile === profileType && selected]} key={profile} onClick={setProfileType.bind(this,profile)}>{profile}</div>)
+						})}
+					</div>
+					<div className={"underline mt-20 text-14 font-500"} onClick={setOtherProfile.bind(this,true)} css={link}>
+						Other Profile
+					</div>
+				</Conditional>
+
+				<Conditional showIf={otherProfile}>
+
+					<Input className={"flex mt-28"} size={"big-medium"} placeholder={"What's your role"} css={css`width: 360rem; input{
+ background: transparent;
+}`}/>
+
+					<div className={"underline mt-22 text-14 font-500"} onClick={setOtherProfile.bind(this,false)} css={link}>
+						Go back
+					</div>
+				</Conditional>
+
+
+				<Button   className={"mt-56"} size={"big-medium"} css={css`min-width: 152rem;`}> Next </Button>
 			</div>
 		</>
 	);
 };
 
-export { CliRepoIntegration };
+const link=css`
+	:hover{
+		color: #a488e4;
+	}
+`
+
+const buttonCSS= css`
+  border-radius: 6px;
+	border: 1px solid #454545;
+	height: 44rem;
+	width: 188rem;
+	font-size: 16rem;
+	display: flex;
+	line-height: 1;
+	justify-content: center;
+	align-items: center;
+	margin-right: 20rem;
+	font-weight: 500;
+	:hover{
+    border-color: #814EEF;
+    background: rgba(129, 78, 239, 0.05);
+	}
+`
+
+const selected = css`
+	border-color: #814EEF;
+  background: rgba(129, 78, 239, 0.05);
+`
+
+export { InitialInfo };

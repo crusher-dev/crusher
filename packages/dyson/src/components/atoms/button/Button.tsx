@@ -21,6 +21,9 @@ const getStyleBySize = (
 		case "medium":
 			return { height: 36, fontSize: 14, fontWeight: 500 };
 			break;
+		case "big-medium":
+			return { height: 40, fontSize: 14, fontWeight: 500 };
+			break;
 		case "large":
 			return { height: 44, fontSize: 15, fontWeight: 500 };
 			break;
@@ -122,7 +125,7 @@ export type ButtonProps = {
 	/**
 	 * Size of the component
 	 */
-	size?: "tiny" | "x-small" | "small" | "medium" | "large" | "x-large";
+	size?: "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
 
 	/**
 	 * Disabled;

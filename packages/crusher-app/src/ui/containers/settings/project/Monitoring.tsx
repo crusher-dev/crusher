@@ -284,7 +284,7 @@ const projectListCard = css`
 	background: rgb(16 18 21);
 	border: 1px solid #171b20;
 	#top-section {
-    padding: 14rem 20rem;
+		padding: 14rem 20rem;
 	}
 	#delete {
 		:hover {

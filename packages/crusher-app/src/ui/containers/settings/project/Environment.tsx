@@ -233,18 +233,18 @@ function EnvironmentForm({ id }) {
 					`}
 				>
 					<Conditional showIf={!notSavedInDB}>
-
 						<Conditional showIf={deleting}>
 							<div className={"flex items-center"}>
-								<LoadingSVG height={12} width={12} className={"mr-8"}/>	Deleting
+								<LoadingSVG height={12} width={12} className={"mr-8"} /> Deleting
 							</div>
-  					</Conditional>
+						</Conditional>
 						<Conditional showIf={!deleting}>
-							<span onClick={()=>{
-								deleteEnvAPI()
-								setDeleting(true)
-								}
-							}>
+							<span
+								onClick={() => {
+									deleteEnvAPI();
+									setDeleting(true);
+								}}
+							>
 								Delete
 							</span>
 						</Conditional>

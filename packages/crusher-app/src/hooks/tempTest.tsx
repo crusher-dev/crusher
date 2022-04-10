@@ -43,7 +43,7 @@ export const useSaveTemp = () => {
 			setLoginKey(loginKey);
 			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } });
 		}
-		if(githubToken) {
+		if (githubToken) {
 			setGithubToken(githubToken);
 		}
 

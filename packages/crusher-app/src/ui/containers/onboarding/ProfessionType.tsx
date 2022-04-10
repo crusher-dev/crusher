@@ -62,7 +62,7 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 	);
 };
 
-const CliRepoIntegration = () => {
+const URLOnboarding = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [project] = useAtom(currentProject);
 	const [commands, setCommnads] = React.useState(["", ""]);

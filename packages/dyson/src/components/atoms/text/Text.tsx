@@ -8,6 +8,7 @@ export type TextProps = {
 	fontSize?: number;
 	leading?: string;
 	weight?: number;
+	letterSpacing?: boolean;
 	CSS?: SerializedStyles;
 	color?: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, any>;
@@ -18,11 +19,30 @@ const TextDefaultProps = {
 	weight: 400,
 	color: "#fff",
 };
+
+const getLetterSpacing = (fontSize)=>{
+	if(fontSize < 12){
+		return {letterSpacing: `.4px`}
+	}
+
+	if(fontSize < 13){
+		return {letterSpacing: `.35px`}
+	}
+
+	if(fontSize < 14){
+		return {letterSpacing: `.3px`}
+	}
+	if(fontSize <= 15){
+		return {letterSpacing: `.25px`}
+	}
+
+	return {letterSpacing: `0`}
+}
 /**
  * Crusher Text component.
  */
 export const Text: React.FC<TextProps> = (props: TextProps) => {
-	const { children, fontSize, weight, className, color, ...otherProps } = props;
+	const { children, fontSize, weight, className, color,letterSpacing, ...otherProps } = props;
 	return (
 		<span
 			className={`font-gilroy font-${weight} ${className}`}
@@ -30,6 +50,7 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 				font-size: ${fontSize}rem;
 				color: ${color};
 				${otherProps.onClick && `cursor:default`}
+				letter-spacing: ${!!letterSpacing ? getLetterSpacing(fontSize) : '0'}
 			`}
 			{...otherProps}
 		>

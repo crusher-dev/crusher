@@ -13,7 +13,7 @@ import { USER_META_KEYS } from "@constants/USER";
 import Link from "next/link";
 
 const SupportCrusher = () => {
-	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
+
 	const [, updateOnboarding] = useAtom(updateMeta);
 
 	usePageTitle("Support crusher");
@@ -46,7 +46,7 @@ const SupportCrusher = () => {
 					</div>
 				</div>
 
-				<div className={"flex mt-80"}>
+				<div className={"flex mt-56"}>
 					<div className={"px-32 py-24"} css={githubCSS}>
 						<div className={"flex justify-between "}>
 							<Text fontSize={16} weight={700} color={"#ff6ef4"}>
@@ -131,19 +131,19 @@ const SupportCrusher = () => {
 };
 
 const githubCSS = css`
-	background: #0c0d0f;
-	border-top-left-radius: 6px;
-	border-bottom-left-radius: 6px;
-	border: 1px solid #21252f;
+	background: #0c0d0e;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border: 1px solid #131516;
 	width: 50%;
 	height: 220px;
 `;
 
 const discordCSS = css`
-	background: #0c0d0f;
-	border-top-right-radius: 6px;
-	border-bottom-right-radius: 6px;
-	border: 1px solid #21252f;
+	background: #0c0d0e;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border: 1px solid #131516;
 	border-left-width: 0;
 	width: 50%;
 	height: 220px;

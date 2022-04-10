@@ -12,11 +12,13 @@ import { CliRepoIntegration } from "./cliIntegration";
 import { SetupCrusher } from "./setup";
 import { SupportCrusher } from "./support";
 import { GitRepoIntegration } from "./gitRepoIntegration";
-import { getBoolean } from "@utils/common";
+import { URLOnboarding } from '@ui/containers/onboarding/URLOnboarding';
+import { InitialInfo } from '@ui/containers/onboarding/InitialInfo';
 
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);
 
+	return <InitialInfo />;
 	switch (step) {
 		case OnboardingStepEnum.SETUP:
 			return <SetupCrusher />;
@@ -43,9 +45,9 @@ const CrusherOnboarding = () => {
 	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
 
 	useEffect(() => {
-		if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
-			router.push("/app/dashboard");
-		}
+		// if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
+		// 	router.push("/app/dashboard");
+		// }
 	}, []);
 
 	return (
@@ -87,7 +89,7 @@ const CrusherOnboarding = () => {
 						</div>
 					))}
 				</div>
-				<div className="flex mt-100">
+				<div className="flex mt-100 flex-col">
 					<GetViewByStep />
 				</div>
 			</div>

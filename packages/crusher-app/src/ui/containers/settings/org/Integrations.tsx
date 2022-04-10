@@ -382,21 +382,14 @@ function LinkedRepo() {
 	);
 }
 
-
 const GitSVG = (props) => (
-	<svg
-		width={1034}
-		height={1034}
-		viewBox="-10 -5 1034 1034"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg width={1034} height={1034} viewBox="-10 -5 1034 1034" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			fill="#ffffff4ag"
 			d="M499 228q-21 0-36 15l-73 73 92 92q17-6 34-2t29.5 16.5 16 29.5-1.5 34l88 88q17-5 34-1.5t30 16.5q18 18 18 43.5t-18 43-43.5 17.5-43.5-17q-13-14-16.5-32t3.5-35l-83-83v218q9 4 16 11 18 18 18 43.5T545 842t-43.5 18-43-18-17.5-43.5 18-43.5q8-8 20-13V522q-12-4-20-13-14-13-17.5-31.5T445 442l-90-91-240 240q-15 15-15 36.5t15 36.5l349 349q15 15 36.5 15t36.5-15l348-348q15-15 15-36.5T885 592L536 243q-15-15-37-15z"
 		/>
 	</svg>
-)
+);
 function GitIntegration() {
 	const [connectedToGit] = useAtom(connectedToGitAtom);
 	const [project] = useAtom(currentProject);
@@ -407,7 +400,7 @@ function GitIntegration() {
 		<div className={"flex flex-col justify-between items-start mt-44 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
-				<GitSVG height={28} width={28}/>
+					<GitSVG height={28} width={28} />
 					<div className={"ml-16"}>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration

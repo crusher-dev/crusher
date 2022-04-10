@@ -116,9 +116,12 @@ function BuildSearchableList() {
 		});
 	}, [data]);
 
-	const setPage = useCallback((page) => {
-		setFilters({ ...filters, page });
-	}, [filters]);
+	const setPage = useCallback(
+		(page) => {
+			setFilters({ ...filters, page });
+		},
+		[filters],
+	);
 
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
 	return (

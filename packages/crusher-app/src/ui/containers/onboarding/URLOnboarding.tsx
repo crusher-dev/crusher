@@ -62,7 +62,7 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 	);
 };
 
-const CliRepoIntegration = () => {
+const URLOnboarding = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [project] = useAtom(currentProject);
 	const [commands, setCommnads] = React.useState(["", ""]);
@@ -101,98 +101,34 @@ const CliRepoIntegration = () => {
 			<div
 				css={css`
 					width: 632rem;
+					color: #DCDCDC; margin-top: 60rem;
 				`}
 			>
-				<div className={"flex justify-between item-center"}>
-					<div>
-						<div className="text-18 leading-none mb-16 font-700 font-cera">Add crusher in your project in 2 mins</div>
-						<div className={"text-13"}>Get ready to feel the change</div>
-					</div>
+				<div>
+						<div className="text-14 leading-none mb-36 font-400 font-cera" css={css`letter-spacing: 0.2px;`}>Create a test</div>
 				</div>
 
-				<Card type="focus" className={"mt-56 py-24 pb-40"}>
-					<div className={"pb-8 px-16 "}>
-						<span
-							className={"text-11 font-700"}
-							css={css`
-								color: rgba(255, 255, 255, 0.23);
-							`}
-						>
-							1.)
-						</span>
-						<span className={"text-16 font-cera font-700 ml-16"}>Create and run your first test</span>
-					</div>
+				<div  className="text-20 font-700" css={css`color: #fff;`} >
+					Enter the URL of the website
+				</div>
 
-					<div className={"pl-44 pr-32 text-14 mb-32"}>We’ll also add handy script to run test with each commit.</div>
+				<div className={"text-13 mt-12"} css={css`letter-spacing: 0.4px;`}>
+					We'll create a test to checks page is loading perfectly
+				</div>
 
-					<div className={"pl-44 pr-32"}>
-						<div className={"flex mt-16"}>
-							<CopyCommandInput command={commands[0]} />
-						</div>
-						<div className={"flex items-center justify-between mt-16"}>
-							<CopyCommandInput command={commands[1]} />
-							<span
-								className={"text-13"}
-								css={css`
-									color: #af7eff;
-								`}
-							></span>
-						</div>
-					</div>
-				</Card>
-				<Card type={"normal"} className={"mt-32 py-16"}>
-					<div className={" px-16 flex items-center justify-between"}>
-						<div
-							className={"flex"}
-							css={css`
-								align-items: center;
-							`}
-						>
-							<span
-								className={"text-11 font-700"}
-								css={css`
-									color: rgba(255, 255, 255, 0.23);
-								`}
-							>
-								2.)
-							</span>
-							<span className={"text-16 font-cera font-700 ml-16"}>Push changes to origin</span>
-							<LoadingSVG
-								className={"ml-8"}
-								css={css`
-									width: 16rem;
-									height: 16rem;
-								`}
-							/>
-						</div>
-						<Button
-							size={"small"}
-							css={css`
-								width: 120rem;
-							`}
-						>
-							Next
-						</Button>
-					</div>
-				</Card>
-				<div className={"flex justify-end mt-28"}>
-					<Link href={"/app/dashboard"}>
-						<Text
-							onClick={handleSkipOnboarding}
-							css={css`
-								:hover {
-									opacity: 0.9;
-								}
-							`}
-							fontSize={13}
-						>
-							Skip setup and show me the dashboard
-						</Text>
-					</Link>
+				<div className={"flex mt-32 items-center"}>
+
+					<Input  size={"large"} placeholder={"Enter the URL of the website"} css={css`width: 360rem; background: transparent;`}/>
+					<Button className={"ml-16"} size={"large"} css={css`min-width: 152rem;`}> Go </Button>
+				</div>
+
+				<div className={"text-16 mt-108"}>
+					<div className={"font-700 mb-16"}>Or run</div>
+					<div><span css={css`color:#AFD97B;`}>npx crusher-cli test:create</span> in your repo</div>
 				</div>
 			</div>
 		</>
 	);
 };
 
-export { CliRepoIntegration };
+export { URLOnboarding };

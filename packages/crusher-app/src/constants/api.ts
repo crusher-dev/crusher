@@ -10,14 +10,14 @@ export const getTestListAPI = (projectId: number, otherFilters: any = {}) => {
 		otherFilters.page = 0;
 	}
 
-	const filteredObj = pickBy(otherFilters,  v => v !== null && v !== undefined);
+	const filteredObj = pickBy(otherFilters, (v) => v !== null && v !== undefined);
 	const urlParams = new URLSearchParams(filteredObj);
 	const urlParamString = urlParams.toString();
 
 	return resolvePathToBackendURI(`/projects/${projectId}/tests?${urlParamString}`);
 };
 export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, otherFilters = {}) => {
-	const filteredObj = pickBy(otherFilters,  v => v !== null && v !== undefined);
+	const filteredObj = pickBy(otherFilters, (v) => v !== null && v !== undefined);
 	const urlParams = new URLSearchParams(filteredObj);
 	const urlParamString = urlParams.toString();
 

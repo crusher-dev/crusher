@@ -118,6 +118,7 @@ class TestsRunner {
 						config: {
 							browser: testInstance.browser as any,
 							shouldRecordVideo: buildTaskInfo.config.shouldRecordVideo,
+							proxyUrlsMap: buildTaskInfo.config.proxyUrlsMap,
 						},
 						buildId: buildTaskInfo.buildId,
 						testInstanceId: testInstance.id,

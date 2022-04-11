@@ -106,8 +106,13 @@ class TestService {
 		folder = null,
 		folderIds = null,
 		testIds = null,
+		proxyUrlsMap?: {[key: string]: {intercept: string | {regex: string}, tunnel: string}},
 	) {
+		console.log("Folder is", folder);
+		console.log("FolderIds is", folderIds);
+		console.log("TestIds is", testIds);
 		const testsData = await this.getTestsInProject(projectId, true, { folder: folder, folderIds: folderIds, testIds: testIds });
+		console.log("Test list is", testsData);
 		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
@@ -131,7 +136,7 @@ class TestService {
 					buildTrigger: BuildTriggerEnum.MANUAL,
 					browser: browsers,
 					isDraftJob: false,
-					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
+					config: { proxyUrlsMap: proxyUrlsMap, shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
 					meta: meta,
 				},
 				customTestsConfig,

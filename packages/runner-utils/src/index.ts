@@ -17,6 +17,7 @@ import { ExportsManager } from "./functions/exports";
 import { IExportsManager } from "@crusher-shared/lib/exports/interface";
 import { CommunicationChannel } from "./functions/communicationChannel";
 import { ActionDescriptor } from "./functions/actionDescriptor";
+import {handleProxyBrowserContext, handleProxyPage} from "./utils/proxy";
 
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
@@ -263,4 +264,4 @@ class CrusherRunnerActions {
 	}
 }
 
-export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk, CommunicationChannel, ActionDescriptor };
+export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk, CommunicationChannel, ActionDescriptor, handleProxyPage, handleProxyBrowserContext };

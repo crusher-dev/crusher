@@ -154,6 +154,7 @@ export class TestController {
 		@CurrentUser({ required: true }) user,
 		@Body()
 		body: {
+			proxyUrlsMap?: {[key: string]: {intercept: string | {regex: string}, tunnel: string}},
 			githubRepoName?: string;
 			githubCommitId?: string;
 			host?: string;
@@ -187,6 +188,7 @@ export class TestController {
 			body.folder ? body.folder : null,
 			body.folderIds ? body.folderIds : null,
 			body.testIds ? body.testIds : null,
+			body.proxyUrlsMap ? body.proxyUrlsMap : null,
 		);
 	}
 

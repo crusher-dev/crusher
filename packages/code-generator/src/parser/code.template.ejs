@@ -67,10 +67,10 @@ await crusherRunnerActionManager.runActions(getMainActions(actions), browser, pa
   <% if (shouldRecordVideo) { %>
   globalManager.set("recordedVideoPath", await page.video().path());
   <% } %>
-  <!-- await page.close(); -->
-  <!-- await browserContext.close(); -->
+  await page.close();
+  await browserContext.close();
   if(browser) {
-    <!-- await browser.close(); -->
+    await browser.close();
   }
   throw ex;
 }
@@ -78,8 +78,8 @@ await crusherRunnerActionManager.runActions(getMainActions(actions), browser, pa
 <% if (shouldRecordVideo) { %>
 globalManager.set("recordedVideoPath", await page.video().path());
 <% } %>
-<!-- await page.close(); -->
-<!-- await browserContext.close(); -->
+await page.close();
+await browserContext.close();
 if(browser) {
- <!-- await browser.close(); -->
+ await browser.close();
 }

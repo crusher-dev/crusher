@@ -250,6 +250,74 @@ function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 	);
 }
 
+function RenderAssertElement({ logs }) {
+	return (<div className="assertTable mt-24">
+<table css={css`width: 540rem;`}>
+  <tr>
+    <th style={{color: "#8A8A8A"}}>Expected:</th>
+    <th>Visible:</th>
+  </tr>
+  <tr>
+    <td style={{color: "#8A8A8A"}}>Element <u>.step</u> should be visible</td>
+    <td style={{color: "#8A8A8A"}}>Element <u>.step</u> is not visible</td>
+  </tr>
+  <tr>
+    <td>
+      <div style={{color: "#8A8A8A"}}><pre>title</pre> should be</div>
+      <div className="para-line"><span className="highlight-old">Homepage</span></div>
+    </td>
+    <td>
+      <div style={{color: "#8A8A8A"}}><pre>title</pre> is</div>
+      <div className="para-line"><span className="highlight-current">Homepage</span></div>
+    </td>
+  </tr>
+  <tr>
+    <td style={{padding: "8px"}}></td>
+  </tr>
+</table>
+<style>
+	{`
+		.assertTable pre {
+		  display: inline-block;
+		  margin: 0;
+		}
+		.assertTable table {
+		  background: rgba(65, 63, 63, 0.03);
+		  border: 1px solid rgba(255, 255, 255, 0.09);
+		  box-sizing: border-box;
+		  color: #fff;
+		  padding: 4px 16px;
+		  
+		  border-spacing: 10px;
+		  border-collapse: collapse;
+		}
+		.assertTable .highlight-old {
+		  color: #AFCE6D;
+		}
+		.assertTable .highlight-current {
+		  color: #FF59A9;
+		}
+		
+	  .assertTable th, td {
+		border-right: 1px solid rgba(255, 255, 255, 0.09); 
+		border-left: 1px solid rgba(255, 255, 255, 0.09);
+		border-radius: 10px;
+		padding: 4px 16px;
+		width: 260px;
+	  }
+	  .assertTable th{
+		padding: 14px 16px;
+		text-align: left;
+	  }
+	  .assertTable .para-line{
+		margin-top: 4px;
+	  }		
+	`}
+</style>
+</div>
+	)
+}
+
 function RenderStep({ data, testInstanceData }) {
 	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
@@ -332,9 +400,26 @@ function RenderStep({ data, testInstanceData }) {
 				</Conditional>
 			</div>
 
+
+
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
 				{data.meta && data.meta.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
 			</Conditional>
+
+			<div className={"px-44"}>
+				<Conditional showIf={status === "FAILED"}>
+					<Button css={css`
+							width: 144px;
+						`}
+					>
+						Review
+					</Button>
+				</Conditional>
+
+				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) && data.meta && data.meta.meta && data.meta.meta.meta && data.meta.meta.meta.logs  ? (
+					<RenderAssertElement logs={data.meta.meta.meta.logs}/>
+				) : ""}
+			</div>
 			<Conditional showIf={showStepInfoModal}>
 				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />
 			</Conditional>

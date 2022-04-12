@@ -15,6 +15,8 @@ const handleProxyBrowserContext = async (browserContext: BrowserContext, proxyUr
             const tunnelUrl = new URL(proxyConfig.tunnel);
 
             urlObject.host = tunnelUrl.host;
+            urlObject.protocol = tunnelUrl.protocol;
+
             console.log("URL IS NOW (browser) ", urlObject.toString());
 
             await route.continue({
@@ -38,6 +40,7 @@ const handleProxyPage = async (page: Page, proxyUrlsMap: { [key: string]: { tunn
 
             const tunnelUrl = new URL(proxyConfig.tunnel);
             urlObject.host = tunnelUrl.host;
+            urlObject.protocol = tunnelUrl.protocol;
             console.log("URL IS NOW (page) ", urlObject.toString());
 
             await route.continue({

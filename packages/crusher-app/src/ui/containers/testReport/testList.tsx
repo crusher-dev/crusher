@@ -251,73 +251,85 @@ function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 }
 
 function RenderAssertElement({ logs }) {
-	return (<div className="assertTable mt-24">
-<table css={css`width: 540rem;`}>
+	return (<div className="assertTable mt-24" css={assertTableContainerStyle}>
+<table css={assertTableCss}>
   <tr>
     <th style={{color: "#8A8A8A"}}>Expected:</th>
     <th>Visible:</th>
   </tr>
   <tr>
-    <td style={{color: "#8A8A8A"}}>Element <u>.step</u> should be visible</td>
-    <td style={{color: "#8A8A8A"}}>Element <u>.step</u> is not visible</td>
+    <td style={{padding: "4rem 0rem"}}></td>
   </tr>
-  <tr>
-    <td>
-      <div style={{color: "#8A8A8A"}}><pre>title</pre> should be</div>
-      <div className="para-line"><span className="highlight-old">Homepage</span></div>
-    </td>
-    <td>
-      <div style={{color: "#8A8A8A"}}><pre>title</pre> is</div>
-      <div className="para-line"><span className="highlight-current">Homepage</span></div>
-    </td>
-  </tr>
+
+{logs.map((log) => {
+	return (
+	<tr>
+		<td>
+		  <div style={{color: "#8A8A8A"}}><pre>{log.meta.field}</pre> should be</div>
+		  <div className="para-line"><span className="highlight-old">{log.meta.valueToMatch}</span></div>
+		</td>
+		<td>
+		  <div style={{color: "#8A8A8A"}}><pre>{log.meta.field}</pre> is</div>
+		  <div className="para-line"><span className={log.meta.status === "FAIELD" ? "highlight-current" : "highlight-old"}>{log.meta.elementValue}</span></div>
+		</td>
+	  </tr>
+	)
+})}
   <tr>
     <td style={{padding: "8px"}}></td>
   </tr>
 </table>
-<style>
-	{`
-		.assertTable pre {
-		  display: inline-block;
-		  margin: 0;
-		}
-		.assertTable table {
-		  background: rgba(65, 63, 63, 0.03);
-		  border: 1px solid rgba(255, 255, 255, 0.09);
-		  box-sizing: border-box;
-		  color: #fff;
-		  padding: 4px 16px;
-		  
-		  border-spacing: 10px;
-		  border-collapse: collapse;
-		}
-		.assertTable .highlight-old {
-		  color: #AFCE6D;
-		}
-		.assertTable .highlight-current {
-		  color: #FF59A9;
-		}
-		
-	  .assertTable th, td {
+</div>
+	)
+}
+
+const assertTableCss = css`
+	background: rgba(65, 63, 63, 0.03);
+	border-radius: 8rem;
+	box-sizing: border-box;
+	color: #fff;
+	padding: 4px 16px;
+
+	border-spacing: 10px;
+	border-collapse: collapse;
+	width: 540rem; font-family: Cera Pro;
+	th, td {
 		border-right: 1px solid rgba(255, 255, 255, 0.09); 
 		border-left: 1px solid rgba(255, 255, 255, 0.09);
 		border-radius: 10px;
 		padding: 4px 16px;
 		width: 260px;
-	  }
-	  .assertTable th{
+	}
+	tr th:nth-of-type(1), tr td:nth-of-type(1) {
+		border-left: none !important;
+	}
+	tr th:nth-of-type(2), tr td:nth-of-type(2) {
+		border-right: none !important;
+	}
+	th{
 		padding: 14px 16px;
 		text-align: left;
-	  }
-	  .assertTable .para-line{
+	}
+	.para-line{
 		margin-top: 4px;
-	  }		
-	`}
-</style>
-</div>
-	)
-}
+	}	
+	.highlight-current {
+		color: #FF59A9;
+	}
+	.highlight-old {
+		color: #AFCE6D;
+	}
+	pre {
+		display: inline-block;
+		margin: 0;
+	  }
+`;
 
+const assertTableContainerStyle = css`
+border: 1px solid rgba(255, 255, 255, 0.09);
+display: inline-block;
+border-radius: 9rem;
+`;
 function RenderStep({ data, testInstanceData }) {
 	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
@@ -406,19 +418,41 @@ function RenderStep({ data, testInstanceData }) {
 				{data.meta && data.meta.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
 			</Conditional>
 
-			<div className={"px-44"}>
-				<Conditional showIf={status === "FAILED"}>
-					<Button css={css`
-							width: 144px;
-						`}
-					>
-						Review
-					</Button>
-				</Conditional>
-
+			<div className={"px-44 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) && data.meta && data.meta.meta && data.meta.meta.meta && data.meta.meta.meta.logs  ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs}/>
 				) : ""}
+				<Conditional showIf={status === "FAILED"}>
+					<div className="mt-36">
+						<div css={css`display: flex;`}>
+							<Button css={css`
+									width: 144px;
+								`}
+							>
+								Run locally
+							</Button>
+							<Button
+								className={"ml-16"}
+									bgColor={"tertiary"}
+									css={css`
+										width: 148rem;
+									`}
+								>
+									<span className={"font-400"}>View Video</span>
+								</Button>
+						</div>
+						<div className="mt-38" css={css`display: flex; flex-direction: column`}>
+							<div css={css`font-family: Cera Pro; font-size: 14px;`}>Screenshot when test failed</div>
+							{data.meta && data.meta.screenshotDuringError ? (<img className={"mt-26"}
+	src={data.meta.screenshotDuringError.endingScreenshot}
+	css={css`
+		max-width: 49%;`}
+		/>
+	 ): ""}
+						
+						</div>
+					</div>
+				</Conditional>
 			</div>
 			<Conditional showIf={showStepInfoModal}>
 				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />

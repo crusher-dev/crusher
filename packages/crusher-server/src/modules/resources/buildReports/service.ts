@@ -103,6 +103,18 @@ export class BuildReportService {
 					}
 				}
 
+				if(actionResult.status === ActionStatusEnum.FAILED) {
+					if(actionResult.meta.screenshotDuringError) {
+						actionResult.meta.screenshotDuringError = JSON.parse(actionResult.meta.screenshotDuringError || {});
+						if(actionResult.meta.screenshotDuringError.startingScreenshot) {
+							actionResult.meta.screenshotDuringError.startingScreenshot = await this.getPublicUrl(actionResult.meta.screenshotDuringError.startingScreenshot);
+						}
+						if(actionResult.meta.screenshotDuringError.endingScreenshot) {
+							actionResult.meta.screenshotDuringError.endingScreenshot = await this.getPublicUrl(actionResult.meta.screenshotDuringError.endingScreenshot);
+						}
+					}
+				}
+
 				return actionResult;
 			}),
 		);

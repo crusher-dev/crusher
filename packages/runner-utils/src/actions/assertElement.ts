@@ -89,7 +89,11 @@ async function assertElementAttributes(
 
 async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, communicationChannel, _, context) {
 	const validationRows = action.payload.meta.validations;
-	await (await element.elementHandle()).waitForElementState("visible");
+	try {
+		await (await element.elementHandle()).waitForElementState("visible");
+	} catch(ex) {
+		markTestFail(`Element ${action.payload.meta && action.payload.meta.elementDescription ? action.payload.meta.elementDescription + " " : ""}is not visible`);
+	}
 	const actionResult = await assertElementAttributes(element, validationRows, context);
 
 	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });

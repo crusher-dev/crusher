@@ -270,7 +270,7 @@ function RenderAssertElement({ logs }) {
 		</td>
 		<td>
 		  <div style={{color: "#8A8A8A"}}><pre>{log.meta.field}</pre> is</div>
-		  <div className="para-line"><span className={log.meta.status === "FAILED" ? "highlight-current" : "highlight-old"}>{log.meta.elementValue}</span></div>
+		  <div className="para-line"><span className={log.status === "FAILED" ? "highlight-current" : "highlight-old"}>{log.meta.elementValue}</span></div>
 		</td>
 	  </tr>
 	)

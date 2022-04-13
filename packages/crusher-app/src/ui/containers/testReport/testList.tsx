@@ -330,7 +330,7 @@ border: 1px solid rgba(255, 255, 255, 0.09);
 display: inline-block;
 border-radius: 9rem;
 `;
-function RenderStep({ data, testInstanceData }) {
+function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
 
@@ -425,18 +425,21 @@ function RenderStep({ data, testInstanceData }) {
 				<Conditional showIf={status === "FAILED"}>
 					<div className="mt-36">
 						<div css={css`display: flex;`}>
-							<Button css={css`
-									width: 144px;
-								`}
-							>
-								Run locally
-							</Button>
+							<a href={`crusher://replay-test?testId=${testId}`}>
+								<Button css={css`
+										width: 144px;
+									`}
+								>
+									Run locally
+								</Button>
+							</a>
 							<Button
 								className={"ml-16"}
 									bgColor={"tertiary"}
 									css={css`
 										width: 148rem;
 									`}
+									onClick={setIsShowingVideo.bind(this, true)}
 								>
 									<span className={"font-400"}>View Video</span>
 								</Button>
@@ -840,7 +843,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 		</>
 	);
 }
-function ExpandableStepGroup({ steps, testInstanceData, count, show = false }: { steps: any[]; testInstanceData: any; count: number; show?: boolean }) {
+function ExpandableStepGroup({ steps, testInstanceData, setIsShowingVideo, testId, count, show = false }: { steps: any[]; testInstanceData: any; count: number; show?: boolean; setIsShowingVideo: any; testId: any; }) {
 	const [expandTestStep, setExpandTestStepSteps] = React.useState(show);
 	const expandHandler = React.useCallback(() => {
 		setExpandTestStepSteps(true);
@@ -869,7 +872,7 @@ function ExpandableStepGroup({ steps, testInstanceData, count, show = false }: {
 			</Conditional>
 			<Conditional showIf={expandTestStep}>
 				{steps.map((step, index) => (
-					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
+					<RenderStep testId={testId} setIsShowingVideo={setIsShowingVideo} testInstanceData={testInstanceData} data={step} key={index} />
 				))}
 			</Conditional>
 		</>
@@ -896,13 +899,13 @@ const expandDIVCSS = css`
 	}
 `;
 
-function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
+function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { steps: any[]; testInstanceData: any; setIsShowingVideo: any; testId: any; }) {
 	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
 		<div className={"px-32 w-full"}>
 			<div className={"ml-32 py-32"} css={stepsList}>
 				{groupSteps.map(({ type, from, to, count }: any) => (
-					<ExpandableStepGroup testInstanceData={testInstanceData} steps={steps.slice(from, from === to ? to + 1 : to)} count={count} show={type === "show"} />
+					<ExpandableStepGroup testId={testId} setIsShowingVideo={setIsShowingVideo} testInstanceData={testInstanceData} steps={steps.slice(from, from === to ? to + 1 : to)} count={count} show={type === "show"} />
 				))}
 			</div>
 		</div>
@@ -943,6 +946,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		}, 500);
 	}, [testCardConfig]);
 
+	console.log("Test data", testData);
+
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
 			<div
@@ -982,7 +987,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			</div>
 
 			<Conditional showIf={expand && !showLoading}>
-				<RenderSteps steps={steps} testInstaceData={testInstanceData} />
+				<RenderSteps testId={testData.testId} setIsShowingVideo={setIsShowingVideo} steps={steps} testInstanceData={testInstanceData} />
 			</Conditional>
 
 			<Conditional showIf={expand && showLoading}>

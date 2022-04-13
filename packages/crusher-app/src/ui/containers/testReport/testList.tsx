@@ -419,7 +419,7 @@ function RenderStep({ data, testInstanceData }) {
 			</Conditional>
 
 			<div className={"px-44 mt-12"}>
-				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) && data.meta && data.meta.meta && data.meta.meta.meta && data.meta.meta.meta.logs  ? (
+				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) && data.meta && data.meta.meta && data.meta.meta.meta && data.meta.meta.meta.logs && status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs}/>
 				) : ""}
 				<Conditional showIf={status === "FAILED"}>

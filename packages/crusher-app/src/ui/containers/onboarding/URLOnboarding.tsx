@@ -3,6 +3,7 @@ import { getTestListAPI } from "@constants/api";
 import { USER_META_KEYS } from "@constants/USER";
 import { css } from "@emotion/react";
 import { usePageTitle } from "@hooks/seo";
+import { appStateAtom } from "@store/atoms/global/appState";
 import { currentProject } from "@store/atoms/global/project";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
 import { updateMeta } from "@store/mutators/metaData";
@@ -13,6 +14,7 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { resolvePathToBackendURI } from "@utils/common/url";
 import { Button, Input, Text } from "dyson/src/components/atoms";
+import { Conditional } from "dyson/src/components/layouts";
 import { useAtom } from "jotai";
 import Link from "next/link";
 import React from "react";
@@ -67,6 +69,9 @@ const URLOnboarding = () => {
 	const [project] = useAtom(currentProject);
 	const [commands, setCommnads] = React.useState(["", ""]);
 	const [, updateOnboarding] = useAtom(updateMeta);
+	const [websiteUrl, setWebsiteUrl] = React.useState(null);
+	const [isCreatingTest, setIsCreatingTest] = React.useState(false);
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
 	React.useEffect(() => {
 		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
@@ -86,15 +91,25 @@ const URLOnboarding = () => {
 		}, 1000);
 	}, []);
 
-	usePageTitle("Create & Run your first test");
+	const handleUrlSubmit = () => {
+		setIsCreatingTest(true);
 
-	const handleSkipOnboarding = () => {
-		updateOnboarding({
-			type: "user",
-			key: USER_META_KEYS.INITIAL_ONBOARDING,
-			value: true,
+		backendRequest(`/projects/${selectedProjectId}/actions/generate.tests`, {
+			method: RequestMethod.POST,
+			payload: {url: websiteUrl}
+		}).then((data) => {
+			if (data && data.status === "Successful") {
+				setIsCreatingTest(false);
+				setOnboardingStep(OnboardingStepEnum.SUPPORT_CRUSHER);
+			}
+		}).catch((err) => {
+			setIsCreatingTest(false);
+			console.error("Error is", err);
+			alert("Some error occured while generating tests");
 		});
 	};
+
+	usePageTitle("Create & Run your first test");
 
 	return (
 		<>
@@ -142,6 +157,14 @@ const URLOnboarding = () => {
 							width: 360rem;
 							background: transparent;
 						`}
+						onChange={(e) => {
+							setWebsiteUrl(e.target.value);
+						}}
+						onKeyPress={(e) => {
+							if (e.key === "Enter") {
+								handleUrlSubmit();
+							}
+						}}
 					/>
 					<Button
 						className={"ml-16"}
@@ -149,9 +172,19 @@ const URLOnboarding = () => {
 						css={css`
 							min-width: 152rem;
 						`}
+						onClick={handleUrlSubmit}
 					>
-						{" "}
-						Go{" "}
+						<span>
+							<Conditional showIf={!isCreatingTest}>
+								{" "}Go{" "}
+							</Conditional>
+							<Conditional showIf={isCreatingTest}>
+								<span css={ css`display: flex; align-items: center;`}>
+									<LoadingSVG css={css`width: 18rem; circle { stroke: #fff; }; height: 18rem;`} />
+									<div css={css`text-align: center; flex: 1;`}>Running</div>
+								</span>
+							</Conditional>
+						</span>
 					</Button>
 				</div>
 

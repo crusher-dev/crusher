@@ -80,6 +80,42 @@ class TestService {
 		);
 	}
 
+	async createAndRunTest(payload: { tempTestId?: any; name: string; events?: any }, projectId: number, userId: number) {
+		let events = payload.events || [];
+		if (payload.tempTestId) {
+			const tempTest = await this.getTempTest(payload.tempTestId);
+			events = tempTest.events;
+		}
+
+		if (!events && !events.length) throw new Error("No events passed");
+		if (!payload.name) throw new Error("No name passed for the test");
+
+		const testInsertRecord = await this.createTest({
+			...(payload as any),
+			events: events,
+			projectId: projectId,
+			userId: userId,
+		});
+
+		const testRecord = await this.getTest(testInsertRecord.insertId);
+
+		const buildRunInfo = await this.testsRunner.runTests(await this.getCompleteTestsArray(await this.getFullTestArr([testRecord])), {
+			userId: userId,
+			projectId: projectId,
+			host: "null",
+			status: BuildStatusEnum.CREATED,
+			buildTrigger: BuildTriggerEnum.MANUAL,
+			browser: [BrowserEnum.CHROME],
+			isDraftJob: true,
+			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+			meta: { isDraftJob: true },
+		});
+
+		await this.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
+
+		return testInsertRecord;
+	}
+
 	async updateTestSteps(testId: number, steps: Array<iAction>) {
 		return this.dbManager.update(`UPDATE public.tests SET events = ? WHERE id = ?`, [JSON.stringify(steps), testId]);
 	}
@@ -147,7 +183,10 @@ class TestService {
 		return this.dbManager.fetchAllRows(query, values);
 	}
 
-	async getTests(findOnlyActiveTests = false, filter: { userId?: number;  projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+	async getTests(
+		findOnlyActiveTests = false,
+		filter: { userId?: number; projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number } = {},
+	) {
 		const PER_PAGE_LIMIT = 15;
 
 		let additionalSelectColumns = "";
@@ -161,9 +200,9 @@ class TestService {
 
 		let query = `SELECT tests.*, tests.project_id project_id, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
 			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
-		} FROM public.tests, public.users, public.jobs, public.job_reports ${
-			additionalFromSource ? `, ${additionalFromSource}` : ""
-		} WHERE ${filter.projectId ? `tests.project_id = ? AND` : ''} ${filter.userId ? `users.id = ? AND` : ''} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		} FROM public.tests, public.users, public.jobs, public.job_reports ${additionalFromSource ? `, ${additionalFromSource}` : ""} WHERE ${
+			filter.projectId ? `tests.project_id = ? AND` : ""
+		} ${filter.userId ? `users.id = ? AND` : ""} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
 		if (filter.projectId) {
 			queryParams.push(filter.projectId);
 		}

@@ -204,43 +204,7 @@ export class TestController {
 		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; tempTestId?: string },
 	) {
 		const { user_id } = user;
-
-		let events = body.events;
-		if (body.tempTestId) {
-			const tempTest = await this.testService.getTempTest(body.tempTestId);
-			events = tempTest.events;
-		}
-
-		if (!events) throw new Error("No events passed");
-		if (!body.name) throw new Error("No name passed for the test");
-
-		const testInsertRecord = await this.testService.createTest({
-			...body,
-			events: events,
-			projectId: projectId,
-			userId: user_id,
-		});
-
-		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
-
-		const buildRunInfo = await this.testRunnerService.runTests(
-			await this.testService.getCompleteTestsArray(await this.testService.getFullTestArr([testRecord])),
-			{
-				userId: user_id,
-				projectId: projectId,
-				host: "null",
-				status: BuildStatusEnum.CREATED,
-				buildTrigger: BuildTriggerEnum.MANUAL,
-				browser: [BrowserEnum.CHROME],
-				isDraftJob: true,
-				config: { shouldRecordVideo: true, testIds: [testRecord.id] },
-				meta: { isDraftJob: true },
-			},
-		);
-
-		await this.testService.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
-
-		return testInsertRecord;
+		return this.testService.createAndRunTest(body, projectId, user_id);
 	}
 
 	@Get("/tests/actions/get.template")

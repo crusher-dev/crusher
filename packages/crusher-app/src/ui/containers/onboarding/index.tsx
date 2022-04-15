@@ -13,29 +13,27 @@ import { SetupCrusher } from "./setup";
 import { SupportCrusher } from "./support";
 import { GitRepoIntegration } from "./gitRepoIntegration";
 import { URLOnboarding } from "@ui/containers/onboarding/URLOnboarding";
-import { InitialInfo } from "@ui/containers/onboarding/InitialInfo";
+import { SurveyContainer } from "@ui/containers/onboarding/Survey";
+import { getBoolean } from "@utils/common";
 
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);
 
-	return <InitialInfo />;
 	switch (step) {
-		case OnboardingStepEnum.SETUP:
-			return <SetupCrusher />;
+		case OnboardingStepEnum.SURVEY:
+			return <SurveyContainer />;
+		case OnboardingStepEnum.URL_ONBOARDING:
+			return <URLOnboarding />;
 		case OnboardingStepEnum.SUPPORT_CRUSHER:
 			return <SupportCrusher />;
-		case OnboardingStepEnum.GIT_INTEGRATION:
-			return <GitRepoIntegration />;
-		case OnboardingStepEnum.CLI_INTEGRATION:
-			return <CliRepoIntegration />;
 		default:
 			return null;
 	}
 };
 
 const steps = [
-	{ id: OnboardingStepEnum.GIT_INTEGRATION, text: "Choose" },
-	{ id: OnboardingStepEnum.CLI_INTEGRATION, text: "Create and run test" },
+	{ id: OnboardingStepEnum.SURVEY, text: "Choose" },
+	{ id: OnboardingStepEnum.URL_ONBOARDING, text: "Create and run test" },
 	{ id: OnboardingStepEnum.SUPPORT_CRUSHER, text: "Support" },
 ];
 
@@ -45,9 +43,25 @@ const CrusherOnboarding = () => {
 	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
 
 	useEffect(() => {
-		// if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
-		// 	router.push("/app/dashboard");
-		// }
+		if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
+			router.push("/app/dashboard");
+		} else {
+			let finalOnboardingStep = null;
+			if(getBoolean(user?.meta.SURVEY)) {
+					finalOnboardingStep = OnboardingStepEnum.URL_ONBOARDING;
+			}
+			if(getBoolean(user?.meta.URL_ONBOARDING)) {
+					finalOnboardingStep = OnboardingStepEnum.SUPPORT_CRUSHER;
+			}
+			if (getBoolean(user?.meta.SUPPORT_CRUSHER)) {
+				finalOnboardingStep = null;
+				router.push("/app/dashboard");
+			}
+
+			if (finalOnboardingStep) {
+				setOnBoardingStep(finalOnboardingStep);
+			}
+		}
 	}, []);
 
 	return (

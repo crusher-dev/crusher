@@ -46,9 +46,24 @@ const updateTeamMeta = (meta: Record<string, any>) => {
 /*
 	Add API filteration to not call API when key-value pair is same.
  */
-export const updateMeta = atom(null, (_get, _set, { type, key, value }: IUpdateUserOnboarding) => {
+export const updateMeta = atom(null, (_get, _set, passedPayload: IUpdateUserOnboarding | {type: IUpdateUserOnboarding["type"], values: Array<Omit<IUpdateUserOnboarding, "type">> }) => {
 	const { selectedProjectId } = _get(appStateAtom);
-	const payload = { [String(key)]: value };
+	let payload = {};
+	const { type } = passedPayload;
+	//@ts-ignore
+	if (passedPayload.values) {
+		//@ts-ignore
+		payload = passedPayload.values.reduce((acc, cur) => {
+			return {
+				...acc,
+				[String(cur.key)]: cur.value,
+			};
+		}, {});
+	} else if (passedPayload instanceof Object) {
+		//@ts-ignore
+		const { key, value, type } = passedPayload;
+		payload = { [String(key)]: value };
+	}
 	switch (type) {
 		case "project":
 			{

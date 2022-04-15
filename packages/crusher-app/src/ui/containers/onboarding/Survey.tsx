@@ -63,7 +63,7 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 	);
 };
 
-const InitialInfo = () => {
+const SurveyContainer = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
 	const [project] = useAtom(currentProject);
 	const [commands, setCommnads] = React.useState(["", ""]);
@@ -71,6 +71,7 @@ const InitialInfo = () => {
 
 	const [profileType, setProfileType] = useState(null);
 	const [otherProfile, setOtherProfile] = useState(false);
+	const [, updateMetaData] = useAtom(updateMeta);
 
 	React.useEffect(() => {
 		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
@@ -100,6 +101,15 @@ const InitialInfo = () => {
 		});
 	};
 
+	const handleNext = () => {
+		updateMetaData({
+			type: "user",
+			key: USER_META_KEYS.SURVEY,
+			value: profileType,
+		});
+		setOnboardingStep(OnboardingStepEnum.URL_ONBOARDING);
+	};
+
 	return (
 		<>
 			<div
@@ -126,12 +136,6 @@ const InitialInfo = () => {
 				>
 					We'll curate experience based on this
 				</div>
-
-				{/*<div className={"flex mt-32 items-center"}>*/}
-
-				{/*	<Input  size={"large"} placeholder={"Enter the URL of the website"} css={css`width: 360rem; background: transparent;`}/>*/}
-				{/*	<Button className={"ml-16"} size={"large"} css={css`min-width: 152rem;`}> Go </Button>*/}
-				{/*</div>*/}
 
 				<Conditional showIf={!otherProfile}>
 					<div className={"flex mt-28"}>
@@ -172,6 +176,8 @@ const InitialInfo = () => {
 					css={css`
 						min-width: 152rem;
 					`}
+					onClick={handleNext}
+					disabled={ !profileType }
 				>
 					{" "}
 					Next{" "}
@@ -210,4 +216,4 @@ const selected = css`
 	background: rgba(129, 78, 239, 0.05);
 `;
 
-export { InitialInfo };
+export { SurveyContainer };

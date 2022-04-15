@@ -26,9 +26,18 @@ const SupportCrusher = () => {
 	const handleOpenApp = () => {
 		updateOnboarding({
 			type: "user",
-			key: USER_META_KEYS.INITIAL_ONBOARDING,
-			value: true,
+			values: [
+				{
+					key: USER_META_KEYS.SUPPORT_CRUSHER,
+					value: true,
+				},
+				{
+					key: USER_META_KEYS.INITIAL_ONBOARDING,
+					value: true,
+				}
+			],
 		});
+
 	};
 
 	const openDiscord = () => {

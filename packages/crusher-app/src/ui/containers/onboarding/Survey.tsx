@@ -110,6 +110,10 @@ const SurveyContainer = () => {
 		setOnboardingStep(OnboardingStepEnum.URL_ONBOARDING);
 	};
 
+	const handleRoleInputChange = (value) => {
+		setProfileType(value);
+	}
+
 	return (
 		<>
 			<div
@@ -156,7 +160,13 @@ const SurveyContainer = () => {
 					<Input
 						className={"flex mt-28"}
 						size={"big-medium"}
-						placeholder={"What's your role"}
+						placeholder={"What's your role?"}
+						onKeyDown={(e) => {
+							handleRoleInputChange(e.target.value)
+							if (e.keyCode === 13) {
+								handleNext();
+							}
+						}}
 						css={css`
 							width: 360rem;
 							input {

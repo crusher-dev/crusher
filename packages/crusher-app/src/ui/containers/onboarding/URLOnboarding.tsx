@@ -18,6 +18,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { useAtom } from "jotai";
 import Link from "next/link";
 import React from "react";
+import { addHttpToURLIfNotThere, checkValidURL } from "@crusher-shared/utils/url";
 
 const CopyCommandInput = ({ command }: { command: string }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -71,6 +72,7 @@ const URLOnboarding = () => {
 	const [, updateOnboarding] = useAtom(updateMeta);
 	const [websiteUrl, setWebsiteUrl] = React.useState(null);
 	const [isCreatingTest, setIsCreatingTest] = React.useState(false);
+	const [urlError, setUrlError] = React.useState(null);
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
 	React.useEffect(() => {
@@ -92,11 +94,20 @@ const URLOnboarding = () => {
 	}, []);
 
 	const handleUrlSubmit = () => {
+		if (!websiteUrl) {
+			setUrlError("Please enter a valid URL");
+			return;
+		}
+		const finalWebsiteUrl = addHttpToURLIfNotThere(websiteUrl);
+		if (!checkValidURL(finalWebsiteUrl)) {
+			setUrlError("Please enter a valid URL");
+			return;
+		}
 		setIsCreatingTest(true);
 
 		backendRequest(`/projects/${selectedProjectId}/actions/generate.tests`, {
 			method: RequestMethod.POST,
-			payload: {url: websiteUrl}
+			payload: {url: finalWebsiteUrl}
 		}).then((data) => {
 			if (data && data.status === "Successful") {
 				setIsCreatingTest(false);
@@ -149,7 +160,7 @@ const URLOnboarding = () => {
 					We'll create a test to checks page is loading perfectly
 				</div>
 
-				<div className={"flex mt-32 items-center"}>
+				<div className={"flex mt-32 items-center"} css={css`position: relative;`}>
 					<Input
 						size={"large"}
 						placeholder={"Enter the URL of the website"}
@@ -157,6 +168,7 @@ const URLOnboarding = () => {
 							width: 360rem;
 							background: transparent;
 						`}
+						isError={!!urlError}
 						onChange={(e) => {
 							setWebsiteUrl(e.target.value);
 						}}
@@ -165,7 +177,11 @@ const URLOnboarding = () => {
 								handleUrlSubmit();
 							}
 						}}
+						onKeyDown={() => {
+							setUrlError(null);
+						}}
 					/>
+					<span css={css`position: absolute; bottom: -28rem; color: #ff4583;`}>{urlError}</span>
 					<Button
 						className={"ml-16"}
 						size={"large"}

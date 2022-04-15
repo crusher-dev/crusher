@@ -7,6 +7,9 @@ type TDropdown = {
 	component: ReactElement | string;
 	initialState: boolean;
 	callback: (openStatus: boolean) => void;
+
+	// For emotion
+	className?: string;
 } & React.DetailedHTMLProps<any, any>;
 
 const DropdownBox = ({ children, dropdownCSS }: React.DetailedHTMLProps<any, any>) => (
@@ -26,9 +29,9 @@ const DropdownBox = ({ children, dropdownCSS }: React.DetailedHTMLProps<any, any
 		<Dropwdown>
  */
 
-export const Dropdown = ({ initialState, children, dropdownCSS, component, callback }: TDropdown) => {
+export const Dropdown = ({ initialState, children, dropdownCSS, className, component, callback }: TDropdown) => {
 	return (
-		<ShowOnClick callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS}>{component}</DropdownBox>}>
+		<ShowOnClick className={className} callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS}>{component}</DropdownBox>}>
 			{children}
 		</ShowOnClick>
 	);

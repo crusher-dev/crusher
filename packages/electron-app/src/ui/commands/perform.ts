@@ -10,11 +10,11 @@ import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
 
 const performAction = async (action: iAction, shouldNotSave = false, isRecording = true) => {
-	ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
+	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
 const performSetDevice = async (device: iDevice) => {
-	await performAction({
+	return performAction({
 		type: ActionsInTestEnum.SET_DEVICE,
 		payload: {
 			meta: {
@@ -27,7 +27,7 @@ const performSetDevice = async (device: iDevice) => {
 };
 
 const performNavigation = async (url: string, store: Store<unknown, AnyAction>) => {
-	await performAction({
+	return performAction({
 		type: ActionsInTestEnum.NAVIGATE_URL,
 		payload: {
 			selectors: [],
@@ -110,7 +110,7 @@ const performClick = async (selectedElement: iElementInfo) => {
 				},
 			},
 		},
-		true,
+		false,
 	);
 };
 
@@ -142,12 +142,13 @@ const performRunAfterTest = async (testId: string) => {
 	);
 };
 
-const performCustomCode = async (code: string) => {
+const performCustomCode = async (code: string, templateId: string | null) => {
 	await performAction({
 		type: ActionsInTestEnum.CUSTOM_CODE,
 		payload: {
 			selectors: null,
 			meta: {
+				templateId,
 				script: code,
 			},
 		},
@@ -166,9 +167,13 @@ export const performAssertElementVisibility = async (selectedElement: iElementIn
 	});
 };
 
-const performVerifyTest = async () => {
-	ipcRenderer.invoke("verify-test");
+const performVerifyTest = async (shouldAlsoSave = true) => {
+	ipcRenderer.invoke("verify-test", { shouldAlsoSave });
 };
+
+const performResetAppSession = async () => {
+	ipcRenderer.invoke("reset-app-session");
+}
 
 const performReplayTest = async (testId) => {
 	ipcRenderer.invoke("replay-test", { testId });
@@ -178,9 +183,25 @@ const turnOnInspectMode = () => {
 	ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 };
 
+const turnOnElementSelectorInspectMode = () => {
+	return ipcRenderer.invoke("turn-on-element-selector-inspect-mode");
+}
+
 const turnOffInspectMode = () => {
 	ipcRenderer.invoke("turn-off-recorder-inspect-mode");
 };
+
+const enableJavascriptInDebugger = () => {
+	return ipcRenderer.invoke("enable-javascript-in-debugger");
+}
+
+const disableJavascriptInDebugger = () => {
+	return ipcRenderer.invoke("disable-javascript-in-debugger");
+}
+
+const turnOffElementSelectorInspectMode = () => {
+	return ipcRenderer.invoke("turn-off-element-selector-inspect-mode");
+}
 
 const saveTest = () => {
 	ipcRenderer.invoke("save-test");
@@ -202,8 +223,8 @@ const resetStorage = () => {
 	ipcRenderer.invoke("reset-storage");
 };
 
-const continueRemainingSteps = () => {
-	ipcRenderer.invoke("continue-remaining-steps");
+const continueRemainingSteps = (extraSteps?: Array<iAction>) => {
+	ipcRenderer.invoke("continue-remaining-steps", { extraSteps });
 };
 
 const registerActionAsSavedStep = (action) => {
@@ -226,6 +247,34 @@ const getUserTests = () => {
 	return ipcRenderer.invoke("get-user-tests");
 };
 
+const performJumpTo = (stepIndex) => {
+	return ipcRenderer.invoke("jump-to-step", {stepIndex});
+}
+
+const performQuitAndRestore = (store) => {
+	const savedSteps = getSavedSteps(store.getState());
+	window.localStorage.setItem("saved-steps", JSON.stringify(savedSteps));
+	return ipcRenderer.invoke("quit-and-restore");
+}
+
+const performSteps = (steps) => {
+	return ipcRenderer.invoke("perform-steps", { steps });
+};
+
+const getCodeTemplates = () => {
+	return ipcRenderer.invoke("get-code-templates", {});
+};
+
+const saveCodeTemplate = (payload) => {
+	return ipcRenderer.invoke("save-code-template", { createPayload: payload });
+};
+
+const updateCodeTemplate = (id, name, code) => {
+	return ipcRenderer.invoke("update-code-template", { id, name, code });
+};
+const deleteCodeTemplate = (id) => {
+	return ipcRenderer.invoke("delete-code-template", { id });
+};
 export {
 	recordHoverDependencies,
 	performAction,
@@ -253,4 +302,16 @@ export {
 	focusOnWindow,
 	saveAndGetUserInfo,
 	getUserTests,
+	turnOnElementSelectorInspectMode,
+	turnOffElementSelectorInspectMode,
+	performResetAppSession,
+	performJumpTo,
+	performQuitAndRestore,
+	performSteps,
+	enableJavascriptInDebugger,
+	disableJavascriptInDebugger,
+	getCodeTemplates,
+	saveCodeTemplate,
+	updateCodeTemplate,
+	deleteCodeTemplate,
 };

@@ -1,11 +1,22 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { Page } from "playwright";
+import { ExportsManager } from "../functions/exports";
+import { CrusherSdk } from "../sdk/sdk";
 import { sleep } from "../functions/sleep";
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
+import template from "@crusher-shared/utils/templateString";
+import { CommunicationChannel } from "../functions/communicationChannel";
 
-async function waitForNavigation(page: Page, action: iAction) {
+async function waitForNavigation(page: Page, action: iAction, globals: IGlobalManager,
+	storageManager: StorageManager,
+	exportsManager: ExportsManager,
+	communicationChannel: CommunicationChannel,
+	sdk: CrusherSdk | null,
+	context: any) {
 	console.log("Waiting for navigation now...");
 	if (action.payload.meta?.value) {
+		let url = template(action.payload.meta?.value, {ctx: context || {}});
 		await new Promise((resolve, reject) => {
 			let time = 0;
 
@@ -17,7 +28,7 @@ async function waitForNavigation(page: Page, action: iAction) {
 				const pageUrl = await page.url();
 				// Trim the slash at the end if any
 				const pageUrlTrimmed = pageUrl.replace(/\/$/, "");
-				const metaValue = action.payload.meta.value.replace(/\/$/, "");
+				const metaValue = url.replace(/\/$/, "");
 
 				if (pageUrlTrimmed === metaValue) {
 					clearInterval(interval);
@@ -35,5 +46,8 @@ async function waitForNavigation(page: Page, action: iAction) {
 module.exports = {
 	name: ActionsInTestEnum.WAIT_FOR_NAVIGATION,
 	description: "Wait for navigation",
+	actionDescriber: (action: iAction) => {
+		return `Wait for navigation to [${action.payload.meta?.value}]`;
+	},
 	handler: waitForNavigation,
 };

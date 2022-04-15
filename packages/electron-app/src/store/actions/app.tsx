@@ -5,6 +5,7 @@ export const SET_SHOW_SHOULD_ONBOARDING_OVERLAY = "SET_SHOW_SHOULD_ONBOARDING_OV
 export const SET_SESSION_META = "SET_SESSION_META";
 export const SET_SETTINGS = "SET_SETTINGS";
 export const SET_USER_ACCOUNT_INFO = "SET_USER_ACCOUNT_INFO";
+export const RESET_APP_SESSION = "RESET_APP_SESSION";
 
 export const setShowShouldOnboardingOverlay = (shouldShow: boolean) => ({
     type: SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
@@ -26,4 +27,10 @@ export const setUserAccountInfo = (info) => {
         type: SET_USER_ACCOUNT_INFO,
         payload: { info },
     };
+};
+
+export const resetAppSession = () => {
+    return {
+        type: RESET_APP_SESSION,
+    }
 };

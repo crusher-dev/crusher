@@ -10,6 +10,8 @@ async function runTemplate(
 	__,
 	___,
 	____,
+	_____,
+	context: any,
 	browser: Browser,
 	runActions: (...params: Parameters<CrusherRunnerActions["runActions"]>) => ReturnType<CrusherRunnerActions["runActions"]>,
 ) {
@@ -22,5 +24,8 @@ async function runTemplate(
 module.exports = {
 	name: ActionsInTestEnum.RUN_TEMPLATE,
 	description: "Run a template",
+	actionDescriber: (action: iAction) => {
+		return `Run a template`;
+	},
 	handler: runTemplate,
 };

@@ -13,5 +13,8 @@ async function goBack(page: Page, action: iAction) {
 module.exports = {
 	name: ActionsInTestEnum.BACK_PAGE,
 	description: "Go back page",
+	actionDescriber: (action: iAction) => {
+		return `Go back page`;
+	},
 	handler: goBack,
 };

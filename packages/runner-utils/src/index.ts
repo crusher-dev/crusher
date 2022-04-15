@@ -15,6 +15,10 @@ import { sleep } from "./functions";
 import { CrusherSdk } from "./sdk/sdk";
 import { ExportsManager } from "./functions/exports";
 import { IExportsManager } from "@crusher-shared/lib/exports/interface";
+import { CommunicationChannel } from "./functions/communicationChannel";
+import { ActionDescriptor } from "./functions/actionDescriptor";
+import {handleProxyBrowserContext, handleProxyPage} from "./utils/proxy";
+
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
 export enum ActionCategoryEnum {
@@ -34,7 +38,9 @@ class CrusherRunnerActions {
 	storageManager: StorageManager;
 	globals: IGlobalManager;
 	exportsManager: ExportsManager;
+	communicationChannel: CommunicationChannel;
 	sdk: CrusherSdk | null;
+	context: any;
 
 	constructor(
 		logManger: IRunnerLogManagerInterface,
@@ -42,7 +48,9 @@ class CrusherRunnerActions {
 		baseAssetPath: string,
 		globalManager: IGlobalManager,
 		exportsManager: IExportsManager,
+		communicationChannel: CommunicationChannel,
 		sdk: CrusherSdk | null = null,
+		context: any = {}
 	) {
 		this.actionHandlers = {};
 		this.globals = globalManager;
@@ -50,7 +58,9 @@ class CrusherRunnerActions {
 		this.logManager = new LogManager(logManger);
 		this.storageManager = new StorageManager(storageManager, baseAssetPath);
 		this.exportsManager = new ExportsManager(exportsManager);
+		this.communicationChannel = communicationChannel;
 		this.sdk = sdk;
+		this.context = context;
 
 		if (!this.globals.has(TEST_RESULT_KEY)) {
 			this.globals.set(TEST_RESULT_KEY, []);
@@ -82,7 +92,7 @@ class CrusherRunnerActions {
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
 
-		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED) {
+		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED || status === ActionStatusEnum.STALLED) {
 			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
 		}
 	}
@@ -124,6 +134,7 @@ class CrusherRunnerActions {
 			const beforeUrl = page ? await page.url() : null;
 
 			try {
+				console.log("Context(top)", this.context);
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
 						stepResult = await wrappedHandler(
@@ -132,13 +143,15 @@ class CrusherRunnerActions {
 							this.globals,
 							this.storageManager,
 							this.exportsManager,
+							this.communicationChannel,
 							this.sdk,
+							this.context,
 							browser,
 							this.runActions.bind(this),
 						);
 						break;
 					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
+						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.communicationChannel, this.sdk, this.context);
 						break;
 					case ActionCategoryEnum.ELEMENT:
 						const crusherSelector = toCrusherSelectorsFormat(step.payload.selectors);
@@ -151,7 +164,7 @@ class CrusherRunnerActions {
 							parentFrame = await parentFrameElement.contentFrame();
 							elementLocator = parentFrame.locator(crusherSelector.value);
 						}
-						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk);
+						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.communicationChannel, this.sdk, this.context);
 						break;
 					default:
 						throw new Error("Invalid action category handler");
@@ -190,13 +203,13 @@ class CrusherRunnerActions {
 					try {
 						endingScreenshot = await this._getCurrentScreenshot(page);
 					} catch (ex) {}
-
+					console.error(err);
 					await this.handleActionExecutionStatus(
 						action.name,
-						ActionStatusEnum.FAILED,
+						err.isStalled ? ActionStatusEnum.STALLED : ActionStatusEnum.FAILED,
 						`Error performing ${action.description}`,
 						{
-							failedReason: err.messsage,
+							failedReason: err.matcherResult ? err.matcherResult.message : err.message,
 							screenshotDuringError: JSON.stringify({ startingScreenshot, endingScreenshot }),
 							actionName: step.name ? step.name : null,
 							beforeUrl: beforeUrl,
@@ -209,7 +222,7 @@ class CrusherRunnerActions {
 						actionCallback,
 					);
 				}
-				if (!step.payload.isOptional) {
+				if (!step.payload.isOptional || err.isStalled) {
 					throw err;
 				}
 			}
@@ -251,4 +264,4 @@ class CrusherRunnerActions {
 	}
 }
 
-export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk };
+export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk, CommunicationChannel, ActionDescriptor, handleProxyPage, handleProxyBrowserContext };

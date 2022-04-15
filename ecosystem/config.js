@@ -21,6 +21,7 @@ module.exports = {
 		APP_PUBLIC_LINK: process.env.GITHUB_APP_PUBLIC_LINK,
 		APP_PRIVATE_KEY: process.env.GITHUB_APP_PRIVATE_KEY,
 		APP_ID: process.env.GITHUB_APP_ID,
+		APP_URL: process.env.GITHUB_APP_URL,
 	},
 	MONGODB_CONFIG: {
 		CONNECTION_STRING: process.env.MONGODB_CONNECTION_STRING,

@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { findDistanceBetweenNodes } from "./utils/helper";
 import { ElementsIdMap } from "./elementsMap";
 import { recordAction } from "./host-proxy";
+import { getElementDescription } from "./utils/dom";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
@@ -107,14 +108,15 @@ export default class EventsController {
 		return this._recordedEvents;
 	}
 
-	getSelectors(_capturedTarget: any) {
+	getSelectors(_capturedTarget: any, useAdvancedSelector = false) {
 		const capturedTarget =
 		_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
 
-		return getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget)
+		return getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget, useAdvancedSelector)
 	}
 
 	async saveCapturedEventInBackground(event_type: ActionsInTestEnum, _capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
+		if (!(window as any).recorder.canRecordEvents()) return false;
 		const capturedTarget =
 			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
 		const selectors = capturedTarget ? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget) : null;
@@ -151,6 +153,7 @@ export default class EventsController {
 				selectors: selectors,
 				meta: {
 					value,
+					elementDescription: getElementDescription(capturedTarget),
 					uniqueNodeId:
 							capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null,
 				},

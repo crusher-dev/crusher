@@ -21,6 +21,8 @@ export interface ITestInstancesTable extends BaseRowInterface {
 	recorded_video_uri?: string;
 	recorded_clip_video_url?: string;
 	meta?: string;
+	context: any;
+	group_id?: string;
 }
 
 export interface ITestInstanceScreenshotsTable extends BaseRowInterface {
@@ -86,3 +88,11 @@ export interface IBuildInstanceActionResults extends BaseRowInterface {
 	actions_result: string;
 	has_instance_passed: boolean;
 }
+
+export type ICreateTestInstancePayload = {
+	host: string;
+	browser: BrowserEnum[];
+
+	// Used when spawned from custom code
+	isSpawned?: boolean;
+};

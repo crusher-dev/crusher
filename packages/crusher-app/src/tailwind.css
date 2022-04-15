@@ -13,7 +13,7 @@ body {
 	text-rendering: optimizeLegibility;
 }
 
-body {
+#__next {
 	font-size: 13rem;
 }
 a {

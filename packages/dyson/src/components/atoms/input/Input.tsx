@@ -25,6 +25,7 @@ export type InputProps = {
 	css?: SerializedStyles;
 	CSS?: SerializedStyles;
 
+	leftIcon?: ReactElement;
 	rightIcon?: ReactElement;
 
 	onReturn?: (value: string) => void;
@@ -43,6 +44,7 @@ export const Input: React.FC<InputProps> = ({
 	size = "large",
 	className,
 	rightIcon,
+	leftIcon,
 	isError = false,
 	onReturn,
 	children,
@@ -75,6 +77,11 @@ export const Input: React.FC<InputProps> = ({
 			]}
 			className={`relative ${className}`}
 		>
+			<Conditional showIf={!!leftIcon}>
+				<div css={leftIconStyle} className="input__leftIconContainer">
+					{leftIcon}
+				</div>
+			</Conditional>
 			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle} className="input__rightIconContainer">
@@ -89,6 +96,14 @@ const rightIconStyle = css`
 	position: absolute;
 	top: 50%;
 	right: 16px;
+	transform: translateY(-50%);
+`;
+
+const leftIconStyle = css`
+	position: absolute;
+	top: 50%;
+	height: 100%;
+	left: 0px;
 	transform: translateY(-50%);
 `;
 const inputBox = (sizeStyle: { height: number }) => css`

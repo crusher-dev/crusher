@@ -21,6 +21,7 @@ export interface iJobRunRequest {
 export interface ITestRunConfig {
 	browser: BrowserEnum;
 	shouldRecordVideo: boolean;
+	proxyUrlsMap?: { [key: string]: { tunnel: string; intercept: string | { regex: string } } };
 }
 
 export interface IJobRunRequest {

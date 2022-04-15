@@ -17,6 +17,8 @@ import {
 	zipDirectory,
 } from "@src/util/helper";
 import * as path from "path";
+import * as fs from "fs";
+import { CommunicationChannel } from "crusher-runner-utils";
 interface iTestRunnerJob extends Job {
 	data: ITestExecutionQueuePayload;
 }
@@ -34,8 +36,15 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		const videoProcessorQueue = await queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		const globalManager = getGlobalManager(true);
 		const exportsManager = new ExportsManager(bullJob.data.exports ? bullJob.data.exports : []);
+		const communcationChannel = new CommunicationChannel();
 		const persistentContextDir = bullJob.data.startingPersistentContext ? getTempContextDirPath() : createTempContextDir();
 
+		const parameterizedTests = [];
+
+		communcationChannel.addListener("run-parameterized-tests", (data: Array<{testId: number, groupId: string, context: any}>) => {
+			parameterizedTests.push(...data);
+			// @TODO: Add impl here
+		});
 		if (!globalManager.has(TEST_RESULT_KEY)) {
 			globalManager.set(TEST_RESULT_KEY, []);
 		}
@@ -58,8 +67,10 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			notifyManager,
 			globalManager,
 			exportsManager,
+			communcationChannel as any,
 			identifier,
 			persistentContextDir,
+			bullJob.data.context,
 		);
 		const { recordedRawVideo, hasPassed, error, actionResults, persistenContextZipURL } = await codeRunnerService.runTest();
 		if (recordedRawVideo) {
@@ -86,18 +97,22 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		// Cleanup persistent context dir after test execution
 		deleteDirIfThere(persistentContextDir);
 
+		console.log("options are", bullJob);
 		const parentJob = await Job.fromId(queueManager.queues[TEST_COMPLETE_QUEUE].value, bullJob.opts.parent.id);
 		await parentJob.update({
 			...parentJob.data,
+			context: bullJob.data.context,
 			exports: exportsManager.getEntriesArr(),
 			nextTestDependencies: bullJob.data.nextTestDependencies,
 			actionResults: actionResults,
 			buildId: bullJob.data.buildId,
+			parameterizedTests: parameterizedTests,
 			buildExecutionPayload: bullJob.data,
 			testInstanceId: bullJob.data.testInstanceId,
 			buildTestCount: bullJob.data.buildTestCount,
 			hasPassed: hasPassed,
 			failedReason: error ? error : null,
+			isStalled: error && error.isStalled ? error.isStalled : false,
 			storageState: globalManager.get("storageState"),
 			persistenContextZipURL: persistenContextZipURL,
 		} as ITestCompleteQueuePayload);

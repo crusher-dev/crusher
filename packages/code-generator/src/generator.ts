@@ -13,6 +13,7 @@ interface iCodeGeneratorOptions {
 	turnOnTracing?: boolean;
 	tracePath?: string;
 	persistentContextDir?: string;
+	proxyUrlsMap?: { [key: string]: { tunnel: string; intercept: string | { regex: string } } };
 }
 
 export class CodeGenerator {
@@ -40,6 +41,7 @@ export class CodeGenerator {
 			videoSavePath: this.options.videoSavePath,
 			turnOnTracing: this.options.turnOnTracing,
 			tracePath: this.options.tracePath,
+			proxyUrlsMap: this.options.proxyUrlsMap,
 			defaultBrowserLaunchOptions: {
 				headless: true,
 				args: ["--disable-shm-usage", "--disable-gpu"],

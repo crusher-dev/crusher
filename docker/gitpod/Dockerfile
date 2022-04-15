@@ -1,6 +1,33 @@
 FROM gitpod/workspace-full-vnc:latest
 
+# Dazzle does not rebuild a layer until one of its lines are changed. Increase this counter to rebuild this layer.
 ENV TRIGGER_REBUILD=5
+ENV PGWORKSPACE="/workspace/.pgsql"
+ENV PGDATA="$PGWORKSPACE/data"
+
+# Install PostgreSQL
+RUN sudo install-packages postgresql-12 postgresql-contrib-12
+
+# Setup PostgreSQL server for user gitpod
+ENV PATH="/usr/lib/postgresql/12/bin:$PATH"
+
+SHELL ["/usr/bin/bash", "-c"]
+RUN PGDATA="${PGDATA//\/workspace/$HOME}" \
+ && mkdir -p ~/.pg_ctl/bin ~/.pg_ctl/sockets $PGDATA \
+ && initdb -D $PGDATA \
+ && printf '#!/bin/bash\npg_ctl -D $PGDATA -l ~/.pg_ctl/log -o "-k ~/.pg_ctl/sockets" start\n' > ~/.pg_ctl/bin/pg_start \
+ && printf '#!/bin/bash\npg_ctl -D $PGDATA -l ~/.pg_ctl/log -o "-k ~/.pg_ctl/sockets" stop\n' > ~/.pg_ctl/bin/pg_stop \
+ && chmod +x ~/.pg_ctl/bin/* \
+ && printf '%s\n' '# Auto-start PostgreSQL server' \
+                  "test ! -e \$PGWORKSPACE && test -e ${PGDATA%/data} && mv ${PGDATA%/data} /workspace" \
+                  # Making the /workspace dir just to make sure it doesnt fail in docker env in case
+                  '[[ $(pg_ctl status | grep PID) ]] || pg_start > /dev/null' > ~/.bashrc.d/200-postgresql-launch \
+ # Just to emulate the workspace-session behavior within docker-build env
+ && sudo bash -c 'mkdir -p /workspace && chown -hR gitpod:gitpod /workspace'
+ENV PATH="$HOME/.pg_ctl/bin:$PATH"
+ENV DATABASE_URL="postgresql://gitpod@localhost"
+ENV PGHOSTADDR="127.0.0.1"
+ENV PGDATABASE="postgres"
 
 # Install custom tools, redis, runtime, etc.
 RUN sudo apt-get update \
@@ -12,38 +39,10 @@ RUN sudo apt-get update \
     && sudo apt-get install -y libx11-dev libxkbfile-dev \
     # keytar
     && sudo apt-get install -y libsecret-1-dev
-
-USER root
-# Install MySQL
-RUN install-packages mysql-server \
- && mkdir -p /var/run/mysqld /var/log/mysql \
- && chown -R gitpod:gitpod /etc/mysql /var/run/mysqld /var/log/mysql /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring /var/lib/mysql-upgrade
-
-# Install MongoDB
-# Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu-tarball/#install-mongodb-community-edition
-RUN mkdir -p /tmp/mongodb && \
-    cd /tmp/mongodb && \
-    wget -qOmongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-4.4.2.tgz && \
-    tar xf mongodb.tgz && \
-    cd mongodb-* && \
-    sudo cp bin/* /usr/local/bin/ && \
-    rm -rf /tmp/mongodb && \
-    sudo mkdir -p /data/db && \
-    sudo chown gitpod:gitpod -R /data/db
-
+ 
 USER gitpod
 
 # Install Redis.
 RUN sudo apt-get update  && sudo apt-get install -y  redis-server redis-tools  && sudo rm -rf /var/lib/apt/lists/*
 
-# Install our own MySQL config
-COPY docker/gitpod/mysql/mysql.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
-
-# Install default-login for MySQL clients
-COPY docker/gitpod/mysql/client.cnf /etc/mysql/mysql.conf.d/client.cnf
-
-COPY docker/gitpod/mysql/mysql-bashrc-launch.sh /etc/mysql/mysql-bashrc-launch.sh
-
 RUN npm install -g pm2
-
-RUN echo "bash /etc/mysql/mysql-bashrc-launch.sh" >> ~/.bashrc

@@ -3,23 +3,24 @@ import { useEffect } from "react";
 
 import { useAtom } from "jotai";
 
-import { tempTestAtom } from "../store/atoms/global/tempTestId";
-import { tempTestNameAtom } from "../store/atoms/global/tempTestName";
-import { tempTestTypeAtom } from "@store/atoms/global/tempTestType";
-import { tempTestUpdateIdAtom } from "@store/atoms/global/tempTestUpdateId";
+import { tempProjectAtom, tempTestAtom } from "../store/atoms/global/temp/tempTestId";
+import { tempTestNameAtom } from "../store/atoms/global/temp/tempTestName";
+import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
+import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
 import { githubTokenAtom } from "@store/atoms/global/githubToken";
 import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
 import { RequestMethod } from "@types/RequestOptions";
 
-export const useSaveTemp = () => {
+export const useLoadTempData = () => {
 	const [, setTempTest] = useAtom(tempTestAtom);
 	const [, setTempTestName] = useAtom(tempTestNameAtom);
 	const [, setTempTestType] = useAtom(tempTestTypeAtom);
 	const [, setTempTestUpdateId] = useAtom(tempTestUpdateIdAtom);
 	const [, setGithubToken] = useAtom(githubTokenAtom);
 	const [, setLoginKey] = useAtom(cliLoginUserKeyAtom);
+	const [, setProjectToRedirect] = useAtom(tempProjectAtom);
 
 	const { asPath } = useRouter();
 
@@ -38,6 +39,10 @@ export const useSaveTemp = () => {
 		setTempTestName(tempTestName);
 		setTempTest(tempTestId);
 		setTempTestType(tempTestType || "save");
+
+		if (!!urlQuery.get("project_id")) {
+			setProjectToRedirect(parseInt(urlQuery.get("project_id")));
+		}
 
 		if (!!loginKey) {
 			setLoginKey(loginKey);

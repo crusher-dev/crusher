@@ -11,12 +11,15 @@ export type ITestExecutionQueuePayload = IJobRunRequest & {
 	exports?: Array<[string, any]> | null;
 	startingStorageState: { cookies: Array<any>; origins: Array<any> } | null;
 	startingPersistentContext: string | null;
+	context?: { [k: string]: any } | null;
 };
 
 export interface ITestCompleteQueuePayload {
 	type?: "complete-build" | "process";
 	exports: Array<[string, any]>;
+	context?: { [k: string]: any } | null;
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
+	parameterizedTests: Array<{testId: number; groupId: string; context: any}>;
 	buildExecutionPayload: ITestExecutionQueuePayload;
 	actionResults: Array<IActionResultItem>;
 	buildId: number;
@@ -24,7 +27,8 @@ export interface ITestCompleteQueuePayload {
 	buildTestCount: number;
 	storageState: { cookies: Array<any>; origins: Array<any> } | null;
 	hasPassed: boolean;
-	failedReason?: Error;
+	failedReason?: Error & { isStalled: boolean; };
+	isStalled?: boolean;
 	persistenContextZipURL: string | null;
 }
 

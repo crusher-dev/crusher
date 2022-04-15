@@ -13,18 +13,20 @@ import { loadGTM, loadCrisp, loadGA, loadSegment, loadUserLeap } from "@utils/co
 
 import { useBasicSEO } from "../src/hooks/seo";
 import { usePageSegmentAnalytics } from "../src/hooks/analytics";
-import { useSaveTemp } from "../src/hooks/tempTest";
+import { useLoadTempData } from "../src/hooks/tempTest";
 import { loadUserDataAndRedirect } from "../src/hooks/user";
 import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
 import "../src/tailwind.css";
 
 function App({ Component, pageProps }: AppProps<any>) {
+	useLoadTempData();
+
 	const [userDataLoaded] = loadUserDataAndRedirect({ fetchData: true, userAndSystemData: null });
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	useAtomDevtools(rootGlobalAtom);
 	useBasicSEO({ favicon: "/assets/img/favicon.png" });
-	useSaveTemp();
+
 	usePageSegmentAnalytics();
 	useEffect(() => {
 		setTimeout(() => {

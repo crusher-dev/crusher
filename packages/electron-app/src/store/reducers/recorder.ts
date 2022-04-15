@@ -1,9 +1,11 @@
 import { AnyAction } from "redux";
-import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_IS_WEBVIEW_INITIALIZED, SET_SELECTED_ELEMENT, SET_SITE_URL, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
+import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_ELEMENT_SELECTOR_MODE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_IS_WEBVIEW_INITIALIZED, SET_RECORDER_CRASH_STATE, SET_SELECTED_ELEMENT, SET_SITE_URL, SET_STATUS_BAR_VISIBILITY, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { RESET_APP_SESSION } from "../actions/app";
+import { TElementActionsEnum } from "electron-app/src/ui/components/sidebar/actionsPanel/elementActions";
 
 export enum TRecorderState {
 	BOOTING = "BOOTING", // <- Internal state (Initialize recorder script)
@@ -14,9 +16,15 @@ export enum TRecorderState {
 	REPLAYING = "REPLAYING", // <- Internal State (Replay all test actions in a test)
 
 	PERFORMING_ACTIONS = "PERFORMING_ACTIONS",
+	PERFORMING_RECORDER_ACTIONS = "PERFORMING_RECORDER_ACTIONS",
 
 	ACTION_REQUIRED = "ACTION_REQURED",
 };
+
+export enum TRecorderCrashState {
+	CRASHED = "CRASHED",
+	PAGE_LOAD_FAILED = "PAGE_LOAD_FAILED",
+}
 
 interface INavigatingStatePayload {
 	url: string;
@@ -43,6 +51,8 @@ export interface iElementInfo {
 	uniqueElementId: string;
 	// In case the element is no longer in DOM, we can still use the selector
 	selectors: Array<iSelectorInfo>;
+	// Element Description to set default name for the actin
+	elementDescription: string;
 	/* In order (first one should be the origin node) */
 	dependentHovers: Array<Omit<iElementInfo, "dependentHovers">>;
 }
@@ -58,12 +68,15 @@ interface IRecorderReducer {
 	isWebViewInitialized: boolean;
 
 	state: {type: TRecorderState, payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null };
+	crashState: {type: TRecorderCrashState, payload: any} | null;
 	isInspectModeOn: boolean;
+	isInspectElementSelectorModeOn: boolean;
 
 	selectedElement: iElementInfo | null;
 	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; }>;
 
 	isVerified: boolean;
+	showStatusBar: boolean;
 };
 
 const initialState: IRecorderReducer = {
@@ -73,10 +86,14 @@ const initialState: IRecorderReducer = {
 
 	state: { type: TRecorderState.BOOTING, payload: null },
 	isInspectModeOn: false,
+	isInspectElementSelectorModeOn: false,
 
 	selectedElement: null,
 	savedSteps: [],
 	isVerified: false,
+	crashState: null,
+
+	showStatusBar: false,
 };
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
@@ -88,7 +105,7 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				...state,
 				/* Set verified status to false, if a new step is added */
 				isVerified: false,
-				savedSteps: newSavedSteps
+				savedSteps: newSavedSteps,
 			};
 		}
 		case SET_DEVICE:
@@ -106,10 +123,15 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				...state,
 				isInspectModeOn: action.payload.isOn
 			}
+		case SET_INSPECT_ELEMENT_SELECTOR_MODE:
+			return {
+				...state,
+				isInspectElementSelectorModeOn: action.payload.isOn
+			}
 		case SET_SELECTED_ELEMENT:
 			return {
 				...state,
-				selectedElement: action.payload.element
+				selectedElement: action.payload.element,
 			}
 		case RECORD_STEP:
 			const lastStep = state.savedSteps.length > 1 ? state.savedSteps[state.savedSteps.length - 1] : null;
@@ -137,6 +159,11 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				savedSteps: savedSteps
 			}
 		}
+		case SET_RECORDER_CRASH_STATE:
+			return {
+				...state,
+				crashState: action.payload
+			}
 		case RESET_RECORDER_STATE:
 			return {
 				...state,
@@ -188,10 +215,19 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case RESET_RECORDER: {
 			return initialState;
 		}
+		case RESET_APP_SESSION:
+			return {
+				...initialState,
+			};
+		case SET_STATUS_BAR_VISIBILITY:
+			return {
+				...state,
+				showStatusBar: action.payload.isVisible
+			}
 		default:
 			return state;
 	}
 };
 
-export {IRecorderReducer, recorderReducer};
+export { IRecorderReducer, recorderReducer};
 

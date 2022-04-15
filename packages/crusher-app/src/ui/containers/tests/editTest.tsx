@@ -20,13 +20,14 @@ import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/
 import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { sentenceCase } from "@utils/common/textUtils";
+import { testFiltersAtom } from "@store/atoms/pages/testPage";
 
-const changeTestData = (testId: number, name: string, testTags?: string, runAfterTest?: number) => {
+const changeTestData = (testId: number, name: string, selectedFolder: string | null) => {
 	return backendRequest(changeTestInfoAPI(testId), {
 		method: RequestMethod.POST,
 		payload: {
 			name: name,
-			tags: testTags,
+			testFolder: selectedFolder,
 		},
 	});
 };
@@ -42,18 +43,26 @@ export const getOptions = ({ list }, id) => {
 	return list.filter((listItem) => listItem.id !== id).map((listItem) => ({ label: sentenceCase(listItem.testName), value: listItem.id }));
 };
 
-export const EditTestModal = ({ name, id, onClose, tags }) => {
+export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 	const [testName, changeTestName] = useState(name);
-	const [testTags, changeTags] = useState(tags);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
 	const [project] = useAtom(currentProject);
-	const isFormChanged = testName !== name || testTags !== tags;
+	const [selectedFolder, setSelectedFolder] = useState(!!folderId ? [folderId] : []);
+
+	const selectedFolderId = selectedFolder.length > 0 && selectedFolder[0];
+	const isFormChanged = testName !== name || folderId !== selectedFolderId;
+
+	const [filters] = useAtom(testFiltersAtom);
+	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {
+		suspense: true,
+		refreshInterval: 200000,
+	});
 
 	const changeTestNameCallback = useCallback(() => {
 		(async () => {
 			try {
-				await changeTestData(id, testName, testTags);
+				await changeTestData(id, testName, selectedFolder.length > 0 ? selectedFolder[0] : null);
 				sendSnackBarEvent({ type: "normal", message: "Changes have been saved." });
 				await mutate(getTestListAPI(project.id));
 				onClose();
@@ -63,7 +72,7 @@ export const EditTestModal = ({ name, id, onClose, tags }) => {
 			setProcessing(false);
 		})();
 		setProcessing(true);
-	}, [testName, testTags]);
+	}, [testName, selectedFolder]);
 
 	const deleteTest = useCallback(() => {
 		(async () => {
@@ -79,12 +88,23 @@ export const EditTestModal = ({ name, id, onClose, tags }) => {
 		})();
 		setProcessingDelete(true);
 	}, []);
+
+	let folders = data.folders.map((folder) => ({ label: folder.name, value: folder.id }));
+
+	if (folderId) {
+		folders = [{ label: "No folder", value: null }, ...folders];
+	}
+
 	return (
 		<Modal
 			onOutsideClick={onClose}
 			onClose={() => {
 				onClose();
 			}}
+			modalStyle={css`
+				padding-left: 28rem;
+				padding-right: 28rem;
+			`}
 		>
 			<div className={"font-cera text-16 font-600 leading-none"}>Edit info</div>
 
@@ -94,7 +114,7 @@ export const EditTestModal = ({ name, id, onClose, tags }) => {
 					color: #d8d8d8;
 				`}
 			>
-				Enter test name
+				Test name
 			</div>
 			<Input
 				placeholder={"User login flow?"}
@@ -118,25 +138,29 @@ export const EditTestModal = ({ name, id, onClose, tags }) => {
 						fontSize={"12.4"}
 						weight={600}
 					>
-						Tag
+						Folder
 					</TextBlock>
 
-					<Input
-						size={"medium"}
-						onChange={(e: React.FormEvent<HTMLInputElement>) => {
-							changeTags(e.currentTarget.value);
-						}}
+					<SelectBox
+						selected={selectedFolder}
 						css={css`
-							max-width: 40%;
+							width: 50%;
 						`}
-						initialValue={testTags}
+						values={folders}
+						isMultiSelect={false}
+						isSearchable={true}
+						size={"medium"}
+						placeholder={"Select folder"}
+						callback={(e) => {
+							setSelectedFolder(e);
+						}}
 					/>
 				</div>
 			</div>
 			<div className={"flex justify-end mt-20"}>
 				<Button
 					css={css`
-						min-width: 132rem;
+						min-width: 104rem;
 					`}
 					disabled={!isFormChanged || processing}
 					bgColor={!isFormChanged ? "disabled" : ""}
@@ -170,16 +194,8 @@ export const EditTestModal = ({ name, id, onClose, tags }) => {
 					Or take action
 				</div>
 				<Button
-					css={css`
-						min-width: 96rem;
-						color: #e74174 !important;
-						border: 1px solid #c93965;
-						background-color: #101215;
-
-						:hover {
-							background-color: #1e2126 !important;
-						}
-					`}
+					bgColor={"danger"}
+					impactLevel={"low"}
 					size={"x-small"}
 					onClick={deleteTest}
 				>

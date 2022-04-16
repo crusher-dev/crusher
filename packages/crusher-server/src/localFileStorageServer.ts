@@ -73,6 +73,7 @@ class LocalServer {
 		fs.writeFileSync(destinationPath, file.data);
 		res.send(url.join(SERVER_PROXY.toString(), `${this.bucketName}/${fileName}`));
 	}
+
 }
 
 new LocalServer({ baseFolder: baseFolder, bucketName: "crusher-videos" });

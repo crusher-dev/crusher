@@ -69,6 +69,7 @@ RUN cp ./ecosystem.config.sample.js ecosystem.config.js
 RUN BACKGROUND pm2 start
 
 EXPOSE WEBSITE http://localhost:3000
+EXPOSE WEBSITE localhost:8000 /server
 
 # To wait for server to starts
 

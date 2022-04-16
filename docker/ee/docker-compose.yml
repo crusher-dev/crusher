@@ -26,6 +26,8 @@ services:
     environment:
       - POSTGRESQL_PASSWORD=password
       - POSTGRESQL_DATABASE=crusher
+    ports:
+      - '5432:5432'
     networks:
       - crusher-network
     container_name: 'postgresql'

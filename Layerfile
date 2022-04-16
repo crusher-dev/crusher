@@ -52,9 +52,12 @@ ENV LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa \
     NEXT_PUBLIC_INTERNAL_BACKEND_URL=https://$EXPOSE_WEBSITE_HOST/server \
     NEXT_PUBLIC_CRUSHER_MODE=enterprise \
     SLACK_CLIENT_ID=$SLACK_CLIENT_ID \
-    SLACK_CLIENT_SECRET=$SLACK_CLIENT_SECRET
+    SLACK_CLIENT_SECRET=$SLACK_CLIENT_SECRET \
+    NODE_ENV=production
 
 RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="$NEXT_PUBLIC_INTERNAL_BACKEND_URL" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh
+
+RUN rm -R packages && mkdir packages && cp output/* packages/
 
 RUN sudo chmod +x /usr/local/bin/docker-compose
 RUN cp ./configs/.env.layerci .env
@@ -69,7 +72,6 @@ RUN cp ./ecosystem.config.sample.js ecosystem.config.js
 RUN BACKGROUND pm2 start
 
 EXPOSE WEBSITE http://localhost:3000
-EXPOSE WEBSITE localhost:8000 /server
 
 # To wait for server to starts
 

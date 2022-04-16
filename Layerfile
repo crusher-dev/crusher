@@ -60,7 +60,7 @@ RUN sudo chmod +x /usr/local/bin/docker-compose
 RUN cp ./configs/.env.layerci .env
 
 # Start postgres and redis
-RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml up postgres redis --build -d --force-recreate
+RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml up--build -d --force-recreate postgres redis
 
 RUN node setup/dbMigration.js
 RUN cp ./configs/ecosystem.config.sample.js ecosystem.config.js

@@ -57,16 +57,16 @@ ENV LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa \
 RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="$NEXT_PUBLIC_INTERNAL_BACKEND_URL" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh
 
 RUN sudo chmod +x /usr/local/bin/docker-compose
-RUN cp ./.env.sample .env
+RUN cp ./configs/.env.layerci .env
 
-# Start mysql, redis and mongo
-RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+# Start postgres and redis
+RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml up postgres redis --build -d --force-recreate
 
 RUN node setup/dbMigration.js
-RUN cp ./configs/ecosystem.config.docker.js ecosystem.config.js
+RUN cp ./configs/ecosystem.config.sample.js ecosystem.config.js
 
 
-RUN BACKGROUND pm2 start --only "crusher-app,crusher-server,test-runner,video-processor"
+RUN BACKGROUND pm2 start
 
 EXPOSE WEBSITE http://localhost:3000
 

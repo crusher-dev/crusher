@@ -63,7 +63,7 @@ RUN cp ./.env.sample .env
 RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
 
 RUN node setup/dbMigration.js
-RUN cp ./ecosystem.docker.js ecosystem.config.js
+RUN cp ./configs/ecosystem.config.docker.js ecosystem.config.js
 
 
 RUN BACKGROUND pm2 start --only "crusher-app,crusher-server,test-runner,video-processor"

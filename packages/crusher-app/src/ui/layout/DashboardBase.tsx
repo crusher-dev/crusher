@@ -114,9 +114,9 @@ function BottomSection({ name, description, ...props }) {
 
 function HelpContent() {
 	return <div>
-			<div className={"px-20 py-16 pt-14"}>
-				<TextBlock fontSize={16} weight={600} color={"#CFCFD0"}>Need help with your project?</TextBlock>
-				<TextBlock fontSize={13} color={"#8F8F8F"} className={"mt-8"}>For issues with crusher, other enquiries.</TextBlock>
+			<div className={"px-24 py-20 pt-14"}>
+				<TextBlock fontSize={16} weight={600} color={"#CFCFD0"} css={css`font-family: 'Cera Pro'`}>Need help with your project?</TextBlock>
+				<TextBlock fontSize={12.8} color={"#8F8F8F"} className={"mt-10"}>For issues with crusher, other enquiries.</TextBlock>
 				<div className={"flex mt-20 mb-12"}>
 					<a href={"https://docs.crusher.dev"} target={"_blank"}>
 					<Button size={"x-small"} css={css`width: 148rem;`} bgColor={"blue"}>Setup call</Button>
@@ -128,11 +128,11 @@ function HelpContent() {
 				<TextBlock className={"mt-24"} fontSize={13} color={"#8F8F8F"} showLineHeight={true} >		A dev will pair to help you adopt crusher.</TextBlock>
 
 			</div>
-		<hr css={css`height: 1px; background: #1C1F22;  border: none;`} className={"mt-8 mb-8"}/>
+		<hr css={css`height: 1px; background: #1C1F22;  border: none;`} className={"mt-0 mb-8"}/>
 
 		<div className={"px-20 py-16"}>
-			<TextBlock fontSize={16} weight={600}  color={"#CFCFD0"}>Discuss with community</TextBlock>
-			<TextBlock className={"mt-8 mb-16 "} fontSize={13} color={"#8F8F8F"}>For feature request, question or discussion</TextBlock>
+			<TextBlock fontSize={16} weight={600}  color={"#CFCFD0"} css={css`font-family: 'Cera Pro'`}>Discuss with community</TextBlock>
+			<TextBlock className={"mt-10 mb-16 "} fontSize={12.8} color={"#8F8F8F"}>For feature request, question or discussion</TextBlock>
 
 			<a href={"https://github.com/crusherdev/crusher"} target={"_blank"}>
 			<img src={"/github_support.png"} className={"mb-16 "} css={banner}/>
@@ -150,17 +150,21 @@ const banner=css`
 	}
 `
 
-function HelpNSupport() {
-	return <Dropdown
-		component={<HelpContent/>}
-		dropdownCSS={css`
-							    bottom: -53rem;
+const helpDropdownCSS = css`
+    box-shadow: 0 0px 6px rgb(0 0 0 / 33%) !important;
+							    bottom: -20rem;
 							    top: unset !important;
 							left: 4rem !important;
 							height: fit-content;
-							border-radius: 6px 6px 0 0;
-							width: 388px;
-						`}
+							border-radius: 10rem !important;
+      width: 372px;
+      
+						`
+
+function HelpNSupport() {
+	return <Dropdown
+		component={<HelpContent/>}
+		dropdownCSS={helpDropdownCSS}
 	>
 		<div css={navLink} className={'flex items-center pr text-12.5 mt-4'}>
 			<NewTabSVG className={'mr-14 mb-2'} /> Help & Support
@@ -222,21 +226,6 @@ function LeftSection() {
 						</div>
 					</Conditional>
 
-					<Dropdown
-						component={<DropdownContent />}
-						dropdownCSS={css`
-							bottom: -10px;
-							top: unset;
-							left: calc(100% - 54px) !important;
-							height: fit-content;
-							width: 206.03px;
-						`}
-					>
-						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"} >
-							<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
-						</div>
-					</Dropdown>
-
 					<HelpNSupport/>
 					<div
 						css={navLink}
@@ -271,16 +260,14 @@ function LeftSection() {
 
 export const dropdDown = css`
 	bottom: -10px;
-	left: calc(100% - 54px);
+	left: calc(100% - 4px);
 	position: absolute;
-
 	width: 206.03px;
 
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);
 	box-sizing: border-box;
-	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);
-	border-radius: 6px;
+	box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
 	padding: 8rem 0;
 	z-index: 1;
 `;

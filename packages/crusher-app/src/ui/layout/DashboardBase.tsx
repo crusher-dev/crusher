@@ -158,7 +158,7 @@ const helpDropdownCSS = css`
 							height: fit-content;
 							border-radius: 10rem !important;
       width: 372px;
-      
+
 						`
 
 function HelpNSupport() {

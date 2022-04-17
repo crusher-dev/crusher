@@ -16,8 +16,8 @@ function LayerSVG(props) {
 	);
 }
 
-export const CreateTestPrompt = () => (
-	<div css={ css`    margin-top: 40rem;`}>
+export const CreateTestPrompt = ({className}) => (
+	<div css={ css`    margin-top: 40rem;`} className={className}>
 		<div css={boxCSS}>
 			<div className={"text-18 font-800 mb-12 leading-none"}>
 				Record your tests <span className={"text-13 ml-12 font-400 leading-none"}>(1/3)</span>

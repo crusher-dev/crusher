@@ -81,14 +81,6 @@ const SurveyContainer = () => {
 				setCommnads(res);
 			}
 		});
-
-		const testCreatedPoll = setInterval(async () => {
-			const res = await backendRequest(getTestListAPI(project.id), { method: RequestMethod.GET });
-			if (res.list.length) {
-				setOnboardingStep(OnboardingStepEnum.SUPPORT_CRUSHER);
-				clearInterval(testCreatedPoll);
-			}
-		}, 1000);
 	}, []);
 
 	usePageTitle("Create & Run your first test");

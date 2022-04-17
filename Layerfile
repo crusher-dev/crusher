@@ -2,8 +2,6 @@
 FROM vm/ubuntu:18.04
 # To note: Layerfiles create VMs, *not* containers!
 
-RUN echo "Hello, Crusher!"
-
 RUN apt-get update && \
     apt-get install apt-transport-https ca-certificates curl software-properties-common && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \

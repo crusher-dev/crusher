@@ -599,10 +599,9 @@ function TestSearchableList() {
 				{rootTest}
 			</Conditional>
 
-			<Conditional showIf={false && data && data.list.length === 0}>
-				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
+			<Conditional showIf={data && data.list.length < 3}>
+				<CreateTestPrompt />
 			</Conditional>
-			<CreateTestPrompt />
 		</div>
 	);
 }

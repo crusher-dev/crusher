@@ -4,6 +4,10 @@ import { ProjectsService } from "./service";
 import { ProjectWorkspaceService } from "./project.workspace.service";
 import { ICreateProjectEnvironmentPayload, ICreateProjectPayload } from "@modules/resources/projects/interface";
 import { UsersService } from "../users/service";
+import { BuildTestInstancesService } from "../builds/instances/service";
+import { TestService } from "../tests/service";
+import { userInfo } from "os";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 
 @Service()
 @JsonController()
@@ -12,6 +16,8 @@ class ProjectsController {
 	private projectsService: ProjectsService;
 	@Inject()
 	private projectWorkspaceService: ProjectWorkspaceService;
+	@Inject()
+	private testsService: TestService;
 
 	@Authorized()
 	@Post("/projects/actions/create")
@@ -72,6 +78,51 @@ class ProjectsController {
 		await this.projectsService.updateProjectName(body.name, projectId);
 		await this.projectsService.updateVisualBaseline(body.visualBaseline, projectId);
 		return "Successful";
+	}
+
+	@Authorized()
+	@Post("/projects/:project_id/actions/generate.tests")
+	async generateTests(@CurrentUser({ required: true }) userInfo, @Body() body: { url: string }, @Param("project_id") projectId: number) {
+		const { user_id } = userInfo;
+		if (!body.url) throw new BadRequestError("No url provided");
+
+		await this.testsService.createAndRunTest(
+			{
+				name: body.url,
+				events: [
+					{
+						type: "BROWSER_SET_DEVICE",
+						payload: {
+							meta: {
+								device: {
+									id: "GoogleChromeMediumScreen",
+									name: "Desktop",
+									width: 1280,
+									height: 800,
+									mobile: false,
+									visible: true,
+									userAgent: "Google Chrome",
+									userAgentRaw:
+										"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
+								},
+							},
+						},
+						status: "COMPLETED",
+						time: 1650029358631,
+					},
+					{
+						type: "PAGE_NAVIGATE_URL",
+						payload: { selectors: [], meta: { value: body.url } },
+						status: "COMPLETED",
+						time: 1650029359651,
+					},
+					{ type: "PAGE_SCREENSHOT", payload: {}, status: "COMPLETED", time: 1650029363118 },
+				],
+			},
+			projectId,
+			user_id,
+		);
+		return { status: "Successful" };
 	}
 }
 

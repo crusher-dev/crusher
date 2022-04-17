@@ -30,12 +30,12 @@ class ProjectsService {
 
 	@CamelizeResponse()
 	async getProjects(teamId: number): Promise<Array<KeysToCamelCase<IProjectTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM public.projects WHERE team_id = ?", [teamId]);
+		return this.dbManager.fetchAllRows("SELECT * FROM public.projects WHERE team_id = ? AND deleted = ?", [teamId, false]);
 	}
 
 	@CamelizeResponse()
 	async getTeamProjectByName(name: string, teamId: number) {
-		return this.dbManager.fetchSingleRow("SELECT * FROM public.projects WHERE name = ? AND team_id = ?", [name, teamId]);
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.projects WHERE name = ? AND team_id = ? AND deleted = ?", [name, teamId, false]);
 	}
 
 	async createProject(payload: ICreateProjectPayload): Promise<{ insertId: number }> {

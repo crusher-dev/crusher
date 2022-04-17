@@ -2,7 +2,7 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 import * as path from "path";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID;
-const PUBLIC_LINK = process.env.NEXT_PUBLIC_GITHUB_APP_PUBLIC_LINK;
+const PUBLIC_LINK = process.env.NEXT_PUBLIC_GITHUB_APP_PUBLIC_LINK || "https://github.com/apps/crusher-test";
 
 // Github new installation is
 const getGithubOAuthURL = (alreadyAuthorized = false) => {

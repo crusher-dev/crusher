@@ -23,12 +23,19 @@ async function setupCronForBuilds() {
 			const queuedMonitorings = await projectMonitoringService.getQueuedMonitoringDetails();
 			try {
 				for (const monitoring of queuedMonitorings) {
-					if(!monitoring.environmentId) return;
+					if (!monitoring.environmentId) return;
 					const environment = await projectEnvironmentsService.getEnvironment(monitoring.environmentId);
+					let vars = {};
+					if (environment.vars) {
+						try {
+							vars = JSON.parse(environment.vars);
+						} catch (e) {}
+					}
 					testService.runTestsInProject(monitoring.projectId, environment.userId, {
 						browser: environment.browser,
 						buildTrigger: BuildTriggerEnum.CRON,
 						host: environment.host ? environment.host : "null",
+						context: vars,
 					});
 					await projectMonitoringService.updateLastCronMarker(monitoring.id);
 				}

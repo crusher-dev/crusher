@@ -38,7 +38,10 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 				dataToConsider = userAndSystemData;
 			}
 			updateInitialData(dataToConsider);
-			selectInitialProject(dataToConsider);
+
+			if (!!dataToConsider?.userData) {
+				selectInitialProject(dataToConsider);
+			}
 
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
 				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => {});

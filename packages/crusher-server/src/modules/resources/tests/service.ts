@@ -16,6 +16,7 @@ import { BuildReportStatusEnum } from "../buildReports/interface";
 import { BadRequestError } from "routing-controllers";
 import { merge } from "lodash";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { CodeTemplateService } from "../teams/codeTemplate/service";
 @Service()
 class TestService {
 	private dbManager: DBManager;
@@ -25,6 +26,8 @@ class TestService {
 	private projectService: ProjectsService;
 	@Inject()
 	private testsRunner: TestsRunner;
+	@Inject()
+	private codeTemplateService: CodeTemplateService;
 
 	constructor() {
 		this.dbManager = Container.get(DBManager);
@@ -80,6 +83,42 @@ class TestService {
 		);
 	}
 
+	async createAndRunTest(payload: { tempTestId?: any; name: string; events?: any }, projectId: number, userId: number) {
+		let events = payload.events || [];
+		if (payload.tempTestId) {
+			const tempTest = await this.getTempTest(payload.tempTestId);
+			events = tempTest.events;
+		}
+
+		if (!events && !events.length) throw new Error("No events passed");
+		if (!payload.name) throw new Error("No name passed for the test");
+
+		const testInsertRecord = await this.createTest({
+			...(payload as any),
+			events: events,
+			projectId: projectId,
+			userId: userId,
+		});
+
+		const testRecord = await this.getTest(testInsertRecord.insertId);
+
+		const buildRunInfo = await this.testsRunner.runTests(await this.getCompleteTestsArray(await this.getFullTestArr([testRecord])), {
+			userId: userId,
+			projectId: projectId,
+			host: "null",
+			status: BuildStatusEnum.CREATED,
+			buildTrigger: BuildTriggerEnum.MANUAL,
+			browser: [BrowserEnum.CHROME],
+			isDraftJob: true,
+			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+			meta: { isDraftJob: true },
+		});
+
+		await this.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
+
+		return testInsertRecord;
+	}
+
 	async updateTestSteps(testId: number, steps: Array<iAction>) {
 		return this.dbManager.update(`UPDATE public.tests SET events = ? WHERE id = ?`, [JSON.stringify(steps), testId]);
 	}
@@ -88,9 +127,9 @@ class TestService {
 		return this.dbManager.update("UPDATE public.tests SET draft_job_id = ? WHERE id = ?", [buildId, testId]);
 	}
 
-	async updateTest(testId: number, newInfo: { name: string; tags: string; runAfter: number }) {
-		const { name, tags, runAfter } = newInfo;
-		return this.dbManager.update(`UPDATE public.tests SET name = ?, tags = ?, run_after = ? WHERE id = ?`, [name, tags || "", runAfter, testId]);
+	async updateTest(testId: number, newInfo: { name: string; testFolder: number }) {
+		const { name, testFolder } = newInfo;
+		return this.dbManager.update(`UPDATE public.tests SET name = ?, test_folder = ? WHERE id = ?`, [name, testFolder, testId]);
 	}
 
 	async runTestsInProject(
@@ -100,9 +139,17 @@ class TestService {
 		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
 		overideBaseLineBuildId: number | null = null,
 		browsers = [BrowserEnum.CHROME],
+		folder = null,
+		folderIds = null,
+		testIds = null,
+		proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } },
 	) {
-		const testsData = await this.getTestsInProject(projectId, true);
-		if (!testsData.list.length) throw new BadRequestError("No tests available to run");
+		console.log("Folder is", folder);
+		console.log("FolderIds is", folderIds);
+		console.log("TestIds is", testIds);
+		const testsData = await this.getTestsInProject(projectId, true, { folder: folder, folderIds: folderIds, testIds: testIds });
+		console.log("Test list is", testsData);
+		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
 
@@ -125,7 +172,7 @@ class TestService {
 					buildTrigger: BuildTriggerEnum.MANUAL,
 					browser: browsers,
 					isDraftJob: false,
-					config: { shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
+					config: { proxyUrlsMap: proxyUrlsMap, shouldRecordVideo: true, testIds: testsData.list.map((test) => test.id) },
 					meta: meta,
 				},
 				customTestsConfig,
@@ -147,7 +194,19 @@ class TestService {
 		return this.dbManager.fetchAllRows(query, values);
 	}
 
-	async getTests(findOnlyActiveTests = false, filter: { userId?: number;  projectId?: number; search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+	async getTests(
+		findOnlyActiveTests = false,
+		filter: {
+			userId?: number;
+			projectId?: number;
+			search?: string;
+			status?: BuildReportStatusEnum;
+			page?: number;
+			folder?: string;
+			folderIds?: string;
+			testIds?: string;
+		} = {},
+	) {
 		const PER_PAGE_LIMIT = 15;
 
 		let additionalSelectColumns = "";
@@ -161,9 +220,10 @@ class TestService {
 
 		let query = `SELECT tests.*, tests.project_id project_id, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
 			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
-		} FROM public.tests, public.users, public.jobs, public.job_reports ${
-			additionalFromSource ? `, ${additionalFromSource}` : ""
-		} WHERE ${filter.projectId ? `tests.project_id = ? AND` : ''} ${filter.userId ? `users.id = ? AND` : ''} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		} FROM public.tests, public.users, public.jobs, public.job_reports ${additionalFromSource ? `, ${additionalFromSource}` : ""} WHERE ${
+			filter.projectId ? `tests.project_id = ? AND` : ""
+		} ${filter.userId ? `users.id = ? AND` : ""} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+
 		if (filter.projectId) {
 			queryParams.push(filter.projectId);
 		}
@@ -190,6 +250,33 @@ class TestService {
 		const totalRecordCountQuery = `SELECT COUNT(*) count FROM (${query}) custom_query`;
 		const totalRecordCountQueryResult = await this.dbManager.fetchSingleRow(totalRecordCountQuery, queryParams);
 
+		if (filter.folder) {
+			const folders = await this.getFolder(filter.projectId, { name: filter.folder });
+			if (folders.length) {
+				// Filter tests belong to one of the folders array
+				const folderIdArr = folders.map((folder) => `${folder.id}`);
+				query += ` AND test_folder IN (${new Array(folderIdArr.length).fill("?").join(",")})`;
+				queryParams.push(...folderIdArr);
+			}
+		} else if (filter.folderIds) {
+			const folders = filter.folderIds.split(",").map((folderId) => parseInt(folderId));
+			if (folders.length) {
+				// Filter tests belong to one of the folders array
+				const folderIdArr = folders.map((folder) => `${folder}`);
+				query += ` AND test_folder IN (${new Array(folderIdArr.length).fill("?").join(",")})`;
+				queryParams.push(...folderIdArr);
+			}
+		}
+		if (filter.testIds) {
+			const testIdArr = filter.testIds.split(",").map((testId) => parseInt(testId));
+			if (testIdArr.length) {
+				// Filter tests belong to one of the folders array
+				const testIdArrStr = testIdArr.map((testId) => `${testId}`);
+				query += ` AND tests.id IN (${new Array(testIdArrStr.length).fill("?").join(",")})`;
+				queryParams.push(...testIdArrStr);
+			}
+		}
+
 		if (filter.search) {
 			query += " ORDER BY tests.created_at DESC, rank DESC";
 		} else {
@@ -207,7 +294,38 @@ class TestService {
 		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
 	}
 
-	async getTestsInProject(projectId: number, findOnlyActiveTests = false, filter: { search?: string; status?: BuildReportStatusEnum; page?: number } = {}) {
+	@CamelizeResponse()
+	async getFolder(projectId: number, filter: { name?: string } = {}) {
+		let query = `SELECT id, name FROM public.tests_folder WHERE project_id = ?`;
+		const queryParams: Array<any> = [projectId];
+		if (filter.name) {
+			const namesArray = filter.name.split(",");
+			query += ` AND name IN (${new Array(namesArray.length).fill("?").join(",")})`;
+			queryParams.push(...namesArray);
+		}
+		return this.dbManager.fetchAllRows(query, queryParams);
+	}
+
+	@CamelizeResponse()
+	async createFolder(projectId: number, name: string) {
+		return this.dbManager.insert(`INSERT INTO public.tests_folder (project_id, name) VALUES (?, ?)`, [projectId, name]);
+	}
+
+	@CamelizeResponse()
+	async renameFolder(folderId: number, name: string) {
+		return this.dbManager.update(`UPDATE public.tests_folder SET name = ? WHERE id = ?`, [name, folderId]);
+	}
+
+	@CamelizeResponse()
+	async deleteFolder(folderId: number) {
+		return this.dbManager.delete(`DELETE FROM public.tests_folder WHERE id = ?`, [folderId]);
+	}
+
+	async getTestsInProject(
+		projectId: number,
+		findOnlyActiveTests = false,
+		filter: { search?: string; status?: BuildReportStatusEnum; page?: number; folder?: string; folderIds?: string; testIds?: string } = {},
+	) {
 		return this.getTests(findOnlyActiveTests, { ...filter, projectId });
 	}
 
@@ -229,11 +347,23 @@ class TestService {
 	async getFullTest(testRecord: KeysToCamelCase<ITestTable>): Promise<KeysToCamelCase<ITestTable>> {
 		const actions = JSON.parse(testRecord.events);
 		const templateActions = actions.filter((action) => action.type === ActionsInTestEnum.RUN_TEMPLATE);
+		const customCodeActions = actions.filter((action) => action.type === ActionsInTestEnum.CUSTOM_CODE);
 		await Promise.all(
 			templateActions.map(async (action) => {
 				if (action.payload.meta.id) {
 					const template = await this.getTemplate(action.payload.meta.id);
 					action.payload.meta.actions = JSON.parse(template.events);
+				}
+			}),
+		);
+
+		await Promise.all(
+			customCodeActions.map(async (customCode) => {
+				if (customCode.payload.meta.templateId) {
+					const template = await this.codeTemplateService.get(customCode.payload.meta.templateId);
+					if (template) {
+						customCode.payload.meta.script = template.code;
+					}
 				}
 			}),
 		);
@@ -259,6 +389,22 @@ class TestService {
 		return this.dbManager.fetchAllRows(`SELECT * FROM public.tests WHERE id IN (${new Array(testIds.length).fill("?").join(", ")})`, [...testIds]);
 	}
 
+	private async _fillMapWithTestDependencies(testsMap: any, test: KeysToCamelCase<ITestTable>) {
+		const actions = test.events;
+		const actionsArray = JSON.parse(actions);
+
+		const runAfterTestAction = actionsArray.find((event) => event.type === ActionsInTestEnum.RUN_AFTER_TEST);
+		if (runAfterTestAction) {
+			const runAfterTestId = runAfterTestAction.payload.meta.value;
+			if (runAfterTestId) {
+				const runAfterTest = testsMap[runAfterTestId];
+				if (!runAfterTest) {
+					testsMap[runAfterTestId] = await this.getTest(runAfterTestId);
+					await this._fillMapWithTestDependencies(testsMap, await this.getTest(runAfterTestId));
+				}
+			}
+		}
+	}
 	// Specifically for run after this test
 	async getCompleteTestsArray(tests: Array<KeysToCamelCase<ITestTable>>): Promise<Array<KeysToCamelCase<ITestTable>>> {
 		const testsMap = tests.reduce((acc, test) => {
@@ -266,14 +412,7 @@ class TestService {
 		}, {});
 
 		for (const test of tests) {
-			const events = JSON.parse(test.events);
-			const runAfterTestAction = events.find((event) => event.type === ActionsInTestEnum.RUN_AFTER_TEST);
-			if (runAfterTestAction) {
-				const runAfterTestId = runAfterTestAction.payload.meta.value;
-				if (!testsMap[runAfterTestId]) {
-					testsMap[runAfterTestId] = await this.getTest(parseInt(runAfterTestId));
-				}
-			}
+			await this._fillMapWithTestDependencies(testsMap, test);
 		}
 
 		return Object.values(testsMap);

@@ -45,7 +45,7 @@ class UniqueSelector {
 	 * @param element. HTML Node for which you want to find code
 	 * @return . Set of unique element with computed most unique element.
 	 */
-	getUniqueSelector(element: HTMLElement): UniqueSelectorResult {
+	getUniqueSelector(element: HTMLElement, useAdvancedSelector: boolean = false): UniqueSelectorResult {
 		if (element.nodeType !== Node.ELEMENT_NODE) {
 			throw new Error(`Can't generate CSS selector for non-element node type.`);
 		}
@@ -63,7 +63,7 @@ class UniqueSelector {
 			selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 		}
 
-		const playwrightSelectors = getSelectors(element, 1000, selectorMode, this.selectorCache);
+		const playwrightSelectors = getSelectors(element, 1000, selectorMode, this.selectorCache, useAdvancedSelector);
 
 		if (playwrightSelectors && playwrightSelectors[0].length) {
 			selectors.push(

@@ -9,5 +9,11 @@ export async function focusOnElement(element: Locator, workingSelector: any, act
 module.exports = {
 	name: ActionsInTestEnum.ELEMENT_FOCUS,
 	description: "Focus on element",
+	actionDescriber: (action: iAction) => {
+		if(!action.payload.meta || !action.payload.meta.elementDescription) {
+			return `Focus on element`;
+		}
+		return `Focus on [${action.payload.meta.elementDescription}]`;
+	},
 	handler: focusOnElement,
 };

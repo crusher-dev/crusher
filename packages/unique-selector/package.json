@@ -6,8 +6,7 @@
 	"author": "Utkarsh Dixit<utkarsh@crusher.dev>",
 	"license": "MIT",
 	"scripts": {
-		"build": "webpack -c webpack.config.prod.js",
-		"serve": "webpack serve -c webpack.config.dev.js"
+		"build": "webpack -c webpack.config.js"
 	},
 	"devDependencies": {
 		"@typescript-eslint/parser": "^4.14.1",

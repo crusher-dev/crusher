@@ -2,6 +2,8 @@
 FROM vm/ubuntu:18.04
 # To note: Layerfiles create VMs, *not* containers!
 
+RUN echo "Hello, Crusher!"
+
 RUN apt-get update && \
     apt-get install apt-transport-https ca-certificates curl software-properties-common && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
@@ -38,43 +40,35 @@ RUN yarn setup:ee
 
 BUILD ENV EXPOSE_WEBSITE_HOST
 
-ENV LOGDNA_API_KEY=c7bdd500e3cfbfe457a2ec4168b8cfaa \
-    DB_HOST=localhost \
-    DB_USERNAME=root \
-    DB_PASSWORD=password \
-    DB_DATABASE=crusher \
-    DB_PORT=3306 \
-    MONGODB_CONNECTION_STRING=mongodb://localhost:27017/crusher \
-    REDIS_HOST=localhost \
-    REDIS_PORT=6379 \
-    REDIS_PASSWORD= \
-    STANDALONE_APP_URL=https://$EXPOSE_WEBSITE_HOST \
-    NEXT_PUBLIC_INTERNAL_BACKEND_URL=https://$EXPOSE_WEBSITE_HOST/server \
+ENV STANDALONE_APP_URL=https://$GIT_BRANCH.test-app.crusher.dev \
+    NEXT_PUBLIC_INTERNAL_BACKEND_URL=https://$GIT_BRANCH.test-app.crusher.dev/server \
     NEXT_PUBLIC_CRUSHER_MODE=enterprise \
-    SLACK_CLIENT_ID=$SLACK_CLIENT_ID \
-    SLACK_CLIENT_SECRET=$SLACK_CLIENT_SECRET
+    CRUSHER_ENV=production \
+    FILE_SERVER_PROXY=https://$GIT_BRANCH.test-app.crusher.dev/output/
 
 RUN NEXT_PUBLIC_INTERNAL_BACKEND_URL="$NEXT_PUBLIC_INTERNAL_BACKEND_URL" NODE_OPTIONS=--max-old-space-size=8096 sh scripts/build/build-all.sh
 
-RUN sudo chmod +x /usr/local/bin/docker-compose
-RUN cp ./.env.sample .env
+RUN rm -R packages && mkdir packages && cp -R output/* packages/
 
-# Start mysql, redis and mongo
-RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml  up --build -d --force-recreate
+RUN sudo chmod +x /usr/local/bin/docker-compose
+RUN cp ./configs/.env.layerci .env
+
+# Start postgres and redis
+RUN REPEATABLE STANDALONE_APP_URL="$STANDALONE_APP_URL" docker-compose -f docker/ee/docker-compose.yml up --build -d --force-recreate postgres redis
 
 RUN node setup/dbMigration.js
-RUN cp ./ecosystem.docker.js ecosystem.config.js
+RUN cp ./ecosystem.config.sample.js ecosystem.config.js
 
 
-RUN BACKGROUND pm2 start --only "crusher-app,crusher-server,test-runner,video-processor"
+RUN BACKGROUND pm2 start
 
 EXPOSE WEBSITE http://localhost:3000
 
 # To wait for server to starts
 
-RUN BACKGROUND node scripts/waitTillCrusherLoaded.js --url="https://$EXPOSE_WEBSITE_HOST/server" && curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
+RUN BACKGROUND node scripts/waitTillCrusherLoaded.js --url="https://$GIT_BRANCH.test-app.crusher.dev/server" && curl --location --request POST 'https://backend.crusher.dev/projects/258/tests/actions/run' \
     --header 'Content-Type: application/x-www-form-urlencoded' \
-    --cookie "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyODIsInRlYW1faWQiOjIxOSwiaWF0IjoxNjMzNDkyOTc5LCJleHAiOjE2NjUwMjg5Nzl9.fftN81qi0yJEDs9HnqiW4tElDMWp4dTHnAofnABmZuE" \
+    --cookie "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjgyIiwidGVhbV9pZCI6MjE5LCJpYXQiOjE2NTAxNTczMjgsImV4cCI6MTY4MTY5MzMyOH0.AqAWiXgPcU4XHizLQ05BWjJCefwjrQg3gVBHQmS0zyI" \
     --data-urlencode "githubRepoName=$GIT_REPO_FULL" \
-    --data-urlencode "host=https://$EXPOSE_WEBSITE_HOST" \
+    --data-urlencode "host=https://$GIT_BRANCH.test-app.crusher.dev" \
     --data-urlencode "githubCommitId=$GIT_COMMIT"

@@ -51,7 +51,7 @@ class LocalServer {
 
 	getUrl(req, res) {
 		const { destination } = req.body;
-		res.send(url.resolve("http://localhost:3001", `${this.bucketName}/${destination}`));
+		res.send(url.resolve(SERVER_PROXY.toString(), `${this.bucketName}/${destination}`));
 	}
 
 	removeFile(req, res) {

@@ -54,6 +54,15 @@ export const addGithubRepo = (projectId: number) => resolvePathToBackendURI(`/in
 export const unlinkGithubRepo = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/actions/unlink/`);
 export const getGitIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/list/repo/`);
 
+export const getCIIntegrationCommnad = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/ci/command/`);
 export const getSlackIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}`);
+
+export const createFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/create`);
+export const deleteFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/delete`);
+export const updateFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/rename`);
+
+// export const updateUserMetaAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests/actions/folder_create`);
+
+// export const updateUserMetaAPI = () => resolvePathToBackendURI(`/users/actions/update.meta`);
 
 export const setupOSS = "/users/actions/oss.init";

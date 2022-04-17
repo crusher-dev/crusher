@@ -11,6 +11,7 @@ import * as fs from "fs";
 import { IActionResultItem } from "@shared/types/common/general";
 import { IExportsManager } from "@shared/lib/exports/interface";
 import { zipDirectory } from "@src/util/helper";
+import { CommunicationChannel } from "crusher-runner-utils";
 
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
 export class CodeRunnerService {
@@ -22,7 +23,9 @@ export class CodeRunnerService {
 	storageManager: IStorageManager;
 	globalManager: IGlobalManager;
 	exportsManager: IExportsManager;
+	communicationChannel: typeof CommunicationChannel;
 	persistentContextDir: string | null;
+	context: any;
 
 	constructor(
 		actions: Array<iAction>,
@@ -31,8 +34,10 @@ export class CodeRunnerService {
 		logManager: IRunnerLogManagerInterface,
 		globalManager: IGlobalManager,
 		exportsManager: IExportsManager,
+		communicationChannel: typeof CommunicationChannel,
 		identifer: string,
 		persistentContextDir: string | null = null,
+		context: any = {},
 	) {
 		this.codeGenerator = new CodeGenerator({
 			shouldRecordVideo: isOpenSource() ? false : runnerConfig.shouldRecordVideo,
@@ -45,6 +50,7 @@ export class CodeRunnerService {
 				args: runnerConfig.browser === BrowserEnum.SAFARI ? [] : ["--disable-dev-shm-usage", "--disable-gpu"],
 				executablePath: isOpenSource() ? process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH : undefined,
 			},
+			proxyUrlsMap: runnerConfig.proxyUrlsMap || {},
 			persistentContextDir: persistentContextDir,
 		});
 		this.actions = actions;
@@ -54,7 +60,9 @@ export class CodeRunnerService {
 		this.logManager = logManager;
 		this.globalManager = globalManager;
 		this.exportsManager = exportsManager;
+		this.communicationChannel = communicationChannel;
 		this.persistentContextDir = persistentContextDir;
+		this.context = context;
 	}
 
 	getCompleteActionsResult(runnerActionResults: Array<IActionResultItem>): Array<IActionResultItem> {
@@ -74,7 +82,7 @@ export class CodeRunnerService {
 	async runTest(): Promise<{
 		recordedRawVideo: string;
 		hasPassed: boolean;
-		error: Error | undefined;
+		error: Error & { isStalled?: boolean; } | undefined;
 		actionResults: any;
 		persistenContextZipURL: string | null;
 	}> {
@@ -91,6 +99,8 @@ export class CodeRunnerService {
 				"storageManager",
 				"globalManager",
 				"exportsManager",
+				"communicationChannel",
+				"context",
 				`async function f(){ ${code} } return f();`,
 			)(
 				exports,
@@ -102,6 +112,8 @@ export class CodeRunnerService {
 				this.storageManager,
 				this.globalManager,
 				this.exportsManager,
+				this.communicationChannel,
+				this.context,
 				process.env.GLOBAL_NODE_MODULES_PATH,
 			);
 		} catch (err) {
@@ -137,7 +149,7 @@ export class CodeRunnerService {
 
 		return {
 			recordedRawVideo: recordedRawVideoUrl,
-			hasPassed: !error,
+			hasPassed: !error ? true : (error.isStalled ? true : false),
 			error: error,
 			actionResults: this.getCompleteActionsResult(testActionResults),
 			persistenContextZipURL,

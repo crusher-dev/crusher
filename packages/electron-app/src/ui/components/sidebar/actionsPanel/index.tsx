@@ -4,18 +4,19 @@ import { css } from "@emotion/react";
 import React from "react";
 import { NavigateBackIcon, SearchIcon } from "../../../icons";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { getSelectedElement, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
+import { getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { PageActions } from "./pageActions";
 import { TemplateActions } from "./templatesActions";
 import { ElementActions } from "./elementActions";
 import { InspectModeAction } from "./inspectModeAction";
-import { turnOffInspectMode } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, turnOffElementSelectorInspectMode, turnOffInspectMode } from "electron-app/src/ui/commands/perform";
 import { useTour } from "@reactour/tour";
 import { BrowserButton } from "../../buttons/browser.button";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 
 const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 	const selected = useSelector(isInspectModeOn);
+	const elementSelectorInspectMode = useSelector(isInspectElementSelectorModeOn);
 	const selectedElement = useSelector(getSelectedElement);
 	const { isOpen, setCurrentStep } = useTour();
 	const store = useStore();
@@ -24,13 +25,18 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 		turnOffInspectMode();
 	};
 
+	const turnOffInspectElementSelectorMode = () => {
+		turnOffElementSelectorInspectMode();
+	}
+
 	React.useEffect(() => {
 		if (selectedElement && isOpen) {
 			setCurrentStep(3);
 		}
 	}, [selectedElement]);
 
-	const goBack = () => {
+	const goBack = async () => {
+		await enableJavascriptInDebugger();
 		store.dispatch(setSelectedElement(null));
 	};
 
@@ -57,11 +63,11 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 				{/* <SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} /> */}
 			</div>
 			<div className="custom-scroll" css={actionScrollContainer}>
-				<Conditional showIf={selected}>
+				<Conditional showIf={selected || elementSelectorInspectMode}>
 					<div css={selectActionContainer}>
 						<Text css={selectActionHeading}>Action required element selection</Text>
 						<Text css={selectActionText}>Select an element on left side</Text>
-						<Text onClick={handleTurnOffInspectMode} css={[selectActionCancel, hoverEffectStyle]}>
+						<Text onClick={selected ? handleTurnOffInspectMode : turnOffInspectElementSelectorMode} css={[selectActionCancel, hoverEffectStyle]}>
 							Cancel action
 						</Text>
 					</div>

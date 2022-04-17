@@ -1,12 +1,18 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
+import template from "@crusher-shared/utils/templateString";
 import { ElementHandle, Locator, Page } from "playwright";
+import { CommunicationChannel } from "../functions/communicationChannel";
+import { ExportsManager } from "../functions/exports";
+import { CrusherSdk } from "../sdk/sdk";
 import { markTestFail } from "../utils/helper";
 
 async function assertSeoRows(
 	page: Page,
 	assertions: Array<iAssertionRow>,
+	context: any
 ): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
 	let hasPassed = true;
 	const logs = [];
@@ -14,7 +20,8 @@ async function assertSeoRows(
 	const pageTitle = await page.title();
 
 	for (let i = 0; i < assertions.length; i++) {
-		const { validation, operation, field } = assertions[i];
+		let { validation, operation, field } = assertions[i];
+		validation = template(validation, { ctx: context || {} })
 		const elementAttributeValue =
 			field.name === "title"
 				? pageTitle
@@ -97,9 +104,14 @@ async function assertSeoRows(
 	return { hasPassed, logs };
 }
 
-async function runSEOAssertionOnPage(page: Page, action: iAction) {
+async function runSEOAssertionOnPage(page: Page, action: iAction,	globals: IGlobalManager,
+	storageManager: StorageManager,
+	exportsManager: ExportsManager,
+	communicationChannel: CommunicationChannel,
+	sdk: CrusherSdk | null,
+	context: any) {
 	const validationRows = action.payload.meta.validations;
-	const actionResult = await assertSeoRows(page, validationRows);
+	const actionResult = await assertSeoRows(page, validationRows, context);
 
 	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });
 
@@ -114,5 +126,8 @@ async function runSEOAssertionOnPage(page: Page, action: iAction) {
 module.exports = {
 	name: ActionsInTestEnum.VALIDATE_SEO,
 	description: "SEO Assertions on page",
+	actionDescriber: (action: iAction) => {
+		return `Validate SEO assertions on page`;
+	},
 	handler: runSEOAssertionOnPage,
 };

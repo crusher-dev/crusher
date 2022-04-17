@@ -222,6 +222,20 @@ function LeftSection() {
 						</div>
 					</Conditional>
 
+					<Dropdown
+						component={<DropdownContent />}
+						dropdownCSS={css`
+							bottom: -10px;
+							top: unset;
+							left: calc(100% - 54px) !important;
+							height: fit-content;
+							width: 206.03px;
+						`}
+					>
+						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"} >
+							<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
+						</div>
+					</Dropdown>
 
 					<HelpNSupport/>
 					<div
@@ -272,33 +286,28 @@ export const dropdDown = css`
 `;
 
 function DropdownContent() {
-	const router = useRouter();
-	useEffect(() => {
-		loadCrisp(() => {});
-	}, []);
 	return (
 		<div className={"flex flex-col justify-between"}>
 			<div>
-				<MenuItem showHightlighted={true} label={"Get Live support"} onClick={openChatBox}></MenuItem>
 				<MenuItem
 					selected={true}
 					label={"Request a feature"}
 					onClick={() => {
-						router.push("https://github.com/crusherdev/crusher/issues");
+						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"Report Issue"}
 					onClick={() => {
-						router.push("https://github.com/crusherdev/crusher/issues");
+						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"View docs"}
 					onClick={() => {
-						router.push("https://docs.crusher.dev");
+						window.open("https://docs.crusher.dev","_blank").focus();
 					}}
 				></MenuItem>
 			</div>
@@ -421,7 +430,7 @@ function TopNavbar() {
 	);
 }
 
-export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
+export const SidebarTopBarLayout = ({ children, hideSidebar = false, setContainerWidth = true }) => {
 	return (
 		<div className={"flex"} css={background}>
 			<Conditional showIf={!hideSidebar}>
@@ -431,7 +440,7 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
 			<div className={"w-full"}>
 				<TopNavbar />
 				<div css={scrollContainer} className={"custom-scroll relative"}>
-					<div css={[containerWidth]}>{children}</div>
+					<div css={[setContainerWidth && containerWidth]}>{children}</div>
 				</div>
 			</div>
 		</div>
@@ -487,7 +496,7 @@ const containerWidth = css`
 	//width: calc(100vw - 250rem);
 	//max-width: 1500rem;
 
-	width: 1488rem;
+	width: 1468rem;
 	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
 	padding: 0 0;

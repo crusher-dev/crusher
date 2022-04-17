@@ -25,7 +25,7 @@ const devices: Array<iDevice> = [
         mobile: false,
 		visible: true,
 		userAgent: "Google Chrome",
-		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
+		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
 	},
 	{
 		id: TDeviceEnum.DESKTOP_L,
@@ -35,7 +35,7 @@ const devices: Array<iDevice> = [
         mobile: false,
 		visible: false,
 		userAgent: "Google Chrome",
-		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
+		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
 	},
 	{
 		id: TDeviceEnum.PIXEL,

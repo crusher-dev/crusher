@@ -30,7 +30,7 @@ function Dashboard() {
 						<div css={headingStyle} className={"font-cera text-16 font-bold"}>
 							Integrate and start testing
 						</div>
-						<div className="mt-4 text-13">It’ll hardly take 5 seconds</div>
+						<div className="mt-8 text-12.5">It’ll hardly take 5 seconds</div>
 						<OnboardingSteps className={"mt-24 mb-56"} />
 					</Conditional>
 

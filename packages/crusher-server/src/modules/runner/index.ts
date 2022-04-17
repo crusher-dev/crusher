@@ -7,24 +7,32 @@ import { ITestTable } from "@modules/resources/tests/interface";
 import { PLATFORM } from "@crusher-shared/types/platform";
 import { QueueManager } from "@modules/queue";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
-import { INextTestInstancesDependencies, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
+import { INextTestInstancesDependencies, ITestCompleteQueuePayload, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
-import { ITestInstancesTable } from "@modules/resources/builds/instances/interface";
+import { ICreateTestInstancePayload, ITestInstancesTable } from "@modules/resources/builds/instances/interface";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BadRequestError } from "routing-controllers";
 import { iAction } from "@crusher-shared/types/action";
+import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { DBManager } from "@modules/db";
+import { GithubService } from "@modules/thirdParty/github/service";
 @Service()
 class TestsRunner {
 	@Inject()
 	private buildsService: BuildsService;
+	@Inject()
+	private dbManager: DBManager;
 	@Inject()
 	private buildTestInstanceService: BuildTestInstancesService;
 	@Inject()
 	private buildReportService: BuildReportService;
 	@Inject()
 	private queueManager: QueueManager;
+	@Inject()
+	private githubService: GithubService;
 
+	// @Caution: Make sure to prevent race condition here
 	async addTestRequestToQueue(payload: any, parent: any) {
 		const flowTree = await this.queueManager.getFlowProducer().add({
 			...payload,
@@ -34,7 +42,13 @@ class TestsRunner {
 		});
 
 		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parentKey", parent.queue + ":" + parent.id);
+		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parent", JSON.stringify({ id: parent.id, queueKey: parent.queue }));
 
+		const opts = await this.queueManager.redisManager.redisClient.hget(parent.queue + ":" + flowTree.job.id, "opts");
+		let optsObject: any = (opts && opts.length ? JSON.parse(opts) : null) || {} as any;
+		optsObject.parent = {id: parent.id, queue: parent.queue};
+
+		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "opts", JSON.stringify(optsObject));
 		await this.queueManager.redisManager.redisClient.sadd(parent.queue + ":" + parent.id + ":dependencies", parent.queue + ":" + flowTree.job.id);
 	}
 
@@ -90,7 +104,7 @@ class TestsRunner {
 
 	private async startBuildTask(
 		buildTaskInfo: IBuildTaskPayload & {
-			testInstances: ITestInstanceDependencyArray;
+			testInstances: Array<ITestInstanceDependencyArray[0] & { context?: any }>;
 		},
 	) {
 		const { testInstances } = buildTaskInfo;
@@ -104,6 +118,7 @@ class TestsRunner {
 						config: {
 							browser: testInstance.browser as any,
 							shouldRecordVideo: buildTaskInfo.config.shouldRecordVideo,
+							proxyUrlsMap: buildTaskInfo.config.proxyUrlsMap,
 						},
 						buildId: buildTaskInfo.buildId,
 						testInstanceId: testInstance.id,
@@ -111,8 +126,9 @@ class TestsRunner {
 						buildTestCount: testInstances.length,
 						startingStorageState: null,
 						startingPersistentContext: null,
-					}),
-					buildTaskInfo.host,
+						// Crusher-context tree
+						context: testInstance.context ? testInstance.context : buildTaskInfo.context,
+					}, buildTaskInfo.host),
 				);
 			}
 		});
@@ -161,7 +177,7 @@ class TestsRunner {
 		return finalTestList;
 	}
 
-	private async createTestInstances(testsList: ITestDependencyArray, buildPayload: ICreateBuildRequestPayload, buildId: number) {
+	private async createTestInstances(testsList: ITestDependencyArray, buildPayload: ICreateTestInstancePayload, buildId: number) {
 		const browserArr: Array<BrowserEnum> = buildPayload.browser;
 		const testInstancesArr: ITestInstanceDependencyArray = [];
 		// Create test instances and store their ids
@@ -177,11 +193,15 @@ class TestsRunner {
 					// @TODO: Need a proper host here
 					host: buildPayload.host,
 					browser: browser,
+					groupId: test.groupId,
 					meta: {
+						groupId: test.groupId,
+						isSpawned: buildPayload.isSpawned ? buildPayload.isSpawned : false,
 						parentTestInstanceId: parentTestInstance ? parentTestInstance.id : null,
 						isFirstLevel: test.isFirstLevelTest,
+						context: test.context ? test.context : null,
 					},
-				});
+				}, test.context);
 
 				return this.buildTestInstanceService.getInstance(buildInstanceInsertRecord.insertId);
 			});
@@ -190,6 +210,7 @@ class TestsRunner {
 			return testInstances.map((testInstance) => ({
 				...testInstance,
 				testInfo: test,
+				context: test.context,
 				parentTestInstanceId: parentTestInstance ? parentTestInstance.id : null,
 			}));
 		};
@@ -216,11 +237,92 @@ class TestsRunner {
 		return testInstancesArr;
 	}
 
+	private async _getTestMapFromArr(testIdArr: Array<number>): Promise<{ [id: number]: KeysToCamelCase<ITestTable> }> {
+		const filtered =  testIdArr.reduce((prev, testId) => {
+			return { ...prev, [testId]: testId };
+		}, {});
+
+		const testsArr = await Promise.all(Object.values(filtered).map((testId: number) => {
+			// @TODO: This is just a workaround for reflect-metadata cyclic dependecny. Clean it
+			return this.getTest(testId);
+		}));
+
+		return testsArr.reduce((prev, test) => {
+			return { ...prev, [test.id]: test };
+		}, {});
+	}
+
+	@CamelizeResponse()
+	async getTest(testId: number): Promise<KeysToCamelCase<ITestTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.tests WHERE id = ?", [testId]);
+	}
+
+	async spawnTestInstances(tests: Array<{ testId: number; groupId: string; context: any; }>, browser: BrowserEnum, buildReportId: number) {
+		try {
+		console.log("Tests are", tests);
+		const build = await this.buildsService.getBuildFromReportId(buildReportId);
+		console.log("Buid is", build);
+		const buildMeta = JSON.parse(build.meta);
+		console.log("Build meta is", buildMeta);
+
+		const buildReport = await this.buildReportService.getBuildReportRecord(buildReportId);
+		const testsMap = await this._getTestMapFromArr(tests.map((test) => test.testId));
+
+		console.log("Tests map is", testsMap);
+
+		const testsArr = tests.map((test) => {
+			return {
+				...testsMap[test.testId],
+				isFirstLevelTest: true,
+				postTestList: [],
+				parentTestId: null,
+				groupId: test.groupId,
+				context: test.context,
+			}
+		});
+
+		let testInstances = [];
+		testInstances = await this.createTestInstances(testsArr, {
+			host: buildMeta && buildMeta.host ? buildMeta.host : undefined,
+			browser: [browser],
+			isSpawned: true,
+		}, build.id);
+
+		// Update build report count
+		await this.buildReportService.incrementBuildReportTotalCount(tests.length, buildReport.id);
+		const testsResultsSetsInsertPromiseArr = testInstances.map(async (testInstance) => {
+			const referenceInstance = await this.buildTestInstanceService.getReferenceInstance(testInstance.id);
+			return this.buildTestInstanceService.createBuildTestInstanceResultSet({
+				reportId: buildReport.id,
+				instanceId: testInstance.id,
+				targetInstanceId: testInstance && testInstance.disableBaseLineComparisions ? testInstance.id : (referenceInstance ? referenceInstance.id : testInstance.id),
+			});
+		});
+
+		await Promise.all(testsResultsSetsInsertPromiseArr);
+		const buildInfo: any = {
+			buildId: build.id, tests: [], host: "", isVideoOn: true, isInitialTest: false, projectId: build.projectId, testInstances: testInstances,
+			buildTrigger: build.buildTrigger,
+			userId: build.userId,
+			browser: [browser],
+			config: {
+				shouldRecordVideo: true,
+			},
+		};
+
+		return { testInstances: testInstances, buildInfo: buildInfo };
+	} catch (err) {
+		console.error("Error is", err);
+		throw err;
+	}
+	}
+
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
 		const build = await this.buildsService.createBuild(buildPayload);
 		const testsListWIthDependency = this._getDependenciesTestArr(tests);
+		let githubMeta = null;
 		if (buildPayload.meta && buildPayload.meta.github) {
-			await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
+			githubMeta = await this.buildsService.initGithubCheckFlow(buildPayload.meta.github, build.insertId);
 		}
 
 		const testInstancesArr: ITestInstanceDependencyArray = await this.createTestInstances(testsListWIthDependency, buildPayload, build.insertId);
@@ -257,6 +359,13 @@ class TestsRunner {
 
 		// @TODO: Add implementation to queue the job
 		await this.startBuildTask({ ...buildInfo, testInstances: testInstancesArr });
+
+		if(githubMeta && githubMeta.installationId) {
+			const githubService = new GithubService();
+			await githubService.authenticateAsApp(githubMeta.installationId);
+
+			await githubService.createOrUpdateIssueComment({fullRepoName: githubMeta.repoName, commit: githubMeta.commitId}, build.insertId, buildPayload.projectId);
+		}
 
 		return { buildId: build.insertId, buildInfo: buildInfo };
 	}

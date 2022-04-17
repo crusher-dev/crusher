@@ -15,6 +15,7 @@ interface IParserOptions {
 	turnOnTracing?: boolean;
 	tracePath?: string;
 	persistentContextDir?: string;
+	proxyUrlsMap?: { [key: string]: { tunnel: string; intercept: string | { regex: string } } };
 }
 
 class Parser {
@@ -28,6 +29,7 @@ class Parser {
 	isTracingOn: boolean;
 	tracePath: string;
 	persistentContextDir: string | null;
+	proxyUrlsMap: { [key: string]: { tunnel: string; intercept: string | { regex: string } } } = {};
 
 	constructor(options: IParserOptions) {
 		this.shouldRecordVideo = !!options.shouldRecordVideo;
@@ -40,6 +42,7 @@ class Parser {
 		this.isTracingOn = !!options.turnOnTracing;
 		this.tracePath = options.tracePath ? options.tracePath : "trace.zip";
 		this.persistentContextDir = options.persistentContextDir;
+		this.proxyUrlsMap = options.proxyUrlsMap;
 
 		ParserChecks.validateActions(this.actionsList);
 	}
@@ -63,6 +66,7 @@ class Parser {
 			actions: this.actionsList,
 			isPersistentContext: !!this.persistentContextDir,
 			persistentContextDir: this.persistentContextDir,
+			proxyUrlsMap: this.proxyUrlsMap || {},
 		});
 	}
 }

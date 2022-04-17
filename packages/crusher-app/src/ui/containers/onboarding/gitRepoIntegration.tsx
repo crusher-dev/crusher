@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { usePageTitle } from "@hooks/seo";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
 import { GitSVG } from "@svg/onboarding";
-import { GithubSVG } from "@svg/social";
+import { GithubSVG, GitIconSVG } from "@svg/social";
 import { openPopup } from "@utils/common/domUtils";
 import { getGithubOAuthURL } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
@@ -63,16 +63,17 @@ const useGithubData = (gitInfo) => {
 			const organisation = await ocktoKit.getInstallationsUserCanAccess();
 			const clientSideOrganisation = convertToOrganisationInfo(organisation);
 
-			console.log("organisations", clientSideOrganisation);
 			setOrganisation(clientSideOrganisation);
 
 			if (clientSideOrganisation.length > 0) {
 				// For new accounts, there might be no organisations
 				const organisationId = clientSideOrganisation[0].id;
 				setSelectedOrganisation(organisationId);
+			} else {
+				setSelectedOrganisation(null);
 			}
 		})();
-	}, [gitInfo.token, gitInfo.updateCount]);
+	}, [gitInfo, gitInfo.token, gitInfo.updateCount]);
 
 	React.useEffect(() => {
 		(async () => {
@@ -81,6 +82,8 @@ const useGithubData = (gitInfo) => {
 				const repoData = await ocktoKit.getReposForInstallation(selectedOrganisation);
 				console.log("Repo data", getRepoData(repoData, selectedOrganisation));
 				setRepositoriesData(getRepoData(repoData, selectedOrganisation));
+			} else {
+				setRepositoriesData([]);
 			}
 		})();
 	}, [selectedOrganisation]);
@@ -110,6 +113,12 @@ const useGithubAuthorize = () => {
 					type: "github",
 					token,
 				});
+			} else if (windowRef?.closed) {
+				setConnectedGit({
+					type: "github",
+					token: connectedGit.token ? connectedGit.token + "" : connectedGit.token,
+				});
+				clearInterval(interval);
 			}
 		}, 50);
 	};
@@ -157,6 +166,8 @@ const GithubRepoBox = () => {
 		);
 	};
 
+	const noOrganisationAndRepo = organisations.length === 0 && repositories.length === 0;
+
 	return (
 		<>
 			<div className={"flex justify-between items-center"}>
@@ -175,15 +186,16 @@ const GithubRepoBox = () => {
 					/>
 				</div>
 				<SelectBox
+					placeholder={"Select your org"}
 					values={getOrganisatioNSelectBox(organisations ? organisations.map((org) => ({ label: org.name, value: org.id })) : [])}
-					selected={[selectedOrganisation]}
+					selected={[selectedOrganisation].filter((a) => a)}
 					callback={(selected) => {
 						if (selected[0] === "add_new") {
 							return onGithubClick(true);
 						}
 						setSelectedOrganisation(selected[0]);
 					}}
-					placeholder={"Select"}
+					placeholder={"Select your organisation ↓"}
 					css={css`
 						width: 180rem;
 						.select-dropDownContainer {
@@ -201,26 +213,79 @@ const GithubRepoBox = () => {
 					`}
 				/>
 			</div>
-			<div
-				className={"py-4 custom-scroll"}
-				css={css`
-					border-top: 1px solid #21252f;
-					height: 400rem;
-					overflow-y: auto;
-				`}
-			>
-				{repositories
-					.filter((repo) => {
-						if (searchFilter.length && repo) {
-							return repo.repoFullName.includes(searchFilter);
-						} else {
-							return true;
-						}
-					})
-					.map((repository) => (
-						<RepoItem key={repository.repoId} repository={repository} />
-					))}
-			</div>
+			<Conditional showIf={noOrganisationAndRepo}>
+				<div
+					css={css`
+						font-size: 14rem;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						justify-content: center;
+						min-height: 340rem;
+					`}
+				>
+					<GitIconSVG
+						css={css`
+							width: 24rem;
+							height: 24rem;
+						`}
+					/>
+					<div
+						css={css`
+							margin-top: 20rem;
+							color: #e7e7e7;
+							font-family: Gilroy;
+							font-size: 14rem;
+							font-weight: 600;
+						`}
+					>
+						Install Crusher in your projects
+					</div>
+					<div
+						css={css`
+							margin-top: 10rem;
+							font-family: Gilroy;
+							font-size: 13rem;
+							color: #e7e7e7;
+						`}
+					>
+						This allows us to integrate crusher seamlessly in your project{" "}
+					</div>
+					<Button
+						onClick={onGithubClick.bind(this, true)}
+						size={"medium"}
+						css={css`
+							margin-top: 20rem;
+							padding: 0 18rem !important;
+						`}
+						bgColor={"primary"}
+					>
+						Authorize
+					</Button>
+				</div>
+			</Conditional>
+			<Conditional showIf={!noOrganisationAndRepo}>
+				<div
+					className={"py-4 custom-scroll"}
+					css={css`
+						border-top: 1px solid #21252f;
+						height: 400rem;
+						overflow-y: auto;
+					`}
+				>
+					{repositories
+						.filter((repo) => {
+							if (searchFilter.length && repo) {
+								return repo.repoFullName.includes(searchFilter);
+							} else {
+								return true;
+							}
+						})
+						.map((repository) => (
+							<RepoItem key={repository.repoId} repository={repository} />
+						))}
+				</div>
+			</Conditional>
 		</>
 	);
 };

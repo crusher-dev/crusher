@@ -11,7 +11,7 @@ import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { getRecorderInfo, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
-import { performNavigation, performReplayTest, performSetDevice, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
+import { performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
@@ -23,6 +23,8 @@ import { TRecorderState } from "../store/reducers/recorder";
 import { webFrame } from "electron";
 import { TourProvider, useTour } from "@reactour/tour";
 import { getGlobalAppConfig } from "../lib/global-config";
+import { iAction } from "@shared/types/action";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -33,16 +35,16 @@ const App = () => {
 	const recorderInfo = useSelector(getRecorderInfo);
 
 	React.useEffect(() => {
-		ipcRenderer.on("webview-initialized", (event: Electron.IpcRendererEvent, { initializeTime }) => {
+		ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
 			store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			const recorderInfo = getRecorderInfo(store.getState() as any);
-			performSetDevice(recorderInfo.device);
+			await performSetDevice(recorderInfo.device);
 
 			emitter.emit("renderer-webview-initialized");
 			if (recorderInfo.url) {
 				// Perform navigation to the url that was set before the webview was initialized
-				performNavigation(recorderInfo.url, store);
+				await performNavigation(recorderInfo.url, store);
 			}
 		});
 
@@ -68,6 +70,16 @@ const App = () => {
 					emitter.once("renderer-webview-initialized", () => {
 						console.log("Render webview initialized listener called");
 						performReplayTest(action.args.testId);
+					});
+				}
+			} else if(action.commandName === "restore") {
+				if(window.localStorage.getItem("saved-steps")){
+					const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps") || "[]");
+					const setDeviceStep = savedSteps.find((step: iAction) => step.type === ActionsInTestEnum.SET_DEVICE);
+					store.dispatch(setDevice(setDeviceStep.payload.meta.device.id));
+					emitter.once("renderer-webview-initialized", () => {
+						performSteps(savedSteps);
+						window.localStorage.removeItem("saved-steps");
 					});
 				}
 			}
@@ -106,6 +118,48 @@ const App = () => {
 
 	return (
 		<>
+			<div
+				css={css`
+					height: 32px;
+					width: 100%;
+					background: #111213;
+					border-bottom: 1px solid #2c2c2c;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				`}
+				className={"drag"}
+			>
+				<div
+					css={css`
+						color: #fff;
+						font-size: 13.5px;
+						font-weight: bold;
+						display: flex;
+						flex: 1;
+						justify-content: center;
+					`}
+				>
+				</div>
+				<div
+					css={css`
+						margin-left: auto;
+						font-size: 14px;
+						margin-right: 8px;
+					`}
+					className={"no-drag"}
+				>
+					<div
+						css={css`
+							padding: 4px;
+							:hover {
+								opacity: 0.5;
+							}
+						`}
+					>
+					</div>
+				</div>
+			</div>
 			<div css={containerStyle}>
 				<Global styles={globalStyles} />
 				<div css={bodyStyle}>
@@ -116,6 +170,19 @@ const App = () => {
 
 				<ToastSnackbar />
 			</div>
+			<style>
+				{`
+				.drag {
+					-webkit-app-region: drag;
+				}
+				.no-drag {
+					-webkit-app-region: no-drag;
+				}
+				.tree-height-line:hover {
+					background: rgba(255,255,255, 0.2) !important;
+				}
+			`}
+			</style>
 		</>
 	);
 };
@@ -127,6 +194,7 @@ const containerStyle = css`
 	overflow-x: hidden;
 	height: 100vh;
 	color: white;
+	height: calc(100vh - 32px);
 `;
 const bodyStyle = css`
 	flex: 1;
@@ -137,7 +205,6 @@ const bodyStyle = css`
 const sidebarStyle = css`
 	padding: 1rem;
 	width: 350rem;
-	background-color: #111213;
 `;
 const toolbarStyle = css`
 	background-color: #111213;
@@ -154,6 +221,15 @@ const globalStyles = css`
 		padding: 0;
 		min-height: "100vh";
 		max-width: "100vw";
+	}
+	.highlight-box {
+		background: rgba(58, 56, 54, 0.4);
+		padding: 4rem 6rem;
+		margin: 0rem 2rem;
+		border-radius: 2rem;
+		:hover {
+			background: rgba(0, 0, 0, 0.7) !important;
+		}
 	}
 	.custom-scroll::-webkit-scrollbar {
 		width: 12rem;

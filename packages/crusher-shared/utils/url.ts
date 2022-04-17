@@ -34,7 +34,7 @@ export const origins = (url: string) => {
 
 export const addHttpToURLIfNotThere = (uri: string) => {
 	if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
-		return `http://${uri}`;
+		return `https://${uri}`;
 	}
 	return uri;
 };
@@ -58,3 +58,18 @@ export const resolveToFrontEndPath = (relativePath: string, customBasePath: stri
 	const backendURL = new URL(customBasePath ? customBasePath : FRONTEND_URL);
 	return url.resolve(backendURL.origin, relativePath);
 };
+
+export function checkValidURL(str: string) {
+	const pattern = new RegExp(
+		"^(https?:\\/\\/)?" + // protocol
+			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+			"(\\#[-a-z\\d_]*)?$",
+		"i",
+	); // fragment locator
+
+	const localHostRegex = new RegExp("(localhost|127.0.0.1)(:\\d*)?");
+	return !!pattern.test(str) || !!localHostRegex.test(str);
+}

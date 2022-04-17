@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
-import { useCallback, useEffect, useState } from "react";
+import { ReactEventHandler, useCallback, useEffect, useState } from "react";
 
-import { Button } from "dyson/src/components/atoms";
+import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
@@ -21,12 +21,14 @@ import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
 import { AddSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
-import { addGithubRepo, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
+import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
 import { RequestMethod } from "@types/RequestOptions";
 import { currentProject } from "@store/atoms/global/project";
 import useSWR, { mutate } from "swr";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { CopyIconSVG } from "@svg/onboarding";
+import React from "react";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -390,6 +392,49 @@ const GitSVG = (props) => (
 		/>
 	</svg>
 );
+
+function CISection() {
+	const [project] = useAtom(currentProject);
+	const { data } = useSWR(getCIIntegrationCommnad(project.id));
+	const inputRef = React.useRef(null);
+
+	const copyCommand = React.useCallback(() => {
+		inputRef.current.select();
+		inputRef.current.setSelectionRange(0, 99999);
+		document.execCommand("copy");
+		sendSnackBarEvent({ type: "normal", message: "Copied invite link to clipboard" });
+	}, inputRef.current);
+
+	return (
+		<div>
+				<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
+					CI/CD
+				</Heading>
+				<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+					Easily integrate and trigger tests from your CI/CD workflow
+				</TextBlock>
+
+				<Input
+				size={"medium"}
+				forwardRef={inputRef}
+				rightIcon={<CopyIconSVG onClick={copyCommand} css={css`position: relative;
+				top: -2rem;
+				right: -1rem;`}/>}
+					css={css`
+						width: 400rem;
+						height: 40rem !important;
+						margin-top: 20rem;
+						input{
+							padding-right: 36rem;
+						}
+					`}
+					value={data ?? "Loading.."}
+					onFocus={copyCommand}
+				/>
+		</div>
+	)
+}
+
 function GitIntegration() {
 	const [connectedToGit] = useAtom(connectedToGitAtom);
 	const [project] = useAtom(currentProject);
@@ -762,6 +807,7 @@ export const Integrations = () => {
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />
+				<CISection/>
 				{/* <CiIntegration /> */}
 			</div>
 		</SettingsLayout>

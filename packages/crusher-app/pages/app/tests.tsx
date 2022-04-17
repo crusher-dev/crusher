@@ -9,8 +9,8 @@ import { usePageTitle } from "../../src/hooks/seo";
 function Tests() {
 	usePageTitle("Tests");
 	return (
-		<SidebarTopBarLayout>
-			<div className="pt-42 pb-24">
+		<SidebarTopBarLayout setContainerWidth={false}>
+			<div className="pt-32 pb-24">
 				<Suspense fallback={<div>loading...</div>}>
 					<TestSearchableList />
 				</Suspense>

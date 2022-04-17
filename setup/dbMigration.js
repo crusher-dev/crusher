@@ -13,8 +13,6 @@ var connectionObject = {
 	insecureAuth: true,
 };
 
-console.log("Connection Object is", connectionObject);
-
 const connection = new Pool(connectionObject);
 
 function waitAndGetConnection() {

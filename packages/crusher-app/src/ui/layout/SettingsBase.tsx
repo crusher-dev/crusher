@@ -173,7 +173,6 @@ const background = css`
 
 const sidebar = css`
 	width: 281rem;
-	background: #101215;
 	height: 100vh;
 	border: 1px solid #171b20;
 	box-sizing: border-box;

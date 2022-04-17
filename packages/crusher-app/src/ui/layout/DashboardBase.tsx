@@ -119,7 +119,7 @@ function HelpContent() {
 				<TextBlock fontSize={13} color={"#8F8F8F"} className={"mt-8"}>For issues with crusher, other enquiries.</TextBlock>
 				<div className={"flex mt-20 mb-12"}>
 					<a href={"https://docs.crusher.dev"} target={"_blank"}>
-					<Button size={"x-small"} css={css`width: 148rem;`}>Setup call</Button>
+					<Button size={"x-small"} css={css`width: 148rem;`} bgColor={"blue"}>Setup call</Button>
 					</a>
 						<a href={"https://docs.crusher.dev"} target={"_blank"}>
 							<Button size={"x-small"} className={"ml-12"} css={css`width: 120rem;`} bgColor={"tertiary-white-outline"}>Read docs</Button>
@@ -154,7 +154,7 @@ function HelpNSupport() {
 	return <Dropdown
 		component={<HelpContent/>}
 		dropdownCSS={css`
-							    bottom: -54rem;
+							    bottom: -53rem;
 							    top: unset !important;
 							left: 4rem !important;
 							height: fit-content;
@@ -473,16 +473,15 @@ const background = css`
 
 const sidebar = css`
 	width: 286rem;
-	background: #101215;
 	height: 100vh;
-	border: 1px solid #171b20;
+	border-right: 1px solid #171b20;
 	box-sizing: border-box;
 `;
 
 const nav = css`
 	width: 100%;
-	background: #101215;
 	height: 68rem;
+	border-bottom: 1px solid #171b20;
 `;
 const containerWidth = css`
 	//width: calc(100vw - 250rem);

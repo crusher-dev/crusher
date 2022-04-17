@@ -222,21 +222,6 @@ function LeftSection() {
 						</div>
 					</Conditional>
 
-					<Dropdown
-						component={<DropdownContent />}
-						dropdownCSS={css`
-							bottom: -10px;
-							top: unset;
-							left: calc(100% - 54px) !important;
-							height: fit-content;
-							width: 206.03px;
-						`}
-					>
-						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"} >
-							<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
-						</div>
-					</Dropdown>
-
 					<HelpNSupport/>
 					<div
 						css={navLink}

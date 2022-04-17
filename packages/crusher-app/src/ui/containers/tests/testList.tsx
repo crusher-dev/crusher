@@ -36,6 +36,7 @@ import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { buildFiltersAtom } from "@store/atoms/pages/buildPage";
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
+import CreateTestPrompt from "@ui/containers/tests/CreateTestPrompt";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -601,7 +602,7 @@ function TestSearchableList() {
 			<Conditional showIf={false && data && data.list.length === 0}>
 				<EmptyList title={"You don't have any test."} subTitle={"Your software needs some love. Create a test to keep it healthy."} />
 			</Conditional>
-
+			<CreateTestPrompt />
 		</div>
 	);
 }

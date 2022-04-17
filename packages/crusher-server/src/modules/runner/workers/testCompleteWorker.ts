@@ -54,9 +54,25 @@ interface ITestResultWorkerJob extends Job {
 	data: ITestCompleteQueuePayload;
 }
 
+function _replaceHostInEvents(events: Array<iAction>, newHost: string) {
+	if (!newHost || newHost === "null") return events;
+
+	return events.map((event) => {
+		if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
+			const urlToGo = new URL(event.payload.meta.value);
+			const newHostURL = new URL(newHost);
+			urlToGo.host = newHostURL.host;
+			urlToGo.port = newHostURL.port;
+			urlToGo.protocol = newHostURL.protocol;
+			event.payload.meta.value = urlToGo.toString();
+		}
+		return event;
+	});
+}
+
 function createExecutionTaskFlow(data: any, host: string | null = null) {
 	if (host && host !== "null" && host.trim() !== "") {
-		data.actions = this._replaceHostInEvents(data.actions, host);
+		data.actions = _replaceHostInEvents(data.actions, host);
 	}
 
 	return {
@@ -198,7 +214,7 @@ async function handleNextTestsForExecution(job: ITestResultWorkerJob, buildRecor
 					},
 				} as any);
 			}
-	
+
 		}
 	}
 

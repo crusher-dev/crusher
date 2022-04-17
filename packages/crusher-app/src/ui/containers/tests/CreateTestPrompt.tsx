@@ -57,7 +57,6 @@ export const CreateTestPrompt = () => (
 				Or download recorder
 			</div>
 		</div>
-		<ViewDemoSection/>
 	</div>
 );
 

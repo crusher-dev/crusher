@@ -70,3 +70,4 @@ RUN BACKGROUND node scripts/waitTillCrusherLoaded.js --url="https://$GIT_BRANCH.
     --data-urlencode "githubRepoName=$GIT_REPO_FULL" \
     --data-urlencode "host=https://$GIT_BRANCH.test-app.crusher.dev" \
     --data-urlencode "githubCommitId=$GIT_COMMIT"
+

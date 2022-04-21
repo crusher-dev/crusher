@@ -77,48 +77,6 @@ const SupportCrusher = () => {
 							Star
 						</a>
 					</div>
-					<div className={"px-32 py-24"} css={discordCSS}>
-						<div className={"flex justify-between"}>
-							<Text fontSize={16} weight={700} color={"#9a58f2"}>
-								Join discord
-							</Text>
-							<DiscordSVG />
-						</div>
-
-						{/*<div className={"mt-14"}>*/}
-						{/*	<div*/}
-						{/*		css={css`*/}
-						{/*			background: #1b1d20;*/}
-						{/*			border-radius: 6px;*/}
-						{/*			min-height: 28rem;*/}
-						{/*			width: 28rem;*/}
-						{/*		`}*/}
-						{/*	></div>*/}
-						{/*</div>*/}
-						<TextBlock showLineHeight={true} className={"mt-8 mb-40"} fontSize={13}>
-							Join community of builders who ship everyday
-						</TextBlock>
-
-						<Button
-							className={"mt-20 px-26"}
-							css={css`
-								border-width: 0;
-								background: #9a58f2;
-								color: #fff;
-
-								padding-left: 20rem;
-								padding-right: 20rem;
-
-								:hover {
-									background: #884adc;
-									border-width: 0;
-								}
-							`}
-							onClick={openDiscord}
-						>
-							Join discord
-						</Button>
-					</div>
 				</div>
 
 				<div className={"flex justify-center mt-52"}>

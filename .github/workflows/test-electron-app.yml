@@ -29,9 +29,6 @@ jobs:
       - name: Setup crusher for prod
         run: yarn setup:prod
 
-      - name: Enable xvfb
-        run: export DISPLAY=":0"
-        /usr/bin/Xvfb :0 &
       - if: matrix.os == 'ubuntu-20.04'
         name: 'Run tests for electron app'
         run: |

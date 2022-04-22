@@ -105,7 +105,7 @@ export default function Signup() {
 						Ready to ship faster & better <RocketImage className={"ml-8"} />
 					</Heading>
 					<TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
-						Million of devs empower their workflow with crusher
+						Millions of devs empower their workflow with testing
 					</TextBlock>
 					<Conditional showIf={!query?.token}>
 						<div className="text-32 font-extrabold my-50">Invalid Token</div>;

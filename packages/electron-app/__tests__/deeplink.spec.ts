@@ -5,7 +5,7 @@ import { ActionStatusEnum } from "../../crusher-shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
 import { execSync } from "child_process";
 
-jest.setTimeout(30000);
+jest.setTimeout(50000);
 
 describe("Recorder boot", () => {
 	let electronApp: ElectronApplication = null;
@@ -58,7 +58,7 @@ describe("Recorder boot", () => {
 	});
 
 	test("replay test doesn't record two set devices in case of run_after_test", async () => {
-    await execSync("xdg-open crusher://replay-test?testId=1577");
+    await execSync("xdg-open crusher://replay-test?testId=3490");
     await new Promise(resolve => setTimeout(resolve, 2000));
 		await waitForRecorderToInitialize();
 

@@ -1,6 +1,9 @@
 name: Build/release electron-app
 
-on: push
+on:
+  push:
+    branchs:
+      - master
 
 jobs:
   release:

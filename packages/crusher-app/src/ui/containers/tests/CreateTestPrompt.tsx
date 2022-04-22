@@ -1,8 +1,13 @@
 import { css } from "@emotion/react";
-import React from "react";
+import React, { useMemo } from "react";
 import { Input } from "dyson/src/components/atoms/input/Input";
 import { Button, Text } from 'dyson/src/components/atoms';
 import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
+import Link from "next/link";
+import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
+import useSWR from "swr";
+import { RELEASE_API } from "@constants/api";
+import { getOSType } from "@utils/common";
 
 function LayerSVG(props) {
 	return (
@@ -14,6 +19,35 @@ function LayerSVG(props) {
 			</g>
 		</svg>
 	);
+}
+
+export function RenderDownloadLink(props) {
+	const osType = useMemo(getOSType, []);
+	const [dmgLink, setDmgLink] = React.useState(null);
+	const { data } = useSWR(RELEASE_API);
+
+	React.useEffect(() => {
+		if(!osType) return;
+
+		if (osType === OS.MAC) {
+			const dmgLink = OS_INFO.MAC.downloadLink || data?.assets?.filter(({ name }: any) => name.includes("darwin"))[0]?.browser_download_url;
+			setDmgLink(dmgLink);
+		} else if (osType === OS.Linux) {
+			const zipLink = LINUX_INFO.Linux_DEB.downloadLink || data?.assets?.filter(({ name }: any) => name.includes("linux-x64"))[0]?.browser_download_url;
+			setDmgLink(zipLink);
+		}
+	}, [osType]);
+
+
+	if(dmgLink) {
+		return (
+			<Link href={dmgLink}>
+				{props.children}
+			</Link>
+		)
+	}
+
+	return null;
 }
 
 export const CreateTestPrompt = ({ className }: {className?: any}) => (
@@ -48,14 +82,17 @@ export const CreateTestPrompt = ({ className }: {className?: any}) => (
 					/>
 				</div>
 			</div>
-			<div
-				className={"flex text-12 justify-end mt-12 underline"}
-				css={css`
-				color: #c8c8c8;
-			`}
-			>
-				Or download recorder
-			</div>
+			<RenderDownloadLink>
+				<div
+					className={"flex text-12 justify-end mt-12 underline"}
+					css={css`
+					color: #c8c8c8;
+				`}
+				>
+					Or download recorder
+				</div>
+				
+			</RenderDownloadLink>
 		</div>
 	</div>
 );

@@ -32,8 +32,4 @@ jobs:
       - if: matrix.os == 'ubuntu-20.04'
         name: 'Run tests for electron app'
         run: |
-          # Run Xvfb
-          export DISPLAY=":0"
-          /usr/bin/Xvfb :0 &
-          # Run tests
-          yarn workspace electron-app test
+         xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn workspace electron-app test

@@ -34,5 +34,4 @@ jobs:
 
       - name: 'Run tests for electron app'
         run: |
-        
-         export VARIANT=release && VARIANT=release yarn workspace electron-app test
+          yarn workspace electron-app test

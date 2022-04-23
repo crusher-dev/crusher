@@ -7,6 +7,7 @@ import { execSync } from "child_process";
 
 jest.setTimeout(50000);
 
+const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();
 describe("Recorder boot", () => {
 	let electronApp: ElectronApplication = null;
 	let appWindow: Page = null;
@@ -14,10 +15,10 @@ describe("Recorder boot", () => {
 	async function init() {
 		electronApp = await playwright["_electron"].launch({
 			executablePath:
-				process.env.VARIANT === "RELEASE"
-					? path.resolve(__dirname, "../../../output/crusher-electron-app-release/linux/linux-unpacked/electron-app")
-					: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
-			args: process.env.VARIANT === "RELEASE" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
+				VARIANT === "release"
+				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
+				: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
+			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
 
 		});
 		appWindow = await electronApp.firstWindow();
@@ -59,8 +60,8 @@ describe("Recorder boot", () => {
 	});
 
 	test("replay test doesn't record two set devices in case of run_after_test", async () => {
-    await execSync("xdg-open crusher://replay-test?testId=3490");
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await execSync('open "crusher://replay-test?testId=3490"');
+    await new Promise(resolve => setTimeout(resolve, 3000));
 		await waitForRecorderToInitialize();
 
 		const recordedStepListContainer = await appWindow.waitForSelector("#steps-list-container");

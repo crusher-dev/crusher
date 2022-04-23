@@ -4,6 +4,7 @@ import http from "http";
 const handler = require("serve-handler");
 
 jest.setTimeout(30000);
+const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();
 
 describe("Recorder session", () => {
 	let electronApp: ElectronApplication = null;
@@ -26,10 +27,10 @@ describe("Recorder session", () => {
 	async function init() {
 		electronApp = await playwright["_electron"].launch({
 			executablePath:
-				process.env.VARIANT === "RELEASE"
-					? path.resolve(__dirname, "../../../output/crusher-electron-app-release/linux/linux-unpacked/electron-app")
+				VARIANT === "release"
+					? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
 					: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
-			args: process.env.VARIANT === "RELEASE" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
+			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
 		});
 		appWindow = await electronApp.firstWindow();
 

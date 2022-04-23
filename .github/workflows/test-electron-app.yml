@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04]
+        os: [macos-latest]
 
     steps:
       - name: Check out Git repository
@@ -29,11 +29,9 @@ jobs:
       - name: Setup crusher for prod
         run: yarn setup:prod
 
-      - if: matrix.os == 'ubuntu-20.04'
         name: Build electron app
         run: BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev yarn workspace electron-app build
 
-      - if: matrix.os == 'ubuntu-20.04'
         name: 'Run tests for electron app'
         run: |
-         xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn workspace electron-app test
+         yarn workspace electron-app test

@@ -28,7 +28,7 @@ describe("Recorder session", () => {
 			executablePath:
 				process.env.VARIANT === "RELEASE"
 					? path.resolve(__dirname, "../../../output/crusher-electron-app-release/linux/linux-unpacked/electron-app")
-					: path.resolve(__dirname, "../bin/linux/electron"),
+					: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
 			args: process.env.VARIANT === "RELEASE" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
 		});
 		appWindow = await electronApp.firstWindow();

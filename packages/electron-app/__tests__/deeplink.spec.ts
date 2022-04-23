@@ -18,6 +18,7 @@ describe("Recorder boot", () => {
 					? path.resolve(__dirname, "../../../output/crusher-electron-app-release/linux/linux-unpacked/electron-app")
 					: path.resolve(__dirname, "../bin/linux/electron"),
 			args: process.env.VARIANT === "RELEASE" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
+
 		});
 		appWindow = await electronApp.firstWindow();
 

@@ -29,9 +29,9 @@ jobs:
       - name: Setup crusher for prod
         run: yarn setup:prod
 
-        name: Build electron app
+      - name: Build electron app
         run: BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev yarn workspace electron-app build
 
-        name: 'Run tests for electron app'
+      - name: 'Run tests for electron app'
         run: |
          yarn workspace electron-app test

@@ -160,8 +160,5 @@
 		"webpack-httpolyglot-server": "^0.3.0",
 		"webpack-node-externals": "^2.5.2",
 		"webpack-virtual-modules": "^0.4.3"
-	},
-	"optionalDependencies": {
-		"xdotool": "^1.0.55"
 	}
 }

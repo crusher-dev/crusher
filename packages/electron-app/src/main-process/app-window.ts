@@ -40,6 +40,7 @@ import * as fs from "fs";
 import { ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
+import { identify } from "../lib/analytics";
 
 const debug = require("debug")("crusher:main");
 export class AppWindow {
@@ -130,6 +131,10 @@ export class AppWindow {
 			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
 
 			this._loadTime = now() - startLoad;
+
+			identify(4);
+
+			console.log("Analaytics done!");
 
 			this.maybeEmitDidLoad();
 		});

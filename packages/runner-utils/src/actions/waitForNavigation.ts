@@ -26,9 +26,15 @@ async function waitForNavigation(page: Page, action: iAction, globals: IGlobalMa
 					return resolve(true);
 				}
 				const pageUrl = await page.url();
+
+				const pageURL = new URL(pageUrl);
+				pageURL.search = "";
+
+				const metaValueUrl = new URL(url);
+				metaValueUrl.search = "";
 				// Trim the slash at the end if any
-				const pageUrlTrimmed = pageUrl.replace(/\/$/, "");
-				const metaValue = url.replace(/\/$/, "");
+				const pageUrlTrimmed = pageURL.toString().replace(/\/$/, "");
+				const metaValue = metaValueUrl.toString().replace(/\/$/, "");
 
 				if (pageUrlTrimmed === metaValue) {
 					clearInterval(interval);

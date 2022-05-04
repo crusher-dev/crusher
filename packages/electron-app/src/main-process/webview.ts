@@ -43,6 +43,20 @@ export class WebView {
 			console.log("Webview context menu", any);
 		});
 
+		webViewWebContents.on("did-frame-navigate", (event, url, httpResponseCode, httpStatusText, isMainFrame) => {
+			if(isMainFrame && this.appWindow.getRecorderState().type !== TRecorderState.PERFORMING_ACTIONS) {
+				this.appWindow.handleSaveStep(null, {
+					action: {
+						type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,
+						payload: {
+							meta: {
+								value: url,
+							},
+						},
+					},
+				});			}
+		});
+
 		webViewWebContents.on("-will-add-new-contents" as any, (event, url) => {
 			event.preventDefault();
 			console.log("New url is this", url);

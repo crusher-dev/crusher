@@ -10,7 +10,7 @@ RUN apt-get update && \
     apt install docker-ce python3 python3-pip awscli && \
     curl -sL https://deb.nodesource.com/setup_14.x | bash && \
     apt install -y nodejs && \
-    rm -f /etc/apt/sources.list.d/nodesource.list
+    rm -f /etc/apt/sources.list.d/nodesource.list && snap install cmake
 
 RUN mkdir /ms-playwright && mkdir /tmp/pw && cd /tmp/pw && npm init -y && npm i playwright && DEBIAN_FRONTEND=noninteractive npx playwright install-deps && rm -rf /tmp/pw && chmod -R 777 /ms-playwright
 

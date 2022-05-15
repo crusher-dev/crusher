@@ -593,7 +593,6 @@ export default class EventRecording {
 	}
 
 	removeNodeListeners() {
-		window.removeEventListener("mousemove", this.handleMouseMove, true);
 	}
 
 	boot(isFirstTime = false) {

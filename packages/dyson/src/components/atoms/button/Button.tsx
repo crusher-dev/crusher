@@ -21,6 +21,9 @@ const getStyleBySize = (
 		case "medium":
 			return { height: 36, fontSize: 14, fontWeight: 500 };
 			break;
+		case "big-medium":
+			return { height: 40, fontSize: 14, fontWeight: 500 };
+			break;
 		case "large":
 			return { height: 44, fontSize: 15, fontWeight: 500 };
 			break;
@@ -73,8 +76,14 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 			break;
 		case "tertiary-white-outline":
 			return {
-				main: { background: "rgba(0,0,0,0)", border: "#rgba(255, 255, 255, 0.66)", color: "#fff" },
-				hover: { background: "rgba(0,0,0,0)", border: "#rgba(255, 255, 255, 0.66)", color: "#fff" },
+				main: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
+				hover: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
+			};
+			break;
+		case "tertiary-white":
+			return {
+				main: { background: "#fff", border: "#fff", color: "#0B0B0D" },
+				hover: { background: "#fff", border: "#fff", color: "#0B0B0D" },
 			};
 			break;
 		case "tertiary-dark":
@@ -122,7 +131,7 @@ export type ButtonProps = {
 	/**
 	 * Size of the component
 	 */
-	size?: "tiny" | "x-small" | "small" | "medium" | "large" | "x-large";
+	size?: "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
 
 	/**
 	 * Disabled;
@@ -151,7 +160,7 @@ export type ButtonProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = React.forwardRef(({
 	bgColor = "primary",
 	impactLevel = "high",
 	size = "small",
@@ -159,7 +168,7 @@ export const Button: React.FC<ButtonProps> = ({
 	disabled = false,
 	className,
 	...props
-}) => {
+}, ref) => {
 	return (
 		<button
 			className={` rem-24 text-14 text-white ${className} leading-none`}
@@ -170,13 +179,14 @@ export const Button: React.FC<ButtonProps> = ({
 				disabled ? disabledButton : getColorCSS(bgColor, impactLevel, disabled),
 				props.CSS,
 			]}
+			ref={ref}
 			disabled={disabled}
 			{...props}
 		>
 			{children}
 		</button>
 	);
-};
+});
 
 const buttonCSS = css`
 	cursor: default;

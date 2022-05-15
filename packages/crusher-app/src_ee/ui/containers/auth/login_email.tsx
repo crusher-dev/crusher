@@ -95,7 +95,7 @@ export default function EmailLogin({ goBackHandler }) {
 						Ready to ship faster & better <RocketImage className={"ml-8"} />
 					</Heading>
 					<TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
-						Million of devs empower their workflow with crusher
+						Millions of devs empower their workflow with testing
 					</TextBlock>
 
 					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28 pb-60"}>

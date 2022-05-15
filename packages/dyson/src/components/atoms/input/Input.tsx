@@ -7,7 +7,7 @@ export type InputProps = {
 	/**
 	 * Size of the component
 	 */
-	size?: "small" | "medium" | "large";
+	size?: "small" |  "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
 
 	/**
 	 * Is error
@@ -25,6 +25,7 @@ export type InputProps = {
 	css?: SerializedStyles;
 	CSS?: SerializedStyles;
 
+	leftIcon?: ReactElement;
 	rightIcon?: ReactElement;
 
 	onReturn?: (value: string) => void;
@@ -43,6 +44,7 @@ export const Input: React.FC<InputProps> = ({
 	size = "large",
 	className,
 	rightIcon,
+	leftIcon,
 	isError = false,
 	onReturn,
 	children,
@@ -75,6 +77,11 @@ export const Input: React.FC<InputProps> = ({
 			]}
 			className={`relative ${className}`}
 		>
+			<Conditional showIf={!!leftIcon}>
+				<div css={leftIconStyle} className="input__leftIconContainer">
+					{leftIcon}
+				</div>
+			</Conditional>
 			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle} className="input__rightIconContainer">
@@ -89,6 +96,14 @@ const rightIconStyle = css`
 	position: absolute;
 	top: 50%;
 	right: 16px;
+	transform: translateY(-50%);
+`;
+
+const leftIconStyle = css`
+	position: absolute;
+	top: 50%;
+	height: 100%;
+	left: 0px;
 	transform: translateY(-50%);
 `;
 const inputBox = (sizeStyle: { height: number }) => css`
@@ -118,15 +133,33 @@ const errorState = css`
 `;
 
 function getSizePropery(size: InputProps["size"]) {
+
 	switch (size) {
 		case "small":
-			return { height: 26, fontSize: 12 };
+			return { height: 26, fontSize: 12};
+			break;
+		case "tiny":
+			return { height: 26, fontSize: 12};
+			break;
+		case "x-small":
+			return { height: 28, fontSize: 12.5,};
+			break;
+		case "small":
+			return { height: 34, fontSize: 14};
+			break;
+		case "medium":
+			return { height: 38, fontSize: 14 };
+			break;
+		case "big-medium":
+			return { height: 42, fontSize: 14};
 			break;
 		case "large":
-			return { height: 42, fontSize: 14 };
+			return { height: 46, fontSize: 15};
+			break;
+		case "x-large":
+			return { height: 54, fontSize: 16};
 			break;
 		default:
-			return { height: 34, fontSize: 13 };
-			break;
+			return { height: 24, fontSize: 12, fontWeight: 500 };
 	}
 }

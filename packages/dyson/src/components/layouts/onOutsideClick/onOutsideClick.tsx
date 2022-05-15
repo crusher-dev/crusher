@@ -11,12 +11,19 @@ export const isChildOfOnCloseClass = (element, root) => {
 	return false;
 };
 
-export const OnOutsideClick = ({ onOutsideClick, children }) => {
+/* @Todo: Find better inexpensive approach for blackListingClassNames */
+export const OnOutsideClick = ({ onOutsideClick, blackListClassNames = [], children, className }) => {
 	const ref = useRef();
 	useEffect(() => {
-		const handleMouseDown = (e: SyntheticEvent) => {
+		const handleMouseDown = (e: React.MouseEvent) => {
 			const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
-			if (!insideClick || isChildOfOnCloseClass(e.target, ref.current)) onOutsideClick();
+			if (!insideClick || isChildOfOnCloseClass(e.target, ref.current)) {
+				const isBlackListed = e.composedPath().some((element) => {
+					return blackListClassNames.some((className) => element.classList?.contains(className));
+				});
+
+				if(!isBlackListed) return onOutsideClick();
+			}
 		};
 		window.addEventListener("mousedown", handleMouseDown, { capture: true });
 
@@ -25,5 +32,5 @@ export const OnOutsideClick = ({ onOutsideClick, children }) => {
 		};
 	}, []);
 
-	return <div ref={ref}>{children}</div>;
+	return <div className={className ? `${className} outsideDiv` : "outsideDiv"} ref={ref}>{children}</div>;
 };

@@ -1,10 +1,10 @@
 const playwright = require("<%= usePlaywrightChromium ? "playwright-chromium" : "playwright" %>");
 const path = require("path");
 
-const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions } = require("<%= runnerUtilsPackagePath %>");
+const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, handleProxyBrowserContext, handleProxyPage } = require("<%= runnerUtilsPackagePath %>");
 
-// @TODO: globalManager, logManager, storageManager, exportsManager are supposed to be injected globally
-const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager);
+// @TODO: globalManager, logManager, storageManager, exportsManager, communicationChannel are supposed to be injected globally
+const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager, communicationChannel, null, context);
 
 let capturedVideo, browserContext, page, browser;
 <% if (!isPersistentContext) { %>
@@ -27,6 +27,7 @@ browserContext = await browser.newContext({
     ...browserContextOptions,
 });
 <% } %>
+  
 <% if (isTracingOn) { %>
 await browserContext.tracing.start({ screenshots: true, snapshots: true });
 <% } %>
@@ -34,6 +35,21 @@ browserContext.setDefaultNavigationTimeout(browserContextOptions.defaultNavigati
 browserContext.setDefaultTimeout(browserContextOptions.defaultTimeout);
 
 page = await browserContext.newPage();
+<% if (proxyUrlsMap) { %>
+  try {
+  await handleProxyBrowserContext(browserContext, <%- JSON.stringify(proxyUrlsMap) %>);
+  } catch(err) {
+  console.error(" Error is: ", err);
+  }
+  <% } %>
+
+<% if (proxyUrlsMap) { %>
+  try {
+await handleProxyPage(page, <%- JSON.stringify(proxyUrlsMap) %>);
+  } catch(err) {
+    console.error("Error is", err);
+  }
+<% } %>
 await handlePopup(page, browserContext);
 
 

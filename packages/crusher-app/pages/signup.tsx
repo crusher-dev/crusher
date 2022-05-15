@@ -10,7 +10,7 @@ function SignupPage() {
 	usePageTitle("Create account");
 	React.useEffect(() => {
 		if ((window as any).localStorage.getItem("githubToken") !== null) {
-			(window as any).localStorage.removeItem("githubToken")
+			(window as any).localStorage.removeItem("githubToken");
 		}
 	}, []);
 

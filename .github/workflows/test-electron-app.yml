@@ -1,0 +1,37 @@
+name: Test electron app
+
+on: push
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 16.13.2
+          cache: 'yarn'
+
+      - name: Create ecosystem.config.js and Copy .env.sample file
+        run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
+
+      - name: Install crusher modules
+        run: yarn
+
+      - name: Setup crusher for prod
+        run: yarn setup:prod
+
+      - name: Build electron app
+        run: BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev yarn workspace electron-app build
+
+      - name: 'Run tests for electron app'
+        run: |
+          yarn workspace electron-app test

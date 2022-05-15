@@ -19,6 +19,7 @@ appStateAtom.debugLabel = "appState";
  */
 export const appStateItemMutator = atom(null, (get, set, { key, value }) => {
 	const appState = get(appStateAtom);
+
 	const newState = produce(appState, (newState) => {
 		// @ts-ignore
 		newState[key] = value;

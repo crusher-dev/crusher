@@ -6,16 +6,19 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "../../types/RequestOptions";
 
-const runTests = (projectId: number) => {
+const runTests = (projectId: number, folder: string | null = null) => {
 	return backendRequest(getRunTestApi(projectId), {
 		method: RequestMethod.POST,
+		payload: {
+			folder,
+		}
 	});
 };
 
 export function handleTestRun(selectedProjectId: number | null, query: any, filters: Record<string, any>, router: BaseRouter, updateMetaData: Function) {
 	(async () => {
 		try {
-			await runTests(selectedProjectId);
+			await runTests(selectedProjectId, filters.folder ? filters.folder : null);
 			sendSnackBarEvent({ type: "normal", message: "We're running test." });
 			const buildAPI = getBuildsList(selectedProjectId, query.trigger, filters);
 

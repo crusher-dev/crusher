@@ -1,49 +1,50 @@
-FROM mcr.microsoft.com/playwright:bionic
+FROM mcr.microsoft.com/playwright:focal
 
 MAINTAINER Utkarsh Dixit "utkarshdix02@gmail.com"
 
 WORKDIR /crusher
 
+# === Setup SSH ====
 ARG SSH_PUBLIC_KEY
-
-RUN mkdir -p /usr/local/nvm
-RUN mkdir -p /var/run/sshd
-RUN apt-get update \
-    && apt-get install -y openssh-server unzip \
-    && mkdir -p /var/run/sshd
-
 ADD docker/ee/test-runner/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-RUN export SSH_PUBLIC_KEY="$SSH_PUBLIC_KEY"
 
-ENV NVM_DIR /usr/local/nvm
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.37.2/install.sh | bash
-ENV NODE_VERSION v12.19.1
-RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use --delete-prefix $NODE_VERSION"
+RUN mkdir -p /var/run/sshd && \
+    apt update && \
+    apt install -y openssh-server && \
+    apt install -y unzip && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    export SSH_PUBLIC_KEY="$SSH_PUBLIC_KEY"
 
-ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/lib/node_modules
-ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
+# === Install deps ====
+RUN curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -L -o ffmpeg.tar.xz && \
+    tar -xf ffmpeg.tar.xz && \
+    mv ffmpeg-*-amd64-static/ffmpeg /usr/local/bin/ && \
+    rm -rf ffmpeg.tar.xz ffmpeg-*-amd64-static
 
-RUN npm install -g npm pm2 concurrently
-RUN npm install -g @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
-RUN npm init -y
-RUN npm install dotenv playwright@1.14.0 patch-package source-map-support pg
+RUN npm init -y && \
+    npm install dotenv playwright-core@1.14.0 patch-package source-map-support pg && \
+    npm install -g pm2 concurrently
 
-RUN export CRUSHER_ENV=production
-
-ADD ./output packages
-RUN cd packages/crusher-app && npm install --save --legacy-peer-deps
-
-
+# === Setting up crusher project ===
 ADD ./patches/playwright+1.14.0.patch ./patches/playwright+1.14.0.patch
-RUN npx patch-package
-ADD ./ecosystem.docker.js ecosystem.config.js
+ADD ./ecosystem.config.sample.js ecosystem.config.js
 ADD ./.env.sample .env
 ADD ./ecosystem ecosystem
 ADD ./db/schema.sql db/schema.sql
 ADD ./setup/dbMigration.js setup/dbMigration.js
+
+RUN npx patch-package
+
+# === Move generated builds to packages for boot ===
+ADD ./output/crusher-app/ packages/crusher-app
+ADD ./output/crusher-server/ packages/crusher-server
+ADD ./output/test-runner packages/test-runner
+ADD ./output/video-processor packages/video-processor
+ADD ./output/crusher-runner-utils/ packages/crusher-runner-utils
+
+RUN rm -Rf ./packages/crusher-app/.next
+
+# == Prepare docker-entrypoint.sh for boot ====
 ADD ./docker/ee/start.sh start.sh
 
-RUN CRUSHER_ENV=production
-
-ENTRYPOINT ["sh", "start.sh"]
+ENTRYPOINT ["node", "packages/crusher-app/server.js"]

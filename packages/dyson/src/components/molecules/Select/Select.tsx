@@ -1,6 +1,7 @@
 import { css, SerializedStyles } from "@emotion/react";
 import React, { ReactElement, useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { OnOutsideClick } from "../../layouts/onOutsideClick/onOutsideClick";
+import ReactDOM from "react-dom";
 
 import { Conditional } from "../../layouts";
 import { CloseSVG } from "../../icons/CloseSVG";
@@ -27,7 +28,7 @@ export type TSelectBoxProps = {
 	/*
 		Event handler when scrolled to bottom of select dropdown
 	*/
-	onScrollEnd: any;
+	onScrollEnd?: any;
 	/*
 		Height of dropdown
 	*/
@@ -55,6 +56,7 @@ export type TSelectBoxProps = {
 const SelectDefaultProps = {
 	placeholder: "Select a value",
 	isMultiSelect: false,
+	isCreateable: false,
 	onScrollEnd: () => {},
 	isSearchable: false,
 	size: "medium",
@@ -73,10 +75,12 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	isSearchable,
 	className,
 	dropDownHeight,
+	isCreatable,
 	callback,
 }) => {
 	const [openSelectBox, setOpenSelectBox] = useState(false);
 	const [filterText, setFilterText] = useState("");
+	const selectContainerRef = React.useRef<HTMLDivElement>(null);
 
 	const getSelectedComponent = () => {
 		const selectedHasLabel = selected && selected.length > 0 && selected.every((item: any) => item && !!item.label);
@@ -96,7 +100,9 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	}, [selected]);
 
 	useEffect(() => {
-		setFilterText("");
+		if(selected && selected.length) {
+			setFilterText("");
+		}
 	}, [selected]);
 
 	const selectValue = (value) => {
@@ -123,15 +129,16 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	};
 
 	const options = filterText ? values.filter(({ label }) => label.toLowerCase().includes(filterText.toLowerCase())) : values;
+	const isInputDisabled = !!isSearchable === false;
 
 	return (
-		<div css={[selectBoxContainer(openSelectBox, size)]} className={`relative ${className}`}>
+		<div ref={selectContainerRef} css={[selectBoxContainer(openSelectBox, size)]} className={`relative ${className}`}>
 			<div className={"flex justify-between text-13 px-12 pr-10 selectBox"} onClick={setOpenSelectBox.bind(this, true)}>
 				<input
 					onInput={handleFilterTextChange}
 					type={"text"}
-					disabled={!!isSearchable === false}
-					css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null]}
+					disabled={isInputDisabled}
+					css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null, isInputDisabled ? css`pointer-events: none;` : null]}
 					value={filterText}
 					className={"selectBox__input selectBox__value"}
 					placeholder={selectedText}
@@ -146,8 +153,8 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 			</div>
 
 			<Conditional showIf={openSelectBox}>
-				<OnOutsideClick onOutsideClick={handleOutSideClick.bind(this, false)}>
-					<DropdownBox dropdownCSS={dropboxCSS(dropDownHeight)} onScrollEnd={onScrollEnd}>
+				<OnOutsideClick blackListClassNames={["select-dropDownContainer"]} onOutsideClick={handleOutSideClick.bind(this, false)}>
+					<DropdownBox selectContainerRef={selectContainerRef} dropdownCSS={dropboxCSS(dropDownHeight)} onScrollEnd={onScrollEnd}>
 						{options.map(({ value, component, label }) => (
 							<div
 								css={dropdDownItem(isMultiSelect)}
@@ -172,9 +179,29 @@ type TDropdownBox = {
 	onScrollEnd?: any;
 } & React.DetailedHTMLProps<any, any>;
 
-const DropdownBox = ({ children, dropdownCSS, onScrollEnd }: TDropdownBox) => {
+const DropdownBox = ({ children, selectContainerRef, dropdownCSS, className, onScrollEnd }: TDropdownBox) => {
 	const dropDownRef = useRef(null as any);
 	const [isLoadingResults, setIsLoadingResults] = useState(false);
+	const [container] = React.useState(() => {
+		return document.createElement("div");
+	});
+
+	React.useEffect(() => {
+		if(className) {
+			container.classList.add(className);
+		}
+		container.style.position = "absolute";
+		// Set position to selectContainerRef
+		const boundingClientRect = selectContainerRef.current.getBoundingClientRect();
+		container.style.top = `calc(${boundingClientRect.top + window.scrollY}px + ${boundingClientRect.height}px + 8rem)`;
+		container.style.left = `${boundingClientRect.left}px`;
+		container.style.width = `${boundingClientRect.width}px`;
+		container.style.zIndex = "99999999";
+		document.body.appendChild(container);
+		return () => {
+			document.body.removeChild(container);
+		};
+	}, []);
 
 	const handleScroll = useCallback(async () => {
 		const element = dropDownRef.current as HTMLElement;
@@ -186,22 +213,24 @@ const DropdownBox = ({ children, dropdownCSS, onScrollEnd }: TDropdownBox) => {
 		}
 	}, [dropDownRef, onScrollEnd]);
 
-	return (
+	return ReactDOM.createPortal((
 		<div css={dropdDownContainer} className="select-dropDownContainer">
-			<div ref={dropDownRef} onScroll={handleScroll} css={[dropdDown, dropdownCSS]} className={"dropdown-box flex flex-col justify-between"}>
-				{children}
-			</div>
-			<Conditional showIf={isLoadingResults}>
-				<div style={{ textAlign: "center", padding: "4rem 0rem" }}>Loading....</div>
-			</Conditional>
+				<div ref={dropDownRef} onScroll={handleScroll} css={[dropdDown, dropdownCSS]} className={"dropdown-box flex flex-col justify-between"}>
+					{children}
+				</div>
+				<Conditional showIf={isLoadingResults}>
+					<div style={{ textAlign: "center", padding: "4rem 0rem" }}>Loading....</div>
+				</Conditional>
 		</div>
+	 ), container
 	);
 };
 
 SelectBox.defaultProps = SelectDefaultProps;
 
 const dropboxCSS = (dropDownHeight: string) => css`
-	height: ${dropDownHeight};
+	height: auto;
+	max-height: ${dropDownHeight};
 `;
 
 const selectBoxContainer = (isOpen, size) => css`
@@ -237,7 +266,7 @@ export const dropdDownContainer = css`
 	position: absolute;
 	width: 100%;
 	overflow: hidden;
-	z-index: 1;
+	z-index: 5;
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);
 	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);

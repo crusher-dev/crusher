@@ -1,5 +1,5 @@
 import { ActionsInTestEnum, IInputNodeInfo, InputNodeTypeEnum } from "@shared/constants/recordedActions";
-import { DOM } from "../utils/dom";
+import { DOM, getElementDescription } from "../utils/dom";
 import EventsController from "../eventsController";
 import { RelevantHoverDetection } from "./relevantHoverDetection";
 import { v4 as uuidv4 } from "uuid";
@@ -299,24 +299,29 @@ export default class EventRecording {
 		}
 	}
 
-	async turnOnElementModeInParentFrame(selectedElement = this.state.targetElement) {
+	async turnOnElementModeInParentFrame(selectedElement = this.state.targetElement, shouldUseAdvancedSelector: boolean) {
 		this.isInspectorMoving = false;
 
 		const element =
 			selectedElement instanceof SVGElement && selectedElement.tagName.toLocaleLowerCase() !== "svg" ? selectedElement.ownerSVGElement : selectedElement;
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
-		const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[];
 
-		const dependentHovers = hoverDependedNodes.map((node) => {
-			return {
-				uniqueElementId: ElementsIdMap.getUniqueId(node),
-				selectors: this.eventsController.getSelectors(selectedElement),
-			}
-		});
+		let dependentHovers = [];
+		if(!shouldUseAdvancedSelector) {
+			const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[];
+
+			dependentHovers = hoverDependedNodes.map((node) => {
+				return {
+					uniqueElementId: ElementsIdMap.getUniqueId(node),
+					selectors: this.eventsController.getSelectors(selectedElement),
+				}
+			});
+		}
 
 		turnOnElementMode({
 			uniqueElementId: ElementsIdMap.getUniqueId(selectedElement),
-			selectors: this.eventsController.getSelectors(selectedElement),
+			selectors: this.eventsController.getSelectors(selectedElement, shouldUseAdvancedSelector),
+			elementDescription: getElementDescription(selectedElement),
 			dependentHovers: dependentHovers,
 		});
 	}
@@ -353,14 +358,19 @@ export default class EventRecording {
 		return false;
 	}
 
+	lastClick = performance.now();
+
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
-		console.log("Click called from recorder script", event);
+
+		const originalTimestamp = event.timeStamp;
 		event.timestamp = Date.now();
 		if (event.which === 3) {
 			return this.onRightClick(event);
 		}
 		if (event.which === 2) return;
+		if (originalTimestamp - this.lastClick < 500) return;
+		this.lastClick = originalTimestamp;
 
 		let target = event.composedPath()[0];
 		target = target instanceof HTMLSlotElement ? target.assignedNodes()[0] : target;
@@ -382,8 +392,11 @@ export default class EventRecording {
 			this._clickEvents.push(event);
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
+			let rect = target.getBoundingClientRect();
+			const mousePos = {x: (event.clientX - rect.left)/rect.width, y: (event.clientY - rect.top)/rect.height};
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, target, {
 				inputInfo: tagName === "label" ? inputNodeInfo : null,
+				mousePos: mousePos,
 			});
 		}
 
@@ -434,7 +447,8 @@ export default class EventRecording {
 
 	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
 		this.state.targetElement = event.detail.element;
-		this.turnOnElementModeInParentFrame(event.detail.element);
+		const shouldUseAdvancedSelector = (window as any).recorder.shouldUseAdvancedSelector();
+		this.turnOnElementModeInParentFrame(event.detail.element, shouldUseAdvancedSelector);
 		this.enableJavascriptEvents();
 	}
 
@@ -521,11 +535,6 @@ export default class EventRecording {
 	registerNodeListeners() {
 		console.log("Registering node listeners", window.location.href);
 
-
-		window.addEventListener("mousemove", this.handleMouseMove, true);
-		window.addEventListener("mouseover", this.handleMouseOver, true);
-		window.addEventListener("mouseout", this.handleMouseOut, true);
-		window.addEventListener("focus", this.handleFocus, true);
 		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
 		window.addEventListener("elementSelected", this.handleElementSelected);
 		window.addEventListener("input", this.handleElementInput);
@@ -584,7 +593,6 @@ export default class EventRecording {
 	}
 
 	removeNodeListeners() {
-		window.removeEventListener("mousemove", this.handleMouseMove, true);
 	}
 
 	boot(isFirstTime = false) {

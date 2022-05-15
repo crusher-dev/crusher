@@ -55,7 +55,7 @@ export default function Login({ loginWithEmailHandler }) {
 						Ready to ship faster & better <RocketImage className={"ml-8"} />
 					</Heading>
 					<TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
-						Million of devs empower their workflow with crusher
+						Millions of devs empower their workflow with testing
 					</TextBlock>
 
 					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28 pb-60"}>
@@ -71,7 +71,7 @@ export default function Login({ loginWithEmailHandler }) {
 									width: 100%;
 									height: 38px;
 									font-weight: 400;
-                               
+
                                     background: linear-gradient(180deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
 								`)}
 								>

@@ -110,6 +110,11 @@ class BuildsService {
 	}
 
 	@CamelizeResponse()
+	async getBuildFromReportId(reportId: number): Promise<KeysToCamelCase<IBuildTable>> {
+		return this.dbManager.fetchSingleRow(`SELECT jobs.* FROM public.jobs, public.job_reports WHERE job_reports.id = ? AND jobs.latest_report_id = job_reports.id`, [reportId]);
+	}
+	
+	@CamelizeResponse()
 	async getBuild(buildId: number): Promise<KeysToCamelCase<IBuildTable> | null> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.jobs WHERE id = ?", [buildId]);
 	}
@@ -143,7 +148,7 @@ class BuildsService {
 		return this.dbManager.update("UPDATE public.jobs SET status = ? WHERE id = ?", [status, buildId]);
 	}
 
-	async initGithubCheckFlow(githubMeta: { repoName: string; commitId: string }, buildId: number) {
+	async initGithubCheckFlow(githubMeta: { repoName: string; commitId: string }, buildId: number): Promise<{ installationId: any; repoName: string; commitId: string; checkRunId: any; }> {
 		const githubService = new GithubService();
 		const buildRecord = await this.getBuild(buildId);
 
@@ -168,6 +173,8 @@ class BuildsService {
 		meta.installationId = githubInstallationRecord.installationId;
 
 		await this.updateBuildMeta(meta, buildRecord.id);
+
+		return { installationId: meta.installationId, repoName: meta.repoName, commitId: meta.commitId, checkRunId: meta.githubCheckRunId };
 	}
 
 	private getGithubConclusionFromReportStatus(reportStatus: BuildReportStatusEnum): GithubCheckConclusionEnum {

@@ -42,5 +42,10 @@ async function setDevice(browser: Browser, action: iAction, globals: IGlobalMana
 module.exports = {
 	name: ActionsInTestEnum.SET_DEVICE,
 	description: "Configuration of device config",
+	actionDescriber: (action: iAction) => {
+		const device: { width: number; height: number; name: string; } = action.payload.meta.device as iDevice;
+
+		return `Set device ${device && device.name ? `to [${device.name}]` : ""}`;
+	},
 	handler: setDevice,
 };

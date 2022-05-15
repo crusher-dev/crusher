@@ -12,5 +12,8 @@ async function scrollOnPage(page: Page, action: iAction) {
 module.exports = {
 	name: ActionsInTestEnum.PAGE_SCROLL,
 	description: "Scroll on page",
+	actionDescriber: (action: iAction) => {
+		return `Scroll on page`;
+	},
 	handler: scrollOnPage,
 };

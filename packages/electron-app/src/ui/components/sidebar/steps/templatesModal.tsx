@@ -56,13 +56,13 @@ const TemplatesModal = (props: iStartupModalProps) => {
 		};
 		localStorage.setItem("app.settings", JSON.stringify(settings));
 		dispatch(setSettngs(settings));
-		
+
 		sendSnackBarEvent({type: "success", message: "Settings saved"});
 		props.handleClose();
 	};
 
 	if(!isOpen) return null;
-	
+
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Templates"} desc={"Groups series of steps into single shareable step"} closeModal={props.handleClose} />
@@ -111,7 +111,7 @@ const TemplatesModal = (props: iStartupModalProps) => {
 						</div>
 						<div css={[inputContainerStyle, css`margin-top: 18rem;`]}>
 							<div css={css`font-size: 13rem; color: rgb(255, 255, 255, 0.7); font-weight: 600;`}>Enable mouse tracker</div>
-						
+
 							<Toggle isOn={enableMouseTracker} callback={handleEnableMouseTrackerCallback} css={css`margin-left: auto`}/>
 						</div>
 					</div>
@@ -128,7 +128,7 @@ const TemplatesModal = (props: iStartupModalProps) => {
 
 const formContainerStyle = css`
     margin-top: 3.375rem;
-	padding: 26rem 34rem;	
+	padding: 26rem 34rem;
     padding-top: 0rem;
 `;
 const submitFormContainerStyle = css`

@@ -1,3 +1,5 @@
+import {iAction} from "../types/action";
+
 export enum ACTIONS_IN_TEST {
 	SET_DEVICE = "BROWSER_SET_DEVICE",
 	RUN_AFTER_TEST = "BROWSER_RUN_AFTER_TEST",
@@ -55,7 +57,7 @@ export const ElementActionsInTestArr = Object.values(ActionsInTestEnum).filter((
 });
 
 export const ACTIONS_TO_LABEL_MAP: Record<ACTIONS_IN_TEST, string> = {
-	[ACTIONS_IN_TEST.ELEMENT_SCROLL]: "Eleemnt Scroll",
+	[ACTIONS_IN_TEST.ELEMENT_SCROLL]: "Element Scroll Scroll",
 	[ACTIONS_IN_TEST.SET_DEVICE]: "Set a device",
 	[ACTIONS_IN_TEST.RUN_AFTER_TEST]: "Run after test",
 	[ACTIONS_IN_TEST.NAVIGATE_URL]: "Navigate to URL",

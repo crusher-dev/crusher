@@ -18,7 +18,7 @@ export function FormInput({ type, data, onChange, placeholder, autoComplete, onB
 				onKeyDown={onKeyDown}
 				onReturn={onReturn}
 				onBlur={onBlur}
-				type={ type || "text" }
+				type={type || "text"}
 			/>
 			<div className={"mt-4 mb-5 text-11"} css={errorState}>
 				{data.error}

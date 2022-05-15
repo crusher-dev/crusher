@@ -1,11 +1,12 @@
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
-import { iElementInfo, TRecorderState } from "../reducers/recorder";
+import { iElementInfo, TRecorderCrashState, TRecorderState } from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
 export const SET_IS_WEBVIEW_INITIALIZED = "SET_IS_WEBVIEW_INITIALIZED";
 
 export const SET_INSPECT_MODE = "SET_INSPECT_MODE";
+export const SET_INSPECT_ELEMENT_SELECTOR_MODE = "SET_INSPECT_ELEMENT_SELECTOR_MODE";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 
 export const SET_SITE_URL = "SET_SITE_URL";
@@ -20,6 +21,9 @@ export const SET_IS_TEST_VERIFIED = "SET_IS_TEST_VERIFIED";
 export const DELETE_RECORDED_STEPS = "DELETE_RECORDED_STEPS";
 export const MARK_RECORDED_STEPS_OPTIONAL = "MARK_RECORDED_STEPS_OPTIONAL";
 export const RESET_RECORDER = "RESET_RECORDER";
+export const SET_RECORDER_CRASH_STATE = "SET_RECORDER_CRASH_STATE";
+
+export const SET_STATUS_BAR_VISIBILITY = "SET_STATUS_BAR_VISIBILITY";
 
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
@@ -28,12 +32,26 @@ export const updateRecorderState = (state: TRecorderState, payload: any) => {
     };
 };
 
+export const updateRecorderCrashState = (stateMeta: {state: TRecorderState, payload: any}) => {
+    return {
+        type: SET_RECORDER_CRASH_STATE,
+        payload: stateMeta,
+    };
+}
+
 export const setInspectMode = (isOn: boolean) => {
     return {
         type: SET_INSPECT_MODE,
         payload: { isOn },
     };
 }
+
+export const setInspectElementSelectorMode = (isOn: boolean) => {
+    return {
+        type: SET_INSPECT_ELEMENT_SELECTOR_MODE,
+        payload: { isOn },
+    };
+};
 
 export const setSelectedElement = (element: iElementInfo) => {
     return {
@@ -115,5 +133,12 @@ export const setIsWebViewInitialized = (isInitialized: boolean) => {
     return {
         type: SET_IS_WEBVIEW_INITIALIZED,
         payload: { isInitialized }
+    }
+}
+
+export const setStatusBarVisibility = (isVisible: boolean) => {
+    return {
+        type: SET_STATUS_BAR_VISIBILITY,
+        payload: { isVisible }
     }
 }

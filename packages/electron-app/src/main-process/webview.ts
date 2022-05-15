@@ -2,7 +2,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { WebContents, ipcMain, webContents, session } from "electron";
 import * as path from "path";
 import { PlaywrightInstance } from "../lib/playwright";
-import { TRecorderState } from "../store/reducers/recorder";
+import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
 
@@ -26,6 +26,35 @@ export class WebView {
 		webViewWebContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
 			details.requestHeaders["Bypass-Tunnel-Reminder"] = "true";
 			callback({ requestHeaders: details.requestHeaders });
+		});
+
+		webViewWebContents.on("crashed", (event, any) => {
+			console.log("Webview crashed", any);
+			this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.CRASHED });
+		});
+
+		webViewWebContents.on("did-fail-load", (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+			if(isMainFrame) {
+				this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.PAGE_LOAD_FAILED});
+			}
+		});
+
+		webViewWebContents.on("context-menu", (event, any) => {
+			console.log("Webview context menu", any);
+		});
+
+		webViewWebContents.on("did-frame-navigate", (event, url, httpResponseCode, httpStatusText, isMainFrame) => {
+			if(isMainFrame && this.appWindow.getRecorderState().type !== TRecorderState.PERFORMING_ACTIONS) {
+				this.appWindow.handleSaveStep(null, {
+					action: {
+						type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,
+						payload: {
+							meta: {
+								value: url,
+							},
+						},
+					},
+				});			}
 		});
 
 		webViewWebContents.on("-will-add-new-contents" as any, (event, url) => {
@@ -108,16 +137,28 @@ export class WebView {
 		});
 	}
 
+	async _resumeExecution() {
+		try {
+			await this.webContents.debugger.sendCommand("Debugger.resume");
+		} catch(ex){}
+	}
+
+	async _disableExecution() {
+		try {
+			await this.webContents.debugger.sendCommand("Debugger.pause");
+		} catch(ex) {}
+	}
+
 	async handleDebuggerEvents(event, method, params) {
 		if (method === "Overlay.inspectNodeRequested") {
-			await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
-				mode: "none",
-				highlightConfig: highlighterStyle,
-			});
 			const nodeObject = await this.webContents.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
 			await this.webContents.debugger.sendCommand("Runtime.callFunctionOn", {
 				functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 				objectId: nodeObject.object.objectId,
+			});
+			await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
+				mode: "none",
+				highlightConfig: highlighterStyle,
 			});
 		}
 	}

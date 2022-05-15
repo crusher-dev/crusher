@@ -24,5 +24,8 @@ async function takePageScreenshot(page: Page, step: iAction, globals: IGlobalMan
 module.exports = {
 	name: ActionsInTestEnum.PAGE_SCREENSHOT,
 	description: "Take page screenshot of page",
+	actionDescriber: (action: iAction) => {
+		return `Take screenshot of current page`;
+	},
 	handler: takePageScreenshot,
 };

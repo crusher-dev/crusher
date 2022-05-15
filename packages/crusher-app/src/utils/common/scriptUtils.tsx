@@ -25,8 +25,6 @@ export const loadSegment = () => {
 	);
 };
 
-
-
 export const GA_ID = process.env.GA_ID || "UA-51192281-1";
 
 // Hate to use GA, but other user activity tool aren't reliable.
@@ -47,9 +45,7 @@ export const loadGA = () => {
 	);
 };
 
-
-
-export const loadGTM = ()=>{
+export const loadGTM = () => {
 	addScript(
 		"gtm",
 		{},
@@ -58,10 +54,9 @@ export const loadGTM = ()=>{
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TCM8227');`
-	)
-}
-
+})(window,document,'script','dataLayer','GTM-TCM8227');`,
+	);
+};
 
 export const openChatBox = () => {
 	window["$crisp"].push(["do", "chat:open"]);

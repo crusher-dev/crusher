@@ -44,11 +44,12 @@ const SetupCrusher = () => {
 
 	return (
 		<>
-			<div className="m-8 text-18 leading-none mb-12 font-700">Setup Crusher</div>
-			<div className="text-16 flex flex-col items-center mb-48">
-				<span className={"mb-20 leading-none text-14"}>Just need to ensure our machines are working</span>
+			<div className={"flex-col"}>
+				<div className="text-18 leading-none mb-12 font-700">Setup Crusher</div>
+				<div className="text-16 flex flex-col mb-48">
+					<span className={"mb-20 leading-none text-14"}>Just need to ensure our machines are working</span>
+				</div>
 			</div>
-
 			<div>
 				<ModuleCard onClick={onInitialSetup.bind(this)} />
 			</div>
@@ -56,7 +57,7 @@ const SetupCrusher = () => {
 			<Button
 				css={css`
 					width: 200rem;
-					margin-top: 320rem;
+					margin-top: 80rem;
 					margin-bottom: 20rem;
 					height: 34rem;
 				`}

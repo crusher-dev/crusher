@@ -229,7 +229,16 @@ class IntegrationsController {
 	@Get("/integrations/cli/commands")
 	async getCliCommands(@CurrentUser({ required: true }) user) {
 		const { user_id, team_id } = user;
-		return ["npx crusher-cli create:test --token=" + generateToken(user_id, team_id), "npx crusher-cli crusher run:test"];
+		return ["npx crusher-cli test:create", "npx crusher-cli test:run"];
+	}
+
+	@Authorized()
+	@Get("/integrations/:project_id/ci/command")
+	async getIntegrationCommand(@CurrentUser({required: true}) userInfo, @Param("project_id") projectId: number) {
+		const {user_id, team_id}= userInfo;
+		const githubUserToken = generateToken(user_id, team_id);
+
+		return `npx crusher-cli test:run --token=${githubUserToken} --project-id=${projectId}`;
 	}
 }
 

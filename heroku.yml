@@ -1,7 +1,0 @@
-build:
-  docker:
-    web: docker/oss/Dockerfile.heroku
-release:
-  image: web
-  command:
-    - node setup/dbMigration.js

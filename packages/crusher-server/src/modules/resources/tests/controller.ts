@@ -63,6 +63,8 @@ export class TestController {
 		if (params.page) params.page = parseInt(params.page!);
 
 		const testsListData = await this.testService.getTests(true, { ...params, userId: user.user_id });
+
+		console.log(testsListData)
 		const testsList = await Promise.all(
 			testsListData.list.map(async (testData) => {
 				const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
@@ -105,7 +107,9 @@ export class TestController {
 		if (!params.page) params.page = 0;
 		if (params.page) params.page = parseInt(params.page!);
 
+		const folderData =  await this.testService.getFolder(projectId);
 		const testsListData = await this.testService.getTestsInProject(projectId, true, params);
+
 		const testsList = await Promise.all(
 			testsListData.list.map(async (testData) => {
 				const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
@@ -117,6 +121,7 @@ export class TestController {
 					id: testData.id,
 					testName: testData.name,
 					tags: testData.tags,
+					folderId: testData.testFolder,
 					runAfter: testData.run_after,
 					meta: testData.meta ? JSON.parse(testData.meta) : null,
 					createdAt: new Date(testData.createdAt).getTime(),
@@ -140,7 +145,7 @@ export class TestController {
 			return { id: user.id, name: user.name, email: user.email };
 		});
 
-		return { totalPages: testsListData.totalPages, list: testsList, availableAuthors: availableAuthors, currentPage: params.page };
+		return { totalPages: testsListData.totalPages,folders: folderData, list: testsList, availableAuthors: availableAuthors, currentPage: params.page };
 	}
 
 	@Authorized()
@@ -149,12 +154,17 @@ export class TestController {
 		@CurrentUser({ required: true }) user,
 		@Body()
 		body: {
+			proxyUrlsMap?: {[key: string]: {intercept: string | {regex: string}, tunnel: string}},
 			githubRepoName?: string;
 			githubCommitId?: string;
 			host?: string;
 			disableBaseLineComparisions: boolean;
 			baselineJobId: number | null;
+			folder?: string;
+			folderIds?: string;
+			testIds?: string;
 			browsers?: Array<BrowserEnum>;
+			context?: any;
 		},
 		@Param("project_id") projectId: number,
 	) {
@@ -171,10 +181,14 @@ export class TestController {
 		return this.testService.runTestsInProject(
 			projectId,
 			user.user_id,
-			{ host: body.host ? body.host : "null" },
+			{ host: body.host ? body.host : "null", context: body.context ? body.context : null },
 			meta,
 			body.baselineJobId ? body.baselineJobId : null,
 			body.browsers ? body.browsers : [BrowserEnum.CHROME],
+			body.folder ? body.folder : null,
+			body.folderIds ? body.folderIds : null,
+			body.testIds ? body.testIds : null,
+			body.proxyUrlsMap ? body.proxyUrlsMap : null,
 		);
 	}
 
@@ -204,43 +218,57 @@ export class TestController {
 		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; tempTestId?: string },
 	) {
 		const { user_id } = user;
+		return this.testService.createAndRunTest(body, projectId, user_id);
+	}
 
-		let events = body.events;
-		if (body.tempTestId) {
-			const tempTest = await this.testService.getTempTest(body.tempTestId);
-			events = tempTest.events;
-		}
+	@Authorized()
+	@Post("/projects/:project_id/folder/create")
+	async createFolder(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
 
-		if (!events) throw new Error("No events passed");
-		if (!body.name) throw new Error("No name passed for the test");
-
-		const testInsertRecord = await this.testService.createTest({
-			...body,
-			events: events,
-			projectId: projectId,
-			userId: user_id,
-		});
-
-		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
-
-		const buildRunInfo = await this.testRunnerService.runTests(
-			await this.testService.getCompleteTestsArray(await this.testService.getFullTestArr([testRecord])),
-			{
-				userId: user_id,
-				projectId: projectId,
-				host: "null",
-				status: BuildStatusEnum.CREATED,
-				buildTrigger: BuildTriggerEnum.MANUAL,
-				browser: [BrowserEnum.CHROME],
-				isDraftJob: true,
-				config: { shouldRecordVideo: true, testIds: [testRecord.id] },
-				meta: { isDraftJob: true },
-			},
+	) {
+		const folderInsertRecord = await this.testService.createFolder(
+			projectId,
+			"New Folder"
 		);
 
-		await this.testService.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
+		return folderInsertRecord;
+	}
 
-		return testInsertRecord;
+	@Authorized()
+	@Post("/projects/:project_id/folder/delete")
+	async deleteFolder(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
+		@Body() body:any
+
+	) {
+		const {folderId} = body;
+
+		const folderDeleteRecord = await this.testService.deleteFolder(
+			folderId,
+		);
+
+		return folderDeleteRecord;
+	}
+
+	@Authorized()
+	@Post("/projects/:project_id/folder/rename")
+	async renameFolder(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
+		@Body() body:any
+
+	) {
+		const {folderId,name} = body;
+
+		const folderUpdateRecord = await this.testService.renameFolder(
+			folderId,
+			name
+		);
+
+		return folderUpdateRecord;
 	}
 
 	@Get("/tests/actions/get.template")
@@ -255,11 +283,12 @@ export class TestController {
 
 	@Authorized()
 	@Post("/tests/:test_id/actions/edit")
-	async editTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { name: string; tags: string; runAfter: number }) {
+	async editTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { name: string; testFolder: number | null; }) {
+
+		console.log(body.testFolder, typeof (body.testFolder))
 		const result = await this.testService.updateTest(testId, {
 			name: body.name,
-			tags: body.tags,
-			runAfter: body.runAfter,
+			testFolder: body.testFolder,
 		});
 
 		return result.changedRows ? "Updated" : "No change";

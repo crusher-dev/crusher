@@ -10,5 +10,11 @@ async function hoverOnElement(element: Locator, workingSelector: any, action: iA
 module.exports = {
 	name: ActionsInTestEnum.HOVER,
 	description: "Hover on element",
+	actionDescriber: (action: iAction) => {
+		if(!action.payload.meta || !action.payload.meta.elementDescription) {
+			return `Hover on element`;
+		}
+		return `Hover on [${action.payload.meta.elementDescription}]`;
+	},
 	handler: hoverOnElement,
 };

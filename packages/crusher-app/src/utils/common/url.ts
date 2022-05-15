@@ -4,8 +4,16 @@ function getLocationOrigin() {
 	return eval("window.location.origin");
 }
 
-export const resolvePathToBackendURI = (endpoint: string) =>
-	getPathWithHost(process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL || `${getLocationOrigin()}/server`, endpoint);
+export const resolvePathToBackendURI = (endpoint: string) => {
+	// If someone's using gitpod, then use dynamic host
+	if(typeof(window) !== "undefined" && window.location.origin.includes('gitpod')){
+			return getPathWithHost(`${getLocationOrigin()}/server`,endpoint)
+	}
+
+	return getPathWithHost(process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL || `${getLocationOrigin()}/server`, endpoint);
+}
+
+
 export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(getLocationOrigin(), endpoint);
 
 const getPathWithHost = (host: string, path: string): string => {

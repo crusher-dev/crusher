@@ -26,6 +26,8 @@ import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { handleTestRun } from "@utils/core/testUtils";
+import { Tooltip } from 'dyson/src/components/atoms/tooltip/Tooltip';
+import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -110,6 +112,66 @@ function BottomSection({ name, description, ...props }) {
 	);
 }
 
+function HelpContent() {
+	return <div>
+			<div className={"px-24 py-20 pt-14"}>
+				<TextBlock fontSize={16} weight={600} color={"#CFCFD0"} css={css`font-family: 'Cera Pro'`}>Need help with your project?</TextBlock>
+				<TextBlock fontSize={12.8} color={"#8F8F8F"} className={"mt-10"}>For issues with crusher, other enquiries.</TextBlock>
+				<div className={"flex mt-20 mb-12"}>
+					<a href={"https://docs.crusher.dev"} target={"_blank"}>
+					<Button size={"x-small"} css={css`width: 148rem;`} bgColor={"blue"}>Setup call</Button>
+					</a>
+						<a href={"https://docs.crusher.dev"} target={"_blank"}>
+							<Button size={"x-small"} className={"ml-12"} css={css`width: 120rem;`} bgColor={"tertiary-white-outline"}>Read docs</Button>
+						</a>
+				</div>
+				<TextBlock className={"mt-24"} fontSize={13} color={"#8F8F8F"} showLineHeight={true} >		A dev will pair to help you adopt crusher.</TextBlock>
+
+			</div>
+		<hr css={css`height: 1px; background: #1C1F22;  border: none;`} className={"mt-0 mb-8"}/>
+
+		<div className={"px-20 py-16"}>
+			<TextBlock fontSize={16} weight={600}  color={"#CFCFD0"} css={css`font-family: 'Cera Pro'`}>Discuss with community</TextBlock>
+			<TextBlock className={"mt-10 mb-16 "} fontSize={12.8} color={"#8F8F8F"}>For feature request, question or discussion</TextBlock>
+
+			<a href={"https://github.com/crusherdev/crusher"} target={"_blank"}>
+			<img src={"/github_support.png"} className={"mb-16 "} css={banner}/>
+			</a>
+			{/*<img src={"/github_support.png"} css={banner}/>*/}
+		</div>
+	</div>;
+}
+
+const banner=css`
+	:hover{
+    filter: sepia(100%) hue-rotate(
+            203deg
+    ) saturate(1500%);
+	}
+`
+
+const helpDropdownCSS = css`
+    box-shadow: 0 0px 6px rgb(0 0 0 / 33%) !important;
+							    bottom: -20rem;
+							    top: unset !important;
+							left: 4rem !important;
+							height: fit-content;
+							border-radius: 10rem !important;
+      width: 372px;
+
+						`
+
+function HelpNSupport() {
+	return <Dropdown
+		component={<HelpContent/>}
+		dropdownCSS={helpDropdownCSS}
+	>
+		<div css={navLink} className={'flex items-center pr text-12.5 mt-4'}>
+			<NewTabSVG className={'mr-14 mb-2'} /> Help & Support
+		</div>
+	</Dropdown>;
+}
+
 function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
@@ -158,26 +220,13 @@ function LeftSection() {
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-12.5 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
+						<div css={navLink} className={"flex items-center text-12.5 mt-4"}
+								 onClick={setInviteTeamMates.bind(this, true)}>
 							<AddSVG className={"mr-18 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
 
-					<Dropdown
-						component={<DropdownContent />}
-						dropdownCSS={css`
-							bottom: -10px;
-							top: unset;
-							left: calc(100% - 54px) !important;
-							height: fit-content;
-							width: 206.03px;
-						`}
-					>
-						<div css={navLink} className={"flex items-center pr text-12.5 mt-4"}>
-							<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
-						</div>
-					</Dropdown>
-
+					<HelpNSupport/>
 					<div
 						css={navLink}
 						className={"flex items-center text-12.5 mt-4"}
@@ -211,48 +260,41 @@ function LeftSection() {
 
 export const dropdDown = css`
 	bottom: -10px;
-	left: calc(100% - 54px);
+	left: calc(100% - 4px);
 	position: absolute;
-
 	width: 206.03px;
 
 	background: #0f1112;
 	border: 1px solid rgba(42, 47, 50, 0.8);
 	box-sizing: border-box;
-	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);
-	border-radius: 6px;
+	box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
 	padding: 8rem 0;
 	z-index: 1;
 `;
 
 function DropdownContent() {
-	const router = useRouter();
-	useEffect(() => {
-		loadCrisp(() => {});
-	}, []);
 	return (
 		<div className={"flex flex-col justify-between"}>
 			<div>
-				<MenuItem showHightlighted={true} label={"Get Live support"} onClick={openChatBox}></MenuItem>
 				<MenuItem
 					selected={true}
 					label={"Request a feature"}
 					onClick={() => {
-						router.push("https://github.com/crusherdev/crusher/issues");
+						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"Report Issue"}
 					onClick={() => {
-						router.push("https://github.com/crusherdev/crusher/issues");
+						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"View docs"}
 					onClick={() => {
-						router.push("https://docs.crusher.dev");
+						window.open("https://docs.crusher.dev","_blank").focus();
 					}}
 				></MenuItem>
 			</div>
@@ -375,7 +417,7 @@ function TopNavbar() {
 	);
 }
 
-export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
+export const SidebarTopBarLayout = ({ children, hideSidebar = false, setContainerWidth = true }) => {
 	return (
 		<div className={"flex"} css={background}>
 			<Conditional showIf={!hideSidebar}>
@@ -385,7 +427,7 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false }) => {
 			<div className={"w-full"}>
 				<TopNavbar />
 				<div css={scrollContainer} className={"custom-scroll relative"}>
-					<div css={[containerWidth]}>{children}</div>
+					<div css={[setContainerWidth && containerWidth]}>{children}</div>
 				</div>
 			</div>
 		</div>
@@ -427,22 +469,21 @@ const background = css`
 
 const sidebar = css`
 	width: 286rem;
-	background: #101215;
 	height: 100vh;
-	border: 1px solid #171b20;
+	border-right: 1px solid #171b20;
 	box-sizing: border-box;
 `;
 
 const nav = css`
 	width: 100%;
-	background: #101215;
 	height: 68rem;
+	border-bottom: 1px solid #171b20;
 `;
 const containerWidth = css`
 	//width: calc(100vw - 250rem);
 	//max-width: 1500rem;
 
-	width: 1488rem;
+	width: 1468rem;
 	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
 	padding: 0 0;
@@ -472,6 +513,7 @@ const navLink = css`
 	height: 31rem;
 	color: rgba(189, 189, 189, 0.8);
 	font-weight: 500;
+  letter-spacing: .3px;
 
 	margin-left: 6px;
 	margin-right: 6px;

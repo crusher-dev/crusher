@@ -13,5 +13,8 @@ async function reloadPage(page: Page, action: iAction) {
 module.exports = {
 	name: ActionsInTestEnum.RELOAD_PAGE,
 	description: "Reload page",
+	actionDescriber: (action: iAction) => {
+		return `Reload page`;
+	},
 	handler: reloadPage,
 };

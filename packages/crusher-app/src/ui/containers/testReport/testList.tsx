@@ -34,6 +34,7 @@ import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 const CompareImage = dynamic(() => import("./components/compareImages"));
@@ -249,7 +250,87 @@ function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 	);
 }
 
-function RenderStep({ data, testInstanceData }) {
+function RenderAssertElement({ logs }) {
+	return (<div className="assertTable mt-24" css={assertTableContainerStyle}>
+<table css={assertTableCss}>
+  <tr>
+    <th style={{color: "#8A8A8A"}}>Expected:</th>
+    <th>Visible:</th>
+  </tr>
+  <tr>
+    <td style={{padding: "4rem 0rem"}}></td>
+  </tr>
+
+{logs.map((log) => {
+	return (
+	<tr>
+		<td>
+		  <div style={{color: "#8A8A8A"}}><pre>{log.meta.field}</pre> should be</div>
+		  <div className="para-line"><span className="highlight-old">{log.meta.valueToMatch}</span></div>
+		</td>
+		<td>
+		  <div style={{color: "#8A8A8A"}}><pre>{log.meta.field}</pre> is</div>
+		  <div className="para-line"><span className={log.status === "FAILED" ? "highlight-current" : "highlight-old"}>{log.meta.elementValue}</span></div>
+		</td>
+	  </tr>
+	)
+})}
+  <tr>
+    <td style={{padding: "8px"}}></td>
+  </tr>
+</table>
+</div>
+	)
+}
+
+const assertTableCss = css`
+	background: rgba(65, 63, 63, 0.03);
+	border-radius: 8rem;
+	box-sizing: border-box;
+	color: #fff;
+	padding: 4px 16px;
+
+	border-spacing: 10px;
+	border-collapse: collapse;
+	width: 540rem; font-family: Cera Pro;
+	th, td {
+		border-right: 1px solid rgba(255, 255, 255, 0.09); 
+		border-left: 1px solid rgba(255, 255, 255, 0.09);
+		border-radius: 10px;
+		padding: 4px 16px;
+		width: 260px;
+	}
+	tr th:nth-of-type(1), tr td:nth-of-type(1) {
+		border-left: none !important;
+	}
+	tr th:nth-of-type(2), tr td:nth-of-type(2) {
+		border-right: none !important;
+	}
+	th{
+		padding: 14px 16px;
+		text-align: left;
+	}
+	.para-line{
+		margin-top: 4px;
+	}	
+	.highlight-current {
+		color: #FF59A9;
+	}
+	.highlight-old {
+		color: #AFCE6D;
+	}
+	pre {
+		display: inline-block;
+		margin: 0;
+	  }
+`;
+
+const assertTableContainerStyle = css`
+border: 1px solid rgba(255, 255, 255, 0.09);
+display: inline-block;
+border-radius: 9rem;
+`;
+function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
 
@@ -264,7 +345,7 @@ function RenderStep({ data, testInstanceData }) {
 		<div className={"relative mb-32"}>
 			<div className={" flex px-44"}>
 				<div css={tick}>
-					<TestStatusSVG type={status} height={"20rem"} width={"20rem"} />
+					<TestStatusSVG css={status === ActionStatusEnum.STALLED ? css`path { fill: #E1C973; }`: css``} type={status} height={"20rem"} width={"20rem"} />
 				</div>
 
 				<Conditional showIf={status !== "FAILED"}>
@@ -280,7 +361,7 @@ function RenderStep({ data, testInstanceData }) {
 								color: #d0d0d0;
 							`}
 						>
-							{actionName}
+							{actionName} {status === ActionStatusEnum.STALLED ? "(Stalled)" : ""}
 						</span>
 						<Conditional showIf={actionDescription && actionDescription.trim().length}>
 							<span
@@ -331,9 +412,51 @@ function RenderStep({ data, testInstanceData }) {
 				</Conditional>
 			</div>
 
+
+
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
 				{data.meta && data.meta.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
 			</Conditional>
+
+			<div className={"px-44 mt-12"}>
+				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) && data.meta && data.meta.meta && data.meta.meta.meta && data.meta.meta.meta.logs && status === "FAILED" ? (
+					<RenderAssertElement logs={data.meta.meta.meta.logs}/>
+				) : ""}
+				<Conditional showIf={status === "FAILED"}>
+					<div className="mt-36">
+						<div css={css`display: flex;`}>
+							<a href={`crusher://replay-test?testId=${testId}`}>
+								<Button css={css`
+										width: 144px;
+									`}
+								>
+									Run locally
+								</Button>
+							</a>
+							<Button
+								className={"ml-16"}
+									bgColor={"tertiary"}
+									css={css`
+										width: 148rem;
+									`}
+									onClick={setIsShowingVideo.bind(this, true)}
+								>
+									<span className={"font-400"}>View Video</span>
+								</Button>
+						</div>
+						<div className="mt-38" css={css`display: flex; flex-direction: column`}>
+							<div css={css`font-family: Cera Pro; font-size: 14px;`}>Screenshot when test failed</div>
+							{data.meta && data.meta.screenshotDuringError ? (<img className={"mt-26"}
+	src={data.meta.screenshotDuringError.endingScreenshot}
+	css={css`
+		max-width: 49%;`}
+		/>
+	 ): ""}
+						
+						</div>
+					</div>
+				</Conditional>
+			</div>
 			<Conditional showIf={showStepInfoModal}>
 				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />
 			</Conditional>
@@ -640,37 +763,63 @@ const tableStyle = css`
 `;
 
 function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
+	const handleClose = (e) => {
+		setOpenVideoModal(false);
+	};
 	return (
-		<Modal
-			onClose={setOpenVideoModal.bind(this, false)}
-			onOutsideClick={setOpenVideoModal.bind(this, false)}
-			modalStyle={css`
-				padding: 28rem 36rem 36rem;
-			`}
+		<div
+			onClick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+			}}
 		>
-			<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
-			<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
-			<VideoComponent src={videoUrl} />
-		</Modal>
+			<Modal
+				lightOverlay={false}
+				onClose={handleClose.bind(this)}
+				onOutsideClick={handleClose.bind(this)}
+				modalStyle={css`
+					padding: 28rem 36rem 36rem;
+				`}
+			>
+				<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
+				<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
+				<VideoComponent src={videoUrl} />
+			</Modal>
+		</div>
 	);
 }
 
-function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
-	const [openVideoModal, setOpenVideoModal] = useState(false);
+function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVideo, setIsShowingVideo }) {
 	const { steps } = testInstanceData;
 	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
 	const videoUrl = testInstanceData?.output?.video;
 	const isVideoAvailable = !!videoUrl;
 
+	const testInstanceMeta = testInstanceData.meta || {};
+	const isStalled = steps.some((step: any) => step.status === ActionStatusEnum.STALLED);
+
+	const handleOpenVideoModal = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setIsShowingVideo(true);
+	};
+
 	return (
 		<>
-			<Conditional showIf={openVideoModal}>
-				<TestVideoUrl setOpenVideoModal={setOpenVideoModal} videoUrl={videoUrl} />
+			<Conditional showIf={isShowingVideo}>
+				<TestVideoUrl setOpenVideoModal={setIsShowingVideo} videoUrl={videoUrl} />
 			</Conditional>
 			<div className={"flex items-center leading-none text-15 font-600"}>
 				<TestStatusSVG type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
-				{name}
+				{name}{testInstanceMeta.groupId ? `/${testInstanceMeta.groupId}` : ""}
+				<Conditional showIf={testInstanceMeta.isSpawned}>
+					<span className={"ml-8"}>(Spawned)</span>
+				</Conditional>
+				<Conditional showIf={isStalled}>
+					<span className={"ml-8"}>(Stalled)</span>
+				</Conditional>
 			</div>
+
 
 			{/*<Conditional showIf={!expand}>*/}
 			{/*	<div className={"text-18 font-600"} id={"click-to-open"} css={css`color: #aacb65;`}>*/}
@@ -683,7 +832,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 					{screenshotCount} screenshot | {checksCount} check
 				</span>
 				<Conditional showIf={isVideoAvailable}>
-					<span className={"flex text-13 mr-26"} onClick={setOpenVideoModal.bind(this, true)}>
+					<span className={"flex text-13 mr-26"} onClick={handleOpenVideoModal.bind(this)}>
 						<PlaySVG className={"mr-10"} /> Recording
 					</span>
 				</Conditional>
@@ -694,7 +843,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand }) {
 		</>
 	);
 }
-function ExpandableStepGroup({ steps, testInstanceData, count, show = false }: { steps: any[]; testInstanceData: any; count: number; show?: boolean }) {
+function ExpandableStepGroup({ steps, testInstanceData, setIsShowingVideo, testId, count, show = false }: { steps: any[]; testInstanceData: any; count: number; show?: boolean; setIsShowingVideo: any; testId: any; }) {
 	const [expandTestStep, setExpandTestStepSteps] = React.useState(show);
 	const expandHandler = React.useCallback(() => {
 		setExpandTestStepSteps(true);
@@ -723,7 +872,7 @@ function ExpandableStepGroup({ steps, testInstanceData, count, show = false }: {
 			</Conditional>
 			<Conditional showIf={expandTestStep}>
 				{steps.map((step, index) => (
-					<RenderStep testInstanceData={testInstanceData} data={step} key={index} />
+					<RenderStep testId={testId} setIsShowingVideo={setIsShowingVideo} testInstanceData={testInstanceData} data={step} key={index} />
 				))}
 			</Conditional>
 		</>
@@ -750,13 +899,13 @@ const expandDIVCSS = css`
 	}
 `;
 
-function RenderSteps({ steps, testInstanceData }: { steps: any[]; testInstanceData: any }) {
+function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { steps: any[]; testInstanceData: any; setIsShowingVideo: any; testId: any; }) {
 	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
 		<div className={"px-32 w-full"}>
 			<div className={"ml-32 py-32"} css={stepsList}>
 				{groupSteps.map(({ type, from, to, count }: any) => (
-					<ExpandableStepGroup testInstanceData={testInstanceData} steps={steps.slice(from, from === to ? to + 1 : to)} count={count} show={type === "show"} />
+					<ExpandableStepGroup testId={testId} setIsShowingVideo={setIsShowingVideo} testInstanceData={testInstanceData} steps={steps.slice(from, from === to ? to + 1 : to)} count={count} show={type === "show"} />
 				))}
 			</div>
 		</div>
@@ -769,6 +918,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const [showLoading, setLoading] = useState(false);
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
 	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
+	const [isShowingVideo, setIsShowingVideo] = React.useState(false);
 
 	const onCardClick = () => {
 		// if(expand===true){
@@ -796,12 +946,30 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		}, 500);
 	}, [testCardConfig]);
 
+	console.log("Test data", testData);
+
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
-			<div onClick={onCardClick} className="sticky top-0 z-20">
+			<div
+				onClick={onCardClick}
+				css={[
+					isShowingVideo
+						? css`
+								z-index: 21;
+						  `
+						: null,
+				]}
+				className="sticky top-0 z-20"
+			>
 				<div css={stickyContainer} className={"px-28 pb-16 w-full test-card-header"}>
 					<div css={header} className={"flex justify-between items-center w-full"}>
-						<TestOverviewTabTopSection name={name} testInstanceData={testInstanceData} expand={expand} />
+						<TestOverviewTabTopSection
+							isShowingVideo={isShowingVideo}
+							setIsShowingVideo={setIsShowingVideo}
+							name={name}
+							testInstanceData={testInstanceData}
+							expand={expand}
+						/>
 					</div>
 
 					<Conditional showIf={failedTestsConfiguration.length >= 1}>
@@ -819,7 +987,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			</div>
 
 			<Conditional showIf={expand && !showLoading}>
-				<RenderSteps steps={steps} testInstaceData={testInstanceData} />
+				<RenderSteps testId={testData.testId} setIsShowingVideo={setIsShowingVideo} steps={steps} testInstanceData={testInstanceData} />
 			</Conditional>
 
 			<Conditional showIf={expand && showLoading}>

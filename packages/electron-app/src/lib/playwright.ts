@@ -10,7 +10,12 @@ import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame } f
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
 import * as path from "path";
-
+import { now } from "../main-process/now";
+import { ACTION_DESCRIPTIONS } from "../ui/components/sidebar/steps";
+import { uuidv4 } from "runner-utils/src/utils/helper";
+const {
+	performance
+  } = require('perf_hooks');
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
 type ElectronCompatibleCookiePayload = Omit<CrusherCookieSetPayload, "sameSite"> & {
@@ -36,6 +41,8 @@ class PlaywrightInstance {
 
 	private isBusy = false;
 
+	lastAction: { action: iAction; id: string; };
+
 	constructor(appWindow: AppWindow) {
 		this.appWindow = appWindow;
 		this.elementsMap = new Map();
@@ -56,11 +63,19 @@ class PlaywrightInstance {
 		this._overrideSdkActions();
 	}
 
+	getContext() {
+		return this.runnerManager.context;
+	}
+
 	public getElementInfoFromUniqueId(uniqueId: string) {
 		return this.elementsMap.get(uniqueId);
 	}
 
 	private _overrideSdkActions() {
+		CrusherSdk.prototype.spawnTests = async () => {
+			return;
+		};
+
 		CrusherSdk.prototype.reloadPage = async () => {
 			await this.page.evaluate(() => {
 				window.location.reload();
@@ -128,6 +143,14 @@ class PlaywrightInstance {
 		this.sdkManager = new CrusherSdk(this.page, this._exportsManager as any, this._storageManager as any);
 
 		this.page.on("console", this._handleConsoleMessage);
+		global.customLogger = {
+			log: (message) => {
+				if(!message.includes("immediate._onImmediate") && this.lastAction) {
+					const prefix = "";
+					this.appWindow.recordLog({id: uuidv4(), parent: this.lastAction ? this.lastAction.id : null, message: prefix + message, type: "info", args: [], time: performance.now()});
+				}
+			}
+		}
 	}
 
 	/* Serves as an API to click/hover over elements through playwright */
@@ -180,20 +203,40 @@ class PlaywrightInstance {
 		await this.appWindow.focusWebView();
 
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result: iActionResult) => {
-			if (!shouldNotSave) {
-				const { status } = result;
+				const { status, message, meta } = result;
 				switch (status) {
 					case ActionStatusEnum.STARTED:
+						this.lastAction = {id: uuidv4(), action};
+						this.appWindow.recordLog({id: this.lastAction.id, message: `Performing ${ACTION_DESCRIPTIONS[action.type]}`, type: "info", args: [], time: performance.now()});
+						if(!shouldNotSave)
 						this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
 						break;
 					case ActionStatusEnum.FAILED:
-						this.appWindow.getRecorder().markRunningStepFailed();
+						case ActionStatusEnum.STALLED:
+							this.lastAction = null;
+							const failedReason = result.meta.failedReason;
+							const isStalled = status === ActionStatusEnum.STALLED;
+
+							const uniqueId = uuidv4();
+							this.appWindow.recordLog({id: uniqueId, message: `Error performing ${ACTION_DESCRIPTIONS[action.type]} `, type: "error", args: [], time: performance.now()});
+							this.appWindow.recordLog({id: uuidv4(), message: `<= ${failedReason.replace(
+								/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}`, type: "error", args: [], time: performance.now(), parent: uniqueId});
+							if(!shouldNotSave) {
+								if(isStalled) {
+									// @TODO: Update it ActionStatusEnum.STALLED
+									this.appWindow.getRecorder().markRunningStepCompleted();
+								}  else {
+									this.appWindow.getRecorder().markRunningStepFailed();
+								}
+							}
 						break;
 					case ActionStatusEnum.COMPLETED:
+						this.lastAction = null;
+						this.appWindow.recordLog({id: uuidv4(), message: `Performed ${ACTION_DESCRIPTIONS[action.type]}`, type: "info", args: [], time: performance.now()});
+						if(!shouldNotSave)
 						this.appWindow.getRecorder().markRunningStepCompleted();
 						break;
 				}
-			}
 		});
 	}
 

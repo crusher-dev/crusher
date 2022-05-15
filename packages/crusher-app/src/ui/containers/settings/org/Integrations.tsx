@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
-import { useCallback, useEffect, useState } from "react";
+import { ReactEventHandler, useCallback, useEffect, useState } from "react";
 
-import { Button } from "dyson/src/components/atoms";
+import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
@@ -21,12 +21,14 @@ import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
 import { AddSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
-import { addGithubRepo, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
+import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
 import { RequestMethod } from "@types/RequestOptions";
 import { currentProject } from "@store/atoms/global/project";
 import useSWR, { mutate } from "swr";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { CopyIconSVG } from "@svg/onboarding";
+import React from "react";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -382,21 +384,57 @@ function LinkedRepo() {
 	);
 }
 
-
 const GitSVG = (props) => (
-	<svg
-		width={1034}
-		height={1034}
-		viewBox="-10 -5 1034 1034"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg width={1034} height={1034} viewBox="-10 -5 1034 1034" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			fill="#ffffff4ag"
 			d="M499 228q-21 0-36 15l-73 73 92 92q17-6 34-2t29.5 16.5 16 29.5-1.5 34l88 88q17-5 34-1.5t30 16.5q18 18 18 43.5t-18 43-43.5 17.5-43.5-17q-13-14-16.5-32t3.5-35l-83-83v218q9 4 16 11 18 18 18 43.5T545 842t-43.5 18-43-18-17.5-43.5 18-43.5q8-8 20-13V522q-12-4-20-13-14-13-17.5-31.5T445 442l-90-91-240 240q-15 15-15 36.5t15 36.5l349 349q15 15 36.5 15t36.5-15l348-348q15-15 15-36.5T885 592L536 243q-15-15-37-15z"
 		/>
 	</svg>
-)
+);
+
+function CISection() {
+	const [project] = useAtom(currentProject);
+	const { data } = useSWR(getCIIntegrationCommnad(project.id));
+	const inputRef = React.useRef(null);
+
+	const copyCommand = React.useCallback(() => {
+		inputRef.current.select();
+		inputRef.current.setSelectionRange(0, 99999);
+		document.execCommand("copy");
+		sendSnackBarEvent({ type: "normal", message: "Copied invite link to clipboard" });
+	}, inputRef.current);
+
+	return (
+		<div>
+				<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
+					CI/CD
+				</Heading>
+				<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+					Easily integrate and trigger tests from your CI/CD workflow
+				</TextBlock>
+
+				<Input
+				size={"medium"}
+				forwardRef={inputRef}
+				rightIcon={<CopyIconSVG onClick={copyCommand} css={css`position: relative;
+				top: -2rem;
+				right: -1rem;`}/>}
+					css={css`
+						width: 400rem;
+						height: 40rem !important;
+						margin-top: 20rem;
+						input{
+							padding-right: 36rem;
+						}
+					`}
+					value={data ?? "Loading.."}
+					onFocus={copyCommand}
+				/>
+		</div>
+	)
+}
+
 function GitIntegration() {
 	const [connectedToGit] = useAtom(connectedToGitAtom);
 	const [project] = useAtom(currentProject);
@@ -407,7 +445,7 @@ function GitIntegration() {
 		<div className={"flex flex-col justify-between items-start mt-44 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
-				<GitSVG height={28} width={28}/>
+					<GitSVG height={28} width={28} />
 					<div className={"ml-16"}>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration
@@ -769,6 +807,7 @@ export const Integrations = () => {
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />
+				<CISection/>
 				{/* <CiIntegration /> */}
 			</div>
 		</SettingsLayout>

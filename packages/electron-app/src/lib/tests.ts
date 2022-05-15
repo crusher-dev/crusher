@@ -66,8 +66,6 @@ class CrusherTests {
 						},
 					},
 				);
-				// @Note: window.open() instead of navigation though hyperlinks
-				// hangs the electron app for some reason.
 			});
 	}
 

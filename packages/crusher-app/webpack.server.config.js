@@ -11,7 +11,7 @@ module.exports = {
 		minimize: false,
 	},
 	entry: {
-		server: "./server.js"
+		server: "./server.js",
 	},
 	output: {
 		path: path.resolve(__dirname, "../../output/crusher-app"),

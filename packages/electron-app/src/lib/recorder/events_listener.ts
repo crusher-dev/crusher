@@ -1,10 +1,6 @@
 import EventRecording from "./ui/eventRecording";
-import { getFrameDepth } from "./utils/helper";
-const frameDepth = getFrameDepth(window.self);
 
 function boot() {
-	console.log("Global", global.sendMessageToWebView);
-
 	(window as any).eventRecorderExecuted = true;
 
 	window.addEventListener("DOMContentLoaded", () => {
@@ -16,6 +12,6 @@ function boot() {
 }
 console.log("Script called", window.location.href);
 
-if (!window.location.href.startsWith("file://")) {
+if (!window.location.href.startsWith("file://") && !(window as any).eventRecorderExecuted) {
 	boot();
 }

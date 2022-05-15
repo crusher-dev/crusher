@@ -15,11 +15,13 @@ import {
 	recordStep,
 	resetRecorderState,
 	setDevice,
+	setInspectElementSelectorMode,
 	setInspectMode,
 	setIsTestVerified,
 	setSiteUrl,
 	updateCurrentRunningStepStatus,
 	updateRecordedStep,
+	updateRecorderCrashState,
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -30,10 +32,17 @@ import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
-import { setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
-import { resolveToFrontEndPath } from "@shared/utils/url";
+import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
+import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
+import template from "@crusher-shared/utils/templateString";
+import * as fs from "fs";
+import { ILoggerReducer } from "../store/reducers/logger";
+import { clearLogs, recordLog } from "../store/actions/logger";
+import axios from "axios";
+import { identify } from "../lib/analytics";
 
+const debug = require("debug")("crusher:main");
 export class AppWindow {
 	private window: Electron.BrowserWindow;
 	private recorder: Recorder;
@@ -47,15 +56,18 @@ export class AppWindow {
 
 	private minWidth = 1000;
 	private minHeight = 600;
+	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
+	private useAdvancedSelectorPicker = false;
 
 	public getWebContents() {
 		return this.window.webContents;
 	}
 
 	public constructor(store: Store<unknown, AnyAction>) {
-		const savedWindowState = windowStateKeeper({
+		debug("Constructor called");
+		this.savedWindowState = windowStateKeeper({
 			defaultWidth: this.minWidth,
 			defaultHeight: this.minHeight,
 			maximize: false,
@@ -65,14 +77,17 @@ export class AppWindow {
 
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
-			x: savedWindowState.x,
-			y: savedWindowState.y,
-			width: savedWindowState.width,
-			height: savedWindowState.height,
+			x: this.savedWindowState.x,
+			y: this.savedWindowState.y,
+			width: this.savedWindowState.width,
+			titleBarStyle: "hidden",
+			trafficLightPosition: { x: 10, y: 8 },
+			height: this.savedWindowState.height,
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
 			show: true,
+			frame: false,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
 			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
@@ -85,7 +100,6 @@ export class AppWindow {
 				spellcheck: true,
 				worldSafeExecuteJavaScript: false,
 				contextIsolation: false,
-
 				webviewTag: true,
 				nodeIntegrationInSubFrames: true,
 				webSecurity: false,
@@ -117,6 +131,10 @@ export class AppWindow {
 			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
 
 			this._loadTime = now() - startLoad;
+
+			identify(4);
+
+			console.log("Analaytics done!");
 
 			this.maybeEmitDidLoad();
 		});
@@ -152,18 +170,26 @@ export class AppWindow {
 			webContents.nodeIntegrationInSubFrames = true;
 			(webContents as any).disablePopups = false;
 			webContents.enablePreferredSizeMode = true;
-			console.log("Web contents of webview", webContents);
 			return webContents;
 		});
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
 			this._rendererReadyTime = readyTime;
+			this.sendMessage("url-action", { action: { commandName: "restore" } });
 
 			this.maybeEmitDidLoad();
 		});
 
-		ipcMain.handle("perform-action", this.handlePerformAction.bind(this));
+		ipcMain.handle("perform-action", async (event, payload) => {
+			this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_RECORDER_ACTIONS, {}));
+			try {
+				await this.handlePerformAction(event, payload);
+				this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+			} catch (ex) {}
+		});
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
+		ipcMain.handle("turn-on-element-selector-inspect-mode", this.turnOnElementSelectorInspectMode.bind(this));
+		ipcMain.handle("turn-off-element-selector-inspect-mode", this.turnOffElementSelectorInspectMode.bind(this));
 		ipcMain.handle("turn-off-recorder-inspect-mode", this.turnOffInspectMode.bind(this));
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
@@ -176,11 +202,23 @@ export class AppWindow {
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
 		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
+		ipcMain.handle("reset-app-session", this.handleResetAppSession.bind(this));
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
-
+		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
+		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
+		ipcMain.handle("quit-and-restore", this.handleQuitAndRestore.bind(this));
+		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
+		ipcMain.handle("enable-javascript-in-debugger", this.handleEnableJavascriptInDebugger.bind(this));
+		ipcMain.handle("disable-javascript-in-debugger", this.disableJavascriptInDebugger.bind(this));
+		ipcMain.handle("save-code-template", this.handleSaveCodeTemplate.bind(this));
+		ipcMain.handle("get-code-templates", this.handleGetCodeTemplates.bind(this));
+		ipcMain.handle("update-code-template", this.handleUpdateCodeTemplate.bind(this));
+		ipcMain.handle("delete-code-template", this.handleDeleteCodeTemplate.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
+		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
+		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -188,6 +226,144 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+	}
+
+	private handleGetAdvancedSelector(event: Electron.IpcMainEvent, payload: any) {
+		event.returnValue = this.useAdvancedSelectorPicker;
+	}
+	private handleGetVarContext(event: Electron.IpcMainEvent, payload: any) {
+		const context = this.webView.playwrightInstance.getContext();
+		event.returnValue = Object.keys(context).reduce((prev, current) => {
+			// Get typescript type of current, CustomClass | string | number | boolean | undefined | null
+			const type = typeof context[current];
+			return { ...prev, [current]: type };
+		}, {});
+	}
+
+	private async handleUpdateCodeTemplate(event: Electron.IpcMainEvent, payload: { id: number; name: string; code: string }) {
+		// await this.store.dispatch(updateCodeTemplate(payload.id, payload.codeTemplate));
+		// pdate.codeTemplate
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.post(
+				resolveToBackendPath("teams/actions/update.codeTemplate", appSettings.backendEndPoint),
+				{ id: payload.id, name: payload.name, code: payload.code },
+				{
+					headers: {
+						Accept: "application/json, text/plain, */*",
+						"Content-Type": "application/json",
+						Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+					},
+				},
+			)
+			.then((res) => {
+				return res.data;
+			});
+	}
+
+	private async handleDeleteCodeTemplate(event: Electron.IpcMainEvent, payload: { id: string }) {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.post(
+				resolveToBackendPath("teams/actions/delete.codeTemplate", appSettings.backendEndPoint),
+				{ id: payload.id },
+				{
+					headers: {
+						Accept: "application/json, text/plain, */*",
+						"Content-Type": "application/json",
+						Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+					},
+				},
+			)
+			.then((res) => {
+				return res.data;
+			});
+	}
+
+	private async handleSaveCodeTemplate(event, payload: { createPayload: any }) {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.post(resolveToBackendPath("teams/actions/save.code", appSettings.backendEndPoint), payload.createPayload, {
+				headers: {
+					Accept: "application/json, text/plain, */*",
+					"Content-Type": "application/json",
+					Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+				},
+			})
+			.then((res) => {
+				return res.data;
+			});
+	}
+
+	private async handleGetCodeTemplates(event) {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		if (!accountInfo || !accountInfo.token) {
+			console.log("Account info is", accountInfo);
+			return null;
+		}
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return axios
+			.get(resolveToBackendPath("teams/actions/get.codeTemplates", appSettings.backendEndPoint), {
+				headers: {
+					Accept: "application/json, text/plain, */*",
+					"Content-Type": "application/json",
+					Cookie: `isLoggedIn=true; token=${accountInfo.token}`,
+				},
+			})
+			.then((res) => {
+				return res.data;
+			});
+	}
+
+	private async disableJavascriptInDebugger() {
+		if (this.window) {
+			return this.webView._disableExecution();
+		}
+	}
+	private async handleEnableJavascriptInDebugger() {
+		if (this.webView) {
+			return this.webView._resumeExecution();
+		}
+	}
+
+	private async handlePerformSteps(event, payload: { steps: any }) {
+		await this.resetRecorder();
+		await this.handleReplayTestSteps(payload.steps);
+	}
+
+	private async handleQuitAndRestore() {
+		app.relaunch();
+		app.quit();
+	}
+
+	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {
+		const recorderSteps = getSavedSteps(this.store.getState() as any);
+		await this.resetRecorder();
+		const appSettings = getAppSettings(this.store.getState() as any);
+		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
+		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
+		return true;
+	}
+
+	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
+		const recorderState = getRecorderState(this.store.getState() as any);
+		event.returnValue = recorderState.type !== TRecorderState.PERFORMING_ACTIONS;
 	}
 
 	private async handleGetUserTests() {
@@ -232,6 +408,25 @@ export class AppWindow {
 		return null;
 	}
 
+	recordLog(log: ILoggerReducer["logs"][0]) {
+		this.store.dispatch(recordLog(log));
+	}
+
+	updateRecorderState(state) {
+		this.store.dispatch(updateRecorderState(state, {}));
+	}
+
+	updateRecorderCrashState(stateMeta) {
+		console.log("Update crash recorder");
+		this.store.dispatch(updateRecorderCrashState(stateMeta));
+	}
+
+	async handleResetAppSession() {
+		await this.webView.dispose();
+		await this.store.dispatch(resetAppSession());
+		await this.resetRecorder();
+	}
+
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
 		await this.webView.dispose();
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
@@ -239,7 +434,7 @@ export class AppWindow {
 		await this.resetRecorder();
 
 		await this.store.dispatch(setDevice(payload.device.id));
-		await this.store.dispatch(setSiteUrl(navigationStep.payload.meta.value));
+		await this.store.dispatch(setSiteUrl(template(navigationStep.payload.meta.value, { ctx: {} })));
 		// Playwright context has issues when set to about:blank
 	}
 
@@ -293,7 +488,11 @@ export class AppWindow {
 				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 			}
 		} else {
-			this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			if (action.type === ActionsInTestEnum.NAVIGATE_URL) {
+				this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
+			} else {
+				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+			}
 		}
 	}
 
@@ -316,16 +515,23 @@ export class AppWindow {
 		});
 	}
 
-	async continueRemainingSteps() {
-		const remainingSteps = getRemainingSteps(this.store.getState() as any);
+	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: Array<iAction> | null }) {
+		const { extraSteps } = payload;
+		let remainingSteps = getRemainingSteps(this.store.getState() as any);
+		await this.setRemainingSteps(null);
+
+		if (extraSteps) {
+			remainingSteps = remainingSteps ? [...extraSteps, ...remainingSteps] : [...extraSteps];
+		}
 		if (remainingSteps) {
 			await this.handleReplayTestSteps(remainingSteps);
 		}
-
-		await this.setRemainingSteps(null);
+		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 	}
 
 	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
+		try { await this.webView._resumeExecution(); } catch (e) { console.error("Enabling exection failed", e); }
+		await new Promise((resolve) => setTimeout(resolve, 500));
 		const elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
 			return null;
@@ -363,6 +569,7 @@ export class AppWindow {
 				});
 			}
 		}
+		try { await this.webView._disableExecution(); } catch(ex) { console.error("Disabling execution failed", ex); }
 		return assertElementInfo;
 	}
 
@@ -433,26 +640,31 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		if (app.commandLine.hasSwitch("exit-on-save")) {
+			const projectId = app.commandLine.getSwitchValue("projectId");
 			await CrusherTests.saveTestDirectly(
 				recordedSteps as any,
-				app.commandLine.getSwitchValue("projectId"),
+				projectId,
 				app.commandLine.getSwitchValue("token"),
 				appSettings.backendEndPoint,
 				appSettings.frontendEndPoint,
 			);
-			await shell.openExternal(resolveToFrontEndPath("/app/tests/", appSettings.frontendEndPoint));
+			await shell.openExternal(resolveToFrontEndPath(`/app/tests/?project_id=${projectId}`, appSettings.frontendEndPoint));
 			process.exit(0);
 		} else {
 			await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);
 		}
 	}
 
-	async handleVerifyTest() {
+	async handleVerifyTest(event, payload) {
+		const { shouldAlsoSave } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
+		if (shouldAlsoSave) {
+			this.handleSaveTest();
+		}
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
@@ -519,6 +731,22 @@ export class AppWindow {
 		this.webView.webContents.focus();
 	}
 
+	private turnOnElementSelectorInspectMode() {
+		this.store.dispatch(setInspectElementSelectorMode(true));
+		this.useAdvancedSelectorPicker = true;
+
+		this.webView._turnOnInspectMode();
+		this.webView._resumeExecution();
+		this.webView.webContents.focus();
+	}
+
+	private turnOffElementSelectorInspectMode() {
+		this.store.dispatch(setInspectElementSelectorMode(false));
+		this.useAdvancedSelectorPicker = false;
+		this.webView._turnOffInspectMode();
+		this.webView.webContents.focus();
+	}
+
 	private turnOffInspectMode() {
 		this.store.dispatch(setInspectMode(false));
 		this.webView._turnOffInspectMode();
@@ -557,7 +785,7 @@ export class AppWindow {
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL: {
-					this.store.dispatch(setSiteUrl(action.payload.meta.value));
+					this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: {} })));
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 				}
@@ -613,6 +841,7 @@ export class AppWindow {
 
 	private async resetRecorder(state: TRecorderState = null) {
 		this.store.dispatch(resetRecorderState(state));
+		this.store.dispatch(clearLogs());
 		if (this.webView) {
 			await this.webView.webContents.loadURL("about:blank");
 		}

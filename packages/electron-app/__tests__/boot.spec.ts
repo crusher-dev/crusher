@@ -6,6 +6,7 @@ import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedAction
 
 jest.setTimeout(30000);
 
+const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();
 describe("Recorder boot", () => {
 	let electronApp: ElectronApplication = null;
 	let appWindow: Page = null;
@@ -13,10 +14,10 @@ describe("Recorder boot", () => {
 	async function init() {
 		electronApp = await playwright["_electron"].launch({
 			executablePath:
-				process.env.VARIANT === "RELEASE"
-					? path.resolve(__dirname, "../../../output/crusher-electron-app-release/linux/linux-unpacked/electron-app")
-					: path.resolve(__dirname, "../bin/linux/electron"),
-			args: process.env.VARIANT === "RELEASE" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
+				VARIANT === "release"
+				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
+				: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
+			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
 		});
 		appWindow = await electronApp.firstWindow();
 
@@ -26,7 +27,6 @@ describe("Recorder boot", () => {
 		}
 		await appWindow.waitForLoadState();
 	}
-
 	async function resetApp() {
 		await electronApp.close();
 		await init();
@@ -124,7 +124,7 @@ describe("Recorder boot", () => {
 		test("device dropdown opens", async () => {
 			await (await getParentElement(deviceDropdown)).click();
 
-			deviceDropDownBox = await appWindow.waitForSelector(".target-device-dropdown .dropdown-box");
+			deviceDropDownBox = await appWindow.waitForSelector(".select-dropDownContainer .dropdown-box");
 			expect(await deviceDropDownBox.isVisible()).toBe(true);
 
 			deviceMobileOption = await deviceDropDownBox.$("text=Mobile");
@@ -153,10 +153,13 @@ describe("Recorder boot", () => {
 
 		test("changing device between recording session", async () => {
 			await (await getParentElement(deviceDropdown)).click();
-			deviceDropDownBox = await appWindow.waitForSelector(".target-device-dropdown .dropdown-box");
+			deviceDropDownBox = await appWindow.waitForSelector(".select-dropDownContainer .dropdown-box");
 
 			await (await deviceDropDownBox.$("text=Desktop")).click();
 			expect(await deviceDropdown.getAttribute("placeholder")).toBe("Desktop");
+
+			// Just some wait for dom update
+			await new Promise((resolve) => setTimeout(resolve, 250));
 
 			const webView = await appWindow.$("webview");
 			const webViewContainerSize = await webView.evaluate((element) => {
@@ -178,6 +181,11 @@ describe("Recorder boot", () => {
 
 		const recordedStepListContainer = await appWindow.waitForSelector("#steps-list-container");
 		expect(await recordedStepListContainer.isVisible()).toBe(true);
+
+		// Wait for 5 seconds to make sure recorder is ready
+		await appWindow.waitForFunction(([element]) => {
+			return element.querySelectorAll(".recorded-step").length >= 2;
+		}, [recordedStepListContainer], {timeout: 5000});
 
 		const recordedSteps = await recordedStepListContainer.evaluate((element) => {
 			return Array.from(element.querySelectorAll(".recorded-step")).map((node: any) => {

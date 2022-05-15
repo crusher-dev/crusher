@@ -67,10 +67,8 @@ function VariableSection({ envId }) {
 								Name
 								<Input
 									css={css`
-										height: 32rem;
 										width: 150rem;
 									`}
-									size={"small"}
 									className={"ml-20"}
 									placeholder={"Enter some name"}
 									onBlur={changeVarValue.bind(this, i, "variableName")}
@@ -81,7 +79,6 @@ function VariableSection({ envId }) {
 								Value
 								<Input
 									css={css`
-										height: 32rem;
 										width: 150rem;
 									`}
 									className={"ml-20"}
@@ -219,7 +216,7 @@ function EnvironmentForm({ id }) {
 				</div>
 			</div>
 
-			{/*<VariableSection envId={id} />*/}
+			<VariableSection envId={id} />
 
 			<div className={"flex justify-between items-center mt-40 mb-20 text-13"}>
 				<TextBlock
@@ -233,18 +230,18 @@ function EnvironmentForm({ id }) {
 					`}
 				>
 					<Conditional showIf={!notSavedInDB}>
-
 						<Conditional showIf={deleting}>
 							<div className={"flex items-center"}>
-								<LoadingSVG height={12} width={12} className={"mr-8"}/>	Deleting
+								<LoadingSVG height={12} width={12} className={"mr-8"} /> Deleting
 							</div>
-  					</Conditional>
+						</Conditional>
 						<Conditional showIf={!deleting}>
-							<span onClick={()=>{
-								deleteEnvAPI()
-								setDeleting(true)
-								}
-							}>
+							<span
+								onClick={() => {
+									deleteEnvAPI();
+									setDeleting(true);
+								}}
+							>
 								Delete
 							</span>
 						</Conditional>

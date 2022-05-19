@@ -35,7 +35,7 @@ export default function Learn() {
 		<div
 			css={css(`
 				height: 100vh;
-				background: #08090b;
+				background: #0D0E11;
 				width: 100vw;
 			`)}
 		>

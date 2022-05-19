@@ -7,7 +7,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import SignupInitial from "@ui/containers/auth/signup";
 
 function SignupPage() {
-	usePageTitle("Create account");
+	usePageTitle("Signup");
 	React.useEffect(() => {
 		if ((window as any).localStorage.getItem("githubToken") !== null) {
 			(window as any).localStorage.removeItem("githubToken");

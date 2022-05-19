@@ -8,25 +8,11 @@ import { Input } from "dyson/src/components/atoms";
 import { useRouter } from "next/router";
 import { validateEmail, validatePassword } from "@utils/common/validationUtils";
 import { loadUserDataAndRedirect } from "@hooks/user";
-import { backendRequest } from "@utils/common/backendRequest";
-import { RequestMethod } from "@types/RequestOptions";
 import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
 import { LoadingSVG } from "@svg/dashboard";
+import { LoginNavBar } from "@ui/containers/common/login/navbar";
 
-const RocketImage = (props) => (
-	<img
-		{...props}
-		src={
-			"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAPCAYAAADUFP50AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJBSURBVHgBndJNSJNxHAfw77ZnPcu5Cb4u3yrnzMhMxQyLOnRQC0yJ9NBFSjHo0k0yIuhSmNClCJUOlpGHDpUkmka+5NSp0Wh7Njc3n/a4ILH26rO5t+efGXWaFX3P38/l9/sC/xnRvxbbOjoUyozy0kBUdCzgX3/9V9ja2io9W3O63UsltLz3yXNo1T4YtLN2yZ/QpE5XQDPWye4nTxvSx0aTKpvqUZgFvJxiV8Tbob6+vqP+Ce1Cz9R04QTzEYrkJBTlZcPD2uCxvhuNCzuLy07yGQf651b9ijO8F90aDaovNcNiYTA8NBxJ8OsfUb/KvkzVBXg8u1YIUfXmV1weN/ISWXoxGrtO4KA6G1bWjumpGTCmpTsL49PGLejLT2umvb6H4dgGFiHFiFiFRD6II0UliAoGmPVa6BkOM7Pz8zYHe/eHocj1HHXYFeykXCFwTnhGuBTZ3pIymWZ3Eg6/7cVAmMYnrxMSj8PImJfrvjrMri0YruDvUztiYmGN/nazJ/Mqu7/03vHEIJTd7eiXZ2FOkIOsfXnBuwwXvRzn/n0IQn6OgHt8qNphqmXPN9WRc8oE0pWbFm1JySODO5XLDUD8t324hhKBq4qG3LfJgwY1GaqRDeoU1PNVMYhbhFfxjJhszk5TntojUsoldt1nVJ4SZnJpLKjFsXp6syCIYI8LLbXYI9kIFkUYW1SJgbGlIbaqIC8clCrIegS4kSLgSjxI8RlIhlR0yzW2+IaxRAyNz8C726SmQGqoJssJLbbJd0nz9aMpv90CAAAAAElFTkSuQmCC"
-		}
-	/>
-);
-const emailLogin = (email: string, password: string) => {
-	return backendRequest("/users/actions/login", {
-		method: RequestMethod.POST,
-		payload: { email, password },
-	});
-};
+
 
 export default function EmailLogin({ goBackHandler }) {
 	const router = useRouter();
@@ -83,28 +69,25 @@ export default function EmailLogin({ goBackHandler }) {
 
 	return (
 		<div
-			css={css(`
-				height: 100vh;
-				background: #08090b;
-				width: 100vw;
-			`)}
+			css={containerCSS}
 		>
+			<div className="pt-28">
+			<LoginNavBar/>
+			</div>
 			<div className={"flex justify-center"}>
-				<div className={"mt-84 flex flex-col items-center"}>
-					<Heading type={1} fontSize={18}>
-						Ready to ship faster & better <RocketImage className={"ml-8"} />
+				
+				<div className={"flex flex-col items-center"} css={css`margin-top:160rem;`}>
+					<Heading type={1} fontSize={22} weight={900}>
+					Get superpowers to <span css={css`color: #D4EB79;`}>ship fast</span> and <span css={css`color: #8C67F5; margin-right: 12px;`}>better</span>🚀
 					</Heading>
-					<TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
-						Millions of devs empower their workflow with testing
+					<TextBlock fontSize={14.2} color={"#606060"} className={"mt-16"} css={css`letter-spacing: .2px;`} leading={false}>
+					Devs use crusher to test & ship fast with confidence. Get started in seconds
 					</TextBlock>
 
-					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28 pb-60"}>
-						<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
-							Continue with email
-						</TextBlock>
+					<div css={overlayContainer} className={"mt-48 pb-60"}>
 
 						<div className={" mb-72"}>
-							<div>
+ 							<div>
 								<Input
 									className="bg"
 									autoComplete={"email"}
@@ -137,7 +120,7 @@ export default function EmailLogin({ goBackHandler }) {
 							</div>
 							<Button
 								disabled={loading}
-								className={"flex items-center justify-center mt-30"}
+								className={"flex items-center justify-center mt-20"}
 								css={css(`
 									width: 100%;
 									height: 38px;
@@ -174,10 +157,21 @@ export default function EmailLogin({ goBackHandler }) {
 								Forgot Password
 							</Text>
 						</div>
+
 					</div>
 					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
-						<Text color={"#9692FF"} fontSize={14} css={underLineonHover}>
-							Create an account
+						<Text
+							color={"#565657"}
+							fontSize={14}
+							css={css`
+							font-size: 14.5rem;
+								:hover {
+								
+									text-decoration: underline;
+								}
+							`}
+						>
+							Already registered? <span css={css`color: #855AFF;`}>Signup</span>
 						</Text>
 					</div>
 				</div>
@@ -186,22 +180,24 @@ export default function EmailLogin({ goBackHandler }) {
 	);
 }
 
-const overlayContainer = css(`
-	background: #0a0b0c;
-	border: 1px solid #21252f;
-	border-radius: 10px;
-	width: 372rem;
-	min-height: 440px;
-`);
+const containerCSS = css(`
+height: 100vh;
+background: #0D0E11;
+width: 100vw;
+`)
 
-const errorState = css`
-	color: #ff4583;
-	height: 12rem;
-	width: 100%;
-`;
+const overlayContainer = css(`
+	width: 372rem;
+`);
 
 const underLineonHover = css`
 	:hover {
 		text-decoration: underline;
 	}
+`;
+
+const errorState = css`
+	color: #ff4583;
+	height: 12rem;
+	width: 100%;
 `;

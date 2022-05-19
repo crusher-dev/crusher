@@ -5,30 +5,15 @@ import { Text } from "dyson/src/components/atoms/text/Text";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 import { loadUserDataAndRedirect } from "@hooks/user";
-import { RequestMethod } from "@types/RequestOptions";
-import { backendRequest } from "@utils/common/backendRequest";
 import { validateEmail, validatePassword, validateName } from "@utils/common/validationUtils";
 import { SubmitButton } from "./components/SubmitButton";
 import { FormInput } from "./components/FormInput";
 
-const RocketImage = (props) => (
-	<img
-		{...props}
-		src={
-			"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAPCAYAAADUFP50AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJBSURBVHgBndJNSJNxHAfw77ZnPcu5Cb4u3yrnzMhMxQyLOnRQC0yJ9NBFSjHo0k0yIuhSmNClCJUOlpGHDpUkmka+5NSp0Wh7Njc3n/a4ILH26rO5t+efGXWaFX3P38/l9/sC/xnRvxbbOjoUyozy0kBUdCzgX3/9V9ja2io9W3O63UsltLz3yXNo1T4YtLN2yZ/QpE5XQDPWye4nTxvSx0aTKpvqUZgFvJxiV8Tbob6+vqP+Ce1Cz9R04QTzEYrkJBTlZcPD2uCxvhuNCzuLy07yGQf651b9ijO8F90aDaovNcNiYTA8NBxJ8OsfUb/KvkzVBXg8u1YIUfXmV1weN/ISWXoxGrtO4KA6G1bWjumpGTCmpTsL49PGLejLT2umvb6H4dgGFiHFiFiFRD6II0UliAoGmPVa6BkOM7Pz8zYHe/eHocj1HHXYFeykXCFwTnhGuBTZ3pIymWZ3Eg6/7cVAmMYnrxMSj8PImJfrvjrMri0YruDvUztiYmGN/nazJ/Mqu7/03vHEIJTd7eiXZ2FOkIOsfXnBuwwXvRzn/n0IQn6OgHt8qNphqmXPN9WRc8oE0pWbFm1JySODO5XLDUD8t324hhKBq4qG3LfJgwY1GaqRDeoU1PNVMYhbhFfxjJhszk5TntojUsoldt1nVJ4SZnJpLKjFsXp6syCIYI8LLbXYI9kIFkUYW1SJgbGlIbaqIC8clCrIegS4kSLgSjxI8RlIhlR0yzW2+IaxRAyNz8C726SmQGqoJssJLbbJd0nz9aMpv90CAAAAAElFTkSuQmCC"
-		}
-	/>
-);
+import { LoginNavBar } from "@ui/containers/common/login/navbar";
 
-const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
-	return backendRequest("/users/actions/signup", {
-		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
-	});
-};
 
-export default function Signup_email({ loginWithEmailHandler }) {
-	const [data, setData] = useState(null);
+export default function Signup_email({ goBackHandler }) {
+		const [data, setData] = useState(null);
 	const router = useRouter();
 	const { query } = router;
 
@@ -96,28 +81,27 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 	return (
 		<div
-			css={css(`
-				height: 100vh;
-				background: #08090b;
-				width: 100vw;
-			`)}
+			css={containerCSS}
 		>
+			<div className="pt-28">
+			<LoginNavBar/>
+			</div>
 			<div className={"flex justify-center"}>
-				<div className={"mt-84 flex flex-col items-center"}>
-					<Heading type={1} fontSize={18}>
-						Try crusher for free <RocketImage className={"ml-8"} />
+				
+				<div className={"flex flex-col items-center"} css={css`margin-top:160rem;`}>
+					<Heading type={1} fontSize={22} weight={900}>
+					Get superpowers to <span css={css`color: #D4EB79;`}>ship fast</span> and <span css={css`color: #8C67F5; margin-right: 12px;`}>better</span>🚀
 					</Heading>
-					<TextBlock fontSize={14.2} color={"#E7E7E7"} className={"mt-12"} leading={false}>
-						Millions of devs empower their workflow with testing
+					<TextBlock fontSize={14.2} color={"#606060"} className={"mt-16"} css={css`letter-spacing: .2px;`} leading={false}>
+					Devs use crusher to test & ship fast with confidence. Get started in seconds
 					</TextBlock>
 
-					<div css={overlayContainer} className={"mt-36 pt-32 pl-28 pr-28"}>
-						<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={"600"}>
-							Create a new account
-						</TextBlock>
+					<div css={overlayContainer} className={"mt-48 pb-60"}>
 
+						<div className={" mb-72"}>
+ 					
 						<div className={" mb-20"}>
-							<FormInput
+ 							<FormInput
 								onReturn={signupUser.bind(this)}
 								data={name}
 								onChange={nameChange}
@@ -146,16 +130,30 @@ export default function Signup_email({ loginWithEmailHandler }) {
 						</div>
 
 						<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />
-
-						<div className="flex items-center justify-between mt-20">
-							<Text onClick={loginWithEmailHandler.bind(this, false)} className={"underline-on-hover"} fontSize={12}>
+						</div>
+						<div className="flex items-center justify-between">
+							<Text onClick={goBackHandler} css={underLineonHover} fontSize={12}>
 								Go back
 							</Text>
+							<Text onClick={() => router.push("/forgot_password")} css={underLineonHover} fontSize={12}>
+								Forgot Password
+							</Text>
 						</div>
+
 					</div>
-					<div onClick={() => router.push("/login")} className="mt-40">
-						<Text color="#9692FF" className={"underline-on-hover"} fontSize={14}>
-							or go to login
+					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
+						<Text
+							color={"#565657"}
+							fontSize={14}
+							css={css`
+							font-size: 14.5rem;
+								:hover {
+								
+									text-decoration: underline;
+								}
+							`}
+						>
+							Already registered? <span css={css`color: #855AFF;`}>Signup</span>
 						</Text>
 					</div>
 				</div>
@@ -164,14 +162,21 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	);
 }
 
+const helpCSS = css`
+color: #565657;
+`
+const containerCSS = css(`
+height: 100vh;
+background: #0D0E11;
+width: 100vw;
+`)
+
 const overlayContainer = css(`
-	background: #0a0b0c;
-	border: 1px solid #21252f;
-	border-radius: 10px;
 	width: 372rem;
-	min-height: 440px;
 `);
 
-export const errorState = css(`
-	color: #ff4583;
-`);
+const underLineonHover = css`
+	:hover {
+		text-decoration: underline;
+	}
+`;

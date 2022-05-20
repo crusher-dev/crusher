@@ -104,7 +104,7 @@ export class BuildReportService {
 				}
 
 				if(actionResult.status === ActionStatusEnum.FAILED) {
-					if(actionResult.meta.screenshotDuringError) {
+					if(actionResult.meta && actionResult.meta.screenshotDuringError) {
 						actionResult.meta.screenshotDuringError = JSON.parse(actionResult.meta.screenshotDuringError || {});
 						if(actionResult.meta.screenshotDuringError.startingScreenshot) {
 							actionResult.meta.screenshotDuringError.startingScreenshot = await this.getPublicUrl(actionResult.meta.screenshotDuringError.startingScreenshot);

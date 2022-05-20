@@ -50,6 +50,7 @@ export const Input: React.FC<InputProps> = ({
 	children,
 	...props
 }) => {
+
 	// tslint:disable-next-line: no-empty
 	const ref = forwardRef ? forwardRef : useRef<HTMLInputElement>(null);
 

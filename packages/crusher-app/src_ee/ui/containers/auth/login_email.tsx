@@ -11,8 +11,15 @@ import { loadUserDataAndRedirect } from "@hooks/user";
 import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
 import { LoadingSVG } from "@svg/dashboard";
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
+import { backendRequest } from "@utils/common/backendRequest";
+import { RequestMethod } from "@types/RequestOptions";
 
-
+const emailLogin = (email: string, password: string) => {
+	return backendRequest("/users/actions/login", {
+		method: RequestMethod.POST,
+		payload: { email, password },
+	});
+};
 
 export default function EmailLogin({ goBackHandler }) {
 	const router = useRouter();
@@ -171,7 +178,7 @@ export default function EmailLogin({ goBackHandler }) {
 								}
 							`}
 						>
-							Already registered? <span css={css`color: #855AFF;`}>Signup</span>
+							New user? <span css={css`color: #855AFF;`}>Signup</span>
 						</Text>
 					</div>
 				</div>

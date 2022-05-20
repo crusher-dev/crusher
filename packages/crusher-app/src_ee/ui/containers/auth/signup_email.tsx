@@ -10,6 +10,15 @@ import { SubmitButton } from "./components/SubmitButton";
 import { FormInput } from "./components/FormInput";
 
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
+import { backendRequest } from "@utils/common/backendRequest";
+import { RequestMethod } from "@types/RequestOptions";
+
+const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
+	return backendRequest("/users/actions/signup", {
+		method: RequestMethod.POST,
+		payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
+	});
+};
 
 
 export default function Signup_email({ goBackHandler }) {
@@ -67,6 +76,7 @@ export default function Signup_email({ goBackHandler }) {
 			const data = await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
 			setData(data.systemInfo);
 		} catch (e: any) {
+			console.error(e)
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
 		setLoading(false);
@@ -153,7 +163,7 @@ export default function Signup_email({ goBackHandler }) {
 								}
 							`}
 						>
-							Already registered? <span css={css`color: #855AFF;`}>Signup</span>
+							Already registered? <span css={css`color: #855AFF;`}>Login</span>
 						</Text>
 					</div>
 				</div>

@@ -4,6 +4,18 @@ import { validateEmail } from "@utils/common/validationUtils";
  import { RequestMethod } from "@types/RequestOptions";
  import { backendRequest } from "@utils/common/backendRequest";
 
+ import { css } from "@emotion/react";
+ import { Heading } from "dyson/src/components/atoms/heading/Heading";
+ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+ import { Text } from "dyson/src/components/atoms/text/Text";
+ import { Button } from "dyson/src/components/atoms";
+ import { useRouter } from "next/router";
+ import { LoginNavBar } from "@ui/containers/common/login/navbar";
+ import React from "react";
+ import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
+ import {Input} from "dyson/src/components/atoms/input/Input";
+ import { LoadingSVG } from "@svg/dashboard";
+import Link from "next/link";
 
 
 const forgotPassword = (email: string) => {
@@ -14,17 +26,6 @@ const forgotPassword = (email: string) => {
 };
 
 
-import { css } from "@emotion/react";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Text } from "dyson/src/components/atoms/text/Text";
-import { Button } from "dyson/src/components/atoms";
-import { useRouter } from "next/router";
-import { LoginNavBar } from "@ui/containers/common/login/navbar";
-import React from "react";
-import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
-import Input from "dyson/src/components/atoms/input/Input";
-import { LoadingSVG } from "@svg/dashboard";
 
 export const GithubSVG = function (props) {
 	return (
@@ -37,7 +38,7 @@ export const GithubSVG = function (props) {
 	);
 };
 
-export default function SignupInitial({ loginWithEmailHandler }) {
+export default function ForgotPassword() {
 	const router = useRouter();
 	const [email, setEmail] = useState({ value: "", error: null });
 	const [loading, setLoading] = useState(false);
@@ -83,6 +84,7 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 		}
 	}, [email.value]);
 
+
 	return (
 		<div
 			css={containerCSS}
@@ -117,7 +119,7 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 										className="md-20 bg"
 										autoComplete={"email"}
 										value={email.value}
-										onChange={emailChange}
+										onChange={(emailChange)}
 										placeholder={"Enter email"}
 										isError={email.error}
 										onBlur={verifyInfo.bind(this, false)}
@@ -156,12 +158,7 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 								</Button>
 							</div>
 						</div>
-					</Conditional>
-						</div>
-						<div className="flex w-full justify-center">
-							<Text css={[underLineonHover,helpCSS]} fontSize={14}>
-								Need help?
-							</Text>
+			</Conditional>
 						</div>
 					</div>
 					<div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
@@ -176,7 +173,7 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 								}
 							`}
 						>
-							Or <span css={css`color: #855AFF;`}>Login</span>
+							Or go back to <span css={css`color: #855AFF; margin-left: 3px;`}>Login</span>
 						</Text>
 					</div>
 				</div>

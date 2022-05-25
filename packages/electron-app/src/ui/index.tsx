@@ -5,6 +5,7 @@ import { render } from "react-dom";
 import Toolbar from "./components/toolbar";
 import DeviceFrame from "./components/device-frame";
 import Sidebar from "./components/sidebar";
+import "../../static/assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from "electron-redux";
@@ -33,8 +34,10 @@ const emitter = new Emitter();
 const App = () => {
 	const store = useStore();
 	const recorderInfo = useSelector(getRecorderInfo);
-
+	
 	React.useEffect(() => {
+		//@ts-ignore
+		// document.body.querySelector("#welcome_splash").style.display = "none";
 		ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
 			store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
@@ -154,12 +157,8 @@ const App = () => {
 				.no-drag {
 					-webkit-app-region: no-drag;
 				}
-				.tree-height-line:hover {
-					background: rgba(255,255,255, 0.2) !important;
-				}
 			`}
 			</style>
-
 		</>
 	);
 };
@@ -200,15 +199,6 @@ const globalStyles = css`
 		padding: 0;
 		min-height: "100vh";
 		max-width: "100vw";
-	}
-	.highlight-box {
-		background: rgba(58, 56, 54, 0.4);
-		padding: 4rem 6rem;
-		margin: 0rem 2rem;
-		border-radius: 2rem;
-		:hover {
-			background: rgba(0, 0, 0, 0.7) !important;
-		}
 	}
 	.custom-scroll::-webkit-scrollbar {
 		width: 12rem;

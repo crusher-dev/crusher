@@ -466,6 +466,7 @@ export class AppWindow {
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
+		if(!this.webView.playwrightInstance) return;
 		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
 		if (elementInfo && elementInfo.parentFrameSelectors) {
 			action.payload.meta = {

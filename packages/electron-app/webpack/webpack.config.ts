@@ -42,7 +42,6 @@ const commonConfig = {
 				test: /\.css$/i,
 				use: [
 				  MiniCssExtractPlugin.loader,
-				  "style-loader",
 				  "css-loader",
 				  {
 					loader: "postcss-loader",

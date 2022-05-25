@@ -202,18 +202,17 @@ const Sidebar = ({ className, ...props }: any) => {
 	return (
 		<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={`${className}`}>
 			{/* <GettingStartedSidebar /> */}
-			<Conditional showIf={!!recorderInfo.device}>
-				<ActionsPanel />
-				<StepsPanel />
-			</Conditional>
+			{recorderInfo.device ? (
+				<>
+					<ActionsPanel />
+					<StepsPanel />
+				</>
+			): ""}
 			<ModalManager />
 			<TemplatesModal isOpen={false} handleClose={() => {}} />
 		</div>
 	);
 };
-
-Sidebar.whyDidYouRender = true;
-
 const inputStyle = css`
 	outline: none;
 	input {

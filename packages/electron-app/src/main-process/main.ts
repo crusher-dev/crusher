@@ -31,6 +31,7 @@ let onDidLoadFns: Array<OnDidLoadFn> | null = []
 
 function setupElectronApp() {
 	app.setName(APP_NAME);
+	app.disableHardwareAcceleration();
 	// app.setAppLogsPath()
 
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");

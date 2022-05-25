@@ -372,6 +372,7 @@ const GroupActionsMenu = ({ showDropDownCallback, callback }) => {
 };
 
 const StepsPanel = ({ className, ...props }: any) => {
+
 	const [checkedSteps, setCheckedSteps] = React.useState(new Set());
 	const recordedSteps = useSelector(getSavedSteps);
 	const remainingSteps = useSelector(getRemainingSteps);
@@ -380,6 +381,10 @@ const StepsPanel = ({ className, ...props }: any) => {
 	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
 	const dispatch = useDispatch();
 
+	React.useEffect(() => {
+		actionDescriptor.initActionHandlers();
+	}, []);
+	
 	const toggleAllSteps = React.useCallback(
 		(checked) => {
 			if (checked) {

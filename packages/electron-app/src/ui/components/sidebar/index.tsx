@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { css } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { getRecorderInfo } from "../../../store/selectors/recorder";
@@ -211,6 +211,9 @@ const Sidebar = ({ className, ...props }: any) => {
 		</div>
 	);
 };
+
+Sidebar.whyDidYouRender = true;
+
 const inputStyle = css`
 	outline: none;
 	input {
@@ -254,3 +257,4 @@ const gettingStartedContainerStyle = css`
 `;
 
 export { Sidebar };
+export default memo(Sidebar);

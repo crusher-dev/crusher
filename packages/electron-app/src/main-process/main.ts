@@ -1,5 +1,5 @@
 console.log("Ready now...");
-
+require('v8-compile-cache');
 import * as Sentry from "@sentry/electron"
 import { isProduction, parseDeepLinkUrlAction } from "./../utils"
 import { app, session } from "electron";
@@ -12,14 +12,14 @@ import * as path from "path";
 
 const os = require('os');
 
-    Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
-    require('update-electron-app')({
-		repo: 'crusherdev/crusher-downloads',
-		updateInterval: '5 minutes',
-		logger: require('electron-log')
-	});
+//     Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
+//     require('update-electron-app')({
+// 		repo: 'crusherdev/crusher-downloads',
+// 		updateInterval: '5 minutes',
+// 		logger: require('electron-log')
+// 	});
 
-app.setAppLogsPath();
+// app.setAppLogsPath();
 
 let mainWindow: AppWindow | null = null
 
@@ -31,7 +31,7 @@ let onDidLoadFns: Array<OnDidLoadFn> | null = []
 
 function setupElectronApp() {
 	app.setName(APP_NAME);
-	app.setAppLogsPath()
+	// app.setAppLogsPath()
 
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 	app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
@@ -145,7 +145,6 @@ function createWindow() {
 	})
 
 	window.onDidLoad(() => {
-	  window.show()
 	  window.sendLaunchTimingStats({
 		mainReadyTime: readyTime!,
 		loadTime: window.loadTime!,

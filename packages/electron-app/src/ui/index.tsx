@@ -1,10 +1,10 @@
+import './wdyr';
 import React from "react";
 import { css, Global } from "@emotion/react";
 import { render } from "react-dom";
-import { Toolbar } from "./components/toolbar";
-import { DeviceFrame } from "./components/device-frame";
-import { Sidebar } from "./components/sidebar";
-import "../../static/assets/styles/tailwind.css";
+import Toolbar from "./components/toolbar";
+import DeviceFrame from "./components/device-frame";
+import Sidebar from "./components/sidebar";
 import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from "electron-redux";
@@ -48,7 +48,7 @@ const App = () => {
 			}
 		});
 
-		ipcRenderer.send("renderer-ready", /* @TODO Add correct rendering time */ 1500);
+		ipcRenderer.send("renderer-ready", /* @TODO Add correct rendering time */ window["performance"].now());
 
 		ipcRenderer.on("url-action", (event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 			if (action.commandName === "replay-test") {
@@ -90,30 +90,6 @@ const App = () => {
 			store.dispatch(setSessionInfoMeta({}));
 			resetStorage();
 		};
-	}, []);
-
-	React.useEffect(() => {
-		let currentzoom = 1;
-		document.body.addEventListener("mousewheel", (e: any) => {
-			if (e.ctrlKey) {
-				const delta = e.wheelDelta / 1500;
-				zoom(delta, e);
-			}
-		});
-
-		function zoom(delta, event: any) {
-			const img = document.body;
-			const width = img.offsetWidth;
-			const height = img.offsetHeight;
-			const x = event.pageX;
-			const y = event.pageY;
-			const xpercent = (x * 100) / width;
-			const ypercent = (y * 100) / height;
-			img.style.transform = "scale(" + currentzoom + ")";
-			if (currentzoom + delta < 1 || currentzoom + delta > 5) return;
-			currentzoom += delta;
-			img.style.transformOrigin = (xpercent < 0 ? 0 : xpercent) + "% " + (ypercent < 0 ? 0 : ypercent) + "%";
-		}
 	}, []);
 
 	return (
@@ -187,6 +163,8 @@ const App = () => {
 		</>
 	);
 };
+
+App.whyDidYouRender = true;
 
 const containerStyle = css`
 	display: flex;

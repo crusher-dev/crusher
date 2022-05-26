@@ -113,8 +113,6 @@ export class AppWindow {
 		this.savedWindowState.manage(this.window);
 		this.splashWindow = new BrowserWindow({
 			title: APP_NAME,
-			x: this.savedWindowState.x,
-			y: this.savedWindowState.y,
 			autoHideMenuBar: true,
 			show:true,
 			frame: false,

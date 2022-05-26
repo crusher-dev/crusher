@@ -480,27 +480,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					</Dropdown>
 				</div>
 			</div>
-
-			<style>{`
-					.CodeMirror {
-						font-size: 14rem;
-						background-color: #050505 !important;
-					}
-
-			.CodeMirror-gutters {
-				background: #0a0d0e !important;
-				margin-right: 20rem;
-			}
-
-			.CodeMirror-line {
-				padding-left: 12rem !important;
-			}
-
-			.CodeMirror-scroll {
-				padding-top: 8rem;
-			}
-
-			`}</style>
 		</Modal>
 	);
 };

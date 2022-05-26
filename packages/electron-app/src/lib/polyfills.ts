@@ -1,3 +1,7 @@
+/*
+	These polyfills are used when using runner-utils
+	since the electron app is not a production environment.
+*/
 class GlobalManagerPolyfill {
 	map;
 	constructor() {

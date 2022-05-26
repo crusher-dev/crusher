@@ -1,6 +1,5 @@
 import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, webFrameMain } from "electron";
 import windowStateKeeper from "electron-window-state";
-import * as path from "path";
 import { APP_NAME } from "../../config/about";
 import { encodePathAsUrl, getAppIconPath, getUserAccountTests, getUserInfoFromToken, sleep } from "../utils";
 import { Emitter, Disposable } from "event-kit";
@@ -25,8 +24,8 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderInfo, getRecorderState, getSavedSteps } from "../store/selectors/recorder";
-import { CrusherTests } from "../lib/tests";
+import { getRecorderState, getSavedSteps } from "../store/selectors/recorder";
+import { CloudCrusher } from "../lib/cloud";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
@@ -36,13 +35,13 @@ import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../stor
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
-import * as fs from "fs";
 import { ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
 import { identify } from "../lib/analytics";
 
 const debug = require("debug")("crusher:main");
+
 export class AppWindow {
 	private window: Electron.BrowserWindow;
 	private splashWindow: Electron.BrowserWindow;
@@ -130,7 +129,7 @@ export class AppWindow {
 			}
 		});
 
-		this.splashWindow.loadURL("data:text/html,%3Chtml%20style%3D%22width%3A%20100vw%3B%20height%3A%20100vh%3B%22%3E%3Cbody%20style%3D%22width%3A%20100vw%3B%20height%3A%20100vh%3B%20overflow%3A%20hidden%3B%22%3E%0A%3Cimg%20style%3D%22width%3A%20240px%3B%20height%3A%2055.88px%3B%20position%3A%20absolute%3B%20top%3A%2050%25%3B%20transform%3A%20translateX(-50%25)%20translateY(-50%25)%3B%20left%3A%2050%25%3B%22%20src%3D%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAqgAAACcCAYAAACzzFnOAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAB60SURBVHgB7d1LjBzXdcbxc5sUJXkRt2xvbCBW01kkiAJwaHknBRoCVrYcLuJlpodaZBVwCIWTJZtLDi1oCGTjABF7VgHiBckgOxlQE0h2jjUE4sAGErMdA8nGgcYbP0RN35xTVU0NyXn0dN9bdavq%2FwMKPe%2FpR3XVV%2Be%2BnAS03vfdMyLL3smyc%2FKqeFnSL3eLDfGNvW56%2B1Cf%2B0d6%2B%2BDW0O0IAABAjThZkIXSF0RW9S%2Bt6B9bFqRmrBcMo85Etm8O3UgAAAASN3dA%2FZu%2B7%2B05GXRELgoV0roY6zbYvOO2BQAAIFEnDqhZM35HrmsT8rqgrsZCUAUAAIk6UUDdeMevykS2hIppI2jT%2F1Cb%2Fm9o0%2F9YAAAAEjFTQKVq2mhj7%2BUSg6kAAEAqjg2o1tdUK2139cMlQXN5ubo5dFsCAABQsSMDahFOP9IPe4LmczLY%2FMDdEAAAgAodGlAJpy1FSAUAABU7MKBmfU6dfCyE07bqM8IfAABUpXPQF7MBUYTTNtuyCroAAABU4LmAeq3v%2B4zWb71uMTAOAACgdE8FVKuaOZdVT4ElvVgZCAAAQMmeCqi2dKnQtI%2BCXqxcoakfAACU7UlAtSCin6wK8LnupENFHQAAlOtJQC2qp8BTnJe%2BzeogAAAAJckCKtVTHOUFYdAcAAAoTxZQJyLLAhzC%2BqIKAABASfImfkf1FEfqvtv3ywIAAFCCjvUvdFRQcYzTIisCAABQgs4pwilmMHFyTgAAAErQ6RBQMQOq7AAAoCwdoTKGGTFpPwAAKMNp3ZjjErPJL2bGAgAI4lrf9yXwCo63hm4gQM2ddixtihlNvLwiAIBwnKxG6EI1EKDmbJopKqiYVU8AAAAi6wgAAACQEAIqAAAAkkJABQAAQFIIqAAAAEjKaQHQeDaHrRdZ0u1VcXLWOb312aC3AwdJ%2Bs%2BnE3uonzzq2K1%2B7ebQjQUAgMgIqEADrfd99wWRVW0jWXJeln0xA4Ob%2FoA%2F%2Bvf3TT%2B3bJ9Mf3xjzY%2F18x0%2FkZF%2B%2BuDW0O0IAACBEVCBhrBQeqYjV7wG0ifzKnoJrWeVV63ArtgnFli9k5GbyP3NobsnAAAEQEAFak6b75cnTq5nodTvq5KWo6cV2r7%2B076G1V0Nq%2Fc6E9m%2BOXQjAQBgTgRUoKZsiUStZF635vuSQ%2BlhuhZWfR5WxxqWr1JVBQDMg4AK1Mw0mEraK3vZoKwrektABQCcGAEVqImnmvIBAGgwAiqQuGLw03XvZT2RpnwAAKIioAIJs6qpd3KnmLMUAIBWiBJQv%2FGHuv2RyCtfPv5nf%2FZT3X4i8sn%2FSensfr72TZGXXpYgpo%2Fhk1%2Fm2%2F%2F8QuS3vxZgLhuXvVVNBwIAQMsED6jfvijy9sXZf%2F5bb%2Ba3FugsqP77x3lojRXsXvqCyJ%2B%2BLfL6GxqgvyLRZUH1v0V%2B%2FHF1QRz1kk2y7%2BSuVk2XBQCAFgoaUC30nSSc7mdh8fU3881YmLMK5I9%2FlAfWRVgo%2FQOtlr75dl7ZLZM9LtusUmvs8VhY%2Fbd%2FFeA52ZKkTj6StEfoAwAQVfCAGooFSdssVBoLrNMqpAXXmf5G0YT%2FrTfykJoCuz%2B2WZD%2F8D5BFZ8jnAIAkAsaUL8Uscl8GljNUc3m0yb8186LfPXrkiyrqn7nHYIqcoRTAAA%2BV8tR%2FPubzX%2F4LyLf%2F%2BDz71nF9dtzdjOowjSoWhcEC6r0UW0fwikAAE%2FrCJJgfW%2F%2F8m9E%2Fvi8oEUIpwAAPI%2BAmhCrpq7%2B1fwDzVA%2F3kbrE04BAHgKATVB1kXhO5fTGdiFODYu%2B%2Ff1ZkkAAMBTCKiJypr8NwipTXWt7%2FviZV0AAMBzCKgJ%2B9rXCalNZP1OnZP3BQAAHIiAmrhpSEVzTJzc0ZuuAACAAxFQa8BCqvVJRf1Z074TljAFAOAotZwHtY2sT6rNkWpzpaKeiimlrktadr2Xsd7u7P%2Bihuiu1825bBAX1V4AQKkIqDVio%2Fv%2F6yciP%2FupoIb2nAw61U8pteu8bH8mMtrTbWvodo%2F7BQvW%2BvNLp0RWNLm%2BJUyLBQCIjIBaM3%2FxVyK3r7PiVN1k1VORVamIVklHE5Eb7w3dSE7o5tCN9ca2e%2FZ51k0hrwT3BACACOiDWjMvfyFfGhX1YtVTqYAF0z0vF24N3YV5wulB9G8NN%2B%2B4s%2Fq31yQPrgAABEVAraFv%2FJHIm28LasKqp53yq6e74uVqyGD6rH1B9YYAABAQAbWmrD8q86PWQwXV07GGxgubQ7clJdCgOtD%2Fd16opgIAAqEPak1ZU%2F%2BfaUj9p38QJKyCvqc7zsulzbzfaGk0pO7oY73gnXwk9E1FDaz3fffFZ2aouFny%2Bwb1YMfx%2FZ%2Bzn5SDgFpjb2gz%2F7%2F%2FiFH9KZuILDspzc6nWjmdZWR%2BDHbQtpA6cXJXH%2FOSNMizJyjzO5Hdqp5rzKYIoUv6Pjyn7YVLevE2nTatZ9%2F3z%2Fz8xtqTr4z1o7Fzsusn8tDZhZ9ubQkmbdvfA%2B0nI22SfqjP0w7HhaPNun8RUGvuba2ifm9TkChX3rynY6ucVn1gtBO4HuwvnHHysdSUHjyX7UTlOrIs%2BYmq5w%2F4uTOSzWiwZn1xBcmwsPGCtVo4WbFFMey1yy4S%2FYn%2BTM9ZOPHZe3hl%2BusaTMb6x3b0k3v6fnvQhMBq%2B7vvZNPHLR23vxfBbMfnfdwfaCAb3YzUxz22rHWrI6veZ0WEIPuJ%2FWp2XFjzI9tH9Pm53%2FZq6yLHUwJqzdmAqW%2F8IVXUFOmbLXszSnw2t%2BmFVA6EFpKz5n45eTjXA%2FtHLuBzZtWNW3fcheN%2BzkLNmY5c0ZOVnWSW5jhRHSoLAPnytsHo%2FdzSA%2FltCagu9%2FMw2YlQLwgjr9RmYaSntyv6XFlg29HHOKxbECmeKwvwq7Ygxwn39fz94bJQd12fg119Lu51JrKdeljdf%2FHiJQtMEqOFK9sH8%2Bdny8Kqfm4DSrelZHU%2FnhJQG4AqarL6Uo711E6ORSX1qpxQcTDtSSCznHyuveOvuIkM9ADajdgdoydhvSJx9CSsWPfziWkw9eV2p5la0srZ1pMg4uX25tDdk0RlF81O3g%2F8XHX1cfc1pPbtOeh4WUvteDQNTPoeX5eSV8YrLpiWNcgP9HZQZlCt%2B%2FGUgNoAVFETla%2B6FPdfaPVGTwalX5nPIvV%2BWHaydlYxnDSrv2xbFKHjulZp1isIps8pqmZDSdTGZX9dQ8NAIsqayp080v%2B1tfmBO%2FEFagz7A5NUq6fbsIqgWoYYx1MCakO89k0CakqK0ftlBB%2FmIJ3Dk5OWVH7Swhyy95fNGOFL6UIzq3GKoSNr1nZyV5%2BrZSmLXjRoEFupsuuR7SNaWb%2Bj7%2FNlSUtPt%2BG1y365M5EbTeijGut4yjyoDfH6G8yLmpLPSginRfV0LDgRqyTpwdTmiCWc1pBVanw%2BCK8naRlIYiyk2YDFyP1yD5NdRBw0Yju2jb63PsJVPe6ZFN0iKnl%2BQop5PCWgNoTNi%2FqtNwSJ6JRzYKR6ekJlNHMinqIZ0ebaTe3iIrnq6ZMqc7VBPrsPVsWVkmTvcasY1%2BMC1J6fjy1QSw3FPp4SUBvktfOCVDg5JxF5z%2FQlJ0U4rTcLXC7d4DGQhFggTGjRjN4L%2BesWXU3f410L1BtrflVqpIznmoDaIDZY6mtfFyQg9kT1ncDTATVdVqEgnNZawquUJVc9PdPJjg89SYQ1tet7cF0iasAF6PDdvl%2BWGijreEpAbRiqqNUrmrOiVnl%2B5%2BWBYCZZHy8n7wtqKwsfaYZTM5DUeEmvydjJ9Vj9LW2QThMuQE9pJTX1PqllHk8JqA1j002hWi9Grp5q8%2F6IpfRmt%2BeyE1dPUEvZCTHd8JHkyP1EdScRWn6yrh%2F5IJ0msK4Zd8vss3tSZR5PCagNY838jOav1meRq6e23rNgVr2OrRyD2ipOiKkaCGZmTf0hm7H39bVtkiWb31fSVOrxlIDaQIzmr5aLfXXZvAMycCALIHqSir7gxZyons7htITrflAEuZ7E5mWsLVe2rO3INvtcYvKyXiyV3WpM1N9AX%2F19QYVc5ArqZ15%2BJUALvJCHmZ7EYsFDngobXeey%2FzfLe3ggODGteK7qhcdg0W5K2TRa%2BdKlUWRBVGT7sci9g%2B6rXTyd0orwKdtHXYSqYt7P89h175uMgNpAtqrU9z8QNNRpiXz1DiTCdeSihsjQdjV83NbgsXVYSLLwY4ttFOHDKri9Z36E6un8LNhZdXAkC8hWiZLwLJhORG68N3Sjo36u2Hfu2ab7y6C4P8sSyLQ7xHH3o8kIqA1kk%2Fa%2F8mWRT%2F5PUIHYTfzMf4rWCL8859iW39w85j1UvMdsswAiFhQ0VPX3VcoGgrkVzfwjmZMGwmUfYTEU3Tdu675x4qpssb9c0Gb5gVbgg%2FUf7eR%2FayQtRR%2FUhrLBUgBQV0UfvNDdZQbzXOBZFUuDS18DzNksxDSlepr3pSx9RhDvFutXvOf0YiEwe11vzhFO97s1dAOtwAZb4S%2F0oLK6oYLaUDZh%2F7%2F9qwBALWkza%2B%2BUhKXhYaEZMIpwG3XC%2Bai83NPK4%2F3Hkk1VN97%2FLQtCVtnU8HhR4g886smcsr6n4UeSjxcNp1MWUvXiyvoyX5EAFq021xkBtaG%2BxkAp4GTyATMjbVb61WRfValjcxOKvKqbLbXZ%2BpG1ZYnRVaZTQbUwBdavUh%2F72lHV46Kvo23roZuqD9C1oDlPNVvfm%2F0IfU8HEpBeAAzOSJig7%2FNuJfW7KApwPK11QP3tr0X%2B9xfPfy1Vdt%2F%2B579FfvPrfK7SL1hf0a%2FEmbf0qyx5Whl94%2B3G6Lw%2FZaNHmag%2FjGKk7j09oWzP8pzaSXWS931b1YPrsiCaGLNhfJYHhrG0iDU5W1XvJL9TVAHHLuKSyvO%2BFi78iPngA97sWKLP341Az1%2B3LoOlQh9PaxVQpwHvxx%2Fntz%2F76fM%2F8y8f5s3bryc2F6jd3%2B9tHhygLaBaxdPut60E9QcBJtu3gVL2N1IO7A0WNTy%2BmJ%2B4CaiLsedvXU%2FEJzoxFRWfoW1FU2OyK77geaecvK%2Bv26W2DDScJ5xO6e8N%2F9rmoY20rGVnjupi0S%2B5JyF5uS0R2PO3sebtuVv4GFGDZv4ox9OgAdWC45tvS1D%2Fq8HuPzWI%2FsePNOT9YrbA9Y9%2Fn9%2BmElI%2F%2BeXh4dTY1y1s22YB21hQ%2FeNvivzJ%2BbzKOo8vfSUPxijdWGJyck5aVgUKbMd5WTikMJtCLS3ZykMbl%2F3QTWS74a%2FheN5wOvXdodvSkGV9KXuSABu5H7p1ykcMfnqBsB2iL2rRLzjVZv5sZowYx9OgAdXCla1itEj1z8Lcf%2F0kD2sWeOetAFpItapkCk3dH94%2F%2BeOYBtZ%2F%2Foc8rL7%2B5slXiLIJ%2BwmozaMHvbOCeY0%2F1YMpXSRaraepZKAn%2FYGGrx29tQsWWyHooQa6HWmOgQRQhKzg%2FVHn6cLR6chboefF7eT9YZclAt%2BRTwLd316iXbuChNPDBA2oFi63BiJ%2Ffjlvpp6FBbcngfRHYefutKrlX25UG1LtOVl0NP00rP5Ag%2B63L84eVOetvGJhUU9yemA%2FJ5jHriOc1slY4lvSfcKajfsawkQD666%2BwUZ%2Bkg3ueHizvpOkB%2BtXqc%2FDUDNW8IA6V%2FeY8PPiWnUy3tLRAcP0i%2FnUXPclHbsxw6kJ3gfVAtnfbeZV1JdfnuHnI04mb4ORqg6pHwbcney5%2Ff7fzx5UX44w%2BArHe6wnhzMSjx5QrT%2FSmuBkvNygWb4%2BJvo%2BCj3N1Ay6up%2BsaFhdsWyhgXWs77dRJ%2B8OMJKacD5cs7W9Z7LgXnF%2Fa6sgVn0fqjTxcl5SCqglHE%2BjTdRvlVELn8dtsVlI3f7bPNyVLUT19LC%2Fa0HVujEc9bhemuECAeEVFbqYVbpumydvntN4c%2Bi2BLWxF7klYkY9DXv9rN%2Fqmn%2BkW%2Fg11yOwUC0huXj9NGf1orR7ijcNa69KOko5nrZiJanpIKWyQ%2BqHka91LPza4%2FrhISH4SzTxV8ZHPrl2Iizz13ADQa3YhV7MASxz6Ok2rENQ3fPycwlpIr%2BSik0SGahVFZ%2FWHMwDKUFrljo9biR9jP9XxkpO02rqQWGYJv4KLbhizXFCrVLSFloFeyConzRft55uw2tr%2FiObGkcSdDpw%2F12fxqwhPWm3niSirONpawKqsTD3YUk9OH5Y8jKj1i%2F1ezefDuAvEVArM4lf%2BenWpbmxajZ5NH1P6%2BmxFlIl0Tl%2FbZ10a%2Fov5uZMSuj93afxGrR9zuEkHn%2BZx9NWBVTT5PXpbaS%2FzaJQRX9bPG2vnKbJgeBYNhpbUEtZM3%2BkidQDseUakwypIbkEAqojoEoKFfsyj6etC6i%2FafjKSvu7MrCKVHVK6j%2FX2%2Bj7VCdvTkfMaWQQXVFFHUu6uhZSU23uB4Iq8XjauoDaBtP5aKcraqEiZfTTcXKdE%2BPRJqEHjKBURRX1kqS9vG9Xm%2FvvCqLR5zelUeyt9Zkvb8AcAbWhLKTa0rCozqScZv7uxMkdSVAqwfkxy8LWnq3wpCH1gqT9Wi5pU%2F9AEIVWqVu%2FwMZnCQyUKnP6NwIqEMl7QzfyJbyZbbDGxmUffKWXRVifvEneNFs5Vo5qBguptnJNYlNPPcVm1ygmlEdoCUx1hXKPpwRUICZf0sofPltXPIlR%2Fbautcv7KX1RgIBs9PCtO%2B6CVlNtJbWxpKd7RqQvABYWfKlTAJ%2BzAR5nIqxjfYjhRt%2B%2FUuWKSRvv%2BFU%2FkaGkYyxoHK2mDsXmIu37vt6u6gXRsiTCO7koibQeNIlNdeUkMC9XPxW5J%2FVRdWvQWEpEQAUisuYQDY3b2g5fTnXTyfva3P%2FFzQ%2FcDSmZ%2Ft%2F3tRmOWQVqylbqCR4AIpsGVevvPMkrlxddxSvuWJcba%2Bana0lYtlhA6P3TQu8WcyQni4AKRLanJ9BTIuU1v2tz%2F7XLvteZyI0yJlTOwoEN1PIsv1qWGOtye5suSeqp2M8HthVhdTmbSF%2FkXBWB9UUnb%2BlNScvCtEOM1ayYWzVtBFQgMhssdW3Nj%2ByEKSVxXvra1Li8seYHm3fctkRgVaIzHbnivaxzoC%2BXXhD0JDDXkKUki7A6LLZsP9ULxKVO%2Fv57q4zuAPqeOCsISsPKjpewmrLPNxUBFSjBxMuNU%2BX3k%2BtJvmZ4v%2BOzaupIArAT%2FgsiK3qiv65ljZ6gdHpiDV8VdHJOGqhoah8VmzypsLqsb3hPIiD4hGcXHnrBba9lsIvhSUP3%2BaZgFD9QAqui6lmrks740zXD9eD%2ByEb6zzs%2FqY3Ot%2Bmszjh55PK5V3uCqnTf1ddDArGLjjIr%2FFXKZgIYuqG2LJzVSmesvtrMYBFB6Gn7olzoIRgqqEBJ3ESu%2BryKWlVzeE%2B3od4HsS4H%2BvFD52VUrLM9fvaH9WSw5K2vY0eW9OesP19PQrexYW6dTtaveSQBWEVcWkiD6kDfC2%2B1JZzXnq3OF7YlKrvQey9Q6xLCooIKlMQqN1qxuS0JcPkgkiv6wV2rrur26NnNvqeV0i3rzypUS%2Bc2iTQ1jL0uIVbryqqnLtpUaGMJwCr30eb59RKljzbCi7E63%2BmWXpzVARVUoETFvKh2ou0JWkGrALuxCs%2B2%2FrsGzAuLTGl0phOvL%2FEkQEC1EK4XdgP7%2BNplvxx6dgq7gDglwbHqUQRW6QzdD1XfQ9btaSv0jCe6r4Zdgnoit201NWkRAipQIgsS2qS0dipfaQktEGNwxz5LZ3Rf0hPspZOeYItZGCycRpu7thOgerznZDBt6nsyO8VlPww112%2BMAU2eBSKisVaowBX%2Fru%2FI%2B3p7SQLJlp72YVcU%2B1TkqrQMTfxAyawKkEpTP8oRObAsFYPgVmddB94GvGmw%2FThmODWLVnysetp5fg7hXrG076MQzf4dJ1cksL3Ag3nwuccxVunyspKFygBsNT0pKv6h6PnifhsXfmhlBfXDEqZP%2FtlPBDiUnrjXr635cwzOaIl8cEfMEcM93YZnpgPg9P%2BdeiYU79nPdORVrUKu%2BBIG6ulJdSQL2l89PUBPbHnfNT%2FQgD6apwk0W%2F0sQveG01RQo7GgFmVeabvouexlkcr8tXf8Fd0PgwdorRjflRZqXUB96QvlhMdPfinAkTpe1nze1N8TNF1pFbXsxK3N4JPnvy5lzsKgwfKhLCDrezrbCmy9bCCfk76G1bH%2Bzv1idoqdg7o9WJX5JZGVSbx5fMdlrODWZtHmlc4r833df9ZOMm%2F0dDU9N4lScBjHWmwlda0LqK%2BdF%2FnOOxKdVWl%2FwEJ3OIKdxK71%2FSVnTa1oNG2WvHdGsn5urVlx6zNZbN7fY6qnh%2BkVs1NcsSxe9P3dnXaxKPqb9iYSj%2FPhR5rjaZFX5%2BsVXWZ2rGm9k88c8NxFh4VS%2B%2F%2B6n676fFaUWAbSUgySAipkTZIaUteKie%2FRUEWz5E6LunSMF5lb8gTV0%2BPYBUG3zJWdNPzSv7wERQuUXdzHuuhb0uOyzQWd9U3VwPrUN32xRQymZuyse1BLMUgKqJitahNxRRskYtKu13ggC7DqqdSQ9btt21RAVbGKZgveU4M2dxchoAIJsBVtCKnNls3eIK1o%2Fl2o6nPIyP1a0IrbUFCa7w7dVoPfU63tezpFQAUSQUhtvlZUUb3cXqTqU9fqqT7ue20PFFWwpn5p4KwJepF3QVqOgAokpAipdsBt3Zx3bZD1y3SLDR5K3HhTq1oypxpXT3ddCydST0GxhLRNst%2BYY6YVKpgJgoAKJMf6pOrV83lhLsVG%2BnTSzIqPWEhbsOpT4%2BopgaJC1u9XQ10zLhC8bFuhQkBABVJkJ7vsZN%2Fsalsr2Yj%2BplV8MvnckWOZU12rp1btWqRqjDCKwaZrUm87n0rc1d3qhIAKJMpO9psfuEv0S22eouJj1cZGhFQLBhrSFp73VOqGaldSipBa19annU%2F1mNDGJU0PQ0AFEmcnQK2mnvWs790o%2B0LqWOrLqsFrFgxkQbqPj6VG9P7e1lDeFyTF3leubu8rvdAhnD6PgArUgFVTb91x531DR6y21fRkWtOLD7vv50OEUzO9ELOTtaRtV%2B%2FjVX1P0hSbqKz16Y47W4vWJ92X7EKHcPo8AipQIxYG9Er7fHHgHQtqb3rxMckHeYwlfVY1vWEVn9ADg7JgoSfrVIOqTcRvoZw%2Bp%2FWQcuuT7UuefelIBFSgZuxKuzjwXkgx1BQH3vXHkg0Ewoxs0vGsaTIPZmNJj43Sv11UTQcxKz4HBNVKq0u2T%2B%2Fpa6OP%2BwKj9eslwdansW5925dYdexopwVALRUnSrv63rrW9329XXWumrXe7QSuNw80lA63OIHPrXhN%2BzaifSLZa3nF1gOXKnkZawVqW1%2FbrbKbIafPx3rfd18QWZGS93Hbr%2FV1uJHNX4taK7qiDN%2Ft%2B%2BVT%2Br4Sl%2B1Ppcmq75L1W2Zmlhm5jTX%2Fid52pSVef0PkO%2B9IdB%2FeF%2FnBfWmUUIMhEM%2B%2BYBP7RG798LKlOzW43CeUxlO8phf1w5UirMY%2BXlsTvlV2Huj%2FHaUWzp7Zx0M%2FH9PHfk%2F36236BTZX5P0ow4X7YiygPtLbnrQEAXV%2BevW3cvOOa9ijajarFnREzulrt6xhsjdnNc5O2uNOHlh29GA74mBbHa2WL%2Bnr0Dudv6avFq9rT05%2BgrWLDAtgO7p%2F%2FHyS99Oz13dcp2A23cd1OzuxfX32sJHt11I8bv3dh3t6Syhtp2eOld0Thlb2pQjcxmV%2FVw9SpZa6q0RAnZ%2F1waKpq%2F6KgGMH3m4nv%2F2ibq8U37YWlV%2Fp93f1e2MNK7uE0fqwpnC9sebw7uSZk6u%2BnruPi76cbXhN9bnoPfs87HsOdgkPmIXtR3Z76plC3l7Rn5XjYzyn%2FUR%2BrlcKwLH2mIezEeiY31xF6CJ4CcEBYezbj8aCUtkofk5WmAXNFQAAoBQdTagjAY7hPBcyAACgHB2bxsMTUnEcJ0yNAQAASpFP1O%2FlgQCHGzN6HwAAlCULqI%2Fzyb6BAzlPhR0AAJQnC6g2%2BIVmfhzhhgAAAJSkM%2F1g4gkheJ5WT4esPQ0AAMr0JKDaBOxUUXEALlwAAECpOk994mVNmOQZBa2e3qZ6CgAAyvZUQLUwQlM%2FCmNh8BwAAKhA59kvfHfotmjqh%2FdyieopAACoQufAL%2BZN%2FWNBK2k4vcF67QAAoCoHBlSrnDkvF4T%2BqK1ThNOBAAAAVKRz2DeyJVAJqa1COAUAACnoHPVNa%2BbVSup5obm%2F8QinAAAgFZ3jfmDa3O9F6JPYTLvi5SrhFAAApOLYgGospN664857pqBqmh3rxrE5dEwnBQAAkjFTQJ2yKptWU89STa29XbvY2NSLDkbrAwCA1JwooJp91dQ13Qg39ZIF00%2F1IoMmfQAAkKrTMicNOEO9Gb7b98unRPri5C39vCdIjobSkd7ceyyyvTV0zMoAAACSNndAnXpv6EZSrDxlYVVLssv6oYXVrnOyJCibVUnH%2Bjo8mIjsaCi9RygFAAB1snBA3W9%2FWJ1a7%2FueJOT3viyl2PMi2pRetl3CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc7f8BN9Nf21%2BegD0AAAAASUVORK5CYII%3D%0A%22%20%2F%3E%0A%3Cstyle%3E%0A%20%20img%20%7B%0A%20%20%20animation%3A%20fadeIn%201s%3B%0A%7D%0A%40keyframes%20fadeIn%20%7B%0A%20%200%25%20%7Bopacity%3A0%3B%7D%0A%20%20100%25%20%7Bopacity%3A1%3B%7D%0A%7D%0A%E2%80%8B%0A%40-moz-keyframes%20fadeIn%20%7B%0A%20%200%25%20%7Bopacity%3A0%3B%7D%0A%20%20100%25%20%7Bopacity%3A1%3B%7D%0A%7D%0A%E2%80%8B%0A%40-webkit-keyframes%20fadeIn%20%7B%0A%20%200%25%20%7Bopacity%3A0%3B%7D%0A%20%20100%25%20%7Bopacity%3A1%3B%7D%0A%7D%0A%E2%80%8B%0A%40-o-keyframes%20fadeIn%20%7B%0A%20%200%25%20%7Bopacity%3A0%3B%7D%0A%20%20100%25%20%7Bopacity%3A1%3B%7D%0A%7D%0A%E2%80%8B%0A%40-ms-keyframes%20fadeIn%20%7B%0A%20%200%25%20%7Bopacity%3A0%3B%7D%0A%20%20100%25%20%7Bopacity%3A1%3B%7D%0A%7D%0A%20%20%3C%2Fstyle%3E%0A%3C%2Fbody%3E%3C%2Fhtml%3E");
+		this.splashWindow.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
 	}
 
 	public load() {
@@ -659,7 +658,7 @@ export class AppWindow {
 		const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
-		await CrusherTests.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		await CloudCrusher.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
 	}
 
 	async handleSaveTest() {
@@ -668,7 +667,7 @@ export class AppWindow {
 
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");
-			await CrusherTests.saveTestDirectly(
+			await CloudCrusher.saveTestDirectly(
 				recordedSteps as any,
 				projectId,
 				app.commandLine.getSwitchValue("token"),
@@ -678,7 +677,7 @@ export class AppWindow {
 			await shell.openExternal(resolveToFrontEndPath(`/app/tests/?project_id=${projectId}`, appSettings.frontendEndPoint));
 			process.exit(0);
 		} else {
-			await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+			await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);
 		}
 	}
 
@@ -697,7 +696,7 @@ export class AppWindow {
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
 		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
-		const testSteps = await CrusherTests.getTest(`${payload.testId}`, appSettings.backendEndPoint);
+		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
 
 		this.handleReplayTestSteps(testSteps);
 	}
@@ -879,9 +878,9 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		try {
-			const testSteps = await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint);
+			const testSteps = await CloudCrusher.getTest(action.payload.meta.value, appSettings.backendEndPoint);
 
-			const replayableTestSteps = await CrusherTests.getReplayableTestActions(testSteps, true, appSettings.backendEndPoint);
+			const replayableTestSteps = await CloudCrusher.getReplayableTestActions(testSteps, true, appSettings.backendEndPoint);
 			const browserActions = getBrowserActions(replayableTestSteps);
 
 			for (const browserAction of browserActions) {

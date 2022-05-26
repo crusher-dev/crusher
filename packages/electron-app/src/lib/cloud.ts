@@ -4,9 +4,8 @@ import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import axios from "axios";
 import { shell } from "electron";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
-import * as url from "url";
 
-class CrusherTests {
+class CloudCrusher {
 	public static async getTest(testId: string, customBackendPath: string | undefined = undefined): Promise<Array<iAction>> {
 		const testInfoResponse = await axios.get<{ events: Array<iAction> }>(resolveToBackendPath(`/tests/${testId}`, customBackendPath));
 		const testSteps = testInfoResponse.data.events;
@@ -117,4 +116,4 @@ class CrusherTests {
 	}
 }
 
-export { CrusherTests };
+export { CloudCrusher };

@@ -72,6 +72,13 @@ const reviewCss = css`
 			1. Step
 			2.) Current state
  */
+
+			const getStatusFromTestInstances = (testInstances) => {
+				const failed = testInstances.find((a)=> a.status === "FAILED");
+				if(failed) return "FAILED";
+
+				return "PASSED";
+			}
 function ReportSection() {
 	const [stickyOverviewSection, setStickOverviewSection] = useState(false);
 	const [selectedTest, setSelectedTest] = React.useState(0);
@@ -136,7 +143,7 @@ function ReportSection() {
 					<ul css={testListStyle}>
 						{data?.tests.map((testData, i) => (
 							<li  className="px-48 py-14" css={i === selectedTest ? css`color: #C071FF;` : undefined} onClick={setSelectedTest.bind(this, i)}>
-								<PassedSVG/>
+								<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"} />
 								<span>{testData!.name}</span>
 							</li>
 						))}
@@ -963,15 +970,15 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	
 
 			<TestOverviewTabTopSection
-							isShowingVideo={isShowingVideo}
-							setIsShowingVideo={setIsShowingVideo}
-							name={name}
-							testInstanceData={testInstanceData}
-							expand={expand}
-							testCardConfig={testCardConfig}
-							allConfiguration={allConfiguration}
-							setTestCardConfig={setTestCardConfig}
-						/>
+				isShowingVideo={isShowingVideo}
+				setIsShowingVideo={setIsShowingVideo}
+				name={name}
+				testInstanceData={testInstanceData}
+				expand={expand}
+				testCardConfig={testCardConfig}
+				allConfiguration={allConfiguration}
+				setTestCardConfig={setTestCardConfig}
+			/>
 			<RenderSteps testId={testData.testId} setIsShowingVideo={setIsShowingVideo} steps={steps} testInstanceData={testInstanceData} />
 
 			<Conditional showIf={expand && showLoading}>

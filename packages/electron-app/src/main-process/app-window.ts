@@ -24,7 +24,7 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderState, getSavedSteps } from "../store/selectors/recorder";
+import { getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
@@ -84,7 +84,7 @@ export class AppWindow {
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
-			show: false,
+			show: true,
 			frame: false,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
@@ -114,7 +114,7 @@ export class AppWindow {
 		this.splashWindow = new BrowserWindow({
 			title: APP_NAME,
 			autoHideMenuBar: true,
-			show:true,
+			show:false,
 			frame: false,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
@@ -216,6 +216,8 @@ export class AppWindow {
 		ipcMain.handle("turn-off-recorder-inspect-mode", this.turnOffInspectMode.bind(this));
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
+		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
+
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
 		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
@@ -230,6 +232,9 @@ export class AppWindow {
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
 		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
+		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
+		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
+
 		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 		ipcMain.handle("quit-and-restore", this.handleQuitAndRestore.bind(this));
 		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
@@ -662,6 +667,7 @@ export class AppWindow {
 	async handleSaveTest() {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
+		const testName = getTestName(this.store.getState() as any);
 
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");
@@ -671,11 +677,12 @@ export class AppWindow {
 				app.commandLine.getSwitchValue("token"),
 				appSettings.backendEndPoint,
 				appSettings.frontendEndPoint,
+				testName,
 			);
 			await shell.openExternal(resolveToFrontEndPath(`/app/tests/?project_id=${projectId}`, appSettings.frontendEndPoint));
 			process.exit(0);
 		} else {
-			await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+			await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);
 		}
 	}
 
@@ -697,6 +704,20 @@ export class AppWindow {
 		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
 
 		this.handleReplayTestSteps(testSteps);
+	}
+
+	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
+		this.sendMessage("url-action", { action: { commandName: "replay-test", args: {testId: payload.testId} } });
+	};
+
+	private async handleLoginWithGithub(event: Electron.IpcMainInvokeEvent) {
+		const appSettings = getAppSettings(this.store.getState() as any);
+		console.log("URL is", resolveToFrontEndPath(`/`, appSettings.frontendEndPoint));
+
+		await shell.openExternal(resolveToFrontEndPath(`/`, appSettings.frontendEndPoint));
+	}
+	private handleLoginWithGitlab(event: Electron.IpcMainInvokeEvent) {
+		return shell.openExternal("https://youtube.com");
 	}
 
 	private setRemainingSteps(steps: Array<iAction>) {

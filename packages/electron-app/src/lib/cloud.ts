@@ -43,6 +43,7 @@ class CloudCrusher {
 		userToken: string,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
+		testName: string | null = null
 	) {
 		return axios
 			.post(
@@ -57,7 +58,7 @@ class CloudCrusher {
 					resolveToBackendPath(`/projects/${projectId}/tests/actions/create`, customBackendPath),
 					{
 						tempTestId: result.data.insertId,
-						name: new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
+						name: testName ? testName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
 					},
 					{
 						headers: {
@@ -72,6 +73,7 @@ class CloudCrusher {
 		events: Array<iAction>,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
+		testName: string | null = null
 	) {
 		return axios
 			.post(
@@ -84,7 +86,11 @@ class CloudCrusher {
 				},
 			)
 			.then(async (result) => {
-				await shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`, customFrontEndPath));
+				const url = new URL(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`, customFrontEndPath));
+				if(testName) {
+					url.searchParams.set("temp_test_name", testName);
+				}
+				await shell.openExternal(url.toString());
 
 				// @Note: window.open() instead of navigation though hyperlinks
 				// hangs the electron app for some reason.

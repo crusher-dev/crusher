@@ -31,6 +31,7 @@ import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/a
 import { sendSnackBarEvent } from "../toast";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
+import { useNavigate } from "react-router-dom";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -272,6 +273,8 @@ const dropdownItemTextStyle = css`
 `;
 
 const Toolbar = (props: any) => {
+	const navigate = useNavigate();
+
 	const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
@@ -294,12 +297,6 @@ const Toolbar = (props: any) => {
 			setUrl(recorderInfoUrl.url);
 		}
 	}, [recorderInfoUrl.url]);
-
-	// React.useEffect(() => {
-	// 	if (!url && urlInputRef.current) {
-	// 		urlInputRef.current.focus();
-	// 	}
-	// }, []);
 
 	const handleUrlReturn = React.useCallback(() => {
 		const isOpen = tourCont.isOpen;
@@ -453,6 +450,8 @@ const Toolbar = (props: any) => {
 				<CrusherHammerIcon
 					className={"ml-24"}
 					css={hammerIconStyle}
+					onClick={() => {var path = window.location.href.split("#")[0];
+					window.location.replace(path); }}
 				/>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
@@ -614,6 +613,9 @@ display: flex;
 						`
 const hammerIconStyle = css`
 width: 19rem;
+:hover {
+	opacity: 0.8;
+}
 `;
 const inputContainerStyle = css`
 position: relative;

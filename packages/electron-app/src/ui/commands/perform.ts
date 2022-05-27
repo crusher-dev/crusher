@@ -179,6 +179,11 @@ const performReplayTest = async (testId) => {
 	ipcRenderer.invoke("replay-test", { testId });
 };
 
+
+const performReplayTestUrlAction = async (testId) => {
+	ipcRenderer.invoke("replay-test-url-action", { testId });
+};
+
 const turnOnInspectMode = () => {
 	ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 };
@@ -314,4 +319,5 @@ export {
 	saveCodeTemplate,
 	updateCodeTemplate,
 	deleteCodeTemplate,
+	performReplayTestUrlAction
 };

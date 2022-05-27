@@ -26,12 +26,19 @@ import { TourProvider, useTour } from "@reactour/tour";
 import { getGlobalAppConfig } from "../lib/global-config";
 import { iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { HashRouter as Router, Route, NavLink, HashRouter, Routes, useNavigate } from 'react-router-dom';
+import { DashboardScreen } from './screens/dashboard';
+import { LoginScreen } from './screens/login';
+import { LoadingScreen } from './screens/loading';
+import { CreateTestScreen } from './screens/createTest';
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 const emitter = new Emitter();
 
 const App = () => {
+	let navigate = useNavigate();
+	
 	const store = useStore();
 	const recorderInfo = useSelector(getRecorderInfo);
 	
@@ -146,8 +153,6 @@ const App = () => {
 					<DeviceFrame css={deviceFrameContainerStyle} />
 				</div>
 				<Sidebar css={sidebarStyle} />
-
-				<ToastSnackbar />
 			</div>
 			<style>
 				{`
@@ -371,9 +376,18 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 	};
 }
 
+
 render(
 	<Provider store={store}>
-		<TourProvider
+			<HashRouter>
+			<ToastSnackbar />
+
+				<Routes>
+					<Route path="/login" element={<LoginScreen/>}/>
+					<Route path="/" element={<DashboardScreen/>}/>
+					<Route path="/create-test" element={<CreateTestScreen/>}/>
+
+					<Route path="/recorder" element={		<TourProvider
 			onClickMask={() => {}}
 			disableDotsNavigation={true}
 			disableKeyboardNavigation={true}
@@ -393,9 +407,13 @@ render(
 				}),
 			}}
 			steps={steps}
-		>
-			<App />
-		</TourProvider>
+		><App/></TourProvider>} />
+					<Route path="/login" element={<h2 css={css`    color: #fff;
+    font-size: 36px;
+    margin: 53px;`}>Hello, world!</h2>} />
+				</Routes>
+				
+			</HashRouter>
 	</Provider>,
 	document.querySelector("#app-container"),
 );

@@ -25,6 +25,14 @@ export const SET_RECORDER_CRASH_STATE = "SET_RECORDER_CRASH_STATE";
 
 export const SET_STATUS_BAR_VISIBILITY = "SET_STATUS_BAR_VISIBILITY";
 
+export const SET_TEST_NAME = "SET_TEST_NAME";
+
+export const setTestName = (testName) => {
+    return {
+        type: SET_TEST_NAME,
+        payload: {testName}
+    }
+};
 export const updateRecorderState = (state: TRecorderState, payload: any) => {
     return {
         type: UPDATE_RECORDER_STATE,

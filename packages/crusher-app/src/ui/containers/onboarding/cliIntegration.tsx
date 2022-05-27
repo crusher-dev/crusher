@@ -56,7 +56,7 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 					`}
 				/>
 			}
-			forwardRef={inputRef}
+			ref={inputRef}
 			onClick={copyToClipbaord}
 		/>
 	);

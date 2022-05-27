@@ -1,7 +1,6 @@
 import * as path from "path";
 import fileUrl from "file-url";
 import { IDeepLinkAction } from "./types";
-import axios from "axios";
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 
 const isProduction = () => {
@@ -65,7 +64,8 @@ function isValidHttpUrl(str: string) {
 	return !!pattern.test(str);
 }
 
-const waitForUserLogin = async (callback?, customBackendPath: string | undefined = undefined): Promise<{ loginKey: string }> => {
+const waitForUserLogin = async (callback?, customBackendPath: string | undefined = undefined): Promise<{ loginKey: string, interval }> => {
+	const axios = require("axios").default;
 	const loginKey = await axios.get(resolveToBackendPath("/cli/get.key", customBackendPath)).then((res) => {
 		return res.data.loginKey;
 	});
@@ -80,10 +80,11 @@ const waitForUserLogin = async (callback?, customBackendPath: string | undefined
 		}
 	}, 5000);
 
-	return { loginKey: loginKey };
+	return { loginKey: loginKey, interval };
 };
 
 const getUserInfoFromToken = async (token: string, customBackendPath: string | undefined = undefined) => {
+	const axios = require("axios").default;
 	// call axios request with token as cookie header
 	const infoResponse = await axios.get(resolveToBackendPath("/users/actions/getUserAndSystemInfo", customBackendPath), {
 		headers: {
@@ -105,6 +106,7 @@ const getUserInfoFromToken = async (token: string, customBackendPath: string | u
 };
 
 const getUserAccountTests = async (token: string, customBackendPath: string | undefined = undefined) => {
+	const axios = require("axios").default;
 	// call axios request with token as cookie header
 	const infoResponse = await axios.get(resolveToBackendPath("/tests?page=-1", customBackendPath), {
 		headers: {

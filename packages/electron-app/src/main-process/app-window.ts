@@ -1,6 +1,5 @@
 import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, webFrameMain } from "electron";
 import windowStateKeeper from "electron-window-state";
-import * as path from "path";
 import { APP_NAME } from "../../config/about";
 import { encodePathAsUrl, getAppIconPath, getUserAccountTests, getUserInfoFromToken, sleep } from "../utils";
 import { Emitter, Disposable } from "event-kit";
@@ -25,8 +24,8 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderInfo, getRecorderState, getSavedSteps } from "../store/selectors/recorder";
-import { CrusherTests } from "../lib/tests";
+import { getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
+import { CloudCrusher } from "../lib/cloud";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
@@ -36,15 +35,16 @@ import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../stor
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
-import * as fs from "fs";
 import { ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
 import { identify } from "../lib/analytics";
 
 const debug = require("debug")("crusher:main");
+
 export class AppWindow {
 	private window: Electron.BrowserWindow;
+	private splashWindow: Electron.BrowserWindow;
 	private recorder: Recorder;
 	private webView: WebView;
 	private emitter = new Emitter();
@@ -54,8 +54,8 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 1000;
-	private minHeight = 600;
+	private minWidth = 1028;
+	private minHeight = 570;
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
@@ -68,9 +68,7 @@ export class AppWindow {
 	public constructor(store: Store<unknown, AnyAction>) {
 		debug("Constructor called");
 		this.savedWindowState = windowStateKeeper({
-			defaultWidth: this.minWidth,
-			defaultHeight: this.minHeight,
-			maximize: false,
+			maximize: true,
 		});
 		this.recorder = new Recorder(store);
 		this.store = store;
@@ -91,7 +89,7 @@ export class AppWindow {
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
 			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
-			backgroundColor: "#fff",
+			backgroundColor: "#111213",
 			webPreferences: {
 				// Disable auxclick event
 				// See https://developers.google.com/web/updates/2016/10/auxclick
@@ -111,6 +109,25 @@ export class AppWindow {
 		};
 
 		this.window = new BrowserWindow(windowOptions);
+
+		this.savedWindowState.manage(this.window);
+		this.splashWindow = new BrowserWindow({
+			title: APP_NAME,
+			autoHideMenuBar: true,
+			show:false,
+			frame: false,
+			icon: getAppIconPath(),
+			// This fixes subpixel aliasing on Windows
+			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
+			backgroundColor: "#111213",
+			hasShadow: false,
+			webPreferences: {
+				nativeWindowOpen: true,
+				enablePreferredSizeMode: true,
+			}
+		});
+
+		this.splashWindow.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
 	}
 
 	public load() {
@@ -141,7 +158,6 @@ export class AppWindow {
 
 		// Disable zoom-in/zoom-out
 		this.window.webContents.on("did-finish-load", () => {
-			this.window.webContents.setVisualZoomLevelLimits(1, 1);
 		});
 
 		this.window.webContents.on("did-fail-load", () => {
@@ -153,18 +169,18 @@ export class AppWindow {
 
 		// @TODO: Remove this asap, this is only here as a workaround to not
 		// having proper events for webview scrolling
-		setInterval(async () => {
-			try {
-				const recorderInfo = getRecorderInfo(this.store.getState() as any);
+		// setInterval(async () => {
+		// 	try {
+		// 		const recorderInfo = getRecorderInfo(this.store.getState() as any);
 
-				if (recorderInfo && recorderInfo.device && recorderInfo.device.width) {
-					await this.window.webContents.executeJavaScript(
-						`if(document.querySelector('webview')){ document.querySelector('webview').setZoomFactor(document.querySelector('webview').offsetWidth / ${recorderInfo.device.width}); }`,
-					);
-				}
-				process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor * (this.webView ? this.webView.webContents.zoomFactor : 1) + "";
-			} catch (err) {}
-		}, 500);
+		// 		if (recorderInfo && recorderInfo.device && recorderInfo.device.width) {
+		// 			await this.window.webContents.executeJavaScript(
+		// 				`if(document.querySelector('webview')){ document.querySelector('webview').setZoomFactor(document.querySelector('webview').offsetWidth / ${recorderInfo.device.width}); }`,
+		// 			);
+		// 		}
+		// 		process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor * (this.webView ? this.webView.webContents.zoomFactor : 1) + "";
+		// 	} catch (err) {}
+		// }, 500);
 
 		this.window.webContents.on("will-attach-webview", (event, webContents) => {
 			webContents.nodeIntegrationInSubFrames = true;
@@ -174,6 +190,13 @@ export class AppWindow {
 		});
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
+			this._rendererReadyTime = readyTime;
+			console.log("Rendering time is", this._rendererReadyTime);
+			this.splashWindow.destroy();
+			setTimeout(() => {
+				this.window.show();
+			}, 200);
+
 			this._rendererReadyTime = readyTime;
 			this.sendMessage("url-action", { action: { commandName: "restore" } });
 
@@ -193,6 +216,8 @@ export class AppWindow {
 		ipcMain.handle("turn-off-recorder-inspect-mode", this.turnOffInspectMode.bind(this));
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
+		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
+
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
 		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
@@ -207,6 +232,9 @@ export class AppWindow {
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
 		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
+		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
+		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
+		ipcMain.handle("go-full-screen", this.handleGoFullScreen.bind(this));
 		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 		ipcMain.handle("quit-and-restore", this.handleQuitAndRestore.bind(this));
 		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
@@ -440,6 +468,7 @@ export class AppWindow {
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
+		if(!this.webView.playwrightInstance) return;
 		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
 		if (elementInfo && elementInfo.parentFrameSelectors) {
 			action.payload.meta = {
@@ -632,26 +661,28 @@ export class AppWindow {
 		const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
-		await CrusherTests.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		await CloudCrusher.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
 	}
 
 	async handleSaveTest() {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
+		const testName = getTestName(this.store.getState() as any);
 
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");
-			await CrusherTests.saveTestDirectly(
+			await CloudCrusher.saveTestDirectly(
 				recordedSteps as any,
 				projectId,
 				app.commandLine.getSwitchValue("token"),
 				appSettings.backendEndPoint,
 				appSettings.frontendEndPoint,
+				testName,
 			);
 			await shell.openExternal(resolveToFrontEndPath(`/app/tests/?project_id=${projectId}`, appSettings.frontendEndPoint));
 			process.exit(0);
 		} else {
-			await CrusherTests.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+			await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);
 		}
 	}
 
@@ -670,9 +701,27 @@ export class AppWindow {
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
 		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
-		const testSteps = await CrusherTests.getTest(`${payload.testId}`, appSettings.backendEndPoint);
+		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
 
 		this.handleReplayTestSteps(testSteps);
+	}
+
+	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
+		this.sendMessage("url-action", { action: { commandName: "replay-test", args: {testId: payload.testId} } });
+	};
+
+	private async handleLoginWithGithub(event: Electron.IpcMainInvokeEvent) {
+		const appSettings = getAppSettings(this.store.getState() as any);
+		console.log("URL is", resolveToFrontEndPath(`/`, appSettings.frontendEndPoint));
+
+		await shell.openExternal(resolveToFrontEndPath(`/`, appSettings.frontendEndPoint));
+	}
+	private handleLoginWithGitlab(event: Electron.IpcMainInvokeEvent) {
+		return shell.openExternal("https://youtube.com");
+	}
+
+	private handleGoFullScreen(event: Electron.IpcMainInvokeEvent) {
+		return this.window.maximize();
 	}
 
 	private setRemainingSteps(steps: Array<iAction>) {
@@ -728,7 +777,7 @@ export class AppWindow {
 	private turnOnInspectMode() {
 		this.store.dispatch(setInspectMode(true));
 		this.webView._turnOnInspectMode();
-		this.webView.webContents.focus();
+		// this.webView.webContents.focus();
 	}
 
 	private turnOnElementSelectorInspectMode() {
@@ -852,9 +901,9 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		try {
-			const testSteps = await CrusherTests.getTest(action.payload.meta.value, appSettings.backendEndPoint);
+			const testSteps = await CloudCrusher.getTest(action.payload.meta.value, appSettings.backendEndPoint);
 
-			const replayableTestSteps = await CrusherTests.getReplayableTestActions(testSteps, true, appSettings.backendEndPoint);
+			const replayableTestSteps = await CloudCrusher.getReplayableTestActions(testSteps, true, appSettings.backendEndPoint);
 			const browserActions = getBrowserActions(replayableTestSteps);
 
 			for (const browserAction of browserActions) {
@@ -975,7 +1024,6 @@ export class AppWindow {
 			// Only maximize the window the first time it's shown, not every time.
 			// Otherwise, it causes the problem described in desktop/desktop#11590
 			this.shouldMaximizeOnShow = false;
-			this.window.maximize();
 		}
 	}
 

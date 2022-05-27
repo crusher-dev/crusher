@@ -179,6 +179,11 @@ const performReplayTest = async (testId) => {
 	ipcRenderer.invoke("replay-test", { testId });
 };
 
+
+const performReplayTestUrlAction = async (testId) => {
+	ipcRenderer.invoke("replay-test-url-action", { testId });
+};
+
 const turnOnInspectMode = () => {
 	ipcRenderer.invoke("turn-on-recorder-inspect-mode");
 };
@@ -251,6 +256,10 @@ const performJumpTo = (stepIndex) => {
 	return ipcRenderer.invoke("jump-to-step", {stepIndex});
 }
 
+const goFullScreen = () => {
+	return ipcRenderer.invoke("go-full-screen");
+}
+
 const performQuitAndRestore = (store) => {
 	const savedSteps = getSavedSteps(store.getState());
 	window.localStorage.setItem("saved-steps", JSON.stringify(savedSteps));
@@ -314,4 +323,6 @@ export {
 	saveCodeTemplate,
 	updateCodeTemplate,
 	deleteCodeTemplate,
+	performReplayTestUrlAction,
+	goFullScreen
 };

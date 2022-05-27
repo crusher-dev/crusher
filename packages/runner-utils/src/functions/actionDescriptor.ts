@@ -24,7 +24,7 @@ class ActionDescriptor {
 	}
     
     constructor() {
-        this.initActionHandlers();
+        // this.initActionHandlers();
     }
 
     registerStepHandler(name, description, handler, actionDescriber) {

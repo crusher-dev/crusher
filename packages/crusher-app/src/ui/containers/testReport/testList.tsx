@@ -14,7 +14,7 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ChevronDown, ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import { ChevronDown, ExpandSVG, InfoSVG, PassedSVG, TestStatusSVG } from "@svg/testReport";
 import ReactTable, { useTable, useBlockLayout } from "react-table";
 import {
 	getActionLabel,
@@ -35,7 +35,6 @@ import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
@@ -75,79 +74,113 @@ const reviewCss = css`
  */
 function ReportSection() {
 	const [stickyOverviewSection, setStickOverviewSection] = useState(false);
-
+	const [selectedTest, setSelectedTest] = React.useState(0);
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
 	useEffect(() => {
 		const heading = document.querySelector("#review-section");
-		const observer = new IntersectionObserver(
-			() => {
-				const { y } = heading.getBoundingClientRect();
-				const bottomOffset = y + heading.clientHeight;
-
-				setStickOverviewSection(bottomOffset < 69 ? true : false);
-			},
-			{ rootMargin: "0px" },
-		);
-
-		observer.observe(heading);
+		
 	}, []);
 
 	return (
 		<div className={"mt-40"}>
-			<div className={"flex justify-between items-center"} id={"review-section"}>
+			{/* <div className={"flex justify-between items-center"} id={"review-section"}>
 				<div className={"text-14"}>Jump to</div>
-				<div className={"flex items-center"}>
+				<div className={"flex items-center"}> */}
 					{/* Disabled for now*/}
 					{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
-					<ReviewSection />
+					{/* <ReviewSection />
 				</div>
-			</div>
+			</div> */}
 
-			<Conditional showIf={stickyOverviewSection}>
+			{/* <Conditional showIf={stickyOverviewSection}>
 				<div className={"fixed"} css={stickyBar} id={"sticky-overview-bar"}>
 					<div css={containerCSS} className={"px-42 pt-10"}>
 						<div>
 							<div className={"flex justify-between items-center"}>
 								<div className={"text-14"}>
-									<span className={"text-16 font-cera font-600 mr-38"}>#{query.id}</span>
+									<span className={"text-16 font-cera font-600 mr-38"}>#{query.id}</span> */}
 									{/* <span className={"text-12 mr-16"}>12 june baseline</span> */}
-									<span className={"text-12"}>Jump to</span>
-								</div>
-								<div className={"flex items-center pt-4"}>
+									{/* <span className={"text-12"}>Jump to</span> */}
+								{/* </div> */}
+								{/* <div className={"flex items-center pt-4"}> */}
 									{/* Disabled for now*/}
 									{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
-									<Button
-										css={css`
-											width: 144px;
-										`}
-									>
-										Review
-									</Button>
-								</div>
-							</div>
-						</div>
+									{/* <Button */}
+										{/* css={css` */}
+											{/* width: 144px; */}
+										{/* `} */}
+									{/* > */}
+										{/* Review */}
+									{/* </Button> */}
+								{/* </div> */}
+							{/* </div> */}
+						{/* </div> */}
 						{/*<div className={"mt-6"}>*/}
 						{/*	<FilterBar />*/}
 						{/*</div>*/}
-					</div>
-				</div>
-			</Conditional>
+					{/* </div> */}
+				{/* </div> */}
+			{/* </Conditional> */}
 
 			{/*<div css={filterSection} className={"flex items-center mt-32  px-24"} id={"filter-section"}>*/}
 			{/*	<FilterBar />*/}
 			{/*</div>*/}
 
-			<div className={"mt-40 pb-60"}>
-				{data?.tests.map((testData, i) => (
+			<div className={"mt-40"} css={css`width: 100%; background: #121316; height: 100%; display: flex;`}>
+				<div css={css`width: 300rem;	border-right-style: solid;
+	border-right-width: 1rem;
+	border-right-color: rgba(196, 196, 196, 0.08);`}>
+					<div  className="px-48 py-28" css={testListHeadingStyle}>Test list</div>
+					<ul css={testListStyle}>
+						{data?.tests.map((testData, i) => (
+							<li  className="px-48 py-14" css={i === selectedTest ? css`color: #C071FF;` : undefined} onClick={setSelectedTest.bind(this, i)}>
+								<PassedSVG/>
+								<span>{testData!.name}</span>
+							</li>
+						))}
+					</ul>
+				</div>
+				<div className={"px-48 py-28"} css={css`flex: 1`}>
+					{data?.tests.length ? (<TestCard key={selectedTest} id={selectedTest} testData={data.tests[selectedTest]} />) : ""}
+				</div>
+				{/* {data?.tests.map((testData, i) => (
 					<TestCard key={i} id={i} testData={testData} />
-				))}
+				))} */}
 			</div>
 		</div>
 	);
 }
 
+const testListStyle = css`
+	margin-top: 32rem;
+
+li {
+	display: flex;
+	align-items: center;
+	gap: 18rem;
+	:hover {
+		background: rgba(0, 0, 0, 0.7);
+	}
+}
+`;
+const testListHeadingStyle  =css`
+font-family: 'Cera Pro';
+font-style: normal;
+font-weight: 700;
+font-size: 13px;
+
+color: rgba(255, 255, 255, 0.79);
+
+font-family: Gilroy;
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+letter-spacing: -0.02em;
+
+color: #D0D0D0;
+`;
 const imageViewAtom = atomWithImmer<"side" | "compare">("side");
 
 export const imageTabCSS = css`
@@ -530,28 +563,7 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
-			<div className={"text-13"}>Switch to</div>
 
-			<Conditional showIf={!expand}>
-				<div className={"flex text-12 items-center"} id={"click-to-open"}>
-					<div
-						className={"text-13 font-500 mr-12 underline"}
-						css={css`
-							color: #eee;
-						`}
-					>
-						Expand
-					</div>
-					<ChevronDown
-						width={"15rem"}
-						css={css`
-							path {
-								fill: #eee;
-							}
-						`}
-					/>
-				</div>
-			</Conditional>
 			<div className={"flex"}>
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
 					<ClickableText paddingY={4} paddingX={"12rem"}>
@@ -789,7 +801,7 @@ function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 	);
 }
 
-function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVideo, setIsShowingVideo }) {
+function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVideo, setIsShowingVideo, allConfiguration, setTestCardConfig, testCardConfig }) {
 	const { steps } = testInstanceData;
 	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
 	const videoUrl = testInstanceData?.output?.video;
@@ -805,19 +817,14 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 	};
 
 	return (
-		<>
+		<div css={css`display: flex; justify-content: space-between; width: 100%;`}>
 			<Conditional showIf={isShowingVideo}>
 				<TestVideoUrl setOpenVideoModal={setIsShowingVideo} videoUrl={videoUrl} />
 			</Conditional>
-			<div className={"flex items-center leading-none text-15 font-600"}>
-				<TestStatusSVG type={testInstanceData.status} height={"17rem"} className={"mr-16"} />
-				{name}{testInstanceMeta.groupId ? `/${testInstanceMeta.groupId}` : ""}
-				<Conditional showIf={testInstanceMeta.isSpawned}>
-					<span className={"ml-8"}>(Spawned)</span>
-				</Conditional>
-				<Conditional showIf={isStalled}>
-					<span className={"ml-8"}>(Stalled)</span>
-				</Conditional>
+			<div css={css`gap: 28rem`} className={"px-54 flex items-center leading-none text-15 font-600"}>
+				<div css={[testNavBarItemStyle, css`font-weight: 700; color: #C071FF;`]}>Overview</div>
+				<div css={testNavBarItemStyle}>Logs</div>
+				<div css={testNavBarItemStyle}>Actions</div>
 			</div>
 
 
@@ -828,21 +835,24 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 			{/*</Conditional>*/}
 
 			<div className={"flex items-center"}>
-				<span className={"text-13 mr-32"}>
-					{screenshotCount} screenshot | {checksCount} check
-				</span>
-				<Conditional showIf={isVideoAvailable}>
-					<span className={"flex text-13 mr-26"} onClick={handleOpenVideoModal.bind(this)}>
-						<PlaySVG className={"mr-10"} /> Recording
-					</span>
-				</Conditional>
-				<span>
-					<ChevronDown css={expand && close} />
-				</span>
+			<TestConfigSection expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
+
 			</div>
-		</>
+		</div>
 	);
 }
+
+const testNavBarItemStyle = css`
+font-family: Cera Pro;
+font-style: normal;
+font-weight: 400;
+font-size: 13rem;
+
+color: #D0D0D0;
+:hover {
+	opacity: 0.8;
+}
+`;
 function ExpandableStepGroup({ steps, testInstanceData, setIsShowingVideo, testId, count, show = false }: { steps: any[]; testInstanceData: any; count: number; show?: boolean; setIsShowingVideo: any; testId: any; }) {
 	const [expandTestStep, setExpandTestStepSteps] = React.useState(show);
 	const expandHandler = React.useCallback(() => {
@@ -950,45 +960,19 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
-			<div
-				onClick={onCardClick}
-				css={[
-					isShowingVideo
-						? css`
-								z-index: 21;
-						  `
-						: null,
-				]}
-				className="sticky top-0 z-20"
-			>
-				<div css={stickyContainer} className={"px-28 pb-16 w-full test-card-header"}>
-					<div css={header} className={"flex justify-between items-center w-full"}>
-						<TestOverviewTabTopSection
+	
+
+			<TestOverviewTabTopSection
 							isShowingVideo={isShowingVideo}
 							setIsShowingVideo={setIsShowingVideo}
 							name={name}
 							testInstanceData={testInstanceData}
 							expand={expand}
+							testCardConfig={testCardConfig}
+							allConfiguration={allConfiguration}
+							setTestCardConfig={setTestCardConfig}
 						/>
-					</div>
-
-					<Conditional showIf={failedTestsConfiguration.length >= 1}>
-						<div
-							css={css`
-								font-size: 12.8rem;
-								color: #ff50c5;
-							`}
-						>
-							{sentenceCase(`Test failed for ${getFailedNotifyFromConfig(failedTestsConfiguration)}.`)}
-						</div>
-					</Conditional>
-					<TestConfigSection expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
-				</div>
-			</div>
-
-			<Conditional showIf={expand && !showLoading}>
-				<RenderSteps testId={testData.testId} setIsShowingVideo={setIsShowingVideo} steps={steps} testInstanceData={testInstanceData} />
-			</Conditional>
+			<RenderSteps testId={testData.testId} setIsShowingVideo={setIsShowingVideo} steps={steps} testInstanceData={testInstanceData} />
 
 			<Conditional showIf={expand && showLoading}>
 				<div className={"flex flex-col items-center w-full mt-80 mb-80"}>
@@ -1000,6 +984,10 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		</div>
 	);
 }
+
+const testNavBarContainerStyle = css`
+	display: flex;
+`;
 
 const header = css`
 	min-height: 52px;
@@ -1026,7 +1014,6 @@ const close = css`
 `;
 
 const stepsList = css`
-	border-left: 1px solid #171c24;
 `;
 
 const testCard = css`

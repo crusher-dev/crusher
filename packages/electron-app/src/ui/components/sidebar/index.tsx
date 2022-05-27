@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { css } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { getRecorderInfo } from "../../../store/selectors/recorder";
@@ -202,10 +202,12 @@ const Sidebar = ({ className, ...props }: any) => {
 	return (
 		<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={`${className}`}>
 			{/* <GettingStartedSidebar /> */}
-			<Conditional showIf={!!recorderInfo.device}>
-				<ActionsPanel />
-				<StepsPanel />
-			</Conditional>
+			{recorderInfo.device ? (
+				<>
+					<ActionsPanel />
+					<StepsPanel />
+				</>
+			): ""}
 			<ModalManager />
 			<TemplatesModal isOpen={false} handleClose={() => {}} />
 		</div>
@@ -254,3 +256,4 @@ const gettingStartedContainerStyle = css`
 `;
 
 export { Sidebar };
+export default memo(Sidebar);

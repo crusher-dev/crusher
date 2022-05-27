@@ -1,6 +1,6 @@
-import React from "react";
+import React, { memo, useContext } from "react";
 import { css } from "@emotion/react";
-import { Input } from "@dyson/components/atoms/input/Input";
+import Input from "@dyson/components/atoms/input/Input";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Conditional } from "@dyson/components/layouts";
 import { Button } from "@dyson/components/atoms/button/Button";
@@ -10,7 +10,7 @@ import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
-import { getRecorderInfo, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
+import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import {
 	performNavigation,
 	performReloadPage,
@@ -26,11 +26,12 @@ import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
-import { useTour } from "@reactour/tour";
+import { TourContext, useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 import { sendSnackBarEvent } from "../toast";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
+import { useNavigate } from "react-router-dom";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -43,6 +44,8 @@ const DeviceItem = ({ label }) => {
 		</div>
 	);
 };
+
+DeviceItem.whyDidYouRender = true;
 
 const recorderDevices = devices
 	.filter((device) => device.visible)
@@ -99,6 +102,8 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 		</div>
 	);
 }
+
+ActionButtonDropdown.whyDidYouRender = true;
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const intervalRef = React.useRef(null);
@@ -235,6 +240,8 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	);
 };
 
+SaveVerifyButton.whyDidYouRender = true;
+
 const StepActionMenu = ({ showDropDownCallback, callback }) => {
 	const ActionItem = ({ title, id, callback }) => {
 		return (
@@ -266,6 +273,8 @@ const dropdownItemTextStyle = css`
 `;
 
 const Toolbar = (props: any) => {
+	const navigate = useNavigate();
+
 	const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
@@ -273,27 +282,29 @@ const Toolbar = (props: any) => {
 	const [showMenu, setShowMenu] = React.useState(false);
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
+	const recorderInfoUrl = useSelector(getRecorderInfoUrl);
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
 	const isTestVerificationComplete = useSelector(isTestVerified);
 
 	const dispatch = useDispatch();
 	const store = useStore();
+	const tourCont = useContext(TourContext)
 	const { isOpen, currentStep, setCurrentStep } = useTour();
 
 	React.useEffect(() => {
-		if (recorderInfo.url !== url) {
-			setUrl(recorderInfo.url);
+		if (recorderInfoUrl.url !== url) {
+			setUrl(recorderInfoUrl.url);
 		}
-	}, [recorderInfo.url]);
-
-	React.useEffect(() => {
-		if (!url && urlInputRef.current) {
-			urlInputRef.current.focus();
-		}
-	}, []);
+	}, [recorderInfoUrl.url]);
 
 	const handleUrlReturn = React.useCallback(() => {
+		const isOpen = tourCont.isOpen;
+		const currentStep = tourCont.currentStep;
+		const setCurrentStep = tourCont.setCurrentStep;
+
+		const recorderInfo = getRecorderInfo(store.getState());
+
 		if (urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
 			if (!isValidHttpUrl(validUrl)) {
@@ -327,12 +338,12 @@ const Toolbar = (props: any) => {
 			setUrlInputError({ value: true, message: "" });
 			urlInputRef.current.focus();
 		}
-	}, [selectedDevice, recorderInfo, currentStep, isOpen]);
+	}, [selectedDevice]);
 
 	const handleChangeDevice = (selected) => {
 		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
 		setSelectedDevice([selected[0]]);
-
+		const recorderInfo = getRecorderInfo(store.getState());
 		if (recorderInfo.url) {
 			// Only perform and set if already recording
 			resetTest(device);
@@ -353,43 +364,66 @@ const Toolbar = (props: any) => {
 	};
 
 	const isTestBeingVerified = recorderState.type === TRecorderState.PERFORMING_ACTIONS;
-
+	const LeftIconComponent = React.useMemo(() => (
+		<Dropdown
+		initialState={showMenu}
+		// dropdownCSS={dropdownStyle}
+		component={
+			<StepActionMenu
+				callback={(id) => {
+					if (id === "REVERIFY") {
+						performVerifyTest(false);
+					} else if (id === "RESET") {
+						performResetAppSession();
+					} else if (id === "BACK") {
+						goBack();
+					}
+					setShowMenu(false);
+				}}
+				showDropDownCallback={() => {
+					setShowMenu(false);
+				}}
+			/>
+		}
+		callback={setShowMenu.bind(this)}
+	>
+		<div
+			css={dropdownContainerStyle}
+		>
+			<MoreIcon
+				css={dropdownMoreIconStyle}
+			/>
+		</div>
+	</Dropdown>
+	), [showMenu]);
+	const RightIconComponent = React.useMemo(() => (
+		<SelectBox
+								selected={selectedDevice}
+								callback={handleChangeDevice}
+								className={"target-device-dropdown"}
+								css={selectBoxStyle}
+								values={recorderDevices}
+							/>
+	), [selectedDevice, recorderDevices]);
 	return (
 		<div css={containerStyle}>
 			<Conditional showIf={isTestBeingVerified}>
 				<div
-					css={css`
-						display: flex;
-						align-items: center;
-						width: 100%;
-					`}
+					css={testBeingVerifiedContainerStyle}
 				>
 					<span
-						css={css`
-							font-size: 14rem;
-							margin-left: 18rem;
-						`}
+						css={drinkCupTextStyle}
 					>
 						Drink a cup of coffee meanwhile
 					</span>
 					<div
-						css={css`
-							display: flex;
-							font-weight: bold;
-							align-items: center;
-							font-size: 14rem;
-							margin: auto;
-						`}
+						css={verifyStatusIconStyle}
 					>
 						<LoadingIconV2
-							css={css`
-								width: 24rem;
-							`}
+							css={loadingIconStyle}
 						/>
 						<span
-							css={css`
-								margin-left: 12rem;
-							`}
+							css={loadingTextStyle}
 						>
 							Our bot is verifying your test.{" "}
 						</span>
@@ -415,9 +449,9 @@ const Toolbar = (props: any) => {
 
 				<CrusherHammerIcon
 					className={"ml-24"}
-					css={css`
-						width: 19rem;
-					`}
+					css={hammerIconStyle}
+					onClick={() => {var path = window.location.href.split("#")[0];
+					window.location.replace(path); }}
 				/>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
@@ -448,20 +482,12 @@ const Toolbar = (props: any) => {
 					/>
 				</BrowserButton> */}
 				<div
-					css={css`
-						font-size: 14rem;
-						color: #fff;
-					`}
+					css={menuContainerStyle}
 				>
 					{showMenu}
 				</div>
 				<div
-					css={css`
-						position: relative;
-						display: flex;
-						flex-direction: column;
-						margin-left: 28rem;
-					`}
+					css={inputContainerStyle}
 				>
 					<Input
 						placeholder="Enter URL to test"
@@ -471,98 +497,20 @@ const Toolbar = (props: any) => {
 						onReturn={handleUrlReturn}
 						isError={urlInputError.value}
 						initialValue={url}
-						forwardRef={urlInputRef}
-						leftIcon={
-							<Dropdown
-								initialState={showMenu}
-								// dropdownCSS={dropdownStyle}
-								component={
-									<StepActionMenu
-										callback={(id) => {
-											if (id === "REVERIFY") {
-												performVerifyTest(false);
-											} else if (id === "RESET") {
-												performResetAppSession();
-											} else if (id === "BACK") {
-												goBack();
-											}
-											setShowMenu(false);
-										}}
-										showDropDownCallback={() => {
-											setShowMenu(false);
-										}}
-									/>
-								}
-								callback={setShowMenu.bind(this)}
-							>
-								<div
-									css={css`
-										height: 100%;
-										display: flex;
-										align-items: center;
-										background: #0d1010;
-										padding: 0rem 10rem;
-										border-right: 0.35px solid rgba(255, 255, 255, 0.17);
-									`}
-								>
-									<MoreIcon
-										css={css`
-											width: 18rem;
-										`}
-									/>
-								</div>
-							</Dropdown>
-						}
-						rightIcon={
-							<SelectBox
-								selected={selectedDevice}
-								callback={handleChangeDevice}
-								className={"target-device-dropdown"}
-								css={css`
-									.selectBox {
-										:hover {
-											border: none;
-											border-left-width: 1rem;
-											border-left-style: solid;
-											border-left-color: #181c23;
-										}
-										input {
-											width: 50rem;
-											height: 30rem;
-										}
-										padding: 14rem;
-										height: 30rem !important;
-										border: none;
-										background: none;
-										border-left-width: 1rem;
-										border-left-style: solid;
-										border-left-color: #181c23;
-									}
-									.selectBox__value {
-										margin-right: 10rem;
-										font-size: 13rem;
-									}
-									width: 104rem;
-								`}
-								values={recorderDevices}
-							/>
-						}
+						ref={urlInputRef}
+						leftIcon={LeftIconComponent}
+						rightIcon={RightIconComponent}
 					/>
 					<Conditional showIf={urlInputError.value}>
 						<span
-							css={css`
-								position: absolute;
-								bottom: -14rem;
-								font-size: 10.5rem;
-								color: #ff4583;
-							`}
+							css={inputErrorMessageStyle}
 						>
 							{urlInputError.message}
 						</span>
 					</Conditional>
 				</div>
 				<Conditional showIf={isRecorderInInitialState}>
-					<Button className={"ml-24"} onClick={handleUrlReturn} bgColor="tertiary-outline" css={buttonStyle}>
+					<Button className={"ml-24"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
 					</Button>
 				</Conditional>
@@ -586,12 +534,7 @@ const Toolbar = (props: any) => {
 					<div className={"ml-auto flex items-center"}>
 						<SettingsIcon
 							onClick={setShowSettingsModal.bind(this, true)}
-							css={css`
-								height: 14rem;
-								:hover {
-									opacity: 0.9;
-								}
-							`}
+							css={settingsIconStyle}
 							className={"ml-12"}
 						/>
 
@@ -603,6 +546,101 @@ const Toolbar = (props: any) => {
 		</div>
 	);
 };
+
+StepActionMenu.whyDidYouRender = true;
+
+Toolbar.whyDidYouRender = true;
+const dropdownMoreIconStyle = css`
+width: 18rem;
+`;
+const dropdownContainerStyle = css`
+height: 100%;
+display: flex;
+align-items: center;
+background: #0d1010;
+padding: 0rem 10rem;
+border-right: 0.35px solid rgba(255, 255, 255, 0.17);
+`;
+const selectBoxStyle = css`
+.selectBox {
+	:hover {
+		border: none;
+		border-left-width: 1rem;
+		border-left-style: solid;
+		border-left-color: #181c23;
+	}
+	input {
+		width: 50rem;
+		height: 30rem;
+	}
+	padding: 14rem;
+	height: 30rem !important;
+	border: none;
+	background: none;
+	border-left-width: 1rem;
+	border-left-style: solid;
+	border-left-color: #181c23;
+}
+.selectBox__value {
+	margin-right: 10rem;
+	font-size: 13rem;
+}
+width: 104rem;
+`;
+
+const loadingTextStyle = css`
+margin-left: 12rem;
+`;
+const loadingIconStyle = css`
+width: 24rem;
+`;
+
+const verifyStatusIconStyle = css`
+display: flex;
+font-weight: bold;
+align-items: center;
+font-size: 14rem;
+margin: auto;
+`;
+const drinkCupTextStyle = css`
+font-size: 14rem;
+margin-left: 18rem;
+`;
+const testBeingVerifiedContainerStyle  = css`
+display: flex;
+						align-items: center;
+						width: 100%;
+						`
+const hammerIconStyle = css`
+width: 19rem;
+:hover {
+	opacity: 0.8;
+}
+`;
+const inputContainerStyle = css`
+position: relative;
+display: flex;
+flex-direction: column;
+margin-left: 28rem;
+`;
+
+const inputErrorMessageStyle = css`
+	position: absolute;
+	bottom: -14rem;
+	font-size: 10.5rem;
+	color: #ff4583;
+							
+`;
+const menuContainerStyle = css`
+	font-size: 14rem;
+	color: #fff;
+`;
+const settingsIconStyle = css`
+height: 14rem;
+:hover {
+	opacity: 0.9;
+}
+`;
 
 const containerStyle = css`
 	display: flex;
@@ -714,3 +752,4 @@ const dropDownContainer = css`
 `;
 
 export { Toolbar };
+export default memo(Toolbar);

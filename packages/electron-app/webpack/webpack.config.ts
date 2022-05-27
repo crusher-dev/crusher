@@ -3,6 +3,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as path from "path";
 
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const fs = require("fs");
 const dotEnv = require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
@@ -19,6 +21,7 @@ if (fs.existsSync(OUTPUT_DIR)) {
 
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
+	plugins: [new MiniCssExtractPlugin()],
 	module: {
 		rules: [
 			{
@@ -38,7 +41,7 @@ const commonConfig = {
 			{
 				test: /\.css$/i,
 				use: [
-				  "style-loader",
+				  MiniCssExtractPlugin.loader,
 				  "css-loader",
 				  {
 					loader: "postcss-loader",
@@ -94,6 +97,7 @@ const finalConfig = [
 		entry: { renderer: path.resolve(__dirname, '../src/ui/index') },
 		target: 'electron-renderer',
 		plugins: [
+			...commonConfig.plugins,
 			new HtmlWebpackPlugin({
 			  template: path.join(__dirname, '../static', 'index.html'),
 			  chunks: ['renderer'],
@@ -106,6 +110,10 @@ const finalConfig = [
 				},
 			})
 		],
+		optimization: {
+			minimize: true,
+			minimizer: [new TerserPlugin({ /* additional options here */ })],
+		},
 
 	},
 	{

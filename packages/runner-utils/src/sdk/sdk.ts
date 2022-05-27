@@ -7,7 +7,6 @@ import { CrusherElementSdk } from "./element";
 import { StorageManager } from "../functions/storage";
 import { chunkArray, markTestFail } from "../utils/helper";
 import nodeFetch from "node-fetch";
-import https from "https";
 import { CommunicationChannel } from "../functions/communicationChannel";
 
 const pageScreenshotModule = require("../actions/pageScreenshot");
@@ -143,19 +142,8 @@ class CrusherSdk implements ICrusherSdk {
 	}
 
 	private async urlExist(url: string) {
-		const agent = new https.Agent({
-			rejectUnauthorized: false,
-		});
-
-		return nodeFetch(url, { method: "HEAD", redirect: "follow", agent: agent }).then(async (res) => {
-			const allowedMethods = res.headers.get("allow");
-			if (allowedMethods && !allowedMethods.includes("HEAD") && allowedMethods.includes("GET")) {
-				return nodeFetch(url, { method: "GET", redirect: "follow", agent: agent }).then(async (res) => {
-					return !!res.ok;
-				});
-			}
-			return !!res.ok;
-		});
+		// @Todo: Remove this function
+		return false;
 	}
 
 	async verifyLinks(links: Array<{ href: string }>): Promise<Array<{ href: string; exists: boolean }>> {

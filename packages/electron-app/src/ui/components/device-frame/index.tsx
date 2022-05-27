@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { css } from "@emotion/react";
 import { getIsStatusBarVisible, getRecorderCrashState, getRecorderInfo, getRecorderState, getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { useDispatch, useSelector, useStore } from "react-redux";
@@ -246,3 +246,6 @@ const containerStyle = css`
 `;
 
 export { DeviceFrame };
+
+DeviceFrame.whyDidYouRender = true;
+export default memo(DeviceFrame);

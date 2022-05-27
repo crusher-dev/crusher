@@ -1,9 +1,10 @@
+import './wdyr';
 import React from "react";
 import { css, Global } from "@emotion/react";
 import { render } from "react-dom";
-import { Toolbar } from "./components/toolbar";
-import { DeviceFrame } from "./components/device-frame";
-import { Sidebar } from "./components/sidebar";
+import Toolbar from "./components/toolbar";
+import DeviceFrame from "./components/device-frame";
+import Sidebar from "./components/sidebar";
 import "../../static/assets/styles/tailwind.css";
 import configureStore from "../store/configureStore";
 import { Provider, useDispatch, useSelector, useStore } from "react-redux";
@@ -25,16 +26,25 @@ import { TourProvider, useTour } from "@reactour/tour";
 import { getGlobalAppConfig } from "../lib/global-config";
 import { iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { HashRouter as Router, Route, NavLink, HashRouter, Routes, useNavigate } from 'react-router-dom';
+import { DashboardScreen } from './screens/dashboard';
+import { LoginScreen } from './screens/login';
+import { LoadingScreen } from './screens/loading';
+import { CreateTestScreen } from './screens/createTest';
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 const emitter = new Emitter();
 
 const App = () => {
+	let navigate = useNavigate();
+	
 	const store = useStore();
 	const recorderInfo = useSelector(getRecorderInfo);
-
+	
 	React.useEffect(() => {
+		//@ts-ignore
+		// document.body.querySelector("#welcome_splash").style.display = "none";
 		ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
 			store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
@@ -48,7 +58,7 @@ const App = () => {
 			}
 		});
 
-		ipcRenderer.send("renderer-ready", /* @TODO Add correct rendering time */ 1500);
+		ipcRenderer.send("renderer-ready", /* @TODO Add correct rendering time */ window["performance"].now());
 
 		ipcRenderer.on("url-action", (event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 			if (action.commandName === "replay-test") {
@@ -90,30 +100,6 @@ const App = () => {
 			store.dispatch(setSessionInfoMeta({}));
 			resetStorage();
 		};
-	}, []);
-
-	React.useEffect(() => {
-		let currentzoom = 1;
-		document.body.addEventListener("mousewheel", (e: any) => {
-			if (e.ctrlKey) {
-				const delta = e.wheelDelta / 1500;
-				zoom(delta, e);
-			}
-		});
-
-		function zoom(delta, event: any) {
-			const img = document.body;
-			const width = img.offsetWidth;
-			const height = img.offsetHeight;
-			const x = event.pageX;
-			const y = event.pageY;
-			const xpercent = (x * 100) / width;
-			const ypercent = (y * 100) / height;
-			img.style.transform = "scale(" + currentzoom + ")";
-			if (currentzoom + delta < 1 || currentzoom + delta > 5) return;
-			currentzoom += delta;
-			img.style.transformOrigin = (xpercent < 0 ? 0 : xpercent) + "% " + (ypercent < 0 ? 0 : ypercent) + "%";
-		}
 	}, []);
 
 	return (
@@ -167,8 +153,6 @@ const App = () => {
 					<DeviceFrame css={deviceFrameContainerStyle} />
 				</div>
 				<Sidebar css={sidebarStyle} />
-
-				<ToastSnackbar />
 			</div>
 			<style>
 				{`
@@ -178,15 +162,13 @@ const App = () => {
 				.no-drag {
 					-webkit-app-region: no-drag;
 				}
-				.tree-height-line:hover {
-					background: rgba(255,255,255, 0.2) !important;
-				}
 			`}
 			</style>
-
 		</>
 	);
 };
+
+App.whyDidYouRender = true;
 
 const containerStyle = css`
 	display: flex;
@@ -222,15 +204,6 @@ const globalStyles = css`
 		padding: 0;
 		min-height: "100vh";
 		max-width: "100vw";
-	}
-	.highlight-box {
-		background: rgba(58, 56, 54, 0.4);
-		padding: 4rem 6rem;
-		margin: 0rem 2rem;
-		border-radius: 2rem;
-		:hover {
-			background: rgba(0, 0, 0, 0.7) !important;
-		}
 	}
 	.custom-scroll::-webkit-scrollbar {
 		width: 12rem;
@@ -403,9 +376,18 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 	};
 }
 
+
 render(
 	<Provider store={store}>
-		<TourProvider
+			<HashRouter>
+			<ToastSnackbar />
+
+				<Routes>
+					<Route path="/login" element={<LoginScreen/>}/>
+					<Route path="/" element={<DashboardScreen/>}/>
+					<Route path="/create-test" element={<CreateTestScreen/>}/>
+
+					<Route path="/recorder" element={		<TourProvider
 			onClickMask={() => {}}
 			disableDotsNavigation={true}
 			disableKeyboardNavigation={true}
@@ -425,9 +407,13 @@ render(
 				}),
 			}}
 			steps={steps}
-		>
-			<App />
-		</TourProvider>
+		><App/></TourProvider>} />
+					<Route path="/login" element={<h2 css={css`    color: #fff;
+    font-size: 36px;
+    margin: 53px;`}>Hello, world!</h2>} />
+				</Routes>
+				
+			</HashRouter>
 	</Provider>,
 	document.querySelector("#app-container"),
 );

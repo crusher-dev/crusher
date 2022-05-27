@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { ReactElement, useCallback, useEffect, useRef } from "react";
+import React, { memo, ReactElement, useCallback, useEffect, useRef } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { Conditional } from "../../layouts";
 
@@ -38,21 +38,20 @@ export type InputProps = {
 /**
  * Unified button component for Dyson UI system
  */
-export const Input: React.FC<InputProps> = ({
-	initialValue = "",
-	forwardRef,
-	size = "large",
-	className,
-	rightIcon,
-	leftIcon,
-	isError = false,
-	onReturn,
-	children,
-	...props
-}) => {
-
-	// tslint:disable-next-line: no-empty
-	const ref = forwardRef ? forwardRef : useRef<HTMLInputElement>(null);
+ export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => {
+	const {
+		initialValue = "",
+		forwardRef,
+		size = "large",
+		className,
+		rightIcon,
+		leftIcon,
+		isError = false,
+		onReturn,
+		children,
+		...props
+	} = mainProps;
+	ref = ref ? ref : useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
 		(e) => {
@@ -91,7 +90,12 @@ export const Input: React.FC<InputProps> = ({
 			</Conditional>
 		</div>
 	);
-};
+});
+
+//@ts-ignore
+Input.whyDidYouRender = true;
+
+export default memo(Input);
 
 const rightIconStyle = css`
 	position: absolute;

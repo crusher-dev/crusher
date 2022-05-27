@@ -4,9 +4,8 @@ import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import axios from "axios";
 import { shell } from "electron";
 import { getBrowserActions, getMainActions } from "runner-utils/src";
-import * as url from "url";
 
-class CrusherTests {
+class CloudCrusher {
 	public static async getTest(testId: string, customBackendPath: string | undefined = undefined): Promise<Array<iAction>> {
 		const testInfoResponse = await axios.get<{ events: Array<iAction> }>(resolveToBackendPath(`/tests/${testId}`, customBackendPath));
 		const testSteps = testInfoResponse.data.events;
@@ -44,6 +43,7 @@ class CrusherTests {
 		userToken: string,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
+		testName: string | null = null
 	) {
 		return axios
 			.post(
@@ -58,7 +58,7 @@ class CrusherTests {
 					resolveToBackendPath(`/projects/${projectId}/tests/actions/create`, customBackendPath),
 					{
 						tempTestId: result.data.insertId,
-						name: new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
+						name: testName ? testName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
 					},
 					{
 						headers: {
@@ -73,6 +73,7 @@ class CrusherTests {
 		events: Array<iAction>,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
+		testName: string | null = null
 	) {
 		return axios
 			.post(
@@ -85,7 +86,11 @@ class CrusherTests {
 				},
 			)
 			.then(async (result) => {
-				await shell.openExternal(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`, customFrontEndPath));
+				const url = new URL(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`, customFrontEndPath));
+				if(testName) {
+					url.searchParams.set("temp_test_name", testName);
+				}
+				await shell.openExternal(url.toString());
 
 				// @Note: window.open() instead of navigation though hyperlinks
 				// hangs the electron app for some reason.
@@ -117,4 +122,4 @@ class CrusherTests {
 	}
 }
 
-export { CrusherTests };
+export { CloudCrusher };

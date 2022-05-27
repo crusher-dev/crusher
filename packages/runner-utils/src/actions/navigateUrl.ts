@@ -16,11 +16,7 @@ async function goToUrl(page: Page, action: iAction, globals: IGlobalManager,
 	console.log("Context is this", context);
 	const urlToGo = template(action.payload.meta.value, {ctx: context || {}});
 	try {
-		const urlMain = new URL(urlToGo);
-		if(isUsingProxy) {
-            urlMain.protocol = "http:";
-		}
-		await page.goto(urlMain.toString(), { waitUntil: "load", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
+		await page.goto(urlToGo, { waitUntil: "load", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
 	} catch (ex) { console.log("Got error during navigation", ex); }
 }
 

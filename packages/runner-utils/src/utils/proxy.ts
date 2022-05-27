@@ -34,7 +34,7 @@ const handleProxyPage = async (page: Page, proxyUrlsMap: { [key: string]: { tunn
     const proxyKeys = Object.keys(proxyUrlsMap);
     await Promise.all(proxyKeys.map(async (item) => {
         const proxyConfig = proxyUrlsMap[item];
-        return page.route((proxyConfig.intercept as any).regex ? eval(`new RegExp(${(proxyConfig.intercept as any).regex})`) : proxyConfig.intercept as string, async (route) => {
+        return page.route((proxyConfig.intercept as any).regex ? eval(`new RegExp(${(proxyConfig.intercept as any).regex})`) : (url) => { return url.toString().includes(proxyConfig.intercept as string); }, async (route) => {
            try {
             const routeUrl = route.request().url();
             const urlObject = new URL(routeUrl);

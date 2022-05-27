@@ -417,7 +417,7 @@ function TopNavbar() {
 	);
 }
 
-export const SidebarTopBarLayout = ({ children, hideSidebar = false, setContainerWidth = true }) => {
+export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }) => {
 	return (
 		<div className={"flex"} css={background}>
 			<Conditional showIf={!hideSidebar}>
@@ -426,8 +426,8 @@ export const SidebarTopBarLayout = ({ children, hideSidebar = false, setContaine
 
 			<div className={"w-full"}>
 				<TopNavbar />
-				<div css={scrollContainer} className={"custom-scroll relative"}>
-					<div css={[setContainerWidth && containerWidth]}>{children}</div>
+				<div css={[scrollContainer, noContainerWidth ? css`overflow-y: overlay` : undefined]} className={"custom-scroll relative"}>
+					<div css={[!noContainerWidth ? setContainerWidth && containerWidth : null]}>{children}</div>
 				</div>
 			</div>
 		</div>

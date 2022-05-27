@@ -117,23 +117,20 @@ function NameNStatusSection() {
 
 const section = [
 	{
-		name: "Overview",
-		icon: <LayoutSVG height={"10rem"} width={"10rem"} />,
-		key: "overview",
-	},
-	{
-		name: "Test report",
-		icon: (
-			<ReportSVG
-				height={"12rem"}
-				width={"12rem"}
-				css={css`
-					margin-right: -2rem;
-				`}
-			/>
-		),
+		name: "Home",
+		icon: null,
 		key: "reports",
 	},
+	{
+		name: "Report",
+		icon: null,
+		key: "report"
+	},
+	{
+		name: "Insights & Alert",
+		icon: null,
+		key: "insights"
+	}
 	// {
 	// 	name: "History",
 	// 	icon: null,
@@ -197,7 +194,7 @@ function TestOverviewTab() {
 	}, [data]);
 
 	return (
-		<div className={"flex mt-48 justify-between"}>
+		<div className={"flex px-16 mt-48 justify-between"} css={containerWidth}>
 			<div css={leftSection}>
 				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120"}>
 					<div className={"flex flex-col items-center"}>
@@ -328,7 +325,8 @@ export const TestReportScreen = () => {
 		if (query.view_draft) setSelectedTabIndex(1);
 	}, [query.view_draft]);
 	return (
-		<div className={"px-16 mt-56"}>
+		<div className={"mt-56"}>
+			<div className="px-16" css={containerWidth}>
 			<NameNStatusSection />
 			<div className={"flex items-center leading-none mt-16 text-13"}>
 				<CalendarSVG className={"mr-16"} />
@@ -368,16 +366,20 @@ export const TestReportScreen = () => {
 				</div>
 			</Conditional>
 			<TabBar />
+			</div>
 			<Conditional showIf={selectedTabIndex === 0}>
-				<TestOverviewTab />
-			</Conditional>
-			<Conditional showIf={selectedTabIndex === 1}>
 				<ReportSection />
 			</Conditional>
 		</div>
 	);
 };
 
+const containerWidth = css`
+width: 1468rem;
+max-width: calc(100vw - 352rem);
+margin: 0 auto;
+padding: 0 0;
+`;
 const timeLine = css`
 	height: 2px;
 	width: 100%;
@@ -428,20 +430,17 @@ const waiting = css`
 `;
 
 const Tab = css`
-	border-bottom: 1px solid #1e242c;
 `;
 
 const TabItem = css`
 	top: 1px;
 	position: relative;
 	height: 37px;
-	min-width: 143px;
 	padding: 0 24px;
 	padding-top: 1rem !important;
 
 	:hover {
-		color: #fff;
-		font-weight: 600;
+		opacity: 0.8;
 	}
 `;
 
@@ -449,8 +448,7 @@ const selected = css`
 	top: 1px;
 	position: relative;
 	border: 1px solid #1e242c;
-	border-radius: 6px 6px 0 0;
-	border-bottom: 1px solid #0a0b0e;
+	border-radius: 6px 6px 6px 6px;
 	color: #fff;
 	font-weight: 600;
 	padding-top: 1px;

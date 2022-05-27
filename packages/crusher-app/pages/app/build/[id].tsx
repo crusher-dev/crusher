@@ -6,7 +6,7 @@ import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 function App() {
 	return (
-		<SidebarTopBarLayout hideSidebar={true}>
+		<SidebarTopBarLayout noContainerWidth={true} hideSidebar={true}>
 			<Suspense fallback={<div>loading...</div>}>
 				<TestReportScreen />
 			</Suspense>

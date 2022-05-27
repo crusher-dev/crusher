@@ -47,8 +47,8 @@ export const Logo: React.FC<LogoProps> = ({ showOnlyIcon, isMonochrome, height, 
 <path d="M19.6499 14.0566C19.511 9.44481 16.8035 6.16064 13.4711 6.16064H10.5552L8.61133 6.85939V12.4495L9.79156 13.6374C9.93042 13.7771 9.99984 13.9168 9.99984 14.1265V16.642H14.1653V13.9867C14.1653 13.9168 14.1653 13.7771 14.2347 13.7072L14.6513 12.8687C14.7902 12.5892 14.9984 12.4495 15.2761 12.4495C16.8035 12.5193 18.2614 13.0783 19.3722 14.1963C19.5203 14.3748 19.6499 14.2768 19.6499 14.0566Z" fill="white"/>
 <defs>
 <linearGradient id="paint0_linear_833_383" x1="11.4256" y1="0" x2="11.4256" y2="22.9997" gradientUnits="userSpaceOnUse">
-<stop stop-color="#9261FF"/>
-<stop offset="1" stop-color="#5F6FFF"/>
+<stop stopColor="#9261FF"/>
+<stop offset="1" stopColor="#5F6FFF"/>
 </linearGradient>
 </defs>
 </svg>

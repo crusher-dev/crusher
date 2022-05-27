@@ -38,6 +38,10 @@ import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
+enum TestTabEnum {
+	OVERVIEW = "overview",
+	LOGS = "logs",
+};
 function ReviewSection() {
 	const [open, setOpen] = useState(false);
 
@@ -808,7 +812,7 @@ function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 	);
 }
 
-function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVideo, setIsShowingVideo, allConfiguration, setTestCardConfig, testCardConfig }) {
+function TestOverviewTabTopSection({ name, currentTestTab, testInstanceData, expand, isShowingVideo, setIsShowingVideo, allConfiguration, setTestCardConfig, testCardConfig, setCurrentTestTab }) {
 	const { steps } = testInstanceData;
 	const { screenshotCount, checksCount } = getScreenShotsAndChecks(steps);
 	const videoUrl = testInstanceData?.output?.video;
@@ -829,8 +833,8 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 				<TestVideoUrl setOpenVideoModal={setIsShowingVideo} videoUrl={videoUrl} />
 			</Conditional>
 			<div css={css`gap: 28rem`} className={"px-54 flex items-center leading-none text-15 font-600"}>
-				<div css={[testNavBarItemStyle, css`font-weight: 700; color: #C071FF;`]}>Overview</div>
-				<div css={testNavBarItemStyle}>Logs</div>
+				<div css={[testNavBarItemStyle, currentTestTab === TestTabEnum.OVERVIEW ? selectedTabStyle : undefined]} onClick={() => {setCurrentTestTab("overview")}}>Overview</div>
+				<div css={[testNavBarItemStyle, currentTestTab === TestTabEnum.LOGS ? selectedTabStyle : undefined]} onClick={() => {setCurrentTestTab("logs")}}>Logs</div>
 				<div css={testNavBarItemStyle}>Actions</div>
 			</div>
 
@@ -849,6 +853,7 @@ function TestOverviewTabTopSection({ name, testInstanceData, expand, isShowingVi
 	);
 }
 
+const selectedTabStyle = css`font-weight: 700; color: #C071FF;`;
 const testNavBarItemStyle = css`
 font-family: Cera Pro;
 font-style: normal;
@@ -929,6 +934,26 @@ function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { s
 	);
 }
 
+function TestLogs({testId, testInstanceData, ...props}) {
+	const steps = getStepsFromInstanceData(testInstanceData);
+
+	return (
+		<textarea css={css`margin-top: 50rem;
+		margin-left: 54rem;
+		width: 500rem;
+		height: 200rem;
+		color: #fff;
+		border: 1rem solid rgba(196,196,196,0.08);
+		border-radius: 10rem;
+		background: transparent;
+		padding: 14rem 12rem;
+		font-size: 14rem;
+		line-height: 19rem;`} value={steps.map((step) => {
+			return (step as any).message ? (step as any).message : ((step as any).meta.customLogMessage);
+		}).join("\n")} readOnly={true}></textarea>
+	)
+}
+
 function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const { name, testInstances } = testData;
 	const [expand, setExpand] = useState(false);
@@ -936,7 +961,7 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
 	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
 	const [isShowingVideo, setIsShowingVideo] = React.useState(false);
-
+	const [currentTestTab, setCurrentTestTab] = React.useState(TestTabEnum.OVERVIEW);
 	const onCardClick = () => {
 		// if(expand===true){
 		// 	window.scrollTo()
@@ -978,8 +1003,16 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 				testCardConfig={testCardConfig}
 				allConfiguration={allConfiguration}
 				setTestCardConfig={setTestCardConfig}
+				setCurrentTestTab={setCurrentTestTab}
+				currentTestTab={currentTestTab}
 			/>
-			<RenderSteps testId={testData.testId} setIsShowingVideo={setIsShowingVideo} steps={steps} testInstanceData={testInstanceData} />
+			{currentTestTab === TestTabEnum.OVERVIEW && (
+				<RenderSteps testId={testData.testId} setIsShowingVideo={setIsShowingVideo} steps={steps} testInstanceData={testInstanceData} />
+			)}
+
+			{currentTestTab === TestTabEnum.LOGS && (
+				<TestLogs testId={testData.testId} testInstanceData={testInstanceData}  />
+			)}
 
 			<Conditional showIf={expand && showLoading}>
 				<div className={"flex flex-col items-center w-full mt-80 mb-80"}>

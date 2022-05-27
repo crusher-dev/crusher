@@ -4,8 +4,11 @@ const path = require("path");
 const { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, handleProxyBrowserContext, handleProxyPage } = require("<%= runnerUtilsPackagePath %>");
 
 // @TODO: globalManager, logManager, storageManager, exportsManager, communicationChannel are supposed to be injected globally
-const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager, communicationChannel, null, context);
-
+<% if (proxyUrlsMap) { %>
+const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager, communicationChannel, null, context, true);
+<% } else { %>
+const crusherRunnerActionManager = new CrusherRunnerActions(logManager, storageManager, "<%= baseAssetsPath %>", globalManager, exportsManager, communicationChannel, null, context, false);
+<% } %>
 let capturedVideo, browserContext, page, browser;
 <% if (!isPersistentContext) { %>
 browser = await playwright["<%= browserName %>"].launch(<%- JSON.stringify(defaultBrowserLaunchOptions) %>);

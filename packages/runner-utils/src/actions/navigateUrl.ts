@@ -12,11 +12,15 @@ async function goToUrl(page: Page, action: iAction, globals: IGlobalManager,
 	exportsManager: ExportsManager,
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
-	context: any) {
+	context: any, browser, runActions, isUsingProxy) {
 	console.log("Context is this", context);
 	const urlToGo = template(action.payload.meta.value, {ctx: context || {}});
 	try {
-		await page.goto(urlToGo, { waitUntil: "load", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
+		const urlMain = new URL(urlToGo);
+		if(isUsingProxy) {
+            urlMain.protocol = "http";
+		}
+		await page.goto(urlMain.toString(), { waitUntil: "load", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
 	} catch (ex) { console.log("Got error during navigation", ex); }
 }
 

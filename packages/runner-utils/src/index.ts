@@ -41,6 +41,7 @@ class CrusherRunnerActions {
 	communicationChannel: CommunicationChannel;
 	sdk: CrusherSdk | null;
 	context: any;
+	isUsingProxy: boolean;
 
 	constructor(
 		logManger: IRunnerLogManagerInterface,
@@ -50,7 +51,8 @@ class CrusherRunnerActions {
 		exportsManager: IExportsManager,
 		communicationChannel: CommunicationChannel,
 		sdk: CrusherSdk | null = null,
-		context: any = {}
+		context: any = {},
+		isUsingProxy: boolean = false,
 	) {
 		this.actionHandlers = {};
 		this.globals = globalManager;
@@ -61,6 +63,7 @@ class CrusherRunnerActions {
 		this.communicationChannel = communicationChannel;
 		this.sdk = sdk;
 		this.context = context;
+		this.isUsingProxy = isUsingProxy;
 
 		if (!this.globals.has(TEST_RESULT_KEY)) {
 			this.globals.set(TEST_RESULT_KEY, []);
@@ -148,6 +151,7 @@ class CrusherRunnerActions {
 							this.context,
 							browser,
 							this.runActions.bind(this),
+							this.isUsingProxy,
 						);
 						break;
 					case ActionCategoryEnum.BROWSER:

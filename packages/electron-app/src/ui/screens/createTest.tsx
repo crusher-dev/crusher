@@ -212,13 +212,17 @@ function CreateTestScreen() {
         threshold: 0,
       });
 
+
+	  React.useEffect(() => {
+		  document.querySelector("html").style.fontSize = "1px";
+	  }, [])
     return (
-        <div className={"main-container"} css={[containerStyle, , window["lastContainerSize"] ? css`width: ${window["lastContainerSize"].width}px; height: ${window["lastContainerSize"].height}px;` : undefined, inView ? css`width: 766rem; height: 499.03rem;` : undefined]} ref={ref}>
+        <div className={"main-container"} css={[containerStyle]} ref={ref}>
             <div css={headerStyle}>
                 <div css={css`    position: relative;
     top: 50%;
     transform: translateY(-50%);`}>
-                            <Link onClick={() => {  const clientRect = document.querySelector(".main-container").getBoundingClientRect(); window["lastContainerSize"] = {width: clientRect.width, height: clientRect.height}; navigate("/"); }}>Back</Link>
+                            {/* <Link onClick={() => {  const clientRect = document.querySelector(".main-container").getBoundingClientRect(); window["lastContainerSize"] = {width: clientRect.width, height: clientRect.height}; navigate("/"); }}>Back</Link> */}
 
                 </div>
                 <div css={logoStyle}><CrusherHammerColorIcon css={css`width: 23px; height: 23px;`}/></div>
@@ -414,7 +418,7 @@ const containerStyle = css`
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-	width: 766rem; height: 499.03rem;
+	width: 100%; height: 100%;
     transition: width 0.3s, height 0.3s;
     background: #161617;
     border-radius: 16px;

@@ -256,6 +256,10 @@ const performJumpTo = (stepIndex) => {
 	return ipcRenderer.invoke("jump-to-step", {stepIndex});
 }
 
+const goFullScreen = () => {
+	return ipcRenderer.invoke("go-full-screen");
+}
+
 const performQuitAndRestore = (store) => {
 	const savedSteps = getSavedSteps(store.getState());
 	window.localStorage.setItem("saved-steps", JSON.stringify(savedSteps));
@@ -319,5 +323,6 @@ export {
 	saveCodeTemplate,
 	updateCodeTemplate,
 	deleteCodeTemplate,
-	performReplayTestUrlAction
+	performReplayTestUrlAction,
+	goFullScreen
 };

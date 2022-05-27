@@ -3,6 +3,9 @@ import { css } from "@emotion/react";
 import { CrusherIcon, LoadingIconV2 } from "../icons";
 
 function LoadingScreen() {
+    React.useEffect(() => {
+        document.querySelector("html").style.fontSize = "1px";
+    }, []);
     return (
         <div css={containerStyle}>
             <div css={css`flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;`}>

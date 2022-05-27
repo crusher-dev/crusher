@@ -54,8 +54,8 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 1000;
-	private minHeight = 600;
+	private minWidth = 1028;
+	private minHeight = 570;
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
@@ -234,7 +234,7 @@ export class AppWindow {
 		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
 		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
 		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
-
+		ipcMain.handle("go-full-screen", this.handleGoFullScreen.bind(this));
 		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 		ipcMain.handle("quit-and-restore", this.handleQuitAndRestore.bind(this));
 		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
@@ -718,6 +718,10 @@ export class AppWindow {
 	}
 	private handleLoginWithGitlab(event: Electron.IpcMainInvokeEvent) {
 		return shell.openExternal("https://youtube.com");
+	}
+
+	private handleGoFullScreen(event: Electron.IpcMainInvokeEvent) {
+		return this.window.maximize();
 	}
 
 	private setRemainingSteps(steps: Array<iAction>) {

@@ -137,7 +137,11 @@ function LoginScreen() {
     const handlePostLogin = () => { 
         navigate("/");
     };
+
     
+    React.useEffect(() => {
+        document.querySelector("html").style.fontSize = "1px";
+    }, []);
     React.useEffect(() => {
         waitForUserLogin((loginToken: string) => {
             setInterval(null);
@@ -299,8 +303,8 @@ const containerStyle = css`
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    width: 1028rem;
-    height: 570rem;
+    width: 100%;
+    height: 100%;
     background: #161617;
     border-radius: 16rem;
     border: 1px solid rgba(255, 255, 255, 0.08);

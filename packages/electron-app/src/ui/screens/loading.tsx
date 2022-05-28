@@ -8,6 +8,18 @@ function LoadingScreen() {
     }, []);
     return (
         <div css={containerStyle}>
+               	<div
+				css={css`
+					height: 32px;
+					width: 100%;
+					background: transparent;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+                    position: absolute
+				`}
+				className={"drag"}
+			></div>
             <div css={css`flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;`}>
                 <CrusherIcon css={css`width: 128px;`}/>
                 <div css={statusTextStyle}>

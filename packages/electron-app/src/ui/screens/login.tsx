@@ -195,6 +195,18 @@ function LoginScreen() {
 
     return (
         <div css={containerStyle}>
+               	<div
+				css={css`
+					height: 32px;
+					width: 100%;
+					background: transparent;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+                    position: absolute
+				`}
+				className={"drag"}
+			></div>
             <div css={contentStyle}>
                 <div>
                     <CrusherHammerColorIcon css={css`width: 23rem; height: 23rem;`}/>

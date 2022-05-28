@@ -105,10 +105,10 @@ const getUserInfoFromToken = async (token: string, customBackendPath: string | u
 	};
 };
 
-const getUserAccountTests = async (token: string, customBackendPath: string | undefined = undefined) => {
+const getUserAccountTests = async (projectId: string | null, token: string, customBackendPath: string | undefined = undefined) => {
 	const axios = require("axios").default;
 	// call axios request with token as cookie header
-	const infoResponse = await axios.get(resolveToBackendPath("/tests?page=-1", customBackendPath), {
+	const infoResponse = await axios.get(resolveToBackendPath(`/projects/${projectId}/tests/`, customBackendPath), {
 		headers: {
 			Cookie: `isLoggedIn=true; token=${token}`,
 		},
@@ -118,4 +118,17 @@ const getUserAccountTests = async (token: string, customBackendPath: string | un
 	return infoResponse.data;
 };
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin, getUserInfoFromToken, getUserAccountTests };
+const getUserAccountProjects = async (token: string, customBackendPath: string | undefined = undefined) => {
+	const axios = require("axios").default;
+	// call axios request with token as cookie header
+	const infoResponse = await axios.get(resolveToBackendPath("/users/actions/getUserAndSystemInfo", customBackendPath), {
+		headers: {
+			Cookie: `isLoggedIn=true; token=${token}`,
+		},
+		withCredentials: true,
+	});
+
+	return infoResponse.data;
+};
+
+export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin, getUserInfoFromToken, getUserAccountTests, getUserAccountProjects };

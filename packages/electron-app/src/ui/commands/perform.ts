@@ -248,9 +248,13 @@ const saveAndGetUserInfo = (token: string) => {
 	return ipcRenderer.invoke("save-n-get-user-info", { token });
 };
 
-const getUserTests = () => {
-	return ipcRenderer.invoke("get-user-tests");
+const getUserTests = (projectId) => {
+	return ipcRenderer.invoke("get-user-tests", { projectId });
 };
+
+const getCloudUserInfo = () => {
+	return ipcRenderer.invoke("get-cloud-user-info");
+}
 
 const performJumpTo = (stepIndex) => {
 	return ipcRenderer.invoke("jump-to-step", {stepIndex});
@@ -324,5 +328,6 @@ export {
 	updateCodeTemplate,
 	deleteCodeTemplate,
 	performReplayTestUrlAction,
-	goFullScreen
+	goFullScreen,
+	getCloudUserInfo
 };

@@ -73,14 +73,14 @@ gap: 10px;
 
 function TestList({userTests}) {
     const navigate = useNavigate();
-
+    const [lastHoverItem, setLastHoverItem] = React.useState(0);
 
     return (
         <ul css={testItemStyle}>
-            {userTests ? userTests.map((test) => {
-                return (<li>
+            {userTests ? userTests.map((test, index) => {
+                return (<li css={[lastHoverItem === index ? testItemHoverStyle : undefined]} onMouseEnter={setLastHoverItem.bind(this, index)}>
                     <span>{test.testName}</span>
-                    <div className={"action-buttons"} css={css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`}>
+                    <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, lastHoverItem === index ? css`display: block;` : undefined]}>
                         <div css={css`display: flex; align-items: center; gap: 18rem;`}>
                         <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
                         <div css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`} onClick={() => { navigate("/recorder"); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}>
@@ -150,17 +150,12 @@ color: #FFFFFF;
 li {
     padding: 14px 46px;
     position: relative;
-    .action-buttons {
-        display: none;
-    }
-    :hover {
-        background: rgba(217, 217, 217, 0.04);
-        color: #9F87FF;
-        .action-buttons {
-            display: block;
-        }
-    }
 }
+`;
+
+const testItemHoverStyle = css`
+background: rgba(217, 217, 217, 0.04);
+color: #9F87FF;
 `;
 
 function ActionButtonDropdown({ setShowActionMenu, ...props }) {
@@ -225,7 +220,11 @@ function DashboardScreen() {
 
     React.useEffect(() => {
         if(userAccountInfo) {
-            getUserTests().then((tests) => {
+            const queryParamString = window.location.hash.split("?")[1];
+            const queryParams = new URLSearchParams(queryParamString);
+            const projectId = queryParams.get("project_id");
+
+            getUserTests(projectId).then((tests) => {
                 console.log("User tests are", tests.list);
 
                 setUserTests(tests.list);
@@ -246,6 +245,18 @@ function DashboardScreen() {
 
     return (
         <div className={"main-container"} ref={ref} css={[containerStyle, inView ? css`width: 100%; height: 100%;` : undefined]}>
+             	<div
+				css={css`
+					height: 32px;
+					width: 100%;
+					background: transparent;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+                    position: absolute
+				`}
+				className={"drag"}
+			></div>
             <div css={headerStyle}>
                 <div css={css`    position: relative;
     top: 50%;

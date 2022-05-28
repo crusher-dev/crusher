@@ -8,14 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getAppSettings, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getUserTests, performReplayTest, performReplayTestUrlAction } from "../commands/perform";
+import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTest, performReplayTestUrlAction } from "../commands/perform";
 import { shell } from "electron";
-import { Input } from "@dyson/components/atoms";
-import { SelectBox } from "@dyson/components/molecules/Select/Select";
-import { getRecorderInfo } from "electron-app/src/store/selectors/recorder";
-import { devices } from "electron-app/src/devices";
-import { setDevice, setSiteUrl, setTestName } from "../../store/actions/recorder";
-import { useInView } from 'react-intersection-observer';
+import { useInView } from "react-intersection-observer";
 
 function Link({children, ...props}) { 
     return(
@@ -51,18 +46,88 @@ const PlusIcon = (props) => (
   </svg>
 )
 
-function TestList({userTests}) {
+const CreateTestLink = (props) => {
+    return (
+        <span css={createTestLinkStyle} {...props}>
+            <PlusIcon css={css`width: 12px;`}/>
+            <span>Create test</span>
+        </span>
+    )
+}
+const createTestLinkStyle = css`
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+
+color: #FFFFFF;
+display: flex;
+align-items: center;
+gap: 10px;
+
+:hover {
+    opacity: 0.8;
+}
+`;
+
+
+function ProjectList({userInfo}) {
     const navigate = useNavigate();
 
 
     return (
         <ul css={testItemStyle}>
-            {userTests ? userTests.map((test) => {
-                return (<li onClick={() => { navigate("/recorder"); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}>{test.testName}</li>);
+            {userInfo && userInfo.projects ? userInfo.projects.map((project) => {
+                return (<li onClick={() => { navigate("/test-list?project_id=" + project.id); }}>
+                    <span>{project.name}</span>
+                        </li>);
             }) : ""}
         </ul>
     )
 }
+
+const EditIcon = (props) => (
+    <svg
+    viewBox={"0 0 13 13"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="m12.833 6.87-2.157-2.157a.537.537 0 0 0-.775 0l-.645.643V.886a.883.883 0 0 0-.883-.884H.883A.885.885 0 0 0 0 .885V8.34c0 .488.395.884.883.884h4.484l-.109.106a.842.842 0 0 0-.138.276l-.551 2.711c-.104.533.275.748.636.663l2.709-.554c.111 0 .194-.056.276-.138l4.643-4.646a.53.53 0 0 0 0-.772ZM1.06 8.165V1.063h7.137v5.346L6.434 8.162H1.06v.003Zm6.466 3.216-1.74.36.357-1.743 4.118-4.12L11.67 7.26l-4.144 4.12Z"
+      fill="#7A7A7A"
+    />
+  </svg>
+  )
+  
+
+const runTextStyle = css`
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 13rem;
+
+
+letter-spacing: 0.03em;
+position: relative;
+top: 2rem;
+
+color: #B061FF;
+`;
+
+const PlayIcon = (props) => (
+    <svg
+      viewBox="0 0 12 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M1.386 14c-.23 0-.456-.062-.656-.178-.45-.258-.73-.76-.73-1.306V1.484C0 .937.28.436.73.178A1.303 1.303 0 0 1 2.07.195l9.296 5.644c.194.123.353.294.464.497a1.385 1.385 0 0 1-.464 1.824L2.07 13.805a1.317 1.317 0 0 1-.684.195Z"
+        fill="#B061FF"
+      />
+    </svg>
+  )
 
 const testItemStyle = css`
 font-family: 'Gilroy';
@@ -75,9 +140,16 @@ color: #FFFFFF;
 
 li {
     padding: 14px 46px;
+    position: relative;
+    .action-buttons {
+        display: none;
+    }
     :hover {
         background: rgba(217, 217, 217, 0.04);
         color: #9F87FF;
+        .action-buttons {
+            display: block;
+        }
     }
 }
 `;
@@ -118,107 +190,52 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 	);
 }
 
-const DeviceItem = ({ label }) => {
-	return (
-		<div
-			css={css`
-				width: 100%;
-			`}
-		>
-			{label}
-		</div>
-	);
-};
-
-const recorderDevices = devices
-	.filter((device) => device.visible)
-	.map((device) => ({
-		device: device,
-		value: device.id,
-		label: device.name,
-		component: <DeviceItem label={device.name} />,
-	}));
-    
-const selectBoxStyle = css`
-margin-left: auto;
-.selectBox {
-
-	:hover {
-		border: none;
-		border-left-width: 1rem;
-		border-left-style: solid;
-		border-left-color: #181c23;
-        background: black;
-	}
-	input {
-		width: 50rem;
-		height: 30rem;
-	}
-	padding: 14rem;
-	height: 30rem !important;
-	border: none;
-    background: black;
-	border-left-width: 1rem;
-	border-left-style: solid;
-	border-left-color: #181c23;
-}
-.selectBox__value {
-	margin-right: 10rem;
-	font-size: 13rem;
-}
-width: 104rem;
-`;
-
-const inputStyle = css`
-	background: #1a1a1c;
-	border-radius: 6rem;
-	border: 1rem solid #43434f;
-	font-family: Gilroy;
-	font-size: 14rem;
-	min-width: 358rem;
-	color: #fff;
-	outline: nonet;
-	margin-left: auto;
-`;
-
-const inputContainerStyle = css`
-	display: flex;
-	align-items: center;
-	color: #fff;
-`;
-
-function CreateTestScreen() {
+function SelectProjectScreen() {
     const [showActionMenu, setShowActionMenu] = React.useState(false);
-    const [userTests, setUserTests] = React.useState([]);
+    const [userInfo, setUserInfo] = React.useState({});
     const store = useStore();
     const userAccountInfo = useSelector(getUserAccountInfo);
-    
-    let navigate = useNavigate();
-    const [testName, setTestNameState] = React.useState("");
-    const [testUrl, setTestUrl] = React.useState("");
-    const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
-    
-	const handleChangeDevice = (selected) => {
-		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
-		setSelectedDevice([selected[0]]);
-	};
 
-    const handleCreateTest = () => {
-        navigate("/recorder");
-    }
+    let navigate = useNavigate();
 
     const { ref, inView, entry } = useInView({
         /* Optional options */
         threshold: 0,
       });
 
+      
+    React.useEffect(()=> {
+        document.querySelector("html").style.fontSize = "1px";
+        const userInfo = getUserAccountInfo(store.getState());
+        if(!userInfo) {
+            setTimeout(() => {
+                navigate("/login");
+            }, 1000);
+        }
+    }, []);
 
-	  React.useEffect(() => {
-		  document.querySelector("html").style.fontSize = "1px";
-	  }, [])
+    React.useEffect(() => {
+        if(userAccountInfo) {
+            getCloudUserInfo().then((userInfo) => {
+                setUserInfo(userInfo);
+            });
+        }
+    }, [userAccountInfo]);
+
+    const handleCreateTest = () => {
+        const clientRect = document.querySelector(".main-container").getBoundingClientRect(); window["lastContainerSize"] = {width: clientRect.width, height: clientRect.height};
+        navigate("/recorder");
+        goFullScreen();
+    }
+
+    if(!userAccountInfo) {
+        return (<LoadingScreen/>)
+    }
+
+
     return (
-        <div className={"main-container"} css={[containerStyle]} ref={ref}>
-			   	<div
+        <div className={"main-container"} ref={ref} css={[containerStyle, inView ? css`width: 100%; height: 100%;` : undefined]}>
+           	<div
 				css={css`
 					height: 32px;
 					width: 100%;
@@ -234,8 +251,7 @@ function CreateTestScreen() {
                 <div css={css`    position: relative;
     top: 50%;
     transform: translateY(-50%);`}>
-                            {/* <Link onClick={() => {  const clientRect = document.querySelector(".main-container").getBoundingClientRect(); window["lastContainerSize"] = {width: clientRect.width, height: clientRect.height}; navigate("/"); }}>Back</Link> */}
-
+        <div css={localProjectTextStyle}>Your local project</div>
                 </div>
                 <div css={logoStyle}><CrusherHammerColorIcon css={css`width: 23px; height: 23px;`}/></div>
                 <div css={css`    position: relative;
@@ -245,99 +261,79 @@ function CreateTestScreen() {
     }}>Open App</Link></div>
             </div>
             <div css={contentStyle}>
-            <div css={css`    padding: 4rem 34rem;`}>
-            <div css={css`font-family: Cera Pro; font-size: 18rem; font-weight: bold; color: #fff`}>Create test</div>
-            <div css={css`margin-top: 26rem;`}>
-            <div css={inputContainerStyle}>
-						<div
-							css={css`
-								font-size: 13rem;
-								color: rgb(255, 255, 255, 0.7);
-								font-weight: 600;
-							`}
-						>
-							Test name
-						</div>
-						<Input
-                            className={"test-name-input"}
-							css={inputStyle}
-							placeholder={"Enter name of your test"}
-							size={"medium"}
-							initialValue={testName}
-							autoFocus={true}
-							onChange={(e) => { setTestNameState(e.target.value);}}
-						/>
-					</div>
-                    <div css={[inputContainerStyle, css`margin-top: 24rem`]}>
-						<div
-							css={css`
-								font-size: 13rem;
-								color: rgb(255, 255, 255, 0.7);
-								font-weight: 600;
-							`}
-						>
-							App URL
-						</div>
-						<Input
-							css={inputStyle}
-							placeholder={"Enter url to your app"}
-							size={"medium"}
-							initialValue={testUrl}
-							onChange={(e) => { setTestUrl(e.target.value);}}
-						/>
-					</div>
-                    <div css={[inputContainerStyle, css`margin-top: 24rem`]}>
-						<div
-							css={css`
-								font-size: 13rem;
-								color: rgb(255, 255, 255, 0.7);
-								font-weight: 600;
-							`}
-						>
-							Device
-						</div>
-						<SelectBox
-								selected={selectedDevice}
-								callback={handleChangeDevice}
-								className={"target-device-dropdown"}
-								css={selectBoxStyle}
-								values={recorderDevices}
-							/>
-					</div>
-                </div>
-        </div>
+                <ProjectList userInfo={userInfo}/>
             </div>
             <div css={footerStyle}>
                 <div css={footerLeftStyle}>
                     {/* <div><span css={infoTextStyle}>5 spec tests</span></div> */}
-                    <div><span css={infoTextStyle}>View docs</span></div>
+                    <div><span css={infoTextStyle}>{userInfo.projects ? userInfo.projects.length : 0} no-code tests</span></div>
                 </div>
                 <div css={footerRightStyle}>
-               
+                    <div>
+                        <CreateTestLink onClick={handleCreateTest}/>
+                    </div>
                     <div css={css`margin-left: 22px;`}>
-                   
+                        
+                    <Dropdown
+				initialState={showActionMenu}
+				component={<ActionButtonDropdown setShowActionMenu={setShowActionMenu.bind(this)}/>}
+				callback={setShowActionMenu.bind(this)}
+				dropdownCSS={css`
+					left: 0rem;
+					width: 150rem;
+				`}
+			>
 					<Button
 						id={"verify-save-test"}
 						onClick={(e) => {
 							e.preventDefault();
-                            console.log("Selected device is", selectedDevice);
-                            store.dispatch(setDevice(selectedDevice[0]));
-                            store.dispatch(setTestName(testName));
-                            store.dispatch(setSiteUrl(testUrl));
-                            navigate("/recorder");
 						}}
 						bgColor="tertiary-outline"
 						css={saveButtonStyle}
 					>
-                        <span>Create test</span>
+                        <span>Run all tests</span>
 					</Button>
 
+				<div
+					css={css`
+						background: #9461ff;
+						display: flex;
+						align-items: center;
+						padding: 0rem 9rem;
+						border-top-right-radius: 6rem;
+						border-bottom-right-radius: 6rem;
+						border-left-color: #00000036;
+						border-left-width: 2.5rem;
+						border-left-style: solid;
+						:hover {
+							opacity: 0.8;
+						}
+					`}
+				>
+					<DownIcon
+						fill={"#fff"}
+						css={css`
+							width: 9rem;
+						`}
+					/>
+				</div>
+			</Dropdown>
                     </div>
                 </div>
             </div>
         </div>
     )
 }
+
+const localProjectTextStyle = css`
+font-family: Gilroy;
+font-style: normal;
+font-weight: 600;
+font-size: 16rem;
+
+color: #FFFFFF;
+
+`;
 const saveButtonStyle = css`
 	width: 120rem;
 	height: 30rem;
@@ -345,13 +341,19 @@ const saveButtonStyle = css`
 	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
-	font-weight: bold;
+	font-weight: normal;
 	font-size: 14rem;
 	line-height: 17rem;
 	border: 0.5px solid transparent;
+	border-right-width: 0rem;
+	border-top-right-radius: 0rem;
+	border-bottom-right-radius: 0rem;
 	color: #ffffff;
 	:hover {
 		border: 0.5px solid #8860de;
+		border-right-width: 0rem;
+		border-top-right-radius: 0rem;
+		border-bottom-right-radius: 0rem;
 	}
 `;
 const infoTextStyle = css`
@@ -361,10 +363,6 @@ const infoTextStyle = css`
     font-size: 14rem;
 
     color: rgba(255, 255, 255, 0.67);
-
-	:hover {
-		opacity: 0.8;
-	}
 `;
 
 const footerLeftStyle = css`
@@ -430,12 +428,11 @@ const containerStyle = css`
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-	width: 100%; height: 100%;
-    transition: width 0.3s, height 0.3s;
+    width: 100%; height: 100%;
     background: #161617;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-
+    transition: width 0.3s, height 0.3s;
     display: flex;
     flex-direction: column;
 `;
@@ -449,4 +446,4 @@ const statusTextStyle = css`
     color: #FFFFFF;
 `;
 
-export { CreateTestScreen };
+export { SelectProjectScreen };

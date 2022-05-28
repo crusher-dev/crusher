@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, webFrameMain } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { APP_NAME } from "../../config/about";
-import { encodePathAsUrl, getAppIconPath, getUserAccountTests, getUserInfoFromToken, sleep } from "../utils";
+import { encodePathAsUrl, getAppIconPath, getUserAccountProjects, getUserAccountTests, getUserInfoFromToken, sleep } from "../utils";
 import { Emitter, Disposable } from "event-kit";
 import { now } from "./now";
 import { AnyAction, Store } from "redux";
@@ -235,6 +235,7 @@ export class AppWindow {
 		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
 		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
 		ipcMain.handle("go-full-screen", this.handleGoFullScreen.bind(this));
+		ipcMain.handle("get-cloud-user-info", this.handleGetCloudUserInfo.bind(this));
 		ipcMain.on("recorder-can-record-events", this.handleRecorderCanRecordEvents.bind(this));
 		ipcMain.handle("quit-and-restore", this.handleQuitAndRestore.bind(this));
 		ipcMain.handle("perform-steps", this.handlePerformSteps.bind(this));
@@ -394,11 +395,11 @@ export class AppWindow {
 		event.returnValue = recorderState.type !== TRecorderState.PERFORMING_ACTIONS;
 	}
 
-	private async handleGetUserTests() {
+	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: { projectId: string }) {
 		const accountInfo = getUserAccountInfo(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 
-		const userTests = await getUserAccountTests(accountInfo.token, appSettings.backendEndPoint);
+		const userTests = await getUserAccountTests(payload.projectId, accountInfo.token, appSettings.backendEndPoint);
 		return userTests;
 	}
 
@@ -722,6 +723,14 @@ export class AppWindow {
 
 	private handleGoFullScreen(event: Electron.IpcMainInvokeEvent) {
 		return this.window.maximize();
+	}
+
+	private async handleGetCloudUserInfo() {
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		const userInfo = await getUserAccountProjects(accountInfo.token, appSettings.backendEndPoint);
+		return userInfo;
 	}
 
 	private setRemainingSteps(steps: Array<iAction>) {

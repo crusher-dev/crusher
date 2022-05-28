@@ -31,6 +31,7 @@ import { DashboardScreen } from './screens/dashboard';
 import { LoginScreen } from './screens/login';
 import { LoadingScreen } from './screens/loading';
 import { CreateTestScreen } from './screens/createTest';
+import { SelectProjectScreen } from './screens/selectProject';
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -154,16 +155,6 @@ const App = () => {
 				</div>
 				<Sidebar css={sidebarStyle} />
 			</div>
-			<style>
-				{`
-				.drag {
-					-webkit-app-region: drag;
-				}
-				.no-drag {
-					-webkit-app-region: no-drag;
-				}
-			`}
-			</style>
 		</>
 	);
 };
@@ -381,10 +372,20 @@ render(
 	<Provider store={store}>
 			<HashRouter>
 			<ToastSnackbar />
-
+			<style>
+				{`
+				.drag {
+					-webkit-app-region: drag;
+				}
+				.no-drag {
+					-webkit-app-region: no-drag;
+				}
+			`}
+			</style>
 				<Routes>
 					<Route path="/login" element={<LoginScreen/>}/>
-					<Route path="/" element={<DashboardScreen/>}/>
+					<Route path="/" element={<SelectProjectScreen/>}/>
+					<Route path="/test-list" element={<DashboardScreen/>}/>
 					<Route path="/create-test" element={<CreateTestScreen/>}/>
 
 					<Route path="/recorder" element={		<TourProvider

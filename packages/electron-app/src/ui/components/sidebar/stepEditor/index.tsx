@@ -106,7 +106,7 @@ const containerStyle = css`
 	border-radius: 8rem;
 	background: #111213;
 	border: 1px solid #272727;
-	transform: translateX(calc(-100% - 1rem));
+	transform: translateX(calc(100% + 12rem));
 	font-family: Cera Pro;
 	bottom: 0%;
 	min-height: 274rem;

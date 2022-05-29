@@ -149,11 +149,11 @@ const App = () => {
 			</div>
 			<div css={containerStyle}>
 				<Global styles={globalStyles} />
+				{!!recorderInfo.device ? (<Sidebar css={sidebarStyle} />) : ""}
 				<div css={bodyStyle}>
 					<Toolbar css={toolbarStyle} />
 					<DeviceFrame css={deviceFrameContainerStyle} />
 				</div>
-				<Sidebar css={sidebarStyle} />
 			</div>
 		</>
 	);

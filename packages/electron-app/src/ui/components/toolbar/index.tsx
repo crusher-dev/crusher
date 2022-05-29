@@ -654,7 +654,7 @@ const containerStyle = css`
 	padding: 5rem;
 	min-height: 60rem;
 	position: relative;
-	z-index: 99999999;
+	z-index: 999;
 `;
 const inputStyle = css`
 	height: 34rem;

@@ -202,6 +202,8 @@ const DashboardFooter = ({userTests}) => {
     dropdownCSS={css`
         left: 0rem;
         width: 150rem;
+        top: unset;
+        bottom: calc(100% + 4rem);
     `}
 >
         <Button

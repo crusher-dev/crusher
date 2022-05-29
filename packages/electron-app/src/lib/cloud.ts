@@ -97,6 +97,36 @@ class CloudCrusher {
 			});
 	}
 
+	public static async updateTestDirectly(
+		events: Array<iAction>,
+		testId: string,
+		userToken: string,
+		customBackendPath: string | undefined = undefined,
+		customFrontEndPath: string | undefined = undefined
+	) {
+		return axios
+			.post(
+				resolveToBackendPath("tests/actions/save.temp", customBackendPath),
+				{ events: events },
+				{
+					headers: { Accept: "application/json, text/plain, */*", "Content-Type": "application/json", Authorization: `Bearer ${userToken}` },
+				},
+			)
+			.then(async (result) => {
+				await axios.post(
+					resolveToBackendPath(`/tests/${testId}/actions/update.steps`, customBackendPath),
+					{
+						tempTestId: result.data.insertId,
+					},
+					{
+						headers: {
+							Cookie: `isLoggedIn=true; token=${userToken}`,
+						},
+					},
+				);
+			});
+	}
+
 	public static async updateTest(
 		events: Array<iAction>,
 		testId: string,

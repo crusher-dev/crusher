@@ -661,7 +661,17 @@ export class AppWindow {
 		const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
+
+		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+
+		if(projectId && accountInfo) {
+			await CloudCrusher.updateTestDirectly(recordedSteps as any, editingSessionMeta.testId, accountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		} else {
 		await CloudCrusher.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		}
+
+		return 1;
 	}
 
 	async handleSaveTest() {
@@ -669,6 +679,7 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testName = getTestName(this.store.getState() as any);
 
+		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");
 			await CloudCrusher.saveTestDirectly(
@@ -682,8 +693,24 @@ export class AppWindow {
 			await shell.openExternal(resolveToFrontEndPath(`/app/tests/?project_id=${projectId}`, appSettings.frontendEndPoint));
 			process.exit(0);
 		} else {
-			await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);
+			const accountInfo = getUserAccountInfo(this.store.getState() as any);
+
+			if(projectId && accountInfo) {
+
+				await CloudCrusher.saveTestDirectly(
+					recordedSteps as any,
+					projectId,
+					app.commandLine.getSwitchValue("token") || accountInfo.token,
+					appSettings.backendEndPoint,
+					appSettings.frontendEndPoint,
+					testName,
+				);
+			} else {
+				await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);
+			}
 		}
+
+		return true;
 	}
 
 	async handleVerifyTest(event, payload) {
@@ -727,11 +754,19 @@ export class AppWindow {
 			this.window.setResizable(true);
 			return this.window.maximize();
 		} else {
-			this.window.setTrafficLightPosition({x: 30, y: 24});
-			this.window.setFullScreenable(false);
-			this.window.setResizable(false);
-			this.window.setSize(this.minWidth,this. minHeight);
-			return this.window.center();
+			return new Promise((resolve) => {
+				this.window.setFullScreen(false);
+				setImmediate(() => {
+					this.window.setTrafficLightPosition({x: 30, y: 24});
+					this.window.setFullScreenable(false);
+					this.window.setResizable(false);
+					this.window.setSize(this.minWidth,this. minHeight);
+					resolve(this.window.center());
+				});
+		
+			})
+			
+	
 		}
 	}
 

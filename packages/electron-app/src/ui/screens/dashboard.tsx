@@ -2,12 +2,12 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { DownIcon } from "../icons";
+import { DownIcon, LoadingIconV2 } from "../icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getUserTests, goFullScreen, performReplayTestUrlAction } from "../commands/perform";
+import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTestUrlAction } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 
 
@@ -59,6 +59,7 @@ function TestList({userTests}) {
             {userTests ? userTests.map((test, index) => {
                 return (<li css={[lastHoverItem === index ? testItemHoverStyle : undefined]} onMouseEnter={setLastHoverItem.bind(this, index)}>
                     <span>{test.testName}</span>
+                    {!test.firstRunCompleted ? (<LoadingIconV2 css={css`width: 16px; height: 16px; margin-left: 8px;`}/>) : ""}
                     <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, lastHoverItem === index ? css`display: block;` : undefined]}>
                         <div css={css`display: flex; align-items: center; gap: 18rem;`}>
                         <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
@@ -129,6 +130,7 @@ color: #FFFFFF;
 li {
     padding: 14px 46px;
     position: relative;
+    display: flex;
 }
 `;
 
@@ -243,8 +245,10 @@ const DashboardFooter = ({userTests}) => {
 }
 function DashboardScreen() {
     const [userTests, setUserTests] = React.useState([]);
+    const [selectedProject, setSelectedProject] = React.useState(null);
     const store = useStore();
     const userAccountInfo = useSelector(getUserAccountInfo);
+    const [userInfo, setUserInfo] = React.useState({});
 
     let navigate = useNavigate();
       
@@ -260,24 +264,35 @@ function DashboardScreen() {
 
     React.useEffect(() => {
         if(userAccountInfo) {
-            const queryParamString = window.location.hash.split("?")[1];
-            const queryParams = new URLSearchParams(queryParamString);
-            const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
-            
-            if(!projectId) {
-                navigate("/select-project");
-                return;
-            }
-            window.localStorage.setItem("projectId", projectId);
-        
-            getUserTests(projectId).then((tests) => {
-                console.log("User tests are", tests.list);
 
-                setUserTests(tests.list);
+            getCloudUserInfo().then((userInfo) => {
+                setUserInfo(userInfo);
+
+                const queryParamString = window.location.hash.split("?")[1];
+                const queryParams = new URLSearchParams(queryParamString);
+                const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
+                setSelectedProject(projectId);
+                if(!projectId) {
+                    navigate("/select-project");
+                    return;
+                }
+                window.localStorage.setItem("projectId", projectId);
+            
+                getUserTests(projectId).then((tests) => {
+                    console.log("User tests are", tests.list);
+    
+                    setUserTests(tests.list);
+                });
             });
+
+         
         }  
     }, [userAccountInfo]);
 
+    const userProject = userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
+    
+    console.log("User project", userProject);
+    const userProjectName = userProject ? userProject.name : null;
 
     const TitleComponent = React.useMemo(() => {
         return (
@@ -285,12 +300,12 @@ function DashboardScreen() {
                 <span>
                     <span css={rocketIconStyle}>🚀</span>
                     &nbsp;&nbsp;
-                    <b css={titleBoldStyle}>Frontend</b> - master
+                    <b css={titleBoldStyle}>{userProjectName}</b> - master
                 </span>
                 <CloudIcon css={titleCloudIconStyle}/>
             </div>
         )
-    }, []);
+    }, [userProjectName]);
 
     if(!userAccountInfo) {
         return (<LoadingScreen/>)

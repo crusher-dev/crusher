@@ -209,11 +209,11 @@ const turnOffElementSelectorInspectMode = () => {
 }
 
 const saveTest = () => {
-	ipcRenderer.invoke("save-test");
+	return ipcRenderer.invoke("save-test");
 };
 
 const updateTest = () => {
-	ipcRenderer.invoke("update-test");
+	return ipcRenderer.invoke("update-test");
 };
 
 const preformGoBackPage = () => {

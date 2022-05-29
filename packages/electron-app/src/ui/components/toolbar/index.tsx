@@ -32,7 +32,7 @@ import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/a
 import { sendSnackBarEvent } from "../toast";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -59,6 +59,7 @@ const recorderDevices = devices
 
 function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
+	const navigate = useNavigate();
 
 	const MenuItem = ({ label, onClick, ...props }) => {
 		return (
@@ -78,12 +79,18 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 
 	const handleSave = () => {
 		setShowActionMenu(false);
-		saveTest();
+		saveTest().then((res) => {
+			navigate("/");
+			goFullScreen(false);
+		});
 		sendSnackBarEvent({ type: "success", message: "Saving test..." });
 	};
 	const handleUpdate = () => {
 		setShowActionMenu(false);
-		updateTest();
+		updateTest().then((res) => {
+			navigate("/");
+			goFullScreen(false);
+		});;
 		sendSnackBarEvent({ type: "success", message: "Updating test" });
 	};
 	return (
@@ -108,6 +115,7 @@ ActionButtonDropdown.whyDidYouRender = true;
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const intervalRef = React.useRef(null);
+	const navigate = useNavigate();
 	const totalSecondsToWaitBeforeSave = 5;
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
 	const { isOpen, setCurrentStep, setIsOpen } = useTour();
@@ -139,7 +147,13 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			clearInterval(intervalRef.current);
 		}
 		intervalRef.current = null;
-		saveTest();
+		saveTest().then((res) => {
+			console.log("Naviagting to", res);
+			navigate("/");
+			goFullScreen(false);
+		}).catch((err) => {
+			console.error("Error is", err);
+		});
 	};
 
 	const editTestInCloud = () => {
@@ -147,7 +161,10 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			setIsOpen(false);
 		}
 
-		updateTest();
+		updateTest().then((res) => {
+			navigate("/");
+			goFullScreen(false);
+		});
 	};
 
 	return (
@@ -655,6 +672,7 @@ const containerStyle = css`
 	min-height: 60rem;
 	position: relative;
 	z-index: 999;
+	padding-right: 24rem;
 `;
 const inputStyle = css`
 	height: 34rem;

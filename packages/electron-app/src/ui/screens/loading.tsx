@@ -3,6 +3,50 @@ import { css } from "@emotion/react";
 import { CrusherIcon, LoadingIconV2 } from "../icons";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { CommonFooter } from "../layouts/commonFooter";
+import { useInView } from "react-intersection-observer";
+function LoadingProgressBar() {
+    const {ref, inView } = useInView();
+
+    return (
+        <div ref={ref} css={loadingProgressBarContainerStyle}>
+            <div css={progressBarStyle}>
+                <div css={[progressPilStyle, inView ? css`width: 100%` : undefined]}></div>
+            </div>
+            <div css={loadingTextStyle}>loading crusher..</div>
+        </div>
+    )
+};
+
+const loadingTextStyle = css`
+font-family: Cera Pro;
+font-style: normal;
+font-weight: 900;
+font-size: 16px;
+margin-top: 22rem;
+
+text-align: center;
+
+color: #FFFFFF;
+`;
+const loadingProgressBarContainerStyle = css`
+    display: flex;
+    flex-direction: column;
+    
+`;
+const progressBarStyle = css`
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 0;
+    width: 168px;
+    height: 8px;
+`;
+const progressPilStyle = css`
+    background: #C96AF5;
+    border-radius: 4px;
+    width: 1%;
+    height: 100%;
+    transition: width 1s;
+`;
 
 function LoadingScreen() {
     React.useEffect(() => {
@@ -12,11 +56,7 @@ function LoadingScreen() {
         <ModelContainerLayout title={null} header={null} footer={<CommonFooter/>}>
     <div css={containerStyle}>
             <div css={css`flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;`}>
-                <CrusherIcon css={css`width: 128px;`}/>
-                <div css={statusTextStyle}>
-                    <div css={css`position: relative; top: 1rem;`}>Setting up crusher for you...</div>
-                    {/* <LoadingIconV2 css={css`width: 24rem; height: 24rem;`}/> */}
-                </div>
+               <LoadingProgressBar/>
             </div>
         </div>
         </ModelContainerLayout>

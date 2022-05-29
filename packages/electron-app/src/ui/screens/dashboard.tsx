@@ -1,35 +1,14 @@
 import React from "react";
-import { css, Global } from "@emotion/react";
-import { BrowserButton } from "../components/buttons/browser.button";
+import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { CrusherHammerColorIcon, DownIcon } from "../icons";
+import { DownIcon } from "../icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
-import { getAppSettings, getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getUserTests, goFullScreen, performReplayTest, performReplayTestUrlAction } from "../commands/perform";
-import { shell } from "electron";
-import { useInView } from "react-intersection-observer";
-
-function Link({children, ...props}) { 
-    return(
-        <span css={linkStyle} {...props}>
-            {children}
-        </span>
-    )
-}
-const linkStyle = css`
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 600;
-font-size: 14rem;
-
-color: #FFFFFF;
-
-:hover {opacity: 0.8}
-`
-
+import { getUserTests, goFullScreen, performReplayTestUrlAction } from "../commands/perform";
+import { ModelContainerLayout } from "../layouts/modalContainer";
 
 
 const PlusIcon = (props) => (
@@ -82,8 +61,8 @@ function TestList({userTests}) {
                     <span>{test.testName}</span>
                     <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, lastHoverItem === index ? css`display: block;` : undefined]}>
                         <div css={css`display: flex; align-items: center; gap: 18rem;`}>
-                        <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
-                        <div css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`} onClick={() => { navigate("/recorder"); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}>
+                        <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
+                        <div css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}>
                         <PlayIcon css={css`width: 10rem; height: 12rem;`}/>
                         <span css={runTextStyle}>Run</span>  
                         </div>
@@ -142,7 +121,7 @@ const testItemStyle = css`
 font-family: 'Gilroy';
 font-style: normal;
 font-weight: 400;
-font-size: 15rem;
+font-size: 14px;
 letter-spacing: 0.03em;
 
 color: #FFFFFF;
@@ -194,19 +173,80 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 	);
 }
 
-function DashboardScreen() {
+const DashboardFooter = ({userTests}) => {
     const [showActionMenu, setShowActionMenu] = React.useState(false);
+    const navigate = useNavigate();
+
+    const handleCreateTest = () => {
+        navigate("/recorder");
+        goFullScreen();
+    };
+
+    return (<>
+        <div css={footerLeftStyle}>
+        {/* <div><span css={infoTextStyle}>5 spec tests</span></div> */}
+        <div><span css={infoTextStyle}>{userTests.length} no-code tests</span></div>
+    </div>
+    <div css={footerRightStyle}>
+        <div>
+            <CreateTestLink onClick={handleCreateTest}/>
+        </div>
+        <div css={css`margin-left: 22px;`}>
+            
+        <Dropdown
+    initialState={showActionMenu}
+    component={<ActionButtonDropdown setShowActionMenu={setShowActionMenu.bind(this)}/>}
+    callback={setShowActionMenu.bind(this)}
+    dropdownCSS={css`
+        left: 0rem;
+        width: 150rem;
+    `}
+>
+        <Button
+            id={"verify-save-test"}
+            onClick={(e) => {
+                e.preventDefault();
+            }}
+            bgColor="tertiary-outline"
+            css={saveButtonStyle}
+        >
+            <span>Run all tests</span>
+        </Button>
+
+    <div
+        css={css`
+            background: #9461ff;
+            display: flex;
+            align-items: center;
+            padding: 0rem 9rem;
+            border-top-right-radius: 6rem;
+            border-bottom-right-radius: 6rem;
+            border-left-color: #00000036;
+            border-left-width: 2.5rem;
+            border-left-style: solid;
+            :hover {
+                opacity: 0.8;
+            }
+        `}
+    >
+        <DownIcon
+            fill={"#fff"}
+            css={css`
+                width: 9rem;
+            `}
+        />
+    </div>
+</Dropdown>
+        </div>
+    </div></>
+    )
+}
+function DashboardScreen() {
     const [userTests, setUserTests] = React.useState([]);
     const store = useStore();
     const userAccountInfo = useSelector(getUserAccountInfo);
 
     let navigate = useNavigate();
-
-    const { ref, inView, entry } = useInView({
-        /* Optional options */
-        threshold: 0,
-      });
-
       
     React.useEffect(()=> {
         document.querySelector("html").style.fontSize = "1px";
@@ -222,8 +262,14 @@ function DashboardScreen() {
         if(userAccountInfo) {
             const queryParamString = window.location.hash.split("?")[1];
             const queryParams = new URLSearchParams(queryParamString);
-            const projectId = queryParams.get("project_id");
-
+            const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
+            
+            if(!projectId) {
+                navigate("/select-project");
+                return;
+            }
+            window.localStorage.setItem("projectId", projectId);
+        
             getUserTests(projectId).then((tests) => {
                 console.log("User tests are", tests.list);
 
@@ -232,107 +278,60 @@ function DashboardScreen() {
         }  
     }, [userAccountInfo]);
 
-    const handleCreateTest = () => {
-        const clientRect = document.querySelector(".main-container").getBoundingClientRect(); window["lastContainerSize"] = {width: clientRect.width, height: clientRect.height};
-        navigate("/recorder");
-        goFullScreen();
-    }
+
+    const TitleComponent = React.useMemo(() => {
+        return (
+            <div css={titleStyle}>
+                <span>
+                    <span css={rocketIconStyle}>🚀</span>
+                    &nbsp;&nbsp;
+                    <b css={titleBoldStyle}>Frontend</b> - master
+                </span>
+                <CloudIcon css={titleCloudIconStyle}/>
+            </div>
+        )
+    }, []);
 
     if(!userAccountInfo) {
         return (<LoadingScreen/>)
     }
 
-
     return (
-        <div className={"main-container"} ref={ref} css={[containerStyle, inView ? css`width: 100%; height: 100%;` : undefined]}>
-             	<div
-				css={css`
-					height: 32px;
-					width: 100%;
-					background: transparent;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-                    position: absolute
-				`}
-				className={"drag"}
-			></div>
-            <div css={headerStyle}>
-                <div css={css`    position: relative;
-    top: 50%;
-    transform: translateY(-50%);`}>
-                </div>
-                <div css={logoStyle}><CrusherHammerColorIcon css={css`width: 23px; height: 23px;`}/></div>
-                <div css={css`    position: relative;
-    top: 50%;
-    transform: translateY(-50%);`}><Link onClick={() => { 
-        shell.openExternal("https://docs.crusher.dev");
-    }}>Open App</Link></div>
-            </div>
-            <div css={contentStyle}>
-                <TestList userTests={userTests}/>
-            </div>
-            <div css={footerStyle}>
-                <div css={footerLeftStyle}>
-                    {/* <div><span css={infoTextStyle}>5 spec tests</span></div> */}
-                    <div><span css={infoTextStyle}>{userTests.length} no-code tests</span></div>
-                </div>
-                <div css={footerRightStyle}>
-                    <div>
-                        <CreateTestLink onClick={handleCreateTest}/>
-                    </div>
-                    <div css={css`margin-left: 22px;`}>
-                        
-                    <Dropdown
-				initialState={showActionMenu}
-				component={<ActionButtonDropdown setShowActionMenu={setShowActionMenu.bind(this)}/>}
-				callback={setShowActionMenu.bind(this)}
-				dropdownCSS={css`
-					left: 0rem;
-					width: 150rem;
-				`}
-			>
-					<Button
-						id={"verify-save-test"}
-						onClick={(e) => {
-							e.preventDefault();
-						}}
-						bgColor="tertiary-outline"
-						css={saveButtonStyle}
-					>
-                        <span>Run all tests</span>
-					</Button>
-
-				<div
-					css={css`
-						background: #9461ff;
-						display: flex;
-						align-items: center;
-						padding: 0rem 9rem;
-						border-top-right-radius: 6rem;
-						border-bottom-right-radius: 6rem;
-						border-left-color: #00000036;
-						border-left-width: 2.5rem;
-						border-left-style: solid;
-						:hover {
-							opacity: 0.8;
-						}
-					`}
-				>
-					<DownIcon
-						fill={"#fff"}
-						css={css`
-							width: 9rem;
-						`}
-					/>
-				</div>
-			</Dropdown>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
+		<ModelContainerLayout title={TitleComponent} footer={<DashboardFooter userTests={userTests}/>}>
+             <TestList userTests={userTests}/>
+		</ModelContainerLayout>
+	);
 }
+
+const rocketIconStyle = css`font-size: 12px;`;
+const titleBoldStyle = css`font-weight: 700;`;
+const titleCloudIconStyle = css`width: 16rem; height: 11rem; margin-left: 12rem;`;
+const titleStyle = css`
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+
+color: #FFFFFF;
+
+    display: flex;
+    align-items: center;
+`;
+
+const CloudIcon = (props) => (
+    <svg
+      viewBox={"0 0 16 11"}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12.854 4.47C12.566 1.953 10.504 0 8 0 5.497 0 3.433 1.953 3.147 4.47 1.409 4.47 0 5.932 0 7.735 0 9.538 1.409 11 3.146 11h9.708C14.59 11 16 9.538 16 7.735c0-1.803-1.409-3.265-3.146-3.265Z"
+        fill="#A5ED6D"
+      />
+    </svg>
+  )
+
 const saveButtonStyle = css`
 	width: 120rem;
 	height: 30rem;
@@ -373,76 +372,6 @@ const footerRightStyle = css`
     display: flex;
     margin-left: auto;
     align-items: center;
-`;
-const contentStyle = css`
-    flex: 1;
-    padding-top: 18px;
-    overflow-y: overlay;
-    ::-webkit-scrollbar {
-        background: transparent;
-        width: 8rem;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: white;
-        border-radius: 14rem;
-    }
-`;
-const footerStyle = css`
-    margin-top: auto;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 20px 28px;
-    display: flex;
-`;
-const headerStyle = css`
-    display: flex;
-    padding: 20px 47px;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-`;
-
-const logoStyle = css`
-    flex: 1;
-    display: flex;
-    justify-content: center;
-`;
-
-const navBarStyle = css`
-display: flex;
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-
-color: #FFFFFF;
-.navItem {
-    :hover {
-        opacity: 0.8;
-    }
-}
-`;
-
-const containerStyle = css`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: 100%; height: 100%;
-    background: #161617;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: width 0.3s, height 0.3s;
-    display: flex;
-    flex-direction: column;
-`;
-
-const statusTextStyle = css`
-    margin-top: 24px;
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    color: #FFFFFF;
 `;
 
 export { DashboardScreen };

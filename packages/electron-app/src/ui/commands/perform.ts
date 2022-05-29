@@ -260,8 +260,8 @@ const performJumpTo = (stepIndex) => {
 	return ipcRenderer.invoke("jump-to-step", {stepIndex});
 }
 
-const goFullScreen = () => {
-	return ipcRenderer.invoke("go-full-screen");
+const goFullScreen = (fullScreen: boolean = true) => {
+	return ipcRenderer.invoke("go-full-screen", { fullScreen });
 }
 
 const performQuitAndRestore = (store) => {

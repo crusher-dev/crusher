@@ -10,6 +10,8 @@ import { focusOnWindow, saveAndGetUserInfo } from "../commands/perform";
 import { sendSnackBarEvent } from "../components/toast";
 import { useSelector } from "react-redux";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
+import { ModelContainerLayout } from "../layouts/modalContainer";
+import { CommonFooter } from "../layouts/commonFooter";
 
 const GithubButton = (props) => {
 	return (<Button
@@ -194,24 +196,8 @@ function LoginScreen() {
     }, [interval]);
 
     return (
-        <div css={containerStyle}>
-               	<div
-				css={css`
-					height: 32px;
-					width: 100%;
-					background: transparent;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-                    position: absolute
-				`}
-				className={"drag"}
-			></div>
-            <div css={contentStyle}>
-                <div>
-                    <CrusherHammerColorIcon css={css`width: 23rem; height: 23rem;`}/>
-                </div>
-                <div css={mainContentStyle}>
+        <ModelContainerLayout css={css`padding-top: 0rem;`} header={null} title={null} footer={<CommonFooter/>}>
+            <div css={mainContentStyle}>
                     <div css={css`text-align: center;`}>
                         <div css={headingStyle}>Login to continue</div>
                         <div css={descriptionStyle}>This to save report, run test.</div>
@@ -234,17 +220,9 @@ function LoginScreen() {
                         </LinkBox>
                     </div>
                 </div>
-            </div>
-            <div css={footerStyle}>
-                <div css={navBarStyle}>
-                    <div className={"navItem"} onClick={ () => {}}>Docs</div>
-                    <div className="navItem" css={css`margin-left: auto`}>
-                        Settings
-                    </div>
-                </div>
-            </div>
-        </div>
+        </ModelContainerLayout>
     )
+
 }
 
 const openThisLinkStyle = css`
@@ -283,6 +261,7 @@ const mainContentStyle = css`
     align-items: center;
     justify-content: center;
     flex: 1;
+    height: 100%;
 `;
 const contentStyle = css`
     flex: 1;

@@ -75,12 +75,10 @@ export class AppWindow {
 
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
-			x: this.savedWindowState.x,
-			y: this.savedWindowState.y,
-			width: this.savedWindowState.width,
 			titleBarStyle: "hidden",
-			trafficLightPosition: { x: 10, y: 8 },
-			height: this.savedWindowState.height,
+			trafficLightPosition: { x: 30, y: 24 },
+			width: this.minWidth,
+			height: this.minHeight,
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
@@ -109,8 +107,9 @@ export class AppWindow {
 		};
 
 		this.window = new BrowserWindow(windowOptions);
+		this.window.setFullScreenable(false);
+		this.window.setResizable(false);
 
-		this.savedWindowState.manage(this.window);
 		this.splashWindow = new BrowserWindow({
 			title: APP_NAME,
 			autoHideMenuBar: true,
@@ -721,8 +720,19 @@ export class AppWindow {
 		return shell.openExternal("https://youtube.com");
 	}
 
-	private handleGoFullScreen(event: Electron.IpcMainInvokeEvent) {
-		return this.window.maximize();
+	private handleGoFullScreen(event: Electron.IpcMainInvokeEvent, payload: { fullScreen: boolean }) {
+		if(payload.fullScreen) {
+			this.window.setTrafficLightPosition({x: 10, y: 8});
+			this.window.setFullScreenable(true);
+			this.window.setResizable(true);
+			return this.window.maximize();
+		} else {
+			this.window.setTrafficLightPosition({x: 30, y: 24});
+			this.window.setFullScreenable(false);
+			this.window.setResizable(false);
+			this.window.setSize(this.minWidth,this. minHeight);
+			return this.window.center();
+		}
 	}
 
 	private async handleGetCloudUserInfo() {

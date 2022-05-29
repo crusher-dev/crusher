@@ -1,41 +1,26 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { CrusherIcon, LoadingIconV2 } from "../icons";
+import { ModelContainerLayout } from "../layouts/modalContainer";
+import { CommonFooter } from "../layouts/commonFooter";
 
 function LoadingScreen() {
     React.useEffect(() => {
         document.querySelector("html").style.fontSize = "1px";
     }, []);
     return (
-        <div css={containerStyle}>
-               	<div
-				css={css`
-					height: 32px;
-					width: 100%;
-					background: transparent;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-                    position: absolute
-				`}
-				className={"drag"}
-			></div>
+        <ModelContainerLayout title={null} header={null} footer={<CommonFooter/>}>
+    <div css={containerStyle}>
             <div css={css`flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;`}>
                 <CrusherIcon css={css`width: 128px;`}/>
                 <div css={statusTextStyle}>
-                    <div css={css`position: relative; top: 1rem;`}>Setting up crusher for you</div>
-                    <LoadingIconV2 css={css`width: 24rem; height: 24rem;`}/>
-                </div>
-            </div>
-            <div css={footerStyle}>
-                <div css={navBarStyle}>
-                    <div className={"navItem"}>Docs</div>
-                    <div className="navItem" css={css`margin-left: auto`}>
-                        Settings
-                    </div>
+                    <div css={css`position: relative; top: 1rem;`}>Setting up crusher for you...</div>
+                    {/* <LoadingIconV2 css={css`width: 24rem; height: 24rem;`}/> */}
                 </div>
             </div>
         </div>
+        </ModelContainerLayout>
+    
     )
 }
 
@@ -47,6 +32,8 @@ font-weight: 400;
 font-size: 16px;
 
 color: #FFFFFF;
+z-index: 99;
+width: 100%;
 .navItem {
     :hover {
         opacity: 0.8;
@@ -64,22 +51,18 @@ const containerStyle = css`
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    width: 1028px;
-    height: 570px;
     background: #161617;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
     display: flex;
     flex-direction: column;
 `;
 
 const statusTextStyle = css`
-    margin-top: 30rem;
+    margin-top: 20px;
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 400;
-    font-size: 16rem;
+    font-size: 15px;
     color: #FFFFFF;
     display: flex;
     align-items: center;

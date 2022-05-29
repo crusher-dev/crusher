@@ -12,6 +12,7 @@ import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import {
+	goFullScreen,
 	performNavigation,
 	performReloadPage,
 	performResetAppSession,
@@ -450,8 +451,11 @@ const Toolbar = (props: any) => {
 				<CrusherHammerIcon
 					className={"ml-24"}
 					css={hammerIconStyle}
-					onClick={() => {var path = window.location.href.split("#")[0];
-					window.location.replace(path); }}
+					onClick={() => {
+						var path = window.location.href.split("#")[0];
+						window.location.replace(path); 
+						goFullScreen(false);
+				}}
 				/>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}

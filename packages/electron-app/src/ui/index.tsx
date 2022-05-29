@@ -384,8 +384,8 @@ render(
 			</style>
 				<Routes>
 					<Route path="/login" element={<LoginScreen/>}/>
-					<Route path="/" element={<SelectProjectScreen/>}/>
-					<Route path="/test-list" element={<DashboardScreen/>}/>
+					<Route path="/" element={<DashboardScreen/>}/>
+					<Route path="/select-project" element={<SelectProjectScreen/>}/>
 					<Route path="/create-test" element={<CreateTestScreen/>}/>
 
 					<Route path="/recorder" element={		<TourProvider

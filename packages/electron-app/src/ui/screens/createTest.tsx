@@ -215,7 +215,8 @@ function CreateTestScreen() {
 
 	  React.useEffect(() => {
 		  document.querySelector("html").style.fontSize = "1px";
-	  }, [])
+	  }, []);
+	  
     return (
         <div className={"main-container"} css={[containerStyle]} ref={ref}>
 			   	<div

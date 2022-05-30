@@ -469,8 +469,7 @@ const Toolbar = (props: any) => {
 					className={"ml-24"}
 					css={hammerIconStyle}
 					onClick={() => {
-						var path = window.location.href.split("#")[0];
-						window.location.replace(path); 
+						navigate("/");
 						goFullScreen(false);
 				}}
 				/>

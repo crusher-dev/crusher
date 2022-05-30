@@ -9,6 +9,7 @@ import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
 import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTestUrlAction } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
+import { sendSnackBarEvent } from "../components/toast";
 
 
 const PlusIcon = (props) => (
@@ -50,26 +51,56 @@ gap: 10px;
 `;
 
 
+function TestListItem({test, isActive, onMouseEnterCallback}) {
+    const [isEditMode, setIsEditMode] = React.useState(false);
+    const [testName, setTestName] = React.useState(test.testName);
+    const inputRef = React.useRef(null);
+    const navigate = useNavigate();
+
+    const handleDoubleClick = React.useCallback(() => {
+        setIsEditMode(true);
+        setTimeout(() => {
+            inputRef.current.focus();
+            inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+        })
+
+    }, [inputRef]);
+
+    const handleKeyDown = () => {
+        if (event.key === 'Enter') {
+            setIsEditMode(false);
+            sendSnackBarEvent({ type: "success", message: "Test name successfully updated!" });
+        }
+    };
+
+    return (
+        <li css={[isActive ? testItemHoverStyle : undefined]} onMouseEnter={onMouseEnterCallback.bind(this)}>
+            <span onDoubleClick={handleDoubleClick} css={[ css`padding: 4px 8px;    border: 1px solid transparent;`, isEditMode ? css`padding: 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;`: undefined]}>
+            <input size={isEditMode ? 20 : (testName.length)} ref={inputRef} css={css`background: transparent;`} onKeyDown={handleKeyDown} onChange={(e) => {setTestName(e.target.value);} } value={testName} disabled={!isEditMode} /></span>
+            {!test.firstRunCompleted ? (<LoadingIconV2 css={[css`width: 18px; height: 18px; margin-left: -5x;`, isEditMode ? css`margin-left: 8px;` : undefined]}/>) : ""}
+            <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, isActive ? css`display: block;` : undefined]}>
+                <div css={css`display: flex; align-items: center; gap: 18rem;`}>
+                <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
+                <div css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}>
+                <PlayIcon css={css`width: 10rem; height: 12rem;`}/>
+                <span css={runTextStyle}>Run</span>  
+                </div>
+                </div>
+            </div>
+        </li>
+    );
+}
 function TestList({userTests}) {
     const navigate = useNavigate();
     const [lastHoverItem, setLastHoverItem] = React.useState(0);
-
     return (
         <ul css={testItemStyle}>
             {userTests ? userTests.map((test, index) => {
-                return (<li css={[lastHoverItem === index ? testItemHoverStyle : undefined]} onMouseEnter={setLastHoverItem.bind(this, index)}>
-                    <span>{test.testName}</span>
-                    {!test.firstRunCompleted ? (<LoadingIconV2 css={css`width: 16px; height: 16px; margin-left: 8px;`}/>) : ""}
-                    <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, lastHoverItem === index ? css`display: block;` : undefined]}>
-                        <div css={css`display: flex; align-items: center; gap: 18rem;`}>
-                        <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
-                        <div css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}>
-                        <PlayIcon css={css`width: 10rem; height: 12rem;`}/>
-                        <span css={runTextStyle}>Run</span>  
-                        </div>
-                        </div>
-                    </div>
-                </li>);
+                return (<TestListItem test={test} isActive={lastHoverItem === index} onMouseEnterCallback={() => {
+                    setLastHoverItem(index);
+                 }}/>);
             }) : ""}
         </ul>
     )
@@ -128,9 +159,11 @@ letter-spacing: 0.03em;
 color: #FFFFFF;
 
 li {
-    padding: 14px 46px;
+    padding: 10px 38px;
+    padding-right: 46px;
     position: relative;
     display: flex;
+    align-items: center;
 }
 `;
 
@@ -261,6 +294,22 @@ function DashboardScreen() {
             setTimeout(() => {
                 navigate("/login");
             }, 1000);
+        }
+
+        const interval = setInterval(() => {
+            const userAccountInfo = getUserAccountInfo(store.getState());
+            const queryParamString = window.location.hash.split("?")[1];
+            const queryParams = new URLSearchParams(queryParamString);
+            const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
+
+            if(projectId && userAccountInfo) {
+                getUserTests(projectId).then((tests) => {
+                    setUserTests(tests.list);
+                });
+            }
+        }, 5000);
+        return () => {
+            clearInterval(interval);
         }
     }, []);
 

@@ -96,11 +96,14 @@ const App = () => {
 			}
 		});
 
-		window.onbeforeunload = () => {
+		return () => {
+			ipcRenderer.removeAllListeners("url-action");
+			ipcRenderer.removeAllListeners("renderer-ready");
+			ipcRenderer.removeAllListeners("webview-initialized");
 			store.dispatch(resetRecorder());
 			store.dispatch(setSessionInfoMeta({}));
 			resetStorage();
-		};
+		}
 	}, []);
 
 	return (

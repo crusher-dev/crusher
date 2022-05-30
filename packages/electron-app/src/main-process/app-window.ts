@@ -863,6 +863,7 @@ export class AppWindow {
 	}
 
 	private async handleResetStorage() {
+		console.log("Resetting storage");
 		await this.clearWebViewStorage();
 	}
 

@@ -54,7 +54,7 @@ class CloudCrusher {
 				},
 			)
 			.then(async (result) => {
-				await axios.post(
+				return axios.post(
 					resolveToBackendPath(`/projects/${projectId}/tests/actions/create`, customBackendPath),
 					{
 						tempTestId: result.data.insertId,
@@ -65,8 +65,21 @@ class CloudCrusher {
 							Cookie: `isLoggedIn=true; token=${userToken}`,
 						},
 					},
-				);
+				).then((res) => res.data);
 			});
+	}
+
+	public static async getBuildReport(
+		buildId: string,
+		userToken: string,
+		customBackendPath: string | undefined = undefined,
+		customFrontEndPath: string | undefined = undefined,
+	): Promise<any> {
+		return axios.get(resolveToBackendPath(`/builds/${buildId}/report`, customBackendPath), {
+			headers: {
+				Cookie: `isLoggedIn=true; token=${userToken}`,
+			},
+		}).then((res) => res.data);
 	}
 
 	public static async saveTest(

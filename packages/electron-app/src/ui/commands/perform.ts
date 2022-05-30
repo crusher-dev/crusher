@@ -252,6 +252,10 @@ const getUserTests = (projectId) => {
 	return ipcRenderer.invoke("get-user-tests", { projectId });
 };
 
+const getBuildReport = (buildId) => {
+	return ipcRenderer.invoke("get-build-report", { buildId });
+}
+
 const getCloudUserInfo = () => {
 	return ipcRenderer.invoke("get-cloud-user-info");
 }
@@ -329,5 +333,6 @@ export {
 	deleteCodeTemplate,
 	performReplayTestUrlAction,
 	goFullScreen,
-	getCloudUserInfo
+	getCloudUserInfo,
+	getBuildReport
 };

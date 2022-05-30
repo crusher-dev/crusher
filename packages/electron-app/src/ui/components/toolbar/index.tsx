@@ -80,6 +80,7 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 	const handleSave = () => {
 		setShowActionMenu(false);
 		saveTest().then((res) => {
+			window["triggeredTest"] = { id: res.draftJobId };
 			navigate("/");
 			goFullScreen(false);
 		});
@@ -149,6 +150,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		intervalRef.current = null;
 		saveTest().then((res) => {
 			console.log("Naviagting to", res);
+			window["triggeredTest"] = { id: res.draftJobId };
 			navigate("/");
 			goFullScreen(false);
 		}).catch((err) => {

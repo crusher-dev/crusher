@@ -218,7 +218,9 @@ export class TestController {
 		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; tempTestId?: string },
 	) {
 		const { user_id } = user;
-		return this.testService.createAndRunTest(body, projectId, user_id);
+		const testInsertRecord = await this.testService.createAndRunTest(body, projectId, user_id);
+		const testRecord = await this.testService.getTest(testInsertRecord.insertId);
+		return testRecord;
 	}
 
 	@Authorized()

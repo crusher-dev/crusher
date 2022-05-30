@@ -216,7 +216,6 @@ export class AppWindow {
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
 		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
-
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
 		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
@@ -230,6 +229,8 @@ export class AppWindow {
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
+		ipcMain.handle("get-build-report", this.handleGetBuildReport.bind(this));
+
 		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
 		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
 		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
@@ -674,15 +675,25 @@ export class AppWindow {
 		return 1;
 	}
 
+	private async handleGetBuildReport(event: Electron.IpcMainEvent, payload: { buildId: string }) {
+		console.log("Got report", payload.buildId);
+		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const buildReport = await CloudCrusher.getBuildReport(payload.buildId, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		console.log("Got this build report", buildReport, payload.buildId);
+		return buildReport;
+	}
+
 	async handleSaveTest() {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testName = getTestName(this.store.getState() as any);
 
 		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
+		let testRecord = null;
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");
-			await CloudCrusher.saveTestDirectly(
+			testRecord = await CloudCrusher.saveTestDirectly(
 				recordedSteps as any,
 				projectId,
 				app.commandLine.getSwitchValue("token"),
@@ -697,7 +708,7 @@ export class AppWindow {
 
 			if(projectId && accountInfo) {
 
-				await CloudCrusher.saveTestDirectly(
+				testRecord = await CloudCrusher.saveTestDirectly(
 					recordedSteps as any,
 					projectId,
 					app.commandLine.getSwitchValue("token") || accountInfo.token,
@@ -710,7 +721,7 @@ export class AppWindow {
 			}
 		}
 
-		return true;
+		return testRecord;
 	}
 
 	async handleVerifyTest(event, payload) {

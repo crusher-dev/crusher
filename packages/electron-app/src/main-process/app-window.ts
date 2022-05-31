@@ -214,6 +214,7 @@ export class AppWindow {
 		ipcMain.handle("turn-off-element-selector-inspect-mode", this.turnOffElementSelectorInspectMode.bind(this));
 		ipcMain.handle("turn-off-recorder-inspect-mode", this.turnOffInspectMode.bind(this));
 		ipcMain.handle("verify-test", this.handleVerifyTest.bind(this));
+		ipcMain.handle("run-tests", this.handleCloudRunTests.bind(this));
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
 		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
@@ -230,7 +231,7 @@ export class AppWindow {
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
 		ipcMain.handle("get-build-report", this.handleGetBuildReport.bind(this));
-
+		ipcMain.handle("update-cloud-test-name", this.handleUpdateCloudTestName.bind(this));
 		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
 		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
 		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
@@ -256,6 +257,14 @@ export class AppWindow {
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 	}
+
+	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { projectId: string; testIds: Array<string> | undefined }) {
+		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+
+		return CloudCrusher.runTests(payload.testIds, payload.projectId, userAccountInfo.token, appSettings.backendEndPoint);
+	}
+
 
 	private handleGetAdvancedSelector(event: Electron.IpcMainEvent, payload: any) {
 		event.returnValue = this.useAdvancedSelectorPicker;
@@ -684,6 +693,13 @@ export class AppWindow {
 		return buildReport;
 	}
 
+	private async handleUpdateCloudTestName(event: Electron.IpcMainEvent, payload: { testId: string, testName: string }) {
+		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+		await CloudCrusher.updateTestName(payload.testId, payload.testName, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		return true;
+	}
+
 	async handleSaveTest() {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
@@ -732,7 +748,7 @@ export class AppWindow {
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (shouldAlsoSave) {
-			this.handleSaveTest();
+			return this.handleSaveTest();
 		}
 	}
 

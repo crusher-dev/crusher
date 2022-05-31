@@ -37,6 +37,25 @@ class CloudCrusher {
 		return out;
 	}
 
+	public static async updateTestName(testId: string, testName: string, userToken: string, customBackendPath: string | undefined = undefined) {
+		return axios.post(resolveToBackendPath(`/tests/${testId}/actions/edit`, customBackendPath), {
+			name: testName,
+		}, {
+			headers: {
+				Cookie: `isLoggedIn=true; token=${userToken}`,
+			},
+		}).then((res) => res.data);
+	}
+	
+	public static async runTests(testIds: Array<string> | null, projectId: string, userToken: string, customBackendPath: string | undefined = undefined) {
+		return axios.post(resolveToBackendPath(`/projects/${projectId}/tests/actions/run`, customBackendPath), {
+			testIds: Array.isArray(testIds) ? testIds.join(",") : null,
+		}, {
+			headers: {
+				Cookie: `isLoggedIn=true; token=${userToken}`,
+			},
+		}).then((res) => res.data);
+	}
 	public static async saveTestDirectly(
 		events: Array<iAction>,
 		projectId: string,

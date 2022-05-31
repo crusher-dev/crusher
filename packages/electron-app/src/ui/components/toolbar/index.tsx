@@ -133,7 +133,13 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			setIsOpen(false);
 		}
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
-			performVerifyTest();
+			performVerifyTest().then((res) => {
+				if(res && res.draftJobId) {
+					window["triggeredTest"] = { id: res.draftJobId };
+					navigate("/");
+					goFullScreen(false);
+				}
+			});
 		} else {
 			sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
 		}

@@ -168,8 +168,12 @@ export const performAssertElementVisibility = async (selectedElement: iElementIn
 };
 
 const performVerifyTest = async (shouldAlsoSave = true) => {
-	ipcRenderer.invoke("verify-test", { shouldAlsoSave });
+	return ipcRenderer.invoke("verify-test", { shouldAlsoSave });
 };
+
+const performRunTests = async (projectId, testIds) => {
+	return ipcRenderer.invoke("run-tests", { projectId, testIds });
+}
 
 const performResetAppSession = async () => {
 	ipcRenderer.invoke("reset-app-session");
@@ -206,6 +210,11 @@ const disableJavascriptInDebugger = () => {
 
 const turnOffElementSelectorInspectMode = () => {
 	return ipcRenderer.invoke("turn-off-element-selector-inspect-mode");
+}
+
+
+const updateTestName =(testId, testName) => {
+	return ipcRenderer.invoke("update-cloud-test-name", {testId, testName});
 }
 
 const saveTest = () => {
@@ -334,5 +343,7 @@ export {
 	performReplayTestUrlAction,
 	goFullScreen,
 	getCloudUserInfo,
-	getBuildReport
+	getBuildReport,
+	updateTestName,
+	performRunTests
 };

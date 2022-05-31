@@ -1,11 +1,14 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CrusherHammerColorIcon } from "../icons";
+import { CrossIcon, CrusherHammerColorIcon, MiniCrossIcon } from "../icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { getBuildReport } from "../commands/perform";
+import { resolveToFrontEndPath } from "@shared/utils/url";
+import { useStore } from "react-redux";
+import { getAppSettings } from "electron-app/src/store/selectors/app";
 
 function Link({children, ...props}) { 
     return(
@@ -29,20 +32,32 @@ export { Link };
 function StatusMessageBar() {
     const [shouldShow, setShouldShow] = React.useState(false);
     const [testStatus, setTestStatus] = React.useState(null);
+    const [buildId, setBuildId] = React.useState(null);
+    const store = useStore();
 
     React.useEffect(() => {
         if(window["triggeredTest"]) {
             setShouldShow(true);
+        }
+
+        window["messageBarCallback"] = (buildId) => { setShouldShow(false); window["triggeredTest"]={id: buildId}; setShouldShow(true); };
+
+        return () => {
+            window["messageBarCallback"] = null;
         }
     });
 
     React.useEffect(() => {
         if(shouldShow) {
             const buildId = window["triggeredTest"].id;
+            setBuildId(buildId);
             window["triggeredTest"] = null;
             const interval = setInterval(() => {
                 getBuildReport(buildId).then(res => {
                     setTestStatus(res.status);
+                    if(res.status != "RUNNING") {
+                        clearInterval(interval);
+                    }
                 });
             }, 1000);
             return () => {
@@ -50,9 +65,16 @@ function StatusMessageBar() {
             }
         }
     }, [shouldShow]);
-    const handleViewReport = () => {
-        shell.openExternal("https://app.crusher.dev/report");
-    };
+    const handleViewReport = React.useCallback(() => {
+        const appSettings = getAppSettings(store.getState() as any);
+        shell.openExternal(resolveToFrontEndPath("/app/build/" +buildId, appSettings.frontendEndPoint));
+    }, [buildId]);
+
+    const handleClose = () => {
+        setShouldShow(false);
+        setTestStatus(null);
+        setBuildId(null);
+    }
 
     if(!shouldShow) return null;
 
@@ -65,7 +87,8 @@ function StatusMessageBar() {
                 </div>
                 <div css={statusMessageBarRightStyle}>
                     {/* <Link css={statusLinkStyle}>Logs</Link> */}
-                    <Link css={statusLinkStyle} onClick={handleViewReport}>View Report</Link>
+                    {testStatus  !== "RUNNING" && testStatus ?  (<Link css={statusLinkStyle} onClick={handleViewReport}>View Report</Link>) : ""}
+                    <MiniCrossIcon onClick={handleClose} css={css`width: 10px; height: 12px; :hover { opacity: 0.8 }`}/>
                 </div>
             </div>
         </div>
@@ -117,6 +140,7 @@ font-size: 13px;
 letter-spacing: 0.03em;
 margin-top: 2px;
 color: #FFFFFF;
+text-transform: capitalize;
 `;
 
 function ModelContainerLayout({children, title, footer, className, ...props}) {

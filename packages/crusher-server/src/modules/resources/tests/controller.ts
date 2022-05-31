@@ -168,6 +168,7 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
+		console.log("BOdy object is", body);
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};

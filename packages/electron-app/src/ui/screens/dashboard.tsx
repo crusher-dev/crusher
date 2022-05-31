@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTestUrlAction } from "../commands/perform";
+import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { sendSnackBarEvent } from "../components/toast";
 
@@ -51,7 +51,7 @@ gap: 10px;
 `;
 
 
-function TestListItem({test, isActive, onMouseEnterCallback}) {
+function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
     const [isEditMode, setIsEditMode] = React.useState(false);
     const [testName, setTestName] = React.useState(test.testName);
     const inputRef = React.useRef(null);
@@ -69,9 +69,22 @@ function TestListItem({test, isActive, onMouseEnterCallback}) {
     const handleKeyDown = () => {
         if (event.key === 'Enter') {
             setIsEditMode(false);
-            sendSnackBarEvent({ type: "success", message: "Test name successfully updated!" });
+
+            updateTestName(test.id, testName).then((res) => {
+                sendSnackBarEvent({ type: "success", message: "Test name successfully updated!" });
+            }).catch((err) => {
+                sendSnackBarEvent({ type: "error", message: "Error updating test name!" });
+            });
         }
     };
+
+    const handleRun = React.useCallback(() => {
+        performRunTests(projectId, [test.id]).then((buildRes) => {
+            window["messageBarCallback"](buildRes.buildId);
+            sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+        });
+
+    }, [test, projectId]);
 
     return (
         <li css={[isActive ? testItemHoverStyle : undefined]} onMouseEnter={onMouseEnterCallback.bind(this)}>
@@ -83,7 +96,9 @@ function TestListItem({test, isActive, onMouseEnterCallback}) {
             <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, isActive ? css`display: block;` : undefined]}>
                 <div css={css`display: flex; align-items: center; gap: 18rem;`}>
                 <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
-                <div css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}>
+                <div onClick={handleRun} css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`}
+                //  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
+                 >
                 <PlayIcon css={css`width: 10rem; height: 12rem;`}/>
                 <span css={runTextStyle}>Run</span>  
                 </div>
@@ -92,13 +107,13 @@ function TestListItem({test, isActive, onMouseEnterCallback}) {
         </li>
     );
 }
-function TestList({userTests}) {
+function TestList({userTests, projectId}) {
     const navigate = useNavigate();
     const [lastHoverItem, setLastHoverItem] = React.useState(0);
     return (
         <ul css={testItemStyle}>
             {userTests ? userTests.map((test, index) => {
-                return (<TestListItem test={test} isActive={lastHoverItem === index} onMouseEnterCallback={() => {
+                return (<TestListItem projectId={projectId} test={test} isActive={lastHoverItem === index} onMouseEnterCallback={() => {
                     setLastHoverItem(index);
                  }}/>);
             }) : ""}
@@ -208,7 +223,7 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 	);
 }
 
-const DashboardFooter = ({userTests}) => {
+const DashboardFooter = ({userTests, projectId}) => {
     const [showActionMenu, setShowActionMenu] = React.useState(false);
     const navigate = useNavigate();
 
@@ -216,6 +231,14 @@ const DashboardFooter = ({userTests}) => {
         navigate("/recorder");
         goFullScreen();
     };
+
+    const handleRunAll = React.useCallback(() => {
+        performRunTests(projectId, null).then((buildRes) => {
+            window["messageBarCallback"](buildRes.buildId);
+            sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+        });
+
+    }, [projectId]);
 
     return (<>
         <div css={footerLeftStyle}>
@@ -243,6 +266,8 @@ const DashboardFooter = ({userTests}) => {
             id={"verify-save-test"}
             onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                handleRunAll();
             }}
             bgColor="tertiary-outline"
             css={saveButtonStyle}
@@ -363,8 +388,8 @@ function DashboardScreen() {
     }
 
     return (
-		<ModelContainerLayout title={TitleComponent} footer={<DashboardFooter userTests={userTests}/>}>
-             <TestList userTests={userTests}/>
+		<ModelContainerLayout title={TitleComponent} footer={<DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
+             <TestList projectId={selectedProject} userTests={userTests}/>
 		</ModelContainerLayout>
 	);
 }

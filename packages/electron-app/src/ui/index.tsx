@@ -39,10 +39,10 @@ const emitter = new Emitter();
 
 const App = () => {
 	let navigate = useNavigate();
-	
+
 	const store = useStore();
 	const recorderInfo = useSelector(getRecorderInfo);
-	
+
 	React.useEffect(() => {
 		//@ts-ignore
 		// document.body.querySelector("#welcome_splash").style.display = "none";
@@ -109,15 +109,15 @@ const App = () => {
 	return (
 		<>
 			<div
-				css={css`
-					height: 32px;
-					width: 100%;
-					background: #111213;
-					border-bottom: 1px solid #2c2c2c;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				`}
+				css={[css`
+		height: 32px;
+		width: 100%;
+		background: #111213;
+		border-bottom: 1px solid #2c2c2c;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	`, process.platform !== "darwin" ? css`display: none;` : undefined]}
 				className={"drag"}
 			>
 				<div
@@ -416,7 +416,7 @@ render(
     font-size: 36px;
     margin: 53px;`}>Hello, world!</h2>} />
 				</Routes>
-				
+
 			</HashRouter>
 	</Provider>,
 	document.querySelector("#app-container"),

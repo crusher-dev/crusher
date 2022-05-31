@@ -10,7 +10,7 @@ import { resolveToFrontEndPath } from "@shared/utils/url";
 import { useStore } from "react-redux";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 
-function Link({children, ...props}) { 
+function Link({children, ...props}) {
     return(
         <span css={linkStyle} {...props}>
             {children}
@@ -160,7 +160,7 @@ function ModelContainerLayout({children, title, footer, className, ...props}) {
             <div css={headerStyle}>
                 <div css={leftNavBarStyle}>
                     <div css={crusherDropdownContainerStyle} onClick={handleDropdownClick}>
-                        <CrusherHammerColorIcon css={logoStyle}/>
+                        <CrusherHammerColorIcon css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
                         <DropdownIconSVG/>
                     </div>
                 </div>

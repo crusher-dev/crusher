@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { getCloudUserInfo } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
+import { LoadingScreen } from "./loading";
 
 function ProjectList({userInfo}) {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ function ProjectList({userInfo}) {
 }
 
 function SelectProjectScreen() {
-    const [userInfo, setUserInfo] = React.useState({});
+    const [userInfo, setUserInfo] = React.useState(null);
     const userAccountInfo = useSelector(getUserAccountInfo);
 
     React.useEffect(() => {
@@ -32,6 +33,11 @@ function SelectProjectScreen() {
             });
         }
     }, [userAccountInfo]);
+
+
+    if(!userAccountInfo || !userInfo) {
+        return (<LoadingScreen/>)
+    }
 
     return (
         <ModelContainerLayout title={<div css={titleStyle}>Select your project</div>} footer={null}>

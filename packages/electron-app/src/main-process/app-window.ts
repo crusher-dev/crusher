@@ -83,7 +83,7 @@ export class AppWindow {
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
 			show: true,
-			frame: false,
+			frame: process.platform === "darwin" ? false : true,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
 			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
@@ -717,7 +717,7 @@ export class AppWindow {
 		let testRecord = null;
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");
-			
+
 			testRecord = await CloudCrusher.saveTestDirectly(
 				recordedSteps as any,
 				projectId,
@@ -783,25 +783,31 @@ export class AppWindow {
 	}
 
 	private handleGoFullScreen(event: Electron.IpcMainInvokeEvent, payload: { fullScreen: boolean }) {
-		if(payload.fullScreen) {
-			this.window.setTrafficLightPosition({x: 10, y: 8});
+		if (payload.fullScreen) {
+			if (process.platform === "darwin") {
+				this.window.setTrafficLightPosition({ x: 10, y: 8 });
+			}
 			this.window.setFullScreenable(true);
 			this.window.setResizable(true);
 			return this.window.maximize();
 		} else {
 			return new Promise((resolve) => {
+				this.window.unmaximize();
 				this.window.setFullScreen(false);
-				setImmediate(() => {
-					this.window.setTrafficLightPosition({x: 30, y: 24});
+				setImmediate(async () => {
+					if (process.platform === "darwin") {
+						this.window.setTrafficLightPosition({ x: 30, y: 24 });
+					}
 					this.window.setFullScreenable(false);
 					this.window.setResizable(false);
-					this.window.setSize(this.minWidth,this. minHeight);
+					this.window.setSize(this.minWidth, this.minHeight);
+
 					resolve(this.window.center());
 				});
-		
+
 			})
-			
-	
+
+
 		}
 	}
 

@@ -100,7 +100,7 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
                 //  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
                  >
                 <PlayIcon css={css`width: 10rem; height: 12rem;`}/>
-                <span css={runTextStyle}>Run</span>  
+                <span css={runTextStyle}>Run</span>
                 </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@ const EditIcon = (props) => (
     />
   </svg>
   )
-  
+
 
 const runTextStyle = css`
 font-family: 'Gilroy';
@@ -250,7 +250,7 @@ const DashboardFooter = ({userTests, projectId}) => {
             <CreateTestLink onClick={handleCreateTest}/>
         </div>
         <div css={css`margin-left: 22px;`}>
-            
+
         <Dropdown
     initialState={showActionMenu}
     component={<ActionButtonDropdown setShowActionMenu={setShowActionMenu.bind(this)}/>}
@@ -304,14 +304,14 @@ const DashboardFooter = ({userTests, projectId}) => {
     )
 }
 function DashboardScreen() {
-    const [userTests, setUserTests] = React.useState([]);
+    const [userTests, setUserTests] = React.useState(null);
     const [selectedProject, setSelectedProject] = React.useState(null);
     const store = useStore();
     const userAccountInfo = useSelector(getUserAccountInfo);
     const [userInfo, setUserInfo] = React.useState({});
 
     let navigate = useNavigate();
-      
+
     React.useEffect(()=> {
         document.querySelector("html").style.fontSize = "1px";
         const userInfo = getUserAccountInfo(store.getState());
@@ -319,6 +319,17 @@ function DashboardScreen() {
             setTimeout(() => {
                 navigate("/login");
             }, 1000);
+        }
+
+        const userAccountInfo = getUserAccountInfo(store.getState());
+        const queryParamString = window.location.hash.split("?")[1];
+        const queryParams = new URLSearchParams(queryParamString);
+        const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
+
+        if(projectId && userAccountInfo) {
+            getUserTests(projectId).then((tests) => {
+                setUserTests(tests.list);
+            });
         }
 
         const interval = setInterval(() => {
@@ -353,20 +364,14 @@ function DashboardScreen() {
                     return;
                 }
                 window.localStorage.setItem("projectId", projectId);
-            
-                getUserTests(projectId).then((tests) => {
-                    console.log("User tests are", tests.list);
-    
-                    setUserTests(tests.list);
-                });
             });
 
-         
-        }  
+
+        }
     }, [userAccountInfo]);
 
     const userProject = userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
-    
+
     console.log("User project", userProject);
     const userProjectName = userProject ? userProject.name : null;
 
@@ -383,12 +388,12 @@ function DashboardScreen() {
         )
     }, [userProjectName]);
 
-    if(!userAccountInfo) {
+    if(!userAccountInfo || !userTests) {
         return (<LoadingScreen/>)
     }
 
     return (
-		<ModelContainerLayout title={TitleComponent} footer={<DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
+		<ModelContainerLayout title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
              <TestList projectId={selectedProject} userTests={userTests}/>
 		</ModelContainerLayout>
 	);

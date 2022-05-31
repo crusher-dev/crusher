@@ -255,7 +255,15 @@ export class AppWindow {
 
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
-		this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+		if(app.commandLine.hasSwitch("open-recorder")) {
+			const projectId = app.commandLine.getSwitchValue("projectId");
+
+			this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
+			this.window.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/recorder");
+			this.handleGoFullScreen(null, {fullScreen: true});
+		} else {
+			this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+		}
 	}
 
 	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { projectId: string; testIds: Array<string> | undefined }) {
@@ -709,6 +717,7 @@ export class AppWindow {
 		let testRecord = null;
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");
+			
 			testRecord = await CloudCrusher.saveTestDirectly(
 				recordedSteps as any,
 				projectId,
@@ -717,8 +726,7 @@ export class AppWindow {
 				appSettings.frontendEndPoint,
 				testName,
 			);
-			await shell.openExternal(resolveToFrontEndPath(`/app/tests/?project_id=${projectId}`, appSettings.frontendEndPoint));
-			process.exit(0);
+
 		} else {
 			const accountInfo = getUserAccountInfo(this.store.getState() as any);
 

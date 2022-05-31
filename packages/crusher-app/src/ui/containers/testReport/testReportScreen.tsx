@@ -122,11 +122,6 @@ const section = [
 		key: "reports",
 	},
 	{
-		name: "Report",
-		icon: null,
-		key: "report"
-	},
-	{
 		name: "Insights & Alert",
 		icon: null,
 		key: "insights"

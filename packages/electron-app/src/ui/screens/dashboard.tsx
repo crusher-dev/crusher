@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
+import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTest, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { sendSnackBarEvent } from "../components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
@@ -84,11 +84,11 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
     };
 
     const handleRun = React.useCallback(() => {
-        performRunTests(projectId, [test.id]).then((buildRes) => {
-            window["messageBarCallback"](buildRes.buildId);
-            sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
-        });
-
+        navigate("/recorder");
+        goFullScreen();
+        setTimeout(() => {
+            performReplayTestUrlAction(test.id, true);
+        }, 500); 
     }, [test, projectId]);
 
 

@@ -400,7 +400,16 @@ function DashboardScreen() {
     const userProject = userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
 
     console.log("User project", userProject);
-    const userProjectName = userProject ? userProject.name : null;
+
+    let userProjectName = null;
+    if (userProject) {
+        if (userProject.name.length > 16) {
+            userProjectName = userProject.name.substring(0,16) + " .."
+        } else {
+            userProjectName = userProject.name
+        }
+    }
+
 
     const TitleComponent = React.useMemo(() => {
         return (
@@ -408,7 +417,7 @@ function DashboardScreen() {
                 <span>
                     <span css={rocketIconStyle}>🚀</span>
                     &nbsp;&nbsp;
-                    <b css={titleBoldStyle}>{userProjectName}</b> - master
+                    <b css={titleBoldStyle}>{userProjectName}</b> | master
                 </span>
                 <CloudIcon css={titleCloudIconStyle}/>
             </div>

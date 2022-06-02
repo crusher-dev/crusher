@@ -10,6 +10,7 @@ import { LoadingScreen } from "./loading";
 import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { sendSnackBarEvent } from "../components/toast";
+import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
 
 const PlusIcon = (props) => (
@@ -66,15 +67,19 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
 
     }, [inputRef]);
 
+    const handleSave = () => {
+        setIsEditMode(false);
+
+        updateTestName(test.id, testName).then((res) => {
+            sendSnackBarEvent({ type: "success", message: "Test name successfully updated!" });
+        }).catch((err) => {
+            sendSnackBarEvent({ type: "error", message: "Error updating test name!" });
+        });
+    };
+
     const handleKeyDown = () => {
         if (event.key === 'Enter') {
-            setIsEditMode(false);
-
-            updateTestName(test.id, testName).then((res) => {
-                sendSnackBarEvent({ type: "success", message: "Test name successfully updated!" });
-            }).catch((err) => {
-                sendSnackBarEvent({ type: "error", message: "Error updating test name!" });
-            });
+            handleSave();
         }
     };
 
@@ -86,12 +91,23 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
 
     }, [test, projectId]);
 
-    return (
-        <li css={[isActive ? testItemHoverStyle : undefined]} onMouseEnter={onMouseEnterCallback.bind(this)}>
-            <span onDoubleClick={handleDoubleClick} css={[ css`padding: 4px 8px;    border: 1px solid transparent;`, isEditMode ? css`padding: 6px 8px;
+
+    const handleOutsideClick = React.useCallback(() => {
+        handleSave();
+    }, [inputRef]);
+    
+    const InnerComponent = (
+        <span onDoubleClick={handleDoubleClick} css={[ css`padding: 4px 8px;    border: 1px solid transparent;`, isEditMode ? css`padding: 6px 8px;
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 4px;`: undefined]}>
-            <input size={isEditMode ? 20 : (testName.length)} ref={inputRef} css={css`background: transparent;`} onKeyDown={handleKeyDown} onChange={(e) => {setTestName(e.target.value);} } value={testName} disabled={!isEditMode} /></span>
+
+            <input size={isEditMode ? 20 : (testName.length)} ref={inputRef} css={css`background: transparent;`} onKeyDown={handleKeyDown} onChange={(e) => {setTestName(e.target.value);} } value={testName} disabled={!isEditMode} />
+            </span>
+    );
+
+    return (
+        <li css={[isActive ? testItemHoverStyle : undefined]} onMouseEnter={onMouseEnterCallback.bind(this)}>
+            {isEditMode ? (<OnOutsideClick onOutsideClick={handleOutsideClick}>{InnerComponent}</OnOutsideClick>) : InnerComponent}
             {!test.firstRunCompleted ? (<LoadingIconV2 css={[css`width: 18px; height: 18px; margin-left: -5x;`, isEditMode ? css`margin-left: 8px;` : undefined]}/>) : ""}
             <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, isActive ? css`display: block;` : undefined]}>
                 <div css={css`display: flex; align-items: center; gap: 18rem;`}>

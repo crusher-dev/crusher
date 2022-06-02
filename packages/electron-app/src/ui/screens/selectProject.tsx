@@ -6,6 +6,7 @@ import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { getCloudUserInfo } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { LoadingScreen } from "./loading";
+import { CommonFooter } from "../layouts/commonFooter";
 
 function ProjectList({userInfo}) {
     const navigate = useNavigate();
@@ -40,7 +41,7 @@ function SelectProjectScreen() {
     }
 
     return (
-        <ModelContainerLayout title={<div css={titleStyle}>Select your project</div>} footer={null}>
+        <ModelContainerLayout title={<div css={titleStyle}>Select your project</div>} footer={<CommonFooter/>}>
             <ProjectList userInfo={userInfo}/>
         </ModelContainerLayout>
     );

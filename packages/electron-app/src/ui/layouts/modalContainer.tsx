@@ -12,7 +12,7 @@ import { getAppSettings } from "electron-app/src/store/selectors/app";
 
 function Link({children, ...props}) {
     return(
-        <span css={linkStyle} {...props}>
+        <span css={[linkStyle]} {...props}>
             {children}
         </span>
     )
@@ -25,6 +25,9 @@ const linkStyle = css`
     font-size: 14px;
     color: #FFFFFF;
     :hover {opacity: 0.8}
+
+    font-weight: 500;
+    font-size: 13px;
 `;
 
 export { Link };
@@ -168,7 +171,8 @@ function ModelContainerLayout({children, title, footer, className, ...props}) {
                     {title}
                 </div>
                 <div css={rightNavStyle}>
-                    <Link onClick={handleOpenAppClick}>Open App</Link>
+                <Link onClick={handleOpenAppClick} css={[css` margin-right: 12rem;`,topLinkStyle]}>docs</Link>
+                    <Link onClick={handleOpenAppClick} css={topLinkStyle}>Open app <ExternalLink css={ css`margin-left: 8rem; margin-top: -2px; zoom: .95;`}/></Link>
                 </div>
             </div>
             <div css={contentStyle} className={className}>
@@ -181,6 +185,40 @@ function ModelContainerLayout({children, title, footer, className, ...props}) {
         </div>
     )
 }
+
+const topLinkStyle = css`
+
+font-size: 12.8rem;
+font-weight: 400;
+color: #e8e8e8;
+display: flex; align-items: center;
+
+:hover{
+    color: #aa83ff;
+    path{
+        fill: #aa83ff;
+    }
+}
+`
+
+
+function ExternalLink(props) {
+    return (
+      <svg
+        width={10}
+        height={10}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+      >
+        <path
+          d="M3.889 1.667v1.11H1.11V8.89h6.111V6.11h1.111v3.333a.556.556 0 01-.555.556H.556A.556.556 0 010 9.444V2.222a.556.556 0 01.556-.555h3.333zM10 0v4.444H8.889V1.896l-4.33 4.33-.785-.785 4.329-4.33H5.556V0H10z"
+          fill="#fff"
+        />
+      </svg>
+    );
+  }
+
 
 const CliIcon = (props) => (
     <svg
@@ -198,7 +236,7 @@ const CliIcon = (props) => (
 
 const crusherDropdownContainerStyle = css`
     display: flex;
-    gap: 16rem;
+    gap:8rem;
     align-items: center;
     :hover {
         opacity: 0.8;
@@ -215,6 +253,11 @@ const rightNavStyle = css`
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+
+    font-size: 13rem;
+
+    display: flex;
+    align-items: center;
 `;
 const leftNavBarStyle = css`
     position: relative;
@@ -247,12 +290,12 @@ const contentStyle = css`
 const footerStyle = css`
     margin-top: auto;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 20px 28px;
+    padding: 12px 28px;
     display: flex;
 `;
 const headerStyle = css`
     display: flex;
-    padding: 20px 47px;
+    padding: 12px 28px;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 

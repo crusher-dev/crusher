@@ -497,7 +497,7 @@ function TestTopBar(props: { totalTests: any; onClick: () => Promise<void> }) {
 				<ClickableText className={"ml-8"} paddingY={6} paddingX={8} onClick={runProjectTest.bind(this)}>
 					<div className={"text-12 flex items-center "}>
 						<PlaySVG height={14} width={14} />
-						<span className={"ml-8 text-13 mt-4 font-500"}>Run all tests</span>
+						<span className={"ml-8 text-13 mt-4 font-500"}>Run tests</span>
 					</div>
 				</ClickableText>
 			</div>

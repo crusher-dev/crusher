@@ -29,8 +29,8 @@ const PlusIcon = (props) => (
 const CreateTestLink = (props) => {
     return (
         <span css={createTestLinkStyle} {...props}>
-            <PlusIcon css={css`width: 12px;`}/>
-            <span>Create test</span>
+            <PlusIcon css={css`width: 8px;`}/>
+            <span>Add test</span>
         </span>
     )
 }
@@ -39,14 +39,23 @@ font-family: 'Gilroy';
 font-style: normal;
 font-weight: 500;
 font-size: 14px;
+line-height: 14px;
 
 color: #FFFFFF;
 display: flex;
 align-items: center;
-gap: 10px;
+gap: 8px;
+
+span{
+    margin-top: .6rem;
+}
 
 :hover {
     opacity: 0.8;
+    color: #B061FF;
+    path {
+        fill: #B061FF;
+    }
 }
 `;
 
@@ -93,7 +102,7 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
     border-radius: 4px;`: undefined]}>
             <input size={isEditMode ? 20 : (testName.length)} ref={inputRef} css={css`background: transparent;`} onKeyDown={handleKeyDown} onChange={(e) => {setTestName(e.target.value);} } value={testName} disabled={!isEditMode} /></span>
             {!test.firstRunCompleted ? (<LoadingIconV2 css={[css`width: 18px; height: 18px; margin-left: -5x;`, isEditMode ? css`margin-left: 8px;` : undefined]}/>) : ""}
-            <div className={"action-buttons"} css={[css`display: none; position: absolute; right: 18rem; top: 50%; transform: translateY(-50%); color: #9F87FF`, isActive ? css`display: block;` : undefined]}>
+            <div className={"action-buttons"} css={[css`display: none; color: #9F87FF`, isActive ? css`display: block;` : undefined]}>
                 <div css={css`display: flex; align-items: center; gap: 18rem;`}>
                 <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
                 <div onClick={handleRun} css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`}
@@ -172,13 +181,15 @@ font-size: 14px;
 letter-spacing: 0.03em;
 
 color: #FFFFFF;
+height: 38rem;
 
 li {
-    padding: 10px 38px;
-    padding-right: 46px;
+    padding: 6px 24px;
+    padding-right: 28px;
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 `;
 
@@ -243,13 +254,13 @@ const DashboardFooter = ({userTests, projectId}) => {
     return (<>
         <div css={footerLeftStyle}>
         {/* <div><span css={infoTextStyle}>5 spec tests</span></div> */}
-        <div><span css={infoTextStyle}>{userTests.length} no-code tests</span></div>
+        <div><span css={infoTextStyle}>{userTests.length} low code </span></div>
     </div>
     <div css={footerRightStyle}>
         <div>
             <CreateTestLink onClick={handleCreateTest}/>
         </div>
-        <div css={css`margin-left: 22px;`}>
+        <div css={css`margin-left: 20px;`}>
 
         <Dropdown
     initialState={showActionMenu}
@@ -272,7 +283,7 @@ const DashboardFooter = ({userTests, projectId}) => {
             bgColor="tertiary-outline"
             css={saveButtonStyle}
         >
-            <span>Run all tests</span>
+            <span>Run tests</span>
         </Button>
 
     <div
@@ -399,16 +410,17 @@ function DashboardScreen() {
 	);
 }
 
-const rocketIconStyle = css`font-size: 12px;`;
-const titleBoldStyle = css`font-weight: 700;`;
-const titleCloudIconStyle = css`width: 16rem; height: 11rem; margin-left: 12rem;`;
+const rocketIconStyle = css`font-size: 12px;
+color: #FFFFFF;`;
+const titleBoldStyle = css`font-weight: 700; font-size: 13.5rem; color: #fff !important;`;
+const titleCloudIconStyle = css`width: 12rem; height: 11rem; margin-left: 12rem;`;
 const titleStyle = css`
 font-family: 'Gilroy';
 font-style: normal;
-font-weight: 600;
-font-size: 14px;
+font-weight: 400;
+font-size: 13rem;
 
-color: #FFFFFF;
+color: rgba(255, 255, 255, 0.67);
 
     display: flex;
     align-items: center;
@@ -429,7 +441,7 @@ const CloudIcon = (props) => (
   )
 
 const saveButtonStyle = css`
-	width: 120rem;
+	width: 92rem;
 	height: 30rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
 	border-radius: 6rem;
@@ -454,7 +466,7 @@ const infoTextStyle = css`
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 400;
-    font-size: 14rem;
+    font-size: 13rem;
 
     color: rgba(255, 255, 255, 0.67);
 `;

@@ -18,11 +18,11 @@ function LoadingProgressBar() {
 };
 
 const loadingTextStyle = css`
-font-family: Cera Pro;
+font-family: Gilroy;
 font-style: normal;
-font-weight: 900;
+font-weight: 700;
 font-size: 16px;
-margin-top: 22rem;
+margin-top: 16rem;
 
 text-align: center;
 
@@ -31,21 +31,22 @@ color: #FFFFFF;
 const loadingProgressBarContainerStyle = css`
     display: flex;
     flex-direction: column;
-    
+
 `;
 const progressBarStyle = css`
     background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
     padding: 0;
     width: 168px;
-    height: 8px;
+    height: 6px;
 `;
 const progressPilStyle = css`
-    background: #C96AF5;
+    background: linear-gradient(180deg, rgba(230, 199, 255, 0) 0%, rgba(43, 37, 48, 0.03) 75.52%, rgba(0, 0, 0, 0.34) 100%), #C96AF5;
     border-radius: 4px;
     width: 1%;
+    transition-timing-function: ease;
     height: 100%;
-    transition: width 1s;
+    transition: width .85s;
 `;
 
 function LoadingScreen() {
@@ -60,7 +61,7 @@ function LoadingScreen() {
             </div>
         </div>
         </ModelContainerLayout>
-    
+
     )
 }
 

@@ -49,9 +49,10 @@ function SelectProjectScreen() {
 const titleStyle = css`
     font-family: Cera Pro;
     font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
+    font-weight: 500;
+    font-size: 13.4px;
     color: #FFFFFF;
+
 `;
 
 const testItemStyle = css`

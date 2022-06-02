@@ -178,8 +178,8 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
                     {title}
                 </div>
                 <div css={rightNavStyle}>
-                <Link onClick={handleOpenAppClick} css={[css` margin-right: 12rem;`,topLinkStyle]}>docs</Link>
-                    <Link onClick={handleOpenAppClick} css={topLinkStyle}>Open app <ExternalLink css={ css`margin-left: 8rem; margin-top: -2px; zoom: .95;`}/></Link>
+                <Link onClick={handleOpenAppClick} css={[css` margin-right: 12rem;`,topLinkStyle]}>Docs</Link>
+                    <Link onClick={handleOpenAppClick} css={topLinkStyle}>Open app <ExternalLink css={ css`margin-left: 4rem; margin-top: -2px; zoom: .95;`}/></Link>
                 </div>
             </div>
             <div css={contentStyle} className={className}>
@@ -200,6 +200,7 @@ font-weight: 400;
 color: #e8e8e8;
 display: flex; align-items: center;
 
+letter-spacing: .25rem;
 :hover{
     color: #aa83ff;
     path{

@@ -12,7 +12,7 @@ import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { getRecorderInfo, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
-import { performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
+import { goFullScreen, performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
@@ -75,22 +75,33 @@ const App = () => {
 				);
 
 				if (isWebViewPresent) {
-					performReplayTest(action.args.testId);
+					performReplayTest(action.args.testId).then((res) => {
+						if(action.args.redirectAfterSuccess) {
+							navigate("/");
+						}
+					});
 				} else {
 					store.dispatch(setDevice(devices[0].id));
 					emitter.once("renderer-webview-initialized", () => {
 						console.log("Render webview initialized listener called");
-						performReplayTest(action.args.testId);
+						performReplayTest(action.args.testId).then((res) => {
+							if(action.args.redirectAfterSuccess) {
+								window["triggeredTest"] = {id: -1, type: "local"};
+								navigate("/");
+								goFullScreen(false);
+							}
+						});
 					});
 				}
 			} else if(action.commandName === "restore") {
 				if(window.localStorage.getItem("saved-steps")){
 					const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps") || "[]");
+					console.log("Saved steps are", savedSteps);
+					window.localStorage.removeItem("saved-steps");
 					const setDeviceStep = savedSteps.find((step: iAction) => step.type === ActionsInTestEnum.SET_DEVICE);
 					store.dispatch(setDevice(setDeviceStep.payload.meta.device.id));
 					emitter.once("renderer-webview-initialized", () => {
 						performSteps(savedSteps);
-						window.localStorage.removeItem("saved-steps");
 					});
 				}
 			}
@@ -412,9 +423,6 @@ render(
 			}}
 			steps={steps}
 		><App/></TourProvider>} />
-					<Route path="/login" element={<h2 css={css`    color: #fff;
-    font-size: 36px;
-    margin: 53px;`}>Hello, world!</h2>} />
 				</Routes>
 
 			</HashRouter>

@@ -180,12 +180,12 @@ const performResetAppSession = async () => {
 }
 
 const performReplayTest = async (testId) => {
-	ipcRenderer.invoke("replay-test", { testId });
+	return ipcRenderer.invoke("replay-test", { testId });
 };
 
 
-const performReplayTestUrlAction = async (testId) => {
-	ipcRenderer.invoke("replay-test-url-action", { testId });
+const performReplayTestUrlAction = async (testId, redirectAfterSuccess = false) => {
+	return ipcRenderer.invoke("replay-test-url-action", { testId, redirectAfterSuccess });
 };
 
 const turnOnInspectMode = () => {

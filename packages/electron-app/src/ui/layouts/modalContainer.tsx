@@ -32,15 +32,18 @@ const linkStyle = css`
 
 export { Link };
 
-function StatusMessageBar() {
+function StatusMessageBar({isLoadingScreen}) {
     const [shouldShow, setShouldShow] = React.useState(false);
     const [testStatus, setTestStatus] = React.useState(null);
     const [buildId, setBuildId] = React.useState(null);
+    const [testType, setTestType] = React.useState(null);
+
     const store = useStore();
 
     React.useEffect(() => {
         if(window["triggeredTest"]) {
             setShouldShow(true);
+            setTestType(window["triggeredTest"].type);
         }
 
         window["messageBarCallback"] = (buildId) => { setShouldShow(false); window["triggeredTest"]={id: buildId}; setShouldShow(true); };
@@ -53,8 +56,12 @@ function StatusMessageBar() {
     React.useEffect(() => {
         if(shouldShow) {
             const buildId = window["triggeredTest"].id;
+            if(!isLoadingScreen) {
+                window["triggeredTest"] = null;
+                setBuildId(buildId);
+                return;
+            }
             setBuildId(buildId);
-            window["triggeredTest"] = null;
             const interval = setInterval(() => {
                 getBuildReport(buildId).then(res => {
                     setTestStatus(res.status);
@@ -86,7 +93,7 @@ function StatusMessageBar() {
             <div css={statusMessageBarInnerContainerStyle}>
                 <div css={statusMessageBarLeftStyle}>
                     <CliIcon css={statusCliIconStyle}/>
-                    <span css={statusTextStyle}>Last test: {testStatus || ""}</span>
+                    <span css={statusTextStyle}>Last test: {testStatus || (testType === "local" ? "Completed" : "Queued")}</span>
                 </div>
                 <div css={statusMessageBarRightStyle}>
                     {/* <Link css={statusLinkStyle}>Logs</Link> */}
@@ -146,7 +153,7 @@ color: #FFFFFF;
 text-transform: capitalize;
 `;
 
-function ModelContainerLayout({children, title, footer, className, ...props}) {
+function ModelContainerLayout({children, title, footer, className, isLoadingScreen, ...props}) {
     const navigate = useNavigate();
 
     const handleOpenAppClick = React.useCallback(() => {
@@ -181,7 +188,7 @@ function ModelContainerLayout({children, title, footer, className, ...props}) {
             <div css={footerStyle}>
                 {footer}
             </div>
-           <StatusMessageBar />
+           <StatusMessageBar isLoadingScreen={isLoadingScreen} />
         </div>
     )
 }

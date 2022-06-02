@@ -23,7 +23,7 @@ function encodePathAsUrl(...pathSegments: string[]): string {
 
 const addHttpToURLIfNotThere = (uri: string) => {
 	if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
-		return `https://${uri}`;
+		return `http://${uri}`;
 	}
 	return uri;
 };

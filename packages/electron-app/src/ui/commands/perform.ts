@@ -183,6 +183,9 @@ const performReplayTest = async (testId) => {
 	return ipcRenderer.invoke("replay-test", { testId });
 };
 
+const performClearRemainingStpes = () => {
+	return ipcRenderer.invoke("clear-remaining-steps");
+}
 
 const performReplayTestUrlAction = async (testId, redirectAfterSuccess = false) => {
 	return ipcRenderer.invoke("replay-test-url-action", { testId, redirectAfterSuccess });
@@ -345,5 +348,6 @@ export {
 	getCloudUserInfo,
 	getBuildReport,
 	updateTestName,
-	performRunTests
+	performRunTests,
+	performClearRemainingStpes
 };

@@ -219,6 +219,7 @@ export class AppWindow {
 		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
+		ipcMain.handle("clear-remaining-steps", this.handleClearRemainingSteps.bind(this));
 		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
 		ipcMain.handle("go-back-page", this.handleGoBackPage.bind(this));
 		ipcMain.handle("reload-page", this.handleReloadPage.bind(this));
@@ -406,6 +407,10 @@ export class AppWindow {
 		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
 		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
 		return true;
+	}
+
+	private handleClearRemainingSteps() {
+		this.setRemainingSteps([]);
 	}
 
 	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {

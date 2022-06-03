@@ -74,29 +74,31 @@ const App = () => {
 					}),
 				);
 
+				const handleCompletion = () => {
+					if (action.args.redirectAfterSuccess) {
+						if (window["testsToRun"]) {
+							window["testsToRun"] = window["testsToRun"].filter((a) => a !== action.args.testId);
+							if (!window["testsToRun"].length) {
+								window["testsToRun"] = null;
+							}
+						}
+						window["triggeredTest"] = { id: -1, type: "local" };
+
+						navigate("/");
+						goFullScreen(false);
+					}
+				}
 				if (isWebViewPresent) {
 					performReplayTest(action.args.testId).then((res) => {
-						if(action.args.redirectAfterSuccess) {
-							navigate("/");
-						}
-					});
+						handleCompletion();
+					}).catch((err) => { if (window["testsToRun"]) { handleCompletion(); } } );
 				} else {
 					store.dispatch(setDevice(devices[0].id));
 					emitter.once("renderer-webview-initialized", () => {
 						console.log("Render webview initialized listener called");
 						performReplayTest(action.args.testId).then((res) => {
-							if (action.args.redirectAfterSuccess) {
-								if (window["testsToRun"]) {
-									window["testsToRun"] = window["testsToRun"].filter((a) => a !== action.args.testId);
-									if (!window["testsToRun"].length) {
-										window["testsToRun"] = null;
-									}
-								}
-								window["triggeredTest"] = { id: -1, type: "local" };
-								navigate("/");
-								goFullScreen(false);
-							}
-						});
+							handleCompletion();
+						}).catch((err) => { if (window["testsToRun"]) { handleCompletion() } });
 					});
 				}
 			} else if(action.commandName === "restore") {
@@ -119,6 +121,11 @@ const App = () => {
 			ipcRenderer.removeAllListeners("webview-initialized");
 			store.dispatch(resetRecorder());
 			store.dispatch(setSessionInfoMeta({}));
+			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
+			setSessionInfoMeta({
+				...sessionInfoMeta,
+				remainingSteps: [],
+			}),
 			resetStorage();
 		}
 	}, []);

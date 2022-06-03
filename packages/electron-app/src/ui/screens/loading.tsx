@@ -54,7 +54,7 @@ function LoadingScreen() {
         document.querySelector("html").style.fontSize = "1px";
     }, []);
     return (
-        <ModelContainerLayout title={null} header={null} footer={<CommonFooter/>}>
+        <ModelContainerLayout isLoadingScreen={true} title={null} header={null} footer={<CommonFooter/>}>
     <div css={containerStyle}>
             <div css={css`flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column;`}>
                <LoadingProgressBar/>

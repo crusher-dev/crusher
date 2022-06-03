@@ -256,6 +256,7 @@ export class AppWindow {
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		if(app.commandLine.hasSwitch("open-recorder")) {
+			process.argv = process.argv.filter((a) => a !== "--open-recorder");
 			const projectId = app.commandLine.getSwitchValue("projectId");
 
 			this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
@@ -394,7 +395,7 @@ export class AppWindow {
 	}
 
 	private async handleQuitAndRestore() {
-		app.relaunch();
+		app.relaunch({args: [...process.argv.slice(1), "--open-recorder"]});
 		app.quit();
 	}
 
@@ -765,11 +766,11 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
 
-		this.handleReplayTestSteps(testSteps);
+		return this.handleReplayTestSteps(testSteps);
 	}
 
-	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
-		this.sendMessage("url-action", { action: { commandName: "replay-test", args: {testId: payload.testId} } });
+	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number, redirectAfterSuccess: boolean }) {
+		this.sendMessage("url-action", { action: { commandName: "replay-test", args: {testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess} } });
 	};
 
 	private async handleLoginWithGithub(event: Electron.IpcMainInvokeEvent) {

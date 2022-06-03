@@ -1,6 +1,46 @@
+/*
+	Two behaviours here, which is slightly hard to grasp.
+
+	Why do we have two loggers?
+	1.) Overwriting console.log
+	2.) Using logger
+
+	+ There should be a better way to handle output, current code might be too duplicated. Using winston as of now.
+*/
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { currentEnvironmentName } = require("./env");
-const LoggerDNA = require("logdna");
+
+const winston = require('winston');
+const LokiTransport = require("winston-loki");
+const winstonLogger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    //
+    // - Write all logs with importance level of `error` or less to `error.log`
+    // - Write all logs with importance level of `info` or less to `combined.log`
+    //
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+		new winston.transports.File({ filename: 'combined.log' }),
+		new winston.transports.Console({
+			format: winston.format.simple(),
+		}),
+		new LokiTransport({
+			host: 'https://225462:eyJrIjoiOGU3MGIwODI5NGJkODlmZWZkYmFmZDU0MjkxMmI3YjYxZmU4ZDM3YSIsIm4iOiJUZXN0IiwiaWQiOjY1NzU1Nn0=@logs-prod3.grafana.net',
+			json: true,
+			basicAuth: '225462:eyJrIjoiOGU3MGIwODI5NGJkODlmZWZkYmFmZDU0MjkxMmI3YjYxZmU4ZDM3YSIsIm4iOiJUZXN0IiwiaWQiOjY1NzU1Nn0=',
+			labels: { job: 'kjl' },
+			onConnectionError: (err) => {
+				_error(err)
+			}
+		})
+  ],
+});
+
+
+
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const chalk = require("chalk");
 
@@ -11,14 +51,7 @@ const _trace = console.trace;
 const _warn = console.warn;
 const _debug = console.debug;
 
-const logger = process.env.LOGDNA_API_KEY
-	? LoggerDNA.setupDefaultLogger(process.env.LOGDNA_API_KEY, {
-			env: currentEnvironmentName,
-			app: "crusher-server",
-			hostname: "crusher-server",
-			index_meta: true,
-	  })
-	: { log: () => null, info: () => null, debug: () => null, warn: () => null, error: () => null, fatal: () => null };
+const logger =  { log: () => null, info: () => null, debug: () => null, warn: () => null, error: () => null, fatal: () => null };
 
 const showMeta = (meta) => {
 	if (!meta) {
@@ -39,6 +72,7 @@ module.exports = {
 			_info(msgToShow);
 			showMeta(meta);
 
+			winstonLogger.log('info',message)
 			if (IS_PRODUCTION) {
 				// Enable to get more logs in production
 				logger.info(msgToShow, { meta });
@@ -89,6 +123,7 @@ module.exports = {
 
 const log = function () {
 	logger.log([...arguments].join(" "));
+
 	_log.apply(console, arguments);
 };
 

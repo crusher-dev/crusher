@@ -97,14 +97,14 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
         goFullScreen();
         setTimeout(() => {
             performReplayTestUrlAction(test.id, true);
-        }, 500); 
+        }, 500);
     }, [test, projectId]);
 
 
     const handleOutsideClick = React.useCallback(() => {
         handleSave();
     }, [inputRef]);
-    
+
     const InnerComponent = (
         <span onDoubleClick={handleDoubleClick} css={[ css`padding: 4px 8px;    border: 1px solid transparent;`, isEditMode ? css`padding: 6px 8px;
     border: 1px solid rgba(255, 255, 255, 0.25);
@@ -259,12 +259,23 @@ const DashboardFooter = ({userTests, projectId}) => {
         goFullScreen();
     };
 
+    React.useEffect(() => {
+        if (window["testsToRun"] && window["testsToRun"].length) {
+            navigate("/recorder");
+            goFullScreen();
+            setTimeout(() => {
+                performReplayTestUrlAction(window["testsToRun"][0], true);
+            }, 500);
+        }
+    }, []);
     const handleRunAll = React.useCallback(() => {
-        performRunTests(projectId, null).then((buildRes) => {
-            window["messageBarCallback"](buildRes.buildId);
-            sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
-        });
-
+        const testIdArr = userTests.map((a) => { return a.id });
+        window["testsToRun"] = testIdArr;
+        navigate("/recorder");
+        goFullScreen();
+        setTimeout(() => {
+            performReplayTestUrlAction(window["testsToRun"][0], true);
+        }, 500);
     }, [projectId]);
 
     return (<>

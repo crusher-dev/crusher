@@ -85,8 +85,14 @@ const App = () => {
 					emitter.once("renderer-webview-initialized", () => {
 						console.log("Render webview initialized listener called");
 						performReplayTest(action.args.testId).then((res) => {
-							if(action.args.redirectAfterSuccess) {
-								window["triggeredTest"] = {id: -1, type: "local"};
+							if (action.args.redirectAfterSuccess) {
+								if (window["testsToRun"]) {
+									window["testsToRun"] = window["testsToRun"].filter((a) => a !== action.args.testId);
+									if (!window["testsToRun"].length) {
+										window["testsToRun"] = null;
+									}
+								}
+								window["triggeredTest"] = { id: -1, type: "local" };
 								navigate("/");
 								goFullScreen(false);
 							}

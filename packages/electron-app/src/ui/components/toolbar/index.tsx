@@ -17,6 +17,7 @@ import {
 	performReloadPage,
 	performResetAppSession,
 	performSetDevice,
+	performSteps,
 	performVerifyTest,
 	preformGoBackPage,
 	resetTest,
@@ -340,16 +341,40 @@ const Toolbar = (props: any) => {
 			}
 			setUrlInputError({ value: false, message: "" });
 			batch(() => {
-				if (selectedDevice[0] !== recorderInfo.device?.id) {
-					// Setting the device will add webview in DOM tree
-					// navigation will be run after 'webview-initialized' event
-					dispatch(setDevice(selectedDevice[0]));
-				}
+				if (!recorderInfo.url) {
+					performSteps([{
+						"type": "BROWSER_SET_DEVICE",
+						"payload": {
+							"meta": {
+								"device": {
+									"id": "GoogleChromeMediumScreen",
+									"name": "Desktop",
+									"width": 1280,
+									"height": 800,
+									"mobile": false,
+									"visible": true,
+									"userAgent": "Google Chrome",
+									"userAgentRaw": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+								}
+							}
+						},
+						"time": Date.now()
+					},
+					{
+						"type": "PAGE_NAVIGATE_URL",
+						"payload": {
+							"selectors": [
 
-				dispatch(setSiteUrl(validUrl.toString()));
-				if (recorderInfo.url) {
-					// Perform navigation if already recording
-					performNavigation(validUrl.toString(), store);
+							],
+							"meta": {
+								"value": validUrl
+							}
+						},
+						"status": "COMPLETED",
+						"time": Date.now()
+					}]);
+				} else {
+					performNavigation(validUrl, store);
 				}
 				// Just in case onboarding overlay info is still visible
 				dispatch(setShowShouldOnboardingOverlay(false));
@@ -657,7 +682,7 @@ const inputErrorMessageStyle = css`
 	bottom: -14rem;
 	font-size: 10.5rem;
 	color: #ff4583;
-							
+
 `;
 const menuContainerStyle = css`
 	font-size: 14rem;

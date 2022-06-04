@@ -259,7 +259,7 @@ export class AppWindow {
 		if(app.commandLine.hasSwitch("open-recorder")) {
 			process.argv = process.argv.filter((a) => a !== "--open-recorder");
 			const projectId = app.commandLine.getSwitchValue("projectId");
-
+			if(projectId)
 			this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
 			this.window.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/recorder");
 			this.handleGoFullScreen(null, {fullScreen: true});
@@ -767,9 +767,12 @@ export class AppWindow {
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
+		console.log("Replaying test", Date.now(), !!this.webView);
+
 		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
+		console.log("Replaying test --now", Date.now(), !!this.webView);
 
 		return this.handleReplayTestSteps(testSteps);
 	}
@@ -804,11 +807,11 @@ export class AppWindow {
 					if (process.platform === "darwin") {
 						this.window.setTrafficLightPosition({ x: 30, y: 24 });
 					}
+					this.window.setSize(this.minWidth, this.minHeight);
+					this.window.center();
 					this.window.setFullScreenable(false);
 					this.window.setResizable(false);
-					this.window.setSize(this.minWidth, this.minHeight);
-
-					resolve(this.window.center());
+					resolve(true);
 				});
 
 			})
@@ -914,13 +917,32 @@ export class AppWindow {
 		await this.clearWebViewStorage();
 	}
 
+	private waitForWebView() {
+		return new Promise((resolve, reject) => {
+			// Check for webview every 100ms
+			// till 2s
+			const interval = setInterval(() => {
+				if (this.webView) {
+					clearInterval(interval);
+					resolve(true);
+				}
+			}, 100);
+			setTimeout(() => {
+				clearInterval(interval);
+				reject();
+			}, 2000);
+		});
+	}
 	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean }) {
 		const { action, shouldNotSave } = payload;
 		console.log("Handle perform action called", payload);
+
 		try {
 			switch (action.type) {
 				case ActionsInTestEnum.SET_DEVICE: {
-					this.store.dispatch(setDevice(action.payload.meta.device.id));
+					if (!shouldNotSave) {
+						this.store.dispatch(setDevice(action.payload.meta.device.id));
+					}
 					// Custom implementation here, because we are in the recorder
 					const userAgent = action.payload.meta?.device.userAgentRaw
 						? action.payload.meta?.device.userAgentRaw
@@ -933,6 +955,7 @@ export class AppWindow {
 					if (!shouldNotSave) {
 						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 					}
+					await this.waitForWebView();
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL: {
@@ -983,7 +1006,7 @@ export class AppWindow {
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 			}
-			await sleep(1000);
+			await sleep(250);
 		} catch (e) {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			throw e;
@@ -991,6 +1014,10 @@ export class AppWindow {
 	}
 
 	private async resetRecorder(state: TRecorderState = null) {
+		if (this.webView) {
+			this.webView.dispose();
+			this.webView = undefined;
+		}
 		this.store.dispatch(resetRecorderState(state));
 		this.store.dispatch(clearLogs());
 		if (this.webView) {
@@ -1041,6 +1068,7 @@ export class AppWindow {
 	}
 
 	async handleWebviewAttached(event, webContents) {
+		console.log("Webview is attached", Date.now());
 		this.webView = new WebView(this);
 		this.webView.webContents.on("dom-ready", () => {
 			if (!this.webView.webContents.debugger.isAttached()) {

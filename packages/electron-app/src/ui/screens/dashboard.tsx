@@ -79,11 +79,7 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
     const handleSave = () => {
         setIsEditMode(false);
 
-        updateTestName(test.id, testName).then((res) => {
-            sendSnackBarEvent({ type: "success", message: "Test name successfully updated!" });
-        }).catch((err) => {
-            sendSnackBarEvent({ type: "error", message: "Error updating test name!" });
-        });
+        updateTestName(test.id, testName);
     };
 
     const handleKeyDown = () => {
@@ -95,9 +91,7 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
     const handleRun = React.useCallback(() => {
         navigate("/recorder");
         goFullScreen();
-        setTimeout(() => {
-            performReplayTestUrlAction(test.id, true);
-        }, 500);
+        performReplayTestUrlAction(test.id, true);
     }, [test, projectId]);
 
 
@@ -263,9 +257,7 @@ const DashboardFooter = ({userTests, projectId}) => {
         if (window["testsToRun"] && window["testsToRun"].length) {
             navigate("/recorder");
             goFullScreen();
-            setTimeout(() => {
-                performReplayTestUrlAction(window["testsToRun"][0], true);
-            }, 500);
+            performReplayTestUrlAction(window["testsToRun"][0], true);
         }
     }, []);
     const handleRunAll = React.useCallback(() => {
@@ -273,9 +265,7 @@ const DashboardFooter = ({userTests, projectId}) => {
         window["testsToRun"] = testIdArr;
         navigate("/recorder");
         goFullScreen();
-        setTimeout(() => {
-            performReplayTestUrlAction(window["testsToRun"][0], true);
-        }, 500);
+        performReplayTestUrlAction(window["testsToRun"][0], true);
     }, [projectId]);
 
     return (<>
@@ -428,7 +418,7 @@ function DashboardScreen() {
                 <span>
                     <span css={rocketIconStyle}>🚀</span>
                     &nbsp;&nbsp;
-                    <b css={titleBoldStyle}>{userProjectName}</b> | master
+                    <b css={titleBoldStyle}>{userProjectName}</b>
                 </span>
                 <CloudIcon css={titleCloudIconStyle}/>
             </div>

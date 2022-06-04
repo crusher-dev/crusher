@@ -157,33 +157,33 @@ const DeviceFrame = (props: any) => {
 	return (
 		<div css={topContainerStyle}>
 			<div css={containerStyle}>
-				<Conditional showIf={!!recorderInfo.device}>
-					<div style={{ width: `${recorderInfo.device?.width}rem`, height: `${recorderInfo.device?.height}rem`, maxWidth: "100%", maxHeight: "100%", position: "relative" }}>
-						<webview
-							ref={ref}
-							css={webviewStyle}
-							id="device_browser"
-							preload={getPreloadScriptPath()}
-							title={"crusher-webview"}
-							src={"about:blank"}
-							partition={"crusherwebview"}
-							webpreferences="nativeWindowOpen=yes"
-							allowpopups
-							nodeintegration={true}
-						/>
+				{recorderInfo.device && (
+	<div style={{ width: `${recorderInfo.device?.width}rem`, height: `${recorderInfo.device?.height}rem`, maxWidth: "100%", maxHeight: "100%", position: "relative" }}>
+	<webview
+		ref={ref}
+		css={webviewStyle}
+		id="device_browser"
+		preload={getPreloadScriptPath()}
+		title={"crusher-webview"}
+		src={"about:blank"}
+		partition={"crusherwebview"}
+		webpreferences="nativeWindowOpen=yes"
+		allowpopups
+		nodeintegration={true}
+	/>
 
-						<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
-							<CrashScreen />
-						</Conditional>
-						<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
-							<PageLoadFailedScreen />
-						</Conditional>
-						<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
-							<div css={deviceOverlayStyle}></div>
-						</Conditional>
-					</div>
-				</Conditional>
-				<InfoOverLay />
+	<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
+		<CrashScreen />
+	</Conditional>
+	<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
+		<PageLoadFailedScreen />
+	</Conditional>
+	<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
+		<div css={deviceOverlayStyle}></div>
+	</Conditional>
+</div>
+				)}
+							<InfoOverLay />
 			</div>
 			<Conditional showIf={isStatusBarVisible}>
 				<StatusBar />

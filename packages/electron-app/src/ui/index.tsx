@@ -48,15 +48,8 @@ const App = () => {
 		// document.body.querySelector("#welcome_splash").style.display = "none";
 		ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
-			store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+			// store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			const recorderInfo = getRecorderInfo(store.getState() as any);
-			await performSetDevice(recorderInfo.device);
-
-			emitter.emit("renderer-webview-initialized");
-			if (recorderInfo.url) {
-				// Perform navigation to the url that was set before the webview was initialized
-				await performNavigation(recorderInfo.url, store);
-			}
 		});
 
 		ipcRenderer.send("renderer-ready", /* @TODO Add correct rendering time */ window["performance"].now());
@@ -93,13 +86,9 @@ const App = () => {
 						handleCompletion();
 					}).catch((err) => { if (window["testsToRun"]) { handleCompletion(); } } );
 				} else {
-					store.dispatch(setDevice(devices[0].id));
-					emitter.once("renderer-webview-initialized", () => {
-						console.log("Render webview initialized listener called");
-						performReplayTest(action.args.testId).then((res) => {
-							handleCompletion();
-						}).catch((err) => { if (window["testsToRun"]) { handleCompletion() } });
-					});
+					performReplayTest(action.args.testId).then((res) => {
+						handleCompletion();
+					}).catch((err) => { if (window["testsToRun"]) { handleCompletion() } });
 				}
 			} else if(action.commandName === "restore") {
 				if(window.localStorage.getItem("saved-steps")){
@@ -107,10 +96,7 @@ const App = () => {
 					console.log("Saved steps are", savedSteps);
 					window.localStorage.removeItem("saved-steps");
 					const setDeviceStep = savedSteps.find((step: iAction) => step.type === ActionsInTestEnum.SET_DEVICE);
-					store.dispatch(setDevice(setDeviceStep.payload.meta.device.id));
-					emitter.once("renderer-webview-initialized", () => {
-						performSteps(savedSteps);
-					});
+					performSteps(savedSteps);
 				}
 			}
 		});
@@ -174,7 +160,7 @@ const App = () => {
 					</div>
 				</div>
 			</div>
-			<div css={containerStyle}>
+			<div css={[containerStyle, process.platform !== "darwin" ? css`height: 100vh` : undefined]}>
 				<Global styles={globalStyles} />
 				{!!recorderInfo.device ? (<Sidebar css={sidebarStyle} />) : ""}
 				<div css={bodyStyle}>

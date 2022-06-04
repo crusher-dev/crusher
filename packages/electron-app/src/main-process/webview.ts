@@ -165,7 +165,7 @@ export class WebView {
 
 	dispose() {
 		try {
-			if (this.webContents) {
+			if (this.webContents && !this.webContents.isDestroyed()) {
 				this.webContents.debugger.detach();
 			}
 			if (ipcMain) {
@@ -178,6 +178,8 @@ export class WebView {
 			if (this.playwrightInstance) {
 				this.playwrightInstance.dispose();
 			}
-		} catch (e) { }
+		} catch (e) {
+			console.error("Error while diposing", e);
+		}
 	}
 }

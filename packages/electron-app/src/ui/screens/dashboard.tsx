@@ -7,10 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getCloudUserInfo, getUserTests, goFullScreen, performReplayTest, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
+import { getCloudUserInfo, getUserTests, goFullScreen, performDeleteTest, performReplayTest, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { sendSnackBarEvent } from "../components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
+import { shell } from "electron";
+import { resolveToFrontEndPath } from "@shared/utils/url";
 
 
 const PlusIcon = (props) => (
@@ -61,11 +63,13 @@ span{
 `;
 
 
-function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
+function TestListItem({test, isActive, deleteItem, setLockState, projectId, onMouseEnterCallback}) {
     const [isEditMode, setIsEditMode] = React.useState(false);
     const [testName, setTestName] = React.useState(test.testName);
+    const [showMenu, setShowMenu] = React.useState({shouldShow: false, pos: null});
     const inputRef = React.useRef(null);
     const navigate = useNavigate();
+    const containerRef = React.useRef(null);
 
     const handleDoubleClick = React.useCallback(() => {
         setIsEditMode(true);
@@ -99,20 +103,61 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
         handleSave();
     }, [inputRef]);
 
+    const handleRightClick = (e) => {
+        const pos = { x: e.clientX, y: e.clientY };
+        console.log("E is", e);
+        const constainerRects = containerRef.current.getBoundingClientRect();
+
+        const dropdownPos = { x: pos.x - constainerRects.left, y: pos.y - constainerRects.top };
+        setShowMenu({shouldShow: true, pos: dropdownPos});
+        setLockState(true);
+    };
+
     const InnerComponent = (
         <span onDoubleClick={handleDoubleClick}>
 
             <input size={isEditMode ? 20 : (testName.length)} ref={inputRef} css={[css`background: transparent; border: 1px solid transparent;  padding: 6px 8px;`, isEditMode ? css`
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 4px;`: undefined]} onKeyDown={handleKeyDown} onChange={(e) => {setTestName(e.target.value);} } value={testName} disabled={!isEditMode} />
-            </span>
+        </span>
     );
 
+    const handleOnMouseEnter = React.useCallback((e) => {
+        if (!showMenu) {
+            onMouseEnterCallback(e);
+        }
+    }, [showMenu]);
+
+    const handleDropdownCallack = React.useCallback((val) => {
+        setLockState(val);
+        if (!val) {
+            setShowMenu({ shouldShow: false, pos: null });
+        } else {
+            if (showMenu.pos) return;
+            setShowMenu(val);
+        }
+
+    }, [showMenu]);
+
     return (
-        <li css={[isActive ? testItemHoverStyle : undefined]} onMouseEnter={onMouseEnterCallback.bind(this)}>
+        <li ref={containerRef} css={[css`position: relative`, isActive ? testItemHoverStyle : undefined]} onContextMenu={ handleRightClick } onMouseEnter={onMouseEnterCallback.bind(this, showMenu)}>
             {isEditMode ? (<OnOutsideClick onOutsideClick={handleOutsideClick}>{InnerComponent}</OnOutsideClick>) : InnerComponent}
+            {showMenu && showMenu.pos ?     <Dropdown
+                initialState={true}
+                css={ css`position: absolute;        left: ${showMenu.pos.x}px;        top: ${showMenu.pos.y}px;
+
+                `}
+    component={<TestItemMenuDropdown draftJobId={test.draftBuildId} testId={test.id} deleteTest={deleteItem} setIsEditMode={handleDoubleClick} setShowActionMenu={handleDropdownCallack.bind(this)}/>}
+    callback={handleDropdownCallack.bind(this)}
+                dropdownCSS={css`
+        position: absolute;
+        width: 130rem;
+        left: 0rem;
+        top: 0rem;
+    `}
+> </Dropdown>:undefined}
             {!test.firstRunCompleted ? (<LoadingIconV2 css={[css`width: 18px; height: 18px; margin-left: -5x;`, isEditMode ? css`margin-left: 8px;` : undefined]}/>) : ""}
-            <div className={"action-buttons"} css={[css`display: none; color: #9F87FF`, isActive ? css`display: block;` : undefined]}>
+            <div className={"action-buttons"} css={[css`display: none; color: #9F87FF; margin-left: auto;`, isActive ? css`display: block;` : undefined]}>
                 <div css={css`display: flex; align-items: center; gap: 18rem;`}>
                 <EditIcon css={css`width: 13rem; height: 13rem; :hover { opacity: 0.8; }`} onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}/>
                 <div onClick={handleRun} css={css`display: flex; align-items: center; gap: 6rem; :hover { opacity: 0.8 }`}
@@ -126,15 +171,25 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
         </li>
     );
 }
-function TestList({userTests, projectId}) {
+function TestList({userTests, deleteTest, projectId}) {
     const navigate = useNavigate();
     const [lastHoverItem, setLastHoverItem] = React.useState(0);
+    const [lockState, setLockState] = React.useState(false);
+
+    const handleSetLockState = (value) => {
+        setLockState(value);
+    };
+
+    const onMouseEnterCallback = React.useCallback((index) => {
+        if (!lockState) {
+            setLastHoverItem(index);
+        }
+    }, [lockState]);
+
     return (
         <ul css={testItemStyle}>
             {userTests ? userTests.map((test, index) => {
-                return (<TestListItem projectId={projectId} test={test} isActive={lastHoverItem === index} onMouseEnterCallback={() => {
-                    setLastHoverItem(index);
-                 }}/>);
+                return (<TestListItem key={test.id} deleteItem={deleteTest} projectId={projectId} test={test} isActive={lastHoverItem === index} setLockState={handleSetLockState} onMouseEnterCallback={onMouseEnterCallback.bind(this, index)}/>);
             }) : ""}
         </ul>
     )
@@ -199,7 +254,6 @@ li {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 `;
 
@@ -208,6 +262,54 @@ background: rgba(217, 217, 217, 0.04);
 color: #9F87FF;
 `;
 
+function TestItemMenuDropdown({ testId, draftJobId, setShowActionMenu, setIsEditMode, deleteTest, ...props}) {
+    const MenuItem = ({ label, onClick, ...props }) => {
+		return (
+			<div
+				css={css`
+					padding: 6rem 13rem;
+					:hover {
+						background: #687ef2 !important;
+					}
+				`}
+				onClick={onClick}
+			>
+				{label}
+			</div>
+		);
+	};
+
+    const handleRename = () => {
+        setShowActionMenu(false);
+        setIsEditMode(true);
+    };
+
+    const handleDelete = () => {
+        setShowActionMenu(false);
+        deleteTest(testId);
+    }
+
+    const handleViewReport = () => {
+        setShowActionMenu(false);
+        shell.openExternal(resolveToFrontEndPath(`/app/build/${draftJobId}`));
+    }
+
+	return (
+		<div
+			className={"flex flex-col justify-between h-full"}
+			css={css`
+				font-size: 13rem;
+				color: #fff;
+			`}
+		>
+            <div>
+                <MenuItem onClick={handleViewReport} label={"View Report"} className={"close-on-click"} />
+                <MenuItem onClick={handleRename} label={"Rename"} className={"close-on-click"} />
+                <MenuItem onClick={handleDelete} label={"Delete"} className={"close-on-click"} />
+			</div>
+		</div>
+	);
+}
 function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 
 	const MenuItem = ({ label, onClick, ...props }) => {
@@ -400,7 +502,14 @@ function DashboardScreen() {
 
     const userProject = userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
 
-    console.log("User project", userProject);
+    const handleTestDelete = React.useCallback((id) => {
+        setUserTests(userTests.filter((a) => a.id != id));
+
+        performDeleteTest(id).catch((err) => {
+            sendSnackBarEvent({ message: "Error deleting test", type: "error" });
+        });
+    }, [userTests]);
+    console.log("User tests", userTests);
 
     let userProjectName = null;
     if (userProject) {
@@ -431,7 +540,7 @@ function DashboardScreen() {
 
     return (
 		<ModelContainerLayout title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
-             <TestList projectId={selectedProject} userTests={userTests}/>
+             <TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>
 		</ModelContainerLayout>
 	);
 }

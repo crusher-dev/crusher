@@ -252,6 +252,10 @@ const resetTest = (device: iDevice) => {
 	ipcRenderer.invoke("reset-test", { device });
 };
 
+const performDeleteTest = (testId: string) => {
+	return ipcRenderer.invoke('delete-test', { testId });
+}
+
 const focusOnWindow = () => {
 	ipcRenderer.invoke("focus-window");
 };
@@ -349,5 +353,6 @@ export {
 	getBuildReport,
 	updateTestName,
 	performRunTests,
-	performClearRemainingStpes
+	performClearRemainingStpes,
+	performDeleteTest
 };

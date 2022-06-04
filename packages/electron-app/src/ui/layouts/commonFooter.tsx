@@ -6,7 +6,7 @@ function CommonFooter() {
         <div css={navBarStyle}>
         <div className={"navItem"}>Docs</div>
         <div className="navItem" css={css`margin-left: auto`}>
-            Settings
+                {/* {"Settings"} */}
         </div>
     </div>
     )

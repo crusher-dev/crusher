@@ -227,6 +227,7 @@ export class AppWindow {
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
 		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
+		ipcMain.handle('delete-test', this.handleDeleteTest.bind(this));
 		ipcMain.handle("reset-app-session", this.handleResetAppSession.bind(this));
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
@@ -479,6 +480,11 @@ export class AppWindow {
 		await this.resetRecorder();
 	}
 
+	async handleDeleteTest(event: Electron.IpcMainEvent, payload: { testId: string }) {
+		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+		return CloudCrusher.deleteTest(payload.testId, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+	}
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
 		await this.webView.dispose();
 		const recordedSteps = getSavedSteps(this.store.getState() as any);

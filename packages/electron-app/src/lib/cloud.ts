@@ -46,7 +46,7 @@ class CloudCrusher {
 			},
 		}).then((res) => res.data);
 	}
-	
+
 	public static async runTests(testIds: Array<string> | null, projectId: string, userToken: string, customBackendPath: string | undefined = undefined) {
 		return axios.post(resolveToBackendPath(`/projects/${projectId}/tests/actions/run`, customBackendPath), {
 			testIds: Array.isArray(testIds) ? testIds.join(",") : null,
@@ -101,6 +101,14 @@ class CloudCrusher {
 		}).then((res) => res.data);
 	}
 
+	public static async deleteTest(testId, userToken: string,	customBackendPath: string | undefined = undefined,
+		customFrontEndPath: string | undefined = undefined) {
+		return axios.post(resolveToBackendPath(`/tests/${testId}/actions/delete`, customBackendPath), {}, {
+			headers: {
+				Cookie: `isLoggedIn=true; token=${userToken}`,
+			},
+		}).then((result) => result.data);
+	}
 	public static async saveTest(
 		events: Array<iAction>,
 		customBackendPath: string | undefined = undefined,

@@ -340,7 +340,7 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 			`}
 		>
 			<div>
-				<MenuItem onClick={handleViewDetails} label={"View Details"} className={"close-on-click"} />
+                <MenuItem onClick={handleViewDetails} label={<span>Run tests (cloud)</span>} className={"close-on-click"} />
 			</div>
 		</div>
 	);

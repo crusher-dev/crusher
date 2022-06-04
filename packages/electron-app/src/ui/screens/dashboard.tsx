@@ -509,7 +509,6 @@ function DashboardScreen() {
             sendSnackBarEvent({ message: "Error deleting test", type: "error" });
         });
     }, [userTests]);
-    console.log("User tests", userTests);
 
     let userProjectName = null;
     if (userProject) {

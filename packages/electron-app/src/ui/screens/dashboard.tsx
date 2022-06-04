@@ -100,11 +100,11 @@ function TestListItem({test, isActive, projectId, onMouseEnterCallback}) {
     }, [inputRef]);
 
     const InnerComponent = (
-        <span onDoubleClick={handleDoubleClick} css={[ css`padding: 4px 8px;    border: 1px solid transparent;`, isEditMode ? css`padding: 6px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 4px;`: undefined]}>
+        <span onDoubleClick={handleDoubleClick}>
 
-            <input size={isEditMode ? 20 : (testName.length)} ref={inputRef} css={css`background: transparent;`} onKeyDown={handleKeyDown} onChange={(e) => {setTestName(e.target.value);} } value={testName} disabled={!isEditMode} />
+            <input size={isEditMode ? 20 : (testName.length)} ref={inputRef} css={[css`background: transparent; border: 1px solid transparent;  padding: 6px 8px;`, isEditMode ? css`
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;`: undefined]} onKeyDown={handleKeyDown} onChange={(e) => {setTestName(e.target.value);} } value={testName} disabled={!isEditMode} />
             </span>
     );
 

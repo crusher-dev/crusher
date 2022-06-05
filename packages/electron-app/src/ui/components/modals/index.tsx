@@ -10,7 +10,7 @@ import mitt from "mitt";
 import { useStore } from "react-redux";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 
-const modalEmitter = mitt();
+export const modalEmitter = mitt();
 
 const emitShowModal = (event: { type: any; stepIndex?: any }) => {
 	modalEmitter.emit("show-modal", event);
@@ -59,12 +59,6 @@ const ModalManager = () => {
 				stepAction={stepAction as any}
 				stepIndex={currentModal.stepIndex}
 				isOpen={currentModal.type === TTopLevelActionsEnum.RUN_AFTER_TEST}
-				handleClose={closeModal}
-			/>
-			<CustomCodeModal
-				stepAction={stepAction as any}
-				stepIndex={currentModal.stepIndex}
-				isOpen={currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE}
 				handleClose={closeModal}
 			/>
 			<SeoModalContent

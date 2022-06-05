@@ -94,7 +94,7 @@ const initialState: IRecorderReducer = {
 	isVerified: false,
 	crashState: null,
 
-	showStatusBar: false,
+	showStatusBar: true,
 };
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {

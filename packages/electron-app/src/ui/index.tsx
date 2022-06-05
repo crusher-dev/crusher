@@ -11,7 +11,7 @@ import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
-import { getRecorderInfo, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
+import { getIsStatusBarVisible, getRecorderInfo, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
 import { goFullScreen, performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
@@ -32,6 +32,7 @@ import { LoginScreen } from './screens/login';
 import { LoadingScreen } from './screens/loading';
 import { CreateTestScreen } from './screens/createTest';
 import { SelectProjectScreen } from './screens/selectProject';
+import { StatusBar } from './components/status-bar';
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -42,6 +43,7 @@ const App = () => {
 
 	const store = useStore();
 	const recorderInfo = useSelector(getRecorderInfo);
+	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 
 	React.useEffect(() => {
 		//@ts-ignore
@@ -164,8 +166,11 @@ const App = () => {
 				<Global styles={globalStyles} />
 				{!!recorderInfo.device ? (<Sidebar css={sidebarStyle} />) : ""}
 				<div css={bodyStyle}>
-					<Toolbar css={toolbarStyle} />
+					<Toolbar css={[toolbarStyle, isStatusBarVisible ? css`z-index: -1;` : undefined]} />
 					<DeviceFrame css={deviceFrameContainerStyle} />
+					{isStatusBarVisible ? (
+						<StatusBar />
+					) : ""}
 				</div>
 			</div>
 		</>
@@ -188,6 +193,9 @@ const bodyStyle = css`
 	display: grid;
 	grid-template-rows: 62rem;
 	flex-direction: column;
+	position: relative;
+	position: relative;
+	z-index: 201;
 `;
 const sidebarStyle = css`
 	padding: 1rem;

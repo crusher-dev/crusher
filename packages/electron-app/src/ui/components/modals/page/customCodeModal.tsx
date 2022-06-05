@@ -18,7 +18,7 @@ import * as path from "path";
 import * as fs from "fs";
 import { ipcRenderer } from "electron";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { DownIcon } from "electron-app/src/ui/icons";
+import { DownIcon, PlayIconV2 } from "electron-app/src/ui/icons";
 import { monacoTheme } from "./monaco.theme";
 
 function ensureFirstBackSlash(str) {
@@ -91,7 +91,7 @@ function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, .
 			`}
 		>
 			<div>
-				<Conditional showIf={selectedTemplate}> 
+				<Conditional showIf={selectedTemplate}>
 					<MenuItem onClick={handleDeteach} label={"Detach template"} className={"close-on-click"} />
 					<MenuItem onClick={handleUpdateTemplate} label={"Update template"} className={"close-on-click"} />
 				</Conditional>
@@ -132,7 +132,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				const templatesArr = res.map((a) => ({ id: a.id, code: a.code, name: a.name }));
 				setCodeTemplates(templatesArr);
 
-		
+
 			});
 		}
 	}, [isOpen]);
@@ -271,9 +271,11 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			});
 	};
 
-	return (
-		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
-			<ModalTopBar css={css`padding-bottom: 12rem;`} title={<><span>Custom code</span><div css={css`font-size: 13rem;
+	return (<div css={css`    background: black;
+	height: 100%;
+	display: flex;
+	flex-direction: column;`}>
+			<ModalTopBar css={css`padding-bottom: 12rem;`} title={<><span>Code block</span><div css={css`font-size: 13rem;
     font-family: 'Cera Pro';
     display: flex;
     color: rgba(255, 255, 255, 0.4);
@@ -287,7 +289,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					border-bottom: 0.25px solid rgb(255,255,255,0.08);
 					padding-bottom: 17rem;
 				`}
-			>
+		>
 				<SelectBox
 					isSearchable={true}
 					dropDownHeight={"auto"}
@@ -357,15 +359,15 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					</div>
 				</Conditional>
 			</div>
-			<div css={css`
+			<div css={css` height: auto;
 					padding: 12rem 34rem;
 					background: #080809;
 					padding-left: 4rem;
 					border-bottom-left-radius: 12px;
-					border-bottom-right-radius: 12px;`}>
+					border-bottom-right-radius: 12px; flex: 1;`}>
 				<Editor
 					path={"ts:modal.ts"}
-					height="300rem"
+					height="90%"
 					defaultLanguage="javascript"
 					beforeMount={handleEditorWillMount}
 					onMount={handleOnMount}
@@ -421,10 +423,17 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						{"Create"}
 					</Button>
 					</div>
-				
+
 				</div>
 			</Conditional>
-				<div css={bottomBarStyle}>
+			<div css={bottomBarStyle}>
+				<div css={ css`display: flex; gap: 20rem; align-items: center;`}>
+					<div css={actionLinkStyle}>View log</div>
+					<div css={[actionLinkStyle, `display: flex; align-items: center; gap: 12rem;`]}>
+						<PlayIconV2 css={css`width: 16rem; height: 16rem`}  />
+						<span>Run with context</span>
+					</div>
+				</div>
 					<Dropdown
 				initialState={showActionMenu}
 				component={<ActionButtonDropdown callback={(method) => {
@@ -437,12 +446,15 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					}
 				}} selectedTemplate={selectedTemplate} setShowActionMenu={setShowActionMenu.bind(this)} />}
 				callback={setShowActionMenu.bind(this)}
-				css={css`margin-top: 16rem;`}
+				css={css`margin-left: auto; .showOnClick {     display: flex; align-items: center; }`}
 				dropdownCSS={css`
 					left: 0rem !important;
 					width: 162rem;
+					z-index: 123123123123123;
+    left: 47rem!important;
 				`}
-			>
+				>
+					<div css={runLinkStyle}>Run</div>
 					<Button css={saveButtonStyle} onClick={(e) => {
 							e.preventDefault();
 							e.stopPropagation();
@@ -452,7 +464,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 								runCustomCode();
 							}
 						}}>
-						{props.stepAction ? (selectedTemplate ? "Save step" : "Save step") : "Add step"}
+						{props.stepAction ? (selectedTemplate ? "Save step" : "Save step") : "Save and run"}
 					</Button>
 					<div
 					css={css`
@@ -468,6 +480,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						:hover {
 							opacity: 0.8;
 						}
+						align-self: stretch;
 					`}
 				>
 					<DownIcon
@@ -480,10 +493,35 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					</Dropdown>
 				</div>
 			</div>
-		</Modal>
+	</div>
 	);
 };
 
+const runLinkStyle = css`
+
+font-family: Gilroy;
+font-style: normal;
+font-weight: 600;
+font-size: 14rem;
+text-align: right;
+
+color: rgba(255, 255, 255, 0.69);
+:hover {
+	opacity: 0.8;
+}
+`;
+
+const actionLinkStyle = css`
+font-family: Cera Pro;
+font-style: normal;
+font-weight: 400;
+font-size: 14rem;
+
+color: rgba(255, 255, 255, 0.4);
+:hover {
+	opacity: 0.8;
+}
+`;
 const inputStyle = css`
 	background: #1a1a1c;
 	border-radius: 6rem;
@@ -518,11 +556,11 @@ const validationStatusContainerCSS = css`
 `;
 const bottomBarStyle = css`
 	display: flex;
-	justify-content: flex-end;
 	align-items: center;
-	margin-top: 1.5rem;
+	padding: 8rem 34rem;
 `;
 const saveButtonStyle = css`
+	margin-left: 24rem;
 	width: 128rem;
 	height: 30rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);

@@ -585,7 +585,24 @@ const CrusherHammerColorIcon = (props) => (
 		fill="#fff"
 	  />
 	</svg>
-  )
+	)
+
+	const PlayIconV2 = (props) => (
+		<svg
+			viewBox={"0 0 16 16"}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<rect width={16} height={16} rx={5} fill="#9462FF" />
+			<path
+				d="M5.693 11a.742.742 0 0 1-.328-.076.63.63 0 0 1-.365-.56V5.636a.63.63 0 0 1 .365-.56.737.737 0 0 1 .67.008l4.649 2.418a.63.63 0 0 1 .232.214.528.528 0 0 1 0 .568.63.63 0 0 1-.232.213l-4.649 2.42a.743.743 0 0 1-.342.083Z"
+				fill="#000"
+				fillOpacity={0.6}
+			/>
+		</svg>
+	)
+
 
 export {
 	CrusherIcon,
@@ -618,5 +635,6 @@ export {
 	StopIcon,
 	MiniCrossIcon,
 	ConsoleIcon,
-	UpMaximiseIcon
+	UpMaximiseIcon,
+	PlayIconV2
 };

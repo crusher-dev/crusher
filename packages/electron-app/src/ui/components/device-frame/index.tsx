@@ -154,8 +154,9 @@ const DeviceFrame = (props: any) => {
 		}
 	}, [ref.current]);
 
+	// Only when code is shown
 	return (
-		<div css={topContainerStyle}>
+		<div css={[topContainerStyle]}>
 			<div css={containerStyle}>
 				{recorderInfo.device && (
 	<div style={{ width: `${recorderInfo.device?.width}rem`, height: `${recorderInfo.device?.height}rem`, maxWidth: "100%", maxHeight: "100%", position: "relative" }}>
@@ -185,9 +186,6 @@ const DeviceFrame = (props: any) => {
 				)}
 							<InfoOverLay />
 			</div>
-			<Conditional showIf={isStatusBarVisible}>
-				<StatusBar />
-			</Conditional>
 		</div>
 	);
 };
@@ -237,7 +235,7 @@ const webviewStyle = css`
 const topContainerStyle = css`position: relative; overflow: hidden;`;
 const containerStyle = css`
 	width: 100%;
-	height: 100%;
+	height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;

@@ -457,7 +457,7 @@ const Toolbar = (props: any) => {
 							/>
 	), [selectedDevice, recorderDevices]);
 	return (
-		<div css={containerStyle}>
+		<div css={containerStyle} {...props}>
 			<Conditional showIf={isTestBeingVerified}>
 				<div
 					css={testBeingVerifiedContainerStyle}

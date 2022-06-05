@@ -308,6 +308,11 @@ const updateCodeTemplate = (id, name, code) => {
 const deleteCodeTemplate = (id) => {
 	return ipcRenderer.invoke("delete-code-template", { id });
 };
+
+const performExit = () => {
+	return ipcRenderer.invoke("exit-app");
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -354,5 +359,6 @@ export {
 	updateTestName,
 	performRunTests,
 	performClearRemainingStpes,
-	performDeleteTest
+	performDeleteTest,
+	performExit
 };

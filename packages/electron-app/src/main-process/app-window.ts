@@ -249,6 +249,7 @@ export class AppWindow {
 		ipcMain.handle("update-code-template", this.handleUpdateCodeTemplate.bind(this));
 		ipcMain.handle("delete-code-template", this.handleDeleteCodeTemplate.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
+		ipcMain.handle("exit-app", this.handleExitApp.bind(this));
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 
@@ -916,6 +917,13 @@ export class AppWindow {
 		return session.fromPartition("crusherwebview").clearStorageData({
 			storages: ["cookies", "localstorage", "indexdb"],
 		});
+	}
+
+
+	private async handleExitApp() {
+		console.log("Resetting storage");
+		await this.destroy();
+		process.exit();
 	}
 
 	private async handleResetStorage() {

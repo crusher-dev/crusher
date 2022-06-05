@@ -5,10 +5,11 @@ import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
-import { getBuildReport } from "../commands/perform";
+import { getBuildReport, performExit } from "../commands/perform";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { useStore } from "react-redux";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
+import { Dropdown } from "@dyson/components/molecules/Dropdown";
 
 function Link({children, ...props}) {
     return(
@@ -153,26 +154,94 @@ color: #FFFFFF;
 text-transform: capitalize;
 `;
 
+function ActionButtonDropdown({ setShowActionMenu, ...props }) {
+    const navigate = useNavigate();
+
+	const MenuItem = ({ label, onClick, ...props }) => {
+		return (
+			<div
+				css={css`
+					padding: 6rem 13rem;
+					:hover {
+						background: #687ef2 !important;
+					}
+				`}
+				onClick={onClick}
+			>
+				{label}
+			</div>
+		);
+	};
+
+	const handleViewDetails = () => {
+		setShowActionMenu(false);
+    };
+
+    const handleSettings = () => {
+        setShowActionMenu(false);
+        alert("Settings not implemented yet");
+    };
+
+    const handleOpenApp = () => {
+        setShowActionMenu(false);
+        shell.openExternal(resolveToFrontEndPath("/"));
+    };
+
+    const handleExit = () => {
+        setShowActionMenu(false);
+        performExit();
+    }
+
+    const handleSelectProject = () => {
+        setShowActionMenu(false);
+        return navigate("/select-project");
+    }
+
+	return (
+		<div
+			className={"flex flex-col justify-between h-full"}
+			css={css`
+				font-size: 13rem;
+				color: #fff;
+			`}
+		>
+            <div>
+                <MenuItem onClick={handleSelectProject} label={<span>Select project</span>} className={"close-on-click"} />
+                <MenuItem onClick={handleOpenApp} label={<span>Open App</span>} className={"close-on-click"} />
+                <MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
+                <MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
+			</div>
+		</div>
+	);
+}
+
 function ModelContainerLayout({children, title, footer, className, isLoadingScreen, ...props}) {
     const navigate = useNavigate();
+    const [showAppMenu, setShowAppMenu] = React.useState(false);
 
     const handleOpenAppClick = React.useCallback(() => {
         shell.openExternal("https://app.crusher.dev");
     }, []);
-
-    const handleDropdownClick = () => {
-        return navigate("/select-project");
-    };
 
     return (
         <div css={containerStyle} {...props}>
             <div css={dragStyle} className={"drag"}></div>
             <div css={headerStyle}>
                 <div css={leftNavBarStyle}>
-                    <div css={crusherDropdownContainerStyle} onClick={handleDropdownClick}>
+                <Dropdown
+    initialState={showAppMenu}
+                        component={(<ActionButtonDropdown setShowActionMenu={setShowAppMenu.bind(this)}/>)}
+    callback={setShowAppMenu.bind(this)}
+	dropdownCSS={css`
+					left: 0rem;
+					width: 162rem;
+				`}
+>
+                    <div css={crusherDropdownContainerStyle}>
                         <CrusherHammerColorIcon css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
                         <DropdownIconSVG/>
-                    </div>
+                        </div>
+                        </Dropdown>
                 </div>
                 <div css={mainTitleContainerStyle}>
                     {title}
@@ -306,7 +375,8 @@ const headerStyle = css`
     padding: 12px 28px;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
+    position: RELATIVE;
+    z-index: 23424234324234234;
 `;
 
 const mainTitleContainerStyle = css`

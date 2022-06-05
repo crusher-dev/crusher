@@ -1,12 +1,17 @@
 import { ILoggerReducer } from "electron-app/src/store/reducers/logger";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useStore } from "react-redux";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
 import { MiniCrossIcon, UpMaximiseIcon } from "../../icons";
 import {ObjectInspector, TableInspector, chromeDark, ObjectRootLabel, ObjectLabel} from 'react-inspector';
 import { BrowserButton } from "../buttons/browser.button";
+import { CustomCodeModal } from "../modals/page/customCodeModal";
+import { modalEmitter } from "../modals";
+import { TElementActionsEnum } from "../sidebar/actionsPanel/elementActions";
+import { TTopLevelActionsEnum } from "../sidebar/actionsPanel/pageActions";
+import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
 	logs = logs.map((log, index) => { return {...log, diff: index == 0 ? "0" : (log.time - logs[index - 1].time).toFixed(2)}});
@@ -36,7 +41,7 @@ const TabButton = (props: ITabButtonProps) => {
 	);
 }
 
-enum TabsEnum { 
+enum TabsEnum {
 	LOGS = "LOGS",
 	CONTEXT = "CONTEXT",
 	HOOKS = "HOOKS",
@@ -73,12 +78,32 @@ const defaultNodeRenderer = ({ depth, name, data, isNonenumerable, expanded }) =
   depth === 0
     ? <ObjectRootLabel name={name} data={data} />
     : <ObjectLabel name={name} data={data} isNonenumerable={isNonenumerable} />;
-	
+
 const StatusBar = (props: any) => {
+	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
+	const store = useStore();
+
 	const [clicked, setClicked] = React.useState(false);
 	const [selectedTab, setSelectedTab] = React.useState(TabsEnum.LOGS);
 	const logsScrollRef: React.Ref<HTMLDivElement> = React.useRef(null);
 	const logs = useSelector(getLogs);
+
+
+	React.useEffect(() => {
+		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: TElementActionsEnum | TTopLevelActionsEnum; stepIndex?: number }) => {
+			if (type === TTopLevelActionsEnum.CUSTOM_CODE) {
+				setCurrentModal({ type, stepIndex });
+				setClicked(true);
+			} else {
+				setCurrentModal(null);
+			}
+		});
+	}, []);
+	const closeModal = () => {
+		setCurrentModal({ type: null, stepIndex: null });
+		setClicked(false);
+	};
+
 
 	React.useEffect(() => {
 		if(logs && logs.length) {
@@ -122,12 +147,31 @@ const StatusBar = (props: any) => {
 	};
 
 	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message : "";
+	const stepAction = React.useMemo(() => {
+		if (typeof currentModal.stepIndex !== "undefined") {
+			const savedSteps = getSavedSteps(store.getState() as any);
+			return savedSteps[currentModal.stepIndex];
+		}
+		return null;
+	}, [currentModal.stepIndex]);
+
 	return (
-	<>
-		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={statusBarContainerStyle}>
+		<div css={[css`
+		position: absolute;
+		bottom: 0rem; width: 100%; display: flex; flex-direction: column;`, currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? css`height: 100%` : undefined]}>
+			{currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? (<div css={css`flex: 1; height: 100%; width: 100%; display: flex; flex-direction: column;`}>
+				<CustomCodeModal
+					stepAction={stepAction as any}
+					stepIndex={currentModal.stepIndex}
+					isOpen={currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE}
+					handleClose={closeModal}
+				/>
+				{/* <div css={css`height: 100%; width: 100%; background :red;`}></div> */}
+			</div>) : ""}
+		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={[statusBarContainerStyle, clicked ? css`height: 341rem;` : undefined]}>
 			<div css={css`display: flex; align-items: center; height: 100%; max-height: 32rem; 	padding: 0rem 14rem;`}>
 				<TabButton selected={selectedTab === TabsEnum.LOGS} title="Logs" count={logs && logs.length} callback={() => {setClicked(true); handleTabSelection(TabsEnum.LOGS); }}/>
-	
+
 
 				<Conditional showIf={!clicked}>
 					<div css={logTextStyle} className={"ml-20"}>{lastLogMessage.length > 100 ? lastLogMessage.substr(0, 100) + "..." : lastLogMessage}</div>
@@ -147,7 +191,7 @@ const StatusBar = (props: any) => {
 				<Conditional showIf={selectedTab === TabsEnum.LOGS}>
 					<div id={"logs-list"} css={css`color: #fff; font-size: 14rem; padding: 0rem 14rem; padding-bottom: 8rem; height: calc(100% - 32rem); overflow-y: auto;`} className={"custom-scroll"}>
 						{logs && logs.length ? formatLogs(logs).map((log: ILoggerReducer["logs"][0], index: number) => {
-							return <LogItem diff={log.diff} log={log} key={log.id}/>	
+							return <LogItem diff={log.diff} log={log} key={log.id}/>
 						}) : ""}
 					</div>
 				</Conditional>
@@ -183,7 +227,7 @@ const StatusBar = (props: any) => {
 					</div>
 				</Conditional>
 			</Conditional>
-		</div> 
+		</div>
 
 		<style>{`
 			.expandBar {
@@ -191,7 +235,7 @@ const StatusBar = (props: any) => {
 			}
 		`}
 		</style>
-	</>
+	</div>
 	)
 };
 
@@ -222,12 +266,10 @@ const statusBarContainerStyle = css`
 	background: linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02)), #0F1010;
 	border: 1px solid #272D2D;
 	width: 100%;
-    max-height: 32rem;
-	height: 100%;
-	position: absolute;
-	bottom: 0rem;
-	transition: max-height 0.1s;  
+  height: 32rem;
+	transition: max-height 0.1s, height 0.1s;
 	z-index: 999;
+	margin-top: auto;
 `;
 
 export { StatusBar };

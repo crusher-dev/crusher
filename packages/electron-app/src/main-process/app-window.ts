@@ -1028,10 +1028,10 @@ export class AppWindow {
 	}
 
 	private async resetRecorder(state: TRecorderState = null) {
-		if (this.webView) {
-			this.webView.dispose();
-			this.webView = undefined;
-		}
+		// if (this.webView) {
+		// 	this.webView.dispose();
+		// 	this.webView = undefined;
+		// }
 		this.store.dispatch(resetRecorderState(state));
 		this.store.dispatch(clearLogs());
 		if (this.webView) {
@@ -1083,7 +1083,11 @@ export class AppWindow {
 
 	async handleWebviewAttached(event, webContents) {
 		console.log("Webview is attached", Date.now());
-		this.webView = new WebView(this);
+		this.webView = new WebView(this, () => {
+			if (this.webView) {
+					this.webView = undefined;
+				}
+		});
 		this.webView.webContents.on("dom-ready", () => {
 			if (!this.webView.webContents.debugger.isAttached()) {
 				this.webView.initialize();

@@ -79,7 +79,7 @@ export class WebView {
 		return webViewWebContents;
 	}
 
-	constructor(appWindow) {
+	constructor(appWindow, private resetCallback) {
 		this.appWindow = appWindow;
 		this.webContents = this.getWebContents();
 		this._startTime = now();
@@ -165,6 +165,7 @@ export class WebView {
 
 	dispose() {
 		try {
+			this.resetCallback();
 			if (this.webContents && !this.webContents.isDestroyed()) {
 				this.webContents.debugger.detach();
 			}

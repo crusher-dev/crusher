@@ -206,7 +206,7 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 			`}
 		>
             <div>
-                <MenuItem onClick={handleSelectProject} label={<span>Select project</span>} className={"close-on-click"} />
+                <MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
                 <MenuItem onClick={handleOpenApp} label={<span>Open App</span>} className={"close-on-click"} />
                 <MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
                 <MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />

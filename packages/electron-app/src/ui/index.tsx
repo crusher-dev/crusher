@@ -46,6 +46,7 @@ const App = () => {
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 
 	React.useEffect(() => {
+		document.querySelector("html").style = "";
 		//@ts-ignore
 		// document.body.querySelector("#welcome_splash").style.display = "none";
 		ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {

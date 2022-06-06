@@ -241,6 +241,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
 			diagnosticCodesToIgnore: [1375],
 		});
+		monaco.editor.set
 		monaco.editor.defineTheme("my-theme", {
 			base: "vs-dark",
 			inherit: true,
@@ -322,7 +323,13 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				/>
 
 <Global
-      styles={css`
+				styles={css`
+			.monaco-editor .view-lines {
+				font-size: 14rem !important;
+			}
+			.monaco-editor .margin-view-overlays {
+				font-size: 14rem !important;
+			}
 	  .select-dropDownContainer {
 		max-height: 200rem;
 		overflow-y: scroll !important;

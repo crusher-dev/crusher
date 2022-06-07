@@ -208,7 +208,9 @@ export class AppWindow {
 			try {
 				await this.handlePerformAction(event, payload);
 				this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-			} catch (ex) {}
+			} catch (ex) {
+				console.error(ex);
+			}
 		});
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
 		ipcMain.handle("turn-on-element-selector-inspect-mode", this.turnOnElementSelectorInspectMode.bind(this));
@@ -454,7 +456,7 @@ export class AppWindow {
 
 	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
 		const recorderState = getRecorderState(this.store.getState() as any);
-		event.returnValue = [TRecorderState.PERFORMING_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type);
+		event.returnValue = ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type);
 	}
 
 	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: { projectId: string }) {
@@ -536,6 +538,7 @@ export class AppWindow {
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
+		console.log("Saving step", payload.action);
 		if(!this.webView.playwrightInstance) return;
 		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
 		if (elementInfo && elementInfo.parentFrameSelectors) {

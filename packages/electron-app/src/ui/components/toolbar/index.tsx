@@ -596,7 +596,7 @@ const Toolbar = (props: any) => {
 							]}
 						/>
 						<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
-							{![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type) ? "Rec." : "Waiting"}
+							{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "Rec." : "Waiting"}
 						</Text>
 					</div>
 

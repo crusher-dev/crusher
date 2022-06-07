@@ -22,6 +22,7 @@ import { DownIcon, PlayIconV2 } from "electron-app/src/ui/icons";
 import { monacoTheme } from "./monaco.theme";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { editor } from "monaco-editor";
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -234,7 +235,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	};
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monacoRef.current = monaco;
-
+		
 		monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
 			target: monaco.languages.typescript.ScriptTarget.ESNext,
 			module: monaco.languages.typescript.ModuleKind.ESNext,
@@ -255,6 +256,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
 			diagnosticCodesToIgnore: [1375],
 		});
+
 		monaco.editor.defineTheme("my-theme", {
 			base: "vs-dark",
 			inherit: true,
@@ -265,6 +267,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			},
 		});
 	};
+
 
 	const handleCreateTemplate = (name) => {
 		if (!name || !name.length) {
@@ -391,7 +394,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					beforeMount={handleEditorWillMount}
 					onMount={handleOnMount}
 					theme={"my-theme"}
-					options={{ minimap: { enabled: false } }}
+					options={{ minimap: { enabled: false }, automaticLayout: true }}
 					defaultValue={initialCodeTemplate}
 				/>
 

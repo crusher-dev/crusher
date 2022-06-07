@@ -12,6 +12,7 @@ import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@shared/constants/recordedAc
 import { iDevice } from "@shared/types/extension/device";
 import {
 	recordStep,
+	resetRecorder,
 	resetRecorderState,
 	setDevice,
 	setInspectElementSelectorMode,
@@ -419,12 +420,12 @@ export class AppWindow {
 
 	private async disableJavascriptInDebugger() {
 		if (this.window) {
-			return this.webView._disableExecution();
+			return this.webView.disableExecution();
 		}
 	}
 	private async handleEnableJavascriptInDebugger() {
 		if (this.webView) {
-			return this.webView._resumeExecution();
+			return this.webView.resumeExecution();
 		}
 	}
 
@@ -626,7 +627,7 @@ export class AppWindow {
 	}
 
 	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
-		try { await this.webView._resumeExecution(); } catch (e) { console.error("Enabling exection failed", e); }
+		try { await this.webView.resumeExecution(); } catch (e) { console.error("Enabling exection failed", e); }
 		await new Promise((resolve) => setTimeout(resolve, 500));
 		const elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
@@ -665,7 +666,7 @@ export class AppWindow {
 				});
 			}
 		}
-		try { await this.webView._disableExecution(); } catch(ex) { console.error("Disabling execution failed", ex); }
+		try { await this.webView.disableExecution(); } catch(ex) { console.error("Disabling execution failed", ex); }
 		return assertElementInfo;
 	}
 
@@ -923,7 +924,7 @@ export class AppWindow {
 
 	private turnOnInspectMode() {
 		this.store.dispatch(setInspectMode(true));
-		this.webView._turnOnInspectMode();
+		this.webView.turnOnInspectMode();
 		// this.webView.webContents.focus();
 	}
 
@@ -931,21 +932,21 @@ export class AppWindow {
 		this.store.dispatch(setInspectElementSelectorMode(true));
 		this.useAdvancedSelectorPicker = true;
 
-		this.webView._turnOnInspectMode();
-		this.webView._resumeExecution();
+		this.webView.turnOnInspectMode();
+		this.webView.resumeExecution();
 		this.webView.webContents.focus();
 	}
 
 	private turnOffElementSelectorInspectMode() {
 		this.store.dispatch(setInspectElementSelectorMode(false));
 		this.useAdvancedSelectorPicker = false;
-		this.webView._turnOffInspectMode();
+		this.webView.turnOffInspectMode();
 		this.webView.webContents.focus();
 	}
 
 	private turnOffInspectMode() {
 		this.store.dispatch(setInspectMode(false));
-		this.webView._turnOffInspectMode();
+		this.webView.turnOffInspectMode();
 		this.webView.webContents.focus();
 	}
 
@@ -1119,10 +1120,16 @@ export class AppWindow {
 
 	async handleWebviewAttached(event, webContents) {
 		console.log("Webview is attached", Date.now());
-		this.webView = new WebView(this, () => {
+		this.webView = new WebView(this,  async () => {
+
+
 			if (this.webView) {
 					this.webView = undefined;
 				}
+				this.store.dispatch(resetRecorder());
+				await this.resetRecorder();
+				this.store.dispatch(setSessionInfoMeta({}));
+				this.handleResetStorage();
 		});
 		this.webView.webContents.on("dom-ready", () => {
 			if (!this.webView.webContents.debugger.isAttached()) {

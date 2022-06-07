@@ -77,7 +77,7 @@ export class AppWindow {
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
 			titleBarStyle: "hidden",
-			trafficLightPosition: { x: 30, y: 24 },
+			trafficLightPosition: { x: 10, y: 15 },
 			width: this.minWidth,
 			height: this.minHeight,
 			minWidth: this.minWidth,
@@ -849,7 +849,7 @@ export class AppWindow {
 				this.window.setFullScreen(false);
 				setImmediate(async () => {
 					if (process.platform === "darwin") {
-						this.window.setTrafficLightPosition({ x: 30, y: 24 });
+						this.window.setTrafficLightPosition({ x: 10, y: 15 });
 					}
 					this.window.setSize(this.minWidth, this.minHeight);
 					this.window.center();
@@ -1121,8 +1121,6 @@ export class AppWindow {
 	async handleWebviewAttached(event, webContents) {
 		console.log("Webview is attached", Date.now());
 		this.webView = new WebView(this,  async () => {
-
-
 			if (this.webView) {
 					this.webView = undefined;
 				}

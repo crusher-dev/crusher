@@ -342,6 +342,8 @@ const Toolbar = (props: any) => {
 			setUrlInputError({ value: false, message: "" });
 			batch(() => {
 				if (!recorderInfo.url) {
+					// @NOTE: Find better way to make sure initScript is done
+					// webview.
 					performSteps([{
 						"type": "BROWSER_SET_DEVICE",
 						"payload": {
@@ -358,6 +360,20 @@ const Toolbar = (props: any) => {
 								}
 							}
 						},
+						"time": Date.now()
+					},
+					{
+						"type": "PAGE_NAVIGATE_URL",
+						"shouldNotRecord": true,
+						"payload": {
+							"selectors": [
+
+							],
+							"meta": {
+								"value": "about:blank"
+							}
+						},
+						"status": "COMPLETED",
 						"time": Date.now()
 					},
 					{

@@ -11,7 +11,9 @@ import { CustomCodeModal } from "../modals/page/customCodeModal";
 import { modalEmitter } from "../modals";
 import { TElementActionsEnum } from "../sidebar/actionsPanel/elementActions";
 import { TTopLevelActionsEnum } from "../sidebar/actionsPanel/pageActions";
-import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { updateRecorderState } from "electron-app/src/store/actions/recorder";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
 	logs = logs.map((log, index) => { return {...log, diff: index == 0 ? "0" : (log.time - logs[index - 1].time).toFixed(2)}});
@@ -92,6 +94,10 @@ const StatusBar = (props: any) => {
 	React.useEffect(() => {
 		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: TElementActionsEnum | TTopLevelActionsEnum; stepIndex?: number }) => {
 			if (type === TTopLevelActionsEnum.CUSTOM_CODE) {
+				const recorderState = getRecorderState(store.getState());
+				if(recorderState.payload && !(recorderState.payload as any).previousState) {
+					store.dispatch(updateRecorderState(TRecorderState.CUSTOM_CODE_ON, { previousState: {type: recorderState.type, payload: recorderState.payload}}));
+				}
 				setCurrentModal({ type, stepIndex });
 				setClicked(true);
 			} else {
@@ -99,7 +105,8 @@ const StatusBar = (props: any) => {
 			}
 		});
 	}, []);
-	const closeModal = () => {
+	const closeModal = (isDocking: boolean = false) => {
+		const recorderState = getRecorderState(store.getState());
 		setCurrentModal({ type: null, stepIndex: null });
 		setClicked(false);
 	};
@@ -159,7 +166,7 @@ const StatusBar = (props: any) => {
 		<div css={[css`
 		position: absolute;
 		bottom: 0rem; width: 100%; display: flex; flex-direction: column;`, currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? css`height: 100%` : undefined]}>
-			{currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? (<div css={css`flex: 1; height: 100%; width: 100%; display: flex; flex-direction: column;`}>
+			{currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? (<div css={css`flex: 1; height: 100%; width: 100%; display: flex; flex-direction: column; overflow: hidden;`}>
 				<CustomCodeModal
 					stepAction={stepAction as any}
 					stepIndex={currentModal.stepIndex}

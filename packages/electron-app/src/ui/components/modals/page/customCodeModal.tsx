@@ -7,7 +7,7 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { deleteCodeTemplate, getCodeTemplates, performCustomCode, performUndockCode, saveCodeTemplate, updateCodeTemplate } from "electron-app/src/ui/commands/perform";
 import { iAction } from "@shared/types/action";
 import { useSelector, useStore } from "react-redux";
-import { setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
+import { setSelectedElement, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { sendSnackBarEvent } from "../../toast";
 import { Checkbox } from "@dyson/components/atoms/checkbox/checkbox";
 import { Input } from "@dyson/components/atoms";
@@ -20,6 +20,8 @@ import { ipcRenderer, remote } from "electron";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { DownIcon, PlayIconV2 } from "electron-app/src/ui/icons";
 import { monacoTheme } from "./monaco.theme";
+import { getRecorderState } from "electron-app/src/store/selectors/recorder";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -40,7 +42,7 @@ console.log("path is", uriFromPath(path.join(remote.app.getAppPath(), "static/mo
 
 interface iElementCustomScriptModalContent {
 	isOpen: boolean;
-	handleClose: () => void;
+	handleClose: any;
 
 	// For editing
 	stepIndex?: number;
@@ -139,10 +141,20 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		}
 	}, [isOpen]);
 
-	const runCustomCode = React.useCallback(() => {
-		performCustomCode(monacoRef.current.editor.getModel(modalName).getValue(), selectedTemplate);
+	const handleCustomClose = React.useCallback((shouldUpdate: boolean = true) => {
+		const recorderState = getRecorderState(store.getState());
+		if(shouldUpdate && recorderState.payload && (recorderState.payload as any).previousState) {
+			store.dispatch(updateRecorderState((recorderState.payload as any).previousState.type, {...(recorderState.payload as any).previousState.payload}));
+		}
 		props.handleClose();
-	}, [selectedTemplate, codeTextAreaRef]);
+	}, [props.handleClose]);
+
+	const runCustomCode = React.useCallback(() => {
+		store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
+
+		performCustomCode(monacoRef.current.editor.getModel(modalName).getValue(), selectedTemplate);
+		handleCustomClose(false);
+	}, [selectedTemplate, codeTextAreaRef, handleCustomClose]);
 
 	const updateCustomCode = React.useCallback(() => {
 		if (props.stepAction) {
@@ -150,9 +162,9 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			props.stepAction.payload.meta.templateId = selectedTemplate;
 			store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
 			sendSnackBarEvent({ type: "success", message: "Custom code updated" });
-			props.handleClose();
+			handleCustomClose();
 		}
-	}, [props.stepAction, selectedTemplate, codeTextAreaRef]);
+	}, [props.stepAction, selectedTemplate, codeTextAreaRef, handleCustomClose]);
 
 	const isThereScriptOutput = true;
 
@@ -288,7 +300,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
     color: rgba(255, 255, 255, 0.4);
     align-items: center;
     padding-top: 1rem;
-    margin-left: 14rem;`}>Read docs</div></>} closeModal={props.handleClose} />
+    margin-left: 14rem;`}>Read docs</div></>} closeModal={() => {handleCustomClose() }} />
 			<div
 				css={css`
 					padding: 8rem 34rem;
@@ -330,12 +342,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 <Global
 				styles={css`
-			.monaco-editor .view-lines {
-				font-size: 14rem !important;
-			}
-			.monaco-editor .margin-view-overlays {
-				font-size: 14rem !important;
-			}
 	  .select-dropDownContainer {
 		max-height: 200rem;
 		overflow-y: scroll !important;
@@ -380,7 +386,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					border-bottom-right-radius: 12px; flex: 1;`}>
 				<Editor
 					path={"ts:modal.ts"}
-					height="90%"
+					height="100%"
 					defaultLanguage="javascript"
 					beforeMount={handleEditorWillMount}
 					onMount={handleOnMount}
@@ -439,6 +445,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 				</div>
 			</Conditional>
+			</div>
 			<div css={bottomBarStyle}>
 				<div css={ css`display: flex; gap: 20rem; align-items: center;`}>
 					<div css={actionLinkStyle}>View log</div>
@@ -505,7 +512,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				</div>
 					</Dropdown>
 				</div>
-			</div>
 	</div>
 	);
 };
@@ -586,6 +592,7 @@ const bottomBarStyle = css`
 	display: flex;
 	align-items: center;
 	padding: 8rem 34rem;
+	background: #080809;
 `;
 const saveButtonStyle = css`
 	margin-left: 24rem;

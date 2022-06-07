@@ -272,12 +272,12 @@ export class AppWindow {
 		}
 	}
 
-	private async handleUndockCode(event: Electron.IpcMainEvent, payload: {}) {
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {
 		console.log("Undocking now");
 		const codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
-			trafficLightPosition: { x: 30, y: 24 },
+			trafficLightPosition: { x: 10, y: 6 },
 			width: this.window.getBounds().width,
 			height: this.window.getBounds().height,
 			autoHideMenuBar: true,
@@ -454,7 +454,7 @@ export class AppWindow {
 
 	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
 		const recorderState = getRecorderState(this.store.getState() as any);
-		event.returnValue = recorderState.type !== TRecorderState.PERFORMING_ACTIONS;
+		event.returnValue = [TRecorderState.PERFORMING_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type);
 	}
 
 	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: { projectId: string }) {
@@ -897,7 +897,7 @@ export class AppWindow {
 
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
-					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						// @Todo: Add support for future browser actions
@@ -911,7 +911,7 @@ export class AppWindow {
 			for (const savedStep of mainActions) {
 				reaminingSteps.shift();
 
-				await this.handlePerformAction(null, { action: savedStep });
+				await this.handlePerformAction(null, { action: savedStep, shouldNotSave: !!(savedStep as any).shouldNotRecord });
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 		} catch (ex) {

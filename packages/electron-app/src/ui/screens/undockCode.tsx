@@ -11,10 +11,14 @@ import { CustomCodeModal } from "../components/modals/page/customCodeModal";
 
 function UnDockCodeScreen() {
 
+    const handleClose = () => {
+        window.close();
+    }
+
     return (
       (
         <div css={ css`    height: 100vh;`}>
-          <CustomCodeModal isOpen={true} handleClose={() => { } }/>
+          <CustomCodeModal isOpen={true} handleClose={handleClose}/>
         </div>
       )
     );

@@ -148,17 +148,17 @@ const StatusBar = (props: any) => {
 
 	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message : "";
 	const stepAction = React.useMemo(() => {
-		if (typeof currentModal.stepIndex !== "undefined") {
+		if (currentModal && typeof currentModal.stepIndex !== "undefined") {
 			const savedSteps = getSavedSteps(store.getState() as any);
 			return savedSteps[currentModal.stepIndex];
 		}
 		return null;
-	}, [currentModal.stepIndex]);
+	}, [currentModal && (typeof currentModal.stepIndex !== "undefined")]);
 
 	return (
 		<div css={[css`
 		position: absolute;
-		bottom: 0rem; width: 100%; display: flex; flex-direction: column;`, currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? css`height: 100%` : undefined]}>
+		bottom: 0rem; width: 100%; display: flex; flex-direction: column;`, currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? css`height: 100%` : undefined]}>
 			{currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? (<div css={css`flex: 1; height: 100%; width: 100%; display: flex; flex-direction: column;`}>
 				<CustomCodeModal
 					stepAction={stepAction as any}

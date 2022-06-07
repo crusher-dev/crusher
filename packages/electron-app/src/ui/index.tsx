@@ -33,6 +33,7 @@ import { LoadingScreen } from './screens/loading';
 import { CreateTestScreen } from './screens/createTest';
 import { SelectProjectScreen } from './screens/selectProject';
 import { StatusBar } from './components/status-bar';
+import { UnDockCodeScreen } from './screens/undockCode';
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -409,7 +410,7 @@ render(
 					<Route path="/" element={<DashboardScreen/>}/>
 					<Route path="/select-project" element={<SelectProjectScreen/>}/>
 					<Route path="/create-test" element={<CreateTestScreen/>}/>
-
+					<Route path="/code-editor" element={<UnDockCodeScreen/>}/>
 					<Route path="/recorder" element={		<TourProvider
 			onClickMask={() => {}}
 			disableDotsNavigation={true}

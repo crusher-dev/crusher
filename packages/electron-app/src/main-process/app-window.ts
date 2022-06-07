@@ -226,6 +226,7 @@ export class AppWindow {
 		ipcMain.handle("get-page-seo-info", this.handleGetPageSeoInfo.bind(this));
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
+		ipcMain.handle("undock-code", this.handleUndockCode.bind(this));
 		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
 		ipcMain.handle('delete-test', this.handleDeleteTest.bind(this));
 		ipcMain.handle("reset-app-session", this.handleResetAppSession.bind(this));
@@ -268,6 +269,41 @@ export class AppWindow {
 		} else {
 			this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 		}
+	}
+
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: {}) {
+		console.log("Undocking now");
+		const codeWindow = new BrowserWindow({
+			title: APP_NAME,
+			titleBarStyle: "hidden",
+			trafficLightPosition: { x: 30, y: 24 },
+			width: this.window.getBounds().width,
+			height: this.window.getBounds().height,
+			autoHideMenuBar: true,
+			show: true,
+			frame: process.platform === "darwin" ? false : true,
+			icon: getAppIconPath(),
+			// This fixes subpixel aliasing on Windows
+			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
+			backgroundColor: "#111213",
+			webPreferences: {
+				// Disable auxclick event
+				// See https://developers.google.com/web/updates/2016/10/auxclick
+				nodeIntegration: true,
+				enableRemoteModule: true,
+				spellcheck: true,
+				worldSafeExecuteJavaScript: false,
+				contextIsolation: false,
+				webviewTag: true,
+				nodeIntegrationInSubFrames: true,
+				webSecurity: false,
+				nativeWindowOpen: true,
+				devTools: false,
+				enablePreferredSizeMode: true,
+			},
+			acceptFirstMouse: true,
+		});
+		codeWindow.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/code-editor");
 	}
 
 	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { projectId: string; testIds: Array<string> | undefined }) {

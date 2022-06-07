@@ -313,6 +313,10 @@ const performExit = () => {
 	return ipcRenderer.invoke("exit-app");
 }
 
+const performUndockCode = () => {
+	return ipcRenderer.invoke("undock-code");
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -360,5 +364,6 @@ export {
 	performRunTests,
 	performClearRemainingStpes,
 	performDeleteTest,
-	performExit
+	performExit,
+	performUndockCode
 };

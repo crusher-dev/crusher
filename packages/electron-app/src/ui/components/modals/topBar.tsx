@@ -4,13 +4,14 @@ import { BrowserIcon, CloseModalIcon, CrossIcon } from "../../icons";
 
 interface iModalTopBarProps {
 	title: string;
+	actions?: any;
 	desc: string;
 	closeModal: () => void;
 	className?: string;
 }
 
 const ModalTopBar = (props: iModalTopBarProps) => {
-	const { title, desc, className, closeModal } = props;
+	const { title, desc, className, actions, closeModal } = props;
 
 	return (
 		<div id="top-bar" className={className} css={topBarStyle}>
@@ -19,19 +20,28 @@ const ModalTopBar = (props: iModalTopBarProps) => {
 					<div className={"heading_title"} css={headingStyle}>
 						{title}
 					</div>
-					<Conditional showIf={!!desc}> 
+					<Conditional showIf={!!desc}>
 						<div className={"heading_sub_title"} css={subHeadingStyle}>
 							{desc}
 						</div>
 					</Conditional>
 				</div>
 			</div>
-			<div id="close-button" onClick={closeModal} style={closeButtonStyle}>
-				<CrossIcon css={ css`width: 10rem;`} color={"#ffffff1a"} />
+			<div css={actionButtonContainerStyle}>
+				{actions || ""}
+				<div id="close-button" onClick={closeModal} style={closeButtonStyle}>
+					<CrossIcon css={ css`width: 10rem;`} color={"#ffffff1a"} />
+				</div>
 			</div>
 		</div>
 	);
 };
+
+const actionButtonContainerStyle = css`
+	display: flex;
+	align-items: center;
+	gap: 16rem;
+`;
 
 const topBarStyle = css`
 	display: flex;

@@ -4,7 +4,7 @@ import { Conditional } from "@dyson/components/layouts";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";
 import { Button } from "@dyson/components/atoms/button/Button";
-import { deleteCodeTemplate, getCodeTemplates, performCustomCode, saveCodeTemplate, updateCodeTemplate } from "electron-app/src/ui/commands/perform";
+import { deleteCodeTemplate, getCodeTemplates, performCustomCode, performUndockCode, saveCodeTemplate, updateCodeTemplate } from "electron-app/src/ui/commands/perform";
 import { iAction } from "@shared/types/action";
 import { useSelector, useStore } from "react-redux";
 import { setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
@@ -16,7 +16,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { loader } from "@monaco-editor/react";
 import * as path from "path";
 import * as fs from "fs";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { DownIcon, PlayIconV2 } from "electron-app/src/ui/icons";
 import { monacoTheme } from "./monaco.theme";
@@ -32,9 +32,11 @@ function uriFromPath(_path) {
 
 loader.config({
 	paths: {
-		vs: uriFromPath(path.join(__dirname, "static/monaco-editor/min/vs")),
+		vs: uriFromPath(path.join(remote.app.getAppPath(), "static/monaco-editor/min/vs")),
 	},
 });
+
+console.log("path is", uriFromPath(path.join(remote.app.getAppPath(), "static/monaco-editor/min/vs")));
 
 interface iElementCustomScriptModalContent {
 	isOpen: boolean;
@@ -229,7 +231,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		});
 
 		const libUri = "ts:filename/sdk.d.ts";
-		let types = fs.readFileSync(path.resolve(__dirname, "static/types.txt"), "utf8");
+		let types = fs.readFileSync(path.resolve(remote.app.getAppPath(), "static/types.txt"), "utf8");
 		const ctx = ipcRenderer.sendSync("get-var-context");
 		types += `\n declare const ctx: { ${Object.keys(ctx)
 			.map((a) => {
@@ -241,7 +243,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
 			diagnosticCodesToIgnore: [1375],
 		});
-		monaco.editor.set
 		monaco.editor.defineTheme("my-theme", {
 			base: "vs-dark",
 			inherit: true,
@@ -272,11 +273,16 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			});
 	};
 
+	const handleUnDock = () => {
+		performUndockCode();
+		props.handleClose();
+	};
+
 	return (<div css={css`    background: black;
 	height: 100%;
 	display: flex;
 	flex-direction: column;`}>
-			<ModalTopBar css={css`padding-bottom: 12rem;`} title={<><span>Code block</span><div css={css`font-size: 13rem;
+		<ModalTopBar css={css`padding-bottom: 12rem;`} actions={(<UnDockIcon onClick={handleUnDock} css={css`width: 14rem; height: 14rem; :hover { opacity: 0.8; }`}  />)} title={<><span>Code block</span><div css={css`font-size: 13rem;
     font-family: 'Cera Pro';
     display: flex;
     color: rgba(255, 255, 255, 0.4);
@@ -503,6 +509,21 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	</div>
 	);
 };
+
+
+const UnDockIcon = (props) => (
+	<svg
+		viewBox={"0 0 16 16"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M15.311 0H5.105a.684.684 0 0 0-.682.682v3.744H.683A.684.684 0 0 0 0 5.108v10.21c0 .375.307.682.682.682h10.21a.684.684 0 0 0 .682-.682V11.57h3.744a.684.684 0 0 0 .682-.682V.682A.694.694 0 0 0 15.311 0ZM10.21 14.665H1.328V5.784h3.098v5.105c0 .375.307.682.682.682h5.105v3.094h-.003Zm0-4.455H5.784V5.784h4.422v4.426h.004Zm4.455 0h-3.097V5.105a.684.684 0 0 0-.683-.682H5.784V1.328h8.881v8.882Z"
+      fill="#737373"
+    />
+  </svg>
+)
 
 const runLinkStyle = css`
 

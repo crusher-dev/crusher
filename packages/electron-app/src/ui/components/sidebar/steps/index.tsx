@@ -541,7 +541,9 @@ const StepsPanel = ({ className, ...props }: any) => {
 const containerStyle = css`
 	border-top: 1rem solid #303235;
 	height: 340rem;
-	padding-bottom: 32rem;
+	padding-bottom: 0rem;
+	display: flex;
+    flex-direction: column;
 `;
 const stepsHeaderStyle = css`
 	display: flex;
@@ -581,7 +583,7 @@ const stepsContainerStyle = css`
 	overflow-y: scroll;
 	padding-top: 0rem;
 	height: 100%;
-	padding-bottom: 100rem;
+	padding-bottom: 0rem;
 `;
 const runningStepStyle = css`
 	border-left: 3rem solid #9462ff;

@@ -48,6 +48,7 @@ const debug = require("debug")("crusher:main");
 export class AppWindow {
 	private window: Electron.BrowserWindow;
 	private splashWindow: Electron.BrowserWindow;
+	private codeWindow: Electron.BrowserWindow | null = null;
 	private recorder: Recorder;
 	private webView: WebView;
 	private emitter = new Emitter();
@@ -278,7 +279,7 @@ export class AppWindow {
 
 	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {
 		console.log("Undocking now");
-		const codeWindow = new BrowserWindow({
+		this.codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
 			trafficLightPosition: { x: 10, y: 6 },
@@ -308,7 +309,15 @@ export class AppWindow {
 			},
 			acceptFirstMouse: true,
 		});
-		codeWindow.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/code-editor");
+		this.codeWindow.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/code-editor");
+
+		this.codeWindow.webContents.on("destroyed", () => {
+			this.codeWindow = null;
+			const recorderState = getRecorderState(this.store.getState() as any);
+			if(recorderState.payload && (recorderState.payload as any).previousState) {
+				this.store.dispatch(updateRecorderState((recorderState.payload as any).previousState.type, {...(recorderState.payload as any).previousState.payload}));
+			}
+		});
 	}
 
 	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { projectId: string; testIds: Array<string> | undefined }) {
@@ -916,7 +925,7 @@ export class AppWindow {
 			for (const savedStep of mainActions) {
 				reaminingSteps.shift();
 
-				await this.handlePerformAction(null, { action: savedStep, shouldNotSave: !!(savedStep as any).shouldNotRecord, shouldNotSleep: !!(savedStep as any).shouldNotRecord });
+				await this.handlePerformAction(null, { action: savedStep, shouldNotSave: !!(savedStep as any).shouldNotRecord, shouldNotSleep: !!(savedStep as any).shouldNotRecordc });
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 		} catch (ex) {
@@ -1128,6 +1137,9 @@ export class AppWindow {
 	async handleWebviewAttached(event, webContents) {
 		console.log("Webview is attached", Date.now());
 		this.webView = new WebView(this,  async () => {
+			if(this.codeWindow) {
+				this.codeWindow.destroy();
+			}
 			if (this.webView) {
 					this.webView = undefined;
 				}

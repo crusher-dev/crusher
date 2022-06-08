@@ -3,11 +3,13 @@ import {css} from "@emotion/react";
 import { ActionsList, ActionsListItem } from "./actionsList";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector, useStore } from "react-redux";
-import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
+import { getRecorderState, getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, turnOffInspectMode } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { useTour } from "@reactour/tour";
 import { emitShowModal } from "../../modals";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { sendSnackBarEvent } from "../../toast";
 
 export enum TElementActionsEnum {
     CLICK = "CLICK",
@@ -52,6 +54,13 @@ const ElementActions = ({className, ...props}: {className?: any}) => {
 	const { isOpen, setCurrentStep } = useTour();
 
     const handleActionSelected = async (id: TElementActionsEnum) => {
+
+		const recorderState = getRecorderState(store.getState());
+		if (recorderState.type !== TRecorderState.RECORDING_ACTIONS) {
+			sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
+			return;
+		}
+		
 		if([TElementActionsEnum.CLICK, TElementActionsEnum.HOVER, TElementActionsEnum.SCREENSHOT].includes(id)) {
 			if(isOpen) {
 				setCurrentStep(4);

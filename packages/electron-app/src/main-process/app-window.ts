@@ -40,6 +40,8 @@ import { ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
 import { identify } from "../lib/analytics";
+import * as fs from "fs";
+import * as path from  "path";
 
 const debug = require("debug")("crusher:main");
 
@@ -914,7 +916,7 @@ export class AppWindow {
 			for (const savedStep of mainActions) {
 				reaminingSteps.shift();
 
-				await this.handlePerformAction(null, { action: savedStep, shouldNotSave: !!(savedStep as any).shouldNotRecord });
+				await this.handlePerformAction(null, { action: savedStep, shouldNotSave: !!(savedStep as any).shouldNotRecord, shouldNotSleep: !!(savedStep as any).shouldNotRecord });
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 		} catch (ex) {
@@ -987,8 +989,8 @@ export class AppWindow {
 			}, 2000);
 		});
 	}
-	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean }) {
-		const { action, shouldNotSave } = payload;
+	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean }) {
+		const { action, shouldNotSave, shouldNotSleep } = payload;
 		console.log("Handle perform action called", payload);
 
 		try {
@@ -1060,7 +1062,9 @@ export class AppWindow {
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 			}
-			await sleep(250);
+			if(!shouldNotSleep) {
+				await sleep(250);
+			}
 		} catch (e) {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			throw e;

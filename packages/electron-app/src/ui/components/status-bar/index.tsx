@@ -160,7 +160,7 @@ const StatusBar = (props: any) => {
 			return savedSteps[currentModal.stepIndex];
 		}
 		return null;
-	}, [currentModal && (typeof currentModal.stepIndex !== "undefined")]);
+	}, [currentModal]);
 
 	return (
 		<div css={[css`

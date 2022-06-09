@@ -11,7 +11,7 @@ import { Provider, useDispatch, useSelector, useStore } from "react-redux";
 import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
-import { getIsStatusBarVisible, getRecorderInfo, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
+import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
 import { goFullScreen, performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
@@ -45,6 +45,7 @@ const App = () => {
 	const store = useStore();
 	const recorderInfo = useSelector(getRecorderInfo);
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+	const recorderState = useSelector(getRecorderState);
 
 	React.useEffect(() => {
 		document.querySelector("html").style = "";
@@ -168,7 +169,7 @@ const App = () => {
 				<Global styles={globalStyles} />
 				{!!recorderInfo.device ? (<Sidebar css={sidebarStyle} />) : ""}
 				<div css={bodyStyle}>
-					<Toolbar css={[toolbarStyle, isStatusBarVisible ? css`z-index: -1;` : undefined]} />
+					<Toolbar css={[toolbarStyle, isStatusBarVisible && recorderState.type === TRecorderState.CUSTOM_CODE_ON ? css`z-index: -1;` : undefined]} />
 					<DeviceFrame css={deviceFrameContainerStyle} />
 					{isStatusBarVisible ? (
 						<StatusBar />

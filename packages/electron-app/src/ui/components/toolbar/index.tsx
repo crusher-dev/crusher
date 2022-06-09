@@ -600,7 +600,7 @@ const Toolbar = (props: any) => {
 						</Text>
 					</div>
 
-					<div className={"ml-auto flex items-center"}>
+					<div className={"ml-auto mr-22 flex items-center"}>
 						<SettingsIcon
 							onClick={setShowSettingsModal.bind(this, true)}
 							css={settingsIconStyle}

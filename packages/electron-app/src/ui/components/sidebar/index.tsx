@@ -213,11 +213,11 @@ const Sidebar = ({ className, ...props }: any) => {
 								<div css={css`font-family: Gilroy;
 font-style: normal;
 font-weight: 700;
-font-size: 14rem;`}>Coding mode enabled</div>
+font-size: 15rem;`}>Coding mode enabled</div>
 								<div css={css`margin-top: 4rem;font-family: Gilroy;
 font-style: normal;
 font-weight: 400;
-font-size: 11rem;`}>you can’t perform action rn. </div>
+font-size: 12rem;     color: rgba(255,255,255,0.9);` }>No manual actions are allowed.</div>
 							</div>
 						</div>
 					)}

@@ -1,12 +1,5 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { getCloudUserInfo } from "../commands/perform";
-import { ModelContainerLayout } from "../layouts/modalContainer";
-import { LoadingScreen } from "./loading";
-import { CommonFooter } from "../layouts/commonFooter";
 import { CustomCodeModal } from "../components/modals/page/customCodeModal";
 
 function UnDockCodeScreen() {
@@ -17,8 +10,9 @@ function UnDockCodeScreen() {
 
     return (
       (
-        <div css={ css`    height: 100vh;`}>
-          <CustomCodeModal isOpen={true} handleClose={handleClose}/>
+        <div css={ css`height: 100vh;`}>
+            {process.platform==="darwin" ? (<div css={dragStyle} className={"drag"}></div>) : ""}
+            <CustomCodeModal isOpen={true} handleClose={handleClose}/>
         </div>
       )
     );
@@ -32,7 +26,15 @@ const titleStyle = css`
     color: #FFFFFF;
 
 `;
-
+const dragStyle = css`
+    height: 18px;
+    width: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+`;
 const testItemStyle = css`
     font-family: 'Gilroy';
     font-style: normal;

@@ -15,6 +15,7 @@ builder
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
+			defaultArch: "arm64",
 			publish:
 				process.env.PUBLISH_RELEASE !== "always"
 					? [
@@ -59,7 +60,7 @@ builder
 				app: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin"),
 			},
-			electronDist: path.resolve(__dirname, "../bin/darwin"),
+			electronDist: path.resolve(__dirname, "../bin/darwin-arm64"),
 			electronVersion: "13.1.6",
 			asar: false,
 			protocols: {

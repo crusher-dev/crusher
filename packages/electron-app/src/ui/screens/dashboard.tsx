@@ -528,7 +528,7 @@ function DashboardScreen() {
                     &nbsp;&nbsp;
                     <b css={titleBoldStyle}>{userProjectName}</b>
                 </span>
-                <CloudIcon css={titleCloudIconStyle}/>
+                {/* <CloudIcon css={titleCloudIconStyle}/> */}
             </div>
         )
     }, [userProjectName]);

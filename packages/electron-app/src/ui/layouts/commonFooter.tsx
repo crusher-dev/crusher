@@ -1,10 +1,16 @@
 import React from "react";
 import { css } from "@emotion/react";
+import { shell } from "electron";
 
 function CommonFooter() {
+
+    const handleDocsClick = React.useCallback(() => {
+        shell.openExternal("https://docs.crusher.dev");
+    }, []);
+
     return (
         <div css={navBarStyle}>
-        <div className={"navItem"}>Docs</div>
+        <div className={"navItem"} onClick={handleDocsClick}>Docs</div>
         <div className="navItem" css={css`margin-left: auto`}>
                 {/* {"Settings"} */}
         </div>

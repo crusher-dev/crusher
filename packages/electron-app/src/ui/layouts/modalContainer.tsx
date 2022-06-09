@@ -223,6 +223,10 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
         shell.openExternal("https://app.crusher.dev");
     }, []);
 
+    const handleDocsClick = () => {
+        shell.openExternal("https://docs.crusher.dev");
+    };
+
     return (
         <div css={containerStyle} {...props}>
             <div css={dragStyle} className={"drag"}></div>
@@ -247,7 +251,7 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
                     {title}
                 </div>
                 <div css={rightNavStyle}>
-                <Link onClick={handleOpenAppClick} css={[css` margin-right: 12rem;`,topLinkStyle]}>Docs</Link>
+                <Link onClick={handleDocsClick} css={[css` margin-right: 12rem;`,topLinkStyle]}>Docs</Link>
                     <Link onClick={handleOpenAppClick} css={topLinkStyle}>Open app <ExternalLink css={ css`margin-left: 4rem; margin-top: -2px; zoom: .95;`}/></Link>
                 </div>
             </div>

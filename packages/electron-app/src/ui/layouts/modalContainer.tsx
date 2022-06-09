@@ -215,9 +215,27 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 	);
 }
 
+export const MenuDropdown = ({}) => {
+    const [showAppMenu, setShowAppMenu] = React.useState(false);
+    return (
+        <Dropdown
+        initialState={showAppMenu}
+                            component={(<ActionButtonDropdown setShowActionMenu={setShowAppMenu.bind(this)}/>)}
+        callback={setShowAppMenu.bind(this)}
+        dropdownCSS={css`
+                        left: 0rem;
+                        width: 162rem;
+                    `}
+    >
+                        <div css={crusherDropdownContainerStyle}>
+                            <CrusherHammerColorIcon css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
+                            <DropdownIconSVG/>
+                            </div>
+                            </Dropdown>
+    )
+}
 function ModelContainerLayout({children, title, footer, className, isLoadingScreen, ...props}) {
     const navigate = useNavigate();
-    const [showAppMenu, setShowAppMenu] = React.useState(false);
 
     const handleOpenAppClick = React.useCallback(() => {
         shell.openExternal("https://app.crusher.dev");
@@ -232,20 +250,7 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
             <div css={dragStyle} className={"drag"}></div>
             <div css={headerStyle}>
                 <div css={leftNavBarStyle}>
-                <Dropdown
-    initialState={showAppMenu}
-                        component={(<ActionButtonDropdown setShowActionMenu={setShowAppMenu.bind(this)}/>)}
-    callback={setShowAppMenu.bind(this)}
-	dropdownCSS={css`
-					left: 0rem;
-					width: 162rem;
-				`}
->
-                    <div css={crusherDropdownContainerStyle}>
-                        <CrusherHammerColorIcon css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
-                        <DropdownIconSVG/>
-                        </div>
-                        </Dropdown>
+                    <MenuDropdown/>
                 </div>
                 <div css={mainTitleContainerStyle}>
                     {title}

@@ -34,6 +34,7 @@ import { sendSnackBarEvent } from "../toast";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Navigate, useNavigate } from "react-router-dom";
+import { MenuDropdown } from "../../layouts/modalContainer";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -513,15 +514,7 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-
-				<CrusherHammerIcon
-					className={"ml-24"}
-					css={hammerIconStyle}
-					onClick={() => {
-						navigate("/");
-						goFullScreen(false);
-				}}
-				/>
+				<MenuDropdown/>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
@@ -567,7 +560,7 @@ const Toolbar = (props: any) => {
 						isError={urlInputError.value}
 						initialValue={url}
 						ref={urlInputRef}
-						leftIcon={LeftIconComponent}
+						// leftIcon={LeftIconComponent}
 						rightIcon={RightIconComponent}
 					/>
 					<Conditional showIf={urlInputError.value}>
@@ -632,11 +625,15 @@ border-right: 0.35px solid rgba(255, 255, 255, 0.17);
 `;
 const selectBoxStyle = css`
 .selectBox {
+	border-top-right-radius: 100rem;
+    border-bottom-right-radius: 100rem;
 	:hover {
 		border: none;
 		border-left-width: 1rem;
 		border-left-style: solid;
-		border-left-color: #181c23;
+		border-left-color: rgba(255, 255, 255, 0.13);
+		border-top-right-radius: 100rem;
+		border-bottom-right-radius: 100rem;
 	}
 	input {
 		width: 50rem;
@@ -648,7 +645,7 @@ const selectBoxStyle = css`
 	background: none;
 	border-left-width: 1rem;
 	border-left-style: solid;
-	border-left-color: #181c23;
+	border-left-color: rgba(255, 255, 255, 0.13);
 }
 .selectBox__value {
 	margin-right: 10rem;
@@ -724,6 +721,13 @@ const containerStyle = css`
 `;
 const inputStyle = css`
 	height: 34rem;
+	.input__rightIconContainer {
+		right: 0px;
+
+		:hover {
+			opacity: 0.8;
+		}
+	}
 	.input__leftIconContainer {
 		border-radius: 8rem 0px 0px 8rem;
 		height: 85%;
@@ -755,8 +759,13 @@ const inputStyle = css`
 		border-radius: 8rem 0px 0px 8rem;
 		color: rgba(255, 255, 255, 0.93);
 		height: 100%;
-		padding-left: 50rem;
+		padding-left: 18rem;
 		padding-right: 110rem;
+
+		background: rgba(255, 255, 255, 0.02);
+		border: 1px solid #292929;
+		border-radius: 18px;
+	}
 	}
 	svg {
 		margin-left: auto;

@@ -42,7 +42,7 @@ import axios from "axios";
 import { identify } from "../lib/analytics";
 import * as fs from "fs";
 import * as path from  "path";
-
+import { screen } from "electron";
 const debug = require("debug")("crusher:main");
 
 export class AppWindow {
@@ -58,7 +58,7 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 1028;
+	private minWidth = 956;
 	private minHeight = 570;
 	private savedWindowState: any = null;
 
@@ -853,18 +853,24 @@ export class AppWindow {
 			if (process.platform === "darwin") {
 				this.window.setTrafficLightPosition({ x: 10, y: 8 });
 			}
+			const winBounds = this.window.getBounds();
+			const screenSize = screen.getDisplayNearestPoint({x: winBounds.x, y: winBounds.y});
+
 			this.window.setFullScreenable(true);
 			this.window.setResizable(true);
-			return this.window.maximize();
+			this.window.setSize(screenSize.bounds.width, screenSize.bounds.height, false);
+			setImmediate(() => {
+				this.window.center();
+			});
 		} else {
 			return new Promise((resolve) => {
-				this.window.unmaximize();
+				// this.window.unmaximize();
 				this.window.setFullScreen(false);
 				setImmediate(async () => {
 					if (process.platform === "darwin") {
 						this.window.setTrafficLightPosition({ x: 10, y: 15 });
 					}
-					this.window.setSize(this.minWidth, this.minHeight);
+					this.window.setSize(this.minWidth, this.minHeight, false);
 					this.window.center();
 					this.window.setFullScreenable(false);
 					this.window.setResizable(false);

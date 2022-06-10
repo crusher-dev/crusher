@@ -33,7 +33,7 @@ const CreateTestLink = (props) => {
     return (
         <span css={createTestLinkStyle} {...props}>
             <PlusIcon css={css`width: 8px;`}/>
-            <span>Add test</span>
+            <span>New test</span>
         </span>
     )
 }

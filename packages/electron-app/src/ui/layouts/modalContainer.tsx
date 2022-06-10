@@ -162,8 +162,14 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 			<div
 				css={css`
 					padding: 6rem 13rem;
+                    color: #FCFCFC;
+                    font-family: Cera Pro;
+font-style: normal;
+font-weight: 400;
+font-size: 13rem;
 					:hover {
-						background: #687ef2 !important;
+						background: #8B63FF !important;
+                        color: #FFFBFB !important;
 					}
 				`}
 				onClick={onClick}
@@ -223,8 +229,9 @@ export const MenuDropdown = ({}) => {
                             component={(<ActionButtonDropdown setShowActionMenu={setShowAppMenu.bind(this)}/>)}
         callback={setShowAppMenu.bind(this)}
         dropdownCSS={css`
-                        left: 0rem;
+                        left: 38rem;
                         width: 162rem;
+                        background: linear-gradient(0deg, #1E1E1F, #1E1E1F), #151516;
                     `}
     >
                         <div css={crusherDropdownContainerStyle}>

@@ -720,7 +720,7 @@ const containerStyle = css`
 	padding-right: 24rem;
 `;
 const inputStyle = css`
-	height: 34rem;
+	height: 40rem;
 	.input__rightIconContainer {
 		right: 0px;
 

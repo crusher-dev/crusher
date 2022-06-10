@@ -11,10 +11,10 @@ describe("Onboarding", () => {
 	async function init() {
 		electronApp = await playwright["_electron"].launch({
 			executablePath:
-			VARIANT === "release"
-			? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-			: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
-			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
+				VARIANT === "release"
+				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
+				: path.resolve(__dirname, "../bin/darwin-x64/Electron.app/Contents/MacOS/Electron"),
+			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app"), "--open-recorder"],
 		});
 		appWindow = await electronApp.firstWindow();
 		await appWindow.waitForLoadState();

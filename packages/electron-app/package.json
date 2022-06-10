@@ -8,21 +8,11 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"extract:deps": "node scripts/extract-binaries.js",
-		"start": "yarn build && ./bin/linux/crusher ../../output/crusher-electron-app/",
-		"start:dev": "DO_NOT_BUILD_EXTENSION=true NODE_ENV=development webpack --config webpack/webpack.config.ts && yarn dev:extension",
-		"build:extension": "webpack --config webpack/webpack.extension.ts",
-		"dev:extension": "NODE_ENV=development webpack --config webpack/webpack.extension.ts",
+		"start:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",
 		"build": "NODE_ENV=production webpack --config webpack/webpack.config.ts",
-		"build:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",
-		"release:linux": "NODE_ENV=production yarn build && bash scripts/build-linux.sh && yarn pack:linux",
-		"release:mac": "NODE_ENV=production yarn build && bash scripts/build-darwin.sh && yarn pack:mac",
-		"deploy:mac": "PUBLISH_RELEASE=always yarn release:mac",
-		"release:all": "NODE_ENV=production yarn build && bash scripts/build-all.sh && yarn pack:all",
-		"pack:linux": "node scripts/pack-linux.js",
-		"pack:mac": "node scripts/pack-mac.js",
-		"pack:all": "yarn pack:linux && yarn pack:mac",
-		"test": "jest --runInBand --detectOpenHandles --verbose"
+		"release": "yarn build && node scripts/release.js",
+		"extract:deps": "node scripts/extract-binaries.js",
+		"tests": "jest --runInBand --detectOpenHandles --verbose"
 	},
 	"dependencies": {
 		"@babel/preset-react": "^7.16.5",

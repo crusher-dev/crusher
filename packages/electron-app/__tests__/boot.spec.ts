@@ -16,8 +16,8 @@ describe("Recorder boot", () => {
 			executablePath:
 				VARIANT === "release"
 				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-				: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
-			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
+				: path.resolve(__dirname, "../bin/darwin-x64/Electron.app/Contents/MacOS/Electron"),
+			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app"), "--open-recorder"],
 		});
 		appWindow = await electronApp.firstWindow();
 
@@ -71,11 +71,13 @@ describe("Recorder boot", () => {
 
 		test("adds http if missing", async () => {
 			await resetApp();
-			const inputBar = await fillInput("example.com");
+			let inputBar = await fillInput("example.com");
 			const beforeValue = await inputBar.inputValue();
 			await inputBar.press("Enter");
+			await inputBar.waitForElementState("hidden");
+			inputBar = await appWindow.waitForSelector(".target-site-input input");
 			const afterValue = await inputBar.inputValue();
-			expect(afterValue).toBe("https://" + beforeValue);
+			expect(afterValue).toBe("http://" + beforeValue);
 		});
 
 		test("enter starts recording session", async () => {

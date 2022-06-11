@@ -3,7 +3,7 @@ import path, { resolve } from "path";
 import { devices } from "../src/devices";
 import { ActionStatusEnum } from "../../crusher-shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
-
+import { getLaunchOptions } from "./utils";
 jest.setTimeout(30000);
 
 const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();
@@ -12,13 +12,7 @@ describe("Recorder boot", () => {
 	let appWindow: Page = null;
 
 	async function init() {
-		electronApp = await playwright["_electron"].launch({
-			executablePath:
-				VARIANT === "release"
-				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac-arm64/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-				: path.resolve(__dirname, "../bin/darwin-arm64/Electron.app/Contents/MacOS/Electron"),
-			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app"), "--open-recorder"],
-		});
+		electronApp = await playwright["_electron"].launch(getLaunchOptions());
 		appWindow = await electronApp.firstWindow();
 
 		const onboarding = await appWindow.$("#onboarding-overlay");

@@ -34,4 +34,4 @@ jobs:
 
       - name: 'Run tests for electron app'
         run: |
-          yarn workspace electron-app test
+          yarn workspace electron-app tests

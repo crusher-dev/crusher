@@ -304,7 +304,7 @@ const Toolbar = (props: any) => {
 	const navigate = useNavigate();
 
 	const [url, setUrl] = React.useState("" || null);
-	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0].value]);
+	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0]]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
 	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
 	const [showMenu, setShowMenu] = React.useState(false);
@@ -343,22 +343,14 @@ const Toolbar = (props: any) => {
 			setUrlInputError({ value: false, message: "" });
 			batch(() => {
 				if (!recorderInfo.url) {
+					console.log("Selected device is", selectedDevice[0]);
 					// @NOTE: Find better way to make sure initScript is done
 					// webview.
 					performSteps([{
 						"type": "BROWSER_SET_DEVICE",
 						"payload": {
 							"meta": {
-								"device": {
-									"id": "GoogleChromeMediumScreen",
-									"name": "Desktop",
-									"width": 1280,
-									"height": 800,
-									"mobile": false,
-									"visible": true,
-									"userAgent": "Google Chrome",
-									"userAgentRaw": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
-								}
+								"device": selectedDevice[0].device
 							}
 						},
 						"time": Date.now()
@@ -409,13 +401,13 @@ const Toolbar = (props: any) => {
 	}, [selectedDevice]);
 
 	const handleChangeDevice = (selected) => {
-		const device = recorderDevices.find((device) => device.value === selected[0])?.device;
-		setSelectedDevice([selected[0]]);
+		const deviceObj = recorderDevices.find((device) => device.value === selected[0]);
+		setSelectedDevice([deviceObj]);
 		const recorderInfo = getRecorderInfo(store.getState());
-		if (recorderInfo.url) {
-			// Only perform and set if already recording
-			resetTest(device);
-		}
+		// if (recorderInfo.url) {
+		// 	// Only perform and set if already recording
+		// 	resetTest(deviceObj.device);
+		// }
 	};
 
 	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;

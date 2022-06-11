@@ -28,9 +28,9 @@ describe("Recorder session", () => {
 		electronApp = await playwright["_electron"].launch({
 			executablePath:
 				VARIANT === "release"
-					? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-					: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
-			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
+				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac-arm64/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
+				: path.resolve(__dirname, "../bin/darwin-arm64/Electron.app/Contents/MacOS/Electron"),
+			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app"), "--open-recorder"],
 		});
 		appWindow = await electronApp.firstWindow();
 

@@ -16,9 +16,9 @@ describe("Recorder boot", () => {
 		electronApp = await playwright["_electron"].launch({
 			executablePath:
 				VARIANT === "release"
-				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-				: path.resolve(__dirname, "../bin/darwin-x64/Electron.app/Contents/MacOS/Electron"),
-			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app"), "--open-recorder"],
+				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac-arm64/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
+				: path.resolve(__dirname, "../bin/darwin-arm64/Electron.app/Contents/MacOS/Electron"),
+			args: VARIANT === "release" ? ["--open-recorder"] : [path.resolve(__dirname, "../../../output/crusher-electron-app"), "--open-recorder"],
 		});
 		appWindow = await electronApp.firstWindow();
 
@@ -59,7 +59,7 @@ describe("Recorder boot", () => {
 	});
 
 	test("replay test doesn't record two set devices in case of run_after_test", async () => {
-    await execSync('open "crusher://replay-test?testId=3490"');
+    await execSync('open "crusher://replay-test?testId=4019"');
     await new Promise(resolve => setTimeout(resolve, 3000));
 		await waitForRecorderToInitialize();
 

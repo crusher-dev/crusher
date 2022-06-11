@@ -34,6 +34,7 @@ import { CreateTestScreen } from './screens/createTest';
 import { SelectProjectScreen } from './screens/selectProject';
 import { StatusBar } from './components/status-bar';
 import { UnDockCodeScreen } from './screens/undockCode';
+import { InfoOverLay } from './components/overlays/infoOverlay';
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -171,11 +172,14 @@ const App = () => {
 				<div css={bodyStyle}>
 					<Toolbar css={[toolbarStyle, isStatusBarVisible && recorderState.type === TRecorderState.CUSTOM_CODE_ON ? css`z-index: -1;` : undefined]} />
 					<DeviceFrame css={deviceFrameContainerStyle} />
+					
 					{isStatusBarVisible ? (
 						<StatusBar />
 					) : ""}
 				</div>
 			</div>
+			<InfoOverLay />
+
 		</>
 	);
 };

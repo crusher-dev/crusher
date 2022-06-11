@@ -184,7 +184,6 @@ const DeviceFrame = (props: any) => {
 	</Conditional>
 </div>
 				)}
-							<InfoOverLay />
 			</div>
 		</div>
 	);

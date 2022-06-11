@@ -15,8 +15,8 @@ describe("Recorder boot", () => {
 		electronApp = await playwright["_electron"].launch({
 			executablePath:
 				VARIANT === "release"
-				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-				: path.resolve(__dirname, "../bin/darwin-x64/Electron.app/Contents/MacOS/Electron"),
+				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac-arm64/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
+				: path.resolve(__dirname, "../bin/darwin-arm64/Electron.app/Contents/MacOS/Electron"),
 			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app"), "--open-recorder"],
 		});
 		appWindow = await electronApp.firstWindow();
@@ -153,26 +153,26 @@ describe("Recorder boot", () => {
 			expect(webViewContainerSize).toMatchObject({ width: devices[2].width + "rem", height: devices[2].height + "rem" });
 		});
 
-		test("changing device between recording session", async () => {
-			await (await getParentElement(deviceDropdown)).click();
-			deviceDropDownBox = await appWindow.waitForSelector(".select-dropDownContainer .dropdown-box");
+		// test("changing device between recording session", async () => {
+		// 	await (await getParentElement(deviceDropdown)).click();
+		// 	deviceDropDownBox = await appWindow.waitForSelector(".select-dropDownContainer .dropdown-box");
 
-			await (await deviceDropDownBox.$("text=Desktop")).click();
-			expect(await deviceDropdown.getAttribute("placeholder")).toBe("Desktop");
+		// 	await (await deviceDropDownBox.$("text=Desktop")).click();
+		// 	expect(await deviceDropdown.getAttribute("placeholder")).toBe("Desktop");
 
-			// Just some wait for dom update
-			await new Promise((resolve) => setTimeout(resolve, 250));
+		// 	// Just some wait for dom update
+		// 	await new Promise((resolve) => setTimeout(resolve, 250));
 
-			const webView = await appWindow.$("webview");
-			const webViewContainerSize = await webView.evaluate((element) => {
-				return {
-					width: element.parentElement.style.width,
-					height: element.parentElement.style.height,
-				};
-			});
+		// 	const webView = await appWindow.$("webview");
+		// 	const webViewContainerSize = await webView.evaluate((element) => {
+		// 		return {
+		// 			width: element.parentElement.style.width,
+		// 			height: element.parentElement.style.height,
+		// 		};
+		// 	});
 
-			expect(webViewContainerSize).toMatchObject({ width: devices[0].width + "rem", height: devices[0].height + "rem" });
-		});
+		// 	expect(webViewContainerSize).toMatchObject({ width: devices[0].width + "rem", height: devices[0].height + "rem" });
+		// });
 	});
 
 	test("init actions are recorded", async () => {

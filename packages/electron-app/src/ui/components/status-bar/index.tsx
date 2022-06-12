@@ -274,9 +274,7 @@ const statusBarContainerStyle = css`
 	border: 1px solid #272D2D;
 	border-left: 0;
 	border-right: 0;
-	:hover{
-		background: #1d1e1f;
-	}
+	cursor: pointer;
 	width: 100%;
   height: 32rem;
 	transition: max-height 0.1s, height 0.1s;

@@ -270,8 +270,13 @@ const statusBarTabStyle = css`
 	}
 `;
 const statusBarContainerStyle = css`
-	background: linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02)), #0F1010;
+	background: #0F1010;
 	border: 1px solid #272D2D;
+	border-left: 0;
+	border-right: 0;
+	:hover{
+		background: #1d1e1f;
+	}
 	width: 100%;
   height: 32rem;
 	transition: max-height 0.1s, height 0.1s;

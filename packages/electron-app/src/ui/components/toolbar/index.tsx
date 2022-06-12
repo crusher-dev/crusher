@@ -485,7 +485,7 @@ const Toolbar = (props: any) => {
 						<span
 							css={loadingTextStyle}
 						>
-							Our bot is verifying your test.{" "}
+							Crusher is verifying your test.{" "}
 						</span>
 					</div>
 				</div>

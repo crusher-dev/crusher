@@ -469,7 +469,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 			<div css={stepsHeaderStyle}>
 				<Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} />
 				<Text css={stepsTextStyle}>{recordedSteps.length} Steps</Text>
-				<ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 14rem; height: 14rem; :hover { opacity: 0.7 }`, isStatusBarVisible ? css`path {fill: rgba(94, 94, 199, 0.8);}` : null]} />
+				{/* <ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 14rem; height: 14rem; :hover { opacity: 0.7 }; path {fill: rgba(255, 255, 255, 1);}`, isStatusBarVisible ? css`path {fill: rgba(255, 255, 255, 0.35);}` : null]} /> */}
 				<Conditional showIf={!!checkedSteps.size}>
 					<div css={stepDropdownStyle}>
 						<Dropdown

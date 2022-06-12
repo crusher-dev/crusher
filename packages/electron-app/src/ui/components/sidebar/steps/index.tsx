@@ -599,12 +599,14 @@ const stepStyle = css`
 	box-sizing: border-box;
 	border: 1.5rem solid rgba(255, 255, 255, 0);
 	border-left: none;
+	border-right: none;
 	padding: 3rem 13rem;
 	margin: 10rem 0rem;
 `;
 const hoverStepStyle = css`
 	border: 1.5rem solid rgba(255, 255, 255, 0.1);
 	border-left: none;
+	border-right: none;
 `;
 
 const failedStyle = css`

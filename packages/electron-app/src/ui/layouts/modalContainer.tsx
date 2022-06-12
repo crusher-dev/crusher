@@ -154,7 +154,7 @@ color: #FFFFFF;
 text-transform: capitalize;
 `;
 
-function ActionButtonDropdown({ setShowActionMenu, ...props }) {
+function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
     const navigate = useNavigate();
 
 	const MenuItem = ({ label, onClick, ...props }) => {
@@ -199,8 +199,13 @@ font-size: 13rem;
     }
 
     const handleSelectProject = () => {
-        setShowActionMenu(false);
+        setShowActionMenu(false, true);
         return navigate("/select-project");
+    }
+
+    const handleGoBackToDashboard = () => {
+        setShowActionMenu(false, true);
+        return navigate("/");
     }
 
 	return (
@@ -212,7 +217,7 @@ font-size: 13rem;
 			`}
 		>
             <div>
-                <MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
+                {isRecorder ? (<MenuItem onClick={handleGoBackToDashboard} label={<span>Back</span>} className={"close-on-click"} />) : (<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />)}
                 <MenuItem onClick={handleOpenApp} label={<span>Open App</span>} className={"close-on-click"} />
                 <MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
                 <MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
@@ -221,13 +226,22 @@ font-size: 13rem;
 	);
 }
 
-export const MenuDropdown = ({}) => {
+export const MenuDropdown = ({className, isRecorder, callback}) => {
     const [showAppMenu, setShowAppMenu] = React.useState(false);
+
+    const handleCallback = React.useCallback((value, isNavigating = false) => {
+        setShowAppMenu(value);
+        if(callback) {
+            callback(value, isNavigating);
+        }
+    }, [callback]);
+
     return (
         <Dropdown
+        className={className}
         initialState={showAppMenu}
-                            component={(<ActionButtonDropdown setShowActionMenu={setShowAppMenu.bind(this)}/>)}
-        callback={setShowAppMenu.bind(this)}
+                            component={(<ActionButtonDropdown isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)}/>)}
+        callback={handleCallback.bind(this)}
         dropdownCSS={css`
                         left: 38rem;
                         width: 162rem;
@@ -235,7 +249,7 @@ export const MenuDropdown = ({}) => {
                     `}
     >
                         <div css={crusherDropdownContainerStyle}>
-                            <CrusherHammerColorIcon css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
+                            <CrusherHammerColorIcon className={"crusher-hammer-icon"} css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
                             <DropdownIconSVG/>
                             </div>
                             </Dropdown>
@@ -257,7 +271,7 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
             <div css={dragStyle} className={"drag"}></div>
             <div css={headerStyle}>
                 <div css={leftNavBarStyle}>
-                    <MenuDropdown/>
+                    <MenuDropdown css={css`.crusher-hammer-icon{ margin-left: 50rem; }`}/>
                 </div>
                 <div css={mainTitleContainerStyle}>
                     {title}
@@ -339,7 +353,6 @@ const crusherDropdownContainerStyle = css`
 const logoStyle = css`
     width: 23px;
     height: 23px;
-    margin-left: 20px;
 
     rect{
         fill: #5a5a5a !important;

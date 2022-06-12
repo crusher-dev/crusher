@@ -346,6 +346,7 @@ const rightNavStyle = css`
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    padding-bottom: 1rem;
 
     font-size: 13rem;
 
@@ -383,7 +384,7 @@ const contentStyle = css`
 const footerStyle = css`
     margin-top: auto;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 12px 28px;
+    padding: 12rem 24rem;
     display: flex;
 `;
 const headerStyle = css`
@@ -399,6 +400,7 @@ const mainTitleContainerStyle = css`
     flex: 1;
     display: flex;
     justify-content: center;
+    padding-top: 3rem;
 `;
 
 const containerStyle = css`

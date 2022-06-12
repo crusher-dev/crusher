@@ -16,7 +16,7 @@ const LokiTransport = require("winston-loki");
 const winstonLogger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
+  defaultMeta: { },
   transports: [
     //
     // - Write all logs with importance level of `error` or less to `error.log`
@@ -28,10 +28,10 @@ const winstonLogger = winston.createLogger({
 			format: winston.format.simple(),
 		}),
 		new LokiTransport({
-			host: 'https://225462:eyJrIjoiOGU3MGIwODI5NGJkODlmZWZkYmFmZDU0MjkxMmI3YjYxZmU4ZDM3YSIsIm4iOiJUZXN0IiwiaWQiOjY1NzU1Nn0=@logs-prod3.grafana.net',
+			host: 'https://146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9@logs-prod-us-central1.grafana.net',
 			json: true,
-			basicAuth: '225462:eyJrIjoiOGU3MGIwODI5NGJkODlmZWZkYmFmZDU0MjkxMmI3YjYxZmU4ZDM3YSIsIm4iOiJUZXN0IiwiaWQiOjY1NzU1Nn0=',
-			labels: { job: 'kjl' },
+			basicAuth: '146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9',
+			labels: { component: 'server' },
 			onConnectionError: (err) => {
 				_error(err)
 			}
@@ -51,7 +51,7 @@ const _trace = console.trace;
 const _warn = console.warn;
 const _debug = console.debug;
 
-const logger =  { log: () => null, info: () => null, debug: () => null, warn: () => null, error: () => null, fatal: () => null };
+const logger =  { log: (message, meta) => { if(!IS_PRODUCTION) return; winstonLogger.log('info', message, meta); }, info: (message, meta) => { if(!IS_PRODUCTION) return;  winstonLogger.log('info', message, meta); }, debug: (message, meta) => { if(!IS_PRODUCTION) return;  winstonLogger.log('debug', message, meta); }, warn: (message, meta) => { if(!IS_PRODUCTION) return; winstonLogger.log('warn', message, meta); }, error: (message, meta) => { if(!IS_PRODUCTION) return; winstonLogger.log('error', message, meta); }, fatal: (message, meta) => { if(!IS_PRODUCTION) return; winstonLogger.log('error', message, meta); } };
 
 const showMeta = (meta) => {
 	if (!meta) {
@@ -71,52 +71,37 @@ module.exports = {
 			const msgToShow = chalk.cyanBright.bold(`[${tag}]`) + `: ${message}`;
 			_info(msgToShow);
 			showMeta(meta);
-
-			winstonLogger.log('info',message)
-			if (IS_PRODUCTION) {
-				// Enable to get more logs in production
-				logger.info(msgToShow, { meta });
-			}
+			logger.info(msgToShow, { meta });
 		},
 		warn: function (tag, message, meta = null) {
 			const msgToShow = `[${tag}]: ${message}`;
 			_warn(msgToShow);
 			showMeta(meta);
-			if (IS_PRODUCTION) {
-				logger.warn(msgToShow, { meta });
-			}
+			logger.warn(msgToShow, { meta });
 		},
 		debug: function (tag, message, meta = null) {
 			const msgToShow = `[${tag}]: ${message}`;
 			_debug(msgToShow);
 			showMeta(meta);
-			if (IS_PRODUCTION) {
-				logger.debug(msgToShow, { meta });
-			}
+			logger.debug(msgToShow, { meta });
 		},
 		error: function (tag, message, meta = null) {
 			const msgToShow = `[${tag}]: ${message}`;
 			_error(msgToShow);
 			showMeta(meta);
-			if (IS_PRODUCTION) {
-				logger.error(msgToShow, { meta });
-			}
+			logger.error(msgToShow, { meta });
 		},
 		fatal: function (tag, message, meta = null) {
 			const msgToShow = `[${tag}]: ${message}`;
 			_error(msgToShow);
 			showMeta(meta);
-			if (IS_PRODUCTION) {
-				logger.fatal(msgToShow, { meta });
-			}
+			logger.fatal(msgToShow, { meta });
 		},
 		trace: function trace(tag, message, meta = null) {
 			const msgToShow = `[${tag}]: ${message}`;
 			_trace(msgToShow);
 			showMeta(meta);
-			if (IS_PRODUCTION) {
-				logger.trace(msgToShow, { meta });
-			}
+			logger.trace(msgToShow, { meta });
 		},
 	},
 };

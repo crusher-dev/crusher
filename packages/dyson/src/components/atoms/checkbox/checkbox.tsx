@@ -58,7 +58,7 @@ const normalSelect = (isSelected: boolean) => css`
 	background: ${isSelected ? "#9462FF" : "none"};
 
 	:hover {
-		background: ${isSelected ? "#5467cb" : "#9462FF"};
+		background: ${isSelected ? "#8a5ee8" : "#9462FF"};
 	}
 `;
 
@@ -77,7 +77,7 @@ const selectAll = (isSelected: boolean) => css`
 		#tick {
 			display: block;
 		}
-		background: ${isSelected ? "#5467cb" : "#0a0b0e"};
+		background: ${isSelected ? "#8a5ee8" : "#0a0b0e"};
 	}
 `;
 

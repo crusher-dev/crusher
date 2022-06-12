@@ -211,8 +211,8 @@ const Step = ({
 			data-status={action.status}
 		>
 			<div css={[stepStyle, isHover && hoverStepStyle, finalIsRunning && runningStepStyle, isFailed && failedStyle]}>
-				<div className="flex flex-col">
-					<Checkbox {...props} />
+				<div className="flex flex-col" css={css``}>
+					<Checkbox {...props} css={css`padding-top: 4rem;`} />
 					<Conditional showIf={action.payload.isOptional}>
 						<MuteIcon
 							css={css`
@@ -595,12 +595,12 @@ const runningStepStyle = css`
 const stepStyle = css`
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
+	align-items: flex-start;
 	box-sizing: border-box;
 	border: 1.5rem solid rgba(255, 255, 255, 0);
 	border-left: none;
 	border-right: none;
-	padding: 3rem 13rem;
+	padding: 3rem 15rem;
 	margin: 10rem 0rem;
 `;
 const hoverStepStyle = css`

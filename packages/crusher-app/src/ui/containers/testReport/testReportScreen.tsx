@@ -121,11 +121,11 @@ const section = [
 		icon: null,
 		key: "reports",
 	},
-	{
-		name: "Insights & Alert",
-		icon: null,
-		key: "insights"
-	}
+	// {
+	// 	name: "Insights & Alert",
+	// 	icon: null,
+	// 	key: "insights"
+	// }
 	// {
 	// 	name: "History",
 	// 	icon: null,
@@ -317,7 +317,7 @@ export const TestReportScreen = () => {
 			value: true,
 		});
 
-		if (query.view_draft) setSelectedTabIndex(1);
+		// if (query.view_draft) setSelectedTabIndex(0);
 	}, [query.view_draft]);
 	return (
 		<div className={"mt-56"}>

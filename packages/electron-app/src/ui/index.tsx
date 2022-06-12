@@ -12,7 +12,7 @@ import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
-import { goFullScreen, performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
+import { goFullScreen, performNavigation, performReplayTest, performReplayTestUrlAction, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
@@ -88,10 +88,19 @@ const App = () => {
 						}
 						window["triggeredTest"] = { id: -1, type: "local" };
 
-						navigate("/");
-						if(testsCompleted)
-						sendSnackBarEvent({type: "test_report", message: null, meta: { totalCount }});
-						goFullScreen(false);
+						// navigate("/");
+						if(testsCompleted) {
+							navigate("/");
+							goFullScreen(false);
+							sendSnackBarEvent({type: "test_report", message: null, meta: { totalCount }});
+						}
+						if(!testsCompleted) {
+													// goFullScreen(false);
+
+													navigate("/recorder");
+													goFullScreen();
+													performReplayTestUrlAction(window["testsToRun"].list[0], true);
+						}
 					}
 				}
 				if (isWebViewPresent) {

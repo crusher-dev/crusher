@@ -71,7 +71,7 @@ const subHeadingStyle = css`
 	color: #FFFFFF;
 	font-family: Cera Pro;
 	color: rgba(255, 255, 255, 0.4);
-	margin-top: 15rem;
+	margin-top: 12rem;
 `;
 const closeButtonStyle = {
 };

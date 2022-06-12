@@ -202,7 +202,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 						}}
 						bgColor="tertiary-outline"
 						css={saveButtonStyle}
-						className={"ml-36"}
+						className={"ml-20"}
 					>
 						<Conditional showIf={isTestVerificationComplete}>
 							<span>
@@ -228,7 +228,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 						}}
 						bgColor="tertiary-outline"
 						css={saveButtonStyle}
-						className={"ml-36"}
+						className={"ml-20"}
 					>
 						<Conditional showIf={isTestVerificationComplete}>
 							<span>
@@ -564,7 +564,7 @@ const Toolbar = (props: any) => {
 					</Conditional>
 				</div>
 				<Conditional showIf={isRecorderInInitialState}>
-					<Button className={"ml-24"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
+					<Button className={"ml-12"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
 					</Button>
 				</Conditional>
@@ -679,7 +679,7 @@ const inputContainerStyle = css`
 position: relative;
 display: flex;
 flex-direction: column;
-margin-left: 28rem;
+margin-left: 12rem;
 `;
 
 const inputErrorMessageStyle = css`

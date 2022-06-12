@@ -339,7 +339,7 @@ const crusherDropdownContainerStyle = css`
 const logoStyle = css`
     width: 23px;
     height: 23px;
-    margin-left: 50px;
+    margin-left: 20px;
 `;
 
 const rightNavStyle = css`

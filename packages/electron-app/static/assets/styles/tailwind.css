@@ -28,7 +28,7 @@ a {
 	user-select: none;
 }
 
-@media only screen and (max-width: 1520px) {
+@media only screen and (max-width: 1546px) {
 	html {
 		font-size: calc(100vw/1546);
 	}

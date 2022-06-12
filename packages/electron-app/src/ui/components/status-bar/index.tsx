@@ -185,7 +185,6 @@ const StatusBar = (props: any) => {
 
 				<Conditional showIf={!clicked}>
 					<div css={logTextStyle} className={"ml-20"}>{lastLogMessage.length > 100 ? lastLogMessage.substr(0, 100) + "..." : lastLogMessage}</div>
-					<UpMaximiseIcon onClick={handleMaximiseClick} css={css`width: 10rem; height: 12rem; margin-left: auto; :hover { opacity: 0.7 }`}/>
 				</Conditional>
 
 				<Conditional showIf={clicked}>

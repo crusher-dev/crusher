@@ -627,7 +627,7 @@ const stepTitleStyle = css`
 	line-height: 13rem !important;
 	color: rgba(215, 223, 225, 0.6) !important;
 	user-select: none !important;
-	margin-bottom: 10rem !important;
+	margin-bottom: 2rem !important;
 `;
 const stepSubtitleStyle = css`
 	font-family: Gilroy !important;

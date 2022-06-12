@@ -194,6 +194,7 @@ const inputTableGridOptionValueInputStyle = {
 
 const inputStyle = css`
 	outline: none;
+	height: 34rem;
 `;
 
 

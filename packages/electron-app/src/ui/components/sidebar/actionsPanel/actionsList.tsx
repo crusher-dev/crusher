@@ -58,10 +58,10 @@ const actionItemContainer = css`
 	background: #161818;
 `;
 const actionItem = css`
-	padding: 8rem 16rem;
+	padding: 10rem 14rem 9rem 16rem;
 	font-family: Gilroy;
 	font-size: 13rem;
-	line-height: 15rem;
+	
 	cursor: default;
 	:hover {
 		background-color: #32363678;

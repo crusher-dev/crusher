@@ -712,7 +712,7 @@ const containerStyle = css`
 	padding-right: 24rem;
 `;
 const inputStyle = css`
-	height: 40rem;
+	height: 36rem;
 	.input__rightIconContainer {
 		right: 0px;
 
@@ -759,9 +759,6 @@ const inputStyle = css`
 		border-radius: 18px;
 	}
 	}
-	svg {
-		margin-left: auto;
-	}
 	.dropdown-box {
 		overflow: hidden;
 	}
@@ -775,7 +772,7 @@ const buttonStyle = css`
 	box-sizing: border-box;
 	border-radius: 4rem;
 	width: 93rem;
-	height: 34rem;
+	height: 36rem;
 `;
 
 const saveButtonStyle = css`

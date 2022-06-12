@@ -340,6 +340,10 @@ const logoStyle = css`
     width: 23px;
     height: 23px;
     margin-left: 20px;
+
+    rect{
+        fill: #5a5a5a !important;
+    }
 `;
 
 const rightNavStyle = css`

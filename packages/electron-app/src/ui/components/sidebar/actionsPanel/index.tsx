@@ -99,7 +99,7 @@ const containerStyle = css`
 	flex: 1;
 	display: grid;
 	overflow: hidden;
-	grid-template-rows: 62rem;
+	grid-template-rows: 60rem;
 `;
 
 const headerContainerStyle = css`

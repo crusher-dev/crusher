@@ -30,37 +30,15 @@ a {
 
 @media only screen and (max-width: 1520px) {
 	html {
-		font-size: 0.9px;
+		font-size: calc(100vw/1546);
 	}
 }
 
-@media only screen and (max-width: 1493px) {
-	html {
-		font-size: 0.85px;
-	}
-}
 
-@media only screen and (max-width: 1400px) {
-	html {
-		font-size: 0.8px;
-	}
-}
-
-@media only screen and (max-width: 1317px) {
-	html {
-		font-size: 0.75px;
-	}
-}
 
 @media only screen and (max-width: 1229px) {
 	html {
-		font-size: 0.75px;
-	}
-}
-
-@media only screen and (max-width: 1054px) {
-	html {
-		font-size: 0.6px;
+		font-size: 0.8px;
 	}
 }
 

@@ -143,17 +143,17 @@ function ReportSection() {
 				<div css={css`width: 300rem;	border-right-style: solid;
 	border-right-width: 1rem;
 	border-right-color: rgba(196, 196, 196, 0.08);`}>
-					<div  className="px-48 py-28" css={testListHeadingStyle}>Test list</div>
+					<div  className="px-32 pt-32" css={testListHeadingStyle}>Test list</div>
 					<ul css={testListStyle}>
 						{data?.tests.map((testData, i) => (
-							<li  className="px-48 py-14" css={i === selectedTest ? css`color: #C071FF;` : undefined} onClick={setSelectedTest.bind(this, i)}>
+							<li  className="px-32 py-12" css={i === selectedTest ? css`color: #C071FF;` : undefined} onClick={setSelectedTest.bind(this, i)}>
 								<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"} />
 								<span>{testData!.name}</span>
 							</li>
 						))}
 					</ul>
 				</div>
-				<div className={"px-48 py-28"} css={css`flex: 1`}>
+				<div className={"px-24 py-4"} css={css`flex: 1`}>
 					{data?.tests.length ? (<TestCard key={selectedTest} id={selectedTest} testData={data.tests[selectedTest]} />) : ""}
 				</div>
 				{/* {data?.tests.map((testData, i) => (
@@ -165,7 +165,7 @@ function ReportSection() {
 }
 
 const testListStyle = css`
-	margin-top: 32rem;
+	margin-top: 24rem;
 
 li {
 	display: flex;
@@ -185,10 +185,9 @@ font-size: 13px;
 color: rgba(255, 255, 255, 0.79);
 
 font-family: Gilroy;
-font-style: normal;
-font-weight: 400;
+font-weight: 600;
 font-size: 14px;
-letter-spacing: -0.02em;
+letter-spacing: .3px;
 
 color: #D0D0D0;
 `;
@@ -855,13 +854,12 @@ function TestOverviewTabTopSection({ name, currentTestTab, testInstanceData, exp
 
 const selectedTabStyle = css`font-weight: 700; color: #C071FF;`;
 const testNavBarItemStyle = css`
-font-family: Cera Pro;
-font-style: normal;
-font-weight: 400;
-font-size: 13rem;
+font-weight: 500;
+font-size: 15rem;
 
 color: #D0D0D0;
 :hover {
+	text-decoration: underline;
 	opacity: 0.8;
 }
 `;
@@ -1057,7 +1055,6 @@ const stepsList = css`
 `;
 
 const testCard = css`
-	background: rgba(16, 18, 21, 0.5);
 
 	:hover {
 		.test-card-header {

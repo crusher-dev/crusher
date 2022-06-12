@@ -52,10 +52,10 @@ const moreStyle = css`
 	color: #af71ff;
 `;
 const actionItemContainer = css`
-	border: 1rem solid #323636;
+	border: 1rem solid #292929;
 	margin: 8rem 0rem;
 	border-radius: 8rem;
-	background: #00000045;
+	background: #161818;
 `;
 const actionItem = css`
 	padding: 8rem 16rem;

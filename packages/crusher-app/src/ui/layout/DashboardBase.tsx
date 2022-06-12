@@ -401,11 +401,11 @@ function TopNavbar() {
 						<Button
 							className={"ml-20"}
 							css={css`
-								width: 160rem;
+								width: 108rem;
 							`}
 							onClick={setShowCreateTest.bind(this, true)}
 						>
-							Create a test
+							New test
 						</Button>
 						{/*<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>*/}
 						{/*	Share*/}

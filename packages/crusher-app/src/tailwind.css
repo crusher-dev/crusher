@@ -31,15 +31,10 @@ a {
 
 @media only screen and (max-width: 1520px) {
 	html {
-		font-size: 0.9px;
+		font-size: calc(100vw / 1570);
 	}
 }
 
-@media only screen and (max-width: 1493px) {
-	html {
-		font-size: 0.85px;
-	}
-}
 
 @media only screen and (max-width: 1400px) {
 	html {
@@ -47,23 +42,7 @@ a {
 	}
 }
 
-@media only screen and (max-width: 1317px) {
-	html {
-		font-size: 0.75px;
-	}
-}
 
-@media only screen and (max-width: 1229px) {
-	html {
-		font-size: 0.75px;
-	}
-}
-
-@media only screen and (max-width: 1054px) {
-	html {
-		font-size: 0.6px;
-	}
-}
 
 img {
 	display: unset;

@@ -356,18 +356,18 @@ const DashboardFooter = ({userTests, projectId}) => {
     };
 
     React.useEffect(() => {
-        if (window["testsToRun"] && window["testsToRun"].length) {
+        if (window["testsToRun"] && window["testsToRun"].list.length) {
             navigate("/recorder");
             goFullScreen();
-            performReplayTestUrlAction(window["testsToRun"][0], true);
+            performReplayTestUrlAction(window["testsToRun"].list[0], true);
         }
     }, []);
     const handleRunAll = React.useCallback(() => {
         const testIdArr = userTests.map((a) => { return a.id });
-        window["testsToRun"] = testIdArr;
+        window["testsToRun"] = {list: testIdArr, count: testIdArr.length};
         navigate("/recorder");
         goFullScreen();
-        performReplayTestUrlAction(window["testsToRun"][0], true);
+        performReplayTestUrlAction(window["testsToRun"].list[0], true);
     }, [projectId]);
 
     return (<>

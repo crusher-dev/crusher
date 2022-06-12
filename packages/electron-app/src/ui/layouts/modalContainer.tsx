@@ -240,7 +240,7 @@ export const MenuDropdown = ({className, isRecorder, callback}) => {
         <Dropdown
         className={className}
         initialState={showAppMenu}
-                            component={(<ActionButtonDropdown isRecorder={true} setShowActionMenu={handleCallback.bind(this)}/>)}
+                            component={(<ActionButtonDropdown isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)}/>)}
         callback={handleCallback.bind(this)}
         dropdownCSS={css`
                         left: 38rem;

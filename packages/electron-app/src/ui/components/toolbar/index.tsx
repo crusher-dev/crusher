@@ -506,7 +506,7 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<MenuDropdown/>
+				<MenuDropdown css={css`.crusher-hammer-icon{ margin-left: 20rem; }`}/>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`

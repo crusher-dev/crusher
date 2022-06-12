@@ -221,10 +221,11 @@ font-size: 13rem;
 	);
 }
 
-export const MenuDropdown = ({}) => {
+export const MenuDropdown = ({className}) => {
     const [showAppMenu, setShowAppMenu] = React.useState(false);
     return (
         <Dropdown
+        className={className}
         initialState={showAppMenu}
                             component={(<ActionButtonDropdown setShowActionMenu={setShowAppMenu.bind(this)}/>)}
         callback={setShowAppMenu.bind(this)}
@@ -235,7 +236,7 @@ export const MenuDropdown = ({}) => {
                     `}
     >
                         <div css={crusherDropdownContainerStyle}>
-                            <CrusherHammerColorIcon css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
+                            <CrusherHammerColorIcon className={"crusher-hammer-icon"} css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
                             <DropdownIconSVG/>
                             </div>
                             </Dropdown>
@@ -257,7 +258,7 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
             <div css={dragStyle} className={"drag"}></div>
             <div css={headerStyle}>
                 <div css={leftNavBarStyle}>
-                    <MenuDropdown/>
+                    <MenuDropdown css={css`.crusher-hammer-icon{ margin-left: 50rem; }`}/>
                 </div>
                 <div css={mainTitleContainerStyle}>
                     {title}
@@ -339,7 +340,6 @@ const crusherDropdownContainerStyle = css`
 const logoStyle = css`
     width: 23px;
     height: 23px;
-    margin-left: 20px;
 
     rect{
         fill: #5a5a5a !important;

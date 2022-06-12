@@ -32,13 +32,16 @@ interface ITabButtonProps {
 }
 const TabButton = (props: ITabButtonProps) => {
 	const {title, className, selected, callback, count} = props;
-
+	
 	return (
 		<div className={className || ""} onClick={callback} css={[statusBarTabStyle, selected ? css`color: #8568D5;` : null]}>
-			{title}
-			<Conditional showIf={count != null}>
-				<span className="ml-4" css={logsCountStyle}>{count}</span>
-			</Conditional>
+			<UpMaximiseIcon css={css`width: 10rem; height: 12rem; margin-left: auto; :hover { opacity: 0.7 }`}/>
+			<span css={css`margin-left: 8rem;`}>{title}</span>
+			<div>
+				<Conditional showIf={count != null}>
+					<span className="ml-4" css={logsCountStyle}>{count}</span>
+				</Conditional>
+			</div>
 		</div>
 	);
 }
@@ -176,7 +179,7 @@ const StatusBar = (props: any) => {
 				{/* <div css={css`height: 100%; width: 100%; background :red;`}></div> */}
 			</div>) : ""}
 		<div id={`logsTab`} className={`${clicked ? "expandBar" : ""}`} css={[statusBarContainerStyle, clicked ? css`height: 341rem;` : undefined]}>
-			<div css={css`display: flex; align-items: center; height: 100%; max-height: 32rem; 	padding: 0rem 14rem;`}>
+			<div css={css`display: flex; align-items: center; height: 100%; max-height: 32rem; 	padding: 0rem 14rem; 	:hover{ background: #1d1e1f; }`}>
 				<TabButton selected={selectedTab === TabsEnum.LOGS} title="Logs" count={logs && logs.length} callback={() => {setClicked(true); handleTabSelection(TabsEnum.LOGS); }}/>
 
 
@@ -264,7 +267,8 @@ const statusBarTabStyle = css`
 	font-size: 14rem;
 	font-family: Cera Pro;
 	color: rgba(255,255,255,0.7);
-
+	display: flex;
+	align-items: center;
 	:hover {
 		opacity: 0.8;
 	}
@@ -274,9 +278,6 @@ const statusBarContainerStyle = css`
 	border: 1px solid #272D2D;
 	border-left: 0;
 	border-right: 0;
-	:hover{
-		background: #1d1e1f;
-	}
 	width: 100%;
   height: 32rem;
 	transition: max-height 0.1s, height 0.1s;

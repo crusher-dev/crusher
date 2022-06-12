@@ -779,13 +779,14 @@ const buttonStyle = css`
 `;
 
 const saveButtonStyle = css`
-	width: 128rem;
-	height: 30rem;
+	width: 116rem;
+	height: 32rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
 	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
-	font-weight: normal;
+	letter-spacing: .3px;
+	font-weight: 500 !important;
 	font-size: 14rem;
 	line-height: 17rem;
 	border: 0.5px solid transparent;

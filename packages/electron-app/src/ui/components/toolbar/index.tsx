@@ -465,6 +465,13 @@ const Toolbar = (props: any) => {
 								values={recorderDevices}
 							/>
 	), [selectedDevice, recorderDevices]);
+
+	const handleMenuCallback = React.useCallback((value, isNavigating) => {
+		console.log("Menu callback", value, isNavigating);
+		if(isNavigating) {
+			goFullScreen(false);
+		}
+	}, []);
 	return (
 		<div css={containerStyle} {...props}>
 			<Conditional showIf={isTestBeingVerified}>
@@ -506,7 +513,7 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<MenuDropdown css={css`.crusher-hammer-icon{ margin-left: 20rem; }`}/>
+				<MenuDropdown isRecorder={true} callback={handleMenuCallback} css={css`.crusher-hammer-icon{ margin-left: 20rem; }`}/>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`

@@ -213,8 +213,7 @@ const containerStyle = css`
 `;
 const bodyStyle = css`
 	flex: 1;
-	display: grid;
-	grid-template-rows: 6rem;
+	display: flex;
 	flex-direction: column;
 	position: relative;
 	position: relative;

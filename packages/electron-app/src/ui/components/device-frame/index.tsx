@@ -231,7 +231,7 @@ const webviewStyle = css`
 	height: 100%;
 	background: #fff;
 `;
-const topContainerStyle = css`position: relative; overflow: hidden;`;
+const topContainerStyle = css`position: relative; overflow: hidden; flex: 1;`;
 const containerStyle = css`
 	width: 100%;
     height: calc(100% - 30rem);

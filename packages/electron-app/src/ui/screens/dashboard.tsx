@@ -550,8 +550,8 @@ function DashboardScreen() {
 
     return (
 		<ModelContainerLayout headerStyle={haveZeroTests ? {borderBottom: 'none'}: {}} title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
-            {/* <ProxyWarningContainer/> */}
-            { haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>)}
+            <ProxyWarningContainer/>
+            {/* { haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>)} */}
 
 		</ModelContainerLayout>
 	);

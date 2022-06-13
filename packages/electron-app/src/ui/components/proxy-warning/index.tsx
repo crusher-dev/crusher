@@ -15,6 +15,7 @@ const ReadDocsButton = ({title, className, onClick}) => {
         }}
         className={`${className}`}
         bgColor="tertiary-outline"
+        size="x-small"
         css={saveButtonStyle}
     >
         <span>Read docs</span>
@@ -22,16 +23,14 @@ const ReadDocsButton = ({title, className, onClick}) => {
 };
 
 const saveButtonStyle = css`
-	width: 120rem;
-	height: 30rem;
+	width: 100rem;
 	background: transparent;
 	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: 600;
-	font-size: 14rem;
-	line-height: 17rem;
-	border: 0.6px solid #FFFFFF;
+	font-size: 13.6rem;
+	border: 0.5px solid #FFFFFF;
 	color: #ffffff;
 	:hover {
         background: transparent;
@@ -71,18 +70,18 @@ const contentContainerStyle = css`
     align-items: center;
 `;
 const headingStyle = css`
-margin-top: 28rem;
+margin-top: 24rem;
 font-family: Cera Pro;
 font-style: normal;
 font-weight: 900;
 font-size: 18rem;
 text-align: center;
-letter-spacing: .1px;
+letter-spacing: -.1px;
 color: #FFFFFF;
 `;
 const highlightStyle = css`color: #FFEC87;`;
 const descriptionStyle = css`
-margin-top: 10rem;
+margin-top: 12rem;
 
 font-family: Gilroy;
 font-style: normal;
@@ -102,11 +101,11 @@ const containerStyle = css`
 const iconStyle = css`width: 43rem; height: 35rem;`;
 const actionsBarContainerStyle = css` display: flex; align-items: center; margin-top: 20rem;`;
 const waitingTextStyle = css`
-margin-top: 28rem;
+margin-top: 40rem;
 font-family: Gilroy;
 font-style: normal;
 font-weight: 400;
-font-size: 13.5rem;
+font-size: 13rem;
 text-align: center;
 letter-spacing: 0.01em;
 

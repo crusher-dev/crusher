@@ -619,6 +619,50 @@ const CreateIcon = (props) => (
     </svg>
 );
 
+const ConnectivityWarningIcon = (props) => (
+    <svg
+      viewBox={"0 0 43 35"}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M15.628 16.462c-2.933.896-5.7 2.48-8.023 4.794l4.055 4.055a13.59 13.59 0 0 1 4.142-2.828l-.174-6.02ZM15.296 5.447A29.917 29.917 0 0 0 0 13.652l4.055 4.054a24.243 24.243 0 0 1 11.415-6.412l-.174-5.847ZM27.305 5.447l-.174 5.856a24.243 24.243 0 0 1 11.416 6.412l4.055-4.054a29.835 29.835 0 0 0-15.297-8.214ZM26.79 22.483a13.607 13.607 0 0 1 4.15 2.837l4.055-4.055a19.277 19.277 0 0 0-8.023-4.803l-.183 6.021ZM21.301 34.526a3.48 3.48 0 1 0 0-6.961 3.48 3.48 0 0 0 0 6.96ZM22.676 24.71h-2.758a1.33 1.33 0 0 1-1.332-1.296l-.66-22.04A1.336 1.336 0 0 1 19.255 0h4.09a1.33 1.33 0 0 1 1.331 1.375l-.67 22.04a1.33 1.33 0 0 1-1.331 1.296Z"
+        fill="#4E4E4E"
+      />
+    </svg>
+);
+
+
+function PlayV2Icon(props) {
+    return (
+      <svg
+        width={18}
+        height={18}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+      >
+        <rect width={18} height={18} rx={9} fill="#A966FF" />
+        <rect
+          x={0.125}
+          y={0.125}
+          width={17.75}
+          height={17.75}
+          rx={8.875}
+          stroke="#000"
+          strokeOpacity={0.53}
+          strokeWidth={0.25}
+        />
+        <path
+          d="M7.963 12.123a.58.58 0 01-.291-.08.67.67 0 01-.324-.582V6.539a.67.67 0 01.324-.582.576.576 0 01.595.007l4.126 2.518a.607.607 0 01.281.518.62.62 0 01-.28.517l-4.128 2.519a.584.584 0 01-.303.087z"
+          fill="#fff"
+        />
+      </svg>
+    );
+  }
+
+
 export {
 	CrusherIcon,
 	GithubIcon,
@@ -652,5 +696,7 @@ export {
 	ConsoleIcon,
 	UpMaximiseIcon,
 	PlayIconV2,
-	CreateIcon
+	CreateIcon,
+	ConnectivityWarningIcon,
+	PlayV2Icon
 };

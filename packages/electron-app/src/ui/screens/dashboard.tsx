@@ -14,6 +14,7 @@ import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsi
 import { shell } from "electron";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { CreateFirstTest } from "../components/create-first-test";
+import { ProxyWarningContainer } from "../components/proxy-warning";
 
 
 const PlusIcon = (props) => (
@@ -549,7 +550,7 @@ function DashboardScreen() {
 
     return (
 		<ModelContainerLayout headerStyle={haveZeroTests ? {borderBottom: 'none'}: {}} title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
-            
+            {/* <ProxyWarningContainer/> */}
             { haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>)}
 
 		</ModelContainerLayout>

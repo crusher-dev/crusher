@@ -1,40 +1,11 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CreateIcon } from "../../icons";
+import { CreateIcon, PlayV2Icon } from "../../icons";
 import { Link } from "../../layouts/modalContainer";
 import {Button} from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen } from "../../commands/perform";
-
-
-function Play(props) {
-    return (
-      <svg
-        width={18}
-        height={18}
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-      >
-        <rect width={18} height={18} rx={9} fill="#A966FF" />
-        <rect
-          x={0.125}
-          y={0.125}
-          width={17.75}
-          height={17.75}
-          rx={8.875}
-          stroke="#000"
-          strokeOpacity={0.53}
-          strokeWidth={0.25}
-        />
-        <path
-          d="M7.963 12.123a.58.58 0 01-.291-.08.67.67 0 01-.324-.582V6.539a.67.67 0 01.324-.582.576.576 0 01.595.007l4.126 2.518a.607.607 0 01.281.518.62.62 0 01-.28.517l-4.128 2.519a.584.584 0 01-.303.087z"
-          fill="#fff"
-        />
-      </svg>
-    );
-  }
 
 const CreateButton = ({title, className, onClick}) => {
     return ( <Button
@@ -92,7 +63,7 @@ export const CreateFirstTest = ({}) => {
             </div>
 
             <div css={watch}>
-               <Play/> Watch video
+               <PlayV2Icon/> Watch video
             </div>
         </div>
     );

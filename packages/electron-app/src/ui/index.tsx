@@ -1,4 +1,6 @@
 import './wdyr';
+import { setupLogger } from "@crusher-shared/modules/logger";
+setupLogger("recorder");
 import React from "react";
 import { css, Global } from "@emotion/react";
 import { render } from "react-dom";
@@ -188,7 +190,7 @@ const App = () => {
 				<div css={bodyStyle}>
 					<Toolbar css={[toolbarStyle, isStatusBarVisible && recorderState.type === TRecorderState.CUSTOM_CODE_ON ? css`z-index: -1;` : undefined]} />
 					<DeviceFrame css={deviceFrameContainerStyle} />
-					
+
 					{isStatusBarVisible ? (
 						<StatusBar />
 					) : ""}

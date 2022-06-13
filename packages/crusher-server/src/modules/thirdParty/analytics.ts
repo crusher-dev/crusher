@@ -7,7 +7,7 @@ class SegmentManager {
 
 	constructor() {
 		if (!process.env.EVENT_INGEST_KEY) {
-			Logger.error("No tracking ingest key provided in environment");
+			console.error("No tracking ingest key provided in environment");
 			return;
 		}
 	}

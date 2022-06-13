@@ -222,7 +222,7 @@ const bodyStyle = css`
 `;
 const sidebarStyle = css`
 	padding: 1rem;
-	width: 350rem;
+	width: 336rem;
 `;
 const toolbarStyle = css`
 	background-color: #111213;

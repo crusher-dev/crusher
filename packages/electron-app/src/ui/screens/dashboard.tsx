@@ -310,7 +310,7 @@ function TestItemMenuDropdown({ testId, draftJobId, setShowActionMenu, setIsEdit
 		</div>
 	);
 }
-function ActionButtonDropdown({ setShowActionMenu, ...props }) {
+function ActionButtonDropdown({ setShowActionMenu, projectId, ...props }) {
 
 	const MenuItem = ({ label, onClick, ...props }) => {
 		return (
@@ -328,7 +328,13 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 		);
 	};
 
-	const handleViewDetails = () => {
+    const handleRunTestsCloud = () => {
+            performRunTests(projectId, null).then((buildRes) => {
+                window["messageBarCallback"](buildRes.buildId);
+                // sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+            });
+
+
 		setShowActionMenu(false);
 	};
 	return (
@@ -340,7 +346,7 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 			`}
 		>
 			<div>
-                <MenuItem onClick={handleViewDetails} label={<span>Run tests (cloud)</span>} className={"close-on-click"} />
+                <MenuItem onClick={handleRunTestsCloud} label={<span>Run tests (cloud)</span>} className={"close-on-click"} />
 			</div>
 		</div>
 	);
@@ -383,7 +389,7 @@ const DashboardFooter = ({userTests, projectId}) => {
 
         <Dropdown
     initialState={showActionMenu}
-    component={<ActionButtonDropdown setShowActionMenu={setShowActionMenu.bind(this)}/>}
+                    component={<ActionButtonDropdown projectId={projectId}  setShowActionMenu={setShowActionMenu.bind(this)}/>}
     callback={setShowActionMenu.bind(this)}
     dropdownCSS={css`
         left: 0rem;

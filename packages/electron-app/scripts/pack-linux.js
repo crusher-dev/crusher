@@ -26,7 +26,7 @@ builder
 				},
 			],
 			linux: {
-				icon: "static/assets/icons/app.icns",
+				icon: "static/assets/icons/app.png",
 			},
 			mac: {
 				category: "public.app-category.developer-tools",
@@ -36,7 +36,7 @@ builder
 				app: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/linux"),
 			},
-			electronDist: path.resolve(__dirname, "../bin/linux"),
+			electronDist: path.resolve(__dirname, "../bin/linux-x64"),
 			electronVersion: "13.1.6",
 			asar: false,
 			protocols: {

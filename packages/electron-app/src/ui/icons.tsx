@@ -604,6 +604,21 @@ const CrusherHammerColorIcon = (props) => (
 	)
 
 
+
+const CreateIcon = (props) => (
+    <svg
+      viewBox={"0 0 28 28"}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M21.533.753a2.571 2.571 0 0 0-3.637 0l-4.753 4.753v-.64a2.572 2.572 0 0 0-2.572-2.571h-8A2.571 2.571 0 0 0 0 4.866v20.572a2 2 0 0 0 2 2h20.571a2.572 2.572 0 0 0 2.572-2.572v-8.005a2.572 2.572 0 0 0-2.572-2.57h-.635l4.749-4.75a2.571 2.571 0 0 0 0-3.636L21.533.753Zm-8.39 9.187 4.35 4.35h-4.35V9.94Zm-1.714 4.35H1.714V4.866c0-.473.384-.857.857-.857h8c.474 0 .858.384.858.857v9.424Zm-9.715 1.714h9.715v9.72H2.57a.857.857 0 0 1-.857-.858v-8.862Zm11.429 9.72v-9.72h9.428c.474 0 .858.384.858.857v8.005a.857.857 0 0 1-.858.857h-9.428Z"
+        fill="#D6FF80"
+      />
+    </svg>
+);
+
 export {
 	CrusherIcon,
 	GithubIcon,
@@ -636,5 +651,6 @@ export {
 	MiniCrossIcon,
 	ConsoleIcon,
 	UpMaximiseIcon,
-	PlayIconV2
+	PlayIconV2,
+	CreateIcon
 };

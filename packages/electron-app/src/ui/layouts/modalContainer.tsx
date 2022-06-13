@@ -11,7 +11,7 @@ import { useStore } from "react-redux";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 
-function Link({children, ...props}) {
+export function Link({children, ...props}) {
     return(
         <span css={[linkStyle]} {...props}>
             {children}

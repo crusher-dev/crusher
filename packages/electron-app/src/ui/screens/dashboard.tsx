@@ -13,6 +13,7 @@ import { sendSnackBarEvent } from "../components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { shell } from "electron";
 import { resolveToFrontEndPath } from "@shared/utils/url";
+import { CreateFirstTest } from "../components/create-first-test";
 
 
 const PlusIcon = (props) => (
@@ -543,9 +544,14 @@ function DashboardScreen() {
         return (<LoadingScreen/>)
     }
 
+
+    const haveZeroTests = userAccountInfo && userTests && (!userTests.length);
+
     return (
 		<ModelContainerLayout title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
-             <TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>
+            
+            { haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>)}
+
 		</ModelContainerLayout>
 	);
 }
@@ -587,7 +593,7 @@ const saveButtonStyle = css`
 	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
-	font-weight: normal;
+	font-weight: 600;
 	font-size: 14rem;
 	line-height: 17rem;
 	border: 0.5px solid transparent;

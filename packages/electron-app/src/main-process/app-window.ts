@@ -859,9 +859,7 @@ export class AppWindow {
 			this.window.setFullScreenable(true);
 			this.window.setResizable(true);
 			this.window.setSize(screenSize.bounds.width, screenSize.bounds.height, false);
-			setImmediate(() => {
-				this.window.center();
-			});
+			this.window.setPosition(screenSize.bounds.x, screenSize.bounds.y, false);
 		} else {
 			return new Promise((resolve) => {
 				// this.window.unmaximize();

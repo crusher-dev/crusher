@@ -6,13 +6,13 @@ switch(process.platform) {
         process.env.ELECTRON_BUILD = "../../output/crusher-electron-app";
         process.env.DIST_DIR = "../../output/crusher-electron-app-release/darwin";
         process.env.APP_RESOURCE_DIR =`${process.env.DIST_DIR}/Electron.app/Contents/Resources`;
-        
+
         cp.execSync(`mkdir -p ../../output/crusher-electron-app-release`);
         require("./pack-mac");
         break;
     case "linux":
         process.env.ELECTRON_BUILD = "../../output/crusher-electron-app";
-        process.env.DIST_DIR = "../../output/crusher-electron-app-release/darwin";
+        process.env.DIST_DIR = "../../output/crusher-electron-app-release/linux";
 
         cp.execSync(`mkdir -p ../../output/crusher-electron-app-release`);
         require("./pack-linux");

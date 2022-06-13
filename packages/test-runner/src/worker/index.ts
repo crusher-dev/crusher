@@ -1,3 +1,6 @@
+import {setupLogger} from "@crusher-shared/modules/logger";
+setupLogger("test-runner");
+
 import { CodeRunnerService } from "./runner.service";
 import { getGlobalManager, getQueueManager, getRedisManager, getStorageManager } from "../util/cache";
 import { Notifier } from "@modules/notifier/index";

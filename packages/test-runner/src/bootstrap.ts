@@ -4,7 +4,7 @@ import * as worker from "./worker";
 import { getQueueManager, getRedisManager } from "@util/cache";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@shared/constants/queues";
 
-require("./util/logger");
+// require("./util/logger");
 
 class TestRunnerBootstrap {
 	redisManager: RedisManager;

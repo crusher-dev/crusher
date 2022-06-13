@@ -1,6 +1,5 @@
 import './wdyr';
 import { setupLogger } from "@crusher-shared/modules/logger";
-setupLogger("recorder");
 import React from "react";
 import { css, Global } from "@emotion/react";
 import { render } from "react-dom";

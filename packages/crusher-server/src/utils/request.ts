@@ -1,5 +1,4 @@
 import { appendParamsToURI, checkIfAbsoluteURI } from "./url";
-import { Logger } from "./logger";
 import * as chalk from "chalk";
 
 const _fetch = require("node-fetch").default;

@@ -2,9 +2,9 @@ import * as winston from "winston";
 const LokiTransport = require("winston-loki");
 import * as chalk from "chalk";
 
-const IS_PRODUCTION = true;
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-const winstonLogger = winston.createLogger({
+let winstonLogger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
   defaultMeta: { },
@@ -23,26 +23,32 @@ const logger =  { log: (message, meta) => { winstonLogger.log('info', message, m
 
 function modifyNativeConsoleFunctions() {
 	const log = function () {
+		//@ts-ignore
 		logger.log([...arguments].join(" "));
 	};
 
 	const info = function () {
+		//@ts-ignore
 		logger.info([...arguments].join(" "));
 	};
 
 	const debug = function () {
+		//@ts-ignore
 		logger.debug([...arguments].join(" "));
 	};
 
 	const trace = function () {
+		//@ts-ignore
 		logger.debug([...arguments].join(" "));
 	};
 
 	const warn = function () {
+		//@ts-ignore
 		logger.warn([...arguments].join(" "));
 	};
 
 	const error = function () {
+		//@ts-ignore
 		logger.error([...arguments].join(" "));
 	};
 
@@ -56,11 +62,12 @@ function modifyNativeConsoleFunctions() {
 
 modifyNativeConsoleFunctions();
 
+let isSetupComplete = false;
 export function setupLogger(componentName: string) {
 	if (!componentName) throw new Error("Provide a unique component name for you logger");
+	if(isSetupComplete)	return;
 	if (IS_PRODUCTION) {
-		console.log("Setting up loki transport");
-		winstonLogger.transports.push(new LokiTransport({
+		winstonLogger.add(new LokiTransport({
 			host: 'https://146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9@logs-prod-us-central1.grafana.net',
 			json: true,
 			basicAuth: '146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9',

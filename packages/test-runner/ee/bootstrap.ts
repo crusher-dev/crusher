@@ -9,7 +9,7 @@ import { Worker } from "bullmq";
 import Timeout = NodeJS.Timeout;
 import { TEST_EXECUTION_QUEUE } from "@shared/constants/queues";
 import axios from "axios";
-require("../src/util/logger");
+// require("../src/util/logger");
 
 const TEST_PER_INSTANCE = 3;
 class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {

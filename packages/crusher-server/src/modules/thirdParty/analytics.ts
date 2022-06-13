@@ -1,5 +1,4 @@
 import { Service } from "typedi";
-import { Logger } from "@utils/logger";
 
 @Service()
 class SegmentManager {

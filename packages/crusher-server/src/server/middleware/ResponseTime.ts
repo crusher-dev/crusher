@@ -1,5 +1,4 @@
 // response-time-logger.js
-import { Logger } from "@utils/logger";
 const chalk = require("chalk");
 
 export const ReqLogger = (req, res, next) => {

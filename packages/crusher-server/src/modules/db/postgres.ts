@@ -1,6 +1,5 @@
 import { IDatabaseManager } from "@modules/db/interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
-import { Logger } from "@utils/logger";
 import { Pool, PoolConfig } from "pg";
 import * as sqlstring from "sqlstring";
 

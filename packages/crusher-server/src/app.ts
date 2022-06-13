@@ -6,7 +6,6 @@ setupLogger("crusher-server");
 require("dotenv").config();
 
 import { authorization, getCurrentUserChecker } from "./server/middleware/Authorization";
-import { Logger } from "./utils/logger";
 import * as bodyParser from "body-parser";
 import { useContainer, useExpressServer } from "routing-controllers";
 import * as http from "http";

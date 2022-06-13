@@ -3,7 +3,6 @@ import { DBManager } from "@modules/db";
 
 import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
 import { OCTOKIT_CONFIG } from "../../../../config/github";
-import { Logger } from "@utils/logger";
 import { createAppAuth } from "@octokit/auth/dist-node";
 import { BuildStatusEnum } from "@modules/resources/builds/interface";
 import { GithubCheckConclusionEnum } from "./interface";

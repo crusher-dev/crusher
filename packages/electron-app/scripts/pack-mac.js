@@ -6,6 +6,18 @@ const { notarize } = require("electron-notarize");
 
 shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
 
+const getIsArm = () => {
+	try {
+		const isCurrentlyTranslated = execSync('sysctl sysctl.proc_translated', { stdio: 'pipe' });
+
+		return true;
+	} catch (e) {
+		// On non-ARM macs `sysctl sysctl.proc_translated` throws with
+		// sysctl: unknown oid 'sysctl.proc_translated'
+		return false;
+	}
+};
+
 // Promise is returned
 builder
 	.build({
@@ -15,7 +27,7 @@ builder
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
-			defaultArch: "arm64",
+			defaultArch: getIsArm() ? "arm64" : undefined,
 			publish:
 				process.env.PUBLISH_RELEASE !== "always"
 					? [
@@ -60,7 +72,7 @@ builder
 				app: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin"),
 			},
-			electronDist: path.resolve(__dirname, "../bin/darwin-arm64"),
+			electronDist: getIsArm() ? path.resolve(__dirname, "../bin/darwin-arm64") : path.resolve(__dirname, "../bin/darwin-x64"),
 			electronVersion: "13.1.6",
 			asar: false,
 			protocols: {

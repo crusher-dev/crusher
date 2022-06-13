@@ -258,7 +258,7 @@ export const MenuDropdown = ({className, isRecorder, callback}) => {
                             </Dropdown>
     )
 }
-function ModelContainerLayout({children, title, footer, className, isLoadingScreen, ...props}) {
+function ModelContainerLayout({children, title, footer, className, isLoadingScreen,headerStyle, ...props}) {
     const navigate = useNavigate();
 
     const handleOpenAppClick = React.useCallback(() => {
@@ -272,7 +272,7 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
     return (
         <div css={containerStyle} {...props}>
             <div css={dragStyle} className={"drag"}></div>
-            <div css={headerStyle}>
+            <div css={headerStyleCSS} style={headerStyle}>
                 <div css={leftNavBarStyle}>
                     <MenuDropdown css={[css`.crusher-hammer-icon{ margin-left: ${ process.platform !== "darwin" ? "0" : "50" }rem`]}/>
                 </div>
@@ -407,12 +407,12 @@ const footerStyle = css`
     padding: 12rem 24rem;
     display: flex;
 `;
-const headerStyle = css`
+const headerStyleCSS = css`
     display: flex;
     padding: 12px 28px;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    position: RELATIVE;
+    position: relative;
     z-index: 23424234324234234;
 `;
 

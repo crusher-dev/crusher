@@ -58,8 +58,8 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 956;
-	private minHeight = 570;
+	private minWidth = 1025;
+	private minHeight = 620;
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
@@ -154,7 +154,7 @@ export class AppWindow {
 
 			identify(4);
 
-			console.log("Analaytics done!");
+			console.log("Telemetry sent!");
 
 			this.maybeEmitDidLoad();
 		});

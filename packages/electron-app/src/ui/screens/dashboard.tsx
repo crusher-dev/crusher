@@ -548,13 +548,14 @@ function DashboardScreen() {
     const haveZeroTests = userAccountInfo && userTests && (!userTests.length);
 
     return (
-		<ModelContainerLayout title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
+		<ModelContainerLayout headerStyle={haveZeroTests ? {borderBottom: 'none'}: {}} title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
             
             { haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>)}
 
 		</ModelContainerLayout>
 	);
 }
+
 
 const rocketIconStyle = css`font-size: 12px;
 color: #FFFFFF;`;

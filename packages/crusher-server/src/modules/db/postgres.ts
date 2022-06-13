@@ -20,7 +20,7 @@ class PostgresDatabase implements IDatabaseManager {
 					resolve(true);
 				})
 				.catch((err) => {
-					Logger.error("Cannot connect to postgres database...", err);
+					console.error("Cannot connect to postgres database...", err);
 					resolve(false);
 				});
 		});

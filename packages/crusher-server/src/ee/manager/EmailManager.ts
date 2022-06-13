@@ -42,7 +42,7 @@ export class EmailManager {
 			html: html,
 		};
 		sgMail.send(msg);
-		Logger.info("EmailManager::sendEmail", `Email Sent... [Verification] - to ${to}`);
+		console.info("EmailManager::sendEmail", `Email Sent... [Verification] - to ${to}`);
 	}
 
 	public static sendVerificationMail(to, code) {

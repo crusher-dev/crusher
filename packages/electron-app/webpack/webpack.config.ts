@@ -90,7 +90,7 @@ const finalConfig = [
 		entry: {
 			app: path.resolve(__dirname, "../src/main-process/main.ts"),
 		},
-		externals: ["playwright"],
+		externals: ["playwright", "snappy"],
 	},
 	{
 		...commonConfig,
@@ -114,7 +114,7 @@ const finalConfig = [
 			minimize: true,
 			minimizer: [new TerserPlugin({ /* additional options here */ })],
 		},
-
+		externals: ["snappy"],
 	},
 	{
 		...commonConfig,

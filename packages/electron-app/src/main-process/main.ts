@@ -1,3 +1,6 @@
+import { setupLogger } from "@crusher-shared/modules/logger";
+setupLogger("recorder");
+
 console.log("Ready now...");
 require('v8-compile-cache');
 import * as Sentry from "@sentry/electron"

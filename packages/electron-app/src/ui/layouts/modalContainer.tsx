@@ -249,7 +249,7 @@ export const MenuDropdown = ({className, isRecorder, callback}) => {
                     `}
     >
                         <div css={crusherDropdownContainerStyle}>
-                            <CrusherHammerColorIcon className={"crusher-hammer-icon"} css={[logoStyle, process.platform !== "darwin" ? css`margin-left: 0px;` : undefined]}/>
+                            <CrusherHammerColorIcon className={"crusher-hammer-icon"} css={[logoStyle]}/>
                             <DropdownIconSVG/>
                             </div>
                             </Dropdown>
@@ -271,7 +271,7 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
             <div css={dragStyle} className={"drag"}></div>
             <div css={headerStyle}>
                 <div css={leftNavBarStyle}>
-                    <MenuDropdown css={css`.crusher-hammer-icon{ margin-left: 50rem; }`}/>
+                    <MenuDropdown css={[css`.crusher-hammer-icon{ margin-left: ${ process.platform !== "darwin" ? "0" : "50" }rem`]}/>
                 </div>
                 <div css={mainTitleContainerStyle}>
                     {title}

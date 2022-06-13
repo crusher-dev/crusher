@@ -19,7 +19,7 @@ class MysqlDatabase implements IDatabaseManager {
 					resolve(true);
 				})
 				.catch((err) => {
-					Logger.error("Cannot connect to mysql database...", err);
+					console.error("Cannot connect to mysql database...", err);
 					resolve(false);
 				});
 		});

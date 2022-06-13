@@ -3,7 +3,7 @@ const Platform = builder.Platform;
 const path = require("path");
 const shell = require("shelljs");
 const { notarize } = require("electron-notarize");
-
+const { execSync } = require("child_process");
 shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
 
 const getIsArm = () => {
@@ -18,6 +18,7 @@ const getIsArm = () => {
 	}
 };
 
+const IS_ARM = getIsArm();
 // Promise is returned
 builder
 	.build({
@@ -27,7 +28,7 @@ builder
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
-			defaultArch: getIsArm() ? "arm64" : undefined,
+			defaultArch: IS_ARM ? "arm64" : undefined,
 			publish:
 				process.env.PUBLISH_RELEASE !== "always"
 					? [
@@ -72,7 +73,7 @@ builder
 				app: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin"),
 			},
-			electronDist: getIsArm() ? path.resolve(__dirname, "../bin/darwin-arm64") : path.resolve(__dirname, "../bin/darwin-x64"),
+			electronDist: IS_ARM ? path.resolve(__dirname, "../bin/darwin-arm64") : path.resolve(__dirname, "../bin/darwin-x64"),
 			electronVersion: "13.1.6",
 			asar: false,
 			protocols: {

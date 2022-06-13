@@ -208,6 +208,10 @@ font-size: 13rem;
         return navigate("/");
     }
 
+    const handleHelpAccount = () => {
+        shell.openExternal("https://docs.crusher.dev");
+    };
+
 	return (
 		<div
 			className={"flex flex-col justify-between h-full"}
@@ -217,9 +221,8 @@ font-size: 13rem;
 			`}
 		>
             <div>
-                {isRecorder ? (<MenuItem onClick={handleGoBackToDashboard} label={<span>Back</span>} className={"close-on-click"} />) : (<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />)}
-                <MenuItem onClick={handleOpenApp} label={<span>Open App</span>} className={"close-on-click"} />
-                <MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
+                {isRecorder ? (<MenuItem onClick={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />) : (<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />)}
+                <MenuItem onClick={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
                 <MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
 			</div>
 		</div>

@@ -52,16 +52,16 @@ const moreStyle = css`
 	color: #af71ff;
 `;
 const actionItemContainer = css`
-	border: 1rem solid #323636;
+	border: 1rem solid #292929;
 	margin: 8rem 0rem;
 	border-radius: 8rem;
-	background: #00000045;
+	background: #161818;
 `;
 const actionItem = css`
-	padding: 8rem 16rem;
+	padding: 10rem 14rem 9rem 16rem;
 	font-family: Gilroy;
 	font-size: 13rem;
-	line-height: 15rem;
+	
 	cursor: default;
 	:hover {
 		background-color: #32363678;

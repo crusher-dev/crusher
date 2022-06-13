@@ -211,8 +211,8 @@ const Step = ({
 			data-status={action.status}
 		>
 			<div css={[stepStyle, isHover && hoverStepStyle, finalIsRunning && runningStepStyle, isFailed && failedStyle]}>
-				<div className="flex flex-col">
-					<Checkbox {...props} />
+				<div className="flex flex-col" css={css``}>
+					<Checkbox {...props} css={css`padding-top: 4rem;`} />
 					<Conditional showIf={action.payload.isOptional}>
 						<MuteIcon
 							css={css`
@@ -469,7 +469,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 			<div css={stepsHeaderStyle}>
 				<Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} />
 				<Text css={stepsTextStyle}>{recordedSteps.length} Steps</Text>
-				<ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 14rem; height: 14rem; :hover { opacity: 0.7 }`, isStatusBarVisible ? css`path {fill: rgba(94, 94, 199, 0.8);}` : null]} />
+				{/* <ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 14rem; height: 14rem; :hover { opacity: 0.7 }; path {fill: rgba(255, 255, 255, 1);}`, isStatusBarVisible ? css`path {fill: rgba(255, 255, 255, 0.35);}` : null]} /> */}
 				<Conditional showIf={!!checkedSteps.size}>
 					<div css={stepDropdownStyle}>
 						<Dropdown
@@ -595,16 +595,18 @@ const runningStepStyle = css`
 const stepStyle = css`
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
+	align-items: flex-start;
 	box-sizing: border-box;
 	border: 1.5rem solid rgba(255, 255, 255, 0);
 	border-left: none;
-	padding: 3rem 13rem;
+	border-right: none;
+	padding: 3rem 15rem;
 	margin: 10rem 0rem;
 `;
 const hoverStepStyle = css`
 	border: 1.5rem solid rgba(255, 255, 255, 0.1);
 	border-left: none;
+	border-right: none;
 `;
 
 const failedStyle = css`
@@ -625,7 +627,7 @@ const stepTitleStyle = css`
 	line-height: 13rem !important;
 	color: rgba(215, 223, 225, 0.6) !important;
 	user-select: none !important;
-	margin-bottom: 10rem !important;
+	margin-bottom: 2rem !important;
 `;
 const stepSubtitleStyle = css`
 	font-family: Gilroy !important;

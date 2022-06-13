@@ -1,30 +1,25 @@
-const winston = require('winston');
-const LokiTransport = require("winston-loki");
+import winston from "winston";
+import LokiTransport from "winston-loki";
+import TransportStream from "winston-transport";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-const transports =  [
-    //
-    // - Write all logs with importance level of `error` or less to `error.log`
-    // - Write all logs with importance level of `info` or less to `combined.log`
-    //
+const transports: Array<TransportStream> =  [
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
-		new winston.transports.File({ filename: 'combined.log' }),
-		new winston.transports.Console({
-			format: winston.format.cli(),
-		}),
-	];
+	new winston.transports.File({ filename: 'combined.log' }),
+	new winston.transports.Console({ format: winston.format.cli() }),
+];
 
-	if(IS_PRODUCTION) {
-		transports.push(new LokiTransport({
-			host: 'https://146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9@logs-prod-us-central1.grafana.net',
-			json: true,
-			basicAuth: '146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9',
-			labels: { component: 'server' },
-			onConnectionError: (err) => {
-				_error(err)
-			}
-		}));
-	}
+if(IS_PRODUCTION) {
+	transports.push(new LokiTransport({
+		host: 'https://146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9@logs-prod-us-central1.grafana.net',
+		json: true,
+		basicAuth: '146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9',
+		labels: { component: 'server' },
+		onConnectionError: (err) => {
+		    _error(err)
+		}
+	}));
+}
 const winstonLogger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),

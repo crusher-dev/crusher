@@ -12,14 +12,14 @@ import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
-import { goFullScreen, performNavigation, performReplayTest, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
+import { goFullScreen, performNavigation, performReplayTest, performReplayTestUrlAction, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
 import { Emitter } from "event-kit";
 import { setSessionInfoMeta, setSettngs, setShowShouldOnboardingOverlay, setUserAccountInfo } from "../store/actions/app";
 import { getAppSessionMeta } from "../store/selectors/app";
-import { ToastSnackbar } from "./components/toast";
+import { sendSnackBarEvent, ToastSnackbar } from "./components/toast";
 import { TRecorderState } from "../store/reducers/recorder";
 import { webFrame } from "electron";
 import { TourProvider, useTour } from "@reactour/tour";
@@ -75,16 +75,32 @@ const App = () => {
 
 				const handleCompletion = () => {
 					if (action.args.redirectAfterSuccess) {
+						let testsCompleted = true;
+						let totalCount = 1;
 						if (window["testsToRun"]) {
-							window["testsToRun"] = window["testsToRun"].filter((a) => a !== action.args.testId);
-							if (!window["testsToRun"].length) {
+							totalCount = window["testsToRun"].count;
+							window["testsToRun"].list = window["testsToRun"].list.filter((a) => a !== action.args.testId);
+							if (!window["testsToRun"].list.length) {
 								window["testsToRun"] = null;
+							} else {
+								testsCompleted = false;
 							}
 						}
 						window["triggeredTest"] = { id: -1, type: "local" };
 
-						navigate("/");
-						goFullScreen(false);
+						// navigate("/");
+						if(testsCompleted) {
+							navigate("/");
+							goFullScreen(false);
+							sendSnackBarEvent({type: "test_report", message: null, meta: { totalCount }});
+						}
+						if(!testsCompleted) {
+													// goFullScreen(false);
+
+													navigate("/recorder");
+													goFullScreen();
+													performReplayTestUrlAction(window["testsToRun"].list[0], true);
+						}
 					}
 				}
 				if (isWebViewPresent) {
@@ -197,8 +213,7 @@ const containerStyle = css`
 `;
 const bodyStyle = css`
 	flex: 1;
-	display: grid;
-	grid-template-rows: 62rem;
+	display: flex;
 	flex-direction: column;
 	position: relative;
 	position: relative;

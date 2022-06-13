@@ -121,11 +121,11 @@ const section = [
 		icon: null,
 		key: "reports",
 	},
-	{
-		name: "Insights & Alert",
-		icon: null,
-		key: "insights"
-	}
+	// {
+	// 	name: "Insights & Alert",
+	// 	icon: null,
+	// 	key: "insights"
+	// }
 	// {
 	// 	name: "History",
 	// 	icon: null,
@@ -317,7 +317,7 @@ export const TestReportScreen = () => {
 			value: true,
 		});
 
-		if (query.view_draft) setSelectedTabIndex(1);
+		// if (query.view_draft) setSelectedTabIndex(0);
 	}, [query.view_draft]);
 	return (
 		<div className={"mt-56"}>
@@ -430,21 +430,21 @@ const Tab = css`
 const TabItem = css`
 	top: 1px;
 	position: relative;
-	height: 37px;
+	height: 28px;
 	padding: 0 24px;
 	padding-top: 1rem !important;
 
+	margin-right: 2px;
+	border-radius: 6px;
 	:hover {
-		opacity: 0.8;
+		background: #17181b;
 	}
 `;
 
 const selected = css`
-	top: 1px;
-	position: relative;
-	border: 1px solid #1e242c;
-	border-radius: 6px 6px 6px 6px;
-	color: #fff;
-	font-weight: 600;
-	padding-top: 1px;
+
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 600;
+    background: #17181b;
 `;

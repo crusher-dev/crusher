@@ -78,8 +78,8 @@ const PageLoadFailedScreen = (props: any) => {
 		`}
 	>
 		<div css={css`display: flex; flex-direction: column; justify-content: center; padding: 0rem 54rem;`}>
-			<StopIcon css={css`width: 24rem; height: 24rem;`}/>
-			<div className={"mt-18"} css={css`font-family: Cera Pro; color: rgba(255, 255, 255, 0.83); font-size: 18rem; font-weight: bold;`}>This site can't be reached!</div>
+			<StopIcon css={css`width: 24rem; height: 24rem; margin-left:0;`}/>
+			<div className={"mt-18"} css={css`font-family: Cera Pro; color: rgba(255, 255, 255, 0.83); font-size: 18rem; font-weight: bold;`}>P</div>
 			<div className="mt-10">Something went wrong while loading the url</div>
 			<div className="mt-16">ERROR_CODE: URL_NOT_REACHABLE</div>
 
@@ -231,7 +231,7 @@ const webviewStyle = css`
 	height: 100%;
 	background: #fff;
 `;
-const topContainerStyle = css`position: relative; overflow: hidden;`;
+const topContainerStyle = css`position: relative; overflow: hidden; flex: 1;`;
 const containerStyle = css`
 	width: 100%;
     height: calc(100% - 30rem);

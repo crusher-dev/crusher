@@ -202,7 +202,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 						}}
 						bgColor="tertiary-outline"
 						css={saveButtonStyle}
-						className={"ml-36"}
+						className={"ml-20"}
 					>
 						<Conditional showIf={isTestVerificationComplete}>
 							<span>
@@ -228,7 +228,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 						}}
 						bgColor="tertiary-outline"
 						css={saveButtonStyle}
-						className={"ml-36"}
+						className={"ml-20"}
 					>
 						<Conditional showIf={isTestVerificationComplete}>
 							<span>
@@ -465,6 +465,13 @@ const Toolbar = (props: any) => {
 								values={recorderDevices}
 							/>
 	), [selectedDevice, recorderDevices]);
+
+	const handleMenuCallback = React.useCallback((value, isNavigating) => {
+		console.log("Menu callback", value, isNavigating);
+		if(isNavigating) {
+			goFullScreen(false);
+		}
+	}, []);
 	return (
 		<div css={containerStyle} {...props}>
 			<Conditional showIf={isTestBeingVerified}>
@@ -485,7 +492,7 @@ const Toolbar = (props: any) => {
 						<span
 							css={loadingTextStyle}
 						>
-							Our bot is verifying your test.{" "}
+							Crusher is verifying your test.{" "}
 						</span>
 					</div>
 				</div>
@@ -506,7 +513,7 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<MenuDropdown/>
+				<MenuDropdown isRecorder={true} callback={handleMenuCallback} css={css`.crusher-hammer-icon{ margin-left: 20rem; }`}/>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
@@ -564,7 +571,7 @@ const Toolbar = (props: any) => {
 					</Conditional>
 				</div>
 				<Conditional showIf={isRecorderInInitialState}>
-					<Button className={"ml-24"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
+					<Button className={"ml-12"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
 					</Button>
 				</Conditional>
@@ -679,7 +686,7 @@ const inputContainerStyle = css`
 position: relative;
 display: flex;
 flex-direction: column;
-margin-left: 28rem;
+margin-left: 12rem;
 `;
 
 const inputErrorMessageStyle = css`
@@ -712,7 +719,7 @@ const containerStyle = css`
 	padding-right: 24rem;
 `;
 const inputStyle = css`
-	height: 40rem;
+	height: 36rem;
 	.input__rightIconContainer {
 		right: 0px;
 
@@ -759,9 +766,6 @@ const inputStyle = css`
 		border-radius: 18px;
 	}
 	}
-	svg {
-		margin-left: auto;
-	}
 	.dropdown-box {
 		overflow: hidden;
 	}
@@ -775,17 +779,18 @@ const buttonStyle = css`
 	box-sizing: border-box;
 	border-radius: 4rem;
 	width: 93rem;
-	height: 34rem;
+	height: 36rem;
 `;
 
 const saveButtonStyle = css`
-	width: 128rem;
-	height: 30rem;
+	width: 116rem;
+	height: 32rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
 	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
-	font-weight: normal;
+	letter-spacing: .3px;
+	font-weight: 500 !important;
 	font-size: 14rem;
 	line-height: 17rem;
 	border: 0.5px solid transparent;

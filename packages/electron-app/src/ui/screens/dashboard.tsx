@@ -447,6 +447,7 @@ function DashboardScreen() {
     const store = useStore();
     const userAccountInfo = useSelector(getUserAccountInfo);
     const [userInfo, setUserInfo] = React.useState({});
+    const [showProxyWarning, setShowProxyWarning] = React.useState(true);
 
     let navigate = useNavigate();
 
@@ -547,12 +548,11 @@ function DashboardScreen() {
 
 
     const haveZeroTests = userAccountInfo && userTests && (!userTests.length);
+    const mainContent = haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>);
 
     return (
 		<ModelContainerLayout headerStyle={haveZeroTests ? {borderBottom: 'none'}: {}} title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
-            <ProxyWarningContainer/>
-            {/* { haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>)} */}
-
+            {showProxyWarning ? (<ProxyWarningContainer onSkip={setShowProxyWarning.bind(this, false)}/>) : mainContent}
 		</ModelContainerLayout>
 	);
 }

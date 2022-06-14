@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { ConnectivityWarningIcon, PlayV2Icon } from "../../icons";
 import { Link } from "../../layouts/modalContainer";
 import {Button} from "@dyson/components/atoms/button/Button";
+import { shell } from "electron";
 
 
 const ReadDocsButton = ({title, className, onClick}) => {
@@ -38,7 +39,12 @@ const saveButtonStyle = css`
 	}
 `;
 
-const ProxyWarningContainer = () => {
+const ProxyWarningContainer = ({onSkip}) => {
+
+    const openDocs = React.useCallback(() => {
+        shell.openExternal("https://docs.crusher.dev");
+    }, []);
+
     return (
         <div css={containerStyle}>
             <div css={contentContainerStyle}>
@@ -51,8 +57,8 @@ const ProxyWarningContainer = () => {
                 </div>
             </div>
             <div css={actionsBarContainerStyle}>
-                <ReadDocsButton />
-                <Link css={skipLinkStyle}>Skip</Link>
+                <ReadDocsButton onClick={openDocs} />
+                <Link onClick={onSkip} css={skipLinkStyle}>Skip</Link>
             </div>
             <div css={waitingTextStyle}>We’ll re-run test when config is changed</div>
             <div css={watch}>

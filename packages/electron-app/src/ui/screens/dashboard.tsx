@@ -445,12 +445,22 @@ function DashboardScreen() {
     const [userTests, setUserTests] = React.useState(null);
     const [selectedProject, setSelectedProject] = React.useState(null);
     const store = useStore();
-    const userAccountInfo = useSelector(getUserAccountInfo);
     const [userInfo, setUserInfo] = React.useState({});
     const [showProxyWarning, setShowProxyWarning] = React.useState(false);
     const proxyState = useSelector(getProxyState);
+    const userAccountInfo = useSelector(getUserAccountInfo);
 
     let navigate = useNavigate();
+
+
+    React.useEffect(() => {
+        if(userAccountInfo) {
+            getCloudUserInfo().then((userInfo) => {
+                setUserInfo(userInfo);
+            });
+        }
+    }, [userAccountInfo]);
+
 
     React.useEffect(()=> {
         document.querySelector("html").style.fontSize = "1px";
@@ -515,8 +525,10 @@ function DashboardScreen() {
         }
     }, [userAccountInfo]);
 
-    const userProject = userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
-
+    const userProject = React.useMemo(() => {
+        return userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
+    }, [userInfo]);
+    console.log("User info", userInfo, selectedProject, userProject);
     const handleTestDelete = React.useCallback((id) => {
         setUserTests(userTests.filter((a) => a.id != id));
 

@@ -317,6 +317,10 @@ const performUndockCode = () => {
 	return ipcRenderer.invoke("undock-code");
 }
 
+const turnOnProxy = (configFilePath) => {
+	return ipcRenderer.invoke("turn-on-proxy", { configFilePath });
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -365,5 +369,6 @@ export {
 	performClearRemainingStpes,
 	performDeleteTest,
 	performExit,
-	performUndockCode
+	performUndockCode,
+	turnOnProxy
 };

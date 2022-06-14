@@ -5,7 +5,7 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { DownIcon, LoadingIconV2 } from "../icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
-import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
 import { getCloudUserInfo, getUserTests, goFullScreen, performDeleteTest, performReplayTest, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
@@ -448,6 +448,7 @@ function DashboardScreen() {
     const userAccountInfo = useSelector(getUserAccountInfo);
     const [userInfo, setUserInfo] = React.useState({});
     const [showProxyWarning, setShowProxyWarning] = React.useState(true);
+    const proxyState = useSelector(getProxyState);
 
     let navigate = useNavigate();
 
@@ -530,6 +531,7 @@ function DashboardScreen() {
 
 
     const TitleComponent = React.useMemo(() => {
+        
         return (
             <div css={titleStyle}>
                 <span>
@@ -537,10 +539,10 @@ function DashboardScreen() {
                     &nbsp;&nbsp;
                     <b css={titleBoldStyle}>{userProjectName}</b>
                 </span>
-                {/* <CloudIcon css={titleCloudIconStyle}/> */}
+                <CloudIcon css={[titleCloudIconStyle, Object.keys(proxyState).length ? undefined : `path{ fill: red; }`]}/>
             </div>
         )
-    }, [userProjectName]);
+    }, [userProjectName, proxyState]);
 
     if(!userAccountInfo || !userTests) {
         return (<LoadingScreen/>)

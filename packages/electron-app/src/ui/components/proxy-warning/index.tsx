@@ -4,6 +4,9 @@ import { ConnectivityWarningIcon, PlayV2Icon } from "../../icons";
 import { Link } from "../../layouts/modalContainer";
 import {Button} from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
+import { turnOnProxy } from "../../commands/perform";
+import { getProxyState } from "electron-app/src/store/selectors/app";
+import { useSelector, useStore } from "react-redux";
 
 
 const ReadDocsButton = ({title, className, onClick}) => {
@@ -40,10 +43,37 @@ const saveButtonStyle = css`
 `;
 
 const ProxyWarningContainer = ({onSkip}) => {
+    const [selectedProject, setSelectedProject] = React.useState(null);
+    const proxyState = useSelector(getProxyState);
+    const store = useStore();
+    
+    const turnOnProxyServers = () => {
+        const proxyState = getProxyState(store.getState());
+        if(Object.keys(proxyState).length) {
+            console.error("Proxy is already enabled", proxyState);
+            return;
+        }
+        if(window.localStorage.getItem("projectConfigFile")) {
+            const projectConfigFile = window.localStorage.getItem("projectConfigFile");
+            const projectConfigFileJson = JSON.parse(projectConfigFile);
+            console.log("projectConfigFileJson", projectConfigFileJson, selectedProject);
+            if(projectConfigFileJson[selectedProject])
+            turnOnProxy(projectConfigFileJson[selectedProject]);
+        }
+    };
+
+    React.useEffect(() => {
+        setSelectedProject(window.localStorage.getItem("projectId"));
+        turnOnProxyServers();
+    }, [selectedProject]);
 
     const openDocs = React.useCallback(() => {
         shell.openExternal("https://docs.crusher.dev");
     }, []);
+
+    const handleRetry = React.useCallback(() => {
+        turnOnProxyServers();
+    }, [selectedProject, proxyState]);
 
     return (
         <div css={containerStyle}>
@@ -61,7 +91,7 @@ const ProxyWarningContainer = ({onSkip}) => {
                 <Link onClick={onSkip} css={skipLinkStyle}>Skip</Link>
             </div>
             <div css={waitingTextStyle}>
-               <Link onClick={openDocs}>Retry</Link>
+               <Link onClick={handleRetry}>Retry</Link>
             </div>
             <div css={watch}>
                <PlayV2Icon/> Watch video

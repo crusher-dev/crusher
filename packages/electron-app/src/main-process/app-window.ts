@@ -42,7 +42,10 @@ import axios from "axios";
 import { identify } from "../lib/analytics";
 import * as fs from "fs";
 import * as path from  "path";
+import child_process from "child_process";
+
 import { screen } from "electron";
+import { ProxyManager } from "./proxy-manager";
 const debug = require("debug")("crusher:main");
 
 export class AppWindow {
@@ -64,6 +67,7 @@ export class AppWindow {
 
 	private shouldMaximizeOnShow = true;
 	private useAdvancedSelectorPicker = false;
+	private proxyManager: ProxyManager;
 
 	public getWebContents() {
 		return this.window.webContents;
@@ -76,6 +80,8 @@ export class AppWindow {
 		});
 		this.recorder = new Recorder(store);
 		this.store = store;
+
+		this.proxyManager = new ProxyManager(store);
 
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
@@ -254,6 +260,7 @@ export class AppWindow {
 		ipcMain.handle("get-code-templates", this.handleGetCodeTemplates.bind(this));
 		ipcMain.handle("update-code-template", this.handleUpdateCodeTemplate.bind(this));
 		ipcMain.handle("delete-code-template", this.handleDeleteCodeTemplate.bind(this));
+		ipcMain.handle("turn-on-proxy", this.handleTurnOnProxy.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 		ipcMain.handle("exit-app", this.handleExitApp.bind(this));
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
@@ -264,16 +271,36 @@ export class AppWindow {
 
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
+		const projectId = app.commandLine.getSwitchValue("projectId");
+
+		if(app.commandLine.hasSwitch("project-config-file") && projectId) {
+			console.log("Segt");
+			const configFilePath = app.commandLine.getSwitchValue("project-config-file");
+			this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigFile')").then((projectConfigs) => {
+				console.log("Project configs is", projectConfigs);
+				const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
+				projectConfigsObject[projectId] = configFilePath;
+				this.window.webContents.executeJavaScript(`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`);
+			});
+			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
+		}
+		if(projectId) {
+			this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
+			process.argv = process.argv.filter((a) => a.includes("--project-id"));
+		}
 		if(app.commandLine.hasSwitch("open-recorder")) {
 			process.argv = process.argv.filter((a) => a !== "--open-recorder");
-			const projectId = app.commandLine.getSwitchValue("projectId");
-			if(projectId)
-			this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
 			this.window.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/recorder");
 			this.handleGoFullScreen(null, {fullScreen: true});
 		} else {
 			this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 		}
+	}
+
+	private proxyProcess: any = null;
+
+	private async handleTurnOnProxy(event: Electron.IpcMainEvent, payload: { configFilePath: string } ) {
+		return this.proxyManager.initializeProxy(payload.configFilePath);
 	}
 
 	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {

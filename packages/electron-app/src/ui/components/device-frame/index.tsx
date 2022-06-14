@@ -159,7 +159,7 @@ const DeviceFrame = (props: any) => {
 		<div css={[topContainerStyle]}>
 			<div css={containerStyle}>
 				{recorderInfo.device && (
-	<div style={{ aspectRatio: `${recorderInfo.device?.width} / ${recorderInfo.device?.height}`, width: "95%", maxWidth: "100%", maxHeight: "100%", position: "relative" }}>
+	<div style={{ aspectRatio: `${recorderInfo.device?.width} / ${recorderInfo.device?.height}`, maxWidth: `${recorderInfo.device?.width}rem`, width: "95%", maxHeight: "100%", position: "relative" }}>
 	<webview
 		ref={ref}
 		css={webviewStyle}

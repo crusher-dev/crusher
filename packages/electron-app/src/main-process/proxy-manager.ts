@@ -32,7 +32,7 @@ class ProxyManager {
 			show:true,
 			frame: false,
             width: 602,
-            height: 230,
+            height: 200,
 			// This fixes subpixel aliasing on Windows
 			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
 			backgroundColor: "#111213",
@@ -63,7 +63,7 @@ class ProxyManager {
         };
 
 		logWindow.loadURL("data:text/html,%3Chtml%3E%3Cbody%3E%3Ctextarea%20id%3D%22textarea%22%20style%3D%22height%3A%20100%25%3B%20width%3A%20100%25%3B%22%3E%3C%2Ftextarea%3E%3Cstyle%3Ehtml%2C%20body%7B%20margin%3A%200%3B%20padding%3A%200%3B%7D%3C%2Fstyle%3E%3C%2Fbody%3E%3C%2Fhtml%3E");
-        logWindow.setPosition(660, 550);
+        logWindow.setPosition(688, 455);
 
             this._currentProxyProcess.stdout.on('data', (data) => {
                 const matches = resultsTunnelRegexp.exec(data.toString());

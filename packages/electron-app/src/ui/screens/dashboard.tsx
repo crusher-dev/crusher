@@ -447,7 +447,7 @@ function DashboardScreen() {
     const store = useStore();
     const userAccountInfo = useSelector(getUserAccountInfo);
     const [userInfo, setUserInfo] = React.useState({});
-    const [showProxyWarning, setShowProxyWarning] = React.useState(true);
+    const [showProxyWarning, setShowProxyWarning] = React.useState(false);
     const proxyState = useSelector(getProxyState);
 
     let navigate = useNavigate();
@@ -459,6 +459,11 @@ function DashboardScreen() {
             setTimeout(() => {
                 navigate("/login");
             }, 1000);
+        }
+
+        if(window["showProxyWarning"] && !Object.keys(proxyState).length) {
+            window["showProxyWarning"] = false;
+            setShowProxyWarning(true);
         }
 
         const userAccountInfo = getUserAccountInfo(store.getState());
@@ -554,7 +559,7 @@ function DashboardScreen() {
 
     return (
 		<ModelContainerLayout headerStyle={haveZeroTests ? {borderBottom: 'none'}: {}} title={TitleComponent} footer={userTests && <DashboardFooter projectId={selectedProject}  userTests={userTests}/>}>
-            {showProxyWarning ? (<ProxyWarningContainer onSkip={setShowProxyWarning.bind(this, false)}/>) : mainContent}
+            {showProxyWarning && !Object.keys(proxyState).length ? (<ProxyWarningContainer onSkip={setShowProxyWarning.bind(this, false)}/>) : mainContent}
 		</ModelContainerLayout>
 	);
 }

@@ -10,7 +10,7 @@ import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
-import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, isTestVerified } from "electron-app/src/store/selectors/recorder";
+import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import {
 	goFullScreen,
 	performNavigation,
@@ -35,6 +35,7 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Navigate, useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../layouts/modalContainer";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -137,7 +138,15 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 			performVerifyTest().then((res) => {
 				if(res && res.draftJobId) {
-					window["triggeredTest"] = { id: res.draftJobId };
+					window["triggeredTest"] = {
+						 id: res.draftJobId };
+					const steps = getSavedSteps(store.getState());
+					const navigationStep = steps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
+					const startNavigationUrl = navigationStep && navigationStep.payload && navigationStep.payload.meta ? navigationStep.payload.meta.value : "";
+					const startUrl = new URL(startNavigationUrl);
+					if(startUrl.hostname.toLowerCase() === "localhost") {
+						window["showProxyWarning"] = true;
+					}
 					navigate("/");
 					goFullScreen(false);
 				}

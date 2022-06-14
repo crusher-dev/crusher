@@ -64,7 +64,7 @@ const ProxyWarningContainer = ({onSkip}) => {
 
     React.useEffect(() => {
         setSelectedProject(window.localStorage.getItem("projectId"));
-        turnOnProxyServers();
+        // turnOnProxyServers();
     }, [selectedProject]);
 
     const openDocs = React.useCallback(() => {

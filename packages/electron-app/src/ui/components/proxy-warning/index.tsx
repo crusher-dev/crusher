@@ -19,7 +19,7 @@ const ReadDocsButton = ({title, className, onClick}) => {
         size="x-small"
         css={saveButtonStyle}
     >
-        <span>Read docs</span>
+        <span>{title}</span>
     </Button>);
 };
 
@@ -57,10 +57,12 @@ const ProxyWarningContainer = ({onSkip}) => {
                 </div>
             </div>
             <div css={actionsBarContainerStyle}>
-                <ReadDocsButton onClick={openDocs} />
+                <ReadDocsButton title={"Read docs"} onClick={openDocs} />
                 <Link onClick={onSkip} css={skipLinkStyle}>Skip</Link>
             </div>
-            <div css={waitingTextStyle}>We’ll re-run test when config is changed</div>
+            <div css={waitingTextStyle}>
+               <Link onClick={openDocs}>Retry</Link>
+            </div>
             <div css={watch}>
                <PlayV2Icon/> Watch video
             </div>

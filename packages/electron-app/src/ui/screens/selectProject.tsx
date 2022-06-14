@@ -41,7 +41,7 @@ function SelectProjectScreen() {
     }
 
     return (
-        <ModelContainerLayout title={<div css={titleStyle}>Select your project</div>} footer={<CommonFooter/>}>
+        <ModelContainerLayout title={<div css={titleStyle}>Select project</div>} footer={<CommonFooter/>}>
             <ProjectList userInfo={userInfo}/>
         </ModelContainerLayout>
     );
@@ -66,7 +66,7 @@ const testItemStyle = css`
     color: #FFFFFF;
 
     li {
-        padding: 14px 46px;
+        padding: 14px 24px;
         position: relative;
         .action-buttons {
             display: none;

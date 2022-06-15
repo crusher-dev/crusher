@@ -487,11 +487,11 @@ const Toolbar = (props: any) => {
 				<div
 					css={testBeingVerifiedContainerStyle}
 				>
-					<span
+					{/* <span
 						css={drinkCupTextStyle}
 					>
 						Drink a cup of coffee meanwhile
-					</span>
+					</span> */}
 					<div
 						css={verifyStatusIconStyle}
 					>
@@ -674,17 +674,17 @@ display: flex;
 font-weight: bold;
 align-items: center;
 font-size: 14rem;
-margin: auto;
+margin-left: auto;
+margin-right: 20rem;
 `;
 const drinkCupTextStyle = css`
 font-size: 14rem;
 margin-left: 18rem;
 `;
 const testBeingVerifiedContainerStyle  = css`
-display: flex;
-						align-items: center;
-						width: 100%;
-						`
+	display: flex;
+	align-items: flex-end;
+	width: 100%;`;
 const hammerIconStyle = css`
 width: 19rem;
 :hover {

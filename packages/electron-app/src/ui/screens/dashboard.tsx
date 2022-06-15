@@ -5,9 +5,9 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { DownIcon, LoadingIconV2 } from "../icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
-import { getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getCloudUserInfo, getUserTests, goFullScreen, performDeleteTest, performReplayTest, performReplayTestUrlAction, performRunTests, updateTestName } from "../commands/perform";
+import { getCloudUserInfo, getUserTests, goFullScreen, performDeleteTest, performReplayTest, performReplayTestUrlAction, performRunTests, turnOnProxy, updateTestName } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { sendSnackBarEvent } from "../components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
@@ -449,6 +449,7 @@ function DashboardScreen() {
     const [showProxyWarning, setShowProxyWarning] = React.useState(false);
     const proxyState = useSelector(getProxyState);
     const userAccountInfo = useSelector(getUserAccountInfo);
+    const proxyIsInitializing = useSelector(getIsProxyInitializing);
 
     let navigate = useNavigate();
 
@@ -461,6 +462,21 @@ function DashboardScreen() {
         }
     }, [userAccountInfo]);
 
+    const turnOnProxyServers = () => {
+        const proxyState = getProxyState(store.getState());
+        if(Object.keys(proxyState).length) {
+            console.error("Proxy is already enabled", proxyState);
+            return;
+        }
+        if(window.localStorage.getItem("projectConfigFile")) {
+            const projectConfigFile = window.localStorage.getItem("projectConfigFile");
+            const projectConfigFileJson = JSON.parse(projectConfigFile);
+            console.log("projectConfigFileJson", projectConfigFileJson, selectedProject);
+            if(projectConfigFileJson[selectedProject])
+            turnOnProxy(projectConfigFileJson[selectedProject]);
+        }
+    };
+    
 
     React.useEffect(()=> {
         document.querySelector("html").style.fontSize = "1px";
@@ -525,6 +541,11 @@ function DashboardScreen() {
         }
     }, [userAccountInfo]);
 
+    React.useEffect(() => {
+        if(selectedProject) {
+            turnOnProxyServers();
+        }
+    }, [selectedProject]);
     const userProject = React.useMemo(() => {
         return userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
     }, [userInfo]);
@@ -556,10 +577,10 @@ function DashboardScreen() {
                     &nbsp;&nbsp;
                     <b css={titleBoldStyle}>{userProjectName}</b>
                 </span>
-                <CloudIcon css={[titleCloudIconStyle, Object.keys(proxyState).length ? undefined : `path{ fill: red; }`]}/>
+                <CloudIcon shouldAnimateGreen={proxyIsInitializing} css={[titleCloudIconStyle, proxyIsInitializing ? css`` : (Object.keys(proxyState).length ? undefined : css`path{ fill: rgba(0, 0, 0, 0.8); }`)]}/>
             </div>
         )
-    }, [userProjectName, proxyState]);
+    }, [userProjectName, proxyState, proxyIsInitializing]);
 
     if(!userAccountInfo || !userTests) {
         return (<LoadingScreen/>)
@@ -593,19 +614,32 @@ color: rgba(255, 255, 255, 0.67);
     align-items: center;
 `;
 
-const CloudIcon = (props) => (
-    <svg
+const CloudIcon = ({shouldAnimateGreen, ...props}) => {
+
+    return (<svg
       viewBox={"0 0 16 11"}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
+        {shouldAnimateGreen ? (  <linearGradient id="lg" x1="0.5" y1="1" x2="0.5" y2="0">
+          <stop offset="0%" stop-opacity="1" stop-color="#A5ED6D"/>
+          <stop offset="40%" stop-opacity="1" stop-color="#A5ED6D">
+            <animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s"/>
+          </stop>
+          <stop offset="40%" stop-opacity="0" stop-color="#A5ED6D">
+            <animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s"  begin="0s"/>
+          </stop>
+          <stop offset="100%" stop-opacity="0" stop-color="#A5ED6D"/>
+      </linearGradient>) : ""}
       <path
         d="M12.854 4.47C12.566 1.953 10.504 0 8 0 5.497 0 3.433 1.953 3.147 4.47 1.409 4.47 0 5.932 0 7.735 0 9.538 1.409 11 3.146 11h9.708C14.59 11 16 9.538 16 7.735c0-1.803-1.409-3.265-3.146-3.265Z"
-        fill="#A5ED6D"
+        fill={shouldAnimateGreen ? "url(#lg)": "#A5ED6D"}
+        stroke={"#fff"}
+        strokeWidth="0.75"
       />
-    </svg>
-  )
+    </svg>)
+}
 
 const saveButtonStyle = css`
 	width: 92rem;

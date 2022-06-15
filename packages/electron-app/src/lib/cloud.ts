@@ -47,9 +47,11 @@ class CloudCrusher {
 		}).then((res) => res.data);
 	}
 
-	public static async runTests(testIds: Array<string> | null, projectId: string, userToken: string, customBackendPath: string | undefined = undefined) {
+	public static async runTests(testIds: Array<string> | null, projectId: string, 	proxyUrlsMap: any | null,		userToken: string, customBackendPath: string | undefined = undefined) {
+		console.log("proxy url is", proxyUrlsMap);
 		return axios.post(resolveToBackendPath(`/projects/${projectId}/tests/actions/run`, customBackendPath), {
 			testIds: Array.isArray(testIds) ? testIds.join(",") : null,
+			proxyUrlsMap: proxyUrlsMap && Object.keys(proxyUrlsMap).length ? proxyUrlsMap : undefined,
 		}, {
 			headers: {
 				Cookie: `isLoggedIn=true; token=${userToken}`,

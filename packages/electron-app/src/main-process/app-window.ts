@@ -356,7 +356,7 @@ export class AppWindow {
 		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 
-		return CloudCrusher.runTests(payload.testIds, payload.projectId, userAccountInfo.token, appSettings.backendEndPoint);
+		return CloudCrusher.runTests(payload.testIds, payload.projectId, this.proxyManager._results, userAccountInfo.token, appSettings.backendEndPoint);
 	}
 
 

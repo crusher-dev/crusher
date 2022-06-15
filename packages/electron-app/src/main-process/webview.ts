@@ -40,7 +40,6 @@ export class WebView {
 	async initialize() {
 		this.webContents.on("destroyed", this.dispose.bind(this));
 		if (this.webContents.debugger.isAttached()) return;
-		else console.info("Debugger already attached. Skipping..."); 
 
 		const _debugger = this.webContents.debugger;
 

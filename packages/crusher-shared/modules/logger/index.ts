@@ -15,49 +15,21 @@ let winstonLogger = winston.createLogger({
 	],
 });
 
+const consoleMiddleware = (type, message, meta) => {
+	winstonLogger.log(type, message, meta);
+}
 // Native console.error
 const _error = console.error;
 const _log = console.log;
 
-const logger =  { log: (message, meta) => { winstonLogger.log('info', message, meta); }, info: (message, meta) => { winstonLogger.log('info', message, meta); }, debug: (message, meta) => { winstonLogger.log('debug', message, meta); }, warn: (message, meta) => { winstonLogger.log('warn', message, meta); }, error: (message, meta) => { winstonLogger.log('error', message, meta); }, fatal: (message, meta) => { winstonLogger.log('error', message, meta); } };
-
 function modifyNativeConsoleFunctions() {
-	const log = function () {
-		//@ts-ignore
-		logger.log([...arguments].join(" "));
-	};
 
-	const info = function () {
-		//@ts-ignore
-		logger.info([...arguments].join(" "));
-	};
-
-	const debug = function () {
-		//@ts-ignore
-		logger.debug([...arguments].join(" "));
-	};
-
-	const trace = function () {
-		//@ts-ignore
-		logger.debug([...arguments].join(" "));
-	};
-
-	const warn = function () {
-		//@ts-ignore
-		logger.warn([...arguments].join(" "));
-	};
-
-	const error = function () {
-		//@ts-ignore
-		logger.error([...arguments].join(" "));
-	};
-
-	console.log = log;
-	console.error = error;
-	console.warn = warn;
-	console.info = info;
-	console.trace = trace;
-	console.debug = debug;
+	console.log = consoleMiddleware.bind(this, "info");
+	console.error = consoleMiddleware.bind(this, "error");
+	console.warn = consoleMiddleware.bind(this, "warn");
+	console.info = consoleMiddleware.bind(this, "info");
+	console.trace = consoleMiddleware.bind(this, "debug");
+	console.debug = consoleMiddleware.bind(this, "debug");
 }
 
 modifyNativeConsoleFunctions();

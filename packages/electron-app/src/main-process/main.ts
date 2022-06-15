@@ -42,7 +42,7 @@ function setupElectronApp() {
 	// app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	// For replaying actions
-	app.commandLine.appendSwitch("--remote-debugging-port", "9112");
+	app.commandLine.appendSwitch("--remote-debugging-port", "9113");
 
 	app.setAboutPanelOptions({
 		applicationName: APP_NAME,

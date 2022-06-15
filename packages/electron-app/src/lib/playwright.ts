@@ -136,7 +136,7 @@ class PlaywrightInstance {
 	}
 
 	async connect() {
-		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
+		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9113/", { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		// @TODO: Look into this
 		this.page = await this._getWebViewPage();

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { iAction, iActionResult } from "../../../crusher-shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { CookiesSetDetails, session } from "electron";
+import { app, CookiesSetDetails, session } from "electron";
 import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
@@ -136,7 +136,9 @@ class PlaywrightInstance {
 	}
 
 	async connect() {
-		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9113/", { customBrowserName: "electron-webview" });
+		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
+		const debuggingPort = debuggingPortFile.split("\n")[0];
+		this.browser = await playwright.chromium.connectOverCDP(`http://localhost:${debuggingPort}/`, { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		// @TODO: Look into this
 		this.page = await this._getWebViewPage();

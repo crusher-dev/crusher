@@ -12,6 +12,7 @@ import { now } from "./now";
 import { installSameOriginFilter } from "./same-origin-filter";
 import configureStore from "../store/configureStore";
 import * as path from "path";
+import net from "net"
 
 const os = require('os');
 
@@ -42,8 +43,9 @@ function setupElectronApp() {
 	// app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	// For replaying actions
-	app.commandLine.appendSwitch("--remote-debugging-port", "9113");
+	app.commandLine.appendSwitch("--remote-debugging-port", "0");
 
+	console.log("Port is: " +  app.getPath("userData"));
 	app.setAboutPanelOptions({
 		applicationName: APP_NAME,
 		applicationVersion: app.getVersion(),
@@ -54,7 +56,8 @@ function setupElectronApp() {
 }
 setupElectronApp();
 
-app.on("ready", function() {
+app.on("ready", async function() {
+
 	if(isDuplicateInstance) return;
 	readyTime = now() - launchTime
 

@@ -23,7 +23,7 @@ class ProxyManager {
             const configFile = JSON.parse(configFileContent);
 
             this._selectedProjectProxy = configFile.projectId;
-            this._currentProxyProcess = child_process.exec(`node /Users/utkarsh/Desktop/crusher/cli/dist/src/bin/index.js tunnel --config=${configFilePath}`);
+            this._currentProxyProcess = child_process.exec(`node /Users/crusher/Desktop/crusher/cli/dist/src/bin/index.js tunnel --config=${configFilePath}`);
 
 
 		const logWindow = new BrowserWindow({

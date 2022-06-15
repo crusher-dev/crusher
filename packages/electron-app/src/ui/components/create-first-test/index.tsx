@@ -19,7 +19,7 @@ const CreateButton = ({title, className, onClick}) => {
         bgColor="tertiary-outline"
         css={saveButtonStyle}
     >
-        <span>Create</span>
+        <span>{title}</span>
     </Button>);
 };
 
@@ -40,11 +40,21 @@ const saveButtonStyle = css`
 	}
 `;
 
-export const CreateFirstTest = ({}) => {
-    const navigate = useNavigate();
+export const DocsGoBackActionBar = ({buttonTitle, buttonCallback}) => {
     const openDocs = React.useCallback( () => {
         shell.openExternal("https://docs.crusher.dev");
     }, []);
+
+    return (
+        <div css={actionsContainerStyle}>
+            <Link onClick={openDocs}>Docs</Link>
+            <CreateButton title={buttonTitle} onClick={buttonCallback} css={createButtonStyle}/>
+        </div>
+    )
+}
+
+export const CreateFirstTest = ({}) => {
+    const navigate = useNavigate();
 
     const handleCreateTest = React.useCallback(()=> {
         navigate("/recorder");
@@ -57,10 +67,7 @@ export const CreateFirstTest = ({}) => {
                 <div css={contentHeadingStyle}>Create your first test</div>
                 <div css={contentDescriptionStyle}>Start with low-code browser to create a test</div>
             </div>
-            <div css={actionsContainerStyle}>
-                <Link onClick={openDocs}>Docs</Link>
-                <CreateButton onClick={handleCreateTest} css={createButtonStyle}/>
-            </div>
+            <DocsGoBackActionBar buttonTitle={"Create"} buttonCallback={handleCreateTest} />
 
             <div css={watch}>
                <PlayV2Icon/> Watch video

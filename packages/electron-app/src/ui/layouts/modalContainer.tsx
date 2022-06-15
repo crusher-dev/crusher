@@ -287,9 +287,10 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
             <div css={contentStyle} className={className}>
                 {children}
             </div>
-            <div css={footerStyle}>
+            {footer ? (     <div css={footerStyle}>
                 {footer}
-            </div>
+            </div>) : ""}
+       
            <StatusMessageBar isLoadingScreen={isLoadingScreen} />
         </div>
     )

@@ -36,6 +36,7 @@ import { SelectProjectScreen } from './screens/selectProject';
 import { StatusBar } from './components/status-bar';
 import { UnDockCodeScreen } from './screens/undockCode';
 import { InfoOverLay } from './components/overlays/infoOverlay';
+import InsufficientPermissionScreen from "./screens/insufficientPermission";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 

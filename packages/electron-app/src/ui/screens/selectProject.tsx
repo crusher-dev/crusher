@@ -15,7 +15,7 @@ function ProjectList({userInfo}) {
     return (
         <ul css={testItemStyle}>
             {userInfo && userInfo.projects ? userInfo.projects.map((project) => {
-                return (<li onClick={() => { navigate("/?project_id=" + project.id); }}>
+                return (<li onClick={() => { window.localStorage.setItem("projectId", project.id); navigate("/?project_id=" + project.id); }}>
                     <span>{project.name}</span>
                         </li>);
             }) : ""}

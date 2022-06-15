@@ -15,6 +15,7 @@ import { shell } from "electron";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { CreateFirstTest } from "../components/create-first-test";
 import { ProxyWarningContainer } from "../components/proxy-warning";
+import InsufficientPermission from "./insufficientPermission";
 
 
 const PlusIcon = (props) => (
@@ -450,7 +451,7 @@ function DashboardScreen() {
     const proxyState = useSelector(getProxyState);
     const userAccountInfo = useSelector(getUserAccountInfo);
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
-
+    const [isUnauthorized, setIsUnauthorized] = React.useState(false);
     let navigate = useNavigate();
 
 
@@ -522,19 +523,21 @@ function DashboardScreen() {
 
     React.useEffect(() => {
         if(userAccountInfo) {
+            const queryParamString = window.location.hash.split("?")[1];
+            const queryParams = new URLSearchParams(queryParamString);
+            const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
+            setSelectedProject(projectId);
+
+            if(!projectId) {
+                console.log("Project id is", projectId, window.localStorage.getItem("projectId"));
+                navigate("/select-project");
+                return;
+            }
 
             getCloudUserInfo().then((userInfo) => {
                 setUserInfo(userInfo);
 
-                const queryParamString = window.location.hash.split("?")[1];
-                const queryParams = new URLSearchParams(queryParamString);
-                const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
-                setSelectedProject(projectId);
-                if(!projectId) {
-                    navigate("/select-project");
-                    return;
-                }
-                window.localStorage.setItem("projectId", projectId);
+  
             });
 
 
@@ -547,6 +550,14 @@ function DashboardScreen() {
         }
     }, [selectedProject]);
     const userProject = React.useMemo(() => {
+        const selectedProject = window.localStorage.getItem("projectId");
+        if(userInfo && userInfo.projects) {
+            if(!userInfo.projects.find((project) => project.id == selectedProject)) {
+                console.log("Unauthorized", userInfo, selectedProject);
+                window.localStorage.removeItem("projectId");
+                setIsUnauthorized(true);
+            }
+        }
         return userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
     }, [userInfo]);
     console.log("User info", userInfo, selectedProject, userProject);
@@ -557,6 +568,11 @@ function DashboardScreen() {
             sendSnackBarEvent({ message: "Error deleting test", type: "error" });
         });
     }, [userTests]);
+
+    // React.useEffect(() => {
+    //     if(isUnauthorized) 
+    //     window.localStorage.removeItem("projectId");
+    // }, [isUnauthorized]);
 
     let userProjectName = null;
     if (userProject) {
@@ -586,6 +602,7 @@ function DashboardScreen() {
         return (<LoadingScreen/>)
     }
 
+    if(isUnauthorized) { return (<InsufficientPermission/>)}
 
     const haveZeroTests = userAccountInfo && userTests && (!userTests.length);
     const mainContent = haveZeroTests ? (<CreateFirstTest/>) : (<TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests}/>);

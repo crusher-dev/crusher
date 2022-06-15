@@ -284,8 +284,14 @@ export class AppWindow {
 			});
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
+		this.handle(projectId);
+	}
+
+	async handle(projectId) {
+		await this.window.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
+
 		if(projectId) {
-			this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
+			await this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
 			process.argv = process.argv.filter((a) => a.includes("--project-id"));
 		}
 		if(app.commandLine.hasSwitch("open-recorder")) {

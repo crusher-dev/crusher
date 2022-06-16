@@ -26,7 +26,7 @@ import {
 } from "../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { getAppEditingSessionMeta } from "electron-app/src/store/selectors/app";
+import { getAppEditingSessionMeta, getProxyState } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
 import { TourContext, useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
@@ -128,6 +128,19 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const dispatch = useDispatch();
 	const store = useStore();
 
+	const handleProxyWarning = React.useCallback(() => {
+		const steps = getSavedSteps(store.getState());
+		const navigationStep = steps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
+		const startNavigationUrl = navigationStep && navigationStep.payload && navigationStep.payload.meta ? navigationStep.payload.meta.value : "";
+		const startUrl = new URL(startNavigationUrl);
+		const proxyState = getProxyState(store.getState());
+
+		const hasProxyEnabled = proxyState && Object.keys(proxyState).length;
+		if(startUrl.hostname.toLowerCase() === "localhost" && !hasProxyEnabled) {
+			window["showProxyWarning"] = true;
+		}
+	}, []);
+
 	const verifyTest = () => {
 		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
@@ -140,13 +153,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				if(res && res.draftJobId) {
 					window["triggeredTest"] = {
 						 id: res.draftJobId };
-					const steps = getSavedSteps(store.getState());
-					const navigationStep = steps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
-					const startNavigationUrl = navigationStep && navigationStep.payload && navigationStep.payload.meta ? navigationStep.payload.meta.value : "";
-					const startUrl = new URL(startNavigationUrl);
-					if(startUrl.hostname.toLowerCase() === "localhost") {
-						window["showProxyWarning"] = true;
-					}
+					handleProxyWarning();
 					navigate("/");
 					goFullScreen(false);
 				}
@@ -168,6 +175,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		saveTest().then((res) => {
 			console.log("Naviagting to", res);
 			window["triggeredTest"] = { id: res.draftJobId };
+			handleProxyWarning();
 			navigate("/");
 			goFullScreen(false);
 		}).catch((err) => {
@@ -181,6 +189,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 
 		updateTest().then((res) => {
+			handleProxyWarning();
 			navigate("/");
 			goFullScreen(false);
 		});

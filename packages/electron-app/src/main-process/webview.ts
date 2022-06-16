@@ -177,8 +177,9 @@ class WebViewListener {
 	}
 
 	private handleFrameDidNavigate(event, url, httpResponseCode, httpStatusText, isMainFrame) {
-		console.log("Recorder state is", this.appWindow.getRecorderState().type);
-		if(isMainFrame && ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(this.appWindow.getRecorderState().type)) {
+		if (isMainFrame && ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(this.appWindow.getRecorderState().type)) {
+			console.log("Recorder state is", this.appWindow.getRecorderState().type);
+
 			this.appWindow.handleSaveStep(null, {
 				action: {
 					type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,

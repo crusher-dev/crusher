@@ -13,7 +13,6 @@ async function goToUrl(page: Page, action: iAction, globals: IGlobalManager,
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
 	context: any, browser, runActions, isUsingProxy) {
-	console.log("Context is this", context);
 	const urlToGo = template(action.payload.meta.value, {ctx: context || {}});
 	try {
 		await page.goto(urlToGo, { waitUntil: "load", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });

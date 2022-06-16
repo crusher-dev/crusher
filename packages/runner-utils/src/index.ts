@@ -137,7 +137,6 @@ class CrusherRunnerActions {
 			const beforeUrl = page ? await page.url() : null;
 
 			try {
-				console.log("Context(top)", this.context);
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
 						stepResult = await wrappedHandler(

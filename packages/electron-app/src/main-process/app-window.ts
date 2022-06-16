@@ -46,11 +46,10 @@ import child_process from "child_process";
 
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
-const debug = require("debug")("crusher:main");
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
-	// private splashWindow: Electron.BrowserWindow;
+	// Docked code window
 	private codeWindow: Electron.BrowserWindow | null = null;
 	private recorder: Recorder;
 	private webView: WebView;
@@ -74,7 +73,6 @@ export class AppWindow {
 	}
 
 	public constructor(store: Store<unknown, AnyAction>) {
-		debug("Constructor called");
 		this.savedWindowState = windowStateKeeper({
 			maximize: true,
 		});
@@ -119,24 +117,6 @@ export class AppWindow {
 		this.window = new BrowserWindow(windowOptions);
 		this.window.setFullScreenable(false);
 		this.window.setResizable(false);
-
-		// this.splashWindow = new BrowserWindow({
-		// 	title: APP_NAME,
-		// 	autoHideMenuBar: true,
-		// 	show:false,
-		// 	frame: false,
-		// 	icon: getAppIconPath(),
-		// 	// This fixes subpixel aliasing on Windows
-		// 	// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
-		// 	backgroundColor: "#111213",
-		// 	hasShadow: false,
-		// 	webPreferences: {
-		// 		nativeWindowOpen: true,
-		// 		enablePreferredSizeMode: true,
-		// 	}
-		// });
-
-		// this.splashWindow.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
 	}
 
 	public load() {
@@ -200,7 +180,6 @@ export class AppWindow {
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
 			this._rendererReadyTime = readyTime;
-			console.log("Rendering time is", this._rendererReadyTime);
 			setTimeout(() => {
 				this.window.show();
 			}, 200);
@@ -274,7 +253,6 @@ export class AppWindow {
 		const projectId = app.commandLine.getSwitchValue("projectId");
 
 		if(app.commandLine.hasSwitch("project-config-file") && projectId) {
-			console.log("Segt");
 			const configFilePath = app.commandLine.getSwitchValue("project-config-file");
 			this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigFile')").then((projectConfigs) => {
 				console.log("Project configs is", projectConfigs);
